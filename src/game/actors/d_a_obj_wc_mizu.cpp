@@ -151,7 +151,7 @@ int daObjWc_Mizu_c::Behavior() {
     }
 
     mPhaseAngle += 0x200;
-    mWaterHeight = FX_SinIdx((u16)mPhaseAngle >> 4) * 0xf + mPosY;
+    mWaterHeight = FX_SinIdx((u16)mPhaseAngle >> 4) * 15 + mPosY;
     data_0209f32c = mWaterHeight;
     UpdateModelTransform();
     UpdateClsnTransform();

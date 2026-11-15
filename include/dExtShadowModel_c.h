@@ -29,15 +29,8 @@
  * prev and next; InitModel fills mat/scale/opacity and links; the D1
  * unlink pins prev at 0x20 and next at 0x24.
  *
- * CORRECTED 2026-10-26. This comment used to argue that InitModel's mangled
- * name carries 5Fix12IiES3_S3_, so a plain int "can never reproduce that
- * name", so the definition had to stay a mangled free function to dodge wall
- * 6az's by-value homing. That reasoning was circular: the name was ours. The
- * stripped cartridge contains no _Z strings and no 5Fix12IiE anywhere (arm9
- * plus all 105 overlays), so there is no ROM evidence that this parameter was
- * ever a class type -- only that it is a 20.12 scalar, which fx32 says. With
- * fx32 the DEFINITION is a real method and reproduces 0x02015e64/0x58
- * exactly. See notes/mwccarm-codegen.md 6az.
+ * InitModel is a real method taking fx32 scalars and reproduces
+ * 0x02015e64/0x58.
  */
 
 struct dExtShadowModel_c : dExtModel_c {

@@ -72,7 +72,7 @@ void MenuSound_Create(void) {
     data_ov007_02104bbc = (NNSSndHandle *)func_ov007_020c3df4(data_ov007_02103218, 0xe4);
     data_ov007_02104bb8 = (int *)func_ov007_020c3df4(data_ov007_02103220, 0x10);
 
-    for (i = 0; i < 0x39; i++)
+    for (i = 0; i < 57; i++)
         func_0204f94c(&data_ov007_02104bbc[i]);
 
     for (j = 0; j < 4; j++)
@@ -81,7 +81,7 @@ void MenuSound_Create(void) {
 
 void MenuSound_Destroy(void) {
     int i;
-    for (i = 0; i < 0x39; i++) {
+    for (i = 0; i < 57; i++) {
         if (data_ov007_02104bbc[i].player != 0) {
             func_0204fa2c(&data_ov007_02104bbc[i], 5);
         }
@@ -223,14 +223,14 @@ void func_ov007_020bda8c(int frames, int fadingOut) {
     int depth, speed;
 
     if (fadingOut == 0) {
-        depth = scale_div(frames, 0xb4, 0x7f);
-        speed = scale_div(frames, 0x78, 0x23) + 5;
+        depth = scale_div(frames, 180, 0x7f);
+        speed = scale_div(frames, 120, 0x23) + 5;
     } else {
-        int left = 0x1e - frames;
-        depth = scale_div(left, 0x1e, 0x7f);
-        speed = scale_div(left, 0x1e, 0x23) + 5;
+        int left = 30 - frames;
+        depth = scale_div(left, 30, 0x7f);
+        speed = scale_div(left, 30, 0x23) + 5;
         if (frames == 0) {
-            NNS_SndPlayerMoveVolume(handle, 0, 0x1e);
+            NNS_SndPlayerMoveVolume(handle, 0, 30);
         }
     }
     func_ov007_020bde2c(0x36);
@@ -248,7 +248,7 @@ void func_ov007_020bda38(int v) {
 
 extern "C" void func_ov007_020bd9e4(int arg) {
     int i;
-    for (i = 0; i < 0x39; i++) {
+    for (i = 0; i < 57; i++) {
         if (data_ov007_02104bbc[i].player != 0) {
             func_0204fa2c(&data_ov007_02104bbc[i], arg);
         }

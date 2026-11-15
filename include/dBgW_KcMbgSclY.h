@@ -15,10 +15,6 @@
  * include/dExtModel_c.h for the key-function rule and the objisolate exemption
  * to it. D0 stays a C file.
  *
- * SetScaleY's mangled name carries Fix12<int>, and SetFile's does too (wall
- * 6az), so those two definitions stay extern-C free functions; the declarations
- * here are the real ones.
- *
  * The complete DetectClsn overload set is real C++. Slot 7 uses named line
  * members; slots 6 and 8 also use the reconstructed query classes and their
  * ordinary automatic C1/D1 lifetimes. All three call dBgW_Kc::DetectClsn with

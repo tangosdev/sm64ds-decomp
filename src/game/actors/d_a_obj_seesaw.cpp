@@ -74,7 +74,7 @@ enum { kFlagOffScreen = 8 };
 /* ±45 degrees in the angle units (full circle 0x10000). */
 enum { kMaxPitch = 0x2000 };
 
-/* Fix12 2.0. Mega ground pounds use this instead of the character scale. */
+/* fx32 2.0. Mega ground pounds use this instead of the character scale. */
 enum { kMegaPoundScale = 0x2000 };
 
 /* PlayLong bank-3 id while |mAngleXSpeed| > 0xa. */
@@ -141,7 +141,7 @@ void daObjSeesaw_c::OnGroundPounded(dActor_c &other) {
     diff = AngleDiff(angle, mAngleY);
     /* The kick is weighted by the cosine of the hitter's bearing off the
      * seesaw's heading. */
-    mAngleX += (s16)(FX_MUL(FX_MUL(dist, weight), FX_CosIdx((u16)diff >> 4)) / 4096);
+    mAngleX += (s16)(FX_MUL(FX_MUL(dist, weight), FX_CosIdx((u16)diff >> 4)) / 0x1000);
     if (mAngleX > kMaxPitch)
         mAngleX = kMaxPitch;
     if (mAngleX < -kMaxPitch)
@@ -292,9 +292,9 @@ void daObjSeesaw_c::OnStoodOn(dActor_c *other) {
     else
         acc = FX_MUL(y, 0x51LL);
 
-    s16 dv = acc / 4096;
+    s16 dv = acc / 0x1000;
     mAngleXSpeed += dv;
-    s16 lim = FX_MUL(r, 0x32000LL) / 4096;
+    s16 lim = FX_MUL(r, 0x32000LL) / 0x1000;
     if (mAngleXSpeed > lim)
         mAngleXSpeed = lim;
     if (mAngleXSpeed < -lim)

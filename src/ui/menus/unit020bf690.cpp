@@ -125,7 +125,7 @@ extern "C" void func_ov007_020bfbdc(void *self) {
     Matrix4x3 mat;
 
     func_ov007_020bc47c(model);
-    model->rotX = FX_DivS32(0x5a0000, 0x168);
+    model->rotX = FX_DivS32(0x5a0000, 360);
     model->visible = 0;
 
     vec.y = 0;
@@ -146,7 +146,7 @@ void ScreenFade_Draw(Ov007Camera *cam) {
     fx32 sinDist = FX_MUL(FX_SinIdx(fovyIdx), 0x1064);
     fx32 size = model->scale.x * 0xd800 + 0x12c000;
     fx32 scaled = FX_MUL(size, sinDist);
-    int cosScaled = FX_CosIdx(fovyIdx) * 0x60;
+    int cosScaled = FX_CosIdx(fovyIdx) * 96;
     fx32 extent = FX_Div(scaled, cosScaled);
     model->scale.z = FX_Div(extent, 0x5000);
     model->scale.x = model->scale.z;
@@ -183,7 +183,7 @@ void ScreenFade_Start(void) {
         tr->curve = 0;
         tr->planes = 0x3F;
         tr->step = 0x3C;
-        tr->fx.brightness.from = 0x10;
+        tr->fx.brightness.from = 16;
         tr->fx.brightness.to = 0;
         break;
     case 2:
@@ -192,7 +192,7 @@ void ScreenFade_Start(void) {
         tr->curve = 0;
         tr->planes = 0x3F;
         tr->step = 0x3C;
-        tr->fx.brightness.from = -0x10;
+        tr->fx.brightness.from = -16;
         tr->fx.brightness.to = 0;
         break;
     case 3:
@@ -201,7 +201,7 @@ void ScreenFade_Start(void) {
         tr->curve = 0;
         tr->planes = 0x2F;
         tr->step = 0x3C;
-        tr->fx.brightness.from = -0x10;
+        tr->fx.brightness.from = -16;
         tr->fx.brightness.to = 0;
         break;
     case 4:
@@ -210,7 +210,7 @@ void ScreenFade_Start(void) {
         tr->curve = 0;
         tr->planes = 0x3F;
         tr->step = 0x100;
-        tr->fx.brightness.from = -0x10;
+        tr->fx.brightness.from = -16;
         tr->fx.brightness.to = 0;
         break;
     case 5:
@@ -228,8 +228,8 @@ void ScreenFade_Start(void) {
         tr->curve = 0;
         tr->planes = 0x3F;
         tr->step = 0x1000;
-        tr->fx.brightness.from = -0x10;
-        tr->fx.brightness.to = -0x10;
+        tr->fx.brightness.from = -16;
+        tr->fx.brightness.to = -16;
         break;
     case 7:
         tr->effect = 4;
@@ -237,8 +237,8 @@ void ScreenFade_Start(void) {
         tr->curve = 0;
         tr->planes = 0x2F;
         tr->step = 0x1000;
-        tr->fx.brightness.from = -0x10;
-        tr->fx.brightness.to = -0x10;
+        tr->fx.brightness.from = -16;
+        tr->fx.brightness.to = -16;
         break;
     case 8:
         tr->effect = 4;
@@ -256,7 +256,7 @@ void ScreenFade_Start(void) {
         tr->step = 0x190;
         tr->planes = 1;
         tr->fx.alpha.planes2 = 0x14;
-        tr->fx.alpha.evaFrom = 0x10;
+        tr->fx.alpha.evaFrom = 16;
         tr->fx.alpha.evaTo = 0;
         tr->fx.alpha.evbFrom = 0;
         tr->fx.alpha.evbTo = 0;
@@ -271,7 +271,7 @@ void ScreenFade_Start(void) {
         } else {
             color = 0;
         }
-        color = color | (color << 0x10);
+        color = color | (color << 16);
         parts->materials->diffuseAmbient = color;
         parts->materials->specularEmission = color;
         sScreenFade->model->visible = 1;
@@ -336,5 +336,5 @@ void ScreenFade_Update(void) {
     }
     if (tr->reversed == 0)
         return;
-    G2_SetBlendBrightness(0x3f, -0x10);
+    G2_SetBlendBrightness(0x3f, -16);
 }

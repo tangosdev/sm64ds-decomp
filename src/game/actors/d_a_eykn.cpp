@@ -112,8 +112,6 @@ u8 DecIfAbove0_Byte(u8 *counter);
 s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
-/* Fix12<int> by value. Scalar parameters: the member form size-DIFFs.
-   See the leftover list. */
 int d_a_eyknNewHold(u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir,
                     void *callback);
 u32 d_a_eyknNewCleanParticleHold(u32 uniqueID, u32 effectID, int x, int y, int z,
@@ -521,7 +519,7 @@ int daEykn_c::St_Attack_Main()
 
     if ((s16)(mAngleY - mTurnRefAngleY) == 0) {
         if (DecIfAbove0_Byte(&mShotTimer) == 0 && StartEyeAnim() != 0)
-            mShotTimer = 0x53;
+            mShotTimer = 83;
         unk_212 = 0xf0;
     }
 
@@ -583,7 +581,7 @@ int daEykn_c::St_Attack_Main()
             func_0201267c(0x165, &mCamSpacePos);
             mCircleTimer = kCircleFrames;
             unk_212 = 0xf0;
-            mShotTimer = 0x53;
+            mShotTimer = 83;
             mCircleAngle = 0;
             ResetEyeAnim();
         }

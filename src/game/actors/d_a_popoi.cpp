@@ -25,10 +25,6 @@
  * deslop leftovers:
  *   - TurnAway (data_ov077_02127d18) is its own record, so ChangeState
  *     still takes that object's address as daPopoi_StateRecord *.
- *   - dExtAnmModel_c::SetAnim and the three collision Init calls stay spelled-out
- *     _ZN identifiers (Fix12<int> by value; the real headers can't express the
- *     call-site mangling). Sound::PlayLong and dBgCh_Actr::GetFloorResult are
- *     real calls.
  *   - UpdateTurnAwayState calls AngleDiff through an (int(*)(short,short))
  *     pointer cast: decl_common declares (int,int), and the short call-site
  *     typing is byte-load-bearing.
@@ -328,7 +324,7 @@ int daPopoi_c::ChangeState(daPopoi_StateRecord *next) {
  * at 8 units/frame (0x8000). Always returns 1. */
 int daPopoi_c::EnterWanderState() {
     mTargetAngleY = ((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 0xc);
-    mStateTimer = ((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0xaa);
+    mStateTimer = ((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 170);
     mAnmModel.speed = 0x1000;
     mHorzSpeed = 0x8000;
     unk_41c = 0;
@@ -375,13 +371,13 @@ int daPopoi_c::UpdateWanderState() {
 
     if (dist > 0x1f4000) {
         mTargetAngleY = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
-        if (mStateTimer < 0x14)
-            mStateTimer = 0x14;
+        if (mStateTimer < 20)
+            mStateTimer = 20;
         ApproachLinear(mPrevAngleY, mTargetAngleY, 0x400);
     }
     ApproachLinear(mPrevAngleY, mTargetAngleY, 0x100);
 
-    if (mStateTimer < 0x64)
+    if (mStateTimer < 100)
         mAnmModel.speed = 0x1000 / (0x64 - mStateTimer);
 
     if (mStateTimer == 0) {
@@ -412,7 +408,7 @@ int daPopoi_c::UpdateWanderState() {
  * 0x410's animation (data_ov077_02127c98). Returns 1. */
 int daPopoi_c::EnterPauseState() {
     mHorzSpeed = 0;
-    mStateTimer = 0x46;
+    mStateTimer = 70;
     mAnmModel.speed = 0x1000;
     mAnmModel.SetAnim((BCA_File *)data_ov077_02127c98.filePtr, 0, 0x1000, 0);
     return 1;
@@ -449,7 +445,7 @@ int daPopoi_c::UpdateTurnAwayState() {
     ApproachLinear(mPrevAngleY, tgt, 0x500);
     int diff = (AngleDiff)(mPrevAngleY, mTargetAngleY);
     if (diff < 0x100) {
-        mCooldown = 0x1e;
+        mCooldown = 30;
         ChangeState(&data_ov077_02127ce8); /* Wander */
     }
     return 1;
@@ -461,7 +457,7 @@ int daPopoi_c::UpdateTurnAwayState() {
  * mAnmModel.speed is overwritten by SetAnim's speed argument 0x1000, so the
  * animation ends up at speed 1.0. Returns 1. */
 int daPopoi_c::EnterChaseState() {
-    mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8 & 0x3f) + 0xaa);
+    mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8 & 0x3f) + 170);
     mHorzSpeed = 0x6000;
     mTurnRate = 0;
     unk_41c = 0;

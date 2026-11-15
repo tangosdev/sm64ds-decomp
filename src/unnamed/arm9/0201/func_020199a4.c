@@ -63,10 +63,10 @@ void func_02019ac4(void) {
             if (data_0208ee48 != 0) {
                 int arg;
                 if (func_0203d974() != 0) {
-                    data_0209d504 = 0x3c;
+                    data_0209d504 = 60;
                     arg = 0x44;
                 } else {
-                    data_0209d504 = 0x78;
+                    data_0209d504 = 120;
                     arg = 0x10;
                 }
                 func_02012790(arg);
@@ -123,10 +123,10 @@ void func_02019ac4(void) {
             if (data_0208ee48 != 0) {
                 int arg;
                 if (func_0203d974() != 0) {
-                    data_0209d504 = 0x3c;
+                    data_0209d504 = 60;
                     arg = 0x45;
                 } else {
-                    data_0209d504 = 0xb4;
+                    data_0209d504 = 180;
                     arg = 0x11;
                 }
                 func_02012790(arg);

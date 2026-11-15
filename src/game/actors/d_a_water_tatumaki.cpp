@@ -16,9 +16,6 @@
  * player reaches the centre). SetState installs a state.
  *
  * What stays:
- * - StateDrag: ApproachLinear on mPullPos with a Fix12<int>
- *   temporary is 0x198 against ROM 0x190 and adds a 4-byte .rodata word.
- *   The int step math/Approach.h declares keeps it in a register.
  * - StateDrag copies the player position through a const reference into a
  *   Vector3 that is never read again (#821). Vector3 is non-POD, so mwccarm
  *   keeps the three stores; a POD triple without volatile was 0x178
@@ -33,11 +30,6 @@
  * - UpdateModelMatrix: mAnmModel.mat4x3 = data_020a0e68 is 0x90 against
  *   ROM 0x74. This TU sees Matrix4x3 as {Matrix3x3 r; Vector3 t}. The ROM
  *   copies twelve words with one three-pass ldm/stm.
- * - InitResources: dExtAnmTexSRT_c::SetFile with a Fix12<int> temporary
- *   is 0xd8 against ROM 0xd0 and adds a 4-byte .rodata word.
- *   dExtAnmModel_c::SetAnim the same way is 0xdc against ROM 0xd0, also with
- *   a 4-byte .rodata word. Both are member calls under their scalar
- *   spellings, which match.
  * - Behavior: the spray position is `Vector3 pos = mPos; pos.y += lift;`
  *   (#821). Passing mPosX, mPosY + 0x384000, mPosZ directly is 0xc8
  *   against ROM 0xe0.

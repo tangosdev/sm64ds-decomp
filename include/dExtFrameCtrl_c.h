@@ -27,11 +27,8 @@
  * frame count in the low 30 bits of +0x4 with the loop flags in the top
  * two, current frame at +0x8 as 20.12, playback speed at +0xc.
  *
- * SetAnimation is a real method. Its symbol is
- * _ZN15dExtFrameCtrl_c12SetAnimationEtiit: speed is the scalar fx32,
- * which mangles as i, not the by-value Fix12<int> the old name invented.
- * The body reads it straight from a register (notes/mwccarm-codegen.md
- * 6az, MEASURED 2026-10-22; the caller does not pay either, 2026-10-23).
+ * SetAnimation is a real method. Speed is the scalar fx32; the body reads it
+ * straight from a register.
  *
  * dExtAnmModel_c and its children carry an dExtFrameCtrl_c as a SECOND base at
  * +0x50, reached through the ROM's _ZThn80_ thunks; that is the next

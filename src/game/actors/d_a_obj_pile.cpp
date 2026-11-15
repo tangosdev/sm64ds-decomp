@@ -104,7 +104,7 @@ void daObjPile_c::Sink(int flag) {
         mPosY -= 0x3c000;
         mStepsLeft--;
     }
-    mAttackCooldown = 0xf;
+    mAttackCooldown = 15;
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     if (mStepsLeft != 0)

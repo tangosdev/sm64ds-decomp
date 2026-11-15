@@ -98,7 +98,7 @@ void daObjBk_Botaosi_c::OnHitByMegaChar(daPly_c &player) {
         return;
     player.IncMegaKillCount();
     mState = 2;
-    mWobbleTimer = 0x640;
+    mWobbleTimer = 1600;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -147,12 +147,12 @@ void daObjBk_Botaosi_c::HandleHit(dActor_c *other) {
     }
 
     if (mState == 1) {
-        if (mWobbleTimer >= 0x320) {
+        if (mWobbleTimer >= 800) {
             if (other->mPosY > mPosY + 0x64000)
                 mState++;
         }
     }
-    mWobbleTimer = 0x640;
+    mWobbleTimer = 1600;
 }
 
 /* -------------------------------------------------------------------------- */

@@ -18,5 +18,5 @@ void func_02049cd8(void *buffer, int size, int mode) {
     data_020a4c64.kind = mode;
     if (mode == 1)
         SNDi_SetSurroundDecay(0x3000);
-    func_020507e0(buffer, size, 0, 0x7d00, 2, (void *)func_02049ba8, &data_020a4c64);
+    func_020507e0(buffer, size, 0, 32000, 2, (void *)func_02049ba8, &data_020a4c64);
 }

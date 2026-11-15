@@ -23,7 +23,7 @@ void *func_02018934(char *name, char *path, void *heap) {
     FS_InitFile(&file);
     myFS_OpenFile(&file, path);
     diff = FS_GetLength(&file);
-    aligned = (diff + 0xf) & ~0xf;
+    aligned = (diff + 15) & ~15;
     ptr = ((mHeap::Heap_t *)heap)->_Allocate(aligned + 0x60, -0x10);
     p60 = (char *)ptr + 0x60;
     DC_FlushRange(p60, aligned);

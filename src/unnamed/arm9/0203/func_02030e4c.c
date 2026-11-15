@@ -23,7 +23,7 @@ int func_02030e4c(void)
         } else if (func_0203da80(0x80)) {
             data_0209fc58 |= 0x20;
         } else {
-            data_0209fc58 |= 0xf;
+            data_0209fc58 |= 15;
             if (data_0209fc68 < 4)
                 data_0209fc58 |= 0x20;
         }

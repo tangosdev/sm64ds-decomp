@@ -139,7 +139,7 @@ void daIDonketu_c::UpdateDeathState() {
  * Hold still while the wind-up plays out over the first ten frames, then run.
  * The first arm returns the timer's address. */
 int daIDonketu_c::UpdateRunState() {
-    if (mStateTimer < 0xa) {
+    if (mStateTimer < 10) {
         mHorzSpeed = 0;
         int result = func_ov064_02116110(0x700);
         if (result != 0)
@@ -151,7 +151,7 @@ int daIDonketu_c::UpdateRunState() {
     }
     mHorzSpeed = 0x14000;
     u16 timer = mStateTimer;
-    if (timer > 0x23) {
+    if (timer > 35) {
         timer = 0;
         mStateTimer = 0;
     }

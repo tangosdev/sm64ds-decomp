@@ -1,7 +1,6 @@
 //cpp
 /* leftovers:
- * - dBgCh_Actr::Init's member call mangles with int. The ROM row is
- *   Fix12<int>. GetFloorResult and GetWallResult are not on the header.
+ * - GetFloorResult and GetWallResult are not on the header.
  * - func_0201267c is Sound::Play(3, id, pos).
  * - data_ov018_* handles are constructed by the sinit. g_profile is
  *   not this TU. common.h stays first so the matrix copy stays flat.
@@ -256,7 +255,7 @@ int daPgMthr_c::StateTalkEnter() {
     mAnmModel.SetAnim((BCA_File *)gPenguinWait1AnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
     mTalkStep = 0;
-    mTalkTimer = 0x3c;
+    mTalkTimer = 60;
     unk_37c = 1;
     return 1;
 }

@@ -60,21 +60,9 @@
  * stores, zeroes +0x60), D2 (both vptr restores, both base D2 calls) and
  * SetAnim/UpdateVerts reading +0x60.
  *
- * SetAnim IS A REAL METHOD, and its symbol is _ZN14dExtAnmModel_c7SetAnimEP8BCA_Fileiit.
- * It used to be a mangled extern "C" free function taking an explicit `thiz`,
- * on the grounds that wall 6az forbade the method form. That was wrong: the
- * wall was the NAME. The old symbol spelled a by-value `Fix12<int>` that we
- * invented -- the cartridge carries no mangled names at all -- and the
- * class-typed parameter is what cost +0x18, because the body reads `speed` in
- * both branches. Retail reads the argument straight out of r3 (`mov r4, r3`),
- * so the honest parameter is the scalar fx32 and the honest startFrame is the
- * u16 the body already loads with `ldrh`. Under that spelling the method
- * reproduces 0x02016748/0x5c exactly. See notes/mwccarm-codegen.md section 6az,
- * MEASURED 2026-10-22.
- *
- * Two call sites could not follow: d_a_ots.cpp tail-forwards the result as an
- * int, and one d_a_ply_methods.cpp body passes a non-constant startFrame. Each keeps a
- * scalar `local extern:` with its reason.
+ * SetAnim (0x02016748/0x5c) is _ZN14dExtAnmModel_c7SetAnimEP8BCA_Fileiit. `speed` is a
+ * scalar fx32: retail reads it straight out of r3 (`mov r4, r3`) in both branches.
+ * startFrame is the u16 the body loads with `ldrh`.
  */
 
 struct dExtAnmModel_c : dExtSimpleModel_c, dExtFrameCtrl_c {

@@ -125,17 +125,17 @@ void D3D_DrawSpriteTable(void) {
     /* Keep the index round trips through long long: without them this
      * function grows from 0xe0 to 0xe8 bytes. */
     sprite = 0;
-    for (entry = 0; entry < 0x80; entry++) {
+    for (entry = 0; entry < 128; entry++) {
         sD3DOamShadow[entry].attr01 = 0;
         *(u32 *)&sD3DOamShadow[(((long long)entry))].attr2 = 0;
     }
 
     y = 0;
     tileY = 0;
-    for (; y < 0xc0; y += 0x40) {
+    for (; y < 192; y += 64) {
         x = 0;
         tileX = 0;
-        for (; x < 0x100; x += 0x40) {
+        for (; x < 256; x += 64) {
             sD3DOamShadow[sprite].attr01 = ((y & 0xff) | 0xc0000c00) | ((x & 0x1ff) << 16);
             sD3DOamShadow[sprite].attr2 =
                 (((int)(((long long)tileX)) + ((int)(((long long)tileY)) << 5)) | 0xf000);
@@ -274,7 +274,7 @@ void dScMgD3DBase_c::AfterRender(unsigned int arg)
     int line = REG_VCOUNT;
 
     if (line > 0xb9 && line <= 0xc0) {
-        while ((int)REG_VCOUNT < 0xc0) {
+        while ((int)REG_VCOUNT < 192) {
         }
     }
 

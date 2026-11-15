@@ -11,8 +11,8 @@ void Ov007Picker::func_ov007_020c510c() {
     int neg;
     Ov007Camera *o = p->camera;
     neg = -o->distance;
-    func_ov007_020bfe4c(o, o->viewportMinX << 0xc, o->viewportMinY << 0xc, neg, &p->boundsMin);
-    func_ov007_020bfe4c(o, o->viewportMaxX << 0xc, o->viewportMaxY << 0xc, neg, &p->boundsMax);
+    func_ov007_020bfe4c(o, o->viewportMinX << 12, o->viewportMinY << 12, neg, &p->boundsMin);
+    func_ov007_020bfe4c(o, o->viewportMaxX << 12, o->viewportMaxY << 12, neg, &p->boundsMax);
     {
         int t = p->boundsMin.y;
         p->boundsMin.y = p->boundsMax.y;

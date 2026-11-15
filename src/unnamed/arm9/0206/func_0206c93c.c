@@ -13,15 +13,15 @@ unsigned int func_0206c93c(unsigned int x, unsigned int base)
         return x >> 1;
     case 8:
         return x >> 3;
-    case 0x10:
+    case 16:
         return x >> 4;
-    case 0xa:
+    case 10:
         lo = x & 0xffff;
         hi = x >> 16;
         q = hi * 0x1999 + ((hi * 0x9999 + lo * 0x1999) >> 16);
-        if (x >= 0xa) {
+        if (x >= 10) {
             base = x - 9;
-            x = 0xa;
+            x = 10;
             while (q * x < base) {
                 q++;
             }

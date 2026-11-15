@@ -162,7 +162,7 @@ void MBi_ParentCallback(void *arg) {
             MBi_CheckWmErrcode(WM_APIID_READ_STATUS, WM_ReadStatus(&WM_WORK->status));
             MBi_CheckWmErrcode(WM_APIID_INDICATION, WM_SetIndCallback(MBi_ParentCallback));
             MBi_CheckWmErrcode(WM_APIID_SET_LIFETIME,
-                               WM_SetLifeTime(MBi_ParentCallback, 0xFFFF, 0x28, 5));
+                               WM_SetLifeTime(MBi_ParentCallback, 0xFFFF, 40, 5));
             return;
         }
         WM_WORK->userCallback(0x100, arg);
@@ -368,7 +368,7 @@ static inline void RecordScannedParent(WmWork *const w, WmStartScanCallback *con
             return;
         }
     }
-    if (i < 0x10) {
+    if (i < 16) {
         w->parentCount = i + 1;
         MI_CpuCopy16(cb, &tbl[i].scan, 0xb8);
         DC_InvalidateRange(&w->parents[i], 0xc0);
@@ -418,7 +418,7 @@ void MBi_ChildCallback(void *arg) {
             w->userCallback(0x15, arg);
             MBi_CheckWmErrcode(WM_APIID_READ_STATUS, WM_ReadStatus(&w->status));
             MBi_CheckWmErrcode(WM_APIID_SET_LIFETIME,
-                               WM_SetLifeTime(MBi_ChildCallback, 0xffff, 0x28, 5));
+                               WM_SetLifeTime(MBi_ChildCallback, 0xffff, 40, 5));
             return;
         }
         w->userCallback(0x100, arg);
@@ -430,7 +430,7 @@ void MBi_ChildCallback(void *arg) {
             if (SCAN_PARAM->channel == 0)
                 SCAN_PARAM->channel = 1;
             if (SCAN_PARAM->maxChannelTime == 0)
-                SCAN_PARAM->maxChannelTime = 0xc8;
+                SCAN_PARAM->maxChannelTime = 200;
             SCAN_PARAM->bssid[0] = 0xffff;
             SCAN_PARAM->bssid[1] = 0xffff;
             SCAN_PARAM->bssid[2] = 0xffff;
@@ -616,7 +616,7 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
             }
             i++;
             *(dst++) = c;
-        } while (i < 0xa);
+        } while (i < 10);
     }
     {
         u16 *dst = (u16 *)wm->gname;
@@ -629,7 +629,7 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
             data_0209a084 = ptr + 1;
             j++;
             *(dst++) = *ptr;
-        } while (j < 0x10);
+        } while (j < 16);
     }
     MI_CpuCopy8(user, &mb->common.user, sizeof(MBUserInfo));
     wm->parentMaxSize = 0x100;
@@ -648,8 +648,8 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
         hdr->tgid = tgid;
         hdr->entryFlag = 1;
         hdr->multiBootFlag = 0;
-        hdr->beaconPeriod = (MBi_GetBeaconPeriodDispersion() + 0xc8);
-        hdr->maxEntry = 0xf;
+        hdr->beaconPeriod = (MBi_GetBeaconPeriodDispersion() + 200);
+        hdr->maxEntry = 15;
     }
     wm->mpSending = 0;
     wm->initialized = 0;
@@ -695,7 +695,7 @@ int MBi_StartCommon(void) {
     WM_WORK->childBitmap = 0;
     WM_WORK->resetting = 0;
     *(short *)(data_020a9db4 + 0x1e48) = 0; /* in WmWork.pad_1e48: no reader here */
-    MBi_SetMaxScanTime(0xa);
+    MBi_SetMaxScanTime(10);
     do {
         ret = WM_Initialize(WM_WORK->wmSysBuf, WM_WORK->stateCallback, data_020a9db0);
     } while (ret == 4);
@@ -737,7 +737,7 @@ int MB_StartParent(int channel) {
     mbc->req_data_piece_size = WM_WORK->childMaxSize - 2;
     mbc->req_data_piece_num = 30 / (WM_WORK->childMaxSize - 2);
 
-    for (i = 0; i < 0xf; i++) {
+    for (i = 0; i < 15; i++) {
         pPwork->p_comm_state[i] = 0;
         pPwork->fileid_of_child[i] = -1;
     }
@@ -756,7 +756,7 @@ int MB_StartParent(int channel) {
     WM_WORK->sendBufSize = (WM_WORK->parentParam.parentMaxSize + 0x23) & ~0x1f;
 
     WM_WORK->parentParam.childMaxSize = WM_WORK->childMaxSize;
-    WM_WORK->recvBufSize = (((WM_WORK->parentParam.childMaxSize + 0xe) * 0xf + 0x29) & ~0x1f) << 1;
+    WM_WORK->recvBufSize = (((WM_WORK->parentParam.childMaxSize + 0xe) * 15 + 0x29) & ~0x1f) << 1;
 
     MB_InitSendGameInfoStatus();
     result = MBi_StartCommon();

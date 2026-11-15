@@ -313,7 +313,7 @@ s32 dScMgSound_c::InitResources() {
     DealNotes();
     mTries = 3;
     mState = 1;
-    mIntroTimer = 0x20;
+    mIntroTimer = 32;
     Mg_ResetRecordBannerPos();
     Mg_ShowBanner(0xd, 0x80, 0xa8, 1, -1, 0xd);
     mHudScore = 0;
@@ -374,7 +374,7 @@ s32 dScMgSound_c::Behavior() {
                     mPromptEnabled = 0;
                 } else {
                     mState = 3;
-                    mResultTimer = 0x20;
+                    mResultTimer = 32;
                     RevealUnmatched();
                 }
             }
@@ -450,7 +450,7 @@ void dScMgSound_c::StartRound(int mode) {
     mTries = 3;
     DealNotes();
 
-    mIntroTimer = 0x20;
+    mIntroTimer = 32;
     Mg_ShowBanner(0xd, 0x80, 0xa8, 1, -1, 0xd);
 
     Sound::LoadAndSetMusic_Layer1(6);
@@ -482,7 +482,7 @@ void dScMgSound_c::ResetRound() {
         mPairNotes[pairIndex] = 0;
     }
 
-    for (popSlot = 0; popSlot < 0x1e; popSlot++) {
+    for (popSlot = 0; popSlot < 30; popSlot++) {
         mPops[popSlot].x = 0;
         mPops[popSlot].y = 0;
         mPops[popSlot].velX = 0;
@@ -683,7 +683,7 @@ void dScMgSound_c::Note_StateOpening(int idx) {
     mQueue[mQueueLen] = mNotes[idx].note + 1;
     mQueue[mQueueLen] |= idx << 8;
     mQueueLen++;
-    mQueueTimer = 0x20;
+    mQueueTimer = 32;
 
     SpawnPops(idx);
     note = mNotes[idx].note;
@@ -860,7 +860,7 @@ void dScMgSound_c::CheckPair() {
 void dScMgSound_c::CheckRoundOver() {
     if (mTries == 0) {
         mState = 2;
-        mResultTimer = 0x50;
+        mResultTimer = 80;
         return;
     }
     {
@@ -874,7 +874,7 @@ void dScMgSound_c::CheckRoundOver() {
         }
         if (hasAliveNote != 0)
             return;
-        mResultTimer = 0x50;
+        mResultTimer = 80;
         mState = 2;
     }
 }
@@ -896,7 +896,7 @@ void dScMgSound_c::SpawnPops(int noteSlot) {
                 mPops[popSlot].timer = 0;
                 if (mNotes[noteSlot].note == 7) {
                     if (spawnIndex >= 3) {
-                        mPops[popSlot].timer = 0x10;
+                        mPops[popSlot].timer = 16;
                     } else {
                         mPops[popSlot].timer = 8;
                     }
@@ -1165,7 +1165,7 @@ void dScMgSound_c::Pop06_Fly(int slot) {
     }
     mPops[slot].velY -= 0x40;
     mPops[slot].timer += 1;
-    if (mPops[slot].timer >= 0x28) {
+    if (mPops[slot].timer >= 40) {
         mPops[slot].timer = 0;
         mPops[slot].phase = 2;
         mPops[slot].dir = 0;
@@ -1302,7 +1302,7 @@ void dScMgSound_c::Pop09_Finish(int slot) {
             mPops[slot].scale = 0x800;
     }
     mPops[slot].timer += 1;
-    if (mPops[slot].timer >= 0x20) {
+    if (mPops[slot].timer >= 32) {
         mPops[slot].active = 0;
         mPops[slot].visible = 0;
     }
@@ -1343,7 +1343,7 @@ void dScMgSound_c::Pop10_Finish(int slot) {
             mPops[slot].scale = 0x800;
     }
     mPops[slot].timer += 1;
-    if (mPops[slot].timer >= 0x20) {
+    if (mPops[slot].timer >= 32) {
         mPops[slot].active = 0;
         mPops[slot].visible = 0;
     }
@@ -1382,7 +1382,7 @@ void dScMgSound_c::Pop11_Finish(int slot) {
             mPops[slot].scale = 0xa80;
     }
     mPops[slot].timer += 1;
-    if (mPops[slot].timer >= 0x18) {
+    if (mPops[slot].timer >= 24) {
         mPops[slot].active = 0;
         mPops[slot].visible = 0;
     }
@@ -1423,7 +1423,7 @@ void dScMgSound_c::Pop12_Finish(int slot) {
             mPops[slot].scale = 0xd80;
     }
     mPops[slot].timer += 1;
-    if (mPops[slot].timer >= 0x18) {
+    if (mPops[slot].timer >= 24) {
         mPops[slot].active = 0;
         mPops[slot].visible = 0;
     }

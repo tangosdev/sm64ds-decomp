@@ -107,7 +107,7 @@ int daObjWc_Obj04_c::Behavior() {
         break;
 
     case 1: {
-        if (mStateTimer > 0x168) {
+        if (mStateTimer > 360) {
             mVisible = mStateTimer & 1;
         }
         mStateTimer++;

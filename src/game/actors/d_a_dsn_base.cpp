@@ -20,8 +20,7 @@
  * - UpdateDropShadow keeps the early `s32 *clipRadius` and the braced
  *   mClipRadius clamp. An if-clamp in that spot is a 64-word DIFF.
  *   Dropping the pointer and shifting mClipRadius directly is a 1-word
- *   DIFF. dActor_c::DropShadowScaleXYZ with Fix12<int> by value
- *   size-DIFFs 0x120 -> 0x134; the scalar extern stays.
+ *   DIFF.
  * - StateSlam keeps `int isDosun` and `if (isDosun != 0)`.
  *   Comparing actorID in the if size-DIFFs 0xf0 -> 0xe4. Combining
  *   dustPos.y into `mPosY + 0x3c000` size-DIFFs 0xf0 -> 0xec.
@@ -139,7 +138,7 @@ void daDsnBase_c::StateRecover() {
     int timeLeft = DecIfAbove0_Byte(&self->timer);
     if (timeLeft == 0) {
         self->state = 0;
-        self->timer = 0x28;
+        self->timer = 40;
     }
 }
 
@@ -152,7 +151,7 @@ void daDsnBase_c::StateRest() {
     self->state = 4;
     unsigned int roll = RandomIntInternal(&data_0209e650.value);
     unsigned int rollHigh = roll >> 16;
-    self->timer = (rollHigh % 10 + 0x14);
+    self->timer = (rollHigh % 10 + 20);
 }
 
 /* State 2, the slam. Integrates the fall at 0x4000 a frame; on reaching the
@@ -170,7 +169,7 @@ void daDsnBase_c::StateSlam() {
     mPosY = cycle->groundY;
     mVertSpeed = 0;
     cycle->state = 3;
-    cycle->timer = 0xa;
+    cycle->timer = 10;
     int isDosun = (actorID == kDosunActorID);
     if (isDosun != 0) {
         HugeLandingDust(true);
@@ -207,7 +206,7 @@ void daDsnBase_c::StateRise() {
         return;
     self->posY = self->riseY;
     self->state = 1;
-    self->timer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 0x1e + 0xa);
+    self->timer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 30 + 10);
 }
 
 /* The per-frame shadow refresh both Behaviors run after the state step.
@@ -331,7 +330,7 @@ s32 daDsnBase_c::Init() {
 
         cycle->riseY = mPosY + 0x190000;
         mPosY = cycle->groundY;
-        cycle->timer = 0x28;
+        cycle->timer = 40;
         mVertAccel = -0x4000;
         mTerminalVelocity = -0x3c000;
         mHorzSpeed = 0xc000;

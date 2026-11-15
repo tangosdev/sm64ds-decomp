@@ -159,13 +159,13 @@ int daWater_Hakidasi_c::State0() {
                     ring->mVertSpeed = 0x5000;
                     ring->mSpeedZ = 0;
                 }
-                mStateTimer = 0x50;
+                mStateTimer = 80;
             }
             hit = mPassedRing;
             if (hit != 0) {
                 if (mRingsPassed == 0) {
                     uid = hit->uniqueID;
-                    for (i = 0; i < 0x14; i++) {
+                    for (i = 0; i < 20; i++) {
                         u32 slot = mSpawnedIDs[i];
                         if (slot == uid) {
                             mMatchedSlot = i;
@@ -222,7 +222,7 @@ int daWater_Hakidasi_c::State0() {
         rewardPos.z = mPosZ;
         rewardPos.y = rewardPos.y - 0x64000;
         mRewardTimer++;
-        if (mRewardTimer > 0x1e) {
+        if (mRewardTimer > 30) {
             dActor_c::Spawn(0xb2, mStarID | 0x40, *(Vector3 *)&rewardPos, &mAngle, mAreaId, -1);
             mRingsPassed = 0xa;
         }
