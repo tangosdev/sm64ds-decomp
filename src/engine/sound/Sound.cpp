@@ -218,7 +218,7 @@ typedef struct SndRegTable {
     int counter;                 /* 0x00 - handed out as the unique id */
     unsigned char cursor;        /* 0x04 - round-robin cursor into entries */
     unsigned char pad5[3];
-    SndRegEntry entries[64];   /* 0x08 */
+    SndRegEntry entries[64];     /* 0x08 */
     SndRegEntry *buckets[16];    /* 0x508 - chain heads by id&0xf */
 
     int func_0201179c(int a1, int a2, const Vector3 *a3, short s1);

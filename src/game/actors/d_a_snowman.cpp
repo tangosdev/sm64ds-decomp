@@ -347,7 +347,8 @@ int daSnowman_c::StateMeltExecute() {
         ApproachLinear(this->mSinkOffsetY, -0x4000, 0x199);
         /* Every read of mStateTimer here is ldrh: it is counted down
            through DecIfAbove0_Short, which takes it unsigned. */
-        if ((u16)this->mStateTimer == 0) this->mStateTimer = 20;
+        if ((u16)this->mStateTimer == 0)
+            this->mStateTimer = 20;
         if (this->mScaleY < 0x50) {
             if (this->mCapPhase == 0) {
                 v.x = this->mPosX;

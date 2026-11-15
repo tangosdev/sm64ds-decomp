@@ -617,7 +617,7 @@ int dScMgMCarlo2_c::DrawCardValue(){
         total += sMCarlo2FaceCounts[i];
     roll = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     total = (total * roll) >> 0xc;
-    for(i=0;i<10;i++){
+    for (i = 0; i < 10; i++) {
         total -= sMCarlo2FaceCounts[i];
         if(total < 0){
             pick = i;

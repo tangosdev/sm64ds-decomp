@@ -6166,7 +6166,8 @@ int daPly_c::St_LevelEnter_Init() {
         mStateWork = 2;
         {
             int b = (gGameMode == 2);
-            if (b == 0) mStateWaitTimer = 30;
+            if (b == 0)
+                mStateWaitTimer = 30;
             else mStateWaitTimer = 0;
         }
         break;
@@ -6209,7 +6210,8 @@ int daPly_c::St_LevelEnter_Init() {
     case 17: {
         u8 st2 = mStateStep;
         if (st2 == 0x11) mStateTimer = 2;
-        else mStateTimer = 32;
+        else
+            mStateTimer = 32;
         mStateArg = 1;
         mVertAccel = 0;
         mStateWork = 5;
@@ -7175,7 +7177,7 @@ void daPly_c::func_ov002_020c9ac0() {
 int daPly_c::func_ov002_020c9b10() {
     mStateStep=0xe;
     this->SetAnim(0x47, 0, 0x1000, 0);
-    mStateTimer=20;
+    mStateTimer = 20;
     this->mHorzSpeed=0;
     this->mVertSpeed=0;
     return 0;
@@ -9562,7 +9564,8 @@ int daPly_c::func_ov002_020cec2c() {
     }
 
     thresh = 240;
-    if (flag != 0) thresh = 80;
+    if (flag != 0)
+        thresh = 80;
 
     if (GetHealth() <= 2) {
         mSurfaceSoundHandle =
@@ -13863,7 +13866,8 @@ int daPly_c::St_YoshiPower_Main() {
                         mStateTimer = 8;
                         if (mObjInMouth->actorID != 0x10d)
                             f2 = 0;
-                        if (f2 != 0) mStateTimer = 12;
+                        if (f2 != 0)
+                            mStateTimer = 12;
                         unk_6ee = 1;
                         break;
                     }

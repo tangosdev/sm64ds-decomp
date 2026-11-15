@@ -378,8 +378,7 @@ void daFish_c::StateTurnAbout() {
     this->mHorzSpeed =
         (((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x1fff) + 0x2000;
     this->mAnmModel.speed = 0x1000;
-    this->mWanderTimer =
-        ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 60);
+    this->mWanderTimer = ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 60);
     this->mState = 5;
 }
 

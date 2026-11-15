@@ -480,7 +480,8 @@ void daCoin_c::StateFollowTarget() {
         int *posY = &mPosY;
         *posY += 0xc8000;
     }
-    if (mDisappearTimer < 65) return;
+    if (mDisappearTimer < 65)
+        return;
     MarkForDestruction();
     mDisappearTimer = 0;
 }
@@ -752,7 +753,8 @@ int daCoin_c::Render()
     {
         /* blinks while the disappear timer is below 0x2d */
         unsigned short timer = mDisappearTimer;
-        if (timer < 45 && (timer & 1)) return 1;
+        if (timer < 45 && (timer & 1))
+            return 1;
     }
     if (!(flags & 0x10))
         mCommonModel1.Render(0);

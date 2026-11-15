@@ -93,8 +93,8 @@ void daPicGate_c::LoadMaterial() {
     {
         Ov080Mat *m2 = (Ov080Mat *)mTexRecord;
         G3_TexImageParam((GXTexFmt)((m2->param >> 26) & 7), GX_TEXGEN_NONE,
-                         (GXTexSizeS)((m2->param >> 20) & 7),
-                         (GXTexSizeT)((m2->param >> 23) & 7), GX_TEXREPEAT_NONE, GX_TEXFLIP_NONE,
+                         (GXTexSizeS)((m2->param >> 20) & 7), (GXTexSizeT)((m2->param >> 23) & 7),
+                         GX_TEXREPEAT_NONE, GX_TEXFLIP_NONE,
                          (GXTexPlttColor0)((m2->param >> 29) & 1), m2->texAddr);
     }
     {
@@ -111,8 +111,8 @@ void daPicGate_c::BuildGateMatrix() {
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68,
-        -(((unsigned char)(param1 & 15) + 1) * 0x64000) / 2 >> 3, 0, 0);
+    Matrix4x3_ApplyInPlaceToTranslation(
+        &data_020a0e68, -(((unsigned char)(param1 & 15) + 1) * 0x64000) / 2 >> 3, 0, 0);
     mMtx = data_020a0e68;
     MTX_Inverse43(&data_020a0e68, &data_020a0e68);
     mInvMtx = data_020a0e68;

@@ -647,8 +647,7 @@ void dScStage_c::VE_Update() {
         idx2 = gActivePlayerSlot;
         a = gTouchX[idx2 * 4];
         off2 = idx2 * 4;
-        if (((u8)(a - 8) < 240 && (u8)(gTouchY[off2] - 56) < 32) ||
-            IsButtonInputValid() != 0) {
+        if (((u8)(a - 8) < 240 && (u8)(gTouchY[off2] - 56) < 32) || IsButtonInputValid() != 0) {
             if (sSelectedMenuButton == 0) {
                 sMenuHighlightDelay = data_0208ee44 << 2;
             }
@@ -1172,21 +1171,17 @@ void dScStage_c::PS_Render() {
         }
         if (sPauseState == 1 && sCourseArrowsHidden == 0) {
             if (sPressedPauseArrow == 1) {
-                OAM::Render(0, &OAM::ARROW_POINTING_LEFT, 18, 96, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &OAM::ARROW_POINTING_LEFT, 18, 96, -1, -1, 0x1000, 0x1000, 0, -1);
                 OAM::RenderSub(&OAM::ARROW_POINTING_LEFT, 18, 16);
             } else {
-                OAM::Render(0, &OAM::ARROW_POINTING_LEFT, 20, 96, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &OAM::ARROW_POINTING_LEFT, 20, 96, -1, -1, 0x1000, 0x1000, 0, -1);
                 OAM::RenderSub(&OAM::ARROW_POINTING_LEFT, 20, 16);
             }
             if (sPressedPauseArrow == 2) {
-                OAM::Render(0, &OAM::ARROW_POINTING_RIGHT, 238, 96, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &OAM::ARROW_POINTING_RIGHT, 238, 96, -1, -1, 0x1000, 0x1000, 0, -1);
                 OAM::RenderSub(&OAM::ARROW_POINTING_RIGHT, 238, 16);
             } else {
-                OAM::Render(0, &OAM::ARROW_POINTING_RIGHT, 236, 96, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &OAM::ARROW_POINTING_RIGHT, 236, 96, -1, -1, 0x1000, 0x1000, 0, -1);
                 OAM::RenderSub(&OAM::ARROW_POINTING_RIGHT, 236, 16);
             }
         }
@@ -1242,45 +1237,44 @@ void dScStage_c::PS_Render() {
         if (sSelectedMenuButton == 3) {
             if (sBackButtonSelected == 0) {
                 if (GetOwnerLanguage() == 5) {
-                    OAM::Render(true, &OAM::TINY_STAR, 70, ((sSelectedMenuButton * 5) + 6) * 8,
-                                -1, -1, 0);
+                    OAM::Render(true, &OAM::TINY_STAR, 70, ((sSelectedMenuButton * 5) + 6) * 8, -1,
+                                -1, 0);
                 } else if (GetOwnerLanguage() == 3) {
-                    OAM::Render(true, &OAM::TINY_STAR, 78, ((sSelectedMenuButton * 5) + 6) * 8,
-                                -1, -1, 0);
+                    OAM::Render(true, &OAM::TINY_STAR, 78, ((sSelectedMenuButton * 5) + 6) * 8, -1,
+                                -1, 0);
                 } else {
-                    OAM::Render(true, &OAM::TINY_STAR, 86, ((sSelectedMenuButton * 5) + 6) * 8,
-                                -1, -1, 0);
+                    OAM::Render(true, &OAM::TINY_STAR, 86, ((sSelectedMenuButton * 5) + 6) * 8, -1,
+                                -1, 0);
                 }
             } else {
-                OAM::Render(true, &OAM::TINY_STAR, 206, ((sSelectedMenuButton * 5) + 6) * 8, -1,
-                            -1, 0);
+                OAM::Render(true, &OAM::TINY_STAR, 206, ((sSelectedMenuButton * 5) + 6) * 8, -1, -1,
+                            0);
             }
         } else {
-            OAM::Render(true, &OAM::TINY_STAR, 38, ((sSelectedMenuButton * 5) + 6) * 8, -1, -1,
-                        0);
+            OAM::Render(true, &OAM::TINY_STAR, 38, ((sSelectedMenuButton * 5) + 6) * 8, -1, -1, 0);
         }
         if (GetOwnerLanguage() == 5) {
-            OAM::Render(0, (OamAttr *)data_ov001_020abd98[sSelectedControllerMode], 128, 96, -1,
-                        -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020abd98[sSelectedControllerMode], 128, 96, -1, -1,
+                        0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 4) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac218[sSelectedControllerMode], 128, 96, -1,
-                        -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020ac218[sSelectedControllerMode], 128, 96, -1, -1,
+                        0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 3) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac64c[sSelectedControllerMode], 128, 96, -1,
-                        -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020ac64c[sSelectedControllerMode], 128, 96, -1, -1,
+                        0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 2) {
-            OAM::Render(0, (OamAttr *)data_ov001_020acb68[sSelectedControllerMode], 128, 96, -1,
-                        -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020acb68[sSelectedControllerMode], 128, 96, -1, -1,
+                        0x1000, 0x1000, 0, -1);
             return;
         }
-        OAM::Render(0, OAM::CONTROLLER_MODE_TEXTS[sSelectedControllerMode], 128, 96, -1, -1,
-                    0x1000, 0x1000, 0, -1);
+        OAM::Render(0, OAM::CONTROLLER_MODE_TEXTS[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                    0x1000, 0, -1);
         return;
     }
 
@@ -1730,8 +1724,7 @@ void dScStage_c::PS_Update() {
                         var_r0_2 = sp4;
                     }
                     if (var_r0_2 != 0) {
-                        if (((u8)(TOUCHP(sl2 * 4)->x - 200) < 56U) &&
-                            (TOUCHP(sl2 * 4)->y < 32U)) {
+                        if (((u8)(TOUCHP(sl2 * 4)->x - 200) < 56U) && (TOUCHP(sl2 * 4)->y < 32U)) {
                             sPauseDisplayedCourse = (sPauseDisplayedCourse + 1);
                             sPressedPauseArrow = 2;
                             var_fp = 1;
@@ -2432,9 +2425,8 @@ void dScStage_c::PS_Update() {
                     if (gTouchEdge[slot * 4] != 0)
                         t = 1;
                 }
-                if (t == 0 ||
-                    !((relx < firstw && (u8)(gTouchY[slot * 4] - 152) < 32) ||
-                      ((u8)(tx - 216) < 32 && (u8)(gTouchY[slot * 4] - 152) < 32))) {
+                if (t == 0 || !((relx < firstw && (u8)(gTouchY[slot * 4] - 152) < 32) ||
+                                ((u8)(tx - 216) < 32 && (u8)(gTouchY[slot * 4] - 152) < 32))) {
                     if (IsButtonInputValid() == 0)
                         return;
                 }
@@ -2443,8 +2435,7 @@ void dScStage_c::PS_Update() {
                     sBackButtonSelected = 0;
                 } else {
                     u8 s4 = gActivePlayerSlot;
-                    if ((u8)(gTouchX[s4 * 4] - 216) < 32 &&
-                        (u8)(gTouchY[s4 * 4] - 152) < 32) {
+                    if ((u8)(gTouchX[s4 * 4] - 216) < 32 && (u8)(gTouchY[s4 * 4] - 152) < 32) {
                         sBackButtonSelected = 1;
                     }
                 }
@@ -3079,17 +3070,13 @@ void dScStage_c::RenderVsModeNewStar() {
     data_0209f308 = timer - data_0208ee44;
     if (data_0209f308 % 60 >= 10) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, (OamAttr *)data_ov002_0210cfd0, 128, 48, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, (OamAttr *)data_ov002_0210cfd0, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d050, 128, 48, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, (OamAttr *)data_ov002_0210d050, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d0e8, 128, 48, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, (OamAttr *)data_ov002_0210d0e8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d188, 128, 48, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, (OamAttr *)data_ov002_0210d188, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
             OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         if (data_0209f1f4 != 0)
@@ -3133,8 +3120,8 @@ void dScStage_c::RenderVsModeCountdown() {
             OAM::Render(0, &data_ov002_0210d1c8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
             OAM::Render(0, &data_ov002_0210d210, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
-        OAM::Render(0, (OamAttr *)data_ov002_0210ca0c[3 - data_0209f2bc], 128, 80, -1, -1,
-                    0x1000, 0x1000, 0, -1);
+        OAM::Render(0, (OamAttr *)data_ov002_0210ca0c[3 - data_0209f2bc], 128, 80, -1, -1, 0x1000,
+                    0x1000, 0, -1);
         return;
     }
     if (data_0209f304 == 0)

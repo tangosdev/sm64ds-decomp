@@ -217,8 +217,7 @@ void daBtfly_c::State5()
         return;
     }
 
-    if (mStateTimer > 110 && DistToCPlayer() < 0xc8000 &&
-        (unsigned char)(mKind + 0xff) <= 1) {
+    if (mStateTimer > 110 && DistToCPlayer() < 0xc8000 && (unsigned char)(mKind + 0xff) <= 1) {
         mHorzSpeed = 0;
         mStateTimer = 0;
         mState = 6;

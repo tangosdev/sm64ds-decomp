@@ -17,7 +17,8 @@ void func_0206c9f4(struct Stream *self, unsigned int n)
 {
     while (n != 0) {
         int chunk = 16;
-        if (n < 16) chunk = n;
+        if (n < 16)
+            chunk = n;
         self->fn(self, data_02086880, chunk);
         n -= chunk;
     }

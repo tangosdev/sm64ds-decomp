@@ -1287,7 +1287,8 @@ void dScMgTeresa_c::AnimateBoo(int i)
 {
     if (mBoos[i].mState >= 6) return;
     mBoos[i].mAnimTimer++;
-    if (mBoos[i].mAnimTimer < 15) return;
+    if (mBoos[i].mAnimTimer < 15)
+        return;
     mBoos[i].mAnimTimer = 0;
     mBoos[i].mFrame++;
     if (mBoos[i].mFrame >= 3)

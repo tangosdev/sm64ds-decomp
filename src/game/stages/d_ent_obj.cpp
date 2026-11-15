@@ -292,8 +292,7 @@ void UnknownVsPlayer::MoveChoosePose() {
     BTP_File *textureFile;
     if (data_ov075_0211d380 < 0) {
         data_ov075_0211d380 =
-            data_ov075_0211b524[((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) %
-                                6];
+            data_ov075_0211b524[((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) % 6];
     }
     if (data_0209b2f0[mPlayerNo] != 0) {
         mModel.SetAnim(*(BCA_File *)data_ov075_0211d3ac.filePtr, 0, 0, 0x1000, 0);
@@ -748,8 +747,8 @@ int dEntObj_c::GetStandingX(int playerNo) {
 /* Rebuild the projection and the view from the camera eye and target. */
 void dEntObj_c::SetCamera() {
     Matrix4x3 view;
-    G3i_PerspectiveW_(data_02082614[10], data_02082614[11], 0x1555, 0x1000, 0x1388000, 0x1000,
-                      true, 0);
+    G3i_PerspectiveW_(data_02082614[10], data_02082614[11], 0x1555, 0x1000, 0x1388000, 0x1000, true,
+                      0);
     G3i_LookAt_((Vector3 *)&mCamPosX, (Vector3 *)&data_ov075_0211c660, (Vector3 *)&mCamTargetX,
                 true, &view);
     CopyToViewMat(&view);

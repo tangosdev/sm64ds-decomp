@@ -1556,7 +1556,8 @@ void daStar_c::StateSpinAndEnd() {
             UntrackStar(mMarkerSlot);
         }
         mBits.visible = 0;
-        if (mSeqTimer < 100) return;
+        if (mSeqTimer < 100)
+            return;
         StopCollectSoundObj();
         if ((int)(gGameMode == 1) != 0) {
             MarkForDestruction();

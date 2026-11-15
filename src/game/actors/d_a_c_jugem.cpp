@@ -320,7 +320,8 @@ int daC_Jugem_c::StateBobMain()
     mPrevAngleY = mAngleY;
     {
         int a1 = 0x4000;
-        if (mTimer >= 75) a1 = 0x8000;
+        if (mTimer >= 75)
+            a1 = 0x8000;
         ApproachLinear(mHorzSpeed, a1, 0x1000);
     }
 
@@ -384,20 +385,18 @@ int daC_Jugem_c::StateGuideMain()
     case 238:
         data_0209d66c = 1;
         break;
-    case 240:
-        {
-            s16 a = mSavedAngleY;
-            s16 b;
-            p->mAngleX = 0;
-            p->mAngleY = a;
-            p->mAngleZ = 0;
-            b = mSavedAngleY;
-            p->mPrevAngleX = 0;
-            p->mPrevAngleY = b;
-            p->mPrevAngleZ = 0;
-            SetState(data_ov085_021307f0);
-        }
-        break;
+    case 240: {
+        s16 a = mSavedAngleY;
+        s16 b;
+        p->mAngleX = 0;
+        p->mAngleY = a;
+        p->mAngleZ = 0;
+        b = mSavedAngleY;
+        p->mPrevAngleX = 0;
+        p->mPrevAngleY = b;
+        p->mPrevAngleZ = 0;
+        SetState(data_ov085_021307f0);
+    } break;
     }
     return 1;
 }
@@ -423,7 +422,8 @@ int daC_Jugem_c::StateTurnMain()
         p->mAngleZ = 0;
         mTimer += 1;
     }
-    if (mTimer == 90) func_ov002_020c3f18(p);
+    if (mTimer == 90)
+        func_ov002_020c3f18(p);
     {
         int s = mTimer;
         if (s > 0x57 && s < 0x5b)

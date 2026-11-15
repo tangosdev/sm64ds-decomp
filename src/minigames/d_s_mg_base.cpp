@@ -3024,8 +3024,10 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
     if (d[5] != 0) {
         int r5;
         int k;
-        if (mode == 0) x -= 20;
-        else if (mode == 1) x -= 40;
+        if (mode == 0)
+            x -= 20;
+        else if (mode == 1)
+            x -= 40;
         r5 = 5;
         for (k = 0; k < 5; k++) {
             Mg_RenderSpriteOnNoMtx(sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
@@ -3035,8 +3037,10 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
     } else if (d[4] != 0) {
         int r5;
         int k;
-        if (mode == 0) x -= 16;
-        else if (mode == 1) x -= 32;
+        if (mode == 0)
+            x -= 16;
+        else if (mode == 1)
+            x -= 32;
         r5 = 4;
         for (k = 0; k < 4; k++) {
             Mg_RenderSpriteOnNoMtx(sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
@@ -3046,8 +3050,10 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
     } else if (d[3] != 0) {
         int r5;
         int k;
-        if (mode == 0) x -= 12;
-        else if (mode == 1) x -= 24;
+        if (mode == 0)
+            x -= 12;
+        else if (mode == 1)
+            x -= 24;
         r5 = 3;
         for (k = 0; k < 3; k++) {
             Mg_RenderSpriteOnNoMtx(sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
@@ -3058,7 +3064,8 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
         int r5;
         int k;
         if (mode == 0) x -= 8;
-        else if (mode == 1) x -= 16;
+        else if (mode == 1)
+            x -= 16;
         r5 = 2;
         for (k = 0; k < 2; k++) {
             Mg_RenderSpriteOnNoMtx(sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);

@@ -610,8 +610,8 @@ s32 dScMgSlot3_c::Render() {
 
     if (mReelDrawY > 0) {
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 128,
-                        mReelDrawY + 0x10, -1, 2, 0x1000, 0x1000, 0, 1);
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 128, mReelDrawY + 0x10,
+                        -1, 2, 0x1000, 0x1000, 0, 1);
         }
         for (i = 0; i < 3; i++) {
             OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mNextWinSymbol * 3 + i], 128,
@@ -619,8 +619,8 @@ s32 dScMgSlot3_c::Render() {
         }
     } else {
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 128, 96, -1, 2,
-                        0x1000, 0x1000, 0, 1);
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 128, 96, -1, 2, 0x1000,
+                        0x1000, 0, 1);
         }
     }
 

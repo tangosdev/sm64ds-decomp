@@ -374,14 +374,16 @@ void dWipe_c::BuildStarTable() {
         d64 = dur;
         step = (int)(0x100000000LL / d64);
         while (pos < 0) {
-            if (i >= 192) break;
+            if (i >= 192)
+                break;
             pos += step;
             i++;
         }
 
         v = (int)(d64 * ((s64)pos * 0x532DLL) / 0x10000000000LL);
         while (pos < 0xB0E00) {
-            if (i >= 192) break;
+            if (i >= 192)
+                break;
             v += 0x53;
             a = (0x8000 - v) / 256;
             if (a < 0) a = 0;
@@ -394,7 +396,8 @@ void dWipe_c::BuildStarTable() {
 
         v = (int)((s64)wipeInterp * 0x0F37292CLL / 0x100000000LL);
         while (pos < 0x11E200) {
-            if (i >= 192) break;
+            if (i >= 192)
+                break;
             v -= 0x160;
             a = (0x8000 - v) / 256;
             if (a < 0) a = 0;
@@ -406,7 +409,8 @@ void dWipe_c::BuildStarTable() {
         }
 
         while (pos < 0x161D00) {
-            if (i >= 192) break;
+            if (i >= 192)
+                break;
             v += 0x53;
             a = (0x8000 - v) / 256;
             if (a < 0) a = 0;
@@ -419,7 +423,8 @@ void dWipe_c::BuildStarTable() {
 
         w = 0;
         while (pos < 0x1CF200) {
-            if (i >= 192) break;
+            if (i >= 192)
+                break;
             v += 0x53;
             w += 0x160;
             a = (0x8000 - v) / 256;

@@ -402,7 +402,8 @@ int daObjPowerUpItem_c::Render()
   if (f != 0) return 1;
   /* blinks while mLifeTimer is below 0x2d */
   unsigned char st = mLifeTimer;
-  if (st < 45 && (st & 1)) return 1;
+  if (st < 45 && (st & 1))
+      return 1;
   switch (mState) {
   case FLOWER_STATE_LAUNCHED:
       mCloseModel.Render(&mScale);

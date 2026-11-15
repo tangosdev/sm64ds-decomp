@@ -514,11 +514,11 @@ void Banner_StartSpin(MgBanner *e) {
 }
 
 void Banner_UpdateDrop(MgBanner *e) {
-    if (e->mTimer < 48){
+    if (e->mTimer < 48) {
         e->mTimer++;
         return;
     }
-    if (ApproachLinear2(e->mY, e->mTargetY, 16)){
+    if (ApproachLinear2(e->mY, e->mTargetY, 16)) {
         Banner_StartSpin(e);
     }
 }

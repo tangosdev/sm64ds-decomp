@@ -93,12 +93,7 @@ enum { kMeshScale = 0x199 };
 
 /* Pitch-to-speed scale, and the travel clamp along the ship.
  * 1279.0 and -50.0 in 20.12. kFixRound is the 0.5 added before >> 12. */
-enum {
-    kSlideScale = 140,
-    kHorzPosMax = 0x4ff000,
-    kHorzPosMin = -0x32000,
-    kFixRound = 0x800
-};
+enum { kSlideScale = 140, kHorzPosMax = 0x4ff000, kHorzPosMin = -0x32000, kFixRound = 0x800 };
 
 /* How close a player has to be, and how fast the crate has to be
  * moving, before the rolling sound would start. 2000.0 and 3.0. */

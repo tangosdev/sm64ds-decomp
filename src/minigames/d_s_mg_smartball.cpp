@@ -760,8 +760,8 @@ void cMgSmartball_board_c::Update() {
     }
 
     for (k = 0; k < 9; k++) {
-        Mg_RenderSpriteBoth(sSmartballCellRowSprites[sSmartballCellOrder[k]], k * 24 + 16, 120,
-                            -1, 1);
+        Mg_RenderSpriteBoth(sSmartballCellRowSprites[sSmartballCellOrder[k]], k * 24 + 16, 120, -1,
+                            1);
     }
 }
 

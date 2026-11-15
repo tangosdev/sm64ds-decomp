@@ -789,7 +789,8 @@ void daTrs_c::func_ov063_021172a8() {
         int state = this->mState;
         if (state == 7) return;
         if (state == 6) {
-            if (this->mRelocateTimer > 90) return;
+            if (this->mRelocateTimer > 90)
+                return;
         }
         ApproachTargetOpacityAndUpdateScale();
     }
@@ -1537,8 +1538,10 @@ void daTrs_c::func_ov063_02118b98() {
     Stop();
 
     v = this->mStateTimer;
-    if (v > 15) goto bigblock;
-    if (v != 15) return;
+    if (v > 15)
+        goto bigblock;
+    if (v != 15)
+        return;
 
     {
         int v2 = this->mDeathMode;
@@ -1558,7 +1561,8 @@ void daTrs_c::func_ov063_02118b98() {
 
 bigblock:
     if (this->mDeathMode != 0) goto special;
-    if (v <= 60) return;
+    if (v <= 60)
+        return;
     if (this->mDistToPlayer >= 0x258000) return;
     {
         dActor_c *r1 = 0;

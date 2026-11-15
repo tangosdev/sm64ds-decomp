@@ -318,7 +318,8 @@ void daObjSwitch_c::StateIdleInit() {
             p = dActor_c::FindWithActorID(0xc, p);
         }
     }
-    if (ok != 0) mMusicVolume = 127;
+    if (ok != 0)
+        mMusicVolume = 127;
 }
 
 void daObjSwitch_c::StateIdleMain() {

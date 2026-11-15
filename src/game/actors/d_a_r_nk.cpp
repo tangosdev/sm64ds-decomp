@@ -423,13 +423,13 @@ void daRNk_c::func_ov062_0211a740()
         if (this->mIsTalkingToMario != 0) {
             if (data_0209d684 == 1) {
                 this->mState = daRNk_c::STATE_RACE;
-                this->mStateTimer = 50;   /* 50 frames; nothing in STATE_RACE reads it */
+                this->mStateTimer = 50; /* 50 frames; nothing in STATE_RACE reads it */
                 SET_ANIM(this, ANIM_IDLE, kAnimLoop);
                 this->unk_3aa = 0;
                 this->mIsTalkingToMario = 0;
             } else if (data_0209d684 == 2) {
                 this->mState = daRNk_c::STATE_WAIT_FOR_PLAYER;
-                this->mStateTimer = 60;   /* 60 frames before he speaks again */
+                this->mStateTimer = 60; /* 60 frames before he speaks again */
                 this->mPlayer->HasFinishedTalking();
                 SET_ANIM(this, ANIM_IDLE, kAnimLoop);
                 this->mIsTalkingToMario = 0;

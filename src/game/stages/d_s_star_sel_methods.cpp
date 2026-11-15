@@ -286,8 +286,7 @@ void dScStarSel_c::UpdateCharacterSelect() {
                 int ri = gActivePlayerSlot;
                 if (((unsigned short)((((u8(*)[4])gTouchHeld)[gActivePlayerSlot][2] - mCharX[i]) +
                                       24)) < 48) {
-                    if (((unsigned short)((((u8(*)[4])gTouchHeld)[ri][3] - mCharY[i]) + 24)) <
-                        43) {
+                    if (((unsigned short)((((u8(*)[4])gTouchHeld)[ri][3] - mCharY[i]) + 24)) < 43) {
                         mCursorTarget = 1;
                         mCharCursor = GetCharacterSlot(i);
                         data_02092128[0] = i;
@@ -483,20 +482,20 @@ s32 dScStarSel_c::Render() {
 
         switch (data_0209caa0.file.mCharacter) {
         case 0:
-            OAM::Render(1, &OAM::PLAYER_SELECT_MARIO, 128, mFaceY, -1, -1, mFaceScaleX,
-                        mFaceScaleY, (u16)mFaceAngle, -1);
+            OAM::Render(1, &OAM::PLAYER_SELECT_MARIO, 128, mFaceY, -1, -1, mFaceScaleX, mFaceScaleY,
+                        (u16)mFaceAngle, -1);
             break;
         case 1:
-            OAM::Render(1, &OAM::PLAYER_SELECT_LUIGI, 128, mFaceY, -1, -1, mFaceScaleX,
-                        mFaceScaleY, (u16)mFaceAngle, -1);
+            OAM::Render(1, &OAM::PLAYER_SELECT_LUIGI, 128, mFaceY, -1, -1, mFaceScaleX, mFaceScaleY,
+                        (u16)mFaceAngle, -1);
             break;
         case 2:
-            OAM::Render(1, &OAM::PLAYER_SELECT_WARIO, 128, mFaceY, -1, -1, mFaceScaleX,
-                        mFaceScaleY, (u16)mFaceAngle, -1);
+            OAM::Render(1, &OAM::PLAYER_SELECT_WARIO, 128, mFaceY, -1, -1, mFaceScaleX, mFaceScaleY,
+                        (u16)mFaceAngle, -1);
             break;
         case 3:
-            OAM::Render(1, &OAM::PLAYER_SELECT_YOSHI, 128, mFaceY, -1, -1, mFaceScaleX,
-                        mFaceScaleY, (u16)mFaceAngle, -1);
+            OAM::Render(1, &OAM::PLAYER_SELECT_YOSHI, 128, mFaceY, -1, -1, mFaceScaleX, mFaceScaleY,
+                        (u16)mFaceAngle, -1);
             for (i = 0; i < 3; i++) {
                 pressY = 0;
                 if (mPickedChar == i && mPickPressTimer != 0) {
@@ -633,8 +632,8 @@ s32 dScStarSel_c::Behavior() {
                     rec = ((u8(*)[4])gTouchHeld)[idx];
                     tx = rec[2];
                     do {
-                        if ((u8)(tx - mPlateX[i] + 8) < 16 &&
-                            ((u8(*)[4])gTouchHeld)[idx][3] < 40 && ((mPlateMask >> i) & 1)) {
+                        if ((u8)(tx - mPlateX[i] + 8) < 16 && ((u8(*)[4])gTouchHeld)[idx][3] < 40 &&
+                            ((mPlateMask >> i) & 1)) {
                             hit = (val != 0 && ((u8(*)[4])gTouchEdge)[idx][0] != 0);
                             if (hit != 0 || cur != i) {
                                 mPlatePressTimer = data_0208ee44 * 3;

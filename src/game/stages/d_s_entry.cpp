@@ -442,8 +442,8 @@ void dScEntry_c::RenderPlayerScores() {
                 int pid = EntryPlayerIndex(i);
                 OAM::Render(zA, data_ov075_0211c7c0, xbase + i * stride, yIcon, minus1, minus1,
                             scale, scale, zA, minus1);
-                p = (int *)OAM::Render(zC, (OamAttr *)data_ov075_0211c8b0,
-                                       xbase + 28 + i * stride, yIcon, minus1, minus1, scale, zC);
+                p = (int *)OAM::Render(zC, (OamAttr *)data_ov075_0211c8b0, xbase + 28 + i * stride,
+                                       yIcon, minus1, minus1, scale, zC);
                 if (p != 0) {
                     int *q = p + 1;
                     int val = *q;
@@ -462,8 +462,8 @@ void dScEntry_c::RenderPlayerScores() {
                     tens = rem / 10;
                     if (hundreds != 0) {
                         p = (int *)OAM::Render(zD, (OamAttr *)data_ov075_0211c8b0,
-                                               xbase + 20 + i * stride, yNum, minus1, minus1,
-                                               scale, zD);
+                                               xbase + 20 + i * stride, yNum, minus1, minus1, scale,
+                                               zD);
                         if (p != 0) {
                             int *q = p + 1;
                             int val = *q;

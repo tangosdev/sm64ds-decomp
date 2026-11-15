@@ -760,8 +760,8 @@ s32 dScMiniGm_c::Render()
             else
                 scale = (((0x12 - t) << 12) / 16) + 0x1000;
             if (mArrowBobPhase < 0x20)
-                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[0], 80 - mArrowBobPhase / 2, 96, -1,
-                            0, scale, 0);
+                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[0], 80 - mArrowBobPhase / 2, 96, -1, 0,
+                            scale, 0);
             else
                 OAM::Render(1, (OamAttr *)sMiniGmPageArrows[0], 80 - (64 - mArrowBobPhase) / 2,
                             0x60, -1, 0, scale, 0);
@@ -774,8 +774,8 @@ s32 dScMiniGm_c::Render()
             else
                 scale = (((0x12 - t) << 12) / 16) + 0x1000;
             if (mArrowBobPhase < 0x20)
-                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[1], mArrowBobPhase / 2 + 224, 96, -1,
-                            0, scale, 0);
+                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[1], mArrowBobPhase / 2 + 224, 96, -1, 0,
+                            scale, 0);
             else
                 OAM::Render(1, (OamAttr *)sMiniGmPageArrows[1], (64 - mArrowBobPhase) / 2 + 224,
                             0x60, -1, 0, scale, 0);
