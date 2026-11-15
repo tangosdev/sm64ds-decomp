@@ -22,7 +22,11 @@ struct player_;
 #include "dBgW_KcMbg.h"
 
 struct dBgActor_c : dActor_c {
-    u8  pad_0d0[0x4];
+    /* The player holding this actor in its mouth. dActor_c ends at 0x0d0, so
+       this word is dBgActor_c's own, as dEnemyBase_c's mEatingPlayer at 0x0d0
+       is that base's; daObjBlockS_c reads and clears it (STATE_SPIT_OUT,
+       STATE_IN_MOUTH). */
+    daPly_c *mEatingPlayer;         /* 0x0d0 */
     dExtSimpleModel_c mModel;       /* 0x0d4 */
     dBgW_KcMbg mMeshCollider;       /* 0x124 */
     /* Where the collider sits: mModel's matrix with the actor's position

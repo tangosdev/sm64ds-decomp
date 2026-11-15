@@ -34,15 +34,10 @@
  * helpers (reset, hit handling, wall test, slide step, shadow, collider
  * transform, model matrix) are commented where they are defined.
  *
- * Leftover: Crate_SetState at 0x02138b28 (size 0x48) stays a free function.
- *   It takes the crate plus an int, already has a recovered name, and was
- *   not turned into a method. Call sites stay Crate_SetState(this, state).
  * Leftover: no member conversion was reverted. Each of the 25 helpers
  *   matched at its original size.
  * Leftover: func_ov002_020e496c, func_ov002_020ef228, func_ov002_020f02c8,
  *   func_ov002_020f030c and func_ov002_020f035c stay calls into ov002.
- * Leftover: the word at 0x0d0 (mEatingPlayer) lives in dBgActor_c's pad and is
- *   reached by the BLOCKS_EATING_PLAYER macro below.
  * Leftover: mFlags bits 0x100 / 0x400 / 0x2000 / 0x4000 / 0x80000 / 0x4000000 and
  *   dCc_c flags bits 0x2000 / 0x8000 are not named in dActor_c.h / dCc_c.h;
  *   they are written as numbers and described by what reading them does.
@@ -55,9 +50,8 @@
  *   IsClsnInRangeOnScreen, the 0x199 passed to dBgW_KcMbg::SetFile, and what
  *   daPly_c::Hurt's trailing arguments select.
  * Leftover: SurfaceInfo_TestFlag0x20 is declared here (and at its
- *   definition) as taking int *, so its two callers still pass the floor
- *   result's surface as `(int *)((char *)... + 4)`; the other reads use
- *   dBgPi::surface.
+ *   definition) as taking int *, so its two callers cast the floor result's
+ *   dBgPi::surface to it.
  * Leftover: the state names STATE_IN_MOUTH and STATE_SPIT_OUT rest on how the
  *   handlers use mFlags bit 0x80000 and the 0x20000 / 0x40000 bits (nothing
  *   in this file sets 0x80000); mSlideSoundHandle rests on PlayLong's id
@@ -129,49 +123,30 @@ enum {
     CC_HIT_FIRE       = 0x40000
 };
 
-/* The word at 0x0d0 is dBgActor_c's pad, not a member of this class; the
-   other actor headers name it mEatingPlayer. */
-#define BLOCKS_EATING_PLAYER(o) (*(daPly_c **)((char *)(o) + 0xd0))
-
 extern u32 gNextActorUpdateMask;
 extern ResourceDescriptor data_ov098_0213c4c8;
 extern "C" u8 DecIfAbove0_Byte(u8 *p);
-extern "C" void *d_a_obj_block_sNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
-extern "C" u32 d_a_obj_block_sNewCleanParticleHold(u32 a, u32 b, int c, int d, int e,
-                                                   const Vector3_16f *v);
 namespace Particle {
 void RunningSlidingDustAt(s32, s32, s32);
 }
-extern "C" void d_a_obj_block_sRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
-extern "C" void hold_d_a_obj_block_s(char *thiz, int f, char *m, int fix, short s, int blk);
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(char *thiz, char *actor, int b, int d, void *v, int f);
-
 int SurfaceInfo_TestFlag0x20(int *p);
 int func_ov002_020ef228(dBgCh_Actr *c, dActor_c *other);
 int func_ov002_020f030c(int x);
 extern "C" int func_ov002_020e496c(daPly_c *c);
 
-extern "C" void d_a_obj_block_sPlayLongHold(u32 a, u32 b, u32 c, const Vector3 *pos, u32 e);
-
-extern "C" s16 atan2_hold_d_a_obj_block_s_1(s32 y, s32 x);
 extern "C" void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern "C" void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" int Math_Function_0203b14c(int *dst, int a, int b, int c, int d);
 
-void Crate_SetState(daObjBlockS_c *c, int i);
-
-enum Bool { FALSE, TRUE };
 
 /* The state table: data_ov098_0213c878 holds one {enter, update} pair of
-   member pointers per state, indexed by mState (the word at 0x560). The host
-   struct is an opaque stand-in for daObjBlockS_c so the member-pointer calls
-   stay plain `this`-adjusted calls. */
-struct BlockSStateHost;
-typedef void (BlockSStateHost::*BlockSStateFn)();
-struct BlockSStateEntry { BlockSStateFn fn[2]; };
+   member pointers per state, indexed by mState. */
+typedef void (daObjBlockS_c::*BlockSStateFn)();
+struct BlockSStateEntry {
+    BlockSStateFn enter;
+    BlockSStateFn update;
+};
 extern BlockSStateEntry data_ov098_0213c878[];
-struct BlockSStateHost { char pad[0x560]; int idx; };
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
@@ -214,7 +189,7 @@ void daObjBlockS_c::UpdateBroken() {
     ResetToHome();
     unsigned b = ((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
     if (b != 0 && DistToCPlayer() > 0x7d0000) {
-        Crate_SetState(this, daObjBlockS_c::STATE_IDLE);
+        SetState(STATE_IDLE);
         return;
     }
     mdCcAcPos_c1.Clear();
@@ -250,7 +225,7 @@ void daObjBlockS_c::UpdateInMouth() {
     t1 = t1 != 0;
 
     if (t1 != 0) {
-        Crate_SetState(this, daObjBlockS_c::STATE_SPIT_OUT);
+        SetState(STATE_SPIT_OUT);
     } else {
         int t2;
         t2 = flags & ACTOR_FLAG_YOSHI_MOUTH_A;
@@ -260,7 +235,7 @@ void daObjBlockS_c::UpdateInMouth() {
             t3 = flags & ACTOR_FLAG_YOSHI_MOUTH_B;
             t3 = t3 != 0;
             if (t3 == 0) {
-                Crate_SetState(this, daObjBlockS_c::STATE_BOUNCING);
+                SetState(STATE_BOUNCING);
             }
         }
     }
@@ -271,12 +246,12 @@ void daObjBlockS_c::UpdateInMouth() {
         t4 = flags2 & ACTOR_FLAG_YOSHI_MOUTH_A;
         t4 = t4 != 0;
         if (t4 == 0) {
-            daPly_c *p = BLOCKS_EATING_PLAYER(this);
+            daPly_c *p = mEatingPlayer;
             if (p != 0) {
-                int *src = &p->mPosX;
-                mPosX = src[0];
-                mPosY = src[1];
-                mPosZ = src[2];
+                const Vector3 &src = p->mPos;
+                mPosX = src.x;
+                mPosY = src.y;
+                mPosZ = src.z;
             }
         }
     }
@@ -318,7 +293,7 @@ void daObjBlockS_c::UpdateBouncing() {
         mHorzSpeed = mBounceCount * 0x5000;
     }
     if (mHorzSpeed == 0 && mBounceCount == 0) {
-        Crate_SetState(this, daObjBlockS_c::STATE_IDLE);
+        SetState(STATE_IDLE);
     }
     UpdateFloorContact();
     HandleHits();
@@ -348,7 +323,7 @@ void daObjBlockS_c::EnterBouncing() {
     mBounceCount = 3;
     mVertSpeed = mBounceCount * 0xa000;
     mHorzSpeed = mBounceCount * 0x5000;
-    BLOCKS_EATING_PLAYER(this) = 0;
+    mEatingPlayer = 0;
     mHoldingPlayer = 0;
     mdCcAcPos_c1.flags &= ~0x2000;
 }
@@ -363,7 +338,7 @@ void daObjBlockS_c::UpdateSpitOut() {
     UpdatePos(&mdCcAcPos_c1);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     if (UpdateFloorContact()) {
-        Crate_SetState(this, daObjBlockS_c::STATE_IDLE);
+        SetState(STATE_IDLE);
         return;
     }
     ApproachLinear(mHorzSpeed, 0, 0x555);
@@ -398,17 +373,17 @@ void daObjBlockS_c::EnterSpitOut() {
     mClsnYOffsetTarget = 0;
     mClsnYOffset = 0;
 
-    obj = BLOCKS_EATING_PLAYER(this);
+    obj = mEatingPlayer;
     angle = obj->mAngleY;
     mAngleY = angle;
     mPrevAngleY = mAngleY;
 
-    obj = BLOCKS_EATING_PLAYER(this);
+    obj = mEatingPlayer;
     {
-        int *osrc = &obj->mPosX;
-        mPosX = osrc[0];
-        mPosY = osrc[1];
-        mPosZ = osrc[2];
+        const Vector3 &src = obj->mPos;
+        mPosX = src.x;
+        mPosY = src.y;
+        mPosZ = src.z;
     }
 
     xw = FX_SinIdx((unsigned short)mAngleY >> 4);
@@ -423,8 +398,8 @@ void daObjBlockS_c::EnterSpitOut() {
 
     mHorzSpeed = 0x1e000;
     mVertSpeed = 0xf000;
-    mPrevHolder = BLOCKS_EATING_PLAYER(this);
-    BLOCKS_EATING_PLAYER(this) = 0;
+    mPrevHolder = mEatingPlayer;
+    mEatingPlayer = 0;
     mdCcAcPos_c1.flags |= 0x2000;
 }
 
@@ -436,7 +411,7 @@ void daObjBlockS_c::UpdateThrown() {
     UpdatePos(&mdCcAcPos_c1);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     if (UpdateFloorContact()) {
-        Crate_SetState(this, daObjBlockS_c::STATE_IDLE);
+        SetState(STATE_IDLE);
         return;
     }
     ApproachLinear(mHorzSpeed, 0, 0x555);
@@ -505,7 +480,7 @@ void daObjBlockS_c::UpdateCarried() {
 
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     if (mWithMeshClsn.IsOnGround() != 0) {
-        if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) != 0) {
+        if (SurfaceInfo_TestFlag0x20((int *)&mWithMeshClsn.GetFloorResult()->surface) != 0) {
             daPly_c *p = mHoldingPlayer;
             if (p != 0) {
                 p->DropActor();
@@ -518,15 +493,15 @@ void daObjBlockS_c::UpdateCarried() {
     flags = mFlags;
     t = flags & 0x400;
     if (t != false) {
-        Crate_SetState(this, daObjBlockS_c::STATE_THROWN);
+        SetState(STATE_THROWN);
     } else {
         t = flags & 0x2000;
         if (t != false) {
-            Crate_SetState(this, daObjBlockS_c::STATE_BOUNCING);
+            SetState(STATE_BOUNCING);
         } else {
             t = flags & 0x100;
             if (t == false) {
-                Crate_SetState(this, daObjBlockS_c::STATE_IDLE);
+                SetState(STATE_IDLE);
             }
         }
     }
@@ -589,24 +564,22 @@ void daObjBlockS_c::UpdateIdle() {
 /* STATE_IDLE, enter. Forgets mHoldingPlayer and mEatingPlayer. */
 void daObjBlockS_c::EnterIdle() {
     mHoldingPlayer = 0;
-    BLOCKS_EATING_PLAYER(this) = 0;
+    mEatingPlayer = 0;
 }
 
 /* Enters state `i`: stores it in mState and calls that row's enter member of
  * the table at data_ov098_0213c878. */
-void Crate_SetState(daObjBlockS_c *self, int i) {
-    BlockSStateHost *c = (BlockSStateHost *)self;
-    c->idx = i;
-    int j = c->idx;
-    (c->*data_ov098_0213c878[j].fn[0])();
+void daObjBlockS_c::SetState(int state) {
+    mState = state;
+    int j = mState;
+    (this->*data_ov098_0213c878[j].enter)();
 }
 
 /* Runs the update member of the current state's row (called once a frame
  * from the end of Behavior). */
 void daObjBlockS_c::CallStateUpdate() {
-    BlockSStateHost *c = (BlockSStateHost *)this;
-    int j = c->idx;
-    (c->*data_ov098_0213c878[j].fn[1])();
+    int j = mState;
+    (this->*data_ov098_0213c878[j].update)();
 }
 
 /* Returns 1 when the crate is on the ground and the floor's CLPS entry has
@@ -614,7 +587,7 @@ void daObjBlockS_c::CallStateUpdate() {
  * crate on it. */
 int daObjBlockS_c::IsOnWaterFloor() {
     if (mWithMeshClsn.IsOnGround()) {
-        if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)))
+        if (SurfaceInfo_TestFlag0x20((int *)&mWithMeshClsn.GetFloorResult()->surface))
             return 1;
     }
     return 0;
@@ -637,21 +610,21 @@ int daObjBlockS_c::func_ov098_02138bfc()
     if (!a) return 0;
     type = ((dActor_c *)a)->actorID;
     {
-        Bool b;
+        int b;
         do {
-            b = (Bool)(type == ACTOR_ONIMASU);
+            b = (int)(type == ACTOR_ONIMASU);
             if (b)
                 break;
-            b = (Bool)(type == ACTOR_DONKAKU);
+            b = (int)(type == ACTOR_DONKAKU);
             if (b)
                 break;
-            b = (Bool)(type == ACTOR_DONGURU);
+            b = (int)(type == ACTOR_DONGURU);
             if (b)
                 break;
-            b = (Bool)(type == ACTOR_DOSUN);
+            b = (int)(type == ACTOR_DOSUN);
             if (b)
                 break;
-            b = (Bool)(type == ACTOR_BATAN);
+            b = (int)(type == ACTOR_BATAN);
             if (!b)
                 return 0;
         } while (0);
@@ -742,11 +715,11 @@ void daObjBlockS_c::HandleHits() {
     {
         int b1 = ((fl & ACTOR_FLAG_YOSHI_MOUTH_A) != 0);
         if (b1 != 0) {
-            Crate_SetState(this, daObjBlockS_c::STATE_IN_MOUTH);
+            SetState(STATE_IN_MOUTH);
         } else {
             int b2 = ((fl & ACTOR_FLAG_YOSHI_MOUTH_B) != 0);
             if (b2 != 0) {
-                Crate_SetState(this, daObjBlockS_c::STATE_IN_MOUTH);
+                SetState(STATE_IN_MOUTH);
             }
         }
     }
@@ -782,7 +755,7 @@ void daObjBlockS_c::HandleHits() {
         if (a->TryGrab(*this) == 0)
             return;
         mHoldingPlayer = a;
-        Crate_SetState(this, daObjBlockS_c::STATE_CARRIED);
+        SetState(STATE_CARRIED);
         return;
     }
 
@@ -823,7 +796,7 @@ void daObjBlockS_c::Kill()
     vec2.z = vec.z;
     DisappearPoofDustAt(vec2);
     Sound::PlayBank3(0x41, mCamSpacePos);
-    Crate_SetState(this, STATE_BROKEN);
+    SetState(STATE_BROKEN);
 }
 
 /* Wall test. Returns early while mWallCooldown, decremented by one per call,
@@ -928,7 +901,7 @@ int daObjBlockS_c::UpdateFloorContact() {
     case 9:
         mClsnYOffsetTarget = 0x64000;
         if (mClsnYOffsetTarget == mClsnYOffset) {
-            Crate_SetState(this, daObjBlockS_c::STATE_BROKEN);
+            SetState(STATE_BROKEN);
             return 0;
         }
         break;
@@ -1064,10 +1037,10 @@ void daObjBlockS_c::UpdateMeshCollider() {
 /* dExtSimpleModel_c matrix. When mHoldingPlayer is set, mFlags bit 0x4000 is set and the
  * player's mCarryMatrix is nonzero, the
  * crate follows the player's hand: it picks a row r5 of the carry-offset
- * table (data_ov098_0213bf60 / 64 / 68 are its x / y / z columns, stride 12
- * bytes) -- 0 normally, 1 if the player is front-sliding, or if it has lost its grabbed
- * object and ((w << 4) >> 16) < 14 for the word w at +0x58 of what
- * func_ov002_020e496c returns (unrecovered), plus 2 if the player's param1 is 2 -- eases
+ * table (data_ov098_0213bf60, one Vector3 per row) -- 0 normally, 1 if the
+ * player is front-sliding, or if it has lost its grabbed
+ * object and the player's current body model (func_ov002_020e496c) is
+ * before whole frame 14 of its animation, plus 2 if the player's param1 is 2 -- eases
  * mCarryOffset toward that row, takes the matrix UpdateCarry returns as the
  * model matrix, and sets mFlags bit 0x4000000. The rows, in units, are
  * (40, 0, 45), (40, 0, 70), (48, 16, 0) and (48, 0, 60).
@@ -1087,24 +1060,18 @@ void daObjBlockS_c::UpdateModelMatrix() {
             if (mHoldingPlayer->IsFrontSliding() != 0)
                 r5 = 1;
             if (mHoldingPlayer->LostGrabbedObject() != 0) {
-                if (((u32)body->currFrame << 4) >> 0x10 < 0xe)
+                if ((unsigned int)(body->currFrame << 4) >> 0x10 < 0xe)
                     r5 = 1;
             }
             if (mHoldingPlayer->param1 == 2) {
                 r5 = (r5 + 2) & 0xff;
             }
-            Math_Function_0203b14c(&mCarryOffset.x,
-                                   *(int *)((char *)data_ov098_0213bf60 + r5 * 0xc), 0x800,
-                                   0x3e8000, 4);
-            Math_Function_0203b14c(&mCarryOffset.y,
-                                   *(int *)((char *)data_ov098_0213bf64 + r5 * 0xc), 0x800,
-                                   0x3e8000, 4);
-            Math_Function_0203b14c(&mCarryOffset.z,
-                                   *(int *)((char *)data_ov098_0213bf68 + r5 * 0xc), 0x800,
-                                   0x3e8000, 4);
+            Math_Function_0203b14c(&mCarryOffset.x, data_ov098_0213bf60[r5].x, 0x800, 0x3e8000, 4);
+            Math_Function_0203b14c(&mCarryOffset.y, data_ov098_0213bf60[r5].y, 0x800, 0x3e8000, 4);
+            Math_Function_0203b14c(&mCarryOffset.z, data_ov098_0213bf60[r5].z, 0x800, 0x3e8000, 4);
             {
-                Matrix4x3 *res = UpdateCarry(*mHoldingPlayer, mCarryOffset);
-                mModel.mat4x3 = *res;
+                Matrix4x3 *carry = UpdateCarry(*mHoldingPlayer, mCarryOffset);
+                mModel.mat4x3 = *carry;
             }
             mFlags |= 0x4000000;
             return;
@@ -1126,19 +1093,19 @@ void daObjBlockS_c::UpdateModelMatrix() {
     }
 }
 
-/* Disables the collider, then releases the model and collision files
- * (data_ov098_0213c4c8.model / .collision) when the actor is BLOCK_S. Always returns 1. */
+/* Disables the collider, then releases the model and collision files of
+ * data_ov098_0213c4c8 when the actor is BLOCK_S. Always returns 1. */
 int daObjBlockS_c::CleanupResources()
 {
-    ResourceDescriptor *f;
+    ResourceDescriptor *res;
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    f = 0;
+    res = 0;
     if (actorID == ACTOR_BLOCK_S)
-        f = &data_ov098_0213c4c8;
-    if (f) {
-        f->model->Release();
-        f->collision->Release();
+        res = &data_ov098_0213c4c8;
+    if (res) {
+        res->model->Release();
+        res->collision->Release();
     }
     return 1;
 }
@@ -1179,17 +1146,17 @@ int daObjBlockS_c::Behavior()
     struct Vector3 vec;
     struct Vector3 t;
     struct Vector3 vec2;
-    enum Bool b1, b2;
+    int b1, b2;
     int x, y, z;
 
-    b1 = (enum Bool)((mFlags & 0x4000000) != 0);
-    if (b1 != FALSE && (gNextActorUpdateMask & 0x4000000) && mHoldingPlayer) {
+    b1 = (int)((mFlags & 0x4000000) != 0);
+    if (b1 != 0 && (gNextActorUpdateMask & 0x4000000) && mHoldingPlayer) {
         mHoldingPlayer->DropActor();
     }
 
-    b2 = (enum Bool)((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
-    if (b2 != FALSE && Vec3_HorzDist(&mPos, &mHomePos) && DistToCPlayer() > 0x7d0000) {
-        Crate_SetState(this, STATE_BROKEN);
+    b2 = (int)((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
+    if (b2 != 0 && Vec3_HorzDist(&mPos, &mHomePos) && DistToCPlayer() > 0x7d0000) {
+        SetState(STATE_BROKEN);
         return 1;
     }
 
@@ -1217,7 +1184,7 @@ int daObjBlockS_c::Behavior()
             vec2.y = vec.y;
             vec2.z = vec.z;
             DisappearPoofDustAt(vec2);
-            Crate_SetState(this, STATE_BROKEN);
+            SetState(STATE_BROKEN);
             return 1;
         }
     }
@@ -1237,8 +1204,8 @@ int daObjBlockS_c::Behavior()
 }
 
 /* Fails (returns 0) unless the actor is BLOCK_S. Saves the spawn position and
- * angles as the home, then builds the crate from data_ov098_0213c4c8 (three
- * words: the model file, the collision file and a CLPS block): model,
+ * angles as the home, then builds the crate from the ResourceDescriptor at
+ * data_ov098_0213c4c8 (model file, collision file, CLPS block): model,
  * cuboid shadow, KCL mesh collider (SetFile with mClsnMat, a Fix12 0x199
  * (about 0.1), mAngleY and the CLPS block word) and the dBgCh_Actr (Init with radius 40 and height
  * 40 units, 0x28000 each) with water detection on. Gravity is -2 units per
@@ -1247,10 +1214,10 @@ int daObjBlockS_c::Behavior()
  * to its home condition. Returns 1. */
 int daObjBlockS_c::InitResources()
 {
-    ResourceDescriptor *f = 0;
+    ResourceDescriptor *res = 0;
     if (actorID == ACTOR_BLOCK_S)
-        f = &data_ov098_0213c4c8;
-    if (f == 0)
+        res = &data_ov098_0213c4c8;
+    if (res == 0)
         return 0;
     mHomePos.x = mPosX;
     mHomePos.y = mPosY;
@@ -1258,18 +1225,16 @@ int daObjBlockS_c::InitResources()
     mHomeAngleX = mAngleX;
     mHomeAngleY = mAngleY;
     mHomeAngleZ = mAngleZ;
-    mModel.SetFile(dExtSimpleModel_c::LoadFile(*f->model), 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*res->model), 1, -1);
     mShadowModel.InitCuboid();
-    mMeshCollider.SetFile((KCL_File *)((int)dBgW_Kc::LoadFile(*f->collision)), mClsnMat, 0x199,
-                          mAngleY, *f->clps);
-    mWithMeshClsn.Init((dActor_c *)((char *)this), 0x28000, 0x28000, 0, 0);
+    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*res->collision), mClsnMat, 0x199, mAngleY,
+                          *res->clps);
+    mWithMeshClsn.Init(this, 0x28000, 0x28000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    Crate_SetState(this, STATE_IDLE);
-    /* dBgActor_c's own generic 0xd0..0xd4 pad (include/dBgActor_c.h), not a
-       daObjBlockS_c field -- reached by raw offset as mEatingPlayer. */
-    BLOCKS_EATING_PLAYER(this) = 0;
+    SetState(STATE_IDLE);
+    mEatingPlayer = 0;
     ResetToHome();
     return 1;
 }
@@ -1314,7 +1279,7 @@ void daObjBlockS_c::OnTurnIntoEgg(daPly_c &player) {
         }
         player.RegisterEggCoinCount(count, 0, 0);
     }
-    Crate_SetState(this, STATE_BROKEN);
+    SetState(STATE_BROKEN);
 }
 
 /* Reconstructed source-style name: SM64DS proves daObjBlockS_c through RTTI,
