@@ -15,7 +15,6 @@
  *   the individual BMD link names stay data_ov031_*.
  * - The actorID switch stays defaultless in matched form; the registry
  *   only spawns the four HS_* profiles (0x12e-0x131).
- * - pad_0d0 stays: untouched anywhere in this TU (dExtSimpleModel_c opens at 0x0d4).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

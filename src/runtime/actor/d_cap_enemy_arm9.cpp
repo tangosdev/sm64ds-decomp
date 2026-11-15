@@ -170,7 +170,7 @@ int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
     p = (unsigned char *)ReleaseCap(*(const Vector3 *)&local);
     if (p != 0 && p != (unsigned char *)this) {
         unsigned char idx;
-        ((dEnemyBase_c *)p)->mEatingPlayer = mEatingPlayer;
+        ((dActor_c *)p)->mEatingPlayer = mEatingPlayer;
         mEatingPlayer->mObjInMouth = (dActor_c *)p;
         ((dActor_c *)p)->mFlags |= 0x20000;
         mFlags &= ~0x20000;

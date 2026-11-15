@@ -31,7 +31,6 @@ struct daSanbo_c : dActor_c {
        not a recovered original return-type declaration. */
     typedef int (daSanbo_c::*StateFunc)();
 
-    u8  pad_0d0[0x4];
     dExtSimpleModel_c mModel;                      /* 0x0d4 */
     dExtShadowModel_c mShadowModel;                /* 0x124 */
     dCcAc_c mdCcAc_c;  /* 0x14c */

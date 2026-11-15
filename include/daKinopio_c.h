@@ -48,7 +48,6 @@ struct daKinopio_c : dActor_c {
         const char *name;
     };
 
-    u8 mPadD0[0x4];               /* 0x0d0 */
     dCcAc_c mCollider;             /* 0x0d4 */
     dExtAnmModel_c mAnmModel;      /* 0x108 */
     dExtShadowModel_c mShadowModel;      /* 0x16c */

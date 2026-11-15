@@ -20,7 +20,6 @@
  * plus the destructor pair at 16/17 (D1 0x020f0dd0, D0 0x020f0e08). */
 
 struct daObj1UpLogo_c : dActor_c {
-    u8 pad_0d0[0x4];
     /* dExtSimpleModel_c member, named by _ZN17dExtSimpleModel_cD1Ev at +0xd4 in the cartridge's own
        ~daObj1UpLogo_c (D1/D0), a relocation the ROM build checks. */
     dExtSimpleModel_c mModel; /* 0x0d4 */

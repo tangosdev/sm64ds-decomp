@@ -41,7 +41,6 @@
  * the destructor pair 16/17. The tree previously called the class Tornado
  * (coined). */
 struct daTor_c : dActor_c {
-    u8 pad_0d0[0x4];
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x0d4 -- a relocation the ROM build
        checks. Was a u8 marker whose pad stopped short of the object, so the

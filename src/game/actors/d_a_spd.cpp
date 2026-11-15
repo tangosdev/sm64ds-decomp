@@ -191,7 +191,7 @@ int daSpd_c::InitResources() {
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    mParent = 0;
+    mEatingPlayer = 0;
     mTimer = 60;
     *(Matrix4x3 *)mShadowMtx = IDENTITY_MATRIX4X3;
     func_ov071_0211f524();
@@ -448,7 +448,7 @@ int daSpd_c::func_ov071_0211fb0c() {
 int daSpd_c::func_ov071_0211fa54() {
     int b0 = (int)((mFlags & 0x40000) != 0);
     if (b0 != 0) {
-        int *src = &mParent->mPosX;
+        int *src = &mEatingPlayer->mPosX;
         mPosX = src[0];
         mPosY = src[1];
         mPosZ = src[2];
@@ -463,7 +463,7 @@ int daSpd_c::func_ov071_0211fa54() {
             if (b2 == 0) {
                 int b3 = (int)((v & 0x40000) != 0);
                 if (b3 == 0) {
-                    mParent = 0;
+                    mEatingPlayer = 0;
                     SetState(2);
                 }
             }
@@ -475,17 +475,17 @@ int daSpd_c::func_ov071_0211fa54() {
 
 int daSpd_c::func_ov071_0211f8d0() {
     mFlags &= 0xfff7fffe;
-    mHorzSpeed = mParent->mHorzSpeed + 0x7000;
+    mHorzSpeed = mEatingPlayer->mHorzSpeed + 0x7000;
     mVertSpeed = 0;
-    mAngleY = mParent->mAngleY;
+    mAngleY = mEatingPlayer->mAngleY;
     mPrevAngleY = mAngleY;
-    mPos = mParent->mPos;
+    mPos = mEatingPlayer->mPos;
     mPosX += FX_MUL(FX_SinIdx((u16)mAngleY >> 4), 0x5a000);
     mPosY += 0x50000;
     mPosZ += FX_MUL(FX_CosIdx((u16)mAngleY >> 4), 0x5a000);
-    Vector3 v(mParent->mPosX, mParent->mPosY + 0x50000, mParent->mPosZ);
+    Vector3 v(mEatingPlayer->mPosX, mEatingPlayer->mPosY + 0x50000, mEatingPlayer->mPosZ);
     DetectRaycastClsn(v, mPos, 1);
-    mParent = 0;
+    mEatingPlayer = 0;
     mWithMeshClsn.SetLimMovFlag();
     mState = 7;
     return 1;

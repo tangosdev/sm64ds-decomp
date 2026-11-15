@@ -27,7 +27,7 @@
  *   common.h and math/Matrix.h still define incompatible C++ forms under
  *   one guard; this TU does not resolve that repository-wide type debt.
  * - The carrier/cap attachment uses dActor_c::mCarryMatrix at +0xc8.
- *   The cap's player pointer uses daObjMarioCap_c::mEatingPlayer.
+ *   The cap's player pointer is the inherited dActor_c::mEatingPlayer.
  *   PathPtr and line-query construction/cleanup are ordinary C++ calls.
  * - data_ov030_* handles stay address labels. decl_common.h types
  *   four of them as void*[] where this file's blocks say int[].
@@ -849,7 +849,7 @@ int daMky_c::func_ov030_02113094()
         if (IsInYoshiMouth(this)) {
             if (this->mHasSpawnedCap != 0) {
                 ::dActor_c *a = ::dActor_c::FindWithID(this->mCapUniqueID);
-                static_cast<daObjMarioCap_c *>(a)->mEatingPlayer = mPlayer;
+                a->mEatingPlayer = mPlayer;
                 a->mFlags |= 0x40000;
             }
             this->mSubState++;

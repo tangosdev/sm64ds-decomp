@@ -56,7 +56,6 @@ typedef char SnowmanBreathParticle_size_must_be_0x60[
  * the player's local-range test.
  */
 struct daSnmBth_c : dActor_c {
-    u8 mPad0d0[0x4];                       /* 0x0d0 */
     static const int PARTICLE_NUM = 50;
     SnowmanBreathParticle mParticles[PARTICLE_NUM]; /* 0x0d4 */
     /* Inverse model matrix, flat words. A Matrix4x3 member (math/Matrix.h's

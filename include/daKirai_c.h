@@ -3,7 +3,7 @@
  * Layout, each sub-object checked by its own size assertion and by closing
  * exactly on the next named field:
  *
- *     dActor_c     0x000 + 0x0d0 = 0x0d0   -> pad_0d0
+ *     dActor_c     0x000 + 0x0d4 = 0x0d4   -> mModel
  *     dExtSimpleModel_c        0x0d4 + 0x050 = 0x124   -> mdCcAcPos_c
  *     dCcAcPos_c   0x124 + 0x040 = 0x164   -> padding, then mStateIndex
  *
@@ -25,7 +25,6 @@
 #include "dActor_c.h"
 
 struct daKirai_c : dActor_c {
-    u8 pad_0d0[0x4];
     /* Named by the class's own destructor calling dExtSimpleModel_c's D1 at +0x0d4 -- a
        relocation the ROM build checks. */
     dExtSimpleModel_c mModel; /* 0x0d4 */

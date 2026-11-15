@@ -18,9 +18,6 @@
  * The helpers are members with coined names: icon_c::Place, the three
  *   graphCallback_c setters, RenderIcons, SetSlotBorderPalette and
  *   RenderPlayerScores. The cartridge keeps none of their spellings.
- * Leftover: func_ov001_020ab5b0 is still the linker name of the ov001
- *   dThIcon field writer (kind, x, y, w, h). This TU's icon_c::Place
- *   calls it. Naming belongs in ov001.
  * Leftover: func_0203d974 is still the arm9 vs/region gate
  *   (MB_IsMultiBootChild, else data_020a0f10). This TU's icon_c::Render
  *   case 13. Naming belongs in arm9.
@@ -86,7 +83,6 @@ extern short data_ov075_0211d742[];
 extern short data_ov075_0211d756[];
 extern short data_ov075_0211d94a[];
 }
-void func_ov001_020ab5b0(char *r0, int r1, short r2, short r3, short s4, short s5);
 
 struct EntryPair {
     short w;
@@ -238,21 +234,20 @@ void dScEntry_c::icon_c::Place(int type, int index, s16 x, s16 y) {
     if (type == 5) {
         widthLanguage = GetLanguageIndex();
         heightLanguage = GetLanguageIndex();
-        func_ov001_020ab5b0((char *)this, touchKind, x, y, data_ov075_0211d72c[widthLanguage].w,
-                            data_ov075_0211d72c[heightLanguage].h);
+        dThIcon_c::Place(touchKind, x, y, data_ov075_0211d72c[widthLanguage].w,
+                         data_ov075_0211d72c[heightLanguage].h);
     } else if (type == 6) {
         widthLanguage = GetLanguageIndex();
         heightLanguage = GetLanguageIndex();
-        func_ov001_020ab5b0((char *)this, touchKind, x, y, data_ov075_0211d740[widthLanguage].w,
-                            data_ov075_0211d740[heightLanguage].h);
+        dThIcon_c::Place(touchKind, x, y, data_ov075_0211d740[widthLanguage].w,
+                         data_ov075_0211d740[heightLanguage].h);
     } else if (type == 0xb) {
         widthLanguage = GetLanguageIndex();
         heightLanguage = GetLanguageIndex();
-        func_ov001_020ab5b0((char *)this, touchKind, x, y, data_ov075_0211d754[widthLanguage].w,
-                            data_ov075_0211d754[heightLanguage].h);
+        dThIcon_c::Place(touchKind, x, y, data_ov075_0211d754[widthLanguage].w,
+                         data_ov075_0211d754[heightLanguage].h);
     } else {
-        func_ov001_020ab5b0((char *)this, touchKind, x, y, data_ov075_0211d948[type].w,
-                            data_ov075_0211d948[type].h);
+        dThIcon_c::Place(touchKind, x, y, data_ov075_0211d948[type].w, data_ov075_0211d948[type].h);
     }
 }
 

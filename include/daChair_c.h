@@ -19,7 +19,6 @@
  * alias HauntedChair_Spawn. Retail does not store that spelling.
  */
 struct daChair_c : dActor_c {
-    u8 mPad0d0[0x4];                /* 0x0d0 */
     dExtSimpleModel_c mModel;       /* 0x0d4 */
     dExtShadowModel_c mShadowModel; /* 0x124 */
     Matrix4x3 mShadowMat;           /* 0x14c */
