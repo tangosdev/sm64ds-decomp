@@ -14,8 +14,7 @@
  *   position; nothing in the ROM names it).
  * - g_profile_SLIDER_MANAGER (ov019 0x021133a8) stays outside this TU (S14):
  *   defining it here would emit .data this entry is not licensed to own.
- * - unk_0d0 (header) has no observed meaning; pad_0d7 is never
- *   dereferenced.
+ * - pad_0d7 is never dereferenced.
  */
 
 #include "daSldMng_c.h"

@@ -11,7 +11,7 @@
  * EIGHT sub-objects in two identical groups of four, and every one closes
  * exactly on the next -- no padding anywhere between 0x0d4 and 0x214:
  *
- *     dActor_c            0x000 + 0x0d0 = 0x0d0   -> pad_0d0
+ *     dActor_c            0x000 + 0x0d4 = 0x0d4   -> mAnmModel1
  *     dExtAnmModel_c           0x0d4 + 0x064 = 0x138   -> mTextureSequence1
  *     dExtAnmTexPat_c     0x138 + 0x014 = 0x14c   -> mMaterialChanger1
  *     dExtAnmMaterial_c     0x14c + 0x014 = 0x160   -> mTextureTransformer1
@@ -48,7 +48,6 @@
 #include "dActor_c.h"
 
 struct daFRing_c : dActor_c {
-    u8 pad_0d0[0x4];
     dExtAnmModel_c mAnmModel1;            /* 0x0d4 */
     dExtAnmTexPat_c mTextureSequence1;    /* 0x138 */
     dExtAnmMaterial_c mMaterialChanger1;  /* 0x14c */

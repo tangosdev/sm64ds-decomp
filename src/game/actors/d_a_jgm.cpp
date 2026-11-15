@@ -373,7 +373,7 @@ s32 daJgm_c::EnterYoshiMouthState()
 s32 daJgm_c::UpdateYoshiMouthState()
 {
     if (((mFlags & 0x40000) ? 1 : 0) != 0) {
-        dActor_c *carrier = mCarryActor;
+        dActor_c *carrier = mEatingPlayer;
         s32 *carrierPos = &carrier->mPosX;
         mPosX = carrierPos[0];
         mPosY = carrierPos[1];
@@ -394,16 +394,16 @@ s32 daJgm_c::EnterSpitState()
 {
     mFlags &= ~0x80000;
 
-    mHorzSpeed = mCarryActor->mHorzSpeed + 0xa000;
-    mPrevAngleY = mCarryActor->mAngleY;
-    mPos = mCarryActor->mPos;
+    mHorzSpeed = mEatingPlayer->mHorzSpeed + 0xa000;
+    mPrevAngleY = mEatingPlayer->mAngleY;
+    mPos = mEatingPlayer->mPos;
     mPosX += FX_MUL(FX_SinIdx((u16)mPrevAngleY >> 4), 0x50000);
     mPosY += 0x50000;
     mPosZ += FX_MUL(FX_CosIdx((u16)mPrevAngleY >> 4), 0x50000);
 
     mAngVelY = 0x7000;
     mTimer = 30;
-    mCarryActor = 0;
+    mEatingPlayer = 0;
     mState = 3;
     return 1;
 }

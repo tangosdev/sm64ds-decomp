@@ -10,8 +10,7 @@
  * final.
  *
  * SIZE 0xd4 from the factory's own allocation literal (212).
- * dActor_c ends at 0xd0; pad_0d0 is unused padding to that size, not a live
- * field -- no enrolled body touches those bytes
+ * That is exactly sizeof(dActor_c): this class adds no field of its own
  * (notes/actor-leaf-provenance.md), and all five overrides below are stubs
  * that never read `this`. daBar_c next door is a different class (0x108,
  * own vtable, own dCcAc_c); do not re-merge them.
@@ -24,7 +23,6 @@
  * daCamTag_c_Spawn.
  */
 struct daCamTag_c : dActor_c {
-    u8 pad_0d0[0x4];
 
     /* Inline empty dtor: mwccarm emits D1 then D0, no D2. InitResources is
      * the first out-of-line virtual/key function, so this TU owns the

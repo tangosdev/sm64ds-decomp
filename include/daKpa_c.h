@@ -14,7 +14,7 @@
  * Five sub-objects, and every one's asserted size closes EXACTLY on the next named
  * field -- five independent confirmations of one layout:
  *
- *     dActor_c                      0x000 + 0x0d0 = 0x0d0   -> pad_0d0
+ *     dActor_c                      0x000 + 0x0d4 = 0x0d4   -> mAnmModel
  *     dExtAnmModel_c                  0x0d4 + 0x064 = 0x138   -> mTextureSequence
  *     dExtAnmTexPat_c            0x138 + 0x014 = 0x14c   -> mWithMeshClsn
  *     dBgCh_Actr               0x14c + 0x1bc = 0x308   -> mShadowModel
@@ -41,7 +41,6 @@
 #include "dActor_c.h"
 
 struct daKpa_c : dActor_c {
-    u8  pad_0d0[0x4];
     dExtAnmModel_c mAnmModel;                               /* 0x0d4 */
     dExtAnmTexPat_c mTextureSequence;                       /* 0x138 */
     dBgCh_Actr mWithMeshClsn;                             /* 0x14c */
