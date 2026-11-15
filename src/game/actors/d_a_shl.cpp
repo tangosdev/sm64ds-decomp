@@ -38,19 +38,6 @@
  * - func_ov002_020ad660, func_ov002_020cc16c and func_020105cc are other
  *   TUs' helpers and stay free externs; the Fix12<int>-by-value callees
  *   listed above stay mangled (notes/mwccarm-codegen.md 6az).
- * - The manifest pins eight @NNN statics (@721..@735), so the count of
- *   named locals, named parameters, labels and unnamed struct types
- *   ahead of __sinit is load-bearing. Including a header moves it
- *   (measured: daPly_c.h +94, the first pin becomes @815; Sound.h +15), so
- *   daPly_c and Sound stay reached through local mangled externs and
- *   daPly_c::mIsAirborne stays the raw 0x6de read.
- * - dBgCh_Gnd.h adds 9 to the count. Including it let five mangled
- *   dBgCh_Gnd externs (7 named parameters), a `surface` local in
- *   func_ov102_0214c7fc and an unnamed struct type for `dir` in
- *   func_ov102_0214cbec go, which nets to 0 (measured: same bytes,
- *   relocations and pins).
- * - The unnamed struct type of `pos` in func_ov102_0214c84c also holds
- *   the count (an unnamed struct type takes one number, measured).
  * - daShl_c_classInit stays a free factory and the destructor stays
  *   inline (D1-then-D0 cartridge order).
  */
