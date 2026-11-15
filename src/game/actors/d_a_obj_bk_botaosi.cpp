@@ -18,11 +18,13 @@
  * each function as it is parsed, so this file is written ROM-ascending: the
  * out-of-line destructor first (D1 0x02111314, then D0 0x02111360; the D2
  * it also produces has no cartridge home and is deadstripped), the factory
- * last. Immediate codegen is also what lets the per-member setting below
- * -- opt_foldconstants off on UpdateShadow -- bind to its own member
- * through push/pop. Under the default deferred codegen it is file-global
- * (measured; see the TU manifest).
- * Same arrangement as src/game/actors/d_a_btt_bk.cpp.
+ * last. Same arrangement as src/game/actors/d_a_btt_bk.cpp.
+ *
+ * `opt_foldconstants off` is a file setting, not a per-member bracket.
+ * UpdateShadow needs it: the cartridge keeps lean = 0 + tilt, yaw = 0x8000
+ * + 0x8000 and the zero high word of 0x7d0000 in the 64-bit multiply
+ * unfolded (folded, the body is a different size). Every other function in
+ * this TU compiles to the same bytes with it on or off (measured, 13/13).
  *
  * What stays, and why:
  * - OnKicked and OnAttacked2 keep #pragma long_calls: the ROM
@@ -47,6 +49,7 @@
 enum daObjBk_Botaosi_c_AssetId { ASSET_BK_BOTAOSI_BMD = 0x0589, ASSET_BK_BOTAOSI_KCL = 0x058a };
 
 #pragma defer_codegen off
+#pragma opt_foldconstants off
 
 #include "daObjBk_Botaosi_c.h"
 #include "daPly_c.h"
@@ -162,8 +165,6 @@ void daObjBk_Botaosi_c::HandleHit(dActor_c *other) {
    out from mFront*, and once the plank goes over it drops to mFrontFloorY.
    The two scoped row blocks are load-bearing: written flat, with the table
    lookup inlined, the body DIFFs (measured). */
-#pragma push
-#pragma opt_foldconstants off
 void daObjBk_Botaosi_c::UpdateShadow() {
     u16 yaw;
     int lean = 0;
@@ -191,7 +192,6 @@ void daObjBk_Botaosi_c::UpdateShadow() {
         mShadowMat.t.y = mFrontFloorY >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0xc8000, 0x12c000, lean, 0xf);
 }
-#pragma pop
 
 /* -------------------------------------------------------------------------- */
 /* mModel's matrix from all three angles, the position in its translation
