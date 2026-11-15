@@ -51,10 +51,8 @@ extern "C" Ov007Follower *func_ov007_020c844c(Vector3 *p, int q);
 /* The ROM copies a Vector3 here as a block move (ldm/stm). The C++ front end
    copies Vector3, and any struct of three named ints, member by member; a
    struct whose only member is an array keeps the block move, so every copy
-   goes through Vector3Bits. */
-struct Vector3Bits {
-    int w[3];
-};
+   goes through Vector3Bits (include/Vector3Bits.h). */
+#include "Vector3Bits.h"
 
 /* *dst = *src, as the block move. */
 static inline void CopyVec3(Vector3 *dst, const Vector3 *src) {

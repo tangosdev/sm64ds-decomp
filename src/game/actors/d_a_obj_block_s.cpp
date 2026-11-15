@@ -130,9 +130,7 @@ namespace Particle {
 void RunningSlidingDustAt(s32, s32, s32);
 }
 int SurfaceInfo_TestFlag0x20(int *p);
-struct BgChEvt {
-    int func_ov002_020ef228(dActor_c *other);
-};
+#include "BgChEvt.h"
 int func_ov002_020f030c(int x);
 extern "C" int func_ov002_020e496c(daPly_c *c);
 

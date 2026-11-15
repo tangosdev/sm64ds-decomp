@@ -173,7 +173,7 @@ typedef struct Desc {
     int f30;
 } Desc;
 
-void Dst::func_020462d0(Desc *h, ElemA *arr) {
+void RuntimeModel::func_020462d0(Desc *h, ElemA *arr) {
     u32 i;
     ElemA *p;
     SrcB *s2;

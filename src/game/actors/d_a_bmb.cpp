@@ -106,9 +106,7 @@ extern unsigned char gGameMode;
 }
 void GiveCoins(int who, int count);
 int SurfaceInfo_TestFlag0x20(int *si);
-struct BgChEvt {
-    int func_ov002_020ef228(dActor_c *other);
-};
+#include "BgChEvt.h"
 
 /* ==========================================================================
  *

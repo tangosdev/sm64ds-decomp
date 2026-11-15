@@ -23,28 +23,16 @@
 #include "Memory.h"
 #include "math/Approach.h"
 #include "nnsys/snd/player.h"
+#include "SndHeap.h"
 #include "private/sound_positional.h"
 #include "daPly_c.h"
 
-/* SoundEngine's sound heap. The methods are defined in SoundEngine.cpp. */
-typedef void (*SndHeapDisposeCallback)(void *mem, u32 size, u32 data1, u32 data2);
-struct SndHeap {
-    u32 func_02051074();
-    void func_020510a4(int level);
-    void *func_020511d4(u32 size, SndHeapDisposeCallback callback, u32 data1, u32 data2);
-    int func_0205117c();
-    int func_02052008();
-};
-
-/* Foreign callees. */
+/* Foreign callees. The sound heap and the archive it loads are SndHeap.h. */
 extern "C" int func_0203d974(void);
 extern "C" int func_0203d7d4(int a);
 extern "C" void func_0204f9c4(int a, int b);
 extern "C" void func_0204f958(int a, int b);
 extern "C" int func_0204fa2c(NNSSndHandle *handle, int z);
-struct data_020a5bb8_t {
-    void func_02050f34(const char *path, struct SndHeap *heap, int loadSymbols);
-};
 extern "C" void func_0204f94c(NNSSndHandle *p);
 extern "C" void func_0204f070(void);
 extern "C" struct SndHeap *func_0205130c(u32 addr, u32 size);

@@ -8,7 +8,7 @@ struct ElemA;
 struct ElemB;
 
 /* Runtime model built from a BMD file by func_020462d0 (Model4.cpp). */
-struct Dst {
+struct RuntimeModel {
     Desc *f0;
     ElemA *f4;
     ElemB *f8;

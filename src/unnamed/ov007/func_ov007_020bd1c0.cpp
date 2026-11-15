@@ -6,12 +6,7 @@
 #include "Ov007Texture.h"
 #include "BMD_File.h"
 #include "nitro/gx/g3x.h"
-
-/* Vector3's destructor turns a copy into memberwise stores. An array
-   member stays one block move, which is what the ROM has here. */
-struct Vector3Bits {
-    int w[3];
-};
+#include "Vector3Bits.h"
 
 /* The lights' source points: lights[0] per menu, lights[1] in menu 0. */
 extern "C" Vector3 data_ov007_020d7c34[];

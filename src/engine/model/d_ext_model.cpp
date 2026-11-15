@@ -232,7 +232,7 @@ ModelComponents *GetCommonModelComponents(BMD_File *file) {
             e->components = 0;
             return 0;
         }
-        ((Dst *)e->components)->func_020462d0((Desc *)file, (ElemA *)b);
+        ((RuntimeModel *)e->components)->func_020462d0((Desc *)file, (ElemA *)b);
     }
     return e->components;
 }
@@ -284,7 +284,7 @@ int dExtSimpleModel_c::DoSetFile(char *file_, int a, int b) {
     buffer = transformsBuf;
     if (buffer == 0)
         return 0;
-    ((Dst *)&data)->func_020462d0((Desc *)file, (ElemA *)buffer);
+    ((RuntimeModel *)&data)->func_020462d0((Desc *)file, (ElemA *)buffer);
     data.UpdateVertsUsingBones();
     if (a != 0)
         SetMaterialFlags(0x8000);

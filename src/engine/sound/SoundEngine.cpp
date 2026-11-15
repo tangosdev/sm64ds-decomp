@@ -30,58 +30,18 @@
 #include "nitro/snd/alarm.h"
 #include "nitro/os/system.h"
 #include "nitro/mi/memory.h"
+#include "SndHeap.h"
 
 struct Elem_204f278;
 struct HeapAllocator_205212c;
 struct Obj_205212c;
 
 typedef short s16;
-/* A block func_020511d4 carves from a sound heap: its link in the heap's
-   newest level, then what freeing the level calls back with. The caller's
-   memory starts at 0x20. */
-typedef void (*SndHeapDisposeCallback)(void *mem, u32 size, u32 data1, u32 data2);
-struct SndHeapBlock {
-    NNSFndLink link;                 /* 0x00 */
-    u32 size;                        /* 0x08 */
-    SndHeapDisposeCallback callback; /* 0x0c */
-    u32 data1;                       /* 0x10 */
-    u32 data2;                       /* 0x14 */
-    u8 pad18[8];
-    u8 mem[1]; /* 0x20 */
-};
-/* A sound heap (func_0205130c): a frame heap and the stack of levels
-   func_02050fd4 pushes. A level is a 0x14-byte list of the blocks carved
-   since it was pushed, linked into `levels` at 0xc; func_020510a4 pops
-   levels back to a count and func_02051244 pops them all, calling each
-   block's dispose callback, newest first. */
-struct SndHeap {
-    NNSFndHeapHandle frmHeap; /* 0x0 */
-    NNSFndList levels;        /* 0x4 */
-    int func_02050fd4();
-    int func_02051024(NNSFndHeapHandle frmHeap);
-    void func_02051244();
-    void func_020512f0();
-    u32 func_02051074();
-    void func_020510a4(int level);
-    int func_0205117c();
-    void *func_020511d4(u32 size, SndHeapDisposeCallback callback, u32 data1, u32 data2);
-    int func_02052008();
-};
 typedef int s32;
 typedef void (*FP)(void *, int, int *, int, int, int);
 typedef signed char s8;
-/* The Nitro binary file header every NARC, SDAT, SSEQ and SSAR file opens
-   with (func_0204ef9c checks a NARC's), and the header each of its blocks
-   starts with (func_0204ee40 walks a NARC's by kind and size). */
-struct NitroFileHeader {
-    u32 magic;      /* 0x00 */
-    u16 byteOrder;  /* 0x04 */
-    u16 version;    /* 0x06 */
-    u32 fileSize;   /* 0x08 */
-    u16 headerSize; /* 0x0c */
-    u16 numBlocks;  /* 0x0e */
-    int func_0204ef9c();
-};
+/* NitroFileHeader is in SndHeap.h. The header each of its blocks starts
+   with (func_0204ee40 walks a NARC's by kind and size). */
 struct NitroBlockHeader {
     u32 kind; /* 0x0 */
     u32 size; /* 0x4 */
@@ -135,28 +95,8 @@ struct List {
     unsigned int count;
     struct Entry entries[1];
 };
-/* The sound archive data_020a5bb8 points at, opened by func_02050f34.
-   0x00..0x30 is the archive file's own header, read from offset 0; its
-   (offset, size) pairs locate the blocks func_02050d54 loads. */
-struct data_020a5bb8_t {
-    /* 0x00 */ NitroFileHeader fileHeader;
-    /* 0x10 */ int symbolOffset; /* the SYMB block, loaded only on request */
-    /* 0x14 */ int symbolSize;
-    /* 0x18 */ int infoOffset;
-    /* 0x1c */ int infoSize;
-    /* 0x20 */ int fileTableOffset;
-    /* 0x24 */ int fileTableSize;
-    /* 0x28 */ int fileImageOffset; /* the FILE block; files are read by fileTable offset */
-    /* 0x2c */ int fileImageSize;
-    /* 0x30 */ FSFile file;
-    /* 0x74 */ FSFileID fileId;         /* filled from the path by FS_ConvertPathToFileID */
-    /* 0x7c */ struct Hdr84 *fileTable; /* per-file records (func_020509b0, func_020509d8) */
-    /* 0x80 */ void *symbols;           /* loaded only when func_02050d54's flag is set */
-    /* 0x84 */ void *info;              /* the Info*Entry::GetWithID tables */
-    int func_02050d54(struct SndHeap *heap, int loadSymbols);
-    void func_02050f34(const char *path, struct SndHeap *heap, int loadSymbols);
-};
-/* The INFO block data_020a5bb8_t::info points at. After its 8-byte block
+/* data_020a5bb8_t, the archive func_02050f34 opens, is in SndHeap.h.
+   The INFO block data_020a5bb8_t::info points at. After its 8-byte block
    header come the offsets, from the block start, of its record tables; each
    lookup below reads one, bounds-checks the id against the table's count and
    returns the record at the id's offset (0 for none). */
