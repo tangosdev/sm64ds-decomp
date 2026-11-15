@@ -19,6 +19,7 @@
 
 /* fwd */
 struct dActor_c;
+struct Vector3_16;
 
 struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
     /* 0x38..0x4b is the dM3dGSph base itself: vptr at 0x38, centre (pos) at
@@ -67,12 +68,12 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
        query tests it against every candidate face before classifying it.
        SetObjAndSphere sets 0x1000 (accept every face); dBgCh_Actr's Update*
        copy its own tail word (Actr +0x1b8) here each update. */
-    s32 mMaxNormalY;   /* 0x108 */
-    s32 mMotionAngPtr; /* 0x10c - dBgCh_Actr::Init stores its fourth
-                               argument, a Vector3_16 *, at Actr +0x12c = this
-                               +0x10c, and the Update* bodies forward it and
-                               Actr +0x130 to dBgS_MoveBgCrrPos, which hands them
-                               to dBgW::BeforeClsn as `motionAng` and `ang` */
+    s32 mMaxNormalY;           /* 0x108 */
+    Vector3_16 *mMotionAngPtr; /* 0x10c - dBgCh_Actr::Init stores its fourth
+                                   argument here (Actr +0x12c), and the Update*
+                                   bodies forward it and Actr +0x130 to
+                                   dBgS_MoveBgCrrPos, which hands them to
+                                   dBgW::BeforeClsn as `motionAng` and `ang` */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     /* Defined as real C++ in separate D1/D0 source files. Dedicated TUs with

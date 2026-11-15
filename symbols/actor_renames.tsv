@@ -10461,3 +10461,6 @@ ov006	0x0210c2b0	_Z15SlotBlink_ClearPc	_Z15SlotBlink_ClearP9SlotBlink	clears a S
 
 arm9	0x0201964c	_Z13func_0201964cP5Timer	_ZN5TimerC1Ev	Timer's constructor becomes Timer::Timer(); the dummy TimerInit static that called it is retired
 ov098	0x02138b28	_Z14Crate_SetStateP13daObjBlockS_ci	_ZN13daObjBlockS_c8SetStateEi	B: enter twin of CallStateUpdate: stores the state in mState and calls the enter member of data_ov098_0213c878[mState]; a member like daRedBombhei_c::ChangeState, matched through a daObjBlockS_c member pointer
+arm9	0x02038234	_Z17dBgS_RideCallBackii	_Z17dBgS_RideCallBackP5dBgPiP8dActor_c	parameters typed as the dBgPi, actor and vector pointers the body uses
+arm9	0x02038298	_Z16dBgS_ChkPolySafePv	_Z16dBgS_ChkPolySafeP5dBgPi	parameters typed as the dBgPi, actor and vector pointers the body uses
+arm9	0x02038324	_Z17dBgS_MoveBgCrrPosPviii	_Z17dBgS_MoveBgCrrPosP5dBgPiP7Vector3P10Vector3_16S4_	parameters typed as the dBgPi, actor and vector pointers the body uses

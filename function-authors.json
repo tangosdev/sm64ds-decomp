@@ -5519,15 +5519,15 @@
     },
     "arm9:0x02038234": {
       "author": "tangosdev",
-      "name": "_Z17dBgS_RideCallBackii"
+      "name": "_Z17dBgS_RideCallBackP5dBgPiP8dActor_c"
     },
     "arm9:0x02038298": {
       "author": "tangosdev",
-      "name": "_Z16dBgS_ChkPolySafePv"
+      "name": "_Z16dBgS_ChkPolySafeP5dBgPi"
     },
     "arm9:0x02038324": {
       "author": "andrewboudreau",
-      "name": "_Z17dBgS_MoveBgCrrPosPviii"
+      "name": "_Z17dBgS_MoveBgCrrPosP5dBgPiP7Vector3P10Vector3_16S4_"
     },
     "arm9:0x020383e4": {
       "author": "ruspecial",
