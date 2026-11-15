@@ -296,9 +296,9 @@ s32 daStar_c::InitResources()
     mCamSeq = 0xffff;
     mSavedAreaId = (u8)mAreaId;
     mMarkerSlot = -1;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScaleX = FX32_ONE;
+    mScaleY = FX32_ONE;
+    mScaleZ = FX32_ONE;
     mMarkerID = 0;
     mSoundObjID = 0;
     mParticle[3] = 0;
@@ -392,9 +392,9 @@ s32 daStar_c::InitResources()
                 return 0;
             }
             if (NumVsStarsObtained() == 5) {
-                mScaleX = 0x1000;
-                mScaleY = 0x1000;
-                mScaleZ = 0x1000;
+                mScaleX = FX32_ONE;
+                mScaleY = FX32_ONE;
+                mScaleZ = FX32_ONE;
             } else {
                 mScaleX = 0;
                 mScaleY = 0;
@@ -1184,9 +1184,9 @@ void daStar_c::StateCollectBegin() {
             mScaleY = 0x3000;
             mScaleZ = 0x3000;
         } else {
-            mScaleX = 0x1000;
-            mScaleY = 0x1000;
-            mScaleZ = 0x1000;
+            mScaleX = FX32_ONE;
+            mScaleY = FX32_ONE;
+            mScaleZ = FX32_ONE;
         }
 
         StopMotion();

@@ -140,9 +140,9 @@ int daSanbo_c::InitResources()
     t = (actorID == SANBO_HEAD);
     if (t != false) {
         mRootPos = mPos;
-        mScaleX = 0x1000;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1000;
+        mScaleX = FX32_ONE;
+        mScaleY = FX32_ONE;
+        mScaleZ = FX32_ONE;
         mPrevSegment = 0;
         mNextSegment = 0;
     } else {
@@ -307,9 +307,9 @@ int daSanbo_c::EnterLeader() {
     mTimer = timer;
     timer = mTimer;
     if (timer == 0) {
-        mScaleX = 0x1000;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1000;
+        mScaleX = FX32_ONE;
+        mScaleY = FX32_ONE;
+        mScaleZ = FX32_ONE;
     }
     mState = 1;
     return 1;

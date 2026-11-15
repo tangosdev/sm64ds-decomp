@@ -228,9 +228,9 @@ s32 daBrq_c::EnterActiveState() {
     mStateTimer = 15;
     mTurnSpeed = 0;
     mSpinAngle = 0;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScaleX = FX32_ONE;
+    mScaleY = FX32_ONE;
+    mScaleZ = FX32_ONE;
     mState = 1;
     return 1;
 }
