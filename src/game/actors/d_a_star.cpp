@@ -228,8 +228,6 @@ extern StarModelFilePtr data_ov002_0211095c;
 
 extern void LoadSilverStarAndNumber(void);
 
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *actor, s32 a, s32 b, void *p1, void *p2);
 extern s32 IsStarCollected(s32 level, s32 idx);
 
 /* The two destructor bodies are defined first so their D1/D0 groups lead the
@@ -2328,8 +2326,6 @@ void func_ov002_020e8244(void *out, daStar_c *b)
 /* ROM ordinal 32 -- UpdateTrailEffect, 0x020e81e0, size 0x64 */
 /* -------------------------------------------------------------------------- */
 /* Keeps trail effect 0x113 (mParticle[0]) 13.0 above the star. */
-extern "C" void *d_a_starNewHold(int a0, unsigned int a1, int a2, int a3, int a4, void *a5,
-                                 void *a6);
 void daStar_c::UpdateTrailEffect() {
     Vector3 v;
     v.x = mPosX;

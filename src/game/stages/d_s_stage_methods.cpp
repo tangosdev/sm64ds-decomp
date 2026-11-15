@@ -122,7 +122,6 @@ void SetSoundMode(int m);
 void TurnBacklightOn(void);
 void TurnBacklightOff(void);
 
-bool d_s_stage_methodsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int fix, int e);
 
 void OamRender10_d_s_stage_methods(int sub, void *attr, int x, int y, int a, int cc, int fx, int fy,
                                    int rot, int mode);

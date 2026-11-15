@@ -174,16 +174,11 @@ extern "C" s16 atan2_hold_d_a_r_nk_1(int y, int x);
 extern "C" unsigned int func_0201277c(unsigned int id);
 extern signed char gCurrentSublevel; /* LEVEL_ID */
 extern u8 gShowRaceTimer;            /* nonzero: dMeter_c draws the race timer */
-extern "C" bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 void func_02012694(u32 a, const Vector3 *b);
 extern u8 data_0209d684;            /* MESSAGE_RESULT: which answer the player picked (1 or 2) */
 extern Timer gRaceTimer;            /* TIME_TIMER: the course timer */
 /* The existing C initializer erases pointer slots to integers. Keep the
    evidenced actor view here; repairing the shared initializer is separate. */
-/* Parameter names keep this TU's @NNN. */
-extern "C" {
-typedef void BgchInitAt_(void *self, void *actor, int r, int h, void *p, int q);
-}
 /* The files InitResources loads and CleanupResources releases; see ANIM_*. */
 extern RNkModelFileHandle gdaRNkNokonokoModelFile;      /* the model (BMD) */
 extern RNkAnimationFileHandle data_ov062_0211e014;  /* ANIM_RUN_START */

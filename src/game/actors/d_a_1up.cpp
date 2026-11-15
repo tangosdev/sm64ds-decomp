@@ -975,8 +975,6 @@ void da1up_c::UpdatePopOutDrift() {
    is spelt as the shard that uses it recovered it; nothing above declares
    any of them, so nothing here overrides a recovered view. */
 extern "C" {
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *thiz, dActor_c *a, int r, int h, Vector3_16 *p, int q);
 }
 int IsStarCollectedInCurLevel(int a);
 

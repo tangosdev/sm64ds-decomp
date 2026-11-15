@@ -110,16 +110,12 @@ extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern SharedFilePtr *data_ov034_02113838[];
 extern SharedFilePtr *data_ov034_0211384c[];
 extern void **data_ov034_02113874[];
-extern void d_a_hanachanRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
-extern void *d_a_hanachanNewHold(u32 a, u32 b, s32 x, s32 y, s32 z, const void *v, void *cb);
 extern int func_ov002_020c51d0(void *, void *);
 extern unsigned char data_ov034_0211433c[];
 extern s32 data_ov034_021138d8[];
 extern int func_020092c4(void *arg0, void *out, void *target);
 extern u32 data_ov034_02113828[];
 extern dCamera_c *gCamera;
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *actor, int fix1, int fix2, void *v, int t);
 }
 
 /* Destroys the eight per-segment arrays in reverse declaration order, then

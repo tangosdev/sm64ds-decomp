@@ -108,8 +108,6 @@ extern ButterflyState data_ov100_02148628[];
 
 /* Fix12<int> by value. The header method form homes those arguments on the
  * stack; these scalar entries are the ROM calls. */
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *w, void *actor, int radius, int height, void *a, void *b);
 }
 s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 

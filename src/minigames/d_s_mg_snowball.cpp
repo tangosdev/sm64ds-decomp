@@ -83,8 +83,6 @@ extern OamAttr *sSnowballBitSprites[];
 extern void func_0203d388(int *p, int angle);
 extern int func_0203d434(int *p);
 extern void func_0203d630(int *p, int m);
-extern u32 d_s_mg_snowballNewHold(u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir,
-                                  void *callback);
 extern void func_02012718(int a, int b);
 extern int atan2_hold_d_s_mg_snowball_1(int y, int x);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);

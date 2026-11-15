@@ -300,10 +300,8 @@ extern void LoadKeyModels(int idx);
 extern void LoadSilverStarAndNumber(void);
 extern "C" {
 extern int Math_Function_0203b14c(void *, int a, int b, int c, int d);
-extern int PlayerChangeMusicVolumeHold(u32 vol, int t);
 extern void PlayerChangeMusicVolumeHold2(int, int);
 extern void PlayerChangeMusicVolumeHold3(unsigned int, int);
-extern void PlayerNewSimpleHold(unsigned int id, int x, int y, int z);
 extern void PlayerNewSimpleHold1(unsigned int, int, int, int);
 extern void PlayerNewSimpleHold13(u32 id, int a, int b, int cc);
 extern void PlayerNewSimpleHold16(unsigned int id, int x, int y, int z);
@@ -452,8 +450,6 @@ extern void func_ov002_020dc09c(char *c);
 extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
-extern u32 PlayerNewHold(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                         void *callback);
 extern u32 PlayerNewHold3(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
                           void *callback);
 extern u32 PlayerNewHold4(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,

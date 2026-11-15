@@ -113,7 +113,6 @@ int ObjectMessageIDToActualMessageID(s16 id);
    The mangled spellings are kept wherever the real declaration takes a
    Fix12<int> BY VALUE, because mwccarm passes those differently at
    the call site than a loose spelling would. */
-int d_a_kinopioPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 }
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int func_020138dc(void);

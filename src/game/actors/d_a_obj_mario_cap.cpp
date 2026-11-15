@@ -238,8 +238,6 @@ void  Matrix4x3_FromRotationY(void *m, int angle);
 
 short atan2_hold_d_a_obj_mario_cap_1(int y, int x);
 
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void *w);
 
 /* -- data -- */
 extern Matrix4x3      data_020a0e68;

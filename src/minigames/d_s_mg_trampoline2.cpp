@@ -123,8 +123,6 @@ extern const u16 sTrmp2BrushPltt[];
 extern dFdBrightness_c *gSceneFader;
 extern int sTrmp2TouchBlocked;
 void func_0203cd80(int *m, short angle);
-unsigned int d_s_mg_trampoline2NewCleanParticleHold(unsigned int a, unsigned int b, int c, int d,
-                                                    int e, const Vector3_16f *f);
 void Jump2Popup_UpdateAll(void);
 extern const VecFx32 sTrmp2RandomSpawnPositions[];
 extern void func_0203cc28(int *vector, int angle);

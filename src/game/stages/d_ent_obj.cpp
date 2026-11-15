@@ -82,8 +82,6 @@ struct EntObjTextureSequenceFileHandle : SharedFilePtr {
  * class type, mwccarm homes the register arguments and the callers grow, so
  * the measured scalar views stay. */
 extern "C" {
-int d_ent_objNewHold(unsigned handle, unsigned id, int x, int y, int z, const Vector3_16 *dir,
-                     void *callback);
 
 int RandomIntInternal(int *seed);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);

@@ -116,8 +116,6 @@ extern PgMthrState data_ov018_02113c4c[3];
 typedef void (daPgMthr_c::*PMF)();
 extern PgMthrModelFileHandle data_ov018_02113c00;
 extern SharedFilePtr *data_ov018_02112c04[2];
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *act, int a, int b, void *c2, void *d);
 }
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 

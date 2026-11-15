@@ -162,8 +162,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
 }
 
 /* One definition, two ROM variants (the D2 mwccarm also emits is

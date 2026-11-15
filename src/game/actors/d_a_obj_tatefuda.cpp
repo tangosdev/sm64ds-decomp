@@ -142,14 +142,8 @@ extern s32 Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern int func_ov002_020bec84(void *player, unsigned int i);
 extern unsigned int gNextActorUpdateMask;
 extern u8 DecIfAbove0_Byte(u8 *p);
-extern void *d_a_obj_tatefudaNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
-extern u32 d_a_obj_tatefudaNewCleanParticleHold(u32 a, u32 b, int c, int d, int e,
-                                                const Vector3_16f *v);
 extern void hold_d_a_obj_tatefuda(void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh,
                                   CLPS_Block &b);
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *a, s32 radius, s32 height, Vector3_16 *v,
-                         Vector3_16 *v2);
 extern CLPS_Block data_ov002_0210d714;
 }
 extern void func_02012694(unsigned int a, const Vector3 *b);
