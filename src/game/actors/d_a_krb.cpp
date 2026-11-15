@@ -175,9 +175,6 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 int SurfaceInfo_TestFlag0x20(int *p);
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
-/* Three-register reconstructed interface; death-state stores also use r3. */
-extern "C" struct Aea30C;
-void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
 extern BMA_File data_ov084_0213088c;
 extern int data_ov084_02130248[];
 extern u8 data_ov084_02130204[];
@@ -604,7 +601,7 @@ int daKrb_c::func_ov084_02129a00() {
         if (goomba->SpawnParticlesIfHitOtherObj(goomba->mdCcAc_c) != 0) {
             void *actor = dActor_c::FindWithID(goomba->mdCcAc_c.otherOwner);
             goomba->mDeathState = daKrb_c::DEATH_HIT_20000;
-            func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)actor, &goomba->mWithMeshClsn);
+            goomba->func_ov002_020aea30((dActor_c *)actor, &goomba->mWithMeshClsn);
             goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000,
                                       0);
             goomba->mdCcAc_c.flags |= 1;
@@ -953,7 +950,7 @@ void daKrb_c::func_ov084_02129ed4() {
         capReleaseOnExit.z = 0; /* 108.0 */
         goomba->ReleaseCap(capReleaseOnExit);
     }
-    func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)other, &goomba->mWithMeshClsn);
+    goomba->func_ov002_020aea30((dActor_c *)other, &goomba->mWithMeshClsn);
     if (turnAround != 0) {
         goomba->mAngleY = (goomba->mPrevAngleY + 0x8000); /* half a turn */
     }
@@ -1125,7 +1122,7 @@ void daKrb_c::ActTumble() {
     if (goomba->SpawnParticlesIfHitOtherObj(goomba->mdCcAc_c) != 0) {
         void *a = dActor_c::FindWithID(goomba->mdCcAc_c.otherOwner);
         goomba->mDeathState = daKrb_c::DEATH_HIT_20000;
-        func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)a, &goomba->mWithMeshClsn);
+        goomba->func_ov002_020aea30((dActor_c *)a, &goomba->mWithMeshClsn);
         goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
         goomba->mdCcAc_c.flags |= 1;
     }

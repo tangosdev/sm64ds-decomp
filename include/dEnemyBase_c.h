@@ -56,7 +56,7 @@ struct dEnemyBase_c : dActor_c {
        dormant, and GetCapState restores them when the cap is released. */
     u32 mDormantFlags; /* 0x0f4 */
     /* Particle-system uniqueIDs for the death state that falls until it lands
-       (EnemyDeathC::func_ov002_020ae4cc): each frame the stored ID is passed
+       (dEnemyBase_c::func_ov002_020ae4cc): each frame the stored ID is passed
        back into System::New (effect 0x13a) and System::NewCleanParticle
        (effect 0x13b) and the returned ID is stored again. daEykn_c and
        daPropeller_Heyho_c spawn the same 0x13a/0x13b pair when defeated. */
@@ -200,6 +200,23 @@ struct dEnemyBase_c : dActor_c {
            scalar lets the definition be a real method (notes/mwccarm-codegen.md
            6az). */
     void KillByInvincibleChar(const Vector3_16 &spin_, daPly_c &player_, fx32 unused_);
+    /* Death. func_ov002_020aea30 starts the death mDeathState selects, through
+       the eight start handlers in data_ov002_0210db80; UpdateDeath runs one of
+       the per-frame handlers in data_ov002_0210dbc0 each frame. */
+    void func_ov002_020aea30(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020ae9f8(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020ae954(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020ae890(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020ae87c(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020ae844(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020ae80c(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020ae73c(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020aea2c(dActor_c *, dBgCh_Actr *);
+    int func_ov002_020ae64c(dBgCh_Actr &);
+    int func_ov002_020ae608(dBgCh_Actr &);
+    int func_ov002_020ae4cc(dBgCh_Actr &);
+    int func_ov002_020ae454(dBgCh_Actr &);
+    int func_ov002_020aea24(dBgCh_Actr &);
 };
 
 /* Makes dEnemyBase_c's size a claim the compiler enforces, and makes every header
