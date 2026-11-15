@@ -160,7 +160,6 @@ extern void OamRender8_d_s_mg_hanachan(int b, void *attr, int x, int y, int a, i
 extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
 extern unsigned short sHanaUsedIds[];
-extern s16 atan2_hold_d_s_mg_hanachan_methods_1(int y, int x);
 extern void Mg_CommitRecords(void);
 extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
 extern int GetGameLanguage(void);

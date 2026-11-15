@@ -163,10 +163,6 @@ enum {
    __sinit_d_a_r_nk.cpp. */
 extern StateFunc data_ov062_0211e0a4[6];
 
-/* Scalar fixed-point ABI entry; the class-valued form still needs
-   caller reconstruction under the pinned compiler. */
-extern "C" s16 atan2_hold_d_a_r_nk_1(int y, int x);
-
 /* Positional sound at the actor's camera-space position (Sound::Play(3, id, pos)). */
 /* This scalar entry follows its C definition, including u16 startFrame.
    dExtAnmModel_c.h instead declares u32; that shared contract is still unresolved. */

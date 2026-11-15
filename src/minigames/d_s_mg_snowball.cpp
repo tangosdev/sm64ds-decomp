@@ -84,7 +84,6 @@ extern void func_0203d388(int *p, int angle);
 extern int func_0203d434(int *p);
 extern void func_0203d630(int *p, int m);
 extern void func_02012718(int a, int b);
-extern int atan2_hold_d_s_mg_snowball_1(int y, int x);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);

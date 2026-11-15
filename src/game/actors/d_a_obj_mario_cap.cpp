@@ -235,10 +235,6 @@ void  Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void  Matrix4x3_FromRotationY(void *m, int angle);
 
-
-short atan2_hold_d_a_obj_mario_cap_1(int y, int x);
-
-
 /* -- data -- */
 extern Matrix4x3      data_020a0e68;
 extern int            data_02092138;

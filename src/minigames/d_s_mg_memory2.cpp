@@ -99,7 +99,6 @@ extern "C" dScMgMemory2_cState sMemory2RoundTable[];
 extern "C" {
 extern void Mg_DrawScoreTally(void *thiz, int a, int b, int c);
 extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
-extern s16 atan2_hold_d_s_mg_memory2_1(int y, int x);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemory2CardFrameSprites[];
 extern void *sMemory2CardSprites[];

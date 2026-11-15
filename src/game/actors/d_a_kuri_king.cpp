@@ -160,7 +160,6 @@ extern int data_ov074_0212291c[];
 extern int data_ov074_0212290c[];
 extern float data_ov074_02122e4c[];
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern "C" s16 atan2_hold_d_a_kuri_king_1(s32 y, s32 x);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern "C" int *Vec3_LslInPlace(void *v, int n);
 extern struct Matrix4x3 data_020a0e68;

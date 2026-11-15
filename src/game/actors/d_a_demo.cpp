@@ -284,7 +284,6 @@ extern StaffRollStep data_ov002_02110e9c[];
 extern void func_ov002_020f3828(int *c);
 extern "C" {
 extern int data_ov002_021002a0[];
-extern short atan2_hold_d_a_demo_1(int y, int x);
 extern StaffRollStep data_ov002_02110e34[];
 extern unsigned short data_ov002_021000c0[];
 extern int data_ov002_02100120[];

@@ -98,7 +98,6 @@ extern int SurfaceInfo_TestFlag0x20(int *p);
 
 extern "C" {
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern short atan2_hold_d_a_coin_1(int a, int b);
 }
 
 daCoin_c::~daCoin_c()

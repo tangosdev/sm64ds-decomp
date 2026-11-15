@@ -416,9 +416,6 @@ int func_ov002_020ae5c8(dEnemyBase_c *c, int x) {
     return 1;
 }
 
-extern "C" {
-}
-
 int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
     Vector3 v;
     int n = mScaleY;
@@ -661,7 +658,6 @@ int dEnemyBase_c::SpawnParticlesIfHitOtherObj(dCc_c &clsn) {
 
 extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern s16 atan2_hold_d_enemy_base_1(s32 y, s32 x);
 extern s32 *Vec3_AsrInPlace(s32 *v, s32 sh);
 }
 

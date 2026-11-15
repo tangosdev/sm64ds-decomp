@@ -83,7 +83,6 @@ enum {
 enum { kFlightSpeed = 0x32000 };
 
 extern "C" {
-short atan2_hold_d_a_book_1(int, int);
 void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
 }
 void func_ov063_0211cae8(daTrsTrap_c *c, int m);

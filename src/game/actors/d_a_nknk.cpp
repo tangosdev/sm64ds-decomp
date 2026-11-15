@@ -17,13 +17,6 @@
 //   by value (notes/mwccarm-codegen.md 6az), or the header declaration
 //   does not mangle to the ROM symbol. func_0201267c is the bank-3
 //   Sound::Play wrapper.
-// - GetFloorResult is still called through its local extern (the wall
-//   lookup uses the dBgCh_Actr method). Deleting that prototype shifts the
-//   static initializer's @NNN temps, which the intact-object manifest pins
-//   by name, by one (code bytes otherwise identical).
-// - Vec3 / V3 below are local three-int aggregates. inline_fn() returns
-//   MATRIX_SCRATCH_PAPER; deleting its definition shifts the same @NNN
-//   temps by three (code bytes otherwise identical).
 // Inline definitions in Koopa.h, emitted here by the two factories.
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_nknk_AssetId {
@@ -97,12 +90,6 @@ extern "C" int RandomIntInternal(int *seed);
 extern SharedFilePtr* data_ov062_0211ced8[2];
 extern SharedFilePtr* data_ov062_0211cee0[2];
 
-
-extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-inline struct Matrix4x3 *inline_fn()
-{
-  return &data_020a0e68;
-}
 
 int SurfaceInfo_TestFlag0x20(int *p); /* CLPS bit 0x20: water */
 
@@ -659,22 +646,16 @@ void daNknk_c::func_ov062_021183e0()
 }
 
 void daNknk_c::UpdateModelMatrixAndShadow() {
-    short *angleY;
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
-    if (1) {
-        Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-        angleY = &mAngleY;
-        Matrix4x3_ApplyInPlaceToRotationY(inline_fn(), *angleY);
-        /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
-        *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
-        {
-            int b = (int)((mFlags & 0x40000) != 0);
-            if (b != 0) {
-                return;
-            }
-        }
-    }
+    MtxStack::transS(v.x, v.y, v.z);
+    MtxStack::YrotM(mAngleY);
+    /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
+    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    /* No drop shadow while in Yoshi's mouth. */
+    int inMouth = (mFlags & 0x40000) != 0;
+    if (inMouth != 0)
+        return;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x50000, 0x50000, 0xf);
 }
 
