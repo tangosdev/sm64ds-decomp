@@ -19,12 +19,12 @@ extern "C" void func_ov007_020b1fa4(int preset) {
         case 0:
             cam->target.y = -0x3e8;
             cam->distance = 0x1e000;
-            cam->fovy = (short)FX_DivS32(0xf0000, 0x168);
+            cam->fovy = (short)FX_DivS32(0xf0000, 360);
             break;
         case 1:
             cam->target.y = -0x7d0;
             cam->distance = 0x28000;
-            cam->fovy = (short)FX_DivS32(0x120000, 0x168);
+            cam->fovy = (short)FX_DivS32(0x120000, 360);
             break;
         }
         break;
@@ -33,12 +33,12 @@ extern "C" void func_ov007_020b1fa4(int preset) {
         break;
     case 3:
         cam->distance = 0x5000;
-        cam->fovy = (short)FX_DivS32(0x140000, 0x168);
+        cam->fovy = (short)FX_DivS32(0x140000, 360);
         break;
     case 4:
         cam->target.y = -0x3e8;
         cam->distance = 0x1e000;
-        cam->fovy = (short)FX_DivS32(0xf0000, 0x168);
+        cam->fovy = (short)FX_DivS32(0xf0000, 360);
         break;
     }
     func_ov007_020bffb8(cam);

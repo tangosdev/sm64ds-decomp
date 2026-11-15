@@ -136,7 +136,7 @@ int dScStarSel_c::GetCursorCharacter() {
 // (SaveData::GetCoinRecord) as three digits drawn right to left, then the
 // TIMES and COIN sprites.
 void dScStarSel_c::RenderCoinScore() {
-    int x = 0xb8;
+    int x = 184;
     int lvl = SublevelToLevel(gNextSublevel);
     int coin = SaveData::GetCoinRecord(lvl);
     CalculateDigits(coin);
@@ -144,12 +144,12 @@ void dScStarSel_c::RenderCoinScore() {
     for (i = 2; i >= 0; i--) {
         signed char d = mDigits[i];
         if (d >= 0) {
-            OAM::Render(0, OAM::NUMBERS[d], x, 0x4c, 8, -1, 0);
+            OAM::Render(0, OAM::NUMBERS[d], x, 76, 8, -1, 0);
             x -= 9;
         }
     }
-    OAM::Render(0, &OAM::TIMES, x, 0x54, -1, -1, 0);
-    OAM::Render(0, &OAM::COIN, x - 0x10, 0x4c, -1, -1, 0);
+    OAM::Render(0, &OAM::TIMES, x, 84, -1, -1, 0);
+    OAM::Render(0, &OAM::COIN, x - 16, 76, -1, -1, 0);
 }
 
 // ROM 0x020ae0b0, size 0xf4. Draws the power-star count: NumStars() as three
@@ -158,11 +158,11 @@ void dScStarSel_c::RenderStarCount() {
     int x;
     int y;
     if (SublevelToLevel(gNextSublevel) >= 0xf) {
-        y = 0xa0;
-        x = 0xb8;
+        y = 160;
+        x = 184;
     } else {
-        y = 0xac;
-        x = 0xf4;
+        y = 172;
+        x = 244;
     }
     CalculateDigits(NumStars());
     {
@@ -177,7 +177,7 @@ void dScStarSel_c::RenderStarCount() {
         } while (i >= 0);
     }
     OAM::Render(0, &OAM::TIMES, x, y + 8, -1, -1, 0);
-    OAM::Render(0, &OAM::POWER_STAR, x - 0x10, y + 8, -1, -1, 0);
+    OAM::Render(0, &OAM::POWER_STAR, x - 16, y + 8, -1, -1, 0);
 }
 
 // ROM 0x020ae1a4, size 0x94. Splits value into three decimal digits in
@@ -205,18 +205,18 @@ void dScStarSel_c::RenderLifeCount() {
     int x;
     int y;
     if (SublevelToLevel(gNextSublevel) >= 0xf) {
-        y = 0xa0;
-        x = 0x50;
+        y = 160;
+        x = 80;
     } else {
-        x = 0x10;
-        y = 0xac;
+        x = 16;
+        y = 172;
     }
     OAM::Render(0, OAM::LIFE_ICONS[mLifeIcon], x, y + 8, -1, -1, 0x1000, 0x1000, 0, -1);
-    OAM::Render(0, &OAM::TIMES, x + 0x10, y + 8, -1, -1, 0);
+    OAM::Render(0, &OAM::TIMES, x + 16, y + 8, -1, -1, 0);
     CalculateDigits((unsigned short)gNumLives);
     {
         int i = 0;
-        x += 0x18;
+        x += 24;
         do {
             signed char d = mDigits[i];
             if (d >= 0) {
@@ -265,13 +265,13 @@ void dScStarSel_c::UpdateCharacterSelect() {
         valid = ((u8(*)[4])gTouchEdge)[idx][0] != 0;
     }
     if (valid != 0) {
-        if ((((unsigned char)(((u8(*)[4])gTouchX)[idx][0] - 0x58)) < 0x50) &&
-            (((unsigned char)((((u8(*)[4])gTouchY)[idx][0] - mFaceY) + 0x28)) < 0x50)) {
+        if ((((unsigned char)(((u8(*)[4])gTouchX)[idx][0] - 88)) < 80) &&
+            (((unsigned char)((((u8(*)[4])gTouchY)[idx][0] - mFaceY) + 40)) < 80)) {
             mCursorTarget = 2;
             mPickedChar = 3;
             mPickPressTimer = (data_0208ee44 * 6);
             mAnimMode = 1;
-            mExitDelay = 0x10;
+            mExitDelay = 16;
             func_02012790(data_0209caa0.file.mCharacter + 0x3c);
             return;
         }
@@ -285,9 +285,9 @@ void dScStarSel_c::UpdateCharacterSelect() {
             if (SaveData::IsCharacterUnlocked(i) != 0) {
                 int ri = gActivePlayerSlot;
                 if (((unsigned short)((((u8(*)[4])gTouchHeld)[gActivePlayerSlot][2] - mCharX[i]) +
-                                      0x18)) < 0x30) {
-                    if (((unsigned short)((((u8(*)[4])gTouchHeld)[ri][3] - mCharY[i]) + 0x18)) <
-                        0x2b) {
+                                      24)) < 48) {
+                    if (((unsigned short)((((u8(*)[4])gTouchHeld)[ri][3] - mCharY[i]) + 24)) <
+                        43) {
                         mCursorTarget = 1;
                         mCharCursor = GetCharacterSlot(i);
                         data_02092128[0] = i;
@@ -295,7 +295,7 @@ void dScStarSel_c::UpdateCharacterSelect() {
                         mPickedChar = i;
                         mPickPressTimer = (data_0208ee44 * 3);
                         mAnimMode = 2;
-                        mExitDelay = 0x10;
+                        mExitDelay = 16;
                         func_02012790(data_0209caa0.file.mCharacter + 0x3c);
                         return;
                     }
@@ -326,14 +326,14 @@ void dScStarSel_c::UpdateCharacterSelect() {
             next = mCharCursor;
             if (ctrl & 0x20) {
                 if (((data_020a0e58[0].pressed & 0x20) != 0) || (timer == 0)) {
-                    mCharRepeatTimer = (data_020a0e58[idx].pressed & 0x20) ? (0x10) : (8);
+                    mCharRepeatTimer = (data_020a0e58[idx].pressed & 0x20) ? (16) : (8);
                     if (mCharCursor != 0) {
                         next = next - 1;
                     }
                 }
             } else if (ctrl & 0x10) {
                 if (((data_020a0e58[0].pressed & 0x10) != 0) || (timer == 0)) {
-                    mCharRepeatTimer = (data_020a0e58[idx].pressed & 0x10) ? (0x10) : (8);
+                    mCharRepeatTimer = (data_020a0e58[idx].pressed & 0x10) ? (16) : (8);
                     if (mCharCursor != (mStripMode - 2)) {
                         next = next + 1;
                     }
@@ -383,12 +383,12 @@ s32 dScStarSel_c::Render() {
         levelNum = SublevelToLevel(gNextSublevel) + 1;
         if (levelNum <= 0xf) {
             if (levelNum >= 10) {
-                OAM::Render(0, OAM::NUMBERS[levelNum / 10], numX = 0x77, 0x7a, 8, -1, 0);
+                OAM::Render(0, OAM::NUMBERS[levelNum / 10], numX = 119, 122, 8, -1, 0);
                 numX += 9;
             } else {
-                numX = 0x7c;
+                numX = 124;
             }
-            OAM::Render(0, OAM::NUMBERS[levelNum % 10], numX, 0x7a, 8, -1, 0);
+            OAM::Render(0, OAM::NUMBERS[levelNum % 10], numX, 122, 8, -1, 0);
         }
     }
 
@@ -416,9 +416,9 @@ s32 dScStarSel_c::Render() {
         for (i = 0; i < mPlateCount; i++) {
             if ((mPlateMask >> i) & 1) {
                 if (i == mSelectedPlate) {
-                    OAM::RenderSub(&data_ov001_020ab938, mPlateX[i], 0x18);
+                    OAM::RenderSub(&data_ov001_020ab938, mPlateX[i], 24);
                 } else {
-                    OAM::RenderSub(&data_ov001_020ab940, mPlateX[i], 0x18);
+                    OAM::RenderSub(&data_ov001_020ab940, mPlateX[i], 24);
                 }
             }
             OAM::Render(0, (OamAttr *)data_ov001_020abb18[i], mPlateX[i], 8, -1, -1, 0);
@@ -429,9 +429,9 @@ s32 dScStarSel_c::Render() {
                 OAM::RenderSub(&OAM::POINTER_DOWN, mPlateX[mSelectedPlate], 6);
             } else if (mCursorTarget == 1) {
                 int slot = GetCursorCharacter();
-                OAM::RenderSub(&OAM::POINTER_RIGHT, mCharX[slot] - 0x24, mCharY[slot] - 8);
+                OAM::RenderSub(&OAM::POINTER_RIGHT, mCharX[slot] - 36, mCharY[slot] - 8);
             } else {
-                OAM::RenderSub(&OAM::POINTER_RIGHT, 0x50, mFaceY + 8);
+                OAM::RenderSub(&OAM::POINTER_RIGHT, 80, mFaceY + 8);
             }
         }
 
@@ -483,19 +483,19 @@ s32 dScStarSel_c::Render() {
 
         switch (data_0209caa0.file.mCharacter) {
         case 0:
-            OAM::Render(1, &OAM::PLAYER_SELECT_MARIO, 0x80, mFaceY, -1, -1, mFaceScaleX,
+            OAM::Render(1, &OAM::PLAYER_SELECT_MARIO, 128, mFaceY, -1, -1, mFaceScaleX,
                         mFaceScaleY, (u16)mFaceAngle, -1);
             break;
         case 1:
-            OAM::Render(1, &OAM::PLAYER_SELECT_LUIGI, 0x80, mFaceY, -1, -1, mFaceScaleX,
+            OAM::Render(1, &OAM::PLAYER_SELECT_LUIGI, 128, mFaceY, -1, -1, mFaceScaleX,
                         mFaceScaleY, (u16)mFaceAngle, -1);
             break;
         case 2:
-            OAM::Render(1, &OAM::PLAYER_SELECT_WARIO, 0x80, mFaceY, -1, -1, mFaceScaleX,
+            OAM::Render(1, &OAM::PLAYER_SELECT_WARIO, 128, mFaceY, -1, -1, mFaceScaleX,
                         mFaceScaleY, (u16)mFaceAngle, -1);
             break;
         case 3:
-            OAM::Render(1, &OAM::PLAYER_SELECT_YOSHI, 0x80, mFaceY, -1, -1, mFaceScaleX,
+            OAM::Render(1, &OAM::PLAYER_SELECT_YOSHI, 128, mFaceY, -1, -1, mFaceScaleX,
                         mFaceScaleY, (u16)mFaceAngle, -1);
             for (i = 0; i < 3; i++) {
                 pressY = 0;
@@ -538,9 +538,9 @@ s32 dScStarSel_c::Render() {
 
         if (mStripMode <= 1 || data_0209caa0.file.mCharacter != 3) {
             if (SublevelToLevel(gNextSublevel) <= 0xe) {
-                OAM::RenderSub(&data_ov001_020abbb4, 0x80, (mPromptYOffset >> 8) + 0xa0);
+                OAM::RenderSub(&data_ov001_020abbb4, 128, (mPromptYOffset >> 8) + 160);
             } else {
-                OAM::RenderSub(&data_ov001_020abbf4, 0x80, (mPromptYOffset >> 8) + 0xa0);
+                OAM::RenderSub(&data_ov001_020abbf4, 128, (mPromptYOffset >> 8) + 160);
             }
         }
     }
@@ -618,7 +618,7 @@ s32 dScStarSel_c::Behavior() {
                     mPickPressTimer = data_0208ee44 * 6;
                     mAnimMode = 1;
                 }
-                mExitDelay = 0x10;
+                mExitDelay = 16;
                 func_02012790(data_0209caa0.file.mCharacter + 0x3c);
             }
         } else if (SublevelToLevel(gNextSublevel) <= 0xe) {
@@ -633,8 +633,8 @@ s32 dScStarSel_c::Behavior() {
                     rec = ((u8(*)[4])gTouchHeld)[idx];
                     tx = rec[2];
                     do {
-                        if ((u8)(tx - mPlateX[i] + 8) < 0x10 &&
-                            ((u8(*)[4])gTouchHeld)[idx][3] < 0x28 && ((mPlateMask >> i) & 1)) {
+                        if ((u8)(tx - mPlateX[i] + 8) < 16 &&
+                            ((u8(*)[4])gTouchHeld)[idx][3] < 40 && ((mPlateMask >> i) & 1)) {
                             hit = (val != 0 && ((u8(*)[4])gTouchEdge)[idx][0] != 0);
                             if (hit != 0 || cur != i) {
                                 mPlatePressTimer = data_0208ee44 * 3;
@@ -656,7 +656,7 @@ s32 dScStarSel_c::Behavior() {
                 if (data_020a0e58[0].held & 0x20) {
                     pressed = data_020a0e58[0].pressed & 0x20;
                     if (pressed != 0 || mPlateRepeatTimer == 0) {
-                        mPlateRepeatTimer = pressed ? 0x10 : 8;
+                        mPlateRepeatTimer = pressed ? 16 : 8;
                         if (cur != 0) {
                             u8 mask = mPlateMask;
                             cur--;
@@ -669,7 +669,7 @@ s32 dScStarSel_c::Behavior() {
                 } else if (data_020a0e58[0].held & 0x10) {
                     pressed = data_020a0e58[0].pressed & 0x10;
                     if (pressed != 0 || mPlateRepeatTimer == 0) {
-                        mPlateRepeatTimer = pressed ? 0x10 : 8;
+                        mPlateRepeatTimer = pressed ? 16 : 8;
                         if (cur < mPlateCount - 1) {
                             u8 mask = mPlateMask;
                             cur++;
@@ -784,7 +784,7 @@ s32 dScStarSel_c::Behavior() {
                     } else if (mBouncePhase == 3 && mPromptYOffset <= 0) {
                         mBounceLaunch += 0x80;
                         if (mBounceLaunch >= -0x180) {
-                            mBounceDelay = 0x78;
+                            mBounceDelay = 120;
                             mPromptYOffset = 0;
                         } else {
                             mBounceVelocity = mBounceLaunch;
@@ -1107,13 +1107,13 @@ s32 dScStarSel_c::InitResources() {
         }
         count = mPlateCount;
         if (count & 1)
-            plateX = 0x80;
+            plateX = 128;
         else
-            plateX = 0x92;
-        plateX -= ((s32)count >> 1) * 0x23;
+            plateX = 146;
+        plateX -= ((s32)count >> 1) * 35;
         for (i = 0; i < (s32)mPlateCount; i++) {
             mPlateX[i] = plateX;
-            plateX += 0x23;
+            plateX += 35;
         }
     }
 
@@ -1138,10 +1138,10 @@ s32 dScStarSel_c::InitResources() {
 
     if (SublevelToLevel(gNextSublevel) <= 0xE) {
         if ((mStripMode != 1) && (data_0209caa0.file.mCharacter == 3)) {
-            mFaceY = 0x88;
+            mFaceY = 136;
             mBounceDelay = 0;
         } else {
-            mFaceY = 0x60;
+            mFaceY = 96;
             mBounceDelay = 0;
         }
         unlocked = mStripMode;
@@ -1183,7 +1183,7 @@ s32 dScStarSel_c::InitResources() {
     mAnimMode = 0;
     mFaceAnimStep = 0;
     mFaceAngle = 0;
-    mBounceDelay = 0x78;
+    mBounceDelay = 120;
     mAnimFlip = 0;
     gSubScreenLayers = 0x10;
     GX_SetVisiblePlane(gMainScreenLayers);

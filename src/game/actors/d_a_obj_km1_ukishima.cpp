@@ -85,7 +85,7 @@ s32 daObjKm1_Ukishima_c::InitResources() {
 
     mPrevAngleY = mAngleY;
     mHorzSpeed = 0xa000;
-    mTurnTimer = 0x3c;
+    mTurnTimer = 60;
     return 1;
 }
 
@@ -93,7 +93,7 @@ s32 daObjKm1_Ukishima_c::InitResources() {
 /* -------------------------------------------------------------------------- */
 s32 daObjKm1_Ukishima_c::Behavior() {
     if (!DecIfAbove0_Byte(&mTurnTimer)) {
-        mTurnTimer = 0x3c;
+        mTurnTimer = 60;
         /* A quarter turn, applied to the heading UpdatePos integrates along.
            MEASURED: it has to be the compound assign. Spelled out as
            `mPrevAngleY = mPrevAngleY + 0x4000` mwcc reloads the field address

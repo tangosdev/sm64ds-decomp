@@ -288,7 +288,7 @@ int dScene_c::BeforeBehavior()
         } else {
             if (gSoftResetFader == 0) {
                 gSoftResetBrightnessFader.currInterp = 0;
-                gSoftResetBrightnessFader.dFdBrightness_c::SetForwardTime(0x10, 0);
+                gSoftResetBrightnessFader.dFdBrightness_c::SetForwardTime(16, 0);
                 gSoftResetFader = &gSoftResetBrightnessFader;
             } else if (gSoftResetBrightnessFader.dFdBrightness_c::IsAtEnd()) {
                 StartSceneFade(1, 0, 0);
@@ -301,7 +301,7 @@ int dScene_c::BeforeBehavior()
 
     if (gNextSceneId != 0x187) {
         if (gSceneFader->IsAtStart() != 0) {
-            gSceneFader->SetForwardTime(0x1e, 0);
+            gSceneFader->SetForwardTime(30, 0);
         } else if (gSceneFader->IsAtEnd() != 0) {
             MarkForDestruction();
         }
@@ -316,7 +316,7 @@ int dScene_c::BeforeBehavior()
         return 0;
     } else {
         if (gSceneFader->IsAtEnd() != 0) {
-            gSceneFader->SetBackwardTime(0x1e, 0);
+            gSceneFader->SetBackwardTime(30, 0);
         }
         return 1;
     }

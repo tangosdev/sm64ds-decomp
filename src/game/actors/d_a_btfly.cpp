@@ -125,7 +125,7 @@ void daBtfly_c::State7()
 
     /* Read mFlutterPhase signed, then zero-extend: a single (u16) read
      * shortens State7 by 8 bytes. */
-    if (mStateTimer > 0x78) {
+    if (mStateTimer > 120) {
         int ang = mFlutterPhase;
         ang = (unsigned short)(short)ang;
         int idx = ang >> 4;
@@ -155,7 +155,7 @@ void daBtfly_c::State7()
     }
     /* mClsnFlags & 0x10 is func_02035638. No accessor; IsOnGround is mFlags & 0x10. */
     if (hasContact || mWithMeshClsn.IsOnWall() || mWithMeshClsn.IsOnGround() ||
-        func_02035638((u8 *)&mWithMeshClsn) || mStateTimer > 0x9d) {
+        func_02035638((u8 *)&mWithMeshClsn) || mStateTimer > 157) {
         if (hasContact != 0) {
             dActor_c *hit = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
             if (hit != 0) {
@@ -187,7 +187,7 @@ void daBtfly_c::State7()
 
 void daBtfly_c::State6()
 {
-    if (mStateTimer == 0x14) {
+    if (mStateTimer == 20) {
         if (mKind != 1) {
             mScale = 0;
             mUseAnimModel = 0;
@@ -197,7 +197,7 @@ void daBtfly_c::State6()
         MarkForDestruction();
         return;
     }
-    if (mStateTimer <= 0x14)
+    if (mStateTimer <= 20)
         return;
     mScale += 0x40;
     if (mScale < 0x800)
@@ -217,7 +217,7 @@ void daBtfly_c::State5()
         return;
     }
 
-    if (mStateTimer > 0x6e && DistToCPlayer() < 0xc8000 &&
+    if (mStateTimer > 110 && DistToCPlayer() < 0xc8000 &&
         (unsigned char)(mKind + 0xff) <= 1) {
         mHorzSpeed = 0;
         mStateTimer = 0;
@@ -227,7 +227,7 @@ void daBtfly_c::State5()
         ApproachLinear(mHorzSpeed, 0x8000, 0x800);
     }
 
-    if (mStateTimer >= 0x3c)
+    if (mStateTimer >= 60)
         hAngle = mWanderAngle;
     else
         hAngle = Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX);

@@ -88,7 +88,7 @@ int daObjPathLift_c::InitResources() {
         mRespawnAfterFall = 1;
         b = (gGameMode == 1);
         if (b)
-            mTimer = 0xb4;
+            mTimer = 180;
     }
     return 1;
 }

@@ -369,7 +369,7 @@ void daBmb_c::func_ov102_0214c0b8() {
     else
         mHorzSpeed = 0x5000;
     mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
-    mTurnTimer = 0x200;
+    mTurnTimer = 512;
     mVertAccel = -0x2000;
     mCarrier = 0;
 }
@@ -1141,7 +1141,7 @@ after_cannon:
         mVariant = 3;
         mState = 0;
         mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
-        mTurnTimer = 0x200;
+        mTurnTimer = 512;
         mVertAccel = -0x2000;
         mdCc_c.flags &= ~2u;
     }

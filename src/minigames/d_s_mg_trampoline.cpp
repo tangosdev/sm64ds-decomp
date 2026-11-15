@@ -336,7 +336,7 @@ void dScMgTrampoline_c::BeginIntro() {
     short startX;
     short startY;
 
-    mTimer = 0x5a;
+    mTimer = 90;
     startX = sTrmpStartTouchX;
     mTouchStartX = startX;
     startY = sTrmpStartTouchY;
@@ -398,7 +398,7 @@ void dScMgTrampoline_c::StateIntro() {
 }
 
 void dScMgTrampoline_c::BeginPlay() {
-    mTimer = 0x1e;
+    mTimer = 30;
     mInputEnabled = 1;
     mDoorMark.Show(mDoorSide);
     mDragSoundHandle = 0;
@@ -416,7 +416,7 @@ void dScMgTrampoline_c::UpdateScroll() {
         if (mLevel > 0x270e)
             mLevel = 0x270e;
         if (mScrollTargetY < 0x50) {
-            mScrollHoldTimer = 0x78;
+            mScrollHoldTimer = 120;
             Sound::PlayBank2_2D(0x1b2);
         }
     }
@@ -460,11 +460,11 @@ void dScMgTrampoline_c::StatePlay() {
                     }
                 }
             }
-            mTimer = 0x168;
+            mTimer = 360;
             {
                 int speedUp = sTrmpComboCount * 2;
-                if (speedUp > 0xb4)
-                    speedUp = 0xb4;
+                if (speedUp > 180)
+                    speedUp = 180;
                 mTimer -= speedUp;
             }
         }
@@ -491,9 +491,9 @@ void dScMgTrampoline_c::StatePlay() {
         }
     }
 
-    if (mDoorSwitchTimer <= 0x3c) {
+    if (mDoorSwitchTimer <= 60) {
         if (ApproachLinear2(mDoorBlinkTimer, 0, 1)) {
-            mDoorBlinkTimer = 0xa;
+            mDoorBlinkTimer = 10;
             if (mDoorBlinkPhase != 0)
                 mDoorBlinkPhase = 0;
             else
@@ -512,7 +512,7 @@ void dScMgTrampoline_c::StatePlay() {
 
 void dScMgTrampoline_c::BeginResults() {
     Trmp3DMario_StartAll();
-    mTimer = 0x5a;
+    mTimer = 90;
     mState = &dScMgTrampoline_c::StateResults;
 }
 
@@ -524,7 +524,7 @@ void dScMgTrampoline_c::StateResults() {
         return;
     Mg_SetSharedState(MG_STATE_GAME_OVER);
     mPromptEnabled = 0;
-    mTimer = 0xb4;
+    mTimer = 180;
     mState = &dScMgTrampoline_c::StateWaitExit;
 }
 
@@ -635,9 +635,9 @@ s32 dScMgTrampoline_c::Render() {
         for (i = 0; i < 3; i++) {
             if (i >= lives) {
                 int language = GetGameLanguage();
-                DrawOamSprite(sTrmpTextSpritesByLanguage[language][1], iconX, 0xc, 0);
+                DrawOamSprite(sTrmpTextSpritesByLanguage[language][1], iconX, 12, 0);
             } else {
-                RenderOamMainScreen(sTrmpLifeIconSprite, iconX, 0xc, -1, -1);
+                RenderOamMainScreen(sTrmpLifeIconSprite, iconX, 12, -1, -1);
             }
             iconX += 0x12;
         }
@@ -658,12 +658,12 @@ s32 dScMgTrampoline_c::Render() {
     }
 
     rowY = sTrmpRowScreenY[0] - (mScrollY + mScrollOffsetY);
-    Mg_RenderSpriteBoth(sTrmpArrowSprite, mArrow1X + 0xf0, rowY, -1, 2);
-    Mg_RenderSpriteBoth(sTrmpDoorSignSprites[door0Frame], 0xf0, rowY - 0x20, -1, 2);
+    Mg_RenderSpriteBoth(sTrmpArrowSprite, mArrow1X + 240, rowY, -1, 2);
+    Mg_RenderSpriteBoth(sTrmpDoorSignSprites[door0Frame], 240, rowY - 32, -1, 2);
 
     rowY = sTrmpRowScreenY[1] - (mScrollY + mScrollOffsetY);
-    Mg_RenderSpriteBoth(sTrmpArrowSprite, mArrow2X + 0xf0, rowY, -1, 2);
-    Mg_RenderSpriteBoth(sTrmpDoorSignSprites[door1Frame], 0xf0, rowY - 0x20, -1, 2);
+    Mg_RenderSpriteBoth(sTrmpArrowSprite, mArrow2X + 240, rowY, -1, 2);
+    Mg_RenderSpriteBoth(sTrmpDoorSignSprites[door1Frame], 240, rowY - 32, -1, 2);
 
     if (mRoundOver == 0) {
         Trmp3DMario_DrawAll();
@@ -782,7 +782,7 @@ void dScMgTrampoline_c::InitBrush(int layer) {
         return;
     }
 
-    for (i = 0; i < 0x300; i++) {
+    for (i = 0; i < 768; i++) {
         t0 = tile;
         MIi_CpuClear16(t0, scrPtr, 2);
         tile = (unsigned short)(tile + 1);
@@ -980,7 +980,7 @@ void dScMgTrampoline_DoorMark::Hide() {
 
 void dScMgTrampoline_DoorMark::Show(int side) {
     row = (s16)side;
-    timer = 0x3c;
+    timer = 60;
     shown = 1;
     active = 1;
     Sound::PlayBank2_2D(0x1B7);
@@ -1004,7 +1004,7 @@ void dScMgTrampoline_DoorMark::Render(int scrollY) {
         return;
     if (shown == 0)
         return;
-    Mg_RenderSpriteBoth((void *)sTrmpRowMarkerSprite, 0xd0, sTrmpRowScreenY[row] - scrollY - 8, -1,
+    Mg_RenderSpriteBoth((void *)sTrmpRowMarkerSprite, 208, sTrmpRowScreenY[row] - scrollY - 8, -1,
                         -1);
 }
 

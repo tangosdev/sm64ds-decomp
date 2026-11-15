@@ -295,7 +295,7 @@ s32 dScMgRoulette_c::Behavior() {
                 } else {
                     for (int i = 0; i < mRacerCount; i++)
                         mRacers[i].state = 1;
-                    mPhaseTimer = 0x258;
+                    mPhaseTimer = 600;
                     mDealer.PlayIdle();
                     mPhase += 1;
                     mDealIndex = 0;
@@ -306,7 +306,7 @@ s32 dScMgRoulette_c::Behavior() {
         break;
     case 2: {
         int timer = mPhaseTimer;
-        if (timer % 60 == 0 && timer > 0 && timer <= 0xb4) {
+        if (timer % 60 == 0 && timer > 0 && timer <= 180) {
             Sound::PlayBank2_2D(0xa6);
         }
         mPhaseTimer -= 1;
@@ -375,7 +375,7 @@ s32 dScMgRoulette_c::Behavior() {
                 Mg_SaveRecordPair(mScore + SCENE_BONUS, 0);
                 unk_53f4 = 0;
                 mDealIndex = 0;
-                mPhaseTimer = 0x5a;
+                mPhaseTimer = 90;
                 mPhase += 1;
             }
         }
@@ -447,8 +447,8 @@ s32 dScMgRoulette_c::Render() {
 
     if (mPhase == 2) {
         int timer = mPhaseTimer;
-        if (timer <= 0xb4) {
-            int frames = timer + 0x3b;
+        if (timer <= 180) {
+            int frames = timer + 59;
             s16 rem = frames % 60;
             int seconds = frames / 60;
             int vol = rem * 0x88 + 0x1000;
@@ -510,7 +510,7 @@ int dScMgRoulette_c::CanEndState(int /* mode */) {
         break;
     case 6:
         if (mDealer.IsIdle() != 0) {
-            mPhaseTimer = 0x3c;
+            mPhaseTimer = 60;
             mDealIndex = 0;
             (mPhase)++;
         }
@@ -548,7 +548,7 @@ void dScMgRoulette_c::StartRound(int /* arg */) {
     mDealer.StartSwap();
 
     mScore = 0;
-    mPhaseTimer = 0xa;
+    mPhaseTimer = 10;
 
     racer = mRacers;
     for (i = 0; i < 5; i++) {
@@ -1233,7 +1233,7 @@ void RouletteStrip_Draw(RouletteStrip *strip, int y) {
 
     {
         int b = y + 0x10;
-        RenderOamBothScreens(sRouletteRacerSprites, 0x20, b, -1, 1, 0);
+        RenderOamBothScreens(sRouletteRacerSprites, 32, b, -1, 1, 0);
         Mg_DrawBigNumber(0x2e, b, strip->count, 0, -1, 1, 0);
     }
 }
@@ -1284,7 +1284,7 @@ int RouletteResults_Tick(void) {
         int idx;
         sRouletteResultIndex = sRouletteResultIndex + 1;
         idx = sRouletteResultIndex;
-        sRouletteResultsTimer = 0x78;
+        sRouletteResultsTimer = 120;
         while (idx < 4) {
             if (sRouletteStrips[idx]->count != 0)
                 break;

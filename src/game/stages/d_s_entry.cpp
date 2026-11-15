@@ -219,9 +219,9 @@ void dScEntry_c::icon_c::Render() {
 void dScEntry_c::icon_c::Behavior() {
     if (unk_01c == 0xd) {
         if (unk_020 == data_0209b2e4) {
-            ApproachLinear2(mY, 0x14, 8);
+            ApproachLinear2(mY, 20, 8);
         } else {
-            if (ApproachLinear2(mY, -0x24, 8) != 0)
+            if (ApproachLinear2(mY, -36, 8) != 0)
                 unk_020 = data_0209b2e4;
         }
     }
@@ -413,7 +413,7 @@ void dScEntry_c::RenderPlayerScores() {
     int d = 4 - count;
     int xbase;
     xbase = data_ov075_0211c6e8[d];
-    stride = (d * 16) + 0x38;
+    stride = (d * 16) + 56;
     {
         if (count > 0) {
             int minus1 = -1;
@@ -430,20 +430,20 @@ void dScEntry_c::RenderPlayerScores() {
             zE = i;
             zD = i;
             zB = i;
-            off14 = 0x14;
+            off14 = 20;
             zF = i;
             zA = i;
-            yIcon = 0x98;
+            yIcon = 152;
             zC = i;
             scale = 0x1000;
-            yNum = 0xb0;
+            yNum = 176;
             do {
                 int *p;
                 int pid = EntryPlayerIndex(i);
                 OAM::Render(zA, data_ov075_0211c7c0, xbase + i * stride, yIcon, minus1, minus1,
                             scale, scale, zA, minus1);
                 p = (int *)OAM::Render(zC, (OamAttr *)data_ov075_0211c8b0,
-                                       xbase + 0x1c + i * stride, yIcon, minus1, minus1, scale, zC);
+                                       xbase + 28 + i * stride, yIcon, minus1, minus1, scale, zC);
                 if (p != 0) {
                     int *q = p + 1;
                     int val = *q;
@@ -462,7 +462,7 @@ void dScEntry_c::RenderPlayerScores() {
                     tens = rem / 10;
                     if (hundreds != 0) {
                         p = (int *)OAM::Render(zD, (OamAttr *)data_ov075_0211c8b0,
-                                               xbase + 0x14 + i * stride, yNum, minus1, minus1,
+                                               xbase + 20 + i * stride, yNum, minus1, minus1,
                                                scale, zD);
                         if (p != 0) {
                             int *q = p + 1;

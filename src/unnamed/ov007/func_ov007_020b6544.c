@@ -20,7 +20,7 @@ void func_ov007_020b6544(void)
     WORK->transitionMode = 1;
     func_ov007_020b20e8();
     int i;
-    for (i = 0; i < 0x18; i++) {
+    for (i = 0; i < 24; i++) {
         ItemView_ResetSprite(WORK->itemViews[i], WORK->cameras[1]);
     }
 }

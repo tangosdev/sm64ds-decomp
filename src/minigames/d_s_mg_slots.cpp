@@ -255,7 +255,7 @@ void Slot3_StateGameOver(char *c) {
         Mg_SetSharedState(MG_STATE_GAME_OVER);
         self->mReelDifficulty = 0;
     }
-    if (self->mStateTimer >= 0x3c)
+    if (self->mStateTimer >= 60)
         return;
     self->mReelWinPos[0] += 0x10000;
     self->mReelWinPos[1] -= 0x10000;
@@ -275,7 +275,7 @@ void Slot3_StatePayout(char *c) {
             self->StartRound(4);
         } else {
             if (self->mCredits <= 0) {
-                self->mStateTimer = 0x78;
+                self->mStateTimer = 120;
                 self->mState = 6;
             } else {
                 self->StartRound(5);
@@ -284,7 +284,7 @@ void Slot3_StatePayout(char *c) {
     }
 
     if (self->mState == 3) {
-        if (self->mStateTimer != 0x14)
+        if (self->mStateTimer != 20)
             return;
         if (self->mPayoutRemaining <= 0)
             return;
@@ -360,12 +360,12 @@ void Slot3_StateJudge(char *c) {
         scene->mPayoutRemaining = payout;
         scene->mState = 3;
         func_02012790(0x26);
-        scene->mStateTimer = 0x28;
+        scene->mStateTimer = 40;
         score += 1;
     } else {
         scene->mState = 4;
         func_02012790(0xe);
-        scene->mStateTimer = 0x50;
+        scene->mStateTimer = 80;
     }
     Mg_SubmitScore(score);
 
@@ -433,7 +433,7 @@ void Slot3_StateSpin(char *c) {
     }
     scene->mSpinSoundHandle = Sound_PlayIfNotActive(scene->mSpinSoundHandle, 2, 0x1a8, 0);
     if (scene->mStoppedReelCount >= 3u) {
-        scene->mStateTimer = 0x1e;
+        scene->mStateTimer = 30;
         scene->mState = 2;
     }
 }
@@ -573,7 +573,7 @@ void dScMgSlot3_c::StartRound(int mode) {
             mReelWinPos[m2] = 0;
         }
         mStoppedReelCount = 0;
-        mStateTimer = 0x3c;
+        mStateTimer = 60;
         mState = 0;
         mWinColumn = -1;
         mPayoutRemaining = 0;
@@ -610,16 +610,16 @@ s32 dScMgSlot3_c::Render() {
 
     if (mReelDrawY > 0) {
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 0x80,
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 128,
                         mReelDrawY + 0x10, -1, 2, 0x1000, 0x1000, 0, 1);
         }
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mNextWinSymbol * 3 + i], 0x80,
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mNextWinSymbol * 3 + i], 128,
                         mReelDrawY + 0x60, -1, 2, 0x1000, 0x1000, 0, 1);
         }
     } else {
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 0x80, 0x60, -1, 2,
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 128, 96, -1, 2,
                         0x1000, 0x1000, 0, 1);
         }
     }
@@ -880,7 +880,7 @@ void *dScMgSlot3_c_classInit(void) {
 
 void SlotLamp_Start(void *raw) {
     SlotLamp *lamp = (SlotLamp *)raw;
-    lamp->mTimer = 0x48;
+    lamp->mTimer = 72;
     lamp->mOn = 1;
     gSubScreenLayers |= 2;
 }
@@ -911,7 +911,7 @@ void SlotBlink_Start(void *raw, s16 x, s16 y) {
     SlotBlink *sprite = (SlotBlink *)raw;
     sprite->mX = x;
     sprite->mY = y;
-    sprite->mTimer = 0x48;
+    sprite->mTimer = 72;
     sprite->mVisible = 1;
 }
 
@@ -1183,12 +1183,12 @@ s32 dScMgSlot1_c::Behavior() {
             mPromptBlinkCount = 1;
             mPromptBlinkTimer = 0;
         }
-        mStateTimer = 0x3c;
+        mStateTimer = 60;
         break;
     case 1:
         if (DecIfAbove0_Byte(&mStateTimer) == 0) {
             Sound::PlayBank2_2D(0x160);
-            mStateTimer = 0x1e;
+            mStateTimer = 30;
             mState = 2;
         }
         break;
@@ -1263,7 +1263,7 @@ s32 dScMgSlot1_c::Behavior() {
                 Mg_SaveRecordPair(mCredits + mPayoutMultiplier * BET_ICON(&mBetIcon)->mBetCount,
                                   mHudScore);
                 mState = 4;
-                mStateTimer = 0x3c;
+                mStateTimer = 60;
             }
         }
         break;
@@ -1280,12 +1280,12 @@ s32 dScMgSlot1_c::Behavior() {
             }
             if (mPayoutMultiplier != 0) {
                 mState = 5;
-                mStateTimer = 0x64;
+                mStateTimer = 100;
                 SlotLamp_Start(&mPayoutLamp);
                 func_02012790(0x26);
             } else {
                 mState = 7;
-                mStateTimer = 0x3c;
+                mStateTimer = 60;
                 func_02012790(0xe);
             }
             mPromptEnabled = 0;
@@ -1294,7 +1294,7 @@ s32 dScMgSlot1_c::Behavior() {
     case 5:
         if (DecIfAbove0_Byte(&mStateTimer) == 0) {
             SlotReel_SetSpeed(&mBetIcon, mPayoutMultiplier);
-            mStateTimer = 0x3c;
+            mStateTimer = 60;
             mState = 6;
         }
         break;
@@ -1332,7 +1332,7 @@ s32 dScMgSlot1_c::Behavior() {
         mReelScroll[idx] -= 0x2000;
         if ((int)mReelScroll[idx] < 0) {
             mReelScroll[idx] = 0;
-            mStateTimer = 0xa;
+            mStateTimer = 10;
             mState++;
             func_02012718(0x164, sSlot1ReelPos[idx][0] << 12);
             if (idx == 0) {
@@ -1345,7 +1345,7 @@ s32 dScMgSlot1_c::Behavior() {
         mReelScroll[2] -= 0x2000;
         if ((int)mReelScroll[2] < 0) {
             mReelScroll[2] = 0;
-            mStateTimer = 0x3c;
+            mStateTimer = 60;
             mState = 8;
             func_02012718(0x164, sSlot1ReelPos[2][0] << 12);
         }
@@ -1461,7 +1461,7 @@ s32 dScMgSlot1_c::InitResources() {
         unsigned char *tbl = sSlotReelSymbolsAlt;
         char *p = c;
         for (j = 0; j < 3; j++) {
-            for (i = 0; i < 0x15; i++) {
+            for (i = 0; i < 21; i++) {
                 ((dScMgSlot1_c *)(p + i))->mReelStrip[0][0] = tbl[i];
             }
             mSymbolIndex[j] = 0;
@@ -1475,7 +1475,7 @@ s32 dScMgSlot1_c::InitResources() {
         unsigned char *tbl = sSlotReelSymbols;
         char *p = c;
         for (k = 0; k < 3; k++) {
-            for (i = 0; i < 0x15; i++) {
+            for (i = 0; i < 21; i++) {
                 ((dScMgSlot1_c *)(p + i))->mReelStrip[0][0] = tbl[i];
             }
             mSymbolIndex[k] = 0;

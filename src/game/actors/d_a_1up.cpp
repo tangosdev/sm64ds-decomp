@@ -703,10 +703,10 @@ void da1up_c::UpdateHiddenChase() {
 
     case 3:
         UpdatePhysics();
-        if (mStateTimer > 0x11)
+        if (mStateTimer > 17)
             UpdateTrailEffect();
         UpdateLaunchArc();
-        if (mStateTimer != 0x25)
+        if (mStateTimer != 37)
             return;
 
         mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
@@ -771,11 +771,11 @@ void da1up_c::UpdateHiddenFlee() {
         return;
     case 3:
         UpdatePhysics();
-        if (mStateTimer > 0x11) {
+        if (mStateTimer > 17) {
             UpdateTrailEffect();
         }
         UpdateLaunchArc();
-        if (mStateTimer != 0x25)
+        if (mStateTimer != 37)
             return;
         mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
         mState = 1;
@@ -918,7 +918,7 @@ void da1up_c::UpdatePopOutFlee() {
             Sound::PlayBank3(SND3_LAUNCH, mCamSpacePos);
         }
         UpdateLaunchArc();
-        if (mStateTimer == 0x25) {
+        if (mStateTimer == 37) {
             mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
             mState = 1;
             mHorzSpeed = 0x8000;
@@ -951,14 +951,14 @@ void da1up_c::UpdatePopOutDrift() {
         if (mStateTimer == 0)
             Sound::PlayBank3(SND3_LAUNCH, mCamSpacePos);
         UpdateLaunchArc();
-        if (mStateTimer != 0x25)
+        if (mStateTimer != 37)
             break;
         mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
         mState = 1;
         mHorzSpeed = 0x2000;
         break;
     case 1:
-        if (mStateTimer > 0x12c)
+        if (mStateTimer > 300)
             mState = 2;
         CollectOnTouch();
         break;

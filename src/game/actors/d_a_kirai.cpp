@@ -201,7 +201,7 @@ void daKirai_c::StateExploding() {
     if (mOpacity < 0xa)
         mOpacity = 0;
     mPosY += mVertSpeed;
-    if (mTimer == 0x1c)
+    if (mTimer == 28)
         Disarm();
     mTimer++;
 }
@@ -214,7 +214,7 @@ void daKirai_c::StateSwelling() {
     mScaleX = scale;
     mScaleY = scale;
     mScaleZ = scale;
-    if (mTimer == 0x1c)
+    if (mTimer == 28)
         Disarm();
     mTimer++;
 }

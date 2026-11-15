@@ -184,7 +184,7 @@ void dScStage_c::UpdateMessage() {
         }
 
         if (data_0209d6d4 == 0x295) {
-            if (data_0209d67c == 0x3c) {
+            if (data_0209d67c == 60) {
                 SaveData::SaveCurrentFile();
             }
             if (data_0209d67c != 0) {
@@ -870,7 +870,7 @@ void Message::DisplayText(int t) {
     } else {
         data_0209d6f4 += 3;
         func_0201b6f8(0);
-        data_0209d65c = ((0xb0 - data_0209d6b0) >> 1);
+        data_0209d65c = ((176 - data_0209d6b0) >> 1);
         data_0209d6a8 = 0x16;
         data_0209d678 = data_0209d65c & 7;
         mapPos = 0x105;
@@ -943,7 +943,7 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
                     ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
     func_0201b6f8(0);
 
-    data_0209d65c = (0x100 - (int)data_0209d6b0) / 2;
+    data_0209d65c = (256 - (int)data_0209d6b0) / 2;
     data_0209d6a8 = 0x20;
 
     p = (int)G2_GetBG3CharPtr() + 0x5000;
@@ -951,7 +951,7 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
     MI_CpuFill32((void *)p, li, 0x800);
 
     q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x180);
-    for (i = 0; i < 0x40; i++) {
+    for (i = 0; i < 64; i++) {
         q[i] = (i + 0x280);
     }
 
@@ -986,7 +986,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     data_0209d6f4 = sum + 3;
     func_0201b6f8(0);
 
-    data_0209d65c = ((0x100 - data_0209d6b0) / 2);
+    data_0209d65c = ((256 - data_0209d6b0) / 2);
     data_0209d6a8 = 0x20;
 
     {
@@ -1007,7 +1007,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
         gMsgBoxStyle = 1;
         map = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x4c0);
     }
-    for (i = 0; i < 0x40; i++)
+    for (i = 0; i < 64; i++)
         map[i] = i + 0x200;
 
     SetSubBg1Offset(0, 0);
@@ -1028,7 +1028,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     }
     func_0201b6f8(0);
 
-    data_0209d65c = ((0xd2 - data_0209d6b0) / 2);
+    data_0209d65c = ((210 - data_0209d6b0) / 2);
     data_0209d6a8 = 0x20;
 
     {
@@ -1038,7 +1038,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     }
 
     map = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x240);
-    for (j = 0; j < 0x40; j++)
+    for (j = 0; j < 64; j++)
         map[j] = j + 0x240;
 
     LayoutLine();
@@ -1081,7 +1081,7 @@ void Message::DisplaySaving(unsigned short n)
     data_0209d6d4 = n;
     func_0201eaac();
 
-    data_0209d67c = 0x3c;
+    data_0209d67c = 60;
     data_0209d660 = 1;
     data_0209d654 = 1;
     gMsgBoxWinLeft = 0x7f;
@@ -1194,7 +1194,7 @@ void func_0201ef50(int arg) {
     data_0209d6e0 = (top << 5);
     while (data_0209d6bc != 8) {
         func_0201b6f8(0);
-        data_0209d65c = (0x100 - data_0209d6b0) >> 1;
+        data_0209d65c = (256 - data_0209d6b0) >> 1;
         line = (char *)G2S_GetBG0CharPtr() + charOffset;
         lineZero = 0;
         MI_CpuFill32(line, lineZero, 0x800);
@@ -1211,7 +1211,7 @@ void func_0201f108(void) {
     do {
         scr[i] = i;
         i++;
-    } while (i < 0x400);
+    } while (i < 1024);
 }
 
 void func_0201f138(void) {

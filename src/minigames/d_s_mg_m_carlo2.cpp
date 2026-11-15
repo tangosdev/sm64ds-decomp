@@ -176,7 +176,7 @@ int dScMgMCarlo2_c::CanEndState(int /* mode */)
         if (found != 0) {
             short *p;
             func_02012790(0x62);
-            mTimer = 0x1e;
+            mTimer = 30;
             dScMgMCarlo2_c::FlipDealtCards();
             p = &mRoundState;
             *p += 1;
@@ -278,13 +278,13 @@ s32 dScMgMCarlo2_c::Render()
         score = 0x270f;
     Mg_DrawNumber(0xe8, 0x28, score, 1, -1, 0, 0);
 
-    RenderOamMainScreen(sMCarloHudSprite, 0xe8, 0x18, -1, -1);
+    RenderOamMainScreen(sMCarloHudSprite, 232, 24, -1, -1);
 
     if (this->mRoundState == 5)
         Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
 
     lifted = sMCarlo2CardsTail;
-    for (i = 0; i < 0x14; i++) {
+    for (i = 0; i < 20; i++) {
         if (lifted == 0)
             break;
         if (lifted->mYStep > 0)
@@ -293,7 +293,7 @@ s32 dScMgMCarlo2_c::Render()
     }
 
     flat = sMCarlo2CardsTail;
-    for (j = 0; j < 0x14; j++) {
+    for (j = 0; j < 20; j++) {
         if (flat == 0)
             break;
         if (flat->mYStep == 0)
@@ -450,7 +450,7 @@ void dMgMCarlo2CardObj_c::Update(int slot)
         }
         if (IsPairWith(sMCarlo2FirstPick) != 0) {
             sMCarlo2SecondPick = this;
-            sMCarlo2BoardDelay = 0x20;
+            sMCarlo2BoardDelay = 32;
             mState = 3;
             Sound::PlayBank2_2D(0x154);
             return;
@@ -526,7 +526,7 @@ void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
                 p->Init(j);
                 p = p + 1;
                 j = j + 1;
-            } while (j < 0x28);
+            } while (j < 40);
         }
         sMCarlo2CardTail = 0;
         sMCarlo2Cards = base;
@@ -559,7 +559,7 @@ void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
                     sMCarlo2CardTail = t;
                 h = h + 1;
                 i++;
-            } while (i < 0x27);
+            } while (i < 39);
         }
     } while (HasRemovablePair() == 0);
 }
@@ -568,9 +568,9 @@ int dScMgMCarlo2_c::HasRemovablePair()
 {
     dMgMCarlo2CardObj_c *p, *q;
     p = sMCarlo2Cards;
-    while (p != 0 && p->mSlot < 0x14) {
+    while (p != 0 && p->mSlot < 20) {
         q = p->mNext;
-        while (q != 0 && q->mSlot < 0x14) {
+        while (q != 0 && q->mSlot < 20) {
             if (p->IsPairWith(q) != 0) return 1;
             q = q->mNext;
         }
@@ -613,11 +613,11 @@ int dScMgMCarlo2_c::DrawCardValue(){
     int total = 0;
     int i;
     int roll;
-    for (i = 0; i < 0xa; i++)
+    for (i = 0; i < 10; i++)
         total += sMCarlo2FaceCounts[i];
     roll = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     total = (total * roll) >> 0xc;
-    for(i=0;i<0xa;i++){
+    for(i=0;i<10;i++){
         total -= sMCarlo2FaceCounts[i];
         if(total < 0){
             pick = i;

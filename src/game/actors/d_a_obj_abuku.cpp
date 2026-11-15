@@ -54,7 +54,7 @@ extern "C" SpawnInfo<daObjAbuku_c> g_profile_OBJ_ABUKU = {
 /* -------------------------------------------------------------------------- */
 int daObjAbuku_c::InitResources() {
     mdCcAc_c.Init(this, 0x96000, 0x96000, 0x100002, 0);
-    mLifeTimer = 0x12c;
+    mLifeTimer = 300;
     return 1;
 }
 

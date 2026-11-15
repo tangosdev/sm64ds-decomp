@@ -279,7 +279,7 @@ void daTrsTrap_c::UpdateBookshelf() {
         mPosX += 0x5000;
         mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8d, mCamSpacePos, 0);
         Sound::PlaySecretSound(this, &mSoundTimer);
-        if (mStateTimer > 0x65)
+        if (mStateTimer > 101)
             mState = 3;
         return;
     case 3:
@@ -313,7 +313,7 @@ void daTrsTrap_c::UpdateTiltingTrap() {
     } else {
         int a = mAngleX;
         if (a < 0) a = -a;
-        if (a < 0xbb8 || mStateTimer > 0xf) {
+        if (a < 0xbb8 || mStateTimer > 15) {
             int v;
             mAngVelX = 0;
             v = mAngleX;

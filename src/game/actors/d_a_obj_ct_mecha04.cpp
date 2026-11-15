@@ -200,7 +200,7 @@ int daObjCtMecha04_c::Behavior() {
                     unsigned int randomValue =
                         (u16)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16);
                     /* New direction, held for 0xa + 0x14 * (0..6) ticks. */
-                    mDirectionTimer = (s16)(((int)randomValue % 7) * 0x14 + 0xa);
+                    mDirectionTimer = (s16)(((int)randomValue % 7) * 20 + 10);
                     if (randomValue >= 0x7fff) {
                         mTargetBeltSpeed = 0x1000;
                     } else {

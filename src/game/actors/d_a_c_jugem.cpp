@@ -208,7 +208,7 @@ int daC_Jugem_c::StateIntroMain() {
     cam->SetPos(mCamPos);
     ::Vec3_Dist(&mCamLook, &look);
     mTimer++;
-    if (mTimer > 0x64) {
+    if (mTimer > 100) {
         if (Sound::PlaySub(0x4b, 0x7f, 0, 0x7222, false) != 0) {
             cam->mFlags &= ~8;
             mHorzSpeed = 0;
@@ -258,7 +258,7 @@ int daC_Jugem_c::StateApproachMain()
     if (mAuxCounter > 0x800)
         mAuxCounter = 0x800;
     mTimer += 1;
-    if (mTimer < 0x19)
+    if (mTimer < 25)
         return 1;
     v[1].x = -0x50c000;
     v[1].y = 0x115000;
@@ -313,20 +313,20 @@ int daC_Jugem_c::StateBobMain()
     ApproachLinear(mPosY, FX_MUL(FX_SinIdx((u16)(s16)mAuxCounter >> 4), 0x1a000) + mTarget.y,
                    0x10000000);
 
-    if (mTimer == 0x32) {
+    if (mTimer == 50) {
         pl->func_ov002_020c3ea0();
     }
     mAngleY = 0x6000;
     mPrevAngleY = mAngleY;
     {
         int a1 = 0x4000;
-        if (mTimer >= 0x4b) a1 = 0x8000;
+        if (mTimer >= 75) a1 = 0x8000;
         ApproachLinear(mHorzSpeed, a1, 0x1000);
     }
 
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
 
-    if (mTimer > 0x78) {
+    if (mTimer > 120) {
         mAngleY = 0x4000;
         mPrevAngleY = mAngleY;
         SetState(data_ov085_02130820);
@@ -372,19 +372,19 @@ int daC_Jugem_c::StateGuideMain()
     case 1:
         func_0201f32c(2);
         break;
-    case 0x14:
+    case 20:
         func_ov002_020c3f2c(p);
         break;
-    case 0x28:
+    case 40:
         data_0209d66c = 1;
         break;
-    case 0x8c:
+    case 140:
         func_0201f32c(3);
         break;
-    case 0xee:
+    case 238:
         data_0209d66c = 1;
         break;
-    case 0xf0:
+    case 240:
         {
             s16 a = mSavedAngleY;
             s16 b;
@@ -423,7 +423,7 @@ int daC_Jugem_c::StateTurnMain()
         p->mAngleZ = 0;
         mTimer += 1;
     }
-    if (mTimer == 0x5a) func_ov002_020c3f18(p);
+    if (mTimer == 90) func_ov002_020c3f18(p);
     {
         int s = mTimer;
         if (s > 0x57 && s < 0x5b)
@@ -431,7 +431,7 @@ int daC_Jugem_c::StateTurnMain()
         else
             ApproachLinear(mAngleX, 0x1000, 0x400);
     }
-    if (mTimer > 0x78)
+    if (mTimer > 120)
         SetState(data_ov085_021307c0);
     return 1;
 }
@@ -479,16 +479,16 @@ int daC_Jugem_c::StateArriveMain()
     case 1:
         p->mMuteSleepVoice = 1;
         break;
-    case 0x78:
+    case 120:
         func_0201f32c(1);
         break;
-    case 0x82:
+    case 130:
         p->mMuteSleepVoice = 0;
         break;
-    case 0xb4:
+    case 180:
         data_0209d66c = 1;
         break;
-    case 0xd2:
+    case 210:
         SetState(data_ov085_021307b0);
         break;
     }
@@ -518,7 +518,7 @@ int daC_Jugem_c::StateArriveInit()
     pos.z = 0x1a89000;
     cam->SetLookAt(look);
     cam->SetPos(pos);
-    mStateTimer = 0x79;
+    mStateTimer = 121;
     mPosX = mTarget.x;
     mPosY = mTarget.y;
     mPosZ = mTarget.z;
@@ -551,7 +551,7 @@ int daC_Jugem_c::StateLeaveInit()
 {
     short r3 = mAngleY;
     mPrevAngleY = r3;
-    mStateTimer = 0x46;
+    mStateTimer = 70;
     return 1;
 }
 

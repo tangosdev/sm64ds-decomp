@@ -23,8 +23,8 @@ void func_ov007_020ae454(Ov007ItemNode *self) {
         int d = b - a;
         int r4;
         r4 = ProgressRatio(d, b);
-        int t = ((r4 * (s->wiggleFrames * 0x2d)) >> 0xc) << 0x10;
-        int r = FX_DivS32(t, 0x168);
+        int t = ((r4 * (s->wiggleFrames * 45)) >> 0xc) << 0x10;
+        int r = FX_DivS32(t, 360);
         r = (unsigned short)r;
         int sv = FX_SinIdx(r >> 4);
         int inv = 0x1000 - r4;

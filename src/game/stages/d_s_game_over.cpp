@@ -282,8 +282,8 @@ s32 dScGameOver_c::InitResources() {
     mIntroPhase = 0;
     for (i = 0; i < 8; i++) {
         mGlyphX[i] = data_ov003_020b1764[i];
-        mGlyphY[i] = 0x60;
-        mGlyphDelay[i] = 0x30;
+        mGlyphY[i] = 96;
+        mGlyphDelay[i] = 48;
         mGlyphUnused[i] = 0;
     }
 
@@ -321,8 +321,8 @@ s32 dScGameOver_c::Behavior() {
             if (!IsTouchStarted() && !IsButtonInputValid())
                 break;
             idx = gActivePlayerSlot;
-            if (((unsigned char)(gTouchX[idx * 4] - 8) < 0xf0 &&
-                 (unsigned char)(gTouchY[idx * 4] - 0x38) < 0x20) ||
+            if (((unsigned char)(gTouchX[idx * 4] - 8) < 240 &&
+                 (unsigned char)(gTouchY[idx * 4] - 56) < 32) ||
                 (mSelection == 0 && IsButtonInputValid())) {
                 if (mSelection == 0)
                     mFlashTimer = (data_0208ee44 << 3);
@@ -334,8 +334,8 @@ s32 dScGameOver_c::Behavior() {
                 break;
             }
             idx = gActivePlayerSlot;
-            if (((unsigned char)(gTouchX[idx * 4] - 8) < 0xf0 &&
-                 (unsigned char)(gTouchY[idx * 4] - 0x68) < 0x20) ||
+            if (((unsigned char)(gTouchX[idx * 4] - 8) < 240 &&
+                 (unsigned char)(gTouchY[idx * 4] - 104) < 32) ||
                 (mSelection == 1 && IsButtonInputValid())) {
                 if (mSelection == 1)
                     mFlashTimer = (data_0208ee44 << 3);
@@ -360,7 +360,7 @@ s32 dScGameOver_c::Behavior() {
                         func_0202ae74();
                     else
                         dScene_c::StartSceneFade(1, 0, 0);
-                    Sound::StopLoadedMusic_Layer1(0x3c);
+                    Sound::StopLoadedMusic_Layer1(60);
                 }
             }
             break;
@@ -409,7 +409,7 @@ void dScGameOver_c::UpdateButtonPalettes(int unselectAll) {
                 w = 0x1000;
             v = (unsigned short)w;
         }
-        for (j = 0; j < 0x20; j++) {
+        for (j = 0; j < 32; j++) {
             p[0] = (p[0] & 0x3ff) | v;
             p[0x20] = (p[0x20] & 0x3ff) | v;
             p[0x40] = (p[0x40] & 0x3ff) | v;
@@ -435,7 +435,7 @@ void dScGameOver_c::UpdateIntro() {
     switch (s) {
     case 0:
         i = 0;
-        ip = 0xa;
+        ip = 10;
         do {
             if (mGlyphDelay[i] != 0) {
                 mGlyphDelay[i]--;
@@ -444,13 +444,13 @@ void dScGameOver_c::UpdateIntro() {
                 short x = mGlyphX[i];
                 if (x != tgt) {
                     if (i < 4) {
-                        mGlyphX[i] += 0xc;
+                        mGlyphX[i] += 12;
                         if (mGlyphX[i] >= tgt) {
                             mGlyphX[i] = tgt;
                             mGlyphDelay[i] = ip;
                         }
                     } else {
-                        mGlyphX[i] -= 0xc;
+                        mGlyphX[i] -= 12;
                         if (mGlyphX[i] <= tgt) {
                             mGlyphX[i] = tgt;
                             mGlyphDelay[i] = ip;

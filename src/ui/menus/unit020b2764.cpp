@@ -146,7 +146,7 @@ extern "C" void func_ov007_020b2998(void) {
         sprite = WORK->screenSprites[i];
         sprite->screenX = 0x80000;
         sprite->screenY = 0x60000;
-        sprite->width = sprite->height = 0x100;
+        sprite->width = sprite->height = 256;
         sprite->cornerColors[0] = sprite->cornerColors[3] = 0;
         sprite->cornerColors[1] = sprite->cornerColors[2] = 0;
         switch (i) {

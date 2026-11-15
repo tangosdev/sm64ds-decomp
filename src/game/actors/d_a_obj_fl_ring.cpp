@@ -144,7 +144,7 @@ s32 daObjFl_Ring_c::Behavior() {
             break;
         if (ApproachAngle(&mPrevAngleZ, 0, 0xf, 0x30, 2) != 0)
             break;
-        mCooldown = 0x96;
+        mCooldown = 150;
         mState = 1;
         Sound::PlayBank3(0xc, mCamSpacePos);
         break;
@@ -154,7 +154,7 @@ s32 daObjFl_Ring_c::Behavior() {
         if (DecIfAbove0_Short(&mCooldown) == 0) {
             if (ApproachAngle(&mPrevAngleZ, -0x100, 0xf, 0x30, 2) != 0)
                 break;
-            mCooldown = 0x96;
+            mCooldown = 150;
             mState = 0;
             break;
         }

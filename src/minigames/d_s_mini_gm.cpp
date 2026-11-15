@@ -175,7 +175,7 @@ s32 dScMiniGm_c::InitResources()
 
     if (!(data_0209caa0.mg.unlocked & 0x80000000)) {
         tbl = sMiniGmRows;
-        for (i = 0; i < 0x24; i++) {
+        for (i = 0; i < 36; i++) {
             for (j = 0; j < 5; j++) {
                 SetRecord(i, j, tbl->recordDefaults.v[j]);
             }
@@ -186,7 +186,7 @@ s32 dScMiniGm_c::InitResources()
     }
 
     tbl2 = sMiniGmRows;
-    for (i2 = 0; i2 < 0x24; i2++) {
+    for (i2 = 0; i2 < 36; i2++) {
         flag = 0;
         if (tbl2->scoreCap != 0) {
             if (tbl2->ownRecords == 1) {
@@ -564,7 +564,7 @@ s32 dScMiniGm_c::Behavior()
         if (mExitTimer == 1) {
             dScene_c::SetAndStopColorFader();
             ExitMinigameMenu();
-            Sound::StopLoadedMusic_Layer1(0x1e);
+            Sound::StopLoadedMusic_Layer1(30);
             mExiting = 1;
             return 1;
         }
@@ -619,19 +619,19 @@ void dScMiniGm_c::DrawRecords() {
                 if (type == 1) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[0], x - 0x10, y, neg1, zero);
+                    OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[0], x - 16, y, neg1, zero);
                     val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
                     MiniGm_DrawNumber(this, x - 4, y, val);
                 } else if (type == 2) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[1], x - 0x10, y, neg1, zero);
+                    OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[1], x - 16, y, neg1, zero);
                     val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
                     MiniGm_DrawNumber(this, x - 4, y, val);
                 } else if (type == 4) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[2], x - 0x10, y, neg1, zero);
+                    OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[2], x - 16, y, neg1, zero);
                     val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
                     MiniGm_DrawNumber(this, x - 4, y, val);
                 } else if (type == 3) {
@@ -723,9 +723,9 @@ s32 dScMiniGm_c::Render()
     int scale;
 
     if (gMgSaveDirty == 1) {
-        OAM::Render(0, (OamAttr *)sMiniGmSavingCaption, 0x80, 0xa4, -1, 0, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, (OamAttr *)sMiniGmSavingCaption, 128, 164, -1, 0, 0x1000, 0x1000, 0, -1);
     } else {
-        OAM::Render(0, (OamAttr *)sMiniGmCaption, 0x80, 0xa4, -1, 0, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, (OamAttr *)sMiniGmCaption, 128, 164, -1, 0, 0x1000, 0x1000, 0, -1);
     }
 
     y0 = 0x18;
@@ -739,13 +739,13 @@ s32 dScMiniGm_c::Render()
             blink = 0;
         for (j = 0; j < 9; j++) {
             if (MiniGm_IsUnlocked(this, sMiniGmGroupBases[i] + j * 4) != 0 && MiniGm_IsNew(this, j * 4 + sMiniGmGroupBases[i]) != 0) {
-                OAM::RenderSub((OamAttr *)sMiniGmNewBadge[blink], 0x18, y1, -1, 0);
+                OAM::RenderSub((OamAttr *)sMiniGmNewBadge[blink], 24, y1, -1, 0);
                 break;
             }
         }
         if (mGroupBase != sMiniGmGroupBases[i])
             k += 4;
-        OAM::RenderSub((OamAttr *)sMiniGmGroupTabs[k], 0x18, y0, -1, 0);
+        OAM::RenderSub((OamAttr *)sMiniGmGroupTabs[k], 24, y0, -1, 0);
         y1 += 0x30;
         y0 += 0x30;
     }
@@ -760,10 +760,10 @@ s32 dScMiniGm_c::Render()
             else
                 scale = (((0x12 - t) << 12) / 16) + 0x1000;
             if (mArrowBobPhase < 0x20)
-                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[0], 0x50 - mArrowBobPhase / 2, 0x60, -1,
+                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[0], 80 - mArrowBobPhase / 2, 96, -1,
                             0, scale, 0);
             else
-                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[0], 0x50 - (0x40 - mArrowBobPhase) / 2,
+                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[0], 80 - (64 - mArrowBobPhase) / 2,
                             0x60, -1, 0, scale, 0);
         } else if (MiniGm_HasSecondPage(this) != 0) {
             t = mNextPageTimer;
@@ -774,10 +774,10 @@ s32 dScMiniGm_c::Render()
             else
                 scale = (((0x12 - t) << 12) / 16) + 0x1000;
             if (mArrowBobPhase < 0x20)
-                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[1], mArrowBobPhase / 2 + 0xe0, 0x60, -1,
+                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[1], mArrowBobPhase / 2 + 224, 96, -1,
                             0, scale, 0);
             else
-                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[1], (0x40 - mArrowBobPhase) / 2 + 0xe0,
+                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[1], (64 - mArrowBobPhase) / 2 + 224,
                             0x60, -1, 0, scale, 0);
         }
     }
@@ -792,7 +792,7 @@ s32 dScMiniGm_c::Render()
         scale = (((t - 0x14) << 12) / 16) + 0x1000;
     else
         scale = (((0x1c - t) << 12) / 16) + 0x1000;
-    OAM::Render(1, (OamAttr *)sMiniGmExitButton, 0xe8, 0xa0, -1, 0, scale, 0);
+    OAM::Render(1, (OamAttr *)sMiniGmExitButton, 232, 160, -1, 0, scale, 0);
     return 1;
 }
 
@@ -822,7 +822,7 @@ void dScMiniGm_c::UpdateGroupTabs() {
             if (f58 != gMgGroupBase) {
                 gMgGroupBase = f58;
                 MiniGm_LoadGroupIcons();
-                mScrollDelay = 0x1e;
+                mScrollDelay = 30;
             }
         }
     }
@@ -921,7 +921,7 @@ void dScMiniGm_c::UpdatePageArrows() {
             if (gTouchY[idx*4] < 0x40) return;
             if (gTouchY[idx*4] > 0x80) return;
             func_02012790(0);
-            mNextPageTimer = 0x12;
+            mNextPageTimer = 18;
             return;
         } else {
             u8 v = gTouchX[idx*4];
@@ -930,7 +930,7 @@ void dScMiniGm_c::UpdatePageArrows() {
             if (gTouchY[idx*4] < 0x40) return;
             if (gTouchY[idx*4] > 0x80) return;
             func_02012790(0);
-            mPrevPageTimer = 0x12;
+            mPrevPageTimer = 18;
             return;
         }
     }
@@ -996,7 +996,7 @@ void dScMiniGm_c::UpdateGameSelect()
     gMgMenuRow.level = mStartLevel;
     dScene_c::StartSceneFade(sMiniGmRows[gMgLastSelected[0]].id,
                              sMiniGmRows[gMgLastSelected[0]].sceneParam, 0);
-    Sound::StopLoadedMusic_Layer1(0x1e);
+    Sound::StopLoadedMusic_Layer1(30);
     mExiting = 1;
     data_0209b2fc = 1;
 }
@@ -1027,7 +1027,7 @@ void dScMiniGm_c::UpdateExitButton() {
     if (y < 0x90) return;
     if (y > 0xb0) return;
     func_02012790(0x63);
-    mExitTimer = 0x1c;
+    mExitTimer = 28;
 }
 
 void dScMiniGm_c::UpdatePageScroll() {

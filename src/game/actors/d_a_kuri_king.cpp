@@ -292,7 +292,7 @@ void daKuriKing_c::LaunchVanishCopies() {
             daKuriKing_c *t = a;
             t->mVertAccel = -0xa000;
             int rv = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 8;
-            t->mTimer = 0x30;
+            t->mTimer = 48;
             t->mHorzSpeed = ((rv & 0xf) << 0xc) + 0x16000;
             t->mSpeedX = 0;
             t->mVertSpeed = ((rv & 0x1f) << 0xc) + 0x60000;
@@ -495,7 +495,7 @@ void daKuriKing_c::UpdateDefeat() {
         func_02011cfc();
         Sound::ChangeMusicVolume(0x7f, 0x15666);
         this->mNoShadow = 1;
-        this->mTimer = 0xf;
+        this->mTimer = 15;
         this->mSubState += 1;
         return;
     case 4:
@@ -1121,7 +1121,7 @@ void daKuriKing_c::HandleCylinderHits() {
                     if (cur == &this->mdCc_cs[2]) {
                         if (this->mWalkSpeed != 0) {
                             pl->Unk_020c6a10(2);
-                            this->mHurtTimer = 0x1e;
+                            this->mHurtTimer = 30;
                         } else {
                             v1.x = this->mPosX;
                             v1.y = this->mPosY;
@@ -1131,7 +1131,7 @@ void daKuriKing_c::HandleCylinderHits() {
                     } else if (cur == &this->mdCc_cs[3]) {
                         if (this->mWalkSpeed != 0) {
                             pl->Unk_020c6a10(2);
-                            this->mHurtTimer = 0x1e;
+                            this->mHurtTimer = 30;
                         } else {
                             v2.x = this->mPosX;
                             v2.y = this->mPosY;
@@ -1143,7 +1143,7 @@ void daKuriKing_c::HandleCylinderHits() {
                         v3.y = this->mPosY;
                         v3.z = this->mPosZ;
                         pl->Hurt(v3, 1, 0x5000, 1, 0, 1);
-                        this->mHurtTimer = 0x10;
+                        this->mHurtTimer = 16;
                     }
                 }
                 if (pl->mIsMega != 0) {
@@ -1456,7 +1456,7 @@ int daKuriKing_c::CleanupResources()
     for (i = 0; i < 7; i++)
         sKurikingMinionAnimationFiles[i]->Release();
     gKurikingModelModelFile.Release();
-    for (i = 0; i < 0xc; i++)
+    for (i = 0; i < 12; i++)
         sKurikingAnimationFiles[i]->Release();
     gKurikingAngerTextureSequenceFile.Release();
     return 1;
@@ -1595,7 +1595,7 @@ int daKuriKing_c::InitResources()
     do {
         dExtFrameCtrl_c::LoadFile(*sKurikingAnimationFiles[i]);
         i++;
-    } while (i < 0xc);
+    } while (i < 12);
 
     dExtAnmTexPat_c::LoadFile(gKurikingAngerTextureSequenceFile);
     p = dExtSimpleModel_c::LoadFile(gKurikingModelModelFile);
@@ -1773,7 +1773,7 @@ int daKuriKing_c::BehaviorVanish() {
         return 1;
     }
 
-    if (this->mTimer < 0x60) {
+    if (this->mTimer < 96) {
         this->UpdatePos(0);
         this->UpdateWMClsn(this->mWithMeshClsn, 0);
 

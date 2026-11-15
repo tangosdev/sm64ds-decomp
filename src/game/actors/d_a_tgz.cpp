@@ -405,7 +405,7 @@ int daTgz_c::func_ov077_02125480() {
     mVertSpeed = 0x28000;
     mAngleX = 0;
     mAngleZ = 0;
-    mActionTimer = 0x2d;
+    mActionTimer = 45;
     mAnmModel.SetAnim((BCA_File *)TGZ_BCA, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int aimHeight = OnAimedAtWithEgg();
@@ -786,7 +786,7 @@ int daTgz_c::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    mDespawnTimer = 0x2c;
+    mDespawnTimer = 44;
     func_ov077_02125e94(this, 0);
     mShadowMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     func_ov077_02125304(this);

@@ -99,7 +99,7 @@ dScMgPanel_c::~dScMgPanel_c() {}
 void dScMgPanel_c::Particle_DrawAll() {
     extern int sPanelParticleSprites[];
     int i;
-    for (i = 0; i < 0x40; i++) {
+    for (i = 0; i < 64; i++) {
         if (mParticles[i].visible != 0) {
             Mg_RenderSpriteBoth((void *)sPanelParticleSprites[mParticles[i].kind],
                                 mParticles[i].x >> 12, mParticles[i].y >> 12, -1, -1);
@@ -111,7 +111,7 @@ void dScMgPanel_c::Particle_DrawAll() {
    counter on all of them, and retire a slot once its counter runs out. */
 void dScMgPanel_c::Particle_UpdateAll() {
     int i;
-    for (i = 0; i < 0x40; i++) {
+    for (i = 0; i < 64; i++) {
         if (mParticles[i].active != 0) {
             if (mParticles[i].stuck == 0) {
                 mParticles[i].x += mParticles[i].vx;
@@ -138,7 +138,7 @@ void dScMgPanel_c::Particle_UpdateAll() {
    fixed-drift variant over the random one. */
 void dScMgPanel_c::Particle_Spawn(int x, int y, int mode) {
     int i;
-    for (i = 0; i < 0x40; i++) {
+    for (i = 0; i < 64; i++) {
         if (mParticles[i].active == 0) {
             mParticles[i].active = 1;
             mParticles[i].visible = 1;
@@ -168,7 +168,7 @@ void dScMgPanel_c::Particle_Spawn(int x, int y, int mode) {
 /* Retire every particle in the 64-slot pool. */
 void dScMgPanel_c::Particle_ClearAll() {
     int i;
-    for (i = 0; i < 0x40; i++) {
+    for (i = 0; i < 64; i++) {
         mParticles[i].active = 0;
         mParticles[i].visible = 0;
     }
@@ -204,7 +204,7 @@ void dScMgPanel_c::Scroll_Update() {
             mScroll.spawnDelay = 3;
         }
 
-        if (mScroll.timer >= 0x3c) {
+        if (mScroll.timer >= 60) {
             mScroll.phase += 1;
             mScroll.timer = 0;
             mScroll.spawnDelay = 0;
@@ -273,7 +273,7 @@ void dScMgPanel_c::Shake_StateLoseTry(int index) {
     extern u8 gSubScreenLayers;
     extern int data_ov006_0212ed00[];
     mShake[index].timer++;
-    if (mShake[index].timer >= 0x20) {
+    if (mShake[index].timer >= 32) {
         mShake[index].timer = 0;
         mShake[index].state = 0;
         SetSubBg0Offset(0, 0);
@@ -283,7 +283,7 @@ void dScMgPanel_c::Shake_StateLoseTry(int index) {
         return;
     }
     mShake[index].offset = data_ov006_0212ed00[mShake[index].timer >> 3];
-    if (mShake[index].timer == 1 || mShake[index].timer == 0x11)
+    if (mShake[index].timer == 1 || mShake[index].timer == 17)
         Sound::PlayBank2_2D(0x1fc);
     SetSubBg0Offset(0, mShake[index].offset);
 }
@@ -294,13 +294,13 @@ void SetSubBg0Offset(int a, int b);
 void dScMgPanel_c::Shake_StateShake(int index) {
     extern int sPanelShakeOffsets[];
     mShake[index].timer++;
-    if (mShake[index].timer >= 0x20) {
+    if (mShake[index].timer >= 32) {
         mShake[index].timer = 0;
         mShake[index].state = 2;
         return;
     }
     mShake[index].offset = sPanelShakeOffsets[mShake[index].timer >> 3];
-    if (mShake[index].timer == 1 || mShake[index].timer == 0x11)
+    if (mShake[index].timer == 1 || mShake[index].timer == 17)
         Sound::PlayBank2_2D(0x1fc);
     SetSubBg0Offset(0, mShake[index].offset);
 }
@@ -381,7 +381,7 @@ void dScMgPanel_c::Banner_Show(int i) {
     mBanner.visible = 1;
     mBanner.x = mX[i];
     mBanner.y = mY[i] + 0x8000;
-    mBanner.timer = 0x30;
+    mBanner.timer = 48;
     mBanner.hold = 0;
     mBanner.state = 0;
 }
@@ -406,7 +406,7 @@ void dScMgPanel_c::DrawHud() {
         index = 1;
         if (mFlipCount >= 2)
             index = 0;
-        Mg_RenderSpriteBoth(sPanelHudSprites[index], a + 0x2c, b, -1, -1);
+        Mg_RenderSpriteBoth(sPanelHudSprites[index], a + 44, b, -1, -1);
     } else {
         int x = mSlideLeft;
         Hud_RenderSprite(data_ov006_02136de8[x], mSlide >> 12, mSlideY >> 12, -1, -1);
@@ -517,7 +517,7 @@ void dScMgPanel_c::StartSolveCheck() {
         mSolved = 0;
         CountMatches();
         mState = 6;
-        mResultTimer = 0x50;
+        mResultTimer = 80;
     }
 }
 
@@ -539,7 +539,7 @@ void dScMgPanel_c::Answer_StateFlipSolution() {
     }
 
     if (mReplayStep >= mFlipCount) {
-        mResultTimer = 0x50;
+        mResultTimer = 80;
         mState = 6;
         mSolved = 0;
         return;
@@ -575,7 +575,7 @@ void dScMgPanel_c::Answer_StateFlipSolution() {
 
     Banner_Show(index);
     mFlipDelay[index] = 0;
-    mDelay = 0x30;
+    mDelay = 48;
     mReplayStep++;
 }
 
@@ -614,7 +614,7 @@ void dScMgPanel_c::Answer_StateFindSolution() {
         return;
     }
 
-    for (i = 0; i < 0x24; i++) {
+    for (i = 0; i < 36; i++) {
         arr[i] = 0;
     }
 
@@ -660,7 +660,7 @@ void dScMgPanel_c::Answer_StateFindSolution() {
         }
     }
 
-    mDelay = 0x40;
+    mDelay = 64;
     mInputState = 3;
     mReplayStep = 0;
 }
@@ -680,7 +680,7 @@ void dScMgPanel_c::Answer_StateResetBoard() {
             mFastFlip[k] = 1;
         }
         mInputState = 2;
-        mDelay = 0x20;
+        mDelay = 32;
     }
 }
 
@@ -729,7 +729,7 @@ void dScMgPanel_c::Answer_StateWaitButton() {
     }
     mInputState = 1;
     mState = 5;
-    mDelay = 0x20;
+    mDelay = 32;
 }
 
 void dScMgPanel_c ::Answer_Update() {
@@ -887,7 +887,7 @@ void dScMgPanel_c::CountFlipping() {
 
     mState = 6;
     mSolved = 1;
-    mResultTimer = 0x40;
+    mResultTimer = 64;
 }
 
 void dScMgPanel_c::CheckSolved() {
@@ -985,7 +985,7 @@ void dScMgPanel_c::UpdateTouch() {
             }
 
             mFlipDelay[i] = 0;
-            mCheckDelay = 0x28;
+            mCheckDelay = 40;
             mMovesUsed++;
             Sound::PlayBank2_2D(0x1fa);
             TickSlideDelay();
@@ -1139,8 +1139,8 @@ void dScMgPanel_c::ScramblePanels() {
         mLastPuzzle = t;
     } else {
         int nv;
-        while (t >= 0x19)
-            t -= 0x19;
+        while (t >= 25)
+            t -= 25;
         if (sPanelScrambleFlipEnabledAlt[t] != 0 || mDealt == 0) {
             if (mDealt == 0)
                 mDealt += 1;
@@ -1172,7 +1172,7 @@ int dScMgPanel_c::HasDuplicateRows() {
     /* Refuse a pick set that repeats any of the last five. */
     for (i = 0; i < 5; i++) {
         bad = 0;
-        for (j = 0; j < 0xa; j++) {
+        for (j = 0; j < 10; j++) {
             if (mFlipAt[j] != mPastFlips[i][j]) {
                 bad = 1;
                 break;
@@ -1185,12 +1185,12 @@ int dScMgPanel_c::HasDuplicateRows() {
     {
         int r, k;
         for (r = 0; r < 4; r++) {
-            for (k = 0; k < 0xa; k++) {
+            for (k = 0; k < 10; k++) {
                 mPastFlips[r + 1][k] = mPastFlips[r][k];
             }
         }
     }
-    for (i = 0; i < 0xa; i++) {
+    for (i = 0; i < 10; i++) {
         mPastFlips[0][i] = mFlipAt[i];
     }
     return 1;
@@ -1199,7 +1199,7 @@ int dScMgPanel_c::HasDuplicateRows() {
 void dScMgPanel_c::ClearGrid() {
     int i, j;
     for (i = 0; i < 5; i++) {
-        for (j = 0; j < 0xa; j++) {
+        for (j = 0; j < 10; j++) {
             mPastFlips[i][j] = 0xff;
         }
     }
@@ -1210,7 +1210,7 @@ void dScMgPanel_c::ClearGrid() {
    cursor, then hand off to the three subsystem resets. */
 void dScMgPanel_c::ResetRound() {
     int i;
-    for (i = 0; i < 0x24; i++) {
+    for (i = 0; i < 36; i++) {
         mX[i] = 0;
         mY[i] = 0;
         mFlipFrame[i] = 0;
@@ -1229,10 +1229,10 @@ void dScMgPanel_c::ResetRound() {
     mFlipCount = 0;
     mMovesUsed = 0;
     mCredits = 0;
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         mFlipAt[i] = 0xff;
     }
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         mTouchLog[i] = 0;
     }
     mTouchCount = 0;
@@ -1313,7 +1313,7 @@ void dScMgPanel_c::Panel_StateBlink(int idx) {
     } else {
         mVisible[idx] = 0;
     }
-    if (mAnimTimer[idx] < 0x40)
+    if (mAnimTimer[idx] < 64)
         return;
     mAnimTimer[idx] = 0;
     mKind[idx] = 0;
@@ -1426,7 +1426,7 @@ void dScMgPanel_c::Scene_StateResult() {
             Mg_SubmitScore(gMgScene != 0 ? gMgScene->mHudScore : 0);
             return;
         }
-        mResultTimer = 0x10;
+        mResultTimer = 16;
         mState = 7;
         Panel_StartAll();
         return;
@@ -1473,7 +1473,7 @@ void dScMgPanel_c::Scene_StateShowMisses() {
     if (found == 0) {
         mState = 4;
         mClear = 1;
-        mDelay = 0x40;
+        mDelay = 64;
     }
 }
 

@@ -755,7 +755,7 @@ void daObjBlockS_c::HandleHits() {
 
     if ((mdCcAcPos_c1.hitFlags & CC_HIT_FIRE) != 0) {
         u32 *pp = &mdCcAcPos_c1.flags;
-        mBreakTimer = 0x3c;
+        mBreakTimer = 60;
         *pp = *pp & ~0x8000u;
     }
     if ((mdCcAcPos_c1.hitFlags & CC_HIT_EXPLOSION) != 0) {

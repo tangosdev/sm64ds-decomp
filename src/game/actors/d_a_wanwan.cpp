@@ -655,7 +655,7 @@ void daWanwan_c::SetState(int i) {
 void daWanwan_c::StateWaitInit() {
     mVertSpeed = 0;
     mHorzSpeed = 0;
-    mActionTimer = 0x78;
+    mActionTimer = 120;
     SetChompAnim(this, data_ov014_02114980);
 }
 
@@ -674,7 +674,7 @@ void daWanwan_c::StateWaitMain() {
 void daWanwan_c::StateWalkInit() {
     mVertSpeed = 0;
     mVertAccel = -0x2000;
-    mActionTimer = 0x78;
+    mActionTimer = 120;
     SetChompAnim(this, data_ov014_02114980);
 }
 
@@ -735,7 +735,7 @@ void daWanwan_c::StateAttackInit() {
         v = 0x2d000;
     mVertSpeed = v;
     mHorzSpeed = FX_MUL(FX_CosIdx(a >> 4), 0x8c000);
-    mActionTimer = 0x3c;
+    mActionTimer = 60;
 }
 
 /* State 2 update: stretch the leash to kChainMax, then back to idle. */
@@ -757,7 +757,7 @@ void daWanwan_c::StateEscapeDemoInit() {
     mVertAccel = -0x2000;
     mReleaseStep = 0;
     unk_600 = 0;
-    mActionTimer = 0x3c;
+    mActionTimer = 60;
     mFlags &= ~3;
     mPosY = mSpawnPosY + kRestLift;
 }
@@ -848,7 +848,7 @@ void daWanwan_c::StateEscapeDemoMain() {
         if (mIsOnGround != 0) {
             SetChompAnim(this, data_ov014_02114980);
             mPrevAngleY = Vec3_HorzAngle(&mPos, &partnerPos);
-            mActionTimer = 0x3c;
+            mActionTimer = 60;
             mAngleY = mPrevAngleY;
             if (fence->mDisabled != 0) {
                 mHorzSpeed = 0x28000;
@@ -866,7 +866,7 @@ void daWanwan_c::StateEscapeDemoMain() {
             camera->mFlags &= ~8u;
             if (ClosestPlayer()->Unk_020ca150(4) != 0) {
                 mReleaseStep++;
-                mActionTimer = 0x3c;
+                mActionTimer = 60;
             }
         } else {
             camera->SetLookAt(mPos);
@@ -903,7 +903,7 @@ int daWanwan_c::StateBombDamageMain() {
 /* State 5 enter: face mPrevAngleY and launch. */
 void daWanwan_c::StateGiantDamageInit() {
     mAngleY = mPrevAngleY;
-    mActionTimer = 0x3c;
+    mActionTimer = 60;
     mHorzSpeed = kChainMax;
     mVertSpeed = kRestLift;
     mVertAccel = -0xa000;

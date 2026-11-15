@@ -435,7 +435,7 @@ void daNknk_c::func_ov062_02118b4c() {
         SpawnFootstepDust(2, 5, 8, 0xb);
 
     if (mModelIndex != 0) {
-        if ((u16)mStateTimer > 0x1e && DistToClosestPlayer() > 0x320000) {
+        if ((u16)mStateTimer > 30 && DistToClosestPlayer() > 0x320000) {
             if (ApproachLinear(mHorzSpeed, 0, 0x1000) == 0)
                 return;
             mState = 1;
@@ -452,7 +452,7 @@ void daNknk_c::func_ov062_02118b4c() {
         *aim = (*aim + 0x8000);
         mPlayerDist = 0;
     }
-    if ((u16)mStateTimer > 0x1e && mPlayerDist > 0x320000) {
+    if ((u16)mStateTimer > 30 && mPlayerDist > 0x320000) {
         if (ApproachLinear(mHorzSpeed, 0, 0x1000) == 0)
             return;
         mState = 1;
@@ -542,7 +542,7 @@ void daNknk_c::func_ov062_02118718()
                     else
                         mTargetAngle +=
                             ((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
-                    mTurnTimer = 0x14;
+                    mTurnTimer = 20;
                 }
             }
         }
@@ -570,7 +570,7 @@ void daNknk_c::func_ov062_02118718()
     mHorzSpeed += mHorzSpeed / 5;
     mVertSpeed = dist / 30;
     SetAnimByIndex(6);
-    mTimer = 0x14;
+    mTimer = 20;
 }
 
 void daNknk_c::func_ov062_02118588()
@@ -653,7 +653,7 @@ void daNknk_c::func_ov062_021183e0()
         mHorzSpeed = 0x18000;
         mVertSpeed = dist / 30;
         SetAnimByIndex(6);
-        mTimer = 0x14;
+        mTimer = 20;
         return;
     }
 
@@ -926,7 +926,7 @@ void daNknk_c::DropShell() {
         v.z = z;
         dActor_c::Spawn(0x11d /* SHELL */, mModelIndex, v, 0, mAreaId, -1);
     }
-    mInvincibleTimer = 0xa;
+    mInvincibleTimer = 10;
     func_0201267c(1, &mCamSpacePos);
 }
 
@@ -1076,7 +1076,7 @@ void daNknk_c::SpawnLandingDust() {
 
     Particle::SetSelfDestructFlag(kPtclLandingDust);
 
-    mLandingDustTimer = 0xa;
+    mLandingDustTimer = 10;
     if (spawned == 0) return;
 
     particle = Particle::System::FromUniqueID(spawned);

@@ -143,7 +143,7 @@ int daObjCtMecha08_c::Behavior() {
                 mVertSpeed = data_ov065_0211c0d0[setting][d].vertSpeed;
                 if (data_0209f2c0 == CLOCK_SETTING_RANDOM) {
                     u32 rnd = (u32)RandomIntInternal(&data_0209e650.value);
-                    mMoveTimer = (u16)((rnd % 6) * 0x14 + 0xa);
+                    mMoveTimer = (u16)((rnd % 6) * 20 + 10);
                 }
             }
         }
