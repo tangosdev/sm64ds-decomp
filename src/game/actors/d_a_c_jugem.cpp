@@ -202,7 +202,7 @@ int daC_Jugem_c::StateIntroMain() {
     mTimer++;
     if (mTimer > 0x64) {
         if (Sound::PlaySub(0x4b, 0x7f, 0, 0x7222, false) != 0) {
-            *(int *)&cam->mFlags &= ~8;
+            cam->mFlags &= ~8;
             mHorzSpeed = 0;
             mTimer = 0;
             mAuxCounter = 0;

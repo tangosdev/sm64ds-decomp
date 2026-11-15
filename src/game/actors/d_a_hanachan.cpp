@@ -821,15 +821,14 @@ void daHanachan_c::UpdateSegmentModels()
        the base and drops that add; a dExtSimpleModel_c* walk keeps it. */
     int i;
     char *rot = (char *)this;
-    char *model = (char *)&mAnmModels[0];
+    dExtSimpleModel_c *model = &mAnmModels[0];
     for (i = 0; i < 5; i++) {
-        Matrix4x3_FromRotationY(&((dExtSimpleModel_c *)model)->mat4x3,
-                                ((daHanachan_c *)rot)->mSegmentRot[0].y);
+        Matrix4x3_FromRotationY(&model->mat4x3, ((daHanachan_c *)rot)->mSegmentRot[0].y);
         mAnmModels[i].mat4x3.t.x = mSegmentPos[i].x >> 3;
         mAnmModels[i].mat4x3.t.y = mSegmentPos[i].y >> 3;
         mAnmModels[i].mat4x3.t.z = mSegmentPos[i].z >> 3;
         rot += sizeof(Vector3s);
-        model += sizeof(dExtAnmModel_c);
+        model = (dExtSimpleModel_c *)((char *)model + sizeof(dExtAnmModel_c));
     }
 }
 
@@ -871,9 +870,7 @@ int daHanachan_c::Render()
  * set, the camera. */
 int daHanachan_c::Behavior()
 {
-    /* void ** like the table it comes from: typed SharedFilePtr * here,
-     * the .bss @NNN labels move down by four. */
-    void **animFile;
+    SharedFilePtr *animFile;
     s32 i;
     Vector3 head;
     Vector3 part;
@@ -915,7 +912,7 @@ int daHanachan_c::Behavior()
         }
     }
 
-    animFile = data_ov034_021138b0[0];
+    animFile = (SharedFilePtr *)data_ov034_021138b0[0];
     if (mAnmModels[0].file == ((SharedFilePtr *)animFile)->filePtr &&
         (((u32)mAnmModels[0].currFrame << 4) >> 16) == 0xf) {
         func_0201267c(0x11e, &mCamSpacePos);

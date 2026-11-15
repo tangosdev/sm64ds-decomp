@@ -131,7 +131,7 @@ void func_02046bbc(ModelComponents *model, BTP_File *file, unsigned int frame);
 void func_02046b64(BMD_File *model, BTA_File *file);
 void func_020469e8(ModelComponents *model, BTA_File *file, int frame);
 void func_020470e8(BMD_File *model, BMA_File *file);
-void func_02046e28(struct Model *model, struct MatAnimData *file, unsigned short frame);
+void func_02046e28(ModelComponents *model, BMA_File *file, unsigned short frame);
 }
 
 /* 0xc-byte records in the common model data array at data_0209cefc, counted
@@ -946,7 +946,7 @@ void dExtAnmMaterial_c::SetFile(BMA_File &animFile, int flags, fx32 speed, u16 s
 }
 
 void dExtAnmMaterial_c::Update(ModelComponents &model) {
-    func_02046e28((struct Model *)&model, (struct MatAnimData *)file, (u16)((u32)currFrame >> 12));
+    func_02046e28(&model, file, (u16)((u32)currFrame >> 12));
 }
 
 /* Static: no this. */

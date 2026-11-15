@@ -84,13 +84,11 @@ struct SnowSpray {
     SnowSpray() {}
     ~SnowSpray() {}
 
-    s32 x;      /* 0x00 position, VEC_Add'd with vx..vz each tick; drawn at x >> 12 */
-    s32 y;      /* 0x04 drawn at (y - z - mScrollY) >> 12 */
-    s32 z;      /* 0x08 height above the course; the chunk dies once it is
-                   below 0 while still falling */
-    s32 vx;     /* 0x0c */
-    s32 vy;     /* 0x10 */
-    s32 vz;     /* 0x14 SnowSpray_UpdateAll takes 0x200 off it a tick (gravity) */
+    Vector3 pos; /* 0x00 position, added to vel each tick; drawn at x >> 12.
+                    y is drawn at (y - z - mScrollY) >> 12. z is the height
+                    above the course; the chunk dies once it is below 0 while
+                    still falling */
+    Vector3 vel; /* 0x0c; z loses 0x200 a tick (gravity) */
     s32 life;   /* 0x18 counted down while positive; the chunk dies at 0 */
     s32 sprite; /* 0x1c sSnowballBitSprites index, SnowSpray_DrawAll */
     u8 active;  /* 0x20 SnowSpray_DrawAll/_UpdateAll run only live chunks */
@@ -213,31 +211,32 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     u16 mTileMap[0x10][0x2e0]; /* 0x4f38 */
     s32 mPosX;                 /* 0xab38 -- fx32 world position of the ball */
     s32 mPosY;                 /* 0xab3c */
-    s32 mPrevPosX;             /* 0xab40 -- Behavior's copy of mPos at tick start */
-    s32 mPrevPosY;             /* 0xab44 */
-    s32 mDrawPosX;             /* 0xab48 -- where Render puts the ball sprite */
-    s32 mDrawPosY;             /* 0xab4c */
-    s32 mSoundPosX;            /* 0xab50 -- position of the last roll sound; a new
-                                   one fires every 0x30000 of travel */
-    s32 mSoundPosY;            /* 0xab54 */
-    s32 mUphillDebt;           /* 0xab58 -- Behavior adds every tick's backwards
-                                   (+Y) travel here and pays it off from later
-                                   downhill travel; only while it is 0 does the
-                                   downhill travel grow mBallSize (by 1/128) */
-    s32 mGoalCenterX;          /* 0xab5c -- BuildCourse clears it, then
-                                   writes the generated corridor's centre lane in
-                                   fx32 on the row before the goal */
-    s32 mVelX;                 /* 0xab60 -- fx32, capped at 0x8000 */
-    s32 mVelY;                 /* 0xab64 */
-    s32 mScrollX;              /* 0xab68 -- subtracted from every world X to draw */
-    s32 mScrollY;              /* 0xab6c -- mPosY - 0x190000, clamped; drives all
-                                   four BG offsets */
-    s32 mTouchX;               /* 0xab70 -- last stylus sample */
-    s32 mTouchY;               /* 0xab74 */
-    s16 mRollAngle;            /* 0xab78 -- += speed * 0x2710 / mBallSize */
-    s16 mAngleY;               /* 0xab7a -- UpdateCamera's Y rotation of
-                                   the ball, after Z (mHeadingAngle) and X
-                                   (mRollAngle); ResetScene zeroes it */
+    struct PrevPos {
+        s32 x;
+        s32 y;
+    } mPrevPos;             /* 0xab40 -- Behavior's copy of mPos at tick start */
+    s32 mDrawPosX;          /* 0xab48 -- where Render puts the ball sprite */
+    s32 mDrawPosY;          /* 0xab4c */
+    s32 mSoundPosX;         /* 0xab50 -- position of the last roll sound; a new
+                                one fires every 0x30000 of travel */
+    s32 mSoundPosY;         /* 0xab54 */
+    s32 mUphillDebt;        /* 0xab58 -- Behavior adds every tick's backwards
+                                (+Y) travel here and pays it off from later
+                                downhill travel; only while it is 0 does the
+                                downhill travel grow mBallSize (by 1/128) */
+    s32 mGoalCenterX;       /* 0xab5c -- BuildCourse clears it, then
+                                writes the generated corridor's centre lane in
+                                fx32 on the row before the goal */
+    Vector2 mVel;           /* 0xab60 -- fx32, length capped at 0x8000 */
+    s32 mScrollX;           /* 0xab68 -- subtracted from every world X to draw */
+    s32 mScrollY;           /* 0xab6c -- mPosY - 0x190000, clamped; drives all
+                                four BG offsets */
+    s32 mTouchX;            /* 0xab70 -- last stylus sample */
+    s32 mTouchY;            /* 0xab74 */
+    s16 mRollAngle;         /* 0xab78 -- += speed * 0x2710 / mBallSize */
+    s16 mAngleY;            /* 0xab7a -- UpdateCamera's Y rotation of
+                                the ball, after Z (mHeadingAngle) and X
+                                (mRollAngle); ResetScene zeroes it */
     s16 mHeadingAngle;      /* 0xab7c -- atan2 of the velocity */
     s16 mPrevRollAngle;     /* 0xab7e -- Behavior copies 0xab78..0xab7c here */
     s16 mPrevAngleY;        /* 0xab80 -- Behavior's copy of mAngleY */

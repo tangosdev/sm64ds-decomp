@@ -1374,11 +1374,11 @@ void dScMgBase_c::RestoreScreenFromMenu() {
     gMainScreenLayers = 0;
     gSubScreenLayers = 0;
 
-    *(u32 *)0x4000000 &= ~0x1f00;
-    *(u32 *)0x4001000 &= ~0x1f00;
+    REG_DISPCNT &= ~0x1f00;
+    REG_DISPCNT_SUB &= ~0x1f00;
     REG_POWCNT1 = (mSavedScreenSwap << 15) | (REG_POWCNT1 & ~0x8000);
-    *(u32 *)0x4000000 = (*(u32 *)0x4000000 & ~0xe000) | ((u32)data_0209d460 << 13);
-    *(u32 *)0x4001000 = (*(u32 *)0x4001000 & ~0xe000) | ((u32)data_0209d458 << 13);
+    GX_SetVisibleWnd(data_0209d460);
+    GXS_SetVisibleWnd(data_0209d458);
 
     GX_LoadBGPltt(save->mainBgPltt, 0x20, 0x1e0);
     {
@@ -1398,8 +1398,8 @@ void dScMgBase_c::RestoreScreenFromMenu() {
     if (GetDisplayMode() == 2)
         return;
 
-    *(u32 *)0x4000000 = (*(u32 *)0x4000000 & ~0x1f00) | ((u32)gMainScreenLayers << 8);
-    *(u32 *)0x4001000 = (*(u32 *)0x4001000 & ~0x1f00) | ((u32)gSubScreenLayers << 8);
+    GX_SetVisiblePlane(gMainScreenLayers);
+    GXS_SetVisiblePlane(gSubScreenLayers);
 }
 
 namespace s20af04c {
@@ -1463,10 +1463,10 @@ int dScMgBase_c::SaveScreenForMenu() {
     gMainScreenLayers = 0;
     gSubScreenLayers = 0;
 
-    *(volatile int *)0x4000000 &= ~0x1f00;
-    *(volatile int *)0x4001000 &= ~0x1f00;
-    *(volatile int *)0x4000000 &= ~0xe000;
-    *(volatile int *)0x4001000 &= ~0xe000;
+    REG_DISPCNT &= ~0x1f00;
+    REG_DISPCNT_SUB &= ~0x1f00;
+    REG_DISPCNT &= ~0xe000;
+    REG_DISPCNT_SUB &= ~0xe000;
 
     MI_CpuCopy32((int *)0x5000020, save->mainBgPltt, 0x1e0);
     {
@@ -3283,8 +3283,8 @@ void dScMgBase_c::InitEngines() {
     GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     Mg_DisableAllBanks();
     Mg_ResetBgOffsets();
-    *(vu32 *)0x4000000u &= ~0x7000000u;
-    *(vu32 *)0x4000000u &= ~0x38000000u;
+    REG_DISPCNT &= ~REG_GX_DISPCNT_BGCHAROFFSET_MASK;
+    REG_DISPCNT &= ~REG_GX_DISPCNT_BGSCREENOFFSET_MASK;
     GX_SetBankForBG(GX_VRAM_BG_256_AB);
     GX_SetBankForOBJ(GX_VRAM_OBJ_64_E);
     gMainScreenLayers = DISPLAY_LAYER_OBJ;

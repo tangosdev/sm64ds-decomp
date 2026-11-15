@@ -256,7 +256,7 @@ void daSnowman_c::CheckAttacks() {
         hit = 1;
     }
     if (flags & 0x40000) {
-        func_02012694(0xdb, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(0xdb, &this->mCamSpacePos);
         hit = 1;
         SetState(&data_ov081_02128e24);
     }
@@ -273,8 +273,8 @@ void daSnowman_c::CheckAttacks() {
             vv.x = -0x1200;
             vv.y = 0;
             vv.z = 0;
-            KillByInvincibleChar(vv, *(daPly_c *)found, 0);
-            func_02012694(0x1d, (const Vector3 *)(&this->mCamSpacePosX));
+            KillByInvincibleChar(vv, *found, 0);
+            func_02012694(0x1d, &this->mCamSpacePos);
             hit = 1;
         }
         if ((flags & 0x40) && (s32)found->param1 == 2) {
@@ -415,7 +415,7 @@ int daSnowman_c::StateDeathEnter() {
             this->mSnowballID = 0;
         }
     }
-    func_02012694(0xdb, (const Vector3 *)(&this->mCamSpacePosX));
+    func_02012694(0xdb, &this->mCamSpacePos);
     this->mInitAngleY = 0;
     this->mTimer = 0;
     return 1;
@@ -591,7 +591,7 @@ int daSnowman_c::StateRiseFromGroundEnter() {
 
     this->mVertSpeed = 0x3c000;
     this->mVertAccel = -0x4000;
-    func_02012694(0xdc, (const Vector3 *)(&this->mCamSpacePosX));
+    func_02012694(0xdc, &this->mCamSpacePos);
     pos.x = this->mHomePos.x;
     pos.y = this->mHomePos.y;
     pos.z = this->mHomePos.z;
@@ -630,7 +630,7 @@ int daSnowman_c::StateHopExecute() {
     int len;
 
     if (this->mWithMeshClsn.IsOnGround()) {
-        func_02012694(0xe5, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(0xe5, &this->mCamSpacePos);
         SetState(&data_ov081_02128e54);
         this->mAnmModel.SetAnim((BCA_File *)gSnowmanJumpEdAnimationFile.filePtr, 0x40000000, 0x1000,
                                 0);
@@ -668,7 +668,7 @@ int daSnowman_c::StateWalkExecute() {
             this->mVertSpeed = 0x14000;
             this->mVertAccel = -0x4000;
             this->mStep = 2;
-            func_02012694(0xdd, (const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(0xdd, &this->mCamSpacePos);
         }
 
         PathPtr p;
@@ -681,7 +681,7 @@ int daSnowman_c::StateWalkExecute() {
             int st = this->mStep;
             if (st != 0) {
                 if (st == 1)
-                    func_02012694(0xe5, (const Vector3 *)(&this->mCamSpacePosX));
+                    func_02012694(0xe5, &this->mCamSpacePos);
                 this->mStep++;
                 if (this->mStep < 0xb)
                     return 1;
@@ -691,7 +691,7 @@ int daSnowman_c::StateWalkExecute() {
             this->mVertAccel = -0x4000;
             this->mAnmModel.SetAnim((BCA_File *)gSnowmanJumpStAnimationFile.filePtr, 0x40000000,
                                     0x1000, 0);
-            func_02012694(0xdd, (const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(0xdd, &this->mCamSpacePos);
             SetState(&data_ov081_02128e74);
         }
     }
@@ -863,7 +863,7 @@ int daSnowman_c::Behavior()
             mType = 0;
         }
         if (mDeathState == 0 && mDeathSound != 0) {
-            func_02012694(0x166, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(0x166, &mCamSpacePos);
             mDeathSound = 0;
         }
         UpdateModelMatrices();
@@ -890,7 +890,7 @@ int daSnowman_c::Behavior()
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     if (mState->execute != 0)
         (this->*mState->execute)();
     UpdatePos(&mdCcAcPos_c);

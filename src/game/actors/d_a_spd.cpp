@@ -154,19 +154,13 @@ daSpd_c *daSpd_c_classInit(void) {
 
 void daSpd_c::OnTurnIntoEgg(daPly_c &player) {
     volatile int force_stack;
-    void *p = &player;
-    int *bp;
-    int t;
-    if (((daPly_c *)p)->IsCollectingCap())
-        GivePlayerCoins(*(daPly_c *)p, mCoinCount, 0);
+    if (player.IsCollectingCap())
+        GivePlayerCoins(player, mCoinCount, 0);
     else
-        ((daPly_c *)p)->RegisterEggCoinCount(mCoinCount, 0, 0);
+        player.RegisterEggCoinCount(mCoinCount, 0, 0);
     if (param1 != 0) {
         mCoinCount = 0;
-        bp = (int *)&mFlags;
-        t = *bp;
-        t &= ~0x40000;
-        *bp = t;
+        mFlags &= ~0x40000;
         SetState(0);
     } else {
         MarkForDestruction();
@@ -207,7 +201,7 @@ int daSpd_c::InitResources() {
 }
 
 int daSpd_c::Behavior() {
-    DecIfAbove0_Short((char *)&mTimer);
+    DecIfAbove0_Short(&mTimer);
     func_ov071_02120278();
     MakeVanishLuigiWork(mdCcAc_c);
     if (mWithMeshClsn.GetResultFlag1() &&
@@ -259,11 +253,10 @@ void daSpd_c::func_ov071_02120278() {
 }
 
 int daSpd_c::func_ov071_02120200() {
-    int *p = (int *)&mFlags;
     int z;
     short ang;
 
-    *p = *p & ~0x10000001;
+    mFlags = mFlags & ~0x10000001;
     mPosX = mHomeX;
     z = 0;
     mPosY = mHomeY;
@@ -655,11 +648,11 @@ void daSpd_c::func_ov071_0211f29c() {
         return;
 
     {
-        int v[3];
-        v[0] = mPosX;
-        v[1] = mPosY;
-        v[2] = mPosZ;
-        if (hitPlayer->Hurt(*(Vector3 *)v, 1, 0xc000, 1, 0, 1) != 0)
+        Vector3 v;
+        v.x = mPosX;
+        v.y = mPosY;
+        v.z = mPosZ;
+        if (hitPlayer->Hurt(v, 1, 0xc000, 1, 0, 1) != 0)
             SetState(4);
     }
 }

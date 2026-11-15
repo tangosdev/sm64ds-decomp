@@ -877,15 +877,15 @@ void func_02035860(dBgCh_Actr *self, const Vector3 *src) {
    the dBgCh_SphCrr at 0x20 second -- that is the ROM's order. */
 void dBgCh_Actr::StartDetectingWater()
 {
-    ((dBgCh *)&mRaycastLine)->StartDetectingWater();
-    ((dBgCh *)&mSphereClsn)->StartDetectingWater();
+    mRaycastLine.StartDetectingWater();
+    mSphereClsn.StartDetectingWater();
 }
 
 /* Mirror of StartDetectingWater: the line sub-object first, then the sphere. */
 void dBgCh_Actr::StopDetectingWater()
 {
-    ((dBgCh *)&mRaycastLine)->StopDetectingWater();
-    ((dBgCh *)&mSphereClsn)->StopDetectingWater();
+    mRaycastLine.StopDetectingWater();
+    mSphereClsn.StopDetectingWater();
 }
 
 void dBgCh_Actr::StartIgnoringVanishSurfaces() {

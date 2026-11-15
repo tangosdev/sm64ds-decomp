@@ -227,9 +227,9 @@ int daBombking_c::TickDefeated() {
     v.x = t.x;
     v.y = t.y;
     v.z = t.z;
-    func_02012694(0x130, (const Vector3 *)&this->mCamSpacePosX);
+    func_02012694(0x130, &this->mCamSpacePos);
 
-    this->UntrackAndSpawnStar(*(s8 *)&this->mStarTracked, this->mStarID, v, 4);
+    this->UntrackAndSpawnStar(this->mStarTracked, this->mStarID, v, 4);
     Particle::System::NewSimple(kPtclKingBobOmbDefeat, v.x, v.y, v.z);
     u.x = v.x;
     u.y = v.y;
@@ -275,7 +275,7 @@ int daBombking_c::TickWalkHome() {
         }
     }
     if (this->mSoundCooldown == 0) {
-        func_02012694(0x12d, (const Vector3 *)&this->mCamSpacePosX);
+        func_02012694(0x12d, &this->mCamSpacePos);
         this->mSoundCooldown = 5;
     }
     ApproachAngle(&this->mPrevAngleY, ang, 5, 0x1000, 0x100);
@@ -300,21 +300,19 @@ int daBombking_c::EnterWalkHome() {
 int daBombking_c::TickThrowPlayer() {
     if (CheckKnockbackHit() == 1) {
         DetonateSpawnedBombs();
-        int v = *(int*)&this->mHeldActor;
-        if (v != 0) {
-            func_ov002_020db54c((char*)v, 0, 0x50000, this->mAngleY);
+        if (this->mHeldActor != 0) {
+            func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngleY);
             this->mTalkingPlayer = this->mHeldActor;
             this->mHeldActor = 0;
         }
         return 1;
     }
     if ((&this->mBlendAnmModel)->WillHitFrame(0x14)) {
-        int v = *(int*)&this->mHeldActor;
-        if (v != 0) {
-            func_ov002_020db54c((char*)v, 0x28000, 0x50000, this->mAngleY);
+        if (this->mHeldActor != 0) {
+            func_ov002_020db54c(this->mHeldActor, 0x28000, 0x50000, this->mAngleY);
             this->mTalkingPlayer = this->mHeldActor;
             this->mHeldActor = 0;
-            func_02012694(0x131, (const Vector3 *)&this->mCamSpacePosX);
+            func_02012694(0x131, &this->mCamSpacePos);
         }
     }
     if ((&this->mBlendAnmModel)->Finished()) {
@@ -366,13 +364,13 @@ int daBombking_c::TickCarryPlayer() {
 
     if (Vec3_Dist(&this->mPos, &v) > 0x1e000) {
         if (this->mSoundCooldown == 0) {
-            func_02012694(0x12d, (const Vector3 *)&this->mCamSpacePosX);
+            func_02012694(0x12d, &this->mCamSpacePos);
             this->mSoundCooldown = 0xf;
         }
     } else {
         if (this->mSoundCooldown == 0) {
             this->mSoundCooldown = 0x14;
-            func_02012694(0x12f, (const Vector3 *)&this->mCamSpacePosX);
+            func_02012694(0x12f, &this->mCamSpacePos);
         }
     }
 
@@ -466,7 +464,7 @@ int daBombking_c::TickKnockback() {
                     }
                     Sound::ChangeMusicVolume(0x14, 0x15666);
                     if (pl->ShowMessage(*this, msg, &mPos, 0, 0) != 0) {
-                        func_02012694(0x12a, (const Vector3 *)&mCamSpacePosX);
+                        func_02012694(0x12a, &mCamSpacePos);
                         KingBobOmb_SetState(&data_ov078_0212705c);
                     }
                 }
@@ -475,7 +473,7 @@ int daBombking_c::TickKnockback() {
         }
 
         if (mActionStep == 0) {
-            func_02012694(0x128, (const Vector3 *)&mCamSpacePosX);
+            func_02012694(0x128, &mCamSpacePos);
             ShakeScreen(0x7d0000);
             HugeLandingDust(1);
             mActionStep = 1;
@@ -576,7 +574,7 @@ int daBombking_c::TickHomeTalk() {
     cam = gCamera;
     if ((&this->mBlendAnmModel)->WillHitFrame(0x46)) {
         ShakeScreen(0x7d0000);
-        func_02012694(0x12c, (const Vector3 *)&this->mCamSpacePosX);
+        func_02012694(0x12c, &this->mCamSpacePos);
         a.x = 0;
         a.y = 0;
         a.z = 0;
@@ -710,7 +708,7 @@ int daBombking_c::TickReturnHome() {
                                          0x40000000, 0x1000, 0);
             this->mVertAccel = -0x2000;
             this->mFlags = 0x10000002;
-            func_02012694(0x12c, (const Vector3 *)&this->mCamSpacePosX);
+            func_02012694(0x12c, &this->mCamSpacePos);
             ShakeScreen(0xfa0000);
             func_0200fa8c(1);
             this->mActionStep = 2;
@@ -731,7 +729,7 @@ int daBombking_c::TickReturnHome() {
             if (m == 0) {
                 if (pl2->ShowMessage(*this, 0x94, &E, 0, 0) != 0) {
                     gCamera->SetFlag_3();
-                    func_02012694(0x12a, (const Vector3 *)&this->mCamSpacePosX);
+                    func_02012694(0x12a, &this->mCamSpacePos);
                     KingBobOmb_SetState(&data_ov078_021270dc);
                 }
             }
@@ -746,7 +744,7 @@ int daBombking_c::TickReturnHome() {
 int daBombking_c::EnterReturnHome() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingJumpAnimationFile.filePtr, 0, 0x40000000,
                                  0x1000, 0);
-    func_02012694(0x129, (const Vector3 *)&this->mCamSpacePosX);
+    func_02012694(0x129, &this->mCamSpacePos);
     this->mWithMeshClsn.ClearGroundFlag();
     this->mPrevAngleX = 0;
     this->mHorzSpeed = 0;
@@ -771,7 +769,7 @@ int daBombking_c::TickBounceOffHill() {
         if (this->mActionStep == 0) {
             ShakeScreen(0x7d0000);
             func_0200fa8c(1);
-            func_02012694(0x128, (const Vector3 *)&this->mCamSpacePosX);
+            func_02012694(0x128, &this->mCamSpacePos);
             this->mStateTimer = 5;
             this->mVertSpeed = 0x14000;
             this->mHorzSpeed = 0xa000;
@@ -802,13 +800,13 @@ int daBombking_c::TickThrown() {
     if (this->mWithMeshClsn.IsOnGround() == 0) goto done;
     this->mHorzSpeed = 0;
     if ((this->mArenaPos.y - 0x28000) > this->mPosY) {
-        func_02012694(0x128, (const Vector3 *)&this->mCamSpacePosX);
+        func_02012694(0x128, &this->mCamSpacePos);
         KingBobOmb_SetState(&data_ov078_021270ac);
         goto done;
     }
     if (this->mActionStep == 0) {
-        func_02012694(0x128, (const Vector3 *)&this->mCamSpacePosX);
-        func_02012694(0x12b, (const Vector3 *)&this->mCamSpacePosX);
+        func_02012694(0x128, &this->mCamSpacePos);
+        func_02012694(0x12b, &this->mCamSpacePos);
         ShakeScreen(0x7d0000);
         func_0200fa8c(1);
         this->mActionStep = 1;
@@ -834,7 +832,7 @@ int daBombking_c::TickThrown() {
 
     if (other->ShowMessage(*this, msg, &this->mPos, 0, 0) == 0)
         goto done;
-    func_02012694(0x12a, (const Vector3 *)&this->mCamSpacePosX);
+    func_02012694(0x12a, &this->mCamSpacePos);
     KingBobOmb_SetState(&data_ov078_0212705c);
 done:
     return 1;
@@ -1049,7 +1047,7 @@ int daBombking_c::TickChase() {
     int slot;
 
     if (this->mSoundCooldown == 0) {
-        func_02012694(0x12d, (const Vector3 *)&this->mCamSpacePosX);
+        func_02012694(0x12d, &this->mCamSpacePos);
         this->mSoundCooldown = 0xf;
     }
     if (CheckKnockbackHit() == 1) {
@@ -1156,7 +1154,7 @@ int daBombking_c::TickActivate() {
     this->mAngleY = this->mPrevAngleY;
     if ((&this->mBlendAnmModel)->WillHitFrame(0x46)) {
         ShakeScreen(0x7d0000);
-        func_02012694(0x12c, (const Vector3 *)&this->mCamSpacePosX);
+        func_02012694(0x12c, &this->mCamSpacePos);
         s.x = 0;
         s.y = 0;
         s.z = 0;
@@ -1267,7 +1265,7 @@ int daBombking_c::TickInactive() {
                     Message::PrepareTalk();
                     b = (gCurrentStarId != 1) ? 0x93 : (short)(player->param1 + 0x96);
                     if (player->ShowMessage(*this, b, &v, 0, 0)) {
-                        func_02012694(0x12a, (const Vector3 *)&this->mCamSpacePosX);
+                        func_02012694(0x12a, &this->mCamSpacePos);
                         this->mIntroTalked = 1;
                         KingBobOmb_SetState(&data_ov078_0212700c);
                     }
@@ -1330,12 +1328,11 @@ void daBombking_c::UpdateShadow() {
     int scale = 0x15e000 - FX_MUL(ip, 0x180);
     if (scale < 0xa000)
         scale = 0xa000;
-    *(Matrix4x3 *)this->mShadowMtx = IDENTITY_MATRIX4X3;
-    this->mShadowMtx[9] = this->mPosX >> 3;
-    this->mShadowMtx[10] = this->mPosY >> 3;
-    this->mShadowMtx[11] = this->mPosZ >> 3;
-    DropShadowRadHeight(this->mShadowModel, *(Matrix4x3 *)this->mShadowMtx, scale, ip + 0x28000,
-                        0xf);
+    this->mShadowMtx = IDENTITY_MATRIX4X3;
+    this->mShadowMtx.m[9] = this->mPosX >> 3;
+    this->mShadowMtx.m[10] = this->mPosY >> 3;
+    this->mShadowMtx.m[11] = this->mPosZ >> 3;
+    DropShadowRadHeight(this->mShadowModel, this->mShadowMtx, scale, ip + 0x28000, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */

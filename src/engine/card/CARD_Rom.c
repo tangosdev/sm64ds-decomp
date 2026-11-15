@@ -19,6 +19,7 @@
  * this ROM.
  */
 #include "nitro/card/card_rom.h"
+#include "nitro/hw/registers.h"
 #include "nitro/os/cache.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/os/system.h"
@@ -28,10 +29,8 @@
 
 /* The card registers and ROMCTRL bits, as the SDK's private card_rom.h
  * names them. */
-#define REG_CARD_MASTER_CNT (HW_REG_BASE + 0x1a1)
-#define REG_CARDCNT (HW_REG_BASE + 0x1a4)
 #define REG_CARD_CMD (HW_REG_BASE + 0x1a8)
-#define REG_CARD_DATA (HW_REG_BASE + 0x100010)
+#define REG_CARD_DATA_ADDR (HW_REG_BASE + 0x100010)
 
 #define CARDMST_SEL_ROM 0x00
 #define CARDMST_IF_ENABLE 0x40
@@ -133,10 +132,10 @@ static void CARDi_ReadEnd(void) {
 
 // @symbol CARDi_SetRomOp
 static void CARDi_SetRomOp(u32 cmd1, u32 cmd2) {
-    while ((*(vu32 *)REG_CARDCNT & CARD_START) != 0)
+    while ((REG_CARD_CNT & CARD_START) != 0)
         ;
 
-    *(vu8 *)REG_CARD_MASTER_CNT = CARDMST_SEL_ROM | CARDMST_ENABLE | CARDMST_IF_ENABLE;
+    REG_CARD_MASTERCNT = CARDMST_SEL_ROM | CARDMST_ENABLE | CARDMST_IF_ENABLE;
     {
         vu8 *const p_cmd = REG_CARD_CMD;
         p_cmd[0] = (cmd1 >> (8 * 3));
@@ -170,12 +169,12 @@ static void CARDi_SetCardDma(void) {
     CARDiCommon *const c = &cardi_common;
     CARDRomStat *const p = &rom_stat;
     DmaCh *ch = (DmaCh *)(0x040000b0 + c->dma * 12);
-    ch->src = REG_CARD_DATA;
+    ch->src = REG_CARD_DATA_ADDR;
     ch->dst = c->dst;
     ch->ctrl = 0xaf000001;
 
     CARDi_SetRomOpReadPage1(c->src);
-    *(vu32 *)REG_CARDCNT = p->ctrl;
+    REG_CARD_CNT = p->ctrl;
 }
 
 // @symbol CARDi_OnReadCard
@@ -249,11 +248,11 @@ void CARDi_ReadCard(CARDRomStat *p) {
         CARDi_SetRomOpReadPage1(src);
         {
             u32 pos = 0;
-            *(vu32 *)REG_CARDCNT = p->ctrl;
+            REG_CARD_CNT = p->ctrl;
             for (;;) {
-                const u32 ctrl = *(vu32 *)REG_CARDCNT;
+                const u32 ctrl = REG_CARD_CNT;
                 if ((ctrl & CARD_DATA_READY) != 0) {
-                    u32 data = *(vu32 *)REG_CARD_DATA;
+                    u32 data = REG_CARD_DATA;
                     if (pos < len)
                         ((u32 *)dst)[pos++] = data;
                 }

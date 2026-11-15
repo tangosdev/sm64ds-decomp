@@ -160,7 +160,7 @@ s32 daShl_c::Behavior()
     if (UpdateYoshiEat(mMeshClsn) != 0) {
         if (mEatenByYoshi != 0) {
             mSpawnAngleY = mPrevAngleY;
-            func_ov102_0214d1f8((ShlState *)&data_ov102_0214ea78);
+            func_ov102_0214d1f8(&data_ov102_0214ea78.rec);
             mFlags &= ~0x80000u;
             mEatenByYoshi = 0;
         }
@@ -201,7 +201,7 @@ s32 daShl_c::Behavior()
         if (mMeshClsn.IsOnGround() != 0 || mMeshClsn.IsOnWall() != 0) {
             /* Hitting a wall while spat out breaks the shell. */
             if (mMeshClsn.IsOnWall() != 0) {
-                if (mState == (ShlState *)&data_ov102_0214ea78) {
+                if (mState == &data_ov102_0214ea78.rec) {
                     PoofDust();
                     MarkForDestruction();
                     return 0;
@@ -378,10 +378,10 @@ int daShl_c::func_ov102_0214cf98(dActor_c *player)
 /* Kicked: take the kicker's heading and switch to the sliding state. */
 int daShl_c::func_ov102_0214cf4c(dActor_c *kicker)
 {
-    if (mState == (ShlState *)&data_ov102_0214ea78)
+    if (mState == &data_ov102_0214ea78.rec)
         return 0;
     mSpawnAngleY = kicker->mAngleY;
-    func_ov102_0214d1f8((ShlState *)&data_ov102_0214ea78);
+    func_ov102_0214d1f8(&data_ov102_0214ea78.rec);
     return 1;
 }
 
@@ -466,7 +466,7 @@ void daShl_c::func_ov102_0214cbec()
             func_ov102_0214cf4c(player);
             return;
         }
-        if (mState != (ShlState *)&data_ov102_0214ea78)
+        if (mState != &data_ov102_0214ea78.rec)
             return;
         v1.x = mPosX;
         v1.y = mPosY;
@@ -475,7 +475,7 @@ void daShl_c::func_ov102_0214cbec()
         return;
     }
 
-    if (mState == (ShlState *)&data_ov102_0214ea78) {
+    if (mState == &data_ov102_0214ea78.rec) {
         v2.x = mPosX;
         v2.y = mPosY;
         v2.z = mPosZ;
@@ -524,8 +524,7 @@ void daShl_c::func_ov102_0214c84c()
         ground.SetObjAndPos(*(Vector3 *)&pos.probe, this);
         if (ground.DetectClsn())
         {
-            if (SurfaceInfo_TestFlag0x20((int *)&ground.surface))
-            {
+            if (SurfaceInfo_TestFlag0x20((int *)&ground.surface)) {
                 pos.trail.y = ground.clsnY + 0x3c000;
                 mParticleHandle_3d4 = 0;
                 mParticleHandle_3c8 = mParticleHandle_3d4;

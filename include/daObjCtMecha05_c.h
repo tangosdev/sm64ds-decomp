@@ -18,7 +18,7 @@ struct daObjCtMecha05_c : dBgActor_c {
     s32 mHomePosZ;   /* 0x328 -- snapshot of mPosZ at InitResources */
     s32 mTravel;     /* 0x32c -- += mHorzSpeed each tick; compared to 0xfa000 */
     s32 mPrevTravel; /* 0x330 -- previous tick's mTravel */
-    s16 mStateTimer; /* 0x334 -- DecIfAbove0_Short countdown */
+    u16 mStateTimer; /* 0x334 -- DecIfAbove0_Short countdown */
     u8 mState;       /* 0x336 -- Behavior switch key, 0..3 */
     u8 pad_337[0x1];
     s32 mGroundY;                   /* 0x338 -- dBgCh_Gnd hit height */

@@ -144,9 +144,8 @@ struct daTrs_c : dCapEnemy_c {
     u16 mCarriedID;            /* 0x4a0 */
     u8  pad_4a2[0x2];
     /* mShadowModel1's drop matrix, rebuilt by 021166ac / 0211640c and handed
-       to DropShadowRadHeight. Spelled as twelve words (the sites store
-       through a Matrix4x3 cast); mShadowMtx2 below is the typed twin. */
-    s32 mShadowMtx[12];        /* 0x4a4 */
+       to DropShadowRadHeight. */
+    Matrix4x3 mShadowMtx; /* 0x4a4 */
     /* mShadowModel2's drop matrix, same 021166ac/DropShadowRadHeight pair. */
     Matrix4x3 mShadowMtx2;     /* 0x4d4 */
     /* Where the carried item sits: 02119ab0 copies the Boo's position here

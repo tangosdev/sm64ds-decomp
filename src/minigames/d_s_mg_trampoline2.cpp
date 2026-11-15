@@ -61,7 +61,7 @@ enum d_s_mg_trampoline2_AssetId {
 
 
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
-#define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
+#define ACTIVE_SLOT (gActivePlayerSlot)
 /* local: these readers only reproduce through a 4-byte-record view of the lane. */
 #define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
 
@@ -829,7 +829,7 @@ int dScMgTrampoline2_c::OnGraphCallback3() {
 /* OnGraphCallback0: the vtable slot is this class's own; the name is inferred. */
 int dScMgTrampoline2_c::OnGraphCallback0() {
 
-    u16 buf[5];
+    s16 buf[5];
 
     if (!dScMgBase_c::OnGraphCallback0())
         return 0;
@@ -848,15 +848,14 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
 
     if (mTouchReleased != 0) {
         s16 a = *(volatile s16 *)&mTouchStartX;
-        if ((a < 0x18 && *(volatile s16 *)&mTouchX < 0x18) ||
-            (a > 0xe8 && *(volatile s16 *)&mTouchX > 0xe8)) {
+        if ((a < 0x18 && mTouchX < 0x18) || (a > 0xe8 && mTouchX > 0xe8)) {
             func_02012790(0xe);
         } else {
             buf[1] = mTouchStartX;
             buf[2] = mTouchStartY;
             buf[3] = mTouchX;
             buf[4] = mTouchY;
-            if (TrmpLine::Create((s16 *)&buf[1], (s16 *)&buf[3])) {
+            if (TrmpLine::Create(&buf[1], &buf[3])) {
                 func_02012718(0x1af, (mTouchStartX + mTouchX) << 11);
             } else {
                 func_02012790(0xe);

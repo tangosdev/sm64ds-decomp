@@ -50,6 +50,7 @@
 #include "Sound.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
+#include "Matrix2x2.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
@@ -58,10 +59,6 @@
 static const int kWallX = 0x6c000;   /* mPos.x clamp: the arena walls */
 static const int kScreenYMax = 0xbc; /* past this mScreenY the Mario damps out */
 static const int kAnimSpeed = 0x800; /* SetAnim speed every install uses */
-
-/* OAM.h forward-declares Matrix2x2 and says the files that pass one keep
- * their own 4 x s32 definition; this is that definition. */
-struct Mtx { int a, b, c, d; };
 
 /* Everything this file calls or reads that no header declares. Keep it
  * above the first function. */
@@ -388,7 +385,7 @@ void dMgJump3DMario_c::Draw()
     int scaleX;
     int scaleY;
     int wave;
-    Mtx mtx;
+    Matrix2x2 mtx;
 
     if (mVisible == 0)
         return;
@@ -406,9 +403,9 @@ void dMgJump3DMario_c::Draw()
            (notes/experiments/jump3d-2711-mtx-intptr-zeroing.md). */
         int *mp = (int *)&mtx;
         mp[0] = 0; mp[1] = 0; mp[2] = 0; mp[3] = 0;
-        mtx.d = scaleY;
-        mtx.a = scaleX;
-        OAM::Render(false, data_ov006_02134d1c, screen[0], screen[1], -1, -1, (Matrix2x2 *)&mtx);
+        mtx.m11 = scaleY;
+        mtx.m00 = scaleX;
+        OAM::Render(false, data_ov006_02134d1c, screen[0], screen[1], -1, -1, &mtx);
     }
 
     mAnmModel.Render(&sJump3DMarioScale);

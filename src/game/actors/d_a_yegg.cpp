@@ -230,7 +230,7 @@ int daYegg_c::func_ov002_020ec654() {
 /* What the egg did to the wall it hit. `arg` is the egg's dBgCh_Actr as an
  * integer; dBgCh_Actr::GetSphereResult turns it into a dBgPi, whose collision ID names the
  * actor owning the surface hit. Returns without doing anything if there is no
- * such ID or actor. A DOSUN gets its byte at +0x3a2 set to 1; a BATAN or
+ * such ID or actor. A DOSUN gets mTriggered set; a BATAN or
  * BATANKING is handed the egg through daBtn_c's hit reaction. Any other actor
  * is left alone. */
 void daYegg_c::HandleWallHit(int arg) {
@@ -299,9 +299,9 @@ void daYegg_c::PayOut() {
     }
     if (HasBlueCoinPayout()) {
         struct Vector3 v3;
-        v3.x = *(int*)&vec.x;
-        v3.y = *(int*)&vec.y;
-        v3.z = *(int*)&vec.z;
+        v3.x = vec.x;
+        v3.y = vec.y;
+        v3.z = vec.z;
         SpawnBlueCoins(&v3, 1, 0x2000, 0);
     }
     mPayoutDone[mPayoutIdx] = 1;
@@ -455,7 +455,7 @@ void daYegg_c::SeekStraight() {
     s32 b;
     u32 fb0;
     s32 onwall;
-    Vector3_16 rot;
+    Vector3_16f rot;
 
     id = mTargetId;
     o = 0;
@@ -484,7 +484,7 @@ void daYegg_c::SeekStraight() {
                 rot.y = 0;
                 rot.z = FX_CosIdx((u16)mAngleY >> 4);
                 mParticleHandle = Particle::System::New(mParticleHandle, kPtclYoshiEggTrail, pos.x,
-                                                        pos.y, pos.z, (const Vector3_16f *)&rot, 0);
+                                                        pos.y, pos.z, &rot, 0);
                 mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x93, mCamSpacePos, 0);
                 flag = 1;
                 UpdateTilt();
@@ -1009,9 +1009,9 @@ void daYegg_c::UpdateModelMatrix() {
         *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)mPlayer->mCarryMatrix;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3f, 9, 0xb);
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, 0xffffb60b, 0xfffff3e9, 0xffffd6c1);
-        v.x = ((Mtx43 *)&data_020a0e68)->r[3].x;
-        v.y = ((Mtx43 *)&data_020a0e68)->r[3].y;
-        v.z = ((Mtx43 *)&data_020a0e68)->r[3].z;
+        v.x = data_020a0e68.t.x;
+        v.y = data_020a0e68.t.y;
+        v.z = data_020a0e68.t.z;
         mPosX = v.x << 3;
         mPosY = v.y << 3;
         mPosZ = v.z << 3;
@@ -1044,7 +1044,7 @@ int daYegg_c::FindTarget(int a1, int best) {
     int b;
     struct P { int a, b, c, d; };
     volatile struct P _p;
-    struct P *_q = (struct P *)&_p;
+    struct P *_q = const_cast<struct P *>(&_p);
 
     if (mTargetedCount >= 5) {
         if (func_ov002_020ec654() == 0) {
@@ -1343,7 +1343,8 @@ int daYegg_c::InitResources()
 
     dExtFrameCtrl_c::LoadFile(data_ov002_0210e6b0);
     dExtFrameCtrl_c::LoadFile(data_ov002_0210eb78);
-    if (mAnmModel.SetFile(*(BMD_File **)(data_ov002_021000a0[idx] + 4), 1, -1) == 0)
+    if (mAnmModel.SetFile((BMD_File *)((SharedFilePtr *)data_ov002_021000a0[idx])->filePtr, 1,
+                          -1) == 0)
         return 0;
 
     /* The predicate is asked a SECOND time rather than reusing idx: the ROM calls

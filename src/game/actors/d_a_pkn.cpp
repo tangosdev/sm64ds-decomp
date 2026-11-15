@@ -718,8 +718,7 @@ void daPkn_c::UpdatePose()
     ang[1] = 0;
     ang[2] = 0;
     for (lr = 0; lr < 5; lr++) {
-        ang[1] = (ang[1] +
-                  *(s16 *)((char *)mAnmModel.data.bones + data_ov084_021302ec[lr] * 0x34 + 0x1c));
+        ang[1] = (ang[1] + (s16)mAnmModel.data.bones[data_ov084_021302ec[lr]].rotY);
     }
 
     mHeadClsnOffset.x = 0;

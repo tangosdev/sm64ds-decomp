@@ -162,7 +162,10 @@ extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, s32 fa, s32 fb, void *v0, void *v1);
 extern "C" void d_a_kuri_kingEarthquakeHold(void *thiz, void *v, int f);
-extern int data_ov074_02122e24[];
+struct KuriKingBoneIdx {
+    int v[3];
+};
+extern KuriKingBoneIdx data_ov074_02122e24;
 extern char data_ov074_02122f3c[];
 extern char data_ov074_02122f38[];
 void UnloadKeyModels(int i);
@@ -449,7 +452,7 @@ void daKuriKing_c::UpdateDefeat() {
         }
         if (this->mSpawnedCount != 0)
             return;
-        func_02012694(0x15c, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(0x15c, &this->mCamSpacePos);
         this->mSubState += 1;
         this->mSpawnedCount = 0;
         return;
@@ -477,7 +480,7 @@ void daKuriKing_c::UpdateDefeat() {
         vzero.y = vzero.y + 0x190000;
         Particle::System::NewSimple(kPtclGoombossVanishA, vzero.x, vzero.y, vzero.z);
         Particle::System::NewSimple(kPtclGoombossVanishB, vzero.x, vzero.y, vzero.z);
-        func_02012694(0x15f, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(0x15f, &this->mCamSpacePos);
         SetOtherCopiesShouldRender(1);
         LaunchVanishCopies();
         cam->mFlags &= ~8;
@@ -495,7 +498,7 @@ void daKuriKing_c::UpdateDefeat() {
         vzero.z = this->mPosZ;
         vzero.y = vzero.y + 0x12c000;
         dActor_c::Spawn(0x11a, 2, vzero, 0, this->mAreaId, -1);
-        func_02012694(0xbb, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(0xbb, &this->mCamSpacePos);
         this->fBase_c::MarkForDestruction();
         return;
     default:
@@ -530,7 +533,7 @@ void daKuriKing_c::UpdateScaleChange() {
             p = (unsigned char*)(((int)&this->mSubState));
             *p = *p + 1;
             PlayAnim(0);
-            func_02012694(0x15c, (const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(0x15c, &this->mCamSpacePos);
             return;
         }
         {
@@ -538,7 +541,7 @@ void daKuriKing_c::UpdateScaleChange() {
             *p = *p + 1;
         }
         PlayAnim(0);
-        func_02012694(0x15c, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(0x15c, &this->mCamSpacePos);
         return;
     case 1:
         {
@@ -797,7 +800,7 @@ void daKuriKing_c::UpdateIntroTalk() {
     }
     msg = (unsigned short)((int)player->param1 + 0xd3);
     if (player->ShowMessage(*this, msg, &msgpos[1], 0, 2) == 0) return;
-    func_02012694(0x15a, (const Vector3 *)(&this->mCamSpacePosX));
+    func_02012694(0x15a, &this->mCamSpacePos);
     ChangeState(1);
 }
 
@@ -862,8 +865,7 @@ int daKuriKing_c::StepScaleTransition() {
             v.y = this->mPosY;
             v.z = this->mPosZ;
             v.y += FX_MUL(this->mCurrentScale, 0x190000);
-            Particle::System::NewSimple(kPtclHugeLandingDust, ((int *)&v)[0], ((int *)&v)[1],
-                                        ((int *)&v)[2]);
+            Particle::System::NewSimple(kPtclHugeLandingDust, v.x, v.y, v.z);
         }
     }
     k = ((u16)mScalePhase >> 4) * 2;
@@ -1149,7 +1151,7 @@ void daKuriKing_c::HandleCylinderHits() {
                         PlayAnim(7);
                         ChangeState(8);
                         SpawnHitParticles(pl, cur, 0);
-                        func_02012694(0x15a, (const Vector3 *)(&this->mCamSpacePosX));
+                        func_02012694(0x15a, &this->mCamSpacePos);
                         this->mWalkSpeed = dir * (this->mDirection * -0xc8);
                     }
                 } else {
@@ -1194,7 +1196,7 @@ void daKuriKing_c::HandleCylinderHits() {
     }
     if (hit == 0)
         return;
-    func_02012694(0x15b, (const Vector3 *)(&this->mCamSpacePosX));
+    func_02012694(0x15b, &this->mCamSpacePos);
     {
         int ang2 = Vec3_HorzAngle(&this->mPos, &player->mPos);
         dir2 = 1;
@@ -1242,10 +1244,8 @@ void daKuriKing_c::UpdateBodyMatrix() {
  * three foot cylinders under the model's bone positions, then works out which
  * feet are touching the ground this frame: a foot counts as stepped-on only
  * on the frame its ground test first reads below the body. */
-struct KuriKingBoneIdx { int v[3]; };
-
 void daKuriKing_c::UpdateCylindersAndFootsteps() {
-    KuriKingBoneIdx bone = *(const KuriKingBoneIdx *)data_ov074_02122e24;
+    KuriKingBoneIdx bone = data_ov074_02122e24;
     int yoff[3], rad[3], hgt[3];
     Vector3 v[3];
     int i;
@@ -1400,7 +1400,7 @@ void daKuriKing_c::UpdateAnimation() {
         mAnmModel.speed = CalcWalkAnimSpeed();
     } else if (IsAnimPlaying(0xb)) {
         if ((((unsigned int)mAnmModel.currFrame << 4) >> 0x10) == 8) {
-            func_02012694(0x15d, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(0x15d, &mCamSpacePos);
         }
     } else {
         mAnmModel.speed = 0x1000;
@@ -1413,7 +1413,11 @@ void daKuriKing_c::UpdateAnimation() {
  * the SharedFilePtr that holds the BCA_File, the matching BTA_File for the
  * texture transformer, and SetAnim's animation index. */
 struct KuriKingAnimFile { u16 fileID; u8 numRefs; void *filePtr; };
-struct KuriKingAnimEntry { KuriKingAnimFile *anim; void *btaFile; int animArg; };
+struct KuriKingAnimEntry {
+    KuriKingAnimFile *anim;
+    BTA_File *btaFile;
+    int animArg;
+};
 extern KuriKingAnimEntry data_ov074_02122f34[];
 
 /* Is clip `idx` the one currently playing: compare its file pointer with the
@@ -1426,8 +1430,8 @@ int daKuriKing_c::IsAnimPlaying(int idx) {
 /* Start clip `idx`: its BCA on the dExtAnmModel_c and its BTA on the texture
  * transformer. */
 void daKuriKing_c::PlayAnim(int idx) {
+    void *file1 = data_ov074_02122f34[idx].anim->filePtr;
     int off = idx * 0xc;
-    void* file1 = data_ov074_02122f34[idx].anim->filePtr;
     int arg2 = *(int*)(data_ov074_02122f3c + off);
     this->mAnmModel.SetAnim((BCA_File *)file1, arg2, 0x1000, 0);
     this->mTextureTransformer.SetFile(**(BTA_File **)(data_ov074_02122f38 + off), 0, 0x1000, 0);
@@ -1518,7 +1522,7 @@ int daKuriKing_c::Behavior()
                 v.z = mCylClsnPos[2].z;
                 LandingDustAt(v, 1);
             }
-            func_02012694(0x15e, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(0x15e, &mCamSpacePos);
             {
                 Vector3 v;
                 v.x = mCylClsnPos[2].x;
@@ -1542,7 +1546,7 @@ int daKuriKing_c::Behavior()
                 v.z = mCylClsnPos[1].z;
                 LandingDustAt(v, 1);
             }
-            func_02012694(0x15e, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(0x15e, &mCamSpacePos);
             {
                 Vector3 v;
                 v.x = mCylClsnPos[1].x;
@@ -1728,9 +1732,9 @@ int daKuriKing_c::BehaviorVanish() {
         int b = ((this->mFlags & 8) != 0) ? 1 : 0;
         if (b == 0) {
             if (this->mSubState == 0) {
-                func_02012694(0x13a, (const Vector3 *)(&this->mCamSpacePosX));
+                func_02012694(0x13a, &this->mCamSpacePos);
             } else {
-                func_02012694(0x13b, (const Vector3 *)(&this->mCamSpacePosX));
+                func_02012694(0x13b, &this->mCamSpacePos);
             }
         }
         this->mSubState++;
