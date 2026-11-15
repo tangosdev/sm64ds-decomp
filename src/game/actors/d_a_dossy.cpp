@@ -62,22 +62,12 @@ enum daDossy_c_AssetId {
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
+#include "daObjMarioCap_c.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
 
 typedef enum { FALSE = 0, TRUE = 1 } BOOL;
-
-/* The spawned daObjMarioCap_c (actor 0x10d) seen only as far as
-   dEnemyBase_c::mEatingPlayer, which daDossyCap_c::Behavior hands over.
-   Including dEnemyBase_c.h instead renumbers this TU's @NNN pins by 26. */
-struct MarioCapEatView : dActor_c {
-    s32 mEatingPlayer; /* 0x0d0 */
-};
-
-#ifndef SM64DS_PLATFORM_PC
-typedef char MarioCapEatView_size_must_be_0xd4[sizeof(MarioCapEatView) == 0xd4 ? 1 : -1];
-#endif
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
    model handle constructs through func_02017acc and destroys through
@@ -265,8 +255,8 @@ int daDossyCap_c::Behavior()
     if (eaten != 0) {
         dActor_c *spit = dActor_c::Spawn(0x10d, 0x1210, mPos, &mAngle, mAreaId, -1);
         if (spit != 0) {
-            ((MarioCapEatView *)spit)->mEatingPlayer = mEatingPlayer;
-            ((daPly_c *)mEatingPlayer)->mObjInMouth = spit;
+            ((daObjMarioCap_c *)spit)->mEatingPlayer = mEatingPlayer;
+            mEatingPlayer->mObjInMouth = spit;
             spit->mFlags |= 0x20000;
             mFlags &= ~0x20000;
             mEatingPlayer = 0;

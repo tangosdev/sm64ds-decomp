@@ -53,6 +53,7 @@
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gxcommon.h"
 #include "math/CalcLib.h"
+#include "dFdColor_c.h"
 
 /* SetFaders stores the fade controller here; slot 5 waits for the entrance fade. */
 
@@ -78,12 +79,8 @@ extern dFdBrightness_c *gSceneFader;
 extern PadData data_020a0e58[];
 extern u8 gGameMode;
 /* The scene-wide colour fader, dScene_c's dFdColor_c in
-   src/game/stages/d_scene.cpp. Element 6 is its u16 `color` at offset 0xc.
-   local extern: spelled as a u16 array because including dFdColor_c.h adds
-   named parameters that renumber this TU's compiler-numbered string pool
-   (sTitleLevelEntries' 54 rodata relocations move with it). */
-extern u16 gSceneColorFader[];
-#define SCENE_FADE_COLOR gSceneColorFader[6]
+   src/game/stages/d_scene.cpp. */
+extern dFdColor_c gSceneColorFader;
 extern char data_020a0d90[];
 extern u8 gMainScreenLayers;
 extern int data_0208ee44;
@@ -280,7 +277,7 @@ s32 dScTitle_c::Behavior() {
             SetPlayerGlobals();
             SetNumPlayers(1);
             dScene_c::StartSceneFade(4, 0, 0);
-            SCENE_FADE_COLOR = 0x7fff;
+            gSceneColorFader.color = 0x7fff;
         }
     } else {
         u16 v = data_020a0e58[0].held;

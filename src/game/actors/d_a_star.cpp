@@ -81,6 +81,7 @@ enum daStar_c_AssetId {
 #include "math/CalcLib.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
+#include "KuppaScript.h"
 
 /* Plain-data stand-ins. Vector3 and Matrix4x3 carry declared destructors, so
  * a local or a struct copy of either one adds cleanup code the cartridge does
@@ -193,10 +194,6 @@ extern "C" {
 extern u8 *data_0209f344;
 }
 
-/* local extern: the header KuppaScript.h would renumber this TU's compiler temps (@NNN pins in its manifest) */
-namespace KuppaScript {
-void End(void);
-}
 extern "C" {
 extern u8 data_0209d660;
 extern s8 gNumStageStars[];
