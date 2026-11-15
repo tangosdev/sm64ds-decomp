@@ -23,10 +23,7 @@
  *   a plain `playerPos = o->mPos` uses [r8,#0x5c] addressing and shortens
  *   Behavior by 4 bytes. The focus copy already goes through a pointer
  *   local, so `&focus->mPos` needs no launder.
- * - GetPosFromMinimapPos and GetPosOnMinimap are static fx32 methods;
- *   the third parameter is the scalar, not Fix12<int>.
- * - The OAM and Vec3 helpers stay on C-linkage or hand-mangled
- *   externs for the same reason.
+ * - GetPosFromMinimapPos and GetPosOnMinimap are static fx32 methods.
  */
 #include "dMap_c.h"
 #include "decl_common.h"

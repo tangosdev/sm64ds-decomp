@@ -69,9 +69,9 @@ struct dScMgSlot3_c : dScMgSingle3DBase_c {
     s32 Render();                         /* slot  9 */
 
     Mascot mMascot;          /* 0x4f38 -- Toad at the table, see file banner */
-    s32 mReelPos[3];         /* 0x4fe4 -- Fix12 scroll of each reel; seeded to a
+    s32 mReelPos[3];         /* 0x4fe4 -- fx32 scroll of each reel; seeded to a
                                random symbol * 0x50000 (0x50 px a symbol) */
-    s32 mReelPeriod;         /* 0x4ff0 -- strip length * 80 pixels, in Fix12 */
+    s32 mReelPeriod;         /* 0x4ff0 -- strip length * 80 pixels, in fx32 */
     s32 mReelWinPos[3];      /* 0x4ff4 -- read instead of mReelPos during the
                                state-6 win-line pass */
     s32 mState;              /* 0x5000 -- index into the pointer-to-member table

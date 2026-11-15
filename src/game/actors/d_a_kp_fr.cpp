@@ -178,8 +178,6 @@ int daKpFr_c::func_ov070_02121eb0() {
     return 1;
 }
 
-/* Fix12-by-value, notes/mwccarm-codegen.md 6az -- header method form homes the
-   class args. */
 void daKpFr_c::func_ov070_02121e14() {
   int shadowDepth;
   mMatrix.t.x = mPosX >> 3;

@@ -12,8 +12,6 @@
  * D1 and D0 pair; `new` odr-uses the class so that pair is emitted here.
  *
  * deslop leftovers:
- * - daPly_c::Hurt and daPly_c::Bounce stay mangled extern "C" calls: each
- *   takes a Fix12<int> by value.
  * - UpdatePose still walks VecFx32 views: spelling those copies as
  *   Vector3 is emitted differently.
  * - The shared files keep their address names (d_a_f_pkn.cpp reads them

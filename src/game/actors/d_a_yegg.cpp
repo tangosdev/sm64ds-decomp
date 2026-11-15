@@ -47,20 +47,13 @@
  * names are reconstructed; this slice does not recover original method names.
  *
  * deslop leftovers:
- * - the callees with Fix12<int> parameters (dExtAnmModel_c::SetAnim,
- *   dBgCh_Actr::Init, Particle::System::New) stay spelled as mangled
- *   extern-C free functions. A real method call homes
- *   a class-typed by-value argument and size-DIFFs the caller
- *   (notes/mwccarm-codegen.md 6az).
  * - the DOSUN byte at +0x3a2 in HandleWallHit remains a raw offset.
  *   Spawned coins use dActor_c's existing previous-angle and horizontal-speed fields.
  * - mSpawnPos is named in daYegg_c.h but its purpose is not known
  *   (written once, never read here); the 4-byte gap at 0x3f8 is unnamed.
  * - this list is representative, not exhaustive: the flag and mask
  *   literals (mFlags 0x40000/0x10000000/0x8, the hit flags 0x8000/0x26fe0,
- *   the cylinder words 0x202000/0x200002/0xa08000) are also left numeric, and
- *   the extern-C Fix12 callees include SpawnCoins, daPly_c::Hurt,
- *   Particle::NewSimple and RunningSlidingDustAt as well.
+ *   the cylinder words 0x202000/0x200002/0xa08000) are also left numeric.
  * - the particle, sound, shadow and animation-file arguments are
  *   numeric (0x3f..0x42, 0x2c, 0x93, 0x103, the two shared animation files)
  *   and the egg's flag bits 0x100/0x400/0x2000 are named by use only. The IDs'
@@ -281,7 +274,7 @@ void daYegg_c::HandleWallHit(int arg) {
  * the coin count from GetCoinPayoutCount as coins, and one blue coin if
  * HasBlueCoinPayout says so, both at the egg's position raised by 0x28000
  * (40 units), then marks the slot paid. The 0x2000 handed on is 2.0 in
- * Fix12; what that argument controls is not recovered here. */
+ * fx32; what that argument controls is not recovered here. */
 void daYegg_c::PayOut() {
     unsigned int idx = mPayoutIdx;
     unsigned int n;
@@ -762,7 +755,7 @@ void daYegg_c::ExecuteFollowPlayer() {
     }
 
     {
-        /* 0x1000 / 0x3000 as Fix12: a third. */
+        /* 0x1000 / 0x3000 as fx32: a third. */
         int fd = FX_Div(0x1000, 0x3000);
         Math_Function_0203b14c(&mPosX, mHoldTargetX, fd, 0x3e8000, 4);
         Math_Function_0203b14c(&mPosY, mHoldTargetY, fd, 0x3e8000, 4);
@@ -1168,7 +1161,7 @@ void func_ov002_020edca4(daYegg_c* self)
  * if the cylinder's hit flags (mdCcAc_c.hitFlags, +0x130) have bit 0x8000 the
  * egg enters state 3 and returns 1; if none of the bits 0x26fe0 are set, the
  * daPly_c is hurt (daPly_c::Hurt at the egg's position with 1, 12 units in
- * Fix12, 1, 0, 1). When the touched actor is one of the six burst actors
+ * fx32, 1, 0, 1). When the touched actor is one of the six burst actors
  * (BOMBKING, HOLHEI, KURIKING, KURIBO_L, WANWAN, WANWAN2) the egg bursts and
  * returns 1. When it is the actor currently sought (mTargetId) the egg pays
  * out, re-enters state 1 and returns 1. Any other case returns 0. */

@@ -27,8 +27,6 @@
  * Behavior calls through.
  *
  * What stays, and why:
- * - dExtAnmModel_c::SetAnim stays mangled: it takes Fix12<int> by value
- *   (notes/mwccarm-codegen.md 6az).
  * - SharedFilePtr::filePtr is a void *, so LoadedBCA casts it to the
  *   BCA_File * SetAnim takes.
  * - data_0209caa0 / data_0209f32c are the arm9 level-state words that

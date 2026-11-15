@@ -13,23 +13,12 @@
  * - StateDrop: mWithMeshClsn.UpdateContinuous() is the same size (0x2b4) but
  *   the reloc target is _ZN10dBgCh_Actr16UpdateContinuousEv. The ROM calls the
  *   veneer at arm9:0x020383fc.
- * - StateDrop: Particle::System::New (Fix12<int> x/y/z) size 0x2b4 -> 0x2c8
- *   (+0x14). Behavior's two calls size 0x310 -> 0x344 (+0x34). The header
- *   does not declare New, and a bare int does not convert to Fix12<int>.
- * - InitResources: dExtAnmModel_c::SetAnim, both calls, Fix12<int> speed, size
- *   0x32c -> 0x344 (+0x18).
- * - InitResources: mWithMeshClsn.Init(...) links to the undefined
- *   _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_: dBgCh_Actr.h spells
- *   the radii fx32, a plain s32, so the ROM's Fix12<int> mangling is
- *   called by name.
  * - func_ov089_02131df4: one control arm (mState != 7) size 0x110 -> 0xe8
  *   (-0x28). The ROM has both copies.
  * - LoadKeyModels / UnloadKeyModels are C by necessity: daDoor_c, daPly_c and the
  *   bosses call them by name.
- * - StateFlyToCenter / StateStarJump: the Fix12<int> calls (Particle::System::New,
- *   ApproachLinear, Sound::ChangeMusicVolume) go by symbol for the same reason
- *   as StateDrop's. mStateTimer is counted through a u16 pointer; the ROM
- *   compares it unsigned.
+ * - StateFlyToCenter / StateStarJump: mStateTimer is counted through a u16
+ *   pointer; the ROM compares it unsigned.
  * - common.h's flat Matrix4x3 keeps the translation in m[9..11].
  * - The carry sparkle reads the first bone's word at +0xc; BMD_Bone does not
  *   name it.
@@ -44,10 +33,10 @@
  * - LoadKeyModels and UnloadKeyModels stay C. The first parameter is the
  *   kind, and daDoor_c, daPly_c and the bosses call them by name.
  * - func_ov002_020c3dbc stays a call into ov002.
- * - The Fix12<int>-by-value calls, the UpdateContinuous veneer, both
- *   control arms in func_ov089_02131df4, the u16* state timer, the s32*
- *   position walks, v.y = v.y + Y_LOOK, and IsOnGround() == 0 stay as
- *   written. Each spelling was already measured; the other form moves bytes.
+ * - The UpdateContinuous veneer, both control arms in func_ov089_02131df4,
+ *   the u16* state timer, the s32* position walks, v.y = v.y + Y_LOOK, and
+ *   IsOnGround() == 0 stay as written. Each spelling was already measured;
+ *   the other form moves bytes.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -188,9 +177,7 @@ struct ObjKeyStateTable {
 
 extern ObjKeyStateTable data_ov089_02132cec;
 
-/* local extern: dCamera_c.h has no SetFlag_3. Particle::System::New and
- * dExtAnmModel_c::SetAnim take Fix12<int> by value; the scalar call does not compile and the Fix12
- * temporary size-DIFFs (see the file comment). The ROM calls the
+/* local extern: dCamera_c.h has no SetFlag_3. The ROM calls the
  * UpdateContinuous veneer, not the method. */
 extern "C" {
 extern dCamera_c *gCamera;

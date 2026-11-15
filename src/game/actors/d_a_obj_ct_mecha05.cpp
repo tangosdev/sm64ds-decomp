@@ -2,9 +2,6 @@
 /* Production translation unit for ov065/daObjCtMecha05_c.
  *
  * What stays, and why:
- * - dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange
- *   are header member calls whose headers take Fix12 as the scalar fx32, a plain
- *   s32 (6az)
  * - dBgW::SetBeforeClsnCallback stores dBgW+0x18 (beforeClsnCallback); dBgW::SetClipRadius
  *   stores +0x0c; dBgW::SetClipOffsetY stores +0x10
  * - data_ov065_0211c0c8 / data_ov065_0211d26c; TTC_MovingBar_ModelFile /

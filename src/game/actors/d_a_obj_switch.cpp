@@ -14,9 +14,6 @@
 // the file.
 //
 // leftovers:
-//   - ChangeMusicVolume / IsClsnInRange / KcMbg::SetFile stay computed-spelling
-//     externs: the member form changes codegen under 2004/b56 (Fix12<int> by
-//     value, wall 6az -- noted at use).
 //   - The daStar_c fields at +0x438/+0x440 and unk_49d are unnamed upstream;
 //     the int*/unk_ puns stay until daStar_c.h names them.
 /* Runtime asset handles resolved through the overlay 0 file table. */

@@ -16,9 +16,7 @@
 // leftovers:
 // - func_ov080_02124418 stays free. Its first argument is a daChoro_Rock_c,
 //   so it is not a daChoropu_c method.
-// - daPly_c::Hurt and daPly_c::Bounce retain scalar mangled declarations for
-//   their by-value Fix12 parameters. Throw's spawn id stays
-//   `py ? 0x137 : 0x137`.
+// - Throw's spawn id stays `py ? 0x137 : 0x137`.
 // - LAUND() in func_ov080_02124088 keeps the cylinder flags, mFlags and
 //   mTimesHit addresses opaque.
 // - Throw reads mAngleX/Y/Z as unsigned short. Hidden reads mHasTurn as
@@ -114,7 +112,7 @@ daChoro_Rock_c::~daChoro_Rock_c()
 {
 }
 
-/* Returns the constant 0x28000 (40.0 read as a Fix12). What the caller does with it is
+/* Returns the constant 0x28000 (40.0 read as an fx32). What the caller does with it is
  * not recovered here. */
 s32 daChoropu_c::OnAimedAtWithEgg()
 {
@@ -196,7 +194,7 @@ void daChoropu_c::func_ov080_02123924()
  * frame 10 it spawns a daChoro_Rock_c (actor 0x137, spawn parameter 0 = the big
  * rock) 80 units out from the mole along (mAngleY - 0x4000), a quarter turn off the way it
  * faces, looked up in the
- * sine/cosine pair table FX_SinCosTable_ (entries are Fix12, indexed by angle >> 4),
+ * sine/cosine pair table FX_SinCosTable_ (entries are fx16, indexed by angle >> 4),
  * 10 units (0xa000) above its position, with the angle triple (mAngleX, mAngleY +
  * 0x400, mAngleZ) and the mole's area. The rock is then given horizontal speed
  * 30 units/frame (0x1e000) and vertical speed 4 units (0x4000) plus 4% of the
@@ -523,7 +521,7 @@ void daChoropu_c::func_ov080_02124088()
  *     knocked underground (func_ov080_02124088);
  *   - otherwise nothing unless bit 0x400000 (the daPly_c) is set;
  *   - daPly_c stomped the mole (JumpedOnByPlayer): knocked underground, then
- *     daPly_c::Bounce is called with 0x28000 (40.0 read as a Fix12);
+ *     daPly_c::Bounce is called with 0x28000 (40.0 read as an fx32);
  *   - daPly_c is Vanish (mIsVanish): no effect;
  *   - daPly_c is Metal (mIsMetal): knocked underground;
  *   - hit by a Mega daPly_c (bit 0x10): sound effect 0x1d, IncMegaKillCount, knocked

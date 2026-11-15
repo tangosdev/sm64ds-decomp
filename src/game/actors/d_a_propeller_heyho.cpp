@@ -6,9 +6,7 @@
  * func_ov070_0211f100 sorts contact. Source order is the reverse of the
  * ROM, so the one .text section emits ascending.
  */
-/* leftovers: daPly_c::SpinBounce and daPly_c::Hurt stay mangled: each takes
- * Fix12<int> by value.
- * Finished and WillHitFrame stay qualified through mAnmModel; a char*
+/* leftovers: Finished and WillHitFrame stay qualified through mAnmModel; a char*
  * view of that member moves a word in func_ov070_0211f48c,
  * func_ov070_0211f62c and func_ov070_0211f6e0. daPly_c-position reads
  * through int* in func_ov070_0211fd98, func_ov070_0211fae4 and
@@ -62,7 +60,7 @@ SpawnInfo<daPropeller_Heyho_c> g_profile_PROPELLER_HEYHO = {daPropeller_Heyho_c_
 struct V3w { int w[3]; };  /* array-wrapper: C++ scalarizes a plain struct copy; this form keeps the C front end's ldm/stm block copy */
 struct V3h { short h[3]; };
 
-/* Named constants.  Fix12 values are written as the raw word (0x1000 = 1.0)
+/* Named constants.  fx32 values are written as the raw word (0x1000 = 1.0)
  * with the unit value in the comment; frame counts are game-logic frames (the frame rate is not established here). */
 enum {
     kLevel0x16 = 0x16, /* LEVEL_ID (gCurrentSublevel, declared as a byte here) value at which this
@@ -134,7 +132,7 @@ void daPropeller_Heyho_c::OnTurnIntoEgg(daPly_c &player) {
 /* -------------------------------------------------------------------------- */
 /* Egg-aim query. Returns the fixed height the slot stores. */
 s32 daPropeller_Heyho_c::OnAimedAtWithEgg() {
-    return 0x2b000; /* Fix12 egg-aim HEIGHT added to pos.y, per dEnemyBase_c.h slot-29: 43.0 units */
+    return 0x2b000; /* fx32 egg-aim HEIGHT added to pos.y, per dEnemyBase_c.h slot-29: 43.0 units */
 }
 
 /* -------------------------------------------------------------------------- */
@@ -773,7 +771,6 @@ int daPropeller_Heyho_c::func_ov070_0211f62c()
 /* -------------------------------------------------------------------------- */
 struct BCA_File;
 /* (dExtAnmModel_c: real header type in scope) */
-/* SetAnim takes Fix12<int> by value, so this call stays the mangled extern. */
 
 /* (data_ov070_02123500: SharedFilePtr view declared earlier in this TU) */
 
@@ -797,7 +794,7 @@ extern daPropeller_Heyho_c::State data_ov070_0212359c;
  * below 13 it steers mPrevAngleY toward mTargetAngY, which is refreshed from the
  * nearest player when there is one. When the animation is about to hit frame 13
  * (WillHitFrame) it spawns the fireball at its own position (SpawnFireball with
- * 30.0 / 10.0 in its two Fix12 slots and param1 = 1) with a rotation copied from
+ * 30.0 / 10.0 in its two fx32 slots and param1 = 1) with a rotation copied from
  * mAngleX/Y/Z whose X is the vertical angle to the player, and plays sound 0x105.
  * When the animation has finished it resets the frame to 0, starts the 90-frame
  * cooldown and returns to wander. */
@@ -992,9 +989,7 @@ void func_ov070_0211f100(daPropeller_Heyho_c *c) {
 
 /* -------------------------------------------------------------------------- */
 
-
-/* (dActor_c: real header type in scope; SpawnCoins goes through the mangled extern below) */
-/* SpawnCoins takes Fix12<int> by value, so this call stays the mangled extern. */
+/* (dActor_c: real header type in scope) */
 
 /* Defeat helper: a small puff of dust, then mExtraCoinCount + 1 coins spread
  * 10.0 units from the actor, then the actor is killed and recorded in the

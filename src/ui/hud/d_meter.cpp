@@ -46,9 +46,6 @@
  *
  * leftovers:
  * - The HUD globals are data_ names: symbols.txt has no recovered name for them.
- * - The OAM::Render overloads that take Fix12<int> by value keep their mangled
- *   spellings: the natural static member call homes the Fix12 arguments
- *   differently under mwccarm (the Fix12 wall) and rewrites every call site.
  * - InitResources keeps one launder: the volatile pun on mVsTimer in the
  *   gCurrentSublevel == 0x2B branch (a plain member store emits different code).
  * - gGameMode is CURRENT_GAMEMODE (symbols/verified.tsv); mode 1 is the one

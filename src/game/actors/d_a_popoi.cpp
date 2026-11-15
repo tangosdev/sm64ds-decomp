@@ -25,10 +25,6 @@
  * deslop leftovers:
  *   - TurnAway (data_ov077_02127d18) is its own record, so ChangeState
  *     still takes that object's address as daPopoi_StateRecord *.
- *   - dExtAnmModel_c::SetAnim and the three collision Init calls stay spelled-out
- *     _ZN identifiers (Fix12<int> by value; the real headers can't express the
- *     call-site mangling). Sound::PlayLong and dBgCh_Actr::GetFloorResult are
- *     real calls.
  *   - UpdateTurnAwayState calls AngleDiff through an (int(*)(short,short))
  *     pointer cast: decl_common declares (int,int), and the short call-site
  *     typing is byte-load-bearing.

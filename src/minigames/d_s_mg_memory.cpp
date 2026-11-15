@@ -10,7 +10,6 @@
  *     added to `this` first and the array reached through a cast back to
  *     the class. The card walks (DrawCards, RoundWaitDeal, ShuffleCards)
  *     step a `char *` the same way -- mCards[i] does not match there.
- *   - cstd::atan2 stays the mangled symbol (Fix12<int> by value).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

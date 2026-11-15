@@ -24,8 +24,6 @@
  * fields; the existing vector pointer views at those helper boundaries are
  * still partial reconstruction. The state timer uses unsigned halfword reads,
  * and the state installer retains its StateFn pointer read-back.
- * Native Fix12<int> calls for collision setup, animation, shadow and Hurt
- * remain pending; the local declarations retain their matched scalar ABI.
  * The forward vectors retain the observed doubled Z store and store order.
  * g_profile_BAKUBAKU remains this file's data, not a class member.
  */
@@ -96,7 +94,6 @@ extern VecFx32 data_ov032_021137d8; /* head cylinder */
 extern "C" int AngleDiff(int a, int b);
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
-/* local extern: retain the matched scalar ABI; native Fix12<int> calls remain pending. */
 /* Parameter names keep this TU's @NNN. */
 extern "C" {
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height, void *a,
@@ -135,7 +132,7 @@ SpawnInfo<daBakubaku_c> g_profile_BAKUBAKU = {
 
 int daBakubaku_c::OnAimedAtWithEgg()
 {
-    return 0xa0000; /* Fix12 160.0, egg aim height */
+    return 0xa0000; /* fx32 160.0, egg aim height */
 }
 
 s32 daBakubaku_c::InitResources()

@@ -42,8 +42,6 @@
  *   data_0209d660, data_0209d6bc and gShowTouchScreenArrows, the daPly_c::Hurt
  *   arguments after the first two, and what the player-side calls
  *   func_ov002_020bec84 and daPly_c::func_ov002_020bec9c test and start.
- * - The daPly_c helpers stay mangled scalar externs (Fix12<int>-by-value
- *   member form is the 6az wall).
  * - SignPost_ClsnFile / SignPost_ModelFile keep their coined BSS names
  *   (historical, like the Spawn aliases).
  * - The message/volume tables and g_profile_TATEFUDA are not this TU's data.
@@ -186,16 +184,7 @@ daObjTatefuda_c *daObjTatefuda_c_classInit(void) {
                            (_ZN11dExtModel_c7SetFileEP8BMD_Fileii) -- only the
                            return type differed, and that is not mangled.
      dBgActor_c           -> the two calls are unqualified members now.
-     dBgW_KcMbg -> its real SetFile takes Fix12<int> BY VALUE, so it
-                           cannot be declared as a callable method here without
-                           changing how the caller passes the argument
-                           (notes/mwccarm-codegen.md 6az). It keeps a scalar
-                           extern "C" declaration under its exact ROM symbol,
-                           which also FIXES A PHANTOM: the shadow spelled `int`
-                           and so emitted a `bl` to
-                           ..._Matrix4x3isR10CLPS_Block, which exists nowhere.
-                           match.py compares relocated words as wildcards, so
-                           nothing caught it. */
+     dBgW_KcMbg           -> mMeshCollider.SetFile, its real method. */
 /* dBgCh_Actr is the real class now, through this actor's header, and it
    declares StartDetectingWater itself. */
 int daObjTatefuda_c::InitResources()
@@ -478,7 +467,7 @@ void daObjTatefuda_c::InitThrown()
  * eighth of a turn); move it (dActor_c::UpdatePos); if it touched the ground, a
  * wall or water, Kill it and stop. Otherwise, if the collider reports an
  * actor that is a player and is not the last holder, hurt that player
- * (daPly_c::Hurt with 1, 0xc000 -- 12.0 as Fix12 -- and 1/0/1 for the rest, which
+ * (daPly_c::Hurt with 1, 0xc000 -- 12.0 as fx32 -- and 1/0/1 for the rest, which
  * are not named here); slow the horizontal speed toward 0 by 0x555 (about
  * 0.33 unit) per frame; keep the mesh collider off; and once the sign is off
  * screen (mFlags bit 8) and more than 0x7d0000 (2000 units) from the player,
@@ -619,7 +608,7 @@ void daObjTatefuda_c::InitTalk()
  * The reading spot is the sign's own position pushed 0x5a000 (90 units), or
  * 0x78000 (120 units) when mPoundsLeft is 1, forward along the sign's facing
  * angle, using the shared sine/cosine table at FX_SinCosTable_ (the angle is read
- * unsigned, >> 4, to index it; the products are Fix12 multiplies, rounded). The
+ * unsigned, >> 4, to index it; the products are fx32 multiplies, rounded). The
  * message is anchored 0x50000 (80 units) above the sign itself.
  *
  * The tail is a special case for message 0x74a (what it stands for is not
@@ -858,7 +847,7 @@ void daObjTatefuda_c::CheckGrabOrBreak() {
  * config/arm9/overlays/ov002/relocs.txt.
  *
  * The signpost does not destroy itself. It plays its particle 0x28000 (40.0 in
- * Fix12) above where it stands, poofs, plays sound bank 3 id 0x41 and then
+ * fx32) above where it stands, poofs, plays sound bank 3 id 0x41 and then
  * tails into Reset, this class's own reset routine.
  * That is why there is no MarkForDestruction here, unlike dBgActor_c::Kill.
  *
@@ -921,7 +910,7 @@ void daObjTatefuda_c::OnHitByMegaChar(daPly_c &player) {
  * for its own slot 21; daPly_c.h names that byte mIsMega, so the read is
  * spelt through a daPly_c & here. A param1 of 2 or a non-zero mIsMega makes
  * the pound take every pound left at once (the sign sinks mPoundsLeft * 0x2d
- * = 45 units per pound, as `<< 12` Fix12, and mPoundsLeft becomes 0); otherwise
+ * = 45 units per pound, as `<< 12` fx32, and mPoundsLeft becomes 0); otherwise
  * it takes one (0x2d000 = 45 units, mPoundsLeft - 1) and starts the 0xf-frame
  * mPoundCooldown. Both set mRespawnDelay = 0x1e (30 frames). */
 void daObjTatefuda_c::OnGroundPounded(dActor_c &other)

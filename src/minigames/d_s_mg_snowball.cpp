@@ -18,9 +18,8 @@
  * The helpers whose first parameter was the scene are now members of
  * dScMgSnowball_c, including the 17 per-element helpers dispatched through
  * the PMF tables sSnowballBitStateTable/38/50/70 (8-byte {function, 0}
- * records). __sinit_d_s_mg_snowball.cpp copies them. Some calls stay mangled:
- * cstd::atan2 and Particle::System take Fix12 or reference
- * arguments. GetBG2CharPtr and GetBG3ScrPtr stay spelled.
+ * records). __sinit_d_s_mg_snowball.cpp copies them. GetBG2CharPtr and
+ * GetBG3ScrPtr stay spelled.
  */
 
 // leftovers:

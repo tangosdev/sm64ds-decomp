@@ -13,8 +13,6 @@
  * leftovers:
  * - defer_codegen is off so this file emits in source order. The per-function
  *   optimization pragmas are brackets.
- * - OAM::Render stays a local extern. Its scale arguments are Fix12<int> by
- *   value.
  * - data_0209fc78 is a volatile macro in func_02033464 only. decl_common.h
  *   spells that byte plain, and the other functions in this file read it plain.
  * - LayoutLineVS keeps the char-cast handler call: data_02092830[idx - 1]()

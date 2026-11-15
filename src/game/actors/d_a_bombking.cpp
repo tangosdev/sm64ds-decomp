@@ -20,7 +20,6 @@
  * are this TU's statics; mwcc emits their initializer,
  * __sinit_d_a_bombking.cpp (0x02126660). The records keep their
  * data_ov078_* address names, as their handlers keep func_ov078_*.
- * Sound::ChangeMusicVolume keeps its mangled decl (Fix12<int> by value, S13 wall); the Layer3 pair stays on decl_common.h / the local mangled decl because Sound.h declares only Layer1/Layer2.
  */
 
 /* common.h FIRST: daBombking_c.h reaches math/Matrix.h through dExtBlendAnmModel_c.h,
@@ -50,7 +49,7 @@ s16 atan2(s32, s32);
 }
 
 /* Remaining reconstruction views. Reconciled by hand against include/: every type
- * the real headers already define (Vector3, Matrix4x3, Fix12<int>, u8/u16/s16,
+ * the real headers already define (Vector3, Matrix4x3, u8/u16/s16,
  * dActor_c, fBase_c, daPly_c, BMD_File, dExtBlendAnmModel_c) was DROPPED here -- the
  * generated preamble redefined all of them. The shapes below are surviving
  * views from the legacy shards, not evidence of original local classes. */
@@ -288,9 +287,6 @@ int daBombking_c::TickWalkHome() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* This caller retains the reconstructed SetAnim ABI declaration above.
-   The callee's Fix12 definition experiment in notes/mwccarm-codegen.md 6az
-   does not establish that a typed call here would fail to match. */
 int daBombking_c::EnterWalkHome() {
     this->mVertAccel = -0x2000;
     this->mAnimSpeed = 2;

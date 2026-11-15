@@ -15,12 +15,8 @@
  * What stays, and why (each alternative measured):
  * - InitResources: a local holding dExtSimpleModel_c::LoadFile's return, reused by
  *   Prepare, differs by 34 words (size stays 0x1ec).
- * - InitResources: dExtAnmModel_c::SetAnim with a Fix12<int> local differs
- *   (size stays 0x1ec, 10 relocation destinations wrong).
  * - InitResources: assigning Matrix4x3 onto both models differs (size stays
  *   0x1ec, 5 relocation destinations wrong). The twelve-word Mtx43 copy stays.
- * - Behavior: DropShadowRadHeight with Fix12<int> locals differs (size stays
- *   0x16c, 5 relocation destinations wrong).
  * - Behavior: or-ing the fade into data_ov055_02111b64 differs by 1 word.
  *   The ROM adds.
  * - Render: *dst = *src in the bone loop differs by 8 words (size stays

@@ -124,7 +124,7 @@ void dScMgBomroom_c::SetRoundOver() {
     mRoundOver = 1;
 }
 
-/* Steps the BG2 y offset mBg2Y (Fix12): state 1 raises it by 3 a
+/* Steps the BG2 y offset mBg2Y (fx32): state 1 raises it by 3 a
  * frame to 0xc0, state 2 waits out the mBg2Hold count, then lowers it by 3
  * a frame back to 0. */
 
@@ -1074,7 +1074,7 @@ void dScMgBomroom_c::Bomb_StateMarch(int index) {
     (this->*sBomroomBombMarchTable[state])(index);
 }
 
-/* Roaming step: advance x/y along the angle at speed (sine table, Fix12),
+/* Roaming step: advance x/y along the angle at speed (sine table, fx32),
  * then bounce off the box selected by color (0xc0..0x100 x 0x40..0x80 for
  * color 1, 0..0x40 x 0x40..0x80 for color 0): a vertical wall mirrors the
  * angle (0x8000 - a), a horizontal one negates it, and the coordinate is

@@ -56,7 +56,7 @@
 #pragma defer_codegen off
 
 /* The 0x40 records at sMgFxPool are 0x20 bytes each. Mg_InitFx
-   fills one: a Fix12 position, two optional vectors, a frame timer and a state.
+   fills one: an fx32 position, two optional vectors, a frame timer and a state.
    State 0 (UpdateDrift / DrawSparkle) adds mVecB into mVecA and
    mVecA into mPos each frame; state 1 (UpdateFlyTo /
    DrawFlyTo) interpolates mPos between the two vectors as the timer
@@ -606,7 +606,7 @@ inline long long inline_fn(int arg0)
 /* State 1's update. Counts mTimer down, calling Mg_GainCredits(1) on
    the frame it reaches 0, then places mPos between the two vectors by the
    remaining fraction s = mTimer / mDuration: x = mVecA.x * s + mVecB.x * (1 - s),
-   y = mVecB.y + s * s * (mVecA.y - mVecB.y), all Fix12. */
+   y = mVecB.y + s * s * (mVecA.y - mVecB.y), all fx32. */
 void MgFx::UpdateFlyTo() {
     using namespace s20addcc;
     {
@@ -1700,8 +1700,7 @@ struct D3DBaseView : dScMgBase_c {
  * take their normal path. The cast is proven by that gate: 2 is returned only
  * by dScMgD3DBase_c's body (ov006:0x020e6e4c), which its four children
  * inherit without overriding, so the scene is a dScMgD3DBase_c whenever the
- * field is read. The OAM::Render overloads taking a Fix12<int> by value stay
- * mangled (see include/OAM.h). */
+ * field is read. */
 
 namespace s20af68c {
 extern "C" {

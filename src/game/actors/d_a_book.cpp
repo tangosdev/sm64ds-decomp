@@ -23,10 +23,9 @@
  * emits D1 then D0; D2 has no ROM home. Both vtables are keyed here.
  * common.h comes first so InitResources' mShadowMat copy stays twelve words.
  */
-/* leftovers: daPly_c::Hurt and daPly_c::Bounce stay mangled externs. This file
- * calls them, and each symbol takes Fix12<int> by value. GetWallResult is
- * not a dBgCh_Actr method; the call is dBgCh_Actr_UpdateContinuous_Veneer,
- * not UpdateContinuous. data_ov020_02114aa0 and 02114ab8 are model handles,
+/* leftovers: GetWallResult is not a dBgCh_Actr method; the call is
+ * dBgCh_Actr_UpdateContinuous_Veneer, not UpdateContinuous.
+ * data_ov020_02114aa0 and 02114ab8 are model handles,
  * 02114aa8 and 02114ab0 animation handles; filePtr is the loaded file.
  * The ROM records no English name for the state helpers. StateX follows the
  * header's State enum; CheckAttacks and Die follow the N64 bookend's

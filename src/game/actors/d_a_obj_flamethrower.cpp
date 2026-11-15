@@ -36,8 +36,6 @@
  *   same shape as InitResources (this-based, stores at +0x3a4 /
  *   +0x104 / +0xf8). Those two spellings together were 0x454 against
  *   0x470.
- * - InitResources: dCcPos_c::Init with by-value Fix12<int> was 0x18c
- *   against 0x174. The call is the scalar fx32 method.
  */
 
 #include "daObjFlamethrower_c.h"

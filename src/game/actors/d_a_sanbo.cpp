@@ -22,16 +22,9 @@
  * real argument lands in r1 either way.
  *
  * deslop leftovers:
- *   - dCcAc_c::Init, dBgCh_Actr::Init, DropShadowRadHeight and
- *   IsTooFarAwayFromPlayer take Fix12 by value, so the calls stay
- *   computed names (InitResources, Behavior, UpdateModelAndShadow).
  *   - func_02038414 is the veneer onto
  *   dBgCh_Actr::UpdateDiscreteNoLava_2 (UpdateKnockback,
  *   UpdateMegaKill, UpdateFloorAndWalls).
- *   - Particle::System::New, NewCleanParticle, NewSimple,
- *   RunningSlidingDustAt and daPly_c::Hurt take Fix12 by value
- *   (UpdateKnockback, HandleAttacks, EnterMegaKill,
- *   UpdateLeader).
  *   - UpdateFloorAndWalls copies the floor and wall collision normals;
  *   the wall normal is unused.
  *   - gSanboHeadModelFile and gSanboBodyModelFile are the head

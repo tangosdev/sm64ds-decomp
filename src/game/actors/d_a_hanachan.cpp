@@ -11,8 +11,7 @@
  * - StateDemoWaitInit, UpdateSegmentModels and InitResources walk
  *   segment rows through char* bases. Indexing mSegmentPos[seg] /
  *   &mAnmModels[i].mat4x3 changes those sizes.
- * - func_ov002_020c51d0 is ov002's. daPly_c::Hurt and daPly_c::Bounce
- *   stay mangled (Fix12<int> by value).
+ * - func_ov002_020c51d0 is ov002's.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

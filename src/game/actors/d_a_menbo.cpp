@@ -27,11 +27,6 @@
  * loop reproduces with strength reduction on and the other 24 functions never
  * needed it (measured: with the pragma gone and the accumulator kept, that one
  * function is 0x124 against the ROM's 0x120).
- *
- * deslop leftovers:
- * - func_ov090_02131608: dExtAnmModel_c::SetAnim with a Fix12<int> rate is 0x4c
- *   against 0x40 and emits 4 bytes of .rodata. The scalar SetAnim call
- *   matches. The patrol, water-rest and water-chase entries keep it.
  */
 
 #pragma defer_codegen off

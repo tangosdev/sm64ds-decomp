@@ -1,7 +1,6 @@
 //cpp
 /* leftovers:
- * - dBgCh_Actr::Init's member call mangles with int. The ROM row is
- *   Fix12<int>. GetFloorResult and GetWallResult are not on the header.
+ * - GetFloorResult and GetWallResult are not on the header.
  * - func_0201267c is Sound::Play(3, id, pos).
  * - data_ov018_* handles are constructed by the sinit. g_profile is
  *   not this TU. common.h stays first so the matrix copy stays flat.

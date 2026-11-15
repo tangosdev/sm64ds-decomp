@@ -109,10 +109,7 @@ s32 AngleDiff(s32 a, s32 b);
 int func_02013a44(void);
 int ObjectMessageIDToActualMessageID(s16 id);
 
-/* dActor_c / Sound.
-   The mangled spellings are kept wherever the real declaration takes a
-   Fix12<int> BY VALUE, because mwccarm passes those differently at
-   the call site than a loose spelling would. */
+/* dActor_c / Sound. */
 int d_a_kinopioPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 }
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);

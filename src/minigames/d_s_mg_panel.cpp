@@ -95,7 +95,7 @@ dScMgPanel_c::~dScMgPanel_c() {}
    cartridge order; the trailing D2 is homeless and is deadstripped. */
 
 /* Draw the live particles: 64 slots of 0x18 bytes, sprite chosen by the
-   slot's kind byte and positioned from its Fix12 x/y. */
+   slot's kind byte and positioned from its fx32 x/y. */
 void dScMgPanel_c::Particle_DrawAll() {
     extern int sPanelParticleSprites[];
     int i;

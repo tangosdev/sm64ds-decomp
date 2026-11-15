@@ -23,10 +23,6 @@
  * - Behavior: deleting the `loc[0..2] = mPos*` seed size-DIFF 0x3ec->0x3d4.
  *   Two Vec3 locals instead of `s32 loc[6]` size-DIFF 0x3ec->0x3ac
  *   (a Vector3 local emits ~Vector3). The six words stay.
- * - Behavior: IsClsnInRange with Fix12<int> parameters size-DIFF
- *   0x3ec->0x3f4. Earthquake's Fix12<int> magnitude size-DIFF
- *   0x3ec->0x3f8. Particle::System::New with Fix12<int> coordinates
- *   size-DIFF 0x3ec->0x41c. All three stay scalar externs.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

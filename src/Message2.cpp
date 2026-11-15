@@ -8,9 +8,6 @@
  * - defer_codegen is off so this file emits in source order. The definitions
  *   run ROM-ascending, and func_0201b388's opt_common_subs off is a bracket;
  *   under deferred codegen it would be last-wins for the whole file.
- * - Sound::ChangeMusicVolume and OAM::Render stay extern "C" free functions.
- *   Each takes a Fix12<int> by value; a method with that parameter homes
- *   r0-r3 to the stack.
  * - The G2/G2S getters are declared locally in their namespaces. No
  *   header declares them yet.
  * - data_0209d6f4 is u8 * here. Message.cpp spells the same word volatile int

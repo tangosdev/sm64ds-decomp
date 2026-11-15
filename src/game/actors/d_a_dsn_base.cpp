@@ -20,8 +20,7 @@
  * - UpdateDropShadow keeps the early `s32 *clipRadius` and the braced
  *   mClipRadius clamp. An if-clamp in that spot is a 64-word DIFF.
  *   Dropping the pointer and shifting mClipRadius directly is a 1-word
- *   DIFF. dActor_c::DropShadowScaleXYZ with Fix12<int> by value
- *   size-DIFFs 0x120 -> 0x134; the scalar extern stays.
+ *   DIFF.
  * - StateSlam keeps `int isDosun` and `if (isDosun != 0)`.
  *   Comparing actorID in the if size-DIFFs 0xf0 -> 0xe4. Combining
  *   dustPos.y into `mPosY + 0x3c000` size-DIFFs 0xf0 -> 0xec.

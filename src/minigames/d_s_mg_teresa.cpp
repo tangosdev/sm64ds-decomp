@@ -31,8 +31,6 @@
  * sTeresaBooStateTable (8 states), and the scene table sTeresaSceneStateTable
  * (5 no-argument states by mSceneState). __sinit_ov006_02132f68 fills them
  * from the .data descriptor records at data_ov006_0213f8xx.
- *
- * OAM::Render takes Fix12<int> by value, so that call stays mangled.
  */
 
 // leftovers:
