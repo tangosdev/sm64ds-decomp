@@ -42,6 +42,7 @@ enum daObjCtMecha04_c_AssetId {
 #include "math/MtxStack.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
+#include "Sound.h"
 
 enum {
     ACTOR_CT_MECHA04L = 0x6f,
@@ -61,11 +62,6 @@ struct Mecha04ClsnFilePtr : SharedFilePtr {
     Mecha04ClsnFilePtr(u32 fileID);
     ~Mecha04ClsnFilePtr();
 };
-
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
 
 /* One 2-row {model, collision, clps} table indexed by mVariant; the three
  * data_ov065_* symbols name row 0's fields, so each column's decl strides by

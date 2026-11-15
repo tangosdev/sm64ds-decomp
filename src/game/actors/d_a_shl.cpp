@@ -64,6 +64,7 @@
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
+#include "Sound.h"
 
 /* Two 8-byte pointers-to-member. The second word is the this-adjustment;
    retail stores 0 for every entry. */
@@ -78,11 +79,6 @@ struct ShlStateEnd {
     ShlState rec;
     ShlStateFn tail[3];
 };
-
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
 
 extern "C" {
 

@@ -31,14 +31,10 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "Sound.h"
 
 /* This scene owns the position used by the breath effect. */
 extern Vector3 data_ov027_02113d10;
-
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
 
 extern "C" {
 int *Vec3_LslInPlace(Vector3 *, int);
