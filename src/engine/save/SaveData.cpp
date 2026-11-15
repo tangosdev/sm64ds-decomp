@@ -333,7 +333,7 @@ void SaveData::SetCoinRecordIfHigher(int courseID, u8 coins) {
 /* The minigame block's helpers, at the bottom of the TU's span. mg.unlocked
  * holds the unlocked-minigame bits: CollectMinigameKey sets bit
  * (rabbit << 2) | character there and in the file's minigameRabbits. mg.seenLo/seenHi are the minigame
- * menu's seen bits (ov005 MiniGm_IsNew reads "not seen", MiniGm_ClearNew sets
+ * menu's seen bits (ov005 dScMiniGm_c::IsNew reads "not seen", ClearNew sets
  * one). The record tables at block + 0x54, five words each, are what
  * src/minigames/d_s_mg_base.cpp reads and writes. */
 
