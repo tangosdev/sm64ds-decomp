@@ -685,7 +685,6 @@ void dCamera_c::func_0200d508(unsigned char playerID) {
 void dCamera_c::StartDanceCutscene(unsigned int playerID, int arg2) {
     unsigned char localID = gLocalPlayerId;
     if (playerID == localID) {
-        volatile int dummy;
         struct dActor_c *player;
         mOrbitTargetYaw = mAngleY;
         player = mTargetPlayer;
@@ -830,7 +829,6 @@ int dCamera_c::func_0200d0ac(unsigned int playerID) {
 void dCamera_c::func_0200d064(unsigned char playerID) {
     unsigned char localID = gLocalPlayerId;
     if (playerID == localID) {
-        volatile int dummy;
         unsigned int *addr = &mFlags;
         unsigned int val = *addr;
         val &= ~2u;
@@ -2578,7 +2576,6 @@ int func_02009db0(dCamera_c *cam) {
 }
 
 int func_02009d90(dCamera_c *cam) {
-    volatile int dummy __attribute__((unused));
     cam->SetMode(7);
     return 1;
 }

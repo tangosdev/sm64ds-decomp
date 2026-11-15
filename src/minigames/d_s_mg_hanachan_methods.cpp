@@ -45,7 +45,7 @@
  * - Wiggler::DrawField: OAM::Render(int, OamAttr*, int, int, int,
  *   int, int, int) does not typecheck (the sprite table is void*). The
  *   ROM symbol's scale parameter is Fix12<int>, which this tree cannot spell.
- *   One sprite offset is still read back through a volatile stack word.
+ *   One sprite offset is still read back through the stack word under s.
  * - Wiggler::StartPathA reads base.y through a volatile; a plain read DIFFs.
  */
 
@@ -167,7 +167,7 @@ extern int GetGameLanguage(void);
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
 extern s16 sHanaRoundPatterns[];
-extern volatile int sHanaFieldWigglerCounts[];
+extern int sHanaFieldWigglerCounts[];
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 
@@ -643,7 +643,7 @@ void dScMgHanachan_c::Wiggler::DrawField() {
                     if (hold < 0x26) {
                         int d = (0x30 - hold) * 0x600;
                         int vy;
-                        s.vc.y = (vy = *(volatile int *)((char *)&s - 4), (idx = 1) ? vy : vy) - d;
+                        s.vc.y = (vy = *(int *)((char *)&s - 4), (idx = 1) ? vy : vy) - d;
                     }
                     func_0203d388(&s.vc.x, rot);
                     s.vc.x += s.pos.x;

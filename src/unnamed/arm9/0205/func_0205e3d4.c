@@ -14,10 +14,7 @@
      assignment; hoisting them to the top is what lands the ROM coloring.
    - `save[2]` must NOT be volatile. Volatile stores are high-priority for the
      list scheduler and sink to the block front, which hoists the shared
-     `mov r0, #0` above the two save loads.
-   - The round-1 K read goes through a volatile pointer. Register pressure in
-     the round-1 body is what keeps K[0] un-hoisted in the ROM; rounds 2..4
-     hoist their K into the preheader on their own. */
+     `mov r0, #0` above the two save loads. */
 
 #include "SHA1Context.h"
 
@@ -73,8 +70,7 @@ void func_0205e3d4(void *ctx)
 
     for (t = 0; t < 20; t++)
     {
-        temp = SHA1CircularShift(5, A) + ((B & C) | ((~B) & D)) + E + W[t] +
-               ((volatile unsigned int *)K.w)[0];
+        temp = SHA1CircularShift(5, A) + ((B & C) | ((~B) & D)) + E + W[t] + K.w[0];
         E = D;
         D = C;
         C = SHA1CircularShift(30, B);

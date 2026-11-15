@@ -1454,7 +1454,7 @@ s32 dScMgSnowball_c::Behavior() {
             touched = (gTouchEdge[slot * 4] != 0);
         if (touched != 0) {
             int vb = ((volatile unsigned char *)gTouchY)[(unsigned int)slot * 4];
-            int va = ((volatile unsigned char *)gTouchX)[(unsigned int)slot * 4];
+            int va = gTouchX[(unsigned int)slot * 4];
             mTouchX = va;
             mTouchY = vb;
         } else if (held != 0) {

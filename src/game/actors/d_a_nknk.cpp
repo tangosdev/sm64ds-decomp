@@ -1048,7 +1048,7 @@ void daNknk_c::SpawnFootstepDust(
 }
 
 void daNknk_c::SpawnLandingDust() {
-    volatile Vector3 pos;
+    Vector3 pos;
     int t;
     u32 spawned;
     Particle::System *particle;

@@ -971,8 +971,6 @@ particle:
             vv[1].x = x0;
             vv[1].y = y0;
             vv[1].z = z0;
-            /* Inherited volatile read preserves the retail stack reload of X
-             * into r2 at 0x020bcfb8 before the particle call. */
             player->mParticle1 = Particle::System::New(player->mParticle1, 0x36, *(int *)&vv[1].x,
                                                        vv[1].y, vv[1].z, 0, 0);
         }
@@ -12931,9 +12929,9 @@ extern "C" int func_ov002_020d5ab4(daPly_c *p) {
     pos.y = pp[1];
     pos.z = pp[2];
 
-    a = (unsigned short)(short)(*(&p->mAngleY) + 0x8000) >> 4;
+    a = (unsigned short)(short)(p->mAngleY + 0x8000) >> 4;
     pos.x = pos.x + FX_MUL(FX_SinCosTable_[a * 2], 0x64000);
-    a = (unsigned short)(short)(*(&p->mAngleY) + 0x8000) >> 4;
+    a = (unsigned short)(short)(p->mAngleY + 0x8000) >> 4;
     pos.z = pos.z + FX_MUL(FX_SinCosTable_[a * 2 + 1], 0x64000);
 
     p->mPosX = pos.x;
@@ -14679,7 +14677,7 @@ int daPly_c::Hurt(const Vector3 &a, u32 b, fx32 dmg, u8 arg4, u8 arg5, u8 arg6) 
                 v.x = x;
                 v.y = y;
                 v.z = z;
-                if (*(int *)((char *)&this->mHurtDamage) == 1) {
+                if (*(int *)&this->mHurtDamage == 1) {
                     Particle::System::NewSimple(kPtclPlayerHurtOneA, x, y, z);
                     Particle::System::NewSimple(kPtclPlayerHurtOneB, v.x, v.y, v.z);
                 } else {

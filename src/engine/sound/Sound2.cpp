@@ -74,13 +74,13 @@ extern "C" int func_02049018(const Vector3 *v) {
 
 /* Copies pair mode (0..8) from data_020821c0 into the near/far range. */
 void SetSoundRange(int mode) {
-    volatile u32 *tbl;
+    const u32 *tbl;
     int j;
     if (mode < 0)
         return;
     if (mode > 8)
         return;
-    tbl = (volatile u32 *)data_020821c0;
+    tbl = data_020821c0;
     j = mode * 2;
     data_02099fa8 = tbl[j];
     j++;

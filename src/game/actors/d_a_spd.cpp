@@ -17,7 +17,6 @@
  *    are written as plain words where the true types break the register
  *    convention, and the spelled mangled calls stay where the member
  *    spelling would change codegen.
- *  - volatile int force_stack pads OnTurnIntoEgg's frame to the ROM shape.
  */
 
 /* common.h first: its flat Matrix4x3 must win the guard; InitResources'
@@ -155,7 +154,6 @@ daSpd_c *daSpd_c_classInit(void) {
  * an egg coin otherwise). A child (param1 != 0) resets; the original dies. */
 
 void daSpd_c::OnTurnIntoEgg(daPly_c &player) {
-    volatile int force_stack;
     if (player.IsCollectingCap())
         GivePlayerCoins(player, mCoinCount, 0);
     else

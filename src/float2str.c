@@ -49,7 +49,7 @@ char *float2str(double x, char *buff_end, print_format format) {
     int alt;
     int digits;
     Decimal dec;
-    volatile unsigned char *p;
+    unsigned char *p;
 
     form.style = 0;
     form.digits = 32;
