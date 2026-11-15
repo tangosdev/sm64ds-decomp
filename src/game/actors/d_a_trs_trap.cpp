@@ -63,8 +63,9 @@
  *   (re-keyed in config/tu_manifest.d/ov063/daTrsTrap_c.json).
  * - Behavior names mStateTimer directly at both sites (TRAP-2709
  *   experiment: unified spelling matches).
- * - +0x418 on the spawned BOOK_SWITCH is daBookGen_c's, which has no header;
- *   +0x154 here has no recovered reader. S14: no g_profile_* rows live here.
+ * - The trap stores its uniqueID in the spawned BOOK_SWITCH's
+ *   daBook_c::mLinkedActorID. +0x154 here has no recovered reader. No
+ *   g_profile_* rows live here.
  */
 
 /* common.h first, so this TU reads the flat Matrix4x3 words: the two matrix

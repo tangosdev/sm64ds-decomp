@@ -188,10 +188,7 @@ struct ObjKeyStateTable {
 
 extern ObjKeyStateTable data_ov089_02132cec;
 
-/* local extern: dCamera_c.h has no SetFlag_3. Particle::System::New and
- * dExtAnmModel_c::SetAnim take Fix12<int> by value; the scalar call does not compile and the Fix12
- * temporary size-DIFFs (see the file comment). The ROM calls the
- * UpdateContinuous veneer, not the method. */
+/* Data and helpers that no header declares. */
 extern "C" {
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
