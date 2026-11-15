@@ -33,22 +33,22 @@ typedef void (*SndHeapDisposeCallback)(void *mem, u32 size, u32 data1, u32 data2
 /* Foreign callees. */
 extern "C" int func_02051f1c(void *a, u32 b, int c);
 extern "C" int func_02051e60(NNSSndHandle *handle, int b, int c, int d, unsigned int e, int f);
-extern "C" u32 func_02051074(struct SndHeap *heap);
-extern "C" void func_020510a4(struct SndHeap *heap, int level);
-extern "C" void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback,
-                               u32 data1, u32 data2);
+extern "C" u32 NNS_SndHeapGetFreeSize(struct SndHeap *heap);
+extern "C" void NNS_SndHeapLoadState(struct SndHeap *heap, int level);
+extern "C" void *NNS_SndHeapAlloc(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback,
+                                  u32 data1, u32 data2);
 extern "C" int func_0203d974(void);
-extern "C" s32 func_0205117c(struct SndHeap *heap);
+extern "C" s32 NNS_SndHeapSaveState(struct SndHeap *heap);
 extern "C" int func_0203d7d4(int a);
-extern "C" void func_0204f9c4(int a, int b);
-extern "C" void func_0204f958(int a, int b);
-extern "C" int func_0204fa2c(NNSSndHandle *handle, int z);
+extern "C" void NNS_SndPlayerStopSeqByPlayerNo(int a, int b);
+extern "C" void NNS_SndPlayerPauseByPlayerNo(int a, int b);
+extern "C" int NNS_SndPlayerStopSeq(NNSSndHandle *handle, int z);
 struct data_020a5bb8_t;
-extern "C" void func_0204f94c(NNSSndHandle *p);
-extern "C" void func_0204f070(void);
-extern "C" struct SndHeap *func_0205130c(u32 addr, u32 size);
-extern "C" void func_02050f34(data_020a5bb8_t *arc, const char *path, struct SndHeap *heap,
-                              int loadSymbols);
+extern "C" void NNS_SndHandleInit(NNSSndHandle *p);
+extern "C" void NNS_SndInit(void);
+extern "C" struct SndHeap *NNS_SndHeapCreate(u32 addr, u32 size);
+extern "C" void NNS_SndArcInit(data_020a5bb8_t *arc, const char *path, struct SndHeap *heap,
+                               int loadSymbols);
 extern "C" int func_02052008(struct SndHeap *heap);
 extern "C" void func_020506fc(int arg);
 extern "C" {
@@ -66,8 +66,8 @@ extern void func_020494cc(void *p, int s);
 }
 
 extern void func_020490b0(NNSSndHandle *p);
-extern "C" void func_0204f03c(void);
-extern "C" void *func_02050cdc(int a, int idx);
+extern "C" void NNS_SndMain(void);
+extern "C" void *NNS_SndArcGetSeqArcParam(int a, int idx);
 extern void func_02049c48(int self);
 extern "C" void func_0204efe0(void);
 extern "C" void func_0204effc(void);
@@ -204,7 +204,7 @@ static SoundPlayerDefault sPlayerSeqLimits[10] = {
  * live entries by id&0xf. */
 typedef struct SndRegEntry {
     int id;                        /* unique id; 0 marks a free slot */
-    short fadeFrames;              /* 0x04 - fade-out passed to func_0204fa2c */
+    short fadeFrames;              /* 0x04 - fade-out passed to NNS_SndPlayerStopSeq */
     unsigned char inUse;           /* in-use flag checked by the sweeps */
     unsigned char pad7[1];
     NNSSndHandle handle;      /* 0x08 */
@@ -239,12 +239,12 @@ void LoadAndSetMusic_Layer1(int j)
     gMusicTrackModeOverride = -1;
     data_0209b48c = 0;
     if (j < 0) {
-        func_0204fa2c(&sMusicHandle, 0);
+        NNS_SndPlayerStopSeq(&sMusicHandle, 0);
     } else {
         if (!(gSubSoundID >= 0 && gCurrentMusicID >= 0 && sLayer1Music == j))
             func_02011dcc(&sMusicHandle, j);
         func_02013524(&sMusicHandle, 0x7f, 0);
-        func_0204fa2c(&sSubHandle, 0);
+        NNS_SndPlayerStopSeq(&sSubHandle, 0);
     }
     gCurrentMusicID = j;
     sLayer1Music = j;
@@ -300,7 +300,7 @@ namespace Sound {
 void StopLoadedMusic_Layer1(unsigned int arg)
 {
     gCurrentMusicID = ~0u;
-    func_0204fa2c(&sMusicHandle, arg);
+    NNS_SndPlayerStopSeq(&sMusicHandle, arg);
 }
 
 void PauseMusic(void)
@@ -315,11 +315,11 @@ void PauseMusic(void)
             sVolumeRampStep = 0xc999;
         }
     } else {
-        func_0204f958(0, 1);
-        func_0204f958(1, 1);
+        NNS_SndPlayerPauseByPlayerNo(0, 1);
+        NNS_SndPlayerPauseByPlayerNo(1, 1);
     }
     func_02011c54();
-    func_0204f9c4(0xd, 1);
+    NNS_SndPlayerStopSeqByPlayerNo(0xd, 1);
 }
 
 void UnpauseMusic(void)
@@ -334,8 +334,8 @@ void UnpauseMusic(void)
         sSavedMusicVolume = -1;
         return;
     }
-    func_0204f958(0, 0);
-    func_0204f958(1, 0);
+    NNS_SndPlayerPauseByPlayerNo(0, 0);
+    NNS_SndPlayerPauseByPlayerNo(1, 0);
 }
 
 }
@@ -359,15 +359,15 @@ void func_02012e1c(void) {
 }
 
 void func_02012dd0(void *c) {
-    func_0204f9c4(0, (int)c);
-    func_0204f9c4(1, (int)c);
-    func_0204f9c4(0xe, (int)c);
-    func_0204f9c4(0x15, (int)c);
-    func_0204f9c4(0x1f, (int)c);
+    NNS_SndPlayerStopSeqByPlayerNo(0, (int)c);
+    NNS_SndPlayerStopSeqByPlayerNo(1, (int)c);
+    NNS_SndPlayerStopSeqByPlayerNo(0xe, (int)c);
+    NNS_SndPlayerStopSeqByPlayerNo(0x15, (int)c);
+    NNS_SndPlayerStopSeqByPlayerNo(0x1f, (int)c);
 }
 
 void func_02012dbc(int a) {
-    func_0204f9c4(0xe, a);
+    NNS_SndPlayerStopSeqByPlayerNo(0xe, a);
 }
 
 void func_02012d64(void) {
@@ -441,7 +441,7 @@ void StopLoadedMusic_Layer3(void)
         }
     }
     if (a < 0 || b < 0)
-        func_0204fa2c(&sMusicHandle, 0);
+        NNS_SndPlayerStopSeq(&sMusicHandle, 0);
     else
         func_02011dcc(&sMusicHandle, a);
 }
@@ -484,7 +484,7 @@ void EndMusic(unsigned int playerNo) {
         func_02011dcc(&sMusicHandle, e43c);
         return;
     }
-    func_0204fa2c(&sMusicHandle, 0);
+    NNS_SndPlayerStopSeq(&sMusicHandle, 0);
 }
 
 void LoadAndSetMusic_Layer2(unsigned int j)
@@ -505,7 +505,7 @@ void StopLoadedMusic_Layer2(void)
     }
     sLayer2Music = -1;
     if (a < 0) {
-        func_0204fa2c(&sMusicHandle, 0);
+        NNS_SndPlayerStopSeq(&sMusicHandle, 0);
         return;
     }
     func_02011dcc(&sMusicHandle, a);
@@ -598,7 +598,7 @@ void PlayBank0(u32 id, const Vector3 &pos)
 
 void Play(unsigned int j1, unsigned int j2, const Vector3 &v)
 {
-    char *s = (char *)func_02050cdc(j1, j2);
+    char *s = (char *)NNS_SndArcGetSeqArcParam(j1, j2);
     int t = (unsigned char)s[5];
     if (t == 9 || t == 2) {
         SoundSlot *slot = func_02048720(&v, j1, j2);
@@ -750,11 +750,11 @@ void LoadGroupAndSetBank(int a, int b)
     }
     if (a == 0) {
         func_020134d8((void *)a, sSndHeap);
-        data_0209b4a8 = func_0205117c(sSndHeap);
+        data_0209b4a8 = NNS_SndHeapSaveState(sSndHeap);
     } else if (sLoadedGroup != a) {
-        func_020510a4(sSndHeap, data_0209b4a8);
+        NNS_SndHeapLoadState(sSndHeap, data_0209b4a8);
         func_020134d8((void *)a, sSndHeap);
-        data_0209b484 = func_0205117c(sSndHeap);
+        data_0209b484 = NNS_SndHeapSaveState(sSndHeap);
     }
     sCurrentBank = b;
     sLoadedGroup = a;
@@ -775,9 +775,9 @@ void UnsetPlayerVoiceGroup(void)
 
 void func_02011f7c(void *self) {
     if (!func_0203d974()) {
-        func_020510a4(sSndHeap, data_0209b484);
+        NNS_SndHeapLoadState(sSndHeap, data_0209b484);
         func_020134d8(self, sSndHeap);
-        data_0209b488 = func_0205117c(sSndHeap);
+        data_0209b488 = NNS_SndHeapSaveState(sSndHeap);
     }
     sPlayerVoiceGroup = (unsigned char)(int)self;
 }
@@ -787,7 +787,7 @@ namespace Sound {
 void ResetPlayerVoiceGroup(void)
 {
     if (func_0203d974() == 0) {
-        func_020510a4(sSndHeap, data_0209b484);
+        NNS_SndHeapLoadState(sSndHeap, data_0209b484);
     }
     sPlayerVoiceGroup = 0;
 }
@@ -797,13 +797,13 @@ void ResetPlayerVoiceGroup(void)
 int func_02011ee4(void *c) {
     int x = func_0203d974();
     if (x != 0) return x;
-    func_020510a4(sSndHeap, data_0209b488);
+    NNS_SndHeapLoadState(sSndHeap, data_0209b488);
     return func_020134d8(c, sSndHeap);
 }
 
 void *func_02011e94(int *out) {
-    int r = func_02051074(sSndHeap);
-    void *block = func_020511d4(sSndHeap, r, 0, 0, 0);
+    int r = NNS_SndHeapGetFreeSize(sSndHeap);
+    void *block = NNS_SndHeapAlloc(sSndHeap, r, 0, 0, 0);
     if (out != 0)
         *out = r;
     return block;
@@ -899,14 +899,14 @@ void func_02011c54(void) {
     unsigned int i;
     unsigned char *p = data_02075258;
     for (i = 0; i < 11; i++) {
-        func_0204f9c4(*p, 1);
+        NNS_SndPlayerStopSeqByPlayerNo(*p, 1);
         p = p + 1;
     }
 }
 
 void func_02011c24(void) {
-    func_0204f958(0, 1);
-    func_0204f958(1, 1);
+    NNS_SndPlayerPauseByPlayerNo(0, 1);
+    NNS_SndPlayerPauseByPlayerNo(1, 1);
     func_02011c54();
 }
 
@@ -917,7 +917,7 @@ void func_02011b7c(void) {
     sVolumeRampStep = 0x7f000;
     if (v >= 0) {
         gSubSoundID = -1;
-        func_0204fa2c(&sSubHandle, 0);
+        NNS_SndPlayerStopSeq(&sSubHandle, 0);
     }
     sLayer3Music = -1;
     sLayer2Music = -1;
@@ -948,7 +948,7 @@ void func_02011ac4(void *c, int a1, int a2, int a3, const Vector3 *s0, int s1, s
 
 int func_02011aa0(void *c) {
     SndRegEntry *e = (SndRegEntry *)c;
-    func_0204fa2c(&e->handle, e->fadeFrames);
+    NNS_SndPlayerStopSeq(&e->handle, e->fadeFrames);
     e->id = 0;
     return 0;
 }
@@ -970,7 +970,7 @@ void func_02011a28(SndRegTable *c) {
     SndRegEntry *p = c->entries;
     int i;
     for (i = 0; i < 0x40; i++) {
-        func_0204f94c(&p->handle);
+        NNS_SndHandleInit(&p->handle);
         p++;
     }
 }
@@ -1113,7 +1113,7 @@ extern "C" void func_020132d8(void) {
         func_02013524(&sSubHandle, gSubVolume >> 0xc, 0);
         if (gSubVolume == 0) {
             gSubSoundID = -1;
-            func_0204fa2c(&sSubHandle, 0);
+            NNS_SndPlayerStopSeq(&sSubHandle, 0);
         }
     }
     int s = func_02013078();
@@ -1121,18 +1121,18 @@ extern "C" void func_020132d8(void) {
         func_020494cc(&sMusicHandle, s);
     }
     func_020490b0(&sMusicHandle);
-    func_0204f03c();
+    NNS_SndMain();
     func_020119c8(&data_0209b53c);
 }
 
 #pragma opt_propagation off
 void func_020133bc(void) {
     char *anim;
-    func_0204f070();
-    sSndHeap = func_0205130c((u32)Memory::Allocate(0x100000), 0x100000);
+    NNS_SndInit();
+    sSndHeap = NNS_SndHeapCreate((u32)Memory::Allocate(0x100000), 0x100000);
     anim = data_0208e498;
     func_0201a9fc(&data_0209d574);
-    func_02050f34((data_020a5bb8_t *)&sSndArc, anim, sSndHeap, 0);
+    NNS_SndArcInit((data_020a5bb8_t *)&sSndArc, anim, sSndHeap, 0);
     func_0201a9fc(&data_0209d574);
     func_02052008(func_0203d974() == 0 ? sSndHeap : 0);
     if (func_0203d974() == 0) {
@@ -1140,9 +1140,9 @@ void func_020133bc(void) {
         func_020134d8((void *)1, sSndHeap);
         func_0201a9fc(&data_0209d574);
     }
-    func_0204f94c(&sMusicHandle);
-    func_0204f94c(&sSubHandle);
-    func_0204f94c(&data_0209b4a4);
+    NNS_SndHandleInit(&sMusicHandle);
+    NNS_SndHandleInit(&sSubHandle);
+    NNS_SndHandleInit(&data_0209b4a4);
     func_02011a28(&data_0209b53c);
     func_02048f34(&sSndArc);
     func_020506fc(2);

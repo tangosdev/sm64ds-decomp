@@ -1016,7 +1016,7 @@ extern void*data_ov081_02128db8;
 extern void*data_ov100_0214857c[];
 extern void*func_0201787c(void*);
 extern void *func_0204d958(void *);
-extern void*func_02050cdc(int, int);
+extern void *NNS_SndArcGetSeqArcParam(int, int);
 extern int func_ov007_020aebac(void);
 extern volatile struct Matrix4x3 sDealerIdentityMtx;
 extern volatile unsigned short data_ov002_0210c208[];

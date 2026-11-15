@@ -282,8 +282,8 @@ addr	state	modules	config_names	config_kinds	verified_name	verified_kind	verdict
 0x020a4d30	KIND-MISMATCH	arm9,arm9	data_020a4d30;PARTICLE_RNG_STATE	bss	PARTICLE_RNG_STATE	data	kind		config kind bss
 0x020a4d34	CONFIG-PLACEHOLDER	arm9	data_020a4d34	bss	_ZN6Memory25isRootHeapIterInitializedE	data	placeholder		
 0x020a4d38	CONFIG-PLACEHOLDER	arm9	data_020a4d38	bss	_ZN6Memory16rootHeapIteratorE	data	placeholder		
-0x020a4d6c	CONFIG-PLACEHOLDER	arm9	data_020a4d6c	bss	_ZN5Sound7PLAYERSE	data	placeholder		
-0x020a5bb8	CONFIG-PLACEHOLDER	arm9	data_020a5bb8	bss	_ZN5Sound8SDAT_RAM3PTRE	data	placeholder		
+0x020a4d6c	CONFIG-PLACEHOLDER	arm9	sPlayer	bss	_ZN5Sound7PLAYERSE	data	placeholder		
+0x020a5bb8	CONFIG-PLACEHOLDER	arm9	sCurrent	bss	_ZN5Sound8SDAT_RAM3PTRE	data	placeholder		
 0x020abac8	CONFIG-PLACEHOLDER	ov000,ov001	data_ov000_020abac8;data_ov001_020abac8	data	_ZN3OAM11SILVER_STARE	data	placeholder		
 0x020aea30	CONFIG-PLACEHOLDER	ov002,ov004	func_ov002_020aea30;func_ov004_020aea30	function	_ZN5Enemy12KillByAttackER5Actor	function	placeholder		
 0x020e2e88	NO-SLOT	-	-	-	FALL_DAMAGE_BIG	data	no-slot		

@@ -8187,11 +8187,11 @@
     },
     "arm9:0x0204f03c": {
       "author": "tangosdev",
-      "name": "func_0204f03c"
+      "name": "NNS_SndMain"
     },
     "arm9:0x0204f070": {
       "author": "tangosdev",
-      "name": "func_0204f070"
+      "name": "NNS_SndInit"
     },
     "arm9:0x0204f0b8": {
       "author": "tangosdev",
@@ -8223,67 +8223,67 @@
     },
     "arm9:0x0204f214": {
       "author": "tangosdev",
-      "name": "func_0204f214"
+      "name": "SetPlayerPriority"
     },
     "arm9:0x0204f278": {
       "author": "tangosdev",
-      "name": "func_0204f278"
+      "name": "PlayerHeapDisposeCallback"
     },
     "arm9:0x0204f2d4": {
       "author": "tangosdev",
-      "name": "func_0204f2d4"
+      "name": "ShutdownPlayer"
     },
     "arm9:0x0204f364": {
       "author": "andrewboudreau",
-      "name": "func_0204f364"
+      "name": "AllocSeqPlayer"
     },
     "arm9:0x0204f3e0": {
       "author": "tangosdev",
-      "name": "func_0204f3e0"
+      "name": "ForceStopSeq"
     },
     "arm9:0x0204f400": {
       "author": "tangosdev",
-      "name": "func_0204f400"
+      "name": "InsertPrioList"
     },
     "arm9:0x0204f460": {
       "author": "tangosdev",
-      "name": "func_0204f460"
+      "name": "InsertPlayerList"
     },
     "arm9:0x0204f4bc": {
       "author": "tangosdev",
-      "name": "func_0204f4bc"
+      "name": "InitPlayer"
     },
     "arm9:0x0204f504": {
       "author": "tangosdev",
-      "name": "func_0204f504"
+      "name": "NNSi_SndPlayerAllocHeap"
     },
     "arm9:0x0204f558": {
       "author": "tangosdev",
-      "name": "func_0204f558"
+      "name": "NNSi_SndPlayerPause"
     },
     "arm9:0x0204f5a0": {
       "author": "tangosdev",
-      "name": "func_0204f5a0"
+      "name": "NNSi_SndPlayerStopSeq"
     },
     "arm9:0x0204f600": {
       "author": "tangosdev",
-      "name": "func_0204f600"
+      "name": "NNSi_SndPlayerStartSeq"
     },
     "arm9:0x0204f630": {
       "author": "ruspecial",
-      "name": "func_0204f630"
+      "name": "NNSi_SndPlayerFreeSeqPlayer"
     },
     "arm9:0x0204f63c": {
       "author": "tangosdev",
-      "name": "func_0204f63c"
+      "name": "NNSi_SndPlayerAllocSeqPlayer"
     },
     "arm9:0x0204f6f8": {
       "author": "tangosdev",
-      "name": "func_0204f6f8"
+      "name": "NNS_SndPlayerSetSeqArcNo"
     },
     "arm9:0x0204f720": {
       "author": "tangosdev",
-      "name": "func_0204f720"
+      "name": "NNS_SndPlayerSetSeqNo"
     },
     "arm9:0x0204f73c": {
       "author": "tangosdev",
@@ -8331,27 +8331,27 @@
     },
     "arm9:0x0204f934": {
       "author": "tangosdev",
-      "name": "func_0204f934"
+      "name": "NNS_SndHandleReleaseSeq"
     },
     "arm9:0x0204f94c": {
       "author": "tangosdev",
-      "name": "func_0204f94c"
+      "name": "NNS_SndHandleInit"
     },
     "arm9:0x0204f958": {
       "author": "andrewboudreau",
-      "name": "func_0204f958"
+      "name": "NNS_SndPlayerPauseByPlayerNo"
     },
     "arm9:0x0204f9c4": {
       "author": "tangosdev",
-      "name": "func_0204f9c4"
+      "name": "NNS_SndPlayerStopSeqByPlayerNo"
     },
     "arm9:0x0204fa2c": {
       "author": "ruspecial",
-      "name": "func_0204fa2c"
+      "name": "NNS_SndPlayerStopSeq"
     },
     "arm9:0x0204fa3c": {
       "author": "tangosdev",
-      "name": "func_0204fa3c"
+      "name": "NNS_SndPlayerCreateHeap"
     },
     "arm9:0x0204fadc": {
       "author": "tangosdev",
@@ -8359,11 +8359,11 @@
     },
     "arm9:0x0204fafc": {
       "author": "tangosdev",
-      "name": "func_0204fafc"
+      "name": "NNSi_SndPlayerMain"
     },
     "arm9:0x0204fc40": {
       "author": "tangosdev",
-      "name": "func_0204fc40"
+      "name": "NNSi_SndPlayerInit"
     },
     "arm9:0x0204fce8": {
       "author": "andrewboudreau",
@@ -8447,43 +8447,43 @@
     },
     "arm9:0x02050970": {
       "author": "tangosdev",
-      "name": "func_02050970"
+      "name": "SymbolDisposeCallback"
     },
     "arm9:0x0205097c": {
       "author": "tangosdev",
-      "name": "func_0205097c"
+      "name": "FatDisposeCallback"
     },
     "arm9:0x02050988": {
       "author": "tangosdev",
-      "name": "func_02050988"
+      "name": "InfoDisposeCallback"
     },
     "arm9:0x02050994": {
       "author": "tangosdev",
-      "name": "func_02050994"
+      "name": "NNS_SndArcSetFileAddress"
     },
     "arm9:0x020509b0": {
       "author": "tangosdev",
-      "name": "func_020509b0"
+      "name": "NNS_SndArcGetFileAddress"
     },
     "arm9:0x020509d8": {
       "author": "andrewboudreau",
-      "name": "func_020509d8"
+      "name": "NNS_SndArcReadFile"
     },
     "arm9:0x02050a5c": {
       "author": "tangosdev",
-      "name": "func_02050a5c"
+      "name": "NNS_SndArcGetFileSize"
     },
     "arm9:0x02050a84": {
       "author": "tangosdev",
-      "name": "func_02050a84"
+      "name": "NNS_SndArcGetGroupInfo"
     },
     "arm9:0x02050ae8": {
       "author": "tangosdev",
-      "name": "func_02050ae8"
+      "name": "NNS_SndArcGetPlayerInfo"
     },
     "arm9:0x02050b4c": {
       "author": "tangosdev",
-      "name": "func_02050b4c"
+      "name": "NNS_SndArcGetWaveArcInfo"
     },
     "arm9:0x02050bb0": {
       "author": "tangosdev",
@@ -8491,7 +8491,7 @@
     },
     "arm9:0x02050c14": {
       "author": "tangosdev",
-      "name": "func_02050c14"
+      "name": "NNS_SndArcGetSeqArcInfo"
     },
     "arm9:0x02050c78": {
       "author": "tangosdev",
@@ -8499,15 +8499,15 @@
     },
     "arm9:0x02050cdc": {
       "author": "tangosdev",
-      "name": "func_02050cdc"
+      "name": "NNS_SndArcGetSeqArcParam"
     },
     "arm9:0x02050d2c": {
       "author": "tangosdev",
-      "name": "func_02050d2c"
+      "name": "NNS_SndArcGetCurrent"
     },
     "arm9:0x02050d3c": {
       "author": "tangosdev",
-      "name": "func_02050d3c"
+      "name": "NNS_SndArcSetCurrent"
     },
     "arm9:0x02050d54": {
       "author": "ruspecial",
@@ -8515,51 +8515,51 @@
     },
     "arm9:0x02050f34": {
       "author": "tangosdev",
-      "name": "func_02050f34"
+      "name": "NNS_SndArcInit"
     },
     "arm9:0x02050fb0": {
       "author": "tangosdev",
-      "name": "func_02050fb0"
+      "name": "EraseSync"
     },
     "arm9:0x02050fd4": {
       "author": "tangosdev",
-      "name": "func_02050fd4"
+      "name": "NewSection"
     },
     "arm9:0x02051024": {
       "author": "tangosdev",
-      "name": "func_02051024"
+      "name": "InitHeap"
     },
     "arm9:0x02051064": {
       "author": "ruspecial",
-      "name": "func_02051064"
+      "name": "InitHeapSection"
     },
     "arm9:0x02051074": {
       "author": "tangosdev",
-      "name": "func_02051074"
+      "name": "NNS_SndHeapGetFreeSize"
     },
     "arm9:0x020510a4": {
       "author": "andrewboudreau",
-      "name": "func_020510a4"
+      "name": "NNS_SndHeapLoadState"
     },
     "arm9:0x0205117c": {
       "author": "tangosdev",
-      "name": "func_0205117c"
+      "name": "NNS_SndHeapSaveState"
     },
     "arm9:0x020511d4": {
       "author": "tangosdev",
-      "name": "func_020511d4"
+      "name": "NNS_SndHeapAlloc"
     },
     "arm9:0x02051244": {
       "author": "tangosdev",
-      "name": "func_02051244"
+      "name": "NNS_SndHeapClear"
     },
     "arm9:0x020512f0": {
       "author": "tangosdev",
-      "name": "func_020512f0"
+      "name": "NNS_SndHeapDestroy"
     },
     "arm9:0x0205130c": {
       "author": "tangosdev",
-      "name": "func_0205130c"
+      "name": "NNS_SndHeapCreate"
     },
     "arm9:0x020513a8": {
       "author": "tangosdev",
