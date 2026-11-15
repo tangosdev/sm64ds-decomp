@@ -247,8 +247,7 @@ void dScEntry_c::icon_c::Place(int type, int index, s16 x, s16 y) {
         dThIcon_c::Place(touchKind, x, y, data_ov075_0211d754[widthLanguage].w,
                          data_ov075_0211d754[heightLanguage].h);
     } else {
-        dThIcon_c::Place(touchKind, x, y, data_ov075_0211d948[type].w,
-                         data_ov075_0211d948[type].h);
+        dThIcon_c::Place(touchKind, x, y, data_ov075_0211d948[type].w, data_ov075_0211d948[type].h);
     }
 }
 

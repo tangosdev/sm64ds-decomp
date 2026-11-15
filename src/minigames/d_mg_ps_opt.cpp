@@ -327,16 +327,13 @@ void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, shor
     if (style == kStyleSoundLabel) {
         lang = GetGameLanguage();
         lang2 = GetGameLanguage();
-        icon->Place(kind, x, y, sPsOptIconPosA[lang].mHalfW,
-                    HALF_H_AT(sPsOptIconPosAY, lang2));
+        icon->Place(kind, x, y, sPsOptIconPosA[lang].mHalfW, HALF_H_AT(sPsOptIconPosAY, lang2));
     } else if (style == kStyleLightLabel) {
         lang = GetGameLanguage();
         lang2 = GetGameLanguage();
-        icon->Place(kind, x, y, sPsOptIconPosB[lang].mHalfW,
-                    HALF_H_AT(sPsOptIconPosBY, lang2));
+        icon->Place(kind, x, y, sPsOptIconPosB[lang].mHalfW, HALF_H_AT(sPsOptIconPosBY, lang2));
     } else {
-        icon->Place(kind, x, y, sPsOptStylePos[style].mHalfW,
-                    HALF_H_AT(sPsOptStylePosY, style));
+        icon->Place(kind, x, y, sPsOptStylePos[style].mHalfW, HALF_H_AT(sPsOptStylePosY, style));
     }
 }
 
