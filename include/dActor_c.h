@@ -166,7 +166,7 @@ struct dActor_c : dBase_c {
        dActor_c pointer when it takes any actor into its mouth, and every
        actor class has the word at 0x0d0: a subclass with no fields of its
        own is 0xd4 bytes (StarCamera_Spawn allocates exactly that). */
-    daPly_c *mEatingPlayer;  /* 0x0d0 */
+    daPly_c *mEatingPlayer; /* 0x0d0 */
 
     /* --- vtable. Declared first, see the header comment. Overrides slots
            16 (D1) and 17 (D0); position here does not affect that. --- */
