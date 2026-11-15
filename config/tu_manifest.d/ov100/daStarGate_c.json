@@ -344,7 +344,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN20StarGateModelFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
@@ -893,7 +893,7 @@
       "source": "0x02147a80",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1756,7 +1756,7 @@
         "requested": [
           {
             "from": "_ZN20StarGateModelFilePtrC1Ej",
-            "to": "_Z13func_02017accPvj",
+            "to": "_ZN13SharedFilePtr13func_02017accEj",
             "module": "arm9",
             "address": "0x02017acc",
             "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
@@ -1780,7 +1780,7 @@
           {
             "symbolIndex": 151,
             "from": "_ZN20StarGateModelFilePtrC1Ej",
-            "to": "_Z13func_02017accPvj"
+            "to": "_ZN13SharedFilePtr13func_02017accEj"
           },
           {
             "symbolIndex": 153,
@@ -3012,7 +3012,7 @@
         "requested": [
           {
             "from": "_ZN20StarGateModelFilePtrC1Ej",
-            "to": "_Z13func_02017accPvj",
+            "to": "_ZN13SharedFilePtr13func_02017accEj",
             "module": "arm9",
             "address": "0x02017acc",
             "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
@@ -3036,7 +3036,7 @@
           {
             "symbolIndex": 151,
             "from": "_ZN20StarGateModelFilePtrC1Ej",
-            "to": "_Z13func_02017accPvj"
+            "to": "_ZN13SharedFilePtr13func_02017accEj"
           },
           {
             "symbolIndex": 153,
@@ -3979,47 +3979,47 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@455",
+      "from": "@476",
       "to": "@485",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @510 to @456 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @456 to @455 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@457",
+      "from": "@478",
       "to": "@487",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @512 to @458 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @458 to @457 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@459",
+      "from": "@480",
       "to": "@489",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @514 to @460 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @460 to @459 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@461",
+      "from": "@482",
       "to": "@491",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @516 to @462 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @462 to @461 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@463",
+      "from": "@484",
       "to": "@493",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @518 to @464 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @464 to @463 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@465",
+      "from": "@486",
       "to": "@495",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @520 to @466 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @466 to @465 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@467",
+      "from": "@488",
       "to": "@497",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @522 to @468 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @468 to @467 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@469",
+      "from": "@490",
       "to": "@25",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @524 to @470 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @470 to @469 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@471",
+      "from": "@492",
       "to": "@26",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @526 to @472 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @472 to @471 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     }

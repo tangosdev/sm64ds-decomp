@@ -421,7 +421,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN20BakubakuModelFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
@@ -558,7 +558,7 @@
       "source": "0x02112c20",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1764,67 +1764,67 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@868",
+      "from": "@871",
       "to": "@834",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @872 to @818 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @818 to @809 when d_a_bakubaku dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @809 to @868 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     },
     {
-      "from": "@869",
+      "from": "@872",
       "to": "@836",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @873 to @819 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @819 to @810 when d_a_bakubaku dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @810 to @869 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     },
     {
-      "from": "@870",
+      "from": "@873",
       "to": "@838",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @874 to @820 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @820 to @811 when d_a_bakubaku dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @811 to @870 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     },
     {
-      "from": "@872",
+      "from": "@875",
       "to": "@840",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @876 to @822 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @822 to @813 when d_a_bakubaku dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @813 to @872 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     },
     {
-      "from": "@874",
+      "from": "@877",
       "to": "@842",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @878 to @824 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @824 to @815 when d_a_bakubaku dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @815 to @874 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     },
     {
-      "from": "@876",
+      "from": "@879",
       "to": "@844",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @880 to @826 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @826 to @817 when d_a_bakubaku dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @817 to @876 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     },
     {
-      "from": "@878",
+      "from": "@881",
       "to": "@846",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @882 to @828 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @828 to @819 when d_a_bakubaku dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @819 to @878 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     },
     {
-      "from": "@880",
+      "from": "@883",
       "to": "@847",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @884 to @830 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @830 to @821 when d_a_bakubaku dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @821 to @880 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     },
     {
-      "from": "@882",
+      "from": "@885",
       "to": "@33",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @886 to @832 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @832 to @823 when d_a_bakubaku dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @823 to @882 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     },
     {
-      "from": "@884",
+      "from": "@887",
       "to": "@34",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @888 to @834 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @834 to @825 when d_a_bakubaku dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @825 to @884 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     },
     {
-      "from": "@886",
+      "from": "@889",
       "to": "@35",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @890 to @836 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @836 to @827 when d_a_bakubaku dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @827 to @886 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     },
     {
-      "from": "@888",
+      "from": "@891",
       "to": "@36",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @892 to @838 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @838 to @829 when d_a_bakubaku dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @829 to @888 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     },
     {
-      "from": "@890",
+      "from": "@893",
       "to": "@37",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @894 to @840 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @840 to @831 when d_a_bakubaku dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @831 to @890 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     }

@@ -1010,82 +1010,82 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@577",
+      "from": "@580",
       "to": "data_ov084_02130e44",
       "evidence": "compiler temp mapped to 0x02130e44 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @631 to @577 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@578",
+      "from": "@581",
       "to": "data_ov084_02130e50",
       "evidence": "compiler temp mapped to 0x02130e50 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @632 to @578 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@579",
+      "from": "@582",
       "to": "data_ov084_02130e68",
       "evidence": "compiler temp mapped to 0x02130e68 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @633 to @579 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@580",
+      "from": "@583",
       "to": "data_ov084_02130e74",
       "evidence": "compiler temp mapped to 0x02130e74 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @634 to @580 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@581",
+      "from": "@584",
       "to": "data_ov084_02130e5c",
       "evidence": "compiler temp mapped to 0x02130e5c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @635 to @581 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@582",
+      "from": "@585",
       "to": "data_ov084_02130e2c",
       "evidence": "compiler temp mapped to 0x02130e2c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @636 to @582 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@583",
+      "from": "@586",
       "to": "data_ov084_02130e38",
       "evidence": "compiler temp mapped to 0x02130e38 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @637 to @583 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@585",
+      "from": "@588",
       "to": "data_ov084_02130bb4",
       "evidence": "compiler temp mapped to 0x02130bb4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @639 to @585 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@587",
+      "from": "@590",
       "to": "data_ov084_02130ba4",
       "evidence": "compiler temp mapped to 0x02130ba4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @641 to @587 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@589",
+      "from": "@592",
       "to": "data_ov084_02130bbc",
       "evidence": "compiler temp mapped to 0x02130bbc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @643 to @589 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@591",
+      "from": "@594",
       "to": "data_ov084_02130bac",
       "evidence": "compiler temp mapped to 0x02130bac by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @645 to @591 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@593",
+      "from": "@596",
       "to": "data_ov084_02130bc4",
       "evidence": "compiler temp mapped to 0x02130bc4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @647 to @593 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@595",
+      "from": "@598",
       "to": "data_ov084_02130bcc",
       "evidence": "compiler temp mapped to 0x02130bcc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @649 to @595 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@597",
+      "from": "@600",
       "to": "data_ov084_02130bdc",
       "evidence": "compiler temp mapped to 0x02130bdc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @651 to @597 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@599",
+      "from": "@602",
       "to": "data_ov084_02130bd4",
       "evidence": "compiler temp mapped to 0x02130bd4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @653 to @599 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@601",
+      "from": "@604",
       "to": "data_ov084_02130be4",
       "evidence": "compiler temp mapped to 0x02130be4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821). Re-keyed from @655 to @601 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
@@ -1203,7 +1203,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN12PknModelFileC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call/load destination at this exact relocation site"
@@ -1236,7 +1236,7 @@
       "source": "0x02130664",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"

@@ -1420,7 +1420,7 @@
       "source": "0x0214d918",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1440,7 +1440,7 @@
       "source": "0x0214d934",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1460,7 +1460,7 @@
       "source": "0x0214d950",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1480,7 +1480,7 @@
       "source": "0x0214d96c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1500,7 +1500,7 @@
       "source": "0x0214d988",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1520,7 +1520,7 @@
       "source": "0x0214d9a4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -3069,7 +3069,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN23HatenaBlockModelFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
@@ -3174,252 +3174,252 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@715",
+      "from": "@716",
       "to": "@110",
       "evidence": "mwcc emits this compiler temp as @714; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @769 to @695 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @709 to @717 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @717 to @715 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@716",
+      "from": "@717",
       "to": "@111",
       "evidence": "mwcc emits this compiler temp as @715; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @770 to @696 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @710 to @718 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @718 to @716 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@717",
+      "from": "@718",
       "to": "@112",
       "evidence": "mwcc emits this compiler temp as @716; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @771 to @697 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @711 to @719 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @719 to @717 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@718",
+      "from": "@719",
       "to": "@113",
       "evidence": "mwcc emits this compiler temp as @717; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @772 to @698 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @712 to @720 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @720 to @718 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@719",
+      "from": "@720",
       "to": "@114",
       "evidence": "mwcc emits this compiler temp as @718; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @773 to @699 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @713 to @721 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @721 to @719 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@720",
+      "from": "@721",
       "to": "@115",
       "evidence": "mwcc emits this compiler temp as @719; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @774 to @700 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @714 to @722 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @722 to @720 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@721",
+      "from": "@722",
       "to": "@116",
       "evidence": "mwcc emits this compiler temp as @720; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @775 to @701 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @715 to @723 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @723 to @721 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@722",
+      "from": "@723",
       "to": "@117",
       "evidence": "mwcc emits this compiler temp as @721; batch renumber to unused same-length name, batch-2 folds on main already promote these names globally | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @776 to @702 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @716 to @724 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @724 to @722 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@724",
+      "from": "@725",
       "to": "data_ov102_0214e278",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @778 to @704 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @718 to @726 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @726 to @724 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@726",
+      "from": "@727",
       "to": "data_ov102_0214e260",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @780 to @706 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @720 to @728 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @728 to @726 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@728",
+      "from": "@729",
       "to": "data_ov102_0214e268",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @782 to @708 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @722 to @730 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @730 to @728 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@730",
+      "from": "@731",
       "to": "data_ov102_0214e258",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @784 to @710 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @724 to @732 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @732 to @730 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@732",
+      "from": "@733",
       "to": "data_ov102_0214e3a0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @786 to @712 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @726 to @734 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @734 to @732 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@734",
+      "from": "@735",
       "to": "data_ov102_0214e398",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @788 to @714 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @728 to @736 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @736 to @734 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@736",
+      "from": "@737",
       "to": "data_ov102_0214e388",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @790 to @716 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @730 to @738 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @738 to @736 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@738",
+      "from": "@739",
       "to": "data_ov102_0214e380",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @792 to @718 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @732 to @740 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @740 to @738 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@740",
+      "from": "@741",
       "to": "data_ov102_0214e378",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @794 to @720 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @734 to @742 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @742 to @740 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@742",
+      "from": "@743",
       "to": "data_ov102_0214e370",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @796 to @722 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @736 to @744 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @744 to @742 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@744",
+      "from": "@745",
       "to": "data_ov102_0214e368",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @798 to @724 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @738 to @746 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @746 to @744 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@746",
+      "from": "@747",
       "to": "data_ov102_0214e360",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @800 to @726 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @740 to @748 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @748 to @746 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@748",
+      "from": "@749",
       "to": "data_ov102_0214e358",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @802 to @728 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @742 to @750 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @750 to @748 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@750",
+      "from": "@751",
       "to": "data_ov102_0214e350",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @804 to @730 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @744 to @752 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @752 to @750 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@752",
+      "from": "@753",
       "to": "data_ov102_0214e348",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @806 to @732 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @746 to @754 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @754 to @752 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@754",
+      "from": "@755",
       "to": "data_ov102_0214e340",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @808 to @734 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @748 to @756 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @756 to @754 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@756",
+      "from": "@757",
       "to": "data_ov102_0214e320",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @810 to @736 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @750 to @758 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @758 to @756 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@758",
+      "from": "@759",
       "to": "data_ov102_0214e288",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @812 to @738 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @752 to @760 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @760 to @758 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@760",
+      "from": "@761",
       "to": "data_ov102_0214e338",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @814 to @740 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @754 to @762 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @762 to @760 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@762",
+      "from": "@763",
       "to": "data_ov102_0214e330",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @816 to @742 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @756 to @764 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @764 to @762 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@764",
+      "from": "@765",
       "to": "data_ov102_0214e280",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @818 to @744 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @758 to @766 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @766 to @764 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@766",
+      "from": "@767",
       "to": "data_ov102_0214e318",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @820 to @746 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @760 to @768 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @768 to @766 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@768",
+      "from": "@769",
       "to": "data_ov102_0214e2a8",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @822 to @748 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @762 to @770 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @770 to @768 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@770",
+      "from": "@771",
       "to": "data_ov102_0214e2b0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @824 to @750 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @764 to @772 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @772 to @770 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@772",
+      "from": "@773",
       "to": "data_ov102_0214e270",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @826 to @752 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @766 to @774 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @774 to @772 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@774",
+      "from": "@775",
       "to": "data_ov102_0214e298",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @828 to @754 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @768 to @776 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @776 to @774 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@776",
+      "from": "@777",
       "to": "data_ov102_0214e2a0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @830 to @756 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @770 to @778 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @778 to @776 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@778",
+      "from": "@779",
       "to": "data_ov102_0214e2f8",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @832 to @758 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @772 to @780 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @780 to @778 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@780",
+      "from": "@781",
       "to": "data_ov102_0214e2f0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @834 to @760 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @774 to @782 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @782 to @780 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@782",
+      "from": "@783",
       "to": "data_ov102_0214e2e8",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @836 to @762 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @776 to @784 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @784 to @782 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@784",
+      "from": "@785",
       "to": "data_ov102_0214e390",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @838 to @764 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @778 to @786 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @786 to @784 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@786",
+      "from": "@787",
       "to": "data_ov102_0214e2d8",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @840 to @766 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @780 to @788 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @788 to @786 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@788",
+      "from": "@789",
       "to": "data_ov102_0214e2d0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @842 to @768 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @782 to @790 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @790 to @788 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@790",
+      "from": "@791",
       "to": "data_ov102_0214e2c8",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @844 to @770 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @784 to @792 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @792 to @790 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@792",
+      "from": "@793",
       "to": "data_ov102_0214e2c0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @846 to @772 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @786 to @794 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @794 to @792 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@794",
+      "from": "@795",
       "to": "data_ov102_0214e2b8",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @848 to @774 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @788 to @796 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @796 to @794 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@796",
+      "from": "@797",
       "to": "data_ov102_0214e2e0",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @850 to @776 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @790 to @798 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @798 to @796 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@798",
+      "from": "@799",
       "to": "data_ov102_0214e328",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @852 to @778 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @792 to @800 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @800 to @798 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@800",
+      "from": "@801",
       "to": "data_ov102_0214e310",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @854 to @780 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @794 to @802 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @802 to @800 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@802",
+      "from": "@803",
       "to": "data_ov102_0214e308",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @856 to @782 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @796 to @804 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @804 to @802 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@804",
+      "from": "@805",
       "to": "data_ov102_0214e300",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @858 to @784 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @798 to @806 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @806 to @804 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@806",
+      "from": "@807",
       "to": "data_ov102_0214e290",
       "evidence": "Exact initializer relocation-site correspondence and descriptor method destination; native local binding retained. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @860 to @786 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @800 to @808 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @808 to @806 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     }

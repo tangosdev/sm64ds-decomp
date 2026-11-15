@@ -133,7 +133,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "address": "0x02017acc",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_02017acc.c",

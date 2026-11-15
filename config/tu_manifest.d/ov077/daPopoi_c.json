@@ -798,7 +798,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN14PopoiModelFileC1Ej",
-      "canonical_symbol": "_Z13func_02017accPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
@@ -929,7 +929,7 @@
       "source": "0x0212760c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017accPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1367,72 +1367,72 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@812",
+      "from": "@815",
       "to": "@738",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back Re-keyed from @806 to @752 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @752 to @815 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@813",
+      "from": "@816",
       "to": "@803",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back Re-keyed from @807 to @753 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @753 to @816 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@814",
+      "from": "@817",
       "to": "@804",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back Re-keyed from @808 to @754 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @754 to @817 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@815",
+      "from": "@818",
       "to": "@805",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back Re-keyed from @809 to @755 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @755 to @818 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@817",
+      "from": "@820",
       "to": "@807",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back Re-keyed from @811 to @757 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @757 to @820 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@819",
+      "from": "@822",
       "to": "@809",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back Re-keyed from @813 to @759 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @759 to @822 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@821",
+      "from": "@824",
       "to": "@811",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back Re-keyed from @815 to @761 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @761 to @824 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@823",
+      "from": "@826",
       "to": "@813",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back Re-keyed from @817 to @763 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @763 to @826 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@825",
+      "from": "@828",
       "to": "@815",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back Re-keyed from @819 to @765 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @765 to @828 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@827",
+      "from": "@830",
       "to": "@194",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back Re-keyed from @821 to @767 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @767 to @830 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@540",
+      "from": "@543",
       "to": "@507",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @518 to @464 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @464 to @540 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@542",
+      "from": "@545",
       "to": "@509",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @520 to @466 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @466 to @542 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@829",
+      "from": "@832",
       "to": "@195",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back Re-keyed from @823 to @769 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @769 to @832 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     },
     {
-      "from": "@831",
+      "from": "@834",
       "to": "@196",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back Re-keyed from @825 to @771 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @771 to @834 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
     }
