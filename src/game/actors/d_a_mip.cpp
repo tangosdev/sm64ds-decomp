@@ -750,8 +750,8 @@ int daMip_c::StateFleeMain() {
             s32 y = pair[1] + 0x3000;
             s32 x = pair[0];
             *((volatile s32 *)(&pos.x)) = x;
-            *((volatile s32 *)(&pos.y)) = y;
-            *((volatile s32 *)(&pos.z)) = z;
+            pos.y = y;
+            pos.z = z;
             mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove,
                                                           pos.x, pos.y, z, 0);
         }
@@ -903,8 +903,8 @@ int daMip_c::StateIdleMain()
         s32 y = pair[1] + 0x3000;
         s32 x = pair[0];
         *((volatile s32*)(&sp.x)) = x;
-        *((volatile s32*)(&sp.y)) = y;
-        *((volatile s32*)(&sp.z)) = z;
+        sp.y = y;
+        sp.z = z;
         mDustParticle =
             Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, sp.x, sp.y, z, 0);
     }

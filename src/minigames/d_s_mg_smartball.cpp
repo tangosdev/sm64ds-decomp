@@ -4048,8 +4048,8 @@ void dScMgSmartball_c::CollideBalls() {
 #pragma push
 #pragma opt_strength_reduction off
 /* Tears the whole table down and rebuilds it from the two tile maps.
- * Leftovers: the vtable stores, the spawn counters and the scan stores are
- * volatile, and every slot walk steps `this` instead of indexing. */
+ * Leftovers: the spawn counters and the scan stores stay as written, and
+ * every slot walk steps `this` instead of indexing. */
 void dScMgSmartball_c::SpawnObjects() {
     char *c = (char *)this;
     V2 pos[25];
@@ -4061,8 +4061,8 @@ void dScMgSmartball_c::SpawnObjects() {
         cMgSmartball_ball_c *p = *slot;
         if (p != 0) {
             if (p != 0) {
-                *(VFunc *volatile *)p = cMgSmartball_ball_c_vtbl;
-                *(VFunc *volatile *)p = cMgSmartball_object_c_vtbl;
+                *(VFunc **)p = cMgSmartball_ball_c_vtbl;
+                *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
             *slot = 0;
@@ -4073,8 +4073,8 @@ void dScMgSmartball_c::SpawnObjects() {
         cMgSmartball_ana_c *p = *slot;
         if (p != 0) {
             if (p != 0) {
-                *(VFunc *volatile *)p = cMgSmartball_ana_c_vtbl;
-                *(VFunc *volatile *)p = cMgSmartball_object_c_vtbl;
+                *(VFunc **)p = cMgSmartball_ana_c_vtbl;
+                *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
             *slot = 0;
@@ -4085,8 +4085,8 @@ void dScMgSmartball_c::SpawnObjects() {
         cMgSmartball_kinoko_c *p = *slot;
         if (p != 0) {
             if (p != 0) {
-                *(VFunc *volatile *)p = cMgSmartball_kinoko_c_vtbl;
-                *(VFunc *volatile *)p = cMgSmartball_object_c_vtbl;
+                *(VFunc **)p = cMgSmartball_kinoko_c_vtbl;
+                *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
             *slot = 0;
@@ -4097,8 +4097,8 @@ void dScMgSmartball_c::SpawnObjects() {
         cMgSmartball_propeller_c *p = *slot;
         if (p != 0) {
             if (p != 0) {
-                *(VFunc *volatile *)p = cMgSmartball_propeller_c_vtbl;
-                *(VFunc *volatile *)p = cMgSmartball_object_c_vtbl;
+                *(VFunc **)p = cMgSmartball_propeller_c_vtbl;
+                *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
             *slot = 0;
@@ -4109,8 +4109,8 @@ void dScMgSmartball_c::SpawnObjects() {
         cMgSmartball_dokan_c *p = *slot;
         if (p != 0) {
             if (p != 0) {
-                *(VFunc *volatile *)p = cMgSmartball_dokan_c_vtbl;
-                *(VFunc *volatile *)p = cMgSmartball_object_c_vtbl;
+                *(VFunc **)p = cMgSmartball_dokan_c_vtbl;
+                *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
             *slot = 0;
@@ -4121,8 +4121,8 @@ void dScMgSmartball_c::SpawnObjects() {
         cMgSmartball_pakkun_c *p = *slot;
         if (p != 0) {
             if (p != 0) {
-                *(VFunc *volatile *)p = cMgSmartball_pakkun_c_vtbl;
-                *(VFunc *volatile *)p = cMgSmartball_object_c_vtbl;
+                *(VFunc **)p = cMgSmartball_pakkun_c_vtbl;
+                *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
             *slot = 0;
@@ -4133,8 +4133,8 @@ void dScMgSmartball_c::SpawnObjects() {
         cMgSmartball_pushswitch_c *p = *slot;
         if (p != 0) {
             if (p != 0) {
-                *(VFunc *volatile *)p = cMgSmartball_pushswitch_c_vtbl;
-                *(VFunc *volatile *)p = cMgSmartball_object_c_vtbl;
+                *(VFunc **)p = cMgSmartball_pushswitch_c_vtbl;
+                *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
             *slot = 0;
@@ -4148,7 +4148,7 @@ void dScMgSmartball_c::SpawnObjects() {
                 *(VFunc **)p = cMgSmartball_slot_c_vtbl;
                 __cxa_vec_cleanup(p->mReelVel, 3, 8, (dtor_t)NullDestructor_0203d47c);
                 __cxa_vec_cleanup(p->mReelOffset, 3, 8, (dtor_t)NullDestructor_0203d47c);
-                *(VFunc *volatile *)p = cMgSmartball_object_c_vtbl;
+                *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
             mpSlot = 0;
@@ -4159,7 +4159,7 @@ void dScMgSmartball_c::SpawnObjects() {
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_board_c_vtbl;
-                *(VFunc *volatile *)p = cMgSmartball_object_c_vtbl;
+                *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
             mpBoard = 0;
@@ -4170,7 +4170,7 @@ void dScMgSmartball_c::SpawnObjects() {
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_wing_c_vtbl;
-                *(VFunc *volatile *)p = cMgSmartball_object_c_vtbl;
+                *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
             mpWing = 0;
@@ -5565,8 +5565,8 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
         cMgSmartball_ball_c *object = *slot;
         if (object != 0) {
             if (object != 0) {
-                *(VFunc *volatile *)object = cMgSmartball_ball_c_vtbl;
-                *(VFunc *volatile *)object = cMgSmartball_object_c_vtbl;
+                *(VFunc **)object = cMgSmartball_ball_c_vtbl;
+                *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
             *slot = 0;
@@ -5580,8 +5580,8 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
         cMgSmartball_kinoko_c *object = *slot;
         if (object != 0) {
             if (object != 0) {
-                *(VFunc *volatile *)object = cMgSmartball_kinoko_c_vtbl;
-                *(VFunc *volatile *)object = cMgSmartball_object_c_vtbl;
+                *(VFunc **)object = cMgSmartball_kinoko_c_vtbl;
+                *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
             *slot = 0;
@@ -5595,8 +5595,8 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
         cMgSmartball_ana_c *object = *slot;
         if (object != 0) {
             if (object != 0) {
-                *(VFunc *volatile *)object = cMgSmartball_ana_c_vtbl;
-                *(VFunc *volatile *)object = cMgSmartball_object_c_vtbl;
+                *(VFunc **)object = cMgSmartball_ana_c_vtbl;
+                *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
             *slot = 0;
@@ -5608,8 +5608,8 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
         cMgSmartball_spring_c *object = mpSpring;
         if (object != 0) {
             if (object != 0) {
-                *(VFunc *volatile *)object = cMgSmartball_spring_c_vtbl;
-                *(VFunc *volatile *)object = cMgSmartball_object_c_vtbl;
+                *(VFunc **)object = cMgSmartball_spring_c_vtbl;
+                *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
             mpSpring = 0;
@@ -5622,8 +5622,8 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
         cMgSmartball_propeller_c *object = *slot;
         if (object != 0) {
             if (object != 0) {
-                *(VFunc *volatile *)object = cMgSmartball_propeller_c_vtbl;
-                *(VFunc *volatile *)object = cMgSmartball_object_c_vtbl;
+                *(VFunc **)object = cMgSmartball_propeller_c_vtbl;
+                *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
             *slot = 0;
@@ -5636,8 +5636,8 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
         cMgSmartball_dokan_c *object = *slot;
         if (object != 0) {
             if (object != 0) {
-                *(VFunc *volatile *)object = cMgSmartball_dokan_c_vtbl;
-                *(VFunc *volatile *)object = cMgSmartball_object_c_vtbl;
+                *(VFunc **)object = cMgSmartball_dokan_c_vtbl;
+                *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
             *slot = 0;
@@ -5651,8 +5651,8 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
         cMgSmartball_pakkun_c *object = *slot;
         if (object != 0) {
             if (object != 0) {
-                *(VFunc *volatile *)object = cMgSmartball_pakkun_c_vtbl;
-                *(VFunc *volatile *)object = cMgSmartball_object_c_vtbl;
+                *(VFunc **)object = cMgSmartball_pakkun_c_vtbl;
+                *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
             *slot = 0;
@@ -5666,8 +5666,8 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
         cMgSmartball_pushswitch_c *object = *slot;
         if (object != 0) {
             if (object != 0) {
-                *(VFunc *volatile *)object = cMgSmartball_pushswitch_c_vtbl;
-                *(VFunc *volatile *)object = cMgSmartball_object_c_vtbl;
+                *(VFunc **)object = cMgSmartball_pushswitch_c_vtbl;
+                *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
             *slot = 0;
@@ -5682,7 +5682,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
                 *(VFunc **)object = cMgSmartball_slot_c_vtbl;
                 __cxa_vec_cleanup(object->mReelVel, 3, 8, (dtor_t)NullDestructor_0203d47c);
                 __cxa_vec_cleanup(object->mReelOffset, 3, 8, (dtor_t)NullDestructor_0203d47c);
-                *(VFunc *volatile *)object = cMgSmartball_object_c_vtbl;
+                *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
             mpSlot = 0;
@@ -5693,7 +5693,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_board_c_vtbl;
-                *(VFunc *volatile *)object = cMgSmartball_object_c_vtbl;
+                *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
             mpBoard = 0;
@@ -5704,7 +5704,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_wing_c_vtbl;
-                *(VFunc *volatile *)object = cMgSmartball_object_c_vtbl;
+                *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
             mpWing = 0;

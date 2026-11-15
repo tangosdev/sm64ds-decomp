@@ -289,7 +289,7 @@ void dCapEnemy_c::Unk_02005d94()
     if (!(mCapId & 0x80)) return;
     b1 = (mFlags & 8) ? 1 : 0;
     if (b1 == 0) {
-        volatile unsigned char *q = &gGameMode;
+        unsigned char *q = &gGameMode;
         b2 = (q[0] == 1) ? 1 : 0;
         if (b2 == 0) return;
     }

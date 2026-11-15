@@ -502,7 +502,7 @@ int PickerScene_HandleDrawingKeys(void) {
     }
 
     {
-        Ov007PickerScene *b = *(Ov007PickerScene *volatile *)&data_ov007_02104ba0;
+        Ov007PickerScene *b = (Ov007PickerScene *)data_ov007_02104ba0;
         short st = b->states[1]->currentState;
         if (st == 6)
             return st;
@@ -555,7 +555,7 @@ int PickerScene_HandleDrawingKeys(void) {
             int *p8 = &r5->groupCount;
             *p14 = *p14 + e->capacity;
             *p8 = *p8 + 1;
-            (*(Ov007PickerScene *volatile *)&data_ov007_02104ba0)->states[1]->requestedState = 7;
+            ((Ov007PickerScene *)data_ov007_02104ba0)->states[1]->requestedState = 7;
             return func_ov007_020bdeb0(0x21);
         }
     }

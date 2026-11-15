@@ -11,10 +11,9 @@
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 
-/* NitroSDK nitro/fs/file.h's FS_GetFileImageTop, with its volatile
- * parameter: a plain field read schedules the ROM-offset load one slot
- * later. The header here carries FS_GetLength but not this one yet. */
-static inline u32 FS_GetFileImageTop(volatile const FSFile *p_file) {
+/* NitroSDK nitro/fs/file.h's FS_GetFileImageTop. The header here
+ * carries FS_GetLength but not this one yet. */
+static inline u32 FS_GetFileImageTop(const FSFile *p_file) {
     return p_file->prop.file.top;
 }
 

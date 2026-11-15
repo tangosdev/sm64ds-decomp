@@ -239,7 +239,7 @@ int Jump3D_AllIdle(void) {
     int i;
     for (i = 0; i < sJump3DMarioCount; i++) {
         int *v = (&((Jump3DEnt *)sJump3DMarioPool)[i].x);
-        volatile int *q = (volatile int *)pmf_dMgJump3DMario_c_StateIdle;
+        volatile int *q = (int *)pmf_dMgJump3DMario_c_StateIdle;
         if (v[0] != pmf_dMgJump3DMario_c_StateIdle[0] ||
             (v[1] != q[1] && ((Jump3DEnt *)sJump3DMarioPool)[i].x != 0))
             return 0;
