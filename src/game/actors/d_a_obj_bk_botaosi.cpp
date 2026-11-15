@@ -21,8 +21,8 @@
  * last. Same arrangement as src/game/actors/d_a_btt_bk.cpp.
  *
  * `opt_foldconstants off` is a file setting, not a per-member bracket.
- * UpdateShadow needs it: the cartridge keeps lean = 0 + tilt, yaw = 0x8000
- * + 0x8000 and the zero high word of 0x7d0000 in the 64-bit multiply
+ * UpdateShadow needs it: the cartridge keeps lean = 0 + tilt, yaw + 0x8000
+ * and the zero high word of 0x7d0000 in the 64-bit multiply
  * unfolded (folded, the body is a different size). Every other function in
  * this TU compiles to the same bytes with it on or off (measured, 13/13).
  *
