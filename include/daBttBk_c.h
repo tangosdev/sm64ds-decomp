@@ -46,7 +46,7 @@
  * registry profile.
  */
 struct daBttBk_c : dActor_c {
-    u8 pad_0d0[0x4];
+    s32 pad_0d0;
     /* dExtSimpleModel_c member, named by the class's own destructor calling
        dExtSimpleModel_c's D1 at +0x0d4. [daBttBk_c D0, src/game/actors/d_a_btt_bk.cpp] */
     dExtSimpleModel_c mModel; /* 0x0d4 */

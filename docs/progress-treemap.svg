@@ -1225,11 +1225,11 @@ matched: yes</title></rect><rect x="200.30" y="127.13" width="7.98" height="5.72
 module: arm9
 addr: 0x02011654
 size: 68 bytes
-matched: yes</title></rect><rect x="208.28" y="127.13" width="5.16" height="5.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02011698PcS_
+matched: yes</title></rect><rect x="208.28" y="127.13" width="5.16" height="5.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02011698P11SndRegTableP11SndRegEntry
 module: arm9
 addr: 0x02011698
 size: 44 bytes
-matched: yes</title></rect><rect x="213.44" y="127.13" width="25.35" height="5.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_020116c4PciiPK7Vector3is
+matched: yes</title></rect><rect x="213.44" y="127.13" width="25.35" height="5.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_020116c4P11SndRegTableiiPK7Vector3is
 module: arm9
 addr: 0x020116c4
 size: 216 bytes
@@ -1241,7 +1241,7 @@ matched: yes</title></rect><rect x="263.21" y="127.13" width="23.47" height="5.7
 module: arm9
 addr: 0x0201186c
 size: 200 bytes
-matched: yes</title></rect><rect x="286.68" y="127.13" width="7.51" height="5.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02011934Pci
+matched: yes</title></rect><rect x="286.68" y="127.13" width="7.51" height="5.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02011934P11SndRegTablei
 module: arm9
 addr: 0x02011934
 size: 64 bytes
@@ -1253,7 +1253,7 @@ matched: yes</title></rect><rect x="304.05" y="127.13" width="11.27" height="5.7
 module: arm9
 addr: 0x020119c8
 size: 96 bytes
-matched: yes</title></rect><rect x="315.32" y="127.13" width="6.10" height="5.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02011a28Pc
+matched: yes</title></rect><rect x="315.32" y="127.13" width="6.10" height="5.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02011a28P11SndRegTable
 module: arm9
 addr: 0x02011a28
 size: 52 bytes
@@ -25521,7 +25521,7 @@ matched: yes</title></rect><rect x="729.91" y="774.50" width="10.37" height="6.1
 module: ov006
 addr: 0x0210c1a8
 size: 96 bytes
-matched: yes</title></rect><rect x="729.91" y="780.69" width="10.37" height="1.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z14SlotLamp_ClearPc
+matched: yes</title></rect><rect x="729.91" y="780.69" width="10.37" height="1.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z14SlotLamp_ClearP8SlotLamp
 module: ov006
 addr: 0x0210c208
 size: 16 bytes
@@ -25537,7 +25537,7 @@ matched: yes</title></rect><rect x="740.28" y="473.09" width="3.33" height="11.2
 module: ov006
 addr: 0x0210c278
 size: 56 bytes
-matched: yes</title></rect><rect x="743.61" y="473.09" width="0.95" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z15SlotBlink_ClearPc
+matched: yes</title></rect><rect x="743.61" y="473.09" width="0.95" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z15SlotBlink_ClearP9SlotBlink
 module: ov006
 addr: 0x0210c2b0
 size: 16 bytes

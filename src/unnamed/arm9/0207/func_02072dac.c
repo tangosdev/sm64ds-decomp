@@ -28,7 +28,7 @@ void func_02072dac(int pc, ActionIterator *info) {
     if (!e)
         return;
     if (e->sizeFlags & 1)
-        info->mActionTable = (unsigned char *)&e->table;
+        info->mActionTable = (unsigned char *)e + 8;
     else
         info->mActionTable = (unsigned char *)e->table;
     info->mFuncStart = e->start;

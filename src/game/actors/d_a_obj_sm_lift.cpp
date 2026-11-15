@@ -195,7 +195,7 @@ int daObjSm_Lift_c::Behavior() {
                     mPauseTimer = 0x3c;
                     mMoving = 0;
                     mNodeStep = -1;
-                    int *pIdx3 = (int *)((unsigned)(int)&mNodeIndex);
+                    int *pIdx3 = &mNodeIndex;
                     *pIdx3 = *pIdx3 + (mNodeStep * 2);
                 }
             }
@@ -218,7 +218,7 @@ s32 daObjSm_Lift_c::InitResources() {
     if (mPathId == 0xff)
         return 0;
     BMD_File *f = dExtSimpleModel_c::LoadFile(gSmLiftModelFile);
-    ((dExtModel_c *)&mModel)->SetFile(f, 1, -1);
+    mModel.SetFile(f, 1, -1);
     UpdateModelTransform();
     UpdateClsnPosAndRot();
     KCL_File *kf = dBgW_Kc::LoadFile(gSmLiftCollisionFile);

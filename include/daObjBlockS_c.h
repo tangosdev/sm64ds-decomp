@@ -43,10 +43,8 @@ struct daObjBlockS_c : dBgActor_c {
     /* Face normal of the floor under the crate, fix12 (1.0 == 0x1000): the
        target of SurfaceInfo::CopyNormalTo in the slide step, read back as
        three words. The same shape daPly_c keeps at 0x554. */
-    s32 mFloorNormalX;          /* 0x4dc */
-    s32 mFloorNormalY;          /* 0x4e0 */
-    s32 mFloorNormalZ;          /* 0x4e4 */
-    Vector3 mHomePos;           /* 0x4e8 */
+    Vector3 mFloorNormal; /* 0x4dc */
+    Vector3 mHomePos;     /* 0x4e8 */
     /* Offset of the crate from the carrying player's hand, fix12: eased toward
        a per-case target row (data_ov098_0213bf60) and handed to
        dActor_c::UpdateCarry as its Vector3. Zeroed when nothing carries it. */

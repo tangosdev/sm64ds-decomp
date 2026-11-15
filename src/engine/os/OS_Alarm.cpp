@@ -12,6 +12,9 @@
  * Alarms sit in one queue sorted by fire tick. Timer 1 counts down to the
  * head alarm; its IRQ runs OSi_ArrangeTimer, which fires every alarm that is
  * due and re-queues the periodic ones.
+ *
+ * HAND-ASM PRIMITIVE: OSi_AlarmHandler is an asm function in the SDK's own
+ * source, so its asm block is the source here; every other body is C.
  */
 #include "types.h"
 #include "nitro/os/system.h"

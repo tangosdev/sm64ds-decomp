@@ -1519,7 +1519,8 @@ void dScMgPachinko2_c::PlotSubBg2Pixels(int a1, int a2, int a3) {
             yb = s - 1;
             a1 = yb + j;
             bp = (u32 *)G2S_GetBG2CharPtr();
-            *(u32 *)((char *)(bp + (row + (a1 >> 3)) * 8) + col) |= a3 << ((a1 & 7) * 4);
+            u32 *cell = (u32 *)((char *)(bp + (row + (a1 >> 3)) * 8) + col);
+            *cell |= a3 << ((a1 & 7) * 4);
         }
     }
 }

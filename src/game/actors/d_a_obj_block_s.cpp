@@ -73,6 +73,7 @@ enum daObjBlockS_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "decl_common.h"
 #include "daObjBlockS_c.h"
+#include "dExtAnmModel_c.h"
 #include "dActor_c.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
@@ -678,12 +679,12 @@ void daObjBlockS_c::ResetToHome() {
 /* Pays out three coins at the crate's position (spread argument 15 units, 0xf000;
  * angle 0), the first time only: mCoinsPaid guards it. */
 void daObjBlockS_c::SpawnBreakCoins() {
-    int v[3];
+    Vector3 v;
     if (mCoinsPaid == 1) return;
-    v[0] = mPosX;
-    v[1] = mPosY;
-    v[2] = mPosZ;
-    SpawnCoins(*(const Vector3 *)v, 3, 0xf000, 0);
+    v.x = mPosX;
+    v.y = mPosY;
+    v.z = mPosZ;
+    SpawnCoins(v, 3, 0xf000, 0);
     mCoinsPaid = 1;
 }
 
@@ -847,11 +848,11 @@ void daObjBlockS_c::HandleWallHit() {
  * and mClsnYOffset has caught up with it the crate goes to STATE_BROKEN
  * (returns 0). mClsnYOffset then eases toward the target by 0.5 unit per
  * frame (0x800). It returns 0 early, clearing dCc_c flags bit 0x2000 on the
- * first cylinder, when mFloorNormalY (still the value from the previous
+ * first cylinder, when mFloorNormal.y (still the value from the previous
  * call at this point) and mHorzSpeed are both 0. A vertical speed below -11
  * units per frame (-0xb000) calls Kill, and the step carries on.
  *
- * The slide: CopyNormalTo fills mFloorNormalX/Y/Z, n is the floor's CLPS
+ * The slide: CopyNormalTo fills mFloorNormal.x/Y/Z, n is the floor's CLPS
  * floor class (CLPS::GetFloorClass; include/daPly_c.h calls it the slipperiness class),
  * hl its slide acceleration (func_ov002_020f02c8). a1 is the current
  * velocity (mHorzSpeed along mPrevAngleY, through the sin / cos table at
@@ -861,7 +862,7 @@ void daObjBlockS_c::HandleWallHit() {
  * 0x64000). mVertSpeed is set to -((normalX * mSpeedX + normalZ * mSpeedZ)
  * / normalY + 8 units); mSpeedX / mSpeedZ sit either side of mVertSpeed and
  * are treated here as its x and z companions, which this file does not
- * otherwise confirm. When func_ov002_020f035c(n, mFloorNormalY) (the
+ * otherwise confirm. When func_ov002_020f035c(n, mFloorNormal.y) (the
  * per-class slope test, include/daPly_c.h) is nonzero, the crate is nearly
  * level (|mAngleX| and |mAngleZ| below 0x10) and mHorzSpeed is above 5 units
  * (0x5000), sound bank 0x51 plays if mVertSpeed is above 10 units and
@@ -908,7 +909,7 @@ int daObjBlockS_c::UpdateFloorContact() {
 
     ApproachLinear(mClsnYOffset, mClsnYOffsetTarget, 0x800);
 
-    if ((mFloorNormalY | mHorzSpeed) == 0) {
+    if ((mFloorNormal.y | mHorzSpeed) == 0) {
         mdCcAcPos_c1.flags &= ~0x2000;
         return 0;
     }
@@ -917,9 +918,9 @@ int daObjBlockS_c::UpdateFloorContact() {
         Kill();
     }
 
-    fr->surface.CopyNormalTo(*(Vector3 *)&mFloorNormalX);
+    fr->surface.CopyNormalTo(mFloorNormal);
     n = fr->surface.clps.GetFloorClass();
-    ang = cstd::atan2(mFloorNormalX, mFloorNormalZ);
+    ang = cstd::atan2(mFloorNormal.x, mFloorNormal.z);
     hl = func_ov002_020f02c8(n);
     func_ov002_020f030c(n);
 
@@ -934,7 +935,7 @@ int daObjBlockS_c::UpdateFloorContact() {
         a2.y = 0;
         a2.z = FX_MUL(hl, FX_CosIdx((u16)ang >> 4));
     }
-    Vec3_MulScalarInPlace(&a2, Vec3_HorzLen((Vector3 *)&mFloorNormalX));
+    Vec3_MulScalarInPlace(&a2, Vec3_HorzLen(&mFloorNormal));
     Vec3_Add(&sum, &a1, &a2);
     newAng = cstd::atan2(sum.x, sum.z);
     mHorzSpeed = Vec3_HorzLen(&sum);
@@ -944,12 +945,12 @@ int daObjBlockS_c::UpdateFloorContact() {
     AngleDiff(mPrevAngleY, mAngleY);
 
     {
-        s32 m0 = FX_MUL(mFloorNormalX, mSpeedX);
-        s32 m1 = FX_MUL(mFloorNormalZ, mSpeedZ);
-        mVertSpeed = -(FX_Div(m0 + m1, mFloorNormalY) + 0x8000);
+        s32 m0 = FX_MUL(mFloorNormal.x, mSpeedX);
+        s32 m1 = FX_MUL(mFloorNormal.z, mSpeedZ);
+        mVertSpeed = -(FX_Div(m0 + m1, mFloorNormal.y) + 0x8000);
     }
 
-    if (func_ov002_020f035c(n, mFloorNormalY) != 0 && mHorzSpeed > 0x5000) {
+    if (func_ov002_020f035c(n, mFloorNormal.y) != 0 && mHorzSpeed > 0x5000) {
         int q0 = mAngleX;
         int q1;
         int sd;
@@ -975,8 +976,8 @@ int daObjBlockS_c::UpdateFloorContact() {
     }
 
     {
-        s16 r5 = func_02010844((Vector3 *)&mFloorNormalX, mAngleY);
-        s16 r4 = func_02010844((Vector3 *)&mFloorNormalX, (s16)(mAngleY - 0x4000));
+        s16 r5 = func_02010844(&mFloorNormal, mAngleY);
+        s16 r4 = func_02010844(&mFloorNormal, (s16)(mAngleY - 0x4000));
         UpdateAngle(mAngleX, r5, 4, 0x1000);
         UpdateAngle(mAngleZ, r4, 4, 0x1000);
     }

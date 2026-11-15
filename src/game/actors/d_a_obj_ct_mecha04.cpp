@@ -196,7 +196,7 @@ int daObjCtMecha04_c::Behavior() {
 
             if (data_0209f2c0 == CLOCK_SETTING_RANDOM) {
                 if (ApproachLinear(mBeltSpeed, mTargetBeltSpeed, 0xcc) != 0 &&
-                    DecIfAbove0_Short((u16 *)&mDirectionTimer) == 0) {
+                    DecIfAbove0_Short(&mDirectionTimer) == 0) {
                     unsigned int randomValue =
                         (u16)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16);
                     /* New direction, held for 0xa + 0x14 * (0..6) ticks. */

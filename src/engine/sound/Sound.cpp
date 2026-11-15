@@ -89,11 +89,13 @@ extern void func_02011b38(void *c, int a1, int a2, int a3, short a5);
 extern void func_02011af8(void *c, int a1, int a2, int a3, const Vector3 *s0, short s1);
 extern void func_02011ac4(void *c, int a1, int a2, int a3, const Vector3 *s0, int s1, short s2);
 extern int func_02011aa0(void *c);
-extern void func_02011a28(char *c);
+struct SndRegTable;
+struct SndRegEntry;
+extern void func_02011a28(SndRegTable *c);
 extern void func_020119c8(void *base);
-extern void *func_02011934(char *table, int id);
-extern int func_020116c4(char *c, int a1, int a2, const Vector3 *a3, int s0, short s1);
-extern void func_02011698(char *table, char *n);
+extern void *func_02011934(SndRegTable *table, int id);
+extern int func_020116c4(SndRegTable *c, int a1, int a2, const Vector3 *a3, int s0, short s1);
+extern void func_02011698(SndRegTable *table, SndRegEntry *n);
 extern int func_02011654(char *table, char *n);
 extern int Player_PlaySoundEffect(NNSSndHandle *handle, int arg1, int arg2);
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
@@ -597,7 +599,7 @@ void PlayBank0(u32 id, const Vector3 &pos)
 void Play(unsigned int j1, unsigned int j2, const Vector3 &v)
 {
     char *s = (char *)func_02050cdc(j1, j2);
-    int t = *(unsigned char *)(s + 5);
+    int t = (unsigned char)s[5];
     if (t == 9 || t == 2) {
         SoundSlot *slot = func_02048720(&v, j1, j2);
         if (slot == 0)
@@ -623,7 +625,7 @@ extern "C" void func_0201251c(int a, int b, const Vector3 *c, int d) {
 }
 
 int Sound_PlayIfNotActive(int a, int b, int c, short d) {
-    SndRegEntry *o = (SndRegEntry *)func_02011934((char *)&data_0209b53c, a);
+    SndRegEntry *o = (SndRegEntry *)func_02011934(&data_0209b53c, a);
     if (o) {
         o->inUse = 1;
         return o->id;
@@ -637,7 +639,7 @@ int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h) {
     SndRegEntry *p;
 
     x = Sound_PlayIfNotActive(a, b, c, h);
-    p = (SndRegEntry *)func_02011934((char *)&data_0209b53c, x);
+    p = (SndRegEntry *)func_02011934(&data_0209b53c, x);
     if (p != 0)
         func_02012860(&p->handle, dd, e, f, g);
     return x;
@@ -666,7 +668,7 @@ int PlayLong(u32 handle, u32 a, u32 b, const Vector3 &pos, s16 e)
     if (func_02048a1c(&pos, a, b) == 0)
         return 0;
 
-    SndRegEntry *slot = (SndRegEntry *)func_02011934((char *)&data_0209b53c, handle);
+    SndRegEntry *slot = (SndRegEntry *)func_02011934(&data_0209b53c, handle);
     if (slot) {
         slot->inUse = 1;
         func_020123c8(&slot->handle, a, b, &pos);
@@ -686,13 +688,13 @@ extern "C" int func_0201226c(int a0, int a1, int a2, const Vector3 *a3, int a4, 
     SndRegEntry *p;
     if (func_02048a1c(a3, a1, a2) == 0)
         return 0;
-    p = (SndRegEntry *)func_02011934((char *)&data_0209b53c, a0);
+    p = (SndRegEntry *)func_02011934(&data_0209b53c, a0);
     if (p != 0) {
         p->inUse = 1;
         func_02048c30(&p->handle, a3, a4);
         return p->id;
     }
-    return func_020116c4((char *)&data_0209b53c, a1, a2, a3, a4, a5);
+    return func_020116c4(&data_0209b53c, a1, a2, a3, a4, a5);
 }
 
 extern "C" int func_02012194(int handle, int a1, int a2, int a3, int s0, const Vector3 *s1,
@@ -700,7 +702,7 @@ extern "C" int func_02012194(int handle, int a1, int a2, int a3, int s0, const V
     SndRegEntry *e;
     if (func_02048a1c(s1, a1, a2) == 0)
         return 0;
-    e = (SndRegEntry *)func_02011934((char *)&data_0209b53c, handle);
+    e = (SndRegEntry *)func_02011934(&data_0209b53c, handle);
     if (e != 0) {
         NNSSndHandle *slot = &e->handle;
         e->inUse = 1;
@@ -709,7 +711,7 @@ extern "C" int func_02012194(int handle, int a1, int a2, int a3, int s0, const V
         return e->id;
     } else {
         int n = data_0209b53c.func_0201179c(a1, a2, s1, s2);
-        SndRegEntry *e2 = (SndRegEntry *)func_02011934((char *)&data_0209b53c, n);
+        SndRegEntry *e2 = (SndRegEntry *)func_02011934(&data_0209b53c, n);
         if (e2 != 0)
             NNS_SndPlayerSetTrackPitch(&e2->handle, a3, s0);
         return n;
@@ -964,8 +966,8 @@ void func_02011a5c(void *vc) {
     for (i = 0; i < 16; i++) c->buckets[i] = 0;
 }
 
-void func_02011a28(char *c) {
-    SndRegEntry *p = ((SndRegTable *)c)->entries;
+void func_02011a28(SndRegTable *c) {
+    SndRegEntry *p = c->entries;
     int i;
     for (i = 0; i < 0x40; i++) {
         func_0204f94c(&p->handle);
@@ -1004,9 +1006,9 @@ void func_02011974(void *vbase) {
     }
 }
 
-void *func_02011934(char *table, int id) {
+void *func_02011934(SndRegTable *table, int id) {
     if (id == 0) return 0;
-    SndRegTable *reg = (SndRegTable *)table;
+    SndRegTable *reg = table;
     int idx = id & 0xf;
     SndRegEntry *node = reg->buckets[idx];
     while (node) {
@@ -1027,7 +1029,7 @@ int SndRegTable::func_0201186c(int a1, int a2, short a3) {
                 reg->counter += 1;
             }
             func_02011b38(&reg->entries[reg->cursor], reg->counter, a1, a2, a3);
-            func_02011698((char *)this, (char *)&reg->entries[reg->cursor]);
+            func_02011698(this, &reg->entries[reg->cursor]);
             return reg->counter;
         }
         reg->cursor = (reg->cursor + 1) % 0x40;
@@ -1044,7 +1046,7 @@ int SndRegTable::func_0201179c(int a1, int a2, const Vector3 *a3, short s1) {
             if (reg->counter == 0)
                 reg->counter += 1;
             func_02011af8(&reg->entries[reg->cursor], reg->counter, a1, a2, a3, s1);
-            func_02011698((char *)this, (char *)&reg->entries[reg->cursor]);
+            func_02011698(this, &reg->entries[reg->cursor]);
             return reg->counter;
         }
         reg->cursor = (reg->cursor + 1) % 0x40;
@@ -1052,8 +1054,8 @@ int SndRegTable::func_0201179c(int a1, int a2, const Vector3 *a3, short s1) {
     return 0;
 }
 
-int func_020116c4(char *c, int a1, int a2, const Vector3 *a3, int s0, short s1) {
-    SndRegTable *reg = (SndRegTable *)c;
+int func_020116c4(SndRegTable *c, int a1, int a2, const Vector3 *a3, int s0, short s1) {
+    SndRegTable *reg = c;
     int i;
     for (i = 0; i < 0x40; i++) {
         if (reg->entries[reg->cursor].id == 0) {
@@ -1061,7 +1063,7 @@ int func_020116c4(char *c, int a1, int a2, const Vector3 *a3, int s0, short s1) 
             if (reg->counter == 0)
                 reg->counter = reg->counter + 1;
             func_02011ac4(&reg->entries[reg->cursor], reg->counter, a1, a2, a3, s0, s1);
-            func_02011698(c, (char *)&reg->entries[reg->cursor]);
+            func_02011698(c, &reg->entries[reg->cursor]);
             return reg->counter;
         }
         reg->cursor = (u8)((reg->cursor + 1) % 0x40);
@@ -1069,9 +1071,9 @@ int func_020116c4(char *c, int a1, int a2, const Vector3 *a3, int s0, short s1) 
     return 0;
 }
 
-void func_02011698(char *table, char *n) {
-    SndRegTable *reg = (SndRegTable *)table;
-    SndRegEntry *e = (SndRegEntry *)n;
+void func_02011698(SndRegTable *table, SndRegEntry *n) {
+    SndRegTable *reg = table;
+    SndRegEntry *e = n;
     int idx = e->id & 0xf;
     SndRegEntry *head = reg->buckets[idx];
     if (head == 0) {
@@ -1141,7 +1143,7 @@ void func_020133bc(void) {
     func_0204f94c(&sMusicHandle);
     func_0204f94c(&sSubHandle);
     func_0204f94c(&data_0209b4a4);
-    func_02011a28((char *)&data_0209b53c);
+    func_02011a28(&data_0209b53c);
     func_02048f34(&sSndArc);
     func_020506fc(2);
     func_02049cd8(&data_0209baa0, 0x1000, 0);

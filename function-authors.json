@@ -1295,11 +1295,11 @@
     },
     "arm9:0x02011698": {
       "author": "tangosdev",
-      "name": "_Z13func_02011698PcS_"
+      "name": "_Z13func_02011698P11SndRegTableP11SndRegEntry"
     },
     "arm9:0x020116c4": {
       "author": "tangosdev",
-      "name": "_Z13func_020116c4PciiPK7Vector3is"
+      "name": "_Z13func_020116c4P11SndRegTableiiPK7Vector3is"
     },
     "arm9:0x0201179c": {
       "author": "tangosdev",
@@ -1311,7 +1311,7 @@
     },
     "arm9:0x02011934": {
       "author": "tangosdev",
-      "name": "_Z13func_02011934Pci"
+      "name": "_Z13func_02011934P11SndRegTablei"
     },
     "arm9:0x02011974": {
       "author": "tangosdev",
@@ -1323,7 +1323,7 @@
     },
     "arm9:0x02011a28": {
       "author": "tangosdev",
-      "name": "_Z13func_02011a28Pc"
+      "name": "_Z13func_02011a28P11SndRegTable"
     },
     "arm9:0x02011a5c": {
       "author": "tangosdev",
@@ -3035,7 +3035,7 @@
     },
     "arm9:0x0201964c": {
       "author": "tangosdev",
-      "name": "_Z13func_0201964cP5Timer"
+      "name": "_ZN5TimerC1Ev"
     },
     "arm9:0x02019664": {
       "author": "tangosdev",
@@ -25703,7 +25703,7 @@
     },
     "ov006:0x0210c208": {
       "author": "tangosdev",
-      "name": "_Z14SlotLamp_ClearPc"
+      "name": "_Z14SlotLamp_ClearP8SlotLamp"
     },
     "ov006:0x0210c218": {
       "author": "tangosdev",
@@ -25719,7 +25719,7 @@
     },
     "ov006:0x0210c2b0": {
       "author": "tangosdev",
-      "name": "_Z15SlotBlink_ClearPc"
+      "name": "_Z15SlotBlink_ClearP9SlotBlink"
     },
     "ov006:0x0210c2c0": {
       "author": "tangosdev",

@@ -126,8 +126,10 @@ s32 daPgDfdr_c::InitResources() {
     file = dExtSimpleModel_c::LoadFile(data_ov027_02113c7c);
     mAnmModel.SetFile((BMD_File *)file, 1, -1);
 
-    for (i = 0; i < 3; i++)
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov027_02112ca4[i]);
+    for (i = 0; i < 3; i++) {
+        SharedFilePtr *anim = (SharedFilePtr *)data_ov027_02112ca4[i];
+        dExtFrameCtrl_c::LoadFile(*anim);
+    }
 
     dExtAnmTexPat_c::LoadFile(data_ov027_02113c94);
     dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov027_02113c7c.filePtr,
@@ -207,7 +209,7 @@ s32 daPgDfdr_c::CleanupResources() {
 
 /* Select state idx and run its enter function. */
 void daPgDfdr_c::SetState(int idx) {
-    mStateTable = &((StatePair *)&data_ov027_02113ce4)[idx];
+    mStateTable = &data_ov027_02113ce4.a + idx * 2;
     CallStateInit();
 }
 
