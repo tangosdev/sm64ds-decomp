@@ -16,7 +16,7 @@
 enum {
     kPlayerRange = 0x64000, /* 100.0 */
     kStarActorId = 0xb2,
-    kStarIndexMask = 0xf,
+    kStarIndexMask = 15,
     kStarSpawnStyle = 0x40
 };
 

@@ -373,7 +373,7 @@ void daBook_c::UpdateSwitchBook() {
          * phase 3 removes it at once */
         if ((partner->mBookFlags & (1 << param1)) == 0) {
             mState = STATE_SWITCH_RETRACT;
-            mStateTimer = 0xa;
+            mStateTimer = 10;
             return;
         }
         if (partner->mState == 2) {
@@ -514,7 +514,7 @@ void daBook_c::StateWindUp() {
 
     ApproachLinear(mAngleZ, mAimRoll, 0x7d0);
 
-    if (mStateTimer < 0x13)
+    if (mStateTimer < 19)
         return;
 
     /* collider radius is 50 units and height 100 units at scale 1.0 */
@@ -706,7 +706,7 @@ int daBook_c::Behavior()
  * (45 degrees) of the way it faces. A shot clears mSpawnTimer. */
 int daBookGen_c::Behavior()
 {
-    if (mSpawnTimer > 0x28) {
+    if (mSpawnTimer > 40) {
         daPly_c *player = ClosestPlayer();
         if (player != 0) {
 

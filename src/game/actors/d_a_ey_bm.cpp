@@ -96,7 +96,7 @@ int daEyBm_c::InitResources() {
     mVertAccel = 0;
     mTerminalVelocity = 0;
     mHorzSpeed = 0xa000;
-    mLifeTimer = 0x96;
+    mLifeTimer = 150;
     mMatrix = IDENTITY_MATRIX4X3;
     UpdateShadow();
     return 1;

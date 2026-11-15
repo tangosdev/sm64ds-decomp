@@ -8,7 +8,7 @@ extern int AllocAssetHandleTable(int count);
 extern int func_020189f0(const char *path);
 extern void SetAssetHandleFileID(unsigned handle, int fileId);
 
-enum { ASSET_HANDLE_COUNT = 0x80a, ASSET_LOOKUP_PRIORITY = 0x1f };
+enum { ASSET_HANDLE_COUNT = 2058, ASSET_LOOKUP_PRIORITY = 31 };
 
 /* The ROM path of every asset handle, indexed by handle. The literals are the
  * strings at the start of the overlay's .data; mwcc places them shortest first,

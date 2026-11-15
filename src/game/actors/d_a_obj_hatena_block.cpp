@@ -825,7 +825,7 @@ void daObjHatenaBlock_c::UpdateBouncing() {
 /* STATE_POPPED enter routine: mBounceTimer = 0x12c (300 frames) and vertical
    acceleration -0x8000 (-8 units). */
 void daObjHatenaBlock_c::EnterPopped() {
-    mBounceTimer = 0x12c;
+    mBounceTimer = 300;
     mVertAccel = -0x8000;
 }
 
@@ -1016,7 +1016,7 @@ void daObjHatenaBlock_c::SpawnPrizeShell() {
     func_ov102_02149684((int *)&v, this);
     void *a = dActor_c::Spawn(ACTOR_SHELL, 0, v, 0, mAreaId, -1);
     if (a)
-        ((daShl_c *)a)->mDespawnTimer = 0xb4;
+        ((daShl_c *)a)->mDespawnTimer = 180;
 }
 
 /* FEATHER prize: spawns a FEATHER at the prize point with rotation taken
@@ -1058,7 +1058,7 @@ void daObjHatenaBlock_c::SpawnPrizeBobOmb() {
     if (a == 0)
         return;
     a->func_ov102_0214ad14();
-    a->func_ov102_0214b384(0x3c);
+    a->func_ov102_0214b384(60);
 }
 
 /* Spawns n COINs (param 2) at *pos. Each coin gets a heading baseAngle + dir

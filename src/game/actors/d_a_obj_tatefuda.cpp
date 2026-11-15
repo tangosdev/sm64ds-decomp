@@ -819,7 +819,7 @@ void daObjTatefuda_c::CheckGrabOrBreak() {
             return;
     }
     if ((mdCcAc_c.hitFlags & 0x40000) != 0) {
-        mBreakTimer = 0x3c;
+        mBreakTimer = 60;
         return;
     }
     {
@@ -923,14 +923,14 @@ void daObjTatefuda_c::OnGroundPounded(dActor_c &other)
         mPoundsLeft = 0;
         UpdateModelPosAndRotY();
         UpdateClsnPosAndRot();
-        mRespawnDelay = 0x1e;
+        mRespawnDelay = 30;
     } else {
         mPosY -= 0x2d000;
         mPoundsLeft -= 1;
         UpdateModelPosAndRotY();
         UpdateClsnPosAndRot();
-        mPoundCooldown = 0xf;
-        mRespawnDelay = 0x1e;
+        mPoundCooldown = 15;
+        mRespawnDelay = 30;
     }
 }
 
@@ -1056,7 +1056,7 @@ void daObjTatefuda_c::UpdateShadowMatrix()
 void daObjTatefuda_c::Reset()
 {
   mHidden = 1;
-  mRespawnDelay = 0x1e;
+  mRespawnDelay = 30;
   mBreakTimer = 0;
   mParticleHandle1 = 0;
   mParticleHandle2 = 0;

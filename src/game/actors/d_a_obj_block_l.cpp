@@ -297,7 +297,7 @@ int daObjBlockL_c::Render() {
         } else {
             if (mSwitch != 0) {
                 unsigned short d = (unsigned short)(mSwitch->mTimeLimit - mSwitch->mTimer);
-                if (d < 0x2d) {
+                if (d < 45) {
                     if ((d & 1) != 0)
                         return 1;
                 }
@@ -415,7 +415,7 @@ int daObjBlockL_c::InitResources() {
     }
 
     if (IsActorID(this, 0x13))
-        mEventID = param1 & 0xf;
+        mEventID = param1 & 15;
     mPrevEventBit = Event::GetBit(mEventID);
 
     {

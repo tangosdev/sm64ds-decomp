@@ -1615,7 +1615,7 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
         return;
     }
 
-    mLifeTimer = 0x258;
+    mLifeTimer = 600;
     mStatus = 1;
     SetStateFlex();
 }

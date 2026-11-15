@@ -274,7 +274,7 @@ int daPgRcer_c::StateShowInitText() {
                 SetState(2);
             } else if (choice == 2) {
                 func_02012790(0x63);
-                mTalkWaitTimer = 0x5a;
+                mTalkWaitTimer = 90;
                 mTalkPlayer->HasFinishedTalking();
                 SetState(0);
             }

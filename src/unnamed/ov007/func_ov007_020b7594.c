@@ -12,8 +12,8 @@ Ov007Display *func_ov007_020b7594(int maskMain, int maskSub) {
     Ov007Display *d = func_ov007_020c3df4(0, sizeof(Ov007Display));
     d->oamMain = func_ov007_020c3df4(0, 0x400);
     d->oamSub = func_ov007_020c3df4(0, 0x400);
-    func_ov007_020c0354((int(*)[2])d->oamMain, 0x80);
-    func_ov007_020c0354((int(*)[2])d->oamSub, 0x80);
+    func_ov007_020c0354((int(*)[2])d->oamMain, 128);
+    func_ov007_020c0354((int(*)[2])d->oamSub, 128);
     d->oamListMain = func_ov007_020c1068();
     d->oamListSub = func_ov007_020c1068();
     d->bgListMain = func_ov007_020c0604(1, maskMain);

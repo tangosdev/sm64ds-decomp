@@ -298,7 +298,7 @@ int daGrock_c::Behavior() {
     } else {
         int dist = DistToCPlayer();
         if (dist > 0x5dc000) {
-            u32 threshold = (dist < 0x1770000) ? 0x70 : 0xe0;
+            u32 threshold = (dist < 0x1770000) ? 112 : 224;
             if ((u16)mStateTimer >= threshold) {
                 u32 rnd;
 

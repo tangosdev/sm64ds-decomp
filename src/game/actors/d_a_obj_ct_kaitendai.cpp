@@ -152,10 +152,10 @@ int daObjCtKaitendai_c::Behavior() {
         break;
 
     case 2: /* random hand */
-        if (ApproachLinear(mPrevAngleZ, mPrevAngleX, 50) != 0) {
+        if (ApproachLinear(mPrevAngleZ, mPrevAngleX, 0x32) != 0) {
             u16 roll = ((u32)RandomIntInternal(&data_0209e650.value) >> 16);
 
-            mPrevAngleX = ((roll % 7) * 200);
+            mPrevAngleX = ((roll % 7) * 0xc8);
             if (roll >= 0x7fff) {
                 s16 *target = &mPrevAngleX;
                 *target *= -1;
@@ -201,7 +201,7 @@ int daObjCtKaitendai_c::CleanupResources() {
 void daObjCtKaitendai_c::UpdateShadow() {
     mShadowMat = mModel.mat4x3;
     mShadowMat.m[10] = (mGroundY + 0x32000) >> 3;
-    DropShadowRadHeight(mShadowModel, mShadowMat, 0x258000, 0xc8000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMat, 0x258000, 0xc8000, 15);
 }
 
 /* Static-init globals (was the handwritten __sinit_ov065_0211c8fc shard).

@@ -15,7 +15,6 @@
  *    POD twin).
  *  - The extern "C" preamble is hand-spelt: Vector3 parameters are written
  *    as pointers where the true types break the register convention.
- *  - volatile int force_stack pads OnTurnIntoEgg's frame to the ROM shape.
  */
 
 /* common.h first: its flat Matrix4x3 must win the guard; InitResources'
@@ -153,7 +152,6 @@ daSpd_c *daSpd_c_classInit(void) {
  * an egg coin otherwise). A child (param1 != 0) resets; the original dies. */
 
 void daSpd_c::OnTurnIntoEgg(daPly_c &player) {
-    volatile int force_stack;
     if (player.IsCollectingCap())
         GivePlayerCoins(player, mCoinCount, 0);
     else
@@ -194,7 +192,7 @@ int daSpd_c::InitResources() {
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     mParent = 0;
-    mTimer = 0x3c;
+    mTimer = 60;
     *(Matrix4x3 *)mShadowMtx = IDENTITY_MATRIX4X3;
     func_ov071_0211f524();
     return 1;
@@ -267,7 +265,7 @@ int daSpd_c::func_ov071_02120200() {
     mAngleY = ang;
     mAngleZ = z;
     mHorzSpeed = z;
-    mTimer = 0x1e;
+    mTimer = 30;
     mdCcAc_c.Clear();
     mState = 0;
     return 1;
@@ -369,7 +367,7 @@ int daSpd_c::func_ov071_0211fd58() {
     int *p = &mLeapDist;
     *p -= 0xf000;
     if (mLeapDist <= 0) {
-        mTimer = 0x3c;
+        mTimer = 60;
         SetState(2);
     }
     UpdatePos(&mdCcAc_c);
@@ -401,7 +399,7 @@ int daSpd_c::func_ov071_0211fcd4() {
 int daSpd_c::func_ov071_0211fc60() {
     mAnmModel.Advance();
     if (mWithMeshClsn.IsOnGround()) {
-        mTimer = 0x3c;
+        mTimer = 60;
         SetState(2);
     }
     UpdatePos(&mdCcAc_c);
@@ -526,7 +524,7 @@ int daSpd_c::func_ov071_0211f6f8() {
     mFlags &= ~1;
     mHorzSpeed = 0xa000;
     mVertSpeed = 0x28000;
-    mTimer = 0x2d;
+    mTimer = 45;
     mAnmModel.SetAnim((BCA_File *)gSpiderWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int yOffset1 = OnAimedAtWithEgg();

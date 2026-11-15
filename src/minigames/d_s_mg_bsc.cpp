@@ -303,7 +303,7 @@ void dScMgBSC_c::StateMoveCards() {
     if (otherArrived == 0)
         return;
 
-    mStateTimer = 0x1e;
+    mStateTimer = 30;
     mState += 1;
 }
 
@@ -330,7 +330,7 @@ void dScMgBSC_c::StateRevealCards() {
         mCardFrame[cardIndex] += 1;
     if (mCardFrame[mOtherCard] < 4)
         return;
-    mStateTimer = 0x1e;
+    mStateTimer = 30;
     mState += 1;
     mPromptEnabled = 0;
     {

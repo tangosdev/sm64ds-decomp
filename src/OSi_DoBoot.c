@@ -54,7 +54,7 @@ asm void OSi_DoBoot(void)
     ldr r1, =0x04000180
 _wait_ack:
     ldrh r0, [r1]
-    and r0, r0, #0xf
+    and r0, r0, #15
     cmp r0, #1
     bne _wait_ack
     mov r0, #0x100
@@ -72,7 +72,7 @@ _wait_ack:
     ldr r1, =0x04000180
 _wait_release:
     ldrh r0, [r1]
-    and r0, r0, #0xf
+    and r0, r0, #15
     cmp r0, #1
     beq _wait_release
     mov r0, #0

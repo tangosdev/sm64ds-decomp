@@ -660,7 +660,7 @@ void daBtn_c::func_ov079_021256d4()
     ApproachLinear(mPrevAngleY, mTargetAngle, 0x200);
     mAngleY = mPrevAngleY;
 
-    if (mStateTimer > 0x1e) {
+    if (mStateTimer > 30) {
         if (mFrontDist < 0x5dc000) {
             mHorzSpeed = 0xd800;
             mAnmModel.speed = 0x3000;
@@ -1041,7 +1041,7 @@ void daBtn_c::func_ov079_02124b08()
             func_ov079_02124dec();
 
         {
-            int lim = mIsKing * 0x14 + 0x64;
+            int lim = mIsKing * 20 + 100;
             u16 cur = mStateTimer;
             if (cur <= lim) {
                 if (unk_407 != 1)
@@ -1063,7 +1063,7 @@ void daBtn_c::func_ov079_02124b08()
     if (st == 0xa) {
         mAnmModel.Advance();
         mSubTimer++;
-        if (mSubTimer <= 0x1e)
+        if (mSubTimer <= 30)
             return;
         unk_407 = 0;
         mSubState++;
@@ -1075,7 +1075,7 @@ void daBtn_c::func_ov079_02124b08()
     }
 
     if (mAngleX > 0) {
-        if (mSubTimer >= 0xc) {
+        if (mSubTimer >= 12) {
             mPitchSpeed = -0x290;
             mAngleX += mPitchSpeed;
         }
@@ -1133,7 +1133,7 @@ void daBtn_c::func_ov079_021249f0()
     if (mSubState == 0) {
         mHorzSpeed = 0;
         mAnmModel.speed = 0x2000;
-        if (mStateTimer >= 0x20) {
+        if (mStateTimer >= 32) {
             mSubState++;
         } else {
             mPrevAngleY += 0x400;
@@ -1141,7 +1141,7 @@ void daBtn_c::func_ov079_021249f0()
         }
     } else {
         mHorzSpeed = data_ov079_021275dc[mIsKing];
-        if (mStateTimer > 0x2a) {
+        if (mStateTimer > 42) {
             mState = 1;
             mAnmModel.SetAnim(
                 (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr), 0,
@@ -1658,7 +1658,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
         }
-        mWobbleTimer = 0x5a;
+        mWobbleTimer = 90;
         mHorzSpeed = 0;
         mState = 0xa;
         mResumePending = 1;

@@ -156,7 +156,7 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     mPosX = mBasePosX;
     mPosY = mBasePosY;
     mPosZ = mBasePosZ;
-    mWaypointIndex = (param1 & 0xf);
+    mWaypointIndex = (param1 & 15);
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
                   (Vector3 *)&tmp[0]);
@@ -241,7 +241,7 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     if (cosine < 0)
         cosine = -cosine;
     DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMat, sx, h,
-                       shadowSizeZ.v[variantC] + FX_MUL(fac, cosine), 0xf);
+                       shadowSizeZ.v[variantC] + FX_MUL(fac, cosine), 15);
 }
 
 // 0x02131340 (0x48)
@@ -397,7 +397,7 @@ int daObjRotateUpdownLift_c::Behavior()
 
     if (arrived != 0) {
         mWaypointIndex++;
-        if (mWaypointIndex >= 0xa)
+        if (mWaypointIndex >= 10)
             mWaypointIndex = 0;
         if (mWaypointIndex > 3 && mWaypointIndex < 8)
             mPitchStep = 0x2000;
@@ -457,7 +457,7 @@ int daObjRotateUpdownLift_c::InitResources()
             mVariant = 1;
     }
 
-    mWaypointIndex = (param1 & 0xf);
+    mWaypointIndex = (param1 & 15);
 
     if (mWaypointIndex == 2) {
         Vec3_Add(&spawnAt, (const Vector3 *)&mBasePosX, &data_ov091_02134cdc[mVariant].node[0]);

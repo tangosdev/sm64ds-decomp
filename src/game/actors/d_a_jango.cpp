@@ -392,13 +392,13 @@ int daJango_c::Behavior()
             } else {
                 mHeldActorID = 0;
                 ((void (*)(int, int))func_02012790)(SND_HELD_RELEASED, 0);
-                mTimer = 0x1e;
+                mTimer = 30;
                 ChangeState(JANGO_STATE_CIRCLE);
             }
         } else {
             mHeldActorID = 0;
             ((void (*)(int, int))func_02012790)(SND_HELD_RELEASED, 0);
-            mTimer = 0x1e;
+            mTimer = 30;
             ChangeState(JANGO_STATE_CIRCLE);
         }
     } else if (mCarriedItem == CARRIES_STAR && mSilverStarFlag != 2) {
@@ -545,7 +545,7 @@ int daJango_c::EnterFlyPathState() {
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
         MTX_MultVec43(&in, &data_020a0e68, &out);
         mVertSpeed = out.y;
-        mStateTimer = 0x3c;
+        mStateTimer = 60;
     }
 
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e104.filePtr, 4, 0, 0x1000, 0);
@@ -650,7 +650,7 @@ int daJango_c::UpdateFlyPathState() {
 int daJango_c::EnterCircleState() {
     mTargetAngleY = mAngleY;
     mStateParam = 0;
-    mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 3) * 0x64 + 0x12c;
+    mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 3) * 100 + 300;
     if (mHitPlayer == 1) {
         mStateTimer = 0;
         mHitPlayer = 0;
@@ -718,7 +718,7 @@ int daJango_c::UpdateCircleState() {
         if (Vec3_Dist(&mPos, &mSpawnPos) < 0x1f4000) {
             mTimer = 0;
         } else {
-            mTimer = 0x1e;
+            mTimer = 30;
         }
         UpdateCircleVelocity();
         return 1;
@@ -833,9 +833,9 @@ int daJango_c::UpdateCircleState() {
    speed 1.0). */
 int daJango_c::EnterSwoopState() {
     if (gCurrentSublevel == 0x10) {
-        mStateTimer = 0x32;
+        mStateTimer = 50;
     } else {
-        mStateTimer = (((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) + 0x14;
+        mStateTimer = (((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) + 20;
     }
     mSpeedX = 0;
     mVertSpeed = 0;
@@ -873,7 +873,7 @@ int daJango_c::UpdateSwoopState() {
     player = ClosestPlayer();
     if (player != 0) {
         if (player->mIsVanish == 1) {
-            mTimer = 0x1e;
+            mTimer = 30;
             ChangeState(JANGO_STATE_CIRCLE);
             return 1;
         }
@@ -905,7 +905,7 @@ int daJango_c::UpdateSwoopState() {
     MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
     HandleCylinderHit();
     if (mStateTimer == 0 || mWithMeshClsn.IsOnWall() != 0) {
-        mTimer = 0x1e;
+        mTimer = 30;
         ChangeState(JANGO_STATE_CIRCLE);
     }
     return 1;
@@ -944,7 +944,7 @@ int daJango_c::EnterHurtState() {
         }
         mStateParam = 0;
         mHeldActorID = 0;
-        mTimer = 0x1e;
+        mTimer = 30;
     }
     func_02012694(SND_AT_HURT_ENTER, (const Vector3 *)(&mCamSpacePosX));
     Particle::System::NewSimple(PARTICLE_AT_HURT_ENTER, mPosX, mPosY, mPosZ);
@@ -962,7 +962,7 @@ int daJango_c::UpdateHurtState() {
     int f = mBlendAnmModel.currFrame;
     int fc = mBlendAnmModel.GetFrameCount();
     if ((int)((unsigned int)(f << 4) >> 16) >= fc - 1) {
-        mTimer = 0x1e;
+        mTimer = 30;
         ChangeState(JANGO_STATE_CIRCLE);
     }
     return 1;
@@ -1120,7 +1120,7 @@ int daJango_c::HandleCylinderHit() {
     r = pl->Hurt(pos, flag, 0xc000, 1, 0, 1);
     if (r == 0)
         return r;
-    mTimer = 0x1e;
+    mTimer = 30;
     return ChangeState(JANGO_STATE_CIRCLE);
 }
 

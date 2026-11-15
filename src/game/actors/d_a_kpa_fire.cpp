@@ -505,7 +505,7 @@ void daKpaFire_c::func_ov060_02116f90() {
  * table values), mFireScale 2.0 (8192 = 0x2000), shadow multiplier 16. */
 void daKpaFire_c::func_ov060_02116f74() {
     this->mHorzSpeed = 30;
-    this->mFireScale = 8192;
+    this->mFireScale = 0x2000;
     this->mShadowRadiusMul = 16;
 }
 
@@ -547,7 +547,7 @@ void daKpaFire_c::func_ov060_02116d78() {
             dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(6, 0), mPos, 0, mAreaId, -1);
         MarkForDestruction();
     }
-    if (mFrameCount < 0x3c)
+    if (mFrameCount < 60)
         return;
     MarkForDestruction();
 }

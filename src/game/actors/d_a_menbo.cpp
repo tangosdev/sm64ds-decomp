@@ -449,15 +449,15 @@ int daMenbo_c::func_ov090_02131648()
 
     if (self->mWanderTimer == 0 && self->mWallLatch == 0 && self->mFarLatch == 0 &&
         self->mProbeLatch == 0) {
-        self->mWanderTimer = (u16)((rnd + 0x32) & 0x3f);
+        self->mWanderTimer = (u16)((rnd + 50) & 0x3f);
         p39a = (s16 *)&self->mTargetAngleY;
         *p39a = *p39a + (0x1800 - ((rnd & 3) << 0xc));
     }
 
     if (angleSet == 1) {
-        self->mTurnTimer = 0xa;
-        self->mWanderTimer = 0x32;
-        self->mSpeedHoldTimer = 0x1e;
+        self->mTurnTimer = 10;
+        self->mWanderTimer = 50;
+        self->mSpeedHoldTimer = 30;
         self->mHorzSpeed = 0x9000;
         self->mAnimSpeed = 0x1000;
     }
@@ -468,8 +468,8 @@ int daMenbo_c::func_ov090_02131648()
         self->mAnimSpeed = 0x1000;
         self->mHorzSpeed = 0x9000;
         if (func_ov090_021314a0(self) == 1) {
-            self->mSpeedHoldTimer = 0x1e;
-            self->mWanderTimer = 0x1e;
+            self->mSpeedHoldTimer = 30;
+            self->mWanderTimer = 30;
             self->mAnimSpeed = 0x2000;
             self->mHorzSpeed = 0xe000;
         }
@@ -496,7 +496,7 @@ int daMenbo_c::func_ov090_02131a74()
 {
     mAnimSpeed = 0x1000;
     mSpeedHoldTimer = 0;
-    mWanderTimer = 0x32;
+    mWanderTimer = 50;
     mAnimLoops = 0;
     mAnmModel.SetAnim((BCA_File *)data_ov090_02134480.filePtr, 0, 0x1000, 0);
     return 1;
@@ -536,7 +536,7 @@ int daMenbo_c::func_ov090_02131b94()
     s = (short *)&mTargetAngleY;
     *s = (*s + ((int)(((r >> 8) & 7) << 0x1d) >> 16));
     r = (unsigned)RandomIntInternal(&data_0209e650.value);
-    mStateTimer = (short)(((r >> 8) & 0x1f) + 0x96);
+    mStateTimer = (short)(((r >> 8) & 0x1f) + 150);
     mAnimSpeed = 0x1000;
     mAnmModel.SetAnim((BCA_File *)data_ov090_02134490.filePtr, 0, 0x1000, 0);
     return 1;

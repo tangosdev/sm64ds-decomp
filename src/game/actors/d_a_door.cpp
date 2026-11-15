@@ -389,13 +389,13 @@ int daDoor_c::func_ov100_02144528(daPly_c *pl) {
                 if (data_ov100_02148704 != 0) {
                     pl->mHasNoCap = 1;
                     func_0201277c(0x7e);
-                    mTimer = 0x40;
+                    mTimer = 64;
                     Sound::ChangeMusicVolume(0, 0x19666); /* 25.4 as fx32 */
                 } else {
                     func_0201277c(0x7f);
                 }
             } else {
-                mTimer = 0x40;
+                mTimer = 64;
                 if (data_ov100_02148704 != 0)
                     func_02012790(0xa1);
                 else
@@ -414,7 +414,7 @@ int daDoor_c::func_ov100_02144528(daPly_c *pl) {
                 mTimer += 1;
             }
         } else {
-            if (data_ov100_02148704 == 0 && mTimer == 0xa && param1 == DOOR_LAST_KEY_MODEL) {
+            if (data_ov100_02148704 == 0 && mTimer == 10 && param1 == DOOR_LAST_KEY_MODEL) {
                 Sound::ChangeMusicVolume(0x7f, 0xcb33);
             }
         }
@@ -796,7 +796,7 @@ int daDoor_c::func_ov100_02145080(daPly_c *arg1) {
         if (mTimer == 0) {
             if (func_ov002_020ca78c(arg1) != 0) {
                 Sound::PlaySub(0x2b, 0, 0x7f, 0x15666, 0);
-                mTimer = 0x78;
+                mTimer = 120;
             }
         } else if (DecIfAbove0_Byte(&mTimer) == 0) {
             Sound::PlaySub(0x2b, 0x7f, 0, 0x7222, 0);

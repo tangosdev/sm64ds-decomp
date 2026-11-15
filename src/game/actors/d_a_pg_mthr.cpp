@@ -255,7 +255,7 @@ int daPgMthr_c::StateTalkEnter() {
     mAnmModel.SetAnim((BCA_File *)gPenguinWait1AnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
     mTalkStep = 0;
-    mTalkTimer = 0x3c;
+    mTalkTimer = 60;
     unk_37c = 1;
     return 1;
 }

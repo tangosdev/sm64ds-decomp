@@ -476,7 +476,7 @@ s32 daKing_Donketu_c::HandleHit() {
         Vector3 v;
         s32 rnd;
 
-        c->mHitCooldown = 0x10;
+        c->mHitCooldown = 16;
         func_02012694(SND_HIT_REGISTERED, &c->mCamSpacePos);
         rnd = RandomIntInternal(&data_0209e650.value);
         if (((rnd >> 8) & 7) == 0) {
@@ -500,7 +500,7 @@ s32 daKing_Donketu_c::HandleHit() {
                         actor->mHorzSpeed = 0xa000;
                         if (SaveData::IsCharacterUnlocked(2) != 0) {
                             c->mCoinsSpawned += 1;
-                            if (c->mCoinsSpawned > 0x1e) {
+                            if (c->mCoinsSpawned > 30) {
                                 dActor_c* actor2 = dActor_c::Spawn(ACTOR_SCALEUP_KINOKO, 0, v, 0, c->mAreaId, -1);
                                 if (actor2 != 0) {
                                     actor2->mPrevAngleX = 0;
@@ -552,7 +552,7 @@ s32 daKing_Donketu_c::HandleHit() {
     c->mBlendAnmModel.speed = 0x1000;
     c->mPhase = 2;
     c->mStateParam = 0x2000;
-    c->mStateTimer = 0x1e;
+    c->mStateTimer = 30;
 done0:
     return 0;
 }
@@ -785,7 +785,7 @@ short daKing_Donketu_c::EnterDefeatCutscene1() {
     daKing_Donketu_c *c = this;
     c->mBlendAnmModel.SetAnim(*(BCA_File *)((BCA_File *)gKingIceDonketuDeadAnimationFile.filePtr),
                               4, 0, 0x1000, 0);
-    c->mStateTimer = 0x32;
+    c->mStateTimer = 50;
     return 1;
 }
 
@@ -1070,7 +1070,7 @@ mainblock:
    mLandedWaypoint = 0xff. */
 int daKing_Donketu_c::func_ov073_0212081c() {
     daKing_Donketu_c *self = this;
-    self->mStateTimer = 0xa;
+    self->mStateTimer = 10;
     self->mStateScratch = 0;
     self->mJumpCount = 0;
     self->mLandedWaypoint = 0xff;
@@ -1182,7 +1182,7 @@ int daKing_Donketu_c::EnterEdgeWobble() {
     t->mEdgePosY = t->mGroundMissPosY;
     t->mEdgePosZ = t->mGroundMissPosZ;
     t->mSoundHandle = 0;
-    t->mStateTimer = 0x5a;
+    t->mStateTimer = 90;
     return 1;
 }
 
@@ -1288,7 +1288,7 @@ int daKing_Donketu_c::UpdateTurnToSpawn() {
     ApproachLinear(c->mPrevAngleY, c->mTargetAngle, 0x500);
     if (AngleDiff(c->mTargetAngle, c->mAngleY) < 0x100) {
         ChiefChilly_ChangeState((C *)(c), (PMF *)&data_ov073_02123360);
-        c->mStateTimer = 0x1e;
+        c->mStateTimer = 30;
     }
     c->mAngleX = c->mPrevAngleX;
     c->mAngleY = c->mPrevAngleY;
@@ -1343,7 +1343,7 @@ int daKing_Donketu_c::UpdateChase() {
             c->mTargetAngle = c->HorzAngleToCPlayer();
             c->mStateScratch = 0;
             if (AngleDiff(c->mPrevAngleY, c->mTargetAngle) <= 0x2000) {
-                c->mStateTimer = 0x1e;
+                c->mStateTimer = 30;
                 break;
             } else {
                 c->mStateTimer = 0;
@@ -1361,7 +1361,7 @@ int daKing_Donketu_c::UpdateChase() {
                         0) {
                         c->mPhase = 3;
                         c->mHorzSpeed = 0;
-                        c->mStateTimer = 0xf;
+                        c->mStateTimer = 15;
                     }
                 }
             }
@@ -1426,7 +1426,7 @@ int daKing_Donketu_c::UpdateChase() {
         }
         c->mHorzSpeed = 0;
         c->mPrevAngleY = c->mAngleY;
-        c->mStateTimer = 0x1e;
+        c->mStateTimer = 30;
         c->mBlendAnmModel.SetAnim(
             *(BCA_File *)((BCA_File *)gKingIceDonketuWalkAnimationFile.filePtr), 4, 0, 0x1000, 0);
         c->mBlendAnmModel.speed = 0x2000;

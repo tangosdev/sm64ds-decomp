@@ -147,7 +147,7 @@ void daDkk_c::StateFall() {
     v[1].y = mPosY;
     v[1].z = mPosZ;
     Earthquake(v[1], 0x7d0000);
-    mTimer = 0x3c;
+    mTimer = 60;
     mLandCount++;
     mState = 6;
     v[0].x = mPosX;
@@ -185,7 +185,7 @@ int daDkk_c::StateTurn() {
     mPrevAngleY = mAngleY;
     mState = 6;
     mLandCount = 0;
-    mTimer = 0x28;
+    mTimer = 40;
     return 0x28;
 }
 

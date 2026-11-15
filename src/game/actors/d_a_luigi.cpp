@@ -61,7 +61,7 @@
 #define kReqFade 2
 /* Bit 0x10 of FileSaveData::flags1 is unnamed. */
 #define kSysHold 0x10
-#define kShadowOpacity 0xf
+#define kShadowOpacity 15
 #define kAppearSound 0x179
 #define kMirrorSx (-0x1000)
 

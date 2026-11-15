@@ -102,12 +102,12 @@ u32 Texture::AllocPalVram(u32 size, bool fromLowAddress)
 void dPa_c::Initialise() {
     signed char v = gCurrentSublevel;
     unsigned int allocSize = 0x8c00;
-    int countA = 0x28;
-    int countB = 0x100;
+    int countA = 40;
+    int countB = 256;
 
     if (v == 0x24 || v == 0x26 || v == 0x28) {
-        countA = 0x40;
-        countB = 0x140;
+        countA = 64;
+        countB = 320;
         allocSize = 0xa800;
     }
 

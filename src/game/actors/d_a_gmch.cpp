@@ -397,7 +397,7 @@ int daGmch_c::EnterState8()
     mFlags &= ~1;
     mHorzSpeed = 0xa000;
     mVertSpeed = 0x28000;
-    mTimer = 0x2d;
+    mTimer = 45;
     mAnmModel.SetAnim((BCA_File *)data_ov081_02128edc.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int yOffset1 = OnAimedAtWithEgg();
@@ -673,7 +673,7 @@ void daGmch_c::EnterState1()
     mAnmModel.speed = 0x1000;
     mHorzSpeed = 0xa000;
     mTargetAngleY = (short)RandomIntInternal(data_0209e650);
-    mTimer = (unsigned char)((unsigned int)RandomIntInternal(data_0209e650) % 0x78);
+    mTimer = (unsigned char)((unsigned int)RandomIntInternal(data_0209e650) % 120);
     mStateIndex = 1;
 }
 

@@ -22,6 +22,6 @@ void func_020196cc(void) {
         if (bottom == PM_BACKLIGHT_OFF)
             data_0208ee3c = 0;
     }
-    func_0203b9b4((int *)&data_0209d4b8, 0x4d2);
+    func_0203b9b4((int *)&data_0209d4b8, 1234);
     SetSoundMode(data_0209d4b4);
 }

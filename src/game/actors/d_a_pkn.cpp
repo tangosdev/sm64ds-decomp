@@ -455,7 +455,7 @@ void daPkn_c::StateWake()
 {
     Sound::PlaySub(0x36, 0x7f, 0, 0xcb33, 0);
     if (CheckHits() != 0) return;
-    if (mStateTimer <= 0xb)
+    if (mStateTimer <= 11)
         return;
     if (!mAnmModel.Finished())
         return;
@@ -488,7 +488,7 @@ void daPkn_c::StateDie()
 
     Sound::PlaySub(0x36, 0x7f, 0, 0xcb33, 0);
     mClsnEnabled = 0;
-    if (mStateTimer < 0xa) {
+    if (mStateTimer < 10) {
         pos.x = mPosX;
         pos.y = mPosY;
         pos.z = mPosZ;

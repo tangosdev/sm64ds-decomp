@@ -114,7 +114,7 @@ void daKpa3Bg_c::OnStoodOn(dActor_c *other) {
 
 s32 daKpa3Bg_c::InitResources()
 {
-    mVariant = (param1 & 0xf);
+    mVariant = (param1 & 15);
     data_0208e738 = 0;
     /* bmd is named for the @NNN count (see the banner). */
     BMD_File *bmd = dExtSimpleModel_c::LoadFile(*data_ov060_02119514[mVariant]);
@@ -223,9 +223,9 @@ void daKpa3Bg_c::StateFall() {
         Vector3 pos = mPos;
         int row = mVariant;
         u16 ang = data_ov060_02119564[row].angle;
-        pos.x = FX_SinIdx(ang >> 4) * 0x366 + (data_ov060_02119564[row].x << 12);
+        pos.x = FX_SinIdx(ang >> 4) * 870 + (data_ov060_02119564[row].x << 12);
         pos.y = 0x12c000;
-        pos.z = FX_CosIdx(ang >> 4) * 0x366 + (data_ov060_02119564[mVariant].z << 12);
+        pos.z = FX_CosIdx(ang >> 4) * 870 + (data_ov060_02119564[mVariant].z << 12);
         Vec3_AsrInPlace((VecFx32 *)&pos, 3);
         MTX_MultVec43(&pos, &data_0209b3ec, &mCamSpacePos);
         func_02012694(0xbc, &mCamSpacePos);
@@ -244,7 +244,7 @@ void daKpa3Bg_c::StateFall() {
     if (phase % 2 == 0 && phase < 14) {
         int row = mVariant;
         s16 ang = data_ov060_02119564[row].angle;
-        int dist = (6 - (phase >> 1)) * 0x122;
+        int dist = (6 - (phase >> 1)) * 290;
         int baseX = data_ov060_02119564[row].x << 12;
         int baseZ = data_ov060_02119564[row].z << 12;
         Vector3 dustPos;

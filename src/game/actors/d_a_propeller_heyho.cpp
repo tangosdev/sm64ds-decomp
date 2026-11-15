@@ -424,8 +424,8 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
 
     if (Vec3_Dist(&c->mPos, &c->mHomePos) > kWanderTurnBackDist || c->mWithMeshClsn.IsOnWall()) {
         c->mTargetAngY = Vec3_HorzAngle(&c->mPos, &c->mHomePos);
-        if (c->mStateTimer < 0x14)
-            c->mStateTimer = 0x14;
+        if (c->mStateTimer < 20)
+            c->mStateTimer = 20;
     }
     ApproachAngle(&c->mPrevAngleY, c->mTargetAngY, 0xa, 0x200, 0x100);
 
@@ -587,7 +587,7 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
  * 0x40000000) at speed 1.0. */
 int func_ov070_0211fa80(daPropeller_Heyho_c *c) {
     c->mHitDuringAttack = 0;
-    c->mStateTimer = 0x3f;
+    c->mStateTimer = 63;
     c->mStateStep = 0;
     c->mTargetAngY = c->HorzAngleToCPlayerOrAng();
     c->mAnmModel.SetAnim((BCA_File *)data_ov070_02123518.filePtr, 0x40000000, 0x1000, 0);

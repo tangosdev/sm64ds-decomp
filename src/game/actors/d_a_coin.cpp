@@ -426,7 +426,7 @@ void func_ov002_020b18f0(char* self)
     if (SublevelToLevel(gCurrentSublevel) >= 0xf)
         return;
     if (player == 0) return;
-    if (gNumCoins[player->mPlayerNo] < 0x64)
+    if (gNumCoins[player->mPlayerNo] < 100)
         return;
     playerPos = &player->mPos;
     spawnPos.x = playerPos->x;
@@ -479,7 +479,8 @@ void daCoin_c::StateFollowTarget() {
         int *posY = &mPosY;
         *posY += 0xc8000;
     }
-    if (mDisappearTimer < 0x41) return;
+    if (mDisappearTimer < 65)
+        return;
     MarkForDestruction();
     mDisappearTimer = 0;
 }
@@ -512,7 +513,7 @@ void daCoin_c::StateLaunchNearPlayer() {
         mVertSpeed = 0x14000;
         ((CoinFlagBits *)&mCoinFlags)->bounces++;
         mWithMeshClsn.SetLimMovFlag();
-        mDisappearTimer = 0x1c2;
+        mDisappearTimer = 450;
     }
     if (mWithMeshClsn.JustHitGround()) {
         if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) == 0) {
@@ -538,7 +539,7 @@ void daCoin_c::StateSlideAwayFromMario() {
     Sound::PlayBank3(0x52, mCamSpacePos);
     if (mHorzSpeed == 0) {
         mHorzSpeed = 0x13000;
-        mDisappearTimer = 0x12c;
+        mDisappearTimer = 300;
     } else {
         if (mHorzSpeed > 0x13000) mHorzSpeed = 0x13000;
     }
@@ -610,7 +611,7 @@ void daCoin_c::StateBounce() {
     if (mWithMeshClsn.JustHitGround() != 0) {
         if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) == 0) {
             if (mDisappearTimer > 0xf000)
-                mDisappearTimer = 0xf;
+                mDisappearTimer = 15;
             Sound::PlayBank3(0x52, mCamSpacePos);
             bits = (CoinFlagBits *)&mCoinFlags;
             bits->bounces++;
@@ -688,7 +689,7 @@ void daCoin_c::StateIdle() {
     if (found) {
         mDisappearTimer = ((daObjBC_Switch_cView *)found)->mCoinTimerSeed;
     } else {
-        mDisappearTimer = 0xfa;
+        mDisappearTimer = 250;
     }
 }
 
@@ -751,7 +752,8 @@ int daCoin_c::Render()
     {
         /* blinks while the disappear timer is below 0x2d */
         unsigned short timer = mDisappearTimer;
-        if (timer < 0x2d && (timer & 1)) return 1;
+        if (timer < 45 && (timer & 1))
+            return 1;
     }
     if (!(flags & 0x10))
         mCommonModel1.Render(0);
@@ -898,7 +900,7 @@ s32 daCoin_c::InitResources()
             mCoinType = COIN_RED;
             if (SublevelToLevel(gCurrentSublevel) == 0x13 || mSpawnFilter == gCurrentStarId) {
                 if (GetBitInDeathTable() == 0) {
-                    for (slot = 0; slot < 0xc; slot = (slot + 1)) {
+                    for (slot = 0; slot < 12; slot = (slot + 1)) {
                         if (STAR_MARKERS[slot] == 0) {
                             SetStarMarker(slot, this, 4);
                             mTrackStarID = slot;
@@ -951,7 +953,7 @@ s32 daCoin_c::InitResources()
     behavior = mBehaviorType;
     do {
         if (behavior == 8) {
-            mDisappearTimer = 0x2d;
+            mDisappearTimer = 45;
             mdCc_c.flags |= 1;
             break;
         }
@@ -965,7 +967,7 @@ s32 daCoin_c::InitResources()
                 break;
             }
         }
-        mDisappearTimer = 0xd2;
+        mDisappearTimer = 210;
     } while (0);
 
     *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~1) | 1;
@@ -975,7 +977,7 @@ s32 daCoin_c::InitResources()
         if (behavior == 5) {
             mNoClsnTimer = 0;
         } else {
-            mNoClsnTimer = 0xf;
+            mNoClsnTimer = 15;
         }
     } else {
         mNoClsnTimer = 0;

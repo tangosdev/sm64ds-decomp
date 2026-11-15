@@ -414,8 +414,8 @@ void daHanachan_c::StateMoveMain()
             }
         }
         mStateTimer = ((unsigned int)(rnd + 0x1e) >> 0x1b);
-        mStateTimer = (mStateTimer - (4 - mHealth) * 0x1e);
-        if (mStateTimer >= 0x40)
+        mStateTimer = (mStateTimer - (4 - mHealth) * 30);
+        if (mStateTimer >= 64)
             mStateTimer = 0;
     }
 
@@ -423,8 +423,8 @@ void daHanachan_c::StateMoveMain()
         rnd = RandomIntInternal(&data_0209e650.value);
         mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
         mStateTimer = ((unsigned int)(rnd + 0x1e) >> 0x1b);
-        mStateTimer = (mStateTimer - (4 - mHealth) * 0x1e);
-        if (mStateTimer >= 0x40)
+        mStateTimer = (mStateTimer - (4 - mHealth) * 30);
+        if (mStateTimer >= 64)
             mStateTimer = 0;
     }
 
@@ -445,7 +445,7 @@ void daHanachan_c::StateMoveInit()
 {
     mPlayer = 0;
     if (mDefeated != 0)
-        mStateTimer = 0x96;
+        mStateTimer = 150;
 }
 
 /* MOVE_START: stagger the walk animation down the body; when the talk ends, hop by remaining health and enter MOVE. */

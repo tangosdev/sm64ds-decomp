@@ -111,7 +111,7 @@ int OAM::LoadAffineParams(OamAttr *oam, int *count, Matrix2x2 *mtx)
             pd == (oam + i)[3].attr3)
             return i >> 2;
     }
-    if (*count >= 0x80)
+    if (*count >= 128)
         return -1;
     SetAffineParams(&oam[*count], mtx);
 
@@ -203,7 +203,7 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
     cosIdx = sinIdx + 1;
 
     while (1) {
-        if (*pCount >= 0x80)
+        if (*pCount >= 128)
             return;
 
         {
@@ -400,7 +400,7 @@ OamAttr *OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio
     if ((!draw) || (data_0209e660 == 1)) {
         counter = &data_0209e664;
         cnt = *counter;
-        if (cnt >= 0x80) {
+        if (cnt >= 128) {
             return 0;
         }
         res = &data_0209e674[cnt];
@@ -408,7 +408,7 @@ OamAttr *OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio
     } else {
         counter = &data_0209e670;
         cnt = *counter;
-        if (cnt >= 0x80) {
+        if (cnt >= 128) {
             return 0;
         }
         res = &data_0209ea74[cnt];
@@ -561,14 +561,14 @@ void OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio, Ma
     if (!draw || data_0209e660 == 1) {
         counter = &data_0209e664;
         cnt = *counter;
-        if (cnt >= 0x80)
+        if (cnt >= 128)
             return;
         res = &data_0209e674[cnt];
         affctr = &data_0209e668;
     } else {
         counter = &data_0209e670;
         cnt = *counter;
-        if (cnt >= 0x80)
+        if (cnt >= 128)
             return;
         res = &data_0209ea74[cnt];
         affctr = &data_0209e66c;
@@ -660,7 +660,7 @@ void OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio, Ma
 void OAM::Reset() {
     int i;
     if (data_0209e660 != 0) {
-        for (i = 0; i < 0x80; i++) {
+        for (i = 0; i < 128; i++) {
             data_0209e674[i].attr01 = 0xc0;
             data_0209e674[i].attr2 = 0;
         }

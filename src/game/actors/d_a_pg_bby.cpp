@@ -102,7 +102,7 @@ s32 daPgBby_c::Behavior()
     } else {
         if (mMother == 0)
             mMother = FindWithActorID(0x101, 0);
-        mRespawnTimer = 0x384;
+        mRespawnTimer = 900;
         CallStateUpdate();
         UpdateModelAndShadow();
     }

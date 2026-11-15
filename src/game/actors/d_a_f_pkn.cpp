@@ -442,7 +442,7 @@ void daFPkn_c::StateSpit()
         mAnmModel.SetAnim((BCA_File *)(((SharedFilePtr *)data_ov084_02130e1c)->filePtr), 0, 0x1000,
                           0);
     } else {
-        if (mStateTimer < 0x3a) {
+        if (mStateTimer < 58) {
             targetAngle = mAngleY;
             player = ClosestPlayer();
             if (player != 0)
@@ -563,7 +563,7 @@ void daFPkn_c::StateWait()
         if (leader == 0)
             return;
     }
-    if (mStateTimer <= 0x64)
+    if (mStateTimer <= 100)
         return;
     if (dist <= 0x64000)
         return;

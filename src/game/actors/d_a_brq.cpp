@@ -204,7 +204,7 @@ void daBrq_c::UpdateState() {
 
 s32 daBrq_c::EnterCooldownState() {
     mAnmModel.SetAnim((BCA_File *)data_ov070_0212360c.filePtr, 0x40000000, 0x1000, 0);
-    mStateTimer = 0x3c;
+    mStateTimer = 60;
     mState = 0;
     return 1;
 }
@@ -225,7 +225,7 @@ s32 daBrq_c::EnterActiveState() {
     mTextureSequence.speed = 0x1000;
     mTextureTransformer.SetFile(data_ov070_021231f4, 0, 0x1000, 0);
     mTextureTransformer.speed = 0x2000;
-    mStateTimer = 0xf;
+    mStateTimer = 15;
     mTurnSpeed = 0;
     mSpinAngle = 0;
     mScaleX = 0x1000;
@@ -285,7 +285,7 @@ s32 daBrq_c::EnterDefeatedState() {
     mPosZ = mOrbitCenter.z;
     mHorzSpeed = 0xa000;
     mVertSpeed = 0x28000;
-    mStateTimer = 0x2d;
+    mStateTimer = 45;
     mAnmModel.SetAnim((BCA_File *)data_ov070_0212360c.filePtr, 0x40000000, 0x1000, 0);
     Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY, mPosZ);
     Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY, mPosZ);

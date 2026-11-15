@@ -8,10 +8,10 @@
 void func_ov007_020c8c88(Ov007Transition *tr, int t) {
     unsigned char from = tr->fx.mosaic.from;
     unsigned char to = tr->fx.mosaic.to;
-    int loFrom = from & 0xf;
+    int loFrom = from & 15;
     unsigned int flags = tr->planes;
     int hiFrom = (int)(from & 0xf0) >> 4;
-    int loTo = to & 0xf;
+    int loTo = to & 15;
     int hiTo = (int)(to & 0xf0) >> 4;
     int lo, hi;
 

@@ -42,7 +42,7 @@ dBgW::~dBgW() {}
 void dBgW::Reset() {
     owner = 0;
     ownerUniqueID = -1;
-    slotIdx = 0x18;
+    slotIdx = 24;
     beforeClsnCallback = 0;
     stoodOnCallback = 0;
     clipRadius = -0x1000;
@@ -150,11 +150,11 @@ void dBgW::SetSlotIndex(int slot) {
 }
 
 void dBgW::ClearSlotIndex() {
-    slotIdx = 0x18;
+    slotIdx = 24;
 }
 
 int dBgW::IsEnabled() {
-    return slotIdx != 0x18;
+    return slotIdx != 24;
 }
 
 
@@ -250,20 +250,20 @@ void dBgW::UpdatePosWithVelocity(dBgW &clsn, dActor_c *clsnActor, dBgPi &res, Ve
 
 void func_02039218(void) {
     int slot;
-    for (slot = 0; slot < 0x18; slot++)
+    for (slot = 0; slot < 24; slot++)
         data_020a0c80[slot] = 0;
 }
 
 void dScStage_c::ResetMeshColliders() {
     int slot;
-    for (slot = 0; slot < 0x18; slot++)
+    for (slot = 0; slot < 24; slot++)
         data_020a0c80[slot] = 0;
 }
 
 void func_020391f0(void) {}
 
 int dBgW::Enable(dActor_c *actor) {
-    for (s32 slot = 0; slot < 0x18; slot++) {
+    for (s32 slot = 0; slot < 24; slot++) {
         if (data_020a0c80[slot] == 0) {
             SetActor(actor);
             SetSlotIndex(slot);
@@ -276,7 +276,7 @@ int dBgW::Enable(dActor_c *actor) {
 
 int dBgW::Disable() {
     int slot = GetSlotIndex();
-    if (slot != 0x18) {
+    if (slot != 24) {
         ClearSlotIndex();
         data_020a0c80[slot] = 0;
     }

@@ -164,7 +164,7 @@ int daObjCtMecha05_c::Behavior() {
             if (sp > -0x8000 && sp < 0x8000) {
                 mState++;
                 mHorzSpeed = 0;
-                mStateTimer = 0x1e;
+                mStateTimer = 30;
                 break;
             }
         }

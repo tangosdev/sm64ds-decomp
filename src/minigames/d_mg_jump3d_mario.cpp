@@ -236,7 +236,7 @@ int Jump3D_AllIdle(void) {
     int i;
     for (i = 0; i < sJump3DMarioCount; i++) {
         int *v = (&((Jump3DEnt *)sJump3DMarioPool)[i].x);
-        volatile int *q = (volatile int *)pmf_dMgJump3DMario_c_StateIdle;
+        volatile int *q = (int *)pmf_dMgJump3DMario_c_StateIdle;
         if (v[0] != pmf_dMgJump3DMario_c_StateIdle[0] ||
             (v[1] != q[1] && ((Jump3DEnt *)sJump3DMarioPool)[i].x != 0))
             return 0;
@@ -449,7 +449,7 @@ void dMgJump3DMario_c::EnterDamp()
     else
         Sound::PlayBank2_2D(0x1c9);
     mAnmModel.SetAnim(sJump3DAnimStruggle, 0, kAnimSpeed, 0);
-    mTimer = 0x28;
+    mTimer = 40;
     mState = pmf_dMgJump3DMario_c_StateDamp;
 }
 
@@ -534,7 +534,7 @@ void dMgJump3DMario_c::EnterHold()
     mAnmModel.SetAnim(sJump3DAnimSdown, 0x40000000, kAnimSpeed, 0);
     mAnmModel.dExtFrameCtrl_c::currFrame = 0;
     Sound_PlayBank1Panned(0, 6, mPos.x);
-    mTimer = 0x20;
+    mTimer = 32;
     mState = pmf_dMgJump3DMario_c_StateHold;
 }
 
@@ -830,7 +830,7 @@ void dMgJump3DMario_c::StateRespawn()
 
 void dMgJump3DMario_c::EnterRespawn()
 {
-    mTimer = 0x3c;
+    mTimer = 60;
     mPos.y = 0x100000;
     mVel.y = 0;
     mAnmModel.SetAnim(sJump3DAnimWallJump, 0x40000000, kAnimSpeed, 0);

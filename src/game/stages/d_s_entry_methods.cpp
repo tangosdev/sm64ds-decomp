@@ -507,9 +507,9 @@ s32 dScEntry_c::InitEntryResources() {
 
 void dScEntry_c::LeaveSettings() {
     if (data_0209fc68) {
-        ChangeStepsAfterDelay(&data_ov075_0211d828, 0x14);
+        ChangeStepsAfterDelay(&data_ov075_0211d828, 20);
     } else {
-        ChangeStepsAfterDelay(&EntryCourseSelectSteps, 0x14);
+        ChangeStepsAfterDelay(&EntryCourseSelectSteps, 20);
     }
 }
 
@@ -517,7 +517,7 @@ void dScEntry_c::StartMatch() {
     PrepareVsMode();
     u8 course = data_0209b2e4;
     LoadLevelNoReturn(data_ov075_0211c6ec[course], 0, 2, 0);
-    Sound::StopLoadedMusic_Layer1(0x3c);
+    Sound::StopLoadedMusic_Layer1(60);
     data_02092778 = 1;
 }
 
@@ -608,21 +608,21 @@ void dScEntry_c::RenderSoundSettings() {
     unsigned char idx = mSelectedIcon;
     int a1, a2;
     if (idx < 2) {
-        a2 = (short)(idx * 0x30 + 0x38);
-        a1 = 0xe;
+        a2 = (short)(idx * 48 + 56);
+        a1 = 14;
     } else {
         int j = GetLanguageIndex();
         a1 = data_ov075_0211b5d4[j];
-        a2 = 0xa8;
+        a2 = 168;
     }
     OAM::RenderSub((OamAttr *)data_ov075_0211c790, a1, a2);
 
     /* mStepWork[1] counts frames; its bit 3 bobs the three arrows. */
     mStepWork[1] += 1;
-    int arrowY = (mStepWork[1] & 8) ? 0xac : 0xae;
-    OAM::Render(false, &OAM::BOUNCING_ARROW, 0x40, arrowY, -1, -1, 0x1000, 0x1000, 0, -1);
-    OAM::Render(false, &OAM::BOUNCING_ARROW, 0x80, arrowY, -1, -1, 0x1000, 0x1000, 0, -1);
-    OAM::Render(false, &OAM::BOUNCING_ARROW, 0xc0, arrowY, -1, -1, 0x1000, 0x1000, 0, -1);
+    int arrowY = (mStepWork[1] & 8) ? 172 : 174;
+    OAM::Render(false, &OAM::BOUNCING_ARROW, 64, arrowY, -1, -1, 0x1000, 0x1000, 0, -1);
+    OAM::Render(false, &OAM::BOUNCING_ARROW, 128, arrowY, -1, -1, 0x1000, 0x1000, 0, -1);
+    OAM::Render(false, &OAM::BOUNCING_ARROW, 192, arrowY, -1, -1, 0x1000, 0x1000, 0, -1);
 }
 
 void dScEntry_c::UpdateSoundSettings() {
@@ -731,24 +731,24 @@ void dScEntry_c::EnterSoundSettings() {
 
     mSelectedIcon = 0;
 
-    mIcons[6].Place(5, 0, (SH(data_ov075_0211d72c, GetLanguageIndex()) + 8), 0x38);
-    mIcons[7].Place(6, 0, (SH(data_ov075_0211d740, GetLanguageIndex()) + 8), 0x68);
-    mIcons[8].Place(0xc, 0, 0x56, 0xa8);
-    mIcons[2].Place(1, 0, 0xac, 0x38);
-    mIcons[0].Place(3, 0, 0x64, 0x38);
-    mIcons[1].Place(4, 0, 0xf4, 0x38);
+    mIcons[6].Place(5, 0, (SH(data_ov075_0211d72c, GetLanguageIndex()) + 8), 56);
+    mIcons[7].Place(6, 0, (SH(data_ov075_0211d740, GetLanguageIndex()) + 8), 104);
+    mIcons[8].Place(0xc, 0, 86, 168);
+    mIcons[2].Place(1, 0, 172, 56);
+    mIcons[0].Place(3, 0, 100, 56);
+    mIcons[1].Place(4, 0, 244, 56);
 
     mIcons[2].mOn = 1;
 
-    mIcons[3].Place(2, 0, 0x8c, 0x68);
-    mIcons[4].Place(2, 0, 0xcc, 0x68);
+    mIcons[3].Place(2, 0, 140, 104);
+    mIcons[4].Place(2, 0, 204, 104);
 
     if (data_0208ee3c != 0)
         mIcons[3].mOn = 1;
     else
         mIcons[4].mOn = 1;
 
-    mIcons[5].Place(0xb, 0, 0x80, 0xa8);
+    mIcons[5].Place(0xb, 0, 128, 168);
 
     mIconCount = 9;
 
@@ -760,17 +760,17 @@ void dScEntry_c::EnterSoundSettings() {
 void dScEntry_c::RenderControlSettings() {
     int *tbl = data_ov075_0211c9cc[GetLanguageIndex()];
     OamAttr *attr = (OamAttr *)tbl[mStepWork[0]];
-    OAM::Render(false, attr, 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+    OAM::Render(false, attr, 128, 96, -1, -1, 0x1000, 0x1000, 0, -1);
 
     int a1, a2;
     unsigned char idx = mSelectedIcon;
     if (idx < 3) {
-        a2 = (short)(idx * 0x28 + 0x30);
-        a1 = 0x26;
+        a2 = (short)(idx * 40 + 48);
+        a1 = 38;
     } else {
         int j = GetLanguageIndex();
         a1 = data_ov075_0211b5d4[j];
-        a2 = 0xa8;
+        a2 = 168;
     }
     OAM::RenderSub((OamAttr *)data_ov075_0211c790, a1, a2);
 }
@@ -826,7 +826,7 @@ void dScEntry_c::UpdateControlSettings() {
             mIcons[0].mOn = 0;
             mIcons[2].mOn = 0;
             mStepWork[0] = mSelectedIcon;
-            SetBg2Offset(0x100, 0);
+            SetBg2Offset(256, 0);
             func_02012790(0x5b);
         }
         mIcons[1].Select();
@@ -845,7 +845,7 @@ void dScEntry_c::UpdateControlSettings() {
             mIcons[0].mOn = 0;
             mIcons[1].mOn = 0;
             mStepWork[0] = mSelectedIcon;
-            SetBg2Offset(0, 0x100);
+            SetBg2Offset(0, 256);
             func_02012790(0x5b);
         }
         mIcons[2].Select();
@@ -861,21 +861,21 @@ void dScEntry_c::EnterControlSettings() {
 
     i = 0;
     icon = mIcons;
-    y = 0x30;
+    y = 48;
     mSelectedIcon = data_0209f498[gActivePlayerSlot].mode;
 
     for (; i <= 2; i++) {
-        icon->Place(0, 0, 0x80, y);
-        y += 0x28;
+        icon->Place(0, 0, 128, y);
+        y += 40;
         icon++;
     }
 
     mIcons[mSelectedIcon].mOn = 1;
 
-    mIcons[3].Place(0xb, 0, 0x80, 0xa8);
+    mIcons[3].Place(0xb, 0, 128, 168);
 
     r = GetLanguageIndex();
-    mIcons[4].Place(0xc, 0, data_ov075_0211b5d4[r], 0xa8);
+    mIcons[4].Place(0xc, 0, data_ov075_0211b5d4[r], 168);
 
     mIconCount = 5;
     gSubScreenLayers &= ~5;
@@ -886,9 +886,9 @@ void dScEntry_c::EnterControlSettings() {
     if (mSelectedIcon == 0)
         SetBg2Offset(0, 0);
     else if (mSelectedIcon == 1)
-        SetBg2Offset(0x100, 0);
+        SetBg2Offset(256, 0);
     else
-        SetBg2Offset(0, 0x100);
+        SetBg2Offset(0, 256);
 
     func_02033bb8(5);
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
@@ -916,13 +916,13 @@ void dScEntry_c::UpdateQuit() {
     if (mStepDelay > 0)
         return;
     dScene_c::StartSceneFade(1, 0, 0);
-    Sound::StopLoadedMusic_Layer1(0x3c);
+    Sound::StopLoadedMusic_Layer1(60);
     data_02092778 = 1;
 }
 
 void dScEntry_c::EnterQuit() {
     gMainScreenLayers &= ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
-    mStepDelay = 0x14;
+    mStepDelay = 20;
     UnloadOverlay((int)&OVERLAY_100_ID);
     UnloadOverlay((int)&OVERLAY_102_ID);
 }
@@ -942,10 +942,10 @@ void dScEntry_c::UpdateQuitConfirm() {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
         if (func_0203d9b4() != 0 && IsMode6(this)) {
-            ChangeStepsAfterDelay(&data_ov075_0211d8e8, 0x14);
+            ChangeStepsAfterDelay(&data_ov075_0211d8e8, 20);
         } else {
             func_02030a78();
-            ChangeStepsAfterDelay(reinterpret_cast<const StepSet *>(&data_ov075_0211d930), 0x14);
+            ChangeStepsAfterDelay(reinterpret_cast<const StepSet *>(&data_ov075_0211d930), 20);
         }
         func_02012790(0x63);
         return;
@@ -959,10 +959,10 @@ void dScEntry_c::UpdateQuitConfirm() {
     mIcons[0].mOn = 0;
     mIcons[1].Select();
     if (IsMode6(this)) {
-        ChangeStepsAfterDelay(&data_ov075_0211d888, 0x14);
+        ChangeStepsAfterDelay(&data_ov075_0211d888, 20);
         func_02030aa4(3);
     } else {
-        ChangeStepsAfterDelay(&data_ov075_0211d810, 0x14);
+        ChangeStepsAfterDelay(&data_ov075_0211d810, 20);
     }
     func_02012790(0x98);
 }
@@ -994,8 +994,8 @@ void dScEntry_c::EnterQuitConfirm() {
     gSubScreenLayers = gSubScreenLayers | 1;
     mIconCount = 2;
     mSelectedIcon = 1;
-    mIcons[0].Place(8, 0, 0x50, 0xa8);
-    mIcons[1].Place(8, 0, 0xb0, 0xa8);
+    mIcons[0].Place(8, 0, 80, 168);
+    mIcons[1].Place(8, 0, 176, 168);
 }
 
 void dScEntry_c::UpdateRematchSync() {
@@ -1044,20 +1044,20 @@ void dScEntry_c::EnterRematchSync() {
 void dScEntry_c::RenderWinCounts() {
     int count = data_0209fc50;
     int d = 4 - count;
-    int yBase = d * 16 + 0x30;
-    int stride = d * 8 + 0x28;
+    int yBase = d * 16 + 48;
+    int stride = d * 8 + 40;
     int n, tens;
     int i = 0;
 
     if (count > 0) {
         int sz = 0x1000;
-        int xTens = 0xce;
+        int xTens = 206;
         int eight = 8;
         int yOff = i;
         int zT = 0;
         int zO = 0;
         int minus1 = -1;
-        int xOnes = 0xd8;
+        int xOnes = 216;
 
         do {
             int *p;
@@ -1115,7 +1115,7 @@ void dScEntry_c::UpdateRematchPrompt() {
         (CheckMenuConfirm(id) != 0 && mSelectedIcon == 0)) {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
-        ChangeStepsAfterDelay(&data_ov075_0211d870, 0x14);
+        ChangeStepsAfterDelay(&data_ov075_0211d870, 20);
         func_02012790(0x126);
         return;
     }
@@ -1127,7 +1127,7 @@ void dScEntry_c::UpdateRematchPrompt() {
     }
     mIcons[0].mOn = 0;
     mIcons[1].Select();
-    ChangeStepsAfterDelay(&data_ov075_0211d8b8, 0x14);
+    ChangeStepsAfterDelay(&data_ov075_0211d8b8, 20);
     func_02012790(0x119);
 }
 
@@ -1144,8 +1144,8 @@ void dScEntry_c::EnterRematchPrompt() {
     gMainScreenLayers |= DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3;
     gSubScreenLayers |= 5;
     mSelectedIcon = 0;
-    mIcons[0].Place(0xa, 0, 0x80, 0x48);
-    mIcons[1].Place(0xa, 0, 0x80, 0x78);
+    mIcons[0].Place(0xa, 0, 128, 72);
+    mIcons[1].Place(0xa, 0, 128, 120);
     mIconCount = 2;
     G2_SetBlendAlpha(4, 0x11, 0xc, 4);
     mDisconnectHideMask = 0xe;
@@ -1160,7 +1160,7 @@ void dScEntry_c::EnterRematchPrompt() {
 
 void dScEntry_c::RenderResults() {
     int id = func_0203da9c();
-    OAM::Render(false, &data_ov075_0211cb84, 0x80, 0x20, -1, -1, 0x1000, 0x1000, 0, -1);
+    OAM::Render(false, &data_ov075_0211cb84, 128, 32, -1, -1, 0x1000, 0x1000, 0, -1);
     RenderPlayerScores();
 
     u8 *p = data_0209b2f0 + id;
@@ -1172,8 +1172,8 @@ void dScEntry_c::RenderResults() {
 
     {
         int i = 0;
-        int x = 0x80;
-        int y = 0x60;
+        int x = 128;
+        int y = 96;
         do {
             int fix = (i == mStepWork[1]) ? 0xe00 : 0x1000;
             OAM::Render(true, sb, x, y, -1, -1, fix, 0);
@@ -1195,14 +1195,14 @@ void dScEntry_c::RenderResults() {
     }
 
     if (*p != 0) {
-        func_0202048c(&mOamAnimations[2], 0x80, 0x88);
-        func_0202048c(&mOamAnimations[0], 0x80, 0x88);
+        func_0202048c(&mOamAnimations[2], 128, 136);
+        func_0202048c(&mOamAnimations[0], 128, 136);
     } else {
-        func_0202048c(&mOamAnimations[0], 0x80, 0x88);
-        func_0202048c(&mOamAnimations[3], 0x6c, 0x6e);
-        func_0202048c(&mOamAnimations[2], 0xa6, 0x6e);
+        func_0202048c(&mOamAnimations[0], 128, 136);
+        func_0202048c(&mOamAnimations[3], 108, 110);
+        func_0202048c(&mOamAnimations[2], 166, 110);
     }
-    func_0202048c(&mOamAnimations[1], 0x80, 0x88);
+    func_0202048c(&mOamAnimations[1], 128, 136);
 }
 
 void dScEntry_c::UpdateResults() {
@@ -1231,7 +1231,7 @@ void dScEntry_c::UpdateResults() {
                     }
                 }
                 mStepDelay -= data_0208ee44;
-                if (mStepDelay <= 0 || (mStepDelay < 0x21c && acc != 0)) {
+                if (mStepDelay <= 0 || (mStepDelay < 540 && acc != 0)) {
                     func_02020334();
                     mStepWork[3] = 1;
                 }
@@ -1241,7 +1241,7 @@ void dScEntry_c::UpdateResults() {
             }
         } else if (mStepWork[3] == 0) {
             mStepDelay -= data_0208ee44;
-            if (mStepDelay < 0x1e0) {
+            if (mStepDelay < 480) {
                 func_02020334();
                 mStepWork[3] = 1;
             }
@@ -1275,7 +1275,7 @@ void dScEntry_c::EnterResults() {
     int id;
 
     id = func_0203da9c();
-    mStepDelay = 0x258;
+    mStepDelay = 600;
     mStepWork[0] = 0;
     mStepWork[1] = 0;
 
@@ -1382,7 +1382,7 @@ void dScEntry_c::EnterMatchLoading() {
 }
 
 void dScEntry_c::RenderCourseSelectTitle() {
-    OAM::Render(0, data_ov075_0211cba4, 0x80, 0x20, -1, -1, 0x1000, 0x1000, 0, -1);
+    OAM::Render(0, data_ov075_0211cba4, 128, 32, -1, -1, 0x1000, 0x1000, 0, -1);
 }
 
 void dScEntry_c::UpdateCourseSelect() {
@@ -1473,17 +1473,17 @@ void dScEntry_c::EnterCourseSelect() {
 
     icon = mIcons;
     index = 0;
-    x = 0x20;
+    x = 32;
     for (; index < 4; index++) {
-        icon->Place(7, index, x, 0x48);
+        icon->Place(7, index, x, 72);
         mIcons[index].mOn = 1;
         mIcons[index].mPressTime = 8;
-        x += 0x40;
+        x += 64;
         ++icon;
     }
 
     data_0209b2e4 = 4;
-    mIcons[4].Place(0xd, 4, 0x80, -0x14);
+    mIcons[4].Place(0xd, 4, 128, -20);
     mIconCount = 5;
     func_02020334();
     func_020200e0();
@@ -1691,7 +1691,7 @@ void dScEntry_c::EnterSessionStart() {
     gSubScreenLayers |= 5;
     mIconCount = 0;
     mWaiting.wavePhase = 0;
-    mWaiting.waveDelay = 0x78;
+    mWaiting.waveDelay = 120;
     func_02012790(0x11e);
     mStepPhase = mEntObj->func_ov075_02115098(func_0203da9c());
 }
@@ -1726,7 +1726,7 @@ void dScEntry_c::UpdateSoloConfirm() {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
         SetNumPlayers(1);
-        ChangeStepsAfterDelay(&data_ov075_0211d900, 0x14);
+        ChangeStepsAfterDelay(&data_ov075_0211d900, 20);
         func_02012790(0x118);
         return;
     }
@@ -1738,7 +1738,7 @@ void dScEntry_c::UpdateSoloConfirm() {
     }
     mIcons[0].mOn = 0;
     mIcons[1].Select();
-    ChangeStepsAfterDelay(&data_ov075_0211d8b8, 0x14);
+    ChangeStepsAfterDelay(&data_ov075_0211d8b8, 20);
     mEntObj->func_ov075_0211505c();
     func_02012790(0x119);
 }
@@ -1752,8 +1752,8 @@ void dScEntry_c::EnterSoloConfirm() {
 
     gSubScreenLayers = gSubScreenLayers | 5;
     mSelectedIcon = 1;
-    mIcons[0].Place(8, 0, 0x50, 0xa8);
-    mIcons[1].Place(8, 0, 0xb0, 0xa8);
+    mIcons[0].Place(8, 0, 80, 168);
+    mIcons[1].Place(8, 0, 176, 168);
 
     mIconCount = 2;
     func_02030a38();
@@ -1777,12 +1777,12 @@ void dScEntry_c::RenderRecruitText() {
     if (mWaiting.waveDelay <= 0) {
         int ang;
         int flag;
-        int fallback = 0x1c;
+        int fallback = 28;
         int zero = 0;
         int one = 1;
         int minus = -1;
         int fx = 0x1000;
-        int x = 0x80;
+        int x = 128;
 
         ang = mWaiting.wavePhase;
         flag = 0;
@@ -1812,9 +1812,9 @@ void dScEntry_c::RenderRecruitText() {
         mWaiting.wavePhase += 0x800;
 
         if (flag == zero)
-            mWaiting.waveDelay = 0x78;
+            mWaiting.waveDelay = 120;
     } else {
-        OAM::RenderSub(attr, 0x80, 0x1c);
+        OAM::RenderSub(attr, 128, 28);
         mWaiting.waveDelay -= data_0208ee44;
         mWaiting.wavePhase = 0;
     }
@@ -1840,10 +1840,10 @@ void dScEntry_c::UpdateRecruit() {
     }
     func_ov001_020ab3f0(&mIcons[0]);
     if (playerCount <= 1) {
-        ChangeStepsAfterDelay(&data_ov075_0211d8a0, 0x14);
+        ChangeStepsAfterDelay(&data_ov075_0211d8a0, 20);
     } else {
         func_02030a6c();
-        ChangeStepsAfterDelay(&data_ov075_0211d8d0, 0x14);
+        ChangeStepsAfterDelay(&data_ov075_0211d8d0, 20);
     }
     func_02012790(0x117);
 }
@@ -1854,11 +1854,11 @@ void dScEntry_c::EnterRecruit() {
     ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(1);
     func_020337ec();
     gSubScreenLayers |= 5;
-    mIcons[0].Place(0xa, 0, 0x80, 0xa8);
+    mIcons[0].Place(0xa, 0, 128, 168);
     mIconCount = 1;
     mStepPhase = 0;
     mWaiting.wavePhase = 0;
-    mWaiting.waveDelay = 0x78;
+    mWaiting.waveDelay = 120;
 }
 
 void dScEntry_c::UpdateStepFadeOut() {
@@ -1939,7 +1939,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
             else
                 func_020338b0(0x125, 0xb0, 0x1a, -1);
             func_02030a78();
-            ChangeStepsAfterDelay(reinterpret_cast<const StepSet *>(&data_ov075_0211d930), 0xb4);
+            ChangeStepsAfterDelay(reinterpret_cast<const StepSet *>(&data_ov075_0211d930), 180);
             gMainScreenLayers = gMainScreenLayers & ~mDisconnectHideMask;
             if (mDisconnectHideMask)
                 mRenderStep = 0;
@@ -1951,7 +1951,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
                 if (disconnectFlags & bit) {
                     func_020338b0(0x125, 0xb0, 0x1c, (s8)(u8)player);
                     data_0209fc58 = data_0209fc58 & ~bit;
-                    ChangeStepsAfterDelay(resumeSteps, 0x78);
+                    ChangeStepsAfterDelay(resumeSteps, 120);
                     func_02012790(0x12a);
                     break;
                 }

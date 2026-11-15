@@ -251,7 +251,7 @@ int daBombking_c::TickDefeated() {
 int daBombking_c::EnterDefeated() {
     this->mAnimSpeed = 2;
     this->mHorzSpeed = 0;
-    this->mStateTimer = 0x32;
+    this->mStateTimer = 50;
     DetonateSpawnedBombs();
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingDamageAnimationFile.filePtr, 0, 0, 0x1000,
                                  0);
@@ -365,11 +365,11 @@ int daBombking_c::TickCarryPlayer() {
     if (Vec3_Dist(&this->mPos, &v) > 0x1e000) {
         if (this->mSoundCooldown == 0) {
             func_02012694(0x12d, &this->mCamSpacePos);
-            this->mSoundCooldown = 0xf;
+            this->mSoundCooldown = 15;
         }
     } else {
         if (this->mSoundCooldown == 0) {
-            this->mSoundCooldown = 0x14;
+            this->mSoundCooldown = 20;
             func_02012694(0x12f, &this->mCamSpacePos);
         }
     }
@@ -383,7 +383,7 @@ int daBombking_c::TickCarryPlayer() {
 int daBombking_c::EnterCarryPlayer() {
     mVertAccel = -0x2000;
     mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingWalk2AnimationFile.filePtr, 0, 0, 0x1000, 0);
-    mStateTimer = 0x32;
+    mStateTimer = 50;
     mHorzSpeed = 0xa000;
     return 1;
 }
@@ -523,7 +523,7 @@ int daBombking_c::TickKnockback() {
 int daBombking_c::EnterKnockback() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingDamageAnimationFile.filePtr, 0, 0, 0x1000,
                                  0);
-    this->mStateTimer = 0xc8;
+    this->mStateTimer = 200;
     this->mTargetAngY = Vec3_HorzAngle(&this->mPos, &this->mArenaPos);
     this->mHealth -= 1;
     this->mActionStep = 0;
@@ -551,7 +551,7 @@ int daBombking_c::TickDamaged() {
 int daBombking_c::EnterDamaged() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingDamageAnimationFile.filePtr, 0, 0, 0x1000,
                                  0);
-    this->mStateTimer = 0x32;
+    this->mStateTimer = 50;
     return 1;
 }
 
@@ -997,7 +997,7 @@ int daBombking_c::TickThrowBomb() {
         player = this->ClosestPlayer();
         if (player != 0) {
             if (player->param1 != 3) {
-                this->mThrowCooldown = 0x64;
+                this->mThrowCooldown = 100;
             }
         }
         KingBobOmb_SetState(&data_ov078_0212703c);
@@ -1048,7 +1048,7 @@ int daBombking_c::TickChase() {
 
     if (this->mSoundCooldown == 0) {
         func_02012694(0x12d, &this->mCamSpacePos);
-        this->mSoundCooldown = 0xf;
+        this->mSoundCooldown = 15;
     }
     if (CheckKnockbackHit() == 1) {
         DetonateSpawnedBombs();
@@ -1230,7 +1230,7 @@ int daBombking_c::TickInactive() {
     if (this->mMusicLayer3 == 1) {
         unsigned char *p = &this->mMusicLayer3Timer;
         *p += 1;
-        if (this->mMusicLayer3Timer > 0xc8) {
+        if (this->mMusicLayer3Timer > 200) {
             this->mFlags = 0x10000003;
             this->mMusicLayer3 = 0;
             this->mMusicLayer3Timer = 0;

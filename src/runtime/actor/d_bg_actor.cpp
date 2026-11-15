@@ -490,7 +490,7 @@ void dBgActor_c::KillByMegaChar(daPly_c &player) {
     mHorzSpeed = 0x14000;
     mVertSpeed = 0x1e000;
     mPrevAngleY = Vec3_HorzAngle(&player.mPos, &mPos);
-    mMegaKnockbackTimer = 0x1e;
+    mMegaKnockbackTimer = 30;
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
 }

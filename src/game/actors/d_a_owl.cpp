@@ -312,7 +312,7 @@ int daOwl_c::UpdateCarrying() {
 
 /* Enter of the carry state: 30-frame timer, animation data_ov094_02136af8[1] at double speed. */
 int daOwl_c::EnterCarrying() {
-    mStateTimer = 0x1e;
+    mStateTimer = 30;
     unk_3e8 = 0;
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af8.filePtr, 0, 0x1000, 0);
     mAnimSpeed = 0x2000;
@@ -346,11 +346,11 @@ int daOwl_c::UpdateHover() {
     }
 
     if (Vec3_Dist(&mPos, &mAnchor) > 0x190000) {
-        mStateTimer = 0x32;
+        mStateTimer = 50;
         mWanderAngleY = Vec3_HorzAngle(&mPos, &mAnchor);
     } else if (OWL_TIMER(this) == 0) {
         mWanderAngleY = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 12);
-        mStateTimer = (s16)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
+        mStateTimer = (s16)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 50);
     }
 
     ApproachAngle(&mPrevAngleY, mWanderAngleY, 0xa, 0x200, 0x100);
@@ -376,7 +376,7 @@ int daOwl_c::UpdateHover() {
 int daOwl_c::EnterHover() {
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af0.filePtr, 0, 0x1000, 0);
     mWanderAngleY = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
-    mStateTimer = (short)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
+    mStateTimer = (short)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 50);
     mAnimSpeed = 0x1000;
     return 1;
 }

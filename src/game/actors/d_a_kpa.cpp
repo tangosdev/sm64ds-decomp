@@ -420,7 +420,7 @@ int daKpa_c::InitResources()
 
     this->mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov060_0211ac78), 1, 0x16);
 
-    for (i = 0; i < 0x1c; i++)
+    for (i = 0; i < 28; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov060_021192dc[i]);
 
     for (i = 0; i < 6; i++)
@@ -605,7 +605,7 @@ int daKpa_c::CleanupResources()
 {
     int i;
     data_ov060_0211ac78.Release();
-    for (i = 0; i < 0x1c; i++)
+    for (i = 0; i < 28; i++)
         data_ov060_021192dc[i]->Release();
     for (i = 0; i < 6; i++)
         data_ov060_0211927c[i]->Release();
@@ -658,14 +658,14 @@ skip_13:
     bowser->SetTangible(0);
     bowser->mHoldState = BOWSER_HOLD_HELD;
     bowser->mGrabbedPlayer = player;
-    this->mHoldCountdown = 0x96;
+    this->mHoldCountdown = 150;
 }
 
 /*
 Tail state BOWSER_TAIL_COOLDOWN (1), per frame: once mTimer is above 0x1e (30)
 the tail goes back to BOWSER_TAIL_FREE. */
 void daKpaTail_c::func_ov060_02115d50(){
-    if (this->mTimer > 0x1e)
+    if (this->mTimer > 30)
         this->mState = BOWSER_TAIL_FREE;
 }
 
@@ -722,7 +722,7 @@ do_drop:
     goto tail;
 
 set_default:
-    this->mHoldCountdown = 0x96;
+    this->mHoldCountdown = 150;
 
 tail:
     this->mdCcAc_c.flags |= BOWSER_CC_DISABLED;
@@ -1840,9 +1840,9 @@ void daKpa_c::ActChargeMario() {
         this->mHorzSpeed = 0;
         if (Bowser_IsAnimAtLastFrame() != 0) {
             if (this->mVariantID == 2)
-                this->mTimer = 0xa;
+                this->mTimer = 10;
             else
-                this->mTimer = 0x1e;
+                this->mTimer = 30;
             if (this->mStepCounter > this->mTimer) {
                 this->mState = BOWSER_STATE_IDLE;
                 this->mAnimSpeed = 0x1000;
@@ -2865,7 +2865,7 @@ int daKpa_c::UpdateIntroCamera() {
             this->mCutsceneTimer = 0;
         else
             this->mCutsceneTimer++;
-        if (this->mCutsceneTimer > 0x1e)
+        if (this->mCutsceneTimer > 30)
             this->mCutsceneStep++;
         break;
     case 2:

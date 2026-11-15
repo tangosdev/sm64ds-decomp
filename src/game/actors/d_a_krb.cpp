@@ -277,7 +277,7 @@ void daKrb_c::func_ov084_021290d4() {
  * of the velocity vector at 0xa4, and releases it from Yoshi. */
 void daKrb_c::func_ov084_02129168(dActor_c *actor) {
     daKrb_c *goomba = this;
-    goomba->mBounceCountdown = 0x3c;
+    goomba->mBounceCountdown = 60;
     goomba->mVertSpeed = FX_Div(0xd000 - goomba->mVertAccel, goomba->mFloorNormalY);
     goomba->mHorzSpeed = Vec3_HorzLen((const Vector3 *)&goomba->mSpeedX) * -1;
     if (actor != 0)
@@ -1078,7 +1078,7 @@ void daKrb_c::ActTumble() {
         goomba->mMaterialChanger.currFrame = 0;
         return;
     }
-    if (h <= 0x3c) {
+    if (h <= 60) {
         goomba->mBounceCountdown -= 1;
         if (goomba->mBounceCountdown == 0) {
             goomba->func_ov084_021296cc();
@@ -1097,8 +1097,8 @@ void daKrb_c::ActTumble() {
     if (goomba->mWithMeshClsn.JustHitGround() != 0) {
         int a8;
         int cnt;
-        if (goomba->mBounceCountdown > 0x3c)
-            goomba->mBounceCountdown = 0x1e;
+        if (goomba->mBounceCountdown > 60)
+            goomba->mBounceCountdown = 30;
         a8 = goomba->mVertSpeed;
         cnt = goomba->mBounceCountdown;
         {
@@ -1134,8 +1134,8 @@ void daKrb_c::ActTumble() {
             goomba->mWithMeshClsn.ClearLimMovFlag();
             goomba->mHorzSpeed = 0;
             goomba->mVertSpeed = 0;
-            if (goomba->mBounceCountdown > 0x3c)
-                goomba->mBounceCountdown = 0x1e;
+            if (goomba->mBounceCountdown > 60)
+                goomba->mBounceCountdown = 30;
         }
     }
     goomba->mEatenByYoshi = 1;
@@ -1256,7 +1256,7 @@ void daKrb_c::func_ov084_0212abd4() {
     }
     if (goomba->mDistToPlayer >= 0x61a8000) {
         goomba->mTargetAngleY = goomba->mInitAngleY;
-        goomba->mHeadingHoldTimer = 0x19;
+        goomba->mHeadingHoldTimer = 25;
     }
     {
         int bit = goomba->AngleAwayFromWallOrCliff(goomba->mWithMeshClsn, goomba->mTargetAngleY);
@@ -1290,7 +1290,7 @@ void daKrb_c::func_ov084_0212abd4() {
                 goomba->mTargetAngleY =
                     goomba->mPrevAngleY +
                     (s16)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
-                goomba->mHeadingHoldTimer = 0x64;
+                goomba->mHeadingHoldTimer = 100;
             } else {
                 goomba->mTargetAngleY = ((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
                 goomba->BeginJump();
@@ -1298,7 +1298,7 @@ void daKrb_c::func_ov084_0212abd4() {
         }
     }
     if (goomba->mCapId >= 6) {
-        if (goomba->mStuckTimer > 0x1e)
+        if (goomba->mStuckTimer > 30)
             goomba->mUnstickTimer = goomba->mStuckTimer;
     }
     ApproachLinear(goomba->mPrevAngleY, goomba->mTargetAngleY, step);
@@ -1391,7 +1391,7 @@ void daKrb_c::func_ov084_0212af74() {
                 if (DecIfAbove0_Short(
                         reinterpret_cast<unsigned short *>(&goomba->mWanderRerollTimer)) == 0) {
                     rnd = RandomIntInternal(&data_0209e650.value);
-                    goomba->mWanderRerollTimer = ((rnd >> 0x1b) + 0x1e);
+                    goomba->mWanderRerollTimer = ((rnd >> 0x1b) + 30);
                     goomba->mInitAngleY = (rnd >> 0x10);
                 }
                 goomba->mTargetHorzSpeed = 0;
@@ -1424,7 +1424,7 @@ void daKrb_c::func_ov084_0212af74() {
     if (king->mState != 4)
         return;
     if (king->mWalkSpeed == 0)
-        goomba->mFreeRoamTimer = 0x1e;
+        goomba->mFreeRoamTimer = 30;
 }
 
 /* STATE_WALK handler: the king's minions follow the king, everything else
@@ -1712,11 +1712,11 @@ int daKrb_c::Behavior() {
             if (b == 0) {
                 if (Vec3_Dist(&mPos, &mStuckCheckPos) < 0xa000) { /* moved less than 10.0 */
                     mStuckTimer += 1;
-                    if (mCapId < 6 && mStuckTimer == 0x1e) {
+                    if (mCapId < 6 && mStuckTimer == 30) {
                         BeginJump();
-                        mUnstickTimer = 0x5a;
+                        mUnstickTimer = 90;
                     }
-                    if (mStuckTimer >= 0x12c && mUnstickTimer == 0) {
+                    if (mStuckTimer >= 300 && mUnstickTimer == 0) {
                         func_ov084_021296cc();
                         SpawnCoin();
                         func_ov084_02129498();

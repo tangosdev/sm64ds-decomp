@@ -190,7 +190,7 @@ void daPeach_c::UpdateModel() {
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mLookHorzAngle);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mLookVertAngle);
     mAnmModel.data.transforms[18] = data_020a0e68;
-    DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x8c000, 0x32000, 0xf);
+    DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x8c000, 0x32000, 15);
 }
 
 int daPeach_c::InitState0() {

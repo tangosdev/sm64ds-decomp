@@ -461,7 +461,7 @@ void func_ov100_021437d4(daWanwan2_c *thisx) {
    identity": the pointer-to-member constant that holds it follows daIbl_c's
    vtable directly, and that is the whole of the old claim. Was a C source. */
 int func_ov100_02143aa4(daWanwan2_c *c) {
-    c->mAnmModel.speed = 4096; /* 1.0 */
+    c->mAnmModel.speed = 0x1000; /* 1.0 */
     c->mAnmModel.Advance();
     func_ov100_021437d4(c);
     func_ov100_0214344c(c);
@@ -630,7 +630,7 @@ int daWanwan2_c::Behavior()
             sp->mVertSpeed = vy << 12;
             sp->mSpeedZ = vx << 12;
         }
-        mCoinTimer = 0xc8;
+        mCoinTimer = 200;
     }
 
     {
@@ -751,7 +751,7 @@ int daWanwan2_c::InitResources()
         } while (i < daWanwan2_NUM_LINKS);
     }
 
-    mCoinTimer = 0xc8;
+    mCoinTimer = 200;
 
     /* Start at node 1: GetNode writes that node's position over mPosX/Y/Z,
        after the links were seeded above from the placed position. */

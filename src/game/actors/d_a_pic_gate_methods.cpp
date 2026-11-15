@@ -157,20 +157,20 @@ void daPicGate_c::InitContinuousRipple() {
             v->z = 0;
             v->normal = kFlatNormal;
             if (col == this->mCols - 2)
-                x = ((u8)(this->param1 & 0xf) + 1) * kCell;
+                x = ((u8)(this->param1 & 15) + 1) * kCell;
             else
-                x += ((u8)(this->param1 & 0xf) + 1) * kCell / (this->mCols - 1);
+                x += ((u8)(this->param1 & 15) + 1) * kCell / (this->mCols - 1);
         }
         x = 0;
         if (row == this->mRows - 2)
-            y = ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell;
+            y = ((u8)((this->param1 >> 4) & 15) + 1) * kCell;
         else
-            y += ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell / (this->mRows - 1);
+            y += ((u8)((this->param1 >> 4) & 15) + 1) * kCell / (this->mRows - 1);
     }
     this->PlaceCorners();
     {
-        int width = ((u8)(this->param1 & 0xf) + 1) * kCell;
-        int height = ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell;
+        int width = ((u8)(this->param1 & 15) + 1) * kCell;
+        int height = ((u8)((this->param1 >> 4) & 15) + 1) * kCell;
         this->BeginWave(width / 2, height / 2, 0);
     }
 }
@@ -254,15 +254,15 @@ void daPicGate_c::InitProximityRipple() {
             int t = kTexSpan - dv * row;
             v->texCoord = GX_ST(s, t);
             if (col == this->mCols - 2)
-                x = (u8)(this->param1 & 0xf) * kCell + kCell;
+                x = (u8)(this->param1 & 15) * kCell + kCell;
             else
-                x += ((u8)(this->param1 & 0xf) * kCell + kCell) / (this->mCols - 1);
+                x += ((u8)(this->param1 & 15) * kCell + kCell) / (this->mCols - 1);
         }
         x = 0;
         if (row == this->mRows - 2)
-            y = (u8)((this->param1 >> 4) & 0xf) * kCell + kCell;
+            y = (u8)((this->param1 >> 4) & 15) * kCell + kCell;
         else
-            y += ((u8)((this->param1 >> 4) & 0xf) * kCell + kCell) / (this->mRows - 1);
+            y += ((u8)((this->param1 >> 4) & 15) * kCell + kCell) / (this->mRows - 1);
     }
     this->PlaceCorners();
 }
@@ -286,14 +286,14 @@ s32 daPicGate_c::Behavior() {
 }
 
 s32 daPicGate_c::InitResources() {
-    unsigned int state = (unsigned char)((param1 >> 0xd) & 3);
+    unsigned int state = (unsigned char)((param1 >> 13) & 3);
 
     if (state >= 2) {
         mRows = 2;
         mCols = mRows;
         mNumCells = (u16)(mCols * mRows);
     } else {
-        unsigned int size = (unsigned char)(param1 & 0xf) + 1;
+        unsigned int size = (unsigned char)(param1 & 15) + 1;
         switch (size) {
         case 0:
         case 1:
@@ -342,20 +342,20 @@ s32 daPicGate_c::InitResources() {
     mCells = (Vertex *)::operator new[]((unsigned)mNumCells * 0x18u);
     mTexRecord = (s32)this->LoadTexture((int)((unsigned char)((param1 >> 8) & 0x1f)));
     mWaveParams = (const daPicGate_c::WaveParams *)&kDefaultWave;
-    mState = &kStates[(unsigned char)((param1 >> 0xd) & 3)];
+    mState = &kStates[(unsigned char)((param1 >> 13) & 3)];
     (this->*mState->init)();
 
     {
-        int width = (int)((unsigned char)(param1 & 0xf) + 1) * kCell;
-        int height = (int)((unsigned char)((param1 >> 4) & 0xf) + 1) * kCell;
+        int width = (int)((unsigned char)(param1 & 15) + 1) * kCell;
+        int height = (int)((unsigned char)((param1 >> 4) & 15) + 1) * kCell;
         SetRanges(height / 2, width / 2 + kRangePad, kFar, kFar);
     }
     if ((unsigned char)((param1 >> 8) & 0x1f) == kPicUnclipped) {
-        if ((unsigned char)((param1 >> 0xd) & 3) == 1)
+        if ((unsigned char)((param1 >> 13) & 3) == 1)
             mFlags &= ~kClipEnable;
     }
     if ((unsigned char)((param1 >> 8) & 0x1f) == kPicSlide) {
-        if ((unsigned char)((param1 >> 0xd) & 3) == 1) {
+        if ((unsigned char)((param1 >> 13) & 3) == 1) {
             mClosedPosX = mPosX;
             if (data_0209caa0.file.flags2 & kOpened)
                 mPosX += kSlide;

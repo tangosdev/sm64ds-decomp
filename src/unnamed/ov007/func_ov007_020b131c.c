@@ -18,6 +18,6 @@ void func_ov007_020b131c(void) {
     b->scrollY = 0;
     b->fineScrollY = 0;
     b->fineScrollX = b->fineScrollY;
-    func_ov007_020c0638(a, 0, -0xc0, 0);
-    func_ov007_020c0638(b, 0, -0xc0, 0);
+    func_ov007_020c0638(a, 0, -192, 0);
+    func_ov007_020c0638(b, 0, -192, 0);
 }
