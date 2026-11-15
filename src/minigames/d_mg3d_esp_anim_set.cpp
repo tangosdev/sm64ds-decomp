@@ -398,7 +398,7 @@ void dMg3DEspModel_c::Reset()
 
 int dMg3DEspModel_c::InitResources()
 {
-    if (func_020179b4(&gEspCardModelFile, &mAnmModel, 1) == 0)
+    if (gEspCardModelFile.func_020179b4(&mAnmModel, 1) == 0)
         return 0;
     dExtAnmTexPat_c::LoadFile(gEspCardTexSeqFile);
     dExtFrameCtrl_c::LoadFile(gEspCardStartAnimFile);
@@ -1279,7 +1279,7 @@ s32 dScMg3DEsp_c::InitResources()
     mCamera.mFovAngle = 0xc00;
     Camera_UpdateMatrices(&mCamera);
 
-    if (func_020179b4(&gEspIrieModelFile, &mModel1, 1) == 0)
+    if (gEspIrieModelFile.func_020179b4(&mModel1, 1) == 0)
         return 0;
 
     dExtAnmTexSRT_c::Prepare(*(BMD_File *)gEspIrieModelFile.filePtr,
@@ -1289,7 +1289,7 @@ s32 dScMg3DEsp_c::InitResources()
     if (mEspModel.InitResources() == 0)
         return 0;
 
-    if (func_020179b4(&gIrieBackModelFile, &mModel2, 1) == 0)
+    if (gIrieBackModelFile.func_020179b4(&mModel2, 1) == 0)
         return 0;
 
     tmp = (Matrix4x3 &)sEsp3DIdentityMtx;

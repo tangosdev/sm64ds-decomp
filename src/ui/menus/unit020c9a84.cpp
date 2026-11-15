@@ -79,7 +79,7 @@ struct SwingSideRows {
  * with x/y springs (mode 2) and its first point pinned, and two pairs of
  * side points with a link each, for func_ov007_020c9d90 to tie to the
  * mesh. */
-Ov007Swing *func_ov007_020ca010(Ov007SwingParams *params) {
+Ov007Swing *Ov007SwingParams::func_ov007_020ca010() {
     Ov007Swing *swing;
     int chainLength;
     int i;
@@ -88,14 +88,14 @@ Ov007Swing *func_ov007_020ca010(Ov007SwingParams *params) {
 
     swing = (Ov007Swing *)func_ov007_020c3df4(0, sizeof(Ov007Swing));
     swing->mesh = 0;
-    swing->params = params;
-    chainLength = params->chainLength;
+    swing->params = this;
+    chainLength = this->chainLength;
     /* A temporary, not a named zero: the ROM gives it the frame's last slot. */
     (Vector3Bits &)swing->anchor = Vector3Bits();
     swing->chainPositions = (Vector3 *)func_ov007_020c3df4(0, chainLength * sizeof(Vector3));
-    swing->chain = func_ov007_020c798c(2, params->chainLength, params->chainPointMass, 1);
+    swing->chain = func_ov007_020c798c(2, this->chainLength, this->chainPointMass, 1);
     chain = swing->chain;
-    for (i = 0; i < params->chainLength; i++) {
+    for (i = 0; i < this->chainLength; i++) {
         VecFx32 v = {0, 0, 0};
         v.z = i << 12;
         CopyVec3(&swing->chainPositions[i], (Vector3 *)&v);
@@ -114,8 +114,8 @@ Ov007Swing *func_ov007_020ca010(Ov007SwingParams *params) {
             b.y = j << 12;
             ((SwingSideRows *)swing)->y[j] = (Vector3Bits &)b;
         }
-        swing->xPoints[j] = func_ov007_020c844c(&swing->xPointPos[j], params->sidePointMass);
-        swing->yPoints[j] = func_ov007_020c844c(&swing->yPointPos[j], params->sidePointMass);
+        swing->xPoints[j] = func_ov007_020c844c(&swing->xPointPos[j], this->sidePointMass);
+        swing->yPoints[j] = func_ov007_020c844c(&swing->yPointPos[j], this->sidePointMass);
         swing->xLinks[j] = func_ov007_020c80a4();
         swing->yLinks[j] = func_ov007_020c80a4();
     }
@@ -125,31 +125,31 @@ Ov007Swing *func_ov007_020ca010(Ov007SwingParams *params) {
 /* Frees the swing: its side points (func_ov007_020c8440) and links
  * (func_ov007_020c8098), the chain (func_ov007_020c78dc), the chain's
  * positions and the swing itself. */
-void func_ov007_020c9fa0(Ov007Swing *self) {
+void Ov007Swing::func_ov007_020c9fa0() {
     int i;
     for (i = 0; i < 2; i++) {
-        func_ov007_020c8440(self->xPoints[i]);
-        func_ov007_020c8440(self->yPoints[i]);
-        func_ov007_020c8098(self->xLinks[i]);
-        func_ov007_020c8098(self->yLinks[i]);
+        func_ov007_020c8440(this->xPoints[i]);
+        func_ov007_020c8440(this->yPoints[i]);
+        func_ov007_020c8098(this->xLinks[i]);
+        func_ov007_020c8098(this->yLinks[i]);
     }
-    func_ov007_020c78dc(self->chain);
-    func_ov007_020c3d1c(self->chainPositions);
-    func_ov007_020c3d1c(self);
+    func_ov007_020c78dc(this->chain);
+    func_ov007_020c3d1c(this->chainPositions);
+    func_ov007_020c3d1c(this);
 }
 
 /* Places the swing at pos: the anchor there, the x side pair w apart along
  * x and the y side pair h apart along y, both centred on it. */
-void func_ov007_020c9f10(Ov007Swing *self, Vector3 *pos, int w, int h) {
-    CopyVec3(&self->yPointPos[1], pos);
-    CopyVec3(&self->yPointPos[0], &self->yPointPos[1]);
-    CopyVec3(&self->xPointPos[1], &self->yPointPos[0]);
-    CopyVec3(&self->xPointPos[0], &self->xPointPos[1]);
-    CopyVec3(&self->anchor, &self->xPointPos[0]);
-    self->xPointPos[0].x -= w / 2;
-    self->xPointPos[1].x += w / 2;
-    self->yPointPos[0].y -= h / 2;
-    self->yPointPos[1].y += h / 2;
+void Ov007Swing::func_ov007_020c9f10(Vector3 *pos, int w, int h) {
+    CopyVec3(&this->yPointPos[1], pos);
+    CopyVec3(&this->yPointPos[0], &this->yPointPos[1]);
+    CopyVec3(&this->xPointPos[1], &this->yPointPos[0]);
+    CopyVec3(&this->xPointPos[0], &this->xPointPos[1]);
+    CopyVec3(&this->anchor, &this->xPointPos[0]);
+    this->xPointPos[0].x -= w / 2;
+    this->xPointPos[1].x += w / 2;
+    this->yPointPos[0].y -= h / 2;
+    this->yPointPos[1].y += h / 2;
 }
 
 /* Binds the swing to mesh: meshPoint is the mesh point nearest the anchor,
@@ -157,7 +157,7 @@ void func_ov007_020c9f10(Ov007Swing *self, Vector3 *pos, int w, int h) {
  * bound with that mesh point held at restZ, so its rest offset is taken
  * against the flat mesh. A mesh point's row is taken as its index / rows,
  * not index / columns, as the ROM has it. */
-void func_ov007_020c9d90(Ov007Swing *self, Ov007Mesh *mesh) {
+void Ov007Swing::func_ov007_020c9d90(Ov007Mesh *mesh) {
     int count;
     int i;
     int nearestX;
@@ -169,12 +169,12 @@ void func_ov007_020c9d90(Ov007Swing *self, Ov007Mesh *mesh) {
     int oldZ;
 
     count = mesh->grid->columns * mesh->grid->rows;
-    self->mesh = mesh;
-    self->meshPoint = func_ov007_020c30ac(mesh->verts, count, &self->anchor, -1, 0);
+    this->mesh = mesh;
+    this->meshPoint = func_ov007_020c30ac(mesh->verts, count, &this->anchor, -1, 0);
 
     for (i = 0; i < 2; i++) {
-        nearestX = func_ov007_020c30ac(mesh->verts, count, &self->xPointPos[i], -1, 0);
-        nearestY = func_ov007_020c30ac(mesh->verts, count, &self->yPointPos[i], -1, 0);
+        nearestX = func_ov007_020c30ac(mesh->verts, count, &this->xPointPos[i], -1, 0);
+        nearestY = func_ov007_020c30ac(mesh->verts, count, &this->yPointPos[i], -1, 0);
 
         grid = mesh->grid;
         column = FX_ModS32(nearestX, grid->columns);
@@ -182,7 +182,7 @@ void func_ov007_020c9d90(Ov007Swing *self, Ov007Mesh *mesh) {
         point = grid->rowLists[row]->items[column];
         oldZ = point->target->z;
         point->target->z = mesh->params.restZ;
-        func_ov007_020c8010(self->xLinks[i], self->xPoints[i], point);
+        func_ov007_020c8010(this->xLinks[i], this->xPoints[i], point);
         point->target->z = oldZ;
 
         grid = mesh->grid;
@@ -191,7 +191,7 @@ void func_ov007_020c9d90(Ov007Swing *self, Ov007Mesh *mesh) {
         point = grid->rowLists[row]->items[column];
         oldZ = point->target->z;
         point->target->z = mesh->params.restZ;
-        func_ov007_020c8010(self->yLinks[i], self->yPoints[i], point);
+        func_ov007_020c8010(this->yLinks[i], this->yPoints[i], point);
         point->target->z = oldZ;
     }
 }
@@ -199,37 +199,37 @@ void func_ov007_020c9d90(Ov007Swing *self, Ov007Mesh *mesh) {
 /* One simulation step: the side points spring along z, the chain's pinned
  * first point follows the mesh normal under it, then the chain springs and
  * integrates. shift is the integration step's shift. */
-void func_ov007_020c9c24(Ov007Swing *self, int shift) {
+void Ov007Swing::func_ov007_020c9c24(int shift) {
     int i;
     Vector3_16 *normal;
     s16 nx, ny;
 
     for (i = 0; i < 2; i++) {
-        func_ov007_020c7a84(self->xLinks[i], self->params->sideStiffness,
-                            self->params->sideDamping);
-        func_ov007_020c80c8(self->xPoints[i], 0, shift);
-        func_ov007_020c7a84(self->yLinks[i], self->params->sideStiffness,
-                            self->params->sideDamping);
-        func_ov007_020c80c8(self->yPoints[i], 0, shift);
+        func_ov007_020c7a84(this->xLinks[i], this->params->sideStiffness,
+                            this->params->sideDamping);
+        func_ov007_020c80c8(this->xPoints[i], 0, shift);
+        func_ov007_020c7a84(this->yLinks[i], this->params->sideStiffness,
+                            this->params->sideDamping);
+        func_ov007_020c80c8(this->yPoints[i], 0, shift);
     }
 
-    normal = &self->mesh->vertexNormals[self->meshPoint];
+    normal = &this->mesh->vertexNormals[this->meshPoint];
     nx = normal->x;
     ny = normal->y;
-    if (nx > self->params->maxNormalX)
-        nx = self->params->maxNormalX;
-    else if (nx < -self->params->maxNormalX)
-        nx = -self->params->maxNormalX;
-    if (ny > self->params->maxNormalY)
-        ny = self->params->maxNormalY;
-    else if (ny < -self->params->maxNormalY)
-        ny = -self->params->maxNormalY;
+    if (nx > this->params->maxNormalX)
+        nx = this->params->maxNormalX;
+    else if (nx < -this->params->maxNormalX)
+        nx = -this->params->maxNormalX;
+    if (ny > this->params->maxNormalY)
+        ny = this->params->maxNormalY;
+    else if (ny < -this->params->maxNormalY)
+        ny = -this->params->maxNormalY;
 
-    self->chain->items[0]->target->x = FX_MUL(nx, self->params->normalScale);
-    self->chain->items[0]->target->y = FX_MUL(ny, self->params->normalScale);
+    this->chain->items[0]->target->x = FX_MUL(nx, this->params->normalScale);
+    this->chain->items[0]->target->y = FX_MUL(ny, this->params->normalScale);
 
-    func_ov007_020c7560(self->chain, self->params->chainStiffness, self->params->chainDamping);
-    func_ov007_020c7504(self->chain, 0, shift);
+    func_ov007_020c7560(this->chain, this->params->chainStiffness, this->params->chainDamping);
+    func_ov007_020c7504(this->chain, 0, shift);
 }
 
 /* a * b in 20.12 fixed point, truncated. */
@@ -248,7 +248,7 @@ static inline int Sign(int v) {
  * half turn less one. Its size over maxRot, held to [0, 1], is eased out
  * as t (2 - t), and the rotation is that share of maxRot with the tilt's
  * sign. */
-void func_ov007_020c9a84(Ov007Swing *self, Vector3 *offset, u16 *rotX, u16 *rotY) {
+void Ov007Swing::func_ov007_020c9a84(Vector3 *offset, u16 *rotX, u16 *rotY) {
     Vector3 span;
     int angleX, angleY;
     s16 tiltX, tiltY;
@@ -256,23 +256,23 @@ void func_ov007_020c9a84(Ov007Swing *self, Vector3 *offset, u16 *rotX, u16 *rotY
     int fracX, fracY;
     int easeX, easeY;
 
-    offset->x = self->chainPositions[self->chain->count - 1].x;
-    offset->y = self->chainPositions[self->chain->count - 1].y;
+    offset->x = this->chainPositions[this->chain->count - 1].x;
+    offset->y = this->chainPositions[this->chain->count - 1].y;
 
-    VEC_Subtract(&self->xPointPos[0], &self->xPointPos[1], &span);
+    VEC_Subtract(&this->xPointPos[0], &this->xPointPos[1], &span);
     angleX = FX_Atan2(span.x, span.z);
-    VEC_Subtract(&self->yPointPos[0], &self->yPointPos[1], &span);
+    VEC_Subtract(&this->yPointPos[0], &this->yPointPos[1], &span);
     angleY = FX_Atan2(span.z, span.y);
     tiltX = (u16)(angleX + 0x3fff);
     tiltY = (u16)(angleY + 0x7fff);
 
     sizeX = (tiltX >= 0) ? tiltX : -tiltX;
-    fracX = ProgressRatio(sizeX, self->params->maxRotX);
+    fracX = ProgressRatio(sizeX, this->params->maxRotX);
     sizeY = (tiltY >= 0) ? tiltY : -tiltY;
-    fracY = ProgressRatio(sizeY, self->params->maxRotY);
+    fracY = ProgressRatio(sizeY, this->params->maxRotY);
 
     easeX = MulFx(fracX, 0x2000 - fracX);
     easeY = MulFx(fracY, 0x2000 - fracY);
-    *rotX = (self->params->maxRotX * (easeX * Sign(tiltX))) >> 12;
-    *rotY = (self->params->maxRotY * (easeY * Sign(tiltY))) >> 12;
+    *rotX = (this->params->maxRotX * (easeX * Sign(tiltX))) >> 12;
+    *rotY = (this->params->maxRotY * (easeY * Sign(tiltY))) >> 12;
 }

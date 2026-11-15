@@ -14,7 +14,7 @@
  * are `return new`.
  */
 // leftovers:
-// - func_ov080_02124418 stays free. Its first argument is a daChoro_Rock_c,
+// - func_ov080_02124418 is daChoro_Rock_c's. Its first argument is the rock,
 //   so it is not a daChoropu_c method.
 // - daPly_c::Hurt and daPly_c::Bounce retain scalar mangled declarations for
 //   their by-value Fix12 parameters. Throw's spawn id stays
@@ -97,8 +97,6 @@ typedef int BgchInitAt_(void *self, void *actor, int radius, int height, Vector3
 extern "C" int RandomIntInternal(int *seed);
 extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
 void func_02012694(unsigned int a, const Vector3 *p);
-
-void  func_ov080_02124418(daChoro_Rock_c *t);
 
 extern int data_ov080_0212767c[];
 extern SharedFilePtr data_ov002_0210d9d8;
@@ -618,11 +616,11 @@ void daChoropu_c::func_ov080_021243d8()
 }
 
 /* Same as func_ov080_021243d8, for the rock's model (mModel.mat4x3). */
-void func_ov080_02124418(daChoro_Rock_c *t) {
-    Matrix4x3_FromRotationY(&t->mModel.mat4x3, t->mAngleY);
-    t->mModel.mat4x3.m[9] = t->mPosX >> 3;
-    t->mModel.mat4x3.m[10] = t->mPosY >> 3;
-    t->mModel.mat4x3.m[11] = t->mPosZ >> 3;
+void daChoro_Rock_c::func_ov080_02124418() {
+    Matrix4x3_FromRotationY(&this->mModel.mat4x3, this->mAngleY);
+    this->mModel.mat4x3.m[9] = this->mPosX >> 3;
+    this->mModel.mat4x3.m[10] = this->mPosY >> 3;
+    this->mModel.mat4x3.m[11] = this->mPosZ >> 3;
 }
 
 /* Releases the shared model and animation files; never touches `this`: the model file
@@ -746,7 +744,7 @@ s32 daChoro_Rock_c::Behavior()
 
     UpdatePos(0);
     UpdateWMClsn(mWithMeshClsn, 0);
-    func_ov080_02124418(this);
+    this->func_ov080_02124418();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;

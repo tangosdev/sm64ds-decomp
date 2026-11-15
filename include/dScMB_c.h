@@ -104,6 +104,8 @@ public:
                                 above, and nothing in the recovered ROM
                                 reads it; the name is coined. */
 
+    void func_02034b1c(void *owner);
+
     /* Clears only the owner; InitResources fills in the rest through
        func_02034b1c. The global's static initializer runs this. */
     graphCallback_c() : mOwner(0) {}

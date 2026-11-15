@@ -12,7 +12,10 @@ extern "C" {
 extern char *GetStageDebugName(void);
 }
 
-extern int func_020441bc(int i);
+/* Static method defined on ProcessList in fListNode.cpp. */
+struct ProcessList {
+    static int func_020441bc(int);
+};
 extern "C" {
 
 extern int GetActorDebugName(unsigned int i);
@@ -71,7 +74,7 @@ void ShowCrashScreen(void)
 
     rr = data_02099f24;
     if (rr != 0 && rr < 6)
-        nds_printf(scr + 0x180, data_0208e58c, rr, func_020441bc(rr));
+        nds_printf(scr + 0x180, data_0208e58c, rr, ProcessList::func_020441bc(rr));
 
     hp = (data_020a4b68 != 0) ? ((fLiNdBaPr_c *)data_020a4b68)->owner->actorID : *&data_020a4b50;
     if (hp != 0xffff) {

@@ -1009,7 +1009,7 @@
     },
     {
       "symbol": "_ZN22Kpa3BgCollisionFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017b4cPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
@@ -1380,7 +1380,7 @@
       "source": "0x0211a128",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1400,7 +1400,7 @@
       "source": "0x0211a144",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1420,7 +1420,7 @@
       "source": "0x0211a160",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1440,7 +1440,7 @@
       "source": "0x0211a17c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1460,7 +1460,7 @@
       "source": "0x0211a198",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1480,7 +1480,7 @@
       "source": "0x0211a1b4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1500,7 +1500,7 @@
       "source": "0x0211a1d0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1520,7 +1520,7 @@
       "source": "0x0211a1ec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1540,7 +1540,7 @@
       "source": "0x0211a208",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1560,7 +1560,7 @@
       "source": "0x0211a224",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"

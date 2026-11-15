@@ -93,10 +93,6 @@ struct CLPS_Block;
 /* The matrix copies go through Mtx43, one 0x30-byte block copy. Matrix4x3's
    own assignment goes member by member through Vector3 and comes out longer. */
 
-extern "C" {
-/* ---- this TU ---- */
-void func_ov079_02123d4c(Vector3 *out, daBtn_c *self);
-}
 
 void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 int IsStarCollectedInCurLevel(int a);
@@ -850,8 +846,6 @@ void daBtn_c::func_ov079_0212538c()
    veneer above. The king lands with a heavier dust burst. */
 void daBtn_c::func_ov079_02125240(){
     Vector3 v;
-    Vector3 a;
-    Vector3 b;
     if (mSubState)
         return;
     if (!mWithMeshClsn.IsOnGround())
@@ -868,12 +862,12 @@ void daBtn_c::func_ov079_02125240(){
     v.z = mPosZ;
     Earthquake(v, 0x7d0000);
     mState = 6;
-    mMovingMeshCollider.SetStoodOnCallback(func_ov079_0212522c);
+    mMovingMeshCollider.SetStoodOnCallback(daBtn_c::func_ov079_0212522c);
     if (mIsKing != 0) {
-        func_ov079_02123d4c(&a, this);
+        Vector3 a = this->func_ov079_02123d4c();
         func_0200fa04(&a, 0);
     } else {
-        func_ov079_02123d4c(&b, this);
+        Vector3 b = this->func_ov079_02123d4c();
         LandingDustAt(b, false);
     }
 }
@@ -883,7 +877,7 @@ void daBtn_c::func_ov079_02125240(){
    `ldr ip,[pc,#8]; bx ip` absolute tail-call; bracketed closed immediately
    because it is positional. */
 #pragma long_calls on
-void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void daBtn_c::func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daBtn_c *>(owner)->func_ov079_02125058(other);
 }
 #pragma long_calls off
@@ -1163,8 +1157,6 @@ void daBtn_c::func_ov079_021246dc()
 {
     Vector3 pos;
     Vector3 starPos;
-    Vector3 v;
-    Vector3 v2;
     Vector3 dp;
     Vector3 dp2;
 
@@ -1211,7 +1203,7 @@ void daBtn_c::func_ov079_021246dc()
             func_0201267c(0xc6, &mCamSpacePos);
             Sound::StopLoadedMusic_Layer3();
             func_02011cfc();
-            func_ov079_02123d4c(&v, this);
+            Vector3 v = this->func_ov079_02123d4c();
             v.y += 0x50000;
             dp.x = v.x;
             dp.y = v.y;
@@ -1227,7 +1219,7 @@ void daBtn_c::func_ov079_021246dc()
         }
     } else {
         func_0201267c(0xc6, &mCamSpacePos);
-        func_ov079_02123d4c(&v2, this);
+        Vector3 v2 = this->func_ov079_02123d4c();
         v2.y += 0x28000;
         dp2.x = v2.x;
         dp2.y = v2.y;
@@ -1490,8 +1482,7 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
     if (mDeathState == 8) return;
     player.IncMegaKillCount();
     func_02012694(0x1e, (const Vector3 *)(&mCamSpacePosX));
-    Vector3 pos;
-    func_ov079_02123d4c(&pos, this);
+    Vector3 pos = this->func_ov079_02123d4c();
     Vector3 dust;
     pos.y = pos.y + 0x28000;
     dust.x = pos.x;
@@ -1511,7 +1502,10 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
    gives the named local its own stack home (no NRVO, +0xc); the (out, this)
    free form is the byte-exact shape, and the callers that need the member
    view reach it through vecret below. */
-extern "C" void func_ov079_02123d4c(Vector3 *out, daBtn_c *self) {
+Vector3 daBtn_c::func_ov079_02123d4c() {
+    Vector3 result;
+    Vector3 *out = &result;
+    daBtn_c *self = this;
     out->x = self->mPosX;
     out->y = self->mPosY;
     out->z = self->mPosZ;
@@ -1530,6 +1524,7 @@ extern "C" void func_ov079_02123d4c(Vector3 *out, daBtn_c *self) {
             out->z = out->z + FX_MUL(m, FX_CosIdx((unsigned short)self->mAngleY >> 4));
         }
     }
+    return result;
 }
 
 /* The king shoves the nearest player aside: if that player is no higher
@@ -1589,7 +1584,7 @@ s32 daBtn_c::OnAimedAtWithEgg() {
 
 Vector3 daBtn_c::OnAimedAtWithEggReturnVec()
 {
-    return vecret::func_ov079_02123d4c(this);
+    return this->func_ov079_02123d4c();
 }
 
 /* The mesh collider also stays on while the nearest actor of ID 9 is within

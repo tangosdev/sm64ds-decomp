@@ -187,10 +187,10 @@ extern short data_ov063_0211e7e0[];
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 void func_02012694(unsigned int a, const Vector3 *p);
-void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos);
-int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4);
 extern void func_020167a4(dExtAnmModel_c *model);
-extern void func_ov055_02111264(void);
+struct daLuigi_c {
+    static void func_ov055_02111264();
+};
 extern u16 func_02011d14(void);
 
 /* Actor ids this file spawns, finds or compares (the names are the ones in
@@ -1170,7 +1170,7 @@ void daTrs_c::func_ov063_02117cdc() {
         if (this->mStateTimer < 0x1e) {
             return;
         }
-        func_ov055_02111264();
+        daLuigi_c::func_ov055_02111264();
         {
             u8 *st = &this->mSubState;
             int n = *st + 1;
@@ -1668,14 +1668,14 @@ void daTrs_c::func_ov063_02118eac() {
     p = dActor_c::FindWithID(id);
     this->mFoundActor = (dActor_c *)p;
     if (this->mFoundActor != 0) {
-        func_ov063_02118f24(static_cast<daTrsIcon_c *>(this->mFoundActor), v);
+        (static_cast<daTrsIcon_c *>(this->mFoundActor))->func_ov063_02118f24(v);
     }
     this->mFoundActor = 0;
 }
 
-void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos) {
+void daTrsIcon_c::func_ov063_02118f24(const Vector3 &pos) {
     unsigned int val = 4;
-    icon->UntrackAndSpawnStar(icon->mTrackStarID, icon->mStarID, pos, val);
+    this->UntrackAndSpawnStar(this->mTrackStarID, this->mStarID, pos, val);
 }
 
 void daTrs_c::func_ov063_02118f50() {
@@ -2266,7 +2266,7 @@ void daTrs_c::ChaseMario(int a1, short a2, int a3) {
                 int otherY = p->mPosY;
                 int dy = myY - otherY;
                 if ((a1 << 0xc) < dy && dy < 0x1f4000 && (this->mHomePos.y - myY) < 0xfa000) {
-                    this->mVertSpeed = func_ov063_0211a0a8((int)this, myY, otherY, 0xa000, 0x2000);
+                    this->mVertSpeed = this->func_ov063_0211a0a8(myY, otherY, 0xa000, 0x2000);
                 }
             }
         }
@@ -2297,7 +2297,7 @@ void daTrs_c::SetVelFromPlayerVel(int a, int b) {
     this->mHorzSpeed = FX_MUL(pv, h);
 }
 
-int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4) {
+int daTrs_c::func_ov063_0211a0a8(int a1, int a2, int a3, int a4) {
     int diff = a1 - a2;
     if (diff > 0) {
         if (diff < a3) return 0;

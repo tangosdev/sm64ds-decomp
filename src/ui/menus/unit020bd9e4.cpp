@@ -38,6 +38,7 @@
  */
 #include "types.h"
 #include "nitro/fx/fx.h"
+#define SM64DS_NNS_HANDLE_METHODS
 #include "nnsys/snd/player.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
@@ -45,7 +46,6 @@
 extern "C" void func_0204f934(NNSSndHandle *);
 extern "C" void func_0204f94c(NNSSndHandle *);
 extern "C" int func_0204fa2c(NNSSndHandle *, int);
-extern "C" int func_02051f1c(void *, unsigned int, int);
 extern "C" void *func_ov007_020c3df4(const char *name, int size);
 extern "C" void func_ov007_020c3d1c(void *);
 
@@ -62,7 +62,7 @@ extern NNSSndHandle *data_ov007_02104bbc;
 
 int func_ov007_020be098(int idx) {
     func_0204f94c(&data_ov007_02104bbc[idx]);
-    return func_02051f1c(&data_ov007_02104bbc[idx], 2, data_ov007_02103134[idx]);
+    return data_ov007_02104bbc[idx].func_02051f1c(2, data_ov007_02103134[idx]);
 }
 
 void MenuSound_Create(void) {

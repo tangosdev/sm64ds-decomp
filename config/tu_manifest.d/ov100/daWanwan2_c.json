@@ -57,42 +57,42 @@
       "ordinal": 2
     },
     {
-      "symbol": "_Z19func_ov100_0214344cP11daWanwan2_c",
+      "symbol": "_ZN11daWanwan2_c19func_ov100_0214344cEv",
       "address": "0x0214344c",
       "size": "0x0000019c",
       "legacy_source": "src/func_ov100_0214344c.c",
       "ordinal": 3
     },
     {
-      "symbol": "_Z19func_ov100_021435e8P11daWanwan2_c",
+      "symbol": "_ZN11daWanwan2_c19func_ov100_021435e8Ev",
       "address": "0x021435e8",
       "size": "0x000001ec",
       "legacy_source": "src/func_ov100_021435e8.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_Z19func_ov100_021437d4P11daWanwan2_c",
+      "symbol": "_ZN11daWanwan2_c19func_ov100_021437d4Ev",
       "address": "0x021437d4",
       "size": "0x000002d0",
       "legacy_source": "src/func_ov100_021437d4.c",
       "ordinal": 5
     },
     {
-      "symbol": "_Z19func_ov100_02143aa4P11daWanwan2_c",
+      "symbol": "_ZN11daWanwan2_c19func_ov100_02143aa4Ev",
       "address": "0x02143aa4",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov100_02143aa4.c",
       "ordinal": 6
     },
     {
-      "symbol": "_Z19func_ov100_02143ae0P11daWanwan2_c",
+      "symbol": "_ZN11daWanwan2_c19func_ov100_02143ae0Ev",
       "address": "0x02143ae0",
       "size": "0x00000038",
       "legacy_source": "src/func_ov100_02143ae0.c",
       "ordinal": 7
     },
     {
-      "symbol": "_Z19func_ov100_02143b18P12ChompPmfSelfP10ChompState",
+      "symbol": "_ZN11daWanwan2_c19func_ov100_02143b18EP10ChompState",
       "address": "0x02143b18",
       "size": "0x00000050",
       "legacy_source": "src/func_ov100_02143b18.cpp",

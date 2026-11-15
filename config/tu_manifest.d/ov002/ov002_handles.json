@@ -35,7 +35,7 @@
   ],
   "functions": [
     {
-      "symbol": "_Z19func_ov002_020ad660PvS_S_i",
+      "symbol": "_ZN12dEnemyBase_c19func_ov002_020ad660EPvS0_i",
       "address": "0x020ad660",
       "size": "0x1d8",
       "legacy_source": "src/ov002_handles.cpp",

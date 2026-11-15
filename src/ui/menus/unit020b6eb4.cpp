@@ -47,17 +47,6 @@
 #include "nitro/gx/gx.h"
 #include "Ov007MenuMem.h"
 
-/* func_ov007_020b7138's first argument: the hooks dScDSMT_c hands the menu
- * (data_ov007_02103290). */
-typedef struct Ov007MenuHooks {
-    int alloc;               /* 0x00: installed by MenuMem_SetAllocHook */
-    int free;                /* 0x04: MenuMem_SetFreeHook */
-    int query;               /* 0x08: MenuMem_SetMaxAllocSizeHook */
-    int fileLoad;            /* 0x0c: func_ov007_020b4100 */
-    int fileRelease;         /* 0x10: func_ov007_020b4100 */
-    int (*callback)(int id); /* 0x14: becomes the work block's callback */
-} Ov007MenuHooks;
-
 /* set once the bring-up or a frame's drawing is done; cleared as the
  * bring-up, the frame's logic and the teardown start */
 extern int sFrameReady;
@@ -97,16 +86,16 @@ extern "C" void func_ov007_020c1db0(Ov007Touch *touch, TPData *sample);
 extern "C" void Pad_Update(struct Ov007Pad *pad, void *src);
 extern void func_ov007_020c3bc8(void);
 
-extern "C" int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
+int Ov007MenuHooks::func_ov007_020b7138(Ov007BootArgs *bootArgs) {
     int flags;
 
     sFrameReady = 0;
     func_ov007_020b6c54();
-    MenuMem_SetAllocHook(hooks->alloc);
-    MenuMem_SetFreeHook(hooks->free);
-    MenuMem_SetMaxAllocSizeHook(hooks->query);
+    MenuMem_SetAllocHook(this->alloc);
+    MenuMem_SetFreeHook(this->free);
+    MenuMem_SetMaxAllocSizeHook(this->query);
     func_ov007_020c3bc8();
-    func_ov007_020b4100(hooks->fileLoad, hooks->fileRelease);
+    func_ov007_020b4100(this->fileLoad, this->fileRelease);
     MenuGfx_ResetVram();
     MenuGfx_InitMainEngine();
     MenuGfx_InitSubEngine();
@@ -119,7 +108,7 @@ extern "C" int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArg
     GX_SetDispSelect(GX_DISP_SELECT_SUB_MAIN);
     Work_Create();
     WORK->settings->bootArgs = bootArgs;
-    WORK->callback = hooks->callback;
+    WORK->callback = this->callback;
     func_ov007_020b30b0();
     MenuSound_Create();
     func_ov007_020b8714((int)WORK->cameras[1], (int)WORK->textures[10], WORK->settings->language);

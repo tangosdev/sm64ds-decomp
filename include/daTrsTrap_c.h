@@ -93,6 +93,7 @@ struct daTrsTrap_c : dActor_c {
        callback word; it forwards the colliding actor to LatchStandingActor. */
     static void OnMeshClsnTouch(dBgW *, dActor_c *, dActor_c *);
     void LatchStandingActor(dActor_c *);
+    void func_ov063_0211cae8(int m);
 };
 
 #ifndef SM64DS_PLATFORM_PC

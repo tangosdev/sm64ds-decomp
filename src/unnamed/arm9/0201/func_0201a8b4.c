@@ -7,7 +7,7 @@
  * input bit 0x2000 is held. */
 extern long long OS_GetTick(void);
 extern unsigned short func_0203da80(unsigned short x);
-extern void func_02013f28(void);
+extern void _ZN9FatalSpin13func_02013f28Ev(void);
 
 void func_0201a8b4(void *arg) {
     WatchdogAlarm *w = (WatchdogAlarm *)arg;
@@ -19,6 +19,6 @@ void func_0201a8b4(void *arg) {
             func_0201aa50(&w->alarm, rest, func_0201a8b4, w);
     } else {
         if (func_0203da80(0x2000) == 0)
-            func_02013f28();
+            _ZN9FatalSpin13func_02013f28Ev();
     }
 }

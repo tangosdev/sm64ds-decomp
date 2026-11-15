@@ -98,8 +98,9 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" int func_02035638(u8 *p);
 
-extern "C" struct Aea30C;
-void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
+struct Aea30C {
+    void func_ov002_020aea30(dActor_c *actor, dBgCh_Actr *collision);
+};
 
 extern Matrix4x3     data_020a0e68;
 extern int           data_02092138;
@@ -119,9 +120,6 @@ extern MenboStateFn  data_ov090_021344e4[2];
 extern MenboStateFn  data_ov090_021344f4[2];
 extern MenboStateFn  data_ov090_02134504[2];
 extern MenboStateFn  data_ov090_02134514[2];
-
-extern "C" int func_ov090_021314a0(daMenbo_c *c);
-extern "C" int func_ov090_02131e00(MenboState *c, MenboStateFn *p);
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. Actor ID 0xbf is PLAYER. gGameMode is the current game
@@ -146,7 +144,7 @@ daMenbo_c::~daMenbo_c()
 /* One ripple under each of four leg bones. Skipped while the actor is off
  * screen. Bone matrices are transforms[6], [9], [12] and [15], multiplied
  * by the model matrix; the ripple sits on the water line. */
-void func_ov090_02130f94(daMenbo_c *c_) {
+void daMenbo_c::func_ov090_02130f94() {
     int zero;
     int sh;
     daMenbo_c *c;
@@ -154,7 +152,7 @@ void func_ov090_02130f94(daMenbo_c *c_) {
     Matrix4x3 *src;
     unsigned int id;
 
-    c = c_;
+    c = this;
     if (IsOffScreen(c))
         return;
 
@@ -202,23 +200,23 @@ void daMenbo_c::func_ov090_021310b4() {
 
     if (flags & 0x2400) {
         mDeathState = 2;
-        func_ov002_020aea30((Aea30C *)this, p, 0);
+        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
         return;
     }
     if (flags & 0x40000) {
         mDeathState = 4;
-        func_ov002_020aea30((Aea30C *)this, p, 0);
+        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
         return;
     }
     if (flags & 0x40) {
         mDeathState = 2;
-        func_ov002_020aea30((Aea30C *)this, p, 0);
+        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
         return;
     }
     if (JumpedOnByPlayer(mdCcAcPos_c, *(daPly_c *)p)) {
         ((daPly_c *)p)->Bounce(0x28000);
         mDeathState = 1;
-        func_ov002_020aea30((Aea30C *)this, p, 0);
+        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
         return;
     }
     if (flags & 0x20) {
@@ -227,7 +225,7 @@ void daMenbo_c::func_ov090_021310b4() {
         mVertSpeed = 0;
         mSpeedZ = 0;
         mDeathState = 1;
-        func_ov002_020aea30((Aea30C *)this, p, 0);
+        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
         return;
     }
     if (flags & 0x10) {
@@ -241,7 +239,7 @@ void daMenbo_c::func_ov090_021310b4() {
     if (flags & 0x4380) {
         mDeathTumble = 3;
         mDeathState = 3;
-        func_ov002_020aea30((Aea30C *)this, p, 0);
+        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
         return;
     }
     if (!IsPlayerActor(p))
@@ -267,7 +265,7 @@ void daMenbo_c::func_ov090_021310b4() {
  * A higher floor is the line instead, and either way Y is clamped up to it. */
 void daMenbo_c::func_ov090_02131378() {
     if (IsGameMode(2) && gCurrentSublevel == 0x12) {
-        func_ov090_02130f94(this);
+        this->func_ov090_02130f94();
         return;
     }
     dBgCh_Gnd rg;
@@ -287,7 +285,7 @@ void daMenbo_c::func_ov090_02131378() {
         mSurfaceY = data_0209f32c;
         if (mPosY <= mSurfaceY) {
             mOnWater = 1;
-            func_ov090_02130f94(this);
+            this->func_ov090_02130f94();
         }
     } else {
         mSurfaceY = mFloorY;
@@ -301,29 +299,29 @@ void daMenbo_c::func_ov090_02131378() {
 /* 1 while a player is close and within a quarter turn of the heading.
  * The held target latches; releasing it points the skeeter back at its
  * anchor and sets the patrol speed. */
-int func_ov090_021314a0(daMenbo_c *c)
+int daMenbo_c::func_ov090_021314a0()
 {
-    daPly_c *p = c->ClosestNonVanishPlayer();
-    if (p != 0 && AngleDiff(c->mPrevAngleY, c->HorzAngleToCPlayer()) < 0x2000) {
+    daPly_c *p = this->ClosestNonVanishPlayer();
+    if (p != 0 && AngleDiff(this->mPrevAngleY, this->HorzAngleToCPlayer()) < 0x2000) {
         int *sv = &p->mPosX;
         int v[3];
         v[0] = sv[0];
         v[1] = sv[1];
         v[2] = sv[2];
-        if (Vec3_Dist(&c->mPos, (const Vector3 *)v) < 0x3ac000) {
+        if (Vec3_Dist(&this->mPos, (const Vector3 *)v) < 0x3ac000) {
             int w[3];
             w[0] = v[0];
             w[1] = v[1];
             w[2] = v[2];
-            c->mTargetAngleY = (u16)Vec3_HorzAngle(&c->mPos, (const Vector3 *)w);
-            c->mChaseLatch = 1;
+            this->mTargetAngleY = (u16)Vec3_HorzAngle(&this->mPos, (const Vector3 *)w);
+            this->mChaseLatch = 1;
             return 1;
         }
     }
-    if (c->mChaseLatch == 1) {
-        c->mHorzSpeed = 0x9000;
-        c->mChaseLatch = 0;
-        c->mTargetAngleY = (u16)Vec3_HorzAngle(&c->mPos, (const Vector3 *)&c->mAnchorPosX);
+    if (this->mChaseLatch == 1) {
+        this->mHorzSpeed = 0x9000;
+        this->mChaseLatch = 0;
+        this->mTargetAngleY = (u16)Vec3_HorzAngle(&this->mPos, (const Vector3 *)&this->mAnchorPosX);
     }
     return 0;
 }
@@ -337,10 +335,10 @@ int daMenbo_c::func_ov090_02131584()
     v = ((unsigned int)mAnmModel.currFrame << 4) >> 0x10;
     if (v >= 0x3b)
         mAnimLoops += 1;
-    if (mAnimLoops > 2 || func_ov090_021314a0(this) == 1)
-        func_ov090_02131e00((MenboState *)this, data_ov090_02134514);
+    if (mAnimLoops > 2 || this->func_ov090_021314a0() == 1)
+        this->func_ov090_02131e00(data_ov090_02134514);
     if (mOnWater == 1)
-        func_ov090_02131e00((MenboState *)this, data_ov090_02134504);
+        this->func_ov090_02131e00(data_ov090_02134504);
     return 1;
 }
 
@@ -475,7 +473,7 @@ int daMenbo_c::func_ov090_02131648()
     if (self->mTurnTimer == 0 && self->mSpeedHoldTimer == 0) {
         self->mAnimSpeed = 0x1000;
         self->mHorzSpeed = 0x9000;
-        if (func_ov090_021314a0(self) == 1) {
+        if (self->func_ov090_021314a0() == 1) {
             self->mSpeedHoldTimer = 0x1e;
             self->mWanderTimer = 0x1e;
             self->mAnimSpeed = 0x2000;
@@ -489,11 +487,11 @@ int daMenbo_c::func_ov090_02131648()
     }
 
     if (self->mAnimLoops > 0x1e && self->mFarLatch == 0) {
-        func_ov090_02131e00((MenboState *)self, data_ov090_021344e4);
+        self->func_ov090_02131e00(data_ov090_021344e4);
     }
 
     if (self->mOnWater == 1) {
-        func_ov090_02131e00((MenboState *)self, data_ov090_02134504);
+        self->func_ov090_02131e00(data_ov090_02134504);
     }
 
     return 1;
@@ -523,11 +521,11 @@ int daMenbo_c::func_ov090_02131ac4()
         mAnchorPosY = mPosY;
         mAnchorPosZ = mPosZ;
         mTargetAngleY = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) << 0xd);
-        func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
+        this->func_ov090_02131e00(data_ov090_021344e4);
     }
     ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x100, 0x100);
     if (mStateTimer == 0)
-        func_ov090_02131e00((MenboState *)this, data_ov090_021344f4);
+        this->func_ov090_02131e00(data_ov090_021344f4);
     return 1;
 }
 
@@ -575,7 +573,7 @@ int daMenbo_c::func_ov090_02131c48()
             s32 *q = &mAnimLoops;
             *q = *q + 1;
             if (mAnimLoops > 0x14)
-                func_ov090_02131e00((MenboState *)this, data_ov090_02134504);
+                this->func_ov090_02131e00(data_ov090_02134504);
         }
     }
 
@@ -584,7 +582,7 @@ int daMenbo_c::func_ov090_02131c48()
         mAnchorPosY = mPosY;
         mAnchorPosZ = mPosZ;
         mTargetAngleY = (u16)(((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) << 13);
-        func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
+        this->func_ov090_02131e00(data_ov090_021344e4);
     }
 
     return 1;
@@ -600,8 +598,9 @@ int daMenbo_c::func_ov090_02131db0()
 }
 
 /* Install a state and run its entry. A null entry PMF means there is none. */
-int func_ov090_02131e00(MenboState *c, MenboStateFn *p)
+int daMenbo_c::func_ov090_02131e00(MenboStateFn *p)
 {
+    MenboState *c = (MenboState *)this;
     c->mState = p;
     MenboStateFn *q = c->mState;
     if (*q == 0) return 1;
@@ -710,7 +709,7 @@ int daMenbo_c::Behavior()
                 mVertSpeed = 0;
                 mSpeedZ = 0;
                 mDeathState = 1;
-                func_ov002_020aea30((Aea30C *)c, ClosestPlayer(), 0);
+                ((Aea30C *)c)->func_ov002_020aea30(ClosestPlayer(), 0);
                 return 1;
             }
         }
@@ -733,7 +732,7 @@ int daMenbo_c::Behavior()
         mVertSpeed = 0;
         mSpeedZ = 0;
         mDeathState = 1;
-        func_ov002_020aea30((Aea30C *)c, ClosestPlayer(), 0);
+        ((Aea30C *)c)->func_ov002_020aea30(ClosestPlayer(), 0);
         return 1;
     }
 
@@ -797,7 +796,7 @@ int daMenbo_c::InitResources()
         mAnchorPosX = mPosX;
         mAnchorPosY = mPosY;
         mAnchorPosZ = mPosZ;
-        func_ov090_02131e00((MenboState *)this, data_ov090_021344f4);
+        this->func_ov090_02131e00(data_ov090_021344f4);
         return 1;
     }
 
@@ -832,7 +831,7 @@ int daMenbo_c::InitResources()
         mAnchorPosZ = mPosZ;
 
         if (mOnWater != 0) {
-            func_ov090_02131e00((MenboState *)this, data_ov090_021344f4);
+            this->func_ov090_02131e00(data_ov090_021344f4);
             return 1;
         }
 
@@ -843,7 +842,7 @@ int daMenbo_c::InitResources()
             mPrevAngleY = *(short *)&mTargetAngleY;
             mAngleY = mPrevAngleY;
         }
-        func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
+        this->func_ov090_02131e00(data_ov090_021344e4);
     }
 
     return 1;

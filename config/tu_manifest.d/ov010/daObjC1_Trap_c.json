@@ -145,7 +145,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "_Z19func_ov010_02111984P4dBgWP8dActor_cS2_",
+      "symbol": "_ZN14daObjC1_Trap_c19func_ov010_02111984EP4dBgWP8dActor_cS3_",
       "address": "0x02111984",
       "size": "0x00000014",
       "legacy_source": "src/func_ov010_02111984.c",
@@ -268,7 +268,7 @@
     },
     {
       "symbol": "_ZN20TrapCollisionFilePtrC1Ej",
-      "canonical_symbol": "_Z13func_02017b4cPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
@@ -400,7 +400,7 @@
       "source": "0x02112064",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"

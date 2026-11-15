@@ -105,7 +105,6 @@ void d_a_shlPlayLongHold(u32 handle, u32 a, u32 soundID, const Vector3 &pos, s16
 typedef void BgchInitAt_(void *self, dActor_c *owner, fx32 radius, fx32 height, Vector3_16 *d,
                          int e);
 }
-int func_ov002_020ad660(void *self, void *clsn, void *model, int kind);
 int SurfaceInfo_TestFlag0x20(int *si);
 
 /* func_ov102_0214c84c's positions are VecFx32: Vector3 members here emit
@@ -158,7 +157,7 @@ s32 daShl_c::InitResources()
  */
 s32 daShl_c::Behavior()
 {
-    if (func_ov002_020ad660(this, &mMeshClsn, &mModel, 3) != 0)
+    if (this->func_ov002_020ad660(&mMeshClsn, &mModel, 3) != 0)
         return 1;
 
     if (UpdateYoshiEat(mMeshClsn) != 0) {

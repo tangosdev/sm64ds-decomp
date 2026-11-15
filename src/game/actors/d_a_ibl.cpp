@@ -93,7 +93,6 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 
 void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" void func_02038414(void *p);
-int func_ov002_020ad660(void *a, void *b, void *d, int e);
 extern "C" {
 void d_a_iblPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
 int atan2_hold_d_a_ibl_1(int y, int x);
@@ -390,7 +389,7 @@ void daIbl_c::PathBehavior() {
     int vy;
 
     MakeVanishLuigiWork(mdCcAc_c);
-    r = func_ov002_020ad660(this, &mWithMeshClsn, &mModel, 3);
+    r = this->func_ov002_020ad660(&mWithMeshClsn, &mModel, 3);
     if (r != 0) {
         if (r != 2)
             return;
@@ -465,7 +464,7 @@ void daIbl_c::RollOffBehavior() {
     int r;
 
     MakeVanishLuigiWork(mdCcAc_c);
-    r = func_ov002_020ad660(this, &mWithMeshClsn, &mModel, 3);
+    r = this->func_ov002_020ad660(&mWithMeshClsn, &mModel, 3);
     if (r != 0) {
         if (r != 2)
             return;
@@ -542,7 +541,7 @@ void daIbl_c::RollOffBehavior() {
 void daIbl_c::FreeRollBehavior() {
     int r;
     MakeVanishLuigiWork(mdCcAc_c);
-    r = func_ov002_020ad660(this, &mWithMeshClsn, &mModel, 3);
+    r = this->func_ov002_020ad660(&mWithMeshClsn, &mModel, 3);
     if (r != 0) {
         if (r != 2)
             return;

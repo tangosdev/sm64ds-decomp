@@ -200,6 +200,7 @@ struct dEnemyBase_c : dActor_c {
            scalar lets the definition be a real method (notes/mwccarm-codegen.md
            6az). */
     void KillByInvincibleChar(const Vector3_16 &spin_, daPly_c &player_, fx32 unused_);
+    int func_ov002_020ad660(void *clsnArg, void *modelArg, int flags);
 };
 
 /* Makes dEnemyBase_c's size a claim the compiler enforces, and makes every header

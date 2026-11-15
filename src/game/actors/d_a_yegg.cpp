@@ -175,8 +175,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *m, int x, int y, i
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 extern int func_ov002_020cf700(void *g);
 }
-void func_ov002_020ed63c(daYegg_c *c, int i);
-void func_ov002_020edca4(daYegg_c *self);
 
 /* One native destructor definition emits both ROM variants. D1 is one vtable
  * store and five destructor calls, every one a consequence of
@@ -372,7 +370,7 @@ void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short arg5) {
 void daYegg_c::ExecuteDrop() {
     UpdatePos(&mdCcAc_c);
     if (mWithMeshClsn.IsOnGround())
-        func_ov002_020edca4(this);
+        this->func_ov002_020edca4();
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     mdCcAc_c.Clear();
 }
@@ -472,7 +470,7 @@ void daYegg_c::SeekStraight() {
         b = ((o->mFlags & 0x10000000) != 0);
         if (b == 0) {
             PayOut();
-            func_ov002_020ed63c(this, daYegg_STATE_SEEK);
+            this->func_ov002_020ed63c(daYegg_STATE_SEEK);
             return;
         }
     }
@@ -482,7 +480,7 @@ void daYegg_c::SeekStraight() {
     if (b == 0) {
         b = ((fb0 & daYegg_FLAG_DROPPED) != 0);
         if (b != 0) {
-            func_ov002_020ed63c(this, daYegg_STATE_DROP);
+            this->func_ov002_020ed63c(daYegg_STATE_DROP);
         } else {
             b = ((fb0 & daYegg_FLAG_FLYING) != 0);
             if (b != 0) {
@@ -499,14 +497,14 @@ void daYegg_c::SeekStraight() {
                     return;
                 onwall = mWithMeshClsn.IsOnWall();
                 if ((onwall | func_02035638((u8 *)&mWithMeshClsn)) != 0) {
-                    func_ov002_020edca4(this);
+                    this->func_ov002_020edca4();
                     return;
                 }
             }
         }
     }
     if (IsStalled() != 0) {
-        func_ov002_020edca4(this);
+        this->func_ov002_020edca4();
         return;
     }
     mdCcAc_c.Clear();
@@ -545,12 +543,12 @@ void daYegg_c::SeekHoming() {
     if (o != 0) {
         b = ((o->mFlags & 0x10000000) != 0);
         if (b == 0) {
-            func_ov002_020ed63c(this, daYegg_STATE_SEEK);
+            this->func_ov002_020ed63c(daYegg_STATE_SEEK);
             return;
         }
     }
     if (mTargetId != 0 && o == 0) {
-        func_ov002_020ed63c(this, daYegg_STATE_SEEK);
+        this->func_ov002_020ed63c(daYegg_STATE_SEEK);
         return;
     }
     fb0 = mFlags;
@@ -559,13 +557,13 @@ void daYegg_c::SeekHoming() {
     if (b == 0) {
         b = ((fb0 & daYegg_FLAG_DROPPED) != 0);
         if (b != 0) {
-            func_ov002_020ed63c(this, daYegg_STATE_DROP);
+            this->func_ov002_020ed63c(daYegg_STATE_DROP);
         } else {
             b = ((fb0 & daYegg_FLAG_FLYING) != 0);
             if (b != 0) {
                 if (mWithMeshClsn.GetResultFlag1() != 0) {
                     HandleWallHit((int)&mWithMeshClsn);
-                    func_ov002_020edca4(this);
+                    this->func_ov002_020edca4();
                     return;
                 }
                 if (o != 0) {
@@ -578,11 +576,11 @@ void daYegg_c::SeekHoming() {
                         case ACTOR_KURIBO_L:
                         case ACTOR_WANWAN:
                         case ACTOR_WANWAN2:
-                            func_ov002_020edca4(this);
+                            this->func_ov002_020edca4();
                             return;
                         default:
                             PayOut();
-                            func_ov002_020ed63c(this, daYegg_STATE_SEEK);
+                            this->func_ov002_020ed63c(daYegg_STATE_SEEK);
                             return;
                         }
                     }
@@ -596,7 +594,7 @@ void daYegg_c::SeekHoming() {
         }
     }
     if (IsStalled() != 0) {
-        func_ov002_020edca4(this);
+        this->func_ov002_020edca4();
         return;
     }
     mdCcAc_c.Clear();
@@ -652,7 +650,7 @@ void daYegg_c::EnterSeek() {
     } else {
         if (mTargetedCount) {
             if (!func_ov002_020ec654())
-                func_ov002_020edca4(this);
+                this->func_ov002_020edca4();
         }
     }
     mdCcAc_c.Init(this, 0x64000, 0xc8000, 0x202000, 0);
@@ -873,7 +871,8 @@ void daYegg_c::EnterFollowPlayer() {
 /* -------------------------------------------------------------------------- */
 /* Switches to state `i` and runs that state's enter handler. daPly_c's
  * St_YoshiPower_Init calls it with state 1 on the egg it holds. */
-void func_ov002_020ed63c(daYegg_c *c, int i) {
+void daYegg_c::func_ov002_020ed63c(int i) {
+    daYegg_c *c = this;
     c->mState = i;
     int j = c->mState;
     (c->*data_ov002_02110a5c[j].pmf[0])();
@@ -1055,7 +1054,7 @@ int daYegg_c::FindTarget(int a1, int best) {
 
     if (mTargetedCount >= 5) {
         if (func_ov002_020ec654() == 0) {
-            func_ov002_020edca4(this);
+            this->func_ov002_020edca4();
         }
         return 0;
     }
@@ -1112,10 +1111,11 @@ int daYegg_c::FindTarget(int a1, int best) {
  * which SeekNewMarker then takes together with the daPly_c. It then
  * starts four particle effects (ids 0x3f to 0x42) at the egg, marks the egg
  * for destruction, plays Sound::PlayCharVoice id 0x103 at its camera-space
- * position and sets mBurstDone. Stays a free function: d_a_ply_methods.cpp calls it
- * on its held object, and daPly_c is not deslopped here. */
-void func_ov002_020edca4(daYegg_c* self)
+ * position and sets mBurstDone. d_a_ply_methods.cpp still calls the free
+ * function on the held egg. */
+void daYegg_c::func_ov002_020edca4()
 {
+    daYegg_c *self = this;
     struct Vector3 pos;
     char* spawned;
     int xv, zv, yv, sy;
@@ -1188,7 +1188,7 @@ int daYegg_c::HandleCylinderHit() {
                 if (t != 0) {
                     flags = mdCcAc_c.hitFlags;
                     if (flags & 0x8000) {
-                        func_ov002_020ed63c(this, daYegg_STATE_DROP);
+                        this->func_ov002_020ed63c(daYegg_STATE_DROP);
                         return 1;
                     }
                     if (!(flags & 0x26fe0)) {
@@ -1209,7 +1209,7 @@ int daYegg_c::HandleCylinderHit() {
             case ACTOR_KURIBO_L:
             case ACTOR_WANWAN:
             case ACTOR_WANWAN2:
-                func_ov002_020edca4(this);
+                this->func_ov002_020edca4();
                 return 1;
             }
 
@@ -1220,7 +1220,7 @@ int daYegg_c::HandleCylinderHit() {
             }
             if (other == actor) {
                 PayOut();
-                func_ov002_020ed63c(this, daYegg_STATE_SEEK);
+                this->func_ov002_020ed63c(daYegg_STATE_SEEK);
                 return 1;
             }
         }
@@ -1311,7 +1311,7 @@ int daYegg_c::Behavior()
     if (mPayoutDone[mPayoutIdx] != 0)
         mPayoutIdx++;
     if (mPayoutIdx >= 5) {
-        func_ov002_020edca4(this);
+        this->func_ov002_020edca4();
     }
     return 1;
 }

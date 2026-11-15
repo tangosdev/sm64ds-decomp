@@ -54,6 +54,8 @@ struct dThIcon_c {
     void Select();
     virtual void Behavior();
     virtual void Render();
+    void func_ov001_020ab3f0();
+    void func_ov001_020ab5b0(int kind, short x, short y, short halfW, short halfH);
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -566,7 +566,6 @@ void func_0202b060(char *table, int count);
 struct ObjTeleport *GetTeleportDestObj(int i);
 void func_0202b090(void *table, int count);
 void func_0202b0c4(void *table, int count);
-void func_0202b0e0(LVL_Overlay::StandardEntry *entries, int count);
 void SetTouchScreenDelay(void);
 void ResetInput(void);
 int IsLevelTinyHugeIslandOutside(int level);
@@ -3637,8 +3636,8 @@ void func_0202b0c4(void *table, int count) {
     gNumViewObjs = count;
 }
 
-void func_0202b0e0(LVL_Overlay::StandardEntry *entries, int count) {
-    sEntranceObjs = entries;
+void LVL_Overlay::StandardEntry::func_0202b0e0(int count) {
+    sEntranceObjs = this;
     sNumEntranceObjs = count;
 }
 
@@ -4044,7 +4043,7 @@ int dScStage_c::Behavior() {
         } else {
             u8 c9c = data_0209fc9c;
             if (c9c != 0) {
-                func_02032f54();
+                Message::func_02032f54();
                 if (data_0209fcc8 >= 7u)
                     func_020199a4();
                 return 1;
@@ -4057,7 +4056,7 @@ int dScStage_c::Behavior() {
                         func_02012790(0x123);
                         func_02011c24();
                         func_02030a78();
-                        func_020345b0(0x13);
+                        Message::func_020345b0(0x13);
                     }
                     return 1;
                 }

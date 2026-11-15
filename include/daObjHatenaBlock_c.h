@@ -82,6 +82,7 @@ struct daObjHatenaBlock_c : dBgActor_c {
     void SpawnPrizeCoins();
     void SpawnPrizeMarioCap(int p1, int p2);
     int GetFloorY();
+    Vector3 func_ov102_02149684();
     void UpdatePopped();
     void EnterPopped();
     void UpdateBouncing();

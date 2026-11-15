@@ -45,6 +45,9 @@ typedef char NNSSndSeqPlayer_size_must_be_0x44[sizeof(NNSSndSeqPlayer) == 0x44 ?
 
 typedef struct NNSSndHandle {
     NNSSndSeqPlayer *player;
+#ifdef SM64DS_NNS_HANDLE_METHODS
+    int func_02051f1c(unsigned int seqArcNo, int index);
+#endif
 } NNSSndHandle;
 
 /* The snd_player.c setters SoundEngine.cpp defines. The SDK spells

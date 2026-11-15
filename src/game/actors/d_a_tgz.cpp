@@ -110,17 +110,6 @@ extern int data_0209f32c;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern signed char gCurrentSublevel;
 }
-int func_ov077_02124c28(daTgz_c *self);
-void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn);
-void func_ov077_021251d0(daTgz_c *self);
-void func_ov077_02125290(daTgz_c *self);
-void func_ov077_02125e20(daTgz_c *self);
-void func_ov077_02125e5c(daTgz_c *self);
-void func_ov077_02125e94(daTgz_c *self, int state);
-int func_ov077_02124ce4(daTgz_c *self);
-void func_ov077_02124eb0(daTgz_c *self);
-void func_ov077_021250a8(daTgz_c *self);
-void func_ov077_02125304(daTgz_c *self);
 int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 
@@ -146,41 +135,41 @@ int daTgz_c::OnAimedAtWithEgg()
 /* Until one is found, probe for a water surface below the Spiny and cache
  * its height in mWaterY. Returns how far above it the Spiny is (0 while
  * nothing has been found). */
-int func_ov077_02124c28(daTgz_c *self) {
-    if (self->mWaterY == 0) {
+int daTgz_c::func_ov077_02124c28() {
+    if (this->mWaterY == 0) {
         dBgCh_Gnd rg;
         Vector3 pos;
         {
-            int y = self->mPosY;
-            int z = self->mPosZ;
+            int y = this->mPosY;
+            int z = this->mPosZ;
             int y2 = y + 0xc8000;
-            int x = self->mPosX;
+            int x = this->mPosX;
             pos.x = x;
             pos.y = y2;
             pos.z = z;
         }
-        rg.SetObjAndPos(pos, self);
+        rg.SetObjAndPos(pos, this);
         rg.StartDetectingWater();
         if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0)
-            self->mWaterY = rg.clsnY;
+            this->mWaterY = rg.clsnY;
         else
             return 0;
         rg.StopDetectingWater();
     }
-    return self->mPosY - self->mWaterY;
+    return this->mPosY - this->mWaterY;
 }
 
 /* Is the Spiny below the cached water surface? */
-int func_ov077_02124ce4(daTgz_c *self) {
-    int waterY = self->mWaterY;
+int daTgz_c::func_ov077_02124ce4() {
+    int waterY = this->mWaterY;
     if (waterY == 0)
         return 0;
-    return waterY > self->mPosY;
+    return waterY > this->mPosY;
 }
 
 /* Toxic floor destroys the Spiny. A sloped floor rewrites vertical speed
  * from mSpeedX/mSpeedZ and pitches mAngleX/mAngleZ to the normal. */
-void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn) {
+void daTgz_c::func_ov077_02124d08(dBgCh_Actr *clsn) {
     Vector3 pos;
     Vector3 normal;
     Vector3 wallnormal;
@@ -189,20 +178,20 @@ void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn) {
     if (clsn->IsOnGround()) {
         dBgCh_Gnd rc;
         {
-            int actorY = self->mPosY;
-            int pz = self->mPosZ;
+            int actorY = this->mPosY;
+            int pz = this->mPosZ;
             int py = actorY + 0xc8000;
-            pos.x = self->mPosX;
+            pos.x = this->mPosX;
             pos.y = py;
             pos.z = pz;
         }
         rc.StartDetectingToxic();
-        rc.SetObjAndPos(pos, self);
+        rc.SetObjAndPos(pos, this);
         if (rc.DetectClsn()) {
-            if (func_02037e20((int *)&rc.surface) != 0 && self->mPosY < rc.clsnY) {
-                self->PoofDust();
-                func_02012694(0xc4, &self->mCamSpacePos);
-                self->MarkForDestruction();
+            if (func_02037e20((int *)&rc.surface) != 0 && this->mPosY < rc.clsnY) {
+                this->PoofDust();
+                func_02012694(0xc4, &this->mCamSpacePos);
+                this->MarkForDestruction();
                 return;
             }
             {
@@ -210,13 +199,13 @@ void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn) {
                 fr->surface.CopyNormalTo(normal);
             }
             if (normal.y != 0) {
-                self->mVertSpeed =
-                    -(FX_Div(FX_MUL(normal.x, self->mSpeedX) + FX_MUL(normal.z, self->mSpeedZ),
+                this->mVertSpeed =
+                    -(FX_Div(FX_MUL(normal.x, this->mSpeedX) + FX_MUL(normal.z, this->mSpeedZ),
                              normal.y) +
                       0x8000);
             }
-            self->mAngleX = self->func_02010844(&normal, self->mAngleY);
-            self->mAngleZ = self->func_02010844(&normal, (self->mAngleY - 0x4000));
+            this->mAngleX = this->func_02010844(&normal, this->mAngleY);
+            this->mAngleZ = this->func_02010844(&normal, (this->mAngleY - 0x4000));
         }
     }
     if (clsn->IsOnWall()) {
@@ -227,24 +216,24 @@ void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn) {
 
 /* Hit response while walking or spinning. Egg and the knock-up destroy or
  * launch; a shell / metal / attack hit in state 1 starts the chase. */
-void func_ov077_02124eb0(daTgz_c *self) {
+void daTgz_c::func_ov077_02124eb0() {
     daPly_c *player;
     int b;
 
-    if (self->FindEgg(self->mdCcAc_c) != 0) {
+    if (this->FindEgg(this->mdCcAc_c) != 0) {
         int v[3];
-        v[0] = self->mPosX;
-        v[1] = self->mPosY;
-        v[2] = self->mPosZ;
-        self->SpawnCoins(*(const Vector3 *)v, 1, 0x2000, 0);
-        self->PoofDust();
-        func_02012694(0xc4, &self->mCamSpacePos);
-        self->MarkForDestruction();
+        v[0] = this->mPosX;
+        v[1] = this->mPosY;
+        v[2] = this->mPosZ;
+        this->SpawnCoins(*(const Vector3 *)v, 1, 0x2000, 0);
+        this->PoofDust();
+        func_02012694(0xc4, &this->mCamSpacePos);
+        this->MarkForDestruction();
         return;
     }
 
     {
-        unsigned int id = self->mdCcAc_c.otherOwner;
+        unsigned int id = this->mdCcAc_c.otherOwner;
         if (id == 0)
             return;
         player = (daPly_c *)dActor_c::FindWithID(id);
@@ -256,47 +245,47 @@ void func_ov077_02124eb0(daTgz_c *self) {
     if (b == 0)
         return;
 
-    b = ((self->mFlags & 0x20000) != 0);
+    b = ((this->mFlags & 0x20000) != 0);
     if (b != 0) {
-        func_ov077_02125e94(self, 3);
+        this->func_ov077_02125e94(3);
         return;
     }
 
     /* 0x403c0 = punch | kick | breakdance | slide kick | fire. */
-    if ((self->mdCcAc_c.hitFlags & 0x403c0)
+    if ((this->mdCcAc_c.hitFlags & 0x403c0)
         || player->IsOnShell() != 0
         || player->mIsMetal != 0) {
-        if (self->mState != 1)
+        if (this->mState != 1)
             return;
-        Sound::PlayBank0(0xb5, self->mCamSpacePos);
-        self->mChasePlayer = player;
-        func_ov077_02125e94(self, 2);
+        Sound::PlayBank0(0xb5, this->mCamSpacePos);
+        this->mChasePlayer = player;
+        this->func_ov077_02125e94(2);
         return;
     }
 
-    if (self->mdCcAc_c.hitFlags & 0x10) {
-        self->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &self->mPos);
+    if (this->mdCcAc_c.hitFlags & 0x10) {
+        this->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &this->mPos);
         player->IncMegaKillCount();
-        func_ov077_02125e94(self, 5);
+        this->func_ov077_02125e94(5);
         return;
     }
 
-    if (self->mState == 4)
+    if (this->mState == 4)
         return;
 
     {
         int v[3];
-        v[0] = self->mPosX;
-        v[1] = self->mPosY;
-        v[2] = self->mPosZ;
+        v[0] = this->mPosX;
+        v[1] = this->mPosY;
+        v[2] = this->mPosZ;
         player->Hurt(*(const Vector3 *)v, 2, 0xc000, 1, 0, 1);
     }
 }
 
 /* Hit response during the thrown spin. Mega turns it to face away and
  * knocks it up; fire is ignored; anything else hurts the player. */
-void func_ov077_021250a8(daTgz_c *self) {
-    unsigned int id = self->mdCcAc_c.otherOwner;
+void daTgz_c::func_ov077_021250a8() {
+    unsigned int id = this->mdCcAc_c.otherOwner;
     if (id == 0)
         return;
     daPly_c *player = (daPly_c *)dActor_c::FindWithID(id);
@@ -305,72 +294,72 @@ void func_ov077_021250a8(daTgz_c *self) {
     int b1 = (player->actorID == 0xbf);
     if (b1 == 0)
         return;
-    int b2 = ((self->mFlags & 0x20000) != 0);
+    int b2 = ((this->mFlags & 0x20000) != 0);
     if (b2 != 0) {
-        func_ov077_02125e94(self, 3);
+        this->func_ov077_02125e94(3);
         return;
     }
-    int flags = self->mdCcAc_c.hitFlags;
+    int flags = this->mdCcAc_c.hitFlags;
     if ((flags & 0x10) != 0) {
-        self->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &self->mPos);
-        self->mAngleY = self->mPrevAngleY + 0x8000;
+        this->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &this->mPos);
+        this->mAngleY = this->mPrevAngleY + 0x8000;
         player->IncMegaKillCount();
-        func_ov077_02125e94(self, 5);
+        this->func_ov077_02125e94(5);
         return;
     }
     if ((flags & 0x40000) != 0)
         return;
     Vector3 v;
-    v.x = self->mPosX;
-    v.y = self->mPosY;
-    v.z = self->mPosZ;
+    v.x = this->mPosX;
+    v.y = this->mPosY;
+    v.z = this->mPosZ;
     player->Hurt(v, 2, 0xc000, 1, 0, 1);
 }
 
 /* Tumble matrix: translate to pos>>3, up by the egg-aim height, rotate, then
  * back down by that height, and keep the result on the anim model's matrix. */
-void func_ov077_021251d0(daTgz_c *self) {
+void daTgz_c::func_ov077_021251d0() {
     int v[3];
-    Vec3_Asr(reinterpret_cast<Vector3 *>(v), &self->mPos, 3);
+    Vec3_Asr(reinterpret_cast<Vector3 *>(v), &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
-    int aimHeight = self->OnAimedAtWithEgg();
+    int aimHeight = this->OnAimedAtWithEgg();
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, aimHeight >> 3, 0);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-        self->mAngleX, self->mAngleY, self->mAngleZ);
-    int aimHeightAgain = self->OnAimedAtWithEgg();
+        this->mAngleX, this->mAngleY, this->mAngleZ);
+    int aimHeightAgain = this->OnAimedAtWithEgg();
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-aimHeightAgain) >> 3, 0);
-    self->mAnmModel.mat4x3 = data_020a0e68;
+    this->mAnmModel.mat4x3 = data_020a0e68;
 }
 
 /* Upright matrix on the still model in states 0 and 4, otherwise on the anim. */
-void func_ov077_02125290(daTgz_c *self) {
-    int v = self->mState;
+void daTgz_c::func_ov077_02125290() {
+    int v = this->mState;
     int b = 1;
     Matrix4x3 *m;
     if (v != 0)
         b = (v == 4);
     if (b)
-        m = &self->mModel.mat4x3;
+        m = &this->mModel.mat4x3;
     else
-        m = &self->mAnmModel.mat4x3;
-    Matrix4x3_FromRotationZXYExt(m, self->mAngleX, self->mAngleY, self->mAngleZ);
-    m->m[9] = self->mPosX >> 3;
-    m->m[10] = self->mPosY >> 3;
-    m->m[11] = self->mPosZ >> 3;
+        m = &this->mAnmModel.mat4x3;
+    Matrix4x3_FromRotationZXYExt(m, this->mAngleX, this->mAngleY, this->mAngleZ);
+    m->m[9] = this->mPosX >> 3;
+    m->m[10] = this->mPosY >> 3;
+    m->m[11] = this->mPosZ >> 3;
 }
 
-void func_ov077_02125304(daTgz_c *self) {
-    int b = ((self->mFlags & 0x40000) != 0);
+void daTgz_c::func_ov077_02125304() {
+    int b = ((this->mFlags & 0x40000) != 0);
     if (b != 0)
         return;
-    if (self->mState == 5)
-        func_ov077_021251d0(self);
+    if (this->mState == 5)
+        this->func_ov077_021251d0();
     else
-        func_ov077_02125290(self);
-    self->mShadowMatrix.a[9] = self->mPosX >> 3;
-    self->mShadowMatrix.a[10] = self->mPosY >> 3;
-    self->mShadowMatrix.a[11] = self->mPosZ >> 3;
-    self->DropShadowRadHeight(self->mShadowModel, *(Matrix4x3 *)&self->mShadowMatrix, 0x50000,
+        this->func_ov077_02125290();
+    this->mShadowMatrix.a[9] = this->mPosX >> 3;
+    this->mShadowMatrix.a[10] = this->mPosY >> 3;
+    this->mShadowMatrix.a[11] = this->mPosZ >> 3;
+    this->DropShadowRadHeight(this->mShadowModel, *(Matrix4x3 *)&this->mShadowMatrix, 0x50000,
                               0x320000, 0xf);
 }
 
@@ -444,7 +433,7 @@ int daTgz_c::func_ov077_02125550() {
             mVertSpeed = 0;
             mAngleX = 0;
             mWithMeshClsn.ClearLimMovFlag();
-            func_ov077_02125e94(this, 1);
+            this->func_ov077_02125e94(1);
         }
     }
 
@@ -456,7 +445,7 @@ int daTgz_c::func_ov077_02125550() {
     }
 
     UpdatePos(&mdCcAc_c);
-    func_ov077_02124eb0(this);
+    this->func_ov077_02124eb0();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -530,10 +519,10 @@ int daTgz_c::func_ov077_02125830() {
     {
         int flags = mFlags;
         if (((flags & 0x80000) ? 1 : 0) != 0)
-            func_ov077_02125e94(this, 4);
+            this->func_ov077_02125e94(4);
         else if (((flags & 0x20000) ? 1 : 0) == 0 && ((flags & 0x40000) ? 1 : 0) == 0) {
             mCarrier = 0;
-            func_ov077_02125e94(this, 1);
+            this->func_ov077_02125e94(1);
         }
     }
     return 1;
@@ -559,7 +548,7 @@ int daTgz_c::func_ov077_02125908() {
         mWithMeshClsn.ClearLimMovFlag();
         mChasePlayer = 0;
         mPrevAngleY = mAngleY;
-        func_ov077_02125e94(this, 1);
+        this->func_ov077_02125e94(1);
     }
 
     if (mWaterY != 0)
@@ -575,7 +564,7 @@ int daTgz_c::func_ov077_02125908() {
 
     mAnmModel.dExtFrameCtrl_c::Advance();
     UpdatePos(&mdCcAc_c);
-    func_ov077_02124eb0(this);
+    this->func_ov077_02124eb0();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -598,7 +587,7 @@ int daTgz_c::func_ov077_02125a54() {
     ApproachLinear(mAngleY, mTurnTarget, 0x64);
     mPrevAngleY = mAngleY;
     mAnmModel.dExtFrameCtrl_c::Advance();
-    func_ov077_02124eb0(this);
+    this->func_ov077_02124eb0();
     if (mWaterY)
         d = mPosY - mWaterY;
     else
@@ -609,11 +598,11 @@ int daTgz_c::func_ov077_02125a54() {
         MarkForDestruction();
     }
     UpdatePos(&mdCcAc_c);
-    func_ov077_02124d08(this, &mWithMeshClsn);
+    this->func_ov077_02124d08(&mWithMeshClsn);
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     if (DecIfAbove0_Byte(&mActionTimer) == 0)
-        func_ov077_02125e94(this, 1);
+        this->func_ov077_02125e94(1);
     return 1;
 }
 
@@ -639,11 +628,11 @@ int daTgz_c::func_ov077_02125bb4() {
 
     mAngleX = mAngleX + 0x4e20;
     UpdatePos(&mdCcAc_c);
-    func_ov077_021250a8(this);
+    this->func_ov077_021250a8();
     mWithMeshClsn.SetLimMovFlag();
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
-    underwater = func_ov077_02124ce4(this);
+    underwater = this->func_ov077_02124ce4();
     if (underwater) {
         if (mInWater == 0) {
             func_02012694(0xe2, &mCamSpacePos);
@@ -675,7 +664,7 @@ int daTgz_c::func_ov077_02125bb4() {
             mAngleZ = mPrevAngleZ;
             mWithMeshClsn.ClearLimMovFlag();
             mFlags |= 0x10000000u;
-            func_ov077_02125e94(this, 1);
+            this->func_ov077_02125e94(1);
         } else {
             x = mPosX;
             y = mPosY + 0x28000;
@@ -704,19 +693,19 @@ int daTgz_c::func_ov077_02125dd4() {
     return 1;
 }
 
-void func_ov077_02125e20(daTgz_c *self) {
-    TgzState *p = (TgzState *)self->mStateDesc + 1;
-    (self->* *p)();
+void daTgz_c::func_ov077_02125e20() {
+    TgzState *p = (TgzState *)this->mStateDesc + 1;
+    (this->* *p)();
 }
 
-void func_ov077_02125e5c(daTgz_c *self) {
-    TgzState *p = (TgzState *)self->mStateDesc;
-    (self->* *p)();
+void daTgz_c::func_ov077_02125e5c() {
+    TgzState *p = (TgzState *)this->mStateDesc;
+    (this->* *p)();
 }
 
-void func_ov077_02125e94(daTgz_c *self, int i) {
-    self->mStateDesc = &gTgzStates[i];
-    func_ov077_02125e5c(self);
+void daTgz_c::func_ov077_02125e94(int i) {
+    this->mStateDesc = &gTgzStates[i];
+    this->func_ov077_02125e5c();
 }
 
 int daTgz_c::CleanupResources()
@@ -757,10 +746,10 @@ int daTgz_c::Behavior()
                 break;
             }
         }
-        func_ov077_02124c28(this);
-        func_ov077_02125e20(this);
+        this->func_ov077_02124c28();
+        this->func_ov077_02125e20();
         MakeVanishLuigiWork(mdCcAc_c);
-        func_ov077_02125304(this);
+        this->func_ov077_02125304();
         if (gCurrentSublevel == 0x1c && mPosY <= -0x1600000) {
             PoofDust();
             func_02012694(0xc4, &mCamSpacePos);
@@ -787,9 +776,9 @@ int daTgz_c::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     mDespawnTimer = 0x2c;
-    func_ov077_02125e94(this, 0);
+    this->func_ov077_02125e94(0);
     mShadowMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
-    func_ov077_02125304(this);
+    this->func_ov077_02125304();
     return 1;
 }
 

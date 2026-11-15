@@ -106,7 +106,9 @@ extern unsigned char gGameMode;
 }
 void GiveCoins(int who, int count);
 int SurfaceInfo_TestFlag0x20(int *si);
-int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other);
+struct BgChEvt {
+    int func_ov002_020ef228(dActor_c *other);
+};
 
 /* ==========================================================================
  *
@@ -919,7 +921,7 @@ int daBmb_c::UpdateFuse() {
                 mdCc_c.height = v * 0x50;
                 mWithMeshClsn.SetRadius(v * 0x3c);
                 mWithMeshClsn.SetHeight(v * 0x3c);
-                func_ov002_020ef228(&mWithMeshClsn, this);
+                ((BgChEvt *)&mWithMeshClsn)->func_ov002_020ef228(this);
             }
             {
                 mdCc_c.flags &= ~4;
@@ -1026,7 +1028,7 @@ void daBmb_c::func_ov102_0214ae1c() {
     Particle::System::NewSimple(kPtclBobOmbExplodeC, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeD, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeE, v.x, v.y, v.z);
-    func_ov002_020ef228(&mWithMeshClsn, this);
+    ((BgChEvt *)&mWithMeshClsn)->func_ov002_020ef228(this);
     if (mCarrier) {
         Vector3 w;
         mCarrier->DropActor();

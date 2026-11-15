@@ -2,7 +2,7 @@
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
 
-extern void func_ov007_020b7eec(Ov007BootArgs *bootArgs);
+extern void _ZN13Ov007BootArgs19func_ov007_020b7eecEv(Ov007BootArgs *bootArgs);
 
 /* Steps the sound mode by `step`, wrapping over 0..2, and redraws the
  * header. Ids 1/2/3 are the owner's sound-mode commands: its dispatcher
@@ -24,5 +24,5 @@ void func_ov007_020b64a8(int step) {
         WORK->callback(3);
         break;
     }
-    func_ov007_020b7eec(WORK->settings->bootArgs);
+    _ZN13Ov007BootArgs19func_ov007_020b7eecEv(WORK->settings->bootArgs);
 }

@@ -849,7 +849,7 @@ int dMgJump3DMario_c::LoadResources()
        (notes/experiments/jump3d-2711-87d0-int-temp.md). */
     int t;
 
-    if (func_020179b4(&gMarioModelMgModelFile, &mAnmModel, 1) == 0)
+    if (gMarioModelMgModelFile.func_020179b4(&mAnmModel, 1) == 0)
         return 0;
 
     sJump3DAnimJump = dExtFrameCtrl_c::LoadFile(sJump3DMarioJumpAnimFile);

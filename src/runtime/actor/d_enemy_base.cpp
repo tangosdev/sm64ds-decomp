@@ -39,7 +39,7 @@
  *     defined_symbol_renames rows pair the numbers mwcc emits now with the
  *     pinned names; a change that adds or drops a named local has to shift
  *     their `from` side to match.
- *   - func_ov002_020ae5c8 stays a free `extern "C"` callee -- callers pass
+ *   - func_ov002_020ae5c8 is EnemyDeathC::func_ov002_020ae5c8; callers pass
  *     its unused second argument; the one-argument form comes out 0x50
  *     against the ROM's 0x5c (measured note in place).
  *   - Computed-spelling externs stay where a member form changes codegen:
@@ -223,15 +223,18 @@ struct Aea30C : dEnemyBase_c {
     void func_ov002_020ae80c(dActor_c *, dBgCh_Actr *);
     void func_ov002_020ae73c(dActor_c *, dBgCh_Actr *);
     void func_ov002_020aea2c(dActor_c *, dBgCh_Actr *);
+    void func_ov002_020aea30(dActor_c *a, dBgCh_Actr *b);
+    void func_ov002_020ae968(dActor_c *arg);
+    void func_ov002_020ae8b8(dActor_c *arg);
 };
-void func_ov002_020aea30(Aea30C *c, dActor_c *a, dBgCh_Actr *b) {
-    if (c->mDeathState == 0)
+void Aea30C::func_ov002_020aea30(dActor_c *a, dBgCh_Actr *b) {
+    if (mDeathState == 0)
         return;
-    c->mFlags &= ~0x10000000;
-    c->mDeathTimer = 0;
-    (c->*data_ov002_0210db80[c->mDeathState - 1])(a, b);
-    c->mVertAccel = -0x2000;
-    c->mFlags &= ~0x10000000;
+    mFlags &= ~0x10000000;
+    mDeathTimer = 0;
+    (this->*data_ov002_0210db80[mDeathState - 1])(a, b);
+    mVertAccel = -0x2000;
+    mFlags &= ~0x10000000;
 }
 
 /* The five death-state handlers UpdateDeath dispatches through
@@ -247,6 +250,7 @@ struct EnemyDeathC : dEnemyBase_c {
   int func_ov002_020ae4cc(dBgCh_Actr & clsn_);
   int func_ov002_020ae454(dBgCh_Actr & clsn_);
   int func_ov002_020aea24(dBgCh_Actr & clsn_);
+  int func_ov002_020ae5c8(int x);
 };
 
 void Aea30C::func_ov002_020aea2c(dActor_c*, dBgCh_Actr*)
@@ -279,64 +283,64 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
-void func_ov002_020ae968(dEnemyBase_c *c, dActor_c *arg) {
-    c->mVertSpeed = 0x14000;
+void Aea30C::func_ov002_020ae968(dActor_c *arg) {
+    mVertSpeed = 0x14000;
     if (IsPlayerActor(arg)) {
         u16 t = data_ov002_020ff01c[(u16)arg->param1];
-        c->mHorzSpeed = ((int)t << 0xf) / 50;
+        mHorzSpeed = ((int)t << 0xf) / 50;
     } else {
-        c->mHorzSpeed = 0x14000;
+        mHorzSpeed = 0x14000;
     }
-    c->mFlags &= ~1;
-    Sound::PlayBank0(9, c->mCamSpacePos);
+    mFlags &= ~1;
+    Sound::PlayBank0(9, mCamSpacePos);
 }
 
 void Aea30C::func_ov002_020ae954(dActor_c* a, dBgCh_Actr*)
 {
     mPrevAngleY = a->mAngleY;
-    func_ov002_020ae968(this, a);
+    func_ov002_020ae968(a);
 }
 
-void func_ov002_020ae8b8(dEnemyBase_c *c, dActor_c *arg) {
+void Aea30C::func_ov002_020ae8b8(dActor_c *arg) {
     if (IsPlayerActor(arg)) {
         u16 t = data_ov002_020ff01c[(u16)arg->param1];
         int scaled = t << 3;
         int ip = scaled << 12;
         int d1 = ip / 100;
         int d2 = scaled / 100;
-        c->mHorzSpeed = d1;
-        c->mVertSpeed = (d2 + 0x20) << 12;
+        mHorzSpeed = d1;
+        mVertSpeed = (d2 + 0x20) << 12;
     } else {
-        c->mHorzSpeed = 0xa000;
-        c->mVertSpeed = 0x28000;
+        mHorzSpeed = 0xa000;
+        mVertSpeed = 0x28000;
     }
-    c->mFlags &= ~1;
+    mFlags &= ~1;
 }
 
 void Aea30C::func_ov002_020ae890(dActor_c* a, dBgCh_Actr*)
 {
     mPrevAngleY = a->mAngleY;
-    func_ov002_020ae8b8(this, a);
+    func_ov002_020ae8b8(a);
     Sound::PlayBank0(0xa, mCamSpacePos);
 }
 
 void Aea30C::func_ov002_020ae87c(dActor_c* a, dBgCh_Actr*)
 {
     mPrevAngleY = a->mAngleY;
-    func_ov002_020ae8b8(this, a);
+    func_ov002_020ae8b8(a);
 }
 
 void Aea30C::func_ov002_020ae844(dActor_c* a, dBgCh_Actr*)
 {
     s16 angle = Vec3_HorzAngle(&a->mPos, &mPos);
     mPrevAngleY = angle;
-    func_ov002_020ae968(this, a);
+    func_ov002_020ae968(a);
 }
 
 void Aea30C::func_ov002_020ae80c(dActor_c* a, dBgCh_Actr*)
 {
     mPrevAngleY = Vec3_HorzAngle(&a->mPos, &mPos);
-    func_ov002_020ae8b8(this, a);
+    func_ov002_020ae8b8(a);
 }
 
 void Aea30C::func_ov002_020ae73c(dActor_c* a, dBgCh_Actr*)
@@ -382,8 +386,6 @@ int dEnemyBase_c::UpdateDeath(dBgCh_Actr &clsn) {
    survive the body in a callee-saved register. So both observations are true at
    once: the caller passes it, the callee ignores it, and the definition below
    carries the parameter unused. */
-int func_ov002_020ae5c8(dEnemyBase_c *c, int x);
-
 int EnemyDeathC::func_ov002_020ae64c(dBgCh_Actr &clsn) {
     int x = (int)&clsn;
     if (mDeathTimer >= 5) {
@@ -394,7 +396,7 @@ int EnemyDeathC::func_ov002_020ae64c(dBgCh_Actr &clsn) {
         mScaleZ = 0x2000 - mScaleY;
         mScaleX = mScaleZ;
     }
-    return func_ov002_020ae5c8(this, x);
+    return func_ov002_020ae5c8(x);
 }
 
 int EnemyDeathC::func_ov002_020ae608(dBgCh_Actr &clsn) {
@@ -407,12 +409,12 @@ int EnemyDeathC::func_ov002_020ae608(dBgCh_Actr &clsn) {
 }
 
 /* `x` is unused on purpose -- see the note on func_ov002_020ae64c, which passes it. */
-int func_ov002_020ae5c8(dEnemyBase_c *c, int x) {
-    if (c->mDeathTimer != 0)
+int EnemyDeathC::func_ov002_020ae5c8(int x) {
+    if (mDeathTimer != 0)
         return 0;
-    c->SpawnCoin();
-    c->KillAndTrackInDeathTable();
-    c->mDeathState = 0;
+    SpawnCoin();
+    KillAndTrackInDeathTable();
+    mDeathState = 0;
     return 1;
 }
 

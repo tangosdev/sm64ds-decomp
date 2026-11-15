@@ -7,7 +7,7 @@ extern void func_ov007_020c2410(void *p);
 extern void func_ov007_020c2018(void *p);
 extern void func_ov007_020c22f8(void *p);
 extern void func_ov007_020c9080(void *p);
-extern void func_ov007_020c1620(void *tex);
+extern void _ZN12Ov007Texture19func_ov007_020c1620Ev(void *tex);
 extern void func_ov007_020b3edc(int a);
 extern void func_ov007_020c9460(void *p);
 extern void ItemView_Destroy(struct Ov007ItemView *view);
@@ -72,7 +72,7 @@ void func_ov007_020b65e0(void)
 
     for (i = 0; i < 0xb; i++) {
         if (WORK->textures[i] != 0) {
-            func_ov007_020c1620(WORK->textures[i]);
+            _ZN12Ov007Texture19func_ov007_020c1620Ev(WORK->textures[i]);
             WORK->textures[i] = 0;
         }
     }

@@ -167,6 +167,10 @@ struct daDoor_c : dActor_c {
     int func_ov100_02144c6c(daPly_c *r1);   /* state 021488c4 execute */
     int func_ov100_02144ccc();              /* state 021488c4 enter */
     int func_ov100_02144cf8(daPly_c *b);    /* state 021488b4 execute */
+    static int func_ov100_02144f84();
+    static int func_ov100_02144fcc();
+    static int func_ov100_02145014();
+    static void func_ov100_02145070(int v);
     int func_ov100_02145080(daPly_c *arg1); /* the exit timing */
     void func_ov100_02145170(daPly_c *pl, Vector3 *a, Vector3 *b); /* place the player */
     int func_ov100_021451c4(void *r5, daPly_c *r4);                /* send the player through */

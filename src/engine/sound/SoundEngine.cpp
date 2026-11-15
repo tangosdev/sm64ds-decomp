@@ -19,12 +19,127 @@
 #include "nitro/fs/file.h"
 #include "nitro/fs/archive.h"
 #include "Sound.h"
+/* NNSFndList is completed here so func_02051064 and func_0204f460 can be
+   methods. nnsys/fnd.h stays untouched: Sound2.cpp reaches it through player.h. */
+struct NNSFndLink {
+    void *prevObject;
+    void *nextObject;
+};
+struct NNSiFndHeapHead;
+typedef NNSiFndHeapHead *NNSFndHeapHandle;
+struct NNSSndSeqPlayer;
+struct NNSFndList {
+    void *headObject;
+    void *tailObject;
+    u16 numObjects;
+    u16 offset;
+    void func_02051064();
+    void func_0204f460(NNSSndSeqPlayer *player);
+};
+typedef char NNSFndList_size_must_be_0xc[sizeof(NNSFndList) == 0xc ? 1 : -1];
+#define NNS_FND_FRMHEAP_FREE_HEAD (1 << 0)
+#define NNS_FND_FRMHEAP_FREE_TAIL (1 << 1)
+#define NNS_FND_FRMHEAP_FREE_ALL (NNS_FND_FRMHEAP_FREE_HEAD | NNS_FND_FRMHEAP_FREE_TAIL)
+extern "C" {
+void NNS_FndInitList(NNSFndList *list, u16 offset);
+void NNS_FndAppendListObject(NNSFndList *list, void *object);
+void NNS_FndInsertListObject(NNSFndList *list, void *target, void *object);
+void NNS_FndRemoveListObject(NNSFndList *list, void *object);
+void *NNS_FndGetNextListObject(NNSFndList *list, void *object);
+void *NNS_FndGetPrevListObject(NNSFndList *list, void *object);
+NNSFndHeapHandle NNS_FndCreateFrmHeapEx(void *startAddress, u32 size, u16 optFlag);
+void NNS_FndDestroyFrmHeap(NNSFndHeapHandle heap);
+void *NNS_FndAllocFromFrmHeapEx(NNSFndHeapHandle heap, u32 size, int alignment);
+void NNS_FndFreeToFrmHeap(NNSFndHeapHandle heap, int mode);
+u32 NNS_FndGetAllocatableSizeForFrmHeapEx(NNSFndHeapHandle heap, int alignment);
+int NNS_FndRecordStateForFrmHeap(NNSFndHeapHandle heap, u32 tagName);
+int NNS_FndFreeByStateToFrmHeap(NNSFndHeapHandle heap, u32 tagName);
+}
+#define NNSYS_FND_H
 #include "SoundPlayerRecord.h"
-#include "nnsys/fnd.h"
 #include "Heap.h"
 #include "msl/string.h"
 #include "nitro/os/cache.h"
-#include "nnsys/snd/player.h"
+/* NNSSndFader is completed here so its workers can be methods without
+   editing nnsys/snd/fader.h, which other TUs include unchanged. */
+struct NNSSndFader {
+    int origin;
+    int target;
+    int counter;
+    int frame;
+    void func_020524c4();
+    void func_02052494(int a, int b);
+    int func_02052458();
+    void func_02052438();
+    int func_02052420();
+};
+#define NNSYS_SND_FADER_H
+/* NNSSndSeqPlayer / NNSSndHandle are completed here so their workers can be
+   methods. nnsys/snd/player.h stays untouched: Sound2.cpp includes it. */
+struct Elem;
+struct ElemTable;
+struct NNSSndHandle;
+struct NNSSndSeqPlayer {
+    NNSSndHandle *handle; /* 0x00 */
+    void *player;         /* 0x04 */
+    void *heap;           /* 0x08 */
+    NNSFndLink playerLink; /* 0x0c */
+    NNSFndLink prioLink;   /* 0x14 */
+    NNSSndFader fader;     /* 0x1c */
+    u8 status;             /* 0x2c */
+    u8 startFlag;          /* 0x2d */
+    u8 pauseFlag;          /* 0x2e */
+    u8 prepareFlag;        /* 0x2f */
+    u32 commandTag;        /* 0x30 */
+    u16 seqType;           /* 0x34 */
+    u16 pad2;              /* 0x36 */
+    u16 seqNo;             /* 0x38 */
+    u16 seqArcIndex;       /* 0x3a */
+    u8 playerNo;           /* 0x3c */
+    u8 prio;               /* 0x3d */
+    s16 volume;            /* 0x3e */
+    u8 initVolume;         /* 0x40 */
+    u8 extVolume;          /* 0x41 */
+    u16 pad3_;             /* 0x42 */
+    void func_0204f214(int prio);
+    void func_0204f2d4();
+    void func_0204f3e0();
+    void func_0204f400();
+    void func_0204f4bc();
+    void func_0204f558(int flag);
+    void func_0204f5a0(int fadeFrames);
+    int func_0204f600(const void *seqData, u32 seqOffset, struct SNDBankData *bank);
+    void func_0204f630();
+};
+typedef char NNSSndSeqPlayer_size_must_be_0x44[sizeof(NNSSndSeqPlayer) == 0x44 ? 1 : -1];
+struct NNSSndHandle {
+    NNSSndSeqPlayer *player;
+    int func_02051a98(int playerNo, unsigned int bankNo, int playerPrio, struct Elem *seq,
+                      struct ElemTable *arc, int seqArcNo, int index);
+    int func_02051bd0(int playerNo, unsigned int bankNo, int playerPrio,
+                      Sound::InfoSequenceEntry *info, int seqNo);
+    int func_02051e60(int playerNo, int bankNo, int playerPrio, unsigned int seqArcNo, int index);
+    int func_02051f1c(u32 seqArcNo, int index);
+    int func_02051fb4(unsigned int seqNo);
+    NNSSndSeqPlayer *func_0204f63c(int playerIdx, int prio);
+    void func_0204f6f8(int seqArcNo, int index);
+    void func_0204f720(int seqNo);
+};
+extern "C" {
+void NNS_SndPlayerSetVolume(NNSSndHandle *handle, int volume);
+void NNS_SndPlayerSetInitialVolume(NNSSndHandle *handle, int volume);
+void NNS_SndPlayerMoveVolume(NNSSndHandle *handle, int targetVolume, int frames);
+void NNS_SndPlayerSetChannelPriority(NNSSndHandle *handle, int priority);
+void NNS_SndPlayerSetTrackMute(NNSSndHandle *handle, int trackBitMask, int flag);
+void NNS_SndPlayerSetTrackVolume(NNSSndHandle *handle, int trackBitMask, int volume);
+void NNS_SndPlayerSetTrackPitch(NNSSndHandle *handle, int trackBitMask, int pitch);
+void NNS_SndPlayerSetTrackPan(NNSSndHandle *handle, int trackBitMask, int pan);
+void NNS_SndPlayerSetTrackModDepth(NNSSndHandle *handle, int trackBitMask, int depth);
+void NNS_SndPlayerSetTrackModSpeed(NNSSndHandle *handle, int trackBitMask, int speed);
+void NNS_SndPlayerSetTempoRatio(NNSSndHandle *handle, int ratio);
+}
+#define NNSYS_SND_PLAYER_H
+
 #include "nitro/os/message.h"
 #include "nitro/os/thread.h"
 #include "nitro/snd/alarm.h"
@@ -57,6 +172,15 @@ struct SndHeapBlock {
 struct SndHeap {
     NNSFndHeapHandle frmHeap; /* 0x0 */
     NNSFndList levels;        /* 0x4 */
+    int func_02050fd4();
+    int func_02051024(NNSFndHeapHandle frmHeap);
+    void func_02051244();
+    void func_020512f0();
+    u32 func_02051074();
+    void func_020510a4(int level);
+    int func_0205117c();
+    void *func_020511d4(u32 size, SndHeapDisposeCallback callback, u32 data1, u32 data2);
+    int func_02052008();
 };
 typedef int s32;
 typedef void (*FP)(void *, int, int *, int, int, int);
@@ -71,6 +195,7 @@ struct NitroFileHeader {
     u32 fileSize;   /* 0x08 */
     u16 headerSize; /* 0x0c */
     u16 numBlocks;  /* 0x0e */
+    int func_0204ef9c();
 };
 struct NitroBlockHeader {
     u32 kind; /* 0x0 */
@@ -112,6 +237,7 @@ struct ElemTable {
     int baseOffset;               /* 0x18 */
     int count;                    /* 0x1c */
     struct Elem arr[1];           /* 0x20 */
+    struct Elem *func_020523e0(int idx);
 };
 struct Entry {
     unsigned char kind;
@@ -142,6 +268,8 @@ struct data_020a5bb8_t {
     /* 0x7c */ struct Hdr84 *fileTable; /* per-file records (func_020509b0, func_020509d8) */
     /* 0x80 */ void *symbols;           /* loaded only when func_02050d54's flag is set */
     /* 0x84 */ void *info;              /* the Info*Entry::GetWithID tables */
+    int func_02050d54(struct SndHeap *heap, int loadSymbols);
+    void func_02050f34(const char *path, struct SndHeap *heap, int loadSymbols);
 };
 /* The INFO block data_020a5bb8_t::info points at. After its 8-byte block
    header come the offsets, from the block start, of its record tables; each
@@ -239,6 +367,14 @@ struct C {
        this goes on at 0x44 */
     /* 0x34 */ unsigned char chans[16];
     void func_0204fce8(void *);
+    void func_0204fda4();
+    void func_0204fde8();
+    void func_0204fe5c(int volume);
+    void func_0204fed0();
+    void func_0204ff48();
+    void func_0204ff9c();
+    void func_0204ffcc();
+    void func_02050008();
 };
 struct E
 {
@@ -260,10 +396,14 @@ struct S82 {
     /* 0x50 */ char *narc;         /* the file func_0204ef9c checked for 'NARC' */
     /* 0x54 */ NarcFatBlock *f54;  /* its FATB block */
     /* 0x58 */ unsigned char *f58; /* its FIMG data */
+    int func_0204ede8(unsigned int i);
+    int func_0204ee10();
+    int func_0204ee40(char *name, char *p);
 };
 struct HeapAllocator_205212c {
     char pad0[8];
-    void *owner_8;    
+    void *owner_8;
+    void func_020520a4();
 };
 /* The 4 streams at data_020a5bd4 (stride 0x12c), each a C (0x00..0x44)
    followed by its own state. */
@@ -289,6 +429,9 @@ struct Obj_205212c : C {
     /* 0x11c */ int volumeIndex; /* indexes data_02086384; func_020522c4 adds the fade term */
     /* 0x120 */ int lastVolume;  /* last value func_020522c4 sent with func_0204fe5c */
     /* 0x124 */ char pad5[0x12c - 0x124];
+    void func_020520dc();
+    void func_0205212c();
+    void func_02052208();
 };
 /* A player heap: func_0204fa3c carves one per playable sequence and parks it
    on its data_020a4d6c record's second list; func_0204f504 hands it to a
@@ -370,11 +513,6 @@ extern void SND_DestroyBank(struct SNDBankData *bank);
 extern void SND_AssignWaveArc(struct SNDBankData *bank, int index, struct SNDWaveArc *waveArc);
 
 /* In-span forward declarations. */
-extern int func_0204eda4(int r0, char* a, u32 idx);
-extern int func_0204ede8(struct S82 *o, unsigned int i);
-extern int func_0204ee10(struct S82 *self);
-extern int func_0204ee40(struct S82 *self, char *name, char *p);
-extern int func_0204ef9c(void* p);
 extern void func_0204efe0(void);
 extern void func_0204effc(void);
 extern void func_0204f03c(void);
@@ -386,23 +524,9 @@ extern int func_0204f138(unsigned int mask);
 extern void func_0204f15c(unsigned int mask);
 extern int func_0204f194(unsigned int a);
 extern void func_0204f1e8(void);
-extern void func_0204f214(NNSSndSeqPlayer *player, int prio);
 extern void func_0204f278(void *mem, u32 size, u32 data1, u32 data2);
-extern void func_0204f2d4(NNSSndSeqPlayer *obj);
 extern NNSSndSeqPlayer *func_0204f364(int prio);
-extern void func_0204f3e0(NNSSndSeqPlayer *player);
-extern void func_0204f400(NNSSndSeqPlayer *self);
-extern void func_0204f460(NNSFndList *list, NNSSndSeqPlayer *player);
-extern void func_0204f4bc(NNSSndSeqPlayer *player);
 extern struct SndHeap *func_0204f504(int playerNo, NNSSndSeqPlayer *player);
-extern void func_0204f558(NNSSndSeqPlayer *player, int flag);
-extern void func_0204f5a0(NNSSndSeqPlayer *player, int fadeFrames);
-extern int func_0204f600(NNSSndSeqPlayer *player, const void *seqData, u32 seqOffset,
-                         struct SNDBankData *bank);
-extern void func_0204f630(NNSSndSeqPlayer *player);
-extern NNSSndSeqPlayer *func_0204f63c(NNSSndHandle *handle, int playerIdx, int prio);
-extern void func_0204f6f8(NNSSndHandle *handle, int seqArcNo, int index);
-extern void func_0204f720(NNSSndHandle *handle, int seqNo);
 extern void func_0204f934(NNSSndHandle *handle);
 extern void func_0204f94c(NNSSndHandle *handle);
 extern void func_0204f958(int idx, int val);
@@ -411,14 +535,6 @@ extern int func_0204fa2c(NNSSndHandle *handle, int fade);
 extern int func_0204fa3c(int playerNo, struct SndHeap *heap, u32 size);
 extern void func_0204fafc(void);
 extern void func_0204fc40(void);
-extern void func_0204fda4(struct C *c);
-extern void func_0204fde8(struct C *obj);
-extern void func_0204fe5c(struct C *c, int volume);
-extern void func_0204fed0(struct C *c);
-extern void func_0204ff48(struct C *p);
-extern void func_0204ff9c(struct C *o);
-extern void func_0204ffcc(struct C *c);
-extern void func_02050008(struct C *o);
 extern void func_02050038(void *arg);
 extern void func_020500a4(void *arg);
 extern void func_020501b8(void);
@@ -444,20 +560,7 @@ extern struct SndArchiveInfo *func_02050c14(unsigned int id);
 extern void *func_02050cdc(int a, int idx);
 extern int func_02050d2c(void);
 extern int func_02050d3c(int v);
-extern int func_02050d54(data_020a5bb8_t *arc, struct SndHeap *heap, int loadSymbols);
-extern void func_02050f34(data_020a5bb8_t *arc, const char *path, struct SndHeap *heap,
-                          int loadSymbols);
 extern void func_02050fb0(void);
-extern s32 func_02050fd4(struct SndHeap *heap);
-extern s32 func_02051024(struct SndHeap *heap, NNSFndHeapHandle frmHeap);
-extern void func_02051064(NNSFndList *level);
-extern u32 func_02051074(struct SndHeap *heap);
-extern void func_020510a4(struct SndHeap *heap, int level);
-extern s32 func_0205117c(struct SndHeap *heap);
-extern void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback,
-                           u32 data1, u32 data2);
-extern void func_02051244(struct SndHeap *heap);
-extern void func_020512f0(struct SndHeap *heap);
 extern struct SndHeap *func_0205130c(u32 addr, u32 size);
 extern void func_020513a8(void *mem, u32 size, u32 arc, u32 fileId);
 extern void func_020513e4(void *mem, u32 size, u32 arc, u32 fileId);
@@ -478,70 +581,52 @@ extern struct SndHeap *func_02051a28(int playerNo, NNSSndSeqPlayer *player);
 extern void func_02051a48(void *mem, u32 size, u32 data1, u32 data2);
 extern void func_02051a68(void *mem, u32 size, u32 data1, u32 data2);
 extern void func_02051a88(void *mem, u32 size, u32 data1, u32 data2);
-extern int func_02051a98(NNSSndHandle *handle, int playerNo, unsigned int bankNo, int playerPrio,
-                         struct Elem *seq, struct ElemTable *arc, int seqArcNo, int index);
-extern int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int bankNo, int playerPrio,
-                         Sound::InfoSequenceEntry *info, int seqNo);
-extern int func_02051e60(NNSSndHandle *handle, int b, int c, int d, unsigned int arg5, int arg6);
-extern int func_02051f1c(void *a0, u32 a1, int a2);
-extern int func_02051fb4(void *thiz, unsigned int id);
-extern int func_02052008(struct SndHeap *heap);
-extern void func_020520a4(void *node);
-extern void func_020520dc(Obj_205212c *self);
-extern void func_0205212c(Obj_205212c *self);
-extern void func_02052208(Obj_205212c *stream);
 extern void func_02052234(void);
 extern void func_0205227c(void);
 extern void func_020522c4(void);
-extern struct Elem *func_020523e0(struct ElemTable *obj, int idx);
-extern int func_02052420(NNSSndFader *fader);
-extern void func_02052438(NNSSndFader *fader);
-extern int func_02052458(NNSSndFader *fader);
-extern void func_02052494(NNSSndFader *o, int a, int b);
-extern void func_020524c4(NNSSndFader *fader);
 }
 
-extern "C" void func_020524c4(NNSSndFader *fader) {
-    fader->target = 0;
-    fader->origin = fader->target;
-    fader->frame = 0;
-    fader->counter = fader->frame;
+void NNSSndFader::func_020524c4() {
+    this->target = 0;
+    this->origin = this->target;
+    this->frame = 0;
+    this->counter = this->frame;
 }
 
-extern "C" void func_02052494(NNSSndFader *o, int a, int b) {
-    o->origin = func_02052458(o);
-    o->target = a;
-    o->frame = b;
-    o->counter = 0;
+void NNSSndFader::func_02052494(int a, int b) {
+    this->origin = this->func_02052458();
+    this->target = a;
+    this->frame = b;
+    this->counter = 0;
 }
 
-extern "C" int func_02052458(NNSSndFader *fader) {
-    int den = fader->frame;
-    int num = fader->counter;
+int NNSSndFader::func_02052458() {
+    int den = this->frame;
+    int num = this->counter;
     if (num >= den)
-        return fader->target;
+        return this->target;
     {
-        int lo = fader->origin;
-        int d = fader->target - lo;
+        int lo = this->origin;
+        int d = this->target - lo;
         return lo + num * d / den;
     }
 }
 
-extern "C" void func_02052438(NNSSndFader *fader) {
-    if (fader->counter < fader->frame) {
-        fader->counter += 1;
+void NNSSndFader::func_02052438() {
+    if (this->counter < this->frame) {
+        this->counter += 1;
     }
 }
 
-extern "C" int func_02052420(NNSSndFader *fader) {
-    return fader->counter >= fader->frame;
+int NNSSndFader::func_02052420() {
+    return this->counter >= this->frame;
 }
 
-extern "C" struct Elem *func_020523e0(struct ElemTable *obj, int idx) {
+struct Elem *ElemTable::func_020523e0(int idx) {
     struct Elem* e;
     if (idx < 0) return 0;
-    if ((u32)idx >= (u32)obj->count) return 0;
-    e = &obj->arr[idx];
+    if ((u32)idx >= (u32)this->count) return 0;
+    e = &this->arr[idx];
     if (e->offset == -1)
         return 0;
     return e;
@@ -555,11 +640,11 @@ extern "C" void func_020522c4(void) {
         int flags = stream->uf0;
         if ((flags << 31) >> 31) {
             if (stream->stopPending != 0) {
-                func_02052208(stream);
+                (stream)->func_02052208();
             } else {
                 if ((flags << 29) >> 31) {
                     if (stream->startReady != 0) {
-                        func_0204ffcc(stream);
+                        (stream)->func_0204ffcc();
                         {
                             stream->uf0 |= 2;
                             stream->uf0 &= ~4;
@@ -568,17 +653,17 @@ extern "C" void func_020522c4(void) {
                 }
                 if (((int)stream->uf0 << 30) >> 31) {
                     unsigned long t2;
-                    func_02052438(&stream->fade);
+                    stream->fade.func_02052438();
                     t1 = data_02086384[stream->volumeIndex];
-                    t2 = data_02086384[func_02052458(&stream->fade) >> 8];
+                    t2 = data_02086384[stream->fade.func_02052458() >> 8];
                     t1 = t2 + t1;
                     if (t1 != stream->lastVolume) {
-                        func_0204fe5c(stream, t1);
+                        (stream)->func_0204fe5c(t1);
                         stream->lastVolume = t1;
                     }
                     if (((int)stream->uf0 << 28) >> 31) {
-                        if (func_02052420(&stream->fade)) {
-                            func_02052208(stream);
+                        if (stream->fade.func_02052420()) {
+                            (stream)->func_02052208();
                         }
                     }
                 }
@@ -592,7 +677,7 @@ extern "C" void func_0205227c(void) {
     int i;
     for (i = 0; i < 4; i++) {
         if (((int)data_020a5bd4[i].uf0 << 30) >> 31) {
-            func_0204ff48(&data_020a5bd4[i]);
+            (&data_020a5bd4[i])->func_0204ff48();
         }
     }
 }
@@ -601,26 +686,26 @@ extern "C" void func_02052234(void) {
     int i;
     for (i = 0; i < 4; i++) {
         if (((int)data_020a5bd4[i].uf0 << 30) >> 31) {
-            func_0204fed0(&data_020a5bd4[i]);
+            (&data_020a5bd4[i])->func_0204fed0();
         }
     }
 }
 
-extern "C" void func_02052208(Obj_205212c *stream) {
-    int v = stream->uf0;
+void Obj_205212c::func_02052208() {
+    int v = this->uf0;
     if ((v << 30) >> 31)
-        func_0204ff9c(stream);
-    func_0205212c(stream);
+        (this)->func_0204ff9c();
+    (this)->func_0205212c();
 }
 
-extern "C" void func_0205212c(Obj_205212c *self) {
-    if (self->u114 != 0) {
-        *self->u114 = 0;
-        self->u114 = 0;
+void Obj_205212c::func_0205212c() {
+    if (this->u114 != 0) {
+        *this->u114 = 0;
+        this->u114 = 0;
     }
-    func_020520dc(self);
-    if (FS_IsFile(&self->file)) {
-        FS_CloseFile(&self->file);
+    (this)->func_020520dc();
+    if (FS_IsFile(&this->file)) {
+        FS_CloseFile(&this->file);
     }
     OSIntrMode irq = OS_DisableInterrupts();
     HeapAllocator_205212c *node =
@@ -628,40 +713,40 @@ extern "C" void func_0205212c(Obj_205212c *self) {
     while (node != 0) {
         HeapAllocator_205212c *next =
             (HeapAllocator_205212c *)NNS_FndGetNextListObject(&data_020a5bc8, node);
-        if (node->owner_8 == self) {
+        if (node->owner_8 == this) {
             NNS_FndRemoveListObject(&data_020a5bc8, node);
-            func_020520a4(node);
+            node->func_020520a4();
         }
         node = next;
     }
     OS_RestoreInterrupts(irq);
-    u32 *p = &self->uf0;
+    u32 *p = &this->uf0;
     *p &= ~1u;
     *p &= ~4u;
     *p &= ~2u;
 }
 
-extern "C" void func_020520dc(Obj_205212c *self) {
-    if (self->useCount == 0)
+void Obj_205212c::func_020520dc() {
+    if (this->useCount == 0)
         return;
 
-    self->useCount -= 1;
+    this->useCount -= 1;
 
-    if (self->useCount != 0)
+    if (this->useCount != 0)
         return;
 
-    func_02050008(self);
+    (this)->func_02050008();
 }
 
-extern "C" void func_020520a4(void *node) {
+void HeapAllocator_205212c::func_020520a4() {
     OSIntrMode state;
 
     state = OS_DisableInterrupts();
-    NNS_FndAppendListObject(&data_020a5bbc, node);
+    NNS_FndAppendListObject(&data_020a5bbc, this);
     OS_RestoreInterrupts(state);
 }
 
-extern "C" int func_02052008(struct SndHeap *heap) {
+int SndHeap::func_02052008() {
     int i;
     func_02050d2c();
     for (i = 0; i < 0x20; i++) {
@@ -671,12 +756,12 @@ extern "C" int func_02052008(struct SndHeap *heap) {
         Sound::Player::SetPlayableSeqCount(i, info->seqMax);
         if (info->heapSize == 0)
             continue;
-        if (heap == 0)
+        if (this == 0)
             continue;
         {
             int j;
             for (j = 0; j < info->seqMax; j++) {
-                if (func_0204fa3c(i, heap, info->heapSize) == 0)
+                if (func_0204fa3c(i, this, info->heapSize) == 0)
                     return 0;
             }
         }
@@ -684,15 +769,15 @@ extern "C" int func_02052008(struct SndHeap *heap) {
     return 1;
 }
 
-extern "C" int func_02051fb4(void *handle, unsigned int seqNo) {
+int NNSSndHandle::func_02051fb4(unsigned int seqNo) {
     Sound::InfoSequenceEntry *info = Sound::InfoSequenceEntry::GetWithID(seqNo);
     if (!info)
         return 0;
-    return func_02051bd0((NNSSndHandle *)handle, info->playerNumber, info->bankId,
+    return this->func_02051bd0(info->playerNumber, info->bankId,
                          info->playerPriority, info, seqNo);
 }
 
-extern "C" int func_02051f1c(void *handle, u32 seqArcNo, int index) {
+int NNSSndHandle::func_02051f1c(u32 seqArcNo, int index) {
     struct SndArchiveInfo *info;
     struct ElemTable *arc;
     struct Elem *seq;
@@ -702,15 +787,14 @@ extern "C" int func_02051f1c(void *handle, u32 seqArcNo, int index) {
     arc = (struct ElemTable *)func_020509b0(info->fileId);
     if (arc == 0)
         return 0;
-    seq = func_020523e0(arc, index);
+    seq = (arc)->func_020523e0(index);
     if (seq == 0)
         return 0;
-    return func_02051a98((NNSSndHandle *)handle, seq->playerNumber, seq->bankId,
+    return this->func_02051a98(seq->playerNumber, seq->bankId,
                          seq->playerPriority, seq, arc, seqArcNo, index);
 }
 
-extern "C" int func_02051e60(NNSSndHandle *handle, int playerNo, int bankNo, int playerPrio,
-                             unsigned int seqArcNo, int index) {
+int NNSSndHandle::func_02051e60(int playerNo, int bankNo, int playerPrio, unsigned int seqArcNo, int index) {
     struct SndArchiveInfo *info;
     struct Elem *seq;
     struct ElemTable *arc;
@@ -720,7 +804,7 @@ extern "C" int func_02051e60(NNSSndHandle *handle, int playerNo, int bankNo, int
     arc = (struct ElemTable *)func_020509b0(info->fileId);
     if (arc == 0)
         return 0;
-    seq = func_020523e0(arc, index);
+    seq = (arc)->func_020523e0(index);
     if (seq == 0)
         return 0;
     if (playerPrio < 0)
@@ -729,11 +813,10 @@ extern "C" int func_02051e60(NNSSndHandle *handle, int playerNo, int bankNo, int
         bankNo = seq->bankId;
     if (playerNo < 0)
         playerNo = seq->playerNumber;
-    return func_02051a98(handle, playerNo, bankNo, playerPrio, seq, arc, seqArcNo, index);
+    return this->func_02051a98(playerNo, bankNo, playerPrio, seq, arc, seqArcNo, index);
 }
 
-extern "C" int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int bankNo,
-                             int playerPrio, Sound::InfoSequenceEntry *info, int seqNo) {
+int NNSSndHandle::func_02051bd0(int playerNo, unsigned int bankNo, int playerPrio, Sound::InfoSequenceEntry *info, int seqNo) {
     Sound::InfoInstrumentBankEntry *bank;
     struct SndArchiveInfo *waveArcInfo;
     NNSSndSeqPlayer *player;
@@ -745,7 +828,7 @@ extern "C" int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int ba
     bank = Sound::InfoInstrumentBankEntry::GetWithID(bankNo);
     if (bank == 0) return 0;
 
-    player = func_0204f63c(handle, playerNo, playerPrio);
+    player = this->func_0204f63c(playerNo, playerPrio);
     if (player == 0)
         return 0;
 
@@ -753,12 +836,12 @@ extern "C" int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int ba
     if (bankData == 0) {
         heap = func_02051a28(playerNo, player);
         if (heap == 0) {
-            func_0204f630(player);
+            player->func_0204f630();
             return 0;
         }
         bankData = func_02051634(bank->fileId, func_02051a68, 0, 0, heap);
         if (bankData == 0) {
-            func_0204f630(player);
+            player->func_0204f630();
             return 0;
         }
     }
@@ -769,7 +852,7 @@ extern "C" int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int ba
             void *waveArc;
             waveArcInfo = func_02050b4c(waveArcNo);
             if (waveArcInfo == 0) {
-                func_0204f630(player);
+                player->func_0204f630();
                 return 0;
             }
             waveArc = func_020509b0(waveArcInfo->fileId);
@@ -777,13 +860,13 @@ extern "C" int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int ba
                 if (heap == 0) {
                     heap = func_02051a28(playerNo, player);
                     if (heap == 0) {
-                        func_0204f630(player);
+                        player->func_0204f630();
                         return 0;
                     }
                 }
                 waveArc = func_02051634(waveArcInfo->fileId, func_02051a48, 0, 0, heap);
                 if (waveArc == 0) {
-                    func_0204f630(player);
+                    player->func_0204f630();
                     return 0;
                 }
             }
@@ -796,28 +879,26 @@ extern "C" int func_02051bd0(NNSSndHandle *handle, int playerNo, unsigned int ba
         if (heap == 0) {
             heap = func_02051a28(playerNo, player);
             if (heap == 0) {
-                func_0204f630(player);
+                player->func_0204f630();
                 return 0;
             }
         }
         seqData = func_02051634(info->fileId, func_02051a88, 0, 0, heap);
         if (seqData == 0) {
-            func_0204f630(player);
+            player->func_0204f630();
             return 0;
         }
     }
 
-    func_0204f600(player, (char *)seqData + ((struct P5 *)seqData)->baseOffset, 0,
+    player->func_0204f600((char *)seqData + ((struct P5 *)seqData)->baseOffset, 0,
                   (struct SNDBankData *)bankData);
-    NNS_SndPlayerSetInitialVolume(handle, info->volume);
-    NNS_SndPlayerSetChannelPriority(handle, info->channelPriority);
-    func_0204f720(handle, seqNo);
+    NNS_SndPlayerSetInitialVolume(this, info->volume);
+    NNS_SndPlayerSetChannelPriority(this, info->channelPriority);
+    this->func_0204f720(seqNo);
     return 1;
 }
 
-extern "C" int func_02051a98(NNSSndHandle *handle, int playerNo, unsigned int bankNo,
-                             int playerPrio, struct Elem *seq, struct ElemTable *arc, int seqArcNo,
-                             int index) {
+int NNSSndHandle::func_02051a98(int playerNo, unsigned int bankNo, int playerPrio, struct Elem *seq, struct ElemTable *arc, int seqArcNo, int index) {
     Sound::InfoInstrumentBankEntry *bank;
     NNSSndSeqPlayer *player;
     void *bankData;
@@ -826,12 +907,12 @@ extern "C" int func_02051a98(NNSSndHandle *handle, int playerNo, unsigned int ba
     bank = Sound::InfoInstrumentBankEntry::GetWithID(bankNo);
     if (bank == 0)
         return 0;
-    player = func_0204f63c(handle, playerNo, playerPrio);
+    player = this->func_0204f63c(playerNo, playerPrio);
     if (player == 0)
         return 0;
     bankData = func_020509b0(bank->fileId);
     if (bankData == 0) {
-        func_0204f630(player);
+        player->func_0204f630();
         return 0;
     }
     for (i = 0; i < 4; i++) {
@@ -841,22 +922,22 @@ extern "C" int func_02051a98(NNSSndHandle *handle, int playerNo, unsigned int ba
         if (waveArcNo != 0xffff) {
             info = func_02050b4c(waveArcNo);
             if (info == 0) {
-                func_0204f630(player);
+                player->func_0204f630();
                 return 0;
             }
             waveArc = func_020509b0(info->fileId);
             if (waveArc == 0) {
-                func_0204f630(player);
+                player->func_0204f630();
                 return 0;
             }
             SND_AssignWaveArc((struct SNDBankData *)bankData, i, (struct SNDWaveArc *)waveArc);
         }
     }
-    func_0204f600(player, (char *)arc + arc->baseOffset, seq->offset,
+    player->func_0204f600((char *)arc + arc->baseOffset, seq->offset,
                   (struct SNDBankData *)bankData);
-    NNS_SndPlayerSetInitialVolume(handle, seq->volume);
-    NNS_SndPlayerSetChannelPriority(handle, seq->channelPriority);
-    func_0204f6f8(handle, seqArcNo, index);
+    NNS_SndPlayerSetInitialVolume(this, seq->volume);
+    NNS_SndPlayerSetChannelPriority(this, seq->channelPriority);
+    this->func_0204f6f8(seqArcNo, index);
     return 1;
 }
 
@@ -877,7 +958,7 @@ extern "C" void func_02051a48(void *mem, u32 size, u32 data1, u32 data2) {
 extern "C" struct SndHeap *func_02051a28(int playerNo, NNSSndSeqPlayer *player) {
     struct SndHeap *heap = func_0204f504(playerNo, player);
     if (heap) {
-        func_02051244(heap);
+        (heap)->func_02051244();
     }
     return heap;
 }
@@ -1020,7 +1101,7 @@ extern "C" void *func_02051634(u32 fileId, SndHeapDisposeCallback callback, u32 
     void *buffer;
     if (size == 0)
         return 0;
-    buffer = func_020511d4(heap, size + 0x20, callback, data1, data2);
+    buffer = heap->func_020511d4(size + 0x20, callback, data1, data2);
     if (buffer == 0)
         return 0;
     if (size != func_020509d8(fileId, buffer, size, 0))
@@ -1115,21 +1196,21 @@ extern "C" struct SndHeap *func_0205130c(u32 addr, u32 size) {
                                      (end - aligned) - sizeof(struct SndHeap), 0);
     if (frmHeap == 0)
         return 0;
-    if (func_02051024((struct SndHeap *)aligned, frmHeap) != 0)
+    if (((struct SndHeap *)aligned)->func_02051024(frmHeap) != 0)
         return (struct SndHeap *)aligned;
     NNS_FndDestroyFrmHeap(frmHeap);
     return 0;
 }
 
-extern "C" void func_020512f0(struct SndHeap *heap) {
-    func_02051244(heap);
-    NNS_FndDestroyFrmHeap(heap->frmHeap);
+void SndHeap::func_020512f0() {
+    (this)->func_02051244();
+    NNS_FndDestroyFrmHeap(this->frmHeap);
 }
 
-extern "C" void func_02051244(struct SndHeap *heap) {
+void SndHeap::func_02051244() {
     NNSFndList *level;
     struct SndHeapBlock *block;
-    level = (NNSFndList *)NNS_FndGetPrevListObject(&heap->levels, 0);
+    level = (NNSFndList *)NNS_FndGetPrevListObject(&this->levels, 0);
     if (level != 0) {
         do {
             block = (struct SndHeapBlock *)NNS_FndGetPrevListObject(level, 0);
@@ -1139,26 +1220,25 @@ extern "C" void func_02051244(struct SndHeap *heap) {
                 }
                 block = (struct SndHeapBlock *)NNS_FndGetPrevListObject(level, block);
             }
-            NNS_FndRemoveListObject(&heap->levels, level);
-            level = (NNSFndList *)NNS_FndGetPrevListObject(&heap->levels, 0);
+            NNS_FndRemoveListObject(&this->levels, level);
+            level = (NNSFndList *)NNS_FndGetPrevListObject(&this->levels, 0);
         } while (level != 0);
     }
-    NNS_FndFreeToFrmHeap(heap->frmHeap, NNS_FND_FRMHEAP_FREE_ALL);
+    NNS_FndFreeToFrmHeap(this->frmHeap, NNS_FND_FRMHEAP_FREE_ALL);
     func_02050fb0();
-    func_02050fd4(heap);
+    (this)->func_02050fd4();
 }
 
-extern "C" void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback,
-                               u32 data1, u32 data2) {
+void *SndHeap::func_020511d4(u32 size, SndHeapDisposeCallback callback, u32 data1, u32 data2) {
     struct SndHeapBlock *block;
     NNSFndList *level;
 
-    block = (struct SndHeapBlock *)NNS_FndAllocFromFrmHeapEx(heap->frmHeap,
+    block = (struct SndHeapBlock *)NNS_FndAllocFromFrmHeapEx(this->frmHeap,
                                                              ((size + 0x1f) & ~0x1fu) + 0x20, 0x20);
     if (block == 0)
         return 0;
 
-    level = (NNSFndList *)NNS_FndGetPrevListObject(&heap->levels, 0);
+    level = (NNSFndList *)NNS_FndGetPrevListObject(&this->levels, 0);
     block->size = size;
     block->callback = callback;
     block->data1 = data1;
@@ -1168,31 +1248,31 @@ extern "C" void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCal
     return block->mem;
 }
 
-extern "C" s32 func_0205117c(struct SndHeap *heap) {
-    u16 level = heap->levels.numObjects;
-    NNSFndHeapHandle frmHeap = heap->frmHeap;
+s32 SndHeap::func_0205117c() {
+    u16 level = this->levels.numObjects;
+    NNSFndHeapHandle frmHeap = this->frmHeap;
     if (!NNS_FndRecordStateForFrmHeap(frmHeap, level)) {
         return ~0;
     }
-    if (func_02050fd4(heap)) {
-        return (s32)((u32)heap->levels.numObjects - 1);
+    if ((this)->func_02050fd4()) {
+        return (s32)((u32)this->levels.numObjects - 1);
     }
-    NNS_FndFreeByStateToFrmHeap(heap->frmHeap, 0);
+    NNS_FndFreeByStateToFrmHeap(this->frmHeap, 0);
     return ~0;
 }
 
-extern "C" void func_020510a4(struct SndHeap *heap, int level) {
+void SndHeap::func_020510a4(int level) {
     struct SndHeapBlock *block;
     NNSFndList *top;
 
     block = 0;
     if (level == 0) {
-        func_02051244(heap);
+        (this)->func_02051244();
         return;
     }
-    if (level < heap->levels.numObjects) {
+    if (level < this->levels.numObjects) {
         do {
-            top = (NNSFndList *)NNS_FndGetPrevListObject(&heap->levels, 0);
+            top = (NNSFndList *)NNS_FndGetPrevListObject(&this->levels, 0);
             block = (struct SndHeapBlock *)NNS_FndGetPrevListObject(top, block);
             while (block != 0) {
                 if (block->callback != 0) {
@@ -1200,18 +1280,18 @@ extern "C" void func_020510a4(struct SndHeap *heap, int level) {
                 }
                 block = (struct SndHeapBlock *)NNS_FndGetPrevListObject(top, block);
             }
-            NNS_FndRemoveListObject(&heap->levels, top);
-        } while (level < heap->levels.numObjects);
+            NNS_FndRemoveListObject(&this->levels, top);
+        } while (level < this->levels.numObjects);
     }
-    NNS_FndFreeByStateToFrmHeap(heap->frmHeap, level);
+    NNS_FndFreeByStateToFrmHeap(this->frmHeap, level);
     func_02050fb0();
-    NNS_FndRecordStateForFrmHeap(heap->frmHeap, heap->levels.numObjects);
-    func_02050fd4(heap);
+    NNS_FndRecordStateForFrmHeap(this->frmHeap, this->levels.numObjects);
+    (this)->func_02050fd4();
 }
 
-extern "C" u32 func_02051074(struct SndHeap *heap) {
+u32 SndHeap::func_02051074() {
     u32 size;
-    size = NNS_FndGetAllocatableSizeForFrmHeapEx(heap->frmHeap, 0x20);
+    size = NNS_FndGetAllocatableSizeForFrmHeapEx(this->frmHeap, 0x20);
     if (size < 0x20)
         return 0;
     size -= 0x20;
@@ -1219,26 +1299,26 @@ extern "C" u32 func_02051074(struct SndHeap *heap) {
     return size;
 }
 
-extern "C" void func_02051064(NNSFndList *level) {
-    NNS_FndInitList(level, 0);
+void NNSFndList::func_02051064() {
+    NNS_FndInitList(this, 0);
 }
 
-extern "C" s32 func_02051024(struct SndHeap *heap, NNSFndHeapHandle frmHeap) {
-    NNS_FndInitList(&heap->levels, 0xc);
-    heap->frmHeap = frmHeap;
-    if (func_02050fd4(heap)) {
+s32 SndHeap::func_02051024(NNSFndHeapHandle frmHeap) {
+    NNS_FndInitList(&this->levels, 0xc);
+    this->frmHeap = frmHeap;
+    if ((this)->func_02050fd4()) {
         return 1;
     }
     return 0;
 }
 
-extern "C" s32 func_02050fd4(struct SndHeap *heap) {
-    NNSFndList *level = (NNSFndList *)NNS_FndAllocFromFrmHeapEx(heap->frmHeap, 0x14, 4);
+s32 SndHeap::func_02050fd4() {
+    NNSFndList *level = (NNSFndList *)NNS_FndAllocFromFrmHeapEx(this->frmHeap, 0x14, 4);
     if (!level) {
         return 0;
     }
-    func_02051064(level);
-    NNS_FndAppendListObject(&heap->levels, level);
+    level->func_02051064();
+    NNS_FndAppendListObject(&this->levels, level);
     return 1;
 }
 
@@ -1248,50 +1328,49 @@ extern "C" void func_02050fb0(void) {
     SND_WaitForCommandProc(r);
 }
 
-extern "C" void func_02050f34(data_020a5bb8_t *arc, const char *path, struct SndHeap *heap,
-                              int loadSymbols) {
-    arc->info = 0;
-    arc->fileTable = 0;
-    arc->symbols = 0;
-    FS_ConvertPathToFileID(&arc->fileId, path);
-    FS_InitFile(&arc->file);
-    FS_OpenFileFast(&arc->file, arc->fileId);
-    FS_ReadFile(&arc->file, arc, 0x30);
+void data_020a5bb8_t::func_02050f34(const char *path, struct SndHeap *heap, int loadSymbols) {
+    this->info = 0;
+    this->fileTable = 0;
+    this->symbols = 0;
+    FS_ConvertPathToFileID(&this->fileId, path);
+    FS_InitFile(&this->file);
+    FS_OpenFileFast(&this->file, this->fileId);
+    FS_ReadFile(&this->file, this, 0x30);
     if (heap != 0)
-        func_02050d54(arc, heap, loadSymbols);
-    data_020a5bb8 = (char *)arc;
+        (this)->func_02050d54(heap, loadSymbols);
+    data_020a5bb8 = (char *)this;
 }
 
-extern "C" int func_02050d54(data_020a5bb8_t *arc, struct SndHeap *heap, int loadSymbols) {
+int data_020a5bb8_t::func_02050d54(struct SndHeap *heap, int loadSymbols) {
     unsigned int sz;
     int r;
-    arc->info = func_020511d4(heap, arc->infoSize, func_02050988, (u32)arc, 0);
-    if (arc->info == 0)
+    this->info = heap->func_020511d4(this->infoSize, func_02050988, (u32)this, 0);
+    if (this->info == 0)
         return 0;
-    arc->fileTable =
-        (struct Hdr84 *)func_020511d4(heap, arc->fileTableSize, func_0205097c, (u32)arc, 0);
-    if (arc->fileTable == 0)
+    this->fileTable =
+        (struct Hdr84 *)heap->func_020511d4(this->fileTableSize, func_0205097c, (u32)this, 0);
+    if (this->fileTable == 0)
         return 0;
-    if (loadSymbols != 0 && (sz = arc->symbolSize) != 0) {
-        arc->symbols = func_020511d4(heap, sz, func_02050970, (u32)arc, 0);
-        if (arc->symbols == 0)
+    if (loadSymbols != 0 && (sz = this->symbolSize) != 0) {
+        this->symbols = heap->func_020511d4(sz, func_02050970, (u32)this, 0);
+        if (this->symbols == 0)
             return 0;
     }
-    if (FS_SeekFile(&arc->file, arc->infoOffset, FS_SEEK_SET) == 0)
+    if (FS_SeekFile(&this->file, this->infoOffset, FS_SEEK_SET) == 0)
         return 0;
-    r = FS_ReadFile(&arc->file, arc->info, arc->infoSize);
-    if (r != arc->infoSize)
+    r = FS_ReadFile(&this->file, this->info, this->infoSize);
+    if (r != this->infoSize)
         return 0;
-    if (FS_SeekFile(&arc->file, arc->fileTableOffset, FS_SEEK_SET) == 0)
+    if (FS_SeekFile(&this->file, this->fileTableOffset, FS_SEEK_SET) == 0)
         return 0;
-    r = FS_ReadFile(&arc->file, arc->fileTable, arc->fileTableSize);
-    if (r != arc->fileTableSize)
+    r = FS_ReadFile(&this->file, this->fileTable, this->fileTableSize);
+    if (r != this->fileTableSize)
         return 0;
-    if (loadSymbols != 0 && arc->symbolSize != 0) {
-        if (FS_SeekFile(&arc->file, arc->symbolOffset, FS_SEEK_SET) == 0)
+    if (loadSymbols != 0 && this->symbolSize != 0) {
+        if (FS_SeekFile(&this->file, this->symbolOffset, FS_SEEK_SET) == 0)
             return 0;
-        r = FS_ReadFile(&arc->file, arc->symbols, arc->symbolSize);
-        if (r != arc->symbolSize)
+        r = FS_ReadFile(&this->file, this->symbols, this->symbolSize);
+        if (r != this->symbolSize)
             return 0;
     }
     return 1;
@@ -1318,7 +1397,7 @@ extern "C" void *func_02050cdc(int a, int idx) {
     o = (struct ElemTable *)func_020509b0(info->fileId);
     if (o == 0)
         return 0;
-    e = func_020523e0(o, idx);
+    e = (o)->func_020523e0(idx);
     if (e == 0)
         return 0;
     return &e->bankId;
@@ -1479,14 +1558,14 @@ extern "C" void func_020508a0(void) {
     if (g->f4 != 0)
         return;
     sub = &g->fade;
-    func_02052438(sub);
+    sub->func_02052438();
     if (g->f48 != 0) {
-        if (func_02052420(sub) != 0) {
+        if (sub->func_02052420() != 0) {
             func_020502b8();
             return;
         }
     }
-    v = func_02052458(sub) >> 8;
+    v = sub->func_02052458() >> 8;
     if (v == g->f4c)
         return;
     SND_SetChannelVolume(g->f20, v, 0);
@@ -1611,8 +1690,8 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
         g->f30 = (void (*)(int, int, int, int, int))p14;
         g->f34 = p15;
         g->f4c = pp10;
-        func_020524c4(&g->fade);
-        func_02052494(&g->fade, pp10 << 8, 1);
+        g->fade.func_020524c4();
+        g->fade.func_02052494(pp10 << 8, 1);
         g->f48 = 0;
         return 1;
     }
@@ -1716,79 +1795,79 @@ extern "C" void func_02050038(void *arg) {
     }
 }
 
-extern "C" void func_02050008(struct C *o) {
-    if (o->f2c == 0) {
+void C::func_02050008() {
+    if (this->f2c == 0) {
         return;
     }
-    func_0204f15c(o->f2c);
-    o->f2c = 0;
-    o->chanCount = 0;
+    func_0204f15c(this->f2c);
+    this->f2c = 0;
+    this->chanCount = 0;
 }
 
-extern "C" void func_0204ffcc(struct C *c) {
-    SND_StartTimer(c->f2c, 0, 1 << c->f28, 0);
-    c->fc |= 2;
+void C::func_0204ffcc() {
+    SND_StartTimer(this->f2c, 0, 1 << this->f28, 0);
+    this->fc |= 2;
 }
 
-extern "C" void func_0204ff9c(struct C *o) {
-    if ((o->fc << 31) >> 31) {
-        func_0204fde8(o);
+void C::func_0204ff9c() {
+    if ((this->fc << 31) >> 31) {
+        (this)->func_0204fde8();
     }
 }
 
-extern "C" void func_0204ff48(struct C *p) {
-    if (!((p->fc << 30) >> 31))
+void C::func_0204ff48() {
+    if (!((this->fc << 30) >> 31))
         return;
-    SND_StopTimer(p->f2c, 0, 1 << p->f28, 0);
+    SND_StopTimer(this->f2c, 0, 1 << this->f28, 0);
     u32 x = SND_GetCurrentCommandTag();
     SND_FlushCommand(1);
     SND_WaitForCommandProc(x);
 }
 
-extern "C" void func_0204fed0(struct C *c) {
-    if (((c->fc << 30) >> 31) == 0) return;
-    while (c->f20 != 0) {
+void C::func_0204fed0() {
+    if (((this->fc << 30) >> 31) == 0) return;
+    while (this->f20 != 0) {
         OSIntrMode saved = OS_DisableInterrupts();
-        c->func_0204fce8((void *)1);
+        this->func_0204fce8((void *)1);
         OS_RestoreInterrupts(saved);
     }
-    SND_StartTimer(c->f2c, 0, 1 << c->f28, 0);
+    SND_StartTimer(this->f2c, 0, 1 << this->f28, 0);
 }
 
-extern "C" void func_0204fe5c(struct C *c, int volume) {
+void C::func_0204fe5c(int volume) {
     unsigned char new_var;
     int i = 0;
-    c->volume = volume;
-    if (c->chanCount > 0) {
+    this->volume = volume;
+    if (this->chanCount > 0) {
         if (1) {
         }
         do {
-            unsigned char idx = new_var = c->chans[i];
-            int r = SND_CalcChannelVolume(c->volume + data_020a5578[idx].field4);
+            unsigned char idx = new_var = this->chans[i];
+            int r = SND_CalcChannelVolume(this->volume + data_020a5578[idx].field4);
             SND_SetChannelVolume(1 << idx, r & 0xff, r >> 8);
             i++;
-        } while (i < c->chanCount);
+        } while (i < this->chanCount);
     }
 }
 
-extern "C" void func_0204fde8(struct C *obj) {
-    if ((int)(obj->fc << 0x1e) >> 0x1f) {
+void C::func_0204fde8() {
+    if ((int)(this->fc << 0x1e) >> 0x1f) {
         u32 p;
-        int *flags = &obj->fc;
-        SND_StopTimer(obj->f2c, 0, 1 << obj->f28, 0);
+        int *flags = &this->fc;
+        SND_StopTimer(this->f2c, 0, 1 << this->f28, 0);
         *flags &= ~2;
         p = SND_GetCurrentCommandTag();
         SND_FlushCommand(1);
         SND_WaitForCommandProc(p);
     }
-    func_0204fda4(obj);
+    (this)->func_0204fda4();
 }
 
-extern "C" void func_0204fda4(struct C *c) {
+void C::func_0204fda4() {
     int* p;
-    func_0204f0b8(c->f28);
-    NNS_FndRemoveListObject(&data_020a552c, c);
-    p = &c->fc;
+    func_0204f0b8(this->f28);
+    NNS_FndRemoveListObject(&data_020a552c, this);
+    p = &this->fc;
     *p &= ~1;
     *p &= ~2;
 }
@@ -1847,13 +1926,13 @@ extern "C" void func_0204fafc(void) {
             }
         }
         if (node->startFlag != 0 && (mask & (1 << node->playerNo)) == 0) {
-            func_0204f2d4(node);
+            node->func_0204f2d4();
         } else {
             int t1, t2, t3;
-            func_02052438(&node->fader);
+            node->fader.func_02052438();
             t1 = data_02086384[node->extVolume];
             t2 = data_02086384[node->initVolume];
-            t3 = data_02086384[func_02052458(&node->fader) >> 8];
+            t3 = data_02086384[node->fader.func_02052458() >> 8];
             v = t3 + (t2 + t1);
             if (v < -0x2d3) {
                 v = -0x2d3;
@@ -1865,8 +1944,8 @@ extern "C" void func_0204fafc(void) {
                 node->volume = v;
             }
             if (node->status == 2) {
-                if (func_02052420(&node->fader)) {
-                    func_0204f3e0(node);
+                if (node->fader.func_02052420()) {
+                    node->func_0204f3e0();
                 }
             }
         }
@@ -1882,7 +1961,7 @@ void Sound::Player::SetPlayableSeqCount(int index, int count)
 extern "C" int func_0204fa3c(int playerNo, struct SndHeap *heap, u32 size) {
     Elem_204f278 *block;
     struct SndHeap *seqHeap;
-    block = (Elem_204f278 *)func_020511d4(heap, size + sizeof(Elem_204f278), func_0204f278, 0, 0);
+    block = (Elem_204f278 *)heap->func_020511d4(size + sizeof(Elem_204f278), func_0204f278, 0, 0);
     if (!block)
         return 0;
     block->player = 0;
@@ -1899,7 +1978,7 @@ extern "C" int func_0204fa3c(int playerNo, struct SndHeap *heap, u32 size) {
 extern "C" int func_0204fa2c(NNSSndHandle *handle, int fade) {
     /* func_0204f5a0 is void, so there is no return: the call is a tail call and r0 is the
        callee's. */
-    func_0204f5a0(handle->player, fade);
+    handle->player->func_0204f5a0(fade);
 }
 
 extern "C" void func_0204f9c4(int idx, int arg1) {
@@ -1908,7 +1987,7 @@ extern "C" void func_0204f9c4(int idx, int arg1) {
     SoundPlayerRecord *player = &data_020a4d6c[idx];
     for (i = 0; i < 16; i++, p++) {
         if (p->status != 0 && p->player == player) {
-            func_0204f5a0(p, arg1);
+            p->func_0204f5a0(arg1);
         }
     }
 }
@@ -1921,7 +2000,7 @@ extern "C" void func_0204f958(int idx, int val) {
     if (cur == 0) return;
     do {
         next = (NNSSndSeqPlayer *)NNS_FndGetNextListObject(list, cur);
-        func_0204f558(cur, val);
+        cur->func_0204f558(val);
         cur = next;
     } while (cur != 0);
 }
@@ -1965,7 +2044,7 @@ extern "C" void NNS_SndPlayerMoveVolume(NNSSndHandle *handle, int targetVolume, 
         return;
     if (player->status == 2)
         return;
-    func_02052494(&player->fader, targetVolume << 8, frames);
+    player->fader.func_02052494(targetVolume << 8, frames);
 }
 
 /* NitroSystem's NNS_SndPlayerSetChannelPriority: SND_SetPlayerChannelPriority
@@ -2040,28 +2119,28 @@ extern "C" void NNS_SndPlayerSetTempoRatio(NNSSndHandle *handle, int ratio) {
         SND_SetPlayerTempoRatio(player->playerNo, ratio);
 }
 
-extern "C" void func_0204f720(NNSSndHandle *handle, int seqNo) {
-    NNSSndSeqPlayer *p = handle->player;
+void NNSSndHandle::func_0204f720(int seqNo) {
+    NNSSndSeqPlayer *p = this->player;
     if (p != 0) {
         p->seqType = 1;
-        p = handle->player;
+        p = this->player;
         p->seqNo = seqNo;
     }
 }
 
-extern "C" void func_0204f6f8(NNSSndHandle *handle, int seqArcNo, int index) {
-    if (handle->player == 0)
+void NNSSndHandle::func_0204f6f8(int seqArcNo, int index) {
+    if (this->player == 0)
         return;
-    handle->player->seqType = 2;
-    handle->player->seqNo = seqArcNo;
-    handle->player->seqArcIndex = index;
+    this->player->seqType = 2;
+    this->player->seqNo = seqArcNo;
+    this->player->seqArcIndex = index;
 }
 
-extern "C" NNSSndSeqPlayer *func_0204f63c(NNSSndHandle *handle, int playerIdx, int prio) {
+NNSSndSeqPlayer * NNSSndHandle::func_0204f63c(int playerIdx, int prio) {
     SoundPlayerRecord *record = &data_020a4d6c[playerIdx];
     NNSSndSeqPlayer *player;
-    if (handle->player != 0)
-        func_0204f934(handle);
+    if (this->player != 0)
+        func_0204f934(this);
     if (record->mLists[0].numObjects >= record->mPlayableSeqCount) {
         NNSSndSeqPlayer *oldest =
             (NNSSndSeqPlayer *)NNS_FndGetNextListObject(&record->mLists[0], 0);
@@ -2069,51 +2148,50 @@ extern "C" NNSSndSeqPlayer *func_0204f63c(NNSSndHandle *handle, int playerIdx, i
             return 0;
         if (prio < oldest->prio)
             return 0;
-        func_0204f3e0(oldest);
+        oldest->func_0204f3e0();
     }
     player = func_0204f364(prio);
     if (player == 0)
         return 0;
-    func_0204f460(&record->mLists[0], player);
-    player->handle = handle;
-    handle->player = player;
+    record->mLists[0].func_0204f460(player);
+    player->handle = this;
+    this->player = player;
     return player;
 }
 
-extern "C" void func_0204f630(NNSSndSeqPlayer *player) {
-    func_0204f2d4(player);
+void NNSSndSeqPlayer::func_0204f630() {
+    this->func_0204f2d4();
 }
 
-extern "C" int func_0204f600(NNSSndSeqPlayer *player, const void *seqData, u32 seqOffset,
-                             struct SNDBankData *bank) {
-    SND_StartSeq(player->playerNo, seqData, seqOffset, bank);
-    func_0204f4bc(player);
-    player->commandTag = SND_GetCurrentCommandTag();
-    player->status = 1;
+int NNSSndSeqPlayer::func_0204f600(const void *seqData, u32 seqOffset, struct SNDBankData *bank) {
+    SND_StartSeq(this->playerNo, seqData, seqOffset, bank);
+    this->func_0204f4bc();
+    this->commandTag = SND_GetCurrentCommandTag();
+    this->status = 1;
     return 1;
 }
 
-extern "C" void func_0204f5a0(NNSSndSeqPlayer *player, int fadeFrames) {
-    if (player == 0)
+void NNSSndSeqPlayer::func_0204f5a0(int fadeFrames) {
+    if (this == 0)
         return;
-    if (player->status == 0)
+    if (this->status == 0)
         return;
     if (fadeFrames == 0) {
-        func_0204f3e0(player);
+        this->func_0204f3e0();
         return;
     }
-    func_02052494(&player->fader, 0, fadeFrames);
-    func_0204f214(player, 0);
-    player->status = 2;
+    this->fader.func_02052494(0, fadeFrames);
+    this->func_0204f214(0);
+    this->status = 2;
 }
 
-extern "C" void func_0204f558(NNSSndSeqPlayer *player, int flag) {
-    if (player == 0)
+void NNSSndSeqPlayer::func_0204f558(int flag) {
+    if (this == 0)
         return;
-    if (flag == player->pauseFlag)
+    if (flag == this->pauseFlag)
         return;
-    SND_PauseSeq(player->playerNo, flag);
-    player->pauseFlag = (unsigned char)flag;
+    SND_PauseSeq(this->playerNo, flag);
+    this->pauseFlag = (unsigned char)flag;
 }
 
 extern "C" struct SndHeap *func_0204f504(int playerNo, NNSSndSeqPlayer *player) {
@@ -2127,51 +2205,51 @@ extern "C" struct SndHeap *func_0204f504(int playerNo, NNSSndSeqPlayer *player) 
     return block->heap;
 }
 
-extern "C" void func_0204f4bc(NNSSndSeqPlayer *player) {
-    player->pauseFlag = 0;
-    player->startFlag = 0;
-    player->seqType = 0;
-    player->volume = 0;
-    player->initVolume = 0x7f;
-    player->extVolume = 0x7f;
-    func_020524c4(&player->fader);
-    func_02052494(&player->fader, 0x7f00, 1);
+void NNSSndSeqPlayer::func_0204f4bc() {
+    this->pauseFlag = 0;
+    this->startFlag = 0;
+    this->seqType = 0;
+    this->volume = 0;
+    this->initVolume = 0x7f;
+    this->extVolume = 0x7f;
+    this->fader.func_020524c4();
+    this->fader.func_02052494(0x7f00, 1);
 }
 
-extern "C" void func_0204f460(NNSFndList *list, NNSSndSeqPlayer *player) {
+void NNSFndList::func_0204f460(NNSSndSeqPlayer *player) {
     NNSSndSeqPlayer *cur;
-    cur = (NNSSndSeqPlayer *)NNS_FndGetNextListObject(list, 0);
+    cur = (NNSSndSeqPlayer *)NNS_FndGetNextListObject(this, 0);
     if (cur != 0) {
         for (;;) {
             if (player->prio < cur->prio)
                 break;
-            cur = (NNSSndSeqPlayer *)NNS_FndGetNextListObject(list, cur);
+            cur = (NNSSndSeqPlayer *)NNS_FndGetNextListObject(this, cur);
             if (cur == 0)
                 break;
         }
     }
-    NNS_FndInsertListObject(list, cur, player);
-    player->player = list;
+    NNS_FndInsertListObject(this, cur, player);
+    player->player = this;
 }
 
-extern "C" void func_0204f400(NNSSndSeqPlayer *self) {
+void NNSSndSeqPlayer::func_0204f400() {
     NNSSndSeqPlayer *cur;
     cur = (NNSSndSeqPlayer *)(NNS_FndGetNextListObject(&data_020a4d60, 0));
     if (cur != 0) {
         for (;;) {
-            if (self->prio < cur->prio)
+            if (this->prio < cur->prio)
                 break;
             cur = (NNSSndSeqPlayer *)(NNS_FndGetNextListObject(&data_020a4d60, cur));
             if (cur == 0)
                 break;
         }
     }
-    NNS_FndInsertListObject(&data_020a4d60, cur, self);
+    NNS_FndInsertListObject(&data_020a4d60, cur, this);
 }
 
-extern "C" void func_0204f3e0(NNSSndSeqPlayer *player) {
-    SND_StopSeq(player->playerNo);
-    func_0204f2d4(player);
+void NNSSndSeqPlayer::func_0204f3e0() {
+    SND_StopSeq(this->playerNo);
+    this->func_0204f2d4();
 }
 
 extern "C" NNSSndSeqPlayer *func_0204f364(int prio) {
@@ -2181,31 +2259,31 @@ extern "C" NNSSndSeqPlayer *func_0204f364(int prio) {
         if (prio < player->prio) {
             return 0;
         }
-        func_0204f3e0(player);
+        player->func_0204f3e0();
     }
     NNS_FndRemoveListObject(&data_020a4d54, player);
     player->prio = prio;
-    func_0204f400(player);
+    player->func_0204f400();
     return player;
 }
 
-extern "C" void func_0204f2d4(NNSSndSeqPlayer *obj) {
-    NNSSndHandle *handle = obj->handle;
+void NNSSndSeqPlayer::func_0204f2d4() {
+    NNSSndHandle *handle = this->handle;
     if (handle != 0) {
         handle->player = 0;
-        obj->handle = 0;
+        this->handle = 0;
     }
-    SoundPlayerRecord *player = (SoundPlayerRecord *)obj->player;
-    NNS_FndRemoveListObject(&player->mLists[0], obj);
-    obj->player = 0;
-    if (obj->heap != 0) {
-        NNS_FndAppendListObject(&player->mLists[1], obj->heap);
-        ((Elem_204f278 *)obj->heap)->player = 0;
-        obj->heap = 0;
+    SoundPlayerRecord *player = (SoundPlayerRecord *)this->player;
+    NNS_FndRemoveListObject(&player->mLists[0], this);
+    this->player = 0;
+    if (this->heap != 0) {
+        NNS_FndAppendListObject(&player->mLists[1], this->heap);
+        ((Elem_204f278 *)this->heap)->player = 0;
+        this->heap = 0;
     }
-    NNS_FndRemoveListObject(&data_020a4d60, obj);
-    NNS_FndAppendListObject(&data_020a4d54, obj);
-    obj->status = 0;
+    NNS_FndRemoveListObject(&data_020a4d60, this);
+    NNS_FndAppendListObject(&data_020a4d54, this);
+    this->status = 0;
 }
 
 extern "C" void func_0204f278(void *mem, u32 size, u32 data1, u32 data2) {
@@ -2213,7 +2291,7 @@ extern "C" void func_0204f278(void *mem, u32 size, u32 data1, u32 data2) {
     struct SndHeap *heap = ph->heap;
     if (heap == 0)
         return;
-    func_020512f0(heap);
+    (heap)->func_020512f0();
     NNSSndSeqPlayer *q = ph->player;
     if (q != 0) {
         q->heap = 0;
@@ -2223,18 +2301,18 @@ extern "C" void func_0204f278(void *mem, u32 size, u32 data1, u32 data2) {
     NNS_FndRemoveListObject(&data_020a4d6c[idx].mLists[1], ph);
 }
 
-extern "C" void func_0204f214(NNSSndSeqPlayer *player, int prio) {
-    NNSFndList *list = (NNSFndList *)player->player;
+void NNSSndSeqPlayer::func_0204f214(int prio) {
+    NNSFndList *list = (NNSFndList *)this->player;
     if (list != 0) {
-        NNS_FndRemoveListObject(list, player);
-        player->player = 0;
+        NNS_FndRemoveListObject(list, this);
+        this->player = 0;
     }
-    NNS_FndRemoveListObject(&data_020a4d60, player);
-    player->prio = (unsigned char)prio;
+    NNS_FndRemoveListObject(&data_020a4d60, this);
+    this->prio = (unsigned char)prio;
     if (list != 0) {
-        func_0204f460(list, player);
+        list->func_0204f460(this);
     }
-    func_0204f400(player);
+    this->func_0204f400();
 }
 
 extern "C" void func_0204f1e8(void) {
@@ -2323,15 +2401,15 @@ extern "C" void func_0204efe0(void) {
     func_02052234();
 }
 
-extern "C" int func_0204ef9c(void *p) {
-    if (((struct NitroFileHeader *)p)->magic != 0x4352414e)
+int NitroFileHeader::func_0204ef9c() {
+    if (this->magic != 0x4352414e)
         return 0;
-    if (((struct NitroFileHeader *)p)->byteOrder != 0xfffe)
+    if (this->byteOrder != 0xfffe)
         return 0;
-    return ((struct NitroFileHeader *)p)->version == 0x100;
+    return this->version == 0x100;
 }
 
-extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
+int S82::func_0204ee40(char *name, char *p) {
     char *fatb;
     char *fntb;
     char *fimg;
@@ -2344,7 +2422,7 @@ extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
     fntb = 0;
     fimg = 0;
 
-    if (func_0204ef9c(p) == 0)
+    if (((NitroFileHeader *)p)->func_0204ef9c() == 0)
         return 0;
 
     cur = p + ((struct NitroFileHeader *)p)->headerSize;
@@ -2370,48 +2448,48 @@ extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
         } while (i < n);
     }
 
-    FS_InitArchive(&self->arc);
-    self->narc = p;
-    self->f54 = (NarcFatBlock *)fatb;
+    FS_InitArchive(&this->arc);
+    this->narc = p;
+    this->f54 = (NarcFatBlock *)fatb;
     fimg_off = fimg + 8;
-    self->f58 = (unsigned char *)fimg_off;
+    this->f58 = (unsigned char *)fimg_off;
 
-    if (FS_RegisterArchiveName(&self->arc, name, strlen(name)) == 0)
+    if (FS_RegisterArchiveName(&this->arc, name, strlen(name)) == 0)
         return 0;
 
     NitroBlockHeader *fatHeader = (NitroBlockHeader *)fatb;
     NitroBlockHeader *fntHeader = (NitroBlockHeader *)fntb;
-    if (FS_LoadArchive(&self->arc, (u32)fimg_off, (u32)(fatb + 0xc) - (u32)fimg_off,
+    if (FS_LoadArchive(&this->arc, (u32)fimg_off, (u32)(fatb + 0xc) - (u32)fimg_off,
                        fatHeader->size - 0xc, (u32)(fntb + 8) - (u32)fimg_off, fntHeader->size - 8,
                        0, 0))
         return 1;
 
-    FS_ReleaseArchiveName(&self->arc);
+    FS_ReleaseArchiveName(&this->arc);
     return 0;
 }
 
-extern "C" int func_0204ee10(struct S82 *self) {
-    if (!FS_UnloadArchive(&self->arc))
+int S82::func_0204ee10() {
+    if (!FS_UnloadArchive(&this->arc))
         return 0;
-    FS_ReleaseArchiveName(&self->arc);
+    FS_ReleaseArchiveName(&this->arc);
     return 1;
 }
 
-extern "C" int func_0204ede8(struct S82 *o, unsigned int i) {
+int S82::func_0204ede8(unsigned int i) {
     int r = 0;
-    if (i < o->f54->fileCount) {
-        r = (int)o->f58 + o->f54->files[i].start;
+    if (i < this->f54->fileCount) {
+        r = (int)this->f58 + this->f54->files[i].start;
     }
     return r;
 }
 
-extern "C" int func_0204eda4(int r0, char *a, u32 idx) {
+int FSFile::func_0204eda4(char *a, unsigned int idx) {
     int r = 0;
     if (idx < ((struct S82 *)a)->f54->fileCount) {
         FSFileID id;
         id.arc = &((struct S82 *)a)->arc;
         id.file_id = idx;
-        r = FS_OpenFileFast((FSFile *)r0, id);
+        r = FS_OpenFileFast(this, id);
     }
     return r;
 }

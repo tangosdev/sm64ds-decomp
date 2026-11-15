@@ -380,7 +380,7 @@ int EntryMesh::Init(const Vector3 *pos, int angleY) {
     mGridDim[1] = 0x14;
     mNumVertices = mGridDim[0] * mGridDim[1];
     mVertices = (EntryMeshVertex *)::operator new[](mNumVertices * sizeof(EntryMeshVertex));
-    LoadTexture((BMD_File *)func_0201787c(&EntryMeshTextureFile));
+    LoadTexture((BMD_File *)EntryMeshTextureFile.func_0201787c());
     EntryMeshTextureFile.Release();
     mState = EntryMeshHandlers;
     (this->*(*mState))();

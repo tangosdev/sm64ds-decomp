@@ -84,6 +84,9 @@ struct ActorList {
     fLiNdBa_c *last;
 
     ActorList() : first(0), last(0) {}
+
+    fLiNdBa_c *func_02043f98(unsigned int key);
+    fLiNdBa_c *func_02043f4c(unsigned int key, fLiNdBa_c *after);
 };
 ActorList data_0209b468;
 
@@ -278,12 +281,9 @@ void dActor_c::AfterRender(u32 vfSuccess)
     fBase_c::AfterRender(vfSuccess);
 }
 
-/* local extern: defined in ActorBase.cpp, which has no header. */
-extern fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key);
-
 dActor_c *dActor_c::FindWithID(u32 id)
 {
-    fLiNdBa_c *node = func_02043f98(&data_0209b468.first, id);
+    fLiNdBa_c *node = data_0209b468.func_02043f98(id);
     if (node)
         return static_cast<dActor_c *>(node->owner);
     return 0;
@@ -292,9 +292,9 @@ dActor_c *dActor_c::FindWithID(u32 id)
 dActor_c *dActor_c::FindWithActorID(u32 actorID, dActor_c *after) {
     fLiNdBa_c *node;
     if (after)
-        node = func_02043f4c(&data_0209b468.first, actorID, &after->mActorListNode);
+        node = data_0209b468.func_02043f4c(actorID, &after->mActorListNode);
     else
-        node = func_02043f4c(&data_0209b468.first, actorID, 0);
+        node = data_0209b468.func_02043f4c(actorID, 0);
     if (node)
         return static_cast<dActor_c *>(node->owner);
     return 0;
@@ -312,9 +312,15 @@ dActor_c *dActor_c::Next(const dActor_c *after)
     return 0;
 }
 
-/* Stages Spawn's arguments for the constructor to pick up. */
-void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID) {
-    data_0209b460 = (s16 *)pos;
+/* Spawn's position is the receiver. Vector3's destructor is declared in
+   types.h, which this pass cannot add a method to, so the method lives on
+   this stand-in. It has no fields; this is the position pointer. */
+struct SpawnArg {
+    void func_02010e78(const Vector3_16 *rot, s8 areaID, s16 deathTableID);
+};
+
+void SpawnArg::func_02010e78(const Vector3_16 *rot, s8 areaID, s16 deathTableID) {
+    data_0209b460 = (s16 *)this;
     data_0209b45c = (s16 *)rot;
     data_0209b44c = areaID;
     data_0208e378 = deathTableID;
@@ -322,12 +328,11 @@ void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 dea
 }
 
 extern fBase_c *gCurrentScene;
-void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID);
 
 dActor_c *dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
                     const Vector3_16 *rot, s8 areaID, s16 deathTableID)
 {
-    func_02010e78(&pos, rot, areaID, deathTableID);
+    ((SpawnArg *)&pos)->func_02010e78(rot, areaID, deathTableID);
     return (dActor_c *)dBase_c::Spawn(actorID, gCurrentScene, spawnParam, 2);
 }
 

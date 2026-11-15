@@ -146,7 +146,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "_Z19func_ov002_020ef228P10dBgCh_ActrP8dActor_c",
+      "symbol": "_ZN7BgChEvt19func_ov002_020ef228EP8dActor_c",
       "address": "0x020ef228",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020ef228.cpp",

@@ -69,8 +69,9 @@ extern "C" {
 
 /* ov002 -- unnamed particle helper. */
 }
-struct Aea30C;
-extern void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
+struct Aea30C {
+    void func_ov002_020aea30(dActor_c *actor, dBgCh_Actr *collision);
+};
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daYurei_Mucho_c_AssetId {
@@ -556,19 +557,19 @@ void daYurei_Mucho_c::HandleCollision() {
 
     if (flags & 0x40000) {
         mDeathState = 4;
-        func_ov002_020aea30((Aea30C *)this, p, 0);
+        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
         func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     if (flags & 0x2400) {
         mDeathState = 2;
-        func_ov002_020aea30((Aea30C *)this, p, 0);
+        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
         func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     if (flags & 0x4380) {
         mDeathState = 3;
-        func_ov002_020aea30((Aea30C *)this, p, 0);
+        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
         func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
@@ -587,13 +588,13 @@ void daYurei_Mucho_c::HandleCollision() {
     }
     if (flags & 0x40) {
         mDeathState = 2;
-        func_ov002_020aea30((Aea30C *)this, p, 0);
+        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
         func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     if (flags & 0x20) {
         mDeathState = 1;
-        func_ov002_020aea30((Aea30C *)this, p, 0);
+        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
         func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
@@ -608,7 +609,7 @@ void daYurei_Mucho_c::HandleCollision() {
     if (JumpedOnByPlayer(mdCcAc_c, *p)) {
         p->Bounce(0x28000);
         mDeathState = 1;
-        func_ov002_020aea30((Aea30C *)this, p, 0);
+        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
         func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }

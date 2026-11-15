@@ -59,10 +59,9 @@
  *
  * comment leftovers:
  * - the member names keep their addresses (nothing here says what the
- *   original called them), and func_ov100_02144f84 / func_ov100_02144fcc /
- *   func_ov100_02145014 / func_ov100_02145070 stay free -- the shared
- *   countdown helpers, which d_a_ply_methods.cpp, daMugenBGM_c and d_a_star_gate.cpp
- *   also call and which take no door.
+ *   original called them). func_ov100_02144f84 / func_ov100_02144fcc /
+ *   func_ov100_02145014 / func_ov100_02145070 are static: they take no door.
+ *   d_a_ply_methods.cpp still calls the free names.
  * - the callees with Fix12<int> parameters (Sound, dExtAnmModel_c::SetAnim),
  *   the SaveData, Sound::PlayCharVoice and dExtFrameCtrl_c::LoadFile calls, and the
  *   dExtSimpleModel_c loaders InitResources calls stay spelled as mangled extern-C free
@@ -190,10 +189,6 @@ struct Vector3_16;
 /* Defined below, called before their definitions. These four are the shared
    countdown helpers -- free functions, not members: d_a_ply_methods.cpp, daMugenBGM_c
    and d_a_star_gate.cpp call them too, and none takes the door. */
-int func_ov100_02144f84(void);
-int func_ov100_02144fcc(void);
-int func_ov100_02145014(void);
-void func_ov100_02145070(int v);
 extern "C" unsigned int func_0201277c(unsigned int a);
 void func_02012694(unsigned int a, const Vector3 *b);
 unsigned char NumStars(void);
@@ -355,7 +350,7 @@ int daDoor_c::func_ov100_02144468(int p) {
 /* State 02148924, execute member. Go to state data_ov100_021488b4 once
    func_ov100_02144fcc reports the shared countdown done. Was a C source. */
 int daDoor_c::func_ov100_021444e8(int a1) {
-    if (func_ov100_02144fcc()) {
+    if (daDoor_c::func_ov100_02144fcc()) {
         func_ov100_021453d8(&data_ov100_021488b4, a1);
     }
     return 1;
@@ -627,7 +622,7 @@ int daDoor_c::func_ov100_02144c64() {
    daPly_c::GetTalkState() returns -1 and the player has left the door's box,
    go to state data_ov100_02148924. Was a C source. */
 int daDoor_c::func_ov100_02144c6c(daPly_c *r1) {
-    func_ov100_02145014();
+    daDoor_c::func_ov100_02145014();
     if (r1->GetTalkState() == -1) {
         if (func_ov100_021452e4(r1) == 0) {
             func_ov100_021453d8(&data_ov100_02148924, (int)r1);
@@ -643,7 +638,7 @@ int daDoor_c::func_ov100_02144c6c(daPly_c *r1) {
    shared countdown at 0x87 (135). Was a C source. */
 int daDoor_c::func_ov100_02144ccc() {
     func_02012694(0xb8, (const Vector3 *)(&mCamSpacePosX));
-    func_ov100_02145070(0x87);
+    daDoor_c::func_ov100_02145070(0x87);
     return 1;
 }
 
@@ -678,7 +673,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
         if (entry->starsNeeded >= 0) {
             if ((data_0209caa0.file.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift)) == 0) {
                 if (NumStars() < entry->starsNeeded) {
-                    if (func_ov100_02144f84() == 0)
+                    if (daDoor_c::func_ov100_02144f84() == 0)
                         return 1;
                     if (b->ShowMessage(*this, entry->msg, (Vector3 *)&mSpeedX, 0, 2) != 0) {
                         func_ov100_021453d8(&data_ov100_021488c4, (int)b);
@@ -695,7 +690,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                 int val = data_0209caa0.file.flags1;
                 if ((val & (DOOR_SAVE_KEY_UNLOCKED << entry->flagShift)) == 0) {
                     if ((val & (DOOR_SAVE_HAVE_KEY << e9)) == 0) {
-                        if (func_ov100_02144f84() == 0)
+                        if (daDoor_c::func_ov100_02144f84() == 0)
                             return 1;
                         {
                             int msg;
@@ -737,7 +732,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
 /* 1 when the shared countdown is zero, the music volume gMusicVolume is at
    0x7f000 (127.0 as Fix12) and the sub-channel volume gSubVolume is
    zero. Was a C source. */
-int func_ov100_02144f84(void) {
+int daDoor_c::func_ov100_02144f84() {
     if (*data_ov100_02148708 != 0)
         goto fail;
     if (gMusicVolume != 0x7f000)
@@ -754,8 +749,8 @@ fail:
 /* Tick the shared countdown (func_ov100_02145014); when it is done, call
    Sound::PlaySub(0x24, 0x7f, 0, 0x7222 = 7.13 as Fix12, 0) and return its
    result, else 0. */
-int func_ov100_02144fcc(void) {
-    int r = func_ov100_02145014();
+int daDoor_c::func_ov100_02144fcc() {
+    int r = daDoor_c::func_ov100_02145014();
     if (r == 0)
         return 0;
     return Sound::PlaySub(0x24, 0x7f, 0, 0x7222, 0);
@@ -768,7 +763,7 @@ int func_ov100_02144fcc(void) {
    the ticked value is still nonzero, call Sound::PlaySub(0x24, 0x14, 0x7f,
    0x15666 = 21.4 as Fix12, 0). Returns 1 once the countdown is zero. Was a C
    source. */
-int func_ov100_02145014(void) {
+int daDoor_c::func_ov100_02145014() {
     int r = DecIfAbove0_Short(data_ov100_02148708);
     if (r) {
         Sound::PlaySub(0x24, 0x14, 0x7f, 0x15666, 0);
@@ -780,7 +775,7 @@ int func_ov100_02145014(void) {
 /* ROM ordinal 19 -- func_ov100_02145070, 0x02145070, size 0x10 */
 /* -------------------------------------------------------------------------- */
 /* Start the shared countdown at v. Was a C source. */
-void func_ov100_02145070(int v) {
+void daDoor_c::func_ov100_02145070(int v) {
     data_ov100_02148708[0] = v;
 }
 

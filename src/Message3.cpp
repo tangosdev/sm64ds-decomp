@@ -180,7 +180,7 @@ s32 GetLanguageIndexVS(void) {
     }
 }
 
-void func_02031028(int arg) {
+void Message::func_02031028(int arg) {
     MBUserInfo *p;
     int i;
     int j;
@@ -256,7 +256,7 @@ void Message::AddChoiceVS() {
     }
 }
 
-void func_0203128c(void) {
+void Message::func_0203128c(void) {
     u8 *g;
     int mode;
     int sub;
@@ -317,7 +317,7 @@ void Message::AddCharPairVS() {
  * and spills the scaled row indices, a CSE-off recompute no spelling reaches. */
 #pragma push
 #pragma opt_common_subs off
-void func_02031428(void) {
+void Message::func_02031428(void) {
     int cnt;
     int i;
     int j;
@@ -393,7 +393,7 @@ void func_02031428(void) {
 }
 #pragma pop
 
-void func_020316d8(int screen, int c, u32 x, void *buf) {
+void Message::func_020316d8(int screen, int c, u32 x, void *buf) {
     u32 *chr;
     int pitch;
     if (screen == 1)
@@ -454,7 +454,7 @@ void func_020316d8(int screen, int c, u32 x, void *buf) {
     }
 }
 
-void func_020318a4(int sl) {
+void Message::func_020318a4(int sl) {
     int base;
     int acc;
     int m;
@@ -506,7 +506,7 @@ void func_020318a4(int sl) {
     }
 }
 
-void func_020319fc(int n) {
+void Message::func_020319fc(int n) {
     u32 *dst;
     int i;
     u32 col;
@@ -591,7 +591,7 @@ void Message::AddCharVS(u8 c) {
     }
 }
 
-void func_02031cd4(void *arg) {
+void Message::func_02031cd4(void *arg) {
     int i;
     u8 *base;
     u8 cmd;
@@ -751,7 +751,7 @@ void Message::LayoutLineVS() {
     }
 }
 
-int func_020321fc(void) {
+int Message::func_020321fc(void) {
     if (data_0209fcb8 == 0) {
         if (data_0209fc8c > data_0209fc6c && data_0209fc74 > data_0209fce0) {
             int t;
@@ -844,7 +844,7 @@ int func_020321fc(void) {
  * swaps the slot index and the held byte (r3/r2), 8 words, same size. */
 #pragma push
 #pragma opt_common_subs off
-void func_020326ac(void) {
+void Message::func_020326ac(void) {
     switch (data_0209fcc8) {
     case 0:
     case 8:
@@ -1053,7 +1053,7 @@ void Message::SetTextGlobalsVS() {
     data_0209fd08 = bankBase + 0x30;
 }
 
-void func_02032f54(void) {
+void Message::func_02032f54(void) {
     if (data_0209fc9c == 0)
         return;
     if (func_020321fc() == 0)
@@ -1061,7 +1061,7 @@ void func_02032f54(void) {
     func_020326ac();
 }
 
-void func_02032f9c(int a) {
+void Message::func_02032f9c(int a) {
     volatile int li;
     volatile unsigned short ls;
     int idx;
@@ -1135,7 +1135,7 @@ void func_02032f9c(int a) {
     data_0209fcdc = (((data_0209fc88 + 7) >> 3) << 1);
 }
 
-void func_020331fc(int a0, int a1, int a2) {
+void Message::func_020331fc(int a0, int a1, int a2) {
     volatile int li;
     short *scr;
     int base;
@@ -1191,7 +1191,7 @@ void func_020331fc(int a0, int a1, int a2) {
     }
 }
 
-void func_02033390(int sub) {
+void Message::func_02033390(int sub) {
     data_0209fc9c = 0;
     func_02034504();
     data_0209fc94 = 1;
@@ -1218,7 +1218,7 @@ void func_02033390(int sub) {
    decl_common.h spells it plain. The macro expands each use to a volatile deref
    of the global -- the inner name paints blue and resolves to the extern. */
 #define data_0209fc78 (*(u8 *)&data_0209fc78)
-void func_02033464(int arg0, int arg1, int arg2) {
+void Message::func_02033464(int arg0, int arg1, int arg2) {
     volatile unsigned short sv0;
     volatile unsigned short sv2;
     volatile int li4;
@@ -1341,7 +1341,7 @@ void func_02033464(int arg0, int arg1, int arg2) {
 }
 #undef data_0209fc78
 
-void func_020337ec(void) {
+void Message::func_020337ec(void) {
     volatile unsigned short v;
     volatile int z;
     data_0209fc9c = 0;
@@ -1364,7 +1364,7 @@ void func_020337ec(void) {
     func_02033464(0, 0, 0);
 }
 
-void func_020338b0(int a, int b, short c, int d) {
+void Message::func_020338b0(int a, int b, short c, int d) {
     int p, s;
     volatile int li0, li1;
     volatile unsigned short ls0, ls1;
@@ -1418,7 +1418,7 @@ void Message::DisplayVsExitText(unsigned short n) {
     Message_DrawCenteredLineVS(0x1c0, 0x20);
 }
 
-void func_02033a80(int arg0) {
+void Message::func_02033a80(int arg0) {
     data_0209fce8 = arg0;
     data_0209fc9c = 0;
     func_02034504();
@@ -1454,7 +1454,7 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
  * what CSE would share (0x298 bytes; 0x278 with CSE on). */
 #pragma push
 #pragma opt_common_subs off
-void func_02033bb8(int param0) {
+void Message::func_02033bb8(int param0) {
     volatile int li;
     volatile unsigned short sv;
     int n, m, i;
@@ -1544,7 +1544,7 @@ void func_02033bb8(int param0) {
 }
 #pragma pop
 
-void func_02033e50(int p0, int p1) {
+void Message::func_02033e50(int p0, int p1) {
     int i;
     int idx = data_0209fce8;
     char *base = (char *)data_0209fd08;
@@ -1641,7 +1641,7 @@ void Message_DrawLineBG2VS(void) {
         li = 0;
         MI_CpuFill32((void *)p, li, n);
     }
-    func_020318a4(1);
+    Message::func_020318a4(1);
     data_0209fcdc = data_0209fcdc + (u8)(((data_0209fc88 + 7) / 8) << 1);
 }
 
@@ -1674,7 +1674,7 @@ extern "C" void Message_DrawCenteredLineVS(int a0, int a1) {
         scr[i] = data_0209fc78 + 0x200 + i;
         (&scr[i])[32] = data_0209fc78 + 0x200 + (data_0209fc88 + 7) / 8 + i;
     }
-    func_020318a4(0);
+    Message::func_020318a4(0);
     data_0209fc78 = data_0209fc78 + (u8)(((data_0209fc88 + 7) / 8) << 1);
 }
 
@@ -1723,7 +1723,7 @@ void Message::DisplayDontSaveTextVS(unsigned short n) {
     Message_DrawCenteredLineVS(0x291, 0xa);
 }
 
-extern "C" void func_02034504(void) {
+void Message::func_02034504(void) {
     data_0209fcb0 = 0;
     data_0209fcbc = 0;
     data_0209fcc4 = 0 * 0;
@@ -1738,7 +1738,7 @@ extern "C" void func_02034504(void) {
     data_0209fc7c = 0;
 }
 
-void func_020345b0(int arg0) {
+void Message::func_020345b0(int arg0) {
     u16 *scr;
     s32 i;
     s32 cols;

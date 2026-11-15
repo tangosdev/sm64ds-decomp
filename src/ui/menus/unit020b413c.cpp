@@ -121,7 +121,6 @@ extern "C" void func_ov007_020b64a8(int dir);
 extern "C" int func_ov007_020b79e4(void);
 extern "C" void MessageWindow_Close(void);
 extern "C" void func_ov007_020b7d94(int kind);
-extern "C" void func_ov007_020b7eec(Ov007BootArgs *bootArgs);
 extern "C" Ov007MenuState *PickerScene_GetDisplayState(void);
 extern int PickerScene_IsAwaitingTap(void);
 extern "C" void func_ov007_020c1d78(int i);
@@ -206,7 +205,7 @@ void ItemView_UpdateChosen(Ov007ItemView *view) {
                 break;
             }
             if (flag != 0) {
-                func_ov007_020b7eec(WORK->settings->bootArgs);
+                WORK->settings->bootArgs->func_ov007_020b7eec();
             }
         }
     }

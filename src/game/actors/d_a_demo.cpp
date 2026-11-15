@@ -144,8 +144,8 @@ struct OamAttr;
 
 #pragma defer_codegen off
 
-/* The staff-roll block's helpers are free functions that take the block
-   as char *; they read it through this record. */
+/* StaffRoll's helpers are members. A char * walked across the doll or
+   star array is that member viewed from this. */
 typedef daDemo_c::StaffRoll StaffRoll;
 
 /* shadow typedef 's16' */
@@ -253,8 +253,6 @@ extern u32 d_a_demoNewHold(u32 slot, u32 unk, fx32 x, fx32 y, fx32 z, void *rot,
 extern int data_ov002_02100140[];
 }
 
-extern void func_ov002_020f2790(char *c, int p1, int p2, int p3, short p4);
-extern int func_ov002_020f2984(char *p);
 
 extern "C" int GetOwnerLanguage(void);
 extern "C" {
@@ -264,26 +262,28 @@ extern void OamRender10_d_a_demo(int a, struct OamAttr *attr, int x, int y, int 
 extern struct OamAttr* data_ov002_0210b988[];
 }
 
-extern void func_0201ef50(int v);
-extern void func_0201f108(void);
+/* Static methods defined in Message.cpp. This TU does not include Message.h. */
+struct Message {
+    static void func_0201ef50(int);
+    static void func_0201f108();
+    static void func_0201f138();
+    static void func_0201ef38();
+};
 extern "C" {
 
 extern struct OamAttr *data_ov002_0210bba0[];
 }
 
-extern int func_ov002_020f5a94(void *c);
 extern "C" {
 extern int *data_ov002_0210b97c[];
 }
 
-extern void func_ov002_020f2f18(char *c, int a, int b);
 extern "C" {
 extern void SetSubBg2Offset(int a, int b);
 extern StaffRollStep data_ov002_02110e24[];
 extern StaffRollStep data_ov002_02110e9c[];
 }
 
-extern void func_ov002_020f3828(int *c);
 extern "C" {
 extern int data_ov002_021002a0[];
 extern short atan2_hold_d_a_demo_1(int y, int x);
@@ -307,20 +307,10 @@ extern int data_ov002_02100170[];
 extern StaffRollStep data_ov002_02110e64[];
 }
 
-extern void func_ov002_020f39ec(char *c, int i);
 extern "C" {
 extern StaffRollStep data_ov002_02110e7c[];
 }
 
-extern void func_ov002_020f5a6c(char* p);
-extern void func_ov002_020f396c(char* p);
-extern void func_ov002_020f30d4(char* p);
-extern void func_ov002_020f2ea0(char* p);
-extern void func_ov002_020f2a68(char* p);
-extern void func_ov002_020f2958(char* c);
-extern void func_ov002_020f37fc(char*);
-extern void func_ov002_020f2f9c(void *, int);
-extern void func_ov002_020f3954(char *);
 extern "C" {
 /* local extern dropped: decl_common.h already declares LoadFont(u8) */
 extern StaffRollCue data_ov002_02110f9c[];
@@ -332,14 +322,6 @@ extern void DecompressLZ16(void *src, void *dst);
 extern "C" void Deallocate(void *p);
 extern "C" void GXS_LoadBG1Scr(const void *src, int offset, int count);
 extern "C" void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
-extern void func_ov002_020f5f60(char *c);
-extern int func_ov002_020f5fb8(void* c);
-extern int func_ov002_020f5f8c(void* c);
-extern void func_ov002_020f2eac(void *c);
-extern void func_ov002_020f3978(char *c);
-extern int func_ov002_020f27e8(char *c);
-extern int func_ov002_020f2990(char *c);
-extern void func_ov002_020f5fe4(char *c);
 
 /* local extern dropped: decl_common.h declares func_ov002_020f6514(unsigned char*, void*, unsigned char) */
 extern void func_02012694(unsigned int, const Vector3 *);
@@ -354,8 +336,6 @@ extern int data_ov002_0210b958;
 
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
-extern void func_0201f138(void);
-extern void func_0201ef38(void);
 extern "C" {
 
 extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
@@ -660,8 +640,9 @@ void StaffRoll::func_ov002_020f26e0() {
     }
 }
 
-void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4)
+void StaffRoll::func_ov002_020f2790(int p1, int p2, int p3, s16 p4)
 {
+    char *c = (char *)this;
     ((StaffRoll *)c)->kira.unk308 = p3;
     ((StaffRoll *)c)->kira.unk30c = p4;
     ((StaffRoll *)c)->kiraParticle =
@@ -669,8 +650,9 @@ void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4)
                               p2 << 12, 0, 0, &((StaffRoll *)c)->kira);
 }
 
-int func_ov002_020f27e8(char *c)
+int StaffRoll::func_ov002_020f27e8()
 {
+    char *c = (char *)this;
     if (((StaffRoll *)c)->burstActive == 0)
         return ((StaffRoll *)c)->burstActive;
 
@@ -695,9 +677,9 @@ int func_ov002_020f27e8(char *c)
         }
     }
 
-    func_ov002_020f2790(c, 0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
+    ((StaffRoll *)c)->func_ov002_020f2790(0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
                         ((StaffRoll *)c)->burstSysParam);
-    func_ov002_020f2790(c, 0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
+    ((StaffRoll *)c)->func_ov002_020f2790(0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
                         ((StaffRoll *)c)->burstSysParam);
 
     if (((StaffRoll *)c)->burstTimer >= 0x1e) {
@@ -706,11 +688,12 @@ int func_ov002_020f27e8(char *c)
     }
     if (((StaffRoll *)c)->burstPeriods < 0xa)
         return ((StaffRoll *)c)->burstPeriods;
-    return func_ov002_020f2984(c);
+    return ((StaffRoll *)c)->func_ov002_020f2984();
 }
 
-void func_ov002_020f2958(char *c)
+void StaffRoll::func_ov002_020f2958()
 {
+    char *c = (char *)this;
     ((StaffRoll *)c)->burstActive = 1;
     ((StaffRoll *)c)->burstDefParam = 0x199;
     ((StaffRoll *)c)->burstSysParam = 0x199;
@@ -718,14 +701,16 @@ void func_ov002_020f2958(char *c)
     ((StaffRoll *)c)->burstPeriods = 0;
 }
 
-int func_ov002_020f2984(char *p)
+int StaffRoll::func_ov002_020f2984()
 {
+    char *p = (char *)this;
     ((StaffRoll *)p)->burstActive = 0;
     return (int)p;
 }
 
-int func_ov002_020f2990(char* c)
+int StaffRoll::func_ov002_020f2990()
 {
+    char *c = (char *)this;
     int x, y;
     int idx;
 
@@ -750,8 +735,9 @@ void StaffRoll::func_ov002_020f2a48() {
     endY = 393216;
 }
 
-void func_ov002_020f2a68(char *p)
+void StaffRoll::func_ov002_020f2a68()
 {
+    char *p = (char *)this;
     /* 0x1d8/0x1d9: see func_ov002_020f2990. */
     ((StaffRoll *)p)->endActive = 0;
     ((StaffRoll *)p)->endVisible = 0;
@@ -815,7 +801,7 @@ void StaffRoll::func_ov002_020f2bf4(int idx) {
     s->credit[idx].blend = 0;
     s->credit[idx].blendTimer = 0;
     gSubScreenLayers &= ~1;
-    func_0201ef50(s->credit[idx].message);
+    Message::func_0201ef50(s->credit[idx].message);
 }
 
 void StaffRoll::func_ov002_020f2d0c(int i) {
@@ -855,19 +841,20 @@ void StaffRoll::StartCredit(int n) {
     credit[0].blend = 0;
     n = (n - 1) << 1;
     credit[0].message = (unsigned char)n;
-    func_0201f108();
-    func_0201ef50(n & 0xff);
+    Message::func_0201f108();
+    Message::func_0201ef50(n & 0xff);
     gSubScreenLayers |= 1;
 }
 
-void func_ov002_020f2ea0(char *p)
+void StaffRoll::func_ov002_020f2ea0()
 {
+    char *p = (char *)this;
     ((StaffRoll *)p)->credit[0].active = 0;
 }
 
-void func_ov002_020f2eac(void *c) {
+void StaffRoll::func_ov002_020f2eac() {
     int i;
-    char *p = (char *)c;
+    char *p = (char *)this;
     for (i = 0; i < 5; i++) {
         if (((StaffRoll *)p)->dolls[0].visible != 0) {
             OAM::RenderSub(data_ov002_0210bba0[((StaffRoll *)p)->dolls[0].frame],
@@ -878,8 +865,9 @@ void func_ov002_020f2eac(void *c) {
     }
 }
 
-void func_ov002_020f2f18(char* c, int a, int b)
+void StaffRoll::func_ov002_020f2f18(int a, int b)
 {
+    char *c = (char *)this;
     int i = 0;
     do {
         if (((StaffRoll *)c)->dolls[0].active != 0) {
@@ -900,11 +888,12 @@ void StaffRoll::func_ov002_020f2f64() {
     }
 }
 
-void func_ov002_020f2f9c(void* self, int count)
+void StaffRoll::func_ov002_020f2f9c(int count)
 {
+    void *self = this;
     char* sl = (char*)self;
     int i;
-    int idx = func_ov002_020f5a94(self) - 2;
+    int idx = ((StaffRoll *)self)->func_ov002_020f5a94() - 2;
     if (idx < 0) idx = 0;
     for (i = 0; i < count + 1; i++) {
         int ok = 0;
@@ -931,8 +920,9 @@ void func_ov002_020f2f9c(void* self, int count)
     }
 }
 
-void func_ov002_020f30d4(char *p)
+void StaffRoll::func_ov002_020f30d4()
 {
+    char *p = (char *)this;
     int i;
     for (i = 0; i < 5; i++) {
         ((StaffRoll *)p)->dolls[0].active = 0;
@@ -981,7 +971,7 @@ void StaffRoll::func_ov002_020f30f8(int i) {
         this->window[i].bgY = 0;
 
     cc = this->window[i].bgX - oldA;
-    func_ov002_020f2f18(o, cc, this->window[i].bgY - oldB);
+    ((StaffRoll *)o)->func_ov002_020f2f18(cc, this->window[i].bgY - oldB);
 
     ee = this->window[i].right >> 12;
     ff = this->window[i].bottom >> 12;
@@ -1105,16 +1095,18 @@ void StaffRoll::func_ov002_020f37a0() {
     (this->*data_ov002_02110e4c[this->window[0].kind])(0);
 }
 
-void func_ov002_020f37fc(char *c)
+void StaffRoll::func_ov002_020f37fc()
 {
-    func_ov002_020f3828((int*)c);
+    char *c = (char *)this;
+    ((StaffRoll *)c)->func_ov002_020f3828();
     ((StaffRoll *)c)->window[0].active = 1;
     ((StaffRoll *)c)->window[0].kind = 2;
     ((StaffRoll *)c)->window[0].step = 0;
 }
 
-void func_ov002_020f3828(int *c)
+void StaffRoll::func_ov002_020f3828()
 {
+    int *c = (int *)this;
     ((StaffRoll *)c)->window[0].left = 0x80000;
     ((StaffRoll *)c)->window[0].top = 0x66000;
     ((StaffRoll *)c)->window[0].right = 0xfc000;
@@ -1138,15 +1130,17 @@ void func_ov002_020f3828(int *c)
     gSubScreenLayers |= 6;
 }
 
-void func_ov002_020f3954(char *p)
+void StaffRoll::func_ov002_020f3954()
 {
+    char *p = (char *)this;
     ((StaffRoll *)p)->window[0].active = 1;
     ((StaffRoll *)p)->window[0].kind = 1;
     ((StaffRoll *)p)->window[0].step = 0;
 }
 
-void func_ov002_020f396c(char *p)
+void StaffRoll::func_ov002_020f396c()
 {
+    char *p = (char *)this;
     ((StaffRoll *)p)->window[0].active = 0;
 }
 
@@ -1155,7 +1149,8 @@ extern "C" {
 extern void *data_ov002_0210b998[];
 }
 
-void func_ov002_020f3978(char *c) {
+void StaffRoll::func_ov002_020f3978() {
+    char *c = (char *)this;
     int i;
     for (i = 0; i < 4; i++) {
         if (((StaffRoll *)c)->stars[0].visible) {
@@ -1167,7 +1162,8 @@ void func_ov002_020f3978(char *c) {
     }
 }
 
-void func_ov002_020f39ec(char *self, int idx) {
+void StaffRoll::func_ov002_020f39ec(int idx) {
+    char *self = (char *)this;
     StaffRoll *s = (StaffRoll *)self;
     s->stars[idx].frameTimer++;
     if (s->stars[idx].frameTimer < 4)
@@ -1349,7 +1345,7 @@ void StaffRoll::func_ov002_020f3de4(int i) {
     this->stars[i].heading += this->stars[i].angSpeed;
     this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
-    if (i != func_ov002_020f5a94(c) - 1)
+    if (i != ((StaffRoll *)c)->func_ov002_020f5a94() - 1)
         return;
     if ((unsigned int)((StaffRoll *)c)->stars[0].orbitTravel < 0x10000)
         return;
@@ -1412,7 +1408,7 @@ void StaffRoll::func_ov002_020f40fc(int i) {
             this->stars[i].speed = 0x2000;
         }
 
-        if (func_ov002_020f5a94(c) != 3)
+        if (((StaffRoll *)c)->func_ov002_020f5a94() != 3)
             return;
         if ((unsigned int)this->stars[i].orbitTravel < 0xc000)
             return;
@@ -1454,7 +1450,7 @@ void StaffRoll::func_ov002_020f40fc(int i) {
  * target (+0x1c/+0x20) within 2 units (flag++, timer reset, heading 0xc000)
  * or turns the heading toward atan2(dy,dx) in 0x100 steps. Arrived slots
  * orbit at radius +0x10 around (0x80000,0x60000) with angular speed +0x42.
- * When the last slot (func_ov002_020f5a94(c)-1) has orbited past 0x10000,
+ * When the last slot (((StaffRoll *)c)->func_ov002_020f5a94()-1) has orbited past 0x10000,
  * every active row (+0x44) is re-armed: +0x47 bumped, +0x3c/+0x48/+0x24
  * cleared, radius 0x38000, heading from data_ov002_021000b8[j] (0 for j==2
  * when the mode call returns 3).
@@ -1551,7 +1547,7 @@ void StaffRoll::func_ov002_020f43cc(int i) {
         this->stars[idx].heading -= this->stars[idx].angSpeed;
         this->stars[idx].orbitTravel += this->stars[idx].angSpeed;
     }
-    if (idx != func_ov002_020f5a94(c) - 1)
+    if (idx != ((StaffRoll *)c)->func_ov002_020f5a94() - 1)
         return;
     if ((unsigned int)this->stars[0].orbitTravel < 0x10000U)
         return;
@@ -1565,7 +1561,7 @@ void StaffRoll::func_ov002_020f43cc(int i) {
                 ((StaffRoll *)p)->stars[0].phase = 0;
                 ((StaffRoll *)p)->stars[0].radius = 0x38000;
                 ((StaffRoll *)p)->stars[0].heading = data_ov002_021000b8[j];
-                if (func_ov002_020f5a94(c) == 3) {
+                if (((StaffRoll *)c)->func_ov002_020f5a94() == 3) {
                     if (j == 2)
                         ((StaffRoll *)p)->stars[0].heading = 0;
                 }
@@ -1621,7 +1617,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
             this->stars[i].speed = -0x2000;
         }
 
-        if (func_ov002_020f5a94(c) != 3)
+        if (((StaffRoll *)c)->func_ov002_020f5a94() != 3)
             return;
         if (i != 2)
             return;
@@ -1633,7 +1629,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
     this->stars[i].flyTimer++;
     this->stars[i].x += this->stars[i].speed;
 
-    if (func_ov002_020f5a94(c) == 3 && i == 2) {
+    if (((StaffRoll *)c)->func_ov002_020f5a94() == 3 && i == 2) {
         this->stars[i].speed += 0x300;
     } else if (i == 0 || i == 3) {
         this->stars[i].speed += 0x300;
@@ -1652,7 +1648,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
         this->stars[i].heading = 0x8000;
         this->stars[i].delay = (u16)(data_ov002_02100110[i] << 6);
 
-        if (func_ov002_020f5a94(c) == 3) {
+        if (((StaffRoll *)c)->func_ov002_020f5a94() == 3) {
             if (i == 2)
                 this->stars[i].delay = 0x40;
         }
@@ -1748,7 +1744,7 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
     this->stars[i].heading -= this->stars[i].angSpeed;
     this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
-    if (i != func_ov002_020f5a94(c) - 1)
+    if (i != ((StaffRoll *)c)->func_ov002_020f5a94() - 1)
         return;
     if ((unsigned int)this->stars[0].orbitTravel < 0x10000)
         return;
@@ -1763,7 +1759,7 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
                 ((StaffRoll *)p)->stars[0].phase = 0;
                 ((StaffRoll *)p)->stars[0].radius = 0x38000;
                 ((StaffRoll *)p)->stars[0].heading = data_ov002_021000c8[j];
-                if (func_ov002_020f5a94(c) == 3) {
+                if (((StaffRoll *)c)->func_ov002_020f5a94() == 3) {
                     if (j == 2)
                         ((StaffRoll *)p)->stars[0].heading = 0;
                 }
@@ -1839,7 +1835,7 @@ void StaffRoll::func_ov002_020f4d70(int i) {
         this->stars[i].loops = 0;
         this->stars[i].delay = data_ov002_021000f0[i] << 6;
 
-        if (func_ov002_020f5a94(c) == 3) {
+        if (((StaffRoll *)c)->func_ov002_020f5a94() == 3) {
             if (i == 2)
                 this->stars[i].delay = 0x40;
         }
@@ -1947,7 +1943,7 @@ void StaffRoll::func_ov002_020f5010(int i) {
     this->stars[i].heading += this->stars[i].angSpeed;
     this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
-    if (i != func_ov002_020f5a94(c) - 1)
+    if (i != ((StaffRoll *)c)->func_ov002_020f5a94() - 1)
         return;
     if ((unsigned int)this->stars[0].orbitTravel < 0x10000)
         return;
@@ -2184,17 +2180,18 @@ void StaffRoll::func_ov002_020f5990() {
         if (s->active == 0)
             continue;
         (this->*data_ov002_02110e7c[s->state])(i);
-        func_ov002_020f39ec(c, i);
+        ((StaffRoll *)c)->func_ov002_020f39ec(i);
         if (s->sparkling == 0)
             continue;
         if (i != this->kiraStar)
             continue;
-        func_ov002_020f2790(c, (s16)(s->x >> 12), (s16)(s->y >> 12), s->kiraDefParam,
+        ((StaffRoll *)c)->func_ov002_020f2790((s16)(s->x >> 12), (s16)(s->y >> 12), s->kiraDefParam,
                             s->kiraSysParam);
     }
 }
 
-void func_ov002_020f5a6c(char *p) {
+void StaffRoll::func_ov002_020f5a6c() {
+    char *p = (char *)this;
     int i;
     for (i = 0; i < 4; i++) {
         ((StaffRoll *)p)->stars[0].active = 0;
@@ -2204,7 +2201,7 @@ void func_ov002_020f5a6c(char *p) {
     }
 }
 
-int func_ov002_020f5a94(void *unused){
+int StaffRoll::func_ov002_020f5a94(){
     unsigned char count = 0;
     int i;
     for (i = 0; i < 4; i++) {
@@ -2219,12 +2216,12 @@ void StaffRoll::func_ov002_020f5ad4() {
     unk1f4 = 0;
     kiraStar = 0;
     holdOrbit = 0;
-    func_ov002_020f5a6c((char *)this);
-    func_ov002_020f396c((char *)this);
-    func_ov002_020f30d4((char *)this);
-    func_ov002_020f2ea0((char *)this);
-    func_ov002_020f2a68((char *)this);
-    func_ov002_020f2984((char *)this);
+    this->func_ov002_020f5a6c();
+    this->func_ov002_020f396c();
+    this->func_ov002_020f30d4();
+    this->func_ov002_020f2ea0();
+    this->func_ov002_020f2a68();
+    this->func_ov002_020f2984();
 }
 
 void StaffRoll::func_ov002_020f5b24() {
@@ -2324,7 +2321,7 @@ void StaffRoll::func_ov002_020f5cd0() {
 
 void StaffRoll::func_ov002_020f5d34() {
     u8 *self = (u8 *)this;
-    int n = func_ov002_020f5a94(self);
+    int n = ((StaffRoll *)self)->func_ov002_020f5a94();
     int i = 0;
     u8 *e;
     int v;
@@ -2354,7 +2351,7 @@ void StaffRoll::func_ov002_020f5d34() {
         i++;
     } while (i < n);
 done:
-    func_ov002_020f2958((char*)self);
+    ((StaffRoll *)self)->func_ov002_020f2958();
 }
 
 extern StaffRollCue data_ov002_02110f34[];
@@ -2363,46 +2360,46 @@ void StaffRoll::func_ov002_020f5dd8(int idx) {
 }
 
 void StaffRoll::func_ov002_020f5e18() {
-    func_ov002_020f37fc((char *)this);
-    func_ov002_020f2f9c(this, 4);
+    this->func_ov002_020f37fc();
+    this->func_ov002_020f2f9c(4);
 }
 
 void StaffRoll::func_ov002_020f5e38() {
-    func_ov002_020f3828((int *)this);
-    func_ov002_020f2f9c(this, 4);
+    this->func_ov002_020f3828();
+    this->func_ov002_020f2f9c(4);
 }
 
 void StaffRoll::func_ov002_020f5e58() {
-    func_ov002_020f3828((int *)this);
-    func_ov002_020f2f9c(this, 3);
+    this->func_ov002_020f3828();
+    this->func_ov002_020f2f9c(3);
 }
 
 void StaffRoll::func_ov002_020f5e78() {
-    func_ov002_020f3828((int *)this);
-    func_ov002_020f2f9c(this, 2);
+    this->func_ov002_020f3828();
+    this->func_ov002_020f2f9c(2);
 }
 
 void StaffRoll::func_ov002_020f5e98() {
-    func_ov002_020f3828((int *)this);
-    func_ov002_020f2f9c(this, 1);
+    this->func_ov002_020f3828();
+    this->func_ov002_020f2f9c(1);
 }
 
 void StaffRoll::func_ov002_020f5eb8() {
-    func_ov002_020f3828((int *)this);
-    func_ov002_020f2f9c(this, 0);
+    this->func_ov002_020f3828();
+    this->func_ov002_020f2f9c(0);
 }
 
 void StaffRoll::func_ov002_020f5ed8() {
-    func_ov002_020f3828((int *)this);
+    this->func_ov002_020f3828();
 }
 
 void StaffRoll::func_ov002_020f5ee4() {
-    func_ov002_020f3828((int *)this);
+    this->func_ov002_020f3828();
 }
 
 void StaffRoll::func_ov002_020f5ef0() {
     char *p = (char *)this;
-    func_ov002_020f3954(p);
+    ((StaffRoll *)p)->func_ov002_020f3954();
 }
 
 /* func_ov002_020f5efc @ 0x20f5efc (ov002) -- tail-call veneer to LoadFont (0x201fcd4) with r0=0.
@@ -2416,8 +2413,9 @@ void StaffRoll::func_ov002_020f5f0c(int idx) {
     this->StartCredit(idx);
 }
 
-void func_ov002_020f5f60(char *c)
+void StaffRoll::func_ov002_020f5f60()
 {
+    char *c = (char *)this;
     void *p = ((StaffRoll *)c)->starChars;
     if (p == 0)
         return;
@@ -2425,22 +2423,25 @@ void func_ov002_020f5f60(char *c)
     ((StaffRoll *)c)->starChars = 0;
 }
 
-int func_ov002_020f5f8c(void* c){
+int StaffRoll::func_ov002_020f5f8c(){
+    void *c = this;
     ((StaffRoll *)c)->func_ov002_020f26e0();
-    func_ov002_020f3978((char *)c);
-    func_ov002_020f2eac(c);
-    return func_ov002_020f2990((char *)c);
+    ((StaffRoll *)c)->func_ov002_020f3978();
+    ((StaffRoll *)c)->func_ov002_020f2eac();
+    return ((StaffRoll *)c)->func_ov002_020f2990();
 }
 
-int func_ov002_020f5fb8(void* c){
+int StaffRoll::func_ov002_020f5fb8(){
+    void *c = this;
     ((StaffRoll *)c)->func_ov002_020f5990();
     ((StaffRoll *)c)->func_ov002_020f37a0();
     ((StaffRoll *)c)->func_ov002_020f2dd4();
-    return func_ov002_020f27e8((char *)c);
+    return ((StaffRoll *)c)->func_ov002_020f27e8();
 }
 
-void func_ov002_020f5fe4(char* c)
+void StaffRoll::func_ov002_020f5fe4()
 {
+    char *c = (char *)this;
     void *f;
     void *r5;
 
@@ -2547,7 +2548,7 @@ void func_ov002_020f5fe4(char* c)
 
 int daDemo_c::func_ov002_020f63a0()
 {
-    func_ov002_020f5f60((char *)this->mStaffRoll);
+    this->mStaffRoll->func_ov002_020f5f60();
     if (this->mStaffRoll != 0) {
         ::operator delete(this->mStaffRoll);
         this->mStaffRoll = 0;
@@ -2558,8 +2559,8 @@ int daDemo_c::func_ov002_020f63a0()
 
 int daDemo_c::func_ov002_020f63d4()
 {
-    func_ov002_020f5fb8(this->mStaffRoll);
-    func_ov002_020f5f8c(this->mStaffRoll);
+    this->mStaffRoll->func_ov002_020f5fb8();
+    this->mStaffRoll->func_ov002_020f5f8c();
     return 1;
 }
 
@@ -2587,7 +2588,7 @@ int daDemo_c::func_ov002_020f6448(unsigned char *arg1)
     this->mStaffRoll = p;
     if (this->mStaffRoll == 0)
         return 0;
-    func_ov002_020f5fe4((char *)this->mStaffRoll);
+    this->mStaffRoll->func_ov002_020f5fe4();
     return func_ov002_020f6424();
 }
 
@@ -3087,12 +3088,12 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         this->mAngleX = 0;
         this->mAngleY = 0xffffb3c0;
         this->mAngleZ = 0;
-        func_0201f138();
+        Message::func_0201f138();
     }
     MTX_MultVec43(((simpleModel_c *)this->mModel)->mScale, &data_0209b41c, (&this->mPos));
     Vec3_LslInPlace(&this->mPosX, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
-        func_0201ef38();
+        Message::func_0201ef38();
     this->mOpacity = this->mMagnitude >> 12;
     {
         unsigned char r = *(&this->mOpacity);

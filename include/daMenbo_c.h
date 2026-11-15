@@ -112,8 +112,10 @@ struct daMenbo_c : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
+    void func_ov090_02130f94();
     void func_ov090_021310b4();
     void func_ov090_02131378();
+    int func_ov090_021314a0();
 
     /* State machine: the four nodes pair an entry with an update; both are
        pointer-to-member slots on this class (idle, water chase, water rest,
@@ -126,6 +128,7 @@ struct daMenbo_c : dEnemyBase_c {
     int func_ov090_02131b94();
     int func_ov090_02131c48();
     int func_ov090_02131db0();
+    int func_ov090_02131e00(int (daMenbo_c::* *entry)());
     void func_ov090_02131e50();
 };
 

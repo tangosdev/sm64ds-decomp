@@ -149,7 +149,6 @@ extern dCamera_c *gCamera;
 extern unsigned char IsAreaShowing(int idx);
 extern void func_02012694(unsigned int a, const Vector3 *p);
 
-extern void func_ov002_020e8244(void *out, daStar_c *b);
 extern "C" {
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
@@ -1275,8 +1274,6 @@ void daStar_c::StateCollectTalk() {
     u32 r2v;
     u32 b2;
     bool st;
-    VecFx32 t1;
-    VecFx32 t2;
     int *src;
     u8 st2;
 
@@ -1313,8 +1310,8 @@ void daStar_c::StateCollectTalk() {
             int idx = mPlayer->mPlayerNo;
             if (gNumStageStars[idx] == 4) {
                 GiveVsStars(idx, 1);
-                func_ov002_020e8244(&t1, this);
-                SpawnNumber(*(Vector3 *)&t1, 5, st, 0, mPlayer);
+                Vector3 t1 = this->func_ov002_020e8244();
+                SpawnNumber(t1, 5, st, 0, mPlayer);
                 FinishCollection();
             }
         } else if (mode == 5) {
@@ -1322,8 +1319,8 @@ void daStar_c::StateCollectTalk() {
             if (!(gNumStageStars[idx2] == 5 && r2v == false)) {
                 if (r2v == false)
                     GiveVsStars(idx2, 1);
-                func_ov002_020e8244(&t2, this);
-                SpawnNumber(*(Vector3 *)&t2, gNumStageStars[mPlayer->mPlayerNo], st, 0, mPlayer);
+                Vector3 t2 = this->func_ov002_020e8244();
+                SpawnNumber(t2, gNumStageStars[mPlayer->mPlayerNo], st, 0, mPlayer);
                 FinishCollection();
             }
         }
@@ -1538,7 +1535,6 @@ void daStar_c::StatePlayAndEnd() {
  * at frame 100 it stops the sound object and destroys itself (VS match) or
  * records itself in the death table. */
 void daStar_c::StateSpinAndEnd() {
-    int v[3];
     char *p;
     int *src;
     unsigned short t;
@@ -1549,9 +1545,9 @@ void daStar_c::StateSpinAndEnd() {
     if (t >= 0x1e) {
         if (t == 0x1e) {
             GiveVsStars(mPlayer->mPlayerNo, 1);
-            func_ov002_020e8244(v, this);
+            Vector3 center = this->func_ov002_020e8244();
             p = (char *)mPlayer;
-            SpawnNumber(*(Vector3 *)v, (unsigned int)gNumStageStars[mPlayer->mPlayerNo], 1, 0,
+            SpawnNumber(center, (unsigned int)gNumStageStars[mPlayer->mPlayerNo], 1, 0,
                         (dActor_c *)p);
             UntrackStar(mMarkerSlot);
         }
@@ -2292,8 +2288,11 @@ void daStar_c::DrawShadow() {
  * a translation and Y rotation of the star, scales the result about the star's
  * position (<< 3) and raises Y by 13 times a word of the bone data at +0xc. */
 
-void func_ov002_020e8244(void *out, daStar_c *b)
+Vector3 daStar_c::func_ov002_020e8244()
 {
+    Vector3 result;
+    void *out = &result;
+    daStar_c *b = this;
     Mtx43 local;
     VecFx32 zero;
     zero.x = 0;
@@ -2303,7 +2302,7 @@ void func_ov002_020e8244(void *out, daStar_c *b)
         ((int *)out)[0] = b->mCenterX;
         ((int *)out)[1] = b->mCenterY;
         ((int *)out)[2] = b->mCenterZ;
-        return;
+        return result;
     }
     Matrix4x3_FromTranslation(&data_020a0e68, b->mPosX, b->mPosY, b->mPosZ);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngleY);
@@ -2322,6 +2321,7 @@ void func_ov002_020e8244(void *out, daStar_c *b)
     ((int *)out)[0] = b->mCenterX;
     ((int *)out)[1] = b->mCenterY;
     ((int *)out)[2] = b->mCenterZ;
+    return result;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2348,10 +2348,9 @@ void daStar_c::UpdateTrailEffect() {
  * scale. */
 void daStar_c::SpawnCollectEffects() {
     Vector3 vc;
-    Vector3 v;
     if (mAnmModel1.Finished())
         return;
-    func_ov002_020e8244(&v, this);
+    Vector3 v = this->func_ov002_020e8244();
     vc.x = v.x;
     vc.y = v.y;
     vc.z = v.z;
@@ -2376,14 +2375,12 @@ void daStar_c::SpawnCollectEffects() {
  * reached. */
 void daStar_c::SpawnPoseEffects() {
     ModelBone *root;
-    struct Vector3 v1;
-    struct Vector3 v2;
 
     root = mAnmModel1.data.bones;
 
     if (!mAnmModel1.Finished() && (u32)(((u32)mAnmModel1.currFrame << 4) >> 0x10) >= 2 &&
         root->scaleX != 0) {
-        func_ov002_020e8244(&v1, this);
+        struct Vector3 v1 = this->func_ov002_020e8244();
         mParticle[0] =
             (u32)Particle::System::New(mParticle[0], kPtclStarPose, v1.x, v1.y, v1.z, 0, 0);
         return;
@@ -2391,7 +2388,7 @@ void daStar_c::SpawnPoseEffects() {
 
     if (!mAnmModel1.WillHitFrame(0x75))
         return;
-    func_ov002_020e8244(&v2, this);
+    struct Vector3 v2 = this->func_ov002_020e8244();
     Particle::System::NewSimple(kPtclStarPoseEnd, v2.x, v2.y, v2.z);
 }
 
@@ -2428,10 +2425,9 @@ void daStar_c::UpdateSparkleEffect() {
 /* -------------------------------------------------------------------------- */
 /* Silver star only: keeps trail effect 0x10e (mParticle[3]) at the centre. */
 void daStar_c::UpdateSilverTrailEffect() {
-    Vector3 v;
     int b = (actorID == ACTOR_SILVER_STAR);
     if (b == 0) return;
-    func_ov002_020e8244(&v, this);
+    Vector3 v = this->func_ov002_020e8244();
     mParticle[3] =
         (int)Particle::System::New(mParticle[3], kPtclSilverStarTrail, v.x, v.y, v.z, 0, 0);
 }

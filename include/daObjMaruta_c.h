@@ -42,6 +42,8 @@
 
 #ifdef __cplusplus
 
+struct ResourceDescriptor;
+
 struct daObjMaruta_c : dBgActor_c {
     u8 pad_31e[0x2];
     s32 mRestPosX;    /* 0x320 -- InitResources copies mPosX */
@@ -90,6 +92,9 @@ struct daObjMaruta_c : dBgActor_c {
        drops its first argument and forwards to this. */
     void HandlePlayerContact(dActor_c *);
     static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
+    int func_ov080_021270dc(ResourceDescriptor *arg);
+    int func_ov080_0212714c(int *maxDist);
+    int func_ov080_021274ac(ResourceDescriptor *arg);
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero

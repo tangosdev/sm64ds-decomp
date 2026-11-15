@@ -130,7 +130,9 @@ namespace Particle {
 void RunningSlidingDustAt(s32, s32, s32);
 }
 int SurfaceInfo_TestFlag0x20(int *p);
-int func_ov002_020ef228(dBgCh_Actr *c, dActor_c *other);
+struct BgChEvt {
+    int func_ov002_020ef228(dActor_c *other);
+};
 int func_ov002_020f030c(int x);
 extern "C" int func_ov002_020e496c(daPly_c *c);
 
@@ -824,7 +826,7 @@ void daObjBlockS_c::HandleWallHit() {
             }
         }
     }
-    if (func_ov002_020ef228(&mWithMeshClsn, this) != 0) {
+    if (((BgChEvt *)&mWithMeshClsn)->func_ov002_020ef228(this) != 0) {
         mWallCooldown = 3;
         return;
     }

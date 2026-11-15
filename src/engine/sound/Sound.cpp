@@ -22,34 +22,59 @@
 #include "private/watchdog_alarm.h"
 #include "Memory.h"
 #include "math/Approach.h"
-#include "nnsys/snd/player.h"
+/* NNSSndHandle completed here. player.h is not included: Sound2.cpp
+   includes the real header and still calls the free stop/init functions. */
+struct NNSSndSeqPlayer;
+struct NNSSndHandle {
+    NNSSndSeqPlayer *player;
+    void func_02012860(int flags, int c, int d, int e);
+    void func_020123c8(int type, int code, const Vector3 *arg);
+    int func_02011dcc(int x);
+    void func_02013524(int b, int c);
+    int func_02051f1c(u32 seqArcNo, int index);
+    int func_02051e60(int playerNo, int bankNo, int playerPrio, unsigned int seqArcNo, int index);
+    int func_02051fb4(unsigned int seqNo);
+};
+extern "C" {
+void NNS_SndPlayerSetVolume(NNSSndHandle *handle, int volume);
+void NNS_SndPlayerSetInitialVolume(NNSSndHandle *handle, int volume);
+void NNS_SndPlayerMoveVolume(NNSSndHandle *handle, int targetVolume, int frames);
+void NNS_SndPlayerSetChannelPriority(NNSSndHandle *handle, int priority);
+void NNS_SndPlayerSetTrackMute(NNSSndHandle *handle, int trackBitMask, int flag);
+void NNS_SndPlayerSetTrackVolume(NNSSndHandle *handle, int trackBitMask, int volume);
+void NNS_SndPlayerSetTrackPitch(NNSSndHandle *handle, int trackBitMask, int pitch);
+void NNS_SndPlayerSetTrackPan(NNSSndHandle *handle, int trackBitMask, int pan);
+void NNS_SndPlayerSetTrackModDepth(NNSSndHandle *handle, int trackBitMask, int depth);
+void NNS_SndPlayerSetTrackModSpeed(NNSSndHandle *handle, int trackBitMask, int speed);
+void NNS_SndPlayerSetTempoRatio(NNSSndHandle *handle, int ratio);
+}
+#define NNSYS_SND_PLAYER_H
+#define NNSYS_SND_FADER_H
 #include "private/sound_positional.h"
 #include "daPly_c.h"
 
-/* SoundEngine's sound heap, opaque here. */
-struct SndHeap;
+/* SoundEngine's sound heap. The methods are defined in SoundEngine.cpp. */
 typedef void (*SndHeapDisposeCallback)(void *mem, u32 size, u32 data1, u32 data2);
+struct SndHeap {
+    u32 func_02051074();
+    void func_020510a4(int level);
+    void *func_020511d4(u32 size, SndHeapDisposeCallback callback, u32 data1, u32 data2);
+    int func_0205117c();
+    int func_02052008();
+};
 
 /* Foreign callees. */
-extern "C" int func_02051f1c(void *a, u32 b, int c);
-extern "C" int func_02051e60(NNSSndHandle *handle, int b, int c, int d, unsigned int e, int f);
-extern "C" u32 func_02051074(struct SndHeap *heap);
-extern "C" void func_020510a4(struct SndHeap *heap, int level);
-extern "C" void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback,
-                               u32 data1, u32 data2);
 extern "C" int func_0203d974(void);
-extern "C" s32 func_0205117c(struct SndHeap *heap);
 extern "C" int func_0203d7d4(int a);
 extern "C" void func_0204f9c4(int a, int b);
 extern "C" void func_0204f958(int a, int b);
 extern "C" int func_0204fa2c(NNSSndHandle *handle, int z);
-struct data_020a5bb8_t;
+struct data_020a5bb8_t {
+    void func_02050f34(const char *path, struct SndHeap *heap, int loadSymbols);
+};
 extern "C" void func_0204f94c(NNSSndHandle *p);
 extern "C" void func_0204f070(void);
 extern "C" struct SndHeap *func_0205130c(u32 addr, u32 size);
-extern "C" void func_02050f34(data_020a5bb8_t *arc, const char *path, struct SndHeap *heap,
-                              int loadSymbols);
-extern "C" int func_02052008(struct SndHeap *heap);
 extern "C" void func_020506fc(int arg);
 extern "C" {
 
@@ -57,7 +82,6 @@ extern void func_02049cd8(void *a, int b, int mode);
 }
 
 extern "C" int func_02051918(unsigned int id, struct SndHeap *heap);
-extern "C" int func_02051fb4(void *g, unsigned int x);
 extern "C" {
 
 extern void func_02049764(void);
@@ -73,30 +97,16 @@ extern "C" void func_0204efe0(void);
 extern "C" void func_0204effc(void);
 
 /* In-TU functions, declared once so callers ahead of their definitions link. */
-extern void func_02013524(NNSSndHandle *handle, int vol, int mode);
 extern int func_020134d8(void *a, struct SndHeap *heap);
 extern void func_020133bc(void);
 extern int func_02013078(void);
 extern void func_02012d64(void);
-extern void func_02012860(NNSSndHandle *handle, int flags, int c, int d, int e);
 extern void func_020127ec(int a0, int a1, int a2, int a3, int a4, int a5);
 extern int func_020126e8(int a);
-extern void func_020123c8(NNSSndHandle *handle, int type, int code, const Vector3 *arg);
-extern int func_02011dcc(NNSSndHandle *handle, int x);
 extern void func_02011c54(void);
 extern void func_02011b7c(void);
-extern void func_02011b38(void *c, int a1, int a2, int a3, short a5);
-extern void func_02011af8(void *c, int a1, int a2, int a3, const Vector3 *s0, short s1);
-extern void func_02011ac4(void *c, int a1, int a2, int a3, const Vector3 *s0, int s1, short s2);
-extern int func_02011aa0(void *c);
 struct SndRegTable;
 struct SndRegEntry;
-extern void func_02011a28(SndRegTable *c);
-extern void func_020119c8(void *base);
-extern void *func_02011934(SndRegTable *table, int id);
-extern int func_020116c4(SndRegTable *c, int a1, int a2, const Vector3 *a3, int s0, short s1);
-extern void func_02011698(SndRegTable *table, SndRegEntry *n);
-extern int func_02011654(char *table, char *n);
 extern int Player_PlaySoundEffect(NNSSndHandle *handle, int arg1, int arg2);
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 
@@ -210,9 +220,12 @@ typedef struct SndRegEntry {
     NNSSndHandle handle;      /* 0x08 */
     struct SndRegEntry *prev; /* 0x0c - bucket chain, toward the head */
     struct SndRegEntry *next; /* 0x10 - bucket chain, away from the head */
+    void func_02011b38(int a1, int a2, int a3, short a5);
+    void func_02011af8(int a1, int a2, int a3, const Vector3 *s0, short s1);
+    void func_02011ac4(int a1, int a2, int a3, const Vector3 *s0, int s1, short s2);
+    int func_02011aa0();
 } SndRegEntry;
 
-void func_02011a5c(void *vc);
 
 typedef struct SndRegTable {
     int counter;                 /* 0x00 - handed out as the unique id */
@@ -223,9 +236,17 @@ typedef struct SndRegTable {
 
     int func_0201179c(int a1, int a2, const Vector3 *a3, short s1);
     int func_0201186c(int a1, int a2, short a3);
+    void func_02011a5c();
+    void func_02011a28();
+    void func_020119c8();
+    void *func_02011934(int id);
+    int func_020116c4(int a1, int a2, const Vector3 *a3, int s0, short s1);
+    void func_02011698(SndRegEntry *n);
+    int func_02011654(char *n);
+    void func_02011974();
 
     SndRegTable() {
-        func_02011a5c(this);
+        this->func_02011a5c();
     }
 } SndRegTable;
 
@@ -242,8 +263,8 @@ void LoadAndSetMusic_Layer1(int j)
         func_0204fa2c(&sMusicHandle, 0);
     } else {
         if (!(gSubSoundID >= 0 && gCurrentMusicID >= 0 && sLayer1Music == j))
-            func_02011dcc(&sMusicHandle, j);
-        func_02013524(&sMusicHandle, 0x7f, 0);
+            sMusicHandle.func_02011dcc(j);
+        sMusicHandle.func_02013524(0x7f, 0);
         func_0204fa2c(&sSubHandle, 0);
     }
     gCurrentMusicID = j;
@@ -372,7 +393,7 @@ void func_02012dbc(int a) {
 
 void func_02012d64(void) {
     ApproachLinear(gMusicVolume, (s32)sMusicVolumeTarget << 12, sVolumeRampStep);
-    func_02013524(&sMusicHandle, gMusicVolume >> 12, 0);
+    sMusicHandle.func_02013524(gMusicVolume >> 12, 0);
 }
 
 namespace Sound {
@@ -403,7 +424,7 @@ bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, bool e) {
                     if (a != 0x2e)
                         gSubVolume = c & 0xff;
                 }
-                func_02011dcc(&sSubHandle, a);
+                sSubHandle.func_02011dcc(a);
             }
         } else if (x != (int)a) {
             return false;
@@ -421,7 +442,7 @@ namespace Sound {
 void LoadAndSetMusic_Layer3(unsigned int musicId)
 {
     sLayer3Music = musicId;
-    func_02011dcc(&sMusicHandle, musicId);
+    sMusicHandle.func_02011dcc(musicId);
 }
 
 void StopLoadedMusic_Layer3(void)
@@ -436,14 +457,14 @@ void StopLoadedMusic_Layer3(void)
     if (a == b) {
         int e440 = sLayer2Music;
         if (e440 >= 0) {
-            func_02011dcc(&sMusicHandle, e440);
+            sMusicHandle.func_02011dcc(e440);
             return;
         }
     }
     if (a < 0 || b < 0)
         func_0204fa2c(&sMusicHandle, 0);
     else
-        func_02011dcc(&sMusicHandle, a);
+        sMusicHandle.func_02011dcc(a);
 }
 
 void SetMusic(unsigned int j1, unsigned int j2)
@@ -457,7 +478,7 @@ void SetMusic(unsigned int j1, unsigned int j2)
     int e = sLayer3Music;
     gCurrentMusicID = j2;
     if (e >= 0) return;
-    func_02011dcc(&sMusicHandle, j2);
+    sMusicHandle.func_02011dcc(j2);
 }
 
 /* ONE parameter, although this symbol used to be spelled with two (`...Ejj`).
@@ -477,11 +498,11 @@ void EndMusic(unsigned int playerNo) {
     if (e444 >= 0) return;
     int e440 = sLayer2Music;
     if (e440 >= 0) {
-        func_02011dcc(&sMusicHandle, e440);
+        sMusicHandle.func_02011dcc(e440);
         return;
     }
     if (e43c >= 0) {
-        func_02011dcc(&sMusicHandle, e43c);
+        sMusicHandle.func_02011dcc(e43c);
         return;
     }
     func_0204fa2c(&sMusicHandle, 0);
@@ -493,7 +514,7 @@ void LoadAndSetMusic_Layer2(unsigned int j)
     int b = sLayer1Music;
     sLayer2Music = j;
     if (a != b) return;
-    func_02011dcc(&sMusicHandle, j);
+    sMusicHandle.func_02011dcc(j);
 }
 
 void StopLoadedMusic_Layer2(void)
@@ -508,18 +529,18 @@ void StopLoadedMusic_Layer2(void)
         func_0204fa2c(&sMusicHandle, 0);
         return;
     }
-    func_02011dcc(&sMusicHandle, a);
+    sMusicHandle.func_02011dcc(a);
 }
 
 }
 
-void func_02012860(NNSSndHandle *handle, int flags, int c, int d, int e) {
+void NNSSndHandle::func_02012860(int flags, int c, int d, int e) {
     if (flags & 1)
-        NNS_SndPlayerSetTrackVolume(handle, 0xffff, c);
+        NNS_SndPlayerSetTrackVolume(this, 0xffff, c);
     if (flags & 2)
-        NNS_SndPlayerSetTrackPitch(handle, 0xffff, d);
+        NNS_SndPlayerSetTrackPitch(this, 0xffff, d);
     if (flags & 4)
-        NNS_SndPlayerSetTrackPan(handle, 0xffff, e - 0x40);
+        NNS_SndPlayerSetTrackPan(this, 0xffff, e - 0x40);
 }
 
 namespace Sound {
@@ -531,7 +552,7 @@ unsigned int Play2D(unsigned int j1, unsigned int j2) {
 
 void func_020127ec(int a0, int a1, int a2, int a3, int a4, int a5) {
     Player_PlaySoundEffect(&data_0209b4a4, a0, a1);
-    func_02012860(&data_0209b4a4, a2, a3, a4, a5);
+    data_0209b4a4.func_02012860(a2, a3, a4, a5);
 }
 
 void func_020127a4(int r0, int r1, int r2, int r3) {
@@ -625,7 +646,7 @@ extern "C" void func_0201251c(int a, int b, const Vector3 *c, int d) {
 }
 
 int Sound_PlayIfNotActive(int a, int b, int c, short d) {
-    SndRegEntry *o = (SndRegEntry *)func_02011934(&data_0209b53c, a);
+    SndRegEntry *o = (SndRegEntry *)(&data_0209b53c)->func_02011934(a);
     if (o) {
         o->inUse = 1;
         return o->id;
@@ -639,26 +660,26 @@ int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h) {
     SndRegEntry *p;
 
     x = Sound_PlayIfNotActive(a, b, c, h);
-    p = (SndRegEntry *)func_02011934(&data_0209b53c, x);
+    p = (SndRegEntry *)(&data_0209b53c)->func_02011934(x);
     if (p != 0)
-        func_02012860(&p->handle, dd, e, f, g);
+        p->handle.func_02012860(dd, e, f, g);
     return x;
 }
 
-void func_020123c8(NNSSndHandle *handle, int type, int code, const Vector3 *arg) {
+void NNSSndHandle::func_020123c8(int type, int code, const Vector3 *arg) {
     if (type == 3 && code >= 0x100 && code <= 0x103) {
-        func_020485f0(handle, arg);
+        func_020485f0(this, arg);
         return;
     }
     if (type == 3 && code == 0x18d) {
-        func_02048528(handle, arg);
+        func_02048528(this, arg);
         return;
     }
     if (type == 3 && code == 0x81) {
-        func_020485f0(handle, arg);
+        func_020485f0(this, arg);
         return;
     }
-    func_02048d80(handle, arg);
+    func_02048d80(this, arg);
 }
 
 namespace Sound {
@@ -668,10 +689,10 @@ int PlayLong(u32 handle, u32 a, u32 b, const Vector3 &pos, s16 e)
     if (func_02048a1c(&pos, a, b) == 0)
         return 0;
 
-    SndRegEntry *slot = (SndRegEntry *)func_02011934(&data_0209b53c, handle);
+    SndRegEntry *slot = (SndRegEntry *)(&data_0209b53c)->func_02011934(handle);
     if (slot) {
         slot->inUse = 1;
-        func_020123c8(&slot->handle, a, b, &pos);
+        slot->handle.func_020123c8(a, b, &pos);
         return slot->id;
     }
 
@@ -688,13 +709,13 @@ extern "C" int func_0201226c(int a0, int a1, int a2, const Vector3 *a3, int a4, 
     SndRegEntry *p;
     if (func_02048a1c(a3, a1, a2) == 0)
         return 0;
-    p = (SndRegEntry *)func_02011934(&data_0209b53c, a0);
+    p = (SndRegEntry *)(&data_0209b53c)->func_02011934(a0);
     if (p != 0) {
         p->inUse = 1;
         func_02048c30(&p->handle, a3, a4);
         return p->id;
     }
-    return func_020116c4(&data_0209b53c, a1, a2, a3, a4, a5);
+    return (&data_0209b53c)->func_020116c4(a1, a2, a3, a4, a5);
 }
 
 extern "C" int func_02012194(int handle, int a1, int a2, int a3, int s0, const Vector3 *s1,
@@ -702,7 +723,7 @@ extern "C" int func_02012194(int handle, int a1, int a2, int a3, int s0, const V
     SndRegEntry *e;
     if (func_02048a1c(s1, a1, a2) == 0)
         return 0;
-    e = (SndRegEntry *)func_02011934(&data_0209b53c, handle);
+    e = (SndRegEntry *)(&data_0209b53c)->func_02011934(handle);
     if (e != 0) {
         NNSSndHandle *slot = &e->handle;
         e->inUse = 1;
@@ -711,7 +732,7 @@ extern "C" int func_02012194(int handle, int a1, int a2, int a3, int s0, const V
         return e->id;
     } else {
         int n = data_0209b53c.func_0201179c(a1, a2, s1, s2);
-        SndRegEntry *e2 = (SndRegEntry *)func_02011934(&data_0209b53c, n);
+        SndRegEntry *e2 = (SndRegEntry *)(&data_0209b53c)->func_02011934(n);
         if (e2 != 0)
             NNS_SndPlayerSetTrackPitch(&e2->handle, a3, s0);
         return n;
@@ -750,11 +771,11 @@ void LoadGroupAndSetBank(int a, int b)
     }
     if (a == 0) {
         func_020134d8((void *)a, sSndHeap);
-        data_0209b4a8 = func_0205117c(sSndHeap);
+        data_0209b4a8 = sSndHeap->func_0205117c();
     } else if (sLoadedGroup != a) {
-        func_020510a4(sSndHeap, data_0209b4a8);
+        sSndHeap->func_020510a4(data_0209b4a8);
         func_020134d8((void *)a, sSndHeap);
-        data_0209b484 = func_0205117c(sSndHeap);
+        data_0209b484 = sSndHeap->func_0205117c();
     }
     sCurrentBank = b;
     sLoadedGroup = a;
@@ -775,9 +796,9 @@ void UnsetPlayerVoiceGroup(void)
 
 void func_02011f7c(void *self) {
     if (!func_0203d974()) {
-        func_020510a4(sSndHeap, data_0209b484);
+        sSndHeap->func_020510a4(data_0209b484);
         func_020134d8(self, sSndHeap);
-        data_0209b488 = func_0205117c(sSndHeap);
+        data_0209b488 = sSndHeap->func_0205117c();
     }
     sPlayerVoiceGroup = (unsigned char)(int)self;
 }
@@ -787,7 +808,7 @@ namespace Sound {
 void ResetPlayerVoiceGroup(void)
 {
     if (func_0203d974() == 0) {
-        func_020510a4(sSndHeap, data_0209b484);
+        sSndHeap->func_020510a4(data_0209b484);
     }
     sPlayerVoiceGroup = 0;
 }
@@ -797,13 +818,13 @@ void ResetPlayerVoiceGroup(void)
 int func_02011ee4(void *c) {
     int x = func_0203d974();
     if (x != 0) return x;
-    func_020510a4(sSndHeap, data_0209b488);
+    sSndHeap->func_020510a4(data_0209b488);
     return func_020134d8(c, sSndHeap);
 }
 
 void *func_02011e94(int *out) {
-    int r = func_02051074(sSndHeap);
-    void *block = func_020511d4(sSndHeap, r, 0, 0, 0);
+    int r = sSndHeap->func_02051074();
+    void *block = sSndHeap->func_020511d4(r, 0, 0, 0);
     if (out != 0)
         *out = r;
     return block;
@@ -813,17 +834,17 @@ int Player_PlaySoundEffect(NNSSndHandle *handle, int arg1, int arg2) {
     if (gSoundInitialized == 0)
         return 1;
     if (arg1 != 3)
-        return func_02051f1c(handle, arg1, arg2);
-    return func_02051e60(handle, -1, sCurrentBank, -1, arg1, arg2);
+        return handle->func_02051f1c(arg1, arg2);
+    return handle->func_02051e60(-1, sCurrentBank, -1, arg1, arg2);
 }
 
-int func_02011dcc(NNSSndHandle *handle, int x) {
-    int r4 = func_02051fb4(handle, x);
-    if (r4 != 0 && handle == &sMusicHandle) {
+int NNSSndHandle::func_02011dcc(int x) {
+    int r4 = this->func_02051fb4(x);
+    if (r4 != 0 && this == &sMusicHandle) {
         func_02049764();
         func_02013078();
         if (sMusicTrackMode >= 0) {
-            func_0204921c(handle, sMusicTrackMode);
+            func_0204921c(this, sMusicTrackMode);
         }
     }
     return r4;
@@ -926,8 +947,8 @@ void func_02011b7c(void) {
     sSavedMusicVolume = -1;
 }
 
-void func_02011b38(void *c, int a1, int a2, int a3, short a5) {
-    SndRegEntry *e = (SndRegEntry *)c;
+void SndRegEntry::func_02011b38(int a1, int a2, int a3, short a5) {
+    SndRegEntry *e = (SndRegEntry *)this;
     e->id = a1;
     e->fadeFrames = a5;
     e->inUse = 1;
@@ -936,25 +957,25 @@ void func_02011b38(void *c, int a1, int a2, int a3, short a5) {
     Player_PlaySoundEffect(&e->handle, a2, a3);
 }
 
-void func_02011af8(void *c, int a1, int a2, int a3, const Vector3 *s0, short s1) {
-    func_02011b38(c, a1, a2, a3, s1);
-    func_020123c8(&((SndRegEntry *)c)->handle, a2, a3, s0);
+void SndRegEntry::func_02011af8(int a1, int a2, int a3, const Vector3 *s0, short s1) {
+    (this)->func_02011b38(a1, a2, a3, s1);
+    ((SndRegEntry *)this)->handle.func_020123c8(a2, a3, s0);
 }
 
-void func_02011ac4(void *c, int a1, int a2, int a3, const Vector3 *s0, int s1, short s2) {
-    func_02011b38(c, a1, a2, a3, s2);
-    func_02048c30(&((SndRegEntry *)c)->handle, s0, s1);
+void SndRegEntry::func_02011ac4(int a1, int a2, int a3, const Vector3 *s0, int s1, short s2) {
+    (this)->func_02011b38(a1, a2, a3, s2);
+    func_02048c30(&((SndRegEntry *)this)->handle, s0, s1);
 }
 
-int func_02011aa0(void *c) {
-    SndRegEntry *e = (SndRegEntry *)c;
+int SndRegEntry::func_02011aa0() {
+    SndRegEntry *e = (SndRegEntry *)this;
     func_0204fa2c(&e->handle, e->fadeFrames);
     e->id = 0;
     return 0;
 }
 
-void func_02011a5c(void *vc) {
-    SndRegTable *c = (SndRegTable *)vc;
+void SndRegTable::func_02011a5c() {
+    SndRegTable *c = (SndRegTable *)this;
     int i;
     SndRegEntry *p = c->entries;
     do {
@@ -966,8 +987,8 @@ void func_02011a5c(void *vc) {
     for (i = 0; i < 16; i++) c->buckets[i] = 0;
 }
 
-void func_02011a28(SndRegTable *c) {
-    SndRegEntry *p = c->entries;
+void SndRegTable::func_02011a28() {
+    SndRegEntry *p = this->entries;
     int i;
     for (i = 0; i < 0x40; i++) {
         func_0204f94c(&p->handle);
@@ -975,8 +996,8 @@ void func_02011a28(SndRegTable *c) {
     }
 }
 
-void func_020119c8(void *vbase) {
-    SndRegTable *base = (SndRegTable *)vbase;
+void SndRegTable::func_020119c8() {
+    SndRegTable *base = (SndRegTable *)this;
     SndRegEntry *e = base->entries;
     int i;
     for (i = 0; i < 0x40; i++) {
@@ -984,7 +1005,7 @@ void func_020119c8(void *vbase) {
             if (e->inUse == 1) {
                 e->inUse = 0;
             } else {
-                func_02011654((char *)base, (char *)e);
+                base->func_02011654((char *)e);
                 base->cursor = (unsigned char)i;
             }
         }
@@ -992,23 +1013,23 @@ void func_020119c8(void *vbase) {
     }
 }
 
-void func_02011974(void *vbase) {
-    SndRegTable *base = (SndRegTable *)vbase;
+void SndRegTable::func_02011974() {
+    SndRegTable *base = this;
     SndRegEntry *e = base->entries;
     int i;
     for (i = 0; i < 0x40; i++) {
         if (e->id) {
             e->inUse = 0;
-            func_02011654((char *)base, (char *)e);
+            base->func_02011654((char *)e);
             base->cursor = (unsigned char)i;
         }
         e++;
     }
 }
 
-void *func_02011934(SndRegTable *table, int id) {
+void *SndRegTable::func_02011934(int id) {
     if (id == 0) return 0;
-    SndRegTable *reg = table;
+    SndRegTable *reg = this;
     int idx = id & 0xf;
     SndRegEntry *node = reg->buckets[idx];
     while (node) {
@@ -1028,8 +1049,8 @@ int SndRegTable::func_0201186c(int a1, int a2, short a3) {
             if (reg->counter == 0) {
                 reg->counter += 1;
             }
-            func_02011b38(&reg->entries[reg->cursor], reg->counter, a1, a2, a3);
-            func_02011698(this, &reg->entries[reg->cursor]);
+            (&reg->entries[reg->cursor])->func_02011b38(reg->counter, a1, a2, a3);
+            (this)->func_02011698(&reg->entries[reg->cursor]);
             return reg->counter;
         }
         reg->cursor = (reg->cursor + 1) % 0x40;
@@ -1045,8 +1066,8 @@ int SndRegTable::func_0201179c(int a1, int a2, const Vector3 *a3, short s1) {
             reg->counter += 1;
             if (reg->counter == 0)
                 reg->counter += 1;
-            func_02011af8(&reg->entries[reg->cursor], reg->counter, a1, a2, a3, s1);
-            func_02011698(this, &reg->entries[reg->cursor]);
+            (&reg->entries[reg->cursor])->func_02011af8(reg->counter, a1, a2, a3, s1);
+            (this)->func_02011698(&reg->entries[reg->cursor]);
             return reg->counter;
         }
         reg->cursor = (reg->cursor + 1) % 0x40;
@@ -1054,16 +1075,16 @@ int SndRegTable::func_0201179c(int a1, int a2, const Vector3 *a3, short s1) {
     return 0;
 }
 
-int func_020116c4(SndRegTable *c, int a1, int a2, const Vector3 *a3, int s0, short s1) {
-    SndRegTable *reg = c;
+int SndRegTable::func_020116c4(int a1, int a2, const Vector3 *a3, int s0, short s1) {
+    SndRegTable *reg = this;
     int i;
     for (i = 0; i < 0x40; i++) {
         if (reg->entries[reg->cursor].id == 0) {
             reg->counter = reg->counter + 1;
             if (reg->counter == 0)
                 reg->counter = reg->counter + 1;
-            func_02011ac4(&reg->entries[reg->cursor], reg->counter, a1, a2, a3, s0, s1);
-            func_02011698(c, &reg->entries[reg->cursor]);
+            (&reg->entries[reg->cursor])->func_02011ac4(reg->counter, a1, a2, a3, s0, s1);
+            (this)->func_02011698(&reg->entries[reg->cursor]);
             return reg->counter;
         }
         reg->cursor = (u8)((reg->cursor + 1) % 0x40);
@@ -1071,8 +1092,8 @@ int func_020116c4(SndRegTable *c, int a1, int a2, const Vector3 *a3, int s0, sho
     return 0;
 }
 
-void func_02011698(SndRegTable *table, SndRegEntry *n) {
-    SndRegTable *reg = table;
+void SndRegTable::func_02011698(SndRegEntry *n) {
+    SndRegTable *reg = this;
     SndRegEntry *e = n;
     int idx = e->id & 0xf;
     SndRegEntry *head = reg->buckets[idx];
@@ -1085,8 +1106,8 @@ void func_02011698(SndRegTable *table, SndRegEntry *n) {
     }
 }
 
-int func_02011654(char *table, char *n) {
-    SndRegTable *reg = (SndRegTable *)table;
+int SndRegTable::func_02011654(char *n) {
+    SndRegTable *reg = (SndRegTable *)this;
     SndRegEntry *e = (SndRegEntry *)n;
     SndRegEntry *prev = e->prev;
     SndRegEntry *next = e->next;
@@ -1099,7 +1120,7 @@ int func_02011654(char *table, char *n) {
     if (next) {
         next->prev = prev;
     }
-    return func_02011aa0(n);
+    return ((SndRegEntry *)n)->func_02011aa0();
 }
 
 #pragma defer_codegen off
@@ -1110,7 +1131,7 @@ extern "C" void func_020132d8(void) {
     func_02012d64();
     if (gSubSoundID >= 0) {
         ApproachLinear(gSubVolume, sSubVolumeTarget << 0xc, sVolumeRampStep);
-        func_02013524(&sSubHandle, gSubVolume >> 0xc, 0);
+        sSubHandle.func_02013524(gSubVolume >> 0xc, 0);
         if (gSubVolume == 0) {
             gSubSoundID = -1;
             func_0204fa2c(&sSubHandle, 0);
@@ -1122,7 +1143,7 @@ extern "C" void func_020132d8(void) {
     }
     func_020490b0(&sMusicHandle);
     func_0204f03c();
-    func_020119c8(&data_0209b53c);
+    (&data_0209b53c)->func_020119c8();
 }
 
 #pragma opt_propagation off
@@ -1132,9 +1153,9 @@ void func_020133bc(void) {
     sSndHeap = func_0205130c((u32)Memory::Allocate(0x100000), 0x100000);
     anim = data_0208e498;
     func_0201a9fc(&data_0209d574);
-    func_02050f34((data_020a5bb8_t *)&sSndArc, anim, sSndHeap, 0);
+    ((data_020a5bb8_t *)&sSndArc)->func_02050f34(anim, sSndHeap, 0);
     func_0201a9fc(&data_0209d574);
-    func_02052008(func_0203d974() == 0 ? sSndHeap : 0);
+    (func_0203d974() == 0 ? sSndHeap : 0)->func_02052008();
     if (func_0203d974() == 0) {
         func_0201a9fc(&data_0209d574);
         func_020134d8((void *)1, sSndHeap);
@@ -1143,7 +1164,7 @@ void func_020133bc(void) {
     func_0204f94c(&sMusicHandle);
     func_0204f94c(&sSubHandle);
     func_0204f94c(&data_0209b4a4);
-    func_02011a28(&data_0209b53c);
+    (&data_0209b53c)->func_02011a28();
     func_02048f34(&sSndArc);
     func_020506fc(2);
     func_02049cd8(&data_0209baa0, 0x1000, 0);
@@ -1157,11 +1178,11 @@ void func_020133bc(void) {
 #pragma opt_propagation on
 #pragma defer_codegen on
 
-void func_02013524(NNSSndHandle *handle, int b, int c) {
+void NNSSndHandle::func_02013524(int b, int c) {
     if (gSoundMuted != 0) {
         c = b = 0;
     }
-    NNS_SndPlayerMoveVolume(handle, b, c);
+    NNS_SndPlayerMoveVolume(this, b, c);
 }
 
 int func_020134d8(void *a, struct SndHeap *heap) {

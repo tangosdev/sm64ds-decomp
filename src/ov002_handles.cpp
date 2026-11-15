@@ -59,8 +59,8 @@ Ov002ModelFile data_ov002_0210d9f0(0x9c0c);
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 
-int func_ov002_020ad660(void *enemy, void *clsnArg, void *modelArg, int flags) {
-    dEnemyBase_c *c = (dEnemyBase_c *)enemy;
+int dEnemyBase_c::func_ov002_020ad660(void *clsnArg, void *modelArg, int flags) {
+    dEnemyBase_c *c = this;
     dBgCh_Actr *clsn = (dBgCh_Actr *)clsnArg;
     dExtSimpleModel_c *model = (dExtSimpleModel_c *)modelArg;
     int v[3];

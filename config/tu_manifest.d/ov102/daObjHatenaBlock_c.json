@@ -143,7 +143,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "_Z19func_ov102_02149684PiP18daObjHatenaBlock_c",
+      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149684Ev",
       "address": "0x02149684",
       "size": "0x00000020",
       "legacy_source": "src/func_ov102_02149684.c",
@@ -1560,7 +1560,7 @@
       "source": "0x0214d9dc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_Z13func_02017b4cPvj",
+      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -3097,7 +3097,7 @@
     },
     {
       "symbol": "_ZN25HatenaBlockClsnFileHandleC1Ej",
-      "canonical_symbol": "_Z13func_02017b4cPvj",
+      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the collision wrapper constructor's exact PC24 relocation"

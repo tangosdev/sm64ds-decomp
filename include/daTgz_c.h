@@ -84,6 +84,17 @@ struct daTgz_c : dActor_c {
     void func_ov077_02125b1c();
     int func_ov077_02125bb4();
     int func_ov077_02125dd4();
+    int func_ov077_02124c28();
+    int func_ov077_02124ce4();
+    void func_ov077_02124d08(dBgCh_Actr *clsn);
+    void func_ov077_02124eb0();
+    void func_ov077_021250a8();
+    void func_ov077_021251d0();
+    void func_ov077_02125290();
+    void func_ov077_02125304();
+    void func_ov077_02125e20();
+    void func_ov077_02125e5c();
+    void func_ov077_02125e94(int i);
 };
 
 #ifndef SM64DS_PLATFORM_PC

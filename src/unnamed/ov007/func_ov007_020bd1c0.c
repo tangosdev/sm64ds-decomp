@@ -17,7 +17,7 @@ extern void func_ov007_020b1fa4(int self);
 extern void func_ov007_020bd4a0(int r0);
 extern void func_ov007_020b2998(void);
 extern void func_ov007_020bfbdc(void* self);
-extern void func_ov007_020c14b8(struct Ov007Texture *t);
+extern void _ZN12Ov007Texture19func_ov007_020c14b8Ev(struct Ov007Texture *t);
 extern void func_ov007_020b77ac(void);
 extern void PickerScene_Create(int a, int b);
 extern void func_ov007_020bf428(void);
@@ -61,11 +61,11 @@ void func_ov007_020bd1c0(int n)
             WORK->modelGrowth = 0;
             func_ov007_020bfbdc(WORK->cameras[0]);
             func_ov007_020bd4a0(1);
-            func_ov007_020c14b8(WORK->textures[8]);
-            func_ov007_020c14b8(WORK->textures[7]);
-            func_ov007_020c14b8(WORK->textures[6]);
-            func_ov007_020c14b8(WORK->textures[9]);
-            func_ov007_020c14b8(WORK->textures[10]);
+            _ZN12Ov007Texture19func_ov007_020c14b8Ev(WORK->textures[8]);
+            _ZN12Ov007Texture19func_ov007_020c14b8Ev(WORK->textures[7]);
+            _ZN12Ov007Texture19func_ov007_020c14b8Ev(WORK->textures[6]);
+            _ZN12Ov007Texture19func_ov007_020c14b8Ev(WORK->textures[9]);
+            _ZN12Ov007Texture19func_ov007_020c14b8Ev(WORK->textures[10]);
             func_ov007_020b77ac();
         }
         break;
@@ -74,9 +74,9 @@ void func_ov007_020bd1c0(int n)
         func_ov007_020bd4a0(0);
         func_ov007_020bfbdc(WORK->cameras[0]);
         func_ov007_020bd4a0(1);
-        func_ov007_020c14b8(WORK->textures[1]);
-        func_ov007_020c14b8(WORK->textures[3]);
-        func_ov007_020c14b8(WORK->textures[4]);
+        _ZN12Ov007Texture19func_ov007_020c14b8Ev(WORK->textures[1]);
+        _ZN12Ov007Texture19func_ov007_020c14b8Ev(WORK->textures[3]);
+        _ZN12Ov007Texture19func_ov007_020c14b8Ev(WORK->textures[4]);
         PickerScene_Create(WORK->transitionMode, WORK->figureIndex);
         break;
     case 2:
@@ -87,9 +87,9 @@ void func_ov007_020bd1c0(int n)
             func_ov007_020bd4a0(0);
             func_ov007_020bfbdc(WORK->cameras[0]);
             func_ov007_020bd4a0(1);
-            func_ov007_020c14b8(WORK->textures[2]);
-            func_ov007_020c14b8(WORK->textures[0]);
-            func_ov007_020c14b8(WORK->textures[10]);
+            _ZN12Ov007Texture19func_ov007_020c14b8Ev(WORK->textures[2]);
+            _ZN12Ov007Texture19func_ov007_020c14b8Ev(WORK->textures[0]);
+            _ZN12Ov007Texture19func_ov007_020c14b8Ev(WORK->textures[10]);
             func_ov007_020bf428();
         }
         break;

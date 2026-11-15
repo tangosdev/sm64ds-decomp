@@ -381,6 +381,7 @@ struct daTrs_c : dCapEnemy_c {
     void          func_ov063_02119cc0(int unused, s16 a2, int a3);
     void ChaseMario(int a1, short a2, int a3);
     void SetVelFromPlayerVel(int a, int b);
+    int func_ov063_0211a0a8(int a1, int a2, int a3, int a4);
     int GetAttackStatus();
     int UpdateDuringDeath();
     int UpdateDuringNonlethalHit(int arg1);

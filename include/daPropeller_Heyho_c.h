@@ -129,6 +129,17 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     int func_ov070_0211f62c();
     int func_ov070_0211f6e0();
     void func_ov070_02120070();
+    int func_ov070_0211ffa8();
+    int func_ov070_0211fd98();
+    int func_ov070_0211fd60();
+    int func_ov070_0211fae4();
+    int func_ov070_0211fa80();
+    int func_ov070_0211f694();
+    int func_ov070_0211f5f0();
+    short func_ov070_0211f450();
+    int func_ov070_0211f368();
+    void func_ov070_0211f100();
+    int func_ov070_0211f0a4();
 };
 
 /* Inline destructor is not the key function; OnYoshiTryEat is the first

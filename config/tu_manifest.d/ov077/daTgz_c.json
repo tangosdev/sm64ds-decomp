@@ -67,56 +67,56 @@
       "ordinal": 3
     },
     {
-      "symbol": "_Z19func_ov077_02124c28P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02124c28Ev",
       "address": "0x02124c28",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov077_02124c28.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_Z19func_ov077_02124ce4P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02124ce4Ev",
       "address": "0x02124ce4",
       "size": "0x00000024",
       "legacy_source": "src/func_ov077_02124ce4.c",
       "ordinal": 5
     },
     {
-      "symbol": "_Z19func_ov077_02124d08P7daTgz_cP10dBgCh_Actr",
+      "symbol": "_ZN7daTgz_c19func_ov077_02124d08EP10dBgCh_Actr",
       "address": "0x02124d08",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov077_02124d08.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_Z19func_ov077_02124eb0P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02124eb0Ev",
       "address": "0x02124eb0",
       "size": "0x000001f8",
       "legacy_source": "src/func_ov077_02124eb0.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_Z19func_ov077_021250a8P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_021250a8Ev",
       "address": "0x021250a8",
       "size": "0x00000128",
       "legacy_source": "src/func_ov077_021250a8.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_Z19func_ov077_021251d0P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_021251d0Ev",
       "address": "0x021251d0",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov077_021251d0.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_Z19func_ov077_02125290P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02125290Ev",
       "address": "0x02125290",
       "size": "0x00000074",
       "legacy_source": "src/func_ov077_02125290.c",
       "ordinal": 10
     },
     {
-      "symbol": "_Z19func_ov077_02125304P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02125304Ev",
       "address": "0x02125304",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov077_02125304.cpp",
@@ -207,21 +207,21 @@
       "ordinal": 23
     },
     {
-      "symbol": "_Z19func_ov077_02125e20P7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02125e20Ev",
       "address": "0x02125e20",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov077_02125e20.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_Z19func_ov077_02125e5cP7daTgz_c",
+      "symbol": "_ZN7daTgz_c19func_ov077_02125e5cEv",
       "address": "0x02125e5c",
       "size": "0x00000038",
       "legacy_source": "src/func_ov077_02125e5c.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "_Z19func_ov077_02125e94P7daTgz_ci",
+      "symbol": "_ZN7daTgz_c19func_ov077_02125e94Ei",
       "address": "0x02125e94",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov077_02125e94.c",
@@ -735,69 +735,69 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@561",
-      "to": "data_ov077_02127c1c",
-      "evidence": "compiler temp mapped to 0x02127c1c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @612 to @553 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @553 to @561 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
-    },
-    {
       "from": "@563",
-      "to": "data_ov077_02127928",
-      "evidence": "compiler temp mapped to 0x02127928 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @614 to @555 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @555 to @563 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "data_ov077_02127c1c",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). compiler temp mapped to 0x02127c1c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @612 to @553 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @553 to @561 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
       "from": "@565",
-      "to": "data_ov077_02127910",
-      "evidence": "compiler temp mapped to 0x02127910 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @616 to @557 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @557 to @565 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "data_ov077_02127928",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). compiler temp mapped to 0x02127928 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @614 to @555 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @555 to @563 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@566",
-      "to": "data_ov077_02127908",
-      "evidence": "compiler temp mapped to 0x02127908 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @617 to @558 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @558 to @566 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "from": "@567",
+      "to": "data_ov077_02127910",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). compiler temp mapped to 0x02127910 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @616 to @557 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @557 to @565 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
       "from": "@568",
-      "to": "data_ov077_021278f0",
-      "evidence": "compiler temp mapped to 0x021278f0 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @619 to @560 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @560 to @568 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "data_ov077_02127908",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). compiler temp mapped to 0x02127908 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @617 to @558 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @558 to @566 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
       "from": "@570",
-      "to": "data_ov077_02127918",
-      "evidence": "compiler temp mapped to 0x02127918 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @621 to @562 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @562 to @570 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "data_ov077_021278f0",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). compiler temp mapped to 0x021278f0 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @619 to @560 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @560 to @568 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
       "from": "@572",
-      "to": "data_ov077_021278f8",
-      "evidence": "compiler temp mapped to 0x021278f8 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @623 to @564 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @564 to @572 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "data_ov077_02127918",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). compiler temp mapped to 0x02127918 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @621 to @562 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @562 to @570 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
       "from": "@574",
-      "to": "data_ov077_021278e8",
-      "evidence": "compiler temp mapped to 0x021278e8 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @625 to @566 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @566 to @574 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "data_ov077_021278f8",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). compiler temp mapped to 0x021278f8 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @623 to @564 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @564 to @572 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
       "from": "@576",
-      "to": "data_ov077_02127940",
-      "evidence": "compiler temp mapped to 0x02127940 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @627 to @568 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @568 to @576 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "data_ov077_021278e8",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). compiler temp mapped to 0x021278e8 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @625 to @566 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @566 to @574 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
       "from": "@578",
-      "to": "data_ov077_02127938",
-      "evidence": "compiler temp mapped to 0x02127938 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @629 to @570 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @570 to @578 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "data_ov077_02127940",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). compiler temp mapped to 0x02127940 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @627 to @568 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @568 to @576 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
       "from": "@580",
-      "to": "data_ov077_02127930",
-      "evidence": "compiler temp mapped to 0x02127930 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @631 to @572 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @572 to @580 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "data_ov077_02127938",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). compiler temp mapped to 0x02127938 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @629 to @570 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @570 to @578 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
       "from": "@582",
-      "to": "data_ov077_02127900",
-      "evidence": "compiler temp mapped to 0x02127900 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @633 to @574 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @574 to @582 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "data_ov077_02127930",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). compiler temp mapped to 0x02127930 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @631 to @572 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @572 to @580 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
       "from": "@584",
+      "to": "data_ov077_02127900",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). compiler temp mapped to 0x02127900 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @633 to @574 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @574 to @582 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+    },
+    {
+      "from": "@586",
       "to": "data_ov077_02127920",
-      "evidence": "compiler temp mapped to 0x02127920 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @635 to @576 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @576 to @584 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). compiler temp mapped to 0x02127920 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @635 to @576 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @576 to @584 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

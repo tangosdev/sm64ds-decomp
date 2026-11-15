@@ -157,7 +157,10 @@ void Banner_Update(MgBanner *e);
 extern void func_02012e1c(void);
 int func_02013580(int table, int index);
 void func_02013568(int table, int index, int value);
-extern void func_0201f32c(int arg0);
+/* Static method defined in Message.cpp. This TU does not include Message.h. */
+struct Message {
+    static void func_0201f32c(int);
+};
 extern void Banner_Free(MgBanner *e);
 extern void Banner_Press(MgBanner *e);
 extern int Banner_IsPressFinished(MgBanner *e);
@@ -1488,7 +1491,7 @@ int dScMgBase_c::SaveScreenForMenu() {
         MI_CpuFill16((char *)0x5000400, tmp, 2);
     }
 
-    func_0201f32c(mSceneKind);
+    Message::func_0201f32c(mSceneKind);
 
     gMainScreenLayers = DISPLAY_LAYER_BG1 | DISPLAY_LAYER_OBJ;
     gSubScreenLayers = 0x10;

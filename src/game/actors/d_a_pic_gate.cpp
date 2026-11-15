@@ -131,7 +131,7 @@ u8 *daPicGate_c::LoadTexture(s32 i) {
         BMD_Material *b;
         BMD_Palette *c;
         SharedFilePtr *sfp = data_ov080_0212775c[i];
-        BMD_File *o = (BMD_File *)func_0201787c(sfp);
+        BMD_File *o = (BMD_File *)sfp->func_0201787c();
         a = o->textures;
         b = o->materials;
         c = o->palettes;

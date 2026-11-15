@@ -216,7 +216,7 @@ void dScStage_c::UpdateMessage() {
     }
 }
 
-extern "C" void func_0201cd08(int arg) {
+void Message::func_0201cd08(int arg) {
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -259,7 +259,7 @@ void Message::DisplaySaveStatusText(unsigned short n)
     func_0201d418(0x109, 0x70);
 }
 
-extern "C" void func_0201cebc(short a0) {
+void Message::func_0201cebc(short a0) {
     volatile unsigned short v;
     volatile int z;
     data_0209d6d4 = a0;
@@ -290,7 +290,7 @@ void Message::DisplayLevelClearText(u16 msgID, u8 course) {
     func_0201e220(1);
 }
 
-extern "C" void func_0201cfb8(int arg0) {
+void Message::func_0201cfb8(int arg0) {
     data_0209d6d4 = arg0;
     data_0209d660 = 0;
     func_0201eaac();
@@ -431,7 +431,7 @@ void Message::DisplayControllerModeText(unsigned short n)
     Message_DrawCenteredLine(0x280, 0x20);
 }
 
-extern "C" void func_0201d418(int p0, int p1) {
+void Message::func_0201d418(int p0, int p1) {
     volatile int li;
     int i;
     int idx = data_0209d6d4;
@@ -533,7 +533,7 @@ extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
    (course < 15) gets its number line, the course name and the star line.
    The star line leads with glyph 0xf0 when the star is collected or
    data_0209f20c is set, and with 0xf1 otherwise. */
-extern "C" void func_0201d850(u32 course) {
+void Message::func_0201d850(u32 course) {
     u16 tile = 0x200;
     u16 mapPos = 0x80;
     /* The fill values go through the stack, as the cartridge does. */
@@ -795,7 +795,7 @@ void Message::DisplayDontSaveText(unsigned short n)
     Message_DrawCenteredLine(0x291, 0xa);
 }
 
-extern "C" void func_0201e220(int arg) {
+void Message::func_0201e220(int arg) {
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -1045,7 +1045,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     func_0201b388(data_0209d6a8);
 }
 
-extern "C" void func_0201eaac(void) {
+void Message::func_0201eaac(void) {
     data_0209d6c0 = 0;
     data_0209d6b4 = 0;
     data_0209d69c = 0;
@@ -1153,14 +1153,14 @@ void Message::DisplaySaving(unsigned short n)
     GX_SetVisiblePlane(gMainScreenLayers);
 }
 
-void func_0201ef38(void) {
+void Message::func_0201ef38(void) {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
 }
 
 /* Shows a credit text (message arg + 0x24e) on the sub screen's BG0: clears
    all of BG0's character tiles, then lays the message out one 32-tile line
    at a time, centred vertically on the screen. A negative arg only clears. */
-void func_0201ef50(int arg) {
+void Message::func_0201ef50(int arg) {
     volatile int zero;
     volatile int lineZero;
     int lines;
@@ -1205,7 +1205,7 @@ void func_0201ef50(int arg) {
     }
 }
 
-void func_0201f108(void) {
+void Message::func_0201f108(void) {
     u16 *scr = (u16 *)G2S_GetBG0ScrPtr();
     int i = 0;
     do {
@@ -1214,7 +1214,7 @@ void func_0201f108(void) {
     } while (i < 0x400);
 }
 
-void func_0201f138(void) {
+void Message::func_0201f138(void) {
     volatile int li;
     volatile unsigned short ls;
     int idx;
@@ -1281,7 +1281,7 @@ static inline int IsGameMode(int mode) {
    screen's text tiles and map, lays the box's tiles out row by row from tile
    0x200 (0x2200 on the sub screen), and pumps Message::Update until the
    open state reaches 4. */
-void func_0201f32c(int arg0) {
+void Message::func_0201f32c(int arg0) {
     MessageEntry *entry;
     u8 disp2;
     u8 t;
@@ -1452,7 +1452,7 @@ void func_0201f32c(int arg0) {
 
 /* Course ids that must not open the talk window. data_0209d664 is the byte
    after the shared reset flag at data_0209d660. */
-int func_0201fb4c(void) {
+int Message::func_0201fb4c(void) {
     short v;
     unsigned int b;
     if (data_0209d664 != 0) goto no;
@@ -1493,7 +1493,7 @@ extern "C" int ObjectMessageIDToActualMessageID(s16 id) {
     return id;
 }
 
-extern "C" void func_0201fc88(s16 objectMsgID) {
+void Message::func_0201fc88(s16 objectMsgID) {
     s16 id = ObjectMessageIDToActualMessageID(objectMsgID);
     func_0201f32c(id);
 }

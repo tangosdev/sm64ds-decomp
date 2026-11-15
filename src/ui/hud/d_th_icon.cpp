@@ -26,7 +26,6 @@
 
 /* local extern: arm9 C helpers with no shared header. */
 extern "C" int func_0203da9c(void);
-void func_ov001_020ab3f0(void *);
 
 extern int data_0208ee44;
 
@@ -35,19 +34,18 @@ extern int data_0208ee44;
  * touchable (the latch Behavior applies), and set the press reload to
  * ten. The highest address in this unit, so first in the file. Callers
  * in ov004/ov006/ov075 pass the icon as a char *, so the entry keeps it. */
-void func_ov001_020ab5b0(char *p, int kind, short x, short y, short halfW, short halfH) {
-    dThIcon_c *icon = reinterpret_cast<dThIcon_c *>(p);
-    icon->mTouchKind = kind;
-    icon->mX = x;
-    icon->mY = y;
-    icon->mHalfW = halfW;
-    icon->mHalfH = halfH;
-    icon->mPressTimer = 0;
-    icon->mOn = 0;
-    icon->mPenInside = 0;
-    if (icon->mTouchKind >= 1)
-        icon->mReady = 1;
-    icon->mPressTime = 10;
+void dThIcon_c::func_ov001_020ab5b0(int kind, short x, short y, short halfW, short halfH) {
+    mTouchKind = kind;
+    mX = x;
+    mY = y;
+    mHalfW = halfW;
+    mHalfH = halfH;
+    mPressTimer = 0;
+    mOn = 0;
+    mPenInside = 0;
+    if (mTouchKind >= 1)
+        mReady = 1;
+    mPressTime = 10;
 }
 
 void dThIcon_c::Behavior() {
@@ -109,5 +107,5 @@ void dThIcon_c::Select() {
         mOn = 1;
         return;
     }
-    func_ov001_020ab3f0(this);
+    func_ov001_020ab3f0();
 }

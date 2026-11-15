@@ -71,7 +71,6 @@ void func_0202b044(unsigned short *entries, int count);
 void func_0202b060(char *entries, int count);
 void func_0202b090(void *entries, s32 count);
 void func_0202b0c4(void *entries, s32 count);
-void func_0202b0e0(LVL_Overlay::StandardEntry *e, int count);
 void StartEntranceFaderWipe(int index);
 extern "C" {
 
@@ -142,7 +141,7 @@ void LoadStandardObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) 
 void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranceIndex) {
     u32 entranceKind; /* declared first: at its first assignment it is 20 words off */
     LVL_Overlay::StandardEntry *entry = (LVL_Overlay::StandardEntry *)table.entries;
-    func_0202b0e0(entry, table.count);
+    entry->func_0202b0e0(table.count);
     entry += entranceIndex;
     entranceKind = 0;
     int entranceId = 0xf;

@@ -2,7 +2,8 @@
 #include "Ov007Sprite.h"
 #include "Ov007Texture.h"
 #include "nitro/fx/fx.h"
-extern void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u32 color0);
+extern void _ZN12Ov007Texture19func_ov007_020c1448Ejjjj(Ov007Texture *self, u32 texGen,
+                                                         u32 repeat, u32 flip, u32 color0);
 extern void Texture_BindPalette(Ov007Texture *tex);
 extern void func_ov007_020c49bc(int width, int height, fx32 s0, fx32 t0, int repeatU, int repeatV,
                                 u16 *tilemap, int texWidth);
@@ -45,7 +46,7 @@ void func_ov007_020c4684(Ov007Sprite *s, u16 color, int alpha, int polygonId, in
         tw = 8 << tex->sizeS;
         th = 8 << tex->sizeT;
     }
-    func_ov007_020c1448(tex, 1, s->texRepeat, s->texFlip, s->texColor0);
+    _ZN12Ov007Texture19func_ov007_020c1448Ejjjj(tex, 1, s->texRepeat, s->texFlip, s->texColor0);
     Texture_BindPalette(tex);
     texW = tw;
     REG_POLYGON_ATTR = s->polygonAttr | 0x80 | (polygonId << 24) | (alpha << 16);

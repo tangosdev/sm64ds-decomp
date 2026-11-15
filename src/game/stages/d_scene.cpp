@@ -50,9 +50,11 @@ extern fBase_c *gCurrentScene;
 
 extern dFader_c *gSoftResetFader;
 
-/* Sound.cpp's sound-object registry; only its address is needed here.
+/* Sound.cpp's sound-object registry.
    local extern: SndRegTable is Sound.cpp's own type, no header declares it. */
-struct SndRegTable;
+struct SndRegTable {
+    void func_02011974();
+};
 extern SndRegTable data_0209b53c;
 
 extern u8 data_02092660;
@@ -77,7 +79,6 @@ extern int func_0203d9b4(void);
 extern dFdBrightness_c *data_0209d4ac;
 }
 extern void func_02011b7c(void);
-extern void func_02011974(void *object);
 extern int func_02013edc(s32 sceneID, s32 param, int a);
 
 /* The scene's two global faders: the colour fade every scene change runs
@@ -265,7 +266,7 @@ int dScene_c::BeforeCleanupResources()
 {
     if (!fBase_c::BeforeCleanupResources())
         return 0;
-    func_02011974(&data_0209b53c);
+    data_0209b53c.func_02011974();
     return 1;
 }
 

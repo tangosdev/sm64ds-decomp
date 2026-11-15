@@ -183,14 +183,14 @@ int SurfaceInfo_TestFlag0x20(int *p);
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
 /* Three-register reconstructed interface; death-state stores also use r3. */
-extern "C" struct Aea30C;
-void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
+struct Aea30C {
+    void func_ov002_020aea30(dActor_c *actor, dBgCh_Actr *collision);
+};
 extern BMA_File data_ov084_0213088c;
 extern int data_ov084_02130248[];
 extern u8 data_ov084_02130204[];
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
-void func_ov074_0212087c(int *out, daKuriKing_c *player, int flag);
 extern "C" int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
 extern s8 gCurrentSublevel;
 void LoadSilverStarAndNumber(void);
@@ -447,8 +447,8 @@ void daKrb_c::func_ov084_021294d0() {
 /* Set the home position (mHomePos) from a three-word position. daKuriKing_c
  * calls this on each minion it spawns, after the Spawn. */
 
-void func_ov084_021296b0(void *a, void *b) {
-    daKrb_c *goomba = (daKrb_c *)a;
+void daKrb_c::func_ov084_021296b0(void *b) {
+    daKrb_c *goomba = (daKrb_c *)this;
     int *pos = (int *)b;
     goomba->mHomePos.x = pos[0];
     goomba->mHomePos.y = pos[1];
@@ -621,7 +621,7 @@ int daKrb_c::func_ov084_02129a00() {
         if (goomba->SpawnParticlesIfHitOtherObj(goomba->mdCcAc_c) != 0) {
             void *actor = dActor_c::FindWithID(goomba->mdCcAc_c.otherOwner);
             goomba->mDeathState = daKrb_c::DEATH_HIT_20000;
-            func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)actor, &goomba->mWithMeshClsn);
+            ((Aea30C *)goomba)->func_ov002_020aea30((dActor_c *)actor, &goomba->mWithMeshClsn);
             goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000,
                                       0);
             goomba->mdCcAc_c.flags |= 1;
@@ -970,7 +970,7 @@ void daKrb_c::func_ov084_02129ed4() {
         capReleaseOnExit.z = 0; /* 108.0 */
         goomba->ReleaseCap(capReleaseOnExit);
     }
-    func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)other, &goomba->mWithMeshClsn);
+    ((Aea30C *)goomba)->func_ov002_020aea30((dActor_c *)other, &goomba->mWithMeshClsn);
     if (turnAround != 0) {
         goomba->mAngleY = (goomba->mPrevAngleY + 0x8000); /* half a turn */
     }
@@ -1142,7 +1142,7 @@ void daKrb_c::ActTumble() {
     if (goomba->SpawnParticlesIfHitOtherObj(goomba->mdCcAc_c) != 0) {
         void *a = dActor_c::FindWithID(goomba->mdCcAc_c.otherOwner);
         goomba->mDeathState = daKrb_c::DEATH_HIT_20000;
-        func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)a, &goomba->mWithMeshClsn);
+        ((Aea30C *)goomba)->func_ov002_020aea30((dActor_c *)a, &goomba->mWithMeshClsn);
         goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
         goomba->mdCcAc_c.flags |= 1;
     }
@@ -1330,7 +1330,6 @@ void daKrb_c::func_ov084_0212abd4() {
  * the king is in state 4 with mWalkSpeed 0 mFreeRoamTimer is reloaded with 30. */
 void daKrb_c::func_ov084_0212af74() {
     daKrb_c *goomba = this;
-    Vector3 targetPos;
     daKuriKing_c *king;
     s32 dist;
     s32 flag;
@@ -1356,7 +1355,7 @@ void daKrb_c::func_ov084_0212af74() {
         goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);
     }
 
-    func_ov074_0212087c((int *)&targetPos, king, goomba->mMinionIndex);
+    Vector3 targetPos = king->func_ov074_0212087c(goomba->mMinionIndex);
 
     if (ApproachAngle(&goomba->mPrevAngleY, goomba->mInitAngleY, 4, 0x1000, 0x400) == 0 &&
         goomba->mWithMeshClsn.IsOnGround() != 0)

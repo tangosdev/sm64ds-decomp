@@ -180,7 +180,7 @@ extern int pmf_Dealer_StateReveal[2];
    No ov006 body exists for them, so they are inline, and defined only here:
    each use expands into the veneer call. */
 inline DealerModelFilePtr::DealerModelFilePtr(u32 fileID) {
-    func_02017acc(this, fileID);
+    this->func_02017acc(fileID);
 }
 inline DealerModelFilePtr::~DealerModelFilePtr() {
     func_02017ab4((int)this);
@@ -192,7 +192,7 @@ inline DealerAnimationFileHandle::~DealerAnimationFileHandle() {
     SharedFilePtr_Destruct_Anim((int)this);
 }
 inline MascotWalkerModelFilePtr::MascotWalkerModelFilePtr(u32 fileID) {
-    func_02017acc(this, fileID);
+    this->func_02017acc(fileID);
 }
 inline MascotWalkerModelFilePtr::~MascotWalkerModelFilePtr() {
     func_02017ab4((int)this);
@@ -204,7 +204,7 @@ inline MascotWalkerAnimationFileHandle::~MascotWalkerAnimationFileHandle() {
     SharedFilePtr_Destruct_Anim((int)this);
 }
 inline PresenterModelFilePtr::PresenterModelFilePtr(u32 fileID) {
-    func_02017acc(this, fileID);
+    this->func_02017acc(fileID);
 }
 inline PresenterModelFilePtr::~PresenterModelFilePtr() {
     func_02017ab4((int)this);
@@ -222,7 +222,7 @@ inline PresenterTexSeqFileHandle::~PresenterTexSeqFileHandle() {
     SharedFilePtr_Destruct_TexSeq((int)this);
 }
 inline FlowerFaceModelFilePtr::FlowerFaceModelFilePtr(u32 fileID) {
-    func_02017acc(this, fileID);
+    this->func_02017acc(fileID);
 }
 inline FlowerFaceModelFilePtr::~FlowerFaceModelFilePtr() {
     func_02017ab4((int)this);

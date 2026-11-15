@@ -237,6 +237,7 @@ struct daStar_c : dEnemyBase_c {
     void SpawnSoundObj6();
     void StopCollectSoundObj();
     void func_ov002_020e7eb4();
+    Vector3 func_ov002_020e8244();
     void UpdateSilverTrailEffect();
     void UpdateSparkleEffect();
     void SpawnPoseEffects();

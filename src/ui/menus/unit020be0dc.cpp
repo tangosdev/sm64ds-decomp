@@ -164,8 +164,8 @@ extern "C" Ov007Model *func_ov007_020bc6d4(void *file, int flags);
  * the model is shown and its animation is not finished, moves the system to
  * the bone and aims it along the motion since the last step, faster and
  * spawning more often the faster the bone moves; otherwise hides it. */
-void func_ov007_020beb80(Ov007Figure *fig) {
-    struct ModelComponents *comps = fig->model->model;
+void Ov007Figure::func_ov007_020beb80() {
+    struct ModelComponents *comps = this->model->model;
     Matrix4x3 *bone0 = comps->transforms;
     int *row = &bone0->r.m[6];
     int yaw;
@@ -176,16 +176,16 @@ void func_ov007_020beb80(Ov007Figure *fig) {
     int speed;
     Vector3 *pos = &bone0->t;
     yaw = FX_Atan2(row[0], row[2]);
-    motion.x = (pos->x - fig->prevPos.x);
-    motion.y = (pos->y - fig->prevPos.y);
-    motion.z = (pos->z - fig->prevPos.z);
-    if (fig->model->animTick != 0) {
-        fig->yaw = yaw;
-        *(Vec3Words *)&fig->prevPos = *(Vec3Words *)pos;
+    motion.x = (pos->x - this->prevPos.x);
+    motion.y = (pos->y - this->prevPos.y);
+    motion.z = (pos->z - this->prevPos.z);
+    if (this->model->animTick != 0) {
+        this->yaw = yaw;
+        *(Vec3Words *)&this->prevPos = *(Vec3Words *)pos;
     }
-    sys = (Particle::System *)func_ov007_020b7690(fig->particleIndex);
+    sys = (Particle::System *)func_ov007_020b7690(this->particleIndex);
     {
-        Ov007Model *m = fig->model;
+        Ov007Model *m = this->model;
         if (m->visible != 0 && (unsigned)m->boneAnim->state <= 1) {
             vel = 0;
             frames = 0x1000;
@@ -257,28 +257,28 @@ Ov007Figure *func_ov007_020beaa0(int index, int figureIndex) {
 /* Frees a figure built by func_ov007_020beaa0: releases its files (3, its
  * animation file, 0xe) and its model. It always releases 0xe, even when
  * func_ov007_020beaa0 loaded 0xf instead. */
-void func_ov007_020bea44(Ov007Figure *fig) {
+void Ov007Figure::func_ov007_020bea44() {
     func_ov007_020b3edc(3);
-    func_ov007_020b3edc(data_ov007_020d7c5c[fig->figureIndex][fig->index]);
+    func_ov007_020b3edc(data_ov007_020d7c5c[this->figureIndex][this->index]);
     func_ov007_020b3edc(0xe);
-    if (fig->model != 0) {
-        func_ov007_020bc53c(fig->model);
-        fig->model = 0;
+    if (this->model != 0) {
+        func_ov007_020bc53c(this->model);
+        this->model = 0;
     }
-    func_ov007_020c3d1c(fig);
+    func_ov007_020c3d1c(this);
 }
 
 /* Poses a figure for the frame: hides its model while the main model plays
  * animation 1 or 2, and hides the second figure while figureIndex is 0;
  * then poses the model under viewMatrix, runs the figure's hook and
  * func_ov007_020beb80. */
-void func_ov007_020be9ac(Ov007Figure *fig, Ov007Model *owner, void *viewMatrix) {
+void Ov007Figure::func_ov007_020be9ac(Ov007Model *owner, void *viewMatrix) {
     switch (owner->boneAnim->anim) {
     case 0:
         break;
     case 1:
     case 2: {
-        Ov007Model *m = fig->model;
+        Ov007Model *m = this->model;
         if (m->visible != 0)
             m->visible = 0;
         break;
@@ -286,27 +286,27 @@ void func_ov007_020be9ac(Ov007Figure *fig, Ov007Model *owner, void *viewMatrix) 
     }
 
     {
-        Ov007Model *m = fig->model;
-        if (m->visible != 0 && fig->index == 1 && fig->figureIndex == 0)
+        Ov007Model *m = this->model;
+        if (m->visible != 0 && this->index == 1 && this->figureIndex == 0)
             m->visible = 0;
     }
 
-    func_ov007_020bc02c(fig->model, viewMatrix);
-    if (fig->update != 0)
-        fig->update(fig);
-    func_ov007_020beb80(fig);
+    func_ov007_020bc02c(this->model, viewMatrix);
+    if (this->update != 0)
+        this->update(this);
+    func_ov007_020beb80();
 }
 
 /* Starts animation `anim` on the figure's model and shows it. */
-extern "C" void func_ov007_020be980(Ov007Figure *fig, int anim, int a2) {
-    func_ov007_020bc3dc(fig->model, anim, a2);
-    fig->model->visible = 1;
-    fig->model->animTick = 1;
+void Ov007Figure::func_ov007_020be980(int anim, int a2) {
+    func_ov007_020bc3dc(this->model, anim, a2);
+    this->model->visible = 1;
+    this->model->animTick = 1;
 }
 
 /* Holds the figure's bone animation if it is playing; returns its state. */
-extern "C" int func_ov007_020be964(Ov007Figure *fig) {
-    s32 *state = &fig->model->boneAnim->state;
+int Ov007Figure::func_ov007_020be964() {
+    s32 *state = &this->model->boneAnim->state;
     if (*state == 0) {
         *state = 1;
         return 1;

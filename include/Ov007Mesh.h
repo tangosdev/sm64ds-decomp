@@ -27,6 +27,8 @@ typedef struct Ov007MeshParams {
 typedef char Ov007MeshParams_size_must_be_0x18[sizeof(Ov007MeshParams) == 0x18 ? 1 : -1];
 #endif
 
+struct Ov007Camera;
+
 /* The 0x38-byte grid mesh that func_ov007_020cbbb0 builds and
  * func_ov007_020cbb04 frees (data_ov007_02104bd4[0]): a grid of spring
  * points with a link across each cell's diagonal, and the normals and
@@ -45,6 +47,9 @@ typedef struct Ov007Mesh {
     Vector3_16 *vertexNormals; /* 0x2c: one per point (func_ov007_020cb4b0) */
     int *texOffsetS;           /* 0x30: func_ov007_020caeac's per-column tu scratch */
     int *texOffsetT;           /* 0x34: its tv scratch */
+#ifdef __cplusplus
+    int func_ov007_020bf630(struct Ov007Camera *camera, int x, int y, int arg5);
+#endif
 } Ov007Mesh;
 
 #ifndef SM64DS_PLATFORM_PC

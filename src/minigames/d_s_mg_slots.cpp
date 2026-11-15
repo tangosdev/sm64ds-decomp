@@ -149,10 +149,8 @@ extern int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, in
 }
 extern void Slot3_ReelDigits(char *c, int i);
 extern int Sound_PlayIfNotActive(int, int, int, short);
-extern void func_ov001_020ab3f0(void *c);
 int TouchArea_Update(void *c, int x);
 void SlotBet_OnTouch(void *c);
-extern void func_ov001_020ab5b0(char *r0, int r1, short r2, short r3, short s4, short s5);
 extern void SlotBlink_Draw(unsigned char *o);
 extern void SlotLamp_Start(void *o);
 extern void SlotLamp_Tick(void *o);
@@ -983,7 +981,7 @@ void SlotBet_OnTouch(void *c_) {
     }
     BET_ICON(icon)->mBetCount += 1;
     Mg_LoseCredits(1);
-    func_ov001_020ab3f0(icon);
+    icon->func_ov001_020ab3f0();
     sid = 0x163;
     Sound::PlayBank2_2D(sid);
 }
@@ -1023,7 +1021,7 @@ void dScMgSlot1_c::betIcon_c::Behavior() {
 }
 
 void SlotBet_Place(char *icon) {
-    func_ov001_020ab5b0(icon, 1, 0x90, 0xb0, 0x10, 8);
+    ((dThIcon_c *)icon)->func_ov001_020ab5b0(1, 0x90, 0xb0, 0x10, 8);
     ((dThIcon_c *)icon)->mPressTime = 6;
 }
 
