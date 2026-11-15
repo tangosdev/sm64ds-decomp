@@ -348,8 +348,8 @@ int daMoray_c::StateLungeMain() {
     Vector3 worldTarget;
     localOffset.x = 0; localOffset.y = 0; localOffset.z = 0;
     worldTarget.x = 0; worldTarget.y = 0; worldTarget.z = 0;
-    unsigned int frame = (unsigned int)this->mBlendAnmModel.currFrame << 4 >> 0x10;
-    if (frame >= 0x15 && frame <= 0x3c) {
+    unsigned int frame = (unsigned int)this->mBlendAnmModel.currFrame << 4 >> 16;
+    if (frame >= 21 && frame <= 60) {
         if (gCurrentStarId == 1) {
             localOffset.z = 0x2bc000;
         } else {
@@ -700,8 +700,8 @@ s32 daMoray_c::InitResources()
     dExtFrameCtrl_c::LoadFile(data_ov016_02114d28);
 
     mPathID = param1 & 0xff;
-    mVariant = (param1 >> 8) & 0xf;
-    mStarParam = (param1 >> 0xc) & 0xf;
+    mVariant = (param1 >> 8) & 15;
+    mStarParam = (param1 >> 12) & 15;
     if (mVariant == 0xff)
         mVariant = 0;
     if (mPathID < 0)

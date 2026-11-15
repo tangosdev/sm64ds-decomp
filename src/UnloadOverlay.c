@@ -16,7 +16,7 @@ void UnloadOverlay(int id) {
     struct OverlaySlot *found = 0;
     unsigned int i;
     struct OverlaySlot *r = data_0209d3c4;
-    for (i = 0; i < 0xc; i++, r++) {
+    for (i = 0; i < 12; i++, r++) {
         if (r->id == id) {
             r->id = -1;
             r->start = 0;

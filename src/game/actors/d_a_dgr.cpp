@@ -55,8 +55,8 @@ struct DgrCollisionFilePtr : SharedFilePtr {
 
 enum {
     kYoshiEggActorID = 9,
-    kHoldFrames = 0x20,
-    kRollStages = 0x14,
+    kHoldFrames = 32,
+    kRollStages = 20,
     kGrindSound = 0x65,
     kDustEffect = 0x2d,
     kQuakeMagnitude = 0x3e8000,

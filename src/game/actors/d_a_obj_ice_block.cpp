@@ -117,13 +117,13 @@ s32 daObjIceBlock_c::Behavior() {
             if (handle != 0) {
                 Particle::System *sys = Particle::System::FromUniqueID(handle);
                 if (sys != 0)
-                    sys->emitRadius = mScale * 0xf;
+                    sys->emitRadius = mScale * 15;
             }
             handle = mParticleHandle2;
             if (handle != 0) {
                 Particle::System *sys = Particle::System::FromUniqueID(handle);
                 if (sys != 0)
-                    sys->emitRadius = mScale * 0xf;
+                    sys->emitRadius = mScale * 15;
             }
         }
         return 1;
@@ -218,7 +218,7 @@ void daObjIceBlock_c::ReleaseStar() {
 
     mContainedActor->MarkForDestruction();
 
-    u32 spawnParam = (u8)(param1 & 0xf) | 0x20;
+    u32 spawnParam = (u8)(param1 & 15) | 0x20;
     dActor_c::Spawn(kStarBaseActorID, spawnParam, pos, &rot, mAreaId, -1);
     mContainedActor = dActor_c::Spawn(kStarActorID, spawnParam, pos, &rot, mAreaId, -1);
     mFlags |= 0x4000000;

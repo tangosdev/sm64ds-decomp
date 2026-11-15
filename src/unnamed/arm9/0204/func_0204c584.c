@@ -48,7 +48,7 @@ static inline u32 RandVal(void) {
 }
 
 static inline int RandScale(void) {
-    return (int)(((RandVal() >> 0x17) << 0xc) - 0x100000) >> 8;
+    return (int)(((RandVal() >> 0x17) << 12) - 0x100000) >> 8;
 }
 
 static inline int FMul(int a, int b) {
@@ -122,7 +122,7 @@ void func_0204c584(ParticleSystem *sys, List *list) {
     def = emitter->data;
     acc = def->rate + sys->callbackValue;
     sys->callbackValue = acc & 0xfff;
-    count = acc >> 0xc;
+    count = acc >> 12;
     {
         u32 t = def->emissionType;
         if ((t == 2 || t == 3 || t == 5) && def->circleAxis == 3)
@@ -194,9 +194,9 @@ void func_0204c584(ParticleSystem *sys, List *list) {
             SPLRandom_VecFx32(&nrm);
         else
             VEC_Normalize(&p->offset, &nrm);
-        p->velocity.x = (nrm.x * mag1 + sys->direction[0] * mag2) >> 0xc;
-        p->velocity.y = (nrm.y * mag1 + sys->direction[1] * mag2) >> 0xc;
-        p->velocity.z = (nrm.z * mag1 + sys->direction[2] * mag2) >> 0xc;
+        p->velocity.x = (nrm.x * mag1 + sys->direction[0] * mag2) >> 12;
+        p->velocity.y = (nrm.y * mag1 + sys->direction[1] * mag2) >> 12;
+        p->velocity.z = (nrm.z * mag1 + sys->direction[2] * mag2) >> 12;
         p->basePosition = sys->position;
         {
             u32 s;
@@ -235,8 +235,8 @@ void func_0204c584(ParticleSystem *sys, List *list) {
         if (def->hasRotation) {
             p->angularSpeed =
                 (s16)((u32)((def->maxRotation - def->minRotation) * (int)(RandVal() >> 0x14) +
-                            (def->minRotation << 0xc)) >>
-                      0xc);
+                            (def->minRotation << 12)) >>
+                      12);
         } else {
             p->angularSpeed = 0;
         }

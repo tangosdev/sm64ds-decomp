@@ -1086,17 +1086,17 @@ void Heyho::Settle() {
         a->callbackScale = t;
 
     ApproachLinear(sHeyhoUnsettledCount, 0, 1);
-    ApproachLinear(sJumpComboCount, 0x270f, 1);
+    ApproachLinear(sJumpComboCount, 9999, 1);
 
     if (sHeyhoScorePopups != 0) {
         if (mPos.y > 0) {
             Camera_ProjectToScreen(sMgSubCamera, &mPos, &v0, &v1);
-            v1 = v1 - (Mg_GetTopScreenYOffset() + 0xc0);
+            v1 = v1 - (Mg_GetTopScreenYOffset() + 192);
         } else {
             Camera_ProjectToScreen(sMgMainCamera, &mPos, &v0, &v1);
         }
-        v1 = v1 - 0x20;
-        Jump2Popup_Spawn(v0 << 0xc, v1 << 0xc, (short)sJumpComboCount);
+        v1 = v1 - 32;
+        Jump2Popup_Spawn(v0 << 12, v1 << 12, (short)sJumpComboCount);
     }
 
     SetIdle();

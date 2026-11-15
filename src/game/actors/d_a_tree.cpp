@@ -60,7 +60,7 @@ enum {
     kClipFar = 0x578000,
     kFadeDist = 0x2f000,
     kFadeBase = 0x10000,
-    kOpacityFull = 0x1f,
+    kOpacityFull = 31,
 };
 
 /* Shared ABI seams. local extern: no shared header declares this helper. */

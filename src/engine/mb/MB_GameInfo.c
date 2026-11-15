@@ -143,9 +143,9 @@ void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent) {
     }
     info->fixed.maxPlayerNum = src->maxPlayerNum;
     MI_CpuCopy16(src->gameNamep, info->fixed.gameName,
-                 (unsigned)(mystrlen(src->gameNamep) << 0x11) >> 0x10);
+                 (unsigned)(mystrlen(src->gameNamep) << 17) >> 16);
     MI_CpuCopy16(src->gameIntroductionp, info->fixed.gameIntroduction,
-                 (unsigned)(mystrlen(src->gameIntroductionp) << 0x11) >> 0x10);
+                 (unsigned)(mystrlen(src->gameIntroductionp) << 17) >> 16);
     info->volat.nowPlayerNum = 1;
     info->volat.nowPlayerFlag = 1;
     info->volat.broadcastedPlayerFlag = 1;
@@ -198,7 +198,7 @@ void MB_UpdateGameInfoMember(char *self, void *src, unsigned int flags, int s) {
     int cnt;
     cnt = 1;
     MI_CpuCopy16(src, gameInfo->volat.member, 0x14a);
-    for (i = 0; i < 0xf; i++) {
+    for (i = 0; i < 15; i++) {
         if (flags & (2 << i))
             cnt = (cnt + 1) & 0xff;
     }

@@ -113,7 +113,7 @@ void dCapEnemy_c::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
     };
     if (((CapFlags *)&mCapIcon.mFlags)->unlinked != 0 ||
         ((CapFlags *)&mCapIcon.mFlags)->real == 0) {
-        if ((mCapId & 0xf) < 6) {
+        if ((mCapId & 15) < 6) {
             mCapId |= 0x80;
         }
     } else {
@@ -188,7 +188,7 @@ struct dActor_c * dCapEnemy_c::RespawnIfHasCap()
 {
     struct dActor_c *r;
     func_02005ed8();
-    if ((mCapId & 0xf) >= 6) return 0;
+    if ((mCapId & 15) >= 6) return 0;
     r = dActor_c::Spawn(actorID, param1, mPos, &mAngle, mAreaId, -1);
     if (!r) return r;
     ((dCapEnemy_c *)r)->mIsDormant = 1;

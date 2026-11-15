@@ -396,13 +396,13 @@ dExtAnmModel_c::~dExtAnmModel_c() {}
 
 void dExtAnmModel_c::UpdateVerts() {
     s32 frame = currFrame;
-    data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
+    data.UpdateBones(file, (u32)(frame << 4) >> 16);
     data.UpdateVertsUsingBones();
 }
 
 void dExtAnmModel_c::Virtual10(Matrix4x3 &mat) {
     s32 frame = currFrame;
-    data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
+    data.UpdateBones(file, (u32)(frame << 4) >> 16);
     dExtSimpleModel_c::Virtual10(mat);
 }
 
@@ -420,7 +420,7 @@ void dExtAnmModel_c::Virtual18(u32 mat, const Vector3 *scale) {
    file-local; daMoray_c calls it on a dExtBlendAnmModel_c*. */
 void func_020167a4(dExtAnmModel_c *self) {
     s32 frame = self->currFrame;
-    self->data.UpdateBones(self->file, (u32)(frame << 4) >> 0x10);
+    self->data.UpdateBones(self->file, (u32)(frame << 4) >> 16);
 }
 
 void dExtAnmModel_c::SetAnim(BCA_File *animFile, int flags, fx32 speed, u16 startFrame) {
@@ -484,7 +484,7 @@ int dExtBlendAnmModel_c::InitBlendBuffer(char *file) {
 
 void dExtBlendAnmModel_c::UpdateVerts() {
     s32 frame = currFrame;
-    data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
+    data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
         func_0204531c((char *)&data, blendWeight);
     } else {
@@ -494,7 +494,7 @@ void dExtBlendAnmModel_c::UpdateVerts() {
 
 void dExtBlendAnmModel_c::Virtual10(Matrix4x3 &mat) {
     s32 frame = currFrame;
-    data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
+    data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
         func_0204531c((char *)&data, blendWeight);
     } else {

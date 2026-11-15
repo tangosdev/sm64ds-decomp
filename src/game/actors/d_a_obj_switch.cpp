@@ -151,7 +151,7 @@ int daObjSwitch_c::InitResources()
             mResourceIdx = 1;
         } else {
             mSwitchType = param1 & 3;
-            mEventBit = (param1 >> 3) & 0xf;
+            mEventBit = (param1 >> 3) & 15;
             mTimeLimit = (param1 >> 8) & 0xff;
             Event::ClearBit(mEventBit);
             mResourceIdx = 0;
@@ -174,9 +174,9 @@ int daObjSwitch_c::InitResources()
     {
         u16 h = mTimeLimit;
         if (h == 0xff || h == 0)
-            mTimeLimit = 0x190;
+            mTimeLimit = 400;
         else
-            mTimeLimit *= 0xa;
+            mTimeLimit *= 10;
     }
     mPressTimer = 5;
     mPosY += 0x5000;
@@ -242,8 +242,8 @@ int daObjSwitch_c::Behavior()
     if (mSwitchType == 2) {
         if (mMusicFadeDone == 0) {
             v = mMusicVolume;
-            if (v != 0x40) {
-                if (v == 0x7f) {
+            if (v != 64) {
+                if (v == 127) {
                     if ((gNextActorUpdateMask & 0x4000000) == 0) {
                         mMusicFadeDone = Sound::ChangeMusicVolume(v, 0x64cc);
                     }
@@ -318,7 +318,7 @@ void daObjSwitch_c::StateIdleInit() {
             p = dActor_c::FindWithActorID(0xc, p);
         }
     }
-    if (ok != 0) mMusicVolume = 0x7f;
+    if (ok != 0) mMusicVolume = 127;
 }
 
 void daObjSwitch_c::StateIdleMain() {
@@ -367,9 +367,9 @@ void daObjSwitch_c::StateTickingMain() {
     }
     diff = mTimeLimit - mTimer;
     if (!(gNextActorUpdateMask & 0x4000000)) {
-        if (diff == 0x2d) {
+        if (diff == 45) {
             mTickSoundHandle = 0;
-        } else if (diff < 0x2d) {
+        } else if (diff < 45) {
             mTickSoundHandle = func_02012310(mTickSoundHandle, 0x39, 0);
         } else {
             mTickSoundHandle = func_02012310(mTickSoundHandle, 0x38, 0);

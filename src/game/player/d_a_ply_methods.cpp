@@ -23329,7 +23329,7 @@ static inline void PlayerInitStates() {
 #pragma section initsec begin
 extern "C" {
 void __sinit_ov002_021019d0(void) {
-    func_0203b9b4(&data_ov002_0210e160, 0x4d2);
+    func_0203b9b4(&data_ov002_0210e160, 1234);
     __register_global_object(&data_ov002_0210e160, (void *)func_0201973c, data_ov002_0210f9b0);
     func_02017acc(&data_ov002_0210e6f8, ASSET_B_MARIO_ALL_BMD);
     __register_global_object(&data_ov002_0210e6f8, (void *)func_02017ab4, data_ov002_0210f9c8);

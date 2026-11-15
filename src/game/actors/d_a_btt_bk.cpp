@@ -173,7 +173,7 @@ void daBttBk_c::UpdateModelTransform() {
         if (sv < 0)
             sv = -sv;
         int result = FX_MUL(sv, 0x28000);
-        DropShadowScaleXYZ(mShadowModel, mShadowMtx, 0x96000, 0x32000, result + 0x96000, 0xf);
+        DropShadowScaleXYZ(mShadowModel, mShadowMtx, 0x96000, 0x32000, result + 0x96000, 15);
     }
 }
 
@@ -266,7 +266,7 @@ int daBttBk_c::StateCarriedInit() {
 int daBttBk_c::StateFallMain() {
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround()) {
-        int v = mVertSpeed * -0x3c;
+        int v = mVertSpeed * -60;
         mVertSpeed = v / 100;
     } else if (mWithMeshClsn.IsOnGround()) {
         mVertSpeed = 0xc000;

@@ -33,7 +33,7 @@ void func_ov007_020b6d40(void) {
     for (i = 0; i < 6; i++) {
         c->palettes[i] = func_ov007_020c9988(data_ov007_020d7e38[i]);
         if (i >= 2 && i <= 5) {
-            c->palettes[i]->colorCount = 0xd0;
+            c->palettes[i]->colorCount = 208;
         }
     }
 

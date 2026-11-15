@@ -12,7 +12,7 @@ void func_ov007_020aec94(int choice) {
     int filesFailed = (settings->filesFailed == 1);
     int minigamesFailed = (settings->minigamesFailed == 1);
     WORK->pendingChoice = choice;
-    func_ov007_020bd9e4(0x50);
+    func_ov007_020bd9e4(80);
     if (choice == 9) {
         if (filesFailed != 0 || minigamesFailed != 0) {
             WORK->settings->dialogKind = 1;

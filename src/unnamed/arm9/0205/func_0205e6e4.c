@@ -26,7 +26,7 @@ int func_0205e6e4(SHA1Context *context, const u8 *p, int count) {
             if (context->Length_High == 0)
                 context->Corrupted = 1;
         }
-        if (context->Message_Block_Index == 0x40)
+        if (context->Message_Block_Index == 64)
             func_0205e3d4(context);
         p++;
     }
