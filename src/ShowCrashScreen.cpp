@@ -12,10 +12,7 @@ extern "C" {
 extern char *GetStageDebugName(void);
 }
 
-/* Static method defined on ProcessList in fListNode.cpp. */
-struct ProcessList {
-    static int func_020441bc(int);
-};
+#include "ProcessList.h"
 extern "C" {
 
 extern int GetActorDebugName(unsigned int i);

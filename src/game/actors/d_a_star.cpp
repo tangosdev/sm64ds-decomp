@@ -2289,8 +2289,7 @@ void daStar_c::DrawShadow() {
  * a translation and Y rotation of the star, scales the result about the star's
  * position (<< 3) and raises Y by 13 times a word of the bone data at +0xc. */
 
-Vector3 daStar_c::func_ov002_020e8244()
-{
+Vector3 daStar_c::func_ov002_020e8244() {
     Vector3 result;
     void *out = &result;
     daStar_c *b = this;

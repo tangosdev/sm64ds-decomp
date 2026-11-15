@@ -1,13 +1,15 @@
+//cpp
 #include "private/arm9_archive_table.h"
+
+#include "S82.h"
 #include "nitro/os/system.h"
 
-extern int LoadArchive(int idx);
-extern int _ZN3S8213func_0204ede8Ej(void *o, unsigned int i);
+extern "C" int LoadArchive(int idx);
 
 /* The address of archived file val's bytes inside its mounted archive
    (func_0204ede8), mounting the archive first if needed. 0 for a FAT id
    (below 0x8000), which has no in-memory copy. */
-int func_020186c0(unsigned int val) {
+extern "C" int func_020186c0(unsigned int val) {
     unsigned int i;
     ArchiveTableEntry *e;
     if (val < 0x8000)
@@ -23,7 +25,7 @@ int func_020186c0(unsigned int val) {
                     return 0;
                 }
             }
-            return _ZN3S8213func_0204ede8Ej(e->archive, val - e->firstFileId);
+            return ((S82 *)e->archive)->func_0204ede8(val - e->firstFileId);
         }
         e++;
     }

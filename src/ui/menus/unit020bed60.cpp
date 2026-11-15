@@ -294,7 +294,7 @@ void func_ov007_020beeb0(void) {
         if (view->item->visible != 0) {
             swing->func_ov007_020c9c24(2);
             swing->func_ov007_020c9a84(&view->sprite->posOffset, &view->sprite->rotX,
-                                &view->sprite->rotY);
+                                       &view->sprite->rotY);
             view->sprite->posOffset.x = FX_MUL(view->sprite->posOffset.x, 100);
             view->sprite->posOffset.y = FX_MUL(view->sprite->posOffset.y, 100);
         }

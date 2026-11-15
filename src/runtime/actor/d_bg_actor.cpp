@@ -86,20 +86,7 @@ static inline int IsActorID(const dActor_c *actor, int id) {
     return actor->actorID == id;
 }
 
-/* The mover's mesh checker is the receiver. dBgCh_Actr.h is included by
-   sources this pass cannot edit, so the methods live on this stand-in.
-   It has no fields and no virtuals; this is the checker pointer. */
-struct BgChEvt {
-    int func_ov002_020ef2a4(dActor_c *other);
-    int func_ov002_020ef228(dActor_c *other);
-    int func_ov002_020ef070(char *moverArg);
-    int func_ov002_020eeeb8(char *moverArg);
-    int func_ov002_020eee3c(char *otherArg);
-    int func_ov002_020eedc0(dActor_c *other);
-    int func_ov002_020eed24(daPly_c *player);
-    int func_ov002_020eeca8(dActor_c *other);
-    int func_ov002_020eea84(dActor_c *player);
-};
+#include "BgChEvt.h"
 
 int BgChEvt::func_ov002_020ef2a4(dActor_c *other) {
     dBgCh_Actr *clsn = (dBgCh_Actr *)this;

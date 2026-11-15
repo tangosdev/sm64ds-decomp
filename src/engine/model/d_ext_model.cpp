@@ -65,12 +65,7 @@ extern Matrix4x3 data_0209b3ec;
 /* local extern: the camera-space matrix the Render paths use */
 /* local extern: no header declares it; sizes the transforms buffer from the file */
 extern "C" int func_02046564(void *file);
-/* Model4.cpp's Dst. The call is the method; Desc and ElemA stay incomplete. */
-struct Desc;
-struct ElemA;
-struct Dst {
-    void func_020462d0(Desc *file, ElemA *buffer);
-};
+#include "Dst.h"
 /* defined below; dExtCommonModel_c and dExtShadowModel_c take their pooled
    components from it */
 ModelComponents *GetCommonModelComponents(BMD_File *file);

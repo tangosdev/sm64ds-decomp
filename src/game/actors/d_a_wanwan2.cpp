@@ -257,14 +257,14 @@ void daWanwan2_c::func_ov100_0214344c() {
     flags = this->mdCcAcPos_c.hitFlags;
     if (flags & daWanwan2_HIT_EXPLOSION) {
         this->mHaltTimer = 90;
-        this->mScaleX = 0x2000;     /* 2.0 */
+        this->mScaleX = 0x2000; /* 2.0 */
         this->mScaleY = this->mScaleX;
         this->mScaleZ = this->mScaleY;
         return;
     }
     if (flags & daWanwan2_HIT_MEGA) {
         this->mHaltTimer = 90;
-        this->mScaleX = 0x2000;     /* 2.0 */
+        this->mScaleX = 0x2000; /* 2.0 */
         this->mScaleY = this->mScaleX;
         this->mScaleZ = this->mScaleY;
         return;
@@ -274,7 +274,7 @@ void daWanwan2_c::func_ov100_0214344c() {
         enum Bool b = (enum Bool)(other->actorID == daWanwan2_ACTOR_YOSHI_EGG);
         if (b != FALSE && (flags & daWanwan2_HIT_EGG)) {
             this->mHaltTimer = 90;
-            this->mScaleX = 0x2000;     /* 2.0 */
+            this->mScaleX = 0x2000; /* 2.0 */
             this->mScaleY = this->mScaleX;
             this->mScaleZ = this->mScaleY;
             return;
@@ -305,14 +305,16 @@ void daWanwan2_c::func_ov100_0214344c() {
    either latches mChainEndDone, clears mChainEndActorID and stops the
    updates. */
 void daWanwan2_c::func_ov100_021435e8() {
-    if (this->mChainEndDone != 0) return;
+    if (this->mChainEndDone != 0)
+        return;
 
     int flag = (gGameMode == 1);
     if (!flag) {
         if (this->mChainEndActorID == 0) {
-            dActor_c *a = dActor_c::Spawn(daWanwan2_ACTOR_SILVER_STAR, 0,
-                this->mLinkPos[5], 0, this->mAreaId, -1);
-            if (a != 0) this->mChainEndActorID = a->uniqueID;
+            dActor_c *a = dActor_c::Spawn(daWanwan2_ACTOR_SILVER_STAR, 0, this->mLinkPos[5], 0,
+                                          this->mAreaId, -1);
+            if (a != 0)
+                this->mChainEndActorID = a->uniqueID;
         } else {
             dActor_c *a = dActor_c::FindWithID(this->mChainEndActorID);
             if (a != 0) {
@@ -332,10 +334,11 @@ void daWanwan2_c::func_ov100_021435e8() {
     } else {
         if (this->mChainEndActorID == 0) {
             dActor_c *a = dActor_c::Spawn(daWanwan2_ACTOR_STAR, this->mSpawnParam | 0x30,
-                this->mLinkPos[5], 0, this->mAreaId, -1);
-            if (a != 0) this->mChainEndActorID = a->uniqueID;
-            dActor_c::Spawn(daWanwan2_ACTOR_STARBASE, this->mSpawnParam | 0x30,
-                this->mLinkPos[5], 0, this->mAreaId, -1);
+                                          this->mLinkPos[5], 0, this->mAreaId, -1);
+            if (a != 0)
+                this->mChainEndActorID = a->uniqueID;
+            dActor_c::Spawn(daWanwan2_ACTOR_STARBASE, this->mSpawnParam | 0x30, this->mLinkPos[5],
+                            0, this->mAreaId, -1);
         } else {
             dActor_c *a = dActor_c::FindWithID(this->mChainEndActorID);
             if (a != 0) {
@@ -443,7 +446,7 @@ void daWanwan2_c::func_ov100_021437d4() {
         Vec3_Sub(&v54, pos, vel);
         Vec3_MulScalar(&v60, &v54, 0xbb8);
         vel->x = v60.x; vel->y = v60.y; vel->z = v60.z;
-        *heights = this->mPosY - 0xc8000;     /* 200 units below the chomp */
+        *heights = this->mPosY - 0xc8000; /* 200 units below the chomp */
         if (*heights - pos->y > 0xc8000) *heights = pos->y;
         angOff += 0x2000;
         vel++;

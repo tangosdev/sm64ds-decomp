@@ -188,9 +188,7 @@ extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 void func_02012694(unsigned int a, const Vector3 *p);
 extern void func_020167a4(dExtAnmModel_c *model);
-struct daLuigi_c {
-    static void func_ov055_02111264();
-};
+#include "daLuigi_c.h"
 extern u16 func_02011d14(void);
 
 /* Actor ids this file spawns, finds or compares (the names are the ones in

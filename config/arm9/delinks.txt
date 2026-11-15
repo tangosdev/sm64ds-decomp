@@ -349,11 +349,11 @@ src/unnamed/arm9/0201/func_02018598.c:
     complete
     .text start:0x02018598 end:0x020185c0
 
-src/unnamed/arm9/0201/func_020185c0.c:
+src/unnamed/arm9/0201/func_020185c0.cpp:
     complete
     .text start:0x020185c0 end:0x020186c0
 
-src/unnamed/arm9/0201/func_020186c0.c:
+src/unnamed/arm9/0201/func_020186c0.cpp:
     complete
     .text start:0x020186c0 end:0x02018770
 
@@ -552,7 +552,7 @@ src/unnamed/arm9/0201/func_02019ed0.c:
 src/unnamed/arm9/0201/func_02019f10.cpp:
     complete
     .text start:0x02019f10 end:0x0201a03c
-src/unnamed/arm9/0201/func_0201a03c.c:
+src/unnamed/arm9/0201/func_0201a03c.cpp:
     complete
     .text start:0x0201a03c end:0x0201a054
 
@@ -618,7 +618,7 @@ src/IsMinigameActorID.c:
     complete
     .text start:0x0201a888 end:0x0201a8b4
 
-src/unnamed/arm9/0201/func_0201a8b4.c:
+src/unnamed/arm9/0201/func_0201a8b4.cpp:
     complete
     .text start:0x0201a8b4 end:0x0201a96c
 

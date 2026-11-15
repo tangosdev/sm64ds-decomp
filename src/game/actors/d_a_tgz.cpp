@@ -243,9 +243,7 @@ void daTgz_c::func_ov077_02124eb0() {
     }
 
     /* 0x403c0 = punch | kick | breakdance | slide kick | fire. */
-    if ((this->mdCcAc_c.hitFlags & 0x403c0)
-        || player->IsOnShell() != 0
-        || player->mIsMetal != 0) {
+    if ((this->mdCcAc_c.hitFlags & 0x403c0) || player->IsOnShell() != 0 || player->mIsMetal != 0) {
         if (this->mState != 1)
             return;
         Sound::PlayBank0(0xb5, this->mCamSpacePos);
@@ -315,8 +313,8 @@ void daTgz_c::func_ov077_021251d0() {
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
     int aimHeight = this->OnAimedAtWithEgg();
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, aimHeight >> 3, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-        this->mAngleX, this->mAngleY, this->mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngleX, this->mAngleY,
+                                           this->mAngleZ);
     int aimHeightAgain = this->OnAimedAtWithEgg();
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-aimHeightAgain) >> 3, 0);
     this->mAnmModel.mat4x3 = data_020a0e68;
@@ -686,12 +684,12 @@ int daTgz_c::func_ov077_02125dd4() {
 
 void daTgz_c::func_ov077_02125e20() {
     TgzState *p = (TgzState *)this->mStateDesc + 1;
-    (this->* *p)();
+    (this->**p)();
 }
 
 void daTgz_c::func_ov077_02125e5c() {
     TgzState *p = (TgzState *)this->mStateDesc;
-    (this->* *p)();
+    (this->**p)();
 }
 
 void daTgz_c::func_ov077_02125e94(int i) {

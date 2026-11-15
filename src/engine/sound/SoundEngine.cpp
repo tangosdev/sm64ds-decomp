@@ -19,126 +19,11 @@
 #include "nitro/fs/file.h"
 #include "nitro/fs/archive.h"
 #include "Sound.h"
-/* NNSFndList is completed here so func_02051064 and func_0204f460 can be
-   methods. nnsys/fnd.h stays untouched: Sound2.cpp reaches it through player.h. */
-struct NNSFndLink {
-    void *prevObject;
-    void *nextObject;
-};
-struct NNSiFndHeapHead;
-typedef NNSiFndHeapHead *NNSFndHeapHandle;
-struct NNSSndSeqPlayer;
-struct NNSFndList {
-    void *headObject;
-    void *tailObject;
-    u16 numObjects;
-    u16 offset;
-    void func_02051064();
-    void func_0204f460(NNSSndSeqPlayer *player);
-};
-typedef char NNSFndList_size_must_be_0xc[sizeof(NNSFndList) == 0xc ? 1 : -1];
-#define NNS_FND_FRMHEAP_FREE_HEAD (1 << 0)
-#define NNS_FND_FRMHEAP_FREE_TAIL (1 << 1)
-#define NNS_FND_FRMHEAP_FREE_ALL (NNS_FND_FRMHEAP_FREE_HEAD | NNS_FND_FRMHEAP_FREE_TAIL)
-extern "C" {
-void NNS_FndInitList(NNSFndList *list, u16 offset);
-void NNS_FndAppendListObject(NNSFndList *list, void *object);
-void NNS_FndInsertListObject(NNSFndList *list, void *target, void *object);
-void NNS_FndRemoveListObject(NNSFndList *list, void *object);
-void *NNS_FndGetNextListObject(NNSFndList *list, void *object);
-void *NNS_FndGetPrevListObject(NNSFndList *list, void *object);
-NNSFndHeapHandle NNS_FndCreateFrmHeapEx(void *startAddress, u32 size, u16 optFlag);
-void NNS_FndDestroyFrmHeap(NNSFndHeapHandle heap);
-void *NNS_FndAllocFromFrmHeapEx(NNSFndHeapHandle heap, u32 size, int alignment);
-void NNS_FndFreeToFrmHeap(NNSFndHeapHandle heap, int mode);
-u32 NNS_FndGetAllocatableSizeForFrmHeapEx(NNSFndHeapHandle heap, int alignment);
-int NNS_FndRecordStateForFrmHeap(NNSFndHeapHandle heap, u32 tagName);
-int NNS_FndFreeByStateToFrmHeap(NNSFndHeapHandle heap, u32 tagName);
-}
-#define NNSYS_FND_H
+#include "nnsys/snd/player.h"
 #include "SoundPlayerRecord.h"
 #include "Heap.h"
 #include "msl/string.h"
 #include "nitro/os/cache.h"
-/* NNSSndFader is completed here so its workers can be methods without
-   editing nnsys/snd/fader.h, which other TUs include unchanged. */
-struct NNSSndFader {
-    int origin;
-    int target;
-    int counter;
-    int frame;
-    void func_020524c4();
-    void func_02052494(int a, int b);
-    int func_02052458();
-    void func_02052438();
-    int func_02052420();
-};
-#define NNSYS_SND_FADER_H
-/* NNSSndSeqPlayer / NNSSndHandle are completed here so their workers can be
-   methods. nnsys/snd/player.h stays untouched: Sound2.cpp includes it. */
-struct Elem;
-struct ElemTable;
-struct NNSSndHandle;
-struct NNSSndSeqPlayer {
-    NNSSndHandle *handle; /* 0x00 */
-    void *player;         /* 0x04 */
-    void *heap;           /* 0x08 */
-    NNSFndLink playerLink; /* 0x0c */
-    NNSFndLink prioLink;   /* 0x14 */
-    NNSSndFader fader;     /* 0x1c */
-    u8 status;             /* 0x2c */
-    u8 startFlag;          /* 0x2d */
-    u8 pauseFlag;          /* 0x2e */
-    u8 prepareFlag;        /* 0x2f */
-    u32 commandTag;        /* 0x30 */
-    u16 seqType;           /* 0x34 */
-    u16 pad2;              /* 0x36 */
-    u16 seqNo;             /* 0x38 */
-    u16 seqArcIndex;       /* 0x3a */
-    u8 playerNo;           /* 0x3c */
-    u8 prio;               /* 0x3d */
-    s16 volume;            /* 0x3e */
-    u8 initVolume;         /* 0x40 */
-    u8 extVolume;          /* 0x41 */
-    u16 pad3_;             /* 0x42 */
-    void func_0204f214(int prio);
-    void func_0204f2d4();
-    void func_0204f3e0();
-    void func_0204f400();
-    void func_0204f4bc();
-    void func_0204f558(int flag);
-    void func_0204f5a0(int fadeFrames);
-    int func_0204f600(const void *seqData, u32 seqOffset, struct SNDBankData *bank);
-    void func_0204f630();
-};
-typedef char NNSSndSeqPlayer_size_must_be_0x44[sizeof(NNSSndSeqPlayer) == 0x44 ? 1 : -1];
-struct NNSSndHandle {
-    NNSSndSeqPlayer *player;
-    int func_02051a98(int playerNo, unsigned int bankNo, int playerPrio, struct Elem *seq,
-                      struct ElemTable *arc, int seqArcNo, int index);
-    int func_02051bd0(int playerNo, unsigned int bankNo, int playerPrio,
-                      Sound::InfoSequenceEntry *info, int seqNo);
-    int func_02051e60(int playerNo, int bankNo, int playerPrio, unsigned int seqArcNo, int index);
-    int func_02051f1c(u32 seqArcNo, int index);
-    int func_02051fb4(unsigned int seqNo);
-    NNSSndSeqPlayer *func_0204f63c(int playerIdx, int prio);
-    void func_0204f6f8(int seqArcNo, int index);
-    void func_0204f720(int seqNo);
-};
-extern "C" {
-void NNS_SndPlayerSetVolume(NNSSndHandle *handle, int volume);
-void NNS_SndPlayerSetInitialVolume(NNSSndHandle *handle, int volume);
-void NNS_SndPlayerMoveVolume(NNSSndHandle *handle, int targetVolume, int frames);
-void NNS_SndPlayerSetChannelPriority(NNSSndHandle *handle, int priority);
-void NNS_SndPlayerSetTrackMute(NNSSndHandle *handle, int trackBitMask, int flag);
-void NNS_SndPlayerSetTrackVolume(NNSSndHandle *handle, int trackBitMask, int volume);
-void NNS_SndPlayerSetTrackPitch(NNSSndHandle *handle, int trackBitMask, int pitch);
-void NNS_SndPlayerSetTrackPan(NNSSndHandle *handle, int trackBitMask, int pan);
-void NNS_SndPlayerSetTrackModDepth(NNSSndHandle *handle, int trackBitMask, int depth);
-void NNS_SndPlayerSetTrackModSpeed(NNSSndHandle *handle, int trackBitMask, int speed);
-void NNS_SndPlayerSetTempoRatio(NNSSndHandle *handle, int ratio);
-}
-#define NNSYS_SND_PLAYER_H
 
 #include "nitro/os/message.h"
 #include "nitro/os/thread.h"
@@ -391,15 +276,7 @@ struct LL {
    through prioLink, their data_020a4d6c record's first list through
    playerLink. */
 /* The sound archive embeds the shared NitroSDK FSArchive before its NARC view. */
-struct S82 {
-    /* 0x00 */ FSArchive arc;
-    /* 0x50 */ char *narc;         /* the file func_0204ef9c checked for 'NARC' */
-    /* 0x54 */ NarcFatBlock *f54;  /* its FATB block */
-    /* 0x58 */ unsigned char *f58; /* its FIMG data */
-    int func_0204ede8(unsigned int i);
-    int func_0204ee10();
-    int func_0204ee40(char *name, char *p);
-};
+#include "S82.h"
 struct HeapAllocator_205212c {
     char pad0[8];
     void *owner_8;
@@ -625,7 +502,8 @@ int NNSSndFader::func_02052420() {
 struct Elem *ElemTable::func_020523e0(int idx) {
     struct Elem* e;
     if (idx < 0) return 0;
-    if ((u32)idx >= (u32)this->count) return 0;
+    if ((u32)idx >= (u32)this->count)
+        return 0;
     e = &this->arr[idx];
     if (e->offset == -1)
         return 0;
@@ -773,8 +651,7 @@ int NNSSndHandle::func_02051fb4(unsigned int seqNo) {
     Sound::InfoSequenceEntry *info = Sound::InfoSequenceEntry::GetWithID(seqNo);
     if (!info)
         return 0;
-    return this->func_02051bd0(info->playerNumber, info->bankId,
-                         info->playerPriority, info, seqNo);
+    return this->func_02051bd0(info->playerNumber, info->bankId, info->playerPriority, info, seqNo);
 }
 
 int NNSSndHandle::func_02051f1c(u32 seqArcNo, int index) {
@@ -790,11 +667,12 @@ int NNSSndHandle::func_02051f1c(u32 seqArcNo, int index) {
     seq = (arc)->func_020523e0(index);
     if (seq == 0)
         return 0;
-    return this->func_02051a98(seq->playerNumber, seq->bankId,
-                         seq->playerPriority, seq, arc, seqArcNo, index);
+    return this->func_02051a98(seq->playerNumber, seq->bankId, seq->playerPriority, seq, arc,
+                               seqArcNo, index);
 }
 
-int NNSSndHandle::func_02051e60(int playerNo, int bankNo, int playerPrio, unsigned int seqArcNo, int index) {
+int NNSSndHandle::func_02051e60(int playerNo, int bankNo, int playerPrio, unsigned int seqArcNo,
+                                int index) {
     struct SndArchiveInfo *info;
     struct Elem *seq;
     struct ElemTable *arc;
@@ -816,7 +694,8 @@ int NNSSndHandle::func_02051e60(int playerNo, int bankNo, int playerPrio, unsign
     return this->func_02051a98(playerNo, bankNo, playerPrio, seq, arc, seqArcNo, index);
 }
 
-int NNSSndHandle::func_02051bd0(int playerNo, unsigned int bankNo, int playerPrio, Sound::InfoSequenceEntry *info, int seqNo) {
+int NNSSndHandle::func_02051bd0(int playerNo, unsigned int bankNo, int playerPrio,
+                                Sound::InfoSequenceEntry *info, int seqNo) {
     Sound::InfoInstrumentBankEntry *bank;
     struct SndArchiveInfo *waveArcInfo;
     NNSSndSeqPlayer *player;
@@ -891,14 +770,15 @@ int NNSSndHandle::func_02051bd0(int playerNo, unsigned int bankNo, int playerPri
     }
 
     player->func_0204f600((char *)seqData + ((struct P5 *)seqData)->baseOffset, 0,
-                  (struct SNDBankData *)bankData);
+                          (struct SNDBankData *)bankData);
     NNS_SndPlayerSetInitialVolume(this, info->volume);
     NNS_SndPlayerSetChannelPriority(this, info->channelPriority);
     this->func_0204f720(seqNo);
     return 1;
 }
 
-int NNSSndHandle::func_02051a98(int playerNo, unsigned int bankNo, int playerPrio, struct Elem *seq, struct ElemTable *arc, int seqArcNo, int index) {
+int NNSSndHandle::func_02051a98(int playerNo, unsigned int bankNo, int playerPrio, struct Elem *seq,
+                                struct ElemTable *arc, int seqArcNo, int index) {
     Sound::InfoInstrumentBankEntry *bank;
     NNSSndSeqPlayer *player;
     void *bankData;
@@ -934,7 +814,7 @@ int NNSSndHandle::func_02051a98(int playerNo, unsigned int bankNo, int playerPri
         }
     }
     player->func_0204f600((char *)arc + arc->baseOffset, seq->offset,
-                  (struct SNDBankData *)bankData);
+                          (struct SNDBankData *)bankData);
     NNS_SndPlayerSetInitialVolume(this, seq->volume);
     NNS_SndPlayerSetChannelPriority(this, seq->channelPriority);
     this->func_0204f6f8(seqArcNo, index);
@@ -1825,7 +1705,8 @@ void C::func_0204ff48() {
 }
 
 void C::func_0204fed0() {
-    if (((this->fc << 30) >> 31) == 0) return;
+    if (((this->fc << 30) >> 31) == 0)
+        return;
     while (this->f20 != 0) {
         OSIntrMode saved = OS_DisableInterrupts();
         this->func_0204fce8((void *)1);
@@ -2136,7 +2017,7 @@ void NNSSndHandle::func_0204f6f8(int seqArcNo, int index) {
     this->player->seqArcIndex = index;
 }
 
-NNSSndSeqPlayer * NNSSndHandle::func_0204f63c(int playerIdx, int prio) {
+NNSSndSeqPlayer *NNSSndHandle::func_0204f63c(int playerIdx, int prio) {
     SoundPlayerRecord *record = &data_020a4d6c[playerIdx];
     NNSSndSeqPlayer *player;
     if (this->player != 0)

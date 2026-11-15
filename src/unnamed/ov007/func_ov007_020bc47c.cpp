@@ -2,11 +2,7 @@
 #include "dExtSimpleModel_c.h"
 #include "Ov007Model.h"
 
-struct Desc;
-struct ElemA;
-struct Dst {
-    void func_020462d0(Desc *b, ElemA *c);
-};
+#include "Dst.h"
 void func_020462b4(int *p, int v);
 extern "C" void func_ov007_020bc434(Ov007Model *m);
 

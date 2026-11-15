@@ -2,10 +2,7 @@
 #include "types.h"
 #include "Heap.h"
 
-/* A mounted .narc archive (src/engine/sound/SoundEngine.cpp). */
-struct S82 {
-    int func_0204ee10();
-};
+#include "S82.h"
 
 extern "C" {
 

@@ -85,8 +85,9 @@ extern NknkAnimationFileHandle *data_ov062_0211cee8[];
 extern int data_ov062_0211cf0c[];
 /* Reconstructed receiver/attacker/nullable collision interface; the original
  * source prototype is not uniquely recoverable from the register traffic. */
-extern "C" struct Aea30C;
-void func_ov002_020aea30(Aea30C *self, dActor_c *attacker, dBgCh_Actr *collision);
+struct Aea30C {
+    void func_ov002_020aea30(dActor_c *attacker, dBgCh_Actr *collision);
+};
 extern "C" void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
 extern "C" int RandomIntInternal(int *seed);
 
@@ -796,7 +797,7 @@ void daNknk_c::func_ov062_02117c98()
             return;
         }
         mDeathState = 5;
-        func_ov002_020aea30((Aea30C *)this, found, (dBgCh_Actr *)turnAround);
+        ((Aea30C *)this)->func_ov002_020aea30(found, (dBgCh_Actr *)turnAround);
         return;
     }
     if (flags & 0x4000) {
@@ -823,7 +824,7 @@ void daNknk_c::func_ov062_02117c98()
                 mScaleY = 0x1000;
                 mScaleZ = 0x1000;
             }
-            func_ov002_020aea30((Aea30C *)this, found, 0);
+            ((Aea30C *)this)->func_ov002_020aea30(found, 0);
             return;
         }
     } else {
@@ -842,7 +843,7 @@ void daNknk_c::func_ov062_02117c98()
                 goto tail;
             }
             mDeathState = 6;
-            func_ov002_020aea30((Aea30C *)this, found, 0);
+            ((Aea30C *)this)->func_ov002_020aea30(found, 0);
             return;
         }
         {
@@ -861,7 +862,7 @@ void daNknk_c::func_ov062_02117c98()
                 DropShell();
             } else {
                 mDeathState = 1;
-                func_ov002_020aea30((Aea30C *)this, found, 0);
+                ((Aea30C *)this)->func_ov002_020aea30(found, 0);
                 mScaleX = 0x1000;
                 mScaleY = 0x1000;
                 mScaleZ = 0x1000;
@@ -895,7 +896,7 @@ void daNknk_c::func_ov062_02117c98()
     }
 
 tail:
-    func_ov002_020aea30((Aea30C *)this, found, &mWithMeshClsn);
+    ((Aea30C *)this)->func_ov002_020aea30(found, &mWithMeshClsn);
     if (turnAround)
         mAngleY = (u16)(mPrevAngleY + 0x8000);
 }

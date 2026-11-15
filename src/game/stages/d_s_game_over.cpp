@@ -51,10 +51,7 @@ enum dScGameOver_c_AssetId {
 #include "OAM.h"
 #include "SpawnInfo.h"
 #include "decl_common.h"
-/* Static method defined in Message.cpp. This TU does not include Message.h. */
-struct Message {
-    static void func_0201cebc(short);
-};
+#include "Message.h"
 #include "PlayerInput.h"
 #include "dFdBrightness_c.h"
 #include "Sound.h"

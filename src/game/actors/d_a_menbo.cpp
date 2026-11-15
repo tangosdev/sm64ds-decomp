@@ -291,8 +291,7 @@ void daMenbo_c::func_ov090_02131378() {
 /* 1 while a player is close and within a quarter turn of the heading.
  * The held target latches; releasing it points the skeeter back at its
  * anchor and sets the patrol speed. */
-int daMenbo_c::func_ov090_021314a0()
-{
+int daMenbo_c::func_ov090_021314a0() {
     daPly_c *p = this->ClosestNonVanishPlayer();
     if (p != 0 && AngleDiff(this->mPrevAngleY, this->HorzAngleToCPlayer()) < 0x2000) {
         int *sv = &p->mPosX;
@@ -590,8 +589,7 @@ int daMenbo_c::func_ov090_02131db0()
 }
 
 /* Install a state and run its entry. A null entry PMF means there is none. */
-int daMenbo_c::func_ov090_02131e00(MenboStateFn *p)
-{
+int daMenbo_c::func_ov090_02131e00(MenboStateFn *p) {
     MenboState *c = (MenboState *)this;
     c->mState = p;
     MenboStateFn *q = c->mState;

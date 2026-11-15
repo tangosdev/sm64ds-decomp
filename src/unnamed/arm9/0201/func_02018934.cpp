@@ -4,9 +4,7 @@
 #include "Heap.h"
 #include "nitro/fs/file.h"
 
-struct S82 {
-    int func_0204ee40(char *name, char *p);
-};
+#include "S82.h"
 
 extern "C" {
 
@@ -30,8 +28,7 @@ void *func_02018934(char *name, char *path, void *heap) {
     ptr = ((mHeap::Heap_t *)heap)->_Allocate(aligned + 0x60, -0x10);
     p60 = (char *)ptr + 0x60;
     DC_FlushRange(p60, aligned);
-    if (myFS_ReadFile(&file, p60, diff) == diff &&
-        ((S82 *)ptr)->func_0204ee40(name, (char *)p60)) {
+    if (myFS_ReadFile(&file, p60, diff) == diff && ((S82 *)ptr)->func_0204ee40(name, (char *)p60)) {
         result = ptr;
     } else {
         ((mHeap::Heap_t *)heap)->_Deallocate(ptr);

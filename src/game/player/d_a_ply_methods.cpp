@@ -247,10 +247,12 @@ extern int func_01ff99a4(int a, int b);
 extern int func_01ffa4bc(int a);
 }
 
+#include "Message.h"
+#include "BgChEvt.h"
+
 extern void func_0201628c(int a, int b);
 extern void func_020162a4(int a, int b);
 extern void func_020167a4(struct dExtAnmModel_c *p);
-extern "C" void func_0201fc88(s16);
 extern "C" {
 extern void func_02020388(int playerNo);
 }
@@ -260,14 +262,8 @@ extern "C" void *func_0203564c(void *);
 extern void func_02035798(dBgCh_Actr *, int);
 extern "C" int func_02037e20(int *);
 extern "C" void func_0203db0c(int idx, unsigned short val);
-extern void func_ov002_020ed63c(daYegg_c *, int);
-extern int func_ov002_020eea84(dBgCh_Actr *, dActor_c *);
-extern int func_ov002_020eeeb8(void *, char *);
-extern int func_ov002_020ef070(void *, char *);
 extern int func_ov002_020f035c(unsigned int sel, int r1);
-extern int func_ov100_02144fcc(void);
-extern int func_ov100_02145014(void);
-extern void func_ov100_02145070(int);
+#include "daDoor_c.h"
 extern "C" int GiveHealth(int, int);
 extern "C" void GiveLives(int);
 extern "C" {
@@ -403,7 +399,6 @@ extern SharedFilePtr data_ov002_0210eca8;
 extern SharedFilePtr data_ov002_0210ecb8;
 }
 
-extern int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player);
 extern int func_ov002_020f030c(int sel);
 extern "C" {
 extern void func_ov002_020d7430(daPly_c &player);
@@ -451,8 +446,6 @@ extern int data_0209f32c;
 }
 
 extern void func_02035860(dBgCh_Actr *, const Vector3 *);
-extern int func_ov002_020edca4(daYegg_c *);
-extern void func_ov002_020eedc0(dBgCh_Actr *, dActor_c *);
 extern "C" {
 extern u8 gMeterShownHealth;
 extern unsigned char gShowRaceTimer[];
@@ -1362,7 +1355,7 @@ void daPly_c::func_ov002_020bdc18() {
     for (i = 0; i < 5; i++) {
         dActor_c **a = mHeldObjQueue;
         if (a[i] != 0) {
-            func_ov002_020edca4((daYegg_c *)a[i]);
+            ((daYegg_c *)a[i])->func_ov002_020edca4();
             a = mHeldObjQueue;
             a[i] = 0;
         }
@@ -3316,7 +3309,7 @@ int daPly_c::func_ov002_020c200c(int arg) {
             return 0;
 
         if (this->IsBeingShotOutOfCannon())
-            func_ov002_020eedc0(&mMeshClsn, (dActor_c *)self);
+            ((BgChEvt *)&mMeshClsn)->func_ov002_020eedc0((dActor_c *)self);
     } else {
         return 0;
     }
@@ -3483,7 +3476,7 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
     func_020383e4(&mMeshClsn);
 
     if (mIsMega)
-        func_ov002_020eed24(&mMeshClsn, c);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020eed24(c);
 
     if (mVertSpeed > 0x1e000)
         mMeshClsn.ClearGroundFlag();
@@ -3715,7 +3708,7 @@ void daPly_c::func_ov002_020c2db8() {
     ((daPly_c *)(c))->func_ov002_020c0fb4();
     ((daPly_c *)(c))->func_ov002_020c5d60();
     ((daPly_c *)(c))->func_ov002_020c61ac();
-    func_ov002_020eea84(&mMeshClsn, (dActor_c *)c);
+    ((BgChEvt *)&mMeshClsn)->func_ov002_020eea84((dActor_c *)c);
     ((daPly_c *)(c))->func_ov002_020c2b08();
     ((daPly_c *)(c))->func_ov002_020c29d4();
 }
@@ -4244,7 +4237,6 @@ int daPly_c::St_Respawn_Init() {
 int daPly_c::func_ov002_020c4188() {
     extern int *gCamera;
     extern int gNextActorUpdateMask;
-    extern void func_0201f32c(int arg0);
     int *p;
 
     if (mEventId == 0) {
@@ -4280,7 +4272,7 @@ int daPly_c::func_ov002_020c4188() {
             mEventWait--;
             break;
         }
-        func_0201f32c(data_ov002_020ff26c[mEventId - 1]);
+        Message::func_0201f32c(data_ov002_020ff26c[mEventId - 1]);
         if (mEventId == 6) {
             mAttachedActor = SpawnSoundObj(5);
         }
@@ -4406,8 +4398,8 @@ cont:
             Vec3_RotateYAndTranslate(&pos, (const Vector3 *)&this->mPosX, this->mAngleY,
                                      &sLevelIntroOff);
             this->ShowMessage(*this, 0x177, &pos, 2, 2);
-            func_ov100_02145070(0x1e);
-            func_ov100_02145014();
+            daDoor_c::func_ov100_02145070(0x1e);
+            daDoor_c::func_ov100_02145014();
             func_02012694(0xb8, &mCamSpacePos);
             mPlayMusicAfterTalk = 1;
             return 1;
@@ -4513,7 +4505,6 @@ ret0:
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_Talk_Main() {
-    extern void func_0201f32c(int a);
     extern int gNextActorUpdateMask;
     extern char *gCamera;
     if (mRestoreMusicVolume != 0) {
@@ -4542,9 +4533,9 @@ int daPly_c::St_Talk_Main() {
         }
         mStateStep = 2;
         if (mStateWork == 0)
-            func_0201fc88(mAttachOffsetY);
+            Message::func_0201fc88(mAttachOffsetY);
         else
-            func_0201f32c((short)mAttachOffsetY);
+            Message::func_0201f32c((short)mAttachOffsetY);
         {
             char *cam = gCamera;
             switch ((mStateArg >> 2) & 3) {
@@ -4573,7 +4564,7 @@ int daPly_c::St_Talk_Main() {
         }
         break;
     case 8:
-        if (func_ov100_02144fcc() != 0)
+        if (daDoor_c::func_ov100_02144fcc() != 0)
             mStateStep = 4;
         break;
     case 4:
@@ -6494,7 +6485,6 @@ dummy_label_675641:;
  */
 
 int daPly_c::func_ov002_020c8540() {
-    extern void func_0201f32c(int arg0);
     extern int gNextActorUpdateMask;
     u32 s8;
     int id;
@@ -6522,7 +6512,7 @@ int daPly_c::func_ov002_020c8540() {
                 ((dActor_c *)o)->mFlags &= ~0x800000;
             }
             gNextActorUpdateMask |= 0x800000;
-            func_0201f32c(data_ov002_020ff108[this->param1]);
+            Message::func_0201f32c(data_ov002_020ff108[this->param1]);
             mStateArg = 1;
             return 1;
         }
@@ -6853,9 +6843,8 @@ int daPly_c::func_ov002_020c91bc() {
 }
 
 int daPly_c::func_ov002_020c924c() {
-    extern void func_0201f32c(int x);
     if (mStateTimer == 0) {
-        func_0201f32c((short)mAttachOffsetY);
+        Message::func_0201f32c((short)mAttachOffsetY);
         mStateStep = 0x15;
     }
     return 0;
@@ -8394,7 +8383,6 @@ int daPly_c::St_Shell_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_Shell_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern ControllerInput data_0209f498[];
     int flag = 0;
     dBgPi *res;
@@ -8407,7 +8395,7 @@ int daPly_c::St_Shell_Main() {
             if (a) {
                 u16 type = a->actorID;
                 if ((type == 0x14 ? flag : 0) || (type == 0x15 ? 1 : 0)) {
-                    func_ov002_020eeca8(&mMeshClsn, this);
+                    ((BgChEvt *)&mMeshClsn)->func_ov002_020eeca8(this);
                     flag = 0;
                 }
             }
@@ -8609,7 +8597,6 @@ int daPly_c::St_HurtWater_Init() {
  */
 
 int daPly_c::St_MetalWaterWater_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern struct S18b2 data_0209f4a0[];
     u32 f;
     int v;
@@ -8623,7 +8610,8 @@ int daPly_c::St_MetalWaterWater_Main() {
         this->ChangeState(data_ov002_0211067c);
         return 1;
     }
-    if (f != 0) func_ov002_020eeca8(&mMeshClsn, this);
+    if (f != 0)
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020eeca8(this);
 
     if (mStateWork == 0) {
         v = 0;
@@ -9808,7 +9796,6 @@ extern "C" int func_ov002_020cf700(daPly_c *player) {
 
 int daPly_c::St_OnWall_Main() {
     extern ControllerInput data_0209f498[];
-    extern void func_ov002_020eee3c(char *, char *);
     u16 f = mStateFlags;
     u16 b0 = f & 1;
     if (b0 != 0) {
@@ -9851,7 +9838,7 @@ int daPly_c::St_OnWall_Main() {
         ApproachLinear(mAngleY, (s16)a, 0x800);
         mPrevAngleY = a;
         mHorzSpeed = func_ov002_020bf224(0xa000, 0x2000);
-        func_ov002_020eee3c((char *)&mMeshClsn, (char *)this);
+        ((BgChEvt *)(char *)&mMeshClsn)->func_ov002_020eee3c((char *)this);
     } else {
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
             int ang = cstd::atan2(mWallNormalX, mWallNormalZ);
@@ -14032,7 +14019,7 @@ int daPly_c::St_YoshiPower_Init() {
         mStateStep = 6;
         mHeldObj = mHeldObjQueue[0];
         mHeldObj->mFlags |= 0x100;
-        func_ov002_020ed63c((daYegg_c *)mHeldObj, 1);
+        ((daYegg_c *)mHeldObj)->func_ov002_020ed63c(1);
         mHeldObjQueue[0] = 0;
         for (i = 1; i < 5; i++) {
             dActor_c **p = mHeldObjQueue;
@@ -14441,11 +14428,11 @@ void daPly_c::func_ov002_020d8a50(int which) {
     switch (which) {
     case 0:
     case 1:
-        func_ov002_020ef070(&mMeshClsn, (char *)this);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020ef070((char *)this);
         break;
     case 2:
     case 3:
-        func_ov002_020eeeb8(&mMeshClsn, (char *)this);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020eeeb8((char *)this);
         break;
     }
 
@@ -17077,7 +17064,6 @@ int daPly_c::St_GroundPound_Cleanup() {
  */
 
 int daPly_c::St_GroundPound_Main() {
-    void func_ov002_020ef2a4(dBgCh_Actr * c, dActor_c * arg);
     void PlayerNewSimpleHold14(unsigned int id, int x, int y, int z);
     extern dCamera_c *gCamera;
     extern char data_0209f4a0[];
@@ -17103,7 +17089,7 @@ int daPly_c::St_GroundPound_Main() {
         }
     } else if (timer == 0) {
         u16 st;
-        func_ov002_020ef2a4(&mMeshClsn, this);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020ef2a4(this);
         st = mStateTimer;
         if (st != 0) {
             if (st == 1) {
@@ -17818,7 +17804,6 @@ int daPly_c::St_Owl_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_Owl_Main() {
-    extern void func_0201f32c(int a);
     extern unsigned char data_0209f49c[];
     extern char data_0209f4a0[];
     extern char *gCamera;
@@ -17872,7 +17857,7 @@ int daPly_c::St_Owl_Main() {
         if (mStateStep == 1) {
             if (mAttachOffsetY - 0xed8000 > mPosY) {
                 mOwlFarCamera = 1;
-                func_0201f32c(0xa3);
+                Message::func_0201f32c(0xa3);
                 ((::dCamera_c *)gCamera)->func_0200d3f8(mPlayerNo, 0);
                 mVertAccel = 0;
                 DisableInteraction();
@@ -18777,10 +18762,9 @@ int daPly_c::St_LongJump_Init() {
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_SideFlip_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr * a, dActor_c * b);
     extern u16 data_0209f49e[];
     extern u16 data_0209f49c[];
-    func_ov002_020eeca8(&mMeshClsn, this);
+    ((BgChEvt *)&mMeshClsn)->func_ov002_020eeca8(this);
 
     if (IsState(data_ov002_02110694)) {
         if (mVertSpeed < 0) {
@@ -18874,10 +18858,9 @@ int daPly_c::St_HeadstandJump_Init() {
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_WallJump_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern unsigned short data_0209f49e[];
     extern void (daPly_c::*data_ov002_0211073c[])();
-    func_ov002_020eeca8(&mMeshClsn, this);
+    ((BgChEvt *)&mMeshClsn)->func_ov002_020eeca8(this);
     func_ov002_020e28d4(0x1800, 0x800);
     if (mIsAirborne == 0) {
         this->ChangeState(data_ov002_02110424);
@@ -19160,10 +19143,9 @@ void func_ov002_020e200c(char* c){
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_Jump_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern u16 data_0209f49e[];
     extern void (daPly_c::*data_ov002_0211073c[])();
-    func_ov002_020eeca8(&mMeshClsn, this);
+    ((BgChEvt *)&mMeshClsn)->func_ov002_020eeca8(this);
     func_ov002_020e28d4(0xd00, 0x800);
 
     if (mIsAirborne == 0) {
@@ -22637,7 +22619,6 @@ void func_0203b9b4(int *p, int v);
 void __register_global_object(void *object, void *destructor, void **node);
 }
 
-void *func_02017acc(void *self, unsigned int fileID);
 int func_02017ab4(int self);
 int SharedFilePtr_Destruct_Anim(int self);
 void *SharedFilePtr_Construct_TexSeq(void *self, unsigned int fileID);
@@ -23255,43 +23236,43 @@ extern "C" {
 void __sinit_ov002_021019d0(void) {
     func_0203b9b4(&data_ov002_0210e160, 1234);
     __register_global_object(&data_ov002_0210e160, (void *)func_0201973c, data_ov002_0210f9b0);
-    func_02017acc(&data_ov002_0210e6f8, ASSET_B_MARIO_ALL_BMD);
+    data_ov002_0210e6f8.func_02017acc(ASSET_B_MARIO_ALL_BMD);
     __register_global_object(&data_ov002_0210e6f8, (void *)func_02017ab4, data_ov002_0210f9c8);
-    func_02017acc(&data_ov002_0210e648, ASSET_B_MARIO_BODY_BMD);
+    data_ov002_0210e648.func_02017acc(ASSET_B_MARIO_BODY_BMD);
     __register_global_object(&data_ov002_0210e648, (void *)func_02017ab4, data_ov002_0210f9d4);
-    func_02017acc(&data_ov002_0210eae8, ASSET_B_MARIO_HEAD_CAP_BMD);
+    data_ov002_0210eae8.func_02017acc(ASSET_B_MARIO_HEAD_CAP_BMD);
     __register_global_object(&data_ov002_0210eae8, (void *)func_02017ab4, data_ov002_0210f9e0);
-    func_02017acc(&data_ov002_0210eb20, 0x807e);
+    data_ov002_0210eb20.func_02017acc(0x807e);
     __register_global_object(&data_ov002_0210eb20, (void *)func_02017ab4, data_ov002_0210f9f8);
-    func_02017acc(&data_ov002_0210eb00, 0x807f);
+    data_ov002_0210eb00.func_02017acc(0x807f);
     __register_global_object(&data_ov002_0210eb00, (void *)func_02017ab4, data_ov002_0210fa04);
-    func_02017acc(&data_ov002_0210ebb8, 0x8080);
+    data_ov002_0210ebb8.func_02017acc(0x8080);
     __register_global_object(&data_ov002_0210ebb8, (void *)func_02017ab4, data_ov002_0210fa1c);
-    func_02017acc(&data_ov002_0210e690, 0x8081);
+    data_ov002_0210e690.func_02017acc(0x8081);
     __register_global_object(&data_ov002_0210e690, (void *)func_02017ab4, data_ov002_0210fa28);
-    func_02017acc(&data_ov002_0210ec38, 0x8082);
+    data_ov002_0210ec38.func_02017acc(0x8082);
     __register_global_object(&data_ov002_0210ec38, (void *)func_02017ab4, data_ov002_0210fa40);
-    func_02017acc(&data_ov002_0210ec50, 0x8083);
+    data_ov002_0210ec50.func_02017acc(0x8083);
     __register_global_object(&data_ov002_0210ec50, (void *)func_02017ab4, data_ov002_0210fa4c);
-    func_02017acc(&data_ov002_0210e758, 0x80b8);
+    data_ov002_0210e758.func_02017acc(0x80b8);
     __register_global_object(&data_ov002_0210e758, (void *)func_02017ab4, data_ov002_0210fa64);
-    func_02017acc(&data_ov002_0210e790, 0x80b9);
+    data_ov002_0210e790.func_02017acc(0x80b9);
     __register_global_object(&data_ov002_0210e790, (void *)func_02017ab4, data_ov002_0210fa70);
-    func_02017acc(&data_ov002_0210e780, ASSET_WARIO_METAL_MODEL_BMD);
+    data_ov002_0210e780.func_02017acc(ASSET_WARIO_METAL_MODEL_BMD);
     __register_global_object(&data_ov002_0210e780, (void *)func_02017ab4, data_ov002_0210fa94);
-    func_02017acc(&data_ov002_0210ec60, 0x80ba);
+    data_ov002_0210ec60.func_02017acc(0x80ba);
     __register_global_object(&data_ov002_0210ec60, (void *)func_02017ab4, data_ov002_0210faa0);
-    func_02017acc(&data_ov002_0210e7b0, 0x80bd);
+    data_ov002_0210e7b0.func_02017acc(0x80bd);
     __register_global_object(&data_ov002_0210e7b0, (void *)func_02017ab4, data_ov002_0210fab8);
-    func_02017acc(&data_ov002_0210e3a0, 0x80c0);
+    data_ov002_0210e3a0.func_02017acc(0x80c0);
     __register_global_object(&data_ov002_0210e3a0, (void *)func_02017ab4, data_ov002_0210fac4);
-    func_02017acc(&data_ov002_0210e7d8, 0x80c1);
+    data_ov002_0210e7d8.func_02017acc(0x80c1);
     __register_global_object(&data_ov002_0210e7d8, (void *)func_02017ab4, data_ov002_0210fadc);
-    func_02017acc(&data_ov002_0210e7a8, 0x80c2);
+    data_ov002_0210e7a8.func_02017acc(0x80c2);
     __register_global_object(&data_ov002_0210e7a8, (void *)func_02017ab4, data_ov002_0210fae8);
-    func_02017acc(&data_ov002_0210e7f0, 0x80c3);
+    data_ov002_0210e7f0.func_02017acc(0x80c3);
     __register_global_object(&data_ov002_0210e7f0, (void *)func_02017ab4, data_ov002_0210fb00);
-    func_02017acc(&data_ov002_0210e818, 0x80c4);
+    data_ov002_0210e818.func_02017acc(0x80c4);
     __register_global_object(&data_ov002_0210e818, (void *)func_02017ab4, data_ov002_0210fb0c);
     data_ov002_0210e490.Construct(0x801d);
     __register_global_object(&data_ov002_0210e490, (void *)SharedFilePtr_Destruct_Anim,

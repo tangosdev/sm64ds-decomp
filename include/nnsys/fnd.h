@@ -20,12 +20,20 @@ typedef struct NNSFndLink {
     void *nextObject;
 } NNSFndLink;
 
+#ifdef __cplusplus
+struct NNSSndSeqPlayer;
+#endif
+
 /* An intrusive list: each object carries an NNSFndLink `offset' bytes in. */
 typedef struct NNSFndList {
     void *headObject;
     void *tailObject;
     u16 numObjects;
     u16 offset;
+#ifdef __cplusplus
+    void func_02051064();
+    void func_0204f460(NNSSndSeqPlayer *);
+#endif
 } NNSFndList;
 
 #ifndef SM64DS_PLATFORM_PC

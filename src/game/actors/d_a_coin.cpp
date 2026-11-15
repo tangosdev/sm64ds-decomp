@@ -412,8 +412,7 @@ void daCoin_c::CollectYellowCoin(daPly_c *player) {
  * below 0xf and the player's coin total has reached 100, spawns a STAR (0xb2,
  * param 0x20) 300 units above the player, sets the event bit and gives the
  * star a marker. */
-void func_ov002_020b18f0(char *raw)
-{
+void func_ov002_020b18f0(char *raw) {
     extern signed char gCurrentSublevel;
     extern short gNumCoins[];
 

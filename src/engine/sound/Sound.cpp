@@ -22,34 +22,7 @@
 #include "private/watchdog_alarm.h"
 #include "Memory.h"
 #include "math/Approach.h"
-/* NNSSndHandle completed here. player.h is not included: Sound2.cpp
-   includes the real header and still calls the free stop/init functions. */
-struct NNSSndSeqPlayer;
-struct NNSSndHandle {
-    NNSSndSeqPlayer *player;
-    void func_02012860(int flags, int c, int d, int e);
-    void func_020123c8(int type, int code, const Vector3 *arg);
-    int func_02011dcc(int x);
-    void func_02013524(int b, int c);
-    int func_02051f1c(u32 seqArcNo, int index);
-    int func_02051e60(int playerNo, int bankNo, int playerPrio, unsigned int seqArcNo, int index);
-    int func_02051fb4(unsigned int seqNo);
-};
-extern "C" {
-void NNS_SndPlayerSetVolume(NNSSndHandle *handle, int volume);
-void NNS_SndPlayerSetInitialVolume(NNSSndHandle *handle, int volume);
-void NNS_SndPlayerMoveVolume(NNSSndHandle *handle, int targetVolume, int frames);
-void NNS_SndPlayerSetChannelPriority(NNSSndHandle *handle, int priority);
-void NNS_SndPlayerSetTrackMute(NNSSndHandle *handle, int trackBitMask, int flag);
-void NNS_SndPlayerSetTrackVolume(NNSSndHandle *handle, int trackBitMask, int volume);
-void NNS_SndPlayerSetTrackPitch(NNSSndHandle *handle, int trackBitMask, int pitch);
-void NNS_SndPlayerSetTrackPan(NNSSndHandle *handle, int trackBitMask, int pan);
-void NNS_SndPlayerSetTrackModDepth(NNSSndHandle *handle, int trackBitMask, int depth);
-void NNS_SndPlayerSetTrackModSpeed(NNSSndHandle *handle, int trackBitMask, int speed);
-void NNS_SndPlayerSetTempoRatio(NNSSndHandle *handle, int ratio);
-}
-#define NNSYS_SND_PLAYER_H
-#define NNSYS_SND_FADER_H
+#include "nnsys/snd/player.h"
 #include "private/sound_positional.h"
 #include "daPly_c.h"
 

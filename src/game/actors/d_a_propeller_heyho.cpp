@@ -382,7 +382,7 @@ int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p) {
 /* Wander init: heading = a random multiple of 0x1000 (one of 16 directions,
  * 22.5 degrees apart), timer = 50 + random 0..31 frames, plays the file-02123520
  * animation at speed 1.0. */
-int daPropeller_Heyho_c::func_ov070_0211ffa8(){
+int daPropeller_Heyho_c::func_ov070_0211ffa8() {
     this->mTargetAngY =
         (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 0xc);
     this->mStateTimer =
@@ -409,8 +409,7 @@ extern daPropeller_Heyho_c::State data_ov070_021235ac;
  * the timer reaches 0 the state restarts (new heading). With the cooldown expired
  * and the actor within 1500 units of home, a non-vanished player within 1000 units
  * starts the chase. */
-int daPropeller_Heyho_c::func_ov070_0211fd98()
-{
+int daPropeller_Heyho_c::func_ov070_0211fd98() {
     int in[3];
     int out[3];
     Vector3 t;
@@ -421,7 +420,8 @@ int daPropeller_Heyho_c::func_ov070_0211fd98()
     out[1] = 0;
     out[2] = 0;
 
-    if (Vec3_Dist(&this->mPos, &this->mHomePos) > kWanderTurnBackDist || this->mWithMeshClsn.IsOnWall()) {
+    if (Vec3_Dist(&this->mPos, &this->mHomePos) > kWanderTurnBackDist ||
+        this->mWithMeshClsn.IsOnWall()) {
         this->mTargetAngY = Vec3_HorzAngle(&this->mPos, &this->mHomePos);
         if (this->mStateTimer < 20)
             this->mStateTimer = 20;
@@ -430,9 +430,8 @@ int daPropeller_Heyho_c::func_ov070_0211fd98()
 
     ApproachLinear(this->mPrevAngleX, Vec3_VertAngle(&this->mPos, &this->mHomePos), 0x100);
 
-    ApproachAngle(&this->mPrevAngleZ,
-                  (this->mPrevAngleY - this->mTargetAngY) / 2,
-                  0xa, 0x100, 0x50);
+    ApproachAngle(&this->mPrevAngleZ, (this->mPrevAngleY - this->mTargetAngY) / 2, 0xa, 0x100,
+                  0x50);
 
     in[2] = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
@@ -493,8 +492,7 @@ extern daPropeller_Heyho_c::State data_ov070_0212358c;
  * units of the aim point (900 when LEVEL_ID == 0x16) it zeroes the velocity words
  * and picks the dive or, when mCanSpitFire is non-zero and a random bit is 1, the
  * fire state. */
-int daPropeller_Heyho_c::func_ov070_0211fae4()
-{
+int daPropeller_Heyho_c::func_ov070_0211fae4() {
     daPly_c *player;
     Vector3 vin;
     Vector3 vb;
@@ -544,9 +542,8 @@ int daPropeller_Heyho_c::func_ov070_0211fae4()
     vd.z = vb.z;
     ApproachAngle(&this->mPrevAngleX, Vec3_VertAngle(&this->mPos, &vd), 1, 0x500, 0x500);
 
-    ApproachAngle(&this->mPrevAngleZ,
-                  (this->mPrevAngleY - this->mTargetAngY) / 2,
-                  0xa, 0x100, 0x50);
+    ApproachAngle(&this->mPrevAngleZ, (this->mPrevAngleY - this->mTargetAngY) / 2, 0xa, 0x100,
+                  0x50);
 
     vin.z = 0xf000;
     Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
@@ -874,7 +871,8 @@ int daPropeller_Heyho_c::func_ov070_0211f368() {
         v.x = x;
         v.y = y;
         v.z = z;
-        this->mParticle0 = Particle::System::New(this->mParticle0, kPtclDeathA, v.x, v.y, v.z, 0, 0);
+        this->mParticle0 =
+            Particle::System::New(this->mParticle0, kPtclDeathA, v.x, v.y, v.z, 0, 0);
         this->mParticle1 =
             Particle::System::NewCleanParticle(this->mParticle1, kPtclDeathB, v.x, v.y, v.z, 0);
     }
@@ -956,7 +954,7 @@ void daPropeller_Heyho_c::func_ov070_0211f100() {
     }
 
     if (hitFlags & kHitMegaChar) {
-        this->SpawnMegaCharParticles(*hitPlayer, (char*)0);
+        this->SpawnMegaCharParticles(*hitPlayer, (char *)0);
         hitPlayer->IncMegaKillCount();
         func_02012694(kSndMegaKill, (const Vector3 *)&this->mCamSpacePosX);
         FlyGuy_ChangeState(this, &data_ov070_021235bc);

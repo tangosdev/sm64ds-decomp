@@ -87,10 +87,7 @@ int GetSoundMode();
 void SetSoundMode(int mode);
 }
 int RunCameraCommand(dCamera_c *camera, u8 *command, int first, int last);
-/* Static method defined in Message.cpp. This TU does not include Message.h. */
-struct Message {
-    static void func_0201f32c(int);
-};
+#include "Message.h"
 void func_02011c8c();
 void CollectStarInLevel(s8 levelID, s32 starID);
 void DisableSoundPlayersForCredits();

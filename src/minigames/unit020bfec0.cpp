@@ -111,7 +111,6 @@ extern "C" void func_020169d8(char *, int, unsigned int);
 extern "C" void func_02016a04(char *, int);
 extern "C" void func_02016a14(char *, int);
 int func_02017ab4(int);
-void *func_02017acc(void *, unsigned int);
 unsigned int func_02012174(unsigned int, unsigned int);
 extern "C" {
 void func_0203ccd4(void *, short);

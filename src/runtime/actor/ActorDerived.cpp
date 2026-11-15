@@ -41,9 +41,7 @@ static inline int OS_DisableIrq(void) {
  * (arm9 0x02013f28..0x02013f4c): fatal-error spin, IME off then call the
  * next entry forever. Defined first because this file emits in reverse
  * source order, so the tail body lands at the run's right edge. */
-struct FatalSpin {
-    void func_02013f28();
-};
+#include "FatalSpin.h"
 
 void FatalSpin::func_02013f28() {
     (void)OS_DisableIrq();

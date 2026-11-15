@@ -907,16 +907,16 @@ int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
 
 /* dst = the block's position with Y raised by 0x32000 (50 units): the point
    the prizes spawn at. */
-Vector3 daObjHatenaBlock_c::func_ov102_02149684(){
-  Vector3 ret;
-  int* dst = (int *)&ret;
-  daObjHatenaBlock_c* src = this;
-  int z = src->mPosZ;
-  int liftedY = src->mPosY + 0x32000;
-  dst[0] = src->mPosX;
-  dst[1] = liftedY;
-  dst[2] = z;
-  return ret;
+Vector3 daObjHatenaBlock_c::func_ov102_02149684() {
+    Vector3 ret;
+    int *dst = (int *)&ret;
+    daObjHatenaBlock_c *src = this;
+    int z = src->mPosZ;
+    int liftedY = src->mPosY + 0x32000;
+    dst[0] = src->mPosX;
+    dst[1] = liftedY;
+    dst[2] = z;
+    return ret;
 }
 
 /* Floor height under the block: a ground raycast (dBgCh_Gnd) from 0x28000 (40

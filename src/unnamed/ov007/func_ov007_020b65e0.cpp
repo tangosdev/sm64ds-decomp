@@ -1,24 +1,24 @@
+//cpp
 #include "Ov007Work.h"
 #include "Ov007MenuMem.h"
+#include "Ov007Texture.h"
 
-extern void func_ov007_020c937c(void *state);
-extern void func_ov007_020c020c(struct Ov007Camera *cam);
-extern void func_ov007_020c2410(void *p);
-extern void func_ov007_020c2018(void *p);
-extern void func_ov007_020c22f8(void *p);
-extern void func_ov007_020c9080(void *p);
-extern void _ZN12Ov007Texture19func_ov007_020c1620Ev(void *tex);
-extern void func_ov007_020b3edc(int a);
-extern void func_ov007_020c9460(void *p);
-extern void ItemView_Destroy(struct Ov007ItemView *view);
-extern void func_ov007_020b6cd0(void);
-extern void func_ov007_020b283c(void);
-extern void PickerScene_Destroy(void);
-extern void func_ov007_020bf304(void);
+extern "C" void func_ov007_020c937c(void *state);
+extern "C" void func_ov007_020c020c(struct Ov007Camera *cam);
+extern "C" void func_ov007_020c2410(void *p);
+extern "C" void func_ov007_020c2018(void *p);
+extern "C" void func_ov007_020c22f8(void *p);
+extern "C" void func_ov007_020c9080(void *p);
+extern "C" void func_ov007_020b3edc(int a);
+extern "C" void func_ov007_020c9460(void *p);
+extern "C" void ItemView_Destroy(struct Ov007ItemView *view);
+extern "C" void func_ov007_020b6cd0(void);
+extern "C" void func_ov007_020b283c(void);
+extern "C" void PickerScene_Destroy(void);
+extern "C" void func_ov007_020bf304(void);
 
 /* Teardown of the data_ov007_0210342c manager. */
-void func_ov007_020b65e0(void)
-{
+extern "C" void func_ov007_020b65e0(void) {
     int i;
 
     if (WORK->states[0] != 0) {
@@ -72,7 +72,7 @@ void func_ov007_020b65e0(void)
 
     for (i = 0; i < 11; i++) {
         if (WORK->textures[i] != 0) {
-            _ZN12Ov007Texture19func_ov007_020c1620Ev(WORK->textures[i]);
+            ((Ov007Texture *)WORK->textures[i])->func_ov007_020c1620();
             WORK->textures[i] = 0;
         }
     }

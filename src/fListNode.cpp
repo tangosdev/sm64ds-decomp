@@ -65,20 +65,7 @@ struct Thing {
 extern fBase_c::ProcessFunction data_02099f60;
 extern fBase_c::ProcessFunction data_02099f70, data_02099f48, data_02099f68, data_02099f50;
 
-struct ProcessList {
-    fLiNdBaPr_c *head;
-    fLiNdBaPr_c *tail;
-    fBase_c::ProcessFunction callback;
-
-    ProcessList(fBase_c::ProcessFunction &p) {
-        head = 0;
-        tail = 0;
-        callback = p;
-    }
-
-    static void func_02044120();
-    static int func_020441bc(int);
-};
+#include "ProcessList.h"
 
 ProcessTree::Thing data_020a4b6c(data_02099f60);
 ProcessList data_020a4b88(data_02099f70);

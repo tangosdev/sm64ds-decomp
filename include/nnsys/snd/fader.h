@@ -17,6 +17,13 @@ typedef struct NNSSndFader {
     int target;
     int counter;
     int frame;
+#ifdef __cplusplus
+    void func_020524c4();
+    void func_02052494(int, int);
+    int func_02052458();
+    void func_02052438();
+    int func_02052420();
+#endif
 } NNSSndFader;
 
 #ifdef __cplusplus

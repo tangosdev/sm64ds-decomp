@@ -11,6 +11,7 @@
  */
 
 #include "dExtSimpleModel_c.h"
+#include "Dst.h"
 #include "nitro/gx/g3x.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_load.h"
@@ -172,18 +173,7 @@ typedef struct Desc {
     int f30;
 } Desc;
 
-typedef struct Dst {
-    Desc *f0;
-    ElemA *f4;
-    ElemB *f8;
-    ElemA *fc;
-    int f10;
-
-    void func_020462d0(Desc *h, ElemA *arr);
-} Dst;
-
-void Dst::func_020462d0(Desc *h, ElemA *arr)
-{
+void Dst::func_020462d0(Desc *h, ElemA *arr) {
     u32 i;
     ElemA *p;
     SrcB *s2;

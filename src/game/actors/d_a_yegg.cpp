@@ -1106,8 +1106,7 @@ int daYegg_c::FindTarget(int a1, int best) {
  * for destruction, plays Sound::PlayCharVoice id 0x103 at its camera-space
  * position and sets mBurstDone. d_a_ply_methods.cpp still calls the free
  * function on the held egg. */
-void daYegg_c::func_ov002_020edca4()
-{
+void daYegg_c::func_ov002_020edca4() {
     daYegg_c *self = this;
     struct Vector3 pos;
     char* spawned;

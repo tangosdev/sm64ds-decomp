@@ -128,7 +128,7 @@ struct daMenbo_c : dEnemyBase_c {
     int func_ov090_02131b94();
     int func_ov090_02131c48();
     int func_ov090_02131db0();
-    int func_ov090_02131e00(int (daMenbo_c::* *entry)());
+    int func_ov090_02131e00(int (daMenbo_c::**entry)());
     void func_ov090_02131e50();
 };
 

@@ -1,15 +1,16 @@
+//cpp
 #include "private/watchdog_alarm.h"
+#include "FatalSpin.h"
 
 /* The watchdog alarm's handler. While the time since base is under limit it
  * re-arms itself for the rest, provided the rest is at least a millisecond
  * (ticks * 64 / (HW_SYSTEM_CLOCK / 1000), as in func_020427c4). Once the
  * limit is used up it enters the fatal-error spin (func_02013f28), unless
  * input bit 0x2000 is held. */
-extern long long OS_GetTick(void);
-extern unsigned short func_0203da80(unsigned short x);
-extern void _ZN9FatalSpin13func_02013f28Ev(void);
+extern "C" long long OS_GetTick(void);
+extern "C" unsigned short func_0203da80(unsigned short x);
 
-void func_0201a8b4(void *arg) {
+extern "C" void func_0201a8b4(void *arg) {
     WatchdogAlarm *w = (WatchdogAlarm *)arg;
     unsigned long long elapsed = (unsigned long long)OS_GetTick() - w->base;
 
@@ -19,6 +20,6 @@ void func_0201a8b4(void *arg) {
             func_0201aa50(&w->alarm, rest, func_0201a8b4, w);
     } else {
         if (func_0203da80(0x2000) == 0)
-            _ZN9FatalSpin13func_02013f28Ev();
+            FatalSpin::func_02013f28();
     }
 }

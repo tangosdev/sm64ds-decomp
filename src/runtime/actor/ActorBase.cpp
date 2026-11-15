@@ -183,7 +183,8 @@ struct ProcessListDescriptor {
 
 void *ProcessListDescriptor::func_02043fdc() {
     fLiNdBaPr_c *node;
-    if (callback == 0) return (void *)1;
+    if (callback == 0)
+        return (void *)1;
     node = head;
     while (node != 0) {
         fLiNdBaPr_c *next;
@@ -236,9 +237,9 @@ fBase_c::fBase_c() : manager(this)
     actorID = data_020a4b54;
     mGroupType = data_020a4b48;
 
-    ((Absorb0203b438::N *)data_020a4b6c)->func_0203b438(
-                                  (Absorb0203b438::N *)&manager.sceneNode,
-                                  (Absorb0203b438::N *)data_020a4b64);
+    ((Absorb0203b438::N *)data_020a4b6c)
+        ->func_0203b438((Absorb0203b438::N *)&manager.sceneNode,
+                        (Absorb0203b438::N *)data_020a4b64);
 
     fBaseActorInfo *info = data_020a4bb8[actorID];
     manager.SetBehaviorPriority(info->behaviorPriority);
@@ -331,8 +332,8 @@ void fBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
         return;
-    ((Absorb0203b3c0::Node *)data_020a4b6c)->func_0203b3c0(
-        (Absorb0203b3c0::Node *)&manager.sceneNode);
+    ((Absorb0203b3c0::Node *)data_020a4b6c)
+        ->func_0203b3c0((Absorb0203b3c0::Node *)&manager.sceneNode);
     func_0203b27c(data_020a4ba8, &manager.behaviorNode);
     if (heap)
         ((Heap *)heap)->_Destroy();

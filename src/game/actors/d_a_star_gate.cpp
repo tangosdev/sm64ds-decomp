@@ -36,6 +36,7 @@ enum d_a_star_gate_AssetId {
 #include "daStarGate_c.h"
 #include "SpawnInfo.h"
 #include "daPly_c.h"
+#include "daDoor_c.h"
 #include "SharedFilePtr.h"
 #include "dExtSimpleModel_c.h"
 #include "dCamera_c.h"
@@ -56,13 +57,6 @@ int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 }
-extern "C" {
-int _ZN8daDoor_c19func_ov100_02144fccEv(void);
-int _ZN8daDoor_c19func_ov100_02145014Ev(void);
-void _ZN8daDoor_c19func_ov100_02145070Ei(int value);
-int _ZN8daDoor_c19func_ov100_02144f84Ev(void);
-}
-
 extern u8 gLocalPlayerId;
 extern dCamera_c *gCamera;
 extern daPly_c *gPlayers[];
@@ -260,7 +254,7 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
                 }
 
                 if (!(isMario && !isSpecial && !notEnoughStars)) {
-                    if (_ZN8daDoor_c19func_ov100_02144f84Ev() == 0)
+                    if (daDoor_c::func_ov100_02144f84() == 0)
                         return true;
                     messageID = isMario ? entry->notEnoughStarsMsgID : entry->notMarioMsgID;
                     if (player->ShowMessage(*this, messageID, (Vector3 *)&messagePos, 0, 2) != 0) {
@@ -285,14 +279,14 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
 /* -------------------------------------------------------------------------- */
 bool daStarGate_c::St_TalkingToPlayer_Init(daPly_c *) {
     func_02012694(0xb8, (const Vector3 *)(&mCamSpacePosX));
-    _ZN8daDoor_c19func_ov100_02145070Ei(0x87);
+    daDoor_c::func_ov100_02145070(0x87);
     return true;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 bool daStarGate_c::St_TalkingToPlayer_Main(daPly_c *player) {
-    _ZN8daDoor_c19func_ov100_02145014Ev();
+    daDoor_c::func_ov100_02145014();
     if (player->GetTalkState() == -1) {
         if (data_ov100_02148390[param1].numStars == 0x50) {
             TryOpenDoor(player);
@@ -340,7 +334,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
     VecFx32 vec;
     int gy, gz, vd;
 
-    ready = _ZN8daDoor_c19func_ov100_02144fccEv();
+    ready = daDoor_c::func_ov100_02144fcc();
     if (ApproachLinear(mHorzSpeed, mTerminalVelocity, 0x8000) != 0) {
         if (mTerminalVelocity != 0) {
             if (mCloseDoorTimer == 0) {
@@ -380,7 +374,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 bool daStarGate_c::St_StayClosed_Main(daPly_c *player) {
-    if (_ZN8daDoor_c19func_ov100_02144fccEv())
+    if (daDoor_c::func_ov100_02144fcc())
         ChangeState(&ST_WAIT, player);
     return true;
 }

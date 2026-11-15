@@ -262,13 +262,7 @@ extern void OamRender10_d_a_demo(int a, struct OamAttr *attr, int x, int y, int 
 extern struct OamAttr* data_ov002_0210b988[];
 }
 
-/* Static methods defined in Message.cpp. This TU does not include Message.h. */
-struct Message {
-    static void func_0201ef50(int);
-    static void func_0201f108();
-    static void func_0201f138();
-    static void func_0201ef38();
-};
+#include "Message.h"
 extern "C" {
 
 extern struct OamAttr *data_ov002_0210bba0[];
@@ -640,8 +634,7 @@ void StaffRoll::func_ov002_020f26e0() {
     }
 }
 
-void StaffRoll::func_ov002_020f2790(int p1, int p2, int p3, s16 p4)
-{
+void StaffRoll::func_ov002_020f2790(int p1, int p2, int p3, s16 p4) {
     char *c = (char *)this;
     ((StaffRoll *)c)->kira.unk308 = p3;
     ((StaffRoll *)c)->kira.unk30c = p4;
@@ -650,8 +643,7 @@ void StaffRoll::func_ov002_020f2790(int p1, int p2, int p3, s16 p4)
                               p2 << 12, 0, 0, &((StaffRoll *)c)->kira);
 }
 
-int StaffRoll::func_ov002_020f27e8()
-{
+int StaffRoll::func_ov002_020f27e8() {
     char *c = (char *)this;
     if (((StaffRoll *)c)->burstActive == 0)
         return ((StaffRoll *)c)->burstActive;
@@ -677,10 +669,12 @@ int StaffRoll::func_ov002_020f27e8()
         }
     }
 
-    ((StaffRoll *)c)->func_ov002_020f2790(0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
-                        ((StaffRoll *)c)->burstSysParam);
-    ((StaffRoll *)c)->func_ov002_020f2790(0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
-                        ((StaffRoll *)c)->burstSysParam);
+    ((StaffRoll *)c)
+        ->func_ov002_020f2790(0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
+                              ((StaffRoll *)c)->burstSysParam);
+    ((StaffRoll *)c)
+        ->func_ov002_020f2790(0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
+                              ((StaffRoll *)c)->burstSysParam);
 
     if (((StaffRoll *)c)->burstTimer >= 30) {
         ((StaffRoll *)c)->burstTimer = 0;
@@ -691,8 +685,7 @@ int StaffRoll::func_ov002_020f27e8()
     return ((StaffRoll *)c)->func_ov002_020f2984();
 }
 
-void StaffRoll::func_ov002_020f2958()
-{
+void StaffRoll::func_ov002_020f2958() {
     char *c = (char *)this;
     ((StaffRoll *)c)->burstActive = 1;
     ((StaffRoll *)c)->burstDefParam = 0x199;
@@ -701,15 +694,13 @@ void StaffRoll::func_ov002_020f2958()
     ((StaffRoll *)c)->burstPeriods = 0;
 }
 
-int StaffRoll::func_ov002_020f2984()
-{
+int StaffRoll::func_ov002_020f2984() {
     char *p = (char *)this;
     ((StaffRoll *)p)->burstActive = 0;
     return (int)p;
 }
 
-int StaffRoll::func_ov002_020f2990()
-{
+int StaffRoll::func_ov002_020f2990() {
     char *c = (char *)this;
     int x, y;
     int idx;
@@ -735,8 +726,7 @@ void StaffRoll::func_ov002_020f2a48() {
     endY = 393216;
 }
 
-void StaffRoll::func_ov002_020f2a68()
-{
+void StaffRoll::func_ov002_020f2a68() {
     char *p = (char *)this;
     /* 0x1d8/0x1d9: see func_ov002_020f2990. */
     ((StaffRoll *)p)->endActive = 0;
@@ -846,8 +836,7 @@ void StaffRoll::StartCredit(int n) {
     gSubScreenLayers |= 1;
 }
 
-void StaffRoll::func_ov002_020f2ea0()
-{
+void StaffRoll::func_ov002_020f2ea0() {
     char *p = (char *)this;
     ((StaffRoll *)p)->credit[0].active = 0;
 }
@@ -865,8 +854,7 @@ void StaffRoll::func_ov002_020f2eac() {
     }
 }
 
-void StaffRoll::func_ov002_020f2f18(int a, int b)
-{
+void StaffRoll::func_ov002_020f2f18(int a, int b) {
     char *c = (char *)this;
     int i = 0;
     do {
@@ -888,8 +876,7 @@ void StaffRoll::func_ov002_020f2f64() {
     }
 }
 
-void StaffRoll::func_ov002_020f2f9c(int count)
-{
+void StaffRoll::func_ov002_020f2f9c(int count) {
     void *self = this;
     char* sl = (char*)self;
     int i;
@@ -920,8 +907,7 @@ void StaffRoll::func_ov002_020f2f9c(int count)
     }
 }
 
-void StaffRoll::func_ov002_020f30d4()
-{
+void StaffRoll::func_ov002_020f30d4() {
     char *p = (char *)this;
     int i;
     for (i = 0; i < 5; i++) {
@@ -1095,8 +1081,7 @@ void StaffRoll::func_ov002_020f37a0() {
     (this->*data_ov002_02110e4c[this->window[0].kind])(0);
 }
 
-void StaffRoll::func_ov002_020f37fc()
-{
+void StaffRoll::func_ov002_020f37fc() {
     char *c = (char *)this;
     ((StaffRoll *)c)->func_ov002_020f3828();
     ((StaffRoll *)c)->window[0].active = 1;
@@ -1104,8 +1089,7 @@ void StaffRoll::func_ov002_020f37fc()
     ((StaffRoll *)c)->window[0].step = 0;
 }
 
-void StaffRoll::func_ov002_020f3828()
-{
+void StaffRoll::func_ov002_020f3828() {
     int *c = (int *)this;
     ((StaffRoll *)c)->window[0].left = 0x80000;
     ((StaffRoll *)c)->window[0].top = 0x66000;
@@ -1130,16 +1114,14 @@ void StaffRoll::func_ov002_020f3828()
     gSubScreenLayers |= 6;
 }
 
-void StaffRoll::func_ov002_020f3954()
-{
+void StaffRoll::func_ov002_020f3954() {
     char *p = (char *)this;
     ((StaffRoll *)p)->window[0].active = 1;
     ((StaffRoll *)p)->window[0].kind = 1;
     ((StaffRoll *)p)->window[0].step = 0;
 }
 
-void StaffRoll::func_ov002_020f396c()
-{
+void StaffRoll::func_ov002_020f396c() {
     char *p = (char *)this;
     ((StaffRoll *)p)->window[0].active = 0;
 }
@@ -2185,8 +2167,9 @@ void StaffRoll::func_ov002_020f5990() {
             continue;
         if (i != this->kiraStar)
             continue;
-        ((StaffRoll *)c)->func_ov002_020f2790((s16)(s->x >> 12), (s16)(s->y >> 12), s->kiraDefParam,
-                            s->kiraSysParam);
+        ((StaffRoll *)c)
+            ->func_ov002_020f2790((s16)(s->x >> 12), (s16)(s->y >> 12), s->kiraDefParam,
+                                  s->kiraSysParam);
     }
 }
 
@@ -2201,7 +2184,7 @@ void StaffRoll::func_ov002_020f5a6c() {
     }
 }
 
-int StaffRoll::func_ov002_020f5a94(){
+int StaffRoll::func_ov002_020f5a94() {
     unsigned char count = 0;
     int i;
     for (i = 0; i < 4; i++) {
@@ -2413,8 +2396,7 @@ void StaffRoll::func_ov002_020f5f0c(int idx) {
     this->StartCredit(idx);
 }
 
-void StaffRoll::func_ov002_020f5f60()
-{
+void StaffRoll::func_ov002_020f5f60() {
     char *c = (char *)this;
     void *p = ((StaffRoll *)c)->starChars;
     if (p == 0)
@@ -2423,7 +2405,7 @@ void StaffRoll::func_ov002_020f5f60()
     ((StaffRoll *)c)->starChars = 0;
 }
 
-int StaffRoll::func_ov002_020f5f8c(){
+int StaffRoll::func_ov002_020f5f8c() {
     void *c = this;
     ((StaffRoll *)c)->func_ov002_020f26e0();
     ((StaffRoll *)c)->func_ov002_020f3978();
@@ -2431,7 +2413,7 @@ int StaffRoll::func_ov002_020f5f8c(){
     return ((StaffRoll *)c)->func_ov002_020f2990();
 }
 
-int StaffRoll::func_ov002_020f5fb8(){
+int StaffRoll::func_ov002_020f5fb8() {
     void *c = this;
     ((StaffRoll *)c)->func_ov002_020f5990();
     ((StaffRoll *)c)->func_ov002_020f37a0();
@@ -2439,8 +2421,7 @@ int StaffRoll::func_ov002_020f5fb8(){
     return ((StaffRoll *)c)->func_ov002_020f27e8();
 }
 
-void StaffRoll::func_ov002_020f5fe4()
-{
+void StaffRoll::func_ov002_020f5fe4() {
     char *c = (char *)this;
     void *f;
     void *r5;
