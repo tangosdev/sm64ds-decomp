@@ -314,7 +314,7 @@ int daOts_c::BehaviorCommon()
     }
 
     mAnmModel.Advance();
-    unsigned short *p100 = (unsigned short *)&mStateTimer;
+    unsigned short *p100 = &mStateTimer;
     *p100 = *p100 + 1;
     if (four != tail().mState)
         *p100 = 0;
@@ -471,11 +471,11 @@ void daOts_c::CheckMarioCollision() {
     {
         int isD8 = (int)(this->actorID == kBigBullyActorId);
         if (!isD8 && (hitFlags & kHitMegaChar)) {
-            s16 v[3];
-            v[0] = 0x2000;
-            v[1] = 0;
-            v[2] = 0;
-            KillByInvincibleChar(*(Vector3_16 *)v, *hitPlayer, mFileTable->eggAimHeight);
+            Vector3_16 v;
+            v.x = 0x2000;
+            v.y = 0;
+            v.z = 0;
+            KillByInvincibleChar(v, *hitPlayer, mFileTable->eggAimHeight);
             this->PlayHitSound();
             return;
         }
@@ -660,7 +660,7 @@ void daOts_c::ActKnockback() {
             mStateTimer = 0;
             return;
         }
-        if (*(unsigned short *)&mStateTimer < (unsigned int)lim)
+        if (mStateTimer < (unsigned int)lim)
             return;
         tail().mState = STATE_CHASE;
         this->mPrevAngleY = this->mAngleY;
@@ -683,14 +683,14 @@ void daOts_c::ActKnockback() {
  * N64: bully_act_back_up -- the same half-turn on the state's first frame, the
  * same 5 units a frame and the same 15 frames back to the patrol state. */
 void daOts_c::ActBackUp() {
-    if (*(unsigned short *)&mStateTimer == 0) {
+    if (mStateTimer == 0) {
         if (mWithMeshClsn.IsOnGround()) {
             mPrevAngleY += 0x8000;
         }
     }
     mHorzSpeed = kWalkSpeed;
     ApproachLinear(mAngleY, mPrevAngleY, 0x200);
-    if (*(unsigned short *)&mStateTimer < 0xf)
+    if (mStateTimer < 0xf)
         return;
     mPrevAngleY = mAngleY;
     tail().mState = STATE_RETURN_HOME;
@@ -791,8 +791,7 @@ void daOts_c::CheckFloorDeath() {
  * at mHomePos (the death spot): config->particleId and particleId + 1, their
  * handles kept in mParticle0 / mParticle1. Returns 0. */
 int daOts_c::func_ov064_0211616c() {
-    /* mStateTimer is s16; the ROM compares ldrh (unsigned). Named signed > DIFFs. */
-    if (*(unsigned short *)&mStateTimer > 0x1e) {
+    if (mStateTimer > 0x1e) {
         this->MarkForDestruction();
         return 1;
     }
@@ -844,7 +843,7 @@ void daOts_c::func_ov064_02115f98(char* a1)
     int* p1;
     int tmpy;
 
-    p1 = (int*)&((dActor_c *)a1)->mPosX;
+    p1 = &((dActor_c *)a1)->mPosX;
     pos0[0] = this->mPosX;
     y0 = this->mPosY;
     pos0[1] = y0;

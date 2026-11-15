@@ -132,7 +132,7 @@ int daObj_volcanoCannon_c::Behavior() {
 int daObj_volcanoCannon_c::InitResources() {
     mTerminalVelocity = -0xc8000;
     mCylinderClsn.Init(this, 0x1e000, 0x1e000, 0x200002, 0);
-    ChangeState((State *)&data_ov022_02114690);
+    ChangeState(&data_ov022_02114690);
     return 1;
 }
 

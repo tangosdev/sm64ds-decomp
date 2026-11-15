@@ -108,12 +108,12 @@ int daObjCtMecha03_c::InitResources() {
 
 int daObjCtMecha03_c::Behavior() {
     if (data_0209f2c0 != 3) {
-        if ((u16)mSoundTimer != 0) {
-            if (DecIfAbove0_Short((u16 *)&mSoundTimer) == 0) {
+        if (mSoundTimer != 0) {
+            if (DecIfAbove0_Short(&mSoundTimer) == 0) {
                 Sound::PlayBank3(0x38, mCamSpacePos);
             }
         }
-        if (DecIfAbove0_Short((u16 *)&mPauseTimer) == 0) {
+        if (DecIfAbove0_Short(&mPauseTimer) == 0) {
             {
                 short vx = mSwingDir;
                 short vy = mSwingAngle;

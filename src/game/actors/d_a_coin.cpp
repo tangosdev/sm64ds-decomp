@@ -296,7 +296,7 @@ void daCoin_c::Step() {
  * FLOOR_DYNAMIC drops it 500 units with a fixed radius; FLOOR_FIXED sizes it
  * from the distance down to mFloorPosY. */
 void daCoin_c::UpdateModelMatrix() {
-    extern int IDENTITY_MATRIX4X3[];
+    extern Matrix4x3 IDENTITY_MATRIX4X3;
 
     int inYoshiMouth;
     int floorState;
@@ -306,7 +306,7 @@ void daCoin_c::UpdateModelMatrix() {
     mCommonModel1.mat4x3.m[10] = mPosY >> 3;
     mCommonModel1.mat4x3.m[11] = mPosZ >> 3;
     mCommonModel2.mat4x3 = mCommonModel1.mat4x3;
-    mShadowMat = *(struct Matrix4x3 *)IDENTITY_MATRIX4X3;
+    mShadowMat = IDENTITY_MATRIX4X3;
     mShadowMat.m[9] = mPosX >> 3;
     mShadowMat.m[10] = mPosY >> 3;
     mShadowMat.m[11] = mPosZ >> 3;
@@ -712,16 +712,17 @@ s32 daCoin_c::CleanupResources()
      * star-tracking slot, decrements the live-coin count on the FL_COIN puzzle
      * manager that spawned it and, unless it is disappearing on a timer, puts up
      * the collection sparkle a little above itself. */
-    extern char data_ov002_0210d9a8;
-    extern char *data_ov002_020ff06c[];
-    extern char *data_ov002_020ff060[];
+    extern SharedFilePtr data_ov002_0210d9a8;
+    extern SharedFilePtr *data_ov002_020ff06c[];
+    extern SharedFilePtr *data_ov002_020ff060[];
 
     dActor_c *manager;
     int isRed = (actorID == 0x121);
-    if (isRed != 0) ((SharedFilePtr *)&data_ov002_0210d9a8)->Release();
+    if (isRed != 0)
+        data_ov002_0210d9a8.Release();
     if (mCoinType == COIN_BLUE) {
-        ((SharedFilePtr *)data_ov002_020ff06c[mCoinType])->Release();
-        ((SharedFilePtr *)data_ov002_020ff060[mCoinType])->Release();
+        data_ov002_020ff06c[mCoinType]->Release();
+        data_ov002_020ff060[mCoinType]->Release();
     }
     UntrackStar(mTrackStarID);
     manager = dActor_c::FindWithID(mPuzzleManagerID);
@@ -826,15 +827,14 @@ s32 daCoin_c::InitResources()
      * each one changes the code (measured per site); the plain `&=`/`|=`
      * sites take the member as is. */
 
-    typedef struct { void* sfp; void* bmd; } FileEntry;
     extern Matrix4x3 IDENTITY_MATRIX4X3;
     extern s8 gCurrentSublevel;
     extern u8 gCurrentStarId;
     extern dActor_c *STAR_MARKERS[12];
     extern u8 gGameMode;
-    extern FileEntry* data_ov002_020ff06c[];
-    extern FileEntry* data_ov002_020ff060[];
-    extern void* data_ov002_0210d9a8;
+    extern SharedFilePtr *data_ov002_020ff06c[];
+    extern SharedFilePtr *data_ov002_020ff060[];
+    extern SharedFilePtr data_ov002_0210d9a8;
 
     s32 ccRadius;
     s32 ccHeight;
@@ -895,7 +895,7 @@ s32 daCoin_c::InitResources()
         isRed = (isRed == 0x121);
         if (isRed) {
             mSpawnFilter = ((param1 >> 4) & 7);
-            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov002_0210d9a8);
+            dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
             mCoinType = COIN_RED;
             if (SublevelToLevel(gCurrentSublevel) == 0x13 || mSpawnFilter == gCurrentStarId) {
                 if (GetBitInDeathTable() == 0) {
@@ -923,19 +923,19 @@ s32 daCoin_c::InitResources()
 
     type = mCoinType;
     if (type < COIN_BLUE) {
-        if (mCommonModel1.SetFile((BMD_File *)data_ov002_020ff06c[type]->bmd, 1, 1) == 0) {
+        if (mCommonModel1.SetFile((BMD_File *)data_ov002_020ff06c[type]->filePtr, 1, 1) == 0) {
             return 0;
         }
-        if (mCommonModel2.SetFile((BMD_File *)data_ov002_020ff060[mCoinType]->bmd, 1, 1) == 0) {
+        if (mCommonModel2.SetFile((BMD_File *)data_ov002_020ff060[mCoinType]->filePtr, 1, 1) == 0) {
             return 0;
         }
     } else {
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_020ff06c[type]);
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_020ff060[mCoinType]);
-        if (mCommonModel1.SetFile((BMD_File *)data_ov002_020ff06c[mCoinType]->bmd, 1, 1) == 0) {
+        dExtSimpleModel_c::LoadFile(*data_ov002_020ff06c[type]);
+        dExtSimpleModel_c::LoadFile(*data_ov002_020ff060[mCoinType]);
+        if (mCommonModel1.SetFile((BMD_File *)data_ov002_020ff06c[mCoinType]->filePtr, 1, 1) == 0) {
             return 0;
         }
-        if (mCommonModel2.SetFile((BMD_File *)data_ov002_020ff060[mCoinType]->bmd, 1, 1) == 0) {
+        if (mCommonModel2.SetFile((BMD_File *)data_ov002_020ff060[mCoinType]->filePtr, 1, 1) == 0) {
             return 0;
         }
     }

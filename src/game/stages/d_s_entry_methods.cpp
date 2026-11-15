@@ -719,7 +719,7 @@ void dScEntry_c::UpdateSoundSettings() {
     }
 }
 
-#define SH(base, i) (*(short *)((char *)(base) + (i) * 4))
+#define SH(base, i) (base[(i) * 2])
 
 void dScEntry_c::EnterSoundSettings() {
     ENTRY_GRAPH_CALLBACK->QueueBg2Screen(LoadFile(data_ov075_0211ca08[GetLanguageIndex()]));

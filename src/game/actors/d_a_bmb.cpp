@@ -259,12 +259,12 @@ int daBmb_c::Behavior()
     if (mState != 5) {
         if (mVertAccel != 0) {
             if ((mdCc_c.hitFlags & 0x10) != 0) {
-                short v[3];
-                other = dActor_c::FindWithID(mdCc_c.otherOwner);
-                v[0] = -0x2000;
-                v[1] = 0;
-                v[2] = 0;
-                KillByInvincibleChar(*(Vector3_16 *)v, *(daPly_c *)other, 0x32000);
+                Vector3_16 spin;
+                daPly_c *player = (daPly_c *)dActor_c::FindWithID(mdCc_c.otherOwner);
+                spin.x = -0x2000;
+                spin.y = 0;
+                spin.z = 0;
+                KillByInvincibleChar(spin, *player, 0x32000);
                 UpdatePos(&mdCc_c);
                 UpdateWMClsn(mWithMeshClsn, 0);
                 mdCc_c.Clear();
@@ -459,15 +459,16 @@ void daBmb_c::func_ov102_0214beb4() {
 void daBmb_c::State1() {
     if (mChasePlayer == 0) {
         mAnmModel.speed = 0x800;
-        ApproachLinear(mPrevAngleY, *(short *)&mTargetAngY, 0x400);
+        ApproachLinear(mPrevAngleY, (short)mTargetAngY, 0x400);
     } else {
         mAnmModel.speed = 0x1000;
-        ApproachLinear(mPrevAngleY, *(short *)&mTargetAngY, 0x800);
+        ApproachLinear(mPrevAngleY, (short)mTargetAngY, 0x800);
     }
     mAngleY = mPrevAngleY;
     mAnmModel.dExtFrameCtrl_c::Advance();
     if (mState == 2) return;
-    if (mPrevAngleY != *(short *)&mTargetAngY) return;
+    if (mPrevAngleY != (short)mTargetAngY)
+        return;
     func_ov102_0214c0b8();
 }
 

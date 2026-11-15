@@ -231,12 +231,6 @@ struct Frame {
     VecFx32 v;
     int pad[10];
 };
-/* mBooFlags seen as 8:1:7, for the one `mirrored` toggle in 02117364. Spelling
-   that toggle as mBooFlags.mirrored ^= 1 keeps the bytes but lowers every
-   @NNN by one for the dropped local and one more for this dropped
-   anonymous typedef (measured). */
-typedef struct { u16 lo8 : 8; u16 mirrored : 1; u16 hi7 : 7; } FlagW;
-
 daTrs_c::~daTrs_c()
 {
 }
@@ -385,9 +379,8 @@ void daTrs_c::func_ov063_0211640c() {
     if (this->mOpacity >= 0x10) {
         Matrix4x3_FromTranslation(&data_020a0e68,
             pos.x >> 3, pos.y >> 3, pos.z >> 3);
-        *(struct Matrix4x3 *)&this->mShadowMtx[0] = data_020a0e68;
-        DropShadowRadHeight(this->mShadowModel1, *(Matrix4x3 *)&this->mShadowMtx[0], 0x12c000,
-                            0xc8000, 0xf);
+        this->mShadowMtx = data_020a0e68;
+        DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x12c000, 0xc8000, 0xf);
 
         if (this->mBooFlags.mirrored) {
             s16 neg = -1;
@@ -451,15 +444,13 @@ void daTrs_c::func_ov063_021166ac() {
     }
 
     Matrix4x3_FromTranslation(&data_020a0e68, this->mPosX >> 3, this->mPosY >> 3, this->mPosZ >> 3);
-    *(Matrix4x3 *)&this->mShadowMtx[0] = data_020a0e68;
+    this->mShadowMtx = data_020a0e68;
     {
         int big = (this->actorID == TRS_ID_BOSS_TERESA);
         if (big)
-            DropShadowRadHeight(this->mShadowModel1, *(Matrix4x3 *)&this->mShadowMtx[0], 0x12c000,
-                                0xc8000, 0xf);
+            DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x12c000, 0xc8000, 0xf);
         else
-            DropShadowRadHeight(this->mShadowModel1, *(Matrix4x3 *)&this->mShadowMtx[0], 0x64000,
-                                0xc8000, 0xf);
+            DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x64000, 0xc8000, 0xf);
     }
     this->mCapPosY = this->mClsnOff.y + FX_MUL(this->mScaleX, 0x60000);
     pos.x = this->mCapPosX;
@@ -562,50 +553,48 @@ void daTrs_c::func_ov063_02116bf0() {
    while fewer than two are alive, five at most. */
 void daTrs_c::func_ov063_02116bf4() {
 
-        unsigned short *ip = (unsigned short *)&this->mBooFlags;
-        int *r3 = (int *)&this->mdCcAcPos_c.flags;
-        unsigned char st;
-    
-        *ip = (unsigned short)(*ip & ~TRS_FLAG_VISIBLE);
-        *r3 = *r3 | 1;
-        func_ov063_02119c18(TRS_ID_MERRYGOROUND);
-    
-        st = this->mState;
-        switch (st) {
-        case 0:
-            if (this->mDistToPlayer >= 0x3e8000)
-                return;
-            if (this->mChildDeaths < 5) {
-                unsigned char cb = this->mSpawnCount;
-                if (cb != 5 && (int)cb - this->mChildDeaths < 2) {
-                    char *p = (char *)dActor_c::Spawn(TRS_ID_TERESA, 0xfff1, this->mPos,
-                                                      &this->mPrevAngle, this->mAreaIdx, -1);
-                    if (p != 0) {
-                        ((daTrs_c *)p)->mSpawnerID = this->uniqueID;
-                        ((daTrs_c *)p)->mCachedActorID = this->mCachedActorID;
-                    }
-                    {
-                        unsigned char *q = &this->mSpawnCount;
-                        *q = *q + 1;
-                    }
+    unsigned short *ip = (unsigned short *)&this->mBooFlags;
+    unsigned char st;
+
+    *ip = (unsigned short)(*ip & ~TRS_FLAG_VISIBLE);
+    this->mdCcAcPos_c.flags = this->mdCcAcPos_c.flags | 1;
+    func_ov063_02119c18(TRS_ID_MERRYGOROUND);
+
+    st = this->mState;
+    switch (st) {
+    case 0:
+        if (this->mDistToPlayer >= 0x3e8000)
+            return;
+        if (this->mChildDeaths < 5) {
+            unsigned char cb = this->mSpawnCount;
+            if (cb != 5 && (int)cb - this->mChildDeaths < 2) {
+                char *p = (char *)dActor_c::Spawn(TRS_ID_TERESA, 0xfff1, this->mPos,
+                                                  &this->mPrevAngle, this->mAreaIdx, -1);
+                if (p != 0) {
+                    ((daTrs_c *)p)->mSpawnerID = this->uniqueID;
+                    ((daTrs_c *)p)->mCachedActorID = this->mCachedActorID;
                 }
                 {
-                    unsigned char *q = &this->mState;
+                    unsigned char *q = &this->mSpawnCount;
                     *q = *q + 1;
                 }
             }
-            if (this->mChildDeaths >= 5)
-                this->mState = 2;
-            break;
-        case 1:
-            if (this->mStateTimer > 0x3c)
-                this->mState = 0;
-            break;
-        case 2:
-            break;
+            {
+                unsigned char *q = &this->mState;
+                *q = *q + 1;
+            }
         }
+        if (this->mChildDeaths >= 5)
+            this->mState = 2;
+        break;
+    case 1:
+        if (this->mStateTimer > 0x3c)
+            this->mState = 0;
+        break;
+    case 2:
+        break;
+    }
 }
-
 
 /* Behavior handler for variant 5: the Boo carrying the cage (T_BASKET). */
 void daTrs_c::func_ov063_02116d38() {
@@ -668,9 +657,8 @@ void daTrs_c::func_ov063_02116e14() {
     }
     this->mState = 3;
     {
-        char *r = (char *)dActor_c::Spawn(this->mCarriedID, 0,
-                                          *(const Vector3 *)((struct Vector3 *)&this->mCarriedPosX),
-                                          (0), this->mAreaIdx, -1);
+        char *r = (char *)dActor_c::Spawn(
+            this->mCarriedID, 0, *(const Vector3 *)&this->mCarriedPosX, (0), this->mAreaIdx, -1);
         if (r != 0) {
             ((dActor_c *)r)->mSpeedX = 0;
             ((dActor_c *)r)->mVertSpeed = 0x32000;
@@ -697,11 +685,6 @@ int daTrs_c::func_ov063_02116f48() {
 }
 
 
-/* L16(this, 0x5d4) is &mBooFlags and L8(this, 0x5cc) is &mState, spelled as
-   integer arithmetic. Either member spelling keeps the bytes but lowers
-   every @NNN in the TU by two (measured, each one alone). */
-#define L16(c, off) ((u16*)((int)(c) + (off)))
-#define L8(c, off) ((u8*)((int)(c) + (off)))
 /* Behavior handler for variant 0xb: the scripted-path Boo. Hidden until
    canAppear, then waits for the player within 0x258000, flies a fixed path
    (hopping in state 4), then vanishes (opacity 0, hidden). */
@@ -709,8 +692,6 @@ void daTrs_c::func_ov063_02116fac() {
 
     struct Frame fr;
     s16 r4 = 0xc00;
-    u16* flags;
-    u8* state;
 
     fr.v.x = this->mHomePos.x;
     fr.v.y = this->mHomePos.y;
@@ -719,19 +700,16 @@ void daTrs_c::func_ov063_02116fac() {
 
     switch (this->mState) {
     case 0:
-        flags = L16(this, 0x5d4);
-        *flags &= ~TRS_FLAG_VISIBLE;
+        *(u16 *)&this->mBooFlags &= ~TRS_FLAG_VISIBLE;
         if (this->mBooFlags.canAppear) {
-            state = L8(this, 0x5cc);
-            (*state)++;
+            this->mState++;
             this->mOpacity = 0xb4;
-            *flags |= TRS_FLAG_VISIBLE;
+            *(u16 *)&this->mBooFlags |= TRS_FLAG_VISIBLE;
         }
         break;
     case 1:
         if (this->mDistToPlayer < 0x258000) {
-            state = L8(this, 0x5cc);
-            (*state)++;
+            this->mState++;
             func_0201267c(0xf8, &this->mCamSpacePos);
         }
         this->mHorzSpeed = 0;
@@ -742,8 +720,7 @@ void daTrs_c::func_ov063_02116fac() {
         fr.v.y = 0;
         fr.v.z = 0xfea84000;
         if (this->mPosZ < (int)0xfee08000) {
-            state = L8(this, 0x5cc);
-            (*state)++;
+            this->mState++;
         }
         break;
     case 3:
@@ -754,8 +731,7 @@ void daTrs_c::func_ov063_02116fac() {
         this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, (Vector3 *)&fr.v);
         r4 = 0x1000;
         if (this->mAngleY == this->mTargetAngleY && this->mHorzSpeed == 0) {
-            state = L8(this, 0x5cc);
-            (*state)++;
+            this->mState++;
         }
         break;
     case 4:
@@ -766,8 +742,7 @@ void daTrs_c::func_ov063_02116fac() {
         }
         if (this->mPosY < this->mHomePos.y) {
             this->mPosY = this->mHomePos.y;
-            state = L8(this, 0x5cc);
-            (*state)++;
+            this->mState++;
             this->mVertAccel = 0;
             this->mTerminalVelocity = 0;
         }
@@ -779,15 +754,13 @@ void daTrs_c::func_ov063_02116fac() {
         fr.v.z = 0xfea84000;
         r4 = 0x1000;
         if (this->mPosZ < (int)0xfec78000) {
-            state = L8(this, 0x5cc);
-            (*state)++;
+            this->mState++;
         }
         break;
     case 6:
         this->mHorzSpeed = 0;
         this->mOpacity = 0;
-        flags = L16(this, 0x5d4);
-        *flags &= ~TRS_FLAG_VISIBLE;
+        *(u16 *)&this->mBooFlags &= ~TRS_FLAG_VISIBLE;
         break;
     }
 
@@ -798,9 +771,6 @@ void daTrs_c::func_ov063_02116fac() {
     ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, r4);
     Oscillate(1);
 }
-
-#undef L16
-#undef L8
 
 /* Behavior handler for variant 0xf: the Big Boo that leaves the OBJ_KEY. */
 void daTrs_c::func_ov063_021172a8() {
@@ -838,8 +808,7 @@ void daTrs_c::func_ov063_02117364() {
             if (this->mRelocateTimer != 0)
                 return;
             {
-                FlagW* fw = (FlagW*)&this->mBooFlags;
-                fw->mirrored ^= 1;
+                this->mBooFlags.mirrored ^= 1;
             }
             func_ov063_02117650();
             this->mTargetOpacity = 0xff;
@@ -893,7 +862,7 @@ void daTrs_c::func_ov063_02117650() {
     }
 
     {
-        int *pp = (int *)&((daPly_c *)p)->mPosX;
+        int *pp = &((daPly_c *)p)->mPosX;
         ppos.x = pp[0];
         ppos.y = pp[1];
         ppos.z = pp[2];
@@ -1023,10 +992,7 @@ void daTrs_c::func_ov063_021177b0() {
     if (UpdateDuringNonlethalHit(0x28) == 0)
         return;
     this->mState = 6;
-    {
-        int* p19c = (int*)&this->mdCcAcPos_c.flags;
-        *p19c |= 1;
-    }
+    this->mdCcAcPos_c.flags |= 1;
     this->mTargetOpacity = 0;
     Stop();
     this->mRelocateTimer = 0x78;
@@ -1128,16 +1094,16 @@ void daTrs_c::func_ov063_02117cdc() {
         return;
     }
     case 2: {
-        VecFx32 *src;
+        int *src;
         int *d54c;
         int *d554;
         if (this->mTalkPlayer == 0) {
             return;
         }
-        src = (VecFx32 *)&this->mTalkPlayer->mPosX;
-        w[0] = src->x;
-        w[1] = src->y;
-        w[2] = src->z;
+        src = &this->mTalkPlayer->mPosX;
+        w[0] = src[0];
+        w[1] = src[1];
+        w[2] = src[2];
         if (VEC_Mag((const Vector3 *)w) >= 0x12c000) {
             return;
         }
@@ -1387,8 +1353,8 @@ void daTrs_c::func_ov063_02118458() {
             v.x = this->mPosX;
             v.y = this->mPosY;
             v.z = this->mPosZ;
-            v.x = FX_SinIdx(*(u16 *)&this->mAngleY >> 4) * m + v.x;
-            v.z = FX_CosIdx(*(u16 *)&this->mAngleY >> 4) * m + v.z;
+            v.x = FX_SinIdx((u16)this->mAngleY >> 4) * m + v.x;
+            v.z = FX_CosIdx((u16)this->mAngleY >> 4) * m + v.z;
             dActor_c *fb;
             this->mAngleX = 0x1000;
             func_02012694(0x156, &this->mCamSpacePos);
@@ -1448,9 +1414,8 @@ void daTrs_c::func_ov063_0211873c() {
         return;
     }
     if (this->mNextRelocateTimer == 0) {
-        int* p = (int*)&this->mdCcAcPos_c.flags;
         this->mState = 6;
-        *p |= 1;
+        this->mdCcAcPos_c.flags |= 1;
         this->mTargetOpacity = 0;
         this->mHorzSpeed = 0;
         Stop();
@@ -2065,8 +2030,7 @@ void daTrs_c::UpdateDying() {
         this->mState = 5;
         this->mSubState = 0;
         {
-            int* q = (int*)&this->mdCcAcPos_c.flags;
-            *q |= 1;
+            this->mdCcAcPos_c.flags |= 1;
         }
         {
             u16* p = (u16*)&this->mBooFlags;
@@ -2389,7 +2353,7 @@ int daTrs_c::GetAttackStatus() {
                     return 1;
                 }
 
-                if (this->JumpedOnByPlayer(*(dCc_c *)(&this->mdCcAcPos_c), *player) != 0) {
+                if (this->JumpedOnByPlayer(this->mdCcAcPos_c, *player) != 0) {
                     player->Bounce(0x28000);
                     func_0201267c(0x149, &this->mCamSpacePos);
                     return -1;
@@ -2417,22 +2381,22 @@ int daTrs_c::GetAttackStatus() {
                     if ((this->mdCcAcPos_c.hitFlags & 0x10) != 0) {
                         u8 kind = this->mVariant;
                         if (kind < 2 || kind >= 6 || kind <= 9) {
-                            void *found2;
-                            s16 v[3];
+                            daPly_c *found2;
+                            Vector3_16 spin;
 
                             this->mdCcAcPos_c.flags |= 1;
-                            found2 = (void *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
+                            found2 = (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
                             if (found2) {
                                 this->mTalkPlayer =
                                     (daPly_c *)dActor_c::FindWithID(this->mdCcAcPos_c.otherOwner);
 
-                                v[0] = -0x2000;
-                                v[1] = 0;
-                                v[2] = 0;
-                                KillByInvincibleChar(*(Vector3_16 *)v, *(daPly_c *)found2, 0);
+                                spin.x = -0x2000;
+                                spin.y = 0;
+                                spin.z = 0;
+                                KillByInvincibleChar(spin, *found2, 0);
 
                                 {
-                                    s16 *ap = (s16 *)&this->mAngleY;
+                                    s16 *ap = &this->mAngleY;
                                     *ap = (s16)(*ap + 0x8000);
                                 }
                                 return 1;
@@ -2765,7 +2729,7 @@ int daTrs_c::CleanupResources()
     if (mSpawnerID != 0) {
         mFoundActor = dActor_c::FindWithID(mSpawnerID);
         if (mFoundActor != 0) {
-            cnt = (int *)&((daTrs_c *)mFoundActor)->mChildDeaths;
+            cnt = &((daTrs_c *)mFoundActor)->mChildDeaths;
             (*cnt)++;
         }
         mFoundActor = 0;
@@ -2903,8 +2867,7 @@ int daTrs_c::Behavior()
             } else {
                 mState = 5;
                 mSubState = 0;
-                p19c = (s32 *)&this->mdCcAcPos_c.flags;
-                *p19c = (*p19c) | 1;
+                this->mdCcAcPos_c.flags = this->mdCcAcPos_c.flags | 1;
                 fp = (u16 *)&this->mBooFlags;
                 *fp = (*fp) & (~TRS_FLAG_VISIBLE);
             }
@@ -3133,7 +3096,7 @@ int daTBasket_c::Behavior()
     int secretDone = 1;
 
     if (mMuteSecretSound == 0)
-        secretDone = Sound::PlaySecretSound(this, (u16 *)&mSoundTimer);
+        secretDone = Sound::PlaySecretSound(this, &mSoundTimer);
 
     if (mWithMeshClsn.JustHitGround()) {
         int vertSpeed = mVertSpeed;

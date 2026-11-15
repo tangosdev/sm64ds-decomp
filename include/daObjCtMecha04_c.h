@@ -26,7 +26,7 @@ struct daObjCtMecha04_c : dBgActor_c {
     s32 mTargetBeltSpeed;                   /* 0x390 */
     s32 mGroundY;                           /* 0x394 */
     s32 mSoundHandle;                       /* 0x398 */
-    s16 mDirectionTimer;                    /* 0x39c */
+    u16 mDirectionTimer;                    /* 0x39c */
     u8  mVariant;                           /* 0x39e */
 
     int Behavior();

@@ -6,6 +6,17 @@ extern void func_ov007_020c90c0(void *self);
 extern void VEC_Normalize(const Vector3 *v, Vector3 *out);
 extern void VEC_MultAdd(int s, int *a, int *b, int *out);
 
+/* from at t <= 0, to at t >= 0x1000, between them the Q12 blend */
+static inline int TweenLerp(int t, int from, int to) {
+    if (t < 0x1000) {
+        if (t <= 0)
+            to = from;
+        else
+            to = (int)(((s64)(0x1000 - t) * from + (s64)t * to) >> 12);
+    }
+    return to;
+}
+
 /* One frame of a vector tween: mode 0 blends *out from `from` to `to` by t
  * (then steps t, func_ov007_020c90c0), mode 1 moves *out toward `to` by
  * at most step. Returns 1 once it has arrived (state 3). */
@@ -16,43 +27,12 @@ int func_ov007_020c8de0(Ov007VecTween *o) {
     }
     if (o->state == 1) {
         switch (o->mode) {
-        case 0: {
-            {
-                int t0 = o->t;
-                int a0 = o->to.x;
-                int b0 = o->from.x;
-                o->out->x =
-                    (t0 >= 0x1000)
-                        ? (a0)
-                        : ((t0 <= 0)
-                               ? (b0)
-                               : (((((s64)(0x1000 - t0)) * b0) + (((s64)t0) * o->to.x)) >> 0xc));
-            }
-            {
-                int t1 = o->t;
-                int a1 = o->to.y;
-                int b1 = o->from.y;
-                o->out->y =
-                    (t1 >= 0x1000)
-                        ? (a1)
-                        : ((t1 <= 0)
-                               ? (b1)
-                               : (((((s64)(0x1000 - t1)) * b1) + (((s64)t1) * o->to.y)) >> 0xc));
-            }
-            {
-                int t2 = o->t;
-                int a2 = o->to.z;
-                int b2 = o->from.z;
-                o->out->z =
-                    (t2 >= 0x1000)
-                        ? (a2)
-                        : ((t2 <= 0)
-                               ? (b2)
-                               : (((((s64)(0x1000 - t2)) * b2) + (((s64)t2) * o->to.z)) >> 0xc));
-            }
+        case 0:
+            o->out->x = TweenLerp(o->t, o->from.x, o->to.x);
+            o->out->y = TweenLerp(o->t, o->from.y, o->to.y);
+            o->out->z = TweenLerp(o->t, o->from.z, o->to.z);
             func_ov007_020c90c0(o);
             break;
-        }
 
         case 1: {
             Vector3 *dst = o->out;

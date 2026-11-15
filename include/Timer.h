@@ -18,6 +18,7 @@ struct Timer {
     u8  mIsRunning;            /* 0x008 */
 #ifdef __cplusplus
     /* methods */
+    Timer();
     s64 GetTime();
     void ResetTimer();
     void StartTimer();
