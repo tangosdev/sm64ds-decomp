@@ -191,9 +191,7 @@ struct Flags3eb {
     u8 real : 1;
 };
 
-/* dEnemyBase_c declares mStateTimer as an s16, but the helpers below read and
- * write it as an unsigned halfword (ldrh/strh); a signed read is ldrsh. */
-#define CAP_TIMER(cap) (*(u16 *)&(cap)->mStateTimer)
+#define CAP_TIMER(cap) ((cap)->mStateTimer)
 
 /* mCarryMatrix: the actor carrying the cap sets it (daMky_c stores its
  * mCapMtx there for the cap it spawns); this file only tests it and clears
@@ -348,9 +346,8 @@ int daObjMarioCap_c::InitResources()
         break;
     }
 
-    if (mAnmModel.SetFile(
-            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_020ff0ac[mModelIndex]), 1,
-            -1) == 0)
+    SharedFilePtr *modelFile = (SharedFilePtr *)data_ov002_020ff0ac[mModelIndex];
+    if (mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(*modelFile), 1, -1) == 0)
         return 0;
 
     mShadowModel.InitCylinder();
@@ -381,7 +378,7 @@ int daObjMarioCap_c::InitResources()
     default:
         break;
     case 0:
-        *(s32 *)((char *)&mdCcAc_c.vulnFlags) |= 0x8000;
+        mdCcAc_c.vulnFlags |= 0x8000;
         mIconKind = 4;
         EnterState(&data_ov002_0210df64);
         break;
@@ -390,7 +387,7 @@ int daObjMarioCap_c::InitResources()
         EnterState(&data_ov002_0210df84);
         break;
     case 2:
-        *(s32 *)((char *)&mdCcAc_c.vulnFlags) |= 0x8000;
+        mdCcAc_c.vulnFlags |= 0x8000;
         mIconKind = 4;
         EnterState(&data_ov002_0210df04);
         break;
@@ -542,7 +539,7 @@ int daObjMarioCap_c::Behavior()
     /* Run the current state's per-frame function (the second member pointer
        of the record in mStateEntry), if it has one. */
     {
-        CapStateRec *q = *(CapStateRec **)&mStateEntry;
+        CapStateRec *q = (CapStateRec *)mStateEntry;
         if (q->fn != 0) {
             (((CapStateSelf *)this)->*(q->fn))();
         }
@@ -708,12 +705,12 @@ void daObjMarioCap_c::UpdateMatrix()
     mAnmModel.mat4x3 = data_020a0e68;
 
     {
-        char *s = *(char **)&mStateEntry;
-        if (s == (char *)&data_ov002_0210df54)
+        McapStateRec *s = (McapStateRec *)mStateEntry;
+        if (s == &data_ov002_0210df54)
             return;
-        if (s == (char *)&data_ov002_0210df74)
+        if (s == &data_ov002_0210df74)
             return;
-        if (s == (char *)&data_ov002_0210df44)
+        if (s == &data_ov002_0210df44)
             return;
     }
 
@@ -759,8 +756,8 @@ void daObjMarioCap_c::UpdateMatrix()
  * if that member pointer is null. */
 int daObjMarioCap_c::EnterState(void *rec)
 {
-    *(CapEnterPmf **)&mStateEntry = (CapEnterPmf *)rec;
-    CapEnterPmf *q = *(CapEnterPmf **)&mStateEntry;
+    mStateEntry = (int)rec;
+    CapEnterPmf *q = (CapEnterPmf *)mStateEntry;
     if (*q == 0) return 0;
     return (((CapEnterSelf *)this)->**q)();
 }

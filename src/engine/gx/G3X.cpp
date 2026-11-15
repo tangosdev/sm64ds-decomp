@@ -98,7 +98,7 @@ void G3X_Reset(void) {
 // Flushes the geometry FIFO, then waits until the engine is idle.
 void G3X_ClearFifo(void) {
     GXi_NopClearFifo128_(0x4000400);
-    while (*(volatile unsigned *)0x4000600 & 0x8000000)
+    while (REG_GXSTAT & 0x8000000)
         ;
 }
 

@@ -902,9 +902,9 @@ void SlotLamp_Tick(void *o_) {
 /* mPayoutLamp (0x469c, a SlotLamp) blinks bit 1 of gSubScreenLayers the same
  * way: a timer and an on flag. This clears it, 0210c180 starts it and
  * 0210c1a8 ticks it. */
-void SlotLamp_Clear(char *blink) {
-    ((SlotLamp *)blink)->mTimer = 0;
-    ((SlotLamp *)blink)->mOn = 0;
+void SlotLamp_Clear(SlotLamp *blink) {
+    blink->mTimer = 0;
+    blink->mOn = 0;
 }
 
 void SlotBlink_Start(void *raw, s16 x, s16 y) {
@@ -935,9 +935,9 @@ void SlotBlink_Tick(void *o_) {
 /* mMatchBlink and mWildBlink (0x4684, 0x4690) are SlotBlinks: s16 x and y,
  * a timer and a visible flag. This clears one, 0210c218 starts one, 0210c278
  * ticks it and 0210c234 draws it. */
-void SlotBlink_Clear(char *sprite) {
-    ((SlotBlink *)sprite)->mTimer = 0;
-    ((SlotBlink *)sprite)->mVisible = 0;
+void SlotBlink_Clear(SlotBlink *sprite) {
+    sprite->mTimer = 0;
+    sprite->mVisible = 0;
 }
 
 /* dThIcon_c.h keeps its words at 0x1c and 0x20 as unk_01c/unk_020 because
@@ -1499,9 +1499,9 @@ s32 dScMgSlot1_c::InitResources() {
 /* The constructor is inline, so the factory below holds it: the base
    constructor, mBetIcon, and the three marker clears. */
 inline dScMgSlot1_c::dScMgSlot1_c() {
-    SlotBlink_Clear((char *)&mMatchBlink);
-    SlotBlink_Clear((char *)&mWildBlink);
-    SlotLamp_Clear((char *)&mPayoutLamp);
+    SlotBlink_Clear(&mMatchBlink);
+    SlotBlink_Clear(&mWildBlink);
+    SlotLamp_Clear(&mPayoutLamp);
 }
 
 /* Reconstructed source-style name. Historical alias: func_ov006_0210d6b8. */

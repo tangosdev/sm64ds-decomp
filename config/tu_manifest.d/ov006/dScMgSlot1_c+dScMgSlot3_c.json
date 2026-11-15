@@ -192,7 +192,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "_Z14SlotLamp_ClearPc",
+      "symbol": "_Z14SlotLamp_ClearP8SlotLamp",
       "address": "0x0210c208",
       "size": "0x00000010",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
@@ -220,7 +220,7 @@
       "ordinal": 25
     },
     {
-      "symbol": "_Z15SlotBlink_ClearPc",
+      "symbol": "_Z15SlotBlink_ClearP9SlotBlink",
       "address": "0x0210c2b0",
       "size": "0x00000010",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
