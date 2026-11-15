@@ -215,7 +215,7 @@ int dScMgMCarlo_c::CanEndState(int mode) {
                 dMgMCarloCardObj_c *card;
                 int cardIndex;
                 int hiddenCards;
-                mRoundTimer = 0x10;
+                mRoundTimer = 16;
                 hiddenCards = mRoundProgress;
                 card = sMCarloCardsTail;
                 for (cardIndex = 0; cardIndex < hiddenCards; cardIndex++) {
@@ -238,7 +238,7 @@ int dScMgMCarlo_c::CanEndState(int mode) {
         if ((active != 0 ? active->mCredits : 0) != 0)
             return 1;
         dScMgMCarlo_c::FlipDealtCards();
-        mRoundTimer = 0x1e;
+        mRoundTimer = 30;
         mRoundState += 1;
         break;
     }
@@ -567,7 +567,7 @@ void dMgMCarloCardObj_c::Update(int slot) {
         }
         if (IsPairWith(sMCarloFirstPick) != 0) {
             sMCarloSecondPick = this;
-            sMCarloBoardDelay = 0x20;
+            sMCarloBoardDelay = 32;
             mState = CARD_SELECTED;
             Sound::PlayBank2_2D(0x154);
             if (sMgCoinsBetPlaced == 0)
@@ -700,7 +700,7 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards) {
 
         cardIndex = 0;
         card = cards;
-        for (; cardIndex < 0x50; cardIndex++) {
+        for (; cardIndex < 80; cardIndex++) {
             card->Init(cardIndex);
             if (cardIndex < sMCarloCardTotal) {
                 card->mFace = (unsigned char)dScMgMCarlo_c::DrawCardValue();
@@ -743,9 +743,9 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards) {
 int dScMgMCarlo_c::HasRemovablePair(void) {
     dMgMCarloCardObj_c *first, *second;
     first = sMCarloCards;
-    while (first != 0 && first->mSlot < 0x14) {
+    while (first != 0 && first->mSlot < 20) {
         second = first->mNext;
-        while (second != 0 && second->mSlot < 0x14) {
+        while (second != 0 && second->mSlot < 20) {
             if (first->IsPairWith(second) != 0)
                 return 1;
             second = second->mNext;

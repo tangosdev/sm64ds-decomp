@@ -166,13 +166,13 @@ int daObjCtMecha10_c::Behavior() {
             if (DecIfAbove0_Short(&mDirTimer) == 0) {
                 if ((unsigned int)rnd % 3 != 0) {
                     mAngleYStep = data_ov035_02111ef0[mRotationState];
-                    mDirTimer = (rnd & 3) * 0x3c + 0x5a;
+                    mDirTimer = (rnd & 3) * 60 + 90;
                 } else {
                     mAngleYStep = -data_ov035_02111ef0[mRotationState];
-                    mDirTimer = (((unsigned int)rnd % 3) + 1) * 0x1e;
+                    mDirTimer = (((unsigned int)rnd % 3) + 1) * 30;
                 }
             }
-            mStepTimer = ((unsigned int)rnd % 3) * 0x14 + 0xa;
+            mStepTimer = ((unsigned int)rnd % 3) * 20 + 10;
         }
     }
 

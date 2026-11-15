@@ -397,13 +397,13 @@ dExtAnmModel_c::~dExtAnmModel_c() {}
 
 void dExtAnmModel_c::UpdateVerts() {
     s32 frame = currFrame;
-    data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
+    data.UpdateBones(file, (u32)(frame << 4) >> 16);
     data.UpdateVertsUsingBones();
 }
 
 void dExtAnmModel_c::Virtual10(Matrix4x3 &mat) {
     s32 frame = currFrame;
-    data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
+    data.UpdateBones(file, (u32)(frame << 4) >> 16);
     dExtSimpleModel_c::Virtual10(mat);
 }
 
@@ -421,7 +421,7 @@ void dExtAnmModel_c::Virtual18(u32 mat, const Vector3 *scale) {
    file-local; daMoray_c calls it on a dExtBlendAnmModel_c*. */
 void func_020167a4(dExtAnmModel_c *self) {
     s32 frame = self->currFrame;
-    self->data.UpdateBones(self->file, (u32)(frame << 4) >> 0x10);
+    self->data.UpdateBones(self->file, (u32)(frame << 4) >> 16);
 }
 
 void dExtAnmModel_c::SetAnim(BCA_File *animFile, int flags, fx32 speed, u16 startFrame) {
@@ -485,7 +485,7 @@ int dExtBlendAnmModel_c::InitBlendBuffer(char *file) {
 
 void dExtBlendAnmModel_c::UpdateVerts() {
     s32 frame = currFrame;
-    data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
+    data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
         func_0204531c((char *)&data, blendWeight);
     } else {
@@ -495,7 +495,7 @@ void dExtBlendAnmModel_c::UpdateVerts() {
 
 void dExtBlendAnmModel_c::Virtual10(Matrix4x3 &mat) {
     s32 frame = currFrame;
-    data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
+    data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
         func_0204531c((char *)&data, blendWeight);
     } else {
@@ -706,13 +706,7 @@ int dExtShadowModel_c::InitCylinder() {
     return SetFile(&data_ov001_020ad560, 1, -1);
 }
 
-/* MEASURED 2026-10-26: a real method reproduces 0x02015e64/0x58 exactly. The
- * old note here said the definition had to stay in the C front end because
- * wall 6az homes class-typed by-value parameters -- but the by-value class was
- * never in the ROM. The stripped cartridge carries no _Z strings at all, so
- * the 5Fix12IiE in the old symbol was OUR spelling of a 20.12 scalar, and
- * nothing about the bytes asked for it. Scalars, a real method, same bytes.
- */
+/* Reproduces 0x02015e64/0x58; the three scales are fx32 scalars. */
 void dExtShadowModel_c::InitModel(Matrix4x3 *m, fx32 sx, fx32 sy, fx32 sz, u8 opacity) {
     mat = m;
     scale.x = sx;

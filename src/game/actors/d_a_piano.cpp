@@ -235,7 +235,7 @@ void daPiano_c::StateSearch() {
 /* State-1 entry, reached via the PMF table: full-speed animation and a
  * 30-frame windup before the bite. */
 void daPiano_c::InitStateAttack() {
-    this->mAnmModel.speed = 4096;
+    this->mAnmModel.speed = 0x1000;
     this->mAttackTimer = 30;
 }
 

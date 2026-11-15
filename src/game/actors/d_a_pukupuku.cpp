@@ -197,7 +197,7 @@ int daPukupuku_c::InitStateSwim() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
     mTargetAngleY = ((r >> 8) & 0xf) << 0xc;
     r = RandomIntInternal(&data_0209e650.value);
-    mStateTimer = (s16)(((r >> 8) & 0x3f) + 0x32);
+    mStateTimer = (s16)(((r >> 8) & 0x3f) + 50);
     mHorzSpeed = 0x5000;
     return 1;
 }
@@ -206,7 +206,7 @@ int daPukupuku_c::InitStateSwim() {
  * mTargetAngleY; pause when the timer runs out. */
 int daPukupuku_c::StateSwim() {
     if (Vec3_Dist(&mPos, &mHomePos) > 0x3e8000) {
-        mStateTimer = 0x32;
+        mStateTimer = 50;
         mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
     }
     ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x100, 0x200);
@@ -218,7 +218,7 @@ int daPukupuku_c::StateSwim() {
 /* Pause enter: stop for 50..113 frames. */
 int daPukupuku_c::InitStatePause() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
-    mStateTimer = (s16)(((r >> 8) & 0x3f) + 0x32);
+    mStateTimer = (s16)(((r >> 8) & 0x3f) + 50);
     mHorzSpeed = 0;
     return 1;
 }

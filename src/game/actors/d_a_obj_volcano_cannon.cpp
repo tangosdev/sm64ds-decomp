@@ -87,7 +87,7 @@ int daObj_volcanoCannon_c::ExecuteFly() {
  * horizontal and vertical speed in 12-bit fixed point, under a -4.0 gravity. */
 int daObj_volcanoCannon_c::EnterFly() {
     unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 8;
-    mKillTimer = 0x3c;
+    mKillTimer = 60;
     mPrevAngleY = (short)((r & 0xf) << 0xc);
     mHorzSpeed = (r & 0x1f) + 0x14;
     mHorzSpeed <<= 0xc;

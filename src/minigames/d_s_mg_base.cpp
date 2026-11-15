@@ -56,7 +56,7 @@
 #pragma defer_codegen off
 
 /* The 0x40 records at sMgFxPool are 0x20 bytes each. Mg_InitFx
-   fills one: a Fix12 position, two optional vectors, a frame timer and a state.
+   fills one: an fx32 position, two optional vectors, a frame timer and a state.
    State 0 (UpdateDrift / DrawSparkle) adds mVecB into mVecA and
    mVecA into mPos each frame; state 1 (UpdateFlyTo /
    DrawFlyTo) interpolates mPos between the two vectors as the timer
@@ -609,7 +609,7 @@ inline long long inline_fn(int arg0)
 /* State 1's update. Counts mTimer down, calling Mg_GainCredits(1) on
    the frame it reaches 0, then places mPos between the two vectors by the
    remaining fraction s = mTimer / mDuration: x = mVecA.x * s + mVecB.x * (1 - s),
-   y = mVecB.y + s * s * (mVecA.y - mVecB.y), all Fix12. */
+   y = mVecB.y + s * s * (mVecA.y - mVecB.y), all fx32. */
 void MgFx::UpdateFlyTo() {
     using namespace s20addcc;
     {
@@ -688,7 +688,7 @@ void Mg_SpawnFx(char *state, short timer, short pos, int *vecA, int *vecB, int *
     if (pos == 0)
         return;
     int i;
-    for (i = 0; i < 0x40; i++) {
+    for (i = 0; i < 64; i++) {
         if (sMgFxPool[i].mTimer == 0) {
             Mg_InitFx(&sMgFxPool[i], state, timer, pos, vecA, vecB);
             return;
@@ -1265,7 +1265,7 @@ void dScMgBase_c::UpdateMenu() {
                 func_02012790(0x62);
                 mMenuCursor = 0;
                 /* 0x10 for item 0 and 0 for the others */
-                mMenuPickDelay = 0x10;
+                mMenuPickDelay = 16;
                 break;
             }
         }
@@ -1550,7 +1550,7 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
     val = i;
     val += base << 12;
 
-    for (; i < 0x300; i++, val++, off += 2) {
+    for (; i < 768; i++, val++, off += 2) {
         switch (scene->mBrushLayer) {
         case 0:
             if (scene->mBrushOnMain) {
@@ -1660,7 +1660,7 @@ typedef struct Item {
 int Mg_CopySpriteList(Item *src, Item *dst, int add) {
     int n = 1;
     int i;
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         dst[i] = *src;
         dst[i].charNo = (add + src->charNo) & 0x3ff;
         if (src->attr3 == 0xffff)
@@ -1703,13 +1703,11 @@ struct D3DBaseView : dScMgBase_c {
  * take their normal path. The cast is proven by that gate: 2 is returned only
  * by dScMgD3DBase_c's body (ov006:0x020e6e4c), which its four children
  * inherit without overriding, so the scene is a dScMgD3DBase_c whenever the
- * field is read. The OAM::Render overloads taking a Fix12<int> by value stay
- * mangled (see include/OAM.h). */
+ * field is read. */
 
 namespace s20af68c {
 extern "C" {
 extern "C" {
-void OamRender10_d_s_mg_base_a(int, OamAttr *, s32, s32, int, int, int, int, int, int);
 void Hud_RenderSprite(void *attr, int x, int y, int palette, int priority) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -1733,8 +1731,6 @@ extern "C" {
 extern "C" {
 struct OamAttr;
 }
-extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
-                                  fx32 e, int f);
 
 extern "C" int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                         unsigned short a6) {
@@ -1794,7 +1790,6 @@ void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m) {
 namespace s20afa20 {
 extern "C" {
 extern "C" {
-void OamRender10_d_s_mg_base_a(int, OamAttr *, s32, s32, int, int, int, int, int, int);
 
 extern "C" void RenderOamMainScreen(OamAttr *oam, int x, int y, int palette, int priority) {
     dScMgBase_c *scene = gMgScene;
@@ -1819,8 +1814,6 @@ extern "C" {
 extern "C" {
 struct OamAttr;
 }
-extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
-                                  fx32 e, int f);
 
 extern "C" int Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                          unsigned short a6) {
@@ -1878,7 +1871,6 @@ extern "C" void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx) {
 namespace s20afdd0 {
 extern "C" {
 extern "C" {
-int OamRender10_d_s_mg_base_b(int, void *, int, int, int, int, int, int, int, int);
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
@@ -1886,7 +1878,7 @@ void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4) {
     if (scene->mMenuOpen == 0) {
         if (scene->GetDisplayMode() == 2) {
             if (((D3DBaseView *)gMgScene)->mDrawSubScreen == 1) {
-                OAM::Render(0, (OamAttr *)a0, a1, a2 + 0xc0 + sMgTopScreenYOffset, a3, a4, 0x1000,
+                OAM::Render(0, (OamAttr *)a0, a1, a2 + 192 + sMgTopScreenYOffset, a3, a4, 0x1000,
                             0x1000, 0, -1);
                 return;
             }
@@ -1894,7 +1886,7 @@ void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4) {
             return;
         }
     }
-    OAM::Render(0, (OamAttr *)a0, a1, a2 + 0xc0 + sMgTopScreenYOffset, a3, a4, 0x1000, 0x1000, 0,
+    OAM::Render(0, (OamAttr *)a0, a1, a2 + 192 + sMgTopScreenYOffset, a3, a4, 0x1000, 0x1000, 0,
                 -1);
     OAM::RenderSub((OamAttr *)a0, a1, a2, a3, a4);
 }
@@ -1908,8 +1900,6 @@ extern "C" {
 struct OamAttr;
 extern int sMgTopScreenYOffset;
 }
-extern int OamRender8_d_s_mg_base(int show, struct OamAttr *attr, int a, int b, int c, int d,
-                                  fx32 e, int f);
 
 extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int a3, int a4,
                                          fx32 a5, int a6) {
@@ -1920,7 +1910,7 @@ extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int
         if (((D3DBaseView *)gMgScene)->mDrawSubScreen == 1) {
             int hp = sMgTopScreenYOffset;
             if (a2 >= -0x100 - hp && a2 < -hp) {
-                return OAM::Render(0, (::OamAttr *)a0, a1, a2 + 0xc0 + hp, a3, a4, a5, a6);
+                return OAM::Render(0, (::OamAttr *)a0, a1, a2 + 192 + hp, a3, a4, a5, a6);
             }
             if (a2 >= -0x40 && a2 < 0xc0) {
                 return OAM::Render(0, (::OamAttr *)a0, a1, a2, a3, a4, a5, a6);
@@ -1929,7 +1919,7 @@ extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int
     } else {
         int hp = sMgTopScreenYOffset;
         if (a2 >= -0x100 - hp && a2 < -hp) {
-            return OAM::Render(0, (::OamAttr *)a0, a1, a2 + 0xc0 + hp, a3, a4, a5, a6);
+            return OAM::Render(0, (::OamAttr *)a0, a1, a2 + 192 + hp, a3, a4, a5, a6);
         }
         if (a2 >= -0x40 && a2 < 0xc0) {
             return OAM::Render(1, (::OamAttr *)a0, a1, a2, a3, a4, a5, a6);
@@ -1949,7 +1939,7 @@ void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, v
     if (scene->mMenuOpen == 0) {
         if (scene->GetDisplayMode() == 2) {
             if (((D3DBaseView *)gMgScene)->mDrawSubScreen == 1) {
-                OAM::Render(false, (OamAttr *)attr, x, y + 0xc0 + sMgTopScreenYOffset, palette,
+                OAM::Render(false, (OamAttr *)attr, x, y + 192 + sMgTopScreenYOffset, palette,
                             priority, (Matrix2x2 *)mtx);
                 return;
             }
@@ -1957,7 +1947,7 @@ void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, v
             return;
         }
     }
-    OAM::Render(false, (OamAttr *)attr, x, y + 0xc0 + sMgTopScreenYOffset, palette, priority,
+    OAM::Render(false, (OamAttr *)attr, x, y + 192 + sMgTopScreenYOffset, palette, priority,
                 (Matrix2x2 *)mtx);
     OAM::Render(true, (OamAttr *)attr, x, y, palette, priority, (Matrix2x2 *)mtx);
 }
@@ -1973,7 +1963,7 @@ void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4) {
     if (scene->mMenuOpen == 0) {
         if (scene->GetDisplayMode() == 2) {
             if (((D3DBaseView *)gMgScene)->mDrawSubScreen == 1) {
-                OAM::Render(0, (OamAttr *)a0, a1, a2 + 0xc0 + sMgTopScreenYOffset, a3, -1,
+                OAM::Render(0, (OamAttr *)a0, a1, a2 + 192 + sMgTopScreenYOffset, a3, -1,
                             (Matrix2x2 *)a4);
                 return;
             }
@@ -1981,7 +1971,7 @@ void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4) {
             return;
         }
     }
-    OAM::Render(0, (OamAttr *)a0, a1, a2 + 0xc0 + sMgTopScreenYOffset, a3, -1, (Matrix2x2 *)a4);
+    OAM::Render(0, (OamAttr *)a0, a1, a2 + 192 + sMgTopScreenYOffset, a3, -1, (Matrix2x2 *)a4);
     OAM::Render(1, (OamAttr *)a0, a1, a2, a3, -1, (Matrix2x2 *)a4);
 }
 }
@@ -1996,7 +1986,7 @@ void Mg_RenderSpriteBothMtx(void *a0, int a1, int a2, void *a3) {
     if (scene->mMenuOpen == 0) {
         if (scene->GetDisplayMode() == 2) {
             if (((D3DBaseView *)gMgScene)->mDrawSubScreen == 1) {
-                OAM::Render(0, (OamAttr *)a0, a1, a2 + 0xc0 + sMgTopScreenYOffset, -1, -1,
+                OAM::Render(0, (OamAttr *)a0, a1, a2 + 192 + sMgTopScreenYOffset, -1, -1,
                             (Matrix2x2 *)a3);
                 return;
             }
@@ -2004,7 +1994,7 @@ void Mg_RenderSpriteBothMtx(void *a0, int a1, int a2, void *a3) {
             return;
         }
     }
-    OAM::Render(0, (OamAttr *)a0, a1, a2 + 0xc0 + sMgTopScreenYOffset, -1, -1, (Matrix2x2 *)a3);
+    OAM::Render(0, (OamAttr *)a0, a1, a2 + 192 + sMgTopScreenYOffset, -1, -1, (Matrix2x2 *)a3);
     OAM::Render(1, (OamAttr *)a0, a1, a2, -1, -1, (Matrix2x2 *)a3);
 }
 }
@@ -2089,7 +2079,7 @@ int dScMgBase_c::BeforeRender()
     }
 
     fx = sMgFxPool;
-    for (j = 0; j < 0x40; j++, fx++) {
+    for (j = 0; j < 64; j++, fx++) {
         if (sMgFxPool[j].mTimer != 0)
             Mg_DrawFx(fx);
     }
@@ -2153,7 +2143,7 @@ int dScMgBase_c::BeforeBehavior()
         int j;
         MgFx *p = sMgFxPool;
         MgFx *base = sMgFxPool;
-        for (j = 0; j < 0x40; j++) {
+        for (j = 0; j < 64; j++) {
             if (base[j].mTimer != 0)
                 Mg_UpdateFx(p);
             p++;
@@ -2394,7 +2384,7 @@ void Mg_ResetOverlays(void) {
     do {
         sMgFxPool[i].mTimer = 0;
         i++;
-    } while (i < 0x40);
+    } while (i < 64);
     int j = 0;
     char* p = sMgBannerGfxSlotUsed;
     do {
@@ -2439,16 +2429,16 @@ void dScMgBase_c::DrawPrompt() {
         return;
     if ((unsigned int)mPromptBlinkCount < 4U) {
         mPromptBlinkTimer++;
-        if ((unsigned int)mPromptBlinkTimer >= 0x30U) {
+        if ((unsigned int)mPromptBlinkTimer >= 48U) {
             mPromptBlinkTimer = 0U;
             mPromptBlinkCount++;
         }
-        if ((unsigned int)mPromptBlinkTimer >= 0x18U)
+        if ((unsigned int)mPromptBlinkTimer >= 24U)
             return;
     }
     {
         int i = GetGameLanguage();
-        RenderOamMainScreen(sMgSpriteTables[i][10], 0xc0, 0xb0, -1, -1);
+        RenderOamMainScreen(sMgSpriteTables[i][10], 192, 176, -1, -1);
     }
 }
 
@@ -2508,12 +2498,12 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
         i = 0;
         if (sb > 0) {
             do {
-                if (i == sb - 1 && sl->mTallyAnimTimer > 0 && sl->mTallyAnimTimer % 0x3c >= 0x1e) {
+                if (i == sb - 1 && sl->mTallyAnimTimer > 0 && sl->mTallyAnimTimer % 60 >= 30) {
                     break;
                 }
-                RenderOamMainScreen(r8[9], 0xf0, r7, -1, -1);
+                RenderOamMainScreen(r8[9], 240, r7, -1, -1);
                 i += 1;
-                r7 -= 0x10;
+                r7 -= 16;
             } while (i < sb);
         }
         if (sl->mTallyAnimTimer >= sl->mTimeLimit) {
@@ -2525,27 +2515,27 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
     if (sb == 5) {
         int u = sl->mTallyAnimTimer;
         if (u == 0) {
-            Mg_DrawNumber(0xf0, r7, 5, 1, 0, 0, 0x14);
-            RenderOamMainScreen(r8[11], 0xf0, r7, -1, -1);
+            Mg_DrawNumber(240, r7, 5, 1, 0, 0, 0x14);
+            RenderOamMainScreen(r8[11], 240, r7, -1, -1);
         } else if (u < sl->mTimeLimit) {
             r7 -= 8;
             i = 0;
             do {
-                RenderOamMainScreen(r8[9], 0xf0, r7, -1, -1);
+                RenderOamMainScreen(r8[9], 240, r7, -1, -1);
                 i += 1;
-                r7 -= 0x10;
+                r7 -= 16;
             } while (i < 4);
-            if (sl->mTallyAnimTimer % 0x3c < 0x1e) {
-                RenderOamMainScreen(r8[9], 0xf0, r7, -1, -1);
+            if (sl->mTallyAnimTimer % 60 < 30) {
+                RenderOamMainScreen(r8[9], 240, r7, -1, -1);
             }
         } else {
-            int d = (sl->mTimeLimit + 0x20) - sl->mTallyAnimTimer;
+            int d = (sl->mTimeLimit + 32) - sl->mTallyAnimTimer;
             r7 -= sdiv4(d);
             i = 0;
             do {
-                RenderOamMainScreen(r8[9], 0xf0, r7, -1, -1);
+                RenderOamMainScreen(r8[9], 240, r7, -1, -1);
                 {
-                    unsigned e = (sl->mTimeLimit + 0x20) - sl->mTallyAnimTimer;
+                    unsigned e = (sl->mTimeLimit + 32) - sl->mTallyAnimTimer;
                     r7 -= sdiv2(e);
                 }
                 i += 1;
@@ -2560,7 +2550,7 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
         } else if (sl->mTallyAnimTimer == sl->mTimeLimit) {
             func_02012790(0x1ba);
         }
-        if (sl->mTallyAnimTimer >= sl->mTimeLimit + 0x20) {
+        if (sl->mTallyAnimTimer >= sl->mTimeLimit + 32) {
             sl->mTallyAnimTimer = 0;
         }
         return;
@@ -2571,32 +2561,32 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
         if (rem == 0) {
             int u = sl->mTallyAnimTimer;
             if (u == 0) {
-                Mg_DrawNumber(0xf0, r7, sb, 1, 0, 0, 0x14);
-                RenderOamMainScreen(r8[11], 0xf0, r7, -1, -1);
+                Mg_DrawNumber(240, r7, sb, 1, 0, 0, 0x14);
+                RenderOamMainScreen(r8[11], 240, r7, -1, -1);
             } else if (u < sl->mTimeLimit) {
-                Mg_DrawNumber(0xf0, r7, sb - 5, 1, 0, 0, 0x14);
-                RenderOamMainScreen(r8[11], 0xf0, r7, -1, -1);
-                r7 -= 0x18;
+                Mg_DrawNumber(240, r7, sb - 5, 1, 0, 0, 0x14);
+                RenderOamMainScreen(r8[11], 240, r7, -1, -1);
+                r7 -= 24;
                 i = 0;
                 do {
-                    if (i == 4 && sl->mTallyAnimTimer > 0 && sl->mTallyAnimTimer % 0x3c >= 0x1e) {
+                    if (i == 4 && sl->mTallyAnimTimer > 0 && sl->mTallyAnimTimer % 60 >= 30) {
                         break;
                     }
-                    RenderOamMainScreen(r8[9], 0xf0, r7, -1, -1);
+                    RenderOamMainScreen(r8[9], 240, r7, -1, -1);
                     i += 1;
-                    r7 -= 0x10;
+                    r7 -= 16;
                 } while (i < 5);
             } else {
                 int d;
-                Mg_DrawNumber(0xf0, r7, sb - 5, 1, 0, 0, 0x14);
-                RenderOamMainScreen(r8[11], 0xf0, r7, -1, -1);
-                d = (sl->mTimeLimit + 0x20) - sl->mTallyAnimTimer;
+                Mg_DrawNumber(240, r7, sb - 5, 1, 0, 0, 0x14);
+                RenderOamMainScreen(r8[11], 240, r7, -1, -1);
+                d = (sl->mTimeLimit + 32) - sl->mTallyAnimTimer;
                 r7 -= sdiv4(d);
                 i = 0;
                 do {
-                    unsigned e = (sl->mTimeLimit + 0x20) - sl->mTallyAnimTimer;
+                    unsigned e = (sl->mTimeLimit + 32) - sl->mTallyAnimTimer;
                     r7 -= sdiv2(e);
-                    RenderOamMainScreen(r8[9], 0xf0, r7, -1, -1);
+                    RenderOamMainScreen(r8[9], 240, r7, -1, -1);
                     i += 1;
                 } while (i < 5);
             }
@@ -2609,7 +2599,7 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
             } else if (sl->mTallyAnimTimer == sl->mTimeLimit) {
                 func_02012790(0x1ba);
             }
-            if (sl->mTallyAnimTimer >= sl->mTimeLimit + 0x20) {
+            if (sl->mTallyAnimTimer >= sl->mTimeLimit + 32) {
                 sl->mTallyAnimTimer = 0;
             }
             return;
@@ -2617,20 +2607,20 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
 
         {
             int base5 = (sb / 5) * 5;
-            Mg_DrawNumber(0xf0, r7, base5, 1, 0, 0, 0x14);
+            Mg_DrawNumber(240, r7, base5, 1, 0, 0, 0x14);
         }
-        RenderOamMainScreen(r8[11], 0xf0, r7, -1, -1);
-        r7 -= 0x18;
+        RenderOamMainScreen(r8[11], 240, r7, -1, -1);
+        r7 -= 24;
         sb = 0;
         if (rem > 0) {
             pin = rem - 1;
             do {
-                if (sb == pin && sl->mTallyAnimTimer > 0 && sl->mTallyAnimTimer % 0x3c >= 0x1e) {
+                if (sb == pin && sl->mTallyAnimTimer > 0 && sl->mTallyAnimTimer % 60 >= 30) {
                     break;
                 }
-                RenderOamMainScreen(r8[9], 0xf0, r7, -1, -1);
+                RenderOamMainScreen(r8[9], 240, r7, -1, -1);
                 sb += 1;
-                r7 -= 0x10;
+                r7 -= 16;
             } while (sb < rem);
         }
         if (sl->mTallyAnimTimer >= sl->mTimeLimit) {
@@ -2660,23 +2650,23 @@ void Mg_DrawRecordTable(dScMgBase_c *scene) {
     int k;
 
     scene->mRecordRevealTimer += 1;
-    if (scene->mRecordRevealTimer >= 0x8c)
-        scene->mRecordRevealTimer = 0x64;
+    if (scene->mRecordRevealTimer >= 140)
+        scene->mRecordRevealTimer = 100;
 
     n = Mg_GetLastRecordRank(scene, scene->mRankedScore);
     if (n >= 0) {
         i = 0;
         if (n > 0) {
             do {
-                if (scene->mRecordRevealTimer >= i * 0x14)
+                if (scene->mRecordRevealTimer >= i * 20)
                     Mg_DrawRecordRow(scene, 0xa8, a2, func_02013580(Mg_GetSaveTable(scene), i));
                 a2 += 0x18;
                 i++;
             } while (i < n);
         }
 
-        if (scene->mRecordRevealTimer >= n * 0x14) {
-            if (scene->mRecordRevealTimer < 0x64 || scene->mRecordRevealTimer - 0x64 < 0x14)
+        if (scene->mRecordRevealTimer >= n * 20) {
+            if (scene->mRecordRevealTimer < 100 || scene->mRecordRevealTimer - 100 < 20)
                 Mg_DrawRecordRow(scene, 0xa8, a2, scene->mRankedScore);
             else
                 Mg_DrawRecordRow(scene, 0xa8, a2, -1);
@@ -2688,7 +2678,7 @@ void Mg_DrawRecordTable(dScMgBase_c *scene) {
             return;
         do
         {
-            if (scene->mRecordRevealTimer >= j * 0x14)
+            if (scene->mRecordRevealTimer >= j * 20)
                 Mg_DrawRecordRow(scene, 0xa8, a2, func_02013580(Mg_GetSaveTable(scene), j));
             a2 += 0x18;
             j++;
@@ -2699,16 +2689,16 @@ void Mg_DrawRecordTable(dScMgBase_c *scene) {
     k = 0;
     do
     {
-        if (scene->mRecordRevealTimer >= k * 0x14)
+        if (scene->mRecordRevealTimer >= k * 20)
             Mg_DrawRecordRow(scene, 0xa8, a2, func_02013580(Mg_GetSaveTable(scene), k));
         a2 += 0x18;
         k++;
     } while (k < 5);
 
-    if (scene->mRecordRevealTimer < 0x64)
+    if (scene->mRecordRevealTimer < 100)
         return;
 
-    if (scene->mRecordRevealTimer - 0x64 < 0x14)
+    if (scene->mRecordRevealTimer - 100 < 20)
         Mg_DrawRecordRow(scene, 0xa8, a2 + 0x10, scene->mRankedScore);
     else
         Mg_DrawRecordRow(scene, 0xa8, a2 + 0x10, -1);
@@ -2740,7 +2730,7 @@ void Mg_DrawRecordRow(dScMgBase_c *scene, int x, int y, int val) {
         if (val < 0)
             return;
         major = val / 60;
-        Mg_DrawNumber(x - 0x18, y, major, flag, -1, 1, 0xa);
+        Mg_DrawNumber(x - 24, y, major, flag, -1, 1, 0xa);
         Hud_RenderSprite(tbl[7], x - 0x10, y, -1, -1);
 
         rem = val % 60;
@@ -2795,8 +2785,8 @@ void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
    0x48, through Mg_DrawNumber. */
 void Mg_DrawTopLeftCounter(int value) {
     int i = GetGameLanguage();
-    RenderOamMainScreen(sMgSpriteTables[i][8], 0x20, 0xc, -1, -1);
-    Mg_DrawNumber(0x48, 0xc, value, 1, -1, 2, 0xa);
+    RenderOamMainScreen(sMgSpriteTables[i][8], 32, 12, -1, -1);
+    Mg_DrawNumber(72, 12, value, 1, -1, 2, 0xa);
 }
 }
 }
@@ -2814,10 +2804,10 @@ void Mg_DrawTopRightCounter(int a0, int a1){
     int i;
     if (c >= lim)
         c = lim;
-    Mg_DrawNumber(0xf4, 0xc, c, 1, -1, 1, 0xa);
+    Mg_DrawNumber(244, 12, c, 1, -1, 1, 0xa);
     r4 = r4 - (0x44 - (6 - a1) * 8);
     i = GetGameLanguage();
-    RenderOamMainScreen(sMgSpriteTables[i][4], r4, 0xc, -1, -1);
+    RenderOamMainScreen(sMgSpriteTables[i][4], r4, 12, -1, -1);
 }
 }
 }
@@ -2895,7 +2885,7 @@ void Mg_DrawCredits(char *a0, int a1, int a2, int a3)
     if (v < 0x64) {
         Mg_DrawBigNumber(a1+0x12, a2, v, a3, -1, 2, 0);
     } else {
-        Mg_DrawNumber(a1+0xc, a2, v, a3, -1, 2, 0x32);
+        Mg_DrawNumber(a1 + 12, a2, v, a3, -1, 2, 0x32);
     }
 }
 }
@@ -2994,7 +2984,7 @@ void Mg_DrawTopCenterCounter(int arg) {
     int r;
     Mg_DrawBigNumber(0x80, 0xc, arg, 1, -1, 0, 0);
     r = GetGameLanguage();
-    DrawOamSprite(sMgSpriteTables[r][3], 0x60, 0xc, 0);
+    DrawOamSprite(sMgSpriteTables[r][3], 96, 12, 0);
 }
 }
 }
@@ -3027,8 +3017,10 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
     if (d[5] != 0) {
         int r5;
         int k;
-        if (mode == 0) x -= 0x14;
-        else if (mode == 1) x -= 0x28;
+        if (mode == 0)
+            x -= 20;
+        else if (mode == 1)
+            x -= 40;
         r5 = 5;
         for (k = 0; k < 5; k++) {
             Mg_RenderSpriteOnNoMtx(sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
@@ -3038,8 +3030,10 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
     } else if (d[4] != 0) {
         int r5;
         int k;
-        if (mode == 0) x -= 0x10;
-        else if (mode == 1) x -= 0x20;
+        if (mode == 0)
+            x -= 16;
+        else if (mode == 1)
+            x -= 32;
         r5 = 4;
         for (k = 0; k < 4; k++) {
             Mg_RenderSpriteOnNoMtx(sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
@@ -3049,8 +3043,10 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
     } else if (d[3] != 0) {
         int r5;
         int k;
-        if (mode == 0) x -= 0xc;
-        else if (mode == 1) x -= 0x18;
+        if (mode == 0)
+            x -= 12;
+        else if (mode == 1)
+            x -= 24;
         r5 = 3;
         for (k = 0; k < 3; k++) {
             Mg_RenderSpriteOnNoMtx(sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
@@ -3061,7 +3057,8 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
         int r5;
         int k;
         if (mode == 0) x -= 8;
-        else if (mode == 1) x -= 0x10;
+        else if (mode == 1)
+            x -= 16;
         r5 = 2;
         for (k = 0; k < 2; k++) {
             Mg_RenderSpriteOnNoMtx(sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
@@ -3125,16 +3122,16 @@ void Mg_DrawNumberRotated(int x, int y, int value, int a3, int a4, int scale, u1
     MTX_Rot22(&m, FX_Mul(FX_SinIdx(idx), scale), FX_Mul(FX_CosIdx(idx), scale));
 
     if (th != 0) {
-        Mg_RenderSpriteOnMtx(sMgDigitSprites[th], x - 0x30, y, a3, a4, &m);
-        Mg_RenderSpriteOnMtx(sMgDigitSprites[hu], x - 0x10, y, a3, a4, &m);
-        Mg_RenderSpriteOnMtx(sMgDigitSprites[te], x + 0x10, y, a3, a4, &m);
+        Mg_RenderSpriteOnMtx(sMgDigitSprites[th], x - 48, y, a3, a4, &m);
+        Mg_RenderSpriteOnMtx(sMgDigitSprites[hu], x - 16, y, a3, a4, &m);
+        Mg_RenderSpriteOnMtx(sMgDigitSprites[te], x + 16, y, a3, a4, &m);
         x += 0x30;
     } else if (hu != 0) {
-        Mg_RenderSpriteOnMtx(sMgDigitSprites[hu], x - 0x20, y, a3, a4, &m);
+        Mg_RenderSpriteOnMtx(sMgDigitSprites[hu], x - 32, y, a3, a4, &m);
         Mg_RenderSpriteOnMtx(sMgDigitSprites[te], x, y, a3, a4, &m);
         x += 0x20;
     } else if (te != 0) {
-        Mg_RenderSpriteOnMtx(sMgDigitSprites[te], x - 0x10, y, a3, a4, &m);
+        Mg_RenderSpriteOnMtx(sMgDigitSprites[te], x - 16, y, a3, a4, &m);
         x += 0x10;
     }
     Mg_RenderSpriteOnMtx(sMgDigitSprites[value], x, y, a3, a4, &m);

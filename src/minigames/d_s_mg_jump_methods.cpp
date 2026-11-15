@@ -174,7 +174,7 @@ int dScMgJump_c::CanEndState(int sel)
                 if (sJump3DMariosLeft < 3) {
                     Jump3D_RestoreCount();
                     func_02012790(0x26);
-                    mStateTimer = 0x3c;
+                    mStateTimer = 60;
                     return 0;
                 }
             } else {
@@ -256,7 +256,7 @@ s32 dScMgJump_c::InitResources()
  * This one arms the countdown; its only caller is StartRound. */
 void dScMgJump_c::BeginIntro()
 {
-    mStateTimer = 0x78;
+    mStateTimer = 120;
     mAccum = 0;
     mAccumStep = 0x4000;
     mState = pmf_dScMgJump_c_State_Intro;
@@ -309,7 +309,7 @@ void dScMgJump_c::State_Play()
 
 void dScMgJump_c::BeginEnd()
 {
-    mStateTimer = 0x20;
+    mStateTimer = 32;
     mState = pmf_dScMgJump_c_State_End;
 }
 
@@ -407,9 +407,9 @@ s32 dScMgJump_c::Render()
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite(sJumpTextSpritesByLanguage[idx][1], y, 0xc, 0);
+                DrawOamSprite(sJumpTextSpritesByLanguage[idx][1], y, 12, 0);
             } else {
-                RenderOamMainScreen(sJumpLifeIconSprite, y, 0xc, -1, -1);
+                RenderOamMainScreen(sJumpLifeIconSprite, y, 12, -1, -1);
             }
             y += 0x12;
         }

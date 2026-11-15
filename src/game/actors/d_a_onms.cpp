@@ -308,7 +308,7 @@ void daOnms_c::NextMove()
 void daOnms_c::func_ov092_02131578()
 {
     mTumbling = 0;
-    if (mStateTimer == 0x14)
+    if (mStateTimer == 20)
         NextMove();
     CheckPlayerHit();
 }

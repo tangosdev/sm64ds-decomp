@@ -185,7 +185,7 @@ u8 dMgPsOpt_c::Update() {
         if (TouchArea_Update(&mIcons[kIconBack], -1)) {
             /* Back: pulse the button, then let state 2 run the delay down. */
             mIcons[kIconBack].func_ov001_020ab3f0();
-            mCloseTimer = 0x14;
+            mCloseTimer = 20;
             mActive = kPanelClosing;
             func_02012790(kSndBack);
         } else {
@@ -326,16 +326,13 @@ void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, shor
     if (style == kStyleSoundLabel) {
         lang = GetGameLanguage();
         lang2 = GetGameLanguage();
-        icon->func_ov001_020ab5b0(kind, x, y, sPsOptIconPosA[lang].mHalfW,
-                                  HALF_H_AT(sPsOptIconPosAY, lang2));
+        icon->Place(kind, x, y, sPsOptIconPosA[lang].mHalfW, HALF_H_AT(sPsOptIconPosAY, lang2));
     } else if (style == kStyleLightLabel) {
         lang = GetGameLanguage();
         lang2 = GetGameLanguage();
-        icon->func_ov001_020ab5b0(kind, x, y, sPsOptIconPosB[lang].mHalfW,
-                                  HALF_H_AT(sPsOptIconPosBY, lang2));
+        icon->Place(kind, x, y, sPsOptIconPosB[lang].mHalfW, HALF_H_AT(sPsOptIconPosBY, lang2));
     } else {
-        icon->func_ov001_020ab5b0(kind, x, y, sPsOptStylePos[style].mHalfW,
-                                  HALF_H_AT(sPsOptStylePosY, style));
+        icon->Place(kind, x, y, sPsOptStylePos[style].mHalfW, HALF_H_AT(sPsOptStylePosY, style));
     }
 }
 

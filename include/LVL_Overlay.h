@@ -75,7 +75,7 @@ struct LVL_Overlay {
     /* ==== PER-CATEGORY RECORD TYPES ====
        `entries' is void* because these differ, and each is added here as its
        loader is migrated rather than guessed in advance. Positions are stored as
-       s16 world units and shifted left by 12 into Fix12 on the way out, which is
+       s16 world units and shifted left by 12 into fx32 on the way out, which is
        why every one of them is a short and every loader does `<< 12'. */
 
     /* 0xe bytes. LoadExitObjects (ov002:0x020fe420). */
@@ -117,7 +117,7 @@ struct LVL_Overlay {
     /* 0x10 bytes. LoadStandardObjects (ov002:0x020fe8ac) and
        LoadEntranceObjects (ov002:0x020fe6c8). `raw' indexes
        sObjToActorIdTable for the actor id; positions are s16 world units
-       shifted left by 12 into Fix12 on spawn, same as every other loader. */
+       shifted left by 12 into fx32 on spawn, same as every other loader. */
     struct StandardEntry {
         u16      raw;           /* 0x00 -- object id index */
         s16      x;             /* 0x02 */

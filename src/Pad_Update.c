@@ -13,7 +13,10 @@ void Pad_Update(Ov007Pad *pad, u16 *src) {
     int zb;
 
     i = 0;
-    do { flags[i] = 0; i = i + 1; } while (i < 0xc);
+    do {
+        flags[i] = 0;
+        i = i + 1;
+    } while (i < 12);
     pad->prevKeys = pad->keys;
     if (src == 0) {
         pad->keys = PAD_Read();
@@ -77,5 +80,5 @@ void Pad_Update(Ov007Pad *pad, u16 *src) {
             pad->releasedFrames[i]++;
         }
         i = i + 1;
-    } while (i < 0xc);
+    } while (i < 12);
 }

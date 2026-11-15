@@ -3,7 +3,6 @@
 
 #include "types.h"
 #include "dExtFrameCtrl_c.h"
-#include "math/Fix12.h"
 #include "private/BTA_File.h"
 
 /* dExtFrameCtrl_c child that drives BTA-file playback, vtable _ZTV15dExtAnmTexSRT_c at 0x0208e7c4:
@@ -27,9 +26,8 @@
  * the PC port a wrong-register hunt.
  * SetFile is a real member under its scalar mangling: speed is an fx32
  * and startFrame a u16. Measured against the ROM body, a u32 startFrame
- * adds a truncation (0x5c, not 0x54) and Fix12<int> by value spills it
- * through the stack (0x6c); the sibling dExtAnmTexPat_c::SetFile is the
- * same body under the same spelling.
+ * adds a truncation (0x5c, not 0x54); the sibling dExtAnmTexPat_c::SetFile
+ * is the same body under the same spelling.
  */
 
 #ifdef __cplusplus

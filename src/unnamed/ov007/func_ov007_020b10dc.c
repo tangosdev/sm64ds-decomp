@@ -21,24 +21,24 @@ void func_ov007_020b10dc(void) {
     }
     switch (WORK->figureIndex) {
     case 0:
-        if (ticks == 0x1e)
+        if (ticks == 30)
             func_ov007_020bdeb0(0x2b);
-        else if (ticks == 0x80)
+        else if (ticks == 128)
             func_ov007_020bdeb0(0x2d);
         break;
     case 1:
-        if (ticks == 0x1e)
+        if (ticks == 30)
             func_ov007_020bdeb0(0x2c);
-        else if (ticks == 0x7a)
+        else if (ticks == 122)
             func_ov007_020bdeb0(0x2e);
         break;
     }
-    if (ticks == 0x3c) {
+    if (ticks == 60) {
         RequestScreenFade(5, 3, func_ov007_020b16f0);
         func_ov007_020b1fa4(1);
         return;
     }
-    if (ticks == 0x3d) {
+    if (ticks == 61) {
         FigureScene_SetScreenBlend(0x1000);
     }
 }

@@ -61,7 +61,6 @@
  * - the member names keep their addresses (nothing here says what the
  *   original called them). func_ov100_02144f84 / func_ov100_02144fcc /
  *   func_ov100_02145014 / func_ov100_02145070 are static: they take no door.
- *   d_a_ply_methods.cpp still calls the free names.
  * - the callees with Fix12<int> parameters (Sound, dExtAnmModel_c::SetAnim),
  *   the SaveData, Sound::PlayCharVoice and dExtFrameCtrl_c::LoadFile calls, and the
  *   dExtSimpleModel_c loaders InitResources calls stay spelled as mangled extern-C free
@@ -247,7 +246,7 @@ extern daPly_c *gPlayers[];
 extern unsigned char gGameMode;
 /* The next-level id (signed byte). */
 extern signed char gNextSublevel;
-/* The music and sub-channel volumes, both in Fix12 (0x7f000 = 127.0). */
+/* The music and sub-channel volumes, both in fx32 (0x7f000 = 127.0). */
 extern int gMusicVolume;
 extern int gSubVolume;
 extern Vector3 data_020a0ebc;
@@ -328,7 +327,7 @@ daDoor_c::~daDoor_c() {}
 /* State 021488a4, execute member. Once func_ov100_02145080 lets the player
    out (it returns 0), clear the data_ov100_02148704 latch, call
    SaveData::SetCharacterIntro(mKeyModelIdx - 1) (or, for variant 0xd,
-   Sound::ChangeMusicVolume(0x7f, 0xcb33 = 12.7 as Fix12)) and go to state
+   Sound::ChangeMusicVolume(0x7f, 0xcb33 = 12.7 as fx32)) and go to state
    data_ov100_021488b4. The player is taken as the int the member-pointer call
    passes. Was a C source. */
 int daDoor_c::func_ov100_02144468(int p) {
@@ -366,7 +365,7 @@ int daDoor_c::func_ov100_021444e8(int a1) {
        the current character), daPly_c::SetRealCharacter. With the
        data_ov100_02148704 latch set they also set the player's mHasNoCap,
        play sound 0x7e, set mTimer to 0x40 (64) and call
-       Sound::ChangeMusicVolume(0, 0x19666 = 25.4 as Fix12); with it clear
+       Sound::ChangeMusicVolume(0, 0x19666 = 25.4 as fx32); with it clear
        they play sound 0x7f;
      - variant 0xd sets mTimer to 0x40, plays sound 0xa1 (latch set) or 0xa2
        and calls the same ChangeMusicVolume(0, ...);
@@ -388,13 +387,13 @@ int daDoor_c::func_ov100_02144528(daPly_c *pl) {
                 if (data_ov100_02148704 != 0) {
                     pl->mHasNoCap = 1;
                     func_0201277c(0x7e);
-                    mTimer = 0x40;
-                    Sound::ChangeMusicVolume(0, 0x19666); /* 25.4 as Fix12 */
+                    mTimer = 64;
+                    Sound::ChangeMusicVolume(0, 0x19666); /* 25.4 as fx32 */
                 } else {
                     func_0201277c(0x7f);
                 }
             } else {
-                mTimer = 0x40;
+                mTimer = 64;
                 if (data_ov100_02148704 != 0)
                     func_02012790(0xa1);
                 else
@@ -413,7 +412,7 @@ int daDoor_c::func_ov100_02144528(daPly_c *pl) {
                 mTimer += 1;
             }
         } else {
-            if (data_ov100_02148704 == 0 && mTimer == 0xa && param1 == DOOR_LAST_KEY_MODEL) {
+            if (data_ov100_02148704 == 0 && mTimer == 10 && param1 == DOOR_LAST_KEY_MODEL) {
                 Sound::ChangeMusicVolume(0x7f, 0xcb33);
             }
         }
@@ -730,7 +729,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
 /* ROM ordinal 16 -- func_ov100_02144f84, 0x02144f84, size 0x48 */
 /* -------------------------------------------------------------------------- */
 /* 1 when the shared countdown is zero, the music volume gMusicVolume is at
-   0x7f000 (127.0 as Fix12) and the sub-channel volume gSubVolume is
+   0x7f000 (127.0 as fx32) and the sub-channel volume gSubVolume is
    zero. Was a C source. */
 int daDoor_c::func_ov100_02144f84() {
     if (*data_ov100_02148708 != 0)
@@ -747,7 +746,7 @@ fail:
 /* ROM ordinal 17 -- func_ov100_02144fcc, 0x02144fcc, size 0x48 */
 /* -------------------------------------------------------------------------- */
 /* Tick the shared countdown (func_ov100_02145014); when it is done, call
-   Sound::PlaySub(0x24, 0x7f, 0, 0x7222 = 7.13 as Fix12, 0) and return its
+   Sound::PlaySub(0x24, 0x7f, 0, 0x7222 = 7.13 as fx32, 0) and return its
    result, else 0. */
 int daDoor_c::func_ov100_02144fcc() {
     int r = daDoor_c::func_ov100_02145014();
@@ -761,7 +760,7 @@ int daDoor_c::func_ov100_02144fcc() {
 /* -------------------------------------------------------------------------- */
 /* Tick the shared countdown data_ov100_02148708 (DecIfAbove0_Short); while
    the ticked value is still nonzero, call Sound::PlaySub(0x24, 0x14, 0x7f,
-   0x15666 = 21.4 as Fix12, 0). Returns 1 once the countdown is zero. Was a C
+   0x15666 = 21.4 as fx32, 0). Returns 1 once the countdown is zero. Was a C
    source. */
 int daDoor_c::func_ov100_02145014() {
     int r = DecIfAbove0_Short(data_ov100_02148708);
@@ -795,7 +794,7 @@ int daDoor_c::func_ov100_02145080(daPly_c *arg1) {
         if (mTimer == 0) {
             if (func_ov002_020ca78c(arg1) != 0) {
                 Sound::PlaySub(0x2b, 0, 0x7f, 0x15666, 0);
-                mTimer = 0x78;
+                mTimer = 120;
             }
         } else if (DecIfAbove0_Byte(&mTimer) == 0) {
             Sound::PlaySub(0x2b, 0x7f, 0, 0x7222, 0);

@@ -198,7 +198,7 @@ void MenuText_DrawGlyph(int plane, int glyph) {
     w -= adj;
     pos = data_ov007_02103464 + adj;
     data_ov007_02103464 = pos;
-    if (pos >= 0x100 - w)
+    if (pos >= 256 - w)
         return;
 
     row = glyph >> 5;
@@ -575,7 +575,7 @@ extern "C" void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
 
     boardLine = 0;
     cursorLine = 0;
-    for (; boardLine < 0x12; boardLine++) {
+    for (; boardLine < 18; boardLine++) {
         data_ov007_02103468 = cursorLine;
         switch (boardLine) {
         case 0:
@@ -720,8 +720,8 @@ extern "C" void func_ov007_020b7d94(int kind) {
     case 8:
         data_ov007_02103460->screenX = 0x80000;
         data_ov007_02103460->screenY = 0x62000;
-        data_ov007_02103460->width = 0xc0;
-        data_ov007_02103460->height = 0x58;
+        data_ov007_02103460->width = 192;
+        data_ov007_02103460->height = 88;
         break;
     case 3:
     case 4:
@@ -730,16 +730,16 @@ extern "C" void func_ov007_020b7d94(int kind) {
     case 11:
         data_ov007_02103460->screenX = 0x80000;
         data_ov007_02103460->screenY = 0x5a000;
-        data_ov007_02103460->width = 0xc0;
-        data_ov007_02103460->height = 0x40;
+        data_ov007_02103460->width = 192;
+        data_ov007_02103460->height = 64;
         data_ov007_02102ddc.textLine = 0xa;
         break;
     case 9:
     case 12:
         data_ov007_02103460->screenX = 0x80000;
         data_ov007_02103460->screenY = 0x6e000;
-        data_ov007_02103460->width = 0xc8;
-        data_ov007_02103460->height = 0x68;
+        data_ov007_02103460->width = 200;
+        data_ov007_02103460->height = 104;
         data_ov007_02102ddc.textLine = 0xa;
         break;
     }
@@ -796,7 +796,7 @@ void MessageWindow_Update(void) {
         break;
     case OV007_WINDOW_HOLDING:
         data_ov007_02102ddc.timer += 1;
-        if (data_ov007_02102ddc.timer >= 0x3C) {
+        if (data_ov007_02102ddc.timer >= 60) {
             data_ov007_02102ddc.timer = 0;
             data_ov007_02102ddc.state = OV007_WINDOW_SHOWN;
         }

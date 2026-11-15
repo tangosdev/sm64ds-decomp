@@ -15,7 +15,7 @@ void func_ov007_020af4dc(void) {
         func_ov007_020c1d8c(0);
     }
     g = WORK;
-    if (g->states[1]->stateTicks != 0x1e)
+    if (g->states[1]->stateTicks != 30)
         return;
     if (g->pendingChoice == 0) {
         RequestScreenFade(2, 1, func_ov007_020b0520);

@@ -15,7 +15,7 @@ void func_0201a8b4(void *arg) {
 
     if (elapsed < w->limit) {
         unsigned long long rest = w->limit - elapsed;
-        if ((unsigned int)((rest << 6) / 0x82ea) != 0)
+        if ((unsigned int)((rest << 6) / 33514) != 0)
             func_0201aa50(&w->alarm, rest, func_0201a8b4, w);
     } else {
         if (func_0203da80(0x2000) == 0)

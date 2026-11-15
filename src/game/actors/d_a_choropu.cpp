@@ -16,9 +16,7 @@
 // leftovers:
 // - func_ov080_02124418 is daChoro_Rock_c's. Its first argument is the rock,
 //   so it is not a daChoropu_c method.
-// - daPly_c::Hurt and daPly_c::Bounce retain scalar mangled declarations for
-//   their by-value Fix12 parameters. Throw's spawn id stays
-//   `py ? 0x137 : 0x137`.
+// - Throw's spawn id stays `py ? 0x137 : 0x137`.
 // - LAUND() in func_ov080_02124088 keeps the cylinder flags, mFlags and
 //   mTimesHit addresses opaque.
 // - Throw reads mAngleX/Y/Z as unsigned short. Hidden reads mHasTurn as
@@ -112,7 +110,7 @@ daChoro_Rock_c::~daChoro_Rock_c()
 {
 }
 
-/* Returns the constant 0x28000 (40.0 read as a Fix12). What the caller does with it is
+/* Returns the constant 0x28000 (40.0 read as an fx32). What the caller does with it is
  * not recovered here. */
 s32 daChoropu_c::OnAimedAtWithEgg()
 {
@@ -134,11 +132,11 @@ void daChoropu_c::func_ov080_02123860()
     unsigned int idx;
 
     mAnmModel.Advance();
-    idx = (unsigned int)(mAnmModel.currFrame << 4) >> 0x10; /* whole frame number */
-    if (idx >= 0xf) {
+    idx = (unsigned int)(mAnmModel.currFrame << 4) >> 16; /* whole frame number */
+    if (idx >= 15) {
         mdCcAc_c.flags |= daChoropu_CC_DISABLED;
         mFlags &= ~daChoropu_FLAG_EMERGED;
-        if (idx == 0xf) {
+        if (idx == 15) {
             Particle::System::NewSimple(kPtclMontyMoleLeapA, mPosX, mPosY, mPosZ);
             Particle::System::NewSimple(kPtclMontyMoleLeapB, mPosX, mPosY + 0x1e000, mPosZ);
         }
@@ -146,8 +144,8 @@ void daChoropu_c::func_ov080_02123860()
     {
         int raw = mAnmModel.currFrame;
         int *tbl = (int *)(int)(data_ov080_0212767c);
-        idx = (unsigned int)(raw << 4) >> 0x10;
-        mdCcAc_c.height = tbl[idx] << 0xc;
+        idx = (unsigned int)(raw << 4) >> 16;
+        mdCcAc_c.height = tbl[idx] << 12;
     }
     if (mAnmModel.Finished() == 0)
         return;
@@ -194,7 +192,7 @@ void daChoropu_c::func_ov080_02123924()
  * frame 10 it spawns a daChoro_Rock_c (actor 0x137, spawn parameter 0 = the big
  * rock) 80 units out from the mole along (mAngleY - 0x4000), a quarter turn off the way it
  * faces, looked up in the
- * sine/cosine pair table FX_SinCosTable_ (entries are Fix12, indexed by angle >> 4),
+ * sine/cosine pair table FX_SinCosTable_ (entries are fx16, indexed by angle >> 4),
  * 10 units (0xa000) above its position, with the angle triple (mAngleX, mAngleY +
  * 0x400, mAngleZ) and the mole's area. The rock is then given horizontal speed
  * 30 units/frame (0x1e000) and vertical speed 4 units (0x4000) plus 4% of the
@@ -235,10 +233,10 @@ void daChoropu_c::func_ov080_02123a34()
         }
 
         s = FX_SinIdx((u16)(s16)(mAngleY - 0x4000) >> 4);
-        pos.x = s * (short)0x50 + px;
+        pos.x = s * (short)80 + px;
 
         s = FX_CosIdx((u16)(s16)(mAngleY - 0x4000) >> 4);
-        pos.z = s * (short)0x50 + pz;
+        pos.z = s * (short)80 + pz;
 
         a = dActor_c::Spawn(
             py ? (unsigned)daChoro_Rock_ACTOR_ID : (unsigned)daChoro_Rock_ACTOR_ID, 0, pos, pAng, mAreaId, -1);
@@ -297,7 +295,7 @@ void daChoropu_c::func_ov080_02123c24()
     }
 
     if (state >= 6) {
-        if (state >= 0x1a) {
+        if (state >= 26) {
             amt = 0x50000;
         } else {
             amt = data_ov080_021276c4[state - 6] << 12;
@@ -521,7 +519,7 @@ void daChoropu_c::func_ov080_02124088()
  *     knocked underground (func_ov080_02124088);
  *   - otherwise nothing unless bit 0x400000 (the daPly_c) is set;
  *   - daPly_c stomped the mole (JumpedOnByPlayer): knocked underground, then
- *     daPly_c::Bounce is called with 0x28000 (40.0 read as a Fix12);
+ *     daPly_c::Bounce is called with 0x28000 (40.0 read as an fx32);
  *   - daPly_c is Vanish (mIsVanish): no effect;
  *   - daPly_c is Metal (mIsMetal): knocked underground;
  *   - hit by a Mega daPly_c (bit 0x10): sound effect 0x1d, IncMegaKillCount, knocked
@@ -769,11 +767,11 @@ s32 daChoropu_c::InitResources()
     mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov080_021283c0), 1, -1);
     mAnmModel.SetAnim((BCA_File *)data_ov080_021283d8.filePtr, 0, 0x1000, 0);
     mdCcAc_c.Init(this, 0x50000, 0x64000, 0x200000, 0x66fe0);
-    mGroupMode = param1 & 0xf;
+    mGroupMode = param1 & 15;
     mState = daChoropu_ST_SETUP;
     if (mGroupMode == daChoropu_GROUP_SOLO) mHasTurn = 1;
     else mHasTurn = (param1 >> 8) & 1;
-    mGroupId = (param1 >> 4) & 0xf;
+    mGroupId = (param1 >> 4) & 15;
     mTimesHit = 0;
     mNumPartners = 0;
     for (i = 0; i < 4; i++) mPartnerIDs[i] = 0;

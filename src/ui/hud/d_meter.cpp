@@ -46,9 +46,6 @@
  *
  * leftovers:
  * - The HUD globals are data_ names: symbols.txt has no recovered name for them.
- * - The OAM::Render overloads that take Fix12<int> by value keep their mangled
- *   spellings: the natural static member call homes the Fix12 arguments
- *   differently under mwccarm (the Fix12 wall) and rewrites every call site.
  * - InitResources keeps one launder: the volatile pun on mVsTimer in the
  *   gCurrentSublevel == 0x2B branch (a plain member store emits different code).
  * - gGameMode is CURRENT_GAMEMODE (symbols/verified.tsv); mode 1 is the one
@@ -98,8 +95,6 @@ extern "C" {
    Quick race (daRNk_c). InitResources clears it. */
 extern unsigned char gShowRaceTimer;
 extern Timer gRaceTimer;
-extern void OamRender10_d_meter(int sub, struct OamAttr *attr, int x, int y, int a, int b, int sx,
-                                int sy, int c, int d);
 extern volatile unsigned short data_ov002_0210c208[];
 extern unsigned char gLocalPlayerId;
 extern unsigned char gMeterCounterSlideState;
@@ -286,16 +281,16 @@ int dMeter_c::InitResources() {
     mVsTimerY = 0xA;
     if (IsVsMode()) {
         if (gCurrentSublevel == 0x33)
-            mVsTimer = 0x1E;
+            mVsTimer = 30;
         else if (gCurrentSublevel == 0x2B)
-            *(volatile u16 *)&mVsTimer = 0x1E;
+            *(volatile u16 *)&mVsTimer = 30;
         else
-            mVsTimer = 0x1E;
+            mVsTimer = 30;
     } else {
-        mVsTimer = 0x1E;
+        mVsTimer = 30;
     }
 
-    data_ov002_02111188 = 0xB4;
+    data_ov002_02111188 = 180;
     gShowRaceTimer = 0;
     gMeterShownHealth[0] = gPlayers[gLocalPlayerId]->GetHealth();
     if (gMeterShownHealth[0] == 8) {
@@ -312,9 +307,9 @@ int dMeter_c::InitResources() {
     if (!IsVsMode()) {
         int n = NumStars();
         if (n > 0x63)
-            starDigitsWidth = 0x1B;
+            starDigitsWidth = 27;
         else if (n > 9)
-            starDigitsWidth = 0x12;
+            starDigitsWidth = 18;
         else
             starDigitsWidth = 9;
     }
@@ -368,9 +363,9 @@ int dMeter_c::Behavior() {
         n = NumStars();
         flags = 0;
         if (n > 0x63)
-            n = 0x1b;
+            n = 27;
         else if (n > 9)
-            n = 0x12;
+            n = 18;
         else
             n = 9;
 
@@ -534,8 +529,8 @@ void dMeter_c::UpdateHealthMeter() {
             return;
         mHealthMeterY = 0x39;
         gMeterShownHealth[0]--;
-        mHealthTickTimer = 0x1e;
-        mHealthMeterHoldTimer = 0x5a;
+        mHealthTickTimer = 30;
+        mHealthMeterHoldTimer = 90;
         mHealthMeterState = 1;
         return;
     case 1:
@@ -554,7 +549,7 @@ void dMeter_c::UpdateHealthMeter() {
                 if ((int)(health - cur) > 1) {
                     gMeterShownHealth[0] = cur + 1;
                     func_02012790(0xd);
-                    mHealthTickTimer = 0x10;
+                    mHealthTickTimer = 16;
                     return;
                 }
                 gMeterShownHealth[0] = health;
@@ -567,14 +562,14 @@ void dMeter_c::UpdateHealthMeter() {
                     gMeterCounterSlideState = 3;
                     mHealthMeterState = 2;
                 } else {
-                    mHealthMeterHoldTimer = 0x3c;
+                    mHealthMeterHoldTimer = 60;
                     mHealthMeterState = 4;
                 }
                 return;
             }
             if (cur > health) {
                 gMeterShownHealth[0] = cur - 1;
-                mHealthTickTimer = 0x1e;
+                mHealthTickTimer = 30;
                 return;
             }
             if (cur != 8)
@@ -587,14 +582,14 @@ void dMeter_c::UpdateHealthMeter() {
                 gMeterCounterSlideState = 3;
                 mHealthMeterState = 2;
             } else {
-                mHealthMeterHoldTimer = 0x3c;
+                mHealthMeterHoldTimer = 60;
                 mHealthMeterState = 4;
             }
         }
         return;
     case 2:
         if (gMeterCounterSlideState == 4) {
-            mHealthMeterHoldTimer = 0x3c;
+            mHealthMeterHoldTimer = 60;
             mHealthMeterState = 3;
         }
         return;
@@ -604,7 +599,7 @@ void dMeter_c::UpdateHealthMeter() {
         GiveLives(-1);
         func_02012790(0x40);
         gMeterCounterSlideState = 5;
-        mHealthMeterHoldTimer = 0x3c;
+        mHealthMeterHoldTimer = 60;
         mHealthMeterState = 4;
         return;
     case 4:
@@ -666,14 +661,14 @@ void dMeter_c::UpdateVsTimer() {
         return;
 
     if (data_ov002_02111188 == 0) {
-        data_ov002_02111188 = 0xb4;
+        data_ov002_02111188 = 180;
         mVsTimer -= 1;
         v = mVsTimer;
         if (v <= 3 && v != 0)
             func_02012790(0x28);
         if (mVsTimer == 0) {
             data_0209f204 = 1;
-            data_ov002_02111188 = 0x3c;
+            data_ov002_02111188 = 60;
             func_02012790(0x29);
             gSubScreenLayers &= ~4;
         }

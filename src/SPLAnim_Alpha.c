@@ -50,7 +50,7 @@ void SPLAnim_Alpha(struct ParticleAlphaView *ptcl, PtclDef *def, int lifeRate) {
         int mid = anim->alpha.mid;
         int end = anim->alpha.end;
         int diff = end - mid;
-        int step = (lifeRate - 0xff) * diff / (0xff - out);
+        int step = (lifeRate - 255) * diff / (255 - out);
         value = step + end;
     }
     u16 *visibility = &ptcl->visibility;
@@ -60,6 +60,5 @@ void SPLAnim_Alpha(struct ParticleAlphaView *ptcl, PtclDef *def, int lifeRate) {
     u16 old = *visibility;
     *visibility =
         ((old & ~0x3e0) |
-         ((((u32)((value * (0xff - ((range * (int)(s >> 0x18)) >> 8))) << 8) >> 0x10) & 0x1f)
-          << 5));
+         ((((u32)((value * (255 - ((range * (int)(s >> 0x18)) >> 8))) << 8) >> 0x10) & 0x1f) << 5));
 }

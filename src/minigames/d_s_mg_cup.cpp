@@ -127,7 +127,7 @@ void CupFx_ElemDtor(void) {}
 
 int CupFx_FindFree(CupFx *fx, int, int, int) {
     int slot;
-    for (slot = 0; slot < 0x20; slot++) {
+    for (slot = 0; slot < 32; slot++) {
         if (fx[slot].active == 0)
             break;
     }
@@ -136,7 +136,7 @@ int CupFx_FindFree(CupFx *fx, int, int, int) {
 
 void CupFx_MoveForCup(CupFx *fx, int cup, int dx, int dy) {
     int i;
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         if (fx[i].active != 0 && cup == fx[i].cup)
             fx[i].Move(dx, dy);
     }
@@ -153,7 +153,7 @@ int CupFx_Spawn(CupFx *fx, int kind, int x, int y, signed char cup) {
 
 void CupFx_DrawForCup(CupFx *fx, int cup) {
     int i;
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         if (fx[i].active != 0 && cup == fx[i].cup)
             fx[i].Draw();
     }
@@ -161,7 +161,7 @@ void CupFx_DrawForCup(CupFx *fx, int cup) {
 
 void CupFx_UpdateAll(CupFx *fx) {
     int i;
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         if (fx[i].active)
             fx[i].Update();
     }
@@ -169,7 +169,7 @@ void CupFx_UpdateAll(CupFx *fx) {
 
 void CupFx_ClearAll(CupFx *fx) {
     int i;
-    for (i = 0; i < 0x20; i++)
+    for (i = 0; i < 32; i++)
         fx[i].active = 0;
 }
 
@@ -373,16 +373,16 @@ void dScMgCup_c::StateResult() {
     }
     score = mHudScore;
     if (mCorrect != 0) {
-        mTimer = 0x3c;
+        mTimer = 60;
         mModel.PlayCheer();
         score++;
     } else {
         Mg_SubCredits(this, 1);
         if (mCredits > 0) {
-            mTimer = 0x96;
+            mTimer = 150;
             mModel.PlayMiss();
         } else {
-            mTimer = 0x1e;
+            mTimer = 30;
             mModel.PlayLose();
         }
         func_02012790(0x12f);
@@ -424,7 +424,7 @@ void dScMgCup_c::StateSelect() {
         }
 
         mState = 5;
-        mTimer = 0x3c;
+        mTimer = 60;
         FreeGfxSlotsById(0x1d);
 
         {
@@ -520,11 +520,11 @@ void dScMgCup_c::StateShuffle() {
             mCupAtSlot[mSwapSlotB] = cupA;
             mSwapsRemaining -= 1;
             if (mSwapsRemaining == 0) {
-                mTimer = 0x1e;
+                mTimer = 30;
                 mState = 3;
             } else {
                 u32 delayRoll = RandomIntInternal(&data_0209e650.value);
-                mTimer = (delayRoll >> 8) % 0x18 + 1;
+                mTimer = (delayRoll >> 8) % 24 + 1;
                 mState = 1;
             }
         } else if (mFakeOut != 0) {
@@ -647,7 +647,7 @@ void dScMgCup_c::StateSetup() {
     mSparkleShuffles = 0;
     mCorrect = 0;
     mState = 1;
-    mTimer = 0x1e;
+    mTimer = 30;
     mRevealCup = 0xff;
     mShuffleSound = 0;
     FreeGfxSlotsById(0x1d);
@@ -708,7 +708,7 @@ void dScMgCup_c::StartRound(int msg) {
         mTick[i] = 0;
     }
 
-    mTimer = 0x3c;
+    mTimer = 60;
     mState = 0;
     mModel.mTouchLocked = 0;
     mModel.ResetPose();

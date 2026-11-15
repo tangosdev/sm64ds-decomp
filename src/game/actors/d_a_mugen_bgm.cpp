@@ -63,7 +63,7 @@ int daMugenBGM_c::InitResources() {
        str r0,[r1]) and the function grows a word; the cartridge re-issues
        ldr/str [r4,#8]. Same lever as dScMgPachinko2_c::StartRound. */
     const daMugenBGM_c *ro = this;
-    param1 = ro->param1 & 0xf;
+    param1 = ro->param1 & 15;
     if (param1 != 1) {
         data_ov002_02110af4 = mAngleY;
         p = ::operator new(0x28);
@@ -105,11 +105,11 @@ int daMugenBGM_c::Behavior() {
     }
 
     depth = 0xffff;
-    vol = 0x7f;
+    vol = 127;
     color = depth;
     flag = 0;
 
-    if (NumStars() < 0x50 || data_0209caa0.file.mCharacter != 0) {
+    if (NumStars() < 80 || data_0209caa0.file.mCharacter != 0) {
         int x = rotated.x;
         color = 0xd00;
         if (x < 0)
@@ -119,7 +119,7 @@ int daMugenBGM_c::Behavior() {
             if (y > -0x32000 && y < 0x1000000 && rotated.z < 0) {
                 int d;
                 vol = 0;
-                flag = 0x7f;
+                flag = 127;
                 d = AngleDiff(mAngleY, gCamera->mAngleY) - 0x2000;
                 if (d < 0)
                     d = 0;

@@ -346,7 +346,7 @@ Ov007Figure *func_ov007_020be850(void) {
         return res;
     r2 = work->model->boneAnim;
     if (r2->anim == 0) {
-        if (r2->frame >= 0x7c) {
+        if (r2->frame >= 124) {
             if (work->figureIndex == 1)
                 return work->altFigure;
         }
@@ -367,7 +367,7 @@ void func_ov007_020be7a8(void *pos, unsigned short *outX, unsigned short *outY, 
     func_ov007_020bfd70(WORK->cameras[0], pos, &x, &y);
 
     if (WORK->cameraPreset == 4) {
-        y = y + 0x14b;
+        y = y + 331;
     } else {
         y = y + data_ov007_020d7c58[WORK->figureIndex];
     }
@@ -403,7 +403,7 @@ void func_ov007_020be684(void *system, Ov007SpriteGroup *grp) {
         item->node->x = rec->screenX << 12;
         item->node->y = rec->screenY << 12;
         item->node->priority = rec->priority;
-        item->node->affineIndex = (rec->lifeScale << 4) >> 0xc;
+        item->node->affineIndex = (rec->lifeScale << 4) >> 12;
         if (rec->particle != 0)
             func_ov007_020c3fe4(item);
     }
@@ -513,7 +513,7 @@ int func_ov007_020be0dc(void) {
             break;
         case 1: {
             int frame = fig->model->boneAnim->frame;
-            if (frame >= 0x226) {
+            if (frame >= 550) {
                 if (node->animIndex != 1)
                     Sprite_SetAnimation(node, 1, 1, 0, 0);
             } else {
@@ -527,13 +527,13 @@ int func_ov007_020be0dc(void) {
         func_ov007_020bfd70(WORK->cameras[0], pos, &screenX, &screenY);
 
         if (WORK->cameraPreset == 4)
-            screenY += 0x14b;
+            screenY += 331;
         else
             screenY += data_ov007_020d7c58[WORK->figureIndex];
 
         {
-            int x = (short)screenX << 0xc;
-            int y = (short)screenY << 0xc;
+            int x = (short)screenX << 12;
+            int y = (short)screenY << 12;
             node->x = x;
             node->y = y;
         }
@@ -541,10 +541,10 @@ int func_ov007_020be0dc(void) {
         {
             int *row = &Bone0(fig)->r.m[6];
             int yaw = FX_Atan2(row[0], row[2]);
-            int turn = FX_DivS32(yaw << 0xc, 0xffff);
-            unsigned int scale = ((turn * 0x12) >> 0xc) & 0xff;
-            if (scale >= 0x12)
-                scale = 0x11;
+            int turn = FX_DivS32(yaw << 12, 0xffff);
+            unsigned int scale = ((turn * 18) >> 12) & 0xff;
+            if (scale >= 18)
+                scale = 17;
             if (node->animIndex == 0)
                 Sprite_SetAnimation(node, 0, 0, 0, scale);
         }

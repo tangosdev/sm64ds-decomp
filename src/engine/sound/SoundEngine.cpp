@@ -749,7 +749,7 @@ void HeapAllocator_205212c::func_020520a4() {
 int SndHeap::func_02052008() {
     int i;
     func_02050d2c();
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         struct SndPlayerInfo *info = func_02050ae8(i);
         if (info == 0)
             continue;
@@ -1895,12 +1895,12 @@ extern "C" void func_0204fc40(void) {
     int i;
     NNS_FndInitList(&data_020a4d60, 0x14);
     NNS_FndInitList(&data_020a4d54, 0x14);
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         data_020a50ec[i].status = 0;
         data_020a50ec[i].playerNo = (unsigned char)i;
         NNS_FndAppendListObject(&data_020a4d54, &data_020a50ec[i]);
     }
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         NNS_FndInitList(&data_020a4d6c[i].mLists[0], 0xc);
         NNS_FndInitList(&data_020a4d6c[i].mLists[1], 0);
         data_020a4d6c[i].mPlayableSeqCount = 1;

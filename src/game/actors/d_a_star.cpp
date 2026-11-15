@@ -21,7 +21,7 @@
  * daSoundObj_c, dBgCh_Gnd and dBgCh_Actr instead of offset arithmetic, and each
  * function says what it does.
  *
- * Units: positions, speeds and scales are Fix12 (0x1000 = 1.0; the comments
+ * Units: positions, speeds and scales are fx32 (0x1000 = 1.0; the comments
  * give decimal values); angles are s16 (0x10000 = a full turn); a model or
  * shadow matrix takes the position >> 3. Hit-flag bits and sound ids stay
  * numbers; the sound calls are func_02012694 (positional, bank 3) and
@@ -37,8 +37,8 @@
  *   output vector, not the star.
  * - Still unnamed: the dActor_c word at +0xc8 and the halfword at
  *   data_02082714 + 0x56, which lands mid-word in an untyped arm9 table.
- * - Fix12-by-value callees stay as mangled extern "C" names, and `this`
- *   goes to some externs as (char *)this to keep their declared signatures.
+ * - `this` goes to LinkSilverStarAndStarMarker as (char *)this to keep its
+ *   declared signature.
  * - The Kind names are numbers (KIND_n): only what the code evidences is
  *   said about each one.
  * Methods are named for what their bodies do (and, for the State handlers and the
@@ -406,8 +406,8 @@ s32 daStar_c::InitResources()
         mState = STATE_BOUNCE;
         mVertSpeed = 0x20000;
         SetDefaultGravity();
-        mStateTimer = 0xf;
-        mSparkleTimer = 0x32;
+        mStateTimer = 15;
+        mSparkleTimer = 50;
         mWithMeshClsn.StartDetectingWater();
     } else if (kind == KIND_2 || kind == KIND_4) {
         mState = STATE_LAUNCH;
@@ -671,7 +671,7 @@ int daStarBase_c::Behavior()
                 mdCcAcPos_c.flags &= ~1;
             }
         } else {
-            mAppearTimer = 0x2a;
+            mAppearTimer = 42;
         }
         mBits.refresh = 0;
     }
@@ -1008,7 +1008,7 @@ void daStar_c::StateIdle() {
                 mFlags |= CUTSCENE_FLAG;
                 gNextActorUpdateMask |= CUTSCENE_FLAG;
             } else if (mScaleX == 0x1000) {
-                mAppearTimer = lim + 0xb;
+                mAppearTimer = lim + 11;
                 mBits.appeared = 1;
                 AddStarMarker();
                 mdCc_c.flags &= ~1;
@@ -1037,7 +1037,7 @@ void daStar_c::StateIdle() {
                 }
             } else {
                 if (!mBits.switchStar)
-                    mAppearTimer = 0x3d;
+                    mAppearTimer = 61;
                 else
                     mAppearTimer = 0;
             }
@@ -1056,7 +1056,7 @@ void daStar_c::StateIdle() {
                 if (mStateTimer == 0)
                     func_02012790(0x42);
                 spd2 = mScaleX;
-                if (mStateTimer <= 0xf) {
+                if (mStateTimer <= 15) {
                     mStateTimer += 1;
                     step2 = 0;
                 } else {
@@ -1283,7 +1283,7 @@ void daStar_c::StateCollectTalk() {
     mPosZ = src[2];
     mPrevAngleY = mPlayer->mAngleY;
     if (mKind == KIND_9) {
-        if (mMusicTimer < 0x78) {
+        if (mMusicTimer < 120) {
             Sound::ChangeMusicVolume(0, 0x7f000);
             mMusicTimer++;
         } else {
@@ -1342,7 +1342,7 @@ LA:
                 }
             }
         }
-        mSeqTimer = 0xa;
+        mSeqTimer = 10;
         if (mPlayer->Unk_020c9e5c(st2) == 0) {
             mTalkStep = 2;
             mState = STATE_SAVE_MESSAGE;
@@ -1376,7 +1376,7 @@ LA:
  * adjusting the music. */
 void daStar_c::StateSaveMessage() {
     if (mKind == KIND_9) {
-        if (mMusicTimer < 0x78) {
+        if (mMusicTimer < 120) {
             Sound::ChangeMusicVolume(0, 0x7f000);
             mMusicTimer++;
         } else {
@@ -1494,7 +1494,7 @@ void daStar_c::StateWaitMarker() {
     if (!actor->mBits.hold) return;
 
     mBits.noPickup = 0;
-    mStateTimer = 0xf;
+    mStateTimer = 15;
     mState = STATE_BOUNCE;
     mVertSpeed = 0x20000;
     SetDefaultGravity();
@@ -1552,7 +1552,8 @@ void daStar_c::StateSpinAndEnd() {
             UntrackStar(mMarkerSlot);
         }
         mBits.visible = 0;
-        if (mSeqTimer < 0x64) return;
+        if (mSeqTimer < 100)
+            return;
         StopCollectSoundObj();
         if ((int)(gGameMode == 1) != 0) {
             MarkForDestruction();
@@ -1924,7 +1925,7 @@ void daStar_c::AddStarMarker()
 {
     s8 i;
     if (mMarkerSlot >= 0) return;
-    for (i = 0; i < 0xc; i++) {
+    for (i = 0; i < 12; i++) {
         if (STAR_MARKERS[(int)i] != 0)
             continue;
 
@@ -2035,7 +2036,7 @@ void daStar_c::ReturnToHome() {
     mState = mHomeState;
     mVertSpeed = 0x20000;
     SetDefaultGravity();
-    mStateTimer = 0xf;
+    mStateTimer = 15;
 }
 
 /* -------------------------------------------------------------------------- */

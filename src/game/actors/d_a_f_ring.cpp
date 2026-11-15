@@ -88,7 +88,7 @@ s32 daFRing_c::Behavior() {
     daPly_c *player = ClosestPlayer();
     unsigned int frame = mFrame;
     int reach = frame * 0x22;
-    if (player != 0 && frame < 0x46 && player->mIsAirborne == 0) {
+    if (player != 0 && frame < 70 && player->mIsAirborne == 0) {
         int dist = Vec3_HorzDist(&mPos, &player->mPos);
         int band0 = reach * data_ov060_0211ab20[0];
         int band1 = reach * data_ov060_0211ab20[1];

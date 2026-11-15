@@ -204,7 +204,7 @@ u8 DSMT_MenuCallback(s32 command) {
     } else if (command == 23) {
         SaveData::SaveMinigames(&data_0209cae4);
     } else if (command == 19) {
-        Sound::StopLoadedMusic_Layer1(0x3c);
+        Sound::StopLoadedMusic_Layer1(60);
     }
     DSMT_UpdateBootArgs(data_0209caa0.activeFile);
     return failed;

@@ -23,9 +23,7 @@
  */
 
 // leftovers:
-// - OAM::Render, OAM::RenderSub, Sound::PlaySub and cstd::atan2
-//   stay mangled (Fix12 by value). Fog::Init is the scalar fx32 method.
-//   RenderNumber keeps a local extern spelled over the member's mask-emitting
+// - RenderNumber keeps a local extern spelled over the member's mask-emitting
 //   parameter conversions. InitResources calls LoadGraphics2D with the comparison
 //   itself as the bool, which is what the ROM passes.
 // - LoadTextureTransformers spells `new` as an explicit operator new call
@@ -124,8 +122,6 @@ void TurnBacklightOff(void);
 
 bool d_s_stage_methodsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int fix, int e);
 
-void OamRender10_d_s_stage_methods(int sub, void *attr, int x, int y, int a, int cc, int fx, int fy,
-                                   int rot, int mode);
 
 extern int data_0208ee44;
 extern u8 data_0208ee3c;
@@ -646,8 +642,7 @@ void dScStage_c::VE_Update() {
         idx2 = gActivePlayerSlot;
         a = gTouchX[idx2 * 4];
         off2 = idx2 * 4;
-        if (((u8)(a - 8) < 0xf0 && (u8)(gTouchY[off2] - 0x38) < 0x20) ||
-            IsButtonInputValid() != 0) {
+        if (((u8)(a - 8) < 240 && (u8)(gTouchY[off2] - 56) < 32) || IsButtonInputValid() != 0) {
             if (sSelectedMenuButton == 0) {
                 sMenuHighlightDelay = data_0208ee44 << 2;
             }
@@ -657,15 +652,15 @@ void dScStage_c::VE_Update() {
             data_0209f290 = 1;
             data_ov002_02111150 = 1;
             func_02012790(0x9a);
-            if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x28) < 0xb0)
+            if ((u8)(gTouchX[gActivePlayerSlot * 4] - 40) < 176)
                 return;
             return;
         } else {
             u8 idx3 = gActivePlayerSlot;
             int off3 = idx3 * 4;
-            if ((u8)(gTouchX[idx3 * 4] - 8) >= 0xf0)
+            if ((u8)(gTouchX[idx3 * 4] - 8) >= 240)
                 return;
-            if ((u8)(gTouchY[off3] - 0x68) >= 0x20)
+            if ((u8)(gTouchY[off3] - 104) >= 32)
                 return;
             if (sSelectedMenuButton == 1) {
                 sMenuHighlightDelay = data_0208ee44 << 2;
@@ -676,7 +671,7 @@ void dScStage_c::VE_Update() {
             data_0209f290 = 1;
             data_ov002_02111150 = 1;
             func_02012790(0x9b);
-            if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
+            if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
                 return;
             return;
         }
@@ -735,17 +730,17 @@ void dScStage_c::RenderBouncingArrows() {
     A = gGamePaused;
     if ((A == 0 && gShowTouchScreenArrows != 0 && (int)(gGameMode == 1) == 0) ||
         (A != 0 && (unsigned char)(sPauseState + 0xf7) <= 2u)) {
-        OAM::Render(0, &OAM::BOUNCING_ARROW, 0x40, r4, -1, -1, 0x1000, 0x1000, 0, -1);
-        OAM::Render(0, &OAM::BOUNCING_ARROW, 0x80, r4, -1, -1, 0x1000, 0x1000, 0, -1);
-        OAM::Render(0, &OAM::BOUNCING_ARROW, 0xc0, r4, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::BOUNCING_ARROW, 64, r4, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::BOUNCING_ARROW, 128, r4, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::BOUNCING_ARROW, 192, r4, -1, -1, 0x1000, 0x1000, 0, -1);
     } else {
-        OAM::Render(0, &OAM::BOUNCING_ARROW, 0xc, r4, -1, -1, 0x1000, 0x1000, 0, -1);
-        OAM::Render(0, &OAM::BOUNCING_ARROW, 0xf4, r4, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::BOUNCING_ARROW, 12, r4, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::BOUNCING_ARROW, 244, r4, -1, -1, 0x1000, 0x1000, 0, -1);
     }
 }
 void dScStage_c::LC_Render() {
     sLevelClearPaletteTimer = sLevelClearPaletteTimer + data_0208ee44;
-    if (sLevelClearPaletteTimer >= 0xc)
+    if (sLevelClearPaletteTimer >= 12)
         sLevelClearPaletteTimer = 0;
 
     if (data_0209f20c == 0)
@@ -761,40 +756,40 @@ void dScStage_c::LC_Render() {
     if (SublevelToLevel(gLastCourseSublevel) >= 0xf &&
         SublevelToLevel(gLastCourseSublevel) < 0x15) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, &data_ov002_0210cea8, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210cea8, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, &data_ov002_0210cee8, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210cee8, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, &data_ov002_0210cf28, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210cf28, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, &data_ov002_0210cf78, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210cf78, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
         else
-            OAM::Render(0, &data_ov002_0210cb14, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210cb14, 128, 56, -1, -1, 0x1000, 0x1000, 0, -1);
     }
 
     if (sLevelClearNewRecord != 0) {
         if (data_0209f20c != 0 && SublevelToLevel(gLastCourseSublevel) >= 0xf) {
             if (GetOwnerLanguage() == 5)
-                OAM::Render(0, &data_ov002_0210ce90, 0x80, 0x70, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210ce90, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 4)
-                OAM::Render(0, &data_ov002_0210ced0, 0x80, 0x70, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210ced0, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 3)
-                OAM::Render(0, &data_ov002_0210cf08, 0x80, 0x70, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210cf08, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 2)
-                OAM::Render(0, &data_ov002_0210cfa0, 0x80, 0x70, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210cfa0, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
             else
-                OAM::Render(0, &data_ov002_0210caf4, 0x80, 0x70, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210caf4, 128, 112, -1, -1, 0x1000, 0x1000, 0, -1);
         } else {
             if (GetOwnerLanguage() == 5)
-                OAM::Render(0, &data_ov002_0210ce90, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210ce90, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 4)
-                OAM::Render(0, &data_ov002_0210ced0, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210ced0, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 3)
-                OAM::Render(0, &data_ov002_0210cf08, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210cf08, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             else if (GetOwnerLanguage() == 2)
-                OAM::Render(0, &data_ov002_0210cfa0, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210cfa0, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
             else
-                OAM::Render(0, &data_ov002_0210caf4, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210caf4, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
         }
     }
 
@@ -835,7 +830,7 @@ void dScStage_c::LC_Update() {
             Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
             data_0209f280 = 1;
         }
-        sMenuWaitTimer = 0x1e;
+        sMenuWaitTimer = 30;
         return;
     case 1: {
         int level = SublevelToLevel(gLastCourseSublevel);
@@ -850,7 +845,7 @@ void dScStage_c::LC_Update() {
                     Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
                     data_0209f280 = 1;
                 }
-                sMenuWaitTimer = 0x1e;
+                sMenuWaitTimer = 30;
                 if (level < 0xf) {
                     u8 coins = sLevelClearCoinCount;
                     if (SaveData::GetCoinRecord(level) >= coins)
@@ -876,7 +871,7 @@ void dScStage_c::LC_Update() {
             Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
             data_0209f280 = 1;
         }
-        sMenuWaitTimer = 0x3c;
+        sMenuWaitTimer = 60;
         gNumCoins[0] = 0;
         gLevelClearStep = 2;
         return;
@@ -919,7 +914,7 @@ void dScStage_c::LC_Update() {
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x28) < 0x20) ||
+            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 40) < 32) ||
                 (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 0)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -928,14 +923,14 @@ void dScStage_c::LC_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 func_02012790(0x57);
                 gLevelClearStep = 4;
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
+                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x50) < 0x20) ||
+            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 80) < 32) ||
                 (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 1)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -944,14 +939,14 @@ void dScStage_c::LC_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 func_02012790(0x58);
                 gLevelClearStep = 4;
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
+                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (!((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x78) < 0x20) &&
+            if (!((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 120) < 32) &&
                 (sSelectedMenuButton != 2 || IsButtonInputValid() == 0))
                 return;
             if (sSelectedMenuButton == 2)
@@ -961,7 +956,7 @@ void dScStage_c::LC_Update() {
             sMenuWaitTimer = data_0208ee44 << 3;
             func_02012790(0x59);
             gLevelClearStep = 6;
-            if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
+            if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
                 return;
             return;
         }
@@ -972,14 +967,14 @@ void dScStage_c::LC_Update() {
         gLevelClearStep = 5;
         gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
         Message::DisplaySaveStatusText(0x295);
-        data_0209f2b8 = 0x78;
+        data_0209f2b8 = 120;
         return;
     case 5:
         if (data_0209f2b8 == 0)
             return;
-        if (data_0209f2b8 == 0x78) {
+        if (data_0209f2b8 == 120) {
             SaveData::SaveCurrentFile();
-        } else if (data_0209f2b8 == 0x3c) {
+        } else if (data_0209f2b8 == 60) {
             Message::DisplaySaveStatusText(0x296);
         }
         data_0209f2b8 = data_0209f2b8 - data_0208ee44;
@@ -999,7 +994,7 @@ void dScStage_c::LC_Update() {
         } else {
             dScene_c::StartSceneFade(1, 0, 0);
             gMeterCounterSlideState = 0;
-            Sound::StopLoadedMusic_Layer1(0xa);
+            Sound::StopLoadedMusic_Layer1(10);
             {
                 int t = gNextActorUpdateMask | ACTOR_UPDATE_MASK_STAGE_ENDING;
                 gNextActorUpdateMask = t;
@@ -1030,25 +1025,25 @@ void dScStage_c::CheckCameraInput() {
                     if (gCamera->mFlags & 0x1000) {
                         // cam->mode here builds 32 bytes shorter; the indexed read is the ROM shape.
                         u8 state = data_0209f498[i].mode;
-                        if ((state == 0 && ((((TouchInfo *)gTouchHeld)[i].x <= 0x58 &&
-                                             ((TouchInfo *)gTouchHeld)[i].y >= 0x8a) ||
-                                            (((TouchInfo *)gTouchHeld)[i].x >= 0xa7 &&
-                                             ((TouchInfo *)gTouchHeld)[i].y >= 0x8a))) ||
-                            (state == 2 && ((TouchInfo *)gTouchHeld)[i].x >= 0xa7 &&
-                             ((TouchInfo *)gTouchHeld)[i].y >= 0x9a)) {
+                        if ((state == 0 && ((((TouchInfo *)gTouchHeld)[i].x <= 88 &&
+                                             ((TouchInfo *)gTouchHeld)[i].y >= 138) ||
+                                            (((TouchInfo *)gTouchHeld)[i].x >= 167 &&
+                                             ((TouchInfo *)gTouchHeld)[i].y >= 138))) ||
+                            (state == 2 && ((TouchInfo *)gTouchHeld)[i].x >= 167 &&
+                             ((TouchInfo *)gTouchHeld)[i].y >= 154)) {
                             if (((((TouchInfo *)gTouchHeld)[i].held &&
                                   ((TouchInfo *)gTouchHeld)[i].edge)
                                      ? 1
                                      : 0) ||
                                 *st == 1) {
                                 u16 mask;
-                                if ((state == 0 && ((TouchInfo *)gTouchHeld)[i].x < 0x2b) ||
-                                    (((TouchInfo *)gTouchHeld)[i].x >= 0xa7 &&
-                                     ((TouchInfo *)gTouchHeld)[i].x < 0xd1))
+                                if ((state == 0 && ((TouchInfo *)gTouchHeld)[i].x < 43) ||
+                                    (((TouchInfo *)gTouchHeld)[i].x >= 167 &&
+                                     ((TouchInfo *)gTouchHeld)[i].x < 209))
                                     mask = 0x200;
-                                else if ((state == 0 && ((TouchInfo *)gTouchHeld)[i].x >= 0x30 &&
-                                          ((TouchInfo *)gTouchHeld)[i].x <= 0x58) ||
-                                         ((TouchInfo *)gTouchHeld)[i].x >= 0xd6)
+                                else if ((state == 0 && ((TouchInfo *)gTouchHeld)[i].x >= 48 &&
+                                          ((TouchInfo *)gTouchHeld)[i].x <= 88) ||
+                                         ((TouchInfo *)gTouchHeld)[i].x >= 214)
                                     mask = 0x100;
                                 else {
                                     mask = data_0209f368[i];
@@ -1083,21 +1078,21 @@ void dScStage_c::CheckCameraInput() {
                               ((TouchInfo *)gTouchHeld)[i].edge)
                                  ? 1
                                  : 0) &&
-                            ((state2 == 1 && ((TouchInfo *)gTouchHeld)[i].x >= 0xd7 &&
-                              ((TouchInfo *)gTouchHeld)[i].y >= 0x8d) ||
-                             (state2 == 2 && ((TouchInfo *)gTouchHeld)[i].x >= 0xd7 &&
-                              ((TouchInfo *)gTouchHeld)[i].y >= 0x73 &&
-                              ((TouchInfo *)gTouchHeld)[i].y < 0x97))) {
-                            gZoomButtonActiveTimer = 0x10;
+                            ((state2 == 1 && ((TouchInfo *)gTouchHeld)[i].x >= 215 &&
+                              ((TouchInfo *)gTouchHeld)[i].y >= 141) ||
+                             (state2 == 2 && ((TouchInfo *)gTouchHeld)[i].x >= 215 &&
+                              ((TouchInfo *)gTouchHeld)[i].y >= 115 &&
+                              ((TouchInfo *)gTouchHeld)[i].y < 151))) {
+                            gZoomButtonActiveTimer = 16;
                             cam->pressed |= 0x8000;
                             *st = 2;
                             cam->touching = 0;
                         } else if (*st == 2) {
-                            if ((state2 == 1 && ((TouchInfo *)gTouchHeld)[i].x >= 0xd5 &&
-                                 ((TouchInfo *)gTouchHeld)[i].y >= 0x8d) ||
-                                (state2 == 2 && ((TouchInfo *)gTouchHeld)[i].x >= 0xd5 &&
-                                 ((TouchInfo *)gTouchHeld)[i].y >= 0x73 &&
-                                 ((TouchInfo *)gTouchHeld)[i].y < 0x97)) {
+                            if ((state2 == 1 && ((TouchInfo *)gTouchHeld)[i].x >= 213 &&
+                                 ((TouchInfo *)gTouchHeld)[i].y >= 141) ||
+                                (state2 == 2 && ((TouchInfo *)gTouchHeld)[i].x >= 213 &&
+                                 ((TouchInfo *)gTouchHeld)[i].y >= 115 &&
+                                 ((TouchInfo *)gTouchHeld)[i].y < 151)) {
                                 cam->touching = 0;
                             } else {
                                 *st = 0;
@@ -1155,7 +1150,7 @@ void dScStage_c::PS_Render() {
 
     int r0v = (gGameMode == 1);
     if (r0v != 0 && data_0209fc68 == 0) {
-        OAM::Render(0, &OAM::VS_PAUSE, 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::VS_PAUSE, 128, 96, -1, -1, 0x1000, 0x1000, 0, -1);
     } else if (sPauseState == 1 || (SublevelToLevel(gCurrentSublevel) == 0x1d &&
                                     (sPauseState < 7U || sPauseState > 8U))) {
         int var_sl;
@@ -1171,68 +1166,64 @@ void dScStage_c::PS_Render() {
         }
         if (sPauseState == 1 && sCourseArrowsHidden == 0) {
             if (sPressedPauseArrow == 1) {
-                OAM::Render(0, &OAM::ARROW_POINTING_LEFT, 0x12, 0x60, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
-                OAM::RenderSub(&OAM::ARROW_POINTING_LEFT, 0x12, 0x10);
+                OAM::Render(0, &OAM::ARROW_POINTING_LEFT, 18, 96, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::RenderSub(&OAM::ARROW_POINTING_LEFT, 18, 16);
             } else {
-                OAM::Render(0, &OAM::ARROW_POINTING_LEFT, 0x14, 0x60, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
-                OAM::RenderSub(&OAM::ARROW_POINTING_LEFT, 0x14, 0x10);
+                OAM::Render(0, &OAM::ARROW_POINTING_LEFT, 20, 96, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::RenderSub(&OAM::ARROW_POINTING_LEFT, 20, 16);
             }
             if (sPressedPauseArrow == 2) {
-                OAM::Render(0, &OAM::ARROW_POINTING_RIGHT, 0xee, 0x60, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
-                OAM::RenderSub(&OAM::ARROW_POINTING_RIGHT, 0xee, 0x10);
+                OAM::Render(0, &OAM::ARROW_POINTING_RIGHT, 238, 96, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::RenderSub(&OAM::ARROW_POINTING_RIGHT, 238, 16);
             } else {
-                OAM::Render(0, &OAM::ARROW_POINTING_RIGHT, 0xec, 0x60, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
-                OAM::RenderSub(&OAM::ARROW_POINTING_RIGHT, 0xec, 0x10);
+                OAM::Render(0, &OAM::ARROW_POINTING_RIGHT, 236, 96, -1, -1, 0x1000, 0x1000, 0, -1);
+                OAM::RenderSub(&OAM::ARROW_POINTING_RIGHT, 236, 16);
             }
         }
         if (sPauseDisplayedCourse != 0xf) {
-            var_sb = 0x50;
+            var_sb = 80;
             var_sl = 1;
             if (var_r8 != 0) {
                 do {
                     if (IsStarCollected(sPauseDisplayedCourse, var_sl) != 0) {
-                        OAM::Render(false, &OAM::MM_SMALL_STAR, var_sb, 0x60, -1, -1, 0);
+                        OAM::Render(false, &OAM::MM_SMALL_STAR, var_sb, 96, -1, -1, 0);
                         var_r7 = (var_r7 + 1) & 0xff;
                     } else {
-                        OAM::Render(false, &OAM::SMALL_STAR_EMPTY, var_sb, 0x60, -1, -1, 0);
+                        OAM::Render(false, &OAM::SMALL_STAR_EMPTY, var_sb, 96, -1, -1, 0);
                         sp18 = 1;
                     }
-                    var_sb += 0x10;
+                    var_sb += 16;
                     var_sl += 1;
                 } while (var_r7 != var_r8);
             }
             if (sp18 == 0 && var_r8 != 7) {
-                OAM::Render(false, &OAM::SMALL_STAR_EMPTY, var_sb, 0x60, -1, -1, 0);
+                OAM::Render(false, &OAM::SMALL_STAR_EMPTY, var_sb, 96, -1, -1, 0);
             }
             unsigned char r5v = SaveData::GetCoinRecord(sPauseDisplayedCourse);
-            OAM::Render(false, &OAM::COIN, 0x70, 0x70, -1, -1, 0);
-            OAM::Render(false, &OAM::TIMES, 0x80, 0x78, -1, -1, 0);
-            RenderNumber(r5v, 0x88, 0x70, 1, 8);
+            OAM::Render(false, &OAM::COIN, 112, 112, -1, -1, 0);
+            OAM::Render(false, &OAM::TIMES, 128, 120, -1, -1, 0);
+            RenderNumber(r5v, 136, 112, 1, 8);
             if (IsStarCollected(sPauseDisplayedCourse, 0) != 0) {
-                OAM::Render(false, &OAM::MM_SMALL_STAR, 0xb0, 0x78, -1, -1, 0);
+                OAM::Render(false, &OAM::MM_SMALL_STAR, 176, 120, -1, -1, 0);
             }
         } else {
-            OAM::Render(false, &OAM::MM_SMALL_STAR, 0x70, 0x60, -1, -1, 0);
-            OAM::Render(false, &OAM::TIMES, 0x80, 0x60, -1, -1, 0);
-            RenderNumber(CountStarsCollectedInLevelToDisplay(0x1d), 0x88, 0x58, 1, 8);
+            OAM::Render(false, &OAM::MM_SMALL_STAR, 112, 96, -1, -1, 0);
+            OAM::Render(false, &OAM::TIMES, 128, 96, -1, -1, 0);
+            RenderNumber(CountStarsCollectedInLevelToDisplay(0x1d), 136, 88, 1, 8);
         }
     } else if (gMainScreenLayers & DISPLAY_LAYER_BG3) {
         if (sPauseDisplayedCourse < 0xfU) {
             unsigned char r4v = CountStarsCollectedInLevelToDisplay(sPauseDisplayedCourse);
-            OAM::Render(false, &OAM::MM_SMALL_STAR, 0x58, 0x8c, -1, -1, 0);
-            OAM::Render(false, &OAM::TIMES, 0x68, 0x8c, -1, -1, 0);
-            RenderNumber(r4v, 0x70, 0x84, 1, 1);
+            OAM::Render(false, &OAM::MM_SMALL_STAR, 88, 140, -1, -1, 0);
+            OAM::Render(false, &OAM::TIMES, 104, 140, -1, -1, 0);
+            RenderNumber(r4v, 112, 132, 1, 1);
             unsigned char r4v2 = SaveData::GetCoinRecord(sPauseDisplayedCourse);
-            OAM::Render(false, &OAM::COIN, 0x88, 0x84, -1, -1, 0);
-            OAM::Render(false, &OAM::TIMES, 0x98, 0x8c, -1, -1, 0);
-            RenderNumber(r4v2, 0xa0, 0x84, 1, 1);
+            OAM::Render(false, &OAM::COIN, 136, 132, -1, -1, 0);
+            OAM::Render(false, &OAM::TIMES, 152, 140, -1, -1, 0);
+            RenderNumber(r4v2, 160, 132, 1, 1);
         }
         if (sPauseState == 0xb) {
-            OAM::RenderSub(&OAM::PAUSE, 0x80, 0x60);
+            OAM::RenderSub(&OAM::PAUSE, 128, 96);
         }
     }
 
@@ -1241,45 +1232,44 @@ void dScStage_c::PS_Render() {
         if (sSelectedMenuButton == 3) {
             if (sBackButtonSelected == 0) {
                 if (GetOwnerLanguage() == 5) {
-                    OAM::Render(true, &OAM::TINY_STAR, 0x46, ((sSelectedMenuButton * 5) + 6) * 8,
-                                -1, -1, 0);
+                    OAM::Render(true, &OAM::TINY_STAR, 70, ((sSelectedMenuButton * 5) + 6) * 8, -1,
+                                -1, 0);
                 } else if (GetOwnerLanguage() == 3) {
-                    OAM::Render(true, &OAM::TINY_STAR, 0x4e, ((sSelectedMenuButton * 5) + 6) * 8,
-                                -1, -1, 0);
+                    OAM::Render(true, &OAM::TINY_STAR, 78, ((sSelectedMenuButton * 5) + 6) * 8, -1,
+                                -1, 0);
                 } else {
-                    OAM::Render(true, &OAM::TINY_STAR, 0x56, ((sSelectedMenuButton * 5) + 6) * 8,
-                                -1, -1, 0);
+                    OAM::Render(true, &OAM::TINY_STAR, 86, ((sSelectedMenuButton * 5) + 6) * 8, -1,
+                                -1, 0);
                 }
             } else {
-                OAM::Render(true, &OAM::TINY_STAR, 0xce, ((sSelectedMenuButton * 5) + 6) * 8, -1,
-                            -1, 0);
+                OAM::Render(true, &OAM::TINY_STAR, 206, ((sSelectedMenuButton * 5) + 6) * 8, -1, -1,
+                            0);
             }
         } else {
-            OAM::Render(true, &OAM::TINY_STAR, 0x26, ((sSelectedMenuButton * 5) + 6) * 8, -1, -1,
-                        0);
+            OAM::Render(true, &OAM::TINY_STAR, 38, ((sSelectedMenuButton * 5) + 6) * 8, -1, -1, 0);
         }
         if (GetOwnerLanguage() == 5) {
-            OAM::Render(0, (OamAttr *)data_ov001_020abd98[sSelectedControllerMode], 0x80, 0x60, -1,
-                        -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020abd98[sSelectedControllerMode], 128, 96, -1, -1,
+                        0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 4) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac218[sSelectedControllerMode], 0x80, 0x60, -1,
-                        -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020ac218[sSelectedControllerMode], 128, 96, -1, -1,
+                        0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 3) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac64c[sSelectedControllerMode], 0x80, 0x60, -1,
-                        -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020ac64c[sSelectedControllerMode], 128, 96, -1, -1,
+                        0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 2) {
-            OAM::Render(0, (OamAttr *)data_ov001_020acb68[sSelectedControllerMode], 0x80, 0x60, -1,
-                        -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020acb68[sSelectedControllerMode], 128, 96, -1, -1,
+                        0x1000, 0x1000, 0, -1);
             return;
         }
-        OAM::Render(0, OAM::CONTROLLER_MODE_TEXTS[sSelectedControllerMode], 0x80, 0x60, -1, -1,
-                    0x1000, 0x1000, 0, -1);
+        OAM::Render(0, OAM::CONTROLLER_MODE_TEXTS[sSelectedControllerMode], 128, 96, -1, -1, 0x1000,
+                    0x1000, 0, -1);
         return;
     }
 
@@ -1290,30 +1280,30 @@ void dScStage_c::PS_Render() {
     if (sSelectedMenuButton == 2) {
         if (sBackButtonSelected == 0) {
             if (GetOwnerLanguage() == 5) {
-                OAM::Render(true, &OAM::TINY_STAR, 0x46, 0xa8, -1, -1, 0);
+                OAM::Render(true, &OAM::TINY_STAR, 70, 168, -1, -1, 0);
             } else if (GetOwnerLanguage() == 3) {
-                OAM::Render(true, &OAM::TINY_STAR, 0x4e, 0xa8, -1, -1, 0);
+                OAM::Render(true, &OAM::TINY_STAR, 78, 168, -1, -1, 0);
             } else {
-                OAM::Render(true, &OAM::TINY_STAR, 0x56, 0xa8, -1, -1, 0);
+                OAM::Render(true, &OAM::TINY_STAR, 86, 168, -1, -1, 0);
             }
         } else {
-            OAM::Render(true, &OAM::TINY_STAR, 0xce, 0xa8, -1, -1, 0);
+            OAM::Render(true, &OAM::TINY_STAR, 206, 168, -1, -1, 0);
         }
     } else {
-        OAM::Render(true, &OAM::TINY_STAR, 0xe, ((sSelectedMenuButton * 6) + 7) * 8, -1, -1, 0);
+        OAM::Render(true, &OAM::TINY_STAR, 14, ((sSelectedMenuButton * 6) + 7) * 8, -1, -1, 0);
     }
 
     if (sPressedPauseArrow == 2) {
-        OAM::Render(true, &OAM::SMALL_ARROW_POINTING_LEFT, 0x62, 0x38, -1, -1, 0);
+        OAM::Render(true, &OAM::SMALL_ARROW_POINTING_LEFT, 98, 56, -1, -1, 0);
     } else {
-        OAM::Render(true, &OAM::SMALL_ARROW_POINTING_LEFT, 0x64, 0x38, -1, -1, 0);
+        OAM::Render(true, &OAM::SMALL_ARROW_POINTING_LEFT, 100, 56, -1, -1, 0);
     }
 
     if (sPressedPauseArrow == 1) {
-        OAM::Render(true, &OAM::SMALL_ARROW_POINTING_RIGHT, 0xf6, 0x38, -1, -1, 0);
+        OAM::Render(true, &OAM::SMALL_ARROW_POINTING_RIGHT, 246, 56, -1, -1, 0);
         return;
     }
-    OAM::Render(true, &OAM::SMALL_ARROW_POINTING_RIGHT, 0xf4, 0x38, -1, -1, 0);
+    OAM::Render(true, &OAM::SMALL_ARROW_POINTING_RIGHT, 244, 56, -1, -1, 0);
 }
 /* Lever (notes 6au): TWO coupled changes that only work together.
  *   1. the array object is declared `extern volatile int data_02075610[];`
@@ -1406,7 +1396,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
 
     sel = (sSoundBoxFlashTimer != 0) ? 0x5000 : 0x6000;
     scr = (u16 *)G2S_GetBG1ScrPtr() + 0xae;
-    for (j = 0; j < 0xf; j++) {
+    for (j = 0; j < 15; j++) {
         scr[0] = (scr[0] & 0x3ff) | sel;
         scr[0x20] = (scr[0x20] & 0x3ff) | sel;
         scr[0x40] = (scr[0x40] & 0x3ff) | sel;
@@ -1418,7 +1408,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
         scr = (u16 *)G2S_GetBG1ScrPtr() + data_020755c0[j];
         v = (sSelectedMenuButton == j) ? 0x4000 : 0x3000;
         counter = 0;
-        for (; counter < 0xa; counter++) {
+        for (; counter < 10; counter++) {
             scr[0] = (scr[0] & 0x3ff) | v;
             scr[0x20] = (scr[0x20] & 0x3ff) | v;
             scr++;
@@ -1461,7 +1451,7 @@ void dScStage_c::UpdateMenuButtons(bool b) {
                 v = (u16)(v + 0x4000);
             }
         }
-        for (j = 0; j < 0x20; j++) {
+        for (j = 0; j < 32; j++) {
             p[0] = (p[0] & 0x3ff) | v;
             p[0x20] = (p[0x20] & 0x3ff) | v;
             p[0x40] = (p[0x40] & 0x3ff) | v;
@@ -1482,7 +1472,7 @@ void dScStage_c::PS_Cleanup() {
     if (data_0209f280 == 0)
         Sound::UnpauseMusic();
     else
-        Sound::StopLoadedMusic_Layer1(0x3c);
+        Sound::StopLoadedMusic_Layer1(60);
     sPauseInputLockout = 0xf;
     G2_BlendNone();
     G2S_BlendNone();
@@ -1618,7 +1608,7 @@ void dScStage_c::PS_Update() {
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x20) < 0x20) ||
+            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 32) < 32) ||
                 (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 0)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1627,14 +1617,14 @@ void dScStage_c::PS_Update() {
                 dScStage_c::UpdateMenuButtons(0);
                 gGamePaused = 2;
                 func_02012790(3);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x28) < 0xb0)
+                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 40) < 176)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x48) < 0x20) ||
+            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 72) < 32) ||
                 (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 1)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1643,14 +1633,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 sNextPauseState = 7;
                 func_02012790(0x53);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
+                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x70) < 0x20) ||
+            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 112) < 32) ||
                 (sSelectedMenuButton == 2 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 2)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1659,14 +1649,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 sNextPauseState = 9;
                 func_02012790(0x54);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
+                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x98) < 0x20) ||
+            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 152) < 32) ||
                 (sSelectedMenuButton == 3 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 3)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1675,7 +1665,7 @@ void dScStage_c::PS_Update() {
                 dScStage_c::UpdateMenuButtons(0);
                 sNextPauseState = 0xc;
                 func_02012790(0x55);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x28) < 0xb0)
+                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 40) < 176)
                     return;
                 return;
             }
@@ -1706,8 +1696,8 @@ void dScStage_c::PS_Update() {
                 if ((a != 0) && (TOUCHP(de_off)->edge != 0)) {
                     var_r0 = 1;
                 }
-                if ((var_r0 != 0) && ((vx = TOUCHP(sl2 * 4)->x) < 0x38U) &&
-                    (TOUCHP(sl2 * 4)->y < 0x20U)) {
+                if ((var_r0 != 0) && ((vx = TOUCHP(sl2 * 4)->x) < 56U) &&
+                    (TOUCHP(sl2 * 4)->y < 32U)) {
                     u8 t;
                     sPauseDisplayedCourse = (sPauseDisplayedCourse - 1);
                     var_fp = 1;
@@ -1717,7 +1707,7 @@ void dScStage_c::PS_Update() {
                     {
                         u8 *p0 = &sPauseArrowPressTimer;
                         u8 *p1 = &sPauseArrowPressTimer;
-                        u8 *p = ((vx & 0xff) < 0x38) ? p0 : p1;
+                        u8 *p = ((vx & 0xff) < 56) ? p0 : p1;
                         sPressedPauseArrow = 1;
                         *p = (data_0208ee44 * 3);
                     }
@@ -1729,8 +1719,7 @@ void dScStage_c::PS_Update() {
                         var_r0_2 = sp4;
                     }
                     if (var_r0_2 != 0) {
-                        if (((u8)(TOUCHP(sl2 * 4)->x - 0xC8) < 0x38U) &&
-                            (TOUCHP(sl2 * 4)->y < 0x20U)) {
+                        if (((u8)(TOUCHP(sl2 * 4)->x - 200) < 56U) && (TOUCHP(sl2 * 4)->y < 32U)) {
                             sPauseDisplayedCourse = (sPauseDisplayedCourse + 1);
                             sPressedPauseArrow = 2;
                             var_fp = 1;
@@ -1802,7 +1791,7 @@ void dScStage_c::PS_Update() {
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x18) < 0x20) ||
+            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 24) < 32) ||
                 (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 0)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1811,14 +1800,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 gGamePaused = 2;
                 func_02012790(3);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
+                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x40) < 0x20) ||
+            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 64) < 32) ||
                 (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 1)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1827,14 +1816,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 sNextPauseState = 7;
                 func_02012790(0x53);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
+                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x68) < 0x20) ||
+            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 104) < 32) ||
                 (sSelectedMenuButton == 2 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 2)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1843,14 +1832,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 sNextPauseState = 9;
                 func_02012790(0x54);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
+                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (!((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x90) < 0x20) &&
+            if (!((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 144) < 32) &&
                 (sSelectedMenuButton != 3 || IsButtonInputValid() == 0))
                 return;
             if (sSelectedMenuButton == 3)
@@ -1906,7 +1895,7 @@ void dScStage_c::PS_Update() {
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x28) < 0x20) ||
+            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 40) < 32) ||
                 (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 0)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1915,14 +1904,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 gGamePaused = 2;
                 func_02012790(3);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
+                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x50) < 0x20) ||
+            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 80) < 32) ||
                 (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 1)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -1937,7 +1926,7 @@ void dScStage_c::PS_Update() {
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (!((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x78) < 0x20) &&
+            if (!((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 120) < 32) &&
                 (sSelectedMenuButton != 2 || IsButtonInputValid() == 0))
                 return;
             if (sSelectedMenuButton == 2)
@@ -2154,17 +2143,17 @@ void dScStage_c::PS_Update() {
                 if (gTouchEdge[idxa] != 0)
                     t = 1;
             }
-            if ((t != 0 && relx < firstw && (u8)(ty - 0x98) < 0x20) ||
-                (sPausedWithSelect == 0 && IsTouchPressed(a0, slot) && (u8)(tx - 0xd8) < 0x20 &&
-                 (u8)(ty - 0x98) < 0x20) ||
+            if ((t != 0 && relx < firstw && (u8)(ty - 152) < 32) ||
+                (sPausedWithSelect == 0 && IsTouchPressed(a0, slot) && (u8)(tx - 216) < 32 &&
+                 (u8)(ty - 152) < 32) ||
                 IsButtonInputValid() != 0) {
-                if (relx < firstw && (u8)(gTouchY[gActivePlayerSlot * 4] - 0x98) < 0x20 &&
+                if (relx < firstw && (u8)(gTouchY[gActivePlayerSlot * 4] - 152) < 32 &&
                     IsButtonInputValid() != 0) {
                     sBackButtonSelected = 0;
                 } else {
                     u8 slot2 = gActivePlayerSlot;
-                    if ((u8)(gTouchX[slot2 * 4] - 0xd8) < 0x20 &&
-                        (u8)(gTouchY[slot2 * 4] - 0x98) < 0x20) {
+                    if ((u8)(gTouchX[slot2 * 4] - 216) < 32 &&
+                        (u8)(gTouchY[slot2 * 4] - 152) < 32) {
                         sBackButtonSelected = 1;
                     }
                 }
@@ -2243,7 +2232,7 @@ void dScStage_c::PS_Update() {
         }
         if ((u8)(tx - 0x5a) < 0x14) {
             ty = gTouchY[slot * 4];
-            if ((u8)(ty - 0x2e) < 0x14) {
+            if ((u8)(ty - 46) < 20) {
                 if ((u8)(tx - 0x5c) >= 0x10)
                     return;
                 if ((u8)(ty - 0x30) >= 0x10)
@@ -2269,7 +2258,7 @@ void dScStage_c::PS_Update() {
                 dScStage_c::PS_UpdateOptionsMenu();
                 SetSoundMode(data_0209f234);
                 func_02012790(0x64);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x5c) < 0x10)
+                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 92) < 16)
                     return;
                 return;
             }
@@ -2278,11 +2267,11 @@ void dScStage_c::PS_Update() {
             u8 ty2;
             int t6;
             int tmpv;
-            if (((u8)(tx - 0xea) < 0x14 && (u8)((ty2 = gTouchY[slot * 4]) - 0x2e) < 0x14) ||
-                ((u8)(tmpv = tx - 0x6e) < 0x7c && (u8)((ty2 = gTouchY[slot * 4]) - 0x26) < 0x24) ||
-                ((u8)(t6 = tx - 6) < 0x3c && (u8)((ty2 = gTouchY[slot * 4]) - 0x26) < 0x24)) {
+            if (((u8)(tx - 234) < 20 && (u8)((ty2 = gTouchY[slot * 4]) - 46) < 20) ||
+                ((u8)(tmpv = tx - 110) < 124 && (u8)((ty2 = gTouchY[slot * 4]) - 38) < 36) ||
+                ((u8)(t6 = tx - 6) < 60 && (u8)((ty2 = gTouchY[slot * 4]) - 38) < 36)) {
                 if (!((u8)(tx - 0xec) < 0x10 && (u8)(ty2 - 0x30) < 0x10) &&
-                    !((u8)(tx - 0x70) < 0x78 && (u8)(ty2 - 0x28) < 0x20) &&
+                    !((u8)(tx - 0x70) < 0x78 && (u8)(ty2 - 40) < 32) &&
                     ((u8)(tx - 8) >= 0x38 || (u8)(ty2 - 0x28) >= 0x20))
                     return;
                 if (data_0209f2a4 == 2) {
@@ -2310,11 +2299,11 @@ void dScStage_c::PS_Update() {
                     u8 s3 = gActivePlayerSlot;
                     u8 x3 = gTouchX[s3 * 4];
                     if ((u8)(x3 - 0xec) < 0x10) {
-                        if ((u8)(gTouchY[s3 * 4] - 0x28) < 0x10)
+                        if ((u8)(gTouchY[s3 * 4] - 40) < 16)
                             return;
                     }
                     if ((u8)(x3 - 0x70) < 0x78) {
-                        if ((u8)(gTouchY[s3 * 4] - 0x20) < 0x20)
+                        if ((u8)(gTouchY[s3 * 4] - 32) < 32)
                             return;
                     }
                     if ((u8)(x3 - 8) < 0x38)
@@ -2351,7 +2340,7 @@ void dScStage_c::PS_Update() {
                     sSelectedBacklightButton = 0;
                     sSelectedMenuButton = 1;
                     dScStage_c::PS_UpdateOptionsMenu();
-                    if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x70) < 0x38)
+                    if ((u8)(gTouchX[gActivePlayerSlot * 4] - 112) < 56)
                         return;
                     return;
                 }
@@ -2385,7 +2374,7 @@ void dScStage_c::PS_Update() {
                     sSelectedBacklightButton = 1;
                     sSelectedMenuButton = 1;
                     dScStage_c::PS_UpdateOptionsMenu();
-                    if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0xb0) < 0x38)
+                    if ((u8)(gTouchX[gActivePlayerSlot * 4] - 176) < 56)
                         return;
                     return;
                 }
@@ -2431,19 +2420,17 @@ void dScStage_c::PS_Update() {
                     if (gTouchEdge[slot * 4] != 0)
                         t = 1;
                 }
-                if (t == 0 ||
-                    !((relx < firstw && (u8)(gTouchY[slot * 4] - 0x98) < 0x20) ||
-                      ((u8)(tx - 0xd8) < 0x20 && (u8)(gTouchY[slot * 4] - 0x98) < 0x20))) {
+                if (t == 0 || !((relx < firstw && (u8)(gTouchY[slot * 4] - 152) < 32) ||
+                                ((u8)(tx - 216) < 32 && (u8)(gTouchY[slot * 4] - 152) < 32))) {
                     if (IsButtonInputValid() == 0)
                         return;
                 }
-                if ((relx < firstw && (u8)(gTouchY[gActivePlayerSlot * 4] - 0x98) < 0x20) ||
+                if ((relx < firstw && (u8)(gTouchY[gActivePlayerSlot * 4] - 152) < 32) ||
                     IsButtonInputValid() != 0) {
                     sBackButtonSelected = 0;
                 } else {
                     u8 s4 = gActivePlayerSlot;
-                    if ((u8)(gTouchX[s4 * 4] - 0xd8) < 0x20 &&
-                        (u8)(gTouchY[s4 * 4] - 0x98) < 0x20) {
+                    if ((u8)(gTouchX[s4 * 4] - 216) < 32 && (u8)(gTouchY[s4 * 4] - 152) < 32) {
                         sBackButtonSelected = 1;
                     }
                 }
@@ -2512,7 +2499,7 @@ void dScStage_c::PS_Update() {
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x28) < 0x20) ||
+            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 40) < 32) ||
                 (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 0)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -2521,14 +2508,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 gGamePaused = 2;
                 func_02012790(3);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
+                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x50) < 0x20) ||
+            if (((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 80) < 32) ||
                 (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
                 if (sSelectedMenuButton == 1)
                     sMenuHighlightDelay = data_0208ee44 << 2;
@@ -2537,14 +2524,14 @@ void dScStage_c::PS_Update() {
                 sMenuWaitTimer = data_0208ee44 << 3;
                 sNextPauseState = 0xe;
                 func_02012790(0x5e);
-                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
+                if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
                     return;
                 return;
             }
         }
         {
             u8 slot = gActivePlayerSlot;
-            if (!((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x78) < 0x20) &&
+            if (!((u8)(gTouchX[slot * 4] - 8) < 240 && (u8)(gTouchY[slot * 4] - 120) < 32) &&
                 (sSelectedMenuButton != 2 || IsButtonInputValid() == 0))
                 return;
             if (sSelectedMenuButton == 2)
@@ -2554,7 +2541,7 @@ void dScStage_c::PS_Update() {
             sMenuWaitTimer = data_0208ee44 << 3;
             sNextPauseState = 0x10;
             func_02012790(0x5f);
-            if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
+            if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 240)
                 return;
             return;
         }
@@ -2565,15 +2552,15 @@ void dScStage_c::PS_Update() {
         sNextPauseState = 0xf;
         Message::DisplaySaveStatusText(0x295);
         gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
-        data_0209f2b8 = 0x78;
+        data_0209f2b8 = 120;
         return;
     }
     case 0xf: {
         if (data_0209f2b8 == 0)
             return;
-        if (data_0209f2b8 == 0x78)
+        if (data_0209f2b8 == 120)
             SaveData::SaveCurrentFile();
-        if (data_0209f2b8 == 0x3c)
+        if (data_0209f2b8 == 60)
             Message::DisplaySaveStatusText(0x296);
         data_0209f2b8 = data_0209f2b8 - data_0208ee44;
         if (data_0209f2b8 != 0)
@@ -2587,7 +2574,7 @@ void dScStage_c::PS_Update() {
         dScStage_c::PS_Cleanup();
         gNextActorUpdateMask |= ACTOR_UPDATE_MASK_STAGE_ENDING;
         gActorUpdateMask = gNextActorUpdateMask;
-        Sound::StopLoadedMusic_Layer1(0xa);
+        Sound::StopLoadedMusic_Layer1(10);
         return;
     }
     case 0x10: {
@@ -2621,7 +2608,7 @@ void dScStage_c::PS_Update() {
             tx = gTouchX[slot * 4];
             rel = tx - 0x28;
             if ((u8)rel < 0x50) {
-                rely = gTouchY[slot * 4] - 0x98;
+                rely = gTouchY[slot * 4] - 152;
                 if ((u8)rely < 0x20) {
                     if (sSelectedMenuButton == 0)
                         sMenuHighlightDelay = data_0208ee44 << 2;
@@ -2642,7 +2629,7 @@ void dScStage_c::PS_Update() {
                 if ((u8)rel >= 0x50)
                     return;
                 {
-                    rely = gTouchY[slot * 4] - 0x98;
+                    rely = gTouchY[slot * 4] - 152;
                     if ((u8)rely >= 0x20)
                         return;
                     if (sSelectedMenuButton == 1)
@@ -2895,7 +2882,7 @@ extern "C" void FUN_02029980(void) {
     WipeFader *o2 = (WipeFader *)((dFdWipe_c *)data_0209f324 + 6);
     data_0209d4b0 = (int)o2;
     o2->w8();
-    o2->w3(0x1e, 0);
+    o2->w3(30, 0);
 }
 
 void FUN_020299f4(void) {
@@ -2904,7 +2891,7 @@ void FUN_020299f4(void) {
     WipeFader *o2 = (WipeFader *)((dFdWipe_c *)data_0209f324 + 6);
     data_0209d4b0 = (int)o2;
     o2->w9();
-    o2->w4(0x1e, 0);
+    o2->w4(30, 0);
 }
 
 extern "C" void FUN_02029a68(void) {
@@ -3078,19 +3065,15 @@ void dScStage_c::RenderVsModeNewStar() {
     data_0209f308 = timer - data_0208ee44;
     if (data_0209f308 % 60 >= 10) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, (OamAttr *)data_ov002_0210cfd0, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, (OamAttr *)data_ov002_0210cfd0, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d050, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, (OamAttr *)data_ov002_0210d050, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d0e8, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, (OamAttr *)data_ov002_0210d0e8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, (OamAttr *)data_ov002_0210d188, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0,
-                        -1);
+            OAM::Render(0, (OamAttr *)data_ov002_0210d188, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
-            OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_NEW_STAR_APPEARED, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         if (data_0209f1f4 != 0)
             return;
         func_02012790(0x2c);
@@ -3103,7 +3086,7 @@ void dScStage_c::RenderVsModeNewStar() {
 extern "C" void FUN_0202a130(void) {
     if (data_0209f2bc != 0)
         return;
-    data_0209f308 = 0xb4;
+    data_0209f308 = 180;
     data_0209f1f4 = 0;
 }
 
@@ -3123,31 +3106,31 @@ void dScStage_c::RenderVsModeCountdown() {
         return;
     if (data_0209f2bc != 0) {
         if (GetOwnerLanguage() == 5)
-            OAM::Render(0, &data_ov002_0210d008, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210d008, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 4)
-            OAM::Render(0, &data_ov002_0210d098, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210d098, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 3)
-            OAM::Render(0, &data_ov002_0210d130, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210d130, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else if (GetOwnerLanguage() == 2)
-            OAM::Render(0, &data_ov002_0210d1c8, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210d1c8, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
         else
-            OAM::Render(0, &data_ov002_0210d210, 0x80, 0x30, -1, -1, 0x1000, 0x1000, 0, -1);
-        OAM::Render(0, (OamAttr *)data_ov002_0210ca0c[3 - data_0209f2bc], 0x80, 0x50, -1, -1,
-                    0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &data_ov002_0210d210, 128, 48, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, (OamAttr *)data_ov002_0210ca0c[3 - data_0209f2bc], 128, 80, -1, -1, 0x1000,
+                    0x1000, 0, -1);
         return;
     }
     if (data_0209f304 == 0)
         return;
     if (GetOwnerLanguage() == 5)
-        OAM::Render(0, &data_ov002_0210d378, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &data_ov002_0210d378, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 4)
-        OAM::Render(0, &data_ov002_0210d3a0, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &data_ov002_0210d3a0, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 3)
-        OAM::Render(0, &data_ov002_0210d3c0, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &data_ov002_0210d3c0, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
     else if (GetOwnerLanguage() == 2)
-        OAM::Render(0, &data_ov002_0210d3e0, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &data_ov002_0210d3e0, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
     else
-        OAM::Render(0, &data_ov002_0210d420, 0x80, 0x50, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &data_ov002_0210d420, 128, 80, -1, -1, 0x1000, 0x1000, 0, -1);
 }
 
 extern "C" s32 NumVsStarsObtained(void) {
@@ -3271,8 +3254,8 @@ void GiveCoins(int idx, int amount) {
     short v = cur + amount;
     p[idx] = v;
     v = p[idx];
-    if (v > 0xff) {
-        p[idx] = 0xff;
+    if (v > 255) {
+        p[idx] = 255;
     } else if (v < 0) {
         p[idx] = 0;
     }
@@ -3878,7 +3861,7 @@ void dScStage_c::LoadFog() {
     unsigned char normalDensity = 0;
     unsigned char underwaterDensity = 0x28;
     int densityIndex;
-    for (densityIndex = 0; densityIndex < 0x20; densityIndex++) {
+    for (densityIndex = 0; densityIndex < 32; densityIndex++) {
         mFog[0].mDensity[densityIndex] = normalDensity;
         mFog[1].mDensity[densityIndex] = underwaterDensity;
         normalDensity += 4;
@@ -3997,12 +3980,12 @@ int dScStage_c::Render() {
     if (gGamePaused != 0) {
         PS_Render();
     } else if (data_0209f20c != 0 && gLevelClearStep != 0) {
-        int coinCounterY = (SublevelToLevel(gLastCourseSublevel) < 0xf) ? 0x80 : 0x70;
+        int coinCounterY = (SublevelToLevel(gLastCourseSublevel) < 0xf) ? 128 : 112;
         if (sLevelClearNewRecord != 0)
-            coinCounterY += 0x10;
-        OAM::Render(0, &OAM::COIN, 0x68, coinCounterY, -1, -1, 0);
-        OAM::Render(0, &OAM::TIMES, 0x78, coinCounterY + 8, -1, -1, 0);
-        RenderNumber(sLevelClearCoinCount, 0x80, coinCounterY, 1, 8);
+            coinCounterY += 16;
+        OAM::Render(0, &OAM::COIN, 104, coinCounterY, -1, -1, 0);
+        OAM::Render(0, &OAM::TIMES, 120, coinCounterY + 8, -1, -1, 0);
+        RenderNumber(sLevelClearCoinCount, 128, coinCounterY, 1, 8);
     }
     LC_Render();
     return 1;
@@ -4073,14 +4056,14 @@ int dScStage_c::Behavior() {
                     }
                 }
                 if (cnt >= data_0209fc50) {
-                    if (data_0209f304 == 0x28 && data_0209f2bc == 3)
+                    if (data_0209f304 == 40 && data_0209f2bc == 3)
                         func_02012790(0x2b);
                     if (gGamePaused == 0) {
                         if (data_0209f304 != 0 || data_0209f2bc != 0) {
                             data_0209f304 = data_0209f304 - data_0208ee44;
                             if (data_0209f304 == 0 && data_0209f2bc != 0) {
                                 data_0209f2bc -= 1;
-                                data_0209f304 = 0x28;
+                                data_0209f304 = 40;
                                 if (data_0209f2bc != 0) {
                                     func_02012790(0x2b);
                                 } else {
@@ -4105,7 +4088,7 @@ int dScStage_c::Behavior() {
                     data_02092778 = 1;
                     data_0209d4b0 = 0;
                 }
-                Sound::StopLoadedMusic_Layer1(0x3c);
+                Sound::StopLoadedMusic_Layer1(60);
             }
         }
     }
@@ -4125,7 +4108,7 @@ int dScStage_c::Behavior() {
              IsLevelTinyHugeIslandOutside(gNextSublevel) == 0)) {
             int bb2 = (gGameMode == 2);
             if (bb2 == 0)
-                Sound::StopLoadedMusic_Layer1(0x3c);
+                Sound::StopLoadedMusic_Layer1(60);
         }
     } else if (data_0209f20c != 0) {
         LC_Update();
@@ -4238,12 +4221,12 @@ void dScStage_c::CheckInput() {
                         int originX = TOUCH_DATA[playerIndex].x - control->dx;
                         if (originX < 0)
                             originX = 0;
-                        else if (originX > 0xff)
-                            originX = 0xff;
+                        else if (originX > 255)
+                            originX = 255;
                         if (originY < 0)
                             originY = 0;
-                        else if (originY > 0xbf)
-                            originY = 0xbf;
+                        else if (originY > 191)
+                            originY = 191;
                         control->tx = originX;
                         control->ty = originY;
                     } else {
@@ -4329,7 +4312,7 @@ void dScStage_c::CheckInput() {
                     pressed >>= 1;
                     buttonMap++;
                     buttonIndex++;
-                } while (buttonIndex < 0x10);
+                } while (buttonIndex < 16);
                 if (control->mode != 2 && (control->held & 0x300) == 0x300) {
                     control->held |= 0x4000;
                     if (control->pressed & 0x300) {
@@ -4363,7 +4346,7 @@ void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
     step = (0x100000 - (farv << 4) - dist) >> 5;
     i = 0;
     p = (char *)this->mDensity;
-    while (i < 0x20) {
+    while (i < 32) {
         if (dist <= 0) {
             *p = 0;
         } else if (dist > 0x80000) {
@@ -4583,7 +4566,7 @@ int dScStage_c::InitResources() {
                 do {
                     sActorDeathTable[row][column] = 0;
                     column += 1;
-                } while (column < 0x10);
+                } while (column < 16);
                 row += 1;
             } while (row < 3);
 
@@ -4680,7 +4663,7 @@ int dScStage_c::InitResources() {
         int vsModeTimers = (gGameMode == 1) ? 1 : 0;
         if (vsModeTimers != 0) {
             data_0209f2bc = 3;
-            data_0209f304 = 0x28;
+            data_0209f304 = 40;
             data_0209f308 = 0;
         } else {
             data_0209f2bc = 0;
@@ -4689,7 +4672,7 @@ int dScStage_c::InitResources() {
 
         {
             int i;
-            for (i = 0; i < 0xC; i++) {
+            for (i = 0; i < 12; i++) {
                 STAR_MARKERS[i] = 0;
             }
         }
@@ -4744,7 +4727,7 @@ int dScStage_c::InitResources() {
 
         {
             u32 i;
-            for (i = 0; i < 0xC; i++) {
+            for (i = 0; i < 12; i++) {
                 dExtSimpleModel_c::LoadFile(*data_020756f0[i]);
             }
         }

@@ -248,12 +248,8 @@ void daObjBlockS_c::UpdateInMouth() {
         t4 = flags2 & ACTOR_FLAG_YOSHI_MOUTH_A;
         t4 = t4 != 0;
         if (t4 == 0) {
-            daPly_c *p = mEatingPlayer;
-            if (p != 0) {
-                const Vector3 &src = p->mPos;
-                mPosX = src.x;
-                mPosY = src.y;
-                mPosZ = src.z;
+            if (mEatingPlayer != 0) {
+                mPos = mEatingPlayer->mPos;
             }
         }
     }
@@ -380,13 +376,7 @@ void daObjBlockS_c::EnterSpitOut() {
     mAngleY = angle;
     mPrevAngleY = mAngleY;
 
-    obj = mEatingPlayer;
-    {
-        const Vector3 &src = obj->mPos;
-        mPosX = src.x;
-        mPosY = src.y;
-        mPosZ = src.z;
-    }
+    mPos = mEatingPlayer->mPos;
 
     xw = FX_SinIdx((unsigned short)mAngleY >> 4);
     mPosX += FX_MUL(xw, 0x50000);
@@ -730,7 +720,7 @@ void daObjBlockS_c::HandleHits() {
 
     if ((mdCcAcPos_c1.hitFlags & CC_HIT_FIRE) != 0) {
         u32 *pp = &mdCcAcPos_c1.flags;
-        mBreakTimer = 0x3c;
+        mBreakTimer = 60;
         *pp = *pp & ~0x8000u;
     }
     if ((mdCcAcPos_c1.hitFlags & CC_HIT_EXPLOSION) != 0) {
@@ -1208,7 +1198,7 @@ int daObjBlockS_c::Behavior()
 /* Fails (returns 0) unless the actor is BLOCK_S. Saves the spawn position and
  * angles as the home, then builds the crate from the ResourceDescriptor at
  * data_ov098_0213c4c8 (model file, collision file, CLPS block): model,
- * cuboid shadow, KCL mesh collider (SetFile with mClsnMat, a Fix12 0x199
+ * cuboid shadow, KCL mesh collider (SetFile with mClsnMat, an fx32 0x199
  * (about 0.1), mAngleY and the CLPS block word) and the dBgCh_Actr (Init with radius 40 and height
  * 40 units, 0x28000 each) with water detection on. Gravity is -2 units per
  * frame^2 (-0x2000) with a terminal velocity of -60 units per frame

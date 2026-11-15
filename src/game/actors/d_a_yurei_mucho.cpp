@@ -335,7 +335,7 @@ int daYurei_Mucho_c::ChangeState(State *s) {
    literal at 0x02116918, not a call, so the field read is what reproduces. */
 int daYurei_Mucho_c::EnterIdle() {
     mTargetAngle = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
-    mStateTimer = ((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x1f) + 0x32);
+    mStateTimer = ((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x1f) + 50);
     mAnmModel.SetAnim((BCA_File *)gYureiMuchoWaitAnimFile.filePtr, 0, 0x1000, 0);
     return 1;
 }
@@ -355,8 +355,8 @@ int daYurei_Mucho_c::UpdateIdle() {
 
     if (Vec3_Dist(&mPos, (Vector3 *)&mHomePosX) > 0x1f4000 || mWithMeshClsn.IsOnWall() != 0) {
         mTargetAngle = Vec3_HorzAngle(&mPos, (Vector3 *)&mHomePosX);
-        if ((u16)mStateTimer < 0x14)
-            mStateTimer = 0x14;
+        if ((u16)mStateTimer < 20)
+            mStateTimer = 20;
     }
 
     ApproachAngle(&mPrevAngleY, mTargetAngle, 0xa, 0x200, 0x100);
@@ -379,7 +379,7 @@ int daYurei_Mucho_c::UpdateIdle() {
         dp.z = pos[2];
 
         if (Vec3_Dist(&mPos, &dp) < 0x3e8000) {
-            mStateTimer = 0x14;
+            mStateTimer = 20;
             ChangeState(&data_ov065_0211d680);
         }
     }
@@ -498,7 +498,7 @@ int daYurei_Mucho_c::UpdateShoot() {
                 mStateTimer = 0;
                 ChangeState(&data_ov065_0211d670);
             } else {
-                mStateTimer = 0x32;
+                mStateTimer = 50;
                 mAnmModel.SetAnim((BCA_File *)gYureiMuchoWaitAnimFile.filePtr, 0, 0x1000, 0);
                 ChangeState(&data_ov065_0211d680);
             }
@@ -518,7 +518,7 @@ int daYurei_Mucho_c::EnterBumped() {
     mSpeedZ = 0;
     mVertSpeed = 0x32000;
     mVertAccel = -0x5000;
-    mStateTimer = 0xa;
+    mStateTimer = 10;
     mFlags = 0;
     return 1;
 }

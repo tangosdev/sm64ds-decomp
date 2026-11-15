@@ -210,7 +210,7 @@ void Dst::func_020462d0(Desc *h, ElemA *arr)
         e->f1c = s->f20;
         if (c1 != -1) {
             u32 v = h->f18[c1].f10;
-            shift = (v >> 0x1a) & 7;
+            shift = (v >> 26) & 7;
             e->f1c |= v;
         }
         idx2 = h->f28[i].f8;

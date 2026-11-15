@@ -41,8 +41,8 @@ extern "C" SpawnInfo<daChRoom_c> g_profile_CH_ROOM = {
     daChRoom_c_classInit, 0x015c, 0x015c, 0, 0, 0, 0, 0};
 
 int daChRoom_c::InitResources() {
-    mScaleX = (((param1 & 0xf) + 1) * 0x64000) >> 1;
-    mScaleY = (((param1 >> 4 & 0xf) + 1) * 0x64000);
+    mScaleX = (((param1 & 15) + 1) * 0x64000) >> 1;
+    mScaleY = (((param1 >> 4 & 15) + 1) * 0x64000);
     mAngleY = -mAngleY;
     return 1;
 }

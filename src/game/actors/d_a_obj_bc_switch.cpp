@@ -209,7 +209,7 @@ int daObjBC_Switch_c::InitResources() {
     bmd = dExtSimpleModel_c::LoadFile(daObjBC_Switch_c_ModelFile);
     mModel.SetFile((BMD_File *)bmd, 1, -1);
 
-    mEventBit = (int)param1 & 0xf;
+    mEventBit = (int)param1 & 15;
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
@@ -235,9 +235,9 @@ int daObjBC_Switch_c::InitResources() {
 
     if (val == 0xff || val == 0) {
         p = (unsigned short *)(c + 0x300);
-        p[0x15] = 0xfa;
+        p[0x15] = 250;
     } else {
-        *(unsigned short *)((int)&mCoinTimerSeed) = *(unsigned short *)((int)&mCoinTimerSeed) * 0xa;
+        *(unsigned short *)((int)&mCoinTimerSeed) = *(unsigned short *)((int)&mCoinTimerSeed) * 10;
     }
     return 1;
 }
@@ -273,7 +273,7 @@ s32 daObjBC_Switch_c::Behavior() {
     if (mPressed == 1) {
         mAreaId = -1;
         if (IsAreaShowing((s8)mHomeAreaId) == 0)
-            Sound::ChangeMusicVolume(0x7f, 0x3f000);
+            Sound::ChangeMusicVolume(127, 0x3f000);
     }
     if (mPressed == 1) {
         if (mPosY > mStopPosY) {
@@ -289,17 +289,17 @@ s32 daObjBC_Switch_c::Behavior() {
         if (mCoinTimer != 0) {
             if (DecIfAbove0_Short(&mCoinTimer) == 0) {
                 mCoinTimer = 1;
-                if (Sound::ChangeMusicVolume(0x7f, 0x64cc) != 0)
+                if (Sound::ChangeMusicVolume(127, 0x64cc) != 0)
                     KillAndTrackInDeathTable();
             } else {
                 t = mCoinTimer;
-                if (t == 0x2d)
+                if (t == 45)
                     mTickSound = 0;
-                else if (t < 0x2d)
+                else if (t < 45)
                     mTickSound = func_02012310(mTickSound, 0x39, 0);
                 else
                     mTickSound = func_02012310(mTickSound, 0x38, 0);
-                Sound::ChangeMusicVolume(0x40, 0xc999);
+                Sound::ChangeMusicVolume(64, 0xc999);
                 if (dActor_c::FindWithActorID(0x122, 0) == 0)
                     mCoinTimer = 1;
             }

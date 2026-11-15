@@ -75,8 +75,8 @@ s32 daChScene_c::InitResources() {
         mScaleX = 0x3e80000;
         mScaleY = 0x3e80000;
     } else {
-        mScaleX = (unsigned int)(((param1 & 0xf) + 1) * 0x64000) >> 1;
-        mScaleY = (((param1 >> 4) & 0xf) + 1) * 0x64000;
+        mScaleX = (unsigned int)(((param1 & 15) + 1) * 0x64000) >> 1;
+        mScaleY = (((param1 >> 4) & 15) + 1) * 0x64000;
     }
 
     if (mAngleX == 0) {
@@ -161,7 +161,7 @@ s32 daChScene_c::Behavior() {
                                             func_02012790(0x19);
                                         }
                                     } else {
-                                        int t = (signed char)(int)((param1 >> 0x18));
+                                        int t = (signed char)(int)((param1 >> 24));
                                         if (t == 0x1b || t == 0x12) {
                                             LoadDestinationLevel();
                                             dScene_c::SetAndStopColorFader();
@@ -208,11 +208,11 @@ void daChScene_c::LoadDestinationLevel() {
     data_0209f2c0 = (u8)mAngleZ;
     {
         u32 v = param1;
-        u32 hi = v >> 0x18;
+        u32 hi = v >> 24;
         u32 mid = (v >> 8) & 0xff;
         if (mid == 0xff)
             mid = -1;
-        LoadLevel((s8)hi, (u8)(v >> 0x10), -1, 0, (s8)mid);
+        LoadLevel((s8)hi, (u8)(v >> 16), -1, 0, (s8)mid);
     }
 }
 
