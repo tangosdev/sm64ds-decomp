@@ -15,9 +15,9 @@
  * Remaining reconstruction under issue #2478:
  * - mStateTimer comparisons read it through a (u16) cast, because the ROM
  *   loads it with ldrh.
- * - The Mtx43 / V3A overlays on mAnmModel.mat4x3, mShadowMat and the
- *   player position copies. Plain Matrix4x3 / Vector3 assignment
- *   scalarizes.
+ * - The Mtx43 overlays on mAnmModel.mat4x3 and the scratch matrix, the
+ *   Matrix4x3 view of mShadowMat, and the V3A copies of a player's
+ *   position. Plain Matrix4x3 / Vector3 assignment scalarizes.
  * - dExtAnmModel_c::SetAnim, dCcAc_c::Init, dBgCh_Actr::Init,
  *   DropShadowRadHeight, KillByInvincibleChar, SpawnCoins, daPly_c::Hurt
  *   and daPly_c::Bounce retain scalar ABI declarations. Native fixed-point
@@ -194,7 +194,7 @@ int daYurei_Mucho_c::Behavior()
         UpdateModelTransform();
         return 1;
     }
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     {
         State *q = mCurrentState;
         if (q->mMain != 0) {
@@ -303,9 +303,9 @@ void daYurei_Mucho_c::UpdateModelTransform() {
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
 
-    *(Mtx43 *)mShadowMat = *(Mtx43 *)&data_020a0e68;
+    mShadowMat = *(Mtx43 *)&data_020a0e68;
 
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMat, 0x64000, 0x258000, 0xf);
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMat, 0x64000, 0x258000, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -372,7 +372,7 @@ int daYurei_Mucho_c::UpdateIdle() {
 
     pl = ClosestNonVanishPlayer();
     if (pl != 0) {
-        pos = (int *)&pl->mPosX;
+        pos = &pl->mPos.x;
         dp.x = pos[0];
         dp.y = pos[1];
         dp.z = pos[2];

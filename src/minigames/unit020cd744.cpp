@@ -439,7 +439,7 @@ void TrmpItem::ReflectOffLine(TrampolineObjectCallbacks *jumper) {
 
     {
         int *growState = pmf_TrmpItem_GrowScale_3;
-        int stateWord = *(int *)this;
+        int stateWord = mState[0];
         if (stateWord == growState[0]) {
             if (mState[1] == growState[1])
                 return;
@@ -590,7 +590,7 @@ int TrmpItem::HitTest2D(TrampolineObjectCallbacks *jumper, int) {
     struct V2 currentProjection, previousProjection, lineStart, lineEnd;
     struct V2 testDirection, firstOffset, secondOffset;
     struct V2 movementDirection, toEnd, toStart;
-    int stateWord = *(int *)this;
+    int stateWord = mState[0];
     int currentSide, previousSide, endSide, startSide;
     int result;
 
@@ -717,8 +717,6 @@ void TrmpItem::Init(int *position, int *normal, int itemType, short motionType) 
     mForward.x = normal[0];
     mForward.y = normal[1];
     mForward.z = normal[2];
-    /* Load-bearing: both component-pointer copies below. Plain field copies
-       or a Vector3 assignment reallocate the whole function. */
     {
         int *normalComponents = (int *)&mForward;
         mSide.x = normalComponents[0];
@@ -1403,7 +1401,9 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
     endPoint[0] = (endPoint[0] - 0x80);
     endPoint[1] = (s16)(0 - endPoint[1]);
 
-    if (*(const s16 *)startPoint > *(const s16 *)endPoint) {
+    const s16 *startCmp = startPoint;
+    const s16 *endCmp = endPoint;
+    if (*startCmp > *endCmp) {
         swapX = startPoint[0];
         swapY = startPoint[1];
         startPoint[0] = endPoint[0];
@@ -1857,9 +1857,6 @@ int TrmpLine::Create(s16 *startPoint, s16 *endPoint) {
             slotOffset = slotIndex * 0x32c;
             newLine = (char *)sTrmpLines + slotOffset;
             ((TrmpLine *)newLine)->Build(startCopy, endCopy);
-            /* Load-bearing: the ROM adds slotOffset as an integer to each field's
-               own address constant. sTrmpLines[slotIndex].field (999 words) and
-               char * arithmetic (7 words) both differ. */
             *(s16 *)((int)&sTrmpLines[0].mBouncesLeft + slotOffset) = 1;
             *(u16 *)((int)&sTrmpLines[0].mBounceCount + slotOffset) = 0;
             *(s16 *)((int)&sTrmpLines[0].mSlotIndex + slotOffset) = (s16)slotIndex;

@@ -84,13 +84,11 @@ struct SnowSpray {
     SnowSpray() {}
     ~SnowSpray() {}
 
-    s32 x;      /* 0x00 position, VEC_Add'd with vx..vz each tick; drawn at x >> 12 */
-    s32 y;      /* 0x04 drawn at (y - z - mScrollY) >> 12 */
-    s32 z;      /* 0x08 height above the course; the chunk dies once it is
-                   below 0 while still falling */
-    s32 vx;     /* 0x0c */
-    s32 vy;     /* 0x10 */
-    s32 vz;     /* 0x14 SnowSpray_UpdateAll takes 0x200 off it a tick (gravity) */
+    Vector3 pos; /* 0x00 position, added to vel each tick; drawn at x >> 12.
+                    y is drawn at (y - z - mScrollY) >> 12. z is the height
+                    above the course; the chunk dies once it is below 0 while
+                    still falling */
+    Vector3 vel; /* 0x0c; z loses 0x200 a tick (gravity) */
     s32 life;   /* 0x18 counted down while positive; the chunk dies at 0 */
     s32 sprite; /* 0x1c sSnowballBitSprites index, SnowSpray_DrawAll */
     u8 active;  /* 0x20 SnowSpray_DrawAll/_UpdateAll run only live chunks */
@@ -213,8 +211,10 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     u16   mTileMap[0x10][0x2e0]; /* 0x4f38 */
     s32   mPosX;            /* 0xab38 -- Fix12 world position of the ball */
     s32   mPosY;            /* 0xab3c */
-    s32   mPrevPosX;        /* 0xab40 -- Behavior's copy of mPos at tick start */
-    s32   mPrevPosY;        /* 0xab44 */
+    struct PrevPos {
+        s32 x;
+        s32 y;
+    } mPrevPos;             /* 0xab40 -- Behavior's copy of mPos at tick start */
     s32   mDrawPosX;        /* 0xab48 -- where Render puts the ball sprite */
     s32   mDrawPosY;        /* 0xab4c */
     s32   mSoundPosX;       /* 0xab50 -- position of the last roll sound; a new
@@ -227,8 +227,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     s32 mGoalCenterX;       /* 0xab5c -- BuildCourse clears it, then
                                 writes the generated corridor's centre lane in
                                 Fix12 on the row before the goal */
-    s32   mVelX;            /* 0xab60 -- Fix12, capped at 0x8000 */
-    s32   mVelY;            /* 0xab64 */
+    Vector2 mVel;           /* 0xab60 -- Fix12, length capped at 0x8000 */
     s32   mScrollX;         /* 0xab68 -- subtracted from every world X to draw */
     s32   mScrollY;         /* 0xab6c -- mPosY - 0x190000, clamped; drives all
                                 four BG offsets */

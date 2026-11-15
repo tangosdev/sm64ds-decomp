@@ -120,9 +120,9 @@ int daObjCtMecha05_c::Behavior() {
     if (data_0209f2c0 == 3) {
         int ang;
         /* ldrh, not the ldrsh a plain s16 mPrevAngleY read would emit. */
-        ang = *(u16 *)&mPrevAngleY;
+        ang = (u16)mPrevAngleY;
         mPosX = mHomePosX + FX_MUL(FX_SinIdx(ang >> 4), 0xfa000);
-        ang = *(u16 *)&mPrevAngleY;
+        ang = (u16)mPrevAngleY;
         mPosZ = mHomePosZ + FX_MUL(FX_CosIdx(ang >> 4), 0xfa000);
         UpdateModelPosAndRotY();
         UpdateShadow();
@@ -136,7 +136,7 @@ int daObjCtMecha05_c::Behavior() {
 
     switch (mState) {
     case 0:
-        if (DecIfAbove0_Short((u16 *)&mStateTimer) != 0)
+        if (DecIfAbove0_Short(&mStateTimer) != 0)
             break;
         if (data_0209f2c0 == 2) {
             int v = (u16)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
@@ -151,7 +151,7 @@ int daObjCtMecha05_c::Behavior() {
     case 1:
         mHorzSpeed += 0xbae;
         if (mHorzSpeed > 0) {
-            if (DecIfAbove0_Short((u16 *)&mStateTimer) != 0) {
+            if (DecIfAbove0_Short(&mStateTimer) != 0) {
                 mHorzSpeed = 0;
                 break;
             }
@@ -190,7 +190,7 @@ int daObjCtMecha05_c::Behavior() {
     }
 
     case 3:
-        if (DecIfAbove0_Short((u16 *)&mStateTimer) != 0)
+        if (DecIfAbove0_Short(&mStateTimer) != 0)
             break;
         mHorzSpeed = -0x5000;
         if (mTravel < 0)

@@ -29,8 +29,8 @@
 #include "dBgActor_c.h"
 
 struct daObjCtMecha10_c : dBgActor_c {
-    s16 mStepTimer; /* 0x31e -- DecIfAbove0_Short; reloaded from data_ov035_02111ef4[mRotationState][setting] */
-    s16 mDirTimer; /* 0x320 -- second countdown; gates the direction re-roll under clock setting 2 */
+    u16 mStepTimer; /* 0x31e -- DecIfAbove0_Short; reloaded from data_ov035_02111ef4[mRotationState][setting] */
+    u16 mDirTimer; /* 0x320 -- second countdown; gates the direction re-roll under clock setting 2 */
     s16 mTargetAngleY; /* 0x322 -- ApproachLinear target for mAngleY; stepped by mAngleYStep */
     s16 mAngleYStep;   /* 0x324 -- +/- data_ov035_02111ef0[mRotationState] */
     s16 unk_326; /* 0x326 -- InitResources gives it the same table value as mAngleYStep; no matched reader */
