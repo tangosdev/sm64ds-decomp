@@ -231,9 +231,9 @@ struct dScMgTeresa_c : dScMgBase_c {
     void Scene_StateInit();
 
     static const int BOO_NUM = 16;
-    SmallBoo   mBoos[BOO_NUM];        /* 0x4660 */
+    SmallBoo mBoos[BOO_NUM]; /* 0x4660 */
     static const int EXCLAIM_NUM = 16;
-    Exclaim    mExclaims[EXCLAIM_NUM];    /* 0x48a0 */
+    Exclaim mExclaims[EXCLAIM_NUM]; /* 0x48a0 */
     static const int VANISH_PUFF_NUM = 16;
     VanishPuff mVanishPuffs[VANISH_PUFF_NUM]; /* 0x4960 */
     static const int FOUND_NUMBER_NUM = 16;

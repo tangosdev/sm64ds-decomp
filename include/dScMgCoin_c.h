@@ -208,15 +208,15 @@ struct dScMgCoin_c : dScMgBase_c {
     void Phase_StateIdle();
 
     static const int BLOCK_NUM = 40;
-    dScMgCoin_Block mBlocks[BLOCK_NUM];       /* 0x4660 */
+    dScMgCoin_Block mBlocks[BLOCK_NUM]; /* 0x4660 */
     static const int COIN_NUM = 24;
-    dScMgCoin_Coin mCoins[COIN_NUM];         /* 0x4ac0 */
+    dScMgCoin_Coin mCoins[COIN_NUM];   /* 0x4ac0 */
     u32 pad_4d00;                      /* 0x4d00 */
     u32 pad_4d04;                      /* 0x4d04 */
     dScMgCoin_Score mScore;            /* 0x4d08 */
     dScMgCoin_Sparkle mSparkles[0x20]; /* 0x4d14 */
     static const int POPUP_NUM = 24;
-    dScMgCoin_Popup mPopups[POPUP_NUM];       /* 0x5014 */
+    dScMgCoin_Popup mPopups[POPUP_NUM]; /* 0x5014 */
     dScMgCoin_Caption mCaption[1];     /* 0x5194 */
     dScMgCoin_Bouncer mBouncer[1];     /* 0x51a8 */
     s32 mSeed;                         /* 0x51c4 set to 1 at construction, never read here */

@@ -179,10 +179,10 @@ struct dScMgLuigi_c : dScMgBase_c {
        mover (9 while the miss is still playing). mActive is set once the
        slot has been placed. */
     static const int PICTURE_NUM = 120;
-    fx32 mPosX[PICTURE_NUM];     /* 0x47f8 -- wraps at 0x110 */
-    fx32 mPosY[PICTURE_NUM];     /* 0x49d8 -- wraps at 0xd0 */
-    fx32 mVelX[PICTURE_NUM];     /* 0x4bb8 */
-    fx32 mVelY[PICTURE_NUM];     /* 0x4d98 */
+    fx32 mPosX[PICTURE_NUM]; /* 0x47f8 -- wraps at 0x110 */
+    fx32 mPosY[PICTURE_NUM]; /* 0x49d8 -- wraps at 0xd0 */
+    fx32 mVelX[PICTURE_NUM]; /* 0x4bb8 */
+    fx32 mVelY[PICTURE_NUM]; /* 0x4d98 */
     s32 mState;          /* 0x4f78 -- 0 setup, 1 place, 2 play, 3 catch */
     u16 mMovePhase[PICTURE_NUM]; /* 0x4f7c -- sway: 0 slowing, 1 speeding right,
                                 2 speeding left. Drift stores an angle. */

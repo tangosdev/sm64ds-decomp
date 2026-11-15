@@ -208,7 +208,7 @@ struct dScMgCurling2_c : dScMgBase_c {
     void SeparateStones(int idx);
 
     static const int STONE_NUM = 11;
-    dScMgCurling2_stone mStone[STONE_NUM];   /* 0x4660, stride 0x30 */
+    dScMgCurling2_stone mStone[STONE_NUM]; /* 0x4660, stride 0x30 */
     dScMgCurling2_mark mMark[5];      /* 0x4870 */
     dScMgCurling2_piece mPiece[0x32]; /* 0x48c0 */
     s32 bg2x;                         /* 0x4fc8, BG2 scroll, 20.12 */

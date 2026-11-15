@@ -162,7 +162,7 @@ struct dScMgMemory2_c : dScMgSingle3DBase_c {
 
     Dealer mDealer;                  /* 0x4f38 */
     static const int CARD_NUM = 20;
-    dMgMemory2Card_c mCards[CARD_NUM];     /* 0x51a8 */
+    dMgMemory2Card_c mCards[CARD_NUM]; /* 0x51a8 */
     dMgMemory2Player_c mPlayers[3];  /* 0x5388 */
     dMgMemory2Cursor_c mCursor;      /* 0x53c4 */
     s32 mState;                      /* 0x53d4 */
@@ -178,7 +178,7 @@ struct dScMgMemory2_c : dScMgSingle3DBase_c {
     u8 mSelectedValues[2];           /* 0x53ee */
     u8 mSelectedCards[2];            /* 0x53f0 */
     static const int VALUE_NUM = 11;
-    u8 mValueCounts[VALUE_NUM];             /* 0x53f2 */
+    u8 mValueCounts[VALUE_NUM];      /* 0x53f2 */
     u8 mPreviewCards[8];             /* 0x53fd */
     u8 mPairsFound;                  /* 0x5405 */
     u8 mSelectedCount;               /* 0x5406 */
