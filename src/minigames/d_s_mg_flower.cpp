@@ -84,7 +84,7 @@ void dScMgFlower_c::UpdatePetals() {
     int i;
 
     mPetalsSettled = 1;
-    for (i = 0; i < 22; i++) {
+    for (i = 0; i < PETAL_NUM; i++) {
         if (mPetals[i].active == 0)
             continue;
         if (mPetals[i].held == 1) {
@@ -128,7 +128,7 @@ void dScMgFlower_c::DealPetals() {
     mPrevCursorX = mCursorX;
     mPrevCursorY = mCursorY;
     Mg_SetTopScreenYOffset(0x20);
-    for (clearIndex = 0; clearIndex < 22; clearIndex++) {
+    for (clearIndex = 0; clearIndex < PETAL_NUM; clearIndex++) {
         mPetals[clearIndex].active = 0;
         mPetals[clearIndex].held = 0;
         mPetals[clearIndex].released = 0;
@@ -215,7 +215,7 @@ s32 dScMgFlower_c::Render() {
     }
     Mg_RenderSpriteBoth(sFlowerFaceSprites[mFaceSprite], 128, 96, -1, 1);
 
-    for (i = 0; i < 22; i++) {
+    for (i = 0; i < PETAL_NUM; i++) {
         if (mPetals[i].active != 0) {
             SpriteAttr *spriteTemplate = (SpriteAttr *)data_ov006_0213abe0;
             struct SpriteAttr attr = *spriteTemplate;
@@ -292,7 +292,7 @@ s32 dScMgFlower_c::Behavior() {
             /* Prefer attached petals; then allow re-grabbing a falling petal. */
             if (touchPressed != 0) {
                 int attachedIndex;
-                for (attachedIndex = 0; attachedIndex < 22; attachedIndex++) {
+                for (attachedIndex = 0; attachedIndex < PETAL_NUM; attachedIndex++) {
                     if (mPetals[attachedIndex].active != 0 && mPetals[attachedIndex].held != 1 &&
                         mPetals[attachedIndex].released != 1) {
                         int withinGrabRadius;
@@ -314,7 +314,7 @@ s32 dScMgFlower_c::Behavior() {
                 }
                 if (mHeldPetal < 0) {
                     int freeIndex;
-                    for (freeIndex = 0; freeIndex < 22; freeIndex++) {
+                    for (freeIndex = 0; freeIndex < PETAL_NUM; freeIndex++) {
                         if (mPetals[freeIndex].active != 0 && mPetals[freeIndex].held != 1) {
                             int withinGrabRadius2;
                             Vec2_Sub(&toCursor2.x, &mPetals[freeIndex].pos.x, &mCursorX);

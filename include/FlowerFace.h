@@ -71,7 +71,8 @@ struct FlowerFace {
     void StateHate();
 
     s32 mState[2];             /* 0x000 -- the current state's member-pointer record */
-    FallingPetal mPetals[22];  /* 0x008 */
+    static const int PETAL_NUM = 22;
+    FallingPetal mPetals[PETAL_NUM]; /* 0x008 */
     /* 0x64 bytes. Draw sets its mat4x3; Update advances its dExtFrameCtrl_c
        base, StatePick tests it and PlayPetalPulled rewinds its currFrame. */
     dExtAnmModel_c mModel;     /* 0xd18 */

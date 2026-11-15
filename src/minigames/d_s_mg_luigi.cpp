@@ -636,7 +636,7 @@ void dScMgLuigi_c::DrawPictures() {
     int i;
     if (mState == STATE_SETUP)
         return;
-    for (i = 0; i < 120; i++) {
+    for (i = 0; i < PICTURE_NUM; i++) {
         if (mShown[i] == 1) {
             Hud_RenderSprite(sLuigiPictureSprites[mCharacter[i]], mPosX[i] >> 12, mPosY[i] >> 12,
                              -1, 0);
@@ -648,7 +648,7 @@ void dScMgLuigi_c::DrawPenalties() {
     extern OamAttr **sLuigiTextSpritesByLanguage[];
     extern OamAttr *sMgDigitSprites[];
     int penaltyIndex;
-    for (penaltyIndex = 0; penaltyIndex < 16; penaltyIndex++) {
+    for (penaltyIndex = 0; penaltyIndex < PENALTY_NUM; penaltyIndex++) {
         if (mPenalty[penaltyIndex].shown != 0) {
             int x = mPenalty[penaltyIndex].x >> 0xc;
             int y = mPenalty[penaltyIndex].y >> 0xc;
@@ -670,7 +670,7 @@ void dScMgLuigi_c::DrawPenalties() {
 }
 
 void dScMgLuigi_c::UpdatePenalties() {
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < PENALTY_NUM; i++) {
         if (mPenalty[i].active != 0) {
             if (mPenalty[i].phase == 0) {
                 if (mPenalty[i].timer != 0) {
@@ -701,7 +701,7 @@ void dScMgLuigi_c::UpdatePenalties() {
 /* First free miss mark, at the picture that was tapped, and ten seconds off. */
 void dScMgLuigi_c::AddPenalty(int pictureIndex) {
     int penaltyIndex;
-    for (penaltyIndex = 0; penaltyIndex < 16; penaltyIndex++) {
+    for (penaltyIndex = 0; penaltyIndex < PENALTY_NUM; penaltyIndex++) {
         if (mPenalty[penaltyIndex].active != 0)
             continue;
         mPenalty[penaltyIndex].active = 1;
@@ -972,7 +972,7 @@ void dScMgLuigi_c::RestartPicture(int idx) {
 void dScMgLuigi_c::UpdatePictures() {
     extern LuigiSlotHandler sLuigiSlotHandlers[];
     int pictureIndex;
-    for (pictureIndex = 0; pictureIndex < 120; pictureIndex++) {
+    for (pictureIndex = 0; pictureIndex < PICTURE_NUM; pictureIndex++) {
         if (mActive[pictureIndex] != 0) {
             unsigned char pictureState = mKind[pictureIndex];
             (this->*sLuigiSlotHandlers[pictureState])(pictureIndex);
@@ -1050,7 +1050,7 @@ void dScMgLuigi_c::CheckTouch() {
         }
     }
 
-    for (pictureIndex = 0; pictureIndex < 120; pictureIndex++) {
+    for (pictureIndex = 0; pictureIndex < PICTURE_NUM; pictureIndex++) {
         if (mActive[pictureIndex] == 1) {
             if (mKind[pictureIndex] != PICTURE_FLASH) {
                 int dx2 = gTouchHeld[playerSlot][2] - (mPosX[pictureIndex] >> 12);
@@ -1392,7 +1392,7 @@ void dScMgLuigi_c::ResetBoard() {
     s32 column;
     s32 row;
 
-    for (pictureIndex = 0; pictureIndex < 120; pictureIndex++) {
+    for (pictureIndex = 0; pictureIndex < PICTURE_NUM; pictureIndex++) {
         mPosX[pictureIndex] = 0;
         mPosY[pictureIndex] = 0;
         mVelX[pictureIndex] = 0;
@@ -1405,7 +1405,7 @@ void dScMgLuigi_c::ResetBoard() {
         mShown[pictureIndex] = 0;
     }
 
-    for (penaltyIndex = 0; penaltyIndex < 16; penaltyIndex++) {
+    for (penaltyIndex = 0; penaltyIndex < PENALTY_NUM; penaltyIndex++) {
         mPenalty[penaltyIndex].x = 0;
         mPenalty[penaltyIndex].y = 0;
         mPenalty[penaltyIndex].timer = 0;
@@ -1453,7 +1453,7 @@ void dScMgLuigi_c::StateCatch() {
     UpdateReward();
 
     flashingCount = 0;
-    for (pictureIndex = 0; pictureIndex < 120; pictureIndex++) {
+    for (pictureIndex = 0; pictureIndex < PICTURE_NUM; pictureIndex++) {
         if (mActive[pictureIndex] != 0) {
             int pictureState = mKind[pictureIndex];
             if (pictureState == PICTURE_FLASH) {
@@ -1465,7 +1465,7 @@ void dScMgLuigi_c::StateCatch() {
     if (flashingCount != 0)
         return;
 
-    for (pictureIndex = 0; pictureIndex < 120; pictureIndex++) {
+    for (pictureIndex = 0; pictureIndex < PICTURE_NUM; pictureIndex++) {
         if (mShown[pictureIndex] == 1)
             mShown[pictureIndex] = 0;
     }

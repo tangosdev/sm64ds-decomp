@@ -65,8 +65,9 @@ struct daWater_Hakidasi_c : dEnemyBase_c {
        only a LOWER BOUND. InitState0 zeroes all of it below. */
     dActor_c *
         mPassedRing; /* 0x31c -- set by a spawned WATER_RING (daWater_Ring_c) when the player passes through it */
+    static const int SPAWNED_RING_NUM = 20;
     u32 mSpawnedIDs
-        [20];         /* 0x320 -- uniqueIDs of the WATER_RINGs it spawned, a 20-entry ring buffer */
+        [SPAWNED_RING_NUM]; /* 0x320 -- uniqueIDs of the WATER_RINGs it spawned, a 20-entry ring buffer */
     s32 mSpawnedHead; /* 0x370 -- next ring slot to write */
     s32 mMatchedSlot; /* 0x374 -- buffer slot where mPassedRing was found */
 };

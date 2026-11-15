@@ -81,7 +81,8 @@ struct dScMgSound_c : dScMgSingle3DBase_c {
     Presenter mTable; /* 0x4f38 -- the Mario face */
     u8  pad_50e4[4];
     dMgSoundNote_c mNotes[10];       /* 0x50e8 */
-    dMgSoundPop_c mPops[30];         /* 0x51b0 */
+    static const int POP_NUM = 30;
+    dMgSoundPop_c mPops[POP_NUM];         /* 0x51b0 */
     dMgSoundSprite_c mSpriteA;       /* 0x55e8 frame limit 2 */
     dMgSoundSprite_c mSpriteB;       /* 0x55f8 frame limit 3 */
     s32 mState;                      /* 0x5608 */

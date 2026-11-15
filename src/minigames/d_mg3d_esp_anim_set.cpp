@@ -522,7 +522,7 @@ extern void *sEsp3DAnimSetSlotsSprites[];
 
 void dScMg3DEsp_c::RenderSlots() {
     int i;
-    for (i = 0; i < 20; i++) {
+    for (i = 0; i < SLOT_NUM; i++) {
         if (mSlots[i].mVisible) {
             int x = mSlots[i].mX >> 12;
             int y = mSlots[i].mY >> 12;
@@ -662,7 +662,7 @@ void dScMg3DEsp_c::SlotWait(int idx)
 }
 
 void dScMg3DEsp_c::UpdateSlots() {
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < SLOT_NUM; i++) {
         if (mSlots[i].mActive) {
             u8 k = mSlots[i].mState;
             (this->*s3DEspSlotFallTable[k])(i);
@@ -672,12 +672,12 @@ void dScMg3DEsp_c::UpdateSlots() {
 
 void dScMg3DEsp_c::ResetSlots() {
     int i;
-    for (i = 0; i < 20; i++) {
+    for (i = 0; i < SLOT_NUM; i++) {
         mSlots[i].mActive = 0;
         mSlots[i].mVisible = 0;
     }
 
-    for (i = 0; i < 20; i++) {
+    for (i = 0; i < SLOT_NUM; i++) {
         mSlots[i].mActive = 1;
         mSlots[i].mState = 0;
         mSlots[i].mType = 0;
