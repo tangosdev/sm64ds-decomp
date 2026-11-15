@@ -959,7 +959,7 @@ void dScMgSlot1_c::betIcon_c::OnTouch() {
     }
     BET_ICON(this)->mBetCount += 1;
     Mg_LoseCredits(1);
-    icon->func_ov001_020ab3f0();
+    this->func_ov001_020ab3f0();
     sid = 0x163;
     Sound::PlayBank2_2D(sid);
 }
