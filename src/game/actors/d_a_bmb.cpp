@@ -198,9 +198,9 @@ int daBmb_c::InitResources()
     *(Matrix4x3 *)mMatrix = IDENTITY_MATRIX4X3;
     mTurnTimer = 0;
     mFuse = 0;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScaleX = FX32_ONE;
+    mScaleY = FX32_ONE;
+    mScaleZ = FX32_ONE;
     mCarrier = 0;
     mTurnCount = 0;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
@@ -623,9 +623,9 @@ void daBmb_c::func_ov102_0214baa0() {
     mChasePlayer = 0;
     mCarrier = 0;
     mFuse = 0;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScaleX = FX32_ONE;
+    mScaleY = FX32_ONE;
+    mScaleZ = FX32_ONE;
     mAngleX = 0;
     mAngleY = 0;
     mAngleZ = 0;

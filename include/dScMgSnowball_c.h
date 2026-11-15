@@ -292,7 +292,8 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     s32   mCrashTimer;      /* 0xba0c -- counts up through states 2 and 4 */
     s32   mEndDelayTimer;   /* 0xba10 -- 0xb4 frames of state 3 */
     SnowSpray mSprays[0x20];     /* 0xba14 */
-    dScMgSnowball_bit mBits[50]; /* 0xbe94 -- 50 * 0x24, see file banner */
+    static const int BIT_NUM = 50;
+    dScMgSnowball_bit mBits[BIT_NUM]; /* 0xbe94 -- 50 * 0x24, see file banner */
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -18,7 +18,7 @@
 /* 0x388 bytes per the factory's operator new(904). The four members are
  * constructed in declaration order and torn down in reverse:
  *
- *   dActor_c    0x000..0x0d0  (inherited, not redeclared)
+ *   dActor_c    0x000..0x0d4  (inherited, not redeclared)
  *   dExtSimpleModel_c        0x0d4
  *   dCcAc_c      0x124
  *   dBgCh_Actr   0x158
@@ -29,7 +29,6 @@
  * destructor at 16/17; every other slot is inherited and not redeclared.
  */
 struct daFeather_c : dActor_c {
-    u8 pad_0d0[0x4];
     dExtSimpleModel_c mModel;       /* 0x0d4 */
     dCcAc_c mdCcAc_c;               /* 0x124 */
     dBgCh_Actr mWithMeshClsn;       /* 0x158 */

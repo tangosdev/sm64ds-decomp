@@ -36,7 +36,6 @@ struct daPly_c;
 struct daLuigiState;
 
 struct daLuigi_c : dActor_c {
-    u8 pad_0d0[0x4];
     dExtAnmModel_c mAnmModel;             /* 0x0d4 */
     dExtSimpleModel_c mModel;             /* 0x138 */
     dExtShadowModel_c mShadowModel;       /* 0x188 */

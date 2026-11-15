@@ -10,9 +10,9 @@
  * (daTrs_c::mSpawnedActorID) and moves it along with itself; it tracks the
  * star the Big Boo releases.
  *
- * The factory allocates 0xd8 bytes and constructs dActor_c. Its 0xd0-byte base
+ * The factory allocates 0xd8 bytes and constructs dActor_c. Its 0xd4-byte base
  * leaves the two InitResources fields at 0xd4 and 0xd5, with alignment padding
- * on either side. The vtable and RTTI independently confirm the inheritance.
+ * after them. The vtable and RTTI independently confirm the inheritance.
  *
  * SM64DS RTTI names the implementation daTrsIcon_c. The reconstructed
  * factory daTrsIcon_c_classInit (historical alias
@@ -20,7 +20,6 @@
  * registry profile.
  */
 struct daTrsIcon_c : dActor_c {
-    u8 pad_0d0[4];        /* 0x0d0 */
     /* dActor_c::TrackStar result. */
     s8 mTrackStarID;      /* 0x0d4 */
     /* (param1 >> 8) & 0xf. */

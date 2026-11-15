@@ -52,7 +52,7 @@ class daPly_c;
  * fields through the class below.
  *
  * SIZE. daDoor_c_classInit's `new daDoor_c` calls fBase_c's operator new
- * with 328 -- 0x148 -- then _ZN8dActor_cC2Ev and _ZN14dExtAnmModel_cC1Ev at +0xd4. dActor_c is 0xd0
+ * with 328 -- 0x148 -- then _ZN8dActor_cC2Ev and _ZN14dExtAnmModel_cC1Ev at +0xd4. dActor_c is 0xd4
  * (include/dActor_c.h) and dExtAnmModel_c is 0x64 (include/dExtAnmModel_c.h), so the
  * embedded dExtAnmModel_c runs 0xd4..0x138 (the same 4-byte alignment pad
  * include/dBgActor_c.h takes before its own dExtSimpleModel_c member). That leaves
@@ -87,7 +87,6 @@ class daPly_c;
  */
 
 struct daDoor_c : dActor_c {
-    u8  pad_0d0[0x4];
     /* Named by daDoor_c_classInit's own _ZN14dExtAnmModel_cC1Ev call at +0xd4 -- a
        relocation the ROM build checks, same idiom as include/dBgActor_c.h's
        mModel. */

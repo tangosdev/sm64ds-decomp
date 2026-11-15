@@ -12,9 +12,6 @@
  *
  * Notes:
  * - g_profile_BK_BILLBOARD lives outside this TU (S14).
- * - pad_0d0[4] is unread in this TU. dActor_c is 0xd0 and
- *   dExtSimpleModel_c needs no more than 4-byte alignment, so those four bytes
- *   are an unknown field, not alignment of mModel.
  * - Inline destructor (out-of-line emits D0 before D1).
  */
 

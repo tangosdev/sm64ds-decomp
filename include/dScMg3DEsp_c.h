@@ -85,7 +85,8 @@ struct dScMg3DEsp_c : dScMgSingle3DBase_c {
     dExtAnmTexSRT_c mTextureTransformer; /* 0x51f4 */
     Card mCards[5];                /* 0x5208 */
     Row mRows[3];                  /* 0x5280 */
-    Slot mSlots[20];               /* 0x52bc */
+    static const int SLOT_NUM = 20;
+    Slot mSlots[SLOT_NUM];         /* 0x52bc */
     s32 mRoundState;               /* 0x553c, the state index Behavior dispatches on */
     s32 mPhase;                    /* 0x5540, the play sub-state index */
     s32 mDifficulty;               /* 0x5544 */

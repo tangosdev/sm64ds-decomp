@@ -16,9 +16,9 @@
  * SIZE 0x18c is the factory's own literal; mEmergeSystemID (4 bytes, 0x188) closes
  * exactly on it.
  *
- * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
- * names -- dActor_c ends at exactly 0x0d0, so unk_008 (dActor_c/fBase_c's
- * own param1 at 0x008) is the only pre-0xd0 field this class's consumers
+ * Everything below 0x0d4 duplicated dActor_c's own fields under placeholder
+ * names -- dActor_c ends at exactly 0x0d4, so unk_008 (dActor_c/fBase_c's
+ * own param1 at 0x008) is the only pre-0xd4 field this class's consumers
  * touched; it was repointed to the inherited fBase_c name.
  *
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. daChoropu_c
@@ -93,7 +93,6 @@ enum {
 };
 
 struct daChoropu_c : dActor_c {
-    u8  pad_0d0[0x4];                 /* untouched by any function in d_a_choropu.cpp */
     /* dExtAnmModel_c member, named by _ZN14dExtAnmModel_cD1Ev at +0xd4 -- a relocation the ROM build checks. */
     dExtAnmModel_c mAnmModel; /* 0x0d4 */
     /* dCcAc_c member, named by the class's own destructor calling

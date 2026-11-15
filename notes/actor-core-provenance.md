@@ -151,7 +151,7 @@ promotion folded it into
 real `dActor_c` and `fBase_c` are in scope and the shadow is gone.
 
 No layout effect: an inline non-virtual member adds no field and no vtable slot,
-and the `0x50` / `0xd0` size assertions still hold.
+and the `0x50` / `0xd4` size assertions still hold.
 
 ### 6a. Why the deallocator is declared with a `void *` second parameter
 
@@ -421,13 +421,17 @@ is tracked separately.
 
 ## 18. The size assertions
 
-`typedef char dActor_c_size_must_be_0xd0[...]` and its `fBase_c` counterpart sit
+`typedef char dActor_c_size_must_be_0xd4[...]` and its `fBase_c` counterpart sit
 OUTSIDE the `__cplusplus` split on purpose, so the C and C++ spellings cannot
 drift apart.
 
-Read what they do and do not claim. `0xd0` is the size the header's own field list
-computes -- it is NOT independent ROM evidence that a `dActor_c` is `0xd0` bytes.
-What it buys is real all the same: the two spellings are held to each other, a
+`0xd4` has ROM support: `StarCamera_Spawn` allocates `0xd4` bytes and runs only
+`dActor_c`'s constructor on them, every actor subclass without fields of its own
+(`daCamTag_c`, `daChRoom_c`, ...) is `0xd4`, and every subclass has a word at
+`0xd0`, which `daPly_c::func_ov002_020d7030` writes through a plain `dActor_c *`
+when the player takes any actor into its mouth. That word is
+`dActor_c::mEatingPlayer`; it was once redeclared in each subclass (or left there
+as `pad_0d0`). The assertion also does work of its own: the two spellings are held to each other, a
 field retyped without shrinking the pad after it stops compiling, and
 `include/daPly_c.h` becomes checkable -- a derived struct's fields start at its
 base's size, and `tools/check_header_offsets.py` will not guess that number.

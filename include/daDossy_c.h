@@ -53,7 +53,6 @@ typedef char DorriePlatform_size_must_be_0x200[
 #endif
 
 struct daDossy_c : dActor_c {
-    u32 unk_0d0;                 /* 0x0d0 */
     daDossyCap_c *mCap;         /* 0x0d4 */
     Vector3 mCapPos;            /* 0x0d8 */
     s16 mHeadRotX;              /* 0x0e4 */

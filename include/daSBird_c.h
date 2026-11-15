@@ -12,8 +12,8 @@
  * daSBird_c_classInit passes to operator new.
  *
  * Factory constructs dExtAnmModel_c at 0xd4 and dExtShadowModel_c at 0x138; D1 tears
- * those down before ~dActor_c. dActor_c ends at 0xd0; pad_0d0 is the 4-byte
- * gap before mAnmModel.
+ * those down before ~dActor_c. dActor_c ends at 0xd4, where mAnmModel
+ * starts.
  *
  * The 31-slot ROM vtable differs from dActor_c in slots 0, 3, 6, 9, 12, 16
  * and 17. Slot 12 is an empty OnPendingDestroy. All other actor virtuals
@@ -27,7 +27,6 @@
  * recovered.
  */
 struct daSBird_c : dActor_c {
-    u8 pad_0d0[0x4];
     dExtAnmModel_c mAnmModel;       /* 0x0d4 */
     dExtShadowModel_c mShadowModel; /* 0x138 */
     Vector3 mTargetPos;             /* 0x160 */

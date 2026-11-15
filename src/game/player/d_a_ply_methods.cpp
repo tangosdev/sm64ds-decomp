@@ -5070,7 +5070,7 @@ int daPly_c::St_DeadPit_Init() {
         if (b) {
             func_ov002_020d5cec(mObjInMouth);
             mStateFlags &= ~2;
-            ((daPly_c *)mObjInMouth)->mEatingPlayer = 0;
+            mObjInMouth->mEatingPlayer = 0;
         }
         mUseAltBodyModel = 0;
         mObjInMouth->mFlags |= 0x80000;
@@ -13539,8 +13539,7 @@ int daPly_c::func_ov002_020d7030(void *b) {
     if (flag)
         return 0;
     ((dActor_c *)b)->mFlags |= 0x20000;
-    /* Raw on purpose: +0xd0 is each eatable subclass's own first field (mEatingPlayer). */
-    *(void **)((char *)b + 0xd0) = this;
+    ((dActor_c *)b)->mEatingPlayer = this;
     mObjInMouth = (dActor_c *)b;
     func_ov002_020d71ec(1);
     return 1;

@@ -846,9 +846,9 @@ void daKrb_c::func_ov084_02129ed4() {
         goomba->mDeathState = daKrb_c::DEATH_STOMPED;
         if (goomba->mGoombaType == daKrb_c::GOOMBA_LARGE)
             goomba->mCoinType = daKrb_c::COIN_BLUE;
-        goomba->mScaleX = 0x1000; /* 1.0 */
-        goomba->mScaleY = 0x1000;
-        goomba->mScaleZ = 0x1000;
+        goomba->mScaleX = FX32_ONE;
+        goomba->mScaleY = FX32_ONE;
+        goomba->mScaleZ = FX32_ONE;
         func_02012694(SND_STOMPED, &goomba->mCamSpacePos);
     } else if (flags & HIT_FIRE) {
         turnAround = 1;
@@ -907,9 +907,9 @@ void daKrb_c::func_ov084_02129ed4() {
                         other->Bounce(0x28000); /* 40.0 */
                         func_02012694(SND_STOMPED, &goomba->mCamSpacePos);
                         goomba->mDeathState = daKrb_c::DEATH_STOMPED;
-                        goomba->mScaleX = 0x1000; /* 1.0 */
-                        goomba->mScaleY = 0x1000;
-                        goomba->mScaleZ = 0x1000;
+                        goomba->mScaleX = FX32_ONE;
+                        goomba->mScaleY = FX32_ONE;
+                        goomba->mScaleZ = FX32_ONE;
                     } else {
                         if (other->mIsVanish != 0)
                             return;
@@ -944,9 +944,9 @@ void daKrb_c::func_ov084_02129ed4() {
                     other->Bounce(0x28000); /* 40.0 */
                     func_02012694(SND_STOMPED, &goomba->mCamSpacePos);
                     goomba->mDeathState = daKrb_c::DEATH_STOMPED;
-                    goomba->mScaleX = 0x1000; /* 1.0 */
-                    goomba->mScaleY = 0x1000;
-                    goomba->mScaleZ = 0x1000;
+                    goomba->mScaleX = FX32_ONE;
+                    goomba->mScaleY = FX32_ONE;
+                    goomba->mScaleZ = FX32_ONE;
                 } else {
                     if (other->mIsVanish != 0)
                         return;

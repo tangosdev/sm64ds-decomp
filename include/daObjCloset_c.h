@@ -6,7 +6,7 @@
  * SIZE AND BASE come from the factory. daObjCloset_c_classInit (0x02111688)
  * allocates fBase_c::operator new(0x21c), calls _ZN8dActor_cC2Ev on it and then
  * stores _ZTV13daObjCloset_c -- so the object is 0x21c bytes and the base is
- * dActor_c (0xd0). Spawn also runs __cxa_vec_ctor over `this + 0xd4` as
+ * dActor_c (0xd4). Spawn also runs __cxa_vec_ctor over `this + 0xd4` as
  * 5 x 0x40 with _ZN10dCcAcPos_cC1Ev / _ZN10dCcAcPos_cD1Ev, which is the
  * array-construct helper; ~daObjCloset_c runs the matching
  * __cxa_vec_cleanup(this + 0xd4, 5, 0x40, _ZN10dCcAcPos_cD1Ev). D1 and not D2, so
@@ -27,9 +27,8 @@
  * so neither is redeclared here -- declaring them would invent overrides the
  * ROM does not have.
  *
- * LAYOUT. dActor_c ends at 0xd0 and the collider array starts at 0xd4, so four
- * bytes at 0xd0 are unaccounted for by anything that reads them; they stay a
- * pad. 0xd4 + 5*0x40 = 0x214, and Behavior reaches exactly three things past
+ * LAYOUT. dActor_c ends at 0xd4, where the collider array starts.
+ * 0xd4 + 5*0x40 = 0x214, and Behavior reaches exactly three things past
  * that: a word at 0x214, a byte at 0x218 and a halfword at 0x21a, which fills
  * the object to its 0x21c.
  *
@@ -59,7 +58,6 @@
 #include "dCcAcPos_c.h"
 
 struct daObjCloset_c : dActor_c {
-    u8 pad_0d0[0x4];
     /* Five attached cylinders, laid out left to right in front of the cupboard:
        Behavior places mColliders[j] at 100 * (2 - j) units along the actor's
        facing normal, so they span two units either side of it. Named by the

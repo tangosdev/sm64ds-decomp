@@ -29,7 +29,7 @@
 //   daPly_c::Hurt's (2, 0xc000, 1, 0, 1) / (1, 0xc000, 1, 0, 1), are still
 //   literals. Sound ids 0xd2, 0xd5, 0x116, 0x1d and particles 0x29, 0x2a,
 //   0x2b are named only by when they fire.
-// - pad_0d0 is untouched. data_ov080_0212767c and data_ov080_021276c4
+// - data_ov080_0212767c and data_ov080_021276c4
 //   (leap and emerge cylinder heights) are read as int arrays. The
 //   hit-flag mask 0x66fe0 stays a literal.
 

@@ -27,19 +27,18 @@ extern "C" mHeap::Heap_t *data_020a0eac;
 struct dEnemyBase_c : dActor_c {
     /* DERIVES FROM dActor_c, at last -- this header used to restate dActor_c's whole
        layout, and its own note said `dEnemyBase_c : dActor_c` was "the real fix and is
-       its own slice". Everything below 0x0d0 is dActor_c's and is inherited now;
+       its own slice". Everything below 0x0d4 is dActor_c's and is inherited now;
        the thirteen fields that were duplicated here resolve through dActor_c.h,
        two of which (0x0a4, 0x0ac) were padding there until this class proved
        they are real.
 
-       dActor_c is 0xd0, so dEnemyBase_c's own fields start there and its 0x110 closes
+       dActor_c is 0xd4, so dEnemyBase_c's own fields start there and its 0x110 closes
        exactly on the subclasses that follow it. */
     /* FIVE FIELDS BELOW WERE PADDING HERE and are named on the same kind of
        evidence that took dActor_c's 0x0a4/0x0ac: the subclasses declare them and
        read them, and `X : dEnemyBase_c` cannot compile unless they exist. The counts
        are how many of dEnemyBase_c's 51 subclasses declare each -- 0x100 is in
        twenty-eight of them, which is not a coincidence. */
-    daPly_c *mEatingPlayer;       /* 0x0d0 -- 4 subclasses */
     s32 mFloorNormalX;            /* 0x0d4 */
     s32 mFloorNormalY;            /* 0x0d8 */
     s32 mFloorNormalZ;            /* 0x0dc */

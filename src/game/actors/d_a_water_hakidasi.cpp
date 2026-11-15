@@ -151,7 +151,7 @@ int daWater_Hakidasi_c::State0() {
                 if (ring != 0) {
                     mSpawnedIDs[mSpawnedHead] = ring->uniqueID;
                     mSpawnedHead++;
-                    if (mSpawnedHead >= 0x14) {
+                    if (mSpawnedHead >= SPAWNED_RING_NUM) {
                         mSpawnedHead = 0;
                     }
                     ring->mSpawner = this;
@@ -165,7 +165,7 @@ int daWater_Hakidasi_c::State0() {
             if (hit != 0) {
                 if (mRingsPassed == 0) {
                     uid = hit->uniqueID;
-                    for (i = 0; i < 20; i++) {
+                    for (i = 0; i < SPAWNED_RING_NUM; i++) {
                         u32 slot = mSpawnedIDs[i];
                         if (slot == uid) {
                             mMatchedSlot = i;
@@ -183,7 +183,7 @@ int daWater_Hakidasi_c::State0() {
                     }
                 } else {
                     mMatchedSlot++;
-                    if (mMatchedSlot >= 0x14) {
+                    if (mMatchedSlot >= SPAWNED_RING_NUM) {
                         mMatchedSlot = 0;
                     }
                     {
@@ -238,7 +238,7 @@ int daWater_Hakidasi_c::InitState0() {
     mPassedRing = 0;
     mSpawnedHead = i;
     mMatchedSlot = i;
-    for (int v = i; i < 20; i++) {
+    for (int v = i; i < SPAWNED_RING_NUM; i++) {
         mSpawnedIDs[i] = v;
     }
     return 1;

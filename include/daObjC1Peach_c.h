@@ -9,7 +9,6 @@
  * The typeinfo record points directly at dActor_c, and the 31-slot vtable
  * has the same extent as that base's table. */
 struct daObjC1Peach_c : dActor_c {
-    u32 unk_0d0;                 /* 0x0d0 */
     dExtSimpleModel_c mModel;    /* 0x0d4 */
     u8 mOpacity;                 /* 0x124 */
     u8 pad_125[3];

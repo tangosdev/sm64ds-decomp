@@ -14,7 +14,6 @@
 #include "dActor_c.h"
 
 struct daTrsTrap_c : dActor_c {
-    u32 pad_0d0;                 /* 0x0d0 -- dActor_c closes at 0xd0, mModel opens at 0xd4 */
     dExtSimpleModel_c mModel;    /* 0x0d4 */
     /* Set by the mesh-collision callback (LatchStandingActor) while the player
        (actor 0xbf) stands on the trapdoor; cleared every Behavior frame. The
