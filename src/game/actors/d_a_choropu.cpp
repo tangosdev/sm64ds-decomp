@@ -136,11 +136,11 @@ void daChoropu_c::func_ov080_02123860()
     unsigned int idx;
 
     mAnmModel.Advance();
-    idx = (unsigned int)(mAnmModel.currFrame << 4) >> 0x10; /* whole frame number */
-    if (idx >= 0xf) {
+    idx = (unsigned int)(mAnmModel.currFrame << 4) >> 16; /* whole frame number */
+    if (idx >= 15) {
         mdCcAc_c.flags |= daChoropu_CC_DISABLED;
         mFlags &= ~daChoropu_FLAG_EMERGED;
-        if (idx == 0xf) {
+        if (idx == 15) {
             Particle::System::NewSimple(kPtclMontyMoleLeapA, mPosX, mPosY, mPosZ);
             Particle::System::NewSimple(kPtclMontyMoleLeapB, mPosX, mPosY + 0x1e000, mPosZ);
         }
@@ -148,8 +148,8 @@ void daChoropu_c::func_ov080_02123860()
     {
         int raw = mAnmModel.currFrame;
         int *tbl = (int *)(int)(data_ov080_0212767c);
-        idx = (unsigned int)(raw << 4) >> 0x10;
-        mdCcAc_c.height = tbl[idx] << 0xc;
+        idx = (unsigned int)(raw << 4) >> 16;
+        mdCcAc_c.height = tbl[idx] << 12;
     }
     if (mAnmModel.Finished() == 0)
         return;
@@ -237,10 +237,10 @@ void daChoropu_c::func_ov080_02123a34()
         }
 
         s = FX_SinIdx((u16)(s16)(mAngleY - 0x4000) >> 4);
-        pos.x = s * (short)0x50 + px;
+        pos.x = s * (short)80 + px;
 
         s = FX_CosIdx((u16)(s16)(mAngleY - 0x4000) >> 4);
-        pos.z = s * (short)0x50 + pz;
+        pos.z = s * (short)80 + pz;
 
         a = dActor_c::Spawn(
             py ? (unsigned)daChoro_Rock_ACTOR_ID : (unsigned)daChoro_Rock_ACTOR_ID, 0, pos, pAng, mAreaId, -1);
@@ -299,7 +299,7 @@ void daChoropu_c::func_ov080_02123c24()
     }
 
     if (state >= 6) {
-        if (state >= 0x1a) {
+        if (state >= 26) {
             amt = 0x50000;
         } else {
             amt = data_ov080_021276c4[state - 6] << 12;
@@ -771,11 +771,11 @@ s32 daChoropu_c::InitResources()
     mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov080_021283c0), 1, -1);
     mAnmModel.SetAnim((BCA_File *)data_ov080_021283d8.filePtr, 0, 0x1000, 0);
     mdCcAc_c.Init(this, 0x50000, 0x64000, 0x200000, 0x66fe0);
-    mGroupMode = param1 & 0xf;
+    mGroupMode = param1 & 15;
     mState = daChoropu_ST_SETUP;
     if (mGroupMode == daChoropu_GROUP_SOLO) mHasTurn = 1;
     else mHasTurn = (param1 >> 8) & 1;
-    mGroupId = (param1 >> 4) & 0xf;
+    mGroupId = (param1 >> 4) & 15;
     mTimesHit = 0;
     mNumPartners = 0;
     for (i = 0; i < 4; i++) mPartnerIDs[i] = 0;

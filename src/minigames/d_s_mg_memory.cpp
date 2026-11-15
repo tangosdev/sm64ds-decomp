@@ -127,7 +127,7 @@ void dScMgMemory_c::UpdateCursor() {
     {
         unsigned short *timer = &mCursor.blinkTimer;
         *timer = *timer + 1;
-        if (*timer < 0x14)
+        if (*timer < 20)
             return;
         *timer = 0;
     }
@@ -239,7 +239,7 @@ inline int *WordAt(char *p) {
 
 void dScMgMemory_c::CheckFinished() {
     if (mPairsFound >= mTargetPairs) {
-        mResultTimer = 0x40;
+        mResultTimer = 64;
         mState = STATE_RESULT;
         mSubstate = RESULT_WAIT;
         /* Read mCredits through WordAt: as a plain member the multiply-add takes
@@ -247,7 +247,7 @@ void dScMgMemory_c::CheckFinished() {
         Mg_SaveRecordPair(*WordAt((char *)&mCredits) + (3 - mMisses) * 6, mHudScore + 1);
     }
     if (mMisses >= mMaxMisses) {
-        mResultTimer = 0x40;
+        mResultTimer = 64;
         mState = STATE_RESULT;
         mSubstate = RESULT_WAIT;
         Mg_SaveRecordPair(mCredits, mHudScore - 1);
@@ -553,7 +553,7 @@ void dScMgMemory_c::ResultTurnCards() {
         return;
     }
     flipped = 0;
-    for (cardIndex = 0; cardIndex < 0xc; cardIndex++) {
+    for (cardIndex = 0; cardIndex < 12; cardIndex++) {
         if (mCards[cardIndex].active != 0) {
             if (mCards[cardIndex].state == CARD_SELECTABLE) {
                 mCards[cardIndex].state = CARD_FLIPPING_UP;
@@ -567,7 +567,7 @@ void dScMgMemory_c::ResultTurnCards() {
         Sound::PlayBank2_2D(0x146);
     mSubstate = RESULT_FINISH;
     ShowCursor();
-    mCardTimer = 0x20;
+    mCardTimer = 32;
 }
 
 void dScMgMemory_c::ResultReward() {
@@ -612,7 +612,7 @@ void dScMgMemory_c::ResultWait() {
         }
     } else {
         mPromptEnabled = 0;
-        mCardTimer = 0x10;
+        mCardTimer = 16;
     }
 }
 
@@ -627,7 +627,7 @@ void dScMgMemory_c::RoundReveal() {
         InitPlayers();
         return;
     }
-    for (cardIndex = 0; cardIndex < 0xc; cardIndex++) {
+    for (cardIndex = 0; cardIndex < 12; cardIndex++) {
         mCards[cardIndex].state = CARD_SELECTABLE;
     }
     mSubstate = ROUND_START;
@@ -642,7 +642,7 @@ void dScMgMemory_c::RoundWaitDeal() {
     int waiting = 0;
     int cardIndex = 0;
     char *cardBase = raw;
-    for (; cardIndex < 0xc;) {
+    for (; cardIndex < 12;) {
         dScMgMemory_c *card = (dScMgMemory_c *)cardBase;
         if (card->mCards[0].active != 0) {
             if (card->mCards[0].state != CARD_IDLE) {
@@ -659,7 +659,7 @@ void dScMgMemory_c::RoundWaitDeal() {
     cardIndex = 0;
     {
         unsigned char selectState = CARD_SELECTABLE;
-        for (; cardIndex < 0xc;) {
+        for (; cardIndex < 12;) {
             ((dScMgMemory_c *)cardBase)->mCards[0].state = selectState;
             cardIndex++;
             cardBase += 0x18;

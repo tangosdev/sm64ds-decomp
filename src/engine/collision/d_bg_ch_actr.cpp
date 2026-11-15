@@ -1013,7 +1013,7 @@ void func_02035644(int *p, int v) {
 }
 
 extern "C" int func_02035638(unsigned char *p) {
-    return p[144] & 16;   /* mSphereClsn.flags & 0x10 -- the ceiling bit */
+    return p[144] & 0x10; /* mSphereClsn.flags & 0x10 -- the ceiling bit */
 }
 
 /* Returns 0 or 8, the mask itself -- no normalisation. */

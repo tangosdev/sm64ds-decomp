@@ -232,7 +232,7 @@ void daSnowman_c::RotateTowardPlayer(int idx) {
         if (this->mInitAngleY < lim) {
             this->mInitAngleY = lim;
             this->mTimer++;
-            if (this->mTimer > 0x28) {
+            if (this->mTimer > 40) {
                 this->mStep = this->mAngleY - ang;
                 SetState(&data_ov081_02128e94);
                 return;
@@ -347,7 +347,8 @@ int daSnowman_c::StateMeltExecute() {
         ApproachLinear(this->mSinkOffsetY, -0x4000, 0x199);
         /* Every read of mStateTimer here is ldrh: it is counted down
            through DecIfAbove0_Short, which takes it unsigned. */
-        if ((u16)this->mStateTimer == 0) this->mStateTimer = 0x14;
+        if ((u16)this->mStateTimer == 0)
+            this->mStateTimer = 20;
         if (this->mScaleY < 0x50) {
             if (this->mCapPhase == 0) {
                 v.x = this->mPosX;
@@ -404,7 +405,7 @@ int daSnowman_c::StateDeathExecute() {
     this->mPrevAngleY += this->mInitAngleY;
     ApproachAngle(&this->mAngleX, -0x2800, 1, 0x500, 0x500);
     this->mTimer++;
-    if (this->mTimer > 0x28) {
+    if (this->mTimer > 40) {
         if (this->mCapPhase == 0) {
             v.x = this->mPosX;
             v.y = this->mPosY;
@@ -558,7 +559,7 @@ int daSnowman_c::StateSpawnSnowballEnter() {
     dActor_c *a = dActor_c::Spawn(kSnowballId, 0, this->mHandPos, 0, this->mAreaId, -1);
     if (a)
         this->mSnowballID = a->uniqueID;
-    this->mStateTimer = 0x64;
+    this->mStateTimer = 100;
     this->mStep = 0;
     return 1;
 }
@@ -580,7 +581,7 @@ int daSnowman_c::StateRotateEnter() {
         this->mFlags = 0x18000002;
     else
         this->mFlags = 0x10000002;
-    this->mStateTimer = 0x14;
+    this->mStateTimer = 20;
     return 1;
 }
 
@@ -734,7 +735,7 @@ int daSnowman_c::StateWalkEnter() {
             this->mPathNodeIndex = 0;
         this->mStep = 1;
     }
-    this->mStateTimer = 0xa;
+    this->mStateTimer = 10;
     this->mAnmModel.SetAnim((BCA_File *)gSnowmanWaitAnimationFile.filePtr, 0, 0x1000, 0);
     return 1;
 }

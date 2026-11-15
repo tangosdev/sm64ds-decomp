@@ -132,7 +132,7 @@ int dBgCh_SphCrr::DetectClsn()
 
     e = (char *)&((dM3dGSph &)*this).centre;
     int reach = ((dM3dGSph &)*this).radius + 0x1000;
-    for (int i = 1; i < 0x18; i++) {
+    for (int i = 1; i < 24; i++) {
         dBgW *o = data_020a0c80[i];
         if (o == 0) continue;
         dActor_c *owner = o->GetActor();
@@ -208,7 +208,7 @@ int dBgCh_SphCrr::DetectClsnExceptSlot0() {
     int zero = 0;
     int one = 1;
     int i;
-    for (i = 1; i < 0x18; i++) {
+    for (i = 1; i < 24; i++) {
         dBgW *o = data_020a0c80[i];
         if (o == 0)
             continue;
@@ -277,7 +277,7 @@ bool dBgCh_Lin::DetectClsn()
     dM3dGSph &sphere = mBoundSphere;
     base = &sphere.centre;
     reach = (int)sphere.radius;
-    for (i = 1; i < 0x18; i++) {
+    for (i = 1; i < 24; i++) {
         o = data_020a0c80[i];
         if (o == 0) continue;
         owner = o->GetActor();
@@ -347,7 +347,7 @@ int dBgCh_Lin::DetectClsnExceptSlot0() {
     dM3dGSph &sphere = mBoundSphere;
     base = &sphere.centre;
     reach = sphere.radius;
-    for (i = 1; i < 0x18; i++) {
+    for (i = 1; i < 24; i++) {
         o = data_020a0c80[i];
         if (o == 0)
             continue;
@@ -458,7 +458,7 @@ int dBgS_ChkPolySafe(void *arg) {
     if (hit->IsValid() == 0)
         return 0;
     idx = hit->GetColliderIndex();
-    if (idx < 0 || idx >= 0x18)
+    if (idx < 0 || idx >= 24)
         return 0;
     collider = data_020a0c80[idx];
     if (collider == 0)
@@ -522,7 +522,7 @@ dBgPi::~dBgPi()
 void dBgPi::Reset()
 {
     triangleID = 0xffff;
-    colliderIdx = 0x18;
+    colliderIdx = 24;
     clsnID = -1;
     owner = 0;
     collider = 0;
@@ -574,12 +574,12 @@ void dBgPi::RecordHit(int triID, SurfaceInfo *src) {
 
 int dBgPi::HasCollider() const
 {
-    return colliderIdx != 0x18;
+    return colliderIdx != 24;
 }
 
 int dBgPi::IsValid() const
 {
-    return colliderIdx != 0x18 && triangleID != 0xffff;
+    return colliderIdx != 24 && triangleID != 0xffff;
 }
 
 int dBgPi::IsHitBy(int uid, dActor_c *actor, dBgW *clsn) const

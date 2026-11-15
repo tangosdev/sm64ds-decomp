@@ -310,7 +310,7 @@ int daSanbo_c::EnterLeader() {
     if (timer != 0)
         timer = 0;
     else
-        timer = 0x5a;
+        timer = 90;
     mTimer = timer;
     timer = mTimer;
     if (timer == 0) {
@@ -489,7 +489,7 @@ int daSanbo_c::EnterMegaKill() {
     mAngleY = (mPrevAngleY + 0x8000);
     mVertSpeed = 0x28000;
     mHorzSpeed = 0xa000;
-    mTimer = 0x2d;
+    mTimer = 45;
     Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
     Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
     mState = 5;

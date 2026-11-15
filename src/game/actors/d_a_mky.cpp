@@ -180,7 +180,7 @@ void daMky_c::ReturnToPerch() {
             this->mPrevPosY = this->mPerchPosY;
             this->mPrevPosZ = this->mPerchPosZ;
             UpdateModelAndCap();
-            this->mResetTimer = 0x96;
+            this->mResetTimer = 150;
         }
     }
 }
@@ -463,7 +463,7 @@ int daMky_c::EnterState10(){
     mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyRunAnimationFile.w[1]), 0, 0x1000, 0);
     this->mAnmModel.speed = 0x1000;
     mHorzSpeed = 0x13000;
-    mActionTimer = 0x1e;
+    mActionTimer = 30;
     mState = 0xa;
     return 1;
 }
@@ -599,7 +599,7 @@ int daMky_c::func_ov030_02112578()
             this->mAnmModel.speed = 0x1000;
             cage->mHorzSpeed = 0x400;
             Sound::PlaySub(0x20, 0x14, 0x7f, 0x15666, 0);
-            this->mActionTimer = 0x78;
+            this->mActionTimer = 120;
             {
                 u8 *p = &this->mSubState;
                 *p = *p + 1;
@@ -793,7 +793,7 @@ int daMky_c::func_ov030_02112da0()
         }
         {
             daPly_c *s = this->mPlayer;
-            u8 val = 0x3c;
+            u8 val = 60;
             int *p = &s->mPosX;
             this->mPosX = *p;
             this->mPosY = p[1];
@@ -832,7 +832,7 @@ int daMky_c::EnterState6()
         mSubState = 3;
     }
     mHorzSpeed = 0;
-    mActionTimer = 0x3c;
+    mActionTimer = 60;
     this->mdCcAc_c.Clear();
     mPrevState = mState;
     mState = 6;
@@ -977,7 +977,7 @@ int daMky_c::func_ov030_02113324()
                 }
             }
         }
-        this->mActionTimer = 0x3c;
+        this->mActionTimer = 60;
         break;
     case 1:
         if (this->mPlayer->GetTalkState() == -1) {
@@ -1012,7 +1012,7 @@ int daMky_c::EnterState4(){
     } else {
         mSubState = 2;
     }
-    mActionTimer = 0x3c;
+    mActionTimer = 60;
     mState = 4;
     return 1;
 }
@@ -1488,7 +1488,7 @@ s32 daMky_c::InitResources()
     mScaleZ = 0x1000;
     mPlayer = 0;
     mCapUniqueID = 0;
-    mResetTimer = 0x96;
+    mResetTimer = 150;
     if (IsUkikiThief(this)) {
         if (SaveData::HasPlayerLostCap() != 0) {
             daPly_c *player = ClosestPlayer();

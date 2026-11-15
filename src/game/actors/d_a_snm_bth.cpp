@@ -183,7 +183,7 @@ int SnowmanBreathParticle::TrySpawn(daPly_c &player) {
         mAngleY = (s16)(angle + ((random & 0x1fff) - 0x1000));
     }
     mAngleZ = 0;
-    mTimer = 0x16;
+    mTimer = 22;
     return 1;
 }
 
@@ -237,7 +237,7 @@ int daSnmBth_c::Render()
         return 1;
     {
         int i;
-        for (i = 0; i < 0x32; i++) {
+        for (i = 0; i < 50; i++) {
             mParticles[i].Render();
         }
     }
@@ -300,7 +300,7 @@ int daSnmBth_c::Behavior()
                     slot = slotBase + mNextParticle;
                     b = slot->TrySpawn(*mTalkPlayer);
                     *idx = *idx + 1;
-                    *idx = *idx % 0x32;
+                    *idx = *idx % 50;
                 } while (b == 0);
             }
             mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x184, mCamSpacePos, 0);
@@ -313,7 +313,7 @@ int daSnmBth_c::Behavior()
         slot->Behavior();
         i++;
         slot++;
-    } while (i < 0x32);
+    } while (i < 50);
 
     return 1;
 }

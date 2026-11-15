@@ -521,7 +521,7 @@ int daEykn_c::St_Attack_Main()
 
     if ((s16)(mAngleY - mTurnRefAngleY) == 0) {
         if (DecIfAbove0_Byte(&mShotTimer) == 0 && StartEyeAnim() != 0)
-            mShotTimer = 0x53;
+            mShotTimer = 83;
         unk_212 = 0xf0;
     }
 
@@ -583,7 +583,7 @@ int daEykn_c::St_Attack_Main()
             func_0201267c(0x165, &mCamSpacePos);
             mCircleTimer = kCircleFrames;
             unk_212 = 0xf0;
-            mShotTimer = 0x53;
+            mShotTimer = 83;
             mCircleAngle = 0;
             ResetEyeAnim();
         }

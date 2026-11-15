@@ -283,7 +283,7 @@ s32 daJgm_c::EnterHoverState()
     mAnmModel.speed = 0x1000;
     mTextureSequence.SetFile(*(BTP_File *)data_ov077_02127b20.filePtr, 0, 0x1000, 0);
     mTextureSequence.speed = 0x1000;
-    mTimer = 0x96;
+    mTimer = 150;
     mState = 0;
     return 1;
 }
@@ -298,9 +298,9 @@ s32 daJgm_c::UpdateHoverState()
             if (p->mPosY < mPosY && Vec3_HorzDist(&mPos, &p->mPos) < 0x190000 && CountSpinies() < 4)
                 SetState(1);
             else
-                mTimer = 0x96;
+                mTimer = 150;
         } else {
-            mTimer = 0x96;
+            mTimer = 150;
         }
     }
     UpdateFlight();
@@ -404,7 +404,7 @@ s32 daJgm_c::EnterSpitState()
     mPosZ += FX_MUL(FX_CosIdx((u16)mPrevAngleY >> 4), 0x50000);
 
     mAngVelY = 0x7000;
-    mTimer = 0x1e;
+    mTimer = 30;
     mCarryActor = 0;
     mState = 3;
     return 1;
@@ -431,7 +431,7 @@ s32 daJgm_c::EnterFallState()
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0xa000;
     mVertSpeed = 0x28000;
-    mTimer = 0x2d;
+    mTimer = 45;
     mAnmModel.SetAnim((BCA_File *)data_ov077_02127b28.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     {

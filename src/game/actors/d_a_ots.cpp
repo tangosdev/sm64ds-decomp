@@ -690,7 +690,7 @@ void daOts_c::ActBackUp() {
     }
     mHorzSpeed = kWalkSpeed;
     ApproachLinear(mAngleY, mPrevAngleY, 0x200);
-    if (mStateTimer < 0xf)
+    if (mStateTimer < 15)
         return;
     mPrevAngleY = mAngleY;
     tail().mState = STATE_RETURN_HOME;
@@ -791,7 +791,7 @@ void daOts_c::CheckFloorDeath() {
  * at mHomePos (the death spot): config->particleId and particleId + 1, their
  * handles kept in mParticle0 / mParticle1. Returns 0. */
 int daOts_c::func_ov064_0211616c() {
-    if (mStateTimer > 0x1e) {
+    if (mStateTimer > 30) {
         this->MarkForDestruction();
         return 1;
     }

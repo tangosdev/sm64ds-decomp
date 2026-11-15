@@ -87,7 +87,7 @@ enum {
     kPlayerActorId = 0xbf,
     kStateChase = 0,
     kStateRecoil = 1,
-    kRecoilFrames = 0x14
+    kRecoilFrames = 20
 };
 
 /* int-returning predicates: they are what make the ROM materialize 0/1
@@ -229,9 +229,9 @@ void daHuwa_c::UpdateModelTransform() {
     if (IsInYoshiMouth(this))
         return;
     if (mWithMeshClsn.IsOnGround() != 0) {
-        DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x50000, 0x1e000, 0xf);
+        DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x50000, 0x1e000, 15);
     } else {
-        DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x50000, 0x96000, 0xf);
+        DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x50000, 0x96000, 15);
     }
 }
 

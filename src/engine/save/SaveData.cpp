@@ -225,7 +225,7 @@ int func_020138dc(void) {
     int count = 0;
     int i;
     int f = data_0209caa0.file.minigameRabbits;
-    for (i = 0; i < 0x1c; i++) {
+    for (i = 0; i < 28; i++) {
         if (f & (1 << i))
             count++;
     }
@@ -347,10 +347,10 @@ void UnlockMinigame(int minigame) {
 
 int func_020135d0(int minigame) {
     int res;
-    if (minigame < 0x1c) {
+    if (minigame < 28) {
         res = (data_0209caa0.mg.seenLo & (1 << minigame)) ? 0 : 1;
     } else {
-        res = (data_0209caa0.mg.seenHi & (1 << (minigame - 0x1c))) ? 0 : 1;
+        res = (data_0209caa0.mg.seenHi & (1 << (minigame - 28))) ? 0 : 1;
     }
     return res;
 }
@@ -358,9 +358,9 @@ int func_020135d0(int minigame) {
 /* For minigame < 0x1c the byte store below shifts by a negative count, which
  * on ARM sets no bit; only the word store takes effect. */
 void func_02013598(int minigame) {
-    if (minigame < 0x1c)
+    if (minigame < 28)
         data_0209caa0.mg.seenLo |= 1 << minigame;
-    data_0209caa0.mg.seenHi |= 1 << (minigame - 0x1c);
+    data_0209caa0.mg.seenHi |= 1 << (minigame - 28);
 }
 
 int func_02013580(int table, int index) {

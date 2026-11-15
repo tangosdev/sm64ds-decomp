@@ -45,7 +45,7 @@ extern "C" {
 void func_0206ce20(struct CardBusState* s){
   unsigned short v = REG_EXMEMCNT;
   s->exmemcnt = v;
-  REG_EXMEMCNT = (v & 0xffe3) | 0xf;
+  REG_EXMEMCNT = (v & 0xffe3) | 15;
   if(func_0206cf7c(1) != 0){
     s->ready = 1;
     s->busMirror = ((struct DebuggerBlock *)HW_ISD_RESERVED)->busMirror;

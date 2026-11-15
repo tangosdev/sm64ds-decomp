@@ -110,7 +110,7 @@ int daWater_Ring_c::StatePassed() {
 /* Init of the passed state: tells the spawner which ring was hit. */
 int daWater_Ring_c::InitStatePassed() {
     mOpacity = 0x1f;
-    mStateTimer = 0x64;
+    mStateTimer = 100;
     int type = mRingType;
     if (type == 1 || type == 2) {
         dActor_c *spawner = mSpawner;
@@ -131,7 +131,7 @@ int daWater_Ring_c::InitStatePassed() {
 int daWater_Ring_c::StateActive() {
     int spd;
     CheckPlayerPass();
-    if (mStateTimer < 0x1e) {
+    if (mStateTimer < 30) {
         if (mOpacity >= 2)
             mOpacity--;
     }
@@ -158,7 +158,7 @@ int daWater_Ring_c::StateActive() {
 
 /* Init of the active state. */
 s32 daWater_Ring_c::InitStateActive() {
-    mStateTimer = 0xc8;
+    mStateTimer = 200;
     mPrevPlayerAngle = HorzAngleToCPlayer();
     return 1;
 }

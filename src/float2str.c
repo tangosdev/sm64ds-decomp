@@ -34,7 +34,7 @@ extern char data_0209a60c[]; /* "-nan" */
 extern char data_0209a614[]; /* "NAN" */
 extern char data_0209a618[]; /* "nan" */
 
-#define ISUPPER(c) (((c) < 0 || (c) >= 0x80) ? 0 : (data_02086a58[c] & 0x200))
+#define ISUPPER(c) (((c) < 0 || (c) >= 128) ? 0 : (data_02086a58[c] & 0x200))
 
 char *float2str(double x, char *buff_end, print_format format) {
     int int_digits;

@@ -71,17 +71,17 @@ dPa_c::level_c::level_c() {
     do {
         emitter->mId = 0;
         emitter++;
-    } while (emitter != &mEmitter[0x40]);
+    } while (emitter != &mEmitter[64]);
     mLastId = 0;
     mFreeNo = 0;
-    for (i = 0; i < 0x10; i++)
+    for (i = 0; i < 16; i++)
         mTable[i] = 0;
 }
 
 void dPa_c::level_c::execute() {
     emitter_c *emitter = mEmitter;
     int i;
-    for (i = 0; i < 0x40; i++, emitter++) {
+    for (i = 0; i < 64; i++, emitter++) {
         if (emitter->mId == 0)
             continue;
         if (emitter->mCallback != 0) {
@@ -104,7 +104,7 @@ void dPa_c::level_c::execute() {
 void dPa_c::level_c::cleanup() {
     emitter_c *emitter = mEmitter;
     int i;
-    for (i = 0; i < 0x40; i++, emitter++) {
+    for (i = 0; i < 64; i++, emitter++) {
         if (emitter->mId != 0) {
             emitter->mStatus = 0;
             cutTable(emitter);
@@ -128,7 +128,7 @@ dPa_c::level_c::emitter_c *dPa_c::level_c::get(u32 id) {
 u32 dPa_c::level_c::entry(u32 nameId, Vector3 &position, const Vector3_16f *direction,
                           callback_c *callback) {
     int i;
-    for (i = 0; i < 0x40; i++) {
+    for (i = 0; i < 64; i++) {
         if (mEmitter[mFreeNo].mId == 0) {
             ++mLastId;
             if (mLastId == 0)
@@ -138,7 +138,7 @@ u32 dPa_c::level_c::entry(u32 nameId, Vector3 &position, const Vector3_16f *dire
             addTable(&mEmitter[mFreeNo]);
             return mLastId;
         }
-        mFreeNo = (mFreeNo + 1) % 0x40;
+        mFreeNo = (mFreeNo + 1) % 64;
     }
     return 0;
 }

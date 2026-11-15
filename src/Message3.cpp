@@ -199,11 +199,11 @@ void func_02031028(int arg) {
         val = p->name[i];
         j = 0;
         while (CharDiffers(data_02075b14[j], val) && CharDiffers(data_02075d14[j], val) &&
-               j < 0x100) {
+               j < 256) {
             j++;
         }
 
-        if (j == 0x100) {
+        if (j == 256) {
             *out = 0x47;
         } else {
             *out = j;
@@ -382,7 +382,7 @@ void func_02031428(void) {
                     q[11] = data_0209283c[rem] & data_0209fd5c[i3];
                 }
                 col = (col + *inc) & 0xff;
-                rowIdx += 0x10;
+                rowIdx += 16;
                 inc++;
                 j++;
             } while (j < count);
@@ -433,7 +433,7 @@ void func_020316d8(int screen, int c, u32 x, void *buf) {
         sh = m << 2;
         k = 8 - m;
         rsh = k << 2;
-        for (; i < 0x10; i++) {
+        for (; i < 16; i++) {
             idx = (i >> 3) * stride + (i & 7);
             chr[idx] |= *src << sh;
             rem = n;
@@ -530,15 +530,15 @@ void func_020319fc(int n) {
     count = data_0209fcd8;
     col = col0;
 
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         for (j = 0; j < count; j++) {
             blk = col >> 3;
             wordIdx = blk << 3;
             rem = col & 7;
-            dst[wordIdx] = (data_0209287c[rem] & data_0209fd5c[i + j * 0x10]) | dst[wordIdx];
+            dst[wordIdx] = (data_0209287c[rem] & data_0209fd5c[i + j * 16]) | dst[wordIdx];
             if (rem != 0)
                 (&dst[wordIdx])[8] =
-                    data_0209283c[rem] & *(u32 *)((char *)data_0209fd5c + ((i + j * 0x10) << 2));
+                    data_0209283c[rem] & *(u32 *)((char *)data_0209fd5c + ((i + j * 16) << 2));
             col = (col + data_0209fd20[j]) & 0xff;
         }
         dst++;
@@ -566,7 +566,7 @@ void Message::AddCharVS(u8 c) {
     }
     mask = data_0209285c[data_0209fcd4];
     sh = data_0209fccc;
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         word = *(ip++);
         masked = word;
         masked = masked & mask;
@@ -863,7 +863,7 @@ void func_020326ac(void) {
         data_0209fc7c = 0;
         func_02031428();
         data_0209fc70 += 1;
-        if (data_0209fc70 != 0x10) {
+        if (data_0209fc70 != 16) {
             return;
         }
         data_0209fcc8 = 1;
@@ -888,8 +888,8 @@ void func_020326ac(void) {
             data_0209fcd0 ^= 1;
         }
         {
-            int r5 = data_0209fcf4[data_0209fcd0] * 9 + data_0209fc6c + 0xC;
-            int r4 = data_0209fce0 + (data_0209fc80 * 0x10) + 0xE;
+            int r5 = data_0209fcf4[data_0209fcd0] * 9 + data_0209fc6c + 12;
+            int r4 = data_0209fce0 + (data_0209fc80 * 16) + 14;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
                 OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
@@ -915,8 +915,8 @@ void func_020326ac(void) {
             data_0209fcd0 ^= 1;
         }
         {
-            int r5 = data_0209fc6c + 0xC;
-            int r4 = data_0209fce0 + (data_0209fcf4[data_0209fcd0] * 0x10) + 0xE;
+            int r5 = data_0209fc6c + 12;
+            int r4 = data_0209fce0 + (data_0209fcf4[data_0209fcd0] * 16) + 14;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
                 OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
@@ -948,9 +948,9 @@ void func_020326ac(void) {
         } else if (f0 != 0) {
             s16 debval = gTouchY[idx * 4];
             data_0209fcf0 = debval - data_0209fcec;
-            if (data_0209fcf0 > 0x10) {
-                data_0209fcf0 = 0x10;
-                data_0209fcec = debval - 0x10;
+            if (data_0209fcf0 > 16) {
+                data_0209fcf0 = 16;
+                data_0209fcec = debval - 16;
             } else if (data_0209fcf0 < 0) {
                 data_0209fcf0 = 0;
                 data_0209fcec = debval;
@@ -963,7 +963,7 @@ void func_020326ac(void) {
                 break;
             case 1:
                 if (data_0209fcf0 > 0) {
-                    if (data_0209fcf0 >= 0x10) {
+                    if (data_0209fcf0 >= 16) {
                         data_0209fcd0 += 1;
                     } else if (data_0209fcf0 <= 6) {
                         data_0209fcd0 -= 1;
@@ -971,7 +971,7 @@ void func_020326ac(void) {
                 }
                 break;
             case 2:
-                if (data_0209fcf0 > 0 && data_0209fcf0 <= 0xE) {
+                if (data_0209fcf0 > 0 && data_0209fcf0 <= 14) {
                     data_0209fcd0 -= 1;
                 }
                 break;
@@ -990,8 +990,8 @@ void func_020326ac(void) {
             }
         }
         {
-            int r5 = data_0209fc6c + 0xC;
-            int r4 = data_0209fce0 + (data_0209fcf4[data_0209fcd0] * 0x10) + 0xE;
+            int r5 = data_0209fc6c + 12;
+            int r4 = data_0209fce0 + (data_0209fcf4[data_0209fcd0] * 16) + 14;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
                 OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
@@ -1102,7 +1102,7 @@ void func_02032f9c(int a) {
     data_0209fc84 = a;
     func_02031cd4(0);
 
-    w = 0x100 - data_0209fc88;
+    w = 256 - data_0209fc88;
     data_0209fc7c = ((w >> 1) & 7);
     q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x40) + (u16)(w / 8 >> 1);
     c = data_0209fc7c;
@@ -1253,7 +1253,7 @@ void func_02033464(int arg0, int arg1, int arg2) {
         if (arg1 < 0)
             return;
         func_02031028(0);
-        data_0209fc7c = ((0x100 - data_0209fc88) >> 1);
+        data_0209fc7c = ((256 - data_0209fc88) >> 1);
         n = data_0209fca0;
         data_0209fccc = data_0209fc7c & 7;
         data_0209fc88 = 0;
@@ -1287,11 +1287,11 @@ void func_02033464(int arg0, int arg1, int arg2) {
             i++;
             x++;
             v1++;
-        } while (i < 0xc);
+        } while (i < 12);
         data_0209fc7c &= 7;
         data_0209fc78 = (data_0209fc78 >> 1);
         data_0209fcb0 = 1;
-        func_020319fc(0xc);
+        func_020319fc(12);
     } else {
         data_0209fc94 = 0;
         d = (char *)G2_GetBG3ScrPtr() + (arg0 << 1);
@@ -1332,11 +1332,11 @@ void func_02033464(int arg0, int arg1, int arg2) {
             i++;
             x++;
             v1++;
-        } while (i < 0xc);
+        } while (i < 12);
         data_0209fc7c &= 7;
         data_0209fc78 = (data_0209fc78 >> 1);
         data_0209fcb0 = 1;
-        func_020319fc(0xc);
+        func_020319fc(12);
     }
 }
 #undef data_0209fc78

@@ -908,7 +908,7 @@ int daYegg_c::IsStalled() {
         if (DecIfAbove0_Byte(&mStallTimer) == 0)
             return 1;
     } else {
-        mStallTimer = 0xf;
+        mStallTimer = 15;
     }
     return 0;
 }
@@ -1403,7 +1403,7 @@ int daYegg_c::InitResources()
     mGoalAngleX = mAngleX;
     mGoalAngleY = mAngleY;
     mGoalAngleZ = mAngleZ;
-    mStallTimer = 0xf;
+    mStallTimer = 15;
 
     if (HasBlueCoinPayout() != 0)
         LoadBlueCoinModel();

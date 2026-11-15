@@ -331,7 +331,7 @@ void daFish_c::StateFlee() {
             (((unsigned int)RandomIntInternal(&data_0209e650.value) % 0x12c) + 0x1f4) << 12;
         this->mTurnSpeed = (RandomIntInternal(&data_0209e650.value) & 0x3ff) + 0x400;
         this->mAnmModel.speed = 0x4000;
-    } else if (this->mStateTimer == 0x14) {
+    } else if (this->mStateTimer == 20) {
         this->mAnmModel.speed = 0x1000;
     }
     if (this->mHorzSpeed < this->mMaxSpeed) {
@@ -378,8 +378,7 @@ void daFish_c::StateTurnAbout() {
     this->mHorzSpeed =
         (((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x1fff) + 0x2000;
     this->mAnmModel.speed = 0x1000;
-    this->mWanderTimer =
-        ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 0x3c);
+    this->mWanderTimer = ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 60);
     this->mState = 5;
 }
 
@@ -411,7 +410,7 @@ void daFish_c::InitFromSpawner(u32 spawnerID) {
         this->mHorzSpeed =
             (((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x1fff) + 0x2000;
         this->mWanderTimer =
-            ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 0x3c);
+            ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 60);
         this->mState = 5;
     } else {
         this->mState = 3;

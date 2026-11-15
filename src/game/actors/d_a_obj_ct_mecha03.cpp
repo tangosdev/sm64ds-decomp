@@ -140,7 +140,7 @@ int daObjCtMecha03_c::Behavior() {
                 }
             }
             if (mSwingSpeed == 0) {
-                mSoundTimer = (u16)mPauseTimer + 0xf;
+                mSoundTimer = (u16)mPauseTimer + 15;
             }
             mSwingAngle += mSwingSpeed;
         }

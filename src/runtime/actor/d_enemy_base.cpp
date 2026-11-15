@@ -264,7 +264,7 @@ void Aea30C::func_ov002_020ae9f8(dActor_c*, dBgCh_Actr*)
 {
     mHorzSpeed = 0;
     mVertSpeed = 0;
-    mDeathTimer = 0xf;
+    mDeathTimer = 15;
     mFlags &= ~0x1;
 }
 
@@ -745,7 +745,7 @@ void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player,
     mPrevAngleY = Vec3_HorzAngle(&player.mPos, &mPos);
     mHorzSpeed = 0xa000;
     mVertSpeed = 0x28000;
-    mDeathTimer = 0x1e;
+    mDeathTimer = 30;
     mSpinRateX = spin.x;
     mSpinRateY = spin.y;
     mSpinRateZ = spin.z;

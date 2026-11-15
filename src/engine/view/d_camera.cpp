@@ -1580,7 +1580,7 @@ void dCamera_c::Mode8DirectionsCamera(CamViewObj *view) {
                         mBaseAngleOffset += 0x2000;
                         mFlags |= 0x40;
                     }
-                    mStateTimer = 0x14;
+                    mStateTimer = 20;
                 }
             }
         }
@@ -2761,7 +2761,7 @@ int dCamera_c::func_020098e0() {
 /* Entry to state 0x13: arm mStateTimer, which func_0200987c counts down. */
 int func_020098b8(dCamera_c *cam) {
     cam->SetMode(0x13);
-    cam->mStateTimer = 0x1c;
+    cam->mStateTimer = 28;
     return 1;
 }
 

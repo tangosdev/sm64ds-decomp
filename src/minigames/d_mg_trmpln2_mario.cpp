@@ -766,7 +766,7 @@ void dMgTrmpln2Mario_c::StateRespawnWait() {
 }
 
 void dMgTrmpln2Mario_c::EnterRespawnWait() {
-    mTimer = 0x3c;
+    mTimer = 60;
     mPos.y = 0x100000;
     mPrevPos.x = mPos.x;
     mPrevPos.y = mPos.y;
@@ -805,7 +805,7 @@ void dMgTrmpln2Mario_c::EnterMissed() {
     else
         Sound::PlayBank2_2D(0x1c9);
     mAnmModel.SetAnim(sTrmpAnimStruggle, 0, 0x800, 0);
-    mTimer = 0x28;
+    mTimer = 40;
     mState = pmf_Trmp2Mario_StateMissed_2;
 }
 
@@ -1886,7 +1886,7 @@ void dMgTrmpln3DMario_c::EnterMissed() {
     else
         Sound::PlayBank2_2D(0x1c9);
     mAnmModel.SetAnim(sTrmpAnimStruggle, 0, 0x800, 0);
-    mTimer = 0x28;
+    mTimer = 40;
     mState = pmf_Trmp3DMario_StateMissed_2;
 }
 

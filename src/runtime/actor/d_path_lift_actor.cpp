@@ -136,7 +136,7 @@ void dPathLiftActor_c::StateFall()
                 return;
             }
         } else {
-            mWaitTimer = 0x12c;
+            mWaitTimer = 300;
         }
     }
     if (DecIfAbove0_Byte(&mFallDelay) != 0)
@@ -171,17 +171,17 @@ void dPathLiftActor_c::StateFallInit() {
         mVertAccel = -0x2000;
         mTerminalVelocity = -0x3c000;
     }
-    mTriggerDelay = 0xfa;
+    mTriggerDelay = 250;
     mPrevAngleX = mAngleX;
     mPrevAngleY = mAngleY;
     mPrevAngleZ = mAngleZ;
     mVertSpeed = 0;
     if (HasNonzeroAngleZ() == 0) {
-        mFallDelay = 0x3c;
+        mFallDelay = 60;
         mFallBounceTimer = 0;
     } else {
-        mFallDelay = 0x1e;
-        mFallBounceTimer = 0x18;
+        mFallDelay = 30;
+        mFallBounceTimer = 24;
         mFallAngle = 0;
         mFallStartY = mPosY;
     }
@@ -212,7 +212,7 @@ void dPathLiftActor_c::StatePath()
                 return;
             }
         } else {
-            mWaitTimer = 0x12c;
+            mWaitTimer = 300;
         }
     }
 
@@ -280,7 +280,7 @@ void dPathLiftActor_c::StatePath()
         if (mPath.Loops()) {
             mCurrPathNode = mPath.NumNodes() - 1;
         } else {
-            mTriggerDelay = 0x14;
+            mTriggerDelay = 20;
             mPathDirection = 1;
             mCurrPathNode += mPathDirection * 2;
         }
@@ -291,7 +291,7 @@ void dPathLiftActor_c::StatePath()
         } else if (Param10ModeIs1() != 0) {
             SetState(2);
         } else {
-            mTriggerDelay = 0x14;
+            mTriggerDelay = 20;
             mPathDirection = -1;
             mCurrPathNode += mPathDirection * 2;
         }

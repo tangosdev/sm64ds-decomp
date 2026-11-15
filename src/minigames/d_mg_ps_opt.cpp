@@ -187,7 +187,7 @@ u8 dMgPsOpt_c::Update() {
         if (TouchArea_Update(&mIcons[kIconBack], -1)) {
             /* Back: pulse the button, then let state 2 run the delay down. */
             func_ov001_020ab3f0(&mIcons[kIconBack]);
-            mCloseTimer = 0x14;
+            mCloseTimer = 20;
             mActive = kPanelClosing;
             func_02012790(kSndBack);
         } else {

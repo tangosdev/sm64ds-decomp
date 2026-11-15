@@ -67,7 +67,7 @@ void func_ov007_020bbe60(int idx) {
                         sPortraitStrokePointCounts[drawing], sPortraitStrokeXCoords[drawing],
                         sPortraitStrokeYCoords[drawing], sPortraitStrokeProgressThresholds[drawing],
                         1);
-    SCENE->replayFrames = 0x78;
+    SCENE->replayFrames = 120;
     if (idx == 0 && StrokeStages()[idx] == 2) {
         int frames = FX_MUL(SCENE->replayFrames << 12, 0x1800);
         SCENE->replayFrames = frames >> 12;

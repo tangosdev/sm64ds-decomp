@@ -134,7 +134,7 @@ int daDsn_c::Behavior() {
             mTextureSequence.currFrame = (int)((((unsigned)frame - 1) << 16) >> 4);
             frame = (unsigned short)(mTextureSequence.currFrame >> 12);
             if (frame == 0)
-                mHoldTimer = 0xa;
+                mHoldTimer = 10;
         } else {
             if (mHoldTimer != 0)
                 mHoldTimer--;

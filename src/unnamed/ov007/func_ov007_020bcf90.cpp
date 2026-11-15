@@ -73,7 +73,7 @@ void func_ov007_020bcf90(void) {
     if (func_ov007_020b7a34() != 0) {
         func_ov007_020b7a00();
     }
-    for (j = 0; j < 0x18; j++) {
+    for (j = 0; j < 24; j++) {
         func_ov007_020b4464(WORK->itemViews[j], WORK->cameras[1]);
     }
 

@@ -298,7 +298,7 @@ void StarPopup_Update(char *arg) {
                     sHanaStarPopups[i].t = 0;
                 return;
             }
-            ((HanaStarPopup *)f)->timer = 0x40;
+            ((HanaStarPopup *)f)->timer = 64;
             ((HanaStarPopup *)f)->phase += 1;
         } else if (ph == 1) {
             if (((HanaStarPopup *)f)->timer != 0) {
@@ -350,7 +350,7 @@ void StarPopup_Start(int x, int y) {
         x = 0xf4000;
     ((HanaStarPopup *)g)->x = x;
     ((HanaStarPopup *)g)->y = y;
-    ((HanaStarPopup *)g)->timer = 0x18;
+    ((HanaStarPopup *)g)->timer = 24;
     ((HanaStarPopup *)g)->phase = 0;
     ((HanaStarPopup *)g)->visible = 1;
     ((HanaStarPopup *)g)->ticks = 5;
@@ -421,7 +421,7 @@ void HanaPopup_UpdateAll(void) {
                     ((Ent71c *)(int)e)->pos += e->vel;
                     ((Ent71c *)(int)e)->vel += 0x100;
                 } else {
-                    e->timer = 0x40;
+                    e->timer = 64;
                     ((Ent71c *)(int)e)->phase += 1;
                 }
             } else {
@@ -444,7 +444,7 @@ void HanaPopup_UpdateAll(void) {
 
 void HanaPopup_Spawn(int r0, int r1) {
     int i;
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         if (sHanaPopups[i].inuse == 0) {
             sHanaPopups[i].inuse = 1;
             sHanaPopups[i].f = 1;
@@ -473,7 +473,7 @@ struct E6_ea8e0 {
 
 void HanaPopup_ClearAll(void) {
     int i;
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         if (((struct E6_ea8e0 *)sHanaPopups)[i].e == 0) {
             ((struct E6_ea8e0 *)sHanaPopups)[i].e = 0;
             ((struct E6_ea8e0 *)sHanaPopups)[i].f = 0;
@@ -894,7 +894,7 @@ int dScMgHanachan_c::Wiggler::IsStarVisible() {
 void dScMgHanachan_c::Wiggler::StopIfIdle() {
     if (state == &Wiggler::TurnTowardAim) {
         busy = 0;
-        timer = 0x60;
+        timer = 96;
         if (decoy == 0) {
             Sound::PlayBank2_2D(0x1e9);
         }
@@ -913,7 +913,7 @@ void dScMgHanachan_c::Wiggler::StopIfIdle() {
 void dScMgHanachan_c::Wiggler::OnTouched() {
     if (state == &Wiggler::TurnTowardAim) {
         busy = 0;
-        timer = 0x60;
+        timer = 96;
         if (decoy == 0)
             Sound::PlayBank2_2D(0x1e9);
         state = &Wiggler::StateMoveA;
@@ -1417,7 +1417,7 @@ void dScMgHanachan_c::Wiggler::StartBounce(int) {
     aim = (short)((ang[0] + ang[1]) >> 1);
     ClampToScreen();
     StepSegmentsC();
-    timer = 0x1e;
+    timer = 30;
     voice = 0;
     voiceId = 0x1ec;
     state = &Wiggler::MoveBounce;
@@ -1626,12 +1626,12 @@ s32 dScMgHanachan_c::Render() {
             if (mPhase == &dScMgHanachan_c::Phase_Result) {
                 int flag = mHit;
                 if (flag != 0) {
-                    if (mPhaseTimer < 0x5a)
+                    if (mPhaseTimer < 90)
                         goto do_eac;
                 }
                 if (flag != 0)
                     goto count_loop;
-                if (mPhaseTimer < 0x8a)
+                if (mPhaseTimer < 138)
                     goto do_eac;
                 goto count_loop;
             do_eac:
@@ -1667,7 +1667,7 @@ tail:
             int idx = GetGameLanguage();
             void *e = sHanaTextSpritesByLanguage[idx];
             OamAttr *f = ((OamAttr **)e)[3];
-            DrawOamSprite(f, 0x80, 0x10, 0);
+            DrawOamSprite(f, 128, 16, 0);
             Mg_DrawNumberRotated(0x80, 0x28, mTimeLeft, 1, -1, 0x800, 0);
         }
     }
@@ -1716,7 +1716,7 @@ void dScMgHanachan_c::Phase_WaitTouch() {
 }
 
 void dScMgHanachan_c::BeginResultWait() {
-    mPhaseTimer = 0xb4;
+    mPhaseTimer = 180;
     mPhase = &dScMgHanachan_c::Phase_WaitTouch;
 }
 
@@ -1760,9 +1760,9 @@ void dScMgHanachan_c::BeginResult() {
         } while (i < sHanaFieldWigglerCount);
     }
     if (mHit != 0)
-        mPhaseTimer = 0xb4;
+        mPhaseTimer = 180;
     else
-        mPhaseTimer = 0xe4;
+        mPhaseTimer = 228;
     mPhase = &dScMgHanachan_c::Phase_Result;
 }
 
@@ -1881,7 +1881,7 @@ void dScMgHanachan_c::Phase_Play() {
 }
 
 void dScMgHanachan_c::BeginPlay() {
-    mPhaseTimer = 0x4b0;
+    mPhaseTimer = 1200;
     mPhase = &dScMgHanachan_c::Phase_Play;
 }
 
@@ -1935,7 +1935,7 @@ void dScMgHanachan_c::Phase_SetupRound() {
         int k = (int)(rnd >> 19) * sHanaFieldWigglerCount >> 12;
         mTarget = mWiggler + k;
         mTarget->decoy = 0;
-        mDelay = 0x3c;
+        mDelay = 60;
         Mg_ShowBanner(0xd, 0x80, 0x50, 1, -1, 0xd);
         mTimeTick = 0x3c;
         mHit = 0;

@@ -936,7 +936,7 @@ int daMip_c::StateIdleMain()
     if (mRabbitId == 1) {
         if (Vec3_HorzDist(&mPos, (const Vector3 *)&pp) < 0x4b0000) {
             mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&pp) + 0x8000;
-            mStateTimer = 0x1e;
+            mStateTimer = 30;
         }
     }
 
@@ -953,7 +953,7 @@ int daMip_c::StateIdleMain()
             (mActionStep)++;
             break;
         case 3:
-            mStateTimer = (s16)((r & 0x1f) + 0x1e);
+            mStateTimer = (s16)((r & 0x1f) + 30);
             mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
             mActionStep = 0;
             break;
@@ -1288,7 +1288,7 @@ int daMip_c::Behavior()
         }
         if (mEatenByYoshi == 1) {
             mEatenTimer++;
-            if (mEatenTimer > 0x96) {
+            if (mEatenTimer > 150) {
                 mEatenByYoshi = 0;
                 mEatenTimer = 0;
             }

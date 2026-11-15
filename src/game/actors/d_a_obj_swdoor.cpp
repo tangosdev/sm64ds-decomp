@@ -82,7 +82,7 @@ s32 daObjSwdoor_c::UpdateShutter() {
     case 0:
         if (Event::GetBit(mEventBit) != 0) {
             if (DecIfAbove0_Byte(&mTimer) == 0) {
-                mTimer = 0x40;
+                mTimer = 64;
                 mState++;
                 mFlags &= ~1;
                 Sound::PlayBank3(0x3f, mCamSpacePos);

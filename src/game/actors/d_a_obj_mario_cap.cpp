@@ -1062,7 +1062,7 @@ int daObjMarioCap_c::InitTaken()
         }
     }
 
-    mStateTimer = 0x96;
+    mStateTimer = 150;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;

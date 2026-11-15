@@ -57,7 +57,7 @@ u64 func_0206c244(u64 d)
     q = (char *)&d;
     q = pad(q, 6);
     mant |= 0x10;
-    mant |= READ8(q) & ((i = 5), 0xf);
+    mant |= READ8(q) & ((i = 5), 15);
     for (; i >= 0; i--) {
         p = pad((char *)&d, i);
         mant <<= 8;
@@ -82,7 +82,7 @@ u64 func_0206c244(u64 d)
     WRITE8(q, t);
     q = pad((char *)&out, 6);
     b = READ8(q);
-    b |= (exp & 0xf) << 4;
+    b |= (exp & 15) << 4;
     q = pad((char *)&out, 6);
     WRITE8(q, b);
     mant &= 0x000fffffffffffffULL;
