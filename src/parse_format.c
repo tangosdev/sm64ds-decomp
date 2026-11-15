@@ -86,9 +86,12 @@ unsigned char *parse_format(unsigned char *format_string, char **arg, print_form
 
     if (c == '*') {
         *arg += 4;
-        if ((f.field_width = *(int *)(*arg - 4)) < 0) {
-            f.justification_options = left_justification;
-            f.field_width = -f.field_width;
+        {
+            int *slot = (int *)(*arg - 4);
+            if ((f.field_width = *slot) < 0) {
+                f.justification_options = left_justification;
+                f.field_width = -f.field_width;
+            }
         }
         c = *++s;
     } else {
@@ -111,8 +114,11 @@ unsigned char *parse_format(unsigned char *format_string, char **arg, print_form
 
         if (c == '*') {
             *arg += 4;
-            if ((f.precision = *(int *)(*arg - 4)) < 0)
-                f.precision_specified = 0;
+            {
+                int *slot = (int *)(*arg - 4);
+                if ((f.precision = *slot) < 0)
+                    f.precision_specified = 0;
+            }
             c = *++s;
         } else {
             while (isdigit_(c)) {

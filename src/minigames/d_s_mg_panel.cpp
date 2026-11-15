@@ -460,7 +460,7 @@ void dScMgPanel_c::IntroCard_StateHold() {
     if (mHold != 0) {
         u16 *p = &mHold;
         *p = *p - 1;
-        if (*(s16 *)&mHold < 0)
+        if ((s16)mHold < 0)
             mHold = 0;
     } else {
         mSlideVel = -0x3000;

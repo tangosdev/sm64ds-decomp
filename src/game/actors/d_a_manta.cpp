@@ -134,7 +134,7 @@ int daManta_c::ExecuteSwim() {
     HurtTouchingPlayer();
 
     if (mRingCount < MANTA_RING_GOAL) {
-        if (*(unsigned short *)&mStateTimer == 0) {
+        if (mStateTimer == 0) {
             spawned = dActor_c::Spawn(MANTA_WATER_RING, 1, mRingPos, &mAngle, mAreaId, -1);
             if (spawned != 0) {
                 mRingIDs[mRingWrite] = spawned->uniqueID;
@@ -259,7 +259,7 @@ int daManta_c::Render() {
 }
 
 int daManta_c::Behavior() {
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     {
         MantaState *state = mState;
         if (state->execute != 0)
@@ -272,8 +272,8 @@ int daManta_c::Behavior() {
         Vector3 forward;
         int len;
 
-        path.FromID(*(unsigned int *)&mPathID);
-        path.GetNode(node, *(unsigned int *)&mPathNode);
+        path.FromID(mPathID);
+        path.GetNode(node, mPathNode);
         Vec3_Sub(&diff, &mPos, &node);
         len = VEC_Mag(&diff);
         if (len == 0 || len <= MANTA_NODE_REACH) {
@@ -321,7 +321,7 @@ int daManta_c::InitResources() {
 
     {
         PathPtr path;
-        path.FromID(*(unsigned int *)&mPathID);
+        path.FromID(mPathID);
         mNumNodes = path.NumNodes();
     }
 
@@ -337,9 +337,9 @@ int daManta_c::InitResources() {
 
     {
         PathPtr path;
-        path.FromID(*(unsigned int *)&mPathID);
+        path.FromID(mPathID);
         mPathNode = 1;
-        path.GetNode(mPos, *(unsigned int *)&mPathNode);
+        path.GetNode(mPos, mPathNode);
     }
 
     {

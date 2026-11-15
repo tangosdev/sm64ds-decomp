@@ -1176,21 +1176,20 @@ void dScMgPachinko_c::Ball_AimAtTarget(int i) {
         return;
     n = i * 0x38;
     {
-        char *yBase = (char *)this + BALL_OFF(y);
-        int y = *(int *)(yBase + n);
-        pY = (int *)(yBase + n);
+        pY = &mBall[i].y;
+        int y = *pY;
         if ((y >> 12) < 0)
             return;
     }
     {
-        char *velXBase = (char *)this + BALL_OFF(velX);
-        char *velYBase = (char *)this + BALL_OFF(velY);
-        int a = *(int *)(velXBase + n);
+        s32 *velXBase = &mBall[i].velX;
+        s32 *velYBase = &mBall[i].velY;
+        int a = *velXBase;
         s64 distSq = (s64)a * a;
-        int b = *(int *)(velYBase + n);
-        pVx = (int *)(velXBase + n);
+        int b = *velYBase;
+        pVx = velXBase;
         distSq += (s64)b * b;
-        pVy = (int *)(velYBase + n);
+        pVy = velYBase;
         dist = (int)cstd::sqrt((u64)distSq);
     }
     factor = dist * 9 / 10;
@@ -1201,11 +1200,12 @@ void dScMgPachinko_c::Ball_AimAtTarget(int i) {
         idx = PACHINKO_RAND(4);
     }
     {
-        char *xBase = (char *)this + BALL_OFF(x);
+        dScMgPachinko_ball *ball = (dScMgPachinko_ball *)((char *)mBall + n);
+        s32 *xBase = &ball->x;
         int targetY = mTarget[idx].y;
         int yval = *pY;
         int targetX = mTarget[idx].x;
-        int entX = *(int *)(xBase + n);
+        int entX = *xBase;
         angBase = (char *)this + BALL_OFF(angle);
         angle = cstd::atan2((targetY - yval) >> 12, (targetX - entX) >> 12);
         *(u16 *)(angBase + n) = (u16)angle;
@@ -1221,7 +1221,7 @@ void dScMgPachinko_c::Ball_AimAtTarget(int i) {
         }
         int fieldByte = BALL((char *)this + n)->level;
         int div40 = (fieldByte * 0x180) / 40;
-        int e8ret = func_020126e8(*(int *)(xBase + n));
+        int e8ret = func_020126e8(*xBase);
         func_020126ac(0x186, 6, 0, div40 - 0x80, e8ret);
         BALL((char *)this + n)->state = 4;
         BALL((char *)this + n)->target = (u8)idx;
@@ -1719,26 +1719,26 @@ void dScMgPachinko_c::BobOmb_StateAim(int i) {
 
         cx = ((u8(*)[4])gTouchX)[idx][0];
         cy = ((u8(*)[4])gTouchY)[idx][0];
-        *(s32 *)(c + SHOT_OFF(x) + off) = (cx << 12) + *(s32 *)(c + SHOT_OFF(offX) + off);
+        s32 grab = *(s32 *)(c + SHOT_OFF(offX) + off);
+        dScMgPachinko_shot *shot = (dScMgPachinko_shot *)((char *)mShot + off);
+        shot->x = (cx << 12) + grab;
         *(s32 *)(c + SHOT_OFF(y) + off) = (cy << 12) + *(s32 *)(c + SHOT_OFF(offY) + off);
 
         vy = *(s32 *)(c + SHOT_OFF(y) + off) >> 12;
         vx = *(s32 *)(c + SHOT_OFF(x) + off) >> 12;
         if (vx >= 0xf8)
-            *(s32 *)(c + SHOT_OFF(x) + off) = 0xf8000;
+            shot->x = 0xf8000;
         py = (s32 *)(c + SHOT_OFF(y) + off);
         if (vx <= 8)
-            *(s32 *)(c + SHOT_OFF(x) + off) = 0x8000;
+            shot->x = 0x8000;
         if (vy >= 0xb8)
             *py = 0xb8000;
         if (vy <= 8)
             *py = 0x8000;
 
         {
-            s32 nx =
-                (*(s32 *)(c + SHOT_OFF(x) + off) >> 12) - ((u8(*)[4])gTouchX)[gActivePlayerSlot][0];
-            s32 ny =
-                (*(s32 *)(c + SHOT_OFF(y) + off) >> 12) - ((u8(*)[4])gTouchY)[gActivePlayerSlot][0];
+            s32 nx = (*(s32 *)(c + SHOT_OFF(x) + off) >> 12) - gTouchX[gActivePlayerSlot * 4];
+            s32 ny = (*(s32 *)(c + SHOT_OFF(y) + off) >> 12) - gTouchY[gActivePlayerSlot * 4];
 
             *(s32 *)(c + SHOT_OFF(offX) + off) = nx << 12;
             *(s32 *)(c + SHOT_OFF(offY) + off) = ny << 12;
@@ -1771,9 +1771,7 @@ void dScMgPachinko_c::BobOmb_StateAim(int i) {
         if (dist >= 0x10) {
             {
                 s16 ang = cstd::atan2(dx, dy);
-                char *p = c + off;
-
-                *(s16 *)(p + SHOT_OFF(angle)) = ang;
+                ((dScMgPachinko_shot *)((char *)mShot + off))->angle = ang;
             }
             *(s32 *)(c + SHOT_OFF(speed) + off) = cstd::sqrt((dy * dy + dx * dx)) << 8;
             *(s32 *)(c + SHOT_OFF(speed) + off) += *(s32 *)(c + SHOT_OFF(speed) + off) >> 2;

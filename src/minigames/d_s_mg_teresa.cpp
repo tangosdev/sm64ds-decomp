@@ -1664,7 +1664,8 @@ void dScMgTeresa_c::StartRound(int reset) {
            field address into its own register (add r2,r4,#0xbc / ldr [r2] /
            str [r2]) and the function grows a word; the cartridge re-issues
            ldr r1,[r4,#0xbc]. Same lever as dScMgHanachan_c::StartRound. */
-        mLevel = *(const unsigned int *)&mLevel + 1;
+        const unsigned int level = mLevel;
+        mLevel = level + 1;
         if (mLevel > 0x270e)
             mLevel = 0x270e;
     } else {

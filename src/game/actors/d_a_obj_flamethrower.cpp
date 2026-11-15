@@ -129,7 +129,7 @@ int daObjFlamethrower_c::InitResources() {
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].y = firstPos.y;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].z = firstPos.z;
             } else {
-                Vec3_Add(&nextPos, (const Vector3 *)&mFlamePositions[im1], &dst);
+                Vec3_Add(&nextPos, &mFlamePositions[im1], &dst);
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].x = nextPos.x;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].y = nextPos.y;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].z = nextPos.z;
@@ -252,7 +252,7 @@ int daObjFlamethrower_c::Behavior() {
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum.y;
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum.z;
                     } else {
-                        Vec3_Add((Vector3 *)sum2, (const Vector3 *)&mFlamePositions[im1], &dst);
+                        Vec3_Add((Vector3 *)sum2, &mFlamePositions[im1], &dst);
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x = sum2[0];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum2[1];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum2[2];

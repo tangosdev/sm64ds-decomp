@@ -366,9 +366,8 @@ int daObjEwbIce_c::InitResources() {
     {
         u8 variant = mVariant;
         kcl = dBgW_Kc::LoadFile(*((EwbIceFileSlot *)data_ov073_021231c0)[variant].file);
-        mMeshCollider.SetFile(
-            kcl, mClsnMat, 0x1000, mAngleY,
-            *(CLPS_Block *)(((EwbIceClpsSlot *)data_ov073_021231c4)[variant].clps));
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY,
+                              *(((EwbIceClpsSlot *)data_ov073_021231c4)[variant].clps));
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);

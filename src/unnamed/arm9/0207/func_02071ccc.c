@@ -10,10 +10,12 @@ void func_02071ccc(ThrowContext *s, int off, int add) {
     info->mLocation = s->mLocation;
     info->mTypeInfo = s->mThrowType;
     info->mDtor = s->mDtor;
-    if (*(u8 *)s->mThrowType != '*') {
+    u8 *typeName = (u8 *)s->mThrowType;
+    if (*typeName != '*') {
         info->mSublocation = s->mLocation + add;
         return;
     }
     info->mSublocation = (int)&info->mPointerCopy;
-    info->mPointerCopy = *(int *)s->mLocation + add;
+    int *thrown = (int *)s->mLocation;
+    info->mPointerCopy = *thrown + add;
 }

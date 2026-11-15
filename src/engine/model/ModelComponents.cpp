@@ -158,7 +158,7 @@ extern u32 data_020a4bd4;
 extern const int data_02082190[12];
 extern void *data_020a4bd0;
 extern u8 data_020a4bbc;
-extern u16 data_02099f94[8];
+extern struct Buf8 data_02099f94;
 extern s16 data_020a4bc0;
 extern s16 data_020a4bc4;
 extern "C" {
@@ -209,7 +209,7 @@ extern "C" void func_0204531c(char *self, int arg) {
     mc->transforms = save;
 
     for (i = 0; i < mc->modelFile->numBones; i++)
-        func_02047910((int *)&mc->transforms[i], (int *)&blend[i], (int *)&mc->transforms[i], arg);
+        func_02047910(&mc->transforms[i].r.m[0], &blend[i].r.m[0], &mc->transforms[i].r.m[0], arg);
 }
 
 void func_02045178(int *out, int ax, int ay, int az, int tx, int ty, int tz) {
@@ -388,12 +388,12 @@ void ModelComponents::func_02044b30(int idx) {
            from data_02099f94, since the ROM's load at +0x284 relocates
            against the table itself (an init-list's anonymous .rodata would
            be a WRONG-DEST). */
-        s16 halfSizes[8];
-        *(struct Buf8 *)halfSizes = *(const struct Buf8 *)data_02099f94;
+        struct Buf8 halfSizes;
+        halfSizes = data_02099f94;
         int sizeS = (texImageParam >> 20) & 7;
         int sizeT = (texImageParam >> 23) & 7;
-        data_020a4bc0 = halfSizes[sizeS];
-        data_020a4bc4 = -halfSizes[sizeT];
+        data_020a4bc0 = halfSizes.v[sizeS];
+        data_020a4bc4 = -halfSizes.v[sizeT];
         G3_TexCoord(mat.texTransS, mat.texTransT);
         break;
     }

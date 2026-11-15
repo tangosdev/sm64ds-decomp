@@ -2,10 +2,6 @@
 
 extern void func_ov007_020c90c0(void *c);
 
-inline int keep(int x) {
-    return x;
-}
-
 /* One frame of a scalar tween (modes as in Ov007Tween.h). Returns 1 once it
  * has arrived (state 3). */
 int func_ov007_020c8f98(Ov007Tween *tw) {
@@ -26,7 +22,7 @@ int func_ov007_020c8f98(Ov007Tween *tw) {
                 if (t <= 0)
                     a = b;
                 else
-                    a = (int)((((s64)t) * keep(a) + ((s64)(0x1000 - t)) * b) >> 12);
+                    a = (int)(((s64)(0x1000 - t) * b + (s64)t * a) >> 12);
             }
             slot = tw->out;
             *slot = a;

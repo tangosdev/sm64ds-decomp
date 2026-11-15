@@ -153,7 +153,7 @@ void Luigi_PushScanlineRecord(void) {
     extern volatile u32 data_0209f608;
     extern struct IrisScanlineTable data_0209f648[];
     data_0209f608 = data_0209f60c;
-    MI_CpuCopy32((int *)&data_0209f648[data_0209f608], (int *)0x04000040, 4);
+    MI_CpuCopy32(&data_0209f648[data_0209f608], (int *)0x04000040, 4);
 }
 
 void dScMgLuigi_c::BuildIrisTable(int irisIndex) {

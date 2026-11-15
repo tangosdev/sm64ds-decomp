@@ -118,7 +118,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             if (fl != 0)
                 t = c->mFrame.mGPR[v0] & 0xff;
             else
-                t = *(unsigned char *)(c->mFP + v0);
+                t = (unsigned char)c->mFP[v0];
             if (t != 0)
                 ((F2)fp)((int)(c->mFP + v1), neg1);
             s->mAction = adv;
@@ -302,7 +302,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             if ((op & 0x40) != 0)
                 t = c->mFrame.mGPR[v0] & 0xff;
             else
-                t = *(unsigned char *)(c->mFP + v0);
+                t = (unsigned char)c->mFP[v0];
             if (t != 0) {
                 if (fl != 0)
                     a = c->mFrame.mGPR[v1];

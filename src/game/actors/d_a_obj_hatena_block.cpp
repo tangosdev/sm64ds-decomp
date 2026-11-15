@@ -374,7 +374,7 @@ int daObjHatenaBlock_c::InitResources()
     mShadowMat = mModel.mat4x3;
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(data_ov102_0214e7d0);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *(CLPS_Block *)(&data_ov002_0210d954));
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov002_0210d954);
     }
     mHomePosY = mPosY;
     mContentType = (unsigned char)param1;
@@ -530,7 +530,7 @@ int daObjHatenaBlock_c::CleanupResources()
         }
         switch (mContentType) {
         case CONTENT_STAR:
-            UntrackStar(*(s8 *)&mStarTracked);
+            UntrackStar(mStarTracked);
             break;
         case CONTENT_SHELL:
             data_ov002_0210da18.Release();
@@ -624,7 +624,7 @@ void daObjHatenaBlock_c::UpdateDropShadow() {
     int b0, b1;
 
     b0 = (mFlags & 8) ? 1 : 0;
-    if (b0 == 0 || ((b1 = (*(volatile unsigned char *)&gGameMode == 1) ? 1 : 0) != 0))
+    if (b0 == 0 || ((b1 = (gGameMode == 1) ? 1 : 0) != 0))
         mFloorY = GetFloorY();
     height = mPosY - mFloorY;
     if (height <= 0x1000) height = 0x1000;
@@ -955,7 +955,7 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
     int rnd;
     dActor_c* o;
     dCamera_c* g;
-    func_ov102_02149684((int*)&f.pos, this);
+    func_ov102_02149684((int *)&f.pos, this);
     o = dActor_c::Spawn(
         ACTOR_OBJ_MARIO_CAP, (unsigned int)(p2 | (p1 << 8)), f.pos, 0, mAreaId, -1);
     if (o == 0) return;
@@ -1043,7 +1043,7 @@ void daObjHatenaBlock_c::SpawnPrizeFeather() {
     rot.x = *(u16 *)(data_020a0edc);
     rot.y = *(u16 *)(data_020a0edc + 2);
     rot.z = *(u16 *)(data_020a0edc + 4);
-    if ((int)(*(unsigned char *)(&gGameMode) == 1) != 0) {
+    if ((int)(gGameMode == 1) != 0) {
         rot.y = mAngleY;
     } else {
         rot.y = gCamera->mAngleY + 0x4000;
