@@ -55,7 +55,6 @@ struct daPicGate_c : dActor_c {
         StateFunc render;        /* 0x10 */
     };
 
-    u8 pad_0d0[4];               /* 0x0d0 -- untouched */
     Matrix4x3 mMtx;              /* 0x0d4 -- model-to-world */
     Matrix4x3 mInvMtx;           /* 0x104 -- its inverse */
     s32 mWaveOrigin[3];          /* 0x134 -- x, y, 0 in cell space: BeginWave sets it,

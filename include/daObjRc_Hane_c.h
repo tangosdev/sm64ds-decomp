@@ -75,7 +75,6 @@ struct daObjRc_Hane_c : dActor_c {
     void UpdateModelTransform();
 
     /* --- fields --- */
-    u8 pad_0d0[0x4];          /* 0x0d0 */
     dExtCommonModel_c mModel; /* 0x0d4 */
     s16 mBaseAngleX;          /* 0x110 */
     s16 mBaseAngleY;          /* 0x112 */

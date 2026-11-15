@@ -434,7 +434,7 @@ int daGmch_c::UpdateState7()
     return 1;
 }
 
-/* mHolder is re-read before each use, as the ROM reloads it: the stores in
+/* mEatingPlayer is re-read before each use, as the ROM reloads it: the stores in
    between go to this object's own fields, but the shards were written with the
    reload and the bytes keep it. */
 int daGmch_c::EnterState7()
@@ -450,16 +450,16 @@ int daGmch_c::EnterState7()
 
     mFlags &= ~0x80000;
     zero = 0;
-    holder = mHolder;
+    holder = mEatingPlayer;
     mHorzSpeed = holder->mHorzSpeed + 0x7000;
     mVertSpeed = zero;
-    holder = mHolder;
+    holder = mEatingPlayer;
     holderAngle = holder->mAngleY;
     mAngleY = holderAngle;
     mPrevAngleY = mAngleY;
 
     /* Word triple through &mPosX. Naming the three fields is 0x178 vs 0x17c. */
-    holder = mHolder;
+    holder = mEatingPlayer;
     holderPos = &holder->mPosX;
     mPosX = holderPos[0];
     mPosY = holderPos[1];
@@ -473,7 +473,7 @@ int daGmch_c::EnterState7()
     trig = FX_CosIdx(angleIdx);
     mPosZ = mPosZ + FX_MUL(trig, 0x50000);
 
-    holder = mHolder;
+    holder = mEatingPlayer;
     {
         int y = holder->mPosY;
         int z = holder->mPosZ;
@@ -485,7 +485,7 @@ int daGmch_c::EnterState7()
     }
 
     DetectRaycastClsn(rayStart, mPos, 1);
-    mHolder = (dActor_c *)zero;
+    mEatingPlayer = (daPly_c *)zero;
     mWithMeshClsn.SetLimMovFlag();
     mStateIndex = 7;
     return 1;
@@ -497,7 +497,7 @@ int daGmch_c::UpdateState6()
     flagSet = (mFlags & MFLAG_YOSHI_MOUTH_B) != 0;
     if (flagSet) {
         /* Same word triple. Naming the three fields is 0x9c vs 0xa0. */
-        s32 *sv = &mHolder->mPosX;
+        s32 *sv = &mEatingPlayer->mPosX;
         mPosX = sv[0];
         mPosY = sv[1];
         mPosZ = sv[2];

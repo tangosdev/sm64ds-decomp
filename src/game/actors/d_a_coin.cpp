@@ -228,7 +228,7 @@ int daCoin_c::CheckInYoshiMouth() {
         return 1;
     }
     zero = 0;
-    mEatingPlayer = zero;
+    mEatingPlayer = (daPly_c *)zero;
     flagsPtr = &mFlags;
     flagsNow = *flagsPtr;
     flagsNow &= ~0xe0000u;

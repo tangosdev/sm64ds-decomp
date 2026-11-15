@@ -45,7 +45,6 @@ typedef char daKpFrState_size_must_be_0x10[
 #endif
 
 struct daKpFr_c : dActor_c {
-    u8                 pad_0d0[0x4];
     dExtShadowModel_c        mShadowModel;           /* 0x0d4 */
     dCcAc_c mdCcAc_c;    /* 0x0fc */
     dBgCh_Actr       mWithMeshClsn;          /* 0x130 */

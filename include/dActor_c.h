@@ -162,6 +162,12 @@ struct dActor_c : dBase_c {
     s8  mAreaId;            /* 0x0cc -- negative means "not area-bound" */
     u8  pad_0cd[0x1];
     s16 mDeathTableID;      /* 0x0ce -- index into the already-killed bitmap */
+    /* The player holding this actor in its mouth (Yoshi) or hands, or null.
+       daPly_c::func_ov002_020d7030 stores itself here through a plain
+       dActor_c pointer when it takes any actor into its mouth, and every
+       actor class has the word at 0x0d0: a subclass with no fields of its
+       own is 0xd4 bytes (StarCamera_Spawn allocates exactly that). */
+    daPly_c *mEatingPlayer;  /* 0x0d0 */
 
     /* --- vtable. Declared first, see the header comment. Overrides slots
            16 (D1) and 17 (D0); position here does not affect that. --- */
@@ -478,18 +484,21 @@ struct dActor_c {
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x1];
     s16 mDeathTableID;      /* 0x0ce */
+    struct daPly_c *mEatingPlayer; /* 0x0d0 */
 };
 
 #endif /* __cplusplus */
 
-/* Outside the split, so the C and C++ spellings cannot drift apart. 0xd0 is what
-   this header's own field list computes -- it is not independent ROM evidence --
-   but it holds the two spellings to each other, catches a field retyped without
-   shrinking the pad after it, and gives tools/check_header_offsets.py the base
-   size it refuses to guess when checking include/daPly_c.h. */
+/* Outside the split, so the C and C++ spellings cannot drift apart. 0xd4 is
+   backed by the ROM: StarCamera_Spawn allocates 0xd4 bytes for a bare
+   dActor_c, and every subclass without fields of its own is 0xd4 too. The
+   assertion also holds the two spellings to each other, catches a field
+   retyped without shrinking the pad after it, and gives
+   tools/check_header_offsets.py the base size it refuses to guess when
+   checking include/daPly_c.h. */
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char dActor_c_size_must_be_0xd0[sizeof(struct dActor_c) == 0xd0 ? 1 : -1];
+typedef char dActor_c_size_must_be_0xd4[sizeof(struct dActor_c) == 0xd4 ? 1 : -1];
 #endif
 
 /* A bit of the actor update mask (gNextActorUpdateMask, copied each frame to

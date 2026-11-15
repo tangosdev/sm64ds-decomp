@@ -15,8 +15,8 @@
  * The __si_class_type_info record at 0x02108c94 points directly at dActor_c
  * at offset zero. SIZE 0x110 is the literal both factories pass to
  * operator new. Both construct dCcAc_c at 0x0d4; D1 tears it down before
- * ~dActor_c. dActor_c ends at 0x0d0; pad_0d0 is the 4-byte gap before
- * mMovingCylinderClsn. 0xd4 + 0x34 = 0x108, and 0x108..0x110 is this
+ * ~dActor_c. dActor_c ends at 0x0d4, where mMovingCylinderClsn starts.
+ * 0xd4 + 0x34 = 0x108, and 0x108..0x110 is this
  * class's POD. The 3-byte alignment after mLinkedPileGone is implicit.
  *
  * The 31-slot table has the same extent as dActor_c and overrides only
@@ -30,7 +30,6 @@
  * spelling would collide, so the profile-qualified C ABI aliases remain. */
 
 struct daObjKinokoTag_c : dActor_c {
-    u8 pad_0d0[0x4];
     dCcAc_c mMovingCylinderClsn; /* 0x0d4 */
     u8 mHasLinkedPile;           /* 0x0108 */
     u8 mGroupId;                 /* 0x0109 */

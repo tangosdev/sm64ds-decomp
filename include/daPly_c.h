@@ -44,10 +44,10 @@ struct dExtAnm2Model_c;
 struct daShl_c;
 
 struct daPly_c : dActor_c {
-    /* 0x000..0x0cf is dActor_c's, inherited rather than duplicated. It used to be
+    /* 0x000..0x0d3 is dActor_c's, inherited rather than duplicated. It used to be
        written out inline here -- mParam at 0x008 was fBase_c's param1, mPosX
        at 0x05c was dActor_c's, and so on. The names were reconciled first so that
-       deleting the block is all that happens here. sizeof(dActor_c) is 0xd0, so
+       deleting the block is all that happens here. sizeof(dActor_c) is 0xd4, so
        daPly_c's own fields start exactly where the base ends. */
 
     /* One entry of the player state machine. _ZN7daPly_c7IsStateERNS_5StateE
@@ -110,7 +110,6 @@ struct daPly_c : dActor_c {
         int (daPly_c::*mCleanup)(); /* 0x10 */
     };
 
-    daPly_c *mEatingPlayer; /* 0x0d0 */
     u8  pad_0d4[0x8];
     /* 0x0dc..0x2ac: the models and the texture/material animations drawn on
        them, grouped as one embedded sub-object. The grouping is what the
