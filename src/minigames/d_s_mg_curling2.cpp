@@ -823,7 +823,7 @@ void dScMgCurling2_c::DrawStones() {
     int x, y;
     int i;
 
-    for (i = 0; i < 11; i++) {
+    for (i = 0; i < STONE_NUM; i++) {
         void *tex;
         if (mStone[i].active == 0)
             continue;
@@ -853,7 +853,7 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
     int distance;
     u16 contactAngle;
 
-    for (hitIndex = 0; hitIndex < 11; hitIndex++) {
+    for (hitIndex = 0; hitIndex < STONE_NUM; hitIndex++) {
         if (mStone[hitIndex].active == 0)
             continue;
         if (stoneIndex == hitIndex)
@@ -876,7 +876,7 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
             contactSin = FX_SinIdx(contactAngle >> 4);
             separationY = FX_MUL(contactSin, 0x1a);
             mStone[hitIndex].y = mStone[stoneIndex].y + (separationY << 12);
-            for (nextIndex = 0; nextIndex < 11; nextIndex++) {
+            for (nextIndex = 0; nextIndex < STONE_NUM; nextIndex++) {
                 int dx2;
                 int dy2;
                 int nextDistance;
@@ -939,7 +939,7 @@ void dScMgCurling2_c::ResolveStoneCollision(int stoneIndex) {
     int dx;
     int dy;
 
-    for (hitIndex = 0; hitIndex < 11; hitIndex++) {
+    for (hitIndex = 0; hitIndex < STONE_NUM; hitIndex++) {
         if (mStone[hitIndex].active == 0)
             continue;
         if (stoneIndex == hitIndex)
@@ -1294,7 +1294,7 @@ void dScMgCurling2_c::SeedStones() {
 /* Clear the +0x2c flag on every stone. */
 void dScMgCurling2_c::ClearStoneFlags() {
     int i;
-    for (i = 0; i < 11; i++) {
+    for (i = 0; i < STONE_NUM; i++) {
         mStone[i].unk2c = 0;
     }
 }
@@ -1324,7 +1324,7 @@ void dScMgCurling2_c::EndRound() {
     }
     mPromptEnabled = 0;
     mCursorVisible = 0;
-    for (i = 0; i < 11; i++) {
+    for (i = 0; i < STONE_NUM; i++) {
         mStone[i].visible = 0;
     }
     mCounterVisible = 0;
@@ -1382,7 +1382,7 @@ void dScMgCurling2_c::Play() {
     {
         int count = 0;
         int i = 0;
-        for (; i < 11; i++) {
+        for (; i < STONE_NUM; i++) {
             if (mStone[i].active != 0) {
                 mStone[i].prevX = mStone[i].x;
                 mStone[i].prevY = mStone[i].y;
@@ -1454,7 +1454,7 @@ void dScMgCurling2_c::ResetScroll() {
 void dScMgCurling2_c::ResetGame() {
     char *c = (char *)this;
     int i;
-    for (i = 0; i < 11; i++) {
+    for (i = 0; i < STONE_NUM; i++) {
         mStone[i].x = 0;
         mStone[i].y = 0;
         mStone[i].speed = 0;

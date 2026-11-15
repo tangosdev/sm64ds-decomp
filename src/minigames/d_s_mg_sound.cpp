@@ -482,7 +482,7 @@ void dScMgSound_c::ResetRound() {
         mPairNotes[pairIndex] = 0;
     }
 
-    for (popSlot = 0; popSlot < 30; popSlot++) {
+    for (popSlot = 0; popSlot < POP_NUM; popSlot++) {
         mPops[popSlot].x = 0;
         mPops[popSlot].y = 0;
         mPops[popSlot].velX = 0;
@@ -885,7 +885,7 @@ void dScMgSound_c::SpawnPops(int noteSlot) {
     const u8 *spriteEntry = sSoundPopSpawnKinds;
 
     for (spawnIndex = 0; spawnIndex < 3; spriteEntry++, spawnIndex++) {
-        for (popSlot = 0; popSlot < 30; popSlot++) {
+        for (popSlot = 0; popSlot < POP_NUM; popSlot++) {
             if (mPops[popSlot].active == 0) {
                 mPops[popSlot].active = 1;
                 mPops[popSlot].x = mNotes[noteSlot].x;
@@ -914,7 +914,7 @@ void dScMgSound_c::SpawnPops(int noteSlot) {
 
 void dScMgSound_c::UpdatePops() {
     int slot;
-    for (slot = 0; slot < 30; slot++) {
+    for (slot = 0; slot < POP_NUM; slot++) {
         if (mPops[slot].active != 0) {
             (this->*sSoundPopUpdateTable[mPops[slot].state].pmf)(slot);
         }
@@ -1438,7 +1438,7 @@ void dScMgSound_c::DrawPops() {
     int sinAngle = FX_SinCosTable_[0];
     long long cosAngle = FX_SinCosTable_[1];
 
-    for (slot = 0; slot < 30; slot++) {
+    for (slot = 0; slot < POP_NUM; slot++) {
         if (mPops[slot].visible) {
             int matrix[4];
             long long scale = mPops[slot].scale;

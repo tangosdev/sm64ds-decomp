@@ -28,6 +28,7 @@ enum daKirai_c_AssetId { ASSET_KOOPA_BOMB_BMD = 0x0382 };
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx.h"
 
 /* Per-member opt brackets bind only when codegen is not deferred, and that
  * also lays .text down in source order. The file is therefore ROM-ascending. */
@@ -132,9 +133,9 @@ void daKirai_c::UpdateModelTransform() {
 
 /* Re-arm. */
 void daKirai_c::Rearm() {
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScaleX = FX32_ONE;
+    mScaleY = FX32_ONE;
+    mScaleZ = FX32_ONE;
     mOpacity = 0xff;
     mStateIndex = 0;
     mdCcAcPos_c.flags &= ~1;
@@ -286,9 +287,9 @@ int daKirai_c::InitResources() {
     v.y = -0x96000;
     v.z = 0;
     mdCcAcPos_c.Init(this, v, 0x96000, 0x12c000, 0x204004, 0);
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScaleX = FX32_ONE;
+    mScaleY = FX32_ONE;
+    mScaleZ = FX32_ONE;
     mOpacity = 0xff;
     z.x = 0;
     z.y = 0;

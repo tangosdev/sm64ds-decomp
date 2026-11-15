@@ -631,7 +631,7 @@ void dScMgTeresa_c::Reveal_Hide()
    Mg_RenderSubSpriteMtx as `(void *, int, int, void *)`. */
 void dScMgTeresa_c::FoundNumber_DrawAll() {
     int i;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < FOUND_NUMBER_NUM; i++) {
         if (mFoundNumbers[i].visible) {
             int b = mFoundNumbers[i].y >> 12;
             int a = mFoundNumbers[i].x >> 12;
@@ -644,7 +644,7 @@ void dScMgTeresa_c::FoundNumber_DrawAll() {
 
 void dScMgTeresa_c::FoundNumber_ClearAll() {
     int i;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < FOUND_NUMBER_NUM; i++) {
         mFoundNumbers[i].active = 0;
         mFoundNumbers[i].visible = 0;
     }
@@ -653,7 +653,7 @@ void dScMgTeresa_c::FoundNumber_ClearAll() {
 int dScMgTeresa_c::FoundNumber_CountBusy() {
     int cnt = 0;
     int i;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < FOUND_NUMBER_NUM; i++) {
         if (mFoundNumbers[i].active != 0 && mFoundNumbers[i].state != 2) {
             cnt++;
         }
@@ -663,7 +663,7 @@ int dScMgTeresa_c::FoundNumber_CountBusy() {
 
 void dScMgTeresa_c::FoundNumber_UpdateAll() {
     int i;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < FOUND_NUMBER_NUM; i++) {
         unsigned char v;
         if (mFoundNumbers[i].active == 0) {
             continue;
@@ -700,7 +700,7 @@ void dScMgTeresa_c::FoundNumber_UpdateAll() {
 
 void dScMgTeresa_c::FoundNumber_Spawn(int i) {
     int n;
-    for (n = 0; n < 16; n++) {
+    for (n = 0; n < FOUND_NUMBER_NUM; n++) {
         if (mFoundNumbers[n].active == 0) {
             mFoundNumbers[n].active = 1;
             mFoundNumbers[n].visible = 0;
@@ -716,7 +716,7 @@ void dScMgTeresa_c::FoundNumber_Spawn(int i) {
 
 void dScMgTeresa_c::FoundNumber_SpawnForFound() {
     int i;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < BOO_NUM; i++) {
         if (mBoos[i].mInPlay != 0 && mBoos[i].mState == 5)
             FoundNumber_Spawn(i);
     }
@@ -725,7 +725,7 @@ void dScMgTeresa_c::FoundNumber_SpawnForFound() {
 /* decl_common.h declares this one with a `void *` parameter. */
 void dScMgTeresa_c::VanishPuff_DrawAll() {
     int i;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < VANISH_PUFF_NUM; i++) {
         if (mVanishPuffs[i].visible) {
             Hud_RenderSprite(sTeresaVanishPuffSprites[mVanishPuffs[i].frame],
                              mVanishPuffs[i].x >> 12, mVanishPuffs[i].y >> 12, -1, -1);
@@ -735,7 +735,7 @@ void dScMgTeresa_c::VanishPuff_DrawAll() {
 
 void dScMgTeresa_c::VanishPuff_UpdateAll() {
     int i;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < VANISH_PUFF_NUM; i++) {
         if (mVanishPuffs[i].active == 0)
             continue;
         mVanishPuffs[i].timer += 1;
@@ -753,7 +753,7 @@ void dScMgTeresa_c::VanishPuff_UpdateAll() {
 
 void dScMgTeresa_c::VanishPuff_Spawn(int param) {
     int i;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < VANISH_PUFF_NUM; i++) {
         if (mVanishPuffs[i].active == 0) {
             mVanishPuffs[i].x = mBoos[param].mX;
             mVanishPuffs[i].y = mBoos[param].mY;
@@ -817,7 +817,7 @@ void dScMgTeresa_c::StartCountdown() {
 void dScMgTeresa_c::Exclaim_DrawAll()
 {
     int i;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < EXCLAIM_NUM; i++) {
         if (mExclaims[i].visible != 0) {
             int v0 = mExclaims[i].x >> 12;
             int v4 = mExclaims[i].y >> 12;
@@ -832,7 +832,7 @@ void dScMgTeresa_c::Exclaim_UpdateAll()
 {
     int i;
 
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < EXCLAIM_NUM; i++) {
         if (mExclaims[i].active != 0) {
             if (mExclaims[i].timer != 0) {
                 u8 *p = &mExclaims[i].timer;
@@ -852,7 +852,7 @@ void dScMgTeresa_c::Exclaim_UpdateAll()
 void dScMgTeresa_c::Exclaim_Spawn(int idx)
 {
     int i;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < EXCLAIM_NUM; i++) {
         if (mExclaims[i].active == 0) {
             mExclaims[i].active = 1;
             mExclaims[i].visible = 1;
@@ -871,7 +871,7 @@ void dScMgTeresa_c::CheckRevealDone()
     if (mRevealDone != 0)
         return;
     found = 0;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < BOO_NUM; i++) {
         if (mBoos[i].mInPlay != 0 && mBoos[i].mState <= 2) {
             found++;
             break;
@@ -896,7 +896,7 @@ void dScMgTeresa_c::CheckRoundEnd()
     {
         int count = 0;
         int i;
-        for (i = 0; i < 16; i++) {
+        for (i = 0; i < BOO_NUM; i++) {
             if (mBoos[i].mInPlay != 0 && mBoos[i].mFound == 0) {
                 count++;
                 break;
@@ -923,7 +923,7 @@ void dScMgTeresa_c::DrawBoos()
 {
     int i;
 
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < BOO_NUM; i++) {
         if (mBoos[i].mVisible != 0) {
             void **frames = sTeresaBooFrameSprites;
             int translucent = mBoos[i].mFade;
@@ -947,7 +947,7 @@ void dScMgTeresa_c::AreBoosSettled()
 {
     int found = 0;
     int i = 0;
-    for (; i < 16; i++) {
+    for (; i < BOO_NUM; i++) {
         if (mBoos[i].mInPlay != 0) {
             unsigned int t = (mBoos[i].mState + 0xfd) & 0xff;
             if (t <= 1) {
@@ -1247,7 +1247,7 @@ void dScMgTeresa_c::StepBoo(int i) {
 void dScMgTeresa_c::StartBoosHiding()
 {
     int i;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < BOO_NUM; i++) {
         if (mBoos[i].mInPlay != 0 && mBoos[i].mState == 1)
             mBoos[i].mState = 2;
     }
@@ -1294,7 +1294,7 @@ void dScMgTeresa_c::AnimateBoo(int i)
 void dScMgTeresa_c::UpdateBoos()
 {
     int i;
-    for (i = 0; i < 16; i++) {
+    for (i = 0; i < BOO_NUM; i++) {
         if (mBoos[i].mInPlay) {
             (this->*sTeresaBooStateTable[mBoos[i].mState])(i);
             AnimateBoo(i);
@@ -1427,7 +1427,7 @@ void dScMgTeresa_c::ReadRubTouch() {
 
 void dScMgTeresa_c::ResetRound() {
 
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < BOO_NUM; i++) {
         mBoos[i].mX = 0;
         mBoos[i].mY = 0;
         mBoos[i].mTimer = 0;
@@ -1443,14 +1443,14 @@ void dScMgTeresa_c::ResetRound() {
         mBoos[i].mAnim = 0;
         mBoos[i].mFade = 0;
     }
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < EXCLAIM_NUM; i++) {
         mExclaims[i].x = 0;
         mExclaims[i].y = 0;
         mExclaims[i].timer = 0;
         mExclaims[i].active = 0;
         mExclaims[i].visible = 0;
     }
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < VANISH_PUFF_NUM; i++) {
         mVanishPuffs[i].active = 0;
         mVanishPuffs[i].visible = 0;
     }

@@ -314,13 +314,13 @@ void dScMgMemory_c::DrawCards() {
         }
         cardIndex += 1;
         cardBase += 0x18;
-    } while (cardIndex < 12);
+    } while (cardIndex < CARD_NUM);
 }
 
 #pragma pop
 
 void dScMgMemory_c::UpdateCards() {
-    for (int cardIndex = 0; cardIndex < 12; cardIndex++) {
+    for (int cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
         if (mCards[cardIndex].active)
             (this->*sMemoryCardTable[mCards[cardIndex].state])(cardIndex);
     }
@@ -552,7 +552,7 @@ void dScMgMemory_c::ResultTurnCards() {
         return;
     }
     flipped = 0;
-    for (cardIndex = 0; cardIndex < 12; cardIndex++) {
+    for (cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
         if (mCards[cardIndex].active != 0) {
             if (mCards[cardIndex].state == CARD_SELECTABLE) {
                 mCards[cardIndex].state = CARD_FLIPPING_UP;
@@ -626,7 +626,7 @@ void dScMgMemory_c::RoundReveal() {
         InitPlayers();
         return;
     }
-    for (cardIndex = 0; cardIndex < 12; cardIndex++) {
+    for (cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
         mCards[cardIndex].state = CARD_SELECTABLE;
     }
     mSubstate = ROUND_START;
@@ -641,7 +641,7 @@ void dScMgMemory_c::RoundWaitDeal() {
     int waiting = 0;
     int cardIndex = 0;
     char *cardBase = raw;
-    for (; cardIndex < 12;) {
+    for (; cardIndex < CARD_NUM;) {
         dScMgMemory_c *card = (dScMgMemory_c *)cardBase;
         if (card->mCards[0].active != 0) {
             if (card->mCards[0].state != CARD_IDLE) {
@@ -658,7 +658,7 @@ void dScMgMemory_c::RoundWaitDeal() {
     cardIndex = 0;
     {
         unsigned char selectState = CARD_SELECTABLE;
-        for (; cardIndex < 12;) {
+        for (; cardIndex < CARD_NUM;) {
             ((dScMgMemory_c *)cardBase)->mCards[0].state = selectState;
             cardIndex++;
             cardBase += 0x18;
@@ -738,12 +738,12 @@ void dScMgMemory_c::ShuffleCards() {
     int cardIndex;
     char *cardBase;
 
-    for (cardIndex = 0; cardIndex < 7; cardIndex++)
+    for (cardIndex = 0; cardIndex < VALUE_NUM; cardIndex++)
         mValueCounts[cardIndex] = 0;
 
     if (mDifficulty == 0) {
         cardBase = raw + 0x60;
-        for (valueIndex = 4; valueIndex < 12; valueIndex++) {
+        for (valueIndex = 4; valueIndex < CARD_NUM; valueIndex++) {
             cardValue = MG_RAND(4) + 1;
             for (;;) {
                 /* mValueCounts[cardValue] hoists the base. Same spelling below. */
@@ -758,7 +758,7 @@ void dScMgMemory_c::ShuffleCards() {
             cardBase += 0x18;
         }
         cardBase = raw + 0x60;
-        for (cardIndex = 4; cardIndex < 12; cardIndex++) {
+        for (cardIndex = 4; cardIndex < CARD_NUM; cardIndex++) {
             ((dScMgMemory_c *)cardBase)->mCards[0].x = 0x80000;
             ((dScMgMemory_c *)cardBase)->mCards[0].y = -0x80000;
             ((dScMgMemory_c *)cardBase)->mCards[0].speed = 0x8000;
@@ -768,7 +768,7 @@ void dScMgMemory_c::ShuffleCards() {
         }
     } else if (mDifficulty == 1) {
         cardBase = raw + 0x30;
-        for (cardIndex = 2; cardIndex < 12; cardIndex++) {
+        for (cardIndex = 2; cardIndex < CARD_NUM; cardIndex++) {
             cardValue = MG_RAND(5) + 1;
             for (;;) {
                 valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
@@ -782,7 +782,7 @@ void dScMgMemory_c::ShuffleCards() {
             cardBase += 0x18;
         }
         cardBase = raw + 0x30;
-        for (cardIndex = 2; cardIndex < 12; cardIndex++) {
+        for (cardIndex = 2; cardIndex < CARD_NUM; cardIndex++) {
             ((dScMgMemory_c *)cardBase)->mCards[0].x = 0x80000;
             ((dScMgMemory_c *)cardBase)->mCards[0].y = -0x80000;
             ((dScMgMemory_c *)cardBase)->mCards[0].speed = 0x8000;
@@ -792,7 +792,7 @@ void dScMgMemory_c::ShuffleCards() {
         }
     } else {
         cardBase = raw;
-        for (cardIndex = 0; cardIndex < 12; cardIndex++) {
+        for (cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
             cardValue = MG_RAND(6) + 1;
             for (;;) {
                 valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
@@ -806,7 +806,7 @@ void dScMgMemory_c::ShuffleCards() {
             cardBase += 0x18;
         }
         cardBase = raw;
-        for (cardIndex = 0; cardIndex < 12; cardIndex++) {
+        for (cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
             ((dScMgMemory_c *)cardBase)->mCards[0].x = 0x80000;
             ((dScMgMemory_c *)cardBase)->mCards[0].y = -0x80000;
             ((dScMgMemory_c *)cardBase)->mCards[0].speed = 0x8000;
@@ -835,7 +835,7 @@ void dScMgMemory_c::ResetGame() {
         mCards[i].frame = 0;
         mCards[i].flyAwayStarted = 0;
         i++;
-    } while (i < 12);
+    } while (i < CARD_NUM);
     j = 0;
     do {
         mPlayers[j].x = 0;
@@ -870,7 +870,7 @@ void dScMgMemory_c::ResetGame() {
     do {
         mValueCounts[j] = 0;
         j++;
-    } while (j < 7);
+    } while (j < VALUE_NUM);
     mMessageVisible = 1;
     mInputSeen = 0;
 }

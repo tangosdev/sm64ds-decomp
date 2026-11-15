@@ -394,7 +394,7 @@ void dScMgPachinko_c::Flyer_CheckHits(int idx) {
     if (mFlyer[idx].state == 0)
         return;
 
-    for (i = 0; i < 48; i++) {
+    for (i = 0; i < SHOT_NUM; i++) {
         if (mShot[i].active == 0)
             continue;
         if (mShot[i].state < 2)
@@ -408,7 +408,7 @@ void dScMgPachinko_c::Flyer_CheckHits(int idx) {
         mShot[i].active = 0;
         mShot[i].visible = 0;
         Fx_Spawn(mFlyer[idx].x, mFlyer[idx].y, 2, 0, 0);
-        for (j = 0; j < 30; j++) {
+        for (j = 0; j < BALL_NUM; j++) {
             if (mBall[j].active == 0)
                 continue;
             state = mBall[j].state;
@@ -567,7 +567,7 @@ void dScMgPachinko_c::Target_Choose() {
 
 void dScMgPachinko_c::Fx_DrawAll() {
     int i;
-    for (i = 0; i < 30; i++) {
+    for (i = 0; i < FX_NUM; i++) {
         if (mFx[i].visible) {
             int type = mFx[i].kind;
             int x = mFx[i].x >> 12;
@@ -587,7 +587,7 @@ void dScMgPachinko_c::Fx_UpdateAll() {
     int lastFrame;
     u8 target;
 
-    for (i = 0; i < 30; i++) {
+    for (i = 0; i < FX_NUM; i++) {
         if (mFx[i].active == 0)
             continue;
         mFx[i].timer++;
@@ -614,7 +614,7 @@ void dScMgPachinko_c::Fx_UpdateAll() {
 
 void dScMgPachinko_c::Fx_Spawn(int x, int y, int kind, int points, int target) {
     int i;
-    for (i = 0; i < 30; i++) {
+    for (i = 0; i < FX_NUM; i++) {
         if (mFx[i].active == 0) {
             mFx[i].x = x;
             mFx[i].y = y;
@@ -668,7 +668,7 @@ void dScMgPachinko_c::DrawTopRecord() {
 
 void dScMgPachinko_c::Popup_DrawAll() {
     int i;
-    for (i = 0; i < 30; i++) {
+    for (i = 0; i < POPUP_NUM; i++) {
         if (mPopup[i].timer != 0)
             Mg_DrawBigNumber(mPopup[i].x >> 12, mPopup[i].y >> 12, mPopup[i].points, -1, -1, 0, 0);
     }
@@ -676,7 +676,7 @@ void dScMgPachinko_c::Popup_DrawAll() {
 
 void dScMgPachinko_c::Popup_UpdateAll() {
     int i;
-    for (i = 0; i < 30; i++) {
+    for (i = 0; i < POPUP_NUM; i++) {
         if (mPopup[i].timer != 0) {
             mPopup[i].timer--;
             if ((s16)mPopup[i].timer < 0)
@@ -1081,7 +1081,7 @@ static inline int FX_Mul(int v1, int v2)
  * place. */
 void dScMgPachinko_c::Ball_DrawAll() {
     int i;
-    for (i = 0; i < 30; i++) {
+    for (i = 0; i < BALL_NUM; i++) {
         if (mBall[i].visible != 0) {
             int scale = mBall[i].scale;
             int sprite = mBall[i].sprite;
@@ -1489,7 +1489,7 @@ void dScMgPachinko_c::Ball_StateWaiting(int idx) {
 
 void dScMgPachinko_c::Ball_UpdateAll() {
     int i;
-    for (i = 0; i < 30; i++) {
+    for (i = 0; i < BALL_NUM; i++) {
         if (mBall[i].active != 0) {
             (this->*sPachinkoBallStateTable[mBall[i].state].pmf)(i);
         }
@@ -1514,7 +1514,7 @@ void dScMgPachinko_c::Ball_UpdateAll() {
 void dScMgPachinko_c::Ball_CheckHitByBobOmb(int i) {
     int j;
 
-    for (j = 0; j < 48; j++) {
+    for (j = 0; j < SHOT_NUM; j++) {
         int dx;
         int dy;
         s64 distsq;
@@ -1563,7 +1563,7 @@ void dScMgPachinko_c::SpawnWave() {
         return;
     }
     mWaveTimer = 80;
-    for (i = 0; i < 30; i++) {
+    for (i = 0; i < BALL_NUM; i++) {
         int ra;
         int rb;
         if (mBall[i].active != 0)
@@ -1628,7 +1628,7 @@ void dScMgPachinko_c::SpawnWave() {
 
 void dScMgPachinko_c::BobOmb_ClearAll() {
     int i;
-    for (i = 0; i < 48; i++) {
+    for (i = 0; i < SHOT_NUM; i++) {
         mShot[i].active = 0;
         mShot[i].visible = 0;
     }
@@ -1636,7 +1636,7 @@ void dScMgPachinko_c::BobOmb_ClearAll() {
 
 void dScMgPachinko_c::BobOmb_DrawAll() {
     int i;
-    for (i = 0; i < 48; i++) {
+    for (i = 0; i < SHOT_NUM; i++) {
         if (mShot[i].visible == 0)
             continue;
         Mg_RenderSpriteBothScaled((OamAttr *)sPachinkoBobOmbSprites, mShot[i].x >> 12,
@@ -1646,7 +1646,7 @@ void dScMgPachinko_c::BobOmb_DrawAll() {
 
 void dScMgPachinko_c::BobOmb_UpdateAll() {
     int i;
-    for (i = 0; i < 48; i++) {
+    for (i = 0; i < SHOT_NUM; i++) {
         if (mShot[i].active != 0) {
             (this->*sPachinkoBobOmbStateTable[mShot[i].state].pmf)(i);
         }
@@ -1880,7 +1880,7 @@ void dScMgPachinko_c::UpdateNextBall() {
         return;
     mNextBallDelay = 0;
 
-    for (i = 0; i < 48; i++) {
+    for (i = 0; i < SHOT_NUM; i++) {
         if (mShot[i].active == 0) {
             mShot[i].active = 1;
             mShot[i].visible = 1;
@@ -1912,7 +1912,7 @@ void dScMgPachinko_c::ResetRound() {
 
     mPhase = 0;
 
-    for (i = 0; i < 30; i++) {
+    for (i = 0; i < POPUP_NUM; i++) {
         mPopup[i].x = 0;
         mPopup[i].y = 0;
         mPopup[i].points = 0;
@@ -1937,7 +1937,7 @@ void dScMgPachinko_c::ResetRound() {
         mPipe[k].visible = 0;
     }
 
-    for (l = 0; l < 48; l++) {
+    for (l = 0; l < SHOT_NUM; l++) {
         mShot[l].x = 0;
         mShot[l].y = 0;
         mShot[l].prevX = 0;
@@ -1951,13 +1951,13 @@ void dScMgPachinko_c::ResetRound() {
         mShot[l].visible = 0;
     }
 
-    for (m = 0; m < 30; m++) {
+    for (m = 0; m < BALL_NUM; m++) {
         mBall[m].active = 0;
         mBall[m].visible = 0;
         mBall[m].state = 0;
     }
 
-    for (n = 0; n < 30; n++) {
+    for (n = 0; n < FX_NUM; n++) {
         mFx[n].active = 0;
         mFx[n].visible = 0;
     }

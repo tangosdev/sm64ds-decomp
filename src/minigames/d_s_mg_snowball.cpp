@@ -1832,7 +1832,7 @@ dScMgSnowball_c::dScMgSnowball_c() : mBallBmd(0) {}
 
 void dScMgSnowball_c::Bit_DrawAll() {
     int i;
-    for (i = 0; i < 50; i++) {
+    for (i = 0; i < BIT_NUM; i++) {
         if (mBits[i].visible != 0) {
             int bb = mBits[i].x >> 12;
             int cc = (mBits[i].y - mScrollY) >> 12;
@@ -2076,7 +2076,7 @@ extern "C" PMF_0212a2e0 sSnowballBitKindTable[];
 
 void dScMgSnowball_c::Bit_UpdateAll() {
     int i;
-    for (i = 0; i < 50; i++) {
+    for (i = 0; i < BIT_NUM; i++) {
         if (mBits[i].active != 0) {
             (this->*sSnowballBitKindTable[mBits[i].kind])(i);
             if ((mBits[i].y - mScrollY) >> 12 >= 0xc8) {
@@ -2099,7 +2099,7 @@ void dScMgSnowball_c::Bit_InitAll() {
     unsigned int v;
     int q;
 
-    for (i = 0; i < 50; i++) {
+    for (i = 0; i < BIT_NUM; i++) {
         mBits[i].x = 0;
         mBits[i].y = 0;
         mBits[i].vx = 0;
@@ -2116,7 +2116,7 @@ void dScMgSnowball_c::Bit_InitAll() {
         mBits[i].spriteB = 1;
     }
 
-    for (j = 0; j < 50; j++) {
+    for (j = 0; j < BIT_NUM; j++) {
         mBits[j].x = MgRandom(32) << 15;
         r = RandomIntInternal(&data_0209d4b8.value);
         q = (((r >> 16) & 0x7fff) * 0x18) >> 15;

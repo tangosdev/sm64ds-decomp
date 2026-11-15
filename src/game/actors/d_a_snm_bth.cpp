@@ -237,7 +237,7 @@ int daSnmBth_c::Render()
         return 1;
     {
         int i;
-        for (i = 0; i < 50; i++) {
+        for (i = 0; i < PARTICLE_NUM; i++) {
             mParticles[i].Render();
         }
     }
@@ -313,7 +313,7 @@ int daSnmBth_c::Behavior()
         slot->Behavior();
         i++;
         slot++;
-    } while (i < 50);
+    } while (i < PARTICLE_NUM);
 
     return 1;
 }

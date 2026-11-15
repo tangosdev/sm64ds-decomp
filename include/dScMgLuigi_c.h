@@ -168,7 +168,8 @@ struct dScMgLuigi_c : dScMgBase_c {
     void StatePlace();
     void StateSetup();
 
-    dScMgLuigi_Penalty mPenalty[16]; /* 0x4660 */
+    static const int PENALTY_NUM = 16;
+    dScMgLuigi_Penalty mPenalty[PENALTY_NUM]; /* 0x4660 */
     dScMgLuigi_Curtain mCurtain[2];  /* 0x47a0 */
     dScMgLuigi_Reward mReward;       /* 0x47d0 */
     dScMgLuigi_Iris mIris[1];        /* 0x47e4 -- only [0] is used */
@@ -177,14 +178,15 @@ struct dScMgLuigi_c : dScMgBase_c {
        mBlink counts down after a miss and toggles mShown. mKind picks the
        mover (9 while the miss is still playing). mActive is set once the
        slot has been placed. */
-    fx32 mPosX[120];     /* 0x47f8 -- wraps at 0x110 */
-    fx32 mPosY[120];     /* 0x49d8 -- wraps at 0xd0 */
-    fx32 mVelX[120];     /* 0x4bb8 */
-    fx32 mVelY[120];     /* 0x4d98 */
+    static const int PICTURE_NUM = 120;
+    fx32 mPosX[PICTURE_NUM]; /* 0x47f8 -- wraps at 0x110 */
+    fx32 mPosY[PICTURE_NUM]; /* 0x49d8 -- wraps at 0xd0 */
+    fx32 mVelX[PICTURE_NUM]; /* 0x4bb8 */
+    fx32 mVelY[PICTURE_NUM]; /* 0x4d98 */
     s32 mState;          /* 0x4f78 -- 0 setup, 1 place, 2 play, 3 catch */
-    u16 mMovePhase[120]; /* 0x4f7c -- sway: 0 slowing, 1 speeding right,
+    u16 mMovePhase[PICTURE_NUM]; /* 0x4f7c -- sway: 0 slowing, 1 speeding right,
                                 2 speeding left. Drift stores an angle. */
-    u16 mBlink[120];     /* 0x506c -- miss flash; (t >> 2) & 1 hides */
+    u16 mBlink[PICTURE_NUM];     /* 0x506c -- miss flash; (t >> 2) & 1 hides */
     u16 mLevelPhase[4];  /* 0x515c -- one random angle per speed */
     u16 mIconOn;         /* 0x5164 -- draw the caught picture while set */
     s16 mIconX;          /* 0x5166 */
@@ -203,11 +205,11 @@ struct dScMgLuigi_c : dScMgBase_c {
     u8 mRowDir[6];   /* 0x51f5 -- 0/1, drift left or right per row */
     u8 mTimeTick;    /* 0x51fb -- counts to 60, then mTime drops */
     u8 pad_51fc;
-    u8 mKind[120];      /* 0x51fd -- mover id; 9 means a fresh miss */
-    u8 mStarted[120];   /* 0x5275 -- 0 until the slot's first tick */
-    u8 mActive[120];    /* 0x52ed -- slot has a picture */
-    u8 mCharacter[120]; /* 0x5365 -- which character, and how fast */
-    u8 mShown[120];     /* 0x53dd -- DrawPictures while 1 */
+    u8 mKind[PICTURE_NUM];      /* 0x51fd -- mover id; 9 means a fresh miss */
+    u8 mStarted[PICTURE_NUM];   /* 0x5275 -- 0 until the slot's first tick */
+    u8 mActive[PICTURE_NUM];    /* 0x52ed -- slot has a picture */
+    u8 mCharacter[PICTURE_NUM]; /* 0x5365 -- which character, and how fast */
+    u8 mShown[PICTURE_NUM];     /* 0x53dd -- DrawPictures while 1 */
     u8 mFilled;         /* 0x5455 -- the board is full */
     u8 mTarget;         /* 0x5456 -- 1-based index of the picture to find;
                                 scatter placement also counts slots with it */

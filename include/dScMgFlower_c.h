@@ -160,7 +160,8 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
         u16 angle;       /* 0x1c */
         u8 pad_1e[2];
     };
-    Petal mPetals[22];  /* 0x4f38, 0x20-byte records */
+    static const int PETAL_NUM = 22;
+    Petal mPetals[PETAL_NUM]; /* 0x4f38, 0x20-byte records */
     FlowerFace mFace;   /* 0x51f8 -- Yoshi and the falling petals; the
                               FlowerFace_* helpers take its address */
     u8 pad_5fa4[0x14];  /* 0x5fa4 -- untouched up to mCursorX */

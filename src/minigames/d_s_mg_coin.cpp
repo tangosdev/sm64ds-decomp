@@ -719,7 +719,7 @@ void dScMgCoin_c::Coin_StateWaitTouch(int idx) {
 /* Runs each coin's state handler from sCoinCoinStateTable. */
 void dScMgCoin_c::Coin_UpdateAll() {
     int i;
-    for (i = 0; i < 24; i++) {
+    for (i = 0; i < COIN_NUM; i++) {
         unsigned char k = this->mCoins[i].state;
         (this->*sCoinCoinStateTable[k].pmf)(i);
     }
@@ -745,7 +745,7 @@ void dScMgCoin_c::LayOutCoins() {
 
     row = 0;
     col = 0;
-    for (i = 0; i < 24; i++) {
+    for (i = 0; i < COIN_NUM; i++) {
         mCoins[i].x = (((col << 5) + 0x10) << 12);
         mCoins[i].y = sCoinRowY[row] << 12;
         col++;
@@ -769,7 +769,7 @@ void dScMgCoin_c::LayOutCoins() {
    up from under the coin (state 5) and plays the panned hop sound. */
 void dScMgCoin_c::KickBlockUnderCoin(int id) {
     int i;
-    for (i = 0; i < 40; i++) {
+    for (i = 0; i < BLOCK_NUM; i++) {
         if (mBlocks[i].active != 0 && mBlocks[i].state == 4 && id == mBlocks[i].coin) {
             mBlocks[i].y = mCoins[id].y - 0x20000;
             mBlocks[i].visible = 1;
@@ -792,7 +792,7 @@ void dScMgCoin_c::DrawBlocks() {
     int i;
     if (mPhase == 5 && mCountdown == 0)
         return;
-    for (i = 0; i < 40; i++) {
+    for (i = 0; i < BLOCK_NUM; i++) {
         if (mBlocks[i].visible == 0)
             continue;
         {
@@ -1015,7 +1015,7 @@ void dScMgCoin_c::Block_ClampToWalls(int idx) {
 void dScMgCoin_c::Block_UpdateAll() {
     int n = 0;
     int i;
-    for (i = 0; i < 40; i++) {
+    for (i = 0; i < BLOCK_NUM; i++) {
         if (mBlocks[i].active != 0) {
             (this->*sCoinBlockStateTable[mBlocks[i].state].pmf)(i);
             if (mBlocks[i].state != 4)
@@ -1066,7 +1066,7 @@ void dScMgCoin_c::SpawnBlocks() {
    the caption and the moneybag. */
 void dScMgCoin_c::ResetRound() {
     int i, j, k, l;
-    for (i = 0; i < 40; i++) {
+    for (i = 0; i < BLOCK_NUM; i++) {
         mBlocks[i].x = 0;
         mBlocks[i].y = 0;
         mBlocks[i].vx = 0;
@@ -1083,7 +1083,7 @@ void dScMgCoin_c::ResetRound() {
         mBlocks[i].coin = 0;
     }
 
-    for (j = 0; j < 24; j++) {
+    for (j = 0; j < COIN_NUM; j++) {
         mCoins[j].x = 0;
         mCoins[j].y = 0;
         mCoins[j].state = 0;
@@ -1105,7 +1105,7 @@ void dScMgCoin_c::ResetRound() {
         mSparkles[k].visible = 0;
     }
 
-    for (l = 0; l < 24; l++) {
+    for (l = 0; l < POPUP_NUM; l++) {
         mPopups[l].live = 0;
         mPopups[l].flag = 0;
     }
@@ -1176,7 +1176,7 @@ void dScMgCoin_c::Phase_StateSettle() {
     dScMgBase_c *g;
 
     count = 0;
-    for (i = 0; i < 40; i++) {
+    for (i = 0; i < BLOCK_NUM; i++) {
         if (mBlocks[i].active) {
             int idx = mBlocks[i].state;
             (this->*sCoinBlockStateTable[idx].pmf)(i);
@@ -1186,7 +1186,7 @@ void dScMgCoin_c::Phase_StateSettle() {
                 this->Block_Animate(i);
         }
     }
-    for (j = 0; j < 24; j++) {
+    for (j = 0; j < COIN_NUM; j++) {
         if (mCoins[j].state == 1 && mCoins[j].placed != 0)
             count++;
     }
@@ -1218,7 +1218,7 @@ void dScMgCoin_c::Phase_StateSettle() {
    win flag is set from the other score. */
 void dScMgCoin_c::Phase_StatePlay() {
     int i;
-    for (i = 0; i < 40; i++) {
+    for (i = 0; i < BLOCK_NUM; i++) {
         if (mBlocks[i].active != 0) {
             (this->*sCoinBlockStateTable[mBlocks[i].state].pmf)(i);
             this->Block_Animate(i);
@@ -1232,7 +1232,7 @@ void dScMgCoin_c::Phase_StatePlay() {
     {
         int found = 0;
         int j;
-        for (j = 0; j < 24; j++) {
+        for (j = 0; j < COIN_NUM; j++) {
             if (mCoins[j].value != 0) {
                 if (mCoins[j].collected == 0) {
                     found++;
