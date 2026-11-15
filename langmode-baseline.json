@@ -31,7 +31,7 @@
     "by_kind": {
       "C1": {
         "draft": 0,
-        "migrated": 81,
+        "migrated": 82,
         "unmigrated": 0
       },
       "C2": {
@@ -56,7 +56,7 @@
       },
       "method": {
         "draft": 0,
-        "migrated": 7942,
+        "migrated": 7941,
         "unmigrated": 0
       }
     },
@@ -71,9 +71,9 @@
     "header_shadows": 1,
     "local_body_no_include": 13,
     "local_body_no_include_cpp": 4,
-    "local_struct_body": 344,
-    "local_struct_body_cpp": 314,
-    "pad_layout": 18
+    "local_struct_body": 343,
+    "local_struct_body_cpp": 313,
+    "pad_layout": 16
   },
   "totals": {
     "c_extension": 757,
