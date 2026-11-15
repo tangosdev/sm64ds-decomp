@@ -10459,3 +10459,4 @@ arm9	0x02011934	_Z13func_02011934Pci	_Z13func_02011934P11SndRegTablei	finds an e
 ov006	0x0210c208	_Z14SlotLamp_ClearPc	_Z14SlotLamp_ClearP8SlotLamp	clears a SlotLamp; the parameter is SlotLamp*, not char*
 ov006	0x0210c2b0	_Z15SlotBlink_ClearPc	_Z15SlotBlink_ClearP9SlotBlink	clears a SlotBlink; the parameter is SlotBlink*, not char*
 
+arm9	0x0201964c	_Z13func_0201964cP5Timer	_ZN5TimerC1Ev	Timer's constructor becomes Timer::Timer(); the dummy TimerInit static that called it is retired
