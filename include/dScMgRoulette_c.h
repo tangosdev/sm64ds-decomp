@@ -75,7 +75,7 @@ struct RouletteBoard {
     BMD_File *mBallFile;       /* 0x0c -- file 0x21e */
     dExtSimpleModel_c mWheel;  /* 0x10 -- turned by mBoardAngle */
     dExtSimpleModel_c mBall;   /* 0x60 -- placed each frame from mBallRadius and mOrbitAngle */
-    s32 mBallRadius;           /* 0xb0 -- Fix12; 0x4200 when the spin starts */
+    s32 mBallRadius;           /* 0xb0 -- fx32; 0x4200 when the spin starts */
     s32 mBallRadiusVel;        /* 0xb4 -- added to mBallRadius each frame */
     s32 mSpinSpeed;            /* 0xb8 -- the ball's speed; at 0 it has stopped:
                                   Render draws the cursor and phase 3 pays out */

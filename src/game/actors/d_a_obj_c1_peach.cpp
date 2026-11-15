@@ -61,7 +61,7 @@ daObjC1Peach_c *daObjC1Peach_c_classInit() {
 int daObjC1Peach_c::InitResources()
 {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(gC1PeachModelFile), 1, -1);
-    mOpacity = 0xff;
+    mOpacity = 255;
     UpdateModelTransform();
     return 1;
 }
@@ -70,12 +70,12 @@ int daObjC1Peach_c::Behavior()
 {
     int distance = DistToCPlayer();
     if (distance >= 0xe10000) {
-        mOpacity = 0xff;
+        mOpacity = 255;
     } else if (distance <= 0xbf4000) {
         mOpacity = 0;
     } else {
         int fraction = FX_Div(distance - 0xbf4000, 0x21c000);
-        int opacity = FX_MUL(fraction, 0xff);
+        int opacity = FX_MUL(fraction, 255);
         mOpacity = (u8)(opacity >> 3);
     }
 

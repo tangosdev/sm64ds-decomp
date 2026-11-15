@@ -311,10 +311,10 @@ int daHyuhyu_c::StateBlowMain() {
     pos.z = mPosZ;
 
     u16 frame = (u16)(mAnmModel.currFrame >> 12);
-    if (frame == 0x1f)
+    if (frame == 31)
         func_02012694(0x164, &mCamSpacePos);
 
-    if ((u16)(mAnmModel.currFrame >> 12) > 0x1e) {
+    if ((u16)(mAnmModel.currFrame >> 12) > 30) {
         rot.x = FX_SinIdx((u16)mAngleY >> 4);
         rot.y = 0;
         rot.z = FX_CosIdx((u16)mAngleY >> 4);
@@ -342,7 +342,7 @@ int daHyuhyu_c::StateBlowMain() {
                         heading =
                             base + (s16)(0x2000 -
                                          ((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 3)
-                                          << 0xc));
+                                          << 12));
                     }
 
                     gust->mPrevAngleX = Vec3_VertAngle(&mPos, &target);

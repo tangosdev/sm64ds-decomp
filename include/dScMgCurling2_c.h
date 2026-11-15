@@ -14,7 +14,7 @@ struct dScMgCurling2_stone {
     s32 speed;     /* 0x08 */
     s32 prevX;     /* 0x0c, snapshot of x before this frame's step */
     s32 prevY;     /* 0x10 */
-    s32 grabX;     /* 0x14, stone position minus stylus position, in Fix12 */
+    s32 grabX;     /* 0x14, stone position minus stylus position, in fx32 */
     s32 grabY;     /* 0x18 */
     s32 snd;       /* 0x1c, rolling-sound slot for func_02012468 */
     u16 timer;     /* 0x20, counts down while the stone is active */

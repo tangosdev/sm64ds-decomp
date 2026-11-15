@@ -514,18 +514,18 @@ void Banner_StartSpin(MgBanner *e) {
 }
 
 void Banner_UpdateDrop(MgBanner *e) {
-    if (e->mTimer < 0x30){
+    if (e->mTimer < 48) {
         e->mTimer++;
         return;
     }
-    if (ApproachLinear2(e->mY, e->mTargetY, 0x10)){
+    if (ApproachLinear2(e->mY, e->mTargetY, 16)) {
         Banner_StartSpin(e);
     }
 }
 
 void Banner_SetupDrop(MgBanner *e) {
     e->mTimer = 0;
-    e->mY = -(sMgTopScreenYOffset + 0x60);
+    e->mY = -(sMgTopScreenYOffset + 96);
 }
 
 void Banner_DrawWave(MgBanner *e) {
@@ -584,7 +584,7 @@ void Banner_StartWaveBurst(MgBanner *e) {
        for destruction at exit. */
     static Vector2 sBannerWaveFxGravity(0, 0xc0);
 
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
         func_0203d388((int *)&burstVel, 0x800);
         func_0203d388((int *)&ringOffset, 0x800);
@@ -945,7 +945,7 @@ void Banner_SetupZoomBurst(MgBanner *e) {
 
     static Vector2 sBannerZoomFxGravity(0, 0xc0);
 
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
         func_0203d388((int *)&burstVel, 0x800);
         func_0203d388((int *)&ringOffset, 0x800);

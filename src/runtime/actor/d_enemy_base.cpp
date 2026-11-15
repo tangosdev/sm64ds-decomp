@@ -42,10 +42,6 @@
  *   - func_ov002_020ae5c8 stays a free `extern "C"` callee -- callers pass
  *     its unused second argument; the one-argument form comes out 0x50
  *     against the ROM's 0x5c (measured note in place).
- *   - Computed-spelling externs stay where a member form changes codegen:
- *     the Particle::System wrappers take Fix12<int> by value (runbook
- *     section 7). dActor_c::ReflectAngle is a member call since batch 5.
- *     cstd::atan2 is the scalar call.
  *   - func_ov002_020ae4cc passes its particle position as
  *     `*(int *)((char *)v + N)`; indexing v[] directly comes out 0xd4 against
  *     the ROM's 0xfc (measured). SpawnParticlesIfHitOtherObj keeps its
@@ -264,7 +260,7 @@ void Aea30C::func_ov002_020ae9f8(dActor_c*, dBgCh_Actr*)
 {
     mHorzSpeed = 0;
     mVertSpeed = 0;
-    mDeathTimer = 0xf;
+    mDeathTimer = 15;
     mFlags &= ~0x1;
 }
 
@@ -745,7 +741,7 @@ void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player,
     mPrevAngleY = Vec3_HorzAngle(&player.mPos, &mPos);
     mHorzSpeed = 0xa000;
     mVertSpeed = 0x28000;
-    mDeathTimer = 0x1e;
+    mDeathTimer = 30;
     mSpinRateX = spin.x;
     mSpinRateY = spin.y;
     mSpinRateZ = spin.z;

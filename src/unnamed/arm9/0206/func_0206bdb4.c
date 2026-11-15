@@ -56,7 +56,7 @@ u64 func_0206bdb4(u64 d, int mode)
     q = (char *)(&d);
     q = pad(q, 6);
     m |= 0x10;
-    m |= READ8(q) & ((i = 5), 0xf);
+    m |= READ8(q) & ((i = 5), 15);
     for (; i >= 0; i--) {
         p = pad((char *)(&d), i);
         m <<= 8;
@@ -69,7 +69,7 @@ u64 func_0206bdb4(u64 d, int mode)
         exp -= 3;
     else
         exp = 0;
-    c35 = 0x35;
+    c35 = 53;
     m |= 0x0010000000000000ULL;
     acc = 0;
     zero = (int)acc;
@@ -80,13 +80,13 @@ u64 func_0206bdb4(u64 d, int mode)
     else
         fpflag = zero;
 
-    while (i < (((int)exp2 <= 0x35 && fpflag) ? (int)exp2 : c35)) {
+    while (i < (((int)exp2 <= 53 && fpflag) ? (int)exp2 : c35)) {
         acc <<= 1;
         n++;
         n--;
         cnt <<= 1;
         t = m;
-        for (k = 0, lim = 0x34 - i; k < lim; k++)
+        for (k = 0, lim = 52 - i; k < lim; k++)
             t >>= 1;
         if ((t & 1) != 0)
             cnt += 1;
@@ -99,7 +99,7 @@ u64 func_0206bdb4(u64 d, int mode)
     if (cnt != 0)
         acc += 1;
 
-    n = 0x35 - i;
+    n = 53 - i;
     for (k = 0; k < n; k++)
         acc <<= 1;
 
@@ -111,7 +111,7 @@ u64 func_0206bdb4(u64 d, int mode)
     m -= acc;
 
     if (mode == 0) {
-        n = 0x35 - (int)exp2;
+        n = 53 - (int)exp2;
         for (k = 0; k < n; k++)
             m >>= 1;
         for (k = 0; k < n; k++)
@@ -146,7 +146,7 @@ u64 func_0206bdb4(u64 d, int mode)
     WRITE8(q, b);
 
     q = pad((char *)(&out), 6);
-    b = READ8(q) | ((exp & 0xf) << 4);
+    b = READ8(q) | ((exp & 15) << 4);
     q = pad((char *)(&out), 6);
     WRITE8(q, b);
 

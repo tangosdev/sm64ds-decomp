@@ -13,11 +13,8 @@
  *    names; no original names are recovered. SetState was Scuttlebug_SetState.
  *  - The position temporaries are Vector3 (measured: same object as the old
  *    POD twin).
- *  - The extern "C" preamble is hand-spelt: Fix12<int>/Vector3 parameters
- *    are written as plain words where the true types break the register
- *    convention, and the spelled mangled calls stay where the member
- *    spelling would change codegen.
- *  - volatile int force_stack pads OnTurnIntoEgg's frame to the ROM shape.
+ *  - The extern "C" preamble is hand-spelt: Vector3 parameters are written
+ *    as pointers where the true types break the register convention.
  */
 
 /* common.h first: its flat Matrix4x3 must win the guard; InitResources'
@@ -59,9 +56,9 @@ typedef struct { PMF enter, run; } ScuttlebugStateRow;
 /* ------------------------------------------------------------------------
  * ABI imports.  One declaration per symbol, hand-reconciled: the generated
  * preamble carried these names with contradictory spellings from thirty-odd
- * source files.  The by-value Fix12<int> and Vector3 parameters are spelt as
- * plain words / pointers on purpose -- the true types are passed differently
- * and break the register convention.
+ * source files.  By-value Vector3 parameters are spelt as pointers on
+ * purpose -- the true type is passed differently and breaks the register
+ * convention.
  * ------------------------------------------------------------------------ */
 
 extern "C" int AngleDiff(int a, int b);
@@ -155,7 +152,6 @@ daSpd_c *daSpd_c_classInit(void) {
  * an egg coin otherwise). A child (param1 != 0) resets; the original dies. */
 
 void daSpd_c::OnTurnIntoEgg(daPly_c &player) {
-    volatile int force_stack;
     if (player.IsCollectingCap())
         GivePlayerCoins(player, mCoinCount, 0);
     else
@@ -196,7 +192,7 @@ int daSpd_c::InitResources() {
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     mEatingPlayer = 0;
-    mTimer = 0x3c;
+    mTimer = 60;
     *(Matrix4x3 *)mShadowMtx = IDENTITY_MATRIX4X3;
     func_ov071_0211f524();
     return 1;
@@ -269,7 +265,7 @@ int daSpd_c::func_ov071_02120200() {
     mAngleY = ang;
     mAngleZ = z;
     mHorzSpeed = z;
-    mTimer = 0x1e;
+    mTimer = 30;
     mdCcAc_c.Clear();
     mState = 0;
     return 1;
@@ -371,7 +367,7 @@ int daSpd_c::func_ov071_0211fd58() {
     int *p = &mLeapDist;
     *p -= 0xf000;
     if (mLeapDist <= 0) {
-        mTimer = 0x3c;
+        mTimer = 60;
         SetState(2);
     }
     UpdatePos(&mdCcAc_c);
@@ -403,7 +399,7 @@ int daSpd_c::func_ov071_0211fcd4() {
 int daSpd_c::func_ov071_0211fc60() {
     mAnmModel.Advance();
     if (mWithMeshClsn.IsOnGround()) {
-        mTimer = 0x3c;
+        mTimer = 60;
         SetState(2);
     }
     UpdatePos(&mdCcAc_c);
@@ -528,7 +524,7 @@ int daSpd_c::func_ov071_0211f6f8() {
     mFlags &= ~1;
     mHorzSpeed = 0xa000;
     mVertSpeed = 0x28000;
-    mTimer = 0x2d;
+    mTimer = 45;
     mAnmModel.SetAnim((BCA_File *)gSpiderWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int yOffset1 = OnAimedAtWithEgg();

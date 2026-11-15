@@ -106,14 +106,14 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
                 int y;
                 if (spriteAngle >= 0 && spriteAngle < 0x10000) {
                     u16 angle = spriteAngle;
-                    y = (FX_SinIdx((u16)(s16)angle >> 4) >> 10) + 0x80;
+                    y = (FX_SinIdx((u16)(s16)angle >> 4) >> 10) + 128;
                     anyOnArc = 1;
                 } else {
-                    y = 0x80;
+                    y = 128;
                 }
 
-                OAM::Render(false, sprite, 0x80, y, -1, -1, 0x1000, 0);
-                OAM::Render(true, sprite, 0x80, y, -1, -1, 0x1000, 0);
+                OAM::Render(false, sprite, 128, y, -1, -1, 0x1000, 0);
+                OAM::Render(true, sprite, 128, y, -1, -1, 0x1000, 0);
 
                 if (sprite->attr3 == 0xffff)
                     break;
@@ -124,11 +124,11 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
             if (mAdvancing != 0) {
                 mSpinAngle += (data_0208ee44 << 10);
                 if (anyOnArc == 0)
-                    mStillTimer = 0x78;
+                    mStillTimer = 120;
             }
         } else {
-            OAM::Render(0, sprite, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
-            OAM::RenderSub(sprite, 0x80, 0x80);
+            OAM::Render(0, sprite, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::RenderSub(sprite, 128, 128);
             mStillTimer -= data_0208ee44;
             mSpinAngle = 0;
         }
@@ -222,7 +222,7 @@ s32 dScMB_c::Behavior() {
 
     if (mStep < 8) {
         mTimeout++;
-        if (mTimeout >= 0x1518) {
+        if (mTimeout >= 5400) {
             data_0209fc54 = 1;
         }
     }

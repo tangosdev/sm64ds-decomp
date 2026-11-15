@@ -84,7 +84,7 @@ daPicGate_c::~daPicGate_c()
 
 void daPicGate_c::LoadMaterial() {
     Ov080Mat *mat = (Ov080Mat *)mTexRecord;
-    unsigned char mode = (param1 >> 0xd) & 3;
+    unsigned char mode = (param1 >> 13) & 3;
     u32 difAmb = mat->difAmb;
     if (mode >= 2 || mWaveTimer == 0)
         difAmb |= 0x7fff0000;
@@ -92,14 +92,14 @@ void daPicGate_c::LoadMaterial() {
     REG_SPE_EMI = ((Ov080Mat *)mTexRecord)->speEmi;
     {
         Ov080Mat *m2 = (Ov080Mat *)mTexRecord;
-        G3_TexImageParam((GXTexFmt)((m2->param >> 0x1a) & 7), GX_TEXGEN_NONE,
-                         (GXTexSizeS)((m2->param >> 0x14) & 7),
-                         (GXTexSizeT)((m2->param >> 0x17) & 7), GX_TEXREPEAT_NONE, GX_TEXFLIP_NONE,
-                         (GXTexPlttColor0)((m2->param >> 0x1d) & 1), m2->texAddr);
+        G3_TexImageParam((GXTexFmt)((m2->param >> 26) & 7), GX_TEXGEN_NONE,
+                         (GXTexSizeS)((m2->param >> 20) & 7), (GXTexSizeT)((m2->param >> 23) & 7),
+                         GX_TEXREPEAT_NONE, GX_TEXFLIP_NONE,
+                         (GXTexPlttColor0)((m2->param >> 29) & 1), m2->texAddr);
     }
     {
         Ov080Mat *m3 = (Ov080Mat *)mTexRecord;
-        G3_TexPlttBase(m3->pltAddr, (GXTexFmt)((m3->param >> 0x1a) & 7));
+        G3_TexPlttBase(m3->pltAddr, (GXTexFmt)((m3->param >> 26) & 7));
     }
     REG_POLYGON_ATTR = 0x11f0088;
 }
@@ -111,8 +111,8 @@ void daPicGate_c::BuildGateMatrix() {
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68,
-        -(((unsigned char)(param1 & 0xf) + 1) * 0x64000) / 2 >> 3, 0, 0);
+    Matrix4x3_ApplyInPlaceToTranslation(
+        &data_020a0e68, -(((unsigned char)(param1 & 15) + 1) * 0x64000) / 2 >> 3, 0, 0);
     mMtx = data_020a0e68;
     MTX_Inverse43(&data_020a0e68, &data_020a0e68);
     mInvMtx = data_020a0e68;
@@ -185,13 +185,13 @@ void daPicGate_c::HitTest() {
         if (x < 0)
             return;
         raw = param1;
-        nib = raw & 0xf;
+        nib = raw & 15;
         lim = (nib + 1) * 0x64000;
         if (x > lim)
             return;
         if (y < 0)
             return;
-        nib = (raw >> 4) & 0xf;
+        nib = (raw >> 4) & 15;
         lim = (nib + 1) * 0x64000;
         if (y > lim)
             return;
@@ -212,13 +212,13 @@ void daPicGate_c::HitTest() {
     if (x < -0x46000)
         return;
     raw = param1;
-    nib = raw & 0xf;
+    nib = raw & 15;
     lim = (nib + 1) * 0x64000 + 0x46000;
     if (x > lim)
         return;
     if (y < -0xc8000)
         return;
-    nib = (raw >> 4) & 0xf;
+    nib = (raw >> 4) & 15;
     lim = (nib + 1) * 0x64000 + 0xc8000;
     if (y > lim)
         return;
@@ -277,8 +277,8 @@ void daPicGate_c::BuildNormals() {
 void daPicGate_c::FlattenFrame() {
     for (int i = 0; i < mNumCells; i++) {
         Vertex *e = mCells + i;
-        if (e->x == 0 || e->x == ((unsigned char)(param1 & 0xf) + 1) * 0x64000 || e->y == 0 ||
-            e->y == ((unsigned char)((param1 >> 4) & 0xf) + 1) * 0x64000) {
+        if (e->x == 0 || e->x == ((unsigned char)(param1 & 15) + 1) * 0x64000 || e->y == 0 ||
+            e->y == ((unsigned char)((param1 >> 4) & 15) + 1) * 0x64000) {
             e->z = 0;
             mCells[i].normal = 0x1ff00000;
         }
@@ -368,14 +368,14 @@ void daPicGate_c::BeginWave(s32 a1, s32 a2, s32 a3) {
     UpdateCellDistances();
     m8 = param1;
     r0 = 0;
-    if ((unsigned char)((m8 >> 0xd) & 3) == 1) {
+    if ((unsigned char)((m8 >> 13) & 3) == 1) {
         f = ((m8 >> 8) & 0x1f);
         if (f == 4)
-            r0 = 0xc;
+            r0 = 12;
         else if (f == 7)
-            r0 = 0xd;
+            r0 = 13;
     } else {
-        switch ((unsigned char)(m8 & 0xf) + 1) {
+        switch ((unsigned char)(m8 & 15) + 1) {
         case 3: r0 = 0; break;
         case 4: r0 = 1; break;
         case 5: r0 = 2; break;
@@ -398,18 +398,18 @@ void daPicGate_c::PlaceCornersMirrored() {
     mCorners[0].z = 0;
     mCorners[0].normal = GX_VECFX10(0, 0, -0x1000);
     mCorners[0].texCoord = GX_ST(0x80000, 0x80000);
-    mCorners[1].x = (u8)(param1 & 0xf) * 0x64000 + 0x64000;
+    mCorners[1].x = (u8)(param1 & 15) * 0x64000 + 0x64000;
     mCorners[1].y = 0;
     mCorners[1].z = 0;
     mCorners[1].normal = GX_VECFX10(0, 0, -0x1000);
     mCorners[1].texCoord = GX_ST(0, 0x80000);
-    mCorners[2].x = (u8)(param1 & 0xf) * 0x64000 + 0x64000;
-    mCorners[2].y = (u8)((param1 >> 4) & 0xf) * 0x64000 + 0x64000;
+    mCorners[2].x = (u8)(param1 & 15) * 0x64000 + 0x64000;
+    mCorners[2].y = (u8)((param1 >> 4) & 15) * 0x64000 + 0x64000;
     mCorners[2].z = 0;
     mCorners[2].normal = GX_VECFX10(0, 0, -0x1000);
     mCorners[2].texCoord = GX_ST(0, 0);
     mCorners[3].x = 0;
-    mCorners[3].y = (u8)((param1 >> 4) & 0xf) * 0x64000 + 0x64000;
+    mCorners[3].y = (u8)((param1 >> 4) & 15) * 0x64000 + 0x64000;
     mCorners[3].z = 0;
     mCorners[3].normal = GX_VECFX10(0, 0, -0x1000);
     mCorners[3].texCoord = GX_ST(0x80000, 0);
@@ -455,18 +455,18 @@ void daPicGate_c::PlaceCorners() {
     mCorners[0].z = 0;
     mCorners[0].normal = GX_VECFX10(0, 0, -0x1000);
     mCorners[0].texCoord = GX_ST(0, 0x80000);
-    mCorners[1].x = (u8)(param1 & 0xf) * 0x64000 + 0x64000;
+    mCorners[1].x = (u8)(param1 & 15) * 0x64000 + 0x64000;
     mCorners[1].y = 0;
     mCorners[1].z = 0;
     mCorners[1].normal = GX_VECFX10(0, 0, -0x1000);
     mCorners[1].texCoord = GX_ST(0x80000, 0x80000);
-    mCorners[2].x = (u8)(param1 & 0xf) * 0x64000 + 0x64000;
-    mCorners[2].y = (u8)((param1 >> 4) & 0xf) * 0x64000 + 0x64000;
+    mCorners[2].x = (u8)(param1 & 15) * 0x64000 + 0x64000;
+    mCorners[2].y = (u8)((param1 >> 4) & 15) * 0x64000 + 0x64000;
     mCorners[2].z = 0;
     mCorners[2].normal = GX_VECFX10(0, 0, -0x1000);
     mCorners[2].texCoord = GX_ST(0x80000, 0);
     mCorners[3].x = 0;
-    mCorners[3].y = (u8)((param1 >> 4) & 0xf) * 0x64000 + 0x64000;
+    mCorners[3].y = (u8)((param1 >> 4) & 15) * 0x64000 + 0x64000;
     mCorners[3].z = 0;
     mCorners[3].normal = GX_VECFX10(0, 0, -0x1000);
     mCorners[3].texCoord = GX_ST(0, 0);
@@ -505,7 +505,7 @@ void daPicGate_c::DrawRippleEnvMapped() {
     }
     {
         struct Ov080Mat *m3 = (struct Ov080Mat *)mTexRecord;
-        G3_TexPlttBase(m3->pltAddr, (GXTexFmt)((m3->param >> 0x1a) & 7));
+        G3_TexPlttBase(m3->pltAddr, (GXTexFmt)((m3->param >> 26) & 7));
     }
     REG_POLYGON_ATTR = 0x01000088 | ((((u8)((param1 >> 8) & 0x1f)) == 7) ? 0x14 : 0x1f) << 16;
     G3_Scale(0x10000, 0x10000, 0x10000);

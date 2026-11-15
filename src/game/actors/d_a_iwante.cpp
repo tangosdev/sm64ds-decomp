@@ -45,7 +45,6 @@
  *    Matrix4x3 grows .text by 0x54 bytes. Vec4 is an unused stack object
  *    with a destructor.
  *  - Handler descriptions come from reading the code, not from play-testing.
- *  - Sound::ChangeMusicVolume keeps its mangled decl (Fix12<int> by value, S13 wall); the Layer3 pair keeps file-local mangled decls because Sound.h declares only Layer1/Layer2 (this file excludes decl_common.h).
  */
 
 /* Turns off deferred codegen, which flips .text emission from reverse-source
@@ -271,7 +270,7 @@ extern unsigned char data_ov066_0211abe0;
 /* Threshold for the special pattern: the decision state picks pattern 8 / 9
  * once mPickCount exceeds this + 3. Starts at 1. */
 extern int data_ov066_0211abe4;
-/* Offset of a hand's hit volume from its position, Fix12 x/y/z. One global
+/* Offset of a hand's hit volume from its position, fx32 x/y/z. One global
  * shared by both hands, rewritten by SetRestHitVolume and
  * SetPoundHitVolume, so it holds whatever the last of those calls left. */
 extern int data_ov066_0211ad18[];
@@ -533,7 +532,7 @@ void daIwante_c::UpdateTexturePattern() {
         else
             mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae9c.filePtr, 0x40000000, 0x1000,
                                      0);
-        mTexTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) * 2 + 0x32;
+        mTexTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) * 2 + 50;
     } else {
         if (mPartIdx == PART_HAND_2)
             mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000,
@@ -2365,7 +2364,7 @@ int daIwante_c::Behavior() {
             }
         }
 
-        for (int i = 0; i < 0x14; i++) {
+        for (int i = 0; i < 20; i++) {
             if (mDustPos[i].x != 0 || mDustPos[i].y != 0 || mDustPos[i].z != 0) {
                 mDustParticle1[i] = NewDust(mDustParticle1[i], 0x13a, mDustPos[i]);
                 mDustParticle2[i] = NewDust(mDustParticle2[i], 0x13b, mDustPos[i]);
@@ -2373,9 +2372,9 @@ int daIwante_c::Behavior() {
         }
 
         mDustCounter++;
-        if (mDustCounter > 0x26) {
+        if (mDustCounter > 38) {
             mDustCounter = 0;
-            for (int j = 0; j < 0x14; j++) {
+            for (int j = 0; j < 20; j++) {
                 mDustPos[j].x = 0;
                 mDustPos[j].y = 0;
                 mDustPos[j].z = 0;
@@ -2491,7 +2490,7 @@ int daIwante_c::InitResources() {
         mdCcAcPos_c.Init((dActor_c *)c, w, 0x64000, 0x64000, 0x200002, 0);
     }
 
-    for (int i = 0; i < 0x14; i++) {
+    for (int i = 0; i < 20; i++) {
         mDustPos[i].x = 0;
         mDustPos[i].y = 0;
         mDustPos[i].z = 0;

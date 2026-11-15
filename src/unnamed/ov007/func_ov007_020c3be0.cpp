@@ -8,7 +8,7 @@ extern "C" {
     else { \
       int cb = ((b) & (mask)) >> (shift); \
       int ca = ((a) & (mask)) >> (shift); \
-      (out) = (int)(((long long)(0x1000 - (t)) * (ca << 0xc) + (long long)(t) * (cb << 0xc)) >> 0xc) >> 0xc; \
+      (out) = (int)(((long long)(0x1000 - (t)) * (ca << 12) + (long long)(t) * (cb << 12)) >> 12) >> 12; \
     } \
   } while (0)
 
@@ -16,7 +16,7 @@ unsigned short func_ov007_020c3be0(int t, int a, int b) {
     int rr, gg, bb;
     BLEND(rr, t, a, b, 0x1f, 0);
     BLEND(gg, t, a, b, 0x3e0, 5);
-    BLEND(bb, t, a, b, 0x7c00, 0xa);
-    return (unsigned short)(rr | (gg << 5) | (bb << 0xa));
+    BLEND(bb, t, a, b, 0x7c00, 10);
+    return (unsigned short)(rr | (gg << 5) | (bb << 10));
 }
 }

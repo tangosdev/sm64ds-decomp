@@ -5,7 +5,7 @@
  *
  * Readability pass: members are named from how that file uses them. State, hold-state,
  * condition-flag, actor-ID, sound and collider-flag numbers are the enums at the
- * top of d_a_kpa.cpp. Fix12 values read 0x1000 = 1.0; angles 0x10000 = a full turn.
+ * top of d_a_kpa.cpp. fx32 values read 0x1000 = 1.0; angles 0x10000 = a full turn.
  *
  * Leftover: unk_420 and unk_422 are written in d_a_kpa.cpp and never read, so they
  * keep placeholder names; the pad_ arrays are bytes nothing in that file reads

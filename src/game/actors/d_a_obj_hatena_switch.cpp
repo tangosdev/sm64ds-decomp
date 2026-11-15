@@ -168,7 +168,7 @@ s32 daObjHatenaSwitch_c::Behavior() {
             switch (player->GetTalkState()) {
             case 0:
                 Sound::PlaySub(0x20, 0x14, 0x7f, 0x6b000, false);
-                mSoundDelay = 0x4b;
+                mSoundDelay = 75;
                 if (mAnmModel.Finished() != 0) {
                     Message::PrepareTalk();
                     player->ShowMessage(*this, 0x183, 0, 1, 2);

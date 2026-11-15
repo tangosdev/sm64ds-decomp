@@ -52,7 +52,7 @@ void func_ov007_020b0358(void)
             func_ov007_020b76a0();
             func_ov007_020bd1c0(1);
         }
-        if (r5 == 0x28) {
+        if (r5 == 40) {
             WORK->states[2]->requestedState = 7;
         }
         st2 = WORK->transitionMode;

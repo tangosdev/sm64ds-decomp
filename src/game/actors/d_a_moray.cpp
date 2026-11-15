@@ -12,9 +12,6 @@
  * common.h stays first: the pose reads Matrix4x3 words m[9], m[10], m[11].
  *
  * leftovers:
- * - dExtBlendAnmModel_c::SetAnim, dCcAcPos_c::Init, ApproachLinear and
- *   dActor_c::SetRanges stay scalar Fix12 externs. The member forms
- *   grow the callers (02111718, InitResources, 02111758).
  * - currFrame >> 12 instead of the << 4 >> 16 shift shrinks 02111758
  *   and moves its pool off data_020a0e68.
  * - GetNode writes node 0 onto mPos, then node 1 over it. Filling a
@@ -348,8 +345,8 @@ int daMoray_c::StateLungeMain() {
     Vector3 worldTarget;
     localOffset.x = 0; localOffset.y = 0; localOffset.z = 0;
     worldTarget.x = 0; worldTarget.y = 0; worldTarget.z = 0;
-    unsigned int frame = (unsigned int)this->mBlendAnmModel.currFrame << 4 >> 0x10;
-    if (frame >= 0x15 && frame <= 0x3c) {
+    unsigned int frame = (unsigned int)this->mBlendAnmModel.currFrame << 4 >> 16;
+    if (frame >= 21 && frame <= 60) {
         if (gCurrentStarId == 1) {
             localOffset.z = 0x2bc000;
         } else {
@@ -700,8 +697,8 @@ s32 daMoray_c::InitResources()
     dExtFrameCtrl_c::LoadFile(data_ov016_02114d28);
 
     mPathID = param1 & 0xff;
-    mVariant = (param1 >> 8) & 0xf;
-    mStarParam = (param1 >> 0xc) & 0xf;
+    mVariant = (param1 >> 8) & 15;
+    mStarParam = (param1 >> 12) & 15;
     if (mVariant == 0xff)
         mVariant = 0;
     if (mPathID < 0)

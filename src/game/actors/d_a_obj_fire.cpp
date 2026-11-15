@@ -118,7 +118,7 @@ int daObjFire_c::Behavior() {
         Particle::System::NewRedFlame(pos.x, pos.y, pos.z);
 
     if (IsBeingEaten(this)) {
-        mDisappearTimer = 0x1e;
+        mDisappearTimer = 30;
         particlePos.x = mFlamePos.x;
         particlePos.y = mFlamePos.y;
         particlePos.z = mFlamePos.z;

@@ -24,7 +24,7 @@ extern "C" void func_ov007_020c0128(Ov007Camera *cam) {
     cam->up.y = 0x1000;
     cam->nearZ = 0x1000;
     cam->farZ = 0x190000;
-    cam->fovy = (short)FX_DivS32(0x1e0000, 0x168);
+    cam->fovy = (short)FX_DivS32(0x1e0000, 360);
     long long l = FX_DivFx64c(0x4000, 0x3000);
     cam->aspect = l;
     cam->viewportMinX = 0;

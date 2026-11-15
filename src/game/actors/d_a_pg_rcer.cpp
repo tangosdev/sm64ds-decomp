@@ -4,8 +4,6 @@
  * sets mPlayerCheated; NumStars() == 0x96 selects the big penguin.
  *
  * Remaining reconstruction:
- * - The scalar Fix12 animation, collision, sound and shadow interfaces
- *   retain their ABI declarations.
  * - Actor position and scale triples are scalar members in dActor_c;
  *   vector views retain their established layout and load grouping.
  * - SharedFilePtr has no shared field layout; LOADED reads its file word.
@@ -276,7 +274,7 @@ int daPgRcer_c::StateShowInitText() {
                 SetState(2);
             } else if (choice == 2) {
                 func_02012790(0x63);
-                mTalkWaitTimer = 0x5a;
+                mTalkWaitTimer = 90;
                 mTalkPlayer->HasFinishedTalking();
                 SetState(0);
             }

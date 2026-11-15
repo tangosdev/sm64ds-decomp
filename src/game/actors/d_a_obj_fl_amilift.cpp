@@ -137,7 +137,7 @@ int daObjFl_Amilift_c::MoveAlongPath() {
  * the forward state if auto-run, else wait for the player. */
 void daObjFl_Amilift_c::StateBackward() {
     unsigned short v = mStateFrames;
-    if (v < 0x14)
+    if (v < 20)
         return;
     int r = MoveAlongPath();
     if (r != -1)
@@ -156,7 +156,7 @@ int daObjFl_Amilift_c::StateForward() {
     unsigned char b = mAutoRun;
     if (b == 1) {
         unsigned short v = mStateFrames;
-        if (v < 0x14)
+        if (v < 20)
             return v;
     }
     int r = MoveAlongPath();
@@ -174,7 +174,7 @@ int daObjFl_Amilift_c::StateForward() {
 void daObjFl_Amilift_c::StateWait() {
     if (mRiderOn != 0) {
         if (mAutoRun != 1) {
-            if (mStateFrames <= 0x14)
+            if (mStateFrames <= 20)
                 return;
         }
         mState = daObjFl_Amilift_c::STATE_FORWARD;
@@ -264,7 +264,7 @@ s32 daObjFl_Amilift_c::InitResources() {
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
 
-    mPathPtr.FromID(param1 & 0xf);
+    mPathPtr.FromID(param1 & 15);
     mNodeCount = mPathPtr.NumNodes();
     mNodeIndex = 1;
 

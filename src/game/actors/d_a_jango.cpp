@@ -33,7 +33,6 @@
  *   - Local resource wrappers retain their existing lifecycle aliases.
  *     The four handles use file ID/reference bytes and typed loaded-file
  *     pointers; animation reads use those pointer members directly.
- *   - NewSimple keeps its scalar-ABI spelling (wall 6az).
  *   - The held-cap byte uses daObjMarioCap_c::mTaken after the star branch.
  *   - the two matrix members are 12-word arrays, not Matrix4x3; see the
  *     header.
@@ -212,7 +211,7 @@ daJango_c *daJango_c_classInit() {
 
 // recovered name: Klepto_OnAimedAtWithEgg
 /* daJango_c::OnAimedAtWithEgg - recovered from vtable slot identity.
-   Returns the constant 458752 (0x70000, which is 112.0 if read as fix12) and
+   Returns the constant 458752 (0x70000, which is 112.0 if read as fx32) and
    does nothing else. */
 s32 daJango_c::OnAimedAtWithEgg() {
     return 458752;
@@ -393,13 +392,13 @@ int daJango_c::Behavior()
             } else {
                 mHeldActorID = 0;
                 ((void (*)(int, int))func_02012790)(SND_HELD_RELEASED, 0);
-                mTimer = 0x1e;
+                mTimer = 30;
                 ChangeState(JANGO_STATE_CIRCLE);
             }
         } else {
             mHeldActorID = 0;
             ((void (*)(int, int))func_02012790)(SND_HELD_RELEASED, 0);
-            mTimer = 0x1e;
+            mTimer = 30;
             ChangeState(JANGO_STATE_CIRCLE);
         }
     } else if (mCarriedItem == CARRIES_STAR && mSilverStarFlag != 2) {
@@ -546,7 +545,7 @@ int daJango_c::EnterFlyPathState() {
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
         MTX_MultVec43(&in, &data_020a0e68, &out);
         mVertSpeed = out.y;
-        mStateTimer = 0x3c;
+        mStateTimer = 60;
     }
 
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e104.filePtr, 4, 0, 0x1000, 0);
@@ -651,7 +650,7 @@ int daJango_c::UpdateFlyPathState() {
 int daJango_c::EnterCircleState() {
     mTargetAngleY = mAngleY;
     mStateParam = 0;
-    mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 3) * 0x64 + 0x12c;
+    mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 3) * 100 + 300;
     if (mHitPlayer == 1) {
         mStateTimer = 0;
         mHitPlayer = 0;
@@ -719,7 +718,7 @@ int daJango_c::UpdateCircleState() {
         if (Vec3_Dist(&mPos, &mSpawnPos) < 0x1f4000) {
             mTimer = 0;
         } else {
-            mTimer = 0x1e;
+            mTimer = 30;
         }
         UpdateCircleVelocity();
         return 1;
@@ -832,15 +831,11 @@ int daJango_c::UpdateCircleState() {
    mStateParam (0x300, 0x400, 0x500 or 0x600, random) that UpdateSwoopState uses as
    the ApproachLinear step, and starts jango_attack.bca (4 blend frames, flags 0,
    speed 1.0). */
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 int daJango_c::EnterSwoopState() {
     if (gCurrentSublevel == 0x10) {
-        mStateTimer = 0x32;
+        mStateTimer = 50;
     } else {
-        mStateTimer = (((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) + 0x14;
+        mStateTimer = (((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) + 20;
     }
     mSpeedX = 0;
     mVertSpeed = 0;
@@ -878,7 +873,7 @@ int daJango_c::UpdateSwoopState() {
     player = ClosestPlayer();
     if (player != 0) {
         if (player->mIsVanish == 1) {
-            mTimer = 0x1e;
+            mTimer = 30;
             ChangeState(JANGO_STATE_CIRCLE);
             return 1;
         }
@@ -910,7 +905,7 @@ int daJango_c::UpdateSwoopState() {
     MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
     HandleCylinderHit();
     if (mStateTimer == 0 || mWithMeshClsn.IsOnWall() != 0) {
-        mTimer = 0x1e;
+        mTimer = 30;
         ChangeState(JANGO_STATE_CIRCLE);
     }
     return 1;
@@ -928,10 +923,6 @@ int daJango_c::UpdateSwoopState() {
    release sound. Either way mHeldActorID = 0, mStateParam = 0 and mTimer = 30. Finally plays sound 0xef
    at the actor's camera-space position, spawns particle 0x7e at mPos and zeroes
    the velocity words and mVertAccel. */
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 int daJango_c::EnterHurtState() {
     dActor_c* found;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e10c.filePtr, 4, 0x40000000, 0x1000, 0);
@@ -953,7 +944,7 @@ int daJango_c::EnterHurtState() {
         }
         mStateParam = 0;
         mHeldActorID = 0;
-        mTimer = 0x1e;
+        mTimer = 30;
     }
     func_02012694(SND_AT_HURT_ENTER, (const Vector3 *)(&mCamSpacePosX));
     Particle::System::NewSimple(PARTICLE_AT_HURT_ENTER, mPosX, mPosY, mPosZ);
@@ -971,7 +962,7 @@ int daJango_c::UpdateHurtState() {
     int f = mBlendAnmModel.currFrame;
     int fc = mBlendAnmModel.GetFrameCount();
     if ((int)((unsigned int)(f << 4) >> 16) >= fc - 1) {
-        mTimer = 0x1e;
+        mTimer = 30;
         ChangeState(JANGO_STATE_CIRCLE);
     }
     return 1;
@@ -981,10 +972,6 @@ int daJango_c::UpdateHurtState() {
    selects): doubles the animation speed (0x2000 = 2.0), zeroes the three
    velocity words and mVertAccel, and starts jango_fly.bca (4 blend frames,
    flags 0, speed 1.0). */
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 int daJango_c::EnterRiseState() {
     mBlendAnmModel.speed = 0x2000;
     mSpeedX = 0;
@@ -1035,7 +1022,7 @@ int daJango_c::UpdateRiseState() {
       the cap was already lost), spawn a cap object holding param1 << 8,
       hold it and enter CIRCLE. Then, whether or not a cap was taken, set
       mHitPlayer, call daPly_c::Hurt (pass-through arguments: the first flag is
-      set for the silver-star variant or param1 == 3, 0xc000 is 12.0 as fix12; the
+      set for the silver-star variant or param1 == 3, 0xc000 is 12.0 as fx32; the
       other three are not decoded here) and, if that took effect, set
       mTimer = 30 and enter CIRCLE. */
 int daJango_c::HandleCylinderHit() {
@@ -1133,7 +1120,7 @@ int daJango_c::HandleCylinderHit() {
     r = pl->Hurt(pos, flag, 0xc000, 1, 0, 1);
     if (r == 0)
         return r;
-    mTimer = 0x1e;
+    mTimer = 30;
     return ChangeState(JANGO_STATE_CIRCLE);
 }
 

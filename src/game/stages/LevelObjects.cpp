@@ -113,7 +113,7 @@ void LoadSimpleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
         u16 actorIndex = entry->raw & 0x1ff;
         int actorParam = entry->raw >> 9;
         if (actorIndex == 0x1ff) {
-            LoadMinimapChangeObject(areaID, position.y, actorParam & 0xf);
+            LoadMinimapChangeObject(areaID, position.y, actorParam & 15);
         } else {
             dActor_c::Spawn(sObjToActorIdTable[actorIndex], actorParam, position, 0, areaID,
                             sNextDeathTableID++);
@@ -122,7 +122,7 @@ void LoadSimpleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
 }
 
 /* One actor per standard object entry. Each StandardEntry is 0x10 bytes: raw id
- * index into sObjToActorIdTable, s16 position (shifted left by 12 into Fix12),
+ * index into sObjToActorIdTable, s16 position (shifted left by 12 into fx32),
  * Vector3s rotation, u16 param. Each spawn takes the next death-table ID. The
  * third parameter is part of the shared loader signature and unused here. */
 void LoadStandardObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
@@ -145,13 +145,13 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
     func_0202b0e0(entry, table.count);
     entry += entranceIndex;
     entranceKind = 0;
-    int entranceId = 0xf;
+    int entranceId = 15;
 
     for (u8 playerIndex = 0; playerIndex < gNumPlayers; entry++, playerIndex++) {
         Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
 
         u16 param = entry->param;
-        entranceKind = (param >> 7) & 0xf;
+        entranceKind = (param >> 7) & 15;
 
         int savedCharacter = data_0209caa0.file.mCharacter;
         int playerCharacter = data_02092128[playerIndex];
@@ -172,7 +172,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
             gPlayers[playerIndex] = player;
 
         if (playerIndex == gLocalPlayerId)
-            entranceId = (entry->param >> 3) & 0xf;
+            entranceId = (entry->param >> 3) & 15;
     }
 
     gCamera = (dCamera_c *)dBase_c::Spawn(0x14c, gCurrentScene, entranceId, 0);
@@ -180,7 +180,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
     if (IsGameMode(2))
         return;
 
-    if (entranceKind >= 0x13)
+    if (entranceKind >= 19)
         entranceKind = 0;
     int wipeType = sEntranceWipes[entranceKind];
     if (wipeType < 0)
@@ -245,9 +245,9 @@ void LoadDoorObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
         /* All three angles are computed before any is stored: member stores or
            an aggregate initializer are +4 bytes, a u16 param copy 11 words off. */
         Vector3_16 rot;
-        s16 rx = (entry->param >> 8) & 0xf;
+        s16 rx = (entry->param >> 8) & 15;
         s16 ry = entry->angle;
-        s16 rz = (entry->param >> 12) & 0xf;
+        s16 rz = (entry->param >> 12) & 15;
         rot.x = rx;
         rot.y = ry;
         rot.z = rz;

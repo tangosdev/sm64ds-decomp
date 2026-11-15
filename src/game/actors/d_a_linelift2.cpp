@@ -119,7 +119,7 @@ int daLinelift2_c::InitResources() {
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
-    mPathPtr.FromID(param1 & 0xf);
+    mPathPtr.FromID(param1 & 15);
     mNodeCount = mPathPtr.NumNodes();
     mNodeIndex = 0;
     mBasePosX = mPosX;
