@@ -98,8 +98,6 @@ extern "C" {
    Quick race (daRNk_c). InitResources clears it. */
 extern unsigned char gShowRaceTimer;
 extern Timer gRaceTimer;
-extern void OamRender10_d_meter(int sub, struct OamAttr *attr, int x, int y, int a, int b, int sx,
-                                int sy, int c, int d);
 extern volatile unsigned short data_ov002_0210c208[];
 extern unsigned char gLocalPlayerId;
 extern unsigned char gMeterCounterSlideState;

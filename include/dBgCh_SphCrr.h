@@ -13,7 +13,6 @@
 #include "types.h"
 #include "dBgPi.h"
 
-#include "math/Fix12.h"
 #include "dBgCh.h"
 #include "dM3dGSph.h"
 

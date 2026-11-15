@@ -72,9 +72,6 @@ struct MenboAnimationFilePtr : SharedFilePtr {
     ~MenboAnimationFilePtr();
 };
 
-/* By-value Fix12<int> in a mangled name; the calls pass a bare word. */
-typedef int LocFix12;
-
 extern "C" void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
 extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 extern "C" void Matrix4x3_FromRotationY(void *m, int angle);

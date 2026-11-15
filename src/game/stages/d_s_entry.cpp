@@ -75,8 +75,6 @@ void Deallocate(void *);
 
 extern unsigned char data_0209b2e4;
 
-extern void OamRender10_d_s_entry(int a, void *oam, int b, int c, int d, int e, int f, int g, int h,
-                                  int i);
 extern int func_0203d974(void);
 
 int GetLanguageIndex(void);

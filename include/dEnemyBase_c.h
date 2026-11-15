@@ -6,7 +6,6 @@
 #define DENEMYBASE_C_H
 #include "types.h"
 #include "dActor_c.h"
-#include "math/Fix12.h"
 
 /* fwd */
 struct dCc_c;

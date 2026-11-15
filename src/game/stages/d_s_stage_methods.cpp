@@ -124,8 +124,6 @@ void TurnBacklightOff(void);
 
 bool d_s_stage_methodsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int fix, int e);
 
-void OamRender10_d_s_stage_methods(int sub, void *attr, int x, int y, int a, int cc, int fx, int fy,
-                                   int rot, int mode);
 
 extern int data_0208ee44;
 extern u8 data_0208ee3c;

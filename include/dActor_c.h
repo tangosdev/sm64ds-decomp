@@ -47,7 +47,6 @@ struct dCc_c;
    math/Matrix.h, which this header deliberately does not pull in. */
 struct Matrix4x3;
 struct dExtShadowModel_c;
-#include "math/Fix12.h"
 
 /* data_020a0eac is the heap every actor is allocated from. operator delete
    passes it to Memory::Deallocate, declared in Memory.h via fBase_c.h. */

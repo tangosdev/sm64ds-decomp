@@ -83,8 +83,6 @@ extern void Mg_DrawScoreTally(void *, int, int, int);
 extern int Mg_IsNewRecord(void);
 #include "OAM.h"
 #include "nitro/mi/memory.h"
-extern void OamRender10_d_s_mg_teresa(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
-                                      s32 priority, s32 scaleX, s32 scaleY, s32 rotation, s32 mode);
 
 extern unsigned char gSubScreenLayers;
 extern unsigned char gMainScreenLayers;

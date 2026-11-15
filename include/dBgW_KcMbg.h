@@ -20,7 +20,6 @@
  * view (the dExtSimpleModel_c::Virtual10 lesson).
  */
 
-#include "math/Fix12.h"
 
 struct dBgW_KcMbg : dBgW_Kc {
     fx32 scale;          /* 0x50 */

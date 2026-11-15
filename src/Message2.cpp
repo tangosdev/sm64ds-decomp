@@ -111,9 +111,6 @@ extern int IsButtonInputValid(void);
 extern int func_0201fb4c(void);
 extern u8 NumStars(void);
 extern int func_020138dc(void);
-extern "C" {
-void OamRender10_Message2(int a, void *b, int c, int d, int e, int f, int g, int h, int i, int j);
-}
 
 struct OamAttr;
 #include "OAM.h"

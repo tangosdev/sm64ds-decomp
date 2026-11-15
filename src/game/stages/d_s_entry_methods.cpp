@@ -1319,10 +1319,6 @@ void dScEntry_c::func_ov075_02118a78() {
     func_020308b4();
 }
 
-// local extern: the Fix12-by-value overload retains its measured scalar ABI bridge.
-extern "C" void OamRender10_d_s_entry_methods(int sub, struct OamAttr *data, s32 x, s32 y,
-                                              s32 palette, s32 priority, s32 scaleX, s32 scaleY,
-                                              s32 rotation, s32 mode);
 
 void dScEntry_c::UpdateMatchLoading() {
     if (mSawLoadSignal == 0) {
