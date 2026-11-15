@@ -154,7 +154,7 @@ void daObjGuragura_c::TiltToward(unsigned char *arg) {
     axis.y = 0x1000;
     Quaternion_FromVector3(mTiltTarget, &axis, &v);
     Quaternion_Normalize(mTiltTarget);
-    mSettleDelay = 0xa;
+    mSettleDelay = 10;
 }
 
 /* ROM ordinal 8 -- 0x020b6374, size 0x14.

@@ -82,7 +82,7 @@ struct TrampolineContactView : TrampolineObjectCallbacks {
     u16 contactState;   /* +0x18 0 none, 1 hit, 2 hard hit, 3 line end */
 };
 
-/* A 2D point or projection: two Fix12 words. Deliberately POD, not Vector2,
+/* A 2D point or projection: two fx32 words. Deliberately POD, not Vector2,
    whose declared destructor would make every local here register a cleanup. */
 struct V2 {
     int x, y;
@@ -1615,7 +1615,7 @@ void TrmpLine::Build(short *startPoint, short *endPoint) {
         return;
     }
 
-    mLifeTimer = 0x258;
+    mLifeTimer = 600;
     mStatus = 1;
     SetStateFlex();
 }

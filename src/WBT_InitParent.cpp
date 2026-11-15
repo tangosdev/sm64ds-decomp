@@ -47,7 +47,7 @@ void WBT_InitParent(int send_packet_size, int recv_packet_size, WBTCallback call
     do {
         work->peer[i].last_cmd_counter = 0;
         i++;
-    } while (i < 0x10);
+    } while (i < 16);
     cmd.command = WBT_CMD_REQ_NONE;
     func_02065af0((int *)&cmd);
     func_02065be0();

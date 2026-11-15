@@ -15,8 +15,8 @@
  *   consumes the four handles; overlay .bss owns them. symbols.txt has
  *   no recovered name, so they are not coined.
  * - volatile mPosY in Behavior's landing puff: a plain field read
- *   CSE's with the add and store above it (likely the Fix12<int> class
- *   wall; mPosY, mPos.y and Vector3 copies are all 4 bytes off).
+ *   CSE's with the add and store above it (mPosY, mPos.y and Vector3
+ *   copies are all 4 bytes off).
  * - Render's star walk keeps the `for (;;)` with a break: a `while`
  *   on the FindWithActorID result DIFFs.
  * - SetOwner is a non-virtual member returning this: the only caller,
@@ -68,7 +68,7 @@ s32 daObjNumber_c::InitResources() {
         dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210da28.filePtr,
                                  *(BTP_File *)data_ov002_0210da08.filePtr);
         mTextureSequence.SetFile(*(BTP_File *)data_ov002_0210da08.filePtr, 0x40000000, 0, 0);
-        mTextureSequence.currFrame = (int)((((unsigned int)(param1 & 0xf) % 10) << 16) >> 4);
+        mTextureSequence.currFrame = (int)((((unsigned int)(param1 & 15) % 10) << 16) >> 4);
     } else {
         dExtAnmTexPat_c::LoadFile(data_ov002_0210d9e8);
         BMD_File *m = dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
@@ -77,7 +77,7 @@ s32 daObjNumber_c::InitResources() {
         dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210d9a8.filePtr,
                                  *(BTP_File *)data_ov002_0210d9e8.filePtr);
         mTextureSequence.SetFile(*(BTP_File *)data_ov002_0210d9e8.filePtr, 0x40000000, 0, 0);
-        mTextureSequence.currFrame = (int)((((unsigned int)(param1 & 0xf) % 10) << 16) >> 4);
+        mTextureSequence.currFrame = (int)((((unsigned int)(param1 & 15) % 10) << 16) >> 4);
     }
 
     mState = 0;

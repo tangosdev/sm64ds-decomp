@@ -89,7 +89,7 @@
 #include "math/Approach.h"
 #include "private/ov006_ec4dc_obj.h"
 
-/* One of the twenty records at sMgCoins. Positions are Fix12
+/* One of the twenty records at sMgCoins. Positions are fx32
    screen pixels (Coin_Draw draws at mPos >> 12). */
 struct Sprite;
 typedef void (Sprite::*SpriteFn)();
@@ -195,7 +195,7 @@ Sprite sMgCoins[0x14];
 /* Reset every sprite and the sequence state. */
 void MgCoins_Reset(void) {
     int i;
-    for (i = 0; i < 0x14; i++)
+    for (i = 0; i < 20; i++)
         Coin_Reset(&sMgCoins[i]);
     sMgCoinsIndex = 0;
     gMgCoinsInPlay = 0;
@@ -233,7 +233,7 @@ void MgCoins_Update(void) {
     }
 
     p = sMgCoins;
-    for (i = 0; i < 0x14; i++) {
+    for (i = 0; i < 20; i++) {
         Coin_Update(p);
         p++;
     }
@@ -285,7 +285,7 @@ void MgCoins_Draw(void) {
     if (sMgCoinsDeltaShown != 0) {
         MgCoins_DrawDelta(sMgCoinsDelta);
     }
-    for (p = sMgCoins, i = 0; i < 0x14; i++) {
+    for (p = sMgCoins, i = 0; i < 20; i++) {
         Coin_Draw(p);
         p++;
     }
@@ -591,7 +591,7 @@ void MgCoins_StartPayout(int count) {
     int i;
     int cond;
     Sprite* it = sMgCoins;
-    for (i = 0; i < 0x14; i++) {
+    for (i = 0; i < 20; i++) {
         Coin_Hide(it);
         it++;
     }
@@ -662,7 +662,7 @@ void MgCoins_StepPayoutNext(void) {
     Vec2i sp;
 
     e = sMgCoins;
-    for (i = 0; i < 0x14; i++) {
+    for (i = 0; i < 20; i++) {
         if (e->mVisible != 0)
             return;
         e++;
@@ -819,7 +819,7 @@ void Coin_SendOff(Sprite *s) {
         if (y < 0) y = -y;
         s->mStep.y = y;
     }
-    s->mDelay = 0x14;
+    s->mDelay = 20;
     Sound::PlayBank2_2D(0x14a);
     s->mState = pmf_Coin_MoveThenRise;
 }
@@ -876,7 +876,7 @@ void Coin_Spend(Sprite *s) {
         if (y < 0) y = -y;
         s->mStep.y = y;
     }
-    s->mDelay = 0x14;
+    s->mDelay = 20;
     Sound::PlayBank2_2D(0x14a);
     s->mState = pmf_Coin_MoveThenRiseSpent;
 }

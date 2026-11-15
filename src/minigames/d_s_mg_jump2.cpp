@@ -215,7 +215,7 @@ s32 dScMgJump2_c::InitResources() {
  *
  * This one arms the countdown and installs the next state. */
 void dScMgJump2_c::BeginIntro() {
-    mStateTimer = 0x78;
+    mStateTimer = 120;
     mTextureOffsetT = 0;
     mTextureScrollRate = 0x4000;
     mState = pmf_dScMgJump2_c_State_Intro;
@@ -236,7 +236,7 @@ void dScMgJump2_c::State_Intro() {
 }
 
 void dScMgJump2_c::BeginPlay() {
-    mStateTimer = 0xf0;
+    mStateTimer = 240;
     mState = pmf_dScMgJump2_c_State_Play;
 }
 
@@ -269,7 +269,7 @@ void dScMgJump2_c::State_Play() {
         int value;
         s16 countdown;
         Heyho_SettleAll();
-        mStateTimer = 0xf0 - sJumpComboCount * 6;
+        mStateTimer = 240 - sJumpComboCount * 6;
         countdown = mStateTimer;
         if (countdown < 0x3c)
             countdown = 0x3c;
@@ -305,7 +305,7 @@ void dScMgJump2_c::State_Play() {
 }
 
 void dScMgJump2_c::BeginEnd() {
-    mStateTimer = 0x20;
+    mStateTimer = 32;
     mState = pmf_dScMgJump2_c_State_End;
 }
 
@@ -340,9 +340,7 @@ void dScMgJump2_c::State_Idle() {}
 
 /* Slot 6. mParticleID is a particle system's unique ID, handed to
  * NewCleanParticle and back each frame. The object FromUniqueID returns is
- * a Particle::System. Both Particle::System
- * calls keep their mangled spellings: declaring the real Fix12<int>
- * parameters changes how the call passes them. */
+ * a Particle::System. */
 s32 dScMgJump2_c::Behavior() {
     mParticleID =
         Particle::System::NewCleanParticle(mParticleID, 0xf0, 0x400000, 0x800000, -0x480000, 0);
@@ -417,9 +415,9 @@ s32 dScMgJump2_c::Render() {
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite(sJump2TextSpritesByLanguage[idx][1], x, 0xc, 0);
+                DrawOamSprite(sJump2TextSpritesByLanguage[idx][1], x, 12, 0);
             } else {
-                RenderOamMainScreen(sJumpLifeIconSprite, x, 0xc, -1, -1);
+                RenderOamMainScreen(sJumpLifeIconSprite, x, 12, -1, -1);
             }
             x += 0x12;
         }

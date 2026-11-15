@@ -178,7 +178,7 @@ int daObjCtRotateBlock_c::Behavior() {
             mState = 0;
             mWaitTimer = data_ov065_0211cfa4[data_0209f2c0];
             if (data_0209f2c0 == 2)
-                mWaitTimer = (unsigned int)RandomIntInternal(&data_0209e650.value) % 7 * 0x14 + 5;
+                mWaitTimer = (unsigned int)RandomIntInternal(&data_0209e650.value) % 7 * 20 + 5;
             mTargetAngleZ += data_ov065_0211cfa8[mVariant];
             break;
         }

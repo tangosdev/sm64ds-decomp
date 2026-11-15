@@ -187,7 +187,7 @@ void G3X_InitTable(void) {
         b = 0;
         MI_CpuFill32((void *)REG_FOG_TABLE_ADDR, b, 0x50);
     }
-    for (i = 0; i < 0x20; i++)
+    for (i = 0; i < 32; i++)
         REG_SHININESS = 0;
 }
 

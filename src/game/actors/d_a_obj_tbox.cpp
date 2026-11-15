@@ -114,7 +114,7 @@ void daObjTbox_c::InitState0() {
 void daObjTbox_c::State0() {
     DecIfAbove0_Short(&mStateTimer);
 
-    if (mStateTimer == 0x58)
+    if (mStateTimer == 88)
         func_02012790(0xe);
 
     u32 id = mCylinder.otherOwner;
@@ -167,7 +167,7 @@ void daObjTbox_c::State0() {
                     func_02012694(0x20, &mCamSpacePos);
                 SetState(1);
             } else {
-                mStateTimer = 0x5a;
+                mStateTimer = 90;
                 if (player->mIsMetal != 0)
                     player->Shock(0);
                 else
@@ -187,7 +187,7 @@ void daObjTbox_c::State0() {
 
 void daObjTbox_c::InitState1() {
     if (mIsLastChest != 0)
-        mStateTimer = 0x2d;
+        mStateTimer = 45;
 
     mFlags &= ~1;
 }

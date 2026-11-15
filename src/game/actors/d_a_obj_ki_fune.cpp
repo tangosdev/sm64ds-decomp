@@ -102,7 +102,7 @@ int daObjKi_Fune_c::Behavior() {
     mMeshCollider.SetClipRadius(0x2000000);
     if (mModelIndex == 0) {
         mBobAngle += 0xda;
-        mAngleX = (s16)((FX_SinIdx((u16)mBobAngle >> 4) << 0xa) >> 0xc);
+        mAngleX = (s16)((FX_SinIdx((u16)mBobAngle >> 4) << 10) >> 12);
         if (DistToCPlayer() < 0xbb8000) {
             mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8b, mCamSpacePos, 0);
         }

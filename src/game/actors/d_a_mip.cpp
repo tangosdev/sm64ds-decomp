@@ -59,15 +59,6 @@ bool PlaySub(u32, u32, u32, int, bool);
 /* ground probe / collision */
 int SurfaceInfo_TestFlag0x20(int *);
 
-/* dActor_c / dEnemyBase_c, reached by their ROM names.
-   dActor_c::ClosestPlayer and dActor_c::FindWithID are deliberately NOT here:
-   both are declared members whose recovered signatures carry no by-value class
-   parameter, so this TU calls them as members and lets the compiler produce the
-   symbol. Everything else keeps the mangled spelling its legacy file matched
-   under, because DropShadowRadHeight and Spawn take Fix12<int> and s8/s16 BY
-   VALUE in their real declarations and mwccarm passes those differently at the
-   call site. */
-
 /* daPly_c / Message / Sound / SaveData */
 /* The return type is load-bearing: StateTalkMain tests it in an `if`, so the
    `void` spelling three of the four legacy files used cannot be the one. */
@@ -750,8 +741,8 @@ int daMip_c::StateFleeMain() {
             s32 y = pair[1] + 0x3000;
             s32 x = pair[0];
             *((volatile s32 *)(&pos.x)) = x;
-            *((volatile s32 *)(&pos.y)) = y;
-            *((volatile s32 *)(&pos.z)) = z;
+            pos.y = y;
+            pos.z = z;
             mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove,
                                                           pos.x, pos.y, z, 0);
         }
@@ -903,8 +894,8 @@ int daMip_c::StateIdleMain()
         s32 y = pair[1] + 0x3000;
         s32 x = pair[0];
         *((volatile s32*)(&sp.x)) = x;
-        *((volatile s32*)(&sp.y)) = y;
-        *((volatile s32*)(&sp.z)) = z;
+        sp.y = y;
+        sp.z = z;
         mDustParticle =
             Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, sp.x, sp.y, z, 0);
     }
@@ -936,7 +927,7 @@ int daMip_c::StateIdleMain()
     if (mRabbitId == 1) {
         if (Vec3_HorzDist(&mPos, (const Vector3 *)&pp) < 0x4b0000) {
             mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&pp) + 0x8000;
-            mStateTimer = 0x1e;
+            mStateTimer = 30;
         }
     }
 
@@ -953,7 +944,7 @@ int daMip_c::StateIdleMain()
             (mActionStep)++;
             break;
         case 3:
-            mStateTimer = (s16)((r & 0x1f) + 0x1e);
+            mStateTimer = (s16)((r & 0x1f) + 30);
             mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
             mActionStep = 0;
             break;
@@ -1288,7 +1279,7 @@ int daMip_c::Behavior()
         }
         if (mEatenByYoshi == 1) {
             mEatenTimer++;
-            if (mEatenTimer > 0x96) {
+            if (mEatenTimer > 150) {
                 mEatenByYoshi = 0;
                 mEatenTimer = 0;
             }
