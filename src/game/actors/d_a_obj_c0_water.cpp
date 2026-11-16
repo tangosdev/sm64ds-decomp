@@ -39,9 +39,12 @@
 #include "SaveBlock.h"
 
 struct BMD_File;
-struct BTA_File;
+#include "private/BTA_File.h"
+
+struct CLPS_Block {
+    u32 words[8];
+};
 struct KCL_File;
-struct CLPS_Block;
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
@@ -59,8 +62,20 @@ struct C0WaterCollisionFilePtr : SharedFilePtr {
 /* Defined at the end of this file so the constructors do not enter .text. */
 extern C0WaterModelFilePtr data_ov012_021124d0;
 extern C0WaterCollisionFilePtr data_ov012_021124c8;
-extern BTA_File data_ov012_02111c24;
-extern CLPS_Block data_ov012_02111c90;
+extern fx32 data_ov012_02111770[];
+extern u16 data_ov012_02111768[];
+extern fx32 data_ov012_0211191c[];
+extern BTAMaterialRecord data_ov012_02111778[];
+
+BTA_File data_ov012_02111c24 = {
+    91, 0, data_ov012_02111770, data_ov012_02111768, data_ov012_0211191c, 1, 0,
+    data_ov012_02111778,
+};
+
+CLPS_Block data_ov012_02111c90 = {
+    0x53504c43, 0x00010008, 0x00000fe0, 0x000000ff,
+    0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+};
 extern int data_0209f32c;
 
 /* Reconstructed source-style name; exact original SM64DS spelling is not

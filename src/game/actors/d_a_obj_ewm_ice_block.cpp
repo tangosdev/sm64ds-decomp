@@ -34,7 +34,7 @@ struct EwmIceFileTable {
     SharedFilePtr *collision;
     CLPS_Block *clps;
 };
-extern EwmIceFileTable data_ov056_02113314;
+extern EwmIceFileTable data_ov056_02113314; /* defined with the file handles */
 extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
@@ -169,3 +169,11 @@ struct EwmIceBlockCollisionFilePtr : SharedFilePtr {
 
 EwmIceBlockModelFilePtr gEwmIceBrockModelFile(ASSET_EWM_ICE_BROCK_BMD);      /* model */
 EwmIceBlockCollisionFilePtr gEwmIceBrockCollisionFile(ASSET_EWM_ICE_BROCK_KCL);  /* collision */
+
+extern CLPS_Block data_ov064_0211bbec;
+
+EwmIceFileTable data_ov056_02113314 = {
+    &gEwmIceBrockModelFile,
+    &gEwmIceBrockCollisionFile,
+    &data_ov064_0211bbec,
+};

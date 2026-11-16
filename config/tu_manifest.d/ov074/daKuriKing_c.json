@@ -17,6 +17,30 @@
   ],
   "sections": [
     {
+      "name": ".rodata.kuriQ",
+      "input_section": ".rodata",
+      "start": "0x0212290c",
+      "end": "0x0212291c"
+    },
+    {
+      "name": ".rodata.kuriD",
+      "input_section": ".rodata",
+      "start": "0x0212291c",
+      "end": "0x0212292c"
+    },
+    {
+      "name": ".data.kuriId",
+      "input_section": ".data",
+      "start": "0x02122d80",
+      "end": "0x02122d84"
+    },
+    {
+      "name": ".data.kuriBone",
+      "input_section": ".data",
+      "start": "0x02122e24",
+      "end": "0x02122e30"
+    },
+    {
       "name": ".text",
       "start": "0x0211f000",
       "end": "0x0212290c"
@@ -469,6 +493,20 @@
     }
   ],
   "data": [
+    {
+      "symbol": "data_ov074_02122d80",
+      "address": "0x02122d80",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Four u8 ids, 16 9 6 3."
+    },
+    {
+      "symbol": "data_ov074_02122e24",
+      "address": "0x02122e24",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three bone indexes, 1 8 10."
+    },
     {
       "symbol": "@668",
       "address": "0x02122d84",
@@ -2942,6 +2980,34 @@
       },
       "tuRanges": [
         {
+          "section": ".rodata.kuriQ",
+          "start": "0x0212290c",
+          "end": "0x0212291c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.kuriD",
+          "start": "0x0212291c",
+          "end": "0x0212292c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.kuriId",
+          "start": "0x02122d80",
+          "end": "0x02122d84",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.kuriBone",
+          "start": "0x02122e24",
+          "end": "0x02122e30",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".text",
           "start": "0x0211f000",
           "end": "0x0212290c",
@@ -3457,6 +3523,20 @@
   ],
   "production_mode": "intact-object",
   "rodata": [
+    {
+      "symbol": "data_ov074_0212290c",
+      "address": "0x0212290c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "Four 20.12 heights."
+    },
+    {
+      "symbol": "data_ov074_0212291c",
+      "address": "0x0212291c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "Four 20.12 offsets."
+    },
     {
       "symbol": "sKurikingMinionAnimationFiles",
       "address": "0x0212292c",

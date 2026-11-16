@@ -15,6 +15,7 @@ src/game/actors/d_a_bg_snm_bdy.cpp:
 src/game/actors/d_a_bg_snm_hed.cpp:
     complete
     .text start:0x0211ff34 end:0x02120824
+    .rodata start:0x02121ffc end:0x02122004
     .init start:0x021221f8 end:0x02122350
     .ctor start:0x0212270c end:0x02122710
     .data start:0x0212283c end:0x02122938

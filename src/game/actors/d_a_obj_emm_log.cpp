@@ -50,7 +50,7 @@ struct EmmLogCollisionFilePtr : SharedFilePtr {
     ~EmmLogCollisionFilePtr();
 };
 
-extern daObjEmmLog_c_Resources data_ov052_021124d4;
+extern daObjEmmLog_c_Resources data_ov052_021124d4; /* defined with the file handles */
 
 daObjEmmLog_c *daObjEmmLog_c_classInit() {
     return new daObjEmmLog_c();
@@ -110,3 +110,11 @@ s32 daObjEmmLog_c::CleanupResources() {
  * and .collision point at them. */
 EmmLogModelFilePtr gEmmLogModelFile(ASSET_EMM_LOG_BMD);
 EmmLogCollisionFilePtr gEmmLogCollisionFile(ASSET_EMM_LOG_KCL);
+
+extern CLPS_Block data_ov064_0211ba2c;
+
+daObjEmmLog_c_Resources data_ov052_021124d4 = {
+    &gEmmLogModelFile,
+    &gEmmLogCollisionFile,
+    &data_ov064_0211ba2c,
+};

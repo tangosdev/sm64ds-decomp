@@ -18,6 +18,11 @@
       "end": "0x02111424"
     },
     {
+      "name": ".rodata",
+      "start": "0x02111424",
+      "end": "0x02111434"
+    },
+    {
       "name": ".init",
       "start": "0x02111434",
       "end": "0x021114ec"
@@ -113,6 +118,15 @@
     }
   ],
   "data": [],
+  "rodata": [
+    {
+      "symbol": "data_ov031_02111424",
+      "address": "0x02111424",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "Four SharedFilePtr pointers, one per billboard variant, relocating to this TU's model handles."
+    }
+  ],
   "bss": [
     {
       "symbol": "gHsStarModelFile",
@@ -260,6 +274,13 @@
           "section": ".text",
           "start": "0x021111a0",
           "end": "0x02111424",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02111424",
+          "end": "0x02111434",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -530,6 +551,46 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x02111424",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHsMoonModelFile",
+      "addend": 0,
+      "target_module": "ov031",
+      "target_address": "0x02111a08"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02111428",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHsStarModelFile",
+      "addend": 0,
+      "target_module": "ov031",
+      "target_address": "0x02111a00"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211142c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHsYStarModelFile",
+      "addend": 0,
+      "target_module": "ov031",
+      "target_address": "0x02111a10"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02111430",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHsBStarModelFile",
+      "addend": 0,
+      "target_module": "ov031",
+      "target_address": "0x02111a18"
+    },
     {
       "section": ".init",
       "source": "0x02111444",

@@ -15,6 +15,11 @@
   ],
   "sections": [
     {
+      "name": ".data",
+      "start": "0x02114828",
+      "end": "0x0211482c"
+    },
+    {
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x02112938"
@@ -272,7 +277,15 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov020_02114828",
+      "address": "0x02114828",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Four u8 page ids, 0 1 3 0."
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov020_02114aa0",
@@ -852,6 +865,13 @@
         "firstDiff": null
       },
       "tuRanges": [
+        {
+          "section": ".data",
+          "start": "0x02114828",
+          "end": "0x0211482c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
         {
           "section": ".text",
           "start": "0x021111a0",

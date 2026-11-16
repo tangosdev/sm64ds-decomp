@@ -27,11 +27,14 @@ enum d_a_obj_ks_water_AssetId { ASSET_KS_MIZU_BMD = 0x0689, ASSET_KS_MIZU_KCL = 
 #include "daObjKsWater_c.h"
 #include "SharedFilePtr.h"
 #include "daObjTbox_c.h"
+#include "private/BTA_File.h"
 
 struct BMD_File;
-struct BTA_File;
 struct KCL_File;
-struct CLPS_Block;
+
+struct CLPS_Block {
+    u32 words[8];
+};
 
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4; collision handles construct through func_02017b4c and
@@ -49,8 +52,20 @@ struct KsWaterClsnFileHandle : SharedFilePtr {
 
 extern KsWaterClsnFileHandle data_ov017_02111c80;
 extern KsWaterModelFilePtr data_ov017_02111c88;
-extern BTA_File data_ov017_02111a60;
-extern CLPS_Block data_ov017_02111a94;
+extern fx32 data_ov017_021114bc[];
+extern u16 data_ov017_021114b8[];
+extern fx32 data_ov017_021114dc[];
+extern BTAMaterialRecord data_ov017_021114c0[];
+
+BTA_File data_ov017_02111a60 = {
+    300, 0, data_ov017_021114bc, data_ov017_021114b8, data_ov017_021114dc, 1, 0,
+    data_ov017_021114c0,
+};
+
+CLPS_Block data_ov017_02111a94 = {
+    0x53504c43, 0x00010008, 0x00000fe0, 0x000000ff,
+    0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+};
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */

@@ -2,7 +2,12 @@
     .rodata     start:0x021128f0 end:0x02112c10 kind:rodata align:4
     .init       start:0x02112c10 end:0x02112e94 kind:code align:4
     .ctor       start:0x02112e94 end:0x02112ea0 kind:rodata align:4
-    .data       start:0x02112ec0 end:0x02113a40 kind:data align:32
+    .data.tdPre   start:0x02112ec0 end:0x02112f64 kind:data align:32
+    .data.tdBta   start:0x02112f64 end:0x02112f7c kind:data align:4
+    .data.tdMid   start:0x02112f7c end:0x02112f98 kind:data align:4
+    .data.tdFuta  start:0x02112f98 end:0x02112fb8 kind:data align:4
+    .data.tdClps  start:0x02112fb8 end:0x02112fd0 kind:data align:4
+    .data         start:0x02112fd0 end:0x02113a40 kind:data align:4
     .bss        start:0x02113a40 end:0x02113b20 kind:bss align:32
 src/game/actors/d_a_bakubaku.cpp:
     complete
@@ -17,6 +22,7 @@ src/game/actors/d_a_obj_td_futa.cpp:
     .text start:0x021124a8 end:0x02112698
     .init start:0x02112dbc end:0x02112e28
     .ctor start:0x02112e98 end:0x02112e9c
+    .data.tdFuta start:0x02112f98 end:0x02112fb8
     .bss start:0x02113acc end:0x02113af4
 
 src/game/actors/d_a_obj_td_water.cpp:
@@ -24,5 +30,7 @@ src/game/actors/d_a_obj_td_water.cpp:
     .text start:0x02112698 end:0x021128f0
     .init start:0x02112e28 end:0x02112e94
     .ctor start:0x02112e9c end:0x02112ea0
+    .data.tdBta start:0x02112f64 end:0x02112f7c
+    .data.tdClps start:0x02112fb8 end:0x02112fd0
     .bss start:0x02113af4 end:0x02113b1c
 

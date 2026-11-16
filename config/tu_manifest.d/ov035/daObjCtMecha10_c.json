@@ -14,6 +14,17 @@
   ],
   "sections": [
     {
+      "name": ".rodata",
+      "start": "0x02111ef0",
+      "end": "0x02111f04"
+    },
+    {
+      "name": ".data.m10Clps",
+      "input_section": ".data",
+      "start": "0x021121d8",
+      "end": "0x021121dc"
+    },
+    {
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x021116ec"
@@ -99,7 +110,31 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov035_021121d8",
+      "address": "0x021121d8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS magic word; the next symbol owns the following bytes."
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov035_02111ef0",
+      "address": "0x02111ef0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Two angle steps."
+    },
+    {
+      "symbol": "data_ov035_02111ef4",
+      "address": "0x02111ef4",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "Dwell counts by state and clock setting."
+    }
+  ],
   "init": [
     {
       "symbol": "__sinit_d_a_obj_ct_mecha10.cpp",
@@ -538,6 +573,20 @@
         "firstDiff": null
       },
       "tuRanges": [
+        {
+          "section": ".rodata",
+          "start": "0x02111ef0",
+          "end": "0x02111f04",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.m10Clps",
+          "start": "0x021121d8",
+          "end": "0x021121dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
         {
           "section": ".text",
           "start": "0x021111a0",

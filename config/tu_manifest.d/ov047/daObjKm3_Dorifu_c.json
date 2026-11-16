@@ -13,6 +13,11 @@
   ],
   "sections": [
     {
+      "name": ".data",
+      "start": "0x02112508",
+      "end": "0x02112530"
+    },
+    {
       "name": ".text",
       "start": "0x02111510",
       "end": "0x021116dc"
@@ -70,7 +75,15 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov047_02112508",
+      "address": "0x02112508",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three resource rows and the next row's model pointer."
+    }
+  ],
   "bss": [
     {
       "symbol": "gKm3Dan1CollisionFile",
@@ -320,6 +333,13 @@
         "firstDiff": null
       },
       "tuRanges": [
+        {
+          "section": ".data",
+          "start": "0x02112508",
+          "end": "0x02112530",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
         {
           "section": ".text",
           "start": "0x02111510",
@@ -794,6 +814,106 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02112508",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3Dan0ModelFile",
+      "addend": 0,
+      "target_module": "ov047",
+      "target_address": "0x021126a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211250c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3Dan0CollisionFile",
+      "addend": 0,
+      "target_module": "ov047",
+      "target_address": "0x02112678"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112510",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov047_02111bb4",
+      "addend": 0,
+      "target_module": "ov047",
+      "target_address": "0x02111bb4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112514",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3Dan1ModelFile",
+      "addend": 0,
+      "target_module": "ov047",
+      "target_address": "0x02112680"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112518",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3Dan1CollisionFile",
+      "addend": 0,
+      "target_module": "ov047",
+      "target_address": "0x02112658"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211251c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov047_02111a74",
+      "addend": 0,
+      "target_module": "ov047",
+      "target_address": "0x02111a74"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112520",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3Dan2ModelFile",
+      "addend": 0,
+      "target_module": "ov047",
+      "target_address": "0x02112668"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112524",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3Dan2CollisionFile",
+      "addend": 0,
+      "target_module": "ov047",
+      "target_address": "0x02112670"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112528",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov047_02111a94",
+      "addend": 0,
+      "target_module": "ov047",
+      "target_address": "0x02111a94"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211252c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3Dan3ModelFile",
+      "addend": 0,
+      "target_module": "ov047",
+      "target_address": "0x02112688"
+    },
     {
       "section": ".init",
       "source": "0x0211182c",
