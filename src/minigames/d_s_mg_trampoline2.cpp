@@ -915,8 +915,6 @@ void dScMgTrampoline2_c::InitBrush(int layer) {
  * into the current touch-screen layer. The same body as dScMgTrampoline_c's,
  * with its own scratch buffer. */
 void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
-    void *obj = this;
-
     int half;
     int x0;
     int j;
@@ -924,7 +922,6 @@ void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
     int *addr;
     int i;
     int yy;
-    int mask = 0xf;
 
     half = n / 2;
     j = 0;
@@ -937,9 +934,7 @@ void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
                 if (x >= 0 && x < 0x100) {
                     if (yy >= 0 && yy < 0xc0) {
                         void *ret;
-                        int mode = ((dScMgTrampoline2_c *)obj)->mBrushLayer;
-
-                        switch (mode) {
+                        switch (mBrushLayer) {
                         case 0:
                             ret = G2_GetBG0CharPtr();
                             break;
@@ -959,7 +954,7 @@ void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
                         addr = (int *)((char *)ret + ((x / 8) + (yy / 8) * 32) * 32 + (yy & 7) * 4);
 
                         MI_CpuCopy32(addr, sTrmp2BrushWord, 4);
-                        sTrmp2BrushWord[0] = (sTrmp2BrushWord[0] & (-1 ^ (mask << ((x & 7) * 4)))) |
+                        sTrmp2BrushWord[0] = (sTrmp2BrushWord[0] & (-1 ^ (0xf << ((x & 7) * 4)))) |
                                              (val << ((x & 7) * 4));
                         MI_CpuCopy32(sTrmp2BrushWord, addr, 4);
                     }
