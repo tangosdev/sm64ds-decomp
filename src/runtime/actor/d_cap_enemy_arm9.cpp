@@ -165,16 +165,16 @@ int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
 {
     const Vector3 *v = &v_;
     VecFx32 local;
-    unsigned char *p;
+    dActor_c *p;
     local.x = v->x;
     local.y = v->y;
     local.z = v->z;
-    p = (unsigned char *)ReleaseCap(*(const Vector3 *)&local);
-    if (p != 0 && p != (unsigned char *)this) {
+    p = ReleaseCap(*(const Vector3 *)&local);
+    if (p != 0 && p != this) {
         unsigned char idx;
-        ((dActor_c *)p)->mEatingPlayer = mEatingPlayer;
-        mEatingPlayer->mObjInMouth = (dActor_c *)p;
-        ((dActor_c *)p)->mFlags |= 0x20000;
+        p->mEatingPlayer = mEatingPlayer;
+        mEatingPlayer->mObjInMouth = p;
+        p->mFlags |= 0x20000;
         mFlags &= ~0x20000;
         mEatingPlayer = 0;
         if (mCapBank == 0) {
