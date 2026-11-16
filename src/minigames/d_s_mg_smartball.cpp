@@ -107,7 +107,6 @@ typedef struct State2 {
     int flags[7];
     int iteration;
     int depth;
-    int entityIndex;
 } State2;
 
 extern "C" {
