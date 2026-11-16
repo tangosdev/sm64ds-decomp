@@ -291,7 +291,17 @@ void dScMgMemory_c::JudgePair() {
 
 #pragma push
 /* Kept: indexed or cursor forms without it give the card counter sl, not r4
- * (colour only). */
+ * (colour only).
+ * The `raw` cursor is kept too (#821, re-measured). mCards[cardIndex] under
+ * this pragma no longer knows the walk starts at 0 and seeds the cursor with
+ * `mla sl, r4, #0x18, this`: 0xbc as a for loop, 0xac as a do-while, against
+ * 0xa8. The same with a block-scoped, u32 or s16 counter, or `continue`
+ * on !visible, is 0xbc-0xc4. Without the pragma every indexed spelling is
+ * 0xa8 but 26-29 of 42 words off, because it moves the counter from r4 to
+ * sl and schedules `dimmed` ahead of the sprite lookup. The spellings tried
+ * without it: for and do-while, scoped, u32 and s16 counters, `dimmed`
+ * computed after the sprite, as `mState != STATE_JUDGE_PAIRS`, as if/else,
+ * and inlined as a ternary argument. */
 #pragma opt_propagation off
 void dScMgMemory_c::DrawCards() {
     char *raw = (char *)this;
