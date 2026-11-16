@@ -1396,14 +1396,11 @@ void daTrs_c::func_ov063_0211873c() {
 
 void daTrs_c::func_ov063_02118914() {
 
-    int zero = 0;
-    u8 copied;
     s32 scale;
 
     this->mState = 7;
-    this->mOpacity = zero;
-    copied = this->mOpacity;
-    this->mTargetOpacity = copied;
+    this->mOpacity = 0;
+    this->mTargetOpacity = this->mOpacity;
     this->mClsnScale = 0x1000;
     this->mHitPoints = 3;
 
@@ -1419,7 +1416,7 @@ void daTrs_c::func_ov063_02118914() {
     this->mPosX = -this->mHomePos.x;
     this->mAngleY += 0x8000;
     this->mPrevAngleY += 0x8000;
-    this->mSubState = zero;
+    this->mSubState = 0;
     this->mFlags &= ~2;
 }
 
