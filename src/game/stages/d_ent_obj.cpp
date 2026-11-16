@@ -22,9 +22,9 @@
  *  - G3i_PerspectiveW_ takes the SDK's fx32 scalars.
  *  - The Matrix4x3 copies go through the flat Mtx43; assigning Matrix4x3
  *    itself grows .text by 0x6c bytes.
- *  - Behavior's mFellOffThisFrame probe keeps the second `walk` induction variable
- *    alongside `player`: folding it into `player->mFellOffThisFrame` drops a
- *    register and rewrites the whole function.
+ *  - Behavior reads mFellOffThisFrame as mPlayers[i] beside the running
+ *    `player`: folding it into `player->mFellOffThisFrame` drops a register and
+ *    rewrites the whole function, and indexing every use changes its size.
  */
 
 #include "Particle__System.h"
@@ -800,17 +800,12 @@ int dEntObj_c::Behavior() {
     if (mSuspended == 0) {
         int i;
         UnknownVsPlayer *player;
-        char *walk;
-        u8 *present;
         int allAtExit;
-        present = data_0209fc5c;
-        walk = (char *)this;
         player = mPlayers;
         allAtExit = 1;
-        i = 0;
-        for (; i < 4; i++, player++, walk += sizeof(UnknownVsPlayer), present += 1) {
+        for (i = 0; i < 4; player++, i++) {
             player->Behavior();
-            if (((dEntObj_c *)walk)->mPlayers[0].mFellOffThisFrame) {
+            if (mPlayers[i].mFellOffThisFrame) {
                 Vector3 *playerPosition = &player->mPosition;
                 Vector3 position;
                 position.x = playerPosition->x;
@@ -818,21 +813,16 @@ int dEntObj_c::Behavior() {
                 position.z = playerPosition->z;
                 mMesh.TouchAt(&position);
             }
-            if (*present) {
+            if (data_0209fc5c[i]) {
                 if (player->IsAtExit() == 0)
                     allAtExit = 0;
             }
         }
 
         if (mState == STATE_WAIT_FOR_EXIT && allAtExit != 0) {
-            int j = 0;
-            u8 *present2 = data_0209fc5c;
-            UnknownVsPlayer *player2 = mPlayers;
-            for (; j < 4; j++) {
-                if (*present2)
-                    player2->StartRunOffStage();
-                present2 += 1;
-                player2++;
+            for (int j = 0; j < 4; j++) {
+                if (data_0209fc5c[j])
+                    mPlayers[j].StartRunOffStage();
             }
             mState = STATE_RUN_OFF_STAGE;
         }
