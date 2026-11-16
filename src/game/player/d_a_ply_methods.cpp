@@ -101,6 +101,7 @@ MTX_C_DECL void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, short);
 
 /* local extern: nitro/fx/fx_vec.h cannot be included next to math/CalcLib.h,
  * which still declares the other VEC_* functions with Vector3 (issue #5207). */
+/* local extern: removing this copy renumbers the TU's @NNN compiler temporaries (measured). */
 extern "C" fx32 VEC_Distance(const VecFx32 *, const VecFx32 *);
 
 extern "C" {
