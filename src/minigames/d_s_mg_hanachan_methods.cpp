@@ -1169,7 +1169,6 @@ void dScMgHanachan_c::Wiggler::StepSegmentsB() {
     int segmentIndex = 4;
     Vector2 *segment = &seg[segmentIndex];
     int baseSpacing = 0x8000;
-    s16 zero = 0;
     int previousIndex;
 
     for (; segmentIndex >= 1; segmentIndex--) {
@@ -1183,7 +1182,7 @@ void dScMgHanachan_c::Wiggler::StepSegmentsB() {
             }
             offsetAngle = cstd::atan2(segmentOffset.x, segmentOffset.y);
             previousAngle = ang[previousIndex];
-            bendExcess = zero;
+            bendExcess = 0;
             targetAngle = (s16)(-offsetAngle);
             angleDifference = (s16)(previousAngle - (s16)(-offsetAngle));
             if (angleDifference > 0x2000) {
