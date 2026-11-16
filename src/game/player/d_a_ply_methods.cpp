@@ -15312,16 +15312,16 @@ int daPly_c::DropHeldObj() {
 }
 
 int daPly_c::func_ov002_020daa74() {
-    char *s = (char *)mHeldObj;
+    dActor_c *s = mHeldObj;
     int b = (s != 0);
     if (!b)
         return 0;
-    ((dActor_c *)s)->mFlags &= ~0x4000;
+    s->mFlags &= ~0x4000;
     mHeldObj->mFlags |= 0x400;
     mHeldObj->mFlags &= ~0x100;
     {
-        char *s2 = (char *)mHeldObj;
-        int e = (((dActor_c *)s2)->actorID == 0xbf);
+        dActor_c *s2 = mHeldObj;
+        int e = (s2->actorID == 0xbf);
         if (e) {
             int c_val = this->mAngleY;
             func_ov002_020db54c(s2, 0x30000, 0x10000, c_val);
