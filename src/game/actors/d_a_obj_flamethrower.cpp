@@ -90,8 +90,6 @@ int daObjFlamethrower_c::InitResources() {
     int count;
     int i;
     int im1;
-    int zero;
-    int flag;
     char *rowBase;
     Vector3 *flamePos;
     dCcPos_c *collider;
@@ -104,8 +102,6 @@ int daObjFlamethrower_c::InitResources() {
     if (gCurrentSublevel == kBigBoosHaunt)
         count = kBbhSegments;
     Matrix4x3_FromRotationXYZExt(&mTransform, mAngleX, mAngleY, mAngleZ);
-    zero = 0;
-    flag = 0;
     i = 0;
     if (i < count) {
         rowBase = (char *)this;
@@ -113,12 +109,12 @@ int daObjFlamethrower_c::InitResources() {
         collider = mColliders;
         do {
             im1 = i - 1;
-            offset.x = zero;
-            offset.y = zero;
-            offset.z = zero;
-            dst.x = zero;
-            dst.y = zero;
-            dst.z = zero;
+            offset.x = 0;
+            offset.y = 0;
+            offset.z = 0;
+            dst.x = 0;
+            dst.y = 0;
+            dst.z = 0;
             offset.z = data_ov095_02136fb0[i];
             MTX_MultVec43(&offset, &mTransform, &dst);
             if (im1 < 0) {
@@ -135,7 +131,7 @@ int daObjFlamethrower_c::InitResources() {
             {
                 short segmentSize = data_ov095_02136f80[i];
                 collider->Init(*flamePos, segmentSize * kRadiusMul, segmentSize * kHeightMul,
-                               kClsnFlags, flag);
+                               kClsnFlags, 0);
             }
             rowBase += 0xc;
             flamePos++;
