@@ -2682,25 +2682,24 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     state.iteration = 0;
     state.flags[6] = 0;
     i = 0;
-    state.iteration = 0;
     do {
-        hitA[i] = (u8)state.iteration;
-        hitC[i] = (u8)state.iteration;
-        hitB[i] = (u8)state.iteration;
+        hitA[i] = 0;
+        hitC[i] = 0;
+        hitB[i] = 0;
         i++;
     } while (i < 32);
-    anyHit = (u8)state.iteration;
-    specialHit = (u8)state.iteration;
+    anyHit = 0;
+    specialHit = 0;
     state.iteration = 0;
 
     if (mCurrent1 >= 0x77000) {
-        int clearIndex = state.iteration;
+        int clearIndex = 0;
         do {
             nearby[clearIndex] = 0;
             clearIndex++;
         } while (clearIndex < 25);
     } else {
-        int probeIndex = state.iteration;
+        int probeIndex = 0;
         do {
             nearby[probeIndex] = 0;
             if (probeIndex < mpManager->mKinokoCount) {
