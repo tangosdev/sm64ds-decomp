@@ -410,16 +410,15 @@ void daCnn_c::StateLoad() {
             s16 angleY = mAngleY;
             s16 angleX = mAngleX;
             rider = mPlayer;
-            s16 zero = 0;
             rider->mAngleX = angleX;
             rider->mAngleY = angleY;
-            rider->mAngleZ = zero;
+            rider->mAngleZ = 0;
             angleY = mAngleY;
             angleX = mAngleX;
             rider = mPlayer;
             rider->mPrevAngleX = angleX;
             rider->mPrevAngleY = angleY;
-            rider->mPrevAngleZ = zero;
+            rider->mPrevAngleZ = 0;
         }
     }
 
