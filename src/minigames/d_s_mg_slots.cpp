@@ -975,11 +975,8 @@ void dScMgSlot1_c::betIcon_c::Reset() {
 void dScMgSlot1_c::betIcon_c::Render() {
     OAM::RenderSub((OamAttr *)data_ov006_0213e528[mOn], mX, mY, -1, 1);
     int i;
-    int y = 0xb0;
-    int zero = 0;
     for (i = 0; i < BET_ICON(this)->mBetCount; i++) {
-        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], 0xb0 + i * 0x10, y,
-                              (void *)zero);
+        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], 0xb0 + i * 0x10, 0xb0, 0);
     }
 }
 
