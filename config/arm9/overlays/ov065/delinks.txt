@@ -26,6 +26,7 @@ src/game/actors/d_a_dossy.cpp:
     .init start:0x0211c440 end:0x0211c660
     .ctor start:0x0211cae8 end:0x0211caec
     .data start:0x0211cd1c end:0x0211cd34
+    .rodata start:0x0211c078 end:0x0211c0a8
     .bss start:0x0211d720 end:0x0211d814
 
 src/game/actors/d_a_obj_ct_rotate_block.cpp:
@@ -33,6 +34,8 @@ src/game/actors/d_a_obj_ct_rotate_block.cpp:
     .text start:0x021196d8 end:0x02119f3c
     .init start:0x0211c660 end:0x0211c76c
     .ctor start:0x0211caec end:0x0211caf0
+    .rodata start:0x0211c0a8 end:0x0211c0b0
+    .data start:0x0211cfa4 end:0x0211cfac
     .bss start:0x0211d814 end:0x0211d88c
 
 src/game/actors/d_a_obj_ct_mecha03.cpp:
@@ -40,6 +43,7 @@ src/game/actors/d_a_obj_ct_mecha03.cpp:
     .text start:0x02119f3c end:0x0211a494
     .init start:0x0211c76c end:0x0211c7d8
     .ctor start:0x0211caf0 end:0x0211caf4
+    .rodata start:0x0211c0b0 end:0x0211c0b8
     .bss start:0x0211d88c end:0x0211d8b4
 
 src/game/actors/d_a_obj_ct_mecha04.cpp:
@@ -47,6 +51,8 @@ src/game/actors/d_a_obj_ct_mecha04.cpp:
     .text start:0x0211a494 end:0x0211ab60
     .init start:0x0211c7d8 end:0x0211c890
     .ctor start:0x0211caf4 end:0x0211caf8
+    .rodata start:0x0211c0b8 end:0x0211c0c8
+    .data start:0x0211d16c end:0x0211d174
     .bss start:0x0211d8b4 end:0x0211d904
 
 src/game/actors/d_a_obj_ct_mecha05.cpp:
@@ -54,6 +60,8 @@ src/game/actors/d_a_obj_ct_mecha05.cpp:
     .text start:0x0211ab60 end:0x0211b360
     .init start:0x0211c890 end:0x0211c8fc
     .ctor start:0x0211caf8 end:0x0211cafc
+    .rodata start:0x0211c0c8 end:0x0211c0d0
+    .data start:0x0211d26c end:0x0211d270
     .bss start:0x0211d904 end:0x0211d92c
 
 src/game/actors/d_a_obj_ct_kaitendai.cpp:
@@ -61,6 +69,7 @@ src/game/actors/d_a_obj_ct_kaitendai.cpp:
     .text start:0x0211b360 end:0x0211b7f0
     .init start:0x0211c8fc end:0x0211c9b8
     .ctor start:0x0211cafc end:0x0211cb00
+    .data start:0x0211d334 end:0x0211d338
     .bss start:0x0211d92c end:0x0211d97c
 
 src/game/actors/d_a_obj_ct_mecha08.cpp:
@@ -68,6 +77,7 @@ src/game/actors/d_a_obj_ct_mecha08.cpp:
     .text start:0x0211b7f0 end:0x0211bbdc
     .init start:0x0211c9b8 end:0x0211ca74
     .ctor start:0x0211cb00 end:0x0211cb04
+    .rodata start:0x0211c0d0 end:0x0211c110
     .bss start:0x0211d97c end:0x0211d9cc
 
 src/game/actors/d_a_obj_ct_mecha09.cpp:
@@ -75,4 +85,5 @@ src/game/actors/d_a_obj_ct_mecha09.cpp:
     .text start:0x0211bbdc end:0x0211c078
     .init start:0x0211ca74 end:0x0211cae0
     .ctor start:0x0211cb04 end:0x0211cb08
+    .data start:0x0211d520 end:0x0211d530
     .bss start:0x0211d9cc end:0x0211d9f4

@@ -39,6 +39,12 @@ enum daObjCtRotateBlock_c_AssetId {
 };
 
 #include "decl_common.h"
+u8 data_ov065_0211cfa4[4] = {
+    120, 40, 0, 0,
+};
+s16 data_ov065_0211cfa8[2] = {
+    0x4000, 0x5555,
+};
 #include "daObjCtRotateBlock_c.h"
 #include "dBgCh_Gnd.h"
 #include "SharedFilePtr.h"
@@ -290,3 +296,10 @@ RotateBlockModelFile gCtMechaObj01aModelFile(ASSET_CT_MECHA_OBJ01A_BMD);
 RotateBlockModelFile gCtMechaObj02aModelFile(ASSET_CT_MECHA_OBJ02A_BMD);
 RotateBlockCollisionFilePtr gCtMechaObj01CollisionFile(ASSET_CT_MECHA_OBJ01_KCL);
 RotateBlockCollisionFilePtr gCtMechaObj02CollisionFile(ASSET_CT_MECHA_OBJ02_KCL);
+#pragma define_section rotblk_ro ".rodata" ".rodata" ".rodata" far_absolute R
+#pragma section rotblk_ro begin
+void *data_ov065_0211c0a8[2] = {
+    &gCtMechaObj01aModelFile,
+    &gCtMechaObj02aModelFile,
+};
+#pragma section rotblk_ro end

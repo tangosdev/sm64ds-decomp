@@ -59,6 +59,15 @@ enum daObjSimpleLift_c_AssetId {
 
 #include "daObjSimpleLift_c.h"
 #include "decl_common.h"
+#pragma define_section slift_ro ".rodata" ".rodata" ".rodata" far_absolute R
+#pragma section slift_ro begin
+u16 data_ov091_02134504[8] = {
+    69, 80, 78, 80, 60, 150, 50, 0,
+};
+u16 data_ov091_02134514[8] = {
+    0x4000, 0x4000, 0x4000, 0x4000, 0x0, 0xc000, 0xc000, 0x0,
+};
+#pragma section slift_ro end
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "math/CalcLib.h"

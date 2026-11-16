@@ -67,7 +67,12 @@ struct Mecha03ClsnFilePtr : SharedFilePtr {
 };
 
 extern u8 data_0209f2c0;
-extern s16 data_ov065_0211c0b0[];
+#pragma define_section mecha03_ro ".rodata" ".rodata" ".rodata" far_absolute R
+#pragma section mecha03_ro begin
+s16 data_ov065_0211c0b0[4] = {
+    13, 22, 13, 0,
+};
+#pragma section mecha03_ro end
 extern Mecha03ModelFilePtr data_ov065_0211d88c;
 extern Mecha03ClsnFilePtr data_ov065_0211d894;
 extern CLPS_Block data_ov035_02112198;
