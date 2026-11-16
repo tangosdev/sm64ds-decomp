@@ -924,7 +924,6 @@ void daKpa_c::RunIntroTalk() {
                 int y;
                 int z;
                 int y2;
-                int zero;
                 int scale;
                 int msg;
                 s16 *msgs;
@@ -943,7 +942,6 @@ void daKpa_c::RunIntroTalk() {
                 y2 = y + 0xc8000;
                 pos[2] = z;
                 ang = this->mAngleY;
-                zero = 0;
                 msgs = data_ov060_0211a4e0;
                 sx = FX_SinIdx(ang >> 4);
                 pos[0] = sx * scale + x;
@@ -953,7 +951,7 @@ void daKpa_c::RunIntroTalk() {
                 pos[2] = sz * scale + z;
                 msg = msgs[this->mVariantID];
                 if (this->mTargetPlayer->ShowMessage(
-                        *this, msg, reinterpret_cast<const Vector3 *>(pos), zero, zero) == 0) {
+                        *this, msg, reinterpret_cast<const Vector3 *>(pos), 0, 0) == 0) {
                     return;
                 }
             }
