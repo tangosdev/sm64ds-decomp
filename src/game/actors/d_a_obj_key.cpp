@@ -177,8 +177,7 @@ struct ObjKeyStateTable {
 
 extern ObjKeyStateTable data_ov089_02132cec;
 
-/* local extern: dCamera_c.h has no SetFlag_3. The ROM calls the
- * UpdateContinuous veneer, not the method. */
+/* Data and helpers that no header declares. */
 extern "C" {
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;

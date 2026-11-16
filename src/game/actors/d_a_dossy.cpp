@@ -28,8 +28,7 @@
 // - The BOOL/TRUE/FALSE spelling in func_ov065_02119594 and
 //   func_ov065_0211956c stays. `bool isPlayer = other->actorID == 0xbf`
 //   shrinks each function 0x28 to 0x1c: the ROM keeps the ternary 0/1
-//   materialization plus the `cmp r2, #0` re-test. Removing the typedef
-//   also renumbers this TU's @NNN temps (manifest rename @1027).
+//   materialization plus the `cmp r2, #0` re-test.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daDossy_c_AssetId {

@@ -85,14 +85,7 @@ enum daKrb_c_AssetId {
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
-
-/* daStar_c::mMarkerID (daStar_c.h, 0x434), seen through a local view:
-   including daStar_c.h renumbers this TU's @NNN labels. */
-struct SilverStarView {
-    u8 head[0x434];
-    u32 mMarkerID;
-};
-typedef char SilverStarView_size_must_be_0x438[sizeof(SilverStarView) == 0x438 ? 1 : -1];
+#include "daStar_c.h"
 
 typedef struct {
     unsigned char b0 : 1;
@@ -468,7 +461,7 @@ void daKrb_c::func_ov084_021296cc() {
         silverStar =
             (char *)dActor_c::Spawn(ACTOR_SILVER_STAR, 0x10, goomba->mPos, 0, goomba->mAreaId, -1);
         if (starMarker != 0 && silverStar != 0) {
-            ((SilverStarView *)silverStar)->mMarkerID = ((dActor_c *)starMarker)->uniqueID;
+            ((daStar_c *)silverStar)->mMarkerID = ((dActor_c *)starMarker)->uniqueID;
             ((daStarBase_c *)starMarker)->LinkSilverStarAndStarMarker(silverStar);
             goomba->SpawnSoundObj(1);
         }
