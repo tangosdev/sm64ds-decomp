@@ -39,18 +39,9 @@ namespace cstd {
 s16 atan2(s32, s32);
 }
 
-/* ResultWait retains the partial view below; it is not an original class
- * layout. */
-
 typedef void (dScMgMemory2_c::*dScMgMemory2_cState)();
 typedef void (dScMgMemory2_c::*dScMgMemory2_cCardState)(int);
 extern "C" dScMgMemory2_cCardState sMemory2CardTable[];
-
-struct ScoreView {
-    char pad[0xb4];
-    int hudScore;
-    int bestHudScore;
-};
 
 extern "C" dScMgMemory2_cState sMemory2ResultTable[];
 extern "C" dScMgMemory2_cState sMemory2StateTable[];
@@ -564,45 +555,39 @@ void dScMgMemory2_c::ResultReward() {
 }
 
 void dScMgMemory2_c::ResultWait() {
-    struct ScoreView *scoreView;
+    dScMgBase_c *scene;
 
-    if (mResultTimer == 0)
-        goto zero;
-
-    mResultTimer--;
-    if ((short)mResultTimer > 0)
-        return;
-
-    mResultTimer = 0;
-
-    if (mPairsFound >= mTargetPairs) {
-        if (mMisses == 0)
-            Mg_SetPerfectBanner();
-        Mg_SetSharedState(MG_STATE_WIN);
-        scoreView = (struct ScoreView *)gMgScene;
-        if (scoreView != 0) {
-            if (scoreView->hudScore < 0x270f)
-                scoreView->hudScore += 1;
-            if (scoreView->hudScore > scoreView->bestHudScore)
-                scoreView->bestHudScore = scoreView->hudScore;
+    if (mResultTimer != 0) {
+        mResultTimer--;
+        if ((short)mResultTimer > 0)
+            return;
+        mResultTimer = 0;
+        if (mPairsFound >= mTargetPairs) {
+            if (mMisses == 0)
+                Mg_SetPerfectBanner();
+            Mg_SetSharedState(MG_STATE_WIN);
+            scene = gMgScene;
+            if (scene != 0) {
+                if (scene->mHudScore < 0x270f)
+                    scene->mHudScore += 1;
+                if (scene->mHudScore > scene->mBestHudScore)
+                    scene->mBestHudScore = scene->mHudScore;
+            }
+            Mg_SubmitScore(gMgScene != 0 ? gMgScene->mHudScore : 0);
+            mDealer.PlayWin();
+        } else {
+            Mg_SetSharedState(MG_STATE_LOSE);
+            scene = gMgScene;
+            if (scene != 0) {
+                if (scene->mHudScore > 0)
+                    scene->mHudScore -= 1;
+            }
+            mDealer.PlayLose();
         }
-        Mg_SubmitScore(gMgScene != 0 ? gMgScene->mHudScore : 0);
-        mDealer.PlayWin();
-        return;
+    } else {
+        mPromptEnabled = 0;
+        mCardTimer = 16;
     }
-
-    Mg_SetSharedState(MG_STATE_LOSE);
-    scoreView = (struct ScoreView *)gMgScene;
-    if (scoreView != 0) {
-        if (scoreView->hudScore > 0)
-            scoreView->hudScore -= 1;
-    }
-    mDealer.PlayLose();
-    return;
-
-zero:
-    mPromptEnabled = 0;
-    mCardTimer = 16;
 }
 
 void dScMgMemory2_c::RoundReveal() {
