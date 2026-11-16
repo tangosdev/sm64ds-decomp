@@ -60,8 +60,6 @@ extern SwitchModelFilePtr data_ov002_0210dfd4;
 extern SwitchClsnFileHandle data_ov002_0210dfc4;
 extern SwitchModelFilePtr data_ov002_0210dfcc;
 extern SwitchClsnFileHandle data_ov002_0210dfbc;
-// Names stay on this unused prototype so this file's @NNN numbers do not move.
-int d_a_obj_switchChangeMusicVolumeHold(unsigned int id, int volume);
 // local extern: the actual free definition accepts a scalar scale. The
 // genuine member call changes InitResources under 2004/b56; see the
 // committed experiment.

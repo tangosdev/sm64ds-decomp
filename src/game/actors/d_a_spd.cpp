@@ -76,9 +76,6 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 
 /* dBgCh_Actr::Init's last two parameters are Vector3_16* (the S5_
  * back-references the pointer type). */
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *actor, int radius, int height, Vector3_16 *a,
-                         Vector3_16 *b);
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern Matrix4x3 data_020a0e68;           /* scratch matrix        */
