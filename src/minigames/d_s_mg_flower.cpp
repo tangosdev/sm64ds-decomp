@@ -4,12 +4,9 @@
  * (.text 0x0212a554..0x0212b890, to the end of ov006's code), closing with
  * the factory and the petal record's empty constructor.
  *
- * The pragmas carry the codegen; among them:
- *   - `#pragma defer_codegen off`: functions are emitted in source order and
- *     the destructor variants land where they are written. Do not reorder.
- *   - `#pragma opt_common_subs off` around Behavior only: with it on, the
- *     touch-sample loads get merged; turning it off file-wide breaks two
- *     other functions instead.
+ * `#pragma defer_codegen off` carries the codegen: functions are emitted in
+ * source order and the destructor variants land where they are written. Do
+ * not reorder.
  * The destructor is defined out of line so D1 and D0 come out in cartridge
  * order; the extra D2 is dropped at link. The factory's `new` expands the
  * inline constructor, so it also emits dScMgSingle3DBase_c's D2, likewise
@@ -21,11 +18,8 @@
  * so each lands at its own cartridge address; their extra C2/D2 are dropped
  * at link.
  *
- * comment leftovers:
- *  - The FlowerFace and FallingPetal methods live in
- *    src/minigames/unit020bfec0.cpp.
- *  - Behavior keeps one launder: the touch sample's `touchY ? touchX : touchX`,
- *    which loads both bytes before the first cursor store.
+ * The FlowerFace and FallingPetal methods live in
+ * src/minigames/unit020bfec0.cpp.
  */
 
 #include "dScMgFlower_c.h"
@@ -235,9 +229,6 @@ s32 dScMgFlower_c::Render() {
 /* Slot 6, the whole minigame: pick up a petal within the stylus radius, drag it,
  * drop it, flip "loves me" and "loves me not", and run the end-of-round
  * results. */
-/* Kept: the ROM re-reads gTouchInfo[playerSlot].held before the grab test; CSE reuses the first read
-   (with CSE on Behavior is 0x7f8, not 0x80c; measured #821). */
-#pragma opt_common_subs off
 s32 dScMgFlower_c::Behavior() {
     int releaseIndex;
     int playerSlot;
@@ -270,7 +261,7 @@ s32 dScMgFlower_c::Behavior() {
         if (gTouchInfo[playerSlot].held != 0) {
             int touchY = gTouchInfo[playerSlot].y;
             int touchX = gTouchInfo[playerSlot].x;
-            mCursorX = (touchY ? touchX : touchX) << 12;
+            mCursorX = touchX << 12;
             mCursorY = touchY << 12;
         }
         if (mHoldTimer > 20) {
@@ -446,7 +437,6 @@ s32 dScMgFlower_c::Behavior() {
     mFace.Update();
     return 1;
 }
-#pragma opt_common_subs on
 
 /* Slot 0. Sets up BG2 and BG3 on both screens, decompresses their tiles and
  * maps, loads the palettes and the OBJ tiles, then starts the first round.
