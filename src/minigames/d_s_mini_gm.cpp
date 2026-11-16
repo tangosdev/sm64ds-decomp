@@ -574,9 +574,6 @@ s32 dScMiniGm_c::Behavior()
 void dScMiniGm_c::DrawRecords() {
     int end;
     int i;
-    int r8;
-    int zero;
-    int neg1;
     int type;
     int x, y;
     int val;
@@ -595,55 +592,49 @@ void dScMiniGm_c::DrawRecords() {
         end = 5;
         i = 0;
     }
-    if (i > end)
-        return;
-
-    zero = 0;
-    neg1 = -1;
-    r8 = i * 4;
-    do {
-        if (IsUnlocked(gMgGroupBase + r8) != 0) {
-            type = sMiniGmRows[gMgGroupBase + r8].scoringMode;
+    for (; i <= end; i++) {
+        if (IsUnlocked(gMgGroupBase + i * 4) != 0) {
+            type = sMiniGmRows[gMgGroupBase + i * 4].scoringMode;
             if (type != 0) {
                 if (type == 1) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    OAM::RenderSub(sMiniGmRecordLabels[0], x - 16, y, neg1, zero);
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    OAM::RenderSub(sMiniGmRecordLabels[0], x - 16, y, -1, 0);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     DrawNumber(x - 4, y, val);
                 } else if (type == 2) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    OAM::RenderSub(sMiniGmRecordLabels[1], x - 16, y, neg1, zero);
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    OAM::RenderSub(sMiniGmRecordLabels[1], x - 16, y, -1, 0);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     DrawNumber(x - 4, y, val);
                 } else if (type == 4) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    OAM::RenderSub(sMiniGmRecordLabels[2], x - 16, y, neg1, zero);
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    OAM::RenderSub(sMiniGmRecordLabels[2], x - 16, y, -1, 0);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     DrawNumber(x - 4, y, val);
                 } else if (type == 3) {
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     x = sMiniGmRecordPos[i].x;
                     y = sMiniGmRecordPos[i].y;
                     DrawNumber(x - 0x14, y, val);
                 } else if (type == 5) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     u = (unsigned int)val;
                     major = u / 60u;
                     DrawNumber(x - 0x10, y, (int)major);
-                    OAM::RenderSub(sMiniGmRecordLabels[4], x, y - 8, neg1, zero);
+                    OAM::RenderSub(sMiniGmRecordLabels[4], x, y - 8, -1, 0);
 
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     u = (unsigned int)val;
                     rem = u % 60u;
                     pct = rem * 100u;
                     DrawNumber(x + 8, y, (int)(pct / 600u));
 
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     u = (unsigned int)val;
                     rem = u % 60u;
                     pct = rem * 100u / 60u;
@@ -651,9 +642,7 @@ void dScMiniGm_c::DrawRecords() {
                 }
             }
         }
-        r8 += 4;
-        i += 1;
-    } while (i <= end);
+    }
 }
 
 void dScMiniGm_c::DrawNumber(int x, int y, int val) {
