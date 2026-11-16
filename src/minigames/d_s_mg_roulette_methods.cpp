@@ -119,7 +119,6 @@ void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 void *Ov004_LoadFile(int id);
 void Mg_LoseCredits(int c);
 void Mg_GainCredits(int c);
-void Mg_DrawCredits(char *, int, int, int);
 void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
 
 int sRouletteResultsTimer;
@@ -421,7 +420,7 @@ void Roulette_DrawResultsThunk(char *) {
    countdown (its volume ramps over the last 3 seconds), and moves the camera
    to the current preset. */
 s32 dScMgRoulette_c::Render() {
-    Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
+    Mg_DrawCredits(this, 0xc, 0xc, 0);
     MgCoins_Draw();
 
     {

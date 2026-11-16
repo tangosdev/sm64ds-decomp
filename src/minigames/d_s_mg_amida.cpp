@@ -2039,7 +2039,7 @@ s32 dScMgAmida_c::InitResources() {
     fillSub = 0;
     MI_CpuFill16(file, fillSub, 0x6000);
 
-    Mg_InitBrush((char *)this, 1, 0, 2);
+    Mg_InitBrush(this, 1, 0, 2);
 
     G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
                          GX_BG_CHARBASE_0x0c000);

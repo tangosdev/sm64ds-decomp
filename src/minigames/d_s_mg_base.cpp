@@ -1523,16 +1523,14 @@ void dScMgBase_c::OpenMenu()
 
 namespace s20af2f8 {
 extern "C" {
-/* Sets up the brush that PaintSquare paints with. `sb` is the scene: stores
+/* Sets up the brush that PaintSquare paints with on `scene`: stores
    `en` in mBrushOnMain and the layer `mode` (0..3) in mBrushLayer, fills
    the first 0x300 screen entries of that sub-screen BG layer (and of the
    main-screen one when `en` is set) with tile numbers 0..0x2ff under
    palette `base`, zeroes 0x6000 bytes of the layer's character data, and
    loads the 0x20-byte palette sMgBrushPalette into palette slot `base` on
    both screens. Any other mode returns at once. */
-void Mg_InitBrush(char* sb, char en, int mode, int base)
-{
-    dScMgBase_c *scene = (dScMgBase_c *)sb;
+void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
     volatile unsigned short v0, v1, v2, v3, v4, v5, v6, v7;
     volatile unsigned short w0, w1, w2, w3, w4, w5, w6, w7;
     int val;
@@ -2866,10 +2864,9 @@ extern "C" {
 /* Draws sprite word 2 at (a1, a2) on wrapper a3 (Mg_DrawCreditsIcon),
    then the scene's mCreditsShown beside it: below 100 through
    Mg_DrawBigNumber, otherwise through Mg_DrawNumber. */
-void Mg_DrawCredits(char *a0, int a1, int a2, int a3)
-{
+void Mg_DrawCredits(dScMgBase_c *scene, int a1, int a2, int a3) {
     Mg_DrawCreditsIcon(a1, a2, a3, -1);
-    int v = ((dScMgBase_c *)a0)->mCreditsShown;
+    int v = scene->mCreditsShown;
     if (v < 0x64) {
         Mg_DrawBigNumber(a1+0x12, a2, v, a3, -1, 2, 0);
     } else {

@@ -95,7 +95,6 @@ extern int data_ov006_0213e948[];
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
 void Mg_DrawScoreTally(char *a0, int a1, int a2, int a3);
 extern void **sSlotLangSprites[];
 extern SlotState sSlot3StateTable[];
@@ -678,7 +677,7 @@ s32 dScMgSlot3_c::Render() {
         }
     }
 
-    Mg_DrawCredits(c, 0xc, 0xc, 0);
+    Mg_DrawCredits(this, 0xc, 0xc, 0);
     Mg_DrawScoreTally(c, 0xe0, 0x14, 1);
 
     if (mState == 3 && mWinColumn >= 0) {

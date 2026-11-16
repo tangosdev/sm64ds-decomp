@@ -74,7 +74,6 @@ extern short gMgCoinsStatus;
 extern void Mg_SetSharedState(int c);
 extern void Mg_SubmitScore(int self);
 extern void FreeGfxSlotsById(int x);
-void Mg_DrawCredits(char *c, int a, int b, int d);
 s32 GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
@@ -928,7 +927,7 @@ void dScMgMemory_c::StartRound(int /* arg */) {
 /* Slot 9. */
 s32 dScMgMemory_c::Render() {
     Camera_InitDealerView(&mCamera);
-    Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
+    Mg_DrawCredits(this, 0xc, 0xc, 0);
     MgCoins_Draw();
     DrawMessage();
     DrawCursor();
