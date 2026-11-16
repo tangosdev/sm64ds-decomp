@@ -3735,7 +3735,9 @@ unsigned short dScMgSmartball_c::GetTile(int *pos) {
 
 #pragma push
 #pragma opt_strength_reduction off
-/* Leftover: UpdateDust needs strength reduction off. */
+/* Kept (#821): UpdateDust needs strength reduction off. Without it the
+ * body is 0x108, not 0xf8; indexed with SR on it is 13 of 62 words off,
+ * with a stepped velocity cursor 8 (register rotation only). */
 void dScMgSmartball_c::UpdateDust() {
     char *self = (char *)this;
     int i;
@@ -3813,7 +3815,9 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
 
 #pragma push
 #pragma opt_strength_reduction off
-/* Leftover: UpdateScores needs strength reduction off. */
+/* Kept (#821): UpdateScores needs strength reduction off. Without it the
+ * body is 0x128, not 0x118; indexed with SR on 0x11c (the ROM forms all
+ * six slot addresses at the loop head), pointer locals 0x12c. */
 void dScMgSmartball_c::UpdateScores() {
     char *o = (char *)this;
     int i;
@@ -4025,6 +4029,8 @@ void dScMgSmartball_c::CollideBalls() {
 
 #pragma push
 #pragma opt_strength_reduction off
+/* Kept (#821): without strength reduction off SpawnObjects is 0x18f8, not
+ * 0x18bc. */
 /* Tears the whole table down and rebuilds it from the two tile maps.
  * Leftovers: the spawn counters and the scan stores stay as written, and
  * every slot walk steps `this` instead of indexing. */
@@ -4780,7 +4786,8 @@ void dScMgSmartball_c::SpawnObjects() {
 #pragma pop
 
 /* Leftover: Render needs both pragmas off, and the locals below must stay in
- * this order (each one pins a stack slot). */
+ * this order (each one pins a stack slot). Kept (#821): without SR off the
+ * body is 0x1124, not 0x10c0; without CSE off it changes size too. */
 #pragma push
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
@@ -5121,7 +5128,9 @@ s32 dScMgSmartball_c::Render() {
 
 #pragma pop
 
-/* Leftover: Behavior needs strength reduction off. */
+/* Kept (#821): Behavior needs strength reduction off. Without it the body is
+ * 0x620, not 0x604; mpBalls[i] indexing with SR on is 0x5e8 (the slot
+ * offset folds into the load instead of a hoisted literal). */
 #pragma push
 #pragma opt_strength_reduction off
 /* Slot 6: the scene's per-frame rules. Phase 0 updates every object, then the
@@ -5529,7 +5538,8 @@ s32 dScMgSmartball_c::InitResources() {
     return 1;
 }
 
-/* Leftover: AfterCleanupResources needs strength reduction off. */
+/* Kept (#821): AfterCleanupResources needs strength reduction off; without
+ * it the body is 0x3f8, not 0x3d8. */
 #pragma push
 #pragma opt_strength_reduction off
 /* Slot 5: frees every board object, then chains to the base. */

@@ -236,7 +236,8 @@ s32 dScMgFlower_c::Render() {
 /* Slot 6, the whole minigame: pick up a petal within the stylus radius, drag it,
  * drop it, flip "loves me" and "loves me not", and run the end-of-round
  * results. */
-/* Kept: the ROM re-reads gTouchHeld[playerSlot * 4] before the grab test; CSE reuses the first read. */
+/* Kept: the ROM re-reads gTouchHeld[playerSlot * 4] before the grab test; CSE reuses the first read
+   (with CSE on Behavior is 0x7f8, not 0x80c; measured #821). */
 #pragma opt_common_subs off
 s32 dScMgFlower_c::Behavior() {
     int releaseIndex;

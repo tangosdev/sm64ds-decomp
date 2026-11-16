@@ -49,6 +49,10 @@
 enum daObjBk_Botaosi_c_AssetId { ASSET_BK_BOTAOSI_BMD = 0x0589, ASSET_BK_BOTAOSI_KCL = 0x058a };
 
 #pragma defer_codegen off
+/* Kept (#821): only UpdateShadow depends on it. The cartridge multiplies the
+   sine by 0x7d0000 as a full 64-bit product (umull plus two mla against a
+   zero register); with folding on it is a smull and the body is 0x174,
+   not 0x17c. Every other function here matches either way. */
 #pragma opt_foldconstants off
 
 #include "daObjBk_Botaosi_c.h"
