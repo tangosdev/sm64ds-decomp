@@ -738,7 +738,14 @@ void dScMgPachinko_c::ClearAimLine() {
    rotate registers. 36 orders of the staged assignments land on the same
    10 words or a word short; dropping x0 (a fresh px), or hoisting rowTile
    and xb out of the inner loop, is 0x7c, and the unstaged one-line index
-   is 0x78. dScMgPachinko2_c's twin keeps the same pragma. */
+   is 0x78. dScMgPachinko2_c's twin keeps the same pragma.
+   The byte-offset store stays too (#821, re-measured 2026-11-16): the ROM
+   adds lineOfs to the tile's address as a register offset. With tile =
+   rowTile + (x >> 3), bp[tile * 8 + line] is 0x7c, and (bp + tile * 8)[line],
+   a u32 *tile local or bp[tile * 8 + (lineOfs >> 2)] is 0x84. A 32-byte
+   tile type (u32 (*)[8], a { u32 line[8]; } struct, a tile row pointer,
+   either operand order) is the right 0x80 but 15 of 32 words off: line * 4
+   is folded into the tile base and the registers rotate. */
 void dScMgPachinko_c::PlotSubBg2Pixels(int x, int y, int colour) {
     int i, j, py, line, tileY, lineOfs, rowTile, xb, x0;
     u32 *bp;
