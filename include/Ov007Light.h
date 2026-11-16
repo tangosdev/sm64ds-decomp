@@ -2,6 +2,7 @@
 #define OV007_LIGHT_H
 
 #include "types.h"
+#include "nitro/fx/fx.h"
 
 /* A reconstructed layout and name, not recovered class identity. */
 
@@ -15,8 +16,8 @@ typedef struct Ov007Light {
      * func_ov007_020c241c seeds target at the origin and source at
      * data_ov007_020d7dac, (0, 0, 1.0); func_ov007_020bd1c0 moves source
      * per menu. */
-    struct Vector3 target;
-    struct Vector3 source;
+    VecFx32 target;
+    VecFx32 source;
     /* 0x1c: the s16 unit direction func_ov007_020c2390 derives from the two
      * points, each axis clamped to 0xfff */
     s16 dirX;
