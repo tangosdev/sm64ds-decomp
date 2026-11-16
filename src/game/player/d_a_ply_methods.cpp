@@ -8220,24 +8220,27 @@ void daPly_c::func_ov002_020cc05c(unsigned short) {
         curval + (s16)FX_MUL(*(s16 *)((char *)&data_0209f498[0].nx + idx), 0x80);
     {
         s16 tv2 = *(s16 *)((char *)&data_0209f498[0].nx + idx);
-    {
-        s16 av = tv2;
-        if (av < 0) av = (s16)(-av);
         {
-            int mag32 = FX_MUL(av, 0x480);
-            s16 mag = (s16)mag32;
-            s16 nmag = (s16)(-mag);
-            s16 cur2 = mAngleYSpeed;
-            s16 result;
-            if (cur2 < nmag) result = nmag;
-            else {
-                if (cur2 <= mag) mag = cur2;
-                result = mag;
+            s16 av = tv2;
+            if (av < 0)
+                av = (s16)(-av);
+            {
+                int mag32 = FX_MUL(av, 0x480);
+                s16 mag = (s16)mag32;
+                s16 nmag = (s16)(-mag);
+                s16 cur2 = mAngleYSpeed;
+                s16 result;
+                if (cur2 < nmag)
+                    result = nmag;
+                else {
+                    if (cur2 <= mag)
+                        mag = cur2;
+                    result = mag;
+                }
+                mAngleYSpeed = result;
             }
-            mAngleYSpeed = result;
         }
     }
-}
 }
 
 /* recovered: named members + shared header, real C++ method */
@@ -12195,8 +12198,7 @@ void daPly_c::func_ov002_020d4748() {
         }
 
         if (this->mSinkDepth > 0x32000) {
-            SetAnim(0x7e, 0, data_0209f498[gActivePlayerSlot].mag,
-                    BodyAnimFrame(this));
+            SetAnim(0x7e, 0, data_0209f498[gActivePlayerSlot].mag, BodyAnimFrame(this));
         } else if (this->mStateStep >= 0x17) {
             this->mStateStep = 0x17;
             SetAnim(0x61, 0, 0x1000, BodyAnimFrame(this));
@@ -19157,8 +19159,7 @@ skipclear:
 
 /* recovered: shared common types */
 
-extern "C" void func_ov002_020e25d4(daPly_c *player)
-{
+extern "C" void func_ov002_020e25d4(daPly_c *player) {
     Sound::PlayCharVoice(player->mCharacter, 0x10, player->mCamSpacePos);
 }
 
