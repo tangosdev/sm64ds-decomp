@@ -32,9 +32,9 @@
  * - data_ov030_* handles stay address labels. decl_common.h types
  *   four of them as void*[] where this file's blocks say int[].
  *   g_profile is not this TU's data.
- * - func_ov030_02112578 keeps `*(s32 *)((u8 *)v + N)` stores into a v
- *   it never reads. Spelled `v[N] = ...` or `s32 v[3] = {...}`, mwcc
- *   drops the three dead stores and the function comes out 0x24 short.
+ * - func_ov030_02112578 fills a Vector3 v it never reads. As a Vector3
+ *   the three stores survive; as `s32 v[3]`, or with v removed, mwcc
+ *   drops them and the function comes out 0x24 short.
  */
 #pragma defer_codegen off
 
