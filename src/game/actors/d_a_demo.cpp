@@ -411,7 +411,7 @@ void daDemo_c::func_ov002_020f1fcc()
     if (mScroll->fadeLevel == 0)
         return;
     mScroll->fadeTimer++;
-    if (mScroll->fadeTimer != 0x18)
+    if (mScroll->fadeTimer != 24)
         return;
     mScroll->fadeTimer = 0;
     mScroll->fadeLevel--;
@@ -641,7 +641,7 @@ void StaffRoll::func_ov002_020f26e0() {
        words, so OamEnt views each one as the sparkle sprite it draws. */
     struct OamEnt *e = (struct OamEnt *)this->kira.trackingRecords;
     int i;
-    for (i = 0; i < 0x40; i++, e++) {
+    for (i = 0; i < 64; i++, e++) {
         int idx;
         int s;
         if (e->enabled == 0)
@@ -698,7 +698,7 @@ int func_ov002_020f27e8(char *c)
     func_ov002_020f2790(c, 0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
                         ((StaffRoll *)c)->burstSysParam);
 
-    if (((StaffRoll *)c)->burstTimer >= 0x1e) {
+    if (((StaffRoll *)c)->burstTimer >= 30) {
         ((StaffRoll *)c)->burstTimer = 0;
         ((StaffRoll *)c)->burstPeriods += 1;
     }
@@ -761,7 +761,7 @@ void StaffRoll::func_ov002_020f2a78(int i) {
 
 void StaffRoll::func_ov002_020f2a88(int i) {
     this->credit[i].timer++;
-    if (this->credit[i].timer < 0x39)
+    if (this->credit[i].timer < 57)
         return;
     this->credit[i].timer = 0;
     this->credit[i].step++;
@@ -818,7 +818,7 @@ void StaffRoll::func_ov002_020f2bf4(int idx) {
 
 void StaffRoll::func_ov002_020f2d0c(int i) {
     this->credit[i].timer++;
-    if (this->credit[i].timer < 0x39)
+    if (this->credit[i].timer < 57)
         return;
     this->credit[i].timer = 0;
     this->credit[i].step++;
@@ -826,7 +826,7 @@ void StaffRoll::func_ov002_020f2d0c(int i) {
 
 void StaffRoll::func_ov002_020f2d70(int i) {
     this->credit[i].timer++;
-    if (this->credit[i].timer < 0x1e)
+    if (this->credit[i].timer < 30)
         return;
     this->credit[i].timer = 0;
     this->credit[i].step++;
@@ -1427,7 +1427,7 @@ void StaffRoll::func_ov002_020f40fc(int i) {
     this->stars[i].flyTimer += 1;
     this->stars[i].x += this->stars[i].speed;
     this->stars[i].speed += 0x300;
-    if (this->stars[0].flyTimer < 0x70)
+    if (this->stars[0].flyTimer < 112)
         return;
     {
         this->stars[i].step += 1;
@@ -1639,7 +1639,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
         this->stars[i].speed -= 0x300;
     }
 
-    if (this->stars[0].flyTimer < 0x60)
+    if (this->stars[0].flyTimer < 96)
         return;
 
     {
@@ -1826,7 +1826,7 @@ void StaffRoll::func_ov002_020f4d70(int i) {
     this->stars[i].x += this->stars[i].speed;
     this->stars[i].speed -= 0x300;
 
-    if (this->stars[0].flyTimer < 0x70)
+    if (this->stars[0].flyTimer < 112)
         return;
 
     {
@@ -2019,7 +2019,7 @@ void StaffRoll::func_ov002_020f5328(int i) {
         this->stars[i].speed -= 0x300;
     }
 
-    if (this->stars[0].flyTimer < 0x60)
+    if (this->stars[0].flyTimer < 96)
         return;
 
     {

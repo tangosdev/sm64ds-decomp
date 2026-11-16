@@ -231,7 +231,7 @@ int daFPknBall_c::Behavior() {
                     mPrevAngleY = Vec3_HorzAngle(&((dActor_c *)hitActor)->mPos, &mPos);
                     mHorzSpeed = 0xa000;
                     mVertSpeed = 0x28000;
-                    mDeathTimer = 0x1e;
+                    mDeathTimer = 30;
                     mSpinRateX = 0;
                     mSpinRateY = 0;
                     mSpinRateZ = 0;
@@ -281,10 +281,10 @@ int daFPknBall_c::Behavior() {
     /* mPrevAngleY is the heading (ApproachLinear steers it toward
      * mTargetAngleY) and mPrevAngleX the pitch; FX_SinCosTable_ holds (sin, cos)
      * pairs in fix12. */
-    flatSpeed = (mHorzSpeed * FX_CosIdx((u16)mPrevAngleX >> 4)) / 4096;
-    mSpeedX = (flatSpeed * FX_SinIdx((u16)mPrevAngleY >> 4)) / 4096;
-    mVertSpeed = (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 4096;
-    mSpeedZ = (flatSpeed * FX_CosIdx((u16)mPrevAngleY >> 4)) / 4096;
+    flatSpeed = (mHorzSpeed * FX_CosIdx((u16)mPrevAngleX >> 4)) / 0x1000;
+    mSpeedX = (flatSpeed * FX_SinIdx((u16)mPrevAngleY >> 4)) / 0x1000;
+    mVertSpeed = (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 0x1000;
+    mSpeedZ = (flatSpeed * FX_CosIdx((u16)mPrevAngleY >> 4)) / 0x1000;
     mPosX += mSpeedX;
     mPosY += mVertSpeed;
     mPosZ += mSpeedZ;

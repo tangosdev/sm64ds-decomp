@@ -66,7 +66,7 @@ extern "C" void func_ov007_020b0a20(void) {
             func_ov007_020bdeb0(0x33);
         }
     }
-    if (ticks == 0x1E) {
+    if (ticks == 30) {
         RequestScreenFade(7, 0x18, 0);
     }
     if (WORK->figure->update == 0) {

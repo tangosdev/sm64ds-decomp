@@ -25,15 +25,6 @@
  *   func_ov077_021251d0 call a destructor the cartridge does not.
  *
  * deslop leftovers:
- * - func_ov077_02124eb0 and func_ov077_021253a4: dActor_c::SpawnCoins is
- *   +12 (0x1f8->0x204, 0xdc->0xe8). Scalar extern kept.
- * - func_ov077_02125304: dActor_c::DropShadowRadHeight is +16 (0xa0->0xb0).
- * - func_ov077_02125480 and func_ov077_02125b1c: dExtAnmModel_c::SetAnim is +12
- *   (0xd0->0xdc, 0x98->0xa4). Scalar extern passes the u16 start frame.
- * - InitResources: SetAnim + dCcAc_c::Init + dBgCh_Actr::Init together are
- *   +36 (0x13c->0x160). dBgCh_Actr::Init's header mangles
- *   _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_, not the ROM Fix12
- *   symbol.
  * - func_ov077_021256b4 and func_ov077_02125830: carrier->mPosX/Y/Z is -4
  *   (0x17c->0x178, 0xac->0xa8). The ROM keeps add #0x5c then [0]/[4]/[8].
  */
@@ -403,7 +394,7 @@ int daTgz_c::func_ov077_02125480() {
     mVertSpeed = 0x28000;
     mAngleX = 0;
     mAngleZ = 0;
-    mActionTimer = 0x2d;
+    mActionTimer = 45;
     mAnmModel.SetAnim((BCA_File *)TGZ_BCA, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int aimHeight = OnAimedAtWithEgg();
@@ -473,7 +464,7 @@ int daTgz_c::func_ov077_021256b4() {
     mHorzSpeed = 0xa000;
     mVertSpeed = 0;
 
-    carrier = mCarrier;
+    carrier = mEatingPlayer;
     carrierYaw = carrier->mAngleY;
     mAngleX = 0;
     mAngleY = carrierYaw;
@@ -481,7 +472,7 @@ int daTgz_c::func_ov077_021256b4() {
 
     mPrevAngleY = mAngleY;
 
-    carrier = mCarrier;
+    carrier = mEatingPlayer;
     one = 1;
     int *src = &carrier->mPosX;
     mPosX = src[0];
@@ -494,7 +485,7 @@ int daTgz_c::func_ov077_021256b4() {
     cosv = FX_CosIdx((u16)mAngleY >> 4);
     mPosZ = mPosZ + FX_MUL(cosv, 0x3c000);
 
-    carrier = mCarrier;
+    carrier = mEatingPlayer;
     {
         int ty = carrier->mPosY;
         int tz = carrier->mPosZ;
@@ -507,7 +498,7 @@ int daTgz_c::func_ov077_021256b4() {
 
     DetectRaycastClsn(v, mPos, one);
 
-    mCarrier = 0;
+    mEatingPlayer = 0;
     mWithMeshClsn.SetLimMovFlag();
 
     mState = 4;
@@ -517,7 +508,7 @@ int daTgz_c::func_ov077_021256b4() {
 /* Held update: stick to the carrier, or on release enter state 4 / the walk. */
 int daTgz_c::func_ov077_02125830() {
     if (((mFlags & 0x40000) ? 1 : 0) != 0) {
-        dActor_c *carrier = mCarrier;
+        dActor_c *carrier = mEatingPlayer;
         /* Address of the triple, then [0]/[4]/[8]. Three field loads fold the
            0x5c into the ldr and drop the add the ROM kept. */
         int *src = &carrier->mPosX;
@@ -530,7 +521,7 @@ int daTgz_c::func_ov077_02125830() {
         if (((flags & 0x80000) ? 1 : 0) != 0)
             func_ov077_02125e94(this, 4);
         else if (((flags & 0x20000) ? 1 : 0) == 0 && ((flags & 0x40000) ? 1 : 0) == 0) {
-            mCarrier = 0;
+            mEatingPlayer = 0;
             func_ov077_02125e94(this, 1);
         }
     }
@@ -784,7 +775,7 @@ int daTgz_c::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    mDespawnTimer = 0x2c;
+    mDespawnTimer = 44;
     func_ov077_02125e94(this, 0);
     mShadowMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     func_ov077_02125304(this);

@@ -10,7 +10,6 @@
 #include "dCcAc_c.h"
 
 struct daESwitch_c : dActor_c {
-    u8 pad_0d0[0x4];
     /* dCcAc_c member. The cartridge's own ~daESwitch_c calls _ZN7dCcAc_cD1Ev at
        +0x0d4 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */

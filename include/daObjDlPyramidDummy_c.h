@@ -18,7 +18,6 @@
  * slots 0, 6, 16, and 17. The original code TU is shared with daObjDlPyramid_c and
  * four daObjDlPyramid_c-only helpers: src/game/actors/d_a_obj_dl_pyramid.cpp. */
 struct daObjDlPyramidDummy_c : dActor_c {
-    u8       pad_0d0[0x4];
     dCcAc_c  mCylinder;       /* 0x0d4 -- the tag's collision cylinder */
     u32      mPyramidTopID;   /* 0x0108 -- daObjDlPyramid_c unique ID */
 

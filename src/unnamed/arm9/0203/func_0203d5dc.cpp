@@ -1,5 +1,5 @@
 //cpp
-/* Distance between two Fix12 (x, y) pairs. Only two words are read. */
+/* Distance between two fx32 (x, y) pairs. Only two words are read. */
 #include "cstd.h"
 #include "types.h"
 

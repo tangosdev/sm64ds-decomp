@@ -17,7 +17,7 @@ void func_02017e94(int key) {
     FSOverlayInfo info;
     struct OverlaySlot *found = 0;
     unsigned int i;
-    for (i = 0; i < 0xc; i++) {
+    for (i = 0; i < 12; i++) {
         struct OverlaySlot *e = &data_0209d3c4[i];
         if (e->id == key) {
             e->id = -1;

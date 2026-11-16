@@ -173,7 +173,7 @@ s32 daObjDorifu_c::InitResources(daObjDorifuResources *resources) {
 
     mActivePlank = 4;
     mStepTimer = 2;
-    mEventBit = param1 & 0xf;
+    mEventBit = param1 & 15;
     Matrix4x3_FromRotationY(&mPlankModels[0].mat4x3, mAngleY);
     mPlankModels[0].mat4x3.m[9] = mPosX >> 3;
     mPlankModels[0].mat4x3.m[10] = mPosY >> 3;

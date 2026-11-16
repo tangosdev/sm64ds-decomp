@@ -26,28 +26,28 @@ extern "C" void func_ov007_020b1cf0(void) {
         func_ov007_020b2614(0, anim, 8);
     }
 
-    if (r5 >= 0x28) {
-        int m = FX_ModS32(r5 - 0x28, 0x154);
+    if (r5 >= 40) {
+        int m = FX_ModS32(r5 - 40, 340);
         Ov007Item *p;
         switch (m) {
         case 0:
             p = WORK->itemNodes[1]->item;
-            p->wiggleFrames = 0x3c;
+            p->wiggleFrames = 60;
             p->wiggleTimer = p->wiggleFrames;
             break;
-        case 0x46:
+        case 70:
             p = WORK->itemViews[1]->item;
-            p->wiggleFrames = 0x3c;
+            p->wiggleFrames = 60;
             p->wiggleTimer = p->wiggleFrames;
             break;
-        case 0x8c:
+        case 140:
             p = WORK->itemViews[0]->item;
-            p->wiggleFrames = 0x3c;
+            p->wiggleFrames = 60;
             p->wiggleTimer = p->wiggleFrames;
             break;
-        case 0xd2:
+        case 210:
             p = WORK->itemViews[2]->item;
-            p->wiggleFrames = 0x3c;
+            p->wiggleFrames = 60;
             p->wiggleTimer = p->wiggleFrames;
             break;
         }

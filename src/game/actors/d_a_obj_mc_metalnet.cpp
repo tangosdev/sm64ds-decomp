@@ -81,7 +81,7 @@ s32 daObjMc_Metalnet_c::InitResources() {
         if (!IsVsMode() && (data_0209caa0.file.flags2 & 0x80000) != 0)
             return 0;
     } else {
-        if (!IsVsMode() && NumStars() >= 0x96)
+        if (!IsVsMode() && NumStars() >= 150)
             return 0;
     }
     return 1;

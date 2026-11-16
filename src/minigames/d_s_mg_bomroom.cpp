@@ -117,14 +117,14 @@ dScMgBomroom_c::~dScMgBomroom_c()
 void dScMgBomroom_c::DrawRoundOver() {
     if (mRoundOver == 0)
         return;
-    RenderOamMainScreen(sBomroomRoundOverSprites, 0x80, 0xc0, -1, 1);
+    RenderOamMainScreen(sBomroomRoundOverSprites, 128, 192, -1, 1);
 }
 
 void dScMgBomroom_c::SetRoundOver() {
     mRoundOver = 1;
 }
 
-/* Steps the BG2 y offset mBg2Y (Fix12): state 1 raises it by 3 a
+/* Steps the BG2 y offset mBg2Y (fx32): state 1 raises it by 3 a
  * frame to 0xc0, state 2 waits out the mBg2Hold count, then lowers it by 3
  * a frame back to 0. */
 
@@ -367,7 +367,7 @@ void dScMgBomroom_c::PenGate_StateOpening(int index) {
     mPenGates[index].level++;
     if (mPenGates[index].level >= 4) {
         mPenGates[index].state = 2;
-        mPenGates[index].timer = 0x20;
+        mPenGates[index].timer = 32;
     }
 }
 
@@ -402,7 +402,7 @@ void dScMgBomroom_c::PenGate_Open(int index) {
     unsigned char st = mPenGates[index].state;
     if (st != 0) {
         if (st == 2) {
-            mPenGates[index].timer = 0x20;
+            mPenGates[index].timer = 32;
         } else {
             mPenGates[index].state = 1;
         }
@@ -519,7 +519,7 @@ void dScMgBomroom_c::CountSortedBombs() {
     int plain, colored, i;
     colored = 0;
     plain = 0;
-    for (i = 0; i < 0x70; i++) {
+    for (i = 0; i < 112; i++) {
         if (mBombs[i].active == 0) continue;
         if (mBombs[i].state != 5) continue;
         if (mBombs[i].color != 0) colored++;
@@ -551,29 +551,29 @@ void dScMgBomroom_c::CountSortedBombs() {
  * sets mSceneState to 3. */
 void dScMgBomroom_c::OnBombExploded(int picked) {
     int i;
-    for (i = 0; i < 0x70; i++) {
+    for (i = 0; i < 112; i++) {
         if (mBombs[i].active == 0 || i == picked)
             continue;
         if (mBombs[picked].pen == 0) {
             if (mBombs[i].state != 5) {
                 mBombs[i].state = 3;
-                mBombs[i].marchDelay = 0x20;
+                mBombs[i].marchDelay = 32;
             }
         } else {
             if (mBombs[i].state == 5 && mBombs[i].color + 1 == mBombs[picked].pen) {
                 mBombs[i].state = 3;
-                mBombs[i].marchDelay = 0x20;
+                mBombs[i].marchDelay = 32;
             }
             if (mBombs[i].state <= 1) {
                 mBombs[i].state = 3;
-                mBombs[i].marchDelay = 0x20;
+                mBombs[i].marchDelay = 32;
             }
         }
     }
     if (mBlastPen != 0)
         return;
     mBlastPen = mBombs[picked].pen + 1;
-    mStateTimer = 0x60;
+    mStateTimer = 96;
     mSceneState = 3;
     mSubState = 0;
 }
@@ -864,7 +864,7 @@ void dScMgBomroom_c::Bomb_PushApart(int index) {
 
 void dScMgBomroom_c::DrawBombs() {
     int i;
-    for (i = 0; i < 0x70; i++) {
+    for (i = 0; i < 112; i++) {
         if (mBombs[i].visible == 0)
             continue;
         {
@@ -904,7 +904,7 @@ void dScMgBomroom_c::CheckColorComplete() {
     int nLined = 0;
     int i;
 
-    for (i = 0; i < 0x70; i++) {
+    for (i = 0; i < 112; i++) {
         if (mBombs[i].active != 0) {
             if (mBlastPen == 1) {
                 if (mBombs[i].color != 0) {
@@ -1074,7 +1074,7 @@ void dScMgBomroom_c::Bomb_StateMarch(int index) {
     (this->*sBomroomBombMarchTable[state])(index);
 }
 
-/* Roaming step: advance x/y along the angle at speed (sine table, Fix12),
+/* Roaming step: advance x/y along the angle at speed (sine table, fx32),
  * then bounce off the box selected by color (0xc0..0x100 x 0x40..0x80 for
  * color 1, 0..0x40 x 0x40..0x80 for color 0): a vertical wall mirrors the
  * angle (0x8000 - a), a horizontal one negates it, and the coordinate is
@@ -1133,7 +1133,7 @@ void dScMgBomroom_c::Bomb_StateExploding(int i) {
     if (mBombs[i].frame != 0) return;
     if (mBombs[i].counter != 1) return;
     Sound::PlayBank2_2D(0x1e0);
-    mDispatchDelay = 0x60;
+    mDispatchDelay = 96;
 }
 
 void dScMgBomroom_c::Bomb_StateChainDelay(int idx) {
@@ -1269,7 +1269,7 @@ void dScMgBomroom_c::UpdateBombs() {
     if (gTouchHeld[gActivePlayerSlot * 4] == 0)
         mHeldColor = 0xff;
     int i;
-    for (i = 0; i < 0x70; i++) {
+    for (i = 0; i < 112; i++) {
         u8 flag;
         flag = mBombs[i].active;
         if (flag != 0) {
@@ -1356,7 +1356,7 @@ void dScMgBomroom_c::SpawnBombs() {
     }
 
     for (int i = 0; i < count; i++) {
-        for (int j = 0; j < 0x70; j++) {
+        for (int j = 0; j < 112; j++) {
             if (mBombs[j].active == 0) {
                 mBombs[j].active = 1;
                 mBombs[j].state = 0;
@@ -1415,7 +1415,7 @@ void dScMgBomroom_c::SpawnBombs() {
 
 void dScMgBomroom_c::HideExplodedBombs() {
     int i;
-    for (i = 0; i < 0x70; i++) {
+    for (i = 0; i < 112; i++) {
         if (mBombs[i].active != 0) {
             if (mBombs[i].state == 6)
                 mBombs[i].visible = 0;
@@ -1427,7 +1427,7 @@ void dScMgBomroom_c::HideExplodedBombs() {
  * halfwords and 10 bytes each. */
 void dScMgBomroom_c::ClearBombs() {
     int i;
-    for (i = 0; i < 0x70; i++) {
+    for (i = 0; i < 112; i++) {
         mBombs[i].x = 0;
         mBombs[i].y = 0;
         mBombs[i].grabX = 0;
@@ -1468,7 +1468,7 @@ void dScMgBomroom_c::RoundEnd_Finish() {
         return;
     }
 
-    for (j = 0; j < 0x70; j++) {
+    for (j = 0; j < 112; j++) {
         if (mBombs[j].active == 2) {
             if (mBombs[j].state == 6
              && mBombs[j].substate == 4) {
@@ -1479,7 +1479,7 @@ void dScMgBomroom_c::RoundEnd_Finish() {
     }
 
     if (mBlastPen != 0) {
-        mStateTimer = 0x60;
+        mStateTimer = 96;
         mSceneState = 4;
         mSubState = 0;
         Mg_SubmitScore(mTallyCount + Mg_GetSubmittedScore());
@@ -1506,7 +1506,7 @@ void dScMgBomroom_c::RoundEnd_Tally() {
         if ((s16)mStateTimer > 0)
             return;
         mStateTimer = 0;
-        mTallyDelay = 0x10;
+        mTallyDelay = 16;
         if (AnyBombMarching() != 0) {
             mBg2State = 1;
             Sound::PlayBank2_2D(0x1dd);
@@ -1525,7 +1525,7 @@ void dScMgBomroom_c::RoundEnd_Tally() {
         if (mBombs[j].active == 1 && mBombs[j].state == 6 && mBombs[j].substate == 4)
             found = j + 1;
         j++;
-    } while (j < 0x70);
+    } while (j < 112);
 
     (mTallyTick)++;
     if (mTallyTick < 4)
@@ -1538,7 +1538,7 @@ void dScMgBomroom_c::RoundEnd_Tally() {
         Sound::PlayBank2_2D(0x1bc);
     } else {
         mTallyTick = 0;
-        mStateTimer = 0x40;
+        mStateTimer = 64;
         mSubState = 3;
     }
 }
@@ -1550,7 +1550,7 @@ int dScMgBomroom_c::AnyBombMarching() {
         if (mBombs[i].active == 1 && mBombs[i].state == 6)
             return 1;
         i++;
-    } while (i < 0x70);
+    } while (i < 112);
     return 0;
 }
 
@@ -1566,13 +1566,13 @@ void dScMgBomroom_c::RoundEnd_WaitLinedUp() {
             if (v != 4) c4++;
         }
         i++;
-    } while (i < 0x70);
+    } while (i < 112);
     if (c2 == 0 && mBg2State == 0) {
         CheckColorComplete();
     }
     if (c4 != 0) return;
     TopDoor_Close();
-    mStateTimer = 0x10;
+    mStateTimer = 16;
     mSubState = 2;
     mShowTally = 1;
 }
@@ -1605,7 +1605,7 @@ void dScMgBomroom_c::RoundEnd_StartMarch() {
                 count++;
             }
             i++;
-        } while (i < 0x70);
+        } while (i < 112);
         if (count != 0) {
             Sound::PlayBank2_2D(0x1e6);
             if (mBlastPen == 1) {
@@ -1626,7 +1626,7 @@ void dScMgBomroom_c::RoundEnd_StartMarch() {
                 }
             }
             i++;
-        } while (i < 0x70);
+        } while (i < 112);
         Sound::PlayBank2_2D(0x1e6);
         PenGate_Open(mWinColor);
     }

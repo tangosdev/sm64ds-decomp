@@ -12,14 +12,13 @@
  *
  * SIZE 0x138, the literal daMcFlag_c_classInit passes to operator new.
  * Factory constructs dExtAnmModel_c at 0xd4; D1 tears it down before ~dActor_c.
- * dActor_c ends at 0xd0; pad_0d0 is the 4-byte gap before mAnmModel.
+ * dActor_c ends at 0xd4, where mAnmModel starts.
  * 0xd4 + sizeof(dExtAnmModel_c) 0x64 = 0x138.
  *
  * The 31-slot ROM vtable differs from dActor_c only in slots 0, 3, 6, 9, 16
  * and 17. All other actor virtuals are inherited and must not be redeclared.
  */
 struct daMcFlag_c : dActor_c {
-    u8 pad_0d0[0x4];
     dExtAnmModel_c mAnmModel; /* 0x0d4 */
 
     /* INLINE IS LOAD-BEARING. Out of line, mwccarm emits D0 before D1

@@ -17,9 +17,7 @@
  * - Behavior: the marker test flipped to
  *   `mMarkerPositions[mNextMarker].y + 0x14000 >= mPosY` stays 0x210
  *   and DIFFs 10 words. Settle `mShakeTimer == 8` instead of `>= 8`
- *   stays 0x210 and DIFFs 3 words. IsClsnInRange as a Fix12<int>
- *   method size-DIFF 0x210->0x224. `Fix12<int>{0}` does not compile
- *   ("( expected"). The free call with two ints matches.
+ *   stays 0x210 and DIFFs 3 words.
  * - Render: one Vector3 local then one Matrix4x3_FromTranslation
  *   size-DIFF 0x8c->0xa4.
  * - The two file handles live after InitResources; the compiler's

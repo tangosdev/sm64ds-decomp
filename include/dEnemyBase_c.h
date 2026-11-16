@@ -6,7 +6,6 @@
 #define DENEMYBASE_C_H
 #include "types.h"
 #include "dActor_c.h"
-#include "math/Fix12.h"
 
 /* fwd */
 struct dCc_c;
@@ -28,19 +27,18 @@ extern "C" mHeap::Heap_t *data_020a0eac;
 struct dEnemyBase_c : dActor_c {
     /* DERIVES FROM dActor_c, at last -- this header used to restate dActor_c's whole
        layout, and its own note said `dEnemyBase_c : dActor_c` was "the real fix and is
-       its own slice". Everything below 0x0d0 is dActor_c's and is inherited now;
+       its own slice". Everything below 0x0d4 is dActor_c's and is inherited now;
        the thirteen fields that were duplicated here resolve through dActor_c.h,
        two of which (0x0a4, 0x0ac) were padding there until this class proved
        they are real.
 
-       dActor_c is 0xd0, so dEnemyBase_c's own fields start there and its 0x110 closes
+       dActor_c is 0xd4, so dEnemyBase_c's own fields start there and its 0x110 closes
        exactly on the subclasses that follow it. */
     /* FIVE FIELDS BELOW WERE PADDING HERE and are named on the same kind of
        evidence that took dActor_c's 0x0a4/0x0ac: the subclasses declare them and
        read them, and `X : dEnemyBase_c` cannot compile unless they exist. The counts
        are how many of dEnemyBase_c's 51 subclasses declare each -- 0x100 is in
        twenty-eight of them, which is not a coincidence. */
-    daPly_c *mEatingPlayer;       /* 0x0d0 -- 4 subclasses */
     s32 mFloorNormalX;            /* 0x0d4 */
     s32 mFloorNormalY;            /* 0x0d8 */
     s32 mFloorNormalZ;            /* 0x0dc */
@@ -139,15 +137,7 @@ struct dEnemyBase_c : dActor_c {
     /* Already a real method -- its own file builds _ZN12dEnemyBase_c9SpawnCoinEv from a
        local `struct dEnemyBase_c : dActor_c` shadow. Declared here so callers need not
        spell the mangled name. */
-    /* Its parameters are SCALARS, and the mangled name says so. The old name
-       spelled the first and last `Fix12<int>`, which the image refutes: mwcc
-       homes a class-typed by-value parameter to the stack the moment a body
-       reads it, and this function's ROM bytes read both straight from r1 and
-       r3. Nothing anchors the class spelling either -- the whole image contains
-       zero `_Z...` strings and zero occurrences of `5Fix12IiE`, so every
-       mangled name in this tree is reconstructed and this one was a guess that
-       the bytes disagree with. `fx32` keeps the fixed-point intent and
-       mangles as plain `i`. See notes/mwccarm-codegen.md 6az. */
+    /* down_ and up_ are scalar fx32: the ROM body reads both straight from r1 and r3. */
     int IsGoingOffCliff(dBgCh_Actr &clsn_, fx32 down_, s16 maxSlope_, bool detectWater_,
                         bool allowObjFloor_, fx32 up_);
     void SpawnCoin();
@@ -181,7 +171,7 @@ struct dEnemyBase_c : dActor_c {
            ov004 (0x020ad97c, 0x020ada10, 0x020adb70, 0x020adbac) leave r3 alone,
            which is what a one-scalar-argument call looks like. All 15 outside it
            materialise a fourth argument in r3 -- the old note listed three. Most
-           pass a Fix12 constant (0x46000, 0x41000, 0x96000, 0x32000, 0);
+           pass an fx32 constant (0x46000, 0x41000, 0x96000, 0x32000, 0);
            ov064 0x02116904 and ov102 0x0214cc8c load one from an object; ov081
            0x02123988
            passes the RETURN of the virtual at vtable offset 0x74, which is slot
@@ -193,12 +183,9 @@ struct dEnemyBase_c : dActor_c {
            source of the following `strh`, so the argument setup is invisible.
 
            It is a fixed-point value, by the sibling:
-           `dBgActor_c::UpdateKillByMegaChar(s16, s16, s16, Fix12<int>)` is the
+           `dBgActor_c::UpdateKillByMegaChar(s16, s16, s16, fx32)` is the
            background-actor form of the same operation and ends in the same
-           parameter. It is the scalar fx32 here: the body never reads r3, so
-           the bytes cannot tell a by-value Fix12<int> from a scalar, and the
-           scalar lets the definition be a real method (notes/mwccarm-codegen.md
-           6az). */
+           parameter. */
     void KillByInvincibleChar(const Vector3_16 &spin_, daPly_c &player_, fx32 unused_);
 };
 

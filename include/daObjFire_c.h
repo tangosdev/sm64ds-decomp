@@ -12,11 +12,10 @@
  *
  * SIZE 0x118, the literal both factories pass to operator new.
  * Factory constructs dCcAc_c at 0xe4; D1 tears it down before ~dActor_c.
- * dActor_c ends at 0xd0; pad_0d0 is the 4-byte gap before mFlamePos.
+ * dActor_c ends at 0xd4, where mFlamePos starts.
  * 0xe4 + 0x34 = 0x118, closing on the allocation.
  */
 struct daObjFire_c : dActor_c {
-    u8 pad_0d0[0x4];
     Vector3 mFlamePos;  /* 0x0d4 */
     u8 mDisappearTimer; /* 0x0e0 */
     u8 pad_0e1[0x3];

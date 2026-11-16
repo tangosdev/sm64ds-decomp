@@ -153,8 +153,8 @@ int daObjC1_Trap_c::InitResources() {
 
         cosAngle = FX_CosIdx((u16)mAngleY >> 4);
         sinAngle = FX_SinIdx((u16)mAngleY >> 4);
-        z = mPosZ + sinAngle * 0x15d;
-        x = mPosX - cosAngle * 0x15d;
+        z = mPosZ + sinAngle * 349;
+        x = mPosX - cosAngle * 349;
         y = mPosY;
         position.x = x;
         position.y = y;
@@ -164,8 +164,8 @@ int daObjC1_Trap_c::InitResources() {
 
         sinAngle = FX_SinIdx((u16)mAngleY >> 4);
         cosAngle = FX_CosIdx((u16)mAngleY >> 4);
-        z = mPosZ - sinAngle * 0x15d;
-        x = cosAngle * 0x15d + mPosX;
+        z = mPosZ - sinAngle * 349;
+        x = cosAngle * 349 + mPosX;
         y = mPosY;
         position.x = x;
         position.y = y;

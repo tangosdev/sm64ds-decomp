@@ -18,9 +18,8 @@
  * The helpers whose first parameter was the scene are now members of
  * dScMgSnowball_c, including the 17 per-element helpers dispatched through
  * the PMF tables sSnowballBitStateTable/38/50/70 (8-byte {function, 0}
- * records). __sinit_d_s_mg_snowball.cpp copies them. Some calls stay mangled:
- * cstd::atan2 and Particle::System take Fix12 or reference
- * arguments. GetBG2CharPtr and GetBG3ScrPtr stay spelled.
+ * records). __sinit_d_s_mg_snowball.cpp copies them. GetBG2CharPtr and
+ * GetBG3ScrPtr stay spelled.
  */
 
 // leftovers:
@@ -138,7 +137,7 @@ dScMgSnowball_c::~dScMgSnowball_c() {}
 
 void dScMgSnowball_c::SnowSpray_DrawAll() {
     int i;
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         if (mSprays[i].active != 0) {
             RenderOamBothScreens(sSnowballBitSprites[mSprays[i].sprite], mSprays[i].pos.x >> 12,
                                  ((mSprays[i].pos.y - mSprays[i].pos.z - mScrollY) >> 12) - 0x110,
@@ -149,7 +148,7 @@ void dScMgSnowball_c::SnowSpray_DrawAll() {
 
 void dScMgSnowball_c::SnowSpray_UpdateAll() {
     int i;
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         if (mSprays[i].active) {
             if (mSprays[i].life > 0) {
                 mSprays[i].life--;
@@ -170,7 +169,7 @@ void dScMgSnowball_c::SnowSpray_UpdateAll() {
 
 void dScMgSnowball_c::SnowSpray_ClearAll() {
     int i;
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         mSprays[i].pos.x = 0;
         mSprays[i].pos.y = 0;
         mSprays[i].pos.z = 0;
@@ -270,7 +269,7 @@ int dScMgSnowball_c::IsInWater(int *point) {
 
 int dScMgSnowball_c::HitsBreakable(int *point) {
     int i;
-    for (i = 0; i < 0x80; i++) {
+    for (i = 0; i < 128; i++) {
         if (mArray1Active[i] == 1) {
             int dx, dy;
             if (point[0] >= mArray1[i].x + 0x10000)
@@ -439,7 +438,7 @@ void dScMgSnowball_c::UpdateSnowball() {
         mProbePush[i] = 0;
         mProbeWater[i] = 0;
         i = i + 1;
-    } while (i < 0x20);
+    } while (i < 32);
     fastWallHit = 0;
     mHitBreakable = 0;
 
@@ -459,7 +458,7 @@ void dScMgSnowball_c::UpdateSnowball() {
     do {
         anyHit = zNoHit;
         angle = zNoHit;
-        for (j = zNoHit; j < 0x20; j++) {
+        for (j = zNoHit; j < 32; j++) {
             mProbeHit[j] = 0;
             sample[0] = 0;
             sample[1] = 0;
@@ -502,7 +501,7 @@ void dScMgSnowball_c::UpdateSnowball() {
         response[1] = zOrigin;
         angle = zOrigin;
         if (anyHit != 0) {
-            for (i = 0; i < 0x20; i++) {
+            for (i = 0; i < 32; i++) {
                 if (mProbeHit[i] == 1) {
                     hitNormal[0] = pushDirX;
                     hitNormal[1] = pushDirY;
@@ -521,7 +520,7 @@ void dScMgSnowball_c::UpdateSnowball() {
             mPosY -= response[1];
         } else if (startedInWater == 1) {
             allWater = 1;
-            for (i = 0; i < 0x20; i++) {
+            for (i = 0; i < 32; i++) {
                 if (mProbeWater[i] == 1) {
                     waterNormal[0] = floatDirX;
                     waterNormal[1] = floatDirY;
@@ -540,7 +539,7 @@ void dScMgSnowball_c::UpdateSnowball() {
                 mAllWater = 1;
         }
         resolvePass = resolvePass + 1;
-    } while (anyHit == 1 && resolvePass < 0x21);
+    } while (anyHit == 1 && resolvePass < 33);
 
     if (mHitBreakable == 1) {
         len = Vec2_Len(&mVel);
@@ -596,7 +595,7 @@ void dScMgSnowball_c::UpdateSnowball() {
             push[1] -= rotPush[1];
         }
         k = k + 1;
-    } while (k < 0x20);
+    } while (k < 32);
 
     if (push[0] == 0 && push[1] == 0)
         return;
@@ -659,12 +658,12 @@ void dScMgSnowball_c::RedrawCourse() {
     int i;
     if (row < 0)
         row = 0;
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         DrawCourseColumn(row, 1);
         row++;
     }
     row = ((mScrollY >> 12) + 0x110) / 16 - 2;
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         if (row >= mScrollLimit)
             return;
         DrawCourseColumn(row, 0);
@@ -766,7 +765,7 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
             row += 0x5c0;
             j += 2;
             i += 1;
-        } while (i < 0x10);
+        } while (i < 16);
         return;
     }
 
@@ -821,7 +820,7 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
         row += 0x5c0;
         j += 2;
         i += 1;
-    } while (i < 0x10);
+    } while (i < 16);
 }
 #pragma opt_strength_reduction on
 
@@ -884,12 +883,12 @@ void dScMgSnowball_c::BuildCourse() {
     int j;
     int wideLane;
 
-    for (i = 0; i < 0x80; i++) {
+    for (i = 0; i < 128; i++) {
         mArray1Active[i] = 0;
         mArray1Kind[i] = 0;
         mArray1Hit[i] = 0;
     }
-    for (i = 0; i < 0x80; i++) {
+    for (i = 0; i < 128; i++) {
         mArray2Active[i] = 0;
     }
     mGoalCenterX = 0;
@@ -1039,7 +1038,7 @@ void dScMgSnowball_c::BuildCourse() {
             mTileMap[right][row] = 11;
             break;
         }
-        for (i = right + 1; i < 0x10; i++) {
+        for (i = right + 1; i < 16; i++) {
             mTileMap[i][row] = 1;
         }
 
@@ -1066,7 +1065,7 @@ void dScMgSnowball_c::BuildCourse() {
                         }
                         mTileMap[lane][row] = 12;
                         cooldown = 0x10;
-                        for (i = 0; i < 0x80; i++) {
+                        for (i = 0; i < 128; i++) {
                             if (mArray1Active[i] == 0) {
                                 mArray1[i].x = (lane * 16 + 8) << 12;
                                 mArray1[i].y = (row * 16 + 8) << 12;
@@ -1082,7 +1081,7 @@ void dScMgSnowball_c::BuildCourse() {
                         wideLane = left + MgRandom(right - left - 3) + 2;
                         mTileMap[wideLane][row] = 12;
                         cooldown = 0x10;
-                        for (i = 0; i < 0x80; i++) {
+                        for (i = 0; i < 128; i++) {
                             if (mArray1Active[i] == 0) {
                                 mArray1[i].x = (wideLane * 16 + 8) << 12;
                                 mArray1[i].y = (row * 16 + 8) << 12;
@@ -1100,7 +1099,7 @@ void dScMgSnowball_c::BuildCourse() {
                         }
                         mTileMap[lane][row] = 12;
                         cooldown = 0x10;
-                        for (i = 0; i < 0x80; i++) {
+                        for (i = 0; i < 128; i++) {
                             if (mArray1Active[i] == 0) {
                                 mArray1[i].x = (lane * 16 + 8) << 12;
                                 mArray1[i].y = (row * 16 + 8) << 12;
@@ -1115,7 +1114,7 @@ void dScMgSnowball_c::BuildCourse() {
     }
 
     if (IsAltVariant()) {
-        for (i = 0; i < 0x80; i++) {
+        for (i = 0; i < 128; i++) {
             if (mArray1Active[i] == 1) {
                 if (MgRandom(2) == 0) {
                     mArray1Kind[i] = 1;
@@ -1125,7 +1124,7 @@ void dScMgSnowball_c::BuildCourse() {
     }
 
     for (goalRow = mGoalY / 16 - 1; goalRow <= mGoalY / 16; goalRow++) {
-        for (j = 0; j < 0x10; j++) {
+        for (j = 0; j < 16; j++) {
             tile = mTileMap[j][goalRow];
             if (tile == 0) {
                 mTileMap[j][goalRow] = 13;
@@ -1139,7 +1138,7 @@ void dScMgSnowball_c::BuildCourse() {
 
     slot = 0;
     for (propRow = mScrollLimit - 1; propRow >= 0; propRow--) {
-        for (col = 0; col < 0x10; col++) {
+        for (col = 0; col < 16; col++) {
             if (mTileMap[col][propRow] == 1) {
                 roll = MgRandom(16);
                 if (roll < 4) {
@@ -1232,7 +1231,7 @@ void dScMgSnowball_c::ResetScene() {
     Quaternion_Normalize(mSpinQuat);
 
     UpdateCamera();
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         mProbeHit[i] = 0;
         mProbePush[i] = 0;
         mProbeWater[i] = 0;
@@ -1248,7 +1247,7 @@ void dScMgSnowball_c::ResetScene() {
     Bit_InitAll();
     SnowSpray_ClearAll();
 
-    mCountdownTimer = 0xf1;
+    mCountdownTimer = 241;
     mCrashTimer = 0;
     mAnimCounter = 0;
     mSoundPending = 0;
@@ -1275,9 +1274,9 @@ s32 dScMgSnowball_c::Render() {
     {
         int base = mGoalY;
         int t = (((mPosY >> 0xc) - base) * 0x7c) / (mStartY - base);
-        Mg_RenderSpriteBoth(sSnowballCourseMeterSprites[0], 0xf0, t + 0x22, -1, 0);
+        Mg_RenderSpriteBoth(sSnowballCourseMeterSprites[0], 240, t + 34, -1, 0);
     }
-    Mg_RenderSpriteBoth(sSnowballCourseMeterSprites[1], 0xf0, 0x60, -1, 0);
+    Mg_RenderSpriteBoth(sSnowballCourseMeterSprites[1], 240, 96, -1, 0);
 
     light[2] = -0xff8;
     light[1] = 0;
@@ -1298,7 +1297,7 @@ s32 dScMgSnowball_c::Render() {
 
     RedrawCourse();
 
-    for (int i = 0; i < 0x80; i++) {
+    for (int i = 0; i < 128; i++) {
         char *p = (char *)this + i;
         if (((dScMgSnowball_c *)p)->mArray1Active[0] == 1) {
             int scrollY = mScrollY;
@@ -1320,7 +1319,7 @@ s32 dScMgSnowball_c::Render() {
         }
     }
 
-    for (int i = 0; i < 0x80; i++) {
+    for (int i = 0; i < 128; i++) {
         if (mArray2Active[i] == 1) {
             int scrollY = mScrollY;
             int y = *(int *)(int)&((dScMgSnowball_c *)((char *)this + i * 8))->mArray2[0].y;
@@ -1349,7 +1348,7 @@ s32 dScMgSnowball_c::Render() {
                         ((mDrawPosY - mScrollY) >> 0xc) - 0x110, -1, 2);
 
     {
-        if (mCountdownTimer <= 0xf0 && mCountdownTimer > 0x3c) {
+        if (mCountdownTimer <= 240 && mCountdownTimer > 60) {
             int q = mCountdownTimer / 60;
             if (q >= 4)
                 q = 3;
@@ -1357,7 +1356,7 @@ s32 dScMgSnowball_c::Render() {
         } else {
             int mode = mState;
             if (mode == 1 || mode == 2 || (mode == 3 && mEndDelayTimer > 0) ||
-                (mode == 4 && mCrashTimer <= 0x3c)) {
+                (mode == 4 && mCrashTimer <= 60)) {
                 int v = mTimeLeft;
                 int q60 = v / 60;
                 int centis = v % 60 * 100 / 60;
@@ -1378,9 +1377,9 @@ s32 dScMgSnowball_c::Render() {
                 } else {
                     Mg_DrawBigNumber(0xac, timerY, ones + 1, -1, -1, 1, 0);
                 }
-                Mg_RenderSpriteBothMtx(sSnowballTextSpritesByLanguage[GetGameLanguage()][3], 0x5c,
+                Mg_RenderSpriteBothMtx(sSnowballTextSpritesByLanguage[GetGameLanguage()][3], 92,
                                        timerY, 0);
-                Mg_RenderSpriteBothMtx(sSnowballTextSpritesByLanguage[GetGameLanguage()][7], 0x90,
+                Mg_RenderSpriteBothMtx(sSnowballTextSpritesByLanguage[GetGameLanguage()][7], 144,
                                        timerY, 0);
             }
         }
@@ -1452,7 +1451,7 @@ s32 dScMgSnowball_c::Behavior() {
             touched = (gTouchEdge[slot * 4] != 0);
         if (touched != 0) {
             int vb = ((volatile unsigned char *)gTouchY)[(unsigned int)slot * 4];
-            int va = ((volatile unsigned char *)gTouchX)[(unsigned int)slot * 4];
+            int va = gTouchX[(unsigned int)slot * 4];
             mTouchX = va;
             mTouchY = vb;
         } else if (held != 0) {
@@ -1559,10 +1558,10 @@ s32 dScMgSnowball_c::Behavior() {
 
     case 2:
         mCrashTimer += 1;
-        if (mCrashTimer >= 0x3c) {
+        if (mCrashTimer >= 60) {
             Mg_SetNextBanner(4);
             Mg_SetSharedState(MG_STATE_FINISHED);
-            mEndDelayTimer = 0xb4;
+            mEndDelayTimer = 180;
             mState = 3;
         }
         /* fall through */
@@ -1616,7 +1615,7 @@ s32 dScMgSnowball_c::Behavior() {
         break;
 
     case 4:
-        if (mCrashTimer < 0x3c) {
+        if (mCrashTimer < 60) {
             if (mVel.x != 0 || mVel.y != 0) {
                 speed = Vec2_Len(&mVel) + 0x100;
                 if (speed >= 0x8000)
@@ -1625,7 +1624,7 @@ s32 dScMgSnowball_c::Behavior() {
                     func_0203d630(&mVel.x, speed);
             }
             mCrashTimer += 1;
-        } else if (mCrashTimer == 0x3c) {
+        } else if (mCrashTimer == 60) {
             if (mBallSize > 0) {
                 mBallSize -= 0x1000;
                 if (mBallSize <= 0) {
@@ -1659,7 +1658,7 @@ s32 dScMgSnowball_c::Behavior() {
             }
         } else {
             mCrashTimer += 1;
-            if (mCrashTimer >= 0x5a) {
+            if (mCrashTimer >= 90) {
                 Mg_SetNextBanner(0xe);
                 Mg_SetSharedState(MG_STATE_RETRY_PROMPT);
                 mState = 5;
@@ -1831,7 +1830,7 @@ dScMgSnowball_c::dScMgSnowball_c() : mBallBmd(0) {}
 
 void dScMgSnowball_c::Bit_DrawAll() {
     int i;
-    for (i = 0; i < 50; i++) {
+    for (i = 0; i < BIT_NUM; i++) {
         if (mBits[i].visible != 0) {
             int bb = mBits[i].x >> 12;
             int cc = (mBits[i].y - mScrollY) >> 12;
@@ -1870,14 +1869,14 @@ void dScMgSnowball_c::Bit_StateFallSpeedUp(int idx) {
         return;
     }
     mBits[idx].fallState = 2;
-    mBits[idx].fallTimer = (u8)(MgRandom(32) + 0x20);
+    mBits[idx].fallTimer = (u8)(MgRandom(32) + 32);
 }
 
 void dScMgSnowball_c::Bit_StateFallStart(int i) {
     mBits[i].vy = 0;
     mBits[i].fallSpeed = (MgRandom(16) << 4) + 0x300;
     mBits[i].fallState = 1;
-    mBits[i].fallTimer = (u8)(MgRandom(32) + 0x20);
+    mBits[i].fallTimer = (u8)(MgRandom(32) + 32);
 }
 
 void dScMgSnowball_c::BitA_StateDriftStop(int idx) {
@@ -1925,7 +1924,7 @@ void dScMgSnowball_c::BitA_StateDriftLeft(int i) {
         return;
     }
     mBits[i].driftState = 3;
-    mBits[i].driftTimer = (u8)(MgRandom(32) + 0x20);
+    mBits[i].driftTimer = (u8)(MgRandom(32) + 32);
 }
 
 void dScMgSnowball_c::BitA_StateDriftRight(int index) {
@@ -1949,7 +1948,7 @@ void dScMgSnowball_c::BitA_StateDriftRight(int index) {
         return;
     }
     mBits[index].driftState = 3;
-    mBits[index].driftTimer = (u8)(MgRandom(32) + 0x20);
+    mBits[index].driftTimer = (u8)(MgRandom(32) + 32);
 }
 
 void dScMgSnowball_c::BitA_StatePause(int i) {
@@ -2075,7 +2074,7 @@ extern "C" PMF_0212a2e0 sSnowballBitKindTable[];
 
 void dScMgSnowball_c::Bit_UpdateAll() {
     int i;
-    for (i = 0; i < 0x32; i++) {
+    for (i = 0; i < BIT_NUM; i++) {
         if (mBits[i].active != 0) {
             (this->*sSnowballBitKindTable[mBits[i].kind])(i);
             if ((mBits[i].y - mScrollY) >> 12 >= 0xc8) {
@@ -2098,7 +2097,7 @@ void dScMgSnowball_c::Bit_InitAll() {
     unsigned int v;
     int q;
 
-    for (i = 0; i < 0x32; i++) {
+    for (i = 0; i < BIT_NUM; i++) {
         mBits[i].x = 0;
         mBits[i].y = 0;
         mBits[i].vx = 0;
@@ -2115,7 +2114,7 @@ void dScMgSnowball_c::Bit_InitAll() {
         mBits[i].spriteB = 1;
     }
 
-    for (j = 0; j < 0x32; j++) {
+    for (j = 0; j < BIT_NUM; j++) {
         mBits[j].x = MgRandom(32) << 15;
         r = RandomIntInternal(&data_0209d4b8.value);
         q = (((r >> 16) & 0x7fff) * 0x18) >> 15;

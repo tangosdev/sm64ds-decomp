@@ -89,7 +89,6 @@ extern unsigned char gSubScreenLayers;
 /* 1 while the backlight is on. TurnBacklightOn / Off write it. */
 extern unsigned char data_0208ee3c;
 }
-extern void func_ov001_020ab5b0(char *icon, int kind, short x, short y, short halfW, short halfH);
 int TouchArea_Update(void *icon, int touch);
 void func_ov001_020ab3f0(void *icon);
 void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x, short y);
@@ -187,7 +186,7 @@ u8 dMgPsOpt_c::Update() {
         if (TouchArea_Update(&mIcons[kIconBack], -1)) {
             /* Back: pulse the button, then let state 2 run the delay down. */
             func_ov001_020ab3f0(&mIcons[kIconBack]);
-            mCloseTimer = 0x14;
+            mCloseTimer = 20;
             mActive = kPanelClosing;
             func_02012790(kSndBack);
         } else {
@@ -328,16 +327,13 @@ void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, shor
     if (style == kStyleSoundLabel) {
         lang = GetGameLanguage();
         lang2 = GetGameLanguage();
-        func_ov001_020ab5b0((char *)icon, kind, x, y, sPsOptIconPosA[lang].mHalfW,
-                            HALF_H_AT(sPsOptIconPosAY, lang2));
+        icon->Place(kind, x, y, sPsOptIconPosA[lang].mHalfW, HALF_H_AT(sPsOptIconPosAY, lang2));
     } else if (style == kStyleLightLabel) {
         lang = GetGameLanguage();
         lang2 = GetGameLanguage();
-        func_ov001_020ab5b0((char *)icon, kind, x, y, sPsOptIconPosB[lang].mHalfW,
-                            HALF_H_AT(sPsOptIconPosBY, lang2));
+        icon->Place(kind, x, y, sPsOptIconPosB[lang].mHalfW, HALF_H_AT(sPsOptIconPosBY, lang2));
     } else {
-        func_ov001_020ab5b0((char *)icon, kind, x, y, sPsOptStylePos[style].mHalfW,
-                            HALF_H_AT(sPsOptStylePosY, style));
+        icon->Place(kind, x, y, sPsOptStylePos[style].mHalfW, HALF_H_AT(sPsOptStylePosY, style));
     }
 }
 

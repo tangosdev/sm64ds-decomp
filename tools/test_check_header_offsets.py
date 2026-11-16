@@ -1335,6 +1335,27 @@ class NamedArrayBoundTests(unittest.TestCase):
         self.assertEqual(rc, 0, out)
         self.assertIn("4 commented fields, 0 mismatched, 0 unparsed, struct spans 0x11", out)
 
+    def test_a_static_const_member_bound_sizes_the_array(self):
+        # include/daSnmBth_c.h: the count is a class member declared just ahead of
+        # the array it bounds; it occupies no storage of its own.
+        rc, out = self._run(
+            "struct Widget {\n"
+            "    u32 head; /* 0x000 */\n"
+            "    static const int SLOT_NUM = 3;\n"
+            "    s32 slots[SLOT_NUM]; /* 0x004 */\n"
+            "    u8 tail; /* 0x010 */\n};\n")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("3 commented fields, 0 mismatched, 0 unparsed, struct spans 0x11", out)
+
+    def test_a_static_const_member_first_in_the_struct(self):
+        rc, out = self._run(
+            "struct Widget {\n"
+            "    static const unsigned int N = 2u;\n"
+            "    s32 a[N]; /* 0x000 */\n"
+            "    u8 tail; /* 0x004 */\n};\n")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("2 commented fields, 1 mismatched, 0 unparsed", out)
+
     def test_a_wrong_offset_after_a_named_bound_still_fails(self):
         rc, out = self._run(
             "enum { N = 2 };\nstruct Widget {\n"

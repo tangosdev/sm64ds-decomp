@@ -258,13 +258,13 @@ void daChair_c::State1() {
         mAngleX = mAngleZ;
     }
 
-    if (mStateTimer < 0x1e)
+    if (mStateTimer < 30)
         return;
     mState = 2;
     mStateValue0 = 0;
     mStateValue1 = 0;
     mStateValue2 = 0xc8;
-    mActionTimer = 0x28;
+    mActionTimer = 40;
     mStateTimer = 0;
 }
 
@@ -272,14 +272,14 @@ void daChair_c::State2() {
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     mStateTimer++;
 
-    if (mStateTimer <= 0x46) {
-        if (mStateTimer < 0x32)
+    if (mStateTimer <= 70) {
+        if (mStateTimer < 50)
             mVertSpeed = 0x6000;
         else
             mVertSpeed = 0;
         ApproachStateValue(&mAngleX, &mStateValue0, -0xfa0, 0xc8, 0x14, 2);
         ApproachStateValue(&mAngleZ, &mStateValue2, 0, 0, 0x14, 1);
-        if (mStateTimer == 0x46)
+        if (mStateTimer == 70)
             func_0201267c(kSfxWindup, &mCamSpacePos);
     } else {
         if (mActionTimer != 0) {
@@ -309,7 +309,7 @@ void daChair_c::State2() {
                 mVertSpeed = FX_MUL(FX_SinIdx((u16)mPrevAngleX >> 4), -0x32000);
                 mSpeedZ = FX_MUL(reach, FX_CosIdx((u16)mPrevAngleY >> 4));
             } else {
-                if (mActionTimer > 0x14) {
+                if (mActionTimer > 20) {
                     mAngleY += 0x2710;
                 }
             }

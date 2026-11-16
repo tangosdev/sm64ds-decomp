@@ -8,8 +8,6 @@
  * mwccarm emits function sections in reverse source order. Keep the factory
  * first and UpdateModelTransform last. InitResources is the key function; the
  * inline destructor emits retail D1 then D0 with this class's RTTI and vtable.
- *
- * pad_0d0 is unused (not live).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

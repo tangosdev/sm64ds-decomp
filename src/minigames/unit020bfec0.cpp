@@ -271,7 +271,7 @@ int FlowerFace::Load() {
     dExtFrameCtrl_c::LoadFile(mHateAnim);
     PlayIdle();
     BMD_File *petalFile = dExtSimpleModel_c::LoadFile(mPetalFile);
-    for (int i = 0; i < 22; i++) {
+    for (int i = 0; i < PETAL_NUM; i++) {
         mPetals[i].SetModel(petalFile);
         mPetals[i].mActive = 0;
     }
@@ -286,7 +286,7 @@ void FlowerFace::Update() {
         if (mPetals[i].mActive != 0)
             mPetals[i].Update();
         i++;
-    } while (i < 22);
+    } while (i < PETAL_NUM);
 }
 
 void FlowerFace::Draw() {
@@ -308,14 +308,14 @@ void FlowerFace::Draw() {
 
     mModel.Render(0);
 
-    for (i = 0; i < 22; i++) {
+    for (i = 0; i < PETAL_NUM; i++) {
         if (mPetals[i].mActive != 0)
             mPetals[i].Draw();
     }
 }
 
 void FlowerFace::Reset() {
-    for (int i = 0; i < 22; i++)
+    for (int i = 0; i < PETAL_NUM; i++)
         mPetals[i].mActive = 0;
     PlayIdle();
 }
@@ -369,7 +369,7 @@ void FlowerFace::PlayPetalPulled() {
 
     mModel.currFrame = 0; /* rewind */
 
-    for (i = 0; i < 0x16; i++) {
+    for (i = 0; i < PETAL_NUM; i++) {
         if (mPetals[i].mActive == 0) {
             b.pos.x = 0x2000;
             b.pos.y = 0xa000;
@@ -1696,7 +1696,7 @@ void MascotWalker::StateWalk() {
 
 void MascotWalker::StartPause() {
     mModel.SetAnim(*(BCA_File *)mPauseAnimFile.filePtr, 8, 0, 0x800, 0);
-    mStateTimer = 0x78;
+    mStateTimer = 120;
     mPaused = 1;
     *(StateSlot *)mState = pmf_MascotWalker_StatePause;
 }

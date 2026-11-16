@@ -112,9 +112,6 @@ u8 DecIfAbove0_Byte(u8 *counter);
 s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
-/* Fix12<int> by value. Scalar parameters: the member form size-DIFFs.
-   See the leftover list. */
-
 /* Sine and cosine pairs indexed by (angle >> 4) * 2. */
 extern s8 gCurrentSublevel; /* current sublevel id */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -516,7 +513,7 @@ int daEykn_c::St_Attack_Main()
 
     if ((s16)(mAngleY - mTurnRefAngleY) == 0) {
         if (DecIfAbove0_Byte(&mShotTimer) == 0 && StartEyeAnim() != 0)
-            mShotTimer = 0x53;
+            mShotTimer = 83;
         unk_212 = 0xf0;
     }
 
@@ -578,7 +575,7 @@ int daEykn_c::St_Attack_Main()
             func_0201267c(0x165, &mCamSpacePos);
             mCircleTimer = kCircleFrames;
             unk_212 = 0xf0;
-            mShotTimer = 0x53;
+            mShotTimer = 83;
             mCircleAngle = 0;
             ResetEyeAnim();
         }
