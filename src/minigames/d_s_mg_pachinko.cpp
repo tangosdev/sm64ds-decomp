@@ -1180,7 +1180,9 @@ void dScMgPachinko_c::Ball_CheckPipes(int idx) {
  * the plain typed body (one sqrt expression, while-loop re-roll, every field
  * as mBall[i].f) is 0x260 without it and 0x230 with it. The ROM reaches each
  * field as its own this + offset base indexed by i * 0x38, the shape common
- * subexpressions off gives. */
+ * subexpressions off gives. Round 18: a `ball` pointer for every field is
+ * 0x204 without the pragma and 0x200 with it; the squared length summed in
+ * an s64 local is 0x260 / 0x230, as the one-expression form. */
 void dScMgPachinko_c::Ball_AimAtTarget(int i) {
     int idx;
     int n;
