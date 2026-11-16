@@ -1465,6 +1465,8 @@ static inline int IsTouchPressed(u8 held, u8 slot) {
     return held != 0 && gTouchInfo[slot].edge != 0;
 }
 /* Pause-screen update. */
+/* Kept, measured (#821, 2026-11-16): without opt_common_subs off the body is
+ * 0x30a8 against 0x30ac, 33 hunks and 2907 of 3115 words aligned. */
 #pragma opt_common_subs off
 void dScStage_c::PS_Update() {
     u8 var_sl;
