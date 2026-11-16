@@ -1081,9 +1081,15 @@ static inline int FX_Mul(int v1, int v2)
  * `sprite` picks, at its position plus offX/offY, through a 2x2
  * rotate-and-scale matrix: `rotation` is the angle (>> 4 indexes the shared
  * sine/cosine table) and the 20.12 `scale` is the scale. The products go through FX_Mul; spelled out in the body
- * they put the scale in the first smull's Rm instead of the table value. With
- * opt_prelinearize on, every callee-saved register in the loop rotates by one
- * place. */
+ * they put the scale in the first smull's Rm instead of the table value.
+ * Kept, measured (#821, 2026-11-16): without opt_prelinearize off this local
+ * FX_Mul (and the SDK's own fx32 FX_Mul body) is 42 of 60 words off, every
+ * callee-saved register in the loop rotated. Through fx.h's FX_MUL macro it is
+ * 6 words off: the scale lands in sl instead of ip, so the two smulls take
+ * other registers. 36 orders of the scale, sprite and matrix locals, the
+ * matrix stores and the x/y reads, swapped FX_MUL operands, a fx32 or long
+ * scale and an `idx` local all stay at 6. A ball pointer (local or walked)
+ * is 56; a function-scope matrix 42. */
 void dScMgPachinko_c::Ball_DrawAll() {
     int i;
     for (i = 0; i < BALL_NUM; i++) {
