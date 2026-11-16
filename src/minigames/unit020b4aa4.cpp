@@ -125,6 +125,7 @@ extern void Mg_SubmitScore(int score);
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 
+/* const folds Coin_Rise and Coin_RiseSpent. This int has to stay a load, in .rodata. */
 #pragma define_section coinframes ".rodata" ".rodata" ".rodata" far_data
 #pragma section coinframes begin
 int sMgCoinRiseFrames = 20;

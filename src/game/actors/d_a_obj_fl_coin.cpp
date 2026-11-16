@@ -96,7 +96,7 @@ struct FlCoinCollisionFilePtr : SharedFilePtr {
 };
 
 extern Entry data_ov064_0211c904[];
-extern SharedFilePtr *data_ov064_0211adc8[];
+extern SharedFilePtr *const data_ov064_0211adc8[];
 extern FlCoinCollisionFilePtr data_ov064_0211c800;
 struct CLPS_Block {
     u32 words[8];
@@ -444,15 +444,12 @@ Entry data_ov064_0211c904[6] = {
     data_ov064_0211bf70, data_ov064_0211bf88, data_ov064_0211bf78,
 };
 
-#pragma define_section coinro ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section coinro begin
-SharedFilePtr *data_ov064_0211adc8[] = {
+extern SharedFilePtr *const data_ov064_0211adc8[] = {
     &gFl1400ModelFile, &gFl1401ModelFile, &gFl1402ModelFile, &gFl1403ModelFile,
     &gFl1404ModelFile, &gFl1405ModelFile, &gFl1406ModelFile, &gFl1407ModelFile,
     &gFl1408ModelFile, &gFl1409ModelFile, &gFl1410ModelFile, &gFl1411ModelFile,
     &gFl1412ModelFile, &gFl1413ModelFile,
 };
-#pragma section coinro end
 
 CLPS_Block data_ov064_0211baac = {
     0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff,

@@ -61,12 +61,9 @@ extern Mecha05ModelFile TTC_MovingBar_ModelFile;
 extern Mecha05CollisionFilePtr TTC_MovingBar_ClsnFile;
 
 extern u8 data_0209f2c0;
-#pragma define_section mecha05_ro ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section mecha05_ro begin
-s16 data_ov065_0211c0c8[4] = {
+extern const s16 data_ov065_0211c0c8[4] = {
     55, 30, 55, 0,
 };
-#pragma section mecha05_ro end
 s8 data_ov065_0211d26c[4] = {
     1, 12, 55, 100,
 };

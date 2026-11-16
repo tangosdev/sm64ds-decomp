@@ -162,9 +162,7 @@ void daKrpa_c::ExecuteState() {
 }
 extern char data_ov070_021234c4[];
 extern char data_ov070_021234dc[];
-#pragma define_section krpa_ro ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section krpa_ro begin
-u32 data_ov070_021222e8[] = {
+extern const u32 data_ov070_021222e8[] = {
     0x1007, 0x100b, 0x1012, 0x101e, 0x1036, 0x105d, 0x1098, 0x10eb,
     0x115c, 0x11ee, 0x1379, 0x1638, 0x1948, 0x1bc6, 0x1ccd, 0x1c7c,
     0x1bc4, 0x1af7, 0x1b5b, 0x1bc9, 0x1c3b, 0x1cad, 0x1d1a, 0x1d7b,
@@ -175,7 +173,7 @@ u32 data_ov070_021222e8[] = {
     0xd1c, 0xd6b, 0xdb8, 0xe03, 0xe4a, 0xe8e, 0xece, 0xf09,
     0xf3f, 0xf70, 0xf9a, 0xfbf, 0xfdc, 0xff2, 0x1000,
 };
-u32 data_ov070_02122404[] = {
+extern const u32 data_ov070_02122404[] = {
     0x1001, 0x1003, 0x1006, 0x100b, 0x1011, 0x1018, 0x1021, 0x102a,
     0x1035, 0x1040, 0x104c, 0x1059, 0x1067, 0x1076, 0x1085, 0x1094,
     0x10a5, 0x10b6, 0x10c7, 0x10d8, 0x10ea, 0x10fc, 0x110e, 0x1121,
@@ -190,11 +188,10 @@ u32 data_ov070_02122404[] = {
     0x104c, 0x1040, 0x1035, 0x102a, 0x1021, 0x1018, 0x1011, 0x100b,
     0x1006, 0x1003, 0x1001, 0x1000,
 };
-#pragma section krpa_ro end
 
 int daKrpa_c::EnterIdle() {
     this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
-    this->mFrameController.SetFrames(data_ov070_02122404, 0x64, 1);
+    this->mFrameController.SetFrames((u32 *)data_ov070_02122404, 0x64, 1);
     this->mStateTimer = 115;
     this->mStateIndex = 0;
     return 1;
@@ -221,7 +218,7 @@ int daKrpa_c::ExecuteIdle() {
 }
 int daKrpa_c::EnterSpit() {
     this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234dc, 0x40000000, 0x1000, 0);
-    this->mFrameController.SetFrames(data_ov070_021222e8, 0x47, 0);
+    this->mFrameController.SetFrames((u32 *)data_ov070_021222e8, 0x47, 0);
     this->mStateIndex = 1;
     return 1;
 }

@@ -95,10 +95,7 @@ struct SeesawCollisionFilePtr : SharedFilePtr {
     ~SeesawCollisionFilePtr();
 };
 
-#pragma define_section rodatasec ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section rodatasec begin
-int data_ov095_02136f58[4] = {0x1000, 0x800, 0x1800, 0x1000};
-#pragma section rodatasec end
+extern const int data_ov095_02136f58[4] = {0x1000, 0x800, 0x1800, 0x1000};
 
 /* Per-variant asset row: the model file, the collision file and the CLPS block,
  * indexed by mVariant. */

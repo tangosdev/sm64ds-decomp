@@ -107,15 +107,12 @@ extern UdliftCollisionFilePtr gRcRift02CollisionFile;
 
 /* Per-variant model and collision files, and the CLPS block handed to
  * dBgW_KcMbg::SetFile, all indexed by mVariant. */
-#pragma define_section rodatasec ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section rodatasec begin
-SharedFilePtr *data_ov095_02136f68[3] = {
+extern SharedFilePtr *const data_ov095_02136f68[3] = {
     &gThLiftModelFile, &gCvUdLiftModelFile, &gRcRift02ModelFile,
 };
-SharedFilePtr *data_ov095_02136f74[3] = {
+extern SharedFilePtr *const data_ov095_02136f74[3] = {
     &gThLiftCollisionFile, &gCvUdLiftCollisionFile, &gRcRift02CollisionFile,
 };
-#pragma section rodatasec end
 extern CLPS_Block *data_ov095_021375a4[];
 /* The state table, indexed by mState. */
 extern State data_ov095_02137910[];

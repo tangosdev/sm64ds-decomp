@@ -38,7 +38,11 @@ enum daObjCtRotateBlock_c_AssetId {
     ASSET_CT_MECHA_OBJ02A_BMD = 0x05bb
 };
 
+/* decl_common.h spells this as a non-const void *[], which cannot be this .rodata. */
+#define data_ov065_0211c0a8 data_ov065_0211c0a8_decl
 #include "decl_common.h"
+#undef data_ov065_0211c0a8
+extern void *const data_ov065_0211c0a8[2];
 u8 data_ov065_0211cfa4[4] = {
     120, 40, 0, 0,
 };
@@ -296,10 +300,7 @@ RotateBlockModelFile gCtMechaObj01aModelFile(ASSET_CT_MECHA_OBJ01A_BMD);
 RotateBlockModelFile gCtMechaObj02aModelFile(ASSET_CT_MECHA_OBJ02A_BMD);
 RotateBlockCollisionFilePtr gCtMechaObj01CollisionFile(ASSET_CT_MECHA_OBJ01_KCL);
 RotateBlockCollisionFilePtr gCtMechaObj02CollisionFile(ASSET_CT_MECHA_OBJ02_KCL);
-#pragma define_section rotblk_ro ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section rotblk_ro begin
-void *data_ov065_0211c0a8[2] = {
+extern void *const data_ov065_0211c0a8[2] = {
     &gCtMechaObj01aModelFile,
     &gCtMechaObj02aModelFile,
 };
-#pragma section rotblk_ro end

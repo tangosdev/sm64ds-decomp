@@ -17,13 +17,17 @@
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 #include "decl_dCcAc_c.h"
+/* decl_common.h spells this as a non-const int[], which cannot be this .rodata. */
+#define data_ov022_02112c9c data_ov022_02112c9c_decl
 #include "decl_common.h"
+#undef data_ov022_02112c9c
 
 #include "daObjFlMaruta_c.h"
 #include "SharedFilePtr.h"
 
 extern CLPS_Block data_ov064_0211bbcc;
-extern "C" int data_ov022_02112c98[];
+extern "C" const int data_ov022_02112c98[];
+extern "C" const int data_ov022_02112c9c[];
 
 #pragma defer_codegen off
 
@@ -36,18 +40,18 @@ daObjFlMaruta_c::~daObjFlMaruta_c()
 
 int daObjFlMaruta_c::CleanupResources()
 {
-    return func_ov080_021270dc(this, data_ov022_02112c9c);
+    return func_ov080_021270dc(this, (void *)data_ov022_02112c9c);
 }
 
 int daObjFlMaruta_c::Behavior()
 {
     mMeshCollider.SetClipRadius(0x500000);
-    return func_ov080_0212714c(this, data_ov022_02112c98) & 0xff;
+    return func_ov080_0212714c(this, (void *)data_ov022_02112c98) & 0xff;
 }
 
 int daObjFlMaruta_c::InitResources()
 {
-    return func_ov080_021274ac(this, data_ov022_02112c9c);
+    return func_ov080_021274ac(this, (void *)data_ov022_02112c9c);
 }
 
 int *daObjFlMaruta_c_classInit(void) {
@@ -73,13 +77,10 @@ struct FlLogCollisionFile : SharedFilePtr {
 FlLogModelFile gFlLogModelFile(0x05fb);
 FlLogCollisionFile gFlLogCollisionFile(0x05fc);
 extern "C" {
-#pragma define_section rodatasec ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section rodatasec begin
-int data_ov022_02112c98[1] = {0x7d0000};
-int data_ov022_02112c9c[3] = {
+extern const int data_ov022_02112c98[1] = {0x7d0000};
+extern const int data_ov022_02112c9c[3] = {
     (int)&gFlLogModelFile,
     (int)&gFlLogCollisionFile,
     (int)&data_ov064_0211bbcc,
 };
-#pragma section rodatasec end
 }

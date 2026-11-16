@@ -99,17 +99,15 @@ extern DossyCollisionFileHandle gDossyBodyCollisionFile;
 extern DossyCollisionFileHandle gDossyHeadCollisionFile;
 
 extern "C" {
-#pragma define_section dossy_ro ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section dossy_ro begin
-u8 data_ov065_0211c078[8] = {
+extern const u8 data_ov065_0211c078[8] = {
     0, 3, 4, 1, 2, 6, 7, 0,
 };
-SharedFilePtr *data_ov065_0211c080[3] = {
+extern SharedFilePtr *const data_ov065_0211c080[3] = {
     &data_ov065_0211d768,
     &data_ov065_0211d748,
     &data_ov065_0211d770,
 };
-SharedFilePtr *data_ov065_0211c08c[7] = {
+extern SharedFilePtr *const data_ov065_0211c08c[7] = {
     &gDossyBodyCollisionFile,
     &gDossyNeckCollisionFile,
     &gDossyHeadCollisionFile,
@@ -118,7 +116,6 @@ SharedFilePtr *data_ov065_0211c08c[7] = {
     &gDossyLegLCollisionFile,
     &gDossyLegRCollisionFile,
 };
-#pragma section dossy_ro end
 extern void *data_ov065_0211cd68[];
 extern SharedFilePtr data_ov002_0210d9c0;
 

@@ -20,7 +20,12 @@ enum d_a_obj_ki_fune_AssetId {
 };
 
 #include "daObjKi_Fune_c.h"
+/* decl_common.h spells these as non-const void*[], which cannot be this .rodata. */
+#define data_ov016_021136dc data_ov016_021136dc_decl
+#define data_ov016_021136e4 data_ov016_021136e4_decl
 #include "decl_common.h"
+#undef data_ov016_021136dc
+#undef data_ov016_021136e4
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "dBgW.h"
@@ -46,6 +51,8 @@ extern "C" {
 extern unsigned char gCurrentStarId;
 }
 extern int IsStarCollected(int a, int b);
+extern void *const data_ov016_021136e4[2];
+extern void *const data_ov016_021136dc[2];
 
 /* Actor 0x39 is the rocking hull, which uses model/collision index 0. */
 static inline int IsRockingHull(daObjKi_Fune_c *ship) {
@@ -158,14 +165,11 @@ void *data_ov016_021149d4[2] = {
     &data_ov016_02113c6c,
     &data_ov016_02113c4c,
 };
-#pragma define_section rodatasec ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section rodatasec begin
-void *data_ov016_021136e4[2] = {
+extern void *const data_ov016_021136e4[2] = {
     &gKiFuneUpModelFile,
     &gKiFuneDownAModelFile,
 };
-void *data_ov016_021136dc[2] = {
+extern void *const data_ov016_021136dc[2] = {
     &gKiFuneUpCollisionFile,
     &gKiFuneDownACollisionFile,
 };
-#pragma section rodatasec end

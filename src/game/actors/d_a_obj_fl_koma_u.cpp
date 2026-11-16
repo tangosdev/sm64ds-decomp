@@ -56,7 +56,7 @@ struct FileTable {
     CLPS_Block *clps;
 };
 
-extern FileTable data_ov064_0211adbc;
+extern const FileTable data_ov064_0211adbc;
 
 daObjFl_KomaU_c::~daObjFl_KomaU_c() {}
 
@@ -171,8 +171,5 @@ CLPS_Block data_ov064_0211bdac = {
     0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
 };
 
-#pragma define_section komaro ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section komaro begin
-FileTable data_ov064_0211adbc = {
+extern const FileTable data_ov064_0211adbc = {
     &gFlKomaUModelFile, &gFlKomaUCollisionFile, &data_ov064_0211bdac};
-#pragma section komaro end

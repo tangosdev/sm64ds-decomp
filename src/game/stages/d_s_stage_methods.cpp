@@ -236,9 +236,9 @@ extern SharedFilePtr *data_020756f0[12];
 extern unsigned char data_02075768[];
 extern u8 data_02075769[];
 extern s8 data_0207576a[];
-extern OvTbl data_02075804[];
-extern int data_020758c8[];
-extern unsigned char data_02075998[][7];
+extern const OvTbl data_02075804[];
+extern const int data_020758c8[];
+extern const unsigned char data_02075998[][7];
 extern u8 data_0208a0e0;
 /* Where the stage goes next. Each destination is a sublevel, an entrance
    and a star; the crash screen prints the current three as "StageNo",
@@ -5074,9 +5074,7 @@ dScStage_c *dScStage_c_classInit() {
 }
 
 extern "C" {
-#pragma define_section forced_ro ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section forced_ro begin
-OvTbl data_02075804[7] = {
+extern const OvTbl data_02075804[7] = {
     {{ 0, 62, 63, 64, 65, 66, 67 }},
     {{ 0, 69, 70, 71, 72, 73, 74 }},
     {{ 0, 77, 78, 79, 80, 81, 82 }},
@@ -5085,9 +5083,7 @@ OvTbl data_02075804[7] = {
     {{ 0, 94, 95, 96, 97, 0, 0 }},
     {{ 0, 100, 101, 0, 0, 0, 0 }},
 };
-#pragma section forced_ro end
-#pragma section forced_ro begin
-int data_020758c8[52] = {
+extern const int data_020758c8[52] = {
     8, 9, 10, 11, 12, 13, 14, 15,
     16, 17, 18, 19, 20, 21, 22, 23,
     24, 25, 26, 27, 28, 29, 30, 31,
@@ -5096,9 +5092,7 @@ int data_020758c8[52] = {
     48, 49, 50, 51, 52, 53, 54, 55,
     56, 57, 58, 59,
 };
-#pragma section forced_ro end
-#pragma section forced_ro begin
-unsigned char data_02075998[52][7] = {
+extern const unsigned char data_02075998[52][7] = {
     { 0, 0, 5, 1, 4, 0, 0 },
     { 1, 1, 0, 2, 1, 1, 1 },
     { 2, 0, 4, 2, 1, 1, 1 },
@@ -5152,5 +5146,4 @@ unsigned char data_02075998[52][7] = {
     { 0, 0, 4, 2, 1, 0, 1 },
     { 0, 0, 0, 2, 0, 0, 1 },
 };
-#pragma section forced_ro end
 }

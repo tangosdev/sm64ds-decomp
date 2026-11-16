@@ -74,12 +74,9 @@ extern SharedFilePtr *data_ov065_0211d194[][3];
 extern SharedFilePtr *data_ov065_0211d198[][3];
 extern CLPS_Block *data_ov065_0211d19c[][3];
 extern u8 data_0209f2c0;
-#pragma define_section mecha04_ro ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section mecha04_ro begin
-int data_ov065_0211c0b8[4] = {
+extern const int data_ov065_0211c0b8[4] = {
     0x1000, 0x2000, 0x0, 0x0,
 };
-#pragma section mecha04_ro end
 
 /* mFlags 0x08 is the framework's off-screen bit (dActor_c.h bit table). */
 static inline int IsOffScreen(dActor_c *actor) {

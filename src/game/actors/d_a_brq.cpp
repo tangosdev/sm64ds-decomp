@@ -103,13 +103,10 @@ daBrq_c *daBrq_c_classInit() {
 extern "C" SpawnInfo<daBrq_c> g_profile_BIRIKYU = {
     daBrq_c_classInit, 0x010a, 0x007d, 0x00000003, 0, 0x00028000, 0x01000000, 0x00a28000};
 
-#pragma define_section brq_ro ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section brq_ro begin
-SharedFilePtr *data_ov070_021222e0[2] = {
+extern SharedFilePtr *const data_ov070_021222e0[2] = {
     &data_ov070_021235f4,
     &data_ov070_0212360c,
 };
-#pragma section brq_ro end
 extern BTA_File data_ov070_021231f4;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 

@@ -67,17 +67,14 @@ extern Linelift2CollisionFilePtr gKm3RiftCollisionFile;
 extern Linelift2CollisionFilePtr gKm2SusumuCollisionFile;
 extern Linelift2ModelFilePtr gKm3RiftModelFile;
 extern Linelift2ModelFilePtr gKm2SusumuModelFile;
-#pragma define_section linelift_ro ".rodata" ".rodata" ".rodata" far_absolute R
-#pragma section linelift_ro begin
-SharedFilePtr *gLinelift2CollisionFiles[2] = {
+extern SharedFilePtr *const gLinelift2CollisionFiles[2] = {
     &gKm3RiftCollisionFile,
     &gKm2SusumuCollisionFile,
 };
-SharedFilePtr *gLinelift2ModelFiles[2] = {
+extern SharedFilePtr *const gLinelift2ModelFiles[2] = {
     &gKm3RiftModelFile,
     &gKm2SusumuModelFile,
 };
-#pragma section linelift_ro end
 extern CLPS_Block data_ov058_02111af4;
 extern CLPS_Block data_ov056_02112610;
 CLPS_Block *gLinelift2ClpsBlocks[2] = {
