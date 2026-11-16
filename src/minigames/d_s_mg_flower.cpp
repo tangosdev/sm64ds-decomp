@@ -146,7 +146,7 @@ void dScMgFlower_c::DealPetals() {
         mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / mPetalsLeft;
         mPetals[petalIndex].pos.x = 0;
         mPetals[petalIndex].pos.y = 0x30000;
-        func_0203d388(&mPetals[petalIndex].pos.x, (s16)mPetals[petalIndex].angle);
+        func_0203d388(&mPetals[petalIndex].pos.x, mPetals[petalIndex].angle);
         mPetals[petalIndex].pos.x += 0x80000;
         mPetals[petalIndex].pos.y += 0x60000;
         mPetals[petalIndex].active = 1;
