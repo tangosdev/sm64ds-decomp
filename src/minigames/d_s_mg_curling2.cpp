@@ -267,10 +267,9 @@ void dScMgCurling2_c::StepYRampDown(int entry) {
         if ((s16)mPiece[entry].countdown3 < 0)
             mPiece[entry].countdown3 = 0;
     } else if (mPiece[entry].yInc > 0x100) {
-        int *q = &mPiece[entry].yInc;
-        *q = *q - 0x10;
-        if ((short)*q < 0x100)
-            *q = 0x100;
+        mPiece[entry].yInc -= 0x10;
+        if ((short)mPiece[entry].yInc < 0x100)
+            mPiece[entry].yInc = 0x100;
     } else {
         mPiece[entry].yIndex = 0;
     }
