@@ -85,17 +85,31 @@ extern FishModelFilePtr gFishAModelFile;
 extern FishModelFilePtr gFishBModelFile;
 extern FishAnimationFileHandle gFishSwimAnimationFile;
 extern FishAnimationFileHandle gFishAbSwimAnimationFile;
-extern SharedFilePtr *data_ov100_021473a4[]; /* BMD, by mModelIndex */
-extern SharedFilePtr *data_ov100_021473b0[]; /* BCA, by mModelIndex */
-extern daFishState data_ov100_02148a1c[];    /* by mState */
-/* The ROM PMF constants the state table copies from (unlicensed .data). */
-extern daFishState data_ov100_02148450;
-extern daFishState data_ov100_02148460;
-extern daFishState data_ov100_02148448;
-extern daFishState data_ov100_02148468;
-extern daFishState data_ov100_02148458;
-extern daFishState data_ov100_02148470;
-extern daFishState data_ov100_02148478;
+extern "C" {
+void _ZN8daFish_c19StateWaitSchoolGoneEv();
+void _ZN8daFish_c18StateWaitForPlayerEv();
+void _ZN8daFish_c9StateFleeEv();
+void _ZN8daFish_c19StateWaitPlayerAwayEv();
+void _ZN8daFish_c9StateIdleEv();
+void _ZN8daFish_c11StateWanderEv();
+void _ZN8daFish_c14StateTurnAboutEv();
+}
+extern SharedFilePtr *const data_ov100_021473a4[3] = {
+    &gFishModelFile, &gFishAModelFile, &gFishBModelFile,
+};
+extern SharedFilePtr *const data_ov100_021473b0[3] = {
+    &gFishSwimAnimationFile, &gFishAbSwimAnimationFile, &gFishAbSwimAnimationFile,
+};
+extern daFishState data_ov100_02148a1c[];
+/* Two-word pointer-to-member images. The initializer copies them into
+   data_ov100_02148a1c. */
+int data_ov100_02148448[2] = {(int)&_ZN8daFish_c19StateWaitSchoolGoneEv, 0};
+int data_ov100_02148450[2] = {(int)&_ZN8daFish_c18StateWaitForPlayerEv, 0};
+int data_ov100_02148458[2] = {(int)&_ZN8daFish_c9StateFleeEv, 0};
+int data_ov100_02148460[2] = {(int)&_ZN8daFish_c19StateWaitPlayerAwayEv, 0};
+int data_ov100_02148468[2] = {(int)&_ZN8daFish_c9StateIdleEv, 0};
+int data_ov100_02148470[2] = {(int)&_ZN8daFish_c11StateWanderEv, 0};
+int data_ov100_02148478[2] = {(int)&_ZN8daFish_c14StateTurnAboutEv, 0};
 extern int data_0209f32c;
 
 /* local extern: arm9 C helpers with no shared header yet. */
@@ -437,6 +451,8 @@ FishAnimationFileHandle gFishSwimAnimationFile(ASSET_FISH_SWIM_BCA);
 FishAnimationFileHandle data_ov100_021489cc(ASSET_FISH_WAIT_BCA);
 FishAnimationFileHandle gFishAbSwimAnimationFile(ASSET_FISH_AB_SWIM_BCA);
 daFishState data_ov100_02148a1c[7] = {
-    data_ov100_02148450, data_ov100_02148460, data_ov100_02148448, data_ov100_02148468,
-    data_ov100_02148458, data_ov100_02148470, data_ov100_02148478,
+    *(daFishState *)&data_ov100_02148450, *(daFishState *)&data_ov100_02148460,
+    *(daFishState *)&data_ov100_02148448, *(daFishState *)&data_ov100_02148468,
+    *(daFishState *)&data_ov100_02148458, *(daFishState *)&data_ov100_02148470,
+    *(daFishState *)&data_ov100_02148478,
 };

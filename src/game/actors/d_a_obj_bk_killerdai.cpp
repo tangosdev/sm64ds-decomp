@@ -82,7 +82,12 @@ struct BkKillerFiles {
     SharedFilePtr *collision;
     CLPS_Block *clps;
 };
-extern BkKillerFiles data_ov079_02127f64;
+extern char data_ov079_02127e7c;
+BkKillerFiles data_ov079_02127f64 = {
+    &gBkKillerDaiModelFile,
+    &gBkKillerDaiCollisionFile,
+    (CLPS_Block *)&data_ov079_02127e7c,
+};
 
 extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
