@@ -9450,10 +9450,8 @@ fx32 daPly_c::func_ov002_020cedb0(fx32 a) {
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 int daPly_c::func_ov002_020cede0() {
-    char *thiz = (char *)this;
-    daPly_c *p = (daPly_c *)thiz;
     Vector3 v;
-    int y = p->mPosY;
+    int y = mPosY;
     int g = data_0209f32c;
     if (g < y - 0x64000)
         return 0;
@@ -9466,31 +9464,31 @@ int daPly_c::func_ov002_020cede0() {
     }
     dBgCh_Gnd rg;
     {
-        int z = p->mPosZ;
+        int z = mPosZ;
         int yy = data_0209f32c + 0xc8000;
-        int x = p->mPosX;
+        int x = mPosX;
         v.x = x;
         v.y = yy;
         v.z = z;
     }
     rg.StartDetectingWater();
     rg.StopDetectingOrdinary();
-    rg.SetObjAndPos(v, (dActor_c *)thiz);
+    rg.SetObjAndPos(v, this);
     if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
         return 1;
     }
     v.y = data_0209212c;
     rg.StartDetectingWater();
     rg.StopDetectingOrdinary();
-    rg.SetObjAndPos(v, (dActor_c *)thiz);
+    rg.SetObjAndPos(v, this);
     if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
-        p->mWaterSurfaceY = rg.clsnY;
-        data_0209f32c = p->mWaterSurfaceY;
+        mWaterSurfaceY = rg.clsnY;
+        data_0209f32c = mWaterSurfaceY;
         return 1;
     }
     if (gCurrentSublevel == 0x21) {
-        p->mWaterSurfaceY = 0x80000000;
-        data_0209f32c = p->mWaterSurfaceY;
+        mWaterSurfaceY = 0x80000000;
+        data_0209f32c = mWaterSurfaceY;
         return 0;
     }
     return 1;
