@@ -14834,6 +14834,13 @@ int daPly_c::St_Hurt_Init() {
     this->SetAnim(data_ov002_0210a6d4[mStateStep & 7], 0x40000000, 0x1000, 0);
     mid = this->GetBodyModelID(param1 & 0xff, 0);
     m = (char *)mModels.mBodyModels[mid];
+    /* r19: the ROM forms the dExtFrameCtrl_c base (+0x50) in a register and
+     * stores currFrame at +8 from it. Every typed form folds that to one
+     * store at +0x58, 0xdc -> 0xd8: the St_CameraZoom_Main reference,
+     * a dExtAnmModel_c * local, a dExtFrameCtrl_c * from the reference
+     * cast, mBodyModels[mid]->currFrame and a reference-then-address
+     * split. An implicitly converted dExtFrameCtrl_c * adds the null test
+     * (0xe0). The masked round trip is what keeps the add. */
     m = (char *)((unsigned int)&(dExtFrameCtrl_c &)*(dExtAnmModel_c *)m & 0xFFFFFFFFU);
     ((dExtFrameCtrl_c *)m)->currFrame = 0;
     mStatePhase = 0;
