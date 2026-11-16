@@ -36,6 +36,11 @@
       "name": ".bss",
       "start": "0x021423a8",
       "end": "0x021424ec"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0212e8e8",
+      "end": "0x0212e954"
     }
   ],
   "functions": [
@@ -658,6 +663,71 @@
       "size": "0x5c",
       "binding": "STB_GLOBAL",
       "evidence": "23 permuted sprite pointers, plain-copied from the ROM constants"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "sMemory2ResultRowsPerDifficulty",
+      "address": "0x0212e8e8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2ResultColsPerDifficulty",
+      "address": "0x0212e8f4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2PreviewCountPerDifficulty",
+      "address": "0x0212e900",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2PreviewTimePerDifficulty",
+      "address": "0x0212e90c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2EasyDealsPerDifficulty",
+      "address": "0x0212e918",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2NormalDealsPerDifficulty",
+      "address": "0x0212e924",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2FlyAwayLimitPerMode",
+      "address": "0x0212e930",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2HardDealsPerMode",
+      "address": "0x0212e93c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2FourthDealsPerDifficulty",
+      "address": "0x0212e948",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
     }
   ],
   "notes": [

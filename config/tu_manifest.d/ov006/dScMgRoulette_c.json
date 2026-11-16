@@ -35,6 +35,11 @@
       "name": ".bss",
       "start": "0x021428c8",
       "end": "0x02142bdc"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0212ed14",
+      "end": "0x0212ed88"
     }
   ],
   "functions": [
@@ -319,7 +324,44 @@
       "ordinal": 39
     }
   ],
-  "data": [],
+"rodata": [
+    {
+      "symbol": "sRoulettePayoutMultipliers",
+      "address": "0x0212ed14",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "Roulette table read by index. Declared length matches this symbol's window."
+    },
+    {
+      "symbol": "sRouletteStripSpriteBase",
+      "address": "0x0212ed24",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "Roulette table read by index. Declared length matches this symbol's window."
+    },
+    {
+      "symbol": "sRouletteStopTiles",
+      "address": "0x0212ed34",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Roulette table read by index. Declared length matches this symbol's window."
+    },
+    {
+      "symbol": "sRouletteTileBounds",
+      "address": "0x0212ed4c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "Roulette table read by index. Declared length matches this symbol's window."
+    },
+    {
+      "symbol": "sRouletteRowEdgesY",
+      "address": "0x0212ed68",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "Roulette table read by index. Declared length matches this symbol's window."
+    }
+  ],
+    "data": [],
   "bss": [
     {
       "symbol": "sRouletteLandedRacer",

@@ -35,6 +35,11 @@
       "name": ".bss",
       "start": "0x02140808",
       "end": "0x02141640"
+    },
+    {
+      "name": ".data",
+      "start": "0x0213b3f4",
+      "end": "0x0213b814"
     }
   ],
   "functions": [
@@ -453,7 +458,22 @@
       "ordinal": 58
     }
   ],
-  "data": [],
+"data": [
+    {
+      "symbol": "sTrmpLinePltt",
+      "address": "0x0213b3f4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "Trampoline line palette bytes loaded by func_02045a50."
+    },
+    {
+      "symbol": "sTrmpLineTex",
+      "address": "0x0213b414",
+      "size": "0x400",
+      "binding": "STB_GLOBAL",
+      "evidence": "Trampoline line texture, 1024 bytes loaded by LoadTextureToVram."
+    }
+  ],
   "bss": [
     {
       "symbol": "_ZGVsUnitY$230",

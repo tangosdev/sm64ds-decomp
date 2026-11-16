@@ -49,6 +49,7 @@ src/minigames/unit020cd744.cpp:
     .init start:0x0212fc7c end:0x0212fd48
     .ctor start:0x0213357c end:0x02133580
     .bss start:0x02140808 end:0x02141640
+    .data start:0x0213b3f4 end:0x0213b814
 
 src/minigames/d_s_mg_amida.cpp:
     complete
@@ -105,6 +106,8 @@ src/minigames/d_s_mg_d3d_base.cpp:
     .init start:0x02130a04 end:0x02130a08
     .ctor start:0x02133598 end:0x0213359c
     .bss start:0x02141a40 end:0x02141e54
+    .rodata start:0x0212e574 end:0x0212e57c
+    .data start:0x0213c5e8 end:0x0213c610
 
 src/minigames/d_mg3d_esp_anim_set.cpp:
     complete
@@ -166,6 +169,7 @@ src/minigames/d_s_mg_memory2.cpp:
     .ctor start:0x021335b4 end:0x021335b8
     .data start:0x0213d248 end:0x0213d338
     .bss start:0x021423a8 end:0x021424ec
+    .rodata start:0x0212e8e8 end:0x0212e954
 
 src/minigames/d_s_mg_m_carlo.cpp:
     complete
@@ -173,6 +177,7 @@ src/minigames/d_s_mg_m_carlo.cpp:
     .init start:0x021318a0 end:0x0213195c
     .ctor start:0x021335b8 end:0x021335bc
     .bss start:0x0214250c end:0x02142558
+    .data start:0x0213d5e0 end:0x0213d600
 
 src/minigames/d_s_mg_m_carlo2.cpp:
     complete
@@ -209,6 +214,7 @@ src/minigames/d_s_mg_roulette_methods.cpp:
     .init start:0x021322bc end:0x02132894
     .ctor start:0x021335cc end:0x021335d0
     .bss start:0x021428c8 end:0x02142bdc
+    .rodata start:0x0212ed14 end:0x0212ed88
 
 src/minigames/d_s_mg_roulette.cpp:
     complete
