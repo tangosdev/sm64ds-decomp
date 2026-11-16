@@ -5353,11 +5353,10 @@ inline void G2_SetOBJMode(OamAttr *oam_, int mode, int cParam) {
  * Leftover: the mode byte needs both the mask and the (u8) cast, and the last
  * Pakkun G2_SetOBJMode reads its colour param from [2] instead of [2]+1. */
 s32 dScMgSmartball_c::InitResources() {
-    char *c = (char *)this;
     void *f;
     s32 i;
-    if ((*((s32 *)(c + 8))) & 0xff) {
-        mLevel = (u8)((*((s32 *)(c + 8))) & 0xFF);
+    if (param1 & 0xff) {
+        mLevel = (u8)(param1 & 0xFF);
         if ((mLevel) > 0x270e) {
             mLevel = 0x270e;
         }
@@ -5403,7 +5402,7 @@ s32 dScMgSmartball_c::InitResources() {
     G2S_BG3Mosaic(false);
     G2S_SetBG3Offset(0, 0);
     G2S_SetBG3Priority(2);
-    if (((u8)(*((s32 *)(c + 8)))) == 0) {
+    if ((u8)param1 == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1FrameNcgPath);
         DecompressLZ16(f, G2_GetBG2CharPtr());
         Ov004_Deallocate(f);
@@ -5430,7 +5429,7 @@ s32 dScMgSmartball_c::InitResources() {
         DecompressLZ16(f, G2S_GetBG3CharPtr());
         Ov004_Deallocate(f);
     }
-    if (((u8)(*((s32 *)(c + 8)))) == 0) {
+    if ((u8)param1 == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1NclPath);
         DC_FlushRange(f, 0x1a0);
         GX_LoadBGPltt(f, 0x60, 0x1a0);
