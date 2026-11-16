@@ -44,9 +44,10 @@
       "end": "0x02127c28"
     },
     {
-      "name": ".data",
+      "name": ".data.w127c28",
       "start": "0x02127cfc",
-      "end": "0x02127e7c"
+      "end": "0x02127e7c",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -783,7 +784,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.w127c28",
           "start": "0x02127cfc",
           "end": "0x02127e7c",
           "differingBytes": 0,

@@ -33,6 +33,30 @@
       "end": "0x0210b9a8"
     },
     {
+      "name": ".data.demoEnd2",
+      "input_section": ".data",
+      "start": "0x0210b9cc",
+      "end": "0x0210b9e4"
+    },
+    {
+      "name": ".data.demoEnd1",
+      "input_section": ".data",
+      "start": "0x0210ba7c",
+      "end": "0x0210ba9c"
+    },
+    {
+      "name": ".data.demoEnd3",
+      "input_section": ".data",
+      "start": "0x0210ba9c",
+      "end": "0x0210babc"
+    },
+    {
+      "name": ".data.demoEnd0",
+      "input_section": ".data",
+      "start": "0x0210bb5c",
+      "end": "0x0210bb7c"
+    },
+    {
       "name": ".bss",
       "start": "0x02110afc",
       "end": "0x0211110c"
@@ -40,7 +64,7 @@
     {
       "name": ".rodata",
       "start": "0x021000b8",
-      "end": "0x021001b0"
+      "end": "0x021002a0"
     }
   ],
   "functions": [
@@ -1765,6 +1789,34 @@
       "symbol": "data_ov002_0210b998",
       "address": "0x0210b998",
       "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_0210b9cc",
+      "address": "0x0210b9cc",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "THE END sprite list for data_ov002_0210b988[2] (French/Spanish); three entries, attr3 0xffff terminates"
+    },
+    {
+      "symbol": "data_ov002_0210ba7c",
+      "address": "0x0210ba7c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "THE END sprite list for data_ov002_0210b988[1] (German); four entries, attr3 0xffff terminates"
+    },
+    {
+      "symbol": "data_ov002_0210ba9c",
+      "address": "0x0210ba9c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "THE END sprite list for data_ov002_0210b988[3] (Italian); four entries, attr3 0xffff terminates"
+    },
+    {
+      "symbol": "data_ov002_0210bb5c",
+      "address": "0x0210bb5c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "THE END sprite list for data_ov002_0210b988[0] (Japanese/English); four entries, attr3 0xffff terminates"
     }
   ],
   "bss": [
@@ -2651,6 +2703,34 @@
           "firstDiff": null
         },
         {
+          "section": ".data.demoEnd2",
+          "start": "0x0210b9cc",
+          "end": "0x0210b9e4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.demoEnd1",
+          "start": "0x0210ba7c",
+          "end": "0x0210ba9c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.demoEnd3",
+          "start": "0x0210ba9c",
+          "end": "0x0210babc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.demoEnd0",
+          "start": "0x0210bb5c",
+          "end": "0x0210bb7c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02110afc",
           "end": "0x0211110c",
@@ -2659,14 +2739,14 @@
         {
           "section": ".rodata",
           "start": "0x021000b8",
-          "end": "0x021001b0",
+          "end": "0x021002a0",
           "differingBytes": 0,
           "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 352
+          "LICENSED": 381
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -2677,19 +2757,19 @@
           {
             "section": ".init",
             "original": [
-              610
+              642
             ],
             "desired": [
-              610
+              642
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              608
+              640
             ],
             "desired": [
-              608
+              640
             ]
           },
           {
@@ -2801,9 +2881,15 @@
               562,
               564,
               566,
-              571,
-              572,
-              585
+              588,
+              589,
+              590,
+              591,
+              597,
+              599,
+              603,
+              604,
+              617
             ],
             "desired": [
               408,
@@ -2890,7 +2976,7 @@
               560,
               558,
               439,
-              585,
+              617,
               525,
               431,
               441,
@@ -2913,8 +2999,50 @@
               291,
               289,
               287,
-              571,
-              572
+              603,
+              604,
+              588,
+              589,
+              590,
+              591,
+              597,
+              599
+            ]
+          },
+          {
+            "section": ".data.demoEnd2",
+            "original": [
+              593
+            ],
+            "desired": [
+              593
+            ]
+          },
+          {
+            "section": ".data.demoEnd1",
+            "original": [
+              594
+            ],
+            "desired": [
+              594
+            ]
+          },
+          {
+            "section": ".data.demoEnd3",
+            "original": [
+              595
+            ],
+            "desired": [
+              595
+            ]
+          },
+          {
+            "section": ".data.demoEnd0",
+            "original": [
+              596
+            ],
+            "desired": [
+              596
             ]
           },
           {
@@ -3109,6 +3237,51 @@
               465,
               317
             ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              569,
+              570,
+              571,
+              572,
+              573,
+              574,
+              575,
+              576,
+              577,
+              578,
+              579,
+              580,
+              581,
+              582,
+              583,
+              584,
+              585,
+              586,
+              587
+            ],
+            "desired": [
+              569,
+              570,
+              571,
+              572,
+              573,
+              574,
+              575,
+              576,
+              577,
+              578,
+              579,
+              580,
+              581,
+              582,
+              583,
+              584,
+              585,
+              586,
+              587
+            ]
           }
         ],
         "objisolate": {
@@ -3222,9 +3395,15 @@
                 562,
                 564,
                 566,
-                571,
-                572,
-                585
+                588,
+                589,
+                590,
+                591,
+                597,
+                599,
+                603,
+                604,
+                617
               ],
               "desired": [
                 408,
@@ -3311,7 +3490,7 @@
                 560,
                 558,
                 439,
-                585,
+                617,
                 525,
                 431,
                 441,
@@ -3334,8 +3513,14 @@
                 291,
                 289,
                 287,
-                571,
-                572
+                603,
+                604,
+                588,
+                589,
+                590,
+                591,
+                597,
+                599
               ],
               "slots": [
                 269,
@@ -3444,9 +3629,15 @@
                 562,
                 564,
                 566,
-                571,
-                572,
-                585
+                588,
+                589,
+                590,
+                591,
+                597,
+                599,
+                603,
+                604,
+                617
               ]
             },
             {
@@ -3738,9 +3929,9 @@
               ]
             }
           ],
-          "symbolIndices": 202,
+          "symbolIndices": 208,
           "sectionLinks": 0,
-          "sectionInfos": 101,
+          "sectionInfos": 104,
           "error": null
         },
         "errors": null
@@ -9252,6 +9443,27 @@
       "symbol": "data_ov002_02100190",
       "address": "0x02100190",
       "size": "0x20"
+    },
+    {
+      "symbol": "data_ov002_021001b0",
+      "address": "0x021001b0",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-language doll placements for data_ov002_0210b97c: five (x, y, priority, frame) rows"
+    },
+    {
+      "symbol": "data_ov002_02100200",
+      "address": "0x02100200",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-language doll placements for data_ov002_0210b97c: five (x, y, priority, frame) rows"
+    },
+    {
+      "symbol": "data_ov002_02100250",
+      "address": "0x02100250",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-language doll placements for data_ov002_0210b97c: five (x, y, priority, frame) rows"
     }
   ]
 }

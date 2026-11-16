@@ -43,6 +43,12 @@
       "input_section": ".data",
       "start": "0x021149d4",
       "end": "0x021149dc"
+    },
+    {
+      "name": ".data.kiFuneClps",
+      "start": "0x02113c4c",
+      "end": "0x02113c8c",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -117,6 +123,20 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "two CLPS pointers, one per hull"
+    },
+    {
+      "symbol": "data_ov016_02113c4c",
+      "address": "0x02113c4c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block of the still hull: 'CLPS' tag, 8-byte stride header with one entry, then the default entries"
+    },
+    {
+      "symbol": "data_ov016_02113c6c",
+      "address": "0x02113c6c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block of the rocking hull: 'CLPS' tag, 8-byte stride header with one entry, then the default entries"
     }
   ],
   "rodata": [
@@ -219,25 +239,25 @@
         "_ZN10dBgActor_cD2Ev"
       ],
       "droppedSections": [
-        5,
-        6,
-        11,
-        12,
-        13,
-        14,
-        15,
+        7,
+        8,
         17,
         18,
         19,
         20,
         21,
-        22,
+        23,
+        24,
+        25,
         26,
-        27,
-        28,
         29,
-        45,
-        46
+        30,
+        32,
+        33,
+        36,
+        37,
+        53,
+        54
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -264,12 +284,13 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV14daObjKi_Fune_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 2 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -331,6 +352,13 @@
           "section": ".data.morayTail",
           "start": "0x021149d4",
           "end": "0x021149dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.kiFuneClps",
+          "start": "0x02113c4c",
+          "end": "0x02113c8c",
           "differingBytes": 0,
           "firstDiff": null
         }

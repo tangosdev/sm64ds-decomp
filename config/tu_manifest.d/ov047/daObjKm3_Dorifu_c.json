@@ -36,6 +36,18 @@
       "name": ".bss",
       "start": "0x02112658",
       "end": "0x02112720"
+    },
+    {
+      "name": ".data.km3DorifuClps",
+      "input_section": ".data",
+      "start": "0x02111a74",
+      "end": "0x02111ab4"
+    },
+    {
+      "name": ".data.km3DorifuMidClps",
+      "input_section": ".data",
+      "start": "0x02111bb4",
+      "end": "0x02111bd4"
     }
   ],
   "functions": [
@@ -82,6 +94,27 @@
       "size": "0x28",
       "binding": "STB_GLOBAL",
       "evidence": "Three resource rows and the next row's model pointer."
+    },
+    {
+      "symbol": "data_ov047_02111a74",
+      "address": "0x02111a74",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "first plank group, two entries: the 0x00000fc0 floor and the 0x00004fc0 wall"
+    },
+    {
+      "symbol": "data_ov047_02111a94",
+      "address": "0x02111a94",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "second plank group, same two entries as the first"
+    },
+    {
+      "symbol": "data_ov047_02111bb4",
+      "address": "0x02111bb4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "third plank group, two entries: the 0x00000fc0 floor and the 0x00002fc0 wall"
     }
   ],
   "bss": [
@@ -250,8 +283,8 @@
         "_ZN13daObjDorifu_cD2Ev"
       ],
       "droppedSections": [
+        12,
         13,
-        14,
         17,
         18,
         19,
@@ -259,21 +292,21 @@
         23,
         26,
         27,
+        28,
         29,
-        30,
+        31,
         32,
-        33,
+        34,
         35,
-        36,
         40,
         41,
         42,
-        43,
-        44,
-        55,
-        56,
-        57,
-        58
+        48,
+        49,
+        60,
+        61,
+        62,
+        63
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -304,7 +337,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV17daObjKm3_Dorifu_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -366,6 +400,20 @@
           "start": "0x02112658",
           "end": "0x02112720",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.km3DorifuClps",
+          "start": "0x02111a74",
+          "end": "0x02111ab4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.km3DorifuMidClps",
+          "start": "0x02111bb4",
+          "end": "0x02111bd4",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

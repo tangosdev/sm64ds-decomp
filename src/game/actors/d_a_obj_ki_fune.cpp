@@ -138,8 +138,22 @@ KiFuneModelFilePtr gKiFuneDownAModelFile(ASSET_KI_FUNE_DOWN_A_BMD);
 KiFuneClsnFileHandle gKiFuneUpCollisionFile(ASSET_KI_FUNE_UP_KCL);
 KiFuneClsnFileHandle gKiFuneDownACollisionFile(ASSET_KI_FUNE_DOWN_A_KCL);
 
-extern int data_ov016_02113c6c;
-extern int data_ov016_02113c4c;
+/* Collision-property blocks, one per hull: the 'CLPS' tag, the 8-byte
+ * stride header with one entry, then the default entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+
+CLPS_Block data_ov016_02113c4c = {
+    0x53504c43, 0x00010008,
+    {0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
+CLPS_Block data_ov016_02113c6c = {
+    0x53504c43, 0x00010008,
+    {0x00000fc5, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
 extern "C" void *data_ov016_021149d4[2] = {
     &data_ov016_02113c6c,
     &data_ov016_02113c4c,

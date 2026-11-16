@@ -33,9 +33,10 @@
       "end": "0x021142ac"
     },
     {
-      "name": ".data",
+      "name": ".data.w12ea0",
       "start": "0x0211306c",
-      "end": "0x0211308c"
+      "end": "0x0211308c",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -453,7 +454,7 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".data",
+          "section": ".data.w12ea0",
           "start": "0x0211306c",
           "end": "0x0211308c",
           "differingBytes": 0,

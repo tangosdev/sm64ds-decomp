@@ -64,3 +64,16 @@ extern "C" daObjFloatBoard_c_Resources data_ov016_02114b8c = {
     &data_ov016_02114e4c,
     &data_ov016_02113bec,
 };
+
+/* CLPS property block for the floating plank: the 'CLPS' tag, the 8-byte
+ * stride header with one entry, then the default entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+
+CLPS_Block data_ov016_02113bec = {
+    0x53504c43, 0x00010008,
+    {0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};

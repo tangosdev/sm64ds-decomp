@@ -2,7 +2,9 @@
     .rodata     start:0x021344e8 end:0x02134524 kind:rodata align:4
     .init       start:0x02134524 end:0x02134b68 kind:code align:4
     .ctor       start:0x02134b68 end:0x02134b80 kind:rodata align:4
-    .data       start:0x02134ba0 end:0x02135440 kind:data align:32
+    .data start:0x02134ba0 end:0x02135100 kind:data align:32
+    .data.dsnClps start:0x02135100 end:0x02135120 kind:data align:4
+    .data.w135120 start:0x02135120 end:0x02135440 kind:data align:32
     .bss        start:0x02135440 end:0x021356e0 kind:bss align:32
 src/game/actors/d_a_obj_rotate_updown_lift.cpp:
     complete
@@ -39,8 +41,9 @@ src/game/actors/d_a_dsn.cpp:
     .text start:0x02132938 end:0x02132d04
     .init start:0x02134930 end:0x021349c4
     .ctor start:0x02134b74 end:0x02134b78
+    .data.dsnClps start:0x02135100 end:0x02135120
     .bss start:0x02135610 end:0x0213564c
-    .data start:0x02135138 end:0x02135150
+    .data.w135120 start:0x02135138 end:0x02135150
 
 src/game/actors/d_a_dsn_base.cpp:
     complete
