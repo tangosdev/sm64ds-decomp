@@ -12,7 +12,7 @@
 // Notes:
 // - States: 0 fall (bounce on landing), 1 carried, 2 in Yoshi's mouth (mFlags
 //   0x20000 / 0x40000). Each row of data_ov080_0212847c is an Init/Main pair.
-// - StateYoshiMouthMain stores 0 in pad_0d0, the word in front of mModel.
+// - StateYoshiMouthMain clears mEatingPlayer once Yoshi lets go.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daBttBk_c_AssetId { ASSET_BATTA_BLOCK_BMD = 0x02ac };
@@ -173,19 +173,19 @@ void daBttBk_c::UpdateModelTransform() {
         if (sv < 0)
             sv = -sv;
         int result = FX_MUL(sv, 0x28000);
-        DropShadowScaleXYZ(mShadowModel, mShadowMtx, 0x96000, 0x32000, result + 0x96000, 0xf);
+        DropShadowScaleXYZ(mShadowModel, mShadowMtx, 0x96000, 0x32000, result + 0x96000, 15);
     }
 }
 
-/* State 2 update: back to state 0 once neither flag bit 17 nor 18 is set.
- * The 0 stored in pad_0d0 is the state passed to SetState. */
+/* State 2 update: once neither flag bit 17 nor 18 is set, forget the eating
+ * player and go back to state 0. */
 int daBttBk_c::StateYoshiMouthMain() {
     int flags = mFlags;
     int inYoshiMouthA = (flags & 0x20000) ? 1 : 0;
     if (inYoshiMouthA == 0) {
         int inYoshiMouthB = (flags & 0x40000) ? 1 : 0;
         if (inYoshiMouthB == 0) {
-            pad_0d0 = 0;
+            mEatingPlayer = 0;
             SetState(0);
         }
     }
@@ -266,7 +266,7 @@ int daBttBk_c::StateCarriedInit() {
 int daBttBk_c::StateFallMain() {
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround()) {
-        int v = mVertSpeed * -0x3c;
+        int v = mVertSpeed * -60;
         mVertSpeed = v / 100;
     } else if (mWithMeshClsn.IsOnGround()) {
         mVertSpeed = 0xc000;
@@ -351,9 +351,9 @@ int daBttBk_c::InitResources() {
         mPosY = ground.clsnY;
     else
         mPosY = pos.y;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScaleX = FX32_ONE;
+    mScaleY = FX32_ONE;
+    mScaleZ = FX32_ONE;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mCarrier = 0;
     SetState(0);

@@ -123,7 +123,7 @@ int daObjCtMecha11_c::Behavior() {
                 mRandDirection = 1;
             else
                 mRandDirection = -1;
-            mRandTimer = ((r % 4 + 1) * 0x1e);
+            mRandTimer = ((r % 4 + 1) * 30);
             mRandFrames = mRandTimer;
         } else {
             if (mRandTimer < mRandFrames - 5) {

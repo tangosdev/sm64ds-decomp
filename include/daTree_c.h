@@ -13,7 +13,6 @@
 #include "dExtSimpleModel_c.h"
 
 struct daTree_c : dActor_c {
-    u8 pad_0d0[0x4];
     /* One dExtSimpleModel_c per spawn-param variant (bits 4-6, clamped to 4); the
      * factory constructs all five, InitResources loads only its own. */
     dExtSimpleModel_c mModel[5]; /* 0x0d4 */

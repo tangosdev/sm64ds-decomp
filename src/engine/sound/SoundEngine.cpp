@@ -679,7 +679,7 @@ extern "C" void func_020520a4(void *node) {
 extern "C" int func_02052008(struct SndHeap *heap) {
     int i;
     NNS_SndArcGetCurrent();
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         struct SndPlayerInfo *info = NNS_SndArcGetPlayerInfo(i);
         if (info == 0)
             continue;
@@ -1831,12 +1831,12 @@ extern "C" void NNSi_SndPlayerInit(void) {
     int i;
     NNS_FndInitList(&sPrioList, 0x14);
     NNS_FndInitList(&sFreeList, 0x14);
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         sSeqPlayer[i].status = 0;
         sSeqPlayer[i].playerNo = (unsigned char)i;
         NNS_FndAppendListObject(&sFreeList, &sSeqPlayer[i]);
     }
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         NNS_FndInitList(&sPlayer[i].mLists[0], 0xc);
         NNS_FndInitList(&sPlayer[i].mLists[1], 0);
         sPlayer[i].mPlayableSeqCount = 1;

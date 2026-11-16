@@ -32,8 +32,8 @@ extern char data_020a0d90[];
 }
 
 void func_0203ad84(void) {
-    func_02018434(data_020994d4, (int)data_020a0d90, 0x1f);
-    data_020a0d90[0x1f] = 0;
+    func_02018434(data_020994d4, (int)data_020a0d90, 31);
+    data_020a0d90[31] = 0;
 }
 
 PathPtr::PathPtr() : def(0), unk_004(0) {}

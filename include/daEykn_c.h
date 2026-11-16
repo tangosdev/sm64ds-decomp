@@ -20,8 +20,7 @@ struct daEykn_c : dActor_c {
 #ifdef __cplusplus
     struct State;
 #endif
-    /* dActor_c ends at 0x0d0; the derived payload begins at 0x0d4. */
-    u8 pad_0d0[0x4];
+    /* dActor_c ends at 0x0d4; the derived payload begins there. */
     /* dExtAnmModel_c member, named by _ZN14dExtAnmModel_cD1Ev at +0xd4 -- a relocation the ROM build
        checks. D1 and not D2, so it is this type and not an inlined base. */
     dExtAnmModel_c mAnmModel; /* 0x0d4 */

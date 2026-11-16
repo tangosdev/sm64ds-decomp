@@ -182,7 +182,7 @@ int daBbl_c::EnterFountain() {
  * the wait over. This is what makes the fixed flame a flame fountain. */
 int daBbl_c::ExecuteFountain() {
     if (mStateTimer == 0) {
-        mStateTimer = 0xb4;
+        mStateTimer = 180;
         Vector3 spawnPos(mPosX, mPosY + 0x78000, mPosZ);
         dActor_c::Spawn(0xd6, 0, spawnPos, &mPrevAngle, mAreaId, -1);
     }

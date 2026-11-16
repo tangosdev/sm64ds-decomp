@@ -33,7 +33,7 @@ enum {
 
 extern unsigned short data_02086a58[];
 
-#define isdigit_(c) ((c) < 0 || (c) >= 0x80 ? 0 : data_02086a58[c] & 8)
+#define isdigit_(c) ((c) < 0 || (c) >= 128 ? 0 : data_02086a58[c] & 8)
 
 unsigned char *parse_format(unsigned char *format_string, char **arg, print_format *format) {
     print_format f;

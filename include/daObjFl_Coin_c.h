@@ -25,7 +25,6 @@ enum {
 };
 
 struct daObjFl_Coin_c : dActor_c {
-    u8 pad_0d0[4];
     /* Bits a piece raises (see the FLCOIN_FLAG_* enum above). Behavior moves to
      * phase 1 on a frame where the byte is exactly PLAYER_TOUCHED |
      * SCRIPT_WRAPPED and the player is near. */

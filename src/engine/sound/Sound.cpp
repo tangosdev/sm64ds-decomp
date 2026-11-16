@@ -218,7 +218,7 @@ typedef struct SndRegTable {
     int counter;                 /* 0x00 - handed out as the unique id */
     unsigned char cursor;        /* 0x04 - round-robin cursor into entries */
     unsigned char pad5[3];
-    SndRegEntry entries[0x40];   /* 0x08 */
+    SndRegEntry entries[64];     /* 0x08 */
     SndRegEntry *buckets[16];    /* 0x508 - chain heads by id&0xf */
 
     int func_0201179c(int a1, int a2, const Vector3 *a3, short s1);
@@ -960,7 +960,7 @@ void func_02011a5c(void *vc) {
     do {
         p->id = 0;
         p++;
-    } while (p != c->entries + 0x40);
+    } while (p != c->entries + 64);
     c->counter = 0;
     c->cursor = 0;
     for (i = 0; i < 16; i++) c->buckets[i] = 0;
@@ -969,7 +969,7 @@ void func_02011a5c(void *vc) {
 void func_02011a28(SndRegTable *c) {
     SndRegEntry *p = c->entries;
     int i;
-    for (i = 0; i < 0x40; i++) {
+    for (i = 0; i < 64; i++) {
         NNS_SndHandleInit(&p->handle);
         p++;
     }
@@ -979,7 +979,7 @@ void func_020119c8(void *vbase) {
     SndRegTable *base = (SndRegTable *)vbase;
     SndRegEntry *e = base->entries;
     int i;
-    for (i = 0; i < 0x40; i++) {
+    for (i = 0; i < 64; i++) {
         if (e->id) {
             if (e->inUse == 1) {
                 e->inUse = 0;
@@ -996,7 +996,7 @@ void func_02011974(void *vbase) {
     SndRegTable *base = (SndRegTable *)vbase;
     SndRegEntry *e = base->entries;
     int i;
-    for (i = 0; i < 0x40; i++) {
+    for (i = 0; i < 64; i++) {
         if (e->id) {
             e->inUse = 0;
             func_02011654((char *)base, (char *)e);
@@ -1032,15 +1032,15 @@ int SndRegTable::func_0201186c(int a1, int a2, short a3) {
             func_02011698(this, &reg->entries[reg->cursor]);
             return reg->counter;
         }
-        reg->cursor = (reg->cursor + 1) % 0x40;
-    } while (++i < 0x40);
+        reg->cursor = (reg->cursor + 1) % 64;
+    } while (++i < 64);
     return 0;
 }
 
 int SndRegTable::func_0201179c(int a1, int a2, const Vector3 *a3, short s1) {
     SndRegTable *reg = this;
     int i;
-    for (i = 0; i < 0x40; i++) {
+    for (i = 0; i < 64; i++) {
         if (reg->entries[reg->cursor].id == 0) {
             reg->counter += 1;
             if (reg->counter == 0)
@@ -1049,7 +1049,7 @@ int SndRegTable::func_0201179c(int a1, int a2, const Vector3 *a3, short s1) {
             func_02011698(this, &reg->entries[reg->cursor]);
             return reg->counter;
         }
-        reg->cursor = (reg->cursor + 1) % 0x40;
+        reg->cursor = (reg->cursor + 1) % 64;
     }
     return 0;
 }
@@ -1057,7 +1057,7 @@ int SndRegTable::func_0201179c(int a1, int a2, const Vector3 *a3, short s1) {
 int func_020116c4(SndRegTable *c, int a1, int a2, const Vector3 *a3, int s0, short s1) {
     SndRegTable *reg = c;
     int i;
-    for (i = 0; i < 0x40; i++) {
+    for (i = 0; i < 64; i++) {
         if (reg->entries[reg->cursor].id == 0) {
             reg->counter = reg->counter + 1;
             if (reg->counter == 0)
@@ -1066,7 +1066,7 @@ int func_020116c4(SndRegTable *c, int a1, int a2, const Vector3 *a3, int s0, sho
             func_02011698(c, &reg->entries[reg->cursor]);
             return reg->counter;
         }
-        reg->cursor = (u8)((reg->cursor + 1) % 0x40);
+        reg->cursor = (u8)((reg->cursor + 1) % 64);
     }
     return 0;
 }

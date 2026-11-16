@@ -33,8 +33,6 @@
  * not reorder.
  *
  * leftovers:
- * - daPly_c::Hurt and Particle::System::NewSimple stay mangled. Each takes
- *   Fix12<int> by value (wall 6az).
  * - The hit check and the placement helper are members but keep their
  *   func_ov098_* address names.
  * - The fragment angle table (data_ov098_0213bf90) is an unnamed ov098 row
@@ -308,7 +306,7 @@ void daWbm_c::StateDrop()
     z = lead * cosine + spawnPos.z;
     spawnPos.z = z;
     dActor_c::Spawn(ACTOR_WATERBOMB, 1, spawnPos, 0, mAreaId, -1)->mHorzSpeed = 0;
-    mStateTimer = 0x96;
+    mStateTimer = 150;
     func_0201267c(0xd8, &mCamSpacePos);
 }
 

@@ -159,11 +159,11 @@ int daObjShell_c::Behavior() {
             u.shutPuff[2] = mPosZ;
             u.shutPuff[1] = u.shutPuff[1] + 0x32000;
             Particle::System::NewSimple(kPtclClamShut, u.shutPuff[0], u.shutPuff[1], u.shutPuff[2]);
-            mShutTimer = 0xa;
+            mShutTimer = 10;
             mStateTimer = 0;
             mdCcAc_c.flags &= ~1;
         } else {
-            if (mStateTimer > 0x96 && DistToCPlayer() < 0x1f4000) {
+            if (mStateTimer > 150 && DistToCPlayer() < 0x1f4000) {
                 func_0201267c(0x26, &mCamSpacePos);
                 u.lungePuff[0] = mPosX;
                 u.lungePuff[1] = mPosY;
@@ -181,7 +181,7 @@ int daObjShell_c::Behavior() {
         }
         break;
     case STATE_LUNGE:
-        if (mStateTimer > 0x96) {
+        if (mStateTimer > 150) {
             mState = STATE_SHUT;
             mAnmModel.SetAnim((BCA_File *)data_ov064_0211c9bc.filePtr, 0x40000000, 0x1000, 0);
             mStateTimer = 0;

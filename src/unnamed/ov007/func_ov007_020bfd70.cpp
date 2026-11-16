@@ -42,6 +42,6 @@ void func_ov007_020bfd70(Ov007Camera *cam, void *pos, int *outX, int *outY) {
     int f = FX_Div(cosv, r);
     int a = FX_MUL(f, out[1]);
     int b = FX_MUL(f, out[0]);
-    outX[0] = ((b * 0x60) >> 0xc) + 0x80;
-    outY[0] = ((-a * 0x60) >> 0xc) + 0x60;
+    outX[0] = ((b * 96) >> 0xc) + 128;
+    outY[0] = ((-a * 96) >> 0xc) + 96;
 }

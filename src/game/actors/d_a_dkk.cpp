@@ -12,11 +12,7 @@
 // - StateFall keeps `mLandCount++` and `Vector3 v[2]`. Adding
 //   one as `mLandCount = mLandCount + 1` shrinks 0xe0 to 0xd4. Two separate
 //   Vector3 locals DIFF 8 words.
-// - Earthquake and Particle::System::NewSimple take scalar fx32.
-//   Fix12<int> by value grows StateFall (0xe0 to 0xe8, and 0xe0 to 0x104).
-//   The ROM plays the impact through func_0201267c, not Sound::Play.
-// - Behavior's IsClsnInRange stays the scalar (void *, fx32, fx32)
-//   call with (0, 0). Fix12<int> by value grows Behavior 0xc0 to 0xdc.
+// - The ROM plays the impact through func_0201267c, not Sound::Play.
 // - InitResources writes the ray's far point before the near point, and
 //   calls GetClsnPos twice. The first result is unread. One call, or
 //   writing the near point first, shrinks the function.
@@ -151,7 +147,7 @@ void daDkk_c::StateFall() {
     v[1].y = mPosY;
     v[1].z = mPosZ;
     Earthquake(v[1], 0x7d0000);
-    mTimer = 0x3c;
+    mTimer = 60;
     mLandCount++;
     mState = 6;
     v[0].x = mPosX;
@@ -189,7 +185,7 @@ int daDkk_c::StateTurn() {
     mPrevAngleY = mAngleY;
     mState = 6;
     mLandCount = 0;
-    mTimer = 0x28;
+    mTimer = 40;
     return 0x28;
 }
 

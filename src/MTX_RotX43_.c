@@ -8,9 +8,9 @@ struct Matrix4x3;
 
 #pragma thumb on
 asm void MTX_RotX43_(struct Matrix4x3 *m, int s, int c) {
-    str r1, [r0, #20]
+    str r1, [r0, #0x14]
     neg r1, r1
-    str r1, [r0, #28]
+    str r1, [r0, #0x1c]
     mov r1, #1
     lsl r1, r1, #12
     stmia r0!, {r1}
@@ -19,7 +19,7 @@ asm void MTX_RotX43_(struct Matrix4x3 *m, int s, int c) {
     stmia r0!, {r1, r3}
     stmia r0!, {r1, r2}
     str r1, [r0, #4]
-    add r0, #12
+    add r0, #0xc
     stmia r0!, {r2, r3}
     stmia r0!, {r1, r3}
     bx lr

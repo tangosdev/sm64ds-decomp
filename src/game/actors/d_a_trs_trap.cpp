@@ -38,8 +38,6 @@
  * file runs in ROM order, destructor first.
  *
  * deslop leftovers:
- * - dBgW_KcMbg::SetFile keeps its mangled TU-local spelling: its signature
- *   carries Fix12<int> by value (wall 6az), so the method form size-DIFFs.
  * - The ROM re-reads the loaded KCL from filePtr rather than keeping
  *   dBgW_Kc::LoadFile's return.
  * - The dispatch table is a pointer-to-member of daTrsTrap_c itself. An
@@ -132,8 +130,6 @@ struct TrsTrapCollisionFilePtr : SharedFilePtr {
  * ------------------------------------------------------------------------ */
 extern "C" {
 /* dBgW callback-word stores (see above). */
-/* dBgW_KcMbg::SetFile, mangled (wall 6az, see above). Spelled exactly as the
-   free definition declares it; only the TU-local linkage differs. */
 extern void hold_d_a_trs_trap(void *self, void *f, const Matrix4x3 *m, int fx, short s, void *b);
 
 extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
@@ -279,7 +275,7 @@ void daTrsTrap_c::UpdateBookshelf() {
         mPosX += 0x5000;
         mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8d, mCamSpacePos, 0);
         Sound::PlaySecretSound(this, &mSoundTimer);
-        if (mStateTimer > 0x65)
+        if (mStateTimer > 101)
             mState = 3;
         return;
     case 3:
@@ -313,7 +309,7 @@ void daTrsTrap_c::UpdateTiltingTrap() {
     } else {
         int a = mAngleX;
         if (a < 0) a = -a;
-        if (a < 0xbb8 || mStateTimer > 0xf) {
+        if (a < 0xbb8 || mStateTimer > 15) {
             int v;
             mAngVelX = 0;
             v = mAngleX;

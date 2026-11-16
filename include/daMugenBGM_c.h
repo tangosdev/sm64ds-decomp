@@ -18,7 +18,6 @@ struct Fog;
  * no owned subobjects; its behavior uses only inherited actor state.
  */
 struct daMugenBGM_c : dActor_c {
-    u8 pad_0d0[0x4];
 
     virtual ~daMugenBGM_c() {}
 

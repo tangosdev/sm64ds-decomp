@@ -22,16 +22,9 @@
  * real argument lands in r1 either way.
  *
  * deslop leftovers:
- *   - dCcAc_c::Init, dBgCh_Actr::Init, DropShadowRadHeight and
- *   IsTooFarAwayFromPlayer take Fix12 by value, so the calls stay
- *   computed names (InitResources, Behavior, UpdateModelAndShadow).
  *   - func_02038414 is the veneer onto
  *   dBgCh_Actr::UpdateDiscreteNoLava_2 (UpdateKnockback,
  *   UpdateMegaKill, UpdateFloorAndWalls).
- *   - Particle::System::New, NewCleanParticle, NewSimple,
- *   RunningSlidingDustAt and daPly_c::Hurt take Fix12 by value
- *   (UpdateKnockback, HandleAttacks, EnterMegaKill,
- *   UpdateLeader).
  *   - UpdateFloorAndWalls copies the floor and wall collision normals;
  *   the wall normal is unused.
  *   - gSanboHeadModelFile and gSanboBodyModelFile are the head
@@ -147,9 +140,9 @@ int daSanbo_c::InitResources()
     t = (actorID == SANBO_HEAD);
     if (t != false) {
         mRootPos = mPos;
-        mScaleX = 0x1000;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1000;
+        mScaleX = FX32_ONE;
+        mScaleY = FX32_ONE;
+        mScaleZ = FX32_ONE;
         mPrevSegment = 0;
         mNextSegment = 0;
     } else {
@@ -310,13 +303,13 @@ int daSanbo_c::EnterLeader() {
     if (timer != 0)
         timer = 0;
     else
-        timer = 0x5a;
+        timer = 90;
     mTimer = timer;
     timer = mTimer;
     if (timer == 0) {
-        mScaleX = 0x1000;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1000;
+        mScaleX = FX32_ONE;
+        mScaleY = FX32_ONE;
+        mScaleZ = FX32_ONE;
     }
     mState = 1;
     return 1;
@@ -489,7 +482,7 @@ int daSanbo_c::EnterMegaKill() {
     mAngleY = (mPrevAngleY + 0x8000);
     mVertSpeed = 0x28000;
     mHorzSpeed = 0xa000;
-    mTimer = 0x2d;
+    mTimer = 45;
     Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
     Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
     mState = 5;

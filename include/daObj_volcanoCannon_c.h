@@ -25,7 +25,6 @@ struct daObj_volcanoCannon_c : dActor_c {
         StateFunc behavior;
     };
 
-    u8  pad_0d0[0x4];
     dCcAc_c mCylinderClsn;       /* 0x0d4 */
     State *mState;               /* 0x108 */
     dActor_c *mSpawner;          /* 0x10c */

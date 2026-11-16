@@ -167,7 +167,7 @@ dScMgCurling_c::~dScMgCurling_c() {}
  * states: each field is 0x24 * index past its base offset. */
 void dScMgCurling_c::Bit_DrawAll() {
     int i;
-    for (i = 0; i < 0x32; i++) {
+    for (i = 0; i < 50; i++) {
         if (mBit[i].visible) {
             int x = mBit[i].x >> 0xc;
             int y = mBit[i].y >> 0xc;
@@ -206,14 +206,14 @@ void dScMgCurling_c::Bit_StateFallSpeedUp(int index) {
         return;
     }
     mBit[index].fallState = 2;
-    mBit[index].fallTimer = (u8)(CURL_RAND(0x20) + 0x20);
+    mBit[index].fallTimer = (u8)(CURL_RAND(32) + 32);
 }
 
 void dScMgCurling_c::Bit_StateFallStart(int index) {
     mBit[index].vy = 0;
-    mBit[index].fallSpeed = (CURL_RAND(0x10) << 4) + 0x300;
+    mBit[index].fallSpeed = (CURL_RAND(16) << 4) + 0x300;
     mBit[index].fallState = 1;
-    mBit[index].fallTimer = (u8)(CURL_RAND(0x20) + 0x20);
+    mBit[index].fallTimer = (u8)(CURL_RAND(32) + 32);
 }
 
 void dScMgCurling_c::BitA_StateDriftStop(int index) {
@@ -261,7 +261,7 @@ void dScMgCurling_c::BitA_StateDriftLeft(int index) {
         return;
     }
     mBit[index].driftState = 3;
-    mBit[index].driftTimer = (u8)(CURL_RAND(0x20) + 0x20);
+    mBit[index].driftTimer = (u8)(CURL_RAND(32) + 32);
 }
 
 void dScMgCurling_c::BitA_StateDriftRight(int index) {
@@ -285,7 +285,7 @@ void dScMgCurling_c::BitA_StateDriftRight(int index) {
         return;
     }
     mBit[index].driftState = 3;
-    mBit[index].driftTimer = (u8)(CURL_RAND(0x20) + 0x20);
+    mBit[index].driftTimer = (u8)(CURL_RAND(32) + 32);
 }
 
 void dScMgCurling_c::BitA_StatePause(int index) {
@@ -297,8 +297,8 @@ void dScMgCurling_c::BitA_StatePause(int index) {
     }
     mBit[index].vx = 0;
     mBit[index].driftState = sCurlingBitAStates[CURL_RAND(2)];
-    mBit[index].holdTimer = (u8)CURL_RAND(0x10);
-    mBit[index].driftTimer = (u8)(CURL_RAND(0x40) + 0x60);
+    mBit[index].holdTimer = (u8)CURL_RAND(16);
+    mBit[index].driftTimer = (u8)(CURL_RAND(64) + 96);
 }
 
 void dScMgCurling_c::Bit_RunKindA(int index) {
@@ -376,10 +376,10 @@ void dScMgCurling_c::BitB_StatePause(int idx) {
         return;
     }
     mBit[idx].vx = 0;
-    mBit[idx].vy = (CURL_RAND(0x20) << 4) + 0x600;
+    mBit[idx].vy = (CURL_RAND(32) << 4) + 0x600;
     mBit[idx].driftState = sCurlingBitBStates[CURL_RAND(2)];
-    mBit[idx].holdTimer = (u8)CURL_RAND(0x10);
-    mBit[idx].driftTimer = (u8)(CURL_RAND(0x30) + 0x30);
+    mBit[idx].holdTimer = (u8)CURL_RAND(16);
+    mBit[idx].driftTimer = (u8)(CURL_RAND(48) + 48);
 }
 
 void dScMgCurling_c::Bit_RunKindB(int idx) {
@@ -397,11 +397,11 @@ void dScMgCurling_c::Bit_PickKind(int idx) {
 
 void dScMgCurling_c::Bit_UpdateAll() {
     int i;
-    for (i = 0; i < 0x32; i++) {
+    for (i = 0; i < 50; i++) {
         if (mBit[i].active != 0) {
             (((C *)this)->*sCurlingBitKindTable[mBit[i].kind])(i);
             if ((mBit[i].y >> 0xc) >= 0xc8) {
-                mBit[i].x = CURL_RAND(0x20) << 0xf;
+                mBit[i].x = CURL_RAND(32) << 0xf;
                 mBit[i].y = -0x8000;
                 mBit[i].driftState = 0;
                 mBit[i].kind = 0;
@@ -419,7 +419,7 @@ void dScMgCurling_c::Bit_InitAll() {
     int i;
     unsigned int v;
 
-    for (i = 0; i < 0x32; i++) {
+    for (i = 0; i < 50; i++) {
         mBit[i].x = 0;
         mBit[i].y = 0;
         mBit[i].vx = 0;
@@ -436,8 +436,8 @@ void dScMgCurling_c::Bit_InitAll() {
         mBit[i].spriteB = 1;
     }
 
-    for (i = 0; i < 0x32; i++) {
-        mBit[i].x = CURL_RAND(0x20) << 0xf;
+    for (i = 0; i < 50; i++) {
+        mBit[i].x = CURL_RAND(32) << 0xf;
         mBit[i].y = -0x8000;
         mBit[i].active = 1;
         mBit[i].visible = 1;
@@ -452,11 +452,11 @@ void dScMgCurling_c::Bit_InitAll() {
             v = (v - 5) & 0xff;
         mBit[i].spriteB = (char)v;
 
-        mBit[i].holdTimer = (short)(((i & 7) << 6) + CURL_RAND(0x30));
+        mBit[i].holdTimer = (short)(((i & 7) << 6) + CURL_RAND(48));
 
-        mBit[i].x = CURL_RAND(0x20) << 0xf;
+        mBit[i].x = CURL_RAND(32) << 0xf;
 
-        mBit[i].y = ((CURL_RAND(0x1a) << 3) - 8) << 0xc;
+        mBit[i].y = ((CURL_RAND(26) << 3) - 8) << 0xc;
         mBit[i].holdTimer = 0;
     }
 }
@@ -540,7 +540,7 @@ void dScMgCurling_c::DrawAimMarker() {
         return;
     int x = mAimX;
     int y = mAimY;
-    Mg_RenderSpriteBoth(sCurlingAimMarkerSprites, (x >> 12) - 0x20, (y >> 12) - 8, -1, 0);
+    Mg_RenderSpriteBoth(sCurlingAimMarkerSprites, (x >> 12) - 32, (y >> 12) - 8, -1, 0);
 }
 
 /* Stylus handler for the stone being aimed. While the stylus is down, the
@@ -725,8 +725,8 @@ void dScMgCurling_c::DrawStonesLeft() {
     if (remaining > 0) {
         for (; j < remaining; j++) {
             int slotX = sCurlingStonesLeftX[j];
-            RenderOamBothScreens(&sCurlingStoneLeftSprite, slotX, 0xb0, -1, 1, 0);
-            RenderOamBothScreens(&sCurlingStoneLeftShadowSprite, slotX, 0xb8, -1, 2, 0);
+            RenderOamBothScreens(&sCurlingStoneLeftSprite, slotX, 176, -1, 1, 0);
+            RenderOamBothScreens(&sCurlingStoneLeftShadowSprite, slotX, 184, -1, 2, 0);
         }
     }
 }
@@ -1242,7 +1242,7 @@ void dScMgCurling_c::Scene_Score() {
     mState = 1;
     if (mThrown >= 5) {
         mState = 3;
-        mStateDelay = 0x80;
+        mStateDelay = 128;
         mRoundOver = 1;
         sum = 0;
         Sound::PlayBank2_2D(0x1bc);
@@ -1302,7 +1302,7 @@ void dScMgCurling_c::Scene_Play() {
     }
     mState = 2;
     ScoreStones();
-    mStateDelay = 0xc0;
+    mStateDelay = 192;
 }
 
 /* Starts a round: clears the stones, brings out the first one and enters
@@ -1491,7 +1491,7 @@ s32 dScMgCurling_c::InitResources() {
     Bit_InitAll();
     mState = 1;
     Mg_SetTopScreenYOffset(0x20);
-    mStateDelay = 0x40;
+    mStateDelay = 64;
     mRunDuringFade = 1;
     G2_SetBlendAlpha(0, 0xd, 2, 0x10);
     G2S_SetBlendAlpha(0, 4, 2, 0x10);

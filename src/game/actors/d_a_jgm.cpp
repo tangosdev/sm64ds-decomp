@@ -23,8 +23,6 @@
  * - mSpawnPosX stays punned: daJgm_c stores it as three scalars.
  * - dBgCh_Actr_UpdateDiscreteNoLava_veneer stays: the named
  *   UpdateDiscreteNoLava method is WRONG-DEST (ROM 0x02038420).
- * - daPly_c::Bounce / Hurt stay mangled: each takes Fix12<int> by value
- *   (6az).
  * - dActor_c::IsTooFarAwayFromPlayer and FX_Div have no header decl,
  *   so they are declared locally.
  * - Sound::PlayLong is the Sound.h call. d_a_jgmPlayLongHold keeps the five
@@ -283,7 +281,7 @@ s32 daJgm_c::EnterHoverState()
     mAnmModel.speed = 0x1000;
     mTextureSequence.SetFile(*(BTP_File *)data_ov077_02127b20.filePtr, 0, 0x1000, 0);
     mTextureSequence.speed = 0x1000;
-    mTimer = 0x96;
+    mTimer = 150;
     mState = 0;
     return 1;
 }
@@ -298,9 +296,9 @@ s32 daJgm_c::UpdateHoverState()
             if (p->mPosY < mPosY && Vec3_HorzDist(&mPos, &p->mPos) < 0x190000 && CountSpinies() < 4)
                 SetState(1);
             else
-                mTimer = 0x96;
+                mTimer = 150;
         } else {
-            mTimer = 0x96;
+            mTimer = 150;
         }
     }
     UpdateFlight();
@@ -375,7 +373,7 @@ s32 daJgm_c::EnterYoshiMouthState()
 s32 daJgm_c::UpdateYoshiMouthState()
 {
     if (((mFlags & 0x40000) ? 1 : 0) != 0) {
-        dActor_c *carrier = mCarryActor;
+        dActor_c *carrier = mEatingPlayer;
         s32 *carrierPos = &carrier->mPosX;
         mPosX = carrierPos[0];
         mPosY = carrierPos[1];
@@ -396,16 +394,16 @@ s32 daJgm_c::EnterSpitState()
 {
     mFlags &= ~0x80000;
 
-    mHorzSpeed = mCarryActor->mHorzSpeed + 0xa000;
-    mPrevAngleY = mCarryActor->mAngleY;
-    mPos = mCarryActor->mPos;
+    mHorzSpeed = mEatingPlayer->mHorzSpeed + 0xa000;
+    mPrevAngleY = mEatingPlayer->mAngleY;
+    mPos = mEatingPlayer->mPos;
     mPosX += FX_MUL(FX_SinIdx((u16)mPrevAngleY >> 4), 0x50000);
     mPosY += 0x50000;
     mPosZ += FX_MUL(FX_CosIdx((u16)mPrevAngleY >> 4), 0x50000);
 
     mAngVelY = 0x7000;
-    mTimer = 0x1e;
-    mCarryActor = 0;
+    mTimer = 30;
+    mEatingPlayer = 0;
     mState = 3;
     return 1;
 }
@@ -431,7 +429,7 @@ s32 daJgm_c::EnterFallState()
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0xa000;
     mVertSpeed = 0x28000;
-    mTimer = 0x2d;
+    mTimer = 45;
     mAnmModel.SetAnim((BCA_File *)data_ov077_02127b28.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     {

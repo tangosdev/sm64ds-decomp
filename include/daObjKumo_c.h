@@ -22,16 +22,11 @@
  *            _ZTV11daObjKumo_c, then dExtSimpleModel_c at 0xd4.
  *   dtor     the same member destroyed in reverse, then ~dActor_c.
  *
- * pad_0d0[0x4] IS AN UNKNOWN FIELD, NOT ALIGNMENT. dActor_c asserts 0xd0 and
- * dExtSimpleModel_c needs no more than 4-byte alignment; nothing in this TU reads or
- * writes those four bytes.
- *
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. Only the slots
  * declared below differ; every other slot holds the base's own word and is
  * inherited, so it is deliberately not redeclared here.
  */
 struct daObjKumo_c : dActor_c {
-    u8 pad_0d0[0x4];
     dExtSimpleModel_c mModel; /* 0x0d4 */
 
     /* MEASURED -- INLINE ON PURPOSE. The class TU is the only place these

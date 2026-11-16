@@ -23,8 +23,8 @@ void func_0202048c(OamAnimation *anim, int x, int y) {
     if (scaleX == 0x1000 && anim->scaleY == 0x1000 && (u16)anim->rotation == 0) {
         int mode = anim->screen;
         if (mode == 2) {
-            OAM::Render(0, (OamAttr *)anim->tile, x, y + 0xc0, anim->palette, anim->priority,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)anim->tile, x, y + 192, anim->palette, anim->priority, 0x1000,
+                        0x1000, 0, -1);
             OAM::RenderSub((OamAttr *)anim->tile, x, y, anim->palette, anim->priority);
             return;
         }
@@ -62,7 +62,7 @@ void func_0202048c(OamAnimation *anim, int x, int y) {
 
     int mode = anim->screen;
     if (mode == 2) {
-        OAM::Render(false, (OamAttr *)anim->tile, x, y + 0xc0, anim->palette, anim->priority,
+        OAM::Render(false, (OamAttr *)anim->tile, x, y + 192, anim->palette, anim->priority,
                     (Matrix2x2 *)m);
         OAM::Render(true, (OamAttr *)anim->tile, x, y, anim->palette, anim->priority,
                     (Matrix2x2 *)m);

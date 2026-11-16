@@ -31,7 +31,7 @@ void func_ov007_020aed98(void)
     Ov007MenuState *r5 = g->states[1];
     int i;
 
-    for (i = 0; i < 0x18; i++) {
+    for (i = 0; i < 24; i++) {
         WORK->itemViews[i]->ItemView_HandleTouch(WORK->touch);
     }
 
@@ -69,7 +69,7 @@ void func_ov007_020aed98(void)
     func_ov007_020c92d0(WORK->states[2]);
 
     WORK->chosenItemId = -1;
-    for (i = 0; i < 0x18; i++) {
+    for (i = 0; i < 24; i++) {
         ItemView_Update(WORK->itemViews[i]);
     }
     for (i = 0; i < 9; i++) {

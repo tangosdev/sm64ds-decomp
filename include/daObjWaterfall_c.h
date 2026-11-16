@@ -14,7 +14,6 @@
  * field closes on it.
  */
 struct daObjWaterfall_c : dActor_c {
-    u8 pad_0d0[0x4];
     u16 mParticleID; /* 0x0d4 */
     u8 pad_0d6[0x2];
     /* Handle, not a pointer: Behavior stores Particle::System::New's

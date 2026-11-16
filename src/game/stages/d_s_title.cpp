@@ -166,7 +166,7 @@ void TitlePrintLevelRow(int level, int row, int col) {
     MI_CpuFill16(d2, t2, 2);
     int cnt = 0x1d - col;
     volatile const signed char *s =
-        reinterpret_cast<volatile const signed char *>(sTitleLevelEntries[level].name);
+        reinterpret_cast<const signed char *>(sTitleLevelEntries[level].name);
     while (*s != 0) {
         t3 = *s;
         MI_CpuFill16(d, t3, 2);
@@ -270,10 +270,10 @@ s32 dScTitle_c::Behavior() {
         t = sTitleLevelEntries[i].levelID;
         if (t == -1 || IsTouchStarted()) {
             dScene_c::StartSceneFade(5, 0, 0);
-            Sound::StopLoadedMusic_Layer1(0x3c);
+            Sound::StopLoadedMusic_Layer1(60);
         } else if (t == -2) {
             dScene_c::StartSceneFade(6, 0, 0);
-            Sound::StopLoadedMusic_Layer1(0x3c);
+            Sound::StopLoadedMusic_Layer1(60);
         } else {
             gGameMode = 0;
             LoadLevelNoReturn(t, sTitleLevelEntries[i].entranceID, 1, 0);
@@ -288,7 +288,7 @@ s32 dScTitle_c::Behavior() {
             int h = data_020a0e58[0].pressed & 0x40;
             if (h != 0 || mRepeatDelay == 0) {
                 mRepeatDelay = h ? 8 : 2;
-                gTitleCursor += 0x35;
+                gTitleCursor += 53;
                 func_02012790(0);
             }
         } else if (v & 0x80) {
@@ -301,7 +301,7 @@ s32 dScTitle_c::Behavior() {
         }
     }
 
-    gTitleCursor = gTitleCursor % 0x36;
+    gTitleCursor = gTitleCursor % 54;
     DecIfAbove0_Short(&mRepeatDelay);
     TitleScrollLevelList(this);
     return 1;
@@ -337,19 +337,19 @@ void dScTitle_c::OnPendingDestroy() {}
  * and the `[0]` subscripts became scalar accesses. */
 void TitleScrollLevelList(void *) {
     int v = gTitleCursor;
-    int nv = v - 0xa;
+    int nv = v - 10;
     gTitleListTop = nv;
-    unsigned int t = (v + 0xb);
-    if (t > 0x36) {
-        gTitleListTop = nv - (t - 0x36);
+    unsigned int t = (v + 11);
+    if (t > 54) {
+        gTitleListTop = nv - (t - 54);
     }
     if (gTitleListTop < 0)
         gTitleListTop = 0;
     int s = gTitleListTop;
-    int cnt = 0x36 - s;
+    int cnt = 54 - s;
     int end = cnt + 2;
-    if (end > 0x17)
-        end = 0x17;
+    if (end > 23)
+        end = 23;
     int i;
     int j = s;
     for (i = 2; i < end; i++) {

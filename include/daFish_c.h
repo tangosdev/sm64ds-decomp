@@ -23,7 +23,6 @@
  * Fish_Spawn.
  */
 struct daFish_c : dActor_c {
-    u8 pad_0d0[0x4];          /* 0x0d0 */
     dExtAnmModel_c mAnmModel; /* 0x0d4 -- its dExtFrameCtrl_c base sits at 0x124 */
     s32 mSeed;                /* 0x138 -- set to 1 at construction, never read here */
     u32 mSpawnerID;           /* 0x13c -- a fish's spawner; the spawner's own ID */

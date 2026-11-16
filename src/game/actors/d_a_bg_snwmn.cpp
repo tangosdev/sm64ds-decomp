@@ -137,7 +137,7 @@ void daBgSnwmn_c::UpdateModelTransform() {
     mModel2.mat4x3.t.y = mPosY >> 3;
     mModel2.mat4x3.t.z = mPosZ >> 3;
 
-    DropShadowRadHeight(mShadow, mModel2.mat4x3, 0xe6000, 0x12c000, 0xf);
+    DropShadowRadHeight(mShadow, mModel2.mat4x3, 0xe6000, 0x12c000, 15);
 }
 
 SnwmnModelFilePtr gdaBgSnwmnBigSnowmanBodyModelFile(ASSET_BIG_SNOWMAN_BODY_BMD);

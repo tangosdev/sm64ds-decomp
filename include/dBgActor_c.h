@@ -22,11 +22,6 @@ struct player_;
 #include "dBgW_KcMbg.h"
 
 struct dBgActor_c : dActor_c {
-    /* The player holding this actor in its mouth. dActor_c ends at 0x0d0, so
-       this word is dBgActor_c's own, as dEnemyBase_c's mEatingPlayer at 0x0d0
-       is that base's; daObjBlockS_c reads and clears it (STATE_SPIT_OUT,
-       STATE_IN_MOUTH). */
-    daPly_c *mEatingPlayer;         /* 0x0d0 */
     dExtSimpleModel_c mModel;       /* 0x0d4 */
     dBgW_KcMbg mMeshCollider;       /* 0x124 */
     /* Where the collider sits: mModel's matrix with the actor's position
@@ -64,12 +59,8 @@ struct dBgActor_c : dActor_c {
     void UpdateClsnPosAndRot();
     void UpdateModelPosAndRotY();
 
-    /* The two IsClsnInRange* symbols used to spell a by-value Fix12<int>, and
-       this header already recorded that "their bytes refuse it". Acted on
-       2026-10-23: both are real methods taking the scalar fx32, under
-       _ZN10dBgActor_c13IsClsnInRangeEii and
-       _ZN10dBgActor_c21IsClsnInRangeOnScreenEii, reproducing ov002
-       0x020ee870/0xc4 and 0x020ee934/0x11c. notes/mwccarm-codegen.md 6az.
+    /* Both take the scalar fx32 and reproduce ov002 0x020ee870/0xc4 and
+       0x020ee934/0x11c.
        Parameters (radius, yOffset) are unnamed on purpose: a named
        class-scope parameter consumes an @NNN number in every consumer. */
     int IsClsnInRange(fx32, fx32);

@@ -36,7 +36,7 @@ void func_ov007_020ca308(Ov007MeshWave *wave, Ov007Mesh *mesh, int i) {
     amplitude = params->amplitude;
 
     if (state->stateTicks == 0)
-        wave->waves[i]->stateTicks = func_ov007_020c3ba8(0x3c);
+        wave->waves[i]->stateTicks = func_ov007_020c3ba8(60);
     ticks = wave->waves[i]->stateTicks;
 
     if (i == 0 || i == 2) {

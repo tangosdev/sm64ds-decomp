@@ -285,17 +285,17 @@ void PickerScene_HandleEditKeys(void) {
             b = a;
             int ratio, ease, v2, half, fpv;
             SCENE->springSet = 0;
-            ratio = ProgressRatio(t1, 0x64);
+            ratio = ProgressRatio(t1, 100);
             ease = (int)(((s64)ratio * (0x2000 - ratio)) >> 0xc);
-            v2 = RangeRatio(t1, 0x50, 0xc8);
+            v2 = RangeRatio(t1, 80, 200);
             half = ((int)(((s64)v2 * (0x2000 - v2)) >> 0xc)) / 2;
             fpv = half + 0x1000;
-            if (t1 >= 0xa0) {
-                int m = FX_ModS32(t1 - 0xa0, 5);
+            if (t1 >= 160) {
+                int m = FX_ModS32(t1 - 160, 5);
                 int mc, v3, v3sq;
                 s16 tbl;
                 mc = ProgressRatio(m, 5);
-                v3 = RangeRatio(t1, 0xa0, 0xc8);
+                v3 = RangeRatio(t1, 160, 200);
                 v3sq = (int)(((s64)v3 * v3) >> 0xc);
                 tbl = FX_SinIdx((u16)((mc * 0xffff) >> 12) >> 4);
                 extra = FX_MUL(v3sq, (tbl * (s16)0xa));
@@ -339,20 +339,20 @@ void PickerScene_HandleEditKeys(void) {
         c1 = (c1 > c2) ? c1 : c2;
         if (c1 > 0) {
             int md = FX_ModS32(c1, 5);
-            if (c1 < 0x64) {
+            if (c1 < 100) {
                 int r;
-                r = ProgressRatio(c1, 0x64);
+                r = ProgressRatio(c1, 100);
                 amp = r / 2;
             } else {
                 int v, sq;
-                v = RangeRatio(c1, 0x64, 0x12c);
+                v = RangeRatio(c1, 100, 300);
                 sq = (int)(((s64)v * v) >> 0xc);
                 amp = sq / 2 + 0x800;
-                if (c1 >= 0x12c) {
-                    int m2 = FX_ModS32(c1, 0x64);
+                if (c1 >= 300) {
+                    int m2 = FX_ModS32(c1, 100);
                     int mc2;
                     int t2v;
-                    mc2 = ProgressRatio(m2, 0x64);
+                    mc2 = ProgressRatio(m2, 100);
                     t2v = FX_SinIdx((u16)((mc2 * 0xffff) >> 12) >> 4);
                     if (t2v < 0) {
                         t2v = -t2v;
@@ -502,7 +502,7 @@ int PickerScene_HandleDrawingKeys(void) {
     }
 
     {
-        Ov007PickerScene *b = *(Ov007PickerScene *volatile *)&data_ov007_02104ba0;
+        Ov007PickerScene *b = (Ov007PickerScene *)data_ov007_02104ba0;
         short st = b->states[1]->currentState;
         if (st == 6)
             return st;
@@ -555,7 +555,7 @@ int PickerScene_HandleDrawingKeys(void) {
             int *p8 = &r5->groupCount;
             *p14 = *p14 + e->capacity;
             *p8 = *p8 + 1;
-            (*(Ov007PickerScene *volatile *)&data_ov007_02104ba0)->states[1]->requestedState = 7;
+            ((Ov007PickerScene *)data_ov007_02104ba0)->states[1]->requestedState = 7;
             return func_ov007_020bdeb0(0x21);
         }
     }
@@ -634,7 +634,7 @@ void PickerScene_UpdateScaleAnim(void) {
         int m;
         int wobble;
 
-        d = r5 - 0x14;
+        d = r5 - 20;
         if (d < 0) {
             return;
         }
@@ -656,13 +656,13 @@ void PickerScene_UpdateScaleAnim(void) {
         return;
     }
     case 4: {
-        int m = FX_ModS32(r5, 0x3c);
+        int m = FX_ModS32(r5, 60);
         SCENE->springSet = 2;
         if (m == 0) {
             PickerScene_SetDeform(1, 0, 0);
             return;
         }
-        if (m != 0x1e) {
+        if (m != 30) {
             return;
         }
         PickerScene_SetDeform(3, 0x1e, FX_MUL(phase, 0x7d0) + 0xc8);
@@ -704,8 +704,8 @@ void PickerScene_UpdateMoveAnim(void) {
     case 1:
     case 2: {
         int v;
-        int m = FX_ModS32(counter, 0x3c);
-        v = ProgressRatio(m, 0x3c);
+        int m = FX_ModS32(counter, 60);
+        v = ProgressRatio(m, 60);
         s = FX_SinIdx((u16)((v * 0xffff) >> 12) >> 4);
         if (state == 2) {
             a->posOffset.x = -dx / 48 + func_ov007_020c3ba8(dx / 48 - -dx / 48);
@@ -720,8 +720,8 @@ void PickerScene_UpdateMoveAnim(void) {
     case 4: {
         int v;
         int idx;
-        int m = FX_ModS32(counter, 0x3c);
-        v = ProgressRatio(m, 0x3c);
+        int m = FX_ModS32(counter, 60);
+        v = ProgressRatio(m, 60);
         if (SCENE->states[3]->currentState == 4)
             v = 0x1000 - v;
         idx = (u16)((v * 0xffff) >> 12) >> 4;
@@ -779,7 +779,7 @@ int PickerScene_UpdateIntro(int t) {
 
     if (s->groupCount == 0 || SCENE->totalPoints == 0) {
         int ratio;
-        ratio = ProgressRatio(t, 0x1e);
+        ratio = ProgressRatio(t, 30);
         SPRITES->sprites[1]->alpha = ratio * 0x1f;
         return ratio >= 0x1000;
     }
@@ -797,10 +797,10 @@ int PickerScene_UpdateIntro(int t) {
         /* ProgressRatio(t, 0x28), spelled out: the inline re-colours this case. */
         if (t <= 0) {
             ratio = 0;
-        } else if (t >= 0x28) {
+        } else if (t >= 40) {
             ratio = 0x1000;
         } else {
-            ratio = FX_DivS32(t << 0xc, 0x28);
+            ratio = FX_DivS32(t << 0xc, 40);
         }
         ease = (int)(((s64)ratio * (0x2000 - ratio)) >> 0xc);
         SCENE->springSet = 1;
@@ -820,12 +820,12 @@ int PickerScene_UpdateIntro(int t) {
     case 1:
     case 4: {
         int r8arg, v, ratio;
-        ratio = ProgressRatio(t, 0x78);
+        ratio = ProgressRatio(t, 120);
         if (t == 0) {
             SPRITES->slideProgress = 0x1000;
             data_ov007_02104b98[0] = -1;
         }
-        if (t >= 0x96) {
+        if (t >= 150) {
             SCENE->springSet = 6;
         } else {
             SCENE->springSet = 0;
@@ -835,19 +835,19 @@ int PickerScene_UpdateIntro(int t) {
             func_ov007_020bfe4c(o, 0xe8000, 0xa8000, -o->distance, (Vector3 *)local);
         }
         PickerScene_UpdatePicker();
-        v = RangeRatio(t, 0xc8, 0x258);
+        v = RangeRatio(t, 200, 600);
         ratio += FX_MUL(v, 0x1e000);
         r8arg = 0x1000;
         if (SCENE->introVariant == 4) {
-            if (t <= 0xc8) {
-                if (t <= 0x64) {
+            if (t <= 200) {
+                if (t <= 100) {
                     ratio = FX_MUL(ratio, 0x258);
                     r8arg = -0xa;
                 } else {
                     ratio = FX_MUL(ratio, 0x320);
                     r8arg = -0x32;
                 }
-            } else if (t <= 0x12c) {
+            } else if (t <= 300) {
                 ratio = FX_MUL(ratio, 0xa);
             }
         }
@@ -863,7 +863,7 @@ int PickerScene_UpdateIntro(int t) {
                     func_ov007_020bdeb0(0x1e);
                 } else {
                     data_ov007_02104b98[0] = c + 1;
-                    if (data_ov007_02104b98[0] >= 0x1e) {
+                    if (data_ov007_02104b98[0] >= 30) {
                         done = 1;
                     }
                 }
@@ -880,11 +880,11 @@ int PickerScene_UpdateIntro(int t) {
         if (t == 0) {
             SPRITES->slideProgress = 0x1000;
         }
-        if (t <= 0x50) {
+        if (t <= 80) {
             int ratio, m, mc, r2c, ease1, ease2, term, sinval;
             int idx;
             short tblval;
-            ratio = ProgressRatio(t, 0x28);
+            ratio = ProgressRatio(t, 40);
             ease1 = (int)(((s64)ratio * (0x2000 - ratio)) >> 0xc);
             m = FX_ModS32(t, 6);
             /* ProgressRatio(m, 6), spelled out for the same reason. */
@@ -895,13 +895,13 @@ int PickerScene_UpdateIntro(int t) {
             } else {
                 mc = FX_DivS32(m << 0xc, 6);
             }
-            r2c = RangeRatio(t, 0x14, 0x3c);
+            r2c = RangeRatio(t, 20, 60);
             ease2 = (int)(((s64)r2c * (0x2000 - r2c)) >> 0xc);
             idx = (u16)((mc * 0xffff) >> 12) >> 4;
             tblval = FX_SinIdx(idx);
             term = FX_MUL(ease2, 0x3e8);
             sinval = FX_MUL(tblval, term);
-            if (t <= 0x4d) {
+            if (t <= 77) {
                 sinval += FX_MUL(ease1, 0x4b0);
                 a += sinval;
                 b += sinval;
@@ -912,10 +912,10 @@ int PickerScene_UpdateIntro(int t) {
             SCENE->springSet = 2;
         } else {
             int v;
-            v = RangeRatio(t, 0x50, 0x64);
+            v = RangeRatio(t, 80, 100);
             a -= v;
             b -= v;
-            if (t == 0x51) {
+            if (t == 81) {
                 func_ov007_020bdeb0(0x1f);
             }
             SCENE->springSet = 5;
@@ -1065,7 +1065,7 @@ void PickerScene_BeginEdit(void) {
     SCENE->idleFrames = 0;
     SCENE->states[2]->requestedState = 0;
     SCENE->states[3]->requestedState = 0;
-    SCENE->idleFrames = 0xf0;
+    SCENE->idleFrames = 240;
     SPRITES->slideProgress = 0x1000;
 }
 
@@ -1110,10 +1110,10 @@ void PickerScene_UpdateEdit(void) {
             Ov007Picker *picker;
             if ((int)t <= 5)
                 f = 0;
-            else if ((int)t >= 0x12c)
+            else if ((int)t >= 300)
                 f = 0x1000;
             else
-                f = FX_DivS32((t - 5) << 12, 0x127);
+                f = FX_DivS32((t - 5) << 12, 295);
             picker = SCENE->picker;
             if (picker->groupCount >= 2)
                 func_ov007_020c6314(picker, picker->hitGroup, 2);
@@ -1168,7 +1168,7 @@ extern "C" void PickerScene_Create(int mode, int drawingIndex) {
 
     startAlpha = 0;
     centerY = 0x60000;
-    size = 0x100;
+    size = 256;
     spriteMode = 1;
 
     for (i = 0; i < 2; i++) {
@@ -1199,7 +1199,7 @@ extern "C" void PickerScene_Create(int mode, int drawingIndex) {
 
     SPRITES->sprites[2] = func_ov007_020c44e4(1);
     bar = SPRITES->sprites[2];
-    bar->width = 0x48;
+    bar->width = 72;
     bar->height = 8;
     bar->cornerColors[3] = 0x7f8a;
     bar->cornerColors[0] = bar->cornerColors[3];
@@ -1210,7 +1210,7 @@ extern "C" void PickerScene_Create(int mode, int drawingIndex) {
 
     SPRITES->sprites[3] = func_ov007_020c44e4(1);
     bar = SPRITES->sprites[3];
-    bar->width = 0x48;
+    bar->width = 72;
     bar->height = 8;
     bar->color = 0x294a;
     bar->alpha = 0x5000;
@@ -1367,7 +1367,7 @@ void func_ov007_020b91b4(void) {
             }
             {
                 int q;
-                q = ProgressRatio(r4, 0x28);
+                q = ProgressRatio(r4, 40);
                 SPRITES->sprites[1]->alpha = q * 0xc;
                 if (q < 0x1000) {
                     return;
@@ -1412,7 +1412,7 @@ void func_ov007_020b91b4(void) {
             } else {
                 r8v = (r6->groupCount) - 1;
             }
-            q = ProgressRatio(r4, 0xf);
+            q = ProgressRatio(r4, 15);
             if ((SCENE->states[1]->currentState) == 6) {
                 q = 0x1000 - q;
             }
@@ -1421,7 +1421,7 @@ void func_ov007_020b91b4(void) {
                 sb = 1;
             }
             func_ov007_020c4e98(r6, r7, r5, 0x1f, r8v, func_ov007_020c3be0(q, 0x18df, r5), sb);
-            if (r4 < 0xf) {
+            if (r4 < 15) {
                 return;
             }
         }
@@ -1526,7 +1526,7 @@ void func_ov007_020b8fd4(Ov007Camera *camera) {
 
 int PickerScene_IsIdle(void) {
     Ov007PickerScene *p = SCENE;
-    return p->idleFrames >= 0xf0;
+    return p->idleFrames >= 240;
 }
 
 /* Getters for the rest of the menu. */

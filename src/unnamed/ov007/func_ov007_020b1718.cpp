@@ -30,7 +30,7 @@ typedef struct Vec3Words {
  * func_ov007_020b1fa4, the camera preset), with no role to name.
  *
  * Codegen note: `r7val = v - 2; divisor = 0x28;` must be assigned BEFORE the
- * Fix12 store block (the compiler sinks both defs to the block exit, ahead of
+ * fx32 store block (the compiler sinks both defs to the block exit, ahead of
  * the predicated flag write); assigning them after the block instead lands the
  * movge first and rotates the block's coloring.
  */
@@ -67,11 +67,11 @@ void func_ov007_020b1718(void) {
         int q, r3, s;
         Ov007AnimPlayer *F18b;
 
-        divisor = 0x1e;
+        divisor = 30;
         r7val = (int)F18->frame - ((int)F18->frameCount - 0x12);
 
-        if (v < 0xc) {
-            q = ProgressRatio(v, 0xc);
+        if (v < 12) {
+            q = ProgressRatio(v, 12);
             r3 = q << 2;
 
             if (r3 <= 0x1000)
@@ -114,7 +114,7 @@ void func_ov007_020b1718(void) {
             func_ov007_020b2454(&m->targetTween->to, &m->distanceTween->to);
         }
 
-        q = ProgressRatio(v, 0x1e);
+        q = ProgressRatio(v, 30);
         t = (int)(((s64)q * (0x2000 - q)) >> 12);
         u = (int)(((s64)t * (0x2000 - t)) >> 12);
         w = (int)(((s64)u * u) >> 12);
@@ -124,7 +124,7 @@ void func_ov007_020b1718(void) {
             r3 = w << 1;
 
         r7val = v - 2;
-        divisor = 0x28;
+        divisor = 40;
         {
             int uu = (int)(unsigned int)u;
             m->target.x = (int)(((s64)(0x1000 - u) * m->targetTween->from.x +
@@ -140,7 +140,7 @@ void func_ov007_020b1718(void) {
                                  (s64)q * m->distanceTween->to) >>
                                 12);
         }
-        if (v >= 0x28)
+        if (v >= 40)
             flag = 1;
         break;
     }
@@ -154,9 +154,9 @@ void func_ov007_020b1718(void) {
     if (v >= 2 && r7val >= 0) {
         int w;
         int qq;
-        func_ov007_020bce70(2, 0xf);
+        func_ov007_020bce70(2, 15);
         w = WORK->paletteState->stateTicks;
-        qq = ProgressRatio(w, 0xf);
+        qq = ProgressRatio(w, 15);
         WORK->lights[1]->color = func_ov007_020c3be0(qq, WORK->lights[1]->color, 0);
     }
 

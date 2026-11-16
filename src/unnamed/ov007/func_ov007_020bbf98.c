@@ -9,7 +9,7 @@ void func_ov007_020bbf98(int** o, unsigned int mask){
   do {
     fld = (int*)(((int)((char*)base[1] + off) + 0x24));
     i++;
-    fld[0] = (fld[0] & ~0xf) | mask;
+    fld[0] = (fld[0] & ~15) | mask;
     off += 0x30;
   } while (i < n);
 }
