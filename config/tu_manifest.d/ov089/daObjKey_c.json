@@ -270,13 +270,6 @@
       "evidence": "five collect-animation handles indexed by mAnimID; the first slot is null"
     },
     {
-      "symbol": "data_ov089_02132894",
-      "address": "0x02132894",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "eight model handles indexed by key kind"
-    },
-    {
       "symbol": "data_ov089_021328b4",
       "address": "0x021328b4",
       "size": "0x20",
