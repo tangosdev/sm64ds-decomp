@@ -15025,9 +15025,9 @@ int daPly_c::St_SwingPlayer_Main() {
         Vector3 offset;
         Vector3 v;
         if ((data_0209f498[gActivePlayerSlot].pressed & 1) != 0) {
-            char *p = (char *)mHeldObj;
+            dActor_c *p = mHeldObj;
             if (p != 0) {
-                int b = (((dActor_c *)p)->mFlags & 0x200) != 0;
+                int b = (p->mFlags & 0x200) != 0;
                 if (!b) {
                     func_ov002_020d9c70();
                     func_ov002_020da95c();
