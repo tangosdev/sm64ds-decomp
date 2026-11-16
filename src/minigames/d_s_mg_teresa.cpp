@@ -1590,7 +1590,10 @@ void dScMgTeresa_c::Scene_StateInit() {
  * grows and buf moves to another slot. The hand-rotated do/while is kept
  * too: `for (j = 0; j < n; j++)` with y = cy - half + j is the right size
  * but schedules cx - half and cy - half ahead of the n <= 0 exit (12 words
- * off; corner in the for initialiser, a word short; measured 2026-11-07). */
+ * off; corner in the for initialiser, a word short; measured 2026-11-07).
+ * Re-measured (#821, 2026-11-16): 0x170 without the pragma against the ROM's
+ * 0x15c; a ~(0xf << s) mask or a named shift local 0x16c; x = cx - half + i
+ * 0x174. */
 #pragma opt_loop_invariants off
 /* dScMgTeresa_c::PaintSquare - slot 34, a STIPPLED brush.
 
