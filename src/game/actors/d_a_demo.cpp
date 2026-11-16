@@ -2004,19 +2004,17 @@ void StaffRoll::func_ov002_020f5328(int i) {
 }
 
 void StaffRoll::func_ov002_020f55b4(int i) {
-    char *c = (char *)this;
-    char *e = c + i * 0x4c;
-    if (((StaffRoll *)e)->stars[0].frame != 0x10)
+    if (this->stars[i].frame != 0x10)
         return;
-    (&this->stars[0].step)[i * 0x4c] += 1;
-    ((StaffRoll *)e)->stars[0].radius = 0x38000;
-    ((StaffRoll *)e)->stars[0].heading = data_ov002_021000d8[i];
-    ((StaffRoll *)e)->stars[0].phase = 0;
-    ((StaffRoll *)e)->stars[0].loops = 0;
-    ((StaffRoll *)e)->stars[0].orbitTravel = 0;
-    ((StaffRoll *)e)->stars[0].angSpeed = 0x200;
-    ((StaffRoll *)e)->stars[0].kiraDefParam = 0x1000;
-    ((StaffRoll *)e)->stars[0].kiraSysParam = 0x200;
+    this->stars[i].step++;
+    this->stars[i].radius = 0x38000;
+    this->stars[i].heading = data_ov002_021000d8[i];
+    this->stars[i].phase = 0;
+    this->stars[i].loops = 0;
+    this->stars[i].orbitTravel = 0;
+    this->stars[i].angSpeed = 0x200;
+    this->stars[i].kiraDefParam = 0x1000;
+    this->stars[i].kiraSysParam = 0x200;
 }
 
 void StaffRoll::func_ov002_020f562c(int idx) {
@@ -2216,12 +2214,10 @@ void StaffRoll::func_ov002_020f5b98() {
 }
 
 void StaffRoll::func_ov002_020f5bcc() {
-    char *p = (char *)this;
     int i;
     for (i = 0; i < 4; i++) {
-        if (((StaffRoll *)p)->stars[0].active)
-            ((StaffRoll *)p)->stars[0].holdFrame = 1;
-        p += 0x4c;
+        if (this->stars[i].active)
+            this->stars[i].holdFrame = 1;
     }
 }
 
@@ -2277,39 +2273,30 @@ void StaffRoll::func_ov002_020f5cd0() {
 }
 
 void StaffRoll::func_ov002_020f5d34() {
-    u8 *self = (u8 *)this;
-    int n = func_ov002_020f5a94(self);
-    int i = 0;
-    u8 *e;
-    int v;
-    if (n <= 0) goto done;
-    e = self;
-    v = 0;
-    do {
+    int n = func_ov002_020f5a94(this);
+    int i;
+    for (i = 0; i < n; i++) {
         /* +0x38 is Star::pad_38: written twice here, read nowhere. */
-        ((StaffRoll *)e)->stars[0].active = 1;
-        ((StaffRoll *)e)->stars[0].visible = 0;
-        ((StaffRoll *)e)->stars[0].heading = 0;
-        ((StaffRoll *)e)->stars[0].pad_38 = 0;
-        ((StaffRoll *)e)->stars[0].x = 0x80000;
-        ((StaffRoll *)e)->stars[0].y = 0x60000;
-        ((StaffRoll *)e)->stars[0].delay = v;
-        ((StaffRoll *)e)->stars[0].frameTimer = 0;
-        ((StaffRoll *)e)->stars[0].kiraTimer = 0;
-        ((StaffRoll *)e)->stars[0].kiraPeriods = 0;
-        ((StaffRoll *)e)->stars[0].kiraDefParam = 0x199;
-        ((StaffRoll *)e)->stars[0].kiraSysParam = 0x199;
-        ((StaffRoll *)e)->stars[0].pad_38 = 0;
-        ((StaffRoll *)e)->stars[0].state = 0;
-        ((StaffRoll *)e)->stars[0].step = 0;
-        ((StaffRoll *)e)->stars[0].sparkling = 0;
-        e += 0x4c;
-        v += 0x40;
-        i++;
-    } while (i < n);
-done:
-    func_ov002_020f2958((char*)self);
+        this->stars[i].active = 1;
+        this->stars[i].visible = 0;
+        this->stars[i].heading = 0;
+        this->stars[i].pad_38 = 0;
+        this->stars[i].x = 0x80000;
+        this->stars[i].y = 0x60000;
+        this->stars[i].delay = i << 6;
+        this->stars[i].frameTimer = 0;
+        this->stars[i].kiraTimer = 0;
+        this->stars[i].kiraPeriods = 0;
+        this->stars[i].kiraDefParam = 0x199;
+        this->stars[i].kiraSysParam = 0x199;
+        this->stars[i].pad_38 = 0;
+        this->stars[i].state = 0;
+        this->stars[i].step = 0;
+        this->stars[i].sparkling = 0;
+    }
+    func_ov002_020f2958((char *)this);
 }
+
 
 extern StaffRollCue data_ov002_02110f34[];
 void StaffRoll::func_ov002_020f5dd8(int idx) {
