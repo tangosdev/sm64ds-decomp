@@ -2,8 +2,6 @@
 #include "types.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
-
 Vector3 *Vec3_DivScalarInPlace(Vector3 *v, int s) {
     if (s == 0) {
         if (v->x > 0)
@@ -24,5 +22,4 @@ Vector3 *Vec3_DivScalarInPlace(Vector3 *v, int s) {
         v->z = FX_Div(v->z, s);
     }
     return v;
-}
 }

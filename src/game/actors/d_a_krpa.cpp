@@ -58,7 +58,7 @@ extern int data_0209f32c;
 /* `return new daKrpa_c()` emits 0x50, calling the inherited
  * fBase_c::operator new (`_ZN7fBase_cnwEm`). Historical aliases:
  * daKrpa_c_Spawn and FlameChomp_Spawn. */
-extern "C" daKrpa_c *daKrpa_c_classInit() {
+daKrpa_c *daKrpa_c_classInit() {
     return new daKrpa_c();
 }
 
@@ -168,7 +168,7 @@ extern u32 data_ov070_021222e8[];
 int daKrpa_c::EnterIdle() {
     this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
     this->mFrameController.SetFrames(data_ov070_02122404, 0x64, 1);
-    this->mStateTimer = 0x73;
+    this->mStateTimer = 115;
     this->mStateIndex = 0;
     return 1;
 }
@@ -179,7 +179,7 @@ int daKrpa_c::ExecuteIdle() {
                 this->ChangeState(1);
         }
     } else {
-        this->mStateTimer = 0x73;
+        this->mStateTimer = 115;
     }
     this->mAnmModel.Advance();
     u32 frame = this->mFrameController.NextFrame();
@@ -254,7 +254,7 @@ int daKrpa_c::EnterKnockedAway() {
     this->mScaleX = 0x1000;
     this->mScaleY = 0x1000;
     this->mScaleZ = 0x1000;
-    this->mStateTimer = 0x2d;
+    this->mStateTimer = 45;
     this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
     Particle::System::NewSimple(kPtclKnockAwayA, this->mPosX, this->mPosY, this->mPosZ);
     Particle::System::NewSimple(kPtclKnockAwayB, this->mPosX, this->mPosY, this->mPosZ);
@@ -268,13 +268,10 @@ int daKrpa_c::ExecuteKnockedAway() {
     this->mAnmModel.Advance();
     this->UpdatePos(&this->mdCcAcPos_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&this->mWithMeshClsn);
-    if (!this->mWithMeshClsn.JustHitGround()) {
-        if (DecIfAbove0_Byte(&this->mStateTimer) != 0)
-            goto end;
+    if (this->mWithMeshClsn.JustHitGround() || DecIfAbove0_Byte(&this->mStateTimer) == 0) {
+        this->PoofDust();
+        this->MarkForDestruction();
     }
-    this->PoofDust();
-    this->MarkForDestruction();
-end:
     return 1;
 }
 void daKrpa_c::UpdateModelAndShadow() {

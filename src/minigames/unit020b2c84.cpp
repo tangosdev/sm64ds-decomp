@@ -129,7 +129,6 @@ struct EntryTable {
 };
 struct OamAttr;
 
-
 extern "C" {
 void Deallocate(void *ptr);
 int GetGameLanguage(void);
@@ -143,10 +142,10 @@ void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
 void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e);
 int Mg_GetLevel(void);
 void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
+}
 void Banner_DrawPlain(MgBanner *e);
 void Banner_StartSpin(MgBanner *e);
 void Banner_StartWaveBurst(MgBanner *e);
-}
 
 /* The first OBJ character number of each graphics slot, {0x380, 0x300, 0x340}
    (MG_BANNER_SLOTn_CHARS / 32). Banner_Init copies it whole to the stack and
@@ -238,7 +237,7 @@ extern int *sMgMsgFourCardSpritesByLanguage[];
 extern int sMgMsgFiveCardNcgByLanguage[];
 extern int *sMgMsgFiveCardSpritesByLanguage[];
 
-extern "C" void Mg_FreeBannerFiles(void) {
+void Mg_FreeBannerFiles(void) {
     int i;
     for (i = 0; i < MG_BANNER_FILE_NUM; i++) {
         Deallocate(sMgBannerFiles[i]);
@@ -246,8 +245,7 @@ extern "C" void Mg_FreeBannerFiles(void) {
     }
 }
 
-extern "C" void Mg_LoadBannerFiles(void)
-{
+void Mg_LoadBannerFiles(void) {
     int i;
     /* The ROM's template for this array is at 0x020bc6e8 and is all zero except
        entry 1. What stood here was 29 invented pairs {1,100}, {2,101} ... {29,128};
@@ -324,12 +322,12 @@ extern "C" void Mg_LoadBannerFiles(void)
     }
 }
 
-extern "C" void Banner_Free(MgBanner *e) {
+void Banner_Free(MgBanner *e) {
     e->mFileIndex = MG_BANNER_FILE_NUM;
     sMgBannerGfxSlotUsed[e->mGfxSlot] = 0;
 }
 
-extern "C" void Banner_Draw(MgBanner *e) {
+void Banner_Draw(MgBanner *e) {
     if (e->mFileIndex == MG_BANNER_FILE_NUM)
         return;
     if (e->mRender != 0) {
@@ -339,7 +337,7 @@ extern "C" void Banner_Draw(MgBanner *e) {
     Banner_DrawPlain(e);
 }
 
-extern "C" void Banner_Update(MgBanner *e) {
+void Banner_Update(MgBanner *e) {
     if (e->mFileIndex == MG_BANNER_FILE_NUM)
         return;
     if (e->mBehavior == 0) return;
@@ -443,7 +441,7 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
     e->mRender = sBannerDrawTable[e->mStyle];
 }
 
-extern "C" void Banner_DrawLevelNumber(MgBanner *e) {
+void Banner_DrawLevelNumber(MgBanner *e) {
     int x;
     int originX = e->mX;
     int n;
@@ -478,11 +476,9 @@ extern "C" void Banner_DrawLevelNumber(MgBanner *e) {
     Mg_DrawBigNumber(x, e->mY, n, e->mScreen, e->mPriority, 2, 0);
 }
 
-extern "C" void Banner_SetupNone(void)
-{
-}
+void Banner_SetupNone(void) {}
 
-extern "C" void Banner_DrawSpin(MgBanner *e) {
+void Banner_DrawSpin(MgBanner *e) {
     GXOamAttr *oam = (GXOamAttr *)e->mOam;
     int angle = (u16)e->mTimer;
     M m;
@@ -504,35 +500,35 @@ extern "C" void Banner_DrawSpin(MgBanner *e) {
     } while (flag != 0xffff);
 }
 
-extern "C" void Banner_UpdateSpin(MgBanner *e) {
+void Banner_UpdateSpin(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
         e->mTimer = 0;
     }
 }
 
-extern "C" void Banner_StartSpin(MgBanner *e) {
+void Banner_StartSpin(MgBanner *e) {
     e->mTimer = 0;
     e->mTimerEnd = 0x27000;
     e->mBehavior = pmf_Banner_UpdateSpin;
     e->mRender = pmf_Banner_DrawSpin;
 }
 
-extern "C" void Banner_UpdateDrop(MgBanner *e) {
-    if (e->mTimer < 0x30){
+void Banner_UpdateDrop(MgBanner *e) {
+    if (e->mTimer < 48) {
         e->mTimer++;
         return;
     }
-    if (ApproachLinear2(e->mY, e->mTargetY, 0x10)){
+    if (ApproachLinear2(e->mY, e->mTargetY, 16)) {
         Banner_StartSpin(e);
     }
 }
 
-extern "C" void Banner_SetupDrop(MgBanner *e) {
+void Banner_SetupDrop(MgBanner *e) {
     e->mTimer = 0;
-    e->mY = -(sMgTopScreenYOffset + 0x60);
+    e->mY = -(sMgTopScreenYOffset + 96);
 }
 
-extern "C" void Banner_DrawWave(MgBanner *e) {
+void Banner_DrawWave(MgBanner *e) {
     GXOamAttr *oam = (GXOamAttr *)e->mOam;
     int x = e->mTimer >> 2;
     int t = 0x1000;
@@ -556,7 +552,7 @@ extern "C" void Banner_DrawWave(MgBanner *e) {
     } while (flag != 0xffff);
 }
 
-extern "C" void Banner_UpdateWave(MgBanner *e) {
+void Banner_UpdateWave(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
         e->mTimer = 0;
     }
@@ -567,7 +563,7 @@ extern "C" void Banner_UpdateWave(MgBanner *e) {
    from the minigame state). */
 #define BANNER_RAND(n) ((int)((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) * (n) >> 12)
 
-extern "C" void Banner_StartWaveBurst(MgBanner *e) {
+void Banner_StartWaveBurst(MgBanner *e) {
     int i;
 
     e->mTimer = 0;
@@ -588,7 +584,7 @@ extern "C" void Banner_StartWaveBurst(MgBanner *e) {
        for destruction at exit. */
     static Vector2 sBannerWaveFxGravity(0, 0xc0);
 
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
         func_0203d388((int *)&burstVel, 0x800);
         func_0203d388((int *)&ringOffset, 0x800);
@@ -598,7 +594,7 @@ extern "C" void Banner_StartWaveBurst(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_DrawSqueeze(MgBanner *e) {
+void Banner_DrawSqueeze(MgBanner *e) {
     int m, t, v;
     unsigned short term;
     if (e->mTimer == 0) return;
@@ -625,20 +621,20 @@ extern "C" void Banner_DrawSqueeze(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_UpdateFall(MgBanner *e) {
+void Banner_UpdateFall(MgBanner *e) {
     ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000);
     if (ApproachLinear2(e->mY, e->mTargetY, 0x10) == 0)
         return;
     Banner_StartWaveBurst(e);
 }
 
-extern "C" void Banner_SetupFall(MgBanner *e) {
+void Banner_SetupFall(MgBanner *e) {
     e->mTimer = 0;
     e->mTimerEnd = 0x14000;
     e->mY = 96;
 }
 
-extern "C" void Banner_DrawPopSpinA(MgBanner *e) {
+void Banner_DrawPopSpinA(MgBanner *e) {
     u16 flag;
     if (e->mTimer == 0) return;
     {
@@ -684,7 +680,7 @@ extern "C" void Banner_DrawPopSpinA(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
+void Banner_DrawPopSpinB(MgBanner *e) {
     u16 flag;
     if (e->mTimer == 0) return;
     {
@@ -730,24 +726,24 @@ extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_UpdatePopSpin(MgBanner *e) {
+void Banner_UpdatePopSpin(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
         e->mTimer = 0x18000;
     }
 }
 
-extern "C" void Banner_SetupPopSpin(MgBanner *e) {
+void Banner_SetupPopSpin(MgBanner *e) {
     e->mTimer = 0;
     e->mTimerEnd = 0x27000;
 }
 
-extern "C" int Banner_IsPressFinished(MgBanner *e) {
+int Banner_IsPressFinished(MgBanner *e) {
     if (e->mBehavior == pmf_Banner_UpdatePressed_2 && e->mTimer == e->mTimerEnd)
         return 1;
     return 0;
 }
 
-extern "C" void Banner_DrawPressed(MgBanner *e) {
+void Banner_DrawPressed(MgBanner *e) {
     GXOamAttr *oam = (GXOamAttr *)e->mOam;
     int x = e->mTimer;
     u16 ang = (unsigned int)x >> 1;
@@ -771,11 +767,11 @@ extern "C" void Banner_DrawPressed(MgBanner *e) {
         e->mScreen, e->mPriority);
 }
 
-extern "C" void Banner_UpdatePressed(MgBanner *e) {
+void Banner_UpdatePressed(MgBanner *e) {
     ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000);
 }
 
-extern "C" void Banner_Press(MgBanner *e) {
+void Banner_Press(MgBanner *e) {
     sMgBannerButtonsArmed = 0;
     switch (e->mFileIndex) {
     case 0:
@@ -792,19 +788,19 @@ extern "C" void Banner_Press(MgBanner *e) {
     e->mRender = pmf_Banner_DrawPressed;
 }
 
-extern "C" void Banner_DrawPlain(MgBanner *e) {
+void Banner_DrawPlain(MgBanner *e) {
     Mg_RenderSpriteOn((OamAttr *)e->mOam, e->mX, e->mY, e->mScreen, e->mPriority);
     if (e->mFileIndex != 0 && e->mFileIndex != 1 && e->mFileIndex != 2)
         return;
     Mg_RenderSpriteOn(data_ov006_021346bc, e->mX, e->mY, e->mScreen, e->mPriority);
 }
 
-extern "C" void Banner_SetupZoom(MgBanner *e) {
+void Banner_SetupZoom(MgBanner *e) {
     e->mTimer = 0;
     e->mTimerEnd = ((e->mOamCount + 1) << 2) + 0x1e << 0xc;
 }
 
-extern "C" void Banner_DrawZoomA(MgBanner *e) {
+void Banner_DrawZoomA(MgBanner *e) {
     u16 flag;
     int val = e->mTimer;
     if (val == 0) return;
@@ -866,7 +862,7 @@ extern "C" void Banner_DrawZoomA(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_DrawZoomB(MgBanner *e) {
+void Banner_DrawZoomB(MgBanner *e) {
     u16 flag;
     int val = e->mTimer;
     if (val == 0) return;
@@ -928,13 +924,13 @@ extern "C" void Banner_DrawZoomB(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_UpdateZoom(MgBanner *e) {
+void Banner_UpdateZoom(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
         e->mTimer = 0x1e000;
     }
 }
 
-extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
+void Banner_SetupZoomBurst(MgBanner *e) {
     int i;
 
     e->mTimer = 0;
@@ -949,7 +945,7 @@ extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
 
     static Vector2 sBannerZoomFxGravity(0, 0xc0);
 
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < 32; i++) {
         func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
         func_0203d388((int *)&burstVel, 0x800);
         func_0203d388((int *)&ringOffset, 0x800);
@@ -959,37 +955,37 @@ extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
     }
 }
 
-extern "C" void Banner_UpdateSlideFromRight(MgBanner *e) {
+void Banner_UpdateSlideFromRight(MgBanner *e) {
     if (ApproachLinear2(e->mX, e->mTargetX, 0x10))
         e->mArrived = 1;
 }
 
-extern "C" void Banner_SetupSlideFromRight(MgBanner *e) {
+void Banner_SetupSlideFromRight(MgBanner *e) {
     e->mX = 320;
 }
 
-extern "C" void Banner_UpdateSlideFromLeft(MgBanner *e) {
+void Banner_UpdateSlideFromLeft(MgBanner *e) {
     if (ApproachLinear2(e->mX, e->mTargetX, 0x10))
         e->mArrived = 1;
 }
 
-extern "C" void Banner_SetupSlideFromLeft(MgBanner *e) {
+void Banner_SetupSlideFromLeft(MgBanner *e) {
     e->mX = -0x40;
 }
 
-extern "C" void Banner_UpdateSlideFromBottom(MgBanner *e) {
+void Banner_UpdateSlideFromBottom(MgBanner *e) {
     ApproachLinear2(e->mY, e->mTargetY, 4);
 }
 
-extern "C" void Banner_SetupSlideFromBottom(MgBanner *e) {
+void Banner_SetupSlideFromBottom(MgBanner *e) {
     e->mY = 200;
 }
 
-extern "C" void Banner_UpdateSlideFromTop(MgBanner *e) {
+void Banner_UpdateSlideFromTop(MgBanner *e) {
     ApproachLinear2(e->mY, e->mTargetY, 4);
 }
 
-extern "C" void Banner_SetupSlideFromTop(MgBanner *e) {
+void Banner_SetupSlideFromTop(MgBanner *e) {
     e->mY = -8;
 }
 

@@ -13,13 +13,13 @@ u16 FX_Atan2(fx32 x, fx32 y) {
     if (x > 0) {
         if (y > 0) {
             if (y > x) {
-                numerator = (u32)x;
-                denominator = (u32)y;
+                numerator = x;
+                denominator = y;
                 bias = 0;
                 positive = 1;
             } else if (y < x) {
-                numerator = (u32)y;
-                denominator = (u32)x;
+                numerator = y;
+                denominator = x;
                 bias = 0x4000;
                 positive = 0;
             } else {
@@ -28,13 +28,13 @@ u16 FX_Atan2(fx32 x, fx32 y) {
         } else if (y < 0) {
             y = -y;
             if (y < x) {
-                numerator = (u32)y;
-                denominator = (u32)x;
+                numerator = y;
+                denominator = x;
                 bias = 0x4000;
                 positive = 1;
             } else if (y > x) {
-                numerator = (u32)x;
-                denominator = (u32)y;
+                numerator = x;
+                denominator = y;
                 bias = 0x8000;
                 positive = 0;
             } else {
@@ -48,27 +48,27 @@ u16 FX_Atan2(fx32 x, fx32 y) {
         if (y < 0) {
             y = -y;
             if (y > x) {
-                numerator = (u32)x;
-                denominator = (u32)y;
-                bias = (u32)(-0x8000);
+                numerator = x;
+                denominator = y;
+                bias = (-0x8000);
                 positive = 1;
             } else if (y < x) {
-                numerator = (u32)y;
-                denominator = (u32)x;
-                bias = (u32)(-0x4000);
+                numerator = y;
+                denominator = x;
+                bias = (-0x4000);
                 positive = 0;
             } else {
                 return 0xA000;
             }
         } else if (y > 0) {
             if (y < x) {
-                numerator = (u32)y;
-                denominator = (u32)x;
-                bias = (u32)(-0x4000);
+                numerator = y;
+                denominator = x;
+                bias = (-0x4000);
                 positive = 1;
             } else if (y > x) {
-                numerator = (u32)x;
-                denominator = (u32)y;
+                numerator = x;
+                denominator = y;
                 bias = 0x0;
                 positive = 0;
             } else {
@@ -86,7 +86,7 @@ u16 FX_Atan2(fx32 x, fx32 y) {
     if (denominator == 0x0)
         return 0x0;
     if (positive)
-        return (u16)(bias + FX_AtanTable_[FX_Div((fx32)numerator, (fx32)denominator) >> 5]);
+        return (bias + FX_AtanTable_[FX_Div(numerator, denominator) >> 5]);
     else
-        return (u16)(bias - FX_AtanTable_[FX_Div((fx32)numerator, (fx32)denominator) >> 5]);
+        return (bias - FX_AtanTable_[FX_Div(numerator, denominator) >> 5]);
 }

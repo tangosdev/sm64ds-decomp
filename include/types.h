@@ -40,25 +40,27 @@ typedef signed int intptr_t;
 typedef unsigned int uintptr_t;
 #endif
 
-/* 20.12 fixed-point scalar, as used by the SDK/game maths.
+/* NitroSDK's fixed-point scalars (nitro/fx/fx.h): fx32 is 20.12 in an s32,
+   fx16 is 4.12 in an s16. Declared here under the same guard as fx.h so every
+   file sees the SDK's spelling without pulling in fx.h's vectors and macros,
+   and a file may include both headers in either order.
 
-   NOT named `Fix12`. In the original C++ that is a class TEMPLATE, not a scalar typedef;
-   this tree's convention spells it out in mangled names, e.g.
-   `_ZN4cstd5atan2E5Fix12IiES1_` for `cstd::atan2(Fix12<int>, Fix12<int>)`. That is a
-   convention and not evidence: the image holds zero `_Z...` strings, so no function's
-   mangled name here is ROM-derived (its RTTI carries class names only). Where a
-   by-value `5Fix12IiE` parameter contradicts the bytes, the bytes win -- see
-   notes/mwccarm-codegen.md 6az. Taking the name here for a plain `s32` would
-   collide with the real type the moment it is reconstructed, and every consumer would have
-   to be edited and re-verified to give it back. `Fix12i` is already the spelling most src/
-   files use and is not a real C++ type name, so it stays free.
-
-   A local `typedef s32 Fix12;` in an individual src/ file is still fine -- it is private to
-   that translation unit. This rule is about what the SHARED header claims. */
-typedef s32 Fix12i;
+   fx32 is the only spelling of a 20.12 scalar in this tree. The ROM is
+   stripped: it carries RTTI class names and no function symbols, so no type
+   spelling of a 20.12 value comes from the cartridge. What the toolchain
+   verifiably had is the SDK's fx32 (the NitroSDK functions linked into this
+   ROM take it), so that is the period spelling, with FX32_SHIFT and FX_MUL
+   from nitro/fx/fx.h. */
+#ifndef NITRO_FX_SCALAR_TYPES
+#define NITRO_FX_SCALAR_TYPES
+typedef signed int fx32;
+typedef signed long long fx64;
+typedef signed long long fx64c;
+typedef signed short fx16;
+#endif
 
 typedef struct Vector3 {
-    Fix12i x, y, z;
+    fx32 x, y, z;
 #ifdef __cplusplus
     /* DECLARED, AND EMPTY, BECAUSE THE ROM DESTROYS ARRAYS OF IT. A POD array
        needs no cleanup, so daKing_Donketu_c's
@@ -79,7 +81,7 @@ typedef struct Vector3 {
        lowering from block moves to memberwise in a few TUs -- those sites use
        a local POD twin instead. */
     Vector3() {}
-    Vector3(Fix12i x_, Fix12i y_, Fix12i z_) : x(x_), y(y_), z(z_) {}
+    Vector3(fx32 x_, fx32 y_, fx32 z_) : x(x_), y(y_), z(z_) {}
 #endif
 } Vector3;
 

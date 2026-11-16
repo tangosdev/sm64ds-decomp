@@ -28,28 +28,28 @@
   ],
   "functions": [
     {
-      "symbol": "Mg_SetNextBanner",
+      "symbol": "_Z16Mg_SetNextBanneri",
       "address": "0x020b67e8",
       "size": "0x00000010",
       "legacy_source": "src/func_ov004_020b67e8.c",
       "ordinal": 0
     },
     {
-      "symbol": "Mg_SetPerfectBanner",
+      "symbol": "_Z19Mg_SetPerfectBannerv",
       "address": "0x020b67f8",
       "size": "0x00000010",
       "legacy_source": "src/func_ov004_020b67f8.c",
       "ordinal": 1
     },
     {
-      "symbol": "Mg_ResetRecordBannerPos",
+      "symbol": "_Z23Mg_ResetRecordBannerPosv",
       "address": "0x020b6808",
       "size": "0x00000024",
       "legacy_source": "src/func_ov004_020b6808.c",
       "ordinal": 2
     },
     {
-      "symbol": "Mg_PlaceBannersOnTopScreen",
+      "symbol": "_Z26Mg_PlaceBannersOnTopScreenv",
       "address": "0x020b682c",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov004_020b682c.c",
@@ -385,7 +385,7 @@
       "ordinal": 50
     },
     {
-      "symbol": "Mg_ResetBannerLayout",
+      "symbol": "_Z20Mg_ResetBannerLayoutv",
       "address": "0x020b8a8c",
       "size": "0x0000018c",
       "legacy_source": "src/func_ov004_020b8a8c.c",

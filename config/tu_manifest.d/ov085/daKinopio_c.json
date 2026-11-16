@@ -137,7 +137,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "daKinopio_c_classInit",
+      "symbol": "_Z21daKinopio_c_classInitv",
       "address": "0x02129cd0",
       "size": "0x00000048",
       "legacy_source": "src/d_a_kinopio.c",
@@ -620,34 +620,34 @@
       "evidence": "compiler temp mapped to 0x021304b0 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @546 to @487 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@853",
+      "from": "@848",
       "to": "data_ov085_0212fe40",
-      "evidence": "compiler temp mapped to 0x0212fe40 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @866 to @861 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821) Re-keyed from @912 to @853 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x0212fe40 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @866 to @861 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821) Re-keyed from @912 to @853 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @853 to @848 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@850",
+      "to": "data_ov085_0212fe48",
+      "evidence": "compiler temp mapped to 0x0212fe48 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @868 to @863 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821) Re-keyed from @914 to @855 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @855 to @850 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@853",
+      "to": "data_ov085_0212fe30",
+      "evidence": "compiler temp mapped to 0x0212fe30 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @871 to @866 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821) Re-keyed from @917 to @858 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @858 to @853 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@855",
-      "to": "data_ov085_0212fe48",
-      "evidence": "compiler temp mapped to 0x0212fe48 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @868 to @863 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821) Re-keyed from @914 to @855 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@858",
-      "to": "data_ov085_0212fe30",
-      "evidence": "compiler temp mapped to 0x0212fe30 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @871 to @866 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821) Re-keyed from @917 to @858 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@860",
       "to": "data_ov085_0212fe38",
-      "evidence": "compiler temp mapped to 0x0212fe38 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @873 to @868 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821) Re-keyed from @919 to @860 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x0212fe38 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @873 to @868 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821) Re-keyed from @919 to @860 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @860 to @855 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@851",
+      "to": "data_ov085_0212fe28",
+      "evidence": "compiler temp mapped to 0x0212fe28 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @869 to @864 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821) Re-keyed from @915 to @856 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @856 to @851 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@856",
-      "to": "data_ov085_0212fe28",
-      "evidence": "compiler temp mapped to 0x0212fe28 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @869 to @864 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821) Re-keyed from @915 to @856 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@861",
       "to": "data_ov085_0212fe20",
-      "evidence": "compiler temp mapped to 0x0212fe20 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @874 to @869 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821) Re-keyed from @920 to @861 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x0212fe20 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @874 to @869 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821) Re-keyed from @920 to @861 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @861 to @856 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -721,7 +721,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN16KinopioModelFileC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call/load destination at this exact relocation site"
@@ -735,7 +735,7 @@
     },
     {
       "symbol": "_ZN16KinopioModelFileD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail initializer call/load destination at this exact relocation site"
@@ -754,7 +754,7 @@
       "source": "0x0212f2b8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -824,7 +824,7 @@
       "source": "0x0212f368",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1024,7 +1024,7 @@
       "source": "0x0212fe6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daKinopio_c_classInit",
+      "symbol": "_Z21daKinopio_c_classInitv",
       "addend": 0,
       "target_module": "ov085",
       "target_address": "0x02129cd0"

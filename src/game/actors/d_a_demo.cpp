@@ -200,9 +200,6 @@ typedef unsigned char u8;
 /* shadow typedef 'u16' */
 typedef unsigned short u16;
 
-/* shadow typedef 'Fix12i' */
-typedef int Fix12i;
-
 /* shadow typedef 'Vector3' */
 
 /* Lakitu's model, animation and texture-sequence file handles, owned and
@@ -223,7 +220,21 @@ struct JugemTexSequenceFilePtr : SharedFilePtr {
     ~JugemTexSequenceFilePtr();
 };
 
+struct DemoModelFile : SharedFilePtr {
+    DemoModelFile(unsigned int fileID);
+    ~DemoModelFile();
+};
+struct DemoAnimFile : SharedFilePtr {
+    DemoAnimFile(unsigned int fileID);
+    ~DemoAnimFile();
+};
+struct DemoTexSeqFile : SharedFilePtr {
+    DemoTexSeqFile(unsigned int fileID);
+    ~DemoTexSeqFile();
+};
+
 extern "C" {
+
 extern unsigned char gSubScreenLayers;
 extern int data_0209e650;
 extern OamAttr data_ov002_0210bddc;
@@ -237,27 +248,42 @@ extern u8 data_ov002_02111144;
 extern u32 data_020a0db0;
 extern struct OamAttr *data_ov002_0210b6a8[];
 
-extern u32 d_a_demoNewHold(u32 slot, u32 unk, Fix12i x, Fix12i y, Fix12i z, void *rot,
-                           struct ParticleCallback *callback);
 extern int data_ov002_02100140[];
+}
+
 extern void func_ov002_020f2790(char *c, int p1, int p2, int p3, short p4);
 extern int func_ov002_020f2984(char *p);
-extern int GetOwnerLanguage(void);
+
+extern "C" int GetOwnerLanguage(void);
+extern "C" {
+
 extern void OamRender10_d_a_demo(int a, struct OamAttr *attr, int x, int y, int e, int f, int g,
                                  int h, int i, int j);
 extern struct OamAttr* data_ov002_0210b988[];
-extern void func_0201ef50(unsigned char v);
+}
+
+extern void func_0201ef50(int v);
 extern void func_0201f108(void);
-extern struct OamAttr* data_ov002_0210bba0[];
+extern "C" {
+
+extern struct OamAttr *data_ov002_0210bba0[];
+}
+
 extern int func_ov002_020f5a94(void *c);
-extern int* data_ov002_0210b97c[];
+extern "C" {
+extern int *data_ov002_0210b97c[];
+}
+
 extern void func_ov002_020f2f18(char *c, int a, int b);
+extern "C" {
 extern void SetSubBg2Offset(int a, int b);
 extern StaffRollStep data_ov002_02110e24[];
 extern StaffRollStep data_ov002_02110e9c[];
+}
+
 extern void func_ov002_020f3828(int *c);
+extern "C" {
 extern int data_ov002_021002a0[];
-extern short atan2_hold_d_a_demo_1(int y, int x);
 extern StaffRollStep data_ov002_02110e34[];
 extern unsigned short data_ov002_021000c0[];
 extern int data_ov002_02100120[];
@@ -276,8 +302,13 @@ extern StaffRollStep data_ov002_02110eec[];
 extern int data_ov002_02100190[];
 extern int data_ov002_02100170[];
 extern StaffRollStep data_ov002_02110e64[];
+}
+
 extern void func_ov002_020f39ec(char *c, int i);
+extern "C" {
 extern StaffRollStep data_ov002_02110e7c[];
+}
+
 extern void func_ov002_020f5a6c(char* p);
 extern void func_ov002_020f396c(char* p);
 extern void func_ov002_020f30d4(char* p);
@@ -287,16 +318,17 @@ extern void func_ov002_020f2958(char* c);
 extern void func_ov002_020f37fc(char*);
 extern void func_ov002_020f2f9c(void *, int);
 extern void func_ov002_020f3954(char *);
+extern "C" {
 /* local extern dropped: decl_common.h already declares LoadFont(u8) */
 extern StaffRollCue data_ov002_02110f9c[];
 extern void SetSubBg3Offset(int a, int b);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
-extern void Deallocate(void* p);
-extern void GXS_LoadBG1Scr(const void *src, int offset, int count);
-extern void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
-extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
-extern void func_ov002_020f5ad4(char* c);
+}
+
+extern "C" void Deallocate(void *p);
+extern "C" void GXS_LoadBG1Scr(const void *src, int offset, int count);
+extern "C" void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
 extern void func_ov002_020f5f60(char *c);
 extern int func_ov002_020f5fb8(void* c);
 extern int func_ov002_020f5f8c(void* c);
@@ -305,20 +337,27 @@ extern void func_ov002_020f3978(char *c);
 extern int func_ov002_020f27e8(char *c);
 extern int func_ov002_020f2990(char *c);
 extern void func_ov002_020f5fe4(char *c);
+
 /* local extern dropped: decl_common.h declares func_ov002_020f6514(unsigned char*, void*, unsigned char) */
-extern void func_02012694(unsigned int, void*);
+extern void func_02012694(unsigned int, const Vector3 *);
+extern "C" {
+
 /* local extern dropped: decl_common.h declares data_ov002_0210bc88 as 'int'; callers cast the address */
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern char *gCamera;
 extern int data_ov002_0210b958;
+}
+
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
 extern void func_0201f138(void);
 extern void func_0201ef38(void);
+extern "C" {
+
 extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalar(VecFx32 *out, const VecFx32 *in, int scale);
+extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
 /* local extern dropped: decl_common.h declares data_0209b41c */
@@ -371,7 +410,7 @@ void daDemo_c::func_ov002_020f1fcc()
     if (mScroll->fadeLevel == 0)
         return;
     mScroll->fadeTimer++;
-    if (mScroll->fadeTimer != 0x18)
+    if (mScroll->fadeTimer != 24)
         return;
     mScroll->fadeTimer = 0;
     mScroll->fadeLevel--;
@@ -601,7 +640,7 @@ void StaffRoll::func_ov002_020f26e0() {
        words, so OamEnt views each one as the sparkle sprite it draws. */
     struct OamEnt *e = (struct OamEnt *)this->kira.trackingRecords;
     int i;
-    for (i = 0; i < 0x40; i++, e++) {
+    for (i = 0; i < 64; i++, e++) {
         int idx;
         int s;
         if (e->enabled == 0)
@@ -618,18 +657,15 @@ void StaffRoll::func_ov002_020f26e0() {
     }
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4)
 {
     ((StaffRoll *)c)->kira.unk308 = p3;
     ((StaffRoll *)c)->kira.unk30c = p4;
-    ((StaffRoll *)c)->kiraParticle = Particle::System::New(
-        ((StaffRoll *)c)->kiraParticle, kPtclEndingStarSparkle, p1 << 12, p2 << 12, 0, 0,
-        (dPa_c::level_c::callback_c *)((struct ParticleCallback *)&((StaffRoll *)c)->kira));
-}
+    ((StaffRoll *)c)->kiraParticle =
+        Particle::System::New(((StaffRoll *)c)->kiraParticle, kPtclEndingStarSparkle, p1 << 12,
+                              p2 << 12, 0, 0, &((StaffRoll *)c)->kira);
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f27e8(char *c)
 {
     if (((StaffRoll *)c)->burstActive == 0)
@@ -661,7 +697,7 @@ int func_ov002_020f27e8(char *c)
     func_ov002_020f2790(c, 0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
                         ((StaffRoll *)c)->burstSysParam);
 
-    if (((StaffRoll *)c)->burstTimer >= 0x1e) {
+    if (((StaffRoll *)c)->burstTimer >= 30) {
         ((StaffRoll *)c)->burstTimer = 0;
         ((StaffRoll *)c)->burstPeriods += 1;
     }
@@ -669,9 +705,7 @@ int func_ov002_020f27e8(char *c)
         return ((StaffRoll *)c)->burstPeriods;
     return func_ov002_020f2984(c);
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2958(char *c)
 {
     ((StaffRoll *)c)->burstActive = 1;
@@ -680,17 +714,13 @@ void func_ov002_020f2958(char *c)
     ((StaffRoll *)c)->burstTimer = 0;
     ((StaffRoll *)c)->burstPeriods = 0;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f2984(char *p)
 {
     ((StaffRoll *)p)->burstActive = 0;
     return (int)p;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f2990(char* c)
 {
     int x, y;
@@ -708,7 +738,6 @@ int func_ov002_020f2990(char* c)
 
     OAM::Render(0, data_ov002_0210b988[idx], x, y, -1, 1, 0x1000, 0x1000, 0, -1);
 }
-}
 
 void StaffRoll::func_ov002_020f2a48() {
     /* 0x1d8/0x1d9 and the position: see func_ov002_020f2990. */
@@ -718,13 +747,11 @@ void StaffRoll::func_ov002_020f2a48() {
     endY = 393216;
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2a68(char *p)
 {
     /* 0x1d8/0x1d9: see func_ov002_020f2990. */
     ((StaffRoll *)p)->endActive = 0;
     ((StaffRoll *)p)->endVisible = 0;
-}
 }
 
 void StaffRoll::func_ov002_020f2a78(int i) {
@@ -733,15 +760,14 @@ void StaffRoll::func_ov002_020f2a78(int i) {
 
 void StaffRoll::func_ov002_020f2a88(int i) {
     this->credit[i].timer++;
-    if (this->credit[i].timer < 0x39)
+    if (this->credit[i].timer < 57)
         return;
     this->credit[i].timer = 0;
     this->credit[i].step++;
 }
 
 void StaffRoll::func_ov002_020f2aec(int idx) {
-    char *c = (char *)this;
-    StaffRoll *s = (StaffRoll *)c;
+    StaffRoll *s = this;
 
     if (s->credit[idx].timer == 0) {
         gSubScreenLayers |= 1;
@@ -765,8 +791,7 @@ void StaffRoll::func_ov002_020f2aec(int idx) {
 }
 
 void StaffRoll::func_ov002_020f2bf4(int idx) {
-    char *c = (char *)this;
-    StaffRoll *s = (StaffRoll *)c;
+    StaffRoll *s = this;
 
     s->credit[idx].timer++;
     s->credit[idx].blendTimer++;
@@ -792,7 +817,7 @@ void StaffRoll::func_ov002_020f2bf4(int idx) {
 
 void StaffRoll::func_ov002_020f2d0c(int i) {
     this->credit[i].timer++;
-    if (this->credit[i].timer < 0x39)
+    if (this->credit[i].timer < 57)
         return;
     this->credit[i].timer = 0;
     this->credit[i].step++;
@@ -800,7 +825,7 @@ void StaffRoll::func_ov002_020f2d0c(int i) {
 
 void StaffRoll::func_ov002_020f2d70(int i) {
     this->credit[i].timer++;
-    if (this->credit[i].timer < 0x1e)
+    if (this->credit[i].timer < 30)
         return;
     this->credit[i].timer = 0;
     this->credit[i].step++;
@@ -832,14 +857,11 @@ void StaffRoll::StartCredit(int n) {
     gSubScreenLayers |= 1;
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2ea0(char *p)
 {
     ((StaffRoll *)p)->credit[0].active = 0;
 }
-}
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2eac(void *c) {
     int i;
     char *p = (char *)c;
@@ -852,9 +874,7 @@ void func_ov002_020f2eac(void *c) {
         p += 0x14;
     }
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2f18(char* c, int a, int b)
 {
     int i = 0;
@@ -867,7 +887,6 @@ void func_ov002_020f2f18(char* c, int a, int b)
         c += 0x14;
     } while (i < 5);
 }
-}
 
 void StaffRoll::func_ov002_020f2f64() {
     int i;
@@ -878,7 +897,6 @@ void StaffRoll::func_ov002_020f2f64() {
     }
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2f9c(void* self, int count)
 {
     char* sl = (char*)self;
@@ -909,9 +927,7 @@ void func_ov002_020f2f9c(void* self, int count)
         sl += 0x14;
     }
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f30d4(char *p)
 {
     int i;
@@ -920,7 +936,6 @@ void func_ov002_020f30d4(char *p)
         ((StaffRoll *)p)->dolls[0].visible = 0;
         p += 0x14;
     }
-}
 }
 
 void StaffRoll::func_ov002_020f30f8(int i) {
@@ -1087,7 +1102,6 @@ void StaffRoll::func_ov002_020f37a0() {
     (this->*data_ov002_02110e4c[this->window[0].kind])(0);
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f37fc(char *c)
 {
     func_ov002_020f3828((int*)c);
@@ -1095,9 +1109,7 @@ void func_ov002_020f37fc(char *c)
     ((StaffRoll *)c)->window[0].kind = 2;
     ((StaffRoll *)c)->window[0].step = 0;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f3828(int *c)
 {
     ((StaffRoll *)c)->window[0].left = 0x80000;
@@ -1122,26 +1134,24 @@ void func_ov002_020f3828(int *c)
     SetSubBg2Offset(((StaffRoll *)c)->window[0].bgX >> 12, ((StaffRoll *)c)->window[0].bgY >> 12);
     gSubScreenLayers |= 6;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f3954(char *p)
 {
     ((StaffRoll *)p)->window[0].active = 1;
     ((StaffRoll *)p)->window[0].kind = 1;
     ((StaffRoll *)p)->window[0].step = 0;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f396c(char *p)
 {
     ((StaffRoll *)p)->window[0].active = 0;
 }
-}
 
 extern "C" {
+
 extern void *data_ov002_0210b998[];
+}
+
 void func_ov002_020f3978(char *c) {
     int i;
     for (i = 0; i < 4; i++) {
@@ -1153,9 +1163,7 @@ void func_ov002_020f3978(char *c) {
         c += 0x4c;
     }
 }
-}
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f39ec(char *self, int idx) {
     StaffRoll *s = (StaffRoll *)self;
     s->stars[idx].frameTimer++;
@@ -1179,11 +1187,9 @@ void func_ov002_020f39ec(char *self, int idx) {
                      (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400, 0x100);
     }
 }
-}
 
 void StaffRoll::func_ov002_020f3ae8(int idx) {
-    char *base = (char *)this;
-    StaffRoll::Star *arr = (StaffRoll::Star *)base;
+    StaffRoll::Star *arr = this->stars;
     int a;
     int b;
     a = FX_SinCosTable_[((arr[idx].heading >> 4) * 2) + 1];
@@ -1420,7 +1426,7 @@ void StaffRoll::func_ov002_020f40fc(int i) {
     this->stars[i].flyTimer += 1;
     this->stars[i].x += this->stars[i].speed;
     this->stars[i].speed += 0x300;
-    if (this->stars[0].flyTimer < 0x70)
+    if (this->stars[0].flyTimer < 112)
         return;
     {
         this->stars[i].step += 1;
@@ -1492,7 +1498,7 @@ void StaffRoll::func_ov002_020f43cc(int i) {
                 *(int *)((char *)&this->stars[0].speed + off) + 0x120;
         {
             s = c + idx * 0x4c;
-            int dx = (((StaffRoll *)s)->stars[0].targetX - *(int *)px) >> 12;
+            int dx = (((StaffRoll *)s)->stars[0].targetX - ((StaffRoll *)px)->stars[0].x) >> 12;
             int dy = (((StaffRoll *)s)->stars[0].targetY - this->stars[idx].y) >> 12;
             if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
                 this->stars[idx].phase++;
@@ -1632,7 +1638,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
         this->stars[i].speed -= 0x300;
     }
 
-    if (this->stars[0].flyTimer < 0x60)
+    if (this->stars[0].flyTimer < 96)
         return;
 
     {
@@ -1701,7 +1707,7 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
         {
             int raw = cstd::atan2(dy, dx);
             ang = this->stars[i].heading;
-            target = (unsigned short)raw;
+            target = raw;
         }
         if (target > ang) {
             unsigned short nv;
@@ -1819,7 +1825,7 @@ void StaffRoll::func_ov002_020f4d70(int i) {
     this->stars[i].x += this->stars[i].speed;
     this->stars[i].speed -= 0x300;
 
-    if (this->stars[0].flyTimer < 0x70)
+    if (this->stars[0].flyTimer < 112)
         return;
 
     {
@@ -1900,7 +1906,7 @@ void StaffRoll::func_ov002_020f5010(int i) {
         {
             int raw = cstd::atan2(dy, dx);
             ang = this->stars[i].heading;
-            target = (unsigned short)raw;
+            target = raw;
         }
         if (target > ang) {
             unsigned short nv;
@@ -2012,7 +2018,7 @@ void StaffRoll::func_ov002_020f5328(int i) {
         this->stars[i].speed -= 0x300;
     }
 
-    if (this->stars[0].flyTimer < 0x60)
+    if (this->stars[0].flyTimer < 96)
         return;
 
     {
@@ -2036,7 +2042,7 @@ void StaffRoll::func_ov002_020f55b4(int i) {
     char *e = c + i * 0x4c;
     if (((StaffRoll *)e)->stars[0].frame != 0x10)
         return;
-    (*((unsigned char *)&this->stars[0].step + i * 0x4c)) += 1;
+    (&this->stars[0].step)[i * 0x4c] += 1;
     ((StaffRoll *)e)->stars[0].radius = 0x38000;
     ((StaffRoll *)e)->stars[0].heading = data_ov002_021000d8[i];
     ((StaffRoll *)e)->stars[0].phase = 0;
@@ -2053,8 +2059,7 @@ void StaffRoll::func_ov002_020f562c(int idx) {
 }
 
 void StaffRoll::func_ov002_020f5678(int i) {
-    char *base = (char *)this;
-    StaffRoll::Star *e = (StaffRoll::Star *)base + i;
+    StaffRoll::Star *e = this->stars + i;
     e->kiraDefParam = 0xccc;
     e->kiraSysParam = 0x155;
 }
@@ -2186,7 +2191,6 @@ void StaffRoll::func_ov002_020f5990() {
     }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5a6c(char *p) {
     int i;
     for (i = 0; i < 4; i++) {
@@ -2196,9 +2200,7 @@ void func_ov002_020f5a6c(char *p) {
         p += 0x4c;
     }
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f5a94(void *unused){
     unsigned char count = 0;
     int i;
@@ -2208,23 +2210,18 @@ int func_ov002_020f5a94(void *unused){
     }
     return count;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020f5ad4(char* c)
-{
-    /* StaffRoll::pad_1f0: two words cleared here and read nowhere. */
-    *(int*)(c+0x1f0) = 0;
-    *(int*)(c+0x1f4) = 0;
-    ((StaffRoll *)c)->kiraStar = 0;
-    ((StaffRoll *)c)->holdOrbit = 0;
-    func_ov002_020f5a6c(c);
-    func_ov002_020f396c(c);
-    func_ov002_020f30d4(c);
-    func_ov002_020f2ea0(c);
-    func_ov002_020f2a68(c);
-    func_ov002_020f2984(c);
-}
+void StaffRoll::func_ov002_020f5ad4() {
+    unk1f0 = 0;
+    unk1f4 = 0;
+    kiraStar = 0;
+    holdOrbit = 0;
+    func_ov002_020f5a6c((char *)this);
+    func_ov002_020f396c((char *)this);
+    func_ov002_020f30d4((char *)this);
+    func_ov002_020f2ea0((char *)this);
+    func_ov002_020f2a68((char *)this);
+    func_ov002_020f2984((char *)this);
 }
 
 void StaffRoll::func_ov002_020f5b24() {
@@ -2416,7 +2413,6 @@ void StaffRoll::func_ov002_020f5f0c(int idx) {
     this->StartCredit(idx);
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5f60(char *c)
 {
     void *p = ((StaffRoll *)c)->starChars;
@@ -2425,27 +2421,21 @@ void func_ov002_020f5f60(char *c)
     ::operator delete(p);
     ((StaffRoll *)c)->starChars = 0;
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f5f8c(void* c){
     ((StaffRoll *)c)->func_ov002_020f26e0();
     func_ov002_020f3978((char *)c);
     func_ov002_020f2eac(c);
     return func_ov002_020f2990((char *)c);
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f5fb8(void* c){
     ((StaffRoll *)c)->func_ov002_020f5990();
     ((StaffRoll *)c)->func_ov002_020f37a0();
     ((StaffRoll *)c)->func_ov002_020f2dd4();
     return func_ov002_020f27e8((char *)c);
 }
-}
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5fe4(char* c)
 {
     void *f;
@@ -2549,10 +2539,8 @@ void func_ov002_020f5fe4(char* c)
     DecompressLZ16(f, ((StaffRoll *)c)->starChars);
     Deallocate(f);
 
-    func_ov002_020f5ad4(c);
+    ((StaffRoll *)c)->func_ov002_020f5ad4();
 }
-}
-
 
 int daDemo_c::func_ov002_020f63a0()
 {
@@ -2603,10 +2591,17 @@ int daDemo_c::func_ov002_020f6448(unsigned char *arg1)
 
 void daDemo_c::anmModel_c::func_ov002_020f64ac(char *r4)
 {
+    struct AnimEntry {
+        u8 anim;
+        s8 btp;
+        u8 loop;
+        s8 next;
+    };
     Advance();
     if (!Finished())
         return;
-    signed char r2 = *(signed char *)(r4 + (mAnimEntry << 2) + 3);
+    AnimEntry *entry = (AnimEntry *)r4 + mAnimEntry;
+    signed char r2 = entry->next;
     if (r2 < 0)
         return;
     func_ov002_020f6514((u8 *)r4, (u8)(r2 & 0xff));
@@ -2625,7 +2620,7 @@ void daDemo_c::anmModel_c::func_ov002_020f6514(void *tbl, unsigned char arg)
         dExtAnmTexPat_c *ts = mTexSeq;
         s8 idx;
         if (ts == 0) return;
-        idx = (s8)e[1];
+        idx = e[1];
         if (idx < 0) return;
         ts->SetFile(*(BTP_File *)mTexSeqFiles[idx]->filePtr, v, 0x1000, 0);
     }
@@ -2791,7 +2786,7 @@ int daDemo_c::func_ov002_020f6ae4(unsigned char *p)
 int daDemo_c::func_ov002_020f6b28(unsigned char *p)
 {
     unsigned int v = ReadUnalignedInt(p);
-    func_02012694(v, &mCamSpacePosX);
+    func_02012694(v, (const Vector3 *)&mCamSpacePosX);
     return 1;
 }
 
@@ -2841,16 +2836,15 @@ int daDemo_c::func_ov002_020f6c24(unsigned char *src)
 int daDemo_c::func_ov002_020f6c34(unsigned char *src)
 {
     unsigned char v = *src;
-    ((anmModel_c *)this->mAnmModel)->func_ov002_020f6514((u8 *)&data_ov002_0210bc88, v);
+    ((anmModel_c *)this->mAnmModel)->func_ov002_020f6514(&data_ov002_0210bc88, v);
     return 1;
 }
 
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 inline unsigned int inline_fn(unsigned int arg0)
 {
   return arg0;
 }
-
 }
 
 int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
@@ -2885,7 +2879,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
   }
   else
   {
-      MTX_MultVec43((Vector3 *)&data_ov002_0210b958, (Matrix4x3 *)&data_0209b41c, (Vector3 *)&v);
+      MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, (Vector3 *)&v);
       Vec3_LslInPlace((int *)&v, 3);
       func_ov002_020f6f48((Vector3 *)&v, 8);
   }
@@ -2981,7 +2975,7 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
     {
         anmModel_c *obj = (anmModel_c *)this->mAnmModel;
         if (obj->mAnimEntry == 0 && (this->mGroundFlags & 1)) {
-            obj->func_ov002_020f6514((u8 *)&data_ov002_0210bc88, 1);
+            obj->func_ov002_020f6514(&data_ov002_0210bc88, 1);
         }
     }
     this->mPosY -= FX_MUL(mRate, 0x199);
@@ -3034,9 +3028,9 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
 
 int daDemo_c::func_ov002_020f72bc()
 {
-    *((u32*)&this->mScaleX) = 0x3000;
-    *((u32*)&this->mScaleY) = 0x3000;
-    *((u32*)&this->mScaleZ) = 0x3000;
+    this->mScaleX = 0x3000;
+    this->mScaleY = 0x3000;
+    this->mScaleZ = 0x3000;
     {
         s16* p = &this->mAngleY;
         *p = *p + 0x400;
@@ -3044,14 +3038,11 @@ int daDemo_c::func_ov002_020f72bc()
     this->mOpacity = 0x1f;
 
     mParticleID[0] =
-        Particle::System::New(mParticleID[0], kPtclDemoSpinA, *((Fix12i *)&this->mPosX),
-                              *((Fix12i *)&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
+        Particle::System::New(mParticleID[0], kPtclDemoSpinA, mPos.x, mPos.y, mPos.z, 0, 0);
     mParticleID[1] =
-        Particle::System::New(mParticleID[1], kPtclDemoSpinB, *(Fix12i *)(&this->mPosX),
-                              *(Fix12i *)(&this->mPosY), *(Fix12i *)(&this->mPosZ), 0, 0);
+        Particle::System::New(mParticleID[1], kPtclDemoSpinB, mPos.x, mPos.y, mPos.z, 0, 0);
     mParticleID[2] =
-        Particle::System::New(mParticleID[2], kPtclDemoSpinC, *(Fix12i *)(&this->mPosX),
-                              *(Fix12i *)(&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
+        Particle::System::New(mParticleID[2], kPtclDemoSpinC, mPos.x, mPos.y, mPos.z, 0, 0);
     return 1;
 }
 
@@ -3086,7 +3077,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
     int b = in[1] << 8;
     int t;
     if (a != 0 && sel == gKuppaScriptFrame) {
-        Vector3 *p = ((param_c &)*(simpleModel_c *)this->mModel).mScale;
+        Vector3 *p = ((simpleModel_c *)this->mModel)->mScale;
         p->x = -0x5d00;
         p->y = 0x1800;
         p->z = -0x16000;
@@ -3095,14 +3086,13 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         this->mAngleZ = 0;
         func_0201f138();
     }
-    MTX_MultVec43(((param_c &)*(simpleModel_c *)this->mModel).mScale, (Matrix4x3 *)&data_0209b41c,
-                  (&this->mPos));
+    MTX_MultVec43(((simpleModel_c *)this->mModel)->mScale, &data_0209b41c, (&this->mPos));
     Vec3_LslInPlace(&this->mPosX, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
         func_0201ef38();
-    *(char *)(&this->mOpacity) = *(int *)(&this->mMagnitude) >> 12;
+    this->mOpacity = this->mMagnitude >> 12;
     {
-        unsigned char r = *(unsigned char *)(&this->mOpacity);
+        unsigned char r = *(&this->mOpacity);
         if (r != 0 || a != 0) {
             t = (r * 0xa00) >> 12;
             if (t > 0x10) t = 0x10;
@@ -3126,7 +3116,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     int b = arg1[1];
     int f1 = a << 0xc;
     int f2 = b << 8;
-    int *base;
+    const Vector3 *base;
     int scale;
     VecFx32 tmp, diff, scaled, sum;
 
@@ -3143,30 +3133,29 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     static Vector3 sViewIdle(0x4c00, -0xf200, -0xff00);
 
     if (f1 != 0) {
-        base = (int *)&sViewStart;
+        base = &sViewStart;
         scale = 0x1000;
     } else {
-        base = (int *)&sViewIdle;
+        base = &sViewIdle;
         scale = 0;
     }
 
     Math_Function_0203b0fc(&this->mRate, scale, 0x40, 0x100);
-    Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&sViewEnd, (const Vector3 *)base);
+    Vec3_Sub((Vector3 *)&diff, &sViewEnd, base);
     tmp.x = diff.x;
     tmp.y = diff.y;
     tmp.z = diff.z;
-    Vec3_MulScalar(&scaled, &tmp, this->mRate);
-    Vec3_Add((Vector3 *)&sum, (const Vector3 *)base, (const Vector3 *)&scaled);
+    Vec3_MulScalar((Vector3 *)&scaled, (const Vector3 *)&tmp, this->mRate);
+    Vec3_Add((Vector3 *)&sum, base, (const Vector3 *)&scaled);
 
     {
-        Vector3 *dp = ((param_c &)*(anmModel_c *)this->mAnmModel).mScale;
+        Vector3 *dp = ((anmModel_c *)this->mAnmModel)->mScale;
         dp->x = sum.x;
         dp->y = sum.y;
         dp->z = sum.z;
     }
-    MTX_MultVec43(((param_c &)*(anmModel_c *)this->mAnmModel).mScale, (Matrix4x3 *)&data_0209b41c,
-                  &this->mPos);
-    Vec3_LslInPlace((int *)(&this->mPosX), 3);
+    MTX_MultVec43(((anmModel_c *)this->mAnmModel)->mScale, &data_0209b41c, &this->mPos);
+    Vec3_LslInPlace(&this->mPosX, 3);
     ApproachLinear(this->mMagnitude, f1, f2);
     this->mOpacity = this->mMagnitude >> 0xc;
     return 1;
@@ -3190,11 +3179,11 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
             v[1] = data_ov002_0210b970[1];
             v[2] = data_ov002_0210b970[2];
 
-            idx = *(volatile unsigned char *)&gLocalPlayerId;
+            idx = gLocalPlayerId;
             {
                 short ang = ((dActor_c *)gPlayers[idx])->mAngleY;
 
-                Vec3_RotateYAndTranslate(&this->mPosX, (int *)&cam->pos, (short)(ang + 0x8000), v);
+                Vec3_RotateYAndTranslate(&this->mPosX, &cam->pos, (ang + 0x8000), v);
             }
         }
 
@@ -3228,20 +3217,20 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 
             state = *&this->mPhase;
             if (state < 0xa9) {
-                UpdateAngle(*(short *)&this->mPrevAngleY, 0x1800, 0x1e, 0x4000);
+                UpdateAngle(this->mPrevAngleY, 0x1800, 0x1e, 0x4000);
             }
             ApproachLinear(this->mPrevAngleX, -0x3000, 0x70);
         }
     }
 
     {
-        unsigned short a = *((unsigned short *)&this->mPrevAngleX);
+        unsigned short a = this->mPrevAngleX;
         int t = this->mMagnitude;
         short s0 = FX_SinCosTable_[((a >> 4) << 1) + 1];
         this->mHorzSpeed = FX_MUL(t, s0);
     }
     {
-        unsigned short a = *(unsigned short *)(&this->mPrevAngleX);
+        unsigned short a = this->mPrevAngleX;
         int t = this->mMagnitude;
         int s1 = -FX_SinCosTable_[(a >> 4) << 1];
         this->mVertSpeed = FX_MUL(t, s1);
@@ -3296,7 +3285,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         h = (unsigned short)this->mPhase;
         t = FX_SinCosTable_[(h >> 4) * 2 + 1];
         {
-            int *p60 = (int *)(&this->mPosY);
+            int *p60 = &this->mPosY;
             *p60 = *p60 + FX_MUL(t, 0x96000);
         }
 
@@ -3320,7 +3309,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
 {
     Vector3 v0, v1;
     int src[3];
-    Fix12i dist;
+    fx32 dist;
     s16 vertAngle, heading;
     dCamera_c *cam;
     unsigned int tbl1, tbl2;
@@ -3345,7 +3334,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     this->mOpacity = 0x1f;
     cam = (dCamera_c *)gCamera;
 
-    VEC_Add((Vector3 *)&v0, &cam->pos, (Vector3 *)&v0);
+    VEC_Add(&v0, &cam->pos, &v0);
     dist = Vec3_Dist(&v0, &cam->pos);
 
     {
@@ -3363,7 +3352,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     src[1] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2]);
     src[2] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2 + 1]);
 
-    Vec3_RotateYAndTranslate((int *)(&this->mPosX), (int *)&cam->pos, heading, src);
+    Vec3_RotateYAndTranslate(&this->mPosX, &cam->pos, heading, src);
 
     this->mAngleX = cstd::atan2(v1.y, Vec3_HorzLen(&v1));
     this->mAngleY = cstd::atan2(v1.x, v1.z);
@@ -3428,24 +3417,22 @@ int daDemo_c::Render() {
     if (param1 == 0x19) {
         /* Draw the model three times: copy INV_VIEW_MATRIX_ASR_3 into its
            mat4x3, then for each entry of data_ov002_0210bb7c overwrite the
-           translation column (m[9..11]) and render. The {p, cur, src} struct
-           is the allocation shape the ROM compiles; a plain Matrix4x3
-           pointer builds the same size with different registers. */
+           translation column (m[9..11]) and render. */
         struct {
-            char *p;
-            char *cur;
+            Matrix4x3 *p;
+            Matrix4x3 *cur;
             Matrix4x3 *src;
         } s;
         s.src = &data_0209b41c;
-        s.p = (char *)&mModel->mat4x3;
+        s.p = &mModel->mat4x3;
         s.cur = s.p;
-        *(Matrix4x3 *)s.cur = *s.src;
+        *s.cur = *s.src;
         int *tbl = data_ov002_0210bb7c;
         int i = 0;
         do {
-            ((Matrix4x3 *)s.p)->m[9] = tbl[0];
-            ((Matrix4x3 *)s.p)->m[10] = tbl[1];
-            ((Matrix4x3 *)s.p)->m[11] = tbl[2];
+            s.p->m[9] = tbl[0];
+            s.p->m[10] = tbl[1];
+            s.p->m[11] = tbl[2];
             mModel->Render(0);
             tbl += 3;
             i++;
@@ -3542,23 +3529,22 @@ int daDemo_c::InitResources()
         if (this->mAnmModel == 0)
             return 0;
         if (((anmModel_c *)this->mAnmModel)
-                ->func_ov002_020f6618((SharedFilePtr *)&data_ov085_0213074c, 1, data_ov002_0210b60c,
-                                      1, 1, data_ov002_0210b608, -1) == 0)
+                ->func_ov002_020f6618(&data_ov085_0213074c, 1, data_ov002_0210b60c, 1, 1,
+                                      data_ov002_0210b608, -1) == 0)
             return 0;
     } else if (param1 == 0x13) {
         this->mAnmModel = new anmModel_c;
         if (this->mAnmModel == 0)
             return 0;
-        t = (*(volatile unsigned char *)&gGameMode == 2);
+        t = (gGameMode == 2);
         if (t == 0) {
             if (((anmModel_c *)this->mAnmModel)
-                    ->func_ov002_020f6618((SharedFilePtr *)&data_ov002_02110b98, 1,
-                                          data_ov002_0210b610, 1, 1, data_ov002_0210b600,
-                                          0x16) == 0)
+                    ->func_ov002_020f6618(&data_ov002_02110b98, 1, data_ov002_0210b610, 1, 1,
+                                          data_ov002_0210b600, 0x16) == 0)
                 return 0;
         } else {
             if (((anmModel_c *)this->mAnmModel)
-                    ->func_ov002_020f6618((SharedFilePtr *)&data_ov002_02110c18, 0xD,
+                    ->func_ov002_020f6618(&data_ov002_02110c18, 0xD,
                                           (SharedFilePtr **)&data_ov002_0210bcf0, 1, 0xD,
                                           (SharedFilePtr **)&data_ov002_0210bd24, 0x16) == 0)
                 return 0;
@@ -3566,19 +3552,24 @@ int daDemo_c::InitResources()
     } else if (param1 >= 0x14 && param1 <= 0x16) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960((SharedFilePtr*)&data_ov002_02110b70, -1) == 0) return 0;
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_02110b70, -1) == 0)
+            return 0;
     } else if (param1 == 0x17) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960((SharedFilePtr*)&data_ov002_02110b50, 0x19) == 0) return 0;
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_02110b50, 0x19) == 0)
+            return 0;
     } else if (param1 == 0x18) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960((SharedFilePtr*)&data_ov002_0211094c, -1) == 0) return 0;
+        if (((simpleModel_c *)this->mModel)
+                ->func_ov002_020f6960((SharedFilePtr *)&data_ov002_0211094c, -1) == 0)
+            return 0;
     } else if (param1 == 0x19) {
         this->mModel = new simpleModel_c;
         if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960((SharedFilePtr*)&data_ov002_02110b78, 0x13) == 0) return 0;
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_02110b78, 0x13) == 0)
+            return 0;
     } else if (param1 >= 0x1A && param1 <= 0x2D) {
         this->mAnmModel = new anmModel_c;
         if (this->mAnmModel == 0)
@@ -3602,8 +3593,7 @@ int daDemo_c::InitResources()
  * `new daDemo_c` is the whole sequence the loose factory spelled by hand:
  * fBase_c::operator new(0x104), dActor_c's base constructor, then the vptr
  * store. */
-extern "C" daDemo_c *daDemo_c_classInit(void)
-{
+daDemo_c *daDemo_c_classInit(void) {
     return new daDemo_c;
 }
 
@@ -3614,33 +3604,18 @@ extern "C" daDemo_c *daDemo_c_classInit(void)
 
 /* File handles and the ten state tables. mwcc emits __sinit_d_a_demo.cpp
    from these definitions: constructors in retail order, then the
-   pointer-to-member copies. The 8-byte sources are POD aggregates so the
-   copy stays a whole-struct move. */
-struct DemoModelFile {
-    unsigned int w[2];
-    DemoModelFile(unsigned int fileID);
-    ~DemoModelFile();
-};
-struct DemoAnimFile {
-    unsigned int w[2];
-    DemoAnimFile(unsigned int fileID);
-    ~DemoAnimFile();
-};
-struct DemoTexSeqFile {
-    unsigned int w[2];
-    DemoTexSeqFile(unsigned int fileID);
-    ~DemoTexSeqFile();
-};
-
+   pointer-to-member copies. */
 extern "C" {
 
 int data_ov002_0210b658[2] = {(int)0x81f020f0, (int)0xffff0100};
 int data_ov002_0210b6e8[2] = {(int)0x81f020f0, (int)0xffff0118};
 int data_ov002_0210b768[2] = {(int)0x41f800f8, (int)0xffff701e};
 int data_ov002_0210b868[2] = {(int)0x41f800f8, (int)0xffff705e};
+}
+
 struct OamAttr *data_ov002_0210b6a8[2] = {(struct OamAttr *)data_ov002_0210b768,
                                           (struct OamAttr *)data_ov002_0210b868};
-
+extern "C" {
 
 DemoModelFile data_ov002_02110b50(0x49b);
 DemoModelFile data_ov002_02110b98(0x3ef);
@@ -3680,11 +3655,11 @@ DemoModelFile data_ov002_02110b78(0x475);
 /* One-entry file lists InitResources hands to anmModel_c::func_ov002_020f6618:
    the BCA list and the BTP list for param1 0x12 (0x0210b60c, 0x0210b608) and
    0x13 (0x0210b610, 0x0210b600), and the BCA list for 0x1a..0x2d. */
-SharedFilePtr *data_ov002_0210b600[1] = {(SharedFilePtr *)&data_ov002_02110b10};
+SharedFilePtr *data_ov002_0210b600[1] = {&data_ov002_02110b10};
 SharedFilePtr *data_ov002_0210b604[1] = {(SharedFilePtr *)data_ov009_02113c28};
 SharedFilePtr *data_ov002_0210b608[1] = {&data_ov085_0213073c};
 SharedFilePtr *data_ov002_0210b60c[1] = {&data_ov085_02130744};
-SharedFilePtr *data_ov002_0210b610[1] = {(SharedFilePtr *)&data_ov002_02110bf8};
+SharedFilePtr *data_ov002_0210b610[1] = {&data_ov002_02110bf8};
 /* The last cue time func_ov002_020f6c60 played sound 0x6a for. */
 int data_ov002_0210b614 = -1;
 int data_ov002_0210b630[2] = {(int)0x81f020f0, (int)0xffff0108};

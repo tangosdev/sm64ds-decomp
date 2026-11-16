@@ -47,7 +47,7 @@ extern ResourceDescriptor data_ov036_02113b2c;
 extern struct CLPS_Block data_ov036_02112bc8;
 extern s16 data_ov036_02113b1c;
 
-extern "C" daObjRc_Kaitendai_c *daObjRc_Kaitendai_c_classInit() {
+daObjRc_Kaitendai_c *daObjRc_Kaitendai_c_classInit() {
     return new daObjRc_Kaitendai_c();
 }
 

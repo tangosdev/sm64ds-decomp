@@ -1,6 +1,7 @@
 #include "Ov007MenuState.h"
 #include "Ov007Touch.h"
 #include "Ov007Work.h"
+#include "Ov007Settings.h"
 #include "Ov007Pad.h"
 #include "nitro/os/system.h"
 
@@ -24,7 +25,7 @@ void func_ov007_020af84c(void)
     Ov007MenuState *s2 = b->states[1];
     int state = s2->currentState;
     int r2var = s2->stateTicks;
-    unsigned char *base = *(unsigned char **)b->settings + 0xb;
+    unsigned char *base = b->settings->bootArgs->fileUsed;
 
     switch (state) {
     case 7:

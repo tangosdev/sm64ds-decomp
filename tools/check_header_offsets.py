@@ -21,7 +21,11 @@ distinction is computed and printed rather than assumed -- see changed_paths.
 """
 import re, subprocess, sys, pathlib
 SZ = {"u8":1,"s8":1,"char":1,"bool":1,"u16":2,"s16":2,"short":2,"u32":4,"s32":4,"int":4,
-      "unsigned":4,"long":4,"Fix12i":4,"float":4,"u64":8,"s64":8,"double":8}
+      "unsigned":4,"long":4,"float":4,"u64":8,"s64":8,"double":8,
+      # NitroSDK fixed-point scalars (nitro/fx/fx.h, also declared in types.h).
+      "fx16":2,"fx32":4,"fx64":8,"fx64c":8,
+      # include/private/mtx43.h: union of int[12], no size assertion of its own.
+      "Mtx43":0x30}
 # Alignment is NOT the same as width once aggregates are in play: a Vector3 is 12
 # bytes wide but 4-aligned, and using the width for the padding test would invent
 # padding before every one.
@@ -38,7 +42,7 @@ ALIGN = {t: min(w, 4) for t, w in SZ.items()}
 REPO = pathlib.Path(__file__).resolve().parent.parent
 # A simple aggregate body: no nested braces, no methods.
 AGG = re.compile(r"(?:typedef\s+)?struct\s+(\w+)\s*\{([^{}]*)\}", re.S)
-# `Fix12i x, y, z;` -- one type, several declarators, optional array bounds.
+# `fx32 x, y, z;` -- one type, several declarators, optional array bounds.
 MEMBERS = re.compile(r"^\s*([A-Za-z_]\w*)\s+([^;]+);", re.M)
 
 
@@ -120,13 +124,16 @@ DECL = re.compile(r"^\s*(?:(?:const|volatile)\s+)*(?:(?:struct|union|class|enum)
                   r"(?:\s*/\*\s*(0x[0-9a-fA-F]+))?")
 ARR_DIMS = re.compile(r"\[\s*(0x[0-9a-fA-F]+|\d+|[A-Za-z_]\w*)\s*\]")
 # `PresenterFile mAnims[PRESENTER_ANIM_COUNT];` -- a bound named by a constant the
-# same header defines. Only that header's own `#define NAME <number>` lines and
-# enumerators (implicit, `= <number>` or `= <earlier enumerator>`) are read; a
-# name defined anywhere else stays unknown, and its field reports UNPARSED rather
-# than being sized from a guess.
+# same header defines. Only that header's own `#define NAME <number>` lines,
+# enumerators (implicit, `= <number>` or `= <earlier enumerator>`) and
+# `static const <int> NAME = <number>;` members (`daSnmBth_c::PARTICLE_NUM`) are
+# read; a name defined anywhere else stays unknown, and its field reports UNPARSED
+# rather than being sized from a guess.
 _NUM = r"(?:0x[0-9a-fA-F]+|\d+)"
 DEFINE_CONST = re.compile(r"^[ \t]*#[ \t]*define[ \t]+([A-Za-z_]\w*)[ \t]+\(?[ \t]*(" + _NUM + r")[uUlL]*[ \t]*\)?[ \t]*$",
                           re.M)
+STATIC_CONST = re.compile(r"^[ \t]*static[ \t]+const[ \t]+(?:(?:unsigned|signed)[ \t]+)?\w+[ \t]+"
+                          r"([A-Za-z_]\w*)[ \t]*=[ \t]*(" + _NUM + r")[uUlL]*[ \t]*;", re.M)
 ENUM_BODY = re.compile(r"\benum\s+(?:class\s+)?(?:\w+\s*)?(?::\s*\w+\s*)?\{([^{}]*)\}", re.S)
 
 
@@ -135,6 +142,7 @@ def header_constants(txt):
     code = re.sub(r"/\*.*?\*/", " ", txt, flags=re.S)
     code = re.sub(r"//[^\n]*", "", code)
     consts = {n: int(v, 0) for n, v in DEFINE_CONST.findall(code)}
+    consts.update((n, int(v, 0)) for n, v in STATIC_CONST.findall(code))
     for body in ENUM_BODY.findall(code):
         nxt = 0
         for item in body.split(","):
@@ -732,7 +740,7 @@ def main(argv, repo=None):
         all_lines = txt.splitlines()
         nested_names = _nested_names(all_lines)
         # Brace-free aggregates declared in THIS header (dClipper.h's
-        # `struct ClipperPlane { Fix12i x, y, z; };`) size the fields that use
+        # `struct ClipperPlane { fx32 x, y, z; };`) size the fields that use
         # them. Learned for this file only and forgotten after it: two headers
         # may each declare a local helper of the same name and a different size.
         learn_aggregates(fp)
@@ -931,6 +939,12 @@ def main(argv, repo=None):
                 continue
             if re.match(r"^\s*(#|\}|/\* methods)", line):
                 break
+            # A `static` data member (`static const int PARTICLE_NUM = 50;`, naming the
+            # bound of the array after it) lives outside every instance: it occupies no
+            # storage, so it neither ends the field list nor advances the offset.
+            # A `static` METHOD has a `(` and still goes through the method test below.
+            if re.match(r"^\s*static\b[^(]*;", _code_without_comments_or_strings(line)[0]):
+                continue
             if IGNORABLE.match(line):
                 if "/*" in line and "*/" not in line:
                     in_comment = True
@@ -943,10 +957,41 @@ def main(argv, repo=None):
             # SysTracker in include/dScStage_c.h is the first instance) starts with `~`,
             # which the type-name alternative below never matches (`~` is not in
             # `[A-Za-z_]`), so without this alternative it fell through to UNPARSED.
+            # A pointer-to-member field is storage: mwccarm's member-function
+            # pointer is eight bytes (code address plus the this adjustment).
+            # The method pattern below also matches `void (Class::*name)();`
+            # and would skip it, leaving every later field eight bytes short.
+            pmf = re.match(
+                r"^\s*\w[\w\s:&]*\(\s*\w+\s*::\s*\*\s*(\w+)\s*\)\s*\([^;]*\)\s*;"
+                r"(?:\s*/\*\s*(0x[0-9a-fA-F]+))?",
+                line)
+            # A typedef of that shape (`typedef void (Class::*Phase)();`)
+            # declares no field. Only the member that uses it does.
+            if pmf and not re.match(r"^\s*typedef\b", line):
+                name, decl = pmf.group(1), pmf.group(2)
+                if off % 4:
+                    off += 4 - (off % 4)
+                if decl is not None and trusted:
+                    n += 1
+                    if int(decl, 16) != off:
+                        pending.append(f"  MISMATCH {path}:{lineno} {name}: comment {decl}, "
+                                       f"computed 0x{off:03x}")
+                        bad += 1
+                off += 8
+                continue
             method_code, _ = _code_without_comments_or_strings(line)
             allocation_method = ALLOCATION_METHOD.match(method_code)
             inline_method = INLINE_METHOD.match(method_code)
-            if allocation_method or inline_method or re.match(r"^\s*(virtual\b|~\w+\s*\([^;]*\)\s*;|[A-Za-z_][\w:<>, &*]*\([^;]*\)\s*(const)?\s*;)", line):
+            # A method declared before any field may wrap after a comma
+            # (`void ProjectOnLine(TrampolineObjectCallbacks *jumper, V2 *currentProjection,`
+            # / `V2 *previousProjection);`). The one-line pattern needs `);` on
+            # this line, so both lines were UNPARSED and the walk's offsets after
+            # them were no longer trusted. An unclosed `(` at end of line is that
+            # wrap; a later method still ends the field list.
+            open_signature = n == 0 and re.match(
+                r"^\s*~?[A-Za-z_][\w:<>, &]*\([^);]*$", method_code)
+            if (allocation_method or inline_method or open_signature
+                    or re.match(r"^\s*(virtual\b|~\w+\s*\([^;]*\)\s*;|[A-Za-z_][\w:<>, &*]*\([^;]*\)\s*(const)?\s*;)", line)):
                 # ...unless we started from a base whose size is asserted. A derived
                 # class places no vptr of its own -- it inherits the base's, and the
                 # base's asserted size already counts it. The running offset is sound,

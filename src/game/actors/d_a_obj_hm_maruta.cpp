@@ -91,7 +91,7 @@ extern int data_ov030_021159f4;
  * is the highest ROM address (0x0211164c), so it must be first here for the
  * three explicitly-written functions below to keep coming out in their
  * documented ROM order. */
-extern "C" daObjHmMaruta_c *daObjHmMaruta_c_classInit() {
+daObjHmMaruta_c *daObjHmMaruta_c_classInit() {
     return new daObjHmMaruta_c();
 }
 

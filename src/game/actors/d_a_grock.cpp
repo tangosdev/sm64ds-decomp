@@ -31,9 +31,8 @@
  * Notes (measured spellings that do not match):
  * - SpawnStar: one UntrackAndSpawnStar with a chosen mode size-DIFFs
  *   (999 words). The two call sites, mode 2 and mode 4, match.
- * - HandleMeshCollision: ReflectAngle(Fix12<int>, Fix12<int>, s16)
- *   size-DIFFs. The wall angle is held in a short so GetSubtraction gets
- *   it without a re-extension.
+ * - HandleMeshCollision: the wall angle is held in a short so
+ *   GetSubtraction gets it without a re-extension.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -77,9 +76,8 @@ struct GrockModelFilePtr : SharedFilePtr {
 
 /* arm9 C helper with no shared header. func_02012694 has the same body as
  * Sound::PlayBank3 (0x02012664); the ROM calls this copy. */
-extern "C" {
-extern void func_02012694(unsigned int id, void *pos);
-}
+
+extern void func_02012694(unsigned int id, const Vector3 *pos);
 
 extern GrockModelFilePtr data_ov021_02114a50;
 
@@ -104,16 +102,16 @@ void daGrock_c::SpawnStar() {
 }
 
 /* Shift the position down 3, build the scratch matrix, keep the unrotated
- * copy in pad_188 for the shadow, then rotate it into the model. */
+ * copy in mShadowMtx for the shadow, then rotate it into the model. */
 void daGrock_c::UpdateModelTransform() {
     int shifted[3];
 
     Vec3_Asr(reinterpret_cast<Vector3 *>(shifted), &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shifted[0], shifted[1], shifted[2]);
-    *(Matrix4x3 *)pad_188 = data_020a0e68;
+    mShadowMtx = data_020a0e68;
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3 = data_020a0e68;
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)pad_188, 0x1f4000, 0x1f4000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMtx, 0x1f4000, 0x1f4000, 0xf);
 }
 
 /* Cylinder hit. Mega always breaks the rock. Punch/kick/breakdance/slide
@@ -196,14 +194,14 @@ void daGrock_c::HandleMeshCollision() {
             Particle::System::NewSimple(kPtclBigSteelieBounce, pos.x, pos.y, pos.z);
             func_0201267c(0x48, &mCamSpacePos);
         } else {
-            mDustParticleID = (int)Particle::System::New(mDustParticleID, kPtclBigSteelieRollDust,
-                                                         pos.x, pos.y, pos.z, 0, 0);
+            mDustParticleID = Particle::System::New(mDustParticleID, kPtclBigSteelieRollDust, pos.x,
+                                                    pos.y, pos.z, 0, 0);
             mRollSoundID = Sound::PlayLong(mRollSoundID, 3, 0x8a, mCamSpacePos, 0);
         }
         mSpeedX += normal.x * 5;
         mSpeedZ += normal.z * 5;
         mHorzSpeed = Vec3_HorzLen(reinterpret_cast<const Vector3 *>(&mSpeedX));
-        mPrevAngleY = (s16)cstd::atan2(mSpeedX, mSpeedZ);
+        mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
         if (mHorzSpeed >= 0x22000) {
             mHorzSpeed = 0x22000;
             mSpeedX = FX_SinIdx((u16)mPrevAngleY >> 4) * 0x22;
@@ -258,7 +256,7 @@ int daGrock_c::Behavior() {
             s16 *roll;
 
             ApplyGravityAndMove();
-            roll = (s16 *)&mAngleX;
+            roll = &mAngleX;
             *roll = (s16)(*roll + (mHorzSpeed >> 12) * 0x43);
             mAngleY = mPrevAngleY;
             HandleMeshCollision();
@@ -300,7 +298,7 @@ int daGrock_c::Behavior() {
     } else {
         int dist = DistToCPlayer();
         if (dist > 0x5dc000) {
-            u32 threshold = (dist < 0x1770000) ? 0x70 : 0xe0;
+            u32 threshold = (dist < 0x1770000) ? 112 : 224;
             if ((u16)mStateTimer >= threshold) {
                 u32 rnd;
 
@@ -324,7 +322,7 @@ int daGrock_c::Behavior() {
             }
         }
         {
-            u16 *timer = (u16 *)&mStateTimer;
+            u16 *timer = &mStateTimer;
             *timer = (u16)(*timer + 1);
         }
     }
@@ -389,7 +387,7 @@ int daGrock_c::InitResources() {
  * allocation size, vtable identity, and the GORO_ROCK registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: RollingRock_Spawn. */
-extern "C" daGrock_c *daGrock_c_classInit() {
+daGrock_c *daGrock_c_classInit() {
     return new daGrock_c();
 }
 

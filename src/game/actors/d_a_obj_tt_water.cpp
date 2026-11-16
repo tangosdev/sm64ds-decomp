@@ -107,7 +107,7 @@ int daObjTtWater_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the TT_WATER registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: TinyWater_Spawn. */
-extern "C" daObjTtWater_c *daObjTtWater_c_classInit() {
+daObjTtWater_c *daObjTtWater_c_classInit() {
     return new daObjTtWater_c();
 }
 

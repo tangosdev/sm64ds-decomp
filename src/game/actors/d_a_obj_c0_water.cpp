@@ -14,7 +14,7 @@
  * D2 body.
  *
  * Notes:
- * - dBgW_KcMbg::SetFile is a header member call; its scale is Fix12i, a
+ * - dBgW_KcMbg::SetFile is a header member call; its scale is fx32, a
  *   plain s32 (notes/mwccarm-codegen.md 6az).
  * - Sound::PlayLong / Sound::PlaySecretSound come from Sound.h, which now
  *   declares both. The ROM mangle is RK7Vector3 (const Vector3 &); a pointer
@@ -72,7 +72,7 @@ extern int data_0209f32c;
  * dExtAnmTexSRT_c C1 on the member at 0x320 are the implicit
  * constructor. The null check is the one `new` itself emits. Declaring a
  * constructor of our own would emit a `bl` the factory does not have. */
-extern "C" daObjC0Water_c *daObjC0Water_c_classInit() {
+daObjC0Water_c *daObjC0Water_c_classInit() {
     return new daObjC0Water_c();
 }
 

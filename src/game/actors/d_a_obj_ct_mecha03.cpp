@@ -14,10 +14,8 @@
  *
  * What stays, and why:
  * - dBgW_KcMbg::SetFile, dActor_c::DropShadowScaleXYZ and
- *   dBgActor_c::IsClsnInRange are header member calls whose headers spell
- *   Fix12 as Fix12i, a plain s32. With Fix12<int> locals SetFile sizes
- *   InitResources 0x104->0x110, DropShadowScaleXYZ sizes UpdateShadow
- *   0x12c->0x144, and IsClsnInRange sizes Behavior 0x190->0x1b0.
+ *   dBgActor_c::IsClsnInRange are header member calls whose headers take
+ *   the scalar fx32, a plain s32.
  * - Assigning mMeshCollider.beforeClsnCallback does not compile: the static
  *   takes references and the field takes pointers. Casting
  *   &dBgW::UpdatePosWithTransform onto the field type sizes InitResources
@@ -74,7 +72,7 @@ extern Mecha03ModelFilePtr data_ov065_0211d88c;
 extern Mecha03ClsnFilePtr data_ov065_0211d894;
 extern CLPS_Block data_ov035_02112198;
 
-extern "C" daObjCtMecha03_c *daObjCtMecha03_c_classInit() {
+daObjCtMecha03_c *daObjCtMecha03_c_classInit() {
     return new daObjCtMecha03_c();
 }
 
@@ -108,12 +106,12 @@ int daObjCtMecha03_c::InitResources() {
 
 int daObjCtMecha03_c::Behavior() {
     if (data_0209f2c0 != 3) {
-        if ((u16)mSoundTimer != 0) {
-            if (DecIfAbove0_Short((u16 *)&mSoundTimer) == 0) {
+        if (mSoundTimer != 0) {
+            if (DecIfAbove0_Short(&mSoundTimer) == 0) {
                 Sound::PlayBank3(0x38, mCamSpacePos);
             }
         }
-        if (DecIfAbove0_Short((u16 *)&mPauseTimer) == 0) {
+        if (DecIfAbove0_Short(&mPauseTimer) == 0) {
             {
                 short vx = mSwingDir;
                 short vy = mSwingAngle;
@@ -126,7 +124,7 @@ int daObjCtMecha03_c::Behavior() {
                     short spd = mSwingAccel;
                     short pos = mSwingDir;
                     short accel = *accelP;
-                    *accelP = (short)(spd * pos + accel);
+                    *accelP = (spd * pos + accel);
                 }
             }
             if (data_0209f2c0 == 2 && mSwingSpeed == 0) {
@@ -140,7 +138,7 @@ int daObjCtMecha03_c::Behavior() {
                 }
             }
             if (mSwingSpeed == 0) {
-                mSoundTimer = (u16)mPauseTimer + 0xf;
+                mSoundTimer = (u16)mPauseTimer + 15;
             }
             mSwingAngle += mSwingSpeed;
         }

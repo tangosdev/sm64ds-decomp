@@ -54,7 +54,7 @@ typedef char BSwdoorClsnFilePtr_size_must_be_8[sizeof(BSwdoorClsnFilePtr) == 8 ?
 
 extern ResourceDescriptor data_ov014_021145c4;
 
-extern "C" daObjBSwdoor_c *daObjBSwdoor_c_classInit() {
+daObjBSwdoor_c *daObjBSwdoor_c_classInit() {
     return new daObjBSwdoor_c();
 }
 

@@ -61,17 +61,20 @@ s16 atan2(s32, s32);
 }
 
 /* The spawn arguments func_02010e78 stages for the constructor. */
-extern "C" {
+
 extern s16 *data_0209b460;
 extern s16 *data_0209b45c;
 extern s16 data_0208e378;
+extern "C" {
 /* local extern: no header declares it. */
 int func_0203b244(void *list, void *node);
+}
+
 /* local extern: no header declares it. The actor registry, indexed by actorID. */
 extern void *data_020a4bb8;
 /* local extern: no header declares it. Game mode; 2 pushes the clip distance. */
 extern unsigned char gGameMode;
-}
+
 
 /* The global actor list: every dActor_c links its mActorListNode into it. The
    inline constructor empties it (mwcc emits __sinit_d_actor.cpp for that);
@@ -97,13 +100,13 @@ dActor_c::dActor_c() : mActorListNode(this) {
         }
     }
     {
-        short *spawnRot = (short *)data_0209b45c;
+        short *spawnRot = data_0209b45c;
         if (spawnRot) {
             mAngleX = spawnRot[0];
             mAngleY = spawnRot[1];
             mAngleZ = spawnRot[2];
             /* The ROM reloads the global. Folding the two reads drops an ldr. */
-            spawnRot = (short *)data_0209b45c;
+            spawnRot = data_0209b45c;
             mPrevAngleX = spawnRot[0];
             mPrevAngleY = spawnRot[1];
             mPrevAngleZ = spawnRot[2];
@@ -112,7 +115,7 @@ dActor_c::dActor_c() : mActorListNode(this) {
     mAreaId = data_0209b44c;
     mDeathTableID = data_0208e378;
     {
-        void **table = *(void ***)&data_020a4bb8;
+        void **table = (void **)data_020a4bb8;
         int actorID = this->actorID;
         SpawnInfo<void> *info = (SpawnInfo<void> *)table[actorID];
         mFlags = info->actorFlags;
@@ -133,7 +136,7 @@ dActor_c::dActor_c() : mActorListNode(this) {
        cleanup itself: both variants stay 0x148. */
     if (0) {
         Vector3s tmp[2];
-        (void)tmp;
+        tmp;
     }
 }
 
@@ -174,20 +177,26 @@ void dActor_c::AfterCleanupResources(u32 vfSuccess)
     fBase_c::AfterCleanupResources(vfSuccess);
 }
 
-extern "C" {
 u8 IsAreaShowing(int areaId);
+extern "C" {
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-extern int data_0209fc68; /* nonzero forces the actor to think anyway */
-extern Matrix4x3 data_0209b3ec; /* world -> camera */
-extern dClipper data_0209f43c;  /* the dClipper instance */
-extern u8 data_0209f274;        /* doubles the clip distance when set */
+}
+
+extern int data_0209fc68;
+/* nonzero forces the actor to think anyway */
+extern Matrix4x3 data_0209b3ec;
+/* world -> camera */
+extern dClipper data_0209f43c;
+/* the dClipper instance */
+extern u8 data_0209f274;
+/* doubles the clip distance when set */
 extern u8 gGamePaused;
 extern u8 data_0209f20c;
 extern u8 gVsExitScreenActive;
 /* This frame's actor update mask, copied from gNextActorUpdateMask; see
    ACTOR_UPDATE_MASK_STAGE_ENDING in dActor_c.h. */
 extern u32 gActorUpdateMask;
-}
+
 /* Culls the actor for this frame: flags 0x38 plus a far-away camera position
    when its area is hidden or the dClipper rejects it, then the pause and
    update-mask gates, then snapshots mPos into mPrevPos. */
@@ -269,10 +278,9 @@ void dActor_c::AfterRender(u32 vfSuccess)
     fBase_c::AfterRender(vfSuccess);
 }
 
-extern "C" {
 /* local extern: defined in ActorBase.cpp, which has no header. */
 extern fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key);
-}
+
 dActor_c *dActor_c::FindWithID(u32 id)
 {
     fLiNdBa_c *node = func_02043f98(&data_0209b468.first, id);
@@ -304,14 +312,8 @@ dActor_c *dActor_c::Next(const dActor_c *after)
     return 0;
 }
 
-extern "C" {
-extern s16 *data_0209b460;          /* spawn position, or null to leave it at 0 */
-extern s16 *data_0209b45c;          /* spawn rotation, or null */
-extern s16 data_0208e378;           /* spawn death-table id */
-}
 /* Stages Spawn's arguments for the constructor to pick up. */
-extern "C" void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID,
-                              s16 deathTableID) {
+void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID) {
     data_0209b460 = (s16 *)pos;
     data_0209b45c = (s16 *)rot;
     data_0209b44c = areaID;
@@ -319,10 +321,9 @@ extern "C" void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 area
     data_0209b458 = 0;
 }
 
-extern "C" {
 extern fBase_c *gCurrentScene;
 void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID);
-}
+
 dActor_c *dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
                     const Vector3_16 *rot, s8 areaID, s16 deathTableID)
 {
@@ -332,8 +333,7 @@ dActor_c *dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
 
 /* The radius, clip distance and far distance are stored at 1/8 scale, the
    scale BeforeBehavior projects into. */
-void dActor_c::SetRanges(Fix12i clipOffsetY, Fix12i clipRadius, Fix12i clipDistance,
-                         Fix12i farDistance) {
+void dActor_c::SetRanges(fx32 clipOffsetY, fx32 clipRadius, fx32 clipDistance, fx32 farDistance) {
     mClipOffsetY = clipOffsetY;
     mClipRadius = clipRadius >> 3;
     mClipDistance = clipDistance >> 3;
@@ -415,26 +415,29 @@ void dActor_c::UpdatePos(dCc_c *clsn)
     UpdatePosWithOnlySpeed(clsn);
 }
 
-void dActor_c::DropShadowRadHeight(dExtShadowModel_c &shadow, Matrix4x3 &matrix, Fix12i radius,
-                                   Fix12i depth, u8 opacity) {
+void dActor_c::DropShadowRadHeight(dExtShadowModel_c &shadow, Matrix4x3 &matrix, fx32 radius,
+                                   fx32 depth, u8 opacity) {
     if (mFlags & 0x10) /* beyond mFarDistance: no drop shadow */
         return;
     shadow.InitModel(&matrix, radius, depth, radius, opacity);
 }
 
-void dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix, Fix12i scaleX,
-                                  Fix12i scaleY, Fix12i scaleZ, u8 opacity) {
+void dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix, fx32 scaleX,
+                                  fx32 scaleY, fx32 scaleZ, u8 opacity) {
     if (mFlags & 0x10)
         return;
     shadow.InitModel(&matrix, scaleX, scaleY, scaleZ, opacity);
 }
 
-extern "C" {
-extern int data_0208e380;           /* distance to the cached closest player */
-extern int data_0208e37c;           /* distance to the cached farthest player */
-extern unsigned char gNumPlayers;   /* number of players */
-extern daPly_c *gPlayers[];         /* the player table */
-}
+extern int data_0208e380;
+/* distance to the cached closest player */
+extern int data_0208e37c;
+/* distance to the cached farthest player */
+extern unsigned char gNumPlayers;
+/* number of players */
+extern daPly_c *gPlayers[];
+/* the player table */
+
 daPly_c *dActor_c::ClosestPlayer() {
     if (!data_0209b458) {
         data_0208e380 = 0x7fffffff;
@@ -522,7 +525,7 @@ dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
 {
     dActor_c *actor = 0;
     dActor_c *closest = 0;
-    Fix12i closestDist = 0x7fffffff;
+    fx32 closestDist = 0x7fffffff;
 
     for (;;) {
         actor = FindWithActorID(actorID, actor);
@@ -530,7 +533,7 @@ dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
             break;
 
         if (actor != this) {
-            Fix12i dist = Vec3_Dist(&mPos, &actor->mPos);
+            fx32 dist = Vec3_Dist(&mPos, &actor->mPos);
             if (dist < closestDist) {
                 closestDist = dist;
                 closest = actor;
@@ -541,8 +544,8 @@ dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
 }
 
 /* atan2 of v's horizontal length, projected onto heading `angle`, against
-   v->y. The leading actor argument is unused. */
-extern "C" s16 func_02010844(void *actor, Vector3 *v, s16 angle) {
+   v->y. The actor is only the member receiver. */
+s16 dActor_c::func_02010844(Vector3 *v, s16 angle) {
     s32 dir;
     s32 horzLen;
 
@@ -555,7 +558,7 @@ extern "C" s16 func_02010844(void *actor, Vector3 *v, s16 angle) {
 /* count is SIGNED, although the old mangled name claimed unsigned: 0x02010734
    branches with `ble` and the loop closes with `blt`, which an unsigned count
    assembles as `bls`/`blo`. */
-void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angle) {
+void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, fx32 spread, s16 angle) {
     dActor_c *actor;
     s32 ang;
     s32 prev;
@@ -600,11 +603,12 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angl
     }
 }
 
-extern "C" {
-extern const u16 data_02075230[4]; /* yellow, red, blue */
+extern const u16 data_02075230[4];
+/* yellow, red, blue */
 extern const u32 data_02075238[3];
-void GiveCoins(s32 playerNo, s32 amount); /* 0x0202a7b8 */
-}
+void GiveCoins(s32 playerNo, s32 amount);
+/* 0x0202a7b8 */
+
 void dActor_c::GivePlayerCoins(daPly_c &player, u8 count, u32 coinKind) {
     /* Null-tested on purpose: the mangled name says R6Player and the ROM's
        test is real (see dActor_c.h). */
@@ -643,13 +647,14 @@ void dActor_c::GivePlayerCoins(daPly_c &player, u8 count, u32 coinKind) {
         coin->mFollowTarget = &player;
 }
 
-extern "C" void func_020105cc(dActor_c *actor, u32 flags) {
+/* The landing thump's sound: 0xa for 0x380, 9 for 0x40. */
+void dActor_c::func_020105cc(u32 flags) {
     if (flags & 0x380) {
-        Sound::PlayBank0(0xa, actor->mCamSpacePos);
+        Sound::PlayBank0(0xa, mCamSpacePos);
         return;
     }
     if (flags & 0x40) {
-        Sound::PlayBank0(9, actor->mCamSpacePos);
+        Sound::PlayBank0(9, mCamSpacePos);
         return;
     }
 }
@@ -660,7 +665,7 @@ int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
     volatile s32 pad[4];
     s32 vel = player.mVertSpeed;
 
-    (void)&pad;
+    &pad;
     if (clsn.flags & 6) {
         if (vel < 0 && player.mIsAirborne != 0
             && mPosY < player.mPosY - 0xa000)
@@ -689,7 +694,7 @@ bool dActor_c::IsPlayerInRange(s32 maxDist)
     return Vec3_Dist(&mPos, &closest->mPos) < (maxDist << 12);
 }
 
-bool dActor_c::IsPlayerInRange(Fix12i posX, Fix12i posY, Fix12i posZ, s32 maxDist) {
+bool dActor_c::IsPlayerInRange(fx32 posX, fx32 posY, fx32 posZ, s32 maxDist) {
     Vector3 pos;
     pos.x = posX;
     pos.y = posY;
@@ -706,7 +711,7 @@ bool dActor_c::IsPlayerInRange(const Vector3 &pos, s32 maxDist)
 }
 
 /* Mirrors angToReflect, turned around, about the normal's heading. */
-s16 dActor_c::ReflectAngle(Fix12i normalX, Fix12i normalZ, s16 angToReflect) {
+s16 dActor_c::ReflectAngle(fx32 normalX, fx32 normalZ, s16 angToReflect) {
     s16 normalAngle = cstd::atan2(normalX, normalZ);
     s16 delta = (s16)((angToReflect + 0x8000) - normalAngle);
     return (s16)(normalAngle - delta);
@@ -766,8 +771,8 @@ daPly_c *dActor_c::func_02010304(dCc_c *clsn) {
 /* Spawns actor 0xfe, daFPknBall_c (the fire piranha plant's fireball), with
    its starting speed and the speed it then approaches. Returns the ball: r0
    holds it from the Spawn call to the `bx lr`, and daTrs_c reads it back. */
-dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix12i horzSpeed,
-                                  Fix12i targetSpeed, u32 param1) {
+dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, fx32 horzSpeed,
+                                  fx32 targetSpeed, u32 param1) {
     dActor_c *ball = dActor_c::Spawn(0xfe, param1, pos, rot, mAreaId, -1);
     if (ball != 0) {
         ball->mHorzSpeed = horzSpeed;
@@ -778,8 +783,10 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix
 
 extern "C" {
 /* local extern: daPly_c has no accessor for the current body model. */
-void *func_ov002_020e496c(daPly_c *p); /* the player's current mBodyModels entry */
+void *func_ov002_020e496c(daPly_c *p);
 }
+/* the player's current mBodyModels entry */
+
 Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Vector3 t;
     t.x = 0;
@@ -791,14 +798,16 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Matrix4x3 *bones = body->data.transforms;
     data_020a0e68 = body->mat4x3;
     MTX_Concat43(&bones[14], &data_020a0e68, &data_020a0e68);
-    t = *(Vector3 *)&data_020a0e68.m[9];
+    t.x = data_020a0e68.m[9];
+    t.y = data_020a0e68.m[10];
+    t.z = data_020a0e68.m[11];
     mPrevAngleY = player.mAngleY;
     mAngleY = mPrevAngleY;
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     Vector3 asr;
     /* vec is a const reference; Vec3_Asr's definition is not const-qualified. */
-    Vec3_Asr(&asr, (Vector3 *)&vec, 3);
+    Vec3_Asr(&asr, const_cast<Vector3 *>(&vec), 3);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
     mPosX = data_020a0e68.m[9];
     mPosY = data_020a0e68.m[10];
@@ -811,10 +820,10 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     return &data_020a0e68;
 }
 
-extern "C" {
-extern dCamera_c *gCamera; /* the camera */
-}
-void dActor_c::Earthquake(const Vector3 &pos, Fix12i magnitude) {
+extern dCamera_c *gCamera;
+/* the camera */
+
+void dActor_c::Earthquake(const Vector3 &pos, fx32 magnitude) {
     gCamera->func_0200d8c8(&pos, magnitude);
 }
 
@@ -895,13 +904,15 @@ dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibbl
     return number->SetOwner(owner);
 }
 
-extern "C" {
-extern u8 gCurrentStarId[];        /* the star index this mission was entered for */
-extern s8 gCurrentSublevel[];      /* the current sublevel id */
-extern dActor_c *STAR_MARKERS[12]; /* 0x0209f40c */
+extern u8 gCurrentStarId[];
+/* the star index this mission was entered for */
+extern s8 gCurrentSublevel[];
+/* the current sublevel id */
+extern dActor_c *STAR_MARKERS[12];
+/* 0x0209f40c */
 void SetStarMarker(s32 slot, dActor_c *actor, s32 markerType);
 int IsStarCollectedInCurLevel(s32 starIdx);
-}
+
 s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
 {
     s32 type = markerType;
@@ -916,7 +927,7 @@ s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
     }
 
     s8 slot;
-    for (slot = 0; slot < 0xc; slot++) {
+    for (slot = 0; slot < 12; slot++) {
         if (STAR_MARKERS[slot] == 0) {
             SetStarMarker(slot, this, type);
             return slot;
@@ -945,10 +956,11 @@ dActor_c *dActor_c::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
                  mAreaId, -1);
 }
 
-extern "C" {
-extern unsigned char data_0209f2c0[]; /* WDW's water level, 0..2 */
-extern int data_02075244[];           /* the water height for each level */
-}
+extern unsigned char data_0209f2c0[];
+/* WDW's water level, 0..2 */
+extern int data_02075244[];
+/* the water height for each level */
+
 /* In area 0 of sublevel 0x15 (WDW), the current water height; anywhere else,
    the actor's own height. */
 s32 dActor_c::GetWaterHeightWDW()
@@ -963,10 +975,10 @@ s32 dActor_c::GetWaterHeightWDW()
     return height;
 }
 
-extern "C" {
-extern SharedFilePtr data_ov002_0210da00; /* the blue coin's two model files */
+extern SharedFilePtr data_ov002_0210da00;
+/* the blue coin's two model files */
 extern SharedFilePtr data_ov002_0210d9c8;
-}
+
 void dActor_c::LoadBlueCoinModel() {
     dExtSimpleModel_c::LoadFile(data_ov002_0210da00);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9c8);
@@ -1023,21 +1035,18 @@ void dActor_c::DisappearPoofDustAt(const Vector3 &pos)
     Particle::System::NewSimple(kPtclDisappearPoofB, pos.x, pos.y, pos.z);
 }
 
-extern "C" {
-extern int func_0200fc44(dActor_c *actor, Vector3 *pos, int doRaycast);
-}
 /* func_0200fc44 at this actor's position. */
 int dActor_c::func_0200fccc(int doRaycast) {
     Vector3 pos;
     pos.x = mPosX;
     pos.y = mPosY;
     pos.z = mPosZ;
-    return func_0200fc44(this, &pos, doRaycast);
+    return func_0200fc44(&pos, doRaycast);
 }
 
 /* Particle 0xb3 25.0 above pos, optionally first dropping pos onto the
-   ground below it; pos is moved. The leading actor argument is unused. */
-extern "C" int func_0200fc44(dActor_c *actor, Vector3 *pos, int doRaycast) {
+   ground below it; pos is moved. The actor is only the member receiver. */
+int dActor_c::func_0200fc44(Vector3 *pos, int doRaycast) {
     if (doRaycast) {
         dBgCh_Gnd rc;
         pos->y += 0x32000;
@@ -1096,21 +1105,17 @@ void dActor_c::LandingDustAt(Vector3 &pos, bool doRaycast) {
     Particle::System::NewSimple(kPtclHugeLandingDust, pos.x, pos.y, pos.z);
 }
 
-extern "C" {
-extern void *func_0200fa04(dActor_c *actor, Vector3 *pos, int doRaycast);
-}
 /* func_0200fa04 at this actor's position; its void * result is ignored here. */
-extern "C" void func_0200fa8c(void *actorp, int doRaycast) {
-    dActor_c *actor = (dActor_c *)actorp;
+void dActor_c::func_0200fa8c(int doRaycast) {
     Vector3 pos;
-    pos.x = actor->mPosX;
-    pos.y = actor->mPosY;
-    pos.z = actor->mPosZ;
-    func_0200fa04(actor, &pos, doRaycast);
+    pos.x = mPosX;
+    pos.y = mPosY;
+    pos.z = mPosZ;
+    func_0200fa04(&pos, doRaycast);
 }
 
 /* As func_0200fc44, with particle 0x1b raised 120.0 instead of 25.0. */
-extern "C" void *func_0200fa04(dActor_c *actor, Vector3 *pos, int doRaycast) {
+void *dActor_c::func_0200fa04(Vector3 *pos, int doRaycast) {
     if (doRaycast) {
         dBgCh_Gnd rc;
         pos->y += 0x32000;
@@ -1122,25 +1127,22 @@ extern "C" void *func_0200fa04(dActor_c *actor, Vector3 *pos, int doRaycast) {
     return Particle::System::NewSimple(kPtclBossLandingDust, pos->x, pos->y, pos->z);
 }
 
-extern "C" {
 unsigned int DeathTable_GetBit(int id);
-}
+
 int dActor_c::GetBitInDeathTable()
 {
     return DeathTable_GetBit(mDeathTableID);
 }
 
-extern "C" {
 void DeathTable_SetBit(int id);
-}
+
 void dActor_c::TrackInDeathTable()
 {
     DeathTable_SetBit(mDeathTableID);
 }
 
-extern "C" {
-void DeathTable_ClearBit(int id);
-}
+extern "C" void DeathTable_ClearBit(int id);
+
 void dActor_c::UntrackInDeathTable()
 {
     DeathTable_ClearBit(mDeathTableID);
@@ -1161,7 +1163,7 @@ static const int kPoolDist = 0x8777;
 namespace Sound {
 
 int PlaySecretSound(dActor_c *actor, u16 *counter) {
-    if (*counter < 0x4b) {
+    if (*counter < 75) {
         Sound::PlaySub(0x20, 0x14, 0x7f, 0x6b000, 0);
         *counter += 1;
     } else if (Sound::PlaySub(0x20, 0x7f, 0, kPoolDist, 0)) {
@@ -1174,7 +1176,7 @@ int PlaySecretSound(dActor_c *actor, u16 *counter) {
 namespace Sound {
 
 int PlaySmallSecretSound(dActor_c *actor, u16 *counter) {
-    if (*counter < 0x19) {
+    if (*counter < 25) {
         Sound::PlaySub(0x29, 0x14, 0x7f, 0x6b000, 0);
         *counter += 1;
     } else if (Sound::PlaySub(0x29, 0x7f, 0, kPoolDist, 0)) {
@@ -1184,8 +1186,8 @@ int PlaySmallSecretSound(dActor_c *actor, u16 *counter) {
 }
 }
 
-extern "C" int func_0200f7f0(dActor_c *actor, u16 *counter) {
-    if (*counter < 0x69) {
+int func_0200f7f0(dActor_c *actor, u16 *counter) {
+    if (*counter < 105) {
         Sound::PlaySub(0x21, 0x14, 0x7f, 0x6b000, 0);
         *counter += 1;
     } else if (Sound::PlaySub(0x21, 0x7f, 0, kPoolDist, 0)) {
@@ -1223,7 +1225,7 @@ void dActor_c::func_0200f760(dCc_c *clsn) {
 
 /* True only while the actor is off screen (mFlags 0x08), nothing forces it to
    think, and the closest player is at least threshold away. */
-int dActor_c::IsTooFarAwayFromPlayer(Fix12i threshold) {
+int dActor_c::IsTooFarAwayFromPlayer(fx32 threshold) {
     if (data_0209fc68 == 0) {
         int offScreen = (mFlags & 8) != 0;
         if (offScreen != 0) {
@@ -1234,9 +1236,9 @@ int dActor_c::IsTooFarAwayFromPlayer(Fix12i threshold) {
     return 0;
 }
 
-/* func_02037dc4 is still an address label: it returns the hit surface's
-   normal. */
-extern "C" Vector3 *func_02037dc4(SurfaceInfo *surface);
+/* func_02037dc4 returns the hit surface's normal. The definition takes the
+   surface address as an int. */
+int func_02037dc4(int surface);
 
 bool dActor_c::DetectRaycastClsn(Vector3 &start, Vector3 &end, bool storeHitPos)
 {
@@ -1245,7 +1247,7 @@ bool dActor_c::DetectRaycastClsn(Vector3 &start, Vector3 &end, bool storeHitPos)
     if (ray.DetectClsn()) {
         if (storeHitPos) {
             Vector3 *hitPos = &ray.lineEnd;
-            Vector3 *normal = func_02037dc4(&ray.surface);
+            Vector3 *normal = (Vector3 *)func_02037dc4((int)&ray.surface);
             int x = hitPos->x + normal->x;
             int z = hitPos->z + normal->z;
             int y = hitPos->y + normal->y;

@@ -88,7 +88,7 @@ int dCapEnemy_c::AddCap(unsigned int param)
         return;
     }
 
-    *(int *)(&mFlags) &= ~1;
+    mFlags &= ~1;
     mCapIcon.Link((char *)this, mCapId, mHadBank1Cap, mCapBank != 0);
 
     int result = func_02005e28();
@@ -114,7 +114,7 @@ void dCapEnemy_c::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
     };
     if (((CapFlags *)&mCapIcon.mFlags)->unlinked != 0 ||
         ((CapFlags *)&mCapIcon.mFlags)->real == 0) {
-        if ((mCapId & 0xf) < 6) {
+        if ((mCapId & 15) < 6) {
             mCapId |= 0x80;
         }
     } else {
@@ -171,8 +171,8 @@ int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
     p = (unsigned char *)ReleaseCap(*(const Vector3 *)&local);
     if (p != 0 && p != (unsigned char *)this) {
         unsigned char idx;
-        ((dEnemyBase_c *)p)->mEatingPlayer = mEatingPlayer;
-        mEatingPlayer->mObjInMouth = (s32)p;
+        ((dActor_c *)p)->mEatingPlayer = mEatingPlayer;
+        mEatingPlayer->mObjInMouth = (dActor_c *)p;
         ((dActor_c *)p)->mFlags |= 0x20000;
         mFlags &= ~0x20000;
         mEatingPlayer = 0;
@@ -189,7 +189,8 @@ struct dActor_c * dCapEnemy_c::RespawnIfHasCap()
 {
     struct dActor_c *r;
     func_02005ed8();
-    if ((mCapId & 0xf) >= 6) return 0;
+    if ((mCapId & 15) >= 6)
+        return 0;
     r = dActor_c::Spawn(actorID, param1, mPos, &mAngle, mAreaId, -1);
     if (!r) return r;
     ((dCapEnemy_c *)r)->mIsDormant = 1;
@@ -212,7 +213,7 @@ int dCapEnemy_c::GetCapState() {
         return 2;
     }
 
-    unsigned char val = *(unsigned char *)&gGameMode;
+    unsigned char val = gGameMode;
     int check = (val == 1) ? 1 : 0;
     if (check == 0) {
         daPly_c *p = ClosestPlayer();
@@ -264,7 +265,7 @@ int dCapEnemy_c::func_02005e28()
     int b;
     int i;
     int n;
-    b = (int)(gGameMode == 1);
+    b = (gGameMode == 1);
     if (b != 0) {
         n = data_0208a0e0;
         for (i = 0; i < n; i++) {
@@ -290,7 +291,7 @@ void dCapEnemy_c::Unk_02005d94()
     if (!(mCapId & 0x80)) return;
     b1 = (mFlags & 8) ? 1 : 0;
     if (b1 == 0) {
-        volatile unsigned char *q = &gGameMode;
+        unsigned char *q = &gGameMode;
         b2 = (q[0] == 1) ? 1 : 0;
         if (b2 == 0) return;
     }

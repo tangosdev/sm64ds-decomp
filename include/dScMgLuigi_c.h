@@ -17,9 +17,9 @@
 /* One miss mark. Sixteen of them sit at 0x4660. y falls under velY while
    phase is 0; the timer then holds the mark up before active and shown clear. */
 struct dScMgLuigi_Penalty {
-    Fix12i x;    /* +0x00 picture position, in pixels << 12 */
-    Fix12i y;    /* +0x04 */
-    Fix12i velY; /* +0x08 starts at 0x1100 and gains 0x100 a frame */
+    fx32 x;      /* +0x00 picture position, in pixels << 12 */
+    fx32 y;      /* +0x04 */
+    fx32 velY;   /* +0x08 starts at 0x1100 and gains 0x100 a frame */
     u16 timer;   /* +0x0c counts down, then reloads to 0x40; the clamp reads it signed */
     u8 pad_e[2];
     u8 active; /* +0x10 UpdatePenalties runs while this is set */
@@ -35,9 +35,9 @@ typedef char dScMgLuigi_Penalty_size_must_be_0x14[sizeof(dScMgLuigi_Penalty) == 
    x slides toward the middle of the screen; state picks the motion and
    phase picks the step inside it. */
 struct dScMgLuigi_Curtain {
-    Fix12i x;    /* +0x00 */
-    Fix12i y;    /* +0x04 parked at 0x60 */
-    Fix12i velX; /* +0x08 */
+    fx32 x;      /* +0x00 */
+    fx32 y;      /* +0x04 parked at 0x60 */
+    fx32 velX;   /* +0x08 */
     s32 sound;   /* +0x0c handle handed back by Sound_PlayIfNotActive */
     u16 delay;   /* +0x10 waits out before the panel moves; the clamp reads it signed */
     u16 count;   /* +0x12 ticks up to the whoosh */
@@ -53,9 +53,9 @@ typedef char dScMgLuigi_Curtain_size_must_be_0x18[sizeof(dScMgLuigi_Curtain) == 
 /* The "got it" pop above the picture that was found. It rises, holds,
    then ticks sparks times, adding one second each, up to 50. */
 struct dScMgLuigi_Reward {
-    Fix12i x;    /* +0x00 */
-    Fix12i y;    /* +0x04 */
-    Fix12i velY; /* +0x08 starts negative and keeps accelerating up */
+    fx32 x;    /* +0x00 */
+    fx32 y;    /* +0x04 */
+    fx32 velY; /* +0x08 starts negative and keeps accelerating up */
     u8 pad_c[3];
     u8 timer;  /* +0x0f the clamp after the countdown reads it as s16, like the other timers */
     u8 active; /* +0x10 UpdateReward */
@@ -71,9 +71,9 @@ typedef char dScMgLuigi_Reward_size_must_be_0x14[sizeof(dScMgLuigi_Reward) == 0x
    the penalty marks; only index 0 is used. radius opens until it covers
    the screen. y and scale are stored with it and not read back here. */
 struct dScMgLuigi_Iris {
-    Fix12i x;      /* +0x00 center, 128 px */
-    Fix12i y;      /* +0x04 center, 96 px */
-    Fix12i radius; /* +0x08 grows by 0x2000 until it passes 0xa0 */
+    fx32 x;        /* +0x00 center, 128 px */
+    fx32 y;        /* +0x04 center, 96 px */
+    fx32 radius;   /* +0x08 grows by 0x2000 until it passes 0xa0 */
     s32 scale;     /* +0x0c held at 0x1000 */
     u8 active;     /* +0x10 */
     u8 state;      /* +0x11 which iris step is running */
@@ -168,7 +168,8 @@ struct dScMgLuigi_c : dScMgBase_c {
     void StatePlace();
     void StateSetup();
 
-    dScMgLuigi_Penalty mPenalty[16]; /* 0x4660 */
+    static const int PENALTY_NUM = 16;
+    dScMgLuigi_Penalty mPenalty[PENALTY_NUM]; /* 0x4660 */
     dScMgLuigi_Curtain mCurtain[2];  /* 0x47a0 */
     dScMgLuigi_Reward mReward;       /* 0x47d0 */
     dScMgLuigi_Iris mIris[1];        /* 0x47e4 -- only [0] is used */
@@ -177,14 +178,15 @@ struct dScMgLuigi_c : dScMgBase_c {
        mBlink counts down after a miss and toggles mShown. mKind picks the
        mover (9 while the miss is still playing). mActive is set once the
        slot has been placed. */
-    Fix12i mPosX[120];   /* 0x47f8 -- wraps at 0x110 */
-    Fix12i mPosY[120];   /* 0x49d8 -- wraps at 0xd0 */
-    Fix12i mVelX[120];   /* 0x4bb8 */
-    Fix12i mVelY[120];   /* 0x4d98 */
+    static const int PICTURE_NUM = 120;
+    fx32 mPosX[PICTURE_NUM]; /* 0x47f8 -- wraps at 0x110 */
+    fx32 mPosY[PICTURE_NUM]; /* 0x49d8 -- wraps at 0xd0 */
+    fx32 mVelX[PICTURE_NUM]; /* 0x4bb8 */
+    fx32 mVelY[PICTURE_NUM]; /* 0x4d98 */
     s32 mState;          /* 0x4f78 -- 0 setup, 1 place, 2 play, 3 catch */
-    u16 mMovePhase[120]; /* 0x4f7c -- sway: 0 slowing, 1 speeding right,
+    u16 mMovePhase[PICTURE_NUM]; /* 0x4f7c -- sway: 0 slowing, 1 speeding right,
                                 2 speeding left. Drift stores an angle. */
-    u16 mBlink[120];     /* 0x506c -- miss flash; (t >> 2) & 1 hides */
+    u16 mBlink[PICTURE_NUM];     /* 0x506c -- miss flash; (t >> 2) & 1 hides */
     u16 mLevelPhase[4];  /* 0x515c -- one random angle per speed */
     u16 mIconOn;         /* 0x5164 -- draw the caught picture while set */
     s16 mIconX;          /* 0x5166 */
@@ -203,11 +205,11 @@ struct dScMgLuigi_c : dScMgBase_c {
     u8 mRowDir[6];   /* 0x51f5 -- 0/1, drift left or right per row */
     u8 mTimeTick;    /* 0x51fb -- counts to 60, then mTime drops */
     u8 pad_51fc;
-    u8 mKind[120];      /* 0x51fd -- mover id; 9 means a fresh miss */
-    u8 mStarted[120];   /* 0x5275 -- 0 until the slot's first tick */
-    u8 mActive[120];    /* 0x52ed -- slot has a picture */
-    u8 mCharacter[120]; /* 0x5365 -- which character, and how fast */
-    u8 mShown[120];     /* 0x53dd -- DrawPictures while 1 */
+    u8 mKind[PICTURE_NUM];      /* 0x51fd -- mover id; 9 means a fresh miss */
+    u8 mStarted[PICTURE_NUM];   /* 0x5275 -- 0 until the slot's first tick */
+    u8 mActive[PICTURE_NUM];    /* 0x52ed -- slot has a picture */
+    u8 mCharacter[PICTURE_NUM]; /* 0x5365 -- which character, and how fast */
+    u8 mShown[PICTURE_NUM];     /* 0x53dd -- DrawPictures while 1 */
     u8 mFilled;         /* 0x5455 -- the board is full */
     u8 mTarget;         /* 0x5456 -- 1-based index of the picture to find;
                                 scatter placement also counts slots with it */

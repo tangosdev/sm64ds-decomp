@@ -28,7 +28,7 @@
  *
  * mArray1 and mArray2 share an element ctor/dtor pair (func_0203d738 /
  * NullDestructor_0203d47c), the arm9 Vector2 structors (include/Vector2.h),
- * and both hold Fix12 {x, y} pairs, so they are Vector2[0x80]. mSprays has
+ * and both hold fx32 {x, y} pairs, so they are Vector2[0x80]. mSprays has
  * its own pair (_ZN9SnowSprayC1Ev / _ZN9SnowSprayD1Ev), and its element
  * fields are read back from the three SnowSpray_* helpers (SnowSpray,
  * below). Every element structor is empty and inline, so the constructor and
@@ -84,13 +84,11 @@ struct SnowSpray {
     SnowSpray() {}
     ~SnowSpray() {}
 
-    s32 x;      /* 0x00 position, VEC_Add'd with vx..vz each tick; drawn at x >> 12 */
-    s32 y;      /* 0x04 drawn at (y - z - mScrollY) >> 12 */
-    s32 z;      /* 0x08 height above the course; the chunk dies once it is
-                   below 0 while still falling */
-    s32 vx;     /* 0x0c */
-    s32 vy;     /* 0x10 */
-    s32 vz;     /* 0x14 SnowSpray_UpdateAll takes 0x200 off it a tick (gravity) */
+    Vector3 pos; /* 0x00 position, added to vel each tick; drawn at x >> 12.
+                    y is drawn at (y - z - mScrollY) >> 12. z is the height
+                    above the course; the chunk dies once it is below 0 while
+                    still falling */
+    Vector3 vel; /* 0x0c; z loses 0x200 a tick (gravity) */
     s32 life;   /* 0x18 counted down while positive; the chunk dies at 0 */
     s32 sprite; /* 0x1c sSnowballBitSprites index, SnowSpray_DrawAll */
     u8 active;  /* 0x20 SnowSpray_DrawAll/_UpdateAll run only live chunks */
@@ -140,7 +138,7 @@ typedef char dScMgSnowball_bit_size_must_be_0x24[sizeof(dScMgSnowball_bit) == 0x
 
 struct dScMgSnowball_c : dScMgSingle3DBase_c {
     /* The 2-vector value type the collision ring carries the last hit in
-       (Fix12 x, y -- the same pair func_0203d388 rotates in place). THE
+       (fx32 x, y -- the same pair func_0203d388 rotates in place). THE
        EMPTY DESTRUCTOR IS LOAD-BEARING, for the reason types.h gives
        Vector3 one and dScMgFlower_c::Vec2 repeats: a local of this type
        keeps an 8-byte stack home in the frame's aggregate region instead
@@ -150,8 +148,8 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
        int[2] and two scalar temps all lose it, measured on 2004/b56.
        Nested so the coined name cannot collide with anything global. */
     struct Vec2 {
-        Fix12i x;
-        Fix12i y;
+        fx32 x;
+        fx32 y;
         ~Vec2() {}
     };
 
@@ -210,30 +208,31 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
        `this + 0x4f38 + lane * 0x5c0 + row * 2`, so the lane index carries
        0x5c0 = 0x2e0 * sizeof(u16) and the row index the halfword. 0x10 lanes
        times 0x5c0 is 0x5c00, which closes exactly on mPosX. */
-    u16   mTileMap[0x10][0x2e0]; /* 0x4f38 */
-    s32   mPosX;            /* 0xab38 -- Fix12 world position of the ball */
-    s32   mPosY;            /* 0xab3c */
-    s32   mPrevPosX;        /* 0xab40 -- Behavior's copy of mPos at tick start */
-    s32   mPrevPosY;        /* 0xab44 */
-    s32   mDrawPosX;        /* 0xab48 -- where Render puts the ball sprite */
-    s32   mDrawPosY;        /* 0xab4c */
-    s32   mSoundPosX;       /* 0xab50 -- position of the last roll sound; a new
+    u16 mTileMap[0x10][0x2e0]; /* 0x4f38 */
+    s32 mPosX;                 /* 0xab38 -- fx32 world position of the ball */
+    s32 mPosY;                 /* 0xab3c */
+    struct PrevPos {
+        s32 x;
+        s32 y;
+    } mPrevPos;             /* 0xab40 -- Behavior's copy of mPos at tick start */
+    s32 mDrawPosX;          /* 0xab48 -- where Render puts the ball sprite */
+    s32 mDrawPosY;          /* 0xab4c */
+    s32 mSoundPosX;         /* 0xab50 -- position of the last roll sound; a new
                                 one fires every 0x30000 of travel */
-    s32   mSoundPosY;       /* 0xab54 */
+    s32 mSoundPosY;         /* 0xab54 */
     s32 mUphillDebt;        /* 0xab58 -- Behavior adds every tick's backwards
                                 (+Y) travel here and pays it off from later
                                 downhill travel; only while it is 0 does the
                                 downhill travel grow mBallSize (by 1/128) */
     s32 mGoalCenterX;       /* 0xab5c -- BuildCourse clears it, then
                                 writes the generated corridor's centre lane in
-                                Fix12 on the row before the goal */
-    s32   mVelX;            /* 0xab60 -- Fix12, capped at 0x8000 */
-    s32   mVelY;            /* 0xab64 */
-    s32   mScrollX;         /* 0xab68 -- subtracted from every world X to draw */
-    s32   mScrollY;         /* 0xab6c -- mPosY - 0x190000, clamped; drives all
+                                fx32 on the row before the goal */
+    Vector2 mVel;           /* 0xab60 -- fx32, length capped at 0x8000 */
+    s32 mScrollX;           /* 0xab68 -- subtracted from every world X to draw */
+    s32 mScrollY;           /* 0xab6c -- mPosY - 0x190000, clamped; drives all
                                 four BG offsets */
-    s32   mTouchX;          /* 0xab70 -- last stylus sample */
-    s32   mTouchY;          /* 0xab74 */
+    s32 mTouchX;            /* 0xab70 -- last stylus sample */
+    s32 mTouchY;            /* 0xab74 */
     s16 mRollAngle;         /* 0xab78 -- += speed * 0x2710 / mBallSize */
     s16 mAngleY;            /* 0xab7a -- UpdateCamera's Y rotation of
                                 the ball, after Z (mHeadingAngle) and X
@@ -254,7 +253,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     u8    mProbePush[0x20]; /* 0xac18 -- same probe hit solid; drives the push-out */
     u8    mProbeWater[0x20];/* 0xac38 -- same probe is inside water */
     u8    mArray1Active[0x80]; /* 0xac58 -- 1 = this mArray1 slot is live */
-    Vector2 mArray1[0x80];     /* 0xacd8 -- Fix12 positions, Render draws them */
+    Vector2 mArray1[0x80];     /* 0xacd8 -- fx32 positions, Render draws them */
     s32   mArray1Kind[0x80]; /* 0xb0d8 -- 1 picks the 8-frame animated sprite
                                 table, anything else the static one */
     u8    mArray1Hit[0x80]; /* 0xb2d8 -- HitsBreakable sets it on
@@ -262,7 +261,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     u8    mArray2Active[0x80]; /* 0xb358 -- 1 = this mArray2 slot is live */
     s32   mArray2Kind[0x80]; /* 0xb3d8 -- Render switches 0..2 against 3 to
                                 pick the sprite */
-    Vector2 mArray2[0x80];   /* 0xb5d8 -- Fix12 positions, as mArray1 */
+    Vector2 mArray2[0x80];   /* 0xb5d8 -- fx32 positions, as mArray1 */
     s32   mAnimCounter;     /* 0xb9d8 -- Render bumps it, wraps at 0x20; the
                                 obstacle sprite frame is (n / 4) & 7 */
     s32   mTimeLeft;        /* 0xb9dc -- frames; Render draws it as
@@ -293,7 +292,8 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     s32   mCrashTimer;      /* 0xba0c -- counts up through states 2 and 4 */
     s32   mEndDelayTimer;   /* 0xba10 -- 0xb4 frames of state 3 */
     SnowSpray mSprays[0x20];     /* 0xba14 */
-    dScMgSnowball_bit mBits[50]; /* 0xbe94 -- 50 * 0x24, see file banner */
+    static const int BIT_NUM = 50;
+    dScMgSnowball_bit mBits[BIT_NUM]; /* 0xbe94 -- 50 * 0x24, see file banner */
 };
 
 #ifndef SM64DS_PLATFORM_PC

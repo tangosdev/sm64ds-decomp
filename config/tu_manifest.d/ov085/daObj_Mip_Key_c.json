@@ -134,7 +134,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "daObj_Mip_Key_c_classInit",
+      "symbol": "_Z25daObj_Mip_Key_c_classInitv",
       "address": "0x0212d4e8",
       "size": "0x00000040",
       "legacy_source": "src/d_a_obj_mip_key.c",

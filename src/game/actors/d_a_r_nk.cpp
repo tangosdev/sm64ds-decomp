@@ -8,8 +8,6 @@
 // leftovers:
 // - The helpers keep their addresses as method names. The State enum in
 //   daRNk_c.h says which handler is which.
-// - SetAnim, PlaySub and DropShadowRadHeight stay mangled. Their symbols
-//   carry 5Fix12IiE, and the scalar signatures are what these calls need.
 // - daPly_c::Unk_020c4f40(0x5a), the 0x1f PlaySub pairs, sounds 0x4d and
 //   0xec, and DropShadowRadHeight's last argument 0xf are named only by
 //   when this TU uses them.
@@ -163,26 +161,18 @@ enum {
    __sinit_d_a_r_nk.cpp. */
 extern StateFunc data_ov062_0211e0a4[6];
 
-/* Scalar fixed-point ABI entry; the class-valued form still needs
-   caller reconstruction under the pinned compiler. */
-extern "C" s16 atan2_hold_d_a_r_nk_1(int y, int x);
-
-extern "C" {
 /* Positional sound at the actor's camera-space position (Sound::Play(3, id, pos)). */
 /* This scalar entry follows its C definition, including u16 startFrame.
    dExtAnmModel_c.h instead declares u32; that shared contract is still unresolved. */
 /* Play2D(3, id): a sound with no position. */
-extern unsigned int func_0201277c(unsigned int id);
+extern "C" unsigned int func_0201277c(unsigned int id);
 extern signed char gCurrentSublevel; /* LEVEL_ID */
 extern u8 gShowRaceTimer;            /* nonzero: dMeter_c draws the race timer */
-extern bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
-extern void func_02012694(u32 a, void *b);
+void func_02012694(u32 a, const Vector3 *b);
 extern u8 data_0209d684;            /* MESSAGE_RESULT: which answer the player picked (1 or 2) */
 extern Timer gRaceTimer;            /* TIME_TIMER: the course timer */
 /* The existing C initializer erases pointer slots to integers. Keep the
    evidenced actor view here; repairing the shared initializer is separate. */
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *actor, int r, int h, void *p, int q);
 /* The files InitResources loads and CleanupResources releases; see ANIM_*. */
 extern RNkModelFileHandle gdaRNkNokonokoModelFile;      /* the model (BMD) */
 extern RNkAnimationFileHandle data_ov062_0211e014;  /* ANIM_RUN_START */
@@ -192,13 +182,10 @@ extern RNkAnimationFileHandle gdaRNkNokonokoWait1AnimationFile;  /* ANIM_IDLE */
 extern RNkAnimationFileHandle gdaRNkNokonokoWait2AnimationFile;  /* ANIM_TALK */
 extern RNkAnimationFileHandle data_ov062_0211e02c;  /* ANIM_JUMP */
 extern RNkAnimationFileHandle data_ov062_0211e004;  /* ANIM_LAND */
-}
 
-extern "C" {
 int *daRNk_c_classInit(void)
 {
     return (int *)new daRNk_c;
-}
 }
 
 /* Load the model and animations, set up the collision, read the actor's
@@ -209,14 +196,14 @@ int daRNk_c::InitResources()
     unsigned char b;
     int zero;
 
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&gdaRNkNokonokoModelFile);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211e014);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211e024);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gdaRNkNokonokoWalkEdAnimationFile);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gdaRNkNokonokoWait1AnimationFile);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gdaRNkNokonokoWait2AnimationFile);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211e02c);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov062_0211e004);
+    dExtSimpleModel_c::LoadFile(gdaRNkNokonokoModelFile);
+    dExtFrameCtrl_c::LoadFile(data_ov062_0211e014);
+    dExtFrameCtrl_c::LoadFile(data_ov062_0211e024);
+    dExtFrameCtrl_c::LoadFile(gdaRNkNokonokoWalkEdAnimationFile);
+    dExtFrameCtrl_c::LoadFile(gdaRNkNokonokoWait1AnimationFile);
+    dExtFrameCtrl_c::LoadFile(gdaRNkNokonokoWait2AnimationFile);
+    dExtFrameCtrl_c::LoadFile(data_ov062_0211e02c);
+    dExtFrameCtrl_c::LoadFile(data_ov062_0211e004);
     if (mAnmModel.SetFile((BMD_File *)gdaRNkNokonokoModelFile.filePtr, 1, -1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
@@ -246,9 +233,9 @@ int daRNk_c::InitResources()
     mPrevPathPt.z = mPosZ;
     mPathPtr.GetNode(mPathTarget, mCurPathPt);
     mHasPlayerUsedCannon = (unsigned char)zero;
-    b = (unsigned char)((((unsigned int)param1 >> 4) + 1) & 0x3f);
+    b = (unsigned char)(((param1 >> 4) + 1) & 0x3f);
     mPathPtToJumpAt1 = b;
-    b = (unsigned char)((((unsigned int)param1 >> 10) + 1) & 0x3f);
+    b = (unsigned char)(((param1 >> 10) + 1) & 0x3f);
     mPathPtToJumpAt2 = b;
     if (mPathPtToJumpAt1 <= 1)
         mPathPtToJumpAt1 = 0xff;
@@ -267,14 +254,14 @@ int daRNk_c::InitResources()
 /* Release the eight shared files, and stop the race music if it is playing. */
 int daRNk_c::CleanupResources()
 {
-    ((SharedFilePtr *)&gdaRNkNokonokoModelFile)->Release();
-    ((SharedFilePtr *)&data_ov062_0211e014)->Release();
-    ((SharedFilePtr *)&data_ov062_0211e024)->Release();
-    ((SharedFilePtr *)&gdaRNkNokonokoWalkEdAnimationFile)->Release();
-    ((SharedFilePtr *)&gdaRNkNokonokoWait1AnimationFile)->Release();
-    ((SharedFilePtr *)&gdaRNkNokonokoWait2AnimationFile)->Release();
-    ((SharedFilePtr *)&data_ov062_0211e02c)->Release();
-    ((SharedFilePtr *)&data_ov062_0211e004)->Release();
+    gdaRNkNokonokoModelFile.Release();
+    data_ov062_0211e014.Release();
+    data_ov062_0211e024.Release();
+    gdaRNkNokonokoWalkEdAnimationFile.Release();
+    gdaRNkNokonokoWait1AnimationFile.Release();
+    gdaRNkNokonokoWait2AnimationFile.Release();
+    data_ov062_0211e02c.Release();
+    data_ov062_0211e004.Release();
     if (mIsRacing)
         Sound::StopLoadedMusic_Layer2();
     return 1;
@@ -425,20 +412,20 @@ void daRNk_c::func_ov062_0211a740()
         if (this->mIsTalkingToMario != 0) {
             if (data_0209d684 == 1) {
                 this->mState = daRNk_c::STATE_RACE;
-                this->mStateTimer = 0x32;   /* 50 frames; nothing in STATE_RACE reads it */
+                this->mStateTimer = 50; /* 50 frames; nothing in STATE_RACE reads it */
                 SET_ANIM(this, ANIM_IDLE, kAnimLoop);
                 this->unk_3aa = 0;
                 this->mIsTalkingToMario = 0;
             } else if (data_0209d684 == 2) {
                 this->mState = daRNk_c::STATE_WAIT_FOR_PLAYER;
-                this->mStateTimer = 0x3c;   /* 60 frames before he speaks again */
+                this->mStateTimer = 60; /* 60 frames before he speaks again */
                 this->mPlayer->HasFinishedTalking();
                 SET_ANIM(this, ANIM_IDLE, kAnimLoop);
                 this->mIsTalkingToMario = 0;
             }
         } else {
             this->mState = daRNk_c::STATE_WAIT_FOR_PLAYER;
-            this->mStateTimer = 0x3c;
+            this->mStateTimer = 60;
             this->mPlayer->HasFinishedTalking();
             SET_ANIM(this, ANIM_IDLE, kAnimLoop);
         }
@@ -484,7 +471,7 @@ void daRNk_c::func_ov062_0211a1f4()
         if (this->mPlayer->GetTalkState() != -1)
             return;
         Sound::PlaySub(0x1f, 0x7f, 0, 0x7f000, 0);
-        func_02012694(kSfx4D, &this->mCamSpacePosX);
+        func_02012694(kSfx4D, (const Vector3 *)(&this->mCamSpacePosX));
         Sound::LoadAndSetMusic_Layer2(kMusicRace);
         this->mIsRacing = 1;
         this->mStep++;
@@ -730,7 +717,7 @@ void daRNk_c::func_ov062_02119be0() {
             return;
         this->mStep++;
         SET_ANIM(this, ANIM_IDLE, kAnimLoop);
-        this->mStateTimer = 0x3c;
+        this->mStateTimer = 60;
         if (this->mPlayerWon != 0) {
             starPos.x = this->mPosX;
             starPos.y = this->mPosY;
@@ -827,7 +814,7 @@ int daRNk_c::func_ov062_02119af0() {
     dzc = targetZ - prevZ;
     p->mTargetAngleY = (short)cstd::atan2(dx, dz);
     int dot = (dxc >> 0xc) * (dx >> 0xc) + (dzc >> 0xc) * (dz >> 0xc);
-    if (dot <= 0 || Vec3_Dist(&p->mPos, (Vector3 *)&p->mPathTarget) < (p->mHorzSpeed >> 1)) {
+    if (dot <= 0 || Vec3_Dist(&p->mPos, &p->mPathTarget) < (p->mHorzSpeed >> 1)) {
         int v = p->mPathTarget.x;
         p->mPrevPathPt.x = v;
         p->mPrevPathPt.y = p->mPathTarget.y;

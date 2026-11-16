@@ -2,9 +2,6 @@
 /* Production translation unit for ov065/daObjCtMecha05_c.
  *
  * What stays, and why:
- * - dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange
- *   are header member calls whose headers spell Fix12 as Fix12i, a plain
- *   s32 (6az)
  * - dBgW::SetBeforeClsnCallback stores dBgW+0x18 (beforeClsnCallback); dBgW::SetClipRadius
  *   stores +0x0c; dBgW::SetClipOffsetY stores +0x10
  * - data_ov065_0211c0c8 / data_ov065_0211d26c; TTC_MovingBar_ModelFile /
@@ -70,13 +67,13 @@ extern CLPS_Block data_ov035_02112258;
 
 /* CT_MECHA05 is the literal ROM registry ID. The g_profile spelling is a
  * lineage-supported reconstruction. The descriptor is at ov065:0x0211d290. */
-extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit();
+daObjCtMecha05_c *daObjCtMecha05_c_classInit();
 extern "C" SpawnInfo<daObjCtMecha05_c> g_profile_CT_MECHA05 = {
     daObjCtMecha05_c_classInit, 0x0071, 0x00ec, 0x00000002, 0, 0x00600000, 0x01000000, 0x02000000};
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit() {
+daObjCtMecha05_c *daObjCtMecha05_c_classInit() {
     return new daObjCtMecha05_c();
 }
 
@@ -120,9 +117,9 @@ int daObjCtMecha05_c::Behavior() {
     if (data_0209f2c0 == 3) {
         int ang;
         /* ldrh, not the ldrsh a plain s16 mPrevAngleY read would emit. */
-        ang = *(u16 *)&mPrevAngleY;
+        ang = (u16)mPrevAngleY;
         mPosX = mHomePosX + FX_MUL(FX_SinIdx(ang >> 4), 0xfa000);
-        ang = *(u16 *)&mPrevAngleY;
+        ang = (u16)mPrevAngleY;
         mPosZ = mHomePosZ + FX_MUL(FX_CosIdx(ang >> 4), 0xfa000);
         UpdateModelPosAndRotY();
         UpdateShadow();
@@ -136,8 +133,8 @@ int daObjCtMecha05_c::Behavior() {
 
     switch (mState) {
     case 0:
-        if (DecIfAbove0_Short((u16 *)&mStateTimer) != 0)
-            goto Lend;
+        if (DecIfAbove0_Short(&mStateTimer) != 0)
+            break;
         if (data_0209f2c0 == 2) {
             int v = (u16)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
             if (v % 2 == 0) {
@@ -146,39 +143,31 @@ int daObjCtMecha05_c::Behavior() {
         }
         mState++;
         mHorzSpeed = -0x8000;
-        goto Lend;
+        break;
 
     case 1:
         mHorzSpeed += 0xbae;
         if (mHorzSpeed > 0) {
-            if (DecIfAbove0_Short((u16 *)&mStateTimer) != 0) {
+            if (DecIfAbove0_Short(&mStateTimer) != 0) {
                 mHorzSpeed = 0;
-                goto Lend;
+                break;
             }
             mState++;
             mHorzSpeed = 0x1d000;
         }
-        goto Lend;
+        break;
 
     case 2: {
         int d = mTravel;
-        if (d != 0xfa000) {
-            int val = FX_MUL((0xfa000 - d), (0xfa000 - mPrevTravel));
-            if (val >= 0)
-                goto L280;
-        }
-        {
+        if (d == 0xfa000 || FX_MUL((0xfa000 - d), (0xfa000 - mPrevTravel)) < 0) {
             int sp = mHorzSpeed;
-            if (sp <= -0x8000)
-                goto L280;
-            if (sp >= 0x8000)
-                goto L280;
-            mState++;
-            mHorzSpeed = 0;
-            mStateTimer = 0x1e;
-            goto Lend;
+            if (sp > -0x8000 && sp < 0x8000) {
+                mState++;
+                mHorzSpeed = 0;
+                mStateTimer = 30;
+                break;
+            }
         }
-    L280: {
         int m = (mTravel < 0xfa000) ? 0x6666 : -0x6666;
         int sp = mHorzSpeed;
         int delta;
@@ -188,26 +177,24 @@ int daObjCtMecha05_c::Behavior() {
             delta = FX_MUL(m, 0x2599);
         mHorzSpeed += delta;
         if (data_0209f2c0 != 2)
-            goto Lend;
-    }
+            break;
         if (FX_MUL(mTravel, mPrevTravel) >= 0)
-            goto Lend;
+            break;
         if ((RandomIntInternal(&data_0209e650.value) & 3) != 0)
-            goto Lend;
+            break;
         ResetToHome();
-        goto Lend;
+        break;
     }
 
     case 3:
-        if (DecIfAbove0_Short((u16 *)&mStateTimer) != 0)
-            goto Lend;
+        if (DecIfAbove0_Short(&mStateTimer) != 0)
+            break;
         mHorzSpeed = -0x5000;
         if (mTravel < 0)
             ResetToHome();
-        goto Lend;
+        break;
     }
 
-Lend:
     UpdatePos(0);
     UpdateModelPosAndRotY();
     UpdateShadow();

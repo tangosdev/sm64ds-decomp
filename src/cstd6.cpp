@@ -39,7 +39,6 @@ unsigned int strlen(const char *s)
   } while (c != 0);
   return n;
 }
-
 }
 
 extern "C" {
@@ -104,7 +103,6 @@ char *strncpy(char *dst, const char *src, unsigned int n)
   } while (--n);
   return dst;
 }
-
 }
 
 extern "C" {
@@ -115,9 +113,9 @@ int strcmp(const char *a, const char *b) {
     int diff;
     unsigned char c3, cb, ca;
 
-    ca = (unsigned char)*a;
-    cb = (unsigned char)*b;
-    diff = (int)ca - (int)cb;
+    ca = *a;
+    cb = *b;
+    diff = ca - cb;
     if (diff != 0)
         return diff;
 
@@ -128,9 +126,9 @@ int strcmp(const char *a, const char *b) {
             if (ca == 0)
                 return 0;
             for (cnt = 3 - align_a; cnt != 0; cnt--) {
-                c3 = *(unsigned char *)(++a);
-                cb = *(unsigned char *)(++b);
-                diff = (int)c3 - (int)cb;
+                c3 = *(++a);
+                cb = *(++b);
+                diff = c3 - cb;
                 if (diff != 0)
                     return diff;
                 if (c3 == 0)
@@ -143,8 +141,6 @@ int strcmp(const char *a, const char *b) {
         wa = *(unsigned int *)a;
         t = (wa + 0xfefefeff) & 0x80808080;
         wb = *(unsigned int *)b;
-        /* scalar_reload gotos kept, as in MSL's strcmp: a while (t == 0) loop shrinks it
-           (0x12c) and break + retest grows it (0x13c) */
         if (t != 0)
             goto scalar_reload;
         while (wa == wb) {
@@ -157,18 +153,18 @@ int strcmp(const char *a, const char *b) {
         return (wa > wb) ? 1 : -1;
 
     scalar_reload:
-        ca = *(unsigned char *)a;
-        cb = *(unsigned char *)b;
-        diff = (int)ca - (int)cb;
+        ca = *a;
+        cb = *b;
+        diff = ca - cb;
         if (diff != 0)
             return diff;
     }
     if (ca == 0)
         return 0;
     for (;;) {
-        c3 = *(unsigned char *)(++a);
-        cb = *(unsigned char *)(++b);
-        diff = (int)c3 - (int)cb;
+        c3 = *(++a);
+        cb = *(++b);
+        diff = c3 - cb;
         if (diff != 0)
             return diff;
         if (c3 == 0)
@@ -179,13 +175,13 @@ int strcmp(const char *a, const char *b) {
 
 extern "C" {
 char *strchr(const char *s, int ch_in) {
-    unsigned char ch = (unsigned char)ch_in;
-    unsigned char c = *(const unsigned char *)s;
+    unsigned char ch = ch_in;
+    unsigned char c = *s;
     const char *p = s + 1;
     if (c != 0) {
         do {
             if (c == ch) return (char *)(p - 1);
-            c = *(const unsigned char *)p++;
+            c = *p++;
         } while (c != 0);
     }
     if (ch != 0) return 0;

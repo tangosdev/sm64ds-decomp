@@ -60,7 +60,7 @@ enum {
     kClipFar = 0x578000,
     kFadeDist = 0x2f000,
     kFadeBase = 0x10000,
-    kOpacityFull = 0x1f,
+    kOpacityFull = 31,
 };
 
 /* Shared ABI seams. local extern: no shared header declares this helper. */
@@ -80,8 +80,7 @@ extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 extern dCamera_c *gCamera;
 
-extern "C" daTree_c *daTree_c_classInit()
-{
+daTree_c *daTree_c_classInit() {
     return new daTree_c();
 }
 

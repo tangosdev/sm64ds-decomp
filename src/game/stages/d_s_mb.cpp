@@ -40,7 +40,6 @@ void DecompressLZ16(void *src, void *dst);
 void func_020308b4(void);
 
 void func_0201a5f8(int t);
-void *func_0201a3e4(void);
 /* Linker-defined overlay IDs: the address is the overlay number. */
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
@@ -58,6 +57,7 @@ extern u8 gSubScreenLayers;
 extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
 }
+void *func_0201a3e4(void);
 
 /* Whether the loader job Behavior waits on has finished: InitResources seeds
    it from func_0201a244's return value (1 when the job ran synchronously) and
@@ -107,14 +107,14 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
                 int y;
                 if (spriteAngle >= 0 && spriteAngle < 0x10000) {
                     u16 angle = spriteAngle;
-                    y = (FX_SinIdx((u16)(s16)angle >> 4) >> 10) + 0x80;
+                    y = (FX_SinIdx((u16)(s16)angle >> 4) >> 10) + 128;
                     anyOnArc = 1;
                 } else {
-                    y = 0x80;
+                    y = 128;
                 }
 
-                OAM::Render(false, sprite, 0x80, y, -1, -1, 0x1000, 0);
-                OAM::Render(true, sprite, 0x80, y, -1, -1, 0x1000, 0);
+                OAM::Render(false, sprite, 128, y, -1, -1, 0x1000, 0);
+                OAM::Render(true, sprite, 128, y, -1, -1, 0x1000, 0);
 
                 if (sprite->attr3 == 0xffff)
                     break;
@@ -125,11 +125,11 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
             if (mAdvancing != 0) {
                 mSpinAngle += (data_0208ee44 << 10);
                 if (anyOnArc == 0)
-                    mStillTimer = 0x78;
+                    mStillTimer = 120;
             }
         } else {
-            OAM::Render(0, sprite, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
-            OAM::RenderSub(sprite, 0x80, 0x80);
+            OAM::Render(0, sprite, 128, 128, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::RenderSub(sprite, 128, 128);
             mStillTimer -= data_0208ee44;
             mSpinAngle = 0;
         }
@@ -223,7 +223,7 @@ s32 dScMB_c::Behavior() {
 
     if (mStep < 8) {
         mTimeout++;
-        if (mTimeout >= 0x1518) {
+        if (mTimeout >= 5400) {
             data_0209fc54 = 1;
         }
     }
@@ -272,9 +272,9 @@ s32 dScMB_c::InitResources() {
 
     /* From OBJ tile 0x94 onwards; a 4bpp tile is 0x20 bytes. */
     DecompressLZ16(&data_0209446c, (u8 *)G2_GetOBJCharPtr() + 0x94 * 0x20);
-    GX_LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
-    GX_LoadOBJPltt((const void *)&data_020945d0, 0xa0, 0x20);
-    GXS_LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
+    GX_LoadOBJPltt(&data_0209444c, 0, 0x20);
+    GX_LoadOBJPltt(&data_020945d0, 0xa0, 0x20);
+    GXS_LoadOBJPltt(&data_0209444c, 0, 0x20);
 
     G2_SetBG1Priority(0);
     G2S_SetBG1Priority(0);
@@ -302,6 +302,6 @@ s32 dScMB_c::InitResources() {
     return 1;
 }
 
-extern "C" void *dScMB_c_classInit(void) {
+void *dScMB_c_classInit(void) {
     return new dScMB_c;
 }

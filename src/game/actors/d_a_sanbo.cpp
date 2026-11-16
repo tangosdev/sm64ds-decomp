@@ -22,16 +22,9 @@
  * real argument lands in r1 either way.
  *
  * deslop leftovers:
- *   - dCcAc_c::Init, dBgCh_Actr::Init, DropShadowRadHeight and
- *   IsTooFarAwayFromPlayer take Fix12 by value, so the calls stay
- *   computed names (InitResources, Behavior, UpdateModelAndShadow).
  *   - func_02038414 is the veneer onto
  *   dBgCh_Actr::UpdateDiscreteNoLava_2 (UpdateKnockback,
  *   UpdateMegaKill, UpdateFloorAndWalls).
- *   - Particle::System::New, NewCleanParticle, NewSimple,
- *   RunningSlidingDustAt and daPly_c::Hurt take Fix12 by value
- *   (UpdateKnockback, HandleAttacks, EnterMegaKill,
- *   UpdateLeader).
  *   - UpdateFloorAndWalls copies the floor and wall collision normals;
  *   the wall normal is unused.
  *   - gSanboHeadModelFile and gSanboBodyModelFile are the head
@@ -71,15 +64,12 @@ enum daSanbo_c_AssetId {
 enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
 
 extern "C" {
-extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
+extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, fx32 x, fx32 y, fx32 z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern struct Matrix4x3 data_020a0e68;
-extern void d_a_sanboNewSimpleHold(unsigned int, int, int, int);
 extern void func_02038414(void *p);
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *actor, int b, int c, void *v, int e);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
 
@@ -97,14 +87,12 @@ extern daSanbo_c::StateFunc data_ov096_02137b48[];
 /* Both profiles construct this class. The synthesized ctor stores
  * `_ZTV9daSanbo_c + 2`; do not restate a file-local `extern _ZTV`. */
 
-extern "C" daSanbo_c *daSanbo_c_classInit_SANBO(void)
-{
+daSanbo_c *daSanbo_c_classInit_SANBO(void) {
     return new daSanbo_c();
 }
 
 /* Same class, SANBO_BODY profile (actor id 0xf1). */
-extern "C" daSanbo_c *daSanbo_c_classInit_SANBO_BODY(void)
-{
+daSanbo_c *daSanbo_c_classInit_SANBO_BODY(void) {
     return new daSanbo_c();
 }
 
@@ -149,9 +137,9 @@ int daSanbo_c::InitResources()
     t = (actorID == SANBO_HEAD);
     if (t != false) {
         mRootPos = mPos;
-        mScaleX = 0x1000;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1000;
+        mScaleX = FX32_ONE;
+        mScaleY = FX32_ONE;
+        mScaleZ = FX32_ONE;
         mPrevSegment = 0;
         mNextSegment = 0;
     } else {
@@ -197,7 +185,7 @@ int daSanbo_c::Render()
 
 void daSanbo_c::OnPendingDestroy()
 {
-    int isBody = *(unsigned short *)((char *)&actorID);
+    int isBody = actorID;
     isBody = (isBody == SANBO_BODY);
     if (isBody) return;
     daSanbo_c *p = mNextSegment;
@@ -248,10 +236,6 @@ namespace Sound { void PlayBank0(unsigned int id, const Vector3 &pos); }
 
 
 extern "C" {
-void d_a_sanboRunningSlidingDustAtHold(int x, int y, int z);
-unsigned d_a_sanboNewHold(unsigned a, unsigned b, int x, int y, int z, const void *dir, void *cb);
-unsigned d_a_sanboNewCleanParticleHold(unsigned a, unsigned b, int x, int y, int z,
-                                       const Vector3_16f *dir);
 }
 
 /* A segment tracks the one in front of it while that piece is still small. */
@@ -288,7 +272,7 @@ int daSanbo_c::UpdateStackedBody() {
         next = mNextSegment;
         mAngleY = next->mAngleY;
         next = mNextSegment;
-        s16 segAng = (s16)(next->mSegAngY + 0x13000);
+        s16 segAng = (next->mSegAngY + 0x13000);
         mSegAngY = segAng;
         ang = (u16)mSegAngY;
         sine = FX_SinIdx(ang >> 4);
@@ -312,13 +296,13 @@ int daSanbo_c::EnterLeader() {
     if (timer != 0)
         timer = 0;
     else
-        timer = 0x5a;
+        timer = 90;
     mTimer = timer;
     timer = mTimer;
     if (timer == 0) {
-        mScaleX = 0x1000;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1000;
+        mScaleX = FX32_ONE;
+        mScaleY = FX32_ONE;
+        mScaleZ = FX32_ONE;
     }
     mState = 1;
     return 1;
@@ -334,7 +318,7 @@ int daSanbo_c::UpdateLeader() {
     mScaleX = copied;
     mScaleY = copied;
     mScaleZ = copied;
-    mSegAngY = (s16)(mSegAngY + 0x500);
+    mSegAngY = (mSegAngY + 0x500);
     mOffsetX = 0;
     mOffsetY = 0;
     mOffsetZ = 0;
@@ -391,9 +375,9 @@ int daSanbo_c::UpdateKnockback() {
         x = mPosX;
         z = mPosZ;
         y = mPosY + 0x3c000;
-        ((int *)&pos)[0] = x;
-        ((int *)&pos)[1] = y;
-        ((int *)&pos)[2] = z;
+        pos.x = x;
+        pos.y = y;
+        pos.z = z;
         mParticle0 = Particle::System::New(mParticle0, kPtclDeathA, pos.x, pos.y, pos.z, 0, 0);
         mParticle1 =
             Particle::System::NewCleanParticle(mParticle1, kPtclDeathB, pos.x, pos.y, pos.z, 0);
@@ -458,7 +442,7 @@ int daSanbo_c::UpdateStackedOnGrowingBody() {
         next = mNextSegment;
         mAngleY = next->mAngleY;
         next = mNextSegment;
-        s16 segAng = (s16)(next->mSegAngY + 0x13000);
+        s16 segAng = (next->mSegAngY + 0x13000);
         mSegAngY = segAng;
         ang = (u16)mSegAngY;
         sine = FX_SinIdx(ang >> 4);
@@ -487,11 +471,11 @@ int daSanbo_c::EnterMegaKill() {
     UnlinkSegment();
     mPrevAngleY = Vec3_HorzAngle(&mHitActor->mPos, &mPos);
     rnd = RandomIntInternal(&data_0209e650.value);
-    mPrevAngleY = (s16)(mPrevAngleY + ((rnd & 0x7fff) - 0x4000));
-    mAngleY = (s16)(mPrevAngleY + 0x8000);
+    mPrevAngleY = (mPrevAngleY + ((rnd & 0x7fff) - 0x4000));
+    mAngleY = (mPrevAngleY + 0x8000);
     mVertSpeed = 0x28000;
     mHorzSpeed = 0xa000;
-    mTimer = 0x2d;
+    mTimer = 45;
     Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
     Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
     mState = 5;
@@ -502,7 +486,7 @@ int daSanbo_c::UpdateMegaKill() {
     int head = (actorID == SANBO_HEAD) ? 1 : 0;
 
     if (head != 0)
-        mAngleX = (s16)(mAngleX - 0x1000);
+        mAngleX = (mAngleX - 0x1000);
     UpdatePos(&mdCcAc_c);
     func_02038414(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround() || !DecIfAbove0_Byte(&mTimer))
@@ -649,9 +633,9 @@ void daSanbo_c::HandleAttacks() {
             x = mPosX;
             z = mPosZ;
             y = mPosY + 0x3c000;
-            ((int *)&pos)[0] = x;
-            ((int *)&pos)[1] = y;
-            ((int *)&pos)[2] = z;
+            pos.x = x;
+            pos.y = y;
+            pos.z = z;
             mParticle0 = Particle::System::New(mParticle0, kPtclDeathA, pos.x, pos.y, pos.z, 0, 0);
             mParticle1 =
                 Particle::System::NewCleanParticle(mParticle1, kPtclDeathB, pos.x, pos.y, pos.z, 0);
@@ -735,7 +719,7 @@ void daSanbo_c::UpdateWanderYaw() {
     ang = Vec3_HorzAngle(&mPos, target);
     ApproachLinear(mAngleY, ang, (short)0x320);
     turn = CalcShyAwayAngle(dist);
-    mPrevAngleY = (short)(mAngleY + turn);
+    mPrevAngleY = (mAngleY + turn);
 }
 
 int daSanbo_c::CalcShyAwayAngle(int x) {

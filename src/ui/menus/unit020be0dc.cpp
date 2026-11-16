@@ -45,7 +45,6 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
  */
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
@@ -63,13 +62,11 @@
 #include "nitro/fx/fx_cp.h"
 #include "Ov007MenuMem.h"
 
-extern "C" {
-
 /* Vector3 declares a constructor and destructor under C++, which makes its
  * assignment copy word by word. The ROM copies these with C's ldm/stm block
  * move, which C++ keeps for a struct with an array member. */
 typedef struct Vec3Words {
-    Fix12i w[3];
+    fx32 w[3];
 } Vec3Words;
 
 /* The same for Vector3s's six-byte halfword copy. */
@@ -134,29 +131,31 @@ extern char data_ov007_02103234[]; /* "2DEffect" */
 extern int data_ov007_020d7c6c;
 extern u16 data_ov007_020d7c58[];
 
-extern void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask, void *cb);
-extern void func_0204dc84(char *self);
-extern void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev, int frame);
+extern "C" void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask,
+                              void *cb);
+extern "C" void func_0204dc84(char *self);
+extern "C" void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev,
+                                    int frame);
 extern void *func_ov007_020b7690(int i);
 extern void func_ov007_020bfd70(struct Ov007Camera *cam, void *pos, int *outX, int *outY);
 extern void func_ov007_020c3e7c(Ov007SpriteGroup *grp);
-extern void func_ov007_020c3ee8(Ov007SpriteGroup *grp, Ov007OamList *list);
-extern Ov007SpriteGroup *func_ov007_020c3f00(int *layout, int extraAnims);
-extern void func_ov007_020c3fe4(Ov007SpriteItem *item);
+extern "C" void func_ov007_020c3ee8(Ov007SpriteGroup *grp, Ov007OamList *list);
+extern "C" Ov007SpriteGroup *func_ov007_020c3f00(int *layout, int extraAnims);
+extern "C" void func_ov007_020c3fe4(Ov007SpriteItem *item);
 
 /* the figure and its files */
 extern int data_ov007_020d7c5c[2][2]; /* [figureIndex][index]: animation file */
 extern void *data_ov007_02104bc4[2][2];
-extern int VEC_Fx16Mag(s16 *v);
-extern void VEC_Fx16Normalize(s16 *in, s16 *out);
-extern void func_ov007_020b3edc(int idx);
-extern void *func_ov007_020b3f20(int idx);
-extern int func_ov007_020aebac(void);
+extern "C" int VEC_Fx16Mag(s16 *v);
+extern "C" void VEC_Fx16Normalize(s16 *in, s16 *out);
+extern "C" void func_ov007_020b3edc(int idx);
+extern "C" void *func_ov007_020b3f20(int idx);
+extern "C" int func_ov007_020aebac(void);
 extern void func_ov007_020bc02c(Ov007Model *model, void *viewMatrix);
-extern void func_ov007_020bc3dc(void *model, int anim, int a2);
+extern "C" void func_ov007_020bc3dc(void *model, int anim, int a2);
 extern void func_ov007_020bc53c(Ov007Model *model);
-extern void func_ov007_020bc6b4(Ov007Model *model, void *files, int count);
-extern Ov007Model *func_ov007_020bc6d4(void *file, int flags);
+extern "C" void func_ov007_020bc6b4(Ov007Model *model, void *files, int count);
+extern "C" Ov007Model *func_ov007_020bc6d4(void *file, int flags);
 
 #define SPRITES data_ov007_02104bc0
 
@@ -177,9 +176,9 @@ void func_ov007_020beb80(Ov007Figure *fig) {
     int speed;
     Vector3 *pos = &bone0->t;
     yaw = FX_Atan2(row[0], row[2]);
-    motion.x = (short)(pos->x - fig->prevPos.x);
-    motion.y = (short)(pos->y - fig->prevPos.y);
-    motion.z = (short)(pos->z - fig->prevPos.z);
+    motion.x = (pos->x - fig->prevPos.x);
+    motion.y = (pos->y - fig->prevPos.y);
+    motion.z = (pos->z - fig->prevPos.z);
     if (fig->model->animTick != 0) {
         fig->yaw = yaw;
         *(Vec3Words *)&fig->prevPos = *(Vec3Words *)pos;
@@ -210,7 +209,7 @@ void func_ov007_020beb80(Ov007Figure *fig) {
                 *(Vec3sWords *)&sys->direction = *(Vec3sWords *)&motion;
                 vel = (short)FX_MUL(speed, 0x460);
             }
-            sys->emitInterval = (u8)(((frames << 2) >> 12) + 1);
+            sys->emitInterval = (((frames << 2) >> 12) + 1);
             sys->callbackVelocity = vel;
             sys->callbackFlags &= ~2;
             *(Vec3Words *)&sys->position = *(Vec3Words *)pos;
@@ -299,14 +298,14 @@ void func_ov007_020be9ac(Ov007Figure *fig, Ov007Model *owner, void *viewMatrix) 
 }
 
 /* Starts animation `anim` on the figure's model and shows it. */
-void func_ov007_020be980(Ov007Figure *fig, int anim, int a2) {
+extern "C" void func_ov007_020be980(Ov007Figure *fig, int anim, int a2) {
     func_ov007_020bc3dc(fig->model, anim, a2);
     fig->model->visible = 1;
     fig->model->animTick = 1;
 }
 
 /* Holds the figure's bone animation if it is playing; returns its state. */
-int func_ov007_020be964(Ov007Figure *fig) {
+extern "C" int func_ov007_020be964(Ov007Figure *fig) {
     s32 *state = &fig->model->boneAnim->state;
     if (*state == 0) {
         *state = 1;
@@ -347,7 +346,7 @@ Ov007Figure *func_ov007_020be850(void) {
         return res;
     r2 = work->model->boneAnim;
     if (r2->anim == 0) {
-        if (r2->frame >= 0x7c) {
+        if (r2->frame >= 124) {
             if (work->figureIndex == 1)
                 return work->altFigure;
         }
@@ -368,13 +367,13 @@ void func_ov007_020be7a8(void *pos, unsigned short *outX, unsigned short *outY, 
     func_ov007_020bfd70(WORK->cameras[0], pos, &x, &y);
 
     if (WORK->cameraPreset == 4) {
-        y = y + 0x14b;
+        y = y + 331;
     } else {
         y = y + data_ov007_020d7c58[WORK->figureIndex];
     }
 
-    *outX = (unsigned short)x;
-    *outY = (unsigned short)y;
+    *outX = x;
+    *outY = y;
     *outScale = 0xfff;
 }
 
@@ -404,7 +403,7 @@ void func_ov007_020be684(void *system, Ov007SpriteGroup *grp) {
         item->node->x = rec->screenX << 12;
         item->node->y = rec->screenY << 12;
         item->node->priority = rec->priority;
-        item->node->affineIndex = (rec->lifeScale << 4) >> 0xc;
+        item->node->affineIndex = (rec->lifeScale << 4) >> 12;
         if (rec->particle != 0)
             func_ov007_020c3fe4(item);
     }
@@ -472,10 +471,10 @@ void func_ov007_020be3bc(void) {
     for (i = 0; i < 16; i++) {
         int *s = SPRITES->affine[i];
         GXOamAffine *d = (GXOamAffine *)(oam + i * 4);
-        d->PA = (short)(s[0] >> 4);
-        d->PB = (short)(s[1] >> 4);
-        d->PC = (short)(s[2] >> 4);
-        d->PD = (short)(s[3] >> 4);
+        d->PA = (s[0] >> 4);
+        d->PB = (s[1] >> 4);
+        d->PC = (s[2] >> 4);
+        d->PD = (s[3] >> 4);
     }
 }
 
@@ -514,7 +513,7 @@ int func_ov007_020be0dc(void) {
             break;
         case 1: {
             int frame = fig->model->boneAnim->frame;
-            if (frame >= 0x226) {
+            if (frame >= 550) {
                 if (node->animIndex != 1)
                     Sprite_SetAnimation(node, 1, 1, 0, 0);
             } else {
@@ -528,13 +527,13 @@ int func_ov007_020be0dc(void) {
         func_ov007_020bfd70(WORK->cameras[0], pos, &screenX, &screenY);
 
         if (WORK->cameraPreset == 4)
-            screenY += 0x14b;
+            screenY += 331;
         else
             screenY += data_ov007_020d7c58[WORK->figureIndex];
 
         {
-            int x = (short)screenX << 0xc;
-            int y = (short)screenY << 0xc;
+            int x = (short)screenX << 12;
+            int y = (short)screenY << 12;
             node->x = x;
             node->y = y;
         }
@@ -542,12 +541,12 @@ int func_ov007_020be0dc(void) {
         {
             int *row = &Bone0(fig)->r.m[6];
             int yaw = FX_Atan2(row[0], row[2]);
-            int turn = FX_DivS32(yaw << 0xc, 0xffff);
-            unsigned int scale = ((turn * 0x12) >> 0xc) & 0xff;
-            if (scale >= 0x12)
-                scale = 0x11;
+            int turn = FX_DivS32(yaw << 12, 0xffff);
+            unsigned int scale = ((turn * 18) >> 12) & 0xff;
+            if (scale >= 18)
+                scale = 17;
             if (node->animIndex == 0)
-                Sprite_SetAnimation(node, 0, 0, 0, (int)scale);
+                Sprite_SetAnimation(node, 0, 0, 0, scale);
         }
 
         if (node->animIndex == 0)
@@ -588,5 +587,4 @@ int func_ov007_020be0dc(void) {
         shown = 0;
     node->visible = shown;
     return shown;
-}
 }

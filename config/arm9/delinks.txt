@@ -2749,7 +2749,7 @@ src/unnamed/arm9/0207/func_02072168.cpp:
     complete
     .text start:0x02072168 end:0x020729f4
 
-src/unnamed/arm9/0207/func_020729f4.c:
+src/unnamed/arm9/0207/func_020729f4.cpp:
     complete
     .text start:0x020729f4 end:0x02072d90
 

@@ -65,7 +65,7 @@ CLPS_Block data_ov030_02114ee4 = {
     {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
 };
 
-extern "C" daObjHmBskt_c *daObjHmBskt_c_classInit() {
+daObjHmBskt_c *daObjHmBskt_c_classInit() {
     return new daObjHmBskt_c();
 }
 
@@ -92,7 +92,7 @@ s32 daObjHmBskt_c::InitResources() {
     starPos.y = mPosY;
     starPos.z = mPosZ;
     starPos.y += 0x3c000;
-    mStarActor = dActor_c::Spawn(0xb2, (u8)(param1 & 0xf) | 0x50, starPos, 0, mAreaId, -1);
+    mStarActor = dActor_c::Spawn(0xb2, (u8)(param1 & 15) | 0x50, starPos, 0, mAreaId, -1);
 
     return 1;
 }
@@ -147,7 +147,7 @@ int daObjHmBskt_c::CheckLanding(dBgCh_Actr *clsn) {
     int pz = mPosZ;
     int py = mPosY + 0x96000;
     Vector3 p(px, py, pz);
-    dActor_c::Spawn(0xb2, (unsigned char)(param1 & 0xf) | 0x20, p, 0, mAreaId, -1);
+    dActor_c::Spawn(0xb2, (unsigned char)(param1 & 15) | 0x20, p, 0, mAreaId, -1);
     Particle::System::NewSimple(kPtclBlockBreakA, mPosX, mPosY, mPosZ);
     Particle::System::NewSimple(kPtclBlockBreakB, mPosX, mPosY, mPosZ);
     MarkForDestruction();

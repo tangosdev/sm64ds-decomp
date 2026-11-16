@@ -49,7 +49,7 @@ extern AmiBouModelFilePtr data_ov045_021131b0;     /* BMD */
 extern CLPS_Block data_ov045_02112510;
 /* local extern: the shared arm9 sine table has no header. */
 
-extern "C" daObjKm2_Ami_Bou_c *daObjKm2_Ami_Bou_c_classInit() {
+daObjKm2_Ami_Bou_c *daObjKm2_Ami_Bou_c_classInit() {
     return new daObjKm2_Ami_Bou_c();
 }
 

@@ -28,7 +28,8 @@ void func_ov007_020c5fc8(Ov007Picker *self, int idx, int t) {
         int r = va;
         if (t < 0x1000) {
             if (t <= 0) r = vb;
-            else r = (int)(((s64)inv * vb + (s64)t * va) >> 12);
+            else
+                r = (((s64)inv * vb + (s64)t * va) >> 12);
         }
         cur.x = r;
 
@@ -39,7 +40,8 @@ void func_ov007_020c5fc8(Ov007Picker *self, int idx, int t) {
         r = va;
         if (t < 0x1000) {
             if (t <= 0) r = vb;
-            else r = (int)(((s64)inv * vb + (s64)t * va) >> 12);
+            else
+                r = (((s64)inv * vb + (s64)t * va) >> 12);
         }
         cur.y = r;
 

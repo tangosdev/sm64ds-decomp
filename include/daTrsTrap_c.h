@@ -14,7 +14,6 @@
 #include "dActor_c.h"
 
 struct daTrsTrap_c : dActor_c {
-    u32 pad_0d0;                 /* 0x0d0 -- dActor_c closes at 0xd0, mModel opens at 0xd4 */
     dExtSimpleModel_c mModel;    /* 0x0d4 */
     /* Set by the mesh-collision callback (LatchStandingActor) while the player
        (actor 0xbf) stands on the trapdoor; cleared every Behavior frame. The
@@ -46,7 +45,7 @@ struct daTrsTrap_c : dActor_c {
     /* Merry-go-round occupancy: a rider stands on the mesh or the area is
        showing. Written every frame; the Boo (daTrs_c, 021163d0) reads it. */
     u8  mOccupiedFlag;           /* 0x153 */
-    u8  pad_154;                 /* 0x154 -- zeroed by InitResources, no reader recovered */
+    u8 mUnk154;                  /* 0x154 -- zeroed by InitResources, no reader recovered */
     /* KAIDAN release: the Boo's death path (ov063:0x02118b98) finds the master
        step and raises this, and the rise state waits on it. */
     u8  mTriggered;              /* 0x155 */

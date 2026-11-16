@@ -7,8 +7,6 @@
 #include "Ov007Model.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
-
 #include "decl_common.h"
 #include "common.h"
 #include "nitro/fx/fx.h"
@@ -22,7 +20,7 @@ extern "C" {
  * assignment copy word by word. The ROM copies these with C's ldm/stm block
  * move, which C++ keeps for a struct with an array member. */
 typedef struct Vec3Words {
-    Fix12i w[3];
+    fx32 w[3];
 } Vec3Words;
 
 
@@ -79,11 +77,11 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
         if (st->stateWork & OV007_FIGURE_SWAY) {
             int bob, rock;
             /* The cartridge calls this once more and drops the result. */
-            FX_ModS32(ticks, 0x28);
-            bob = ProgressRatio(FX_ModS32(ticks, 0x28), 0x28);
+            FX_ModS32(ticks, 40);
+            bob = ProgressRatio(FX_ModS32(ticks, 40), 40);
             out.y = FX_SinIdx((u16)((bob * 0xffff) >> 12) >> 4) >> 2;
 
-            rock = ProgressRatio(FX_ModS32(ticks, 0xa0), 0xa0);
+            rock = ProgressRatio(FX_ModS32(ticks, 160), 160);
             MTX_Identity43_(mat);
             {
                 int swing = FX_SinIdx((u16)(((rock * 2 + 0x800) * 0xffff) >> 12) >> 4);
@@ -103,10 +101,10 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
             /* FX_Div here, not FX_DivS32: the rise calls the SDK's out-of-line divide. */
             if (diff <= 0) {
                 ratio = 0;
-            } else if (diff >= 0x50) {
+            } else if (diff >= 80) {
                 ratio = 0x1000;
             } else {
-                ratio = FX_Div(diff, 0x50);
+                ratio = FX_Div(diff, 80);
             }
             sq = (fx32)(((fx64)ratio * ratio) >> FX32_SHIFT);
             out.y = sq * 30;
@@ -117,5 +115,4 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
 
         *(Vec3Words *)&mat->t = *(Vec3Words *)&out;
     }
-}
 }

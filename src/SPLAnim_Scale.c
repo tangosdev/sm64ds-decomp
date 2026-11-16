@@ -28,6 +28,6 @@ void SPLAnim_Scale(ParticleElement *ptcl, PtclDef *def, int lifeRate) {
     }
     {
         short end = anim->end;
-        ptcl->animScale = end + (lifeRate - 0xff) * (end - anim->mid) / (0xff - out);
+        ptcl->animScale = end + (lifeRate - 255) * (end - anim->mid) / (255 - out);
     }
 }

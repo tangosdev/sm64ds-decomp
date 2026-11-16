@@ -41,7 +41,7 @@ void OS_InitLock(void)
     lockp = (OSLockWord *)HW_INIT_LOCK_BUF;
     lockp->lockFlag = 0;
 
-    (void)OS_TryLockByWord(0x7e, lockp, 0);
+    OS_TryLockByWord(0x7e, lockp, 0);
 
     while (lockp->extension) {
         OSi_WaitByLoop();
@@ -57,8 +57,8 @@ void OS_InitLock(void)
     REG_EXMEMCNT |= 0x800;
     REG_EXMEMCNT |= 0x80;
 
-    (void)OS_UnlockByWord(0x7e, lockp, 0);
-    (void)OS_TryLockByWord(0x7f, lockp, 0);
+    OS_UnlockByWord(0x7e, lockp, 0);
+    OS_TryLockByWord(0x7f, lockp, 0);
 }
 
 s32 OSi_DoLockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void), u32 disableFiq)
@@ -111,7 +111,7 @@ s32 OSi_DoTryLockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void), 
 {
     OSIntrMode lastIntrMode = disableFiq ? OS_DisableInterrupts_IrqAndFiq() : OS_DisableInterrupts();
 
-    s32 lastLockFlag = (s32)MI_SwapWord(lockID, &lockp->lockFlag);
+    s32 lastLockFlag = MI_SwapWord(lockID, &lockp->lockFlag);
 
     if (!lastLockFlag) {
         if (ctrlFuncp) {

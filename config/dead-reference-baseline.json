@@ -123,7 +123,15 @@
   },
   {
    "file": "notes/archive/mwccarm-codegen-log.md",
+   "ref": "include/math/Fix12.h"
+  },
+  {
+   "file": "notes/archive/mwccarm-codegen-log.md",
    "ref": "src/dst"
+  },
+  {
+   "file": "notes/archive/mwccarm-codegen-log.md",
+   "ref": "tools/wallcrack.py"
   },
   {
    "file": "notes/archive/n64-decomp-cross-reference.md",
@@ -692,14 +700,6 @@
   {
    "file": "tools/rebuild_ledger.py",
    "ref": "tools/rebuild_ledger"
-  },
-  {
-   "file": "tools/residue_reaudit.py",
-   "ref": "src/_ZN"
-  },
-  {
-   "file": "tools/restack_tu_pr.py",
-   "ref": "config/tu_manifest.json"
   },
   {
    "file": "tools/romdata_check.py",

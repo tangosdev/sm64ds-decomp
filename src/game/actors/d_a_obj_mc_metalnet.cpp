@@ -40,9 +40,7 @@ extern CLPS_Block data_ov009_02112bf8;
    places across the tree, always to mean "not the ordinary single-player run". */
 extern unsigned char gGameMode;
 
-extern "C" {
 unsigned char NumStars(void);
-}
 
 /* gGameMode (CURRENT_GAMEMODE) is 1 in VS mode: PrepareVsMode stores it.
    Both gates below skip in VS. Same predicate as CapIconMgr and d_meter. */
@@ -57,7 +55,7 @@ static inline int IsVsMode(void) {
  * inline operator new; 0x0211205c calls dBgActor_c's C2 and the store at
  * 0x02112068 lays down this class's vptr. The null check is the one `new`
  * itself emits. */
-extern "C" daObjMc_Metalnet_c *daObjMc_Metalnet_c_classInit(void) {
+daObjMc_Metalnet_c *daObjMc_Metalnet_c_classInit(void) {
     return new daObjMc_Metalnet_c();
 }
 
@@ -83,7 +81,7 @@ s32 daObjMc_Metalnet_c::InitResources() {
         if (!IsVsMode() && (data_0209caa0.file.flags2 & 0x80000) != 0)
             return 0;
     } else {
-        if (!IsVsMode() && NumStars() >= 0x96)
+        if (!IsVsMode() && NumStars() >= 150)
             return 0;
     }
     return 1;

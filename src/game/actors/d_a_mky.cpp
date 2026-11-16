@@ -15,10 +15,6 @@
  *   pointer-to-member records at 0x02115ac8, EnterState0..10 store
  *   mState. The other eleven are the ticks. Helpers those ticks call
  *   take the same Ukiki, so they are methods too.
- * - Shared animation/collision/scalar declarations retain their current
- *   reconstructed Fix12<int> spellings. Genuine scalar definitions and
- *   callers match in separate experiments; canonical shared migration
- *   remains pending, rather than an inherent compiler limitation.
  * - func_0201267c and PlayBank3 are the bank-3 wrappers.
  *   func_02012790 is Sound::Play2D(2, id). func_020383f0 and
  *   dBgCh_Actr_UpdateContinuous_Veneer are the tail-call veneers the
@@ -31,7 +27,7 @@
  *   common.h and math/Matrix.h still define incompatible C++ forms under
  *   one guard; this TU does not resolve that repository-wide type debt.
  * - The carrier/cap attachment uses dActor_c::mCarryMatrix at +0xc8.
- *   The cap's player pointer uses daObjMarioCap_c::mEatingPlayer.
+ *   The cap's player pointer is the inherited dActor_c::mEatingPlayer.
  *   PathPtr and line-query construction/cleanup are ordinary C++ calls.
  * - data_ov030_* handles stay address labels. decl_common.h types
  *   four of them as void*[] where this file's blocks say int[].
@@ -75,6 +71,18 @@ extern "C" {
 
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 }
+
+/* The model handle constructs through func_02017acc and the animation
+ * handles through SharedFilePtr::Construct. Declared here, ahead of the
+ * members that read them; defined at the bottom in retail __sinit order. */
+struct MkyModelFilePtr : SharedFilePtr {
+    MkyModelFilePtr(unsigned int fileID);
+    ~MkyModelFilePtr();
+};
+struct MkyAnimFilePtr : SharedFilePtr {
+    MkyAnimFilePtr(unsigned int fileID);
+    ~MkyAnimFilePtr();
+};
 
 /* Actor IDs 0xbf, 0x10b and 0x10c are PLAYER, UKIKI_THIEF and UKIKI_STAR.
  * dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states.
@@ -155,7 +163,7 @@ void daMky_c::ReturnToPerch() {
     rc.SetObjAndLine(a, b, this);
 
     if (this->mPerchPosY - this->mPosY > 0x96000 || rc.DetectClsn()) {
-        Vec3_Asr((Vector3 *)&asr, (Vector3 *)&this->mPerchPosX, 3);
+        Vec3_Asr(&asr, (Vector3 *)&this->mPerchPosX, 3);
 
         if (data_0209f43c.TransformAndClip(data_0209b3ec, asr, 0x1f400, out) > 0xc350000) {
             this->mPosX = this->mPerchPosX;
@@ -168,7 +176,7 @@ void daMky_c::ReturnToPerch() {
             this->mPrevPosY = this->mPerchPosY;
             this->mPrevPosZ = this->mPerchPosZ;
             UpdateModelAndCap();
-            this->mResetTimer = 0x96;
+            this->mResetTimer = 150;
         }
     }
 }
@@ -207,11 +215,10 @@ int daMky_c::CycleIdleAnimation() {
     extern int gMonkeyWait4AnimationFile[];
     extern void** data_ov030_02115bc8[];
     PlayIdleSounds();
-    if (static_cast<dExtFrameCtrl_c &>(this->mAnmModel).WillHitFrame(0) != 0 ||
-        (!IsPlayingAnim(this, data_ov030_02115cf0) &&
-         !IsPlayingAnim(this, gMonkeyWait2AnimationFile) &&
-         !IsPlayingAnim(this, gMonkeyWait3AnimationFile) &&
-         !IsPlayingAnim(this, gMonkeyWait4AnimationFile))) {
+    if (this->mAnmModel.WillHitFrame(0) != 0 || (!IsPlayingAnim(this, data_ov030_02115cf0) &&
+                                                 !IsPlayingAnim(this, gMonkeyWait2AnimationFile) &&
+                                                 !IsPlayingAnim(this, gMonkeyWait3AnimationFile) &&
+                                                 !IsPlayingAnim(this, gMonkeyWait4AnimationFile))) {
         this->mAnmModel.SetAnim((BCA_File *)(data_ov030_02115bc8[this->mAnimIdx][1]), 0, 0x1000, 0);
         {
             unsigned char *p = &this->mAnimIdx;
@@ -354,7 +361,7 @@ void daMky_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
         dBgCh_Actr_UpdateContinuous_Veneer(&this->mWithMeshClsn);
     if (w->IsOnGround() != 0) {
         Vector3 n;
-        static_cast<const dBgPi *>(w->GetFloorResult())->surface.CopyNormalTo(n);
+        w->GetFloorResult()->surface.CopyNormalTo(n);
         if (n.y != 0) {
             int s = FX_MUL(n.x, this->mSpeedX) + FX_MUL(n.z, this->mSpeedZ);
             this->mVertSpeed = -(FX_Div(s, n.y) + 0x8000);
@@ -362,7 +369,7 @@ void daMky_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
     }
     if (w->IsOnWall() != 0) {
         Vector3 wn;
-        static_cast<const dBgPi *>(w->GetWallResult())->surface.CopyNormalTo(wn);
+        w->GetWallResult()->surface.CopyNormalTo(wn);
     }
 }
 void daMky_c::UpdateModelAndCap() {
@@ -429,14 +436,14 @@ int daMky_c::func_ov030_021122b0()
     this->mPrevAngleY = this->mAngleY;
     if (DecIfAbove0_Byte(&this->mActionTimer) == 0)
         ChangeState(0);
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     if (IsUkikiThief(this)) {
-        this->UpdatePos((dCc_c*)(&this->mdCcAc_c));
+        this->UpdatePos(&this->mdCcAc_c);
         UpdateSafePos();
         UpdateFloorAndWalls(&this->mWithMeshClsn);
         HandleContact();
     } else {
-        this->UpdatePos((dCc_c*)(&this->mdCcAc_c));
+        this->UpdatePos(&this->mdCcAc_c);
         UpdateFloorAndWalls(&this->mWithMeshClsn);
         HandleContact();
         RevertOffLedge();
@@ -452,7 +459,7 @@ int daMky_c::EnterState10(){
     mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyRunAnimationFile.w[1]), 0, 0x1000, 0);
     this->mAnmModel.speed = 0x1000;
     mHorzSpeed = 0x13000;
-    mActionTimer = 0x1e;
+    mActionTimer = 30;
     mState = 0xa;
     return 1;
 }
@@ -460,9 +467,9 @@ int daMky_c::EnterState10(){
 int daMky_c::func_ov030_02112400()
 {
     CycleIdleAnimation();
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     this->UpdatePos(&this->mdCcAc_c);
-    UpdateFloorAndWalls((dBgCh_Actr *)(&this->mWithMeshClsn));
+    UpdateFloorAndWalls(&this->mWithMeshClsn);
     HandleContact();
     this->mdCcAc_c.Clear();
     this->mdCcAc_c.Update();
@@ -500,10 +507,10 @@ int daMky_c::func_ov030_02112578()
     extern void *gMonkeyRunAnimationFile[];
     dActor_c *cage = dActor_c::FindWithActorID(0x67, 0);
     daPly_c *player = this->ClosestPlayer();
-    s32 v[3];
-    *(s32 *)((u8 *)v + 0) = 0x981;
-    *(s32 *)((u8 *)v + 4) = 0x77a;
-    *(s32 *)((u8 *)v + 8) = 0x501;
+    Vector3 v;
+    v.x = 0x981;
+    v.y = 0x77a;
+    v.z = 0x501;
 
     switch (this->mSubState) {
     case 0:
@@ -538,7 +545,7 @@ int daMky_c::func_ov030_02112578()
         sp[1] += 0x50000;
         if (player->ShowMessage(*this, 0xbd, (const Vector3 *)sp, 1, 0) != 0) {
             this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait3AnimationFile[1], 0, 0x1000, 0);
-            static_cast<dExtFrameCtrl_c &>(this->mAnmModel).SetFlags(0);
+            this->mAnmModel.SetFlags(0);
             func_0201267c(0xd1, &this->mCamSpacePos);
             {
                 u8 *p = &this->mSubState;
@@ -583,12 +590,12 @@ int daMky_c::func_ov030_02112578()
         }
         break;
     case 6:
-        if (static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Finished() != 0) {
+        if (this->mAnmModel.Finished() != 0) {
             this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait2AnimationFile[1], 0, 0x1000, 0);
             this->mAnmModel.speed = 0x1000;
             cage->mHorzSpeed = 0x400;
             Sound::PlaySub(0x20, 0x14, 0x7f, 0x15666, 0);
-            this->mActionTimer = 0x78;
+            this->mActionTimer = 120;
             {
                 u8 *p = &this->mSubState;
                 *p = *p + 1;
@@ -633,7 +640,7 @@ int daMky_c::func_ov030_02112578()
         break;
     }
 
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     UpdatePos(&this->mdCcAc_c);
     UpdateFloorAndWalls(&this->mWithMeshClsn);
     this->mdCcAc_c.Clear();
@@ -673,7 +680,7 @@ int daMky_c::func_ov030_02112a84()
         }
     }
 
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     this->UpdatePos(&this->mdCcAc_c);
     HandleContact();
     this->mdCcAc_c.Clear();
@@ -685,7 +692,6 @@ int daMky_c::EnterState7()
     typedef unsigned short u16;
     typedef short s16;
     extern void *gMonkeyJumpStAnimationFile[];
-    u8 *new_var;
     int *pos;
     int *py;
     int *pz;
@@ -726,7 +732,7 @@ int daMky_c::EnterState7()
     other = this->mPlayer;
     {
         int oy = other->mPosY;
-        int oz = *((int *)(new_var = (u8 *)&other->mPosZ));
+        int oz = other->mPosZ;
         mul = oy + 0x50000;
         v.x = other->mPosX;
         v.y = mul;
@@ -783,7 +789,7 @@ int daMky_c::func_ov030_02112da0()
         }
         {
             daPly_c *s = this->mPlayer;
-            u8 val = 0x3c;
+            u8 val = 60;
             int *p = &s->mPosX;
             this->mPosX = *p;
             this->mPosY = p[1];
@@ -822,7 +828,7 @@ int daMky_c::EnterState6()
         mSubState = 3;
     }
     mHorzSpeed = 0;
-    mActionTimer = 0x3c;
+    mActionTimer = 60;
     this->mdCcAc_c.Clear();
     mPrevState = mState;
     mState = 6;
@@ -843,7 +849,7 @@ int daMky_c::func_ov030_02113094()
         if (IsInYoshiMouth(this)) {
             if (this->mHasSpawnedCap != 0) {
                 ::dActor_c *a = ::dActor_c::FindWithID(this->mCapUniqueID);
-                static_cast<daObjMarioCap_c *>(a)->mEatingPlayer = mPlayer;
+                a->mEatingPlayer = mPlayer;
                 a->mFlags |= 0x40000;
             }
             this->mSubState++;
@@ -879,7 +885,7 @@ int daMky_c::func_ov030_02113094()
                 {
                     u32 z = 0;
                     this->mCapUniqueID = z;
-                    this->mHasSpawnedCap = (u8)z;
+                    this->mHasSpawnedCap = z;
                     this->mPrevState = 0xa;
                 }
             }
@@ -967,7 +973,7 @@ int daMky_c::func_ov030_02113324()
                 }
             }
         }
-        this->mActionTimer = 0x3c;
+        this->mActionTimer = 60;
         break;
     case 1:
         if (this->mPlayer->GetTalkState() == -1) {
@@ -987,7 +993,7 @@ int daMky_c::func_ov030_02113324()
         break;
     }
 
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     this->mdCcAc_c.Clear();
     return 1;
 }
@@ -1002,7 +1008,7 @@ int daMky_c::EnterState4(){
     } else {
         mSubState = 2;
     }
-    mActionTimer = 0x3c;
+    mActionTimer = 60;
     mState = 4;
     return 1;
 }
@@ -1077,7 +1083,7 @@ int daMky_c::func_ov030_021136b0()
         MtxStack::YrotM(ang);
         MtxStack::transM(0, 0, -0x64000);
         {
-            int msgArg = ((int)msg << 16) >> 16;
+            int msgArg = (msg << 16) >> 16;
             int my = MtxStack::get().m[10];
             int mx = MtxStack::get().m[9];
             int mz = MtxStack::get().m[11];
@@ -1159,19 +1165,14 @@ int daMky_c::func_ov030_021136b0()
         break;
     }
 
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     this->mdCcAc_c.Clear();
     return 1;
 }
 int daMky_c::EnterState3()
 {
-    /* The scalar ABI binding is retained: the
-       ROM name carries by-value class parameters (e.g. Fix12<int>), which
-       mwccarm passes differently at the call site, so declaring the true
-       types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-
-    extern char gMonkeyHoldAnimationFile[];
-    this->mAnmModel.SetAnim((BCA_File *)(*(void **)(gMonkeyHoldAnimationFile + 4)), 0, 0x1000, 0);
+    extern MkyAnimFilePtr gMonkeyHoldAnimationFile;
+    this->mAnmModel.SetAnim((BCA_File *)gMonkeyHoldAnimationFile.filePtr, 0, 0x1000, 0);
     this->mAnmModel.speed = 0x1000;
     if (mHasSpawnedCap == 0 && SaveData::HasPlayerLostCap()) {
         mSubState = 5;
@@ -1193,9 +1194,8 @@ int daMky_c::EnterState3()
 
 int daMky_c::func_ov030_02113b38()
 {
-    typedef int Fix12i;
     extern int gMonkeyRunAnimationFile[];
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     this->UpdatePos(&this->mdCcAc_c);
     UpdateFloorAndWalls(&this->mWithMeshClsn);
     if (this->mWithMeshClsn.JustHitGround() != 0) {
@@ -1212,10 +1212,9 @@ int daMky_c::func_ov030_02113b38()
     return 1;
 }
 int daMky_c::EnterState2() {
-    typedef int Fix12i;
     typedef short s16;
 
-    extern void *gMonkeyJumpStAnimationFile;
+    extern SharedFilePtr gMonkeyJumpStAnimationFile;
     daPly_c *p;
 
     p = this->mPlayer;
@@ -1236,8 +1235,7 @@ int daMky_c::EnterState2() {
     this->mVertSpeed = IsUkikiThief(this) ? 0x23000 : 0x1e000;
 
     this->mWithMeshClsn.SetLimMovFlag();
-    this->mAnmModel.SetAnim((BCA_File *)(((void **)&gMonkeyJumpStAnimationFile)[1]), 0x40000000,
-                            0x1000, 0);
+    this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpStAnimationFile.filePtr, 0x40000000, 0x1000, 0);
     func_0201267c(0xd1, &this->mCamSpacePos);
     func_0201267c(0xf1, &this->mCamSpacePos);
     this->mState = 2;
@@ -1246,12 +1244,11 @@ int daMky_c::EnterState2() {
 
 int daMky_c::func_ov030_02113d20()
 {
-    typedef int Fix12i;
     typedef short s16;
 
-    extern void *gMonkeyRunAnimationFile;
+    extern SharedFilePtr gMonkeyRunAnimationFile;
     daPly_c *p;
-    Fix12i dist;
+    fx32 dist;
     s16 angle;
     int onWall;
 
@@ -1294,11 +1291,11 @@ int daMky_c::func_ov030_02113d20()
     ApproachLinear(this->mAngleY, angle, 0xa28);
     this->mPrevAngleY = this->mAngleY;
     if (this->mHorzSpeed != 0)
-        this->mAnmModel.SetAnim((BCA_File *)(((void **)&gMonkeyRunAnimationFile)[1]), 0, 0x1000, 0);
+        this->mAnmModel.SetAnim((BCA_File *)gMonkeyRunAnimationFile.filePtr, 0, 0x1000, 0);
     else
         CycleIdleAnimation();
 
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
 
     if (IsUkikiThief(this)) {
         UpdatePos(&this->mdCcAc_c);
@@ -1333,7 +1330,6 @@ int daMky_c::EnterState1(){
 
 int daMky_c::func_ov030_02113ff0()
 {
-    typedef int Fix12i;
     typedef short s16;
     extern int gMonkeyRunAnimationFile[];
     int dist = this->DistToCPlayer();
@@ -1347,7 +1343,7 @@ int daMky_c::func_ov030_02113ff0()
     ApproachLinear(this->mAngleY, this->HorzAngleToCPlayer(), 0x514);
     this->mPrevAngleY = this->mAngleY;
     this->mAnmModel.speed = 0x1000;
-    static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
+    this->mAnmModel.Advance();
     if (IsUkikiThief(this)) {
         this->UpdatePos(&this->mdCcAc_c);
         UpdateSafePos();
@@ -1382,17 +1378,6 @@ void daMky_c::ChangeState(int idx) {
     this->mStateDesc = &data_ov030_02115e0c[idx];
     CallStateEnter();
 }
-/* The model handle constructs through func_02017acc and the animation
- * handles through SharedFilePtr::Construct. Declared here, ahead of the
- * virtuals that call them; defined at the bottom in retail __sinit order. */
-struct MkyModelFilePtr : SharedFilePtr {
-    MkyModelFilePtr(unsigned int fileID);
-    ~MkyModelFilePtr();
-};
-struct MkyAnimFilePtr : SharedFilePtr {
-    MkyAnimFilePtr(unsigned int fileID);
-    ~MkyAnimFilePtr();
-};
 extern MkyModelFilePtr data_ov030_02115d00;
 extern MkyAnimFilePtr data_ov030_02115cf0;
 
@@ -1406,7 +1391,6 @@ extern SharedFilePtr  data_ov002_0210da40;
 extern SharedFilePtr  data_ov002_0210d9a0;
 extern SharedFilePtr  data_ov002_0210d9c0;
 extern SharedFilePtr *data_ov030_02114824[10];
-
 }
 
 /* Vtable slot 3.  Releases the four shared files the class holds plus its
@@ -1495,7 +1479,7 @@ s32 daMky_c::InitResources()
     mScaleZ = 0x1000;
     mPlayer = 0;
     mCapUniqueID = 0;
-    mResetTimer = 0x96;
+    mResetTimer = 150;
     if (IsUkikiThief(this)) {
         if (SaveData::HasPlayerLostCap() != 0) {
             daPly_c *player = ClosestPlayer();
@@ -1531,8 +1515,7 @@ void daMky_c::OnTurnIntoEgg(daPly_c &player) {
  * allocation size, vtable identity, and the MONKEY_STAR registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: UkikiStar_Spawn. */
-extern "C" daMky_c *daMky_c_classInit_MONKEY_STAR()
-{
+daMky_c *daMky_c_classInit_MONKEY_STAR() {
     return new daMky_c();
 }
 
@@ -1540,8 +1523,7 @@ extern "C" daMky_c *daMky_c_classInit_MONKEY_STAR()
  * allocation size, vtable identity, and the MONKEY_THIEF registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: UkikiThief_Spawn. */
-extern "C" daMky_c *daMky_c_classInit_MONKEY_THIEF()
-{
+daMky_c *daMky_c_classInit_MONKEY_THIEF() {
     return new daMky_c();
 }
 
@@ -1613,9 +1595,9 @@ struct MkyOff {
     }
     MkyOff(int px, int py, int pz) {
         unsigned int *p = (unsigned int *)this;
-        p[0] = (unsigned int)px;
-        p[1] = (unsigned int)py;
-        p[2] = (unsigned int)pz;
+        p[0] = px;
+        p[1] = py;
+        p[2] = pz;
     }
     ~MkyOff();
 };

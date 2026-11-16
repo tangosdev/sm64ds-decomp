@@ -77,17 +77,22 @@ BkKillerdaiModelFile gBkKillerDaiModelFile(ASSET_BK_KILLER_DAI_BMD);
 BkKillerdaiCollisionFile gBkKillerDaiCollisionFile(ASSET_BK_KILLER_DAI_KCL);
 
 /* Launcher model, mesh, and CLPS block: three pointers. */
-extern void *data_ov079_02127f64[];
+struct BkKillerFiles {
+    SharedFilePtr *model;
+    SharedFilePtr *collision;
+    CLPS_Block *clps;
+};
+extern BkKillerFiles data_ov079_02127f64;
 
 extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
-extern int IsStarCollectedInCurLevel(int starID);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 }
+extern int IsStarCollectedInCurLevel(int starID);
 
 #pragma defer_codegen off
 
@@ -97,9 +102,9 @@ daObjBkKillerdai_c::~daObjBkKillerdai_c() {}
 void daObjBkKillerdai_c::Kill() {
     Vector3 pos;
     Vector3 dustPos;
-    Fix12i x = mPosX;
-    Fix12i y = mPosY + 0x96000;
-    Fix12i z = mPosZ;
+    fx32 x = mPosX;
+    fx32 y = mPosY + 0x96000;
+    fx32 z = mPosZ;
     pos.x = x;
     pos.y = y;
     pos.z = z;
@@ -121,8 +126,8 @@ void daObjBkKillerdai_c::OnHitByMegaChar(daPly_c &player) {
 s32 daObjBkKillerdai_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    ((SharedFilePtr *)data_ov079_02127f64[0])->Release();
-    ((SharedFilePtr *)data_ov079_02127f64[1])->Release();
+    data_ov079_02127f64.model->Release();
+    data_ov079_02127f64.collision->Release();
     data_ov079_02128300.Release();
     data_ov079_021282f0.Release();
     return 1;
@@ -166,13 +171,12 @@ s32 daObjBkKillerdai_c::InitResources() {
 
     dExtSimpleModel_c::LoadFile(data_ov079_02128300);
     dExtSimpleModel_c::LoadFile(data_ov079_021282f0);
-    file = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov079_02127f64[0]);
+    file = dExtSimpleModel_c::LoadFile(*data_ov079_02127f64.model);
     mModel.SetFile((BMD_File *)file, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    file = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov079_02127f64[1]);
-    mMeshCollider.SetFile((KCL_File *)(file), mClsnMat, 0x199, mAngleY,
-                          *(CLPS_Block *)(data_ov079_02127f64[2]));
+    file = dBgW_Kc::LoadFile(*data_ov079_02127f64.collision);
+    mMeshCollider.SetFile((KCL_File *)(file), mClsnMat, 0x199, mAngleY, *data_ov079_02127f64.clps);
 
     mSpawnedUniqueID = 0;
 
@@ -190,6 +194,6 @@ s32 daObjBkKillerdai_c::InitResources() {
     return 1;
 }
 
-extern "C" daObjBkKillerdai_c *daObjBkKillerdai_c_classInit() {
+daObjBkKillerdai_c *daObjBkKillerdai_c_classInit() {
     return new daObjBkKillerdai_c();
 }

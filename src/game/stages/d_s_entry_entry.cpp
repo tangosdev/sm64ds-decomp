@@ -18,7 +18,7 @@
 /* ROM order: the ENTRY factory, then EntryMesh (0x0211a948..0x0211b524). */
 #pragma defer_codegen off
 
-extern "C" void *dScEntry_c_classInit_ENTRY(void) {
+void *dScEntry_c_classInit_ENTRY(void) {
     return new dScEntry_c;
 }
 
@@ -36,14 +36,14 @@ void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
 void VEC_Normalize(const Vector3 *, Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
-unsigned int func_02045ad8(const void *, unsigned int);
-unsigned int func_02045a50(const void *, unsigned int);
 /* local extern: the geometry-engine matrix load and the
    BMD load through a file handle, declared only in decl_common.h, which
    clashes with dScEntry_c.h's vtable spellings. */
 void G3_LoadMtx43(void *);
 void *func_0201787c(SharedFilePtr *);
 }
+unsigned int func_02045ad8(const void *, unsigned int);
+unsigned int func_02045a50(const void *, unsigned int);
 /* local extern: the camera matrix, declared per consumer (d_ext_model.cpp,
    d_ent_obj.cpp). */
 extern Matrix4x3 data_0209b3ec;
@@ -113,7 +113,7 @@ int EntryMesh::LoadTexture(BMD_File *file) {
     if (sz <= 8)
         mMaterial.pltAddr = func_02045ad8(pal->data, sz);
     else
-        mMaterial.pltAddr = func_02045a50(pal->data, (unsigned int)sz);
+        mMaterial.pltAddr = func_02045a50(pal->data, sz);
     /* d is the first BMD_Material. */
     mMaterial.difAmb = ((BMDMaterialColors *)d)->difAmb;
     mMaterial.speEmi = ((BMDMaterialColors *)d)->speEmi;
@@ -213,10 +213,10 @@ int EntryMesh::RippleHeight(int dist) {
     short phase;
     if (cnt == 0)
         return 0;
-    if (dist > (0x64 - cnt) * 0x18444)
+    if (dist > (100 - cnt) * 0x18444)
         return 0;
     phase = RipplePhase(dist);
-    amp = RippleAmplitude(0x64 - mRippleTimer);
+    amp = RippleAmplitude(100 - mRippleTimer);
     slope = FX_Div(amp, 0x384000);
     v = FX_MUL((-slope), dist);
     r2 = amp + v;
@@ -236,7 +236,7 @@ int EntryMesh::RippleAmplitude(int age) {
 short EntryMesh::RipplePhase(int dist) {
     int t = FX_Div(0xffff, 0x16c000);
     int v = FX_MUL(dist, t);
-    return (short)(v - mRipplePhase);
+    return (v - mRipplePhase);
 }
 
 /* An array-member twin of EntryMeshVec. Copying through it keeps C's
@@ -376,8 +376,8 @@ int EntryMesh::Behavior() {
 /* Allocate a 20 x 20 grid, load its texture from the shared mesh file, run
  * the init handler (InitGrid) and place the mesh at pos, turned by angleY. */
 int EntryMesh::Init(const Vector3 *pos, int angleY) {
-    mGridDim[0] = 0x14;
-    mGridDim[1] = 0x14;
+    mGridDim[0] = 20;
+    mGridDim[1] = 20;
     mNumVertices = mGridDim[0] * mGridDim[1];
     mVertices = (EntryMeshVertex *)::operator new[](mNumVertices * sizeof(EntryMeshVertex));
     LoadTexture((BMD_File *)func_0201787c(&EntryMeshTextureFile));

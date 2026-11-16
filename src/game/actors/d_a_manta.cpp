@@ -22,7 +22,6 @@
  *   Dropping it loses the reload of dActor_c's z speed.
  * - Matrix4x3 stays decl_common.h's flat s32[12].
  *   UpdateModelAndRingPos indexes .m. common.h must not replace it.
- * - daPly_c::Hurt stays mangled (Fix12 by value).
  */
 
 #pragma defer_codegen off
@@ -68,10 +67,10 @@ enum {
     MANTA_PLAYER = 0xbf,
     MANTA_WATER_RING = 0xf4,
     MANTA_RING_GOAL = 5,
-    MANTA_RING_SLOTS = 0x14,
-    MANTA_RING_INTERVAL = 0x27,
-    MANTA_STAR_WAIT = 0x1e,
-    MANTA_STAR_SPAWNED = 0xa,
+    MANTA_RING_SLOTS = 20,
+    MANTA_RING_INTERVAL = 39,
+    MANTA_STAR_WAIT = 30,
+    MANTA_STAR_SPAWNED = 10,
     MANTA_COLLECT_JINGLE = 0x25,
     MANTA_NODE_REACH = 0x258000,
     MANTA_FORWARD = 0xa000,
@@ -89,9 +88,9 @@ extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int VEC_Mag(const Vector3 *v);
-short Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 }
+short Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
 
 extern MantaState data_ov090_0213454c;
 
@@ -134,7 +133,7 @@ int daManta_c::ExecuteSwim() {
     HurtTouchingPlayer();
 
     if (mRingCount < MANTA_RING_GOAL) {
-        if (*(unsigned short *)&mStateTimer == 0) {
+        if (mStateTimer == 0) {
             spawned = dActor_c::Spawn(MANTA_WATER_RING, 1, mRingPos, &mAngle, mAreaId, -1);
             if (spawned != 0) {
                 mRingIDs[mRingWrite] = spawned->uniqueID;
@@ -166,15 +165,15 @@ int daManta_c::ExecuteSwim() {
                 mRingRead += 1;
                 if (mRingRead >= MANTA_RING_SLOTS)
                     mRingRead = 0;
-                /* Named mRingIDs[mRingRead] == uniqueID is cmp r1, r0 either
-                 * operand order. The cartridge is cmp r0, r1. 0x3ac is mRingIDs;
-                 * spelling the slot as &mRingIDs[i] differs by four words. */
-                int slotAddr = mRingRead;
+                /* mRingIDs[mRingRead] == mHitRing->uniqueID in one expression
+                 * is cmp r1, r0 either operand order; the cartridge is cmp r0, r1,
+                 * which needs the slot and the ring id each reusing a local. */
+                int slot = mRingRead;
                 int ringId = (int)mHitRing;
-                slotAddr = (int)((char *)this + (slotAddr << 2));
+                s32 *ids = mRingIDs;
                 ringId = ((dActor_c *)ringId)->uniqueID;
-                slotAddr = *(int *)(slotAddr + 0x3ac);
-                if (slotAddr == ringId) {
+                slot = ids[slot];
+                if (slot == ringId) {
                     mRingCount += 1;
                     func_02012790(MANTA_COLLECT_JINGLE);
                     num2 = mHitRing->mPos;
@@ -259,7 +258,7 @@ int daManta_c::Render() {
 }
 
 int daManta_c::Behavior() {
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     {
         MantaState *state = mState;
         if (state->execute != 0)
@@ -272,8 +271,8 @@ int daManta_c::Behavior() {
         Vector3 forward;
         int len;
 
-        path.FromID(*(unsigned int *)&mPathID);
-        path.GetNode(node, *(unsigned int *)&mPathNode);
+        path.FromID(mPathID);
+        path.GetNode(node, mPathNode);
         Vec3_Sub(&diff, &mPos, &node);
         len = VEC_Mag(&diff);
         if (len == 0 || len <= MANTA_NODE_REACH) {
@@ -315,13 +314,13 @@ int daManta_c::InitResources() {
     dExtFrameCtrl_c::LoadFile(data_ov090_0213452c);
 
     mPathID = param1 & 0xff;
-    mStarID = (param1 >> 12) & 0xf;
+    mStarID = (param1 >> 12) & 15;
     if (mPathID < 0)
         mPathID = 0;
 
     {
         PathPtr path;
-        path.FromID(*(unsigned int *)&mPathID);
+        path.FromID(mPathID);
         mNumNodes = path.NumNodes();
     }
 
@@ -337,9 +336,9 @@ int daManta_c::InitResources() {
 
     {
         PathPtr path;
-        path.FromID(*(unsigned int *)&mPathID);
+        path.FromID(mPathID);
         mPathNode = 1;
-        path.GetNode(mPos, *(unsigned int *)&mPathNode);
+        path.GetNode(mPos, mPathNode);
     }
 
     {
@@ -358,11 +357,11 @@ int daManta_c::InitResources() {
         }
     }
 
-    ChangeState((MantaState *)&data_ov090_0213454c);
+    ChangeState(&data_ov090_0213454c);
     return 1;
 }
 
-extern "C" daManta_c *daManta_c_classInit() {
+daManta_c *daManta_c_classInit() {
     return new daManta_c();
 }
 

@@ -83,7 +83,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjKb1Billboard_c_classInit",
+      "symbol": "_Z29daObjKb1Billboard_c_classInitv",
       "address": "0x021112dc",
       "size": "0x00000038",
       "legacy_source": "src/OrangeBallBillboard_Spawn.c",
@@ -154,14 +154,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN24Kb1BillboardModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and wrapper constructor relocation"
     },
     {
       "symbol": "_ZN24Kb1BillboardModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor-registration destination and wrapper destructor relocation"
@@ -205,7 +205,7 @@
       "source": "0x02111324",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -235,7 +235,7 @@
       "source": "0x0211134c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -295,7 +295,7 @@
       "source": "0x021115e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjKb1Billboard_c_classInit",
+      "symbol": "_Z29daObjKb1Billboard_c_classInitv",
       "addend": 0,
       "target_module": "ov044",
       "target_address": "0x021112dc"
@@ -969,7 +969,7 @@
           },
           {
             "ordinal": 6,
-            "symbol": "daObjKb1Billboard_c_classInit",
+            "symbol": "_Z29daObjKb1Billboard_c_classInitv",
             "identical": true,
             "relocCount": 4,
             "differences": [],
@@ -1004,21 +1004,21 @@
         "requested": [
           {
             "from": "_ZN24Kb1BillboardModelFilePtrC1Ej",
-            "to": "func_02017acc",
+            "to": "_Z13func_02017accPvj",
             "module": "arm9",
             "address": "0x02017acc",
             "evidence": "retail initializer call destination and wrapper constructor relocation"
           },
           {
             "from": "_ZN24Kb1BillboardModelFilePtrD1Ev",
-            "to": "func_02017ab4",
+            "to": "_Z13func_02017ab4i",
             "module": "arm9",
             "address": "0x02017ab4",
             "evidence": "retail destructor-registration destination and wrapper destructor relocation"
           },
           {
             "from": "__register_global_object",
-            "to": "func_020731dc",
+            "to": "__register_global_object",
             "module": "arm9",
             "address": "0x020731dc",
             "evidence": "compiler-generated static initialization call shape and retail destination"
@@ -1028,17 +1028,17 @@
           {
             "symbolIndex": 75,
             "from": "_ZN24Kb1BillboardModelFilePtrC1Ej",
-            "to": "func_02017acc"
+            "to": "_Z13func_02017accPvj"
           },
           {
             "symbolIndex": 77,
             "from": "_ZN24Kb1BillboardModelFilePtrD1Ev",
-            "to": "func_02017ab4"
+            "to": "_Z13func_02017ab4i"
           },
           {
             "symbolIndex": 76,
             "from": "__register_global_object",
-            "to": "func_020731dc"
+            "to": "__register_global_object"
           }
         ],
         "errors": null
@@ -1209,7 +1209,7 @@
             "size": "0x0000003c"
           },
           {
-            "symbol": "daObjKb1Billboard_c_classInit",
+            "symbol": "_Z29daObjKb1Billboard_c_classInitv",
             "section": ".text",
             "size": "0x00000038"
           }
@@ -1669,7 +1669,7 @@
           },
           {
             "ordinal": 6,
-            "symbol": "daObjKb1Billboard_c_classInit",
+            "symbol": "_Z29daObjKb1Billboard_c_classInitv",
             "identical": true,
             "relocCount": 4,
             "differences": [],
@@ -1704,21 +1704,21 @@
         "requested": [
           {
             "from": "_ZN24Kb1BillboardModelFilePtrC1Ej",
-            "to": "func_02017acc",
+            "to": "_Z13func_02017accPvj",
             "module": "arm9",
             "address": "0x02017acc",
             "evidence": "retail initializer call destination and wrapper constructor relocation"
           },
           {
             "from": "_ZN24Kb1BillboardModelFilePtrD1Ev",
-            "to": "func_02017ab4",
+            "to": "_Z13func_02017ab4i",
             "module": "arm9",
             "address": "0x02017ab4",
             "evidence": "retail destructor-registration destination and wrapper destructor relocation"
           },
           {
             "from": "__register_global_object",
-            "to": "func_020731dc",
+            "to": "__register_global_object",
             "module": "arm9",
             "address": "0x020731dc",
             "evidence": "compiler-generated static initialization call shape and retail destination"
@@ -1728,17 +1728,17 @@
           {
             "symbolIndex": 75,
             "from": "_ZN24Kb1BillboardModelFilePtrC1Ej",
-            "to": "func_02017acc"
+            "to": "_Z13func_02017accPvj"
           },
           {
             "symbolIndex": 77,
             "from": "_ZN24Kb1BillboardModelFilePtrD1Ev",
-            "to": "func_02017ab4"
+            "to": "_Z13func_02017ab4i"
           },
           {
             "symbolIndex": 76,
             "from": "__register_global_object",
-            "to": "func_020731dc"
+            "to": "__register_global_object"
           }
         ],
         "errors": null
@@ -1909,7 +1909,7 @@
             "size": "0x0000003c"
           },
           {
-            "symbol": "daObjKb1Billboard_c_classInit",
+            "symbol": "_Z29daObjKb1Billboard_c_classInitv",
             "section": ".text",
             "size": "0x00000038"
           }

@@ -52,7 +52,7 @@ struct EmmLogCollisionFilePtr : SharedFilePtr {
 
 extern daObjEmmLog_c_Resources data_ov052_021124d4;
 
-extern "C" daObjEmmLog_c *daObjEmmLog_c_classInit() {
+daObjEmmLog_c *daObjEmmLog_c_classInit() {
     return new daObjEmmLog_c();
 }
 

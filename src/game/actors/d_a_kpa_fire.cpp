@@ -60,6 +60,8 @@
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
+#include "Sound.h"
 
 /* The shadow update copies its matrix through Mtx43: the plain word union
  * keeps the block copy in C++ with Vector3's user-declared constructor in
@@ -107,26 +109,12 @@ enum {
 /* Sound id variant 0 plays through its mSoundHandle; named by use site, not decoded. */
 enum { SOUND_ID_MOUTH = 0x180 };
 
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
-
 extern "C" {
 /* This file's own helpers, defined further down. */
 extern Entry data_ov060_0211afb4[];
 extern PMF data_ov060_0211af74[];
 
-/* Fix12<int>-by-value and other mangled-name calls (see the banner). */
-extern u32 d_a_kpa_fireNewCleanParticleHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
-                                            const struct Vector3_16f *f);
-extern u32 d_a_kpa_fireNewHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void *f, void *g);
-void d_a_kpa_fireNewSimpleHold(u32 id, Fix12i x, Fix12i y, Fix12i z);
-extern void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
-
-extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
-extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern int RandomIntInternal(int* seed);
+extern int RandomIntInternal(int *seed);
 
 /* ov060 tables indexed by mSubVariant (02119358, 0211934c) and the mouth-pose
  * rows variant 0 reads (02119364); see the handlers below. */
@@ -136,8 +124,7 @@ extern u16 data_ov060_02119364[];
 }
 
 /* Historical alias BowserFire_Spawn. First in source because codegen is deferred. */
-extern "C" daKpaFire_c *daKpaFire_c_classInit(void)
-{
+daKpaFire_c *daKpaFire_c_classInit(void) {
     return new daKpaFire_c;
 }
 
@@ -160,7 +147,7 @@ int daKpaFire_c::InitResources()
         this, 0x32000, 0x32000, 0,
         0); /* radius and height 50 units; the two Vector3_16 * args are null */
 
-    /* Fix12: gravity -4.0 units per frame per frame, fall speed floor -30.0
+    /* fx32: gravity -4.0 units per frame per frame, fall speed floor -30.0
        units per frame. The variant's init (below) may overwrite both. */
     this->mVertAccel = -0x4000;
     this->mTerminalVelocity = -0x1e000;
@@ -171,7 +158,7 @@ int daKpaFire_c::InitResources()
     else
         this->mDropsShadow = 1;
     this->mLanded = 0;
-    this->mSubVariant = ((unsigned int)this->param1 >> 4) & 3;
+    this->mSubVariant = (this->param1 >> 4) & 3;
     /* flags bit 0 set = this cylinder is disabled (dCc_c::flags). */
     if (this->mVariant == VARIANT_MOUTH)
         this->mdCcAc_c.flags |= 1;
@@ -248,7 +235,7 @@ int daKpaFire_c::CleanupResources()
  * builds a translation matrix in the shared scratch matrix data_020a0e68 at
  * the fire's x, its mGroundY and its z (each >> 3), copies it into the
  * Matrix4x3 at 0x32c of the actor, and draws the dExtShadowModel_c at 0x304 with
- * radius mShadowRadiusMul * mFireScale, the second Fix12 argument (dActor_c.h
+ * radius mShadowRadiusMul * mFireScale, the second fx32 argument (dActor_c.h
  * calls it `depth`) 30 units (0x1e000), and the `opacity` argument 0xf (what
  * that value means is not decoded; every caller passes 0xf).
  * The Matrix4x3 at 0x32c remains the header's `mShadowMat` storage; copying it
@@ -356,8 +343,7 @@ void daKpaFire_c::func_ov060_0211747c() {
  *     and stops -- this branch returns whether or not the spawn worked;
  *   - otherwise it spawns a coin and zeroes the coin's three velocity words. */
 void daKpaFire_c::func_ov060_021172e0() {
-    Particle::System::NewSimple(kPtclFlameOutPuff, *(Fix12i *)&this->mPosX, *(Fix12i *)&this->mPosY,
-                                *(Fix12i *)&this->mPosZ);
+    Particle::System::NewSimple(kPtclFlameOutPuff, mPos.x, mPos.y, mPos.z);
     this->MarkForDestruction();
 
     if ((((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10) >= 2) {
@@ -509,7 +495,7 @@ void daKpaFire_c::func_ov060_02116f90() {
  * table values), mFireScale 2.0 (8192 = 0x2000), shadow multiplier 16. */
 void daKpaFire_c::func_ov060_02116f74() {
     this->mHorzSpeed = 30;
-    this->mFireScale = 8192;
+    this->mFireScale = 0x2000;
     this->mShadowRadiusMul = 16;
 }
 
@@ -551,7 +537,7 @@ void daKpaFire_c::func_ov060_02116d78() {
             dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(6, 0), mPos, 0, mAreaId, -1);
         MarkForDestruction();
     }
-    if (mFrameCount < 0x3c)
+    if (mFrameCount < 60)
         return;
     MarkForDestruction();
 }
@@ -764,7 +750,7 @@ void daKpaFire_c::func_ov060_02116740() {
 }
 
 /* Particle helper. Keeps two particles alive at the fire's position, y raised
- * by yOffset (Fix12): `kind` in mParticleHandle and `kind + 1` in
+ * by yOffset (fx32): `kind` in mParticleHandle and `kind + 1` in
  * mParticleHandle2 (each handle is passed back in, so a live particle is
  * presumably refreshed rather than duplicated). Kinds 0xa2 and 0xa4 start the
  * first one through the NewCleanParticle form of Particle::System::New; the rest use
@@ -858,10 +844,8 @@ daKpaFire_c::~daKpaFire_c() {}
 /* Behavior handler table (mVariant 0..7); one Entry{PMF} per slot. */
 extern "C" Entry data_ov060_0211afb4[8] = {
     {data_ov060_0211a794}, {data_ov060_0211a78c}, {data_ov060_0211a76c}, {data_ov060_0211a77c},
-    {data_ov060_0211a764}, {data_ov060_0211a774}, {data_ov060_0211a744}, {data_ov060_0211a784}
-};
+    {data_ov060_0211a764}, {data_ov060_0211a774}, {data_ov060_0211a744}, {data_ov060_0211a784}};
 /* InitResources handler table (mVariant 0..7); one PMF per slot. */
 extern "C" PMF data_ov060_0211af74[8] = {
     data_ov060_0211a75c, data_ov060_0211a754, data_ov060_0211a73c, data_ov060_0211a74c,
-    data_ov060_0211a734, data_ov060_0211a7ac, data_ov060_0211a7a4, data_ov060_0211a79c
-};
+    data_ov060_0211a734, data_ov060_0211a7ac, data_ov060_0211a7a4, data_ov060_0211a79c};

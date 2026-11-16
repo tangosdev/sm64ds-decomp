@@ -28,7 +28,7 @@
 
 extern "C" {
 
-extern const char data_0209a048[];  /* "rom" */
+extern const char data_0209a048[]; /* "rom" */
 
 void CARD_Init(void);
 

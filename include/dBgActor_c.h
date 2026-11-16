@@ -22,7 +22,6 @@ struct player_;
 #include "dBgW_KcMbg.h"
 
 struct dBgActor_c : dActor_c {
-    u8  pad_0d0[0x4];
     dExtSimpleModel_c mModel;       /* 0x0d4 */
     dBgW_KcMbg mMeshCollider;       /* 0x124 */
     /* Where the collider sits: mModel's matrix with the actor's position
@@ -60,22 +59,18 @@ struct dBgActor_c : dActor_c {
     void UpdateClsnPosAndRot();
     void UpdateModelPosAndRotY();
 
-    /* The two IsClsnInRange* symbols used to spell a by-value Fix12<int>, and
-       this header already recorded that "their bytes refuse it". Acted on
-       2026-10-23: both are real methods taking the scalar Fix12i, under
-       _ZN10dBgActor_c13IsClsnInRangeEii and
-       _ZN10dBgActor_c21IsClsnInRangeOnScreenEii, reproducing ov002
-       0x020ee870/0xc4 and 0x020ee934/0x11c. notes/mwccarm-codegen.md 6az.
+    /* Both take the scalar fx32 and reproduce ov002 0x020ee870/0xc4 and
+       0x020ee934/0x11c.
        Parameters (radius, yOffset) are unnamed on purpose: a named
        class-scope parameter consumes an @NNN number in every consumer. */
-    int IsClsnInRange(Fix12i, Fix12i);
-    int IsClsnInRangeOnScreen(Fix12i, Fix12i);
+    int IsClsnInRange(fx32, fx32);
+    int IsClsnInRangeOnScreen(fx32, fx32);
 
-    /* Takes the scalar Fix12i, under _ZN10dBgActor_c20UpdateKillByMegaCharEsssi.
+    /* Takes the scalar fx32, under _ZN10dBgActor_c20UpdateKillByMegaCharEsssi.
        The body at ov002 0x020ee674 only forwards the pivot height in a
        register, so the scalar reproduces it (2026-10-26), and callers can
        call it as a method. notes/mwccarm-codegen.md 6az. */
-    int UpdateKillByMegaChar(s16 a, s16 b, s16 c, Fix12i d);
+    int UpdateKillByMegaChar(s16 a, s16 b, s16 c, fx32 d);
 };
 
 #ifndef SM64DS_PLATFORM_PC

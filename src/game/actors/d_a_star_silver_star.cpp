@@ -9,6 +9,6 @@
  * `new` alone reproduces the body: the fBase_c::operator new(1220) call, the
  * dEnemyBase_c C2, the vptr store and the member constructors (dCcAcPos_c,
  * dBgCh_Actr, two dExtAnmModel_c, dExtShadowModel_c). */
-extern "C" daStar_c *daStar_c_classInit_SILVER_STAR() {
+daStar_c *daStar_c_classInit_SILVER_STAR() {
     return new daStar_c();
 }

@@ -177,7 +177,7 @@ void daObjFallBlock_c::Kill() {
     dustPos.z = pos.z;
     PoofDustAt(dustPos);
     Sound::PlayBank3(0x41, mCamSpacePos);
-    mStateTimer = 0x1e;
+    mStateTimer = 30;
     mPosX = mRestPos.x;
     mPosY = mRestPos.y;
     mPosZ = mRestPos.z;
@@ -199,9 +199,9 @@ void daObjFallBlock_c::OnHitByMegaChar(daPly_c &player) {
     if (mRespawnDelay != 0)
         return;
     Kill();
-    mRespawnDelay = 0xa;
+    mRespawnDelay = 10;
     mState = 3;
-    mStateTimer = 0x3c;
+    mStateTimer = 60;
 }
 
 /* Shared CleanupResources for the four leaves. Slot 0 is the model
@@ -301,9 +301,9 @@ s32 daObjFallBlock_c::Behavior() {
             st = &mState;
             *st = (u8)(*st + 1);
             Sound::PlayBank3(0x2d, mCamSpacePos);
-            mStateTimer = 0x5a;
+            mStateTimer = 90;
         } else {
-            sinv = FX_SinIdx(*(u16 *)&mBobPhase >> 4);
+            sinv = FX_SinIdx((u16)mBobPhase >> 4);
             /* (long long) is load-bearing: a plain int mul changes the code
                size. */
             mPosY = mRestPos.y + FX_MUL(sinv, 0x19000);

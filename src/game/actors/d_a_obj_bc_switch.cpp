@@ -127,10 +127,10 @@ extern BcSwitchModelFilePtr daObjBC_Switch_c_ModelFile;
 
 /* arm9 / ov002 C helpers with no shared header. */
 extern "C" {
-extern u8 IsAreaShowing(s32 idx);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern int func_ov002_020dd8b8(void *c);
 }
+extern u8 IsAreaShowing(s32 idx);
 
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the
  * ROM materialize 0/1 before testing it. */
@@ -149,7 +149,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
  * inline operator new; 0x020f15e0 calls dBgActor_c's C2 and the store at
  * 0x020f15ec lays down this class's vptr. The null check is the one `new`
  * itself emits. */
-extern "C" daObjBC_Switch_c *daObjBC_Switch_c_classInit(void) {
+daObjBC_Switch_c *daObjBC_Switch_c_classInit(void) {
     return new daObjBC_Switch_c();
 }
 
@@ -210,7 +210,7 @@ int daObjBC_Switch_c::InitResources() {
     bmd = dExtSimpleModel_c::LoadFile(daObjBC_Switch_c_ModelFile);
     mModel.SetFile((BMD_File *)bmd, 1, -1);
 
-    mEventBit = (int)param1 & 0xf;
+    mEventBit = (int)param1 & 15;
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
@@ -236,9 +236,10 @@ int daObjBC_Switch_c::InitResources() {
 
     if (val == 0xff || val == 0) {
         p = (unsigned short *)(c + 0x300);
-        p[0x15] = 0xfa;
+        p[0x15] = 250;
     } else {
-        *(unsigned short *)((intptr_t)(&mCoinTimerSeed)) = *(unsigned short *)((intptr_t)(&mCoinTimerSeed)) * 0xa;
+        *(unsigned short *)((intptr_t)(&mCoinTimerSeed)) =
+            *(unsigned short *)((intptr_t)(&mCoinTimerSeed)) * 10;
     }
     return 1;
 }
@@ -274,7 +275,7 @@ s32 daObjBC_Switch_c::Behavior() {
     if (mPressed == 1) {
         mAreaId = -1;
         if (IsAreaShowing((s8)mHomeAreaId) == 0)
-            Sound::ChangeMusicVolume(0x7f, 0x3f000);
+            Sound::ChangeMusicVolume(127, 0x3f000);
     }
     if (mPressed == 1) {
         if (mPosY > mStopPosY) {
@@ -290,17 +291,17 @@ s32 daObjBC_Switch_c::Behavior() {
         if (mCoinTimer != 0) {
             if (DecIfAbove0_Short(&mCoinTimer) == 0) {
                 mCoinTimer = 1;
-                if (Sound::ChangeMusicVolume(0x7f, 0x64cc) != 0)
+                if (Sound::ChangeMusicVolume(127, 0x64cc) != 0)
                     KillAndTrackInDeathTable();
             } else {
                 t = mCoinTimer;
-                if (t == 0x2d)
+                if (t == 45)
                     mTickSound = 0;
-                else if (t < 0x2d)
+                else if (t < 45)
                     mTickSound = func_02012310(mTickSound, 0x39, 0);
                 else
                     mTickSound = func_02012310(mTickSound, 0x38, 0);
-                Sound::ChangeMusicVolume(0x40, 0xc999);
+                Sound::ChangeMusicVolume(64, 0xc999);
                 if (dActor_c::FindWithActorID(0x122, 0) == 0)
                     mCoinTimer = 1;
             }

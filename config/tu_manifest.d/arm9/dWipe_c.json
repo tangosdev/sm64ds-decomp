@@ -70,7 +70,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "Wipe_Reset",
+      "symbol": "_Z10Wipe_Resetv",
       "address": "0x0202ed48",
       "size": "0x00000034",
       "legacy_source": "src/func_0202ed48.c",
@@ -119,14 +119,14 @@
       "ordinal": 10
     },
     {
-      "symbol": "Wipe_HBlankHandler",
+      "symbol": "_Z18Wipe_HBlankHandlerv",
       "address": "0x0202f2c4",
       "size": "0x000000e0",
       "legacy_source": "src/func_0202f2c4.c",
       "ordinal": 11
     },
     {
-      "symbol": "Wipe_LatchTable",
+      "symbol": "_Z15Wipe_LatchTablev",
       "address": "0x0202f3a4",
       "size": "0x00000084",
       "legacy_source": "src/func_0202f3a4.c",

@@ -38,8 +38,6 @@
  * file runs in ROM order, destructor first.
  *
  * deslop leftovers:
- * - dBgW_KcMbg::SetFile keeps its mangled TU-local spelling: its signature
- *   carries Fix12<int> by value (wall 6az), so the method form size-DIFFs.
  * - The ROM re-reads the loaded KCL from filePtr rather than keeping
  *   dBgW_Kc::LoadFile's return.
  * - The dispatch table is a pointer-to-member of daTrsTrap_c itself. An
@@ -63,8 +61,9 @@
  *   (re-keyed in config/tu_manifest.d/ov063/daTrsTrap_c.json).
  * - Behavior names mStateTimer directly at both sites (TRAP-2709
  *   experiment: unified spelling matches).
- * - +0x418 on the spawned BOOK_SWITCH is daBookGen_c's, which has no header;
- *   +0x154 here has no recovered reader. S14: no g_profile_* rows live here.
+ * - The trap stores its uniqueID in the spawned BOOK_SWITCH's
+ *   daBook_c::mLinkedActorID. +0x154 here has no recovered reader. No
+ *   g_profile_* rows live here.
  */
 
 /* common.h first, so this TU reads the flat Matrix4x3 words: the two matrix
@@ -88,15 +87,7 @@ enum d_a_trs_trap_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "Sound.h"
-
-/* daBook_c::mLinkedActorID (daBook_c.h, 0x418): the BOOK_SWITCH (0xd5)
-   looks its trap up by this ID (daBook_c's FindWithID calls). Seen through
-   a local view: including daBook_c.h renumbers this TU's @NNN labels. */
-struct BookSwitchView {
-    u8 head[0x418];
-    u32 mLinkedActorID;
-};
-typedef char BookSwitchView_size_must_be_0x41c[sizeof(BookSwitchView) == 0x41c ? 1 : -1];
+#include "daBook_c.h"
 
 #pragma defer_codegen off
 
@@ -132,8 +123,6 @@ struct TrsTrapCollisionFilePtr : SharedFilePtr {
  * ------------------------------------------------------------------------ */
 extern "C" {
 /* dBgW callback-word stores (see above). */
-/* dBgW_KcMbg::SetFile, mangled (wall 6az, see above). Spelled exactly as the
-   free definition declares it; only the TU-local linkage differs. */
 extern void hold_d_a_trs_trap(void *self, void *f, const Matrix4x3 *m, int fx, short s, void *b);
 
 extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
@@ -147,8 +136,8 @@ void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-u8 IsAreaShowing(int idx);
 }
+u8 IsAreaShowing(int idx);
 
 /* InitResources tests the profile's actor id as a 0/1 value. */
 static inline int IsActorType(u16 actorType, int id) {
@@ -201,7 +190,7 @@ void daTrsTrap_c::UpdateMerryGoRound() {
     }
     mAngVelY = 0x80;
     t = &mAngleY;
-    *t = (short)(*t + mAngVelY);
+    *t = (*t + mAngVelY);
     UpdateOccupiedFlag();
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8f, mCamSpacePos, 0);
 }
@@ -279,7 +268,7 @@ void daTrsTrap_c::UpdateBookshelf() {
         mPosX += 0x5000;
         mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8d, mCamSpacePos, 0);
         Sound::PlaySecretSound(this, &mSoundTimer);
-        if (mStateTimer > 0x65)
+        if (mStateTimer > 101)
             mState = 3;
         return;
     case 3:
@@ -292,7 +281,7 @@ void daTrsTrap_c::UpdateBookshelf() {
 
 /* Book-switch callback: ORs switch bit m into mBookFlags, then the right or
    wrong chime -- the order is 1, then 1|2, then all three. */
-extern "C" void func_ov063_0211cae8(daTrsTrap_c *c, int m) {
+void func_ov063_0211cae8(daTrsTrap_c *c, int m) {
     unsigned char *p = &c->mBookFlags;
     *p |= m;
     unsigned char v = c->mBookFlags & 7;
@@ -313,7 +302,7 @@ void daTrsTrap_c::UpdateTiltingTrap() {
     } else {
         int a = mAngleX;
         if (a < 0) a = -a;
-        if (a < 0xbb8 || mStateTimer > 0xf) {
+        if (a < 0xbb8 || mStateTimer > 15) {
             int v;
             mAngVelX = 0;
             v = mAngleX;
@@ -443,7 +432,6 @@ int daTrsTrap_c::Behavior()
  *     swaps the two strh at +0x2a0/+0x2a4. */
 int daTrsTrap_c::InitResources()
 {
-    char *c = (char *)this;
     u16 actorType;
     s32 param;
     s32 dx;
@@ -491,7 +479,7 @@ int daTrsTrap_c::InitResources()
     mStandingActor = 0;
     mInitLatch = 0;
     mOccupiedFlag = 0;
-    *(u8 *)(c + 0x154) = 0;
+    mUnk154 = 0;
     mTriggered = 0;
     mSoundHandle = 0;
     mSoundTimer = 0;
@@ -506,10 +494,10 @@ int daTrsTrap_c::InitResources()
         int m = mIndex;
         if (m == 3) {
             mMovingMeshCollider.SetFile((KCL_File *)(data_ov063_0211e28c[m]->filePtr), mClsnMat,
-                                        0x1000, mAngleY, *(CLPS_Block *)(data_ov063_0211e9e8[m]));
+                                        0x1000, mAngleY, *(data_ov063_0211e9e8[m]));
         } else {
             mMovingMeshCollider.SetFile((KCL_File *)(data_ov063_0211e28c[m]->filePtr), mClsnMat,
-                                        0x199, mAngleY, *(CLPS_Block *)(data_ov063_0211e9e8[m]));
+                                        0x199, mAngleY, *(data_ov063_0211e9e8[m]));
         }
     }
 
@@ -536,7 +524,7 @@ int daTrsTrap_c::InitResources()
             base.y = mHomePosY + data_ov063_0211e9f8[odd];
             base.z = mHomePosZ - 0xb4000;
             sp = dActor_c::Spawn(actorId, j, base, &v16, mAreaId, neg1);
-            ((BookSwitchView *)sp)->mLinkedActorID = uniqueID;
+            ((daBook_c *)sp)->mLinkedActorID = uniqueID;
             even += 2; odd += 2;
         }
         mSavedAreaId = mAreaId;

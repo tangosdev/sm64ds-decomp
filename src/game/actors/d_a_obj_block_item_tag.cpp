@@ -44,9 +44,7 @@ typedef void (daObjBlockItemTag_c::*ItemTagAction)();
 extern ItemTagAction data_ov002_0210dd30[];
 
 /* arm9 / ov002 C helpers with no shared header. */
-extern "C" {
 extern void LoadSilverStarAndNumber();
-}
 
 /* Actor IDs 0xf, 0x10 and 0x11 are three of the daObjBlockL_c brick
  * blocks a tag can attach to. This int-returning predicate is what makes
@@ -80,7 +78,7 @@ void daObjBlockItemTag_c::SpawnKoopaShell() {
     GetSpawnPos(spawnPos, *this);
     dActor_c *shell = Spawn(0x11d, 0, spawnPos, 0, mAreaId, -1);
     if (shell)
-        ((daShl_c *)shell)->mDespawnTimer = 0xb4;
+        ((daShl_c *)shell)->mDespawnTimer = 180;
 }
 
 void daObjBlockItemTag_c::SpawnMegaMushroom() {
@@ -196,19 +194,19 @@ int daObjBlockItemTag_c::InitResources() {
  * preserved. Historical aliases: SilverStarBlockTag_Spawn,
  * GreenShellBlockTag_Spawn, MegaMushroomBlockTag_Spawn,
  * OneUpMushroomBlockTag_Spawn. */
-extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SLVSTAR_TAG() {
+daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SLVSTAR_TAG() {
     return new daObjBlockItemTag_c();
 }
 
-extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAG() {
+daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAG() {
     return new daObjBlockItemTag_c();
 }
 
-extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SKINOKO_TAG() {
+daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SKINOKO_TAG() {
     return new daObjBlockItemTag_c();
 }
 
-extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_OKINOKO_TAG() {
+daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_OKINOKO_TAG() {
     return new daObjBlockItemTag_c();
 }
 

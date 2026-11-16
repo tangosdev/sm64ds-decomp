@@ -21,8 +21,7 @@ extern unsigned char data_0209d660;
 extern short data_0209d6d4;
 
 extern "C" void LoadFont(unsigned char arg);
-extern "C" void LoadFont(unsigned char arg)
-{
+extern "C" void LoadFont(unsigned char arg) {
     void *file;
     void *r4;
     data_0209d698 = arg;

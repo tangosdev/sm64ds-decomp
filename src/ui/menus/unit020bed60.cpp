@@ -29,7 +29,6 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
  */
 #include "common.h"
 #include "nitro/fx/fx.h"
@@ -45,8 +44,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 #include "Ov007MenuMem.h"
-
-extern "C" {
 
 /* data_ov007_02104bd4: the 0x30-byte record func_ov007_020bf428 allocates
  * and fills; medium-confidence name. The slot names follow their builders. */
@@ -67,34 +64,34 @@ extern Ov007MeshWaveParams data_ov007_020d7c9c;
 extern Ov007SwingParams data_ov007_020d7cc8;
 extern Ov007MeshMaterial data_ov007_020d7cf8[2];
 
-extern Ov007MenuState *func_ov007_020b2cdc(void);
+extern "C" Ov007MenuState *func_ov007_020b2cdc(void);
 extern Ov007Sprite *NumberSprite_Create(int index);
-extern void func_ov007_020bce70(short n, int frames);
-extern void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, void *out);
+extern "C" void func_ov007_020bce70(short n, int frames);
+extern "C" void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, Vector3 *out);
 extern int func_ov007_020c1da0(int i);
-extern int func_ov007_020c30ac(Vector3 *arr, int count, void *target, int arg4, int *out);
-extern unsigned short func_ov007_020c3be0(int t, int a, int b);
+extern int func_ov007_020c30ac(Vector3 *arr, int count, Vector3 *target, int arg4, int *out);
+extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern void func_ov007_020c9a84(Ov007Swing *swing, Vector3 *offset, u16 *rotX, u16 *rotY);
 extern void func_ov007_020c9c24(Ov007Swing *swing, int shift);
 extern void func_ov007_020c9d90(Ov007Swing *swing, Ov007Mesh *mesh);
-extern void func_ov007_020c9f10(Ov007Swing *swing, void *pos, int w, int h);
+extern void func_ov007_020c9f10(Ov007Swing *swing, Vector3 *pos, int w, int h);
 extern void func_ov007_020c9fa0(Ov007Swing *swing);
 extern Ov007Swing *func_ov007_020ca010(Ov007SwingParams *params);
 extern void func_ov007_020ca1d4(Ov007MeshWave *wave, Ov007Mesh *mesh);
 extern void func_ov007_020ca26c(Ov007MeshWave *wave);
 extern Ov007MeshWave *func_ov007_020ca2a8(Ov007MeshWaveParams *params);
-extern void func_ov007_020ca578(Ov007Mesh *mesh, int i, int j, int t);
-extern void func_ov007_020ca5f0(Ov007Mesh *mesh, Ov007MeshMaterial *mat, int *pos, int scaleZ,
-                                int smooth);
-extern void func_ov007_020cb3dc(Ov007Mesh *mesh);
-extern void func_ov007_020cba78(Ov007Mesh *mesh, int shift);
+extern "C" void func_ov007_020ca578(Ov007Mesh *mesh, int i, int j, int t);
+extern "C" void func_ov007_020ca5f0(Ov007Mesh *mesh, Ov007MeshMaterial *mat, int *pos, int scaleZ,
+                                    int smooth);
+extern "C" void func_ov007_020cb3dc(Ov007Mesh *mesh);
+extern "C" void func_ov007_020cba78(Ov007Mesh *mesh, int shift);
 extern void func_ov007_020cbb04(Ov007Mesh *mesh);
 extern Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams *params);
-extern Ov007MeshMaterial *func_ov007_020cbf8c(Ov007MeshMaterial *src);
+extern "C" Ov007MeshMaterial *func_ov007_020cbf8c(Ov007MeshMaterial *src);
 
 /* Defined below, after their callers (ROM order). */
 void func_ov007_020bed60(int arg0, int arg1, int arg2);
-void func_ov007_020beeb0(void);
+extern "C" void func_ov007_020beeb0(void);
 
 #define SCENE data_ov007_02104bd4
 
@@ -150,7 +147,7 @@ void func_ov007_020bf57c(Ov007Camera *camera, int idx) {
     buf.view.depth = -camera->distance;
     func_ov007_020c43bc((Ov007Sprite *)&buf, camera);
     func_ov007_020c4388((Ov007Sprite *)&buf, camera);
-    func_ov007_020c9f10(swing, &buf.view.pos, buf.view.worldWidth, buf.view.worldHeight);
+    func_ov007_020c9f10(swing, (Vector3 *)&buf.view.pos, buf.view.worldWidth, buf.view.worldHeight);
     func_ov007_020c9d90(swing, SCENE->mesh);
 }
 
@@ -158,7 +155,7 @@ void func_ov007_020bf57c(Ov007Camera *camera, int idx) {
  * (each given one of the menu's textures), the wave and the eight swings
  * (each bound to its item), then the manager's three number sprites, and
  * runs the frame 0x14 times to settle the mesh. */
-void func_ov007_020bf428(void) {
+extern "C" void func_ov007_020bf428(void) {
     int i;
     Ov007MeshMaterial *w;
     u8 *bp;
@@ -168,7 +165,7 @@ void func_ov007_020bf428(void) {
         return;
 
     SCENE = (Ov007MeshScene *)func_ov007_020c3df4(0, sizeof(Ov007MeshScene));
-    SCENE->mesh = func_ov007_020cbbb0(0xf, 0xe, 0x6000, &data_ov007_020d7cb0);
+    SCENE->mesh = func_ov007_020cbbb0(15, 14, 0x6000, &data_ov007_020d7cb0);
 
     w = data_ov007_020d7cf8;
     bp = data_ov007_020d7c98;
@@ -191,14 +188,14 @@ void func_ov007_020bf428(void) {
         WORK->numberSprites[i] = NumberSprite_Create(i);
     }
 
-    for (i = 0; i < 0x14; i++) {
+    for (i = 0; i < 20; i++) {
         func_ov007_020beeb0();
     }
 }
 
 /* Tears down the mesh scene: frees the mesh, the wave, both materials and
  * the eight swings, then the manager's number sprites and the scene itself. */
-void func_ov007_020bf304(void) {
+extern "C" void func_ov007_020bf304(void) {
     int i;
     Ov007MeshScene *g;
 
@@ -271,7 +268,7 @@ void func_ov007_020beeb0(void) {
             int t = FX_MUL(strength, speed);
             if (t >= 0x1000)
                 t = 0x1000;
-            strength = (int)(((s64)t * t) >> 12);
+            strength = (((s64)t * t) >> 12);
         }
         func_ov007_020bed60(WORK->touch->cur.x, WORK->touch->cur.y, strength);
     } else {
@@ -316,7 +313,7 @@ void func_ov007_020beeb0(void) {
     case 11:
     case 12:
         palette = 4;
-        fadeFrames = 0x1e;
+        fadeFrames = 30;
         diffuseTarget = 0x7fff;
         ambientTarget = 0x4800;
         break;
@@ -326,20 +323,20 @@ void func_ov007_020beeb0(void) {
     case 5:
     case 6:
         palette = 5;
-        fadeFrames = 0x3c;
+        fadeFrames = 60;
         diffuseTarget = 0x575c;
         ambientTarget = 0x178;
         break;
     case 7:
     case 8:
         palette = 6;
-        fadeFrames = 0x3c;
+        fadeFrames = 60;
         diffuseTarget = 0x631a;
         ambientTarget = 0x7fbf;
         break;
     case 9:
     case 10:
-        fadeFrames = 0x3c;
+        fadeFrames = 60;
         diffuseTarget = 0x7fff;
         ambientTarget = 0x49e0;
         palette = 7;
@@ -403,6 +400,5 @@ void func_ov007_020bed60(int arg0, int arg1, int arg2) {
         int d = FX_DivS32(res, mesh->grid->columns);
         func_ov007_020ca578(mesh, m, d, arg2);
     }
-    SCENE->wave->delay = 0x78;
-}
+    SCENE->wave->delay = 120;
 }

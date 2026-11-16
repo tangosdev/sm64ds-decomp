@@ -91,7 +91,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "daObjCtMecha11_c_classInit",
+      "symbol": "_Z26daObjCtMecha11_c_classInitv",
       "address": "0x02111b98",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_ct_mecha11.c",
@@ -464,28 +464,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN19Mecha11ModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's PC24 relocation"
     },
     {
       "symbol": "_ZN19Mecha11ModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor's ABS32 relocation"
     },
     {
       "symbol": "_ZN18Mecha11ClsnFilePtrC1Ej",
-      "canonical_symbol": "func_02017b4c",
+      "canonical_symbol": "_Z13func_02017b4cPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the collision wrapper constructor's PC24 relocation"
     },
     {
       "symbol": "_ZN18Mecha11ClsnFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
@@ -519,14 +519,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@562",
+      "from": "@560",
       "to": "@533",
-      "evidence": "mwcc numbers this node @528 per TU and the fleet already defines a global @528 in ov080, so the merged link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @586 to @549 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @549 to @559 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @559 to @562 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "mwcc numbers this node @528 per TU and the fleet already defines a global @528 in ov080, so the merged link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @586 to @549 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @549 to @559 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @559 to @562 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @562 to @560 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
     },
     {
-      "from": "@563",
+      "from": "@561",
       "to": "@535",
-      "evidence": "mwcc numbers this node @529 per TU and the fleet already defines a global @529 in ov080, so the merged link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @587 to @550 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @550 to @560 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @560 to @563 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "mwcc numbers this node @529 per TU and the fleet already defines a global @529 in ov080, so the merged link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @587 to @550 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @550 to @560 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @560 to @563 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @563 to @561 when the local fx_trig.h and CalcLib.h declaration copies gave way to the headers (measured from the compiled object)."
     }
   ],
   "relocations": [
@@ -535,7 +535,7 @@
       "source": "0x02111fd0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -555,7 +555,7 @@
       "source": "0x02111fec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -585,7 +585,7 @@
       "source": "0x02112010",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -615,7 +615,7 @@
       "source": "0x02112020",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"

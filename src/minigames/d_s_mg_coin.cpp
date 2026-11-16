@@ -81,8 +81,8 @@ enum {
     kSparkleDrag = 0x180,
     kSparkleCap = 0x300,
     kCaptionHold = 0x3c,
-    kCountInDelay = 0xb4,
-    kStartDelay = 0x28,
+    kCountInDelay = 180,
+    kStartDelay = 40,
     kChimeAt = 0x18,
     kBagRestX = 0x8e000,
     kBagRestY = -0x43000,
@@ -124,7 +124,6 @@ extern void *sCoinValuesSprites[];
 extern void *sCoinSparkleSprites[];
 extern void *sCoinBagSprites[];
 extern void Mg_RenderSpriteBothPalMtx(void *obj, int x, int y, int w, int *vec);
-extern void func_020127a4(int a, int b, int c, int d);
 extern const int sCoinRowY[];
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 extern void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
@@ -149,6 +148,7 @@ extern u8 gSubScreenLayers;
 extern int data_0208ee44;
 extern void func_0203b9b4(int *p, int v);
 }
+extern void func_020127a4(int a, int b, int c, int d);
 
 /* The per-state handler tables: {pmf, delta} records indexed by the
    record's own state byte. Static initialisation fills each one from the
@@ -468,7 +468,7 @@ void dScMgCoin_c::Caption_Reset() {
 void dScMgCoin_c::DrawResultPrompt() {
     if (mPhase != kResultPhase)
         return;
-    if (mCountdown > 0x80)
+    if (mCountdown > 128)
         return;
     if (mCountdown == 0)
         return;
@@ -505,7 +505,7 @@ void dScMgCoin_c::Popup_Spawn(int index) {
     mPopups[index].y = mCoins[index].y;
     mPopups[index].value = mCoins[index].value;
     mPopups[index].live = 1;
-    mPopups[index].timer = 0x18;
+    mPopups[index].timer = 24;
 }
 
 void dScMgCoin_c::Sparkle_DrawAll() {
@@ -578,10 +578,10 @@ void dScMgCoin_c::DrawScorePlayer() {
         return;
 
     lang = GetGameLanguage();
-    RenderOamMainScreen(sCoinScorePlayerSprites[lang][8], 0x80, 0x18, -1, -1);
+    RenderOamMainScreen(sCoinScorePlayerSprites[lang][8], 128, 24, -1, -1);
     Mg_DrawCreditsIcon(0x68, 0x28, 1, -1);
     lang = GetGameLanguage();
-    DrawOamSprite(sCoinScorePlayerSprites[lang][1], 0x7a, 0x28, 0);
+    DrawOamSprite(sCoinScorePlayerSprites[lang][1], 122, 40, 0);
     Mg_DrawBigNumber(0x8c, 0x28, mPlayerScore, 1, -1, 2, 0);
 }
 
@@ -592,10 +592,10 @@ void dScMgCoin_c::DrawScoreRival() {
         return;
 
     lang = GetGameLanguage();
-    RenderOamMainScreen(sCoinScorePlayerSprites[lang][4], 0x80, 0x50, -1, -1);
+    RenderOamMainScreen(sCoinScorePlayerSprites[lang][4], 128, 80, -1, -1);
     Mg_DrawCreditsIcon(0x6c, 0x60, 1, -1);
     lang = GetGameLanguage();
-    DrawOamSprite(sCoinScorePlayerSprites[lang][1], 0x7e, 0x60, 0);
+    DrawOamSprite(sCoinScorePlayerSprites[lang][1], 126, 96, 0);
     if (gMgScene != 0)
         count = gMgScene->mCreditsShown;
     else
@@ -699,7 +699,7 @@ void dScMgCoin_c::Coin_StateWaitTouch(int idx) {
     Sparkle_Burst(idx);
     mCoins[idx].visible = 0;
     mPhase = 3;
-    mCountdown = 0x40;
+    mCountdown = 64;
 
     pan = ((mCoins[idx].x >> 12) - 0x80) >> 1;
     if (pan >= 0x3c)
@@ -719,7 +719,7 @@ void dScMgCoin_c::Coin_StateWaitTouch(int idx) {
 /* Runs each coin's state handler from sCoinCoinStateTable. */
 void dScMgCoin_c::Coin_UpdateAll() {
     int i;
-    for (i = 0; i < 0x18; i++) {
+    for (i = 0; i < COIN_NUM; i++) {
         unsigned char k = this->mCoins[i].state;
         (this->*sCoinCoinStateTable[k].pmf)(i);
     }
@@ -745,7 +745,7 @@ void dScMgCoin_c::LayOutCoins() {
 
     row = 0;
     col = 0;
-    for (i = 0; i < 0x18; i++) {
+    for (i = 0; i < COIN_NUM; i++) {
         mCoins[i].x = (((col << 5) + 0x10) << 12);
         mCoins[i].y = sCoinRowY[row] << 12;
         col++;
@@ -769,7 +769,7 @@ void dScMgCoin_c::LayOutCoins() {
    up from under the coin (state 5) and plays the panned hop sound. */
 void dScMgCoin_c::KickBlockUnderCoin(int id) {
     int i;
-    for (i = 0; i < 0x28; i++) {
+    for (i = 0; i < BLOCK_NUM; i++) {
         if (mBlocks[i].active != 0 && mBlocks[i].state == 4 && id == mBlocks[i].coin) {
             mBlocks[i].y = mCoins[id].y - 0x20000;
             mBlocks[i].visible = 1;
@@ -792,7 +792,7 @@ void dScMgCoin_c::DrawBlocks() {
     int i;
     if (mPhase == 5 && mCountdown == 0)
         return;
-    for (i = 0; i < 0x28; i++) {
+    for (i = 0; i < BLOCK_NUM; i++) {
         if (mBlocks[i].visible == 0)
             continue;
         {
@@ -1015,7 +1015,7 @@ void dScMgCoin_c::Block_ClampToWalls(int idx) {
 void dScMgCoin_c::Block_UpdateAll() {
     int n = 0;
     int i;
-    for (i = 0; i < 0x28; i++) {
+    for (i = 0; i < BLOCK_NUM; i++) {
         if (mBlocks[i].active != 0) {
             (this->*sCoinBlockStateTable[mBlocks[i].state].pmf)(i);
             if (mBlocks[i].state != 4)
@@ -1066,7 +1066,7 @@ void dScMgCoin_c::SpawnBlocks() {
    the caption and the moneybag. */
 void dScMgCoin_c::ResetRound() {
     int i, j, k, l;
-    for (i = 0; i < 0x28; i++) {
+    for (i = 0; i < BLOCK_NUM; i++) {
         mBlocks[i].x = 0;
         mBlocks[i].y = 0;
         mBlocks[i].vx = 0;
@@ -1083,7 +1083,7 @@ void dScMgCoin_c::ResetRound() {
         mBlocks[i].coin = 0;
     }
 
-    for (j = 0; j < 0x18; j++) {
+    for (j = 0; j < COIN_NUM; j++) {
         mCoins[j].x = 0;
         mCoins[j].y = 0;
         mCoins[j].state = 0;
@@ -1094,18 +1094,18 @@ void dScMgCoin_c::ResetRound() {
         mCoins[j].collected = 0;
     }
 
-    *(u32 *)&pad_4d00[0] = 0;
-    *(u32 *)&pad_4d00[4] = 0;
+    pad_4d00 = 0;
+    pad_4d04 = 0;
     mScore.total = 0;
     mScore.shown = 0;
     mScore.tick = 0;
     mScore.running = 0;
-    for (k = 0; k < 0x20; k++) {
+    for (k = 0; k < 32; k++) {
         mSparkles[k].active = 0;
         mSparkles[k].visible = 0;
     }
 
-    for (l = 0; l < 0x18; l++) {
+    for (l = 0; l < POPUP_NUM; l++) {
         mPopups[l].live = 0;
         mPopups[l].flag = 0;
     }
@@ -1114,7 +1114,7 @@ void dScMgCoin_c::ResetRound() {
     mCountdown = 0;
     mWonLast = 0;
     pad_51dd = 0;
-    *(u32 *)pad_51d0 = 0;
+    pad_51d0 = 0;
     mCaptionLatch = 0;
     Caption_Reset();
     Bag_Hide();
@@ -1132,11 +1132,11 @@ void dScMgCoin_c::Phase_StateResult() {
     int touched = 0;
     if (gTouchHeld[slot * 4] != 0 && gTouchEdge[slot * 4] != 0)
         touched = 1;
-    if (touched != 0 && mCountdown <= 0x80) {
+    if (touched != 0 && mCountdown <= 128) {
         mCountdown = 0;
         Sound::PlayBank2_2D(0x62);
     } else {
-        mCountdown = 0x80;
+        mCountdown = 128;
     }
     if (mCountdown > 0)
         return;
@@ -1162,7 +1162,7 @@ void dScMgCoin_c::Phase_StateScoreDelay() {
         mCaptionLatch = 0;
         Caption_Trigger();
     }
-    mCountdown = 0xc0;
+    mCountdown = 192;
     mPhase = 5;
 }
 
@@ -1176,7 +1176,7 @@ void dScMgCoin_c::Phase_StateSettle() {
     dScMgBase_c *g;
 
     count = 0;
-    for (i = 0; i < 0x28; i++) {
+    for (i = 0; i < BLOCK_NUM; i++) {
         if (mBlocks[i].active) {
             int idx = mBlocks[i].state;
             (this->*sCoinBlockStateTable[idx].pmf)(i);
@@ -1186,7 +1186,7 @@ void dScMgCoin_c::Phase_StateSettle() {
                 this->Block_Animate(i);
         }
     }
-    for (j = 0; j < 0x18; j++) {
+    for (j = 0; j < COIN_NUM; j++) {
         if (mCoins[j].state == 1 && mCoins[j].placed != 0)
             count++;
     }
@@ -1197,9 +1197,9 @@ void dScMgCoin_c::Phase_StateSettle() {
 
     if (mCountdown != 0) {
         mCountdown -= 1;
-        if (mCountdown == 0x20 && mClearedAll == 0)
+        if (mCountdown == 32 && mClearedAll == 0)
             this->Caption_Finish();
-        if (mCountdown == 0x20 && mClearedAll != 0) {
+        if (mCountdown == 32 && mClearedAll != 0) {
             Mg_ShowBanner(6, 0x80, -0x80, -1, -1, 0xd);
             Mg_PlayJingle(0);
         }
@@ -1209,7 +1209,7 @@ void dScMgCoin_c::Phase_StateSettle() {
     }
     g = gMgScene;
     Mg_SubmitScore(g != 0 ? g->mCredits : 0);
-    mCountdown = 0x70;
+    mCountdown = 112;
     mPhase = 4;
 }
 
@@ -1218,7 +1218,7 @@ void dScMgCoin_c::Phase_StateSettle() {
    win flag is set from the other score. */
 void dScMgCoin_c::Phase_StatePlay() {
     int i;
-    for (i = 0; i < 0x28; i++) {
+    for (i = 0; i < BLOCK_NUM; i++) {
         if (mBlocks[i].active != 0) {
             (this->*sCoinBlockStateTable[mBlocks[i].state].pmf)(i);
             this->Block_Animate(i);
@@ -1232,7 +1232,7 @@ void dScMgCoin_c::Phase_StatePlay() {
     {
         int found = 0;
         int j;
-        for (j = 0; j < 0x18; j++) {
+        for (j = 0; j < COIN_NUM; j++) {
             if (mCoins[j].value != 0) {
                 if (mCoins[j].collected == 0) {
                     found++;
@@ -1245,7 +1245,7 @@ void dScMgCoin_c::Phase_StatePlay() {
         }
     }
     mPhase = 3;
-    mCountdown = 0x40;
+    mCountdown = 64;
     mClearedAll = 1;
     {
         int t;
@@ -1356,7 +1356,7 @@ int dScMgCoin_c::InitResources() {
                           GX_BG_CHARBASE_0x10000);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCG_BIN);
-    DecompressLZ16(d, (void *)((char *)G2S_GetBG3CharPtr() + 0x4000));
+    DecompressLZ16(d, ((char *)G2S_GetBG3CharPtr() + 0x4000));
     Deallocate(d);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCL_BIN);
@@ -1397,7 +1397,7 @@ inline dScMgCoin_c::dScMgCoin_c() {
  * allocation size, vtable identity, and the MG_COIN registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgCoincentration_Spawn. */
-extern "C" void *dScMgCoin_c_classInit() {
+void *dScMgCoin_c_classInit() {
     return new dScMgCoin_c;
 }
 

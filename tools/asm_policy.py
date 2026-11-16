@@ -208,7 +208,8 @@ def counts_as_matched(text):
          original C to recover and no match to chase. Counts as done under the
          asm-primitive policy" -- and were then not counted, because the counting
          tools only read the word NONMATCHING. Those twenty are byte-verified
-         against the ROM under the pinned 2004/b56 compiler (audit/unmatched_census.md).
+         against the ROM under the pinned 2004/b56 compiler (the 2026-09-09 census,
+         retired; in git history).
          The hand-asm exception additionally refuses any file carrying a raw dcd
          word. Clause 1 cannot catch that case on its own -- ``classify`` treats
          ANY banner as exculpatory and returns None -- so without this the new rule

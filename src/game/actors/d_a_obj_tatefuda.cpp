@@ -42,8 +42,6 @@
  *   data_0209d660, data_0209d6bc and gShowTouchScreenArrows, the daPly_c::Hurt
  *   arguments after the first two, and what the player-side calls
  *   func_ov002_020bec84 and daPly_c::func_ov002_020bec9c test and start.
- * - The daPly_c helpers stay mangled scalar externs (Fix12<int>-by-value
- *   member form is the 6az wall).
  * - SignPost_ClsnFile / SignPost_ModelFile keep their coined BSS names
  *   (historical, like the Spawn aliases).
  * - The message/volume tables and g_profile_TATEFUDA are not this TU's data.
@@ -133,7 +131,6 @@ extern char *func_ov002_020e496c(daPly_c *p);
 extern void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 extern short data_ov002_020ff0d0[];
 extern Vector3 data_ov002_020ff0d4[];
-extern void func_02012694(unsigned int a, void *b);
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern u8 data_0209d660;
@@ -143,16 +140,11 @@ extern s32 Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern int func_ov002_020bec84(void *player, unsigned int i);
 extern unsigned int gNextActorUpdateMask;
 extern u8 DecIfAbove0_Byte(u8 *p);
-extern void *d_a_obj_tatefudaNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
-extern u32 d_a_obj_tatefudaNewCleanParticleHold(u32 a, u32 b, int c, int d, int e,
-                                                const Vector3_16f *v);
 extern void hold_d_a_obj_tatefuda(void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh,
                                   CLPS_Block &b);
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *a, s32 radius, s32 height, Vector3_16 *v,
-                         Vector3_16 *v2);
 extern CLPS_Block data_ov002_0210d714;
 }
+extern void func_02012694(unsigned int a, const Vector3 *b);
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 28 -- daObjTatefuda_c_classInit, 0x020bc3c8, size 0x4c */
@@ -167,8 +159,7 @@ extern CLPS_Block data_ov002_0210d714;
  * hand: fBase_c::operator new(0x5a4), dBgActor_c's base constructor, the
  * vptr store, then the dCcAc_c, dExtShadowModel_c and dBgCh_Actr member
  * constructors in declaration order. */
-extern "C" daObjTatefuda_c *daObjTatefuda_c_classInit(void)
-{
+daObjTatefuda_c *daObjTatefuda_c_classInit(void) {
     return new daObjTatefuda_c;
 }
 
@@ -187,16 +178,7 @@ extern "C" daObjTatefuda_c *daObjTatefuda_c_classInit(void)
                            (_ZN11dExtModel_c7SetFileEP8BMD_Fileii) -- only the
                            return type differed, and that is not mangled.
      dBgActor_c           -> the two calls are unqualified members now.
-     dBgW_KcMbg -> its real SetFile takes Fix12<int> BY VALUE, so it
-                           cannot be declared as a callable method here without
-                           changing how the caller passes the argument
-                           (notes/mwccarm-codegen.md 6az). It keeps a scalar
-                           extern "C" declaration under its exact ROM symbol,
-                           which also FIXES A PHANTOM: the shadow spelled `int`
-                           and so emitted a `bl` to
-                           ..._Matrix4x3isR10CLPS_Block, which exists nowhere.
-                           match.py compares relocated words as wildcards, so
-                           nothing caught it. */
+     dBgW_KcMbg           -> mMeshCollider.SetFile, its real method. */
 /* dBgCh_Actr is the real class now, through this actor's header, and it
    declares StartDetectingWater itself. */
 int daObjTatefuda_c::InitResources()
@@ -211,7 +193,7 @@ int daObjTatefuda_c::InitResources()
     int py2 = py + 0x64000;
     VecFx32 v = {px, py2, pz};
     dBgCh_Gnd rg;
-    rg.SetObjAndPos(*(Vector3*)&v, (dActor_c*)0);
+    rg.SetObjAndPos(*(Vector3 *)&v, 0);
     if (rg.DetectClsn() != 0)
         mPosY = rg.clsnY;
 
@@ -295,12 +277,12 @@ int daObjTatefuda_c::Behavior()
             u32 *fp;
             AttachToHolder();
             mClipRadius = 0x20000;
-            fp = (u32 *)&mFlags;
+            fp = &mFlags;
             *fp = *fp | 0x4000000;
         } else {
             u32 *fp;
             mClipRadius = 0x10000;
-            fp = (u32 *)&mFlags;
+            fp = &mFlags;
             *fp = *fp & ~0x4000000;
         }
     }
@@ -329,17 +311,17 @@ int daObjTatefuda_c::Behavior()
 
     if (mBreakTimer != 0) {
         int x, y, z;
-        if (((dBgW *)&mMeshCollider)->IsEnabled())
-            ((dBgW *)&mMeshCollider)->Disable();
+        if (mMeshCollider.IsEnabled())
+            mMeshCollider.Disable();
         x = mPosX;
         z = mPosZ;
         y = mPosY + 0x50000;
-        ((int *)&v)[0] = x;
-        ((int *)&v)[1] = y;
-        ((int *)&v)[2] = z;
+        v.x = x;
+        v.y = y;
+        v.z = z;
         if (DecIfAbove0_Byte(&mBreakTimer) != 0) {
-            *(void **)&mParticleHandle1 =
-                (void *)Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
+            mParticleHandle1 =
+                Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
             mParticleHandle2 =
                 Particle::System::NewCleanParticle(mParticleHandle2, kPtclDeathB, v.x, v.y, v.z, 0);
         } else {
@@ -347,9 +329,9 @@ int daObjTatefuda_c::Behavior()
             x2 = mPosX;
             z2 = mPosZ;
             y2 = mPosY + 0x28000;
-            ((int *)&vec)[0] = x2;
-            ((int *)&vec)[1] = y2;
-            ((int *)&vec)[2] = z2;
+            vec.x = x2;
+            vec.y = y2;
+            vec.z = z2;
             vec2 = vec;
             DisappearPoofDustAt(vec2);
             Reset();
@@ -399,8 +381,8 @@ int daObjTatefuda_c::Render() {
 /* recovered: named members + shared header, real C++ method */
 int daObjTatefuda_c::CleanupResources()
 {
-    if (((dBgW *)&mMeshCollider)->IsEnabled()) {
-        ((dBgW *)&mMeshCollider)->Disable();
+    if (mMeshCollider.IsEnabled()) {
+        mMeshCollider.Disable();
     }
     SignPost_ModelFile.Release();
     SignPost_ClsnFile.Release();
@@ -452,8 +434,8 @@ void daObjTatefuda_c::Carried()
         }
     }
 
-    if (((dBgW *)&mMeshCollider)->IsEnabled()) {
-        ((dBgW *)&mMeshCollider)->Disable();
+    if (mMeshCollider.IsEnabled()) {
+        mMeshCollider.Disable();
     }
 }
 
@@ -479,7 +461,7 @@ void daObjTatefuda_c::InitThrown()
  * eighth of a turn); move it (dActor_c::UpdatePos); if it touched the ground, a
  * wall or water, Kill it and stop. Otherwise, if the collider reports an
  * actor that is a player and is not the last holder, hurt that player
- * (daPly_c::Hurt with 1, 0xc000 -- 12.0 as Fix12 -- and 1/0/1 for the rest, which
+ * (daPly_c::Hurt with 1, 0xc000 -- 12.0 as fx32 -- and 1/0/1 for the rest, which
  * are not named here); slow the horizontal speed toward 0 by 0x555 (about
  * 0.33 unit) per frame; keep the mesh collider off; and once the sign is off
  * screen (mFlags bit 8) and more than 0x7d0000 (2000 units) from the player,
@@ -510,7 +492,7 @@ void daObjTatefuda_c::Thrown()
         found = static_cast<daPly_c *>(dActor_c::FindWithID(id));
         if (found != 0) {
             if (found != mLastHolder) {
-                b = ((dActor_c *)found)->actorID;
+                b = (found)->actorID;
                 b = b == ACTOR_PLAYER;
                 if (b) {
                     vec.x = mPosX;
@@ -524,8 +506,8 @@ void daObjTatefuda_c::Thrown()
 
     ApproachLinear(mHorzSpeed, 0, 0x555);
 
-    if (((dBgW *)&mMeshCollider)->IsEnabled() != 0) {
-        ((dBgW *)&mMeshCollider)->Disable();
+    if (mMeshCollider.IsEnabled() != 0) {
+        mMeshCollider.Disable();
     }
 
     b = mFlags & 8;
@@ -544,12 +526,12 @@ void daObjTatefuda_c::InitDropped()
 {
     daPly_c *other;
     int* py;
-    VecFx32 *src;
+    Vector3 *src;
     mHorzSpeed = 0;
     mVertSpeed = 0;
     other = mHoldingPlayer;
     py = &mPosY;
-    src = (VecFx32 *)&other->mPosX;
+    src = &other->mPos;
     mPosX = src->x;
     mPosY = src->y;
     mPosZ = src->z;
@@ -571,8 +553,8 @@ void daObjTatefuda_c::Dropped(){
         Kill();
     } else {
         RebuildModelMatrix();
-        if (((dBgW *)&mMeshCollider)->IsEnabled())
-            ((dBgW *)&mMeshCollider)->Disable();
+        if (mMeshCollider.IsEnabled())
+            mMeshCollider.Disable();
     }
 }
 
@@ -620,7 +602,7 @@ void daObjTatefuda_c::InitTalk()
  * The reading spot is the sign's own position pushed 0x5a000 (90 units), or
  * 0x78000 (120 units) when mPoundsLeft is 1, forward along the sign's facing
  * angle, using the shared sine/cosine table at FX_SinCosTable_ (the angle is read
- * unsigned, >> 4, to index it; the products are Fix12 multiplies, rounded). The
+ * unsigned, >> 4, to index it; the products are fx32 multiplies, rounded). The
  * message is anchored 0x50000 (80 units) above the sign itself.
  *
  * The tail is a special case for message 0x74a (what it stands for is not
@@ -654,7 +636,7 @@ void daObjTatefuda_c::Talk()
     param = param1;
     player = mTalkingPlayer;
     if (param != 0xffff) {
-        msgId = (u16)param;
+        msgId = param;
     }
     /* The raised message anchor. The horizontal pair is read first and the
        raised height last: that order is what puts the 0x60 load in the gap the
@@ -679,13 +661,12 @@ void daObjTatefuda_c::Talk()
     tz = mPosZ;
     tgt.z = tz;
 
-
-    ang = (s32) * (u16 *)&mAngleY;
+    ang = (unsigned short)mAngleY;
     sinV = FX_SinIdx(ang >> 4);
     tx = tx + FX_MUL(scale, sinV);
     tgt.x = tx;
 
-    ang = (s32) * (u16 *)&mAngleY;
+    ang = (unsigned short)mAngleY;
     cosV = FX_CosIdx(ang >> 4);
     tz = tz + FX_MUL(scale, cosV);
     tgt.z = tz;
@@ -705,29 +686,25 @@ void daObjTatefuda_c::Talk()
         case 0:
             if (Vec3_HorzDist(&plPos, &tgt) < 0x32000) {
                 talkStep = &mTalkStep;
-                *talkStep = (u8)(*talkStep + 1);
+                *talkStep = (*talkStep + 1);
             } else if (ApproachLinear(
                            player->mAngleY,
                            Vec3_HorzAngle(&plPos, &tgt),
                            0x800)
                        != 0) {
                 talkStep = &mTalkStep;
-                *talkStep = (u8)(*talkStep + 1);
+                *talkStep = (*talkStep + 1);
                 player->func_ov002_020bec9c(1, 0, 0x1000, 0);
             }
             break;
         case 1:
             if (Vec3_ApproachHorz(&player->mPos, &tgt, 0xa000) != 0) {
                 talkStep = &mTalkStep;
-                *talkStep = (u8)(*talkStep + 1);
+                *talkStep = (*talkStep + 1);
             }
             break;
         case 2:
-            if (ApproachLinear(
-                    player->mAngleY,
-                    (s16)(mAngleY + 0x8000),
-                    0x800)
-                != 0) {
+            if (ApproachLinear(player->mAngleY, (mAngleY + 0x8000), 0x800) != 0) {
                 if (mPoundsLeft == 1) {
                     if (func_ov002_020bec84(player, 1) != 0
                         || func_ov002_020bec84(player, 0) != 0) {
@@ -792,7 +769,7 @@ int daObjTatefuda_c::TryStartTalk() {
         if (other == 0)
             goto fail;
         {
-            int b = (int)(other->actorID == ACTOR_PLAYER);
+            int b = (other->actorID == ACTOR_PLAYER);
             if (b != false)
                 goto success;
         }
@@ -831,12 +808,12 @@ void daObjTatefuda_c::CheckGrabOrBreak() {
     if (other == 0)
         return;
     {
-        int b = (int)(other->actorID == ACTOR_PLAYER);
+        int b = (other->actorID == ACTOR_PLAYER);
         if (b == 0)
             return;
     }
     if ((mdCcAc_c.hitFlags & 0x40000) != 0) {
-        mBreakTimer = 0x3c;
+        mBreakTimer = 60;
         return;
     }
     {
@@ -864,7 +841,7 @@ void daObjTatefuda_c::CheckGrabOrBreak() {
  * config/arm9/overlays/ov002/relocs.txt.
  *
  * The signpost does not destroy itself. It plays its particle 0x28000 (40.0 in
- * Fix12) above where it stands, poofs, plays sound bank 3 id 0x41 and then
+ * fx32) above where it stands, poofs, plays sound bank 3 id 0x41 and then
  * tails into Reset, this class's own reset routine.
  * That is why there is no MarkForDestruction here, unlike dBgActor_c::Kill.
  *
@@ -880,9 +857,9 @@ void daObjTatefuda_c::Kill()
 {
     Vector3 pos;
     Vector3 dustPos;
-    Fix12i x = mPosX;
-    Fix12i y = mPosY + 0x28000;
-    Fix12i z = mPosZ;
+    fx32 x = mPosX;
+    fx32 y = mPosY + 0x28000;
+    fx32 z = mPosZ;
     pos.x = x;
     pos.y = y;
     pos.z = z;
@@ -908,7 +885,7 @@ void daObjTatefuda_c::Kill()
  * dActor_c's own field pair (include/dActor_c.h, 0x08e/0x094). */
 void daObjTatefuda_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
-    func_02012694(0x1d, &mCamSpacePosX);
+    func_02012694(0x1d, (const Vector3 *)&mCamSpacePosX);
     KillByMegaChar(player);
     mAngleY = mPrevAngleY;
 }
@@ -927,7 +904,7 @@ void daObjTatefuda_c::OnHitByMegaChar(daPly_c &player) {
  * for its own slot 21; daPly_c.h names that byte mIsMega, so the read is
  * spelt through a daPly_c & here. A param1 of 2 or a non-zero mIsMega makes
  * the pound take every pound left at once (the sign sinks mPoundsLeft * 0x2d
- * = 45 units per pound, as `<< 12` Fix12, and mPoundsLeft becomes 0); otherwise
+ * = 45 units per pound, as `<< 12` fx32, and mPoundsLeft becomes 0); otherwise
  * it takes one (0x2d000 = 45 units, mPoundsLeft - 1) and starts the 0xf-frame
  * mPoundCooldown. Both set mRespawnDelay = 0x1e (30 frames). */
 void daObjTatefuda_c::OnGroundPounded(dActor_c &other)
@@ -940,14 +917,14 @@ void daObjTatefuda_c::OnGroundPounded(dActor_c &other)
         mPoundsLeft = 0;
         UpdateModelPosAndRotY();
         UpdateClsnPosAndRot();
-        mRespawnDelay = 0x1e;
+        mRespawnDelay = 30;
     } else {
         mPosY -= 0x2d000;
         mPoundsLeft -= 1;
         UpdateModelPosAndRotY();
         UpdateClsnPosAndRot();
-        mPoundCooldown = 0xf;
-        mRespawnDelay = 0x1e;
+        mPoundCooldown = 15;
+        mRespawnDelay = 30;
     }
 }
 
@@ -1073,7 +1050,7 @@ void daObjTatefuda_c::UpdateShadowMatrix()
 void daObjTatefuda_c::Reset()
 {
   mHidden = 1;
-  mRespawnDelay = 0x1e;
+  mRespawnDelay = 30;
   mBreakTimer = 0;
   mParticleHandle1 = 0;
   mParticleHandle2 = 0;
@@ -1090,8 +1067,8 @@ void daObjTatefuda_c::Reset()
   SetState(STATE_IDLE);
   mMegaKnockback = 0;
   mdCcAc_c.Init(this, 0x64000, 0x64000, 0x4800002, 0x41000);
-  if (((dBgW *)&mMeshCollider)->IsEnabled()) {
-      ((dBgW *)&mMeshCollider)->Disable();
+  if (mMeshCollider.IsEnabled()) {
+      mMeshCollider.Disable();
   }
   mdCcAc_c.Clear();
 }

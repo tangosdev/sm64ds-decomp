@@ -84,7 +84,7 @@ s32 daObjTtFuta_c::InitResources() {
 }
 
 /* TT_FUTA factory. */
-extern "C" daObjTtFuta_c *daObjTtFuta_c_classInit() {
+daObjTtFuta_c *daObjTtFuta_c_classInit() {
     return new daObjTtFuta_c();
 }
 

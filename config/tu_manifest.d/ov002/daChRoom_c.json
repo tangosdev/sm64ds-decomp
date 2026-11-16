@@ -74,7 +74,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daChRoom_c_classInit",
+      "symbol": "_Z20daChRoom_c_classInitv",
       "address": "0x020b0980",
       "size": "0x00000030",
       "legacy_source": "src/daChRoom_c_Spawn.c",
@@ -146,7 +146,7 @@
       "source": "0x021085d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daChRoom_c_classInit",
+      "symbol": "_Z20daChRoom_c_classInitv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020b0980"

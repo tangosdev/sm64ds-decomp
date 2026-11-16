@@ -12,12 +12,7 @@
 // Notes:
 // - States: 0 fall (bounce on landing), 1 carried, 2 in Yoshi's mouth (mFlags
 //   0x20000 / 0x40000). Each row of data_ov080_0212847c is an Init/Main pair.
-// - StateYoshiMouthMain stores 0 through *(int *)pad_0d0, the pad in front of
-//   mModel.
-// - StateYoshiMouthMain keeps `goto done` and StateCarriedMain keeps
-//   `goto clear`: early returns reschedule the tail (+48 bytes) and a
-//   keepCrate flag reschedules the break block (+16 bytes), both measured
-//   against the ROM-matching spelling.
+// - StateYoshiMouthMain clears mEatingPlayer once Yoshi lets go.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daBttBk_c_AssetId { ASSET_BATTA_BLOCK_BMD = 0x02ac };
@@ -41,10 +36,7 @@ typedef void (daBttBk_c::*PMF)();
 /* arm9 C helpers. local extern: no shared header declares these. */
 extern "C" {
 int *Vec3_LslInPlace(Vector3 *v, int sh);
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
 }
-
 
 /* dExtSimpleModel_c-file handle. The derived constructor and destructor are the retail
  * SharedFilePtr pair; this TU does not define them. */
@@ -179,23 +171,22 @@ void daBttBk_c::UpdateModelTransform() {
         if (sv < 0)
             sv = -sv;
         int result = FX_MUL(sv, 0x28000);
-        DropShadowScaleXYZ(mShadowModel, mShadowMtx, 0x96000, 0x32000, result + 0x96000, 0xf);
+        DropShadowScaleXYZ(mShadowModel, mShadowMtx, 0x96000, 0x32000, result + 0x96000, 15);
     }
 }
 
-/* State 2 update: back to state 0 once neither flag bit 17 nor 18 is set.
- * The 0 stored through pad_0d0 is the state passed to SetState. */
+/* State 2 update: once neither flag bit 17 nor 18 is set, forget the eating
+ * player and go back to state 0. */
 int daBttBk_c::StateYoshiMouthMain() {
     int flags = mFlags;
     int inYoshiMouthA = (flags & 0x20000) ? 1 : 0;
-    if (inYoshiMouthA != 0)
-        goto done;
-    int inYoshiMouthB = (flags & 0x40000) ? 1 : 0;
-    if (inYoshiMouthB != 0)
-        goto done;
-    *(int *)pad_0d0 = 0;
-    SetState(0);
-done:
+    if (inYoshiMouthA == 0) {
+        int inYoshiMouthB = (flags & 0x40000) ? 1 : 0;
+        if (inYoshiMouthB == 0) {
+            mEatingPlayer = 0;
+            SetState(0);
+        }
+    }
     return 1;
 }
 
@@ -217,44 +208,45 @@ int daBttBk_c::StateCarriedMain() {
     {
         int flags = mFlags;
         int hasBit8 = (int)((flags & 0x100) != 0);
-        if (hasBit8 != 0) {
-            int hasBit13 = (int)((flags & 0x2000) != 0);
-            if (hasBit13 == 0)
-                goto clear;
-        }
-        {
-            Vector3 vec;
-            Vector3 vec2;
-            int x = mPosX;
-            int z = mPosZ;
-            int y = mPosY + 0xb4000;
-            vec.x = x;
-            vec.y = y;
-            vec.z = z;
-            vec2.x = vec.x;
-            vec2.y = vec.y;
-            vec2.z = vec.z;
-            PoofDustAt(vec2);
-            Particle::System::NewSimple(kPtclBattaBlockBreak, vec.x, vec.y, vec.z);
-
-            {
-                int ybase = mPosY;
-                int xx = vec.x;
-                int y2 = ybase + 0x64000;
-                int zz = vec.z;
-                Vector3 v3;
-                v3.x = xx;
-                v3.z = zz;
-                vec.y = y2;
-                v3.y = y2;
-                SpawnCoins(v3, 5, 0xf000, 0);
+        do {
+            if (hasBit8 != 0) {
+                int hasBit13 = (int)((flags & 0x2000) != 0);
+                if (hasBit13 == 0)
+                    break;
             }
+            {
+                Vector3 vec;
+                Vector3 vec2;
+                int x = mPosX;
+                int z = mPosZ;
+                int y = mPosY + 0xb4000;
+                vec.x = x;
+                vec.y = y;
+                vec.z = z;
+                vec2.x = vec.x;
+                vec2.y = vec.y;
+                vec2.z = vec.z;
+                PoofDustAt(vec2);
+                Particle::System::NewSimple(kPtclBattaBlockBreak, vec.x, vec.y, vec.z);
 
-            Sound::PlayBank3(0x41, mCamSpacePos);
-            MarkForDestruction();
-        }
+                {
+                    int ybase = mPosY;
+                    int xx = vec.x;
+                    int y2 = ybase + 0x64000;
+                    int zz = vec.z;
+                    Vector3 v3;
+                    v3.x = xx;
+                    v3.z = zz;
+                    vec.y = y2;
+                    v3.y = y2;
+                    SpawnCoins(v3, 5, 0xf000, 0);
+                }
+
+                Sound::PlayBank3(0x41, mCamSpacePos);
+                MarkForDestruction();
+            }
+        } while (0);
     }
-clear:
     mdCcAc_c.Clear();
     return 1;
 }
@@ -272,7 +264,7 @@ int daBttBk_c::StateCarriedInit() {
 int daBttBk_c::StateFallMain() {
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround()) {
-        int v = mVertSpeed * -0x3c;
+        int v = mVertSpeed * -60;
         mVertSpeed = v / 100;
     } else if (mWithMeshClsn.IsOnGround()) {
         mVertSpeed = 0xc000;
@@ -357,9 +349,9 @@ int daBttBk_c::InitResources() {
         mPosY = ground.clsnY;
     else
         mPosY = pos.y;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScaleX = FX32_ONE;
+    mScaleY = FX32_ONE;
+    mScaleZ = FX32_ONE;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mCarrier = 0;
     SetState(0);
@@ -388,7 +380,7 @@ void daBttBk_c::OnTurnIntoEgg(daPly_c &player) {
     MarkForDestruction();
 }
 
-extern "C" daBttBk_c *daBttBk_c_classInit() {
+daBttBk_c *daBttBk_c_classInit() {
     return new daBttBk_c();
 }
 

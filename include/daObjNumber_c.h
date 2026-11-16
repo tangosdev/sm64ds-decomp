@@ -15,7 +15,6 @@
  * _ZTV/_ZTI/_ZTS. */
 
 struct daObjNumber_c : dActor_c {
-    u8  pad_0d0[0x4];
     dExtSimpleModel_c mModel;         /* 0x0d4 */
     dExtAnmTexPat_c mTextureSequence; /* 0x124 */
     /* Follow target. Behavior looks this uniqueID up with FindWithID;

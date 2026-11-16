@@ -39,6 +39,7 @@ enum daObjFl_Amilift_c_AssetId { ASSET_FL_AMILIFT_BMD = 0x05ef, ASSET_FL_AMILIFT
 #include "math/Approach.h"
 #include "cstd.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
  * model handle constructs through func_02017acc and destroys through
@@ -66,7 +67,6 @@ struct KCL_File;
 struct CLPS_Block;
 
 extern "C" {
-int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *dst, const Vector3 *a, const Vector3 *b);
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
 }
@@ -85,7 +85,7 @@ daObjFl_Amilift_c::~daObjFl_Amilift_c() {}
 void daObjFl_Amilift_c::FaceToward(Vector3 *a, Vector3 *b) {
     Vector3 v;
     Vec3_Sub(&v, a, b);
-    mPrevAngleY = (short)cstd::atan2(v.x, v.z);
+    mPrevAngleY = cstd::atan2(v.x, v.z);
 }
 
 /* Advance along the path by one frame. Speeds up toward 0xa000 and slows to a
@@ -137,7 +137,7 @@ int daObjFl_Amilift_c::MoveAlongPath() {
  * the forward state if auto-run, else wait for the player. */
 void daObjFl_Amilift_c::StateBackward() {
     unsigned short v = mStateFrames;
-    if (v < 0x14)
+    if (v < 20)
         return;
     int r = MoveAlongPath();
     if (r != -1)
@@ -156,7 +156,7 @@ int daObjFl_Amilift_c::StateForward() {
     unsigned char b = mAutoRun;
     if (b == 1) {
         unsigned short v = mStateFrames;
-        if (v < 0x14)
+        if (v < 20)
             return v;
     }
     int r = MoveAlongPath();
@@ -174,7 +174,7 @@ int daObjFl_Amilift_c::StateForward() {
 void daObjFl_Amilift_c::StateWait() {
     if (mRiderOn != 0) {
         if (mAutoRun != 1) {
-            if (mStateFrames <= 0x14)
+            if (mStateFrames <= 20)
                 return;
         }
         mState = daObjFl_Amilift_c::STATE_FORWARD;
@@ -211,15 +211,15 @@ s32 daObjFl_Amilift_c::Behavior() {
     int idx = mState;
     (this->*data_ov064_0211c750[idx].pmf)();
     unsigned short *p338 = &mStateFrames;
-    *p338 = (unsigned short)(*p338 + 1);
+    *p338 = (*p338 + 1);
     if (idx != mState) {
         mStateFrames = 0;
     }
     int target = mRiderOn ? -0x28000 : 0;
     if (ApproachLinear(mSinkOffset, target, 0x5000)) {
         short *pAng = &mBobPhase;
-        *pAng = (short)(*pAng + 0xa00);
-        unsigned short h = *(unsigned short *)&mBobPhase;
+        *pAng = (*pAng + 0xa00);
+        unsigned short h = *&mBobPhase;
         short s = FX_SinIdx(h >> 4);
         short ten = 10;
         mBobOffset = s * ten;
@@ -264,7 +264,7 @@ s32 daObjFl_Amilift_c::InitResources() {
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
 
-    mPathPtr.FromID(param1 & 0xf);
+    mPathPtr.FromID(param1 & 15);
     mNodeCount = mPathPtr.NumNodes();
     mNodeIndex = 1;
 
@@ -330,6 +330,6 @@ void daObjFl_Amilift_c::StoodOnCallback(dBgW *collider, daObjFl_Amilift_c *self,
  * `new daObjFl_Amilift_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x368), dBgActor_c's base constructor, the vptr
  * store, then mPathPtr's constructor. */
-extern "C" daObjFl_Amilift_c *daObjFl_Amilift_c_classInit(void) {
+daObjFl_Amilift_c *daObjFl_Amilift_c_classInit(void) {
     return new daObjFl_Amilift_c;
 }

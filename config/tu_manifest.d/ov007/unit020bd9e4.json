@@ -27,35 +27,35 @@
       "ordinal": 0
     },
     {
-      "symbol": "func_ov007_020bda38",
+      "symbol": "_Z19func_ov007_020bda38i",
       "address": "0x020bda38",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bda38.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_ov007_020bda8c",
+      "symbol": "_Z19func_ov007_020bda8cii",
       "address": "0x020bda8c",
       "size": "0x00000140",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bda8c.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov007_020bdbcc",
+      "symbol": "_Z19func_ov007_020bdbccii",
       "address": "0x020bdbcc",
       "size": "0x00000260",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bdbcc.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov007_020bde2c",
+      "symbol": "_Z19func_ov007_020bde2ci",
       "address": "0x020bde2c",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bde2c.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov007_020bde70",
+      "symbol": "_Z19func_ov007_020bde70ii",
       "address": "0x020bde70",
       "size": "0x00000040",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bde70.cpp",
@@ -69,28 +69,28 @@
       "ordinal": 6
     },
     {
-      "symbol": "MenuSound_UpdateLoops",
+      "symbol": "_Z21MenuSound_UpdateLoopsv",
       "address": "0x020bdebc",
       "size": "0x000000a4",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bdebc.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "MenuSound_Destroy",
+      "symbol": "_Z17MenuSound_Destroyv",
       "address": "0x020bdf60",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bdf60.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "MenuSound_Create",
+      "symbol": "_Z16MenuSound_Createv",
       "address": "0x020be00c",
       "size": "0x0000008c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020be00c.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov007_020be098",
+      "symbol": "_Z19func_ov007_020be098i",
       "address": "0x020be098",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/ov007/func_ov007_020be098.cpp",

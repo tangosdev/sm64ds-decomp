@@ -32,23 +32,23 @@ void func_ov007_020ae2d0(Ov007ItemNode *self) {
         }
         if (a == 2)
             return;
-        if (v < 0x28)
+        if (v < 40)
             return;
-        if (FX_ModS32(v - 0x28, 0x10e) != 0)
+        if (FX_ModS32(v - 40, 270) != 0)
             return;
         {
             Ov007Item *p2 = self->item;
-            p2->wiggleFrames = 0x3c;
+            p2->wiggleFrames = 60;
             p2->wiggleTimer = p2->wiggleFrames;
         }
         return;
     }
     case 0: {
-        int n = FX_ModS32(v, 0x32);
+        int n = FX_ModS32(v, 50);
         int m;
         short sine, base;
         Ov007Item *q;
-        n = ProgressRatio(n, 0x32);
+        n = ProgressRatio(n, 50);
         m = (-n) * 0xffff;
         m = (int)(((unsigned)(m << 4)) >> 0x10);
         sine = FX_SinIdx(m >> 4);

@@ -1,28 +1,27 @@
 //cpp
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
+#include "Ov007Item.h"
 
-extern "C" {
-extern void ItemView_HandleTouch(void *elem, void *tp);
 extern void MessageWindow_Update(void);
-extern void func_ov007_020c92d0(Ov007MenuState *state);
+extern "C" void func_ov007_020c92d0(Ov007MenuState *state);
 extern void func_ov007_020c934c(Ov007MenuState *state, int initialState);
 extern void func_ov007_020b066c(void);
-extern void func_ov007_020af0e4(void);
-extern void func_ov007_020af1f4(void);
+extern "C" void func_ov007_020af0e4(void);
+extern "C" void func_ov007_020af1f4(void);
 extern void func_ov007_020aef84(void);
-extern void func_ov007_020af434(void);
-extern void func_ov007_020b0340(void);
-extern void func_ov007_020c2090(struct Ov007Pad *pad);
-extern void func_ov007_020b0548(void);
-extern void func_ov007_020b0358(void);
+extern "C" void func_ov007_020af434(void);
+extern "C" void func_ov007_020b0340(void);
+extern "C" void func_ov007_020c2090(struct Ov007Pad *pad);
+extern "C" void func_ov007_020b0548(void);
+extern "C" void func_ov007_020b0358(void);
 extern void func_ov007_020aefb4(void);
-extern void func_ov007_020af12c(void);
-extern void func_ov007_020aef78(void);
-extern void func_ov007_020af390(void);
-extern void func_ov007_020b0324(void);
+extern "C" void func_ov007_020af12c(void);
+extern "C" void func_ov007_020aef78(void);
+extern "C" void func_ov007_020af390(void);
+extern "C" void func_ov007_020b0324(void);
 extern void ItemView_Update(struct Ov007ItemView *view);
-extern void func_ov007_020add3c(struct Ov007ItemNode *self);
+extern "C" void func_ov007_020add3c(struct Ov007ItemNode *self);
 extern void func_ov007_020ad660(struct Ov007LayerSlot *slot);
 
 void func_ov007_020aed98(void)
@@ -32,8 +31,8 @@ void func_ov007_020aed98(void)
     Ov007MenuState *r5 = g->states[1];
     int i;
 
-    for (i = 0; i < 0x18; i++) {
-        ItemView_HandleTouch(WORK->itemViews[i], WORK->touch);
+    for (i = 0; i < 24; i++) {
+        WORK->itemViews[i]->ItemView_HandleTouch(WORK->touch);
     }
 
     MessageWindow_Update();
@@ -70,7 +69,7 @@ void func_ov007_020aed98(void)
     func_ov007_020c92d0(WORK->states[2]);
 
     WORK->chosenItemId = -1;
-    for (i = 0; i < 0x18; i++) {
+    for (i = 0; i < 24; i++) {
         ItemView_Update(WORK->itemViews[i]);
     }
     for (i = 0; i < 9; i++) {
@@ -79,5 +78,4 @@ void func_ov007_020aed98(void)
     for (i = 0; i < 8; i++) {
         func_ov007_020ad660(WORK->layerSlots[i]);
     }
-}
 }

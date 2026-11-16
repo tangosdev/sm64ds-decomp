@@ -19,8 +19,7 @@ extern "C" void func_ov007_020c43bc(Ov007Sprite *sprite, Ov007Camera *camera) {
         if (x < 0)
             x = -x;
         s16 sinFov = FX_SinIdx(idx);
-        sprite->worldWidth =
-            FX_Div(FX_MUL((sprite->width << 12), FX_MUL(sinFov, x)), cosFov * 0x60);
+        sprite->worldWidth = FX_Div(FX_MUL((sprite->width << 12), FX_MUL(sinFov, x)), cosFov * 96);
     }
     {
         int x = sprite->depth;
@@ -30,6 +29,6 @@ extern "C" void func_ov007_020c43bc(Ov007Sprite *sprite, Ov007Camera *camera) {
             x = -x;
         s16 sinFov = FX_SinIdx(idx);
         sprite->worldHeight =
-            FX_Div(FX_MUL((sprite->height << 12), FX_MUL(sinFov, x)), cosFov * 0x60);
+            FX_Div(FX_MUL((sprite->height << 12), FX_MUL(sinFov, x)), cosFov * 96);
     }
 }

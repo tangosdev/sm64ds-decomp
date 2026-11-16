@@ -614,9 +614,9 @@ divergence quietly broke two things:
   `symbols.txt` name as a *weak* undefined, so a differently-named definition leaves every
   caller silently binding to address 0 instead of erroring.
 
-`tools/reconcile_names.py` renames the emitted function to the `@symbol` name, replaces
+The reconcile_names pass (#944, since retired) renamed the emitted function to the `@symbol` name, replaces
 the now-redundant `@emits` line with `// recovered name: <name>` so the recovered identity
-is preserved, and byte-verifies each file against the ROM before keeping the edit.
+was preserved, and byte-verified each file against the ROM before keeping the edit.
 
 **711 of 712 verified and were applied.** The one holdout, `func_ov022_021123d0`, declares
 its own symbol with a conflicting signature and needs a human. Of the 711, **699 reproduce

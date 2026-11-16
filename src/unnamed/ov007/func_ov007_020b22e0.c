@@ -1,8 +1,13 @@
-void func_ov007_020b22e0(int* r0, int* r1, int r2){
-  int a=r1[6];
-  int ia=a+r2*20;
-  int b=r1[8];
-  int ib=b+(r2<<4);
-  r0[2]=*(int*)(ia+4);
-  r0[7]=*(int*)(ib+4);
+#include "types.h"
+#include "BMD_File.h"
+#include "Ov007Texture.h"
+
+/* Point the menu texture at the texel and palette data of record `i` in a
+ * loaded BMD model file. */
+void func_ov007_020b22e0(Ov007Texture *tex, struct BMD_File *file, int i) {
+    struct BMD_Texture *texture = &file->textures[i];
+    struct BMD_Palette *palette = &file->palettes[i];
+
+    tex->texSrc = texture->data;
+    tex->plttSrc = palette->data;
 }

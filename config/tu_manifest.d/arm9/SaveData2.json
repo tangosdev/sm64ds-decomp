@@ -33,7 +33,7 @@
       "legacy_source": "src/_ZN8SaveData14SaveDataToCartEPcjj.cpp"
     },
     {
-      "symbol": "func_02042f68",
+      "symbol": "_Z13func_02042f68iPh",
       "address": "0x02042f68",
       "size": "0x7c",
       "ordinal": 2,

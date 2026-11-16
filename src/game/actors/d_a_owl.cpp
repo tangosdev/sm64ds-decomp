@@ -79,6 +79,7 @@ enum daOwl_c_AssetId {
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 #include "LevelRng.h"
+#include "Sound.h"
 
 /* Resource handles the static initializer constructs. The wrapper spellings
  * are reconstructed; the constructor and destructor addresses, the file IDs
@@ -140,28 +141,19 @@ enum {
 #define OWL_STATE_CARRY     OWL_STATE(data_ov094_02136b70)
 #define OWL_STATE_RETURN    OWL_STATE(data_ov094_02136b30)
 
-/* mStateTimer is s16 but every read in the ROM is an unsigned halfword load. */
-#define OWL_TIMER(o)        (*(u16 *)&(o)->mStateTimer)
+#define OWL_TIMER(o)        ((o)->mStateTimer)
 
 /* Whole animation frame of the dExtAnmModel_c, as the ROM extracts it. */
 #define OWL_FRAME(o)        ((u16)((o)->mAnmModel.currFrame >> 12))
 
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
-
-extern "C" {
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
-
-void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
-                         unsigned int d);
-int func_ov002_020df7f4(void *c);
-void func_02012694(unsigned int a, void *pos);
+void func_02012694(unsigned int a, const Vector3 *pos);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int IsStarCollectedInCurLevel(int);
+extern "C" {
+int func_ov002_020df7f4(void *c);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the
@@ -273,7 +265,7 @@ int daOwl_c::UpdateCarrying() {
 
     if (OWL_TIMER(this) != 0) {
         if (unk_3e8 == 0 && OWL_FRAME(this) <= 2) {
-            func_02012694(0x139, &mCamSpacePosX);
+            func_02012694(0x139, (const Vector3 *)(&mCamSpacePosX));
             unk_3e8 = 1;
         } else {
             if (OWL_FRAME(this) > 2)
@@ -314,7 +306,7 @@ int daOwl_c::UpdateCarrying() {
 
 /* Enter of the carry state: 30-frame timer, animation data_ov094_02136af8[1] at double speed. */
 int daOwl_c::EnterCarrying() {
-    mStateTimer = 0x1e;
+    mStateTimer = 30;
     unk_3e8 = 0;
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af8.filePtr, 0, 0x1000, 0);
     mAnimSpeed = 0x2000;
@@ -336,7 +328,7 @@ int daOwl_c::UpdateHover() {
                 if ((u16)(player->mStateFlags & 0x800) == 0) {
                     if (player->StartTalk(*this, 1) != 0) {
                         if (mTalkTarget->ShowMessage(*this, 0xa2, &mPos, 0, 0) == 1) {
-                            func_02012694(0x176, &mCamSpacePosX);
+                            func_02012694(0x176, (const Vector3 *)(&mCamSpacePosX));
                             mTalkState = TALK_TALKING;
                             ChangeState(OWL_STATE_TALK);
                             return 1;
@@ -348,11 +340,11 @@ int daOwl_c::UpdateHover() {
     }
 
     if (Vec3_Dist(&mPos, &mAnchor) > 0x190000) {
-        mStateTimer = 0x32;
+        mStateTimer = 50;
         mWanderAngleY = Vec3_HorzAngle(&mPos, &mAnchor);
     } else if (OWL_TIMER(this) == 0) {
-        mWanderAngleY = (s16)(((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 12);
-        mStateTimer = (s16)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
+        mWanderAngleY = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 12);
+        mStateTimer = (s16)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 50);
     }
 
     ApproachAngle(&mPrevAngleY, mWanderAngleY, 0xa, 0x200, 0x100);
@@ -377,8 +369,8 @@ int daOwl_c::UpdateHover() {
  * 50..113 frame wander timer. */
 int daOwl_c::EnterHover() {
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af0.filePtr, 0, 0x1000, 0);
-    mWanderAngleY = (short)(((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
-    mStateTimer = (short)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
+    mWanderAngleY = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
+    mStateTimer = (short)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 50);
     mAnimSpeed = 0x1000;
     return 1;
 }
@@ -427,16 +419,16 @@ int daOwl_c::EnterTalk() {
 int daOwl_c::UpdateDormant() {
     daPly_c *p = ClosestPlayer();
     if (p != 0 && p->mClimbClsn != 0) {
-        VecFx32 *playerPos = (VecFx32 *)&p->mPosX;
+        const Vector3 *playerPos = &p->mPos;
         VecFx32 pp;
         VecFx32 d;
-        VecFx32 *selfpos = (VecFx32 *)&mPosX;
+        const Vector3 *selfpos = &mPos;
         pp.x = playerPos->x;
         pp.y = playerPos->y;
         pp.z = playerPos->z;
         mPosY = p->mGroundY + 0x190000;
         mTalkTarget = p;
-        Vec3_Sub((Vector3 *)&d, (const Vector3 *)selfpos, (const Vector3 *)&pp);
+        Vec3_Sub((Vector3 *)&d, selfpos, (const Vector3 *)&pp);
         if (VEC_Mag((const Vector3 *)&d) < 0x28000) {
             d.x = mPosX;
             d.y = mPosY;
@@ -559,7 +551,7 @@ int daOwl_c::Behavior()
         if ((m == OWL_STATE_TALK || m == OWL_STATE_HOVER ||
              m == OWL_STATE_RETURN) &&
             (unsigned short)(mAnmModel.currFrame >> 0xc) == 0) {
-            func_02012694(0x139, &mCamSpacePosX);
+            func_02012694(0x139, (const Vector3 *)(&mCamSpacePosX));
         }
     }
     /* The ROM tests this state twice; the else is unreachable. */
@@ -630,8 +622,7 @@ int daOwl_c::InitResources()
     return 1;
 }
 
-extern "C" daOwl_c *daOwl_c_classInit()
-{
+daOwl_c *daOwl_c_classInit() {
     return new daOwl_c();
 }
 

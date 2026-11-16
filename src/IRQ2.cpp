@@ -30,10 +30,10 @@ extern int data_0208ee44;
 extern u8 data_0209d4f0;
 extern u16 data_0209d500;
 extern u16 data_0209d4fc;
-extern void func_02019144(void);
 extern void func_02019100(void);
 extern u8 data_0209d4dc;
 }
+extern void func_02019144(void);
 
 // 0x0201a534 (0x98)
 namespace IRQ {
@@ -54,8 +54,7 @@ void VBlankHandler(void) {
 }
 
 // 0x0201a4e4 (0x50)
-extern "C" void func_0201a4e4(void)
-{
+void func_0201a4e4(void) {
     data_0209d4fc = 0;
     data_0209d500 = 0;
     OS_SetIrqFunction(OS_IE_V_BLANK, IRQ::VBlankHandler);

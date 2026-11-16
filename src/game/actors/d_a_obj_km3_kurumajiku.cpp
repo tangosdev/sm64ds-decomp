@@ -77,7 +77,7 @@ daObjKurumajiku_c::Resources gKm3KurumajikuResources = {
 /* KM3_KURUMA: the cart this axle drives. InitResourcesFrom spawns four. */
 enum { kCartActorId = 0x97 };
 
-extern "C" daObjKm3_Kurumajiku_c *daObjKm3_Kurumajiku_c_classInit() {
+daObjKm3_Kurumajiku_c *daObjKm3_Kurumajiku_c_classInit() {
     return new daObjKm3_Kurumajiku_c();
 }
 

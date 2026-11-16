@@ -136,8 +136,6 @@ extern const u8 sSoundPop00Dirs[3] = {0, 0, 1};
 /* SpawnPops consumes the first three selectors. The other two stored values
  * are retained; their original grouping is unknown. */
 extern const u8 sSoundPopSpawnKinds[5] = {0, 1, 2, 2, 1};
-extern void Presenter_PlayMatch(void *c);
-extern void Presenter_PlayMiss(void *c);
 extern int sSoundRowLengthAlt[];
 extern int sSoundRowLength[];
 extern int sSoundScrollRowLengthAlt[];
@@ -145,8 +143,6 @@ extern int sSoundScrollRowLength[];
 /* Note frames use indices 0 through 6. The final stored timing value in each
  * array is retained without asserting its original purpose or declared bound. */
 extern const u16 sSoundNoteClosingTimes[8] = {2, 2, 3, 4, 4, 4, 4, 4};
-void Presenter_PlayCheerLoop(void *p);
-unsigned int func_02012174(u32 bank, u32 id);
 extern const u16 sSoundNoteOpeningTimes[8] = {2, 2, 3, 4, 4, 4, 6, 4};
 /* Parallel playback selectors and sound IDs retain all 42 stored entries.
  * Some entries are not exercised by the current deal logic. */
@@ -170,16 +166,14 @@ u16 sSoundNotePositions8[16] = {32, 32,  96, 32,  160, 32,  224, 32,
 u16 sSoundNotePositions10[20] = {32, 32,  80, 32,  128, 32,  176, 32,  224, 32,
                                  32, 112, 80, 112, 128, 112, 176, 112, 224, 112};
 u16 *sSoundNotePositions[3] = {sSoundNotePositions6, sSoundNotePositions8, sSoundNotePositions10};
-extern void Presenter_ResetPose(void *c);
-extern void Presenter_PlayCheer(void *c);
 extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 void FreeGfxSlotsById(int id);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
-int Presenter_Load(void *p);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
+unsigned int func_02012174(u32 bank, u32 id);
 
 /* The note and pop dispatch tables belong to this scene. Declaration
  * order preserves the cartridge static-initialization sequence. */
@@ -272,7 +266,7 @@ inline dScMgSound_c::dScMgSound_c() {}
 
 /* The MG_SOUND registry factory. It sits directly after InitResources and
    installs this class's vtable, so it was compiled with the class. */
-extern "C" void *dScMgSound_c_classInit(void) {
+void *dScMgSound_c_classInit(void) {
     return new dScMgSound_c;
 }
 
@@ -291,7 +285,7 @@ s32 dScMgSound_c::InitResources() {
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCG_BIN);
     G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
                           GX_BG_CHARBASE_0x14000);
-    DecompressLZ16(file, (void *)G2S_GetBG2CharPtr());
+    DecompressLZ16(file, G2S_GetBG2CharPtr());
     Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCL_BIN);
@@ -311,7 +305,7 @@ s32 dScMgSound_c::InitResources() {
     Deallocate(objPltt);
 
     Camera_InitPresenterView(&mCamera);
-    if (Presenter_Load(&mTable) == 0)
+    if (mTable.Load() == 0)
         return 0;
 
     mTable.mQuiet = 1;
@@ -319,7 +313,7 @@ s32 dScMgSound_c::InitResources() {
     DealNotes();
     mTries = 3;
     mState = 1;
-    mIntroTimer = 0x20;
+    mIntroTimer = 32;
     Mg_ResetRecordBannerPos();
     Mg_ShowBanner(0xd, 0x80, 0xa8, 1, -1, 0xd);
     mHudScore = 0;
@@ -361,7 +355,7 @@ s32 dScMgSound_c::Behavior() {
             if (mResultTimer == 0) {
                 if (mTries != 0) {
                     mTable.mQuiet = 0;
-                    Presenter_PlayCheer(&mTable);
+                    mTable.PlayCheer();
                     if (mTries == 3)
                         Mg_SetPerfectBanner();
                     Mg_SetSharedState(MG_STATE_ROUND_CLEAR);
@@ -380,7 +374,7 @@ s32 dScMgSound_c::Behavior() {
                     mPromptEnabled = 0;
                 } else {
                     mState = 3;
-                    mResultTimer = 0x20;
+                    mResultTimer = 32;
                     RevealUnmatched();
                 }
             }
@@ -396,7 +390,7 @@ s32 dScMgSound_c::Behavior() {
             mResultTimer--;
             if ((s16)mResultTimer <= 0) {
                 mTable.mQuiet = 0;
-                Presenter_PlayLose((char *)&mTable);
+                mTable.PlayLose();
                 Mg_SetSharedState(MG_STATE_GAME_OVER);
                 mPromptEnabled = 0;
                 mResultTimer = 0;
@@ -405,7 +399,7 @@ s32 dScMgSound_c::Behavior() {
         break;
     }
 
-    Presenter_Update((char *)&mTable);
+    mTable.Update();
     return 1;
 }
 
@@ -417,7 +411,7 @@ s32 dScMgSound_c::Render() {
     DrawTries();
     DrawWinSpriteB();
     DrawWinSpriteA();
-    Presenter_Draw(&mTable);
+    mTable.Draw();
     return 1;
 }
 
@@ -456,7 +450,7 @@ void dScMgSound_c::StartRound(int mode) {
     mTries = 3;
     DealNotes();
 
-    mIntroTimer = 0x20;
+    mIntroTimer = 32;
     Mg_ShowBanner(0xd, 0x80, 0xa8, 1, -1, 0xd);
 
     Sound::LoadAndSetMusic_Layer1(6);
@@ -464,7 +458,7 @@ void dScMgSound_c::StartRound(int mode) {
 
 /* Slot 20, OnNewRecord: plays the table model's win animation. */
 void dScMgSound_c::OnNewRecord() {
-    Presenter_PlayCheer(&mTable);
+    mTable.PlayCheer();
 }
 
 void dScMgSound_c::ResetRound() {
@@ -488,7 +482,7 @@ void dScMgSound_c::ResetRound() {
         mPairNotes[pairIndex] = 0;
     }
 
-    for (popSlot = 0; popSlot < 0x1e; popSlot++) {
+    for (popSlot = 0; popSlot < POP_NUM; popSlot++) {
         mPops[popSlot].x = 0;
         mPops[popSlot].y = 0;
         mPops[popSlot].velX = 0;
@@ -524,7 +518,7 @@ void dScMgSound_c::ResetRound() {
     mTouchCount = 0;
     mResultTimer = 0;
 
-    Presenter_ResetPose(&mTable);
+    mTable.ResetPose();
 }
 
 /* Choose distinct pitches, make one pair of each, then deal the pairs
@@ -689,7 +683,7 @@ void dScMgSound_c::Note_StateOpening(int idx) {
     mQueue[mQueueLen] = mNotes[idx].note + 1;
     mQueue[mQueueLen] |= idx << 8;
     mQueueLen++;
-    mQueueTimer = 0x20;
+    mQueueTimer = 32;
 
     SpawnPops(idx);
     note = mNotes[idx].note;
@@ -731,7 +725,7 @@ void dScMgSound_c::Note_StateOpening(int idx) {
     }
 
     if (mTouchCount == 1)
-        Presenter_PlayCheerLoop(&mTable);
+        mTable.PlayCheerLoop();
 }
 
 void dScMgSound_c::Note_StateOpen(int slot) {
@@ -848,14 +842,14 @@ void dScMgSound_c::CheckPair() {
         mNotes[mQueue[0] >> 8].alive = 0;
         mNotes[mQueue[1] >> 8].alive = 0;
         func_02012790(0x26);
-        Presenter_PlayMatch(&mTable);
+        mTable.PlayMatch();
     } else {
         mNotes[mQueue[0] >> 8].state = 3;
         mNotes[mQueue[1] >> 8].state = 3;
         func_02012790(0xe);
         mTries--;
         func_02012790(0x12f);
-        Presenter_PlayMiss(&mTable);
+        mTable.PlayMiss();
     }
     mQueue[1] = 0;
     mQueue[0] = mQueue[1];
@@ -866,7 +860,7 @@ void dScMgSound_c::CheckPair() {
 void dScMgSound_c::CheckRoundOver() {
     if (mTries == 0) {
         mState = 2;
-        mResultTimer = 0x50;
+        mResultTimer = 80;
         return;
     }
     {
@@ -880,7 +874,7 @@ void dScMgSound_c::CheckRoundOver() {
         }
         if (hasAliveNote != 0)
             return;
-        mResultTimer = 0x50;
+        mResultTimer = 80;
         mState = 2;
     }
 }
@@ -891,7 +885,7 @@ void dScMgSound_c::SpawnPops(int noteSlot) {
     const u8 *spriteEntry = sSoundPopSpawnKinds;
 
     for (spawnIndex = 0; spawnIndex < 3; spriteEntry++, spawnIndex++) {
-        for (popSlot = 0; popSlot < 30; popSlot++) {
+        for (popSlot = 0; popSlot < POP_NUM; popSlot++) {
             if (mPops[popSlot].active == 0) {
                 mPops[popSlot].active = 1;
                 mPops[popSlot].x = mNotes[noteSlot].x;
@@ -902,7 +896,7 @@ void dScMgSound_c::SpawnPops(int noteSlot) {
                 mPops[popSlot].timer = 0;
                 if (mNotes[noteSlot].note == 7) {
                     if (spawnIndex >= 3) {
-                        mPops[popSlot].timer = 0x10;
+                        mPops[popSlot].timer = 16;
                     } else {
                         mPops[popSlot].timer = 8;
                     }
@@ -920,7 +914,7 @@ void dScMgSound_c::SpawnPops(int noteSlot) {
 
 void dScMgSound_c::UpdatePops() {
     int slot;
-    for (slot = 0; slot < 30; slot++) {
+    for (slot = 0; slot < POP_NUM; slot++) {
         if (mPops[slot].active != 0) {
             (this->*sSoundPopUpdateTable[mPops[slot].state].pmf)(slot);
         }
@@ -1171,7 +1165,7 @@ void dScMgSound_c::Pop06_Fly(int slot) {
     }
     mPops[slot].velY -= 0x40;
     mPops[slot].timer += 1;
-    if (mPops[slot].timer >= 0x28) {
+    if (mPops[slot].timer >= 40) {
         mPops[slot].timer = 0;
         mPops[slot].phase = 2;
         mPops[slot].dir = 0;
@@ -1213,7 +1207,7 @@ void dScMgSound_c::Pop07_Start(int slot) {
     unsigned short delay = mPops[slot].timer;
     if (delay != 0) {
         mPops[slot].timer = delay - 1;
-        if (*(short *)&mPops[slot].timer < 0)
+        if ((short)mPops[slot].timer < 0)
             mPops[slot].timer = 0;
         return;
     }
@@ -1308,7 +1302,7 @@ void dScMgSound_c::Pop09_Finish(int slot) {
             mPops[slot].scale = 0x800;
     }
     mPops[slot].timer += 1;
-    if (mPops[slot].timer >= 0x20) {
+    if (mPops[slot].timer >= 32) {
         mPops[slot].active = 0;
         mPops[slot].visible = 0;
     }
@@ -1349,7 +1343,7 @@ void dScMgSound_c::Pop10_Finish(int slot) {
             mPops[slot].scale = 0x800;
     }
     mPops[slot].timer += 1;
-    if (mPops[slot].timer >= 0x20) {
+    if (mPops[slot].timer >= 32) {
         mPops[slot].active = 0;
         mPops[slot].visible = 0;
     }
@@ -1388,7 +1382,7 @@ void dScMgSound_c::Pop11_Finish(int slot) {
             mPops[slot].scale = 0xa80;
     }
     mPops[slot].timer += 1;
-    if (mPops[slot].timer >= 0x18) {
+    if (mPops[slot].timer >= 24) {
         mPops[slot].active = 0;
         mPops[slot].visible = 0;
     }
@@ -1429,7 +1423,7 @@ void dScMgSound_c::Pop12_Finish(int slot) {
             mPops[slot].scale = 0xd80;
     }
     mPops[slot].timer += 1;
-    if (mPops[slot].timer >= 0x18) {
+    if (mPops[slot].timer >= 24) {
         mPops[slot].active = 0;
         mPops[slot].visible = 0;
     }
@@ -1444,7 +1438,7 @@ void dScMgSound_c::DrawPops() {
     int sinAngle = FX_SinCosTable_[0];
     long long cosAngle = FX_SinCosTable_[1];
 
-    for (slot = 0; slot < 30; slot++) {
+    for (slot = 0; slot < POP_NUM; slot++) {
         if (mPops[slot].visible) {
             int matrix[4];
             long long scale = mPops[slot].scale;

@@ -151,7 +151,7 @@ WIDEN_RE = re.compile(r"\(\s*(?:long\s+long|s64|u64|unsigned\s+long\s+long)\s*\)
 # they are real.
 _CV = r"(?:const\s+volatile|volatile\s+const|volatile)"
 _SCALAR = (r"(?:signed\s+|unsigned\s+)?"
-           r"(?:s8|u8|s16|u16|s32|u32|s64|u64|Fix12i|bool|char|short|int|float|double"
+           r"(?:s8|u8|s16|u16|s32|u32|s64|u64|fx16|fx32|bool|char|short|int|float|double"
            r"|long(?:\s+long)?)")
 CVCAST_RE = re.compile(r"\(\s*" + _CV + r"\s+" + _SCALAR + r"\s*\)")
 

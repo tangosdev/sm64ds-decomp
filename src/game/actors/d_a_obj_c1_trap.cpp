@@ -76,7 +76,7 @@ extern TrapStateRec data_ov010_02112d28;
  * Every instruction the cartridge has here falls out of the one `new`.
  * The header's inline operator new keeps the allocation on fBase_c::operator
  * new; without it the call relocates to the unavailable global `_Znwm`. */
-extern "C" daObjC1_Trap_c *daObjC1_Trap_c_classInit() {
+daObjC1_Trap_c *daObjC1_Trap_c_classInit() {
     return new daObjC1_Trap_c();
 }
 
@@ -85,10 +85,9 @@ extern "C" SpawnInfo<daObjC1_Trap_c> g_profile_C1_TRAP = {
 
 /*
  * registered directly in InitResources. */
-extern "C" void func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daObjC1_Trap_c *>(owner)->OnCollision(*other);
 }
-
 
 void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     daObjC1_Trap_c *spawner;
@@ -114,7 +113,7 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     spawner = (daObjC1_Trap_c *)dActor_c::FindWithID(spawnerID);
     if (!spawner)
         return;
-    isPlayer = (int)(other.actorID == 0xbf);
+    isPlayer = (other.actorID == 0xbf);
     if (!isPlayer)
         return;
 
@@ -127,7 +126,7 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     spawnerPos.y = spawnerPosition->y;
     spawnerPos.z = spawnerPosition->z;
     angle = Vec3_HorzAngle((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
-    relativeAngle = (s16)(angle + spawner->mAngleY);
+    relativeAngle = (angle + spawner->mAngleY);
     distance = Vec3_HorzDist((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
     projection = FX_SinIdx((u16)relativeAngle >> 4);
     projectedDistance = FX_MUL(distance, projection);
@@ -154,8 +153,8 @@ int daObjC1_Trap_c::InitResources() {
 
         cosAngle = FX_CosIdx((u16)mAngleY >> 4);
         sinAngle = FX_SinIdx((u16)mAngleY >> 4);
-        z = mPosZ + sinAngle * 0x15d;
-        x = mPosX - cosAngle * 0x15d;
+        z = mPosZ + sinAngle * 349;
+        x = mPosX - cosAngle * 349;
         y = mPosY;
         position.x = x;
         position.y = y;
@@ -165,8 +164,8 @@ int daObjC1_Trap_c::InitResources() {
 
         sinAngle = FX_SinIdx((u16)mAngleY >> 4);
         cosAngle = FX_CosIdx((u16)mAngleY >> 4);
-        z = mPosZ - sinAngle * 0x15d;
-        x = cosAngle * 0x15d + mPosX;
+        z = mPosZ - sinAngle * 349;
+        x = cosAngle * 349 + mPosX;
         y = mPosY;
         position.x = x;
         position.y = y;
@@ -200,7 +199,7 @@ int daObjC1_Trap_c::Behavior() {
         return 1;
     }
 
-    TrapState *states = (TrapState *)&data_ov010_02112d28;
+    TrapState *states = &data_ov010_02112d28.state0;
     (this->*states[mState])();
     UpdateModelTransform();
     UpdateCollisionTransform();

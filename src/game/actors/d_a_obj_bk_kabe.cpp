@@ -134,8 +134,7 @@ int daObjBk_Kabe_c::Behavior() {
             pos.y = mPosY;
             pos.z = mPosZ;
             pos.y += kStarPopY;
-            dActor_c::Spawn(kStarActor, mStarId | kStarSpawnFlags, pos, (Vector3_16 *)0, mAreaId,
-                            -1);
+            dActor_c::Spawn(kStarActor, mStarId | kStarSpawnFlags, pos, 0, mAreaId, -1);
             MarkForDestruction();
         }
         return 1;
@@ -149,7 +148,7 @@ int daObjBk_Kabe_c::InitResources() {
     int isBreakable = actorID == kBreakableActor;
     if (isBreakable) {
         mVariant = 0;
-        mStarId = (u8)param1;
+        mStarId = param1;
         if (mStarId == 0xff)
             mStarId = 0;
     } else {
@@ -166,11 +165,11 @@ int daObjBk_Kabe_c::InitResources() {
     return 1;
 }
 
-extern "C" daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE01() {
+daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE01() {
     return new daObjBk_Kabe_c();
 }
 
-extern "C" daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE00() {
+daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE00() {
     return new daObjBk_Kabe_c();
 }
 

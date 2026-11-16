@@ -68,7 +68,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daBar_c_classInit",
+      "symbol": "_Z17daBar_c_classInitv",
       "address": "0x020b0710",
       "size": "0x00000038",
       "legacy_source": "src/InvisiblePole_Spawn.c",

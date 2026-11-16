@@ -144,7 +144,7 @@ struct daKrb_c : dCapEnemy_c {
        names coined by that project); see d_a_krb.cpp. ActTumble and ActPause
        have no N64 counterpart. */
     void BeginJump();
-    void func_ov084_02129cf4(Fix12i distThresh);
+    void func_ov084_02129cf4(fx32 distThresh);
     void func_ov084_02129ed4();
     void ActPause();
     void ActTumble();

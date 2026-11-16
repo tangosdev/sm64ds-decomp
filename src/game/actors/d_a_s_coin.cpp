@@ -40,15 +40,13 @@ static inline int HasActorID(dActor_c *actor, unsigned int id) {
     return actor->actorID == id;
 }
 
-extern "C" daSCoin_c *daSCoin_c_classInit()
-{
+daSCoin_c *daSCoin_c_classInit() {
     return new daSCoin_c();
 }
 
 extern "C" SpawnInfo<daSCoin_c> g_profile_SECRET_COIN = {
-    daSCoin_c_classInit, 0x0149, 0x014a, 0x00000000,
-    0x00000000, 0x00320000, 0x01f40000, 0x00050000
-};
+    daSCoin_c_classInit, 0x0149,     0x014a,     0x00000000,
+    0x00000000,          0x00320000, 0x01f40000, 0x00050000};
 
 s32 daSCoin_c::InitResources()
 {
@@ -179,7 +177,10 @@ void daSCoin_c::Collect()
         SpawnNumber(v, leader->mCollectedCount, false, 0, 0);
     }
     mdCcAc_c.flags |= 1;
-    if (leader->mCollectedCount == 5) { mDeathTimer = 0x1e; return; }
+    if (leader->mCollectedCount == 5) {
+        mDeathTimer = 30;
+        return;
+    }
     if (mGroupRole != 2) return;
     MarkForDestruction();
 }

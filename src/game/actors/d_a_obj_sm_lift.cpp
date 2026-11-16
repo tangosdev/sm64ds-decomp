@@ -1,5 +1,4 @@
 //cpp
-#include "types.h"
 /* Production translation unit for ov018/daObjSm_Lift_c.
  * 11 function(s), .text 0x021111a0..0x02111848. Cool, Cool Mountain's ski lift
  * (SM_LIFT): it follows a path and turns when a mega mushroom hits it.
@@ -126,7 +125,7 @@ int daObjSm_Lift_c::Behavior() {
         if (mNodeStep > 0 && mNodeIndex == 1) {
             if (Vec3_HorzDist(&mPos, (Vector3 *)&mBasePosX) < 0x10000) {
                 mMoving = 0;
-                mPauseTimer = 0x3c;
+                mPauseTimer = 60;
             }
         }
         target = 0;
@@ -182,7 +181,7 @@ int daObjSm_Lift_c::Behavior() {
                 if (path.Loops() != 0) {
                     mNodeIndex = mNodeCount - 1;
                 } else {
-                    mPauseTimer = 0x3c;
+                    mPauseTimer = 60;
                     mMoving = 0;
                     mNodeStep = 1;
                     int *pIdx2 = &mNodeIndex;
@@ -193,10 +192,10 @@ int daObjSm_Lift_c::Behavior() {
                 if (path.Loops() != 0) {
                     mNodeIndex = 0;
                 } else {
-                    mPauseTimer = 0x3c;
+                    mPauseTimer = 60;
                     mMoving = 0;
                     mNodeStep = -1;
-                    int *pIdx3 = (int *)((unsigned)(intptr_t)(&mNodeIndex));
+                    int *pIdx3 = &mNodeIndex;
                     *pIdx3 = *pIdx3 + (mNodeStep * 2);
                 }
             }
@@ -215,34 +214,27 @@ int daObjSm_Lift_c::Behavior() {
 }
 
 s32 daObjSm_Lift_c::InitResources() {
-    char *c = (char *)this;
-    mPathId = *(int *)(c + 8) & 0xff;
+    mPathId = param1 & 0xff;
     if (mPathId == 0xff)
         return 0;
     BMD_File *f = dExtSimpleModel_c::LoadFile(gSmLiftModelFile);
-    ((dExtModel_c *)&mModel)->SetFile(f, 1, -1);
+    mModel.SetFile(f, 1, -1);
     UpdateModelTransform();
     UpdateClsnPosAndRot();
     KCL_File *kf = dBgW_Kc::LoadFile(gSmLiftCollisionFile);
     mMeshCollider.SetFile(kf, mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)data_ov018_02112f48);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
-    mPauseTimer = 0x3c;
+    mPauseTimer = 60;
     mBasePosX = mPosX;
     mBasePosY = mPosY;
     mBasePosZ = mPosZ;
-    {
-        short *ang = (short *)&mAngleY;
-        *ang = *ang - 0x4000;
-    }
+    mAngleY -= 0x4000;
     PathPtr p;
     p.FromID(mPathId);
     mNodeCount = p.NumNodes();
     mNodeStep = 1;
-    {
-        int *ip = (int *)&mNodeIndex;
-        *ip = *ip + mNodeStep;
-    }
+    mNodeIndex += mNodeStep;
     mTouchingPlayer = 0;
     return 1;
 }
@@ -270,7 +262,7 @@ void daObjSm_Lift_c::StoodOnCallback(dBgW *collider, dActor_c *self, dActor_c *o
  * `new daObjSm_Lift_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x354), dBgActor_c's base constructor and the
  * vptr store (the class adds no member with a constructor). */
-extern "C" daObjSm_Lift_c *daObjSm_Lift_c_classInit(void) {
+daObjSm_Lift_c *daObjSm_Lift_c_classInit(void) {
     return new daObjSm_Lift_c;
 }
 

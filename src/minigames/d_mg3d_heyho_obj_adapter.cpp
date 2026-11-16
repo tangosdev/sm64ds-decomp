@@ -24,6 +24,7 @@
 #include "common.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "MgCamera.h"
 #include "decl_common.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
@@ -71,9 +72,6 @@ extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern int NormalizeVec3IfNonZero(Vector3 *v);
-/* local extern: MgCamera.h declares it on MgCamera *, but the two cameras are void * here. */
-extern void Camera_ProjectToScreen(void *camera, void *pos, int *x, int *y);
-extern void Jump2Popup_Spawn(int a, int b, int c);
 
 extern HeyhoMotion pmf_Heyho_MotionPatrolBob;
 extern HeyhoMotion pmf_Heyho_MotionBounceNear;
@@ -113,6 +111,7 @@ extern const HeyhoPath sHeyhoFlyInPaths[][4];
 extern const HeyhoPath sHeyhoSettlePaths[][5];
 extern MgCamera *sMgSubCamera;
 }
+extern void Jump2Popup_Spawn(int a, int b, int c);
 
 /* The Jump scene's three players, seen through the adapter base the Heyhos
    test against. */
@@ -972,9 +971,11 @@ void Heyho::MotionChase() {
         for (i = 0; i < 3; i++) {
             if (JumpAdapter(i)->IsLaunched() != 0) {
                 int dot;
-                op = *(const Vector3 *)JumpAdapter(i)->GetPos();
+                const Vector3 *pos = (const Vector3 *)JumpAdapter(i)->GetPos();
+                op = *pos;
                 Vec3_Sub(&delta, &mPos, &op);
-                nrm = *(const Vector3 *)JumpAdapter(i)->GetVelocity();
+                const Vector3 *vel = (const Vector3 *)JumpAdapter(i)->GetVelocity();
+                nrm = *vel;
                 if (NormalizeVec3IfNonZero(&nrm) != 0) {
                     dot = VEC_DotProduct(&nrm, &delta);
                     if (dot > 0) {
@@ -1085,17 +1086,17 @@ void Heyho::Settle() {
         a->callbackScale = t;
 
     ApproachLinear(sHeyhoUnsettledCount, 0, 1);
-    ApproachLinear(sJumpComboCount, 0x270f, 1);
+    ApproachLinear(sJumpComboCount, 9999, 1);
 
     if (sHeyhoScorePopups != 0) {
         if (mPos.y > 0) {
             Camera_ProjectToScreen(sMgSubCamera, &mPos, &v0, &v1);
-            v1 = v1 - (Mg_GetTopScreenYOffset() + 0xc0);
+            v1 = v1 - (Mg_GetTopScreenYOffset() + 192);
         } else {
             Camera_ProjectToScreen(sMgMainCamera, &mPos, &v0, &v1);
         }
-        v1 = v1 - 0x20;
-        Jump2Popup_Spawn(v0 << 0xc, v1 << 0xc, (short)sJumpComboCount);
+        v1 = v1 - 32;
+        Jump2Popup_Spawn(v0 << 12, v1 << 12, (short)sJumpComboCount);
     }
 
     SetIdle();
@@ -1251,8 +1252,6 @@ int Heyho::IsChasing() {
     return mMotion != pmf_Heyho_MotionLeave && (mMotion != pmf_Heyho_MotionChase_2 || mLean == 0);
 }
 
-extern "C" {
-
 /* ---- Heyho_InitPool ---- */
 int Heyho_InitPool(void *heyhos, int count) {
     int i;
@@ -1376,7 +1375,6 @@ int Heyho_AllIdle(void) {
             return 0;
     }
     return 1;
-}
 }
 
 dMg3DHeyhoObjAdapter_c::dMg3DHeyhoObjAdapter_c() : mCommand(0)

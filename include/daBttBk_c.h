@@ -18,8 +18,8 @@
  * SIZE 0x378 is the factory's own literal; mCarrier (4 bytes, 0x374) closes
  * exactly on it.
  *
- * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
- * names -- dActor_c ends at exactly 0x0d0. Two consumer fields were
+ * Everything below 0x0d4 duplicated dActor_c's own fields under placeholder
+ * names -- dActor_c ends at exactly 0x0d4. Two consumer fields were
  * repointed to inherited dActor_c names: unk_09c -> mVertAccel, unk_0a0 ->
  * mTerminalVelocity, unk_0b0 -> mFlags (mPosX/Y/Z and mScaleX/Y/Z already
  * shared dActor_c's names).
@@ -46,7 +46,6 @@
  * registry profile.
  */
 struct daBttBk_c : dActor_c {
-    u8 pad_0d0[0x4];
     /* dExtSimpleModel_c member, named by the class's own destructor calling
        dExtSimpleModel_c's D1 at +0x0d4. [daBttBk_c D0, src/game/actors/d_a_btt_bk.cpp] */
     dExtSimpleModel_c mModel; /* 0x0d4 */

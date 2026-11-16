@@ -60,7 +60,7 @@
  *   df44    InitDormant    Dormant     13               enter clears mBlinkHidden; per-frame does
  *                                                       nothing
  *
- * Fix12 reads throughout: 0x1000 is 1.0, and positions / sizes shown as "N
+ * fx32 reads throughout: 0x1000 is 1.0, and positions / sizes shown as "N
  * units" are the raw value >> 12. Angles: 0x10000 is a full turn.
  *
  * DO NOT "TIDY" THESE -- each one is load-bearing:
@@ -85,12 +85,6 @@
  *   (0x224 vs 0x21c); taking `&player->mAngleX` / `&player->mPosX` and indexing
  *   the pointer matches. mStateTimer is s16 in dEnemyBase_c but the helpers
  *   read it unsigned, hence CAP_TIMER.
- *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
- *   dActor_c::SetRanges is not on the header (notes/mwccarm-codegen.md 6az).
- *   dExtAnmModel_c::SetAnim / DropShadowRadHeight / ReflectAngle take Fix12<int>
- *   by value, which has no implicit int conversion (notes/mwccarm-codegen.md
- *   6az).
  *
  * leftovers:
  *   InitResources keeps two `(u32)param1` read-side casts; spelled plainly,
@@ -192,9 +186,7 @@ struct Flags3eb {
     u8 real : 1;
 };
 
-/* dEnemyBase_c declares mStateTimer as an s16, but the helpers below read and
- * write it as an unsigned halfword (ldrh/strh); a signed read is ldrsh. */
-#define CAP_TIMER(cap) (*(u16 *)&(cap)->mStateTimer)
+#define CAP_TIMER(cap) ((cap)->mStateTimer)
 
 /* mCarryMatrix: the actor carrying the cap sets it (daMky_c stores its
  * mCapMtx there for the cap it spawns); this file only tests it and clears
@@ -212,7 +204,7 @@ enum {
 /* Sound bank 3: the 1-Up chime (da1up_c plays it for the 1-up mushroom too). */
 enum { kSfx1Up = 0x6e };
 
-/* Sizes in fix12 (0x1000 = 1.0 unit). */
+/* Sizes in fx32 (0x1000 = 1.0 unit). */
 enum {
     kClsnSizeSmall = 0x1e000,   /* 30 units: dCcAc_c radius and height at Init */
     kClsnSizeLarge = 0x32000,   /* 50 units: collider radius and height of the df34 types */
@@ -226,14 +218,10 @@ enum {
 extern "C" {
 
 /* -- other modules -- */
-void  func_02013a88(void);
-short func_02010844(void *self, void *v, short angle);
-void func_020167a4(dExtAnmModel_c *model);
-int func_ov002_020f030c(int x);
 
 unsigned short DecIfAbove0_Short(unsigned short *p);
 
-Fix12i Vec3_HorzLen(const Vector3 *v);
+fx32 Vec3_HorzLen(const Vector3 *v);
 void  Vec3_MulScalarInPlace(void *v, int s);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *out, Vector3 *v, int shift);
@@ -241,14 +229,6 @@ void Vec3_Asr(Vector3 *out, Vector3 *v, int shift);
 void  Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void  Matrix4x3_FromRotationY(void *m, int angle);
-
-
-short atan2_hold_d_a_obj_mario_cap_1(int y, int x);
-
-
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void *w);
-
 
 /* -- data -- */
 extern Matrix4x3      data_020a0e68;
@@ -286,11 +266,12 @@ extern McapStatePmf data_ov002_0210959c, data_ov002_021095a4;
 extern SharedFilePtr *data_ov002_020ff0a0[];
 extern SharedFilePtr *data_ov002_020ff0b8[];
 extern int            *data_ov002_020ff0c4[];
-
 }
+void func_02013a88(void);
+void func_020167a4(dExtAnmModel_c *model);
+int func_ov002_020f030c(int x);
 
-extern "C" daObjMarioCap_c *daObjMarioCap_c_classInit(void)
-{
+daObjMarioCap_c *daObjMarioCap_c_classInit(void) {
     return new daObjMarioCap_c();
 }
 
@@ -354,9 +335,8 @@ int daObjMarioCap_c::InitResources()
         break;
     }
 
-    if (mAnmModel.SetFile(
-            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_020ff0ac[mModelIndex]), 1,
-            -1) == 0)
+    SharedFilePtr *modelFile = (SharedFilePtr *)data_ov002_020ff0ac[mModelIndex];
+    if (mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(*modelFile), 1, -1) == 0)
         return 0;
 
     mShadowModel.InitCylinder();
@@ -387,7 +367,7 @@ int daObjMarioCap_c::InitResources()
     default:
         break;
     case 0:
-        *(s32 *)((char *)&mdCcAc_c.vulnFlags) |= 0x8000;
+        mdCcAc_c.vulnFlags |= 0x8000;
         mIconKind = 4;
         EnterState(&data_ov002_0210df64);
         break;
@@ -396,7 +376,7 @@ int daObjMarioCap_c::InitResources()
         EnterState(&data_ov002_0210df84);
         break;
     case 2:
-        *(s32 *)((char *)&mdCcAc_c.vulnFlags) |= 0x8000;
+        mdCcAc_c.vulnFlags |= 0x8000;
         mIconKind = 4;
         EnterState(&data_ov002_0210df04);
         break;
@@ -548,7 +528,7 @@ int daObjMarioCap_c::Behavior()
     /* Run the current state's per-frame function (the second member pointer
        of the record in mStateEntry), if it has one. */
     {
-        CapStateRec *q = *(CapStateRec **)&mStateEntry;
+        CapStateRec *q = (CapStateRec *)mStateEntry;
         if (q->fn != 0) {
             (((CapStateSelf *)this)->*(q->fn))();
         }
@@ -714,12 +694,12 @@ void daObjMarioCap_c::UpdateMatrix()
     mAnmModel.mat4x3 = data_020a0e68;
 
     {
-        char *s = *(char **)&mStateEntry;
-        if (s == (char *)&data_ov002_0210df54)
+        McapStateRec *s = (McapStateRec *)mStateEntry;
+        if (s == &data_ov002_0210df54)
             return;
-        if (s == (char *)&data_ov002_0210df74)
+        if (s == &data_ov002_0210df74)
             return;
-        if (s == (char *)&data_ov002_0210df44)
+        if (s == &data_ov002_0210df44)
             return;
     }
 
@@ -765,8 +745,8 @@ void daObjMarioCap_c::UpdateMatrix()
  * if that member pointer is null. */
 int daObjMarioCap_c::EnterState(void *rec)
 {
-    *(CapEnterPmf **)&mStateEntry = (CapEnterPmf *)rec;
-    CapEnterPmf *q = *(CapEnterPmf **)&mStateEntry;
+    mStateEntry = (int)rec;
+    CapEnterPmf *q = (CapEnterPmf *)mStateEntry;
     if (*q == 0) return 0;
     return (((CapEnterSelf *)this)->**q)();
 }
@@ -790,8 +770,7 @@ int daObjMarioCap_c::InitWait()
 int daObjMarioCap_c::Wait() {
     if (mCarryMatrix == 0 && !SaveData::HasPlayerLostCap()) {
         if (CAP_TIMER(this) == 0 && mWithMeshClsn.IsOnGround()) {
-            if (dActor_c::Spawn(kActorMarioCap, param1 | 0x12, mPos, (const Vector3_16 *)0, mAreaId,
-                                -1)) {
+            if (dActor_c::Spawn(kActorMarioCap, param1 | 0x12, mPos, 0, mAreaId, -1)) {
                 CAP_TIMER(this) = 3;
             }
         }
@@ -823,11 +802,8 @@ int daObjMarioCap_c::InitTimedWait()
  * Returns 1. */
 int daObjMarioCap_c::TimedWait()
 {
-    if (data_02092138 > mPosY
-        || mWithMeshClsn.IsOnGround()
-        || !DecIfAbove0_Short((unsigned short*)&mStateTimer)
-        || (mFlags & 8))
-    {
+    if (data_02092138 > mPosY || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
+        (mFlags & 8)) {
         MarkForDestruction();
         return 1;
     }
@@ -860,11 +836,8 @@ int daObjMarioCap_c::InitTimedWait2()
  * TimedWait. Returns 1. */
 int daObjMarioCap_c::TimedWait2()
 {
-    if (data_02092138 > mPosY
-        || mWithMeshClsn.IsOnGround()
-        || !DecIfAbove0_Short((unsigned short*)&mStateTimer)
-        || (mFlags & 8))
-    {
+    if (data_02092138 > mPosY || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
+        (mFlags & 8)) {
         MarkForDestruction();
         return 1;
     }
@@ -974,7 +947,7 @@ int daObjMarioCap_c::Slide()
         CheckTouch();
         return 1;
     }
-    if (DecIfAbove0_Short((unsigned short *)&mStateTimer) == 0)
+    if (DecIfAbove0_Short(&mStateTimer) == 0)
         return 1;
     if (CAP_TIMER(this) == 1) {
         b = (int)((mFlags & 0x60000) != 0);
@@ -1026,8 +999,8 @@ int daObjMarioCap_c::Slide()
     mVertSpeed =
         -(FX_Div(FX_MUL(mFloorNormalX, mSpeedX) + FX_MUL(mFloorNormalZ, mSpeedZ), mFloorNormalY) +
           0x8000);
-    pitch = func_02010844(this, &mFloorNormalX, mAngleY);
-    roll = func_02010844(this, &mFloorNormalX, mAngleY - 0x4000);
+    pitch = func_02010844((Vector3 *)&mFloorNormalX, mAngleY);
+    roll = func_02010844((Vector3 *)&mFloorNormalX, mAngleY - 0x4000);
     UpdateAngle(mAngleX, pitch, 4, 0x1000);
     UpdateAngle(mAngleZ, roll, 4, 0x1000);
     return 1;
@@ -1072,13 +1045,13 @@ int daObjMarioCap_c::InitTaken()
                     v.y = mPosY;
                     v.z = mPosZ;
                     v.y += 0x64000;
-                    dActor_c::Spawn(kActor1UpLogo, 8, v, (Vector3_16 *)0, mAreaId, -1);
+                    dActor_c::Spawn(kActor1UpLogo, 8, v, 0, mAreaId, -1);
                 }
             }
         }
     }
 
-    mStateTimer = 0x96;
+    mStateTimer = 150;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
@@ -1095,7 +1068,7 @@ int daObjMarioCap_c::InitTaken()
  * daPly_c::Unk_020c9e5c(8) says 1, and when it has finished removes the cap,
  * first spawning a new OBJ_MARIO_CAP at mHomePos if mType is 4. Returns 1. */
 int daObjMarioCap_c::Taken() {
-    if (DecIfAbove0_Short((unsigned short *)&mStateTimer) == 0) {
+    if (DecIfAbove0_Short(&mStateTimer) == 0) {
         MarkForDestruction();
         return 1;
     }
@@ -1154,7 +1127,8 @@ int daObjMarioCap_c::Taken() {
     if (mAnimStarted == 1) {
         if (mAnmModel.Finished() != 0) {
             if (mType == 4) {
-                dActor_c::Spawn(kActorMarioCap, param1, *(const Vector3 *)&mHomePosX, (const Vector3_16 *)0, mAreaId, -1);
+                dActor_c::Spawn(kActorMarioCap, param1, *(const Vector3 *)&mHomePosX, 0, mAreaId,
+                                -1);
             }
             MarkForDestruction();
         }
@@ -1357,8 +1331,8 @@ void daObjMarioCap_c::CheckTouch()
         v.x = a;
         v.y = b;
         v.z = *(u16*)&found->mAngleZ;
-        mPrevAngleX = *(s16*)&v.x;
-        mPrevAngleY = *(s16*)&v.y;
+        mPrevAngleX = v.x;
+        mPrevAngleY = v.y;
         mPrevAngleZ = *(s16*)&v.z;
         mAngleX = mPrevAngleX;
         mAngleY = mPrevAngleY;

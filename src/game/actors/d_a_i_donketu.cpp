@@ -69,7 +69,7 @@ extern BullyResourceConfig data_ov027_021138f4;
  * ICE_DONKETU registry profile; later EAD lineage supplies classInit.
  * Exact original spelling is not preserved. Historical alias:
  * daIDonketu_c_Spawn. */
-extern "C" daIDonketu_c *daIDonketu_c_classInit(void) {
+daIDonketu_c *daIDonketu_c_classInit(void) {
     return new daIDonketu_c();
 }
 
@@ -135,27 +135,23 @@ void daIDonketu_c::UpdateDeathState() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* daIDonketu_c::UpdateRunState -- vtable slot 31, daOts_c's state-1 hook. The
- * charge: hold still while the wind-up plays out over the first ten frames, then
- * run at 0x14000. The pointer returned from the first arm is the cartridge's own
- * shape, not a meaningful value -- r0 is simply left holding the timer address.
- * mStateTimer is s16 in dEnemyBase_c.h and the ROM compares it unsigned
- * (blo), hence the u16 conversions; the u16* in the first arm stays for the
- * address it leaves in r0. */
+/* daIDonketu_c::UpdateRunState -- vtable slot 31, daOts_c's state-1 hook.
+ * Hold still while the wind-up plays out over the first ten frames, then run.
+ * The first arm returns the timer's address. */
 int daIDonketu_c::UpdateRunState() {
-    if ((u16)mStateTimer < 0xa) {
+    if (mStateTimer < 10) {
         mHorzSpeed = 0;
         int result = func_ov064_02116110(0x700);
         if (result != 0)
             return result;
-        u16 *timer = (u16 *)&mStateTimer;
+        u16 *timer = &mStateTimer;
         if (*timer == 9)
             *timer = 0;
         return (int)timer;
     }
     mHorzSpeed = 0x14000;
     u16 timer = mStateTimer;
-    if (timer > 0x23) {
+    if (timer > 35) {
         timer = 0;
         mStateTimer = 0;
     }

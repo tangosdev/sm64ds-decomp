@@ -48,8 +48,6 @@
  *   include/decl_common.h declares them that way and check_decl_agreement
  *   compares the two. func_ov100_02143aa4 and func_ov100_02143ae0 are the
  *   state pair's members, called through ChompPmfSelf rather than as methods.
- * - daPly_c::Hurt, which takes a Fix12<int> parameter, stays spelled as a
- *   mangled extern-C free function.
  * - func_ov100_02143b68 reaches the link positions and the link models'
  *   translations through two raw char pointers that start at the chomp,
  *   and InitResources' link seeding loop does the same. Written as
@@ -84,6 +82,7 @@
 #include "dCc_c.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -114,7 +113,7 @@ enum {
     daWanwan2_SND_COIN_SPAWN  = 0x3a    /* Behavior's COIN spawn (played whether or not Spawn returned an actor) */
 };
 
-/* The daPly_c::Hurt ABI bridge and chain-link arithmetic below use NitroSDK
+/* The daPly_c::Hurt call and chain-link arithmetic below use NitroSDK
    VecFx32; the collision offset uses the real Vector3 interface. */
 
 /* func_ov100_02143b68 copies its identity matrix through the flat Mtx43: a
@@ -157,9 +156,11 @@ extern Wanwan2AnimFileHandle data_ov100_021486b4;
 struct Vector3_16;
 struct dCc_c;
 
+void func_02012694(unsigned int, const Vector3 *);
+void LoadSilverStarAndNumber();
+void UnloadSilverStarAndNumber();
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void func_02012694(unsigned int, void *);
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
@@ -168,13 +169,9 @@ void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-int Vec3_HorzLen(void *v);
 int VEC_Mag(const Vector3 *v);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int ApproachAngle(short *cur, short target, int step, int a, int b);
-int atan2_hold_d_a_wanwan2_1(int y, int x);
-void LoadSilverStarAndNumber();
-void UnloadSilverStarAndNumber();
+}
 
 extern SharedFilePtr data_ov002_0211092c;
 extern s32 data_ov100_02148008[3];
@@ -184,7 +181,6 @@ extern ChompPmf data_ov100_02148000;
 extern ChompPmf data_ov100_02147ff8;
 extern unsigned char gGameMode;
 extern Matrix4x3 data_020a0e68;
-}
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
@@ -205,9 +201,8 @@ daWanwan2_c::~daWanwan2_c()
 /* -------------------------------------------------------------------------- */
 /* The floor probe: a vertical line from 10 units above the chomp (0xa000) to
    184 units below it (0xb8000). Returns 1 on a hit. */
-extern "C" int func_ov100_02143370(char *self)
-{
-    daWanwan2_c *c = (daWanwan2_c *)self;
+int daWanwan2_c::func_ov100_02143370() {
+    daWanwan2_c *c = this;
     Vector3 va;
     Vector3 vb;
     int ya, yb;
@@ -243,8 +238,7 @@ extern "C" int func_ov100_02143370(char *self)
    source; its `enum Bool` comparison temporaries are kept. */
 enum Bool { FALSE, TRUE };
 
-extern "C" void func_ov100_0214344c(daWanwan2_c *self)
-{
+void func_ov100_0214344c(daWanwan2_c *self) {
     Vector3 v;
     daPly_c *other;
 
@@ -292,11 +286,11 @@ extern "C" void func_ov100_0214344c(daWanwan2_c *self)
     if (other->mIsVanish != 0)
         return;
     {
-        VecFx32 pos;
+        Vector3 pos;
         pos.x = self->mPosX;
         pos.y = self->mPosY;
         pos.z = self->mPosZ;
-        other->Hurt(*(Vector3 *)&pos, 2, 0xc000, 1, 0, 1);
+        other->Hurt(pos, 2, 0xc000, 1, 0, 1);
     }
 }
 
@@ -309,8 +303,7 @@ extern "C" void func_ov100_0214344c(daWanwan2_c *self)
    frame until it is gone or its +0x440 word (daStar_c's unk_440) reads 5;
    either latches mChainEndDone, clears mChainEndActorID and stops the
    updates. */
-extern "C" void func_ov100_021435e8(daWanwan2_c *c)
-{
+void func_ov100_021435e8(daWanwan2_c *c) {
     if (c->mChainEndDone != 0) return;
 
     int flag = (gGameMode == 1);
@@ -382,25 +375,24 @@ extern "C" void func_ov100_021435e8(daWanwan2_c *c)
    bound ended up more than 200 units above it. Was a C source; the
    materialised mChainTimer address and the `added` copy are the shapes the ROM
    carries. */
-extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
-{
-    VecFx32 in, out, cur, delta, added, v48, v54, v60;
-    VecFx32 *pos, *vel, *src;
+void func_ov100_021437d4(daWanwan2_c *thisx) {
+    Vector3 in, out, cur, delta, added, v48, v54, v60;
+    Vector3 *pos, *vel, *src;
     int *heights;
     int loop;
     int angOff;
     int idx, val, ang, hlen, angz;
 
-    pos = (VecFx32 *)thisx->mLinkPos;
-    vel = (VecFx32 *)thisx->mLinkVel;
+    pos = thisx->mLinkPos;
+    vel = thisx->mLinkVel;
     heights = thisx->mLinkMinY;
 
     in.z = -0xfa000; in.x = 0; in.y = 0;    /* 250 units behind */
     out.x = 0; out.y = 0; out.z = 0;
 
     Matrix4x3_FromRotationXYZExt(&data_020a0e68, thisx->mAngleX, thisx->mAngleY, thisx->mAngleZ);
-    MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
-    Vec3_Add((Vector3 *)&added, &thisx->mPos, (const Vector3 *)&out);
+    MTX_MultVec43(&in, &data_020a0e68, &out);
+    Vec3_Add(&added, &thisx->mPos, &out);
 
     {
         int ax = added.x, ay = added.y, az = added.z;
@@ -410,7 +402,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         cur.x = ax; cur.y = ay; cur.z = az;
         thisx->mLinkPos[0].x = ax;
         ay = cur.y;
-        p6a0 = (int *)&thisx->mChainTimer;
+        p6a0 = &thisx->mChainTimer;
         thisx->mLinkPos[0].y = ay;
         {
             int cz = cur.z;
@@ -439,16 +431,16 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         if (val <= *heights) val = *heights;
         delta.y = val - src->y;
         ang = cstd::atan2(delta.x, delta.z);
-        hlen = Vec3_HorzLen(&delta);
+        hlen = Vec3_HorzLen((const Vector3 *)&delta);
         angz = (s16)(-cstd::atan2(delta.y, hlen));
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angz);
-        MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
+        MTX_MultVec43(&in, &data_020a0e68, &out);
         vel->x = pos->x; vel->y = pos->y; vel->z = pos->z;
-        Vec3_Add((Vector3 *)&v48, (const Vector3 *)src, (const Vector3 *)&out);
+        Vec3_Add(&v48, src, &out);
         pos->x = v48.x; pos->y = v48.y; pos->z = v48.z;
-        Vec3_Sub((Vector3 *)&v54, (const Vector3 *)pos, (const Vector3 *)vel);
-        Vec3_MulScalar((Vector3 *)&v60, (const Vector3 *)&v54, 0xbb8);
+        Vec3_Sub(&v54, pos, vel);
+        Vec3_MulScalar(&v60, &v54, 0xbb8);
         vel->x = v60.x; vel->y = v60.y; vel->z = v60.z;
         *heights = thisx->mPosY - 0xc8000;     /* 200 units below the chomp */
         if (*heights - pos->y > 0xc8000) *heights = pos->y;
@@ -467,9 +459,8 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
    recovered as "RollingIronBall_Kill" / "daIbl_c::Kill, from vtable slot
    identity": the pointer-to-member constant that holds it follows daIbl_c's
    vtable directly, and that is the whole of the old claim. Was a C source. */
-extern "C" int func_ov100_02143aa4(daWanwan2_c *c)
-{
-    c->mAnmModel.speed = 4096; /* 1.0 */
+int func_ov100_02143aa4(daWanwan2_c *c) {
+    c->mAnmModel.speed = 0x1000; /* 1.0 */
     c->mAnmModel.Advance();
     func_ov100_021437d4(c);
     func_ov100_0214344c(c);
@@ -480,8 +471,7 @@ extern "C" int func_ov100_02143aa4(daWanwan2_c *c)
 /* -------------------------------------------------------------------------- */
 /* The walking state's enter member (data_ov100_02148000): start the walk
    animation from data_ov100_021486ac. Was a C source. */
-extern "C" int func_ov100_02143ae0(daWanwan2_c *c)
-{
+int func_ov100_02143ae0(daWanwan2_c *c) {
     c->mAnmModel.SetAnim((BCA_File *)data_ov100_021486ac.filePtr, 0, 0x1000, 0);
     return 1;
 }
@@ -489,8 +479,7 @@ extern "C" int func_ov100_02143ae0(daWanwan2_c *c)
 /* -------------------------------------------------------------------------- */
 /* Enter a state: store the pair in mStatePair (+0x668) and call its enter
    member, if it has one. */
-extern "C" int func_ov100_02143b18(ChompPmfSelf *c, ChompState *p)
-{
+int func_ov100_02143b18(ChompPmfSelf *c, ChompState *p) {
     c->state = p;
     ChompState *q = c->state;
     if (q->enter == 0) return 1;
@@ -503,15 +492,11 @@ extern "C" int func_ov100_02143b18(ChompPmfSelf *c, ChompState *p)
    opacity 0xf), then for each of the six links an identity matrix at the
    link's position (mLinkPos >> 3) and a smaller drop shadow (radius 120
    units, depth 500 units). */
-extern "C" void func_ov100_02143b68(char *self)
-{
-    daWanwan2_c *c = (daWanwan2_c *)self;
+void daWanwan2_c::func_ov100_02143b68() {
+    daWanwan2_c *c = this;
     Mtx43 tmp;
     int i;
     dExtSimpleModel_c *mdst;
-    char *rd;
-    char *st;
-    dExtShadowModel_c *sm;
     Matrix4x3_FromRotationXYZExt(&c->mAnmModel.mat4x3, c->mAngleX, c->mAngleY, c->mAngleZ);
     c->mAnmModel.mat4x3.t.x = c->mPosX >> 3;
     c->mAnmModel.mat4x3.t.y = c->mPosY >> 3;
@@ -520,22 +505,13 @@ extern "C" void func_ov100_02143b68(char *self)
     tmp = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     i = 0;
     mdst = c->mModels;
-    /* rd and st both start at the chomp itself and are stepped by one link
-       (rd: 0xc, st: 0x50, a dExtSimpleModel_c), so the offsets below are from the chomp:
-       rd + 0x6d8 is mLinkPos[i] and st + 0x3b0 is mModels[i].mat4x3.t. */
-    rd = (char *)c;
-    st = (char *)c;
-    sm = c->mShadowModels;
     for (; i < daWanwan2_NUM_LINKS; i++) {
         *(Mtx43 *)&mdst->mat4x3 = tmp;
-        *(int *)(st + 0x3b0) = *(int *)(rd + 0x6d8) >> 3;
-        *(int *)(st + 0x3b4) = *(int *)(rd + 0x6dc) >> 3;
-        *(int *)(st + 0x3b8) = *(int *)(rd + 0x6e0) >> 3;
-        c->DropShadowRadHeight(*sm, mdst->mat4x3, 0x78000, 0x1f4000, 0xf);
+        c->mModels[i].mat4x3.t.x = c->mLinkPos[i].x >> 3;
+        c->mModels[i].mat4x3.t.y = c->mLinkPos[i].y >> 3;
+        c->mModels[i].mat4x3.t.z = c->mLinkPos[i].z >> 3;
+        c->DropShadowRadHeight(c->mShadowModels[i], mdst->mat4x3, 0x78000, 0x1f4000, 0xf);
         mdst++;
-        rd += 0xc;
-        st += 0x50;
-        sm++;
     }
 }
 
@@ -592,16 +568,16 @@ int daWanwan2_c::Render()
    exists and is not vanished. */
 int daWanwan2_c::Behavior()
 {
-    DecIfAbove0_Short((unsigned short *)&mCoinTimer);
-    DecIfAbove0_Short((unsigned short *)&unk_6a8);
-    if (DecIfAbove0_Short((unsigned short *)&mHaltTimer) != 0) {
+    DecIfAbove0_Short(&mCoinTimer);
+    DecIfAbove0_Short(&unk_6a8);
+    if (DecIfAbove0_Short(&mHaltTimer) != 0) {
         ApproachLinear(mScaleX, 0x1000, 0x500);
         mScaleZ = mScaleX;
         mScaleY = mScaleZ;
-        func_ov100_02143b68((char *)this);
+        func_ov100_02143b68();
         mHorzSpeed = 0;
-        UpdatePos((dCc_c *)&mdCcAcPos_c);
-        if (func_ov100_02143370((char *)this) != 0) {
+        UpdatePos(&mdCcAcPos_c);
+        if (func_ov100_02143370() != 0) {
             mTerminalVelocity = 0;
         }
         mdCcAcPos_c.Clear();
@@ -619,11 +595,11 @@ int daWanwan2_c::Behavior()
     }
 
     mHorzSpeed = 0x17000;
-    UpdatePos((dCc_c *)&mdCcAcPos_c);
+    UpdatePos(&mdCcAcPos_c);
 
-    if (func_ov100_02143370((char *)this) != 0) {
+    if (func_ov100_02143370() != 0) {
         if (unk_6a8 == 0) {
-            func_02012694(daWanwan2_SND_FLOOR_HIT, &mCamSpacePosX);
+            func_02012694(daWanwan2_SND_FLOOR_HIT, &mCamSpacePos);
         }
         mVertSpeed = 0x14000;
         HugeLandingDust(true);
@@ -641,7 +617,7 @@ int daWanwan2_c::Behavior()
         dActor_c *sp =
             dActor_c::Spawn(daWanwan2_ACTOR_COIN, 2, mPos, (const Vector3_16 *)0, mAreaId, -1);
         if (unk_6a8 == 0) {
-            func_02012694(daWanwan2_SND_COIN_SPAWN, &mCamSpacePosX);
+            func_02012694(daWanwan2_SND_COIN_SPAWN, &mCamSpacePos);
         }
         if (sp != 0) {
             sp->mPrevAngleX = 0;
@@ -653,7 +629,7 @@ int daWanwan2_c::Behavior()
             sp->mVertSpeed = vy << 12;
             sp->mSpeedZ = vx << 12;
         }
-        mCoinTimer = 0xc8;
+        mCoinTimer = 200;
     }
 
     {
@@ -680,7 +656,7 @@ int daWanwan2_c::Behavior()
 
         mAngleY = mPrevAngleY;
 
-        func_ov100_02143b68((char *)this);
+        func_ov100_02143b68();
         mdCcAcPos_c.Clear();
 
         daPly_c *p = ClosestPlayer();
@@ -766,17 +742,15 @@ int daWanwan2_c::InitResources()
     /* Every link starts at the position it was placed at. */
     {
         int i = 0;
-        char *position = (char *)this;
         do {
-            *(s32 *)(position + 0x6d8) = mPosX;     /* mLinkPos[i] */
+            mLinkPos[i].x = mPosX;
+            mLinkPos[i].y = mPosY;
+            mLinkPos[i].z = mPosZ;
             i++;
-            *(s32 *)(position + 0x6dc) = mPosY;
-            *(s32 *)(position + 0x6e0) = mPosZ;
-            position += sizeof(Vector3);
         } while (i < daWanwan2_NUM_LINKS);
     }
 
-    mCoinTimer = 0xc8;
+    mCoinTimer = 200;
 
     /* Start at node 1: GetNode writes that node's position over mPosX/Y/Z,
        after the links were seeded above from the placed position. */
@@ -817,8 +791,7 @@ s32 daWanwan2_c::OnAimedAtWithEgg()
  * retail constructor and destructor callback pairs through the manifest's
  * canonical constructor records. Vector3s.h supplies the real short-vector
  * default constructor. The compiler emits the vptr store and array calls. */
-extern "C" daWanwan2_c *daWanwan2_c_classInit()
-{
+daWanwan2_c *daWanwan2_c_classInit() {
     return new daWanwan2_c();
 }
 

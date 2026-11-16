@@ -134,7 +134,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "daWater_Ring_c_classInit",
+      "symbol": "_Z24daWater_Ring_c_classInitv",
       "address": "0x0211a1b0",
       "size": "0x00000050",
       "legacy_source": "src/d_a_water_ring.c",

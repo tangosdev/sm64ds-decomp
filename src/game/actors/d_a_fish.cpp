@@ -27,8 +27,6 @@
  * Behavior calls through.
  *
  * What stays, and why:
- * - dExtAnmModel_c::SetAnim stays mangled: it takes Fix12<int> by value
- *   (notes/mwccarm-codegen.md 6az).
  * - SharedFilePtr::filePtr is a void *, so LoadedBCA casts it to the
  *   BCA_File * SetAnim takes.
  * - data_0209caa0 / data_0209f32c are the arm9 level-state words that
@@ -131,7 +129,7 @@ inline daFish_c::daFish_c() {
     func_0203b9b4(&mSeed, 1);
 }
 
-extern "C" daFish_c *daFish_c_classInit() {
+daFish_c *daFish_c_classInit() {
     return new daFish_c();
 }
 
@@ -305,8 +303,7 @@ void daFish_c::StateIdle() {
         s16 ang = Vec3_HorzAngle(&this->mPos, &p->mPos);
         if (ApproachLinear(this->mPrevAngleY, ang, 0x400) != 0) {
             if (this->mModelIndex == 0) {
-                this->mAnmModel.SetAnim((BCA_File *)(LoadedBCA(&data_ov100_021489cc)), 0, 0x1000,
-                                        0);
+                this->mAnmModel.SetAnim((LoadedBCA(&data_ov100_021489cc)), 0, 0x1000, 0);
             }
         }
         Vec3_Sub(&d, &this->mPos, &p->mPos);
@@ -314,13 +311,11 @@ void daFish_c::StateIdle() {
             return;
         this->mStateTimer = -1;
         this->mState = 4;
-        this->mAnmModel.SetAnim((BCA_File *)(LoadedBCA(data_ov100_021473b0[this->mModelIndex])), 0,
-                                0x1000, 0);
+        this->mAnmModel.SetAnim((LoadedBCA(data_ov100_021473b0[this->mModelIndex])), 0, 0x1000, 0);
     } else {
         this->mStateTimer = -1;
         this->mState = 4;
-        this->mAnmModel.SetAnim((BCA_File *)(LoadedBCA(data_ov100_021473b0[this->mModelIndex])), 0,
-                                0x1000, 0);
+        this->mAnmModel.SetAnim((LoadedBCA(data_ov100_021473b0[this->mModelIndex])), 0, 0x1000, 0);
     }
 }
 
@@ -334,7 +329,7 @@ void daFish_c::StateFlee() {
             (((unsigned int)RandomIntInternal(&data_0209e650.value) % 0x12c) + 0x1f4) << 12;
         this->mTurnSpeed = (RandomIntInternal(&data_0209e650.value) & 0x3ff) + 0x400;
         this->mAnmModel.speed = 0x4000;
-    } else if (this->mStateTimer == 0x14) {
+    } else if (this->mStateTimer == 20) {
         this->mAnmModel.speed = 0x1000;
     }
     if (this->mHorzSpeed < this->mMaxSpeed) {
@@ -381,8 +376,7 @@ void daFish_c::StateTurnAbout() {
     this->mHorzSpeed =
         (((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x1fff) + 0x2000;
     this->mAnmModel.speed = 0x1000;
-    this->mWanderTimer =
-        (unsigned char)((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 0x3c);
+    this->mWanderTimer = ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 60);
     this->mState = 5;
 }
 
@@ -397,7 +391,7 @@ void daFish_c::InitFromSpawner(u32 spawnerID) {
     this->mTerminalVelocity = -0x1e000;
     unsigned int r = RandomIntInternal(&data_0209e650.value);
     int fc = this->mAnmModel.GetFrameCount();
-    this->mAnmModel.currFrame = (unsigned short)(r % (unsigned)fc) << 12;
+    this->mAnmModel.currFrame = (unsigned short)(r % fc) << 12;
     this->mIsSpawner = 0;
     this->mSpawnerID = spawnerID;
     if (this->mVariant != 0) {
@@ -414,8 +408,7 @@ void daFish_c::InitFromSpawner(u32 spawnerID) {
         this->mHorzSpeed =
             (((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x1fff) + 0x2000;
         this->mWanderTimer =
-            (unsigned char)((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) +
-                            0x3c);
+            ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 60);
         this->mState = 5;
     } else {
         this->mState = 3;

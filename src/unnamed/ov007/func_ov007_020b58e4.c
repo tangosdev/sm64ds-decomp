@@ -90,7 +90,7 @@ int func_ov007_020b58e4(Ov007ItemView *view) {
                     if (f == 1) {
                         view->sprite->texS = 0;
                     } else {
-                        view->sprite->texS = 0x28;
+                        view->sprite->texS = 40;
                     }
                 }
             }

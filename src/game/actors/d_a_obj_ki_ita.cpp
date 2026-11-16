@@ -34,7 +34,7 @@ struct KiItaCollisionFilePtr : SharedFilePtr {
     ~KiItaCollisionFilePtr();
 };
 
-extern "C" daObjKi_Ita_c *daObjKi_Ita_c_classInit() {
+daObjKi_Ita_c *daObjKi_Ita_c_classInit() {
     return new daObjKi_Ita_c();
 }
 

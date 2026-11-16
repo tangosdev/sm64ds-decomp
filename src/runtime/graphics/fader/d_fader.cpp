@@ -32,10 +32,10 @@
 
 // These helpers have native definitions but no shared declaration yet.
 #include "nitro/os/cache.h"
-int ApproachLinear(Fix12i &value, Fix12i target, Fix12i step);
+int ApproachLinear(fx32 &value, fx32 target, fx32 step);
 
 extern "C" {
-void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
+void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, fx32 x, fx32 y, fx32 z);
 }
 
 #ifndef _MSC_VER
@@ -54,17 +54,17 @@ dFdBrightness_c::~dFdBrightness_c()
    black the backdrop palette is reloaded as well. */
 void dFdBrightness_c::AdvanceFade()
 {
-    Fix12i before = currInterp;
+    fx32 before = currInterp;
     int level;
 
     AdvanceInterp();
     if (currInterp == before)
         return;
 
-    level = -(currInterp << 4) >> 0xc;
+    level = -(currInterp << 4) >> 12;
     GX_SetMasterBrightness(level);
     GXS_SetMasterBrightness(level);
-    if (level > -0x10)
+    if (level > -16)
         return;
 
     DC_FlushRange(data_0209d3ac, 2);
@@ -77,9 +77,9 @@ void dFdBrightness_c::AdvanceFade()
    `extra` is not read. Callers still pass it (always 0). */
 int dFdBrightness_c::SetBackwardTime(u32 frames, u32 extra) {
     if (frames == 0) {
-        speed = -(Fix12i)0x1000;
+        speed = -0x1000;
     } else {
-        speed = FX_Div(-(Fix12i)0x1000, (Fix12i)(frames << 12));
+        speed = FX_Div(-0x1000, (frames << 12));
     }
     return IsAtStart();
 }
@@ -87,9 +87,9 @@ int dFdBrightness_c::SetBackwardTime(u32 frames, u32 extra) {
 /* Fade in over `frames` frames: speed = 1.0 / frames. 0 means "instant". */
 int dFdBrightness_c::SetForwardTime(u32 frames, u32 extra) {
     if (frames == 0) {
-        speed = (Fix12i)0x1000;
+        speed = 0x1000;
     } else {
-        speed = FX_Div(0x1000, (Fix12i)(frames << 12));
+        speed = FX_Div(0x1000, (frames << 12));
     }
     return IsAtEnd();
 }
@@ -130,8 +130,8 @@ void dFdBrightness_c::SetToStart()
    1.0, a negative one toward 0.0; the helper takes a nonnegative step. */
 void dFader_c::AdvanceInterp()
 {
-    Fix12i step = speed;
-    Fix12i target = step >= 0 ? 0x1000 : 0;
+    fx32 step = speed;
+    fx32 target = step >= 0 ? 0x1000 : 0;
     if (step < 0)
         step = -step;
     ApproachLinear(currInterp, target, step);
@@ -149,7 +149,7 @@ void dFdColor_c::AdvanceFade()
     if (currInterp == old) return;
     {
         unsigned short color = this->color;
-        int m = color ? 0x10 : -0x10;
+        int m = color ? 16 : -16;
         int r = (currInterp * m) >> 12;
         if (r != 0) {
             G2_SetBlendBrightness(0x3f, r);
@@ -179,20 +179,20 @@ dFdWipe_c::~dFdWipe_c()
 
 void dFdWipe_c::AdvanceFade()
 {
-    Fix12i old = currInterp;
-    Fix12i cur;
+    fx32 old = currInterp;
+    fx32 cur;
     AdvanceInterp();
     cur = currInterp;
     if (cur == 0 && cur == old) return;
     if (cur == 0x1000) {
-        G2_SetBlendBrightness(0x3f, -0x10);
+        G2_SetBlendBrightness(0x3f, -16);
     } else {
         if (speed != 0) {
             if (old != 0x1000)
                 G2_BlendNone();
         }
         if (currInterp != 0) {
-            Fix12i scale = FX_MUL(0x1000 - currInterp, 0x20000);
+            fx32 scale = FX_MUL(0x1000 - currInterp, 0x20000);
             Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, -0x1000);
             Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, scale, scale, scale);
             Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x4000);
@@ -203,7 +203,7 @@ void dFdWipe_c::AdvanceFade()
         return;
     {
         u16 color = this->color;
-        int m = color ? 0x10 : -0x10;
+        int m = color ? 16 : -16;
         int prod = currInterp * m;
         int r = prod >> 12;
         if (r != 0) {

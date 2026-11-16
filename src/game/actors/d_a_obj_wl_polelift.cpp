@@ -53,8 +53,7 @@ extern Vector3 data_ov026_02113a9c;
 extern PoleliftModelFile data_ov026_02113ea0;
 }
 
-extern "C" daObjWlPolelift_c *daObjWlPolelift_c_classInit()
-{
+daObjWlPolelift_c *daObjWlPolelift_c_classInit() {
     return new daObjWlPolelift_c();
 }
 
@@ -98,7 +97,7 @@ s32 daObjWlPolelift_c::Behavior()
     int scale;
     int skipCollision;
 
-    if (DecIfAbove0_Short((u16 *)&bounceTimer) == 0) {
+    if (DecIfAbove0_Short(&bounceTimer) == 0) {
         speed = moveSpeed;
         current = curNodeIdx;
         prevNodeIdx = current - speed;
@@ -131,7 +130,7 @@ s32 daObjWlPolelift_c::Behavior()
                 if (path.Loops()) {
                     curNodeIdx = numNodes - 1;
                 } else {
-                    bounceTimer = 0x3c;
+                    bounceTimer = 60;
                     moveSpeed = 1;
                     curNodeIdx += moveSpeed << 1;
                 }
@@ -140,7 +139,7 @@ s32 daObjWlPolelift_c::Behavior()
                 if (path.Loops()) {
                     curNodeIdx = 0;
                 } else {
-                    bounceTimer = 0x3c;
+                    bounceTimer = 60;
                     moveSpeed = -1;
                     curNodeIdx += moveSpeed << 1;
                 }

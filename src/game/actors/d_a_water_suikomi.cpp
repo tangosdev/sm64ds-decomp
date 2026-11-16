@@ -143,7 +143,7 @@ int daWater_Suikomi_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the WATER_SUIKOMI registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: WaterSuction_Spawn. */
-extern "C" daWater_Suikomi_c *daWater_Suikomi_c_classInit() {
+daWater_Suikomi_c *daWater_Suikomi_c_classInit() {
     return new daWater_Suikomi_c();
 }
 

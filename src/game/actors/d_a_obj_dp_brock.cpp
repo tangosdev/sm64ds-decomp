@@ -79,7 +79,7 @@ enum {
  * out-of-line dBgActor_c base constructor, this class's vptr and the dExtSimpleModel_c
  * constructor for mStepModel all come from the implicit constructor the
  * `new` inlines, and the null check is the one `new` itself emits. */
-extern "C" daObjDpBrock_c *daObjDpBrock_c_classInit() {
+daObjDpBrock_c *daObjDpBrock_c_classInit() {
     return new daObjDpBrock_c();
 }
 

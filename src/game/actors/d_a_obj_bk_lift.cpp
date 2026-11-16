@@ -81,9 +81,9 @@ extern u8 gCurrentStarId;
 /* arm9 C helpers with no shared header. */
 extern "C" {
 u8 DecIfAbove0_Byte(u8 *p);
-int IsStarCollectedInCurLevel(int starID);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 }
+int IsStarCollectedInCurLevel(int starID);
 
 /* BK_LIFT01's registry factory. 0x394 is this class's size, and the calls the
    cartridge inlines here -- fBase_c::operator new, dBgActor_c's base
@@ -91,7 +91,7 @@ int Vec3_Dist(const Vector3 *a, const Vector3 *b);
    0x320 -- are exactly what the implicit default constructor of
    `struct daObjBk_Lift_c : dBgActor_c` with a dExtShadowModel_c member generates.
    Same shape as daObjBk_Rotebar_c_classInit in this overlay. */
-extern "C" daObjBk_Lift_c *daObjBk_Lift_c_classInit() {
+daObjBk_Lift_c *daObjBk_Lift_c_classInit() {
     return new daObjBk_Lift_c();
 }
 
@@ -145,7 +145,7 @@ int daObjBk_Lift_c::InitResources() {
     UpdateShadow();
 
     mPrevAngleY = mAngleY + 0x8000;
-    mMoveTimer = 0x87;
+    mMoveTimer = 135;
 
     int kind = param1 & 0xff;
     if (kind != 2) {
@@ -204,7 +204,7 @@ int daObjBk_Lift_c::Behavior() {
                     if (flag == 0) {
                         mPosY = (y > bound) ? bound : y;
                         mVertSpeed = -0xa000;
-                        mMoveTimer = 0x5a;
+                        mMoveTimer = 90;
                     }
                 }
             }

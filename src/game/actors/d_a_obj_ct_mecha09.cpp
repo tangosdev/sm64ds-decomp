@@ -75,7 +75,7 @@ void daObjCtMecha09_c::UpdateShadow() {
     mShadowMat.t.x = mPosX >> 3;
     mShadowMat.t.y = (mGroundY + 0x1000) >> 3;
     mShadowMat.t.z = mPosZ >> 3;
-    DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x1e0000, 0x32000, 0xfa000, 0xf);
+    DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x1e0000, 0x32000, 0xfa000, 15);
 }
 
 int daObjCtMecha09_c::CleanupResources() {
@@ -179,7 +179,7 @@ int daObjCtMecha09_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the CT_MECHA09 registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical aliases: TTC_MovingBeam, TTC_MovingBeam_Spawn. */
-extern "C" daObjCtMecha09_c *daObjCtMecha09_c_classInit() {
+daObjCtMecha09_c *daObjCtMecha09_c_classInit() {
     return new daObjCtMecha09_c();
 }
 

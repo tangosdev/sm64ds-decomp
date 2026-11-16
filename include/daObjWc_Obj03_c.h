@@ -11,8 +11,8 @@
  * spelling. The project's earlier coined name, WaterDiamond, survives only in
  * the rename ledger.
  *
- * The factory allocates 0x160 bytes. dActor_c ends at 0xd0; dExtSimpleModel_c sits at
- * 0x0d4 and dCcAc_c at 0x124, the same gap dBgActor_c uses, independently
+ * The factory allocates 0x160 bytes. dActor_c ends at 0xd4; dExtSimpleModel_c sits at
+ * 0x0d4 and dCcAc_c at 0x124, the same layout dBgActor_c uses, independently
  * proven by both destructor variants destroying those members in reverse
  * order before chaining to dActor_c.
  *
@@ -28,7 +28,6 @@
  * carried.
  */
 struct daObjWc_Obj03_c : dActor_c {
-    u8      pad_0d0[0x4];
     dExtSimpleModel_c mModel;   /* 0x0d4 */
     dCcAc_c mCylinder;          /* 0x0124 */
     u32     mWaterID;           /* 0x0158 -- unique ID of actor 0x65 */

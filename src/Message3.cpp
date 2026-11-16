@@ -13,12 +13,8 @@
  * leftovers:
  * - defer_codegen is off so this file emits in source order. The per-function
  *   optimization pragmas are brackets.
- * - OAM::Render stays a local extern. Its scale arguments are Fix12<int> by
- *   value.
  * - data_0209fc78 is a volatile macro in func_02033464 only. decl_common.h
  *   spells that byte plain, and the other functions in this file read it plain.
- * - data_0209f4a4 is s16[] in decl_common.h. func_020326ac indexes it with a
- *   byte stride, so the cast stays at that use.
  * - LayoutLineVS keeps the char-cast handler call: data_02092830[idx - 1]()
  *   subtracts first, a 6-word DIFF.
  * - func_020319fc writes the spill-over store as (&dst[wordIdx])[8] and keeps
@@ -34,6 +30,7 @@
 #include "nitro/hw/registers.h"
 #include "decl_common.h"
 #include "PlayerInput.h"
+#include "private/controller_input.h"
 #include "SaveData.h"
 #include "Message.h"
 #include "MessageBank.h"
@@ -97,13 +94,12 @@ extern s32 data_0208ee44;
 extern u32 gNextActorUpdateMask;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
-extern s16 data_0209f4a2[];
 extern u16 data_020a0e5a[];
 extern s32 data_020a0db0;
-extern u8 data_ov002_0210c390;
-extern u8 data_ov002_0210c398;
-extern u8 data_ov002_0210c3a0;
-extern u8 data_ov002_0210c3a8;
+extern struct OamAttr data_ov002_0210c390;
+extern struct OamAttr data_ov002_0210c398;
+extern struct OamAttr data_ov002_0210c3a0;
+extern struct OamAttr data_ov002_0210c3a8;
 extern int data_0209289c[296];
 extern int data_02092d3c;
 extern int data_0209325c;
@@ -119,17 +115,16 @@ extern u32 data_0209283c[];
 extern u32 data_0209287c[];
 
 extern MBUserInfo *func_0203d8a0(int idx);
-extern u8 NumStars(void);
-extern int func_020138dc(void);
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
-/* local extern: Fix12 wall -- the by-value Fix12<int> form cannot be spelled
-   from a header; the literal name keeps the def's own scalar params. */
-extern void OamRender10_Message3(int sub, struct OamAttr *attr_, int xOff, int yOff, int palette,
-                                 int priority, int scaleX, int scaleY, int rotation, int mode);
 #include "OAM.h"
 #include "nitro/mi/memory.h"
 
+/* Slot 0's nx/ny are data_0209f4a2/data_0209f4a4. The record stride is 0x18. */
+extern ControllerInput data_0209f498[];
+}
+extern u8 NumStars(void);
+extern int func_020138dc(void);
 void func_02031cd4(void *arg);
 int func_020321fc(void);
 void func_020326ac(void);
@@ -146,7 +141,6 @@ void func_02033e50(int p0, int p1);
 void Message_DrawLineBG2VS(void);
 void func_020345b0(int arg0);
 void LoadFont3D(void);
-}
 
 /* The text cursor's current control record (data_0209fd0c). Bytes 3 and 4 are
  * a big-endian argument; 5 and 6 are the number-format mode and base. */
@@ -164,7 +158,7 @@ inline bool CharDiffers(u16 a, u16 b) {
     return a != b;
 }
 
-extern "C" s32 GetLanguageIndexVS(void) {
+s32 GetLanguageIndexVS(void) {
     s32 lang = GetOwnerLanguage();
     switch (lang) {
     case 2:
@@ -180,7 +174,7 @@ extern "C" s32 GetLanguageIndexVS(void) {
     }
 }
 
-extern "C" void func_02031028(int arg) {
+void func_02031028(int arg) {
     MBUserInfo *p;
     int i;
     int j;
@@ -199,11 +193,11 @@ extern "C" void func_02031028(int arg) {
         val = p->name[i];
         j = 0;
         while (CharDiffers(data_02075b14[j], val) && CharDiffers(data_02075d14[j], val) &&
-               j < 0x100) {
+               j < 256) {
             j++;
         }
 
-        if (j == 0x100) {
+        if (j == 256) {
             *out = 0x47;
         } else {
             *out = j;
@@ -256,7 +250,7 @@ void Message::AddChoiceVS() {
     }
 }
 
-extern "C" void func_0203128c(void) {
+void func_0203128c(void) {
     u8 *g;
     int mode;
     int sub;
@@ -300,7 +294,7 @@ extern "C" void func_0203128c(void) {
                 Message::AddCharVS(*pp);
                 n2++;
                 pp++;
-            } while (n2 < (int)data_0209fca0);
+            } while (n2 < data_0209fca0);
         }
         break;
     }
@@ -317,7 +311,7 @@ void Message::AddCharPairVS() {
  * and spills the scaled row indices, a CSE-off recompute no spelling reaches. */
 #pragma push
 #pragma opt_common_subs off
-extern "C" void func_02031428(void) {
+void func_02031428(void) {
     int cnt;
     int i;
     int j;
@@ -382,7 +376,7 @@ extern "C" void func_02031428(void) {
                     q[11] = data_0209283c[rem] & data_0209fd5c[i3];
                 }
                 col = (col + *inc) & 0xff;
-                rowIdx += 0x10;
+                rowIdx += 16;
                 inc++;
                 j++;
             } while (j < count);
@@ -393,7 +387,7 @@ extern "C" void func_02031428(void) {
 }
 #pragma pop
 
-extern "C" void func_020316d8(int screen, int c, u32 x, void *buf) {
+void func_020316d8(int screen, int c, u32 x, void *buf) {
     u32 *chr;
     int pitch;
     if (screen == 1)
@@ -407,7 +401,7 @@ extern "C" void func_020316d8(int screen, int c, u32 x, void *buf) {
         MI_CpuCopy32((char *)buf + ((((c & 0xf) << 1) + ((c & 0xf0) << 2)) << 5), chr, 0x40);
         pitch = (data_0209fc88 + 7) / 8;
         MI_CpuCopy32((char *)buf + (((c & 0xf) + (((c & 0xf0) << 1) + 0x10)) << 6),
-                     (void *)(chr + pitch * 8), 0x40);
+                     (chr + pitch * 8), 0x40);
     } else {
         int lo;
         int hi;
@@ -426,14 +420,14 @@ extern "C" void func_020316d8(int screen, int c, u32 x, void *buf) {
         hi = c & 0xf0;
         src = (u32 *)((char *)buf + (((lo << 1) + (hi << 2)) << 5));
         src2 = src + 8;
-        n = (short)(int)data_0208f174[c];
+        n = (int)data_0208f174[c];
         i = 0;
-        stride = (((int)data_0209fc88 + 7) / 8) << 3;
+        stride = ((data_0209fc88 + 7) / 8) << 3;
         m = x & 7;
         sh = m << 2;
         k = 8 - m;
         rsh = k << 2;
-        for (; i < 0x10; i++) {
+        for (; i < 16; i++) {
             idx = (i >> 3) * stride + (i & 7);
             chr[idx] |= *src << sh;
             rem = n;
@@ -454,7 +448,7 @@ extern "C" void func_020316d8(int screen, int c, u32 x, void *buf) {
     }
 }
 
-extern "C" void func_020318a4(int sl) {
+void func_020318a4(int sl) {
     int base;
     int acc;
     int m;
@@ -506,7 +500,7 @@ extern "C" void func_020318a4(int sl) {
     }
 }
 
-extern "C" void func_020319fc(int n) {
+void func_020319fc(int n) {
     u32 *dst;
     int i;
     u32 col;
@@ -530,15 +524,15 @@ extern "C" void func_020319fc(int n) {
     count = data_0209fcd8;
     col = col0;
 
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         for (j = 0; j < count; j++) {
             blk = col >> 3;
             wordIdx = blk << 3;
             rem = col & 7;
-            dst[wordIdx] = (data_0209287c[rem] & data_0209fd5c[i + j * 0x10]) | dst[wordIdx];
+            dst[wordIdx] = (data_0209287c[rem] & data_0209fd5c[i + j * 16]) | dst[wordIdx];
             if (rem != 0)
                 (&dst[wordIdx])[8] =
-                    data_0209283c[rem] & *(u32 *)((char *)data_0209fd5c + ((i + j * 0x10) << 2));
+                    data_0209283c[rem] & *(u32 *)((char *)data_0209fd5c + ((i + j * 16) << 2));
             col = (col + data_0209fd20[j]) & 0xff;
         }
         dst++;
@@ -566,7 +560,7 @@ void Message::AddCharVS(u8 c) {
     }
     mask = data_0209285c[data_0209fcd4];
     sh = data_0209fccc;
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         word = *(ip++);
         masked = word;
         masked = masked & mask;
@@ -591,7 +585,7 @@ void Message::AddCharVS(u8 c) {
     }
 }
 
-extern "C" void func_02031cd4(void *arg) {
+void func_02031cd4(void *arg) {
     int i;
     u8 *base;
     u8 cmd;
@@ -751,7 +745,7 @@ void Message::LayoutLineVS() {
     }
 }
 
-extern "C" int func_020321fc(void) {
+int func_020321fc(void) {
     if (data_0209fcb8 == 0) {
         if (data_0209fc8c > data_0209fc6c && data_0209fc74 > data_0209fce0) {
             int t;
@@ -844,7 +838,7 @@ extern "C" int func_020321fc(void) {
  * swaps the slot index and the held byte (r3/r2), 8 words, same size. */
 #pragma push
 #pragma opt_common_subs off
-extern "C" void func_020326ac(void) {
+void func_020326ac(void) {
     switch (data_0209fcc8) {
     case 0:
     case 8:
@@ -863,7 +857,7 @@ extern "C" void func_020326ac(void) {
         data_0209fc7c = 0;
         func_02031428();
         data_0209fc70 += 1;
-        if (data_0209fc70 != 0x10) {
+        if (data_0209fc70 != 16) {
             return;
         }
         data_0209fcc8 = 1;
@@ -878,7 +872,7 @@ extern "C" void func_020326ac(void) {
             data_0209fcb8 = 1;
             return;
         }
-        t = *(s16 *)((u8 *)data_0209f4a2 + gActivePlayerSlot * 0x18);
+        t = data_0209f498[gActivePlayerSlot].nx;
         if (t > 0x80) {
             data_0209fcd0 = 1;
         } else if (t < -0x80) {
@@ -888,14 +882,12 @@ extern "C" void func_020326ac(void) {
             data_0209fcd0 ^= 1;
         }
         {
-            int r5 = data_0209fcf4[data_0209fcd0] * 9 + data_0209fc6c + 0xC;
-            int r4 = data_0209fce0 + (data_0209fc80 * 0x10) + 0xE;
+            int r5 = data_0209fcf4[data_0209fcd0] * 9 + data_0209fc6c + 12;
+            int r4 = data_0209fce0 + (data_0209fc80 * 16) + 14;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
@@ -907,7 +899,7 @@ extern "C" void func_020326ac(void) {
             data_0209fcb8 = 1;
             return;
         }
-        t = *(s16 *)((u8 *)data_0209f4a4 + gActivePlayerSlot * 0x18);
+        t = data_0209f498[gActivePlayerSlot].ny;
         if (t > 0x80) {
             data_0209fcd0 = 1;
         } else if (t < -0x80) {
@@ -917,14 +909,12 @@ extern "C" void func_020326ac(void) {
             data_0209fcd0 ^= 1;
         }
         {
-            int r5 = data_0209fc6c + 0xC;
-            int r4 = data_0209fce0 + (data_0209fcf4[data_0209fcd0] * 0x10) + 0xE;
+            int r5 = data_0209fc6c + 12;
+            int r4 = data_0209fce0 + (data_0209fcf4[data_0209fcd0] * 16) + 14;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
@@ -952,9 +942,9 @@ extern "C" void func_020326ac(void) {
         } else if (f0 != 0) {
             s16 debval = gTouchY[idx * 4];
             data_0209fcf0 = debval - data_0209fcec;
-            if (data_0209fcf0 > 0x10) {
-                data_0209fcf0 = 0x10;
-                data_0209fcec = debval - 0x10;
+            if (data_0209fcf0 > 16) {
+                data_0209fcf0 = 16;
+                data_0209fcec = debval - 16;
             } else if (data_0209fcf0 < 0) {
                 data_0209fcf0 = 0;
                 data_0209fcec = debval;
@@ -967,7 +957,7 @@ extern "C" void func_020326ac(void) {
                 break;
             case 1:
                 if (data_0209fcf0 > 0) {
-                    if (data_0209fcf0 >= 0x10) {
+                    if (data_0209fcf0 >= 16) {
                         data_0209fcd0 += 1;
                     } else if (data_0209fcf0 <= 6) {
                         data_0209fcd0 -= 1;
@@ -975,7 +965,7 @@ extern "C" void func_020326ac(void) {
                 }
                 break;
             case 2:
-                if (data_0209fcf0 > 0 && data_0209fcf0 <= 0xE) {
+                if (data_0209fcf0 > 0 && data_0209fcf0 <= 14) {
                     data_0209fcd0 -= 1;
                 }
                 break;
@@ -994,14 +984,12 @@ extern "C" void func_020326ac(void) {
             }
         }
         {
-            int r5 = data_0209fc6c + 0xC;
-            int r4 = data_0209fce0 + (data_0209fcf4[data_0209fcd0] * 0x10) + 0xE;
+            int r5 = data_0209fc6c + 12;
+            int r4 = data_0209fce0 + (data_0209fcf4[data_0209fcd0] * 16) + 14;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
@@ -1023,11 +1011,9 @@ extern "C" void func_020326ac(void) {
                 return;
             }
             if (data_0209fcd4 != 0) {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c390, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c390, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (struct OamAttr *)&data_ov002_0210c398, r5, r4, -1, -1, 0x1000,
-                            0x1000, 0, -1);
+                OAM::Render(0, &data_ov002_0210c398, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
@@ -1041,26 +1027,27 @@ extern "C" void func_020326ac(void) {
  * third, so only three of the four are fixed strides:
  *
  *     +0x00  header      -> data_0209fd04
- *     +0x20  section A   -> data_0209fcf8, and its word at +4 is the distance
- *                           from A to section B
- *     A + *(A+4)         -> data_0209fcfc
+ *     +0x20  info section -> data_0209fcf8; its sectionSize is the distance
+ *                            to the data section
+ *     info + sectionSize -> data_0209fcfc
  *     +0x30              -> data_0209fd08
  *
- * The intermediate `r2`/`r3` locals are kept because the load of `*(r2 + 4)` has
- * to happen after r2 is formed and before r3 is stored; collapsing them into one
- * expression reorders the loads.
+ * The intermediate infoSection/dataSection locals are kept because the
+ * sectionSize load has to happen after infoSection is formed and before
+ * dataSection is stored; collapsing them into one expression reorders the
+ * loads. Same shape as Message::SetTextGlobals.
  */
 void Message::SetTextGlobalsVS() {
-    int ip = data_0209fd14;
-    int r2 = ip + 0x20;
-    data_0209fd04 = ip;
-    data_0209fcf8 = (int *)r2;
-    int r3 = r2 + *(int *)(r2 + 4);
-    data_0209fcfc = r3;
-    data_0209fd08 = ip + 0x30;
+    int bankBase = data_0209fd14;
+    int infoSection = bankBase + 0x20;
+    data_0209fd04 = bankBase;
+    data_0209fcf8 = (int *)infoSection;
+    int dataSection = infoSection + ((MessageInfoSection *)infoSection)->sectionSize;
+    data_0209fcfc = dataSection;
+    data_0209fd08 = bankBase + 0x30;
 }
 
-extern "C" void func_02032f54(void) {
+void func_02032f54(void) {
     if (data_0209fc9c == 0)
         return;
     if (func_020321fc() == 0)
@@ -1068,7 +1055,7 @@ extern "C" void func_02032f54(void) {
     func_020326ac();
 }
 
-extern "C" void func_02032f9c(int a) {
+void func_02032f9c(int a) {
     volatile int li;
     volatile unsigned short ls;
     int idx;
@@ -1106,11 +1093,11 @@ extern "C" void func_02032f9c(int a) {
         return;
     }
 
-    data_0209fc84 = (u8)a;
+    data_0209fc84 = a;
     func_02031cd4(0);
 
-    w = 0x100 - data_0209fc88;
-    data_0209fc7c = (u8)((w >> 1) & 7);
+    w = 256 - data_0209fc88;
+    data_0209fc7c = ((w >> 1) & 7);
     q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x40) + (u16)(w / 8 >> 1);
     c = data_0209fc7c;
     n = (data_0209fc88 + c + 7) >> 3;
@@ -1118,8 +1105,8 @@ extern "C" void func_02032f9c(int a) {
     if (n > 0) {
         v2 = n + 0x200;
         do {
-            q[i] = (u16)(i + 0x200);
-            (q + i)[0x20] = (u16)v2;
+            q[i] = (i + 0x200);
+            (q + i)[0x20] = v2;
             v2++;
             i++;
         } while (i < n);
@@ -1139,10 +1126,10 @@ extern "C" void func_02032f9c(int a) {
 
     data_0209fc94 = old94;
     data_0209fcd4 = 0;
-    data_0209fcdc = (u8)(((data_0209fc88 + 7) >> 3) << 1);
+    data_0209fcdc = (((data_0209fc88 + 7) >> 3) << 1);
 }
 
-extern "C" void func_020331fc(int a0, int a1, int a2) {
+void func_020331fc(int a0, int a1, int a2) {
     volatile int li;
     short *scr;
     int base;
@@ -1198,7 +1185,7 @@ extern "C" void func_020331fc(int a0, int a1, int a2) {
     }
 }
 
-extern "C" void func_02033390(int sub) {
+void func_02033390(int sub) {
     data_0209fc9c = 0;
     func_02034504();
     data_0209fc94 = 1;
@@ -1210,22 +1197,22 @@ extern "C" void func_02033390(int sub) {
         int *dst = (int *)((int)G2_GetBG3CharPtr() + 0x4000);
         v = 0;
         MI_CpuFill32(dst, v, 0x2000);
-        MI_CpuFill16((char *)G2_GetBG3ScrPtr(), fill = 0x2ff, 0x800);
+        MI_CpuFill16(G2_GetBG3ScrPtr(), fill = 0x2ff, 0x800);
     } else {
         volatile u16 fill;
         volatile s32 v;
         int *dst = (int *)((int)G2S_GetBG0CharPtr() + 0x4000);
         v = 0;
         MI_CpuFill32(dst, v, 0x2000);
-        MI_CpuFill16((char *)G2S_GetBG0ScrPtr(), fill = 0x2ff, 0x800);
+        MI_CpuFill16(G2S_GetBG0ScrPtr(), fill = 0x2ff, 0x800);
     }
 }
 
 /* byte-forced: this function accesses data_0209fc78 volatile (reload per use);
    decl_common.h spells it plain. The macro expands each use to a volatile deref
    of the global -- the inner name paints blue and resolves to the extern. */
-#define data_0209fc78 (*(volatile u8 *)&data_0209fc78)
-extern "C" void func_02033464(int arg0, int arg1, int arg2) {
+#define data_0209fc78 (*(u8 *)&data_0209fc78)
+void func_02033464(int arg0, int arg1, int arg2) {
     volatile unsigned short sv0;
     volatile unsigned short sv2;
     volatile int li4;
@@ -1260,7 +1247,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
         if (arg1 < 0)
             return;
         func_02031028(0);
-        data_0209fc7c = (u8)((0x100 - data_0209fc88) >> 1);
+        data_0209fc7c = ((256 - data_0209fc88) >> 1);
         n = data_0209fca0;
         data_0209fccc = data_0209fc7c & 7;
         data_0209fc88 = 0;
@@ -1274,7 +1261,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
                 p++;
             } while (i < data_0209fca0);
         }
-        data_0209fc78 = (u8)(arg0 * 0x18 + data_0209fcdc);
+        data_0209fc78 = (arg0 * 0x18 + data_0209fcdc);
         {
             int cp = (u32)G2S_GetBG0CharPtr() + 0x4000;
             int *dst = (int *)(cp + (data_0209fc78 << 5));
@@ -1289,16 +1276,16 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
         }
         i = 0;
         do {
-            base[i] = (u16)x;
-            (base + i)[0x20] = (u16)v1;
+            base[i] = x;
+            (base + i)[0x20] = v1;
             i++;
             x++;
             v1++;
-        } while (i < 0xc);
+        } while (i < 12);
         data_0209fc7c &= 7;
-        data_0209fc78 = (u8)(data_0209fc78 >> 1);
+        data_0209fc78 = (data_0209fc78 >> 1);
         data_0209fcb0 = 1;
-        func_020319fc(0xc);
+        func_020319fc(12);
     } else {
         data_0209fc94 = 0;
         d = (char *)G2_GetBG3ScrPtr() + (arg0 << 1);
@@ -1319,7 +1306,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
                 p++;
             } while (i < data_0209fca0);
         }
-        data_0209fc78 = (u8)(arg1 * 0x18 + data_0209fcdc);
+        data_0209fc78 = (arg1 * 0x18 + data_0209fcdc);
         {
             int cp = (int)G2_GetBG3CharPtr() + 0x4000;
             int *dst = (int *)(cp + (data_0209fc78 << 5));
@@ -1334,21 +1321,21 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
         }
         i = 0;
         do {
-            base[i] = (u16)x;
-            (base + i)[0x20] = (u16)v1;
+            base[i] = x;
+            (base + i)[0x20] = v1;
             i++;
             x++;
             v1++;
-        } while (i < 0xc);
+        } while (i < 12);
         data_0209fc7c &= 7;
-        data_0209fc78 = (u8)(data_0209fc78 >> 1);
+        data_0209fc78 = (data_0209fc78 >> 1);
         data_0209fcb0 = 1;
-        func_020319fc(0xc);
+        func_020319fc(12);
     }
 }
 #undef data_0209fc78
 
-extern "C" void func_020337ec(void) {
+void func_020337ec(void) {
     volatile unsigned short v;
     volatile int z;
     data_0209fc9c = 0;
@@ -1371,7 +1358,7 @@ extern "C" void func_020337ec(void) {
     func_02033464(0, 0, 0);
 }
 
-extern "C" void func_020338b0(int a, int b, short c, int d) {
+void func_020338b0(int a, int b, short c, int d) {
     int p, s;
     volatile int li0, li1;
     volatile unsigned short ls0, ls1;
@@ -1425,8 +1412,8 @@ void Message::DisplayVsExitText(unsigned short n) {
     Message_DrawCenteredLineVS(0x1c0, 0x20);
 }
 
-extern "C" void func_02033a80(int arg0) {
-    data_0209fce8 = (u16)arg0;
+void func_02033a80(int arg0) {
+    data_0209fce8 = arg0;
     data_0209fc9c = 0;
     func_02034504();
     data_0209fc94 = 1;
@@ -1461,13 +1448,13 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
  * what CSE would share (0x298 bytes; 0x278 with CSE on). */
 #pragma push
 #pragma opt_common_subs off
-extern "C" void func_02033bb8(int param0) {
+void func_02033bb8(int param0) {
     volatile int li;
     volatile unsigned short sv;
     int n, m, i;
     short *scr;
 
-    data_0209fce8 = (short)param0;
+    data_0209fce8 = param0;
     data_0209fc9c = 0;
     func_02034504();
 
@@ -1495,8 +1482,8 @@ extern "C" void func_02033bb8(int param0) {
     if (m > 0) {
         int v2 = m + 0x280;
         do {
-            scr[i] = (short)(i + 0x280);
-            (scr + i)[0x20] = (short)v2;
+            scr[i] = (i + 0x280);
+            (scr + i)[0x20] = v2;
             v2++;
             i++;
         } while (i < m);
@@ -1515,8 +1502,8 @@ extern "C" void func_02033bb8(int param0) {
         int v1 = d - mm * 2 + 0x280;
         int v2 = d - mm + 0x280;
         do {
-            scr[i] = (short)v1;
-            (scr + i)[0x20] = (short)v2;
+            scr[i] = v1;
+            (scr + i)[0x20] = v2;
             v1++;
             v2++;
             i++;
@@ -1536,8 +1523,8 @@ extern "C" void func_02033bb8(int param0) {
         int v1 = d - mm * 2 + 0x280;
         int v2 = d - mm + 0x280;
         do {
-            scr[i] = (short)v1;
-            (scr + i)[0x20] = (short)v2;
+            scr[i] = v1;
+            (scr + i)[0x20] = v2;
             v1++;
             v2++;
             i++;
@@ -1545,13 +1532,13 @@ extern "C" void func_02033bb8(int param0) {
     }
     func_02033e50(0x1e9, 0x70);
 
-    data_0209fc78 = (unsigned char)(data_0209fc78 << 1);
+    data_0209fc78 = (data_0209fc78 << 1);
     data_0209fce8++;
     Message_DrawCenteredLineVS(0x280, 0x20);
 }
 #pragma pop
 
-extern "C" void func_02033e50(int p0, int p1) {
+void func_02033e50(int p0, int p1) {
     int i;
     int idx = data_0209fce8;
     char *base = (char *)data_0209fd08;
@@ -1598,7 +1585,7 @@ extern "C" void func_02033e50(int p0, int p1) {
             p0 = (unsigned short)(p0 + 0x40);
         } else {
             volatile int li;
-            data_0209fc7c = (unsigned char)((p1 - data_0209fc88) >> 1);
+            data_0209fc7c = ((p1 - data_0209fc88) >> 1);
             {
                 int cp = (u32)G2S_GetBG0CharPtr() + 0x4000;
                 li = 0;
@@ -1630,7 +1617,7 @@ extern "C" void func_02033e50(int p0, int p1) {
     data_0209fcc8 = 0;
 }
 
-extern "C" void Message_DrawLineBG2VS(void) {
+void Message_DrawLineBG2VS(void) {
     volatile int li;
     int n;
     int idx = data_0209fce8;
@@ -1745,7 +1732,7 @@ extern "C" void func_02034504(void) {
     data_0209fc7c = 0;
 }
 
-extern "C" void func_020345b0(int arg0) {
+void func_020345b0(int arg0) {
     u16 *scr;
     s32 i;
     s32 cols;
@@ -1758,7 +1745,7 @@ extern "C" void func_020345b0(int arg0) {
         return;
     }
 
-    data_0209fce8 = (s16)arg0;
+    data_0209fce8 = arg0;
     func_02034504();
 
     data_0209fc9c = 1;
@@ -1770,11 +1757,11 @@ extern "C" void func_020345b0(int arg0) {
         (u8 *)(data_0209fd14 + (sizeof(MessageBankHeader) + sizeof(MessageDataSection)) +
                ((MessageInfoSection *)data_0209fcf8)->sectionSize +
                ((MessageEntry *)((char *)data_0209fd08 + data_0209fce8 * 8))->textOffset);
-    data_0209fc78 = (u8)((((MessageEntry *)data_0209fd00)->width + 7) / 8);
+    data_0209fc78 = ((((MessageEntry *)data_0209fd00)->width + 7) / 8);
     data_0209fce4 = 0x7f;
-    data_0209fc6c = (u8)(((0x20 - (data_0209fc78 + 2)) / 2) * 8);
+    data_0209fc6c = (((0x20 - (data_0209fc78 + 2)) / 2) * 8);
     data_0209fcc0 = 0x63;
-    data_0209fce0 = (u8)(0x64 - (((((MessageEntry *)data_0209fd00)->lineCount * 2 + 1) * 8) / 2));
+    data_0209fce0 = (0x64 - (((((MessageEntry *)data_0209fd00)->lineCount * 2 + 1) * 8) / 2));
     data_0209fc8c = 0x7f;
     data_0209fc74 = 0x63;
     data_0209fcac = 0;
@@ -1784,30 +1771,30 @@ extern "C" void func_020345b0(int arg0) {
     {
         void *p = (char *)G2_GetBG3CharPtr() + 0x4000;
         li = 0;
-        MI_CpuFill32((void *)p, li, 0x3000);
+        MI_CpuFill32(p, li, 0x3000);
     }
 
     {
         void *s = G2_GetBG3ScrPtr();
         ls = 0x37f;
-        MI_CpuFill16((void *)s, ls, 0x800);
+        MI_CpuFill16(s, ls, 0x800);
     }
 
     scr = (u16 *)G2_GetBG3ScrPtr() + 0x21;
-    SetBg3Offset(-(int)data_0209fc6c, 4 - (int)data_0209fce0);
+    SetBg3Offset(-data_0209fc6c, 4 - data_0209fce0);
 
     i = 0;
     cols = data_0209fc78;
-    if ((s32)(cols * (((MessageEntry *)data_0209fd00)->lineCount) * 2) > 0) {
+    if ((cols * (((MessageEntry *)data_0209fd00)->lineCount) * 2) > 0) {
         last = cols - 1;
         do {
             s32 rem = i % cols;
-            scr[rem] = (u16)(i + 0x200);
+            scr[rem] = (i + 0x200);
             if (last == rem) {
                 scr += 0x20;
             }
             i++;
-        } while (i < (s32)(cols * (((MessageEntry *)data_0209fd00)->lineCount) * 2));
+        } while (i < (cols * (((MessageEntry *)data_0209fd00)->lineCount) * 2));
     }
 
     t = data_0209fcc8;
@@ -1834,12 +1821,12 @@ extern "C" void func_020345b0(int arg0) {
     GX_SetVisiblePlane(gMainScreenLayers);
 }
 
-extern "C" void LoadFont3D(void) {
+void LoadFont3D(void) {
     void *r5;
     void *r4;
 
     r5 = LoadFile(0x980e);
-    MI_CpuCopy32(r5, (int *)G2_GetBG3CharPtr(), 0x4000);
+    MI_CpuCopy32(r5, G2_GetBG3CharPtr(), 0x4000);
 
     r4 = LoadFile(0x980d);
     DecompressLZ16(r4, (u8 *)G2_GetBG3CharPtr() + 0x8000);

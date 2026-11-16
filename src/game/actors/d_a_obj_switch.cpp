@@ -14,9 +14,6 @@
 // the file.
 //
 // leftovers:
-//   - ChangeMusicVolume / IsClsnInRange / KcMbg::SetFile stay computed-spelling
-//     externs: the member form changes codegen under 2004/b56 (Fix12<int> by
-//     value, wall 6az -- noted at use).
 //   - The daStar_c fields at +0x438/+0x440 and unk_49d are unnamed upstream;
 //     the int*/unk_ puns stay until daStar_c.h names them.
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -35,6 +32,7 @@ enum daObjSwitch_c_AssetId {
 #include "daStar_c.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 namespace Event { int ClearBit(unsigned int bit); void SetBit(unsigned int bit); }
 
@@ -62,20 +60,17 @@ extern SwitchModelFilePtr data_ov002_0210dfd4;
 extern SwitchClsnFileHandle data_ov002_0210dfc4;
 extern SwitchModelFilePtr data_ov002_0210dfcc;
 extern SwitchClsnFileHandle data_ov002_0210dfbc;
-// Names stay on this unused prototype so this file's @NNN numbers do not move.
-int d_a_obj_switchChangeMusicVolumeHold(unsigned int id, int volume);
 // local extern: the actual free definition accepts a scalar scale. The
 // genuine member call changes InitResources under 2004/b56; see the
 // committed experiment.
 extern void hold_d_a_obj_switch(void *self, void *file, const Matrix4x3 *matrix, int scale,
                                 s16 angle, void *clps);
 int func_02012310(int handle, int sound, short arg);
-unsigned char IsAreaShowing(int area);
 unsigned char DecIfAbove0_Byte(unsigned char *value);
+}
+unsigned char IsAreaShowing(int area);
 void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-}
 
 /* Reconstructed source-style name: SM64DS proves daObjSwitch_c through RTTI,
  * allocation size, vtable identity, and the HANSWITCH registry profile;
@@ -85,8 +80,7 @@ int Vec3_Dist(const Vector3 *a, const Vector3 *b);
  * `new daObjSwitch_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x354), dBgActor_c's base constructor, then
  * the vptr store. */
-extern "C" daObjSwitch_c *daObjSwitch_c_classInit_HANSWITCH(void)
-{
+daObjSwitch_c *daObjSwitch_c_classInit_HANSWITCH(void) {
     return new daObjSwitch_c;
 }
 
@@ -94,8 +88,7 @@ extern "C" daObjSwitch_c *daObjSwitch_c_classInit_HANSWITCH(void)
  * allocation size, vtable identity, and the STAR_SWITCH registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: StarSwitch_Spawn. */
-extern "C" daObjSwitch_c *daObjSwitch_c_classInit_STAR_SWITCH(void)
-{
+daObjSwitch_c *daObjSwitch_c_classInit_STAR_SWITCH(void) {
     return new daObjSwitch_c;
 }
 
@@ -153,7 +146,7 @@ int daObjSwitch_c::InitResources()
             mResourceIdx = 1;
         } else {
             mSwitchType = param1 & 3;
-            mEventBit = (param1 >> 3) & 0xf;
+            mEventBit = (param1 >> 3) & 15;
             mTimeLimit = (param1 >> 8) & 0xff;
             Event::ClearBit(mEventBit);
             mResourceIdx = 0;
@@ -169,16 +162,16 @@ int daObjSwitch_c::InitResources()
     idx = mResourceIdx;
     f = dBgW_Kc::LoadFile(*data_ov002_021098e8[idx].collision);
     mMeshCollider.SetFile((KCL_File *)(f), mClsnMat, 0x199, mAngleY,
-                          *(CLPS_Block *)(data_ov002_021098e8[idx].clps));
+                          *data_ov002_021098e8[idx].clps);
 
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
     {
         u16 h = mTimeLimit;
         if (h == 0xff || h == 0)
-            mTimeLimit = 0x190;
+            mTimeLimit = 400;
         else
-            mTimeLimit *= 0xa;
+            mTimeLimit *= 10;
     }
     mPressTimer = 5;
     mPosY += 0x5000;
@@ -244,8 +237,8 @@ int daObjSwitch_c::Behavior()
     if (mSwitchType == 2) {
         if (mMusicFadeDone == 0) {
             v = mMusicVolume;
-            if (v != 0x40) {
-                if (v == 0x7f) {
+            if (v != 64) {
+                if (v == 127) {
                     if ((gNextActorUpdateMask & 0x4000000) == 0) {
                         mMusicFadeDone = Sound::ChangeMusicVolume(v, 0x64cc);
                     }
@@ -320,7 +313,8 @@ void daObjSwitch_c::StateIdleInit() {
             p = dActor_c::FindWithActorID(0xc, p);
         }
     }
-    if (ok != 0) mMusicVolume = 0x7f;
+    if (ok != 0)
+        mMusicVolume = 127;
 }
 
 void daObjSwitch_c::StateIdleMain() {
@@ -369,9 +363,9 @@ void daObjSwitch_c::StateTickingMain() {
     }
     diff = mTimeLimit - mTimer;
     if (!(gNextActorUpdateMask & 0x4000000)) {
-        if (diff == 0x2d) {
+        if (diff == 45) {
             mTickSoundHandle = 0;
-        } else if (diff < 0x2d) {
+        } else if (diff < 45) {
             mTickSoundHandle = func_02012310(mTickSoundHandle, 0x39, 0);
         } else {
             mTickSoundHandle = func_02012310(mTickSoundHandle, 0x38, 0);
@@ -412,12 +406,12 @@ void daObjSwitch_c::StateExpiredMain() {
     SetState(3);
 }
 
-void daObjSwitch_c::ScaleOverTime(int mask, Fix12i frames, Fix12i base, Fix12i target) {
-    Fix12i d = FX_Div((Fix12i)mTimer, frames);
-    Fix12i diff = target - base;
-    Fix12i e = FX_MUL(diff, d);
-    Fix12i v = base + FX_Div(e, 0x1000);
-    Fix12i h = FX_MUL(v, 0x3c000);
+void daObjSwitch_c::ScaleOverTime(int mask, fx32 frames, fx32 base, fx32 target) {
+    fx32 d = FX_Div((fx32)mTimer, frames);
+    fx32 diff = target - base;
+    fx32 e = FX_MUL(diff, d);
+    fx32 v = base + FX_Div(e, 0x1000);
+    fx32 h = FX_MUL(v, 0x3c000);
     mDisplacementY = 0x3c000 - h;
     if (mask & 1) mDrawScale.x = v;
     if (mask & 2) mDrawScale.y = v;

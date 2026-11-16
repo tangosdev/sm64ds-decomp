@@ -107,7 +107,7 @@ struct BullyResourceConfig {
     s32 modelYOffset;   /* +0x20 -- copied to Tail::mModelYOffset */
     /* +0x24 -- passed as both radius and height to dBgCh_Actr::Init;
        OnAimedAtWithEgg returns it as the aim height */
-    Fix12i eggAimHeight;
+    fx32 eggAimHeight;
     s32 shadowRadius; /* +0x28 -- copied to Tail::mShadowRadius */
     s32 cliffDown;    /* +0x2c -- IsGoingOffCliff's `down` probe depth */
     u32 particleId;   /* +0x30 -- first of two ids func_ov064_0211616c spawns */

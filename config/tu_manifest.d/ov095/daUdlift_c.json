@@ -129,21 +129,21 @@
       "ordinal": 12
     },
     {
-      "symbol": "daUdlift_c_classInit_RC_RIFT02",
+      "symbol": "_Z30daUdlift_c_classInit_RC_RIFT02v",
       "address": "0x0213679c",
       "size": "0x00000030",
       "legacy_source": "src/d_a_udlift_rc_rift02.c",
       "ordinal": 13
     },
     {
-      "symbol": "daUdlift_c_classInit_UDLIFT",
+      "symbol": "_Z27daUdlift_c_classInit_UDLIFTv",
       "address": "0x021367cc",
       "size": "0x00000030",
       "legacy_source": "src/d_a_udlift_udlift.c",
       "ordinal": 14
     },
     {
-      "symbol": "daUdlift_c_classInit_UDLIFT_TERESA",
+      "symbol": "_Z34daUdlift_c_classInit_UDLIFT_TERESAv",
       "address": "0x021367fc",
       "size": "0x00000030",
       "legacy_source": "src/d_a_udlift_udlift_teresa.c",
@@ -621,28 +621,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN15UdliftModelFileC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
     },
     {
       "symbol": "_ZN15UdliftModelFileD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
     },
     {
       "symbol": "_ZN22UdliftCollisionFilePtrC1Ej",
-      "canonical_symbol": "func_02017b4c",
+      "canonical_symbol": "_Z13func_02017b4cPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the collision wrapper constructor exact PC24 relocation"
     },
     {
       "symbol": "_ZN22UdliftCollisionFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail destructor registration destination and the collision wrapper destructor exact ABS32 relocation"
@@ -746,7 +746,7 @@
       "source": "0x0213723c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -766,7 +766,7 @@
       "source": "0x02137258",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -786,7 +786,7 @@
       "source": "0x02137274",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -806,7 +806,7 @@
       "source": "0x02137290",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -826,7 +826,7 @@
       "source": "0x021372ac",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -846,7 +846,7 @@
       "source": "0x021372c8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -876,7 +876,7 @@
       "source": "0x02137358",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -946,7 +946,7 @@
       "source": "0x0213737c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"

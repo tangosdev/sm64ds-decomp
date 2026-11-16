@@ -12,9 +12,6 @@
  * common.h stays first: the pose reads Matrix4x3 words m[9], m[10], m[11].
  *
  * leftovers:
- * - dExtBlendAnmModel_c::SetAnim, dCcAcPos_c::Init, ApproachLinear and
- *   dActor_c::SetRanges stay scalar Fix12 externs. The member forms
- *   grow the callers (02111718, InitResources, 02111758).
  * - currFrame >> 12 instead of the << 4 >> 16 shift shrinks 02111758
  *   and moves its pool off data_020a0e68.
  * - GetNode writes node 0 onto mPos, then node 1 over it. Filling a
@@ -95,24 +92,24 @@ extern daMoray_c::State data_ov016_02114dbc;
 extern "C" {
 extern VecFx32 data_ov016_02114d4c; /* cylinder offset, bss */
 
-extern unsigned char gCurrentStarId;        /* the selected star */
+extern unsigned char gCurrentStarId; /* the selected star */
 
 int AngleDiff(int a, int b);
 int SublevelToLevel(int sub);
-int IsStarCollected(int level, int star);
 /* Sound::Play(3, id, pos). Calling Play directly is one word larger
    (StateLungeInit 0x54 -> 0x58). */
-void func_02012694(unsigned int id, const Vector3 *pos);
 /* UpdateBones(model.data, model.file, frame). Inlining that grows Render
    0x8c -> 0x9c. */
-void func_020167a4(dExtAnmModel_c *model);
 /* Blend the posed bones by blendWeight. No named method. */
 void func_0204531c(ModelComponents *data, s32 weight);
 
-short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 }
+int IsStarCollected(int level, int star);
+void func_02012694(unsigned int id, const Vector3 *pos);
+void func_020167a4(dExtAnmModel_c *model);
+short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 /* Render's per-segment bend table, one 0xc record per body bone.
  * The six ROM records are {0, 0, scale} with scales 1,1,1,1,-1,0.
@@ -122,7 +119,6 @@ struct MorayRenderStep {
     s32 pad_04;
     s32 angleScale;
 };
-
 
 extern "C" MorayRenderStep data_ov016_02114908[];
 
@@ -349,8 +345,8 @@ int daMoray_c::StateLungeMain() {
     Vector3 worldTarget;
     localOffset.x = 0; localOffset.y = 0; localOffset.z = 0;
     worldTarget.x = 0; worldTarget.y = 0; worldTarget.z = 0;
-    unsigned int frame = (unsigned int)this->mBlendAnmModel.currFrame << 4 >> 0x10;
-    if (frame >= 0x15 && frame <= 0x3c) {
+    unsigned int frame = (unsigned int)this->mBlendAnmModel.currFrame << 4 >> 16;
+    if (frame >= 21 && frame <= 60) {
         if (gCurrentStarId == 1) {
             localOffset.z = 0x2bc000;
         } else {
@@ -701,8 +697,8 @@ s32 daMoray_c::InitResources()
     dExtFrameCtrl_c::LoadFile(data_ov016_02114d28);
 
     mPathID = param1 & 0xff;
-    mVariant = (param1 >> 8) & 0xf;
-    mStarParam = (param1 >> 0xc) & 0xf;
+    mVariant = (param1 >> 8) & 15;
+    mStarParam = (param1 >> 12) & 15;
     if (mVariant == 0xff)
         mVariant = 0;
     if (mPathID < 0)
@@ -803,8 +799,7 @@ s32 daMoray_c::InitResources()
  * The implicit constructor builds the base, collision cylinders, background
  * checker, model animation, and seven segment positions in declaration order.
  * Vector3's empty default constructor is the array callback at 0x0203d384. */
-extern "C" daMoray_c *daMoray_c_classInit()
-{
+daMoray_c *daMoray_c_classInit() {
     return new daMoray_c;
 }
 

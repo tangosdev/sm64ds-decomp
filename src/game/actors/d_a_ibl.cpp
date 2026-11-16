@@ -15,10 +15,7 @@
 /* leftovers:
  * - The eight helpers' names (CheckContact through SpawnerBehavior) are
  *   coined from their bodies and gIblKindHandlers' kind order, not
- *   recovered. Behavior reads gIblKindHandlers by hand, through two-word
- *   records, rather than calling a pointer-to-member.
- * - daPly_c::Hurt stays mangled: it takes Fix12<int> by value. The local
- *   Hurt declaration agrees with the current scalar definition.
+ *   recovered.
  * - The spawner copies daPly_c position through a byte view of the whole object
  *   into a real Vector3. The inherited position fields remain separate scalars.
  * - Spawn still borrows this actor's flat position and angle fields through
@@ -30,8 +27,7 @@
  *   speeds and kill heights chosen from them.
  * - func_020383f0 and func_02038414 are the two probes picked by that
  *   level id. func_02012694 plays a bank-3 sound at a position.
- * - Behavior's dispatch and InitResources' param1 shift keep the
- *   spellings the bytes need.
+ * - InitResources' param1 shift keeps the spelling the bytes need.
  */
 
 #pragma defer_codegen off
@@ -88,31 +84,11 @@ enum { daIbl_PTCL_BREAK = 0xf };
 /* The model and shadow matrix copies go through the flat Mtx43: assigning
    the C++ Matrix4x3 grows .text by 0x34 bytes. */
 
-/* Behavior's handler table, gIblKindHandlers: one pointer-to-member
-   per kind, as the two words mwcc lays one out in (function or vtable
-   offset, then this-adjustment doubled with the virtual bit in bit 0). */
-struct VtEntry {
-    int field0;
-    int field1;
-};
-typedef void (*FnPtr)(void *);
-
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
-
-extern "C" {
-/* Defined below. */
-
-void func_02012694(unsigned int a, void *p);
-void d_a_iblPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
-void func_02038414(void *p);
-int atan2_hold_d_a_ibl_1(int y, int x);
+void func_02012694(unsigned int a, const Vector3 *p);
+extern "C" void func_02038414(void *p);
 int func_ov002_020ad660(void *a, void *b, void *d, int e);
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-}
 
 extern signed char gCurrentSublevel;
 extern int data_02092138;
@@ -193,7 +169,7 @@ void daIbl_c::CheckContact() {
             Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
             PoofDust();
             MarkForDestruction();
-            func_02012694(daIbl_SND_BREAK, &mCamSpacePosX);
+            func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
             return;
         }
         Sound::PlayBank0(daIbl_SND_HIT_NOT_BROKEN, mCamSpacePos);
@@ -255,7 +231,8 @@ void daIbl_c::UpdateModelMatrix() {
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
-    *(Mtx43 *)mShadowMtx = *(Mtx43 *)&mModel.mat4x3;
+    Mtx43 *shadow = (Mtx43 *)mShadowMtx;
+    *shadow = *(Mtx43 *)&mModel.mat4x3;
     int k = 0x32;
     mShadowMtx[10] = (mDrawScale.x * k + mPosY) >> 3;
     if (mWithMeshClsn.IsOnGround() != 0)
@@ -407,7 +384,7 @@ void daIbl_c::PathBehavior() {
         if (r != 2)
             return;
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, &mCamSpacePosX);
+        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
         return;
     }
 
@@ -436,7 +413,7 @@ void daIbl_c::PathBehavior() {
             mRollSoundHandle = 0;
         } else if (mWithMeshClsn.IsOnGround() != 0) {
             if (mWithMeshClsn.JustHitGround() != 0) {
-                func_02012694(daIbl_SND_LAND, &mCamSpacePosX);
+                func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
                 LandingDust(1);
                 if (vy < -0x14000)
                     mVertSpeed = (int)(-vy + ((u32)-vy >> 31)) >> 1;
@@ -483,7 +460,7 @@ void daIbl_c::RollOffBehavior() {
             return;
 
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, &mCamSpacePosX);
+        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
         return;
     }
 
@@ -495,7 +472,7 @@ void daIbl_c::RollOffBehavior() {
            mPosY this function compiles to 0x1e8 bytes against the ROM's 0x1ec,
            and testing mHitWall first instead moves seven words. */
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, *(volatile int *)&mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, &mCamSpacePosX);
+        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
         TriplePoofDust();
         MarkForDestruction();
         return;
@@ -509,7 +486,7 @@ void daIbl_c::RollOffBehavior() {
         mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
 
         if (mWithMeshClsn.JustHitGround()) {
-            func_02012694(daIbl_SND_LAND, &mCamSpacePosX);
+            func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
             LandingDust(1);
 
             if (mVertSpeed < -0x8000)
@@ -559,7 +536,7 @@ void daIbl_c::FreeRollBehavior() {
         if (r != 2)
             return;
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, &mCamSpacePosX);
+        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
         return;
     }
 
@@ -586,7 +563,7 @@ void daIbl_c::FreeRollBehavior() {
         }
 
         if (mWithMeshClsn.JustHitGround()) {
-            func_02012694(daIbl_SND_LAND, &mCamSpacePosX);
+            func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
             LandingDust(1);
         } else {
             mRollSoundHandle =
@@ -622,7 +599,7 @@ void daIbl_c::FreeRollBehavior() {
    mDispenser, and mLiveBalls counts it. */
 void daIbl_c::SpawnerBehavior() {
     Vector3 pos;
-    u16 *timer = (u16 *)&mStateTimer;
+    u16 *timer = &mStateTimer;
     daPly_c *pl;
     int r1;
 
@@ -663,9 +640,9 @@ void daIbl_c::SpawnerBehavior() {
 
     if (gCurrentSublevel == 0x16) {
         if (pos.y < (int)0xff63c000) return;
-        mStateTimer = 0x3f;
+        mStateTimer = 63;
     } else {
-        mStateTimer = 0x7f;
+        mStateTimer = 127;
     }
 
     {
@@ -711,17 +688,7 @@ int daIbl_c::Render()
    gIblKindHandlers, on this actor. */
 int daIbl_c::Behavior()
 {
-    unsigned char idx = mVariant;
-    struct VtEntry *e = (struct VtEntry *)((char *)gIblKindHandlers + ((int)idx << 3));
-    int f1 = e->field1;
-    void *obj = (void *)((char *)((void *)this) + (f1 >> 1));
-    FnPtr fn;
-    if (f1 & 1) {
-        fn = (FnPtr)*(int *)((char *)*(int **)obj + e->field0);
-    } else {
-        fn = (FnPtr)e->field0;
-    }
-    fn(obj);
+    (this->*gIblKindHandlers[mVariant])();
     return 1;
 }
 
@@ -769,8 +736,8 @@ int daIbl_c::InitResources()
         }
         AdvancePath();
         mPrevAngleY = mHeadingToNode;
-        mKillY = *(int *)&data_02092138;
-        d = *(signed char *)&gCurrentSublevel;
+        mKillY = data_02092138;
+        d = gCurrentSublevel;
         /* Sublevel 0x19 is the half-size ball: speed 10 units/frame, scale
            0.5 (0x800), collider radius and height 30 units. */
         if (d == 0x19) {
@@ -820,7 +787,7 @@ int daIbl_c::InitResources()
            Sublevel 0x19: 512 to 6000. Otherwise the minimum is 1024 and the
            maximum 7000 in sublevels 0x18 and 0x16, 4600 in 6, 6500
            elsewhere. */
-        d = *(signed char *)&gCurrentSublevel;
+        d = gCurrentSublevel;
         if (d == 0x19) {
             mMinSpawnDist = 0x200000;
             mMaxSpawnDist = 0x1770000;
@@ -846,8 +813,7 @@ int daIbl_c::InitResources()
 }
 
 /* return new constructs the ball and its members. */
-extern "C" daIbl_c *daIbl_c_classInit(void)
-{
+daIbl_c *daIbl_c_classInit(void) {
     return new daIbl_c;
 }
 

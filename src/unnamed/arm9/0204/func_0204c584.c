@@ -1,6 +1,7 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
+#include "nitro/fx/fx_vec.h"
 #include "private/spl_particle_views.h"
 
 typedef struct Node {
@@ -31,14 +32,11 @@ typedef struct TexAnim {
     u32 prest : 15;
 } TexAnim;
 
-extern Vector3s data_02099fc4;
-extern void VEC_Fx16Normalize(void *a, Vector3s *b);
+extern VecFx16 data_02099fc4;
 extern Node *func_0204d958(List *list);
 extern void func_0204d9a0(List *list, Node *node);
-extern void SPLRandom_VecFx32(Vector3 *out);
-extern void SPLRandom_VecFx32_XY(Vector3 *out);
-struct Vector3;
-extern void VEC_Normalize(const struct Vector3 *v, struct Vector3 *out);
+extern void SPLRandom_VecFx32(VecFx32 *out);
+extern void SPLRandom_VecFx32_XY(VecFx32 *out);
 extern u32 data_020a4d30;
 
 static inline u32 RandVal(void) {
@@ -48,7 +46,7 @@ static inline u32 RandVal(void) {
 }
 
 static inline int RandScale(void) {
-    return (int)(((RandVal() >> 0x17) << 0xc) - 0x100000) >> 8;
+    return (int)(((RandVal() >> 0x17) << 12) - 0x100000) >> 8;
 }
 
 static inline int FMul(int a, int b) {
@@ -56,11 +54,11 @@ static inline int FMul(int a, int b) {
 }
 
 void func_0204cebc(ParticleSystem *sys) {
-    Vector3s vecA;
-    Vector3s vecB;
+    VecFx16 vecA;
+    VecFx16 vecB;
 
     vecA = data_02099fc4;
-    VEC_Fx16Normalize(sys->direction, &vecB);
+    VEC_Fx16Normalize(&sys->direction, &vecB);
 
     if (vecA.x == vecB.x && vecA.y == vecB.y && vecA.z == vecB.z) {
         vecA.x = 0x1000;
@@ -77,27 +75,27 @@ void func_0204cebc(ParticleSystem *sys) {
     sys->basisV.z = (s16)(FX_MUL(vecB.x, sys->basisU.y) - FX_MUL(vecB.y, sys->basisU.x));
 }
 
-void func_0204cd5c(int *out, int *in, int sel, ParticleSystem *sys) {
+void func_0204cd5c(VecFx32 *out, VecFx32 *in, int sel, ParticleSystem *sys) {
     switch (sel) {
     case 2:
-        out[0] = 0;
-        out[1] = in[0];
-        out[2] = in[1];
+        out->x = 0;
+        out->y = in->x;
+        out->z = in->y;
         break;
     case 1:
-        out[0] = in[1];
-        out[1] = 0;
-        out[2] = in[0];
+        out->x = in->y;
+        out->y = 0;
+        out->z = in->x;
         break;
     case 0:
-        out[0] = in[0];
-        out[1] = in[1];
-        out[2] = 0;
+        out->x = in->x;
+        out->y = in->y;
+        out->z = 0;
         break;
     case 3:
-        out[0] = FX_MUL(in[0], sys->basisU.x) + FX_MUL(in[1], sys->basisV.x);
-        out[1] = FX_MUL(in[0], sys->basisU.y) + FX_MUL(in[1], sys->basisV.y);
-        out[2] = FX_MUL(in[0], sys->basisU.z) + FX_MUL(in[1], sys->basisV.z);
+        out->x = FX_MUL(in->x, sys->basisU.x) + FX_MUL(in->y, sys->basisV.x);
+        out->y = FX_MUL(in->x, sys->basisU.y) + FX_MUL(in->y, sys->basisV.y);
+        out->z = FX_MUL(in->x, sys->basisU.z) + FX_MUL(in->y, sys->basisV.z);
         break;
     }
 }
@@ -109,10 +107,10 @@ void func_0204c584(ParticleSystem *sys, List *list) {
     int mag2;
     int ringAngle;
     u16 arr[3];
-    Vector3 vecB;
-    Vector3 vecC;
-    Vector3 vecE;
-    Vector3 nrm;
+    VecFx32 vecB;
+    VecFx32 vecC;
+    VecFx32 vecE;
+    VecFx32 nrm;
     PtclDef *emitter;
     PtclData *def;
     ParticleElement *p;
@@ -122,7 +120,7 @@ void func_0204c584(ParticleSystem *sys, List *list) {
     def = emitter->data;
     acc = def->rate + sys->callbackValue;
     sys->callbackValue = acc & 0xfff;
-    count = acc >> 0xc;
+    count = acc >> 12;
     {
         u32 t = def->emissionType;
         if ((t == 2 || t == 3 || t == 5) && def->circleAxis == 3)
@@ -151,7 +149,7 @@ void func_0204c584(ParticleSystem *sys, List *list) {
             SPLRandom_VecFx32_XY(&vecB);
             vecB.x = FX_MUL(vecB.x, sys->emitRadius);
             vecB.y = FX_MUL(vecB.y, sys->emitRadius);
-            func_0204cd5c((int *)&p->offset, (int *)&vecB, def->circleAxis, sys);
+            func_0204cd5c(&p->offset, &vecB, def->circleAxis, sys);
             break;
         case 3: {
             int q = ringAngle / count;
@@ -162,7 +160,7 @@ void func_0204c584(ParticleSystem *sys, List *list) {
             vecC.x = FMul(s, sys->emitRadius);
             vecC.y = FMul(c, sys->emitRadius);
             vecC.z = 0;
-            func_0204cd5c((int *)&p->offset, (int *)&vecC, def->circleAxis, sys);
+            func_0204cd5c(&p->offset, &vecC, def->circleAxis, sys);
             break;
         }
         case 4:
@@ -175,7 +173,7 @@ void func_0204c584(ParticleSystem *sys, List *list) {
             SPLRandom_VecFx32_XY(&vecE);
             vecE.x = FMul(FMul(vecE.x, sys->emitRadius), RandScale());
             vecE.y = FMul(FMul(vecE.y, sys->emitRadius), RandScale());
-            func_0204cd5c((int *)&p->offset, (int *)&vecE, def->circleAxis, sys);
+            func_0204cd5c(&p->offset, &vecE, def->circleAxis, sys);
             break;
         }
         {
@@ -193,10 +191,10 @@ void func_0204c584(ParticleSystem *sys, List *list) {
         if (p->offset.x == 0 && p->offset.y == 0 && p->offset.z == 0)
             SPLRandom_VecFx32(&nrm);
         else
-            VEC_Normalize((const struct Vector3 *)&p->offset, (struct Vector3 *)&nrm);
-        p->velocity.x = (nrm.x * mag1 + sys->direction[0] * mag2) >> 0xc;
-        p->velocity.y = (nrm.y * mag1 + sys->direction[1] * mag2) >> 0xc;
-        p->velocity.z = (nrm.z * mag1 + sys->direction[2] * mag2) >> 0xc;
+            VEC_Normalize(&p->offset, &nrm);
+        p->velocity.x = (nrm.x * mag1 + sys->direction.x * mag2) >> 12;
+        p->velocity.y = (nrm.y * mag1 + sys->direction.y * mag2) >> 12;
+        p->velocity.z = (nrm.z * mag1 + sys->direction.z * mag2) >> 12;
         p->basePosition = sys->position;
         {
             u32 s;
@@ -235,8 +233,8 @@ void func_0204c584(ParticleSystem *sys, List *list) {
         if (def->hasRotation) {
             p->angularSpeed =
                 (s16)((u32)((def->maxRotation - def->minRotation) * (int)(RandVal() >> 0x14) +
-                            (def->minRotation << 0xc)) >>
-                      0xc);
+                            (def->minRotation << 12)) >>
+                      12);
         } else {
             p->angularSpeed = 0;
         }

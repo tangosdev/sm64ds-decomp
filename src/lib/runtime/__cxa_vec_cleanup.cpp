@@ -26,8 +26,8 @@ namespace std {
 void terminate();
 }
 
-extern "C" void __cxa_vec_cleanup(void *block, unsigned int n, unsigned int size, dtor_t dtor)
-{
+extern "C" void __cxa_vec_cleanup(void *block, unsigned int n, unsigned int size,
+                                  void (*dtor)(void *)) {
     if (dtor) {
         char *p = (char *)block + n * size;
         try {

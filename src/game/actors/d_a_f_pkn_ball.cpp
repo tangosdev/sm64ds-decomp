@@ -27,6 +27,7 @@
 #include "SaveData.h"
 #include "Sound.h"
 #include "daFPknBall_c.h"
+#include "daKpa_c.h"
 #include "dBgCh_Actr.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
@@ -62,10 +63,8 @@ extern s32 data_ov002_02100348[];
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. Vec3_Asr is
    not among them any more -- math/CalcLib.h, included above, declares it. */
-extern "C" {
 int func_ov002_020ad660(void *cc, void *pp, void *r5p, int flags);
 void func_02012694(unsigned int, const Vector3 *);
-}
 
 /* D1: own vptr, then the members in reverse declaration order (dExtShadowModel_c,
  * dBgCh_Actr, dCcAc_c), then dEnemyBase_c's destructor. D0 is the same body
@@ -89,20 +88,20 @@ void daFPknBall_c::TryDropCoin() {
 /* Death drop of a variant-0 ball. Rolls 0..9. On 4..9, gives up if any
  * FPAKUN_BALL already exists. Otherwise, if the closest player's param1 is 3
  * and the actor 279 has not yet handed one out, spawns a cap (actor 269) for a
- * random unlocked character 0..2 and marks actor 279's byte at +0x42b. If none
+ * random unlocked character 0..2 and sets Bowser's mCapActorAlive. If none
  * of that happens, a roll below 4 spawns a coin as TryDropCoin does. */
 void daFPknBall_c::TryDropItem() {
-    u8 roll = (u8)(((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10);
+    u8 roll = (((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10);
     if (roll >= 4) {
         if (ClosestWithActorID(ACTOR_FPAKUN_BALL) != 0)
             return;
     }
     {
         daPly_c *player = ClosestPlayer();
-        char *koopa;
+        daKpa_c *koopa;
         if (player != 0 && player->param1 == 3 &&
-            (koopa = (char *)dActor_c::FindWithActorID(ACTOR_KOOPA, 0)) != 0 &&
-            *(u8 *)(koopa + 0x42b) == 0) {
+            (koopa = (daKpa_c *)dActor_c::FindWithActorID(ACTOR_KOOPA, 0)) != 0 &&
+            koopa->mCapActorAlive == 0) {
             int c;
             int idx;
             int unlocked = 0;
@@ -116,7 +115,7 @@ void daFPknBall_c::TryDropItem() {
             } while ((unlocked & (1 << idx)) == 0);
             if (dActor_c::Spawn(ACTOR_OBJ_MARIO_CAP, (idx << 8) | 0xb, mPos, &mAngle, mAreaId,
                                 -1) != 0) {
-                *(u8 *)(koopa + 0x42b) = 1;
+                koopa->mCapActorAlive = 1;
                 return;
             }
         }
@@ -224,7 +223,7 @@ int daFPknBall_c::Behavior() {
     hitByID = mdCcAc_c.otherOwner;
     if (hitByID != 0) {
         if ((mdCcAc_c.hitFlags & 0x8000) == 0) {
-            hitActor = dActor_c::FindWithID((u32)hitByID);
+            hitActor = dActor_c::FindWithID(hitByID);
             if (hitActor != 0) {
                 if (mdCcAc_c.hitFlags & HIT_MEGA_CHARACTER) {
                     /* Knocked away from the hitter: a short hop into death state 8. */
@@ -232,7 +231,7 @@ int daFPknBall_c::Behavior() {
                     mPrevAngleY = Vec3_HorzAngle(&((dActor_c *)hitActor)->mPos, &mPos);
                     mHorzSpeed = 0xa000;
                     mVertSpeed = 0x28000;
-                    mDeathTimer = 0x1e;
+                    mDeathTimer = 30;
                     mSpinRateX = 0;
                     mSpinRateY = 0;
                     mSpinRateZ = 0;
@@ -282,10 +281,10 @@ int daFPknBall_c::Behavior() {
     /* mPrevAngleY is the heading (ApproachLinear steers it toward
      * mTargetAngleY) and mPrevAngleX the pitch; FX_SinCosTable_ holds (sin, cos)
      * pairs in fix12. */
-    flatSpeed = (mHorzSpeed * FX_CosIdx((u16)mPrevAngleX >> 4)) / 4096;
-    mSpeedX = (flatSpeed * FX_SinIdx((u16)mPrevAngleY >> 4)) / 4096;
-    mVertSpeed = (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 4096;
-    mSpeedZ = (flatSpeed * FX_CosIdx((u16)mPrevAngleY >> 4)) / 4096;
+    flatSpeed = (mHorzSpeed * FX_CosIdx((u16)mPrevAngleX >> 4)) / 0x1000;
+    mSpeedX = (flatSpeed * FX_SinIdx((u16)mPrevAngleY >> 4)) / 0x1000;
+    mVertSpeed = (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 0x1000;
+    mSpeedZ = (flatSpeed * FX_CosIdx((u16)mPrevAngleY >> 4)) / 0x1000;
     mPosX += mSpeedX;
     mPosY += mVertSpeed;
     mPosZ += mSpeedZ;
@@ -350,6 +349,6 @@ s32 daFPknBall_c::OnYoshiTryEat() {
 }
 
 /* FPAKUN_BALL registry factory. */
-extern "C" daFPknBall_c *daFPknBall_c_classInit() {
+daFPknBall_c *daFPknBall_c_classInit() {
     return new daFPknBall_c();
 }

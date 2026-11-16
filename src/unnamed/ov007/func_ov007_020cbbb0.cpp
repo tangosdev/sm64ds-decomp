@@ -4,8 +4,6 @@
 #include "Ov007Mesh.h"
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
-
 /* The ROM copies the template with one ldm/stm block. Under C++ a struct of
  * six named ints copies word by word, a struct with an array member as one
  * block, so the copy goes through this. */
@@ -13,12 +11,12 @@ struct MeshParamsWords {
     int w[6];
 };
 
-extern void *func_ov007_020c3df4(const char *name, int size);
-extern Ov007Grid *func_ov007_020c73f0(int springMode, int columns, int rows, int pointMass);
-extern Ov007Link *func_ov007_020c80a4(void);
-extern void func_ov007_020c72d0(Ov007Grid *grid);
-extern void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
-extern void func_ov007_020cb3dc(Ov007Mesh *mesh);
+extern "C" void *func_ov007_020c3df4(const char *name, int size);
+extern "C" Ov007Grid *func_ov007_020c73f0(int springMode, int columns, int rows, int pointMass);
+extern "C" Ov007Link *func_ov007_020c80a4(void);
+extern "C" void func_ov007_020c72d0(Ov007Grid *grid);
+extern "C" void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
+extern "C" void func_ov007_020cb3dc(Ov007Mesh *mesh);
 
 /* Builds a columns x rows mesh `width` wide, centred on the origin, every
  * point at the template's rest z. Rows are cellHeight apart (width *
@@ -35,9 +33,9 @@ Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams
 
     mesh = (Ov007Mesh *)func_ov007_020c3df4(0, sizeof(Ov007Mesh));
     cellColumns = columns - 1;
-    cellWidth = (int)FX_DivS32(width, cellColumns);
+    cellWidth = FX_DivS32(width, cellColumns);
     t = FX_MUL(width, 0x16a1);
-    cellHeight = (int)FX_DivS32(t / 2, cellColumns);
+    cellHeight = FX_DivS32(t / 2, cellColumns);
     {
         int n = columns - 1;
         cellColumns = n;
@@ -45,13 +43,13 @@ Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams
     halfWidth = (cellWidth * cellColumns) / 2;
     cellRows = rows - 1;
     halfHeight = (cellHeight * cellRows) / 2;
-    mesh->verts = (Vector3 *)func_ov007_020c3df4(0, columns * 12 * rows);
+    mesh->verts = (Vector3 *)func_ov007_020c3df4(0, columns * 0xc * rows);
     mesh->faceNormals = (Vector3_16 *)func_ov007_020c3df4(0, cellColumns * 6 * cellRows * 2);
     mesh->vertexNormals = (Vector3_16 *)func_ov007_020c3df4(0, columns * 6 * rows);
     mesh->texOffsetS = (int *)func_ov007_020c3df4(0, columns * 4);
     mesh->texOffsetT = (int *)func_ov007_020c3df4(0, columns * 4);
-    mesh->cellWidth = (s16)cellWidth;
-    mesh->cellHeight = (s16)cellHeight;
+    mesh->cellWidth = cellWidth;
+    mesh->cellHeight = cellHeight;
     mesh->cellLinks =
         (Ov007Link **)func_ov007_020c3df4(0, cellColumns * sizeof(Ov007Link) * cellRows);
     mesh->grid = func_ov007_020c73f0(3, columns, rows, params->pointMass);
@@ -113,5 +111,4 @@ Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams
     *(MeshParamsWords *)&mesh->params = *(MeshParamsWords *)params;
     func_ov007_020cb3dc(mesh);
     return mesh;
-}
 }

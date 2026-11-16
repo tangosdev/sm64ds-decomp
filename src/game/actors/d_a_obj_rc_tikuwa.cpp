@@ -80,7 +80,7 @@ s32 daObjRc_Tikuwa_c::Behavior() {
             mClsnTimer += 1;
             mHadClsn = 0;
         }
-        if (mClsnTimer >= 0xf)
+        if (mClsnTimer >= 15)
             mState = 1;
         break;
     case 1:
@@ -161,7 +161,7 @@ void daObjRc_Tikuwa_c::StoodOnCallback(void *collider, daObjRc_Tikuwa_c *self, d
 /* Factory: `return new` calls the inherited fBase_c::operator new -- the
  * 0x4ec allocation the cartridge's own factory makes. */
 /* -------------------------------------------------------------------------- */
-extern "C" daObjRc_Tikuwa_c *daObjRc_Tikuwa_c_classInit() {
+daObjRc_Tikuwa_c *daObjRc_Tikuwa_c_classInit() {
     return new daObjRc_Tikuwa_c;
 }
 

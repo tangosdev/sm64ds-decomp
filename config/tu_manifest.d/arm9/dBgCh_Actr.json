@@ -125,7 +125,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "func_02035644",
+      "symbol": "_Z13func_02035644Pii",
       "address": "0x02035644",
       "size": "0x00000008",
       "legacy_source": "src/func_02035644.c",
@@ -279,7 +279,7 @@
       "ordinal": 36
     },
     {
-      "symbol": "func_02035798",
+      "symbol": "_Z13func_02035798P10dBgCh_Actri",
       "address": "0x02035798",
       "size": "0x00000008",
       "legacy_source": "src/func_02035798.c",
@@ -328,7 +328,7 @@
       "ordinal": 43
     },
     {
-      "symbol": "func_02035860",
+      "symbol": "_Z13func_02035860P10dBgCh_ActrPK7Vector3",
       "address": "0x02035860",
       "size": "0x0000003c",
       "legacy_source": "src/func_02035860.c",
@@ -398,7 +398,7 @@
       "ordinal": 53
     },
     {
-      "symbol": "func_02037318",
+      "symbol": "_Z13func_02037318P10dBgCh_Actr",
       "address": "0x02037318",
       "size": "0x00000070",
       "legacy_source": "src/func_02037318.c",

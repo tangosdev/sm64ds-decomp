@@ -87,7 +87,7 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
  * allocation size, vtable identity, and the CASKET registry profile; later EAD
  * lineage supplies classInit. Exact original spelling is not preserved.
  * Historical alias: Coffin_Spawn. */
-extern "C" daObjCasket_c *daObjCasket_c_classInit() {
+daObjCasket_c *daObjCasket_c_classInit() {
     return new daObjCasket_c();
 }
 

@@ -33,7 +33,7 @@ enum {
 
 extern unsigned short data_02086a58[];
 
-#define isdigit_(c) ((c) < 0 || (c) >= 0x80 ? 0 : data_02086a58[c] & 8)
+#define isdigit_(c) ((c) < 0 || (c) >= 128 ? 0 : data_02086a58[c] & 8)
 
 unsigned char *parse_format(unsigned char *format_string, char **arg, print_format *format) {
     print_format f;
@@ -49,9 +49,9 @@ unsigned char *parse_format(unsigned char *format_string, char **arg, print_form
     f.field_width           = 0;
     f.precision             = 0;
 
-    s = (unsigned char *)(format_string + 1);
+    s = (format_string + 1);
     if ((c = *s) == '%') {
-        f.conversion_char = (unsigned char)c;
+        f.conversion_char = c;
         *format = f;
         return s + 1;
     }
@@ -86,9 +86,12 @@ unsigned char *parse_format(unsigned char *format_string, char **arg, print_form
 
     if (c == '*') {
         *arg += 4;
-        if ((f.field_width = *(int *)(*arg - 4)) < 0) {
-            f.justification_options = left_justification;
-            f.field_width = -f.field_width;
+        {
+            int *slot = (int *)(*arg - 4);
+            if ((f.field_width = *slot) < 0) {
+                f.justification_options = left_justification;
+                f.field_width = -f.field_width;
+            }
         }
         c = *++s;
     } else {
@@ -111,8 +114,11 @@ unsigned char *parse_format(unsigned char *format_string, char **arg, print_form
 
         if (c == '*') {
             *arg += 4;
-            if ((f.precision = *(int *)(*arg - 4)) < 0)
-                f.precision_specified = 0;
+            {
+                int *slot = (int *)(*arg - 4);
+                if ((f.precision = *slot) < 0)
+                    f.precision_specified = 0;
+            }
             c = *++s;
         } else {
             while (isdigit_(c)) {
@@ -159,7 +165,7 @@ unsigned char *parse_format(unsigned char *format_string, char **arg, print_form
     if (flag_found)
         c = *++s;
 
-    f.conversion_char = (unsigned char)c;
+    f.conversion_char = c;
 
     switch (c) {
     case 'd':
@@ -181,8 +187,7 @@ unsigned char *parse_format(unsigned char *format_string, char **arg, print_form
     case 'f':
     case 'F':
         if (f.argument_options == short_argument ||
-            (unsigned char)(f.argument_options + 0xFC) <=
-                (unsigned char)(long_long_argument - intmax_argument)) {
+            (unsigned char)(f.argument_options + 0xFC) <= (long_long_argument - intmax_argument)) {
             f.conversion_char = 0xFF;
             break;
         }

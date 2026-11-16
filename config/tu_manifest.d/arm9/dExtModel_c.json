@@ -668,28 +668,28 @@
       "ordinal": 46
     },
     {
-      "symbol": "_ZN15dExtAnm2Model_c4CopyERKS_Pcj",
+      "symbol": "_ZN15dExtAnm2Model_c4CopyERKS_PcP8BCA_File",
       "address": "0x02016254",
       "size": "0x00000038",
       "legacy_source": "src/engine/model/d_ext_anm2_model.cpp",
       "ordinal": 47
     },
     {
-      "symbol": "func_0201628c",
+      "symbol": "_Z13func_0201628cii",
       "address": "0x0201628c",
       "size": "0x00000018",
       "legacy_source": "src/engine/model/d_ext_anm2_model.cpp",
       "ordinal": 48
     },
     {
-      "symbol": "func_020162a4",
+      "symbol": "_Z13func_020162a4ii",
       "address": "0x020162a4",
       "size": "0x00000020",
       "legacy_source": "src/engine/model/d_ext_anm2_model.cpp",
       "ordinal": 49
     },
     {
-      "symbol": "_ZN15dExtAnm2Model_c13Func_020162C4Ejiit",
+      "symbol": "_ZN15dExtAnm2Model_c13Func_020162C4EP8BCA_Fileiit",
       "address": "0x020162c4",
       "size": "0x0000005c",
       "legacy_source": "src/engine/model/d_ext_anm2_model.cpp",
@@ -808,7 +808,7 @@
       "ordinal": 66
     },
     {
-      "symbol": "func_020167a4",
+      "symbol": "_Z13func_020167a4P14dExtAnmModel_c",
       "address": "0x020167a4",
       "size": "0x00000020",
       "legacy_source": "src/engine/model/d_ext_anm_model.cpp",
@@ -885,7 +885,7 @@
       "ordinal": 77
     },
     {
-      "symbol": "func_020169f4",
+      "symbol": "_Z13func_020169f4Pci",
       "address": "0x020169f4",
       "size": "0x00000010",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
@@ -1032,7 +1032,7 @@
       "ordinal": 98
     },
     {
-      "symbol": "GetCommonModelComponents",
+      "symbol": "_Z24GetCommonModelComponentsP8BMD_File",
       "address": "0x02016e70",
       "size": "0x00000098",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
@@ -1067,7 +1067,7 @@
       "ordinal": 103
     },
     {
-      "symbol": "TrimModelFile",
+      "symbol": "_Z13TrimModelFilePv",
       "address": "0x02017060",
       "size": "0x00000058",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",

@@ -8,7 +8,6 @@
  * - common.h stays before daGmch_c.h. InitResources assigns
  *   IDENTITY_MATRIX4X3 into mMatrix; the .r/.t Matrix4x3 spelling is
  *   0x1f0 against the ROM's 0x1d4. decl_common.h is not included.
- * - daPly_c::Bounce and daPly_c::Hurt stay mangled (Fix12<int> by value).
  * - GetFloorResult / GetWallResult return the raw word; a dBgPi* return
  *   disagrees with the definitions, so the callers still cast.
  *   TouchesWater and FX_Div are the const method and the divide.
@@ -125,8 +124,8 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
  * ApproachLinear and RandomIntInternal.  Collapsing each onto ONE spelling was
  * measured, not assumed, and eight of the nine cost nothing:
  *
- *   TWO were never different types at all.  Fix12i is `typedef s32`, so
- *   Vec3_Dist and dActor_c::DistToCPlayer spelt `Fix12i` and spelt `int` are
+ *   TWO were never different types at all.  fx32 is `typedef s32`, so
+ *   Vec3_Dist and dActor_c::DistToCPlayer spelt `fx32` and spelt `int` are
  *   the same declaration written twice.
  *
  *   FIVE disagreed only about something no call site can see: a return value
@@ -152,20 +151,13 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
  * GmchDrawReg supplies the draw offset's .init stores so the plain Vector3
  * earns its registered destructor instead of constant initialization. */
 extern "C" {
-extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-/* local extern: named parameters keep the TU's compiler-generated aliases
- * stable when CalcLib's shared declarations are included above. */
-extern int RandomIntInternal(int *seed);
 extern void func_02038414(void *clsn);
-extern void   Matrix4x3_FromRotationY(void *m, int angle);
-extern void   Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern void   Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-extern void   Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
+extern void Matrix4x3_FromRotationY(void *m, int angle);
+extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
+extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
+extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
 }
 
 /* One definition, two ROM variants (the D2 mwccarm also emits is
@@ -195,8 +187,8 @@ void daGmch_c::ChooseNextState()
 {
     extern int data_0209e650;
 
-    Fix12i distC;
-    Fix12i dist;
+    fx32 distC;
+    fx32 dist;
     int curState;
 
     distC = DistToCPlayer();
@@ -285,7 +277,7 @@ void daGmch_c::CheckPlayerContact()
 
     if (mdCcAc_c.hitFlags & HIT_MEGA_CHARACTER) {
         mPrevAngleY = Vec3_HorzAngle(&player->mPos, &mPos);
-        mAngleY = (short)(mPrevAngleY + 0x8000);
+        mAngleY = (mPrevAngleY + 0x8000);
         player->IncMegaKillCount();
         SetState(8);
         return;
@@ -386,7 +378,7 @@ int daGmch_c::UpdateState8()
     mAnmModel.Advance();
     UpdatePos(&mdCcAc_c);
     func_02038414(&mWithMeshClsn);
-    if (mWithMeshClsn.JustHitGround() != 0 || DecIfAbove0_Byte((unsigned char *)&mTimer) == 0) {
+    if (mWithMeshClsn.JustHitGround() != 0 || DecIfAbove0_Byte(&mTimer) == 0) {
         SpawnCoinsAndDie();
     }
     return 1;
@@ -400,7 +392,7 @@ int daGmch_c::EnterState8()
     mFlags &= ~1;
     mHorzSpeed = 0xa000;
     mVertSpeed = 0x28000;
-    mTimer = 0x2d;
+    mTimer = 45;
     mAnmModel.SetAnim((BCA_File *)data_ov081_02128edc.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int yOffset1 = OnAimedAtWithEgg();
@@ -436,7 +428,7 @@ int daGmch_c::UpdateState7()
     return 1;
 }
 
-/* mHolder is re-read before each use, as the ROM reloads it: the stores in
+/* mEatingPlayer is re-read before each use, as the ROM reloads it: the stores in
    between go to this object's own fields, but the shards were written with the
    reload and the bytes keep it. */
 int daGmch_c::EnterState7()
@@ -452,16 +444,16 @@ int daGmch_c::EnterState7()
 
     mFlags &= ~0x80000;
     zero = 0;
-    holder = mHolder;
+    holder = mEatingPlayer;
     mHorzSpeed = holder->mHorzSpeed + 0x7000;
     mVertSpeed = zero;
-    holder = mHolder;
+    holder = mEatingPlayer;
     holderAngle = holder->mAngleY;
     mAngleY = holderAngle;
     mPrevAngleY = mAngleY;
 
     /* Word triple through &mPosX. Naming the three fields is 0x178 vs 0x17c. */
-    holder = mHolder;
+    holder = mEatingPlayer;
     holderPos = &holder->mPosX;
     mPosX = holderPos[0];
     mPosY = holderPos[1];
@@ -475,7 +467,7 @@ int daGmch_c::EnterState7()
     trig = FX_CosIdx(angleIdx);
     mPosZ = mPosZ + FX_MUL(trig, 0x50000);
 
-    holder = mHolder;
+    holder = mEatingPlayer;
     {
         int y = holder->mPosY;
         int z = holder->mPosZ;
@@ -487,7 +479,7 @@ int daGmch_c::EnterState7()
     }
 
     DetectRaycastClsn(rayStart, mPos, 1);
-    mHolder = (dActor_c *)zero;
+    mEatingPlayer = (daPly_c *)zero;
     mWithMeshClsn.SetLimMovFlag();
     mStateIndex = 7;
     return 1;
@@ -499,7 +491,7 @@ int daGmch_c::UpdateState6()
     flagSet = (mFlags & MFLAG_YOSHI_MOUTH_B) != 0;
     if (flagSet) {
         /* Same word triple. Naming the three fields is 0x9c vs 0xa0. */
-        s32 *sv = &mHolder->mPosX;
+        s32 *sv = &mEatingPlayer->mPosX;
         mPosX = sv[0];
         mPosY = sv[1];
         mPosZ = sv[2];
@@ -529,7 +521,7 @@ int daGmch_c::EnterState6()
 
 int daGmch_c::UpdateState5()
 {
-    Fix12i distToSpawn = Vec3_Dist(&mPos, (Vector3 *)&mSpawnPosX);
+    fx32 distToSpawn = Vec3_Dist(&mPos, (Vector3 *)&mSpawnPosX);
     if (distToSpawn < mHorzSpeed) {
         mAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mSpawnPosX);
         mPrevAngleY = mAngleY;
@@ -659,7 +651,7 @@ int daGmch_c::UpdateState1()
     ApplySlopeToVertSpeed(&mWithMeshClsn);
     CheckPlayerContact();
     mAnmModel.Advance();
-    if (DecIfAbove0_Byte((unsigned char *)&mTimer) == 0) {
+    if (DecIfAbove0_Byte(&mTimer) == 0) {
         ChooseNextState();
     }
     mdCcAc_c.Clear();
@@ -676,7 +668,7 @@ void daGmch_c::EnterState1()
     mAnmModel.speed = 0x1000;
     mHorzSpeed = 0xa000;
     mTargetAngleY = (short)RandomIntInternal(data_0209e650);
-    mTimer = (unsigned char)((unsigned int)RandomIntInternal(data_0209e650) % 0x78);
+    mTimer = (unsigned char)((unsigned int)RandomIntInternal(data_0209e650) % 120);
     mStateIndex = 1;
 }
 
@@ -760,11 +752,11 @@ void daGmch_c::SetState(int n)
 int daGmch_c::CleanupResources()
 {
     extern GmchModelFileHandle data_ov081_02128ed4;
-    extern void *data_ov081_021280d8[];
+    extern SharedFilePtr *data_ov081_021280d8[];
 
-    ((SharedFilePtr *)&data_ov081_02128ed4)->Release();
+    data_ov081_02128ed4.Release();
     for (int i = 0; i < 4; i++) {
-        ((SharedFilePtr *)data_ov081_021280d8[i])->Release();
+        data_ov081_021280d8[i]->Release();
     }
     return 1;
 }
@@ -811,17 +803,17 @@ int daGmch_c::Behavior()
 int daGmch_c::InitResources()
 {
     extern GmchModelFileHandle data_ov081_02128ed4;
-    extern void *data_ov081_021280d8[];
+    extern SharedFilePtr *data_ov081_021280d8[];
     extern SharedFilePtr data_ov002_0210d9b8;
     extern Matrix4x3 IDENTITY_MATRIX4X3;
 
     Vector3 pos;
-    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov081_02128ed4);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(data_ov081_02128ed4);
     mAnmModel.SetFile(modelFile, 1, 1);
     if (mModel.SetFile((BMD_File *)data_ov002_0210d9b8.filePtr, 1, 1) == 0)
         return 0;
     for (int i = 0; i < 4; i++)
-        dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov081_021280d8[i]);
+        dExtFrameCtrl_c::LoadFile(*data_ov081_021280d8[i]);
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     mdCcAc_c.Init(this, 0x4b000, 0x73000, 0x200000, 0x6eff0);
@@ -876,8 +868,7 @@ void daGmch_c::OnTurnIntoEgg(daPly_c &player) {
  * allocation size, vtable identity and the GAMAGUCHI registry profile; later
  * EAD lineage supplies classInit. Exact original spelling is not preserved.
  * Historical alias: Moneybag_Spawn. */
-extern "C" daGmch_c *daGmch_c_classInit(void)
-{
+daGmch_c *daGmch_c_classInit(void) {
     return new daGmch_c();
 }
 

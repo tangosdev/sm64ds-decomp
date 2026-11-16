@@ -80,7 +80,7 @@ s32 daObjFl_Seesaw_c::Behavior() {
         mAngleX += mSwingStep;
         if (mAngleX >= 0x400 || mAngleX <= -0x400) {
             mSwingStep = -mSwingStep;
-            mSwingCooldown = 0x1e;
+            mSwingCooldown = 30;
         }
     }
     UpdateModelTransform();
@@ -102,7 +102,7 @@ s32 daObjFl_Seesaw_c::InitResources() {
     return 1;
 }
 
-extern "C" daObjFl_Seesaw_c *daObjFl_Seesaw_c_classInit() {
+daObjFl_Seesaw_c *daObjFl_Seesaw_c_classInit() {
     return new daObjFl_Seesaw_c();
 }
 

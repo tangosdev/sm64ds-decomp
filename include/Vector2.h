@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* A 2D Fix12 vector, the 8-byte sibling of types.h's Vector3. The name is
+/* A 2D fx32 vector, the 8-byte sibling of types.h's Vector3. The name is
    coined (Vector3's pattern; the SM64DS hacking headers spell it the same).
 
    THE ARM9 2-VECTOR LIBRARY IS WHERE ITS STRUCTORS LIVE. 0x0203d388..0x0203d738
-   is one run of {x, y} Fix12 helpers: rotate by an angle (func_0203d388),
+   is one run of {x, y} fx32 helpers: rotate by an angle (func_0203d388),
    normalize (func_0203d434 / func_0203d480), cross (func_0203d4d0,
    func_0203d524), dot (func_0203d570), squared length (func_0203d5bc),
    distance (func_0203d5dc), Vec2_Len, scale (func_0203d630, func_0203d680),
@@ -17,7 +17,7 @@
    same arrangement as Vector3's empty constructor, func_0203d384, right after
    Vec3_Add.
 
-   Every array of this element the ROM builds or tears down holds Fix12
+   Every array of this element the ROM builds or tears down holds fx32
    positions or velocities (dScMgBSC_c's card positions, read back `>> 12`
    for the meter; the amida, cup, smartball and snowball scenes'
    position/velocity arrays). Each one goes through __cxa_vec_ctor(...,
@@ -40,13 +40,13 @@
    deadstrip-duplicate rows against those two addresses (as daDpLift_c's does
    for _ZN7Vector3C1Ev). */
 typedef struct Vector2 {
-    Fix12i x, y;
+    fx32 x, y;
 #ifdef __cplusplus
     Vector2() {}
     /* Statics initialised with a value spell it `Vector2(x, y)`, as Vector3's
        do: the inline member ctor gives the retail shape, two stores and then
        the ~Vector2() registration (unit020b2c84's banner effect origins). */
-    Vector2(Fix12i x_, Fix12i y_) : x(x_), y(y_) {}
+    Vector2(fx32 x_, fx32 y_) : x(x_), y(y_) {}
     ~Vector2() {}
 #endif
 } Vector2;

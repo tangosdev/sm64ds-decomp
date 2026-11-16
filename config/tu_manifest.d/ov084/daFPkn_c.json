@@ -146,21 +146,21 @@
       "ordinal": 17
     },
     {
-      "symbol": "daFPkn_c_classInit_PAKUN2",
+      "symbol": "_Z25daFPkn_c_classInit_PAKUN2v",
       "address": "0x0212ea18",
       "size": "0x00000048",
       "legacy_source": "src/d_a_f_pkn_pakun2.c",
       "ordinal": 18
     },
     {
-      "symbol": "daFPkn_c_classInit_FIREPAKUN_S",
+      "symbol": "_Z30daFPkn_c_classInit_FIREPAKUN_Sv",
       "address": "0x0212ea60",
       "size": "0x00000048",
       "legacy_source": "src/d_a_f_pkn_firepakun_s.c",
       "ordinal": 19
     },
     {
-      "symbol": "daFPkn_c_classInit_FIREPAKUN",
+      "symbol": "_Z28daFPkn_c_classInit_FIREPAKUNv",
       "address": "0x0212eaa8",
       "size": "0x00000048",
       "legacy_source": "src/d_a_f_pkn_firepakun.c",

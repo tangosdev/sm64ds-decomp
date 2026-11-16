@@ -33,7 +33,7 @@ enum {
     kWaterfallMistCourse21 = 0xeb
 };
 
-extern "C" daObjWaterfall_c *daObjWaterfall_c_classInit() {
+daObjWaterfall_c *daObjWaterfall_c_classInit() {
     return new daObjWaterfall_c();
 }
 

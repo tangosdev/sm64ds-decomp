@@ -3,7 +3,7 @@ extern void func_02011d5c(int mode);
 
 void SetSoundMode(int mode)
 {
-    data_0209d4b4 = (unsigned char)mode;
+    data_0209d4b4 = mode;
     switch (mode) {
     case 0:
         func_02011d5c(1);

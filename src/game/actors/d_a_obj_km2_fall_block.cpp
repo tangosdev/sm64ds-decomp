@@ -43,7 +43,7 @@ typedef char Km2FallClsnFileHandle_size_must_be_8[sizeof(Km2FallClsnFileHandle) 
 
 extern ResourceDescriptor data_ov045_021130ac;
 
-extern "C" daObjKm2_Fall_Block_c *daObjKm2_Fall_Block_c_classInit() {
+daObjKm2_Fall_Block_c *daObjKm2_Fall_Block_c_classInit() {
     return new daObjKm2_Fall_Block_c();
 }
 

@@ -14,20 +14,19 @@
 #include "daSCre_c.h"
 
 enum {
-    kPlayerRangeFix12 = 0x64000, /* 100.0 */
+    kPlayerRange = 0x64000, /* 100.0 */
     kStarActorId = 0xb2,
-    kStarIndexMask = 0xf,
+    kStarIndexMask = 15,
     kStarSpawnStyle = 0x40
 };
 
-extern "C" daSCre_c *daSCre_c_classInit(void)
-{
+daSCre_c *daSCre_c_classInit(void) {
     return new daSCre_c;
 }
 
 s32 daSCre_c::Behavior()
 {
-    if (DistToCPlayer() < kPlayerRangeFix12) {
+    if (DistToCPlayer() < kPlayerRange) {
         Spawn(kStarActorId, (param1 & kStarIndexMask) | kStarSpawnStyle, mPos, 0, mAreaId,
               -1); /* no rot, no death-table id */
     }

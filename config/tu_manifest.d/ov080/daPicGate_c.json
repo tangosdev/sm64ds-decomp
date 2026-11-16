@@ -110,7 +110,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "daPicGate_c_classInit",
+      "symbol": "_Z21daPicGate_c_classInitv",
       "address": "0x02126f8c",
       "size": "0x00000030",
       "legacy_source": "src/d_a_pic_gate.c",
@@ -928,7 +928,7 @@
       "source": "0x2127b3c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -948,7 +948,7 @@
       "source": "0x2127b58",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -968,7 +968,7 @@
       "source": "0x2127b74",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -988,7 +988,7 @@
       "source": "0x2127b90",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1008,7 +1008,7 @@
       "source": "0x2127bac",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1028,7 +1028,7 @@
       "source": "0x2127bc8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1048,7 +1048,7 @@
       "source": "0x2127be4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1068,7 +1068,7 @@
       "source": "0x2127c00",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1088,7 +1088,7 @@
       "source": "0x2127c1c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1108,7 +1108,7 @@
       "source": "0x2127c38",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1128,7 +1128,7 @@
       "source": "0x2127c54",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1148,7 +1148,7 @@
       "source": "0x2127c70",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1168,7 +1168,7 @@
       "source": "0x2127c8c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1188,7 +1188,7 @@
       "source": "0x2127ca8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1208,7 +1208,7 @@
       "source": "0x2127cc4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1228,7 +1228,7 @@
       "source": "0x2127ce0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1248,7 +1248,7 @@
       "source": "0x2127cfc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1268,7 +1268,7 @@
       "source": "0x2127d18",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1288,7 +1288,7 @@
       "source": "0x2127d34",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_020178cc",
+      "symbol": "_Z13func_020178ccPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -1318,7 +1318,7 @@
       "source": "0x2127e50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_020178b4",
+      "symbol": "_Z13func_020178b4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020178b4"
@@ -2157,14 +2157,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN14PicGateFilePtrC1Ej",
-      "canonical_symbol": "func_020178cc",
+      "canonical_symbol": "_Z13func_020178ccPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x020178cc",
       "evidence": "retail initializer call destination and the picture file-handle wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN14PicGateFilePtrD1Ev",
-      "canonical_symbol": "func_020178b4",
+      "canonical_symbol": "_Z13func_020178b4i",
       "canonical_module": "arm9",
       "canonical_address": "0x020178b4",
       "evidence": "retail destructor registration destination and the picture file-handle wrapper destructor's exact ABS32 relocation"

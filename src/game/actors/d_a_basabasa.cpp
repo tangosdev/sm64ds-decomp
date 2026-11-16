@@ -56,13 +56,12 @@ struct BasabasaAnimationFileHandle : SharedFilePtr {
 
 /* arm9 C helpers with no shared header. Vec3_Asr's definition takes a
  * file-local struct, so no shared spelling agrees with it yet. */
-extern "C" {
-void func_ov002_020aea30(void *self, void *actor, void *collision);
+
 void func_02012694(unsigned int id, const Vector3 *pos);
+extern "C" {
 void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 }
-
 
 extern BasabasaAnimationFileHandle data_ov065_0211d690; /* flying animation */
 extern BasabasaModelFilePtr data_ov065_0211d698;        /* flying model */
@@ -96,16 +95,16 @@ void daBasabasa_c::CheckTouch() {
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
         mDeathState = 2;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
     if (flags & 0x10) {
-        short v[3];
-        v[0] = -0x2000;
-        v[1] = 0;
-        v[2] = 0;
-        KillByInvincibleChar(*(Vector3_16 *)v, *p, 0);
+        Vector3_16 v;
+        v.x = -0x2000;
+        v.y = 0;
+        v.z = 0;
+        KillByInvincibleChar(v, *p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -113,7 +112,7 @@ void daBasabasa_c::CheckTouch() {
         mDeathState = 4;
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -121,7 +120,7 @@ void daBasabasa_c::CheckTouch() {
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
         mDeathState = 3;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -129,13 +128,13 @@ void daBasabasa_c::CheckTouch() {
         mIsFlying = 1;
         mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
         mDeathState = 2;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
     if (flags & 0x20) {
         mDeathState = 1;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -160,7 +159,7 @@ void daBasabasa_c::CheckTouch() {
     if (JumpedOnByPlayer(mdCcAc_c, *p) != 0) {
         p->Bounce(0x28000);
         mDeathState = 1;
-        func_ov002_020aea30(this, p, 0);
+        func_ov002_020aea30(p, 0);
         func_02012694(0x112, &mCamSpacePos);
         return;
     }
@@ -184,12 +183,12 @@ int daBasabasa_c::ExecuteReturn() {
     if (dist > 0x1f4000 || mWithMeshClsn.IsOnWall() != 0) {
         mTargetAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mHomePosX);
         /* The states read mStateTimer unsigned (ldrh). */
-        if ((u16)mStateTimer < 0x14)
-            mStateTimer = 0x14;
+        if (mStateTimer < 20)
+            mStateTimer = 20;
     }
     if (dist < 0x1f4000 && (mFlags & 8)) {
         mPerchTimer++;
-        if (mPerchTimer > 0x64) {
+        if (mPerchTimer > 100) {
             mPerchTimer = 0;
             mFlags |= 1;
             mPrevAngleX = -0x8000;
@@ -210,7 +209,7 @@ int daBasabasa_c::ExecuteReturn() {
     v.z = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
-    if ((u16)mStateTimer == 0) {
+    if (mStateTimer == 0) {
         SetState(&data_ov065_0211d6f0);
     }
     return 1;
@@ -221,7 +220,7 @@ int daBasabasa_c::EnterReturn() {
     r = RandomIntInternal(&data_0209e650.value);
     mTargetAngleY = ((r >> 8) & 0xf) << 0xc;
     r = RandomIntInternal(&data_0209e650.value);
-    mStateTimer = ((r >> 8) & 0x1f) + 0x32;
+    mStateTimer = ((r >> 8) & 0x1f) + 50;
     func_02012694(0xf9, &mCamSpacePos);
     mAnmModel1.speed = 0x1000;
     mFlags &= ~1;
@@ -240,7 +239,7 @@ int daBasabasa_c::ExecuteChase() {
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
     MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
-    if (Vec3_Dist(&mPos, (Vector3 *)&mHomePosX) > 0x5dc000 || (u16)mStateTimer == 0) {
+    if (Vec3_Dist(&mPos, (Vector3 *)&mHomePosX) > 0x5dc000 || mStateTimer == 0) {
         mPerchTimer = 0;
         SetState(&data_ov065_0211d6f0);
     }
@@ -251,7 +250,7 @@ int daBasabasa_c::EnterChase() {
     mVertAccel = 0;
     mIsFlying = 1;
     mFlags = 0x10000003;
-    mStateTimer = 0x64;
+    mStateTimer = 100;
     mAnmModel1.speed = 0x2000;
     mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
     mTargetAngleY = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 0xc;
@@ -268,7 +267,7 @@ int daBasabasa_c::ExecuteDrop() {
     if (p != 0) {
         floorY = p->mGroundY + 0x50000;
     }
-    if ((u16)mStateTimer == 0 || floorY > posY) {
+    if (mStateTimer == 0 || floorY > posY) {
         SetState(&data_ov065_0211d6e0);
     }
     return 1;
@@ -281,9 +280,9 @@ int daBasabasa_c::EnterDrop() {
     mAnmModel2.speed = 0;
     mAnmModel2.SetAnim((BCA_File *)data_ov065_0211d6a0.filePtr, 0, 0x1000, 0);
     PoofPos vec(mPosX, mPosY + 0x64000, mPosZ);
-    mStateTimer = 0x19;
+    mStateTimer = 25;
     if (mPosY == 0x898000)
-        mStateTimer = 0x32;
+        mStateTimer = 50;
     func_02012694(0xf9, &mCamSpacePos);
     return 1;
 }
@@ -298,7 +297,7 @@ int daBasabasa_c::ExecutePerch() {
         v.y = q[1];
         v.z = q[2];
         if (Vec3_Dist(&mPos, &v) < 0x3e8000) {
-            mStateTimer = 0x14;
+            mStateTimer = 20;
             SetState(&data_ov065_0211d710);
         }
     }
@@ -379,7 +378,7 @@ int daBasabasa_c::Behavior() {
         UpdateModelTransform();
         return 1;
     }
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     if (mCurrentState->execute != 0)
         (this->*mCurrentState->execute)();
     if (mCurrentState == &data_ov065_0211d6e0 || mCurrentState == &data_ov065_0211d6f0) {
@@ -462,7 +461,7 @@ s32 daBasabasa_c::OnYoshiTryEat() {
     return 4;
 }
 
-extern "C" daBasabasa_c *daBasabasa_c_classInit() {
+daBasabasa_c *daBasabasa_c_classInit() {
     return new daBasabasa_c();
 }
 

@@ -165,8 +165,8 @@ def memoize_compiles(enabled=True):
 
     The key is what reaches the compiler: the source's bytes and basename (mwcc names a
     TU's static initializer after the file), the version, the flags and the include
-    search path. Header CONTENTS are not in it, which is why this is opt-in: match.py,
-    wallcrack and swarm edit headers between compiles in one process and must not see
+    search path. Header CONTENTS are not in it, which is why this is opt-in: match.py
+    and swarm edit headers between compiles in one process and must not see
     a stale object. A tree that is not being edited cannot hit that.
 
     Compile failures are remembered too -- a version that rejects the source rejects it

@@ -26,8 +26,6 @@
  * location.
  *
  * leftovers (member spellings measured and rejected on size):
- * - Kill: Particle::System::NewSimple(Fix12<int> x, y, z) is +0x24
- *   (0x8c -> 0xb0). The scalar extern passes the three positions in r1-r3.
  * - func_ov091_02131160: a Matrix4x3 * local for mShadowMat is +4
  *   (0x1e0 -> 0x1e4); the translation row is stored through `this`.
  * - Behavior: one this+0x3a2 halfword for the arrived pitch is
@@ -66,7 +64,7 @@ enum daObjRotateUpdownLift_c_AssetId {
 
 /* Ten nodes, 0x78 bytes. Three of these sit at data_ov091_02134cdc. */
 struct UpdownPath {
-    VecFx32 node[10];
+    Vector3 node[10];
 };
 
 /* Node 5's Y, one word per path, stride 0x78. The symbol is 0x40 bytes
@@ -135,10 +133,10 @@ void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 void VEC_Subtract(void *a, void *b, void *c);
 int VEC_Mag(void *v);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-void func_02012694(unsigned int id, const Vector3 *pos);
 extern void hold_d_a_obj_rotate_updown_lift(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
                                             int scale, s16 angY, CLPS_Block *clps);
 }
+void func_02012694(unsigned int id, const Vector3 *pos);
 
 // 0x02130f00 (0x4c)
 daObjRotateUpdownLift_c::~daObjRotateUpdownLift_c()
@@ -158,9 +156,9 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     mPosX = mBasePosX;
     mPosY = mBasePosY;
     mPosZ = mBasePosZ;
-    mWaypointIndex = (u8)(param1 & 0xf);
+    mWaypointIndex = (param1 & 15);
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
                   (Vector3 *)&tmp[0]);
     Vec3_Add((Vector3 *)&tmp[1], (const Vector3 *)&mBasePosX, (const Vector3 *)&tmp[0]);
     mPosX = tmp[1].x;
@@ -243,7 +241,7 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     if (cosine < 0)
         cosine = -cosine;
     DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMat, sx, h,
-                       shadowSizeZ.v[variantC] + FX_MUL(fac, cosine), 0xf);
+                       shadowSizeZ.v[variantC] + FX_MUL(fac, cosine), 15);
 }
 
 // 0x02131340 (0x48)
@@ -375,42 +373,33 @@ int daObjRotateUpdownLift_c::Behavior()
     if (prevIndex < 0)
         prevIndex = 9;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
-                  &cur);
-    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
+    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &cur);
+    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
     Vec3_Add(&target, (const Vector3 *)&mBasePosX, &cur);
     Vec3_Sub(&remain, &mPos, &target);
     Vec3_Sub(&edge, &cur, &prev);
     span = VEC_Mag(&edge);
     dist = VEC_Mag(&remain);
     along = FX_Div(span - dist, span);
-    mAngleX = (s16)(mPitchBase + (s16)FX_MUL(mPitchStep, along));
+    mAngleX = (mPitchBase + (s16)FX_MUL(mPitchStep, along));
 
     if (dist == 0 || dist <= stepLen) {
         Vec3_Add(&snapped, (const Vector3 *)&mBasePosX, &cur);
         mPosX = snapped.x;
         mPosY = snapped.y;
         mPosZ = snapped.z;
-        /* &mPitchBase is offsetof 0x3a2, which is not an ARM immediate, so this
-           is a pool add. The step is the halfword at this+0x300+0xa4. One
-           base for both grows the function. */
-        {
-            s16 *pitch = &mPitchBase;
-            s16 *stepAt = (s16 *)((char *)this + 0x300);
-            arrived = 1;
-            *pitch = (s16)(*pitch + *(s16 *)((char *)stepAt + 0xa4));
-        }
+        arrived = 1;
+        mPitchBase += mPitchStep;
     } else {
         Vec3_MulScalar(&stepVec, &remain, FX_Div(stepLen, dist));
         VEC_Subtract(&mPosX, &stepVec, &mPosX);
     }
 
     if (arrived != 0) {
-        u8 *waypoint = &mWaypointIndex;
-        *waypoint = (u8)(*waypoint + 1);
-        if ((u32)mWaypointIndex >= 0xa)
+        mWaypointIndex++;
+        if (mWaypointIndex >= 10)
             mWaypointIndex = 0;
-        if ((u32)mWaypointIndex > 3 && (u32)mWaypointIndex < 8)
+        if (mWaypointIndex > 3 && mWaypointIndex < 8)
             mPitchStep = 0x2000;
         else
             mPitchStep = 0;
@@ -468,11 +457,10 @@ int daObjRotateUpdownLift_c::InitResources()
             mVariant = 1;
     }
 
-    mWaypointIndex = (u8)(param1 & 0xf);
+    mWaypointIndex = (param1 & 15);
 
     if (mWaypointIndex == 2) {
-        Vec3_Add(&spawnAt, (const Vector3 *)&mBasePosX,
-                 (const Vector3 *)&data_ov091_02134cdc[mVariant].node[0]);
+        Vec3_Add(&spawnAt, (const Vector3 *)&mBasePosX, &data_ov091_02134cdc[mVariant].node[0]);
         spawnAt.y += data_ov091_02134d1c[mVariant].y;
         Spawn(0x1d, 0xffff, spawnAt, 0, mAreaId, -1);
     }
@@ -524,14 +512,12 @@ int daObjRotateUpdownLift_c::InitResources()
 }
 
 // 0x02131ba4 (0x38)
-extern "C" daObjRotateUpdownLift_c *daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFT()
-{
+daObjRotateUpdownLift_c *daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFT() {
     return new daObjRotateUpdownLift_c();
 }
 
 // 0x02131bdc (0x38)
-extern "C" daObjRotateUpdownLift_c *daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT()
-{
+daObjRotateUpdownLift_c *daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT() {
     return new daObjRotateUpdownLift_c();
 }
 

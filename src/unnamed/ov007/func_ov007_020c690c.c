@@ -20,7 +20,7 @@ Ov007Picker *func_ov007_020c690c(int maxGroups, int maxPoints, int pathCapacity,
 
     p->maxGroups = maxGroups;
     p->maxPoints = maxPoints;
-    p->springConstants = (int *)springConstants;
+    p->springConstants = springConstants;
     p->params = params;
     p->camera = camera;
 

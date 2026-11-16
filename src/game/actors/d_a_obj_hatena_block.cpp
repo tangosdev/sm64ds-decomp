@@ -53,17 +53,6 @@
  *   OnAttacked1 / OnHitFromUnderneath keep their valueless nested-if exits;
  *   C++ rejects a valueless return in a non-void function.
  *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
- *
- *   (a) Fix12<int> passed by value (notes/mwccarm-codegen.md 6az). A
- *       method call homes the argument and the bytes move: dExtAnmModel_c::SetAnim and
- *       dBgW_KcMbg::SetFile (InitResources), dBgActor_c::IsClsnInRange
- *       (Behavior), dActor_c::DropShadowScaleXYZ (UpdateDropShadow),
- *       Particle::System::NewSimple (also absent from Particle.h).
- *
- *   (b) No usable declaration: dActor_c::Earthquake is not on dActor_c.h
- *       (EnterBouncing).
- *
  * Known limits:
  *   The helpers carry role names (symbols/actor_renames.tsv records the evidence for each);
  *   func_ov102_02149684 keeps its address. All take the block as arg0 and are declared as members on
@@ -139,6 +128,7 @@ enum daObjHatenaBlock_c_AssetId {
 #include "ParticleIds.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/CalcLib.h"
 
 struct CLPS_Block;
 struct KCL_File;
@@ -205,17 +195,15 @@ extern SharedFilePtr gPFlowerCloseModelFile;
 extern CLPS_Block data_ov002_0210d954;
 
 extern int RandomIntInternal(int *seed);
-extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
 extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
                                       void *clps);
 
 /* Free: the block is its second argument (dst, src), so member form would
    swap the register operands. */
-void func_ov102_02149684(int *dst, daObjHatenaBlock_c *src);
 }
+void func_ov102_02149684(int *dst, daObjHatenaBlock_c *src);
 
 /* The block's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
@@ -289,33 +277,27 @@ PMF data_ov102_0214e870[1][4] = {
      &daObjHatenaBlock_c::SpawnPrizeFeather, &daObjHatenaBlock_c::SpawnPrizeFeather},
 };
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK() {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_HATENA_BLOCK()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_HATENA_BLOCK() {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_ITEM_BLOCK()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_ITEM_BLOCK() {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_M()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_M() {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_L()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_L() {
     return new daObjHatenaBlock_c();
 }
 
-extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W()
-{
+daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W() {
     return new daObjHatenaBlock_c();
 }
 
@@ -380,7 +362,7 @@ int daObjHatenaBlock_c::InitResources()
     mShadowMat = mModel.mat4x3;
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(data_ov102_0214e7d0);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *(CLPS_Block *)(&data_ov002_0210d954));
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov002_0210d954);
     }
     mHomePosY = mPosY;
     mContentType = (unsigned char)param1;
@@ -401,44 +383,43 @@ int daObjHatenaBlock_c::InitResources()
         }
     }
 
-    {
+    do {
         int b14 = !(actorID != ACTOR_HATENA_BLOCK);
         if (b14 == 0) {
             int b15 = !(actorID != ACTOR_ITEM_BLOCK);
             if (b15 == 0)
-                goto end;
+                break;
         }
-    }
 
-    switch (mContentType) {
-    case CONTENT_COINS:
-    case CONTENT_STAR:
-        break;
-    case CONTENT_SHELL:
-        dExtSimpleModel_c::LoadFile(data_ov002_0210da18);
-        break;
-    case CONTENT_ONEUP:
-        dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
-        break;
-    case CONTENT_SCALEUP_KINOKO:
-        dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
-        break;
-    case CONTENT_POWER_UP_7:
-        dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
-        dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
-        dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
-        break;
-    case CONTENT_POWER_UP_5:
-        dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
-        dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
-        dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
-        break;
-    case CONTENT_POWER_UP_6:
-        dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
-        dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
-        break;
-    }
-end:
+        switch (mContentType) {
+        case CONTENT_COINS:
+        case CONTENT_STAR:
+            break;
+        case CONTENT_SHELL:
+            dExtSimpleModel_c::LoadFile(data_ov002_0210da18);
+            break;
+        case CONTENT_ONEUP:
+            dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
+            break;
+        case CONTENT_SCALEUP_KINOKO:
+            dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
+            break;
+        case CONTENT_POWER_UP_7:
+            dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+            dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
+            dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
+            break;
+        case CONTENT_POWER_UP_5:
+            dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
+            dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+            dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
+            break;
+        case CONTENT_POWER_UP_6:
+            dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+            dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
+            break;
+        }
+    } while (0);
     return 1;
 }
 
@@ -471,37 +452,23 @@ int daObjHatenaBlock_c::Behavior()
         if (mMeshCollider.IsEnabled() != 0) {
             mMeshCollider.Disable();
         }
-        goto end;
-    }
-    if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0) {
-        int b = (int)(actorID == ACTOR_HATENA_BLOCK);
-        if (b != 0) {
-            mAnmModel.Advance();
-            if (mMeshCollider.IsEnabled() != 0) {
-                mMeshCollider.Disable();
-            }
-            goto end;
+    } else if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0 &&
+               (int)(actorID == ACTOR_HATENA_BLOCK) != 0) {
+        mAnmModel.Advance();
+        if (mMeshCollider.IsEnabled() != 0) {
+            mMeshCollider.Disable();
         }
-    }
-    {
-        int b = (int)(gGameMode == 1);
-        if (b != 0) {
-            if (mMeshCollider.IsEnabled() == 0) {
-                mMeshCollider.Enable(this);
-            }
-            goto end;
+    } else if ((int)(gGameMode == 1) != 0) {
+        if (mMeshCollider.IsEnabled() == 0) {
+            mMeshCollider.Enable(this);
         }
-    }
-    if (gCurrentSublevel == 0x1c) { /* LEVEL_ID 0x1c */
+    } else if (gCurrentSublevel == 0x1c) { /* LEVEL_ID 0x1c */
         if (IsClsnInRange(0x460000, 0x46000) != 0) {
             UpdateMeshCollider();
         }
-        goto end;
-    }
-    if (IsClsnInRange(0x118000, 0x46000) != 0) {
+    } else if (IsClsnInRange(0x118000, 0x46000) != 0) {
         UpdateMeshCollider();
     }
-end:
     return 1;
 }
 
@@ -510,19 +477,20 @@ end:
    mScaleX. Always returns 1. */
 int daObjHatenaBlock_c::Render()
 {
-    if (mState == STATE_POPPED)
-        goto done;
-    if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0) {
-        int b = (actorID == ACTOR_HATENA_BLOCK);
-        if (b != 0) {
-            mAnmModel.Render(0);
-            goto done;
+    do {
+        if (mState == STATE_POPPED)
+            break;
+        if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0) {
+            int b = (actorID == ACTOR_HATENA_BLOCK);
+            if (b != 0) {
+                mAnmModel.Render(0);
+                break;
+            }
         }
-    }
-    {
-        mModel.Render(&mScale);
-    }
-done:
+        {
+            mModel.Render(&mScale);
+        }
+    } while (0);
     return 1;
 }
 
@@ -541,15 +509,16 @@ int daObjHatenaBlock_c::CleanupResources()
     if (b)
         data_ov002_0210da58.Release();
 
-    b2 = (int)(actorID == ACTOR_HATENA_BLOCK);
-    if (b2)
-        goto dosw;
-    b3 = (int)(actorID == ACTOR_ITEM_BLOCK);
-    if (b3) {
-    dosw:
+    do {
+        b2 = (int)(actorID == ACTOR_HATENA_BLOCK);
+        if (b2 == 0) {
+            b3 = (int)(actorID == ACTOR_ITEM_BLOCK);
+            if (b3 == 0)
+                break;
+        }
         switch (mContentType) {
         case CONTENT_STAR:
-            UntrackStar(*(s8 *)&mStarTracked);
+            UntrackStar(mStarTracked);
             break;
         case CONTENT_SHELL:
             data_ov002_0210da18.Release();
@@ -575,7 +544,7 @@ int daObjHatenaBlock_c::CleanupResources()
             gPFlowerCloseModelFile.Release();
             break;
         }
-    }
+    } while (0);
 
     switch (actorID - ACTOR_HATENA_BLOCK) {
     case 0:   /* HATENA_BLOCK */
@@ -630,7 +599,7 @@ void daObjHatenaBlock_c::UpdateModelMatrix() {
  * at least 0x1000 (1 unit).
  *   horizontal shadow scale = 0xb4000 (180 units) - height * 0x180 / 0x1000
  *                   (about 0.094 * height), at least 0xa000 (10 units), then
- *                   times mScaleX (a Fix12 multiply)
+ *                   times mScaleX (an fx32 multiply)
  *   shadow Y scale = height + 0x14000 (20 units)
  *   mClipOffsetY  = -(height + 0x14000) / 2 (signed divide by 2)
  *   mClipRadius   = max(height + 0x214000, 0x200000) / 16 (signed divide)
@@ -643,12 +612,8 @@ void daObjHatenaBlock_c::UpdateDropShadow() {
     int b0, b1;
 
     b0 = (mFlags & 8) ? 1 : 0;
-    if (b0 != 0) {
-        b1 = (gGameMode == 1) ? 1 : 0;
-        if (b1 == 0) goto skipcall;
-    }
-    mFloorY = GetFloorY();
-skipcall:
+    if (b0 == 0 || ((b1 = (gGameMode == 1) ? 1 : 0) != 0))
+        mFloorY = GetFloorY();
     height = mPosY - mFloorY;
     if (height <= 0x1000) height = 0x1000;
     shadowScale = FX_MUL(height, 0x180);
@@ -742,7 +707,7 @@ void daObjHatenaBlock_c::EnterBouncing() {
  *
  * While mBounceTimer is still counting down (DecIfAbove0_Short returns the
  * new value; non-zero means it has not reached 0), squash and stretch, with
- * s = sin(mBounceAng) as Fix12 from FX_SinCosTable_ (0x1000 = 1.0):
+ * s = sin(mBounceAng) as fx16 from FX_SinCosTable_ (0x1000 = 1.0):
  *   mScaleY       = (1 + s) * 0x999/0x1000 + 0x666/0x1000
  *                 = 0.4 + 0.6 * (1 + s)
  *   mScaleX, Z    = (1 - s) + 1.0
@@ -859,7 +824,7 @@ void daObjHatenaBlock_c::UpdateBouncing() {
 /* STATE_POPPED enter routine: mBounceTimer = 0x12c (300 frames) and vertical
    acceleration -0x8000 (-8 units). */
 void daObjHatenaBlock_c::EnterPopped() {
-    mBounceTimer = 0x12c;
+    mBounceTimer = 300;
     mVertAccel = -0x8000;
 }
 
@@ -943,14 +908,12 @@ int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
 
 /* dst = the block's position with Y raised by 0x32000 (50 units): the point
    the prizes spawn at. */
-extern "C" {
 void func_ov102_02149684(int* dst, daObjHatenaBlock_c* src){
   int z = src->mPosZ;
   int liftedY = src->mPosY + 0x32000;
   dst[0] = src->mPosX;
   dst[1] = liftedY;
   dst[2] = z;
-}
 }
 
 /* Floor height under the block: a ground raycast (dBgCh_Gnd) from 0x28000 (40
@@ -980,7 +943,7 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
     int rnd;
     dActor_c* o;
     dCamera_c* g;
-    func_ov102_02149684((int*)&f.pos, this);
+    func_ov102_02149684((int *)&f.pos, this);
     o = dActor_c::Spawn(
         ACTOR_OBJ_MARIO_CAP, (unsigned int)(p2 | (p1 << 8)), f.pos, 0, mAreaId, -1);
     if (o == 0) return;
@@ -1052,7 +1015,7 @@ void daObjHatenaBlock_c::SpawnPrizeShell() {
     func_ov102_02149684((int *)&v, this);
     void *a = dActor_c::Spawn(ACTOR_SHELL, 0, v, 0, mAreaId, -1);
     if (a)
-        ((daShl_c *)a)->mDespawnTimer = 0xb4;
+        ((daShl_c *)a)->mDespawnTimer = 180;
 }
 
 /* FEATHER prize: spawns a FEATHER at the prize point with rotation taken
@@ -1063,10 +1026,12 @@ void daObjHatenaBlock_c::SpawnPrizeFeather() {
     struct Vector3 pos;
     struct Vector3_16 rot;
     func_ov102_02149684((int *)&pos, this);
+    /* Raw: as Vector3_16 the three loads become ldrsh where the ROM has ldrh
+       (copy and field-wise both, measured 2026-11-14). */
     rot.x = *(u16 *)(data_020a0edc);
     rot.y = *(u16 *)(data_020a0edc + 2);
     rot.z = *(u16 *)(data_020a0edc + 4);
-    if ((int)(*(unsigned char *)(&gGameMode) == 1) != 0) {
+    if ((int)(gGameMode == 1) != 0) {
         rot.y = mAngleY;
     } else {
         rot.y = gCamera->mAngleY + 0x4000;
@@ -1092,7 +1057,7 @@ void daObjHatenaBlock_c::SpawnPrizeBobOmb() {
     if (a == 0)
         return;
     a->func_ov102_0214ad14();
-    a->func_ov102_0214b384(0x3c);
+    a->func_ov102_0214b384(60);
 }
 
 /* Spawns n COINs (param 2) at *pos. Each coin gets a heading baseAngle + dir

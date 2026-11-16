@@ -91,7 +91,6 @@ typedef struct {
     u16 w[0x40];
 } GameInfo;
 
-
 extern void OS_GetMacAddress(unsigned char *macAddress);
 
 extern void MB_InitSendGameInfoStatus(void);
@@ -163,7 +162,7 @@ void MBi_ParentCallback(void *arg) {
             MBi_CheckWmErrcode(WM_APIID_READ_STATUS, WM_ReadStatus(&WM_WORK->status));
             MBi_CheckWmErrcode(WM_APIID_INDICATION, WM_SetIndCallback(MBi_ParentCallback));
             MBi_CheckWmErrcode(WM_APIID_SET_LIFETIME,
-                               WM_SetLifeTime(MBi_ParentCallback, 0xFFFF, 0x28, 5));
+                               WM_SetLifeTime(MBi_ParentCallback, 0xFFFF, 40, 5));
             return;
         }
         WM_WORK->userCallback(0x100, arg);
@@ -212,7 +211,7 @@ void MBi_ParentCallback(void *arg) {
                             WM_APIID_START_MP,
                             WM_StartMPEx(MBi_ParentCallback, (u16 *)WM_WORK->recvBuf,
                                          WM_WORK->recvBufSize, (u16 *)WM_WORK->sendBuf,
-                                         WM_WORK->sendBufSize, (u16)mpFreq, 0, 0, 0, 1, 1));
+                                         WM_WORK->sendBufSize, mpFreq, 0, 0, 0, 1, 1));
                         return;
                     }
                 }
@@ -369,7 +368,7 @@ static inline void RecordScannedParent(WmWork *const w, WmStartScanCallback *con
             return;
         }
     }
-    if (i < 0x10) {
+    if (i < 16) {
         w->parentCount = i + 1;
         MI_CpuCopy16(cb, &tbl[i].scan, 0xb8);
         DC_InvalidateRange(&w->parents[i], 0xc0);
@@ -419,7 +418,7 @@ void MBi_ChildCallback(void *arg) {
             w->userCallback(0x15, arg);
             MBi_CheckWmErrcode(WM_APIID_READ_STATUS, WM_ReadStatus(&w->status));
             MBi_CheckWmErrcode(WM_APIID_SET_LIFETIME,
-                               WM_SetLifeTime(MBi_ChildCallback, 0xffff, 0x28, 5));
+                               WM_SetLifeTime(MBi_ChildCallback, 0xffff, 40, 5));
             return;
         }
         w->userCallback(0x100, arg);
@@ -431,7 +430,7 @@ void MBi_ChildCallback(void *arg) {
             if (SCAN_PARAM->channel == 0)
                 SCAN_PARAM->channel = 1;
             if (SCAN_PARAM->maxChannelTime == 0)
-                SCAN_PARAM->maxChannelTime = 0xc8;
+                SCAN_PARAM->maxChannelTime = 200;
             SCAN_PARAM->bssid[0] = 0xffff;
             SCAN_PARAM->bssid[1] = 0xffff;
             SCAN_PARAM->bssid[2] = 0xffff;
@@ -499,8 +498,7 @@ void MBi_ChildCallback(void *arg) {
                 MBi_CheckWmErrcode(WM_APIID_START_MP,
                                    WM_StartMPEx(MBi_ChildCallback, (u16 *)w->recvBuf,
                                                 w->recvBufSize, (u16 *)w->sendBuf, w->sendBufSize,
-                                                (u16)(w->mpContinuous == 0 ? 1 : 0), 0, 0, 0, 1,
-                                                1));
+                                                (w->mpContinuous == 0 ? 1 : 0), 0, 0, 0, 1, 1));
                 return;
             case WM_STATECODE_DISCONNECTED:
                 w->userCallback(0xa, arg);
@@ -570,7 +568,7 @@ int MBi_GetBeaconPeriodDispersion(void) {
     for (i = 0, sum = 0; i < 6; i++) {
         sum += mac[i];
     }
-    return (int)((sum + OS_GetVBlankCount()) * 7 % 20);
+    return ((sum + OS_GetVBlankCount()) * 7 % 20);
 }
 
 /* MB_Init: carve the WmWork and mbc out of the caller's buffer (each 32-byte
@@ -598,7 +596,7 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
     mb = (MB_CommPWork *)MATH_ROUNDUP((int)wm + sizeof(WmWork), 32);
     irq = OS_DisableInterrupts();
     fill_i = 0;
-    data_020a9db0 = (u16)dma;
+    data_020a9db0 = dma;
     data_020a9db4 = (char *)wm;
     mbc = &mb->common;
     MI_CpuFill32(wm, fill_i, sizeof(WmWork));
@@ -618,7 +616,7 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
             }
             i++;
             *(dst++) = c;
-        } while (i < 0xa);
+        } while (i < 10);
     }
     {
         u16 *dst = (u16 *)wm->gname;
@@ -631,7 +629,7 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
             data_0209a084 = ptr + 1;
             j++;
             *(dst++) = *ptr;
-        } while (j < 0x10);
+        } while (j < 16);
     }
     MI_CpuCopy8(user, &mb->common.user, sizeof(MBUserInfo));
     wm->parentMaxSize = 0x100;
@@ -645,13 +643,13 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
         WMParentParam *hdr = &wm->parentParam;
         hdr->CS_Flag = 1;
         hdr->KS_Flag = 0;
-        hdr->ggid[0] = (short)ggid0;
-        hdr->ggid[1] = (short)ggid1;
-        hdr->tgid = (short)tgid;
+        hdr->ggid[0] = ggid0;
+        hdr->ggid[1] = ggid1;
+        hdr->tgid = tgid;
         hdr->entryFlag = 1;
         hdr->multiBootFlag = 0;
-        hdr->beaconPeriod = (u16)(MBi_GetBeaconPeriodDispersion() + 0xc8);
-        hdr->maxEntry = 0xf;
+        hdr->beaconPeriod = (MBi_GetBeaconPeriodDispersion() + 200);
+        hdr->maxEntry = 15;
     }
     wm->mpSending = 0;
     wm->initialized = 0;
@@ -697,7 +695,7 @@ int MBi_StartCommon(void) {
     WM_WORK->childBitmap = 0;
     WM_WORK->resetting = 0;
     *(short *)(data_020a9db4 + 0x1e48) = 0; /* in WmWork.pad_1e48: no reader here */
-    MBi_SetMaxScanTime(0xa);
+    MBi_SetMaxScanTime(10);
     do {
         ret = WM_Initialize(WM_WORK->wmSysBuf, WM_WORK->stateCallback, data_020a9db0);
     } while (ret == 4);
@@ -739,7 +737,7 @@ int MB_StartParent(int channel) {
     mbc->req_data_piece_size = WM_WORK->childMaxSize - 2;
     mbc->req_data_piece_num = 30 / (WM_WORK->childMaxSize - 2);
 
-    for (i = 0; i < 0xf; i++) {
+    for (i = 0; i < 15; i++) {
         pPwork->p_comm_state[i] = 0;
         pPwork->fileid_of_child[i] = -1;
     }
@@ -758,7 +756,7 @@ int MB_StartParent(int channel) {
     WM_WORK->sendBufSize = (WM_WORK->parentParam.parentMaxSize + 0x23) & ~0x1f;
 
     WM_WORK->parentParam.childMaxSize = WM_WORK->childMaxSize;
-    WM_WORK->recvBufSize = (((WM_WORK->parentParam.childMaxSize + 0xe) * 0xf + 0x29) & ~0x1f) << 1;
+    WM_WORK->recvBufSize = (((WM_WORK->parentParam.childMaxSize + 0xe) * 15 + 0x29) & ~0x1f) << 1;
 
     MB_InitSendGameInfoStatus();
     result = MBi_StartCommon();
@@ -813,8 +811,8 @@ int MBi_SetMPData(WMCallbackFunc callback, const u16 *sendData, u16 sendDataSize
  * data_0209a088 (6). */
 int MBi_SendMP(const void *buf, int len, int pollbmp) {
     WmWork *hdr = WM_WORK;
-    u16 size = (u16)len;
-    u16 pollbitmap = (u16)pollbmp;
+    u16 size = len;
+    u16 pollbitmap = pollbmp;
     int ret;
     int wait;
     if ((hdr->mpStarted == 0) || (hdr->resetting == 1)) {
@@ -823,14 +821,14 @@ int MBi_SendMP(const void *buf, int len, int pollbmp) {
     switch (hdr->mode) {
     case 1:
         if (size < data_0209a088) {
-            size = (u16)data_0209a088;
+            size = data_0209a088;
         }
         if (hdr->mpContinuous == 0) {
             wait = 1000;
         } else {
             wait = 0;
         }
-        ret = MBi_SetMPData(hdr->stateCallback, (const u16 *)buf, size, (u16)wait, pollbitmap);
+        ret = MBi_SetMPData(hdr->stateCallback, (const u16 *)buf, size, wait, pollbitmap);
         /* Two tests of OPERATING, as shipped: one if for both costs a word. */
         if (ret == 2) {
             WM_WORK->mpSending = 1;
@@ -875,10 +873,10 @@ u16 MBi_GetTgid(void) {
  * 2, KS_Flag 4, CS_Flag 8 (the SDK's WM_ATTR_FLAG_* bits). The beacon senders
  * OR in WM_ATTR_FLAG_MB again. */
 u8 MBi_GetAttribute(void) {
-    return ((u8)(((WM_WORK->parentParam.entryFlag) ? WM_ATTR_FLAG_ENTRY : 0) |
-                 ((WM_WORK->parentParam.multiBootFlag) ? WM_ATTR_FLAG_MB : 0) |
-                 ((WM_WORK->parentParam.KS_Flag) ? WM_ATTR_FLAG_KS : 0) |
-                 ((WM_WORK->parentParam.CS_Flag) ? WM_ATTR_FLAG_CS : 0)));
+    return ((((WM_WORK->parentParam.entryFlag) ? WM_ATTR_FLAG_ENTRY : 0) |
+             ((WM_WORK->parentParam.multiBootFlag) ? WM_ATTR_FLAG_MB : 0) |
+             ((WM_WORK->parentParam.KS_Flag) ? WM_ATTR_FLAG_KS : 0) |
+             ((WM_WORK->parentParam.CS_Flag) ? WM_ATTR_FLAG_CS : 0)));
 }
 
 void MBi_SetMaxScanTime(u16 time) {
@@ -910,8 +908,8 @@ void MBi_CheckWmErrcode(int apiid, int errcode) {
         return;
     if (errcode == 0)
         return;
-    p.apiid = (s16)apiid;
-    p.errcode = (s16)errcode;
+    p.apiid = apiid;
+    p.errcode = errcode;
     WM_WORK->userCallback(0xff, &p);
 }
 }

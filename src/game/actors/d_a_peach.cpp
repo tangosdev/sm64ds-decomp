@@ -28,8 +28,8 @@ struct Vector3_16;
 /* local extern: no header declares these two. */
 extern "C" {
 int AngleDiff(int, int);
-short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 }
+short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 /* ov085 statics. data_ov085_0212f280 keeps include/decl_common.h's
  * spelling, so this file adds no new reading of it. */
@@ -170,13 +170,12 @@ int daPeach_c::IsTouchingPlayer() {
         alive = 1;
     else
         alive = 0;
-    /* Both paths return alive. The cartridge still compares it with zero
-     * first; a single return lets the compiler delete that compare. */
-    if (alive == 0)
-        goto done;
-    return alive;
-done:
-    return alive;
+    switch (alive) {
+    case 0:
+        return alive;
+    default:
+        return alive;
+    }
 }
 
 /* The model matrix is rebuilt from the body angle and the position, then
@@ -191,7 +190,7 @@ void daPeach_c::UpdateModel() {
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mLookHorzAngle);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mLookVertAngle);
     mAnmModel.data.transforms[18] = data_020a0e68;
-    DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x8c000, 0x32000, 0xf);
+    DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x8c000, 0x32000, 15);
 }
 
 int daPeach_c::InitState0() {
@@ -203,7 +202,7 @@ int daPeach_c::InitState0() {
 
 int daPeach_c::State0() {
     mAnmModel.SetAnim((BCA_File *)gPeachJumpAnimationFile.filePtr, 0, 0x1000, 0);
-    ((dExtFrameCtrl_c *)&mAnmModel)->SetFlags(0x40000000);
+    mAnmModel.SetFlags(0x40000000);
     mHorzSpeed = 0x4000;
     mVertSpeed = 0xa000;
     mStateValue = 4;
@@ -267,8 +266,8 @@ int daPeach_c::State3() {
 
 int daPeach_c::InitState1() {
     mAnmModel.SetAnim((BCA_File *)gPeachWaitAnimationFile.filePtr, 0, 0x1000, 0);
-    ((dExtFrameCtrl_c *)&mAnmModel)->currFrame = 0;
-    ((dExtFrameCtrl_c *)&mAnmModel)->Advance();
+    mAnmModel.currFrame = 0;
+    mAnmModel.Advance();
     mTalkState = 1;
     mStateValue = 1;
     return 1;
@@ -371,7 +370,7 @@ int daPeach_c::InitResources() {
 }
 
 /* PEACH_PRINCESS factory. */
-extern "C" daPeach_c *daPeach_c_classInit(void) {
+daPeach_c *daPeach_c_classInit(void) {
     return new daPeach_c();
 }
 

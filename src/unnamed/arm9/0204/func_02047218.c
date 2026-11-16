@@ -3,7 +3,7 @@
 /* Add t times the product m1 m0 of two 4x3 matrices (row vectors: m1,
    then m0) into dst: each row of m1 is taken through m0's rotation, and
    the translation row adds m0's translation too. func_02044e50 sums one
-   such term per weight, with byte weights shifted up to Fix12, to build a
+   such term per weight, with byte weights shifted up to fx32, to build a
    blended matrix. */
 void func_02047218(fx32 *m0, fx32 *m1, fx32 *dst, fx32 t)
 {

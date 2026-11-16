@@ -15,12 +15,8 @@
  * What stays, and why (each alternative measured):
  * - InitResources: a local holding dExtSimpleModel_c::LoadFile's return, reused by
  *   Prepare, differs by 34 words (size stays 0x1ec).
- * - InitResources: dExtAnmModel_c::SetAnim with a Fix12<int> local differs
- *   (size stays 0x1ec, 10 relocation destinations wrong).
  * - InitResources: assigning Matrix4x3 onto both models differs (size stays
  *   0x1ec, 5 relocation destinations wrong). The twelve-word Mtx43 copy stays.
- * - Behavior: DropShadowRadHeight with Fix12<int> locals differs (size stays
- *   0x16c, 5 relocation destinations wrong).
  * - Behavior: or-ing the fade into data_ov055_02111b64 differs by 1 word.
  *   The ROM adds.
  * - Render: *dst = *src in the bone loop differs by 8 words (size stays
@@ -45,6 +41,7 @@
 #include "private/mtx43.h"
 #include "nitro/fx/fx.h"
 #include "SaveBlock.h"
+#include "math/CalcLib.h"
 
 /* The matrix copies go through the flat Mtx43. Assigning Matrix4x3 itself
    is a different sequence (.text grows by 0xa0 bytes). */
@@ -65,7 +62,7 @@
 #define kReqFade 2
 /* Bit 0x10 of FileSaveData::flags1 is unnamed. */
 #define kSysHold 0x10
-#define kShadowOpacity 0xf
+#define kShadowOpacity 15
 #define kAppearSound 0x179
 #define kMirrorSx (-0x1000)
 
@@ -106,16 +103,13 @@ int func_ov002_020e496c(daPly_c *player);
 
 void func_0203c178(Matrix4x3 *m, int sx, int sy, int sz);
 void MTX_Concat33(const int *a, const int *b, int *dst);
-/* local extern: math/CalcLib.h's spelling is the one below, but including
-   that header renumbers this TU's @NNN .data locals. */
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 }
 
 /* Reconstructed source-style name: SM64DS proves daLuigi_c through RTTI,
  * allocation size, vtable identity, and the LUIGI registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MirrorLuigi_Spawn. */
-extern "C" daLuigi_c *daLuigi_c_classInit() {
+daLuigi_c *daLuigi_c_classInit() {
     return new daLuigi_c();
 }
 
@@ -264,7 +258,7 @@ int daLuigi_c::ExecuteMirror(daPly_c *player) {
 
 /* One candidate caller, ov063 0x02118004, relocates to ov027 or ov055, so
  * the owner is unknown. */
-extern "C" void func_ov055_02111264(void) {
+void func_ov055_02111264(void) {
     data_ov055_02111b68 = kReqFade;
     func_0201277c(kAppearSound);
 }

@@ -83,7 +83,7 @@ extern u8 gCurrentStarId;
 extern u8 gGameMode;
 
 /* local extern: no shared header declares it. */
-extern "C" int IsStarCollectedInCurLevel(int starID);
+int IsStarCollectedInCurLevel(int starID);
 
 /* Actor ID 0x31 is BK_TOWER; gGameMode is CURRENT_GAMEMODE
  * (symbols/verified.tsv). These int-returning predicates are what make the
@@ -193,27 +193,27 @@ int daObjSimpleBg_c::InitResources() {
     return 1;
 }
 
-extern "C" daObjSimpleBg_c *daObjSimpleBg_c_classInit_MC_HAZAD() {
+daObjSimpleBg_c *daObjSimpleBg_c_classInit_MC_HAZAD() {
     return new daObjSimpleBg_c();
 }
 
-extern "C" daObjSimpleBg_c *daObjSimpleBg_c_classInit_MC_DODAI() {
+daObjSimpleBg_c *daObjSimpleBg_c_classInit_MC_DODAI() {
     return new daObjSimpleBg_c();
 }
 
-extern "C" daObjSimpleBg_c *daObjSimpleBg_c_classInit_DOKAN() {
+daObjSimpleBg_c *daObjSimpleBg_c_classInit_DOKAN() {
     return new daObjSimpleBg_c();
 }
 
-extern "C" daObjSimpleBg_c *daObjSimpleBg_c_classInit_BK_TOWER() {
+daObjSimpleBg_c *daObjSimpleBg_c_classInit_BK_TOWER() {
     return new daObjSimpleBg_c();
 }
 
-extern "C" daObjSimpleBg_c *daObjSimpleBg_c_classInit_KI_HASIRA_DAI() {
+daObjSimpleBg_c *daObjSimpleBg_c_classInit_KI_HASIRA_DAI() {
     return new daObjSimpleBg_c();
 }
 
-extern "C" daObjSimpleBg_c *daObjSimpleBg_c_classInit_KI_IWA() {
+daObjSimpleBg_c *daObjSimpleBg_c_classInit_KI_IWA() {
     return new daObjSimpleBg_c();
 }
 

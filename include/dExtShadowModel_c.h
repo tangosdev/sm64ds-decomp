@@ -5,7 +5,6 @@
 #include "BMD_File.h"
 #include "dExtModel_c.h"
 #include "math/Matrix.h"
-#include "math/Fix12.h"
 
 /* dExtModel_c sibling for drop shadows, vtable _ZTV17dExtShadowModel_c at
  * 0x0208e868:
@@ -30,15 +29,8 @@
  * prev and next; InitModel fills mat/scale/opacity and links; the D1
  * unlink pins prev at 0x20 and next at 0x24.
  *
- * CORRECTED 2026-10-26. This comment used to argue that InitModel's mangled
- * name carries 5Fix12IiES3_S3_, so a plain int "can never reproduce that
- * name", so the definition had to stay a mangled free function to dodge wall
- * 6az's by-value homing. That reasoning was circular: the name was ours. The
- * stripped cartridge contains no _Z strings and no 5Fix12IiE anywhere (arm9
- * plus all 105 overlays), so there is no ROM evidence that this parameter was
- * ever a class type -- only that it is a 20.12 scalar, which Fix12i says. With
- * Fix12i the DEFINITION is a real method and reproduces 0x02015e64/0x58
- * exactly. See notes/mwccarm-codegen.md 6az.
+ * InitModel is a real method taking fx32 scalars and reproduces
+ * 0x02015e64/0x58.
  */
 
 struct dExtShadowModel_c : dExtModel_c {
@@ -75,7 +67,7 @@ struct dExtShadowModel_c : dExtModel_c {
     /* --- non-virtual --- */
     /* opacity is u8, not the u32 the old name claimed: 0x02015e78 reads the
        fifth argument with `ldrb r2, [sp, #4]`. */
-    void InitModel(Matrix4x3 *m, Fix12i sx, Fix12i sy, Fix12i sz, u8 opacity);
+    void InitModel(Matrix4x3 *m, fx32 sx, fx32 sy, fx32 sz, u8 opacity);
     /* RETURNS int, not void: 0x02015ebc ends in `bx ip`, a tail call, so the
        callee's r0 is this function's. Same evidence as dExtModel_c::SetFile. */
     int InitCylinder();

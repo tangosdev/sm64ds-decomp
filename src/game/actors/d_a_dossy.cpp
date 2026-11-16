@@ -12,9 +12,6 @@
  * reduction's, not the source's.
  */
 // leftovers:
-// - dExtAnmModel_c::SetAnim and the other Fix12<int>-by-value calls stay
-//   mangled. A member SetAnim with Fix12<int> speed in func_ov065_021182e4
-//   changes that function.
 // - These three helpers stay as address-named free-function seams. The
 //   original ownership and names are unproven; func_ov065_02119210 is typed
 //   with its caller's daDossyCap_c * view.
@@ -31,8 +28,7 @@
 // - The BOOL/TRUE/FALSE spelling in func_ov065_02119594 and
 //   func_ov065_0211956c stays. `bool isPlayer = other->actorID == 0xbf`
 //   shrinks each function 0x28 to 0x1c: the ROM keeps the ternary 0/1
-//   materialization plus the `cmp r2, #0` re-test. Removing the typedef
-//   also renumbers this TU's @NNN temps (manifest rename @1027).
+//   materialization plus the `cmp r2, #0` re-test.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daDossy_c_AssetId {
@@ -67,17 +63,6 @@ s16 atan2(s32, s32);
 }
 
 typedef enum { FALSE = 0, TRUE = 1 } BOOL;
-
-/* The spawned daObjMarioCap_c (actor 0x10d) seen only as far as
-   dEnemyBase_c::mEatingPlayer, which daDossyCap_c::Behavior hands over.
-   Including dEnemyBase_c.h instead renumbers this TU's @NNN pins by 26. */
-struct MarioCapEatView : dActor_c {
-    s32 mEatingPlayer; /* 0x0d0 */
-};
-
-#ifndef SM64DS_PLATFORM_PC
-typedef char MarioCapEatView_size_must_be_0xd4[sizeof(MarioCapEatView) == 0xd4 ? 1 : -1];
-#endif
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
    model handle constructs through func_02017acc and destroys through
@@ -122,13 +107,12 @@ extern SharedFilePtr *data_ov065_0211c08c[];
 
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
 extern int AngleDiff(int a, int b);
-
+}
 int func_ov065_021180d4(daDossyCap_c *cap);
 void func_ov065_02118c4c(daDossyCap_c *cap);
 int func_ov065_02119210(daDossyCap_c *cap);
 void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other);
 void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other);
-}
 
 typedef void (daDossy_c::*StateFunc)();
 extern "C" StateFunc data_ov065_0211d7fc[];
@@ -137,13 +121,11 @@ DorriePlatform::DorriePlatform()
 {
 }
 
-extern "C" daDossy_c *daDossy_c_classInit(void)
-{
+daDossy_c *daDossy_c_classInit(void) {
     return new daDossy_c();
 }
 
-extern "C" daDossyCap_c *daDossyCap_c_classInit(void)
-{
+daDossyCap_c *daDossyCap_c_classInit(void) {
     return new daDossyCap_c();
 }
 
@@ -153,13 +135,13 @@ int daDossyCap_c::OnYoshiTryEat()
 }
 
 #pragma long_calls on
-extern "C" void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daDossy_c *>(owner)->func_ov065_02119594(other);
 }
 #pragma long_calls off
 
 #pragma long_calls on
-extern "C" void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daDossy_c *>(owner)->func_ov065_0211956c(other);
 }
 #pragma long_calls off
@@ -254,7 +236,7 @@ int daDossy_c::InitResources()
     return 1;
 }
 
-extern "C" int func_ov065_02119210(daDossyCap_c *cap) {
+int func_ov065_02119210(daDossyCap_c *cap) {
     int flags = cap->mCapIcon.mFlags << 30;
     return ((unsigned)flags >> 31) != 0;
 }
@@ -268,8 +250,8 @@ int daDossyCap_c::Behavior()
     if (eaten != 0) {
         dActor_c *spit = dActor_c::Spawn(0x10d, 0x1210, mPos, &mAngle, mAreaId, -1);
         if (spit != 0) {
-            ((MarioCapEatView *)spit)->mEatingPlayer = mEatingPlayer;
-            ((daPly_c *)mEatingPlayer)->mObjInMouth = (s32)spit;
+            spit->mEatingPlayer = mEatingPlayer;
+            mEatingPlayer->mObjInMouth = spit;
             spit->mFlags |= 0x20000;
             mFlags &= ~0x20000;
             mEatingPlayer = 0;
@@ -388,7 +370,7 @@ void daDossy_c::func_ov065_02118cc4()
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-extern "C" void func_ov065_02118c4c(daDossyCap_c *cap) {
+void func_ov065_02118c4c(daDossyCap_c *cap) {
     Vector3 pos;
     Vec3_Asr(&pos, &cap->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
@@ -550,7 +532,7 @@ void daDossy_c::func_ov065_021183c8()
         if (Vec3_HorzDist(&mPos, &mClsnPlayer->mPos) < 0x1f4000)
             mStateTimer = 0;
     } else {
-        if (mStateTimer > 0x96) {
+        if (mStateTimer > 150) {
             mState++;
             mStateState = 0;
             mAnmModel.SetAnim((BCA_File *)data_ov065_0211d748.filePtr, 0x40000000, 0x1000, 0);
@@ -601,7 +583,7 @@ int daDossy_c::func_ov065_02118248()
     return 0;
 }
 
-extern "C" int func_ov065_021180d4(daDossyCap_c *cap) {
+int func_ov065_021180d4(daDossyCap_c *cap) {
     daPly_c *player;
     u32 id;
 
@@ -625,7 +607,7 @@ extern "C" int func_ov065_021180d4(daDossyCap_c *cap) {
                 if (dActor_c::Spawn(0x10d, 0x1210, pos, &cap->mAngle, cap->mAreaId, -1) != 0) {
                     cap->mCapIcon.Unlink();
                     cap->mCapIcon.Link((char *)cap, 2, 0, 0);
-                    cap->mCarrier->mRideCooldown = 0x1e;
+                    cap->mCarrier->mRideCooldown = 30;
                 }
                 return 1;
             }

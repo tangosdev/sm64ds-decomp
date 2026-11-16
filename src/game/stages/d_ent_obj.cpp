@@ -19,17 +19,12 @@
  * the classInit factory, then UnknownVsPlayer's constructor.
  *
  * leftovers:
- *  - The Fix12-by-value dExtShadowModel_c::InitModel call keeps its measured
- *    scalar-extern spelling: spelled as
- *    the real member types, mwccarm homes the register arguments and the
- *    callers grow. G3i_PerspectiveW_ is the Fix12i method.
+ *  - G3i_PerspectiveW_ takes the SDK's fx32 scalars.
  *  - The Matrix4x3 copies go through the flat Mtx43; assigning Matrix4x3
  *    itself grows .text by 0x6c bytes.
  *  - Behavior's mFellOffThisFrame probe keeps the second `walk` induction variable
  *    alongside `player`: folding it into `player->mFellOffThisFrame` drops a
  *    register and rewrites the whole function.
- *  - GetExitX's row*16/playerNo*4 byte form stays: the
- *    int[]-indexed spelling emits a different addressing pair.
  */
 
 #include "Particle__System.h"
@@ -80,12 +75,7 @@ struct EntObjTextureSequenceFileHandle : SharedFilePtr {
     ~EntObjTextureSequenceFileHandle();
 };
 
-/* Fix12<int> is passed by value at these call boundaries. Spelled as the
- * class type, mwccarm homes the register arguments and the callers grow, so
- * the measured scalar views stay. */
 extern "C" {
-int d_ent_objNewHold(unsigned handle, unsigned id, int x, int y, int z, const Vector3_16 *dir,
-                     void *callback);
 
 int RandomIntInternal(int *seed);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
@@ -96,8 +86,6 @@ void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
 int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-unsigned int func_02012174(unsigned int a, unsigned int b);
-void func_020167a4(dExtAnmModel_c *model);
 
 extern Matrix4x3 data_020a0e68;
 extern dClipper data_0209f43c;
@@ -129,8 +117,13 @@ extern EntObjAnimationFileHandle data_ov075_0211d414;
 extern EntObjAnimationFileHandle data_ov075_0211d41c;
 extern EntObjAnimationFileHandle data_ov075_0211d424;
 extern EntObjAnimationFileHandle data_ov075_0211d42c;
-extern int *data_ov075_0211c678[];
-extern int *data_ov075_0211c688[];
+struct EntAnimSlot {
+    u16 fileID;
+    u8 numRefs;
+    BCA_File *file;
+};
+extern EntAnimSlot *data_ov075_0211c678[];
+extern EntAnimSlot *data_ov075_0211c688[];
 
 extern unsigned char data_ov075_0211b524[];
 /* Q12 takeoff thresholds and speed limits, indexed by the four player slots.
@@ -143,12 +136,13 @@ extern const int sVsPlayerStandingX[4][4] = {{0, 1843200, 1843200, 1843200},
                                              {-409600, 409600, 1843200, 1843200},
                                              {-737280, 0, 737280, 1843200},
                                              {-983040, -327680, 327680, 983040}};
-/* The exit positions use the same logical rows. Keep the flat storage view
- * used by the matching byte-offset consumer below. */
+/* Exit x by player-count row and compacted player column, stored flat. */
 extern const int sVsPlayerExitX[16] = {0,       1843200, 1843200, 1843200, -204800, 204800,
                                        1843200, 1843200, -368640, 0,       368640,  1843200,
                                        -491520, -163840, 163840,  491520};
 }
+unsigned int func_02012174(unsigned int a, unsigned int b);
+void func_020167a4(dExtAnmModel_c *model);
 
 /* A pointer-to-member row: the two per-figure state tables are arrays of
  * these. __sinit_ov075_0211b5e0 fills them, which fixes each index:
@@ -194,7 +188,7 @@ void UnknownVsPlayer::AnimFastGait() {
     }
     mModel.speed = FX_Div(mSpeed, mMaxSpeed) + 0x1000;
     if (!mModel.WillHitFrame(4)) {
-        if (mModel.WillHitFrame(0x22) == 0)
+        if (mModel.WillHitFrame(34) == 0)
             return;
     }
     Vector3 screenPos;
@@ -211,7 +205,7 @@ void UnknownVsPlayer::AnimSlowGait() {
     }
     mModel.speed = FX_Div(mSpeed, mMaxSpeed) + 0x1000;
     if (!mModel.WillHitFrame(4)) {
-        if (mModel.WillHitFrame(0x22) == 0)
+        if (mModel.WillHitFrame(34) == 0)
             return;
     }
     Vector3 screenPos;
@@ -241,7 +235,7 @@ void UnknownVsPlayer::AnimWaitForNext() {
 void UnknownVsPlayer::AnimWalkSounds() {
     Vector3 screenPos;
     if (!mModel.WillHitFrame(4)) {
-        if (mModel.WillHitFrame(0x22) == 0)
+        if (mModel.WillHitFrame(34) == 0)
             return;
     }
     data_0209f43c.TransformAndClip(data_0209b3ec, mPosition, 0, screenPos);
@@ -262,16 +256,16 @@ void UnknownVsPlayer::MovePoseParticles() {
     MTX_MultVec43(&bone->t, &mModel.mat4x3, &pos);
     Vec3_MulScalarInPlace(&pos, 0x8000);
     pos.y += 0x28000;
-    mParticleHandle = Particle::System::New(mParticleHandle, 0x140, pos.x, pos.y, pos.z,
-                                            (const Vector3_16f *)((Vector3_16 *)0),
-                                            (dPa_c::level_c::callback_c *)((void *)0));
+    mParticleHandle =
+        Particle::System::New(mParticleHandle, 0x140, pos.x, pos.y, pos.z, (const Vector3_16f *)0,
+                              (dPa_c::level_c::callback_c *)0);
 }
 
 /* Movement state 8: frame 0x14 of the animation comes round twice; the
  * first pass only arms the flag, the second plays the player's sound
  * 0x1c and stops. */
 void UnknownVsPlayer::MoveWaitForPoseSound() {
-    if (!mModel.WillHitFrame(0x14))
+    if (!mModel.WillHitFrame(20))
         return;
     if (mInAir == 0) {
         mInAir = 1;
@@ -290,16 +284,14 @@ void UnknownVsPlayer::MoveChoosePose() {
     BTP_File *textureFile;
     if (data_ov075_0211d380 < 0) {
         data_ov075_0211d380 =
-            data_ov075_0211b524[((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) %
-                                6];
+            data_ov075_0211b524[((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) % 6];
     }
     if (data_0209b2f0[mPlayerNo] != 0) {
         mModel.SetAnim(*(BCA_File *)data_ov075_0211d3ac.filePtr, 0, 0, 0x1000, 0);
         textureFile = (BTP_File *)data_ov075_0211d40c.filePtr;
         mMoveState = MOVE_WAIT_FOR_POSE_SOUND;
     } else {
-        mModel.SetAnim(*(BCA_File *)((data_ov075_0211c688[data_ov075_0211d380 & 3])[1]), 0, 0,
-                       0x1000, 0);
+        mModel.SetAnim(*data_ov075_0211c688[data_ov075_0211d380 & 3]->file, 0, 0, 0x1000, 0);
         textureFile = (BTP_File *)data_ov075_0211d3dc.filePtr;
         mMoveState = MOVE_POSE_PARTICLES;
         data_ov075_0211d380 >>= 2;
@@ -309,7 +301,7 @@ void UnknownVsPlayer::MoveChoosePose() {
     {
         unsigned int randomValue = (unsigned int)RandomIntInternal(&data_0209e650.value);
         int frameCount = mModel.GetFrameCount();
-        mTextureSequence.currFrame = (u16)((randomValue >> 0x10) % frameCount) << 12;
+        mTextureSequence.currFrame = (u16)((randomValue >> 16) % frameCount) << 12;
     }
 }
 
@@ -426,7 +418,7 @@ int UnknownVsPlayer::IsAtExit() {
  * (movement state 2). */
 void UnknownVsPlayer::GoToExit(int exitX) {
     mModel.SetAnim(*(BCA_File *)data_ov075_0211d384.filePtr, 8, 0x40000000, 0x1000, 0);
-    mWaitTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) + 0x1e) & 0xf;
+    mWaitTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) + 30) & 15;
     mExitPos.x = exitX;
     mExitPos.y = 0;
     mExitPos.z = -0x3e8000;
@@ -464,7 +456,7 @@ int UnknownVsPlayer::IsIdle() {
 /* Go idle in the player's own standing animation. */
 int UnknownVsPlayer::StartIdle() {
     unsigned char playerNo = mPlayerNo;
-    mModel.SetAnim(*(BCA_File *)(data_ov075_0211c678[playerNo][1]), 4, 0, 0x1000, 0);
+    mModel.SetAnim(*data_ov075_0211c678[playerNo]->file, 4, 0, 0x1000, 0);
     mModel.speed = 0x1000;
     mMoveState = MOVE_IDLE;
     mAnimState = ANIM_NONE;
@@ -484,8 +476,8 @@ int UnknownVsPlayer::UpdateCamera(Vector3 *at, Vector3 *pos) {
     }
     if (state != MOVE_FINISHED)
         return 0;
-    Math_Function_0203b0fc((int *)&pos->y, 0x2bc00, 0x66, 0x1c00);
-    Math_Function_0203b14c((int *)&pos->z, at->z, 1, 0x4000, 0x100);
+    Math_Function_0203b0fc(&pos->y, 0x2bc00, 0x66, 0x1c00);
+    Math_Function_0203b14c(&pos->z, at->z, 1, 0x4000, 0x100);
     at->y = pos->y;
     return 1;
 }
@@ -568,7 +560,7 @@ void UnknownVsPlayer::Behavior() {
     (this->*sVsPlayerAnimStates[mAnimState].state)();
     mModel.Advance();
     mTextureSequence.Advance();
-    mShadow.InitModel(&mModel.mat4x3, 0x50000, 0x1f4000, 0x50000, 0xf);
+    mShadow.InitModel(&mModel.mat4x3, 0x50000, 0x1f4000, 0x50000, 15);
 }
 
 /* Set up the figure for player slot playerNo at x: both models, the pose
@@ -584,7 +576,7 @@ int UnknownVsPlayer::Init(unsigned char kind, unsigned char playerNo, int x) {
     mAnimation.SetAnim((BCA_File *)data_ov075_0211d414.filePtr, 0, 0x1000, 0);
 
     if (kind == 0 || kind == 2) {
-        mModel.SetAnim(*(BCA_File *)(data_ov075_0211c678[playerNo][1]), 0, 0, 0x1000, 0);
+        mModel.SetAnim(*data_ov075_0211c678[playerNo]->file, 0, 0, 0x1000, 0);
         textureFile = (BTP_File *)data_ov075_0211d40c.filePtr;
         mMoveState = MOVE_IDLE;
     } else {
@@ -599,7 +591,7 @@ int UnknownVsPlayer::Init(unsigned char kind, unsigned char playerNo, int x) {
     {
         unsigned randomValue = (unsigned)RandomIntInternal(&data_0209e650.value);
         int frameCount = mModel.GetFrameCount();
-        mTextureSequence.currFrame = (((randomValue >> 0x10) % (unsigned)frameCount) << 0x10) >> 4;
+        mTextureSequence.currFrame = (((randomValue >> 16) % (unsigned)frameCount) << 16) >> 4;
     }
 
     if (mShadow.InitCylinder() == 0)
@@ -711,8 +703,8 @@ void dEntObj_c::SetMarkerPosition(int playerNo) {
 }
 
 /* The exit x for player slot playerNo, from the row for the current player
- * count. This path widens the column-map byte unsigned, unlike the standing
- * table lookup below. Preserve that spelling and its ineffective negative check. */
+ * count. The column-map byte is widened unsigned, unlike the standing table
+ * lookup below, and the negative check never fires. */
 int dEntObj_c::GetExitX(int playerNo) {
     unsigned int count = data_0209fc50;
     int row;
@@ -724,7 +716,8 @@ int dEntObj_c::GetExitX(int playerNo) {
         if (playerNo < 0)
             playerNo = 3;
     }
-    return *(const int *)((const char *)sVsPlayerExitX + row * 16 + playerNo * 4);
+    const int *exitRow = sVsPlayerExitX + row * 4;
+    return exitRow[playerNo];
 }
 
 /* The standing x for player slot playerNo, laid out the same way as the
@@ -746,8 +739,8 @@ int dEntObj_c::GetStandingX(int playerNo) {
 /* Rebuild the projection and the view from the camera eye and target. */
 void dEntObj_c::SetCamera() {
     Matrix4x3 view;
-    G3i_PerspectiveW_(data_02082614[0xa], data_02082614[0xb], 0x1555, 0x1000, 0x1388000, 0x1000,
-                      true, (Matrix4x3 *)0);
+    G3i_PerspectiveW_(data_02082614[10], data_02082614[11], 0x1555, 0x1000, 0x1388000, 0x1000, true,
+                      0);
     G3i_LookAt_((Vector3 *)&mCamPosX, (Vector3 *)&data_ov075_0211c660, (Vector3 *)&mCamTargetX,
                 true, &view);
     CopyToViewMat(&view);
@@ -962,7 +955,7 @@ int dEntObj_c::InitResources() {
  * preserved. The array runtime passes each element address and ignores
  * lifecycle results; explicit function-pointer casts mark that runtime ABI
  * boundary. */
-extern "C" dEntObj_c *dEntObj_c_classInit(void) {
+dEntObj_c *dEntObj_c_classInit(void) {
     return new dEntObj_c;
 }
 

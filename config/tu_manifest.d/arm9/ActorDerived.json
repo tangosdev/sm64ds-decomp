@@ -40,7 +40,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_02013edc",
+      "symbol": "_Z13func_02013edciii",
       "address": "0x02013edc",
       "size": "0x0000000c",
       "legacy_source": "src/func_02013edc.c",

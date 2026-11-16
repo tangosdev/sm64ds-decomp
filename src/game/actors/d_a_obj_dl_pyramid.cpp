@@ -110,7 +110,7 @@ void daObjDlPyramid_c::FinishDescent() {
  * particle alive and moves to state 2 at frame 150. */
 void daObjDlPyramid_c::Descend() {
     mPosX = FX_SinIdx((u16)(s16)(mStateTimer << 14) >> 4) * 0x28 + mHomePosX;
-    if (mStateTimer < 0x3c) {
+    if (mStateTimer < 60) {
         int bob = FX_SinIdx((u16)(s16)(mStateTimer << 13) >> 4) * 0xa;
         if (bob < 0)
             bob = -bob;
@@ -170,13 +170,13 @@ int daObjDlPyramid_c::Behavior() {
             mState++;
         break;
     case 1:
-        Sound::PlaySecretSound(this, (u16 *)&mSoundTimer);
+        Sound::PlaySecretSound(this, &mSoundTimer);
         if (mStateTimer == 0)
             Sound::PlayBank3(0x4b, mCamSpacePos);
         Descend();
         break;
     case 2:
-        if (Sound::PlaySecretSound(this, (u16 *)&mSoundTimer)) {
+        if (Sound::PlaySecretSound(this, &mSoundTimer)) {
             Sound::PlayBank3(0x4c, mCamSpacePos);
             FinishDescent();
         } else {
@@ -252,12 +252,12 @@ s32 daObjDlPyramidDummy_c::InitResources() {
    allocator the cartridge's own factories call. Spelled by hand they read as a four-step C
    transcription; this is the original shape. */
 /* -------------------------------------------------------------------------- */
-extern "C" daObjDlPyramidDummy_c *daObjDlPyramidDummy_c_classInit() {
+daObjDlPyramidDummy_c *daObjDlPyramidDummy_c_classInit() {
     return new daObjDlPyramidDummy_c;
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" daObjDlPyramid_c *daObjDlPyramid_c_classInit() {
+daObjDlPyramid_c *daObjDlPyramid_c_classInit() {
     return new daObjDlPyramid_c;
 }
 

@@ -10,8 +10,12 @@ extern "C" {
  * but making these locals Vector3 objects emits its inline destructor; cast
  * the same-layout buffers at those ABI boundaries to preserve the original
  * lifetime and code generation. */
-typedef struct { int x, y, z; } Vec3;
-typedef struct { int x, y, z, w; } Quat;
+typedef struct {
+    int x, y, z;
+} Vec3;
+typedef struct {
+    int x, y, z, w;
+} Quat;
 
 extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void func_0203cebc(Vector3 *out, Vector3 *p, Vector3 *q, Vector3 *r);

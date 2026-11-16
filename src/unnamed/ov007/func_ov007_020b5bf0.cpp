@@ -10,11 +10,9 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-extern "C" {
-
-extern unsigned short func_ov007_020c3be0(int t, int a, int b);
-extern void func_ov007_020b5f64(Ov007ItemView *view);
-extern int func_ov007_020c8f98(struct Ov007Tween *tw);
+extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
+extern "C" void func_ov007_020b5f64(Ov007ItemView *view);
+extern "C" int func_ov007_020c8f98(struct Ov007Tween *tw);
 
 /* One frame of a menu item's look. Kind 0 items wiggle: rotZ follows a
  * sine at 72 degrees per frame, decaying over wiggleFrames, 4 degrees deep
@@ -40,8 +38,8 @@ void func_ov007_020b5bf0(Ov007ItemView *view) {
             int progress;
             progress = ProgressRatio(elapsed, item->wiggleFrames);
             {
-                int degrees = (progress * (item->wiggleFrames * 0x48)) >> 0xc;
-                int angle = FX_DivS32(degrees << 0x10, 0x168);
+                int degrees = (progress * (item->wiggleFrames * 72)) >> 0xc;
+                int angle = FX_DivS32(degrees << 0x10, 360);
                 fx16 sine;
                 int decay;
                 u16 id;
@@ -56,7 +54,7 @@ void func_ov007_020b5bf0(Ov007ItemView *view) {
                 wave = FX_MUL(sine, decay);
                 amplitude = (id == 0) ? 4 : 8;
                 tilt = (wave * amplitude) >> 0xc;
-                view->sprite->rotZ = FX_DivS32(tilt << 0x10, 0x168);
+                view->sprite->rotZ = FX_DivS32(tilt << 0x10, 360);
             }
         } else {
             view->sprite->rotZ = 0;
@@ -142,5 +140,4 @@ void func_ov007_020b5bf0(Ov007ItemView *view) {
         func_ov007_020b5f64(view);
     }
     func_ov007_020c8f98(view->slideTween);
-}
 }

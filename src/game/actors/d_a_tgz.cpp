@@ -25,15 +25,6 @@
  *   func_ov077_021251d0 call a destructor the cartridge does not.
  *
  * deslop leftovers:
- * - func_ov077_02124eb0 and func_ov077_021253a4: dActor_c::SpawnCoins is
- *   +12 (0x1f8->0x204, 0xdc->0xe8). Scalar extern kept.
- * - func_ov077_02125304: dActor_c::DropShadowRadHeight is +16 (0xa0->0xb0).
- * - func_ov077_02125480 and func_ov077_02125b1c: dExtAnmModel_c::SetAnim is +12
- *   (0xd0->0xdc, 0x98->0xa4). Scalar extern passes the u16 start frame.
- * - InitResources: SetAnim + dCcAc_c::Init + dBgCh_Actr::Init together are
- *   +36 (0x13c->0x160). dBgCh_Actr::Init's header mangles
- *   _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_, not the ROM Fix12
- *   symbol.
  * - func_ov077_021256b4 and func_ov077_02125830: carrier->mPosX/Y/Z is -4
  *   (0x17c->0x178, 0xac->0xa8). The ROM keeps add #0x5c then [0]/[4]/[8].
  */
@@ -103,6 +94,11 @@ TgzStateRecord gTgzStates[6] = {
 extern "C" {
 extern DaJgmModelFile data_ov077_02127b48;
 extern DaJgmModelFile data_ov077_02127b38;
+
+extern int data_0209f32c;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
+extern signed char gCurrentSublevel;
+}
 int func_ov077_02124c28(daTgz_c *self);
 void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn);
 void func_ov077_021251d0(daTgz_c *self);
@@ -114,16 +110,8 @@ int func_ov077_02124ce4(daTgz_c *self);
 void func_ov077_02124eb0(daTgz_c *self);
 void func_ov077_021250a8(daTgz_c *self);
 void func_ov077_02125304(daTgz_c *self);
-
 int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
-s16 func_02010844(void *unused, Vector3 *v, s16 angle);
-unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
-                            const void *dir, void *callback);
-extern int data_0209f32c;
-extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern signed char gCurrentSublevel;
-}
 
 /* Vtable slot 16. The compiler writes the whole body: one vtable store, the
  * members in reverse, then ~dActor_c. Slot 17 (D0) is the deleting variant of
@@ -147,8 +135,7 @@ int daTgz_c::OnAimedAtWithEgg()
 /* Until one is found, probe for a water surface below the Spiny and cache
  * its height in mWaterY. Returns how far above it the Spiny is (0 while
  * nothing has been found). */
-extern "C" int func_ov077_02124c28(daTgz_c *self)
-{
+int func_ov077_02124c28(daTgz_c *self) {
     if (self->mWaterY == 0) {
         dBgCh_Gnd rg;
         Vector3 pos;
@@ -173,7 +160,7 @@ extern "C" int func_ov077_02124c28(daTgz_c *self)
 }
 
 /* Is the Spiny below the cached water surface? */
-extern "C" int func_ov077_02124ce4(daTgz_c *self) {
+int func_ov077_02124ce4(daTgz_c *self) {
     int waterY = self->mWaterY;
     if (waterY == 0)
         return 0;
@@ -182,8 +169,7 @@ extern "C" int func_ov077_02124ce4(daTgz_c *self) {
 
 /* Toxic floor destroys the Spiny. A sloped floor rewrites vertical speed
  * from mSpeedX/mSpeedZ and pitches mAngleX/mAngleZ to the normal. */
-extern "C" void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn)
-{
+void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn) {
     Vector3 pos;
     Vector3 normal;
     Vector3 wallnormal;
@@ -218,8 +204,8 @@ extern "C" void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn)
                              normal.y) +
                       0x8000);
             }
-            self->mAngleX = func_02010844(self, &normal, self->mAngleY);
-            self->mAngleZ = func_02010844(self, &normal, (s16)(self->mAngleY - 0x4000));
+            self->mAngleX = self->func_02010844(&normal, self->mAngleY);
+            self->mAngleZ = self->func_02010844(&normal, (self->mAngleY - 0x4000));
         }
     }
     if (clsn->IsOnWall()) {
@@ -230,7 +216,7 @@ extern "C" void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn)
 
 /* Hit response while walking or spinning. Egg and the knock-up destroy or
  * launch; a shell / metal / attack hit in state 1 starts the chase. */
-extern "C" void func_ov077_02124eb0(daTgz_c *self) {
+void func_ov077_02124eb0(daTgz_c *self) {
     daPly_c *player;
     int b;
 
@@ -255,11 +241,11 @@ extern "C" void func_ov077_02124eb0(daTgz_c *self) {
     if (player == 0)
         return;
 
-    b = (int)(player->actorID == 0xbf);
+    b = (player->actorID == 0xbf);
     if (b == 0)
         return;
 
-    b = (int)((self->mFlags & 0x20000) != 0);
+    b = ((self->mFlags & 0x20000) != 0);
     if (b != 0) {
         func_ov077_02125e94(self, 3);
         return;
@@ -298,17 +284,17 @@ extern "C" void func_ov077_02124eb0(daTgz_c *self) {
 
 /* Hit response during the thrown spin. Mega turns it to face away and
  * knocks it up; fire is ignored; anything else hurts the player. */
-extern "C" void func_ov077_021250a8(daTgz_c *self) {
+void func_ov077_021250a8(daTgz_c *self) {
     unsigned int id = self->mdCcAc_c.otherOwner;
     if (id == 0)
         return;
     daPly_c *player = (daPly_c *)dActor_c::FindWithID(id);
     if (player == 0)
         return;
-    int b1 = (int)(player->actorID == 0xbf);
+    int b1 = (player->actorID == 0xbf);
     if (b1 == 0)
         return;
-    int b2 = (int)((self->mFlags & 0x20000) != 0);
+    int b2 = ((self->mFlags & 0x20000) != 0);
     if (b2 != 0) {
         func_ov077_02125e94(self, 3);
         return;
@@ -332,7 +318,7 @@ extern "C" void func_ov077_021250a8(daTgz_c *self) {
 
 /* Tumble matrix: translate to pos>>3, up by the egg-aim height, rotate, then
  * back down by that height, and keep the result on the anim model's matrix. */
-extern "C" void func_ov077_021251d0(daTgz_c *self) {
+void func_ov077_021251d0(daTgz_c *self) {
     int v[3];
     Vec3_Asr(reinterpret_cast<Vector3 *>(v), &self->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
@@ -346,8 +332,7 @@ extern "C" void func_ov077_021251d0(daTgz_c *self) {
 }
 
 /* Upright matrix on the still model in states 0 and 4, otherwise on the anim. */
-extern "C" void func_ov077_02125290(daTgz_c *self)
-{
+void func_ov077_02125290(daTgz_c *self) {
     int v = self->mState;
     int b = 1;
     Matrix4x3 *m;
@@ -363,18 +348,18 @@ extern "C" void func_ov077_02125290(daTgz_c *self)
     m->m[11] = self->mPosZ >> 3;
 }
 
-extern "C" void func_ov077_02125304(daTgz_c *self) {
-    int b = (int)((self->mFlags & 0x40000) != 0);
+void func_ov077_02125304(daTgz_c *self) {
+    int b = ((self->mFlags & 0x40000) != 0);
     if (b != 0)
         return;
     if (self->mState == 5)
         func_ov077_021251d0(self);
     else
         func_ov077_02125290(self);
-    self->mShadowMatrix[9] = self->mPosX >> 3;
-    self->mShadowMatrix[10] = self->mPosY >> 3;
-    self->mShadowMatrix[11] = self->mPosZ >> 3;
-    self->DropShadowRadHeight(self->mShadowModel, *(Matrix4x3 *)self->mShadowMatrix, 0x50000,
+    self->mShadowMatrix.a[9] = self->mPosX >> 3;
+    self->mShadowMatrix.a[10] = self->mPosY >> 3;
+    self->mShadowMatrix.a[11] = self->mPosZ >> 3;
+    self->DropShadowRadHeight(self->mShadowModel, *(Matrix4x3 *)&self->mShadowMatrix, 0x50000,
                               0x320000, 0xf);
 }
 
@@ -409,7 +394,7 @@ int daTgz_c::func_ov077_02125480() {
     mVertSpeed = 0x28000;
     mAngleX = 0;
     mAngleZ = 0;
-    mActionTimer = 0x2d;
+    mActionTimer = 45;
     mAnmModel.SetAnim((BCA_File *)TGZ_BCA, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int aimHeight = OnAimedAtWithEgg();
@@ -439,9 +424,9 @@ int daTgz_c::func_ov077_02125550() {
             x = mPosX;
             y = mPosY + 0x28000;
             z = mPosZ;
-            ((int *)&vec)[0] = x;
-            ((int *)&vec)[1] = y;
-            ((int *)&vec)[2] = z;
+            vec.x = x;
+            vec.y = y;
+            vec.z = z;
             Particle::System::NewSimple(kPtclLandingDust, vec.x, vec.y, vec.z);
             func_0201267c(0x109, &mCamSpacePos);
         } else {
@@ -479,7 +464,7 @@ int daTgz_c::func_ov077_021256b4() {
     mHorzSpeed = 0xa000;
     mVertSpeed = 0;
 
-    carrier = mCarrier;
+    carrier = mEatingPlayer;
     carrierYaw = carrier->mAngleY;
     mAngleX = 0;
     mAngleY = carrierYaw;
@@ -487,9 +472,9 @@ int daTgz_c::func_ov077_021256b4() {
 
     mPrevAngleY = mAngleY;
 
-    carrier = mCarrier;
+    carrier = mEatingPlayer;
     one = 1;
-    int *src = (int *)&carrier->mPosX;
+    int *src = &carrier->mPosX;
     mPosX = src[0];
     mPosY = src[1];
     mPosZ = src[2];
@@ -500,7 +485,7 @@ int daTgz_c::func_ov077_021256b4() {
     cosv = FX_CosIdx((u16)mAngleY >> 4);
     mPosZ = mPosZ + FX_MUL(cosv, 0x3c000);
 
-    carrier = mCarrier;
+    carrier = mEatingPlayer;
     {
         int ty = carrier->mPosY;
         int tz = carrier->mPosZ;
@@ -513,7 +498,7 @@ int daTgz_c::func_ov077_021256b4() {
 
     DetectRaycastClsn(v, mPos, one);
 
-    mCarrier = 0;
+    mEatingPlayer = 0;
     mWithMeshClsn.SetLimMovFlag();
 
     mState = 4;
@@ -523,10 +508,10 @@ int daTgz_c::func_ov077_021256b4() {
 /* Held update: stick to the carrier, or on release enter state 4 / the walk. */
 int daTgz_c::func_ov077_02125830() {
     if (((mFlags & 0x40000) ? 1 : 0) != 0) {
-        dActor_c *carrier = mCarrier;
+        dActor_c *carrier = mEatingPlayer;
         /* Address of the triple, then [0]/[4]/[8]. Three field loads fold the
            0x5c into the ldr and drop the add the ROM kept. */
-        int *src = (int *)&carrier->mPosX;
+        int *src = &carrier->mPosX;
         mPosX = src[0];
         mPosY = src[1];
         mPosZ = src[2];
@@ -536,7 +521,7 @@ int daTgz_c::func_ov077_02125830() {
         if (((flags & 0x80000) ? 1 : 0) != 0)
             func_ov077_02125e94(this, 4);
         else if (((flags & 0x20000) ? 1 : 0) == 0 && ((flags & 0x40000) ? 1 : 0) == 0) {
-            mCarrier = 0;
+            mEatingPlayer = 0;
             func_ov077_02125e94(this, 1);
         }
     }
@@ -589,7 +574,7 @@ int daTgz_c::func_ov077_02125908() {
 int daTgz_c::func_ov077_02125a0c() {
     mHorzSpeed = 0x5000;
     mVertSpeed = 0xd000;
-    short ang = (short)Vec3_HorzAngle(&mChasePlayer->mPos, &mPos);
+    short ang = Vec3_HorzAngle(&mChasePlayer->mPos, &mPos);
     mPrevAngleY = ang;
     mWithMeshClsn.SetLimMovFlag();
     mState = 2;
@@ -663,7 +648,7 @@ int daTgz_c::func_ov077_02125bb4() {
         mTerminalVelocity = -0x3c000;
         mHorzSpeed = 0x4000;
     }
-    mInWater = (unsigned char)underwater;
+    mInWater = underwater;
 
     if (mWithMeshClsn.JustHitGround()) {
         mVertSpeed = (mVertSpeed * -0x3c) / 100;
@@ -684,9 +669,9 @@ int daTgz_c::func_ov077_02125bb4() {
             x = mPosX;
             y = mPosY + 0x28000;
             z = mPosZ;
-            ((int *)&vec)[0] = x;
-            ((int *)&vec)[1] = y;
-            ((int *)&vec)[2] = z;
+            vec.x = x;
+            vec.y = y;
+            vec.z = z;
             Particle::System::NewSimple(kPtclLandingDust, vec.x, vec.y, vec.z);
             func_0201267c(0x109, &mCamSpacePos);
         }
@@ -708,20 +693,17 @@ int daTgz_c::func_ov077_02125dd4() {
     return 1;
 }
 
-extern "C" void func_ov077_02125e20(daTgz_c *self)
-{
+void func_ov077_02125e20(daTgz_c *self) {
     TgzState *p = (TgzState *)self->mStateDesc + 1;
     (self->* *p)();
 }
 
-extern "C" void func_ov077_02125e5c(daTgz_c *self)
-{
+void func_ov077_02125e5c(daTgz_c *self) {
     TgzState *p = (TgzState *)self->mStateDesc;
     (self->* *p)();
 }
 
-extern "C" void func_ov077_02125e94(daTgz_c *self, int i)
-{
+void func_ov077_02125e94(daTgz_c *self, int i) {
     self->mStateDesc = &gTgzStates[i];
     func_ov077_02125e5c(self);
 }
@@ -753,26 +735,27 @@ int daTgz_c::Render()
 int daTgz_c::Behavior()
 {
     int s = mState;
-    if (s != 1 || mWithMeshClsn.IsOnGround()) {
-        s = mState;
-        if (s != 4 && s != 5 && IsTooFarAwayFromPlayer(0x5dc000)) {
-            if (DecIfAbove0_Byte(&mDespawnTimer) == 0) {
-                MarkForDestruction();
-                return 1;
+    do {
+        if (s != 1 || mWithMeshClsn.IsOnGround()) {
+            s = mState;
+            if (s != 4 && s != 5 && IsTooFarAwayFromPlayer(0x5dc000)) {
+                if (DecIfAbove0_Byte(&mDespawnTimer) == 0) {
+                    MarkForDestruction();
+                    return 1;
+                }
+                break;
             }
-            goto done;
         }
-    }
-    func_ov077_02124c28(this);
-    func_ov077_02125e20(this);
-    MakeVanishLuigiWork(mdCcAc_c);
-    func_ov077_02125304(this);
-    if (gCurrentSublevel == 0x1c && mPosY <= -0x1600000) {
-        PoofDust();
-        func_02012694(0xc4, &mCamSpacePos);
-        MarkForDestruction();
-    }
-done:
+        func_ov077_02124c28(this);
+        func_ov077_02125e20(this);
+        MakeVanishLuigiWork(mdCcAc_c);
+        func_ov077_02125304(this);
+        if (gCurrentSublevel == 0x1c && mPosY <= -0x1600000) {
+            PoofDust();
+            func_02012694(0xc4, &mCamSpacePos);
+            MarkForDestruction();
+        }
+    } while (0);
     return 1;
 }
 
@@ -792,9 +775,9 @@ int daTgz_c::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    mDespawnTimer = 0x2c;
+    mDespawnTimer = 44;
     func_ov077_02125e94(this, 0);
-    *(Matrix4x3 *)mShadowMatrix = IDENTITY_MATRIX4X3;
+    mShadowMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     func_ov077_02125304(this);
     return 1;
 }
@@ -809,7 +792,7 @@ void daTgz_c::OnTurnIntoEgg(daPly_c &player) {
     MarkForDestruction();
 }
 
-extern "C" daTgz_c *daTgz_c_classInit() {
+daTgz_c *daTgz_c_classInit() {
     return new daTgz_c;
 }
 

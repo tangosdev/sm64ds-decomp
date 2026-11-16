@@ -9,9 +9,6 @@
  */
 
 // leftovers:
-// - dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange take Fix12<int> by
-//   value, so they stay mangled; a member call homes the argument and
-//   changes the ROM ABI.
 // - This TU emits its own __sinit for the file handles below, which the
 //   manifest does not license. The handles stay: nothing else defines
 //   their BSS or .init range.
@@ -157,8 +154,7 @@ int daObjEmmYuka_c::InitResources()
  * RTTI, allocation size, vtable identity, and the EMM_YUKA registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: SquarePathLift_Spawn. */
-extern "C" daObjEmmYuka_c *daObjEmmYuka_c_classInit()
-{
+daObjEmmYuka_c *daObjEmmYuka_c_classInit() {
     return new daObjEmmYuka_c();
 }
 

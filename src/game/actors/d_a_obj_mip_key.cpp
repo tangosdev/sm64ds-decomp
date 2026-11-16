@@ -24,11 +24,11 @@
 #include "SaveBlock.h"
 
 extern "C" {
-s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+}
+s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void CollectMinigameKey(int t, int x);
 void StartMinigameMenu(u8 a);
-}
 
 extern dCamera_c *gCamera;
 extern u8 data_0209d660;
@@ -58,7 +58,7 @@ daObj_Mip_Key_c::~daObj_Mip_Key_c() {}
 // End the conversation, restore control flags and retire the key.
 
 void daObj_Mip_Key_c::FinishConversation() {
-    Sound::PlaySub(0x28, 0x7f, 0, 0x7444, 0);
+    Sound::PlaySub(0x28, 127, 0, 0x7444, 0);
     Message::EndTalk();
     gCamera->mFlags &= ~8;
     mPlayer->mStateFlags &= ~0x800;
@@ -75,7 +75,7 @@ int daObj_Mip_Key_c::StateCarried() {
     if (other == 0)
         return 1;
 
-    playerPos = (int *)(&other->mPosX);
+    playerPos = (&other->mPosX);
     Vector3 v;
     v = *(Vector3 *)playerPos;
     v.y += 0xc8000;
@@ -87,7 +87,7 @@ int daObj_Mip_Key_c::StateCarried() {
 
     switch (mTalkState) {
     case 0:
-        if (!Sound::PlaySub(0x28, 0x12, 0x7f, 0x15ccc, 0))
+        if (!Sound::PlaySub(0x28, 18, 127, 0x15ccc, 0))
             break;
         mTalkState = 1;
     case 1:
@@ -121,7 +121,7 @@ int daObj_Mip_Key_c::StateCarried() {
         break;
     case 3:
         if (data_0209d660 == 0) {
-            Sound::PlaySub(0x28, 0x7f, 0, 0x7444, 0);
+            Sound::PlaySub(0x28, 127, 0, 0x7444, 0);
             StartMinigameMenu(1);
             Message::EndTalk();
             MarkForDestruction();
@@ -136,7 +136,7 @@ int daObj_Mip_Key_c::StateCarried() {
         }
     } break;
     case 6:
-        if (Sound::PlaySub(0x28, 0x12, 0x7f, 0x15ccc, 0)) {
+        if (Sound::PlaySub(0x28, 18, 127, 0x15ccc, 0)) {
             if (data_0209d660 == 0) {
                 if (mode == 1) {
                     func_02012790(0x5e);
@@ -259,7 +259,7 @@ void daObj_Mip_Key_c::UpdateModelAndShadow() {
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)(&mModel.mat4x3) = *(Mtx43 *)&data_020a0e68;
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x32000) >> 3, mPosZ >> 3);
-    DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x23000, 0x12c000, 0xf);
+    DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x23000, 0x12c000, 15);
 }
 
 
@@ -314,7 +314,7 @@ int daObj_Mip_Key_c::InitResources() {
 // classInit is a lineage-supported project spelling; ROM RTTI proves the class.
 // The exact original factory spelling is unknown (old alias: RabbitKey_Spawn).
 
-extern "C" daObj_Mip_Key_c *daObj_Mip_Key_c_classInit(void) {
+daObj_Mip_Key_c *daObj_Mip_Key_c_classInit(void) {
     return new daObj_Mip_Key_c();
 }
 

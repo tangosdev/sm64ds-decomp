@@ -45,9 +45,9 @@ extern char data_ov002_0210d6dc[];  /* the ring's BTA */
 
 /* local extern: no shared header declares these. */
 extern "C" {
-s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 int AngleDiff(int a, int b);
 }
+s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 
 extern SharedFilePtr data_ov002_0210da10; /* the ring's BMD */
 
@@ -110,7 +110,7 @@ int daWater_Ring_c::StatePassed() {
 /* Init of the passed state: tells the spawner which ring was hit. */
 int daWater_Ring_c::InitStatePassed() {
     mOpacity = 0x1f;
-    mStateTimer = 0x64;
+    mStateTimer = 100;
     int type = mRingType;
     if (type == 1 || type == 2) {
         dActor_c *spawner = mSpawner;
@@ -131,7 +131,7 @@ int daWater_Ring_c::InitStatePassed() {
 int daWater_Ring_c::StateActive() {
     int spd;
     CheckPlayerPass();
-    if (mStateTimer < 0x1e) {
+    if (mStateTimer < 30) {
         if (mOpacity >= 2)
             mOpacity--;
     }
@@ -158,7 +158,7 @@ int daWater_Ring_c::StateActive() {
 
 /* Init of the active state. */
 s32 daWater_Ring_c::InitStateActive() {
-    mStateTimer = 0xc8;
+    mStateTimer = 200;
     mPrevPlayerAngle = HorzAngleToCPlayer();
     return 1;
 }
@@ -240,7 +240,7 @@ int daWater_Ring_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the WATER_RING registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: WaterRing_Spawn. */
-extern "C" daWater_Ring_c *daWater_Ring_c_classInit() {
+daWater_Ring_c *daWater_Ring_c_classInit() {
     return new daWater_Ring_c();
 }
 

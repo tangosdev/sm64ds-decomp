@@ -1,14 +1,14 @@
 _ZN10dScTitle_cD1Ev kind:function(arm,size=0x3c) addr:0x020ad660
 _ZN10dScTitle_cD0Ev kind:function(arm,size=0x50) addr:0x020ad69c
-TitleScrollLevelList kind:function(arm,size=0xb4) addr:0x020ad6ec
+_Z20TitleScrollLevelListPv kind:function(arm,size=0xb4) addr:0x020ad6ec
 _ZN10dScTitle_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020ad7a0
 _ZN10dScTitle_c6RenderEv kind:function(arm,size=0x70) addr:0x020ad7a4
 _ZN10dScTitle_c8BehaviorEv kind:function(arm,size=0x26c) addr:0x020ad814
 _ZN10dScTitle_c16CleanupResourcesEv kind:function(arm,size=0x1c) addr:0x020ada80
 _ZN10dScTitle_c13InitResourcesEv kind:function(arm,size=0x174) addr:0x020ada9c
-dScTitle_c_classInit kind:function(arm,size=0x64) addr:0x020adc10
-TitlePrintString kind:function(arm,size=0x48) addr:0x020adc74
-TitlePrintLevelRow kind:function(arm,size=0x140) addr:0x020adcbc
+_Z20dScTitle_c_classInitv kind:function(arm,size=0x64) addr:0x020adc10
+_Z16TitlePrintStringPaii kind:function(arm,size=0x48) addr:0x020adc74
+_Z18TitlePrintLevelRowiii kind:function(arm,size=0x140) addr:0x020adcbc
 _ZN12dScStarSel_cD1Ev kind:function(arm,size=0x58) addr:0x020addfc
 _ZN12dScStarSel_cD0Ev kind:function(arm,size=0x6c) addr:0x020ade54
 _ZN12dScStarSel_c16GetCharacterSlotEj kind:function(arm,size=0x90) addr:0x020adec0
@@ -23,7 +23,7 @@ _ZN12dScStarSel_c6RenderEv kind:function(arm,size=0x944) addr:0x020ae6f4
 _ZN12dScStarSel_c8BehaviorEv kind:function(arm,size=0x834) addr:0x020af038
 _ZN12dScStarSel_c16CleanupResourcesEv kind:function(arm,size=0x34) addr:0x020af86c
 _ZN12dScStarSel_c13InitResourcesEv kind:function(arm,size=0xc50) addr:0x020af8a0
-dScStarSel_c_classInit kind:function(arm,size=0x90) addr:0x020b04f0
+_Z22dScStarSel_c_classInitv kind:function(arm,size=0x90) addr:0x020b04f0
 _ZN13dScGameOver_cD1Ev kind:function(arm,size=0x3c) addr:0x020b0580
 _ZN13dScGameOver_cD0Ev kind:function(arm,size=0x50) addr:0x020b05bc
 _ZN13dScGameOver_c11UpdateIntroEv kind:function(arm,size=0x124) addr:0x020b060c
@@ -33,7 +33,7 @@ _ZN13dScGameOver_c6RenderEv kind:function(arm,size=0x80) addr:0x020b0814
 _ZN13dScGameOver_c8BehaviorEv kind:function(arm,size=0x2a0) addr:0x020b0894
 _ZN13dScGameOver_c16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x020b0b34
 _ZN13dScGameOver_c13InitResourcesEv kind:function(arm,size=0x5dc) addr:0x020b0b3c
-dScGameOver_c_classInit kind:function(arm,size=0x64) addr:0x020b1118
+_Z23dScGameOver_c_classInitv kind:function(arm,size=0x64) addr:0x020b1118
 sTitleLevelEntries kind:data(any) addr:0x020b117c
 data_ov003_020b1180 kind:data(any) addr:0x020b1180
 data_ov003_020b1181 kind:data(any) addr:0x020b1181

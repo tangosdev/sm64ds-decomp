@@ -3,7 +3,7 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx.h"
 
-extern "C" void MenuGfx_InitMainEngine(void) {
+void MenuGfx_InitMainEngine(void) {
     GX_SetBankForTex(GX_VRAM_TEX_01_AB);
     GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_0_F);
     GX_SetBankForOBJ(GX_VRAM_OBJ_16_G);

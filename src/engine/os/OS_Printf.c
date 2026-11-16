@@ -50,7 +50,7 @@ void string_fill_char(printfStr *dest, s8 value, int count) {
         return;
 
     toWrite = dest->spaceLeft;
-    if (toWrite > (u32)count)
+    if (toWrite > count)
         toWrite = count;
 
     for (written = 0; written < toWrite; written++)
@@ -68,7 +68,7 @@ void string_put_string(printfStr *dest, const char *src, int count) {
         return;
 
     toWrite = dest->spaceLeft;
-    if (toWrite > (u32)count)
+    if (toWrite > count)
         toWrite = count;
 
     for (written = 0; written < toWrite; written++)
@@ -81,7 +81,7 @@ void string_put_string(printfStr *dest, const char *src, int count) {
 /* The variable arguments start on the stack word after format, which is
  * how pret's file spells va_start. */
 int OS_SPrintf(char *buffer, const char *format, ...) {
-    void *args = (void *)((u32 *)((uintptr_t)&format & ~3) + 1);
+    void *args = ((u32 *)((uintptr_t)&format & ~3) + 1);
     return OS_VSPrintf(buffer, format, args);
 }
 
@@ -233,8 +233,6 @@ int OS_VSNPrintf(char *buffer, int bufsz, const char *fmt, int *args) {
                 }
                 {
                     s8 cc = *fmt;
-                    /* num/xhex/dflt gotos kept: they are the shared integer, hex and
-                       invalid-spec tails, and the case bodies sit in ROM order */
                     switch (cc) {
                     case 0x6f:
                         pf[1] = eight;
@@ -309,11 +307,11 @@ int OS_VSNPrintf(char *buffer, int bufsz, const char *fmt, int *args) {
                         break;
                     }
                     case 0x25:
-                        if (pct + 1 != fmt)
-                            goto dflt;
-                        fmt++;
-                        string_put_char(&str, cc);
-                        break;
+                        if (pct + 1 == fmt) {
+                            fmt++;
+                            string_put_char(&str, cc);
+                            break;
+                        }
                     default:
                     dflt:
                         string_put_string(&str, pct, fmt - pct);
@@ -390,9 +388,9 @@ int OS_VSNPrintf(char *buffer, int bufsz, const char *fmt, int *args) {
                         cnt = zero;
                         if (v != 0) {
                             do {
-                                int digit = (int)((u64)v % (u64)pf[1]);
+                                int digit = (v % (u64)pf[1]);
                                 int dch;
-                                v = (u64)v / (u64)pf[1];
+                                v = v / (u64)pf[1];
                                 if (digit < 0xa)
                                     dch = digit + 0x30;
                                 else

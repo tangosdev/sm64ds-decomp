@@ -46,7 +46,7 @@
  *
  * The callees' declarations keep their definitions' spellings (most are
  * still one-function files taking ints and char *), so the typed values
- * are cast where they are handed over. The functions keep C linkage.
+ * are cast where they are handed over.
  * FigureScene_SetScreenBlend's name is coined from its body (the file has
  * no struct of its own; FigureScene_ is coined from this banner); the
  * other three keep their address names for now.
@@ -57,8 +57,6 @@
 #include "Ov007Model.h"
 #include "dExtModel_c.h"
 #include "Ov007Figure.h"
-
-extern "C" {
 
 /* One sprite's corner-colour pair (BGR555): `outer` feeds cornerColors[0]
  * and [3], `inner` cornerColors[1] and [2]. */
@@ -76,21 +74,21 @@ extern void *data_ov007_020d7ee8[3][3];        /* [set]: animation data in the o
 extern void *data_ov007_02103348[3];           /* data_ov007_020ccc80[set], loaded */
 extern void *data_ov007_02103354[3];           /* data_ov007_020ccc68[figureIndex], loaded */
 
-extern void func_02044efc(void *bmd);
-extern void func_ov007_020b3edc(int idx);
-extern void *func_ov007_020b3f20(int idx);
+void func_02044efc(struct BMD_File *bmd);
+extern "C" void func_ov007_020b3edc(int idx);
+extern "C" void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020b7708(int idx, void *pos);
-extern void func_ov007_020bbf98(void *model, unsigned int lights);
+extern "C" void func_ov007_020bbf98(void *model, unsigned int lights);
 extern void func_ov007_020bc53c(Ov007Model *model);
-extern void func_ov007_020bc5fc(Ov007Model *model, void *files, int count);
-extern void func_ov007_020bc658(Ov007Model *model, void *files, int count);
-extern void func_ov007_020bc6b4(Ov007Model *model, void *files, int count);
-extern Ov007Model *func_ov007_020bc6d4(void *bmd, int flags);
+extern "C" void func_ov007_020bc5fc(Ov007Model *model, void *files, int count);
+extern "C" void func_ov007_020bc658(Ov007Model *model, void *files, int count);
+extern "C" void func_ov007_020bc6b4(Ov007Model *model, void *files, int count);
+extern "C" Ov007Model *func_ov007_020bc6d4(void *bmd, int flags);
 extern void func_ov007_020bea44(Ov007Figure *fig);
 extern Ov007Figure *func_ov007_020beaa0(int index, int figureIndex);
-extern unsigned short func_ov007_020c3be0(int t, int a, int b);
+extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
 
-void func_ov007_020b283c(void);
+extern "C" void func_ov007_020b283c(void);
 
 /* Loads figure figureIndex's model at the given stroke stage and returns
  * its model record: the model file, the two sets of three animation files
@@ -115,7 +113,7 @@ Ov007Model *func_ov007_020b2bd4(int figureIndex, int stage) {
         data_ov007_02103348[i] = func_ov007_020b3f20(setFiles[i]);
         data_ov007_02103354[i] = func_ov007_020b3f20(figureFiles[i]);
     }
-    func_02044efc(file);
+    func_02044efc((struct BMD_File *)file);
     model = func_ov007_020bc6d4(file, 6);
     func_ov007_020bc6b4(model, data_ov007_02103348, 3);
     func_ov007_020bc5fc(model, data_ov007_02103354, 3);
@@ -130,7 +128,7 @@ Ov007Model *func_ov007_020b2bd4(int figureIndex, int stage) {
  * sets modelReady. The three quads cover the screen at 256 x 256 pixels on
  * camera 1, each a little nearer than the last: [0] a corner-colour fill,
  * [1] textures[9] tiled four times across, [2] plain white. */
-void func_ov007_020b2998(void) {
+extern "C" void func_ov007_020b2998(void) {
     int i;
     Ov007Sprite *sprite;
     Vector3 pos;
@@ -148,7 +146,7 @@ void func_ov007_020b2998(void) {
         sprite = WORK->screenSprites[i];
         sprite->screenX = 0x80000;
         sprite->screenY = 0x60000;
-        sprite->width = sprite->height = 0x100;
+        sprite->width = sprite->height = 256;
         sprite->cornerColors[0] = sprite->cornerColors[3] = 0;
         sprite->cornerColors[1] = sprite->cornerColors[2] = 0;
         switch (i) {
@@ -235,7 +233,7 @@ static inline int MulFx(int a, int b) {
  * data_ov007_020ccc50 (t = 0) to data_ov007_020ccc5c (t = 0x1000), and
  * fades [1]'s alpha along a curve: 31 (of 31) at either end, 16 at
  * t = 0x800. */
-void FigureScene_SetScreenBlend(int t) {
+extern "C" void FigureScene_SetScreenBlend(int t) {
     int i;
     Ov007Sprite *sprite;
     int falling = 0x1000 - (t - 0x800) * 2;
@@ -254,5 +252,4 @@ void FigureScene_SetScreenBlend(int t) {
             sprite->alpha = (0x1000 - curve) * 0xf + 0x10000;
         }
     }
-}
 }

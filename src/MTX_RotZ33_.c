@@ -16,6 +16,6 @@ asm void MTX_RotZ33_(int *m, int s, int c) {
     str r3, [r0, #0]
     str r3, [r0, #4]
     str r3, [r0, #8]
-    str r1, [r0, #12]
+    str r1, [r0, #0xc]
     bx lr
 }

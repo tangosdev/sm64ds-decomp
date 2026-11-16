@@ -117,7 +117,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "daKpa3Bg_c_classInit",
+      "symbol": "_Z20daKpa3Bg_c_classInitv",
       "address": "0x02118408",
       "size": "0x00000030",
       "legacy_source": "src/d_a_kpa3_bg.c",
@@ -995,28 +995,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN18Kpa3BgModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN18Kpa3BgModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
     },
     {
       "symbol": "_ZN22Kpa3BgCollisionFilePtrC1Ej",
-      "canonical_symbol": "func_02017b4c",
+      "canonical_symbol": "_Z13func_02017b4cPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN22Kpa3BgCollisionFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
@@ -1180,7 +1180,7 @@
       "source": "0x0211a010",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1200,7 +1200,7 @@
       "source": "0x0211a02c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1220,7 +1220,7 @@
       "source": "0x0211a048",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1240,7 +1240,7 @@
       "source": "0x0211a064",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1260,7 +1260,7 @@
       "source": "0x0211a080",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1280,7 +1280,7 @@
       "source": "0x0211a09c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1300,7 +1300,7 @@
       "source": "0x0211a0b8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1320,7 +1320,7 @@
       "source": "0x0211a0d4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1340,7 +1340,7 @@
       "source": "0x0211a0f0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1360,7 +1360,7 @@
       "source": "0x0211a10c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1380,7 +1380,7 @@
       "source": "0x0211a128",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1400,7 +1400,7 @@
       "source": "0x0211a144",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1420,7 +1420,7 @@
       "source": "0x0211a160",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1440,7 +1440,7 @@
       "source": "0x0211a17c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1460,7 +1460,7 @@
       "source": "0x0211a198",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1480,7 +1480,7 @@
       "source": "0x0211a1b4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1500,7 +1500,7 @@
       "source": "0x0211a1d0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1520,7 +1520,7 @@
       "source": "0x0211a1ec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1540,7 +1540,7 @@
       "source": "0x0211a208",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1560,7 +1560,7 @@
       "source": "0x0211a224",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1590,7 +1590,7 @@
       "source": "0x0211a28c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1800,7 +1800,7 @@
       "source": "0x0211a308",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"
@@ -2078,119 +2078,119 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@592",
+      "from": "@589",
       "to": "@470",
-      "evidence": "compiler-local destructor-registration node at 0x0211b0bc; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @676 to @671 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @667 to @598 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @667 to @666 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@593",
-      "to": "@471",
-      "evidence": "compiler-local destructor-registration node at 0x0211b0c8; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @677 to @672 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @668 to @599 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @668 to @667 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@579",
-      "to": "@457",
-      "evidence": "compiler-local destructor-registration node at 0x0211b0d4; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @663 to @658 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @654 to @585 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @654 to @653 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@594",
-      "to": "@472",
-      "evidence": "compiler-local destructor-registration node at 0x0211b0e0; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @678 to @673 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @669 to @600 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @669 to @668 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@581",
-      "to": "@459",
-      "evidence": "compiler-local destructor-registration node at 0x0211b0ec; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @665 to @660 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @656 to @587 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @656 to @655 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@582",
-      "to": "@460",
-      "evidence": "compiler-local destructor-registration node at 0x0211b0f8; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @666 to @661 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @657 to @588 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @657 to @656 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@595",
-      "to": "@473",
-      "evidence": "compiler-local destructor-registration node at 0x0211b104; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @679 to @674 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @670 to @601 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @670 to @669 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@583",
-      "to": "@461",
-      "evidence": "compiler-local destructor-registration node at 0x0211b110; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @667 to @662 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @658 to @589 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @658 to @657 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@580",
-      "to": "@458",
-      "evidence": "compiler-local destructor-registration node at 0x0211b11c; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @664 to @659 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @655 to @586 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @655 to @654 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@596",
-      "to": "@474",
-      "evidence": "compiler-local destructor-registration node at 0x0211b128; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @680 to @675 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @671 to @602 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @671 to @670 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@585",
-      "to": "@463",
-      "evidence": "compiler-local destructor-registration node at 0x0211b134; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @669 to @664 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @660 to @591 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @660 to @659 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@586",
-      "to": "@464",
-      "evidence": "compiler-local destructor-registration node at 0x0211b140; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @670 to @665 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @661 to @592 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @661 to @660 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@597",
-      "to": "@475",
-      "evidence": "compiler-local destructor-registration node at 0x0211b14c; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @681 to @676 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @672 to @603 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @672 to @671 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@587",
-      "to": "@465",
-      "evidence": "compiler-local destructor-registration node at 0x0211b158; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @671 to @666 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @662 to @593 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @662 to @661 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@588",
-      "to": "@466",
-      "evidence": "compiler-local destructor-registration node at 0x0211b164; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @672 to @667 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @663 to @594 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @663 to @662 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@584",
-      "to": "@462",
-      "evidence": "compiler-local destructor-registration node at 0x0211b170; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @668 to @663 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @659 to @590 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @659 to @658 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
-    },
-    {
-      "from": "@602",
-      "to": "@467",
-      "evidence": "compiler-local PMF descriptor at 0x0211a930; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals and the types.h Vector3 ctors advance mwcc's per-TU label counter to @520, which is itself another module's pin (the daKpa_c.h include moves it on to @691); the descriptor is bound to this TU's swapped data pin at 0x0211a930 | Re-keyed from @686 to @681 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @677 to @608 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @677 to @676 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
+      "evidence": "compiler-local destructor-registration node at 0x0211b0bc; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @676 to @671 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @667 to @598 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @667 to @666 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @592 to @589 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@590",
-      "to": "@468",
-      "evidence": "compiler-local destructor-registration node at 0x0211b188; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @674 to @669 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @665 to @596 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @665 to @664 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
+      "to": "@471",
+      "evidence": "compiler-local destructor-registration node at 0x0211b0c8; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @677 to @672 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @668 to @599 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @668 to @667 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @593 to @590 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@576",
+      "to": "@457",
+      "evidence": "compiler-local destructor-registration node at 0x0211b0d4; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @663 to @658 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @654 to @585 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @654 to @653 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @579 to @576 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@591",
-      "to": "@469",
-      "evidence": "compiler-local destructor-registration node at 0x0211b194; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @675 to @670 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @666 to @597 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @666 to @665 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
+      "to": "@472",
+      "evidence": "compiler-local destructor-registration node at 0x0211b0e0; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @678 to @673 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @669 to @600 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @669 to @668 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @594 to @591 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@578",
+      "to": "@459",
+      "evidence": "compiler-local destructor-registration node at 0x0211b0ec; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @665 to @660 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @656 to @587 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @656 to @655 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @581 to @578 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@579",
+      "to": "@460",
+      "evidence": "compiler-local destructor-registration node at 0x0211b0f8; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @666 to @661 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @657 to @588 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @657 to @656 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @582 to @579 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@592",
+      "to": "@473",
+      "evidence": "compiler-local destructor-registration node at 0x0211b104; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @679 to @674 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @670 to @601 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @670 to @669 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @595 to @592 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@580",
+      "to": "@461",
+      "evidence": "compiler-local destructor-registration node at 0x0211b110; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @667 to @662 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @658 to @589 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @658 to @657 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @583 to @580 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@577",
+      "to": "@458",
+      "evidence": "compiler-local destructor-registration node at 0x0211b11c; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @664 to @659 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @655 to @586 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @655 to @654 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @580 to @577 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@593",
+      "to": "@474",
+      "evidence": "compiler-local destructor-registration node at 0x0211b128; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @680 to @675 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @671 to @602 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @671 to @670 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @596 to @593 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@582",
+      "to": "@463",
+      "evidence": "compiler-local destructor-registration node at 0x0211b134; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @669 to @664 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @660 to @591 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @660 to @659 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @585 to @582 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@583",
+      "to": "@464",
+      "evidence": "compiler-local destructor-registration node at 0x0211b140; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @670 to @665 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @661 to @592 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @661 to @660 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @586 to @583 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@594",
+      "to": "@475",
+      "evidence": "compiler-local destructor-registration node at 0x0211b14c; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @681 to @676 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @672 to @603 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @672 to @671 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @597 to @594 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@584",
+      "to": "@465",
+      "evidence": "compiler-local destructor-registration node at 0x0211b158; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @671 to @666 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @662 to @593 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @662 to @661 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @587 to @584 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@585",
+      "to": "@466",
+      "evidence": "compiler-local destructor-registration node at 0x0211b164; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @672 to @667 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @663 to @594 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @663 to @662 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @588 to @585 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@581",
+      "to": "@462",
+      "evidence": "compiler-local destructor-registration node at 0x0211b170; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @668 to @663 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @659 to @590 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @659 to @658 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @584 to @581 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@599",
+      "to": "@467",
+      "evidence": "compiler-local PMF descriptor at 0x0211a930; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals and the types.h Vector3 ctors advance mwcc's per-TU label counter to @520, which is itself another module's pin (the daKpa_c.h include moves it on to @691); the descriptor is bound to this TU's swapped data pin at 0x0211a930 | Re-keyed from @686 to @681 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @677 to @608 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @677 to @676 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @602 to @599 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@587",
+      "to": "@468",
+      "evidence": "compiler-local destructor-registration node at 0x0211b188; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @674 to @669 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @665 to @596 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @665 to @664 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @590 to @587 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@588",
+      "to": "@469",
+      "evidence": "compiler-local destructor-registration node at 0x0211b194; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @675 to @670 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @666 to @597 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @666 to @665 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @591 to @588 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@575",
       "to": "@456",
-      "evidence": "compiler-local destructor-registration node at 0x0211b1a0; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @662 to @657 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @653 to @584 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @653 to @652 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
+      "evidence": "compiler-local destructor-registration node at 0x0211b1a0; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @662 to @657 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @653 to @584 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @653 to @652 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @578 to @575 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@598",
+      "from": "@595",
       "to": "@477",
-      "evidence": "compiler-local pointer-to-member descriptor at 0x0211a938; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @682 to @677 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @673 to @604 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @673 to @672 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
+      "evidence": "compiler-local pointer-to-member descriptor at 0x0211a938; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @682 to @677 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @673 to @604 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @673 to @672 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @598 to @595 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@600",
+      "from": "@597",
       "to": "@479",
-      "evidence": "compiler-local pointer-to-member descriptor at 0x0211a940; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @684 to @679 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @675 to @606 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @675 to @674 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
+      "evidence": "compiler-local pointer-to-member descriptor at 0x0211a940; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @684 to @679 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @675 to @606 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @675 to @674 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @600 to @597 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@589",
+      "from": "@586",
       "to": "@506",
-      "evidence": "compiler-local destructor-registration node at 0x0211b17c; including daKpa_c.h (StateCheck reads Bowser's fields by name) advances mwcc's label counter by a further 171, so the compiled name maps back to the configured one | Re-keyed from @673 to @668 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @664 to @595 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @664 to @663 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object)."
+      "evidence": "compiler-local destructor-registration node at 0x0211b17c; including daKpa_c.h (StateCheck reads Bowser's fields by name) advances mwcc's label counter by a further 171, so the compiled name maps back to the configured one | Re-keyed from @673 to @668 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821). Re-keyed from @664 to @595 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @664 to @663 by address (same section, size and order; uniform -1 shift) when StateFall became a C++ member: the kpaCall* bridges and the hold_d_a_kpa3_bg counter declaration were retired, MulVec3Mat4x3 got parameter names, and the destructor moved ahead of the deferred functions. Re-keyed down by 5 when func_ov060_021183cc / 021183f4 became daKpa3Bg_c::OnStoodOn / StoodOnCallback: their two named-parameter local externs left the TU and the handler lost its named self (measured from the compiled object). Re-keyed from @589 to @586 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
     }
   ]
 }

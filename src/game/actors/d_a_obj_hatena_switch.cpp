@@ -94,7 +94,7 @@ extern u8 data_0209d660;
  * Every instruction the cartridge has here falls out of the one `new`.
  * Reconstructed spelling from ROM RTTI plus later EAD lineage; historical
  * alias QuestionSwitch_Spawn. */
-extern "C" daObjHatenaSwitch_c *daObjHatenaSwitch_c_classInit() {
+daObjHatenaSwitch_c *daObjHatenaSwitch_c_classInit() {
     return new daObjHatenaSwitch_c();
 }
 
@@ -124,22 +124,20 @@ void daObjHatenaSwitch_c::HandleClsn(dActor_c &other) {
 }
 
 s32 daObjHatenaSwitch_c::InitResources() {
-    void *file;
+    BMD_File *model = dExtSimpleModel_c::LoadFile(data_ov002_0210dd60);
+    mAnmModel.SetFile(model, 1, -1);
 
-    file = dExtSimpleModel_c::LoadFile(data_ov002_0210dd60);
-    mAnmModel.SetFile((BMD_File *)file, 1, -1);
-
-    file = dExtFrameCtrl_c::LoadFile(data_ov002_0210dd68);
-    mAnmModel.SetAnim((BCA_File *)file, 0, 0x1000, 0);
+    BCA_File *anim = dExtFrameCtrl_c::LoadFile(data_ov002_0210dd68);
+    mAnmModel.SetAnim(anim, 0, 0x1000, 0);
     mAnmModel.SetFlags(0x40000000);
     mAnmModel.speed = 0x1000;
     UpdateModelTransform();
 
-    file = dBgW_Kc::LoadFile(data_ov002_0210dd58);
-    mStaticMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngleY, data_ov002_0210d8b4);
+    KCL_File *staticClsn = dBgW_Kc::LoadFile(data_ov002_0210dd58);
+    mStaticMeshCollider.SetFile(staticClsn, mClsnMat, 0x199, mAngleY, data_ov002_0210d8b4);
 
-    file = dBgW_Kc::LoadFile(data_ov002_0210dd50);
-    mMovingMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngleY, data_ov002_0210d774);
+    KCL_File *movingClsn = dBgW_Kc::LoadFile(data_ov002_0210dd50);
+    mMovingMeshCollider.SetFile(movingClsn, mClsnMat, 0x199, mAngleY, data_ov002_0210d774);
 
     mStaticMeshCollider.SetStoodOnCallback(&daObjHatenaSwitch_c::AfterClsnCallback);
 
@@ -170,7 +168,7 @@ s32 daObjHatenaSwitch_c::Behavior() {
             switch (player->GetTalkState()) {
             case 0:
                 Sound::PlaySub(0x20, 0x14, 0x7f, 0x6b000, false);
-                mSoundDelay = 0x4b;
+                mSoundDelay = 75;
                 if (mAnmModel.Finished() != 0) {
                     Message::PrepareTalk();
                     player->ShowMessage(*this, 0x183, 0, 1, 2);

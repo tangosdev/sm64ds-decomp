@@ -87,14 +87,14 @@ Vector3 data_ov009_02113de0[7] = {
 /* -------------------------------------------------------------------------- */
 /* Reconstructed source-style name; exact original SM64DS spelling is not
  * preserved. Historical alias: CastleWater_Spawn. */
-extern "C" daObjMcWater_c *daObjMcWater_c_classInit() {
+daObjMcWater_c *daObjMcWater_c_classInit() {
     return new daObjMcWater_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 int daObjMcWater_c::InitResources() {
-    int b = (int)(gGameMode == 1);
+    int b = (gGameMode == 1);
     if (b == 0) {
         if (data_0209caa0.file.flags2 & 0x80000) {
             mPosY = -0x2bc000;
@@ -153,7 +153,7 @@ int daObjMcWater_c::CleanupResources() {
 void daObjMcWater_c::SpawnWaterfalls() {
     Vector3 *vec;
     int i;
-    int b = (int)(gGameMode == 1);
+    int b = (gGameMode == 1);
     if (b != 0) {
         if (mPosX > 0)
             return;

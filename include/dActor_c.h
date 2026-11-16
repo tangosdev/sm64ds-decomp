@@ -47,7 +47,6 @@ struct dCc_c;
    math/Matrix.h, which this header deliberately does not pull in. */
 struct Matrix4x3;
 struct dExtShadowModel_c;
-#include "math/Fix12.h"
 
 /* data_020a0eac is the heap every actor is allocated from. operator delete
    passes it to Memory::Deallocate, declared in Memory.h via fBase_c.h. */
@@ -116,8 +115,8 @@ struct dActor_c : dBase_c {
         Vector3_16 mPrevAngle; /* 0x092 */
     };
     s32 mHorzSpeed;         /* 0x098 */
-    s32 mVertAccel;         /* 0x09c -- fix12, negative (gravity) */
-    s32 mTerminalVelocity;  /* 0x0a0 -- fix12, negative */
+    s32 mVertAccel;         /* 0x09c -- fx32, negative (gravity) */
+    s32 mTerminalVelocity;  /* 0x0a0 -- fx32, negative */
     /* mSpeedX, mVertSpeed and mSpeedZ are the velocity vector:
        UpdatePosWithOnlySpeed adds it to mPos, and UpdatePosWithHorzSpeedAndAng
        derives the x/z words from mHorzSpeed along the heading mPrevAngleY. */
@@ -162,6 +161,12 @@ struct dActor_c : dBase_c {
     s8  mAreaId;            /* 0x0cc -- negative means "not area-bound" */
     u8  pad_0cd[0x1];
     s16 mDeathTableID;      /* 0x0ce -- index into the already-killed bitmap */
+    /* The player holding this actor in its mouth (Yoshi) or hands, or null.
+       daPly_c::func_ov002_020d7030 stores itself here through a plain
+       dActor_c pointer when it takes any actor into its mouth, and every
+       actor class has the word at 0x0d0: a subclass with no fields of its
+       own is 0xd4 bytes (StarCamera_Spawn allocates exactly that). */
+    daPly_c *mEatingPlayer; /* 0x0d0 */
 
     /* --- vtable. Declared first, see the header comment. Overrides slots
            16 (D1) and 17 (D0); position here does not affect that. --- */
@@ -231,22 +236,19 @@ struct dActor_c : dBase_c {
     daPly_c *FarthestPlayer();
     s32     DistToCPlayer();
 
-    /* maxDist is a whole-unit distance, not a fix12 one: it is shifted into
+    /* maxDist is a whole-unit distance, not an fx32 one: it is shifted into
        20.12 at the comparison (`cmp r0, r4, lsl #12`). */
     s16  HorzAngleToCPlayer();
     s16  HorzAngleToFPlayer();
     s16  HorzAngleToCPlayerOrAng();
-    /* Both took a by-value Fix12<int> in their old mangled names; measured
-       2026-10-23, the honest parameter is the scalar Fix12i and both reproduce
-       as real methods (0x02010e08/0x24 and 0x0200f70c/0x54).
-       notes/mwccarm-codegen.md 6az. Parameters are unnamed on purpose: a
+    /* 0x02010e08/0x24 and 0x0200f70c/0x54. Parameters are unnamed on purpose: a
        named class-scope parameter consumes an @NNN number in every consumer.
        SetRanges(clipOffsetY, clipRadius, clipDistance, farDistance);
        IsTooFarAwayFromPlayer(threshold). */
-    void SetRanges(Fix12i, Fix12i, Fix12i, Fix12i);
-    int IsTooFarAwayFromPlayer(Fix12i);
-    /* Intensity is a 0x1000-scaled Fix12i, not a by-value Fix12<int>. */
-    void Earthquake(const Vector3 &, Fix12i);
+    void SetRanges(fx32, fx32, fx32, fx32);
+    int IsTooFarAwayFromPlayer(fx32);
+    /* Intensity is a 0x1000-scaled fx32. */
+    void Earthquake(const Vector3 &, fx32);
 
     bool IsPlayerInRange(s32 maxDist);
     bool IsPlayerInRange(const Vector3 &pos, s32 maxDist);
@@ -258,6 +260,8 @@ struct dActor_c : dBase_c {
     void UpdatePosWithHorzSpeedAndAng();
     int BumpedUnderneathByPlayer(daPly_c &);
     int  GetSubtraction(short a, short b);
+    /* The ground normal projected onto the heading, against its y. */
+    s16 func_02010844(Vector3 *, s16);
 
     /* Rebuilds the scratch matrix at 0x020a0e68 from the carrying player's hand
        transform, writes this actor's own position out of it, and returns it. */
@@ -276,6 +280,8 @@ struct dActor_c : dBase_c {
     dActor_c *FindExplosionActor(dCc_c &); /* hitFlags 0x4000 */
     void MakeVanishLuigiWork(dCc_c &);
     int JumpedOnByPlayer(dCc_c &, daPly_c &);
+    /* The landing thump's sound: 0xa for 0x380, 9 for 0x40. */
+    void func_020105cc(u32);
     void UpdatePos(dCc_c *);
     void UpdatePosWithOnlySpeed(dCc_c *);
     /* MakeVanishLuigiWork again, taking the cylinder by pointer; the ROM keeps
@@ -306,9 +312,15 @@ struct dActor_c : dBase_c {
     void HugeLandingDust(bool doRaycast);
     void HugeLandingDustAt(Vector3 &, bool doRaycast);     /* particle 0xb2 */
     void LandingDustAt(Vector3 &pos, bool doRaycast);      /* particle 0xb1 */
+    /* The boss landing-dust worker and its no-argument wrapper. */
+    void *func_0200fa04(Vector3 *, int);
+    void func_0200fa8c(int);
     /* func_0200fc44 (particle 0xb3) at this actor's position. The flag stays
        int: every caller passes a constant and the body forwards it unmasked. */
     int func_0200fccc(int);
+    /* The worker behind func_0200fccc; pos is moved onto the ground and raised
+       25.0. The flag stays int for the same reason. */
+    int func_0200fc44(Vector3 *, int);
 
     /* The death table: actors already killed, so they do not respawn. All three
        key off mDeathTableID. */
@@ -356,27 +368,18 @@ struct dActor_c : dBase_c {
     static dActor_c *Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
                         const Vector3_16 *rot, s8 areaID, s16 deathTableID);
 
-    /* MEASURED 2026-10-26: the five Fix12 declarations below -- SpawnFireball,
-       DropShadowScaleXYZ, ReflectAngle, SpawnCoins, DropShadowRadHeight -- are
-       real methods now, bytes unchanged (IsPlayerInRange was already scalar).
-       They used to be "declared for callers only" on the rule that a mangled
-       name carrying a by-value class parameter can never be DEFINED as a
-       method, because CW homes such a parameter to the stack (+0x14). The
-       by-value class was never in the ROM -- it was our own spelling of a
-       20.12 scalar -- so with Fix12i the rule does not apply. The parameter
-       NAMES here are load-bearing: a class-scope named parameter consumes an
-       @NNN number in every consumer, so they must not be dropped.
-       notes/mwccarm-codegen.md 6az. */
+    /* The parameter NAMES here are load-bearing: a class-scope named parameter
+       consumes an @NNN number in every consumer, so they must not be dropped. */
     /* Returns the spawned ball; see the definition. */
-    dActor_c *SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix12i horzSpeed,
-                            Fix12i targetSpeed, u32 param1);
-    bool IsPlayerInRange(Fix12i posX, Fix12i posY, Fix12i posZ, s32 maxDist);
-    void DropShadowScaleXYZ(dExtShadowModel_c &, Matrix4x3 &matrix, Fix12i scaleX, Fix12i scaleY,
-                            Fix12i scaleZ, u8 opacity);
-    s16 ReflectAngle(Fix12i normalX, Fix12i normalZ, s16 angToReflect);
+    dActor_c *SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, fx32 horzSpeed,
+                            fx32 targetSpeed, u32 param1);
+    bool IsPlayerInRange(fx32 posX, fx32 posY, fx32 posZ, s32 maxDist);
+    void DropShadowScaleXYZ(dExtShadowModel_c &, Matrix4x3 &matrix, fx32 scaleX, fx32 scaleY,
+                            fx32 scaleZ, u8 opacity);
+    s16 ReflectAngle(fx32 normalX, fx32 normalZ, s16 angToReflect);
     /* count is signed; see the branch evidence at the definition. */
-    void SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angle);
-    void DropShadowRadHeight(dExtShadowModel_c &, Matrix4x3 &matrix, Fix12i radius, Fix12i depth,
+    void SpawnCoins(const Vector3 &pos, s32 count, fx32 spread, s16 angle);
+    void DropShadowRadHeight(dExtShadowModel_c &, Matrix4x3 &matrix, fx32 radius, fx32 depth,
                              u8 opacity);
 
     /* INLINE, AND ON THIS CLASS RATHER THAN A BASE -- both are load-bearing.
@@ -468,18 +471,21 @@ struct dActor_c {
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x1];
     s16 mDeathTableID;      /* 0x0ce */
+    struct daPly_c *mEatingPlayer; /* 0x0d0 */
 };
 
 #endif /* __cplusplus */
 
-/* Outside the split, so the C and C++ spellings cannot drift apart. 0xd0 is what
-   this header's own field list computes -- it is not independent ROM evidence --
-   but it holds the two spellings to each other, catches a field retyped without
-   shrinking the pad after it, and gives tools/check_header_offsets.py the base
-   size it refuses to guess when checking include/daPly_c.h. */
+/* Outside the split, so the C and C++ spellings cannot drift apart. 0xd4 is
+   backed by the ROM: StarCamera_Spawn allocates 0xd4 bytes for a bare
+   dActor_c, and every subclass without fields of its own is 0xd4 too. The
+   assertion also holds the two spellings to each other, catches a field
+   retyped without shrinking the pad after it, and gives
+   tools/check_header_offsets.py the base size it refuses to guess when
+   checking include/daPly_c.h. */
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char dActor_c_size_must_be_0xd0[sizeof(struct dActor_c) == 0xd0 ? 1 : -1];
+typedef char dActor_c_size_must_be_0xd4[sizeof(struct dActor_c) == 0xd4 ? 1 : -1];
 #endif
 
 /* A bit of the actor update mask (gNextActorUpdateMask, copied each frame to

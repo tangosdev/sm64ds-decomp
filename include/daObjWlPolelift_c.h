@@ -25,8 +25,8 @@
  *   dCcAcPos_c   at 0x124 (sizeof 0x40, ends 0x164)
  *   PathPtr                     at 0x164 (sizeof 0x08, ends 0x16c)
  *   dExtShadowModel_c                 at 0x188 (sizeof 0x28, ends 0x1b0)
- * dActor_c's own fields run to 0xd0 (dActor_c.h); the dExtSimpleModel_c sub-object
- * starts 4 bytes later at 0xd4.
+ * dActor_c's own fields run to 0xd4 (dActor_c.h), where the dExtSimpleModel_c
+ * sub-object starts.
  *
  * The destructor (func_ov026_021111a0 / _021111e0) tears down the same
  * three sub-objects that have non-trivial destructors -- dExtShadowModel_c,
@@ -34,13 +34,13 @@
  * destructor call at all, consistent with it being POD).
  *
  * MEMBERS BETWEEN THE SUB-OBJECTS, read from InitResources/Behavior/Render
- * (func_ov026_02111598/_02111330/_02111308) -- everything else in 0xd0..0x1e4
+ * (func_ov026_02111598/_02111330/_02111308) -- everything else in 0xd4..0x1e4
  * not covered by a sub-object above is left as opaque padding, pending a
  * members-focused pass:
  *   0x16c  s32  numNodes    -- PathPtr::NumNodes(), cached once by InitResources
  *   0x170  s32  curNodeIdx  -- current path-node index; Behavior's state
  *   0x180  s32  moveSpeed   -- +/-1 step applied to curNodeIdx each advance
- *   0x184  s16  bounceTimer -- DecIfAbove0_Short pauses movement while nonzero;
+ *   0x184  u16  bounceTimer -- DecIfAbove0_Short pauses movement while nonzero;
  *                              set to 0x3c when a non-looping path end is hit
  *   0x1b0  Matrix4x3 dropShadowMtx -- copy of the model's own matrix (0xf0),
  *                              fed to dActor_c::DropShadowScaleXYZ (0x30 bytes,
@@ -59,7 +59,6 @@
  * 0x021111a0..0x021116c8 linker run.
  */
 struct daObjWlPolelift_c : dActor_c {
-    u8   pad_0d0[0x4];              /* 0x0d0 -- unobserved */
     dExtSimpleModel_c model;        /* 0x0d4 */
     dCcAcPos_c clsn;  /* 0x124 */
     PathPtr path;                    /* 0x164 */
@@ -67,7 +66,7 @@ struct daObjWlPolelift_c : dActor_c {
     s32  curNodeIdx;                 /* 0x170 */
     u8   pad_174[0xc];               /* 0x174 -- unobserved */
     s32  moveSpeed;                  /* 0x180 */
-    s16  bounceTimer;                /* 0x184 */
+    u16 bounceTimer;                 /* 0x184 */
     u8   pad_186[0x2];               /* 0x186 -- unobserved */
     dExtShadowModel_c shadow;              /* 0x188 */
     struct Matrix4x3 dropShadowMtx;  /* 0x1b0 */

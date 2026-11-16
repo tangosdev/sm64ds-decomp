@@ -21,11 +21,12 @@
 
 #pragma defer_codegen off
 
-extern "C" {
 extern void *data_020a4b68;
 extern int data_02099f24;
 extern const int data_02082178[6];
-extern void *func_02043fdc(void *list);
+namespace Absorb02043fdc {
+struct ProcessListDescriptor;
+void *func_02043fdc(ProcessListDescriptor *list);
 }
 
 /* If this node is the one currently executing, clear that pointer. */
@@ -39,29 +40,18 @@ fLiNdBa_c::~fLiNdBa_c() {
         data_020a4b68 = 0;
 }
 
-/* func_020441cc's own view of a tree node and the descriptor that names the
- * callback. */
+/* The process tree's sentinel: the root scene node, then the callback
+ * func_020441cc runs on each node's owner. */
 namespace ProcessTree {
-class Obj {
-public:
-    int dummy;
-};
-typedef void (Obj::*PMF)();
-
-struct Node {
-    char pad[0x10];
-    Obj *obj; // 0x10
-};
-
 struct Thing {
-    Node *head;   // 0
-    PMF callback; // 4
+    fBase_c::SceneNode *head;          // 0
+    fBase_c::ProcessFunction callback; // 4
 
-    Thing(PMF &p) {
+    Thing(fBase_c::ProcessFunction &p) {
         callback = p;
         head = 0;
     }
-    void *func_020441cc();
+    int func_020441cc();
 };
 }
 
@@ -71,18 +61,15 @@ struct Thing {
  * copying them is not a constant expression, so mwcc emits __sinit_fListNode.cpp
  * (was the handwritten __sinit_02075154) in this definition order. No destructor
  * is registered. ActorBase.cpp still reaches the heads by their address names. */
-struct fBase_c;
-typedef int (fBase_c::*ProcessCallback)();
-
-extern ProcessTree::PMF data_02099f60;
-extern ProcessCallback data_02099f70, data_02099f48, data_02099f68, data_02099f50;
+extern fBase_c::ProcessFunction data_02099f60;
+extern fBase_c::ProcessFunction data_02099f70, data_02099f48, data_02099f68, data_02099f50;
 
 struct ProcessList {
     fLiNdBaPr_c *head;
     fLiNdBaPr_c *tail;
-    ProcessCallback callback;
+    fBase_c::ProcessFunction callback;
 
-    ProcessList(ProcessCallback &p) {
+    ProcessList(fBase_c::ProcessFunction &p) {
         head = 0;
         tail = 0;
         callback = p;
@@ -97,15 +84,15 @@ ProcessList data_020a4ba8(data_02099f50);
 
 /* One frame: walk each process list, recording the phase number in
  * data_02099f24 while it runs. */
-extern "C" void func_02044120(void) {
+void func_02044120(void) {
     data_02099f24 = 4;
-    func_02043fdc(&data_020a4ba8);
+    Absorb02043fdc::func_02043fdc((Absorb02043fdc::ProcessListDescriptor *)&data_020a4ba8);
     data_02099f24 = 2;
-    func_02043fdc(&data_020a4b88);
+    Absorb02043fdc::func_02043fdc((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b88);
     data_02099f24 = 3;
-    func_02043fdc(&data_020a4b78);
+    Absorb02043fdc::func_02043fdc((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b78);
     data_02099f24 = 5;
-    func_02043fdc(&data_020a4b98);
+    Absorb02043fdc::func_02043fdc((Absorb02043fdc::ProcessListDescriptor *)&data_020a4b98);
     data_02099f24 = 1;
     data_020a4b6c.func_020441cc();
     data_02099f24 = 0;
@@ -113,28 +100,27 @@ extern "C" void func_02044120(void) {
 
 /* Table entry for frame-loop phase i (data_02099f24). The crash screen
  * prints it. */
-extern "C" int func_020441bc(int i) {
+int func_020441bc(int i) {
     return data_02082178[i];
 }
 
-namespace ProcessTree {
-/* local extern: ActorBase_SceneNode.cpp defines it; no header declares it.
-   Node is this file's view of the same fBase_c::SceneNode. */
-extern "C" fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node);
+/* ActorBase_SceneNode.cpp defines it at file scope. */
+fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node);
 
+namespace ProcessTree {
 /* Walk a tree list, calling the descriptor's callback on each owner.
  * Unlike func_02043fdc, it does not set data_020a4b68. */
-void *Thing::func_020441cc() {
-    Node *node;
-    if (this->callback == 0)
-        return (void *)1;
-    node = this->head;
+int Thing::func_020441cc() {
+    fBase_c::SceneNode *node;
+    if (callback == 0)
+        return 1;
+    node = head;
     while (node) {
-        Node *next = (Node *)func_0203b394((fBase_c::SceneNode *)node);
-        (node->obj->*this->callback)();
+        fBase_c::SceneNode *next = func_0203b394(node);
+        (node->owner->*callback)();
         node = next;
     }
-    return (void *)1;
+    return 1;
 }
 }
 
@@ -160,7 +146,7 @@ struct LifecycleSequence {
     s16 f12;    // 0x12
 };
 
-extern "C" int func_02044284(LifecycleSequence *self, int flag);
+int func_02044284(LifecycleSequence *self, int flag);
 
 /* Step a pending sequence once. Returns 0 while it is still pending. */
 extern "C" int func_0204424c(char *c) {
@@ -174,7 +160,7 @@ extern "C" int func_0204424c(char *c) {
 
 /* Run table entries from idx while each returns state 2. With flag == 0,
  * run at most one. */
-extern "C" int func_02044284(LifecycleSequence *self, int flag) {
+int func_02044284(LifecycleSequence *self, int flag) {
     void **arr = self->arr;
     s16 i;
 
@@ -198,7 +184,7 @@ extern "C" int func_02044284(LifecycleSequence *self, int flag) {
 
 /* Drain a started sequence: call slot 3 on each entry already run, newest
  * first. */
-extern "C" void func_02044334(LifecycleSequence *self) {
+void func_02044334(LifecycleSequence *self) {
     if (self->arr == 0)
         return;
     if (self->state == 0)

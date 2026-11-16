@@ -72,7 +72,7 @@ extern RcDorifuCollisionFilePtr data_ov036_02114114;
 extern RcDorifuModelFilePtr data_ov036_0211410c;
 extern RcDorifuCollisionFilePtr data_ov036_021140dc;
 
-extern "C" daObjRc_Dorifu_c *daObjRc_Dorifu_c_classInit() {
+daObjRc_Dorifu_c *daObjRc_Dorifu_c_classInit() {
     return new daObjRc_Dorifu_c();
 }
 

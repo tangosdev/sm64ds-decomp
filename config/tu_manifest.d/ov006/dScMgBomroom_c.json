@@ -108,7 +108,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "Bomroom_DrawScore",
+      "symbol": "_Z17Bomroom_DrawScorev",
       "address": "0x020d5dfc",
       "size": "0x00000020",
       "legacy_source": "src/func_ov006_020d5dfc.cpp",
@@ -598,7 +598,7 @@
       "ordinal": 79
     },
     {
-      "symbol": "dScMgBomroom_c_classInit",
+      "symbol": "_Z24dScMgBomroom_c_classInitv",
       "address": "0x020d9574",
       "size": "0x00000030",
       "legacy_source": "src/d_s_mg_bomroom.cpp",

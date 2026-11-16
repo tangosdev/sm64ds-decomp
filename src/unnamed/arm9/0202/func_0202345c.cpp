@@ -6,17 +6,20 @@
    func_0203bc7c turns into data_020a0e44) asks the running scene to fade out
    and restart. dScene_c::BeforeBehavior runs the fade out with
    gSoftResetFader and then destroys the scene. */
-extern "C" {
 
 extern unsigned char data_0209b2fc;
 extern unsigned char gMgSaveDirty;
 extern void func_0202fd2c(void);
 extern void Wipe_Reset(void);
 extern void func_02011c8c(void);
+extern "C" {
+
 extern int GetSoundMode(void);
 extern void SetSoundMode(int mode);
 extern void func_0203bc50(void);
 extern void func_0203bb14(void);
+}
+
 extern void ResetInput(void);
 extern unsigned char data_020a0e44;
 
@@ -43,7 +46,7 @@ dFader_c *gSoftResetFader;
    re-apply the current sound mode. dScene_c::BeforeBehavior calls it when
    the request lands on a scene whose actorID is 0; dScDSMT_c::InitResources
    calls it too. */
-void func_02023544(void) {
+extern "C" void func_02023544(void) {
     gSoftResetPending = 0;
     func_0202fd2c();
     data_0209b2fc = 0;
@@ -82,5 +85,4 @@ void func_0202345c(void) {
     if (!fader)
         return;
     fader->AdvanceFade();
-}
 }

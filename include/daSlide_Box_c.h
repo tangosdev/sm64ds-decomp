@@ -23,7 +23,7 @@ struct daSlide_Box_c : dBgActor_c {
     dActor_c *mShip;                    /* 0x320 -- actor 0x39, the upward ship */
     dBgCh_Actr mWithMeshClsn;           /* 0x324 */
     Vector3 mBasePos;                   /* 0x4e0 -- position where it grounded */
-    Fix12i mHorzPos;                    /* 0x4ec -- travel along the ship's tilt */
+    fx32 mHorzPos;                      /* 0x4ec -- travel along the ship's tilt */
     u32 mSoundID;                       /* 0x4f0 -- rolling Sound::PlayLong handle */
     u8 mState;                          /* 0x4f4 */
     u8 pad_4f5[0x3];

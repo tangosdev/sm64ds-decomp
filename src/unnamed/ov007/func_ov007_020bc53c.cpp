@@ -7,7 +7,7 @@ extern "C" void func_ov007_020c3d1c(void *p);
 /* Frees a model record: the four animation players go back through
    func_ov007_020c92a0, the buffers and the record through
    func_ov007_020c3d1c. */
-extern "C" void func_ov007_020bc53c(Ov007Model *m) {
+void func_ov007_020bc53c(Ov007Model *m) {
     if (m->boneAnim) {
         func_ov007_020c92a0(m->boneAnim);
         m->boneAnim = 0;

@@ -51,7 +51,7 @@ extern "C" {
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 }
 
-extern "C" daObjBk_Rotebar_c *daObjBk_Rotebar_c_classInit() {
+daObjBk_Rotebar_c *daObjBk_Rotebar_c_classInit() {
     return new daObjBk_Rotebar_c();
 }
 
@@ -65,7 +65,7 @@ s32 daObjBk_Rotebar_c::InitResources() {
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
-    mPauseTimer = 0x3c;
+    mPauseTimer = 60;
     return 1;
 }
 
@@ -75,7 +75,7 @@ s32 daObjBk_Rotebar_c::Behavior() {
         mAngleY = mPrevAngleY;
         mTurnSound = Sound::PlayLong(mTurnSound, 3, 0x88, mCamSpacePos, 0);
         if ((mPrevAngleY & 0x7fff) == 0)
-            mPauseTimer = 0x3c;
+            mPauseTimer = 60;
     }
 
     UpdateModelPosAndRotY();

@@ -58,7 +58,7 @@ extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 /* Reconstructed registry name; the class identity is backed by retail RTTI.
  * Historical alias: daPiano_c_Spawn. The inherited allocator and native
  * construction establish the base, vtable and member lifetimes. */
-extern "C" daPiano_c *daPiano_c_classInit() {
+daPiano_c *daPiano_c_classInit() {
     return new daPiano_c();
 }
 
@@ -235,7 +235,7 @@ void daPiano_c::StateSearch() {
 /* State-1 entry, reached via the PMF table: full-speed animation and a
  * 30-frame windup before the bite. */
 void daPiano_c::InitStateAttack() {
-    this->mAnmModel.speed = 4096;
+    this->mAnmModel.speed = 0x1000;
     this->mAttackTimer = 30;
 }
 

@@ -91,13 +91,11 @@ enum {
 };
 
 extern "C" {
-extern void func_02012694(unsigned int id, const Vector3 *v);
 extern dCamera_c *gCamera;
-extern void *gPFlowerCloseModelFile[];
-extern void *gPFlowerOpenModelFile[];
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *act, Fix12i a, Fix12i b, void *d, void *e);
+extern SharedFilePtr gPFlowerCloseModelFile;
+extern SharedFilePtr gPFlowerOpenModelFile;
 }
+extern void func_02012694(unsigned int id, const Vector3 *v);
 
 daObjPowerUpItem_c::~daObjPowerUpItem_c()
 {
@@ -184,15 +182,14 @@ void daObjPowerUpItem_c::BeginOpening()
     int x = mPosX;
     int y = mPosY + 0x82000;
     int z = mPosZ;
-    ((int *)&pos)[0] = x;
-    ((int *)&pos)[1] = y;
-    ((int *)&pos)[2] = z;
-    Particle::System::NewSimple(kPtclPowerFlowerOpen, ((int *)&pos)[0], ((int *)&pos)[1],
-                                ((int *)&pos)[2]);
+    pos.x = x;
+    pos.y = y;
+    pos.z = z;
+    Particle::System::NewSimple(kPtclPowerFlowerOpen, pos.x, pos.y, pos.z);
     func_02012694(0x7d, &mCamSpacePos);
     mEffectHandle = 0;
     mAngleY = gCamera->mAngleY;
-    mWobbleTimer = 0x1b;
+    mWobbleTimer = 27;
 }
 
 /* Falling update: emits particle 0x103, turns the flower about Y by 0x250 plus
@@ -218,7 +215,7 @@ void daObjPowerUpItem_c::StateLaunched()
     a = mVertSpeed;
     mag = (a < 0) ? -a : a;
     y = FX_MUL(mag, 0x120000);
-    X = (s16)(y / 4096);
+    X = (s16)(y / 0x1000);
     delta = 0x250;
     if (X > 0)
         delta += X;
@@ -229,7 +226,7 @@ void daObjPowerUpItem_c::StateLaunched()
 
     mWithMeshClsn.SetRadius(0x3c000);
     mWithMeshClsn.SetHeight(0x3c000);
-    UpdatePos((dCc_c*)&mdCcAc_c);
+    UpdatePos(&mdCcAc_c);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
     if (mWithMeshClsn.TouchesWater()) {
@@ -313,7 +310,7 @@ void daObjPowerUpItem_c::CheckPickup() {
     if (player->IsCollectingCap() != 0) return;
 
     {
-        dActor_c* held = (dActor_c*)player->mHeldObj;
+        dActor_c *held = player->mHeldObj;
         int t = (int)(held != 0);
         if (t != 0) {
             int b = (int)(held->actorID == ACTOR_MONKEY_THIEF);
@@ -325,7 +322,7 @@ void daObjPowerUpItem_c::CheckPickup() {
         u32 flags = mFlags;
         int t = (int)((flags & 0x20000) != 0);
         if (t != 0) {
-            mLifeTimer = 0x64;
+            mLifeTimer = 100;
             return;
         }
     }
@@ -348,8 +345,8 @@ void daObjPowerUpItem_c::CheckPickup() {
         MarkForDestruction();
         return;
     case CHARACTER_YOSHI:
-        if ((dActor_c*)player->mObjInMouth != 0) {
-            dActor_c* inMouth = (dActor_c*)player->mObjInMouth;
+        if (player->mObjInMouth != 0) {
+            dActor_c *inMouth = player->mObjInMouth;
             if (inMouth->actorID == ACTOR_MONKEY_STAR) return;
         }
         player->InitFireYoshi();
@@ -368,7 +365,7 @@ void daObjPowerUpItem_c::DropShadow() {
     int b = (int)((mFlags & 0x40000) != 0);
     if (b != 0)
         return;
-    *(struct Matrix4x3*)&mShadowMat = *(struct Matrix4x3*)&mOpenModel.mat4x3;
+    mShadowMat = mOpenModel.mat4x3;
     mShadowMat.m[10] = mGroundY >> 3;
     r3 = 0x78000;
     if (mState == FLOWER_STATE_LAUNCHED) {
@@ -387,13 +384,13 @@ void daObjPowerUpItem_c::UpdateMatrices(){
   mOpenModel.mat4x3.m[9] = mPosX >> 3;
   mOpenModel.mat4x3.m[10] = mPosY >> 3;
   mOpenModel.mat4x3.m[11] = mPosZ >> 3;
-  *(struct Matrix4x3*)&mCloseModel.mat4x3 = *(struct Matrix4x3*)&mOpenModel.mat4x3;
+  mCloseModel.mat4x3 = mOpenModel.mat4x3;
 }
 
 s32 daObjPowerUpItem_c::CleanupResources()
 {
-    ((SharedFilePtr *)gPFlowerCloseModelFile)->Release();
-    ((SharedFilePtr *)gPFlowerOpenModelFile)->Release();
+    gPFlowerCloseModelFile.Release();
+    gPFlowerOpenModelFile.Release();
     return 1;
 }
 
@@ -403,7 +400,8 @@ int daObjPowerUpItem_c::Render()
   if (f != 0) return 1;
   /* blinks while mLifeTimer is below 0x2d */
   unsigned char st = mLifeTimer;
-  if (st < 0x2d && (st & 1)) return 1;
+  if (st < 45 && (st & 1))
+      return 1;
   switch (mState) {
   case FLOWER_STATE_LAUNCHED:
       mCloseModel.Render(&mScale);
@@ -429,8 +427,8 @@ int daObjPowerUpItem_c::Behavior()
     CheckPickup();
     UpdateMatrices();
     DropShadow();
-    ((dCc_c *)&mdCcAc_c)->Clear();
-    ((dCc_c *)&mdCcAc_c)->Update();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     if (SaveData::HasPlayerLostCap()) {
         SmallPoofDust();
         MarkForDestruction();
@@ -442,11 +440,11 @@ int daObjPowerUpItem_c::InitResources()
 {
     struct Vector3 pos;
 
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
-    if (mOpenModel.SetFile((BMD_File*)gPFlowerOpenModelFile[1], 1, -1) == 0)
+    dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
+    dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+    if (mOpenModel.SetFile((BMD_File *)gPFlowerOpenModelFile.filePtr, 1, -1) == 0)
         return 0;
-    if (mCloseModel.SetFile((BMD_File*)gPFlowerCloseModelFile[1], 1, -1) == 0)
+    if (mCloseModel.SetFile((BMD_File *)gPFlowerCloseModelFile.filePtr, 1, -1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
         return 0;
@@ -473,7 +471,7 @@ int daObjPowerUpItem_c::InitResources()
     mGroundY = pos.y;
     if (ground.DetectClsn())
         mGroundY = ground.clsnY;
-    mLifeTimer = 0xb4;
+    mLifeTimer = 180;
 
     if (param1 == FLOWER_PARAM_PERSISTENT) {
         if (ClosestPlayer()->param1 == CHARACTER_LUIGI && SaveData::HasPlayerLostCap() == 0) {
@@ -497,8 +495,7 @@ s32 daObjPowerUpItem_c::OnYoshiTryEat()
  * RTTI, allocation size, vtable identity, and the POWER_UP_ITEM registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: PowerFlower_Spawn. */
-extern "C" daObjPowerUpItem_c *daObjPowerUpItem_c_classInit()
-{
+daObjPowerUpItem_c *daObjPowerUpItem_c_classInit() {
     return new daObjPowerUpItem_c();
 }
 

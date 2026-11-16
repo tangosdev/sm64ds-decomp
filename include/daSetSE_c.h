@@ -10,7 +10,6 @@
 #include "dActor_c.h"
 
 struct daSetSE_c : dActor_c {
-    u8  pad_0d0[0x4];
     u32 mSoundHandle;       /* 0x0d4: Sound::PlayLong recycled handle, never
                                initialized -- PlayLong treats an unknown
                                handle as not playing and starts a new voice */

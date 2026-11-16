@@ -20,10 +20,10 @@
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/mi/dma.h"
+#include "nitro/hw/registers.h"
 
 #define MIi_GX_LENGTH_ONCE 0x1d8
 #define REG_GXFIFO_ADDR 0x04000400
-#define REG_G3X_GXSTAT (*(vu32 *)0x04000600)
 
 /* MI_CNT_SEND32: enable, 32-bit, destination fixed, start immediately */
 #define MI_CNT_SEND32(size) (0x84400000 | ((size) >> 2))
@@ -66,7 +66,7 @@ void MI_SendGXCommandAsync(u32 dmaNo, const void *src, u32 commandLength, MIDmaC
     }
 
     /* G3X_GetCommandFifoStatus() & GX_FIFOSTAT_UNDERHALF */
-    while (!((REG_G3X_GXSTAT & 0x7000000) >> 24 & 2)) {
+    while (!((REG_GXSTAT & 0x7000000) >> 24 & 2)) {
     }
 
     MIi_GXDmaParams.isBusy = 1;
@@ -80,11 +80,11 @@ void MI_SendGXCommandAsync(u32 dmaNo, const void *src, u32 commandLength, MIDmaC
     {
         OSIntrMode lastIntrMode = OS_DisableInterrupts();
 
-        MIi_GXDmaParams.fifoCond = (REG_G3X_GXSTAT & 0xc0000000) >> 30;
+        MIi_GXDmaParams.fifoCond = (REG_GXSTAT & 0xc0000000) >> 30;
         MIi_GXDmaParams.fifoFunc = OS_GetIrqFunction(OS_IE_GXFIFO);
 
         /* G3X_SetFifoIntrCond(GX_FIFOINTR_COND_UNDERHALF) */
-        REG_G3X_GXSTAT = (REG_G3X_GXSTAT & ~0xc0000000) | 0x40000000;
+        REG_GXSTAT = (REG_GXSTAT & ~0xc0000000) | 0x40000000;
         OS_SetIrqFunction(OS_IE_GXFIFO, MIi_FIFOCallback);
         OS_EnableIrqMask(OS_IE_GXFIFO);
 
@@ -119,7 +119,7 @@ void MIi_DMACallback(void *arg) {
     OS_DisableIrqMask(OS_IE_GXFIFO);
 
     /* G3X_SetFifoIntrCond(MIi_GXDmaParams.fifoCond) */
-    REG_G3X_GXSTAT = (MIi_GXDmaParams.fifoCond << 30) | (REG_G3X_GXSTAT & ~0xc0000000);
+    REG_GXSTAT = (MIi_GXDmaParams.fifoCond << 30) | (REG_GXSTAT & ~0xc0000000);
     OS_SetIrqFunction(OS_IE_GXFIFO, MIi_GXDmaParams.fifoFunc);
 
     MIi_GXDmaParams.isBusy = 0;

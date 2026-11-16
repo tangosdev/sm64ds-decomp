@@ -78,21 +78,21 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjCtMecha10_c_classInit_CT_MECHA12S",
+      "symbol": "_Z38daObjCtMecha10_c_classInit_CT_MECHA12Sv",
       "address": "0x0211165c",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_ct_mecha10_ct_mecha12s.c",
       "ordinal": 6
     },
     {
-      "symbol": "daObjCtMecha10_c_classInit_CT_MECHA12L",
+      "symbol": "_Z38daObjCtMecha10_c_classInit_CT_MECHA12Lv",
       "address": "0x0211168c",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_ct_mecha10_ct_mecha12l.c",
       "ordinal": 7
     },
     {
-      "symbol": "daObjCtMecha10_c_classInit_CT_MECHA10",
+      "symbol": "_Z37daObjCtMecha10_c_classInit_CT_MECHA10v",
       "address": "0x021116bc",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_ct_mecha10_ct_mecha10.c",
@@ -179,28 +179,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN19Mecha10ModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's PC24 relocation"
     },
     {
       "symbol": "_ZN19Mecha10ModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor's ABS32 relocation"
     },
     {
       "symbol": "_ZN18Mecha10ClsnFilePtrC1Ej",
-      "canonical_symbol": "func_02017b4c",
+      "canonical_symbol": "_Z13func_02017b4cPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the collision wrapper constructor's PC24 relocation"
     },
     {
       "symbol": "_ZN18Mecha10ClsnFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
@@ -250,7 +250,7 @@
       "source": "0x02111f14",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -270,7 +270,7 @@
       "source": "0x02111f30",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -290,7 +290,7 @@
       "source": "0x02111f4c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -310,7 +310,7 @@
       "source": "0x02111f68",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -340,7 +340,7 @@
       "source": "0x02111f90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -370,7 +370,7 @@
       "source": "0x02111fa0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"

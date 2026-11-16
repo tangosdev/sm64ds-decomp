@@ -107,6 +107,10 @@ typedef struct Ov007Picker {
      * to it on x and y */
     Vector3 boundsMin;
     Vector3 boundsMax;
+#ifdef __cplusplus
+    int func_ov007_020c5014(int x);
+    void func_ov007_020c510c();
+#endif
 } Ov007Picker;
 
 #ifndef SM64DS_PLATFORM_PC

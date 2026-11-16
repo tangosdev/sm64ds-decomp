@@ -2,8 +2,6 @@
 #include "types.h"
 #include "msl/stdlib.h"
 
-extern "C" {
-
 typedef struct {
     unsigned char b[3];
 } B3;
@@ -165,5 +163,4 @@ void func_0204547c(Ctx *ctx, Src *s, int a2, Dst *d) {
     d->f20 = func_020457f0(v, a2, s->b18, s->b19, ctx->p10 + s->h1A);
     d->f24 = func_020457f0(v, a2, s->b1C, s->b1D, ctx->p10 + s->h1E);
     d->f28 = func_020457f0(v, a2, s->b20, s->b21, ctx->p10 + s->h22);
-}
 }

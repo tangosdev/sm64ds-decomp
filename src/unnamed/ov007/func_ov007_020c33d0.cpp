@@ -2,8 +2,6 @@
 #include "nitro/gx/gx_load.h"
 #include "Ov007Display.h"
 
-extern "C" {
-
 /* Copies a character record's tiles to `offset` in one VRAM target: 0..4
  * the main engine's OBJ, BG0, BG1, BG2 and BG3 characters, 5..9 the sub
  * engine's. */
@@ -42,5 +40,4 @@ void func_ov007_020c33d0(Ov007CharRecord *rec, int target, unsigned int offset) 
         GXS_LoadBG3Char(rec->tiles, offset, size);
         break;
     }
-}
 }
