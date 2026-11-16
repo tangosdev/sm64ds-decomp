@@ -939,7 +939,6 @@ void func_ov002_020f30d4(char *p)
 }
 
 void StaffRoll::func_ov002_020f30f8(int i) {
-    char *o = (char *)this;
     unsigned short t;
     int oldA, oldB;
     int cc, dd, ee, ff;
@@ -978,7 +977,7 @@ void StaffRoll::func_ov002_020f30f8(int i) {
         this->window[i].bgY = 0;
 
     cc = this->window[i].bgX - oldA;
-    func_ov002_020f2f18(o, cc, this->window[i].bgY - oldB);
+    func_ov002_020f2f18((char *)this, cc, this->window[i].bgY - oldB);
 
     ee = this->window[i].right >> 12;
     ff = this->window[i].bottom >> 12;
@@ -2124,25 +2123,21 @@ void StaffRoll::func_ov002_020f5894(int i) {
 }
 
 void StaffRoll::func_ov002_020f5990() {
-    char *c = (char *)this;
     int i;
-    StaffRoll::Star *s = this->stars;
-    {
-        int *cnt = &this->kiraStar;
-        *cnt = *cnt + 1;
-        *cnt = *cnt & 3;
-    }
-    for (i = 0; i < 4; i++, s++) {
-        if (s->active == 0)
+    this->kiraStar++;
+    this->kiraStar &= 3;
+    for (i = 0; i < 4; i++) {
+        if (this->stars[i].active == 0)
             continue;
-        (this->*data_ov002_02110e7c[s->state])(i);
-        func_ov002_020f39ec(c, i);
-        if (s->sparkling == 0)
+        (this->*data_ov002_02110e7c[this->stars[i].state])(i);
+        func_ov002_020f39ec((char *)this, i);
+        if (this->stars[i].sparkling == 0)
             continue;
         if (i != this->kiraStar)
             continue;
-        func_ov002_020f2790(c, (s16)(s->x >> 12), (s16)(s->y >> 12), s->kiraDefParam,
-                            s->kiraSysParam);
+        func_ov002_020f2790((char *)this, (s16)(this->stars[i].x >> 12),
+                            (s16)(this->stars[i].y >> 12), this->stars[i].kiraDefParam,
+                            this->stars[i].kiraSysParam);
     }
 }
 
@@ -2342,8 +2337,7 @@ void StaffRoll::func_ov002_020f5ee4() {
 }
 
 void StaffRoll::func_ov002_020f5ef0() {
-    char *p = (char *)this;
-    func_ov002_020f3954(p);
+    func_ov002_020f3954((char *)this);
 }
 
 /* func_ov002_020f5efc @ 0x20f5efc (ov002) -- tail-call veneer to LoadFont (0x201fcd4) with r0=0.
