@@ -28,6 +28,18 @@
       "end": "0x0211342c"
     },
     {
+      "name": ".data.fb_clps",
+      "input_section": ".data",
+      "start": "0x021136b4",
+      "end": "0x021136d4"
+    },
+    {
+      "name": ".data.fb_res",
+      "input_section": ".data",
+      "start": "0x02114880",
+      "end": "0x0211488c"
+    },
+    {
       "name": ".bss",
       "start": "0x02114ad4",
       "end": "0x02114afc"
@@ -70,7 +82,22 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov015_021136b4",
+      "address": "0x021136b4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "falling-block CLPS block"
+    },
+    {
+      "symbol": "data_ov015_02114880",
+      "address": "0x02114880",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "model, collision, and CLPS descriptor"
+    }
+  ],
   "bss": [
     {
       "symbol": "gBkDownBCollisionFile",
@@ -231,6 +258,20 @@
           "section": ".ctor",
           "start": "0x02113428",
           "end": "0x0211342c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.fb_clps",
+          "start": "0x021136b4",
+          "end": "0x021136d4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.fb_res",
+          "start": "0x02114880",
+          "end": "0x0211488c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -635,6 +676,36 @@
       "addend": 0,
       "target_module": "ov015",
       "target_address": "0x021133a8"
+    },
+    {
+      "section": ".data.fb_res",
+      "source": "0x02114880",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDownBModelFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x02114adc"
+    },
+    {
+      "section": ".data.fb_res",
+      "source": "0x02114884",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDownBCollisionFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x02114ad4"
+    },
+    {
+      "section": ".data.fb_res",
+      "source": "0x02114888",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov015_021136b4",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021136b4"
     }
   ]
 }

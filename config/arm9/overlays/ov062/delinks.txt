@@ -18,6 +18,7 @@ src/game/actors/d_a_nknk.cpp:
     .init start:0x0211d2d8 end:0x0211d4a0
     .ctor start:0x0211d8d0 end:0x0211d8d4
     .bss start:0x0211df28 end:0x0211e004
+    .rodata start:0x0211ced8 end:0x0211cf30
 
 src/game/actors/d_a_r_nk.cpp:
     complete

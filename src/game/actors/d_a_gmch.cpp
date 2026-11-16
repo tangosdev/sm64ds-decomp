@@ -99,6 +99,9 @@ struct GmchAnimationFileHandle : SharedFilePtr {
 typedef int (daGmch_c::*StatePmf)();
 struct StatePair { StatePmf enter, update; };
 
+/* Four animation handles, in the order CleanupResources and InitResources walk. */
+extern SharedFilePtr *const data_ov081_021280d8[4];
+
 /* The draw offset is a plain Vector3, and `Vector3 v = {...}` cannot
    produce its init: brace init is constant initialization, so nothing runs
    in __sinit at all -- no stores, no destructor registration.  mwcc splits
@@ -752,7 +755,6 @@ void daGmch_c::SetState(int n)
 int daGmch_c::CleanupResources()
 {
     extern GmchModelFileHandle data_ov081_02128ed4;
-    extern SharedFilePtr *data_ov081_021280d8[];
 
     data_ov081_02128ed4.Release();
     for (int i = 0; i < 4; i++) {
@@ -803,7 +805,6 @@ int daGmch_c::Behavior()
 int daGmch_c::InitResources()
 {
     extern GmchModelFileHandle data_ov081_02128ed4;
-    extern SharedFilePtr *data_ov081_021280d8[];
     extern SharedFilePtr data_ov002_0210d9b8;
     extern Matrix4x3 IDENTITY_MATRIX4X3;
 
@@ -881,6 +882,13 @@ GmchAnimationFileHandle data_ov081_02128edc(ASSET_GAMAGUCHI_WALK_BCA);
 GmchAnimationFileHandle gGamaguchiWalkEndAnimationFile(ASSET_GAMAGUCHI_WALK_END_BCA);
 GmchAnimationFileHandle gGamaguchiJumpAnimationFile(ASSET_GAMAGUCHI_JUMP_BCA);
 GmchAnimationFileHandle gGamaguchiJumpEndAnimationFile(ASSET_GAMAGUCHI_JUMP_END_BCA);
+
+SharedFilePtr *const data_ov081_021280d8[4] = {
+    &data_ov081_02128edc,
+    &gGamaguchiWalkEndAnimationFile,
+    &gGamaguchiJumpAnimationFile,
+    &gGamaguchiJumpEndAnimationFile,
+};
 
 StatePair data_ov081_02128f40[9] = {
     { &daGmch_c::EnterState0, &daGmch_c::UpdateState0 },

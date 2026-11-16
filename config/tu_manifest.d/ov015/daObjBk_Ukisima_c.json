@@ -28,6 +28,12 @@
       "end": "0x02113428"
     },
     {
+      "name": ".data.uki_clps",
+      "input_section": ".data",
+      "start": "0x02113614",
+      "end": "0x02113634"
+    },
+    {
       "name": ".bss",
       "start": "0x02114aac",
       "end": "0x02114ad4"
@@ -82,6 +88,13 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "ResourceDescriptor {model, collision, CLPS} InitResourcesFrom and CleanupResourcesFrom take; the words relocate to 0x02114aac, 0x02114ab4 and the CLPS block at 0x02113614"
+    },
+    {
+      "symbol": "data_ov015_02113614",
+      "address": "0x02113614",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "spinning disc CLPS block"
     }
   ],
   "bss": [
@@ -244,10 +257,11 @@
           "firstDiff": null
         },
         {
-          "section": ".bss",
-          "start": "0x02114aac",
-          "end": "0x02114ad4",
-          "comparison": "NOBITS -- symbol/module gates"
+          "section": ".data.uki_clps",
+          "start": "0x02113614",
+          "end": "0x02113634",
+          "differingBytes": 0,
+          "firstDiff": null
         },
         {
           "section": ".data",
@@ -255,6 +269,12 @@
           "end": "0x021147b0",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02114aac",
+          "end": "0x02114ad4",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
