@@ -19,6 +19,11 @@
       "end": "0x02119330"
     },
     {
+      "name": ".rodata",
+      "start": "0x0211adc8",
+      "end": "0x0211ae00"
+    },
+    {
       "name": ".init",
       "start": "0x0211b1d4",
       "end": "0x0211b4dc"
@@ -27,6 +32,17 @@
       "name": ".ctor",
       "start": "0x0211b744",
       "end": "0x0211b748"
+    },
+    {
+      "name": ".data.coinClps",
+      "input_section": ".data",
+      "start": "0x0211baac",
+      "end": "0x0211bacc"
+    },
+    {
+      "name": ".data",
+      "start": "0x0211bfd8",
+      "end": "0x0211c198"
     },
     {
       "name": ".bss",
@@ -211,7 +227,136 @@
       "ordinal": 24
     }
   ],
-  "data": [],
+  "rodata": [
+    {
+      "symbol": "data_ov064_0211adc8",
+      "address": "0x0211adc8",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "fourteen model handles, one per puzzle type"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "data_ov064_0211bfd8",
+      "address": "0x0211bfd8",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "data_ov064_0211bff4",
+      "address": "0x0211bff4",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "data_ov064_0211c010",
+      "address": "0x0211c010",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "data_ov064_0211c02c",
+      "address": "0x0211c02c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "data_ov064_0211c048",
+      "address": "0x0211c048",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "data_ov064_0211c064",
+      "address": "0x0211c064",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "data_ov064_0211c080",
+      "address": "0x0211c080",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "data_ov064_0211c09c",
+      "address": "0x0211c09c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "data_ov064_0211c0b8",
+      "address": "0x0211c0b8",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "data_ov064_0211c0d4",
+      "address": "0x0211c0d4",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "data_ov064_0211c0f0",
+      "address": "0x0211c0f0",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "data_ov064_0211c10c",
+      "address": "0x0211c10c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "data_ov064_0211c128",
+      "address": "0x0211c128",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "data_ov064_0211c144",
+      "address": "0x0211c144",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "one puzzle step script, ended by -1, 0"
+    },
+    {
+      "symbol": "g_profile_FL_PUZZLE",
+      "address": "0x0211c160",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "spawn profile for the puzzle piece"
+    },
+    {
+      "symbol": "g_profile_FL_COIN",
+      "address": "0x0211c17c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "spawn profile for the puzzle coin"
+    },
+    {
+      "symbol": "data_ov064_0211baac",
+      "address": "0x0211baac",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "mesh collider CLPS block for the puzzle piece"
+    }
+  ],
   "bss": [
     {
       "symbol": "gFl1408ModelFile",
@@ -559,6 +704,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0211adc8",
+          "end": "0x0211ae00",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x0211b1d4",
           "end": "0x0211b4dc",
@@ -569,6 +721,20 @@
           "section": ".ctor",
           "start": "0x0211b744",
           "end": "0x0211b748",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.coinClps",
+          "start": "0x0211baac",
+          "end": "0x0211bacc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0211bfd8",
+          "end": "0x0211c198",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1164,6 +1330,166 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x0211adc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1400ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c810"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211adcc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1401ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c818"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211add0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1402ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c7e8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211add4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1403ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c840"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211add8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1404ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c820"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211addc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1405ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c830"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211ade0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1406ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c7e0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211ade4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1407ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c808"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211ade8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1408ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c7d8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211adec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1409ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c7f0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211adf0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1410ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c828"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211adf4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1411ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c7f8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211adf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1412ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c838"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211adfc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFl1413ModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c848"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c160",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z26daObjFl_Puzzle_c_classInitv",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x02119300"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211c17c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z24daObjFl_Coin_c_classInitv",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x021192d0"
+    },
     {
       "section": ".init",
       "source": "0x0211b1e4",

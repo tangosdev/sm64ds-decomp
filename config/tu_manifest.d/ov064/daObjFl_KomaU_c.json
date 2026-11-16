@@ -19,6 +19,11 @@
       "end": "0x021185c0"
     },
     {
+      "name": ".rodata",
+      "start": "0x0211adbc",
+      "end": "0x0211adc8"
+    },
+    {
       "name": ".init",
       "start": "0x0211b0e4",
       "end": "0x0211b150"
@@ -27,6 +32,11 @@
       "name": ".ctor",
       "start": "0x0211b73c",
       "end": "0x0211b740"
+    },
+    {
+      "name": ".data",
+      "start": "0x0211bdac",
+      "end": "0x0211bdcc"
     },
     {
       "name": ".bss",
@@ -85,7 +95,24 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "rodata": [
+    {
+      "symbol": "data_ov064_0211adbc",
+      "address": "0x0211adbc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "model, collision and CLPS handles for the spinning top"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "data_ov064_0211bdac",
+      "address": "0x0211bdac",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "mesh collider CLPS block for the spinning top"
+    }
+  ],
   "bss": [
     {
       "symbol": "gFlKomaUModelFile",
@@ -327,6 +354,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0211adbc",
+          "end": "0x0211adc8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x0211b0e4",
           "end": "0x0211b150",
@@ -337,6 +371,13 @@
           "section": ".ctor",
           "start": "0x0211b73c",
           "end": "0x0211b740",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0211bdac",
+          "end": "0x0211bdcc",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -522,6 +563,36 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x0211adbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlKomaUModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c790"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211adc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlKomaUCollisionFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c798"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211adc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211bdac",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211bdac"
+    },
     {
       "section": ".init",
       "source": "0x0211b0f4",
