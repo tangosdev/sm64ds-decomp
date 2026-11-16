@@ -3095,9 +3095,9 @@ KpaTexSequenceFilePtr data_ov060_0211ac30(ASSET_KOOPA_HOLD_BTP);
  * u8[] ROM copy: that declaration is non-const. */
 extern "C" {
 extern const unsigned char data_ov060_02119264[] = {1, 1, 3, 0};
-extern SharedFilePtr *const data_ov060_0211927c[] = {
-    &data_ov060_0211ac40, &data_ov060_0211acb8, &data_ov060_0211ac10,
-    &data_ov060_0211abf0, &data_ov060_0211ac28, &data_ov060_0211ac30};
+extern SharedFilePtr *const data_ov060_0211927c[] = {&data_ov060_0211ac40, &data_ov060_0211acb8,
+                                                     &data_ov060_0211ac10, &data_ov060_0211abf0,
+                                                     &data_ov060_0211ac28, &data_ov060_0211ac30};
 extern SharedFilePtr *const data_ov060_021192dc[] = {
     &data_ov060_0211ac88, &data_ov060_0211ac50, &data_ov060_0211ac58, &data_ov060_0211ac60,
     &data_ov060_0211ac18, &data_ov060_0211acd0, &data_ov060_0211ac68, &data_ov060_0211ac70,
