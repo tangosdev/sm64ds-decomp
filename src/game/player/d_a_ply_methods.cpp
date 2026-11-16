@@ -67,7 +67,6 @@
 #include "dCamera_c.h"
 #include "SaveData.h"
 #include "Timer.h"
-#include "daBtn_c.h"
 #include "daObj1UpLogo_c.h"
 #include "daOwl_c.h"
 #include "daShl_c.h"
@@ -5376,7 +5375,9 @@ int daPly_c::St_Squish_Main() {
                         int b1 = (id == 0xa4);
                         int b2;
                         if (b1 || (b2 = (id == 0xa5)) != 0)
-                            ((daBtn_c *)a)->unk_407 = 1;
+                            /* daBtn_c::unk_407: daBtn_c.h is not included here (it would
+                               renumber this file's compiler-generated names). */
+                            *((u8 *)a + 0x407) = 1;
                     }
                 }
             } else {
