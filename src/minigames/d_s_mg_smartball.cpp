@@ -16,8 +16,10 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 
 // Leftovers kept for byte-exactness; each has a note at its site:
 // - several slot-0 overrides repeat the base's SaveSnapshot body inline;
-// - the object tables, popups, dust and score arrays are walked by stepping
-//   `this` and reading element 0, because indexing changes the addressing.
+// - SpawnDust, UpdateScores and Render still walk the popup, dust and tally
+//   arrays by stepping `this` and reading element 0, and Behavior reads the
+//   object tables through TableEntry, because indexing changes the
+//   addressing there.
 
 #include "dScMgSmartball_c.h"
 #include "nitro/hw/registers.h"
@@ -3685,41 +3687,27 @@ unsigned short dScMgSmartball_c::GetTile(int *pos) {
     return 0;
 }
 
-#pragma push
-#pragma opt_strength_reduction off
-/* Kept (#821): UpdateDust needs strength reduction off. Without it the
- * body is 0x108, not 0xf8; indexed with SR on it is 13 of 62 words off,
- * with a stepped velocity cursor 8 (register rotation only). */
+/* Moves each live dust puff, slows it to three quarters of its speed, and
+ * retires it once mDustAge reaches 0xf. */
 void dScMgSmartball_c::UpdateDust() {
-    char *self = (char *)this;
     int i;
-    char *obj = (char *)mDustVel;
     for (i = 0; i < 16; i++) {
-        unsigned char *flag = (unsigned char *)((dScMgSmartball_c *)(self + i))->mDustActive;
-        if (*flag != 0) {
-            dScMgSmartball_c *entry = (dScMgSmartball_c *)(self + i * 8);
-            entry->mDustPos[0][0] += entry->mDustVel[0][0];
-            entry->mDustPos[0][1] += entry->mDustVel[0][1];
-            {
-                int m = Vec2_Len((const Vector2 *)obj) * 6 / 8;
-                if (func_0203d434((V2 *)obj)) {
-                    func_0203d630((V2 *)obj, m);
-                }
+        if (mDustActive[i] != 0) {
+            mDustPos[i][0] += mDustVel[i][0];
+            mDustPos[i][1] += mDustVel[i][1];
+            int speed = Vec2_Len((const Vector2 *)mDustVel[i]);
+            speed = speed * 6 / 8;
+            if (func_0203d434((V2 *)mDustVel[i])) {
+                func_0203d630((V2 *)mDustVel[i], speed);
             }
-            {
-                int *counter = ((dScMgSmartball_c *)(self + i * 4))->mDustAge;
-                *counter += 1;
-                if (*counter >= 0xf) {
-                    *flag = 0;
-                    *counter = 0;
-                }
+            mDustAge[i]++;
+            if (mDustAge[i] >= 0xf) {
+                mDustActive[i] = 0;
+                mDustAge[i] = 0;
             }
         }
-        obj += 8;
     }
 }
-
-#pragma pop
 
 /* Spawns up to four dust puffs at a point.
  * Leftover: TVec2's empty destructor keeps `v` in memory, and `sa` must be its
@@ -3769,7 +3757,10 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
 #pragma opt_strength_reduction off
 /* Kept (#821): UpdateScores needs strength reduction off. Without it the
  * body is 0x128, not 0x118; indexed with SR on 0x11c (the ROM forms all
- * six slot addresses at the loop head), pointer locals 0x12c. */
+ * six slot addresses at the loop head), pointer locals 0x12c. Also measured
+ * with SR on: references or pointers declared above the loop 0x12c, no
+ * `continue` 0x128; indexed with a long counter 0x114, unsigned 0x11c,
+ * u8 0x120, short or char 0x124. */
 void dScMgSmartball_c::UpdateScores() {
     char *o = (char *)this;
     int i;
@@ -3979,101 +3970,88 @@ void dScMgSmartball_c::CollideBalls() {
     }
 }
 
-#pragma push
-#pragma opt_strength_reduction off
-/* Kept (#821): without strength reduction off SpawnObjects is 0x18f8, not
- * 0x18bc. */
 /* Tears the whole table down and rebuilds it from the two tile maps.
- * Leftovers: the spawn counters and the scan stores stay as written, and
- * every slot walk steps `this` instead of indexing. */
+ * Leftover: the spawn counters and the scan stores stay as written. */
 void dScMgSmartball_c::SpawnObjects() {
-    char *c = (char *)this;
     V2 pos[25];
 
     Mg_SubmitScore(0);
 
     for (int i = 0; i < 13; i++) {
-        cMgSmartball_ball_c **slot = ((cMgSmartball_ball_c **)this) + i + 0x4688 / 4;
-        cMgSmartball_ball_c *p = *slot;
+        cMgSmartball_ball_c *p = mpBalls[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_ball_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpBalls[i] = 0;
         }
     }
     for (int i = 0; i < 8; i++) {
-        cMgSmartball_ana_c **slot = ((cMgSmartball_ana_c **)this) + i + 0x4720 / 4;
-        cMgSmartball_ana_c *p = *slot;
+        cMgSmartball_ana_c *p = mpAnas[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_ana_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpAnas[i] = 0;
         }
     }
     for (int i = 0; i < 25; i++) {
-        cMgSmartball_kinoko_c **slot = ((cMgSmartball_kinoko_c **)this) + i + 0x46bc / 4;
-        cMgSmartball_kinoko_c *p = *slot;
+        cMgSmartball_kinoko_c *p = mpKinokos[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_kinoko_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpKinokos[i] = 0;
         }
     }
     for (int i = 0; i < 3; i++) {
-        cMgSmartball_propeller_c **slot = ((cMgSmartball_propeller_c **)this) + i + 0x4740 / 4;
-        cMgSmartball_propeller_c *p = *slot;
+        cMgSmartball_propeller_c *p = mpPropellers[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_propeller_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpPropellers[i] = 0;
         }
     }
     for (int i = 0; i < 6; i++) {
-        cMgSmartball_dokan_c **slot = ((cMgSmartball_dokan_c **)this) + i + 0x474c / 4;
-        cMgSmartball_dokan_c *p = *slot;
+        cMgSmartball_dokan_c *p = mpDokans[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_dokan_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpDokans[i] = 0;
         }
     }
     for (int i = 0; i < 3; i++) {
-        cMgSmartball_pakkun_c **slot = ((cMgSmartball_pakkun_c **)this) + i + 0x4764 / 4;
-        cMgSmartball_pakkun_c *p = *slot;
+        cMgSmartball_pakkun_c *p = mpPakkuns[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_pakkun_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpPakkuns[i] = 0;
         }
     }
     for (int i = 0; i < 2; i++) {
-        cMgSmartball_pushswitch_c **slot = ((cMgSmartball_pushswitch_c **)this) + i + 0x4770 / 4;
-        cMgSmartball_pushswitch_c *p = *slot;
+        cMgSmartball_pushswitch_c *p = mpPushSwitches[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_pushswitch_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpPushSwitches[i] = 0;
         }
     }
 
@@ -4219,12 +4197,9 @@ void dScMgSmartball_c::SpawnObjects() {
                 V2 tmp = pos[j];
                 spawned = cMgSmartball_kinoko_c_Construct(spawned, this, j, &tmp);
             }
-            {
-                cMgSmartball_kinoko_c **slot = ((cMgSmartball_kinoko_c **)this) + j + 0x46bc / 4;
-                *slot = spawned;
-                if (*slot != 0)
-                    (*slot)->mVariant = 0;
-            }
+            mpKinokos[j] = spawned;
+            if (mpKinokos[j] != 0)
+                mpKinokos[j]->mVariant = 0;
         }
         for (int i = 0; i < 768; i++) {
             int k = mKinokoCount;
@@ -4262,12 +4237,9 @@ void dScMgSmartball_c::SpawnObjects() {
                 tmp.y = ty;
                 spawned = cMgSmartball_kinoko_c_Construct(spawned, this, n, &tmp);
             }
-            {
-                cMgSmartball_kinoko_c **slot = ((cMgSmartball_kinoko_c **)this) + n + 0x46bc / 4;
-                *slot = spawned;
-                if (*slot != 0)
-                    (*slot)->mVariant = 1;
-            }
+            mpKinokos[n] = spawned;
+            if (mpKinokos[n] != 0)
+                mpKinokos[n]->mVariant = 1;
         }
     }
 
@@ -4673,19 +4645,17 @@ void dScMgSmartball_c::SpawnObjects() {
         mPopupScore[i] = 0;
         mPopupMultiplier[i] = 0;
         mPopupAge[i] = 0;
-        dScMgSmartball_c *popup = (dScMgSmartball_c *)(c + i * 8);
-        popup->mPopupPos[0][0] = 0;
-        popup->mPopupPos[0][1] = 0;
+        mPopupPos[i][0] = 0;
+        mPopupPos[i][1] = 0;
         mPopupDelay[i] = 0;
     }
     for (int i = 0; i < 16; i++) {
         mDustActive[i] = 0;
         mDustAge[i] = 0;
-        dScMgSmartball_c *dust = (dScMgSmartball_c *)(c + i * 8);
-        dust->mDustPos[0][0] = 0;
-        dust->mDustPos[0][1] = 0;
-        dust->mDustVel[0][0] = 0;
-        dust->mDustVel[0][1] = 0;
+        mDustPos[i][0] = 0;
+        mDustPos[i][1] = 0;
+        mDustVel[i][0] = 0;
+        mDustVel[i][1] = 0;
     }
     mPhase = 0;
     mResultSlideX = 0x100;
@@ -4694,11 +4664,13 @@ void dScMgSmartball_c::SpawnObjects() {
     __cxa_vec_cleanup(pos, 25, 8, (dtor_t)NullDestructor_0203d47c);
 }
 
-#pragma pop
-
-/* Leftover: Render needs both pragmas off, and the locals below must stay in
- * this order (each one pins a stack slot). Kept (#821): without SR off the
- * body is 0x1124, not 0x10c0; without CSE off it changes size too. */
+/* Kept (#821): Render needs both pragmas off, and the locals below must stay
+ * in this order (each one pins a stack slot). Without SR off the body is
+ * 0x1124, not 0x10c0. Indexing every tally, popup and dust array by name
+ * with both pragmas on gives 0x10b8: CSE folds the popup's first digit-count
+ * read into the address of mPopupScore[sb], where the ROM forms it again with
+ * the offset in a register. The same indexed body with either pragma off is
+ * 0x109c, and indexing one array alone under the pragmas is 0x10bc. */
 #pragma push
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
@@ -5039,8 +5011,12 @@ s32 dScMgSmartball_c::Render() {
 #pragma pop
 
 /* Kept (#821): Behavior needs strength reduction off. Without it the body is
- * 0x620, not 0x604; mpBalls[i] indexing with SR on is 0x5e8 (the slot
- * offset folds into the load instead of a hoisted literal). */
+ * 0x620, not 0x604. The ROM's seven SaveSnapshot loops keep each table's
+ * offset in a register hoisted above the loop, a shape only the integer
+ * address below produces. Measured with SR on: mpBalls[i] 0x5e8 (with SR off
+ * too; the offset folds into the load), and the same with an unsigned or long
+ * counter; a short counter 0x628; `&mpBalls[i]`, a reference to mpBalls[i],
+ * `i << 2` and a null-checked mpBalls[i] each 0x620. */
 #pragma push
 #pragma opt_strength_reduction off
 /* Slot 6: the scene's per-frame rules. Phase 0 updates every object, then the
@@ -5448,56 +5424,46 @@ s32 dScMgSmartball_c::InitResources() {
     return 1;
 }
 
-/* Kept (#821): AfterCleanupResources needs strength reduction off; without
- * it the body is 0x3f8, not 0x3d8. */
-#pragma push
-#pragma opt_strength_reduction off
 /* Slot 5: frees every board object, then chains to the base. */
 void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
     if (vfSuccess != 2)
         return;
 
     for (int i = 0; i < 13; i++) {
-        cMgSmartball_ball_c **slot =
-            (cMgSmartball_ball_c **)SlotAddress(this, OFFSET_OF(dScMgSmartball_c, mpBalls), i, 4);
-        cMgSmartball_ball_c *object = *slot;
+        cMgSmartball_ball_c *object = mpBalls[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_ball_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpBalls[i] = 0;
         }
     }
     mBallCount = 0;
 
     for (int i = 0; i < 25; i++) {
-        cMgSmartball_kinoko_c **slot = (cMgSmartball_kinoko_c **)SlotAddress(
-            this, OFFSET_OF(dScMgSmartball_c, mpKinokos), i, 4);
-        cMgSmartball_kinoko_c *object = *slot;
+        cMgSmartball_kinoko_c *object = mpKinokos[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_kinoko_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpKinokos[i] = 0;
         }
     }
     mKinokoCount = 0;
 
     for (int i = 0; i < 8; i++) {
-        cMgSmartball_ana_c **slot =
-            (cMgSmartball_ana_c **)SlotAddress(this, OFFSET_OF(dScMgSmartball_c, mpAnas), i, 4);
-        cMgSmartball_ana_c *object = *slot;
+        cMgSmartball_ana_c *object = mpAnas[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_ana_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpAnas[i] = 0;
         }
     }
     mAnaCount = 0;
@@ -5515,60 +5481,52 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
     }
 
     for (int i = 0; i < 3; i++) {
-        cMgSmartball_propeller_c **slot = (cMgSmartball_propeller_c **)SlotAddress(
-            this, OFFSET_OF(dScMgSmartball_c, mpPropellers), i, 4);
-        cMgSmartball_propeller_c *object = *slot;
+        cMgSmartball_propeller_c *object = mpPropellers[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_propeller_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpPropellers[i] = 0;
         }
     }
 
     for (int i = 0; i < 6; i++) {
-        cMgSmartball_dokan_c **slot =
-            (cMgSmartball_dokan_c **)SlotAddress(this, OFFSET_OF(dScMgSmartball_c, mpDokans), i, 4);
-        cMgSmartball_dokan_c *object = *slot;
+        cMgSmartball_dokan_c *object = mpDokans[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_dokan_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpDokans[i] = 0;
         }
     }
     mDokanCount = 0;
 
     for (int i = 0; i < 3; i++) {
-        cMgSmartball_pakkun_c **slot = (cMgSmartball_pakkun_c **)SlotAddress(
-            this, OFFSET_OF(dScMgSmartball_c, mpPakkuns), i, 4);
-        cMgSmartball_pakkun_c *object = *slot;
+        cMgSmartball_pakkun_c *object = mpPakkuns[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_pakkun_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpPakkuns[i] = 0;
         }
     }
     mPakkunCount = 0;
 
     for (int i = 0; i < 2; i++) {
-        cMgSmartball_pushswitch_c **slot = (cMgSmartball_pushswitch_c **)SlotAddress(
-            this, OFFSET_OF(dScMgSmartball_c, mpPushSwitches), i, 4);
-        cMgSmartball_pushswitch_c *object = *slot;
+        cMgSmartball_pushswitch_c *object = mpPushSwitches[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_pushswitch_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpPushSwitches[i] = 0;
         }
     }
     mPushSwitchCount = 0;
@@ -5611,8 +5569,6 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
 
     dScMgBase_c::AfterCleanupResources(vfSuccess);
 }
-
-#pragma pop
 
 /* The scene factory and its empty particle-element constructor. */
 void SmartballObj_ElemCtor(void);
