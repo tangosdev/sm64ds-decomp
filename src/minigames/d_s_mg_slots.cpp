@@ -211,19 +211,12 @@ void dScMgSlot3_c::InitMainScreenBg() {
                      GX_BG_CHARBASE_0x18000, GX_BG_EXTPLTT_01);
 }
 
-// Keep the strided cursors cast back to the class. mStripLength is read by
-// offset: a member read of it grows this body by 8 bytes (measured).
 void dScMgSlot3_c::ReelDigits(int reelIndex) {
-    char *c = (char *)this;
-    int symbolIndex = (((dScMgSlot3_c *)(c + reelIndex * 4))->mReelPos[0] >> 12) / 80;
+    int symbolIndex = (mReelPos[reelIndex] >> 12) / 80;
     int column;
-    char *dst = c + reelIndex * 3;
-    char *stripBytes = c + reelIndex * 5;
     for (column = 0; column < 3; column++) {
-        ((dScMgSlot3_c *)dst)->mResultSymbols[0][0] =
-            ((dScMgSlot3_c *)(stripBytes + symbolIndex))->mReelStrip[0][0];
-        symbolIndex = (symbolIndex + 1) % *(unsigned char *)(c + SLOT3_OFF(mStripLength));
-        dst += 1;
+        mResultSymbols[reelIndex][column] = mReelStrip[reelIndex][symbolIndex];
+        symbolIndex = (symbolIndex + 1) % mStripLength;
     }
 }
 
@@ -446,8 +439,6 @@ void dScMgSlot3_c::StateIntro() {
 }
 
 void dScMgSlot3_c::StartRound(int mode) {
-    char *c = (char *)this;
-
     if (mode == 3 || mode == 0x12) {
         mCredits = 0xc;
         mCreditsShown = mCredits;
@@ -513,15 +504,12 @@ void dScMgSlot3_c::StartRound(int mode) {
             func_02012790(0x1aa);
         }
 
-        {
-            char *w = c;
-            for (j = 0; j < 3; j++, w += 5) {
-                for (k = 0; k < mStripLength; k++) {
-                    if (j == 1) {
-                        mReelStrip[1][k] = mStripLength - k - 1;
-                    } else {
-                        ((dScMgSlot3_c *)w)->mReelStrip[0][k] = k;
-                    }
+        for (j = 0; j < 3; j++) {
+            for (k = 0; k < mStripLength; k++) {
+                if (j == 1) {
+                    mReelStrip[1][k] = mStripLength - k - 1;
+                } else {
+                    mReelStrip[j][k] = k;
                 }
             }
         }
@@ -532,13 +520,11 @@ void dScMgSlot3_c::StartRound(int mode) {
         int j2;
         int k2;
         int m2;
-        char *w2 = c;
-        for (j2 = 0; j2 < 3; j2++, w2 += 3) {
+        for (j2 = 0; j2 < 3; j2++) {
             mReelSpinning[j2] = 1;
             mReelStopped[j2] = 0;
             for (k2 = 0; k2 < 3; k2++) {
-                /* mResultSymbols[j2][k2]; a typed spelling grows the function. */
-                *(u8 *)(w2 + k2 + SLOT3_OFF(mResultSymbols)) = mStripLength;
+                mResultSymbols[j2][k2] = mStripLength;
             }
         }
         for (m2 = 0; m2 < 3; m2++) {
@@ -744,8 +730,6 @@ s32 dScMgSlot3_c::Behavior() {
 
 /* Load the reel assets and initialise the scene state. */
 s32 dScMgSlot3_c::InitResources() {
-    char *c = (char *)this;
-
     G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8800,
                      GX_BG_CHARBASE_0x18000, GX_BG_EXTPLTT_01);
     G2_BG1Mosaic(0);
@@ -808,7 +792,7 @@ s32 dScMgSlot3_c::InitResources() {
 
     mReelDifficulty = (int)mLevel;
 
-    ((dScMgSlot3_c *)c)->StartRound(3);
+    StartRound(3);
 
     mWinSymbol = mNextWinSymbol;
     mReelDrawY = 0;
