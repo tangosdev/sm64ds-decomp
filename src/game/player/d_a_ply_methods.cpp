@@ -111,7 +111,7 @@ void func_ov002_020cd190(char *);
 int func_ov002_020cf700(daPly_c *);
 int func_ov002_020d5cec(void *);
 int func_ov002_020d85fc(daPly_c *, daPly_c *, int);
-void func_ov002_020e25d4(char *);
+void func_ov002_020e25d4(daPly_c *);
 void func_ov002_020e3e00(dExtSimpleModel_c *, Vector3 *, unsigned int);
 void func_ov002_020d2e74(daPly_c *);
 int func_ov002_020d5ab4(daPly_c *);
@@ -18288,7 +18288,7 @@ int daPly_c::St_Land_Init() {
     int idx = gActivePlayerSlot;
     short sval = data_0209f498[idx].mag;
     if (sval == 0 && (IsAnim(0x2b) || IsAnim(0x4c))) {
-        func_ov002_020e25d4((char *)this);
+        func_ov002_020e25d4(this);
     }
     mStateStep = 0;
     if (r4 == &data_ov002_0211019c && mJumpComboStage == 2) {
@@ -19152,9 +19152,8 @@ skipclear:
 
 /* recovered: shared common types */
 
-extern "C" void func_ov002_020e25d4(char *c)
+extern "C" void func_ov002_020e25d4(daPly_c *player)
 {
-    daPly_c *player = (daPly_c *)c;
     Sound::PlayCharVoice(player->mCharacter, 0x10, player->mCamSpacePos);
 }
 
