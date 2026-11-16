@@ -878,8 +878,8 @@ int daMip_c::StateIdleMain()
 
     if (TestWaterBelow() == 1) {
         Vector3 sp(mPosX, mFloorY + 0x3000, mPosZ);
-        mDustParticle =
-            Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, sp.x, sp.y, sp.z, 0);
+        mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, sp.x,
+                                                      sp.y, sp.z, 0);
     }
 
     VecFx32 pp;
