@@ -3816,7 +3816,10 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
  * `this`: the ROM takes each popup slot's address as (this + i*4) + offset,
  * all six before the first test. Plain mPopupScore[i] at every use: 0x11c
  * against 0x118 (with or without the pragma); element pointers or references
- * (&mPopupScore[i]): 0x128, they add the offset before i*4. */
+ * (&mPopupScore[i]): 0x128, they add the offset before i*4.
+ * Re-measured (#821, 2026-11-16): this body is 0x128 without the pragma;
+ * &mPopupX[i] element pointers with an int counter 0x12c, with a u8 counter
+ * 0x12c, with an s16 counter 0x134 (0x130 under the pragma). */
 void dScMgSmartball_c::UpdateScores() {
     char *o = (char *)this;
     int i;
