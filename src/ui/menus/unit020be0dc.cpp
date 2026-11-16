@@ -591,8 +591,10 @@ int func_ov007_020be0dc(void) {
 
 extern const u16 data_ov007_020d7c58[2] = {0x136, 0xf2};
 extern const int data_ov007_020d7c5c[2][2] = {
-    11, 0,
-    12, 13,
+    11,
+    0,
+    12,
+    13,
 };
 int data_ov007_02103230 = 0xffffffff;
 char data_ov007_02103234[] = {'2', 'D', 'E', 'f', 'f', 'e', 'c', 't', 0, 0, 0, 0};

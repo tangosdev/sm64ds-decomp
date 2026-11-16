@@ -713,7 +713,7 @@ extern void UnloadArchives(void);
 extern int Vec3_ApproachHorz(void*, void*, int);
 extern int *Vec3_AsrInPlace(void *, int);
 extern void WarpPlayer(int, int);
-extern void data_ov007_020cd72c(void *);
+extern const unsigned char data_ov007_020cd72c[];
 extern void data_ov052_02111e84(void *);
 extern void data_ov054_02111238(void *);
 extern void MI_SendGXCommand(unsigned int, const void *, unsigned int);
