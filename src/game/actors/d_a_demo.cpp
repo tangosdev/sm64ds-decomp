@@ -1271,10 +1271,9 @@ void StaffRoll::func_ov002_020f3d98(int idx) {
     (this->*data_ov002_02110e34[sel])(idx);
 }
 
-/* Per-slot update of one 0x4c-byte cutscene record. func_ov002_020f5a94
- * takes c so r0 stays live through the orbit path to the call. */
+/* Per-star update of stars[i]: approach the target, then orbit; the last
+ * star's full orbit re-arms every active star. */
 void StaffRoll::func_ov002_020f3de4(int i) {
-    char *c = (char *)this;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
@@ -1346,28 +1345,25 @@ void StaffRoll::func_ov002_020f3de4(int i) {
     this->stars[i].heading += this->stars[i].angSpeed;
     this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
-    if (i != func_ov002_020f5a94(c) - 1)
+    if (i != func_ov002_020f5a94(this) - 1)
         return;
-    if ((unsigned int)((StaffRoll *)c)->stars[0].orbitTravel < 0x10000)
+    if ((unsigned int)this->stars[0].orbitTravel < 0x10000)
         return;
 
     for (j = 0; j < 4; j++) {
-        if (((StaffRoll *)c)->stars[0].active != 0) {
-            ((StaffRoll *)c)->stars[0].step = 1;
-            ((StaffRoll *)c)->stars[0].loops = 0;
-            ((StaffRoll *)c)->stars[0].phase = 0;
-            ((StaffRoll *)c)->stars[0].radius = 0x38000;
-            ((StaffRoll *)c)->stars[0].heading = data_ov002_021000c0[j];
-            ((StaffRoll *)c)->stars[0].orbitTravel = 0;
-            ((StaffRoll *)c)->stars[0].angSpeed = 0x200;
+        if (this->stars[j].active != 0) {
+            this->stars[j].step = 1;
+            this->stars[j].loops = 0;
+            this->stars[j].phase = 0;
+            this->stars[j].radius = 0x38000;
+            this->stars[j].heading = data_ov002_021000c0[j];
+            this->stars[j].orbitTravel = 0;
+            this->stars[j].angSpeed = 0x200;
         }
-        c += 0x4c;
     }
 }
 
 void StaffRoll::func_ov002_020f40fc(int i) {
-    char *c = (char *)this;
-
     if (this->stars[i].frame == 0) {
         if (this->stars[i].frameTimer == 0) {
             this->stars[i].loops += 1;
@@ -1409,7 +1405,7 @@ void StaffRoll::func_ov002_020f40fc(int i) {
             this->stars[i].speed = 0x2000;
         }
 
-        if (func_ov002_020f5a94(c) != 3)
+        if (func_ov002_020f5a94(this) != 3)
             return;
         if ((unsigned int)this->stars[i].orbitTravel < 0xc000)
             return;
@@ -1556,8 +1552,6 @@ void StaffRoll::func_ov002_020f43cc(int idx) {
 }
 
 void StaffRoll::func_ov002_020f4710(int i) {
-    char *c = (char *)this;
-
     if (this->stars[i].phase == 0) {
         int idx;
 
@@ -1600,7 +1594,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
             this->stars[i].speed = -0x2000;
         }
 
-        if (func_ov002_020f5a94(c) != 3)
+        if (func_ov002_020f5a94(this) != 3)
             return;
         if (i != 2)
             return;
@@ -1612,7 +1606,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
     this->stars[i].flyTimer++;
     this->stars[i].x += this->stars[i].speed;
 
-    if (func_ov002_020f5a94(c) == 3 && i == 2) {
+    if (func_ov002_020f5a94(this) == 3 && i == 2) {
         this->stars[i].speed += 0x300;
     } else if (i == 0 || i == 3) {
         this->stars[i].speed += 0x300;
@@ -1631,7 +1625,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
         this->stars[i].heading = 0x8000;
         this->stars[i].delay = (u16)(data_ov002_02100110[i] << 6);
 
-        if (func_ov002_020f5a94(c) == 3) {
+        if (func_ov002_020f5a94(this) == 3) {
             if (i == 2)
                 this->stars[i].delay = 0x40;
         }
@@ -1751,8 +1745,6 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
 }
 
 void StaffRoll::func_ov002_020f4d70(int i) {
-    char *c = (char *)this;
-
     if (this->stars[i].frame == 0) {
         if (this->stars[i].frameTimer == 0)
             this->stars[i].loops++;
@@ -1815,7 +1807,7 @@ void StaffRoll::func_ov002_020f4d70(int i) {
         this->stars[i].loops = 0;
         this->stars[i].delay = data_ov002_021000f0[i] << 6;
 
-        if (func_ov002_020f5a94(c) == 3) {
+        if (func_ov002_020f5a94(this) == 3) {
             if (i == 2)
                 this->stars[i].delay = 0x40;
         }
