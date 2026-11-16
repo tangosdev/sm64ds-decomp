@@ -4773,14 +4773,14 @@ void dScMgSmartball_c::SpawnObjects() {
 
 #pragma pop
 
-/* Leftover: Render needs both pragmas off, and the locals below must stay in
- * this order (each one pins a stack slot). The tally and popup pointers still
- * step the byte view `g`: the ROM forms (this + i*4) + offset. Measured
- * against 0x10c0: &mLineTally[row] 0x10bc, &mAwardTally[j] same size but
- * offset-first, &mPopupScore[sb] 0x10c8, &mPopupMultiplier[sb] 0x10c8,
- * &mPopupPos[sb][1] / [0] 0x10c4, the mPopupScore[sb] re-read offset-first. */
+/* Leftover: Render needs strength reduction off, and the locals below must
+ * stay in this order (each one pins a stack slot). The tally and popup
+ * pointers still step the byte view `g`: the ROM forms (this + i*4) + offset.
+ * Measured (#821, 2026-11-16) with common subexpressions on, against 0x10c0:
+ * &mLineTally[row] 0x10b8, &mAwardTally[j] 3 words off, &mPopupScore[sb]
+ * 29 words off, &mPopupMultiplier[sb] 0x10c8, &mPopupPos[sb][1] / [0] 0x10cc,
+ * all six 0x10d0; without the strength-reduction pragma 0x110c. */
 #pragma push
-#pragma opt_common_subs off
 #pragma opt_strength_reduction off
 /* Slot 9: the frame draw. On the result screen it reveals the tally rows one
  * at a time, then draws the side lamps, every board object and the score
@@ -4981,9 +4981,7 @@ s32 dScMgSmartball_c::Render() {
                     int *px = &((dScMgSmartball_c *)(g + sb * 8))->mPopupPos[0][0];
                     Mg_DrawNumber((*px >> 12) - 0x10, *py >> 12, cnt, -1, 0, 0, 0);
                     nd = 0;
-                    /* Leftover: the score is read again through an int address. */
-                    u = (unsigned int)*(int *)SlotAddress(
-                        this, OFFSET_OF(dScMgSmartball_c, mPopupScore), sb, 4);
+                    u = mPopupScore[sb];
                     if (u != 0) {
                         do {
                             u /= 10;
