@@ -1341,6 +1341,48 @@
           "firstDiff": null
         },
         {
+          "section": ".data.menuScreenEnglish",
+          "start": "0x020bcaa0",
+          "end": "0x020bd074",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.menuScreenFrench",
+          "start": "0x020bd074",
+          "end": "0x020bd698",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.menuScreenItalian",
+          "start": "0x020bd698",
+          "end": "0x020bdccc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.menuScreenSpanish",
+          "start": "0x020bdccc",
+          "end": "0x020be34c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.menuScreenGerman",
+          "start": "0x020be34c",
+          "end": "0x020be9ec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sparkleSprites",
+          "start": "0x020be9ec",
+          "end": "0x020bea14",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data.menuplt",
           "start": "0x020bea14",
           "end": "0x020beb48",
