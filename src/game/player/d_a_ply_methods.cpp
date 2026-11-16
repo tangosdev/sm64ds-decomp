@@ -1700,7 +1700,6 @@ int daPly_c::IsCollectingCap() {
 }
 
 void daPly_c::func_ov002_020beabc() {
-    char *p = (char *)this;
     mCapFlags = 5;
     mCapTimer = 47;
     mCapPaletteBlend = 0x1000;
