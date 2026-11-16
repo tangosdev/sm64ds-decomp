@@ -1112,7 +1112,7 @@ void func_ov002_020edca4(daYegg_c* self)
         spawned =
             (char *)dActor_c::Spawn(ACTOR_SILVER_STAR, 0x10, pos, 0, self->mPlayer->mAreaId, -1);
         if (spawned != 0) {
-            ((daStar_c *)spawned)->SeekNewMarker((char *)self->mPlayer, 1);
+            ((daStar_c *)spawned)->SeekNewMarker(self->mPlayer, 1);
         }
     }
 

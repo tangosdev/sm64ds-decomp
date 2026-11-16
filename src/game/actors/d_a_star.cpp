@@ -2802,13 +2802,12 @@ void daStarBase_c::SpawnRedCoinStarIfNecessary()
 /* Sends the star looking for a new marker. With gate 0 it first spawns a score
  * popup 200.0 above the player. Sets the relink flag and picks a marker with
  * LinkRandomFreeMarker. */
-void daStar_c::SeekNewMarker(char *player, int gate) {
-    daPly_c *a = (daPly_c *)player;
+void daStar_c::SeekNewMarker(daPly_c *player, int gate) {
     if (gate == 0) {
         struct Vector3 pos[2];
         bool b;
         int* v;
-        v = &a->mPosX;
+        v = &player->mPosX;
         pos[0].x = v[0];
         pos[0].y = v[1];
         pos[0].z = v[2];
@@ -2818,7 +2817,7 @@ void daStar_c::SeekNewMarker(char *player, int gate) {
         pos[1].x = pos[0].x;
         pos[1].z = pos[0].z;
         pos[1].y = pos[0].y;
-        SpawnNumber(pos[1], gNumStageStars[a->mPlayerNo], b, 0x15, a);
+        SpawnNumber(pos[1], gNumStageStars[player->mPlayerNo], b, 0x15, player);
     }
     mBits.relink = 1;
     LinkRandomFreeMarker();

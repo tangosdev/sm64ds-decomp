@@ -14648,7 +14648,7 @@ int daPly_c::func_ov002_020d94cc() {
 
     if (spawned == 0) goto fail;
 
-    ((daStar_c *)spawned)->SeekNewMarker((char *)this, 0);
+    ((daStar_c *)spawned)->SeekNewMarker(this, 0);
 
     b = (gGameMode == 1);
     if (!b) {
