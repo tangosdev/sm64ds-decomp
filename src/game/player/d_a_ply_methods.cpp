@@ -15424,14 +15424,14 @@ int daPly_c::func_ov002_020dacb4(dActor_c *actor) {
     }
 
     {
-        char *a2 = (char *)mHeldObj;
+        dActor_c *a2 = mHeldObj;
         int offset = 0xc4;
-        int s = ((dActor_c *)a2)->mFlags;
+        int s = a2->mFlags;
         s = (s & 0x8000) != false;
         if (s != false) {
             offset = 0x224;
             if (param1 == 2) {
-                int c = ((dActor_c *)a2)->actorID;
+                int c = a2->actorID;
                 c = c == 0xce;
                 if (c != false) offset = 0xc4;
             }
