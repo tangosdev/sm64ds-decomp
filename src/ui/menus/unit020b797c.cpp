@@ -61,6 +61,15 @@
 #include "Ov007Settings.h"
 #include "nitro/mi/memory.h"
 
+/* Kept, measured 2026-11-16 (#821). MenuText_DrawGlyph (ROM 0x178) is the
+ * only one of the 27 functions this setting changes: the ROM recomputes
+ * `~mask` inside the glyph loop's spill branch, and loop-invariant hoisting
+ * lifts it into a register ahead of the loop, which then predicates the
+ * branch (0x174). Without the pragma: `*d2 &= ~mask; *d2 |= ...` 0x180,
+ * `dst[8]` for d2 0x170, `mask ^ 0xffffffff` 0x188, `u32 keep = ~mask` in
+ * the branch 0x174, `rem > 0` / `shift != 0` tests 0x174, s32 mask 0x174,
+ * `src[0]; src++` 0x178 but 56 words off -- every spelling of the
+ * complement is loop-invariant, so none survives the hoist. */
 #pragma opt_loop_invariants off
 
 /* The window's state machine, as MessageWindow_Update steps it. */
