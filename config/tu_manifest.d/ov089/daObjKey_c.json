@@ -198,20 +198,6 @@
   ],
   "data": [
     {
-      "symbol": "data_ov089_02132894",
-      "address": "0x02132894",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "eight model handles indexed by key kind"
-    },
-    {
-      "symbol": "@708",
-      "address": "0x02132b00",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
-    },
-    {
       "symbol": "@700",
       "address": "0x02132b08",
       "size": "0x8",
@@ -226,13 +212,6 @@
       "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
     },
     {
-      "symbol": "@706",
-      "address": "0x02132b18",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor for the StateFlyToCenter slot; retail first word is 0x021311c0"
-    },
-    {
       "symbol": "@704",
       "address": "0x02132b20",
       "size": "0x8",
@@ -240,8 +219,22 @@
       "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
     },
     {
-      "symbol": "@726",
-      "address": "0x02132b28",
+      "symbol": "@706",
+      "address": "0x02132b18",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary pointer-to-member descriptor for the StateFlyToCenter slot; retail first word is 0x021311c0"
+    },
+    {
+      "symbol": "@708",
+      "address": "0x02132b00",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
+    },
+    {
+      "symbol": "@710",
+      "address": "0x02132b38",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
@@ -254,8 +247,8 @@
       "evidence": "compiler temporary pointer-to-member descriptor for the StateStarJump slot; retail first word is 0x0213162c"
     },
     {
-      "symbol": "@710",
-      "address": "0x02132b38",
+      "symbol": "@726",
+      "address": "0x02132b28",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
@@ -267,14 +260,7 @@
       "binding": "STB_GLOBAL",
       "evidence": "eight model handles indexed by key kind, in the overlay's model-handle band"
     }
-  ,
-    {
-      "symbol": "data_ov089_02132894",
-      "address": "0x02132894",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "eight model handles indexed by key kind; LoadFile/Release index this array"
-    }],
+  ],
   "rodata": [
     {
       "symbol": "data_ov089_02132880",
