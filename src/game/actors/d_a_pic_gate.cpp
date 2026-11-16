@@ -57,13 +57,11 @@
 #pragma defer_codegen off
 
 /* Locals take the type of the call that fills them: the CalcLib Vec3_* helpers
-   write Vector3, the NitroSDK VEC_* and MTX_MultVec43 write VecFx32. The SDK
-   prototypes (math/CalcLib.h, math/MtxStack.h and the two below) still say
-   Vector3 (tangosdev/sm64ds-decomp#5207), hence the casts on the VecFx32
-   side. */
+   write Vector3, the NitroSDK VEC_* and MTX_MultVec43 write VecFx32. The VEC_*
+   calls take VecFx32 directly (nitro/fx/fx_vec.h, through math/CalcLib.h);
+   MTX_MultVec43's prototype (math/MtxStack.h) still says Vector3
+   (tangosdev/sm64ds-decomp#5207), hence the casts there. */
 
-extern "C" void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
-extern "C" void VEC_Normalize(const Vector3 *v, Vector3 *out);
 extern "C" void G3_LoadMtx43(void *m);
 void func_02012694(u32 id, const Vector3 *pos);
 extern "C" void *func_0201787c(SharedFilePtr *sfp);
@@ -249,22 +247,22 @@ void daPicGate_c::BuildNormals() {
             q = (int *)&n;  q[0] = z; q[1] = z; q[2] = z;
 
             if (j == 0)
-                VEC_Subtract((Vector3 *)p, (Vector3 *)(p + 1), (Vector3 *)&ej);
+                VEC_Subtract((VecFx32 *)p, (VecFx32 *)(p + 1), &ej);
             else if (j == mCols - 1)
-                VEC_Subtract((Vector3 *)(p - 1), (Vector3 *)p, (Vector3 *)&ej);
+                VEC_Subtract((VecFx32 *)(p - 1), (VecFx32 *)p, &ej);
             else
-                VEC_Subtract((Vector3 *)(p - 1), (Vector3 *)(p + 1), (Vector3 *)&ej);
+                VEC_Subtract((VecFx32 *)(p - 1), (VecFx32 *)(p + 1), &ej);
 
             if (i == 0)
-                VEC_Subtract((Vector3 *)p, (Vector3 *)(p + mRows), (Vector3 *)&ei);
+                VEC_Subtract((VecFx32 *)p, (VecFx32 *)(p + mRows), &ei);
             else if (i == mRows - 1)
-                VEC_Subtract((Vector3 *)(p - mRows), (Vector3 *)p, (Vector3 *)&ei);
+                VEC_Subtract((VecFx32 *)(p - mRows), (VecFx32 *)p, &ei);
             else
-                VEC_Subtract((Vector3 *)(p - mRows), (Vector3 *)(p + mRows), (Vector3 *)&ei);
+                VEC_Subtract((VecFx32 *)(p - mRows), (VecFx32 *)(p + mRows), &ei);
 
-            VEC_CrossProduct((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
+            VEC_CrossProduct(&ej, &ei, &n);
             n.z >>= 1;
-            VEC_Normalize((const Vector3 *)&n, (Vector3 *)&n);
+            VEC_Normalize(&n, &n);
             p->normal = (n.x >> 3 & mask) | ((n.y >> 3 & mask) << 10) | ((n.z >> 3 & mask) << 20);
             p += 1;
         }

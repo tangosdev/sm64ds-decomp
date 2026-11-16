@@ -50,6 +50,7 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/cp/sqrt.h"
+#include "math/CalcLib.h"
 
 extern "C" {
 
@@ -61,8 +62,6 @@ extern "C" {
    and the normal into 0x8.
    local extern: no header in include/ declares them. */
 
-/* local extern: no shared header declares it; match src/VEC_DotProduct.c. */
-fx32 VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* local extern: no header in include/ declares it. */
 fx32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 }
