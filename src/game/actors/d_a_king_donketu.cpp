@@ -578,6 +578,15 @@ int daKing_Donketu_c::UpdateDefeat() {
     pos.y = pos.y + 0x190000;
     c->func_0200fa8c(1);
 
+    /* Kept (#821 r20, measured against ov073 0x0211fa74, 0x178). rot is
+       built and never read; the ROM still stores all four halfwords.
+         non-volatile rot with plain field stores: 0x15c (the stores are
+           dropped).
+         volatile rot, `rot.x = mAngleX; rot.y = mAngleY; ...`: 5 of 94
+           words differ.
+         volatile rot with the reads below but `rot.x = a`: 4 differ.
+       Vector3_16 has no destructor, so the non-POD lever that keeps a
+       dead Vector3 copy does not apply. */
     {
         unsigned short a = *(unsigned short *)&c->mAngleX;
         unsigned short b = *(unsigned short *)&c->mAngleY;
