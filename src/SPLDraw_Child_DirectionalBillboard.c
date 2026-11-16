@@ -75,9 +75,8 @@ void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl)
     {
         /* |velocity . -view z|: 1 when the particle flies straight at the
          * camera, 0 across it; y stretches by (1 - that) * dbbScale + 1 */
-        int dot =
-            FX_MUL(velDir.x, -view->m[0][2]) + FX_MUL(velDir.y, -view->m[1][2]) +
-            FX_MUL(velDir.z, -view->m[2][2]);
+        int dot = FX_MUL(velDir.x, -view->m[0][2]) + FX_MUL(velDir.y, -view->m[1][2]) +
+                  FX_MUL(velDir.z, -view->m[2][2]);
         int side;
         int stretch;
         int sy2;

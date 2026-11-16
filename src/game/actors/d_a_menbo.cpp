@@ -44,7 +44,6 @@
 #include "LevelRng.h"
 #include "math/MtxStack.h"
 
-
 struct BMD_File;
 struct BCA_File;
 
