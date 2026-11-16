@@ -34,6 +34,11 @@
       "name": ".bss",
       "start": "0x0209b000",
       "end": "0x0209b270"
+    },
+    {
+      "name": ".data",
+      "start": "0x02086fcc",
+      "end": "0x020874cc"
     }
   ],
   "functions": [
@@ -1032,7 +1037,14 @@
       "ordinal": 176
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_02086fcc",
+      "address": "0x02086fcc",
+      "size": "0x500",
+      "evidence": "32 CamMode records; SetMode indexes the table by 0x28"
+    }
+  ],
   "bss": [
     {
       "symbol": "sPrevTurnInput$1927",
@@ -1931,6 +1943,13 @@
           "start": "0x0209b000",
           "end": "0x0209b270",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02086fcc",
+          "end": "0x020874cc",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
