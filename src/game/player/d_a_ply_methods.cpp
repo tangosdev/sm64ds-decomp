@@ -1058,7 +1058,6 @@ int daPly_c::func_ov002_020bd4e0(unsigned char *data, int beginFrame, int endFra
     extern char data_0209f4a0[];
     extern char data_0209f4ac[];
     extern char data_0209f49c[];
-    char *self = (char *)this;
     Vector3 v;
     int y, z;
     int idx;
