@@ -2111,7 +2111,6 @@ s32 dScMgPachinko_c::Behavior()
 /* Vtable slot 0. */
 s32 dScMgPachinko_c::InitResources()
 {
-    char *c = (char *)this;
     char *b;
     char *dst;
     volatile u16 fillScr;
