@@ -108,9 +108,6 @@ typedef struct State2 {
     int iteration;
     int depth;
     int entityIndex;
-    void *null34;
-    void *null38;
-    int null3c;
     int angle40;
     int index44;
 } State2;
@@ -2727,9 +2724,6 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     }
 
     state.depth = 0;
-    state.null34 = 0;
-    state.null38 = 0;
-    state.null3c = 0;
     state.angle40 = 0;
     state.index44 = 0;
 
@@ -2875,14 +2869,12 @@ outer_loop:
         if (mpManager->mBallCount > 0) {
             do {
                 if (entityLoopIndex != mIndex) {
-                    other =
-                        entityLoopIndex >= 0xd ? state.null34 : mpManager->mpBalls[entityLoopIndex];
+                    other = entityLoopIndex >= 0xd ? 0 : mpManager->mpBalls[entityLoopIndex];
                     if (((cMgSmartball_ball_c *)other)->state3a == 0) {
-                        other = entityLoopIndex >= 0xd ? state.null38
-                                                       : mpManager->mpBalls[entityLoopIndex];
+                        other = entityLoopIndex >= 0xd ? 0 : mpManager->mpBalls[entityLoopIndex];
                         if (((cMgSmartball_object_c *)other)->mIsActive != 0) {
-                            other = entityLoopIndex >= 0xd ? (void *)state.null3c
-                                                           : mpManager->mpBalls[entityLoopIndex];
+                            other =
+                                entityLoopIndex >= 0xd ? 0 : mpManager->mpBalls[entityLoopIndex];
                             CopyObjectPos(&entityPos, other);
                             Vec2_Sub(&entityDelta.x, &mCurrent0, &entityPos.x);
                             delta = entityDelta;
