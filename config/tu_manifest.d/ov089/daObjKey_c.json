@@ -529,6 +529,27 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata.anims",
+          "start": "0x02132880",
+          "end": "0x02132894",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.models",
+          "start": "0x02132894",
+          "end": "0x021328b4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.extra",
+          "start": "0x021328b4",
+          "end": "0x021328d4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data",
           "start": "0x02132b00",
           "end": "0x02132b40",

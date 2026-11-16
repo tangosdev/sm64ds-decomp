@@ -455,8 +455,8 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
-          "start": "0x0211ecd8",
+          "section": ".data.piano",
+          "start": "0x0211ecb8",
           "end": "0x0211ecf8",
           "differingBytes": 0,
           "firstDiff": null

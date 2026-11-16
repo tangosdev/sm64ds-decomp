@@ -2,7 +2,7 @@
     .rodata     start:0x0211adb0 end:0x0211ae00 kind:rodata align:4
     .init       start:0x0211ae00 end:0x0211b72c kind:code align:4
     .ctor       start:0x0211b72c end:0x0211b758 kind:rodata align:4
-    .data.coinClps start:0x0211b760 end:0x0211bacc kind:data align:4
+    .data.coinClps start:0x0211b760 end:0x0211bacc kind:data align:32
     .data.amiliftClps start:0x0211bacc end:0x0211bb8c kind:data align:4
     .data.guraClps start:0x0211bb8c end:0x0211bc00 kind:data align:4
     .data       start:0x0211bc00 end:0x0211c660 kind:data align:32

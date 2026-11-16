@@ -467,6 +467,13 @@
           "end": "0x02134bc4",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021344e8",
+          "end": "0x021344f4",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

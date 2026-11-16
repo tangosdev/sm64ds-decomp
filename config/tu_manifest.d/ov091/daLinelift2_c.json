@@ -827,7 +827,7 @@
         {
           "section": ".data",
           "start": "0x02134e44",
-          "end": "0x02134e5c",
+          "end": "0x02134e64",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -836,6 +836,13 @@
           "start": "0x02135490",
           "end": "0x021354f8",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021344f4",
+          "end": "0x02134504",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

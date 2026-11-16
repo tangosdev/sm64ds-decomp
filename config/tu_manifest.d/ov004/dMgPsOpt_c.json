@@ -1030,8 +1030,8 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
-          "start": "0x020bca68",
+          "section": ".data.psopt",
+          "start": "0x020bca58",
           "end": "0x020bcaa0",
           "differingBytes": 0,
           "firstDiff": null

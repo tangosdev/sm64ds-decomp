@@ -34,9 +34,10 @@
       "end": "0x02141e54"
     },
     {
-      "name": ".rodata",
+      "name": ".rodata.sD3DSoundPanOffsets",
       "start": "0x0212e574",
-      "end": "0x0212e57c"
+      "end": "0x0212e57c",
+      "input_section": ".rodata"
     },
     {
       "name": ".data",
@@ -529,6 +530,20 @@
           "start": "0x02141a40",
           "end": "0x02141e54",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata.sD3DSoundPanOffsets",
+          "start": "0x0212e574",
+          "end": "0x0212e57c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0213c5e8",
+          "end": "0x0213c610",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

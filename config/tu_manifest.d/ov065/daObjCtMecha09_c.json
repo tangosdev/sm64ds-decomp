@@ -368,6 +368,13 @@
           "start": "0x0211d9cc",
           "end": "0x0211d9f4",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x0211d520",
+          "end": "0x0211d530",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

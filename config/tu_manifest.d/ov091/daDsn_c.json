@@ -281,6 +281,13 @@
           "start": "0x02135610",
           "end": "0x0213564c",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02135138",
+          "end": "0x02135150",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

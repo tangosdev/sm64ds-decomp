@@ -1206,9 +1206,37 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".rodata",
+          "start": "0x020b944c",
+          "end": "0x020b9488",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.fxpmf",
           "start": "0x020bbf4c",
           "end": "0x020bbf6c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.menutbl",
+          "start": "0x020bbf94",
+          "end": "0x020bc034",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.scenekind",
+          "start": "0x020bc070",
+          "end": "0x020bc0b8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.menuplt",
+          "start": "0x020bea14",
+          "end": "0x020beb48",
           "differingBytes": 0,
           "firstDiff": null
         },

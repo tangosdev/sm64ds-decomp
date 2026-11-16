@@ -1513,6 +1513,13 @@
           "start": "0x0211d720",
           "end": "0x0211d814",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0211c078",
+          "end": "0x0211c0a8",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

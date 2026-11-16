@@ -458,6 +458,27 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x020b9488",
+          "end": "0x020b948c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x020bc7d0",
+          "end": "0x020bc7d4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.coinspr",
+          "start": "0x020bc828",
+          "end": "0x020bc850",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x020b9ad0",
           "end": "0x020b9b24",

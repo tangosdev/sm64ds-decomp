@@ -733,6 +733,20 @@
           "firstDiff": null
         },
         {
+          "section": ".data.layout",
+          "start": "0x020bc850",
+          "end": "0x020bc8bc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.statetext",
+          "start": "0x020bca44",
+          "end": "0x020bca58",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x020bfd04",
           "end": "0x020bfda8",

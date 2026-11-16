@@ -250,6 +250,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data.cvres",
+          "start": "0x021148d0",
+          "end": "0x021148dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02114a64",
           "end": "0x02114a8c",

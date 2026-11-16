@@ -260,6 +260,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data.clps",
+          "start": "0x02111bfc",
+          "end": "0x02111c0c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x021124c0",
           "end": "0x021124e8",

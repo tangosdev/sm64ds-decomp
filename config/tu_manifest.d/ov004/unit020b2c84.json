@@ -1309,8 +1309,211 @@
         },
         {
           "section": ".data",
-          "start": "0x020bc6e8",
+          "start": "0x020bc27c",
           "end": "0x020bc7d0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgSuperEsperSpritesEnglish",
+          "start": "0x20b9e50",
+          "end": "0x20b9e54",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgNoPairSpritesEnglish",
+          "start": "0x20b9e70",
+          "end": "0x20b9e74",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgFullHouseSpritesEnglish",
+          "start": "0x20b9e78",
+          "end": "0x20b9e7c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgTimeOverSpritesEnglish",
+          "start": "0x20b9e7c",
+          "end": "0x20b9e80",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgQuitSpritesEnglish",
+          "start": "0x20b9e8c",
+          "end": "0x20b9e90",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgYouWinSpritesEnglish",
+          "start": "0x20b9e90",
+          "end": "0x20b9e94",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgRetrySpritesEnglish",
+          "start": "0x20b9e98",
+          "end": "0x20b9e9c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgGoalSpritesEnglish",
+          "start": "0x20b9ea4",
+          "end": "0x20b9ea8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgHateSpritesEnglish",
+          "start": "0x20b9ea8",
+          "end": "0x20b9eac",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgPerfectSpritesEnglish",
+          "start": "0x20b9eb8",
+          "end": "0x20b9ebc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgWhereSpritesEnglish",
+          "start": "0x20b9ebc",
+          "end": "0x20b9ec0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgTooBadSpritesEnglish",
+          "start": "0x20b9ed4",
+          "end": "0x20b9ed8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgLikeSpritesEnglish",
+          "start": "0x20b9ee4",
+          "end": "0x20b9ee8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgFiveCardSpritesEnglish",
+          "start": "0x20b9ee8",
+          "end": "0x20b9eec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgLoveSpritesEnglish",
+          "start": "0x20b9ef0",
+          "end": "0x20b9ef4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgTwoPairSpritesEnglish",
+          "start": "0x20b9efc",
+          "end": "0x20b9f00",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgEsperSpritesEnglish",
+          "start": "0x20b9f0c",
+          "end": "0x20b9f10",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgLevelClearSpritesEnglish",
+          "start": "0x20b9f2c",
+          "end": "0x20b9f30",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgGiveUpSprites",
+          "start": "0x20b9f54",
+          "end": "0x20b9f58",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgResultHiScoreSpritesEnglish",
+          "start": "0x20b9f5c",
+          "end": "0x20b9f60",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgOnePairSpritesEnglish",
+          "start": "0x20b9f60",
+          "end": "0x20b9f64",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgStartSpritesEnglish",
+          "start": "0x20b9f78",
+          "end": "0x20b9f7c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgDislikeSpritesEnglish",
+          "start": "0x20b9f7c",
+          "end": "0x20b9f80",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgThreeCardSpritesEnglish",
+          "start": "0x20b9f88",
+          "end": "0x20b9f8c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgLevelSpritesEnglish",
+          "start": "0x20b9fa0",
+          "end": "0x20b9fa4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgFourCardSpritesEnglish",
+          "start": "0x20b9fc8",
+          "end": "0x20b9fcc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgHiScoreSpritesEnglish",
+          "start": "0x20b9fd8",
+          "end": "0x20b9fdc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgDrawSpritesEnglish",
+          "start": "0x20b9ffc",
+          "end": "0x20ba000",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgGameOverSpritesEnglish",
+          "start": "0x20ba010",
+          "end": "0x20ba014",
           "differingBytes": 0,
           "firstDiff": null
         },

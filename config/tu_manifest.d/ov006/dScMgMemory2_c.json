@@ -38,9 +38,10 @@
       "end": "0x021424ec"
     },
     {
-      "name": ".rodata",
+      "name": ".rodata.sMemory2Tables",
       "start": "0x0212e8e8",
-      "end": "0x0212e954"
+      "end": "0x0212e954",
+      "input_section": ".rodata"
     }
   ],
   "functions": [
@@ -883,6 +884,13 @@
           "start": "0x021423a8",
           "end": "0x021424ec",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata.sMemory2Tables",
+          "start": "0x0212e8e8",
+          "end": "0x0212e954",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

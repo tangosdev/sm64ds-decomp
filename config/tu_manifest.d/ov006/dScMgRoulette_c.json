@@ -37,9 +37,10 @@
       "end": "0x02142bdc"
     },
     {
-      "name": ".rodata",
+      "name": ".rodata.sRouletteTables",
       "start": "0x0212ed14",
-      "end": "0x0212ed88"
+      "end": "0x0212ed88",
+      "input_section": ".rodata"
     }
   ],
   "functions": [
@@ -324,7 +325,7 @@
       "ordinal": 39
     }
   ],
-"rodata": [
+  "rodata": [
     {
       "symbol": "sRoulettePayoutMultipliers",
       "address": "0x0212ed14",
@@ -361,7 +362,7 @@
       "evidence": "Roulette table read by index. Declared length matches this symbol's window."
     }
   ],
-    "data": [],
+  "data": [],
   "bss": [
     {
       "symbol": "sRouletteLandedRacer",
@@ -841,6 +842,13 @@
           "start": "0x021428c8",
           "end": "0x02142bdc",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata.sRouletteTables",
+          "start": "0x0212ed14",
+          "end": "0x0212ed88",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

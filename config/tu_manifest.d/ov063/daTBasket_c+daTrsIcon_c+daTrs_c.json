@@ -1179,6 +1179,13 @@
           "start": "0x0211edc0",
           "end": "0x0211ee98",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0211e1c0",
+          "end": "0x0211e26c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

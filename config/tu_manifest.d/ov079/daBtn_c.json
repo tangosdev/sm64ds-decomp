@@ -767,6 +767,27 @@
           "start": "0x02128140",
           "end": "0x021282e0",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021275dc",
+          "end": "0x02127618",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.btnA",
+          "start": "0x02127ba0",
+          "end": "0x02127c28",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02127cfc",
+          "end": "0x02127e7c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
