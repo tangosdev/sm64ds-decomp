@@ -203,8 +203,6 @@ int dBgCh_SphCrr::DetectClsnSlot0() {
 int dBgCh_SphCrr::DetectClsnExceptSlot0() {
     int reach = ((dM3dGSph &)*this).radius + 0x1000;
     int result = 0;
-    int zero = 0;
-    int one = 1;
     int i;
     for (i = 1; i < 24; i++) {
         dBgW *o = data_020a0c80[i];
@@ -213,7 +211,7 @@ int dBgCh_SphCrr::DetectClsnExceptSlot0() {
         dActor_c *owner = o->GetActor();
         if (IsOwnedBy(owner))
             continue;
-        if (owner != 0 && ((owner->mFlags & 2) ? one : zero)) {
+        if (owner != 0 && ((owner->mFlags & 2) ? 1 : 0)) {
             /* The address local must stay declared int -- a pointer local
                diffs. Its value is the dM3dGSph base's centre. */
             int pos = (int)&((dM3dGSph &)*this).centre;
@@ -244,7 +242,7 @@ int dBgCh_SphCrr::DetectClsnExceptSlot0() {
             SetWallCollider(i, o->GetActorUniqueID(), o->GetActor(), o);
         if (hits & 4)
             SetUnderCollider(i, o->GetActorUniqueID(), o->GetActor(), o);
-        result = one;
+        result = 1;
     }
     this->UpdateDisplacement();
     return result;
