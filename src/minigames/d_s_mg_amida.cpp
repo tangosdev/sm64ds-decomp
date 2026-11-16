@@ -875,7 +875,10 @@ int dScMgAmida_c::StepWalker(int walker, int dir) {
    mwccarm keeps the ROM's branch there instead of predicating it
    (notes/mwccarm-codegen.md 6cn). */
 /* Both kept: measured 2026-11-06, StepWalkers is the only function this
-   bracket reaches and its size changes when EITHER setting goes back on. */
+   bracket reaches and its size changes when EITHER setting goes back on.
+   The `sceneBytes` slot pointers stay too: the ROM forms each one as
+   (this + i*stride) + offset, and &mWalkerDelay[i] / &mWalkerCell[i] /
+   &mWalkerDone[i] put the offset first, 0xe4c against 0xe48 (2026-11-16). */
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
