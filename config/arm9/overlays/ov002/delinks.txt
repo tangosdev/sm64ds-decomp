@@ -11,6 +11,7 @@ src/runtime/actor/d_enemy_base.cpp:
     .ctor start:0x021080d4 end:0x021080d8
     .data start:0x02108140 end:0x021081c0
     .bss start:0x0210db80 end:0x0210dc00
+    .rodata start:0x020ff014 end:0x020ff028
 
 src/runtime/actor/d_cap_enemy.cpp:
     complete
@@ -48,6 +49,7 @@ src/game/actors/d_a_coin.cpp:
     .ctor start:0x021080dc end:0x021080e0
     .data start:0x02108730 end:0x02108868
     .bss start:0x0210dc70 end:0x0210dcb8
+    .rodata start:0x020ff060 end:0x020ff090
 
 src/game/actors/d_a_feather.cpp:
     complete
@@ -135,6 +137,7 @@ src/game/actors/d_a_obj_mario_cap.cpp:
     .init start:0x02101064 end:0x02101478
     .ctor start:0x021080f0 end:0x021080f4
     .bss start:0x0210de00 end:0x0210df94
+    .rodata start:0x020ff0b8 end:0x020ff0d0
 
 src/game/actors/d_a_obj_pushblock.cpp:
     complete
@@ -169,6 +172,7 @@ src/game/actors/d_a_obj_tatefuda.cpp:
     .ctor start:0x02108100 end:0x02108104
     .data start:0x02109a64 end:0x02109ab4
     .bss start:0x0210e05c end:0x0210e0d4
+    .rodata start:0x020ff0d4 end:0x020ff0ec
 
 src/game/actors/d_a_obj_wakame.cpp:
     complete
@@ -243,6 +247,7 @@ src/game/actors/d_a_yegg.cpp:
     .ctor start:0x02108118 end:0x0210811c
     .data start:0x0210ad38 end:0x0210ad78
     .bss start:0x02110a5c end:0x02110a9c
+    .rodata start:0x021000a8 end:0x021000b8
 
 src/runtime/actor/d_bg_actor.cpp:
     complete
@@ -298,8 +303,9 @@ src/game/actors/d_a_demo.cpp:
     .text start:0x020f1f70 end:0x020f8858
     .init start:0x02107370 end:0x02107f88
     .ctor start:0x02108128 end:0x0210812c
-    .data start:0x0210b600 end:0x0210b958
+    .data start:0x0210b600 end:0x0210b9a8
     .bss start:0x02110afc end:0x0211110c
+    .rodata start:0x021000b8 end:0x021001b0
 
 src/game/actors/d_a_f_pkn_ball.cpp:
     complete
@@ -338,6 +344,7 @@ src/game/actors/d_a_propeller_heyho_fire.cpp:
     .init start:0x02108094 end:0x021080d0
     .ctor start:0x02108134 end:0x02108138
     .bss start:0x02111190 end:0x021111a0
+    .data start:0x0210d5f8 end:0x0210d608
 
 src/ov002_handles.cpp:
     complete
