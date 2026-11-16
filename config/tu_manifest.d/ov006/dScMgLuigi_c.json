@@ -110,6 +110,36 @@
       "end": "0x021350dc"
     },
     {
+      "name": ".data.data_ov006_021350dc",
+      "input_section": ".data",
+      "start": "0x021350dc",
+      "end": "0x021350fc"
+    },
+    {
+      "name": ".data.data_ov006_0213aba8",
+      "input_section": ".data",
+      "start": "0x0213aba8",
+      "end": "0x0213abb0"
+    },
+    {
+      "name": ".data.data_ov006_0213abb0",
+      "input_section": ".data",
+      "start": "0x0213abb0",
+      "end": "0x0213abb8"
+    },
+    {
+      "name": ".data.data_ov006_0213abb8",
+      "input_section": ".data",
+      "start": "0x0213abb8",
+      "end": "0x0213abc0"
+    },
+    {
+      "name": ".data.data_ov006_0213abc0",
+      "input_section": ".data",
+      "start": "0x0213abc0",
+      "end": "0x0213abc8"
+    },
+    {
       "name": ".data.sLuigiPictureSprites",
       "input_section": ".data",
       "start": "0x0213abc8",
@@ -713,6 +743,41 @@
       "size": "0x10",
       "binding": "STB_GLOBAL",
       "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021350dc",
+      "address": "0x021350dc",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213aba8",
+      "address": "0x0213aba8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213abb0",
+      "address": "0x0213abb0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213abb8",
+      "address": "0x0213abb8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213abc0",
+      "address": "0x0213abc0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     }
   ],
   "bss": [
@@ -1079,6 +1144,41 @@
           "section": ".data.sLuigiPictureSprites",
           "start": "0x0213abc8",
           "end": "0x0213abd8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021350dc",
+          "start": "0x021350dc",
+          "end": "0x021350fc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213aba8",
+          "start": "0x0213aba8",
+          "end": "0x0213abb0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213abb0",
+          "start": "0x0213abb0",
+          "end": "0x0213abb8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213abb8",
+          "start": "0x0213abb8",
+          "end": "0x0213abc0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213abc0",
+          "start": "0x0213abc0",
+          "end": "0x0213abc8",
           "differingBytes": 0,
           "firstDiff": null
         }

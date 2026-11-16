@@ -63,6 +63,54 @@
       "end": "0x0212e5a8"
     },
     {
+      "name": ".data.data_ov006_021339fc",
+      "input_section": ".data",
+      "start": "0x021339fc",
+      "end": "0x02133a04"
+    },
+    {
+      "name": ".data.data_ov006_02133a04",
+      "input_section": ".data",
+      "start": "0x02133a04",
+      "end": "0x02133a0c"
+    },
+    {
+      "name": ".data.data_ov006_02133a0c",
+      "input_section": ".data",
+      "start": "0x02133a0c",
+      "end": "0x02133a14"
+    },
+    {
+      "name": ".data.data_ov006_02133a14",
+      "input_section": ".data",
+      "start": "0x02133a14",
+      "end": "0x02133a1c"
+    },
+    {
+      "name": ".data.data_ov006_02133a1c",
+      "input_section": ".data",
+      "start": "0x02133a1c",
+      "end": "0x02133a24"
+    },
+    {
+      "name": ".data.data_ov006_02133a24",
+      "input_section": ".data",
+      "start": "0x02133a24",
+      "end": "0x02133a2c"
+    },
+    {
+      "name": ".data.data_ov006_02133a2c",
+      "input_section": ".data",
+      "start": "0x02133a2c",
+      "end": "0x02133a34"
+    },
+    {
+      "name": ".data.data_ov006_02133a34",
+      "input_section": ".data",
+      "start": "0x02133a34",
+      "end": "0x02133a3c"
+    },
+    {
       "name": ".data.sEsp3DAnimSetSlotsSprites",
       "input_section": ".data",
       "start": "0x02133a3c",
@@ -75,10 +123,46 @@
       "end": "0x02133f38"
     },
     {
+      "name": ".data.data_ov006_02133f38",
+      "input_section": ".data",
+      "start": "0x02133f38",
+      "end": "0x02133f50"
+    },
+    {
+      "name": ".data.data_ov006_02133f50",
+      "input_section": ".data",
+      "start": "0x02133f50",
+      "end": "0x02133f68"
+    },
+    {
+      "name": ".data.data_ov006_02133f68",
+      "input_section": ".data",
+      "start": "0x02133f68",
+      "end": "0x02133f80"
+    },
+    {
+      "name": ".data.data_ov006_02133f80",
+      "input_section": ".data",
+      "start": "0x02133f80",
+      "end": "0x02133f98"
+    },
+    {
+      "name": ".data.data_ov006_02133f98",
+      "input_section": ".data",
+      "start": "0x02133f98",
+      "end": "0x02133fb0"
+    },
+    {
       "name": ".data.sEsp3DAnimSetRowsSprites",
       "input_section": ".data",
       "start": "0x02136e38",
       "end": "0x02136e3c"
+    },
+    {
+      "name": ".data.data_ov006_02136e3c",
+      "input_section": ".data",
+      "start": "0x02136e3c",
+      "end": "0x02136e44"
     }
   ],
   "functions": [
@@ -587,6 +671,104 @@
       "size": "0x30",
       "binding": "STB_GLOBAL",
       "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021339fc",
+      "address": "0x021339fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a04",
+      "address": "0x02133a04",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a0c",
+      "address": "0x02133a0c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a14",
+      "address": "0x02133a14",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a1c",
+      "address": "0x02133a1c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a24",
+      "address": "0x02133a24",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a2c",
+      "address": "0x02133a2c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a34",
+      "address": "0x02133a34",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133f38",
+      "address": "0x02133f38",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133f50",
+      "address": "0x02133f50",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133f68",
+      "address": "0x02133f68",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133f80",
+      "address": "0x02133f80",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133f98",
+      "address": "0x02133f98",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02136e3c",
+      "address": "0x02136e3c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     }
   ],
   "bss": [
@@ -1013,6 +1195,104 @@
           "section": ".data.sEsp3DAnimSetRowsSprites",
           "start": "0x02136e38",
           "end": "0x02136e3c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021339fc",
+          "start": "0x021339fc",
+          "end": "0x02133a04",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a04",
+          "start": "0x02133a04",
+          "end": "0x02133a0c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a0c",
+          "start": "0x02133a0c",
+          "end": "0x02133a14",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a14",
+          "start": "0x02133a14",
+          "end": "0x02133a1c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a1c",
+          "start": "0x02133a1c",
+          "end": "0x02133a24",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a24",
+          "start": "0x02133a24",
+          "end": "0x02133a2c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a2c",
+          "start": "0x02133a2c",
+          "end": "0x02133a34",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a34",
+          "start": "0x02133a34",
+          "end": "0x02133a3c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133f38",
+          "start": "0x02133f38",
+          "end": "0x02133f50",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133f50",
+          "start": "0x02133f50",
+          "end": "0x02133f68",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133f68",
+          "start": "0x02133f68",
+          "end": "0x02133f80",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133f80",
+          "start": "0x02133f80",
+          "end": "0x02133f98",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133f98",
+          "start": "0x02133f98",
+          "end": "0x02133fb0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02136e3c",
+          "start": "0x02136e3c",
+          "end": "0x02136e44",
           "differingBytes": 0,
           "firstDiff": null
         }

@@ -364,7 +364,12 @@ void dScMgLuigi_c::StartReward(int pictureIndex) {
     mReward.velY = -3840;
 }
 
-extern "C" OamAttr data_ov006_021350dc[];
+OamAttr data_ov006_021350dc[4] = {
+    {0x00c0, 0xc1c0, 0x0018, 0x0000},
+    {0x00c0, 0xd000, 0x0018, 0x0000},
+    {0x0000, 0xe1c0, 0x0018, 0x0000},
+    {0x0000, 0xf000, 0x0018, 0xffff},
+};
 OamAttr *sLuigiCurtainSprite = data_ov006_021350dc;
 
 extern const int sLuigiCurtainX[2] = {0xffffffc0, 0x140};
@@ -644,10 +649,10 @@ void dScMgLuigi_c::TickTimer() {
     BeginCatch(0);
 }
 
-extern "C" char data_ov006_0213abc0[];
-extern "C" char data_ov006_0213abb8[];
-extern "C" char data_ov006_0213abb0[];
-extern "C" char data_ov006_0213aba8[];
+OamAttr data_ov006_0213abc0[1] = {{0x00f0, 0x81f0, 0x4084, 0xffff}};
+OamAttr data_ov006_0213abb8[1] = {{0x00f0, 0x81f0, 0x5088, 0xffff}};
+OamAttr data_ov006_0213abb0[1] = {{0x00f0, 0x81f0, 0x608c, 0xffff}};
+OamAttr data_ov006_0213aba8[1] = {{0x00f0, 0x81f0, 0x7080, 0xffff}};
 void *sLuigiPictureSprites[] = {data_ov006_0213abc0, data_ov006_0213abb8, data_ov006_0213abb0,
                                 data_ov006_0213aba8};
 

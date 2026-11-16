@@ -65,6 +65,7 @@ enum dScMgHanachan_c_AssetId {
 #include "types.h"
 #include "Vector2.h"
 #include "OAM.h"
+#include "OamAttr.h"
 #include "nitro/hw/registers.h"
 #include "dScMgHanachan_c.h"
 #include "decl_common.h"
@@ -152,12 +153,12 @@ extern "C" {
 /* This TU's own functions. */
 
 extern void *sWigglerSprites[];
-extern "C" char data_ov006_021375b8[];
-extern "C" char data_ov006_021375b0[];
-extern "C" char data_ov006_021375a8[];
+OamAttr data_ov006_021375b8[1] = {{0x00f0, 0x81f0, 0x3104, 0xffff}};
+OamAttr data_ov006_021375b0[1] = {{0x00f8, 0x41f8, 0x305e, 0xffff}};
+OamAttr data_ov006_021375a8[1] = {{0x00f8, 0x41f8, 0x301e, 0xffff}};
 void *sHanaWigglerTargetSprites[] = {data_ov006_021375b8, data_ov006_021375b0, data_ov006_021375a8};
-extern "C" char data_ov006_02137598[];
-extern "C" char data_ov006_02137590[];
+OamAttr data_ov006_02137598[1] = {{0x40f8, 0x81f0, 0x314a, 0xffff}};
+OamAttr data_ov006_02137590[1] = {{0x40f8, 0x81f0, 0x310a, 0xffff}};
 void *sHanaWigglerFieldSprites[] = {data_ov006_02137598, data_ov006_02137590};
 
 extern short sHanaPickedCount;
@@ -2039,17 +2040,17 @@ void Hana_LoadBackground(void) {
  * two sHanaBackgroundPartsB entries, then every third pointer out of the
  * vu32* ring sHanaBackgroundParts. Non-constant initializers, so the
  * compiler emits __sinit_d_s_mg_hanachan_methods.cpp to copy them at load. */
-extern "C" char data_ov006_021374bc[];
+OamAttr data_ov006_021374bc[1] = {{0x80e0, 0xc1f0, 0x0018, 0xffff}};
 void *data_ov006_021374b8 = data_ov006_021374bc;
-extern "C" char data_ov006_021374c8[];
+OamAttr data_ov006_021374c8[1] = {{0x80e0, 0xc1f0, 0x0100, 0xffff}};
 void *data_ov006_021374c4 = data_ov006_021374c8;
-extern "C" char data_ov006_021374b0[];
+OamAttr data_ov006_021374b0[1] = {{0x80e0, 0xc1f0, 0x0000, 0xffff}};
 void *data_ov006_021374ac = data_ov006_021374b0;
 extern void *data_ov006_021374e8;
-extern "C" char data_ov006_021374f8[];
+OamAttr data_ov006_021374f8[1] = {{0x80e0, 0xc1f0, 0x1006, 0xffff}};
 void *data_ov006_021374f4 = data_ov006_021374f8;
-extern "C" char data_ov006_021375d4[];
-extern "C" char data_ov006_021375cc[];
+OamAttr data_ov006_021375d4[1] = {{0x80e8, 0xc1f0, 0x010e, 0xffff}};
+OamAttr data_ov006_021375cc[1] = {{0x80e8, 0xc1f0, 0x1112, 0xffff}};
 void *sHanaBackgroundPartsB[] = {data_ov006_021375d4, data_ov006_021375cc};
 
 void *sWigglerSprites[11] = {

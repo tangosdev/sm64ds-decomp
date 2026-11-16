@@ -54,7 +54,15 @@
     .ctor       start:0x0213356c end:0x021335e8 kind:rodata align:4
     .data.gap0 start:0x02133600 end:0x0213386c kind:data align:32
     .data.sPachinko2PaddleSprite start:0x0213386c end:0x02133870 kind:data align:4
-    .data.gap1 start:0x02133870 end:0x02133a3c kind:data align:4
+    .data.gap1 start:0x02133870 end:0x021339fc kind:data align:4
+    .data.data_ov006_021339fc start:0x021339fc end:0x02133a04 kind:data align:4
+    .data.data_ov006_02133a04 start:0x02133a04 end:0x02133a0c kind:data align:4
+    .data.data_ov006_02133a0c start:0x02133a0c end:0x02133a14 kind:data align:4
+    .data.data_ov006_02133a14 start:0x02133a14 end:0x02133a1c kind:data align:4
+    .data.data_ov006_02133a1c start:0x02133a1c end:0x02133a24 kind:data align:4
+    .data.data_ov006_02133a24 start:0x02133a24 end:0x02133a2c kind:data align:4
+    .data.data_ov006_02133a2c start:0x02133a2c end:0x02133a34 kind:data align:4
+    .data.data_ov006_02133a34 start:0x02133a34 end:0x02133a3c kind:data align:4
     .data.sEsp3DAnimSetSlotsSprites start:0x02133a3c end:0x02133a5c kind:data align:4
     .data.sTeresaExclaimSprites start:0x02133a5c end:0x02133a60 kind:data align:4
     .data.data_ov006_02133a60 start:0x02133a60 end:0x02133a70 kind:data align:4
@@ -72,7 +80,12 @@
     .data.sCoinValuesSprites start:0x02133f10 end:0x02133f18 kind:data align:4
     .data.gap5 start:0x02133f18 end:0x02133f24 kind:data align:4
     .data.data_ov006_02133f24 start:0x02133f24 end:0x02133f38 kind:data align:4
-    .data.gap6 start:0x02133f38 end:0x02134028 kind:data align:4
+    .data.data_ov006_02133f38 start:0x02133f38 end:0x02133f50 kind:data align:4
+    .data.data_ov006_02133f50 start:0x02133f50 end:0x02133f68 kind:data align:4
+    .data.data_ov006_02133f68 start:0x02133f68 end:0x02133f80 kind:data align:4
+    .data.data_ov006_02133f80 start:0x02133f80 end:0x02133f98 kind:data align:4
+    .data.data_ov006_02133f98 start:0x02133f98 end:0x02133fb0 kind:data align:4
+    .data.gap6 start:0x02133fb0 end:0x02134028 kind:data align:4
     .data.data_ov006_02134028 start:0x02134028 end:0x0213402c kind:data align:4
     .data.gap7 start:0x0213402c end:0x0213406c kind:data align:4
     .data.sCardHudSprites start:0x0213406c end:0x02134074 kind:data align:4
@@ -112,17 +125,40 @@
     .data.sCoinBagSprites start:0x02134b4c end:0x02134b54 kind:data align:4
     .data.gap14 start:0x02134b54 end:0x02134d1c kind:data align:4
     .data.data_ov006_02134d1c start:0x02134d1c end:0x02134d20 kind:data align:4
-    .data.gap15 start:0x02134d20 end:0x02134f00 kind:data align:4
+    .data.gap15 start:0x02134d20 end:0x02134d28 kind:data align:4
+    .data.sTrmpPuffItalian start:0x02134d28 end:0x02134d34 kind:data align:4
+    .data.sTrmpPuffGerman start:0x02134d34 end:0x02134d40 kind:data align:4
+    .data.sTrmpPuffEnglish start:0x02134d40 end:0x02134d4c kind:data align:4
+    .data.sTrmpPuffSpanish start:0x02134d4c end:0x02134d58 kind:data align:4
+    .data.sTrmpPuffFrench start:0x02134d58 end:0x02134d64 kind:data align:4
+    .data.data_ov006_02134d64 start:0x02134d64 end:0x02134d7c kind:data align:4
+    .data.data_ov006_02134d7c start:0x02134d7c end:0x02134d94 kind:data align:4
+    .data.data_ov006_02134d94 start:0x02134d94 end:0x02134dac kind:data align:4
+    .data.data_ov006_02134dac start:0x02134dac end:0x02134dc4 kind:data align:4
+    .data.data_ov006_02134dc4 start:0x02134dc4 end:0x02134ddc kind:data align:4
+    .data.data_ov006_02134ddc start:0x02134ddc end:0x02134df4 kind:data align:4
+    .data.data_ov006_02134df4 start:0x02134df4 end:0x02134e0c kind:data align:4
+    .data.data_ov006_02134e0c start:0x02134e0c end:0x02134e24 kind:data align:4
+    .data.data_ov006_02134e24 start:0x02134e24 end:0x02134e3c kind:data align:4
+    .data.data_ov006_02134e3c start:0x02134e3c end:0x02134e54 kind:data align:4
+    .data.data_ov006_02134e54 start:0x02134e54 end:0x02134e6c kind:data align:4
+    .data.data_ov006_02134e6c start:0x02134e6c end:0x02134e84 kind:data align:4
+    .data.data_ov006_02134e84 start:0x02134e84 end:0x02134e9c kind:data align:4
+    .data.data_ov006_02134e9c start:0x02134e9c end:0x02134eb4 kind:data align:4
+    .data.data_ov006_02134eb4 start:0x02134eb4 end:0x02134ecc kind:data align:4
+    .data.gap15b start:0x02134ecc end:0x02134ef0 kind:data align:4
+    .data.data_ov006_02134ef0 start:0x02134ef0 end:0x02134ef8 kind:data align:4
+    .data.data_ov006_02134ef8 start:0x02134ef8 end:0x02134f00 kind:data align:4
     .data.sTrmpDoorSignSprites start:0x02134f00 end:0x02134f08 kind:data align:4
     .data.sTrmpArrowSprite start:0x02134f08 end:0x02134f0c kind:data align:4
-    .data.gap16 start:0x02134f0c end:0x02134f24 kind:data align:4
+    .data.data_ov006_02134f0c start:0x02134f0c end:0x02134f24 kind:data align:4
     .data.sTrmpRowMarkerSprite start:0x02134f24 end:0x02134f28 kind:data align:4
-    .data.gap17 start:0x02134f28 end:0x02134f30 kind:data align:4
+    .data.data_ov006_02134f28 start:0x02134f28 end:0x02134f30 kind:data align:4
     .data.sBomroomRoundOverSprites start:0x02134f30 end:0x02134f34 kind:data align:4
     .data.data_ov006_02134f34 start:0x02134f34 end:0x02134fdc kind:data align:4
     .data.gap18 start:0x02134fdc end:0x021350d8 kind:data align:4
     .data.sLuigiCurtainSprite start:0x021350d8 end:0x021350dc kind:data align:4
-    .data.gap19 start:0x021350dc end:0x021350fc kind:data align:4
+    .data.data_ov006_021350dc start:0x021350dc end:0x021350fc kind:data align:4
     .data.sTeresaBigBooSprites start:0x021350fc end:0x02135128 kind:data align:4
     .data.data_ov006_02135128 start:0x02135128 end:0x02135268 kind:data align:4
     .data.data_ov006_02135268 start:0x02135268 end:0x021353a8 kind:data align:4
@@ -149,19 +185,27 @@
     .data.sCoinSparkleSprites start:0x02136e24 end:0x02136e2c kind:data align:4
     .data.gap23 start:0x02136e2c end:0x02136e38 kind:data align:4
     .data.sEsp3DAnimSetRowsSprites start:0x02136e38 end:0x02136e3c kind:data align:4
-    .data.gap24 start:0x02136e3c end:0x021374ac kind:data align:4
+    .data.data_ov006_02136e3c start:0x02136e3c end:0x02136e44 kind:data align:4
+    .data.gap24 start:0x02136e44 end:0x021374ac kind:data align:4
     .data.data_ov006_021374ac start:0x021374ac end:0x021374b0 kind:data align:4
-    .data.gap25 start:0x021374b0 end:0x021374b8 kind:data align:4
+    .data.data_ov006_021374b0 start:0x021374b0 end:0x021374b8 kind:data align:4
     .data.data_ov006_021374b8 start:0x021374b8 end:0x021374bc kind:data align:4
-    .data.gap26 start:0x021374bc end:0x021374c4 kind:data align:4
+    .data.data_ov006_021374bc start:0x021374bc end:0x021374c4 kind:data align:4
     .data.data_ov006_021374c4 start:0x021374c4 end:0x021374c8 kind:data align:4
-    .data.gap27 start:0x021374c8 end:0x021374f4 kind:data align:4
+    .data.data_ov006_021374c8 start:0x021374c8 end:0x021374d0 kind:data align:4
+    .data.gap27 start:0x021374d0 end:0x021374f4 kind:data align:4
     .data.data_ov006_021374f4 start:0x021374f4 end:0x021374f8 kind:data align:4
-    .data.gap28 start:0x021374f8 end:0x021375a0 kind:data align:4
+    .data.data_ov006_021374f8 start:0x021374f8 end:0x02137500 kind:data align:4
+    .data.gap28 start:0x02137500 end:0x02137590 kind:data align:4
+    .data.data_ov006_02137590 start:0x02137590 end:0x02137598 kind:data align:4
+    .data.data_ov006_02137598 start:0x02137598 end:0x021375a0 kind:data align:4
     .data.sHanaWigglerFieldSprites start:0x021375a0 end:0x021375a8 kind:data align:4
-    .data.gap29 start:0x021375a8 end:0x021375c0 kind:data align:4
+    .data.data_ov006_021375a8 start:0x021375a8 end:0x021375b0 kind:data align:4
+    .data.data_ov006_021375b0 start:0x021375b0 end:0x021375b8 kind:data align:4
+    .data.data_ov006_021375b8 start:0x021375b8 end:0x021375c0 kind:data align:4
     .data.sHanaWigglerTargetSprites start:0x021375c0 end:0x021375cc kind:data align:4
-    .data.gap30 start:0x021375cc end:0x021375dc kind:data align:4
+    .data.data_ov006_021375cc start:0x021375cc end:0x021375d4 kind:data align:4
+    .data.data_ov006_021375d4 start:0x021375d4 end:0x021375dc kind:data align:4
     .data.sHanaBackgroundPartsB start:0x021375dc end:0x021375e4 kind:data align:4
     .data.gap31 start:0x021375e4 end:0x021389ec kind:data align:4
     .data.sPachinko2BallSprite start:0x021389ec end:0x021389f0 kind:data align:4
@@ -206,7 +250,11 @@
     .data.sTeresaBooFrameSprites start:0x0213a964 end:0x0213a99c kind:data align:4
     .data.gap41 start:0x0213a99c end:0x0213a9fc kind:data align:4
     .data.sCoinCaptionSprites start:0x0213a9fc end:0x0213aa24 kind:data align:4
-    .data.gap42 start:0x0213aa24 end:0x0213abc8 kind:data align:4
+    .data.gap42 start:0x0213aa24 end:0x0213aba8 kind:data align:4
+    .data.data_ov006_0213aba8 start:0x0213aba8 end:0x0213abb0 kind:data align:4
+    .data.data_ov006_0213abb0 start:0x0213abb0 end:0x0213abb8 kind:data align:4
+    .data.data_ov006_0213abb8 start:0x0213abb8 end:0x0213abc0 kind:data align:4
+    .data.data_ov006_0213abc0 start:0x0213abc0 end:0x0213abc8 kind:data align:4
     .data.sLuigiPictureSprites start:0x0213abc8 end:0x0213abd8 kind:data align:4
     .data.gap43 start:0x0213abd8 end:0x0213acc0 kind:data align:4
     .data.sMascotWalkerPaths start:0x0213acc0 end:0x0213ace0 kind:data align:4
@@ -406,6 +454,20 @@ src/minigames/d_mg3d_esp_anim_set.cpp:
     .data.sEsp3DAnimSetSlotsSprites start:0x02133a3c end:0x02133a5c
     .data.data_ov006_02133f24 start:0x02133f24 end:0x02133f38
     .data.sEsp3DAnimSetRowsSprites start:0x02136e38 end:0x02136e3c
+    .data.data_ov006_021339fc start:0x021339fc end:0x02133a04
+    .data.data_ov006_02133a04 start:0x02133a04 end:0x02133a0c
+    .data.data_ov006_02133a0c start:0x02133a0c end:0x02133a14
+    .data.data_ov006_02133a14 start:0x02133a14 end:0x02133a1c
+    .data.data_ov006_02133a1c start:0x02133a1c end:0x02133a24
+    .data.data_ov006_02133a24 start:0x02133a24 end:0x02133a2c
+    .data.data_ov006_02133a2c start:0x02133a2c end:0x02133a34
+    .data.data_ov006_02133a34 start:0x02133a34 end:0x02133a3c
+    .data.data_ov006_02133f38 start:0x02133f38 end:0x02133f50
+    .data.data_ov006_02133f50 start:0x02133f50 end:0x02133f68
+    .data.data_ov006_02133f68 start:0x02133f68 end:0x02133f80
+    .data.data_ov006_02133f80 start:0x02133f80 end:0x02133f98
+    .data.data_ov006_02133f98 start:0x02133f98 end:0x02133fb0
+    .data.data_ov006_02136e3c start:0x02136e3c end:0x02136e44
     .data start:0x0213c85c end:0x0213c88c
 
 src/minigames/d_s_mg_hanachan_methods.cpp:
@@ -424,6 +486,17 @@ src/minigames/d_s_mg_hanachan_methods.cpp:
     .data.sHanaWigglerFieldSprites start:0x021375a0 end:0x021375a8
     .data.sHanaWigglerTargetSprites start:0x021375c0 end:0x021375cc
     .data.sHanaBackgroundPartsB start:0x021375dc end:0x021375e4
+    .data.data_ov006_021374b0 start:0x021374b0 end:0x021374b8
+    .data.data_ov006_021374bc start:0x021374bc end:0x021374c4
+    .data.data_ov006_021374c8 start:0x021374c8 end:0x021374d0
+    .data.data_ov006_021374f8 start:0x021374f8 end:0x02137500
+    .data.data_ov006_02137590 start:0x02137590 end:0x02137598
+    .data.data_ov006_02137598 start:0x02137598 end:0x021375a0
+    .data.data_ov006_021375a8 start:0x021375a8 end:0x021375b0
+    .data.data_ov006_021375b0 start:0x021375b0 end:0x021375b8
+    .data.data_ov006_021375b8 start:0x021375b8 end:0x021375c0
+    .data.data_ov006_021375cc start:0x021375cc end:0x021375d4
+    .data.data_ov006_021375d4 start:0x021375d4 end:0x021375dc
 
 src/minigames/d_s_mg_hanachan.cpp:
     complete
@@ -467,6 +540,11 @@ src/minigames/d_s_mg_luigi.cpp:
     .rodata.sLuigiDriftByLevelSpeed start:0x0212e8d8 end:0x0212e8e8
     .data.sLuigiCurtainSprite start:0x021350d8 end:0x021350dc
     .data.sLuigiPictureSprites start:0x0213abc8 end:0x0213abd8
+    .data.data_ov006_021350dc start:0x021350dc end:0x021350fc
+    .data.data_ov006_0213aba8 start:0x0213aba8 end:0x0213abb0
+    .data.data_ov006_0213abb0 start:0x0213abb0 end:0x0213abb8
+    .data.data_ov006_0213abb8 start:0x0213abb8 end:0x0213abc0
+    .data.data_ov006_0213abc0 start:0x0213abc0 end:0x0213abc8
 
 src/minigames/d_s_mg_memory.cpp:
     complete
@@ -641,6 +719,30 @@ src/minigames/d_s_mg_trampoline.cpp:
     .data.sTrmpDoorSignSprites start:0x02134f00 end:0x02134f08
     .data.sTrmpArrowSprite start:0x02134f08 end:0x02134f0c
     .data.sTrmpRowMarkerSprite start:0x02134f24 end:0x02134f28
+    .data.sTrmpPuffItalian start:0x02134d28 end:0x02134d34
+    .data.sTrmpPuffGerman start:0x02134d34 end:0x02134d40
+    .data.sTrmpPuffEnglish start:0x02134d40 end:0x02134d4c
+    .data.sTrmpPuffSpanish start:0x02134d4c end:0x02134d58
+    .data.sTrmpPuffFrench start:0x02134d58 end:0x02134d64
+    .data.data_ov006_02134d64 start:0x02134d64 end:0x02134d7c
+    .data.data_ov006_02134d7c start:0x02134d7c end:0x02134d94
+    .data.data_ov006_02134d94 start:0x02134d94 end:0x02134dac
+    .data.data_ov006_02134dac start:0x02134dac end:0x02134dc4
+    .data.data_ov006_02134dc4 start:0x02134dc4 end:0x02134ddc
+    .data.data_ov006_02134ddc start:0x02134ddc end:0x02134df4
+    .data.data_ov006_02134df4 start:0x02134df4 end:0x02134e0c
+    .data.data_ov006_02134e0c start:0x02134e0c end:0x02134e24
+    .data.data_ov006_02134e24 start:0x02134e24 end:0x02134e3c
+    .data.data_ov006_02134e3c start:0x02134e3c end:0x02134e54
+    .data.data_ov006_02134e54 start:0x02134e54 end:0x02134e6c
+    .data.data_ov006_02134e6c start:0x02134e6c end:0x02134e84
+    .data.data_ov006_02134e84 start:0x02134e84 end:0x02134e9c
+    .data.data_ov006_02134e9c start:0x02134e9c end:0x02134eb4
+    .data.data_ov006_02134eb4 start:0x02134eb4 end:0x02134ecc
+    .data.data_ov006_02134ef0 start:0x02134ef0 end:0x02134ef8
+    .data.data_ov006_02134ef8 start:0x02134ef8 end:0x02134f00
+    .data.data_ov006_02134f0c start:0x02134f0c end:0x02134f24
+    .data.data_ov006_02134f28 start:0x02134f28 end:0x02134f30
 
 src/minigames/d_s_mg_trampoline2.cpp:
     complete

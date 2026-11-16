@@ -64,10 +64,22 @@
       "end": "0x021374b0"
     },
     {
+      "name": ".data.data_ov006_021374b0",
+      "input_section": ".data",
+      "start": "0x021374b0",
+      "end": "0x021374b8"
+    },
+    {
       "name": ".data.data_ov006_021374b8",
       "input_section": ".data",
       "start": "0x021374b8",
       "end": "0x021374bc"
+    },
+    {
+      "name": ".data.data_ov006_021374bc",
+      "input_section": ".data",
+      "start": "0x021374bc",
+      "end": "0x021374c4"
     },
     {
       "name": ".data.data_ov006_021374c4",
@@ -76,10 +88,34 @@
       "end": "0x021374c8"
     },
     {
+      "name": ".data.data_ov006_021374c8",
+      "input_section": ".data",
+      "start": "0x021374c8",
+      "end": "0x021374d0"
+    },
+    {
       "name": ".data.data_ov006_021374f4",
       "input_section": ".data",
       "start": "0x021374f4",
       "end": "0x021374f8"
+    },
+    {
+      "name": ".data.data_ov006_021374f8",
+      "input_section": ".data",
+      "start": "0x021374f8",
+      "end": "0x02137500"
+    },
+    {
+      "name": ".data.data_ov006_02137590",
+      "input_section": ".data",
+      "start": "0x02137590",
+      "end": "0x02137598"
+    },
+    {
+      "name": ".data.data_ov006_02137598",
+      "input_section": ".data",
+      "start": "0x02137598",
+      "end": "0x021375a0"
     },
     {
       "name": ".data.sHanaWigglerFieldSprites",
@@ -88,10 +124,40 @@
       "end": "0x021375a8"
     },
     {
+      "name": ".data.data_ov006_021375a8",
+      "input_section": ".data",
+      "start": "0x021375a8",
+      "end": "0x021375b0"
+    },
+    {
+      "name": ".data.data_ov006_021375b0",
+      "input_section": ".data",
+      "start": "0x021375b0",
+      "end": "0x021375b8"
+    },
+    {
+      "name": ".data.data_ov006_021375b8",
+      "input_section": ".data",
+      "start": "0x021375b8",
+      "end": "0x021375c0"
+    },
+    {
       "name": ".data.sHanaWigglerTargetSprites",
       "input_section": ".data",
       "start": "0x021375c0",
       "end": "0x021375cc"
+    },
+    {
+      "name": ".data.data_ov006_021375cc",
+      "input_section": ".data",
+      "start": "0x021375cc",
+      "end": "0x021375d4"
+    },
+    {
+      "name": ".data.data_ov006_021375d4",
+      "input_section": ".data",
+      "start": "0x021375d4",
+      "end": "0x021375dc"
     },
     {
       "name": ".data.sHanaBackgroundPartsB",
@@ -845,6 +911,83 @@
     {
       "symbol": "sHanaBackgroundPartsB",
       "address": "0x021375dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021374b0",
+      "address": "0x021374b0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021374bc",
+      "address": "0x021374bc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021374c8",
+      "address": "0x021374c8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021374f8",
+      "address": "0x021374f8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02137590",
+      "address": "0x02137590",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02137598",
+      "address": "0x02137598",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021375a8",
+      "address": "0x021375a8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021375b0",
+      "address": "0x021375b0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021375b8",
+      "address": "0x021375b8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021375cc",
+      "address": "0x021375cc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021375d4",
+      "address": "0x021375d4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "initialized ROM object"
@@ -1888,6 +2031,83 @@
           "section": ".data.sHanaBackgroundPartsB",
           "start": "0x021375dc",
           "end": "0x021375e4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021374b0",
+          "start": "0x021374b0",
+          "end": "0x021374b8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021374bc",
+          "start": "0x021374bc",
+          "end": "0x021374c4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021374c8",
+          "start": "0x021374c8",
+          "end": "0x021374d0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021374f8",
+          "start": "0x021374f8",
+          "end": "0x02137500",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02137590",
+          "start": "0x02137590",
+          "end": "0x02137598",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02137598",
+          "start": "0x02137598",
+          "end": "0x021375a0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021375a8",
+          "start": "0x021375a8",
+          "end": "0x021375b0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021375b0",
+          "start": "0x021375b0",
+          "end": "0x021375b8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021375b8",
+          "start": "0x021375b8",
+          "end": "0x021375c0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021375cc",
+          "start": "0x021375cc",
+          "end": "0x021375d4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021375d4",
+          "start": "0x021375d4",
+          "end": "0x021375dc",
           "differingBytes": 0,
           "firstDiff": null
         }

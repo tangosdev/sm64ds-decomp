@@ -37,6 +37,7 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g2_oam.h"
+#include "OamAttr.h"
 #include "SharedFilePtr.h"
 #include "dScMg3DEsp_c.h"
 #include "dMg3DEspModel_c.h"
@@ -517,14 +518,14 @@ void dScMg3DEsp_c::UpdateFlash() {
     (this->*s3DEspFlashTable[idx])();
 }
 
-extern "C" char data_ov006_02133a34[];
-extern "C" char data_ov006_02133a2c[];
-extern "C" char data_ov006_02133a24[];
-extern "C" char data_ov006_02133a1c[];
-extern "C" char data_ov006_02133a14[];
-extern "C" char data_ov006_02133a0c[];
-extern "C" char data_ov006_02133a04[];
-extern "C" char data_ov006_021339fc[];
+OamAttr data_ov006_02133a34[1] = {{0x00fc, 0x01fc, 0x010c, 0xffff}};
+OamAttr data_ov006_02133a2c[1] = {{0x00fb, 0x01fc, 0x00ec, 0xffff}};
+OamAttr data_ov006_02133a24[1] = {{0x00fc, 0x01fc, 0x00cc, 0xffff}};
+OamAttr data_ov006_02133a1c[1] = {{0x00f8, 0x41f8, 0x008c, 0xffff}};
+OamAttr data_ov006_02133a14[1] = {{0x00f8, 0x41f8, 0x0006, 0xffff}};
+OamAttr data_ov006_02133a0c[1] = {{0x00f8, 0x41f8, 0x0004, 0xffff}};
+OamAttr data_ov006_02133a04[1] = {{0x00f8, 0x41f8, 0x0002, 0xffff}};
+OamAttr data_ov006_021339fc[1] = {{0x00f8, 0x41f8, 0x0000, 0xffff}};
 void *sEsp3DAnimSetSlotsSprites[] = {
     data_ov006_02133a34, data_ov006_02133a2c, data_ov006_02133a24, data_ov006_02133a1c,
     data_ov006_02133a14, data_ov006_02133a0c, data_ov006_02133a04, data_ov006_021339fc,
@@ -696,7 +697,7 @@ void dScMg3DEsp_c::ResetSlots() {
     }
 }
 
-extern "C" char data_ov006_02136e3c[];
+OamAttr data_ov006_02136e3c[1] = {{0x00e0, 0xc1e0, 0x1040, 0xffff}};
 int sEsp3DAnimSetRowsSprites = (int)data_ov006_02136e3c;
 
 void dScMg3DEsp_c::RenderRows()
@@ -786,11 +787,31 @@ void dScMg3DEsp_c::SpawnRows(int idx) {
 struct Ent_8e10 {
     u16 f0, f2, f4, f6;
 };
-extern "C" Ent_8e10 data_ov006_02133f80[];
-extern "C" Ent_8e10 data_ov006_02133f68[];
-extern "C" Ent_8e10 data_ov006_02133f50[];
-extern "C" Ent_8e10 data_ov006_02133f38[];
-extern "C" Ent_8e10 data_ov006_02133f98[];
+Ent_8e10 data_ov006_02133f80[] = {
+    {0x00f0, 0x81f0, 0x2018, 0x0000},
+    {0x00e8, 0x81f0, 0x2088, 0x0000},
+    {0x4008, 0x81f0, 0x2108, 0xffff},
+};
+Ent_8e10 data_ov006_02133f68[] = {
+    {0x00f0, 0x81f0, 0x201c, 0x0000},
+    {0x00e8, 0x81f0, 0x2088, 0x0000},
+    {0x4008, 0x81f0, 0x2108, 0xffff},
+};
+Ent_8e10 data_ov006_02133f50[] = {
+    {0x00f0, 0x81f0, 0x2008, 0x0000},
+    {0x00e8, 0x81f0, 0x2088, 0x0000},
+    {0x4008, 0x81f0, 0x2108, 0xffff},
+};
+Ent_8e10 data_ov006_02133f38[] = {
+    {0x00f0, 0x81f0, 0x200c, 0x0000},
+    {0x00e8, 0x81f0, 0x2088, 0x0000},
+    {0x4008, 0x81f0, 0x2108, 0xffff},
+};
+Ent_8e10 data_ov006_02133f98[] = {
+    {0x00f0, 0x81f0, 0x2010, 0x0000},
+    {0x00e8, 0x81f0, 0x2088, 0x0000},
+    {0x4008, 0x81f0, 0x2108, 0xffff},
+};
 Ent_8e10 *data_ov006_02133f24[] = {
     data_ov006_02133f80, data_ov006_02133f68, data_ov006_02133f50,
     data_ov006_02133f38, data_ov006_02133f98,
