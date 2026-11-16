@@ -130,10 +130,8 @@ void dPa_c::Initialise() {
         mResourceFile = data_02075f14;
     } else {
         /* The compressed stream starts at +4; its header word carries the
-           decompressed size in the upper 24 bits. The (int) cast keeps the
-           file address in one register for both uses: without it the
-           compiler reloads the address from the literal pool. */
-        char *file = (char *)(int)data_02075f14;
+           decompressed size in the upper 24 bits. */
+        char *file = (char *)data_02075f14;
         u32 size = *(u32 *)(file + 4) >> 8;
         void *dst = Memory::Allocate(size);
         DecompressLZ16(file + 4, dst);
@@ -147,12 +145,12 @@ void dPa_c::Initialise() {
 
     if (mResourceFile != data_02075f14) {
         /* The textures are in VRAM now; keep only the resource's resident
-           part. The (long long) widening is a register-allocation lever:
-           without it trimmedSize and heap trade r4 and r5. */
+           part. allocSize is reused for it: a fresh local takes r4 where the
+           ROM has r5. */
         Heap *heap = Memory::defaultHeapPtr;
-        u32 trimmedSize = (long long)((ParticleResourceHeader *)mResourceFile)->residentSize;
+        allocSize = ((ParticleResourceHeader *)mResourceFile)->residentSize;
         heap->_Sizeof(mResourceFile);
-        heap->Reallocate(mResourceFile, trimmedSize);
+        heap->Reallocate(mResourceFile, allocSize);
     }
 }
 

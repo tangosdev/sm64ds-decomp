@@ -27,7 +27,20 @@
    delink-sized comparison it reproduces with the pragma and is NO-REPRO without it.
    tools/fdiff.py over the full 0x1364 bytes agrees: 0/1241 with it, 13/1241 without
    (common-subexpression elimination reuses the fraction digit's WRITE8 parity test for
-   the READ8 after it, and two stack slots swap). */
+   the READ8 after it, and two stack slots swap).
+   Kept (#821, measured 2026-11-16 by fdiff over the full 0x1364 bytes, pragma off):
+     READ8 with a (u32), (unsigned int) or (long) address cast: 12/1241 words
+       differ (one parity test fixed; the slot swap stays).
+     WRITE8 with a (u32) cast: 12. (s32), or (u32) on both: 13.
+     READ8/WRITE8 as inline functions (both or one): 13.
+     the WRITE8 target spelled `frac + k` directly: 13.
+     `b = frac + k` assigned again before each access: 23.
+   The pragma is not a setting shared by the whole cluster. Toggled on its siblings,
+   func_0206c244 and func_0206c8b4 also need CSE off (26/182 words, and a size
+   change). func_0206bdb4, func_0206ca7c and func_0206cb0c break with it off,
+   and func_0206bc8c, c51c, c93c, c9f4, ca44 and cbc0 match either way. That
+   fits per-file build settings in the original library, but it does not
+   prove them. */
 #pragma opt_common_subs off
 
 typedef void (*WriteFn)(void *self, const char *buf, int len);

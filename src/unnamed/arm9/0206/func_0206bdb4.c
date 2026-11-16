@@ -34,8 +34,6 @@ u64 func_0206bdb4(u64 d, int mode)
     char *q;
     char *p;
     u64 acc;
-    int zero;
-    int one;
     int c35;
     int lim;
     u64 out;
@@ -63,7 +61,6 @@ u64 func_0206bdb4(u64 d, int mode)
         m |= READ8(p);
     }
 
-    one = 1;
     exp2 = (unsigned)(exp - 0x3fd);
     if (exp >= 3)
         exp -= 3;
@@ -72,13 +69,12 @@ u64 func_0206bdb4(u64 d, int mode)
     c35 = 53;
     m |= 0x0010000000000000ULL;
     acc = 0;
-    zero = (int)acc;
-    cnt = zero;
-    i = zero;
+    cnt = 0;
+    i = 0;
     if (mode == 0)
-        fpflag = one;
+        fpflag = 1;
     else
-        fpflag = zero;
+        fpflag = 0;
 
     while (i < (((int)exp2 <= 53 && fpflag) ? (int)exp2 : c35)) {
         acc <<= 1;

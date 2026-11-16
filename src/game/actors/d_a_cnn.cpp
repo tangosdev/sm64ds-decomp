@@ -264,34 +264,29 @@ void daCnn_c::StateFire() {
     if (timer == 60) {
         dActor_c *ball;
         const s16 *sinCos;
-        int speed;
         s16 elevation;
         int idx;
 
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        pos = mPos;
         pos.y += 0x80000;
 
         {
             dActor_c *spawned = dActor_c::Spawn(kWaterBombActorID, 3, pos, 0, mAreaId, -1);
             const s16 *table = FX_SinCosTable_;
-            int launchSpeed = 100;
             s16 pitch = mPrevAngleX;
             int up = (s16)(0x4000 - pitch);
             int i = (u16)up >> 4;
             int sine = table[i * 2];
             sinCos = table;
-            speed = launchSpeed;
             ball = spawned;
             ball->mSpeedX = 0;
-            ball->mVertSpeed = sine * launchSpeed;
+            ball->mVertSpeed = sine * 100;
             ball->mSpeedZ = 0;
         }
 
         elevation = (0x4000 - mPrevAngleX);
         idx = (u16)elevation >> 4;
-        ball->mHorzSpeed = sinCos[idx * 2 + 1] * speed;
+        ball->mHorzSpeed = sinCos[idx * 2 + 1] * 100;
 
         {
             s16 yaw = mPrevAngleY;
@@ -410,16 +405,15 @@ void daCnn_c::StateLoad() {
             s16 angleY = mAngleY;
             s16 angleX = mAngleX;
             rider = mPlayer;
-            s16 zero = 0;
             rider->mAngleX = angleX;
             rider->mAngleY = angleY;
-            rider->mAngleZ = zero;
+            rider->mAngleZ = 0;
             angleY = mAngleY;
             angleX = mAngleX;
             rider = mPlayer;
             rider->mPrevAngleX = angleX;
             rider->mPrevAngleY = angleY;
-            rider->mPrevAngleZ = zero;
+            rider->mPrevAngleZ = 0;
         }
     }
 

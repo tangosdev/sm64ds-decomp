@@ -189,7 +189,6 @@ int daObj_Mip_Key_c::StateLoose() {
     Vector3 out;
     Vector3 pp;
     daPly_c *player;
-    int zero;
     Vector3 *ppos;
 
     mAngleX += 0x1000;
@@ -201,14 +200,13 @@ int daObj_Mip_Key_c::StateLoose() {
         return 1;
     }
 
-    zero = 0;
     ppos = &player->mPos;
-    v.x = zero;
-    v.y = zero;
-    v.z = zero;
-    out.x = zero;
-    out.y = zero;
-    out.z = zero;
+    v.x = 0;
+    v.y = 0;
+    v.z = 0;
+    out.x = 0;
+    out.y = 0;
+    out.z = 0;
     pp.x = ppos->x;
     pp.y = ppos->y;
     pp.z = ppos->z;
