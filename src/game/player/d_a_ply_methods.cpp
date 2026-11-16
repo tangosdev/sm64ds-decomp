@@ -10888,14 +10888,14 @@ int daPly_c::St_HoldLight_Init() {
         mHorzSpeed = ScaleByCharFactor(0x1c000);
     }
     if (mStateStep == 0) {
-        char *o = (char *)mHeldObj;
+        dActor_c *held = mHeldObj;
         unsigned int anim = 0x2f;
-        if (o != 0) {
-            int b = (int)((((dActor_c *)o)->mFlags & 0x8000) != 0);
+        if (held != 0) {
+            int b = (int)((held->mFlags & 0x8000) != 0);
             if (b != 0) {
                 anim = 0x86;
                 if (param1 == 2) {
-                    if ((int)(((dActor_c *)o)->actorID == 0xce) != 0)
+                    if ((int)(held->actorID == 0xce) != 0)
                         anim = 0x2f;
                 }
             }
