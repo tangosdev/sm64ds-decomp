@@ -13450,7 +13450,6 @@ int daPly_c::func_ov002_020d7030(void *b) {
 }
 
 char *daPly_c::func_ov002_020d708c() {
-    char* self = (char*)this;
     char* a;
     char* best = 0;
     int bestAng = 0x238e;
@@ -13458,7 +13457,7 @@ char *daPly_c::func_ov002_020d708c() {
     if (a) {
         int thresh = bestAng;
         do {
-            if (a != self) {
+            if ((dActor_c *)a != this) {
                 if (((dActor_c *)a)->OnYoshiTryEat()) {
                     if (Vec3_Dist(&mPos, &((dActor_c *)a)->mPos) < 0x15e000) {
                         int diff =
