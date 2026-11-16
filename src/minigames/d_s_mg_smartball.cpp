@@ -108,7 +108,6 @@ typedef struct State2 {
     int iteration;
     int depth;
     int zeroAngle;
-    int zero;
     int entityIndex;
     void *null34;
     void *null38;
@@ -2729,7 +2728,6 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     }
 
     state.depth = 0;
-    state.zero = 0;
     state.null34 = 0;
     state.null38 = 0;
     state.null3c = 0;
@@ -2742,9 +2740,9 @@ outer_loop:
     blocked = angle;
     i = angle;
     do {
-        hit[i] = (u8)state.zero;
-        work.x = state.zero;
-        work.z = state.zero;
+        hit[i] = 0;
+        work.x = 0;
+        work.z = 0;
         work.z += mRadius;
         func_0203d388((V2 *)&work, angle);
         dot = func_0203d570((V2 *)&work, (V2 *)&mVel0);
