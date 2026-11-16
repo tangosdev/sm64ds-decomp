@@ -160,3 +160,5 @@ void func_ov007_020b7658(Matrix4x3 *viewMatrix, int update) {
     }
     func_02049ee8(data_ov007_0210344c, viewMatrix);
 }
+
+char data_ov007_02102dd0[] = {'E', 'f', 'f', 'e', 'c', 't', 0, 0};

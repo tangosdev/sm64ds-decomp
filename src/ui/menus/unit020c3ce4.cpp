@@ -120,3 +120,6 @@ extern "C" int MenuMem_GetMaxAllocSize(void) {
         return 0;
     return data_ov007_02104c14();
 }
+
+Ov007FreeHook data_ov007_02103254 = MenuMem_DefaultFree;
+Ov007AllocHook data_ov007_02103258 = MenuMem_DefaultAlloc;

@@ -58,11 +58,11 @@ typedef char Ov007MeshScene_size_must_be_0x30[sizeof(Ov007MeshScene) == 0x30 ? 1
 
 extern Ov007MeshScene *data_ov007_02104bd4;
 extern struct Vector3 data_ov007_020d7d60;
-extern Ov007MeshParams data_ov007_020d7cb0;
-extern u8 data_ov007_020d7c98[];
-extern Ov007MeshWaveParams data_ov007_020d7c9c;
-extern Ov007SwingParams data_ov007_020d7cc8;
-extern Ov007MeshMaterial data_ov007_020d7cf8[2];
+extern const Ov007MeshParams data_ov007_020d7cb0;
+extern const u8 data_ov007_020d7c98[];
+extern const Ov007MeshWaveParams data_ov007_020d7c9c;
+extern const Ov007SwingParams data_ov007_020d7cc8;
+extern const Ov007MeshMaterial data_ov007_020d7cf8[2];
 
 extern "C" Ov007MenuState *func_ov007_020b2cdc(void);
 extern Ov007Sprite *NumberSprite_Create(int index);
@@ -165,10 +165,10 @@ extern "C" void func_ov007_020bf428(void) {
         return;
 
     SCENE = (Ov007MeshScene *)func_ov007_020c3df4(0, sizeof(Ov007MeshScene));
-    SCENE->mesh = func_ov007_020cbbb0(15, 14, 0x6000, &data_ov007_020d7cb0);
+    SCENE->mesh = func_ov007_020cbbb0(15, 14, 0x6000, (Ov007MeshParams *)&data_ov007_020d7cb0);
 
-    w = data_ov007_020d7cf8;
-    bp = data_ov007_020d7c98;
+    w = (Ov007MeshMaterial *)data_ov007_020d7cf8;
+    bp = (u8 *)data_ov007_020d7c98;
     for (i = 0; i < 2; i++) {
         ret = func_ov007_020cbf8c(w);
         w++;
@@ -177,10 +177,10 @@ extern "C" void func_ov007_020bf428(void) {
         bp++;
     }
 
-    SCENE->wave = func_ov007_020ca2a8(&data_ov007_020d7c9c);
+    SCENE->wave = func_ov007_020ca2a8((Ov007MeshWaveParams *)&data_ov007_020d7c9c);
 
     for (i = 0; i < 8; i++) {
-        SCENE->swings[i] = func_ov007_020ca010(&data_ov007_020d7cc8);
+        SCENE->swings[i] = func_ov007_020ca010((Ov007SwingParams *)&data_ov007_020d7cc8);
         func_ov007_020bf57c(WORK->cameras[0], i);
     }
 
@@ -402,3 +402,12 @@ void func_ov007_020bed60(int arg0, int arg1, int arg2) {
     }
     SCENE->wave->delay = 120;
 }
+
+extern const u8 data_ov007_020d7c98[4] = {0, 0, 0, 0};
+extern const Ov007MeshWaveParams data_ov007_020d7c9c = {0x1f4, 0x4fffb, -0xa8, 0x258, 0x320, 0x64};
+extern const Ov007MeshParams data_ov007_020d7cb0 = {0x1000, 0x9c4, 0x3c, 0x0, 0x14000, 0x0};
+extern const Ov007SwingParams data_ov007_020d7cc8 = {0x3, 0x1000, 0x7d0, 0x7d0, 0x50000, 0x1000, 0x3e8, 0x1f4, {1, 0, 0, 0, 1, 0, 0, 0}, 0x888, 0xaaa, 0x100, 0x100};
+extern const Ov007MeshMaterial data_ov007_020d7cf8[2] = {
+    {0, 0x0, 0x0, 0xa0000, 0xa0000, 0x1000, 0x1000, 0x0, 0x0, 0x1f, 0x7fff, 0x0, 0x2, 0x20},
+    {0, 0x0, 0x0, 0x12c000, 0x12c000, 0x1000, 0x1000, 0x0, 0x0, 0xf, 0x7fff, 0x0, 0x0, 0x1f},
+};
