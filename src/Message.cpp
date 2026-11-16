@@ -144,10 +144,6 @@ extern void SetBg3Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
 }
 
-extern void func_0201b6f8(int a);
-extern void func_0201b388(int a);
-extern void func_0201b100(int a);
-extern int func_0201fb4c(void);
 extern int IsStarCollected(s32 a, s32 b);
 extern "C" int SublevelToLevel(int a);
 
@@ -155,21 +151,9 @@ namespace Sound {
 int ChangeMusicVolume(u32 a, s32 b);
 }
 
-extern "C" void func_0201cd08(int arg);
-extern "C" void func_0201cebc(short a0);
-extern "C" void func_0201cfb8(int arg0);
 void LoadControllerModeText(int param0);
-extern "C" void func_0201d418(int p0, int p1);
 void Message_DrawLineBG2(void);
 extern "C" void Message_DrawCenteredLine(int mapPos, int width);
-extern "C" void func_0201d850(u32 course);
-extern "C" void func_0201e220(int arg);
-extern "C" void func_0201eaac(void);
-void func_0201ef38(void);
-void func_0201ef50(int arg);
-void func_0201f108(void);
-void func_0201f138(void);
-void func_0201f32c(int arg0);
 
 void dScStage_c::UpdateMessage() {
     if (data_0209d660 == 0)
@@ -330,7 +314,7 @@ void LoadControllerModeText(int param0) {
 
     data_0209d6d4 = param0;
     data_0209d660 = 0;
-    func_0201eaac();
+    Message::func_0201eaac();
 
     data_0209d668 = 1;
     data_0209d6a8 = 0;
@@ -473,7 +457,7 @@ void Message_DrawLineBG2(void) {
     data_0209d6f0 = (u8*)(base + idx * 8);
     data_0209d6f4 =
         data_0209d6fc + 0x28 + data_0209d70c[1] + ((MessageEntry *)(base + idx * 8))->textOffset;
-    func_0201b6f8(1);
+    Message::func_0201b6f8(1);
     data_0209d65c = 0;
     n = ((data_0209d6b0 + 7) / 8) << 6;
     {
@@ -481,7 +465,7 @@ void Message_DrawLineBG2(void) {
         li = 0;
         MI_CpuFill32((void *)p, li, n);
     }
-    func_0201b100(1);
+    Message::func_0201b100(1);
     data_0209d674 = data_0209d674 + (u8)(((data_0209d6b0 + 7) / 8) << 1);
 }
 
@@ -504,7 +488,7 @@ extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
     data_0209d6f0 = (u8 *)(base + idx * 8);
     data_0209d6f4 =
         data_0209d6fc + 0x28 + data_0209d70c[1] + ((MessageEntry *)(base + idx * 8))->textOffset;
-    func_0201b6f8(1);
+    Message::func_0201b6f8(1);
     old = data_0209d6b0;
     data_0209d65c = ((width * 8 - old) & 0xf) >> 1;
     data_0209d6b0 = old + data_0209d65c;
@@ -519,7 +503,7 @@ extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
         (&map[i])[0x20] = data_0209d6a8 + 0x200 + (data_0209d6b0 + 7) / 8 + i;
     }
 
-    func_0201b100(0);
+    Message::func_0201b100(0);
     data_0209d6a8 += (u8)((data_0209d6b0 + 7) / 8 * 2);
 }
 

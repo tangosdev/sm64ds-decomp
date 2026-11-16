@@ -196,7 +196,6 @@ struct daBtn_c : dEnemyBase_c {
        pay out one coin apiece while mCoinsLeft lasts. */
     void func_ov079_02125058(dActor_c *other);
     static void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
-    Vector3 func_ov079_02123d4c();
     void func_ov079_02124dec();
     void func_ov079_02124ed4();
     void func_ov079_02125504();

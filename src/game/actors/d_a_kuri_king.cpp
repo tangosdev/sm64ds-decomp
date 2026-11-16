@@ -189,6 +189,7 @@ extern SharedFilePtr *const sKurikingMinionAnimationFiles[7];
 extern SharedFilePtr *const sKurikingAnimationFiles[12];
 
 /* Intra-TU forward decls: calls run both ways across the file. */
+void func_ov074_02121270(Vector3 *, daKuriKing_c *, int);
 void func_ov074_021203e0(void);
 void func_ov074_021201ec(void);
 void func_ov074_0212007c(void);
@@ -1215,10 +1216,8 @@ void daKuriKing_c::HandleCylinderHits() {
 /* World position of model bone `bone`: that bone's transform composed with
  * mBodyMatrix, translation row out, shifted back up from model
  * space (<< 3). */
-Vector3 daKuriKing_c::func_ov074_02121270(int bone) {
-    Vector3 result;
-    daKuriKing_c *self = this;
-    Vector3 *v = &result;
+void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) {
+    Vector3 *v = out;
     Matrix4x3 *boneMat;
     v->x = 0;
     v->y = 0;
@@ -1230,7 +1229,6 @@ Vector3 daKuriKing_c::func_ov074_02121270(int bone) {
     v->y = data_020a0e68.m[10];
     v->z = data_020a0e68.m[11];
     Vec3_LslInPlace(v, 3);
-    return result;
 }
 
 extern "C" struct Matrix4x3 data_020a0e68;
@@ -1250,6 +1248,7 @@ void daKuriKing_c::UpdateBodyMatrix() {
 void daKuriKing_c::UpdateCylindersAndFootsteps() {
     KuriKingBoneIdx bone = data_ov074_02122e24;
     int yoff[3], rad[3], hgt[3];
+    Vector3 v[3];
     int i;
     int h0, r0, y0;
     int d, a, b;
@@ -1269,10 +1268,10 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
     hgt[0] = FX_MUL(this->mScaleY, 0x104000);
     for (i = 0; i < 3; i++) {
         int ax, ay, az;
-        Vector3 foot = this->func_ov074_02121270(bone.v[i]);
-        this->mCylClsnPos[i].x = foot.x;
-        this->mCylClsnPos[i].y = foot.y;
-        this->mCylClsnPos[i].z = foot.z;
+        func_ov074_02121270(&v[2], this, bone.v[i]);
+        this->mCylClsnPos[i].x = v[2].x;
+        this->mCylClsnPos[i].y = v[2].y;
+        this->mCylClsnPos[i].z = v[2].z;
         ax = this->mCylClsnPos[i].x;
         az = this->mCylClsnPos[i].z;
         ay = this->mCylClsnPos[i].y + yoff[i];
