@@ -1095,7 +1095,11 @@ static inline int FX_Mul(int v1, int v2)
  * other registers. 36 orders of the scale, sprite and matrix locals, the
  * matrix stores and the x/y reads, swapped FX_MUL operands, a fx32 or long
  * scale and an `idx` local all stay at 6. A ball pointer (local or walked)
- * is 56; a function-scope matrix 42. */
+ * is 56; a function-scope matrix 42.
+ * Re-measured (#821, round 18): FX_MUL without the pragma stays 6 words off
+ * with fx64 casts on both operands or on the scale alone, a block-scope loop
+ * counter and a u16 rotation local. The sine product first is 18 off, fx16
+ * or int sine/cosine locals 42, the scale re-read per product 52. */
 void dScMgPachinko_c::Ball_DrawAll() {
     int i;
     for (i = 0; i < BALL_NUM; i++) {
