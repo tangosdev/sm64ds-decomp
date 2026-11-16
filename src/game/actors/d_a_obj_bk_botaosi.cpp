@@ -20,12 +20,6 @@
  * it also produces has no cartridge home and is deadstripped), the factory
  * last. Same arrangement as src/game/actors/d_a_btt_bk.cpp.
  *
- * `opt_foldconstants off` is a file setting, not a per-member bracket.
- * UpdateShadow needs it: the cartridge keeps lean = 0 + tilt, yaw + 0x8000
- * and the zero high word of 0x7d0000 in the 64-bit multiply
- * unfolded (folded, the body is a different size). Every other function in
- * this TU compiles to the same bytes with it on or off (measured, 13/13).
- *
  * What stays, and why:
  * - OnKicked and OnAttacked2 keep #pragma long_calls: the ROM
  *   veneers are the pooled `ldr ip,[pc]; bx ip` absolute tail call (0xc
@@ -49,11 +43,6 @@
 enum daObjBk_Botaosi_c_AssetId { ASSET_BK_BOTAOSI_BMD = 0x0589, ASSET_BK_BOTAOSI_KCL = 0x058a };
 
 #pragma defer_codegen off
-/* Kept (#821): only UpdateShadow depends on it. The cartridge multiplies the
-   sine by 0x7d0000 as a full 64-bit product (umull plus two mla against a
-   zero register); with folding on it is a smull and the body is 0x174,
-   not 0x17c. Every other function here matches either way. */
-#pragma opt_foldconstants off
 
 #include "daObjBk_Botaosi_c.h"
 #include "daPly_c.h"
@@ -176,7 +165,7 @@ void daObjBk_Botaosi_c::UpdateShadow() {
     int tilt = FX_MUL(sine, 0x7d0000);
     yaw = 0x8000;
     if (tilt <= 0) {
-        yaw = yaw + 0x8000;
+        yaw += 0x8000;
         tilt = -tilt;
     }
     lean = lean + tilt;
