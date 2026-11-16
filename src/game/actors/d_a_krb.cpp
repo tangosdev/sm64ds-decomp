@@ -223,10 +223,8 @@ inline s32 *chaseRadius(daKrb_c *goomba)
 
 void daKrb_c::func_ov084_021290d4() {
     daKrb_c *c = this;
-    int timerOff;
     daKrb_c *self2;
     int state;
-    timerOff = 0x458;
     if (c->mUnstickTimer != 0)
     {
         /* Comparison stays in the `if`: assigning `== 1` to an int is a bool
@@ -235,11 +233,7 @@ void daKrb_c::func_ov084_021290d4() {
         if (state == daKrb_c::STATE_ATTACKED_MARIO) {
             c->mUnstickTimer = 0;
         } else {
-            /* timerOff is the offset of mUnstickTimer (0x458). The plain
-               `c->mUnstickTimer--` builds the same .text but drops nine
-               @NNN numbers that daKrb_c.json pins, so this stays raw. */
-            *((unsigned short *)(((int)c) + timerOff)) =
-                (*((unsigned short *)(((int)c) + 0x458))) - 1;
+            c->mUnstickTimer--;
         }
         return;
     }
@@ -1458,8 +1452,6 @@ int daKrb_c::OnAimedAtWithEgg()
  * silver star). If it is 4 (KURIBO_S) only the coin is given. Finally the
  * Goomba is removed (func_ov084_02129498). */
 void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef) {
-    /* self is unused; deleting it drops @NNN numbers daKrb_c.json pins. */
-    dActor_c *self = this;
     daPly_c *player = &playerRef;
     int b5;
     bool b4;

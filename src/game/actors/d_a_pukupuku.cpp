@@ -90,10 +90,6 @@ extern PukuStateRow data_ov090_02134584;
 
 extern Vector3 data_ov090_021342d8;
 
-/* local extern: the spelling math/CalcLib.h declares, repeated here because
-   dropping the declaration renumbers this TU's @NNN locals. */
-extern "C" void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
-
 int *daPukupuku_c_classInit(void) {
     return (int *)new daPukupuku_c;
 }

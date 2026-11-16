@@ -140,14 +140,6 @@ extern void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
    ov079's function there is daBtn_c's hit reaction, which takes the body and
    the actor that hit it -- the call's (actor, egg). */
 extern int RandomIntInternal(int *seed);
-/* Numbering pins: func_ov002_020d5f98/020d6048 are now daPly_c members (see
-   daPly_c.h) and no call in this TU uses these free spellings anymore. The
-   declarations stay, spelled exactly as they were, because each named
-   parameter advances mwccarm's @NNN counter: removing or un-naming them
-   renumbers this TU's .data temps and rotates __sinit_d_a_yegg.cpp's pool
-   destinations (measured). */
-extern int func_ov002_020d5f98(void *c, unsigned char *a, unsigned char *b);
-extern int func_ov002_020d6048(void *c);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
