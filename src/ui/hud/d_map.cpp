@@ -944,9 +944,9 @@ int dMap_c::InitResources()
     for (i = 0; i < gNumMinimapTileObjs; i++) {
         if (*p != 0) {
             void *f3 = LoadFile(*p);
-            /* Each tile object fills one 0x800-byte text screen block,
+            /* Each tile object fills one 32x32 text screen block,
              * stacked downward from BG3's screen base. */
-            DecompressLZ16(f3, (char *)G2S_GetBG3ScrPtr() - i * 0x800u);
+            DecompressLZ16(f3, (char *)G2S_GetBG3ScrPtr() - i * sizeof(u16[32][32]));
             Deallocate(f3);
         }
         p++;
