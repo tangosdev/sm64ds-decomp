@@ -1,7 +1,8 @@
     .text       start:0x020bfec0 end:0x0212b890 kind:code align:32
     .rodata.before_coin_tables start:0x0212b890 end:0x0212e308 kind:rodata align:4
     .rodata.coin_tables start:0x0212e308 end:0x0212e450 kind:rodata align:4
-    .rodata.gap0 start:0x0212e450 end:0x0212e57c kind:rodata align:4
+    .rodata.gap0 start:0x0212e450 end:0x0212e574 kind:rodata align:4
+    .rodata.sD3DSoundPanOffsets start:0x0212e574 end:0x0212e57c kind:rodata align:4
     .rodata.data_ov006_0212e57c start:0x0212e57c end:0x0212e580 kind:rodata align:4
     .rodata.gap1 start:0x0212e580 end:0x0212e588 kind:rodata align:4
     .rodata.sEsp3DCardsPerDifficulty start:0x0212e588 end:0x0212e58c kind:rodata align:4
@@ -21,7 +22,8 @@
     .rodata.sLuigiBounceSpeeds start:0x0212e8b8 end:0x0212e8c8 kind:rodata align:4
     .rodata.sLuigiDriftFixedSpeed start:0x0212e8c8 end:0x0212e8d8 kind:rodata align:4
     .rodata.sLuigiDriftByLevelSpeed start:0x0212e8d8 end:0x0212e8e8 kind:rodata align:4
-    .rodata.gap3 start:0x0212e8e8 end:0x0212ebac kind:rodata align:4
+    .rodata.sMemory2Tables start:0x0212e8e8 end:0x0212e954 kind:rodata align:4
+    .rodata.gap3 start:0x0212e954 end:0x0212ebac kind:rodata align:4
     .rodata.sPachinko2CupHopRightStartFrames start:0x0212ebac end:0x0212ebb0 kind:rodata align:4
     .rodata.sPachinko2CupHopLeftStartFrames start:0x0212ebb0 end:0x0212ebb4 kind:rodata align:4
     .rodata.sPachinko2BallWalkOffSprites start:0x0212ebb4 end:0x0212ebb8 kind:rodata align:4
@@ -41,7 +43,9 @@
     .rodata.sPachinko2CupWaitTimesAlt start:0x0212ecac end:0x0212ecbc kind:rodata align:4
     .rodata.sPachinko2CupRightStops start:0x0212ecbc end:0x0212ecd4 kind:rodata align:4
     .rodata.sPachinko2CupLeftStops start:0x0212ecd4 end:0x0212ecec kind:rodata align:4
-    .rodata.gap9 start:0x0212ecec end:0x0212ee0c kind:rodata align:4
+    .rodata.gap9 start:0x0212ecec end:0x0212ed14 kind:rodata align:4
+    .rodata.sRouletteTables start:0x0212ed14 end:0x0212ed88 kind:rodata align:4
+    .rodata.gap9b start:0x0212ed88 end:0x0212ee0c kind:rodata align:4
     .rodata.sound_tables start:0x0212ee0c end:0x0212ef5c kind:rodata align:4
     .rodata.sound_row_views start:0x0212ef5c end:0x0212ef9c kind:rodata align:4
     .rodata.sound_note_offsets start:0x0212ef9c end:0x0212efc4 kind:rodata align:4
@@ -158,7 +162,8 @@
     .data.sPuffSprites start:0x0213b0d8 end:0x0213b0ec kind:data align:4
     .data.gap49 start:0x0213b0ec end:0x0213b22c kind:data align:4
     .data.sTrmpBounceAnimTable start:0x0213b22c end:0x0213b238 kind:data align:4
-    .data.gap50 start:0x0213b238 end:0x0213b814 kind:data align:4
+    .data.gap50 start:0x0213b238 end:0x0213b3f4 kind:data align:4
+    .data.sTrmpLineTex start:0x0213b3f4 end:0x0213b814 kind:data align:4
     .data start:0x0213b814 end:0x021402e0 kind:data align:4
     .bss        start:0x021402e0 end:0x021430a0 kind:bss align:32
 src/minigames/unit020bfec0.cpp:
@@ -213,7 +218,7 @@ src/minigames/unit020cd744.cpp:
     .init start:0x0212fc7c end:0x0212fd48
     .ctor start:0x0213357c end:0x02133580
     .bss start:0x02140808 end:0x02141640
-    .data start:0x0213b3f4 end:0x0213b814
+    .data.sTrmpLineTex start:0x0213b3f4 end:0x0213b814
 
 src/minigames/d_s_mg_amida.cpp:
     complete
@@ -291,7 +296,7 @@ src/minigames/d_s_mg_d3d_base.cpp:
     .init start:0x02130a04 end:0x02130a08
     .ctor start:0x02133598 end:0x0213359c
     .bss start:0x02141a40 end:0x02141e54
-    .rodata start:0x0212e574 end:0x0212e57c
+    .rodata.sD3DSoundPanOffsets start:0x0212e574 end:0x0212e57c
     .data start:0x0213c5e8 end:0x0213c610
 
 src/minigames/d_mg3d_esp_anim_set.cpp:
@@ -384,7 +389,7 @@ src/minigames/d_s_mg_memory2.cpp:
     .ctor start:0x021335b4 end:0x021335b8
     .data start:0x0213d248 end:0x0213d338
     .bss start:0x021423a8 end:0x021424ec
-    .rodata start:0x0212e8e8 end:0x0212e954
+    .rodata.sMemory2Tables start:0x0212e8e8 end:0x0212e954
 
 src/minigames/d_s_mg_m_carlo.cpp:
     complete
@@ -448,7 +453,7 @@ src/minigames/d_s_mg_roulette_methods.cpp:
     .init start:0x021322bc end:0x02132894
     .ctor start:0x021335cc end:0x021335d0
     .bss start:0x021428c8 end:0x02142bdc
-    .rodata start:0x0212ed14 end:0x0212ed88
+    .rodata.sRouletteTables start:0x0212ed14 end:0x0212ed88
 
 src/minigames/d_s_mg_roulette.cpp:
     complete
