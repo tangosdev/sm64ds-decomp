@@ -168,35 +168,41 @@ BtnCollisionFilePtr     gBattanCollisionFile(ASSET_BATTAN_KCL);   /* the plain W
 BtnCollisionFilePtr     gBattanKingCollisionFile(ASSET_BATTAN_KING_KCL);   /* the king's KCL */
 
 extern "C" {
+/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_0212538c to int. */
 void _ZN7daBtn_c19func_ov079_0212538cEv();
+/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_02125240 to int. */
 void _ZN7daBtn_c19func_ov079_02125240Ev();
+/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_021258fc to int. */
 void _ZN7daBtn_c19func_ov079_021258fcEv();
+/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_021254b4 to int. */
 void _ZN7daBtn_c19func_ov079_021254b4Ev();
+/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_02124638 to int. */
 void _ZN7daBtn_c19func_ov079_02124638Ev();
+/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_021246dc to int. */
 void _ZN7daBtn_c19func_ov079_021246dcEv();
+/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_021246d8 to int. */
 void _ZN7daBtn_c19func_ov079_021246d8Ev();
+/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_02125b44 to int. */
 void _ZN7daBtn_c19func_ov079_02125b44Ev();
+/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_02124530 to int. */
 void _ZN7daBtn_c19func_ov079_02124530Ev();
+/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_021256d4 to int. */
 void _ZN7daBtn_c19func_ov079_021256d4Ev();
+/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_02124b08 to int. */
 void _ZN7daBtn_c19func_ov079_02124b08Ev();
+/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_021249f0 to int. */
 void _ZN7daBtn_c19func_ov079_021249f0Ev();
 }
 
 /* Plain Whomp animation handles, then the king's six. */
 extern SharedFilePtr *const data_ov079_021275ec[5] = {
-    &gBattanAttack01AnimationFile,
-    &gBattanAttack02AnimationFile,
-    &gBattanRecoverAnimationFile,
-    &gBattanWalkAnimationFile,
-    &gBattanWalkstartAnimationFile,
+    &gBattanAttack01AnimationFile, &gBattanAttack02AnimationFile,  &gBattanRecoverAnimationFile,
+    &gBattanWalkAnimationFile,     &gBattanWalkstartAnimationFile,
 };
 extern void *const data_ov079_02127600[6] = {
-    &gBattanKingAttack01AnimationFile,
-    &gBattanKingAttack02AnimationFile,
-    &gBattanKingRecoverAnimationFile,
-    &gBattanKingWalkAnimationFile,
-    &gBattanKingWalkstartAnimationFile,
-    &data_ov079_021281b0,
+    &gBattanKingAttack01AnimationFile,  &gBattanKingAttack02AnimationFile,
+    &gBattanKingRecoverAnimationFile,   &gBattanKingWalkAnimationFile,
+    &gBattanKingWalkstartAnimationFile, &data_ov079_021281b0,
 };
 
 /* CLPS, the twelve state-handler images, and the two collision handles.
@@ -238,18 +244,12 @@ int data_ov079_02127cfc[96] = {
 };
 
 daBtn_c::StateFunc data_ov079_02128280[12] = {
-    *(daBtn_c::StateFunc *)&data_ov079_02127c00,
-    *(daBtn_c::StateFunc *)&data_ov079_02127bd0,
-    *(daBtn_c::StateFunc *)&data_ov079_02127c10,
-    *(daBtn_c::StateFunc *)&data_ov079_02127bd8,
-    *(daBtn_c::StateFunc *)&data_ov079_02127bc0,
-    *(daBtn_c::StateFunc *)&data_ov079_02127bc8,
-    *(daBtn_c::StateFunc *)&data_ov079_02127c18,
-    *(daBtn_c::StateFunc *)&data_ov079_02127c20,
-    *(daBtn_c::StateFunc *)&data_ov079_02127be8,
-    *(daBtn_c::StateFunc *)&data_ov079_02127bf8,
-    *(daBtn_c::StateFunc *)&data_ov079_02127be0,
-    *(daBtn_c::StateFunc *)&data_ov079_02127c08,
+    *(daBtn_c::StateFunc *)&data_ov079_02127c00, *(daBtn_c::StateFunc *)&data_ov079_02127bd0,
+    *(daBtn_c::StateFunc *)&data_ov079_02127c10, *(daBtn_c::StateFunc *)&data_ov079_02127bd8,
+    *(daBtn_c::StateFunc *)&data_ov079_02127bc0, *(daBtn_c::StateFunc *)&data_ov079_02127bc8,
+    *(daBtn_c::StateFunc *)&data_ov079_02127c18, *(daBtn_c::StateFunc *)&data_ov079_02127c20,
+    *(daBtn_c::StateFunc *)&data_ov079_02127be8, *(daBtn_c::StateFunc *)&data_ov079_02127bf8,
+    *(daBtn_c::StateFunc *)&data_ov079_02127be0, *(daBtn_c::StateFunc *)&data_ov079_02127c08,
 };
 
 /* OnAimedAtWithEggReturnVec's view of func_ov079_02123d4c: the (out, this)

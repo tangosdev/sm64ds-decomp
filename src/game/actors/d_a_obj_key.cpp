@@ -932,16 +932,17 @@ ObjKeyStateTable data_ov089_02132cec;
 
 /* Collect animations, models, and the extra-model row. Defined after the
    static-init objects so this file's @NNN numbers stay put. */
-extern "C" char data_ov002_0210da40;
-extern "C" char data_ov002_0210d9a0;
-extern "C" char data_ov002_0210d9c0;
-extern "C" char data_ov085_021305d8;
+extern "C" SharedFilePtr data_ov002_0210da40;
+extern "C" SharedFilePtr data_ov002_0210d9a0;
+extern "C" SharedFilePtr data_ov002_0210d9c0;
+struct DaMipModelFile;
+extern "C" DaMipModelFile data_ov085_021305d8;
 extern "C" ObjKeyFile *const data_ov089_02132880[5] = {
     0, &data_ov089_02132c60, &data_ov089_02132c70, &data_ov089_02132c40, &data_ov089_02132c48,
 };
 extern "C" void *data_ov089_02132894[8] = {
-    &data_ov089_02132c50, &data_ov089_02132c50, &gMarioKeyModelFile, &gLuigiKeyModelFile,
-    &gWarioKeyModelFile, &data_ov085_021305d8, &data_ov085_021305d8, &data_ov002_0211094c,
+    &data_ov089_02132c50, &data_ov089_02132c50, &gMarioKeyModelFile,  &gLuigiKeyModelFile,
+    &gWarioKeyModelFile,  &data_ov085_021305d8, &data_ov085_021305d8, &data_ov002_0211094c,
 };
 extern "C" void *const data_ov089_021328b4[8] = {
     0, 0, &data_ov002_0210da40, &data_ov002_0210d9a0, &data_ov002_0210d9c0, 0, 0, 0,

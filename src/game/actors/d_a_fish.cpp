@@ -86,19 +86,30 @@ extern FishModelFilePtr gFishBModelFile;
 extern FishAnimationFileHandle gFishSwimAnimationFile;
 extern FishAnimationFileHandle gFishAbSwimAnimationFile;
 extern "C" {
+/* local extern: mwccarm rejects casting &daFish_c::StateWaitSchoolGone to int. */
 void _ZN8daFish_c19StateWaitSchoolGoneEv();
+/* local extern: mwccarm rejects casting &daFish_c::StateWaitForPlayer to int. */
 void _ZN8daFish_c18StateWaitForPlayerEv();
+/* local extern: mwccarm rejects casting &daFish_c::StateFlee to int. */
 void _ZN8daFish_c9StateFleeEv();
-void _ZN8daFish_c19StateWaitPlayerAwayEv();
+/* local extern: mwccarm rejects casting &daFish_c::StateWaitPlayerAway to int. */
+int _ZN8daFish_c19StateWaitPlayerAwayEv();
+/* local extern: mwccarm rejects casting &daFish_c::StateIdle to int. */
 void _ZN8daFish_c9StateIdleEv();
+/* local extern: mwccarm rejects casting &daFish_c::StateWander to int. */
 void _ZN8daFish_c11StateWanderEv();
+/* local extern: mwccarm rejects casting &daFish_c::StateTurnAbout to int. */
 void _ZN8daFish_c14StateTurnAboutEv();
 }
 extern SharedFilePtr *const data_ov100_021473a4[3] = {
-    &gFishModelFile, &gFishAModelFile, &gFishBModelFile,
+    &gFishModelFile,
+    &gFishAModelFile,
+    &gFishBModelFile,
 };
 extern SharedFilePtr *const data_ov100_021473b0[3] = {
-    &gFishSwimAnimationFile, &gFishAbSwimAnimationFile, &gFishAbSwimAnimationFile,
+    &gFishSwimAnimationFile,
+    &gFishAbSwimAnimationFile,
+    &gFishAbSwimAnimationFile,
 };
 extern daFishState data_ov100_02148a1c[];
 /* Two-word pointer-to-member images. The initializer copies them into

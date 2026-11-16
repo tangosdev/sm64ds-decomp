@@ -45,11 +45,11 @@ void *sD3DLanguageFile;
 Oam sD3DOamShadow[128];
 extern const unsigned char sD3DSoundPanOffsets[8] = {0x00, 0x40, 0x80, 0xc0,
                                                      0xc0, 0x00, 0x00, 0x00};
-extern unsigned int data_ov004_020bcaa0[];
-extern unsigned int data_ov004_020bdccc[];
-extern unsigned int data_ov004_020bd074[];
-extern unsigned int data_ov004_020be34c[];
-extern unsigned int data_ov004_020bd698[];
+extern char data_ov004_020bcaa0[];
+extern char data_ov004_020bdccc[];
+extern char data_ov004_020bd074[];
+extern char data_ov004_020be34c[];
+extern char data_ov004_020bd698[];
 unsigned int sD3DSubScreenBgByLanguage[5] = {
     (unsigned int)data_ov004_020bcaa0, (unsigned int)data_ov004_020bdccc,
     (unsigned int)data_ov004_020bd074, (unsigned int)data_ov004_020be34c,
