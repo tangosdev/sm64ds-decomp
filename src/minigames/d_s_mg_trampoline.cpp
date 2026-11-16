@@ -55,10 +55,6 @@ extern "C" void Mg_CommitRecords(void);
 extern "C" s32 GetGameLanguage(void);
 
 
-typedef struct Vec2s {
-    s16 x, y;
-} Vec2s;
-
 extern int sTrmpRowScreenY[];
 
 extern int sTrmpRowMarkerSprite;
@@ -273,10 +269,10 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
 
     G2_SetBlendAlpha(1, 0x3e, 0x10, 0x10);
 
-    mTouchStartX = data_020a0dbc[0];
-    mTouchStartY = data_020a0dbc[1];
-    mTouchX = data_020a0dbc[0];
-    mTouchY = data_020a0dbc[1];
+    mTouchStart.x = data_020a0dbc[0];
+    mTouchStart.y = data_020a0dbc[1];
+    mTouch.x = data_020a0dbc[0];
+    mTouch.y = data_020a0dbc[1];
 
     sTrmpAnyOnLedge = 0;
     mLevel = 0;
@@ -333,11 +329,11 @@ void dScMgTrampoline_c::BeginIntro() {
 
     mTimer = 90;
     startX = sTrmpStartTouchX;
-    mTouchStartX = startX;
+    mTouchStart.x = startX;
     startY = sTrmpStartTouchY;
-    mTouchStartY = startY;
-    mTouchX = startX;
-    mTouchY = startY;
+    mTouchStart.y = startY;
+    mTouch.x = startX;
+    mTouch.y = startY;
     mDragSoundHandle = 0;
     mState = &dScMgTrampoline_c::StateIntro;
 }
@@ -372,20 +368,20 @@ void dScMgTrampoline_c::StateIntro() {
         int t = FX_Div(counter << 12, 0x5a000);
         /* Kept volatile: the ROM spills the previous point to the stack
            across the random draw; plain locals DIFF (measured 2026-11-08). */
-        volatile s16 prevX = mTouchX;
-        volatile s16 prevY = mTouchY;
+        volatile s16 prevX = mTouch.x;
+        volatile s16 prevY = mTouch.y;
         int penX = sTrmpStartTouchX * t + sTrmpIntroFromX * (0x1000 - t);
 
-        mTouchX = (s16)(penX >> 12);
-        mTouchY = sTrmpStartTouchY;
+        mTouch.x = (s16)(penX >> 12);
+        mTouch.y = sTrmpStartTouchY;
 
-        mTouchY +=
+        mTouch.y +=
             ((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) -
                0x800)
               << 2) >>
              12);
 
-        Mg_DrawLine(prevX, prevY, mTouchX, mTouchY, 2, 0xc);
+        Mg_DrawLine(prevX, prevY, mTouch.x, mTouch.y, 2, 0xc);
 
         mDragSoundHandle =
             func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(penX), 0, 0);
@@ -568,10 +564,10 @@ void dScMgTrampoline_c::UpdateTouchInput() {
     slot = gActivePlayerSlot;
     edge = (gTouchInfo[slot].held != 0 && gTouchInfo[slot].edge != 0);
     if (edge) {
-        mTouchX = gTouchInfo[slot].x;
-        mTouchStartX = mTouchX;
-        mTouchY = gTouchInfo[slot].y;
-        mTouchStartY = mTouchY;
+        mTouch.x = gTouchInfo[slot].x;
+        mTouchStart.x = mTouch.x;
+        mTouch.y = gTouchInfo[slot].y;
+        mTouchStart.y = mTouch.y;
         mTouching = 1;
         mDragSoundHandle = 0;
     }
@@ -581,12 +577,12 @@ void dScMgTrampoline_c::UpdateTouchInput() {
 
     slot = gActivePlayerSlot;
     if (gTouchInfo[slot].held != 0) {
-        Mg_DrawLine(mTouchX, mTouchY, gTouchInfo[slot].x, gTouchInfo[slot].y, 2, 4);
+        Mg_DrawLine(mTouch.x, mTouch.y, gTouchInfo[slot].x, gTouchInfo[slot].y, 2, 4);
         slot = gActivePlayerSlot;
-        mTouchX = gTouchInfo[slot].x;
-        mTouchY = gTouchInfo[slot].y;
+        mTouch.x = gTouchInfo[slot].x;
+        mTouch.y = gTouchInfo[slot].y;
         mDragSoundHandle =
-            func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mTouchX << 12), 0, 0);
+            func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mTouch.x << 12), 0, 0);
     } else {
         edge = (gTouchInfo[slot].held == 0 && gTouchInfo[slot].edge != 0);
         if (edge != 0) {
@@ -700,7 +696,6 @@ int dScMgTrampoline_c::OnGraphCallback0() {
     volatile u16 fill;
     Vec2s from;
     Vec2s to;
-    s16 startX;
     int dst;
 
     if (!dScMgBase_c::OnGraphCallback0())
@@ -719,18 +714,14 @@ int dScMgTrampoline_c::OnGraphCallback0() {
         return 0;
 
     if (mTouchReleased != 0) {
-        startX = mTouchStartX;
-        if ((startX < 0x24 && mTouchX < 0x24) || (startX > 0xd4 && mTouchX > 0xd4)) {
+        if ((mTouchStart.x < 0x24 && mTouch.x < 0x24) ||
+            (mTouchStart.x > 0xd4 && mTouch.x > 0xd4)) {
             func_02012790(0xe);
         } else {
-            /* Kept volatile: a plain read of mTouchStartX DIFFs here
-               (measured 2026-11-08). */
-            from.x = *(volatile s16 *)&mTouchStartX;
-            from.y = mTouchStartY;
-            to.x = mTouchX;
-            to.y = mTouchY;
+            from = mTouchStart;
+            to = mTouch;
             if (TrmpLine::Create(&from.x, &to.x)) {
-                func_02012718(0x1af, (mTouchStartX + mTouchX) << 11);
+                func_02012718(0x1af, (mTouchStart.x + mTouch.x) << 11);
             } else {
                 func_02012790(0xe);
             }
