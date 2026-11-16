@@ -218,7 +218,7 @@ extern "C" {
 struct BCA_File;
 extern SharedFilePtr data_ov002_0210da30;
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern void Matrix4x3_FromRotationY(void* m, short ang);
+extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void MTX_Concat43(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
@@ -1134,7 +1134,7 @@ int daKing_Donketu_c::UpdateEdgeWobble() {
     out.x = 0;
     out.y = 0;
     out.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY + 0x8000);
+    Matrix4x3_FromRotationY(&data_020a0e68, (s16)(c->mAngleY + 0x8000));
     MTX_MultVec43(&in, &data_020a0e68, &out);
     in.x = c->mEdgePosX + out.x;
     in.y = c->mEdgePosY;
