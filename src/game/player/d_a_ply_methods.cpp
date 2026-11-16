@@ -20643,11 +20643,6 @@ s32 daPly_c::InitResources() {
     extern u8 gGameMode;
     extern s8 data_02092114;
     extern u8 gPrevReturnState;
-    /* The helpers below take void or char pointers, and this file's match
-       depends on declaration and load order documented in the header comment
-       above. One alias keeps every one of those decisions untouched. */
-    void *self = this;
-    char* c = (char*)self;
     Vector3 pos;
     unsigned int a, b;
     u8 n8;
@@ -20703,7 +20698,7 @@ Lac:
 Ld0:
     func_ov002_020e5948();
     if (changed != 0)
-        ((daPly_c *)(c))->func_ov002_020beabc();
+        func_ov002_020beabc();
     mTrailPos = (Vector3 *)__cxa_vec_new(0x32, 0xc, 8, (void (*)(void *))func_0203d384,
                                          (void (*)(void *))_ZN7Vector3D1Ev);
     mTrailFlags = (u8 *)::operator new[](0x32);
@@ -20713,7 +20708,7 @@ Ld0:
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     func_ov002_020e63a4();
-    mMeshClsn.Init((dActor_c *)c, 0x32000, 0x32000, &mPrevAngle, &mAngle);
+    mMeshClsn.Init(this, 0x32000, 0x32000, &mPrevAngle, &mAngle);
     func_02035644((int *)&mMeshClsn, 0x28000);
     mTerminalVelocity = -0x4b000;
     mSpawnPosX = mPosX;
@@ -20744,7 +20739,7 @@ Ld0:
         if (SaveData::HasPlayerLostCap() != 0)
             func_02013a00();
     }
-    ((daPly_c *)(c))->func_ov002_020c7dd0(n8);
+    func_ov002_020c7dd0(n8);
     dBgCh_Gnd rc;
     tz = mPosZ;
     tx = mPosX;
@@ -20753,7 +20748,7 @@ Ld0:
     pos.y = td;
     pos.z = tz;
     rc.mProbeHeight = td * 2;
-    rc.SetObjAndPos(pos, (dActor_c *)c);
+    rc.SetObjAndPos(pos, this);
     rc.StartDetectingWater();
     if (gCurrentSublevel == 0x1d) {
         gReturnSublevel = 2;
