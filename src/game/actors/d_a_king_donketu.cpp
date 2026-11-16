@@ -1715,8 +1715,18 @@ int daKing_Donketu_c::Render()
  *     position as one Vector3 copy from m[9]: each is 0x428, the same 85
  *     replaced words.
  *   SpawnLandingEffects (0x0211f2c0) is the same copy-and-concat block, and
- *   it holds the address in lr under the default propagation. So the r4 hold
- *   in Behavior comes from how the rest of Behavior is shaped.
+ *   it holds the address in lr under the default propagation.
+ * Re-measured after the body was rewritten without the RayParams bundle and
+ * the `C *` alias: with the bracket removed it is still 0x428, and the same
+ * 182 equal / 85 replaced / 1 deleted words, so the launders were not what
+ * needed the pragma. Ignoring register names (fdiff --align-shape), only two
+ * sites differ: after MTX_Concat43 the bone reads reload &data_020a0e68 from
+ * the literal pool instead of using the copy held in r4, and 0x2000 goes to
+ * Matrix4x3_ApplyInPlaceToRotationX as an immediate instead of being held in
+ * r4 from before the dir.z if/else. Both are copy/constant propagation
+ * undone. Also measured with the bracket removed, each unchanged: pitch as
+ * `int` or `register short`, pitch (and yaw) as Vector3_16 fields, and a
+ * `Matrix4x3 *m` local declared at the top or in the stomp block.
  *
  * The eight Vector3 locals are declared up front in frame order (bonePos at
  * sp+0, then start, end, dir, ray, shifted, dustPos, offset); declared inside
