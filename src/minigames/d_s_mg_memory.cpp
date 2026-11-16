@@ -337,7 +337,9 @@ void dScMgMemory_c::UpdateCards() {
 }
 
 #pragma push
-/* Kept: without opt_lifetimes off the two loops' counter and limit take other registers (colour only). */
+/* Kept: without opt_lifetimes off the two loops' counter and limit take other registers (colour only).
+ * Re-measured (#821, 2026-11-16): 41 of 102 words off without it; swapping the
+ * j/n roles in the second loop gives 40, declaring n before j 41 or 40. */
 #pragma opt_lifetimes off
 void dScMgMemory_c::CardFlyAway(int cardIndex) {
     int j;
