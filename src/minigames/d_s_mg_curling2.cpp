@@ -415,20 +415,16 @@ void dScMgCurling2_c::StepXAndY(int entry) {
 
 /* Step the piece, then bleed xInc toward zero 0x20 a frame. */
 void dScMgCurling2_c::StepXSettleFast(int entry) {
-    /* x, xInc, y -- the ROM's load order, not a tidy one. */
-    int *x = &mPiece[entry].x;
-    int *xInc = &mPiece[entry].xInc;
-    int *y = &mPiece[entry].y;
-    *x += *xInc;
-    *y += mPiece[entry].yInc;
-    if (*xInc > 0) {
-        *xInc -= 0x20;
-        if ((short)*xInc < 0)
-            *xInc = 0;
-    } else if (*xInc < 0) {
-        *xInc += 0x20;
-        if (*xInc > 0)
-            *xInc = 0;
+    mPiece[entry].x += mPiece[entry].xInc;
+    mPiece[entry].y += mPiece[entry].yInc;
+    if (mPiece[entry].xInc > 0) {
+        mPiece[entry].xInc -= 0x20;
+        if ((short)mPiece[entry].xInc < 0)
+            mPiece[entry].xInc = 0;
+    } else if (mPiece[entry].xInc < 0) {
+        mPiece[entry].xInc += 0x20;
+        if (mPiece[entry].xInc > 0)
+            mPiece[entry].xInc = 0;
     } else {
         mPiece[entry].xIndex = 0;
     }
