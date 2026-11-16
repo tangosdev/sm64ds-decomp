@@ -756,12 +756,10 @@ void daWanwan_c::StateEscapeDemoMain() {
     fence = (daObjWanwanShutter_c *)dActor_c::FindWithID((unsigned)mFenceUniqueID);
     {
         s32 *src = &fence->mPosX;
-        s32 fifth = 0x80;
         partnerPos.x = src[0];
         partnerPos.y = src[1];
-        s32 z = 0;
         partnerPos.z = src[2];
-        ApproachAngle(&mAngleX, z, 4, 0x200, fifth);
+        ApproachAngle(&mAngleX, 0, 4, 0x200, 0x80);
     }
     camera = gCamera;
     angleToPlayer = HorzAngleToCPlayer();
