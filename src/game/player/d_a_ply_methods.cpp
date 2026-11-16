@@ -6460,8 +6460,6 @@ int daPly_c::func_ov002_020c8540() {
  * fanfare (mode 0x10) or spawns the star and hands the player to it.
  */
 int daPly_c::func_ov002_020c8714() {
-    volatile int v[3]; // without volatile, the function shrinks 0x268 to 0x24c
-
     if (mStateArg == 0) {
         Sound::ChangeMusicVolume(0x14, 0x15666);
         if (mStateTimer == 0) {
@@ -6479,15 +6477,9 @@ int daPly_c::func_ov002_020c8714() {
             mIsAirborne = 1;
             mLandSoundPlayed = 0;
         }
-        v[0] = this->mPosX;
-        v[1] = this->mPosY;
-        v[2] = this->mPosZ;
-        /* mPosY (+0x60), re-read by index: this->mPosY lets the compiler reuse the
-           load above and drops the ROM's second load (one word short, measured). */
-        v[1] = ((int *)this)[0x18] + 0x3c000;
-        mParticle1 =
-            Particle::System::New(*(volatile int *)&this->mParticle1, 0x27, v[0], v[1], this->mPosZ,
-                                  0, 0); // without volatile, two instructions swap
+        Vector3 v = mPos;
+        v.y = mPosY + 0x3c000;
+        mParticle1 = Particle::System::New(mParticle1, 0x27, v.x, v.y, v.z, 0, 0);
     } else if (this->FinishedAnim() != 0) {
         if (mNoCtrlKind == 0x10) {
             mStateStep = 0x19;
