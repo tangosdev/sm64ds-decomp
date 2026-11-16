@@ -1977,10 +1977,10 @@ void daTrs_c::UpdateDying() {
         this->mAngleX = src[0];
         this->mAngleY = src[1];
         this->mAngleZ = src[2];
-        char* r = (char*)RespawnIfHasCap();
+        daTrs_c *r = (daTrs_c *)RespawnIfHasCap();
         if (r == 0) return;
         {
-            u16* p = (u16*)&((daTrs_c *)r)->mBooFlags;
+            u16 *p = (u16 *)&r->mBooFlags;
             *p &= ~TRS_FLAG_CARRYING;
         }
     } else {
