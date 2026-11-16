@@ -20083,6 +20083,9 @@ int daPly_c::func_ov002_020e3f90() {
         }
     }
     mShadowMatrix = data_020a0e68;
+    /* Re-measured (#821 r17): s.v filled straight from m[9..11] and shifted
+       into mPos is 0x3e8 (the two volatile casts dropped, member still
+       volatile); angs/v/tgt as separate locals with v a Vector3 is 0x3bc. */
     t = (&data_020a0e68)->m[9];
     t1 = ((volatile Matrix4x3 *)&data_020a0e68)->m[10]; // without volatile, 7 words differ
     t2 = ((volatile Matrix4x3 *)&data_020a0e68)->m[11]; // without volatile, 10 words differ
