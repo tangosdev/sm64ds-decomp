@@ -4298,7 +4298,7 @@ void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
     int dist;
     int step;
     int i;
-    char *p; /* walks mDensity */
+    u8 *p;
 
     this->mEnabled = 1;
     dist = 0x28000 - (nearv << 4);
@@ -4308,9 +4308,8 @@ void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
     if (dist >= 0x80000)
         dist = 0x7ffff;
     step = (0x100000 - (farv << 4) - dist) >> 5;
-    i = 0;
-    p = (char *)this->mDensity;
-    while (i < 32) {
+    p = this->mDensity;
+    for (i = 0; i < 32; i++) {
         if (dist <= 0) {
             *p = 0;
         } else if (dist > 0x80000) {
@@ -4318,7 +4317,6 @@ void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
         } else {
             *p = (dist >> 12);
         }
-        i++;
         p++;
         dist += step;
     }
