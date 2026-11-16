@@ -10740,10 +10740,8 @@ int daPly_c::St_HoldHeavy_Init() {
 
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::St_HoldLight_Cleanup() {
-
-    char *p = (char *)mHeldObj;
-    if (p) {
-        ((dActor_c *)p)->mFlags |= 0x4000;
+    if (mHeldObj) {
+        mHeldObj->mFlags |= 0x4000;
     }
     return 1;
 }
