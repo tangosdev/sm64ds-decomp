@@ -2178,8 +2178,7 @@ int daKpa_c::DeadWaitForMario() {
     int r = 0;
     LoopLayDownAnimation();
     if ((int)this->mAnmModel.file == (int)data_ov060_0211ac60.filePtr) {
-        char* player = (char *)this->mTargetPlayer;
-        if (player != 0) {
+        if (this->mTargetPlayer != 0) {
             int* targetPos = &this->mTargetPlayer->mPosX;
             struct Vector3 v;
             s16 ang;
