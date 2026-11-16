@@ -2618,9 +2618,6 @@ block2:
     }
 }
 
-/* Leftover: UpdatePhysics needs strength reduction off. */
-#pragma push
-#pragma opt_strength_reduction off
 /* Leftover: the owner selection keeps its own address computation. */
 extern "C" { /* C linkage, as in the original .c file */
 
@@ -2671,7 +2668,6 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     int i;
     int entityLoopIndex;
     s16 angle;
-    int radialAngle;
     int responseScale;
     int dot;
     int volume;
@@ -2968,30 +2964,26 @@ outer_loop:
     response.x = 0;
     response.z = 0;
     if (state.flags[2] == 1) {
-        radialAngle = 0;
         do {
             if (hitB[i] == 1) {
                 radial.x = 0;
                 radial.z = 0x1000;
-                func_0203d388((V2 *)&radial, (s16)(radialAngle / 0x20));
+                func_0203d388((V2 *)&radial, (s16)(i * 0x10000 / 32));
                 response.x -= radial.x;
                 response.z -= radial.z;
             }
             i++;
-            radialAngle += 0x10000;
         } while (i < 32);
     } else {
-        radialAngle = 0;
         do {
             if (hitA[i] == 1 && hitC[i] == 0) {
                 radial.x = 0;
                 radial.z = 0x1000;
-                func_0203d388((V2 *)&radial, (s16)(radialAngle / 0x20));
+                func_0203d388((V2 *)&radial, (s16)(i * 0x10000 / 32));
                 response.x -= radial.x;
                 response.z -= radial.z;
             }
             i++;
-            radialAngle += 0x10000;
         } while (i < 32);
     }
 
@@ -3156,8 +3148,6 @@ outer_loop:
     } while (i < mpManager->mAnaCount);
 }
 }
-
-#pragma pop
 
 void cMgSmartball_ball_c::DrawMarker() {
     long long sq;
