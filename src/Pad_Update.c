@@ -25,6 +25,20 @@ void Pad_Update(Ov007Pad *pad, u16 *src) {
     }
     if ((pad->inputLock & 1) != 0) {
         if (pad->keys == 0) {
+            /* Kept (#821, measured 2026-11-16 against ov007 0x020c20b8,
+               0x1e8). The ROM reloads inputLock and clears bit 0 through
+               [r0,#0x64] (ldreq/biceq/streq).
+                 `&= ~1`, `= inputLock & ~1`, `&= 0xfffffffe`, `^= 1`, or
+                   an empty else: 0x1ec, +1 word (addeq r2,r0,#0x64, then
+                   ldr/str through r2).
+                 `-= 1`: 0x1ec, 4 words replaced.
+                 if/else arms swapped: 0x1ec, 7 words differ.
+                 `= inputLock & ~1u`, an int local first, or an (int) cast
+                   on the read: 0x1e4, -1 word (the reload is CSE'd into
+                   the outer test).
+                 u32 field: 0x1ec. 1-bit bitfield: 0x1f0.
+               ov007's menu (unit020b2cdc.cpp) sets bit 0 of its own
+               inputLock with the same reload-through-a-cast shape. */
             u32 w = *(volatile u32 *)&pad->inputLock;
             pad->inputLock = w & ~1u;
         } else {
