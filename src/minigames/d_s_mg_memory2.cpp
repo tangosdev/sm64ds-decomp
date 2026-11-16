@@ -8,11 +8,9 @@
  * leftovers:
  * - DrawCards steps a char* by 0x18 from this. mCards[i] and a card
  *   pointer both change that loop.
- * - CardFlyAway keeps FlyAwaySceneView. Direct mCards access misses.
  * - CheckFinished's clear-bonus call reads mCredits through WordAt, as
  *   dScMgMemory_c's twin does; the plain read changes four words.
  *   unk_5407 is only cleared.
- * - MEMORY2_OFF names the offsets CardFlyAway adds.
  * - Camera_InitDealerView sets mCamera and tail-calls
  *   Camera_UpdateMatrices. Render and InitResources call that wrapper.
  * - Mg_DrawScoreTally and Mg_SaveRecordPair stay the linker names. Their
@@ -41,32 +39,13 @@ namespace cstd {
 s16 atan2(s32, s32);
 }
 
-/* CardFlyAway, ResultWait and RoundDealHard retain the partial views below.
+/* ResultWait and RoundDealHard retain the partial views below.
  * Their array extents span unrelated fields to retain specific address
  * calculations; they are not original class layouts. */
 
 typedef void (dScMgMemory2_c::*dScMgMemory2_cState)();
 typedef void (dScMgMemory2_c::*dScMgMemory2_cCardState)(int);
 extern "C" dScMgMemory2_cCardState sMemory2CardTable[];
-
-typedef struct FlyAwayCardView {
-    /* 0x00 */ s32 x;
-    /* 0x04 */ u8 unk04[0x12 - 0x04];
-    /* 0x12 */ u8 visible;
-    /* 0x13 */ u8 active;
-    /* 0x14 */ u8 state;
-    /* 0x15 */ u8 frame;
-    /* 0x16 */ u8 flyAwayStarted;
-    /* 0x17 */ u8 pad_17;
-} FlyAwayCardView;
-
-typedef struct FlyAwaySceneView {
-    /* 0x0000 */ FlyAwayCardView raw[1];
-    /* 0x0018 */ u8 unk18[0x51a8 - 0x18];
-    /* 0x51a8 */ FlyAwayCardView cards[25];
-    /* 0x5400 */ u8 unk5400[0xa];
-    /* 0x540a */ u8 difficulty;
-} FlyAwaySceneView;
 
 struct ScoreView {
     char pad[0xb4];
@@ -140,9 +119,6 @@ void Mg_PlaceBannersOnTopScreen(void);
 /* The scene seen through a pointer stepped one card at a time, for the
  * DrawCards walk. */
 #define MEMORY2(p) ((dScMgMemory2_c *)(p))
-/* A field's byte offset in the scene, for the CardFlyAway sites that add it
-   to a stepped pointer, as the ROM does. */
-#define MEMORY2_OFF(member) ((int)&((dScMgMemory2_c *)0)->member)
 
 #pragma defer_codegen off
 
@@ -367,15 +343,14 @@ void dScMgMemory2_c::UpdateCards() {
 }
 
 void dScMgMemory2_c::CardFlyAway(int cardIndex) {
-    FlyAwaySceneView *view = (FlyAwaySceneView *)this;
     s32 rowWidth;
     s32 column;
     s32 precedingOffset;
     s32 scanLimit;
 
-    view->cards[cardIndex].x -= 0x10000;
-    if (view->cards[cardIndex].flyAwayStarted == 0) {
-        rowWidth = sMemory2FlyAwayLimitPerMode[view->difficulty];
+    mCards[cardIndex].x -= 0x10000;
+    if (mCards[cardIndex].flyAwayStarted == 0) {
+        rowWidth = sMemory2FlyAwayLimitPerMode[mDifficulty];
         column = cardIndex;
         if (cardIndex >= rowWidth) {
             scanLimit = rowWidth;
@@ -384,30 +359,29 @@ void dScMgMemory2_c::CardFlyAway(int cardIndex) {
             } while (column >= scanLimit);
         }
         if (column == 0) {
-            view->cards[cardIndex].flyAwayStarted = 1;
+            mCards[cardIndex].flyAwayStarted = 1;
             return;
         }
         scanLimit = column + 1;
         precedingOffset = 1;
         if (scanLimit > 1) {
             do {
-                if (view->cards[cardIndex - precedingOffset].active != 0) {
-                    if (((view->cards[cardIndex].x - view->cards[cardIndex - precedingOffset].x) >>
-                         12) <= 4) {
-                        view->cards[cardIndex].flyAwayStarted = 1;
-                        view->cards[cardIndex - precedingOffset].state = CARD_FLY_AWAY;
+                if (mCards[cardIndex - precedingOffset].active != 0) {
+                    if (((mCards[cardIndex].x - mCards[cardIndex - precedingOffset].x) >> 12) <=
+                        4) {
+                        mCards[cardIndex].flyAwayStarted = 1;
+                        mCards[cardIndex - precedingOffset].state = CARD_FLY_AWAY;
                     }
                 }
                 precedingOffset++;
             } while (precedingOffset < scanLimit);
         }
     }
-    if ((view->cards[cardIndex].x >> 12) > -0x18) {
+    if ((mCards[cardIndex].x >> 12) > -0x18) {
         return;
     }
-    /* mCards[cardIndex].active and .visible; view->cards[cardIndex] shrinks the function. */
-    *((u8 *)view + cardIndex * 24 + MEMORY2_OFF(mCards[0].active)) = 0;
-    *((u8 *)view + cardIndex * 24 + MEMORY2_OFF(mCards[0].visible)) = 0;
+    mCards[cardIndex].active = 0;
+    mCards[cardIndex].visible = 0;
 }
 
 void dScMgMemory2_c::CardFlipDown(int cardIndex) {
