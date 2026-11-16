@@ -24,8 +24,6 @@ enum d_a_obj_wc_obj06_AssetId { ASSET_WC_OBJ06_BMD = 0x06d5, ASSET_WC_OBJ06_KCL 
 #include "dBgCh_Lin.h"
 #include "SharedFilePtr.h"
 
-extern daObjFloatBoard_c_Resources data_ov029_02113f00;
-
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
  * addresses are the ROM resource-family functions. */
@@ -37,6 +35,16 @@ struct WcObj06ModelFilePtr : SharedFilePtr {
 struct WcObj06CollisionFilePtr : SharedFilePtr {
     WcObj06CollisionFilePtr(u32 fileID);
     ~WcObj06CollisionFilePtr();
+};
+
+extern WcObj06ModelFilePtr gWcObj06ModelFile;
+extern WcObj06CollisionFilePtr gWcObj06CollisionFile;
+extern CLPS_Block data_ov029_0211308c;
+
+daObjFloatBoard_c_Resources data_ov029_02113f00 = {
+    &gWcObj06ModelFile,
+    &gWcObj06CollisionFile,
+    &data_ov029_0211308c,
 };
 
 enum {

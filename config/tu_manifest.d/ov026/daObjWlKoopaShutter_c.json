@@ -32,6 +32,11 @@
       "name": ".bss",
       "start": "0x02113eb4",
       "end": "0x02113edc"
+    },
+    {
+      "name": ".data",
+      "start": "0x02112f74",
+      "end": "0x02112f7c"
     }
   ],
   "functions": [
@@ -85,7 +90,14 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov026_02112f74",
+      "address": "0x02112f74",
+      "size": "0x8",
+      "binding": "STB_GLOBAL"
+    }
+  ],
   "bss": [
     {
       "symbol": "BowserShutter_ClsnFile",
@@ -243,6 +255,13 @@
           "start": "0x02113eb4",
           "end": "0x02113edc",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02112f74",
+          "end": "0x02112f7c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

@@ -17,6 +17,7 @@ src/game/actors/d_a_obj_wl_koopa_shutter.cpp:
     .init start:0x02112bbc end:0x02112c28
     .ctor start:0x02112da8 end:0x02112dac
     .bss start:0x02113eb4 end:0x02113edc
+    .data start:0x02112f74 end:0x02112f7c
 
 src/game/actors/d_a_obj_wl_submarine.cpp:
     complete
@@ -24,6 +25,7 @@ src/game/actors/d_a_obj_wl_submarine.cpp:
     .init start:0x02112c28 end:0x02112c94
     .ctor start:0x02112dac end:0x02112db0
     .bss start:0x02113edc end:0x02113f04
+    .data start:0x02112fd4 end:0x02112ffc
 
 src/game/actors/d_a_water_tatumaki.cpp:
     complete
