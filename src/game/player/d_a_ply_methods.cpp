@@ -15295,12 +15295,12 @@ int daPly_c::func_ov002_020da95c() {
 }
 
 int daPly_c::DropHeldObj() {
-    char *s = (char *)mHeldObj;
+    dActor_c *s = mHeldObj;
     int b = (s != 0);
     if (!b)
         return 0;
     {
-        int e = (((dActor_c *)s)->actorID == 0xbf);
+        int e = (s->actorID == 0xbf);
         if (e)
             func_ov002_020db54c(s, 0x10000, 0x10000, mAngleY);
     }
