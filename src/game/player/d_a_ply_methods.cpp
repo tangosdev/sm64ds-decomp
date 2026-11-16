@@ -4084,8 +4084,7 @@ int daPly_c::St_Respawn_Main() {
             }
         } else {
             if (mIsAirborne == 0) {
-                u32 zero = 0;
-                this->SetAnim(0x55, 0x40000000, 0x1000, zero);
+                this->SetAnim(0x55, 0x40000000, 0x1000, 0);
                 mStateStep += 1;
             }
         }
@@ -4093,8 +4092,7 @@ int daPly_c::St_Respawn_Main() {
     }
     case 1:
         if (this->FinishedAnim() != 0) {
-            int z = 0;
-            this->SetAnim(0x47, z, 0x1000, z);
+            this->SetAnim(0x47, 0, 0x1000, 0);
             mStateStep += 1;
         }
         break;
