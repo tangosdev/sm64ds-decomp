@@ -3582,28 +3582,27 @@ void daPly_c::func_ov002_020c2b08() {
 }
 
 void daPly_c::func_ov002_020c2db8() {
-    unsigned char *c = (unsigned char *)this;
-    ((daPly_c *)(c))->func_ov002_020c14b8();
+    func_ov002_020c14b8();
     mClsnFlags = 0;
     if (mSkipGroundUpdate != 0)
         return;
     mSlideType = 0;
     if (mFloorClass == 5)
         mSlideType = 1;
-    if (((daPly_c *)(c))->func_ov002_020c231c() == 0) {
+    if (func_ov002_020c231c() == 0) {
         func_02035798(&mMeshClsn, 0x1000);
-        ((daPly_c *)(c))->func_ov002_020c25a8(0);
+        func_ov002_020c25a8(0);
     } else {
         func_02035798(&mMeshClsn, 0);
-        ((daPly_c *)(c))->func_ov002_020c25a8(1);
+        func_ov002_020c25a8(1);
     }
-    ((daPly_c *)(c))->func_ov002_020c1234();
-    ((daPly_c *)(c))->func_ov002_020c0fb4();
-    ((daPly_c *)(c))->func_ov002_020c5d60();
-    ((daPly_c *)(c))->func_ov002_020c61ac();
-    func_ov002_020eea84(&mMeshClsn, (dActor_c *)c);
-    ((daPly_c *)(c))->func_ov002_020c2b08();
-    ((daPly_c *)(c))->func_ov002_020c29d4();
+    func_ov002_020c1234();
+    func_ov002_020c0fb4();
+    func_ov002_020c5d60();
+    func_ov002_020c61ac();
+    func_ov002_020eea84(&mMeshClsn, this);
+    func_ov002_020c2b08();
+    func_ov002_020c29d4();
 }
 
 void daPly_c::func_ov002_020c2e78() {
