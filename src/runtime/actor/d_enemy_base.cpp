@@ -764,5 +764,5 @@ DeathPMF data_ov002_0210dbc0[8] = {
 };
 
 /* Initialized data this file is the only complete referrer for. */
-const unsigned short data_ov002_020ff014[4] = { 288, 289, 290, 0 };
-const unsigned short data_ov002_020ff01c[6] = { 150, 150, 400, 80, 400, 0 };
+const unsigned short data_ov002_020ff014[4] = {288, 289, 290, 0};
+const unsigned short data_ov002_020ff01c[6] = {150, 150, 400, 80, 400, 0};

@@ -228,7 +228,9 @@ daPropeller_Heyho_Fire_c *daPropeller_Heyho_Fire_c_classInit(void) {
 HeyhoStateTable data_ov002_02111190 = {data_ov002_0210d600, data_ov002_0210d5f8};
 
 /* Initialized data this file is the only complete referrer for. */
+/* local extern: mwccarm rejects casting &daPropeller_Heyho_Fire_c::State0 to int. */
 extern "C" int _ZN24daPropeller_Heyho_Fire_c6State0Ev();
+/* local extern: mwccarm rejects casting &daPropeller_Heyho_Fire_c::InitState0 to int. */
 extern "C" int _ZN24daPropeller_Heyho_Fire_c10InitState0Ev();
-HeyhoFnPair data_ov002_0210d5f8 = { (int)&_ZN24daPropeller_Heyho_Fire_c6State0Ev, 0 };
-HeyhoFnPair data_ov002_0210d600 = { (int)&_ZN24daPropeller_Heyho_Fire_c10InitState0Ev, 0 };
+HeyhoFnPair data_ov002_0210d5f8 = {(int)&_ZN24daPropeller_Heyho_Fire_c6State0Ev, 0};
+HeyhoFnPair data_ov002_0210d600 = {(int)&_ZN24daPropeller_Heyho_Fire_c10InitState0Ev, 0};

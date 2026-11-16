@@ -3652,6 +3652,16 @@
         "return:unsigned int"
       ]
     },
+    "_ZN24daPropeller_Heyho_Fire_c10InitState0Ev": {
+      "src/game/actors/d_a_propeller_heyho_fire.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN24daPropeller_Heyho_Fire_c6State0Ev": {
+      "src/game/actors/d_a_propeller_heyho_fire.cpp": [
+        "arity:0"
+      ]
+    },
     "_ZN2G212GetBG0ScrPtrEv": {
       "src/minigames/d_s_mg_trampoline2.cpp": [
         "return:char *"

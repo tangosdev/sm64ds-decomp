@@ -1094,5 +1094,6 @@ Entry data_ov002_0210e084[5] = {
 
 /* Initialized data this file is the only complete referrer for. */
 const VecFx32 data_ov002_020ff0d4[2] = {
-    {0x6000, 0xa00, 0x0}, {0x6000, -0xa000, -0xa000},
+    {0x6000, 0xa00, 0x0},
+    {0x6000, -0xa000, -0xa000},
 };
