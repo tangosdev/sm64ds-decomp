@@ -67,3 +67,18 @@ struct FlGuraCollisionFilePtr : SharedFilePtr {
  * file. */
 FlGuraModelFilePtr gFlGuraModelFile(ASSET_FL_GURA_BMD);         /* model */
 FlGuraCollisionFilePtr gFlGuraCollisionFile(ASSET_FL_GURA_KCL); /* collision */
+
+struct CLPS_Block {
+    u32 words[8];
+};
+
+CLPS_Block data_ov064_0211bb8c = {
+    0x53504c43, 0x00020008, 0x00002fc0, 0x000000ff,
+    0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff,
+};
+
+#pragma define_section guraro ".rodata" ".rodata" ".rodata" far_absolute R
+#pragma section guraro begin
+ResourceDescriptor data_ov064_0211adb0 = {
+    &gFlGuraModelFile, &gFlGuraCollisionFile, &data_ov064_0211bb8c};
+#pragma section guraro end

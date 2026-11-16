@@ -293,6 +293,31 @@ Kpa3BgCollisionFilePtr data_ov060_0211b074(0x632);
 Kpa3BgCollisionFilePtr data_ov060_0211b084(0x634);
 Kpa3BgCollisionFilePtr data_ov060_0211b08c(0x636);
 Kpa3BgCollisionFilePtr data_ov060_0211b04c(0x638);
+
+#pragma define_section kpa3ro ".rodata" ".rodata" ".rodata" far_absolute R
+#pragma section kpa3ro begin
+SharedFilePtr *data_ov060_02119514[] = {
+    &data_ov060_0211b06c, &data_ov060_0211b034, &data_ov060_0211b0a4, &data_ov060_0211b03c,
+    &data_ov060_0211b0b4, &data_ov060_0211b044, &data_ov060_0211b094, &data_ov060_0211b09c,
+    &data_ov060_0211b054, &data_ov060_0211b024};
+SharedFilePtr *data_ov060_0211953c[] = {
+    &data_ov060_0211b0ac, &data_ov060_0211b02c, &data_ov060_0211b05c, &data_ov060_0211b064,
+    &data_ov060_0211b07c, &data_ov060_0211b01c, &data_ov060_0211b074, &data_ov060_0211b084,
+    &data_ov060_0211b08c, &data_ov060_0211b04c};
+Kpa3BgPieceSpot data_ov060_02119564[10] = {
+    {-770, -1000, (s16)0xae00},
+    {-1155, 385, (s16)0xb800},
+    {-1155, 385, (s16)0xe200},
+    {0, 1232, (s16)0xe800},
+    {0, 1232, (s16)0x1800},
+    {1155, 385, (s16)0x1e00},
+    {1155, 385, (s16)0x4800},
+    {770, -1000, (s16)0x5200},
+    {770, -1000, (s16)0x8400},
+    {-770, -1000, (s16)0x7c00},
+};
+#pragma section kpa3ro end
+
 HandlerEntry data_ov060_0211b1ac[3] = {
     {(Handler)&daKpa3Bg_c::StateStart},
     {&daKpa3Bg_c::StateCheck},

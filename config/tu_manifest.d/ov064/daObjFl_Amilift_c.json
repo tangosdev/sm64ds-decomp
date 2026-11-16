@@ -28,6 +28,12 @@
       "end": "0x0211b738"
     },
     {
+      "name": ".data.amiliftClps",
+      "input_section": ".data",
+      "start": "0x0211bb6c",
+      "end": "0x0211bb8c"
+    },
+    {
       "name": ".data",
       "start": "0x0211bc0c",
       "end": "0x0211bc24"
@@ -139,6 +145,13 @@
     }
   ],
   "data": [
+    {
+      "symbol": "data_ov064_0211bb6c",
+      "address": "0x0211bb6c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "mesh collider CLPS block for the moving lift"
+    },
     {
       "symbol": "@107",
       "address": "0x0211bc0c",
@@ -420,6 +433,13 @@
           "section": ".ctor",
           "start": "0x0211b734",
           "end": "0x0211b738",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.amiliftClps",
+          "start": "0x0211bb6c",
+          "end": "0x0211bb8c",
           "differingBytes": 0,
           "firstDiff": null
         },
