@@ -177,12 +177,10 @@ struct ObjKeyStateTable {
 
 extern ObjKeyStateTable data_ov089_02132cec;
 
-/* local extern: dCamera_c.h has no SetFlag_3. The ROM calls the
- * UpdateContinuous veneer, not the method. */
+/* Data and helpers that no header declares. */
 extern "C" {
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
-extern void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
 extern void func_ov002_020c3dbc(void *player);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void *const data_ov089_021328b4[];
@@ -198,16 +196,12 @@ extern ObjKeyModelFile gWarioKeyModelFile;
 extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
 extern int *Vec3_LslInPlace(void *v, int sh);
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *thiz, void *actor, int a, int b, void *v, void *w);
 /* An ObjKeyFile in layout, but daDemo_c::InitResources declares it `char`;
    keep that spelling so the declarations of this symbol stay in agreement. */
 extern char data_ov002_0211094c;
 extern int data_0209cef0;
 /* The collect animations, by mAnimID. */
 extern ObjKeyFile *const data_ov089_02132880[];
-/* Names stay on this unused prototype so this file's @NNN numbers do not move. */
-extern int d_a_obj_keyChangeMusicVolumeHold(unsigned int id, int vol);
 /* Level-overlay BSS: ov089 relocs record the store as claimed by fourteen
    overlays, and ov055 is the one that names 0x02111b68 unambiguous kind:bss
    (the func_ov002_020e3e00 precedent for its neighbours 0x02111b64/6c). */
@@ -938,16 +932,22 @@ ObjKeyStateTable data_ov089_02132cec;
 
 /* Collect animations, models, and the extra-model row. Defined after the
    static-init objects so this file's @NNN numbers stay put. */
-extern "C" char data_ov002_0210da40;
-extern "C" char data_ov002_0210d9a0;
-extern "C" char data_ov002_0210d9c0;
-extern "C" char data_ov085_021305d8;
+extern SharedFilePtr data_ov002_0210da40;
+extern SharedFilePtr data_ov002_0210d9a0;
+extern SharedFilePtr data_ov002_0210d9c0;
+/* MIPS's model-file handle, owned and constructed by d_a_mip.cpp's static
+ * init. Same TU-local wrapper spelling as the owning TU. */
+struct DaMipModelFile : SharedFilePtr {
+    DaMipModelFile(u32 fileID);
+    ~DaMipModelFile();
+};
+extern DaMipModelFile data_ov085_021305d8;
 extern "C" ObjKeyFile *const data_ov089_02132880[5] = {
     0, &data_ov089_02132c60, &data_ov089_02132c70, &data_ov089_02132c40, &data_ov089_02132c48,
 };
 extern "C" void *data_ov089_02132894[8] = {
-    &data_ov089_02132c50, &data_ov089_02132c50, &gMarioKeyModelFile, &gLuigiKeyModelFile,
-    &gWarioKeyModelFile, &data_ov085_021305d8, &data_ov085_021305d8, &data_ov002_0211094c,
+    &data_ov089_02132c50, &data_ov089_02132c50, &gMarioKeyModelFile,  &gLuigiKeyModelFile,
+    &gWarioKeyModelFile,  &data_ov085_021305d8, &data_ov085_021305d8, &data_ov002_0211094c,
 };
 extern "C" void *const data_ov089_021328b4[8] = {
     0, 0, &data_ov002_0210da40, &data_ov002_0210d9a0, &data_ov002_0210d9c0, 0, 0, 0,

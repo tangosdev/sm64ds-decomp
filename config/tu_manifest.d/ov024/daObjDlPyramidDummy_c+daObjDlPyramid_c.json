@@ -614,7 +614,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -646,6 +646,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data.clps",
+          "start": "0x021129f0",
+          "end": "0x02112a00",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02113960",
           "end": "0x02113988",
@@ -654,7 +661,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 22
+          "LICENSED": 23
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -665,19 +672,28 @@
           {
             "section": ".init",
             "original": [
-              72
+              73
             ],
             "desired": [
-              72
+              73
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              70
+              71
             ],
             "desired": [
-              70
+              71
+            ]
+          },
+          {
+            "section": ".data.clps",
+            "original": [
+              48
+            ],
+            "desired": [
+              48
             ]
           },
           {

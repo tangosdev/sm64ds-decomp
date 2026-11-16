@@ -57,10 +57,10 @@ extern SoundSlot data_020a4c08[];
 extern SoundSlot data_020a4bf8[];
 extern SoundSlot data_020a4bf0;
 
-extern "C" int func_0204fa2c(NNSSndHandle *handle, int v);
-extern "C" void func_0204f934(NNSSndHandle *handle);
-extern "C" void func_0204f94c(NNSSndHandle *handle);
-extern "C" void *func_02050cdc(int kind, int id);
+extern "C" int NNS_SndPlayerStopSeq(NNSSndHandle *handle, int v);
+extern "C" void NNS_SndHandleReleaseSeq(NNSSndHandle *handle);
+extern "C" void NNS_SndHandleInit(NNSSndHandle *handle);
+extern "C" void *NNS_SndArcGetSeqArcParam(int kind, int id);
 
 extern "C" int func_02049018(const Vector3 *v) {
     int tx = v->x >> 12;
@@ -91,12 +91,12 @@ extern "C" void func_02048f34(void *owner) {
     int i;
     data_020a4bec = owner;
     for (i = 0; i < 6; i++)
-        func_0204f94c(&data_020a4c18[i].handle);
+        NNS_SndHandleInit(&data_020a4c18[i].handle);
     for (i = 0; i < 2; i++)
-        func_0204f94c(&data_020a4c08[i].handle);
+        NNS_SndHandleInit(&data_020a4c08[i].handle);
     for (i = 0; i < 2; i++)
-        func_0204f94c(&data_020a4bf8[i].handle);
-    func_0204f94c(&data_020a4bf0.handle);
+        NNS_SndHandleInit(&data_020a4bf8[i].handle);
+    NNS_SndHandleInit(&data_020a4bf0.handle);
     SetSoundRange(0);
 }
 
@@ -202,7 +202,7 @@ extern "C" void func_02048c30(NNSSndHandle *handle, const Vector3 *p, int q) {
                 t = (int)((hi - n) * 127) / (int)(hi - lo);
             }
         } else {
-            func_0204fa2c(handle, 0);
+            NNS_SndPlayerStopSeq(handle, 0);
         }
     } else {
         t = 127;
@@ -257,7 +257,7 @@ extern "C" void func_02048af4(NNSSndHandle *handle, const Vector3 *p, int q) {
         NNS_SndPlayerSetTrackPan(handle, data_02099fa4, a);
         return;
     }
-    func_0204fa2c(handle, 0);
+    NNS_SndPlayerStopSeq(handle, 0);
 }
 
 extern "C" int func_02048a1c(const Vector3 *pos, int kind, int id) {
@@ -290,7 +290,7 @@ extern "C" int func_02048a1c(const Vector3 *pos, int kind, int id) {
     if (data_020a4bec == 0) {
         return 1;
     }
-    func_02050cdc(kind, id);
+    NNS_SndArcGetSeqArcParam(kind, id);
     return 1;
 }
 
@@ -370,7 +370,7 @@ extern "C" SoundSlot *func_02048720(const Vector3 *v, int kind, int id) {
     best_pri = 0xff;
     best_dist = 0;
 
-    elem = func_02050cdc(kind, id);
+    elem = NNS_SndArcGetSeqArcParam(kind, id);
     if (elem == 0) {
         return 0;
     }
@@ -431,8 +431,8 @@ extern "C" SoundSlot *func_02048720(const Vector3 *v, int kind, int id) {
         return 0;
     }
     if (pick >= 0 && pick < count) {
-        func_0204fa2c(&table[pick].handle, 1);
-        func_0204f934(&table[pick].handle);
+        NNS_SndPlayerStopSeq(&table[pick].handle, 1);
+        NNS_SndHandleReleaseSeq(&table[pick].handle);
         table[pick].dist = (int)dist;
         return &table[pick];
     }

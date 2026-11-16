@@ -18,8 +18,6 @@
  * is its ROM location.
  *
  * Known limits:
- * - data_ov002_0210d9f0 is a SharedFilePtr, read here through a local
- *   PathStuff struct: including SharedFilePtr.h renumbers the @NNN labels.
  * - IsUnk42cSet keeps its symbol-bound name; the field it reads is
  *   mRespawnAfterFall (see include/PathLift.h).
  * - StateFall keeps two views of mFallAngle: a signed read and an
@@ -40,6 +38,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
+#include "SharedFilePtr.h"
 
 typedef void (dPathLiftActor_c::*PathLiftStateFn)();
 
@@ -52,16 +51,10 @@ struct PathLiftState {
 /* POD spelling of Vector3's 0x0c bytes: with a user-declared constructor on
    Vector3, copy-init lowers memberwise; the ROM copy is the block move, so the
    per-frame local in RenderPathModels is a VecFx32. */
-/* The shared lift model file, in SharedFilePtr's layout. This TU does not
-   include SharedFilePtr.h: the header's declarations take one compiler
-   label number, and every @NNN of the state table would move up by one. */
 struct BMD_File;
-struct PathStuff {
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
-};
-extern PathStuff data_ov002_0210d9f0;
+
+/* The shared lift model file. */
+extern SharedFilePtr data_ov002_0210d9f0;
 
 /* ROM symbols with no header of their own. */
 extern "C" {

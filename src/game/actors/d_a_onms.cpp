@@ -78,9 +78,9 @@ const s32 daOnms_c::sLaunchVertSpeed[3] = {0x7c000, 0x7c000, 0x8c000};
 
 /* Roll indexes this by mOrientBits. An s8 offset from &mAngleX; negative subtracts. */
 const s8 daOnms_c::sBankAxis[64] = {
-    2, 1, -3, -2, 0, 1, 0, -2, 2, 1, -3, -2, 0, 1, 0, -2, 2, 1, -3, -2, 0, 1, 0, -2,
-    2, 1, -3, -2, 0, 1, 0, 0,  2, 1, -3, -2, 0, 1, 0, -2, 2, 1, -3, -2, 0, 1, 0, -2,
-    2, 1, -3, -2, 0, 1, 0, -2, 2, 1, -3, -2, 0, 0, 0, -2,
+    2, 1,  -3, -2, 0,  1,  0,  -2, 2, 1, -3, -2, 0,  1,  0,  -2, 2, 1,  -3, -2, 0,  1,
+    0, -2, 2,  1,  -3, -2, 0,  1,  0, 0, 2,  1,  -3, -2, 0,  1,  0, -2, 2,  1,  -3, -2,
+    0, 1,  0,  -2, 2,  1,  -3, -2, 0, 1, 0,  -2, 2,  1,  -3, -2, 0, 0,  0,  -2,
 };
 
 /* One member pointer per mMoveDir. */
@@ -113,12 +113,9 @@ extern OnmsCollisionFilePtr gOnimasuCollisionFile;
 extern daOnms_cStateEntry data_ov092_02132568[9];
 
 extern "C" int func_ov002_020de328(void *player);
-extern "C" void d_a_onmsEarthquakeHold(void *v, int f);
 /* Sound::Play(3, id, pos). The overlay calls this wrapper, not Sound::Play. */
 void func_02012694(unsigned int id, const Vector3 *v);
 /* Stores mRadius: p[6] = value, the word at dBgCh_Actr + 0x18. */
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(dBgCh_Actr *self, int a1, int a2, int a3, int sp0, int sp1);
 extern "C" void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angX);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);
@@ -128,23 +125,22 @@ extern "C" void hold_d_a_onms(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 
 /* Stores beforeClsnCallback: p[6] = value, the word at dBgW + 0x18. */
 /* CLPS block ("CLPS" magic) handed to SetFile. One entry; the 0xFF tail stays unclaimed. */
 char data_ov092_02132220[16] = {
-    0x43, 0x4c, 0x50, 0x53, 0x08, 0x00, 0x01, 0x00,
-    0xc4, 0x0f, 0x00, 0x01, 0xff, 0x00, 0x00, 0x00,
+    0x43, 0x4c, 0x50, 0x53, 0x08, 0x00, 0x01, 0x00, 0xc4, 0x0f, 0x00, 0x01, 0xff, 0x00, 0x00, 0x00,
 };
 
 /* Direction scripts, indexed by param1 & 3. A path (kind 3) ignores them.
    Each run ends at -1, which NextMove wraps back to the first word. */
 s32 data_ov092_02132350[35] = {
-    2, 0, 2, 0, 5, 0, 5, 0, 5, 0, 1, 4, 0, 4, 0, 4, 0, 3, 0, 3, 0, 4, 0, 3, 0, 3, 0, 1,
-    2, 0, 2, 0, 5, 0, -1,
+    2, 0, 2, 0, 5, 0, 5, 0, 5, 0, 1, 4, 0, 4, 0, 4, 0,  3,
+    0, 3, 0, 4, 0, 3, 0, 3, 0, 1, 2, 0, 2, 0, 5, 0, -1,
 };
 s32 data_ov092_021323dc[36] = {
-    2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1, 3, 0, 3, 0, 3, 0, 3, 0, 3, 0, 5, 0, 1, 4, 0, 4, 0,
-    3, 0, 1, 2, 0, 5, 0, -1,
+    2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1, 3, 0, 3, 0, 3, 0, 3,
+    0, 3, 0, 5, 0, 1, 4, 0, 4, 0, 3, 0, 1, 2, 0, 5, 0, -1,
 };
 s32 data_ov092_0213246c[52] = {
-    2, 0, 2, 0, 4, 0, 4, 0, 3, 0, 3, 0, 4, 0, 4, 0, 3, 0, 1, 2, 0, 2, 0, 2, 0, 1, 3, 0,
-    3, 0, 5, 0, 5, 0, 2, 0, 2, 0, 5, 0, 5, 0, 3, 0, 3, 0, 3, 0, 1, 2, 0, -1,
+    2, 0, 2, 0, 4, 0, 4, 0, 3, 0, 3, 0, 4, 0, 4, 0, 3, 0, 1, 2, 0, 2, 0, 2, 0, 1,
+    3, 0, 3, 0, 5, 0, 5, 0, 2, 0, 2, 0, 5, 0, 5, 0, 3, 0, 3, 0, 3, 0, 1, 2, 0, -1,
 };
 s32 *data_ov092_02132294[3] = {
     data_ov092_0213246c,

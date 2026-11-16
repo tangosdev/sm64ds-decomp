@@ -8,18 +8,8 @@
 #include "nitro/card/card_common.h"
 #include "nitro/mi/memory.h"
 
-/* opt_loop_invariants stays off for schedule colour only: with it on the function
-   is still 0xcc, but the prologue hoists &p->src ahead of the 0x100, 6 and 1
-   constants -- five words, unreachable from the source either with or without
-   the `buf` alias. */
-#pragma opt_loop_invariants off
-/* MI_CpuCopy8 */
-
 void func_0206071c(CARDiCommon *p) {
     u32 len;
-    u8 *buf;
-
-    buf = p->backup_cache_page_buf;
 
     do {
         len = p->len;
@@ -31,7 +21,7 @@ void func_0206071c(CARDiCommon *p) {
         p->cmd->len = len;
         if (!CARDi_Request(p, CARD_REQ_READ_BACKUP, 1))
             break;
-        MI_CpuCopy8(buf, (void *)p->dst, len);
+        MI_CpuCopy8(p->backup_cache_page_buf, (void *)p->dst, len);
         p->src += len;
         p->dst += len;
         p->len -= len;
