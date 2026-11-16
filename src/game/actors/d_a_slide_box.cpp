@@ -28,17 +28,12 @@
  *   the veneer at arm9 0x020383fc, not _ZN10dBgCh_Actr16UpdateContinuousEv.
  * - Behavior: mShip->mAngleX/Y/Z each reloads mShip and grows the
  *   function 0x2dc to 0x2e0. One pointer, then the three halfwords.
- * - Behavior: IsClsnInRange(Fix12<int>, Fix12<int>) homes the two
- *   zeros and grows the function 0x2dc to 0x2e8. dBgActor_c.h does
- *   not declare it; the int extern is the call that matches.
  * - Behavior: keeping the pre-clear slide speed for the rolling-sound
  *   test differs by 99 words. The ROM reloads mHorzSpeed after the
  *   store of 0, so the gate does not open.
  * - Behavior: GetFloorResult is not declared on dBgCh_Actr.h. A
  *   temporary declaration made the member call match; that edit is
  *   the shared header, not this TU, so the call stays mangled.
- * - InitResources: SetFile(Fix12<int> by value) grows the function
- *   0xdc to 0xe8. The int extern is the call that matches.
  * - InitResources: storing beforeClsnCallback directly shrinks the
  *   function 0xdc to 0xd8. The ROM calls dBgW::SetBeforeClsnCallback, the store.
  */
@@ -76,8 +71,6 @@ extern "C" SlideBoxModelFilePtr gKiSlideBoxModelFile;
 extern "C" SlideBoxClsnFilePtr gKiSlideBoxCollisionFile;
 
 extern "C" {
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(dBgCh_Actr *self, int actor, Fix12i radius, Fix12i height, int a, int b);
 extern int data_ov016_02113bac[];
 extern void Matrix4x3_FromRotationXYZExt(void *mtx, int angleX, int angleY, int angleZ);
 
@@ -93,12 +86,7 @@ enum { kMeshScale = 0x199 };
 
 /* Pitch-to-speed scale, and the travel clamp along the ship.
  * 1279.0 and -50.0 in 20.12. kFixRound is the 0.5 added before >> 12. */
-enum {
-    kSlideScale = 0x8c,
-    kHorzPosMax = 0x4ff000,
-    kHorzPosMin = -0x32000,
-    kFixRound = 0x800
-};
+enum { kSlideScale = 140, kHorzPosMax = 0x4ff000, kHorzPosMin = -0x32000, kFixRound = 0x800 };
 
 /* How close a player has to be, and how fast the crate has to be
  * moving, before the rolling sound would start. 2000.0 and 3.0. */
@@ -142,7 +130,7 @@ daSlide_Box_c::~daSlide_Box_c()
 
 void daSlide_Box_c::UpdateModel()
 {
-    Matrix4x3_FromRotationXYZExt((void *)&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     /* Flat Matrix4x3 (common.h): words 9..11 are the translation, at 1/8. */
     mModel.mat4x3.m[9] = mPosX >> 3;
     mModel.mat4x3.m[10] = mPosY >> 3;
@@ -244,7 +232,7 @@ int daSlide_Box_c::InitResources()
     UpdateModel();
     UpdateClsnPosAndRot();
     KCL_File *clsnFile = dBgW_Kc::LoadFile(ClsnFile);
-    mMeshCollider.SetFile((KCL_File *)(clsnFile), mClsnMat, kMeshScale, mAngleY,
+    mMeshCollider.SetFile((clsnFile), mClsnMat, kMeshScale, mAngleY,
                           *(CLPS_Block *)(data_ov016_02113bac));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mWithMeshClsn.Init(this, kClsnRadius, kClsnRadius, 0, 0);
@@ -260,8 +248,7 @@ int daSlide_Box_c::InitResources()
  * allocation size, vtable identity, and the SLIDE_BOX registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: SlidingBox_Spawn. */
-extern "C" daSlide_Box_c *daSlide_Box_c_classInit()
-{
+daSlide_Box_c *daSlide_Box_c_classInit() {
     return new daSlide_Box_c();
 }
 

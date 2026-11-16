@@ -44,7 +44,7 @@ Ov007LayerSlot *func_ov007_020adc08(int type, Ov007BgLayer *layer) {
         break;
     case 5:
         layer->screen = func_ov007_020c3df4(0, 0x800);
-        func_ov007_020c02d8(layer->screen, 0x18, 0x300);
+        func_ov007_020c02d8(layer->screen, 24, 0x300);
         func_ov007_020c0384(display->bgListSub, layer);
         break;
     default:

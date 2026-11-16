@@ -8,10 +8,10 @@
 void func_ov007_020c8c88(Ov007Transition *tr, int t) {
     unsigned char from = tr->fx.mosaic.from;
     unsigned char to = tr->fx.mosaic.to;
-    int loFrom = from & 0xf;
+    int loFrom = from & 15;
     unsigned int flags = tr->planes;
     int hiFrom = (int)(from & 0xf0) >> 4;
-    int loTo = to & 0xf;
+    int loTo = to & 15;
     int hiTo = (int)(to & 0xf0) >> 4;
     int lo, hi;
 
@@ -32,7 +32,7 @@ void func_ov007_020c8c88(Ov007Transition *tr, int t) {
     }
 
     if (tr->screens & 1) {
-        (void)REG_MOSAIC; /* read and dropped, as the ROM does */
+        REG_MOSAIC; /* read and dropped, as the ROM does */
         if ((flags & 1) || (flags & 2) || (flags & 4) || (flags & 8))
             REG_MOSAIC_BG = (unsigned char)(lo | (hi << 4));
         if (flags & 0x10)

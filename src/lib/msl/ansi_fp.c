@@ -58,12 +58,12 @@ int func_02071708(int w0, ...) {
             } while (c == 0);
         }
         c = ~c;
-        *p = (unsigned char)c;
-        if ((*(volatile unsigned char *)p & 1) == 0)
+        *p = c;
+        if ((*p & 1) == 0)
             return count;
         do {
             count++;
-            *p = (unsigned char)((int)*(volatile unsigned char *)p >> 1);
+            *p = ((int)*p >> 1);
         } while (*(volatile unsigned char *)p & 1);
         return count;
     }
@@ -137,7 +137,7 @@ void __ull2dec(Decimal *result, unsigned long long v) {
     result->sig.length = 0;
     if (v != 0) {
         do {
-            result->sig.text[result->sig.length++] = (unsigned char)(v % 10);
+            result->sig.text[result->sig.length++] = (v % 10);
             v /= 10;
         } while (v != 0);
     }
@@ -153,7 +153,7 @@ void __ull2dec(Decimal *result, unsigned long long v) {
             e--;
         }
     }
-    result->exp = (short)(result->sig.length - 1);
+    result->exp = (result->sig.length - 1);
 }
 
 void __timesdec(Decimal *result, const Decimal *x, const Decimal *y) {
@@ -191,29 +191,27 @@ void __timesdec(Decimal *result, const Decimal *x, const Decimal *y) {
             accumulator += *jp * *kp;
         }
 
-        *--ip = (unsigned char)(accumulator % 10);
+        *--ip = (accumulator % 10);
         accumulator /= 10;
     }
 
-    result->exp = (short)(x->exp + y->exp);
+    result->exp = (x->exp + y->exp);
 
     if (accumulator) {
-        *--ip = (unsigned char)accumulator;
+        *--ip = accumulator;
         result->exp++;
     }
 
     for (i = 0; i < 32 && ip < ep; i++, ip++) {
         result->sig.text[i] = *ip;
     }
-    result->sig.length = (unsigned char)i;
+    result->sig.length = i;
 
     if (ip < ep && *ip >= 5) {
         if (*ip == 5) {
             unsigned char *jp = ip + 1;
             for (; jp < ep; jp++) {
                 if (*jp != 0) {
-                    /* kept, as in MSL's timesdec: break + a jp test (0x1b4) or an
-                       inline predicate (0x1bc) both grow it */
                     goto round;
                 }
             }
@@ -233,9 +231,9 @@ void __str2dec(Decimal *result, const char *digits, short exp) {
     result->sign = 0;
     i = 0;
     while (i < 0x20 && digits[0] != 0) {
-        result->sig.text[i++] = (unsigned char)(*digits++ - 0x30);
+        result->sig.text[i++] = (*digits++ - 0x30);
     }
-    result->sig.length = (unsigned char)i;
+    result->sig.length = i;
     if (digits[0] == 0)
         return;
     if (digits[0] < 5)
@@ -244,9 +242,6 @@ void __str2dec(Decimal *result, const char *digits, short exp) {
         c = digits[1];
         digits++;
         while (c != 0) {
-            /* Kept goto: break plus a `c == 0` guard (+8), while (c == '0') (+4),
-               for (;;) with the return inside (-4), a duplicated call (+20) and
-               an inline must-round predicate (+12..+20) all change the object. */
             if (c != 0x30)
                 goto docall;
             c = *++digits;
@@ -347,23 +342,23 @@ void __two_exp(Decimal *out, int n) {
     }
 }
 
-void __num2dec_internal(char *out, double x) {
+void __num2dec_internal(Decimal *d, double x) {
     int e;
     double t1;
     double t2;
     double mm;
-    unsigned char dec[0x26];
-    unsigned char big[0x26];
+    Decimal dec;
+    Decimal big;
     double v = x;
     unsigned char neg = (((int *)&x)[1] & 0x80000000) != 0;
     int cls;
     int cls2;
 
     if (v == 0.0) {
-        out[0] = neg;
-        *(short *)(out + 2) = 0;
-        out[4] = 1;
-        out[5] = 0;
+        d->sign = neg;
+        d->exp = 0;
+        d->sig.length = 1;
+        d->sig.text[0] = 0;
         return;
     }
 
@@ -389,9 +384,9 @@ void __num2dec_internal(char *out, double x) {
         break;
     }
     if (cls <= 2) {
-        out[0] = neg;
-        *(short *)(out + 2) = 0;
-        out[4] = 1;
+        d->sign = neg;
+        d->exp = 0;
+        d->sig.length = 1;
 
         t2 = x;
         switch (((int *)&t2)[1] & 0x7ff00000) {
@@ -411,7 +406,7 @@ void __num2dec_internal(char *out, double x) {
             cls2 = 4;
             break;
         }
-        out[5] = (cls2 == 1) ? 0x4e : 0x49;
+        d->sig.text[0] = (cls2 == 1) ? 0x4e : 0x49;
     } else {
         double m;
         int nbits, k;
@@ -427,10 +422,10 @@ void __num2dec_internal(char *out, double x) {
         else
             nbits = func_02071708(mp[1] | 0x100000) + 0x20;
         k = 0x35 - nbits;
-        __two_exp((Decimal *)big, e - k);
-        __ull2dec((Decimal *)dec, (unsigned long long)ldexp(m, k));
-        __timesdec((Decimal *)out, (Decimal *)dec, (Decimal *)big);
-        out[0] = neg;
+        __two_exp(&big, e - k);
+        __ull2dec(&dec, ldexp(m, k));
+        __timesdec(d, &dec, &big);
+        d->sign = neg;
     }
 }
 
@@ -443,7 +438,7 @@ void __num2dec(void *a0, double x, void *d) {
     Decimal *c = (Decimal *)d;
     int i;
     n = ((decform *)a0)->digits;
-    __num2dec_internal((char *)c, x);
+    __num2dec_internal(c, x);
     if (c->sig.text[0] > 9) /* inf or nan: no digits to round */
         return;
     if (n > 0x20)

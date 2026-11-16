@@ -6,9 +6,7 @@
  * func_ov070_0211f100 sorts contact. Source order is the reverse of the
  * ROM, so the one .text section emits ascending.
  */
-/* leftovers: daPly_c::SpinBounce and daPly_c::Hurt stay mangled: each takes
- * Fix12<int> by value.
- * Finished and WillHitFrame stay qualified through mAnmModel; a char*
+/* leftovers: Finished and WillHitFrame stay qualified through mAnmModel; a char*
  * view of that member moves a word in func_ov070_0211f48c,
  * func_ov070_0211f62c and func_ov070_0211f6e0. daPly_c-position reads
  * through int* in func_ov070_0211fd98, func_ov070_0211fae4 and
@@ -43,28 +41,26 @@ enum d_a_propeller_heyho_AssetId {
 /* The cartridge preserves this descriptor's C-ABI symbol but not its source
  * spelling.  Keep that evidence-bounded alias; all seven scalar words and
  * the factory relocation are covered by the TU's data claim. */
-extern "C" daPropeller_Heyho_c *daPropeller_Heyho_c_classInit(void);
+daPropeller_Heyho_c *daPropeller_Heyho_c_classInit(void);
 
 /* Reconstructed source-style name: SM64DS proves this descriptor through
  * its registry role, the PROPELLER_HEYHO literal ROM profile ID, and the
  * factory relocation it carries; later EAD lineage supplies g_profile_.
  * Exact original spelling is not preserved. Historical alias:
  * FlyGuy_SpawnInfo. */
-extern "C" SpawnInfo<daPropeller_Heyho_c> g_profile_PROPELLER_HEYHO = {
-    daPropeller_Heyho_c_classInit,
-    0x00e8,
-    0x0057,
-    0x10000003,
-    0x00064000,
-    0x000c8000,
-    0x01000000,
-    0x01000000
-};
+SpawnInfo<daPropeller_Heyho_c> g_profile_PROPELLER_HEYHO = {daPropeller_Heyho_c_classInit,
+                                                            0x00e8,
+                                                            0x0057,
+                                                            0x10000003,
+                                                            0x00064000,
+                                                            0x000c8000,
+                                                            0x01000000,
+                                                            0x01000000};
 
 struct V3w { int w[3]; };  /* array-wrapper: C++ scalarizes a plain struct copy; this form keeps the C front end's ldm/stm block copy */
 struct V3h { short h[3]; };
 
-/* Named constants.  Fix12 values are written as the raw word (0x1000 = 1.0)
+/* Named constants.  fx32 values are written as the raw word (0x1000 = 1.0)
  * with the unit value in the comment; frame counts are game-logic frames (the frame rate is not established here). */
 enum {
     kLevel0x16 = 0x16, /* LEVEL_ID (gCurrentSublevel, declared as a byte here) value at which this
@@ -111,8 +107,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
 
 /* -------------------------------------------------------------------------- */
 /* Registry factory for the PROPELLER_HEYHO profile. */
-extern "C" daPropeller_Heyho_c *daPropeller_Heyho_c_classInit(void)
-{
+daPropeller_Heyho_c *daPropeller_Heyho_c_classInit(void) {
     return new daPropeller_Heyho_c();
 }
 
@@ -137,7 +132,7 @@ void daPropeller_Heyho_c::OnTurnIntoEgg(daPly_c &player) {
 /* -------------------------------------------------------------------------- */
 /* Egg-aim query. Returns the fixed height the slot stores. */
 s32 daPropeller_Heyho_c::OnAimedAtWithEgg() {
-    return 0x2b000; /* Fix12 egg-aim HEIGHT added to pos.y, per dEnemyBase_c.h slot-29: 43.0 units */
+    return 0x2b000; /* fx32 egg-aim HEIGHT added to pos.y, per dEnemyBase_c.h slot-29: 43.0 units */
 }
 
 /* -------------------------------------------------------------------------- */
@@ -192,11 +187,8 @@ extern int (daPropeller_Heyho_c::*data_ov070_02123110)();
 extern void (daPropeller_Heyho_c::*data_ov070_021230e0)();
 extern int (daPropeller_Heyho_c::*data_ov070_021230f8)();
 extern void (daPropeller_Heyho_c::*data_ov070_02123100)();
-extern "C" {
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *a, int r, int h, Vector3_16 *p, Vector3_16 *q);
-extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
-}
+
+int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 /* Loads the model (shared file 02123530) and six animation files, then seeds:
  * mCanSpitFire from the low byte of param1 (0xff counts as 0), the terminal fall
@@ -231,9 +223,7 @@ int daPropeller_Heyho_c::InitResources()
 
 extern daPropeller_Heyho_c::State data_ov070_021235cc;
 extern daPropeller_Heyho_c::State data_ov070_021235bc;
-extern "C" {
-extern void func_ov070_0211f100(daPropeller_Heyho_c *c);
-}
+void func_ov070_0211f100(daPropeller_Heyho_c *c);
 
 /* Per-frame update. In order: Yoshi-mouth handling, then the death sequence
  * (mDeathState != 0), then the current state's main handler, gravity clamped at
@@ -264,7 +254,7 @@ int daPropeller_Heyho_c::Behavior()
     }
 
     if (mCurrentState != &data_ov070_021235cc) {
-        DecIfAbove0_Short((unsigned short *)&mStateTimer);
+        DecIfAbove0_Short(&mStateTimer);
     }
     DecIfAbove0_Short(&mCooldown);
 
@@ -355,10 +345,7 @@ int daPropeller_Heyho_c::CleanupResources()
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
 
-extern "C" {
-
 extern Matrix4x3 data_020a0e68;
-}
 
 /* The matrix copies go through the flat Mtx43: assigning Matrix4x3 grows
    .text by 0x34 bytes. */
@@ -374,15 +361,14 @@ void daPropeller_Heyho_c::func_ov070_02120070() {
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0xa000) >> 3, mPosZ >> 3);
-    *(Mtx43 *)mShadowMatrix = *(Mtx43 *)&data_020a0e68;
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMatrix, 0x76000, 0x320000, 0xf);
+    mShadowMatrix = *(Mtx43 *)&data_020a0e68;
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMatrix, 0x76000, 0x320000, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
 /* Installs a state record and runs its init handler if it has one. Returns the
  * init's result, or 1 with no init. */
-extern "C" int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p)
-{
+int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p) {
     c->mCurrentState = p;
     daPropeller_Heyho_c::State *q = c->mCurrentState;
     if (q->mInit == 0)
@@ -391,7 +377,7 @@ extern "C" int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::S
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" {
+
 /* Wander init: heading = a random multiple of 0x1000 (one of 16 directions,
  * 22.5 degrees apart), timer = 50 + random 0..31 frames, plays the file-02123520
  * animation at speed 1.0. */
@@ -403,14 +389,12 @@ int func_ov070_0211ffa8(daPropeller_Heyho_c* c){
     c->mAnmModel.SetAnim((BCA_File *)data_ov070_02123520.filePtr, 0, 0x1000, 0);
     return 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-extern "C" {
-typedef short s16;
 
+typedef short s16;
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
+int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern Matrix4x3 data_020a0e68;
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
@@ -438,8 +422,8 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
 
     if (Vec3_Dist(&c->mPos, &c->mHomePos) > kWanderTurnBackDist || c->mWithMeshClsn.IsOnWall()) {
         c->mTargetAngY = Vec3_HorzAngle(&c->mPos, &c->mHomePos);
-        if ((u16)c->mStateTimer < 0x14)
-            c->mStateTimer = 0x14;
+        if (c->mStateTimer < 20)
+            c->mStateTimer = 20;
     }
     ApproachAngle(&c->mPrevAngleY, c->mTargetAngY, 0xa, 0x200, 0x100);
 
@@ -458,7 +442,7 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
     ApproachLinear(c->mVertSpeed, out[1], 0x800);
     ApproachLinear(c->mSpeedZ, out[2], 0x1000);
 
-    if ((u16)c->mStateTimer == 0) {
+    if (c->mStateTimer == 0) {
         FlyGuy_ChangeState(c, &data_ov070_0212359c);
         return 1;
     }
@@ -467,7 +451,8 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
     if (Vec3_Dist(&c->mPos, &c->mHomePos) < kHomeLeashDist) {
         p = c->ClosestNonVanishPlayer();
         if (p) {
-            int *pos = (int *)&p->mPosX; /* int view is load-bearing: plain p->mPosX reads change this function's size */
+            int *pos =
+                &p->mPosX; /* int view is load-bearing: plain p->mPosX reads change this function's size */
             t.x = pos[0];
             t.y = pos[1];
             t.z = pos[2];
@@ -477,23 +462,19 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
     }
     return 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-extern "C" {
+
 /* (data_ov070_02123520: SharedFilePtr view declared earlier in this TU) */
 /* Chase init: plays the file-02123520 animation (the wander one) at speed 1.0. */
 int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
-    p->mAnmModel.SetAnim((BCA_File *)(((void **)&data_ov070_02123520)[1]), 0, 0x1000, 0);
+    p->mAnmModel.SetAnim((BCA_File *)data_ov070_02123520.filePtr, 0, 0x1000, 0);
     return 1;
-}
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" {
-
 extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
+int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern signed char gCurrentSublevel;
 extern daPropeller_Heyho_c::State data_ov070_021235dc;
@@ -542,10 +523,12 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
     vin.z = 0;
 
     {
-    int *q = (int *)&player->mPosX; /* int view is load-bearing: plain player->mPosX reads change this function's size */
-    vb.x = q[0];
-    vb.y = q[1];
-    vb.z = q[2];
+        int *q =
+            &player
+                 ->mPosX; /* int view is load-bearing: plain player->mPosX reads change this function's size */
+        vb.x = q[0];
+        vb.y = q[1];
+        vb.z = q[2];
     }
     vb.y += kAimAbovePlayer;
     vc.x = vb.x;
@@ -594,25 +577,23 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
 
     return 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-extern "C" {
+
 /* Dive init: clears mHitDuringAttack and mStateStep, timer = 63 frames, heading
  * from HorzAngleToCPlayerOrAng, plays the file-02123518 animation (flags
  * 0x40000000) at speed 1.0. */
 int func_ov070_0211fa80(daPropeller_Heyho_c *c) {
     c->mHitDuringAttack = 0;
-    c->mStateTimer = 0x3f;
+    c->mStateTimer = 63;
     c->mStateStep = 0;
     c->mTargetAngY = c->HorzAngleToCPlayerOrAng();
     c->mAnmModel.SetAnim((BCA_File *)data_ov070_02123518.filePtr, 0x40000000, 0x1000, 0);
     return 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-extern "C" {
+
 typedef int s32;
 typedef short s16;
 typedef unsigned int u32;
@@ -627,11 +608,8 @@ extern daPropeller_Heyho_c::State data_ov070_0212359c;
 extern daPropeller_Heyho_c::State data_ov070_021235dc;
 extern s32 data_0209f32c;
 extern Matrix4x3 data_020a0e68;
-
-extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
+int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-}
-
 /* Dive main. Turns toward mTargetAngY and levels the Z bank. When the animation
  * has finished: the first time (mStateStep == 0) it starts the file-02123510
  * animation and sets mStateStep = 1; if mHitDuringAttack == 1 (set by the hit
@@ -676,7 +654,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         }
     }
 
-    if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnWall()) {
+    if (mStateTimer == 0 || mWithMeshClsn.IsOnWall()) {
         if (gCurrentSublevel != kLevel0x16) {
             mHomePosX = mPosX;
             mHomePosY = mPosY;
@@ -741,7 +719,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     if (mPosY <= tmp.y + 0x5000 ||
         mPosY <= player->mPosY + 0x5000 ||
         Vec3_Dist(&mPos, &mHomePos) > kHomeLeashDist) {
-        DecIfAbove0_Short((u16*)&mStateTimer);
+        DecIfAbove0_Short(&mStateTimer);
         v.z = 0x9000;
     }
 
@@ -756,7 +734,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" {
+
 /* Settle init: mStateStep = 0; plays the file-02123508 animation (flags
  * 0x40000000) unless mHitDuringAttack is set. */
 int func_ov070_0211f694(daPropeller_Heyho_c *c) {
@@ -766,14 +744,12 @@ int func_ov070_0211f694(daPropeller_Heyho_c *c) {
     }
     return 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-extern "C" {
+
 extern signed char gCurrentSublevel;
-extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
+int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
-}
 
 /* Settle main: once the animation has finished, raises home by 300 units (not
  * when LEVEL_ID == 0x16), clears mStateStep, starts the 90-frame cooldown and
@@ -793,25 +769,22 @@ int daPropeller_Heyho_c::func_ov070_0211f62c()
 /* -------------------------------------------------------------------------- */
 struct BCA_File;
 /* (dExtAnmModel_c: real header type in scope) */
-/* SetAnim takes Fix12<int> by value, so this call stays the mangled extern. */
 
 /* (data_ov070_02123500: SharedFilePtr view declared earlier in this TU) */
 
 /* Fire init: plays the file-02123500 animation (flags 0x40000000) at speed 1.0. */
-extern "C" int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
+int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
     unsigned int flags = 0;
     BCA_File *file = (BCA_File *)data_ov070_02123500.filePtr;
-    c->mAnmModel.SetAnim((BCA_File *)file, 0x40000000, 0x1000, flags);
+    c->mAnmModel.SetAnim(file, 0x40000000, 0x1000, flags);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" {
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-void func_02012694(unsigned int a, void *p);
+void func_02012694(unsigned int a, const Vector3 *p);
 int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
-}
 
 #define M(p) (p)
 
@@ -819,7 +792,7 @@ extern daPropeller_Heyho_c::State data_ov070_0212359c;
  * below 13 it steers mPrevAngleY toward mTargetAngY, which is refreshed from the
  * nearest player when there is one. When the animation is about to hit frame 13
  * (WillHitFrame) it spawns the fireball at its own position (SpawnFireball with
- * 30.0 / 10.0 in its two Fix12 slots and param1 = 1) with a rotation copied from
+ * 30.0 / 10.0 in its two fx32 slots and param1 = 1) with a rotation copied from
  * mAngleX/Y/Z whose X is the vertical angle to the player, and plays sound 0x105.
  * When the animation has finished it resets the frame to 0, starts the 90-frame
  * cooldown and returns to wander. */
@@ -852,7 +825,7 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
             vel.x = Vec3_VertAngle(&mPos, &fp);
         }
         SpawnFireball(mPos, &vel, 0x1e000, 0xa000, 1);
-        func_02012694(kSndFireSpit, &mCamSpacePosX);
+        func_02012694(kSndFireSpit, (const Vector3 *)(&mCamSpacePosX));
     }
     if (mAnmModel.dExtFrameCtrl_c::Finished() != 0) {
         mAnmModel.currFrame = 0;
@@ -863,7 +836,7 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
 }
 
 /* -------------------------------------------------------------------------- */
-extern "C" {
+
 /* Knocked init: zeroes the 0x0a4 / mVertSpeed / 0x0ac velocity words, then
  * mVertSpeed = +50.0 units/frame (upward pop), mVertAccel = -5.0, timer = 3
  * frames and mFlags = 0. */
@@ -877,40 +850,33 @@ short func_ov070_0211f450(daPropeller_Heyho_c *c) {
     c->mFlags = 0;
     return 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-extern "C" int func_ov070_0211f0a4(daPropeller_Heyho_c *c);
-typedef int Fix12i;
+int func_ov070_0211f0a4(daPropeller_Heyho_c *c);
 
-extern "C" unsigned d_a_propeller_heyhoNewHold(unsigned a, unsigned b, Fix12i c, Fix12i d, Fix12i e,
-                                               void *f, void *g);
-extern "C" u32 d_a_propeller_heyhoNewCleanParticleHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
-                                                       const Vector3_16f *f);
 
 /* Knocked main. While mStateStep is non-zero (normally a fire hit; the
  * mega-character hit leaves it unchanged) it refreshes the effects 0x13a and
  * 0x13b at the position + 80.0 units up each frame (their handles are fed back). Tilts mAngleX toward
  * -0x4000 (a quarter turn) with ApproachAngle and then ApproachLinear. When the
  * timer reaches 0 it runs the defeat helper func_ov070_0211f0a4. */
-extern "C" int func_ov070_0211f368(daPropeller_Heyho_c* c)
-{
+int func_ov070_0211f368(daPropeller_Heyho_c *c) {
     if (c->mStateStep != 0) {
         Vector3 v;
         int x, y, z;
         x = c->mPosX;
         z = c->mPosZ;
         y = c->mPosY + 0x50000;
-        ((int*)&v)[0] = x;
-        ((int*)&v)[1] = y;
-        ((int*)&v)[2] = z;
+        v.x = x;
+        v.y = y;
+        v.z = z;
         c->mParticle0 = Particle::System::New(c->mParticle0, kPtclDeathA, v.x, v.y, v.z, 0, 0);
         c->mParticle1 =
             Particle::System::NewCleanParticle(c->mParticle1, kPtclDeathB, v.x, v.y, v.z, 0);
     }
     ApproachAngle(&c->mAngleX, -0x4000, 0xa, 0x200, 0x100);
     ApproachLinear(c->mAngleX, -0x4000, 0x200);
-    if ((u16)c->mStateTimer == 0)
+    if (c->mStateTimer == 0)
         func_ov070_0211f0a4(c);
     return 1;
 }
@@ -928,12 +894,8 @@ extern daPropeller_Heyho_c::State data_ov070_021235bc;
 extern daPropeller_Heyho_c::State data_ov070_021235cc;
 /* (data_ov070_02123528: SharedFilePtr view declared earlier in this TU) */
 
-extern "C" {
-extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
-extern void func_ov002_020aea30(void *self, void *actor, void *collision);
-extern void func_02012694(unsigned int a, void *b);
-}
-
+int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
+extern void func_02012694(unsigned int a, const Vector3 *b);
 /* Hit reaction, run once per frame outside the knocked state. Takes the colliding
  * actor from the collider (mdCcAc_c.otherOwner) and reads hitFlags: fire sends it
  * to the knocked state with mStateStep = 1 (particles); 0x20 kills it through
@@ -947,8 +909,7 @@ extern void func_02012694(unsigned int a, void *b);
  * hurts the player (daPly_c::Hurt) and, in the dive state with mHitDuringAttack
  * still 0, plays the file-02123528 animation and sets mStateStep =
  * mHitDuringAttack = 1. */
-extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
-{
+void func_ov070_0211f100(daPropeller_Heyho_c *c) {
     daPly_c *hitPlayer;
     s32 hitFlags;
 
@@ -966,7 +927,7 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
     }
     if (hitFlags & kHitSpinPound) {
         c->mDeathState = 1;
-        func_ov002_020aea30(c, hitPlayer, 0);
+        c->func_ov002_020aea30(hitPlayer, 0);
         return;
     }
     if (hitFlags & kHitAttackMask) {
@@ -983,14 +944,14 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
     if (c->JumpedOnByPlayer(c->mdCcAc_c, *hitPlayer)) {
         hitPlayer->SpinBounce(0x28000);
         c->mDeathState = 1;
-        func_ov002_020aea30(c, hitPlayer, 0);
+        c->func_ov002_020aea30(hitPlayer, 0);
         return;
     }
 
     if (hitFlags & kHitMegaChar) {
         c->SpawnMegaCharParticles(*hitPlayer, (char*)0);
         hitPlayer->IncMegaKillCount();
-        func_02012694(kSndMegaKill, &c->mCamSpacePosX);
+        func_02012694(kSndMegaKill, (const Vector3 *)&c->mCamSpacePosX);
         FlyGuy_ChangeState(c, &data_ov070_021235bc);
         return;
     }
@@ -1020,20 +981,18 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
 
 /* -------------------------------------------------------------------------- */
 
-
-/* (dActor_c: real header type in scope; SpawnCoins goes through the mangled extern below) */
-/* SpawnCoins takes Fix12<int> by value, so this call stays the mangled extern. */
+/* (dActor_c: real header type in scope) */
 
 /* Defeat helper: a small puff of dust, then mExtraCoinCount + 1 coins spread
  * 10.0 units from the actor, then the actor is killed and recorded in the
  * death table. */
-extern "C" int func_ov070_0211f0a4(daPropeller_Heyho_c *c) {
+int func_ov070_0211f0a4(daPropeller_Heyho_c *c) {
     c->SmallPoofDust();
     Vector3 pos;
     pos.x = c->mPosX;
     pos.y = c->mPosY;
     pos.z = c->mPosZ;
-    unsigned int coins = (unsigned char)c->mExtraCoinCount + 1;
+    unsigned int coins = c->mExtraCoinCount + 1;
     c->SpawnCoins(pos, coins, 0xa000, 0);
     c->KillAndTrackInDeathTable();
 }

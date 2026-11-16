@@ -620,7 +620,7 @@
       "ordinal": 80
     },
     {
-      "symbol": "dScMgSound_c_classInit",
+      "symbol": "_Z22dScMgSound_c_classInitv",
       "address": "0x0211cb70",
       "size": "0x00000060",
       "legacy_source": "src/d_s_mg_sound.cpp",

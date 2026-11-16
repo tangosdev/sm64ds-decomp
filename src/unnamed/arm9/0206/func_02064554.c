@@ -19,7 +19,7 @@ void func_02064554(WBTWork *work, int sel, int idx, s16 a3) {
         return;
 
     o->command = WBT_CMD_SYSTEM_CALLBACK;
-    o->peer_bmp = (s16)(1 << idx);
+    o->peer_bmp = (1 << idx);
     c->last_cmd_counter = c->cmd_counter;
     o->peer_cmd_counter = c->cmd_counter;
     o->result = a3;
@@ -40,7 +40,7 @@ void func_02064554(WBTWork *work, int sel, int idx, s16 a3) {
             break;
         }
         o->u.user_data.size = v;
-        MI_CpuCopy8((const void *)c->user_data, (void *)o->u.user_data.data, o->u.user_data.size);
+        MI_CpuCopy8((const void *)c->user_data, o->u.user_data.data, o->u.user_data.size);
     } break;
     case WBT_CMD_SYSTEM_CALLBACK:
     case WBT_CMD_REQ_ERROR:

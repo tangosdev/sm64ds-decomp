@@ -16,8 +16,6 @@
  * 814); this TU only loads and releases them.
  *
  * Notes (measured spellings that do not match):
- * - HandleCylinderHit: daPly_c::Hurt with Fix12<int> knockback: 0x210 -> 0x21c
- *   (+12). SpinBounce with Fix12<int>: 0x210 -> 0x21c (+12).
  * - The 0/1 the ROM materializes in HandleCylinderHit, UpdateModelTransform
  *   and Render comes from the int-returning IsPlayerActor / IsInYoshiMouth
  *   inlines. A direct `!=` or bit test is 16 / 12 / 12 bytes short.
@@ -87,7 +85,7 @@ enum {
     kPlayerActorId = 0xbf,
     kStateChase = 0,
     kStateRecoil = 1,
-    kRecoilFrames = 0x14
+    kRecoilFrames = 20
 };
 
 /* int-returning predicates: they are what make the ROM materialize 0/1
@@ -163,7 +161,7 @@ void daHuwa_c::HandleCylinderHit() {
     flags = mdCcAc_c.hitFlags;
     if ((flags & kHitMega) != 0) {
         int height;
-        knock.x = (short)-0x2000;
+        knock.x = -0x2000;
         knock.y = 0;
         knock.z = 0;
         height = OnAimedAtWithEgg();
@@ -229,9 +227,9 @@ void daHuwa_c::UpdateModelTransform() {
     if (IsInYoshiMouth(this))
         return;
     if (mWithMeshClsn.IsOnGround() != 0) {
-        DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x50000, 0x1e000, 0xf);
+        DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x50000, 0x1e000, 15);
     } else {
-        DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x50000, 0x96000, 0xf);
+        DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x50000, 0x96000, 15);
     }
 }
 
@@ -292,8 +290,8 @@ int daHuwa_c::Behavior() {
         break;
     }
     case kStateRecoil:
-        *(unsigned short *)&mStateTimer += 1;
-        if (*(unsigned short *)&mStateTimer >= kRecoilFrames)
+        mStateTimer += 1;
+        if (mStateTimer >= kRecoilFrames)
             mState = kStateChase;
         break;
     }
@@ -344,7 +342,7 @@ s32 daHuwa_c::OnYoshiTryEat() {
     return 6;
 }
 
-extern "C" daHuwa_c *daHuwa_c_classInit() {
+daHuwa_c *daHuwa_c_classInit() {
     return new daHuwa_c();
 }
 

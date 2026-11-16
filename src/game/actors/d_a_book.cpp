@@ -23,10 +23,9 @@
  * emits D1 then D0; D2 has no ROM home. Both vtables are keyed here.
  * common.h comes first so InitResources' mShadowMat copy stays twelve words.
  */
-/* leftovers: daPly_c::Hurt and daPly_c::Bounce stay mangled externs. This file
- * calls them, and each symbol takes Fix12<int> by value. GetWallResult is
- * not a dBgCh_Actr method; the call is dBgCh_Actr_UpdateContinuous_Veneer,
- * not UpdateContinuous. data_ov020_02114aa0 and 02114ab8 are model handles,
+/* leftovers: GetWallResult is not a dBgCh_Actr method; the call is
+ * dBgCh_Actr_UpdateContinuous_Veneer, not UpdateContinuous.
+ * data_ov020_02114aa0 and 02114ab8 are model handles,
  * 02114aa8 and 02114ab0 animation handles; filePtr is the loaded file.
  * The ROM records no English name for the state helpers. StateX follows the
  * header's State enum; CheckAttacks and Die follow the N64 bookend's
@@ -83,13 +82,9 @@ enum {
 enum { kFlightSpeed = 0x32000 };
 
 extern "C" {
-short atan2_hold_d_a_book_1(int, int);
 void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
-void func_ov063_0211cae8(void *found, int mask);
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height,
-                         Vector3_16 *first, Vector3_16 *second);
 }
+void func_ov063_0211cae8(daTrsTrap_c *c, int m);
 
 /* BOOK_SWITCH push order, indexed by the book's param1: the value the
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}
@@ -249,7 +244,7 @@ int daBook_c::GetHitType() {
     if (found == 0)
         return HIT_NONE;
 
-    t = (int)(found->actorID == kPlayerActorId);
+    t = (found->actorID == kPlayerActorId);
     if (t == 0)
         return HIT_NONE;
 
@@ -258,7 +253,7 @@ int daBook_c::GetHitType() {
         return HIT_NONE;
 
     if (found->mIsVanish != 0) {
-        t = (int)(actorID == kShootBookActorId);
+        t = (actorID == kShootBookActorId);
         if (t != 0)
             return HIT_NONE;
     }
@@ -293,7 +288,7 @@ int daBook_c::GetHitType() {
         return HIT_METAL_PLAYER;
 
     if (found->mIsVanish != 0) {
-        t = (int)(actorID == kKillerBookActorId);
+        t = (actorID == kKillerBookActorId);
         if (t != 0)
             return HIT_NONE;
     }
@@ -374,7 +369,7 @@ void daBook_c::UpdateSwitchBook() {
          * phase 3 removes it at once */
         if ((partner->mBookFlags & (1 << param1)) == 0) {
             mState = STATE_SWITCH_RETRACT;
-            mStateTimer = 0xa;
+            mStateTimer = 10;
             return;
         }
         if (partner->mState == 2) {
@@ -515,7 +510,7 @@ void daBook_c::StateWindUp() {
 
     ApproachLinear(mAngleZ, mAimRoll, 0x7d0);
 
-    if (mStateTimer < 0x13)
+    if (mStateTimer < 19)
         return;
 
     /* collider radius is 50 units and height 100 units at scale 1.0 */
@@ -638,18 +633,18 @@ void daBook_c::UpdateModelMatrix() {
 
 int daBook_c::CleanupResources()
 {
-    ((SharedFilePtr *)(&data_ov020_02114aa0))->Release();
-    ((SharedFilePtr *)(&data_ov020_02114ab8))->Release();
-    ((SharedFilePtr *)(&data_ov020_02114aa8))->Release();
-    ((SharedFilePtr *)(&data_ov020_02114ab0))->Release();
+    data_ov020_02114aa0.Release();
+    data_ov020_02114ab8.Release();
+    data_ov020_02114aa8.Release();
+    data_ov020_02114ab0.Release();
     UnloadBlueCoinModel();
     return 1;
 }
 
 int daBookGen_c::CleanupResources()
 {
-    ((SharedFilePtr *)&data_ov020_02114aa0)->Release();
-    ((SharedFilePtr *)&data_ov020_02114ab8)->Release();
+    data_ov020_02114aa0.Release();
+    data_ov020_02114ab8.Release();
     UnloadBlueCoinModel();
     return 1;
 }
@@ -707,7 +702,7 @@ int daBook_c::Behavior()
  * (45 degrees) of the way it faces. A shot clears mSpawnTimer. */
 int daBookGen_c::Behavior()
 {
-    if (mSpawnTimer > 0x28) {
+    if (mSpawnTimer > 40) {
         daPly_c *player = ClosestPlayer();
         if (player != 0) {
 
@@ -740,10 +735,10 @@ int daBookGen_c::Behavior()
  * kick. */
 int daBook_c::InitResources()
 {
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa0);
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab8);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa8);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab0);
+    dExtSimpleModel_c::LoadFile(data_ov020_02114aa0);
+    dExtSimpleModel_c::LoadFile(data_ov020_02114ab8);
+    dExtFrameCtrl_c::LoadFile(data_ov020_02114aa8);
+    dExtFrameCtrl_c::LoadFile(data_ov020_02114ab0);
     LoadBlueCoinModel();
 
     if (mShadowModel.InitCylinder() == 0)
@@ -777,52 +772,49 @@ int daBook_c::InitResources()
         unsigned short id = actorID;
         unsigned int match1 = (id == kShootBookActorId);
 
-        if (match1)
-        {
-            mKind = KIND_FLYING_BOOK;
-            mState = STATE_SPAWNED;
-            mCoinType = 0;
-            mdCcAcPos_c.vulnFlags |= 0x26fe0;
-            goto success;
-        }
-        {
-            unsigned int match2 = (id == kKillerBookActorId);
-            if (match2)
-            {
+        do {
+            if (match1) {
                 mKind = KIND_FLYING_BOOK;
-                mState = STATE_WAIT;
-                mCoinType = 3;
-                mdCcAcPos_c.vulnFlags |= 0x2efe0;
-                goto success;
-            }
-        }
-        {
-            unsigned int match3 = (id == kBookSwitchActorId);
-            if (match3)
-            {
-                mKind = KIND_SWITCH_BOOK;
-                mState = STATE_SWITCH_WAIT;
+                mState = STATE_SPAWNED;
                 mCoinType = 0;
-                mdCcAcPos_c.flags |= 4;
-                mdCcAcPos_c.vulnFlags |= 0x3c0;
-                mScaleX = 0x1000;
-                mScaleY = 0x800;
-                mScaleZ = 0x800;
-                goto success;
+                mdCcAcPos_c.vulnFlags |= 0x26fe0;
+                break;
             }
-        }
+            {
+                unsigned int match2 = (id == kKillerBookActorId);
+                if (match2) {
+                    mKind = KIND_FLYING_BOOK;
+                    mState = STATE_WAIT;
+                    mCoinType = 3;
+                    mdCcAcPos_c.vulnFlags |= 0x2efe0;
+                    break;
+                }
+            }
+            {
+                unsigned int match3 = (id == kBookSwitchActorId);
+                if (match3) {
+                    mKind = KIND_SWITCH_BOOK;
+                    mState = STATE_SWITCH_WAIT;
+                    mCoinType = 0;
+                    mdCcAcPos_c.flags |= 4;
+                    mdCcAcPos_c.vulnFlags |= 0x3c0;
+                    mScaleX = 0x1000;
+                    mScaleY = 0x800;
+                    mScaleZ = 0x800;
+                    break;
+                }
+            }
+            return 0;
+        } while (0);
     }
-    return 0;
-
-success:
     return 1;
 }
 
 int daBookGen_c::InitResources()
 {
     mSpawnTimer = 0;
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa0);
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab8);
+    dExtSimpleModel_c::LoadFile(data_ov020_02114aa0);
+    dExtSimpleModel_c::LoadFile(data_ov020_02114ab8);
     LoadBlueCoinModel();
     return 1;
 }
@@ -841,23 +833,19 @@ s32 daBook_c::OnYoshiTryEat()
     unsigned int b = actorID==kKillerBookActorId; return b ? 2 : 0;
 }
 
-extern "C" daBook_c *daBook_c_classInit_BOOK_SWITCH()
-{
+daBook_c *daBook_c_classInit_BOOK_SWITCH() {
     return new daBook_c;
 }
 
-extern "C" daBookGen_c *daBookGen_c_classInit()
-{
+daBookGen_c *daBookGen_c_classInit() {
     return new daBookGen_c;
 }
 
-extern "C" daBook_c *daBook_c_classInit_KILLER_BOOK()
-{
+daBook_c *daBook_c_classInit_KILLER_BOOK() {
     return new daBook_c;
 }
 
-extern "C" daBook_c *daBook_c_classInit_SHOOT_BOOK()
-{
+daBook_c *daBook_c_classInit_SHOOT_BOOK() {
     return new daBook_c;
 }
 

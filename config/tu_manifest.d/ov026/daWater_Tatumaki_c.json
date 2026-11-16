@@ -133,7 +133,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "daWater_Tatumaki_c_classInit",
+      "symbol": "_Z28daWater_Tatumaki_c_classInitv",
       "address": "0x021121bc",
       "size": "0x00000040",
       "legacy_source": "src/d_a_water_tatumaki.c",
@@ -235,14 +235,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN20TatumakiModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model-handle constructor's PC24 relocation"
     },
     {
       "symbol": "_ZN20TatumakiModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination for the model handle"
@@ -318,7 +318,7 @@
       "source": "0x02112ca0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -368,7 +368,7 @@
       "source": "0x02112d38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -891,34 +891,34 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@782",
-      "to": "@742",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @836 to @842 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @842 to @788 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @788 to @782 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
-    },
-    {
       "from": "@783",
+      "to": "@742",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @836 to @842 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @842 to @788 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @788 to @782 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @782 to @783 when a redundant pun was removed (same section, offset, size, type and binding)."
+    },
+    {
+      "from": "@784",
       "to": "@743",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @837 to @843 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @843 to @789 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @789 to @783 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @837 to @843 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @843 to @789 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @789 to @783 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @783 to @784 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@785",
+      "from": "@786",
       "to": "@745",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @839 to @845 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @845 to @791 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @791 to @785 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @839 to @845 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @845 to @791 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @791 to @785 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @785 to @786 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@787",
+      "from": "@788",
       "to": "@747",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @841 to @847 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @847 to @793 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @793 to @787 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @841 to @847 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @847 to @793 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @793 to @787 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @787 to @788 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@789",
+      "from": "@790",
       "to": "@749",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @843 to @849 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @849 to @795 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @795 to @789 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @843 to @849 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @849 to @795 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @795 to @789 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @789 to @790 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@791",
+      "from": "@792",
       "to": "@751",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @845 to @851 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @851 to @797 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @797 to @791 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @845 to @851 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @851 to @797 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @797 to @791 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @791 to @792 when a redundant pun was removed (same section, offset, size, type and binding)."
     }
   ]
 }

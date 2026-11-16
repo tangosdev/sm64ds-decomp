@@ -30,7 +30,6 @@
  * where dCcAc_c's reads through its owner pointer.
  */
 
-#include "math/Fix12.h"
 
 struct dCcPos_c : dCc_c {
     Vector3 pos;            /* 0x30 */
@@ -46,7 +45,7 @@ struct dCcPos_c : dCc_c {
     dCcPos_c();
 
     /* --- non-virtual --- */
-    void Init(const Vector3 &pos, Fix12i radius, Fix12i height, u32 flags, u32 vulnFlags);
+    void Init(const Vector3 &pos, fx32 radius, fx32 height, u32 flags, u32 vulnFlags);
 };
 
 #ifndef SM64DS_PLATFORM_PC

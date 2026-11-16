@@ -118,10 +118,10 @@ enum {
     ACTOR_KING_DONKETU = 0xda,
 
     kReportFrames = 3,
-    kArenaFrames = 0x64,
-    kSinkFrames = 0x190,
-    kSinkQuietBelow = 0x18d,
-    kSinkSoundAt = 0x183,
+    kArenaFrames = 100,
+    kSinkFrames = 400,
+    kSinkQuietBelow = 397,
+    kSinkSoundAt = 387,
 
     kWobbleAmp = 0x400,
     kWobbleStep = 0x800,
@@ -137,10 +137,10 @@ enum {
 };
 
 extern "C" {
-void func_02012694(unsigned int id, const Vector3 *pos);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 /* local extern: d_bg_w.cpp defines these; no header declares them. */
 }
+void func_02012694(unsigned int id, const Vector3 *pos);
 
 extern int data_02092138;
 extern u8 data_ov073_02123420[];
@@ -199,19 +199,16 @@ int daObjEwbIce_c::StateArena_Update() {
     mAngleX = 0;
     mVertAccel = -kFallAccel;
     UpdatePos(0);
-    if (mVariant != 0)
-        goto done;
-    {
+    if (mVariant == 0) {
         int surface = data_02092138 + kSurfaceAboveVoid;
-        if (surface <= mPosY)
-            goto done;
-        mPosY = surface;
-        mTimer = 0;
-        mVertAccel = 0;
-        mVertSpeed = 0;
-        SetState(&data_ov073_021234a0);
+        if (surface > mPosY) {
+            mPosY = surface;
+            mTimer = 0;
+            mVertAccel = 0;
+            mVertSpeed = 0;
+            SetState(&data_ov073_021234a0);
+        }
     }
-done:
     return 1;
 }
 
@@ -369,9 +366,8 @@ int daObjEwbIce_c::InitResources() {
     {
         u8 variant = mVariant;
         kcl = dBgW_Kc::LoadFile(*((EwbIceFileSlot *)data_ov073_021231c0)[variant].file);
-        mMeshCollider.SetFile(
-            (KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
-            *(CLPS_Block *)(((EwbIceClpsSlot *)data_ov073_021231c4)[variant].clps));
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY,
+                              *(((EwbIceClpsSlot *)data_ov073_021231c4)[variant].clps));
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
@@ -421,7 +417,7 @@ void daObjEwbIce_c::StoodOnCallback(dBgW *collider, daObjEwbIce_c *ice, dActor_c
  * `new daObjEwbIce_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x33c), dBgActor_c's base constructor, then
  * the vptr store. */
-extern "C" daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_C(void) {
+daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_C(void) {
     return new daObjEwbIce_c;
 }
 
@@ -429,7 +425,7 @@ extern "C" daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_C(void) {
  * allocation size, vtable identity, and the EWB_ICE_B registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: CccBigIce_Spawn. */
-extern "C" daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_B(void) {
+daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_B(void) {
     return new daObjEwbIce_c;
 }
 
@@ -437,7 +433,7 @@ extern "C" daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_B(void) {
  * allocation size, vtable identity, and the EWB_ICE_A registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: CccArena_Spawn. */
-extern "C" daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_A(void) {
+daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_A(void) {
     return new daObjEwbIce_c;
 }
 

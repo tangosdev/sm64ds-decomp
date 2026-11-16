@@ -45,8 +45,8 @@ void func_0204dab4(void *system, void *records, int count, u32 mask, void *callb
 /* This initializer's 0xc-byte layout is evidenced, but its original class
  * name is not. Keep that single unresolved ABI boundary explicit. */
 void func_0204dc84(char *record);
-void func_02049d60(Particle::Manager *manager, Particle::System *system);
 }
+void func_02049d60(Particle::Manager *manager, Particle::System *system);
 
 void dPa_c::level_c::callback_c::SpawnParticles(Particle::System&)
 {
@@ -93,7 +93,7 @@ void dPa_c::level_c::scaleCallback_c::SpawnParticles(Particle::System& system)
     system.callbackScale = scale;
     system.callbackVelocity = velocity;
     simpleCallback_c::SpawnParticles(system);
-    timer = 0x10;
+    timer = 16;
 }
 
 int dPa_c::level_c::scaleCallback_c::OnUpdate(Particle::System& system,
@@ -203,7 +203,7 @@ dPa_c::level_c::edStarKiraCallback_c::edStarKiraCallback_c()
         func_0204dc84((char *)record);
         ++i;
         ++record;
-    } while (i < 0x40);
+    } while (i < 64);
 
     unk308 = 0x1000;
     unk30c = 0x200;
@@ -228,8 +228,7 @@ void dPa_c::level_c::edStarKiraCallback_c::SpawnParticles(
 int dPa_c::level_c::edStarKiraCallback_c::OnUpdate(Particle::System& system,
                                                     bool active)
 {
-    func_0204dab4(&system, trackingRecords, 0x40, 0,
-                  (void*)func_02022260);
+    func_0204dab4(&system, trackingRecords, 0x40, 0, (void *)func_02022260);
     return simpleCallback_c::OnUpdate(system, active);
 }
 

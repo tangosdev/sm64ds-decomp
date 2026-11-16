@@ -207,14 +207,14 @@
       "ordinal": 22
     },
     {
-      "symbol": "daEykn_c_classInit_EYEKUN_BOSS",
+      "symbol": "_Z30daEykn_c_classInit_EYEKUN_BOSSv",
       "address": "0x021219cc",
       "size": "0x00000050",
       "legacy_source": "src/d_a_eykn_eyekun_boss.c",
       "ordinal": 23
     },
     {
-      "symbol": "daEykn_c_classInit_EYEKUN",
+      "symbol": "_Z25daEykn_c_classInit_EYEKUNv",
       "address": "0x02121a1c",
       "size": "0x00000050",
       "legacy_source": "src/d_a_eykn_eyekun.c",
@@ -888,14 +888,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN13EyknModelFileC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "Inferred local resource-family ABI import targets the same arm9 function as the original initializer relocation."
     },
     {
       "symbol": "_ZN13EyknModelFileD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "Inferred local resource-family ABI import targets the same arm9 function as the original initializer relocation."
@@ -935,7 +935,7 @@
       "source": "0x021228d8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1025,7 +1025,7 @@
       "source": "0x021229d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1295,7 +1295,7 @@
       "source": "0x02122cf0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daEykn_c_classInit_EYEKUN",
+      "symbol": "_Z25daEykn_c_classInit_EYEKUNv",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x02121a1c"
@@ -1305,7 +1305,7 @@
       "source": "0x02122d0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daEykn_c_classInit_EYEKUN_BOSS",
+      "symbol": "_Z30daEykn_c_classInit_EYEKUN_BOSSv",
       "addend": 0,
       "target_module": "ov071",
       "target_address": "0x021219cc"

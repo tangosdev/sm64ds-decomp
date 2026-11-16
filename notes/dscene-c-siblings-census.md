@@ -262,8 +262,8 @@ far it spread. Both are answered.
 
 Minting: there is no generator. No script in this tree, in any branch, writes
 either the `// recovered name:` slot names or the `recovered from vtable slot
-identity` tag; `tools/reconcile_names.py` only copies a pre-existing `@emits`
-line into a comment, and derives nothing. The shift came from reading a slot
+identity` tag; the reconcile_names pass (#944, since retired) only copied a pre-existing `@emits`
+line into a comment, and derived nothing. The shift came from reading a slot
 table that numbers `virtual` DECLARATIONS instead of vtable WORDS. A class
 declares its destructor once and mwcc emits two words for it (D1 at 16, D0 at
 17), so declaration index equals slot index up to the destructor and is one

@@ -76,8 +76,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
  * implicit constructor is what keeps the intervening construction inlined;
  * declaring a constructor of our own would emit a `bl` the factory does not
  * have. */
-extern "C" daObjWc_Obj03_c *daObjWc_Obj03_c_classInit()
-{
+daObjWc_Obj03_c *daObjWc_Obj03_c_classInit() {
     return new daObjWc_Obj03_c();
 }
 

@@ -73,26 +73,26 @@ extern void *data_020a0ea0;
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
 
+void Enable3dEngines();
+int GetSoundMode(void);
+void SetSoundMode(int mode);
+void TurnBacklightOn(void);
+void TurnBacklightOff(void);
+}
 FileSaveData *DSMT_GetFileBuffer(int slot);
 void DSMT_SetFileBuffers(FileSaveData *files);
 int DSMT_SetPendingMusic(int musicId, unsigned int delayFrames);
 void DSMT_UpdateBootArgs(u32 saveSlot);
 int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4);
 int func_ov007_020b6eb4(void);
-void Enable3dEngines();
-int GetSoundMode(void);
 int IsStarCollected(int course, int star);
 void StartMinigameMenu(u8 returnToRecRoom);
-void SetSoundMode(int mode);
-void TurnBacklightOn(void);
-void TurnBacklightOff(void);
-}
 
 /* data_0209b340 (decl_common.h's int[]) is the download-play table. */
 #define sBootArgs (*(Ov007BootArgs *)data_0209b340)
 
 /* Factory: the registry's spawn entry point. */
-extern "C" dScDSMT_c *dScDSMT_c_classInit(void) {
+dScDSMT_c *dScDSMT_c_classInit(void) {
     return new dScDSMT_c;
 }
 
@@ -101,31 +101,31 @@ extern "C" dScDSMT_c *dScDSMT_c_classInit(void) {
  * free, query, fileLoad, fileRelease, callback.
  *
  * Heap thunks onto the game heap; `bx ip` sibcalls. */
-extern "C" void *DSMT_MenuAlloc(u32 size) {
+void *DSMT_MenuAlloc(u32 size) {
     return ((Heap *)data_020a0ea0)->Allocate(size);
 }
 
-extern "C" void DSMT_MenuFree(void *ptr) {
+void DSMT_MenuFree(void *ptr) {
     ((Heap *)data_020a0ea0)->_Deallocate(ptr);
 }
 
-extern "C" void DSMT_MenuMaxAllocSize(void) {
-    (void)((Heap *)data_020a0ea0)->MaxAllocationUnitSize();
+void DSMT_MenuMaxAllocSize(void) {
+    ((Heap *)data_020a0ea0)->MaxAllocationUnitSize();
 }
 
 /* File-op veneers: `#pragma long_calls` emits the pooled absolute tail call. */
 #pragma long_calls on
 extern "C" void *LoadFile(int);
-extern "C" void *DSMT_MenuLoadFile(int fileId) {
+void *DSMT_MenuLoadFile(int fileId) {
     return LoadFile(fileId);
 }
-extern "C" void DSMT_MenuReleaseFile(void *file) {
+void DSMT_MenuReleaseFile(void *file) {
     Deallocate(file);
 }
 #pragma long_calls off
 
 /* The menu's command callback: sound/backlight/save-file/minigame codes. */
-extern "C" u8 DSMT_MenuCallback(s32 command) {
+u8 DSMT_MenuCallback(s32 command) {
     u8 failed = 0;
 
     if (command == 1) {
@@ -204,7 +204,7 @@ extern "C" u8 DSMT_MenuCallback(s32 command) {
     } else if (command == 23) {
         SaveData::SaveMinigames(&data_0209cae4);
     } else if (command == 19) {
-        Sound::StopLoadedMusic_Layer1(0x3c);
+        Sound::StopLoadedMusic_Layer1(60);
     }
     DSMT_UpdateBootArgs(data_0209caa0.activeFile);
     return failed;
@@ -309,7 +309,7 @@ void dScDSMT_c::OnPendingDestroy() {}
 
 /* Refresh the boot-args table: the sound mode and backlight, then save file
  * `saveSlot`'s summary (in use, characters, stars and coin records). */
-extern "C" void DSMT_UpdateBootArgs(u32 saveSlot) {
+void DSMT_UpdateBootArgs(u32 saveSlot) {
     int highestUnlockedPlusOne;
     int character;
     int course;
@@ -328,7 +328,7 @@ extern "C" void DSMT_UpdateBootArgs(u32 saveSlot) {
     highestUnlockedPlusOne = 3;
     character = 2;
     do {
-        if (SaveData::IsCharacterUnlocked((u32)character))
+        if (SaveData::IsCharacterUnlocked(character))
             break;
         highestUnlockedPlusOne--;
         character--;
@@ -338,19 +338,19 @@ extern "C" void DSMT_UpdateBootArgs(u32 saveSlot) {
         sBootArgs.firstStar[saveSlot][course] = IsStarCollected(course, 0) != 0;
         sBootArgs.otherStars[saveSlot][course] =
             CountStarsCollectedInLevelToDisplay(course) - sBootArgs.firstStar[saveSlot][course];
-        sBootArgs.coinRecords[saveSlot][course] = SaveData::GetCoinRecord((u32)course);
+        sBootArgs.coinRecords[saveSlot][course] = SaveData::GetCoinRecord(course);
     }
 
     data_0209b3d8[saveSlot] = CountStarsCollectedInLevelToDisplay(0x1d);
 }
 
 /* Arm the deferred music change Behavior commits. Declines if one is pending. */
-extern "C" int DSMT_SetPendingMusic(int musicId, unsigned int delayFrames) {
+int DSMT_SetPendingMusic(int musicId, unsigned int delayFrames) {
     if (data_ov007_02103260 >= 0) {
         return 0;
     }
     data_ov007_02103260 = musicId;
-    data_ov007_02104c28 = (unsigned short)delayFrames;
+    data_ov007_02104c28 = delayFrames;
     Sound::StopLoadedMusic_Layer1(delayFrames);
     return 1;
 }
@@ -367,12 +367,12 @@ int dScDSMT_c::graphCallback_c::GraphCallback2() {
 }
 
 /* Install the three save-file buffers the callback reads and writes. */
-extern "C" void DSMT_SetFileBuffers(FileSaveData *files) {
+void DSMT_SetFileBuffers(FileSaveData *files) {
     data_0209b33c = files;
 }
 
 /* Address of save file `slot`'s buffer (0x44 stride is in the ROM's mla). */
-extern "C" FileSaveData *DSMT_GetFileBuffer(int slot) {
+FileSaveData *DSMT_GetFileBuffer(int slot) {
     return &data_0209b33c[slot];
 }
 

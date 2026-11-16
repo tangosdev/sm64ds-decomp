@@ -31,8 +31,7 @@ namespace std {
 void terminate();
 }
 
-extern "C" void func_02073300(void *block, unsigned int n, unsigned int size, dtor_t dtor)
-{
+extern "C" void func_02073300(void *block, unsigned int n, unsigned int size, dtor_t dtor) {
     if (dtor) {
         char *p = (char *)block + n * size;
         try {

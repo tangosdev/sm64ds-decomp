@@ -42,7 +42,7 @@ typedef char FallBlockClsnFileHandle_size_must_be_8[sizeof(FallBlockClsnFileHand
 
 extern ResourceDescriptor data_ov015_02114880;
 
-extern "C" daObjBk_Fall_Block_c *daObjBk_Fall_Block_c_classInit() {
+daObjBk_Fall_Block_c *daObjBk_Fall_Block_c_classInit() {
     return new daObjBk_Fall_Block_c();
 }
 

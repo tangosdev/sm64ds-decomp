@@ -18,7 +18,7 @@ void func_ov007_020c7d60(Ov007Link *link, int r5, int r4) {
     Vector3 v1, v2;
     int delta;
 
-    VEC_Subtract((Vector3 *)link->from->target, (Vector3 *)link->to->target, (Vector3 *)&d);
+    VEC_Subtract((Vector3 *)link->from->target, (Vector3 *)link->to->target, &d);
 
     /* x-first in source; mwccarm emits y-first loads (same as Vec3_DistSq) */
     sq = (s64)(d.x) * (d.x);

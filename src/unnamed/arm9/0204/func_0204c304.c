@@ -81,7 +81,7 @@ void func_0204c304(ParticleElement *self, SystemListView *sys, List *freelist) {
             p->scale = (m * (def->scaleRatio + 1)) >> 6;
         }
 
-        p->animScale = (u16)d1c;
+        p->animScale = d1c;
 
         if (def->flags.useChildColor)
             p->color = def->color;
@@ -90,8 +90,7 @@ void func_0204c304(ParticleElement *self, SystemListView *sys, List *freelist) {
 
         {
             Visibility *q = &p->visibility;
-            q->baseAlpha =
-                (u16)((self->visibility.baseAlpha * (self->visibility.animAlpha + 1)) >> 5);
+            q->baseAlpha = ((self->visibility.baseAlpha * (self->visibility.animAlpha + 1)) >> 5);
             q->animAlpha = 0x1f;
         }
 
@@ -99,12 +98,12 @@ void func_0204c304(ParticleElement *self, SystemListView *sys, List *freelist) {
             int mode = def->flags.rotationType;
             switch (mode) {
             case 0:
-                p->angle = (u16)eB;
-                p->angularSpeed = (s16)eB;
+                p->angle = eB;
+                p->angularSpeed = eB;
                 break;
             case 1:
                 p->angle = self->angle;
-                p->angularSpeed = (s16)eA;
+                p->angularSpeed = eA;
                 break;
             case 2:
                 p->angle = self->angle;
@@ -114,7 +113,7 @@ void func_0204c304(ParticleElement *self, SystemListView *sys, List *freelist) {
         }
 
         p->lifetime = def->lifetime;
-        p->age = (u16)eC;
+        p->age = eC;
         p->texture = def->texture;
         p->loopTimeFactor = 0xffff / (int)((u32)self->lifetime >> 1);
         p->lifeRateFactor = 0xffff / self->lifetime;

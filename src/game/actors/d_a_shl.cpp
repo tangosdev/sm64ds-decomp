@@ -28,29 +28,12 @@
  * section per function in the reverse of source order.
  *
  * Known limits:
- * - daPly_c::Hurt and Particle::System::New stay mangled: each takes Fix12<int> by value
- *   (notes/mwccarm-codegen.md 6az). Particle::System::New is declared
- *   with the seven arguments its call sites pass.
  * - data_ov102_0214d70c is this TU's .rodata pair of model-file handles
  *   and the state records are .bss; this text-only TU claims neither.
  *
  * deslop leftovers:
  * - func_ov002_020ad660, func_ov002_020cc16c and func_020105cc are other
- *   TUs' helpers and stay free externs; the Fix12<int>-by-value callees
- *   listed above stay mangled (notes/mwccarm-codegen.md 6az).
- * - The manifest pins eight @NNN statics (@721..@735), so the count of
- *   named locals, named parameters, labels and unnamed struct types
- *   ahead of __sinit is load-bearing. Including a header moves it
- *   (measured: daPly_c.h +94, the first pin becomes @815; Sound.h +15), so
- *   daPly_c and Sound stay reached through local mangled externs and
- *   daPly_c::mIsAirborne stays the raw 0x6de read.
- * - dBgCh_Gnd.h adds 9 to the count. Including it let five mangled
- *   dBgCh_Gnd externs (7 named parameters), a `surface` local in
- *   func_ov102_0214c7fc and an unnamed struct type for `dir` in
- *   func_ov102_0214cbec go, which nets to 0 (measured: same bytes,
- *   relocations and pins).
- * - The unnamed struct type of `pos` in func_ov102_0214c84c also holds
- *   the count (an unnamed struct type takes one number, measured).
+ *   TUs' helpers and stay free externs.
  * - daShl_c_classInit stays a free factory and the destructor stays
  *   inline (D1-then-D0 cartridge order).
  */
@@ -64,6 +47,7 @@
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
+#include "Sound.h"
 
 /* Two 8-byte pointers-to-member. The second word is the this-adjustment;
    retail stores 0 for every entry. */
@@ -79,13 +63,7 @@ struct ShlStateEnd {
     ShlStateFn tail[3];
 };
 
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
-
 extern "C" {
-
 
 /* -- the four state records (.bss) and the model handles (.rodata) -- */
 extern ShlState data_ov102_0214ea48;
@@ -95,25 +73,16 @@ extern ShlStateEnd data_ov102_0214ea78;
 extern SharedFilePtr *data_ov102_0214d70c[];
 
 /* -- other modules -- */
-int  func_ov002_020ad660(char *self, char *clsn, char *model, int kind);
-int  func_ov002_020cc16c(void *player, void *actor);
-void func_020105cc(void *self, u32 flags);
+int func_ov002_020cc16c(void *player, void *actor);
 void Matrix4x3_FromRotationY(void *m, int angle);
-int  SurfaceInfo_TestFlag0x20(int *si);
 
-int d_a_shlNewHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir, void *cb);
-/* local extern: these five names hold the @NNN count. Sound::PlayLong is the call. */
-void d_a_shlPlayLongHold(u32 handle, u32 a, u32 soundID, const Vector3 &pos, s16 e);
-
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *owner, Fix12i radius, Fix12i height, Vector3_16 *d,
-                         int e);
 }
+int func_ov002_020ad660(void *self, void *clsn, void *model, int kind);
+int SurfaceInfo_TestFlag0x20(int *si);
 
 /* func_ov102_0214c84c's positions are VecFx32: Vector3 members here emit
    an extra destructor function into this TU (measured). */
-extern "C" daShl_c *daShl_c_classInit()
-{
+daShl_c *daShl_c_classInit() {
     return new daShl_c();
 }
 
@@ -161,13 +130,13 @@ s32 daShl_c::InitResources()
  */
 s32 daShl_c::Behavior()
 {
-    if (func_ov002_020ad660((char *)this, (char *)&mMeshClsn, (char *)&mModel, 3) != 0)
+    if (func_ov002_020ad660(this, &mMeshClsn, &mModel, 3) != 0)
         return 1;
 
     if (UpdateYoshiEat(mMeshClsn) != 0) {
         if (mEatenByYoshi != 0) {
             mSpawnAngleY = mPrevAngleY;
-            func_ov102_0214d1f8((ShlState *)&data_ov102_0214ea78);
+            func_ov102_0214d1f8(&data_ov102_0214ea78.rec);
             mFlags &= ~0x80000u;
             mEatenByYoshi = 0;
         }
@@ -208,7 +177,7 @@ s32 daShl_c::Behavior()
         if (mMeshClsn.IsOnGround() != 0 || mMeshClsn.IsOnWall() != 0) {
             /* Hitting a wall while spat out breaks the shell. */
             if (mMeshClsn.IsOnWall() != 0) {
-                if (mState == (ShlState *)&data_ov102_0214ea78) {
+                if (mState == &data_ov102_0214ea78.rec) {
                     PoofDust();
                     MarkForDestruction();
                     return 0;
@@ -245,7 +214,7 @@ s32 daShl_c::Render()
         return 1;
     {
         unsigned char v = mDespawnTimer;
-        if (v < 0x2d) {
+        if (v < 45) {
             if (v & 1)
                 return 1;
         }
@@ -385,10 +354,10 @@ int daShl_c::func_ov102_0214cf98(dActor_c *player)
 /* Kicked: take the kicker's heading and switch to the sliding state. */
 int daShl_c::func_ov102_0214cf4c(dActor_c *kicker)
 {
-    if (mState == (ShlState *)&data_ov102_0214ea78)
+    if (mState == &data_ov102_0214ea78.rec)
         return 0;
     mSpawnAngleY = kicker->mAngleY;
-    func_ov102_0214d1f8((ShlState *)&data_ov102_0214ea78);
+    func_ov102_0214d1f8(&data_ov102_0214ea78.rec);
     return 1;
 }
 
@@ -413,7 +382,7 @@ void daShl_c::func_ov102_0214ce60()
     int hidden = (mFlags & 0x40000) != 0;
     if (hidden)
         return;
-    DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x50000, 0x50000, 0xf);
+    DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x50000, 0x50000, 15);
 }
 
 /* What touching the player does, read off the body cylinder's last hit.
@@ -469,11 +438,11 @@ void daShl_c::func_ov102_0214cbec()
     if (mModelIndex != 0) {
         s32 attack = hit & 0x3c0;
         if (attack) {
-            func_020105cc(this, attack);
+            func_020105cc(attack);
             func_ov102_0214cf4c(player);
             return;
         }
-        if (mState != (ShlState *)&data_ov102_0214ea78)
+        if (mState != &data_ov102_0214ea78.rec)
             return;
         v1.x = mPosX;
         v1.y = mPosY;
@@ -482,7 +451,7 @@ void daShl_c::func_ov102_0214cbec()
         return;
     }
 
-    if (mState == (ShlState *)&data_ov102_0214ea78) {
+    if (mState == &data_ov102_0214ea78.rec) {
         v2.x = mPosX;
         v2.y = mPosY;
         v2.z = mPosZ;
@@ -531,8 +500,7 @@ void daShl_c::func_ov102_0214c84c()
         ground.SetObjAndPos(*(Vector3 *)&pos.probe, this);
         if (ground.DetectClsn())
         {
-            if (SurfaceInfo_TestFlag0x20((int *)&ground.surface))
-            {
+            if (SurfaceInfo_TestFlag0x20((int *)&ground.surface)) {
                 pos.trail.y = ground.clsnY + 0x3c000;
                 mParticleHandle_3d4 = 0;
                 mParticleHandle_3c8 = mParticleHandle_3d4;
@@ -624,7 +592,7 @@ extern "C" ShlState data_ov102_0214ea68 = {
     &daShl_c::func_ov102_0214d1b0,
 };
 extern "C" ShlStateEnd data_ov102_0214ea78 = {
-    { &daShl_c::func_ov102_0214d148, &daShl_c::func_ov102_0214d114 },
+    {&daShl_c::func_ov102_0214d148, &daShl_c::func_ov102_0214d114},
 };
 extern "C" ShlState data_ov102_0214ea48 = {
     &daShl_c::func_ov102_0214d0bc,

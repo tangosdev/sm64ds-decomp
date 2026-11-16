@@ -28,12 +28,12 @@ WMErrCode WM_SetIndCallback(WMCallbackFunc callback) {
 
     result = WMi_CheckInitialized();
     if (result != WM_ERRCODE_SUCCESS) {
-        (void)OS_RestoreInterrupts(e);
+        OS_RestoreInterrupts(e);
         return result;
     }
 
     WM_GetSystemWork()->indCallback = callback;
-    (void)OS_RestoreInterrupts(e);
+    OS_RestoreInterrupts(e);
 
     return WM_ERRCODE_SUCCESS;
 }
@@ -47,7 +47,7 @@ WMErrCode WM_SetPortCallback(u16 port, WMCallbackFunc callback, void *arg) {
 
     result = WMi_CheckInitialized();
     if (result != WM_ERRCODE_SUCCESS) {
-        (void)OS_RestoreInterrupts(e);
+        OS_RestoreInterrupts(e);
         return result;
     }
 
@@ -58,7 +58,7 @@ WMErrCode WM_SetPortCallback(u16 port, WMCallbackFunc callback, void *arg) {
         p->portCallbackArgument[port] = arg;
     }
 
-    (void)OS_RestoreInterrupts(e);
+    OS_RestoreInterrupts(e);
 
     return WM_ERRCODE_SUCCESS;
 }
@@ -99,7 +99,7 @@ int WM_GetMPSendBufferSize(void) {
     DC_InvalidateRange(&(p->status->mp_maxSendSize), 4);
     maxSendSize = p->status->mp_maxSendSize;
 
-    return ((maxSendSize + 31) & ~0x1f);
+    return ((maxSendSize + 0x1f) & ~0x1f);
 }
 
 /* The receive buffer WM_StartMPEx needs: a parent's holds one block per
@@ -129,11 +129,11 @@ int WM_GetMPReceiveBufferSize(void) {
         DC_InvalidateRange(&(p->status->pparam.maxEntry), 2);
         maxEntry = p->status->pparam.maxEntry;
         return (int)((sizeof(WMMpRecvHeader) - sizeof(WMMpRecvData) +
-                      ((sizeof(WMMpRecvData) + maxReceiveSize - 2 + 2) * maxEntry) + 31) &
+                      ((sizeof(WMMpRecvData) + maxReceiveSize - 2 + 2) * maxEntry) + 0x1f) &
                      ~0x1f) *
                2;
     } else {
-        return (int)((sizeof(WMMpRecvBuf) + maxReceiveSize - 4 + 31) & ~0x1f) * 2;
+        return (int)((sizeof(WMMpRecvBuf) + maxReceiveSize - 4 + 0x1f) & ~0x1f) * 2;
     }
 }
 

@@ -61,9 +61,7 @@ extern "C" {
    so a crash mid-load names the file. */
 extern unsigned int data_0209d3bc;
 
-void func_02017e0c(void *self, unsigned int fileID);
 unsigned int func_02018a24(unsigned int);
-unsigned int TrimModelFile(void *file);
 int func_020186c0(unsigned int val);
 int func_02018568(int a);
 unsigned int func_02018ac4(unsigned int *p);
@@ -73,13 +71,22 @@ void func_02018770(void);
 int myFS_ReadFile(void *a, void *b, int c);
 }
 
+/* ROM symbol is _Z13func_02017e0cPvj. The host call is C: port/hal/fs.cpp
+   declares it inside its extern "C" seam. */
+#ifdef _MSC_VER
+extern "C"
+#endif
+    void
+    func_02017e0c(void *self, unsigned int fileID);
+unsigned int TrimModelFile(void *file);
+
 #ifndef _MSC_VER
-extern "C" void *func_02017e48(void *self, unsigned int fileID) {
+void *func_02017e48(void *self, unsigned int fileID) {
     func_02017e0c(self, fileID);
     return self;
 }
 
-extern "C" void *func_02017e34(void *self) {
+void *func_02017e34(void *self) {
     data_0209d3bc = static_cast<SharedFilePtr *>(self)->fileID;
     return self;
 }
@@ -87,7 +94,7 @@ extern "C" void *func_02017e34(void *self) {
 
 /* Stamps a fresh handle: no file, no holders, and the FAT file ID that
    func_02018a24 resolves from the overlay-0 file ID. */
-extern "C" void func_02017e0c(void *self, unsigned int fileID) {
+void func_02017e0c(void *self, unsigned int fileID) {
     SharedFilePtr *handle = static_cast<SharedFilePtr *>(self);
     handle->filePtr = 0;
     handle->numRefs = 0;
@@ -160,7 +167,7 @@ void *SharedFilePtr::Load() {
 #endif
 
 /* Frees the file once the last holder lets go. */
-extern "C" void func_02017c24(SharedFilePtr *self) {
+void func_02017c24(SharedFilePtr *self) {
     data_0209d3bc = self->fileID;
     Memory::Deallocate(self->filePtr);
     self->filePtr = 0;
@@ -176,7 +183,7 @@ void *SharedFilePtr::LoadFile() {
             return 0;
     }
 
-    if (numRefs >= 0xff) {
+    if (numRefs >= 255) {
         return 0;
     }
 
@@ -200,12 +207,12 @@ void SharedFilePtr::Release() {
 }
 
 #ifndef _MSC_VER
-extern "C" void *func_02017b4c(void *self, unsigned int fileID) {
+void *func_02017b4c(void *self, unsigned int fileID) {
     func_02017e48(self, fileID);
     return self;
 }
 
-extern "C" int SharedFilePtr_Destruct_Clsn(int self) {
+int SharedFilePtr_Destruct_Clsn(int self) {
     func_02017e34(reinterpret_cast<void *>(self));
     return self;
 }
@@ -228,22 +235,22 @@ KCL_File *dBgW_Kc::LoadFile(SharedFilePtr &ptr) {
 #endif
 
 #ifndef _MSC_VER
-extern "C" void *func_02017ae4(void *self, unsigned int fileID) {
+void *func_02017ae4(void *self, unsigned int fileID) {
     func_02017e48(self, fileID);
     return self;
 }
 
-extern "C" void *func_02017acc(void *self, unsigned int fileID) {
+void *func_02017acc(void *self, unsigned int fileID) {
     func_02017e48(self, fileID);
     return self;
 }
 
-extern "C" int func_02017ab4(int self) {
+int func_02017ab4(int self) {
     func_02017e34(reinterpret_cast<void *>(self));
     return self;
 }
 
-extern "C" int func_02017a9c(int self) {
+int func_02017a9c(int self) {
     func_02017e34(reinterpret_cast<void *>(self));
     return self;
 }
@@ -271,19 +278,19 @@ BMD_File *dExtSimpleModel_c::LoadFile(SharedFilePtr &ptr) {
 #endif
 
 #ifndef _MSC_VER
-extern "C" void *func_02017a24(void *self, unsigned int fileID) {
+void *func_02017a24(void *self, unsigned int fileID) {
     func_02017ae4(self, fileID);
     return self;
 }
 
-extern "C" int func_02017a0c(int self) {
+int func_02017a0c(int self) {
     func_02017a9c(self);
     return self;
 }
 
 /* Loads a BMD through the handle and gives it to a dExtModel_c. If SetFile
    refuses it, the reference is handed back. */
-extern "C" int func_020179b4(SharedFilePtr *filePtr, dExtModel_c *model, int arg) {
+int func_020179b4(SharedFilePtr *filePtr, dExtModel_c *model, int arg) {
     int result = 0;
     if (model) {
         BMD_File *file = dExtSimpleModel_c::LoadFile(*filePtr);
@@ -347,12 +354,12 @@ BTP_File *dExtAnmTexPat_c::LoadFile(SharedFilePtr &ptr) {
     return filePtr;
 }
 
-extern "C" void *func_020178cc(void *self, unsigned int fileID) {
+void *func_020178cc(void *self, unsigned int fileID) {
     func_02017ae4(self, fileID);
     return self;
 }
 
-extern "C" int func_020178b4(int self) {
+int func_020178b4(int self) {
     func_02017a9c(self);
     return self;
 }
@@ -360,11 +367,11 @@ extern "C" int func_020178b4(int self) {
 /* A BMD LoadFile that rebases the file but, unlike dExtSimpleModel_c::LoadFile, neither
    registers it in the common model data array nor trims its allocation. */
 extern "C" void *func_0201787c(SharedFilePtr *ptr) {
-    void *filePtr;
+    BMD_File *filePtr;
     ptr->LoadFile();
-    filePtr = ptr->filePtr;
+    filePtr = (BMD_File *)ptr->filePtr;
     if (ptr->numRefs == 1 && filePtr != 0) {
-        dExtSimpleModel_c::UpdateFileOffsets(*(BMD_File *)filePtr);
+        dExtSimpleModel_c::UpdateFileOffsets(*filePtr);
     }
     return filePtr;
 }

@@ -49,13 +49,11 @@ extern void Initialise3dGraphics(int arg);
 extern fBase_c *gCurrentScene;
 
 extern dFader_c *gSoftResetFader;
-extern void func_02011b7c(void);
 
 /* Sound.cpp's sound-object registry; only its address is needed here.
    local extern: SndRegTable is Sound.cpp's own type, no header declares it. */
 struct SndRegTable;
 extern SndRegTable data_0209b53c;
-extern void func_02011974(void *object);
 
 extern u8 data_02092660;
 
@@ -75,10 +73,12 @@ extern u32 gNextSceneParam;
 
 extern int func_0203d9b4(void);
 
-extern int func_02013edc(s32 sceneID, s32 param, int a);
 
 extern dFdBrightness_c *data_0209d4ac;
 }
+extern void func_02011b7c(void);
+extern void func_02011974(void *object);
+extern int func_02013edc(s32 sceneID, s32 param, int a);
 
 /* The scene's two global faders: the colour fade every scene change runs
    (SetAndStopColorFader, StartSceneFade) and the plain brightness fade
@@ -288,7 +288,7 @@ int dScene_c::BeforeBehavior()
         } else {
             if (gSoftResetFader == 0) {
                 gSoftResetBrightnessFader.currInterp = 0;
-                gSoftResetBrightnessFader.dFdBrightness_c::SetForwardTime(0x10, 0);
+                gSoftResetBrightnessFader.dFdBrightness_c::SetForwardTime(16, 0);
                 gSoftResetFader = &gSoftResetBrightnessFader;
             } else if (gSoftResetBrightnessFader.dFdBrightness_c::IsAtEnd()) {
                 StartSceneFade(1, 0, 0);
@@ -301,7 +301,7 @@ int dScene_c::BeforeBehavior()
 
     if (gNextSceneId != 0x187) {
         if (gSceneFader->IsAtStart() != 0) {
-            gSceneFader->SetForwardTime(0x1e, 0);
+            gSceneFader->SetForwardTime(30, 0);
         } else if (gSceneFader->IsAtEnd() != 0) {
             MarkForDestruction();
         }
@@ -316,7 +316,7 @@ int dScene_c::BeforeBehavior()
         return 0;
     } else {
         if (gSceneFader->IsAtEnd() != 0) {
-            gSceneFader->SetBackwardTime(0x1e, 0);
+            gSceneFader->SetBackwardTime(30, 0);
         }
         return 1;
     }

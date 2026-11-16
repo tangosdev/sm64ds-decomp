@@ -45,8 +45,7 @@
 extern "C" void func_02073534(void *base, void *current, unsigned int size, dtor_t dtor);
 
 extern "C" void __cxa_vec_ctor(void *base, unsigned int n, unsigned int elem_size,
-                               ctor_t ctor, dtor_t dtor)
-{
+                               void (*ctor)(void *), void (*dtor)(void *)) {
     if (ctor) {
         if (dtor) {
             char *p = (char *)base;

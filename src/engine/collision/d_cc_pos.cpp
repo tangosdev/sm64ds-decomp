@@ -56,10 +56,9 @@ u32 dCcPos_c::GetOwnerID()
     return 0;
 }
 
-/* Scalar Fix12i: a by-value Fix12<int> is the class type wall 6az homes
-   on the stack. The reference is the same address the pointer spelling
-   passed. */
-void dCcPos_c::Init(const Vector3 &pos, Fix12i radius, Fix12i height, u32 flags, u32 vulnFlags) {
+/* Scalar fx32 radius and height. The reference is the same address the
+   pointer spelling passed. */
+void dCcPos_c::Init(const Vector3 &pos, fx32 radius, fx32 height, u32 flags, u32 vulnFlags) {
     this->pos.x = pos.x;
     this->pos.y = pos.y;
     this->pos.z = pos.z;
@@ -71,7 +70,6 @@ void dCcPos_c::Init(const Vector3 &pos, Fix12i radius, Fix12i height, u32 flags,
  * nds_printt.cpp, which keep their own matching extern declarations and call
  * sites; only the definition moves. Body as recovered. */
 
-extern "C" void func_020147bc(unsigned short *dst, int glyph)
-{
-    *dst = (unsigned short)(data_0208e500 + glyph);
+extern "C" void func_020147bc(unsigned short *dst, int glyph) {
+    *dst = (data_0208e500 + glyph);
 }

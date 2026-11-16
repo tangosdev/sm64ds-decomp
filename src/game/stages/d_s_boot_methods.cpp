@@ -4,9 +4,13 @@
  * - UpdateButtonPalettes (0x02005348) is a coined name. It is a
  *   dScBoot_c method: Behavior is its only caller, and the body reads
  *   mSelectedButton and mButtonFlashTimer.
- * - opt_common_subs off stays file-global. Behavior's countdown
- *   updates need it: without it the compiler reuses each timer's
- *   field address and Behavior drops an instruction.
+ * - opt_common_subs off stays file-global for Behavior's two touch
+ *   tests (STATE_CONFIRM_ERASE / STATE_FINAL_CONFIRM): the cartridge
+ *   rebuilds playerSlot * 4 for each condition that reads a touch lane,
+ *   and CSE shares one copy across them (0x638 against 0x640). The other
+ *   three functions compile the same either way, and reading the lanes
+ *   as ((TouchInfo *)gTouchHeld)[playerSlot] does not help: the cartridge
+ *   loads each lane's own address.
  * - The destructor pair and dScBoot_c_classInit live in src/game/stages/d_s_boot.cpp.
  *
  * dScBoot_c, the title screen. fBase_c, dBase_c, dScene_c, then this
@@ -53,7 +57,6 @@ u32 LoadCompressedFileAt(int fileID, void *target);
 void *LoadFile(int handle);
 
 void DecompressLZ16(const void *src, void *dst);
-
 }
 
 /* These names describe the observed transitions; original state names are unknown. */
@@ -132,17 +135,17 @@ s32 dScBoot_c::InitResources() {
                           GX_BG_CHARBASE_0x10000);
     SetSubBg2Offset(0, 0);
 
-    DecompressLZ16(&data_020918c4, (void *)G2S_GetBG2CharPtr());
+    DecompressLZ16(&data_020918c4, G2S_GetBG2CharPtr());
     GXS_LoadBGPltt(&data_020914e0, 0, 2);
     GXS_LoadBGPltt(&data_020914e0, 0x1c0, 0x40);
-    DecompressLZ16(&data_02091570, (void *)G2S_GetBG2ScrPtr());
+    DecompressLZ16(&data_02091570, G2S_GetBG2ScrPtr());
 
     gMainScreenLayers = DISPLAY_LAYER_BG0;
     gSubScreenLayers = 4;
     GX_SetVisiblePlane(DISPLAY_LAYER_BG0);
     GXS_SetVisiblePlane(DISPLAY_LAYER_BG2);
 
-    mFadeTimer = 0x3c;
+    mFadeTimer = 60;
     mState = STATE_BOOT_WAIT;
     mButtonFlashTimer = 0;
     mInputLockTimer = 0;
@@ -217,12 +220,12 @@ s32 dScBoot_c::Behavior() {
                     } else {
                         langFileID = 0xa00d;
                     }
-                    LoadCompressedFileAt(langFileID, (void *)G2S_GetBG1CharPtr());
+                    LoadCompressedFileAt(langFileID, G2S_GetBG1CharPtr());
                     palette = LoadFile(0x9807);
                     GXS_LoadBGPltt(palette, 0, 0x1c0);
                     Deallocate(palette);
                     LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN,
-                                         (void *)G2S_GetBG1ScrPtr());
+                                         G2S_GetBG1ScrPtr());
                     LoadCompressedFileAt(0x9803, (char *)G2S_GetBG1ScrPtr() + 0x800);
                     func_0201cd08(0x29a);
                     mSelectedButton = 1;
@@ -256,18 +259,18 @@ s32 dScBoot_c::Behavior() {
                     leftTouchStarted = 0;
                 }
                 /* left button: touch x 0x28..0x78, y 0x98..0xb8, or Left */
-                if ((leftTouchStarted != 0 && (u8)(gTouchX[playerSlot * 4] - 0x28) < 0x50 &&
-                     (u8)(gTouchY[playerSlot * 4] - 0x98) < 0x20) ||
+                if ((leftTouchStarted != 0 && (u8)(gTouchX[playerSlot * 4] - 40) < 80 &&
+                     (u8)(gTouchY[playerSlot * 4] - 152) < 32) ||
                     (keysPressed & PAD_KEY_LEFT)) {
                     if (mSelectedButton == 0) {
-                        mButtonFlashTimer = 0x10;
+                        mButtonFlashTimer = 16;
                     }
                     mSelectedButton = 0;
                     UpdateButtonPalettes();
                     func_02012790(0);
-                    if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x28) < 0x50 &&
-                        (u8)(gTouchY[gActivePlayerSlot * 4] - 0x98) < 0x20) {
-                        mInputLockTimer = 0x20;
+                    if ((u8)(gTouchX[gActivePlayerSlot * 4] - 40) < 80 &&
+                        (u8)(gTouchY[gActivePlayerSlot * 4] - 152) < 32) {
+                        mInputLockTimer = 32;
                         if (mState == STATE_CONFIRM_ERASE) {
                             mState = STATE_OPEN_FINAL_CONFIRM;
                         } else {
@@ -283,24 +286,24 @@ s32 dScBoot_c::Behavior() {
                         rightTouchStarted = 0;
                     }
                     /* right button: touch x 0x88..0xd8, same rows, or Right */
-                    if ((rightTouchStarted != 0 && (u8)(gTouchX[playerSlot * 4] - 0x88) < 0x50 &&
-                         (u8)(gTouchY[playerSlot * 4] - 0x98) < 0x20) ||
+                    if ((rightTouchStarted != 0 && (u8)(gTouchX[playerSlot * 4] - 136) < 80 &&
+                         (u8)(gTouchY[playerSlot * 4] - 152) < 32) ||
                         (keysPressed & PAD_KEY_RIGHT)) {
                         if (mSelectedButton == 1) {
-                            mButtonFlashTimer = 0x10;
+                            mButtonFlashTimer = 16;
                         }
                         mSelectedButton = 1;
                         UpdateButtonPalettes();
                         func_02012790(0);
-                        if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x88) < 0x50) {
-                            if ((u8)(gTouchY[gActivePlayerSlot * 4] - 0x98) < 0x20) {
-                                mInputLockTimer = 0x20;
+                        if ((u8)(gTouchX[gActivePlayerSlot * 4] - 136) < 80) {
+                            if ((u8)(gTouchY[gActivePlayerSlot * 4] - 152) < 32) {
+                                mInputLockTimer = 32;
                                 mState = STATE_CANCEL_ERASE;
                             }
                         }
                     } else if (keysPressed & (PAD_BUTTON_A | PAD_BUTTON_START)) {
-                        mButtonFlashTimer = 0x10;
-                        mInputLockTimer = 0x20;
+                        mButtonFlashTimer = 16;
+                        mInputLockTimer = 32;
                         UpdateButtonPalettes();
                         func_02012790(0);
                         if (mSelectedButton == 0) {
@@ -329,12 +332,12 @@ s32 dScBoot_c::Behavior() {
             G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
                               GX_BG_CHARBASE_0x18000, GX_BG_EXTPLTT_01);
             Message::DisplaySaveStatusText(0x29c);
-            mEraseEffectTimer = 0x78;
+            mEraseEffectTimer = 120;
             mState = STATE_ERASING;
             break;
 
         case STATE_ERASING:
-            if (mEraseEffectTimer == 0x3c) {
+            if (mEraseEffectTimer == 60) {
                 SaveData::EraseAllSaveData();
             }
             if (mEraseEffectTimer != 0) {
@@ -342,12 +345,12 @@ s32 dScBoot_c::Behavior() {
 
                 mEraseEffectTimer -= frameStep;
                 eraseFramesLeft = mEraseEffectTimer;
-                if (eraseFramesLeft == 0x3c) {
+                if (eraseFramesLeft == 60) {
                     Message::DisplaySaveStatusText(0x29d);
                 } else if (eraseFramesLeft == 0) {
                     gSubScreenLayers &= ~3;
                     gSubScreenLayers |= 4;
-                    mFadeTimer = 0x3c;
+                    mFadeTimer = 60;
                     mState = STATE_POST_ERASE_WAIT;
                 }
             }
@@ -356,7 +359,7 @@ s32 dScBoot_c::Behavior() {
         case STATE_CANCEL_ERASE:
             gSubScreenLayers &= ~3;
             gSubScreenLayers |= 4;
-            mFadeTimer = 0x3c;
+            mFadeTimer = 60;
             mState = STATE_BOOT_WAIT;
             break;
         }
@@ -371,11 +374,11 @@ s32 dScBoot_c::Behavior() {
 void dScBoot_c::UpdateButtonPalettes() {
     int button;
     for (button = 0; button < 2; button++) {
-        u16(*rows)[0x20];
+        u16(*rows)[32];
         int column;
         u16 paletteBits = (button == mSelectedButton && mButtonFlashTimer == 0) ? 0x2000 : 0x1000;
-        rows = (u16(*)[0x20])((u16 *)G2S_GetBG1ScrPtr() + 19 * 0x20 + button * 0x10);
-        for (column = 0; column < 0x10; column++) {
+        rows = (u16(*)[32])((u16 *)G2S_GetBG1ScrPtr() + 19 * 0x20 + button * 0x10);
+        for (column = 0; column < 16; column++) {
             rows[0][column] = paletteBits + (rows[0][column] & 0x3ff);
             rows[1][column] = paletteBits + (rows[1][column] & 0x3ff);
             rows[2][column] = paletteBits + (rows[2][column] & 0x3ff);
@@ -389,7 +392,7 @@ void dScBoot_c::UpdateButtonPalettes() {
  * setup, returns 1. Defined last because this file emits .text in reverse
  * source order, so the lead body lands at the run's left edge. The camera
  * calls are spelled as the members they are (dCamera_c.h). */
-extern "C" int func_02005324(void *p) {
+int func_02005324(void *p) {
     ((dCamera_c *)p)->SaveCameraStateBeforeTalk();
     ((dCamera_c *)p)->SetMode(0x19);
     return 1;

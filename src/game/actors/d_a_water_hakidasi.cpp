@@ -73,8 +73,8 @@ extern HakPmfTable data_ov064_0211c934;
 
 extern "C" {
 extern int SublevelToLevel(int);
-extern int IsStarCollected(int r0, int r1);
 }
+extern int IsStarCollected(int r0, int r1);
 
 extern SharedFilePtr data_ov002_0210da10;
 extern SharedFilePtr data_ov002_0210d9a8;
@@ -142,16 +142,16 @@ int daWater_Hakidasi_c::State0() {
         mParticle =
             Particle::System::New(mParticle, kPtclWaterSpoutRings, mPosX, mPosY, mPosZ, 0, 0);
         if (mRingsPassed < 5) {
-            if (*(u16 *)&mStateTimer == 0) {
+            if (mStateTimer == 0) {
                 Vector3_16 rot = mAngle;
                 rot.x += 0x4000;
                 /* Registry slot 0xf4 constructs daWater_Ring_c. */
                 ring = static_cast<daWater_Ring_c *>(
-                    dActor_c::Spawn(0xf4, 2, mPos, (Vector3_16 *)&rot, mAreaId, -1));
+                    dActor_c::Spawn(0xf4, 2, mPos, &rot, mAreaId, -1));
                 if (ring != 0) {
                     mSpawnedIDs[mSpawnedHead] = ring->uniqueID;
                     mSpawnedHead++;
-                    if (mSpawnedHead >= 0x14) {
+                    if (mSpawnedHead >= SPAWNED_RING_NUM) {
                         mSpawnedHead = 0;
                     }
                     ring->mSpawner = this;
@@ -159,13 +159,13 @@ int daWater_Hakidasi_c::State0() {
                     ring->mVertSpeed = 0x5000;
                     ring->mSpeedZ = 0;
                 }
-                mStateTimer = 0x50;
+                mStateTimer = 80;
             }
             hit = mPassedRing;
             if (hit != 0) {
                 if (mRingsPassed == 0) {
                     uid = hit->uniqueID;
-                    for (i = 0; i < 0x14; i++) {
+                    for (i = 0; i < SPAWNED_RING_NUM; i++) {
                         u32 slot = mSpawnedIDs[i];
                         if (slot == uid) {
                             mMatchedSlot = i;
@@ -183,7 +183,7 @@ int daWater_Hakidasi_c::State0() {
                     }
                 } else {
                     mMatchedSlot++;
-                    if (mMatchedSlot >= 0x14) {
+                    if (mMatchedSlot >= SPAWNED_RING_NUM) {
                         mMatchedSlot = 0;
                     }
                     {
@@ -222,7 +222,7 @@ int daWater_Hakidasi_c::State0() {
         rewardPos.z = mPosZ;
         rewardPos.y = rewardPos.y - 0x64000;
         mRewardTimer++;
-        if (mRewardTimer > 0x1e) {
+        if (mRewardTimer > 30) {
             dActor_c::Spawn(0xb2, mStarID | 0x40, *(Vector3 *)&rewardPos, &mAngle, mAreaId, -1);
             mRingsPassed = 0xa;
         }
@@ -238,7 +238,7 @@ int daWater_Hakidasi_c::InitState0() {
     mPassedRing = 0;
     mSpawnedHead = i;
     mMatchedSlot = i;
-    for (int v = i; i < 20; i++) {
+    for (int v = i; i < SPAWNED_RING_NUM; i++) {
         mSpawnedIDs[i] = v;
     }
     return 1;
@@ -277,7 +277,7 @@ s32 daWater_Hakidasi_c::Render() {
 /* The state pointer at 0x300 is daWater_Hakidasi_c::State (see the header),
  * the same shape and treatment as daPropeller_Heyho_Fire_c::Behavior. */
 s32 daWater_Hakidasi_c::Behavior() {
-    DecIfAbove0_Short((u16 *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     State *h = mState;
     if (h->mMain != 0) {
         (this->*(h->mMain))();
@@ -309,7 +309,7 @@ s32 daWater_Hakidasi_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the WATER_HAKIDASI registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: JetStream_Spawn. */
-extern "C" daWater_Hakidasi_c *daWater_Hakidasi_c_classInit() {
+daWater_Hakidasi_c *daWater_Hakidasi_c_classInit() {
     return new daWater_Hakidasi_c();
 }
 

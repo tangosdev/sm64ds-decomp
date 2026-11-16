@@ -57,8 +57,8 @@ extern C1HikariModelFilePtr gC1HikariModelFile;
 extern "C" {
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int AngleDiff(int a, int b);
-extern unsigned char NumStars(void);
 }
+extern unsigned char NumStars(void);
 
 namespace Sound {
 int PlaySmallSecretSound(dActor_c *actor, u16 *counter);
@@ -73,13 +73,13 @@ int PlaySmallSecretSound(dActor_c *actor, u16 *counter);
  * fBase_c::operator new(unsigned long) keeps the allocation on
  * _ZN7fBase_cnwEm; without it the call relocates to the unavailable global
  * `_Znwm`. */
-extern "C" daObjC1Hikari_c *daObjC1Hikari_c_classInit() {
+daObjC1Hikari_c *daObjC1Hikari_c_classInit() {
     return new daObjC1Hikari_c();
 }
 
 int daObjC1Hikari_c::InitResources() {
     dExtSimpleModel_c::LoadFile(gC1HikariModelFile);
-    if (NumStars() < 0xe)
+    if (NumStars() < 14)
         return 0;
     if (data_0209caa0.file.flags1 & 0x80000000)
         return 0;
@@ -90,10 +90,10 @@ int daObjC1Hikari_c::InitResources() {
 }
 
 int daObjC1Hikari_c::Behavior() {
-    VecFx32 vIn, vMid;
+    int vIn[3], vMid[3];
     Vector3 vRes;
     Vector3 hv;
-    VecFx32 vIn2, vMid2;
+    int vIn2[3], vMid2[3];
     Vector3 vRes2;
 
     if (mTalkPlayer != 0) {
@@ -102,15 +102,15 @@ int daObjC1Hikari_c::Behavior() {
             return 1;
         p = mTalkPlayer;
 
-        vIn.x = -0x3b0000;
-        vIn.y = 0x200000;
-        vIn.z = 0x120000;
-        vMid.x = 0;
-        vMid.y = 0;
-        vMid.z = 0;
+        vIn[0] = -0x3b0000;
+        vIn[1] = 0x200000;
+        vIn[2] = 0x120000;
+        vMid[0] = 0;
+        vMid[1] = 0;
+        vMid[2] = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        MTX_MultVec43((Vector3 *)&vIn, &data_020a0e68, (Vector3 *)&vMid);
-        Vec3_Add(&vRes, &mPos, (const Vector3 *)&vMid);
+        MTX_MultVec43((Vector3 *)vIn, &data_020a0e68, (Vector3 *)vMid);
+        Vec3_Add(&vRes, &mPos, (const Vector3 *)vMid);
 
         switch (p->GetTalkState()) {
         case 0:
@@ -130,7 +130,7 @@ int daObjC1Hikari_c::Behavior() {
         if (mCylinder.hitFlags & 0x8000000) {
             dActor_c *o = dActor_c::FindWithID(mCylinder.otherOwner);
             if (o) {
-                int b = (int)(o->actorID == 0xbf);
+                int b = (o->actorID == 0xbf);
                 if (b) {
                     Vector3 *op = &o->mPos;
                     hv = *op;
@@ -148,15 +148,15 @@ int daObjC1Hikari_c::Behavior() {
         }
     }
 
-    vIn2.x = -0x3b0000;
-    vIn2.y = 0;
-    vIn2.z = 0x320000;
-    vMid2.x = 0;
-    vMid2.y = 0;
-    vMid2.z = 0;
+    vIn2[0] = -0x3b0000;
+    vIn2[1] = 0;
+    vIn2[2] = 0x320000;
+    vMid2[0] = 0;
+    vMid2[1] = 0;
+    vMid2[2] = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MTX_MultVec43((Vector3 *)&vIn2, &data_020a0e68, (Vector3 *)&vMid2);
-    Vec3_Add(&vRes2, &mPos, (const Vector3 *)&vMid2);
+    MTX_MultVec43((Vector3 *)vIn2, &data_020a0e68, (Vector3 *)vMid2);
+    Vec3_Add(&vRes2, &mPos, (const Vector3 *)vMid2);
     mCylinder.pos.x = vRes2.x;
     mCylinder.pos.y = vRes2.y;
     mCylinder.pos.z = vRes2.z;

@@ -28,7 +28,7 @@
   ],
   "functions": [
     {
-      "symbol": "GetLevelPart",
+      "symbol": "_Z12GetLevelParti",
       "address": "0x02013548",
       "size": "0x10",
       "legacy_source": "src/GetLevelPart.c",

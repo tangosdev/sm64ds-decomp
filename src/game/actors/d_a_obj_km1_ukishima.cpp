@@ -65,7 +65,7 @@ extern CLPS_Block data_ov043_02111c00;              /* the CLPS block SetFile is
    Every instruction the cartridge has here falls out of the one `new`.
    0x320 is the whole object: dBgActor_c's own size, this class's one byte
    living in its tail padding at 0x31e. */
-extern "C" daObjKm1_Ukishima_c *daObjKm1_Ukishima_c_classInit() {
+daObjKm1_Ukishima_c *daObjKm1_Ukishima_c_classInit() {
     return new daObjKm1_Ukishima_c();
 }
 
@@ -85,7 +85,7 @@ s32 daObjKm1_Ukishima_c::InitResources() {
 
     mPrevAngleY = mAngleY;
     mHorzSpeed = 0xa000;
-    mTurnTimer = 0x3c;
+    mTurnTimer = 60;
     return 1;
 }
 
@@ -93,7 +93,7 @@ s32 daObjKm1_Ukishima_c::InitResources() {
 /* -------------------------------------------------------------------------- */
 s32 daObjKm1_Ukishima_c::Behavior() {
     if (!DecIfAbove0_Byte(&mTurnTimer)) {
-        mTurnTimer = 0x3c;
+        mTurnTimer = 60;
         /* A quarter turn, applied to the heading UpdatePos integrates along.
            MEASURED: it has to be the compound assign. Spelled out as
            `mPrevAngleY = mPrevAngleY + 0x4000` mwcc reloads the field address

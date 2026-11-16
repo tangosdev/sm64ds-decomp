@@ -79,7 +79,7 @@ ResourceDescriptor data_ov047_02112334 = {
 s16 gKm3KaitendaiRotationIncrement = 312;
 s16 gKm3KaitendaiAlternateRotationIncrement = 624;
 
-extern "C" daObjKm3_Kaitendai_c *daObjKm3_Kaitendai_c_classInit() {
+daObjKm3_Kaitendai_c *daObjKm3_Kaitendai_c_classInit() {
     return new daObjKm3_Kaitendai_c();
 }
 

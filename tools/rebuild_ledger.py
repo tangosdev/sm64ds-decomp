@@ -2,7 +2,7 @@
 
 A fresh worktree/clone starts with an empty or near-empty progress/matched.jsonl
 (it is gitignored, so `git checkout` does not populate it). The worklist builders
-(worklist.py -> harvest_wl.py, refine_wl.py's unmatched() check, etc.) then treat
+(worklist.py, refine_wl.py's unmatched() check, etc.) then treat
 thousands of ALREADY-matched functions as unmatched and schedule them for a fan-out,
 burning tokens re-deriving committed work.
 

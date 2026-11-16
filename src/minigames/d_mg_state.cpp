@@ -116,15 +116,9 @@
 #include "Sound.h"
 #include "math/Approach.h"
 
-/* local extern: including Sound.h renumbers SetState's local static. */
-namespace Sound {
-u32 PlayBank2_2D(u32);
-}
-
 extern "C" {
 extern void FreeGfxSlotsById(int arg);
 extern int GetGameLanguage(void);
-extern void func_02012dd0(void *c);
 extern void Mg_CommitRecords(void);
 extern int Mg_GetSubmittedScore(void);
 extern int Mg_IsNewRecord(void);
@@ -139,13 +133,11 @@ extern void Mg_DrawBlinkSprite(void *, int, int);
 extern void Mg_DrawRecordTable(void *);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Mg_CallStartRound(void *c, void *arg);
-extern void Mg_SetNextBanner(int);
 }
+extern void func_02012dd0(void *c);
+extern void Mg_SetNextBanner(int);
 
-struct W2 {
-    int w[2];
-};
-extern W2 data_02086b58; /* __ptmf_null's address: the null member pointer */
+extern void (dMgState_c::*data_02086b58)(); /* __ptmf_null's address: the null member pointer */
 extern dFdBrightness_c *gSceneFader;
 extern dWipe_c data_0209f61c;
 extern int sMgTopScreenYOffset;
@@ -238,7 +230,7 @@ extern dMgState_c::Callback pmf_dMgState_c_ResultsNewRecord_Enter;
 extern dMgState_c::Callback pmf_dMgState_c_GameOver_Enter;
 extern dMgState_c::Callback pmf_dMgState_c_Finished_Enter;
 
-extern "C" void Mg_ResetBannerLayout(void) {
+void Mg_ResetBannerLayout(void) {
     sMgClearBannerX = 0x80;
     sMgRecordBannerX = 0x80;
     sMgClearBannerY = 0x60;
@@ -321,7 +313,7 @@ void dMgState_c::Render() {
 
 void dMgState_c::RoundClear_Enter() {
     int prevId, id;
-    mTimer = 0xb4;
+    mTimer = 180;
     prevId = sMgNextBanner;
     id = 3;
     if (prevId != 0x1d) {
@@ -387,7 +379,7 @@ void dMgState_c::NextRound_Update() {
 }
 
 void dMgState_c::RoundBanner5_Enter() {
-    mTimer = 0xb4;
+    mTimer = 180;
     Mg_ShowBanner(5, sMgRecordBannerX, sMgRecordBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)1);
     mBehavior = pmf_dMgState_c_RoundBanner5_Update;
@@ -419,7 +411,7 @@ void dMgState_c::RoundBanner5_Update() {
 
 void dMgState_c::RetryPrompt_Enter() {
     int prevId, id;
-    mTimer = 0x3c;
+    mTimer = 60;
     prevId = sMgNextBanner;
     id = 8;
     if (prevId != 0x1d) {
@@ -474,7 +466,7 @@ void dMgState_c::UpdateRetryFadeOut() {
 
 void dMgState_c::Win_Enter() {
     int prevId, id;
-    mTimer = 0x78;
+    mTimer = 120;
     prevId = sMgNextBanner;
     id = 9;
     if (prevId != 0x1d) {
@@ -487,7 +479,7 @@ void dMgState_c::Win_Enter() {
 }
 
 void dMgState_c::Win_Update() {
-    if (mTimer > 0x64)
+    if (mTimer > 100)
         return;
     if (mTimer != 0)
         return;
@@ -507,7 +499,7 @@ void dMgState_c::Win_Update() {
 }
 
 void dMgState_c::Lose_Enter() {
-    mTimer = 0x78;
+    mTimer = 120;
     Mg_ShowBanner(0xa, sMgLoseBannerX, sMgLoseBannerY, -1, -1, 0xd);
     Sound::PlayBank2_2D(0x137);
     mBehavior = pmf_dMgState_c_Lose_Update;
@@ -531,7 +523,7 @@ void dMgState_c::Lose_Update() {
         sMgCoinsDeltaShown = 0;
         Mg_RestoreMusic();
         FreeGfxSlotsById(0x1d);
-        mTimer = 0xb4;
+        mTimer = 180;
         mBehavior = pmf_dMgState_c_UpdateGameOverToMenu;
     } else {
         if (state != 0)
@@ -572,7 +564,7 @@ void dMgState_c::UpdateGameOverToMenu() {
 }
 
 void dMgState_c::LoseResume_Enter() {
-    mTimer = 0x78;
+    mTimer = 120;
     Mg_ShowBanner(0xa, sMgLoseBannerX, sMgLoseBannerY, -1, -1, 0xd);
     Sound::PlayBank2_2D(0x137);
     mBehavior = pmf_dMgState_c_LoseResume_Update;
@@ -601,7 +593,7 @@ void dMgState_c::UpdateAfterHidden() {
         if (!g->CanEndState(mState))
             return;
         Mg_RestoreMusic();
-        mTimer = 0xb4;
+        mTimer = 180;
         mBehavior = pmf_dMgState_c_UpdateGameOverToMenu_2;
         return;
     }
@@ -620,7 +612,7 @@ void dMgState_c::UpdateAfterHidden() {
 }
 
 void dMgState_c::Draw_Enter() {
-    mTimer = 0x78;
+    mTimer = 120;
     Mg_ShowBanner(0xb, sMgDrawBannerX, sMgDrawBannerY, -1, -1, 0xd);
     mBehavior = pmf_dMgState_c_UpdateWaitThenResume;
 }
@@ -649,7 +641,7 @@ void dMgState_c::UpdateWaitThenResume() {
 
 void dMgState_c::RoundClearTop_Enter() {
     int id;
-    mTimer = 0xb4;
+    mTimer = 180;
     Mg_PlayJingle((void *)4);
     id = 3;
     if (sMgNextBanner != 0x1d) {
@@ -679,7 +671,7 @@ void dMgState_c::RoundClearTop_Update() {
 }
 
 void dMgState_c::RetryPromptB_Enter() {
-    mTimer = 0xb4;
+    mTimer = 180;
     Mg_PlayJingle((void *)3);
     Mg_ShowBanner(8, sMgRetryBannerX, sMgRetryBannerY, -1, -1, 0xb);
     mBehavior = pmf_dMgState_c_RetryPromptB_Update;
@@ -710,7 +702,7 @@ void dMgState_c ::RetryPromptB_Update() {
 }
 
 void dMgState_c::ScoreThenRound_Enter() {
-    mTimer = 0xb4;
+    mTimer = 180;
     Mg_PlayJingle((void *)1);
     mBehavior = pmf_dMgState_c_ScoreThenRound_Update;
     mRender = pmf_dMgState_c_DrawScore;
@@ -774,7 +766,7 @@ void dMgState_c::UpdateRetryPrompt() {
 }
 
 void dMgState_c::DigitsThenRound_Enter() {
-    mTimer = 0xb4;
+    mTimer = 180;
     Mg_ShowBanner(5, sMgRecordBannerX, sMgRecordBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)1);
     mBehavior = pmf_dMgState_c_UpdateFadeThenResume;
@@ -806,7 +798,7 @@ void dMgState_c::UpdateFadeThenResume() {
 }
 
 void dMgState_c::BannerEThenRound_Enter() {
-    mTimer = 0x3c;
+    mTimer = 60;
     Mg_ShowBanner(0xe, sMgMainBannerX, sMgMainBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)3);
     mBehavior = pmf_dMgState_c_UpdateFadeThenResume_2;
@@ -818,7 +810,7 @@ void dMgState_c::Results_Enter() {
         return;
     }
     Mg_ShowBanner(7, 0x80, 0x14, -1, -1, 0xd);
-    mTimer = 0x78;
+    mTimer = 120;
     mBehavior = pmf_dMgState_c_Results_Update;
     mRender = pmf_dMgState_c_DrawRecordTable;
     Mg_CommitRecords();
@@ -841,13 +833,13 @@ void dMgState_c::Results_Update() {
         return;
     func_02012790(0x62);
     FreeGfxSlotsById(7);
-    *(W2 *)&mRender = data_02086b58;
+    mRender = data_02086b58;
     RetryPromptWide_Enter();
 }
 
 void dMgState_c::ResultsNewRecord_Enter() {
     Mg_ShowBanner(7, 0x80, 0x14, -1, -1, 0xd);
-    mTimer = 0x12c;
+    mTimer = 300;
     mBehavior = pmf_dMgState_c_ResultsNewRecord_Update;
     mRender = pmf_dMgState_c_DrawRecordTable_2;
     Mg_CommitRecords();
@@ -871,12 +863,12 @@ void dMgState_c::ResultsNewRecord_Update() {
         if (flag != 0) {
             FreeGfxSlotsById(7);
             func_02012790(0x62);
-            *(W2 *)&mRender = data_02086b58;
+            mRender = data_02086b58;
             RetryPromptWide_Enter();
         }
     }
 
-    if (mTimer != 0xb4)
+    if (mTimer != 180)
         return;
 
     scene = gMgScene;
@@ -900,7 +892,7 @@ void dMgState_c::ResultsNewRecord_Update() {
 }
 
 void dMgState_c::GameOver_Enter() {
-    mTimer = 0xb4;
+    mTimer = 180;
     Mg_ShowBanner(8, sMgMainBannerX, sMgMainBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)3);
     mBehavior = pmf_dMgState_c_GameOver_Update;
@@ -922,7 +914,7 @@ void dMgState_c::GameOver_Update() {
     }
     if (g->CanEndState(mState) == 0)
         return;
-    *(W2 *)&mRender = data_02086b58;
+    mRender = data_02086b58;
     FreeGfxSlotsById(0x1d);
     if (Mg_IsNewRecord() != 0) {
         ResultsNewRecord_Enter();
@@ -933,7 +925,7 @@ void dMgState_c::GameOver_Update() {
 
 void dMgState_c::Finished_Enter() {
     int prevId, id;
-    mTimer = 0xb4;
+    mTimer = 180;
     prevId = sMgNextBanner;
     id = 3;
     if (prevId != 0x1d) {
@@ -961,7 +953,7 @@ void dMgState_c::Finished_Update() {
     }
     if (g->CanEndState(mState) == 0)
         return;
-    *(W2 *)&mRender = data_02086b58;
+    mRender = data_02086b58;
     FreeGfxSlotsById(0x1d);
     if (Mg_IsNewRecord() != 0) {
         ResultsNewRecord_Enter();
@@ -1013,7 +1005,7 @@ void dMgState_c::DrawRecordTable() {
     Mg_DrawBlinkSprite(g, 0xe0, 0xa0);
 }
 
-extern "C" void Mg_PlaceBannersOnTopScreen(void) {
+void Mg_PlaceBannersOnTopScreen(void) {
     int v1 = -0x1c - Mg_GetTopScreenYOffset();
     sMgWinBannerX = 0x80;
     sMgWinBannerY = v1;
@@ -1033,15 +1025,15 @@ extern "C" void Mg_PlaceBannersOnTopScreen(void) {
     }
 }
 
-extern "C" void Mg_ResetRecordBannerPos(void) {
+void Mg_ResetRecordBannerPos(void) {
     sMgResultsBannerX = 0x80;
     sMgResultsBannerY = -0x1c;
 }
 
-extern "C" void Mg_SetPerfectBanner(void) {
+void Mg_SetPerfectBanner(void) {
     Mg_SetNextBanner(6);
 }
 
-extern "C" void Mg_SetNextBanner(int v) {
+void Mg_SetNextBanner(int v) {
     sMgNextBanner = v;
 }

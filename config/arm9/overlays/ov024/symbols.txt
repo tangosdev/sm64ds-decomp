@@ -12,8 +12,8 @@ _ZN16daObjDlPyramid_c8BehaviorEv kind:function(arm,size=0x100) addr:0x02111568
 _ZN21daObjDlPyramidDummy_c8BehaviorEv kind:function(arm,size=0x84) addr:0x02111668
 _ZN16daObjDlPyramid_c13InitResourcesEv kind:function(arm,size=0xdc) addr:0x021116ec
 _ZN21daObjDlPyramidDummy_c13InitResourcesEv kind:function(arm,size=0x74) addr:0x021117c8
-daObjDlPyramidDummy_c_classInit kind:function(arm,size=0x38) addr:0x0211183c
-daObjDlPyramid_c_classInit kind:function(arm,size=0x38) addr:0x02111874
+_Z31daObjDlPyramidDummy_c_classInitv kind:function(arm,size=0x38) addr:0x0211183c
+_Z26daObjDlPyramid_c_classInitv kind:function(arm,size=0x38) addr:0x02111874
 data_ov024_021118ac kind:data(any) addr:0x021118ac
 data_ov024_021118b0 kind:data(any) addr:0x021118b0
 data_ov024_021118b4 kind:data(any) addr:0x021118b4

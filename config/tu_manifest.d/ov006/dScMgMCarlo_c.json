@@ -204,7 +204,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "dScMgMCarlo_c_classInit",
+      "symbol": "_Z23dScMgMCarlo_c_classInitv",
       "address": "0x020f8e44",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_020f8e44.cpp",

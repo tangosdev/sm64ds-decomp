@@ -32,9 +32,7 @@
 #include "nitro/gx/gx.h"
 #include "nitro/mi/memory.h"
 
-extern "C" {
 void Wipe_HBlankHandler(void);
-}
 
 extern u8           data_0209f5f8;   /* which display engine the wipe covers */
 extern volatile u8  data_0209f5fc;   /* the next HBlank has a fresh line */
@@ -79,7 +77,7 @@ void dWipe_c::DisableWindows() {
     GX_HBlankIntr(0);
     OS_SetIrqFunction(OS_IE_H_BLANK, 0);
     if (enabled)
-        (void)OS_EnableIrq();
+        OS_EnableIrq();
     GX_SetVisibleWnd(GX_WNDMASK_NONE);
     GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     if (typePending == 1) {
@@ -101,7 +99,7 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
             wipeSpeed = 0x200000;
             wipeAccel = 0;
         } else {
-            t = (type == 0) ? 0x2d : 0x3c;
+            t = (type == 0) ? 45 : 60;
             wipeSpeed = 0x200000 / t;
             wipeAccel = (wipeSpeed << 1) / t;
             wipeSpeed = 0;
@@ -133,7 +131,7 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
             OS_EnableIrqMask(OS_IE_H_BLANK);
             GX_HBlankIntr(1);
             if (enabled)
-                (void)OS_EnableIrq();
+                OS_EnableIrq();
         }
 
         needsCleanup = 1;
@@ -163,7 +161,7 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
             wipeSpeed = -0x200000;
             wipeAccel = 0;
         } else {
-            t = (type == 0) ? 0x2d : 0x3c;
+            t = (type == 0) ? 45 : 60;
             wipeSpeed = -0x200000 / t;
             wipeAccel = (-wipeSpeed << 1) / t;
             wipeSpeed = wipeSpeed << 1;
@@ -193,7 +191,7 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
         OS_EnableIrqMask(OS_IE_H_BLANK);
         GX_HBlankIntr(1);
         if (enabled)
-            (void)OS_EnableIrq();
+            OS_EnableIrq();
 
         needsCleanup = 1;
         return 0;
@@ -301,7 +299,7 @@ void dWipe_c::AdvanceFade()
 
 /* Latch the staged table into the IRQ-visible index and seed both engines'
    line-0 windows from it. */
-extern "C" void Wipe_LatchTable(void) {
+void Wipe_LatchTable(void) {
     data_0209f608 = data_0209f60c;
     MI_CpuCopy32(data_0209f648 + data_0209f608 * 0x300u, (int *)0x4000040, 4);
     MI_CpuCopy32(data_0209f648 + data_0209f608 * 0x300u, (int *)0x4001040, 4);
@@ -312,14 +310,14 @@ extern "C" void Wipe_LatchTable(void) {
    last visible line it latches the next table, once per frame; on a visible
    line it copies that scanline's 4-byte entry into both engines' WIN0H and
    WIN1H. */
-extern "C" void Wipe_HBlankHandler(void) {
+void Wipe_HBlankHandler(void) {
     int line;
 
     OS_SetIrqCheckFlag(OS_IE_H_BLANK);
 
     line = REG_VCOUNT + 1;
 
-    if (line >= 0xc0) {
+    if (line >= 192) {
         if (data_0209f5fc != 1)
             Wipe_LatchTable();
         return;
@@ -376,52 +374,57 @@ void dWipe_c::BuildStarTable() {
         d64 = dur;
         step = (int)(0x100000000LL / d64);
         while (pos < 0) {
-            if (i >= 0xC0) break;
+            if (i >= 192)
+                break;
             pos += step;
             i++;
         }
 
         v = (int)(d64 * ((s64)pos * 0x532DLL) / 0x10000000000LL);
         while (pos < 0xB0E00) {
-            if (i >= 0xC0) break;
+            if (i >= 192)
+                break;
             v += 0x53;
             a = (0x8000 - v) / 256;
             if (a < 0) a = 0;
             if (a > 0x7F) a = 0x7F;
             buf[i].win1Left = a;
-            buf[i].win0Right = 0x100 - buf[i].win1Left;
+            buf[i].win0Right = 256 - buf[i].win1Left;
             pos += step;
             i++;
         }
 
         v = (int)((s64)wipeInterp * 0x0F37292CLL / 0x100000000LL);
         while (pos < 0x11E200) {
-            if (i >= 0xC0) break;
+            if (i >= 192)
+                break;
             v -= 0x160;
             a = (0x8000 - v) / 256;
             if (a < 0) a = 0;
             if (a > 0x7F) a = 0x7F;
             buf[i].win1Left = a;
-            buf[i].win0Right = 0x100 - buf[i].win1Left;
+            buf[i].win0Right = 256 - buf[i].win1Left;
             pos += step;
             i++;
         }
 
         while (pos < 0x161D00) {
-            if (i >= 0xC0) break;
+            if (i >= 192)
+                break;
             v += 0x53;
             a = (0x8000 - v) / 256;
             if (a < 0) a = 0;
             if (a > 0x7F) a = 0x7F;
             buf[i].win1Left = a;
-            buf[i].win0Right = 0x100 - buf[i].win1Left;
+            buf[i].win0Right = 256 - buf[i].win1Left;
             pos += step;
             i++;
         }
 
         w = 0;
         while (pos < 0x1CF200) {
-            if (i >= 0xC0) break;
+            if (i >= 192)
+                break;
             v += 0x53;
             w += 0x160;
             a = (0x8000 - v) / 256;
@@ -432,8 +435,8 @@ void dWipe_c::BuildStarTable() {
             if (b > 0x7F) b = 0x7F;
             buf[i].win1Left = a;
             buf[i].win1Right = b;
-            buf[i].win0Left = 0x100 - buf[i].win1Right;
-            buf[i].win0Right = 0x100 - buf[i].win1Left;
+            buf[i].win0Left = 256 - buf[i].win1Right;
+            buf[i].win0Right = 256 - buf[i].win1Left;
             pos += step;
             i++;
         }
@@ -465,11 +468,11 @@ void dWipe_c::BuildCircleTable() {
     MI_CpuFill32(buf, fill, 0x300);
 
     radius = wipeInterp >> 0xc;
-    start = 0x60 - radius;
+    start = 96 - radius;
     diameter = radius << 1;
-    for (i = 0; i < 0x60; i++) {
+    for (i = 0; i < 96; i++) {
         if (start <= i) {
-            int a = i - 0x60 + radius;
+            int a = i - 96 + radius;
             int s = cstd::sqrt((a * (diameter - a)));
             int lo = 0x80 - s;
             int hi = s + 0x80;
@@ -483,9 +486,9 @@ void dWipe_c::BuildCircleTable() {
     }
 
     src = 0x5f;
-    for (j = 0; j < 0x60; j++) {
-        buf[j + 0x60].win0Right = buf[src].win0Right;
-        buf[j + 0x60].win1Left = buf[src].win1Left;
+    for (j = 0; j < 96; j++) {
+        buf[j + 96].win0Right = buf[src].win0Right;
+        buf[j + 96].win1Left = buf[src].win1Left;
         src--;
     }
 
@@ -536,7 +539,7 @@ dWipe_c data_0209f61c;
 
 /* Scene-side wipe reset: disarm live windows, then return the singleton to
    its idle state. */
-extern "C" void Wipe_Reset(void) {
+void Wipe_Reset(void) {
     if (data_0209f61c.needsCleanup == 1)
         data_0209f61c.DisableWindows();
     data_0209f61c.Reset();

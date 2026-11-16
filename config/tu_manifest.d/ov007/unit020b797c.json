@@ -20,7 +20,7 @@
   ],
   "functions": [
     {
-      "symbol": "MenuText_ClearMainPlane",
+      "symbol": "_Z23MenuText_ClearMainPlanev",
       "address": "0x020b797c",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b797c.c",
@@ -41,14 +41,14 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov007_020b7a00",
+      "symbol": "_Z19func_ov007_020b7a00v",
       "address": "0x020b7a00",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b7a00.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov007_020b7a34",
+      "symbol": "_Z19func_ov007_020b7a34v",
       "address": "0x020b7a34",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b7a34.cpp",
@@ -62,7 +62,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "MessageWindow_Update",
+      "symbol": "_Z20MessageWindow_Updatev",
       "address": "0x020b7a78",
       "size": "0x0000031c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b7a78.c",
@@ -118,91 +118,91 @@
       "ordinal": 13
     },
     {
-      "symbol": "MenuText_LoadFontPalette",
+      "symbol": "_Z24MenuText_LoadFontPalettev",
       "address": "0x020b850c",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b850c.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "MenuText_Init",
+      "symbol": "_Z13MenuText_InitPvS_iS_S_iS_",
       "address": "0x020b8548",
       "size": "0x00000148",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8548.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov007_020b8690",
+      "symbol": "_Z19func_ov007_020b8690v",
       "address": "0x020b8690",
       "size": "0x00000084",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8690.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov007_020b8714",
+      "symbol": "_Z19func_ov007_020b8714iii",
       "address": "0x020b8714",
       "size": "0x00000128",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8714.c",
       "ordinal": 17
     },
     {
-      "symbol": "MessageWindow_SetClosed",
+      "symbol": "_Z23MessageWindow_SetClosedv",
       "address": "0x020b883c",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b883c.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "MessageWindow_Start",
+      "symbol": "_Z19MessageWindow_Startii",
       "address": "0x020b8860",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8860.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "MessageWindow_LayoutFrame",
+      "symbol": "_Z25MessageWindow_LayoutFramev",
       "address": "0x020b88c0",
       "size": "0x000001b8",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b88c0.c",
       "ordinal": 20
     },
     {
-      "symbol": "MenuText_DrawSlotHeading",
+      "symbol": "_Z24MenuText_DrawSlotHeadingii",
       "address": "0x020b8a78",
       "size": "0x00000088",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8a78.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "MenuText_DrawNumber",
+      "symbol": "_Z19MenuText_DrawNumberii",
       "address": "0x020b8b00",
       "size": "0x00000080",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8b00.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "MenuText_DrawString",
+      "symbol": "_Z19MenuText_DrawStringiPhi",
       "address": "0x020b8b80",
       "size": "0x0000017c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8b80.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "MenuText_RepeatGlyph",
+      "symbol": "_Z20MenuText_RepeatGlyphiii",
       "address": "0x020b8cfc",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8cfc.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "MenuText_DrawGlyph",
+      "symbol": "_Z18MenuText_DrawGlyphii",
       "address": "0x020b8d48",
       "size": "0x00000178",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8d48.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "MenuText_MessageIDToIndex",
+      "symbol": "_Z25MenuText_MessageIDToIndexi",
       "address": "0x020b8ec0",
       "size": "0x00000090",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8ec0.cpp",

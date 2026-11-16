@@ -48,7 +48,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjFlamethrower_c_classInit",
+      "symbol": "_Z29daObjFlamethrower_c_classInitv",
       "address": "0x02136ed4",
       "size": "0x00000084",
       "legacy_source": "src/d_a_obj_flamethrower.cpp",

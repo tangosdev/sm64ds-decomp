@@ -13,7 +13,7 @@ struct Vec3Words {
 
 /* Re-unprojects every committed stroke point through the camera, resets the
    live points to it, and puts pos back at its rest position. */
-extern "C" void func_ov007_020c5dec(Ov007Picker *c) {
+void func_ov007_020c5dec(Ov007Picker *c) {
     int i;
     for (i = 0; i < c->groupCount; i++) {
         int j;

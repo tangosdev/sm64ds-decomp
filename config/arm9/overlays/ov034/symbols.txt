@@ -32,7 +32,7 @@ _ZN12daHanachan_c16CleanupResourcesEv kind:function(arm,size=0x98) addr:0x02112a
 _ZN12daHanachan_c6RenderEv kind:function(arm,size=0x68) addr:0x02112af4
 _ZN12daHanachan_c8BehaviorEv kind:function(arm,size=0x6e0) addr:0x02112b5c
 _ZN12daHanachan_c13InitResourcesEv kind:function(arm,size=0x468) addr:0x0211323c
-daHanachan_c_classInit kind:function(arm,size=0x17c) addr:0x021136a4
+_Z22daHanachan_c_classInitv kind:function(arm,size=0x17c) addr:0x021136a4
 data_ov034_02113820 kind:data(any) addr:0x02113820
 data_ov034_02113828 kind:data(any) addr:0x02113828
 data_ov034_0211382c kind:data(any) addr:0x0211382c ambiguous

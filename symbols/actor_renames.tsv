@@ -6239,19 +6239,19 @@ ov004	0x020ae104	func_ov004_020ae104	_ZN11dScMgBase_c15graphCallback_cC1Ev	dScMg
 ov004	0x020b2c58	func_ov004_020b2c58	__arraydtor$328	compiler-generated array destructor thunk for the Ent record pool data_ov004_020bebe8; __sinit_d_s_mg_base.cpp registers it through __register_global_object.
 ov004	0x020b2c7c	func_ov004_020b2c7c	_ZN3EntD1Ev	Ent's trivial destructor, emitted for the data_ov004_020bebe8 record pool's __cxa_vec_ctor/__cxa_vec_cleanup calls.
 ov004	0x020b2c80	func_ov004_020b2c80	_ZN3EntC1Ev	Ent's trivial constructor, emitted for the data_ov004_020bebe8 record pool's __cxa_vec_ctor call.
-ov002	0x020ae9f8	func_ov002_020ae9f8	_ZN6Aea30C19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
-ov002	0x020ae954	func_ov002_020ae954	_ZN6Aea30C19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
-ov002	0x020ae890	func_ov002_020ae890	_ZN6Aea30C19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
-ov002	0x020ae87c	func_ov002_020ae87c	_ZN6Aea30C19func_ov002_020ae87cEP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
-ov002	0x020ae844	func_ov002_020ae844	_ZN6Aea30C19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
-ov002	0x020ae80c	func_ov002_020ae80c	_ZN6Aea30C19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
-ov002	0x020ae73c	func_ov002_020ae73c	_ZN6Aea30C19func_ov002_020ae73cEP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
-ov002	0x020aea2c	func_ov002_020aea2c	_ZN6Aea30C19func_ov002_020aea2cEP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index
-ov002	0x020ae64c	func_ov002_020ae64c	_ZN11EnemyDeathC19func_ov002_020ae64cER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState
-ov002	0x020ae608	func_ov002_020ae608	_ZN11EnemyDeathC19func_ov002_020ae608ER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState
-ov002	0x020ae4cc	func_ov002_020ae4cc	_ZN11EnemyDeathC19func_ov002_020ae4ccER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState
-ov002	0x020ae454	func_ov002_020ae454	_ZN11EnemyDeathC19func_ov002_020ae454ER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState
-ov002	0x020aea24	func_ov002_020aea24	_ZN11EnemyDeathC19func_ov002_020aea24ER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState
+ov002	0x020ae9f8	func_ov002_020ae9f8	_ZN12dEnemyBase_c19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index (was _ZN6Aea30C19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr)
+ov002	0x020ae954	func_ov002_020ae954	_ZN12dEnemyBase_c19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index (was _ZN6Aea30C19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr)
+ov002	0x020ae890	func_ov002_020ae890	_ZN12dEnemyBase_c19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index (was _ZN6Aea30C19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr)
+ov002	0x020ae87c	func_ov002_020ae87c	_ZN12dEnemyBase_c19func_ov002_020ae87cEP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index (was _ZN6Aea30C19func_ov002_020ae87cEP8dActor_cP10dBgCh_Actr)
+ov002	0x020ae844	func_ov002_020ae844	_ZN12dEnemyBase_c19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index (was _ZN6Aea30C19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr)
+ov002	0x020ae80c	func_ov002_020ae80c	_ZN12dEnemyBase_c19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index (was _ZN6Aea30C19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr)
+ov002	0x020ae73c	func_ov002_020ae73c	_ZN12dEnemyBase_c19func_ov002_020ae73cEP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index (was _ZN6Aea30C19func_ov002_020ae73cEP8dActor_cP10dBgCh_Actr)
+ov002	0x020aea2c	func_ov002_020aea2c	_ZN12dEnemyBase_c19func_ov002_020aea2cEP8dActor_cP10dBgCh_Actr	pointer-to-member target of data_ov002_0210db80, dispatched on f10c index (was _ZN6Aea30C19func_ov002_020aea2cEP8dActor_cP10dBgCh_Actr)
+ov002	0x020ae64c	func_ov002_020ae64c	_ZN12dEnemyBase_c19func_ov002_020ae64cER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState (was _ZN11EnemyDeathC19func_ov002_020ae64cER10dBgCh_Actr)
+ov002	0x020ae608	func_ov002_020ae608	_ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState (was _ZN11EnemyDeathC19func_ov002_020ae608ER10dBgCh_Actr)
+ov002	0x020ae4cc	func_ov002_020ae4cc	_ZN12dEnemyBase_c19func_ov002_020ae4ccER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState (was _ZN11EnemyDeathC19func_ov002_020ae4ccER10dBgCh_Actr)
+ov002	0x020ae454	func_ov002_020ae454	_ZN12dEnemyBase_c19func_ov002_020ae454ER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState (was _ZN11EnemyDeathC19func_ov002_020ae454ER10dBgCh_Actr)
+ov002	0x020aea24	func_ov002_020aea24	_ZN12dEnemyBase_c19func_ov002_020aea24ER10dBgCh_Actr	pointer-to-member target of data_ov002_0210dbc0, dispatched by UpdateDeath on mDeathState (was _ZN11EnemyDeathC19func_ov002_020aea24ER10dBgCh_Actr)
 ov002	0x020bccfc	func_ov002_020bccfc	_ZN6Player19func_ov002_020bccfcEPhii	Player method; Kuppa-script command, pointer-to-member target in the func_ov002_020bd664 dispatch table
 ov002	0x020bcd18	func_ov002_020bcd18	_ZN6Player19func_ov002_020bcd18EPhii	Player method; Kuppa-script command, pointer-to-member target in the func_ov002_020bd664 dispatch table
 ov002	0x020bcd38	func_ov002_020bcd38	_ZN6Player19func_ov002_020bcd38EPhii	Player method; Kuppa-script command, pointer-to-member target in the func_ov002_020bd664 dispatch table
@@ -7950,6 +7950,63 @@ arm9	0x0204f7fc	func_0204f7fc	NNS_SndPlayerSetTrackPitch	NitroSystem snd_player.
 arm9	0x0204f89c	func_0204f89c	NNS_SndPlayerSetChannelPriority	NitroSystem snd_player.c setter run, reverse source order (Sonic Rush Adventure decomp); body: SND_SetPlayerChannelPriority, SNDPlayer.prio 4 size 1
 arm9	0x0204f8cc	func_0204f8cc	NNS_SndPlayerMoveVolume	NitroSystem snd_player.c setter run, reverse source order (Sonic Rush Adventure decomp); body: fader set to target<<8 unless status is FADEOUT (2)
 arm9	0x0204f914	func_0204f914	NNS_SndPlayerSetInitialVolume	NitroSystem snd_player.c setter run, reverse source order (Sonic Rush Adventure decomp); body: stores initVolume (+0x40)
+arm9	0x0204f03c	func_0204f03c	NNS_SndMain	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f070	func_0204f070	NNS_SndInit	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f214	func_0204f214	SetPlayerPriority	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f278	func_0204f278	PlayerHeapDisposeCallback	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f2d4	func_0204f2d4	ShutdownPlayer	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f364	func_0204f364	AllocSeqPlayer	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f3e0	func_0204f3e0	ForceStopSeq	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f400	func_0204f400	InsertPrioList	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f460	func_0204f460	InsertPlayerList	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f4bc	func_0204f4bc	InitPlayer	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f504	func_0204f504	NNSi_SndPlayerAllocHeap	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f558	func_0204f558	NNSi_SndPlayerPause	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f5a0	func_0204f5a0	NNSi_SndPlayerStopSeq	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f600	func_0204f600	NNSi_SndPlayerStartSeq	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f630	func_0204f630	NNSi_SndPlayerFreeSeqPlayer	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f63c	func_0204f63c	NNSi_SndPlayerAllocSeqPlayer	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f6f8	func_0204f6f8	NNS_SndPlayerSetSeqArcNo	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f720	func_0204f720	NNS_SndPlayerSetSeqNo	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f934	func_0204f934	NNS_SndHandleReleaseSeq	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f94c	func_0204f94c	NNS_SndHandleInit	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f958	func_0204f958	NNS_SndPlayerPauseByPlayerNo	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204f9c4	func_0204f9c4	NNS_SndPlayerStopSeqByPlayerNo	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204fa2c	func_0204fa2c	NNS_SndPlayerStopSeq	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204fa3c	func_0204fa3c	NNS_SndPlayerCreateHeap	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204fafc	func_0204fafc	NNSi_SndPlayerMain	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x0204fc40	func_0204fc40	NNSi_SndPlayerInit	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x020a4d54	data_020a4d54	sFreeList	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x020a4d60	data_020a4d60	sPrioList	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x020a4d6c	data_020a4d6c	sPlayer	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x020a50ec	data_020a50ec	sSeqPlayer	NitroSystem snd_player.c/snd_main.c: body matches pret/pokediamond arm9/asm/NNS_SND_player.s and the Sonic Rush Adventure decomp's snd_player.c/nns_snd_main.c (field offsets, callees)
+arm9	0x02050970	func_02050970	SymbolDisposeCallback	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x0205097c	func_0205097c	FatDisposeCallback	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02050988	func_02050988	InfoDisposeCallback	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02050994	func_02050994	NNS_SndArcSetFileAddress	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x020509b0	func_020509b0	NNS_SndArcGetFileAddress	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x020509d8	func_020509d8	NNS_SndArcReadFile	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02050a5c	func_02050a5c	NNS_SndArcGetFileSize	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02050a84	func_02050a84	NNS_SndArcGetGroupInfo	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02050ae8	func_02050ae8	NNS_SndArcGetPlayerInfo	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02050b4c	func_02050b4c	NNS_SndArcGetWaveArcInfo	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02050c14	func_02050c14	NNS_SndArcGetSeqArcInfo	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02050cdc	func_02050cdc	NNS_SndArcGetSeqArcParam	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02050d2c	func_02050d2c	NNS_SndArcGetCurrent	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02050d3c	func_02050d3c	NNS_SndArcSetCurrent	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02050f34	func_02050f34	NNS_SndArcInit	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02050fb0	func_02050fb0	EraseSync	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02050fd4	func_02050fd4	NewSection	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02051024	func_02051024	InitHeap	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02051064	func_02051064	InitHeapSection	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02051074	func_02051074	NNS_SndHeapGetFreeSize	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x020510a4	func_020510a4	NNS_SndHeapLoadState	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x0205117c	func_0205117c	NNS_SndHeapSaveState	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x020511d4	func_020511d4	NNS_SndHeapAlloc	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x02051244	func_02051244	NNS_SndHeapClear	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x020512f0	func_020512f0	NNS_SndHeapDestroy	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x0205130c	func_0205130c	NNS_SndHeapCreate	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
+arm9	0x020a5bb8	data_020a5bb8	sCurrent	NitroSystem snd_arc.c/snd_heap.c: body matches pret/pokediamond arm9/asm/NNS_SND_sndarc.s/NNS_SND_heap.s and the Sonic Rush Adventure decomp's sndarc.c/snd_heap.c (field offsets, callees, source order)
 arm9	0x0204f924	func_0204f924	NNS_SndPlayerSetVolume	NitroSystem snd_player.c setter run, reverse source order (Sonic Rush Adventure decomp); body: stores extVolume (+0x41)
 arm9	0x02048fd4	func_02048fd4	SetSoundRange	coined from the body: copies near/far pair mode (0..8) of data_020821c0 into the audible-range words data_02099fa8/data_02099fac that every Sound2 volume function reads; the eight Sound2 thunks select modes 1..7 and 0, and func_02048f34 selects mode 0 at init; no N64 audio/external.c counterpart
 arm9	0x0205dc7c	func_0205dc7c	FS_EndOverlay	NitroSDK FS_overlay.c FS_EndOverlay, an older revision of pret's: under disabled interrupts unlink every __global_destructor_chain entry (data_020aa3f0) whose dtor lies in the overlay's image or whose object lies in its bss, run them, repeat until none, then report the unload to func_0206cf98; called by FS_UnloadOverlayImage
@@ -9926,3 +9983,573 @@ arm9	0x02040aa4	func_02040aa4	WFS_End	WFS file-share layer compiled into the lin
 arm9	0x02040a94	func_02040a94	WFS_GetStatus	WFS file-share layer compiled into the link unit, named after RushRE/SonicRushAdventure-Decomp src/network/wfs.c (wfs.c); same role and same relative order there: returns the WFS state
 arm9	0x02040a84	func_02040a84	WFS_GetCurrentBitmap	WFS file-share layer compiled into the link unit, named after RushRE/SonicRushAdventure-Decomp src/network/wfs.c (wfs.c); same role and same relative order there: returns the parent's connected bitmap
 arm9	0x02040a5c	func_02040a5c	WFS_EnableSync	WFS file-share layer compiled into the link unit, named after RushRE/SonicRushAdventure-Decomp src/network/wfs.c (wfs.c); same role and same relative order there: interrupt-locked store of the sync bitmap with bit 0 (the parent) clear
+ov002	0x020d6334	_ZN7daPly_c19func_ov002_020d6334Ei	_ZN7daPly_c19func_ov002_020d6334EP8dActor_c	held-object queue push takes the actor pointer it stores, not an int (32-bit pointer cleanup)
+ov002	0x020e7090	_ZN8daStar_c13CollectNoPoseEi	_ZN8daStar_c13CollectNoPoseEP7daPly_c	CollectNoPose stores the collecting player in mPlayer; the parameter is the daPly_c pointer, not an int
+arm9	0x02016254	_ZN15dExtAnm2Model_c4CopyERKS_Pcj	_ZN15dExtAnm2Model_c4CopyERKS_PcP8BCA_File	the second-animation BCA lives in a BCA_File* member, so the copy parameter is BCA_File*
+arm9	0x020162c4	_ZN15dExtAnm2Model_c13Func_020162C4Ejiit	_ZN15dExtAnm2Model_c13Func_020162C4EP8BCA_Fileiit	Func_020162C4 is SetAnim for the second BCA; the animation file parameter is BCA_File* like dExtAnmModel_c::SetAnim
+ov002	0x020f5ad4	func_ov002_020f5ad4	_ZN8daDemo_c9StaffRoll19func_ov002_020f5ad4Ev	free helper -> daDemo_c::StaffRoll member: only caller (the staff-roll init, ov002 handler 20) passes the freshly built block in r0, no address-taken loads; it clears the star/hold-orbit fields then calls the sub-initialisers on the same block
+arm9	0x020352b4	dScMB_c_classInit	_Z17dScMB_c_classInitv	C++ linkage; symbols.txt emits this name
+arm9	0x02023624	dScBoot_c_classInit	_Z19dScBoot_c_classInitv	C++ linkage; symbols.txt emits this name
+arm9	0x0202e088	dScStage_c_classInit	_Z20dScStage_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020b0530	da1up_c_classInit_SCALEUP_KINOKO	_Z32da1up_c_classInit_SCALEUP_KINOKOv	C++ linkage; symbols.txt emits this name
+ov002	0x020b0580	da1up_c_classInit_ONEUPKINOKO	_Z29da1up_c_classInit_ONEUPKINOKOv	C++ linkage; symbols.txt emits this name
+ov002	0x020b0710	daBar_c_classInit	_Z17daBar_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020b07c8	daCamTag_c_classInit	_Z20daCamTag_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020b0980	daChRoom_c_classInit	_Z20daChRoom_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020b0f24	daChScene_c_classInit	_Z21daChScene_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020b2a98	daCoin_c_classInit_BLUE_COIN	_Z28daCoin_c_classInit_BLUE_COINv	C++ linkage; symbols.txt emits this name
+ov002	0x020b2af0	daCoin_c_classInit_RED_COIN	_Z27daCoin_c_classInit_RED_COINv	C++ linkage; symbols.txt emits this name
+ov002	0x020b2b48	daCoin_c_classInit_COIN	_Z23daCoin_c_classInit_COINv	C++ linkage; symbols.txt emits this name
+ov002	0x020b3248	daFeather_c_classInit	_Z21daFeather_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020b3568	daObjAbuku_c_classInit	_Z22daObjAbuku_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020b406c	daObjBlockL_c_classInit_BK_FUTA	_Z31daObjBlockL_c_classInit_BK_FUTAv	C++ linkage; symbols.txt emits this name
+ov002	0x020b409c	daObjBlockL_c_classInit_BLOCK_LL	_Z32daObjBlockL_c_classInit_BLOCK_LLv	C++ linkage; symbols.txt emits this name
+ov002	0x020b40cc	daObjBlockL_c_classInit_SW_BLOCK_L	_Z34daObjBlockL_c_classInit_SW_BLOCK_Lv	C++ linkage; symbols.txt emits this name
+ov002	0x020b40fc	daObjBlockL_c_classInit_DP_BLOCK_L	_Z34daObjBlockL_c_classInit_DP_BLOCK_Lv	C++ linkage; symbols.txt emits this name
+ov002	0x020b412c	daObjBlockL_c_classInit_BLOCK_L	_Z31daObjBlockL_c_classInit_BLOCK_Lv	C++ linkage; symbols.txt emits this name
+ov002	0x020b45e0	daObjBlockItemTag_c_classInit_BLK_SLVSTAR_TAG	_Z45daObjBlockItemTag_c_classInit_BLK_SLVSTAR_TAGv	C++ linkage; symbols.txt emits this name
+ov002	0x020b4610	daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAG	_Z45daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAGv	C++ linkage; symbols.txt emits this name
+ov002	0x020b4640	daObjBlockItemTag_c_classInit_BLK_SKINOKO_TAG	_Z45daObjBlockItemTag_c_classInit_BLK_SKINOKO_TAGv	C++ linkage; symbols.txt emits this name
+ov002	0x020b4670	daObjBlockItemTag_c_classInit_BLK_OKINOKO_TAG	_Z45daObjBlockItemTag_c_classInit_BLK_OKINOKO_TAGv	C++ linkage; symbols.txt emits this name
+ov002	0x020b4a00	daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG	_Z44daObjKinokoTag_c_classInit_KINOKO_CREATE_TAGv	C++ linkage; symbols.txt emits this name
+ov002	0x020b4a38	daObjKinokoTag_c_classInit_KINOKO_TAG	_Z37daObjKinokoTag_c_classInit_KINOKO_TAGv	C++ linkage; symbols.txt emits this name
+ov002	0x020b56d8	daObjHatenaSwitch_c_classInit	_Z29daObjHatenaSwitch_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020b59a8	daObjFire_c_classInit_OBJ_BLUE_FIRE	_Z35daObjFire_c_classInit_OBJ_BLUE_FIREv	C++ linkage; symbols.txt emits this name
+ov002	0x020b59e0	daObjFire_c_classInit_OBJ_RED_FIRE	_Z34daObjFire_c_classInit_OBJ_RED_FIREv	C++ linkage; symbols.txt emits this name
+ov002	0x020b6dd8	daObjLava_c_classInit	_Z21daObjLava_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020b6ee8	daObjWaterfall_c_classInit	_Z26daObjWaterfall_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020b8b98	daObjMarioCap_c_classInit	_Z25daObjMarioCap_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020b910c	daObjPushblock_c_classInit	_Z26daObjPushblock_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020b9e0c	daObjPowerUpItem_c_classInit	_Z28daObjPowerUpItem_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020baaac	daObjSwitch_c_classInit_STAR_SWITCH	_Z35daObjSwitch_c_classInit_STAR_SWITCHv	C++ linkage; symbols.txt emits this name
+ov002	0x020baadc	daObjSwitch_c_classInit_HANSWITCH	_Z33daObjSwitch_c_classInit_HANSWITCHv	C++ linkage; symbols.txt emits this name
+ov002	0x020bc3c8	daObjTatefuda_c_classInit	_Z25daObjTatefuda_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020bc5a8	daObjWakame_c_classInit	_Z23daObjWakame_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020bc8b4	daObjHeart_c_classInit	_Z22daObjHeart_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020bcccc	daObjCannonShutter_c_classInit	_Z30daObjCannonShutter_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020ebe5c	StarCamera_Spawn	_Z16StarCamera_Spawnv	C++ linkage; symbols.txt emits this name
+ov002	0x020ebe8c	daStarBase_c_classInit	_Z22daStarBase_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020ebed4	daStar_c_classInit_SILVER_STAR	_Z30daStar_c_classInit_SILVER_STARv	C++ linkage; symbols.txt emits this name
+ov002	0x020ebf30	daStar_c_classInit_STAR	_Z23daStar_c_classInit_STARv	C++ linkage; symbols.txt emits this name
+ov002	0x020ec32c	daTree_c_classInit	_Z18daTree_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020ec534	daWarpkun_c_classInit	_Z21daWarpkun_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020ee3d8	daYegg_c_classInit	_Z18daYegg_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020f085c	daSCoin_c_classInit	_Z19daSCoin_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020f0d90	daObjNumber_c_classInit	_Z23daObjNumber_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020f1170	daObj1UpLogo_c_classInit	_Z24daObj1UpLogo_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020f15cc	daObjBC_Switch_c_classInit	_Z26daObjBC_Switch_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020f1924	daECreate_c_classInit	_Z21daECreate_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020f1954	daESwitch_c_classInit	_Z21daESwitch_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020f1b94	daSetSE_c_classInit	_Z19daSetSE_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020f1f40	daMugenBGM_c_classInit	_Z22daMugenBGM_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020f8808	daDemo_c_classInit	_Z18daDemo_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020f9304	daFPknBall_c_classInit	_Z22daFPknBall_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020f972c	daSoundObj_c_classInit	_Z22daSoundObj_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020fb8bc	dMap_c_classInit	_Z16dMap_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020fe154	dMeter_c_classInit	_Z18dMeter_c_classInitv	C++ linkage; symbols.txt emits this name
+ov002	0x020fefcc	daPropeller_Heyho_Fire_c_classInit	_Z34daPropeller_Heyho_Fire_c_classInitv	C++ linkage; symbols.txt emits this name
+ov003	0x020b04f0	dScStarSel_c_classInit	_Z22dScStarSel_c_classInitv	C++ linkage; symbols.txt emits this name
+ov003	0x020adc10	dScTitle_c_classInit	_Z20dScTitle_c_classInitv	C++ linkage; symbols.txt emits this name
+ov003	0x020ad6ec	TitleScrollLevelList	_Z20TitleScrollLevelListPv	C++ linkage; symbols.txt emits this name
+ov003	0x020adcbc	TitlePrintLevelRow	_Z18TitlePrintLevelRowiii	C++ linkage; symbols.txt emits this name
+ov003	0x020adc74	TitlePrintString	_Z16TitlePrintStringPaii	C++ linkage; symbols.txt emits this name
+ov003	0x020b1118	dScGameOver_c_classInit	_Z23dScGameOver_c_classInitv	C++ linkage; symbols.txt emits this name
+ov005	0x020c21ec	dScMiniGm_c_classInit	_Z21dScMiniGm_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020d5974	dScMgAmida_c_classInit	_Z22dScMgAmida_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020d9574	dScMgBomroom_c_classInit	_Z24dScMgBomroom_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020dbd54	dScMgCard_c_classInit	_Z21dScMgCard_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020de940	dScMgCoin_c_classInit	_Z21dScMgCoin_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020e0574	dScMgCup_c_classInit	_Z20dScMgCup_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020e3820	dScMgCurling_c_classInit	_Z24dScMgCurling_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020ea1f0	dScMg3DEsp_c_classInit	_Z22dScMg3DEsp_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020ede18	dScMgHanachan_c_classInit	_Z25dScMgHanachan_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020eeafc	dScMgJump_c_classInit	_Z21dScMgJump_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020efaf0	dScMgJump2_c_classInit	_Z22dScMgJump2_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020f3800	dScMgLuigi_c_classInit	_Z22dScMgLuigi_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020f5504	dScMgMemory_c_classInit	_Z23dScMgMemory_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020f75d4	dScMgMemory2_c_classInit	_Z24dScMgMemory2_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020f8e44	dScMgMCarlo_c_classInit	_Z23dScMgMCarlo_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020fa6ac	dScMgMCarlo2_c_classInit	_Z24dScMgMCarlo2_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020ff3ec	dScMgPachinko_c_classInit	_Z25dScMgPachinko_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x02104258	dScMgPachinko2_c_classInit	_Z26dScMgPachinko2_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x02107858	dScMgPanel_c_classInit	_Z22dScMgPanel_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x0210a400	dScMgRoulette_c_classInit	_Z25dScMgRoulette_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x0210c120	dScMgSlot3_c_classInit	_Z22dScMgSlot3_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x0210d6b8	dScMgSlot1_c_classInit	_Z22dScMgSlot1_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x02119824	dScMgSmartball_c_classInit	_Z26dScMgSmartball_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x0211cb70	dScMgSound_c_classInit	_Z22dScMgSound_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x021207a8	dScMgTeresa_c_classInit	_Z23dScMgTeresa_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x02122490	dScMgTrampoline_c_classInit	_Z27dScMgTrampoline_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x0212471c	dScMgTrampoline2_c_classInit	_Z28dScMgTrampoline2_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x021255f8	dScMgBSC_c_classInit	_Z20dScMgBSC_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x0212a520	dScMgSnowball_c_classInit	_Z25dScMgSnowball_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x0212b7f8	dScMgFlower_c_classInit	_Z23dScMgFlower_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x020e6bf4	dScMgCurling2_c_classInit	_Z25dScMgCurling2_c_classInitv	C++ linkage; symbols.txt emits this name
+ov007	0x020cc0cc	DSMT_GetFileBuffer	_Z18DSMT_GetFileBufferi	C++ linkage; symbols.txt emits this name
+ov007	0x020cc0e4	DSMT_SetFileBuffers	_Z19DSMT_SetFileBuffersP12FileSaveData	C++ linkage; symbols.txt emits this name
+ov007	0x020cc118	DSMT_SetPendingMusic	_Z20DSMT_SetPendingMusicij	C++ linkage; symbols.txt emits this name
+ov007	0x020cc168	DSMT_UpdateBootArgs	_Z19DSMT_UpdateBootArgsj	C++ linkage; symbols.txt emits this name
+ov007	0x020cc600	DSMT_MenuCallback	_Z17DSMT_MenuCallbacki	C++ linkage; symbols.txt emits this name
+ov007	0x020cca68	DSMT_MenuReleaseFile	_Z20DSMT_MenuReleaseFilePv	C++ linkage; symbols.txt emits this name
+ov007	0x020cca74	DSMT_MenuLoadFile	_Z17DSMT_MenuLoadFilei	C++ linkage; symbols.txt emits this name
+ov007	0x020cca80	DSMT_MenuMaxAllocSize	_Z21DSMT_MenuMaxAllocSizev	C++ linkage; symbols.txt emits this name
+ov007	0x020cca98	DSMT_MenuFree	_Z13DSMT_MenuFreePv	C++ linkage; symbols.txt emits this name
+ov007	0x020ccab4	DSMT_MenuAlloc	_Z14DSMT_MenuAllocj	C++ linkage; symbols.txt emits this name
+ov007	0x020ccad0	dScDSMT_c_classInit	_Z19dScDSMT_c_classInitv	C++ linkage; symbols.txt emits this name
+ov007	0x020c3e64	MenuMem_DefaultAlloc	_Z20MenuMem_DefaultAllocj	C++ linkage; symbols.txt emits this name
+ov007	0x020c3e4c	MenuMem_DefaultFree	_Z19MenuMem_DefaultFreePv	C++ linkage; symbols.txt emits this name
+ov007	0x020c3e1c	MenuMem_SetMaxAllocSizeHook	_Z27MenuMem_SetMaxAllocSizeHooki	C++ linkage; symbols.txt emits this name
+ov007	0x020bc9c8	Display_DrawOam	_Z15Display_DrawOamP12Ov007Display	C++ linkage; symbols.txt emits this name
+ov007	0x020bd4e8	MenuGfx_StartCapture	_Z20MenuGfx_StartCapturev	C++ linkage; symbols.txt emits this name
+ov007	0x020bd500	MenuGfx_InitSubEngine	_Z21MenuGfx_InitSubEnginev	C++ linkage; symbols.txt emits this name
+ov007	0x020bd5a8	MenuGfx_InitMainEngine	_Z22MenuGfx_InitMainEnginev	C++ linkage; symbols.txt emits this name
+ov007	0x020bd648	MenuGfx_SetBgMode	_Z17MenuGfx_SetBgModei	C++ linkage; symbols.txt emits this name
+ov007	0x020bd960	MenuGfx_ResetVram	_Z17MenuGfx_ResetVramv	C++ linkage; symbols.txt emits this name
+ov007	0x020be00c	MenuSound_Create	_Z16MenuSound_Createv	C++ linkage; symbols.txt emits this name
+ov007	0x020bdf60	MenuSound_Destroy	_Z17MenuSound_Destroyv	C++ linkage; symbols.txt emits this name
+ov007	0x020bdebc	MenuSound_UpdateLoops	_Z21MenuSound_UpdateLoopsv	C++ linkage; symbols.txt emits this name
+ov007	0x020bf690	ScreenFade_Update	_Z17ScreenFade_Updatev	C++ linkage; symbols.txt emits this name
+ov007	0x020bf790	ScreenFade_Start	_Z16ScreenFade_Startv	C++ linkage; symbols.txt emits this name
+ov007	0x020bfaf0	ScreenFade_Draw	_Z15ScreenFade_DrawP11Ov007Camera	C++ linkage; symbols.txt emits this name
+ov007	0x020bfc54	ScreenFade_Destroy	_Z18ScreenFade_Destroyv	C++ linkage; symbols.txt emits this name
+ov007	0x020bfcec	ScreenFade_Create	_Z17ScreenFade_Createv	C++ linkage; symbols.txt emits this name
+ov007	0x020c3e3c	MenuMem_SetAllocHook	_Z20MenuMem_SetAllocHooki	C++ linkage; symbols.txt emits this name
+ov007	0x020c3e2c	MenuMem_SetFreeHook	_Z19MenuMem_SetFreeHooki	C++ linkage; symbols.txt emits this name
+ov007	0x020b42d8	NumberSprite_Create	_Z19NumberSprite_Createi	C++ linkage; symbols.txt emits this name
+ov007	0x020b44ec	ItemView_Update	_Z15ItemView_UpdateP13Ov007ItemView	C++ linkage; symbols.txt emits this name
+ov007	0x020b45b0	ItemView_TryChoose	_Z18ItemView_TryChooseP13Ov007ItemView	C++ linkage; symbols.txt emits this name
+ov007	0x020b46b0	ItemView_HandleTouch	_ZN13Ov007ItemView20ItemView_HandleTouchEPv	C++ linkage; symbols.txt emits this name
+ov007	0x020b5068	ItemView_UpdateIdle	_Z19ItemView_UpdateIdleP13Ov007ItemView	C++ linkage; symbols.txt emits this name
+ov007	0x020b50e8	ItemView_UpdateChosen	_Z21ItemView_UpdateChosenP13Ov007ItemView	C++ linkage; symbols.txt emits this name
+ov007	0x020b797c	MenuText_ClearMainPlane	_Z23MenuText_ClearMainPlanev	C++ linkage; symbols.txt emits this name
+ov007	0x020b7a78	MessageWindow_Update	_Z20MessageWindow_Updatev	C++ linkage; symbols.txt emits this name
+ov007	0x020b850c	MenuText_LoadFontPalette	_Z24MenuText_LoadFontPalettev	C++ linkage; symbols.txt emits this name
+ov007	0x020b8548	MenuText_Init	_Z13MenuText_InitPvS_iS_S_iS_	C++ linkage; symbols.txt emits this name
+ov007	0x020b883c	MessageWindow_SetClosed	_Z23MessageWindow_SetClosedv	C++ linkage; symbols.txt emits this name
+ov007	0x020b8860	MessageWindow_Start	_Z19MessageWindow_Startii	C++ linkage; symbols.txt emits this name
+ov007	0x020b88c0	MessageWindow_LayoutFrame	_Z25MessageWindow_LayoutFramev	C++ linkage; symbols.txt emits this name
+ov007	0x020b8a78	MenuText_DrawSlotHeading	_Z24MenuText_DrawSlotHeadingii	C++ linkage; symbols.txt emits this name
+ov007	0x020b8b00	MenuText_DrawNumber	_Z19MenuText_DrawNumberii	C++ linkage; symbols.txt emits this name
+ov007	0x020b8b80	MenuText_DrawString	_Z19MenuText_DrawStringiPhi	C++ linkage; symbols.txt emits this name
+ov007	0x020b8cfc	MenuText_RepeatGlyph	_Z20MenuText_RepeatGlyphiii	C++ linkage; symbols.txt emits this name
+ov007	0x020b8d48	MenuText_DrawGlyph	_Z18MenuText_DrawGlyphii	C++ linkage; symbols.txt emits this name
+ov007	0x020b8ec0	MenuText_MessageIDToIndex	_Z25MenuText_MessageIDToIndexi	C++ linkage; symbols.txt emits this name
+ov007	0x020b8f50	PickerScene_GetMoveAnimState	_Z28PickerScene_GetMoveAnimStatev	C++ linkage; symbols.txt emits this name
+ov007	0x020b8f64	PickerScene_GetScaleAnimState	_Z29PickerScene_GetScaleAnimStatev	C++ linkage; symbols.txt emits this name
+ov007	0x020b8fa0	PickerScene_IsAwaitingTap	_Z25PickerScene_IsAwaitingTapv	C++ linkage; symbols.txt emits this name
+ov007	0x020b8fb4	PickerScene_IsIdle	_Z18PickerScene_IsIdlev	C++ linkage; symbols.txt emits this name
+ov007	0x020b9ca8	PickerScene_UpdateEdit	_Z22PickerScene_UpdateEditv	C++ linkage; symbols.txt emits this name
+ov007	0x020b9f0c	PickerScene_BeginEdit	_Z21PickerScene_BeginEditv	C++ linkage; symbols.txt emits this name
+ov007	0x020b9fc0	PickerScene_FadeToEdit	_Z22PickerScene_FadeToEditv	C++ linkage; symbols.txt emits this name
+ov007	0x020ba05c	PickerScene_UpdateDrawing	_Z25PickerScene_UpdateDrawingv	C++ linkage; symbols.txt emits this name
+ov007	0x020ba2e0	PickerScene_StartDrawing	_Z24PickerScene_StartDrawingv	C++ linkage; symbols.txt emits this name
+ov007	0x020ba368	PickerScene_UpdateIntro	_Z23PickerScene_UpdateIntroi	C++ linkage; symbols.txt emits this name
+ov007	0x020ba9bc	PickerScene_UpdatePicker	_Z24PickerScene_UpdatePickerv	C++ linkage; symbols.txt emits this name
+ov007	0x020baa10	PickerScene_UpdateMoveAnim	_Z26PickerScene_UpdateMoveAnimv	C++ linkage; symbols.txt emits this name
+ov007	0x020bad8c	PickerScene_UpdateScaleAnim	_Z27PickerScene_UpdateScaleAnimv	C++ linkage; symbols.txt emits this name
+ov007	0x020bb09c	PickerScene_HandleDrawingKeys	_Z29PickerScene_HandleDrawingKeysv	C++ linkage; symbols.txt emits this name
+ov007	0x020bb4b0	PickerScene_HandleEditKeys	_Z26PickerScene_HandleEditKeysv	C++ linkage; symbols.txt emits this name
+ov007	0x020bbc08	PickerScene_SetDeform	_Z21PickerScene_SetDeformiii	C++ linkage; symbols.txt emits this name
+ov007	0x020bbd24	PickerScene_UpdateReplay	_Z24PickerScene_UpdateReplayi	C++ linkage; symbols.txt emits this name
+ov007	0x020b3190	Cursor_UpdateParked	_Z19Cursor_UpdateParkedv	C++ linkage; symbols.txt emits this name
+ov007	0x020b3360	Cursor_UpdateState	_Z18Cursor_UpdateStatev	C++ linkage; symbols.txt emits this name
+ov007	0x020b3708	Cursor_NextState	_Z16Cursor_NextStatev	C++ linkage; symbols.txt emits this name
+ov007	0x020b3c54	Cursor_UpdateMode	_Z17Cursor_UpdateModev	C++ linkage; symbols.txt emits this name
+ov007	0x020b3d30	Cursor_SetSpriteMode	_Z20Cursor_SetSpriteModeP11Ov007Spritei	C++ linkage; symbols.txt emits this name
+ov007	0x020b3e04	Cursor_GetModeOffset	_Z20Cursor_GetModeOffsetiPsS_	C++ linkage; symbols.txt emits this name
+ov007	0x020b3e84	Cursor_TouchItem	_Z16Cursor_TouchItemP6TPData	C++ linkage; symbols.txt emits this name
+ov007	0x020c14d4	Texture_LoadPalette	_Z19Texture_LoadPaletteP12Ov007Texture	C++ linkage; symbols.txt emits this name
+ov007	0x020c1560	Texture_LoadTexels	_Z18Texture_LoadTexelsP12Ov007Texture	C++ linkage; symbols.txt emits this name
+ov007	0x020c162c	Texture_Create	_Z14Texture_Createiiiiit	C++ linkage; symbols.txt emits this name
+ov007	0x020c16dc	Texture_GetSizes	_Z16Texture_GetSizesiiiiPjS_	C++ linkage; symbols.txt emits this name
+ov007	0x020c1814	Texture_InitRegions	_Z19Texture_InitRegionsii	C++ linkage; symbols.txt emits this name
+ov007	0x020c184c	Texture_ResetRegions	_Z20Texture_ResetRegionsv	C++ linkage; symbols.txt emits this name
+ov009	0x02111a30	daSBird_c_classInit	_Z19daSBird_c_classInitv	C++ linkage; symbols.txt emits this name
+ov009	0x02111d8c	daObjMcWater_c_classInit	_Z24daObjMcWater_c_classInitv	C++ linkage; symbols.txt emits this name
+ov009	0x02112048	daObjMc_Metalnet_c_classInit	_Z28daObjMc_Metalnet_c_classInitv	C++ linkage; symbols.txt emits this name
+ov009	0x021121f0	daMcFlag_c_classInit	_Z20daMcFlag_c_classInitv	C++ linkage; symbols.txt emits this name
+ov010	0x02111998	daObjC1_Trap_c_classInit	_Z24daObjC1_Trap_c_classInitv	C++ linkage; symbols.txt emits this name
+ov010	0x02111dd0	daObjC1Hikari_c_classInit	_Z25daObjC1Hikari_c_classInitv	C++ linkage; symbols.txt emits this name
+ov010	0x02112004	daObjC1Peach_c_classInit	_Z24daObjC1Peach_c_classInitv	C++ linkage; symbols.txt emits this name
+ov012	0x02111420	daObjC0_Switch_c_classInit	_Z26daObjC0_Switch_c_classInitv	C++ linkage; symbols.txt emits this name
+ov012	0x02111730	daObjC0Water_c_classInit	_Z24daObjC0Water_c_classInitv	C++ linkage; symbols.txt emits this name
+ov013	0x02111384	daObjClockHuriko_c_classInit	_Z28daObjClockHuriko_c_classInitv	C++ linkage; symbols.txt emits this name
+ov013	0x0211163c	daObjClock_c_classInit_CLOCK_SHORT	_Z34daObjClock_c_classInit_CLOCK_SHORTv	C++ linkage; symbols.txt emits this name
+ov013	0x02111674	daObjClock_c_classInit_CLOCK_LONG	_Z33daObjClock_c_classInit_CLOCK_LONGv	C++ linkage; symbols.txt emits this name
+ov014	0x021112cc	daObjBSwdoor_c_classInit	_Z24daObjBSwdoor_c_classInitv	C++ linkage; symbols.txt emits this name
+ov014	0x02112d1c	daWanwan_c_classInit	_Z20daWanwan_c_classInitv	C++ linkage; symbols.txt emits this name
+ov014	0x0211307c	daObjWanwanShutter_c_classInit	_Z30daObjWanwanShutter_c_classInitv	C++ linkage; symbols.txt emits this name
+ov015	0x021112dc	daObjBkBillboard_c_classInit	_Z28daObjBkBillboard_c_classInitv	C++ linkage; symbols.txt emits this name
+ov015	0x02111b68	daObjBk_Botaosi_c_classInit	_Z27daObjBk_Botaosi_c_classInitv	C++ linkage; symbols.txt emits this name
+ov015	0x02112230	daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L	_Z44daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_Lv	C++ linkage; symbols.txt emits this name
+ov015	0x02112260	daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S	_Z44daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_Sv	C++ linkage; symbols.txt emits this name
+ov015	0x0211290c	daObjBk_Lift_c_classInit	_Z24daObjBk_Lift_c_classInitv	C++ linkage; symbols.txt emits this name
+ov015	0x02112ba0	daObjBk_Rotebar_c_classInit	_Z27daObjBk_Rotebar_c_classInitv	C++ linkage; symbols.txt emits this name
+ov015	0x02112cb8	daObjBk_Ukisima_c_classInit	_Z27daObjBk_Ukisima_c_classInitv	C++ linkage; symbols.txt emits this name
+ov015	0x02112dd0	daObjBk_Fall_Block_c_classInit	_Z30daObjBk_Fall_Block_c_classInitv	C++ linkage; symbols.txt emits this name
+ov016	0x02112588	daMoray_c_classInit	_Z19daMoray_c_classInitv	C++ linkage; symbols.txt emits this name
+ov016	0x021129a0	daObjKi_Fune_c_classInit_KI_FUNE_UP	_Z35daObjKi_Fune_c_classInit_KI_FUNE_UPv	C++ linkage; symbols.txt emits this name
+ov016	0x021129d0	daObjKi_Fune_c_classInit_KI_FUNE	_Z32daObjKi_Fune_c_classInit_KI_FUNEv	C++ linkage; symbols.txt emits this name
+ov016	0x02112ec4	daObjKi_Hasira_c_classInit	_Z26daObjKi_Hasira_c_classInitv	C++ linkage; symbols.txt emits this name
+ov016	0x02112fbc	daObjKi_Ita_c_classInit	_Z23daObjKi_Ita_c_classInitv	C++ linkage; symbols.txt emits this name
+ov016	0x02113510	daSlide_Box_c_classInit	_Z23daSlide_Box_c_classInitv	C++ linkage; symbols.txt emits this name
+ov017	0x02111480	daObjKsWater_c_classInit	_Z24daObjKsWater_c_classInitv	C++ linkage; symbols.txt emits this name
+ov018	0x02111818	daObjSm_Lift_c_classInit	_Z24daObjSm_Lift_c_classInitv	C++ linkage; symbols.txt emits this name
+ov018	0x0211267c	daPgMthr_c_classInit	_Z20daPgMthr_c_classInitv	C++ linkage; symbols.txt emits this name
+ov018	0x0211278c	daSCre_c_classInit	_Z18daSCre_c_classInitv	C++ linkage; symbols.txt emits this name
+ov018	0x02112a44	daObjIceBoard_c_classInit	_Z25daObjIceBoard_c_classInitv	C++ linkage; symbols.txt emits this name
+ov019	0x021125bc	daPgRcer_c_classInit	_Z20daPgRcer_c_classInitv	C++ linkage; symbols.txt emits this name
+ov019	0x0211274c	daSldMng_c_classInit	_Z20daSldMng_c_classInitv	C++ linkage; symbols.txt emits this name
+ov020	0x021127f4	daBook_c_classInit_BOOK_SWITCH	_Z30daBook_c_classInit_BOOK_SWITCHv	C++ linkage; symbols.txt emits this name
+ov020	0x02112850	daBookGen_c_classInit	_Z21daBookGen_c_classInitv	C++ linkage; symbols.txt emits this name
+ov020	0x02112880	daBook_c_classInit_KILLER_BOOK	_Z30daBook_c_classInit_KILLER_BOOKv	C++ linkage; symbols.txt emits this name
+ov020	0x021128dc	daBook_c_classInit_SHOOT_BOOK	_Z29daBook_c_classInit_SHOOT_BOOKv	C++ linkage; symbols.txt emits this name
+ov020	0x02113494	daChair_c_classInit	_Z19daChair_c_classInitv	C++ linkage; symbols.txt emits this name
+ov021	0x02112168	daObjCvNewsLift_c_classInit	_Z27daObjCvNewsLift_c_classInitv	C++ linkage; symbols.txt emits this name
+ov021	0x02112d64	daGrock_c_classInit	_Z19daGrock_c_classInitv	C++ linkage; symbols.txt emits this name
+ov021	0x02112ed4	daObjCvShutter_c_classInit	_Z26daObjCvShutter_c_classInitv	C++ linkage; symbols.txt emits this name
+ov022	0x02111578	daObjFl_Ring_c_classInit	_Z24daObjFl_Ring_c_classInitv	C++ linkage; symbols.txt emits this name
+ov022	0x02111688	daObjFl_Koma_D_c_classInit	_Z26daObjFl_Koma_D_c_classInitv	C++ linkage; symbols.txt emits this name
+ov022	0x02111950	daObjFl_Block_c_classInit	_Z25daObjFl_Block_c_classInitv	C++ linkage; symbols.txt emits this name
+ov022	0x02111c7c	daObjFl_London_c_classInit	_Z26daObjFl_London_c_classInitv	C++ linkage; symbols.txt emits this name
+ov022	0x02111f3c	daObjFl_Seesaw_c_classInit	_Z26daObjFl_Seesaw_c_classInitv	C++ linkage; symbols.txt emits this name
+ov022	0x021120b8	daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L	_Z40daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_Lv	C++ linkage; symbols.txt emits this name
+ov022	0x021120f4	daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA	_Z38daObjFl_Ukiyuka_c_classInit_FL_UKIYUKAv	C++ linkage; symbols.txt emits this name
+ov022	0x02112350	daObjFl_UkiKi_c_classInit	_Z25daObjFl_UkiKi_c_classInitv	C++ linkage; symbols.txt emits this name
+ov022	0x0211245c	daObjFl_Fall_Block_c_classInit	_Z30daObjFl_Fall_Block_c_classInitv	C++ linkage; symbols.txt emits this name
+ov022	0x021125a4	daObjFlMaruta_c_classInit	_Z25daObjFlMaruta_c_classInitv	C++ linkage; symbols.txt emits this name
+ov022	0x02112918	daObj_volcanoCannon_c_classInit	_Z31daObj_volcanoCannon_c_classInitv	C++ linkage; symbols.txt emits this name
+ov023	0x02111728	daObjFm_Battan_c_classInit	_Z26daObjFm_Battan_c_classInitv	C++ linkage; symbols.txt emits this name
+ov024	0x0211183c	daObjDlPyramidDummy_c_classInit	_Z31daObjDlPyramidDummy_c_classInitv	C++ linkage; symbols.txt emits this name
+ov024	0x02111874	daObjDlPyramid_c_classInit	_Z26daObjDlPyramid_c_classInitv	C++ linkage; symbols.txt emits this name
+ov025	0x02111898	daDgr_c_classInit	_Z17daDgr_c_classInitv	C++ linkage; symbols.txt emits this name
+ov025	0x02111cf4	daDkk_c_classInit	_Z17daDkk_c_classInitv	C++ linkage; symbols.txt emits this name
+ov025	0x021120ac	daObjDpBrock_c_classInit	_Z24daObjDpBrock_c_classInitv	C++ linkage; symbols.txt emits this name
+ov025	0x021125f0	daDpLift_c_classInit	_Z20daDpLift_c_classInitv	C++ linkage; symbols.txt emits this name
+ov026	0x02111678	daObjWlPolelift_c_classInit	_Z27daObjWlPolelift_c_classInitv	C++ linkage; symbols.txt emits this name
+ov026	0x02111888	daObjWlKoopaShutter_c_classInit	_Z31daObjWlKoopaShutter_c_classInitv	C++ linkage; symbols.txt emits this name
+ov026	0x02111a70	daObjWlSubmarine_c_classInit	_Z28daObjWlSubmarine_c_classInitv	C++ linkage; symbols.txt emits this name
+ov026	0x021121bc	daWater_Tatumaki_c_classInit	_Z28daWater_Tatumaki_c_classInitv	C++ linkage; symbols.txt emits this name
+ov026	0x02112450	daWater_Suikomi_c_classInit	_Z27daWater_Suikomi_c_classInitv	C++ linkage; symbols.txt emits this name
+ov027	0x02111564	daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT	_Z44daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOTv	C++ linkage; symbols.txt emits this name
+ov027	0x02111594	daObjSlIceBlock_c_classInit_SL_ICEBLOCK	_Z39daObjSlIceBlock_c_classInit_SL_ICEBLOCKv	C++ linkage; symbols.txt emits this name
+ov027	0x0211186c	daIDonketu_c_classInit	_Z22daIDonketu_c_classInitv	C++ linkage; symbols.txt emits this name
+ov027	0x0211207c	daPgDfdr_c_classInit	_Z20daPgDfdr_c_classInitv	C++ linkage; symbols.txt emits this name
+ov027	0x02112ab4	daSnmBth_c_classInit	_Z20daSnmBth_c_classInitv	C++ linkage; symbols.txt emits this name
+ov029	0x02111340	daObjWcObj01_c_classInit	_Z24daObjWcObj01_c_classInitv	C++ linkage; symbols.txt emits this name
+ov029	0x021116f8	daObjWc_Obj02_c_classInit	_Z25daObjWc_Obj02_c_classInitv	C++ linkage; symbols.txt emits this name
+ov029	0x02111a84	daObjWc_Obj03_c_classInit	_Z25daObjWc_Obj03_c_classInitv	C++ linkage; symbols.txt emits this name
+ov029	0x02111e74	daObjWc_Obj05_c_classInit	_Z25daObjWc_Obj05_c_classInitv	C++ linkage; symbols.txt emits this name
+ov029	0x02112044	daObjWcObj06_c_classInit	_Z24daObjWcObj06_c_classInitv	C++ linkage; symbols.txt emits this name
+ov029	0x02112168	daObjWc_Obj07_c_classInit	_Z25daObjWc_Obj07_c_classInitv	C++ linkage; symbols.txt emits this name
+ov029	0x021125f8	daObjWc_Mizu_c_classInit	_Z24daObjWc_Mizu_c_classInitv	C++ linkage; symbols.txt emits this name
+ov029	0x02112964	daObjWc_Obj04_c_classInit	_Z25daObjWc_Obj04_c_classInitv	C++ linkage; symbols.txt emits this name
+ov030	0x02111524	daObjHmBskt_c_classInit	_Z23daObjHmBskt_c_classInitv	C++ linkage; symbols.txt emits this name
+ov030	0x0211164c	daObjHmMaruta_c_classInit	_Z25daObjHmMaruta_c_classInitv	C++ linkage; symbols.txt emits this name
+ov030	0x021145e0	daMky_c_classInit_MONKEY_STAR	_Z29daMky_c_classInit_MONKEY_STARv	C++ linkage; symbols.txt emits this name
+ov030	0x02114638	daMky_c_classInit_MONKEY_THIEF	_Z30daMky_c_classInit_MONKEY_THIEFv	C++ linkage; symbols.txt emits this name
+ov031	0x02111344	daObjHsBillboard_c_classInit_HS_B_STAR	_Z38daObjHsBillboard_c_classInit_HS_B_STARv	C++ linkage; symbols.txt emits this name
+ov031	0x0211137c	daObjHsBillboard_c_classInit_HS_Y_STAR	_Z38daObjHsBillboard_c_classInit_HS_Y_STARv	C++ linkage; symbols.txt emits this name
+ov031	0x021113b4	daObjHsBillboard_c_classInit_HS_STAR	_Z36daObjHsBillboard_c_classInit_HS_STARv	C++ linkage; symbols.txt emits this name
+ov031	0x021113ec	daObjHsBillboard_c_classInit_HS_MOON	_Z36daObjHsBillboard_c_classInit_HS_MOONv	C++ linkage; symbols.txt emits this name
+ov032	0x02112668	daObjTdFuta_c_classInit	_Z23daObjTdFuta_c_classInitv	C++ linkage; symbols.txt emits this name
+ov032	0x021128b8	daObjTdWater_c_classInit	_Z24daObjTdWater_c_classInitv	C++ linkage; symbols.txt emits this name
+ov033	0x021113a4	daObjTtFuta_c_classInit	_Z23daObjTtFuta_c_classInitv	C++ linkage; symbols.txt emits this name
+ov033	0x02111690	daObjTtWater_c_classInit	_Z24daObjTtWater_c_classInitv	C++ linkage; symbols.txt emits this name
+ov034	0x021136a4	daHanachan_c_classInit	_Z22daHanachan_c_classInitv	C++ linkage; symbols.txt emits this name
+ov035	0x0211165c	daObjCtMecha10_c_classInit_CT_MECHA12S	_Z38daObjCtMecha10_c_classInit_CT_MECHA12Sv	C++ linkage; symbols.txt emits this name
+ov035	0x0211168c	daObjCtMecha10_c_classInit_CT_MECHA12L	_Z38daObjCtMecha10_c_classInit_CT_MECHA12Lv	C++ linkage; symbols.txt emits this name
+ov035	0x021116bc	daObjCtMecha10_c_classInit_CT_MECHA10	_Z37daObjCtMecha10_c_classInit_CT_MECHA10v	C++ linkage; symbols.txt emits this name
+ov035	0x02111b98	daObjCtMecha11_c_classInit	_Z26daObjCtMecha11_c_classInitv	C++ linkage; symbols.txt emits this name
+ov036	0x02111414	daObjRcBuranko_c_classInit	_Z26daObjRcBuranko_c_classInitv	C++ linkage; symbols.txt emits this name
+ov036	0x02111544	daObjRc_Kaitendai_c_classInit	_Z29daObjRc_Kaitendai_c_classInitv	C++ linkage; symbols.txt emits this name
+ov036	0x02111904	daObjRc_Hane_c_classInit	_Z24daObjRc_Hane_c_classInitv	C++ linkage; symbols.txt emits this name
+ov036	0x02111cd8	daObjRc_Tikuwa_c_classInit	_Z26daObjRc_Tikuwa_c_classInitv	C++ linkage; symbols.txt emits this name
+ov036	0x02111f5c	daObjRc_Guruguru_c_classInit	_Z28daObjRc_Guruguru_c_classInitv	C++ linkage; symbols.txt emits this name
+ov036	0x021120c8	daObjRc_Dorifu_c_classInit	_Z26daObjRc_Dorifu_c_classInitv	C++ linkage; symbols.txt emits this name
+ov036	0x02112538	daObjRcCarpet_c_classInit	_Z25daObjRcCarpet_c_classInitv	C++ linkage; symbols.txt emits this name
+ov039	0x0211137c	daObjKumo_c_classInit	_Z21daObjKumo_c_classInitv	C++ linkage; symbols.txt emits this name
+ov043	0x021113cc	daObjKm1_Ukishima_c_classInit	_Z29daObjKm1_Ukishima_c_classInitv	C++ linkage; symbols.txt emits this name
+ov043	0x021114dc	daObjKm1_Kurumajiku_c_classInit	_Z31daObjKm1_Kurumajiku_c_classInitv	C++ linkage; symbols.txt emits this name
+ov043	0x021115f4	daObjKm1_Kuruma_c_classInit	_Z27daObjKm1_Kuruma_c_classInitv	C++ linkage; symbols.txt emits this name
+ov043	0x0211176c	daObjKm1_Dorifu_c_classInit	_Z27daObjKm1_Dorifu_c_classInitv	C++ linkage; symbols.txt emits this name
+ov044	0x021112dc	daObjKb1Billboard_c_classInit	_Z29daObjKb1Billboard_c_classInitv	C++ linkage; symbols.txt emits this name
+ov045	0x021114dc	daObjKm2_Agaru_c_classInit	_Z26daObjKm2_Agaru_c_classInitv	C++ linkage; symbols.txt emits this name
+ov045	0x02111808	daObjKm2_Ami_Bou_c_classInit	_Z28daObjKm2_Ami_Bou_c_classInitv	C++ linkage; symbols.txt emits this name
+ov045	0x02111ad4	daObjKm2_Nobiru_c_classInit	_Z27daObjKm2_Nobiru_c_classInitv	C++ linkage; symbols.txt emits this name
+ov045	0x02111bf4	daObjKm2_Ukishima_c_classInit	_Z29daObjKm2_Ukishima_c_classInitv	C++ linkage; symbols.txt emits this name
+ov045	0x02111d0c	daObjKm2_Gura_c_classInit	_Z25daObjKm2_Gura_c_classInitv	C++ linkage; symbols.txt emits this name
+ov045	0x02111e24	daObjKm2_Fall_Block_c_classInit	_Z31daObjKm2_Fall_Block_c_classInitv	C++ linkage; symbols.txt emits this name
+ov047	0x02111280	daObjKm3_Kurumajiku_c_classInit	_Z31daObjKm3_Kurumajiku_c_classInitv	C++ linkage; symbols.txt emits this name
+ov047	0x021113bc	daObjKm3_Kaitendai_c_classInit	_Z30daObjKm3_Kaitendai_c_classInitv	C++ linkage; symbols.txt emits this name
+ov047	0x021114d4	daObjKm3_Kuruma_c_classInit	_Z27daObjKm3_Kuruma_c_classInitv	C++ linkage; symbols.txt emits this name
+ov047	0x0211164c	daObjKm3_Dorifu_c_classInit	_Z27daObjKm3_Dorifu_c_classInitv	C++ linkage; symbols.txt emits this name
+ov052	0x02111410	daObjEmmLog_c_classInit	_Z23daObjEmmLog_c_classInitv	C++ linkage; symbols.txt emits this name
+ov052	0x02111830	daObjEmmYuka_c_classInit	_Z24daObjEmmYuka_c_classInitv	C++ linkage; symbols.txt emits this name
+ov055	0x02111860	daLuigi_c_classInit	_Z19daLuigi_c_classInitv	C++ linkage; symbols.txt emits this name
+ov056	0x02111594	daObjEwmIceBlock_c_classInit	_Z28daObjEwmIceBlock_c_classInitv	C++ linkage; symbols.txt emits this name
+ov058	0x02111688	daObjCloset_c_classInit	_Z23daObjCloset_c_classInitv	C++ linkage; symbols.txt emits this name
+ov060	0x02117938	daKpaFire_c_classInit	_Z21daKpaFire_c_classInitv	C++ linkage; symbols.txt emits this name
+ov060	0x02117cdc	daKpa2Bg_c_classInit	_Z20daKpa2Bg_c_classInitv	C++ linkage; symbols.txt emits this name
+ov060	0x02118408	daKpa3Bg_c_classInit	_Z20daKpa3Bg_c_classInitv	C++ linkage; symbols.txt emits this name
+ov060	0x02118cbc	daKirai_c_classInit	_Z19daKirai_c_classInitv	C++ linkage; symbols.txt emits this name
+ov060	0x021191f4	daFRing_c_classInit	_Z19daFRing_c_classInitv	C++ linkage; symbols.txt emits this name
+ov062	0x02116cd8	daHolhei_c_ChangeState	_Z22daHolhei_c_ChangeStateP10daHolhei_cP11HolheiState	C++ linkage; symbols.txt emits this name
+ov062	0x02117478	daHolhei_c_classInit	_Z20daHolhei_c_classInitv	C++ linkage; symbols.txt emits this name
+ov062	0x021196bc	daNknk_c_classInit_NOKONOKO_S	_Z29daNknk_c_classInit_NOKONOKO_Sv	C++ linkage; symbols.txt emits this name
+ov062	0x0211970c	daNknk_c_classInit_NOKONOKO	_Z27daNknk_c_classInit_NOKONOKOv	C++ linkage; symbols.txt emits this name
+ov062	0x0211aee0	daRNk_c_classInit	_Z17daRNk_c_classInitv	C++ linkage; symbols.txt emits this name
+ov062	0x0211b208	daRFlag_c_classInit	_Z19daRFlag_c_classInitv	C++ linkage; symbols.txt emits this name
+ov062	0x0211ce80	daJango_c_classInit	_Z19daJango_c_classInitv	C++ linkage; symbols.txt emits this name
+ov063	0x0211c4a0	daTrsIcon_c_classInit	_Z21daTrsIcon_c_classInitv	C++ linkage; symbols.txt emits this name
+ov063	0x0211c4d0	daTBasket_c_classInit	_Z21daTBasket_c_classInitv	C++ linkage; symbols.txt emits this name
+ov063	0x0211c520	daTrs_c_classInit_BOSS_TERESA	_Z29daTrs_c_classInit_BOSS_TERESAv	C++ linkage; symbols.txt emits this name
+ov063	0x0211c590	daTrs_c_classInit_TERESA	_Z24daTrs_c_classInit_TERESAv	C++ linkage; symbols.txt emits this name
+ov063	0x0211d2a0	daTrsTrap_c_classInit_TERESAPIT	_Z31daTrsTrap_c_classInit_TERESAPITv	C++ linkage; symbols.txt emits this name
+ov063	0x0211d2e0	daTrsTrap_c_classInit_MERRYGOROUND	_Z34daTrsTrap_c_classInit_MERRYGOROUNDv	C++ linkage; symbols.txt emits this name
+ov063	0x0211d320	daTrsTrap_c_classInit_BOOKSHELF	_Z31daTrsTrap_c_classInit_BOOKSHELFv	C++ linkage; symbols.txt emits this name
+ov063	0x0211d360	daTrsTrap_c_classInit_KAIDAN	_Z28daTrsTrap_c_classInit_KAIDANv	C++ linkage; symbols.txt emits this name
+ov063	0x0211d47c	daObjTh_Fall_Block_c_classInit	_Z30daObjTh_Fall_Block_c_classInitv	C++ linkage; symbols.txt emits this name
+ov063	0x0211e128	daPiano_c_classInit	_Z19daPiano_c_classInitv	C++ linkage; symbols.txt emits this name
+ov064	0x02117444	daDonketu_c_classInit	_Z21daDonketu_c_classInitv	C++ linkage; symbols.txt emits this name
+ov064	0x0211791c	daBDonketu_c_classInit	_Z22daBDonketu_c_classInitv	C++ linkage; symbols.txt emits this name
+ov064	0x02117fe8	daObjFl_Amilift_c_classInit	_Z27daObjFl_Amilift_c_classInitv	C++ linkage; symbols.txt emits this name
+ov064	0x021180fc	daObjFl_Gura_c_classInit	_Z24daObjFl_Gura_c_classInitv	C++ linkage; symbols.txt emits this name
+ov064	0x02118564	daObjFl_KomaU_c_classInit	_Z25daObjFl_KomaU_c_classInitv	C++ linkage; symbols.txt emits this name
+ov064	0x02118b10	daBbl_c_classInit	_Z17daBbl_c_classInitv	C++ linkage; symbols.txt emits this name
+ov064	0x021192d0	daObjFl_Coin_c_classInit	_Z24daObjFl_Coin_c_classInitv	C++ linkage; symbols.txt emits this name
+ov064	0x02119300	daObjFl_Puzzle_c_classInit	_Z26daObjFl_Puzzle_c_classInitv	C++ linkage; symbols.txt emits this name
+ov064	0x02119a18	daWater_Hakidasi_c_classInit	_Z28daWater_Hakidasi_c_classInitv	C++ linkage; symbols.txt emits this name
+ov064	0x0211a1b0	daWater_Ring_c_classInit	_Z24daWater_Ring_c_classInitv	C++ linkage; symbols.txt emits this name
+ov064	0x0211a8f0	daObjTbox_c_classInit	_Z21daObjTbox_c_classInitv	C++ linkage; symbols.txt emits this name
+ov064	0x0211ad70	daObjShell_c_classInit	_Z22daObjShell_c_classInitv	C++ linkage; symbols.txt emits this name
+ov065	0x02116f48	daYurei_Mucho_c_classInit	_Z25daYurei_Mucho_c_classInitv	C++ linkage; symbols.txt emits this name
+ov065	0x02117ee8	daBasabasa_c_classInit	_Z22daBasabasa_c_classInitv	C++ linkage; symbols.txt emits this name
+ov065	0x021195ec	daDossyCap_c_classInit	_Z22daDossyCap_c_classInitv	C++ linkage; symbols.txt emits this name
+ov065	0x02119634	daDossy_c_classInit	_Z19daDossy_c_classInitv	C++ linkage; symbols.txt emits this name
+ov065	0x02119ebc	daObjCtRotateBlock_c_classInit_CT_MECHA02	_Z41daObjCtRotateBlock_c_classInit_CT_MECHA02v	C++ linkage; symbols.txt emits this name
+ov065	0x02119efc	daObjCtRotateBlock_c_classInit_CT_MECHA01	_Z41daObjCtRotateBlock_c_classInit_CT_MECHA01v	C++ linkage; symbols.txt emits this name
+ov065	0x0211a45c	daObjCtMecha03_c_classInit	_Z26daObjCtMecha03_c_classInitv	C++ linkage; symbols.txt emits this name
+ov065	0x0211aae0	daObjCtMecha04_c_classInit_CT_MECHA04L	_Z38daObjCtMecha04_c_classInit_CT_MECHA04Lv	C++ linkage; symbols.txt emits this name
+ov065	0x0211ab20	daObjCtMecha04_c_classInit_CT_MECHA04S	_Z38daObjCtMecha04_c_classInit_CT_MECHA04Sv	C++ linkage; symbols.txt emits this name
+ov065	0x0211b328	daObjCtMecha05_c_classInit	_Z26daObjCtMecha05_c_classInitv	C++ linkage; symbols.txt emits this name
+ov065	0x0211b780	daObjCtKaitendai_c_classInit_CT_MECHA07	_Z39daObjCtKaitendai_c_classInit_CT_MECHA07v	C++ linkage; symbols.txt emits this name
+ov065	0x0211b7b8	daObjCtKaitendai_c_classInit_CT_MECHA06	_Z39daObjCtKaitendai_c_classInit_CT_MECHA06v	C++ linkage; symbols.txt emits this name
+ov065	0x0211bb7c	daObjCtMecha08_c_classInit_CT_MECHA08B	_Z38daObjCtMecha08_c_classInit_CT_MECHA08Bv	C++ linkage; symbols.txt emits this name
+ov065	0x0211bbac	daObjCtMecha08_c_classInit_CT_MECHA08A	_Z38daObjCtMecha08_c_classInit_CT_MECHA08Av	C++ linkage; symbols.txt emits this name
+ov065	0x0211c040	daObjCtMecha09_c_classInit	_Z26daObjCtMecha09_c_classInitv	C++ linkage; symbols.txt emits this name
+ov066	0x0211a370	daIwante_c_classInit	_Z20daIwante_c_classInitv	C++ linkage; symbols.txt emits this name
+ov070	0x02120520	daPropeller_Heyho_c_classInit	_Z29daPropeller_Heyho_c_classInitv	C++ linkage; symbols.txt emits this name
+ov070	0x021210ac	daBrq_c_classInit	_Z17daBrq_c_classInitv	C++ linkage; symbols.txt emits this name
+ov070	0x02121af8	daKrpa_c_classInit	_Z18daKrpa_c_classInitv	C++ linkage; symbols.txt emits this name
+ov070	0x021221fc	daKpFr_c_classInit	_Z18daKpFr_c_classInitv	C++ linkage; symbols.txt emits this name
+ov071	0x02120618	daSpd_c_classInit	_Z17daSpd_c_classInitv	C++ linkage; symbols.txt emits this name
+ov071	0x021219cc	daEykn_c_classInit_EYEKUN_BOSS	_Z30daEykn_c_classInit_EYEKUN_BOSSv	C++ linkage; symbols.txt emits this name
+ov071	0x02121a1c	daEykn_c_classInit_EYEKUN	_Z25daEykn_c_classInit_EYEKUNv	C++ linkage; symbols.txt emits this name
+ov071	0x02121f9c	daEyBm_c_classInit	_Z18daEyBm_c_classInitv	C++ linkage; symbols.txt emits this name
+ov071	0x02122670	daObjCasket_c_classInit	_Z23daObjCasket_c_classInitv	C++ linkage; symbols.txt emits this name
+ov072	0x0211fedc	daBgSnmBdy_c_classInit	_Z22daBgSnmBdy_c_classInitv	C++ linkage; symbols.txt emits this name
+ov072	0x021207d4	daBgSnmHed_c_classInit	_Z22daBgSnmHed_c_classInitv	C++ linkage; symbols.txt emits this name
+ov072	0x02121fac	daPgBby_c_classInit	_Z19daPgBby_c_classInitv	C++ linkage; symbols.txt emits this name
+ov073	0x02121ec8	daKing_Donketu_c_classInit	_Z26daKing_Donketu_c_classInitv	C++ linkage; symbols.txt emits this name
+ov073	0x021227e4	daObjEwbIce_c_classInit_EWB_ICE_C	_Z33daObjEwbIce_c_classInit_EWB_ICE_Cv	C++ linkage; symbols.txt emits this name
+ov073	0x02122814	daObjEwbIce_c_classInit_EWB_ICE_B	_Z33daObjEwbIce_c_classInit_EWB_ICE_Bv	C++ linkage; symbols.txt emits this name
+ov073	0x02122844	daObjEwbIce_c_classInit_EWB_ICE_A	_Z33daObjEwbIce_c_classInit_EWB_ICE_Av	C++ linkage; symbols.txt emits this name
+ov074	0x02122764	daKuriKing_c_classInit_KURIKING_VANISH	_Z38daKuriKing_c_classInit_KURIKING_VANISHv	C++ linkage; symbols.txt emits this name
+ov074	0x02122838	daKuriKing_c_classInit_KURIKING	_Z31daKuriKing_c_classInit_KURIKINGv	C++ linkage; symbols.txt emits this name
+ov075	0x021159f4	dEntObj_c_classInit	_Z19dEntObj_c_classInitv	C++ linkage; symbols.txt emits this name
+ov075	0x0211a740	dScEntry_c_classInit_RESULT	_Z27dScEntry_c_classInit_RESULTv	C++ linkage; symbols.txt emits this name
+ov075	0x0211a854	dScEntry_c_classInit_ENTRY	_Z26dScEntry_c_classInit_ENTRYv	C++ linkage; symbols.txt emits this name
+ov077	0x02124b04	daJgm_c_classInit	_Z17daJgm_c_classInitv	C++ linkage; symbols.txt emits this name
+ov077	0x021261f4	daTgz_c_classInit	_Z17daTgz_c_classInitv	C++ linkage; symbols.txt emits this name
+ov077	0x021271d4	daPopoi_c_classInit	_Z19daPopoi_c_classInitv	C++ linkage; symbols.txt emits this name
+ov078	0x021265fc	daBombking_c_classInit	_Z22daBombking_c_classInitv	C++ linkage; symbols.txt emits this name
+ov079	0x02126588	daBtn_c_classInit_BATANKING	_Z27daBtn_c_classInit_BATANKINGv	C++ linkage; symbols.txt emits this name
+ov079	0x021265e8	daBtn_c_classInit_BATAN	_Z23daBtn_c_classInit_BATANv	C++ linkage; symbols.txt emits this name
+ov079	0x02126d64	daKlr_c_classInit	_Z17daKlr_c_classInitv	C++ linkage; symbols.txt emits this name
+ov079	0x021271b4	daObjBkKillerdai_c_classInit	_Z28daObjBkKillerdai_c_classInitv	C++ linkage; symbols.txt emits this name
+ov079	0x0212757c	daObjBk_Kabe_c_classInit_BK_KABE01	_Z34daObjBk_Kabe_c_classInit_BK_KABE01v	C++ linkage; symbols.txt emits this name
+ov079	0x021275ac	daObjBk_Kabe_c_classInit_BK_KABE00	_Z34daObjBk_Kabe_c_classInit_BK_KABE00v	C++ linkage; symbols.txt emits this name
+ov080	0x02124998	daChoro_Rock_c_classInit	_Z24daChoro_Rock_c_classInitv	C++ linkage; symbols.txt emits this name
+ov080	0x021249e0	daChoropu_c_classInit	_Z21daChoropu_c_classInitv	C++ linkage; symbols.txt emits this name
+ov080	0x021253b4	daBttBk_c_classInit	_Z19daBttBk_c_classInitv	C++ linkage; symbols.txt emits this name
+ov080	0x02126f8c	daPicGate_c_classInit	_Z21daPicGate_c_classInitv	C++ linkage; symbols.txt emits this name
+ov081	0x02124040	daHuwa_c_classInit	_Z18daHuwa_c_classInitv	C++ linkage; symbols.txt emits this name
+ov081	0x02125ec0	daSnowman_c_classInit	_Z21daSnowman_c_classInitv	C++ linkage; symbols.txt emits this name
+ov081	0x021264b4	daSnowball_c_classInit	_Z22daSnowball_c_classInitv	C++ linkage; symbols.txt emits this name
+ov081	0x02127adc	daGmch_c_classInit	_Z18daGmch_c_classInitv	C++ linkage; symbols.txt emits this name
+ov081	0x021280a0	daObjIceBlock_c_classInit	_Z25daObjIceBlock_c_classInitv	C++ linkage; symbols.txt emits this name
+ov084	0x0212bff8	daKrb_c_classInit_KURIBO_L	_Z26daKrb_c_classInit_KURIBO_Lv	C++ linkage; symbols.txt emits this name
+ov084	0x0212c054	daKrb_c_classInit_KURIBO_S	_Z26daKrb_c_classInit_KURIBO_Sv	C++ linkage; symbols.txt emits this name
+ov084	0x0212c0b0	daKrb_c_classInit_KURIBO	_Z24daKrb_c_classInit_KURIBOv	C++ linkage; symbols.txt emits this name
+ov084	0x0212d200	daRedBombhei_c_classInit	_Z24daRedBombhei_c_classInitv	C++ linkage; symbols.txt emits this name
+ov084	0x0212ea18	daFPkn_c_classInit_PAKUN2	_Z25daFPkn_c_classInit_PAKUN2v	C++ linkage; symbols.txt emits this name
+ov084	0x0212ea60	daFPkn_c_classInit_FIREPAKUN_S	_Z30daFPkn_c_classInit_FIREPAKUN_Sv	C++ linkage; symbols.txt emits this name
+ov084	0x0212eaa8	daFPkn_c_classInit_FIREPAKUN	_Z28daFPkn_c_classInit_FIREPAKUNv	C++ linkage; symbols.txt emits this name
+ov084	0x02130110	daPkn_c_classInit	_Z17daPkn_c_classInitv	C++ linkage; symbols.txt emits this name
+ov085	0x02129cd0	daKinopio_c_classInit	_Z21daKinopio_c_classInitv	C++ linkage; symbols.txt emits this name
+ov085	0x0212a684	daPeach_c_classInit	_Z19daPeach_c_classInitv	C++ linkage; symbols.txt emits this name
+ov085	0x0212cc2c	daMip_c_classInit	_Z17daMip_c_classInitv	C++ linkage; symbols.txt emits this name
+ov085	0x0212d4e8	daObj_Mip_Key_c_classInit	_Z25daObj_Mip_Key_c_classInitv	C++ linkage; symbols.txt emits this name
+ov085	0x0212ed54	daC_Jugem_c_classInit	_Z21daC_Jugem_c_classInitv	C++ linkage; symbols.txt emits this name
+ov085	0x0212f244	daObjKanban_c_classInit	_Z23daObjKanban_c_classInitv	C++ linkage; symbols.txt emits this name
+ov089	0x021327d0	daObjKey_c_classInit_LAST_STAR	_Z30daObjKey_c_classInit_LAST_STARv	C++ linkage; symbols.txt emits this name
+ov089	0x02132828	daObjKey_c_classInit_OBJ_KEY	_Z28daObjKey_c_classInit_OBJ_KEYv	C++ linkage; symbols.txt emits this name
+ov090	0x02132654	daMenbo_c_classInit	_Z19daMenbo_c_classInitv	C++ linkage; symbols.txt emits this name
+ov090	0x02132fe8	daManta_c_classInit	_Z19daManta_c_classInitv	C++ linkage; symbols.txt emits this name
+ov090	0x02133634	daPukupuku_c_classInit	_Z22daPukupuku_c_classInitv	C++ linkage; symbols.txt emits this name
+ov090	0x02133ca0	daShark_c_classInit	_Z19daShark_c_classInitv	C++ linkage; symbols.txt emits this name
+ov091	0x02131ba4	daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFT	_Z48daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFTv	C++ linkage; symbols.txt emits this name
+ov091	0x02131bdc	daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT	_Z45daObjRotateUpdownLift_c_classInit_UPDOWN_LIFTv	C++ linkage; symbols.txt emits this name
+ov091	0x02132394	daLinelift2_c_classInit_KM2_SUSUMU	_Z34daLinelift2_c_classInit_KM2_SUSUMUv	C++ linkage; symbols.txt emits this name
+ov091	0x021323cc	daLinelift2_c_classInit_KM3_LIFT	_Z32daLinelift2_c_classInit_KM3_LIFTv	C++ linkage; symbols.txt emits this name
+ov091	0x021327e8	daObjSimpleLift_c_classInit_BK_TRANSBAR	_Z39daObjSimpleLift_c_classInit_BK_TRANSBARv	C++ linkage; symbols.txt emits this name
+ov091	0x02132818	daObjSimpleLift_c_classInit_KM2_RIFUT02	_Z39daObjSimpleLift_c_classInit_KM2_RIFUT02v	C++ linkage; symbols.txt emits this name
+ov091	0x02132848	daObjSimpleLift_c_classInit_KM2_RIFUT01	_Z39daObjSimpleLift_c_classInit_KM2_RIFUT01v	C++ linkage; symbols.txt emits this name
+ov091	0x02132878	daObjSimpleLift_c_classInit_RC_RIFT01	_Z37daObjSimpleLift_c_classInit_RC_RIFT01v	C++ linkage; symbols.txt emits this name
+ov091	0x021328a8	daObjSimpleLift_c_classInit_KM3_DERU02	_Z38daObjSimpleLift_c_classInit_KM3_DERU02v	C++ linkage; symbols.txt emits this name
+ov091	0x021328d8	daObjSimpleLift_c_classInit_KM3_DERU01	_Z38daObjSimpleLift_c_classInit_KM3_DERU01v	C++ linkage; symbols.txt emits this name
+ov091	0x02132908	daObjSimpleLift_c_classInit_KM1_DERU	_Z36daObjSimpleLift_c_classInit_KM1_DERUv	C++ linkage; symbols.txt emits this name
+ov091	0x02132cb8	daDsn_c_classInit	_Z17daDsn_c_classInitv	C++ linkage; symbols.txt emits this name
+ov091	0x02133938	daObjPile_c_classInit	_Z21daObjPile_c_classInitv	C++ linkage; symbols.txt emits this name
+ov091	0x021344a0	daHyuhyu_c_classInit	_Z20daHyuhyu_c_classInitv	C++ linkage; symbols.txt emits this name
+ov092	0x02132018	daOnms_c_classInit	_Z18daOnms_c_classInitv	C++ linkage; symbols.txt emits this name
+ov094	0x02136798	daOwl_c_classInit	_Z17daOwl_c_classInitv	C++ linkage; symbols.txt emits this name
+ov095	0x02135ea4	daObjSeesaw_c_classInit_RC_SEESAW	_Z33daObjSeesaw_c_classInit_RC_SEESAWv	C++ linkage; symbols.txt emits this name
+ov095	0x02135ed4	daObjSeesaw_c_classInit_KM3_YOKOSEESAW	_Z38daObjSeesaw_c_classInit_KM3_YOKOSEESAWv	C++ linkage; symbols.txt emits this name
+ov095	0x02135f04	daObjSeesaw_c_classInit_KM3_SEESAW	_Z34daObjSeesaw_c_classInit_KM3_SEESAWv	C++ linkage; symbols.txt emits this name
+ov095	0x02135f34	daObjSeesaw_c_classInit_KM2_YOKOSEESAW	_Z38daObjSeesaw_c_classInit_KM2_YOKOSEESAWv	C++ linkage; symbols.txt emits this name
+ov095	0x02135f64	daObjSeesaw_c_classInit_KM1_SEESAW	_Z34daObjSeesaw_c_classInit_KM1_SEESAWv	C++ linkage; symbols.txt emits this name
+ov095	0x02135f94	daObjSeesaw_c_classInit_BOMB_SEESAW	_Z35daObjSeesaw_c_classInit_BOMB_SEESAWv	C++ linkage; symbols.txt emits this name
+ov095	0x02135fc4	daObjSeesaw_c_classInit_SEESAW	_Z30daObjSeesaw_c_classInit_SEESAWv	C++ linkage; symbols.txt emits this name
+ov095	0x0213679c	daUdlift_c_classInit_RC_RIFT02	_Z30daUdlift_c_classInit_RC_RIFT02v	C++ linkage; symbols.txt emits this name
+ov095	0x021367cc	daUdlift_c_classInit_UDLIFT	_Z27daUdlift_c_classInit_UDLIFTv	C++ linkage; symbols.txt emits this name
+ov095	0x021367fc	daUdlift_c_classInit_UDLIFT_TERESA	_Z34daUdlift_c_classInit_UDLIFT_TERESAv	C++ linkage; symbols.txt emits this name
+ov095	0x02136ed4	daObjFlamethrower_c_classInit	_Z29daObjFlamethrower_c_classInitv	C++ linkage; symbols.txt emits this name
+ov096	0x02136d10	daSanbo_c_classInit_SANBO_BODY	_Z30daSanbo_c_classInit_SANBO_BODYv	C++ linkage; symbols.txt emits this name
+ov096	0x02136d60	daSanbo_c_classInit_SANBO	_Z25daSanbo_c_classInit_SANBOv	C++ linkage; symbols.txt emits this name
+ov096	0x021376bc	daTor_c_classInit	_Z17daTor_c_classInitv	C++ linkage; symbols.txt emits this name
+ov098	0x02137fd0	daObjYajirusi_c_classInit_YAJIRUSI_R	_Z36daObjYajirusi_c_classInit_YAJIRUSI_Rv	C++ linkage; symbols.txt emits this name
+ov098	0x02138008	daObjYajirusi_c_classInit_YAJIRUSI_L	_Z36daObjYajirusi_c_classInit_YAJIRUSI_Lv	C++ linkage; symbols.txt emits this name
+ov098	0x02139f04	daObjBlockS_c_classInit	_Z23daObjBlockS_c_classInitv	C++ linkage; symbols.txt emits this name
+ov098	0x0213b43c	daCnn_c_classInit	_Z17daCnn_c_classInitv	C++ linkage; symbols.txt emits this name
+ov098	0x0213bf10	daWbm_c_classInit	_Z17daWbm_c_classInitv	C++ linkage; symbols.txt emits this name
+ov100	0x02141ea4	daBtfly_c_classInit	_Z19daBtfly_c_classInitv	C++ linkage; symbols.txt emits this name
+ov100	0x0214316c	daIbl_c_classInit	_Z17daIbl_c_classInitv	C++ linkage; symbols.txt emits this name
+ov100	0x021442dc	daWanwan2_c_classInit	_Z21daWanwan2_c_classInitv	C++ linkage; symbols.txt emits this name
+ov100	0x0214589c	daDoor_c_classInit	_Z18daDoor_c_classInitv	C++ linkage; symbols.txt emits this name
+ov100	0x021461d4	daStarGate_c_classInit	_Z22daStarGate_c_classInitv	C++ linkage; symbols.txt emits this name
+ov100	0x02146d38	daFish_c_classInit	_Z18daFish_c_classInitv	C++ linkage; symbols.txt emits this name
+ov100	0x02147328	daObjPathLift_c_classInit	_Z25daObjPathLift_c_classInitv	C++ linkage; symbols.txt emits this name
+ov102	0x02148e9c	daObjSimpleBg_c_classInit_MC_HAZAD	_Z34daObjSimpleBg_c_classInit_MC_HAZADv	C++ linkage; symbols.txt emits this name
+ov102	0x02148ecc	daObjSimpleBg_c_classInit_MC_DODAI	_Z34daObjSimpleBg_c_classInit_MC_DODAIv	C++ linkage; symbols.txt emits this name
+ov102	0x02148efc	daObjSimpleBg_c_classInit_DOKAN	_Z31daObjSimpleBg_c_classInit_DOKANv	C++ linkage; symbols.txt emits this name
+ov102	0x02148f2c	daObjSimpleBg_c_classInit_BK_TOWER	_Z34daObjSimpleBg_c_classInit_BK_TOWERv	C++ linkage; symbols.txt emits this name
+ov102	0x02148f5c	daObjSimpleBg_c_classInit_KI_HASIRA_DAI	_Z39daObjSimpleBg_c_classInit_KI_HASIRA_DAIv	C++ linkage; symbols.txt emits this name
+ov102	0x02148f8c	daObjSimpleBg_c_classInit_KI_IWA	_Z32daObjSimpleBg_c_classInit_KI_IWAv	C++ linkage; symbols.txt emits this name
+ov102	0x0214a7ec	daObjHatenaBlock_c_classInit_CAP_BLOCK_W	_Z40daObjHatenaBlock_c_classInit_CAP_BLOCK_Wv	C++ linkage; symbols.txt emits this name
+ov102	0x0214a82c	daObjHatenaBlock_c_classInit_CAP_BLOCK_L	_Z40daObjHatenaBlock_c_classInit_CAP_BLOCK_Lv	C++ linkage; symbols.txt emits this name
+ov102	0x0214a86c	daObjHatenaBlock_c_classInit_CAP_BLOCK_M	_Z40daObjHatenaBlock_c_classInit_CAP_BLOCK_Mv	C++ linkage; symbols.txt emits this name
+ov102	0x0214a8ac	daObjHatenaBlock_c_classInit_ITEM_BLOCK	_Z39daObjHatenaBlock_c_classInit_ITEM_BLOCKv	C++ linkage; symbols.txt emits this name
+ov102	0x0214a8ec	daObjHatenaBlock_c_classInit_HATENA_BLOCK	_Z41daObjHatenaBlock_c_classInit_HATENA_BLOCKv	C++ linkage; symbols.txt emits this name
+ov102	0x0214a92c	daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK	_Z42daObjHatenaBlock_c_classInit_VS_ITEM_BLOCKv	C++ linkage; symbols.txt emits this name
+ov102	0x0214c6f8	daBmb_c_classInit	_Z17daBmb_c_classInitv	C++ linkage; symbols.txt emits this name
+ov102	0x0214d6b4	daShl_c_classInit	_Z17daShl_c_classInitv	C++ linkage; symbols.txt emits this name
+ov072	0x02120c00	daBgSnwmn_c_classInit	_Z21daBgSnwmn_c_classInitv	C++ linkage; symbols.txt emits this name
+ov032	0x0211244c	daBakubaku_c_classInit	_Z22daBakubaku_c_classInitv	C++ linkage; symbols.txt emits this name
+ov006	0x021146e0	CopyObjectVel	_Z13CopyObjectVelPvS_	C++ linkage; symbols.txt emits this name
+ov006	0x021146f4	GetObjectDelta	_Z14GetObjectDeltaPvP21cMgSmartball_object_c	C++ linkage; symbols.txt emits this name
+ov006	0x0211470c	CopyObjectPos	_Z13CopyObjectPosPvS_	C++ linkage; symbols.txt emits this name
+arm9	0x0201361c	UnlockMinigame	_Z14UnlockMinigamei	C++ linkage; symbols.txt emits this name
+arm9	0x02013868	CollectMinigameKey	_Z18CollectMinigameKeyii	C++ linkage; symbols.txt emits this name
+arm9	0x020139b8	ClearCapHeldByToad	_Z18ClearCapHeldByToadv	C++ linkage; symbols.txt emits this name
+arm9	0x02013e64	ClearSaveBlock	_Z14ClearSaveBlockv	C++ linkage; symbols.txt emits this name
+arm9	0x02017060	TrimModelFile	_Z13TrimModelFilePv	C++ linkage; symbols.txt emits this name
+arm9	0x02016e70	GetCommonModelComponents	_Z24GetCommonModelComponentsP8BMD_File	C++ linkage; symbols.txt emits this name
+ov001	0x020aa6b0	CapIconMgr_SetMapIconShown	_Z26CapIconMgr_SetMapIconShownP10dCapIcon_ci	C++ linkage; symbols.txt emits this name
+ov001	0x020aa6cc	CapIconMgr_ClearDispatched	_Z26CapIconMgr_ClearDispatchedi	C++ linkage; symbols.txt emits this name
+ov001	0x020aa6e4	CapIconMgr_Commit	_Z17CapIconMgr_CommitijP10dCapIcon_c	C++ linkage; symbols.txt emits this name
+ov001	0x020aa7b8	CapIconMgr_ShouldCommitVs	_Z25CapIconMgr_ShouldCommitVsiP10dCapIcon_c	C++ linkage; symbols.txt emits this name
+ov001	0x020aa79c	CapIconMgr_IsDispatched	_Z23CapIconMgr_IsDispatchedi	C++ linkage; symbols.txt emits this name
+ov001	0x020aa858	CapIconMgr_ShouldCommit	_Z23CapIconMgr_ShouldCommitiP10dCapIcon_ciii	C++ linkage; symbols.txt emits this name
+ov001	0x020aa960	CapIconMgr_ShouldDispatch	_Z25CapIconMgr_ShouldDispatchiP7daPly_c	C++ linkage; symbols.txt emits this name
+ov001	0x020aaa54	CapIconMgr_Dispatch	_Z19CapIconMgr_Dispatchv	C++ linkage; symbols.txt emits this name
+ov001	0x020aadac	CapIconMgr_DispatchNoCap	_Z24CapIconMgr_DispatchNoCapv	C++ linkage; symbols.txt emits this name
+arm9	0x02030fa8	GetLanguageIndexVS	_Z18GetLanguageIndexVSv	C++ linkage; symbols.txt emits this name
+arm9	0x0201d590	Message_DrawLineBG2	_Z19Message_DrawLineBG2v	C++ linkage; symbols.txt emits this name
+arm9	0x02034098	Message_DrawLineBG2VS	_Z21Message_DrawLineBG2VSv	C++ linkage; symbols.txt emits this name
+arm9	0x02048fd4	SetSoundRange	_Z13SetSoundRangei	C++ linkage; symbols.txt emits this name
+arm9	0x02007000	NitroMain	_Z9NitroMainv	C++ linkage; symbols.txt emits this name
+arm9	0x020071a8	StarDanceBoundYaw	_Z17StarDanceBoundYawP9dCamera_csi	C++ linkage; symbols.txt emits this name
+arm9	0x020071e0	CutsceneGrandStarFlyAppCvars	_Z28CutsceneGrandStarFlyAppCvarsP9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x020072c4	CutsceneGrandStarFlyMarioOffscreen	_Z34CutsceneGrandStarFlyMarioOffscreenP9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x020073a0	CutsceneGrandStarFlyMoveToMario	_Z31CutsceneGrandStarFlyMoveToMarioP9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x02007414	CutsceneGrandStarFlyStart	_Z25CutsceneGrandStarFlyStartP9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x02007450	CutsceneGrandStarMoveCvar2	_Z26CutsceneGrandStarMoveCvar2P9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x02007484	CutsceneGrandStarApproachMario	_Z30CutsceneGrandStarApproachMarioP9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x020074e8	CutsceneGrandStarAccelCvar2	_Z27CutsceneGrandStarAccelCvar2P9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x0200751c	CutsceneGrandStarMarioJump	_Z26CutsceneGrandStarMarioJumpP9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x02007548	CutsceneGrandStarFocusMario	_Z27CutsceneGrandStarFocusMarioP9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x020075b4	CutsceneGrandStarFrontOfMario	_Z29CutsceneGrandStarFrontOfMarioP9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x0200762c	CutsceneGrandStarStart	_Z22CutsceneGrandStarStartP9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x02007758	CutsceneDanceCloseupFlyAbove	_Z28CutsceneDanceCloseupFlyAboveP9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x020077f0	CutsceneDanceCloseupStart	_Z25CutsceneDanceCloseupStartP9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x02007910	RotateAndMoveVec3f	_Z18RotateAndMoveVec3fP9dCamera_cPh	C++ linkage; symbols.txt emits this name
+arm9	0x020079ac	CutscenePanCvar9	_Z16CutscenePanCvar9P9dCamera_cPhi	C++ linkage; symbols.txt emits this name
+arm9	0x02007b0c	FocusInFrontOfMario	_Z19FocusInFrontOfMarioP9dCamera_cPh	C++ linkage; symbols.txt emits this name
+arm9	0x02007d58	CutsceneDanceFlyAwayStart	_Z25CutsceneDanceFlyAwayStartP9dCamera_c	C++ linkage; symbols.txt emits this name
+arm9	0x02008550	RunCameraCommand	_Z16RunCameraCommandP9dCamera_cPhii	C++ linkage; symbols.txt emits this name
+arm9	0x0202ed48	Wipe_Reset	_Z10Wipe_Resetv	C++ linkage; symbols.txt emits this name
+arm9	0x0202f2c4	Wipe_HBlankHandler	_Z18Wipe_HBlankHandlerv	C++ linkage; symbols.txt emits this name
+arm9	0x0202f3a4	Wipe_LatchTable	_Z15Wipe_LatchTablev	C++ linkage; symbols.txt emits this name
+arm9	0x02007d0c	ApproachVec3fAsymptotic	_Z23ApproachVec3fAsymptoticP7Vector3PKS_iii	C++ linkage; symbols.txt emits this name
+arm9	0x02007698	CutsceneKeyDanceJumpCvar	_Z24CutsceneKeyDanceJumpCvarP9dCamera_cPh	C++ linkage; symbols.txt emits this name
+arm9	0x02007870	CutsceneDanceShakeFov	_Z21CutsceneDanceShakeFovP9dCamera_cPh	C++ linkage; symbols.txt emits this name
+arm9	0x02038298	dBgS_ChkPolySafe	_Z16dBgS_ChkPolySafePv	C++ linkage; symbols.txt emits this name
+arm9	0x02038234	dBgS_RideCallBack	_Z17dBgS_RideCallBackii	C++ linkage; symbols.txt emits this name
+arm9	0x02038324	dBgS_MoveBgCrrPos	_Z17dBgS_MoveBgCrrPosPviii	C++ linkage; symbols.txt emits this name
+arm9	0x0203cbf0	func_0203cbf0	_Z13func_0203cbf0Pv	C++ linkage; symbols.txt emits this name
+arm9	0x02011a28	_Z13func_02011a28Pc	_Z13func_02011a28P11SndRegTable	the parameter is the sound-object registry at data_0209b53c; the body walks its entries, so it is SndRegTable*, not char*
+arm9	0x02011698	_Z13func_02011698PcS_	_Z13func_02011698P11SndRegTableP11SndRegEntry	links an entry into the registry hash bucket: the parameters are SndRegTable* and SndRegEntry*, not char*
+arm9	0x020116c4	_Z13func_020116c4PciiPK7Vector3is	_Z13func_020116c4P11SndRegTableiiPK7Vector3is	allocates an entry in the sound-object registry; the first parameter is SndRegTable*, not char*
+arm9	0x02011934	_Z13func_02011934Pci	_Z13func_02011934P11SndRegTablei	finds an entry by id in the sound-object registry; the first parameter is SndRegTable*, not char*
+ov006	0x0210c208	_Z14SlotLamp_ClearPc	_Z14SlotLamp_ClearP8SlotLamp	clears a SlotLamp; the parameter is SlotLamp*, not char*
+ov006	0x0210c2b0	_Z15SlotBlink_ClearPc	_Z15SlotBlink_ClearP9SlotBlink	clears a SlotBlink; the parameter is SlotBlink*, not char*
+
+arm9	0x0201964c	_Z13func_0201964cP5Timer	_ZN5TimerC1Ev	Timer's constructor becomes Timer::Timer(); the dummy TimerInit static that called it is retired
+ov006	0x020c8af4	_Z9Puff_DrawP4Puff	_ZN4Puff4DrawEv	Puff record helpers become Puff members
+ov006	0x020c8ba8	_Z11Puff_UpdateP4Puff	_ZN4Puff6UpdateEv	Puff record helpers become Puff members
+ov006	0x020c8c6c	_Z10Puff_ClearP4Puff	_ZN4Puff5ClearEv	Puff record helpers become Puff members
+ov005	0x020bff4c	_Z18MiniGm_SaveIfDirtyPc	_ZN11dScMiniGm_c11SaveIfDirtyEv	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020bfff4	_Z16MiniGm_GetRecordPvii	_ZN11dScMiniGm_c9GetRecordEii	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020c0010	_Z19MiniGm_GetSaveTablePvi	_ZN11dScMiniGm_c12GetSaveTableEi	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020c007c	_Z12MiniGm_IsNewPvi	_ZN11dScMiniGm_c5IsNewEi	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020c00b4	_Z17MiniGm_IsUnlockedPvi	_ZN11dScMiniGm_c10IsUnlockedEi	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020c00e4	_Z20MiniGm_HasSecondPagePv	_ZN11dScMiniGm_c13HasSecondPageEv	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020c1030	_Z17MiniGm_DrawNumberPviii	_ZN11dScMiniGm_c10DrawNumberEiii	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020c16e4	_ZN11dScMiniGm_c21MiniGm_LoadGroupIconsEv	_ZN11dScMiniGm_c14LoadGroupIconsEv	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov006	0x0210ab08	_Z16Slot3_ReelDigitsPci	_ZN12dScMgSlot3_c10ReelDigitsEi	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210ab90	_Z15Slot3_StateDonev	_ZN12dScMgSlot3_c9StateDoneEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210ab94	_Z19Slot3_StateGameOverPc	_ZN12dScMgSlot3_c13StateGameOverEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210ac38	_Z15Slot3_StateWaitv	_ZN12dScMgSlot3_c9StateWaitEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210ac3c	_Z17Slot3_StatePayoutPc	_ZN12dScMgSlot3_c11StatePayoutEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210adac	_Z16Slot3_StateJudgePc	_ZN12dScMgSlot3_c10StateJudgeEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210af64	_Z15Slot3_StateSpinPc	_ZN12dScMgSlot3_c9StateSpinEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210b1fc	_Z16Slot3_StateIntroPc	_ZN12dScMgSlot3_c10StateIntroEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210c180	_Z14SlotLamp_StartPv	_ZN8SlotLamp5StartEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210c1a8	_Z13SlotLamp_TickPv	_ZN8SlotLamp4TickEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210c208	_Z14SlotLamp_ClearP8SlotLamp	_ZN8SlotLamp5ClearEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210c218	_Z15SlotBlink_StartPvss	_ZN9SlotBlink5StartEss	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210c234	_Z14SlotBlink_DrawPh	_ZN9SlotBlink4DrawEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210c278	_Z14SlotBlink_TickPv	_ZN9SlotBlink4TickEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210c2b0	_Z15SlotBlink_ClearP9SlotBlink	_ZN9SlotBlink5ClearEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210c2c0	_Z17SlotReel_SetSpeedPvi	_ZN12dScMgSlot1_c9betIcon_c9ArmPayoutEi	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210c2d4	_Z15SlotBet_OnTouchPv	_ZN12dScMgSlot1_c9betIcon_c7OnTouchEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210c354	_Z13SlotBet_ResetPv	_ZN12dScMgSlot1_c9betIcon_c5ResetEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210c478	_Z13SlotBet_PlacePc	_ZN12dScMgSlot1_c9betIcon_c5PlaceEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov006	0x0210c638	_Z13Slot1_InitHudPv	_ZN12dScMgSlot1_c7InitHudEv	The slots scenes' record and state helpers become members: the Slot3 states and ReelDigits take the dScMgSlot3_c scene (sSlot3StateTable is already typed void (dScMgSlot3_c::*)()), the SlotLamp/SlotBlink helpers take one marker, the bet helpers take mBetIcon (SlotReel_SetSpeed was a misreading: it arms the bet icon's payout countdown), and Slot1_InitHud takes the dScMgSlot1_c scene
+ov098	0x02138b28	_Z14Crate_SetStateP13daObjBlockS_ci	_ZN13daObjBlockS_c8SetStateEi	B: enter twin of CallStateUpdate: stores the state in mState and calls the enter member of data_ov098_0213c878[mState]; a member like daRedBombhei_c::ChangeState, matched through a daObjBlockS_c member pointer
+arm9	0x02038234	_Z17dBgS_RideCallBackii	_Z17dBgS_RideCallBackP5dBgPiP8dActor_c	parameters typed as the dBgPi, actor and vector pointers the body uses
+arm9	0x02038298	_Z16dBgS_ChkPolySafePv	_Z16dBgS_ChkPolySafeP5dBgPi	parameters typed as the dBgPi, actor and vector pointers the body uses
+arm9	0x02038324	_Z17dBgS_MoveBgCrrPosPviii	_Z17dBgS_MoveBgCrrPosP5dBgPiP7Vector3P10Vector3_16S4_	parameters typed as the dBgPi, actor and vector pointers the body uses
+ov001	0x020ab5b0	_Z19func_ov001_020ab5b0Pcissss	_ZN9dThIcon_c5PlaceEissss	dThIcon_c::Place: stores the touch kind, centre and half extents and resets the press state; every caller passed its own dThIcon_c-derived icon as a char *, so it is a member; same address, same body

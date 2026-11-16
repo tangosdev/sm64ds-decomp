@@ -92,7 +92,7 @@ int daBgSnmHed_c::State3() {
         break;
     case 2:
         if (mTalkPlayer->GetTalkState() == -1) {
-            unsigned int param = (*(int *)&param1) & 0xf;
+            unsigned int param = ((int)param1) & 0xf;
             param = param & 0xff;
             param |= 0x40;
             Spawn(0xb2, param, mPos, 0, mAreaId, -1);
@@ -148,7 +148,7 @@ int daBgSnmHed_c::InitState2() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mVertSpeed = 0x2d000;
-    mStateTimer = 0x78;
+    mStateTimer = 120;
     mSubstate = 0;
     mStateValue = 2;
     return 1;
@@ -179,7 +179,7 @@ int daBgSnmHed_c::State1() {
 
 int daBgSnmHed_c::InitState1() {
     mSubstate = 0;
-    mStateTimer = 0x96;
+    mStateTimer = 150;
     mStateValue = 1;
     return 1;
 }
@@ -255,10 +255,10 @@ int daBgSnmHed_c::InitResources() {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(gBgSnmHedModelFile), 1, -1);
 
     for (i = 0; i < 2; i++) {
-        void *tex = ((void **)&data_ov072_02121ffc)[i];
-        dExtAnmTexPat_c::LoadFile(*(SharedFilePtr *)tex);
+        SharedFilePtr *tex = ((SharedFilePtr **)&data_ov072_02121ffc)[i];
+        dExtAnmTexPat_c::LoadFile(*tex);
         dExtAnmTexPat_c::Prepare(*(BMD_File *)gBgSnmHedModelFile.filePtr,
-                                 *(BTP_File *)((void **)tex)[1]);
+                                 *(BTP_File *)tex->filePtr);
     }
 
     mCylinder.Init(this, 0x96000, 0x12c000, 0x800004, 0);
@@ -283,7 +283,7 @@ int daBgSnmHed_c::InitResources() {
     return 1;
 }
 
-extern "C" daBgSnmHed_c *daBgSnmHed_c_classInit() {
+daBgSnmHed_c *daBgSnmHed_c_classInit() {
     return new daBgSnmHed_c();
 }
 

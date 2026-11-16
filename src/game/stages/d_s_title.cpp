@@ -51,7 +51,9 @@
 #include "nitro/hw/registers.h"
 #include "nitro/mi/memory.h"
 #include "nitro/gx/g2.h"
+#include "nitro/gx/gxcommon.h"
 #include "math/CalcLib.h"
+#include "dFdColor_c.h"
 
 /* SetFaders stores the fade controller here; slot 5 waits for the entrance fade. */
 
@@ -72,17 +74,13 @@ extern "C" {
  * Behavior's `% 0x36` is an unsigned reduction; the array spelling was only
  * ever read at [0]. */
 extern u32 gTitleCursor;
-extern char data_0209e674[];
+extern GXOamAttr data_0209e674[];
 extern dFdBrightness_c *gSceneFader;
 extern PadData data_020a0e58[];
 extern u8 gGameMode;
 /* The scene-wide colour fader, dScene_c's dFdColor_c in
-   src/game/stages/d_scene.cpp. Element 6 is its u16 `color` at offset 0xc.
-   local extern: spelled as a u16 array because including dFdColor_c.h adds
-   named parameters that renumber this TU's compiler-numbered string pool
-   (sTitleLevelEntries' 54 rodata relocations move with it). */
-extern u16 gSceneColorFader[];
-#define SCENE_FADE_COLOR gSceneColorFader[6]
+   src/game/stages/d_scene.cpp. */
+extern dFdColor_c gSceneColorFader;
 extern char data_020a0d90[];
 extern u8 gMainScreenLayers;
 extern int data_0208ee44;
@@ -129,8 +127,8 @@ extern const TitleLevelEntry sTitleLevelEntries[] = {
 /* RECONCILED: the two legacy call sites spelt the parameter `int` and
  * `char *`; the body ignores it. `void *` is the spelling neither call site
  * has to cast away from. */
-extern void TitleScrollLevelList(void *self);
 }
+extern void TitleScrollLevelList(void *self);
 
 /* The stylus went down this frame: held, with the held state just changed
  * (see PlayerInput.h). Int-returning, so the ROM materializes the 0/1 it
@@ -149,7 +147,7 @@ static inline int IsTouchStarted() {
  * to column 0x1d. Coined name. Called only from TitleScrollLevelList. Each
  * tile goes through MIi_CpuClear16 from a volatile temporary, five of them;
  * that is the spelling the bytes need. */
-extern "C" void TitlePrintLevelRow(int level, int row, int col) {
+void TitlePrintLevelRow(int level, int row, int col) {
     volatile u16 t0, t1, t2, t3, t4;
     int tens = level / 10;
     int ones = level % 10;
@@ -165,7 +163,7 @@ extern "C" void TitlePrintLevelRow(int level, int row, int col) {
     MI_CpuFill16(d2, t2, 2);
     int cnt = 0x1d - col;
     volatile const signed char *s =
-        reinterpret_cast<volatile const signed char *>(sTitleLevelEntries[level].name);
+        reinterpret_cast<const signed char *>(sTitleLevelEntries[level].name);
     while (*s != 0) {
         t3 = *s;
         MI_CpuFill16(d, t3, 2);
@@ -183,12 +181,12 @@ extern "C" void TitlePrintLevelRow(int level, int row, int col) {
 /* [9] 0x020adc74 -- copies a NUL-terminated string into the BG0 screen map
  * at (row, col), one tile per character. Called only from
  * TitleScrollLevelList, for the caption. Coined name. */
-extern "C" void TitlePrintString(signed char *s, int row, int col) {
+void TitlePrintString(signed char *s, int row, int col) {
     short *p = (short *)G2_GetBG0ScrPtr() + (col + (row << 5));
     if (*s == 0)
         return;
     do {
-        *p++ = (short)*s++;
+        *p++ = *s++;
     } while (*s != 0);
 }
 
@@ -202,7 +200,7 @@ extern "C" void TitlePrintString(signed char *s, int row, int col) {
  * new; the inlined ctor runs fBase_c's C2, stores dBase_c then dScene_c's
  * vptrs, ORs pauseFlags 1 and 4 (dScene_c::dScene_c), then stores this
  * class's vptr. The null check is the one `new` itself emits. */
-extern "C" dScTitle_c *dScTitle_c_classInit(void) {
+dScTitle_c *dScTitle_c_classInit(void) {
     return new dScTitle_c();
 }
 
@@ -269,17 +267,17 @@ s32 dScTitle_c::Behavior() {
         t = sTitleLevelEntries[i].levelID;
         if (t == -1 || IsTouchStarted()) {
             dScene_c::StartSceneFade(5, 0, 0);
-            Sound::StopLoadedMusic_Layer1(0x3c);
+            Sound::StopLoadedMusic_Layer1(60);
         } else if (t == -2) {
             dScene_c::StartSceneFade(6, 0, 0);
-            Sound::StopLoadedMusic_Layer1(0x3c);
+            Sound::StopLoadedMusic_Layer1(60);
         } else {
             gGameMode = 0;
             LoadLevelNoReturn(t, sTitleLevelEntries[i].entranceID, 1, 0);
             SetPlayerGlobals();
             SetNumPlayers(1);
             dScene_c::StartSceneFade(4, 0, 0);
-            SCENE_FADE_COLOR = 0x7fff;
+            gSceneColorFader.color = 0x7fff;
         }
     } else {
         u16 v = data_020a0e58[0].held;
@@ -287,7 +285,7 @@ s32 dScTitle_c::Behavior() {
             int h = data_020a0e58[0].pressed & 0x40;
             if (h != 0 || mRepeatDelay == 0) {
                 mRepeatDelay = h ? 8 : 2;
-                gTitleCursor += 0x35;
+                gTitleCursor += 53;
                 func_02012790(0);
             }
         } else if (v & 0x80) {
@@ -300,7 +298,7 @@ s32 dScTitle_c::Behavior() {
         }
     }
 
-    gTitleCursor = gTitleCursor % 0x36;
+    gTitleCursor = gTitleCursor % 54;
     DecIfAbove0_Short(&mRepeatDelay);
     TitleScrollLevelList(this);
     return 1;
@@ -314,9 +312,9 @@ s32 dScTitle_c::Render() {
     {
         int idx = data_0209e664;
         unsigned int v = ((gTitleCursor - gTitleListTop + 2) << 3) & 0xff;
-        char *p = data_0209e674 + (idx << 3);
-        *(int *)p = v | 0x80000;
-        *(short *)(p + 4) = 0;
+        GXOamAttr *p = &data_0209e674[idx];
+        p->attr01 = v | 0x80000;
+        p->attr2 = 0;
     }
     return 1;
 }
@@ -334,22 +332,21 @@ void dScTitle_c::OnPendingDestroy() {}
  * RECONCILED: decl_common.h already declares gTitleListTop `extern int`, so
  * the legacy `int[]` spelling is dropped in favour of the header's scalar
  * and the `[0]` subscripts became scalar accesses. */
-extern "C" { /* .c-derived member: C linkage for the whole block */
 void TitleScrollLevelList(void *) {
     int v = gTitleCursor;
-    int nv = v - 0xa;
+    int nv = v - 10;
     gTitleListTop = nv;
-    unsigned int t = (unsigned int)(v + 0xb);
-    if (t > 0x36) {
-        gTitleListTop = nv - (t - 0x36);
+    unsigned int t = (v + 11);
+    if (t > 54) {
+        gTitleListTop = nv - (t - 54);
     }
     if (gTitleListTop < 0)
         gTitleListTop = 0;
     int s = gTitleListTop;
-    int cnt = 0x36 - s;
+    int cnt = 54 - s;
     int end = cnt + 2;
-    if (end > 0x17)
-        end = 0x17;
+    if (end > 23)
+        end = 23;
     int i;
     int j = s;
     for (i = 2; i < end; i++) {
@@ -357,7 +354,6 @@ void TitleScrollLevelList(void *) {
         j++;
     }
     TitlePrintString((signed char *)data_020a0d90, 0, 0);
-}
 }
 
 /* [1] [0] 0x020ad69c (D0) and 0x020ad660 (D1) -- neither is written here.

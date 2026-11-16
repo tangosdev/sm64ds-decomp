@@ -23,7 +23,6 @@
  * - VecFx32, not Vector3: a Vector3 stack local would
  *   instantiate its vague-linkage D1 into this TU. EyBmVec3's
  *   declared-not-defined destructor is that D1's alias.
- * - daPly_c::Hurt stays mangled: by-value Fix12<int> is wall 6az.
  * - The UpdateDiscreteNoLava veneer stays because
  *   the named method is WRONG-DEST (ROM 0x02038420).
  * - data_ov071_021230b8 is this TU's sinit-constructed bss;
@@ -76,7 +75,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
 
 /* `new` calls the inherited fBase_c::operator new; the implicit constructor
  * emits the measured dActor_c C2, vptr store, and three member C1s. */
-extern "C" daEyBm_c *daEyBm_c_classInit() {
+daEyBm_c *daEyBm_c_classInit() {
     return new daEyBm_c();
 }
 
@@ -97,7 +96,7 @@ int daEyBm_c::InitResources() {
     mVertAccel = 0;
     mTerminalVelocity = 0;
     mHorzSpeed = 0xa000;
-    mLifeTimer = 0x96;
+    mLifeTimer = 150;
     mMatrix = IDENTITY_MATRIX4X3;
     UpdateShadow();
     return 1;
@@ -110,7 +109,9 @@ int daEyBm_c::Behavior() {
         return 1;
 
     if (!IsBeingEaten(this)) {
-        offset = *(VecFx32 *)&data_ov071_021230b8;
+        offset.x = data_ov071_021230b8.x;
+        offset.y = data_ov071_021230b8.y;
+        offset.z = data_ov071_021230b8.z;
         mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)&offset);
 
         velocity.z = mHorzSpeed;
@@ -157,7 +158,7 @@ void daEyBm_c::UpdateShadow() {
 
     dBgCh_Gnd ground;
     ground.SetObjAndPos(mPos, this);
-    Fix12i depth;
+    fx32 depth;
     if (ground.DetectClsn())
         depth = (mPosY - ground.clsnY) + 0x1e000;
     else
@@ -166,8 +167,7 @@ void daEyBm_c::UpdateShadow() {
 }
 
 /*
- * 0x02121ba4, size 0xc8. daPly_c::Hurt retains the measured by-value Fix12
- * ABI seam; daPly_c itself and all accessed fields are the real type. */
+ * 0x02121ba4, size 0xc8. */
 
 void daEyBm_c::HurtPlayer() {
     u32 ownerID = mdCcAcPos_c.otherOwner;

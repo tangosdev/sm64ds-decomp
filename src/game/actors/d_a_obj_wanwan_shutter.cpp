@@ -54,7 +54,7 @@ extern CLPS_Block data_ov014_02114558;
  * inline operator new; 0x02113090 calls dBgActor_c's C2 and the store at
  * 0x0211309c lays down this class's vptr. The null check is the one `new`
  * itself emits. */
-extern "C" daObjWanwanShutter_c *daObjWanwanShutter_c_classInit(void) {
+daObjWanwanShutter_c *daObjWanwanShutter_c_classInit(void) {
     return new daObjWanwanShutter_c();
 }
 

@@ -31,7 +31,7 @@
 
 extern SharedFilePtr data_ov002_0210da30;
 
-extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_TAG() {
+daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_TAG() {
     return new daObjKinokoTag_c();
 }
 
@@ -46,7 +46,7 @@ extern "C" SpawnInfo<daObjKinokoTag_c> g_profile_KINOKO_TAG = {
     0x01000000,
     0};
 
-extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG() {
+daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG() {
     return new daObjKinokoTag_c();
 }
 
@@ -63,7 +63,7 @@ s32 daObjKinokoTag_c::InitResources() {
 
 s32 daObjKinokoTag_c::Behavior() {
     dActor_c *other;
-    s32 isKinokoTag = (s32)(actorID == 0x140);
+    s32 isKinokoTag = (actorID == 0x140);
     if (isKinokoTag) {
         if (!mSearchedForPile) {
             other = FindWithActorID(0x1b, 0);
@@ -91,7 +91,7 @@ s32 daObjKinokoTag_c::Behavior() {
             MarkForDestruction();
     }
 
-    isKinokoTag = (s32)(actorID == 0x140);
+    isKinokoTag = (actorID == 0x140);
     if (isKinokoTag) {
         if (mHasLinkedPile == 1) {
             if (mLinkedPileGone)

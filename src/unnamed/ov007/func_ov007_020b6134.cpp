@@ -2,8 +2,7 @@
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
 
-extern "C" {
-extern void func_ov007_020aec94(int);
+extern "C" void func_ov007_020aec94(int);
 
 /* Slot `arg` was tapped: in main state 0 it hands arg + 3 to
  * func_ov007_020aec94; in 3 it becomes the selected slot, in 2 the target;
@@ -38,5 +37,4 @@ void func_ov007_020b6134(int arg){
           w->selectedSlot = arg;
       break;
   }
-}
 }

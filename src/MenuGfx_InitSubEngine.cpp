@@ -4,7 +4,7 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/hw/registers.h"
 
-extern "C" void MenuGfx_InitSubEngine(void) {
+void MenuGfx_InitSubEngine(void) {
     GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
     GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_16_I);
     GXS_SetGraphicsMode(GX_BGMODE_0);

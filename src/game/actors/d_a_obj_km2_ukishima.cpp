@@ -50,7 +50,7 @@ extern UkishimaCollisionFilePtr gKm2UkishimaCollisionFile; /* KCL, file 1644 */
 /* 20.12; InitResourcesFrom writes this to mBobAmplitude. */
 enum { kBobAmplitude = 0xf50 };
 
-extern "C" daObjKm2_Ukishima_c *daObjKm2_Ukishima_c_classInit() {
+daObjKm2_Ukishima_c *daObjKm2_Ukishima_c_classInit() {
     return new daObjKm2_Ukishima_c();
 }
 

@@ -31,11 +31,11 @@ extern "C" {
 
 /* Checker-family helpers shared across the collision TUs, spelled as
    defined. */
-int  func_02037dc4(int p);   /* SurfaceInfo * -> Vector3 * (the hit normal) */
-void dBgS_RideCallBack(int a, int b);
-void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d);
-int  SurfaceInfo_TestFlag0x20(int *p);
 }
+int func_02037dc4(int p); /* SurfaceInfo * -> Vector3 * (the hit normal) */
+void dBgS_RideCallBack(dBgPi *hit, dActor_c *rider);
+void dBgS_MoveBgCrrPos(dBgPi *hit, Vector3 *pos, Vector3_16 *motionAng, Vector3_16 *ang);
+int  SurfaceInfo_TestFlag0x20(int *p);
 
 /* Lifecycle first; the group emits at the run's tail. Both bodies are empty:
    the class header supplies the base step, the vtable store, the two typed
@@ -47,20 +47,20 @@ dBgCh_Actr::~dBgCh_Actr()
 {
 }
 
-void dBgCh_Actr::Init(dActor_c *actor, Fix12i radius, Fix12i height, Vector3_16 *a, Vector3_16 *b) {
+void dBgCh_Actr::Init(dActor_c *actor, fx32 radius, fx32 height, Vector3_16 *a, Vector3_16 *b) {
     mActor = actor;
     mRadius = radius;
     mHeight = height;
     mFlags = 0;
-    mSphereClsn.mMotionAngPtr = (s32)a;
-    mAngPtr = (s32)b;
+    mSphereClsn.mMotionAngPtr = a;
+    mAngPtr = b;
     mMaxNormalY = 0x1000;
 }
 
 /* Latch the sphere query's floor normal (the floor contact with the greatest
    Y, see dBgCh_SphCrr.h) into mGroundNormal on a grounded frame. Flag 0x100
    marks the latched normal valid; func_020371fc reads it. */
-extern "C" void func_02037318(dBgCh_Actr *clsn) {
+void func_02037318(dBgCh_Actr *clsn) {
     const int *src;
 
     clsn->mFlags &= ~0x100;
@@ -78,9 +78,7 @@ extern "C" void func_02037318(dBgCh_Actr *clsn) {
 /* The ground-snap step run once per landing: when the sphere query flagged a
    floor hit and the actor is close to a dBgCh_Gnd probed surface, snap the
    actor's position onto it and raise the on-ground state. */
-extern "C" void func_020371fc(char *self)
-{
-    dBgCh_Actr *clsn = (dBgCh_Actr *)self;
+extern "C" void func_020371fc(dBgCh_Actr *clsn) {
     if ((clsn->mSphereClsn.flags & 1) == 0) return;
     if ((clsn->mSphereClsn.flags & 8) == 0) return;
     if ((clsn->mFlags & 0x100) == 0) return;
@@ -116,7 +114,7 @@ extern "C" void func_020371fc(char *self)
 void dBgCh_Actr::CommitFloorHit(s32 wasOnGround) {
     if (wasOnGround == 0)
         SetJustHitGroundFlag();
-    dBgS_RideCallBack((int)GetFloorResult(), (int)mActor);
+    dBgS_RideCallBack(GetFloorResult(), mActor);
     SetGroundFlag();
     if (GetLimMovFlag() == 0)
         mActor->mVertSpeed = 0;
@@ -132,8 +130,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
     struct Vector3 *prev = &mActor->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos()) {
-        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                          mAngPtr);
+        dBgS_MoveBgCrrPos(mSphereClsn.GetFloorResult(), pos, mSphereClsn.mMotionAngPtr, mAngPtr);
     }
     onGround = IsOnGround();
     ClearAllGroundFlags();
@@ -229,8 +226,7 @@ void dBgCh_Actr::UpdateContinuousExceptSlot0() {
     prev = &a->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos())
-        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                          mAngPtr);
+        dBgS_MoveBgCrrPos(mSphereClsn.GetFloorResult(), pos, mSphereClsn.mMotionAngPtr, mAngPtr);
 
     hitFloor = false;
     dBgPi floorHit;
@@ -357,8 +353,7 @@ void dBgCh_Actr::UpdateContinuous()
     prev = &a->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos())
-        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                          mAngPtr);
+        dBgS_MoveBgCrrPos(mSphereClsn.GetFloorResult(), pos, mSphereClsn.mMotionAngPtr, mAngPtr);
 
     hitFloor = false;
     dBgPi floorHit;
@@ -610,8 +605,7 @@ void dBgCh_Actr::UpdateExtraContinous()
     prev = &actor->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear())
-        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                          mAngPtr);
+        dBgS_MoveBgCrrPos(mSphereClsn.GetFloorResult(), pos, mSphereClsn.mMotionAngPtr, mAngPtr);
 
     {
         hitFloor = false;
@@ -862,7 +856,7 @@ void dBgCh_Actr::Unk_0203589c()
 }
 
 /* Copy a vector into the actor's current and previous position fields. */
-extern "C" void func_02035860(dBgCh_Actr *self, const Vector3 *src) {
+void func_02035860(dBgCh_Actr *self, const Vector3 *src) {
     dActor_c *base = self->mActor;
     struct Vector3 *d1 = &base->mPos;
     d1->x = src->x;
@@ -878,15 +872,15 @@ extern "C" void func_02035860(dBgCh_Actr *self, const Vector3 *src) {
    the dBgCh_SphCrr at 0x20 second -- that is the ROM's order. */
 void dBgCh_Actr::StartDetectingWater()
 {
-    ((dBgCh *)&mRaycastLine)->StartDetectingWater();
-    ((dBgCh *)&mSphereClsn)->StartDetectingWater();
+    mRaycastLine.StartDetectingWater();
+    mSphereClsn.StartDetectingWater();
 }
 
 /* Mirror of StartDetectingWater: the line sub-object first, then the sphere. */
 void dBgCh_Actr::StopDetectingWater()
 {
-    ((dBgCh *)&mRaycastLine)->StopDetectingWater();
-    ((dBgCh *)&mSphereClsn)->StopDetectingWater();
+    mRaycastLine.StopDetectingWater();
+    mSphereClsn.StopDetectingWater();
 }
 
 void dBgCh_Actr::StartIgnoringVanishSurfaces() {
@@ -909,7 +903,7 @@ void dBgCh_Actr::StopIgnoringType14Walls() {
     mSphereClsn.StopIgnoringType14Walls();
 }
 
-extern "C" void func_02035798(dBgCh_Actr *self, Fix12i maxNormalY) {
+void func_02035798(dBgCh_Actr *self, fx32 maxNormalY) {
     self->mMaxNormalY = maxNormalY;
 }
 
@@ -985,11 +979,11 @@ s32 dBgCh_Actr::GetLimMovFlag() const
     return mFlags & 0x80;
 }
 
-void dBgCh_Actr::SetRadius(Fix12i radius) {
+void dBgCh_Actr::SetRadius(fx32 radius) {
     mRadius = radius;
 }
 
-void dBgCh_Actr::SetHeight(Fix12i height) {
+void dBgCh_Actr::SetHeight(fx32 height) {
     mHeight = height;
 }
 
@@ -1005,19 +999,16 @@ dBgPi *dBgCh_Actr::GetWallResult() const {
     return const_cast<dBgCh_SphCrr &>(mSphereClsn).GetWallResult();
 }
 
-extern "C" int func_0203564c(int p)
-{
-    return (int)((dBgCh_Actr *)p)->mSphereClsn.GetUnderResult();
+extern "C" void *func_0203564c(void *p) {
+    return ((dBgCh_Actr *)p)->mSphereClsn.GetUnderResult();
 }
 
-extern "C" void func_02035644(int *p, int v)
-{
+void func_02035644(int *p, int v) {
     p[67] = v; /* mSphereClsn's wall-rejection half extent (its +0xec) */
 }
 
-extern "C" int func_02035638(unsigned char *p)
-{
-    return p[144] & 16;   /* mSphereClsn.flags & 0x10 -- the ceiling bit */
+extern "C" int func_02035638(unsigned char *p) {
+    return p[144] & 0x10; /* mSphereClsn.flags & 0x10 -- the ceiling bit */
 }
 
 /* Returns 0 or 8, the mask itself -- no normalisation. */

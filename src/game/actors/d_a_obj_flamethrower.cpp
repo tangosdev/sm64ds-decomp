@@ -36,8 +36,6 @@
  *   same shape as InitResources (this-based, stores at +0x3a4 /
  *   +0x104 / +0xf8). Those two spellings together were 0x454 against
  *   0x470.
- * - InitResources: dCcPos_c::Init with by-value Fix12<int> was 0x18c
- *   against 0x174. The call is the scalar Fix12i method.
  */
 
 #include "daObjFlamethrower_c.h"
@@ -55,15 +53,15 @@ enum {
     kBigBoosHaunt = 0xc,
     kSegments = 12,
     kBbhSegments = 9,
-    kPhaseFrames = 0x3c,
+    kPhaseFrames = 60,
     kAltParam = 0xff,
     kOffScreen = 8,
     kPlayerActorId = 0xbf,
     kFlameSound = 0x180,
     kClsnFlags = 0x200002,
     kParticleLift = 0x32000,
-    kRadiusMul = 0x14,
-    kHeightMul = 0x28
+    kRadiusMul = 20,
+    kHeightMul = 40
 };
 
 extern signed char gCurrentSublevel;
@@ -84,7 +82,7 @@ extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 /* The implicit constructor builds twelve collision cylinders and twelve
  * flame positions in member order. Vector3's empty default constructor
  * is the original array callback at arm9 0x0203d384. */
-extern "C" daObjFlamethrower_c *daObjFlamethrower_c_classInit() {
+daObjFlamethrower_c *daObjFlamethrower_c_classInit() {
     return new daObjFlamethrower_c;
 }
 
@@ -129,7 +127,7 @@ int daObjFlamethrower_c::InitResources() {
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].y = firstPos.y;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].z = firstPos.z;
             } else {
-                Vec3_Add(&nextPos, (const Vector3 *)&mFlamePositions[im1], &dst);
+                Vec3_Add(&nextPos, &mFlamePositions[im1], &dst);
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].x = nextPos.x;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].y = nextPos.y;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].z = nextPos.z;
@@ -189,7 +187,7 @@ int daObjFlamethrower_c::Behavior() {
         if (mActiveFlames != 0) {
             /* Through its address. mActiveFlames-- is ldrb [this, #0x465]. */
             active = &mActiveFlames;
-            *active = (u8)(*active - 1);
+            *active = (*active - 1);
         }
         if (DecIfAbove0_Short(&mTimer) == 0) {
             mState = 1;
@@ -199,7 +197,7 @@ int daObjFlamethrower_c::Behavior() {
     case 1:
         if ((int)mActiveFlames < (count - 1)) {
             active = &mActiveFlames;
-            *active = (u8)(*active + 1);
+            *active = (*active + 1);
         }
         if (DecIfAbove0_Short(&mTimer) == 0) {
             mState = 0;
@@ -252,7 +250,7 @@ int daObjFlamethrower_c::Behavior() {
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum.y;
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum.z;
                     } else {
-                        Vec3_Add((Vector3 *)sum2, (const Vector3 *)&mFlamePositions[im1], &dst);
+                        Vec3_Add((Vector3 *)sum2, &mFlamePositions[im1], &dst);
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x = sum2[0];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum2[1];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum2[2];

@@ -15,9 +15,6 @@
  *     passed, not used. Jump2Popup's empty constructor and destructor
  *     are also dScMgTrampoline2_c's: its hand-built factory and array
  *     cleanup register them by their mangled names.
- *   - pad_5004 stays bytes: the state functions copy the whole eight-byte
- *     PMF record into it with a struct assign, and Behavior calls through
- *     it. See the header's state-machine note.
  *   - The func_ov006_020cNNN and func_ov004_* externs are foreign callees
  *     (the board objects' TUs and the minigame base), not this TU's own.
  */
@@ -60,14 +57,7 @@ struct S3 {
     int w[3];
 };
 
-/* The state callback stored at 0x5004 (pad_5004 in the header). */
 typedef void (dScMgJump2_c::*dScMgJump2_cState)();
-
-/* The same eight bytes as a plain pair: the state functions copy the next
- * state into 0x5004 whole. */
-struct G2 {
-    int w[2];
-};
 
 /* File-scope objects at the end of this file construct the two model
  * handles (files 0x203 and 0x204). mwcc emits __sinit_d_s_mg_jump2.cpp
@@ -94,36 +84,35 @@ struct OamAttr;
 struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
-void Jump2Popup_UpdateAll(void);
-extern int Jump3D_AllIdle(void);
-extern int Heyho_AllIdle(void);
 extern void Mg_SubmitScore(int);
 extern void Mg_SetSharedState(int);
-extern void Heyho_SeparateAll(void);
-extern void Jump3D_UpdateAll(void);
 extern int sJumpComboCount;
-extern struct G2 pmf_dScMgJump2_c_State_Idle;
-extern struct G2 pmf_dScMgJump2_c_State_End;
-extern void Heyho_SettleAll(void);
-extern void Jump3D_SetTuning(int a);
+extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_Idle)();
+extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_End)();
 extern int sHeyhoUnsettledCount;
 extern int sHeyhoCount;
 extern int sJump3DMariosLeft;
-extern struct G2 pmf_dScMgJump2_c_State_Play;
-extern void Jump3D_StartRoundLayout(void);
-extern struct G2 pmf_dScMgJump2_c_State_Result;
-extern struct G2 pmf_dScMgJump2_c_State_Intro;
+extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_Play)();
+extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_Result)();
+extern void (dScMgJump2_c::*pmf_dScMgJump2_c_State_Intro)();
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
-extern void Jump3D_SetLowGravity(void);
-extern void Heyho_ReactAll(void);
 extern int Mg_GetTopScreenYOffset(void);
-extern int Heyho_InitPool(void *ptr, int n);
 extern int Jump3D_InitPool(void *base, int count);
 extern u8 gMainScreenLayers;
 extern s16 data_02082614;
 }
-
+void Jump2Popup_UpdateAll(void);
+extern int Jump3D_AllIdle(void);
+extern int Heyho_AllIdle(void);
+extern void Heyho_SeparateAll(void);
+extern void Jump3D_UpdateAll(void);
+extern void Heyho_SettleAll(void);
+extern void Jump3D_SetTuning(int a);
+extern void Jump3D_StartRoundLayout(void);
+extern void Jump3D_SetLowGravity(void);
+extern void Heyho_ReactAll(void);
+extern int Heyho_InitPool(void *ptr, int n);
 
 /* Empty and out of line: mPopups' element constructor, which the factory
  * below registers with __cxa_vec_ctor (dScMgTrampoline2_c's factory reuses
@@ -136,7 +125,7 @@ Jump2Popup::Jump2Popup() {}
  * mDrawSubScreen, the empty loop over the two cameras, mParticle), then
  * this class's vtable and mPlayers, mHeyhos, mPopups and mModel.
  * Historical alias: dScMgJump2_c_Spawn. */
-extern "C" dScMgJump2_c *dScMgJump2_c_classInit() {
+dScMgJump2_c *dScMgJump2_c_classInit() {
     return new dScMgJump2_c;
 }
 
@@ -203,7 +192,7 @@ s32 dScMgJump2_c::InitResources() {
         return 0;
 
     sJump2BackFile = &sJump2Back02ModelFile;
-    bmdFile = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&sJump2Back02ModelFile);
+    bmdFile = dExtSimpleModel_c::LoadFile(sJump2Back02ModelFile);
 
     if (mModel.SetFile((BMD_File *)bmdFile, 1, -1) == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
@@ -226,10 +215,10 @@ s32 dScMgJump2_c::InitResources() {
  *
  * This one arms the countdown and installs the next state. */
 void dScMgJump2_c::BeginIntro() {
-    mStateTimer = 0x78;
+    mStateTimer = 120;
     mTextureOffsetT = 0;
     mTextureScrollRate = 0x4000;
-    *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Intro;
+    mState = pmf_dScMgJump2_c_State_Intro;
 }
 
 void dScMgJump2_c::State_Intro() {
@@ -247,8 +236,8 @@ void dScMgJump2_c::State_Intro() {
 }
 
 void dScMgJump2_c::BeginPlay() {
-    mStateTimer = 0xf0;
-    *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Play;
+    mStateTimer = 240;
+    mState = pmf_dScMgJump2_c_State_Play;
 }
 
 void dScMgJump2_c::State_Play() {
@@ -280,7 +269,7 @@ void dScMgJump2_c::State_Play() {
         int value;
         s16 countdown;
         Heyho_SettleAll();
-        mStateTimer = 0xf0 - sJumpComboCount * 6;
+        mStateTimer = 240 - sJumpComboCount * 6;
         countdown = mStateTimer;
         if (countdown < 0x3c)
             countdown = 0x3c;
@@ -316,8 +305,8 @@ void dScMgJump2_c::State_Play() {
 }
 
 void dScMgJump2_c::BeginEnd() {
-    mStateTimer = 0x20;
-    *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_End;
+    mStateTimer = 32;
+    mState = pmf_dScMgJump2_c_State_End;
 }
 
 void dScMgJump2_c::State_End() {
@@ -331,7 +320,7 @@ void dScMgJump2_c::State_End() {
     }
     Jump3D_SetLowGravity();
     Heyho_ReactAll();
-    *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Result;
+    mState = pmf_dScMgJump2_c_State_Result;
 }
 
 void dScMgJump2_c::State_Result() {
@@ -340,7 +329,7 @@ void dScMgJump2_c::State_Result() {
             Mg_SubmitScore(sJumpComboCount);
             Mg_SetSharedState(MG_STATE_GAME_OVER);
             mPromptEnabled = 0;
-            *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Idle;
+            mState = pmf_dScMgJump2_c_State_Idle;
         }
     }
     Heyho_SeparateAll();
@@ -351,9 +340,7 @@ void dScMgJump2_c::State_Idle() {}
 
 /* Slot 6. mParticleID is a particle system's unique ID, handed to
  * NewCleanParticle and back each frame. The object FromUniqueID returns is
- * a Particle::System. Both Particle::System
- * calls keep their mangled spellings: declaring the real Fix12<int>
- * parameters changes how the call passes them. */
+ * a Particle::System. */
 s32 dScMgJump2_c::Behavior() {
     mParticleID =
         Particle::System::NewCleanParticle(mParticleID, 0xf0, 0x400000, 0x800000, -0x480000, 0);
@@ -363,15 +350,10 @@ s32 dScMgJump2_c::Behavior() {
         system->emitInterval = 0x2c;
     }
     Jump2Popup_UpdateAll();
-    {
-        dScMgJump2_cState *pp = (dScMgJump2_cState *)pad_5004;
-        (this->**pp)();
-    }
+    (this->*mState)();
     return 1;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void func_0203cd80(int *m, int x);
 
 void Jump2_SetLights(void) {
     int light0[3];
@@ -392,7 +374,6 @@ void Jump2_SetLights(void) {
     func_0203cd80(light1, 0x2000);
     func_0203ccd4((struct Vector3 *)light1, 0);
     G3_LightVector(GX_LIGHTID_1, light1[0], light1[1], light1[2]);
-}
 }
 
 /* Slot 9. */
@@ -434,9 +415,9 @@ s32 dScMgJump2_c::Render() {
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite(sJump2TextSpritesByLanguage[idx][1], x, 0xc, 0);
+                DrawOamSprite(sJump2TextSpritesByLanguage[idx][1], x, 12, 0);
             } else {
-                RenderOamMainScreen(sJumpLifeIconSprite, x, 0xc, -1, -1);
+                RenderOamMainScreen(sJumpLifeIconSprite, x, 12, -1, -1);
             }
             x += 0x12;
         }
@@ -454,15 +435,12 @@ s32 dScMgJump2_c::CleanupResources() {
     return 1;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
 void Jump2Popup_InitPool(int table, int count) {
     sJump2Popups = (struct Jump2Popup *)table;
     sJump2PopupCount = count;
     data_ov006_021421b4 = 0;
 }
-}
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
 void Jump2Popup_Spawn(int x, int y, int number) {
     int i;
     for (i = sJump2PopupCount - 1; i >= 0; i--) {
@@ -472,9 +450,7 @@ void Jump2Popup_Spawn(int x, int y, int number) {
         }
     }
 }
-}
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
 void Jump2Popup_ClearAll(void) {
     int i;
     for (i = 0; i < sJump2PopupCount; i++) {
@@ -482,23 +458,18 @@ void Jump2Popup_ClearAll(void) {
     }
     sJump2PopupList = 0;
 }
-}
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
 void Jump2Popup_UpdateAll(void) {
     int i;
     for (i = 0; i < sJump2PopupCount; i++) {
         sJump2Popups[i].Tick();
     }
 }
-}
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
 void Jump2Popup_DrawAll(void) {
     Jump2PopupLink *node;
     for (node = sJump2PopupList; node != 0; node = node->next)
         ((Jump2Popup *)node)->DrawNumber();
-}
 }
 
 void Jump2PopupLink::Link() {

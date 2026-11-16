@@ -89,7 +89,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "dScGameOver_c_classInit",
+      "symbol": "_Z23dScGameOver_c_classInitv",
       "address": "0x020b1118",
       "size": "0x00000064",
       "legacy_source": "src/d_s_game_over.cpp",
@@ -499,7 +499,7 @@
       "source": "0x020b1750",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dScGameOver_c_classInit",
+      "symbol": "_Z23dScGameOver_c_classInitv",
       "addend": 0,
       "target_module": "ov003",
       "target_address": "0x020b1118"

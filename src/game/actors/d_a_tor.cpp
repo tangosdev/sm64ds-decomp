@@ -43,7 +43,7 @@ enum daTor_c_AssetId {
  * the level overlay, not here. ov096 relocs.txt lists the load at 0x021376b0
  * as ambiguous between ten level overlays; tools/overlay_residency.py settles
  * it to ov024, the only level whose tables load ov096. */
-extern int data_ov024_02112968[];
+extern BTA_File data_ov024_02112968;
 
 /* The tornado's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
@@ -103,9 +103,9 @@ void daTor_c::UpdateSpin(s32 scale)
 
 void daTor_c::State2()
 {
-    s32 scale = (0x3c - mStateTimer) << 12;
+    s32 scale = (60 - mStateTimer) << 12;
     if (scale >= 0) {
-        UpdateSpin(scale / 0x3c);
+        UpdateSpin(scale / 60);
         return;
     }
     mdCcAc_c.flags |= 1;
@@ -116,7 +116,7 @@ void daTor_c::State2()
         dActor_c *actor = (dActor_c *)player;
         if (Vec3_HorzDist(&mHomePos, &actor->mPos) > 0x9c4000)
             mState = 0;
-        if (mStateTimer > 0x168)
+        if (mStateTimer > 360)
             mState = 0;
         return;
     }
@@ -148,7 +148,7 @@ void daTor_c::State1()
     }
 
     if (Vec3_HorzDist(&mHomePos, &playerPos) < mChaseRange && mTriggerCount == 0 &&
-        mChaseTimer < 0x384) {
+        mChaseTimer < 900) {
         angle = Vec3_HorzAngle(&mPos, &playerPos);
         mAngleToPlayer = angle;
         ApproachLinear(mPrevAngleY, mAngleToPlayer, 0x200);
@@ -160,14 +160,13 @@ void daTor_c::State1()
         if (Vec3_HorzDist(&mHomePos, &mPos) < 0xc8000)
             mState = 2;
     }
-    goto cont;
 
+    goto cont;
 null_player:
     mState = 2;
     return;
-
 cont:
-    if (Vec3_Dist(&mPos, &playerPos) > 0xbb8000 || mChaseTimer >= 0x384)
+    if (Vec3_Dist(&mPos, &playerPos) > 0xbb8000 || mChaseTimer >= 900)
         mState = 2;
 
     UpdatePos(0);
@@ -189,7 +188,7 @@ cont:
 
 void daTor_c::State0()
 {
-    if (mChaseTimer >= 0x384) {
+    if (mChaseTimer >= 900) {
         mPosX = mHomePos.x;
         mPosY = mHomePos.y;
         mPosZ = mHomePos.z;
@@ -210,7 +209,7 @@ void daTor_c::State0()
     } else {
         mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x85, mCamSpacePos, 0);
         UpdateSpin((mStateTimer << 12) / 60);
-        if (mStateTimer >= 0x3c)
+        if (mStateTimer >= 60)
             mState = 1;
     }
 }
@@ -269,9 +268,8 @@ int daTor_c::InitResources()
     dExtFrameCtrl_c::LoadFile(gSandTornadoAnimationFile);
     func_02016aac(&mAnmModel, 0x16, 1);
     mAnmModel.SetAnim((BCA_File *)((void *)gSandTornadoAnimationFile.filePtr), 0, 0x1000, 0);
-    dExtAnmTexSRT_c::Prepare(*(BMD_File *)gSandTornadoModelFile.filePtr,
-                             *(BTA_File *)data_ov024_02112968);
-    mTextureTransformer.SetFile(*(BTA_File *)data_ov024_02112968, 0, 0x1000, 0);
+    dExtAnmTexSRT_c::Prepare(*(BMD_File *)gSandTornadoModelFile.filePtr, data_ov024_02112968);
+    mTextureTransformer.SetFile(data_ov024_02112968, 0, 0x1000, 0);
     mdCcAc_c.Init(this, 0, 0, 0x200002, 0);
     mWithMeshClsn.Init(this, 0x50000, 0x50000, 0, 0);
 
@@ -295,7 +293,6 @@ int daTor_c::InitResources()
     return 1;
 }
 
-extern "C" daTor_c *daTor_c_classInit()
-{
+daTor_c *daTor_c_classInit() {
     return new daTor_c();
 }

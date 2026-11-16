@@ -88,7 +88,7 @@ s32 daFRing_c::Behavior() {
     daPly_c *player = ClosestPlayer();
     unsigned int frame = mFrame;
     int reach = frame * 0x22;
-    if (player != 0 && frame < 0x46 && player->mIsAirborne == 0) {
+    if (player != 0 && frame < 70 && player->mIsAirborne == 0) {
         int dist = Vec3_HorzDist(&mPos, &player->mPos);
         int band0 = reach * data_ov060_0211ab20[0];
         int band1 = reach * data_ov060_0211ab20[1];
@@ -153,6 +153,6 @@ FRingAnimationFileHandle data_ov060_0211b1f8(ASSET_KPA_SHWAVE_BCA);
 FRingTexSequenceFilePtr data_ov060_0211b200(ASSET_KPA_SHWAVE_BTP);
 
 /* return new builds the ring and its eight animators. */
-extern "C" daFRing_c *daFRing_c_classInit(void) {
+daFRing_c *daFRing_c_classInit(void) {
     return new daFRing_c;
 }

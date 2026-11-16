@@ -101,8 +101,6 @@ void Mg_AddCredits(void *c, int delta);
 void Mg_SubCredits(void *c, int val);
 extern void Mg_SubmitScore(int self);
 extern int data_ov006_0213e948[];
-extern void Slot3_ReelDigits(char *c, int i);
-extern int Sound_PlayIfNotActive(int, int, int, short);
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
@@ -127,27 +125,17 @@ extern int data_0208ee44;
 extern void RenderOamMainScreen(OamAttr *, int, int, int, int);
 extern OamAttr sSlotsSlotBlinkSprites[];
 extern void Mg_LoseCredits(int c);
-extern void func_ov001_020ab3f0(void *c);
 void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m);
 extern void *data_ov006_0213e528[];
-int TouchArea_Update(void *c, int x);
-void SlotBet_OnTouch(void *c);
 void Mg_GainCredits(int x);
-extern void func_ov001_020ab5b0(char *r0, int r1, short r2, short r3, short s4, short s5);
 extern int Mg_GetSavedRecord0(void);
 extern int sSlot1ReelPos[][2];
 extern void *sSlot1Sprites[];
 extern unsigned char sSlot1Payouts[];
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
-extern void SlotBlink_Draw(unsigned char *o);
 extern void Mg_SaveRecordPair(int a, int b);
 extern void Mg_PlayJingle(void *c);
-extern void SlotLamp_Start(void *o);
-extern void SlotLamp_Tick(void *o);
-extern void SlotBlink_Start(void *o, s16 x, s16 y);
-extern void SlotBlink_Tick(void *o);
-extern void SlotReel_SetSpeed(void *o, int v);
 extern int sSlotReelScrollSpeeds[];
 extern u8 sSlot1Payouts[];
 extern s16 sSlotMatchBlinkX[][2];
@@ -159,6 +147,9 @@ extern dWipe_c data_0209f61c;
 extern int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
 }
+extern int Sound_PlayIfNotActive(int, int, int, short);
+extern void func_ov001_020ab3f0(void *c);
+int TouchArea_Update(void *c, int x);
 
 /* ~dScMgSlot1_c() (D1, complete-object destructor). The empty body is the
    original ownership model: the compiler destroys the typed mBetIcon member,
@@ -229,11 +220,10 @@ void dScMgSlot3_c::InitMainScreenBg() {
                      GX_BG_CHARBASE_0x18000, GX_BG_EXTPLTT_01);
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void Slot3_ReelDigits(char *sceneBytes, int reelIndex);
 // Keep the strided cursors cast back to the class. mStripLength is read by
 // offset: a member read of it grows this body by 8 bytes (measured).
-void Slot3_ReelDigits(char *c, int reelIndex) {
+void dScMgSlot3_c::ReelDigits(int reelIndex) {
+    char *c = (char *)this;
     int symbolIndex = (((dScMgSlot3_c *)(c + reelIndex * 4))->mReelPos[0] >> 12) / 80;
     int column;
     char *dst = c + reelIndex * 3;
@@ -245,90 +235,78 @@ void Slot3_ReelDigits(char *c, int reelIndex) {
         dst += 1;
     }
 }
-}
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void Slot3_StateDone(void) {}
-}
+void dScMgSlot3_c::StateDone() {}
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-
-void Slot3_StateGameOver(char *c) {
-    dScMgSlot3_c *self = (dScMgSlot3_c *)c;
-    if (DecIfAbove0_Byte(&self->mStateTimer) == 0) {
-        self->mState = 7;
+void dScMgSlot3_c::StateGameOver() {
+    if (DecIfAbove0_Byte(&mStateTimer) == 0) {
+        mState = 7;
         Mg_SetSharedState(MG_STATE_GAME_OVER);
-        self->mReelDifficulty = 0;
+        mReelDifficulty = 0;
     }
-    if (self->mStateTimer >= 0x3c)
+    if (mStateTimer >= 60)
         return;
-    self->mReelWinPos[0] += 0x10000;
-    self->mReelWinPos[1] -= 0x10000;
-    self->mReelWinPos[2] += 0x10000;
-}
-}
-
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void Slot3_StateWait(void) {}
+    mReelWinPos[0] += 0x10000;
+    mReelWinPos[1] -= 0x10000;
+    mReelWinPos[2] += 0x10000;
 }
 
-extern "C" void Slot3_StatePayout(char *c) {
-    dScMgSlot3_c *self = (dScMgSlot3_c *)c;
-    if (DecIfAbove0_Byte(&self->mStateTimer) == 0) {
-        if (self->mState == 3) {
-            if (self->mHudScore < 0x270f)
-                self->mHudScore += 1;
-            if (self->mHudScore > self->mBestHudScore)
-                self->mBestHudScore = self->mHudScore;
-            self->StartRound(4);
+void dScMgSlot3_c::StateWait() {}
+
+void dScMgSlot3_c::StatePayout() {
+    if (DecIfAbove0_Byte(&mStateTimer) == 0) {
+        if (mState == 3) {
+            if (mHudScore < 0x270f)
+                mHudScore += 1;
+            if (mHudScore > mBestHudScore)
+                mBestHudScore = mHudScore;
+            StartRound(4);
         } else {
-            if (self->mCredits <= 0) {
-                self->mStateTimer = 0x78;
-                self->mState = 6;
+            if (mCredits <= 0) {
+                mStateTimer = 120;
+                mState = 6;
             } else {
-                self->StartRound(5);
+                StartRound(5);
             }
         }
     }
 
-    if (self->mState == 3) {
-        if (self->mStateTimer != 0x14)
+    if (mState == 3) {
+        if (mStateTimer != 20)
             return;
-        if (self->mPayoutRemaining <= 0)
+        if (mPayoutRemaining <= 0)
             return;
-        self->mPayoutRemaining -= 1;
-        Mg_AddCredits(c, 1);
+        mPayoutRemaining -= 1;
+        Mg_AddCredits(this, 1);
         Sound::PlayBank2_2D(0x149);
-        self->mStateTimer += 5;
+        mStateTimer += 5;
         return;
     }
 
-    if (self->mState != 4)
+    if (mState != 4)
         return;
 
     {
-        unsigned char b = self->mStateTimer;
+        unsigned char b = mStateTimer;
         if (b != 0x14 && b != 0x28 && b != 0x3c)
             return;
     }
 
-    Mg_SubCredits(c, 1);
+    Mg_SubCredits(this, 1);
     Sound::PlayBank2_2D(0x14a);
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void Slot3_StateJudge(char *c) {
+void dScMgSlot3_c::StateJudge() {
     unsigned char columnSymbols[3];
     int column;
     int payout;
     int score;
     char *self;
-    dScMgSlot3_c *scene = (dScMgSlot3_c *)c;
 
-    if (DecIfAbove0_Byte(&scene->mStateTimer) != 0)
+    if (DecIfAbove0_Byte(&mStateTimer) != 0)
         return;
 
-    self = c;
+    self = (char *)this;
     for (column = 0; column < 3; column++) {
         int reelIndex;
         columnSymbols[column] = ((dScMgSlot3_c *)self)->mResultSymbols[0][column];
@@ -346,17 +324,17 @@ void Slot3_StateJudge(char *c) {
         self = (char *)((unsigned)self | (unsigned)(column - column));
     }
 
-    scene->mWinColumn = -1;
+    mWinColumn = -1;
     payout = 0;
     {
         int columnIndex;
         for (columnIndex = 0; columnIndex < 3; columnIndex++) {
-            if (columnSymbols[columnIndex] == scene->mWinSymbol) {
+            if (columnSymbols[columnIndex] == mWinSymbol) {
                 if (columnIndex == 1) {
-                    scene->mWinColumn = columnIndex;
+                    mWinColumn = columnIndex;
                     payout += 6;
                 } else if (columnIndex == 0 || columnIndex == 2) {
-                    scene->mWinColumn = columnIndex;
+                    mWinColumn = columnIndex;
                     payout += 3;
                 }
                 break;
@@ -364,27 +342,24 @@ void Slot3_StateJudge(char *c) {
         }
     }
 
-    score = scene->mHudScore;
+    score = mHudScore;
     if (payout > 0) {
-        scene->mPayoutRemaining = payout;
-        scene->mState = 3;
+        mPayoutRemaining = payout;
+        mState = 3;
         func_02012790(0x26);
-        scene->mStateTimer = 0x28;
+        mStateTimer = 40;
         score += 1;
     } else {
-        scene->mState = 4;
+        mState = 4;
         func_02012790(0xe);
-        scene->mStateTimer = 0x50;
+        mStateTimer = 80;
     }
     Mg_SubmitScore(score);
 
-    scene->mPromptEnabled = 0;
-}
+    mPromptEnabled = 0;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void Slot3_StateSpin(char *c) {
-    dScMgSlot3_c *scene = (dScMgSlot3_c *)c;
+void dScMgSlot3_c::StateSpin() {
     u8 playerSlot;
     int touchPressed;
     int touchOffset;
@@ -400,91 +375,85 @@ void Slot3_StateSpin(char *c) {
     if (touchPressed != 0) {
         unsigned int touchY = gTouchY[playerSlot * 4];
         if (touchY >= 0x40 && touchY < 0x58) {
-            if (scene->mReelSpinning[0] == 1)
-                scene->mReelSpinning[0] = 0;
+            if (mReelSpinning[0] == 1)
+                mReelSpinning[0] = 0;
         } else if (touchY >= 0x58 && touchY < 0x70) {
-            if (scene->mReelSpinning[1] == 1)
-                scene->mReelSpinning[1] = 0;
+            if (mReelSpinning[1] == 1)
+                mReelSpinning[1] = 0;
         } else if (touchY >= 0x70 && touchY < 0x88) {
-            if (scene->mReelSpinning[2] == 1)
-                scene->mReelSpinning[2] = 0;
+            if (mReelSpinning[2] == 1)
+                mReelSpinning[2] = 0;
         }
     }
     for (reelIndex = 0; reelIndex < 3; reelIndex++) {
-        if (scene->mReelStopped[reelIndex] == 0) {
+        if (mReelStopped[reelIndex] == 0) {
             int oldSymbol;
             int newSymbol;
-            oldSymbol = (scene->mReelPos[reelIndex] >> 12) / 0x50;
-            if (scene->mReelReverse[reelIndex] == 1) {
-                scene->mReelPos[reelIndex] -=
-                    data_ov006_0213e948[scene->mStoppedReelCount * 3 + reelIndex];
-                if (scene->mReelPos[reelIndex] < 0)
-                    scene->mReelPos[reelIndex] += scene->mReelPeriod;
+            oldSymbol = (mReelPos[reelIndex] >> 12) / 0x50;
+            if (mReelReverse[reelIndex] == 1) {
+                mReelPos[reelIndex] -= data_ov006_0213e948[mStoppedReelCount * 3 + reelIndex];
+                if (mReelPos[reelIndex] < 0)
+                    mReelPos[reelIndex] += mReelPeriod;
             } else {
-                scene->mReelPos[reelIndex] +=
-                    data_ov006_0213e948[scene->mStoppedReelCount * 3 + reelIndex];
-                if (scene->mReelPos[reelIndex] >= scene->mReelPeriod)
-                    scene->mReelPos[reelIndex] -= scene->mReelPeriod;
+                mReelPos[reelIndex] += data_ov006_0213e948[mStoppedReelCount * 3 + reelIndex];
+                if (mReelPos[reelIndex] >= mReelPeriod)
+                    mReelPos[reelIndex] -= mReelPeriod;
             }
-            if (scene->mReelSpinning[reelIndex] == 0) {
-                newSymbol = (scene->mReelPos[reelIndex] >> 12) / 0x50;
+            if (mReelSpinning[reelIndex] == 0) {
+                newSymbol = (mReelPos[reelIndex] >> 12) / 0x50;
                 if (newSymbol != oldSymbol) {
-                    if (scene->mReelReverse[reelIndex] == 1)
-                        scene->mReelPos[reelIndex] = (oldSymbol * 0x50) << 12;
+                    if (mReelReverse[reelIndex] == 1)
+                        mReelPos[reelIndex] = (oldSymbol * 0x50) << 12;
                     else
-                        scene->mReelPos[reelIndex] = (newSymbol * 0x50) << 12;
-                    Slot3_ReelDigits(c, reelIndex);
-                    scene->mReelStopped[reelIndex] = 1;
-                    scene->mStoppedReelCount++;
-                    scene->mFrameCounter = 0;
+                        mReelPos[reelIndex] = (newSymbol * 0x50) << 12;
+                    ReelDigits(reelIndex);
+                    mReelStopped[reelIndex] = 1;
+                    mStoppedReelCount++;
+                    mFrameCounter = 0;
                     Sound::PlayBank2_2D(0x1a9);
                 }
             }
         }
     }
-    scene->mSpinSoundHandle = Sound_PlayIfNotActive(scene->mSpinSoundHandle, 2, 0x1a8, 0);
-    if (scene->mStoppedReelCount >= 3u) {
-        scene->mStateTimer = 0x1e;
-        scene->mState = 2;
+    mSpinSoundHandle = Sound_PlayIfNotActive(mSpinSoundHandle, 2, 0x1a8, 0);
+    if (mStoppedReelCount >= 3u) {
+        mStateTimer = 30;
+        mState = 2;
     }
 }
+
+extern "C" {
+void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6);
+void FreeGfxSlotsById(int arg);
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void Mascot_LookAt(char *c, int *src);
-void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6);
-void Mascot_StopLooking(int *p);
-void FreeGfxSlotsById(int arg);
-
-void Slot3_StateIntro(char *p) {
-    dScMgSlot3_c *scene = (dScMgSlot3_c *)p;
-    if (scene->mReelDrawY == 0x50) {
-        Mascot_LookAt((char *)&scene->mMascot, 0);
+void dScMgSlot3_c::StateIntro() {
+    if (mReelDrawY == 0x50) {
+        mMascot.LookAt(0);
         Mg_ShowBanner(0xd, 0x80, 0xa8, 1, -1, 0xd);
     }
 
-    if (scene->mReelDrawY > 0) {
-        scene->mReelDrawY -= 1;
-        if (scene->mReelDrawY != 0)
+    if (mReelDrawY > 0) {
+        mReelDrawY -= 1;
+        if (mReelDrawY != 0)
             return;
-        scene->mWinSymbol = scene->mNextWinSymbol;
-        Mascot_StopLooking((int *)&scene->mMascot);
+        mWinSymbol = mNextWinSymbol;
+        mMascot.StopLooking();
         return;
     }
 
-    scene->mStateTimer -= 1;
-    if (scene->mStateTimer != 0)
+    mStateTimer -= 1;
+    if (mStateTimer != 0)
         return;
 
     FreeGfxSlotsById(0x1d);
 
-    if (scene->mPromptBlinkCount == 0) {
-        scene->mPromptEnabled = 1;
-        scene->mPromptBlinkCount = 1;
-        scene->mPromptBlinkTimer = 0;
+    if (mPromptBlinkCount == 0) {
+        mPromptEnabled = 1;
+        mPromptBlinkCount = 1;
+        mPromptBlinkTimer = 0;
     }
-    scene->mState++;
-}
+    mState++;
 }
 
 void dScMgSlot3_c::StartRound(int mode) {
@@ -587,7 +556,7 @@ void dScMgSlot3_c::StartRound(int mode) {
             mReelWinPos[m2] = 0;
         }
         mStoppedReelCount = 0;
-        mStateTimer = 0x3c;
+        mStateTimer = 60;
         mState = 0;
         mWinColumn = -1;
         mPayoutRemaining = 0;
@@ -619,22 +588,22 @@ s32 dScMgSlot3_c::Render() {
     char *c = (char *)this;
     int i;
 
-    Camera_InitSlotsView((char *)&mCamera);
-    Mascot_Draw((char *)&mMascot);
+    Camera_InitSlotsView(&mCamera);
+    mMascot.Draw();
 
     if (mReelDrawY > 0) {
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 0x80,
-                        mReelDrawY + 0x10, -1, 2, 0x1000, 0x1000, 0, 1);
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 128, mReelDrawY + 0x10,
+                        -1, 2, 0x1000, 0x1000, 0, 1);
         }
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mNextWinSymbol * 3 + i], 0x80,
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mNextWinSymbol * 3 + i], 128,
                         mReelDrawY + 0x60, -1, 2, 0x1000, 0x1000, 0, 1);
         }
     } else {
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 0x80, 0x60, -1, 2,
-                        0x1000, 0x1000, 0, 1);
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 128, 96, -1, 2, 0x1000,
+                        0x1000, 0, 1);
         }
     }
 
@@ -765,7 +734,7 @@ s32 dScMgSlot3_c::Behavior() {
     (this->*sSlot3StateTable[mState])();
 
     mFrameCounter++;
-    Mascot_Update(&mMascot);
+    mMascot.Update();
 
     for (i = 0; i < 3; i++) {
         if (mState == 1) {
@@ -845,8 +814,8 @@ s32 dScMgSlot3_c::InitResources() {
     gSubScreenLayers = 0x14;
     G2_SetBlendAlpha(0, 0xc, 0xc, 4);
 
-    Mascot_Load((char *)&mMascot);
-    Camera_InitSlotsView((char *)&mCamera);
+    mMascot.Load();
+    Camera_InitSlotsView(&mCamera);
 
     mReelDifficulty = (int)mLevel;
 
@@ -888,96 +857,77 @@ inline dScMgSlot3_c::dScMgSlot3_c() {}
  * allocation size, vtable identity, and the MG_SLOT3 registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: func_ov006_0210c120. */
-extern "C" void *dScMgSlot3_c_classInit(void) {
+void *dScMgSlot3_c_classInit(void) {
     return new dScMgSlot3_c;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void SlotLamp_Start(void *raw) {
-    SlotLamp *lamp = (SlotLamp *)raw;
-    lamp->mTimer = 0x48;
-    lamp->mOn = 1;
+void SlotLamp::Start() {
+    mTimer = 72;
+    mOn = 1;
     gSubScreenLayers |= 2;
 }
-}
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void SlotLamp_Tick(void *o_) {
-    SlotLamp *lamp = (SlotLamp *)o_;
-    if (lamp->mTimer <= 0)
+void SlotLamp::Tick() {
+    if (mTimer <= 0)
         return;
-    lamp->mTimer -= 1;
-    if ((lamp->mTimer & 7) != 0)
+    mTimer -= 1;
+    if ((mTimer & 7) != 0)
         return;
-    lamp->mOn ^= 1;
-    if (lamp->mOn != 0)
+    mOn ^= 1;
+    if (mOn != 0)
         gSubScreenLayers |= 2;
     else
         gSubScreenLayers &= ~2;
 }
-}
 
 /* mPayoutLamp (0x469c, a SlotLamp) blinks bit 1 of gSubScreenLayers the same
- * way: a timer and an on flag. This clears it, 0210c180 starts it and
- * 0210c1a8 ticks it. */
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void SlotLamp_Clear(char *blink) {
-    ((SlotLamp *)blink)->mTimer = 0;
-    ((SlotLamp *)blink)->mOn = 0;
-}
+ * way: a timer and an on flag. Clear clears it, Start starts it and
+ * Tick ticks it. */
+void SlotLamp::Clear() {
+    mTimer = 0;
+    mOn = 0;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void SlotBlink_Start(void *raw, s16 x, s16 y) {
-    SlotBlink *sprite = (SlotBlink *)raw;
-    sprite->mX = x;
-    sprite->mY = y;
-    sprite->mTimer = 0x48;
-    sprite->mVisible = 1;
-}
+void SlotBlink::Start(s16 x, s16 y) {
+    mX = x;
+    mY = y;
+    mTimer = 72;
+    mVisible = 1;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void SlotBlink_Draw(unsigned char *raw) {
-    SlotBlink *sprite = (SlotBlink *)raw;
-    if (sprite->mVisible == 0)
+void SlotBlink::Draw() {
+    if (mVisible == 0)
         return;
-    RenderOamMainScreen(sSlotsSlotBlinkSprites, sprite->mX, sprite->mY, -1, -1);
-}
+    RenderOamMainScreen(sSlotsSlotBlinkSprites, mX, mY, -1, -1);
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void SlotBlink_Tick(void *o_) {
-    SlotBlink *sprite = (SlotBlink *)o_;
-    if (sprite->mTimer <= 0)
+void SlotBlink::Tick() {
+    if (mTimer <= 0)
         return;
-    sprite->mTimer -= 1;
-    if ((sprite->mTimer & 7) == 0) {
-        sprite->mVisible ^= 1;
+    mTimer -= 1;
+    if ((mTimer & 7) == 0) {
+        mVisible ^= 1;
     }
-}
 }
 
 /* mMatchBlink and mWildBlink (0x4684, 0x4690) are SlotBlinks: s16 x and y,
- * a timer and a visible flag. This clears one, 0210c218 starts one, 0210c278
- * ticks it and 0210c234 draws it. */
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void SlotBlink_Clear(char *sprite) {
-    ((SlotBlink *)sprite)->mTimer = 0;
-    ((SlotBlink *)sprite)->mVisible = 0;
-}
+ * a timer and a visible flag. Clear clears one, Start starts one, Tick
+ * ticks it and Draw draws it. */
+void SlotBlink::Clear() {
+    mTimer = 0;
+    mVisible = 0;
 }
 
 /* dThIcon_c.h keeps its words at 0x1c and 0x20 as unk_01c/unk_020 because
  * each derived icon gives them its own role. This file-local view names
  * dScMgSlot1_c::betIcon_c's:
- * - mBetCount: SlotBet_OnTouch adds one per touch, up to 3; betIcon_c::Render
+ * - mBetCount: OnTouch adds one per touch, up to 3; betIcon_c::Render
  *   draws that many bet coins; Behavior state 3 records mCredits plus
  *   mPayoutMultiplier per bet.
- * - mPayoutTicks: SlotReel_SetSpeed loads mBetCount * multiplier * 4;
+ * - mPayoutTicks: ArmPayout loads mBetCount * multiplier * 4;
  *   betIcon_c::Behavior counts it down, paying a credit every 4 ticks, and
  *   Behavior state 6 waits for it to reach 0.
- * SlotBet_Reset clears both. */
+ * Reset clears both. */
 struct SlotBetIcon {
     u8 mIcon[0x1c];   /* 0x00 -- dThIcon_c's vptr and named fields */
     s32 mBetCount;    /* 0x1c */
@@ -986,25 +936,21 @@ struct SlotBetIcon {
 typedef char SlotBetIcon_size_must_be_0x24[sizeof(SlotBetIcon) == 0x24 ? 1 : -1];
 #define BET_ICON(p) ((SlotBetIcon *)(p))
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
 /* The symbol name is a misreading: Behavior state 5 passes &mBetIcon and
  * the payout multiplier, and this arms the bet icon's payout countdown. */
-void SlotReel_SetSpeed(void *raw, int value) {
-    BET_ICON(raw)->mPayoutTicks = (BET_ICON(raw)->mBetCount * value) << 2;
-}
+void dScMgSlot1_c::betIcon_c::ArmPayout(int value) {
+    BET_ICON(this)->mPayoutTicks = (BET_ICON(this)->mBetCount * value) << 2;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void SlotBet_OnTouch(void *c_) {
-    dThIcon_c *icon = (dThIcon_c *)c_;
+void dScMgSlot1_c::betIcon_c::OnTouch() {
     void *scene;
     int count;
     unsigned int sid;
 
-    if (BET_ICON(icon)->mBetCount >= 3) {
+    if (BET_ICON(this)->mBetCount >= 3) {
         return;
     }
-    if (icon->mOn != 0) {
+    if (mOn != 0) {
         return;
     }
     scene = gMgScene;
@@ -1012,22 +958,18 @@ void SlotBet_OnTouch(void *c_) {
     if (count <= 0) {
         return;
     }
-    BET_ICON(icon)->mBetCount += 1;
+    BET_ICON(this)->mBetCount += 1;
     Mg_LoseCredits(1);
-    func_ov001_020ab3f0(icon);
+    func_ov001_020ab3f0(this);
     sid = 0x163;
     Sound::PlayBank2_2D(sid);
 }
-}
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void SlotBet_Reset(void *raw) {
-    dThIcon_c *icon = (dThIcon_c *)raw;
-    BET_ICON(icon)->mBetCount = 0;
-    BET_ICON(icon)->mPayoutTicks = 0;
-    if (icon->mTouchKind >= 1)
-        icon->mReady = 1;
-}
+void dScMgSlot1_c::betIcon_c::Reset() {
+    BET_ICON(this)->mBetCount = 0;
+    BET_ICON(this)->mPayoutTicks = 0;
+    if (mTouchKind >= 1)
+        mReady = 1;
 }
 
 void dScMgSlot1_c::betIcon_c::Render() {
@@ -1044,7 +986,7 @@ void dScMgSlot1_c::betIcon_c::Render() {
 void dScMgSlot1_c::betIcon_c::Behavior() {
     int val;
     if (TouchArea_Update(this, -1))
-        SlotBet_OnTouch(this);
+        OnTouch();
     val = BET_ICON(this)->mPayoutTicks;
     if (val != 0) {
         if ((val & 3) == 0) {
@@ -1056,11 +998,9 @@ void dScMgSlot1_c::betIcon_c::Behavior() {
     dThIcon_c::Behavior();
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void SlotBet_Place(char *icon) {
-    func_ov001_020ab5b0(icon, 1, 0x90, 0xb0, 0x10, 8);
-    ((dThIcon_c *)icon)->mPressTime = 6;
-}
+void dScMgSlot1_c::betIcon_c::Place() {
+    dThIcon_c::Place(1, 0x90, 0xb0, 0x10, 8);
+    mPressTime = 6;
 }
 
 int dScMgSlot1_c::CloseMenu() {
@@ -1111,16 +1051,12 @@ int dScMgSlot1_c::SlotReels_CheckStopped() {
     return matches;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-void Slot1_InitHud(void *self) {
-    char *raw = (char *)self;
-    ((dScMgSlot1_c *)raw)->mPrevMatchedSymbol = -1;
-    *(u8 *)(raw + 0x4707) = 1;
-    dScMgSlot1_c *scene = (dScMgSlot1_c *)self;
-    scene->mSpeedTableOffset = 0;
-    scene->mCredits = Mg_GetSavedRecord0();
-    scene->mCreditsShown = scene->mCredits;
-}
+void dScMgSlot1_c::InitHud() {
+    mPrevMatchedSymbol = -1;
+    unk_4707 = 1;
+    mSpeedTableOffset = 0;
+    mCredits = Mg_GetSavedRecord0();
+    mCreditsShown = mCredits;
 }
 
 /* Slot 18. */
@@ -1130,9 +1066,9 @@ void dScMgSlot1_c::StartRound(int i) {
     if (i == 4) {
         mPrevMatchedSymbol = mMatchedSymbol;
     } else if (i == 3) {
-        Slot1_InitHud(raw);
+        InitHud();
     }
-    SlotBet_Reset(&mBetIcon);
+    mBetIcon.Reset();
     mState = 0;
 }
 
@@ -1188,8 +1124,8 @@ s32 dScMgSlot1_c::Render() {
             Mg_DrawBigNumber(0x60, 0x40, sSlot1Payouts[mMatchedSymbol], 0, 2, 2, 0x14);
         }
     }
-    SlotBlink_Draw((unsigned char *)&mMatchBlink);
-    SlotBlink_Draw((unsigned char *)&mWildBlink);
+    mMatchBlink.Draw();
+    mWildBlink.Draw();
     return 1;
 }
 
@@ -1216,18 +1152,18 @@ s32 dScMgSlot1_c::Behavior() {
         mHasMatch = 0;
         mWildCount = 0;
         mState = 1;
-        SlotBet_OnTouch(&mBetIcon);
+        mBetIcon.OnTouch();
         if (mPromptBlinkCount == 0) {
             mPromptEnabled = 1;
             mPromptBlinkCount = 1;
             mPromptBlinkTimer = 0;
         }
-        mStateTimer = 0x3c;
+        mStateTimer = 60;
         break;
     case 1:
         if (DecIfAbove0_Byte(&mStateTimer) == 0) {
             Sound::PlayBank2_2D(0x160);
-            mStateTimer = 0x1e;
+            mStateTimer = 30;
             mState = 2;
         }
         break;
@@ -1302,7 +1238,7 @@ s32 dScMgSlot1_c::Behavior() {
                 Mg_SaveRecordPair(mCredits + mPayoutMultiplier * BET_ICON(&mBetIcon)->mBetCount,
                                   mHudScore);
                 mState = 4;
-                mStateTimer = 0x3c;
+                mStateTimer = 60;
             }
         }
         break;
@@ -1310,21 +1246,21 @@ s32 dScMgSlot1_c::Behavior() {
     case 4:
         if (DecIfAbove0_Byte(&mStateTimer) == 0) {
             if (mHasMatch != 0) {
-                SlotBlink_Start(&mMatchBlink, sSlotMatchBlinkX[mMatchedSymbol][0],
-                                sSlotMatchBlinkY[mMatchedSymbol][0]);
+                mMatchBlink.Start(sSlotMatchBlinkX[mMatchedSymbol][0],
+                                  sSlotMatchBlinkY[mMatchedSymbol][0]);
             }
             if (mWildCount != 0 && mWildCount < 3) {
-                SlotBlink_Start(&mWildBlink, sSlotWildBlinkX[mWildCount - 1][0],
-                                sSlotWildBlinkY[mWildCount - 1][0]);
+                mWildBlink.Start(sSlotWildBlinkX[mWildCount - 1][0],
+                                 sSlotWildBlinkY[mWildCount - 1][0]);
             }
             if (mPayoutMultiplier != 0) {
                 mState = 5;
-                mStateTimer = 0x64;
-                SlotLamp_Start(&mPayoutLamp);
+                mStateTimer = 100;
+                mPayoutLamp.Start();
                 func_02012790(0x26);
             } else {
                 mState = 7;
-                mStateTimer = 0x3c;
+                mStateTimer = 60;
                 func_02012790(0xe);
             }
             mPromptEnabled = 0;
@@ -1332,8 +1268,8 @@ s32 dScMgSlot1_c::Behavior() {
         break;
     case 5:
         if (DecIfAbove0_Byte(&mStateTimer) == 0) {
-            SlotReel_SetSpeed(&mBetIcon, mPayoutMultiplier);
-            mStateTimer = 0x3c;
+            mBetIcon.ArmPayout(mPayoutMultiplier);
+            mStateTimer = 60;
             mState = 6;
         }
         break;
@@ -1371,7 +1307,7 @@ s32 dScMgSlot1_c::Behavior() {
         mReelScroll[idx] -= 0x2000;
         if ((int)mReelScroll[idx] < 0) {
             mReelScroll[idx] = 0;
-            mStateTimer = 0xa;
+            mStateTimer = 10;
             mState++;
             func_02012718(0x164, sSlot1ReelPos[idx][0] << 12);
             if (idx == 0) {
@@ -1384,7 +1320,7 @@ s32 dScMgSlot1_c::Behavior() {
         mReelScroll[2] -= 0x2000;
         if ((int)mReelScroll[2] < 0) {
             mReelScroll[2] = 0;
-            mStateTimer = 0x3c;
+            mStateTimer = 60;
             mState = 8;
             func_02012718(0x164, sSlot1ReelPos[2][0] << 12);
         }
@@ -1404,9 +1340,9 @@ s32 dScMgSlot1_c::Behavior() {
         break;
     }
     mBetIcon.Behavior();
-    SlotBlink_Tick(&mMatchBlink);
-    SlotBlink_Tick(&mWildBlink);
-    SlotLamp_Tick(&mPayoutLamp);
+    mMatchBlink.Tick();
+    mWildBlink.Tick();
+    mPayoutLamp.Tick();
     return 1;
 }
 
@@ -1500,7 +1436,7 @@ s32 dScMgSlot1_c::InitResources() {
         unsigned char *tbl = sSlotReelSymbolsAlt;
         char *p = c;
         for (j = 0; j < 3; j++) {
-            for (i = 0; i < 0x15; i++) {
+            for (i = 0; i < 21; i++) {
                 ((dScMgSlot1_c *)(p + i))->mReelStrip[0][0] = tbl[i];
             }
             mSymbolIndex[j] = 0;
@@ -1514,7 +1450,7 @@ s32 dScMgSlot1_c::InitResources() {
         unsigned char *tbl = sSlotReelSymbols;
         char *p = c;
         for (k = 0; k < 3; k++) {
-            for (i = 0; i < 0x15; i++) {
+            for (i = 0; i < 21; i++) {
                 ((dScMgSlot1_c *)(p + i))->mReelStrip[0][0] = tbl[i];
             }
             mSymbolIndex[k] = 0;
@@ -1528,7 +1464,7 @@ s32 dScMgSlot1_c::InitResources() {
     mMatchedSymbol = 5;
     mStartCredits = 0xa;
     Mg_SubmitScore(mStartCredits);
-    SlotBet_Place((char *)&mBetIcon);
+    mBetIcon.Place();
     StartRound(3);
     Mg_SetTopScreenYOffset(0x20);
     data_0208ee44 = 1;
@@ -1538,13 +1474,13 @@ s32 dScMgSlot1_c::InitResources() {
 /* The constructor is inline, so the factory below holds it: the base
    constructor, mBetIcon, and the three marker clears. */
 inline dScMgSlot1_c::dScMgSlot1_c() {
-    SlotBlink_Clear((char *)&mMatchBlink);
-    SlotBlink_Clear((char *)&mWildBlink);
-    SlotLamp_Clear((char *)&mPayoutLamp);
+    mMatchBlink.Clear();
+    mWildBlink.Clear();
+    mPayoutLamp.Clear();
 }
 
 /* Reconstructed source-style name. Historical alias: func_ov006_0210d6b8. */
-extern "C" void *dScMgSlot1_c_classInit(void) {
+void *dScMgSlot1_c_classInit(void) {
     return new dScMgSlot1_c;
 }
 

@@ -119,18 +119,15 @@ extern State data_ov095_02137584;
 extern State data_ov095_0213758c;
 extern State data_ov095_0213759c;
 
-extern "C" daUdlift_c *daUdlift_c_classInit_UDLIFT_TERESA()
-{
+daUdlift_c *daUdlift_c_classInit_UDLIFT_TERESA() {
     return new daUdlift_c();
 }
 
-extern "C" daUdlift_c *daUdlift_c_classInit_UDLIFT()
-{
+daUdlift_c *daUdlift_c_classInit_UDLIFT() {
     return new daUdlift_c();
 }
 
-extern "C" daUdlift_c *daUdlift_c_classInit_RC_RIFT02()
-{
+daUdlift_c *daUdlift_c_classInit_RC_RIFT02() {
     return new daUdlift_c();
 }
 
@@ -144,7 +141,7 @@ void daUdlift_c::OnMeshClsnTouch(void *collider, daUdlift_c *self, daPly_c *play
 /* If the touching actor is the player (0xbf), hold it as mRider and mark
  * the lift ridden this frame. */
 void daUdlift_c::LatchRider(daPly_c *player) {
-    int isPlayer = (int)(player->actorID == 0xbf);
+    int isPlayer = (player->actorID == 0xbf);
     if (isPlayer) {
         mRider = player;
         mIsRidden = 1;

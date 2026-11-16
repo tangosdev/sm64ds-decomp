@@ -67,56 +67,56 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_ov077_02124c28",
+      "symbol": "_Z19func_ov077_02124c28P7daTgz_c",
       "address": "0x02124c28",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov077_02124c28.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov077_02124ce4",
+      "symbol": "_Z19func_ov077_02124ce4P7daTgz_c",
       "address": "0x02124ce4",
       "size": "0x00000024",
       "legacy_source": "src/func_ov077_02124ce4.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov077_02124d08",
+      "symbol": "_Z19func_ov077_02124d08P7daTgz_cP10dBgCh_Actr",
       "address": "0x02124d08",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov077_02124d08.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov077_02124eb0",
+      "symbol": "_Z19func_ov077_02124eb0P7daTgz_c",
       "address": "0x02124eb0",
       "size": "0x000001f8",
       "legacy_source": "src/func_ov077_02124eb0.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov077_021250a8",
+      "symbol": "_Z19func_ov077_021250a8P7daTgz_c",
       "address": "0x021250a8",
       "size": "0x00000128",
       "legacy_source": "src/func_ov077_021250a8.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov077_021251d0",
+      "symbol": "_Z19func_ov077_021251d0P7daTgz_c",
       "address": "0x021251d0",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov077_021251d0.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov077_02125290",
+      "symbol": "_Z19func_ov077_02125290P7daTgz_c",
       "address": "0x02125290",
       "size": "0x00000074",
       "legacy_source": "src/func_ov077_02125290.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov077_02125304",
+      "symbol": "_Z19func_ov077_02125304P7daTgz_c",
       "address": "0x02125304",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov077_02125304.cpp",
@@ -207,21 +207,21 @@
       "ordinal": 23
     },
     {
-      "symbol": "func_ov077_02125e20",
+      "symbol": "_Z19func_ov077_02125e20P7daTgz_c",
       "address": "0x02125e20",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov077_02125e20.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "func_ov077_02125e5c",
+      "symbol": "_Z19func_ov077_02125e5cP7daTgz_c",
       "address": "0x02125e5c",
       "size": "0x00000038",
       "legacy_source": "src/func_ov077_02125e5c.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "func_ov077_02125e94",
+      "symbol": "_Z19func_ov077_02125e94P7daTgz_ci",
       "address": "0x02125e94",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov077_02125e94.c",
@@ -270,7 +270,7 @@
       "ordinal": 32
     },
     {
-      "symbol": "daTgz_c_classInit",
+      "symbol": "_Z17daTgz_c_classInitv",
       "address": "0x021261f4",
       "size": "0x00000058",
       "legacy_source": "src/d_a_tgz.c",
@@ -1254,7 +1254,7 @@
       "source": "0x02127960",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daTgz_c_classInit",
+      "symbol": "_Z17daTgz_c_classInitv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x021261f4"

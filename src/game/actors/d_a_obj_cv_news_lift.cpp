@@ -47,6 +47,7 @@
 #include "nitro/fx/fx.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/Quaternion.h"
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daObjCvNewsLift_c_AssetId {
@@ -93,13 +94,9 @@ void Vec3_Asr(void *d, void *s, int sh);
 int MTX_Inverse43(const struct Matrix4x3 *s, struct Matrix4x3 *d);
 void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
-void Quaternion_FromVector3(void *q, Vector3 *axis, Vector3 *v);
-void Quaternion_Normalize(void *q);
-void Quaternion_SLerp(void *q0, void *q1, int t, void *out);
 s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
 u16 DecIfAbove0_Short(u16 *p);
 u8 DecIfAbove0_Byte(u8 *p);
-
 }
 
 /* The identity quaternion. Its other readers still declare it int[4], so this
@@ -110,7 +107,7 @@ extern const u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
 
 /* CV_NEWS_LIFT factory. classInit is the EAD shape; the cartridge's RTTI
  * names the class, not this function. */
-extern "C" daObjCvNewsLift_c *daObjCvNewsLift_c_classInit() {
+daObjCvNewsLift_c *daObjCvNewsLift_c_classInit() {
     return new daObjCvNewsLift_c();
 }
 
@@ -134,13 +131,13 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player) {
         MTX_Inverse43(&data_020a0e68, &data_020a0e68);
         Vector3 inFrame;
         MTX_MultVec43(&player->mPos, &data_020a0e68, &inFrame);
-        inFrame.y *= 0x30;
+        inFrame.y *= 48;
         Vector3 axis;
         axis.x = 0;
         axis.y = 0x1000;
         axis.z = 0;
         Quaternion_FromVector3(&mTargetRotation, &axis, &inFrame);
-        Quaternion_Normalize(&mTargetRotation);
+        Quaternion_Normalize((int *)&mTargetRotation);
         mTiltHoldTimer = 10;
     }
 }
@@ -386,7 +383,7 @@ s32 daObjCvNewsLift_c::Behavior() {
             mTargetRotation = *(Quaternion *)data_02092768;
         }
     }
-    Quaternion_SLerp(&mRotation, &mTargetRotation, 0x199, &mRotation);
+    Quaternion_SLerp((int *)&mRotation, (int *)&mTargetRotation, 0x199, (int *)&mRotation);
     if (Vec3_Equal(&mPos, &mHomePos))
         mResetTimer = 300;
     if (!DecIfAbove0_Short(&mResetTimer)) {

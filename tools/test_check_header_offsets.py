@@ -978,6 +978,27 @@ class InlineMethodBodyTests(unittest.TestCase):
         self.assertEqual(rc, 1, out)
         self.assertIn("2 commented fields, 1 mismatched, 0 unparsed", out)
 
+    def test_a_wrapped_method_before_fields_is_not_a_field(self):
+        self._assert_checked(
+            "struct Widget {\n"
+            "    void ProjectOnLine(TrampolineObjectCallbacks *jumper, V2 *currentProjection,\n"
+            "                       V2 *previousProjection);\n"
+            "    u32 first; /* 0x000 */\n"
+            "    u32 second; /* 0x004 */\n"
+            "};\n",
+            2, "0x8")
+
+    def test_a_wrong_offset_after_a_wrapped_method_still_fails(self):
+        rc, out = self._run(
+            "struct Widget {\n"
+            "    void ProjectOnLine(TrampolineObjectCallbacks *jumper, V2 *currentProjection,\n"
+            "                       V2 *previousProjection);\n"
+            "    u32 first; /* 0x004 */\n"
+            "};\n")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("MISMATCH", out)
+        self.assertNotIn("UNPARSED", out)
+
 
 # ------------------------- nested enums and anonymous unions are not fields
 
@@ -1314,6 +1335,27 @@ class NamedArrayBoundTests(unittest.TestCase):
         self.assertEqual(rc, 0, out)
         self.assertIn("4 commented fields, 0 mismatched, 0 unparsed, struct spans 0x11", out)
 
+    def test_a_static_const_member_bound_sizes_the_array(self):
+        # include/daSnmBth_c.h: the count is a class member declared just ahead of
+        # the array it bounds; it occupies no storage of its own.
+        rc, out = self._run(
+            "struct Widget {\n"
+            "    u32 head; /* 0x000 */\n"
+            "    static const int SLOT_NUM = 3;\n"
+            "    s32 slots[SLOT_NUM]; /* 0x004 */\n"
+            "    u8 tail; /* 0x010 */\n};\n")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("3 commented fields, 0 mismatched, 0 unparsed, struct spans 0x11", out)
+
+    def test_a_static_const_member_first_in_the_struct(self):
+        rc, out = self._run(
+            "struct Widget {\n"
+            "    static const unsigned int N = 2u;\n"
+            "    s32 a[N]; /* 0x000 */\n"
+            "    u8 tail; /* 0x004 */\n};\n")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("2 commented fields, 1 mismatched, 0 unparsed", out)
+
     def test_a_wrong_offset_after_a_named_bound_still_fails(self):
         rc, out = self._run(
             "enum { N = 2 };\nstruct Widget {\n"
@@ -1387,6 +1429,17 @@ class DerivedVptrAndLocalAggregateTests(unittest.TestCase):
             "    u8 tail; /* 0x018 */\n};\n")
         self.assertEqual(rc, 0, out)
         self.assertIn("2 commented fields, 0 mismatched, 0 unparsed, struct spans 0x19", out)
+
+    def test_nitro_fx_scalars_size_a_local_aggregate(self):
+        # dClipper.h's ClipperPlane spells its members fx32.
+        rc, out = self._run(
+            "struct Plane { fx32 x, y, z; };\n"
+            "struct Widget {\n"
+            "    Plane planes[2]; /* 0x000 */\n"
+            "    fx16 half; /* 0x018 */\n"
+            "    fx64 wide; /* 0x01c */\n};\n")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("3 commented fields, 0 mismatched, 0 unparsed, struct spans 0x24", out)
 
     def test_a_local_aggregate_does_not_leak_into_the_next_header(self):
         rc, out = self._run(

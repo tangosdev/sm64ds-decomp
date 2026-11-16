@@ -93,7 +93,7 @@ static inline int IsOffScreen(dActor_c *actor) {
  * `new daObjFl_Ring_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x328), dBgActor_c's base constructor, then the
  * vptr store. */
-extern "C" daObjFl_Ring_c *daObjFl_Ring_c_classInit(void) {
+daObjFl_Ring_c *daObjFl_Ring_c_classInit(void) {
     return new daObjFl_Ring_c;
 }
 
@@ -144,7 +144,7 @@ s32 daObjFl_Ring_c::Behavior() {
             break;
         if (ApproachAngle(&mPrevAngleZ, 0, 0xf, 0x30, 2) != 0)
             break;
-        mCooldown = 0x96;
+        mCooldown = 150;
         mState = 1;
         Sound::PlayBank3(0xc, mCamSpacePos);
         break;
@@ -154,7 +154,7 @@ s32 daObjFl_Ring_c::Behavior() {
         if (DecIfAbove0_Short(&mCooldown) == 0) {
             if (ApproachAngle(&mPrevAngleZ, -0x100, 0xf, 0x30, 2) != 0)
                 break;
-            mCooldown = 0x96;
+            mCooldown = 150;
             mState = 0;
             break;
         }

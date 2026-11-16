@@ -16,7 +16,7 @@
  * The layout is unchanged: rotation at 0x00, translation at 0x24.
  */
 typedef struct Matrix3x3 {
-    Fix12i m[9];
+    fx32 m[9];
 } Matrix3x3;
 
 /* See include/common.h: this type has a second, flat spelling there. Same 0x30

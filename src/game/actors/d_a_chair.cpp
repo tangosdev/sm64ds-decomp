@@ -81,9 +81,8 @@ void VEC_Add(Vector3 *dst, Vector3 *add, Vector3 *src);
 int AngleDiff(int a, int b);
 }
 
-
 /* CHAIR registry factory. */
-extern "C" daChair_c *daChair_c_classInit(void) {
+daChair_c *daChair_c_classInit(void) {
     return new daChair_c();
 }
 
@@ -204,28 +203,28 @@ void daChair_c::State1() {
     target = dActor_c::FindWithID(mTargetID);
     if (target != 0) {
         /* The three words are loaded before either Vec3 call. */
-        av = (int *)&target->mPosX;
+        av = &target->mPosX;
         targetPos[0] = *av;
         targetPos[1] = av[1];
         targetPos[2] = av[2];
         if (Vec3_Dist(&mPos, (const Vector3 *)targetPos) >= 0xfa000)
             return;
-        delta = (short)(Vec3_HorzAngle(&mPos, (const Vector3 *)targetPos) - mAngleY + 0x2000);
+        delta = (Vec3_HorzAngle(&mPos, (const Vector3 *)targetPos) - mAngleY + 0x2000);
         if (delta & 0x4000) {
             mTrackedAngle = &mAngleZ;
             if (delta > 0)
                 mTargetAngle = 0x4000;
             else
-                mTargetAngle = (short)-0x4000;
+                mTargetAngle = -0x4000;
         } else {
             mTrackedAngle = &mAngleX;
             if (delta < 0)
                 mTargetAngle = 0x5800;
             else
-                mTargetAngle = (short)-0x4000;
+                mTargetAngle = -0x4000;
         }
         if (mTargetAngle < 0)
-            mStateValue0 = (short)0xfa24;
+            mStateValue0 = 0xfa24;
         else
             mStateValue0 = 0x5dc;
         mState = 3;
@@ -252,20 +251,20 @@ void daChair_c::State1() {
         }
         mPosX -= wobble << 12;
         mPosZ -= wobble << 12;
-        mAngleZ = (short)(wobble * 0x32);
+        mAngleZ = (wobble * 0x32);
         mAngleX = mAngleZ;
     } else {
         mAngleZ = 0;
         mAngleX = mAngleZ;
     }
 
-    if (mStateTimer < 0x1e)
+    if (mStateTimer < 30)
         return;
     mState = 2;
     mStateValue0 = 0;
     mStateValue1 = 0;
     mStateValue2 = 0xc8;
-    mActionTimer = 0x28;
+    mActionTimer = 40;
     mStateTimer = 0;
 }
 
@@ -273,14 +272,14 @@ void daChair_c::State2() {
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     mStateTimer++;
 
-    if (mStateTimer <= 0x46) {
-        if (mStateTimer < 0x32)
+    if (mStateTimer <= 70) {
+        if (mStateTimer < 50)
             mVertSpeed = 0x6000;
         else
             mVertSpeed = 0;
         ApproachStateValue(&mAngleX, &mStateValue0, -0xfa0, 0xc8, 0x14, 2);
         ApproachStateValue(&mAngleZ, &mStateValue2, 0, 0, 0x14, 1);
-        if (mStateTimer == 0x46)
+        if (mStateTimer == 70)
             func_0201267c(kSfxWindup, &mCamSpacePos);
     } else {
         if (mActionTimer != 0) {
@@ -310,7 +309,7 @@ void daChair_c::State2() {
                 mVertSpeed = FX_MUL(FX_SinIdx((u16)mPrevAngleX >> 4), -0x32000);
                 mSpeedZ = FX_MUL(reach, FX_CosIdx((u16)mPrevAngleY >> 4));
             } else {
-                if (mActionTimer > 0x14) {
+                if (mActionTimer > 20) {
                     mAngleY += 0x2710;
                 }
             }
@@ -339,7 +338,7 @@ void daChair_c::State2() {
         if (actor == 0)
             return;
         /* Direct comparison drops the ROM's store-then-load. */
-        isPlayer = (int)(actor->actorID == kPlayerActorId);
+        isPlayer = (actor->actorID == kPlayerActorId);
         if (isPlayer == 0)
             return;
         isPlayer = ((daPly_c *)actor)->mIsVanish;
@@ -367,7 +366,7 @@ void daChair_c::State3() {
     angle = AngleDiff(*mTrackedAngle, 0);
     ip = mTrackedAngle;
     sample = FX_SinIdx((u16)*ip >> 4);
-    wrapped = (s16)angle;
+    wrapped = angle;
     offset = (s16)sample * (s16)0x50;
     if (ip != &mAngleX) {
         mClsnOffset.x = -offset;
@@ -379,7 +378,7 @@ void daChair_c::State3() {
         mClsnOffset.z = offset;
     }
     if (wrapped >= 0x4000) {
-        s16 past = (s16)(wrapped - 0x4000);
+        s16 past = (wrapped - 0x4000);
         s16 tip = FX_SinIdx((u16)past >> 4);
         mPosY = (s16)tip * (s16)0x28 + (mHomePos.y + 0x28000);
     } else {

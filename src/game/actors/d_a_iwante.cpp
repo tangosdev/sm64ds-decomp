@@ -41,11 +41,10 @@
  *    resource handles and 19 state descriptors are now typed objects defined
  *    at the bottom of this file; the 38 pointer-to-member records they copy
  *    from keep their data_ov066 names.
- *  - Position temporaries are the POD VecFx32, not Vector3, and the matrix
- *    copies go through the flat Mtx43: assigning Matrix4x3 grows .text by
- *    0x54 bytes. Vec4 is an unused stack object with a destructor.
+ *  - The model and shadow matrices are copied through Mtx43: assigning
+ *    Matrix4x3 grows .text by 0x54 bytes. Vec4 is an unused stack object
+ *    with a destructor.
  *  - Handler descriptions come from reading the code, not from play-testing.
- *  - Sound::ChangeMusicVolume keeps its mangled decl (Fix12<int> by value, S13 wall); the Layer3 pair keeps file-local mangled decls because Sound.h declares only Layer1/Layer2 (this file excludes decl_common.h).
  */
 
 /* Turns off deferred codegen, which flips .text emission from reverse-source
@@ -173,7 +172,6 @@ enum {
     MSG_AFTER_FIGHT = 0xb9
 };
 
-/* Position temporaries are VecFx32: unlike a Vector3, a local of it has no destructor. */
 typedef int (daIwante_c::*EyerokPMF)();
 /* A state descriptor: enter PMF at +0 (run by SetState on install),
  * run PMF at +8 (run by Behavior every frame). */
@@ -211,7 +209,6 @@ struct EyerokCollisionFilePtr : SharedFilePtr {
     ~EyerokCollisionFilePtr();
 };
 
-extern "C" {
 /* ---- ov066 .bss: 8-byte SharedFilePtr slots (0x0211ae14..0x0211aebc) ----
  * Each one's filePtr is the loaded file, which the states pass to SetAnim /
  * SetFile. Roles, from InitResources and the order __sinit_d_a_iwante.cpp
@@ -273,7 +270,7 @@ extern unsigned char data_ov066_0211abe0;
 /* Threshold for the special pattern: the decision state picks pattern 8 / 9
  * once mPickCount exceeds this + 3. Starts at 1. */
 extern int data_ov066_0211abe4;
-/* Offset of a hand's hit volume from its position, Fix12 x/y/z. One global
+/* Offset of a hand's hit volume from its position, fx32 x/y/z. One global
  * shared by both hands, rewritten by SetRestHitVolume and
  * SetPoundHitVolume, so it holds whatever the last of those calls left. */
 extern int data_ov066_0211ad18[];
@@ -341,28 +338,25 @@ extern dCamera_c *gCamera;
 extern Matrix4x3 data_020a0e68;
 
 /* ---- arm9 helpers (unmangled ROM names) ---- */
-extern int AngleDiff(int a, int b);
-extern int ApproachAngle(s16 *angle, s16 target, int a, int b, int max);
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern int RandomIntInternal(int *seed);
-extern int Vec3_ApproachHorz(void *out, void *a, int maxStep);
-extern int Vec3_Dist(const void *a, const void *b);
-extern void Vec3_Asr(void *d, void *s, int sh);
-extern int Vec3_HorzDist(const void *a, const void *b);
+extern "C" int AngleDiff(int a, int b);
+extern "C" int ApproachAngle(s16 *angle, s16 target, int a, int b, int max);
+extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
+extern "C" int RandomIntInternal(int *seed);
+extern "C" int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
+extern "C" int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+extern "C" void Vec3_Asr(void *d, void *s, int sh);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
+extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 // local extern: CalcLib.h conflicts with this TU's opaque Vec3_Dist, Vec3_Asr, and Vec3_HorzDist prototypes.
-extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern int func_020092c4(void *cam, void *out, void *target);
-extern void func_02011cfc(void);
-extern void func_02011d2c(void);
-extern void func_02012694(unsigned int a, void *p);
+extern "C" s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" int func_020092c4(void *cam, void *out, void *target);
+extern "C" void func_02011cfc(void);
+extern "C" void func_02011d2c(void);
+void func_02012694(unsigned int a, const Vector3 *p);
 
 /* Unreferenced. */
-extern void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
-}
-extern "C" {
-extern u32 d_a_iwanteNewHold(u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
-}
-
+extern "C" void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
@@ -472,7 +466,7 @@ int daIwante_c::CheckAttacked() {
                     mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211aebc.filePtr, 0x40000000,
                                              0x1000, 0);
                 }
-                func_02012694(SE_HAND_HIT, &mCamSpacePosX);
+                func_02012694(SE_HAND_HIT, &mCamSpacePos);
                 return 1;
             }
 
@@ -484,7 +478,7 @@ int daIwante_c::CheckAttacked() {
                 data_ov066_0211ae08 = (u8)(x + 1);
                 data_ov066_0211abe4 = -3;
             }
-            func_02012694(SE_HAND_DEFEATED, &mCamSpacePosX);
+            func_02012694(SE_HAND_DEFEATED, &mCamSpacePos);
             SetState(&data_ov066_0211b07c);
             return 2;
         }
@@ -537,7 +531,7 @@ void daIwante_c::UpdateTexturePattern() {
         else
             mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae9c.filePtr, 0x40000000, 0x1000,
                                      0);
-        mTexTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) * 2 + 0x32;
+        mTexTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) * 2 + 50;
     } else {
         if (mPartIdx == PART_HAND_2)
             mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000,
@@ -616,10 +610,10 @@ void daIwante_c::SetLoweredPose() {
 
     if (mPartIdx == PART_HAND_1) {
         mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae34.filePtr), mClsnMat2, 0x199, mAngleY,
-                               *(CLPS_Block *)(&data_ov025_02112cc8));
+                               data_ov025_02112cc8);
     } else {
         mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae1c.filePtr), mClsnMat2, 0x199, mAngleY,
-                               *(CLPS_Block *)(&data_ov025_02112c88));
+                               data_ov025_02112c88);
     }
 
     mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
@@ -702,7 +696,7 @@ int daIwante_c::GetPlayerDepthBand() {
     int dist = playerPos.z;
     int lo = (int)0xff3ae000;
     if (dist < lo) return lo;
-    int lo2 = -(int)0xb50000;
+    int lo2 = -0xb50000;
     if (dist < lo2) return lo2;
     int hi = (int)0xff598000;
     if (dist >= hi) return 0;
@@ -724,7 +718,7 @@ void daIwante_c::PoundGround(int strength) {
         mPosX += 0x80000;
     mPosZ += 0x80000;
     HugeLandingDust(true);
-    func_02012694(SE_LANDING, &mCamSpacePosX);
+    func_02012694(SE_LANDING, &mCamSpacePos);
     mPos = saved;
 }
 
@@ -786,13 +780,13 @@ int daIwante_c::HandDefeatExecute() {
         Particle::System::NewSimple(kPtclEyerokDefeatA, mPosX, mPosY, mPosZ);
         Particle::System::NewSimple(kPtclEyerokDefeatB, mPosX, mPosY, mPosZ);
         {
-            VecFx32 v;
+            Vector3 v;
             v.x = mPosX;
             v.y = mPosY;
             v.z = mPosZ;
-            TriplePoofDustAt(*(Vector3 *)&v);
+            TriplePoofDustAt(v);
         }
-        func_02012694(SE_DEFEAT_POOF, &mCamSpacePosX);
+        func_02012694(SE_DEFEAT_POOF, &mCamSpacePos);
         MarkForDestruction();
     }
     return 1;
@@ -833,7 +827,7 @@ int daIwante_c::HandDefeatEnter() {
  *      position is snapped and data_ov066_0211ae08 is set to 2 -> 5.
  *   5  waits for the phase to leave PATTERN_9, then back to the waiting state. */
 int daIwante_c::HandPattern9Execute() {
-    VecFx32 in, out;
+    Vector3 in, out;
     s16 ang;
     int r;
 
@@ -847,10 +841,10 @@ int daIwante_c::HandPattern9Execute() {
         if (mStateWork1 == 0) {
             daPly_c *p = ClosestPlayer();
             if (p != 0) {
-                VecFx32 *pp = (VecFx32 *)&p->mPosX;
-                mTargetPosX = pp->x;
-                mTargetPosY = pp->y;
-                mTargetPosZ = pp->z;
+                Vector3 *pp = &p->mPos;
+                mTargetPos.x = pp->x;
+                mTargetPos.y = pp->y;
+                mTargetPos.z = pp->z;
 
                 in.x = 0;
                 in.y = 0;
@@ -860,23 +854,23 @@ int daIwante_c::HandPattern9Execute() {
                 out.z = 0;
                 in.z = 0x3e8000;
 
-                ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mTargetPosX);
+                ang = Vec3_HorzAngle(&mPos, &mTargetPos);
                 Matrix4x3_FromRotationY(&data_020a0e68, ang);
-                MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
+                MTX_MultVec43(&in, &data_020a0e68, &out);
 
-                mTargetPosX += out.x;
-                mTargetPosZ += out.z;
+                mTargetPos.x += out.x;
+                mTargetPos.z += out.z;
             }
 
             if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0)
-                func_02012694(SE_ANIM_FRAME_0, &mCamSpacePosX);
+                func_02012694(SE_ANIM_FRAME_0, &mCamSpacePos);
 
             if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0) {
                 BeginVulnerable();
-                func_02012694(SE_START_MOVING, &mCamSpacePosX);
+                func_02012694(SE_START_MOVING, &mCamSpacePos);
             }
 
-            ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mTargetPosX);
+            ang = Vec3_HorzAngle(&mPos, &mTargetPos);
             ApproachAngle(&mAngleY, ang, 2, 0x400, 0x200);
         }
 
@@ -887,8 +881,8 @@ int daIwante_c::HandPattern9Execute() {
                     mSubState = 2;
                 break;
             }
-            Vec3_ApproachHorz(&mPosX, &mTargetPosX, 0x37000);
-            if (ClampToArena() == 1 || Vec3_HorzDist(&mPosX, &mTargetPosX) <= 0x37000) {
+            Vec3_ApproachHorz(&mPos, &mTargetPos, 0x37000);
+            if (ClampToArena() == 1 || Vec3_HorzDist(&mPos, &mTargetPos) <= 0x37000) {
                 EndVulnerable();
                 mSubState = 3;
             }
@@ -902,10 +896,10 @@ int daIwante_c::HandPattern9Execute() {
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, *(CLPS_Block *)(&data_ov025_02112c08));
+                                       mAngleY, data_ov025_02112c08);
             else
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, *(CLPS_Block *)(&data_ov025_02112d48));
+                                       mAngleY, data_ov025_02112d48);
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
@@ -924,8 +918,8 @@ int daIwante_c::HandPattern9Execute() {
     case 4:
         SetRestHitVolume();
         ApproachAngle(&mAngleY, 0, 2, 0x400, 0x200);
-        Vec3_ApproachHorz(&mPosX, &mRestPosX, 0x37000);
-        if (Vec3_HorzDist(&mPosX, &mRestPosX) <= 0x37000) {
+        Vec3_ApproachHorz(&mPos, (Vector3 *)&mRestPosX, 0x37000);
+        if (Vec3_HorzDist(&mPos, (const Vector3 *)&mRestPosX) <= 0x37000) {
             mPosX = mRestPosX;
             mPosY = mRestPosY;
             mPosZ = mRestPosZ;
@@ -983,42 +977,42 @@ int daIwante_c::HandPattern8Execute() {
         if (p == 0)
             break;
         {
-            VecFx32 *pp = (VecFx32 *)&p->mPosX;
-            mTargetPosX = pp->x;
-            mTargetPosY = pp->y;
-            mTargetPosZ = pp->z;
+            Vector3 *pp = &p->mPos;
+            mTargetPos.x = pp->x;
+            mTargetPos.y = pp->y;
+            mTargetPos.z = pp->z;
         }
-        mTargetPosZ -= 0xc8000;
-        if (mTargetPosZ < (int)0xff3ae000) {
-            mTargetPosZ = (int)0xff3ae000;
-        } else if (mTargetPosZ > (int)0xff8c6000) {
-            mTargetPosZ = (int)0xff8c6000;
+        mTargetPos.z -= 0xc8000;
+        if (mTargetPos.z < (int)0xff3ae000) {
+            mTargetPos.z = (int)0xff3ae000;
+        } else if (mTargetPos.z > (int)0xff8c6000) {
+            mTargetPos.z = (int)0xff8c6000;
         }
         if (data_ov066_0211ae0c == PART_HAND_1) {
             mPrevAngleY = -0x4000;
-            mTargetPosX = 0x334000;
+            mTargetPos.x = 0x334000;
             if (mPartIdx == PART_HAND_1) {
-                mTargetPosX -= 0xf2000;
+                mTargetPos.x -= 0xf2000;
             }
         } else {
             mPrevAngleY = 0x4000;
-            mTargetPosX = (int)0xffe8e000;
+            mTargetPos.x = (int)0xffe8e000;
             if (mPartIdx == PART_HAND_1) {
-                mTargetPosX -= 0xf2000;
+                mTargetPos.x -= 0xf2000;
             }
         }
-        func_02012694(SE_START_MOVING, &mCamSpacePosX);
-        mTargetPosY = mRestPosY + 0x1c2000;
+        func_02012694(SE_START_MOVING, &mCamSpacePos);
+        mTargetPos.y = mRestPosY + 0x1c2000;
         mSubState = 1;
         break;
     }
     case 1:
-        ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x28000);
-        if (Vec3_Dist(&mPosX, &mTargetPosX) > 0x28000)
+        ApproachLinear(mPos, mTargetPos, 0x28000);
+        if (Vec3_Dist(&mPos, &mTargetPos) > 0x28000)
             break;
-        mPosX = mTargetPosX;
-        mPosY = mTargetPosY;
-        mPosZ = mTargetPosZ;
+        mPosX = mTargetPos.x;
+        mPosY = mTargetPos.y;
+        mPosZ = mTargetPos.z;
         data_ov066_0211ae00 |= mPartIdx;
         if (data_ov066_0211ae00 != HANDS_BOTH)
             break;
@@ -1030,18 +1024,18 @@ int daIwante_c::HandPattern8Execute() {
             if (mPartIdx == PART_HAND_1)
                 mTimer1 = 0x12;
         }
-        mTargetPosY = mRestPosY + 0x1a000;
+        mTargetPos.y = mRestPosY + 0x1a000;
         mSubState = 2;
         break;
     case 2:
         if (mTimer1 != 0)
             break;
-        ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x32000);
-        if (Vec3_Dist(&mPosX, &mTargetPosX) > 0x32000)
+        ApproachLinear(mPos, mTargetPos, 0x32000);
+        if (Vec3_Dist(&mPos, &mTargetPos) > 0x32000)
             break;
-        mPosX = mTargetPosX;
-        mPosY = mTargetPosY;
-        mPosZ = mTargetPosZ;
+        mPosX = mTargetPos.x;
+        mPosY = mTargetPos.y;
+        mPosZ = mTargetPos.z;
         PoundGround(0x7d0000);
         mTimer1 = 0xf;
         mSubState = 3;
@@ -1080,8 +1074,8 @@ int daIwante_c::HandPattern8Execute() {
         }
         if (data_ov066_0211ae00 != 0)
             break;
-        Vec3_ApproachHorz(&mPosX, &mRestPosX, 0x28000);
-        if (Vec3_HorzDist(&mPosX, &mRestPosX) > 0x28000)
+        Vec3_ApproachHorz(&mPos, (Vector3 *)&mRestPosX, 0x28000);
+        if (Vec3_HorzDist(&mPos, (const Vector3 *)&mRestPosX) > 0x28000)
             break;
         data_ov066_0211ae0c = 0;
         mPosX = mRestPosX;
@@ -1149,22 +1143,22 @@ int daIwante_c::HandPattern7Execute() {
         if (data_ov066_0211ae0c == mPartIdx) {
             daPly_c *p = ClosestPlayer();
             if (p != 0) {
-                VecFx32 *pp = (VecFx32 *)&p->mPosX;
-                mTargetPosX = pp->x;
-                mTargetPosY = pp->y;
-                mTargetPosZ = pp->z;
-                mTargetPosZ -= 0xc8000;
+                Vector3 *pp = &p->mPos;
+                mTargetPos.x = pp->x;
+                mTargetPos.y = pp->y;
+                mTargetPos.z = pp->z;
+                mTargetPos.z -= 0xc8000;
                 if (mPartIdx == PART_HAND_1)
-                    mTargetPosX += 0x58000;
+                    mTargetPos.x += 0x58000;
                 else
-                    mTargetPosX -= 0x58000;
-                if (mTargetPosZ < -0xc52000)
-                    mTargetPosZ = -0xc52000;
-                else if (mTargetPosZ > -0x73a000)
-                    mTargetPosZ = -0x73a000;
+                    mTargetPos.x -= 0x58000;
+                if (mTargetPos.z < -0xc52000)
+                    mTargetPos.z = -0xc52000;
+                else if (mTargetPos.z > -0x73a000)
+                    mTargetPos.z = -0x73a000;
             }
-            func_02012694(SE_START_MOVING, &mCamSpacePosX);
-            mTargetPosY = mRestPosY + 0x1c2000;
+            func_02012694(SE_START_MOVING, &mCamSpacePos);
+            mTargetPos.y = mRestPosY + 0x1c2000;
             mSubState = 1;
         } else if (mTimer1 == 0) {
             SetLoweredPose();
@@ -1172,36 +1166,36 @@ int daIwante_c::HandPattern7Execute() {
         }
         break;
     case 1:
-        ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x28000);
-        if (Vec3_Dist(&mPosX, &mTargetPosX) <= 0x28000) {
+        ApproachLinear(mPos, mTargetPos, 0x28000);
+        if (Vec3_Dist(&mPos, &mTargetPos) <= 0x28000) {
             mTimer1 = 0xa;
             mFlags = 0x2000000;
-            mPosX = mTargetPosX;
-            mPosY = mTargetPosY;
-            mPosZ = mTargetPosZ;
-            mTargetPosY = mRestPosY;
+            mPosX = mTargetPos.x;
+            mPosY = mTargetPos.y;
+            mPosZ = mTargetPos.z;
+            mTargetPos.y = mRestPosY;
             mSubState = 2;
         }
         break;
     case 2:
         if (mTimer1 == 0)
-            ApproachLinear(mPos, *(Vector3 *)&mTargetPosX, 0x32000);
-        if (Vec3_Dist(&mPosX, &mTargetPosX) <= 0x32000) {
+            ApproachLinear(mPos, mTargetPos, 0x32000);
+        if (Vec3_Dist(&mPos, &mTargetPos) <= 0x32000) {
             PoundGround(0x7d0000);
-            mPosX = mTargetPosX;
-            mPosY = mTargetPosY;
-            mPosZ = mTargetPosZ;
+            mPosX = mTargetPos.x;
+            mPosY = mTargetPos.y;
+            mPosZ = mTargetPos.z;
             mTimer1 = 0xa;
             mSubState = 7;
             if (GetPlayerDepthBand() == 0) {
                 daPly_c *p = ClosestPlayer();
                 if (p != 0) {
-                    VecFx32 *pp = (VecFx32 *)&p->mPosX;
+                    Vector3 *pp = &p->mPos;
                     v.x = pp->x;
                     v.y = pp->y;
                     v.z = pp->z;
                     mTimer1 = 0x24;
-                    if (Vec3_HorzDist(&mPosX, &v) < 0x400000) {
+                    if (Vec3_HorzDist(&mPos, (const Vector3 *)&v) < 0x400000) {
                         if (v.x < mPosX)
                             mPrevAngleY = -0x4000;
                         else
@@ -1231,7 +1225,7 @@ int daIwante_c::HandPattern7Execute() {
     case 4:
         BeginVulnerable();
         if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0)
-            func_02012694(SE_ANIM_FRAME_0, &mCamSpacePosX);
+            func_02012694(SE_ANIM_FRAME_0, &mCamSpacePos);
         if (mStateWork1 == 1) {
             int r = CheckAttacked();
             UpdateTexturePattern();
@@ -1259,10 +1253,10 @@ int daIwante_c::HandPattern7Execute() {
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, *(CLPS_Block *)(&data_ov025_02112c08));
+                                       mAngleY, data_ov025_02112c08);
             else
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, *(CLPS_Block *)(&data_ov025_02112d48));
+                                       mAngleY, data_ov025_02112d48);
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
@@ -1273,8 +1267,8 @@ int daIwante_c::HandPattern7Execute() {
         break;
     case 7:
         if (mTimer1 == 0) {
-            Vec3_ApproachHorz(&mPosX, &mRestPosX, 0x28000);
-            if (Vec3_HorzDist(&mPosX, &mRestPosX) <= 0x28000) {
+            Vec3_ApproachHorz(&mPos, (Vector3 *)&mRestPosX, 0x28000);
+            if (Vec3_HorzDist(&mPos, (const Vector3 *)&mRestPosX) <= 0x28000) {
                 data_ov066_0211ae0c ^= mPartIdx;
                 mPosX = mRestPosX;
                 mPosY = mRestPosY;
@@ -1335,30 +1329,30 @@ int daIwante_c::HandPattern6Execute() {
         if (data_ov066_0211ae0c == mPartIdx) {
             daPly_c *p = ClosestPlayer();
             if (p != 0) {
-                VecFx32 *pp = (VecFx32 *)&p->mPosX;
-                mTargetPosX = pp->x;
-                mTargetPosY = pp->y;
-                mTargetPosZ = pp->z;
-                mTargetPosZ -= 0xc8000;
-                if (mTargetPosZ < -0xc52000)
-                    mTargetPosZ = -0xc52000;
-                else if (mTargetPosZ > -0x73a000)
-                    mTargetPosZ = -0x73a000;
+                Vector3 *pp = &p->mPos;
+                mTargetPos.x = pp->x;
+                mTargetPos.y = pp->y;
+                mTargetPos.z = pp->z;
+                mTargetPos.z -= 0xc8000;
+                if (mTargetPos.z < -0xc52000)
+                    mTargetPos.z = -0xc52000;
+                else if (mTargetPos.z > -0x73a000)
+                    mTargetPos.z = -0x73a000;
             }
-            if (mTargetPosZ > -0xa68000) {
-                if (mTargetPosX < 0) {
+            if (mTargetPos.z > -0xa68000) {
+                if (mTargetPos.x < 0) {
                     if (mPartIdx == PART_HAND_1)
-                        mTargetPosX += 0x1c2000;
+                        mTargetPos.x += 0x1c2000;
                     else
-                        mTargetPosX += 0x12c000;
+                        mTargetPos.x += 0x12c000;
                 } else {
                     if (mPartIdx == PART_HAND_1)
-                        mTargetPosX -= 0x12c000;
+                        mTargetPos.x -= 0x12c000;
                     else
-                        mTargetPosX -= 0x1c2000;
+                        mTargetPos.x -= 0x1c2000;
                 }
             }
-            func_02012694(SE_START_MOVING, &mCamSpacePosX);
+            func_02012694(SE_START_MOVING, &mCamSpacePos);
             mSubState = 1;
         } else if (mTimer1 == 0) {
             SetLoweredPose();
@@ -1366,18 +1360,18 @@ int daIwante_c::HandPattern6Execute() {
         }
         break;
     case 1:
-        Vec3_ApproachHorz(&mPosX, &mTargetPosX, 0x28000);
-        if (Vec3_HorzDist(&mPosX, &mTargetPosX) <= 0x28000) {
+        Vec3_ApproachHorz(&mPos, &mTargetPos, 0x28000);
+        if (Vec3_HorzDist(&mPos, &mTargetPos) <= 0x28000) {
             mSubState = 6;
             if (GetPlayerDepthBand() == 0) {
                 daPly_c *p = ClosestPlayer();
                 if (p != 0) {
-                    VecFx32 *pp = (VecFx32 *)&p->mPosX;
+                    Vector3 *pp = &p->mPos;
                     v.x = pp->x;
                     v.y = pp->y;
                     v.z = pp->z;
                     mTimer1 = 0x24;
-                    if (Vec3_HorzDist(&mPosX, &v) < 0x400000) {
+                    if (Vec3_HorzDist(&mPos, (const Vector3 *)&v) < 0x400000) {
                         if (v.x < mPosX)
                             mPrevAngleY = -0x4000;
                         else
@@ -1407,7 +1401,7 @@ int daIwante_c::HandPattern6Execute() {
     case 3:
         BeginVulnerable();
         if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0)
-            func_02012694(SE_ANIM_FRAME_0, &mCamSpacePosX);
+            func_02012694(SE_ANIM_FRAME_0, &mCamSpacePos);
         if (mStateWork1 == 1) {
             int r = CheckAttacked();
             UpdateTexturePattern();
@@ -1435,10 +1429,10 @@ int daIwante_c::HandPattern6Execute() {
                 mMeshCollider2.Disable();
             if (mPartIdx == PART_HAND_1)
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, *(CLPS_Block *)(&data_ov025_02112c08));
+                                       mAngleY, data_ov025_02112c08);
             else
                 mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                       mAngleY, *(CLPS_Block *)(&data_ov025_02112d48));
+                                       mAngleY, data_ov025_02112d48);
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
@@ -1448,8 +1442,8 @@ int daIwante_c::HandPattern6Execute() {
         }
         break;
     case 6:
-        Vec3_ApproachHorz(&mPosX, &mRestPosX, 0x28000);
-        if (Vec3_HorzDist(&mPosX, &mRestPosX) <= 0x28000) {
+        Vec3_ApproachHorz(&mPos, (Vector3 *)&mRestPosX, 0x28000);
+        if (Vec3_HorzDist(&mPos, (const Vector3 *)&mRestPosX) <= 0x28000) {
             data_ov066_0211ae0c ^= mPartIdx;
             mPosX = mRestPosX;
             mPosY = mRestPosY;
@@ -1538,7 +1532,7 @@ int daIwante_c::HandPattern5Execute() {
         }
 
         if ((unsigned short)(mBlendAnmModel.currFrame >> 0xc) == 0) {
-            func_02012694(SE_ANIM_FRAME_0, &mCamSpacePosX);
+            func_02012694(SE_ANIM_FRAME_0, &mCamSpacePos);
         }
 
         BeginVulnerable();
@@ -1573,10 +1567,10 @@ int daIwante_c::HandPattern5Execute() {
 
         if (mPartIdx == PART_HAND_1) {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                   mAngleY, *(CLPS_Block *)(&data_ov025_02112c08));
+                                   mAngleY, data_ov025_02112c08);
         } else {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                   mAngleY, *(CLPS_Block *)(&data_ov025_02112d48));
+                                   mAngleY, data_ov025_02112d48);
         }
 
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
@@ -1709,12 +1703,12 @@ int daIwante_c::HandRiseExecute() {
                 mVertAccel = -0x800;
             }
             mStateWork0 = 1;
-            func_02012694(SE_START_MOVING, &mCamSpacePosX);
+            func_02012694(SE_START_MOVING, &mCamSpacePos);
         }
         return 1;
     }
 
-    Vec3_ApproachHorz(&mPosX, &mRestPosX, 0x14000);
+    Vec3_ApproachHorz(&mPos, (Vector3 *)&mRestPosX, 0x14000);
     if (mVertAccel != 0) {
         int v = mRestPosY;
         if (v >= mPosY) {
@@ -1725,7 +1719,7 @@ int daIwante_c::HandRiseExecute() {
         }
     }
 
-    if (mVertAccel == 0 && Vec3_HorzDist(&mPosX, &mRestPosX) <= 0x14000 &&
+    if (mVertAccel == 0 && Vec3_HorzDist(&mPos, (const Vector3 *)&mRestPosX) <= 0x14000 &&
         mBlendAnmModel.Finished()) {
         mMeshCollider2.Enable(this);
         data_ov066_0211ae0c |= mPartIdx;
@@ -2093,7 +2087,7 @@ int daIwante_c::BodyTalkExecute() {
             in.z = -0x32000;
 
             Matrix4x3_FromRotationY(&data_020a0e68, 0);
-            MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
+            MTX_MultVec43(&in, &data_020a0e68, &out);
 
             out.x += mPosX;
             out.y += mPosY;
@@ -2109,7 +2103,7 @@ int daIwante_c::BodyTalkExecute() {
             Message::PrepareTalk();
             if (mTalkPlayer->ShowMessage(*this, msgid, &out, 0, 0) == 1) {
                 mStateWork1 = 1;
-                func_02012694(SE_TALK_STARTED, &mCamSpacePosX);
+                func_02012694(SE_TALK_STARTED, &mCamSpacePos);
             }
         }
     } else {
@@ -2191,7 +2185,7 @@ int daIwante_c::BodyDormantEnter() {
  * is called on the object unless that first word is null. */
 int daIwante_c::SetState(void *pv) {
     mState = (EyerokState *)pv;
-    if (*(int *)&mState->enter == 0)
+    if (mState->enter == 0)
         return 1;
     return (this->*mState->enter)();
 }
@@ -2234,8 +2228,8 @@ void daIwante_c::UpdateModelMatrices() {
         Matrix4x3_FromTranslation(&data_020a0e68, (mPosX + d) >> 3, (mPosY - 0x8000) >> 3,
                                   (mPosZ + 0xa0000) >> 3);
     }
-    *(Mtx43 *)mShadowMtx = *(Mtx43 *)&data_020a0e68;
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, 0x140000, 0x258000, 0xf);
+    *(Mtx43 *)&mShadowMtx = *(Mtx43 *)&data_020a0e68;
+    DropShadowRadHeight(mShadowModel, mShadowMtx, 0x140000, 0x258000, 0xf);
 }
 
 /* Disables the collision if it is still enabled; the body (mPartIdx 0) alone
@@ -2312,9 +2306,8 @@ static inline u32 NewDust(u32 handle, u32 id, const Vector3 &pos) {
  * (mdCcAcPos_c) to its position plus data_ov066_0211ad18, refreshes matrices and
  * collision, clears its hit results, re-registers it (Update links it into the
  * collision list) and advances both animations. */
-/* Vtable slot 6. The stack temps are POD VecFx32s; callees whose
- * ROM symbols carry by-value/ref class parameters keep their literal mangled
- * extern "C" spellings. */
+/* Vtable slot 6. Callees whose ROM symbols carry by-value or reference
+ * class parameters keep their literal mangled extern "C" spellings. */
 int daIwante_c::Behavior() {
     DecIfAbove0_Short(&mTimer1);
     DecIfAbove0_Short(&mTimer2);
@@ -2326,8 +2319,8 @@ int daIwante_c::Behavior() {
         if ((mDustCounter & 1) == 0) {
             int rnd = RandomIntInternal(&data_0209e650.value);
             int idx = mDustCounter >> 1;
-            VecFx32 vin;
-            VecFx32 vout;
+            Vector3 vin;
+            Vector3 vout;
             mDustPos[idx].x = mPosX;
             mDustPos[idx].y = mPosY;
             mDustPos[idx].z = mPosZ;
@@ -2341,7 +2334,7 @@ int daIwante_c::Behavior() {
                 if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
                     Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngleY - 0x4000));
-                    MTX_MultVec43((Vector3 *)&vin, &data_020a0e68, (Vector3 *)&vout);
+                    MTX_MultVec43(&vin, &data_020a0e68, &vout);
                     mDustPos[idx].x += vout.x;
                     mDustPos[idx].z += vout.z;
                 } else {
@@ -2356,7 +2349,7 @@ int daIwante_c::Behavior() {
                 if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
                     Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngleY - 0x4000));
-                    MTX_MultVec43((Vector3 *)&vin, &data_020a0e68, (Vector3 *)&vout);
+                    MTX_MultVec43(&vin, &data_020a0e68, &vout);
                     mDustPos[idx].x += vout.x;
                     mDustPos[idx].z += vout.z;
                 } else {
@@ -2370,7 +2363,7 @@ int daIwante_c::Behavior() {
             }
         }
 
-        for (int i = 0; i < 0x14; i++) {
+        for (int i = 0; i < 20; i++) {
             if (mDustPos[i].x != 0 || mDustPos[i].y != 0 || mDustPos[i].z != 0) {
                 mDustParticle1[i] = NewDust(mDustParticle1[i], 0x13a, mDustPos[i]);
                 mDustParticle2[i] = NewDust(mDustParticle2[i], 0x13b, mDustPos[i]);
@@ -2378,9 +2371,9 @@ int daIwante_c::Behavior() {
         }
 
         mDustCounter++;
-        if (mDustCounter > 0x26) {
+        if (mDustCounter > 38) {
             mDustCounter = 0;
-            for (int j = 0; j < 0x14; j++) {
+            for (int j = 0; j < 20; j++) {
                 mDustPos[j].x = 0;
                 mDustPos[j].y = 0;
                 mDustPos[j].z = 0;
@@ -2433,7 +2426,7 @@ int daIwante_c::Behavior() {
  * mHitPoints = 3; data_ov066_0211ae00 = 0; it enters the rise state
  * (data_ov066_0211b05c). */
 int daIwante_c::InitResources() {
-    char *c = (char *)((void *)this);
+    char *c = (char *)(this);
     Vector3 v;
     Vector3 w;
 
@@ -2496,7 +2489,7 @@ int daIwante_c::InitResources() {
         mdCcAcPos_c.Init((dActor_c *)c, w, 0x64000, 0x64000, 0x200002, 0);
     }
 
-    for (int i = 0; i < 0x14; i++) {
+    for (int i = 0; i < 20; i++) {
         mDustPos[i].x = 0;
         mDustPos[i].y = 0;
         mDustPos[i].z = 0;
@@ -2531,7 +2524,7 @@ int daIwante_c::InitResources() {
         data_ov066_0211ae04 = PHASE_DORMANT;
         data_ov066_0211abe0 = HANDS_BOTH;
         mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae24.filePtr), mClsnMat2, 0x199, mAngleY,
-                               *(CLPS_Block *)(&data_ov025_02112ca8));
+                               data_ov025_02112ca8);
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
         mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
         mMeshCollider2.Enable(this);
@@ -2546,11 +2539,11 @@ int daIwante_c::InitResources() {
         mSpawnPosZ = mPosZ;
         if (mPartIdx == PART_HAND_1) {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
-                                   mAngleY, *(CLPS_Block *)(&data_ov025_02112c08));
+                                   mAngleY, data_ov025_02112c08);
             mRestPosX -= 0x31F000;
         } else {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
-                                   mAngleY, *(CLPS_Block *)(&data_ov025_02112d48));
+                                   mAngleY, data_ov025_02112d48);
             mRestPosX += 0x31F000;
         }
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
@@ -2612,7 +2605,7 @@ void daIwante_c::StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *othe
  * allocation size, vtable identity, and the IWANTE registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Eyerok_Spawn. */
-extern "C" daIwante_c *daIwante_c_classInit(void) {
+daIwante_c *daIwante_c_classInit(void) {
     return new daIwante_c();
 }
 

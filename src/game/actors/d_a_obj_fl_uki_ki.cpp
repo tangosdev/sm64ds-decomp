@@ -75,7 +75,7 @@ extern CLPS_Block data_ov064_0211ba6c; /* the CLPS block SetFile is handed */
 /* The registry's allocator for FL_UKI_KI. The implicit default constructor is
    inlined into it at -O4: operator new, dBgActor_c's constructor, the vptr
    store. Historical alias in the rename ledger: LavaPlank_Spawn. */
-extern "C" daObjFl_UkiKi_c *daObjFl_UkiKi_c_classInit() {
+daObjFl_UkiKi_c *daObjFl_UkiKi_c_classInit() {
     return new daObjFl_UkiKi_c();
 }
 
@@ -99,7 +99,7 @@ s32 daObjFl_UkiKi_c::InitResources() {
 /* Bob 30 units either side of mOriginalPosY, one cycle per 64 frames
  * (mPhaseAngle advances 0x400 of 0x10000 a frame). */
 s32 daObjFl_UkiKi_c::Behavior() {
-    mPosY = FX_SinIdx((u16)mPhaseAngle >> 4) * (s16)0x1e + mOriginalPosY;
+    mPosY = FX_SinIdx((u16)mPhaseAngle >> 4) * (s16)30 + mOriginalPosY;
     mPhaseAngle += 0x400;
 
     UpdateModelPosAndRotY();

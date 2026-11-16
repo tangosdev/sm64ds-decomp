@@ -52,7 +52,7 @@ int func_02063718(WBTWork *work, void *buf, int size) {
         MI_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
         work->cmd.my_cmd_counter = t;
         recv = &work->peer[0].recv;
-        for (i = 0; i < 0x10; i++, recv = (WBTPeerRecv *)((char *)recv + sizeof(WBTPeerRecord))) {
+        for (i = 0; i < 16; i++, recv = (WBTPeerRecv *)((char *)recv + sizeof(WBTPeerRecord))) {
             if ((work->cmd.target_bmp >> i) & 1)
                 func_020647fc(&recv->pkt_bmp, work->cmd.u.get.recv_data_size, recv->blockinfo_bits,
                               work->cmd.u.get.recv_buf_table[i]);
@@ -68,7 +68,7 @@ int func_02063718(WBTWork *work, void *buf, int size) {
         MI_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
         work->cmd.my_cmd_counter = t;
         recv = &work->peer[0].recv;
-        for (i = 0; i < 0x10; i++, recv = (WBTPeerRecv *)((char *)recv + sizeof(WBTPeerRecord))) {
+        for (i = 0; i < 16; i++, recv = (WBTPeerRecv *)((char *)recv + sizeof(WBTPeerRecord))) {
             if ((work->cmd.target_bmp >> i) & 1)
                 func_020647fc(&recv->pkt_bmp, work->cmd.u.get.recv_data_size,
                               work->cmd.u.get.pkt_bmp_table[i], work->cmd.u.get.recv_buf_table[i]);

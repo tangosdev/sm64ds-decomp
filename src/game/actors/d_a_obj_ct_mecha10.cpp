@@ -96,15 +96,15 @@ u16 DecIfAbove0_Short(u16 *p);
 int RandomIntInternal(int *state);
 }
 
-extern "C" daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA10() {
+daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA10() {
     return new daObjCtMecha10_c();
 }
 
-extern "C" daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA12L() {
+daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA12L() {
     return new daObjCtMecha10_c();
 }
 
-extern "C" daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA12S() {
+daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA12S() {
     return new daObjCtMecha10_c();
 }
 
@@ -156,24 +156,23 @@ int daObjCtMecha10_c::Behavior() {
         return 1;
     }
 
-    if (ApproachLinear(mAngleY, mTargetAngleY, 0xc8) &&
-        DecIfAbove0_Short((u16 *)&mStepTimer) == 0) {
+    if (ApproachLinear(mAngleY, mTargetAngleY, 0xc8) && DecIfAbove0_Short(&mStepTimer) == 0) {
         mTargetAngleY += mAngleYStep;
 
         u8 setting = data_0209f2c0;
         mStepTimer = data_ov035_02111ef4[mRotationState][setting];
         if (setting == CLOCK_SETTING_RANDOM) {
             int rnd = RandomIntInternal(&data_0209e650.value);
-            if (DecIfAbove0_Short((u16 *)&mDirTimer) == 0) {
+            if (DecIfAbove0_Short(&mDirTimer) == 0) {
                 if ((unsigned int)rnd % 3 != 0) {
                     mAngleYStep = data_ov035_02111ef0[mRotationState];
-                    mDirTimer = (rnd & 3) * 0x3c + 0x5a;
+                    mDirTimer = (rnd & 3) * 60 + 90;
                 } else {
                     mAngleYStep = -data_ov035_02111ef0[mRotationState];
-                    mDirTimer = (((unsigned int)rnd % 3) + 1) * 0x1e;
+                    mDirTimer = (((unsigned int)rnd % 3) + 1) * 30;
                 }
             }
-            mStepTimer = ((unsigned int)rnd % 3) * 0x14 + 0xa;
+            mStepTimer = ((unsigned int)rnd % 3) * 20 + 10;
         }
     }
 

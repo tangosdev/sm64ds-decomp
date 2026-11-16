@@ -34,8 +34,8 @@ int func_02063980(WBTWork *work, void *buf, int size) {
             if (work->cmd.target_bmp & (u16)bit) {
                 int v = func_0206470c(&recv->pkt_bmp);
                 if (v == -1) {
-                    ret = func_02064bac(buf, (u16)bit, work->cmd.my_cmd_counter,
-                                        work->cmd.u.get.block_id);
+                    ret =
+                        func_02064bac(buf, bit, work->cmd.my_cmd_counter, work->cmd.u.get.block_id);
                 } else {
                     u16 mask = work->cmd.target_bmp;
                     if (work->cmd.command == WBT_CMD_REQ_GET_BLOCK)

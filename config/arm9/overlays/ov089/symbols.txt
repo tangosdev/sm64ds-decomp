@@ -1,8 +1,8 @@
 _ZN10daObjKey_cD1Ev kind:function(arm,size=0x50) addr:0x02130f00
 _ZN10daObjKey_cD0Ev kind:function(arm,size=0x64) addr:0x02130f50
 _ZN10daObjKey_c19func_ov089_02130fb4EP7Vector3i kind:function(arm,size=0x118) addr:0x02130fb4
-UnloadKeyModels kind:function(arm,size=0x48) addr:0x021310cc
-LoadKeyModels kind:function(arm,size=0x48) addr:0x02131114
+_Z15UnloadKeyModelsi kind:function(arm,size=0x48) addr:0x021310cc
+_Z13LoadKeyModelsi kind:function(arm,size=0x48) addr:0x02131114
 _ZN10daObjKey_c19func_ov089_0213115cEi kind:function(arm,size=0x64) addr:0x0213115c
 _ZN10daObjKey_c16StateFlyToCenterEv kind:function(arm,size=0x46c) addr:0x021311c0
 _ZN10daObjKey_c13StateStarJumpEv kind:function(arm,size=0x4ec) addr:0x0213162c
@@ -16,8 +16,8 @@ _ZN10daObjKey_c16CleanupResourcesEv kind:function(arm,size=0x6c) addr:0x02132084
 _ZN10daObjKey_c6RenderEv kind:function(arm,size=0xa4) addr:0x021320f0
 _ZN10daObjKey_c8BehaviorEv kind:function(arm,size=0x310) addr:0x02132194
 _ZN10daObjKey_c13InitResourcesEv kind:function(arm,size=0x32c) addr:0x021324a4
-daObjKey_c_classInit_LAST_STAR kind:function(arm,size=0x58) addr:0x021327d0
-daObjKey_c_classInit_OBJ_KEY kind:function(arm,size=0x58) addr:0x02132828
+_Z30daObjKey_c_classInit_LAST_STARv kind:function(arm,size=0x58) addr:0x021327d0
+_Z28daObjKey_c_classInit_OBJ_KEYv kind:function(arm,size=0x58) addr:0x02132828
 data_ov089_02132880 kind:data(any) addr:0x02132880
 data_ov089_02132894 kind:data(any) addr:0x02132894
 data_ov089_021328b4 kind:data(any) addr:0x021328b4

@@ -67,7 +67,7 @@ extern CLPS_Block data_ov036_02112b28;
 FlyingCarpetResources data_ov036_02113f58 = {&gRcCarpetModelFile, &gRcCarpetCollisionFile,
                                              &data_ov036_02112b28};
 
-extern "C" daObjRcCarpet_c *daObjRcCarpet_c_classInit() {
+daObjRcCarpet_c *daObjRcCarpet_c_classInit() {
     return new daObjRcCarpet_c();
 }
 
@@ -115,7 +115,7 @@ int daObjRcCarpet_c::Behavior() {
 }
 
 int daObjRcCarpet_c::Render() {
-    if (mWaitTimer < 0x5a && (mWaitTimer & 1))
+    if (mWaitTimer < 90 && (mWaitTimer & 1))
         return 1;
     mAnmModel.Render(0);
     return 1;

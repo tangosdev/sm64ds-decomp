@@ -138,14 +138,14 @@
       "ordinal": 14
     },
     {
-      "symbol": "Amida_RestoreBgChars",
+      "symbol": "_Z20Amida_RestoreBgCharsPv",
       "address": "0x020d3624",
       "size": "0x00000044",
       "legacy_source": "src/func_ov006_020d3624.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "Amida_SaveBgChars",
+      "symbol": "_Z17Amida_SaveBgCharsPv",
       "address": "0x020d3668",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020d3668.cpp",
@@ -215,7 +215,7 @@
       "ordinal": 25
     },
     {
-      "symbol": "dScMgAmida_c_classInit",
+      "symbol": "_Z22dScMgAmida_c_classInitv",
       "address": "0x020d5974",
       "size": "0x000000dc",
       "legacy_source": "src/d_s_mg_amida.cpp",
@@ -570,7 +570,7 @@
       "source": "0x0213b814",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dScMgAmida_c_classInit",
+      "symbol": "_Z22dScMgAmida_c_classInitv",
       "addend": 0,
       "target_module": "overlay(6)",
       "target_address": "0x020d5974"

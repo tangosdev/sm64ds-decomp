@@ -13,11 +13,8 @@
  *    names; no original names are recovered. SetState was Scuttlebug_SetState.
  *  - The position temporaries are Vector3 (measured: same object as the old
  *    POD twin).
- *  - The extern "C" preamble is hand-spelt: Fix12<int>/Vector3 parameters
- *    are written as plain words where the true types break the register
- *    convention, and the spelled mangled calls stay where the member
- *    spelling would change codegen.
- *  - volatile int force_stack pads OnTurnIntoEgg's frame to the ROM shape.
+ *  - The extern "C" preamble is hand-spelt: Vector3 parameters are written
+ *    as pointers where the true types break the register convention.
  */
 
 /* common.h first: its flat Matrix4x3 must win the guard; InitResources'
@@ -59,28 +56,26 @@ typedef struct { PMF enter, run; } ScuttlebugStateRow;
 /* ------------------------------------------------------------------------
  * ABI imports.  One declaration per symbol, hand-reconciled: the generated
  * preamble carried these names with contradictory spellings from thirty-odd
- * source files.  The by-value Fix12<int> and Vector3 parameters are spelt as
- * plain words / pointers on purpose -- the true types are passed differently
- * and break the register convention.
+ * source files.  By-value Vector3 parameters are spelt as pointers on
+ * purpose -- the true type is passed differently and breaks the register
+ * convention.
  * ------------------------------------------------------------------------ */
-extern "C" {
 
-int AngleDiff(int a, int b);
-unsigned short DecIfAbove0_Short(void *p);
-int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern "C" int AngleDiff(int a, int b);
+extern "C" unsigned short DecIfAbove0_Short(void *p);
+/* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short (void *) */
+extern "C" int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+/* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short (void *) */
+extern "C" short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
-void  Matrix4x3_FromRotationY(void *m, int angle);
-void  Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-void  Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
+extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
+extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 
-void func_02012694(unsigned int id, void *pos);
+void func_02012694(unsigned int id, const Vector3 *pos);
 
 /* dBgCh_Actr::Init's last two parameters are Vector3_16* (the S5_
  * back-references the pointer type). */
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *actor, int radius, int height, Vector3_16 *a,
-                         Vector3_16 *b);
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern Matrix4x3 data_020a0e68;           /* scratch matrix        */
@@ -88,7 +83,6 @@ extern Matrix4x3 data_020a0e68;           /* scratch matrix        */
 /* Intra-TU forward declarations.  mwccarm lays .text down in reverse source
  * order, so this file is written ROM-descending and nearly every intra-TU call
  * is a forward reference. */
-}
 
 /* The bug's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
@@ -147,7 +141,7 @@ PMF data_ov071_02122fa8[18] = {
     data_ov071_02122ba8, data_ov071_02122ba0, data_ov071_02122b98,
 };
 
-extern "C" daSpd_c *daSpd_c_classInit(void) {
+daSpd_c *daSpd_c_classInit(void) {
     return new daSpd_c();
 }
 
@@ -155,20 +149,13 @@ extern "C" daSpd_c *daSpd_c_classInit(void) {
  * an egg coin otherwise). A child (param1 != 0) resets; the original dies. */
 
 void daSpd_c::OnTurnIntoEgg(daPly_c &player) {
-    volatile int force_stack;
-    void *p = &player;
-    int *bp;
-    int t;
-    if (((daPly_c *)p)->IsCollectingCap())
-        GivePlayerCoins(*(daPly_c *)p, mCoinCount, 0);
+    if (player.IsCollectingCap())
+        GivePlayerCoins(player, mCoinCount, 0);
     else
-        ((daPly_c *)p)->RegisterEggCoinCount(mCoinCount, 0, 0);
+        player.RegisterEggCoinCount(mCoinCount, 0, 0);
     if (param1 != 0) {
         mCoinCount = 0;
-        bp = (int *)&mFlags;
-        t = *bp;
-        t &= ~0x40000;
-        *bp = t;
+        mFlags &= ~0x40000;
         SetState(0);
     } else {
         MarkForDestruction();
@@ -177,9 +164,9 @@ void daSpd_c::OnTurnIntoEgg(daPly_c &player) {
 
 int daSpd_c::InitResources() {
     BMD_File *mf = dExtSimpleModel_c::LoadFile(data_ov071_02122f80);
-    ((dExtModel_c *)(&mAnmModel))->SetFile(mf, 1, -1);
+    mAnmModel.SetFile(mf, 1, -1);
     dExtFrameCtrl_c::LoadFile(gSpiderWalkAnimationFile);
-    if (((dExtShadowModel_c *)(&mShadowModel))->InitCylinder() == 0)
+    if (mShadowModel.InitCylinder() == 0)
         return 0;
     mdCcAc_c.Init(this, 0x46000, 0x64000, 0x200000, 0x6eff0);
     mWithMeshClsn.Init(this, 0x50000, 0x50000, (Vector3_16 *)0, (Vector3_16 *)0);
@@ -201,15 +188,15 @@ int daSpd_c::InitResources() {
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    mParent = 0;
-    mTimer = 0x3c;
+    mEatingPlayer = 0;
+    mTimer = 60;
     *(Matrix4x3 *)mShadowMtx = IDENTITY_MATRIX4X3;
     func_ov071_0211f524();
     return 1;
 }
 
 int daSpd_c::Behavior() {
-    DecIfAbove0_Short((char *)&mTimer);
+    DecIfAbove0_Short(&mTimer);
     func_ov071_02120278();
     MakeVanishLuigiWork(mdCcAc_c);
     if (mWithMeshClsn.GetResultFlag1() &&
@@ -222,12 +209,8 @@ int daSpd_c::Behavior() {
 
 int daSpd_c::Render() {
     int flag = (mFlags & 0x40000) ? 1 : 0;
-    if (flag) goto ret;
-    if (!mState) goto ret;
-    goto call;
-ret:
-    return 1;
-call:
+    if (flag || !mState)
+        return 1;
     /* dExtAnmModel_c slot 5. The call stays virtual. */
     mAnmModel.Render(0);
     return 1;
@@ -265,11 +248,10 @@ void daSpd_c::func_ov071_02120278() {
 }
 
 int daSpd_c::func_ov071_02120200() {
-    int *p = (int *)&mFlags;
     int z;
     short ang;
 
-    *p = *p & ~0x10000001;
+    mFlags = mFlags & ~0x10000001;
     mPosX = mHomeX;
     z = 0;
     mPosY = mHomeY;
@@ -280,7 +262,7 @@ int daSpd_c::func_ov071_02120200() {
     mAngleY = ang;
     mAngleZ = z;
     mHorzSpeed = z;
-    mTimer = 0x1e;
+    mTimer = 30;
     mdCcAc_c.Clear();
     mState = 0;
     return 1;
@@ -352,11 +334,11 @@ int daSpd_c::func_ov071_0211fee4() {
         func_0201267c(0xf0, &mCamSpacePos);
     }
     func_ov071_0211f0b4();
-    UpdatePos((dCc_c *)(&mdCcAc_c));
+    UpdatePos(&mdCcAc_c);
     func_ov071_0211f148(&mWithMeshClsn);
     func_ov071_0211f29c();
-    ((dCc_c *)(&mdCcAc_c))->Clear();
-    ((dCc_c *)(&mdCcAc_c))->Update();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }
 
@@ -382,7 +364,7 @@ int daSpd_c::func_ov071_0211fd58() {
     int *p = &mLeapDist;
     *p -= 0xf000;
     if (mLeapDist <= 0) {
-        mTimer = 0x3c;
+        mTimer = 60;
         SetState(2);
     }
     UpdatePos(&mdCcAc_c);
@@ -414,7 +396,7 @@ int daSpd_c::func_ov071_0211fcd4() {
 int daSpd_c::func_ov071_0211fc60() {
     mAnmModel.Advance();
     if (mWithMeshClsn.IsOnGround()) {
-        mTimer = 0x3c;
+        mTimer = 60;
         SetState(2);
     }
     UpdatePos(&mdCcAc_c);
@@ -463,7 +445,7 @@ int daSpd_c::func_ov071_0211fb0c() {
 int daSpd_c::func_ov071_0211fa54() {
     int b0 = (int)((mFlags & 0x40000) != 0);
     if (b0 != 0) {
-        int *src = &((dActor_c *)mParent)->mPosX;
+        int *src = &mEatingPlayer->mPosX;
         mPosX = src[0];
         mPosY = src[1];
         mPosZ = src[2];
@@ -473,37 +455,34 @@ int daSpd_c::func_ov071_0211fa54() {
         int b1 = (int)((v & 0x80000) != 0);
         if (b1 != 0) {
             SetState(7);
-            goto done;
-        }
-        {
+        } else {
             int b2 = (int)((v & 0x20000) != 0);
-            if (b2 != 0) goto done;
+            if (b2 == 0) {
+                int b3 = (int)((v & 0x40000) != 0);
+                if (b3 == 0) {
+                    mEatingPlayer = 0;
+                    SetState(2);
+                }
+            }
         }
-        {
-            int b3 = (int)((v & 0x40000) != 0);
-            if (b3 != 0) goto done;
-        }
-        mParent = 0;
-        SetState(2);
     }
-done:
     mdCcAc_c.Clear();
     return 1;
 }
 
 int daSpd_c::func_ov071_0211f8d0() {
     mFlags &= 0xfff7fffe;
-    mHorzSpeed = mParent->mHorzSpeed + 0x7000;
+    mHorzSpeed = mEatingPlayer->mHorzSpeed + 0x7000;
     mVertSpeed = 0;
-    mAngleY = mParent->mAngleY;
+    mAngleY = mEatingPlayer->mAngleY;
     mPrevAngleY = mAngleY;
-    mPos = mParent->mPos;
+    mPos = mEatingPlayer->mPos;
     mPosX += FX_MUL(FX_SinIdx((u16)mAngleY >> 4), 0x5a000);
     mPosY += 0x50000;
     mPosZ += FX_MUL(FX_CosIdx((u16)mAngleY >> 4), 0x5a000);
-    Vector3 v(mParent->mPosX, mParent->mPosY + 0x50000, mParent->mPosZ);
+    Vector3 v(mEatingPlayer->mPosX, mEatingPlayer->mPosY + 0x50000, mEatingPlayer->mPosZ);
     DetectRaycastClsn(v, mPos, 1);
-    mParent = 0;
+    mEatingPlayer = 0;
     mWithMeshClsn.SetLimMovFlag();
     mState = 7;
     return 1;
@@ -530,7 +509,7 @@ int daSpd_c::func_ov071_0211f7d4() {
         mAngleZ = z;
         SetState(2);
     }
-    UpdatePos((dCc_c *)(&mdCcAc_c));
+    UpdatePos(&mdCcAc_c);
     func_ov071_0211f29c();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
@@ -542,7 +521,7 @@ int daSpd_c::func_ov071_0211f6f8() {
     mFlags &= ~1;
     mHorzSpeed = 0xa000;
     mVertSpeed = 0x28000;
-    mTimer = 0x2d;
+    mTimer = 45;
     mAnmModel.SetAnim((BCA_File *)gSpiderWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int yOffset1 = OnAimedAtWithEgg();
@@ -600,7 +579,7 @@ void daSpd_c::func_ov071_0211f498() {
     v.z = mPosZ;
     SpawnCoins(v, mCoinCount, 0xf000, 0);
     PoofDust();
-    func_02012694(0xc4, &mCamSpacePosX);
+    func_02012694(0xc4, (const Vector3 *)(&mCamSpacePosX));
     if (param1) {
         mCoinCount = 0;
         SetState(0);
@@ -664,11 +643,11 @@ void daSpd_c::func_ov071_0211f29c() {
         return;
 
     {
-        int v[3];
-        v[0] = mPosX;
-        v[1] = mPosY;
-        v[2] = mPosZ;
-        if (hitPlayer->Hurt(*(Vector3 *)v, 1, 0xc000, 1, 0, 1) != 0)
+        Vector3 v;
+        v.x = mPosX;
+        v.y = mPosY;
+        v.z = mPosZ;
+        if (hitPlayer->Hurt(v, 1, 0xc000, 1, 0, 1) != 0)
             SetState(4);
     }
 }
@@ -713,7 +692,7 @@ void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
 
 void daSpd_c::func_ov071_0211f0b4() {
     dActor_c *p;
-    Fix12i d;
+    fx32 d;
     short ang;
     if (mTimer != 0) return;
     p = (dActor_c *)ClosestNonVanishPlayer();

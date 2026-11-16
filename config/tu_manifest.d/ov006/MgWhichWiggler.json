@@ -19,7 +19,7 @@
   ],
   "functions": [
     {
-      "symbol": "dScMgHanachan_c_classInit",
+      "symbol": "_Z25dScMgHanachan_c_classInitv",
       "address": "0x020ede18",
       "size": "0x00000068",
       "legacy_source": "src/MgWhichWiggler_Spawn.cpp",

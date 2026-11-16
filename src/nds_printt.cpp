@@ -1,9 +1,7 @@
 //cpp
 #include "msl/string.h"
 
-extern "C" {
-
-extern void func_020147bc(unsigned short *p, int c);
+extern "C" void func_020147bc(unsigned short *p, int c);
 
 /* opt_common_subs stays off: the cartridge keeps the lower-case, upper-case and
    default arms of the digit test as three separate `out = c` tails, and CSE
@@ -42,5 +40,4 @@ void nds_printt(unsigned short *dest, const char *str, int value) {
             func_020147bc(q, space);
         } while (len != 0);
     }
-}
 }

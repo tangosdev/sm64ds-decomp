@@ -31,19 +31,13 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "Sound.h"
 
 /* This scene owns the position used by the breath effect. */
 extern Vector3 data_ov027_02113d10;
 
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
-
 extern "C" {
 int *Vec3_LslInPlace(Vector3 *, int);
-/* local extern: these five names hold the @NNN count. */
-void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos, unsigned int c);
 extern u8 gGameMode;
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
@@ -183,7 +177,7 @@ int SnowmanBreathParticle::TrySpawn(daPly_c &player) {
         mAngleY = (s16)(angle + ((random & 0x1fff) - 0x1000));
     }
     mAngleZ = 0;
-    mTimer = 0x16;
+    mTimer = 22;
     return 1;
 }
 
@@ -237,7 +231,7 @@ int daSnmBth_c::Render()
         return 1;
     {
         int i;
-        for (i = 0; i < 0x32; i++) {
+        for (i = 0; i < PARTICLE_NUM; i++) {
             mParticles[i].Render();
         }
     }
@@ -300,7 +294,7 @@ int daSnmBth_c::Behavior()
                     slot = slotBase + mNextParticle;
                     b = slot->TrySpawn(*mTalkPlayer);
                     *idx = *idx + 1;
-                    *idx = *idx % 0x32;
+                    *idx = *idx % 50;
                 } while (b == 0);
             }
             mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x184, mCamSpacePos, 0);
@@ -313,7 +307,7 @@ int daSnmBth_c::Behavior()
         slot->Behavior();
         i++;
         slot++;
-    } while (i < 0x32);
+    } while (i < PARTICLE_NUM);
 
     return 1;
 }
@@ -337,8 +331,7 @@ int daSnmBth_c::InitResources()
 }
 
 /* SNOWMAN_BREATH factory. */
-extern "C" daSnmBth_c *daSnmBth_c_classInit()
-{
+daSnmBth_c *daSnmBth_c_classInit() {
     return new daSnmBth_c();
 }
 

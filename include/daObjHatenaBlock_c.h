@@ -23,7 +23,7 @@ struct daObjHatenaBlock_c : dBgActor_c {
        by UpdateDropShadow. DropShadowScaleXYZ takes this pairing. 0x3ac + 0x30 = 0x3dc. */
     Matrix4x3 mShadowMat;             /* 0x3ac */
     /* Bounce squash Y added onto mPosY when writing the model/collider
-       translation (UpdateModelMatrix / 02149e38 / 021498e0). Fix12:
+       translation (UpdateModelMatrix / 02149e38 / 021498e0). fx32:
        0x1000 = 1 unit. */
     s32 mBounceYOffs;                 /* 0x3dc */
     s32 mHomePosY;                    /* 0x3e0 -- mPosY at InitResources; Behavior clamps mPosY up to it after UpdatePos (not while POPPED) */
@@ -39,7 +39,7 @@ struct daObjHatenaBlock_c : dBgActor_c {
        (EnterPopped), where it is the delay before the block can come
        back. */
     u16 mBounceTimer;                 /* 0x3ee */
-    u8 mStarTracked;                  /* 0x3f0 -- TrackStar's result (CONTENT_STAR only); passed back to UntrackStar */
+    s8 mStarTracked; /* 0x3f0 -- TrackStar's result (CONTENT_STAR only); passed back to UntrackStar */
     u8 mStarId;                       /* 0x3f1 -- param1 bits 8..15 (CONTENT_STAR only) */
     /* Truncated from the hitter's param1 by every combat callback, then
        ChangeState(this, STATE_BOUNCING). A prize column is picked

@@ -34,7 +34,7 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep C linkage. The Cursor_ names are coined from the
+ * The Cursor_ names are coined from the
  * bodies, after this file's Ov007Cursor; the five functions other units
  * call (func_ov007_020b2cdc, 020b2cf0, 020b2e64, 020b3050 and 020b30b0)
  * keep their address names for now.
@@ -49,8 +49,6 @@
 #include "Ov007Touch.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
-
-extern "C" {
 
 /* data_ov007_02103360: the 0x1c-byte cursor func_ov007_020b30b0 allocates. */
 typedef struct Ov007Cursor {
@@ -89,15 +87,15 @@ extern unsigned char data_ov007_020d7ddd[];
 extern short data_ov007_020d7de8[];
 extern short data_ov007_020d7dea[];
 
-extern int func_ov007_020b79e4(void);
-extern int func_ov007_020bdeb0(int a);
+extern "C" int func_ov007_020b79e4(void);
+extern "C" int func_ov007_020bdeb0(int a);
 extern int func_ov007_020c1da0(int i);
-extern void func_ov007_020c2090(Ov007Pad *pad);
-extern void func_ov007_020c3d1c(void *self);
-extern void *func_ov007_020c3df4(const char *name, int size);
-extern void func_ov007_020c92d0(Ov007MenuState *state);
-extern void func_ov007_020c937c(void *state);
-extern void *func_ov007_020c9388(int initialState);
+extern "C" void func_ov007_020c2090(Ov007Pad *pad);
+extern "C" void func_ov007_020c3d1c(void *self);
+extern "C" void *func_ov007_020c3df4(const char *name, int size);
+extern "C" void func_ov007_020c92d0(Ov007MenuState *state);
+extern "C" void func_ov007_020c937c(void *state);
+extern "C" void *func_ov007_020c9388(int initialState);
 
 /* The menu cursor (data_ov007_02103360). */
 #define CURSOR data_ov007_02103360
@@ -156,7 +154,7 @@ void Cursor_SetSpriteMode(Ov007Sprite *sprite, int idx) {
     if (idx == 1)
         sprite->depth = -0x10c0;
     else
-        sprite->depth = (int)0xffffef38;
+        sprite->depth = 0xffffef38;
     func_ov007_020c43bc(sprite, WORK->cameras[1]);
 }
 
@@ -660,7 +658,7 @@ void func_ov007_020b30b0(void) {
     sprite->texColor0 = 1;
     sprite->drawFlags |= 4;
     sprite->shadowAlphaDrop = 0x14;
-    sprite->depth = (int)0xffffef01;
+    sprite->depth = 0xffffef01;
 }
 
 /* Frees the cursor's state machine, its sprite and the cursor. */
@@ -689,13 +687,13 @@ void func_ov007_020b2e64(TPData *sample) {
 
     if (func_ov007_020c1da0(0) != 0) {
         dir = -1;
-    } else if (held[0] == 1 || (held[0] >= 0x14 && FX_ModS32(held[0] - 0x14, 0xa) == 0)) {
+    } else if (held[0] == 1 || (held[0] >= 20 && FX_ModS32(held[0] - 20, 10) == 0)) {
         dir = 0;
-    } else if (held[1] == 1 || (held[1] >= 0x14 && FX_ModS32(held[1] - 0x14, 0xa) == 0)) {
+    } else if (held[1] == 1 || (held[1] >= 20 && FX_ModS32(held[1] - 20, 10) == 0)) {
         dir = 1;
-    } else if (held[2] == 1 || (held[2] >= 0x14 && FX_ModS32(held[2] - 0x14, 0xa) == 0)) {
+    } else if (held[2] == 1 || (held[2] >= 20 && FX_ModS32(held[2] - 20, 10) == 0)) {
         dir = 2;
-    } else if (held[3] == 1 || (held[3] >= 0x14 && FX_ModS32(held[3] - 0x14, 0xa) == 0)) {
+    } else if (held[3] == 1 || (held[3] >= 20 && FX_ModS32(held[3] - 20, 10) == 0)) {
         dir = 3;
     } else {
         dir = -1;
@@ -775,7 +773,6 @@ void func_ov007_020b2cf0(void) {
 }
 
 /* The cursor's state machine. */
-Ov007MenuState *func_ov007_020b2cdc(void) {
+extern "C" Ov007MenuState *func_ov007_020b2cdc(void) {
     return data_ov007_02103360->state;
-}
 }

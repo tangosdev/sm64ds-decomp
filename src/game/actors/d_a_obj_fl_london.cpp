@@ -53,7 +53,7 @@ extern LondonModelFile data_ov022_02114580;
 extern LondonCollisionFilePtr data_ov022_02114578;
 extern CLPS_Block data_ov064_0211bb2c;
 
-extern "C" daObjFl_London_c *daObjFl_London_c_classInit() {
+daObjFl_London_c *daObjFl_London_c_classInit() {
     return new daObjFl_London_c();
 }
 
@@ -79,7 +79,7 @@ s32 daObjFl_London_c::InitResources() {
     mMeshCollider.SetFile(k, mClsnMat, 0x1000, mAngleY, data_ov064_0211bb2c);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mFlag = 0;
-    mCooldown = 0xf;
+    mCooldown = 15;
     return 1;
 }
 
@@ -92,7 +92,7 @@ s32 daObjFl_London_c::Behavior() {
             *p = *p - 0x100;
             if (mPrevAngleZ <= -0x2000) {
                 mPrevAngleZ = -0x2000;
-                mCooldown = 0xf;
+                mCooldown = 15;
                 mFlag = 1;
             }
         } else {
@@ -100,7 +100,7 @@ s32 daObjFl_London_c::Behavior() {
             *p = *p + 0x100;
             if (mPrevAngleZ >= 0) {
                 mPrevAngleZ = 0;
-                mCooldown = 0xf;
+                mCooldown = 15;
                 mFlag = 0;
             }
         }

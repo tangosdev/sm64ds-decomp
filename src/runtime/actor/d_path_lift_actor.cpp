@@ -18,8 +18,6 @@
  * is its ROM location.
  *
  * Known limits:
- * - data_ov002_0210d9f0 is a SharedFilePtr, read here through a local
- *   PathStuff struct: including SharedFilePtr.h renumbers the @NNN labels.
  * - IsUnk42cSet keeps its symbol-bound name; the field it reads is
  *   mRespawnAfterFall (see include/PathLift.h).
  * - StateFall keeps two views of mFallAngle: a signed read and an
@@ -40,6 +38,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
+#include "SharedFilePtr.h"
 
 typedef void (dPathLiftActor_c::*PathLiftStateFn)();
 
@@ -52,30 +51,24 @@ struct PathLiftState {
 /* POD spelling of Vector3's 0x0c bytes: with a user-declared constructor on
    Vector3, copy-init lowers memberwise; the ROM copy is the block move, so the
    per-frame local in RenderPathModels is a VecFx32. */
-/* The shared lift model file, in SharedFilePtr's layout. This TU does not
-   include SharedFilePtr.h: the header's declarations take one compiler
-   label number, and every @NNN of the state table would move up by one. */
 struct BMD_File;
-struct PathStuff {
-    u16 fileID;
-    u8 numRefs;
-    void *filePtr;
-};
-extern PathStuff data_ov002_0210d9f0;
+
+/* The shared lift model file. */
+extern SharedFilePtr data_ov002_0210d9f0;
 
 /* ROM symbols with no header of their own. */
 extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern short Vec3_VertAngle(const Vector3 *from, const Vector3 *to);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 /* Sound.cpp: plays sound `id' at a camera-space position. */
-void func_02012694(unsigned int id, const Vector3 *camSpacePos);
 /* dBgW.cpp: sets a collider's stoodOnCallback. */
 
 /* Defined last: the ROM-ascending order puts the collider callback after
    BaseInitResources, which stores its address. */
-void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider);
 }
+extern short Vec3_VertAngle(const Vector3 *from, const Vector3 *to);
+void func_02012694(unsigned int id, const Vector3 *camSpacePos);
+void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider);
 
 extern PathLiftState data_ov002_0210af2c[];
 
@@ -136,7 +129,7 @@ void dPathLiftActor_c::StateFall()
                 return;
             }
         } else {
-            mWaitTimer = 0x12c;
+            mWaitTimer = 300;
         }
     }
     if (DecIfAbove0_Byte(&mFallDelay) != 0)
@@ -171,17 +164,17 @@ void dPathLiftActor_c::StateFallInit() {
         mVertAccel = -0x2000;
         mTerminalVelocity = -0x3c000;
     }
-    mTriggerDelay = 0xfa;
+    mTriggerDelay = 250;
     mPrevAngleX = mAngleX;
     mPrevAngleY = mAngleY;
     mPrevAngleZ = mAngleZ;
     mVertSpeed = 0;
     if (HasNonzeroAngleZ() == 0) {
-        mFallDelay = 0x3c;
+        mFallDelay = 60;
         mFallBounceTimer = 0;
     } else {
-        mFallDelay = 0x1e;
-        mFallBounceTimer = 0x18;
+        mFallDelay = 30;
+        mFallBounceTimer = 24;
         mFallAngle = 0;
         mFallStartY = mPosY;
     }
@@ -212,7 +205,7 @@ void dPathLiftActor_c::StatePath()
                 return;
             }
         } else {
-            mWaitTimer = 0x12c;
+            mWaitTimer = 300;
         }
     }
 
@@ -258,7 +251,7 @@ void dPathLiftActor_c::StatePath()
 
     yawDiff = AngleDiff(mPrevPathAngle.y, targetYaw);
     pitchDiff = AngleDiff(mPrevPathAngle.x, targetPitch);
-    pitchStep = (short)(pitchDiff / segFrames);
+    pitchStep = (pitchDiff / segFrames);
     ApproachLinear(mAngleY, targetYaw, (short)(yawDiff / segFrames));
     if (HasNonzeroAngleZ() != 0) {
         ApproachLinear(mAngleX, targetPitch, pitchStep);
@@ -280,7 +273,7 @@ void dPathLiftActor_c::StatePath()
         if (mPath.Loops()) {
             mCurrPathNode = mPath.NumNodes() - 1;
         } else {
-            mTriggerDelay = 0x14;
+            mTriggerDelay = 20;
             mPathDirection = 1;
             mCurrPathNode += mPathDirection * 2;
         }
@@ -291,7 +284,7 @@ void dPathLiftActor_c::StatePath()
         } else if (Param10ModeIs1() != 0) {
             SetState(2);
         } else {
-            mTriggerDelay = 0x14;
+            mTriggerDelay = 20;
             mPathDirection = -1;
             mCurrPathNode += mPathDirection * 2;
         }
@@ -489,7 +482,7 @@ void dPathLiftActor_c::AfterClsn(int)
 // 0x020eff90 (0x28)
 /* The mesh collider's stoodOnCallback: the actor that landed on the lift
    arrives as AfterClsn's word argument. */
-extern "C" void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider) {
+void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider) {
     static_cast<dPathLiftActor_c *>(lift)->AfterClsn((int)rider);
 }
 

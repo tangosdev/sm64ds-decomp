@@ -87,9 +87,6 @@ extern void Mg_InitBrush(char *, char, int, int);
 extern void Mg_SetTopScreenYOffset(int);
 extern void Mg_SetSharedState(int);
 extern void FreeGfxSlotsById(int n);
-extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
-extern int func_020126e8(int a);
-extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void func_02012718(int, int);
 extern void *LoadFile(int handle);
 extern void Deallocate(void *);
@@ -162,6 +159,9 @@ extern PMF pmf_dScMgPachinko2_c_Cup_StateHopRight;
 extern PMF pmf_dScMgPachinko2_c_Cup_StateDecide;
 
 } /* extern "C" */
+extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
+extern int func_020126e8(int a);
+extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 
 /* Both variants come from this one definition: D1 stores this class's
    vtable and calls dScMgBase_c's D2; D0 adds dScMgBase_c::operator delete. */
@@ -192,7 +192,7 @@ void dScMgPachinko2_c::CupSlot_ResetAll() {
 void dScMgPachinko2_c::Cup_PickTarget(int k) {
     int found = 0;
     int i;
-    for (i = 0; i < 0x30; i++) {
+    for (i = 0; i < 48; i++) {
         int dx, dy;
         if (mBalls[i].active == 0)
             continue;
@@ -506,7 +506,7 @@ void dScMgPachinko2_c::ChooseLaneConfig() {
 }
 
 void dScMgPachinko2_c::Popup_DrawAll() {
-    for (int i = 0; i < 0x10; i++) {
+    for (int i = 0; i < 16; i++) {
         if (mScorePops[i].visible != 0) {
             Mg_DrawBigNumber(mScorePops[i].x >> 12, mScorePops[i].y >> 12, mScorePops[i].score, -1,
                              -1, 0, 0);
@@ -515,7 +515,7 @@ void dScMgPachinko2_c::Popup_DrawAll() {
 }
 
 void dScMgPachinko2_c::Popup_UpdateAll() {
-    for (int i = 0; i < 0x10; i++) {
+    for (int i = 0; i < 16; i++) {
         if (mScorePops[i].active != 0) {
             if (mScorePops[i].settled == 0) {
                 mScorePops[i].y += mScorePops[i].vy;
@@ -535,7 +535,7 @@ void dScMgPachinko2_c::Popup_UpdateAll() {
 }
 
 void dScMgPachinko2_c::Popup_Spawn(int ballX, int ballY, int value) {
-    for (int i = 0; i < 0x10; i++) {
+    for (int i = 0; i < 16; i++) {
         if (mScorePops[i].active == 0) {
             mScorePops[i].active = 1;
             mScorePops[i].visible = 1;
@@ -546,7 +546,7 @@ void dScMgPachinko2_c::Popup_Spawn(int ballX, int ballY, int value) {
             mScorePops[i].y = ballY + 0x48000;
             mScorePops[i].unk_0c = 0;
             mScorePops[i].vy = 0;
-            mScorePops[i].score = (u8)value;
+            mScorePops[i].score = value;
             mScorePops[i].settled = 0;
             mScorePops[i].life = 0x40;
             return;
@@ -555,7 +555,7 @@ void dScMgPachinko2_c::Popup_Spawn(int ballX, int ballY, int value) {
 }
 
 void dScMgPachinko2_c::Spark_DrawAll() {
-    for (int i = 0; i < 0x10; i++) {
+    for (int i = 0; i < 16; i++) {
         if (mHitFx[i].visible != 0) {
             Mg_RenderSpriteBoth(sPachinko2SparkSprites[mHitFx[i].frame], mHitFx[i].x >> 12,
                                 mHitFx[i].y >> 12, -1, -1);
@@ -596,7 +596,7 @@ void dScMgPachinko2_c::Spark_Spawn(int x, int y) {
             return;
         }
         i++;
-    } while (i < 0x10);
+    } while (i < 16);
 }
 
 void dScMgPachinko2_c::DrawScore() {
@@ -617,7 +617,7 @@ void dScMgPachinko2_c::StartRoundEnd(int a) {
        a literal 0 or a plain local is 8 bytes shorter (known unsolved). */
     volatile unsigned short v;
     mPhase = 3;
-    mEndTimer = 0x40;
+    mEndTimer = 64;
     dst = (char *)G2S_GetBG2CharPtr();
     v = 0;
     MI_CpuFill16(dst, v, 0x6000);
@@ -643,7 +643,7 @@ void dScMgPachinko2_c::CheckRoundOver() {
         return;
 
     count = 0;
-    for (i = 0; i < 0x30; i++) {
+    for (i = 0; i < 48; i++) {
         if (mBalls[i].active) {
             count++;
             break;
@@ -673,7 +673,7 @@ void dScMgPachinko2_c::Paddle_HideAll() {
     for (int i = 0; i < 3; i++) {
         if (mPaddles[i].active != 0) {
             mPaddles[i].state = 0xe;
-            mPaddles[i].timer = 0x88;
+            mPaddles[i].timer = 136;
         }
     }
 }
@@ -683,7 +683,7 @@ void dScMgPachinko2_c::Paddle_Stop(int idx) {
         return;
     mPaddles[idx].angle = 0;
     mPaddles[idx].speed = 0;
-    mPaddles[idx].timer = 0x40;
+    mPaddles[idx].timer = 64;
     mPaddles[idx].state = 0xc;
 }
 
@@ -693,7 +693,7 @@ void dScMgPachinko2_c::Paddle_CheckBallHits(int idx) {
     if (mPaddles[idx].state >= 0xc)
         return;
 
-    for (int i = 0; i < 0x30; i++) {
+    for (int i = 0; i < 48; i++) {
         if (mBalls[i].active != 0) {
             if (mBalls[i].state >= 2) {
                 if (mBalls[i].vy > 0x2000) {
@@ -777,7 +777,7 @@ void dScMgPachinko2_c::Paddle_StateDropBalls(int idx) {
         int z;
 
         mPaddles[idx].ballsHeld -= 1;
-        mPaddles[idx].timer = 0x30;
+        mPaddles[idx].timer = 48;
         x = mPaddles[idx].x >> 12;
         z = mPaddles[idx].y >> 12;
         Ball_HitAt(x, z, mPaddles[idx].ballsHeld & 1);
@@ -831,9 +831,9 @@ void dScMgPachinko2_c::Paddle_StateGather(int i) {
         mPaddles[i].y = targetY << 12;
         mPaddles[i].state = 0xd;
         CupSlot_ResetAll();
-        mPaddles[i].timer = 0x40;
+        mPaddles[i].timer = 64;
         if (i & 1) {
-            mPaddles[i].timer += 0x20;
+            mPaddles[i].timer += 32;
         }
     }
 }
@@ -882,7 +882,7 @@ void dScMgPachinko2_c::Paddle_StateSwing(int idx) {
         return;
     }
 
-    mPaddles[idx].timer = 0x10;
+    mPaddles[idx].timer = 16;
     mPaddles[idx].vy = 0;
     mPaddles[idx].state = 0xb;
     mPaddles[idx].x = mPaddles[idx].homeX;
@@ -900,7 +900,7 @@ void dScMgPachinko2_c::Paddle_StateFallToGround(int i) {
     mPaddles[i].y = 0xa0000;
     mPaddles[i].state = 0xa;
     mPaddles[i].vy = 0;
-    mPaddles[i].timer = 0x40;
+    mPaddles[i].timer = 64;
     if (PACHINKO_RAND(2)) {
         mPaddles[i].vx = 0x1000;
         mPaddles[i].swing = 0;
@@ -922,7 +922,7 @@ void dScMgPachinko2_c::Paddle_StateKnockedDown(int i) {
     }
     if (distanceBelowHome < 0x60)
         return;
-    mPaddles[i].timer = 0x10;
+    mPaddles[i].timer = 16;
     mPaddles[i].vy = 0;
     mPaddles[i].state = 0xb;
 }
@@ -989,7 +989,7 @@ void dScMgPachinko2_c::Paddle_StateCross(int i) {
 
     if (step == 0) {
         if (screenX >= 0xe0) {
-            mPaddles[i].timer = 0x40;
+            mPaddles[i].timer = 64;
             mPaddles[i].step++;
             mPaddles[i].vx = 0;
             mPaddles[i].vy = 0;
@@ -1026,7 +1026,7 @@ void dScMgPachinko2_c::Paddle_StateCross(int i) {
         }
     } else if (step == 1) {
         if (screenX <= 0x20) {
-            mPaddles[i].timer = 0x40;
+            mPaddles[i].timer = 64;
             mPaddles[i].step = 0;
             mPaddles[i].vx = 0;
             mPaddles[i].vy = 0;
@@ -1101,7 +1101,7 @@ void dScMgPachinko2_c::Paddle_StateWeave(int i) {
             mPaddles[i].vy = 0;
             mPaddles[i].dir ^= 1;
             mPaddles[i].step ^= 1;
-            mPaddles[i].timer = 0x40;
+            mPaddles[i].timer = 64;
         }
     } else {
         if (screenX <= 0x80) {
@@ -1124,7 +1124,7 @@ void dScMgPachinko2_c::Paddle_StateWeave(int i) {
             mPaddles[i].vy = 0;
             mPaddles[i].dir ^= 1;
             mPaddles[i].step ^= 1;
-            mPaddles[i].timer = 0x40;
+            mPaddles[i].timer = 64;
         }
     }
 
@@ -1251,7 +1251,7 @@ void dScMgPachinko2_c::Paddle_StateSweep(int i) {
             mPaddles[i].x = 0xe0000;
             mPaddles[i].vx = 0;
             mPaddles[i].dir ^= 1;
-            mPaddles[i].timer = PACHINKO_RAND(8) * 3 + 0x40;
+            mPaddles[i].timer = PACHINKO_RAND(8) * 3 + 64;
             mPaddles[i].state = 7;
         }
     } else {
@@ -1267,7 +1267,7 @@ void dScMgPachinko2_c::Paddle_StateSweep(int i) {
             mPaddles[i].x = 0x20000;
             mPaddles[i].vx = 0;
             mPaddles[i].dir ^= 1;
-            mPaddles[i].timer = PACHINKO_RAND(8) * 3 + 0x40;
+            mPaddles[i].timer = PACHINKO_RAND(8) * 3 + 64;
             mPaddles[i].state = 7;
         }
     }
@@ -1410,7 +1410,7 @@ void dScMgPachinko2_c::Paddle_SpawnForLanes() {
         mPaddles[i].active = 1;
         mPaddles[i].state = 0;
         mPaddles[i].step = 0;
-        mPaddles[i].timer = 0x20;
+        mPaddles[i].timer = 32;
         mPaddles[i].sound = 0;
         mPaddles[i].spawnClear[0] = 0;
         mPaddles[i].spawnClear[1] = 0;
@@ -1437,7 +1437,7 @@ void dScMgPachinko2_c::CheckCountdownEnd() {
     Paddle_Stop(1);
     Paddle_Stop(2);
     mPhase = 2;
-    mEndTimer = 0x40;
+    mEndTimer = 64;
     dst = (char *)G2S_GetBG2CharPtr();
     v = 0;
     MI_CpuFill16(dst, v, 0x6000);
@@ -1455,11 +1455,11 @@ void dScMgPachinko2_c::UpdateCountdown() {
     if (mCountdown == 0)
         return;
     mCountdownTick++;
-    if (mCountdownTick < 0x3c)
+    if (mCountdownTick < 60)
         return;
     mCountdownTick = 0;
     mCountdown--;
-    if (mCountdown > 0xa)
+    if (mCountdown > 10)
         Sound::PlayBank2_2D(0xa8);
     else if (mCountdown > 3)
         Sound::PlayBank2_2D(0xa7);
@@ -1519,7 +1519,8 @@ void dScMgPachinko2_c::PlotSubBg2Pixels(int a1, int a2, int a3) {
             yb = s - 1;
             a1 = yb + j;
             bp = (u32 *)G2S_GetBG2CharPtr();
-            *(u32 *)((char *)(bp + (row + (a1 >> 3)) * 8) + col) |= a3 << ((a1 & 7) * 4);
+            u32 *cell = (u32 *)((char *)(bp + (row + (a1 >> 3)) * 8) + col);
+            *cell |= a3 << ((a1 & 7) * 4);
         }
     }
 }
@@ -1593,73 +1594,74 @@ void dScMgPachinko2_c::DrawAimLine() {
 
             if (adx >= ady) {
                 mGuideStep = adx / 2;
-            LX:
-                if (dx == 0) {
-                    PlotSubBg2Pixels(cx, cy, layer);
-                } else if (dx > 0) {
-                    cx++;
-                    mGuideStep += ady;
-                    if (mGuideStep > adx) {
-                        if (dy >= 0)
-                            cy++;
-                        else
-                            cy--;
-                        mGuideStep -= adx;
+                for (;;) {
+                    if (dx == 0) {
+                        PlotSubBg2Pixels(cx, cy, layer);
+                        break;
+                    } else if (dx > 0) {
+                        cx++;
+                        mGuideStep += ady;
+                        if (mGuideStep > adx) {
+                            if (dy >= 0)
+                                cy++;
+                            else
+                                cy--;
+                            mGuideStep -= adx;
+                        }
+                        PlotSubBg2Pixels(cx, cy, layer);
+                        if (cx == tx)
+                            break;
+                    } else {
+                        cx--;
+                        mGuideStep += ady;
+                        if (mGuideStep > adx) {
+                            if (dy >= 0)
+                                cy++;
+                            else
+                                cy--;
+                            mGuideStep -= adx;
+                        }
+                        PlotSubBg2Pixels(cx, cy, layer);
+                        if (cx == tx)
+                            break;
                     }
-                    PlotSubBg2Pixels(cx, cy, layer);
-                    if (cx == tx)
-                        goto DONEK;
-                    goto LX;
-                } else {
-                    cx--;
-                    mGuideStep += ady;
-                    if (mGuideStep > adx) {
-                        if (dy >= 0)
-                            cy++;
-                        else
-                            cy--;
-                        mGuideStep -= adx;
-                    }
-                    PlotSubBg2Pixels(cx, cy, layer);
-                    if (cx == tx)
-                        goto DONEK;
-                    goto LX;
                 }
             } else {
                 mGuideStep = ady / 2;
-            LY:
-                if (dy == 0) {
-                    PlotSubBg2Pixels(cx, cy, layer);
-                } else if (dy > 0) {
-                    cy++;
-                    mGuideStep += adx;
-                    if (mGuideStep > ady) {
-                        if (dx >= 0)
-                            cx++;
-                        else
-                            cx--;
-                        mGuideStep -= ady;
+                for (;;) {
+                    if (dy == 0) {
+                        PlotSubBg2Pixels(cx, cy, layer);
+                        break;
+                    } else if (dy > 0) {
+                        cy++;
+                        mGuideStep += adx;
+                        if (mGuideStep > ady) {
+                            if (dx >= 0)
+                                cx++;
+                            else
+                                cx--;
+                            mGuideStep -= ady;
+                        }
+                        PlotSubBg2Pixels(cx, cy, layer);
+                        if (cy == ty)
+                            break;
+                    } else {
+                        cy--;
+                        mGuideStep += adx;
+                        if (mGuideStep > ady) {
+                            if (dx >= 0)
+                                cx++;
+                            else
+                                cx--;
+                            mGuideStep -= ady;
+                        }
+                        PlotSubBg2Pixels(cx, cy, layer);
+                        if (cy != ty)
+                            continue;
+                        break;
                     }
-                    PlotSubBg2Pixels(cx, cy, layer);
-                    if (cy == ty)
-                        goto DONEK;
-                    goto LY;
-                } else {
-                    cy--;
-                    mGuideStep += adx;
-                    if (mGuideStep > ady) {
-                        if (dx >= 0)
-                            cx++;
-                        else
-                            cx--;
-                        mGuideStep -= ady;
-                    }
-                    PlotSubBg2Pixels(cx, cy, layer);
-                    if (cy != ty)
-                        goto LY;
                 }
             }
-        DONEK:
             k++;
         } while (k < 2);
     }
@@ -1670,11 +1672,11 @@ void dScMgPachinko2_c::DrawAimLine() {
 
 void dScMgPachinko2_c::Ball_HitAt(int x, int z, int d) {
     int i;
-    for (i = 0; i < 0x30; i++) {
+    for (i = 0; i < 48; i++) {
         if (mBalls[i].active == 0) {
             mBalls[i].active = 1;
             mBalls[i].state = 7;
-            mBalls[i].timer = 0x40;
+            mBalls[i].timer = 64;
             mBalls[i].visible = 1;
             mBalls[i].sprite = 0;
             if (d != 0)
@@ -1705,7 +1707,7 @@ void dScMgPachinko2_c::Ball_Bounce(int i) {
 }
 
 void dScMgPachinko2_c::Ball_ClearAll() {
-    for (int i = 0; i < 0x30; i++) {
+    for (int i = 0; i < 48; i++) {
         mBalls[i].visible = 0;
         mBalls[i].active = 0;
     }
@@ -1713,7 +1715,7 @@ void dScMgPachinko2_c::Ball_ClearAll() {
 
 void dScMgPachinko2_c::Ball_DrawAll() {
     int i;
-    for (i = 0; i < 0x30; i++) {
+    for (i = 0; i < 48; i++) {
         if (mBalls[i].visible != 0) {
             int x = mBalls[i].x >> 12;
             unsigned char t = mBalls[i].sprite;
@@ -1730,7 +1732,7 @@ void dScMgPachinko2_c::Ball_DrawAll() {
 
 void dScMgPachinko2_c::Ball_UpdateAll() {
     int i;
-    for (i = 0; i < 0x30; i++) {
+    for (i = 0; i < 48; i++) {
         if (mBalls[i].active != 0) {
             unsigned char k = mBalls[i].state;
             (this->*sPachinko2BallStateTable[k].pmf)(i);
@@ -1741,7 +1743,7 @@ void dScMgPachinko2_c::Ball_UpdateAll() {
 void dScMgPachinko2_c::StartCountdown() {
     if (mCountdownArmed != 0)
         return;
-    mCountdown = 0x1e;
+    mCountdown = 30;
     mCountdownTick = 0;
     mCountdownShown = 1;
     mCountdownArmed++;
@@ -2047,7 +2049,7 @@ void dScMgPachinko2_c::Ball_StateScored(int i) {
 
     if (mBalls[i].timer != 0) {
         mBalls[i].timer--;
-        if (mBalls[i].timer == 0x20) {
+        if (mBalls[i].timer == 32) {
             Popup_Spawn(mBalls[i].x, mBalls[i].y, Mg_GetSubmittedScore() + 1);
             Mg_SubmitScore(Mg_GetSubmittedScore() + 1);
         }
@@ -2067,7 +2069,7 @@ void dScMgPachinko2_c::UpdateNextBall() {
     if ((short)mNextBallDelay > 0)
         return;
     mNextBallDelay = 0;
-    for (i = 0; i < 0x30; i++) {
+    for (i = 0; i < 48; i++) {
         if (mBalls[i].active == 0) {
             mBalls[i].active = 1;
             mBalls[i].visible = 1;
@@ -2103,7 +2105,7 @@ void dScMgPachinko2_c::ResetRound() {
     int i;
     int j;
     mPhase = 0;
-    for (i = 0; i < 0x30; i++) {
+    for (i = 0; i < 48; i++) {
         mBalls[i].x = 0;
         mBalls[i].y = 0;
         mBalls[i].prevX = 0;
@@ -2116,7 +2118,7 @@ void dScMgPachinko2_c::ResetRound() {
         mBalls[i].state = 0;
         mBalls[i].visible = 0;
     }
-    for (j = 0; j < 0x10; j++) {
+    for (j = 0; j < 16; j++) {
         mHitFx[j].active = 0;
         mHitFx[j].visible = 0;
     }
@@ -2176,7 +2178,7 @@ s32 dScMgPachinko2_c::Behavior() {
         ChooseLaneConfig();
         Paddle_SpawnForLanes();
         Cup_ShowAll();
-        mNextBallDelay = 0x10;
+        mNextBallDelay = 16;
         mPhase = 1;
         break;
     case 1:
@@ -2242,7 +2244,7 @@ s32 dScMgPachinko2_c::InitResources() {
                          GX_BG_CHARBASE_0x10000);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NCG_BIN);
-    DecompressLZ16(f, (void *)G2_GetBG3CharPtr());
+    DecompressLZ16(f, G2_GetBG3CharPtr());
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NCL_BIN);
@@ -2270,8 +2272,8 @@ s32 dScMgPachinko2_c::InitResources() {
     MI_CpuFill16(b, spC, 0x6000);
 
     n = 0;
-    for (y = 0; y < 0x18; y++) {
-        for (x = 0; x < 0x20; x++) {
+    for (y = 0; y < 24; y++) {
+        for (x = 0; x < 32; x++) {
             dst = (char *)((u16 *)G2S_GetBG2ScrPtr() + x + y * 0x20);
             spE = n;
             MI_CpuFill16(dst, spE, 2);
@@ -2288,7 +2290,7 @@ s32 dScMgPachinko2_c::InitResources() {
                           GX_BG_CHARBASE_0x08000);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NCG_BIN);
-    DecompressLZ16(f, (void *)G2S_GetBG3CharPtr());
+    DecompressLZ16(f, G2S_GetBG3CharPtr());
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NCL_BIN);
@@ -2321,7 +2323,7 @@ s32 dScMgPachinko2_c::InitResources() {
     Mg_SetTopScreenYOffset(0x20);
 
     mRunDuringFade = 1;
-    mNextBallDelay = 0x10;
+    mNextBallDelay = 16;
     mPhase = 1;
     return 1;
 }
@@ -2330,7 +2332,7 @@ s32 dScMgPachinko2_c::InitResources() {
    bytes, dScMgBase_c's C2, then this class's vtable. The classInit
    spelling follows later EAD lineage; the historical alias is
    MgLakituLaunch_Spawn. */
-extern "C" dScMgPachinko2_c *dScMgPachinko2_c_classInit(void) {
+dScMgPachinko2_c *dScMgPachinko2_c_classInit(void) {
     return new dScMgPachinko2_c;
 }
 

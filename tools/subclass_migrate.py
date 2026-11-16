@@ -21,7 +21,7 @@ import build_pin as BP  # noqa: E402
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
 W = {"u8": 1, "s8": 1, "char": 1, "bool": 1, "u16": 2, "s16": 2, "short": 2,
-     "u32": 4, "s32": 4, "int": 4, "Fix12i": 4, "PathPtr": 8}
+     "u32": 4, "s32": 4, "int": 4, "fx32": 4, "fx16": 2, "PathPtr": 8}
 FIELD = re.compile(r"^\s*([A-Za-z_][\w:<>]*)\s+(\**)(\w+)(\[[^\]]*\])?\s*;\s*/\*\s*(0x[0-9a-fA-F]+)", re.M)
 
 # The base class this run is migrating subclasses of, and its DATA size -- the

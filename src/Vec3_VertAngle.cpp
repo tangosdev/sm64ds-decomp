@@ -11,7 +11,7 @@ s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0)
 {
     Vector3 temp;
     Vec3_Sub(&temp, v1, v0);
-    Fix12i horzLen = Vec3_HorzLen(&temp);
+    fx32 horzLen = Vec3_HorzLen(&temp);
     return cstd::atan2(temp.y, horzLen);
 }
 }

@@ -60,7 +60,7 @@ struct daObjUkiyuka_c : dBgActor_c {
 
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
     s32 mRestY;           /* 0x320 */
-    Fix12i mBobAmplitude; /* 0x324 */
+    fx32 mBobAmplitude;   /* 0x324 */
     s16 mBobPhase;        /* 0x328 */
     u16 mRestTimer;       /* 0x32a */
 

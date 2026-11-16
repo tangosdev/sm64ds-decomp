@@ -101,11 +101,9 @@
  *   as a mushroom launches, 0x69 once when type 13 starts).
  * - The vulnFlags/hitFlags bit names come from the best-effort table in
  *   include/dCc_c.h.
- * - The PlayBank3 / IsPlayerInRange / ReflectAngle / DropShadowRadHeight /
- *   Vec3_* / Matrix4x3_* / cstd / Particle::System::New externs are the
- *   spelled-out declarations in the file-scope `extern "C"` region (the
- *   Fix12/undeclared walls above are why real method/header forms are not
- *   used); member bodies cannot carry per-site views.
+ * - The Vec3_* / Matrix4x3_* externs are the spelled-out declarations in
+ *   the file-scope `extern "C"` region; member bodies cannot carry per-site
+ *   views.
  */
 
 #pragma defer_codegen off
@@ -184,9 +182,8 @@ short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 void Vec3_Asr(Vector3 *, Vector3 *, int);
 void Matrix4x3_FromRotationY(void*, int);
 void Matrix4x3_FromTranslation(void*, int, int, int);
-void GiveCoins(int, int);
-short atan2_hold_d_a_1up_1(int, int);
 }
+void GiveCoins(int, int);
 /* ONE definition, both variants. The complete-object destructor (D1) tears the
    four members down in exact reverse of the factories' construction order --
    dExtShadowModel_c at 0x350, dExtSimpleModel_c at 0x300, dBgCh_Actr at 0x144, dCcAc_c at 0x110,
@@ -252,9 +249,7 @@ void da1up_c::func_ov002_020aefa4() {
    non-virtual methods. The merged TU has both real classes complete through
    da1up_c.h, so the shadows are gone and the calls go through the real types --
    which mangle identically, the class name being the whole of the difference.
-   ReflectAngle is a real member call: the by-value Fix12<int> its old
-   mangled name claimed was never in the ROM, and with scalar parameters the
-   typed call costs nothing (notes/mwccarm-codegen.md 6az, batch 5). */
+   ReflectAngle is a real member call. */
 void da1up_c::UpdatePhysics() {
 
     UpdatePosWithHorzSpeedAndAng();
@@ -271,7 +266,7 @@ void da1up_c::UpdatePhysics() {
             if (mHorzSpeed >= 0xf000) mHorzSpeed = 0xf000;
         }
     }
-    UpdatePosWithOnlySpeed((dCc_c*)&mdCcAc_c);
+    UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     if (!mWithMeshClsn.IsOnWall()) return;
     mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
@@ -294,15 +289,11 @@ void da1up_c::SteerTowardPlayer() {
     if(p != 0){
         Vector3 diff;
         Vector3 ppos;
-        /* The player's position is read through an int * over a (void *) of
-           &p->mPosX; reading p->mPosX/Y/Z directly here changes the bytes
-           (tried: it did not byte-match), so that spelling stays. The (int)
-           round-trip that used to sit between the two casts did nothing and
-           is gone (#821). */
-        int *s = (int *)(void *)&p->mPosX;
-        ppos.x = s[0];
-        ppos.y = s[1];
-        ppos.z = s[2];
+        /* mPos is the position. Reading mPosX/Y/Z directly changes the bytes. */
+        const Vector3 *s = &p->mPos;
+        ppos.x = s->x;
+        ppos.y = s->y;
+        ppos.z = s->z;
         diff.x = ppos.x - mPosX;
         if (p->func_ov002_020d0d2c() != 0)
             diff.y = ppos.y - mPosY - 0x50000;
@@ -468,7 +459,7 @@ void da1up_c::CollectOnTouch() {
    degrees): mVertSpeed = 30 units (0x1e) times the cosine of mPrevAngleX plus
    2 units (0x2000); mHorzSpeed = -30 units times its sine. */
 void da1up_c::UpdateLaunchArc() {
-    if ((u16)mStateTimer < 5) {
+    if (mStateTimer < 5) {
         mVertSpeed = 0x28000;
         return;
     }
@@ -492,7 +483,7 @@ void da1up_c::UpdateLaunchArc() {
      airborne:        dBgCh_Gnd probes the floor from 40 units (0x28000) above
                       the actor; depth = the actor's height over the hit (1 unit
                       at least), radius = twice (cylinder radius - 10 units)
-                      minus depth * 0x180 / 0x1000 (a Fix12 multiply by 0.09375),
+                      minus depth * 0x180 / 0x1000 (an fx32 multiply by 0.09375),
                       10 units at least, and then depth += 60 units (0x3c000);
      on the ground:   depth = 60 units, radius = twice (cylinder radius - 10 units). */
 void da1up_c::UpdateModelAndShadow() {
@@ -624,7 +615,7 @@ void da1up_c::UpdateRiseThenPopOut() {
     mPosY = mSpawnPosY + 0x64000;
     mMushroomType = 0;
     mState = 0;
-    *(unsigned short*)&mStateTimer = 0xffff;
+    mStateTimer = 0xffff;
     mStateFrames = 0xffff;
 }
 
@@ -707,10 +698,10 @@ void da1up_c::UpdateHiddenChase() {
 
     case 3:
         UpdatePhysics();
-        if (*(unsigned short *)&mStateTimer > 0x11)
+        if (mStateTimer > 17)
             UpdateTrailEffect();
         UpdateLaunchArc();
-        if (*(unsigned short *)&mStateTimer != 0x25)
+        if (mStateTimer != 37)
             return;
 
         mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
@@ -775,11 +766,11 @@ void da1up_c::UpdateHiddenFlee() {
         return;
     case 3:
         UpdatePhysics();
-        if (*(u16 *)&mStateTimer > 0x11) {
+        if (mStateTimer > 17) {
             UpdateTrailEffect();
         }
         UpdateLaunchArc();
-        if (*(u16 *)&mStateTimer != 0x25)
+        if (mStateTimer != 37)
             return;
         mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
         mState = 1;
@@ -918,11 +909,11 @@ void da1up_c::UpdatePopOutFlee() {
     UpdatePhysics();
     switch (mState) {
     case 0:
-        if (*(unsigned short*)&mStateTimer == 0) {
+        if (mStateTimer == 0) {
             Sound::PlayBank3(SND3_LAUNCH, mCamSpacePos);
         }
         UpdateLaunchArc();
-        if (*(unsigned short*)&mStateTimer == 0x25) {
+        if (mStateTimer == 37) {
             mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
             mState = 1;
             mHorzSpeed = 0x8000;
@@ -952,17 +943,17 @@ void da1up_c::UpdatePopOutDrift() {
     UpdatePhysics();
     switch (mState) {
     case 0:
-        if (*(unsigned short *)&mStateTimer == 0)
+        if (mStateTimer == 0)
             Sound::PlayBank3(SND3_LAUNCH, mCamSpacePos);
         UpdateLaunchArc();
-        if (*(unsigned short *)&mStateTimer != 0x25)
+        if (mStateTimer != 37)
             break;
         mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
         mState = 1;
         mHorzSpeed = 0x2000;
         break;
     case 1:
-        if (*(unsigned short *)&mStateTimer > 0x12c)
+        if (mStateTimer > 300)
             mState = 2;
         CollectOnTouch();
         break;
@@ -975,14 +966,7 @@ void da1up_c::UpdatePopOutDrift() {
     UpdateTrailEffect();
 }
 
-/* File-scope `extern "C"` region for the members below. Every one of these
-   is spelt as the shard that uses it recovered it; nothing above declares
-   any of them, so nothing here overrides a recovered view. */
-extern "C" {
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *thiz, dActor_c *a, int r, int h, Vector3_16 *p, int q);
 int IsStarCollectedInCurLevel(int a);
-}
 
 /* Ordinal 34 dispatches through this pointer-to-member-function type: the
    fourteen descriptors at 0x02108300..0x02108370 are {function pointer, 0}
@@ -1059,11 +1043,11 @@ int da1up_c::Behavior()
     (this->*data_ov002_0210dc00[mMushroomType])();
     /* Named ++mStateTimer / mStateTimer = 0 size-DIFF vs this recovered
        unsigned-short launder; keep MATCH form. */
-    ++*(unsigned short*)&mStateTimer;
+    ++mStateTimer;
     ++mStateFrames;
     if(old != mState){
-      *(unsigned short*)&mStateTimer = 0;
-      mStateFrames = 0;
+        mStateTimer = 0;
+        mStateFrames = 0;
     }
   }
   mdCcAc_c.Clear();
@@ -1157,7 +1141,7 @@ int da1up_c::InitResources()
         mShown = 0;
     }
     mBlinkOn = 1;
-    mUnlockCount = ((unsigned int)param1 >> 4) & 0xf;
+    mUnlockCount = (param1 >> 4) & 0xf;
     mSpawnPosX = mPosX;
     mSpawnPosY = mPosY;
     mSpawnPosZ = mPosZ;
@@ -1180,15 +1164,13 @@ int da1up_c::InitResources()
 /* MEGA_MUSHROOM (277 / SCALEUP_KINOKO). `new` calls the inherited
    fBase_c::operator new; the implicit constructor inlines the dEnemyBase_c
    base step, vptr store, and the four member constructors. */
-extern "C" da1up_c *da1up_c_classInit_SCALEUP_KINOKO()
-{
+da1up_c *da1up_c_classInit_SCALEUP_KINOKO() {
     return new da1up_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* ONE_UP_MUSHROOM (276 / ONEUPKINOKO). Same class, second profile. */
-extern "C" da1up_c *da1up_c_classInit_ONEUPKINOKO()
-{
+da1up_c *da1up_c_classInit_ONEUPKINOKO() {
     return new da1up_c();
 }
 

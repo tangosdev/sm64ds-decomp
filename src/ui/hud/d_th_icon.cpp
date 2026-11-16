@@ -5,8 +5,7 @@
  * constructor and destructor are inline in include/dThIcon_c.h, so this
  * TU anchors the vague-linkage group and emits no C1/C2/D0/D1/D2.
  * The unit spans ov001 .text 0x020ab41c..0x020ab5f8: Select, the pen
- * test TouchArea_Update, Render, Behavior, then the icon placement
- * helper func_ov001_020ab5b0. The press pulse func_ov001_020ab3f0 just
+ * test TouchArea_Update, Render, Behavior, then Place. The press pulse func_ov001_020ab3f0 just
  * below it is defined in d_cap_icon.cpp.
  *
  * FUNCTION ORDER IS THE REVERSE OF THE ROM'S. mwccarm emits one .text
@@ -16,40 +15,36 @@
  * in the object. No optimisation pragma is needed.
  *
  * The field names are coined (see include/dThIcon_c.h); the cartridge
- * carries none. TouchArea_Update and func_ov001_020ab5b0 keep C
- * linkage: the ov004/ov006/ov075 callers
- * declare them as C functions that take the icon as a char * or void *.
+ * carries none. TouchArea_Update stays a free function: the
+ * ov004/ov006/ov075 callers declare it taking the icon as a void *.
  */
 
 #include "dThIcon_c.h"
 #include "PlayerInput.h"
 
-extern "C" {
 /* local extern: arm9 C helpers with no shared header. */
-int func_0203da9c(void);
+extern "C" int func_0203da9c(void);
 void func_ov001_020ab3f0(void *);
-}
 
 extern int data_0208ee44;
 
 /* Place an icon: store its touch kind, centre and half extents, clear
  * mPressTimer, mOn and mPenInside, arm it at once when the kind is
  * touchable (the latch Behavior applies), and set the press reload to
- * ten. The highest address in this unit, so first in the file. Callers
- * in ov004/ov006/ov075 pass the icon as a char *, so the entry keeps it. */
-extern "C" void func_ov001_020ab5b0(char *p, int kind, short x, short y, short halfW, short halfH) {
-    dThIcon_c *icon = reinterpret_cast<dThIcon_c *>(p);
-    icon->mTouchKind = kind;
-    icon->mX = x;
-    icon->mY = y;
-    icon->mHalfW = halfW;
-    icon->mHalfH = halfH;
-    icon->mPressTimer = 0;
-    icon->mOn = 0;
-    icon->mPenInside = 0;
-    if (icon->mTouchKind >= 1)
-        icon->mReady = 1;
-    icon->mPressTime = 10;
+ * ten. The highest address in this unit, so first in the file. The
+ * derived icons in ov004/ov006/ov075 call it from their own Place. */
+void dThIcon_c::Place(int kind, s16 x, s16 y, s16 halfW, s16 halfH) {
+    mTouchKind = kind;
+    mX = x;
+    mY = y;
+    mHalfW = halfW;
+    mHalfH = halfH;
+    mPressTimer = 0;
+    mOn = 0;
+    mPenInside = 0;
+    if (mTouchKind >= 1)
+        mReady = 1;
+    mPressTime = 10;
 }
 
 void dThIcon_c::Behavior() {
@@ -74,7 +69,7 @@ void dThIcon_c::Render() {}
 /* Test player `player`'s pen (the local player when negative) against the
  * icon's box. Fires per mTouchKind: 1 on a touch that begins inside, 2 when
  * the pen enters. Records whether the pen is inside for the next frame. */
-extern "C" int TouchArea_Update(char *c, int player) {
+int TouchArea_Update(void *c, int player) {
     int fired;
     int inside;
     int dx, dy;

@@ -366,7 +366,7 @@
       "ordinal": 45
     },
     {
-      "symbol": "dScMgCurling_c_classInit",
+      "symbol": "_Z24dScMgCurling_c_classInitv",
       "address": "0x020e3820",
       "size": "0x00000034",
       "legacy_source": "src/d_s_mg_curling.cpp",

@@ -92,7 +92,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "daObjCtMecha05_c_classInit",
+      "symbol": "_Z26daObjCtMecha05_c_classInitv",
       "address": "0x0211b328",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_ct_mecha05.cpp",
@@ -471,28 +471,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN16Mecha05ModelFileC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
     },
     {
       "symbol": "_ZN16Mecha05ModelFileD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
     },
     {
       "symbol": "_ZN23Mecha05CollisionFilePtrC1Ej",
-      "canonical_symbol": "func_02017b4c",
+      "canonical_symbol": "_Z13func_02017b4cPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the collision wrapper constructor exact PC24 relocation"
     },
     {
       "symbol": "_ZN23Mecha05CollisionFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail destructor registration destination and the collision wrapper destructor exact ABS32 relocation"
@@ -500,14 +500,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@534",
+      "from": "@529",
       "to": "@637",
-      "evidence": "mwcc numbers this registration node @517 per TU and the fleet already defines a global @517, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @569 to @532 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @532 to @540 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @540 to @534 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "mwcc numbers this registration node @517 per TU and the fleet already defines a global @517, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @569 to @532 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @532 to @540 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @540 to @534 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @534 to @529 when Behavior dropped its gotos (measured from the compiled object)."
     },
     {
-      "from": "@535",
+      "from": "@530",
       "to": "@634",
-      "evidence": "mwcc numbers this registration node @518 per TU and the fleet already defines a global @518, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @570 to @533 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @533 to @541 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @541 to @535 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "mwcc numbers this registration node @518 per TU and the fleet already defines a global @518, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @570 to @533 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @533 to @541 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @541 to @535 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @535 to @530 when Behavior dropped its gotos (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -552,7 +552,7 @@
       "source": "0x0211c8a0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -572,7 +572,7 @@
       "source": "0x0211c8bc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -602,7 +602,7 @@
       "source": "0x0211c8e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -632,7 +632,7 @@
       "source": "0x0211c8f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"

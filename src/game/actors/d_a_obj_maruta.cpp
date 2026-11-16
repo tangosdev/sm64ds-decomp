@@ -44,15 +44,13 @@
 #include "ResourceDescriptor.h"
 #include "math/MtxStack.h"
 
-extern "C" {
-void func_02012694(unsigned int a, void *b);
-int AngleDiff(int a, int b);
-void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+void func_02012694(unsigned int a, const Vector3 *b);
+extern "C" int AngleDiff(int a, int b);
+extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
-int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
-int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
-int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
-}
+extern "C" int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
+extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
+extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
 
 /* -------------------------------------------------------------------------- */
 /* ROM 0x02126fbc (D0, size 0x58) and 0x02127014 (D1, size 0x44)              */
@@ -84,7 +82,7 @@ void daObjMaruta_c_EmitDestructor(daObjMaruta_c *p) {
    direct `bl` the ROM has. */
 void daObjMaruta_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
-    func_02012694(0x1e, &mCamSpacePosX);
+    func_02012694(0x1e, (const Vector3 *)(&mCamSpacePosX));
     KillByMegaChar(player);
 }
 
@@ -101,7 +99,7 @@ void daObjMaruta_c::UpdateModelTransform() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov080_021270dc, 0x021270dc, size 0x48 */
 /* -------------------------------------------------------------------------- */
-extern "C" int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg) {
+int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg) {
     if (self->mMeshCollider.IsEnabled())
         self->mMeshCollider.Disable();
     arg->model->Release();
@@ -120,14 +118,14 @@ s32 daObjMaruta_c::Render() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov080_0212714c, 0x0212714c, size 0x360 */
 /* -------------------------------------------------------------------------- */
-extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
+int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
     Vector3 tmp;
     int len;
     int ang;
     s16 v;
     int horz;
 
-    if (self->UpdateKillByMegaChar((s16)-0x1500, 0, 0, 0) != 0)
+    if (self->UpdateKillByMegaChar(-0x1500, 0, 0, 0) != 0)
         return 1;
     if ((int)((self->mFlags & 8) != 0) != 0)
         return 1;
@@ -140,7 +138,7 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
                 self->mRollAngVel += 0x10;
             }
             v = self->mRollAngVel;
-            if (v <= 0x10 && v >= (s16)-0x10)
+            if (v <= 0x10 && v >= -0x10)
                 self->mRollAngVel = 0;
         } else {
             v = self->mRollAngVel;
@@ -171,9 +169,9 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
             int lim = 0x200;
             int nlim = -lim;
             if (v < nlim)
-                v = (s16)nlim;
+                v = nlim;
             else if (v > lim)
-                v = (s16)lim;
+                v = lim;
         }
         self->mRollAngVel = v;
     }
@@ -200,7 +198,7 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
         self->mPosX = self->mPrevPosX;
         self->mPosY = self->mPrevPosY;
         self->mPosZ = self->mPrevPosZ;
-        self->mHitTimer = 0xa;
+        self->mHitTimer = 10;
     }
     self->mAngleX += self->mRollAngVel;
     {
@@ -208,7 +206,7 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
         if ((self->mAngleX & mask) < 0x210 && self->mRollAngVel != 0) {
             if (self->mSoundTimer == 0) {
                 Sound::PlayBank3(0x25, self->mCamSpacePos);
-                self->mSoundTimer = 0xe;
+                self->mSoundTimer = 14;
             }
         } else {
             DecIfAbove0_Short(&self->mSoundTimer);
@@ -216,7 +214,7 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
     }
     self->UpdateModelTransform();
     {
-        int is66 = (int)(self->actorID == 0x66);
+        int is66 = (self->actorID == 0x66);
         if (is66 != 0) {
             if (self->IsClsnInRangeOnScreen(0, 0) != 0)
                 self->UpdateClsnPosAndRot();
@@ -232,7 +230,7 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov080_021274ac, 0x021274ac, size 0xe0 */
 /* -------------------------------------------------------------------------- */
-extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg) {
+int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg) {
     struct Vector3 d;
     self->mModel.SetFile(dExtSimpleModel_c::LoadFile(*arg->model), 1, -1);
     self->UpdateModelTransform();
@@ -269,7 +267,7 @@ void daObjMaruta_c::HandlePlayerContact(dActor_c *other) {
         mHitPosY = position->y;
         mHitPosZ = position->z;
         mHitByPlayer = 1;
-        mHitTimer = 0x78;
+        mHitTimer = 120;
 
         half = mHorzSpeed >> 1;
         position->x += FX_MUL(half, FX_SinIdx((u16)mAngleY >> 4));

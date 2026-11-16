@@ -72,7 +72,7 @@ void func_0204b244(ManagerView *mgr, ParticleElement *ptcl) {
     G3_Color(ptcl->color);
     {
         PtclData *data = mgr->mCurrentSystem->mDefinition->data;
-        data_02099fb4[data->polygonReferencePlane]((u8)data->textureTileCountS,
-                                                   (u8)data->textureTileCountT);
+        data_02099fb4[data->polygonReferencePlane](data->textureTileCountS,
+                                                   data->textureTileCountT);
     }
 }

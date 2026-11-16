@@ -17,12 +17,11 @@ extern "C" {
 /* local extern: no header declares the CLPS water test (CLPS.h only
    documents it); d_bg_ch_sph_crr_query.cpp defines it with this
    signature. */
-extern int SurfaceInfo_TestFlag0x20(int *clpsWords);
 }
-
+extern int SurfaceInfo_TestFlag0x20(int *clpsWords);
 
 /* Stores dBgW_Kc::depthDirMinDot (+0x44), the sphere query's face-dot threshold. */
-void dBgW_Kc::SetDepthDirMinDot(Fix12i value) {
+void dBgW_Kc::SetDepthDirMinDot(fx32 value) {
     depthDirMinDot = value;
 }
 
@@ -43,7 +42,7 @@ dBgW::~dBgW() {}
 void dBgW::Reset() {
     owner = 0;
     ownerUniqueID = -1;
-    slotIdx = 0x18;
+    slotIdx = 24;
     beforeClsnCallback = 0;
     stoodOnCallback = 0;
     clipRadius = -0x1000;
@@ -151,11 +150,11 @@ void dBgW::SetSlotIndex(int slot) {
 }
 
 void dBgW::ClearSlotIndex() {
-    slotIdx = 0x18;
+    slotIdx = 24;
 }
 
 int dBgW::IsEnabled() {
-    return slotIdx != 0x18;
+    return slotIdx != 24;
 }
 
 
@@ -192,25 +191,25 @@ s32 dBgW::GetActorUniqueID() const {
 
 
 /* Sets clipRadius (+0x0c). */
-void dBgW::SetClipRadius(Fix12i radius) {
+void dBgW::SetClipRadius(fx32 radius) {
     clipRadius = radius;
 }
 
 
 /* Reads clipRadius (+0x0c). */
-Fix12i dBgW::GetClipRadius() const {
+fx32 dBgW::GetClipRadius() const {
     return clipRadius;
 }
 
 
 /* Sets clipOffsetY (+0x10). */
-void dBgW::SetClipOffsetY(Fix12i offsetY) {
+void dBgW::SetClipOffsetY(fx32 offsetY) {
     clipOffsetY = offsetY;
 }
 
 
 /* Reads clipOffsetY (+0x10). */
-Fix12i dBgW::GetClipOffsetY() const {
+fx32 dBgW::GetClipOffsetY() const {
     return clipOffsetY;
 }
 
@@ -249,22 +248,22 @@ void dBgW::UpdatePosWithVelocity(dBgW &clsn, dActor_c *clsnActor, dBgPi &res, Ve
     pos.z += velocity.z;
 }
 
-extern "C" void func_02039218(void) {
+void func_02039218(void) {
     int slot;
-    for (slot = 0; slot < 0x18; slot++)
+    for (slot = 0; slot < 24; slot++)
         data_020a0c80[slot] = 0;
 }
 
 void dScStage_c::ResetMeshColliders() {
     int slot;
-    for (slot = 0; slot < 0x18; slot++)
+    for (slot = 0; slot < 24; slot++)
         data_020a0c80[slot] = 0;
 }
 
-extern "C" void func_020391f0(void) {}
+void func_020391f0(void) {}
 
 int dBgW::Enable(dActor_c *actor) {
-    for (s32 slot = 0; slot < 0x18; slot++) {
+    for (s32 slot = 0; slot < 24; slot++) {
         if (data_020a0c80[slot] == 0) {
             SetActor(actor);
             SetSlotIndex(slot);
@@ -277,7 +276,7 @@ int dBgW::Enable(dActor_c *actor) {
 
 int dBgW::Disable() {
     int slot = GetSlotIndex();
-    if (slot != 0x18) {
+    if (slot != 24) {
         ClearSlotIndex();
         data_020a0c80[slot] = 0;
     }

@@ -23,16 +23,11 @@
  * - mSpawnPosX stays punned: daJgm_c stores it as three scalars.
  * - dBgCh_Actr_UpdateDiscreteNoLava_veneer stays: the named
  *   UpdateDiscreteNoLava method is WRONG-DEST (ROM 0x02038420).
- * - daPly_c::Bounce / Hurt stay mangled: each takes Fix12<int> by value
- *   (6az).
  * - dActor_c::IsTooFarAwayFromPlayer and FX_Div have no header decl,
  *   so they are declared locally.
- * - Sound::PlayLong is the Sound.h call. d_a_jgmPlayLongHold keeps the five
- *   named parameters that hold the @NNN count. Unnaming them gives -5.
  * - The manifest pins eight @NNN statics, so every named local, named
- *   parameter and goto label ahead of __sinit counts (each advances the
- *   counter by one, measured). Control-flow shape moves the counter too:
- *   removing the UpdateFlight goto drops a label but measures +1. Names
+ *   parameter ahead of __sinit counts (each advances the
+ *   counter by one, measured). Names
  *   that also hold that count: bodyFile /
  *   heldFile and the loop counters in InitResources / CleanupResources,
  *   `frame` in UpdateThrowState, the `offset` references in the hover and
@@ -146,37 +141,22 @@ extern DaJgmStateHandler data_ov077_021277f8;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
+/* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) */
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern void Vec3_Asr(void *d, void *s, int sh);
 
-/* Parameter names keep this TU's @NNN. */
-typedef int BgchInitAt_(dBgCh_Actr *collision, dActor_c *actor, Fix12i radius, Fix12i height,
-                        void *a, void *b);
-/* local extern: kept as a count holder: its five named parameters hold
- * the @NNN count. Sound.h's PlayLong emits the same bytes. */
-extern void d_a_jgmPlayLongHold(unsigned int handle, unsigned int a, unsigned int id,
-                                const Vector3 *pos, unsigned int e);
-extern void d_a_jgmNewSimpleHold(unsigned int n, int x, int y, int z);
 }
 
-extern "C" daJgm_c *daJgm_c_classInit()
-{
+daJgm_c *daJgm_c_classInit() {
     return new daJgm_c();
 }
 
 extern "C" SpawnInfo<daJgm_c> g_profile_JUGEM = {
-    daJgm_c_classInit,
-    0x0109,
-    0x007c,
-    0x10000006,
-    0x0001e000,
-    0x00064000,
-    0x01000000,
-    0x01000000
-};
+    daJgm_c_classInit, 0x0109, 0x007c, 0x10000006, 0x0001e000, 0x00064000, 0x01000000, 0x01000000};
 
 void daJgm_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.IsCollectingCap())
@@ -291,7 +271,7 @@ s32 daJgm_c::EnterHoverState()
     mAnmModel.speed = 0x1000;
     mTextureSequence.SetFile(*(BTP_File *)data_ov077_02127b20.filePtr, 0, 0x1000, 0);
     mTextureSequence.speed = 0x1000;
-    mTimer = 0x96;
+    mTimer = 150;
     mState = 0;
     return 1;
 }
@@ -306,9 +286,9 @@ s32 daJgm_c::UpdateHoverState()
             if (p->mPosY < mPosY && Vec3_HorzDist(&mPos, &p->mPos) < 0x190000 && CountSpinies() < 4)
                 SetState(1);
             else
-                mTimer = 0x96;
+                mTimer = 150;
         } else {
-            mTimer = 0x96;
+            mTimer = 150;
         }
     }
     UpdateFlight();
@@ -326,7 +306,7 @@ s32 daJgm_c::UpdateHoverState()
     }
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
-    mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x182, *(Vector3 *)&mCamSpacePos, 0);
+    mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x182, mCamSpacePos, 0);
     return 1;
 }
 
@@ -368,7 +348,7 @@ s32 daJgm_c::UpdateThrowState()
     }
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
-    mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x182, *(Vector3 *)&mCamSpacePos, 0);
+    mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x182, mCamSpacePos, 0);
     return 1;
 }
 
@@ -383,7 +363,7 @@ s32 daJgm_c::EnterYoshiMouthState()
 s32 daJgm_c::UpdateYoshiMouthState()
 {
     if (((mFlags & 0x40000) ? 1 : 0) != 0) {
-        dActor_c *carrier = mCarryActor;
+        dActor_c *carrier = mEatingPlayer;
         s32 *carrierPos = &carrier->mPosX;
         mPosX = carrierPos[0];
         mPosY = carrierPos[1];
@@ -404,16 +384,16 @@ s32 daJgm_c::EnterSpitState()
 {
     mFlags &= ~0x80000;
 
-    mHorzSpeed = mCarryActor->mHorzSpeed + 0xa000;
-    mPrevAngleY = mCarryActor->mAngleY;
-    mPos = mCarryActor->mPos;
+    mHorzSpeed = mEatingPlayer->mHorzSpeed + 0xa000;
+    mPrevAngleY = mEatingPlayer->mAngleY;
+    mPos = mEatingPlayer->mPos;
     mPosX += FX_MUL(FX_SinIdx((u16)mPrevAngleY >> 4), 0x50000);
     mPosY += 0x50000;
     mPosZ += FX_MUL(FX_CosIdx((u16)mPrevAngleY >> 4), 0x50000);
 
     mAngVelY = 0x7000;
-    mTimer = 0x1e;
-    mCarryActor = 0;
+    mTimer = 30;
+    mEatingPlayer = 0;
     mState = 3;
     return 1;
 }
@@ -439,7 +419,7 @@ s32 daJgm_c::EnterFallState()
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0xa000;
     mVertSpeed = 0x28000;
-    mTimer = 0x2d;
+    mTimer = 45;
     mAnmModel.SetAnim((BCA_File *)data_ov077_02127b28.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     {
@@ -628,26 +608,27 @@ void daJgm_c::DieAndDropCoins()
 }
 
 void daJgm_c::UpdateFlight() {
-    /* The goto is kept: the goto-free if/else emits 4 more bytes. */
     daPly_c *p = ClosestNonVanishPlayer();
     s32 *target;
     int chaseRange;
     if (p != 0) {
         chaseRange = (param1 != 0) ? 0x1068000 : 0x7d0000;
-        if (Vec3_HorzDist((Vector3 *)&mSpawnPosX, &p->mPos) < chaseRange) {
-            int d = mSpawnPosY - p->mPosY;
-            if (d < 0)
-                d = -d;
-            if (d < 0x5dc000) {
-                target = &p->mPosX;
-                goto haveTarget;
+        for (;;) {
+            if (Vec3_HorzDist((Vector3 *)&mSpawnPosX, &p->mPos) < chaseRange) {
+                int d = mSpawnPosY - p->mPosY;
+                if (d < 0)
+                    d = -d;
+                if (d < 0x5dc000) {
+                    target = &p->mPosX;
+                    break;
+                }
             }
+            target = &mSpawnPosX;
+            break;
         }
-        target = &mSpawnPosX;
     } else {
         target = &mSpawnPosX;
     }
-haveTarget:
     int hd = Vec3_HorzDist(&mPos, (Vector3 *)target);
     short ha = Vec3_HorzAngle(&mPos, (Vector3 *)target);
     ApproachLinear(mAngleY, ha, 0x5e8);

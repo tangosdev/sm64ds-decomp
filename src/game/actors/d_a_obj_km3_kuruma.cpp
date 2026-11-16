@@ -66,7 +66,7 @@ daObjKuruma_c::Resources gKm3KurumaResources = {
 #include "daObjKm3_Kuruma_c.h"
 #include "SpawnInfo.h"
 
-extern "C" daObjKm3_Kuruma_c *daObjKm3_Kuruma_c_classInit() {
+daObjKm3_Kuruma_c *daObjKm3_Kuruma_c_classInit() {
     return new daObjKm3_Kuruma_c();
 }
 

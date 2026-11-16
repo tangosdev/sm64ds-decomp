@@ -4,8 +4,6 @@
  * sets mPlayerCheated; NumStars() == 0x96 selects the big penguin.
  *
  * Remaining reconstruction:
- * - The scalar Fix12 animation, collision, sound and shadow interfaces
- *   retain their ABI declarations.
  * - Actor position and scale triples are scalar members in dActor_c;
  *   vector views retain their established layout and load grouping.
  * - SharedFilePtr has no shared field layout; LOADED reads its file word.
@@ -35,15 +33,11 @@ extern SharedFilePtr *data_ov019_02112788[7];      /* the seven BCA handles */
 extern SharedFilePtr *data_ov019_0211277c[3];      /* the three BTP handles */
 extern unsigned char data_0209d684;                /* talk-script choice */
 
-extern unsigned char NumStars(void);
 extern void func_02038414(void *clsn);
 extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 
-extern void d_a_pg_rcerPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int d, int e);
-extern void *d_a_pg_rcerNewHold(u32 handle, u32 effect, int x, int y, int z, void *dir, void *cb);
-
 }
-
+extern unsigned char NumStars(void);
 
 /* Resource handles owned by this TU. The static initializer constructs the
    model, seven animations and three texture sequences and registers each
@@ -104,8 +98,7 @@ daPgRcerState data_ov019_0211356c[6] = {
 Vector3 data_ov019_021134e8(-0x18c28a1, -0x164c644, -0x18f1a11);
 Vector3 data_ov019_0211353c(-0x1290000, 0x600000, 0);
 
-extern "C" daPgRcer_c *daPgRcer_c_classInit()
-{
+daPgRcer_c *daPgRcer_c_classInit() {
     return new daPgRcer_c();
 }
 
@@ -260,12 +253,12 @@ int daPgRcer_c::StateShowInitText() {
             z = mPosZ;
             pos.z = z;
             pos.y = y + 0x190000;
-            eq = (int)(NumStars() == 0x96);
+            eq = (NumStars() == 0x96);
             if (eq != 0)
                 msg = 0xab;
             else
                 msg = 0xa7;
-            if (mTalkPlayer->ShowMessage(*this, (unsigned int)(short)msg, &pos, 1, 2) != 0) {
+            if (mTalkPlayer->ShowMessage(*this, (short)msg, &pos, 1, 2) != 0) {
                 ++mActionStep;
             }
         }
@@ -279,7 +272,7 @@ int daPgRcer_c::StateShowInitText() {
                 SetState(2);
             } else if (choice == 2) {
                 func_02012790(0x63);
-                mTalkWaitTimer = 0x5a;
+                mTalkWaitTimer = 90;
                 mTalkPlayer->HasFinishedTalking();
                 SetState(0);
             }
@@ -435,8 +428,8 @@ int daPgRcer_c::StateRace() {
             mPenguinFinished = 1;
         }
         mSlideSound = Sound::PlayLong(mSlideSound, 3, 0x185, mCamSpacePos, 0);
-        mDustParticle = (u32)Particle::System::New(mDustParticle, kPtclSlideDust, mPosX,
-                                                   mPosY + 0x32000, mPosZ, 0, 0);
+        mDustParticle = Particle::System::New(mDustParticle, kPtclSlideDust, mPosX, mPosY + 0x32000,
+                                              mPosZ, 0, 0);
         break;
 
     case 2:
@@ -562,8 +555,7 @@ int daPgRcer_c::StateShowFinalText() {
     case 2:
         if (mTalkPlayer->GetTalkState() == 2) {
             if (mPenguinWon == 0) {
-                UntrackAndSpawnStar(mStarSlot, (unsigned int)(unsigned char)((param1 >> 8) & 0xf),
-                                    mPos, 4);
+                UntrackAndSpawnStar(mStarSlot, (unsigned char)((param1 >> 8) & 0xf), mPos, 4);
             }
             mTalkPlayer->HasFinishedTalking();
             mTextureSequence.SetFile(*(BTP_File *)gOV019PenguinWait1TextureSequenceFile.filePtr, 0,
@@ -649,7 +641,7 @@ void daPgRcer_c::CheckFallCheat() {
 int daPgRcer_c::IsNearPathNode(Vector3 *pos, unsigned int nodeIndex) {
     Vector3 node;
     mPath.GetNode(node, nodeIndex);
-    Fix12i dist = Vec3_HorzDist(&node, pos);
+    fx32 dist = Vec3_HorzDist(&node, pos);
     return dist <= 0x320000;
 }
 

@@ -111,13 +111,13 @@ static inline BOOL TPi_SamplingNow(void) {
 static inline BOOL TPi_AutoSamplingOn(u16 vCount, u8 frequency) {
     if (0 > PXI_SendWordByFifo(PXI_FIFO_TAG_TOUCHPANEL,
                                SPI_PXI_START_BIT | (0 << SPI_PXI_INDEX_SHIFT) |
-                                   (SPI_PXI_COMMAND_TP_AUTO_ON << 8) | (u32)frequency,
+                                   (SPI_PXI_COMMAND_TP_AUTO_ON << 8) | frequency,
                                0)) {
         return FALSE;
     }
 
     if (0 > PXI_SendWordByFifo(PXI_FIFO_TAG_TOUCHPANEL,
-                               SPI_PXI_END_BIT | (1 << SPI_PXI_INDEX_SHIFT) | (u32)vCount, 0)) {
+                               SPI_PXI_END_BIT | (1 << SPI_PXI_INDEX_SHIFT) | vCount, 0)) {
         return FALSE;
     }
 
@@ -127,13 +127,13 @@ static inline BOOL TPi_AutoSamplingOn(u16 vCount, u8 frequency) {
 static inline BOOL TPi_SetupStability(u8 retry, u16 range) {
     if (0 > PXI_SendWordByFifo(PXI_FIFO_TAG_TOUCHPANEL,
                                SPI_PXI_START_BIT | (0 << SPI_PXI_INDEX_SHIFT) |
-                                   (SPI_PXI_COMMAND_TP_SETUP_STABILITY << 8) | (u32)retry,
+                                   (SPI_PXI_COMMAND_TP_SETUP_STABILITY << 8) | retry,
                                0)) {
         return FALSE;
     }
 
     if (0 > PXI_SendWordByFifo(PXI_FIFO_TAG_TOUCHPANEL,
-                               SPI_PXI_END_BIT | (1 << SPI_PXI_INDEX_SHIFT) | (u32)range, 0)) {
+                               SPI_PXI_END_BIT | (1 << SPI_PXI_INDEX_SHIFT) | range, 0)) {
         return FALSE;
     }
 
@@ -146,8 +146,8 @@ static inline void TPi_CopyTpFromSystemWork(TPData *result) {
     spi_tp.halfs[0] = *(u16 *)(&(OS_GetSystemWork()->touch_panel[0]));
     spi_tp.halfs[1] = *(u16 *)(&(OS_GetSystemWork()->touch_panel[2]));
 
-    result->x = (u16)spi_tp.e.x;
-    result->y = (u16)spi_tp.e.y;
+    result->x = spi_tp.e.x;
+    result->y = spi_tp.e.y;
     result->touch = (u8)spi_tp.e.touch;
     result->validity = (u8)spi_tp.e.validity;
 }
@@ -166,11 +166,11 @@ static void TPi_TpCallback(PXIFifoTag tag, u32 data, BOOL err) {
     u16 result;
     u16 command;
 
-    result = (u16)(data & SPI_PXI_DATA_MASK);
-    command = (u16)((result & 0x7f00) >> 8);
+    result = (data & SPI_PXI_DATA_MASK);
+    command = ((result & 0x7f00) >> 8);
 
     if (err) {
-        TPi_ErrorAtPxi((TPRequestCommand)command);
+        TPi_ErrorAtPxi(command);
         return;
     }
 
@@ -184,7 +184,7 @@ static void TPi_TpCallback(PXIFifoTag tag, u32 data, BOOL err) {
         TPi_CopyTpFromSystemWork(&tpState.samplingBufs[tpState.index]);
 
         if (tpState.callback) {
-            (tpState.callback)((TPRequestCommand)command, TP_RESULT_SUCCESS, (u8)tpState.index);
+            (tpState.callback)(command, TP_RESULT_SUCCESS, (u8)tpState.index);
         }
 
         return;
@@ -194,7 +194,7 @@ static void TPi_TpCallback(PXIFifoTag tag, u32 data, BOOL err) {
         return;
     }
 
-    switch ((u8)(result & 0x00ff)) {
+    switch ((result & 0x00ff)) {
     case SPI_PXI_RESULT_SUCCESS:
         switch (command) {
         case SPI_PXI_COMMAND_TP_SAMPLING:
@@ -212,7 +212,7 @@ static void TPi_TpCallback(PXIFifoTag tag, u32 data, BOOL err) {
         tpState.command_flg &= ~(1 << command);
 
         if (tpState.callback) {
-            (tpState.callback)((TPRequestCommand)command, TP_RESULT_SUCCESS, 0);
+            (tpState.callback)(command, TP_RESULT_SUCCESS, 0);
         }
 
         break;
@@ -229,7 +229,7 @@ static void TPi_TpCallback(PXIFifoTag tag, u32 data, BOOL err) {
         tpState.command_flg &= ~(1 << command);
 
         if (tpState.callback) {
-            (tpState.callback)((TPRequestCommand)command, (TPRequestResult)(result & 0xff), 0);
+            (tpState.callback)(command, (result & 0xff), 0);
         }
         break;
 
@@ -272,12 +272,12 @@ BOOL TP_GetUserInfo(TPCalibrateParam *calibrate) {
 
     x1 = info->ncd.tp.raw_x1;
     y1 = info->ncd.tp.raw_y1;
-    dx1 = (u16)(info->ncd.tp.dx1);
-    dy1 = (u16)(info->ncd.tp.dy1);
+    dx1 = (info->ncd.tp.dx1);
+    dy1 = (info->ncd.tp.dy1);
     x2 = info->ncd.tp.raw_x2;
     y2 = info->ncd.tp.raw_y2;
-    dx2 = (u16)(info->ncd.tp.dx2);
-    dy2 = (u16)(info->ncd.tp.dy2);
+    dx2 = (info->ncd.tp.dx2);
+    dy2 = (info->ncd.tp.dy2);
 
     if (x1 == 0 && x2 == 0 && y1 == 0 && y2 == 0) {
         return FALSE;
@@ -300,19 +300,19 @@ void TP_SetCalibrateParam(const TPCalibrateParam *param) {
 
     enabled = OS_DisableInterrupts();
 
-    CP_SetDiv32_32(0x10000000, (u32)param->xDotSize);
+    CP_SetDiv32_32(0x10000000, param->xDotSize);
 
     tpState.calibrate.x0 = param->x0;
     tpState.calibrate.xDotSize = param->xDotSize;
-    tpState.calibrate.xDotSizeInv = (s32)CP_GetDivResult32();
+    tpState.calibrate.xDotSizeInv = CP_GetDivResult32();
 
-    CP_SetDiv32_32(0x10000000, (u32)param->yDotSize);
+    CP_SetDiv32_32(0x10000000, param->yDotSize);
 
     tpState.calibrate.y0 = param->y0;
     tpState.calibrate.yDotSize = param->yDotSize;
-    tpState.calibrate.yDotSizeInv = (s32)CP_GetDivResult32();
+    tpState.calibrate.yDotSizeInv = CP_GetDivResult32();
 
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
 
     tpState.calibrate_flg = TRUE;
 }
@@ -323,7 +323,7 @@ void TP_RequestSamplingAsync(void) {
     enabled = OS_DisableInterrupts();
 
     if (TPi_SamplingNow() == FALSE) {
-        (void)OS_RestoreInterrupts(enabled);
+        OS_RestoreInterrupts(enabled);
         TPi_ErrorAtPxi(TP_REQUEST_COMMAND_SAMPLING);
         return;
     }
@@ -331,7 +331,7 @@ void TP_RequestSamplingAsync(void) {
     tpState.command_flg |= TP_REQUEST_COMMAND_FLAG_SAMPLING;
     tpState.err_flg &= ~TP_REQUEST_COMMAND_FLAG_SAMPLING;
 
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 u32 TP_GetCalibratedResult(TPData *result) {
@@ -365,8 +365,8 @@ void TP_RequestAutoSamplingStartAsync(u16 vcount, u16 frequence, TPData sampling
 
     enabled = OS_DisableInterrupts();
 
-    if ((u8)TPi_AutoSamplingOn(vcount, (u8)frequence) == FALSE) {
-        (void)OS_RestoreInterrupts(enabled);
+    if ((u8)TPi_AutoSamplingOn(vcount, frequence) == FALSE) {
+        OS_RestoreInterrupts(enabled);
         TPi_ErrorAtPxi(TP_REQUEST_COMMAND_AUTO_ON);
         return;
     }
@@ -374,7 +374,7 @@ void TP_RequestAutoSamplingStartAsync(u16 vcount, u16 frequence, TPData sampling
     tpState.command_flg |= TP_REQUEST_COMMAND_FLAG_AUTO_ON;
     tpState.err_flg &= ~TP_REQUEST_COMMAND_FLAG_AUTO_ON;
 
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 void TP_RequestSetStabilityAsync(u8 retry, u16 range) {
@@ -383,7 +383,7 @@ void TP_RequestSetStabilityAsync(u8 retry, u16 range) {
     enabled = OS_DisableInterrupts();
 
     if (TPi_SetupStability(retry, range) == FALSE) {
-        (void)OS_RestoreInterrupts(enabled);
+        OS_RestoreInterrupts(enabled);
         TPi_ErrorAtPxi(TP_REQUEST_COMMAND_SET_STABILITY);
         return;
     }
@@ -391,7 +391,7 @@ void TP_RequestSetStabilityAsync(u8 retry, u16 range) {
     tpState.command_flg |= TP_REQUEST_COMMAND_FLAG_SET_STABILITY;
     tpState.err_flg &= ~TP_REQUEST_COMMAND_FLAG_SET_STABILITY;
 
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 u16 TP_GetLatestIndexInAuto(void) {
@@ -423,44 +423,44 @@ u32 TP_CalcCalibrateParam(TPCalibrateParam *calibrate, u16 raw_x1, u16 raw_y1, u
 
     enabled = OS_DisableInterrupts();
 
-    CP_SetDiv32_32(((u32)rx_width) << TP_CALIBRATE_DOT_SCALE_SHIFT, (u32)dx_width);
+    CP_SetDiv32_32((rx_width) << TP_CALIBRATE_DOT_SCALE_SHIFT, dx_width);
 
     ry_width = raw_y1 - raw_y2;
     dy_width = dy1 - dy2;
 
     tmp32 = CP_GetDivResult32();
-    CP_SetDiv32_32(((u32)ry_width) << TP_CALIBRATE_DOT_SCALE_SHIFT, (u32)dy_width);
+    CP_SetDiv32_32((ry_width) << TP_CALIBRATE_DOT_SCALE_SHIFT, dy_width);
 
     if (!IN_S16_RANGE(tmp32)) {
-        (void)OS_RestoreInterrupts(enabled);
+        OS_RestoreInterrupts(enabled);
         return 1;
     }
-    calibrate->xDotSize = (s16)tmp32;
-    tmp32 = (s16)((((s32)(raw_x1 + raw_x2) << TP_CALIBRATE_DOT_SCALE_SHIFT) -
-                   ((s32)(dx1 + dx2) * calibrate->xDotSize)) >>
+    calibrate->xDotSize = tmp32;
+    tmp32 = (s16)((((raw_x1 + raw_x2) << TP_CALIBRATE_DOT_SCALE_SHIFT) -
+                   ((dx1 + dx2) * calibrate->xDotSize)) >>
                   (TP_CALIBRATE_DOT_SCALE_SHIFT - TP_CALIBRATE_ORIGIN_SCALE_SHIFT + 1));
     if (!IN_S16_RANGE(tmp32)) {
-        (void)OS_RestoreInterrupts(enabled);
+        OS_RestoreInterrupts(enabled);
         return 1;
     }
-    calibrate->x0 = (s16)tmp32;
+    calibrate->x0 = tmp32;
 
     tmp32 = CP_GetDivResult32();
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
 
     if (!IN_S16_RANGE(tmp32)) {
         return 1;
     }
 
-    calibrate->yDotSize = (s16)tmp32;
-    tmp32 = (s16)((((s32)(raw_y1 + raw_y2) << TP_CALIBRATE_DOT_SCALE_SHIFT) -
-                   ((s32)(dy1 + dy2) * calibrate->yDotSize)) >>
+    calibrate->yDotSize = tmp32;
+    tmp32 = (s16)((((raw_y1 + raw_y2) << TP_CALIBRATE_DOT_SCALE_SHIFT) -
+                   ((dy1 + dy2) * calibrate->yDotSize)) >>
                   (TP_CALIBRATE_DOT_SCALE_SHIFT - TP_CALIBRATE_ORIGIN_SCALE_SHIFT + 1));
     if (!IN_S16_RANGE(tmp32)) {
         return 1;
     }
 
-    calibrate->y0 = (s16)tmp32;
+    calibrate->y0 = tmp32;
 
     return 0;
 }
@@ -486,9 +486,8 @@ void TP_GetCalibratedPoint(TPData *disp, const TPData *raw) {
         return;
     }
 
-    disp->x =
-        (u16)((((u64)(raw->x << TP_CALIBRATE_ORIGIN_SCALE_SHIFT) - cal->x0) * cal->xDotSizeInv) >>
-              (TP_CALIBRATE_DOT_INV_SCALE_SHIFT + TP_CALIBRATE_ORIGIN_SCALE_SHIFT));
+    disp->x = ((((u64)(raw->x << TP_CALIBRATE_ORIGIN_SCALE_SHIFT) - cal->x0) * cal->xDotSizeInv) >>
+               (TP_CALIBRATE_DOT_INV_SCALE_SHIFT + TP_CALIBRATE_ORIGIN_SCALE_SHIFT));
 
     if ((s16)disp->x < 0) {
         disp->x = 0;
@@ -496,9 +495,8 @@ void TP_GetCalibratedPoint(TPData *disp, const TPData *raw) {
         disp->x = MAX_X;
     }
 
-    disp->y =
-        (u16)((((u64)(raw->y << TP_CALIBRATE_ORIGIN_SCALE_SHIFT) - cal->y0) * cal->yDotSizeInv) >>
-              (TP_CALIBRATE_DOT_INV_SCALE_SHIFT + TP_CALIBRATE_ORIGIN_SCALE_SHIFT));
+    disp->y = ((((u64)(raw->y << TP_CALIBRATE_ORIGIN_SCALE_SHIFT) - cal->y0) * cal->yDotSizeInv) >>
+               (TP_CALIBRATE_DOT_INV_SCALE_SHIFT + TP_CALIBRATE_ORIGIN_SCALE_SHIFT));
 
     if ((s16)disp->y < 0) {
         disp->y = 0;
@@ -513,5 +511,5 @@ void TP_WaitBusy(TPRequestCommandFlag command_flgs) {
 }
 
 u32 TP_CheckError(TPRequestCommandFlag command_flgs) {
-    return (u32)(tpState.err_flg & command_flgs);
+    return (tpState.err_flg & command_flgs);
 }

@@ -61,14 +61,14 @@
       "ordinal": 2
     },
     {
-      "symbol": "Luigi_PrepareScanlines",
+      "symbol": "_Z22Luigi_PrepareScanlinesv",
       "address": "0x020efcf8",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov006_020efcf8.c",
       "ordinal": 3
     },
     {
-      "symbol": "Luigi_PushScanlineRecord",
+      "symbol": "_Z24Luigi_PushScanlineRecordv",
       "address": "0x020efdac",
       "size": "0x00000044",
       "legacy_source": "src/func_ov006_020efdac.c",
@@ -439,7 +439,7 @@
       "ordinal": 56
     },
     {
-      "symbol": "dScMgLuigi_c_classInit",
+      "symbol": "_Z22dScMgLuigi_c_classInitv",
       "address": "0x020f3800",
       "size": "0x00000034",
       "legacy_source": "src/d_s_mg_luigi.c",
@@ -1872,7 +1872,7 @@
       "source": "0x0213ce0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dScMgLuigi_c_classInit",
+      "symbol": "_Z22dScMgLuigi_c_classInitv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x020f3800"

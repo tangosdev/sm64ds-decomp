@@ -119,7 +119,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "daEyBm_c_classInit",
+      "symbol": "_Z18daEyBm_c_classInitv",
       "address": "0x02121f9c",
       "size": "0x00000048",
       "legacy_source": "src/MrI_Projectile_Spawn.c",

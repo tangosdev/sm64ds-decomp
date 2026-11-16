@@ -74,8 +74,6 @@ int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 unsigned short DecIfAbove0_Short(unsigned short *timer);
-
-
 }
 extern "C" {
 
@@ -152,8 +150,7 @@ static inline short AbsAngle(short angle) {
 /* Reconstructed source-style names. SM64DS preserves this class's RTTI, the
  * BIG_SNOWMAN_BODY registry ID, the descriptor relationship and the factory's
  * behavior; it preserves neither identifier below. */
-extern "C" daBgSnmBdy_c *daBgSnmBdy_c_classInit()
-{
+daBgSnmBdy_c *daBgSnmBdy_c_classInit() {
     return new daBgSnmBdy_c();
 }
 
@@ -290,7 +287,7 @@ int daBgSnmBdy_c::State0()
 int daBgSnmBdy_c::InitState1()
 {
     mSubstate = 0;
-    mStateTimer = 0x15;
+    mStateTimer = 21;
     mStateValue = 1;
     return 1;
 }
@@ -545,7 +542,7 @@ int daBgSnmBdy_c::AdvancePath()
 void daBgSnmBdy_c::UpdateRollAngle()
 {
     int circumference = FX_Mul32x64c(mRadius << 1, FX64C_PI);
-    Fix12i turns = FX_Div(mHorzSpeed, circumference);
+    fx32 turns = FX_Div(mHorzSpeed, circumference);
     mAngleX = (short)(mAngleX + FX_Mul(turns, ANGLE_FULL_TURN));
 }
 

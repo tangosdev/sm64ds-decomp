@@ -28,15 +28,12 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
  */
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtFrameCtrl_c.h"
 #include "dExtAnmTexPat_c.h"
-
-extern "C" {
 
 typedef void *(*Ov007FileLoad)(u16 id);
 typedef void (*Ov007FileRelease)(void *file);
@@ -47,14 +44,14 @@ extern void *data_ov007_02103370[];
 /* the file id each slot loads */
 extern u16 data_ov007_020d7584[];
 
-extern void *func_ov007_020c3df4(const char *name, int size);
-extern void DecompressLZ16(void *src, void *dst);
+extern "C" void *func_ov007_020c3df4(const char *name, int size);
+extern "C" void DecompressLZ16(void *src, void *dst);
 
-void func_ov007_020b3edc(int idx);
+extern "C" void func_ov007_020b3edc(int idx);
 
 void func_ov007_020b4100(int load, int release) {
     int i;
-    for (i = 0; i < 0x2e; i++) {
+    for (i = 0; i < 46; i++) {
         data_ov007_02103370[i] = 0;
     }
     data_ov007_02103368 = (Ov007FileLoad)load;
@@ -63,13 +60,13 @@ void func_ov007_020b4100(int load, int release) {
 
 void func_ov007_020b40c0(void) {
     int i;
-    for (i = 0; i < 0x2e; i++)
+    for (i = 0; i < 46; i++)
         func_ov007_020b3edc(i);
     data_ov007_02103368 = 0;
     data_ov007_0210336c = 0;
 }
 
-void *func_ov007_020b3f20(int idx) {
+extern "C" void *func_ov007_020b3f20(int idx) {
     if (idx == 0) {
         return 0;
     }
@@ -142,5 +139,4 @@ void func_ov007_020b3edc(int idx) {
         return;
     data_ov007_0210336c(file);
     data_ov007_02103370[idx] = 0;
-}
 }

@@ -37,7 +37,7 @@ extern BblPmfPair data_ov064_0211c7c8[2];
  * fBase_c::operator new call, the base C2, the vptr store and the two member
  * constructors inline -- a declared constructor would emit a `bl` the
  * factory does not have. */
-extern "C" daBbl_c *daBbl_c_classInit() {
+daBbl_c *daBbl_c_classInit() {
     return new daBbl_c();
 }
 
@@ -182,7 +182,7 @@ int daBbl_c::EnterFountain() {
  * the wait over. This is what makes the fixed flame a flame fountain. */
 int daBbl_c::ExecuteFountain() {
     if (mStateTimer == 0) {
-        mStateTimer = 0xb4;
+        mStateTimer = 180;
         Vector3 spawnPos(mPosX, mPosY + 0x78000, mPosZ);
         dActor_c::Spawn(0xd6, 0, spawnPos, &mPrevAngle, mAreaId, -1);
     }

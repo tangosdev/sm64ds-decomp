@@ -34,6 +34,7 @@
 #include "private/particle_resource_header.h"
 
 extern "C" {
+
 /* local extern: decl_common.h, a C catch-all, declares func_0204d958,
  * func_0204d9a0 and func_0204ae2c; no real header declares any of these. */
 void *func_0204d958(void *list);
@@ -81,10 +82,8 @@ static inline SystemState &StateOf(Particle::System *system) {
     return *(SystemState *)&system->callbackFlags;
 }
 
-extern "C" {
-
-char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int minPolygonID,
-                    unsigned short maxPolygonID) {
+extern "C" char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles,
+                               int minPolygonID, unsigned short maxPolygonID) {
     int i;
     Particle::Manager *manager;
     char *system;
@@ -119,7 +118,7 @@ char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int m
     return (char *)manager;
 }
 
-void func_0204a17c(Particle::Manager *manager, char *resource) {
+extern "C" void func_0204a17c(Particle::Manager *manager, char *resource) {
     int offset = sizeof(ParticleResourceHeader);
     int i;
 
@@ -227,7 +226,7 @@ void func_0204a17c(Particle::Manager *manager, char *resource) {
     }
 }
 
-int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32, u32)) {
+extern "C" int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32, u32)) {
     int i;
     GX_BeginLoadTex();
     for (i = 0; i < manager->mNumTextures; i++) {
@@ -243,8 +242,8 @@ int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(u32, u32)) {
     return 1;
 }
 
-int func_0204a028(Particle::Manager *manager,
-                  unsigned int (*allocPalVram)(unsigned int, unsigned int)) {
+extern "C" int func_0204a028(Particle::Manager *manager,
+                             unsigned int (*allocPalVram)(unsigned int, unsigned int)) {
     int i;
 
     GX_BeginLoadTexPltt();
@@ -267,7 +266,7 @@ int func_0204a028(Particle::Manager *manager,
     return 1;
 }
 
-void func_02049f58(Particle::Manager *manager) {
+extern "C" void func_02049f58(Particle::Manager *manager) {
     Particle::System *system = manager->mActiveSystems.head;
     Particle::System *next;
     if (system == 0)
@@ -304,7 +303,6 @@ void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
         }
         system = system->next;
     } while (system != 0);
-}
 }
 
 /* Particle::Manager::AddSystem -- spawn a System, arm9
@@ -347,8 +345,6 @@ System *Manager::AddSystem(int definitionID, Vector3 &position) {
 
 }
 
-extern "C" {
-
 void func_02049d78(Particle::Manager *manager, Particle::System *system) {
     void *particle;
     particle = func_0204d958(&system->particles);
@@ -367,5 +363,4 @@ void func_02049d78(Particle::Manager *manager, Particle::System *system) {
 
 void func_02049d60(Particle::Manager *manager, Particle::System *system) {
     func_0204a5bc(system, &manager->mFreeParticles);
-}
 }

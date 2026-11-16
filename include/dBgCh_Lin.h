@@ -67,7 +67,7 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
 
     /* Was mPosY. Read as the search seed on entry (`ldr r1,[r0,#0x60]`) and
        written with the winning distance on exit (`str r1,[r0,#0x60]`). */
-    Fix12i clsnDist;        /* 0x060 */
+    fx32 clsnDist; /* 0x060 */
 
     /* The segment's BOUNDING SPHERE, and the struct does not end at 0x65.
        Proven three ways, all matched code:

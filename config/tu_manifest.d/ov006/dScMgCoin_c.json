@@ -481,7 +481,7 @@
       "ordinal": 61
     },
     {
-      "symbol": "dScMgCoin_c_classInit",
+      "symbol": "_Z21dScMgCoin_c_classInitv",
       "address": "0x020de940",
       "size": "0x00000048",
       "legacy_source": "src/d_s_mg_coin.cpp",

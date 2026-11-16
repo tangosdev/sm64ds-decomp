@@ -51,9 +51,9 @@ extern CLPS_Block data_ov046_021115bc;
 
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
-int Sound_PlayIfNotActive(int handle, int a, int b, short c);
 void Vec3_Asr(void *dst, void *src, int shift);
 }
+int Sound_PlayIfNotActive(int handle, int a, int b, short c);
 
 daKpa2Bg_c::~daKpa2Bg_c() {}
 
@@ -123,7 +123,7 @@ int daKpa2Bg_c::InitResources() {
     mModel2.SetFile(dExtSimpleModel_c::LoadFile(daKpa2Bg_c_ModelFile), 1, -1);
     UpdateClsnMatrix();
     mMovingMeshCollider2.SetFile(dBgW_Kc::LoadFile(daKpa2Bg_c_ClsnFile), mClsnMat, 0x1000, mAngleY,
-                                 *(CLPS_Block *)(&data_ov046_021115bc));
+                                 *(&data_ov046_021115bc));
     mMovingMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMovingMeshCollider2.Enable(this);
     mAngleXSpeed = 0;
@@ -136,7 +136,7 @@ int daKpa2Bg_c::InitResources() {
 /* `new daKpa2Bg_c` is the whole sequence the loose factory spelled by hand:
  * fBase_c::operator new(0x570), dBgActor_c's base constructor, the vptr store,
  * then the dExtSimpleModel_c and dBgW_KcMbg member constructors. */
-extern "C" daKpa2Bg_c *daKpa2Bg_c_classInit(void) {
+daKpa2Bg_c *daKpa2Bg_c_classInit(void) {
     return new daKpa2Bg_c;
 }
 

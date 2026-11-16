@@ -84,11 +84,11 @@ enum {
 static const int cSinkDepth = 0x1e000;
 static const int cSinkRate = 0x5000;
 
-extern "C" daLinelift2_c *daLinelift2_c_classInit_KM3_LIFT() {
+daLinelift2_c *daLinelift2_c_classInit_KM3_LIFT() {
     return new daLinelift2_c();
 }
 
-extern "C" daLinelift2_c *daLinelift2_c_classInit_KM2_SUSUMU() {
+daLinelift2_c *daLinelift2_c_classInit_KM2_SUSUMU() {
     return new daLinelift2_c();
 }
 
@@ -119,7 +119,7 @@ int daLinelift2_c::InitResources() {
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
-    mPathPtr.FromID(param1 & 0xf);
+    mPathPtr.FromID(param1 & 15);
     mNodeCount = mPathPtr.NumNodes();
     mNodeIndex = 0;
     mBasePosX = mPosX;
@@ -261,7 +261,7 @@ int daLinelift2_c::StepAlongPath() {
                 result = -1;
             }
         }
-        mPathPtr.GetNode(*(Vector3 *)&mTargetPosX, (unsigned int)mNodeIndex);
+        mPathPtr.GetNode(*(Vector3 *)&mTargetPosX, mNodeIndex);
         {
             Vector3 target, base;
             target.x = mTargetPosX;

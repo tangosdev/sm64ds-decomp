@@ -68,7 +68,7 @@ void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask,
             slot = &buf[empty];
             slot->particle = walk;
             fp6 = &slot->flags;
-            *fp6 = (unsigned char)((*fp6 & ~3u) | (mask & 3u));
+            *fp6 = ((*fp6 & ~3u) | (mask & 3u));
         }
 
         if (slot != 0) {
@@ -82,9 +82,9 @@ void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask,
 
             fn(&sp[1], &slot->screenX, &slot->screenY, &sp[0]);
 
-            slot->lifeScale = (short)FX_MUL(sp[0], scale);
+            slot->lifeScale = FX_MUL(sp[0], scale);
             fp6 = &slot->flags;
-            *fp6 = (unsigned char)(*fp6 | 4u);
+            *fp6 = (*fp6 | 4u);
         }
 
         walk = walk->next;
@@ -103,7 +103,7 @@ void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask,
         }
 
         fp6 = &p->flags;
-        *fp6 = (unsigned char)(*fp6 & ~4u);
+        *fp6 = (*fp6 & ~4u);
         p++;
     } while (++j < count);
 }

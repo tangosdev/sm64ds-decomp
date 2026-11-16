@@ -2,13 +2,19 @@
 #include "OAM.h"
 #include "dGraph_c.h"
 
-extern "C" {
-
 extern void func_0202345c(void);
 extern void func_02018efc(void);
+extern "C" {
+
 extern int func_02019018(void);
+}
+
 extern void func_0200f4b4(void);
+extern "C" {
+
 extern void func_0200f468(void);
+}
+
 extern void func_02018ec0(void);
 
 /* The scene's graph callback (d_s_dsmt.cpp and the other scenes set it). */
@@ -38,5 +44,4 @@ void func_02019390(void)
     func_0202345c();
     func_02018efc();
     func_02018ec0();
-}
 }

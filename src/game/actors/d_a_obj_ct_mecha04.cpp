@@ -11,10 +11,8 @@
  */
 
 // What stays, and why (each measured; simplifying changes the emitted bytes):
-// dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange are
-// header member calls whose headers spell Fix12 as Fix12i, a plain s32
-// (6az). dBgW::SetStoodOnCallback / dBgW::GetStoodOnCallback
-// store/load dBgW+0x1c -- the ROM's own call, not an inlineable assignment.
+// dBgW::SetStoodOnCallback / dBgW::GetStoodOnCallback store/load dBgW+0x1c --
+// the ROM's own call, not an inlineable assignment.
 // common.h first: UpdateShadow writes mShadowMat.m[9..11] on the flat 12-word
 // spelling. InitResources keeps its two-store animationFiles[2] stack array,
 // the variant reloads, MoveActorOnBelt's &mPosX-derived pointer chain and flat
@@ -42,6 +40,7 @@ enum daObjCtMecha04_c_AssetId {
 #include "math/MtxStack.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
+#include "Sound.h"
 
 enum {
     ACTOR_CT_MECHA04L = 0x6f,
@@ -62,11 +61,6 @@ struct Mecha04ClsnFilePtr : SharedFilePtr {
     ~Mecha04ClsnFilePtr();
 };
 
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
-
 /* One 2-row {model, collision, clps} table indexed by mVariant; the three
  * data_ov065_* symbols name row 0's fields, so each column's decl strides by
  * the row size. */
@@ -86,11 +80,11 @@ static inline int IsLargeBelt(dActor_c *actor) {
     return actor->actorID == ACTOR_CT_MECHA04L;
 }
 
-extern "C" daObjCtMecha04_c *daObjCtMecha04_c_classInit_CT_MECHA04S() {
+daObjCtMecha04_c *daObjCtMecha04_c_classInit_CT_MECHA04S() {
     return new daObjCtMecha04_c();
 }
 
-extern "C" daObjCtMecha04_c *daObjCtMecha04_c_classInit_CT_MECHA04L() {
+daObjCtMecha04_c *daObjCtMecha04_c_classInit_CT_MECHA04L() {
     return new daObjCtMecha04_c();
 }
 
@@ -196,11 +190,11 @@ int daObjCtMecha04_c::Behavior() {
 
             if (data_0209f2c0 == CLOCK_SETTING_RANDOM) {
                 if (ApproachLinear(mBeltSpeed, mTargetBeltSpeed, 0xcc) != 0 &&
-                    DecIfAbove0_Short((u16 *)&mDirectionTimer) == 0) {
+                    DecIfAbove0_Short(&mDirectionTimer) == 0) {
                     unsigned int randomValue =
                         (u16)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16);
                     /* New direction, held for 0xa + 0x14 * (0..6) ticks. */
-                    mDirectionTimer = (s16)(((int)randomValue % 7) * 0x14 + 0xa);
+                    mDirectionTimer = (s16)(((int)randomValue % 7) * 20 + 10);
                     if (randomValue >= 0x7fff) {
                         mTargetBeltSpeed = 0x1000;
                     } else {
@@ -239,9 +233,7 @@ int daObjCtMecha04_c::CleanupResources() {
     return 1;
 }
 
-/* Inferred descriptive name. DropShadowScaleXYZ's three sizes are Fix12i
- * (a plain s32); Fix12<int> by value homes arguments absent from the
- * cartridge (6az). */
+/* Inferred descriptive name. DropShadowScaleXYZ's three sizes are fx32. */
 void daObjCtMecha04_c::UpdateShadow() {
     int heightDiff = mPosY - mGroundY;
     int absHeightDiff = heightDiff < 0 ? -heightDiff : heightDiff;

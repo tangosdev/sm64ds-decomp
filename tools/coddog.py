@@ -1,6 +1,6 @@
 """Fuzzy opcode-similarity scheduler (Coddog-style).
 
-Our existing similarity lever (worklist.py --similar, recurring.py, cluster_shapes.py)
+Our existing similarity lever (worklist.py --similar, recurring.py)
 keys on the EXACT mnemonic sequence -- two functions cluster only if their opcode
 lists are identical. That misses near-lookalikes: a target one or two instructions
 off from an already-matched function gets no example. This tool ranks by FUZZY

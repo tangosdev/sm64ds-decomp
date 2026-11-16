@@ -91,13 +91,13 @@ s32 daObjHeart_c::Behavior() {
                     Sound::PlayBank3(0x61, mCamSpacePos);
                 }
             }
-            mHealTimer = 0x5a;
+            mHealTimer = 90;
         }
     } else {
         mWasTouched = 0;
     }
 
-    if (mHealTimer > 0x2d)
+    if (mHealTimer > 45)
         spin = 0x8000;
     Math_Function_0203b14c(&mAnimSpeed, spin, 0x400, 0x2000, 0x80);
     mAnmModel.speed = mAnimSpeed;
@@ -117,7 +117,7 @@ s32 daObjHeart_c::InitResources() {
 }
 
 /* Reconstructed source-style name; historical alias HealingHeart_Spawn. */
-extern "C" daObjHeart_c *daObjHeart_c_classInit(void) {
+daObjHeart_c *daObjHeart_c_classInit(void) {
     return new daObjHeart_c();
 }
 

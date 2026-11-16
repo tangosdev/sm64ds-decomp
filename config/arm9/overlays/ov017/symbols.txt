@@ -4,7 +4,7 @@ _ZN14daObjKsWater_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211
 _ZN14daObjKsWater_c6RenderEv kind:function(arm,size=0x34) addr:0x02111290
 _ZN14daObjKsWater_c8BehaviorEv kind:function(arm,size=0xfc) addr:0x021112c4
 _ZN14daObjKsWater_c13InitResourcesEv kind:function(arm,size=0xc0) addr:0x021113c0
-daObjKsWater_c_classInit kind:function(arm,size=0x38) addr:0x02111480
+_Z24daObjKsWater_c_classInitv kind:function(arm,size=0x38) addr:0x02111480
 data_ov017_021114b8 kind:data(any) addr:0x021114b8
 data_ov017_021114bc kind:data(any) addr:0x021114bc
 data_ov017_021114c0 kind:data(any) addr:0x021114c0

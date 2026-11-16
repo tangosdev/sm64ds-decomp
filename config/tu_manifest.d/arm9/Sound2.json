@@ -168,7 +168,7 @@
       "ordinal": 20
     },
     {
-      "symbol": "SetSoundRange",
+      "symbol": "_Z13SetSoundRangei",
       "address": "0x02048fd4",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0204/func_02048f34.c",

@@ -90,14 +90,8 @@ extern PukuStateRow data_ov090_02134584;
 
 extern Vector3 data_ov090_021342d8;
 
-/* local extern: the spelling math/CalcLib.h declares, repeated here because
-   dropping the declaration renumbers this TU's @NNN locals. */
-extern "C" void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
-
-extern "C" {
 int *daPukupuku_c_classInit(void) {
     return (int *)new daPukupuku_c;
-}
 }
 
 int daPukupuku_c::InitResources() {
@@ -136,7 +130,7 @@ int daPukupuku_c::Behavior() {
         return 1;
     }
 
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     UpdatePos(&mdCcAcPos_c);
     {
         PukuMainView *q = (PukuMainView *)mState;
@@ -199,7 +193,7 @@ int daPukupuku_c::InitStateSwim() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
     mTargetAngleY = ((r >> 8) & 0xf) << 0xc;
     r = RandomIntInternal(&data_0209e650.value);
-    mStateTimer = (s16)(((r >> 8) & 0x3f) + 0x32);
+    mStateTimer = (s16)(((r >> 8) & 0x3f) + 50);
     mHorzSpeed = 0x5000;
     return 1;
 }
@@ -208,11 +202,11 @@ int daPukupuku_c::InitStateSwim() {
  * mTargetAngleY; pause when the timer runs out. */
 int daPukupuku_c::StateSwim() {
     if (Vec3_Dist(&mPos, &mHomePos) > 0x3e8000) {
-        mStateTimer = 0x32;
+        mStateTimer = 50;
         mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
     }
     ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x100, 0x200);
-    if ((unsigned short)mStateTimer == 0)
+    if (mStateTimer == 0)
         SetState((PukuStatePMF *)&data_ov090_02134584);
     return 1;
 }
@@ -220,14 +214,14 @@ int daPukupuku_c::StateSwim() {
 /* Pause enter: stop for 50..113 frames. */
 int daPukupuku_c::InitStatePause() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
-    mStateTimer = (s16)(((r >> 8) & 0x3f) + 0x32);
+    mStateTimer = (s16)(((r >> 8) & 0x3f) + 50);
     mHorzSpeed = 0;
     return 1;
 }
 
 /* Pause main: swim again when the timer runs out. */
 int daPukupuku_c::StatePause() {
-    if ((unsigned short)mStateTimer == 0) {
+    if (mStateTimer == 0) {
         SetState((PukuStatePMF *)&data_ov090_02134594);
     }
     return 1;
@@ -247,7 +241,7 @@ void daPukupuku_c::CheckPlayerHit() {
             return;
         {
             daPly_c *a = (daPly_c *)dActor_c::FindWithID(id);
-            int b = (int)(a->actorID == 0xbf);
+            int b = (a->actorID == 0xbf);
             if (b == 0)
                 return;
             if (a->mIsVanish != 0)

@@ -21,7 +21,7 @@
 
 enum { kLavaBubbleEffect = 0xb7 };
 
-extern "C" daObjLava_c *daObjLava_c_classInit() {
+daObjLava_c *daObjLava_c_classInit() {
     return new daObjLava_c();
 }
 

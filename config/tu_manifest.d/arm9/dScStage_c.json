@@ -154,7 +154,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "func_02029408",
+      "symbol": "_Z13func_02029408v",
       "address": "0x02029408",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0202/func_02029408.cpp",
@@ -168,7 +168,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "func_02029600",
+      "symbol": "_Z13func_02029600i",
       "address": "0x02029600",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0202/func_02029600.c",
@@ -196,21 +196,21 @@
       "ordinal": 21
     },
     {
-      "symbol": "UpdateMinimap",
+      "symbol": "_Z13UpdateMinimapP11MinimapDescjjjj",
       "address": "0x02029854",
       "size": "0x0000004c",
       "legacy_source": "src/UpdateMinimap.c",
       "ordinal": 22
     },
     {
-      "symbol": "StartEntranceFaderWipe",
+      "symbol": "_Z22StartEntranceFaderWipei",
       "address": "0x020298a0",
       "size": "0x00000038",
       "legacy_source": "src/runtime/graphics/fader/StartEntranceFaderWipe.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "StartExitCharacterWipe",
+      "symbol": "_Z22StartExitCharacterWipev",
       "address": "0x020298d8",
       "size": "0x00000024",
       "legacy_source": "src/StartExitCharacterWipe.c",
@@ -238,7 +238,7 @@
       "ordinal": 27
     },
     {
-      "symbol": "FUN_020299f4",
+      "symbol": "_Z12FUN_020299f4v",
       "address": "0x020299f4",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/arm9/0202/FUN_020299f4.cpp",
@@ -252,14 +252,14 @@
       "ordinal": 29
     },
     {
-      "symbol": "FUN_02029ab0",
+      "symbol": "_Z12FUN_02029ab0v",
       "address": "0x02029ab0",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0202/FUN_02029ab0.c",
       "ordinal": 30
     },
     {
-      "symbol": "EnterBigBoosHaunt",
+      "symbol": "_Z17EnterBigBoosHauntv",
       "address": "0x02029b04",
       "size": "0x0000002c",
       "legacy_source": "src/EnterBigBoosHaunt.c",
@@ -273,28 +273,28 @@
       "ordinal": 32
     },
     {
-      "symbol": "HitDeathPlane",
+      "symbol": "_Z13HitDeathPlanei",
       "address": "0x02029b84",
       "size": "0x00000050",
       "legacy_source": "src/HitDeathPlane.c",
       "ordinal": 33
     },
     {
-      "symbol": "ExitLevel",
+      "symbol": "_Z9ExitLevelv",
       "address": "0x02029bd4",
       "size": "0x00000020",
       "legacy_source": "src/ExitLevel.c",
       "ordinal": 34
     },
     {
-      "symbol": "SetNextLevel",
+      "symbol": "_Z12SetNextLeveli",
       "address": "0x02029bf4",
       "size": "0x00000128",
       "legacy_source": "src/SetNextLevel.c",
       "ordinal": 35
     },
     {
-      "symbol": "SetNextStar",
+      "symbol": "_Z11SetNextStarv",
       "address": "0x02029d1c",
       "size": "0x000000a0",
       "legacy_source": "src/SetNextStar.c",
@@ -308,14 +308,14 @@
       "ordinal": 37
     },
     {
-      "symbol": "DeathTable_SetBit",
+      "symbol": "_Z17DeathTable_SetBiti",
       "address": "0x02029e0c",
       "size": "0x0000004c",
       "legacy_source": "src/DeathTable_SetBit.c",
       "ordinal": 38
     },
     {
-      "symbol": "DeathTable_GetBit",
+      "symbol": "_Z17DeathTable_GetBiti",
       "address": "0x02029e58",
       "size": "0x0000004c",
       "legacy_source": "src/DeathTable_GetBit.c",
@@ -371,7 +371,7 @@
       "ordinal": 46
     },
     {
-      "symbol": "GiveVsStars",
+      "symbol": "_Z11GiveVsStarsii",
       "address": "0x0202a5ac",
       "size": "0x00000018",
       "legacy_source": "src/GiveVsStars.c",
@@ -385,7 +385,7 @@
       "ordinal": 48
     },
     {
-      "symbol": "ClearSpikeBomb",
+      "symbol": "_Z14ClearSpikeBombi",
       "address": "0x0202a608",
       "size": "0x00000020",
       "legacy_source": "src/ClearSpikeBomb.c",
@@ -399,7 +399,7 @@
       "ordinal": 50
     },
     {
-      "symbol": "SetStarMarker",
+      "symbol": "_Z13SetStarMarkeriP8dActor_ci",
       "address": "0x0202a660",
       "size": "0x0000001c",
       "legacy_source": "src/SetStarMarker.c",
@@ -420,42 +420,42 @@
       "ordinal": 53
     },
     {
-      "symbol": "CollectStarInCurLevel",
+      "symbol": "_Z21CollectStarInCurLeveli",
       "address": "0x0202a6ac",
       "size": "0x0000001c",
       "legacy_source": "src/CollectStarInCurLevel.c",
       "ordinal": 54
     },
     {
-      "symbol": "IsStarCollectedInCurLevel",
+      "symbol": "_Z25IsStarCollectedInCurLeveli",
       "address": "0x0202a6c8",
       "size": "0x0000001c",
       "legacy_source": "src/IsStarCollectedInCurLevel.c",
       "ordinal": 55
     },
     {
-      "symbol": "NumRedCoins",
+      "symbol": "_Z11NumRedCoinsv",
       "address": "0x0202a6e4",
       "size": "0x00000050",
       "legacy_source": "src/NumRedCoins.c",
       "ordinal": 56
     },
     {
-      "symbol": "GiveRedCoins",
+      "symbol": "_Z12GiveRedCoinsii",
       "address": "0x0202a734",
       "size": "0x0000003c",
       "legacy_source": "src/GiveRedCoins.c",
       "ordinal": 57
     },
     {
-      "symbol": "NumCoins",
+      "symbol": "_Z8NumCoinsv",
       "address": "0x0202a770",
       "size": "0x00000048",
       "legacy_source": "src/NumCoins.c",
       "ordinal": 58
     },
     {
-      "symbol": "GiveCoins",
+      "symbol": "_Z9GiveCoinsii",
       "address": "0x0202a7b8",
       "size": "0x0000005c",
       "legacy_source": "src/GiveCoins.c",
@@ -476,21 +476,21 @@
       "ordinal": 61
     },
     {
-      "symbol": "InitControllerMode",
+      "symbol": "_Z18InitControllerModeih",
       "address": "0x0202a87c",
       "size": "0x00000034",
       "legacy_source": "src/InitControllerMode.c",
       "ordinal": 62
     },
     {
-      "symbol": "SetControllerMode",
+      "symbol": "_Z17SetControllerModeh",
       "address": "0x0202a8b0",
       "size": "0x00000030",
       "legacy_source": "src/SetControllerMode.c",
       "ordinal": 63
     },
     {
-      "symbol": "func_0202a8e0",
+      "symbol": "_Z13func_0202a8e0ih",
       "address": "0x0202a8e0",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202a8e0.c",
@@ -504,21 +504,21 @@
       "ordinal": 65
     },
     {
-      "symbol": "func_0202a958",
+      "symbol": "_Z13func_0202a958v",
       "address": "0x0202a958",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0202/func_0202a958.c",
       "ordinal": 66
     },
     {
-      "symbol": "func_0202a96c",
+      "symbol": "_Z13func_0202a96cv",
       "address": "0x0202a96c",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0202/func_0202a96c.c",
       "ordinal": 67
     },
     {
-      "symbol": "func_0202a980",
+      "symbol": "_Z13func_0202a980v",
       "address": "0x0202a980",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0202/func_0202a980.c",
@@ -532,21 +532,21 @@
       "ordinal": 69
     },
     {
-      "symbol": "HideArea",
+      "symbol": "_Z8HideAreai",
       "address": "0x0202aa2c",
       "size": "0x00000020",
       "legacy_source": "src/HideArea.c",
       "ordinal": 70
     },
     {
-      "symbol": "ShowArea",
+      "symbol": "_Z8ShowAreai",
       "address": "0x0202aa4c",
       "size": "0x00000020",
       "legacy_source": "src/ShowArea.c",
       "ordinal": 71
     },
     {
-      "symbol": "IsAreaShowing",
+      "symbol": "_Z13IsAreaShowingi",
       "address": "0x0202aa6c",
       "size": "0x0000001c",
       "legacy_source": "src/IsAreaShowing.c",
@@ -567,7 +567,7 @@
       "ordinal": 74
     },
     {
-      "symbol": "LoadLevel",
+      "symbol": "_Z9LoadLevelijija",
       "address": "0x0202aaec",
       "size": "0x000001d4",
       "legacy_source": "src/LoadLevel.c",
@@ -595,14 +595,14 @@
       "ordinal": 78
     },
     {
-      "symbol": "StartMinigameMenu",
+      "symbol": "_Z17StartMinigameMenuh",
       "address": "0x0202adf4",
       "size": "0x00000038",
       "legacy_source": "src/StartMinigameMenu.c",
       "ordinal": 79
     },
     {
-      "symbol": "PrepareVsMode",
+      "symbol": "_Z13PrepareVsModev",
       "address": "0x0202ae2c",
       "size": "0x00000048",
       "legacy_source": "src/PrepareVsMode.c",
@@ -623,84 +623,84 @@
       "ordinal": 82
     },
     {
-      "symbol": "StartWithFarCamera",
+      "symbol": "_Z18StartWithFarCamerav",
       "address": "0x0202af08",
       "size": "0x00000020",
       "legacy_source": "src/StartWithFarCamera.c",
       "ordinal": 83
     },
     {
-      "symbol": "GetStarCameraSetting",
+      "symbol": "_Z20GetStarCameraSettingi",
       "address": "0x0202af28",
       "size": "0x00000020",
       "legacy_source": "src/GetStarCameraSetting.c",
       "ordinal": 84
     },
     {
-      "symbol": "GetMinimapScale",
+      "symbol": "_Z15GetMinimapScalei",
       "address": "0x0202af48",
       "size": "0x00000038",
       "legacy_source": "src/GetMinimapScale.c",
       "ordinal": 85
     },
     {
-      "symbol": "func_0202af80",
+      "symbol": "_Z13func_0202af80Psi",
       "address": "0x0202af80",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202af80.c",
       "ordinal": 86
     },
     {
-      "symbol": "GetMinimapID",
+      "symbol": "_Z12GetMinimapIDP8dActor_ci",
       "address": "0x0202af9c",
       "size": "0x000000a8",
       "legacy_source": "src/GetMinimapID.c",
       "ordinal": 87
     },
     {
-      "symbol": "func_0202b044",
+      "symbol": "_Z13func_0202b044Pti",
       "address": "0x0202b044",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b044.c",
       "ordinal": 88
     },
     {
-      "symbol": "func_0202b060",
+      "symbol": "_Z13func_0202b060Pci",
       "address": "0x0202b060",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b060.c",
       "ordinal": 89
     },
     {
-      "symbol": "GetTeleportDestObj",
+      "symbol": "_Z18GetTeleportDestObji",
       "address": "0x0202b07c",
       "size": "0x00000014",
       "legacy_source": "src/GetTeleportDestObj.c",
       "ordinal": 90
     },
     {
-      "symbol": "func_0202b090",
+      "symbol": "_Z13func_0202b090Pvi",
       "address": "0x0202b090",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b090.c",
       "ordinal": 91
     },
     {
-      "symbol": "GetViewObj",
+      "symbol": "_Z10GetViewObji",
       "address": "0x0202b0ac",
       "size": "0x00000018",
       "legacy_source": "src/GetViewObj.c",
       "ordinal": 92
     },
     {
-      "symbol": "func_0202b0c4",
+      "symbol": "_Z13func_0202b0c4Pvi",
       "address": "0x0202b0c4",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b0c4.c",
       "ordinal": 93
     },
     {
-      "symbol": "func_0202b0e0",
+      "symbol": "_Z13func_0202b0e0PN11LVL_Overlay13StandardEntryEi",
       "address": "0x0202b0e0",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202b0e0.c",
@@ -805,14 +805,14 @@
       "ordinal": 108
     },
     {
-      "symbol": "SetTouchScreenDelay",
+      "symbol": "_Z19SetTouchScreenDelayv",
       "address": "0x0202c8b8",
       "size": "0x00000040",
       "legacy_source": "src/SetTouchScreenDelay.c",
       "ordinal": 109
     },
     {
-      "symbol": "ResetInput",
+      "symbol": "_Z10ResetInputv",
       "address": "0x0202c8f8",
       "size": "0x000000b0",
       "legacy_source": "src/ResetInput.c",
@@ -847,21 +847,21 @@
       "ordinal": 114
     },
     {
-      "symbol": "IsLevelTinyHugeIslandOutside",
+      "symbol": "_Z28IsLevelTinyHugeIslandOutsidei",
       "address": "0x0202ddd4",
       "size": "0x00000020",
       "legacy_source": "src/IsLevelTinyHugeIslandOutside.c",
       "ordinal": 115
     },
     {
-      "symbol": "IsLevelInsideCastle",
+      "symbol": "_Z19IsLevelInsideCastlei",
       "address": "0x0202ddf4",
       "size": "0x00000030",
       "legacy_source": "src/IsLevelInsideCastle.c",
       "ordinal": 116
     },
     {
-      "symbol": "GetSoundGroupID",
+      "symbol": "_Z15GetSoundGroupIDii",
       "address": "0x0202de24",
       "size": "0x00000040",
       "legacy_source": "src/GetSoundGroupID.c",
@@ -875,7 +875,7 @@
       "ordinal": 118
     },
     {
-      "symbol": "func_0202deac",
+      "symbol": "_Z13func_0202deaci",
       "address": "0x0202deac",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0202/func_0202deac.c",
@@ -896,7 +896,7 @@
       "ordinal": 121
     },
     {
-      "symbol": "dScStage_c_classInit",
+      "symbol": "_Z20dScStage_c_classInitv",
       "address": "0x0202e088",
       "size": "0x00000090",
       "legacy_source": "src/game/stages/d_s_stage.cpp",

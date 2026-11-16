@@ -15,7 +15,6 @@
  * InitResources picks the SharedFilePtr in data_ov031_02111424 from actorID. */
 
 struct daObjHsBillboard_c : dActor_c {
-    u8 pad_0d0[0x4];
     dExtSimpleModel_c mModel; /* 0x0d4 */
     u8 mVariant;              /* 0x124 -- index into data_ov031_02111424 */
 

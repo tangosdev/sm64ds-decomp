@@ -34,14 +34,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov007_020b40c0",
+      "symbol": "_Z19func_ov007_020b40c0v",
       "address": "0x020b40c0",
       "size": "0x00000040",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b40c0.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov007_020b4100",
+      "symbol": "_Z19func_ov007_020b4100ii",
       "address": "0x020b4100",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b4100.cpp",

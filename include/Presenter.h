@@ -37,14 +37,34 @@ struct PresenterTexSeqFileHandle : SharedFilePtr {
  * face_lose, face_lose_st, face_lose_ed, face_smile and face_surprised.bca,
  * each with its BTP. The constructor and destructor are the class's own
  * (ov006 0x020c33dc and 0x020c3288), so the cup and sound scenes hold a
- * typed Presenter member and the compiler tears it down. The other helpers
- * are free functions over a char* record and read it through their
- * PRESENTER() cast. The sixteen animation handles are named members, not
+ * typed Presenter member and the compiler tears it down. Its methods are the
+ * face's reactions. The sixteen animation handles are named members, not
  * arrays: an array of a class with a destructor is torn down through
  * __cxa_vec_cleanup, and the cartridge's destructor is unrolled. */
 struct Presenter {
     Presenter();
     ~Presenter();
+
+    int Load();
+    void TrackStylus();
+    void Update();
+    void Draw();
+    int IsIdle();
+    int IsAnimDone();
+    void ResetPose();
+    void PlayIdle();
+    void StateIdle();
+    void PlayMatch();
+    void StateWin();
+    void PlayMiss();
+    void StateMistake();
+    void PlayCheer();
+    void StateSurprisedThenSmile();
+    void PlayLose();
+    void StateLoseStart();
+    void PlayCheerLoop();
+    void StateSurprisedThenIdle();
+    void UpdateMatrix();
 
     s32 mState[2]; /* 0x000 -- the current state's member-pointer record */
     /* 0x70 bytes. UpdateMatrix sets its mat4x3; Draw hands its data to mTexSeq

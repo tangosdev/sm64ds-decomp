@@ -17,7 +17,7 @@ extern void func_ov007_020bd1c0(int i);
 extern void func_ov007_020b131c(void);
 }
 
-extern "C" void func_ov007_020b066c(void) {
+void func_ov007_020b066c(void) {
     switch (WORK->states[0]->previousState) {
     case 6:
         func_ov007_020b283c();

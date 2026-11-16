@@ -131,7 +131,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "daObjFl_Amilift_c_classInit",
+      "symbol": "_Z27daObjFl_Amilift_c_classInitv",
       "address": "0x02117fe8",
       "size": "0x00000038",
       "legacy_source": "src/d_a_obj_fl_amilift.c",
@@ -565,28 +565,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN19AmiliftModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail model-handle construction destination and the SharedFilePtr model family identity"
     },
     {
       "symbol": "_ZN19AmiliftModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail model-handle destruction destination"
     },
     {
       "symbol": "_ZN18AmiliftClsnFilePtrC1Ej",
-      "canonical_symbol": "func_02017b4c",
+      "canonical_symbol": "_Z13func_02017b4cPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail collision-handle construction destination"
     },
     {
       "symbol": "_ZN18AmiliftClsnFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail collision-handle destruction destination"
@@ -594,29 +594,29 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@529",
+      "from": "@527",
       "to": "@106",
-      "evidence": "mwcc emits this compiler temp as @545; ov091 promotes @545 globally, so the configured @106 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @541 to @519 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @519 to @529 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "mwcc emits this compiler temp as @545; ov091 promotes @545 globally, so the configured @106 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @541 to @519 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @519 to @529 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @529 to @527 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+    },
+    {
+      "from": "@528",
+      "to": "@557",
+      "evidence": "mwcc emits this compiler temp as @546; ov080 promotes @546 globally, so the configured @557 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @542 to @520 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @520 to @530 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @530 to @528 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
       "from": "@530",
-      "to": "@557",
-      "evidence": "mwcc emits this compiler temp as @546; ov080 promotes @546 globally, so the configured @557 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @542 to @520 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @520 to @530 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "@107",
+      "evidence": "mwcc emits this compiler temp as @548; ov080 promotes @548 globally, so the configured @107 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @544 to @522 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @522 to @532 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @532 to @530 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@532",
-      "to": "@107",
-      "evidence": "mwcc emits this compiler temp as @548; ov080 promotes @548 globally, so the configured @107 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @544 to @522 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @522 to @532 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "from": "@531",
+      "to": "@108",
+      "evidence": "mwcc emits this compiler temp as @549; ov091 promotes @549 globally, so the configured @108 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @545 to @523 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @523 to @533 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @533 to @531 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
       "from": "@533",
-      "to": "@108",
-      "evidence": "mwcc emits this compiler temp as @549; ov091 promotes @549 globally, so the configured @108 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @545 to @523 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @523 to @533 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
-    },
-    {
-      "from": "@535",
       "to": "@109",
-      "evidence": "mwcc emits this compiler temp as @551; the configured @109 stays the licensed name so the ov064 symbol surface is unchanged by the classInit tail merge | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @547 to @525 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @525 to @535 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "mwcc emits this compiler temp as @551; the configured @109 stays the licensed name so the ov064 symbol surface is unchanged by the classInit tail merge | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @547 to @525 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @525 to @535 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @535 to @533 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -669,7 +669,7 @@
       "source": "0x0211afd0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -689,7 +689,7 @@
       "source": "0x0211afec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -719,7 +719,7 @@
       "source": "0x0211b054",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -749,7 +749,7 @@
       "source": "0x0211b060",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"

@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 #include "nnsys/snd/player.h"
-extern "C" {
+
 extern s32 data_020a4c5c[];
 extern s32 data_020a4c4c[];
 extern u16 data_020a4c48[];
@@ -69,5 +69,4 @@ void func_020490b0(NNSSndHandle *c) {
         }
         NNS_SndPlayerSetTrackVolume(c, data_020a4c48[i], data_020a4c5c[i] >> 12);
     }
-}
 }

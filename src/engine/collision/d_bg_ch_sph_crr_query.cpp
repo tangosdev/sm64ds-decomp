@@ -29,9 +29,9 @@
 #include "math/CalcLib.h"
 
 extern "C" {
-int dBgS_ChkPolySafe(void *arg);
 extern CLPS data_020a0c78;
 }
+int dBgS_ChkPolySafe(dBgPi *hit);
 
 /* Ground and line scans use the real dBgW virtual interface and dActor_c
    clip-volume fields, as the sphere scans do below. PFN retains its pending
@@ -133,7 +133,7 @@ int dBgCh_SphCrr::DetectClsn()
 
     e = (char *)&((dM3dGSph &)*this).centre;
     int reach = ((dM3dGSph &)*this).radius + 0x1000;
-    for (int i = 1; i < 0x18; i++) {
+    for (int i = 1; i < 24; i++) {
         dBgW *o = data_020a0c80[i];
         if (o == 0) continue;
         dActor_c *owner = o->GetActor();
@@ -209,7 +209,7 @@ int dBgCh_SphCrr::DetectClsnExceptSlot0() {
     int zero = 0;
     int one = 1;
     int i;
-    for (i = 1; i < 0x18; i++) {
+    for (i = 1; i < 24; i++) {
         dBgW *o = data_020a0c80[i];
         if (o == 0)
             continue;
@@ -278,7 +278,7 @@ bool dBgCh_Lin::DetectClsn()
     dM3dGSph &sphere = mBoundSphere;
     base = &sphere.centre;
     reach = (int)sphere.radius;
-    for (i = 1; i < 0x18; i++) {
+    for (i = 1; i < 24; i++) {
         o = data_020a0c80[i];
         if (o == 0) continue;
         owner = o->GetActor();
@@ -348,7 +348,7 @@ int dBgCh_Lin::DetectClsnExceptSlot0() {
     dM3dGSph &sphere = mBoundSphere;
     base = &sphere.centre;
     reach = sphere.radius;
-    for (i = 1; i < 0x18; i++) {
+    for (i = 1; i < 24; i++) {
         o = data_020a0c80[i];
         if (o == 0)
             continue;
@@ -401,7 +401,7 @@ extern "C" void func_02038414(void *self) {
 
 /* func_02038408 @ 0x2038408 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateContinuousExceptSlot0 (0x2036acc).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-extern "C" void func_02038408(dBgCh_Actr *self) {
+void func_02038408(dBgCh_Actr *self) {
     self->UpdateContinuousExceptSlot0();
 }
 
@@ -428,8 +428,7 @@ extern "C" void func_020383e4(dBgCh_Actr *self) {
    Named after TWW's dBgS::MoveBgCrrPos, which runs the same guards and calls
    the collider's position correction; the dBgS_ prefix is coined (there is
    no dBgS object here, the table is a global). */
-extern "C" void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d) {
-    dBgPi *hit = (dBgPi *)arg;
+void dBgS_MoveBgCrrPos(dBgPi *hit, Vector3 *pos, Vector3_16 *motionAng, Vector3_16 *ang) {
     int idx;
     dBgW *obj;
     if (hit->HasCollider() == 0)
@@ -442,16 +441,14 @@ extern "C" void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d) {
         return;
     if (dBgS_ChkPolySafe(hit) == 0)
         return;
-    obj->BeforeClsn(*hit, data_020a0c80[idx]->GetActor(), *(Vector3 *)b, (Vector3_16 *)c,
-                    (Vector3_16 *)d);
+    obj->BeforeClsn(*hit, data_020a0c80[idx]->GetActor(), *pos, motionAng, ang);
 }
 
 /* Enabled-collider gate: the record must be valid, name a live table slot,
    and re-identify against its entry. Named after TWW's cBgS::ChkPolySafe,
    same checks in the same order; the dBgS_ prefix is coined. Member-called: the mangled free
    spellings emit the same bl and read worse under decl agreement. */
-extern "C" int dBgS_ChkPolySafe(void *arg) {
-    dBgPi *hit = (dBgPi *)arg;
+int dBgS_ChkPolySafe(dBgPi *hit) {
     int idx;
     dBgW *collider;
     int clsnID;
@@ -459,7 +456,7 @@ extern "C" int dBgS_ChkPolySafe(void *arg) {
     if (hit->IsValid() == 0)
         return 0;
     idx = hit->GetColliderIndex();
-    if (idx < 0 || idx >= 0x18)
+    if (idx < 0 || idx >= 24)
         return 0;
     collider = data_020a0c80[idx];
     if (collider == 0)
@@ -474,17 +471,17 @@ extern "C" int dBgS_ChkPolySafe(void *arg) {
    dispatches the entry's stored callback. Named after
    TWW's dBgS::RideCallBack (the stored callback is its ride callback); the
    dBgS_ prefix is coined. */
-extern "C" void dBgS_RideCallBack(int a, int b) {
+void dBgS_RideCallBack(dBgPi *hit, dActor_c *rider) {
     int idx;
     dBgW *entry;
     StoodOnCallback fn;
-    if (dBgS_ChkPolySafe((void *)a) == 0)
+    if (dBgS_ChkPolySafe(hit) == 0)
         return;
-    idx = ((dBgPi *)a)->GetColliderIndex();
+    idx = hit->GetColliderIndex();
     entry = data_020a0c80[idx];
     fn = entry->GetStoodOnCallback();
     if (fn == 0) return;
-    fn(entry, entry->GetActor(), (dActor_c *)b);
+    fn(entry, entry->GetActor(), rider);
 }
 
 CLPS_BlockRef::CLPS_BlockRef() : ptr(0) {}
@@ -501,7 +498,7 @@ CLPS_BlockRef &CLPS_BlockRef::operator=(CLPS_Block &block)
    table, or the default entry data_020a0c78 (reset by CLPS::SetDefault) when
    the block is missing or its entries are not 8 bytes. Written first to
    land last in the ROM (reverse emission). */
-extern "C" void func_020381cc(void *block, int idx, void **out) {
+void func_020381cc(void *block, int idx, void **out) {
     unsigned char *table = *(unsigned char **)block;
     if (table == 0 || *(unsigned short *)(table + 4) != 8) {
         data_020a0c78.SetDefault();
@@ -523,7 +520,7 @@ dBgPi::~dBgPi()
 void dBgPi::Reset()
 {
     triangleID = 0xffff;
-    colliderIdx = 0x18;
+    colliderIdx = 24;
     clsnID = -1;
     owner = 0;
     collider = 0;
@@ -575,12 +572,12 @@ void dBgPi::RecordHit(int triID, SurfaceInfo *src) {
 
 int dBgPi::HasCollider() const
 {
-    return colliderIdx != 0x18;
+    return colliderIdx != 24;
 }
 
 int dBgPi::IsValid() const
 {
-    return colliderIdx != 0x18 && triangleID != 0xffff;
+    return colliderIdx != 24 && triangleID != 0xffff;
 }
 
 int dBgPi::IsHitBy(int uid, dActor_c *actor, dBgW *clsn) const
@@ -627,7 +624,7 @@ dBgPc::~dBgPc()
 
 /* Fill a SurfaceInfo from a CLPS entry, passed by value as its two words,
    and a face normal. Opens the dBgPc run. */
-extern "C" void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal) {
+void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal) {
     info->clps.w0 = clps.w0;
     info->clps.w1 = clps.w1;
     info->normal.x = normal->x;
@@ -650,7 +647,7 @@ int CLPS::GetSoundType() const {
     return w0 & 0x1f;
 }
 
-extern "C" int SurfaceInfo_TestFlag0x20(int *p) {
+int SurfaceInfo_TestFlag0x20(int *p) {
     return p[0] & 0x20;
 }
 
@@ -704,6 +701,6 @@ void SurfaceInfo::CopyNormalTo(Vector3 &out) const
     out.z = normal.z;
 }
 
-extern "C" int func_02037dc4(int p) {
+int func_02037dc4(int p) {
     return p + 8;
 }

@@ -2,6 +2,8 @@
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
 #include "Ov007Light.h"
+#include "Ov007Texture.h"
+#include "BMD_File.h"
 #include "nitro/gx/g3x.h"
 
 /* The lights' source points: lights[0] per menu, lights[1] in menu 0. */
@@ -10,7 +12,7 @@ extern Vector3 data_ov007_020d7c28;
 
 extern void func_ov007_020bce70(short n, int m);
 extern void* func_ov007_020b3f20(int idx);
-extern void func_ov007_020b22e0(int* a, int* b, int c);
+extern void func_ov007_020b22e0(Ov007Texture *tex, struct BMD_File *file, int i);
 extern void func_ov007_020b1fa4(int self);
 extern void func_ov007_020bd4a0(int r0);
 extern void func_ov007_020b2998(void);
@@ -33,7 +35,7 @@ void func_ov007_020bd1c0(int n)
 
     h = func_ov007_020b3f20(0x16);
     for (i = 0; i < 11; i++) {
-        func_ov007_020b22e0((int *)WORK->textures[i], (int *)h, i);
+        func_ov007_020b22e0(WORK->textures[i], h, i);
     }
 
     {
@@ -42,8 +44,8 @@ void func_ov007_020bd1c0(int n)
             void* h2;
             res = t + 0x20;
             h2 = func_ov007_020b3f20(res);
-            func_ov007_020b22e0((int *)WORK->textures[2], (int *)h2, 0);
-            func_ov007_020b22e0((int *)WORK->textures[6], (int *)h2, 1);
+            func_ov007_020b22e0(WORK->textures[2], h2, 0);
+            func_ov007_020b22e0(WORK->textures[6], h2, 1);
         }
     }
 

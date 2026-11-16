@@ -35,7 +35,7 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep C linkage. The Texture_ names are coined from the
+ * The Texture_ names are coined from the
  * bodies, after the in-tree Ov007Texture (include/Ov007Texture.h); the
  * other six keep their address names for now.
  */
@@ -46,8 +46,6 @@
 #include "nitro/gx/g3imm.h"
 #include "nitro/os/system.h"
 #include "Ov007MenuMem.h"
-
-extern "C" {
 
 extern u32 data_ov007_02104bdc; /* next free texture slot */
 extern u32 data_ov007_02104be0; /* end of the palette region */
@@ -204,7 +202,7 @@ Ov007Texture *Texture_Create(int fmt, int texSrc, int sizeS, int sizeT, int pltt
  * pooled `ldr ip,[pc]; bx ip` form; bracketed because the pragma is
  * positional. */
 #pragma long_calls on
-void func_ov007_020c1620(void *tex) {
+extern "C" void func_ov007_020c1620(void *tex) {
     func_ov007_020c3d1c(tex);
 }
 #pragma long_calls off
@@ -261,7 +259,7 @@ void Texture_LoadPalette(Ov007Texture *tex) {
 }
 
 /* Loads a record's texels and palette into VRAM. */
-void func_ov007_020c14b8(Ov007Texture *tex) {
+extern "C" void func_ov007_020c14b8(Ov007Texture *tex) {
     Texture_LoadTexels(tex);
     Texture_LoadPalette(tex);
 }
@@ -269,7 +267,8 @@ void func_ov007_020c14b8(Ov007Texture *tex) {
 /* Binds a record's texels for drawing: TEXIMAGE_PARAM gets its VRAM slot,
  * format and size with the given coordinate source (texGen), repeat, flip
  * and colour-0 bits. No record selects no texture. */
-void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u32 color0) {
+extern "C" void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip,
+                                    u32 color0) {
     if (self != 0) {
         G3_TexImageParam((GXTexFmt)self->fmt, (GXTexGen)texGen, (GXTexSizeS)self->sizeS,
                          (GXTexSizeT)self->sizeT, (GXTexRepeat)repeat, (GXTexFlip)flip,
@@ -282,12 +281,10 @@ void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u
 /* Binds a record's palette for drawing: PLTT_BASE gets its VRAM slot, in
  * 8-byte units for 4-colour textures (format 2) and 16-byte units
  * otherwise. No record writes 0. */
-void Texture_BindPalette(Ov007Texture *tex) {
+extern "C" void Texture_BindPalette(Ov007Texture *tex) {
     if (tex) {
         G3_TexPlttBase(tex->plttAddr, (GXTexFmt)tex->fmt);
     } else {
         reg_G3_TEXPLTT_BASE = 0;
     }
 }
-
-} // extern "C"

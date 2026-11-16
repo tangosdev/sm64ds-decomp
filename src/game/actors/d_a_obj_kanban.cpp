@@ -163,7 +163,7 @@ int daObjKanban_c::InitResources() {
  * what runs dBgActor_c's base step, stores the vptr and then
  * constructs the dCcAcPos_c at 0x320, in that order, and `operator
  * new` is fBase_c's. */
-extern "C" daObjKanban_c *daObjKanban_c_classInit(void) {
+daObjKanban_c *daObjKanban_c_classInit(void) {
     return new daObjKanban_c();
 }
 

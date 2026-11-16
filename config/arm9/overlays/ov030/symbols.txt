@@ -5,13 +5,13 @@ _ZN13daObjHmBskt_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111
 _ZN13daObjHmBskt_c6RenderEv kind:function(arm,size=0x34) addr:0x02111350
 _ZN13daObjHmBskt_c8BehaviorEv kind:function(arm,size=0x8c) addr:0x02111384
 _ZN13daObjHmBskt_c13InitResourcesEv kind:function(arm,size=0x114) addr:0x02111410
-daObjHmBskt_c_classInit kind:function(arm,size=0x38) addr:0x02111524
+_Z23daObjHmBskt_c_classInitv kind:function(arm,size=0x38) addr:0x02111524
 _ZN15daObjHmMaruta_cD1Ev kind:function(arm,size=0x50) addr:0x0211155c
 _ZN15daObjHmMaruta_cD0Ev kind:function(arm,size=0x64) addr:0x021115ac
 _ZN15daObjHmMaruta_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111610
 _ZN15daObjHmMaruta_c8BehaviorEv kind:function(arm,size=0x14) addr:0x02111624
 _ZN15daObjHmMaruta_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111638
-daObjHmMaruta_c_classInit kind:function(arm,size=0x3c) addr:0x0211164c
+_Z25daObjHmMaruta_c_classInitv kind:function(arm,size=0x3c) addr:0x0211164c
 _ZN7daMky_cD1Ev kind:function(arm,size=0x48) addr:0x02111688
 _ZN7daMky_cD0Ev kind:function(arm,size=0x5c) addr:0x021116d0
 _ZN7daMky_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x0211172c
@@ -56,8 +56,8 @@ _ZN7daMky_c6RenderEv kind:function(arm,size=0x48) addr:0x02114230
 _ZN7daMky_c8BehaviorEv kind:function(arm,size=0x100) addr:0x02114278
 _ZN7daMky_c13InitResourcesEv kind:function(arm,size=0x25c) addr:0x02114378
 _ZN7daMky_c13OnTurnIntoEggER7daPly_c kind:function(arm,size=0xc) addr:0x021145d4
-daMky_c_classInit_MONKEY_STAR kind:function(arm,size=0x58) addr:0x021145e0
-daMky_c_classInit_MONKEY_THIEF kind:function(arm,size=0x58) addr:0x02114638
+_Z29daMky_c_classInit_MONKEY_STARv kind:function(arm,size=0x58) addr:0x021145e0
+_Z30daMky_c_classInit_MONKEY_THIEFv kind:function(arm,size=0x58) addr:0x02114638
 data_ov030_02114690 kind:data(any) addr:0x02114690
 data_ov030_02114694 kind:data(any) addr:0x02114694
 data_ov030_02114698 kind:data(any) addr:0x02114698

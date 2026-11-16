@@ -224,7 +224,7 @@ struct daStar_c : dEnemyBase_c {
     void InitKind8();
     void SpawnCollectSoundObj(int arg);
     void CheckIceBlock();
-    void CollectNoPose(int arg);
+    void CollectNoPose(daPly_c *arg);
     void SeekNewMarker(char *a, int gate);
     u8 PickTalkState();
     void RelinkMarker();

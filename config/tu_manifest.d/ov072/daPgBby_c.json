@@ -262,7 +262,7 @@
       "ordinal": 30
     },
     {
-      "symbol": "daPgBby_c_classInit",
+      "symbol": "_Z19daPgBby_c_classInitv",
       "address": "0x02121fac",
       "size": "0x00000050",
       "legacy_source": "src/d_a_pg_bby.c",
@@ -942,127 +942,127 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@852",
+      "from": "@846",
       "to": "data_ov072_02122a34",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @916 to @852 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @852 to @860 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @860 to @852 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@848",
-      "to": "data_ov072_02122a44",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @912 to @848 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @848 to @856 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @856 to @848 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@850",
-      "to": "data_ov072_02122a3c",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @914 to @850 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @850 to @858 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @858 to @850 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@862",
-      "to": "data_ov072_02122a24",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @926 to @862 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @862 to @870 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @870 to @862 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@844",
-      "to": "data_ov072_02122a4c",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @908 to @844 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @844 to @852 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @852 to @844 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @916 to @852 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @852 to @860 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @860 to @852 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @852 to @846 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@842",
-      "to": "data_ov072_02122a14",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @906 to @842 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @842 to @850 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @850 to @842 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "to": "data_ov072_02122a44",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @912 to @848 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @848 to @856 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @856 to @848 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @848 to @842 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@846",
-      "to": "data_ov072_02122a0c",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @910 to @846 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @846 to @854 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @854 to @846 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@860",
-      "to": "data_ov072_021229f4",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @924 to @860 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @860 to @868 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @868 to @860 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "from": "@844",
+      "to": "data_ov072_02122a3c",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @914 to @850 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @850 to @858 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @858 to @850 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @850 to @844 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@856",
-      "to": "data_ov072_02122a04",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @920 to @856 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @856 to @864 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @864 to @856 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@854",
-      "to": "data_ov072_02122a2c",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @918 to @854 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @854 to @862 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @862 to @854 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@840",
-      "to": "data_ov072_021229fc",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @904 to @840 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @840 to @848 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @848 to @840 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@858",
-      "to": "data_ov072_02122a1c",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @922 to @858 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @858 to @866 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @866 to @858 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@833",
-      "to": "data_ov072_02122d00",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @897 to @833 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @833 to @841 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @841 to @833 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@834",
-      "to": "data_ov072_02122d0c",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @898 to @834 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @834 to @842 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @842 to @834 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@835",
-      "to": "data_ov072_02122d18",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @899 to @835 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @835 to @843 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @843 to @835 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@836",
-      "to": "data_ov072_02122d24",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @900 to @836 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @836 to @844 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @844 to @836 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@837",
-      "to": "data_ov072_02122d30",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @901 to @837 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @837 to @845 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @845 to @837 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "to": "data_ov072_02122a24",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @926 to @862 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @862 to @870 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @870 to @862 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @862 to @856 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@838",
+      "to": "data_ov072_02122a4c",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @908 to @844 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @844 to @852 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @852 to @844 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @844 to @838 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@836",
+      "to": "data_ov072_02122a14",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @906 to @842 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @842 to @850 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @850 to @842 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @842 to @836 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@840",
+      "to": "data_ov072_02122a0c",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @910 to @846 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @846 to @854 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @854 to @846 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @846 to @840 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@854",
+      "to": "data_ov072_021229f4",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @924 to @860 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @860 to @868 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @868 to @860 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @860 to @854 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@850",
+      "to": "data_ov072_02122a04",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @920 to @856 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @856 to @864 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @864 to @856 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @856 to @850 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@848",
+      "to": "data_ov072_02122a2c",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @918 to @854 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @854 to @862 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @862 to @854 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @854 to @848 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@834",
+      "to": "data_ov072_021229fc",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @904 to @840 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @840 to @848 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @848 to @840 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @840 to @834 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@852",
+      "to": "data_ov072_02122a1c",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @922 to @858 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @858 to @866 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @866 to @858 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @858 to @852 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@827",
+      "to": "data_ov072_02122d00",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @897 to @833 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @833 to @841 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @841 to @833 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @833 to @827 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@828",
+      "to": "data_ov072_02122d0c",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @898 to @834 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @834 to @842 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @842 to @834 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @834 to @828 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@829",
+      "to": "data_ov072_02122d18",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @899 to @835 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @835 to @843 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @843 to @835 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @835 to @829 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@830",
+      "to": "data_ov072_02122d24",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @900 to @836 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @836 to @844 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @844 to @836 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @836 to @830 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@831",
+      "to": "data_ov072_02122d30",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @901 to @837 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @837 to @845 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @845 to @837 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @837 to @831 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@832",
       "to": "data_ov072_02122cc4",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @902 to @838 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @838 to @846 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @846 to @838 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @902 to @838 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @838 to @846 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @846 to @838 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @838 to @832 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@858",
+      "to": "data_ov072_02122cd0",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @928 to @864 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @864 to @872 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @872 to @864 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @864 to @858 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@861",
+      "to": "data_ov072_02122cdc",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @931 to @867 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @867 to @875 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @875 to @867 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @867 to @861 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@864",
-      "to": "data_ov072_02122cd0",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @928 to @864 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @864 to @872 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @872 to @864 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "to": "data_ov072_02122ce8",
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @934 to @870 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @870 to @878 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @878 to @870 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @870 to @864 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@867",
-      "to": "data_ov072_02122cdc",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @931 to @867 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @867 to @875 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @875 to @867 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@870",
-      "to": "data_ov072_02122ce8",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @934 to @870 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @870 to @878 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @878 to @870 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
-    },
-    {
-      "from": "@873",
       "to": "data_ov072_02122cf4",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @937 to @873 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @873 to @881 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @881 to @873 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @937 to @873 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @873 to @881 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @881 to @873 when d_a_pg_bby dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @873 to @867 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     }
   ],
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN14PgBbyModelFileC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "Native local wrapper lifecycle or compiler runtime call; exact retail initializer PC24/ABS32 destination and existing SharedFilePtr implementation"
     },
     {
       "symbol": "_ZN14PgBbyModelFileD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "Native local wrapper lifecycle or compiler runtime call; exact retail initializer PC24/ABS32 destination and existing SharedFilePtr implementation"
@@ -1376,7 +1376,7 @@
       "source": "0x02122424",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1546,7 +1546,7 @@
       "source": "0x0212266c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1976,7 +1976,7 @@
       "source": "0x02122a6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daPgBby_c_classInit",
+      "symbol": "_Z19daPgBby_c_classInitv",
       "addend": 0,
       "target_module": "overlay(72)",
       "target_address": "0x02121fac"

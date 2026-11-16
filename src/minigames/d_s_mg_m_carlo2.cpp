@@ -9,7 +9,6 @@
  * leftovers:
  *   - the ov004 helpers and the data_ov006 globals are unnamed in
  *     symbols.txt.
- *   - the Dealer_* helpers are still free functions over mDealer.
  */
 
 #include "dScMgMCarlo2_c.h"
@@ -24,6 +23,10 @@
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "math/CalcLib.h"
+extern "C" void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
+extern "C" void Hud_RenderSprite(void *attr, int, int, int, int);
+extern "C" void Mg_CommitRecords(void);
+extern "C" s32 GetGameLanguage(void);
 
 /* sMCarlo2Cards is the head of the live card list and _02142568 its
  * tail (SetupBoard builds it); _0214256c heads the list of cleared cards,
@@ -32,47 +35,65 @@
  * last one on the board, where the draw passes start. */
 
 /* Globals that decl_common.h does not already declare with these types. */
-extern "C" {
+
 extern dMgMCarlo2CardObj_c *sMCarlo2CardTail;
+
 extern dMgMCarlo2CardObj_c *sMCarlo2CardHead;
+
 extern dMgMCarlo2CardObj_c *sMCarlo2FirstPick;
+
 extern dMgMCarlo2CardObj_c *sMCarlo2SecondPick;
+
 extern dMgMCarlo2CardObj_c *sMCarlo2CardsTail;
+
 extern dMgMCarlo2CardObj_c *sMCarlo2Cards;
-extern s16 sMCarlo2BoardDelay;   /* frames left before the pair resolves  */
-extern s16 sMCarlo2CardsMoving;  /* pieces still animating                */
-extern s16 sMCarlo2BoardStep;    /* difficulty row into sMCarlo2BoardRows */
-extern int sMCarlo2FaceCounts[]; /* per-face weights the picker draws from  */
+
+extern s16 sMCarlo2BoardDelay;
+/* frames left before the pair resolves  */
+extern s16 sMCarlo2CardsMoving;
+/* pieces still animating                */
+extern s16 sMCarlo2BoardStep;
+/* difficulty row into sMCarlo2BoardRows */
+extern int sMCarlo2FaceCounts[];
+/* per-face weights the picker draws from  */
 /* Twenty-three sprite words. The static initializer copies them out of
  * sMgCardSprites in this order; an in-order copy does not. */
 struct Carlo2SpriteWords {
-    int a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,a16,a17,a18,a19,a20,a21,a22;
+    int w[23];
 };
-extern int sMgCardSprites[];
-extern Carlo2SpriteWords sMCarlo2CardSprites;
-extern unsigned short sMCarlo2CardFrameSprites[];
-extern int sMCarlo2StartFaceCounts[]; /* the starting weights                     */
-extern int sMCarlo2BoardRows[][10];   /* per-difficulty weight top-ups          */
-extern int data_020a0db0;
-extern unsigned char gSubScreenLayers;
-extern unsigned char gMainScreenLayers;
 
-void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
-void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
-int  GetGameLanguage(void);
+extern int sMgCardSprites[];
+
+extern Carlo2SpriteWords sMCarlo2CardSprites;
+
+extern unsigned short sMCarlo2CardFrameSprites[];
+
+extern int sMCarlo2StartFaceCounts[];
+/* the starting weights                     */
+extern int sMCarlo2BoardRows[][10];
+/* per-difficulty weight top-ups          */
+extern int data_020a0db0;
+
+extern unsigned char gSubScreenLayers;
+
+extern unsigned char gMainScreenLayers;
+extern "C" {
 void *LoadFile(int handle);
+
 void DecompressLZ16(void *src, void *dst);
-void Vec2_Sub(int* out, int* a, int* b);
-int  func_0203d5dc(void* a, void* b);
-void Mg_CommitRecords(void);
-void Mg_SubmitScore(int score);
+
+extern "C" void Vec2_Sub(int *out, int *a, int *b);
+}
+
+int func_0203d5dc(const int *a, const int *b);
 void LoadCard2SubBg3(void *);
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 int Dealer_IsIdle(Dealer *dealer);
-void Dealer_Draw(void* t);
-void Dealer_Update(Dealer *t);
-int  Dealer_Load(void* t);
-
+extern "C" {
+void Dealer_Draw(void *t);
+}
+extern "C" {
+int Dealer_Load(void *t);
 }
 
 /* C++ linkage: the reference parameters are part of the ROM names. */
@@ -84,8 +105,7 @@ dMgMCarlo2CardObj_c::dMgMCarlo2CardObj_c()
 
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, then mDealer and the card array in declaration order. */
-extern "C" void* dScMgMCarlo2_c_classInit()
-{
+void *dScMgMCarlo2_c_classInit() {
     return new dScMgMCarlo2_c;
 }
 
@@ -111,7 +131,7 @@ s32 dScMgMCarlo2_c::InitResources()
     G2_SetBG0Priority(1);
     G2S_SetBG1Priority(0);
     Camera_InitDealerView(&mCamera);
-    if (Dealer_Load(&mDealer) == 0)
+    if (mDealer.Load() == 0)
         return 0;
     Mg_PlaceBannersOnTopScreen();
     StartRound(-1);
@@ -129,7 +149,7 @@ void dScMgMCarlo2_c::StartRound(int /* arg */)
     sMCarlo2PickAllowed = 0;
     mDealCount = 0;
     mDealer.mReserved = 1;
-    Dealer_StartShuffle(&mDealer, 4, 4, &mDealCount);
+    mDealer.StartShuffle(4, 4, &mDealCount);
     mDealer.mHand = 1;
     mTimer = 0;
     Mg_SubmitScore(0);
@@ -141,7 +161,7 @@ int dScMgMCarlo2_c::CanEndState(int /* mode */)
     short state = mRoundState;
     switch (state) {
     case 4:
-        if (Dealer_IsIdle(&mDealer) != 0) {
+        if (mDealer.IsIdle() != 0) {
             mRoundState++;
         }
         break;
@@ -156,7 +176,7 @@ int dScMgMCarlo2_c::CanEndState(int /* mode */)
         if (found != 0) {
             short *p;
             func_02012790(0x62);
-            mTimer = 0x1e;
+            mTimer = 30;
             dScMgMCarlo2_c::FlipDealtCards();
             p = &mRoundState;
             *p += 1;
@@ -200,11 +220,10 @@ s32 dScMgMCarlo2_c::Behavior()
             if (sMCarlo2PickAllowed == 1)
                 sMCarlo2PickAllowed = 0;
             dealt = sMCarlo2DealProgress >> 12;
-            if (sMCarlo2DeckSize != 0 && dealt > 10 && dealt <= 18 &&
-                Dealer_IsIdle(&mDealer) != 0) {
+            if (sMCarlo2DeckSize != 0 && dealt > 10 && dealt <= 18 && mDealer.IsIdle() != 0) {
                 mDealCount = 0;
                 mDealer.mReserved = 0;
-                Dealer_StartReveal(&mDealer, 2, &mDealCount);
+                mDealer.StartReveal(2, &mDealCount);
                 if (sMCarlo2DeckSize == 2)
                     mDealer.mHand = 0;
             } else {
@@ -223,8 +242,8 @@ s32 dScMgMCarlo2_c::Behavior()
                     if (sMCarlo2CardsWanted != 0) {
                         if (mDealer.mHand == 1) {
                             mDealer.mHand = 0;
-                        } else if (Dealer_IsIdleAtRest(&mDealer) != 0) {
-                            Dealer_PlayLose(&mDealer);
+                        } else if (mDealer.IsIdleAtRest() != 0) {
+                            mDealer.PlayLose();
                             Mg_SetSharedState(MG_STATE_GAME_OVER);
                             mPromptEnabled = 0;
                             mRoundState++;
@@ -237,7 +256,7 @@ s32 dScMgMCarlo2_c::Behavior()
         break;
     }
 
-    Dealer_Update(&mDealer);
+    mDealer.Update();
     dScMgMCarlo2_c::UpdateBoard();
     return 1;
 }
@@ -259,13 +278,13 @@ s32 dScMgMCarlo2_c::Render()
         score = 0x270f;
     Mg_DrawNumber(0xe8, 0x28, score, 1, -1, 0, 0);
 
-    RenderOamMainScreen(sMCarloHudSprite, 0xe8, 0x18, -1, -1);
+    RenderOamMainScreen(sMCarloHudSprite, 232, 24, -1, -1);
 
     if (this->mRoundState == 5)
         Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
 
     lifted = sMCarlo2CardsTail;
-    for (i = 0; i < 0x14; i++) {
+    for (i = 0; i < 20; i++) {
         if (lifted == 0)
             break;
         if (lifted->mYStep > 0)
@@ -274,7 +293,7 @@ s32 dScMgMCarlo2_c::Render()
     }
 
     flat = sMCarlo2CardsTail;
-    for (j = 0; j < 0x14; j++) {
+    for (j = 0; j < 20; j++) {
         if (flat == 0)
             break;
         if (flat->mYStep == 0)
@@ -282,7 +301,7 @@ s32 dScMgMCarlo2_c::Render()
         flat = flat->mPrev;
     }
 
-    Dealer_Draw(&mDealer);
+    mDealer.Draw();
     return 1;
 }
 
@@ -294,11 +313,11 @@ s32 dScMgMCarlo2_c::CleanupResources()
 }
 
 void dMgMCarlo2CardObj_c::Init(int slot){
-    mSlot = (short)slot;
+    mSlot = slot;
     if (slot >= 0x14) {
         mDealDelay = 1;
     } else {
-        mDealDelay = (short)(((slot % 5) << 1) + 1);
+        mDealDelay = (((slot % 5) << 1) + 1);
     }
     mLift = 0;
     if (slot == 0x13)
@@ -307,7 +326,7 @@ void dMgMCarlo2CardObj_c::Init(int slot){
     mXStep = 0;
     mYStep = 0;
     mState = 0;
-    mFace = (unsigned char)dScMgMCarlo2_c::DrawCardValue();
+    mFace = dScMgMCarlo2_c::DrawCardValue();
     mNext = 0;
     mPrev = mNext;
 }
@@ -336,7 +355,7 @@ void dMgMCarlo2CardObj_c::DealIn(int slot)
 
     mTargetX = ((slot % 5) * 32 + 0x30) << 12;
     mTargetY = ((slot / 5) * 0x30) << 12;
-    mSlot = (short)slot;
+    mSlot = slot;
 
     Vec2_Sub(delta, &mTargetX, &mX);
 
@@ -351,7 +370,7 @@ void dMgMCarlo2CardObj_c::DealIn(int slot)
 }
 
 void dMgMCarlo2CardObj_c::FlipAway(int order) {
-    mDealDelay = (short)((4 - order % 5) * 2);
+    mDealDelay = ((4 - order % 5) * 2);
     mState = 5;
 }
 
@@ -408,8 +427,8 @@ void dMgMCarlo2CardObj_c::Update(int slot)
     case 0:
         {
             short *p = &mDealDelay;
-            short v = *(short *)p;
-            *(short *)p = (short)(v - 1);
+            short v = *p;
+            *p = (v - 1);
         }
         if (mDealDelay != 0)
             return;
@@ -431,7 +450,7 @@ void dMgMCarlo2CardObj_c::Update(int slot)
         }
         if (IsPairWith(sMCarlo2FirstPick) != 0) {
             sMCarlo2SecondPick = this;
-            sMCarlo2BoardDelay = 0x20;
+            sMCarlo2BoardDelay = 32;
             mState = 3;
             Sound::PlayBank2_2D(0x154);
             return;
@@ -485,7 +504,7 @@ void dMgMCarlo2CardObj_c::Render()
     {
         int idx = (mFace + 1) * 5 + (mLift >> 12);
         unsigned short sprite = sMCarlo2CardFrameSprites[idx];
-        Hud_RenderSprite((void *)((int *)&sMCarlo2CardSprites)[sprite], (mX >> 12) + 0x18,
+        Hud_RenderSprite((void *)sMCarlo2CardSprites.w[sprite], (mX >> 12) + 0x18,
                          (mY >> 12) + 0x18, -1, -1);
     }
 }
@@ -507,7 +526,7 @@ void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
                 p->Init(j);
                 p = p + 1;
                 j = j + 1;
-            } while (j < 0x28);
+            } while (j < 40);
         }
         sMCarlo2CardTail = 0;
         sMCarlo2Cards = base;
@@ -540,7 +559,7 @@ void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
                     sMCarlo2CardTail = t;
                 h = h + 1;
                 i++;
-            } while (i < 0x27);
+            } while (i < 39);
         }
     } while (HasRemovablePair() == 0);
 }
@@ -549,9 +568,9 @@ int dScMgMCarlo2_c::HasRemovablePair()
 {
     dMgMCarlo2CardObj_c *p, *q;
     p = sMCarlo2Cards;
-    while (p != 0 && p->mSlot < 0x14) {
+    while (p != 0 && p->mSlot < 20) {
         q = p->mNext;
-        while (q != 0 && q->mSlot < 0x14) {
+        while (q != 0 && q->mSlot < 20) {
             if (p->IsPairWith(q) != 0) return 1;
             q = q->mNext;
         }
@@ -594,14 +613,14 @@ int dScMgMCarlo2_c::DrawCardValue(){
     int total = 0;
     int i;
     int roll;
-    for (i = 0; i < 0xa; i++)
+    for (i = 0; i < 10; i++)
         total += sMCarlo2FaceCounts[i];
-    roll = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+    roll = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     total = (total * roll) >> 0xc;
-    for(i=0;i<0xa;i++){
+    for (i = 0; i < 10; i++) {
         total -= sMCarlo2FaceCounts[i];
         if(total < 0){
-            pick = (unsigned char)i;
+            pick = i;
             sMCarlo2FaceCounts[i]--;
             break;
         }

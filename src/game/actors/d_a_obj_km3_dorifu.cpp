@@ -56,7 +56,7 @@ typedef char DorifuClsnFileHandle_size_must_be_8[sizeof(DorifuClsnFileHandle) ==
 
 extern daObjDorifuResources data_ov047_02112508[5];
 
-extern "C" daObjKm3_Dorifu_c *daObjKm3_Dorifu_c_classInit() {
+daObjKm3_Dorifu_c *daObjKm3_Dorifu_c_classInit() {
     return new daObjKm3_Dorifu_c();
 }
 

@@ -16,7 +16,7 @@ void Message::SetTextGlobals() {
     int infoSection = bankBase + 0x20;
     gMessageBankHeader = bankBase;
     gMessageInfoSection = infoSection;
-    int dataSection = infoSection + *(int *)(infoSection + 4);
+    int dataSection = infoSection + ((MessageInfoSection *)infoSection)->sectionSize;
     gMessageDataSection = dataSection;
     gMessageEntries = bankBase + 0x30;
 }

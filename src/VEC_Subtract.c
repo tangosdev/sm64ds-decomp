@@ -1,8 +1,7 @@
-/* One of the arm9 Vector3 helpers: c = a - b, per axis. See src/VEC_Add.c on
-   why a C file sees Vector3 as a plain triple. */
-#include "common.h"
+/* c = a - b, per axis (NitroSDK fx_vec.c). */
+#include "nitro/fx/fx_vec.h"
 
-void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c) {
+void VEC_Subtract(const VecFx32 *a, const VecFx32 *b, VecFx32 *c) {
     c->x = a->x - b->x;
     c->y = a->y - b->y;
     c->z = a->z - b->z;

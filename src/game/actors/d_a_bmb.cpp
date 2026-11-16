@@ -88,26 +88,25 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern "C" {
 
 /* -- other modules -- */
-void  GiveCoins(int who, int count);
-int   SurfaceInfo_TestFlag0x20(int *si);
 /* 0x0203b0e8. Not declared in math/CalcLib.h (a shared header); callers spell it int, int. */
 int AngleDiff(int, int);
 /* The out-of-line stores of mWithMeshClsn's radius and height. */
 /* local extern: no header declares these; each is spelled as its
    definition is (d_bg_actor.cpp, d_a_ply_methods.cpp, src/). */
-int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other);
 int func_ov002_020e496c(daPly_c *c);
 int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
 void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 int *Vec3_LslInPlace(int *v, int sh);
-/* Real definitions: func_0201267c and func_0200fc44 (arm9).
-   The methods call through these so the names stay unmangled. */
-int func_0200fc44(dActor_c *a, Vector3 *pos, int flag);
+/* Real definition: func_0201267c (arm9). The methods call through it so the
+   name stays unmangled. */
 
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
 extern unsigned char gGameMode;
 }
+void GiveCoins(int who, int count);
+int SurfaceInfo_TestFlag0x20(int *si);
+int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other);
 
 /* ==========================================================================
  *
@@ -127,13 +126,9 @@ extern unsigned char gGameMode;
  * Historical alias: BobOmb_Spawn.
  * ======================================================================== */
 
-extern "C" {
-
 daBmb_c *daBmb_c_classInit(void)
 {
     return new daBmb_c();
-}
-
 }
 
 extern "C" SpawnInfo<daBmb_c> g_profile_BOMBHEI = {
@@ -201,9 +196,9 @@ int daBmb_c::InitResources()
     *(Matrix4x3 *)mMatrix = IDENTITY_MATRIX4X3;
     mTurnTimer = 0;
     mFuse = 0;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScaleX = FX32_ONE;
+    mScaleY = FX32_ONE;
+    mScaleZ = FX32_ONE;
     mCarrier = 0;
     mTurnCount = 0;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
@@ -264,12 +259,12 @@ int daBmb_c::Behavior()
     if (mState != 5) {
         if (mVertAccel != 0) {
             if ((mdCc_c.hitFlags & 0x10) != 0) {
-                short v[3];
-                other = dActor_c::FindWithID(mdCc_c.otherOwner);
-                v[0] = -0x2000;
-                v[1] = 0;
-                v[2] = 0;
-                KillByInvincibleChar(*(Vector3_16 *)v, *(daPly_c *)other, 0x32000);
+                Vector3_16 spin;
+                daPly_c *player = (daPly_c *)dActor_c::FindWithID(mdCc_c.otherOwner);
+                spin.x = -0x2000;
+                spin.y = 0;
+                spin.z = 0;
+                KillByInvincibleChar(spin, *player, 0x32000);
                 UpdatePos(&mdCc_c);
                 UpdateWMClsn(mWithMeshClsn, 0);
                 mdCc_c.Clear();
@@ -374,7 +369,7 @@ void daBmb_c::func_ov102_0214c0b8() {
     else
         mHorzSpeed = 0x5000;
     mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
-    mTurnTimer = 0x200;
+    mTurnTimer = 512;
     mVertAccel = -0x2000;
     mCarrier = 0;
 }
@@ -464,22 +459,23 @@ void daBmb_c::func_ov102_0214beb4() {
 void daBmb_c::State1() {
     if (mChasePlayer == 0) {
         mAnmModel.speed = 0x800;
-        ApproachLinear(mPrevAngleY, *(short *)&mTargetAngY, 0x400);
+        ApproachLinear(mPrevAngleY, (short)mTargetAngY, 0x400);
     } else {
         mAnmModel.speed = 0x1000;
-        ApproachLinear(mPrevAngleY, *(short *)&mTargetAngY, 0x800);
+        ApproachLinear(mPrevAngleY, (short)mTargetAngY, 0x800);
     }
     mAngleY = mPrevAngleY;
     mAnmModel.dExtFrameCtrl_c::Advance();
     if (mState == 2) return;
-    if (mPrevAngleY != *(short *)&mTargetAngY) return;
+    if (mPrevAngleY != (short)mTargetAngY)
+        return;
     func_ov102_0214c0b8();
 }
 
 /* ==========================================================================
  *
- * mState arm 2. The first argument is this Bob-omb. It calls func_0200fc44
- * through the file-scope three-argument prototype, the definition's own.
+ * mState arm 2. It calls the inherited dActor_c::func_0200fc44 at this
+ * Bob-omb's position.
  * ======================================================================== */
 
 void daBmb_c::func_ov102_0214bd90(){
@@ -488,7 +484,7 @@ void daBmb_c::func_ov102_0214bd90(){
     v.x = mPosX;
     v.y = mPosY;
     v.z = mPosZ;
-    func_0200fc44(this, &v, 1);
+    func_0200fc44(&v, 1);
   }
   if (mWithMeshClsn.IsOnGround()) {
     if (mChasePlayer == 0) {
@@ -625,9 +621,9 @@ void daBmb_c::func_ov102_0214baa0() {
     mChasePlayer = 0;
     mCarrier = 0;
     mFuse = 0;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScaleX = FX32_ONE;
+    mScaleY = FX32_ONE;
+    mScaleZ = FX32_ONE;
     mAngleX = 0;
     mAngleY = 0;
     mAngleZ = 0;
@@ -735,7 +731,7 @@ void daBmb_c::func_ov102_0214b53c() {
                 idx = 1;
             }
             if (mCarrier->param1 == 2) {
-                idx = (u8)(idx + 2);
+                idx = (idx + 2);
             }
             Math_Function_0203b14c(mCarryOff, gBmbCarryOffsets[idx].x, 0x800, 0x3e8000, 4);
             Math_Function_0203b14c(&mCarryOff[1], gBmbCarryOffsets[idx].y, 0x800, 0x3e8000, 4);
@@ -863,7 +859,6 @@ do_call:
     mCarrier = (daPly_c *)a1;
     func_ov102_0214bd20();
 }
-
 }
 
 /* ==========================================================================
@@ -1146,7 +1141,7 @@ after_cannon:
         mVariant = 3;
         mState = 0;
         mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
-        mTurnTimer = 0x200;
+        mTurnTimer = 512;
         mVertAccel = -0x2000;
         mdCc_c.flags &= ~2u;
     }
@@ -1213,7 +1208,7 @@ int daBmb_c::func_ov102_0214aa18() {
             v.x = mPosX;
             v.y = mPosY;
             v.z = mPosZ;
-            func_0200fc44(this, &v, 1);
+            func_0200fc44(&v, 1);
         }
         if (mWithMeshClsn.IsOnGround() == 0)
             return 1;

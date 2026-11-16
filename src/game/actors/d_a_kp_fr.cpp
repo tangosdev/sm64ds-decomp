@@ -16,7 +16,7 @@
  *   order; the inline destructor group comes out retail D1 then D0, no D2.
  *   Mtx43, the flat type for the IDENTITY_MATRIX4X3 copy: the nested
  *   math/Matrix.h spelling (via dExtShadowModel_c.h) scalarizes it.
- *   Fix12i[3] locals instead of Vector3, which declares its own
+ *   fx32[3] locals instead of Vector3, which declares its own
  *   destructor.
  *   FX_MUL's 64-bit product (one smull) in func_ov070_02121d50 is the
  *   matching form.
@@ -42,8 +42,7 @@
 /* The registry factory behind the KERONPA_FIRE profile.
  * `return new daKpFr_c()` emits 0x48 with the synthesized ctor storing
  * `_ZTV8daKpFr_c + 2`. Historical aliases: daKpFr_c_Spawn, FlameChompFire_Spawn. */
-extern "C" daKpFr_c *daKpFr_c_classInit(void)
-{
+daKpFr_c *daKpFr_c_classInit(void) {
     return new daKpFr_c();
 }
 
@@ -52,23 +51,14 @@ extern "C" daKpFr_c *daKpFr_c_classInit(void)
  * later EAD lineage supplies the spelling prior. Exact original SM64DS
  * spellings are not preserved. Historical aliases: daKpFr_c_Spawn and
  * daKpFr_c_SpawnInfo. The descriptor is at ov070:0x02123424. */
-extern "C" SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
-    daKpFr_c_classInit,
-    0x010f,
-    0x0082,
-    0x00000006,
-    0x0001e000,
-    0x0003c000,
-    0x01000000,
-    0x01000000
-};
+SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
+    daKpFr_c_classInit, 0x010f, 0x0082, 0x00000006, 0x0001e000, 0x0003c000, 0x01000000, 0x01000000};
 
 #include "decl_common.h"
 #include "dBgCh_Actr.h"
 #include "private/mtx43.h"
-extern "C" {
+
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-}
 
 int daKpFr_c::InitResources()
 {
@@ -118,13 +108,13 @@ int daKpFr_c::CleanupResources()
     return 1;
 }
 
-extern "C" daKpFrState data_ov070_021236ec[];
+extern daKpFrState data_ov070_021236ec[];
 /* The ROM PMF constants the state table copies from (unlicensed .data):
  * the init/behavior halves of the two states, in retail copy order. */
-extern "C" daKpFrStateMethod data_ov070_021233ec;
-extern "C" daKpFrStateMethod data_ov070_021233fc;
-extern "C" daKpFrStateMethod data_ov070_021233f4;
-extern "C" daKpFrStateMethod data_ov070_02123404;
+extern daKpFrStateMethod data_ov070_021233ec;
+extern daKpFrStateMethod data_ov070_021233fc;
+extern daKpFrStateMethod data_ov070_021233f4;
+extern daKpFrStateMethod data_ov070_02123404;
 
 void daKpFr_c::func_ov070_02122044(int idx)
 {
@@ -188,8 +178,6 @@ int daKpFr_c::func_ov070_02121eb0() {
     return 1;
 }
 
-/* Fix12-by-value, notes/mwccarm-codegen.md 6az -- header method form homes the
-   class args. */
 void daKpFr_c::func_ov070_02121e14() {
   int shadowDepth;
   mMatrix.t.x = mPosX >> 3;
@@ -201,7 +189,7 @@ void daKpFr_c::func_ov070_02121e14() {
     shadowDepth = (mPosY - ground.clsnY) + 0x1e000;
   else
     shadowDepth = 0x12c000;
-  DropShadowRadHeight(mShadowModel, mMatrix, 0x64000, shadowDepth, 0xf);
+  DropShadowRadHeight(mShadowModel, mMatrix, 0x64000, shadowDepth, 15);
 }
 
 /* GetFloorResult is not declared in the shared header yet; keep only that
@@ -210,7 +198,7 @@ void daKpFr_c::func_ov070_02121e14() {
 
 void daKpFr_c::func_ov070_02121d50(void* vclsn) {
     dBgCh_Actr* clsn = (dBgCh_Actr*)vclsn;
-    Fix12i normal[3];
+    fx32 normal[3];
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(*(Vector3 *)normal);
@@ -224,7 +212,7 @@ void daKpFr_c::func_ov070_02121d50(void* vclsn) {
         func_ov070_02121c8c();
 }
 
-extern "C" void func_02012694(unsigned int id, void *pos);
+void func_02012694(unsigned int id, const Vector3 *pos);
 
 void daKpFr_c::func_ov070_02121cbc(){
   dActor_c* found;
@@ -249,22 +237,22 @@ void daKpFr_c::func_ov070_02121cbc(){
 
 void daKpFr_c::func_ov070_02121c8c()
 {
-    func_02012694(0x166, &mCamSpacePosX);
+    func_02012694(0x166, (const Vector3 *)(&mCamSpacePosX));
     SmallPoofDust();
     MarkForDestruction();
 }
 
 void daKpFr_c::func_ov070_02121be4()
 {
-    Fix12i pos[3];
+    fx32 pos[3];
 
     if (!mWithMeshClsn.IsOnGround()) return;
 
     dBgCh_Gnd ground;
     {
-        Fix12i z = mPosZ;
-        Fix12i y = mPosY + 0x1e000;
-        Fix12i x = mPosX;
+        fx32 z = mPosZ;
+        fx32 y = mPosY + 0x1e000;
+        fx32 x = mPosX;
         pos[0] = x;
         pos[1] = y;
         pos[2] = z;

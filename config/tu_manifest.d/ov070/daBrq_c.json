@@ -166,7 +166,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "daBrq_c_classInit",
+      "symbol": "_Z17daBrq_c_classInitv",
       "address": "0x021210ac",
       "size": "0x0000006c",
       "legacy_source": "src/d_a_brq.c",
@@ -331,7 +331,7 @@
       "source": "0x02123254",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daBrq_c_classInit",
+      "symbol": "_Z17daBrq_c_classInitv",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x021210ac"
@@ -661,7 +661,7 @@
       "source": "0x02122d90",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -681,7 +681,7 @@
       "source": "0x02122dac",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -781,7 +781,7 @@
       "source": "0x02122ecc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1442,34 +1442,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@569",
+      "from": "@567",
       "to": "@228",
-      "evidence": "Compiler-local registration node at ov070:0x02123614; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @620 to @561 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @561 to @569 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "Compiler-local registration node at ov070:0x02123614; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @620 to @561 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @561 to @569 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @569 to @567 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+    },
+    {
+      "from": "@568",
+      "to": "@229",
+      "evidence": "Compiler-local registration node at ov070:0x02123620; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @621 to @562 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @562 to @570 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @570 to @568 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
+    },
+    {
+      "from": "@569",
+      "to": "@230",
+      "evidence": "Compiler-local registration node at ov070:0x0212362c; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @622 to @563 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @563 to @571 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @571 to @569 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
       "from": "@570",
-      "to": "@229",
-      "evidence": "Compiler-local registration node at ov070:0x02123620; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @621 to @562 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @562 to @570 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
-    },
-    {
-      "from": "@571",
-      "to": "@230",
-      "evidence": "Compiler-local registration node at ov070:0x0212362c; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @622 to @563 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @563 to @571 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "to": "@232",
+      "evidence": "Compiler-local registration node at ov070:0x02123638; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @623 to @564 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @564 to @572 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @572 to @570 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
       "from": "@572",
-      "to": "@232",
-      "evidence": "Compiler-local registration node at ov070:0x02123638; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @623 to @564 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @564 to @572 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
-    },
-    {
-      "from": "@574",
       "to": "@233",
-      "evidence": "Compiler-local registration node at ov070:0x02123644; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @625 to @566 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @566 to @574 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "Compiler-local registration node at ov070:0x02123644; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @625 to @566 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @566 to @574 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @574 to @572 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
-      "from": "@573",
+      "from": "@571",
       "to": "@234",
-      "evidence": "Compiler-local registration node at ov070:0x02123650; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @624 to @565 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @565 to @573 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "Compiler-local registration node at ov070:0x02123650; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @624 to @565 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @565 to @573 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @573 to @571 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -1525,14 +1525,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN16BrqModelResourceC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "Inferred resource-family ABI import targets the same helper as the original initializer relocation."
     },
     {
       "symbol": "_ZN16BrqModelResourceD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "Inferred resource-family ABI import targets the same helper as the original initializer relocation."

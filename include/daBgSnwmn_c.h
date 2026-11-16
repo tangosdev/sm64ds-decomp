@@ -30,17 +30,14 @@
  * 0x1b0 + 0x40 = 0x1f0. The destructor pair tears the same five down in
  * reverse order.
  *
- * dActor_c ends at 0x0d0. The first typed member (mModel1) starts at 0x0d4.
- * The four bytes at 0x0d0..0x0d3 are real layout (they hold up the rest,
- * which closes exactly on 0x1f0) but nothing in this TU reads or writes
- * them; kept opaque. InitResources' area argument is the inherited
+ * dActor_c ends at 0x0d4 (its last word is mEatingPlayer), so the first
+ * member, mModel1, starts there. InitResources' area argument is the inherited
  * mAreaId at 0x0cc, not a field of this class.
  *
  * VTABLE ORDER follows dActor_c's; daBgSnwmn_c adds no new virtual. The
  * destructor pair is at slots 16/17.
  */
 struct daBgSnwmn_c : dActor_c {
-    u8 unk_0d0[0x4];           /* 0x0d0 -- opaque; see the note above */
     dExtSimpleModel_c mModel1; /* 0x0d4 */
     dExtSimpleModel_c mModel2; /* 0x124 */
     dExtAnmTexPat_c mTexSeq;   /* 0x174 */

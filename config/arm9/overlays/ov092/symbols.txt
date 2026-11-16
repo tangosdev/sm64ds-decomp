@@ -3,7 +3,7 @@ _ZN8daOnms_cD0Ev kind:function(arm,size=0x70) addr:0x02130f5c
 _ZN8daOnms_c9StateSinkEv kind:function(arm,size=0x44) addr:0x02130fcc
 _ZN8daOnms_c11StateBounceEv kind:function(arm,size=0x1a0) addr:0x02131010
 _ZN8daOnms_c12StateKnockedEv kind:function(arm,size=0x200) addr:0x021311b0
-func_ov092_021313b0 kind:function(arm,size=0x120) addr:0x021313b0
+_ZN8daOnms_c19func_ov092_021313b0Ev kind:function(arm,size=0x120) addr:0x021313b0
 _ZN8daOnms_c8NextMoveEv kind:function(arm,size=0xa8) addr:0x021314d0
 _ZN8daOnms_c19func_ov092_02131578Ev kind:function(arm,size=0x34) addr:0x02131578
 _ZN8daOnms_c9StateLandEv kind:function(arm,size=0x74) addr:0x021315ac
@@ -14,13 +14,13 @@ _ZN8daOnms_c13StateRollPosZEv kind:function(arm,size=0x28) addr:0x021316b0
 _ZN8daOnms_c4RollEiiis kind:function(arm,size=0x1a0) addr:0x021316d8
 _ZN8daOnms_c6LaunchEP8dActor_cj kind:function(arm,size=0x138) addr:0x02131878
 _ZN8daOnms_c14CheckPlayerHitEv kind:function(arm,size=0xd8) addr:0x021319b0
-func_ov092_02131a88 kind:function(arm,size=0x64) addr:0x02131a88
+_ZN8daOnms_c19func_ov092_02131a88Ev kind:function(arm,size=0x64) addr:0x02131a88
 _ZN8daOnms_c14UpdateModelMtxEv kind:function(arm,size=0xec) addr:0x02131aec
 _ZN8daOnms_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02131bd8
 _ZN8daOnms_c6RenderEv kind:function(arm,size=0x28) addr:0x02131c1c
 _ZN8daOnms_c8BehaviorEv kind:function(arm,size=0x15c) addr:0x02131c44
 _ZN8daOnms_c13InitResourcesEv kind:function(arm,size=0x278) addr:0x02131da0
-daOnms_c_classInit kind:function(arm,size=0x5c) addr:0x02132018
+_Z18daOnms_c_classInitv kind:function(arm,size=0x5c) addr:0x02132018
 _ZN8daOnms_c16sLaunchVertSpeedE kind:data(any) addr:0x02132074
 _ZN8daOnms_c16sLaunchHorzSpeedE kind:data(any) addr:0x02132080
 _ZN8daOnms_c9sBankAxisE kind:data(any) addr:0x0213208c

@@ -19,8 +19,8 @@
  * SIZE 0x3cc is the factory's own literal; mResetTimer (1 byte, 0x3cb) closes
  * exactly on it under 4-byte alignment.
  *
- * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
- * names -- dActor_c ends at exactly 0x0d0. The first derived word is
+ * Everything below 0x0d4 duplicated dActor_c's own fields under placeholder
+ * names -- dActor_c ends at exactly 0x0d4. Its last word, mEatingPlayer, is
  * the daPly_c pointer written by the mouth/grab machinery and read by
  * HandleContact when the mouth-state flag is set. Consumers that used the old duplicated names
  * were repointed to the inherited dActor_c/fBase_c names: mActorID ->
@@ -51,7 +51,6 @@ struct daMky_c : dActor_c {
     };
 
     /* Member names below are inferred from use, not recovered identifiers. */
-    daPly_c *mEatingPlayer; /* 0x0d0 -- player holding this actor in its mouth */
     /* dExtAnmModel_c member, named by _ZN14dExtAnmModel_cD1Ev at +0xd4 -- a relocation the ROM build
        checks. */
     dExtAnmModel_c mAnmModel; /* 0x0d4 */

@@ -87,7 +87,7 @@ int daObj_volcanoCannon_c::ExecuteFly() {
  * horizontal and vertical speed in 12-bit fixed point, under a -4.0 gravity. */
 int daObj_volcanoCannon_c::EnterFly() {
     unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 8;
-    mKillTimer = 0x3c;
+    mKillTimer = 60;
     mPrevAngleY = (short)((r & 0xf) << 0xc);
     mHorzSpeed = (r & 0x1f) + 0x14;
     mHorzSpeed <<= 0xc;
@@ -132,11 +132,11 @@ int daObj_volcanoCannon_c::Behavior() {
 int daObj_volcanoCannon_c::InitResources() {
     mTerminalVelocity = -0xc8000;
     mCylinderClsn.Init(this, 0x1e000, 0x1e000, 0x200002, 0);
-    ChangeState((State *)&data_ov022_02114690);
+    ChangeState(&data_ov022_02114690);
     return 1;
 }
 
-extern "C" daObj_volcanoCannon_c *daObj_volcanoCannon_c_classInit(void) {
+daObj_volcanoCannon_c *daObj_volcanoCannon_c_classInit(void) {
     return new daObj_volcanoCannon_c;
 }
 

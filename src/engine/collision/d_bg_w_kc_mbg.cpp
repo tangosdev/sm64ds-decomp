@@ -1,7 +1,7 @@
 //cpp
 /* The constructor/destructor order retains all five lifecycle variants used
  * by dBgW_KcMbgSclY. The direction-to-world and movement-filter helpers retain C linkage.
- * SetFile and dBgCh_SphCrr::SetObjAndSphere are scalar Fix12i methods.
+ * SetFile and dBgCh_SphCrr::SetObjAndSphere are scalar fx32 methods.
  * Flat matrix copies use Mtx43;
  * the shared Matrix4x3 copy changes the retail instruction sequence.
  */
@@ -53,7 +53,7 @@ dBgW_KcMbg::~dBgW_KcMbg() {}
  * Matrix words are copied through Mtx43; a Matrix4x3 assignment
  * scalarizes.
  */
-void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, Fix12i scale, s16 angY,
+void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, fx32 scale, s16 angY,
                          CLPS_Block &clps) {
     dBgW_KcMbg *self = this;
     struct Scratch {
@@ -131,11 +131,11 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     *(Mtx43 *)&invScaledMat = *(Mtx43 *)&newScaledMat;
     MTX_Inverse43(&invScaledMat, &invScaledMat);
 
-    VecFx32 up;
+    Vector3 up;
     up.x = 0;
     up.y = 0x1000;
     up.z = 0;
-    WorldToLocalDirection(*(Vector3 *)&up, *(Vector3 *)&upAxis);
+    WorldToLocalDirection(up, *(Vector3 *)&upAxis);
 
     if (!filterByMoveDir)
         return;
@@ -143,15 +143,15 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     /* Aim dBgW_Kc's depth policy along the horizontal motion: depthByDir on,
        depthDir the direction in collider space, depthDirMinDot its threshold.
        A collider that is not moving sideways sets shallowOnly instead. */
-    VecFx32 moveDir;
-    GetVelocity(*(Vector3 *)&moveDir);
+    Vector3 moveDir;
+    GetVelocity(moveDir);
     moveDir.y = 0;
-    if (VEC_Mag((Vector3 *)&moveDir) != 0) {
+    if (VEC_Mag(&moveDir) != 0) {
         SetDepthByDir();
-        VEC_Normalize((Vector3 *)&moveDir, (Vector3 *)&moveDir);
-        VecFx32 localDir;
-        WorldToLocalDirection(*(Vector3 *)&moveDir, *(Vector3 *)&localDir);
-        SetDepthDir((Vector3 *)&localDir);
+        VEC_Normalize(&moveDir, &moveDir);
+        Vector3 localDir;
+        WorldToLocalDirection(moveDir, localDir);
+        SetDepthDir(&localDir);
         SetDepthDirMinDot(0xe66);
         ClearShallowOnly();
     } else {
@@ -182,15 +182,15 @@ void dBgW_KcMbg::GetTriangleOrigin(s16 triID, Vector3 &res) {
 }
 
 void dBgW_KcMbg::WorldToLocalPosition(const Vector3 &position, Vector3 &result) {
-    MTX_MultVec43((Vector3 *)&position, &invScaledMat, &result);
+    MTX_MultVec43(const_cast<Vector3 *>(&position), &invScaledMat, &result);
 }
 
 void dBgW_KcMbg::LocalToWorldPosition(const Vector3 &position, Vector3 &result) {
-    MTX_MultVec43((Vector3 *)&position, &newScaledMat, &result);
+    MTX_MultVec43(const_cast<Vector3 *>(&position), &newScaledMat, &result);
 }
 
 void dBgW_KcMbg::WorldToLocalDirection(const Vector3 &direction, Vector3 &result) {
-    MTX_MultVec43((Vector3 *)&direction, &invRotMat, &result);
+    MTX_MultVec43(const_cast<Vector3 *>(&direction), &invRotMat, &result);
 }
 
 /* Transform a direction by mat, leaving out the translation. */
@@ -200,7 +200,7 @@ void dBgW_KcMbg::LocalToWorldDirection(const Vector3 &direction, Vector3 &result
     rotation.t.x = 0;
     rotation.t.y = 0;
     rotation.t.z = 0;
-    MTX_MultVec43((Vector3 *)&direction, &rotation, &result);
+    MTX_MultVec43(const_cast<Vector3 *>(&direction), &rotation, &result);
 }
 
 int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray) {
@@ -229,7 +229,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray) {
     int hit = dBgW_Kc::DetectClsn(data_020a0d0c);
     if (hit != 0) {
         LocalToWorldPosition(data_020a0d0c.lineEnd, worldPos);
-        (dBgPi &)ray = static_cast<dBgPi &>(data_020a0d0c);
+        (dBgPi &)ray = (data_020a0d0c);
         ray.clsnY = worldPos.y;
         ray.hasClsn = 1;
     }
@@ -263,7 +263,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr &sphere) {
         bounds.scaledMax.z = FX_MUL(bounds.localMax.z, scale);
         sphere.ExpandPushOutBounds(bounds.scaledMin.x, bounds.scaledMin.y, bounds.scaledMin.z,
                                    bounds.scaledMax.x, bounds.scaledMax.y, bounds.scaledMax.z);
-        (dBgPi &)sphere = (dBgPi &)localSphere;
+        (dBgPi &)sphere = localSphere;
         sphere.flags |= 1;
         if (localSphere.flags & 4) {
             if (sphere.flags & 4) {
@@ -305,7 +305,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Lin &ray) {
 
     int hit = dBgW_Kc::DetectClsn(data_020a0d0c);
     if (hit != 0) {
-        Fix12i distance = data_020a0d0c.clsnDist;
+        fx32 distance = data_020a0d0c.clsnDist;
         LocalToWorldPosition(data_020a0d60, worldPos);
         ray.SetClsnPos(worldPos);
         ray.clsnDist = distance;
@@ -318,7 +318,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Lin &ray) {
 /* Out of the previous frame's space, into the current one. */
 int dBgW_KcMbg::TransformPos(const Vector3 &localCentre, Vector3 &res) {
     Vector3 localPos;
-    MTX_MultVec43((Vector3 *)&localCentre, &invMat, &localPos);
+    MTX_MultVec43(const_cast<Vector3 *>(&localCentre), &invMat, &localPos);
     MTX_MultVec43(&localPos, &mat, &res);
     return 1;
 }

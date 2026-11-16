@@ -55,21 +55,20 @@ extern "C" {
 
 /* Shared collider helpers, defined in the arm9 TU (src/engine/collision/d_bg_w_kc.cpp).
    local extern: they are free functions of that TU and no header declares them. */
-s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri); /* prism -> triangle index */
 
 /* CLPS helpers (src/engine/collision/d_bg_ch_sph_crr_query.cpp): the entry
    lookup and the SurfaceInfo write, which takes the entry by value into 0x0
    and the normal into 0x8.
    local extern: no header in include/ declares them. */
-void func_020381cc(void *block, int idx, void **out);
-void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal);
 
 /* local extern: no shared header declares it; match src/VEC_DotProduct.c. */
-Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
+fx32 VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* local extern: no header in include/ declares it. */
-Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
-
+fx32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 }
+s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri); /* prism -> triangle index */
+void func_020381cc(void *block, int idx, void **out);
+void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal);
 
 /* The shared scratch dBgPc at 0x020a0cec, defined (and constructed) by
    d_bg_w_kc.cpp. GetSurfaceInfo fills its surface record, which
@@ -105,7 +104,7 @@ extern dBgPc data_020a0cec;
    `pos + cross(fn, ea) * (length / dot(cross(fn, ea), en3))`. The cross goes
    through a 6-byte s16 scratch (sp+0x16c, reused by both rounds), so it really
    does truncate to 16 bits. The quotient's `>> 2` and the product's `>> 14` are
-   FX_Div's Fix12 result reconciled with the 0x400 normal scale.
+   FX_Div's fx32 result reconciled with the 0x400 normal scale.
 
    `cr` being a Vector3s rather than an `s16[3]` is load-bearing and is why nothing
    here needs a cast -- see its declaration. */
@@ -121,9 +120,9 @@ extern dBgPc data_020a0cec;
     (out)[2] = (o2) + (s32)(((s64)cr.z * u) >> 14);
 
 /* Post-subtraction form: components already relative to the centre. The wall
-   block is the one place that uses the ROUNDED Fix12 multiply, FX_MUL --
+   block is the one place that uses the ROUNDED fx32 multiply, FX_MUL --
    `smull` / `adds #0x800` / `adc` / `lsr #0xc` / `orr lsl #20`: the collider's
-   axis is Fix12i where the edge normals are 0x400-scale, so MUL10 is wrong here
+   axis is fx32 where the edge normals are 0x400-scale, so MUL10 is wrong here
    and FX_MUL is wrong everywhere else. */
 #define AXIS_DOT0(v) (FX_MUL(upAxis.x, (v).x) \
                     + FX_MUL(upAxis.y, (v).y) \
@@ -135,7 +134,7 @@ extern dBgPc data_020a0cec;
 
    `IsNearZeroDivisor(den)` is the divisor guard: |den| <= 8 means the two edge
    normals are within a hair of parallel and the 2x2 is singular. The `>> 2` on
-   the quotient is FX_Div's Fix12 result brought back to the 0x400 scale. */
+   the quotient is FX_Div's fx32 result brought back to the 0x400 scale. */
 #define VERTEX_BLOCK(nn, nnh, den, ea, eb, dotI, dotJ)                        \
     den = MUL10(nn, nn) - 0x400;                                              \
     den += (nnh) - (nnh);                                                     \
@@ -1190,8 +1189,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
     return 1;
 }
 
-Fix12i dBgW_Kc::GetOctreeOriginY() const
-{
+fx32 dBgW_Kc::GetOctreeOriginY() const {
     return kclFile->origin.y << 6;
 }
 
@@ -1200,8 +1198,7 @@ Fix12i dBgW_Kc::GetOctreeOriginY() const
    units, hence the `lsl #12` against the origin's `lsl #6`. The name is the
    ROM's own, so it is kept rather than renamed to what the arithmetic
    suggests. */
-Fix12i dBgW_Kc::GetUnkOctreeY() const
-{
+fx32 dBgW_Kc::GetUnkOctreeY() const {
     return (kclFile->origin.y << 6) + (~kclFile->yMask << 12);
 }
 

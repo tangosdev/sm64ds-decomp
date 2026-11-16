@@ -26,7 +26,7 @@ enum d_a_obj_fl_gura_AssetId { ASSET_FL_GURA_BMD = 0x05f3, ASSET_FL_GURA_KCL = 0
 
 extern ResourceDescriptor data_ov064_0211adb0;
 
-extern "C" daObjFl_Gura_c *daObjFl_Gura_c_classInit() {
+daObjFl_Gura_c *daObjFl_Gura_c_classInit() {
     return new daObjFl_Gura_c();
 }
 

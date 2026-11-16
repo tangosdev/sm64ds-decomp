@@ -145,7 +145,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "func_ov080_02124418",
+      "symbol": "_Z19func_ov080_02124418P14daChoro_Rock_c",
       "address": "0x02124418",
       "size": "0x00000040",
       "legacy_source": "src/func_ov080_02124418.c",
@@ -208,14 +208,14 @@
       "ordinal": 23
     },
     {
-      "symbol": "daChoro_Rock_c_classInit",
+      "symbol": "_Z24daChoro_Rock_c_classInitv",
       "address": "0x02124998",
       "size": "0x00000048",
       "legacy_source": "src/d_a_choro_rock.c",
       "ordinal": 24
     },
     {
-      "symbol": "daChoropu_c_classInit",
+      "symbol": "_Z21daChoropu_c_classInitv",
       "address": "0x021249e0",
       "size": "0x00000040",
       "legacy_source": "src/d_a_choropu.c",
@@ -851,14 +851,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN16ChoropuModelFileC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN16ChoropuModelFileD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor's exact ABS32 relocation"
@@ -970,7 +970,7 @@
       "source": "0x021278d0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -990,7 +990,7 @@
       "source": "0x021278ec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1100,7 +1100,7 @@
       "source": "0x02127a00",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1368,64 +1368,64 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1035",
+      "from": "@1018",
       "to": "@1010",
-      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1070 to @1016 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1016 to @1028 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1028 to @1035 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1070 to @1016 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1016 to @1028 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1028 to @1035 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1035 to @1031 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1031 to @1018 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@1036",
+      "from": "@1019",
       "to": "@1011",
-      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1071 to @1017 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1017 to @1029 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1029 to @1036 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1071 to @1017 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1017 to @1029 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1029 to @1036 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1036 to @1032 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1032 to @1019 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@1037",
+      "from": "@1020",
       "to": "@1012",
-      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1072 to @1018 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1018 to @1030 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1030 to @1037 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1072 to @1018 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1018 to @1030 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1030 to @1037 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1037 to @1033 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1033 to @1020 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@1038",
+      "from": "@1021",
       "to": "@1013",
-      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1073 to @1019 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1019 to @1031 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1031 to @1038 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1073 to @1019 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1019 to @1031 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1031 to @1038 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1038 to @1034 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1034 to @1021 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@1039",
+      "from": "@1022",
       "to": "@1014",
-      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1074 to @1020 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1020 to @1032 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1032 to @1039 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1074 to @1020 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1020 to @1032 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1032 to @1039 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1039 to @1035 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1035 to @1022 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@1040",
+      "from": "@1023",
       "to": "@1015",
-      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1075 to @1021 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1021 to @1033 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1033 to @1040 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1075 to @1021 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1021 to @1033 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1033 to @1040 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1040 to @1036 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1036 to @1023 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@1042",
+      "from": "@1025",
       "to": "@1017",
-      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1077 to @1023 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1023 to @1035 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1035 to @1042 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1077 to @1023 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1023 to @1035 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1035 to @1042 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1042 to @1038 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1038 to @1025 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@1044",
+      "from": "@1027",
       "to": "@1019",
-      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1079 to @1025 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1025 to @1037 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1037 to @1044 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1079 to @1025 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1025 to @1037 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1037 to @1044 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1044 to @1040 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1040 to @1027 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@1046",
+      "from": "@1029",
       "to": "@1021",
-      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1081 to @1027 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1027 to @1039 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1039 to @1046 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1081 to @1027 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1027 to @1039 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1039 to @1046 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1046 to @1042 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1042 to @1029 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@1048",
+      "from": "@1031",
       "to": "@1023",
-      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1083 to @1029 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1029 to @1041 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1041 to @1048 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1083 to @1029 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1029 to @1041 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1041 to @1048 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1048 to @1044 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1044 to @1031 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@1050",
+      "from": "@1033",
       "to": "@1025",
-      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1085 to @1031 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1031 to @1043 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1043 to @1050 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1085 to @1031 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1031 to @1043 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1043 to @1050 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1050 to @1046 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1046 to @1033 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@1052",
+      "from": "@1035",
       "to": "@1027",
-      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1087 to @1033 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1033 to @1045 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1045 to @1052 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object)."
+      "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1087 to @1033 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1033 to @1045 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1045 to @1052 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1052 to @1048 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1048 to @1035 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     }
   ]
 }

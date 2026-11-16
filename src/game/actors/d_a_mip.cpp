@@ -13,19 +13,14 @@
  *   the player position through V3Blk for the same reason.
  *   TestWaterBelow's ground probe stays a stack buffer; clsnY is
  *   detect[12].
- * - Render stores the colour at BMD_Material+0x20,
- *   which is pad, and walks materials as an int**. Naming that walk
- *   off data.modelFile shrinks Render, so only the int** slot is
- *   retyped to BMD_File for numMaterials.
- * - UpdateMirrorShadow keeps its Obj overlay. Spelling the position
- *   and a Mtx43* at pad_3e8 moves 34 words.
+ * - Render writes mMaterialColor into each material's texImageParam.
+ *   numMaterials is still read through the first word of ModelComponents.
+ * - The mirror shadow matrix is mMirrorMtx.
  * - The read-modify-writes of the player's mStateFlags, mTargetAngY and
  *   mEatenTimer are compound assignments (`|=`, `+=`, `++`). An earlier draft
  *   spelled them through pointer locals and a (long long)(int)& launder
  *   because the expanded `x = x | y` form changes the size; the compound form
  *   reproduces (#821).
- * - StateIdleMain still reads mStateTimer as `*(u16 *)&`: the ROM loads it
- *   with ldrh, and dEnemyBase_c declares it s16.
  */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daMip_c_AssetId {
@@ -61,19 +56,8 @@ namespace Sound {
 bool PlaySub(u32, u32, u32, int, bool);
 }
 
-extern "C" {
-
 /* ground probe / collision */
-int   SurfaceInfo_TestFlag0x20(void *);
-
-/* dActor_c / dEnemyBase_c, reached by their ROM names.
-   dActor_c::ClosestPlayer and dActor_c::FindWithID are deliberately NOT here:
-   both are declared members whose recovered signatures carry no by-value class
-   parameter, so this TU calls them as members and lets the compiler produce the
-   symbol. Everything else keeps the mangled spelling its legacy file matched
-   under, because DropShadowRadHeight and Spawn take Fix12<int> and s8/s16 BY
-   VALUE in their real declarations and mwccarm passes those differently at the
-   call site. */
+int SurfaceInfo_TestFlag0x20(int *);
 
 /* daPly_c / Message / Sound / SaveData */
 /* The return type is load-bearing: StateTalkMain tests it in an `if`, so the
@@ -83,23 +67,20 @@ int   SurfaceInfo_TestFlag0x20(void *);
 
 
 /* maths and the still-unnamed helpers */
-void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
-void  Vec3_MulScalar(void *, const void *, int);
-int VEC_Mag(const Vector3 *);
-int   AngleDiff(int, int);
-void  Matrix4x3_FromTranslation(void *, int, int, int);
-void  Matrix4x3_FromRotationY(void *, int);
-void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
-void MTX_Concat43(void *, void *, void *);
-void MTX_Concat33(void *, void *, void *);
-void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
+extern "C" void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
+extern "C" int VEC_Mag(const Vector3 *);
+extern "C" int AngleDiff(int, int);
+extern "C" void Matrix4x3_FromTranslation(void *, int, int, int);
+extern "C" void Matrix4x3_FromRotationY(void *, int);
+extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
+extern "C" void MTX_Concat43(void *, void *, void *);
+extern "C" void MTX_Concat33(void *, void *, void *);
+extern "C" void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
 u8 NumStars(void);
-int func_02013890(int, int);
+extern "C" int func_02013890(int, int);
 void func_02013944(void);
 void func_02012694(unsigned int id, const Vector3 *pos);
-void  func_0203c178(void *, int, int, int);
-
-}
+extern "C" void func_0203c178(void *, int, int, int);
 
 /* The state records at 0x0213003c..0x021300bc are 8-byte Itanium
    pointer-to-member-function constants, so SetState reaches one through a real
@@ -239,7 +220,7 @@ int daMip_c::TestWaterBelow()
     rg.SetObjAndPos(*(::Vector3 *)&v, this);
     if (rg.DetectClsn()) {
         mFloorY = rg.clsnY;
-        if (SurfaceInfo_TestFlag0x20(&rg.surface))
+        if (SurfaceInfo_TestFlag0x20((int *)&rg.surface))
             return 1;
     }
     return 0;
@@ -352,7 +333,7 @@ int daMip_c::StateTalkMain()
     unsigned int id;
 
     player = mSaveTalkPlayer;
-    pq = (int *)&player->mPosX;
+    pq = &player->mPosX;
     pos.x = mPosX;
     pos.y = mPosY;
     pos.z = mPosZ;
@@ -446,7 +427,7 @@ int daMip_c::StateReleasedMain()
         if (o != 0) {
             if (IsPlayerActor(o)) {
                 mSaveTalkPlayer = o;
-                o = static_cast<daPly_c *>(mSaveTalkPlayer);
+                o = mSaveTalkPlayer;
                 if (o->StartTalk(*this, 0) != 0) {
                     SetState(&data_ov085_021306dc);
                 }
@@ -500,7 +481,7 @@ int daMip_c::StateCaughtMain()
 
     if (mActionStep == 0) {
         {
-            int *ps = (int *)&pl->mPosX;
+            int *ps = &pl->mPosX;
             pv.x = ps[0];
             pv.y = ps[1];
             pv.z = ps[2];
@@ -760,10 +741,10 @@ int daMip_c::StateFleeMain() {
             s32 y = pair[1] + 0x3000;
             s32 x = pair[0];
             *((volatile s32 *)(&pos.x)) = x;
-            *((volatile s32 *)(&pos.y)) = y;
-            *((volatile s32 *)(&pos.z)) = z;
-            mDustParticle = Particle::System::NewFitWater(
-                mDustParticle, kPtclWaterSurfaceMove, *((volatile s32 *)(&pos.x)), *(&pos.y), z, 0);
+            pos.y = y;
+            pos.z = z;
+            mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove,
+                                                          pos.x, pos.y, z, 0);
         }
     }
 
@@ -787,7 +768,7 @@ int daMip_c::StateFleeMain() {
     {
         s32 y = mPosY;
         node.y = y;
-        Vec3_Sub((::Vector3 *)&delta, (const ::Vector3 *)&mPos, (const ::Vector3 *)&node);
+        Vec3_Sub((::Vector3 *)&delta, &mPos, (const ::Vector3 *)&node);
         len = VEC_Mag((const Vector3 *)&delta);
     }
     if ((len == 0) || (len <= lim)) {
@@ -810,8 +791,8 @@ int daMip_c::StateFleeMain() {
             ysave = mPosY;
             {
                 int s = FX_Div(lim, len);
-                Vec3_MulScalar(&scaled, &delta, s);
-                VEC_Subtract((::Vector3 *)&mPos, (::Vector3 *)&scaled, (::Vector3 *)&mPos);
+                Vec3_MulScalar((Vector3 *)&scaled, (const Vector3 *)&delta, s);
+                VEC_Subtract(&mPos, (::Vector3 *)&scaled, &mPos);
             }
             if (mVertSpeed > 0) {
                 mPosY = ysave;
@@ -913,10 +894,10 @@ int daMip_c::StateIdleMain()
         s32 y = pair[1] + 0x3000;
         s32 x = pair[0];
         *((volatile s32*)(&sp.x)) = x;
-        *((volatile s32*)(&sp.y)) = y;
-        *((volatile s32*)(&sp.z)) = z;
-        mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove,
-                                                      *((volatile s32 *)(&sp.x)), *(&sp.y), z, 0);
+        sp.y = y;
+        sp.z = z;
+        mDustParticle =
+            Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, sp.x, sp.y, z, 0);
     }
 
     VecFx32 pp;
@@ -946,7 +927,7 @@ int daMip_c::StateIdleMain()
     if (mRabbitId == 1) {
         if (Vec3_HorzDist(&mPos, (const Vector3 *)&pp) < 0x4b0000) {
             mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&pp) + 0x8000;
-            mStateTimer = 0x1e;
+            mStateTimer = 30;
         }
     }
 
@@ -963,14 +944,14 @@ int daMip_c::StateIdleMain()
             (mActionStep)++;
             break;
         case 3:
-            mStateTimer = (s16)((r & 0x1f) + 0x1e);
+            mStateTimer = (s16)((r & 0x1f) + 30);
             mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
             mActionStep = 0;
             break;
         }
     }
 
-    if (mActionStep == 0 && *(u16 *)&mStateTimer == 0) {
+    if (mActionStep == 0 && mStateTimer == 0) {
         mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mIdlePosX);
         mTargetAngY += 0x1800 - ((r & 3) << 12);
         mAnmModel.SetAnim((BCA_File *)data_ov085_021305c8.filePtr, 0x40000000, 0x1000, 0);
@@ -985,7 +966,7 @@ int daMip_c::StateIdleInit()
 {
     extern DaMipAnimationFilePtr data_ov085_021305c0;
 
-    mAnmModel.SetAnim((BCA_File *)(*(void **)((char *)&data_ov085_021305c0 + 4)), 0, 0x1000, 0);
+    mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
     mIdlePosX = mPosX;
     mIdlePosY = mPosY;
     mIdlePosZ = mPosZ;
@@ -1007,21 +988,21 @@ int daMip_c::SetState(void *record)
 
 void daMip_c::UpdateMatrixAndShadow()
 {
-    extern Mtx43 data_020a0e68;
+    extern Matrix4x3 data_020a0e68;
 
     char tmp[0x30];
     VecFx32 t;
     Vec3_Asr((Vector3 *)&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(Mtx43 *)&mAnmModel.mat4x3 = data_020a0e68;
+    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, tmp);
     Matrix4x3_FromTranslation(&data_020a0e68,
         mPosX >> 3,
         (mPosY - 0xe000) >> 3,
         mPosZ >> 3);
-    *(Mtx43 *)mShadowMtx = data_020a0e68;
-    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)mShadowMtx, 0x46000, 0x258000, 0xf);
+    mShadowMtx = *(Mtx43 *)&data_020a0e68;
+    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMtx, 0x46000, 0x258000, 0xf);
 }
 
 /* While carried, the matrix comes from UpdateCarry plus one of four hold
@@ -1029,7 +1010,7 @@ void daMip_c::UpdateMatrixAndShadow()
 void daMip_c::UpdateCarriedMatrix()
 {
     extern MipVec3 data_ov085_021306ec;
-    extern int data_020a0e68[];
+    extern Matrix4x3 data_020a0e68;
 
     int idx;
     void* res;
@@ -1043,31 +1024,17 @@ void daMip_c::UpdateCarriedMatrix()
     if ((int)mTalkingPlayer->param1 == 2) {
         idx = (idx + 2) & 0xff;
     }
-    res = UpdateCarry(*mTalkingPlayer, *(Vector3 *)((char *)&data_ov085_021306ec + idx * 0xc));
+    res = UpdateCarry(*mTalkingPlayer, *(Vector3 *)&(&data_ov085_021306ec)[idx]);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)res;
-    Matrix4x3_FromTranslation(data_020a0e68, mPosX >> 3, (mPosY - 0xc000) >> 3, mPosZ >> 3);
-    *(Mtx43 *)mShadowMtx = *(Mtx43 *)data_020a0e68;
-    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)mShadowMtx, 0x46000, 0x258000, 0xf);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0xc000) >> 3, mPosZ >> 3);
+    mShadowMtx = *(Mtx43 *)&data_020a0e68;
+    DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMtx, 0x46000, 0x258000, 0xf);
 }
 
-/* Second shadow, on the far side of the mirror plane at x = 0x1086000.
-   The matrix is the 0x30 bytes at this+0x3e8, in the pad after mShadowModel2.
-   Naming mPosX and mShadowModel2, with the matrix as its own Mtx43*, stays
-   the same size and differs by 34 words. The overlay keeps the block move. */
+/* Second shadow, on the far side of the mirror plane at x = 0x1086000. */
 void daMip_c::UpdateMirrorShadow()
 {
-    struct Obj {
-        char pad5c[0x5c];
-        int v5c;
-        int v60;
-        int v64;
-        char pad3c0[0x3c0 - 0x68];
-        char shadowmodel[0x28];
-        Mtx43 mtx;
-    };
-    extern Mtx43 data_020a0e68;
-
-    struct Obj *c = (struct Obj *)this;
+    extern Matrix4x3 data_020a0e68;
 
     VecFx32 v;
     VecFx32 res;
@@ -1077,26 +1044,23 @@ void daMip_c::UpdateMirrorShadow()
     res.x = 0; res.y = 0; res.z = 0;
     vd.x = 0; vd.y = 0; vd.z = 0;
 
-    vd.x = c->v5c;
-    vd.y = c->v60;
-    vd.z = c->v64;
+    vd.x = mPosX;
+    vd.y = mPosY;
+    vd.z = mPosZ;
     vd.x = 0x1086000;
-    v.z = Vec3_HorzDist((const Vector3 *)&c->v5c, (const Vector3 *)&vd);
-    Matrix4x3_FromRotationY(&data_020a0e68,
-                            Vec3_HorzAngle((const Vector3 *)&c->v5c, (const Vector3 *)&vd));
-    MTX_MultVec43((Vector3 *)&v, (Matrix4x3 *)&data_020a0e68, (Vector3 *)&res);
+    v.z = Vec3_HorzDist(&mPos, (const Vector3 *)&vd);
+    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle(&mPos, (const Vector3 *)&vd));
+    MTX_MultVec43((Vector3 *)&v, &data_020a0e68, (Vector3 *)&res);
     {
         int t;
         vd.x = vd.x + res.x;
-        t = c->v60;
+        t = mPosY;
         vd.y = t;
         vd.z = vd.z + res.z;
         Matrix4x3_FromTranslation(&data_020a0e68, vd.x >> 3, (t - 0xc000) >> 3, vd.z >> 3);
     }
-    c->mtx = data_020a0e68;
-    ((dActor_c *)c)
-        ->DropShadowRadHeight(*(dExtShadowModel_c *)&c->shadowmodel, *(Matrix4x3 *)&c->mtx, 0x46000,
-                              0x258000, 0xf);
+    mMirrorMtx = *(Mtx43 *)&data_020a0e68;
+    DropShadowRadHeight(mShadowModel2, *(Matrix4x3 *)&mMirrorMtx, 0x46000, 0x258000, 0xf);
 }
 
 /* Seven releases, straight-line. Not address order, so not a table walk.
@@ -1111,13 +1075,13 @@ int daMip_c::CleanupResources()
     extern DaMipAnimationFilePtr data_ov085_021305c0;
     extern DaMipModelFile data_ov085_021305e0;
 
-    ((SharedFilePtr *)(&data_ov085_021305d8))->Release();
-    ((SharedFilePtr *)(&data_ov085_021305b8))->Release();
-    ((SharedFilePtr *)(&gMipRunAnimationFile))->Release();
-    ((SharedFilePtr *)(&data_ov085_021305b0))->Release();
-    ((SharedFilePtr *)(&data_ov085_021305c8))->Release();
-    ((SharedFilePtr *)(&data_ov085_021305c0))->Release();
-    ((SharedFilePtr *)(&data_ov085_021305e0))->Release();
+    data_ov085_021305d8.Release();
+    data_ov085_021305b8.Release();
+    gMipRunAnimationFile.Release();
+    data_ov085_021305b0.Release();
+    data_ov085_021305c8.Release();
+    data_ov085_021305c0.Release();
+    data_ov085_021305e0.Release();
     return 1;
 }
 
@@ -1141,15 +1105,13 @@ int daMip_c::Render()
     mScaleY = mScaleZ;
 
     {
-        /* modelFile, then materials.
-           +0x20 of each 0x30-byte material is still pad in BMD_Material;
-           walking it as BMD_Material:: does not match this loop. */
-        int **base = (int **)&mAnmModel.data;
-        BMD_File *modelData = (BMD_File *)base[0];
-        char* mat = (char*)base[1];
+        /* modelFile, then materials. texImageParam is the colour word. */
+        ModelComponents *components = &mAnmModel.data;
+        BMD_File *modelData = components->modelFile;
+        BMD_Material *mat = (BMD_Material *)components->materials;
         for (unsigned int i = 0; i < modelData->numMaterials; i++) {
-            *(int*)(mat + 0x20) = mMaterialColor;
-            mat += 0x30;
+            mat->texImageParam = mMaterialColor;
+            mat++;
         }
     }
 
@@ -1212,7 +1174,9 @@ int daMip_c::Behavior()
        function would come out 8 bytes longer. The ROM emits no cleanup for either of
        these, which is itself the evidence that they were never Vector3s: they are
        scratch x/y/z the code fills and reads back. */
-    typedef volatile struct { Fix12i x, y, z; } Vec3Scratch;
+    typedef volatile struct {
+        fx32 x, y, z;
+    } Vec3Scratch;
 
     extern s8 gCurrentSublevel;
     extern s8 gCurrentAreaId;
@@ -1291,7 +1255,7 @@ int daMip_c::Behavior()
                             messageId = 0x13b; soundId = 0x160;
                         }
                         pos.y += 0x64000;
-                        if (talker->ShowMessage(*(fBase_c *)c, messageId, 0, 0, 0) == 1) {
+                        if (talker->ShowMessage(*this, messageId, 0, 0, 0) == 1) {
                             func_02012694(soundId, &mCamSpacePos);
                             mTalkState = 1;
                         }
@@ -1315,7 +1279,7 @@ int daMip_c::Behavior()
         }
         if (mEatenByYoshi == 1) {
             mEatenTimer++;
-            if (mEatenTimer > 0x96) {
+            if (mEatenTimer > 150) {
                 mEatenByYoshi = 0;
                 mEatenTimer = 0;
             }
@@ -1323,28 +1287,27 @@ int daMip_c::Behavior()
         UpdateMatrixAndShadow();
         mCatchState = 2;
         SetState(&data_ov085_021306ac);
-        mAnmModel.SetAnim((BCA_File *)(*(void **)((char *)&data_ov085_021305c0 + 4)), 0, 0x1000, 0);
-        if (*(void**)&mTalkingPlayer == 0)
-            *(void**)&mTalkingPlayer = ClosestPlayer();
+        mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
+        if (mTalkingPlayer == 0)
+            mTalkingPlayer = ClosestPlayer();
         return 1;
     }
 
     if (mCatchState != 0) {
-        void* p = *(void**)&mState;
-        if (p != (void*)&data_ov085_021306ac && p != (void*)&data_ov085_0213068c &&
-            p != (void*)&data_ov085_021306bc && p != (void*)&data_ov085_021306dc) {
+        void *p = (void *)mState;
+        if (p != &data_ov085_021306ac && p != &data_ov085_0213068c && p != &data_ov085_021306bc &&
+            p != &data_ov085_021306dc) {
             SetState(&data_ov085_021306ac);
-            mAnmModel.SetAnim((BCA_File *)(*(void **)((char *)&data_ov085_021305c0 + 4)), 0, 0x1000,
-                              0);
+            mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
         }
         mHorzSpeed = 0;
     }
 
-    DecIfAbove0_Short((u16 *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
 
     {
         daMip_cSelf *self = (daMip_cSelf *)c;
-        MipStatePair *state = *(MipStatePair **)&mState;
+        MipStatePair *state = (MipStatePair *)mState;
         if (state->b != 0)
             (self->*(state->b))();
     }
@@ -1360,17 +1323,17 @@ int daMip_c::Behavior()
         UpdateMirrorShadow();
 
     if (!IsFlagSet(this, 0x4000)) {
-        if (*(void **)&mState != (void *)&data_ov085_021306ac || mCatchState != 0)
+        if ((void *)mState != &data_ov085_021306ac || mCatchState != 0)
             UpdatePos(&mdCcAc_c);
         mAngleX = mPrevAngleX;
         mAngleY = mPrevAngleY;
         mAngleZ = mPrevAngleZ;
         UpdateWMClsn(mWithMeshClsn, 0);
-        if (*(void **)&mState != (void *)&data_ov085_021306ac)
+        if ((void *)mState != &data_ov085_021306ac)
             UpdateGrab();
     }
 
-    if (*(void**)&mState != (void*)&data_ov085_021306ac) {
+    if ((void *)mState != &data_ov085_021306ac) {
         mdCcAc_c.Clear();
         mdCcAc_c.Update();
     }
@@ -1395,13 +1358,13 @@ int daMip_c::InitResources()
     void* closest;
     int rabbitId;
 
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305b8);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&gMipRunAnimationFile);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305b0);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305c8);
-    dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305c0);
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305d8);
-    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov085_021305e0), 1, -1);
+    dExtFrameCtrl_c::LoadFile(data_ov085_021305b8);
+    dExtFrameCtrl_c::LoadFile(gMipRunAnimationFile);
+    dExtFrameCtrl_c::LoadFile(data_ov085_021305b0);
+    dExtFrameCtrl_c::LoadFile(data_ov085_021305c8);
+    dExtFrameCtrl_c::LoadFile(data_ov085_021305c0);
+    dExtSimpleModel_c::LoadFile(data_ov085_021305d8);
+    mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov085_021305e0), 1, -1);
     mShadowModel1.InitCylinder();
     mShadowModel2.InitCylinder();
 
@@ -1510,7 +1473,7 @@ int daMip_c::InitResources()
         if (mAreaId == 3)
             mFlags = 0x8280;
     }
-    mMaterialColor = (mColorVariant << 1) + *(s32 *)((char *)mAnmModel.data.materials + 0x20);
+    mMaterialColor = (mColorVariant << 1) + mAnmModel.data.materials->texImageParam;
     SetState(&data_ov085_021306cc);
     return 1;
 }
@@ -1522,8 +1485,7 @@ s32 daMip_c::OnYoshiTryEat() {
 }
 
 /* Registry factory for the MIP profile. `return new daMip_c()`. */
-extern "C" daMip_c *daMip_c_classInit(void)
-{
+daMip_c *daMip_c_classInit(void) {
     return new daMip_c();
 }
 

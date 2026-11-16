@@ -44,9 +44,9 @@ extern SharedFilePtr data_ov079_021282f0;
 
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
-void func_02012694(u32 id, const Vector3 *pos);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
+void func_02012694(u32 id, const Vector3 *pos);
 
 /* Indexed by mState: [0] StateFly, [1] StateShotDown.
    Defined at the end of this file so it does not insert a function into .text. */
@@ -59,7 +59,7 @@ enum {
     kSmokeParticle = 0x90,
 };
 
-extern "C" daKlr_c *daKlr_c_classInit() {
+daKlr_c *daKlr_c_classInit() {
     return new daKlr_c();
 }
 
@@ -94,7 +94,7 @@ s32 daKlr_c::Behavior() {
     func_0200f760(&mCylClsn);
     UpdatePos(0);
 
-    which = (u32)mState;
+    which = mState;
     (this->*data_ov079_021282e0[which])();
 
     id = mCylClsn.otherOwner;
@@ -240,7 +240,7 @@ void daKlr_c::UpdateModelAndShadow() {
     /* One 0x30-byte block copy. Matrix4x3's own assignment goes member by
        member through Vector3 and comes out 0x18 bytes longer. */
     *(Mtx43 *)&mModel2.mat4x3 = *(Mtx43 *)&mModel.mat4x3;
-    DropShadowRadHeight(mShadow, mModel.mat4x3, 0x50000, 0x50000, 0xf);
+    DropShadowRadHeight(mShadow, mModel.mat4x3, 0x50000, 0x50000, 15);
 }
 
 int daKlr_c::OnAimedAtWithEgg() {

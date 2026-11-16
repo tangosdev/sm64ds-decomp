@@ -49,7 +49,7 @@ _ZN12daBombking_c6RenderEv kind:function(arm,size=0x58) addr:0x021260ac
 _ZN12daBombking_c8BehaviorEv kind:function(arm,size=0x264) addr:0x02126104
 _ZN12daBombking_c13InitResourcesEv kind:function(arm,size=0x28c) addr:0x02126368
 _ZN12daBombking_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x021265f4
-daBombking_c_classInit kind:function(arm,size=0x64) addr:0x021265fc
+_Z22daBombking_c_classInitv kind:function(arm,size=0x64) addr:0x021265fc
 __sinit_d_a_bombking.cpp kind:function(arm,size=0x674) addr:0x02126660
 .p__sinit_d_a_bombking.cpp kind:data(word) addr:0x02126cd4
 data_ov078_02126ce0 kind:data(any) addr:0x02126ce0

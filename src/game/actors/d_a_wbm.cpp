@@ -33,8 +33,6 @@
  * not reorder.
  *
  * leftovers:
- * - daPly_c::Hurt and Particle::System::NewSimple stay mangled. Each takes
- *   Fix12<int> by value (wall 6az).
  * - The hit check and the placement helper are members but keep their
  *   func_ov098_* address names.
  * - The fragment angle table (data_ov098_0213bf90) is an unnamed ov098 row
@@ -80,9 +78,6 @@ extern SharedFilePtr data_ov002_0210da38;
 /* The five fragments' launch angles. */
 extern u16 data_ov098_0213bf90[];
 
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, s32 radius, s32 height, Vector3_16 *a,
-                         Vector3_16 *b);
 }
 
 /* The bomb's file-scope SharedFilePtr object, spelled through the same
@@ -119,8 +114,7 @@ State data_ov098_0213c930[3] = {
 /* Reconstructed source-style name: SM64DS proves daWbm_c through RTTI,
  * allocation size, vtable identity and the WATERBOMB registry profile; later
  * EAD lineage supplies classInit. Historical alias: WaterBomb_Spawn. */
-extern "C" int *daWbm_c_classInit(void)
-{
+int *daWbm_c_classInit(void) {
     return (int *)new daWbm_c;
 }
 
@@ -309,7 +303,7 @@ void daWbm_c::StateDrop()
     z = lead * cosine + spawnPos.z;
     spawnPos.z = z;
     dActor_c::Spawn(ACTOR_WATERBOMB, 1, spawnPos, 0, mAreaId, -1)->mHorzSpeed = 0;
-    mStateTimer = 0x96;
+    mStateTimer = 150;
     func_0201267c(0xd8, &mCamSpacePos);
 }
 

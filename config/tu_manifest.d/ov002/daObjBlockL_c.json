@@ -134,35 +134,35 @@
       "ordinal": 13
     },
     {
-      "symbol": "daObjBlockL_c_classInit_BK_FUTA",
+      "symbol": "_Z31daObjBlockL_c_classInit_BK_FUTAv",
       "address": "0x020b406c",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_l_bk_futa.c",
       "ordinal": 14
     },
     {
-      "symbol": "daObjBlockL_c_classInit_BLOCK_LL",
+      "symbol": "_Z32daObjBlockL_c_classInit_BLOCK_LLv",
       "address": "0x020b409c",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_l_block_ll.c",
       "ordinal": 15
     },
     {
-      "symbol": "daObjBlockL_c_classInit_SW_BLOCK_L",
+      "symbol": "_Z34daObjBlockL_c_classInit_SW_BLOCK_Lv",
       "address": "0x020b40cc",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_l_sw_block_l.c",
       "ordinal": 16
     },
     {
-      "symbol": "daObjBlockL_c_classInit_DP_BLOCK_L",
+      "symbol": "_Z34daObjBlockL_c_classInit_DP_BLOCK_Lv",
       "address": "0x020b40fc",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_l_dp_block_l.c",
       "ordinal": 17
     },
     {
-      "symbol": "daObjBlockL_c_classInit_BLOCK_L",
+      "symbol": "_Z31daObjBlockL_c_classInit_BLOCK_Lv",
       "address": "0x020b412c",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_block_l_block_l.c",
@@ -276,28 +276,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN14BlockModelFileC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail model-handle constructor call"
     },
     {
       "symbol": "_ZN14BlockModelFileD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail model-handle destructor registration"
     },
     {
       "symbol": "_ZN19daObjBlockLClsnFileC1Ej",
-      "canonical_symbol": "func_02017b4c",
+      "canonical_symbol": "_Z13func_02017b4cPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail collision-handle constructor call"
     },
     {
       "symbol": "_ZN19daObjBlockLClsnFileD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail collision-handle destructor registration"
@@ -740,7 +740,7 @@
       "source": "0x02100d54",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -760,7 +760,7 @@
       "source": "0x02100d70",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -780,7 +780,7 @@
       "source": "0x02100d8c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -800,7 +800,7 @@
       "source": "0x02100da8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -820,7 +820,7 @@
       "source": "0x02100dc4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -840,7 +840,7 @@
       "source": "0x02100de0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -870,7 +870,7 @@
       "source": "0x02100e08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -900,7 +900,7 @@
       "source": "0x02100e18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"

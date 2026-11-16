@@ -24,13 +24,13 @@
 extern "C" {
 extern const char data_020868a0[52];
 extern char data_020868d4;
-void func_0206ccd8(int fmt, ...);
 int func_0206cf7c(int mask);
 /* local extern: no header declares it; func_0206ccd8 formats through it */
 void func_0206a928(void *a, int b, void *c, void *d);
 /* local extern: no header declares it; func_0206ccd8 stores it as the print callback */
 void func_0206cbc0(struct Csl *sl, u8 *sb, int count);
 }
+void func_0206ccd8(int fmt, ...);
 
 struct CardBusState {
     unsigned short exmemcnt;
@@ -45,7 +45,7 @@ extern "C" {
 void func_0206ce20(struct CardBusState* s){
   unsigned short v = REG_EXMEMCNT;
   s->exmemcnt = v;
-  REG_EXMEMCNT = (v & 0xffe3) | 0xf;
+  REG_EXMEMCNT = (v & 0xffe3) | 15;
   if(func_0206cf7c(1) != 0){
     s->ready = 1;
     s->busMirror = ((struct DebuggerBlock *)HW_ISD_RESERVED)->busMirror;
@@ -67,7 +67,7 @@ void func_0206cd9c(struct CardBusState *s)
         unsigned short v2;
 
         mirror = &((struct DebuggerBlock *)HW_ISD_RESERVED)->busMirror;
-        busReg = (volatile unsigned short *)0x9fe2ffe;
+        busReg = (unsigned short *)0x9fe2ffe;
         v2 = s->busMirror;
         *mirror = v2;
         v2 = s->busMirror;
@@ -105,8 +105,7 @@ void __assert(const char *file, int line, const char *exp, int stop) {
  * through func_0206a928 with a print-argument struct and the func_0206cbc0
  * console callback. The print struct stays function-local. Lowest address
  * in the TU, so it goes last for reverse-source emission. */
-extern "C" void func_0206ccd8(int fmt, ...)
-{
+void func_0206ccd8(int fmt, ...) {
     struct S { int f0, f1, f2, f3; void *cb; };
     S s;
     int *p;

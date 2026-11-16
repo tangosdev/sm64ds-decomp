@@ -35,7 +35,6 @@
 
 #ifdef __cplusplus
 
-#include "math/Fix12.h"
 
 struct dActor_c;
 
@@ -53,7 +52,7 @@ struct dCcAc_c : dCc_c {
     dCcAc_c();
 
     /* --- non-virtual --- */
-    void Init(dActor_c *actor, Fix12i radius, Fix12i height, u32 flags, u32 vulnFlags);
+    void Init(dActor_c *actor, fx32 radius, fx32 height, u32 flags, u32 vulnFlags);
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -15,9 +15,9 @@
  * Remaining reconstruction under issue #2478:
  * - mStateTimer comparisons read it through a (u16) cast, because the ROM
  *   loads it with ldrh.
- * - The Mtx43 / V3A overlays on mAnmModel.mat4x3, mShadowMat and the
- *   player position copies. Plain Matrix4x3 / Vector3 assignment
- *   scalarizes.
+ * - The Mtx43 overlays on mAnmModel.mat4x3 and the scratch matrix, the
+ *   Matrix4x3 view of mShadowMat, and the V3A copies of a player's
+ *   position. Plain Matrix4x3 / Vector3 assignment scalarizes.
  * - dExtAnmModel_c::SetAnim, dCcAc_c::Init, dBgCh_Actr::Init,
  *   DropShadowRadHeight, KillByInvincibleChar, SpawnCoins, daPly_c::Hurt
  *   and daPly_c::Bounce retain scalar ABI declarations. Native fixed-point
@@ -61,15 +61,10 @@ struct V3Quint {
 };
 
 /* Scalar ABI declarations retained by this TU. */
-extern "C" {
 
 /* arm9 scalar ABI and unnamed helpers; see the remaining work above. */
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern void func_02012694(unsigned int id, void *v);
-
-/* ov002 -- unnamed particle helper. */
-extern void func_ov002_020aea30(void *self, void *actor, void *collision);
-}
+extern void func_02012694(unsigned int id, const Vector3 *v);
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daYurei_Mucho_c_AssetId {
@@ -111,8 +106,7 @@ extern daYurei_Mucho_c::State data_ov065_0211d660;
    daYurei_Mucho_c()` MATCHES (size 0x50); the synthesized ctor stores
    `_ZTV15daYurei_Mucho_c + 2`. classInit is a reconstructed source-style
    name, not a preserved identifier. */
-extern "C" daYurei_Mucho_c *daYurei_Mucho_c_classInit(void)
-{
+daYurei_Mucho_c *daYurei_Mucho_c_classInit(void) {
     return new daYurei_Mucho_c();
 }
 
@@ -131,7 +125,7 @@ s32 daYurei_Mucho_c::OnYoshiTryEat()
  * reference and a pointer generate identical ARM for this body, so the bytes
  * cannot distinguish them. */
 void daYurei_Mucho_c::OnTurnIntoEgg(daPly_c &player) {
-    GivePlayerCoins(player, (unsigned char)(mExtraCoinCount + 1), 0);
+    GivePlayerCoins(player, (mExtraCoinCount + 1), 0);
     KillAndTrackInDeathTable();
 }
 
@@ -194,7 +188,7 @@ int daYurei_Mucho_c::Behavior()
         UpdateModelTransform();
         return 1;
     }
-    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mStateTimer);
     {
         State *q = mCurrentState;
         if (q->mMain != 0) {
@@ -303,9 +297,9 @@ void daYurei_Mucho_c::UpdateModelTransform() {
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
 
-    *(Mtx43 *)mShadowMat = *(Mtx43 *)&data_020a0e68;
+    mShadowMat = *(Mtx43 *)&data_020a0e68;
 
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMat, 0x64000, 0x258000, 0xf);
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMat, 0x64000, 0x258000, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -333,8 +327,8 @@ int daYurei_Mucho_c::ChangeState(State *s) {
    the SharedFilePtr's filePtr -- the ROM does `ldr r1,[r0,#4]` off the
    literal at 0x02116918, not a call, so the field read is what reproduces. */
 int daYurei_Mucho_c::EnterIdle() {
-    mTargetAngle = (short)(((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
-    mStateTimer = (short)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x1f) + 0x32);
+    mTargetAngle = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
+    mStateTimer = ((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x1f) + 50);
     mAnmModel.SetAnim((BCA_File *)gYureiMuchoWaitAnimFile.filePtr, 0, 0x1000, 0);
     return 1;
 }
@@ -354,8 +348,8 @@ int daYurei_Mucho_c::UpdateIdle() {
 
     if (Vec3_Dist(&mPos, (Vector3 *)&mHomePosX) > 0x1f4000 || mWithMeshClsn.IsOnWall() != 0) {
         mTargetAngle = Vec3_HorzAngle(&mPos, (Vector3 *)&mHomePosX);
-        if ((u16)mStateTimer < 0x14)
-            mStateTimer = 0x14;
+        if ((u16)mStateTimer < 20)
+            mStateTimer = 20;
     }
 
     ApproachAngle(&mPrevAngleY, mTargetAngle, 0xa, 0x200, 0x100);
@@ -372,13 +366,13 @@ int daYurei_Mucho_c::UpdateIdle() {
 
     pl = ClosestNonVanishPlayer();
     if (pl != 0) {
-        pos = (int *)&pl->mPosX;
+        pos = &pl->mPos.x;
         dp.x = pos[0];
         dp.y = pos[1];
         dp.z = pos[2];
 
         if (Vec3_Dist(&mPos, &dp) < 0x3e8000) {
-            mStateTimer = 0x14;
+            mStateTimer = 20;
             ChangeState(&data_ov065_0211d680);
         }
     }
@@ -468,7 +462,7 @@ int daYurei_Mucho_c::UpdateShoot() {
             void *spawned = dActor_c::Spawn(0xe9, 1, *(Vector3 *)&mShotPosX, 0, mAreaId, -1);
             if (spawned != 0) {
                 dActor_c *shot = (dActor_c *)spawned;
-                func_02012694(0xfb, &mCamSpacePosX);
+                func_02012694(0xfb, (const Vector3 *)&mCamSpacePosX);
                 L.spv.x = 0;
                 L.spv.y = 0;
                 L.spv.z = 0x1e000;
@@ -497,7 +491,7 @@ int daYurei_Mucho_c::UpdateShoot() {
                 mStateTimer = 0;
                 ChangeState(&data_ov065_0211d670);
             } else {
-                mStateTimer = 0x32;
+                mStateTimer = 50;
                 mAnmModel.SetAnim((BCA_File *)gYureiMuchoWaitAnimFile.filePtr, 0, 0x1000, 0);
                 ChangeState(&data_ov065_0211d680);
             }
@@ -517,7 +511,7 @@ int daYurei_Mucho_c::EnterBumped() {
     mSpeedZ = 0;
     mVertSpeed = 0x32000;
     mVertAccel = -0x5000;
-    mStateTimer = 0xa;
+    mStateTimer = 10;
     mFlags = 0;
     return 1;
 }
@@ -552,28 +546,28 @@ void daYurei_Mucho_c::HandleCollision() {
     if (id == 0) return;
     p = (daPly_c *)dActor_c::FindWithID(id);
     if (p == 0) return;
-    flags = (int)mdCcAc_c.hitFlags;
+    flags = mdCcAc_c.hitFlags;
 
     if (flags & 0x40000) {
         mDeathState = 4;
-        func_ov002_020aea30(this, p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_ov002_020aea30(p, 0);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     if (flags & 0x2400) {
         mDeathState = 2;
-        func_ov002_020aea30(this, p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_ov002_020aea30(p, 0);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     if (flags & 0x4380) {
         mDeathState = 3;
-        func_ov002_020aea30(this, p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_ov002_020aea30(p, 0);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     if (BumpedUnderneathByPlayer(*p) == 1) {
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         ChangeState(&data_ov065_0211d660);
         return;
     }
@@ -582,23 +576,23 @@ void daYurei_Mucho_c::HandleCollision() {
         v.y = 0;
         v.z = 0;
         KillByInvincibleChar(v, *p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     if (flags & 0x40) {
         mDeathState = 2;
-        func_ov002_020aea30(this, p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_ov002_020aea30(p, 0);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     if (flags & 0x20) {
         mDeathState = 1;
-        func_ov002_020aea30(this, p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_ov002_020aea30(p, 0);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     {
-        int b = (int)(p->actorID == 0xbf);
+        int b = (p->actorID == 0xbf);
         if (b == 0) return;
     }
     if (p->mIsMetal == 1 || p->IsOnShell() == 1) {
@@ -608,8 +602,8 @@ void daYurei_Mucho_c::HandleCollision() {
     if (JumpedOnByPlayer(mdCcAc_c, *p)) {
         p->Bounce(0x28000);
         mDeathState = 1;
-        func_ov002_020aea30(this, p, 0);
-        func_02012694(0x11e, &mCamSpacePosX);
+        func_ov002_020aea30(p, 0);
+        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
         return;
     }
     hv.x = mPosX;
@@ -628,7 +622,7 @@ void daYurei_Mucho_c::KillWithCoins() {
     v.z = mPosZ;
     SpawnCoins(v, mExtraCoinCount + 1, 0xa000, 0);
     KillAndTrackInDeathTable();
-    func_02012694(0x11e, &mCamSpacePosX);
+    func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
 }
 
 /* -------------------------------------------------------------------------- */

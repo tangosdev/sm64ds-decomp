@@ -92,7 +92,7 @@ int daRFlag_c::Behavior() {
 
     if (mVictoryTimer != 0) {
         mVictoryTimer += 1;
-        if (mVictoryTimer >= 0x5A) {
+        if (mVictoryTimer >= 90) {
             if (Sound::PlaySub(0x1F, 0x7F, 0, 0x8777, 0) != 0) {
                 mVictoryTimer = 0;
             }
@@ -115,7 +115,7 @@ int daRFlag_c::InitResources() {
     return 1;
 }
 
-extern "C" daRFlag_c *daRFlag_c_classInit(void) {
+daRFlag_c *daRFlag_c_classInit(void) {
     return new daRFlag_c();
 }
 

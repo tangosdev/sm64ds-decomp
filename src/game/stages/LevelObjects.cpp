@@ -64,26 +64,31 @@ extern u16 sObjToActorIdTable[];
  * list's NEXT_DEATH_TABLE_ID): LoadClsnAndObjects zeroes it, and every
  * loader passes it, post-incremented, as dActor_c::Spawn's deathTableID. */
 extern s16 sNextDeathTableID;
+}
 
-void func_0202af80(void *entries, s32 count);
-void func_0202b044(void *entries, s32 count);
-void func_0202b060(void *entries, s32 count);
+void func_0202af80(short *entries, int count);
+void func_0202b044(unsigned short *entries, int count);
+void func_0202b060(char *entries, int count);
 void func_0202b090(void *entries, s32 count);
 void func_0202b0c4(void *entries, s32 count);
 void func_0202b0e0(LVL_Overlay::StandardEntry *e, int count);
 void StartEntranceFaderWipe(int index);
+extern "C" {
 
 /* dScStage_c::LoadClsnAndObjects' own callees. LoadFile is not in decl_common.h. */
 struct KCL_File;
 void *LoadFile(int handle);
+}
 
 /* LoadObjects dispatches through this table, indexed by object category.
  * Its entries are the fifteen category loaders. This text-only TU does not
  * define it. */
 typedef void (*ObjectLoader)(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param);
-extern ObjectLoader sObjectLoaders[];
+extern "C" {
 
-} /* extern "C" */
+extern ObjectLoader sObjectLoaders[];
+}
+/* extern "C" */
 
 /* The loaders test the game mode as a 0/1 value. */
 static inline int IsGameMode(int mode) {
@@ -108,7 +113,7 @@ void LoadSimpleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
         u16 actorIndex = entry->raw & 0x1ff;
         int actorParam = entry->raw >> 9;
         if (actorIndex == 0x1ff) {
-            LoadMinimapChangeObject(areaID, position.y, actorParam & 0xf);
+            LoadMinimapChangeObject(areaID, position.y, actorParam & 15);
         } else {
             dActor_c::Spawn(sObjToActorIdTable[actorIndex], actorParam, position, 0, areaID,
                             sNextDeathTableID++);
@@ -117,7 +122,7 @@ void LoadSimpleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
 }
 
 /* One actor per standard object entry. Each StandardEntry is 0x10 bytes: raw id
- * index into sObjToActorIdTable, s16 position (shifted left by 12 into Fix12),
+ * index into sObjToActorIdTable, s16 position (shifted left by 12 into fx32),
  * Vector3s rotation, u16 param. Each spawn takes the next death-table ID. The
  * third parameter is part of the shared loader signature and unused here. */
 void LoadStandardObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
@@ -140,13 +145,13 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
     func_0202b0e0(entry, table.count);
     entry += entranceIndex;
     entranceKind = 0;
-    int entranceId = 0xf;
+    int entranceId = 15;
 
     for (u8 playerIndex = 0; playerIndex < gNumPlayers; entry++, playerIndex++) {
         Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
 
         u16 param = entry->param;
-        entranceKind = (param >> 7) & 0xf;
+        entranceKind = (param >> 7) & 15;
 
         int savedCharacter = data_0209caa0.file.mCharacter;
         int playerCharacter = data_02092128[playerIndex];
@@ -167,7 +172,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
             gPlayers[playerIndex] = player;
 
         if (playerIndex == gLocalPlayerId)
-            entranceId = (entry->param >> 3) & 0xf;
+            entranceId = (entry->param >> 3) & 15;
     }
 
     gCamera = (dCamera_c *)dBase_c::Spawn(0x14c, gCurrentScene, entranceId, 0);
@@ -175,7 +180,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
     if (IsGameMode(2))
         return;
 
-    if (entranceKind >= 0x13)
+    if (entranceKind >= 19)
         entranceKind = 0;
     int wipeType = sEntranceWipes[entranceKind];
     if (wipeType < 0)
@@ -226,7 +231,7 @@ void LoadTeleportDestObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 par
 }
 
 void LoadFogObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    func_0202b060(table.entries, table.count);
+    func_0202b060((char *)table.entries, table.count);
 }
 
 /* One door actor per entry. The actor id and the high half of its parameter come
@@ -240,9 +245,9 @@ void LoadDoorObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
         /* All three angles are computed before any is stored: member stores or
            an aggregate initializer are +4 bytes, a u16 param copy 11 words off. */
         Vector3_16 rot;
-        s16 rx = (entry->param >> 8) & 0xf;
+        s16 rx = (entry->param >> 8) & 15;
         s16 ry = entry->angle;
-        s16 rz = (entry->param >> 12) & 0xf;
+        s16 rz = (entry->param >> 12) & 15;
         rot.x = rx;
         rot.y = ry;
         rot.z = rz;
@@ -279,11 +284,11 @@ void LoadExitObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
 }
 
 void LoadMinimapTileObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    func_0202b044(table.entries, table.count);
+    func_0202b044((unsigned short *)table.entries, table.count);
 }
 
 void LoadMinimapScaleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    func_0202af80(table.entries, table.count);
+    func_0202af80((short *)table.entries, table.count);
 }
 
 /* Stash the entry array's ADDRESS and do nothing with it. Not a mistake in the

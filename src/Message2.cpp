@@ -8,9 +8,6 @@
  * - defer_codegen is off so this file emits in source order. The definitions
  *   run ROM-ascending, and func_0201b388's opt_common_subs off is a bracket;
  *   under deferred codegen it would be last-wins for the whole file.
- * - Sound::ChangeMusicVolume and OAM::Render stay extern "C" free functions.
- *   Each takes a Fix12<int> by value; a method with that parameter homes
- *   r0-r3 to the stack.
  * - The G2/G2S getters are declared locally in their namespaces. No
  *   header declares them yet.
  * - data_0209d6f4 is u8 * here. Message.cpp spells the same word volatile int
@@ -25,6 +22,7 @@
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "Message.h"
+#include "MessageBank.h"
 #include "PlayerInput.h"
 #include "SaveData.h"
 #include "Sound.h"
@@ -99,20 +97,17 @@ extern s16 data_0209f4a2[];
 extern s16 data_0209f4a4[];
 extern u16 data_020a0e5a[];
 extern s32 data_020a0db0;
-extern u8 data_ov002_0210c390;
-extern u8 data_ov002_0210c398;
-extern u8 data_ov002_0210c3a0;
-extern u8 data_ov002_0210c3a8;
+extern struct OamAttr data_ov002_0210c390;
+extern struct OamAttr data_ov002_0210c398;
+extern struct OamAttr data_ov002_0210c3a0;
+extern struct OamAttr data_ov002_0210c3a8;
 extern void (*MSG_GEN_TEXT_FUNCS[])(void);
 
 extern int IsButtonInputValid(void);
+}
 extern int func_0201fb4c(void);
 extern u8 NumStars(void);
 extern int func_020138dc(void);
-}
-extern "C" {
-void OamRender10_Message2(int a, void *b, int c, int d, int e, int f, int g, int h, int i, int j);
-}
 
 struct OamAttr;
 #include "OAM.h"
@@ -181,8 +176,6 @@ void Message::AddChoice() {
     }
 }
 
-extern "C" {
-
 void func_0201aca4(void) {
 
     struct MsgTextChar {
@@ -229,7 +222,6 @@ void func_0201aca4(void) {
         break;
     }
 }
-}
 
 void Message::AddCharPair() {
     /* Text code 3. Calls AddChar twice with the font byte and the next byte.
@@ -247,8 +239,6 @@ void Message::AddCharPair() {
     AddChar(data_0208ee6c[idx]);
     AddChar((data_0208ee6c[idx] + 1) & 0xff);
 }
-
-extern "C" {
 
 void func_0201adfc(void) {
     int n;
@@ -298,7 +288,7 @@ void func_0201adfc(void) {
                 u8 bit = pos & 7;
                 int word = (u32)pos >> 3;
                 u32 *q = &p[word << 3];
-                u32 *mask = (u32 *)&data_0208eeac[bit];
+                int *mask = &data_0208eeac[bit];
 
                 p[word << 3] |= *mask & ((u32 *)data_0209d74c)[base];
                 q[1] |= *mask & ((u32 *)data_0209d74c)[base + 1];
@@ -306,7 +296,7 @@ void func_0201adfc(void) {
                 q[3] |= *mask & ((u32 *)data_0209d74c)[base + 3];
 
                 if (bit != 0) {
-                    u32 *omask = (u32 *)&data_0208ee8c[bit];
+                    int *omask = &data_0208ee8c[bit];
 
                     q[8] = ((u32 *)data_0209d74c)[base] & *omask;
                     q[9] = ((u32 *)data_0209d74c)[base + 1] & *omask;
@@ -387,7 +377,7 @@ void func_0201b100(int mode) {
             lshift = sh << 2;
             inv = 8 - sh;
             rshift = inv << 2;
-            for (; row < 0x10; row++) {
+            for (; row < 16; row++) {
                 i = (row >> 3) * w8 + (row & 7);
                 ((int *)r4addr)[i] |= *(int *)r8addr << lshift;
                 rem = val;
@@ -447,7 +437,7 @@ void func_0201b388(int a0) {
     step = (a0 - 1) << 5;
 
     sb = (u32)(((long long)(int)start));
-    for (j = 0; j < 0x10; j++) {
+    for (j = 0; j < 16; j++) {
         for (i = 0; i < n; i++) {
             int blk = sb >> 3;
             u8 col = sb & 7;
@@ -468,7 +458,6 @@ void func_0201b388(int a0) {
     data_0209d6c0 = data_0209d6c0 + 1;
 }
 #pragma pop
-}
 
 void Message::AddChar(u8 c) {
     int i;
@@ -487,7 +476,7 @@ void Message::AddChar(u8 c) {
 
     mask = data_0208eecc[gMsgBoxStyle];
     sh = data_0209d678;
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         word = *ip++;
         masked = word & mask;
         if (sh != 0) {
@@ -511,8 +500,6 @@ void Message::AddChar(u8 c) {
         data_0209d6a4 = data_0209d6a4 + 1;
     }
 }
-
-extern "C" {
 
 void func_0201b6f8(int mode) {
     int i;
@@ -541,7 +528,6 @@ void func_0201b6f8(int mode) {
             break;
         }
     }
-}
 }
 
 /* Lays out the next text line: glyphs until 0xfd (line end) or 0xff (message
@@ -762,7 +748,7 @@ void Message::Update() {
             data_0209d65c = 0;
         } else {
             func_0201b6f8(0);
-            data_0209d65c = (u8)((*(u16 *)(data_0209d6f0 + 4) - data_0209d6b0) >> 1);
+            data_0209d65c = (u8)((((MessageEntry *)data_0209d6f0)->width - data_0209d6b0) >> 1);
         }
         LayoutLine();
         return;
@@ -776,7 +762,7 @@ void Message::Update() {
         data_0209d65c = 0;
         func_0201adfc();
         data_0209d6a0 += 1;
-        if (data_0209d6a0 != 0x10) {
+        if (data_0209d6a0 != 16) {
             return;
         }
         data_0209d6bc = 1;
@@ -808,14 +794,12 @@ void Message::Update() {
             func_02012790(0x96);
         }
         {
-            int r5 = gMsgChoicePositions[gMsgChoiceIndex] + gMsgBoxLeft + 0xC;
-            int r4 = gMsgBoxTop + (gMsgChoiceLine * 0x10) + 0xE;
+            int r5 = gMsgChoicePositions[gMsgChoiceIndex] + gMsgBoxLeft + 12;
+            int r4 = gMsgBoxTop + (gMsgChoiceLine * 16) + 14;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
@@ -844,14 +828,12 @@ void Message::Update() {
             func_02012790(0x96);
         }
         {
-            int r5 = gMsgBoxLeft + 0xC;
-            int r4 = gMsgBoxTop + (gMsgChoicePositions[gMsgChoiceIndex] * 0x10) + 0xE;
+            int r5 = gMsgBoxLeft + 12;
+            int r4 = gMsgBoxTop + (gMsgChoicePositions[gMsgChoiceIndex] * 16) + 14;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
@@ -879,9 +861,9 @@ void Message::Update() {
         } else if (f0 != 0) {
             s16 debval = ((u8(*)[4])gTouchY)[idx][0];
             data_0209d6dc = debval - data_0209d6d8;
-            if (data_0209d6dc > 0x10) {
-                data_0209d6dc = 0x10;
-                data_0209d6d8 = debval - 0x10;
+            if (data_0209d6dc > 16) {
+                data_0209d6dc = 16;
+                data_0209d6d8 = debval - 16;
             } else if (data_0209d6dc < 0) {
                 data_0209d6dc = 0;
                 data_0209d6d8 = debval;
@@ -895,7 +877,7 @@ void Message::Update() {
                 break;
             case 1:
                 if (data_0209d6dc > 0) {
-                    if (data_0209d6dc >= 0x10) {
+                    if (data_0209d6dc >= 16) {
                         gMsgChoiceIndex += 1;
                         func_02012790(0x96);
                     } else if (data_0209d6dc <= 6) {
@@ -905,7 +887,7 @@ void Message::Update() {
                 }
                 break;
             case 2:
-                if (data_0209d6dc > 0 && data_0209d6dc <= 0xE) {
+                if (data_0209d6dc > 0 && data_0209d6dc <= 14) {
                     gMsgChoiceIndex -= 1;
                     func_02012790(0x96);
                 }
@@ -926,14 +908,12 @@ void Message::Update() {
             }
         }
         {
-            int r5 = gMsgBoxLeft + 0xC;
-            int r4 = gMsgBoxTop + (gMsgChoicePositions[gMsgChoiceIndex] * 0x10) + 0xE;
+            int r5 = gMsgBoxLeft + 12;
+            int r4 = gMsgBoxTop + (gMsgChoicePositions[gMsgChoiceIndex] * 16) + 14;
             if (data_020a0db0 & (0x10 / data_0208ee44)) {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c3a8, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c3a0, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }
@@ -959,11 +939,9 @@ void Message::Update() {
                 return;
             }
             if (gMsgBoxStyle != 0) {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c390, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c390, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             } else {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c398, r5, r4, -1, -1, 0x1000, 0x1000, 0,
-                            -1);
+                OAM::Render(0, &data_ov002_0210c398, r5, r4, -1, -1, 0x1000, 0x1000, 0, -1);
             }
             return;
         }

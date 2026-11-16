@@ -36,21 +36,21 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_020070e8",
+      "symbol": "_Z13func_020070e8P9dCamera_ciissss",
       "address": "0x020070e8",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/arm9/0200/func_020070e8.c",
       "ordinal": 2
     },
     {
-      "symbol": "StarDanceBoundYaw",
+      "symbol": "_Z17StarDanceBoundYawP9dCamera_csi",
       "address": "0x020071a8",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0200/func_020071a8.c",
       "ordinal": 3
     },
     {
-      "symbol": "CutsceneGrandStarFlyAppCvars",
+      "symbol": "_Z28CutsceneGrandStarFlyAppCvarsP9dCamera_c",
       "address": "0x020071e0",
       "size": "0x000000e0",
       "legacy_source": "src/unnamed/arm9/0200/func_020071e0.cpp",

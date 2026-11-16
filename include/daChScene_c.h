@@ -58,7 +58,6 @@
  * get here is documented in the file comment above.
  */
 struct daChScene_c : dActor_c {
-    u8 pad_0d0[0x4];
     /* WORLD -> DOOR-LOCAL. InitResources builds translation, then rotation Y by
        -mAngleY and X by -mAngleX, then inverts in place -- so every Behavior
        test runs in the door's own frame and the box tests are plain axis

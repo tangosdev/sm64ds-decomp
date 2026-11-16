@@ -15,16 +15,8 @@
  * pointer-to-member constants are real. StateStart returns an int, so its
  * table entry casts the pointer-to-member to the table's void handler type.
  *
- * __sinit at the end of this file emits compiler-numbered statics; they
- * compile as @578..@598, @600 and @602, and the manifest maps them to the ROM's
- * @456..@479 and @506. mwcc's counter for those names advances for
- * named variables, named parameters (prototypes included) and some
- * compiler temporaries declared before them (`new daKpa3Bg_c` alone
- * advances it by 25, and including daKpa_c.h by 171), so adding or
- * deleting one renumbers them. These
- * names are there for the count:
- * - InitResources loads the model through the named local bmd.
- * - StateCheck steps its timer through two named locals.
+ * __sinit at the end of this file emits compiler-numbered statics, which
+ * the manifest maps to the ROM's @456..@479 and @506.
  *
  * leftovers:
  * - StateStart, StateCheck and StateFall take N64's names for the same
@@ -49,12 +41,10 @@ struct BMD_File;
 struct KCL_File;
 struct CLPS_Block;
 
-extern "C" {
-
-int *Vec3_AsrInPlace(VecFx32 *v, int n);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
-void func_02012694(unsigned int, void *);
-int CopyTexPalFromLevelModel(void *);
+extern "C" int *Vec3_AsrInPlace(VecFx32 *v, int n);
+extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
+void func_02012694(unsigned int, const Vector3 *);
+extern "C" int CopyTexPalFromLevelModel(void *);
 
 /* One row per mVariant: where that platform piece sits (whole units,
  * shifted to fix12 on use) and the angle it faces. */
@@ -71,7 +61,6 @@ extern SharedFilePtr *data_ov060_02119514[];
 extern SharedFilePtr *data_ov060_0211953c[];
 extern CLPS_Block *data_ov060_0211a980[];
 extern int data_0208e738;
-}
 
 typedef void (daKpa3Bg_c::*Handler)();
 struct HandlerEntry { Handler pmf; };
@@ -96,8 +85,7 @@ daKpa3Bg_c::~daKpa3Bg_c() {}
 #pragma defer_codegen on
 
 /* Historical alias BowserSkyPlatform_Spawn. */
-extern "C" daKpa3Bg_c *daKpa3Bg_c_classInit(void)
-{
+daKpa3Bg_c *daKpa3Bg_c_classInit(void) {
     return new daKpa3Bg_c;
 }
 
@@ -118,11 +106,9 @@ void daKpa3Bg_c::OnStoodOn(dActor_c *other) {
 
 s32 daKpa3Bg_c::InitResources()
 {
-    mVariant = (u8)(param1 & 0xf);
+    mVariant = (param1 & 15);
     data_0208e738 = 0;
-    /* bmd is named for the @NNN count (see the banner). */
-    BMD_File *bmd = dExtSimpleModel_c::LoadFile(*data_ov060_02119514[mVariant]);
-    mModel.SetFile(bmd, 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov060_02119514[mVariant]), 1, -1);
     CopyTexPalFromLevelModel(&mModel.data);
     data_0208e738 = 1;
     UpdateClsnPosAndRot();
@@ -200,11 +186,9 @@ void daKpa3Bg_c::StateCheck() {
         mTimer = 0;
         return;
     }
-    int dropAfter = mVariant * 20;
-    u16 *timer = &mTimer;
-    if (dropAfter < mTimer)
+    if (mVariant * 20 < mTimer)
         mState = 2;
-    (*timer)++;
+    mTimer++;
 }
 
 /* mState 2, N64's falling_bowser_plat_act_fall: the platform lifts, then
@@ -227,9 +211,9 @@ void daKpa3Bg_c::StateFall() {
         Vector3 pos = mPos;
         int row = mVariant;
         u16 ang = data_ov060_02119564[row].angle;
-        pos.x = FX_SinIdx(ang >> 4) * 0x366 + (data_ov060_02119564[row].x << 12);
+        pos.x = FX_SinIdx(ang >> 4) * 870 + (data_ov060_02119564[row].x << 12);
         pos.y = 0x12c000;
-        pos.z = FX_CosIdx(ang >> 4) * 0x366 + (data_ov060_02119564[mVariant].z << 12);
+        pos.z = FX_CosIdx(ang >> 4) * 870 + (data_ov060_02119564[mVariant].z << 12);
         Vec3_AsrInPlace((VecFx32 *)&pos, 3);
         MTX_MultVec43(&pos, &data_0209b3ec, &mCamSpacePos);
         func_02012694(0xbc, &mCamSpacePos);
@@ -248,7 +232,7 @@ void daKpa3Bg_c::StateFall() {
     if (phase % 2 == 0 && phase < 14) {
         int row = mVariant;
         s16 ang = data_ov060_02119564[row].angle;
-        int dist = (6 - (phase >> 1)) * 0x122;
+        int dist = (6 - (phase >> 1)) * 290;
         int baseX = data_ov060_02119564[row].x << 12;
         int baseZ = data_ov060_02119564[row].z << 12;
         Vector3 dustPos;

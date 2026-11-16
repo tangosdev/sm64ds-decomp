@@ -66,8 +66,8 @@ enum {
 extern "C" {
 int AngleDiff(int a, int b);
 /* 1: return to the rec room when the menu closes. */
-void StartMinigameMenu(unsigned char returnToRecRoom);
 }
+void StartMinigameMenu(unsigned char returnToRecRoom);
 
 extern u8 data_0209d684;
 extern u8 data_0209d660;
@@ -104,7 +104,7 @@ s32 daObjCloset_c::Behavior() {
         switch (target->GetTalkState()) {
         case 0: {
             /* Face the cupboard: half a turn off its yaw, stepped by 0x800. */
-            short facing = (short)(mAngleY + kHalfTurn);
+            short facing = (mAngleY + kHalfTurn);
             if (ApproachLinear(target->mAngleY, facing, kTurnStep) != 0) {
                 mMessageID = kMenuMessage;
                 Message::PrepareTalk();
@@ -204,6 +204,6 @@ s32 daObjCloset_c::InitResources() {
     return 1;
 }
 
-extern "C" daObjCloset_c *daObjCloset_c_classInit() {
+daObjCloset_c *daObjCloset_c_classInit() {
     return new daObjCloset_c();
 }

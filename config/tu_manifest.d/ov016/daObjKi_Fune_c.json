@@ -85,14 +85,14 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjKi_Fune_c_classInit_KI_FUNE_UP",
+      "symbol": "_Z35daObjKi_Fune_c_classInit_KI_FUNE_UPv",
       "address": "0x021129a0",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_ki_fune_ki_fune_up.c",
       "ordinal": 7
     },
     {
-      "symbol": "daObjKi_Fune_c_classInit_KI_FUNE",
+      "symbol": "_Z32daObjKi_Fune_c_classInit_KI_FUNEv",
       "address": "0x021129d0",
       "size": "0x00000030",
       "legacy_source": "src/d_a_obj_ki_fune_ki_fune.c",
@@ -500,28 +500,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN18KiFuneModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017acc",
+      "canonical_symbol": "_Z13func_02017accPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination for the two model handles"
     },
     {
       "symbol": "_ZN18KiFuneModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017ab4",
+      "canonical_symbol": "_Z13func_02017ab4i",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination for the two model handles"
     },
     {
       "symbol": "_ZN20KiFuneClsnFileHandleC1Ej",
-      "canonical_symbol": "func_02017b4c",
+      "canonical_symbol": "_Z13func_02017b4cPvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination for the two collision handles"
     },
     {
       "symbol": "_ZN20KiFuneClsnFileHandleD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail destructor registration destination for the two collision handles"
@@ -529,24 +529,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@415",
+      "from": "@419",
       "to": "@820",
-      "evidence": "mwcc numbers this registration node @422 per TU and another module already defines @422 Re-keyed from @429 to @407 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @407 to @415 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "mwcc numbers this registration node @422 per TU and another module already defines @422 Re-keyed from @429 to @407 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @407 to @415 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @415 to @416 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @416 to @419 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@416",
+      "from": "@420",
       "to": "@605",
-      "evidence": "batch-5 atdup: @423 collides cross-module (temps are fleet-global); renumber to unused same-length @605 Re-keyed from @430 to @408 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @408 to @416 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "batch-5 atdup: @423 collides cross-module (temps are fleet-global); renumber to unused same-length @605 Re-keyed from @430 to @408 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @408 to @416 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @416 to @417 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @417 to @420 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@417",
+      "from": "@421",
       "to": "@604",
-      "evidence": "batch-5 atdup: @424 collides cross-module (temps are fleet-global); renumber to unused same-length @604 Re-keyed from @431 to @409 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @409 to @417 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "batch-5 atdup: @424 collides cross-module (temps are fleet-global); renumber to unused same-length @604 Re-keyed from @431 to @409 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @409 to @417 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @417 to @418 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @418 to @421 when a redundant pun was removed (same section, offset, size, type and binding)."
     },
     {
-      "from": "@418",
+      "from": "@422",
       "to": "@425",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @441 now; licensed under the existing pin @425 Re-keyed from @432 to @410 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @410 to @418 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @441 now; licensed under the existing pin @425 Re-keyed from @432 to @410 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @410 to @418 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @418 to @419 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @419 to @422 when a redundant pun was removed (same section, offset, size, type and binding)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -593,7 +593,7 @@
       "source": "0x021138cc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -613,7 +613,7 @@
       "source": "0x021138e8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017acc",
+      "symbol": "_Z13func_02017accPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -633,7 +633,7 @@
       "source": "0x02113904",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -653,7 +653,7 @@
       "source": "0x02113920",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017b4c",
+      "symbol": "_Z13func_02017b4cPvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -683,7 +683,7 @@
       "source": "0x02113948",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017ab4",
+      "symbol": "_Z13func_02017ab4i",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -733,7 +733,7 @@
       "source": "0x02113964",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"

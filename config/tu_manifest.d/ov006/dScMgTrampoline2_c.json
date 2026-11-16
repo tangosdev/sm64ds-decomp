@@ -87,63 +87,63 @@
       "ordinal": 2
     },
     {
-      "symbol": "Trmp2Spinner_UpdateMatrix",
+      "symbol": "_Z25Trmp2Spinner_UpdateMatrixPc",
       "address": "0x02122814",
       "size": "0x00000068",
       "legacy_source": "src/func_ov006_02122814.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "Trmp2Spinner_Update",
+      "symbol": "_Z19Trmp2Spinner_UpdatePc",
       "address": "0x0212287c",
       "size": "0x00000040",
       "legacy_source": "src/func_ov006_0212287c.c",
       "ordinal": 4
     },
     {
-      "symbol": "Trmp2Spinner_Init",
+      "symbol": "_Z17Trmp2Spinner_InitPvi",
       "address": "0x021228bc",
       "size": "0x00000160",
       "legacy_source": "src/func_ov006_021228bc.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "Trmp2Spinner_SetModel",
+      "symbol": "_Z21Trmp2Spinner_SetModelPv",
       "address": "0x02122a1c",
       "size": "0x00000030",
       "legacy_source": "src/func_ov006_02122a1c.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "Trmp2Spinner_UpdateMatricesAll",
+      "symbol": "_Z30Trmp2Spinner_UpdateMatricesAllv",
       "address": "0x02122a4c",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_02122a4c.c",
       "ordinal": 7
     },
     {
-      "symbol": "Trmp2Spinner_UpdateAll",
+      "symbol": "_Z22Trmp2Spinner_UpdateAllv",
       "address": "0x02122ab8",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_02122ab8.c",
       "ordinal": 8
     },
     {
-      "symbol": "Trmp2Spinner_HideAll",
+      "symbol": "_Z20Trmp2Spinner_HideAllv",
       "address": "0x02122b24",
       "size": "0x00000064",
       "legacy_source": "src/func_ov006_02122b24.c",
       "ordinal": 9
     },
     {
-      "symbol": "Trmp2Spinner_InitAll",
+      "symbol": "_Z20Trmp2Spinner_InitAlli",
       "address": "0x02122b88",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov006_02122b88.c",
       "ordinal": 10
     },
     {
-      "symbol": "Trmp2Spinner_LoadAll",
+      "symbol": "_Z20Trmp2Spinner_LoadAllii",
       "address": "0x02122c04",
       "size": "0x00000064",
       "legacy_source": "src/func_ov006_02122c04.c",
@@ -227,28 +227,28 @@
       "ordinal": 22
     },
     {
-      "symbol": "Trmp2_PickFaceB",
+      "symbol": "_Z15Trmp2_PickFaceBi",
       "address": "0x0212373c",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_0212373c.c",
       "ordinal": 23
     },
     {
-      "symbol": "Trmp2_PickFaceA",
+      "symbol": "_Z15Trmp2_PickFaceAi",
       "address": "0x021237c8",
       "size": "0x00000064",
       "legacy_source": "src/func_ov006_021237c8.c",
       "ordinal": 24
     },
     {
-      "symbol": "Trmp2_OccupancyBits",
+      "symbol": "_Z19Trmp2_OccupancyBitsii",
       "address": "0x0212382c",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_0212382c.c",
       "ordinal": 25
     },
     {
-      "symbol": "Trmp2_ColumnForKind",
+      "symbol": "_Z19Trmp2_ColumnForKindi",
       "address": "0x021238d0",
       "size": "0x00000068",
       "legacy_source": "src/func_ov006_021238d0.c",
@@ -346,7 +346,7 @@
       "ordinal": 39
     },
     {
-      "symbol": "dScMgTrampoline2_c_classInit",
+      "symbol": "_Z28dScMgTrampoline2_c_classInitv",
       "address": "0x0212471c",
       "size": "0x0000018c",
       "legacy_source": "src/actors/MgTrampolineTerror.cpp",
@@ -664,7 +664,7 @@
       "source": "0x0213fbc8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "dScMgTrampoline2_c_classInit",
+      "symbol": "_Z28dScMgTrampoline2_c_classInitv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212471c"
@@ -1224,7 +1224,7 @@
       "source": "0x0213323c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_02017a24",
+      "symbol": "_Z13func_02017a24Pvj",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017a24"
@@ -1254,7 +1254,7 @@
       "source": "0x02133264",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_02017a0c",
+      "symbol": "_Z13func_02017a0ci",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017a0c"
@@ -1585,14 +1585,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN23Trampoline2ModelFilePtrC1Ej",
-      "canonical_symbol": "func_02017a24",
+      "canonical_symbol": "_Z13func_02017a24Pvj",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a24",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN23Trampoline2ModelFilePtrD1Ev",
-      "canonical_symbol": "func_02017a0c",
+      "canonical_symbol": "_Z13func_02017a0ci",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a0c",
       "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
@@ -1674,37 +1674,37 @@
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning: RAW: src/func_ov006_021227c8.cpp (Trmp2_DestructJumperModels) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/func_ov006_021228bc.cpp (Trmp2Spinner_Init) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: CONFLICT: extern declaration 'Trmp2Spinner_UpdateMatrix' differs between the legacy file that used to hold Trmp2Spinner_UpdateMatrix and the one that held Trmp2Spinner_UpdateMatricesAll; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'sTrmp2Spinners' differs between the legacy file that used to hold Trmp2Spinner_UpdateMatricesAll and the one that held Trmp2Spinner_HideAll; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'sTrmp2Spinners' differs between the legacy file that used to hold Trmp2Spinner_UpdateMatricesAll and the one that held Trmp2Spinner_InitAll; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'sTrmp2Spinners' differs between the legacy file that used to hold Trmp2Spinner_UpdateMatricesAll and the one that held Trmp2Spinner_LoadAll; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'sTrmp2StarModelFile' differs between the legacy file that used to hold Trmp2Spinner_SetModel and the one that held Trmp2Spinner_Destruct; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Trmp2Spinner_UpdateMatrix' differs between the legacy file that used to hold Trmp2Spinner_UpdateMatrix and the one that held Trmp2Spinner_UpdateMatricesAll; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sTrmp2Spinners' differs between the legacy file that used to hold Trmp2Spinner_UpdateMatricesAll and the one that held Trmp2Spinner_HideAll; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sTrmp2Spinners' differs between the legacy file that used to hold Trmp2Spinner_UpdateMatricesAll and the one that held Trmp2Spinner_InitAll; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sTrmp2Spinners' differs between the legacy file that used to hold Trmp2Spinner_UpdateMatricesAll and the one that held Trmp2Spinner_LoadAll; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sTrmp2StarModelFile' differs between the legacy file that used to hold Trmp2Spinner_SetModel and the one that held Trmp2Spinner_Destruct; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'G2_GetBG2CharPtr' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c11PaintSquareEiiii and the one that held func_ov006_02122e20; kept the first, the other is commented out for review. Reconciled: every legacy spelling now takes the declaration in include/nitro/gx/g2.h, so no local extern is left to disagree.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'G2_GetBG0CharPtr' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c11PaintSquareEiiii and the one that held func_ov006_02122e20; kept the first, the other is commented out for review. Reconciled: every legacy spelling now takes the declaration in include/nitro/gx/g2.h, so no local extern is left to disagree.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'G2_GetBG1CharPtr' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c11PaintSquareEiiii and the one that held func_ov006_02122e20; kept the first, the other is commented out for review. Reconciled: every legacy spelling now takes the declaration in include/nitro/gx/g2.h, so no local extern is left to disagree.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'G2_GetBG3CharPtr' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c11PaintSquareEiiii and the one that held func_ov006_02122e20; kept the first, the other is commented out for review. Reconciled: every legacy spelling now takes the declaration in include/nitro/gx/g2.h, so no local extern is left to disagree.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'G2_GetBG3CharPtr' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c11PaintSquareEiiii and the one that held _ZN18dScMgTrampoline2_c16OnGraphCallback0Ev; kept the first, the other is commented out for review. Reconciled: every legacy spelling now takes the declaration in include/nitro/gx/g2.h, so no local extern is left to disagree.",
-    "tubuild create warning: CONFLICT: extern declaration 'MIi_CpuClear16' differs between the legacy file that used to hold func_ov006_02122e20 and the one that held _ZN18dScMgTrampoline2_c16OnGraphCallback0Ev; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_02123428 and the one that held Trmp2_PickFaceA; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'MIi_CpuClear16' differs between the legacy file that used to hold func_ov006_02122e20 and the one that held func_ov006_02123b24; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov006_02123428 and the one that held func_ov006_02123bf4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MIi_CpuClear16' differs between the legacy file that used to hold func_ov006_02122e20 and the one that held _ZN18dScMgTrampoline2_c16OnGraphCallback0Ev; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_02123428 and the one that held Trmp2_PickFaceA; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MIi_CpuClear16' differs between the legacy file that used to hold func_ov006_02122e20 and the one that held func_ov006_02123b24; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov006_02123428 and the one that held func_ov006_02123bf4; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'TrmpItem_UpdateAll' differs between the legacy file that used to hold func_ov006_02123bf4 and the one that held func_ov006_02123cb4; kept the first, the other is commented out for review. Reconciled in favour of the alternate, void(void): the callee at 0x020cedf0 never reads r0 on entry -- it clears r4, loads a count and an array base from its own literal pool and sweeps them at stride 0x1d0, the same parameterless shape as its neighbour Trmp2Mario_UpdateAll. The kept spelling 'daPly_c *TrmpItem_UpdateAll(void *c)' byte-matched at 0x02123bf4 only incidentally, because the incoming 'c' is still live in r0 across the 'mov r4, r0' that precedes the bl. Both call sites now use the void(void) contract and the false 'daPly_c' shadow struct is gone.",
-    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov006_02123428 and the one that held func_ov006_02123cb4; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'func_0203cc28' differs between the legacy file that used to hold func_ov006_02123428 and the one that held func_ov006_02123cb4; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'TrmpItem_Spawn' differs between the legacy file that used to hold func_ov006_02123428 and the one that held func_ov006_02123cb4; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'MIi_CpuClear16' differs between the legacy file that used to hold func_ov006_02122e20 and the one that held func_ov006_02124088; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'func_02012718' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c16OnGraphCallback0Ev and the one that held func_ov006_02124088; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'func_02012468' differs between the legacy file that used to hold func_ov006_02123938 and the one that held func_ov006_02124088; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov006_02123428 and the one that held func_ov006_02123cb4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0203cc28' differs between the legacy file that used to hold func_ov006_02123428 and the one that held func_ov006_02123cb4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'TrmpItem_Spawn' differs between the legacy file that used to hold func_ov006_02123428 and the one that held func_ov006_02123cb4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MIi_CpuClear16' differs between the legacy file that used to hold func_ov006_02122e20 and the one that held func_ov006_02124088; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012718' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c16OnGraphCallback0Ev and the one that held func_ov006_02124088; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012468' differs between the legacy file that used to hold func_ov006_02123938 and the one that held func_ov006_02124088; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Mg_DrawLine' differs between the legacy file that used to hold func_ov006_02123938 and the one that held func_ov006_02124088; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'sTrmpStartTouchY' differs between the legacy file that used to hold func_ov006_02124088 and the one that held func_ov006_02124228; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c6RenderEv and the one that held _ZN18dScMgTrampoline2_c11CanEndStateEi; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c6RenderEv and the one that held _ZN18dScMgTrampoline2_c10StartRoundEi; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'MIi_CpuClear16' differs between the legacy file that used to hold func_ov006_02122e20 and the one that held _ZN18dScMgTrampoline2_c10StartRoundEi; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'sTrmpStartTouchY' differs between the legacy file that used to hold func_ov006_02124088 and the one that held func_ov006_02124228; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c6RenderEv and the one that held _ZN18dScMgTrampoline2_c11CanEndStateEi; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c6RenderEv and the one that held _ZN18dScMgTrampoline2_c10StartRoundEi; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MIi_CpuClear16' differs between the legacy file that used to hold func_ov006_02122e20 and the one that held _ZN18dScMgTrampoline2_c10StartRoundEi; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'FX_Div' differs between the legacy file that used to hold func_ov006_02124088 and the one that held _ZN18dScMgTrampoline2_c13InitResourcesEv; kept the first, the other is commented out for review. Reconciled: every legacy spelling now takes the declaration in include/nitro/fx/fx_cp.h, so no local extern is left to disagree.",
-    "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c6RenderEv and the one that held func_ov006_021245a8; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c6RenderEv and the one that held func_ov006_021245a8; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'G2_GetBG2CharPtr' differs between the legacy file that used to hold _ZN18dScMgTrampoline2_c11PaintSquareEiiii and the one that held func_ov006_021245a8; kept the first, the other is commented out for review. Reconciled: every legacy spelling now takes the declaration in include/nitro/gx/g2.h, so no local extern is left to disagree.",
-    "tubuild create warning: CONFLICT: extern declaration 'MIi_CpuClear16' differs between the legacy file that used to hold func_ov006_02122e20 and the one that held func_ov006_021245a8; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration '_ZN2GX10LoadBGPlttEPKvjj' differs between the legacy file that used to hold func_ov006_02122e20 and the one that held func_ov006_021245a8; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MIi_CpuClear16' differs between the legacy file that used to hold func_ov006_02122e20 and the one that held func_ov006_021245a8; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN2GX10LoadBGPlttEPKvjj' differs between the legacy file that used to hold func_ov006_02122e20 and the one that held func_ov006_021245a8; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('struct', 'dExtSimpleModel_c') differs between the legacy file that used to hold Trmp2Spinner_SetModel and the one that held Trmp2Spinner_Destruct; kept the first, the other is commented out for review",
     "Data-boundary reconstruction: all 0x148 bytes of 0x0213fbc4..0x0213fd0c are tiled by compiler-emitted objects from this TU; all 56 relocated words are licensed by exact raw symbol, addend, configured module set, and destination before byte comparison.",
     "data-trampoline2-wave-tables1017 adds complete700-byte rodata ownership [0212f0f0,0212f3ac):28 native objects670bytes and30 linker-alignment bytes, including six typed scripted waves, observed short-array counts2/3/5, four spinnercolors,16colorbrushpalette and11randompositions. Names/types express consumer evidence; original array lengths/grouping/identifier spelling and historicalTU are not claimed. No source alignment attributes or paddingobjects. Existing raw state/lifecycle findings remain partial.",
@@ -2219,7 +2219,7 @@
           },
           {
             "ordinal": 3,
-            "symbol": "Trmp2Spinner_UpdateMatrix",
+            "symbol": "_Z25Trmp2Spinner_UpdateMatrixPc",
             "identical": true,
             "relocCount": 3,
             "differences": [],
@@ -2227,7 +2227,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "Trmp2Spinner_Update",
+            "symbol": "_Z19Trmp2Spinner_UpdatePc",
             "identical": true,
             "relocCount": 2,
             "differences": [],
@@ -2235,7 +2235,7 @@
           },
           {
             "ordinal": 5,
-            "symbol": "Trmp2Spinner_Init",
+            "symbol": "_Z17Trmp2Spinner_InitPvi",
             "identical": true,
             "relocCount": 10,
             "differences": [],
@@ -2243,7 +2243,7 @@
           },
           {
             "ordinal": 6,
-            "symbol": "Trmp2Spinner_SetModel",
+            "symbol": "_Z21Trmp2Spinner_SetModelPv",
             "identical": true,
             "relocCount": 3,
             "differences": [],
@@ -2251,7 +2251,7 @@
           },
           {
             "ordinal": 7,
-            "symbol": "Trmp2Spinner_UpdateMatricesAll",
+            "symbol": "_Z30Trmp2Spinner_UpdateMatricesAllv",
             "identical": true,
             "relocCount": 3,
             "differences": [],
@@ -2259,7 +2259,7 @@
           },
           {
             "ordinal": 8,
-            "symbol": "Trmp2Spinner_UpdateAll",
+            "symbol": "_Z22Trmp2Spinner_UpdateAllv",
             "identical": true,
             "relocCount": 3,
             "differences": [],
@@ -2267,7 +2267,7 @@
           },
           {
             "ordinal": 9,
-            "symbol": "Trmp2Spinner_HideAll",
+            "symbol": "_Z20Trmp2Spinner_HideAllv",
             "identical": true,
             "relocCount": 2,
             "differences": [],
@@ -2275,7 +2275,7 @@
           },
           {
             "ordinal": 10,
-            "symbol": "Trmp2Spinner_InitAll",
+            "symbol": "_Z20Trmp2Spinner_InitAlli",
             "identical": true,
             "relocCount": 3,
             "differences": [],
@@ -2283,7 +2283,7 @@
           },
           {
             "ordinal": 11,
-            "symbol": "Trmp2Spinner_LoadAll",
+            "symbol": "_Z20Trmp2Spinner_LoadAllii",
             "identical": true,
             "relocCount": 3,
             "differences": [],
@@ -2379,7 +2379,7 @@
           },
           {
             "ordinal": 23,
-            "symbol": "Trmp2_PickFaceB",
+            "symbol": "_Z15Trmp2_PickFaceBi",
             "identical": true,
             "relocCount": 3,
             "differences": [],
@@ -2387,7 +2387,7 @@
           },
           {
             "ordinal": 24,
-            "symbol": "Trmp2_PickFaceA",
+            "symbol": "_Z15Trmp2_PickFaceAi",
             "identical": true,
             "relocCount": 3,
             "differences": [],
@@ -2395,7 +2395,7 @@
           },
           {
             "ordinal": 25,
-            "symbol": "Trmp2_OccupancyBits",
+            "symbol": "_Z19Trmp2_OccupancyBitsii",
             "identical": true,
             "relocCount": 0,
             "differences": [],
@@ -2403,7 +2403,7 @@
           },
           {
             "ordinal": 26,
-            "symbol": "Trmp2_ColumnForKind",
+            "symbol": "_Z19Trmp2_ColumnForKindi",
             "identical": true,
             "relocCount": 0,
             "differences": [],
@@ -2515,7 +2515,7 @@
           },
           {
             "ordinal": 40,
-            "symbol": "dScMgTrampoline2_c_classInit",
+            "symbol": "_Z28dScMgTrampoline2_c_classInitv",
             "identical": false,
             "relocCount": 23,
             "differences": [
@@ -2625,32 +2625,32 @@
     {
       "from": "@1213",
       "to": "@1086",
-      "evidence": "data-trampoline2-wave-tables1017: named local wave-record type shifts compiler-local destructor registration node from@1111 to@1110. Both are unique12-byte local NOBITS objects; identical64-byte initializer references the node at the same relocation offset/type/addend. Its configured canonicalidentity remains@1086. Complete71-definition proof permits only this exactsite-derived bijection and the random-position semanticrename. Re-keyed -1 (from @1156) when this TU's extern Mg_DrawLine was removed and dScMgBase_c.h gained Mg_DrawLine. Re-keyed -1 (from @1148) when the unread TU-local vtable-slot scaffold struct C was deleted.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed -2 (from @1215) when the unread pointer parameters of Trmp2Mario_EnterAll and Trmp2Mario_PlaceAtStart were dropped from this TU's externs. Re-keyed -1 (from @1213) when Trmp2Spinner_Init took its hit count as an int parameter instead of re-reading a void * into a local (decl agreement with Trmp2Spinner_InitAll's caller); paired by symtab index 92, every non-strtab section byte-identical. Re-keyed from @1212 to @1211 (same symtab index 92, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1211 to @1209 when StateWaitExit copied its PMF state as a struct P2 instead of a b ? a : a ternary. Re-keyed from @1209 to @1215 when the five state assignments became mState = &dScMgTrampoline2_c::X (five new PMF literals ahead of it) and the dead P2/S2/StateValue types were deleted. Re-keyed from @1209 to @1212 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @1209 to @1231 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @1209 to @1177 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1208 to @1211 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @1211 to @1224 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @1224 to @1218 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @1218 to @1213 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "data-trampoline2-wave-tables1017: named local wave-record type shifts compiler-local destructor registration node from@1111 to@1110. Both are unique12-byte local NOBITS objects; identical64-byte initializer references the node at the same relocation offset/type/addend. Its configured canonicalidentity remains@1086. Complete71-definition proof permits only this exactsite-derived bijection and the random-position semanticrename. Re-keyed -1 (from @1156) when this TU's extern Mg_DrawLine was removed and dScMgBase_c.h gained Mg_DrawLine. Re-keyed -1 (from @1148) when the unread TU-local vtable-slot scaffold struct C was deleted.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed -2 (from @1215) when the unread pointer parameters of Trmp2Mario_EnterAll and Trmp2Mario_PlaceAtStart were dropped from this TU's externs. Re-keyed -1 (from @1213) when Trmp2Spinner_Init took its hit count as an int parameter instead of re-reading a void * into a local (decl agreement with Trmp2Spinner_InitAll's caller); paired by symtab index 92, every non-strtab section byte-identical. Re-keyed from @1212 to @1211 (same symtab index 92, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1211 to @1209 when StateWaitExit copied its PMF state as a struct P2 instead of a b ? a : a ternary. Re-keyed from @1209 to @1215 when the five state assignments became mState = &dScMgTrampoline2_c::X (five new PMF literals ahead of it) and the dead P2/S2/StateValue types were deleted. Re-keyed from @1209 to @1212 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @1209 to @1231 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @1209 to @1177 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1208 to @1211 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @1211 to @1224 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @1224 to @1218 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @1218 to @1213 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1213 to @1231 when this branch's TrmpLine method conversion was merged over main's CalcLib.h/MtxStack.h declaration cleanup; the merged object emits this index (measured from the compiled object). Re-keyed from @1231 to @1225 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1225 to @1213 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@669",
+      "from": "@681",
       "to": "pmf_dScMgTrampoline2_c_StateIntro",
-      "evidence": "Compiler PMF literal: BeginIntro assigns mState = &dScMgTrampoline2_c::StateIntro, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (BeginIntro's load of 0x0213fbd8). Re-keyed from @670 to @695 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @695 to @663 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @663 to @666 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @666 to @679 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @679 to @673 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @673 to @669 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "Compiler PMF literal: BeginIntro assigns mState = &dScMgTrampoline2_c::StateIntro, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (BeginIntro's load of 0x0213fbd8). Re-keyed from @670 to @695 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @695 to @663 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @663 to @666 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @666 to @679 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @679 to @673 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @673 to @669 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @669 to @687 when this branch's TrmpLine method conversion was merged over main's CalcLib.h/MtxStack.h declaration cleanup; the merged object emits this index (measured from the compiled object). Re-keyed from @687 to @681 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@690",
+      "from": "@702",
       "to": "pmf_dScMgTrampoline2_c_StatePlay",
-      "evidence": "Compiler PMF literal: BeginPlay assigns mState = &dScMgTrampoline2_c::StatePlay, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (BeginPlay's load of 0x0213fbe8). Re-keyed from @691 to @716 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @716 to @684 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @684 to @687 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @687 to @700 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @700 to @694 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @694 to @690 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
-    },
-    {
-      "from": "@754",
-      "to": "pmf_dScMgTrampoline2_c_StateResults",
-      "evidence": "Compiler PMF literal: BeginResults assigns mState = &dScMgTrampoline2_c::StateResults, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (BeginResults's load of 0x0213fbf0). Re-keyed from @755 to @780 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @780 to @748 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @748 to @751 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @751 to @764 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @764 to @758 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @758 to @754 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "Compiler PMF literal: BeginPlay assigns mState = &dScMgTrampoline2_c::StatePlay, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (BeginPlay's load of 0x0213fbe8). Re-keyed from @691 to @716 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @716 to @684 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @684 to @687 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @687 to @700 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @700 to @694 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @694 to @690 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @690 to @708 when this branch's TrmpLine method conversion was merged over main's CalcLib.h/MtxStack.h declaration cleanup; the merged object emits this index (measured from the compiled object). Re-keyed from @708 to @702 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@764",
-      "to": "pmf_dScMgTrampoline2_c_StateWaitExit",
-      "evidence": "Compiler PMF literal: StateResults assigns mState = &dScMgTrampoline2_c::StateWaitExit, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (StateResults's load of 0x0213fbe0). Re-keyed from @765 to @790 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @790 to @758 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @758 to @761 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @761 to @774 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @774 to @768 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @768 to @764 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "to": "pmf_dScMgTrampoline2_c_StateResults",
+      "evidence": "Compiler PMF literal: BeginResults assigns mState = &dScMgTrampoline2_c::StateResults, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (BeginResults's load of 0x0213fbf0). Re-keyed from @755 to @780 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @780 to @748 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @748 to @751 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @751 to @764 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @764 to @758 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @758 to @754 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @754 to @772 when this branch's TrmpLine method conversion was merged over main's CalcLib.h/MtxStack.h declaration cleanup; the merged object emits this index (measured from the compiled object). Re-keyed from @772 to @766 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @766 to @764 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
-      "from": "@781",
+      "from": "@774",
+      "to": "pmf_dScMgTrampoline2_c_StateWaitExit",
+      "evidence": "Compiler PMF literal: StateResults assigns mState = &dScMgTrampoline2_c::StateWaitExit, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (StateResults's load of 0x0213fbe0). Re-keyed from @765 to @790 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @790 to @758 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @758 to @761 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @761 to @774 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @774 to @768 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @768 to @764 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @764 to @782 when this branch's TrmpLine method conversion was merged over main's CalcLib.h/MtxStack.h declaration cleanup; the merged object emits this index (measured from the compiled object). Re-keyed from @782 to @776 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @776 to @774 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@791",
       "to": "pmf_dScMgTrampoline2_c_StateDone",
-      "evidence": "Compiler PMF literal: StateWaitExit assigns mState = &dScMgTrampoline2_c::StateDone, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (StateWaitExit's load of 0x0213fbd0). Re-keyed from @782 to @807 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @807 to @775 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @775 to @778 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @778 to @791 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @791 to @785 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @785 to @781 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "Compiler PMF literal: StateWaitExit assigns mState = &dScMgTrampoline2_c::StateDone, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (StateWaitExit's load of 0x0213fbd0). Re-keyed from @782 to @807 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object). Re-keyed from @807 to @775 when the class-scope operator delete forwarders gave way to the global operator delete, merged over the NitroSDK renames (measured from the compiled object). Re-keyed from @775 to @778 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @778 to @791 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @791 to @785 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @785 to @781 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @781 to @799 when this branch's TrmpLine method conversion was merged over main's CalcLib.h/MtxStack.h declaration cleanup; the merged object emits this index (measured from the compiled object). Re-keyed from @799 to @793 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @793 to @791 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object)."
     }
   ],
   "rodata": [

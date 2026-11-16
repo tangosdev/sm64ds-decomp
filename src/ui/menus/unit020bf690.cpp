@@ -32,7 +32,7 @@
  * first here and the functions come out in ROM order.
  *
  * The ScreenFade_* names are coined from the bodies, after the module's
- * RequestScreenFade entry; ov007 records no names. All keep C linkage.
+ * RequestScreenFade entry; ov007 records no names.
  * func_ov007_020bfbdc keeps its address name while a file another branch
  * holds calls it.
  */
@@ -49,8 +49,6 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/MtxStack.h"
 
-extern "C" {
-
 /* The 0x14-byte screen-fade record sScreenFade points at. */
 typedef struct Ov007Fade {
     Ov007Transition *transition; /* 0x00 */
@@ -66,22 +64,22 @@ typedef char Ov007Fade_size_must_be_0x14[sizeof(Ov007Fade) == 0x14 ? 1 : -1];
 
 extern Ov007Fade *sScreenFade;
 
-extern void InitialiseVramGlobals(void);
-extern void func_ov007_020b3edc(int size);
-extern void *func_ov007_020b3f20(int idx);
-extern void func_ov007_020bbff0(void *c);
-extern void func_ov007_020bc02c(void *a, void *b);
-extern void func_ov007_020bc47c(void *thiz);
-extern void func_ov007_020bc53c(void *p);
-extern Ov007Model *func_ov007_020bc6d4(void *file, int flags);
-extern int func_ov007_020bdeb0(int a);
-extern void func_ov007_020c3d1c(void *self);
-extern void *func_ov007_020c3df4(const char *name, int size);
-extern void Transition_Update(Ov007Transition *tr);
-extern void Transition_StartBackward(Ov007Transition *tr, int v);
-extern void Transition_StartForward(Ov007Transition *tr, int v);
-extern void Transition_Destroy(void *p);
-extern Ov007Transition *Transition_Create(void);
+extern "C" void InitialiseVramGlobals(void);
+extern "C" void func_ov007_020b3edc(int size);
+extern "C" void *func_ov007_020b3f20(int idx);
+extern void func_ov007_020bbff0(Ov007Model *c);
+extern void func_ov007_020bc02c(Ov007Model *a, void *b);
+extern "C" void func_ov007_020bc47c(Ov007Model *thiz);
+extern void func_ov007_020bc53c(Ov007Model *p);
+extern "C" Ov007Model *func_ov007_020bc6d4(void *file, int flags);
+extern "C" int func_ov007_020bdeb0(int a);
+extern "C" void func_ov007_020c3d1c(void *self);
+extern "C" void *func_ov007_020c3df4(const char *name, int size);
+extern "C" void Transition_Update(Ov007Transition *tr);
+extern "C" void Transition_StartBackward(Ov007Transition *tr, int v);
+extern "C" void Transition_StartForward(Ov007Transition *tr, int v);
+extern "C" void Transition_Destroy(void *p);
+extern "C" Ov007Transition *Transition_Create(void);
 
 void ScreenFade_Create(void) {
     void *file;
@@ -120,14 +118,14 @@ void ScreenFade_Destroy(void) {
 /* Turns the model to face the screen and puts it 0x1064 in front of the
  * camera: the point (0, 0, -0x1064) taken back through the inverse of the
  * camera's view matrix. */
-void func_ov007_020bfbdc(void *self) {
+extern "C" void func_ov007_020bfbdc(void *self) {
     Ov007Camera *cam = (Ov007Camera *)self;
     Ov007Model *model = sScreenFade->model;
     Vector3 vec;
     Matrix4x3 mat;
 
     func_ov007_020bc47c(model);
-    model->rotX = (short)FX_DivS32(0x5a0000, 0x168);
+    model->rotX = FX_DivS32(0x5a0000, 360);
     model->visible = 0;
 
     vec.y = 0;
@@ -145,11 +143,11 @@ void ScreenFade_Draw(Ov007Camera *cam) {
     if (model->visible == 0)
         return;
     int fovyIdx = cam->fovy >> 4;
-    Fix12i sinDist = FX_MUL(FX_SinIdx(fovyIdx), 0x1064);
-    Fix12i size = model->scale.x * 0xd800 + 0x12c000;
-    Fix12i scaled = FX_MUL(size, sinDist);
-    int cosScaled = FX_CosIdx(fovyIdx) * 0x60;
-    Fix12i extent = FX_Div(scaled, cosScaled);
+    fx32 sinDist = FX_MUL(FX_SinIdx(fovyIdx), 0x1064);
+    fx32 size = model->scale.x * 0xd800 + 0x12c000;
+    fx32 scaled = FX_MUL(size, sinDist);
+    int cosScaled = FX_CosIdx(fovyIdx) * 96;
+    fx32 extent = FX_Div(scaled, cosScaled);
     model->scale.z = FX_Div(extent, 0x5000);
     model->scale.x = model->scale.z;
     func_ov007_020bc02c(model, &cam->viewMatrix);
@@ -159,7 +157,7 @@ void ScreenFade_Draw(Ov007Camera *cam) {
 /* Queues fade kind `kind` (1..9, see ScreenFade_Start) with flags and
  * the end callback onEnd (0 for none); ScreenFade_Update starts it on its
  * next run. */
-void RequestScreenFade(int kind, int flags, void (*onEnd)(void)) {
+extern "C" void RequestScreenFade(int kind, int flags, void (*onEnd)(void)) {
     sScreenFade->request = kind;
     sScreenFade->flags = flags;
     sScreenFade->onEnd = onEnd;
@@ -185,7 +183,7 @@ void ScreenFade_Start(void) {
         tr->curve = 0;
         tr->planes = 0x3F;
         tr->step = 0x3C;
-        tr->fx.brightness.from = 0x10;
+        tr->fx.brightness.from = 16;
         tr->fx.brightness.to = 0;
         break;
     case 2:
@@ -194,7 +192,7 @@ void ScreenFade_Start(void) {
         tr->curve = 0;
         tr->planes = 0x3F;
         tr->step = 0x3C;
-        tr->fx.brightness.from = -0x10;
+        tr->fx.brightness.from = -16;
         tr->fx.brightness.to = 0;
         break;
     case 3:
@@ -203,7 +201,7 @@ void ScreenFade_Start(void) {
         tr->curve = 0;
         tr->planes = 0x2F;
         tr->step = 0x3C;
-        tr->fx.brightness.from = -0x10;
+        tr->fx.brightness.from = -16;
         tr->fx.brightness.to = 0;
         break;
     case 4:
@@ -212,7 +210,7 @@ void ScreenFade_Start(void) {
         tr->curve = 0;
         tr->planes = 0x3F;
         tr->step = 0x100;
-        tr->fx.brightness.from = -0x10;
+        tr->fx.brightness.from = -16;
         tr->fx.brightness.to = 0;
         break;
     case 5:
@@ -230,8 +228,8 @@ void ScreenFade_Start(void) {
         tr->curve = 0;
         tr->planes = 0x3F;
         tr->step = 0x1000;
-        tr->fx.brightness.from = -0x10;
-        tr->fx.brightness.to = -0x10;
+        tr->fx.brightness.from = -16;
+        tr->fx.brightness.to = -16;
         break;
     case 7:
         tr->effect = 4;
@@ -239,8 +237,8 @@ void ScreenFade_Start(void) {
         tr->curve = 0;
         tr->planes = 0x2F;
         tr->step = 0x1000;
-        tr->fx.brightness.from = -0x10;
-        tr->fx.brightness.to = -0x10;
+        tr->fx.brightness.from = -16;
+        tr->fx.brightness.to = -16;
         break;
     case 8:
         tr->effect = 4;
@@ -258,7 +256,7 @@ void ScreenFade_Start(void) {
         tr->step = 0x190;
         tr->planes = 1;
         tr->fx.alpha.planes2 = 0x14;
-        tr->fx.alpha.evaFrom = 0x10;
+        tr->fx.alpha.evaFrom = 16;
         tr->fx.alpha.evaTo = 0;
         tr->fx.alpha.evbFrom = 0;
         tr->fx.alpha.evbTo = 0;
@@ -273,7 +271,7 @@ void ScreenFade_Start(void) {
         } else {
             color = 0;
         }
-        color = color | (color << 0x10);
+        color = color | (color << 16);
         parts->materials->diffuseAmbient = color;
         parts->materials->specularEmission = color;
         sScreenFade->model->visible = 1;
@@ -338,6 +336,5 @@ void ScreenFade_Update(void) {
     }
     if (tr->reversed == 0)
         return;
-    G2_SetBlendBrightness(0x3f, -0x10);
-}
+    G2_SetBlendBrightness(0x3f, -16);
 }

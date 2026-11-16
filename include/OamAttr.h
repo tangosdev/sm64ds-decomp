@@ -4,8 +4,8 @@
  *
  * DELIBERATELY DEPENDENCY-FREE -- no #include, and `unsigned short` rather than `u16`.
  * That is not a style choice, it is what makes this header includable everywhere. Five
- * of the files that need it carry their own `typedef int s32;` / `typedef int Fix12i;`
- * at file scope, and duplicating a typedef is an error under `-lang c99`, so pulling in
+ * of the files that need it carry their own `typedef int s32;` at file scope, and
+ * duplicating a typedef is an error under `-lang c99`, so pulling in
  * types.h here would break them. An earlier attempt at a shared OamAttr header did
  * exactly that and broke the ROM build; this is the fix. `u16` IS `unsigned short`, so
  * the type is identical either way.

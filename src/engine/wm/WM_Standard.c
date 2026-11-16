@@ -177,7 +177,7 @@ WMErrCode WM_SetParentParameter(WMCallbackFunc callback, const WMParentParam *pp
              (pparaBuf->KS_Flag ? WM_SIZE_KS_CHILD_DATA + WM_SIZE_MP_CHILD_PADDING : 0) >
          WM_SIZE_MP_DATA_MAX))
         return WM_ERRCODE_INVALID_PARAM;
-    (void)WmCheckParentParameter(pparaBuf);
+    WmCheckParentParameter(pparaBuf);
     WM_SetCallbackTable(WM_APIID_SET_P_PARAM, callback);
     DC_StoreRange((void *)pparaBuf, sizeof(WMParentParam));
     if (pparaBuf->userGameInfoLength > 0)

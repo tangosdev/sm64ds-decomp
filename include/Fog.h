@@ -14,7 +14,7 @@ struct Fog {
     u8  pad_026[0x2];
 #ifdef __cplusplus
     /* Types only. A named parameter renumbers @NNN in every consumer. */
-    void Init(unsigned short, Fix12i, Fix12i);
+    void Init(unsigned short, fx32, fx32);
 #endif
 };
 

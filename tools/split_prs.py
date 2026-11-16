@@ -47,7 +47,7 @@ different symbol than its name. Nothing in the repo consumes either annotation, 
 `match.py --func <stem>` reports "symbol not found in object" — meaning the byte oracle
 could not verify these files at all, while `progress.py` counted them as matched because
 a `src/<name>.c` existed. The emitted function is renamed to the `@symbol` name and the
-recovered name kept as `// recovered name: Y`. Produced by `tools/reconcile_names.py`,
+recovered name kept as `// recovered name: Y`. Produced by the reconcile_names pass (since retired),
 byte-verified per file."""),
     ("blind", "Resolve references to symbols that carry no address",
      """Each file referenced a name `config/**/symbols.txt` does not define — the BLIND

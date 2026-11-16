@@ -38,7 +38,6 @@
  * position, this one returns its own field.
  */
 
-#include "math/Fix12.h"
 
 struct dCcAcPos_c : dCcAc_c {
     Vector3 pos;            /* 0x34 */
@@ -54,7 +53,7 @@ struct dCcAcPos_c : dCcAc_c {
     dCcAcPos_c();
 
     /* --- non-virtual --- */
-    void Init(dActor_c *actor, const Vector3 &offset, Fix12i radius, Fix12i height, u32 flags,
+    void Init(dActor_c *actor, const Vector3 &offset, fx32 radius, fx32 height, u32 flags,
               u32 vulnFlags);
     void SetPosRelativeToActor(const Vector3 &offset);
 };

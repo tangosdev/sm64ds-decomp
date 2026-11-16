@@ -102,7 +102,7 @@ void Vec3_Asr(void *dst, void *src, int n);
    sizeof is 0x11c; the implicit ctor calls dActor_c C2, stores this class's
    vptr, then dExtCommonModel_c C1 at 0xd4. The null check is the one `new` itself
    emits. */
-extern "C" daObjRc_Hane_c *daObjRc_Hane_c_classInit() {
+daObjRc_Hane_c *daObjRc_Hane_c_classInit() {
     return new daObjRc_Hane_c();
 }
 
@@ -159,7 +159,7 @@ s32 daObjRc_Hane_c::Behavior() {
        runs the full 16 bits and wraps on its own -- the table only ever sees
        the low bits either way. */
     if (mPlaySound != 0) {
-        if (mFrame == 0x40) {
+        if (mFrame == 64) {
             Sound::PlayBank3(0x75, mCamSpacePos);
             mFrame = 0;
         }

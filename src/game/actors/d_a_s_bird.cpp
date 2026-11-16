@@ -239,9 +239,9 @@ void daSBird_c::StateSpawnFlock() {
             Vector3_16 rot = mPrevAngle;
             for (int i = 0; i < n - 1; i++) {
                 Vector3 pos;
-                pos.x = mPosX + (int)((Random() % 400) - 0xa0) * 4096;
+                pos.x = mPosX + (int)((Random() % 400) - 160) * 0x1000;
                 pos.y = mPosY;
-                pos.z = mPosZ + (int)((Random() % 400) - 0xa0) * 4096;
+                pos.z = mPosZ + (int)((Random() % 400) - 160) * 0x1000;
                 rot.y = (short)(rot.y + (short)(Random() >> 16));
                 daSBird_c *follower =
                     (daSBird_c *)dActor_c::Spawn(0x157, 0, pos, &rot, mAreaId, -1);
@@ -305,7 +305,7 @@ s32 daSBird_c::InitResources() {
     return 1;
 }
 
-extern "C" daSBird_c *daSBird_c_classInit() {
+daSBird_c *daSBird_c_classInit() {
     return new daSBird_c();
 }
 

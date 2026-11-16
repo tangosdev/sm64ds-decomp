@@ -9,7 +9,7 @@ extern "C" void func_ov007_020c3d1c(void *self);
 
 /* Frees the mesh func_ov007_020cbbb0 builds: its buffers, every cell link,
  * the link table, the grid (func_ov007_020c7368) and the mesh itself. */
-extern "C" void func_ov007_020cbb04(Ov007Mesh *mesh) {
+void func_ov007_020cbb04(Ov007Mesh *mesh) {
     func_ov007_020c3d1c(mesh->verts);
     func_ov007_020c3d1c(mesh->faceNormals);
     func_ov007_020c3d1c(mesh->vertexNormals);

@@ -75,7 +75,7 @@ extern WakameAnimationFileHandle data_ov002_0210e0d4; /* BCA animation */
  * inline operator new; 0x020bc5bc calls dActor_c's C2, the store at
  * 0x020bc5c8 lays down this class's vptr, and 0x020bc5d0 constructs
  * mAnmModel. The null check is the one `new` itself emits. */
-extern "C" daObjWakame_c *daObjWakame_c_classInit(void) {
+daObjWakame_c *daObjWakame_c_classInit(void) {
     return new daObjWakame_c();
 }
 

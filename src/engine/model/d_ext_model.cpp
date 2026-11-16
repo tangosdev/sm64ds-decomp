@@ -62,24 +62,30 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 struct Model;
 struct MatAnimData;
 
-extern "C" {
-extern Matrix4x3 data_0209b3ec; /* local extern: the camera-space matrix the Render paths use */
+extern Matrix4x3 data_0209b3ec;
+/* local extern: the camera-space matrix the Render paths use */
 /* local extern: no header declares it; sizes the transforms buffer from the file */
-int func_02046564(BMD_File *file);
-/* local extern: no header declares it; initializes ModelComponents over the file */
-void func_020462d0(ModelComponents *data, BMD_File *file, void *buffer);
+extern "C" int func_02046564(void *file);
+/* local extern: Model4.cpp's Dst/Desc/ElemA. Pointer casts at the calls. */
+struct Dst;
+struct Desc;
+struct ElemA;
+void func_020462d0(Dst *data, Desc *file, ElemA *buffer);
 /* defined below; dExtCommonModel_c and dExtShadowModel_c take their pooled
    components from it */
 ModelComponents *GetCommonModelComponents(BMD_File *file);
+extern "C" {
 /* local extern: LoadFile.c defines int(int); the file comes back as a
    pointer here (banked return row). */
 void *LoadFile(int ov0ID);
 /* local extern: func_020469e0.c defines int(int *). The caller's shard
    matched this spelling (banked rows). */
 int func_020469e0(void *ptr);
+}
+
 /* local extern: no header declares it; dExtModel_c's destructor frees the file.
    decl_common.h's copy is the same spelling; that catch-all does not count. */
-void Deallocate(void *ptr);
+extern "C" void Deallocate(void *ptr);
 /* local extern: game heap pointer TrimModelFile reads */
 extern void *data_020a0ea0;
 /* decl_common.h's int[] spelling. The records are 0xc-byte CommonModelData. */
@@ -94,18 +100,15 @@ extern int data_0209cef0;
    but flips the declaration plurality onto this shorter path. */
 extern int data_0208e738;
 u32 TrimModelFile(void *ptr);
-/* local extern: defined in src/engine/model/Model4.cpp, which types the frame
-   `short`; no header declares it. Stores (file, frame) into bone slot i of the
-   components' animation array. The frame stays `int` here: the ROM passes
-   func_020162a4's `lsr #16` result with no sign extension, which a `short`
-   parameter would add (the banked param:#4 int disagreement). */
-void func_02045e2c(int obj, int i, int a, int b);
-/* local extern: no header declares it; blends verts toward the old pose in
-   Virtual10/UpdateVerts while blendWeight is still below 1.0 */
-void func_0204531c(ModelComponents *data, s32 weight);
+/* int frame: a short parameter sign-extends func_020162a4 and that function
+   no longer reproduces. C linkage matches Model4.cpp. */
+extern "C" void func_02045e2c(int obj, int i, BCA_File *a, int b);
+/* local extern: blends verts toward the old pose in Virtual10/UpdateVerts
+   while blendWeight is still below 1.0. Definition takes char *. */
+extern "C" void func_0204531c(char *data, int weight);
 /* local extern: no header declares it; sizes the mBlendBuffer blend buffer off the
    file. Spelled (int *) the way func_020462bc.c defines it */
-u32 func_020462bc(int *file);
+extern "C" u32 func_020462bc(int *file);
 /* local extern: no header declares it; initializes ModelComponents' side of
    the blend buffer. Spelled (int *, int) the way func_020462b4.c defines it */
 void func_020462b4(int *data, int buf);
@@ -118,8 +121,9 @@ extern u8 data_0209ceec;
  * strings, so the objects are overlay 1's .data. */
 extern BMD_File data_ov001_020ad524;
 extern BMD_File data_ov001_020ad560;
+extern "C" {
 /* local extern: no header declares it; the shadow scale matrix */
-void func_0203c178(Matrix4x3 *m, Fix12i sx, Fix12i sy, Fix12i sz);
+void func_0203c178(Matrix4x3 *m, fx32 sx, fx32 sy, fx32 sz);
 /* local extern: the texture-animation helpers. Each Prepare's ROM body is a
    0xc long-call veneer (ldr ip, [pc]; bx ip); the registers pass through
    untouched, so the helper's own two-argument signature is the call surface. */
@@ -128,7 +132,7 @@ void func_02046bbc(ModelComponents *model, BTP_File *file, unsigned int frame);
 void func_02046b64(BMD_File *model, BTA_File *file);
 void func_020469e8(ModelComponents *model, BTA_File *file, int frame);
 void func_020470e8(BMD_File *model, BMA_File *file);
-void func_02046e28(struct Model *model, struct MatAnimData *file, unsigned short frame);
+void func_02046e28(ModelComponents *model, BMA_File *file, unsigned short frame);
 }
 
 /* 0xc-byte records in the common model data array at data_0209cefc, counted
@@ -161,7 +165,7 @@ dExtModel_c::~dExtModel_c() {
 
 /* Trims a set-up model file's allocation down to the size its header
    reports (func_020469e0). Coined name. */
-extern "C" u32 TrimModelFile(void *ptr) {
+u32 TrimModelFile(void *ptr) {
     if (!ptr)
         return 0;
     void *heap = data_020a0ea0;
@@ -217,7 +221,7 @@ void *dExtSimpleModel_c::AddToCommonModelDataArr(BMD_File &file) {
 
 /* Get-or-create the pooled ModelComponents entry for the pointer-holding
    siblings (dExtCommonModel_c/dExtShadowModel_c). Coined name. */
-extern "C" ModelComponents *GetCommonModelComponents(BMD_File *file) {
+ModelComponents *GetCommonModelComponents(BMD_File *file) {
     CommonModelData *e;
     void *b;
 
@@ -233,7 +237,7 @@ extern "C" ModelComponents *GetCommonModelComponents(BMD_File *file) {
             e->components = 0;
             return 0;
         }
-        func_020462d0(e->components, file, b);
+        func_020462d0((Dst *)e->components, (Desc *)file, (ElemA *)b);
     }
     return e->components;
 }
@@ -285,7 +289,7 @@ int dExtSimpleModel_c::DoSetFile(char *file_, int a, int b) {
     buffer = transformsBuf;
     if (buffer == 0)
         return 0;
-    func_020462d0(&data, file, buffer);
+    func_020462d0((Dst *)&data, (Desc *)file, (ElemA *)buffer);
     data.UpdateVertsUsingBones();
     if (a != 0)
         SetMaterialFlags(0x8000);
@@ -366,7 +370,7 @@ extern "C" void func_02016a04(char *self, int color) {
     ((dExtSimpleModel_c *)self)->data.SetAmbient(color);
 }
 
-extern "C" void func_020169f4(char *self, int color) {
+void func_020169f4(char *self, int color) {
     ((dExtSimpleModel_c *)self)->data.SetEmission(color);
 }
 
@@ -393,13 +397,13 @@ dExtAnmModel_c::~dExtAnmModel_c() {}
 
 void dExtAnmModel_c::UpdateVerts() {
     s32 frame = currFrame;
-    data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
+    data.UpdateBones(file, (u32)(frame << 4) >> 16);
     data.UpdateVertsUsingBones();
 }
 
 void dExtAnmModel_c::Virtual10(Matrix4x3 &mat) {
     s32 frame = currFrame;
-    data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
+    data.UpdateBones(file, (u32)(frame << 4) >> 16);
     dExtSimpleModel_c::Virtual10(mat);
 }
 
@@ -415,12 +419,12 @@ void dExtAnmModel_c::Virtual18(u32 mat, const Vector3 *scale) {
 
 /* Refresh bones without touching verts -- UpdateVerts' first half kept
    file-local; daMoray_c calls it on a dExtBlendAnmModel_c*. */
-extern "C" void func_020167a4(dExtAnmModel_c *self) {
+void func_020167a4(dExtAnmModel_c *self) {
     s32 frame = self->currFrame;
-    self->data.UpdateBones(self->file, (u32)(frame << 4) >> 0x10);
+    self->data.UpdateBones(self->file, (u32)(frame << 4) >> 16);
 }
 
-void dExtAnmModel_c::SetAnim(BCA_File *animFile, int flags, Fix12i speed, u16 startFrame) {
+void dExtAnmModel_c::SetAnim(BCA_File *animFile, int flags, fx32 speed, u16 startFrame) {
     if (animFile == file) {
         SetFlags(flags);
         this->speed = speed;
@@ -481,9 +485,9 @@ int dExtBlendAnmModel_c::InitBlendBuffer(char *file) {
 
 void dExtBlendAnmModel_c::UpdateVerts() {
     s32 frame = currFrame;
-    data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
+    data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
-        func_0204531c(&data, blendWeight);
+        func_0204531c((char *)&data, blendWeight);
     } else {
         data.UpdateVertsUsingBones();
     }
@@ -491,9 +495,9 @@ void dExtBlendAnmModel_c::UpdateVerts() {
 
 void dExtBlendAnmModel_c::Virtual10(Matrix4x3 &mat) {
     s32 frame = currFrame;
-    data.UpdateBones(file, (u32)(frame << 4) >> 0x10);
+    data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
-        func_0204531c(&data, blendWeight);
+        func_0204531c((char *)&data, blendWeight);
     } else {
         dExtSimpleModel_c::Virtual10(mat);
     }
@@ -516,7 +520,7 @@ void dExtBlendAnmModel_c::Advance() {
     }
 }
 
-void dExtBlendAnmModel_c::SetAnim(BCA_File &animFile, int numBlendFrames, int flags, Fix12i speed,
+void dExtBlendAnmModel_c::SetAnim(BCA_File &animFile, int numBlendFrames, int flags, fx32 speed,
                                   u16 startFrame) {
     if (&animFile == file) {
         SetFlags(flags);
@@ -552,34 +556,34 @@ dExtAnm2Model_c::~dExtAnm2Model_c() {}
 
 /* The second animation's SetAnim, fast path and all: the same body as
    dExtAnmModel_c::SetAnim, run on otherFile and otherAnim. */
-void dExtAnm2Model_c::Func_020162C4(u32 animFile, int flags, Fix12i speed, u16 startFrame) {
+void dExtAnm2Model_c::Func_020162C4(BCA_File *animFile, int flags, fx32 speed, u16 startFrame) {
     if (animFile == otherFile) {
         otherAnim.SetFlags(flags);
         otherAnim.speed = speed;
     } else {
         otherFile = animFile;
-        otherAnim.SetAnimation(((BCA_File *)animFile)->numFrames, flags, speed, startFrame);
+        otherAnim.SetAnimation(animFile->numFrames, flags, speed, startFrame);
     }
 }
 
 /* Pose bone `bone` from the second animation at its current frame. daPly_c
    calls it on a body model with bone 8; the int `self` keeps daPly_c's
    declaration and this definition in agreement. */
-extern "C" void func_020162a4(int self, int bone) {
+void func_020162a4(int self, int bone) {
     dExtAnm2Model_c *model = (dExtAnm2Model_c *)self;
     s32 frame = model->otherAnim.currFrame;
     func_02045e2c((intptr_t)(&model->data), bone, model->otherFile, (u32)(frame << 4) >> 16);
 }
 
 /* Release bone `bone` back to the primary animation (no file, frame 0). */
-extern "C" void func_0201628c(int self, int bone) {
+void func_0201628c(int self, int bone) {
     dExtAnm2Model_c *model = (dExtAnm2Model_c *)self;
     func_02045e2c((intptr_t)(&model->data), bone, 0, 0);
 }
 
 /* otherAnim.Copy(src) upcasts src to its dExtFrameCtrl_c BASE (+0x50): the
    second animation is seeded from the first one's state. */
-void dExtAnm2Model_c::Copy(const dExtAnm2Model_c &src, char *newFile, u32 newOtherFile) {
+void dExtAnm2Model_c::Copy(const dExtAnm2Model_c &src, char *newFile, BCA_File *newOtherFile) {
     dExtAnmModel_c::Copy(src, newFile);
     otherAnim.Copy(src);
     if (newOtherFile)
@@ -702,14 +706,8 @@ int dExtShadowModel_c::InitCylinder() {
     return SetFile(&data_ov001_020ad560, 1, -1);
 }
 
-/* MEASURED 2026-10-26: a real method reproduces 0x02015e64/0x58 exactly. The
- * old note here said the definition had to stay in the C front end because
- * wall 6az homes class-typed by-value parameters -- but the by-value class was
- * never in the ROM. The stripped cartridge carries no _Z strings at all, so
- * the 5Fix12IiE in the old symbol was OUR spelling of a 20.12 scalar, and
- * nothing about the bytes asked for it. Scalars, a real method, same bytes.
- */
-void dExtShadowModel_c::InitModel(Matrix4x3 *m, Fix12i sx, Fix12i sy, Fix12i sz, u8 opacity) {
+/* Reproduces 0x02015e64/0x58; the three scales are fx32 scalars. */
+void dExtShadowModel_c::InitModel(Matrix4x3 *m, fx32 sx, fx32 sy, fx32 sz, u8 opacity) {
     mat = m;
     scale.x = sx;
     scale.y = sy;
@@ -796,7 +794,7 @@ void dExtFrameCtrl_c::Advance() {
     }
 }
 
-void dExtFrameCtrl_c::SetAnimation(u16 numFrames, int flags, Fix12i speed, u16 startFrame) {
+void dExtFrameCtrl_c::SetAnimation(u16 numFrames, int flags, fx32 speed, u16 startFrame) {
     numFramesAndFlags = flags | (numFrames << 12);
     currFrame = startFrame << 12;
     this->speed = speed;
@@ -878,7 +876,7 @@ dExtAnmTexPat_c::~dExtAnmTexPat_c() {}
 
 /* The header's first word is the frame count handed to SetAnimation, as in
    the sibling BTA. */
-void dExtAnmTexPat_c::SetFile(BTP_File &animFile, int flags, Fix12i speed, u16 startFrame) {
+void dExtAnmTexPat_c::SetFile(BTP_File &animFile, int flags, fx32 speed, u16 startFrame) {
     if (&animFile == file) {
         SetFlags(flags);
         this->speed = speed;
@@ -908,7 +906,7 @@ dExtAnmTexSRT_c::dExtAnmTexSRT_c() {
 
 dExtAnmTexSRT_c::~dExtAnmTexSRT_c() {}
 
-void dExtAnmTexSRT_c::SetFile(BTA_File &animFile, int flags, Fix12i speed, u16 startFrame) {
+void dExtAnmTexSRT_c::SetFile(BTA_File &animFile, int flags, fx32 speed, u16 startFrame) {
     if (&animFile == file) {
         SetFlags(flags);
         this->speed = speed;
@@ -938,7 +936,7 @@ dExtAnmMaterial_c::dExtAnmMaterial_c() {
 
 dExtAnmMaterial_c::~dExtAnmMaterial_c() {}
 
-void dExtAnmMaterial_c::SetFile(BMA_File &animFile, int flags, Fix12i speed, u16 startFrame) {
+void dExtAnmMaterial_c::SetFile(BMA_File &animFile, int flags, fx32 speed, u16 startFrame) {
     if (&animFile == file) {
         SetFlags(flags);
         this->speed = speed;
@@ -949,7 +947,7 @@ void dExtAnmMaterial_c::SetFile(BMA_File &animFile, int flags, Fix12i speed, u16
 }
 
 void dExtAnmMaterial_c::Update(ModelComponents &model) {
-    func_02046e28((struct Model *)&model, (struct MatAnimData *)file, (u16)((u32)currFrame >> 12));
+    func_02046e28(&model, file, (u16)((u32)currFrame >> 12));
 }
 
 /* Static: no this. */

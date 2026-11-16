@@ -5,10 +5,6 @@
  * VEC_Normalize(src, dst): normalizes src into dst.
  */
 
-typedef int Fix12i;
-
-
-
 struct Matrix3x3_Vecs {
     struct Vector3 v0;
     struct Vector3 v1;

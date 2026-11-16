@@ -14,11 +14,11 @@ int func_02064674(int *p, int idx, int dst)
         if (idx == cnt - 1) {
             int rem = p[0] % n;
             if (rem != 0)
-                MI_CpuCopy8((const void *)dst, (void *)(idx * n + base), (unsigned int)rem);
+                MI_CpuCopy8((const void *)dst, (void *)(idx * n + base), rem);
             else
-                MI_CpuCopy8((const void *)dst, (void *)(idx * n + base), (unsigned int)n);
+                MI_CpuCopy8((const void *)dst, (void *)(idx * n + base), n);
         } else {
-            MI_CpuCopy8((const void *)dst, (void *)(idx * n + base), (unsigned int)n);
+            MI_CpuCopy8((const void *)dst, (void *)(idx * n + base), n);
         }
     } else {
         return 0;

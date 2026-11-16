@@ -66,19 +66,19 @@ inline u32 PMi_MakeData2(u32 bit, u32 seq, u32 data) {
 static inline BOOL OS_EnableIrq(void) {
     u16 prep = REG_IME;
     REG_IME = 1;
-    return (BOOL)prep;
+    return prep;
 }
 
 static inline BOOL OS_DisableIrq(void) {
     u16 prep = REG_IME;
     REG_IME = 0;
-    return (BOOL)prep;
+    return prep;
 }
 
 static inline BOOL OS_RestoreIrq(BOOL enable) {
     u16 prep = REG_IME;
-    REG_IME = (u16)enable;
-    return (BOOL)prep;
+    REG_IME = enable;
+    return prep;
 }
 
 /* The display's power bit (nitro/gx/gx.h's GXi_PowerLCD). */
@@ -106,12 +106,12 @@ int PMi_Lock(void) {
     OSIntrMode enabled = OS_DisableInterrupts();
 
     if (PMi_Work.lock) {
-        (void)OS_RestoreInterrupts(enabled);
+        OS_RestoreInterrupts(enabled);
         return FALSE;
     }
 
     PMi_Work.lock = TRUE;
-    (void)OS_RestoreInterrupts(enabled);
+    OS_RestoreInterrupts(enabled);
 
     return TRUE;
 }
@@ -179,12 +179,12 @@ void PMi_CommonCallback(PXIFifoTag tag, u32 data, BOOL err) {
         return;
     }
 
-    command = (u16)((data & SPI_PXI_RESULT_COMMAND_MASK) >> SPI_PXI_RESULT_COMMAND_SHIFT);
-    pxiResult = (u16)((data & SPI_PXI_RESULT_DATA_MASK) >> SPI_PXI_RESULT_DATA_SHIFT);
+    command = ((data & SPI_PXI_RESULT_COMMAND_MASK) >> SPI_PXI_RESULT_COMMAND_SHIFT);
+    pxiResult = ((data & SPI_PXI_RESULT_DATA_MASK) >> SPI_PXI_RESULT_DATA_SHIFT);
 
     if (SPI_PXI_COMMAND_PM_REG0VALUE <= command && command <= SPI_PXI_COMMAND_PM_REG3VALUE) {
-        int num = (int)(command - SPI_PXI_COMMAND_PM_REG0VALUE);
-        u16 value = (u16)(pxiResult & 0xff);
+        int num = (command - SPI_PXI_COMMAND_PM_REG0VALUE);
+        u16 value = (pxiResult & 0xff);
         u16 *buffer = PMi_RegisterBuffer[num].buffer;
 
         if (buffer) {
@@ -229,7 +229,7 @@ u32 PMi_SendSleepStart(u16 trigger, u16 keyIntrData) {
     *p = 0;
     PMi_SleepEndFlag = 0;
 
-    (void)PMi_SetLCDPower(PM_LCD_POWER_OFF, PM_LED_BLINK_LOW, FALSE, FALSE);
+    PMi_SetLCDPower(PM_LCD_POWER_OFF, PM_LED_BLINK_LOW, FALSE, FALSE);
 
     pxi_send_data = PMi_MakeData1(SPI_PXI_START_BIT, 0, SPI_PXI_COMMAND_PM_SLEEP_START, trigger);
     PMi_SendPxiData(pxi_send_data);
@@ -407,9 +407,9 @@ void PM_GoSleepMode(PMWakeUpTrigger trigger, PMLogic logic, u16 keyPattern) {
     prepIrq = OS_DisableIrq();
     prepIntrMode = OS_DisableInterrupts();
     prepIntrMask = OS_DisableIrqMask((1 << OS_IRQ_TABLE_MAX) - 1);
-    (void)OS_SetIrqMask(OS_IE_SPFIFO_RECV);
-    (void)OS_RestoreInterrupts(prepIntrMode);
-    (void)OS_EnableIrq();
+    OS_SetIrqMask(OS_IE_SPFIFO_RECV);
+    OS_RestoreInterrupts(prepIntrMode);
+    OS_EnableIrq();
 
     if (trigger & PM_TRIGGER_CARD) {
         if (MB_IsMultiBootChild()) {
@@ -438,16 +438,16 @@ void PM_GoSleepMode(PMWakeUpTrigger trigger, PMLogic logic, u16 keyPattern) {
     }
 
     if (!powerOffFlag) {
-        (void)PMi_SetLCDPower(PM_LCD_POWER_ON, PM_LED_ON, TRUE, FALSE);
+        PMi_SetLCDPower(PM_LCD_POWER_ON, PM_LED_ON, TRUE, FALSE);
     }
 
-    (void)OS_DisableInterrupts();
-    (void)OS_SetIrqMask(prepIntrMask);
-    (void)OS_RestoreInterrupts(prepIntrMode);
-    (void)OS_RestoreIrq(prepIrq);
+    OS_DisableInterrupts();
+    OS_SetIrqMask(prepIntrMask);
+    OS_RestoreInterrupts(prepIntrMode);
+    OS_RestoreIrq(prepIrq);
 
     if (powerOffFlag) {
-        (void)PM_ForceToPowerOff();
+        PM_ForceToPowerOff();
     }
 }
 
@@ -460,9 +460,9 @@ int PMi_SetLCDPower(PMLCDPower sw, PMLEDStatus led, int skip, int isSync) {
 
         if (led != PM_LED_NONE) {
             if (isSync) {
-                (void)PMi_SetLED(led);
+                PMi_SetLED(led);
             } else {
-                (void)PMi_SetLEDAsync(led, NULL, NULL);
+                PMi_SetLEDAsync(led, NULL, NULL);
             }
         }
 
@@ -475,9 +475,9 @@ int PMi_SetLCDPower(PMLCDPower sw, PMLEDStatus led, int skip, int isSync) {
 
         if (led != PM_LED_NONE) {
             if (isSync) {
-                (void)PMi_SetLED(led);
+                PMi_SetLED(led);
             } else {
-                (void)PMi_SetLEDAsync(led, NULL, NULL);
+                PMi_SetLEDAsync(led, NULL, NULL);
             }
         }
         break;

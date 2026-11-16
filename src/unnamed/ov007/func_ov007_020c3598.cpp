@@ -1,7 +1,6 @@
 //cpp
 #include "nitro/fx/fx_cp.h"
 
-extern "C" {
 int func_ov007_020c3598(int val, int n, char *buf, int base) {
     int res = 0;
     int fnd = 0;
@@ -16,11 +15,11 @@ int func_ov007_020c3598(int val, int n, char *buf, int base) {
         int one = 1;
         int pos = (n - 1) - i;
         char *p = buf + pos;
-        buf[pos] = (char)FX_DivS32(val, r7);
-        val -= r7 * ((signed char)buf[pos]);
+        buf[pos] = FX_DivS32(val, r7);
+        val -= r7 * (buf[pos]);
         r7 = FX_DivS32(r7, base);
         if (fnd == 0) {
-            if (((signed char)(*p)) != 0) {
+            if ((*p) != 0) {
                 fnd = one;
                 res = pos + 1;
             } else if (pos > 0) {
@@ -30,5 +29,4 @@ int func_ov007_020c3598(int val, int n, char *buf, int base) {
     }
 
     return res;
-}
 }

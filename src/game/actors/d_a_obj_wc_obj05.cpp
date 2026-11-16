@@ -53,7 +53,7 @@ extern CLPS_Block data_ov029_0211306c;
 /* Reconstructed source-style name; exact original SM64DS spelling is not
  * preserved. Historical alias: CageLift_Spawn. Attribution stays on
  * daObjWc_Obj05_c_classInit. */
-extern "C" daObjWc_Obj05_c *daObjWc_Obj05_c_classInit() {
+daObjWc_Obj05_c *daObjWc_Obj05_c_classInit() {
     return new daObjWc_Obj05_c();
 }
 
@@ -128,7 +128,7 @@ s32 daObjWc_Obj05_c::Behavior() {
         break;
     }
     case 2: {
-        if ((u16)mDwellTimer >= 0x6e) {
+        if ((u16)mDwellTimer >= 110) {
             int snd = Sound::PlayLong(mSoundHandle, 3, 0x8d, mCamSpacePos, 0);
             mSoundHandle = snd;
             mPosY += 0xa000;

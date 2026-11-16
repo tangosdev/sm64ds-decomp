@@ -47,8 +47,6 @@
 #include "nitro/gx/gx.h"
 #include "Ov007MenuMem.h"
 
-extern "C" {
-
 /* func_ov007_020b7138's first argument: the hooks dScDSMT_c hands the menu
  * (data_ov007_02103290). */
 typedef struct Ov007MenuHooks {
@@ -64,18 +62,18 @@ typedef struct Ov007MenuHooks {
  * bring-up, the frame's logic and the teardown start */
 extern int sFrameReady;
 
-extern void func_02045d9c(void);
+void func_02045d9c(void);
 extern void func_ov007_020aed98(void);
 extern void func_ov007_020b2e64(TPData *sample);
 extern void func_ov007_020b3050(void);
 extern void func_ov007_020b30b0(void);
 extern void func_ov007_020b40c0(void);
 extern void func_ov007_020b4100(int a, int b);
-extern void func_ov007_020b6544(void);
-extern void func_ov007_020b65e0(void);
-extern void Work_Create(void);
+extern "C" void func_ov007_020b6544(void);
+extern "C" void func_ov007_020b65e0(void);
+extern "C" void Work_Create(void);
 extern void func_ov007_020b6c54(void);
-extern void Display_Upload(void);
+extern "C" void Display_Upload(void);
 extern void func_ov007_020b7764(void);
 extern void func_ov007_020b782c(void);
 extern void func_ov007_020b8690(void);
@@ -95,11 +93,11 @@ extern void func_ov007_020be50c(void);
 extern void ScreenFade_Update(void);
 extern void ScreenFade_Destroy(void);
 extern void ScreenFade_Create(void);
-extern void func_ov007_020c1db0(Ov007Touch *touch, TPData *sample);
-extern void Pad_Update(struct Ov007Pad *pad, void *src);
+extern "C" void func_ov007_020c1db0(Ov007Touch *touch, TPData *sample);
+extern "C" void Pad_Update(struct Ov007Pad *pad, void *src);
 extern void func_ov007_020c3bc8(void);
 
-int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
+extern "C" int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
     int flags;
 
     sFrameReady = 0;
@@ -114,8 +112,8 @@ int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
     MenuGfx_InitSubEngine();
     MenuGfx_SetBgMode(1);
     func_02045d9c();
-    G2_SetBlendBrightness(0x3f, -0x10);
-    G2S_SetBlendBrightness(0x3f, -0x10);
+    G2_SetBlendBrightness(0x3f, -16);
+    G2S_SetBlendBrightness(0x3f, -16);
     GX_SetVisiblePlane(0);
     GXS_SetVisiblePlane(0);
     GX_SetDispSelect(GX_DISP_SELECT_SUB_MAIN);
@@ -156,7 +154,7 @@ int func_ov007_020b7090(u16 x, u16 y, u16 touch, u16 validity, int keys) {
     return choice;
 }
 
-int func_ov007_020b7040(void) {
+extern "C" int func_ov007_020b7040(void) {
     func_ov007_020bcf90();
     Display_DrawOam(WORK->display);
     WORK->frameCount++;
@@ -172,13 +170,13 @@ int func_ov007_020b6f4c(void) {
     sFrameReady = 0;
     flags |= strokeBits;
     if (work->pendingChoice != 0xa && work->pendingChoice != 0xb && work->choiceReady != 0) {
-        G2_SetBlendBrightness(0x3f, 0x10);
-        G2S_SetBlendBrightness(0x3f, 0x10);
+        G2_SetBlendBrightness(0x3f, 16);
+        G2S_SetBlendBrightness(0x3f, 16);
         GX_SetVisiblePlane(0);
         GXS_SetVisiblePlane(0);
     } else {
-        G2_SetBlendBrightness(0x20, -0x10);
-        G2S_SetBlendBrightness(0x20, -0x10);
+        G2_SetBlendBrightness(0x20, -16);
+        G2S_SetBlendBrightness(0x20, -16);
     }
     func_ov007_020b65e0();
     func_ov007_020b3050();
@@ -208,5 +206,4 @@ int func_ov007_020b6eb4(void) {
         CPi_RestoreContext(&cpContext);
     }
     return 1;
-}
 }

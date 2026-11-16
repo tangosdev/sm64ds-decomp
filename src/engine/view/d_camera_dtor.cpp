@@ -38,10 +38,10 @@ extern void Vec3fGetDistAndAngle(const Vector3 *from, const Vector3 *to, int *ou
 extern void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang,
                                  short angY);
 extern int func_02007cec(void *a, const Vector3 *b, int c);
-extern void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int sx, int sy, int sz);
 extern void Math_Function_0203b0fc(int *value, int target, int step, int max);
 extern int AngleDiff(int a, int b);
 }
+extern void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int sx, int sy, int sz);
 
 #ifdef _MSC_VER
 /* Host definition of the one destructor MSVC emits. The flat D0 name is
@@ -52,8 +52,6 @@ dCamera_c::~dCamera_c() {}
 
 dCamera_c::~dCamera_c() {}
 #endif
-
-extern "C" {
 
 void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarget, short vertDiv,
                    short horzTarget, short horzDiv) {
@@ -89,7 +87,7 @@ int CutsceneGrandStarFlyAppCvars(dCamera_c *cam) {
     ApproachLinear(cam->mScriptParam, 0x5a000, 0x2800);
     {
         dActor_c *o = reinterpret_cast<dActor_c *>(cam->mTargetPlayer);
-        short a = (short)(o->mAngleY + 0x8000);
+        short a = (o->mAngleY + 0x8000);
         const Vector3 *trans = &o->mPos;
         Vec3_RotateYAndTranslate(&va, trans, a, &cam->savedLookAt);
         Vec3_RotateYAndTranslate(&vb, trans, a, &cam->savedPos);
@@ -100,7 +98,6 @@ int CutsceneGrandStarFlyAppCvars(dCamera_c *cam) {
     func_02007cec(&cam->pos, &va, 0x28);
     ApproachVec3fAsymptotic(&cam->lookAt, &vb, 0x800, 0xccc, 0x800);
     return 1;
-}
 }
 
 /* The Vector3 destructor's body is the inline one in include/types.h. */

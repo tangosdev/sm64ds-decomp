@@ -86,7 +86,7 @@ int daObjSlIceBlock_c::Render() {
 int daObjSlIceBlock_c::Behavior() {
     int isType = (actorID == 0x5d);
     if (isType) {
-        if (DecIfAbove0_Short((u16 *)&mDelayTimer) == 0) {
+        if (DecIfAbove0_Short(&mDelayTimer) == 0) {
             ApproachLinear(mHorzSpeed, 0, 0x3000);
             if (ApproachLinear(mPosY, mMinPosY, 0xa000) != 0) {
                 MarkForDestruction();
@@ -95,20 +95,20 @@ int daObjSlIceBlock_c::Behavior() {
         UpdatePos(0);
         mSoundID = Sound::PlayLong(mSoundID, 3, 0x98, mCamSpacePos, 0);
     } else {
-        if (DecIfAbove0_Short((u16 *)&mDelayTimer) == 0) {
+        if (DecIfAbove0_Short(&mDelayTimer) == 0) {
             Vector3 pos;
             pos.x = mPosX;
             pos.y = mPosY;
             pos.z = mPosZ;
             int spawnType = 1;
-            if (DecIfAbove0_Byte((u8 *)&mNumToBigIce) == 0) {
+            if (DecIfAbove0_Byte(&mNumToBigIce) == 0) {
                 mNumToBigIce = 5;
                 spawnType = 2;
             } else {
                 pos.y -= 0x50000;
             }
             unsigned char cnt = mNumToBigIce;
-            mDelayTimer = (cnt + 1) * 0x14;
+            mDelayTimer = (cnt + 1) * 20;
             dActor_c::Spawn(0x5d, spawnType, pos, &mAngle, mAreaId, -1);
         }
     }
@@ -131,11 +131,11 @@ int daObjSlIceBlock_c::InitResources() {
         mMeshCollider.edgeContacts = false;
         mMeshCollider.Enable(this);
         mHorzSpeed = 0x2d000;
-        mDelayTimer = 0x64;
+        mDelayTimer = 100;
         mPrevAngleY = -0x4000;
         mMinPosY = mPosY - 0xc8000;
     } else {
-        mDelayTimer = (u8)mNumToBigIce * 0x14;
+        mDelayTimer = (u8)mNumToBigIce * 20;
         mNumToBigIce = 5;
     }
     return 1;
@@ -145,7 +145,7 @@ int daObjSlIceBlock_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the SL_ICEBLOCK_SHOT registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: SlidingIce_Spawn. */
-extern "C" daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT() {
+daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT() {
     return new daObjSlIceBlock_c();
 }
 
@@ -153,7 +153,7 @@ extern "C" daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT() {
  * RTTI, allocation size, vtable identity, and the SL_ICEBLOCK registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: SlidingIceSpawner_Spawn. */
-extern "C" daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK() {
+daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK() {
     return new daObjSlIceBlock_c();
 }
 

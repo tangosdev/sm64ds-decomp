@@ -43,27 +43,26 @@ typedef char KiFuneClsnFileHandle_size_must_be_8[sizeof(KiFuneClsnFileHandle) ==
 /* local extern: no shared header declares these. */
 extern "C" {
 
-extern int IsStarCollected(int a, int b);
 extern unsigned char gCurrentStarId;
 }
+extern int IsStarCollected(int a, int b);
 
 /* Actor 0x39 is the rocking hull, which uses model/collision index 0. */
 static inline int IsRockingHull(daObjKi_Fune_c *ship) {
     return ship->actorID == 0x39;
 }
 
-extern "C" daObjKi_Fune_c *daObjKi_Fune_c_classInit_KI_FUNE() {
+daObjKi_Fune_c *daObjKi_Fune_c_classInit_KI_FUNE() {
     return new daObjKi_Fune_c();
 }
 
-extern "C" daObjKi_Fune_c *daObjKi_Fune_c_classInit_KI_FUNE_UP() {
+daObjKi_Fune_c *daObjKi_Fune_c_classInit_KI_FUNE_UP() {
     return new daObjKi_Fune_c();
 }
 
 int daObjKi_Fune_c::InitResources() {
     void *clpsBlocks[2];
     unsigned int idx;
-    void *file;
     clpsBlocks[0] = data_ov016_021149d4[0];
     clpsBlocks[1] = data_ov016_021149d4[1];
     if (IsRockingHull(this))
@@ -71,14 +70,16 @@ int daObjKi_Fune_c::InitResources() {
     else
         mModelIndex = 1;
     idx = mModelIndex;
-    file = dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov016_021136e4[idx]);
-    mModel.SetFile((BMD_File *)file, 1, -1);
+    SharedFilePtr *modelFile = (SharedFilePtr *)data_ov016_021136e4[idx];
+    BMD_File *model = dExtSimpleModel_c::LoadFile(*modelFile);
+    mModel.SetFile(model, 1, -1);
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
     idx = mModelIndex;
-    file = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov016_021136dc[idx]);
-    mMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x1000, mAngleY,
-                          *(CLPS_Block *)clpsBlocks[idx]);
+    SharedFilePtr *collisionFile = (SharedFilePtr *)data_ov016_021136dc[idx];
+    KCL_File *collision = dBgW_Kc::LoadFile(*collisionFile);
+    CLPS_Block *clps = (CLPS_Block *)clpsBlocks[idx];
+    mMeshCollider.SetFile(collision, mClsnMat, 0x1000, mAngleY, *clps);
     if (mModelIndex == 0) {
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     }
@@ -101,7 +102,7 @@ int daObjKi_Fune_c::Behavior() {
     mMeshCollider.SetClipRadius(0x2000000);
     if (mModelIndex == 0) {
         mBobAngle += 0xda;
-        mAngleX = (s16)((FX_SinIdx((u16)mBobAngle >> 4) << 0xa) >> 0xc);
+        mAngleX = (s16)((FX_SinIdx((u16)mBobAngle >> 4) << 10) >> 12);
         if (DistToCPlayer() < 0xbb8000) {
             mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8b, mCamSpacePos, 0);
         }

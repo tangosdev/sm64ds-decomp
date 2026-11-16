@@ -1,14 +1,20 @@
 //cpp
 #include "Sound.h"
 
+extern "C" void func_0203da2c(int v);
+extern void func_02030500(void);
 extern "C" {
 
-extern void func_0203da2c(int v);
-extern void func_02030500(void);
 extern void func_02019a58(void);
-extern void func_020132d8(void);
+}
+
+extern "C" void func_020132d8(void);
+extern "C" {
+
 extern void func_0201ffcc(void);
 extern void func_020199a4(void);
+}
+
 extern unsigned char data_02092778;
 extern int data_0209fc68;
 extern int data_0209277c;
@@ -25,8 +31,7 @@ extern unsigned char gSoundInitialized;
    func_020199a4 follows. The state handlers func_02030b58
    and func_02030c38 and the error checks in func_02030e4c call it after
    setting their disconnect bits in data_0209fc58. */
-void func_02030790(void)
-{
+extern "C" void func_02030790(void) {
     data_0209fc68 = 6;
     if (data_02092778 == 0)
         return;
@@ -41,5 +46,4 @@ void func_02030790(void)
     }
     func_0201ffcc();
     func_020199a4();
-}
 }

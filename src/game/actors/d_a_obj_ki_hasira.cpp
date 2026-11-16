@@ -93,7 +93,7 @@ extern dCamera_c *gCamera;
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical aliases: RockPillar_Spawn, and RockPillar for
  * the class itself. */
-extern "C" daObjKi_Hasira_c *daObjKi_Hasira_c_classInit() {
+daObjKi_Hasira_c *daObjKi_Hasira_c_classInit() {
     return new daObjKi_Hasira_c();
 }
 

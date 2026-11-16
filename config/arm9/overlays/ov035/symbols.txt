@@ -4,9 +4,9 @@ _ZN16daObjCtMecha10_c16CleanupResourcesEv kind:function(arm,size=0x88) addr:0x02
 _ZN16daObjCtMecha10_c6RenderEv kind:function(arm,size=0x28) addr:0x021112c4
 _ZN16daObjCtMecha10_c8BehaviorEv kind:function(arm,size=0x1f4) addr:0x021112ec
 _ZN16daObjCtMecha10_c13InitResourcesEv kind:function(arm,size=0x17c) addr:0x021114e0
-daObjCtMecha10_c_classInit_CT_MECHA12S kind:function(arm,size=0x30) addr:0x0211165c
-daObjCtMecha10_c_classInit_CT_MECHA12L kind:function(arm,size=0x30) addr:0x0211168c
-daObjCtMecha10_c_classInit_CT_MECHA10 kind:function(arm,size=0x30) addr:0x021116bc
+_Z38daObjCtMecha10_c_classInit_CT_MECHA12Sv kind:function(arm,size=0x30) addr:0x0211165c
+_Z38daObjCtMecha10_c_classInit_CT_MECHA12Lv kind:function(arm,size=0x30) addr:0x0211168c
+_Z37daObjCtMecha10_c_classInit_CT_MECHA10v kind:function(arm,size=0x30) addr:0x021116bc
 _ZN16daObjCtMecha11_cD1Ev kind:function(arm,size=0x4c) addr:0x021116ec
 _ZN16daObjCtMecha11_cD0Ev kind:function(arm,size=0x60) addr:0x02111738
 _ZN16daObjCtMecha11_c12UpdateShadowEv kind:function(arm,size=0x110) addr:0x02111798
@@ -15,7 +15,7 @@ _ZN16daObjCtMecha11_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02
 _ZN16daObjCtMecha11_c6RenderEv kind:function(arm,size=0x28) addr:0x02111934
 _ZN16daObjCtMecha11_c8BehaviorEv kind:function(arm,size=0x13c) addr:0x0211195c
 _ZN16daObjCtMecha11_c13InitResourcesEv kind:function(arm,size=0x100) addr:0x02111a98
-daObjCtMecha11_c_classInit kind:function(arm,size=0x38) addr:0x02111b98
+_Z26daObjCtMecha11_c_classInitv kind:function(arm,size=0x38) addr:0x02111b98
 data_ov035_02111bd0 kind:data(any) addr:0x02111bd0
 data_ov035_02111bd4 kind:data(any) addr:0x02111bd4
 data_ov035_02111bd8 kind:data(any) addr:0x02111bd8

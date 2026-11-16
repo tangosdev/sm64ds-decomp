@@ -42,10 +42,9 @@ extern u8 gCurrentStarId;          /* STAR_ID */
 extern u8 gGameMode;               /* CURRENT_GAMEMODE */
 extern int gRunningKuppaScript;    /* RUNNING_KUPPA_SCRIPT */
 
-extern "C" int IsStarCollectedInLevel(s8 levelID, int starID);
+int IsStarCollectedInLevel(s8 levelID, int starID);
 
-extern "C" daSetSE_c *daSetSE_c_classInit()
-{
+daSetSE_c *daSetSE_c_classInit() {
     return new daSetSE_c();
 }
 
@@ -59,7 +58,7 @@ int daSetSE_c::InitResources()
     /* The int local is load-bearing: a u32 temporary or `param1 &= 0xf`
        makes CW materialize this + 0x08 into its own base register, where
        the ROM loads and stores [this + 0x08] directly. */
-    int soundID = param1 & 0xf;
+    int soundID = param1 & 15;
     param1 = soundID;
 
     /* The (int) casts are load-bearing, not noise: each forces its boolean

@@ -109,7 +109,7 @@ extern int data_ov064_0211c198[];
  * `new daObjFl_Puzzle_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0x33c), dBgActor_c's base constructor, then the
  * vptr store. */
-extern "C" daObjFl_Puzzle_c *daObjFl_Puzzle_c_classInit(void) {
+daObjFl_Puzzle_c *daObjFl_Puzzle_c_classInit(void) {
     return new daObjFl_Puzzle_c;
 }
 
@@ -122,7 +122,7 @@ extern "C" daObjFl_Puzzle_c *daObjFl_Puzzle_c_classInit(void) {
  * `new daObjFl_Coin_c` is the whole sequence the loose factory spelled by
  * hand: fBase_c::operator new(0xd8), dActor_c's base constructor, then the
  * vptr store. */
-extern "C" daObjFl_Coin_c *daObjFl_Coin_c_classInit(void) {
+daObjFl_Coin_c *daObjFl_Coin_c_classInit(void) {
     return new daObjFl_Coin_c;
 }
 
@@ -290,7 +290,7 @@ void daObjFl_Puzzle_c::AdvanceStepScript() {
 void daObjFl_Puzzle_c::ShakeThenSlide(int dx, int dz, int slideTicks) {
     unsigned int st = mStepTimer;
 
-    if (st < 0x14) {
+    if (st < 20) {
         if (st & 1) {
             mShakeOffsetY = -0x6000;
         } else {
@@ -299,12 +299,12 @@ void daObjFl_Puzzle_c::ShakeThenSlide(int dx, int dz, int slideTicks) {
         return;
     }
 
-    if (st == 0x14) {
+    if (st == 20) {
         mShakeOffsetY = 0;
         Sound::PlayBank3(0xe7, mCamSpacePos);
     }
 
-    if ((int)mStepTimer >= slideTicks + 0x14) {
+    if (mStepTimer >= slideTicks + 20) {
         mState = PIECE_STATE_WAIT;
         mStepActive = 0;
         return;
@@ -344,7 +344,7 @@ void daObjFl_Puzzle_c::StateWait() {
             }
         }
     }
-    if (mStepTimer >= 0x18)
+    if (mStepTimer >= 24)
         mStepActive = 0;
 }
 

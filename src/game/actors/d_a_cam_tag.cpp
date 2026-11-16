@@ -21,13 +21,11 @@
  * - g_profile_CAMERA_TAG (ov002 0x02108518) stays outside this TU: defining
  *   it here would emit .data this entry is not licensed to own; the ROM
  *   supplies it.
- * - pad_0d0 keeps the sibling spelling (daChRoom_c, daChScene_c, daBar_c
- *   all pad_0d0); no body touches those bytes.
  */
 
 #include "daCamTag_c.h"
 
-extern "C" daCamTag_c *daCamTag_c_classInit() {
+daCamTag_c *daCamTag_c_classInit() {
     return new daCamTag_c();
 }
 

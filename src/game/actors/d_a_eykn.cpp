@@ -106,21 +106,11 @@ daEykn_c::State gEyknStates[3] = {
     {&daEykn_c::St_Die_Init, &daEykn_c::St_Die_Main},
 };
 
-
 extern "C" {
 int AngleDiff(int a, int b);
 u8 DecIfAbove0_Byte(u8 *counter);
 s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-
-/* Fix12<int> by value. Scalar parameters: the member form size-DIFFs.
-   See the leftover list. */
-int d_a_eyknNewHold(u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir,
-                    void *callback);
-u32 d_a_eyknNewCleanParticleHold(u32 uniqueID, u32 effectID, int x, int y, int z,
-                                 const Vector3_16f *dir);
-void d_a_eyknNewSimpleHold(u32 effectID, int x, int y, int z);
 
 /* Sine and cosine pairs indexed by (angle >> 4) * 2. */
 extern s8 gCurrentSublevel; /* current sublevel id */
@@ -130,6 +120,7 @@ extern SharedFilePtr *const gEyknTextureSequenceFiles[2] = {&gEyknCloseTextureSe
                                                             &gEyknOpenTextureSequenceFile};
 extern SharedFilePtr *const gEyknDeathAnimationFilePtr = &gEyknDeathAnimationFile;
 }
+s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
 /* Debug-table actor ids, and the thresholds this file compares against. */
 enum {
@@ -165,7 +156,7 @@ int daEykn_c::UpdateCircling()
     int limit;
 
     delta = (short)(mAngleY - mTurnRefAngleY);
-    isBig = (int)(actorID == kBigMrI);
+    isBig = (actorID == kBigMrI);
     if (isBig != 0)
         limit = kBigTurnLimit;
     else
@@ -301,21 +292,14 @@ void daEykn_c::LookForPlayer()
  * with particle systems kDeathPtcl0 and kDeathPtcl1 attached. */
 void daEykn_c::CheckAttacks()
 {
-    /* One || is 6 words off. */
     dActor_c *egg = FindEgg(mdCcAcPos_c);
-    if (egg != 0) {
-        int isEgg9 = (int)(egg->actorID == kYoshiEgg);
-        if (isEgg9) goto playSound;
+    int isEgg9;
+    if ((egg != 0 && (isEgg9 = (int)(egg->actorID == kYoshiEgg), isEgg9 != 0)) ||
+        FindExplosionActor(mdCcAcPos_c) != 0) {
+        Sound::PlayBank0(9, mCamSpacePos);
+        SetState(2);
+        return;
     }
-
-    if (FindExplosionActor(mdCcAcPos_c) == 0) goto idCheck;
-
-playSound:
-    Sound::PlayBank0(9, mCamSpacePos);
-    SetState(2);
-    return;
-
-idCheck:
 
     if (mdCcAcPos_c.otherOwner == 0) return;
 
@@ -363,7 +347,7 @@ int daEykn_c::St_Die_Main()
     u32 id0;
 
     ApproachLinear(mHorzSpeed, mDeathSpinSpeed, 300);
-    mAngleY = (s16)(mAngleY + mHorzSpeed);
+    mAngleY = (mAngleY + mHorzSpeed);
     mDeathSpinAngle += mHorzSpeed;
     if (mDeathSpinAngle / 131070 != 0) {
         func_0201267c(0x119, &mCamSpacePos);
@@ -374,7 +358,7 @@ int daEykn_c::St_Die_Main()
     if (id0 != 0 && mParticleID1 != 0) {
         Particle::System *p0;
         Particle::System *p1;
-        mParticleID0 = (u32)Particle::System::New(id0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
+        mParticleID0 = Particle::System::New(id0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
         mParticleID1 =
             Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
         p0 = Particle::System::FromUniqueID(mParticleID0);
@@ -390,8 +374,8 @@ int daEykn_c::St_Die_Main()
     switch (mSubState) {
     case 0: {
         s16 sinv = FX_SinIdx((int)mWobblePhase >> 4);
-        mAngleX = (s16)(FX_MUL(mWobbleAmp, sinv));
-        mWobblePhase = (u16)((s16)mWobblePhase + 0xe000);
+        mAngleX = (FX_MUL(mWobbleAmp, sinv));
+        mWobblePhase = ((s16)mWobblePhase + 0xe000);
         ApproachLinear(mWobbleAmp, 0, 0x1b);
         if (DecIfAbove0_Byte(&mSubTimer) == 0) {
             mSubState++;
@@ -448,7 +432,7 @@ int daEykn_c::St_Die_Main()
         } else {
             int isBig = (kind == kBigMrI);
             if (isBig != 0) {
-                unsigned char star = (unsigned char)(param1 & 0xf);
+                unsigned char star = (param1 & 0xf);
                 UntrackAndSpawnStar(mStarTrackID, star, mPos, 4);
                 Particle::System::NewSimple(kPtclTriplePoofA, mPosX, mPosY, mPosZ);
                 Particle::System::NewSimple(kPtclTriplePoofB, mPosX, mPosY, mPosZ);
@@ -529,7 +513,7 @@ int daEykn_c::St_Attack_Main()
 
     if ((s16)(mAngleY - mTurnRefAngleY) == 0) {
         if (DecIfAbove0_Byte(&mShotTimer) == 0 && StartEyeAnim() != 0)
-            mShotTimer = 0x53;
+            mShotTimer = 83;
         unk_212 = 0xf0;
     }
 
@@ -591,7 +575,7 @@ int daEykn_c::St_Attack_Main()
             func_0201267c(0x165, &mCamSpacePos);
             mCircleTimer = kCircleFrames;
             unk_212 = 0xf0;
-            mShotTimer = 0x53;
+            mShotTimer = 83;
             mCircleAngle = 0;
             ResetEyeAnim();
         }
@@ -707,7 +691,7 @@ int daEykn_c::Render()
 {
     mTextureSequence.Update(mAnmModel.data);
     /* Not &mScale: daEykn_c's own s32 mScale hides dActor_c's vector. */
-    mAnmModel.Render((Vector3 *)&mScaleX);
+    mAnmModel.Render(&this->dActor_c::mScale);
     return 1;
 }
 
@@ -730,7 +714,7 @@ s32 daEykn_c::InitResources()
 
     dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
     bmd = dExtSimpleModel_c::LoadFile(gEyknModelFile);
-    ((dExtModel_c *)&mAnmModel)->SetFile(bmd, 1, 1);
+    (&mAnmModel)->SetFile(bmd, 1, 1);
 
     int i;
     for (i = 0; i < 2; i++) {
@@ -771,7 +755,7 @@ s32 daEykn_c::InitResources()
             mScaleZ = 0x2000;
             mScale = 0x2000;
             {
-                unsigned char starID = (unsigned char)(param1 & 0xf);
+                unsigned char starID = (param1 & 0xf);
                 mStarTrackID = TrackStar(starID, 2);
             }
         }
@@ -806,13 +790,11 @@ s32 daEykn_c::InitResources()
     return 1;
 }
 
-extern "C" daEykn_c *daEykn_c_classInit_EYEKUN_BOSS()
-{
+daEykn_c *daEykn_c_classInit_EYEKUN_BOSS() {
     return new daEykn_c();
 }
 
-extern "C" daEykn_c *daEykn_c_classInit_EYEKUN()
-{
+daEykn_c *daEykn_c_classInit_EYEKUN() {
     return new daEykn_c();
 }
 

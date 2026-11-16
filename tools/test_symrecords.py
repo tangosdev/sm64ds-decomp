@@ -209,7 +209,7 @@ class OnlyAllowlistedToolsOpenTheImportMirror(unittest.TestCase):
     opening symbols/verified.tsv, or make the case for the allowlist in review.
 
     The scope of the claim is exactly what the glob below covers: `tools/*.py`,
-    non-recursively. `tools/archive/*.py` and any reader living outside
+    non-recursively. Readers in a subdirectory of `tools/` or living outside
     `tools/` are invisible to it, so this test is a guard on new tooling, not
     a proof that the repo has no other direct readers."""
 
