@@ -121,7 +121,11 @@ typedef struct State2 {
 } State2;
 
 extern "C" {
-extern void func_0203d388(V2 *p, int angle);
+/* local extern: the angle is an s16. ResolveBallPair negates its angle once
+   and the ROM narrows it again at each of the two calls, which is the
+   argument conversion of an s16 parameter. The definition
+   (func_0203d384.c) still says `int` and compiles identically with s16. */
+extern void func_0203d388(V2 *p, s16 angle);
 extern long long func_0203d5bc(int *p);
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern struct OamAttr *sSmartballWingSprites[];
@@ -2618,9 +2622,6 @@ block2:
     }
 }
 
-/* Leftover: UpdatePhysics needs strength reduction off. */
-#pragma push
-#pragma opt_strength_reduction off
 /* Leftover: the owner selection keeps its own address computation. */
 extern "C" { /* C linkage, as in the original .c file */
 
@@ -2638,19 +2639,20 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     V2xz radial;
     V2xz hazardDelta;
     V2xz correction;
-    V2xz pos0;
-    V2xz pos1;
-    V2xz pos2;
-    V2xz pos3;
-    V2xz pos4;
-    V2xz pos5;
-    V2xz pos6;
-    V2xz pos7;
-    V2xz pos8;
-    V2xz pos9;
-    V2xz pos10;
-    V2xz pos11;
-    V2xz pos12;
+    V2xz kinokoPos;
+    /* One copy of the probe point per test: the ROM gives each call its own slot. */
+    V2xz respawnProbe;
+    V2xz slopeProbe;
+    V2xz exitProbe;
+    V2xz respawnProbe2;
+    V2xz exitProbe2;
+    V2xz kinokoProbe;
+    V2xz dokanProbe;
+    V2xz pakkunProbe;
+    V2xz switchProbe;
+    V2xz wingProbe;
+    V2xz springProbe;
+    V2xz propellerProbe;
     V2xz entityPos;
     V2xz entityDelta;
     V2xz entityPos2;
@@ -2670,7 +2672,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     int blocked;
     int i;
     int entityLoopIndex;
-    int angle;
+    s16 angle;
     int responseScale;
     int dot;
     int volume;
@@ -2678,10 +2680,6 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     void *fallback;
     dScMgSmartball_c *mgr;
     s64 square;
-    int correctionZ;
-    int correctionX;
-    int *velXPtr;
-    int *velZPtr;
 
     savedVel.x = mVel0;
     state.flags[0] = 0;
@@ -2720,10 +2718,10 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                 dist.x = mCurrent0;
                 dist.z = mCurrent1;
                 mgr = mpManager;
-                CopyObjectPos(&pos0,
+                CopyObjectPos(&kinokoPos,
                               probeIndex >= mgr->mKinokoCount ? 0 : mgr->mpKinokos[probeIndex]);
-                dist.x -= pos0.x;
-                dist.z -= pos0.z;
+                dist.x -= kinokoPos.x;
+                dist.z -= kinokoPos.z;
                 if (func_0203d5bc(&dist.x) <= 0x900000LL) {
                     nearby[probeIndex] = 1;
                     state.iteration = 1;
@@ -2760,24 +2758,24 @@ outer_loop:
             work.x += mCurrent0;
             work.z += mCurrent1;
             if ((u8)mpManager->param1 == 0) {
-                pos1 = work;
-                if (NeedsRespawn(&pos1.x) != 0) {
+                respawnProbe = work;
+                if (NeedsRespawn(&respawnProbe.x) != 0) {
                     hit[i] = 1;
                     hitA[i] = 1;
                     anyHit = 1;
                     blocked = 1;
                     goto final_checks;
                 } else {
-                    pos2 = work;
-                    if (OnSlope(&pos2.x) != 0) {
+                    slopeProbe = work;
+                    if (OnSlope(&slopeProbe.x) != 0) {
                         hit[i] = 1;
                         hitA[i] = 1;
                         anyHit = 1;
                         state.flags[0] = 1;
                         blocked = 1;
                     } else {
-                        pos3 = work;
-                        if (CheckExits(&pos3.x) != 0) {
+                        exitProbe = work;
+                        if (CheckExits(&exitProbe.x) != 0) {
                             hit[i] = 1;
                             hitA[i] = 1;
                             anyHit = 1;
@@ -2788,15 +2786,15 @@ outer_loop:
                     }
                 }
             } else {
-                pos4 = work;
-                if (NeedsRespawn(&pos4.x) != 0) {
+                respawnProbe2 = work;
+                if (NeedsRespawn(&respawnProbe2.x) != 0) {
                     hit[i] = 1;
                     hitA[i] = 1;
                     anyHit = 1;
                     blocked = 1;
                 } else {
-                    pos5 = work;
-                    if (CheckExits(&pos5.x) != 0) {
+                    exitProbe2 = work;
+                    if (CheckExits(&exitProbe2.x) != 0) {
                         hit[i] = 1;
                         hitA[i] = 1;
                         anyHit = 1;
@@ -2806,8 +2804,8 @@ outer_loop:
                         goto final_checks;
                     } else {
                         if (state.iteration == 1) {
-                            pos6 = work;
-                            if (HitKinokos(&pos6.x) != 0) {
+                            kinokoProbe = work;
+                            if (HitKinokos(&kinokoProbe.x) != 0) {
                                 hit[i] = 1;
                                 hitA[i] = 1;
                                 anyHit = 1;
@@ -2817,29 +2815,29 @@ outer_loop:
                                 goto final_checks;
                             }
                         }
-                        pos7 = work;
-                        if (HitDokans(&pos7.x) != 0) {
+                        dokanProbe = work;
+                        if (HitDokans(&dokanProbe.x) != 0) {
                             hit[i] = 1;
                             hitA[i] = 1;
                             anyHit = 1;
                             blocked = 1;
                         } else {
-                            pos8 = work;
-                            if (HitPakkuns(&pos8.x) != 0) {
+                            pakkunProbe = work;
+                            if (HitPakkuns(&pakkunProbe.x) != 0) {
                                 hit[i] = 1;
                                 hitA[i] = 1;
                                 anyHit = 1;
                                 blocked = 1;
                             } else {
-                                pos9 = work;
-                                if (HitSwitches(&pos9.x) != 0) {
+                                switchProbe = work;
+                                if (HitSwitches(&switchProbe.x) != 0) {
                                     hit[i] = 1;
                                     hitA[i] = 1;
                                     anyHit = 1;
                                     blocked = 1;
                                 } else {
-                                    pos10 = work;
-                                    if (HitWing(&pos10.x) != 0) {
+                                    wingProbe = work;
+                                    if (HitWing(&wingProbe.x) != 0) {
                                         hit[i] = 1;
                                         hitA[i] = 1;
                                         anyHit = 1;
@@ -2859,8 +2857,8 @@ outer_loop:
 
     final_checks:
         if (blocked == 0) {
-            pos11 = work;
-            if (AtSpring(&pos11.x) != 0) {
+            springProbe = work;
+            if (AtSpring(&springProbe.x) != 0) {
                 hit[i] = 1;
                 hitA[i] = 1;
                 anyHit = 1;
@@ -2868,8 +2866,8 @@ outer_loop:
                 if (angle == 0)
                     state.flags[5] = 1;
             } else {
-                pos12 = work;
-                if (HitPropellers(&pos12.x) != 0) {
+                propellerProbe = work;
+                if (HitPropellers(&propellerProbe.x) != 0) {
                     hit[i] = 1;
                     hitA[i] = 1;
                     anyHit = 1;
@@ -2878,7 +2876,7 @@ outer_loop:
                 }
             }
         }
-        angle = (s16)(angle + 0x800);
+        angle += 0x800;
         i++;
     } while (i < 32);
 
@@ -2922,7 +2920,7 @@ outer_loop:
                                             hitC[i] = 1;
                                             blocked = 1;
                                         }
-                                        angle = (s16)(angle + 0x800);
+                                        angle += 0x800;
                                         i++;
                                     } while (i < 32);
                                 }
@@ -2947,7 +2945,7 @@ outer_loop:
             normal.x += unit.x;
             normal.z += unit.z;
         }
-        angle = (s16)(angle + 0x800);
+        angle += 0x800;
         i++;
     } while (i < 32);
     func_0203d434((V2 *)&normal);
@@ -2967,30 +2965,26 @@ outer_loop:
     response.x = 0;
     response.z = 0;
     if (state.flags[2] == 1) {
-        angle = 0;
         do {
             if (hitB[i] == 1) {
                 radial.x = 0;
                 radial.z = 0x1000;
-                func_0203d388((V2 *)&radial, (s16)(angle / 0x20));
+                func_0203d388((V2 *)&radial, i * 0x10000 / 32);
                 response.x -= radial.x;
                 response.z -= radial.z;
             }
             i++;
-            angle += 0x10000;
         } while (i < 32);
     } else {
-        angle = 0;
         do {
             if (hitA[i] == 1 && hitC[i] == 0) {
                 radial.x = 0;
                 radial.z = 0x1000;
-                func_0203d388((V2 *)&radial, (s16)(angle / 0x20));
+                func_0203d388((V2 *)&radial, i * 0x10000 / 32);
                 response.x -= radial.x;
                 response.z -= radial.z;
             }
             i++;
-            angle += 0x10000;
         } while (i < 32);
     }
 
@@ -3037,10 +3031,8 @@ outer_loop:
         } else {
             responseScale = FX_MUL(dot, 0x1200);
         }
-        velXPtr = &mVel0;
-        *velXPtr -= FX_MUL(responseScale, response.x);
-        velZPtr = &mVel1;
-        *velZPtr -= FX_MUL(responseScale, response.z);
+        mVel0 -= FX_MUL(responseScale, response.x);
+        mVel1 -= FX_MUL(responseScale, response.z);
     }
 
     if (state.flags[5] == 1) {
@@ -3142,12 +3134,8 @@ outer_loop:
                 correction.x /= 64;
                 correction.z = FX_MUL(correction.z, dot);
                 correction.z /= 64;
-                correctionX = correction.x;
-                correctionZ = correction.z;
-                velXPtr = &mVel0;
-                *velXPtr -= correctionX;
-                velZPtr = &mVel1;
-                *velZPtr -= correction.z;
+                mVel0 -= correction.x;
+                mVel1 -= correction.z;
                 return;
             }
         }
@@ -3155,8 +3143,6 @@ outer_loop:
     } while (i < mpManager->mAnaCount);
 }
 }
-
-#pragma pop
 
 void cMgSmartball_ball_c::DrawMarker() {
     long long sq;
@@ -3749,7 +3735,9 @@ unsigned short dScMgSmartball_c::GetTile(int *pos) {
 
 #pragma push
 #pragma opt_strength_reduction off
-/* Leftover: UpdateDust needs strength reduction off. */
+/* Kept (#821): UpdateDust needs strength reduction off. Without it the
+ * body is 0x108, not 0xf8; indexed with SR on it is 13 of 62 words off,
+ * with a stepped velocity cursor 8 (register rotation only). */
 void dScMgSmartball_c::UpdateDust() {
     char *self = (char *)this;
     int i;
@@ -3827,7 +3815,9 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
 
 #pragma push
 #pragma opt_strength_reduction off
-/* Leftover: UpdateScores needs strength reduction off. */
+/* Kept (#821): UpdateScores needs strength reduction off. Without it the
+ * body is 0x128, not 0x118; indexed with SR on 0x11c (the ROM forms all
+ * six slot addresses at the loop head), pointer locals 0x12c. */
 void dScMgSmartball_c::UpdateScores() {
     char *o = (char *)this;
     int i;
@@ -3939,9 +3929,6 @@ int dScMgSmartball_c::IsTableAtRest() {
     return 1;
 }
 
-#pragma push
-#pragma opt_common_subs off
-/* Leftover: ResolveBallPair needs common subexpression folding off. */
 void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firstObject,
                                        u8 *secondObject) {
     // Leftover: keep the pair materialized in memory; direct casts keep the
@@ -3959,7 +3946,6 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
     V2 firstResult;
     V2 secondResult;
     s16 collisionAngle;
-    int inverseAngle;
 
     if (firstIndex == secondIndex) {
         return;
@@ -4013,9 +3999,8 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
         secondVelocity = secondSavedVelocity;
     }
     // Rotate into the ball-to-ball line, swap the shared component, rotate back.
-    inverseAngle = -collisionAngle;
-    func_0203d388(&firstVelocity, (s16)inverseAngle);
-    func_0203d388(&secondVelocity, (s16)inverseAngle);
+    func_0203d388(&firstVelocity, -collisionAngle);
+    func_0203d388(&secondVelocity, -collisionAngle);
     {
         int normalVelocity = firstVelocity.x;
         firstVelocity.x = secondVelocity.x;
@@ -4028,8 +4013,6 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
     secondResult = secondVelocity;
     ((cMgSmartball_ball_c *)secondObject)->SetVel(&secondResult.x);
 }
-
-#pragma pop
 
 void dScMgSmartball_c::CollideBalls() {
     int ballCount = mBallCount;
@@ -4046,6 +4029,8 @@ void dScMgSmartball_c::CollideBalls() {
 
 #pragma push
 #pragma opt_strength_reduction off
+/* Kept (#821): without strength reduction off SpawnObjects is 0x18f8, not
+ * 0x18bc. */
 /* Tears the whole table down and rebuilds it from the two tile maps.
  * Leftovers: the spawn counters and the scan stores stay as written, and
  * every slot walk steps `this` instead of indexing. */
@@ -4801,7 +4786,8 @@ void dScMgSmartball_c::SpawnObjects() {
 #pragma pop
 
 /* Leftover: Render needs both pragmas off, and the locals below must stay in
- * this order (each one pins a stack slot). */
+ * this order (each one pins a stack slot). Kept (#821): without SR off the
+ * body is 0x1124, not 0x10c0; without CSE off it changes size too. */
 #pragma push
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
@@ -5142,7 +5128,9 @@ s32 dScMgSmartball_c::Render() {
 
 #pragma pop
 
-/* Leftover: Behavior needs strength reduction off. */
+/* Kept (#821): Behavior needs strength reduction off. Without it the body is
+ * 0x620, not 0x604; mpBalls[i] indexing with SR on is 0x5e8 (the slot
+ * offset folds into the load instead of a hoisted literal). */
 #pragma push
 #pragma opt_strength_reduction off
 /* Slot 6: the scene's per-frame rules. Phase 0 updates every object, then the
@@ -5550,7 +5538,8 @@ s32 dScMgSmartball_c::InitResources() {
     return 1;
 }
 
-/* Leftover: AfterCleanupResources needs strength reduction off. */
+/* Kept (#821): AfterCleanupResources needs strength reduction off; without
+ * it the body is 0x3f8, not 0x3d8. */
 #pragma push
 #pragma opt_strength_reduction off
 /* Slot 5: frees every board object, then chains to the base. */

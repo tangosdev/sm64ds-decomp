@@ -53,7 +53,6 @@ struct SpriteAttr {
 };
 
 extern "C" {
-extern void func_0203d388(int *p, int angle);
 extern void Mg_SetTopScreenYOffset(int n);
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
@@ -152,7 +151,7 @@ void dScMgFlower_c::DealPetals() {
         mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / mPetalsLeft;
         mPetals[petalIndex].pos.x = 0;
         mPetals[petalIndex].pos.y = 0x30000;
-        func_0203d388(&mPetals[petalIndex].pos.x, (s16)mPetals[petalIndex].angle);
+        func_0203d388(&mPetals[petalIndex].pos.x, mPetals[petalIndex].angle);
         mPetals[petalIndex].pos.x += 0x80000;
         mPetals[petalIndex].pos.y += 0x60000;
         mPetals[petalIndex].active = 1;
@@ -236,7 +235,8 @@ s32 dScMgFlower_c::Render() {
 /* Slot 6, the whole minigame: pick up a petal within the stylus radius, drag it,
  * drop it, flip "loves me" and "loves me not", and run the end-of-round
  * results. */
-/* Kept: the ROM re-reads gTouchHeld[playerSlot * 4] before the grab test; CSE reuses the first read. */
+/* Kept: the ROM re-reads gTouchHeld[playerSlot * 4] before the grab test; CSE reuses the first read
+   (with CSE on Behavior is 0x7f8, not 0x80c; measured #821). */
 #pragma opt_common_subs off
 s32 dScMgFlower_c::Behavior() {
     int releaseIndex;

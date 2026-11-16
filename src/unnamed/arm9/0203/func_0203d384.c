@@ -16,7 +16,7 @@ int func_0203d434(fx32 *in) {
 }
 
 /* Rotate a Vector2 by angle, the first of Vector2.h's 2-vector helpers. */
-void func_0203d388(int *p, int angle) {
+void func_0203d388(int *p, s16 angle) {
     int s = FX_SinIdx((unsigned short)angle >> 4);
     int c = FX_CosIdx((unsigned short)angle >> 4);
     int x = p[0];

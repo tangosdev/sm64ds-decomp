@@ -288,7 +288,8 @@ void dScMgMemory_c::JudgePair() {
 
 #pragma push
 /* Kept: indexed or cursor forms without it give the card counter sl, not r4
- * (colour only). */
+ * (colour only; 27 of 42 words as written, measured #821). The ROM also
+ * holds 0, 1 and -1 in registers across the loop, which is propagation off. */
 #pragma opt_propagation off
 void dScMgMemory_c::DrawCards() {
     char *raw = (char *)this;
@@ -325,7 +326,8 @@ void dScMgMemory_c::UpdateCards() {
 }
 
 #pragma push
-/* Kept: without opt_lifetimes off the two loops' counter and limit take other registers (colour only). */
+/* Kept: without opt_lifetimes off the two loops' counter and limit take other registers
+   (colour only; 41 of 102 words, 40 with both loops spelled alike; measured #821). */
 #pragma opt_lifetimes off
 void dScMgMemory_c::CardFlyAway(int cardIndex) {
     int j;
