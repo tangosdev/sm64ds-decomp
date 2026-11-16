@@ -658,9 +658,9 @@ void Presenter::TrackStylus() {
     }
     if (IsIdle() != 0) {
         int i = gActivePlayerSlot;
-        if (gTouchHeld[i * 4] != 0) {
-            int x = gTouchX[i * 4];
-            int y = gTouchY[i * 4];
+        if (gTouchInfo[i].held != 0) {
+            int x = gTouchInfo[i].x;
+            int y = gTouchInfo[i].y;
             PRESENTER_TRACK(this, x, y);
             return;
         }
