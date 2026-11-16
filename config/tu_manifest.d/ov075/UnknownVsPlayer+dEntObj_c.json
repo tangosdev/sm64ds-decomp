@@ -511,7 +511,14 @@
       "binding": "STB_GLOBAL",
       "evidence": "four animation-handle pointers; the following eight bytes are the vtable preamble"
     }
-  ],
+  ,
+    {
+      "symbol": "data_ov075_0211b524",
+      "address": "0x0211b524",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "shared six-entry pose-choice byte pattern that refills the random draw"
+    }],
   "bss": [
     {
       "symbol": "data_ov075_0211d384",
@@ -3295,7 +3302,77 @@
       "target_module": "ov075",
       "target_address": "0x021159f4"
     }
-  ],
+  ,
+    {
+      "section": ".data.ent_anim",
+      "source": "0x0211c678",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov075_0211d394",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x0211d394"
+    },
+    {
+      "section": ".data.ent_anim",
+      "source": "0x0211c67c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov075_0211d3cc",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x0211d3cc"
+    },
+    {
+      "section": ".data.ent_anim",
+      "source": "0x0211c680",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov075_0211d39c",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x0211d39c"
+    },
+    {
+      "section": ".data.ent_anim",
+      "source": "0x0211c684",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov075_0211d3d4",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x0211d3d4"
+    },
+    {
+      "section": ".data.ent_anim2",
+      "source": "0x0211c688",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov075_0211d3b4",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x0211d3b4"
+    },
+    {
+      "section": ".data.ent_anim2",
+      "source": "0x0211c68c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov075_0211d3f4",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x0211d3f4"
+    },
+    {
+      "section": ".data.ent_anim2",
+      "source": "0x0211c690",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov075_0211d38c",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x0211d38c"
+    }],
   "rodata": [
     {
       "symbol": "sVsPlayerTakeoffZ",
