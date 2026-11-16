@@ -3112,13 +3112,11 @@ int daPly_c::func_ov002_020c1ad8(int ang) {
 }
 
 int daPly_c::func_ov002_020c1c84(int arg) {
-    char *self = (char *)this;
     int a;
     int p;
 
-    if ((u16)(this->mStateFlags & 0x200) || !this->mIsAirborne ||
-        func_ov002_020cf700((daPly_c *)self) || this->mIsMega || func_ov002_020e0478() ||
-        this->mEatingPlayer || this->mIsUnderwater)
+    if ((u16)(this->mStateFlags & 0x200) || !this->mIsAirborne || func_ov002_020cf700(this) ||
+        this->mIsMega || func_ov002_020e0478() || this->mEatingPlayer || this->mIsUnderwater)
         return 0;
 
     if (AngleDiff(arg, this->mPrevAngleY) < 0x6000)
