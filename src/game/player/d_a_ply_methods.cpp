@@ -15454,7 +15454,7 @@ int daPly_c::St_Throw_Main() {
     if (mIsAirborne == 0) {
         ApproachLinear(mHorzSpeed, 0, 0x1000);
     }
-    if ((char *)mHeldObj) {
+    if (mHeldObj) {
         int r4 = 5;
         int id = this->GetBodyModelID(param1 & 0xff, 0);
         dExtAnmModel_c *anim = mModels.mBodyModels[id];
@@ -15462,8 +15462,8 @@ int daPly_c::St_Throw_Main() {
             if (func_ov002_020c19d0(0x40, 0x32))
                 r4 = 0;
         }
-        char *q = (char *)mHeldObj;
-        unsigned short a = ((dActor_c *)q)->actorID;
+        dActor_c *q = mHeldObj;
+        unsigned short a = q->actorID;
         int t1 = (a == 0xbd);
         // folding the two id tests shrinks this function 0x168 -> 0x164
         if (!t1) {
@@ -15474,7 +15474,7 @@ int daPly_c::St_Throw_Main() {
         r4 = 7;
         goto Ld0;
     Lb8: {
-        int b = (((dActor_c *)q)->mFlags & 0x200) ? 1 : 0;
+        int b = (q->mFlags & 0x200) ? 1 : 0;
         if (b)
             r4 = 0xd;
     }
