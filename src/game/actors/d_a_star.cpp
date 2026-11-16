@@ -2231,7 +2231,6 @@ void daStar_c::UpdateModelMatrix() {
  * times the scale, less 0.09375 per unit of height above mGroundY (at least
  * 1.0), never below 10.0; the shadow is 40.0 deeper than that height. */
 void daStar_c::DrawShadow() {
-    char *c = (char *)this;
     int r2, rad, delta, r8, t;
     int flag2;
 
@@ -2267,7 +2266,7 @@ void daStar_c::DrawShadow() {
     mShadowMtx.ty = mPosY >> 3;
     mShadowMtx.tz = mPosZ >> 3;
 
-    ((dActor_c *)c)->DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMtx, r8, t, 0xf);
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMtx, r8, t, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
