@@ -1268,9 +1268,8 @@ void daPly_c::func_ov002_020bdc18() {
 /* recovered: named members + shared header, real C++ method */
 void daPly_c::IncMegaKillCount() {
     Vector3 v;
-    char *new_var2;
     int new_var3;
-    char *a;
+    daObj1UpLogo_c *logo;
     int y;
     if ((mIsMega) == 0) {
         return;
@@ -1287,13 +1286,12 @@ void daPly_c::IncMegaKillCount() {
     v.y = y;
     v.z = mPosZ;
     v.y = y + 0x190000;
-    new_var2 = (char *)Spawn(0x14b, mMegaKillCount, v, 0, mAreaId, new_var3);
-    a = new_var2;
-    if (a == 0) {
+    logo = (daObj1UpLogo_c *)Spawn(0x14b, mMegaKillCount, v, 0, mAreaId, new_var3);
+    if (logo == 0) {
         return;
     }
-    ((daObj1UpLogo_c *)a)->mDelay = 0;
-    ((daObj1UpLogo_c *)a)->SetFollowTarget(0);
+    logo->mDelay = 0;
+    logo->SetFollowTarget(0);
 }
 
 void daPly_c::func_ov002_020bdd2c() {
