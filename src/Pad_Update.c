@@ -6,17 +6,13 @@
  * pad, honours inputLock, sets the three axes and steps each button's held
  * and released frame counts. */
 void Pad_Update(Ov007Pad *pad, u16 *src) {
-    int flags[13];
+    int flags[12];
     int i;
     u16 keys;
-    int za;
-    int zb;
 
-    i = 0;
-    do {
+    for (i = 0; i < 12; i++) {
         flags[i] = 0;
-        i = i + 1;
-    } while (i < 12);
+    }
     pad->prevKeys = pad->keys;
     if (src == 0) {
         pad->keys = PAD_Read();
@@ -25,19 +21,20 @@ void Pad_Update(Ov007Pad *pad, u16 *src) {
     }
     if ((pad->inputLock & 1) != 0) {
         if (pad->keys == 0) {
+            /* The ROM reloads and stores inputLock at [pad, #0x64]; a plain
+             * `inputLock &= ~1` (or a u32 / bitfield inputLock) keeps the
+             * field address in a register (addeq + ldr/str [r2], one word
+             * long). The volatile read is the only spelling found so far. */
             u32 w = *(volatile u32 *)&pad->inputLock;
             pad->inputLock = w & ~1u;
         } else {
             pad->keys = 0;
         }
     }
-    i = 0;
     pad->prevDirX = pad->dirX;
     pad->prevDirY = pad->dirY;
     pad->prevShoulder = pad->shoulder;
-    pad->shoulder = (s8)i;
-    pad->dirY = pad->shoulder;
-    pad->dirX = pad->dirY;
+    pad->dirX = pad->dirY = pad->shoulder = 0;
     if ((pad->keys & PAD_KEY_UP) != 0) {
         pad->dirY = 1;
         flags[0] = 1;
@@ -63,22 +60,19 @@ void Pad_Update(Ov007Pad *pad, u16 *src) {
         flags[9] = 1;
     }
     keys = pad->keys;
-    i = 0;
     flags[4] = keys & PAD_BUTTON_A;
     flags[5] = keys & PAD_BUTTON_B;
     flags[6] = keys & PAD_BUTTON_X;
     flags[7] = keys & PAD_BUTTON_Y;
     flags[10] = keys & PAD_BUTTON_START;
     flags[11] = keys & PAD_BUTTON_SELECT;
-    za = i; zb = i;
-    do {
+    for (i = 0; i < 12; i++) {
         if (flags[i] != 0) {
             pad->heldFrames[i]++;
-            pad->releasedFrames[i] = zb;
+            pad->releasedFrames[i] = 0;
         } else {
-            pad->heldFrames[i] = za;
+            pad->heldFrames[i] = 0;
             pad->releasedFrames[i]++;
         }
-        i = i + 1;
-    } while (i < 12);
+    }
 }
