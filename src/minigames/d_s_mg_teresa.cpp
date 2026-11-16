@@ -60,11 +60,6 @@
 #include "cstd.h"
 #include "nitro/gx/gx_load.h"
 
-/* Scene_StateResult's view of the ov004 score block at gMgScene
-   (dScMgBase_c.h declares it void *): the current score at +0xb4 and the best
-   at +0xb8. */
-struct ScoreView { unsigned char pad[0xb4]; int b4; int b8; };
-
 /* Everything this file calls or reads that decl_common.h does not declare. */
 extern "C" {
 
@@ -1492,18 +1487,18 @@ void dScMgTeresa_c::Scene_StateResult() {
         return;
     mSceneTimer = 0;
     if (mRoundCleared != 0) {
-        struct ScoreView *p;
+        dScMgBase_c *scene;
         Mg_SetSharedState(MG_STATE_ROUND_CLEAR);
-        p = (struct ScoreView *)gMgScene;
-        if (p != 0) {
-            if (p->b4 < 0x270f) {
-                p->b4 += 1;
+        scene = gMgScene;
+        if (scene != 0) {
+            if (scene->mHudScore < 0x270f) {
+                scene->mHudScore += 1;
             }
-            if (p->b4 > p->b8) {
-                p->b8 = p->b4;
+            if (scene->mHudScore > scene->mBestHudScore) {
+                scene->mBestHudScore = scene->mHudScore;
             }
         }
-        Mg_SubmitScore(gMgScene ? ((struct ScoreView *)gMgScene)->b4 : 0);
+        Mg_SubmitScore(gMgScene ? gMgScene->mHudScore : 0);
     } else {
         if (Mg_IsNewRecord() != 0) {
             mCountdownShown = 0;
