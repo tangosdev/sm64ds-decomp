@@ -1086,9 +1086,8 @@ void Trmp2Spinner_Init(void *r0, int value) {
     spinner->mPos.x = 0x60000;
     spinner->mPos.y = 0x100000;
     spinner->mPos.z = 0x18000;
-    int drop = -0x1C00;
-    spinner->mVel.x = drop;
-    spinner->mVel.y = drop;
+    spinner->mVel.x = -0x1C00;
+    spinner->mVel.y = -0x1C00;
     spinner->mVel.z = 0;
     spinner->mPos.x += (TRMP2_RAND_FX - 0x800) * 0x40;
     spinner->mVel.x -= TRMP2_RAND_FX >> 1;
