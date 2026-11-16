@@ -58,7 +58,7 @@ u64 func_0206c51c(u64 a, u64 b)
     q = (char *)(&a);
     q = pad(q, 6);
     manta |= 0x10;
-    manta |= READ8(q) & ((i = 5), 0xf);
+    manta |= READ8(q) & ((i = 5), 15);
     do {
         p = pad((char *)(&a), i);
         manta <<= 8;
@@ -67,7 +67,7 @@ u64 func_0206c51c(u64 a, u64 b)
     q = (char *)(&b);
     q = pad(q, 6);
     mantb |= 0x10;
-    mantb |= READ8(q) & ((i = 5), 0xf);
+    mantb |= READ8(q) & ((i = 5), 15);
     do {
         p = pad((char *)(&b), i);
         mantb <<= 8;
@@ -108,7 +108,7 @@ u64 func_0206c51c(u64 a, u64 b)
     WRITE8(q, t);
     q = pad((char *)&out, 6);
     bb = READ8(q);
-    bb |= (exp & 0xf) << 4;
+    bb |= (exp & 15) << 4;
     q = pad((char *)&out, 6);
     WRITE8(q, bb);
     mantb &= 0x000fffffffffffffULL;

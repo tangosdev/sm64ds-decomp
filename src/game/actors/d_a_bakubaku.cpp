@@ -24,8 +24,6 @@
  * fields; the existing vector pointer views at those helper boundaries are
  * still partial reconstruction. The state timer uses unsigned halfword reads,
  * and the state installer retains its StateFn pointer read-back.
- * Native Fix12<int> calls for collision setup, animation, shadow and Hurt
- * remain pending; the local declarations retain their matched scalar ABI.
  * The forward vectors retain the observed doubled Z store and store order.
  * g_profile_BAKUBAKU remains this file's data, not a class member.
  */
@@ -129,7 +127,7 @@ SpawnInfo<daBakubaku_c> g_profile_BAKUBAKU = {
 
 int daBakubaku_c::OnAimedAtWithEgg()
 {
-    return 0xa0000; /* Fix12 160.0, egg aim height */
+    return 0xa0000; /* fx32 160.0, egg aim height */
 }
 
 s32 daBakubaku_c::InitResources()
@@ -257,7 +255,7 @@ int daBakubaku_c::EnterWander() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
     mAngTarget = ((r >> 8) & 0xf) << 0xc;
     r = RandomIntInternal(&data_0209e650.value);
-    mStateTimer = ((r >> 8) & 0x3f) + 0x32;
+    mStateTimer = ((r >> 8) & 0x3f) + 50;
     mAnmModel.speed = 0x1000;
     return 1;
 }
@@ -270,8 +268,8 @@ int daBakubaku_c::ExecuteWander() {
 
     ApproachLinear(mHorzSpeed, 0x5000, 0x333);
     if (ShouldReturnHome() == 1) {
-        mStateTimer = 0x28;
-        mChaseCooldown = 0x28;
+        mStateTimer = 40;
+        mChaseCooldown = 40;
         ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mSpawnPosX);
         mAngTarget = ang;
     }
@@ -307,7 +305,7 @@ int daBakubaku_c::ExecuteWander() {
 /* Pause enter: short timer, kill the velocity. */
 int daBakubaku_c::EnterPause() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
-    mStateTimer = ((r >> 8) & 0x1f) + 0x14;
+    mStateTimer = ((r >> 8) & 0x1f) + 20;
     mAnmModel.speed = 0x1000;
     mSpeedX = 0;
     mVertSpeed = 0;
@@ -328,7 +326,7 @@ int daBakubaku_c::ExecutePause() {
 
 /* Chase enter. */
 int daBakubaku_c::EnterChase() {
-    mStateTimer = 0x12c;
+    mStateTimer = 300;
     mAnmModel.speed = 0x2000;
     mHorzSpeed = 0xa000;
     return 1;
@@ -339,7 +337,7 @@ int daBakubaku_c::ExecuteChase() {
     /* Out of time, chase aborted, or no target: back to wandering. */
     if (mStateTimer == 0 || ShouldReturnHome() == 1 || FindChaseTarget() == 0) {
         mAnmModel.SetAnim((BCA_File *)data_ov032_02113a50.filePtr, 0, 0x1000, 0);
-        mChaseCooldown = 0x64;
+        mChaseCooldown = 100;
         SetState(&data_ov032_02113a8c);
         return 1;
     }
@@ -452,7 +450,7 @@ int daBakubaku_c::ExecuteDive() {
             s16 a = mPrevAngleX;
             if (a < 0) a = -a;
             if (a < 0x100) {
-                mChaseCooldown = 0x64;
+                mChaseCooldown = 100;
                 mAngTarget = mAngleY;
                 mFlags = 3; /* profile clip bits 1|2 */
                 mBodyClsn.flags &= ~kCcCharMove;
@@ -516,7 +514,7 @@ int daBakubaku_c::ExecuteSurface() {
         mMouthOpen = 0;
         if (AngleDiff(mPrevAngleX, 0) < 0x200) {
             mPrevAngleX = 0;
-            mChaseCooldown = 0x64;
+            mChaseCooldown = 100;
             mAngTarget = mAngleY;
             mFlags = 3;
             mAnmModel.SetAnim((BCA_File *)data_ov032_02113a50.filePtr, 0, 0x1000, 0);

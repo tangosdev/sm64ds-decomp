@@ -196,10 +196,10 @@ void func_ov007_020afc44(void) {
     if (func_ov007_020b79e4() != 0)
         return;
     if (scrollLayers != 0) {
-        func_ov007_020c0638(WORK->layerSlots[6]->layer, (WORK->tweenOut[0] >> 0xc) * 8, 0, 0);
-        func_ov007_020c0638(WORK->layerSlots[7]->layer, (WORK->tweenOut[0] >> 0xc) * 8, 0, 0);
+        func_ov007_020c0638(WORK->layerSlots[6]->layer, (WORK->tweenOut[0] >> 12) * 8, 0, 0);
+        func_ov007_020c0638(WORK->layerSlots[7]->layer, (WORK->tweenOut[0] >> 12) * 8, 0, 0);
     }
     if (scrollBoard == 0)
         return;
-    MenuText_ScrollRecordBoard(WORK->tweenOut[1] >> 0xc);
+    MenuText_ScrollRecordBoard(WORK->tweenOut[1] >> 12);
 }

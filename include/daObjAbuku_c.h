@@ -10,14 +10,13 @@
  * (arm9:0x0208e390, offset 0).
  *
  * SIZE 0x114 is the factory's own literal; mParticle at 0x110 closes on it.
- * dActor_c ends at 0x0d0. pad_0d0 is unevidenced (not read in this TU);
- * dCcAc_c sits at 0x0d4. The old "Bubble" alias also names daBbl_c.
+ * dActor_c ends at 0x0d4, where dCcAc_c sits. The old "Bubble" alias also
+ * names daBbl_c.
  *
  * Vtable vs _ZTV8dActor_c: only slot 0 (InitResources) and slot 6 (Behavior)
  * differ. InitResources is the key function.
  */
 struct daObjAbuku_c : dActor_c {
-    u8 pad_0d0[0x4];
     /* Named by the factory C1 and the destructor D1 at +0xd4. */
     dCcAc_c mdCcAc_c; /* 0x0d4 */
     /* Same float as daFeather_c: mSwayAngle += 0x400 a frame,

@@ -110,7 +110,7 @@ void daObjDlPyramid_c::FinishDescent() {
  * particle alive and moves to state 2 at frame 150. */
 void daObjDlPyramid_c::Descend() {
     mPosX = FX_SinIdx((u16)(s16)(mStateTimer << 14) >> 4) * 0x28 + mHomePosX;
-    if (mStateTimer < 0x3c) {
+    if (mStateTimer < 60) {
         int bob = FX_SinIdx((u16)(s16)(mStateTimer << 13) >> 4) * 0xa;
         if (bob < 0)
             bob = -bob;

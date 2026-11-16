@@ -62,7 +62,7 @@ typedef char dScMgCoin_Sparkle_size_must_be_0x18[sizeof(dScMgCoin_Sparkle) == 0x
    State 1 waits out delay (Block_StateWaiting), 2 has passed its own row,
    4 has landed and scored (Block_StateFallIn). */
 struct dScMgCoin_Block {
-    s32 x;         /* 0x00 Fix12 */
+    s32 x;         /* 0x00 fx32 */
     s32 y;         /* 0x04 */
     s32 vx;        /* 0x08 */
     s32 vy;        /* 0x0c */
@@ -207,13 +207,16 @@ struct dScMgCoin_c : dScMgBase_c {
     void Phase_StateIntro();
     void Phase_StateIdle();
 
-    dScMgCoin_Block mBlocks[40];       /* 0x4660 */
-    dScMgCoin_Coin mCoins[24];         /* 0x4ac0 */
+    static const int BLOCK_NUM = 40;
+    dScMgCoin_Block mBlocks[BLOCK_NUM]; /* 0x4660 */
+    static const int COIN_NUM = 24;
+    dScMgCoin_Coin mCoins[COIN_NUM];   /* 0x4ac0 */
     u32 pad_4d00;                      /* 0x4d00 */
     u32 pad_4d04;                      /* 0x4d04 */
     dScMgCoin_Score mScore;            /* 0x4d08 */
     dScMgCoin_Sparkle mSparkles[0x20]; /* 0x4d14 */
-    dScMgCoin_Popup mPopups[24];       /* 0x5014 */
+    static const int POPUP_NUM = 24;
+    dScMgCoin_Popup mPopups[POPUP_NUM]; /* 0x5014 */
     dScMgCoin_Caption mCaption[1];     /* 0x5194 */
     dScMgCoin_Bouncer mBouncer[1];     /* 0x51a8 */
     s32 mSeed;                         /* 0x51c4 set to 1 at construction, never read here */

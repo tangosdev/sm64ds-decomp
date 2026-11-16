@@ -380,7 +380,7 @@ void CapIconMgr_Commit(int character, unsigned iconKind, dCapIcon_c *icon) {
             return;
         gShowTouchScreenArrows = 1;
         func_02012790(0x24);
-        icon->mFlashFrames = 0x3c;
+        icon->mFlashFrames = 60;
         gCapIconFlashTimer = icon->mFlashFrames;
         return;
     }

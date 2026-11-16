@@ -38,8 +38,8 @@ void func_ov007_020b5bf0(Ov007ItemView *view) {
             int progress;
             progress = ProgressRatio(elapsed, item->wiggleFrames);
             {
-                int degrees = (progress * (item->wiggleFrames * 0x48)) >> 0xc;
-                int angle = FX_DivS32(degrees << 0x10, 0x168);
+                int degrees = (progress * (item->wiggleFrames * 72)) >> 0xc;
+                int angle = FX_DivS32(degrees << 0x10, 360);
                 fx16 sine;
                 int decay;
                 u16 id;
@@ -54,7 +54,7 @@ void func_ov007_020b5bf0(Ov007ItemView *view) {
                 wave = FX_MUL(sine, decay);
                 amplitude = (id == 0) ? 4 : 8;
                 tilt = (wave * amplitude) >> 0xc;
-                view->sprite->rotZ = FX_DivS32(tilt << 0x10, 0x168);
+                view->sprite->rotZ = FX_DivS32(tilt << 0x10, 360);
             }
         } else {
             view->sprite->rotZ = 0;

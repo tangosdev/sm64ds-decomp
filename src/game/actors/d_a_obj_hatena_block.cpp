@@ -53,17 +53,6 @@
  *   OnAttacked1 / OnHitFromUnderneath keep their valueless nested-if exits;
  *   C++ rejects a valueless return in a non-void function.
  *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
- *
- *   (a) Fix12<int> passed by value (notes/mwccarm-codegen.md 6az). A
- *       method call homes the argument and the bytes move: dExtAnmModel_c::SetAnim and
- *       dBgW_KcMbg::SetFile (InitResources), dBgActor_c::IsClsnInRange
- *       (Behavior), dActor_c::DropShadowScaleXYZ (UpdateDropShadow),
- *       Particle::System::NewSimple (also absent from Particle.h).
- *
- *   (b) No usable declaration: dActor_c::Earthquake is not on dActor_c.h
- *       (EnterBouncing).
- *
  * Known limits:
  *   The helpers carry role names (symbols/actor_renames.tsv records the evidence for each);
  *   func_ov102_02149684 keeps its address. All take the block as arg0 and are declared as members on
@@ -610,7 +599,7 @@ void daObjHatenaBlock_c::UpdateModelMatrix() {
  * at least 0x1000 (1 unit).
  *   horizontal shadow scale = 0xb4000 (180 units) - height * 0x180 / 0x1000
  *                   (about 0.094 * height), at least 0xa000 (10 units), then
- *                   times mScaleX (a Fix12 multiply)
+ *                   times mScaleX (an fx32 multiply)
  *   shadow Y scale = height + 0x14000 (20 units)
  *   mClipOffsetY  = -(height + 0x14000) / 2 (signed divide by 2)
  *   mClipRadius   = max(height + 0x214000, 0x200000) / 16 (signed divide)
@@ -718,7 +707,7 @@ void daObjHatenaBlock_c::EnterBouncing() {
  *
  * While mBounceTimer is still counting down (DecIfAbove0_Short returns the
  * new value; non-zero means it has not reached 0), squash and stretch, with
- * s = sin(mBounceAng) as Fix12 from FX_SinCosTable_ (0x1000 = 1.0):
+ * s = sin(mBounceAng) as fx16 from FX_SinCosTable_ (0x1000 = 1.0):
  *   mScaleY       = (1 + s) * 0x999/0x1000 + 0x666/0x1000
  *                 = 0.4 + 0.6 * (1 + s)
  *   mScaleX, Z    = (1 - s) + 1.0
@@ -835,7 +824,7 @@ void daObjHatenaBlock_c::UpdateBouncing() {
 /* STATE_POPPED enter routine: mBounceTimer = 0x12c (300 frames) and vertical
    acceleration -0x8000 (-8 units). */
 void daObjHatenaBlock_c::EnterPopped() {
-    mBounceTimer = 0x12c;
+    mBounceTimer = 300;
     mVertAccel = -0x8000;
 }
 
@@ -1026,7 +1015,7 @@ void daObjHatenaBlock_c::SpawnPrizeShell() {
     func_ov102_02149684((int *)&v, this);
     void *a = dActor_c::Spawn(ACTOR_SHELL, 0, v, 0, mAreaId, -1);
     if (a)
-        ((daShl_c *)a)->mDespawnTimer = 0xb4;
+        ((daShl_c *)a)->mDespawnTimer = 180;
 }
 
 /* FEATHER prize: spawns a FEATHER at the prize point with rotation taken
@@ -1068,7 +1057,7 @@ void daObjHatenaBlock_c::SpawnPrizeBobOmb() {
     if (a == 0)
         return;
     a->func_ov102_0214ad14();
-    a->func_ov102_0214b384(0x3c);
+    a->func_ov102_0214b384(60);
 }
 
 /* Spawns n COINs (param 2) at *pos. Each coin gets a heading baseAngle + dir

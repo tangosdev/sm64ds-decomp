@@ -108,7 +108,7 @@ int daObjSlIceBlock_c::Behavior() {
                 pos.y -= 0x50000;
             }
             unsigned char cnt = mNumToBigIce;
-            mDelayTimer = (cnt + 1) * 0x14;
+            mDelayTimer = (cnt + 1) * 20;
             dActor_c::Spawn(0x5d, spawnType, pos, &mAngle, mAreaId, -1);
         }
     }
@@ -131,11 +131,11 @@ int daObjSlIceBlock_c::InitResources() {
         mMeshCollider.edgeContacts = false;
         mMeshCollider.Enable(this);
         mHorzSpeed = 0x2d000;
-        mDelayTimer = 0x64;
+        mDelayTimer = 100;
         mPrevAngleY = -0x4000;
         mMinPosY = mPosY - 0xc8000;
     } else {
-        mDelayTimer = (u8)mNumToBigIce * 0x14;
+        mDelayTimer = (u8)mNumToBigIce * 20;
         mNumToBigIce = 5;
     }
     return 1;

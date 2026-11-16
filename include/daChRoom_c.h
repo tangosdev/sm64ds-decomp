@@ -10,8 +10,8 @@
  * final.
  *
  * SIZE 0xd4 from the factory's `mov r0, #0xd4` into fBase_c::operator new.
- * dActor_c ends at 0xd0; pad_0d0 is unused padding to that size, not a live
- * field. Every value this class uses is inherited actor state: InitResources
+ * That is exactly sizeof(dActor_c): this class adds no field of its own.
+ * Every value this class uses is inherited actor state: InitResources
  * writes mScaleX/mScaleY/mAngleY, Behavior reads mPosX/mAngleY/mScaleX/
  * mScaleY/mAngleX/mAngleZ. mScaleX/mScaleY are the trigger box half-width
  * and height; mAngleX/mAngleZ are the two area ids.
@@ -22,7 +22,6 @@
  * Retail does not store that spelling.
  */
 struct daChRoom_c : dActor_c {
-    u8 pad_0d0[0x4];
 
     /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */
     virtual ~daChRoom_c() {} /* slots 16 (D1), 17 (D0) */

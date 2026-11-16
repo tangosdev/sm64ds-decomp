@@ -15,7 +15,6 @@
 #include "dCcAc_c.h"
 
 struct daObjHeart_c : dActor_c {
-    u8 pad_0d0[0x4];
     /* dExtAnmModel_c member, named by _ZN14dExtAnmModel_cD1Ev at +0xd4 -- a relocation the ROM build
        checks. D1 and not D2, so it is this type and not an inlined base. */
     dExtAnmModel_c mAnmModel; /* 0x0d4 */

@@ -7,7 +7,6 @@
 #include "types.h"
 
 struct Matrix4x3;
-#include "math/Fix12.h"
 /* Same 0xc coordinate layout as Vector3, but deliberately POD. A Vector3[4]
  * member makes mwccarm emit __cxa_vec_cleanup in dClipper's D1/D0; the cartridge's
  * trivial destructors prove these plane records have no element destructor. */

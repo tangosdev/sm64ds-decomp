@@ -178,8 +178,6 @@ int daKpFr_c::func_ov070_02121eb0() {
     return 1;
 }
 
-/* Fix12-by-value, notes/mwccarm-codegen.md 6az -- header method form homes the
-   class args. */
 void daKpFr_c::func_ov070_02121e14() {
   int shadowDepth;
   mMatrix.t.x = mPosX >> 3;
@@ -191,7 +189,7 @@ void daKpFr_c::func_ov070_02121e14() {
     shadowDepth = (mPosY - ground.clsnY) + 0x1e000;
   else
     shadowDepth = 0x12c000;
-  DropShadowRadHeight(mShadowModel, mMatrix, 0x64000, shadowDepth, 0xf);
+  DropShadowRadHeight(mShadowModel, mMatrix, 0x64000, shadowDepth, 15);
 }
 
 /* GetFloorResult is not declared in the shared header yet; keep only that

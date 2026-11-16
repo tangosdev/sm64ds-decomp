@@ -21,8 +21,8 @@ void func_ov007_020bfe4c(Ov007Camera *cam, int a, int b, int c, Vector3 *out) {
     sinv = FX_SinIdx(ang);
     ac = c < 0 ? -c : c;
     f1 = FX_Div(FX_MUL(sinv, ac), cosv);
-    v.x = FX_DivS32(FX_MUL(v.x, f1), 0x60);
-    v.y = FX_DivS32(FX_MUL(v.y, f1), 0x60);
+    v.x = FX_DivS32(FX_MUL(v.x, f1), 96);
+    v.y = FX_DivS32(FX_MUL(v.y, f1), 96);
     MTX_Inverse43(&cam->viewMatrix, &inv);
     MTX_MultVec43(&v, &inv, out);
 }

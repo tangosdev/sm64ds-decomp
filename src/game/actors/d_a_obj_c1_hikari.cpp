@@ -79,7 +79,7 @@ daObjC1Hikari_c *daObjC1Hikari_c_classInit() {
 
 int daObjC1Hikari_c::InitResources() {
     dExtSimpleModel_c::LoadFile(gC1HikariModelFile);
-    if (NumStars() < 0xe)
+    if (NumStars() < 14)
         return 0;
     if (data_0209caa0.file.flags1 & 0x80000000)
         return 0;

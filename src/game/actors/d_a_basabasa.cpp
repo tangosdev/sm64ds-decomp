@@ -183,12 +183,12 @@ int daBasabasa_c::ExecuteReturn() {
     if (dist > 0x1f4000 || mWithMeshClsn.IsOnWall() != 0) {
         mTargetAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mHomePosX);
         /* The states read mStateTimer unsigned (ldrh). */
-        if (mStateTimer < 0x14)
-            mStateTimer = 0x14;
+        if (mStateTimer < 20)
+            mStateTimer = 20;
     }
     if (dist < 0x1f4000 && (mFlags & 8)) {
         mPerchTimer++;
-        if (mPerchTimer > 0x64) {
+        if (mPerchTimer > 100) {
             mPerchTimer = 0;
             mFlags |= 1;
             mPrevAngleX = -0x8000;
@@ -220,7 +220,7 @@ int daBasabasa_c::EnterReturn() {
     r = RandomIntInternal(&data_0209e650.value);
     mTargetAngleY = ((r >> 8) & 0xf) << 0xc;
     r = RandomIntInternal(&data_0209e650.value);
-    mStateTimer = ((r >> 8) & 0x1f) + 0x32;
+    mStateTimer = ((r >> 8) & 0x1f) + 50;
     func_02012694(0xf9, &mCamSpacePos);
     mAnmModel1.speed = 0x1000;
     mFlags &= ~1;
@@ -250,7 +250,7 @@ int daBasabasa_c::EnterChase() {
     mVertAccel = 0;
     mIsFlying = 1;
     mFlags = 0x10000003;
-    mStateTimer = 0x64;
+    mStateTimer = 100;
     mAnmModel1.speed = 0x2000;
     mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
     mTargetAngleY = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 0xc;
@@ -280,9 +280,9 @@ int daBasabasa_c::EnterDrop() {
     mAnmModel2.speed = 0;
     mAnmModel2.SetAnim((BCA_File *)data_ov065_0211d6a0.filePtr, 0, 0x1000, 0);
     PoofPos vec(mPosX, mPosY + 0x64000, mPosZ);
-    mStateTimer = 0x19;
+    mStateTimer = 25;
     if (mPosY == 0x898000)
-        mStateTimer = 0x32;
+        mStateTimer = 50;
     func_02012694(0xf9, &mCamSpacePos);
     return 1;
 }
@@ -297,7 +297,7 @@ int daBasabasa_c::ExecutePerch() {
         v.y = q[1];
         v.z = q[2];
         if (Vec3_Dist(&mPos, &v) < 0x3e8000) {
-            mStateTimer = 0x14;
+            mStateTimer = 20;
             SetState(&data_ov065_0211d710);
         }
     }

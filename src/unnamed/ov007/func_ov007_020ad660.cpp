@@ -51,13 +51,13 @@ void func_ov007_020ad660(Ov007LayerSlot *slot) {
             return;
         }
         if (mainState->stateTicks == 0) {
-            func_ov007_020c02d8(slot->layer->screen, 0x18, 0x300);
+            func_ov007_020c02d8(slot->layer->screen, 24, 0x300);
         }
         if (WORK->paletteState->stateTicks != 0) {
             return;
         }
         RequestScreenFade(9, 0, func_ov007_020ada70);
-        func_ov007_020c02d8(slot->layer->screen, 0x18, 0x301);
+        func_ov007_020c02d8(slot->layer->screen, 24, 0x301);
         slot->layer->dirty = 1;
         func_ov007_020c1d8c(0);
         return;
@@ -92,7 +92,7 @@ void func_ov007_020ad660(Ov007LayerSlot *slot) {
         }
         case 1: {
             /* ten turns over the step, dying away as (1 - progress)^4 */
-            int progress = ProgressRatio(ticks, 0x50);
+            int progress = ProgressRatio(ticks, 80);
             u16 angle = FX_DivS32(FX_MUL(progress, 3600) << 16, 360);
             int inv = 0x1000 - progress;
             int amp = (fx32)(((fx64)inv * inv) >> FX32_SHIFT);

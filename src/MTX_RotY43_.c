@@ -8,7 +8,7 @@ struct Matrix4x3;
 
 #pragma thumb on
 asm void MTX_RotY43_(struct Matrix4x3 *m, int s, int c) {
-    str r1, [r0, #24]
+    str r1, [r0, #0x18]
     mov r3, #0
     stmia r0!, {r2, r3}
     neg r1, r1

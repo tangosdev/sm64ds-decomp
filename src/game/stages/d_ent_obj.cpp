@@ -19,10 +19,7 @@
  * the classInit factory, then UnknownVsPlayer's constructor.
  *
  * leftovers:
- *  - The Fix12-by-value dExtShadowModel_c::InitModel call keeps its measured
- *    scalar-extern spelling: spelled as
- *    the real member types, mwccarm homes the register arguments and the
- *    callers grow. G3i_PerspectiveW_ takes the SDK's fx32 scalars.
+ *  - G3i_PerspectiveW_ takes the SDK's fx32 scalars.
  *  - The Matrix4x3 copies go through the flat Mtx43; assigning Matrix4x3
  *    itself grows .text by 0x6c bytes.
  *  - Behavior's mFellOffThisFrame probe keeps the second `walk` induction variable
@@ -78,9 +75,6 @@ struct EntObjTextureSequenceFileHandle : SharedFilePtr {
     ~EntObjTextureSequenceFileHandle();
 };
 
-/* Fix12<int> is passed by value at these call boundaries. Spelled as the
- * class type, mwccarm homes the register arguments and the callers grow, so
- * the measured scalar views stay. */
 extern "C" {
 
 int RandomIntInternal(int *seed);
@@ -194,7 +188,7 @@ void UnknownVsPlayer::AnimFastGait() {
     }
     mModel.speed = FX_Div(mSpeed, mMaxSpeed) + 0x1000;
     if (!mModel.WillHitFrame(4)) {
-        if (mModel.WillHitFrame(0x22) == 0)
+        if (mModel.WillHitFrame(34) == 0)
             return;
     }
     Vector3 screenPos;
@@ -211,7 +205,7 @@ void UnknownVsPlayer::AnimSlowGait() {
     }
     mModel.speed = FX_Div(mSpeed, mMaxSpeed) + 0x1000;
     if (!mModel.WillHitFrame(4)) {
-        if (mModel.WillHitFrame(0x22) == 0)
+        if (mModel.WillHitFrame(34) == 0)
             return;
     }
     Vector3 screenPos;
@@ -241,7 +235,7 @@ void UnknownVsPlayer::AnimWaitForNext() {
 void UnknownVsPlayer::AnimWalkSounds() {
     Vector3 screenPos;
     if (!mModel.WillHitFrame(4)) {
-        if (mModel.WillHitFrame(0x22) == 0)
+        if (mModel.WillHitFrame(34) == 0)
             return;
     }
     data_0209f43c.TransformAndClip(data_0209b3ec, mPosition, 0, screenPos);
@@ -271,7 +265,7 @@ void UnknownVsPlayer::MovePoseParticles() {
  * first pass only arms the flag, the second plays the player's sound
  * 0x1c and stops. */
 void UnknownVsPlayer::MoveWaitForPoseSound() {
-    if (!mModel.WillHitFrame(0x14))
+    if (!mModel.WillHitFrame(20))
         return;
     if (mInAir == 0) {
         mInAir = 1;
@@ -290,8 +284,7 @@ void UnknownVsPlayer::MoveChoosePose() {
     BTP_File *textureFile;
     if (data_ov075_0211d380 < 0) {
         data_ov075_0211d380 =
-            data_ov075_0211b524[((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) %
-                                6];
+            data_ov075_0211b524[((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) % 6];
     }
     if (data_0209b2f0[mPlayerNo] != 0) {
         mModel.SetAnim(*(BCA_File *)data_ov075_0211d3ac.filePtr, 0, 0, 0x1000, 0);
@@ -308,7 +301,7 @@ void UnknownVsPlayer::MoveChoosePose() {
     {
         unsigned int randomValue = (unsigned int)RandomIntInternal(&data_0209e650.value);
         int frameCount = mModel.GetFrameCount();
-        mTextureSequence.currFrame = (u16)((randomValue >> 0x10) % frameCount) << 12;
+        mTextureSequence.currFrame = (u16)((randomValue >> 16) % frameCount) << 12;
     }
 }
 
@@ -425,7 +418,7 @@ int UnknownVsPlayer::IsAtExit() {
  * (movement state 2). */
 void UnknownVsPlayer::GoToExit(int exitX) {
     mModel.SetAnim(*(BCA_File *)data_ov075_0211d384.filePtr, 8, 0x40000000, 0x1000, 0);
-    mWaitTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) + 0x1e) & 0xf;
+    mWaitTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) + 30) & 15;
     mExitPos.x = exitX;
     mExitPos.y = 0;
     mExitPos.z = -0x3e8000;
@@ -567,7 +560,7 @@ void UnknownVsPlayer::Behavior() {
     (this->*sVsPlayerAnimStates[mAnimState].state)();
     mModel.Advance();
     mTextureSequence.Advance();
-    mShadow.InitModel(&mModel.mat4x3, 0x50000, 0x1f4000, 0x50000, 0xf);
+    mShadow.InitModel(&mModel.mat4x3, 0x50000, 0x1f4000, 0x50000, 15);
 }
 
 /* Set up the figure for player slot playerNo at x: both models, the pose
@@ -598,7 +591,7 @@ int UnknownVsPlayer::Init(unsigned char kind, unsigned char playerNo, int x) {
     {
         unsigned randomValue = (unsigned)RandomIntInternal(&data_0209e650.value);
         int frameCount = mModel.GetFrameCount();
-        mTextureSequence.currFrame = (((randomValue >> 0x10) % (unsigned)frameCount) << 0x10) >> 4;
+        mTextureSequence.currFrame = (((randomValue >> 16) % (unsigned)frameCount) << 16) >> 4;
     }
 
     if (mShadow.InitCylinder() == 0)
@@ -746,8 +739,8 @@ int dEntObj_c::GetStandingX(int playerNo) {
 /* Rebuild the projection and the view from the camera eye and target. */
 void dEntObj_c::SetCamera() {
     Matrix4x3 view;
-    G3i_PerspectiveW_(data_02082614[0xa], data_02082614[0xb], 0x1555, 0x1000, 0x1388000, 0x1000,
-                      true, 0);
+    G3i_PerspectiveW_(data_02082614[10], data_02082614[11], 0x1555, 0x1000, 0x1388000, 0x1000, true,
+                      0);
     G3i_LookAt_((Vector3 *)&mCamPosX, (Vector3 *)&data_ov075_0211c660, (Vector3 *)&mCamTargetX,
                 true, &view);
     CopyToViewMat(&view);

@@ -70,7 +70,7 @@ void func_ov007_020b65e0(void)
         WORK->settings = 0;
     }
 
-    for (i = 0; i < 0xb; i++) {
+    for (i = 0; i < 11; i++) {
         if (WORK->textures[i] != 0) {
             func_ov007_020c1620(WORK->textures[i]);
             WORK->textures[i] = 0;
@@ -91,7 +91,7 @@ void func_ov007_020b65e0(void)
         }
     }
 
-    for (i = 0; i < 0x18; i++) {
+    for (i = 0; i < 24; i++) {
         if (WORK->itemViews[i] != 0) {
             ItemView_Destroy(WORK->itemViews[i]);
             WORK->itemViews[i] = 0;

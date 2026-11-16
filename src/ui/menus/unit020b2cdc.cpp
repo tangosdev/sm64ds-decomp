@@ -687,13 +687,13 @@ void func_ov007_020b2e64(TPData *sample) {
 
     if (func_ov007_020c1da0(0) != 0) {
         dir = -1;
-    } else if (held[0] == 1 || (held[0] >= 0x14 && FX_ModS32(held[0] - 0x14, 0xa) == 0)) {
+    } else if (held[0] == 1 || (held[0] >= 20 && FX_ModS32(held[0] - 20, 10) == 0)) {
         dir = 0;
-    } else if (held[1] == 1 || (held[1] >= 0x14 && FX_ModS32(held[1] - 0x14, 0xa) == 0)) {
+    } else if (held[1] == 1 || (held[1] >= 20 && FX_ModS32(held[1] - 20, 10) == 0)) {
         dir = 1;
-    } else if (held[2] == 1 || (held[2] >= 0x14 && FX_ModS32(held[2] - 0x14, 0xa) == 0)) {
+    } else if (held[2] == 1 || (held[2] >= 20 && FX_ModS32(held[2] - 20, 10) == 0)) {
         dir = 2;
-    } else if (held[3] == 1 || (held[3] >= 0x14 && FX_ModS32(held[3] - 0x14, 0xa) == 0)) {
+    } else if (held[3] == 1 || (held[3] >= 20 && FX_ModS32(held[3] - 20, 10) == 0)) {
         dir = 3;
     } else {
         dir = -1;

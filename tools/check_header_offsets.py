@@ -124,13 +124,16 @@ DECL = re.compile(r"^\s*(?:(?:const|volatile)\s+)*(?:(?:struct|union|class|enum)
                   r"(?:\s*/\*\s*(0x[0-9a-fA-F]+))?")
 ARR_DIMS = re.compile(r"\[\s*(0x[0-9a-fA-F]+|\d+|[A-Za-z_]\w*)\s*\]")
 # `PresenterFile mAnims[PRESENTER_ANIM_COUNT];` -- a bound named by a constant the
-# same header defines. Only that header's own `#define NAME <number>` lines and
-# enumerators (implicit, `= <number>` or `= <earlier enumerator>`) are read; a
-# name defined anywhere else stays unknown, and its field reports UNPARSED rather
-# than being sized from a guess.
+# same header defines. Only that header's own `#define NAME <number>` lines,
+# enumerators (implicit, `= <number>` or `= <earlier enumerator>`) and
+# `static const <int> NAME = <number>;` members (`daSnmBth_c::PARTICLE_NUM`) are
+# read; a name defined anywhere else stays unknown, and its field reports UNPARSED
+# rather than being sized from a guess.
 _NUM = r"(?:0x[0-9a-fA-F]+|\d+)"
 DEFINE_CONST = re.compile(r"^[ \t]*#[ \t]*define[ \t]+([A-Za-z_]\w*)[ \t]+\(?[ \t]*(" + _NUM + r")[uUlL]*[ \t]*\)?[ \t]*$",
                           re.M)
+STATIC_CONST = re.compile(r"^[ \t]*static[ \t]+const[ \t]+(?:(?:unsigned|signed)[ \t]+)?\w+[ \t]+"
+                          r"([A-Za-z_]\w*)[ \t]*=[ \t]*(" + _NUM + r")[uUlL]*[ \t]*;", re.M)
 ENUM_BODY = re.compile(r"\benum\s+(?:class\s+)?(?:\w+\s*)?(?::\s*\w+\s*)?\{([^{}]*)\}", re.S)
 
 
@@ -139,6 +142,7 @@ def header_constants(txt):
     code = re.sub(r"/\*.*?\*/", " ", txt, flags=re.S)
     code = re.sub(r"//[^\n]*", "", code)
     consts = {n: int(v, 0) for n, v in DEFINE_CONST.findall(code)}
+    consts.update((n, int(v, 0)) for n, v in STATIC_CONST.findall(code))
     for body in ENUM_BODY.findall(code):
         nxt = 0
         for item in body.split(","):
@@ -935,6 +939,12 @@ def main(argv, repo=None):
                 continue
             if re.match(r"^\s*(#|\}|/\* methods)", line):
                 break
+            # A `static` data member (`static const int PARTICLE_NUM = 50;`, naming the
+            # bound of the array after it) lives outside every instance: it occupies no
+            # storage, so it neither ends the field list nor advances the offset.
+            # A `static` METHOD has a `(` and still goes through the method test below.
+            if re.match(r"^\s*static\b[^(]*;", _code_without_comments_or_strings(line)[0]):
+                continue
             if IGNORABLE.match(line):
                 if "/*" in line and "*/" not in line:
                     in_comment = True

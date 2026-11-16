@@ -70,10 +70,9 @@
  * implicit `this`; the ROM bytes still match at 106/106.
  *
  * SIZE. daObjClockHuriko_c_classInit asks fBase_c::operator new for 296 =
- * 0x128 bytes. dActor_c is 0xd0 (include/dActor_c.h) and dExtSimpleModel_c is 0x50
- * (include/dExtSimpleModel_c.h), so the embedded dExtSimpleModel_c runs 0xd4..0x124 (the same
- * 4-byte alignment pad include/dBgActor_c.h and include/daDoor_c.h both take
- * before their own dExtSimpleModel_c/dExtAnmModel_c members). That leaves exactly
+ * 0x128 bytes. dActor_c is 0xd4 (include/dActor_c.h) and dExtSimpleModel_c is 0x50
+ * (include/dExtSimpleModel_c.h), so the embedded dExtSimpleModel_c runs 0xd4..0x124,
+ * starting right where the base ends. That leaves exactly
  * 0x124..0x127 (4 bytes) as this class's own storage -- one s16, mAngSpeed,
  * plus 2 bytes of trailing padding. Same offset, daObjClock_c.h's sibling
  * field (`mHandIndex`, u8) confirms the shape -- one small scalar right
@@ -90,7 +89,6 @@
 #ifdef __cplusplus
 
 struct daObjClockHuriko_c : dActor_c {
-    u8 pad_0d0[0x4];
     /* Named by the implicit constructor's _ZN17dExtSimpleModel_cC1Ev call at +0xd4 -- a
        relocation the ROM build checks. */
     dExtSimpleModel_c mModel; /* 0x0d4 */

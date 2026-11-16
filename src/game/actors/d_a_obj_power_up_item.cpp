@@ -189,7 +189,7 @@ void daObjPowerUpItem_c::BeginOpening()
     func_02012694(0x7d, &mCamSpacePos);
     mEffectHandle = 0;
     mAngleY = gCamera->mAngleY;
-    mWobbleTimer = 0x1b;
+    mWobbleTimer = 27;
 }
 
 /* Falling update: emits particle 0x103, turns the flower about Y by 0x250 plus
@@ -215,7 +215,7 @@ void daObjPowerUpItem_c::StateLaunched()
     a = mVertSpeed;
     mag = (a < 0) ? -a : a;
     y = FX_MUL(mag, 0x120000);
-    X = (s16)(y / 4096);
+    X = (s16)(y / 0x1000);
     delta = 0x250;
     if (X > 0)
         delta += X;
@@ -322,7 +322,7 @@ void daObjPowerUpItem_c::CheckPickup() {
         u32 flags = mFlags;
         int t = (int)((flags & 0x20000) != 0);
         if (t != 0) {
-            mLifeTimer = 0x64;
+            mLifeTimer = 100;
             return;
         }
     }
@@ -400,7 +400,8 @@ int daObjPowerUpItem_c::Render()
   if (f != 0) return 1;
   /* blinks while mLifeTimer is below 0x2d */
   unsigned char st = mLifeTimer;
-  if (st < 0x2d && (st & 1)) return 1;
+  if (st < 45 && (st & 1))
+      return 1;
   switch (mState) {
   case FLOWER_STATE_LAUNCHED:
       mCloseModel.Render(&mScale);
@@ -470,7 +471,7 @@ int daObjPowerUpItem_c::InitResources()
     mGroundY = pos.y;
     if (ground.DetectClsn())
         mGroundY = ground.clsnY;
-    mLifeTimer = 0xb4;
+    mLifeTimer = 180;
 
     if (param1 == FLOWER_PARAM_PERSISTENT) {
         if (ClosestPlayer()->param1 == CHARACTER_LUIGI && SaveData::HasPlayerLostCap() == 0) {

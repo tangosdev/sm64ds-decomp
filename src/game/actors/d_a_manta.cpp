@@ -22,7 +22,6 @@
  *   Dropping it loses the reload of dActor_c's z speed.
  * - Matrix4x3 stays decl_common.h's flat s32[12].
  *   UpdateModelAndRingPos indexes .m. common.h must not replace it.
- * - daPly_c::Hurt stays mangled (Fix12 by value).
  */
 
 #pragma defer_codegen off
@@ -68,10 +67,10 @@ enum {
     MANTA_PLAYER = 0xbf,
     MANTA_WATER_RING = 0xf4,
     MANTA_RING_GOAL = 5,
-    MANTA_RING_SLOTS = 0x14,
-    MANTA_RING_INTERVAL = 0x27,
-    MANTA_STAR_WAIT = 0x1e,
-    MANTA_STAR_SPAWNED = 0xa,
+    MANTA_RING_SLOTS = 20,
+    MANTA_RING_INTERVAL = 39,
+    MANTA_STAR_WAIT = 30,
+    MANTA_STAR_SPAWNED = 10,
     MANTA_COLLECT_JINGLE = 0x25,
     MANTA_NODE_REACH = 0x258000,
     MANTA_FORWARD = 0xa000,
@@ -315,7 +314,7 @@ int daManta_c::InitResources() {
     dExtFrameCtrl_c::LoadFile(data_ov090_0213452c);
 
     mPathID = param1 & 0xff;
-    mStarID = (param1 >> 12) & 0xf;
+    mStarID = (param1 >> 12) & 15;
     if (mPathID < 0)
         mPathID = 0;
 

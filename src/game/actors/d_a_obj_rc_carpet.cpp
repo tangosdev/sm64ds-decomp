@@ -115,7 +115,7 @@ int daObjRcCarpet_c::Behavior() {
 }
 
 int daObjRcCarpet_c::Render() {
-    if (mWaitTimer < 0x5a && (mWaitTimer & 1))
+    if (mWaitTimer < 90 && (mWaitTimer & 1))
         return 1;
     mAnmModel.Render(0);
     return 1;

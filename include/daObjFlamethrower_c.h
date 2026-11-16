@@ -21,7 +21,6 @@
  * reconstructed as g_profile_OBJ_FLAMETHROWER.
  * literal closes the object after the state fields below. */
 struct daObjFlamethrower_c : dActor_c {
-    u8 pad_0d0[0x4];
     dCcPos_c mColliders[12];     /* 0x0d4 */
     Vector3 mFlamePositions[12]; /* 0x3a4 */
     Matrix4x3 mTransform;        /* 0x434 */

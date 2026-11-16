@@ -26,8 +26,8 @@
  * SIZE 0x3cc is the factory's own literal; the two bytes mLifeTimer (0x3ca) and
  * mWobbleTimer (0x3cb) close exactly on it under 4-byte alignment.
  *
- * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
- * names -- dActor_c ends at exactly 0x0d0. Consumer fields were repointed to
+ * Everything below 0x0d4 duplicated dActor_c's own fields under placeholder
+ * names -- dActor_c ends at exactly 0x0d4. Consumer fields were repointed to
  * the inherited dActor_c/fBase_c names: mParam -> param1, unk_08e ->
  * mAngleY, unk_09c -> mVertAccel, unk_0a0 -> mTerminalVelocity, unk_0b0 ->
  * mFlags (mPosX/Y/Z and mScaleX/Y/Z already shared dActor_c's names).
@@ -46,7 +46,6 @@
  * here.
  */
 struct daObjPowerUpItem_c : dActor_c {
-    u8  pad_0d0[0x4];
     /* dExtSimpleModel_c member, named by _ZN17dExtSimpleModel_cD1Ev at +0xd4 -- a relocation the ROM build checks. */
     dExtSimpleModel_c mCloseModel; /* 0x0d4 -- SetFile'd from gPFlowerCloseModelFile */
     /* dExtSimpleModel_c member, named by the class's own destructor calling

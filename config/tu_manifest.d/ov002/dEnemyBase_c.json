@@ -264,112 +264,112 @@
       "address": "0x02108140",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae73cEP8dActor_cP10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN6Aea30C19func_ov002_020ae73cEP8dActor_cP10dBgCh_Actr"
     },
     {
       "symbol": "@986",
       "address": "0x02108148",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11EnemyDeathC19func_ov002_020ae608ER10dBgCh_Actr"
     },
     {
       "symbol": "@960",
       "address": "0x02108150",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN6Aea30C19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr"
     },
     {
       "symbol": "@985",
       "address": "0x02108158",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN6Aea30C19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr"
     },
     {
       "symbol": "@218",
       "address": "0x02108160",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae87cEP8dActor_cP10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN6Aea30C19func_ov002_020ae87cEP8dActor_cP10dBgCh_Actr"
     },
     {
       "symbol": "@958",
       "address": "0x02108168",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN6Aea30C19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr"
     },
     {
       "symbol": "@987",
       "address": "0x02108170",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN6Aea30C19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr"
     },
     {
       "symbol": "@946",
       "address": "0x02108178",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020aea24ER10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11EnemyDeathC19func_ov002_020aea24ER10dBgCh_Actr"
     },
     {
       "symbol": "@948",
       "address": "0x02108180",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae454ER10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11EnemyDeathC19func_ov002_020ae454ER10dBgCh_Actr"
     },
     {
       "symbol": "@942",
       "address": "0x02108188",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11EnemyDeathC19func_ov002_020ae608ER10dBgCh_Actr"
     },
     {
       "symbol": "@944",
       "address": "0x02108190",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11EnemyDeathC19func_ov002_020ae608ER10dBgCh_Actr"
     },
     {
       "symbol": "@262",
       "address": "0x02108198",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae4ccER10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11EnemyDeathC19func_ov002_020ae4ccER10dBgCh_Actr"
     },
     {
       "symbol": "@954",
       "address": "0x021081a0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020aea2cEP8dActor_cP10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN6Aea30C19func_ov002_020aea2cEP8dActor_cP10dBgCh_Actr"
     },
     {
       "symbol": "@950",
       "address": "0x021081a8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11EnemyDeathC19func_ov002_020ae608ER10dBgCh_Actr"
     },
     {
       "symbol": "@952",
       "address": "0x021081b0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae64cER10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11EnemyDeathC19func_ov002_020ae64cER10dBgCh_Actr"
     },
     {
       "symbol": "@266",
       "address": "0x021081b8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN12dEnemyBase_c19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN6Aea30C19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr"
     }
   ],
   "bss": [
