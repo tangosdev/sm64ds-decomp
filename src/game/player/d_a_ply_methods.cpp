@@ -15375,7 +15375,6 @@ int daPly_c::DropHeldObj() {
 }
 
 int daPly_c::func_ov002_020daa74() {
-    char* self = (char*)this;
     char *s = (char *)mHeldObj;
     int b = (s != 0);
     if (!b)
