@@ -1203,8 +1203,7 @@ int daMip_c::Behavior()
     if (mIsGlowing != 0) {
         Vector3 pv = mPos;
         pv.y += 0x3c000;
-        mGlowParticle =
-            Particle::System::New(mGlowParticle, 0x10d, pv.x, pv.y, pv.z, 0, 0);
+        mGlowParticle = Particle::System::New(mGlowParticle, 0x10d, pv.x, pv.y, pv.z, 0, 0);
     }
 
     {
