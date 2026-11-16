@@ -144,6 +144,22 @@ u8 OAM::GetObjWidth(int shape, int sizeBits)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- OAM::Render(bool, OamAttr *, int, int, int, int, int, int, int, int)
  * 0x02020994  size 0x690 */
+/* Kept, measured 2026-11-16 (#821). Render is the only function in the
+ * bracket, and it needs both settings: without either it is the right size
+ * but 279 words off; propagation off alone 0x698, loop invariants off alone
+ * 0x688. With neither, the closest spelling found (tile read as
+ * attr->charNo, the sine table through FX_SinIdx/FX_CosIdx, identical
+ * either way) is 0x690 with 220 words off, in three places: loop-invariant
+ * motion hoists the matrix's `mtxIdx + 1` ahead of the loop, which shifts
+ * every later stack slot by 4 and re-colours the rotation block's s64
+ * products. Not moved: s64 assignment order and declaration order (5 + 2
+ * orders, identical), mtxIdx before / after sinIdx (0x68c / identical),
+ * s16 or u16 mtxIdx (0x694), `&FX_SinCosTable_[mtxIdx]` + [1] (0x684),
+ * sin read before cos (218 off), Matrix2x2 scoped in the branch and
+ * `for (;;)` (identical), `while (*pCount < 128)` (0x6a8). Not a TU-wide
+ * build flag: both offs file-wide break LoadAffineParams, the 8-parameter
+ * Render and Reset; optimization_level 2 file-wide breaks three functions,
+ * level 3 leaves this one at 0x688. */
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 
@@ -156,17 +172,14 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
      * == -1 keep the entry's own bits, mode > 0 overrides the entry's object
      * mode.
      *
-     * The three pragma offs above are load-bearing: the scalar parameters
-     * are used DIRECTLY, never copied into locals, which is what reproduces
-     * the ROM's prologue register-homing order. Each one alone moves the
-     * size (0x680-0x698 against 0x690): the pragmas stay for CSE recompute,
-     * copy propagation and loop-invariant placement together, not for colour.
+     * The scalar parameters are used DIRECTLY, never copied into locals,
+     * which is what reproduces the ROM's prologue register-homing order.
      * The 0x100 / 0x300 / 0 constants the prologue spills are the compiler's
-     * own hoist of the bare literals below. The sine table stays indexed
-     * by the hoisted sinIdx/cosIdx/mtxIdx: FX_SinIdx/FX_CosIdx at the use
-     * sites measured 0x64c-0x698, with or without the pragmas. `attr_` is
-     * spelled OamAttr* for the call-site declarations; the body views it as
-     * GXOamAttr. */
+     * own hoist of the bare literals below. Under the two pragmas the sine
+     * table stays indexed by the hoisted sinIdx/cosIdx/mtxIdx and the tile
+     * number stays a two-step shift: FX_SinIdx/FX_CosIdx in the matrix
+     * measure 0x680, attr->charNo 4 words off. `attr_` is spelled OamAttr*
+     * for the call-site declarations; the body views it as GXOamAttr. */
     GXOamAttr *attr = (GXOamAttr *)attr_;
     int priVal;
     int palVal;
