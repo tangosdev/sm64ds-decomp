@@ -882,12 +882,9 @@ int daMky_c::func_ov030_02113094()
                 Spawn(0x10d, (this->mCapPlayerNo << 8) | 5, this->mPlayer->mPos, 0, this->mAreaId,
                       -1);
                 ((fBase_c *)::dActor_c::FindWithID(this->mCapUniqueID))->MarkForDestruction();
-                {
-                    u32 z = 0;
-                    this->mCapUniqueID = z;
-                    this->mHasSpawnedCap = z;
-                    this->mPrevState = 0xa;
-                }
+                this->mCapUniqueID = 0;
+                this->mHasSpawnedCap = 0;
+                this->mPrevState = 0xa;
             }
             ChangeState(7);
         }

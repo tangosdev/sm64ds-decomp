@@ -288,20 +288,15 @@ s32 daSBird_c::InitResources() {
     BCA_File *animFile = dExtFrameCtrl_c::LoadFile(data_ov009_02113c28);
     mAnmModel.SetAnim((BCA_File *)animFile, 0, 0x1000, 0);
     mShadowModel.InitCylinder();
-    {
-        int *p60 = &mPosY;
-        int y = *p60;
-        int zero = 0;
-        *p60 = y + 0xa000;
-        mVertAccel = zero;
-        mTerminalVelocity = -0x32000;
-        mIsLeader = 1;
-        mOwnerID = uniqueID;
-        mTargetPos.x = mPosX;
-        mTargetPos.y = mPosY;
-        mTargetPos.z = mPosZ;
-        mState = zero;
-    }
+    mPosY += 0xa000;
+    mVertAccel = 0;
+    mTerminalVelocity = -0x32000;
+    mIsLeader = 1;
+    mOwnerID = uniqueID;
+    mTargetPos.x = mPosX;
+    mTargetPos.y = mPosY;
+    mTargetPos.z = mPosZ;
+    mState = 0;
     return 1;
 }
 
