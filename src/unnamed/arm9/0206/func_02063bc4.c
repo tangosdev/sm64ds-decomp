@@ -4,7 +4,7 @@
 extern WBTBlockInfoList *func_02065a94(int key);
 extern int func_0206491c(unsigned int key, int val);
 extern char *func_02064888(unsigned int id, int idx);
-extern int func_02064d6c(u8 *dst, int a, u8 b, int c, int d, const void *p, int n);
+extern int func_02064d6c(u8 *dst, u16 a, u8 b, int c, int d, const void *p, int n);
 extern int func_02065bc0(void);
 extern void func_02064554(void *base, int a, int b, s16 c);
 
@@ -18,7 +18,7 @@ int func_02063bc4(WBTWork *work, int idx, void *buf, int size) {
     WBTCommand *sys = &work->system_cmd;
     WBTPeerRecord *e = &work->peer[idx];
     if (e->state == 2) {
-        int r7;
+        u16 r7;
         if (WBT_GetOwnAid() == 0)
             r7 = 0xfffe;
         else

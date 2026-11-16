@@ -430,7 +430,6 @@ int daObjRotateUpdownLift_c::InitResources()
     Vector3 rotated;
     Vector3 probe;
     Vector3 placed;
-    unsigned char node;
     unsigned char variant;
     void *bmd;
     void *kcl;
@@ -464,13 +463,7 @@ int daObjRotateUpdownLift_c::InitResources()
     }
 
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    {
-        char *tbl = (char *)data_ov091_02134cdc;
-        int stride = 0x78;
-        int i = mVariant;
-        node = mWaypointIndex;
-        MTX_MultVec43((Vector3 *)(tbl + i * stride + node * 0xc), &data_020a0e68, &rotated);
-    }
+    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &rotated);
     Vec3_Add(&placed, (const Vector3 *)&mBasePosX, &rotated);
     mPosX = placed.x;
     mPosY = placed.y;

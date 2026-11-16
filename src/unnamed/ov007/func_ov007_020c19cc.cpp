@@ -1,5 +1,6 @@
 //cpp
 #include "common.h"
+#include "math/Matrix.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g3imm_cmd.h"
 
@@ -8,7 +9,7 @@
 #define REG_VTX_XY (*(volatile u32 *)0x04000494)
 
 extern "C" {
-extern void MTX_RotZ33_(int *m, int s, int c);
+extern void MTX_RotZ33_(Matrix3x3 *m, int s, int c);
 extern void G3_MultTransMtx33(int *a, int *v);
 
 /* Draws a ribbon `half` units either side of the point path `pts` as one
@@ -29,7 +30,7 @@ void func_ov007_020c19cc(int count, VecFx32 *pts, int half, int t) {
     VecFx32 *prev;
     int inv;
     VecFx32 tmp;
-    int mtx[9];
+    Matrix3x3 mtx;
     VecFx32 *pos;
 
     z = (s16)half;
@@ -116,8 +117,8 @@ void func_ov007_020c19cc(int count, VecFx32 *pts, int half, int t) {
             {
                 s16 halfd = (s16)(ang - prevAng) / 2;
                 int idx = (unsigned short)((s16)prevAng + halfd) >> 4;
-                MTX_RotZ33_(mtx, FX_SinIdx(idx), FX_CosIdx(idx));
-                G3_MultTransMtx33(mtx, (int *)pos);
+                MTX_RotZ33_(&mtx, FX_SinIdx(idx), FX_CosIdx(idx));
+                G3_MultTransMtx33(mtx.m, (int *)pos);
             }
             prev++;
             i++;

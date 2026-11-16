@@ -24,7 +24,7 @@ void func_ov007_020bfe4c(Ov007Camera *cam, int a, int b, int c, VecFx32 *out) {
     v.x = FX_DivS32(FX_MUL(v.x, f1), 96);
     v.y = FX_DivS32(FX_MUL(v.y, f1), 96);
     MTX_Inverse43(&cam->viewMatrix, &inv);
-    /* MTX_Inverse43 and Ov007Camera::viewMatrix are still Matrix4x3 (#5207). */
+    /* Ov007Camera::viewMatrix, so its inverse, is still Matrix4x3 (#5207). */
     MTX_MultVec43(&v, (MtxFx43 *)&inv, out);
 }
 }

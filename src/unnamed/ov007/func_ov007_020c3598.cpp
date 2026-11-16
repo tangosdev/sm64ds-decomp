@@ -11,19 +11,16 @@ int func_ov007_020c3598(int val, int n, char *buf, int base) {
     }
 
     for (i = 0; i < n; i++) {
-        int neg1 = -1;
-        int one = 1;
         int pos = (n - 1) - i;
-        char *p = buf + pos;
         buf[pos] = FX_DivS32(val, r7);
-        val -= r7 * (buf[pos]);
+        val -= r7 * buf[pos];
         r7 = FX_DivS32(r7, base);
         if (fnd == 0) {
-            if ((*p) != 0) {
-                fnd = one;
+            if (buf[pos] != 0) {
+                fnd = 1;
                 res = pos + 1;
             } else if (pos > 0) {
-                *p = neg1;
+                buf[pos] = -1;
             }
         }
     }

@@ -52,6 +52,15 @@
 #include "nitro/fx/fx_trig.h"
 #include "nitro/fx/fx_cp.h"
 
+/* The position overload reads mPos through its reference, so the break puff
+   reloads mPosY after the kill-height test (a scalar mPosY reuses the test's
+   load and RollOffBehavior comes out 0x1e8 against the ROM's 0x1ec).
+   d_a_obj_number.cpp defines it the same way; a body in
+   Particle__System.h would renumber every includer's @NNN. */
+inline void *Particle::System::NewSimple(u32 id, const Vector3 &pos) {
+    return NewSimple(id, pos.x, pos.y, pos.z);
+}
+
 /* Actor IDs from symbols/actor_debug_names.tsv. */
 enum {
     daIbl_ACTOR_PLAYER   = 191,     /* PLAYER */
@@ -468,10 +477,7 @@ void daIbl_c::RollOffBehavior() {
     UpdateWallAndFloor();
 
     if (mPosY < mKillY || mHitWall != 0) {
-        /* The volatile read of mPosY is measured, not style: with a plain
-           mPosY this function compiles to 0x1e8 bytes against the ROM's 0x1ec,
-           and testing mHitWall first instead moves seven words. */
-        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, *(volatile int *)&mPosY, mPosZ);
+        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos);
         func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
         TriplePoofDust();
         MarkForDestruction();

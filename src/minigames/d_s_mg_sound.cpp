@@ -613,7 +613,6 @@ void dScMgSound_c::DealNotes() {
 
 void dScMgSound_c::Note_StateWait(int slot) {
     u8 player;
-    int offset;
     int touchPressed;
     int dx;
     int dy;
@@ -625,11 +624,10 @@ void dScMgSound_c::Note_StateWait(int slot) {
         return;
     }
 
-    player = gActivePlayerSlot;
-    offset = player * 4;
     touchPressed = 0;
-    if (gTouchHeld[offset] != 0) {
-        if (gTouchEdge[offset] != 0) {
+    player = gActivePlayerSlot;
+    if (gTouchInfo[player].held != 0) {
+        if (gTouchInfo[player].edge != 0) {
             touchPressed = 1;
         }
     }
@@ -637,8 +635,8 @@ void dScMgSound_c::Note_StateWait(int slot) {
         return;
     }
 
-    dx = gTouchX[player * 4] - (mNotes[slot].x >> 12);
-    dy = gTouchY[player * 4] - (mNotes[slot].y >> 12);
+    dx = gTouchInfo[player].x - (mNotes[slot].x >> 12);
+    dy = gTouchInfo[player].y - (mNotes[slot].y >> 12);
 
     if (dx > 0x18) {
         return;

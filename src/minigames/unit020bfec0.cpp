@@ -658,9 +658,9 @@ void Presenter::TrackStylus() {
     }
     if (IsIdle() != 0) {
         int i = gActivePlayerSlot;
-        if (gTouchHeld[i * 4] != 0) {
-            int x = gTouchX[i * 4];
-            int y = gTouchY[i * 4];
+        if (gTouchInfo[i].held != 0) {
+            int x = gTouchInfo[i].x;
+            int y = gTouchInfo[i].y;
             PRESENTER_TRACK(this, x, y);
             return;
         }
@@ -1705,10 +1705,8 @@ void MascotWalker::StatePause() {
     if (ApproachLinear2(mStateTimer, 0, 1) == 0)
         return;
     mModel.SetAnim(*(BCA_File *)mWalkAnimFile.filePtr, 0, 0, 0x800, 0);
-    /* Walk for 0x258..0x4af frames: a random 0..0xfff scaled into 0x258. */
-    int roll = RandomIntInternal(&data_0209e650.value);
-    int frac = ((unsigned int)(roll & 0x7fffffff) >> 0x13);
-    mStateTimer = (((frac * 0x258) >> 12) + 0x258);
+    /* Walk for 0x258 to 0x4af frames. */
+    mStateTimer = RAND_FX_SCALE(0x258) + 0x258;
     mPaused = 0;
     *(StateSlot *)mState = pmf_MascotWalker_StateWalk_3;
 }
@@ -1719,7 +1717,7 @@ void MascotWalker::StatePause() {
  */
 
 void Camera_UpdateMatrices(MgCamera *camera) {
-    Vector3 up;
+    VecFx32 up;
     Vector3 forward;
     Vector3 right;
     Vector3 scratch0;
@@ -1744,8 +1742,7 @@ void Camera_UpdateMatrices(MgCamera *camera) {
     G3i_PerspectiveW_(FX_SinIdx(camera->mFovAngle >> 4), FX_CosIdx(camera->mFovAngle >> 4), 0x1555,
                       0x1000, 0x1388000, 0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
 
-    G3i_LookAt_((Vector3 *)&camera->mPos, &up, (Vector3 *)&camera->mLookAt, true,
-                (Matrix4x3 *)&camera->mViewMtx);
+    G3i_LookAt_(&camera->mPos, &up, &camera->mLookAt, true, &camera->mViewMtx);
 
     CopyToViewMat((Matrix4x3 *)&camera->mViewMtx);
 

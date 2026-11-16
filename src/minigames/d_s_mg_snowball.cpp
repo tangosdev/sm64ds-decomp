@@ -79,7 +79,6 @@ enum dScMgSnowball_c_AssetId {
 extern "C" {
 extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, void *f);
 extern OamAttr *sSnowballBitSprites[];
-extern void func_0203d388(int *p, int angle);
 extern int func_0203d434(int *p);
 extern void func_0203d630(int *p, int m);
 extern void func_02012718(int a, int b);
@@ -407,7 +406,7 @@ void dScMgSnowball_c::UpdateSnowball() {
     int floatDirX;
     int floatDirY;
     int zNotAllWater;
-    int angle;
+    s16 angle;
     int j;
     int sample[2];
     dScMgSnowball_c::Vec2 hit;
@@ -589,7 +588,7 @@ void dScMgSnowball_c::UpdateSnowball() {
         if (mProbePush[k] == 1) {
             rotPush[0] = 0;
             rotPush[1] = 0x1000;
-            func_0203d388(rotPush, (s16)(k * 0x10000 / 32));
+            func_0203d388(rotPush, k * 0x10000 / 32);
             push[0] -= rotPush[0];
             push[1] -= rotPush[1];
         }
@@ -1398,7 +1397,7 @@ s32 dScMgSnowball_c::Behavior() {
     int scrollStart, scrollMax;
     int speed;
     int slot, held, touched;
-    int heading;
+    s16 heading;
     int steer[2];
     int moved[2];
     Vector3 part;
@@ -1444,26 +1443,28 @@ s32 dScMgSnowball_c::Behavior() {
         }
 
         slot = gActivePlayerSlot;
-        held = gTouchHeld[slot * 4];
+        held = gTouchInfo[slot].held;
         touched = 0;
         if (held != 0)
-            touched = (gTouchEdge[slot * 4] != 0);
+            touched = (gTouchInfo[slot].edge != 0);
         if (touched != 0) {
-            int vb = ((volatile unsigned char *)gTouchY)[(unsigned int)slot * 4];
-            int va = gTouchX[(unsigned int)slot * 4];
+            int vb = gTouchInfo[slot].y;
+            int va = gTouchInfo[slot].x;
             mTouchX = va;
             mTouchY = vb;
         } else if (held != 0) {
-            steer[0] = ((gTouchX[(unsigned int)slot * 4] - mTouchX) << 12) / 296;
-            steer[1] = ((gTouchY[(unsigned int)slot * 4] - mTouchY) << 12) / 296;
-            mTouchX = gTouchX[(unsigned int)slot * 4];
-            mTouchY = gTouchY[(unsigned int)slot * 4];
+            int tx = gTouchInfo[slot].x;
+            steer[0] = ((tx - mTouchX) << 12) / 296;
+            int ty = gTouchInfo[slot].y;
+            steer[1] = ((ty - mTouchY) << 12) / 296;
+            mTouchX = tx;
+            mTouchY = ty;
             if (Vec2_Len((const Vector2 *)steer) >= 0x400) {
                 steer[0] = 0;
                 steer[1] = 0;
             }
             heading = cstd::atan2(mVel.y, mVel.x);
-            func_0203d388(steer, (short)-heading);
+            func_0203d388(steer, -heading);
             steer[1] = steer[1] << 2;
             func_0203d388(steer, heading);
             if (mVel.y >= 0) {
@@ -1570,10 +1571,10 @@ s32 dScMgSnowball_c::Behavior() {
         if (mEndDelayTimer > 0)
             mEndDelayTimer -= 1;
         slot = gActivePlayerSlot;
-        held = gTouchHeld[slot * 4];
+        held = gTouchInfo[slot].held;
         touched = 0;
         if (held != 0)
-            touched = (gTouchEdge[slot * 4] != 0);
+            touched = (gTouchInfo[slot].edge != 0);
         if (touched != 0)
             mEndDelayTimer = 0;
         UpdateSnowball();
