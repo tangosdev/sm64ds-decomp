@@ -146,7 +146,6 @@ extern u8 data_0209f254;
 extern u8 gCurrentEntranceId;
 extern unsigned char data_0209f28c;
 extern unsigned char gNewStarCollected;
-extern s16 data_0209f4a2[];
 extern ControllerInput data_0209f498[];
 extern u8 data_0209f4ab[];
 extern u8 data_0209fc5c[];
@@ -8207,14 +8206,20 @@ int daPly_c::func_ov002_020cc01c() {
     return 1;
 }
 
+/* Both stick reads stay byte offsets from &data_0209f498[0].nx. The ROM
+ * loads .nx twice, once on each side of the mAngleYSpeed store; mwcc reloads
+ * only an indirect read. Measured (fdiff): data_0209f498[gActivePlayerSlot].nx
+ * at both reads, with or without the (int) store and with or without idx, is
+ * CSE'd to one load: 0xe0 against 0xe4. A ControllerInput * or s16 * local
+ * keeps both loads but adds the slot with mla and reads [p, #0xa]: 25/57 off. */
 void daPly_c::func_ov002_020cc05c(unsigned short) {
     int idx = gActivePlayerSlot * 0x18;
     /* Through (int): plain player->mAngleYSpeed reschedules the 0x69c add and moves bytes. */
     s16 curval = *(s16 *)((int)&mAngleYSpeed);
     *(s16 *)((int)&mAngleYSpeed) =
-        curval + (s16)FX_MUL(*(s16 *)((char *)data_0209f4a2 + idx), 0x80);
+        curval + (s16)FX_MUL(*(s16 *)((char *)&data_0209f498[0].nx + idx), 0x80);
     {
-        s16 tv2 = *(s16*)((char*)data_0209f4a2 + idx);
+        s16 tv2 = *(s16 *)((char *)&data_0209f498[0].nx + idx);
     {
         s16 av = tv2;
         if (av < 0) av = (s16)(-av);
