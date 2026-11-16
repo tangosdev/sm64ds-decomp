@@ -423,7 +423,7 @@ extern int func_ov080_021270dc(void *, void *);
 extern int func_ov002_020baa98;
 extern int func_ov002_020bd250(char *, unsigned char *);
 extern int func_ov002_020c51d0(void *, void *);
-extern int func_ov002_020c56f0(unsigned char *, int);
+extern int func_ov002_020c56f0(struct daPly_c *, int);
 extern int func_ov002_020cf700(void *);
 extern int func_ov002_020d5ab4(void *);
 extern int func_ov002_020d5f34(struct daPly_c *, void *);

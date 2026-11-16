@@ -4859,16 +4859,15 @@ int daPly_c::St_BowserEarthquake_Init() {
 }
 
 extern "C" {
-int func_ov002_020c56f0(unsigned char* c, unsigned char arg)
-{
-    if (((daPly_c *)c)->func_ov002_020d82f0() == 0)
+int func_ov002_020c56f0(daPly_c *player, unsigned char arg) {
+    if (player->func_ov002_020d82f0() == 0)
         return 0;
-    ((daPly_c *)c)->mStateStep = arg;
-    if (((daPly_c *)c)->mStateStep == 0 && ((daPly_c *)c)->func_ov002_020d91e0(0x300, 1) != 0) {
-        ((daPly_c *)c)->ChangeState(data_ov002_0211010c);
+    player->mStateStep = arg;
+    if (player->mStateStep == 0 && player->func_ov002_020d91e0(0x300, 1) != 0) {
+        player->ChangeState(data_ov002_0211010c);
         return 1;
     }
-    ((daPly_c *)c)->ChangeState(data_ov002_021103c4);
+    player->ChangeState(data_ov002_021103c4);
     return 1;
 }
 }

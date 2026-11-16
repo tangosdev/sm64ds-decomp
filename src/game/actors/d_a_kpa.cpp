@@ -1546,7 +1546,7 @@ int daKpa_c::BowserLand() {
         if(this->mVariantID == 0){
             b = (this->mDistToTarget >= 0x352000);
             if (!this->mTargetPlayer->IsInAir())
-                func_ov002_020c56f0((unsigned char *)this->mTargetPlayer, b);
+                func_ov002_020c56f0(this->mTargetPlayer, b);
         }
         return 1;
     }
