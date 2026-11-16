@@ -78,41 +78,27 @@ void func_ov007_020bbe60(int idx) {
 }
 
 const int data_ov007_020cef80[20] = {
-    27, 14, 5, 8, 4, 3, 19, 10,
-    63, 11, 9, 31, 15, 11, 22, 26,
-    5, 20, 5, 4,
+    27, 14, 5, 8, 4, 3, 19, 10, 63, 11, 9, 31, 15, 11, 22, 26, 5, 20, 5, 4,
 };
 const int data_ov007_020cf700[30] = {
-    16, 12, 10, 17, 7, 8, 52, 19,
-    16, 10, 13, 12, 24, 12, 13, 3,
-    2, 12, 13, 3, 77, 17, 20, 6,
-    8, 2, 2, 7, 7, 3,
+    16, 12, 10, 17, 7, 8,  52, 19, 16, 10, 13, 12, 24, 12, 13,
+    3,  2,  12, 13, 3, 77, 17, 20, 6,  8,  2,  2,  7,  7,  3,
 };
 const int data_ov007_020cf8ec[32] = {
-    27, 14, 5, 8, 4, 3, 19, 10,
-    63, 11, 9, 31, 15, 11, 22, 26,
-    5, 20, 5, 4, 37, 5, 5, 8,
-    9, 7, 5, 10, 8, 7, 5, 7,
+    27, 14, 5, 8, 4,  3, 19, 10, 63, 11, 9, 31, 15, 11, 22, 26,
+    5,  20, 5, 4, 37, 5, 5,  8,  9,  7,  5, 10, 8,  7,  5,  7,
 };
 const int data_ov007_020cf96c[32] = {
-    27, 14, 5, 8, 4, 3, 19, 10,
-    63, 11, 9, 31, 15, 11, 22, 26,
-    5, 20, 5, 4, 28, 42, 26, 3,
-    1, 4, 6, 6, 5, 5, 4, 3,
+    27, 14, 5, 8, 4,  3,  19, 10, 63, 11, 9, 31, 15, 11, 22, 26,
+    5,  20, 5, 4, 28, 42, 26, 3,  1,  4,  6, 6,  5,  5,  4,  3,
 };
 const int data_ov007_020cfa70[34] = {
-    22, 9, 5, 5, 2, 15, 11, 4,
-    1, 8, 6, 25, 25, 3, 21, 12,
-    5, 23, 10, 4, 14, 24, 30, 38,
-    20, 12, 13, 11, 33, 31, 18, 1,
-    1, 2,
+    22, 9,  5, 5,  2,  15, 11, 4,  1,  8,  6,  25, 25, 3,  21, 12, 5,
+    23, 10, 4, 14, 24, 30, 38, 20, 12, 13, 11, 33, 31, 18, 1,  1,  2,
 };
 const int data_ov007_020cfb84[37] = {
-    18, 7, 5, 14, 6, 3, 10, 7,
-    8, 20, 26, 20, 22, 6, 3, 14,
-    8, 20, 31, 3, 26, 14, 19, 9,
-    7, 35, 9, 17, 19, 5, 6, 9,
-    7, 6, 14, 8, 1,
+    18, 7,  5,  14, 6, 3, 10, 7, 8,  20, 26, 20, 22, 6, 3, 14, 8, 20, 31,
+    3,  26, 14, 19, 9, 7, 35, 9, 17, 19, 5,  6,  9,  7, 6, 14, 8, 1,
 };
 extern const unsigned char data_ov007_020ccca4[];
 extern const unsigned char data_ov007_020ccca8[];
@@ -550,28 +536,28 @@ extern const int data_ov007_020cfe94[];
 extern const int data_ov007_020cff64[];
 extern const int data_ov007_020d0060[];
 
-const unsigned char * data_ov007_020d7f0c[20] = {
+const unsigned char *data_ov007_020d7f0c[20] = {
     data_ov007_020cdccc, data_ov007_020cd394, data_ov007_020cce7c, data_ov007_020cd074,
     data_ov007_020ccd74, data_ov007_020ccd10, data_ov007_020cd5ec, data_ov007_020cd13c,
     data_ov007_020ce974, data_ov007_020cd1cc, data_ov007_020cd0ac, data_ov007_020cdf14,
     data_ov007_020cd464, data_ov007_020cd1e4, data_ov007_020cd8f4, data_ov007_020cdc94,
     data_ov007_020cce64, data_ov007_020cd7b8, data_ov007_020cce24, data_ov007_020ccd78,
 };
-const unsigned char * data_ov007_020d7f5c[20] = {
+const unsigned char *data_ov007_020d7f5c[20] = {
     data_ov007_020cdce8, data_ov007_020cd3a4, data_ov007_020ccddc, data_ov007_020cd06c,
     data_ov007_020ccdb4, data_ov007_020ccd48, data_ov007_020cd600, data_ov007_020cd148,
     data_ov007_020ce9b4, data_ov007_020cd1d8, data_ov007_020cd0b8, data_ov007_020cdf34,
     data_ov007_020cd454, data_ov007_020cd1f0, data_ov007_020cd90c, data_ov007_020cdcb0,
     data_ov007_020ccdc4, data_ov007_020cd7cc, data_ov007_020cce4c, data_ov007_020ccd6c,
 };
-const int * data_ov007_020d7fac[20] = {
+const int *data_ov007_020d7fac[20] = {
     data_ov007_020cf5ac, data_ov007_020ce774, data_ov007_020cd704, data_ov007_020cdfb4,
     data_ov007_020cd484, data_ov007_020cd214, data_ov007_020cebd0, data_ov007_020ce2cc,
     data_ov007_020cff64, data_ov007_020ce3f0, data_ov007_020ce104, data_ov007_020cf870,
     data_ov007_020ce8fc, data_ov007_020ce41c, data_ov007_020cf178, data_ov007_020cf544,
     data_ov007_020cd7a4, data_ov007_020cef30, data_ov007_020cd7f4, data_ov007_020cd4b4,
 };
-const unsigned char * data_ov007_020d7ffc[30] = {
+const unsigned char *data_ov007_020d7ffc[30] = {
     data_ov007_020cd4d4, data_ov007_020cd268, data_ov007_020cd154, data_ov007_020cd574,
     data_ov007_020ccf94, data_ov007_020cd04c, data_ov007_020ce5c8, data_ov007_020cd664,
     data_ov007_020cd4f4, data_ov007_020cd178, data_ov007_020cd334, data_ov007_020cd2b0,
@@ -581,7 +567,7 @@ const unsigned char * data_ov007_020d7ffc[30] = {
     data_ov007_020ccfcc, data_ov007_020ccccc, data_ov007_020cccdc, data_ov007_020ccf64,
     data_ov007_020ccf34, data_ov007_020ccd1c,
 };
-const unsigned char * data_ov007_020d8074[30] = {
+const unsigned char *data_ov007_020d8074[30] = {
     data_ov007_020cd4e4, data_ov007_020cd274, data_ov007_020cd160, data_ov007_020cd588,
     data_ov007_020ccf8c, data_ov007_020cd054, data_ov007_020ce5fc, data_ov007_020cd678,
     data_ov007_020cd504, data_ov007_020cd184, data_ov007_020cd344, data_ov007_020cd2bc,
@@ -591,7 +577,7 @@ const unsigned char * data_ov007_020d8074[30] = {
     data_ov007_020ccfe4, data_ov007_020cccf4, data_ov007_020cccd0, data_ov007_020ccf5c,
     data_ov007_020ccfb4, data_ov007_020ccd44,
 };
-const int * data_ov007_020d80ec[30] = {
+const int *data_ov007_020d80ec[30] = {
     data_ov007_020ce9f4, data_ov007_020ce4d4, data_ov007_020ce2f4, data_ov007_020ceafc,
     data_ov007_020cde1c, data_ov007_020ce034, data_ov007_020cfe94, data_ov007_020cecb4,
     data_ov007_020cea34, data_ov007_020ce31c, data_ov007_020ce630, data_ov007_020ce504,
@@ -601,7 +587,7 @@ const int * data_ov007_020d80ec[30] = {
     data_ov007_020cdf94, data_ov007_020ccfdc, data_ov007_020ccfec, data_ov007_020cdd3c,
     data_ov007_020cdd58, data_ov007_020cd220,
 };
-const unsigned char * data_ov007_020d8164[32] = {
+const unsigned char *data_ov007_020d8164[32] = {
     data_ov007_020cdccc, data_ov007_020cd394, data_ov007_020cce7c, data_ov007_020cd074,
     data_ov007_020ccd74, data_ov007_020ccd10, data_ov007_020cd5ec, data_ov007_020cd13c,
     data_ov007_020ce974, data_ov007_020cd1cc, data_ov007_020cd0ac, data_ov007_020cdf14,
@@ -611,7 +597,7 @@ const unsigned char * data_ov007_020d8164[32] = {
     data_ov007_020cd07c, data_ov007_020ccf6c, data_ov007_020ccdfc, data_ov007_020cd190,
     data_ov007_020cd024, data_ov007_020ccf74, data_ov007_020ccdf4, data_ov007_020ccf2c,
 };
-const unsigned char * data_ov007_020d81e4[32] = {
+const unsigned char *data_ov007_020d81e4[32] = {
     data_ov007_020cdce8, data_ov007_020cd3a4, data_ov007_020ccddc, data_ov007_020cd06c,
     data_ov007_020ccdb4, data_ov007_020ccd48, data_ov007_020cd600, data_ov007_020cd148,
     data_ov007_020ce9b4, data_ov007_020cd1d8, data_ov007_020cd0b8, data_ov007_020cdf34,
@@ -621,7 +607,7 @@ const unsigned char * data_ov007_020d81e4[32] = {
     data_ov007_020cd094, data_ov007_020ccfac, data_ov007_020cce54, data_ov007_020cd16c,
     data_ov007_020ccfc4, data_ov007_020ccf9c, data_ov007_020ccdbc, data_ov007_020ccf1c,
 };
-const int * data_ov007_020d8264[32] = {
+const int *data_ov007_020d8264[32] = {
     data_ov007_020cf5ac, data_ov007_020ce774, data_ov007_020cd704, data_ov007_020cdfb4,
     data_ov007_020cd484, data_ov007_020cd214, data_ov007_020cebd0, data_ov007_020ce2cc,
     data_ov007_020cff64, data_ov007_020ce3f0, data_ov007_020ce104, data_ov007_020cf870,
@@ -631,7 +617,7 @@ const int * data_ov007_020d8264[32] = {
     data_ov007_020ce194, data_ov007_020cde38, data_ov007_020cd844, data_ov007_020ce344,
     data_ov007_020cdf74, data_ov007_020cdd04, data_ov007_020cd6b4, data_ov007_020cdd20,
 };
-const unsigned char * data_ov007_020d82e4[32] = {
+const unsigned char *data_ov007_020d82e4[32] = {
     data_ov007_020cdccc, data_ov007_020cd394, data_ov007_020cce7c, data_ov007_020cd074,
     data_ov007_020ccd74, data_ov007_020ccd10, data_ov007_020cd5ec, data_ov007_020cd13c,
     data_ov007_020ce974, data_ov007_020cd1cc, data_ov007_020cd0ac, data_ov007_020cdf14,
@@ -641,7 +627,7 @@ const unsigned char * data_ov007_020d82e4[32] = {
     data_ov007_020cccac, data_ov007_020ccda8, data_ov007_020ccebc, data_ov007_020ccf14,
     data_ov007_020cce2c, data_ov007_020cce0c, data_ov007_020ccd84, data_ov007_020ccd40,
 };
-const unsigned char * data_ov007_020d8364[32] = {
+const unsigned char *data_ov007_020d8364[32] = {
     data_ov007_020cdce8, data_ov007_020cd3a4, data_ov007_020ccddc, data_ov007_020cd06c,
     data_ov007_020ccdb4, data_ov007_020ccd48, data_ov007_020cd600, data_ov007_020cd148,
     data_ov007_020ce9b4, data_ov007_020cd1d8, data_ov007_020cd0b8, data_ov007_020cdf34,
@@ -651,7 +637,7 @@ const unsigned char * data_ov007_020d8364[32] = {
     data_ov007_020cccb4, data_ov007_020ccd8c, data_ov007_020ccecc, data_ov007_020cceac,
     data_ov007_020cce04, data_ov007_020cce3c, data_ov007_020ccd9c, data_ov007_020ccd24,
 };
-const int * data_ov007_020d83e4[32] = {
+const int *data_ov007_020d83e4[32] = {
     data_ov007_020cf5ac, data_ov007_020ce774, data_ov007_020cd704, data_ov007_020cdfb4,
     data_ov007_020cd484, data_ov007_020cd214, data_ov007_020cebd0, data_ov007_020ce2cc,
     data_ov007_020cff64, data_ov007_020ce3f0, data_ov007_020ce104, data_ov007_020cf870,
@@ -661,7 +647,7 @@ const int * data_ov007_020d83e4[32] = {
     data_ov007_020ccd70, data_ov007_020cd494, data_ov007_020cda74, data_ov007_020cda8c,
     data_ov007_020cd77c, data_ov007_020cd7e0, data_ov007_020cd4c4, data_ov007_020cd280,
 };
-const unsigned char * data_ov007_020d8464[34] = {
+const unsigned char *data_ov007_020d8464[34] = {
     data_ov007_020cd924, data_ov007_020cd100, data_ov007_020cce1c, data_ov007_020cce6c,
     data_ov007_020cccfc, data_ov007_020cd474, data_ov007_020cd1c0, data_ov007_020ccdb0,
     data_ov007_020cccbc, data_ov007_020ccfbc, data_ov007_020ccefc, data_ov007_020cdb7c,
@@ -672,7 +658,7 @@ const unsigned char * data_ov007_020d8464[34] = {
     data_ov007_020ce074, data_ov007_020cde94, data_ov007_020cd5d8, data_ov007_020ccca4,
     data_ov007_020ccca8, data_ov007_020ccd04,
 };
-const unsigned char * data_ov007_020d84ec[34] = {
+const unsigned char *data_ov007_020d84ec[34] = {
     data_ov007_020cd93c, data_ov007_020cd0f4, data_ov007_020cce84, data_ov007_020ccde4,
     data_ov007_020ccce4, data_ov007_020cd444, data_ov007_020cd1b4, data_ov007_020ccd80,
     data_ov007_020cccc8, data_ov007_020ccfd4, data_ov007_020cceec, data_ov007_020cdb98,
@@ -683,7 +669,7 @@ const unsigned char * data_ov007_020d84ec[34] = {
     data_ov007_020ce098, data_ov007_020cdeb4, data_ov007_020cd59c, data_ov007_020cccb0,
     data_ov007_020cccc0, data_ov007_020cccec,
 };
-const int * data_ov007_020d8574[34] = {
+const int *data_ov007_020d8574[34] = {
     data_ov007_020cf1d0, data_ov007_020ce1b8, data_ov007_020cd858, data_ov007_020cd86c,
     data_ov007_020cd064, data_ov007_020ce938, data_ov007_020ce448, data_ov007_020cd514,
     data_ov007_020ccd64, data_ov007_020cdf54, data_ov007_020cdaec, data_ov007_020cf344,
@@ -694,7 +680,7 @@ const int * data_ov007_020d8574[34] = {
     data_ov007_020cf9ec, data_ov007_020cf778, data_ov007_020ceb40, data_ov007_020ccda4,
     data_ov007_020ccda0, data_ov007_020cd004,
 };
-const unsigned char * data_ov007_020d85fc[37] = {
+const unsigned char *data_ov007_020d85fc[37] = {
     data_ov007_020cd5b0, data_ov007_020ccf54, data_ov007_020cce14, data_ov007_020cd424,
     data_ov007_020ccf04, data_ov007_020ccd50, data_ov007_020cd124, data_ov007_020ccf44,
     data_ov007_020cd034, data_ov007_020cd718, data_ov007_020cdc24, data_ov007_020cd830,
@@ -706,7 +692,7 @@ const unsigned char * data_ov007_020d85fc[37] = {
     data_ov007_020ccf84, data_ov007_020cced4, data_ov007_020cd3f4, data_ov007_020cd044,
     data_ov007_020cccc4,
 };
-const unsigned char * data_ov007_020d8690[37] = {
+const unsigned char *data_ov007_020d8690[37] = {
     data_ov007_020cd5c4, data_ov007_020ccf24, data_ov007_020cce94, data_ov007_020cd3b4,
     data_ov007_020ccf0c, data_ov007_020ccd34, data_ov007_020cd130, data_ov007_020ccf4c,
     data_ov007_020cd00c, data_ov007_020cd72c, data_ov007_020cdc40, data_ov007_020cd740,
@@ -718,7 +704,7 @@ const unsigned char * data_ov007_020d8690[37] = {
     data_ov007_020ccf7c, data_ov007_020ccef4, data_ov007_020cd404, data_ov007_020cd01c,
     data_ov007_020cccb8,
 };
-const int * data_ov007_020d8724[37] = {
+const int *data_ov007_020d8724[37] = {
     data_ov007_020ceb88, data_ov007_020cddac, data_ov007_020cd6f0, data_ov007_020ce7ac,
     data_ov007_020cd9fc, data_ov007_020cd238, data_ov007_020ce2a4, data_ov007_020cddc8,
     data_ov007_020cdfd4, data_ov007_020cee40, data_ov007_020cf474, data_ov007_020cee90,

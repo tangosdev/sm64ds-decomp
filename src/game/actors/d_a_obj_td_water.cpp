@@ -68,8 +68,7 @@ extern fx32 data_ov032_02112aa4[];
 extern BTAMaterialRecord data_ov032_0211291c[];
 
 BTA_File data_ov032_02112f64 = {
-    91, 0, data_ov032_021128fc, data_ov032_021128f0, data_ov032_02112aa4, 1, 0,
-    data_ov032_0211291c,
+    91, 0, data_ov032_021128fc, data_ov032_021128f0, data_ov032_02112aa4, 1, 0, data_ov032_0211291c,
 };
 
 CLPS_Block data_ov032_02112fb8 = {

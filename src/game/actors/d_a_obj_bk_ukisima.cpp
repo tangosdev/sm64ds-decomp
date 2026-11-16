@@ -53,7 +53,8 @@ struct CLPS_Block {
     u32 tail0;
     u32 tail1;
 };
-CLPS_Block data_ov015_02113614 = {0x53504c43, 0x00020008, 0x00030fc2, 0x000000ff, 0x00030fc1, 0x000000ff, 0xffffffff, 0xffffffff};
+CLPS_Block data_ov015_02113614 = {0x53504c43, 0x00020008, 0x00030fc2, 0x000000ff,
+                                  0x00030fc1, 0x000000ff, 0xffffffff, 0xffffffff};
 
 daObjBk_Ukisima_c *daObjBk_Ukisima_c_classInit() {
     return new daObjBk_Ukisima_c();

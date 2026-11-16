@@ -97,12 +97,19 @@ enum d_a_trs_trap_AssetId {
    entry types are recovered. */
 extern SharedFilePtr *const data_ov063_0211e27c[4];
 extern SharedFilePtr *const data_ov063_0211e28c[4];
-int data_ov063_0211ebf8[8] = {0x53504c43, 0x00010008, 0x00000fc5, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
-int data_ov063_0211ec18[8] = {0x53504c43, 0x00010008, 0x00000fcb, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
-int data_ov063_0211ec58[8] = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
-int data_ov063_0211ec78[8] = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
-CLPS_Block *data_ov063_0211e9e8[4] = {(CLPS_Block *)data_ov063_0211ec58, (CLPS_Block *)data_ov063_0211ebf8, (CLPS_Block *)data_ov063_0211ec78, (CLPS_Block *)data_ov063_0211ec18};
-s32 data_ov063_0211e9f8[6] = {0x00002000, 0x000d4000, 0x00055000, 0x00043000, 0xfff83000, 0x0008e000};
+int data_ov063_0211ebf8[8] = {0x53504c43, 0x00010008, 0x00000fc5, 0x000000ff,
+                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+int data_ov063_0211ec18[8] = {0x53504c43, 0x00010008, 0x00000fcb, 0x000000ff,
+                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+int data_ov063_0211ec58[8] = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
+                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+int data_ov063_0211ec78[8] = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
+                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+CLPS_Block *data_ov063_0211e9e8[4] = {
+    (CLPS_Block *)data_ov063_0211ec58, (CLPS_Block *)data_ov063_0211ebf8,
+    (CLPS_Block *)data_ov063_0211ec78, (CLPS_Block *)data_ov063_0211ec18};
+s32 data_ov063_0211e9f8[6] = {0x00002000, 0x000d4000, 0x00055000,
+                              0x00043000, 0xfff83000, 0x0008e000};
 
 /* The four dispatch records, bound to this trap's own class (see above).
    Defined at the bottom of this file. */
@@ -554,10 +561,16 @@ extern TrsTrapCollisionFilePtr gThTrapCollisionFile;
 extern TrsTrapCollisionFilePtr gThHondanaCollisionFile;
 extern TrsTrapCollisionFilePtr gThMeryGoCollisionFile;
 extern SharedFilePtr *const data_ov063_0211e27c[4] = {
-    &gThKaidanModelFile, &gThTrapModelFile, &gThHondanaModelFile, &gThMeryGoModelFile,
+    &gThKaidanModelFile,
+    &gThTrapModelFile,
+    &gThHondanaModelFile,
+    &gThMeryGoModelFile,
 };
 extern SharedFilePtr *const data_ov063_0211e28c[4] = {
-    &gThKaidanCollisionFile, &gThTrapCollisionFile, &gThHondanaCollisionFile, &gThMeryGoCollisionFile,
+    &gThKaidanCollisionFile,
+    &gThTrapCollisionFile,
+    &gThHondanaCollisionFile,
+    &gThMeryGoCollisionFile,
 };
 TrsTrapModelFilePtr gThHondanaModelFile(ASSET_TH_HONDANA_BMD);
 TrsTrapModelFilePtr gThKaidanModelFile(ASSET_TH_KAIDAN_BMD);

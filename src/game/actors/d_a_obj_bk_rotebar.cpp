@@ -54,7 +54,8 @@ struct CLPS_Block {
     u32 tail0;
     u32 tail1;
 };
-CLPS_Block data_ov015_02113654 = {0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+CLPS_Block data_ov015_02113654 = {0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff,
+                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 
 /* arm9 C helpers with no shared header. */
 extern "C" {

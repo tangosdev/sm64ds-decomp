@@ -66,8 +66,7 @@ struct CLPS_Block {
 };
 
 CLPS_Block data_ov012_02111cd0 = {
-    0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
-    0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+    0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
 };
 
 /* -------------------------------------------------------------------------- */

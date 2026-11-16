@@ -84,7 +84,8 @@ struct CLPS_Block {
     u32 tail0;
     u32 tail1;
 };
-CLPS_Block data_ov015_02113594 = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+CLPS_Block data_ov015_02113594 = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
+                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 

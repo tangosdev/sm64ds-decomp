@@ -105,7 +105,10 @@ extern const int data_ov080_021276c4[20] = {
 };
 extern SharedFilePtr data_ov002_0210d9d8;
 extern SharedFilePtr *const data_ov080_0212766c[4] = {
-    &data_ov080_021283e8, &data_ov080_021283d0, &data_ov080_021283d8, &data_ov080_021283e0,
+    &data_ov080_021283e8,
+    &data_ov080_021283d0,
+    &data_ov080_021283d8,
+    &data_ov080_021283e0,
 };
 
 #pragma defer_codegen off

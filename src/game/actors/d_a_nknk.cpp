@@ -81,7 +81,6 @@ extern SharedFilePtr *const data_ov062_0211cee0[2];
 extern SharedFilePtr data_ov002_0210da18;
 extern SharedFilePtr data_ov002_0210da20;
 
-
 int SurfaceInfo_TestFlag0x20(int *p); /* CLPS bit 0x20: water */
 
 daNknk_c *daNknk_c_classInit_NOKONOKO()
@@ -1091,15 +1090,9 @@ extern SharedFilePtr *const data_ov062_0211cee0[2] = {
     &data_ov002_0210da20,
 };
 extern NknkAnimationFileHandle *const data_ov062_0211cee8[9] = {
-    &gNokonokoWalkStAnimationFile,
-    &gNokonokoWalkAnimationFile,
-    &gNokonokoWalkEdAnimationFile,
-    &gNokonokoRunAnimationFile,
-    &gNokonokoWait1AnimationFile,
-    &gNokonokoWait2AnimationFile,
-    &gNokonokoDiveStAnimationFile,
-    &gNokonokoDiveAnimationFile,
-    &gNokonokoDiveEdAnimationFile,
+    &gNokonokoWalkStAnimationFile, &gNokonokoWalkAnimationFile,  &gNokonokoWalkEdAnimationFile,
+    &gNokonokoRunAnimationFile,    &gNokonokoWait1AnimationFile, &gNokonokoWait2AnimationFile,
+    &gNokonokoDiveStAnimationFile, &gNokonokoDiveAnimationFile,  &gNokonokoDiveEdAnimationFile,
 };
 extern const int data_ov062_0211cf0c[9] = {
     0x40000000, 0x00000000, 0x40000000, 0x00000000, 0x00000000,

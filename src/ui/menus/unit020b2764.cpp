@@ -255,26 +255,20 @@ extern "C" void FigureScene_SetScreenBlend(int t) {
 }
 
 extern const int data_ov007_020ccc48[2] = {
-    1, 2,
+    1,
+    2,
 };
 extern const Ov007CornerPair data_ov007_020ccc50[3] = {
-    0x5fbf, 0x6bff,
-    0x537d, 0x579e,
-    0x0, 0x0,
+    0x5fbf, 0x6bff, 0x537d, 0x579e, 0x0, 0x0,
 };
 extern const Ov007CornerPair data_ov007_020ccc5c[3] = {
-    0x7d8a, 0x7fd5,
-    0x69a4, 0x6b2b,
-    0x0, 0x0,
+    0x7d8a, 0x7fd5, 0x69a4, 0x6b2b, 0x0, 0x0,
 };
 extern const int data_ov007_020ccc68[2][3] = {
-    16, 17, 18,
-    19, 20, 21,
+    16, 17, 18, 19, 20, 21,
 };
 extern const int data_ov007_020ccc80[3][3] = {
-    4, 5, 7,
-    8, 9, 10,
-    4, 6, 7,
+    4, 5, 7, 8, 9, 10, 4, 6, 7,
 };
 extern char data_ov007_020cd9b4[];
 extern char data_ov007_020cd9e4[];

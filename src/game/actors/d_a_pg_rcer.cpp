@@ -90,12 +90,8 @@ extern SharedFilePtr *const data_ov019_0211277c[3] = {
 };
 
 extern SharedFilePtr *const data_ov019_02112788[7] = {
-    &gOV019PenguinWait1AnimationFile,
-    &gOV019PenguinWalkAnimationFile,
-    &gPenguinJumpStAnimationFile,
-    &gPenguinJumpEdAnimationFile,
-    &gPenguinDiveAnimationFile,
-    &gPenguinSliderAnimationFile,
+    &gOV019PenguinWait1AnimationFile, &gOV019PenguinWalkAnimationFile, &gPenguinJumpStAnimationFile,
+    &gPenguinJumpEdAnimationFile,     &gPenguinDiveAnimationFile,      &gPenguinSliderAnimationFile,
     &gPenguinStandUpAnimationFile,
 };
 

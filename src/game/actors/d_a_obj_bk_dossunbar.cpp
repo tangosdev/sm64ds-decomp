@@ -318,8 +318,10 @@ struct CLPS_Block {
     u32 tail0;
     u32 tail1;
 };
-CLPS_Block data_ov015_021135b4 = {0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
-CLPS_Block data_ov015_02113634 = {0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+CLPS_Block data_ov015_021135b4 = {0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff,
+                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+CLPS_Block data_ov015_02113634 = {0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff,
+                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 SharedFilePtr *data_ov015_02114534 = &gBkDossunbarSModelFile;
 SharedFilePtr *data_ov015_02114538 = &gBkDossunbarSCollisionFile;
 void *data_ov015_0211453c[4] = {

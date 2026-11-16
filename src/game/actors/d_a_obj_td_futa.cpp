@@ -38,8 +38,7 @@ struct TdFutaClsnFileHandle : SharedFilePtr {
 extern TdFutaClsnFileHandle data_ov032_02113acc;
 extern TdFutaModelFilePtr data_ov032_02113ad4;
 CLPS_Block data_ov032_02112f98 = {
-    0x53504c43, 0x00010008, 0x00040fc4, 0x000000ff,
-    0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+    0x53504c43, 0x00010008, 0x00040fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
 };
 
 /* Every instruction the cartridge has here falls out of the one `new`.
