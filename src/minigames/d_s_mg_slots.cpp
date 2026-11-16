@@ -304,6 +304,9 @@ void dScMgSlot3_c::StateJudge() {
             }
         } while (++reelIndex < 3);
         // Retain the compiler address barrier; deleting it grows this body by 32 bytes.
+        // Plain members (mResultSymbols[0][column], mReelPos[reelIndex], ...) with
+        // for, do-while or an inlined index hoist this+0x5031 into a stack slot:
+        // 0x1c0 against 0x1b8 (2026-11-16).
         self = (char *)((unsigned)self | (unsigned)(column - column));
     }
 
