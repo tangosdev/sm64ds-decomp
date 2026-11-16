@@ -185,7 +185,7 @@ extern u32 gNextActorUpdateMask;
 extern void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
 extern void func_ov002_020c3dbc(void *player);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern void *data_ov089_021328b4[];
+extern void *const data_ov089_021328b4[];
 extern ObjKeyFile data_ov002_02110964;
 extern ObjKeyAnimationFilePtr data_ov089_02132c60;
 extern ObjKeyAnimationFilePtr data_ov089_02132c40;
@@ -205,7 +205,7 @@ typedef void BgchInitAt_(void *thiz, void *actor, int a, int b, void *v, void *w
 extern char data_ov002_0211094c;
 extern int data_0209cef0;
 /* The collect animations, by mAnimID. */
-extern ObjKeyFile *data_ov089_02132880[];
+extern ObjKeyFile *const data_ov089_02132880[];
 /* Names stay on this unused prototype so this file's @NNN numbers do not move. */
 extern int d_a_obj_keyChangeMusicVolumeHold(unsigned int id, int vol);
 /* Level-overlay BSS: ov089 relocs record the store as claimed by fourteen
@@ -935,3 +935,20 @@ ObjKeyAnimationFilePtr data_ov089_02132c48(ASSET_KOOPA_KEY_W_GET_BCA);
 VecFx32 data_ov089_02132ca4;
 
 ObjKeyStateTable data_ov089_02132cec;
+
+/* Collect animations, models, and the extra-model row. Defined after the
+   static-init objects so this file's @NNN numbers stay put. */
+extern "C" char data_ov002_0210da40;
+extern "C" char data_ov002_0210d9a0;
+extern "C" char data_ov002_0210d9c0;
+extern "C" char data_ov085_021305d8;
+extern "C" ObjKeyFile *const data_ov089_02132880[5] = {
+    0, &data_ov089_02132c60, &data_ov089_02132c70, &data_ov089_02132c40, &data_ov089_02132c48,
+};
+extern "C" void *data_ov089_02132894[8] = {
+    &data_ov089_02132c50, &data_ov089_02132c50, &gMarioKeyModelFile, &gLuigiKeyModelFile,
+    &gWarioKeyModelFile, &data_ov085_021305d8, &data_ov085_021305d8, &data_ov002_0211094c,
+};
+extern "C" void *const data_ov089_021328b4[8] = {
+    0, 0, &data_ov002_0210da40, &data_ov002_0210d9a0, &data_ov002_0210d9c0, 0, 0, 0,
+};

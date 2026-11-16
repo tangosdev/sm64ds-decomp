@@ -26,6 +26,24 @@
       "end": "0x02132af8"
     },
     {
+      "name": ".rodata.anims",
+      "input_section": ".rodata",
+      "start": "0x02132880",
+      "end": "0x02132894"
+    },
+    {
+      "name": ".data.models",
+      "input_section": ".data",
+      "start": "0x02132894",
+      "end": "0x021328b4"
+    },
+    {
+      "name": ".rodata.extra",
+      "input_section": ".rodata",
+      "start": "0x021328b4",
+      "end": "0x021328d4"
+    },
+    {
       "name": ".data",
       "start": "0x02132b00",
       "end": "0x02132b40"
@@ -234,6 +252,29 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov089_02132880",
+      "address": "0x02132880",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five collect-animation handles indexed by mAnimID; the first slot is null"
+    },
+    {
+      "symbol": "data_ov089_02132894",
+      "address": "0x02132894",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight model handles indexed by key kind"
+    },
+    {
+      "symbol": "data_ov089_021328b4",
+      "address": "0x021328b4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight extra-model handles indexed by key kind; slots 2..4 point at ov002"
     }
   ],
   "bss": [
