@@ -96,8 +96,10 @@ extern "C" char data_ov006_02135d08[];
 extern "C" char data_ov006_021358e8[];
 extern "C" char data_ov006_02135e68[];
 int sTeresaBigBooSprites[] = {
-    (int)data_ov006_02135268, (int)data_ov006_021354f8, (int)data_ov006_02135798, (int)data_ov006_02135ba8, (int)data_ov006_02135128, (int)data_ov006_02135648, (int)data_ov006_021353a8, (int)data_ov006_02135a48,
-    (int)data_ov006_02135d08, (int)data_ov006_021358e8, (int)data_ov006_02135e68,
+    (int)data_ov006_02135268, (int)data_ov006_021354f8, (int)data_ov006_02135798,
+    (int)data_ov006_02135ba8, (int)data_ov006_02135128, (int)data_ov006_02135648,
+    (int)data_ov006_021353a8, (int)data_ov006_02135a48, (int)data_ov006_02135d08,
+    (int)data_ov006_021358e8, (int)data_ov006_02135e68,
 };
 extern unsigned char sTeresaBigBooHoverPicks[];
 extern unsigned short sTeresaBigBooFrameTimes[];
@@ -105,10 +107,10 @@ extern unsigned char sTeresaRevealSlideFrames[];
 extern unsigned char sTeresaRevealAnimFrames[];
 extern unsigned short sTeresaBg3FlashTimes[];
 extern "C" char data_ov006_02133a60[];
-void * sTeresaExclaimSprites = data_ov006_02133a60;
+void *sTeresaExclaimSprites = data_ov006_02133a60;
 extern "C" char data_ov006_021341f8[];
 extern "C" char data_ov006_0213424c[];
-void * sTeresaVanishPuffSprites[] = {data_ov006_021341f8, data_ov006_0213424c};
+void *sTeresaVanishPuffSprites[] = {data_ov006_021341f8, data_ov006_0213424c};
 extern "C" char data_ov006_0213635c[];
 extern "C" char data_ov006_02136524[];
 extern "C" char data_ov006_0213672c[];
@@ -116,27 +118,30 @@ extern "C" char data_ov006_0213620c[];
 extern "C" char data_ov006_02135fe4[];
 extern "C" char data_ov006_02136154[];
 extern "C" char data_ov006_0213609c[];
-int sTeresaBigBooHoverSprites[] = {(int)data_ov006_0213635c, (int)data_ov006_02136524, (int)data_ov006_0213672c, (int)data_ov006_0213620c, (int)data_ov006_02135fe4, (int)data_ov006_02136154, (int)data_ov006_0213609c};
+int sTeresaBigBooHoverSprites[] = {(int)data_ov006_0213635c, (int)data_ov006_02136524,
+                                   (int)data_ov006_0213672c, (int)data_ov006_0213620c,
+                                   (int)data_ov006_02135fe4, (int)data_ov006_02136154,
+                                   (int)data_ov006_0213609c};
 extern OamAttr *sMgDigitSprites[];
 extern "C" char data_ov006_0213a5f8[];
-void * sTeresaMarkerSprites = data_ov006_0213a5f8;
+void *sTeresaMarkerSprites = data_ov006_0213a5f8;
 extern "C" struct OamAttr data_ov006_0213a744[];
 extern "C" struct OamAttr data_ov006_0213a6ec[];
 extern "C" struct OamAttr data_ov006_0213a694[];
 extern "C" struct OamAttr data_ov006_0213a63c[];
 extern "C" struct OamAttr data_ov006_0213a79c[];
-struct OamAttr * sTeresaRevealSprites[] = {
-    data_ov006_0213a744, data_ov006_0213a6ec, data_ov006_0213a694, data_ov006_0213a63c,
-    data_ov006_0213a79c,
+struct OamAttr *sTeresaRevealSprites[] = {
+    data_ov006_0213a744, data_ov006_0213a6ec, data_ov006_0213a694,
+    data_ov006_0213a63c, data_ov006_0213a79c,
 };
-extern "C" OamAttr * sMgTextSpritesEnglish[];
-extern "C" OamAttr * sMgTextSpritesSpanish[];
-extern "C" OamAttr * sMgTextSpritesFrench[];
-extern "C" OamAttr * sMgTextSpritesGerman[];
-extern "C" OamAttr * sMgTextSpritesItalian[];
-OamAttr ** sTeresaCountdownSprites[] = {
-    sMgTextSpritesEnglish, sMgTextSpritesSpanish, sMgTextSpritesFrench, sMgTextSpritesGerman,
-    sMgTextSpritesItalian,
+extern "C" OamAttr *sMgTextSpritesEnglish[];
+extern "C" OamAttr *sMgTextSpritesSpanish[];
+extern "C" OamAttr *sMgTextSpritesFrench[];
+extern "C" OamAttr *sMgTextSpritesGerman[];
+extern "C" OamAttr *sMgTextSpritesItalian[];
+OamAttr **sTeresaCountdownSprites[] = {
+    sMgTextSpritesEnglish, sMgTextSpritesSpanish, sMgTextSpritesFrench,
+    sMgTextSpritesGerman,  sMgTextSpritesItalian,
 };
 extern "C" char data_ov006_0213a814[];
 extern "C" char data_ov006_0213a844[];
@@ -152,7 +157,7 @@ extern "C" char data_ov006_0213a924[];
 extern "C" char data_ov006_0213a944[];
 extern "C" char data_ov006_0213a8c4[];
 extern "C" char data_ov006_0213a7f4[];
-void * sTeresaBooFrameSprites[] = {
+void *sTeresaBooFrameSprites[] = {
     data_ov006_0213a814, data_ov006_0213a844, data_ov006_0213a82c, data_ov006_0213a8a4,
     data_ov006_0213a8e4, data_ov006_0213a904, data_ov006_0213a804, data_ov006_0213a874,
     data_ov006_0213a85c, data_ov006_0213a88c, data_ov006_0213a924, data_ov006_0213a944,

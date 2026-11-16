@@ -139,12 +139,12 @@ extern char *sJump3DMarioPool;
 extern char *sJumpAdapters[];
 extern int pmf_dMgJump3DMario_c_StateIdle[2];
 
-extern u8  data_ov006_02140400;
+extern u8 data_ov006_02140400;
 extern u16 sJump3DSpinAngle;
 extern struct MgCamera *sMgMainCamera;
 extern void *sMgCurCamera;
 extern "C" OamAttr data_ov006_02134d20[];
-OamAttr * data_ov006_02134d1c = data_ov006_02134d20;
+OamAttr *data_ov006_02134d1c = data_ov006_02134d20;
 extern Vector3 sJump3DMarioScale;
 extern char sJump3DRoundLayouts[];
 

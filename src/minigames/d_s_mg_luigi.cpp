@@ -379,7 +379,6 @@ extern const int sLuigiDriftByLevelSpeed[4] = {0xe00, 0xa00, 0x600, 0xc00};
 extern const int sLuigiDriftFixedSpeed[4] = {0xe00, 0xa00, 0x600, 0xc00};
 extern const unsigned short sLuigiTouchSfx[4] = {188, 189, 190, 0};
 
-
 void dScMgLuigi_c::DrawCurtains() {
     int curtainIndex;
     for (curtainIndex = 0; curtainIndex < 2; curtainIndex++) {

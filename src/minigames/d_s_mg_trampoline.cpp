@@ -139,10 +139,10 @@ void TrmpFx_UpdateAll(void);
 void TrmpFx_DrawAll(void);
 extern "C" char data_ov006_02134ef8[];
 extern "C" char data_ov006_02134ef0[];
-void * sTrmpDoorSignSprites[] = {data_ov006_02134ef8, data_ov006_02134ef0};
+void *sTrmpDoorSignSprites[] = {data_ov006_02134ef8, data_ov006_02134ef0};
 
 extern "C" char data_ov006_02134f0c[];
-void * sTrmpArrowSprite = data_ov006_02134f0c;
+void *sTrmpArrowSprite = data_ov006_02134f0c;
 extern "C" void Trmp3DMario_DrawAll(void);
 void TrmpLine_DrawAll(void);
 dScMgTrampoline_c *dScMgTrampoline_c_classInit(void);

@@ -155,10 +155,10 @@ extern void *sWigglerSprites[];
 extern "C" char data_ov006_021375b8[];
 extern "C" char data_ov006_021375b0[];
 extern "C" char data_ov006_021375a8[];
-void * sHanaWigglerTargetSprites[] = {data_ov006_021375b8, data_ov006_021375b0, data_ov006_021375a8};
+void *sHanaWigglerTargetSprites[] = {data_ov006_021375b8, data_ov006_021375b0, data_ov006_021375a8};
 extern "C" char data_ov006_02137598[];
 extern "C" char data_ov006_02137590[];
-void * sHanaWigglerFieldSprites[] = {data_ov006_02137598, data_ov006_02137590};
+void *sHanaWigglerFieldSprites[] = {data_ov006_02137598, data_ov006_02137590};
 
 extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
@@ -2041,17 +2041,17 @@ void Hana_LoadBackground(void) {
  * vu32* ring sHanaBackgroundParts. Non-constant initializers, so the
  * compiler emits __sinit_d_s_mg_hanachan_methods.cpp to copy them at load. */
 extern "C" char data_ov006_021374bc[];
-void * data_ov006_021374b8 = data_ov006_021374bc;
+void *data_ov006_021374b8 = data_ov006_021374bc;
 extern "C" char data_ov006_021374c8[];
-void * data_ov006_021374c4 = data_ov006_021374c8;
+void *data_ov006_021374c4 = data_ov006_021374c8;
 extern "C" char data_ov006_021374b0[];
-void * data_ov006_021374ac = data_ov006_021374b0;
+void *data_ov006_021374ac = data_ov006_021374b0;
 extern void *data_ov006_021374e8;
 extern "C" char data_ov006_021374f8[];
-void * data_ov006_021374f4 = data_ov006_021374f8;
+void *data_ov006_021374f4 = data_ov006_021374f8;
 extern "C" char data_ov006_021375d4[];
 extern "C" char data_ov006_021375cc[];
-void * sHanaBackgroundPartsB[] = {data_ov006_021375d4, data_ov006_021375cc};
+void *sHanaBackgroundPartsB[] = {data_ov006_021375d4, data_ov006_021375cc};
 
 void *sWigglerSprites[11] = {
     data_ov006_021374b8,

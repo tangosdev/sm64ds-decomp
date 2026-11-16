@@ -120,7 +120,8 @@ void func_0203cebc(void *, void *, void *, void *);
 }
 
 /* The overlay's own identity matrix, which the flower model loads. */
-Matrix4x3 data_ov006_0213aee8 = {0x1000, 0x0, 0x0, 0x0, 0x1000, 0x0, 0x0, 0x0, 0x1000, 0x0, 0x0, 0x0};
+Matrix4x3 data_ov006_0213aee8 = {0x1000, 0x0, 0x0,    0x0, 0x1000, 0x0,
+                                 0x0,    0x0, 0x1000, 0x0, 0x0,    0x0};
 /* The scene-shared start position and rotation of the dealer and the walker. */
 extern Vector3 data_020a0ebc;
 extern Vector3_16 data_020a0edc;
@@ -128,7 +129,8 @@ extern Vector3_16 data_020a0edc;
 extern Vector3 sPetalUpAxis;
 extern Vector3 sMascotWalkerOffset;
 extern Vector3 sPresenterScale;
-Matrix4x3 sDealerIdentityMtx = {0x1000, 0x0, 0x0, 0x0, 0x1000, 0x0, 0x0, 0x0, 0x1000, 0x0, 0x0, 0x0};
+Matrix4x3 sDealerIdentityMtx = {0x1000, 0x0, 0x0,    0x0, 0x1000, 0x0,
+                                0x0,    0x0, 0x1000, 0x0, 0x0,    0x0};
 extern short sDealerLampTimes[];
 extern "C" char data_ov006_0213ad58[];
 extern "C" char data_ov006_0213ad88[];

@@ -103,11 +103,12 @@ extern "C" OamAttr data_ov006_02136c7c[];
 extern "C" OamAttr data_ov006_02136c34[];
 extern "C" OamAttr data_ov006_02136be4[];
 extern "C" OamAttr data_ov006_02136c0c[];
-OamAttr * sPachinko2SparkSprites[] = {data_ov006_02136c7c, data_ov006_02136c34, data_ov006_02136be4, data_ov006_02136c0c};
+OamAttr *sPachinko2SparkSprites[] = {data_ov006_02136c7c, data_ov006_02136c34, data_ov006_02136be4,
+                                     data_ov006_02136c0c};
 extern "C" OamAttr data_ov006_02133870[];
-OamAttr * sPachinko2PaddleSprite = data_ov006_02133870;
+OamAttr *sPachinko2PaddleSprite = data_ov006_02133870;
 extern "C" OamAttr data_ov006_021389f0[];
-OamAttr * sPachinko2BallSprite = data_ov006_021389f0;
+OamAttr *sPachinko2BallSprite = data_ov006_021389f0;
 extern "C" OamAttr data_ov006_02138cf0[];
 extern "C" OamAttr data_ov006_02138cd8[];
 extern "C" OamAttr data_ov006_02138cc0[];
@@ -116,7 +117,7 @@ extern "C" OamAttr data_ov006_02138c90[];
 extern "C" OamAttr data_ov006_02138c78[];
 extern "C" OamAttr data_ov006_02138c60[];
 extern "C" OamAttr data_ov006_02138c48[];
-OamAttr * sPachinko2BallCountSprites[] = {
+OamAttr *sPachinko2BallCountSprites[] = {
     data_ov006_02138cf0, data_ov006_02138cd8, data_ov006_02138cc0, data_ov006_02138ca8,
     data_ov006_02138c90, data_ov006_02138c78, data_ov006_02138c60, data_ov006_02138c48,
 };
@@ -141,9 +142,9 @@ extern "C" int data_ov006_0212ec68[];
 extern "C" int data_ov006_0212ec60[];
 extern "C" int data_ov006_0212ec00[];
 extern "C" int data_ov006_0212ebd0[];
-int * sPachinko2PaddleDescendLimits[] = {
-    data_ov006_0212ec78, data_ov006_0212ec70, data_ov006_0212ec68, data_ov006_0212ec60,
-    data_ov006_0212ec00, data_ov006_0212ebd0,
+int *sPachinko2PaddleDescendLimits[] = {
+    data_ov006_0212ec78, data_ov006_0212ec70, data_ov006_0212ec68,
+    data_ov006_0212ec60, data_ov006_0212ec00, data_ov006_0212ebd0,
 };
 extern "C" int data_ov006_0212ec58[];
 extern "C" int data_ov006_0212ec50[];
@@ -151,9 +152,9 @@ extern "C" int data_ov006_0212ebf0[];
 extern "C" int data_ov006_0212ec48[];
 extern "C" int data_ov006_0212ec40[];
 extern "C" int data_ov006_0212ebe8[];
-int * sPachinko2PaddleSweepLimits[] = {
-    data_ov006_0212ec58, data_ov006_0212ec50, data_ov006_0212ebf0, data_ov006_0212ec48,
-    data_ov006_0212ec40, data_ov006_0212ebe8,
+int *sPachinko2PaddleSweepLimits[] = {
+    data_ov006_0212ec58, data_ov006_0212ec50, data_ov006_0212ebf0,
+    data_ov006_0212ec48, data_ov006_0212ec40, data_ov006_0212ebe8,
 };
 extern "C" int data_ov006_0212ec28[];
 extern "C" int data_ov006_0212ec20[];

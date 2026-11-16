@@ -246,7 +246,7 @@ extern struct OamAttr *sJumpLifeIconSprite;
 extern struct OamAttr *sTrmpLifeIconSprite;
 extern int data_ov006_02138c18;
 extern int pmf_MascotWalker_StateWalk_2[2];
-extern int data_ov006_0213aee8[12];
+extern Matrix4x3 data_ov006_0213aee8;
 extern int sJump3DFallSpeed;
 extern int sJump3DGravityStep;
 extern int sTrmp3DLives;
@@ -1011,7 +1011,7 @@ extern void*func_0201787c(void*);
 extern void *func_0204d958(void *);
 extern void*func_02050cdc(int, int);
 extern int func_ov007_020aebac(void);
-extern volatile struct Matrix4x3 sDealerIdentityMtx;
+extern Matrix4x3 sDealerIdentityMtx;
 extern volatile unsigned short data_ov002_0210c208[];
 extern vu32 *sHanaBackgroundParts[];
 

@@ -53,11 +53,8 @@ extern "C" void *data_ov006_02134b60[];
 extern "C" void *data_ov006_02134b54[];
 
 extern "C" void **sPuffSprites[] = {
-    data_ov006_02134b6c,
-    data_ov006_02134b78,
-    data_ov006_02134b84,
-    data_ov006_02134b60,
-    data_ov006_02134b54,
+    data_ov006_02134b6c, data_ov006_02134b78, data_ov006_02134b84,
+    data_ov006_02134b60, data_ov006_02134b54,
 };
 
 int sPuffNextIndex;
