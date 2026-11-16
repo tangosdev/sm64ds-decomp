@@ -4418,7 +4418,7 @@ data_0209a068 kind:data(any) addr:0x0209a068
 data_0209a06c kind:data(any) addr:0x0209a06c
 data_0209a070 kind:data(any) addr:0x0209a070
 data_0209a074 kind:data(any) addr:0x0209a074
-data_0209a078 kind:data(any) addr:0x0209a078
+prev_fid$305 kind:data(byte) addr:0x0209a078 local
 mbi_seg_header kind:data(any) addr:0x0209a07c
 data_0209a080 kind:data(any) addr:0x0209a080
 data_0209a084 kind:data(any) addr:0x0209a084
