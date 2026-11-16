@@ -782,6 +782,13 @@
       "symbol": "_ZN22dMg3DHeyhoObjAdapter_cD2Ev",
       "disposition": "deadstrip",
       "reason": "Homeless. include/dMgJump3DMario_c.h gives the base an inline empty destructor, which is what the cartridge shows: the only trace of it is the base-vptr store inlined at the tail of _ZN16dMgJump3DMario_cD1Ev (0x020c89c0), and there is no out-of-line copy at any ov006 address. mwcc emits one anyway as vague linkage. Plain deadstrip."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so a TU with a Vector3 local re-emits it with vague linkage; StateMove's touch-point vector v is one (a non-POD local stays a stack object, which is what keeps the ROM's three sp reloads before each NewSimple; a POD VecFx32 there is 0x1c bytes short). The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by src/engine/view/d_camera_dtor.cpp. This object's copy is the identical 4-byte `bx lr` body with no relocations, and no surviving section in this TU references it; rombuild compares the body against those cartridge bytes before discarding the duplicate."
     }
   ],
   "externalized_output": [],

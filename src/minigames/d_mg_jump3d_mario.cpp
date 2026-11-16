@@ -31,8 +31,7 @@
  *   spellings (u8 [][4] lanes) because the ROM scales the slot in the
  *   addressing mode, which conflicts with PlayerInput.h's declarations;
  *   that header stays unincluded and the sites are marked `local extern`.
- * - The *(volatile int *)&v[2] store in StateMove, the int* zeroing of
- *   Mtx in Draw, and the `int t` temp in LoadResources
+ * - The int* zeroing of Mtx in Draw and the `int t` temp in LoadResources
  *   are codegen-pinned; each site carries its measured note.
  */
 
@@ -577,17 +576,11 @@ void dMgJump3DMario_c::StateMove()
                 t = ym - az;
                 if (t < 0) t = -t;
                 if (t < 0x26 && (int)y < kScreenYMax) {
-                    int v[3];
-                    int *p = &sJump3DRiseVy;
-                    int t0 = (ax - 0x80) << 12;
-                    int t1 = (-az) << 12;
-                    v[0] = t0;
-                    v[1] = t1;
-                    /* Keep the volatile store: a plain `v[2] = 0;` shrinks the
-                       function to 0x3a8 bytes against the ROM's 0x3c4
-                       (notes/experiments/jump3d-2711-statemove-volatile-store.md). */
-                    *(volatile int *)&v[2] = 0;
-                    mVel.y = *p;
+                    Vector3 v;
+                    v.x = (ax - 0x80) << 12;
+                    v.y = (-az) << 12;
+                    v.z = 0;
+                    mVel.y = sJump3DRiseVy;
                     mVel.x = sJump3DMoveSpeed * dx;
                     if (mAnimIdx != 0)
                         mAnimIdx = 0;
@@ -597,10 +590,8 @@ void dMgJump3DMario_c::StateMove()
                     mAnmModel.dExtFrameCtrl_c::currFrame = 0;
                     Particle::System::NewSimple(kPtclMgJump3DJumpA, mPos.x << 3, mPos.y << 3,
                                                 mPos.z << 3);
-                    Particle::System::NewSimple(kPtclMgJump3DJumpB, v[0] << 3, v[1] << 3,
-                                                v[2] << 3);
-                    Particle::System::NewSimple(kPtclMgJump3DJumpC, v[0] << 3, v[1] << 3,
-                                                v[2] << 3);
+                    Particle::System::NewSimple(kPtclMgJump3DJumpB, v.x << 3, v.y << 3, v.z << 3);
+                    Particle::System::NewSimple(kPtclMgJump3DJumpC, v.x << 3, v.y << 3, v.z << 3);
                     Sound_PlayBank1Panned(0, mAnimIdx, mPos.x);
                     func_02012718(0x1c6, mScreenX << 12);
                     EnterBounce();
