@@ -80,6 +80,9 @@ enum dScMgHanachan_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_cp.h"
 
+extern int data_ov006_0213c954;
+extern int sHanaFieldWigglerCount;
+
 void *dScMgHanachan_c_classInit();
 extern "C" BaseSpawnInfo<void> g_profile_MG_HANACHAN = {dScMgHanachan_c_classInit, 0x182, 0x182};
 
@@ -149,8 +152,13 @@ extern "C" {
 /* This TU's own functions. */
 
 extern void *sWigglerSprites[];
-extern void *sHanaWigglerTargetSprites[];
-extern void *sHanaWigglerFieldSprites[];
+extern "C" char data_ov006_021375b8[];
+extern "C" char data_ov006_021375b0[];
+extern "C" char data_ov006_021375a8[];
+void * sHanaWigglerTargetSprites[] = {data_ov006_021375b8, data_ov006_021375b0, data_ov006_021375a8};
+extern "C" char data_ov006_02137598[];
+extern "C" char data_ov006_02137590[];
+void * sHanaWigglerFieldSprites[] = {data_ov006_02137598, data_ov006_02137590};
 
 extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
@@ -160,8 +168,8 @@ extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
 extern int GetGameLanguage(void);
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
-extern s16 sHanaRoundPatterns[];
-extern int sHanaFieldWigglerCounts[];
+extern const s16 sHanaRoundPatterns[10] = {0, 0, 0, 1, 1, 2, 2, 2, 3, 3};
+extern const int sHanaFieldWigglerCounts[10] = {3, 4, 5, 4, 6, 3, 4, 5, 15, 15};
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 
@@ -2031,12 +2039,18 @@ void Hana_LoadBackground(void) {
  * two sHanaBackgroundPartsB entries, then every third pointer out of the
  * vu32* ring sHanaBackgroundParts. Non-constant initializers, so the
  * compiler emits __sinit_d_s_mg_hanachan_methods.cpp to copy them at load. */
-extern void *data_ov006_021374b8;
-extern void *data_ov006_021374c4;
-extern void *data_ov006_021374ac;
+extern "C" char data_ov006_021374bc[];
+void * data_ov006_021374b8 = data_ov006_021374bc;
+extern "C" char data_ov006_021374c8[];
+void * data_ov006_021374c4 = data_ov006_021374c8;
+extern "C" char data_ov006_021374b0[];
+void * data_ov006_021374ac = data_ov006_021374b0;
 extern void *data_ov006_021374e8;
-extern void *data_ov006_021374f4;
-extern void *sHanaBackgroundPartsB[];
+extern "C" char data_ov006_021374f8[];
+void * data_ov006_021374f4 = data_ov006_021374f8;
+extern "C" char data_ov006_021375d4[];
+extern "C" char data_ov006_021375cc[];
+void * sHanaBackgroundPartsB[] = {data_ov006_021375d4, data_ov006_021375cc};
 
 void *sWigglerSprites[11] = {
     data_ov006_021374b8,

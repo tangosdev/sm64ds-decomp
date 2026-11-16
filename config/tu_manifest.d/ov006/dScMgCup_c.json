@@ -36,6 +36,54 @@
       "name": ".data",
       "start": "0x0213bfe0",
       "end": "0x0213c1e4"
+    },
+    {
+      "name": ".data.data_ov006_02139db4",
+      "input_section": ".data",
+      "start": "0x02139db4",
+      "end": "0x02139dbc"
+    },
+    {
+      "name": ".data.data_ov006_02139dbc",
+      "input_section": ".data",
+      "start": "0x02139dbc",
+      "end": "0x02139dc4"
+    },
+    {
+      "name": ".data.data_ov006_02139df4",
+      "input_section": ".data",
+      "start": "0x02139df4",
+      "end": "0x02139e0c"
+    },
+    {
+      "name": ".data.data_ov006_02139e4c",
+      "input_section": ".data",
+      "start": "0x02139e4c",
+      "end": "0x02139e74"
+    },
+    {
+      "name": ".data.data_ov006_02139e9c",
+      "input_section": ".data",
+      "start": "0x02139e9c",
+      "end": "0x02139ec4"
+    },
+    {
+      "name": ".data.data_ov006_02139ec4",
+      "input_section": ".data",
+      "start": "0x02139ec4",
+      "end": "0x02139eec"
+    },
+    {
+      "name": ".data.data_ov006_0213a1ec",
+      "input_section": ".data",
+      "start": "0x0213a1ec",
+      "end": "0x0213a274"
+    },
+    {
+      "name": ".data.data_ov006_0213a274",
+      "input_section": ".data",
+      "start": "0x0213a274",
+      "end": "0x0213a284"
     }
   ],
   "functions": [
@@ -424,6 +472,62 @@
       "evidence": "Native emitted object and complete relocated retail bytes verified; consumer-backed layout documented in data-cup-native1017.",
       "emitted_storage_address": "0x0213c14c",
       "address_point_bias": "0x8"
+    },
+    {
+      "symbol": "data_ov006_02139df4",
+      "address": "0x02139df4",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02139db4",
+      "address": "0x02139db4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02139dbc",
+      "address": "0x02139dbc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02139e4c",
+      "address": "0x02139e4c",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02139e9c",
+      "address": "0x02139e9c",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02139ec4",
+      "address": "0x02139ec4",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213a1ec",
+      "address": "0x0213a1ec",
+      "size": "0x88",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213a274",
+      "address": "0x0213a274",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     }
   ],
   "bss": [
@@ -576,6 +680,62 @@
           "section": ".data",
           "start": "0x0213bfe0",
           "end": "0x0213c1e4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02139db4",
+          "start": "0x02139db4",
+          "end": "0x02139dbc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02139dbc",
+          "start": "0x02139dbc",
+          "end": "0x02139dc4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02139df4",
+          "start": "0x02139df4",
+          "end": "0x02139e0c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02139e4c",
+          "start": "0x02139e4c",
+          "end": "0x02139e74",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02139e9c",
+          "start": "0x02139e9c",
+          "end": "0x02139ec4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02139ec4",
+          "start": "0x02139ec4",
+          "end": "0x02139eec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213a1ec",
+          "start": "0x0213a1ec",
+          "end": "0x0213a274",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213a274",
+          "start": "0x0213a274",
+          "end": "0x0213a284",
           "differingBytes": 0,
           "firstDiff": null
         }
@@ -1644,6 +1804,366 @@
       "addend": 8,
       "target_module": "main",
       "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data.data_ov006_02139db4",
+      "source": "0x02139db4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139fdc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139fdc"
+    },
+    {
+      "section": ".data.data_ov006_02139dbc",
+      "source": "0x02139dbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139e74",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139e74"
+    },
+    {
+      "section": ".data.data_ov006_02139e4c",
+      "source": "0x02139e6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139dd4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139dd4"
+    },
+    {
+      "section": ".data.data_ov006_02139e4c",
+      "source": "0x02139e64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139e0c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139e0c"
+    },
+    {
+      "section": ".data.data_ov006_02139e4c",
+      "source": "0x02139e5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139e2c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139e2c"
+    },
+    {
+      "section": ".data.data_ov006_02139e4c",
+      "source": "0x02139e54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a18c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a18c"
+    },
+    {
+      "section": ".data.data_ov006_02139e4c",
+      "source": "0x02139e4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139fdc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139fdc"
+    },
+    {
+      "section": ".data.data_ov006_02139e9c",
+      "source": "0x02139ebc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139dd4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139dd4"
+    },
+    {
+      "section": ".data.data_ov006_02139e9c",
+      "source": "0x02139eb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139de4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139de4"
+    },
+    {
+      "section": ".data.data_ov006_02139e9c",
+      "source": "0x02139eac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139dc4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139dc4"
+    },
+    {
+      "section": ".data.data_ov006_02139e9c",
+      "source": "0x02139ea4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a13c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a13c"
+    },
+    {
+      "section": ".data.data_ov006_02139e9c",
+      "source": "0x02139e9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139e74",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139e74"
+    },
+    {
+      "section": ".data.data_ov006_02139ec4",
+      "source": "0x02139ee4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139e74",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139e74"
+    },
+    {
+      "section": ".data.data_ov006_02139ec4",
+      "source": "0x02139edc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a13c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a13c"
+    },
+    {
+      "section": ".data.data_ov006_02139ec4",
+      "source": "0x02139ed4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139dc4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139dc4"
+    },
+    {
+      "section": ".data.data_ov006_02139ec4",
+      "source": "0x02139ecc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139de4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139de4"
+    },
+    {
+      "section": ".data.data_ov006_02139ec4",
+      "source": "0x02139ec4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139dd4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139dd4"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a26c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a01c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a01c"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a264",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a064",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a064"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a25c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a0ac",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a0ac"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a254",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a0f4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a0f4"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a24c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a0ac",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a0ac"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a244",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a064",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a064"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a23c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a01c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a01c"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a234",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a064",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a064"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a22c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a0ac",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a0ac"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a224",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a0f4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a0f4"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a21c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a0ac",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a0ac"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a214",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a064",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a064"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a20c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a01c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a01c"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a204",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a18c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a18c"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a1fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139e2c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139e2c"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a1f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139e0c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139e0c"
+    },
+    {
+      "section": ".data.data_ov006_0213a1ec",
+      "source": "0x0213a1ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139dd4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139dd4"
+    },
+    {
+      "section": ".data.data_ov006_0213a274",
+      "source": "0x0213a27c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139e0c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139e0c"
+    },
+    {
+      "section": ".data.data_ov006_0213a274",
+      "source": "0x0213a274",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02139dd4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02139dd4"
     }
   ],
   "production_mode": "intact-object",

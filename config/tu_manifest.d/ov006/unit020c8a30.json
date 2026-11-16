@@ -33,6 +33,12 @@
       "name": ".bss",
       "start": "0x021404c4",
       "end": "0x02140538"
+    },
+    {
+      "name": ".data.sPuffSprites",
+      "input_section": ".data",
+      "start": "0x0213b0d8",
+      "end": "0x0213b0ec"
     }
   ],
   "functions": [
@@ -107,7 +113,15 @@
       "ordinal": 9
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "sPuffSprites",
+      "address": "0x0213b0d8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite tables; Puff::Draw indexes sPuffSprites[GetGameLanguage()][mIndex]"
+    }
+  ],
   "bss": [
     {
       "symbol": "sPuffNextIndex",
@@ -209,6 +223,13 @@
           "start": "0x021404c4",
           "end": "0x02140538",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.sPuffSprites",
+          "start": "0x0213b0d8",
+          "end": "0x0213b0ec",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -416,6 +437,56 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212f660"
+    },
+    {
+      "section": ".data.sPuffSprites",
+      "source": "0x0213b0e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134b54",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134b54"
+    },
+    {
+      "section": ".data.sPuffSprites",
+      "source": "0x0213b0e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134b60",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134b60"
+    },
+    {
+      "section": ".data.sPuffSprites",
+      "source": "0x0213b0e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134b84",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134b84"
+    },
+    {
+      "section": ".data.sPuffSprites",
+      "source": "0x0213b0dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134b78",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134b78"
+    },
+    {
+      "section": ".data.sPuffSprites",
+      "source": "0x0213b0d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134b6c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134b6c"
     }
   ]
 }

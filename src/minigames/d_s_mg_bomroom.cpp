@@ -40,11 +40,41 @@
 
 extern "C" {
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-extern OamAttr *sBomroomPenGateSprites[];
+extern "C" OamAttr data_ov006_02134514[];
+extern "C" OamAttr data_ov006_0213466c[];
+extern "C" OamAttr data_ov006_021345ec[];
+extern "C" OamAttr data_ov006_02134484[];
+extern "C" OamAttr data_ov006_0213456c[];
+extern "C" OamAttr data_ov006_021344c4[];
+extern "C" OamAttr data_ov006_0213453c[];
+extern "C" OamAttr data_ov006_0213462c[];
+extern "C" OamAttr data_ov006_021344a4[];
+extern "C" OamAttr data_ov006_021345ac[];
+OamAttr * sBomroomPenGateSprites[] = {
+    data_ov006_02134514, data_ov006_0213466c, data_ov006_021345ec, data_ov006_02134484,
+    data_ov006_0213456c, data_ov006_021344c4, data_ov006_0213453c, data_ov006_0213462c,
+    data_ov006_021344a4, data_ov006_021345ac,
+};
 extern int sBomroomPenGateX[];
 extern int sBomroomPenGateY[];
-extern OamAttr *sBomroomHatchPanelSprites[];
-extern OamAttr *sBomroomTopDoorSprites[];
+extern "C" OamAttr data_ov006_02134340[];
+extern "C" OamAttr data_ov006_021342d0[];
+extern "C" OamAttr data_ov006_021342f0[];
+extern "C" OamAttr data_ov006_02134310[];
+extern "C" OamAttr data_ov006_02134370[];
+OamAttr * sBomroomHatchPanelSprites[] = {
+    data_ov006_02134340, data_ov006_021342d0, data_ov006_021342f0, data_ov006_02134310,
+    data_ov006_02134370,
+};
+extern "C" OamAttr data_ov006_02134404[];
+extern "C" OamAttr data_ov006_021343a0[];
+extern "C" OamAttr data_ov006_021343e4[];
+extern "C" OamAttr data_ov006_021343c4[];
+extern "C" OamAttr data_ov006_02134444[];
+OamAttr * sBomroomTopDoorSprites[] = {
+    data_ov006_02134404, data_ov006_021343a0, data_ov006_021343e4, data_ov006_021343c4,
+    data_ov006_02134444,
+};
 extern int sBomroomHatchPanelX[];
 extern int sBomroomHatchPanelY[];
 extern unsigned char *sBomroomBombFrameTimes[];
@@ -52,11 +82,44 @@ extern unsigned char sBomroomBombFrameCounts[];
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern unsigned char *sBomroomBombSprites[];
 extern unsigned char *sBomroomBombLitSprites[];
+extern "C" char data_ov006_02133dd0[];
+extern "C" char data_ov006_02133dc8[];
+extern "C" char data_ov006_02133dc0[];
+extern "C" char data_ov006_02133db8[];
+extern "C" char data_ov006_02133e00[];
+extern "C" char data_ov006_02133df8[];
+extern "C" char data_ov006_02133df0[];
+extern "C" char data_ov006_02133de8[];
+extern "C" char data_ov006_02133de0[];
+extern "C" char data_ov006_02133dd8[];
+extern "C" char data_ov006_02133c98[];
+extern "C" char data_ov006_02133c90[];
+extern "C" char data_ov006_02133c88[];
+extern "C" char data_ov006_02133c80[];
+extern "C" char data_ov006_02133c78[];
+extern "C" char data_ov006_02133c70[];
+extern "C" char data_ov006_02133ca8[];
+extern "C" char data_ov006_02133cb8[];
+extern "C" char data_ov006_02133ca0[];
+extern "C" char data_ov006_02133cc0[];
+extern "C" char data_ov006_02133cc8[];
+extern "C" char data_ov006_02133cb0[];
+extern "C" char data_ov006_02133ce8[];
+extern "C" char data_ov006_02133d50[];
 extern void *sBomroomBombsSprites[];
 extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
-extern OamAttr *sBomroomRoundOverSprites;
-extern void *sBomroomMarkerPlainSprites[];
-extern void *sBomroomMarkerLitSprites[];
+extern "C" OamAttr data_ov006_02134f34[];
+OamAttr * sBomroomRoundOverSprites = data_ov006_02134f34;
+extern "C" char data_ov006_02133b60[];
+extern "C" char data_ov006_02133ba0[];
+extern "C" char data_ov006_02133af0[];
+extern "C" char data_ov006_02133b28[];
+void * sBomroomMarkerPlainSprites[] = {data_ov006_02133b60, data_ov006_02133ba0, data_ov006_02133af0, data_ov006_02133b28};
+extern "C" char data_ov006_02133ab0[];
+extern "C" char data_ov006_02133a98[];
+extern "C" char data_ov006_02133a80[];
+extern "C" char data_ov006_02133ac8[];
+void * sBomroomMarkerLitSprites[] = {data_ov006_02133ab0, data_ov006_02133a98, data_ov006_02133a80, data_ov006_02133ac8};
 extern int sBomroomMarkerY[];
 extern int Mg_GetSubmittedScore(void);
 extern u16 sBomroomSpawnDelays[];

@@ -99,27 +99,68 @@ extern void GX_LoadBG3Scr(void *, u32, u32);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern int sPachinkoPipeSprites[];
-extern OamAttr *sPachinko2SparkSprites[];
-extern OamAttr *sPachinko2PaddleSprite;
-extern OamAttr *sPachinko2BallSprite;
-extern OamAttr *sPachinko2BallCountSprites[];
-extern u8 sPachinko2CupHopRightStartFrames[];
-extern u8 sPachinko2CupHopLeftStartFrames[];
-extern unsigned char sPachinko2BallWalkOffSprites[];
-extern unsigned char sPachinko2PaddleCountPerLanes[];
-extern u8 sPachinko2CupHopLeftFrames[];
-extern u8 sPachinko2CupHopRightFrames[];
-extern unsigned char sPachinko2CupWaitFrames[];
-extern unsigned char sPachinko2CupWaitTimes[];
-extern int sPachinko2CupX[];
-extern int sPachinko2CrossRowY[];
-extern int sPachinko2PaddleFlyAwayVX[];
-extern unsigned short sPachinko2CupWaitTimesAlt[];
-extern s32 sPachinko2CupRightStops[];
-extern s32 sPachinko2CupLeftStops[];
+extern "C" OamAttr data_ov006_02136c7c[];
+extern "C" OamAttr data_ov006_02136c34[];
+extern "C" OamAttr data_ov006_02136be4[];
+extern "C" OamAttr data_ov006_02136c0c[];
+OamAttr * sPachinko2SparkSprites[] = {data_ov006_02136c7c, data_ov006_02136c34, data_ov006_02136be4, data_ov006_02136c0c};
+extern "C" OamAttr data_ov006_02133870[];
+OamAttr * sPachinko2PaddleSprite = data_ov006_02133870;
+extern "C" OamAttr data_ov006_021389f0[];
+OamAttr * sPachinko2BallSprite = data_ov006_021389f0;
+extern "C" OamAttr data_ov006_02138cf0[];
+extern "C" OamAttr data_ov006_02138cd8[];
+extern "C" OamAttr data_ov006_02138cc0[];
+extern "C" OamAttr data_ov006_02138ca8[];
+extern "C" OamAttr data_ov006_02138c90[];
+extern "C" OamAttr data_ov006_02138c78[];
+extern "C" OamAttr data_ov006_02138c60[];
+extern "C" OamAttr data_ov006_02138c48[];
+OamAttr * sPachinko2BallCountSprites[] = {
+    data_ov006_02138cf0, data_ov006_02138cd8, data_ov006_02138cc0, data_ov006_02138ca8,
+    data_ov006_02138c90, data_ov006_02138c78, data_ov006_02138c60, data_ov006_02138c48,
+};
+extern const u8 sPachinko2CupHopRightStartFrames[4] = {6, 5, 4, 0};
+extern const u8 sPachinko2CupHopLeftStartFrames[4] = {4, 5, 6, 0};
+extern const unsigned char sPachinko2BallWalkOffSprites[4] = {1, 2, 3, 4};
+extern const unsigned char sPachinko2PaddleCountPerLanes[8] = {2, 2, 2, 2, 2, 2, 0, 0};
+extern const u8 sPachinko2CupHopLeftFrames[8] = {0, 1, 2, 3, 2, 1, 0, 0};
+extern const u8 sPachinko2CupHopRightFrames[8] = {7, 8, 9, 10, 9, 8, 0, 0};
+extern const unsigned char sPachinko2CupWaitFrames[8] = {11, 12, 13, 14, 15, 14, 13, 12};
+extern const unsigned char sPachinko2CupWaitTimes[8] = {4, 2, 3, 2, 4, 2, 3, 2};
+extern const int sPachinko2CupX[2] = {0x40, 0xc0};
+extern const int sPachinko2CrossRowY[2] = {0xffffff98, 0xffffff68};
+extern const int sPachinko2PaddleFlyAwayVX[3] = {0x400, 0xfffffc00, 0x0};
+extern const unsigned short sPachinko2CupWaitTimesAlt[8] = {5, 5, 80, 8, 80, 5, 75, 0};
+extern const s32 sPachinko2CupRightStops[6] = {0x60, 0xe0, 0x58, 0xd8, 0x40, 0xc0};
+extern const s32 sPachinko2CupLeftStops[6] = {0x20, 0xa0, 0x28, 0xa8, 0x40, 0xc0};
 extern unsigned short *sPachinko2CupWaitFramesPerCup[];
-extern int *sPachinko2PaddleDescendLimits[];
-extern int *sPachinko2PaddleSweepLimits[];
+extern "C" int data_ov006_0212ec78[];
+extern "C" int data_ov006_0212ec70[];
+extern "C" int data_ov006_0212ec68[];
+extern "C" int data_ov006_0212ec60[];
+extern "C" int data_ov006_0212ec00[];
+extern "C" int data_ov006_0212ebd0[];
+int * sPachinko2PaddleDescendLimits[] = {
+    data_ov006_0212ec78, data_ov006_0212ec70, data_ov006_0212ec68, data_ov006_0212ec60,
+    data_ov006_0212ec00, data_ov006_0212ebd0,
+};
+extern "C" int data_ov006_0212ec58[];
+extern "C" int data_ov006_0212ec50[];
+extern "C" int data_ov006_0212ebf0[];
+extern "C" int data_ov006_0212ec48[];
+extern "C" int data_ov006_0212ec40[];
+extern "C" int data_ov006_0212ebe8[];
+int * sPachinko2PaddleSweepLimits[] = {
+    data_ov006_0212ec58, data_ov006_0212ec50, data_ov006_0212ebf0, data_ov006_0212ec48,
+    data_ov006_0212ec40, data_ov006_0212ebe8,
+};
+extern "C" int data_ov006_0212ec28[];
+extern "C" int data_ov006_0212ec20[];
+extern "C" int data_ov006_0212ec18[];
+extern "C" int data_ov006_0212ebf8[];
+extern "C" int data_ov006_0212ec10[];
+extern "C" int data_ov006_0212ec38[];
 extern int *sPachinko2PaddleGatherTargets[];
 
 /* The three pointer-to-member tables the helpers dispatch through. */

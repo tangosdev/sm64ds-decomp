@@ -1,19 +1,173 @@
     .text       start:0x020bfec0 end:0x0212b890 kind:code align:32
     .rodata.before_coin_tables start:0x0212b890 end:0x0212e308 kind:rodata align:4
     .rodata.coin_tables start:0x0212e308 end:0x0212e450 kind:rodata align:4
-    .rodata start:0x0212e450 end:0x0212ee0c kind:rodata align:4
+    .rodata.gap0 start:0x0212e450 end:0x0212e57c kind:rodata align:4
+    .rodata.data_ov006_0212e57c start:0x0212e57c end:0x0212e580 kind:rodata align:4
+    .rodata.gap1 start:0x0212e580 end:0x0212e588 kind:rodata align:4
+    .rodata.sEsp3DCardsPerDifficulty start:0x0212e588 end:0x0212e58c kind:rodata align:4
+    .rodata.data_ov006_0212e58c start:0x0212e58c end:0x0212e594 kind:rodata align:4
+    .rodata.sEsp3DResultSfx start:0x0212e594 end:0x0212e5a8 kind:rodata align:4
+    .rodata.gap2 start:0x0212e5a8 end:0x0212e80c kind:rodata align:4
+    .rodata.sHanaRoundPatterns start:0x0212e80c end:0x0212e820 kind:rodata align:4
+    .rodata.sHanaFieldWigglerCounts start:0x0212e820 end:0x0212e848 kind:rodata align:4
+    .rodata.sLuigiTouchSfx start:0x0212e848 end:0x0212e850 kind:rodata align:4
+    .rodata.sLuigiCurtainX start:0x0212e850 end:0x0212e858 kind:rodata align:4
+    .rodata.sLuigiDriftByColumnSpeed start:0x0212e858 end:0x0212e868 kind:rodata align:4
+    .rodata.sLuigiDriftByRowSpeed start:0x0212e868 end:0x0212e878 kind:rodata align:4
+    .rodata.sLuigiDriftRandomSpeed start:0x0212e878 end:0x0212e888 kind:rodata align:4
+    .rodata.sLuigiSwaySpeed start:0x0212e888 end:0x0212e898 kind:rodata align:4
+    .rodata.sLuigiSwayStartVY start:0x0212e898 end:0x0212e8a8 kind:rodata align:4
+    .rodata.sLuigiSwayAccel start:0x0212e8a8 end:0x0212e8b8 kind:rodata align:4
+    .rodata.sLuigiBounceSpeeds start:0x0212e8b8 end:0x0212e8c8 kind:rodata align:4
+    .rodata.sLuigiDriftFixedSpeed start:0x0212e8c8 end:0x0212e8d8 kind:rodata align:4
+    .rodata.sLuigiDriftByLevelSpeed start:0x0212e8d8 end:0x0212e8e8 kind:rodata align:4
+    .rodata.gap3 start:0x0212e8e8 end:0x0212ebac kind:rodata align:4
+    .rodata.sPachinko2CupHopRightStartFrames start:0x0212ebac end:0x0212ebb0 kind:rodata align:4
+    .rodata.sPachinko2CupHopLeftStartFrames start:0x0212ebb0 end:0x0212ebb4 kind:rodata align:4
+    .rodata.sPachinko2BallWalkOffSprites start:0x0212ebb4 end:0x0212ebb8 kind:rodata align:4
+    .rodata.sPachinko2PaddleCountPerLanes start:0x0212ebb8 end:0x0212ebc0 kind:rodata align:4
+    .rodata.sPachinko2CupHopLeftFrames start:0x0212ebc0 end:0x0212ebc8 kind:rodata align:4
+    .rodata.sPachinko2CupHopRightFrames start:0x0212ebc8 end:0x0212ebd0 kind:rodata align:4
+    .rodata.gap4 start:0x0212ebd0 end:0x0212ebd8 kind:rodata align:4
+    .rodata.sPachinko2CupWaitFrames start:0x0212ebd8 end:0x0212ebe0 kind:rodata align:4
+    .rodata.sPachinko2CupWaitTimes start:0x0212ebe0 end:0x0212ebe8 kind:rodata align:4
+    .rodata.gap5 start:0x0212ebe8 end:0x0212ec08 kind:rodata align:4
+    .rodata.sPachinko2CupX start:0x0212ec08 end:0x0212ec10 kind:rodata align:4
+    .rodata.gap6 start:0x0212ec10 end:0x0212ec30 kind:rodata align:4
+    .rodata.sPachinko2CrossRowY start:0x0212ec30 end:0x0212ec38 kind:rodata align:4
+    .rodata.gap7 start:0x0212ec38 end:0x0212ec80 kind:rodata align:4
+    .rodata.sPachinko2PaddleFlyAwayVX start:0x0212ec80 end:0x0212ec8c kind:rodata align:4
+    .rodata.gap8 start:0x0212ec8c end:0x0212ecac kind:rodata align:4
+    .rodata.sPachinko2CupWaitTimesAlt start:0x0212ecac end:0x0212ecbc kind:rodata align:4
+    .rodata.sPachinko2CupRightStops start:0x0212ecbc end:0x0212ecd4 kind:rodata align:4
+    .rodata.sPachinko2CupLeftStops start:0x0212ecd4 end:0x0212ecec kind:rodata align:4
+    .rodata.gap9 start:0x0212ecec end:0x0212ee0c kind:rodata align:4
     .rodata.sound_tables start:0x0212ee0c end:0x0212ef5c kind:rodata align:4
     .rodata.sound_row_views start:0x0212ef5c end:0x0212ef9c kind:rodata align:4
     .rodata.sound_note_offsets start:0x0212ef9c end:0x0212efc4 kind:rodata align:4
     .rodata.after_sound start:0x0212efc4 end:0x0212f4c4 kind:rodata align:4
     .init       start:0x0212f4c4 end:0x0213356c kind:code align:4
     .ctor       start:0x0213356c end:0x021335e8 kind:rodata align:4
-    .data       start:0x02133600 end:0x021402e0 kind:data align:32
+    .data.gap0 start:0x02133600 end:0x0213386c kind:data align:32
+    .data.sPachinko2PaddleSprite start:0x0213386c end:0x02133870 kind:data align:4
+    .data.gap1 start:0x02133870 end:0x02133a3c kind:data align:4
+    .data.sEsp3DAnimSetSlotsSprites start:0x02133a3c end:0x02133a5c kind:data align:4
+    .data.sTeresaExclaimSprites start:0x02133a5c end:0x02133a60 kind:data align:4
+    .data.gap2 start:0x02133a60 end:0x02133a70 kind:data align:4
+    .data.sBomroomMarkerLitSprites start:0x02133a70 end:0x02133a80 kind:data align:4
+    .data.gap3 start:0x02133a80 end:0x02133ae0 kind:data align:4
+    .data.sBomroomMarkerPlainSprites start:0x02133ae0 end:0x02133af0 kind:data align:4
+    .data.gap4 start:0x02133af0 end:0x02133f10 kind:data align:4
+    .data.sCoinValuesSprites start:0x02133f10 end:0x02133f18 kind:data align:4
+    .data.gap5 start:0x02133f18 end:0x02133f24 kind:data align:4
+    .data.data_ov006_02133f24 start:0x02133f24 end:0x02133f38 kind:data align:4
+    .data.gap6 start:0x02133f38 end:0x02134028 kind:data align:4
+    .data.data_ov006_02134028 start:0x02134028 end:0x0213402c kind:data align:4
+    .data.gap7 start:0x0213402c end:0x0213406c kind:data align:4
+    .data.sCardHudSprites start:0x0213406c end:0x02134074 kind:data align:4
+    .data.gap8 start:0x02134074 end:0x021341ec kind:data align:4
+    .data.sCoinPopupSprites start:0x021341ec end:0x021341f0 kind:data align:4
+    .data.gap9 start:0x021341f0 end:0x02134210 kind:data align:4
+    .data.sTeresaVanishPuffSprites start:0x02134210 end:0x02134218 kind:data align:4
+    .data.gap10 start:0x02134218 end:0x021342bc kind:data align:4
+    .data.sBomroomHatchPanelSprites start:0x021342bc end:0x021342d0 kind:data align:4
+    .data.gap11 start:0x021342d0 end:0x021343b0 kind:data align:4
+    .data.sBomroomTopDoorSprites start:0x021343b0 end:0x021343c4 kind:data align:4
+    .data.gap12 start:0x021343c4 end:0x021344ec kind:data align:4
+    .data.sBomroomPenGateSprites start:0x021344ec end:0x02134514 kind:data align:4
+    .data.gap13 start:0x02134514 end:0x02134b4c kind:data align:4
+    .data.sCoinBagSprites start:0x02134b4c end:0x02134b54 kind:data align:4
+    .data.gap14 start:0x02134b54 end:0x02134d1c kind:data align:4
+    .data.data_ov006_02134d1c start:0x02134d1c end:0x02134d20 kind:data align:4
+    .data.gap15 start:0x02134d20 end:0x02134f00 kind:data align:4
+    .data.sTrmpDoorSignSprites start:0x02134f00 end:0x02134f08 kind:data align:4
+    .data.sTrmpArrowSprite start:0x02134f08 end:0x02134f0c kind:data align:4
+    .data.gap16 start:0x02134f0c end:0x02134f24 kind:data align:4
+    .data.sTrmpRowMarkerSprite start:0x02134f24 end:0x02134f28 kind:data align:4
+    .data.gap17 start:0x02134f28 end:0x02134f30 kind:data align:4
+    .data.sBomroomRoundOverSprites start:0x02134f30 end:0x02134f34 kind:data align:4
+    .data.gap18 start:0x02134f34 end:0x021350d8 kind:data align:4
+    .data.sLuigiCurtainSprite start:0x021350d8 end:0x021350dc kind:data align:4
+    .data.gap19 start:0x021350dc end:0x021350fc kind:data align:4
+    .data.sTeresaBigBooSprites start:0x021350fc end:0x02135128 kind:data align:4
+    .data.gap20 start:0x02135128 end:0x02135fc8 kind:data align:4
+    .data.sTeresaBigBooHoverSprites start:0x02135fc8 end:0x02135fe4 kind:data align:4
+    .data.gap21 start:0x02135fe4 end:0x02136bd4 kind:data align:4
+    .data.sPachinko2SparkSprites start:0x02136bd4 end:0x02136be4 kind:data align:4
+    .data.gap22 start:0x02136be4 end:0x02136e24 kind:data align:4
+    .data.sCoinSparkleSprites start:0x02136e24 end:0x02136e2c kind:data align:4
+    .data.gap23 start:0x02136e2c end:0x02136e38 kind:data align:4
+    .data.sEsp3DAnimSetRowsSprites start:0x02136e38 end:0x02136e3c kind:data align:4
+    .data.gap24 start:0x02136e3c end:0x021374ac kind:data align:4
+    .data.data_ov006_021374ac start:0x021374ac end:0x021374b0 kind:data align:4
+    .data.gap25 start:0x021374b0 end:0x021374b8 kind:data align:4
+    .data.data_ov006_021374b8 start:0x021374b8 end:0x021374bc kind:data align:4
+    .data.gap26 start:0x021374bc end:0x021374c4 kind:data align:4
+    .data.data_ov006_021374c4 start:0x021374c4 end:0x021374c8 kind:data align:4
+    .data.gap27 start:0x021374c8 end:0x021374f4 kind:data align:4
+    .data.data_ov006_021374f4 start:0x021374f4 end:0x021374f8 kind:data align:4
+    .data.gap28 start:0x021374f8 end:0x021375a0 kind:data align:4
+    .data.sHanaWigglerFieldSprites start:0x021375a0 end:0x021375a8 kind:data align:4
+    .data.gap29 start:0x021375a8 end:0x021375c0 kind:data align:4
+    .data.sHanaWigglerTargetSprites start:0x021375c0 end:0x021375cc kind:data align:4
+    .data.gap30 start:0x021375cc end:0x021375dc kind:data align:4
+    .data.sHanaBackgroundPartsB start:0x021375dc end:0x021375e4 kind:data align:4
+    .data.gap31 start:0x021375e4 end:0x021389ec kind:data align:4
+    .data.sPachinko2BallSprite start:0x021389ec end:0x021389f0 kind:data align:4
+    .data.gap32 start:0x021389f0 end:0x02138d08 kind:data align:4
+    .data.sPachinko2BallCountSprites start:0x02138d08 end:0x02138d28 kind:data align:4
+    .data.gap33 start:0x02138d28 end:0x02139db4 kind:data align:4
+    .data.data_ov006_02139db4 start:0x02139db4 end:0x02139dbc kind:data align:4
+    .data.data_ov006_02139dbc start:0x02139dbc end:0x02139dc4 kind:data align:4
+    .data.gap34 start:0x02139dc4 end:0x02139df4 kind:data align:4
+    .data.data_ov006_02139df4 start:0x02139df4 end:0x02139e0c kind:data align:4
+    .data.gap35 start:0x02139e0c end:0x02139e4c kind:data align:4
+    .data.data_ov006_02139e4c start:0x02139e4c end:0x02139e74 kind:data align:4
+    .data.gap36 start:0x02139e74 end:0x02139e9c kind:data align:4
+    .data.data_ov006_02139e9c start:0x02139e9c end:0x02139ec4 kind:data align:4
+    .data.data_ov006_02139ec4 start:0x02139ec4 end:0x02139eec kind:data align:4
+    .data.gap37 start:0x02139eec end:0x0213a1ec kind:data align:4
+    .data.data_ov006_0213a1ec start:0x0213a1ec end:0x0213a274 kind:data align:4
+    .data.data_ov006_0213a274 start:0x0213a274 end:0x0213a284 kind:data align:4
+    .data.gap38 start:0x0213a284 end:0x0213a5f4 kind:data align:4
+    .data.sTeresaMarkerSprites start:0x0213a5f4 end:0x0213a5f8 kind:data align:4
+    .data.gap39 start:0x0213a5f8 end:0x0213a628 kind:data align:4
+    .data.sTeresaRevealSprites start:0x0213a628 end:0x0213a63c kind:data align:4
+    .data.gap40 start:0x0213a63c end:0x0213a964 kind:data align:4
+    .data.sTeresaBooFrameSprites start:0x0213a964 end:0x0213a99c kind:data align:4
+    .data.gap41 start:0x0213a99c end:0x0213a9fc kind:data align:4
+    .data.sCoinCaptionSprites start:0x0213a9fc end:0x0213aa24 kind:data align:4
+    .data.gap42 start:0x0213aa24 end:0x0213abc8 kind:data align:4
+    .data.sLuigiPictureSprites start:0x0213abc8 end:0x0213abd8 kind:data align:4
+    .data.gap43 start:0x0213abd8 end:0x0213acc0 kind:data align:4
+    .data.sMascotWalkerPaths start:0x0213acc0 end:0x0213ace0 kind:data align:4
+    .data.gap44 start:0x0213ace0 end:0x0213ad28 kind:data align:4
+    .data.sDealerIdentityMtx start:0x0213ad28 end:0x0213ad58 kind:data align:4
+    .data.gap45 start:0x0213ad58 end:0x0213aee8 kind:data align:4
+    .data.data_ov006_0213aee8 start:0x0213aee8 end:0x0213af18 kind:data align:4
+    .data.gap46 start:0x0213af18 end:0x0213b008 kind:data align:4
+    .data.sJump3DBounceVy start:0x0213b008 end:0x0213b00c kind:data align:4
+    .data.sJump3DRiseVy start:0x0213b00c end:0x0213b010 kind:data align:4
+    .data.sJump3DFallSpeed start:0x0213b010 end:0x0213b014 kind:data align:4
+    .data.sJump3DStartVx start:0x0213b014 end:0x0213b018 kind:data align:4
+    .data.sJump3DGravityStep start:0x0213b018 end:0x0213b01c kind:data align:4
+    .data.sJump3DMoveSpeed start:0x0213b01c end:0x0213b020 kind:data align:4
+    .data.gap47 start:0x0213b020 end:0x0213b098 kind:data align:4
+    .data.sJump3DAnimTable start:0x0213b098 end:0x0213b0a4 kind:data align:4
+    .data.gap48 start:0x0213b0a4 end:0x0213b0d8 kind:data align:4
+    .data.sPuffSprites start:0x0213b0d8 end:0x0213b0ec kind:data align:4
+    .data.gap49 start:0x0213b0ec end:0x0213b22c kind:data align:4
+    .data.sTrmpBounceAnimTable start:0x0213b22c end:0x0213b238 kind:data align:4
+    .data.gap50 start:0x0213b238 end:0x0213b814 kind:data align:4
+    .data start:0x0213b814 end:0x021402e0 kind:data align:4
     .bss        start:0x021402e0 end:0x021430a0 kind:bss align:32
 src/minigames/unit020bfec0.cpp:
     complete
     .text start:0x020bfec0 end:0x020c4048
     .bss start:0x021402e0 end:0x021402fc
+    .data.sMascotWalkerPaths start:0x0213acc0 end:0x0213ace0
+    .data.sDealerIdentityMtx start:0x0213ad28 end:0x0213ad58
+    .data.data_ov006_0213aee8 start:0x0213aee8 end:0x0213af18
 
 src/minigames/d_mg3d_heyho_obj_adapter.cpp:
     complete
@@ -28,6 +182,14 @@ src/minigames/d_mg_jump3d_mario.cpp:
     .init start:0x0212f52c end:0x0212f660
     .ctor start:0x02133570 end:0x02133574
     .bss start:0x02140438 end:0x021404c4
+    .data.data_ov006_02134d1c start:0x02134d1c end:0x02134d20
+    .data.sJump3DBounceVy start:0x0213b008 end:0x0213b00c
+    .data.sJump3DRiseVy start:0x0213b00c end:0x0213b010
+    .data.sJump3DFallSpeed start:0x0213b010 end:0x0213b014
+    .data.sJump3DStartVx start:0x0213b014 end:0x0213b018
+    .data.sJump3DGravityStep start:0x0213b018 end:0x0213b01c
+    .data.sJump3DMoveSpeed start:0x0213b01c end:0x0213b020
+    .data.sJump3DAnimTable start:0x0213b098 end:0x0213b0a4
 
 src/minigames/unit020c8a30.cpp:
     complete
@@ -35,6 +197,7 @@ src/minigames/unit020c8a30.cpp:
     .init start:0x0212f660 end:0x0212f6b4
     .ctor start:0x02133574 end:0x02133578
     .bss start:0x021404c4 end:0x02140538
+    .data.sPuffSprites start:0x0213b0d8 end:0x0213b0ec
 
 src/minigames/d_mg_trmpln2_mario.cpp:
     complete
@@ -42,6 +205,7 @@ src/minigames/d_mg_trmpln2_mario.cpp:
     .init start:0x0212f6b4 end:0x0212fc7c
     .ctor start:0x02133578 end:0x0213357c
     .bss start:0x0214053c end:0x02140808
+    .data.sTrmpBounceAnimTable start:0x0213b22c end:0x0213b238
 
 src/minigames/unit020cd744.cpp:
     complete
@@ -61,6 +225,12 @@ src/minigames/d_s_mg_bomroom.cpp:
     .init start:0x0212fd48 end:0x021300b0
     .ctor start:0x02133580 end:0x02133584
     .bss start:0x02141660 end:0x02141768
+    .data.sBomroomMarkerLitSprites start:0x02133a70 end:0x02133a80
+    .data.sBomroomMarkerPlainSprites start:0x02133ae0 end:0x02133af0
+    .data.sBomroomHatchPanelSprites start:0x021342bc end:0x021342d0
+    .data.sBomroomTopDoorSprites start:0x021343b0 end:0x021343c4
+    .data.sBomroomPenGateSprites start:0x021344ec end:0x02134514
+    .data.sBomroomRoundOverSprites start:0x02134f30 end:0x02134f34
 
 src/minigames/d_s_mg_card.cpp:
     complete
@@ -68,6 +238,8 @@ src/minigames/d_s_mg_card.cpp:
     .init start:0x021300b0 end:0x0213014c
     .ctor start:0x02133584 end:0x02133588
     .bss start:0x02141774 end:0x021417b0
+    .data.data_ov006_02134028 start:0x02134028 end:0x0213402c
+    .data.sCardHudSprites start:0x0213406c end:0x02134074
 
 src/minigames/d_s_mg_coin.cpp:
     complete
@@ -76,6 +248,11 @@ src/minigames/d_s_mg_coin.cpp:
     .init start:0x0213014c end:0x021303d0
     .ctor start:0x02133588 end:0x0213358c
     .bss start:0x021417b0 end:0x02141870
+    .data.sCoinValuesSprites start:0x02133f10 end:0x02133f18
+    .data.sCoinPopupSprites start:0x021341ec end:0x021341f0
+    .data.sCoinBagSprites start:0x02134b4c end:0x02134b54
+    .data.sCoinSparkleSprites start:0x02136e24 end:0x02136e2c
+    .data.sCoinCaptionSprites start:0x0213a9fc end:0x0213aa24
 
 src/minigames/d_s_mg_cup.cpp:
     complete
@@ -84,6 +261,14 @@ src/minigames/d_s_mg_cup.cpp:
     .ctor start:0x0213358c end:0x02133590
     .bss start:0x02141870 end:0x021418b0
     .data start:0x0213bfe0 end:0x0213c1e4
+    .data.data_ov006_02139db4 start:0x02139db4 end:0x02139dbc
+    .data.data_ov006_02139dbc start:0x02139dbc end:0x02139dc4
+    .data.data_ov006_02139df4 start:0x02139df4 end:0x02139e0c
+    .data.data_ov006_02139e4c start:0x02139e4c end:0x02139e74
+    .data.data_ov006_02139e9c start:0x02139e9c end:0x02139ec4
+    .data.data_ov006_02139ec4 start:0x02139ec4 end:0x02139eec
+    .data.data_ov006_0213a1ec start:0x0213a1ec end:0x0213a274
+    .data.data_ov006_0213a274 start:0x0213a274 end:0x0213a284
 
 src/minigames/d_s_mg_curling.cpp:
     complete
@@ -112,6 +297,14 @@ src/minigames/d_mg3d_esp_anim_set.cpp:
     .init start:0x02130a08 end:0x02130df8
     .ctor start:0x0213359c end:0x021335a0
     .bss start:0x02141e54 end:0x02141fcc
+    .rodata.data_ov006_0212e57c start:0x0212e57c end:0x0212e580
+    .rodata.sEsp3DCardsPerDifficulty start:0x0212e588 end:0x0212e58c
+    .rodata.data_ov006_0212e58c start:0x0212e58c end:0x0212e594
+    .rodata.sEsp3DResultSfx start:0x0212e594 end:0x0212e5a8
+    .data.sEsp3DAnimSetSlotsSprites start:0x02133a3c end:0x02133a5c
+    .data.data_ov006_02133f24 start:0x02133f24 end:0x02133f38
+    .data.sEsp3DAnimSetRowsSprites start:0x02136e38 end:0x02136e3c
+    .data start:0x0213c85c end:0x0213c88c
 
 src/minigames/d_s_mg_hanachan_methods.cpp:
     complete
@@ -120,6 +313,15 @@ src/minigames/d_s_mg_hanachan_methods.cpp:
     .ctor start:0x021335a0 end:0x021335a4
     .data start:0x0213c95c end:0x0213ca7c
     .bss start:0x02142018 end:0x02142044
+    .rodata.sHanaRoundPatterns start:0x0212e80c end:0x0212e820
+    .rodata.sHanaFieldWigglerCounts start:0x0212e820 end:0x0212e848
+    .data.data_ov006_021374ac start:0x021374ac end:0x021374b0
+    .data.data_ov006_021374b8 start:0x021374b8 end:0x021374bc
+    .data.data_ov006_021374c4 start:0x021374c4 end:0x021374c8
+    .data.data_ov006_021374f4 start:0x021374f4 end:0x021374f8
+    .data.sHanaWigglerFieldSprites start:0x021375a0 end:0x021375a8
+    .data.sHanaWigglerTargetSprites start:0x021375c0 end:0x021375cc
+    .data.sHanaBackgroundPartsB start:0x021375dc end:0x021375e4
 
 src/minigames/d_s_mg_hanachan.cpp:
     complete
@@ -150,6 +352,19 @@ src/minigames/d_s_mg_luigi.cpp:
     .ctor start:0x021335ac end:0x021335b0
     .data start:0x0213cd8c end:0x0213ce54
     .bss start:0x021421ec end:0x021422a4
+    .rodata.sLuigiTouchSfx start:0x0212e848 end:0x0212e850
+    .rodata.sLuigiCurtainX start:0x0212e850 end:0x0212e858
+    .rodata.sLuigiDriftByColumnSpeed start:0x0212e858 end:0x0212e868
+    .rodata.sLuigiDriftByRowSpeed start:0x0212e868 end:0x0212e878
+    .rodata.sLuigiDriftRandomSpeed start:0x0212e878 end:0x0212e888
+    .rodata.sLuigiSwaySpeed start:0x0212e888 end:0x0212e898
+    .rodata.sLuigiSwayStartVY start:0x0212e898 end:0x0212e8a8
+    .rodata.sLuigiSwayAccel start:0x0212e8a8 end:0x0212e8b8
+    .rodata.sLuigiBounceSpeeds start:0x0212e8b8 end:0x0212e8c8
+    .rodata.sLuigiDriftFixedSpeed start:0x0212e8c8 end:0x0212e8d8
+    .rodata.sLuigiDriftByLevelSpeed start:0x0212e8d8 end:0x0212e8e8
+    .data.sLuigiCurtainSprite start:0x021350d8 end:0x021350dc
+    .data.sLuigiPictureSprites start:0x0213abc8 end:0x0213abd8
 
 src/minigames/d_s_mg_memory.cpp:
     complete
@@ -194,6 +409,25 @@ src/minigames/d_s_mg_pachinko2.cpp:
     .init start:0x02131cd0 end:0x02131fa4
     .ctor start:0x021335c4 end:0x021335c8
     .bss start:0x021426cc end:0x021427ac
+    .rodata.sPachinko2CupHopRightStartFrames start:0x0212ebac end:0x0212ebb0
+    .rodata.sPachinko2CupHopLeftStartFrames start:0x0212ebb0 end:0x0212ebb4
+    .rodata.sPachinko2BallWalkOffSprites start:0x0212ebb4 end:0x0212ebb8
+    .rodata.sPachinko2PaddleCountPerLanes start:0x0212ebb8 end:0x0212ebc0
+    .rodata.sPachinko2CupHopLeftFrames start:0x0212ebc0 end:0x0212ebc8
+    .rodata.sPachinko2CupHopRightFrames start:0x0212ebc8 end:0x0212ebd0
+    .rodata.sPachinko2CupWaitFrames start:0x0212ebd8 end:0x0212ebe0
+    .rodata.sPachinko2CupWaitTimes start:0x0212ebe0 end:0x0212ebe8
+    .rodata.sPachinko2CupX start:0x0212ec08 end:0x0212ec10
+    .rodata.sPachinko2CrossRowY start:0x0212ec30 end:0x0212ec38
+    .rodata.sPachinko2PaddleFlyAwayVX start:0x0212ec80 end:0x0212ec8c
+    .rodata.sPachinko2CupWaitTimesAlt start:0x0212ecac end:0x0212ecbc
+    .rodata.sPachinko2CupRightStops start:0x0212ecbc end:0x0212ecd4
+    .rodata.sPachinko2CupLeftStops start:0x0212ecd4 end:0x0212ecec
+    .data.sPachinko2PaddleSprite start:0x0213386c end:0x02133870
+    .data.sPachinko2SparkSprites start:0x02136bd4 end:0x02136be4
+    .data.sPachinko2BallSprite start:0x021389ec end:0x021389f0
+    .data.sPachinko2BallCountSprites start:0x02138d08 end:0x02138d28
+    .data start:0x0213db6c end:0x0213db9c
 
 src/minigames/d_s_mg_panel.cpp:
     complete
@@ -245,11 +479,22 @@ src/minigames/d_s_mg_teresa.cpp:
     .init start:0x02132f68 end:0x0213322c
     .ctor start:0x021335d8 end:0x021335dc
     .bss start:0x02142e88 end:0x02142f60
+    .data.sTeresaExclaimSprites start:0x02133a5c end:0x02133a60
+    .data.sTeresaVanishPuffSprites start:0x02134210 end:0x02134218
+    .data.sTeresaBigBooSprites start:0x021350fc end:0x02135128
+    .data.sTeresaBigBooHoverSprites start:0x02135fc8 end:0x02135fe4
+    .data.sTeresaMarkerSprites start:0x0213a5f4 end:0x0213a5f8
+    .data.sTeresaRevealSprites start:0x0213a628 end:0x0213a63c
+    .data.sTeresaBooFrameSprites start:0x0213a964 end:0x0213a99c
+    .data start:0x0213f9d0 end:0x0213f9e4
 
 src/minigames/d_s_mg_trampoline.cpp:
     complete
     .text start:0x021207dc end:0x021225ac
-    .data start:0x0213faa0 end:0x0213fbc4
+    .data start:0x0213fa9c end:0x0213fbc4
+    .data.sTrmpDoorSignSprites start:0x02134f00 end:0x02134f08
+    .data.sTrmpArrowSprite start:0x02134f08 end:0x02134f0c
+    .data.sTrmpRowMarkerSprite start:0x02134f24 end:0x02134f28
 
 src/minigames/d_s_mg_trampoline2.cpp:
     complete
@@ -266,6 +511,7 @@ src/minigames/d_s_mg_bsc.cpp:
     .init start:0x0213326c end:0x021333e0
     .ctor start:0x021335e0 end:0x021335e4
     .bss start:0x02142f94 end:0x02143004
+    .data start:0x0213fe78 end:0x0213fe8c
 
 src/minigames/d_s_mg_snowball.cpp:
     complete

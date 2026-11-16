@@ -87,16 +87,13 @@ extern Jump3DState pmf_dMgJump3DMario_c_StateRiseOut;
 extern Jump3DState pmf_dMgJump3DMario_c_StateRespawn_2;
 extern Jump3DState pmf_dMgJump3DMario_c_StateFallOut;
 
-/* Slots the current mAnimIdx (0/1/2) picks the anim file from. */
-extern BCA_File **sJump3DAnimTable[];
-
 /* Tuning words, read as plain ints. */
-extern int sJump3DBounceVy;
-extern int sJump3DRiseVy;
-extern int sJump3DStartVx;
-extern int sJump3DFallSpeed;
-extern int sJump3DGravityStep;
-extern int sJump3DMoveSpeed;
+int sJump3DBounceVy = 0x5000;
+int sJump3DRiseVy = 0x4c00;
+int sJump3DStartVx = 0x180;
+int sJump3DFallSpeed = 0xffffdc00;
+int sJump3DGravityStep = 224;
+int sJump3DMoveSpeed = 0x200;
 extern int sJump3DMariosLeft;
 extern int sJump3DRisenOutCount;
 
@@ -108,6 +105,9 @@ extern BCA_File *sJump3DAnimRollJump;
 extern BCA_File *sJump3DAnimWallJump;
 extern BCA_File *sJump3DAnimStruggle;
 extern BCA_File *sJump3DAnimJump;
+
+/* Slots the current mAnimIdx (0/1/2) picks the anim file from. */
+BCA_File **sJump3DAnimTable[] = {&sJump3DAnimJump, &sJump3DAnimDoubleJump1, &sJump3DAnimWallJump};
 
 /* Six anim handles call SharedFilePtr::Construct. The model handle calls
    func_02017a24. */
@@ -143,7 +143,8 @@ extern u8  data_ov006_02140400;
 extern u16 sJump3DSpinAngle;
 extern struct MgCamera *sMgMainCamera;
 extern void *sMgCurCamera;
-extern OamAttr *data_ov006_02134d1c;
+extern "C" OamAttr data_ov006_02134d20[];
+OamAttr * data_ov006_02134d1c = data_ov006_02134d20;
 extern Vector3 sJump3DMarioScale;
 extern char sJump3DRoundLayouts[];
 

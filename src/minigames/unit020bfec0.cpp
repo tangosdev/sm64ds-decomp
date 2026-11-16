@@ -120,7 +120,7 @@ void func_0203cebc(void *, void *, void *, void *);
 }
 
 /* The overlay's own identity matrix, which the flower model loads. */
-extern Matrix4x3 data_ov006_0213aee8;
+Matrix4x3 data_ov006_0213aee8 = {0x1000, 0x0, 0x0, 0x0, 0x1000, 0x0, 0x0, 0x0, 0x1000, 0x0, 0x0, 0x0};
 /* The scene-shared start position and rotation of the dealer and the walker. */
 extern Vector3 data_020a0ebc;
 extern Vector3_16 data_020a0edc;
@@ -128,9 +128,18 @@ extern Vector3_16 data_020a0edc;
 extern Vector3 sPetalUpAxis;
 extern Vector3 sMascotWalkerOffset;
 extern Vector3 sPresenterScale;
-extern Matrix4x3 sDealerIdentityMtx;
+Matrix4x3 sDealerIdentityMtx = {0x1000, 0x0, 0x0, 0x0, 0x1000, 0x0, 0x0, 0x0, 0x1000, 0x0, 0x0, 0x0};
 extern short sDealerLampTimes[];
-extern WalkPath sMascotWalkerPaths[];
+extern "C" char data_ov006_0213ad58[];
+extern "C" char data_ov006_0213ad88[];
+extern "C" char data_ov006_0213ad04[];
+extern "C" char data_ov006_0213ace0[];
+WalkPath sMascotWalkerPaths[] = {
+    {4, (Vector3 *)data_ov006_0213ad58},
+    {4, (Vector3 *)data_ov006_0213ad88},
+    {3, (Vector3 *)data_ov006_0213ad04},
+    {3, (Vector3 *)data_ov006_0213ace0},
+};
 extern QuaternionBlock data_02092768; /* identity */
 extern dClipper data_0209f43c;
 extern dFdBrightness_c *gSceneFader;
