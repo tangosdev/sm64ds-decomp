@@ -1243,7 +1243,6 @@ int daPly_c::HasNoCap() {
 }
 
 void daPly_c::func_ov002_020bdb50(int arg) {
-    char* c = (char*)this;
     this->func_ov002_020bdc18();
     ReleaseHeldActor();
     if (arg != 0) return;
