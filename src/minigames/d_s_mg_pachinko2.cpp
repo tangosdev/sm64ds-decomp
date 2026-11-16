@@ -1525,17 +1525,13 @@ void dScMgPachinko2_c::PlotSubBg2Pixels(int a1, int a2, int a3) {
 }
 #pragma pop
 
-#pragma push
-/* Kept: without opt_dead_assignments off the scheduler stores the right pivot
- * x (0x94) before the pivot y (0x22); the stores are otherwise the same. */
-#pragma opt_dead_assignments off
+/* The same guide line as dScMgPachinko_c::DrawAimLine, its twin: two
+ * segments from the fixed pivots (0x6c, 0x22) and (0x94, 0x22). */
 void dScMgPachinko2_c::DrawAimLine() {
     int k;
     int tx;
     int ty;
     int idx;
-    int pivot[2];
-    int rightPivotX;
     volatile unsigned short tmp; /* fill value; see StartRoundEnd */
     int cx;
     int cy;
@@ -1543,7 +1539,6 @@ void dScMgPachinko2_c::DrawAimLine() {
     int dy;
     int adx;
     int ady;
-    int layer;
 
     if (mHeldBall == 0)
         return;
@@ -1553,34 +1548,27 @@ void dScMgPachinko2_c::DrawAimLine() {
         tmp = 0;
         MI_CpuFill16(dst, tmp, 0x6000);
 
-        k = 0;
-        pivot[0] = 0x6c;
-        pivot[1] = 0x22;
-        layer = 2;
-        rightPivotX = 0x94;
-        do {
+        for (k = 0; k < 2; k++) {
             if (k == 0) {
-                int v;
-                cx = pivot[0];
+                cx = 0x6c;
                 tx = mBalls[idx].x >> 12;
-                v = mBalls[idx].y >> 12;
-                if (v >= 0x22)
-                    ty = v + 4;
+                cy = 0x22;
+                ty = mBalls[idx].y >> 12;
+                if (ty >= 0x22)
+                    ty += 4;
                 else
-                    ty = v - 4;
-                cy = pivot[1];
-                tx = tx - 4;
+                    ty -= 4;
+                tx -= 4;
             } else {
-                int v;
-                cx = rightPivotX;
+                cx = 0x94;
                 tx = mBalls[idx].x >> 12;
-                v = mBalls[idx].y >> 12;
-                if (v >= 0x22)
-                    ty = v + 4;
+                cy = 0x22;
+                ty = mBalls[idx].y >> 12;
+                if (ty >= 0x22)
+                    ty += 4;
                 else
-                    ty = v - 4;
-                cy = pivot[1];
-                tx = tx + 4;
+                    ty -= 4;
+                tx += 4;
             }
             dx = tx - cx;
             adx = dx;
@@ -1595,7 +1583,7 @@ void dScMgPachinko2_c::DrawAimLine() {
                 mGuideStep = adx / 2;
                 for (;;) {
                     if (dx == 0) {
-                        PlotSubBg2Pixels(cx, cy, layer);
+                        PlotSubBg2Pixels(cx, cy, 2);
                         break;
                     } else if (dx > 0) {
                         cx++;
@@ -1607,7 +1595,7 @@ void dScMgPachinko2_c::DrawAimLine() {
                                 cy--;
                             mGuideStep -= adx;
                         }
-                        PlotSubBg2Pixels(cx, cy, layer);
+                        PlotSubBg2Pixels(cx, cy, 2);
                         if (cx == tx)
                             break;
                     } else {
@@ -1620,7 +1608,7 @@ void dScMgPachinko2_c::DrawAimLine() {
                                 cy--;
                             mGuideStep -= adx;
                         }
-                        PlotSubBg2Pixels(cx, cy, layer);
+                        PlotSubBg2Pixels(cx, cy, 2);
                         if (cx == tx)
                             break;
                     }
@@ -1629,7 +1617,7 @@ void dScMgPachinko2_c::DrawAimLine() {
                 mGuideStep = ady / 2;
                 for (;;) {
                     if (dy == 0) {
-                        PlotSubBg2Pixels(cx, cy, layer);
+                        PlotSubBg2Pixels(cx, cy, 2);
                         break;
                     } else if (dy > 0) {
                         cy++;
@@ -1641,7 +1629,7 @@ void dScMgPachinko2_c::DrawAimLine() {
                                 cx--;
                             mGuideStep -= ady;
                         }
-                        PlotSubBg2Pixels(cx, cy, layer);
+                        PlotSubBg2Pixels(cx, cy, 2);
                         if (cy == ty)
                             break;
                     } else {
@@ -1654,20 +1642,18 @@ void dScMgPachinko2_c::DrawAimLine() {
                                 cx--;
                             mGuideStep -= ady;
                         }
-                        PlotSubBg2Pixels(cx, cy, layer);
+                        PlotSubBg2Pixels(cx, cy, 2);
                         if (cy != ty)
                             continue;
                         break;
                     }
                 }
             }
-            k++;
-        } while (k < 2);
+        }
     }
     mBalls[idx].prevX = mBalls[idx].x;
     mBalls[idx].prevY = mBalls[idx].y;
 }
-#pragma pop
 
 void dScMgPachinko2_c::Ball_HitAt(int x, int z, int d) {
     int i;
