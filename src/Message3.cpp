@@ -1444,7 +1444,9 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
 }
 
 /* opt_common_subs stays off: CSE recompute. The ROM re-reads and recomputes
- * what CSE would share (0x298 bytes; 0x278 with CSE on). */
+ * what CSE would share (0x298 bytes; 0x278 with CSE on). Re-measured (#821
+ * r17): still 0x278 without the bracket, and 0x2a8 with the second and third
+ * rows re-reading data_0209fc88 for their tile count. */
 #pragma push
 #pragma opt_common_subs off
 void func_02033bb8(int param0) {
