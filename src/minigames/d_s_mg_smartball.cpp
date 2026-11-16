@@ -5434,56 +5434,46 @@ s32 dScMgSmartball_c::InitResources() {
     return 1;
 }
 
-/* Kept (#821): AfterCleanupResources needs strength reduction off; without
- * it the body is 0x3f8, not 0x3d8. */
-#pragma push
-#pragma opt_strength_reduction off
 /* Slot 5: frees every board object, then chains to the base. */
 void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
     if (vfSuccess != 2)
         return;
 
     for (int i = 0; i < 13; i++) {
-        cMgSmartball_ball_c **slot =
-            (cMgSmartball_ball_c **)SlotAddress(this, OFFSET_OF(dScMgSmartball_c, mpBalls), i, 4);
-        cMgSmartball_ball_c *object = *slot;
+        cMgSmartball_ball_c *object = mpBalls[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_ball_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpBalls[i] = 0;
         }
     }
     mBallCount = 0;
 
     for (int i = 0; i < 25; i++) {
-        cMgSmartball_kinoko_c **slot = (cMgSmartball_kinoko_c **)SlotAddress(
-            this, OFFSET_OF(dScMgSmartball_c, mpKinokos), i, 4);
-        cMgSmartball_kinoko_c *object = *slot;
+        cMgSmartball_kinoko_c *object = mpKinokos[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_kinoko_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpKinokos[i] = 0;
         }
     }
     mKinokoCount = 0;
 
     for (int i = 0; i < 8; i++) {
-        cMgSmartball_ana_c **slot =
-            (cMgSmartball_ana_c **)SlotAddress(this, OFFSET_OF(dScMgSmartball_c, mpAnas), i, 4);
-        cMgSmartball_ana_c *object = *slot;
+        cMgSmartball_ana_c *object = mpAnas[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_ana_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpAnas[i] = 0;
         }
     }
     mAnaCount = 0;
@@ -5501,60 +5491,52 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
     }
 
     for (int i = 0; i < 3; i++) {
-        cMgSmartball_propeller_c **slot = (cMgSmartball_propeller_c **)SlotAddress(
-            this, OFFSET_OF(dScMgSmartball_c, mpPropellers), i, 4);
-        cMgSmartball_propeller_c *object = *slot;
+        cMgSmartball_propeller_c *object = mpPropellers[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_propeller_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpPropellers[i] = 0;
         }
     }
 
     for (int i = 0; i < 6; i++) {
-        cMgSmartball_dokan_c **slot =
-            (cMgSmartball_dokan_c **)SlotAddress(this, OFFSET_OF(dScMgSmartball_c, mpDokans), i, 4);
-        cMgSmartball_dokan_c *object = *slot;
+        cMgSmartball_dokan_c *object = mpDokans[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_dokan_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpDokans[i] = 0;
         }
     }
     mDokanCount = 0;
 
     for (int i = 0; i < 3; i++) {
-        cMgSmartball_pakkun_c **slot = (cMgSmartball_pakkun_c **)SlotAddress(
-            this, OFFSET_OF(dScMgSmartball_c, mpPakkuns), i, 4);
-        cMgSmartball_pakkun_c *object = *slot;
+        cMgSmartball_pakkun_c *object = mpPakkuns[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_pakkun_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpPakkuns[i] = 0;
         }
     }
     mPakkunCount = 0;
 
     for (int i = 0; i < 2; i++) {
-        cMgSmartball_pushswitch_c **slot = (cMgSmartball_pushswitch_c **)SlotAddress(
-            this, OFFSET_OF(dScMgSmartball_c, mpPushSwitches), i, 4);
-        cMgSmartball_pushswitch_c *object = *slot;
+        cMgSmartball_pushswitch_c *object = mpPushSwitches[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_pushswitch_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpPushSwitches[i] = 0;
         }
     }
     mPushSwitchCount = 0;
@@ -5597,8 +5579,6 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
 
     dScMgBase_c::AfterCleanupResources(vfSuccess);
 }
-
-#pragma pop
 
 /* The scene factory and its empty particle-element constructor. */
 void SmartballObj_ElemCtor(void);
