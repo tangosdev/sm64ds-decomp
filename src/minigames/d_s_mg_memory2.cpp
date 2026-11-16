@@ -197,33 +197,39 @@ void dScMgMemory2_c::HideCursor() {
 void dScMgMemory2_c::PlayerWait(int /* player */) {}
 
 void dScMgMemory2_c::PlayerMove(int player) {
-    int targetX = (player << 4) + 0xc;
-    int targetY = -0x2c;
-    u16 *angle;
-    int dx;
-    int dy;
+    int targetX = player * 16 + 12;
+    int dx, dy;
+
     dx = targetX - (mPlayers[player].x >> 12);
-    dy = targetY - (mPlayers[player].y >> 12);
+    dy = -44 - (mPlayers[player].y >> 12);
+
     mPlayers[player].angle = cstd::atan2(dy, dx);
-    mPlayers[player].speed = mPlayers[player].speed + 0x200;
-    /* The index stays by hand here: through FX_CosIdx/FX_SinIdx, with or
-       without the angle pointer, the second product takes other registers
-       (17 words). */
-    angle = (u16 *)&mPlayers[player].angle;
-    mPlayers[player].x = mPlayers[player].x +
-                         FX_MUL(FX_SinCosTable_[((*angle >> 4) << 1) + 1], mPlayers[player].speed);
-    mPlayers[player].y =
-        mPlayers[player].y + FX_MUL(FX_SinCosTable_[(*angle >> 4) << 1], mPlayers[player].speed);
+
+    mPlayers[player].speed += 0x200;
+
+    {
+        fx16 c = FX_CosIdx((u16)mPlayers[player].angle >> 4);
+        mPlayers[player].x += FX_MUL(c, mPlayers[player].speed);
+    }
+    {
+        fx16 s = FX_SinIdx((u16)mPlayers[player].angle >> 4);
+        mPlayers[player].y += FX_MUL(s, mPlayers[player].speed);
+    }
+
     dx = targetX - (mPlayers[player].x >> 12);
-    dy = targetY - (mPlayers[player].y >> 12);
-    if (dx < -3 || dx > 3) {
+    dy = -44 - (mPlayers[player].y >> 12);
+
+    if (dx < -3)
         return;
-    }
-    if (dy < -3 || dy > 3) {
+    if (dx > 3)
         return;
-    }
+    if (dy < -3)
+        return;
+    if (dy > 3)
+        return;
+
     mPlayers[player].x = targetX << 12;
-    mPlayers[player].y = targetY << 12;
+    mPlayers[player].y = -0x2c000;
     mPlayers[player].state = PLAYER_WAIT;
 }
 
@@ -930,16 +936,14 @@ void dScMgMemory2_c::ChoosePreviewCards() {
     int previewCount = sMemory2PreviewCountPerDifficulty[difficulty];
     int cardCount = sMemory2PreviewTimePerDifficulty[difficulty];
     int previewIndex;
-    int zero = 0;
     for (previewIndex = 0; previewIndex < previewCount; previewIndex++) {
-        int cardIndex;
-        cardIndex = MG_RAND(cardCount);
+        int cardIndex = MG_RAND(cardCount);
         if (previewIndex != 0) {
             int duplicate;
             int previousIndex;
             do {
-                duplicate = zero;
-                for (previousIndex = zero; previousIndex < previewIndex; previousIndex++) {
+                duplicate = 0;
+                for (previousIndex = 0; previousIndex < previewIndex; previousIndex++) {
                     if (cardIndex == mPreviewCards[previousIndex]) {
                         duplicate++;
                         break;

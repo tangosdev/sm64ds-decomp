@@ -727,13 +727,8 @@ void dScMgHanachan_c::Wiggler::StateMoveA() {
         }
         return;
     }
-    {
-        int z = 0;
-        int n = 0x10000;
-        n = -n;
-        va[0] = z;
-        va[1] = n;
-    }
+    va[0] = 0;
+    va[1] = -0x10000;
     tgt = aim - 0x1000;
     ApproachLinear(ang[0], tgt, 0x400);
     func_0203d388(va, ang[0]);
@@ -799,13 +794,8 @@ void dScMgHanachan_c::Wiggler::StateMoveB() {
         state = sub;
         return;
     }
-    {
-        int z = 0;
-        int n = 0x10000;
-        n = -n;
-        va[0] = z;
-        va[1] = n;
-    }
+    va[0] = 0;
+    va[1] = -0x10000;
     tgt = aim - 0x1000;
     ApproachLinear(ang[0], tgt, 0x400);
     func_0203d388(va, ang[0]);
@@ -1175,7 +1165,6 @@ void dScMgHanachan_c::Wiggler::StepSegmentsB() {
     int segmentIndex = 4;
     Vector2 *segment = &seg[segmentIndex];
     int baseSpacing = 0x8000;
-    s16 zero = 0;
     int previousIndex;
 
     for (; segmentIndex >= 1; segmentIndex--) {
@@ -1189,7 +1178,7 @@ void dScMgHanachan_c::Wiggler::StepSegmentsB() {
             }
             offsetAngle = cstd::atan2(segmentOffset.x, segmentOffset.y);
             previousAngle = ang[previousIndex];
-            bendExcess = zero;
+            bendExcess = 0;
             targetAngle = (s16)(-offsetAngle);
             angleDifference = (s16)(previousAngle - (s16)(-offsetAngle));
             if (angleDifference > 0x2000) {
