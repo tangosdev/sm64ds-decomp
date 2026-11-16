@@ -142,7 +142,7 @@ int daSoundObj_c::InitResources()
             break;
         if (actor != this) {
             actor->MarkForDestruction();
-            Sound::PlaySub(current, 0x7f, 0, 0x7f000, 0);
+            Sound::PlaySub(current, 127, 0, 0x7f000, 0);
         }
     }
 
@@ -155,10 +155,10 @@ int daSoundObj_c::Behavior()
 {
     SoundObjectCallbackOwner *owner = (SoundObjectCallbackOwner *)this;
     int done = (owner->*data_ov002_0211110c[param1])(&mCounter);
-    if (done != 0 || mSoundID != gSubSoundID || (mCounter > 0xa && gSubVolume <= 0x7f)) {
+    if (done != 0 || mSoundID != gSubSoundID || (mCounter > 10 && gSubVolume <= 127)) {
         MarkForDestruction();
         if (gSubSoundID != 0x22) {
-            Sound::PlaySub(gSubSoundID, 0x7f, 0, 0x7f000, 0);
+            Sound::PlaySub(gSubSoundID, 127, 0, 0x7f000, 0);
         }
     }
     if (param1 != 6) {
@@ -178,11 +178,11 @@ int func_ov002_020f9468(daSoundObj_c *self, u16 *counter) {
     /* The starter shape PlaySecretSound, PlaySmallSecretSound and
        func_0200f7f0 share: the pool fallback is an else-if, so the
        steady-state branch falls through to the one `return 0`. */
-    if (*counter < self->mCounterLimit - 0xf) {
+    if (*counter < self->mCounterLimit - 15) {
         int vol = self->mVolume;
-        Sound::PlaySub(self->mSoundID, vol, 0x7f, (0x7f - vol) << 0xc, *(bool *)&self->mLoop);
+        Sound::PlaySub(self->mSoundID, vol, 127, (127 - vol) << 12, *(bool *)&self->mLoop);
         *counter += 1;
-    } else if (Sound::PlaySub(self->mSoundID, 0x7f, 0, kPoolDist, *(bool *)&self->mLoop)) {
+    } else if (Sound::PlaySub(self->mSoundID, 127, 0, kPoolDist, *(bool *)&self->mLoop)) {
         return 1;
     }
     return 0;
@@ -191,11 +191,11 @@ int func_ov002_020f9468(daSoundObj_c *self, u16 *counter) {
 int func_ov002_020f93a8(daSoundObj_c *self, u16 *counter) {
     if (counter[0] < self->mCounterLimit) {
         int vol = self->mVolume;
-        if (Sound::PlaySub(self->mSoundID, vol, 0x7f, ((0x7f - vol) << 12) / 5, 1) != 0)
+        if (Sound::PlaySub(self->mSoundID, vol, 127, ((127 - vol) << 12) / 5, 1) != 0)
             self->mCounterLimit = 1;
         counter[0]++;
     } else if (self->mCounterLimit == 0) {
-        if (Sound::PlaySub(self->mSoundID, 0x7f, 0, 0xcb33, 1) != 0)
+        if (Sound::PlaySub(self->mSoundID, 127, 0, 0xcb33, 1) != 0)
             return 1;
     }
     return 0;

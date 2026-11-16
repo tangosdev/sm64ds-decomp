@@ -99,7 +99,7 @@ int WM_GetMPSendBufferSize(void) {
     DC_InvalidateRange(&(p->status->mp_maxSendSize), 4);
     maxSendSize = p->status->mp_maxSendSize;
 
-    return ((maxSendSize + 31) & ~0x1f);
+    return ((maxSendSize + 0x1f) & ~0x1f);
 }
 
 /* The receive buffer WM_StartMPEx needs: a parent's holds one block per
@@ -129,11 +129,11 @@ int WM_GetMPReceiveBufferSize(void) {
         DC_InvalidateRange(&(p->status->pparam.maxEntry), 2);
         maxEntry = p->status->pparam.maxEntry;
         return (int)((sizeof(WMMpRecvHeader) - sizeof(WMMpRecvData) +
-                      ((sizeof(WMMpRecvData) + maxReceiveSize - 2 + 2) * maxEntry) + 31) &
+                      ((sizeof(WMMpRecvData) + maxReceiveSize - 2 + 2) * maxEntry) + 0x1f) &
                      ~0x1f) *
                2;
     } else {
-        return (int)((sizeof(WMMpRecvBuf) + maxReceiveSize - 4 + 31) & ~0x1f) * 2;
+        return (int)((sizeof(WMMpRecvBuf) + maxReceiveSize - 4 + 0x1f) & ~0x1f) * 2;
     }
 }
 

@@ -11,5 +11,5 @@ void func_ov007_020c93c4(int t, Ov007PaletteBuf *from, Ov007PaletteBuf *to, Ov00
     do {
         out->colors[i] = func_ov007_020c3be0(t, fromColors[i], toColors[i]);
         i++;
-    } while (i < 0x20);
+    } while (i < 32);
 }

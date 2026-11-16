@@ -10,7 +10,6 @@
  * regardless.
  */
 struct daSCre_c : dActor_c {
-    u8 pad_0d0[0x4];       /* 0x0d0 unused */
 
     virtual ~daSCre_c() {}
     virtual s32 Behavior();

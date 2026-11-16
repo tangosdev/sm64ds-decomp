@@ -9,11 +9,10 @@
  *
  * ROM-proven class identity: _ZTI19daObjKb1Billboard_c and
  * _ZTS19daObjKb1Billboard_c at ov044:0x021115bc/0x021115c8. Direct dActor_c
- * subclass. Factory allocates 0x124: dActor_c 0xd0, four-byte gap, dExtSimpleModel_c at
- * 0xd4.
+ * subclass. Factory allocates 0x124: the 0xd4-byte dActor_c, then
+ * dExtSimpleModel_c at 0xd4.
  */
 struct daObjKb1Billboard_c : dActor_c {
-    u8    pad_0d0[0x4];
     dExtSimpleModel_c mModel; /* 0x0d4 */
 
     /* InitResources is the first out-of-line virtual/key function. The inline

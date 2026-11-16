@@ -36,8 +36,6 @@
  *   same shape as InitResources (this-based, stores at +0x3a4 /
  *   +0x104 / +0xf8). Those two spellings together were 0x454 against
  *   0x470.
- * - InitResources: dCcPos_c::Init with by-value Fix12<int> was 0x18c
- *   against 0x174. The call is the scalar fx32 method.
  */
 
 #include "daObjFlamethrower_c.h"
@@ -55,15 +53,15 @@ enum {
     kBigBoosHaunt = 0xc,
     kSegments = 12,
     kBbhSegments = 9,
-    kPhaseFrames = 0x3c,
+    kPhaseFrames = 60,
     kAltParam = 0xff,
     kOffScreen = 8,
     kPlayerActorId = 0xbf,
     kFlameSound = 0x180,
     kClsnFlags = 0x200002,
     kParticleLift = 0x32000,
-    kRadiusMul = 0x14,
-    kHeightMul = 0x28
+    kRadiusMul = 20,
+    kHeightMul = 40
 };
 
 extern signed char gCurrentSublevel;

@@ -7,6 +7,6 @@ void SPLAnim_ChildScale(ParticleElement *ptcl, PtclDef *def, int lifeRate) {
     int endScale;
     int delta;
     endScale = def->child->endScale;
-    delta = (endScale - 0x1000) * (lifeRate - 0xff) / 255;
+    delta = (endScale - 0x1000) * (lifeRate - 255) / 255;
     ptcl->animScale = endScale + delta;
 }

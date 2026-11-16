@@ -16,13 +16,6 @@
    declared below differ from dActor_c. */
 
 struct daGmch_c : dActor_c {
-    /* The actor whose position this one copies while mFlags bit 0x40000 (one
-       of dActor_c's yoshi-mouth states) is set.  EnterState7 reads its
-       mHorzSpeed, mAngleY and position, then clears the pointer.  A dActor_c
-       because those are the only fields ever read through it; that it is in
-       fact the player is not asserted here.
-       [UpdateState6, EnterState7] */
-    dActor_c *mHolder;                       /* 0x0d0 */
     dExtAnmModel_c mAnmModel;                /* 0x0d4 */
     dExtSimpleModel_c mModel;                /* 0x138 */
     dExtShadowModel_c mShadowModel;                /* 0x188 */

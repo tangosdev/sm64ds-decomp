@@ -11,10 +11,8 @@
  */
 
 // What stays, and why (each measured; simplifying changes the emitted bytes):
-// dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange are
-// header member calls whose headers take Fix12 as the scalar fx32, a plain s32
-// (6az). dBgW::SetStoodOnCallback / dBgW::GetStoodOnCallback
-// store/load dBgW+0x1c -- the ROM's own call, not an inlineable assignment.
+// dBgW::SetStoodOnCallback / dBgW::GetStoodOnCallback store/load dBgW+0x1c --
+// the ROM's own call, not an inlineable assignment.
 // common.h first: UpdateShadow writes mShadowMat.m[9..11] on the flat 12-word
 // spelling. InitResources keeps its two-store animationFiles[2] stack array,
 // the variant reloads, MoveActorOnBelt's &mPosX-derived pointer chain and flat
@@ -196,7 +194,7 @@ int daObjCtMecha04_c::Behavior() {
                     unsigned int randomValue =
                         (u16)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16);
                     /* New direction, held for 0xa + 0x14 * (0..6) ticks. */
-                    mDirectionTimer = (s16)(((int)randomValue % 7) * 0x14 + 0xa);
+                    mDirectionTimer = (s16)(((int)randomValue % 7) * 20 + 10);
                     if (randomValue >= 0x7fff) {
                         mTargetBeltSpeed = 0x1000;
                     } else {
@@ -235,9 +233,7 @@ int daObjCtMecha04_c::CleanupResources() {
     return 1;
 }
 
-/* Inferred descriptive name. DropShadowScaleXYZ's three sizes are fx32
- * (a plain s32); Fix12<int> by value homes arguments absent from the
- * cartridge (6az). */
+/* Inferred descriptive name. DropShadowScaleXYZ's three sizes are fx32. */
 void daObjCtMecha04_c::UpdateShadow() {
     int heightDiff = mPosY - mGroundY;
     int absHeightDiff = heightDiff < 0 ? -heightDiff : heightDiff;

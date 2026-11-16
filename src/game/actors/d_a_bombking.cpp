@@ -20,7 +20,6 @@
  * are this TU's statics; mwcc emits their initializer,
  * __sinit_d_a_bombking.cpp (0x02126660). The records keep their
  * data_ov078_* address names, as their handlers keep func_ov078_*.
- * Sound::ChangeMusicVolume keeps its mangled decl (Fix12<int> by value, S13 wall); the Layer3 pair stays on decl_common.h / the local mangled decl because Sound.h declares only Layer1/Layer2.
  */
 
 /* common.h FIRST: daBombking_c.h reaches math/Matrix.h through dExtBlendAnmModel_c.h,
@@ -50,7 +49,7 @@ s16 atan2(s32, s32);
 }
 
 /* Remaining reconstruction views. Reconciled by hand against include/: every type
- * the real headers already define (Vector3, Matrix4x3, Fix12<int>, u8/u16/s16,
+ * the real headers already define (Vector3, Matrix4x3, u8/u16/s16,
  * dActor_c, fBase_c, daPly_c, BMD_File, dExtBlendAnmModel_c) was DROPPED here -- the
  * generated preamble redefined all of them. The shapes below are surviving
  * views from the legacy shards, not evidence of original local classes. */
@@ -251,7 +250,7 @@ int daBombking_c::TickDefeated() {
 int daBombking_c::EnterDefeated() {
     this->mAnimSpeed = 2;
     this->mHorzSpeed = 0;
-    this->mStateTimer = 0x32;
+    this->mStateTimer = 50;
     DetonateSpawnedBombs();
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingDamageAnimationFile.filePtr, 0, 0, 0x1000,
                                  0);
@@ -287,9 +286,6 @@ int daBombking_c::TickWalkHome() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* This caller retains the reconstructed SetAnim ABI declaration above.
-   The callee's Fix12 definition experiment in notes/mwccarm-codegen.md 6az
-   does not establish that a typed call here would fail to match. */
 int daBombking_c::EnterWalkHome() {
     this->mVertAccel = -0x2000;
     this->mAnimSpeed = 2;
@@ -368,11 +364,11 @@ int daBombking_c::TickCarryPlayer() {
     if (Vec3_Dist(&this->mPos, &v) > 0x1e000) {
         if (this->mSoundCooldown == 0) {
             func_02012694(0x12d, &this->mCamSpacePos);
-            this->mSoundCooldown = 0xf;
+            this->mSoundCooldown = 15;
         }
     } else {
         if (this->mSoundCooldown == 0) {
-            this->mSoundCooldown = 0x14;
+            this->mSoundCooldown = 20;
             func_02012694(0x12f, &this->mCamSpacePos);
         }
     }
@@ -386,7 +382,7 @@ int daBombking_c::TickCarryPlayer() {
 int daBombking_c::EnterCarryPlayer() {
     mVertAccel = -0x2000;
     mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingWalk2AnimationFile.filePtr, 0, 0, 0x1000, 0);
-    mStateTimer = 0x32;
+    mStateTimer = 50;
     mHorzSpeed = 0xa000;
     return 1;
 }
@@ -526,7 +522,7 @@ int daBombking_c::TickKnockback() {
 int daBombking_c::EnterKnockback() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingDamageAnimationFile.filePtr, 0, 0, 0x1000,
                                  0);
-    this->mStateTimer = 0xc8;
+    this->mStateTimer = 200;
     this->mTargetAngY = Vec3_HorzAngle(&this->mPos, &this->mArenaPos);
     this->mHealth -= 1;
     this->mActionStep = 0;
@@ -554,7 +550,7 @@ int daBombking_c::TickDamaged() {
 int daBombking_c::EnterDamaged() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingDamageAnimationFile.filePtr, 0, 0, 0x1000,
                                  0);
-    this->mStateTimer = 0x32;
+    this->mStateTimer = 50;
     return 1;
 }
 
@@ -1000,7 +996,7 @@ int daBombking_c::TickThrowBomb() {
         player = this->ClosestPlayer();
         if (player != 0) {
             if (player->param1 != 3) {
-                this->mThrowCooldown = 0x64;
+                this->mThrowCooldown = 100;
             }
         }
         KingBobOmb_SetState(&data_ov078_0212703c);
@@ -1051,7 +1047,7 @@ int daBombking_c::TickChase() {
 
     if (this->mSoundCooldown == 0) {
         func_02012694(0x12d, &this->mCamSpacePos);
-        this->mSoundCooldown = 0xf;
+        this->mSoundCooldown = 15;
     }
     if (CheckKnockbackHit() == 1) {
         DetonateSpawnedBombs();
@@ -1233,7 +1229,7 @@ int daBombking_c::TickInactive() {
     if (this->mMusicLayer3 == 1) {
         unsigned char *p = &this->mMusicLayer3Timer;
         *p += 1;
-        if (this->mMusicLayer3Timer > 0xc8) {
+        if (this->mMusicLayer3Timer > 200) {
             this->mFlags = 0x10000003;
             this->mMusicLayer3 = 0;
             this->mMusicLayer3Timer = 0;

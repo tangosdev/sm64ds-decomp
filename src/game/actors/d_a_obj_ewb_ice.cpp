@@ -118,10 +118,10 @@ enum {
     ACTOR_KING_DONKETU = 0xda,
 
     kReportFrames = 3,
-    kArenaFrames = 0x64,
-    kSinkFrames = 0x190,
-    kSinkQuietBelow = 0x18d,
-    kSinkSoundAt = 0x183,
+    kArenaFrames = 100,
+    kSinkFrames = 400,
+    kSinkQuietBelow = 397,
+    kSinkSoundAt = 387,
 
     kWobbleAmp = 0x400,
     kWobbleStep = 0x800,

@@ -47,7 +47,6 @@ typedef char DaJgmStateHandlers_size_must_be_0x10[
  *   `int` signedness is not distinguishable.
  */
 struct daJgm_c : dActor_c {
-    dActor_c                 *mCarryActor;          /* 0x0d0 */
     dExtAnmModel_c mAnmModel;                       /* 0x0d4 */
     dExtSimpleModel_c mModel;                       /* 0x138 */
     dExtShadowModel_c               mShadowModel;          /* 0x188 */

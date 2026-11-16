@@ -125,7 +125,7 @@ int daObjSm_Lift_c::Behavior() {
         if (mNodeStep > 0 && mNodeIndex == 1) {
             if (Vec3_HorzDist(&mPos, (Vector3 *)&mBasePosX) < 0x10000) {
                 mMoving = 0;
-                mPauseTimer = 0x3c;
+                mPauseTimer = 60;
             }
         }
         target = 0;
@@ -181,7 +181,7 @@ int daObjSm_Lift_c::Behavior() {
                 if (path.Loops() != 0) {
                     mNodeIndex = mNodeCount - 1;
                 } else {
-                    mPauseTimer = 0x3c;
+                    mPauseTimer = 60;
                     mMoving = 0;
                     mNodeStep = 1;
                     int *pIdx2 = &mNodeIndex;
@@ -192,7 +192,7 @@ int daObjSm_Lift_c::Behavior() {
                 if (path.Loops() != 0) {
                     mNodeIndex = 0;
                 } else {
-                    mPauseTimer = 0x3c;
+                    mPauseTimer = 60;
                     mMoving = 0;
                     mNodeStep = -1;
                     int *pIdx3 = &mNodeIndex;
@@ -225,7 +225,7 @@ s32 daObjSm_Lift_c::InitResources() {
     mMeshCollider.SetFile(kf, mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)data_ov018_02112f48);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
-    mPauseTimer = 0x3c;
+    mPauseTimer = 60;
     mBasePosX = mPosX;
     mBasePosY = mPosY;
     mBasePosZ = mPosZ;

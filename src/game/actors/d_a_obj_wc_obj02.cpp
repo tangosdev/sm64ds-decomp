@@ -127,7 +127,7 @@ int daObjWc_Obj02_c::Behavior() {
         break;
     case 2:
     case 4:
-        if (mStateTimer >= 0x3c) {
+        if (mStateTimer >= 60) {
             mPrevAngleY += 0x8000;
             if (mState == 4) {
                 mState = 0;

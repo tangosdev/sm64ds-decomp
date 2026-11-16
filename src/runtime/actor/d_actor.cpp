@@ -927,7 +927,7 @@ s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
     }
 
     s8 slot;
-    for (slot = 0; slot < 0xc; slot++) {
+    for (slot = 0; slot < 12; slot++) {
         if (STAR_MARKERS[slot] == 0) {
             SetStarMarker(slot, this, type);
             return slot;
@@ -1163,7 +1163,7 @@ static const int kPoolDist = 0x8777;
 namespace Sound {
 
 int PlaySecretSound(dActor_c *actor, u16 *counter) {
-    if (*counter < 0x4b) {
+    if (*counter < 75) {
         Sound::PlaySub(0x20, 0x14, 0x7f, 0x6b000, 0);
         *counter += 1;
     } else if (Sound::PlaySub(0x20, 0x7f, 0, kPoolDist, 0)) {
@@ -1176,7 +1176,7 @@ int PlaySecretSound(dActor_c *actor, u16 *counter) {
 namespace Sound {
 
 int PlaySmallSecretSound(dActor_c *actor, u16 *counter) {
-    if (*counter < 0x19) {
+    if (*counter < 25) {
         Sound::PlaySub(0x29, 0x14, 0x7f, 0x6b000, 0);
         *counter += 1;
     } else if (Sound::PlaySub(0x29, 0x7f, 0, kPoolDist, 0)) {
@@ -1187,7 +1187,7 @@ int PlaySmallSecretSound(dActor_c *actor, u16 *counter) {
 }
 
 int func_0200f7f0(dActor_c *actor, u16 *counter) {
-    if (*counter < 0x69) {
+    if (*counter < 105) {
         Sound::PlaySub(0x21, 0x14, 0x7f, 0x6b000, 0);
         *counter += 1;
     } else if (Sound::PlaySub(0x21, 0x7f, 0, kPoolDist, 0)) {

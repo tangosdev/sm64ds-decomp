@@ -5,11 +5,11 @@ extern char data_0209ee90[];
    the minigame scene call it while setting up their screens). No reader of
    the byte is in src/ yet. func_020233f0 is empty; func_0201a054 calls it. */
 void func_02023408(void) {
-    data_0209ee90[837] = 1;
+    data_0209ee90[0x345] = 1;
 }
 
 void func_020233f4(void) {
-    data_0209ee90[837] = 0;
+    data_0209ee90[0x345] = 0;
 }
 
 void func_020233f0(void) {}

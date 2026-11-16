@@ -73,11 +73,11 @@ int myFS_OpenFile(FSFile *p_file, const char *path) {
 }
 
 int myFS_ReadFile(FSFile *p_file, void *dst, int len) {
-    char buf[0x100];
+    char buf[256];
     int r = FS_ReadFile(p_file, dst, len);
     if (r != len) {
         func_02018e68(&data_0208eb9c);
-        FS_GetPathName(p_file, buf, 0x100);
+        FS_GetPathName(p_file, buf, 256);
         OS_Terminate();
     }
     return r;

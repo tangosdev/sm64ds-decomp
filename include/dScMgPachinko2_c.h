@@ -18,7 +18,7 @@
    release, aims it at (0x80, 0x20): angle = atan2, speed from the distance,
    vx/vy from the sine table. */
 struct dScMgPachinko2_Ball {
-    s32 x;          /* +0x00 -- Fix12 */
+    s32 x;          /* +0x00 -- fx32 */
     s32 y;          /* +0x04 */
     s32 vx;         /* +0x08 */
     s32 vy;         /* +0x0c */
@@ -62,7 +62,7 @@ typedef char
    sPachinko2PaddleStateTable; Paddle_Hit parks the current motion in
    home/saved* and later states restore it. */
 struct dScMgPachinko2_Paddle {
-    s32 x;          /* +0x00 -- Fix12 */
+    s32 x;          /* +0x00 -- fx32 */
     s32 y;          /* +0x04 */
     s32 vx;         /* +0x08 */
     s32 vy;         /* +0x0c */
@@ -127,7 +127,7 @@ struct dScMgPachinko2_ScorePop {
 
 /* One of the two cups. State 0..4 dispatches through sPachinko2CupStateTable. */
 struct dScMgPachinko2_Cup {
-    s32 x;  /* +0x00 -- Fix12 */
+    s32 x;  /* +0x00 -- fx32 */
     s32 y;  /* +0x04 */
     s32 vx; /* +0x08 */
     s32 vy; /* +0x0c -- the y twin of vx, as in the twin scene's pipe

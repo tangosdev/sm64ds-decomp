@@ -31,7 +31,7 @@ L50:
 	mov	r8, #3
 	add	r5, r8, r9, asr #4
 	ldrb	r9, [r0], #1
-	and	r8, r9, #0xf
+	and	r8, r9, #15
 	mov	r4, r8, lsl #8
 	ldrb	r9, [r0], #1
 	orr	r8, r9, r4

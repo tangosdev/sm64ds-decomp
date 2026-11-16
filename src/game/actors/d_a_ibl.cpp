@@ -16,8 +16,6 @@
  * - The eight helpers' names (CheckContact through SpawnerBehavior) are
  *   coined from their bodies and gIblKindHandlers' kind order, not
  *   recovered.
- * - daPly_c::Hurt stays mangled: it takes Fix12<int> by value. The local
- *   Hurt declaration agrees with the current scalar definition.
  * - The spawner copies daPly_c position through a byte view of the whole object
  *   into a real Vector3. The inherited position fields remain separate scalars.
  * - Spawn still borrows this actor's flat position and angle fields through
@@ -642,9 +640,9 @@ void daIbl_c::SpawnerBehavior() {
 
     if (gCurrentSublevel == 0x16) {
         if (pos.y < (int)0xff63c000) return;
-        mStateTimer = 0x3f;
+        mStateTimer = 63;
     } else {
-        mStateTimer = 0x7f;
+        mStateTimer = 127;
     }
 
     {

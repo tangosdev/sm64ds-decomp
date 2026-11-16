@@ -93,7 +93,7 @@ void dPa_c::level_c::scaleCallback_c::SpawnParticles(Particle::System& system)
     system.callbackScale = scale;
     system.callbackVelocity = velocity;
     simpleCallback_c::SpawnParticles(system);
-    timer = 0x10;
+    timer = 16;
 }
 
 int dPa_c::level_c::scaleCallback_c::OnUpdate(Particle::System& system,
@@ -203,7 +203,7 @@ dPa_c::level_c::edStarKiraCallback_c::edStarKiraCallback_c()
         func_0204dc84((char *)record);
         ++i;
         ++record;
-    } while (i < 0x40);
+    } while (i < 64);
 
     unk308 = 0x1000;
     unk30c = 0x200;

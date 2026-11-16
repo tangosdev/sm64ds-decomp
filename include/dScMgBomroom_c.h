@@ -10,13 +10,13 @@
  * MgSortOrSplode_Spawn) installs its vtable for the MG_BOMROOM profile.
  */
 /* One bomb: 0x70 records at +0x4660, stride 0x40. grabX/grabY are the
-   stylus offset at the grab; speed is the Fix12 step along angle. */
+   stylus offset at the grab; speed is the fx32 step along angle. */
 struct dScMgBomroom_Bomb {
-    s32 x;          /* +0x00 -- Fix12 */
-    s32 y;          /* +0x04 -- Fix12 */
-    s32 grabX;      /* +0x08 -- stylus x minus bomb x, Fix12 */
-    s32 grabY;      /* +0x0c -- stylus y minus bomb y, Fix12 */
-    s32 speed;      /* +0x10 -- Fix12 per-frame step; scaled by sin/cos of
+    s32 x;          /* +0x00 -- fx32 */
+    s32 y;          /* +0x04 -- fx32 */
+    s32 grabX;      /* +0x08 -- stylus x minus bomb x, fx32 */
+    s32 grabY;      /* +0x0c -- stylus y minus bomb y, fx32 */
+    s32 speed;      /* +0x10 -- fx32 per-frame step; scaled by sin/cos of
                        angle while roaming, added directly when
                        walking to its slot */
     s32 unk_14;     /* +0x14 */
@@ -48,8 +48,8 @@ struct dScMgBomroom_Bomb {
    +0x6260 and +0x62cf, and +0x0c/+0x0d are always the PMF-table index and
    the dispatch gate. */
 struct dScMgBomroom_Slot {
-    s32 x;            /* +0x00 -- Fix12 */
-    s32 y;            /* +0x04 -- Fix12 */
+    s32 x;            /* +0x00 -- fx32 */
+    s32 y;            /* +0x04 -- fx32 */
     u16 timer;        /* +0x08 -- frame counter, see Marker_UpdateAll/020d61dc */
     u8  unk_0a[0x2];
     u8  state;        /* +0x0c -- PMF-table index (markers: animating flag) */
@@ -164,7 +164,7 @@ struct dScMgBomroom_c : dScMgBase_c {
     s32 mSceneState;    /* 0x62d0 -- round state; 3 once a picked bomb has gone off */
     s32 mSubState;      /* 0x62d4 -- index into the sBomroomRoundEndTable {fptr,adj} pairs */
     s32 mSpawnCount;    /* 0x62d8 -- bombs dropped so far; picks the spawn step */
-    s32 mBg2Y;          /* 0x62dc -- BG2 scroll offset, Fix12 */
+    s32 mBg2Y;          /* 0x62dc -- BG2 scroll offset, fx32 */
     u16 mTallyDelay;    /* 0x62e0 -- 0x10 frames between mStateTimer and the tally */
     u16 mSpawnDelay;    /* 0x62e2 -- frames until the next spawn step */
     u16 unk_62e4;       /* 0x62e4 */

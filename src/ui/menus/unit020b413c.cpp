@@ -431,7 +431,7 @@ extern "C" Ov007ItemView *ItemView_Create(int id) {
             view->item->hitBox = &data_ov007_020d76c0[hitBoxIndex - 1];
             view->item->layout = &data_ov007_020d7680[id];
             if (id != 0) {
-                sprite->width = 0x48;
+                sprite->width = 72;
             } else {
                 sprite->depth += 0xc;
             }
@@ -459,14 +459,14 @@ extern "C" Ov007ItemView *ItemView_Create(int id) {
                 sprite->frames[0] = WORK->textures[7];
                 sprite->texS = 0;
                 sprite->texT = 0;
-                sprite->width = 0x50;
+                sprite->width = 80;
                 view->item->hitBox = &data_ov007_020d7658;
                 break;
             case 4:
                 sprite->frames[0] = WORK->textures[7];
                 sprite->texS = 0x50;
                 sprite->texT = 0;
-                sprite->width = 0x60;
+                sprite->width = 96;
                 view->item->hitBox = &data_ov007_020d766c;
                 break;
             }

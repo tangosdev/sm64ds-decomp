@@ -80,7 +80,7 @@ s32 daObjRc_Tikuwa_c::Behavior() {
             mClsnTimer += 1;
             mHadClsn = 0;
         }
-        if (mClsnTimer >= 0xf)
+        if (mClsnTimer >= 15)
             mState = 1;
         break;
     case 1:

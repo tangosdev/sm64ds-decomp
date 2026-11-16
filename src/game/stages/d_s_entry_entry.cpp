@@ -213,10 +213,10 @@ int EntryMesh::RippleHeight(int dist) {
     short phase;
     if (cnt == 0)
         return 0;
-    if (dist > (0x64 - cnt) * 0x18444)
+    if (dist > (100 - cnt) * 0x18444)
         return 0;
     phase = RipplePhase(dist);
-    amp = RippleAmplitude(0x64 - mRippleTimer);
+    amp = RippleAmplitude(100 - mRippleTimer);
     slope = FX_Div(amp, 0x384000);
     v = FX_MUL((-slope), dist);
     r2 = amp + v;
@@ -376,8 +376,8 @@ int EntryMesh::Behavior() {
 /* Allocate a 20 x 20 grid, load its texture from the shared mesh file, run
  * the init handler (InitGrid) and place the mesh at pos, turned by angleY. */
 int EntryMesh::Init(const Vector3 *pos, int angleY) {
-    mGridDim[0] = 0x14;
-    mGridDim[1] = 0x14;
+    mGridDim[0] = 20;
+    mGridDim[1] = 20;
     mNumVertices = mGridDim[0] * mGridDim[1];
     mVertices = (EntryMeshVertex *)::operator new[](mNumVertices * sizeof(EntryMeshVertex));
     LoadTexture((BMD_File *)func_0201787c(&EntryMeshTextureFile));

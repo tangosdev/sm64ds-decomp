@@ -52,8 +52,8 @@ void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, int *pts, s16 a5, s16 a6
         dxdy = dx * dy;
         z0 = row;
         do {
-            curr = (int *)((char *)pts + rowIndex * 12);
-            nxt = (int *)((char *)pts + (rowIndex + w1) * 12);
+            curr = (int *)((char *)pts + rowIndex * 0xc);
+            nxt = (int *)((char *)pts + (rowIndex + w1) * 0xc);
             i = z0;
             if (w > 0) {
                 do {

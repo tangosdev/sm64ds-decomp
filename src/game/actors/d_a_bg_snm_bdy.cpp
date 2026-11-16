@@ -287,7 +287,7 @@ int daBgSnmBdy_c::State0()
 int daBgSnmBdy_c::InitState1()
 {
     mSubstate = 0;
-    mStateTimer = 0x15;
+    mStateTimer = 21;
     mStateValue = 1;
     return 1;
 }
