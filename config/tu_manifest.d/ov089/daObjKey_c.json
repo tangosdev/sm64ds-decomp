@@ -198,6 +198,20 @@
   ],
   "data": [
     {
+      "symbol": "data_ov089_02132894",
+      "address": "0x02132894",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight model handles indexed by key kind"
+    },
+    {
+      "symbol": "@708",
+      "address": "0x02132b00",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
+    },
+    {
       "symbol": "@700",
       "address": "0x02132b08",
       "size": "0x8",
@@ -212,13 +226,6 @@
       "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
     },
     {
-      "symbol": "@704",
-      "address": "0x02132b20",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
-    },
-    {
       "symbol": "@706",
       "address": "0x02132b18",
       "size": "0x8",
@@ -226,15 +233,15 @@
       "evidence": "compiler temporary pointer-to-member descriptor for the StateFlyToCenter slot; retail first word is 0x021311c0"
     },
     {
-      "symbol": "@708",
-      "address": "0x02132b00",
+      "symbol": "@704",
+      "address": "0x02132b20",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
     },
     {
-      "symbol": "@710",
-      "address": "0x02132b38",
+      "symbol": "@726",
+      "address": "0x02132b28",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
@@ -247,8 +254,8 @@
       "evidence": "compiler temporary pointer-to-member descriptor for the StateStarJump slot; retail first word is 0x0213162c"
     },
     {
-      "symbol": "@726",
-      "address": "0x02132b28",
+      "symbol": "@710",
+      "address": "0x02132b38",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
@@ -1029,6 +1036,176 @@
   ],
   "relocations": [
     {
+      "section": ".ctor",
+      "source": "0x02132af4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_obj_key.cpp",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x021328d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02132b00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daObjKey_c9StateDropEv",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02131b18"
+    },
+    {
+      "section": ".data",
+      "source": "0x02132b08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daObjKey_c9StateDropEv",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02131b18"
+    },
+    {
+      "section": ".data",
+      "source": "0x02132b10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daObjKey_c9StateDropEv",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02131b18"
+    },
+    {
+      "section": ".data",
+      "source": "0x02132b18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daObjKey_c16StateFlyToCenterEv",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x021311c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02132b20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daObjKey_c9StateDropEv",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02131b18"
+    },
+    {
+      "section": ".data",
+      "source": "0x02132b28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daObjKey_c9StateDropEv",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02131b18"
+    },
+    {
+      "section": ".data",
+      "source": "0x02132b30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daObjKey_c13StateStarJumpEv",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x0213162c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02132b38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daObjKey_c9StateDropEv",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02131b18"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x02132894",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov089_02132c50",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c50"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x02132898",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov089_02132c50",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c50"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x0213289c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMarioKeyModelFile",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c68"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x021328a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gLuigiKeyModelFile",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c78"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x021328a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gWarioKeyModelFile",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c58"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x021328a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_021305d8",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021305d8"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x021328ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_021305d8",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021305d8"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x021328b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0211094c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0211094c"
+    },
+    {
       "section": ".init",
       "source": "0x021328e4",
       "type": "R_ARM_PC24",
@@ -1459,94 +1636,74 @@
       "target_address": "0x02132b18"
     },
     {
-      "section": ".ctor",
-      "source": "0x02132af4",
+      "section": ".rodata.anims",
+      "source": "0x02132884",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_d_a_obj_key.cpp",
+      "symbol": "data_ov089_02132c60",
       "addend": 0,
       "target_module": "ov089",
-      "target_address": "0x021328d4"
+      "target_address": "0x02132c60"
     },
     {
-      "section": ".data",
-      "source": "0x02132b00",
+      "section": ".rodata.anims",
+      "source": "0x02132888",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daObjKey_c9StateDropEv",
+      "symbol": "data_ov089_02132c70",
       "addend": 0,
       "target_module": "ov089",
-      "target_address": "0x02131b18"
+      "target_address": "0x02132c70"
     },
     {
-      "section": ".data",
-      "source": "0x02132b08",
+      "section": ".rodata.anims",
+      "source": "0x0213288c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daObjKey_c9StateDropEv",
+      "symbol": "data_ov089_02132c40",
       "addend": 0,
       "target_module": "ov089",
-      "target_address": "0x02131b18"
+      "target_address": "0x02132c40"
     },
     {
-      "section": ".data",
-      "source": "0x02132b10",
+      "section": ".rodata.anims",
+      "source": "0x02132890",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daObjKey_c9StateDropEv",
+      "symbol": "data_ov089_02132c48",
       "addend": 0,
       "target_module": "ov089",
-      "target_address": "0x02131b18"
+      "target_address": "0x02132c48"
     },
     {
-      "section": ".data",
-      "source": "0x02132b18",
+      "section": ".rodata.extra",
+      "source": "0x021328bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daObjKey_c16StateFlyToCenterEv",
+      "symbol": "data_ov002_0210da40",
       "addend": 0,
-      "target_module": "ov089",
-      "target_address": "0x021311c0"
+      "target_module": "ov002",
+      "target_address": "0x0210da40"
     },
     {
-      "section": ".data",
-      "source": "0x02132b20",
+      "section": ".rodata.extra",
+      "source": "0x021328c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daObjKey_c9StateDropEv",
+      "symbol": "data_ov002_0210d9a0",
       "addend": 0,
-      "target_module": "ov089",
-      "target_address": "0x02131b18"
+      "target_module": "ov002",
+      "target_address": "0x0210d9a0"
     },
     {
-      "section": ".data",
-      "source": "0x02132b28",
+      "section": ".rodata.extra",
+      "source": "0x021328c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daObjKey_c9StateDropEv",
+      "symbol": "data_ov002_0210d9c0",
       "addend": 0,
-      "target_module": "ov089",
-      "target_address": "0x02131b18"
-    },
-    {
-      "section": ".data",
-      "source": "0x02132b30",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN10daObjKey_c13StateStarJumpEv",
-      "addend": 0,
-      "target_module": "ov089",
-      "target_address": "0x0213162c"
-    },
-    {
-      "section": ".data",
-      "source": "0x02132b38",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN10daObjKey_c9StateDropEv",
-      "addend": 0,
-      "target_module": "ov089",
-      "target_address": "0x02131b18"
+      "target_module": "ov002",
+      "target_address": "0x0210d9c0"
     }
   ,
     {

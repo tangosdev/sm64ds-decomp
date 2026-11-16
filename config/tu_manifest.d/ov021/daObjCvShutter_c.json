@@ -531,6 +531,46 @@
   ],
   "relocations": [
     {
+      "section": ".ctor",
+      "source": "0x0211373c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_obj_cv_shutter.cpp",
+      "addend": 0,
+      "target_module": "ov021",
+      "target_address": "0x021136c8"
+    },
+    {
+      "section": ".data.cvres",
+      "source": "0x021148d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gCvShutterModelFile",
+      "addend": 0,
+      "target_module": "ov021",
+      "target_address": "0x02114a6c"
+    },
+    {
+      "section": ".data.cvres",
+      "source": "0x021148d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gCvShutterCollisionFile",
+      "addend": 0,
+      "target_module": "ov021",
+      "target_address": "0x02114a64"
+    },
+    {
+      "section": ".data.cvres",
+      "source": "0x021148d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov021_02113a00",
+      "addend": 0,
+      "target_module": "ov021",
+      "target_address": "0x02113a00"
+    },
+    {
       "section": ".init",
       "source": "0x021136d8",
       "type": "R_ARM_PC24",
@@ -629,16 +669,6 @@
       "addend": 0,
       "target_module": "ov021",
       "target_address": "0x02114a80"
-    },
-    {
-      "section": ".ctor",
-      "source": "0x0211373c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "__sinit_d_a_obj_cv_shutter.cpp",
-      "addend": 0,
-      "target_module": "ov021",
-      "target_address": "0x021136c8"
     }
   ,
     {
