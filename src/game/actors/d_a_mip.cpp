@@ -1152,16 +1152,6 @@ void daMip_c::RenderMirrorImage()
  * */
 int daMip_c::Behavior()
 {
-    /* A LOCAL COORDINATE TRIPLE, NOT A Vector3 OBJECT. Vector3 declares a
-       destructor (see include/types.h -- the ROM's __cxa_vec_cleanup calls prove the
-       type has one), so a Vector3 local would be destroyed at scope exit and this
-       function would come out 8 bytes longer. The ROM emits no cleanup for either of
-       these, which is itself the evidence that they were never Vector3s: they are
-       scratch x/y/z the code fills and reads back. */
-    typedef volatile struct {
-        fx32 x, y, z;
-    } Vec3Scratch;
-
     extern s8 gCurrentSublevel;
     extern s8 gCurrentAreaId;
     extern void* data_0209f33c;
@@ -1195,13 +1185,9 @@ int daMip_c::Behavior()
         data_0209f33c = c;
 
     if (mIsGlowing != 0) {
-        Vec3Scratch pv;
-        pv.x = mPosX;
-        pv.y = mPosY;
-        pv.z = mPosZ;
-        pv.y = mPosY + 0x3c000;
-        mGlowParticle =
-            Particle::System::New(*(volatile u32 *)&mGlowParticle, 0x10d, pv.x, pv.y, mPosZ, 0, 0);
+        Vector3 pv = mPos;
+        pv.y += 0x3c000;
+        mGlowParticle = Particle::System::New(mGlowParticle, 0x10d, pv.x, pv.y, pv.z, 0, 0);
     }
 
     {
@@ -1211,13 +1197,10 @@ int daMip_c::Behavior()
                 daPly_c *talker = mTalkingPlayer;
                 if (talker != 0) {
                     if (talkStep == 0) {
-                        Vec3Scratch pos;
+                        Vector3 pos = mPos;
                         int soundId;
                         int messageId;
                         int t;
-                        pos.x = mPosX;
-                        pos.y = mPosY;
-                        pos.z = mPosZ;
                         Message::PrepareTalk();
                         t = mRabbitId;
                         if (t != 7) {
