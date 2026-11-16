@@ -54,12 +54,6 @@ struct StateEntry {
     PMF handler;
 };
 
-/* The installer walks the enter-table records by hand as {ptr, adj}. */
-typedef void (*FnPtr)(void *);
-struct VtEntry {
-    int field0;
-    int field1;
-};
 
 enum { kMovingBarBigActorId = 0x35 };
 
@@ -68,7 +62,7 @@ static inline int IsBigBar(dActor_c *actor) {
 }
 
 extern StateEntry data_ov015_021149ec[7];
-extern VtEntry data_ov015_02114a24[7];
+extern StateEntry data_ov015_02114a24[7];
 extern StateEntry data_ov015_02114500;
 extern StateEntry data_ov015_021144f0;
 extern StateEntry data_ov015_021144e0;
@@ -76,13 +70,13 @@ extern StateEntry data_ov015_021144d0;
 extern StateEntry data_ov015_02114508;
 extern StateEntry data_ov015_021144d8;
 extern StateEntry data_ov015_021144e8;
-extern VtEntry data_ov015_021144b0;
-extern VtEntry data_ov015_021144f8;
-extern VtEntry data_ov015_021144c8;
-extern VtEntry data_ov015_021144c0;
-extern VtEntry data_ov015_021144a8;
-extern VtEntry data_ov015_021144b8;
-extern VtEntry data_ov015_021144a0;
+extern StateEntry data_ov015_021144b0;
+extern StateEntry data_ov015_021144f8;
+extern StateEntry data_ov015_021144c8;
+extern StateEntry data_ov015_021144c0;
+extern StateEntry data_ov015_021144a8;
+extern StateEntry data_ov015_021144b8;
+extern StateEntry data_ov015_021144a0;
 
 /* Three column symbols of one two-row {model, KCL, CLPS} table.
    A typed ResourceDescriptor[2] changes Init reloc destinations. */
@@ -163,15 +157,7 @@ s32 daObjBk_Dossunbar_c::CleanupResources() {
 
 /* Install mState and run that state's enter function. */
 void daObjBk_Dossunbar_c::ChangeState(int idx) {
-    VtEntry *e = (VtEntry *)((char *)data_ov015_02114a24 + (idx << 3));
-    int f1 = e->field1;
-    void *obj = ((char *)this + (f1 >> 1));
-    FnPtr fn;
-    if (f1 & 1)
-        fn = (FnPtr) * (int *)((char *)*(int **)obj + e->field0);
-    else
-        fn = (FnPtr)e->field0;
-    fn(obj);
+    (this->*(data_ov015_02114a24[idx].handler))();
     mState = idx;
 }
 
@@ -309,7 +295,7 @@ DossunbarCollisionFile gBkDossunbarSCollisionFile(0x058e);
 DossunbarModelFile gBkDossunbarLModelFile(0x058b);
 DossunbarCollisionFile gBkDossunbarLCollisionFile(0x058c);
 
-VtEntry data_ov015_02114a24[7] = {
+StateEntry data_ov015_02114a24[7] = {
     data_ov015_021144b0, data_ov015_021144f8, data_ov015_021144c8, data_ov015_021144c0,
     data_ov015_021144a8, data_ov015_021144b8, data_ov015_021144a0,
 };
