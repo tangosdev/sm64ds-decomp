@@ -5140,7 +5140,6 @@ s32 dScMgSmartball_c::Render() {
  * address in a register instead of folding it into an indexed load), and the
  * declarations below must keep C linkage and their `extern` keyword. */
 s32 dScMgSmartball_c::Behavior() {
-    char *c = (char *)this;
     int vec[3];
 
     if (mPromptBlinkCount == 0) {
@@ -5243,9 +5242,9 @@ s32 dScMgSmartball_c::Behavior() {
                         ((i >= 13) ? 0 : mpBalls[i])->ArmExpire(1) != 0) {
                         ((i >= 13) ? 0 : mpBalls[i])->Burst();
                         CopyObjectPos(vec, (i >= 13) ? 0 : mpBalls[i]);
-                        ((dScMgSmartball_c *)c)->EmitScore(vec, 0x7d0, 0, 1);
+                        EmitScore(vec, 0x7d0, 0, 1);
                         Sound::PlayBank2_2D(0x175);
-                        ((dScMgSmartball_c *)(c))->CountOut();
+                        CountOut();
                         found = 1;
                         break;
                     }
@@ -5303,7 +5302,7 @@ s32 dScMgSmartball_c::Behavior() {
         (*p)--;
     }
 
-    ((dScMgSmartball_c *)(c))->UpdateSparks();
+    UpdateSparks();
     return 1;
 }
 
