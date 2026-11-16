@@ -130,12 +130,18 @@ extern int data_020a0db0;
 /* The first of the two blink frames in sRouletteStripSprites for each strip's
    marker: {0, 2, 6, 8} for strips 0..3. A horizontal pair adds 2. */
 extern const s32 sRouletteStripSpriteBase[4] = {
-    0, 2, 6, 8,
+    0,
+    2,
+    6,
+    8,
 };
 extern void *sRouletteStripSprites[];
 extern void **sRouletteTextSpritesByLanguage[];
 extern const int sRoulettePayoutMultipliers[4] = {
-    12, 6, 3, 2,
+    12,
+    6,
+    3,
+    2,
 };
 extern void *sRouletteRacerSprites;
 /* Bet tiles: 0..0xb are single numbers, 0xc..0x1c pairs of numbers and
@@ -154,8 +160,7 @@ extern ShortTbl12 sRouletteSlowStops;
 /* The single number (0..0xb) under each of the twelve stops in
    sRouletteSlowStops, in wheel order. */
 extern const short sRouletteStopTiles[12] = {
-    2, 9, 5, 6, 4, 8, 1, 10,
-    3, 11, 0, 7,
+    2, 9, 5, 6, 4, 8, 1, 10, 3, 11, 0, 7,
 };
 
 extern RouletteBoardState pmf_RouletteBoard_StateSlow;
