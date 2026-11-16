@@ -79,7 +79,7 @@ int Jump3D_InitPool(void *base, int count);
 extern Matrix4x3 data_020a0e68;
 extern int sJumpLastPick;
 extern u8 gMainScreenLayers;
-extern s16 data_02082614;
+extern s16 data_02082614[];
 extern int sJump3DMarioCount;
 extern int sHeyhoUnsettledCount;
 extern int sJump3DRisenOutCount;
@@ -207,7 +207,7 @@ s32 dScMgJump_c::InitResources()
     G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     G2_SetBG0Priority(1);
-    fov = FX_Div(0xc0000, (s32)data_02082614);
+    fov = FX_Div(0xc0000, data_02082614[0]);
 
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;

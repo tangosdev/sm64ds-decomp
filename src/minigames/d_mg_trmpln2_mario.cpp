@@ -1109,7 +1109,7 @@ void Trmp2Mario_DrawAll(void) {
     v[1] = 0;
     v[2] = -0xff8;
     func_0203cd80(v, -0x2000);
-    func_0203ccd4((Vector3 *)v, -0x3000);
+    func_0203ccd4(v, -0x3000);
     G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
     w.x = 0;
     w.y = 0;
@@ -2299,7 +2299,7 @@ void Trmp3DMario_DrawAll(void) {
     v[1] = 0;
     v[2] = -0xff8;
     func_0203cd80((int *)v, 0x2000);
-    func_0203ccd4((Vector3 *)v, 0);
+    func_0203ccd4(v, 0);
     G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
 
     w[0] = 0;
