@@ -1043,8 +1043,14 @@ int daHanachan_c::InitResources()
     cyl1Flags = 0x200000;
     cyl2Height = 0x32000;
     one = 1;
-    /* These three start at this and step by one element. Dropping them for
-       mSegmentPos[i] / mSegmentRot[i] / mTextureSequences[i] is 152 words off. */
+    /* These three start at this and step by one element. Measured (#821):
+       indexing mSegmentPos[i] / mSegmentRot[i] / mSegmentScale[i] /
+       mTextureSequences[i] instead is 42/282 off; indexing segPos too is 27,
+       and every pointer walk (texSeq, animRow, cyl1, cyl2) 26. What is left is
+       the stack slot order of the spilled row pointers. Even the lone
+       (c + prev * 6) read spelled mSegmentRot[prev].y is 6/282: prev and
+       radius trade stack slots, and swapping their declarations, scoping
+       either to its branch or dropping prev for i - 1 all stay at 6. */
     texRow = c;
     posRow = c;
     rotRow = c;
