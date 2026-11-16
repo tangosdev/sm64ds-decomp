@@ -5,7 +5,7 @@
 extern "C" {
 extern void MTX_RotX33_(Matrix3x3 *m, int s, int c);
 extern void MTX_RotY33_(Matrix3x3 *m, int s, int c);
-extern void MTX_RotZ33_(int *m, int s, int c);
+extern void MTX_RotZ33_(Matrix3x3 *m, int s, int c);
 extern void MTX_Concat33(const int *A, const int *B, int *dst);
 
 void func_ov007_020c3abc(Matrix3x3 *out, int ax, int ay, int az) {
@@ -23,7 +23,7 @@ void func_ov007_020c3abc(Matrix3x3 *out, int ax, int ay, int az) {
     }
     if (az != 0) {
         idx = az >> 4;
-        MTX_RotZ33_(tmp.m, FX_SinIdx(idx), FX_CosIdx(idx));
+        MTX_RotZ33_(&tmp, FX_SinIdx(idx), FX_CosIdx(idx));
         MTX_Concat33((const int *)out, tmp.m, (int *)out);
     }
 }
