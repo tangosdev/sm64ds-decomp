@@ -6,10 +6,8 @@
  *   - func_ and data_ helpers are still the linker names.
  *   - CheckFinished reads mCredits through WordAt. As a plain member the
  *     multiply-add takes its registers the other way round.
- *   - ShuffleCards: mValueCounts[cardValue] hoists the base; the slot is
- *     added to `this` first and the array reached through a cast back to
- *     the class. The card walks (DrawCards, RoundWaitDeal, ShuffleCards)
- *     step a `char *` the same way -- mCards[i] does not match there.
+ *   - DrawCards still steps a `char *` cursor over the cards; mCards[i]
+ *     does not match there (measured; see the function).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -718,88 +716,67 @@ void dScMgMemory_c::RoundStart() {
 }
 
 void dScMgMemory_c::ShuffleCards() {
-    char *raw = (char *)this;
     int cardValue;
-    int valueIndex;
-    u8 *valueCount;
-    int cardIndex;
-    char *cardBase;
 
-    for (cardIndex = 0; cardIndex < VALUE_NUM; cardIndex++)
-        mValueCounts[cardIndex] = 0;
+    for (int i = 0; i < VALUE_NUM; i++)
+        mValueCounts[i] = 0;
 
     if (mDifficulty == 0) {
-        cardBase = raw + 0x60;
-        for (valueIndex = 4; valueIndex < CARD_NUM; valueIndex++) {
+        for (int cardIndex = 4; cardIndex < CARD_NUM; cardIndex++) {
             cardValue = MG_RAND(4) + 1;
             for (;;) {
-                /* mValueCounts[cardValue] hoists the base. Same spelling below. */
-                valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
-                if (*valueCount < 2) {
-                    ((dScMgMemory_c *)cardBase)->mCards[0].value = cardValue;
-                    *valueCount += 1;
+                if (mValueCounts[cardValue] < 2) {
+                    mCards[cardIndex].value = cardValue;
+                    mValueCounts[cardValue]++;
                     break;
                 }
                 cardValue = MG_RAND(4) + 1;
             }
-            cardBase += 0x18;
         }
-        cardBase = raw + 0x60;
-        for (cardIndex = 4; cardIndex < CARD_NUM; cardIndex++) {
-            ((dScMgMemory_c *)cardBase)->mCards[0].x = 0x80000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].y = -0x80000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].speed = 0x8000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].visible = 1;
-            ((dScMgMemory_c *)cardBase)->mCards[0].state = CARD_MOVING;
-            cardBase += 0x18;
+        for (int cardIndex = 4; cardIndex < CARD_NUM; cardIndex++) {
+            mCards[cardIndex].x = 0x80000;
+            mCards[cardIndex].y = -0x80000;
+            mCards[cardIndex].speed = 0x8000;
+            mCards[cardIndex].visible = 1;
+            mCards[cardIndex].state = CARD_MOVING;
         }
     } else if (mDifficulty == 1) {
-        cardBase = raw + 0x30;
-        for (cardIndex = 2; cardIndex < CARD_NUM; cardIndex++) {
+        for (int cardIndex = 2; cardIndex < CARD_NUM; cardIndex++) {
             cardValue = MG_RAND(5) + 1;
             for (;;) {
-                valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
-                if (*valueCount < 2) {
-                    ((dScMgMemory_c *)cardBase)->mCards[0].value = cardValue;
-                    *valueCount += 1;
+                if (mValueCounts[cardValue] < 2) {
+                    mCards[cardIndex].value = cardValue;
+                    mValueCounts[cardValue]++;
                     break;
                 }
                 cardValue = MG_RAND(5) + 1;
             }
-            cardBase += 0x18;
         }
-        cardBase = raw + 0x30;
-        for (cardIndex = 2; cardIndex < CARD_NUM; cardIndex++) {
-            ((dScMgMemory_c *)cardBase)->mCards[0].x = 0x80000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].y = -0x80000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].speed = 0x8000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].visible = 1;
-            ((dScMgMemory_c *)cardBase)->mCards[0].state = CARD_MOVING;
-            cardBase += 0x18;
+        for (int cardIndex = 2; cardIndex < CARD_NUM; cardIndex++) {
+            mCards[cardIndex].x = 0x80000;
+            mCards[cardIndex].y = -0x80000;
+            mCards[cardIndex].speed = 0x8000;
+            mCards[cardIndex].visible = 1;
+            mCards[cardIndex].state = CARD_MOVING;
         }
     } else {
-        cardBase = raw;
-        for (cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
+        for (int cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
             cardValue = MG_RAND(6) + 1;
             for (;;) {
-                valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
-                if (*valueCount < 2) {
-                    ((dScMgMemory_c *)cardBase)->mCards[0].value = cardValue;
-                    *valueCount += 1;
+                if (mValueCounts[cardValue] < 2) {
+                    mCards[cardIndex].value = cardValue;
+                    mValueCounts[cardValue]++;
                     break;
                 }
                 cardValue = MG_RAND(6) + 1;
             }
-            cardBase += 0x18;
         }
-        cardBase = raw;
-        for (cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
-            ((dScMgMemory_c *)cardBase)->mCards[0].x = 0x80000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].y = -0x80000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].speed = 0x8000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].visible = 1;
-            ((dScMgMemory_c *)cardBase)->mCards[0].state = CARD_MOVING;
-            cardBase += 0x18;
+        for (int cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
+            mCards[cardIndex].x = 0x80000;
+            mCards[cardIndex].y = -0x80000;
+            mCards[cardIndex].speed = 0x8000;
+            mCards[cardIndex].visible = 1;
+            mCards[cardIndex].state = CARD_MOVING;
         }
     }
 }
