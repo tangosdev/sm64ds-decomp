@@ -233,7 +233,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -287,7 +287,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 10
+          "LICENSED": 12
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -298,38 +298,84 @@
           {
             "section": ".init",
             "original": [
-              45
+              48
             ],
             "desired": [
-              45
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              43
+              46
             ],
             "desired": [
-              43
+              46
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6,
-              22,
+              7,
+              8,
+              20,
               23
             ],
             "desired": [
-              5,
-              6,
-              22,
+              8,
+              7,
+              20,
               23
+            ]
+          },
+          {
+            "section": ".data.morayTail",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
+            ]
+          },
+          {
+            "section": ".data.kiItaClps",
+            "original": [
+              31
+            ],
+            "desired": [
+              31
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                7,
+                8,
+                20,
+                23
+              ],
+              "desired": [
+                8,
+                7,
+                20,
+                23
+              ],
+              "slots": [
+                7,
+                8,
+                20,
+                23
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,

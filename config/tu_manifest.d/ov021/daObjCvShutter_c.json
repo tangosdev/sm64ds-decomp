@@ -232,7 +232,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -286,7 +286,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 12
+          "LICENSED": 14
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -297,34 +297,52 @@
           {
             "section": ".init",
             "original": [
-              47
+              50
             ],
             "desired": [
-              47
+              50
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              48
             ],
             "desired": [
-              45
+              48
+            ]
+          },
+          {
+            "section": ".data.cvres",
+            "original": [
+              12
+            ],
+            "desired": [
+              12
             ]
           },
           {
             "section": ".bss",
             "original": [
               5,
-              6,
-              22,
+              8,
+              16,
               23
             ],
             "desired": [
-              6,
+              8,
               5,
-              22,
+              16,
               23
+            ]
+          },
+          {
+            "section": ".data.cvShutterClps",
+            "original": [
+              29
+            ],
+            "desired": [
+              29
             ]
           }
         ],
@@ -334,20 +352,20 @@
               "section": ".bss",
               "original": [
                 5,
-                6,
-                22,
+                8,
+                16,
                 23
               ],
               "desired": [
-                6,
+                8,
                 5,
-                22,
+                16,
                 23
               ],
               "slots": [
                 5,
-                6,
-                22,
+                8,
+                16,
                 23
               ]
             }
