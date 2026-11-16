@@ -3075,7 +3075,12 @@ extern "C" {
    The fixed-point multiply and the 2x2 rotation are the NitroSDK FX_Mul and
    MTX_Rot22 shapes, written as local inlines. Spelled that way the
    allocator keeps the thousands counter in r0 as the cartridge does; with
-   the products written out in the body it lands in ip or r3. */
+   the products written out in the body it lands in ip or r3.
+   Kept, measured (#821, 2026-11-16): without opt_propagation off this body is
+   38 of 137 words off (the counters start from a zero in r3 or lr, not the
+   thousands counter in r0, and the two smulls take other registers); through
+   fx.h's FX_MUL 36; `th = hu = te = 0` or three separate zeros 36-40; the
+   counters as for-loop variables 51-52; divide-and-subtract digits 0x23c. */
 struct M { int _00, _01, _10, _11; };
 extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, struct M *a5);
 extern OamAttr *sMgDigitSprites[];
