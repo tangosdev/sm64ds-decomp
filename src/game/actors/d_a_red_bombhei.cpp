@@ -421,9 +421,7 @@ void daRedBombhei_c::ChangeState(int state) {
 }
 
 void daRedBombhei_c::EnterIdle() {
-    unsigned int flags = 0;
-    BCA_File *file = (BCA_File *)gRedBombheiWaitAnimFile.filePtr;
-    this->mAnmModel.SetAnim(file, 0, 0x1000, flags);
+    mAnmModel.SetAnim((BCA_File *)gRedBombheiWaitAnimFile.filePtr, 0, 0x1000, 0);
 }
 
 /* State 0 update: start talking when a player walks into the talk cylinder. */
