@@ -13831,10 +13831,9 @@ int daPly_c::St_YoshiPower_Main() {
                 mAttackClsn.Clear();
                 mAttackClsn.Update();
                 if (mStateTimer == 1 && mFireBreaths == 0) {
-                    int z2 = 0;
-                    mUseAltBodyModel = z2;
+                    mUseAltBodyModel = 0;
                     dExtFrameCtrl_c &anim9 =
-                        *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, z2)];
+                        *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, 0)];
                     ((dExtAnmModel_c *)mModels.mHeadModels[3])
                         ->SetAnim((BCA_File *)data_ov002_0210e3d8[1], 0x40000000, 0x1000,
                                   anim9.currFrame >> 12);
