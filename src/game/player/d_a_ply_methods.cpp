@@ -18437,25 +18437,16 @@ int daPly_c::St_CrazedCrate_Cleanup() {
 }
 
 int daPly_c::St_CrazedCrate_Main() {
-    typedef long long s64;
     func_ov002_020e28d4(0x1000, 0x1800);
 
     if (mClsnFlags & 2) {
         int atan = cstd::atan2(mWallNormalX, this->mWallNormalZ);
         int diff = AngleDiff(atan, this->mAngleY);
         if (diff >= 0x6000) {
-            int t = (s16)(2 * atan - this->mAngleY);
-            t += 0x8000;
-            mAngleY = t;
-            int half = 0x800;
+            mAngleY = (s16)(2 * atan - mAngleY) + 0x8000;
             mPrevAngleY = mAngleY;
-            mPosX +=
-                (int)(((s64)mHorzSpeed * FX_SinCosTable_[(((int)(u16)mPrevAngleY >> 4) << 1) + 1] +
-                       half) >>
-                      12);
-            mPosZ += (int)(((s64)mHorzSpeed * FX_SinCosTable_[((int)(u16)mPrevAngleY >> 4) << 1] +
-                            half) >>
-                           12);
+            mPosX += FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngleY >> 4));
+            mPosZ += FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleY >> 4));
         }
     }
 
