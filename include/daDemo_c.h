@@ -412,8 +412,8 @@ struct daDemo_c : dActor_c {
 typedef char daDemo_c_size_must_be_0x104[
     sizeof(daDemo_c) == 0x104 ? 1 : -1];
 typedef char daDemo_c_anmModel_c_size_must_be_0x84[sizeof(daDemo_c::anmModel_c) == 0x84 ? 1 : -1];
-typedef char daDemo_c_anmModel_c_AnimEntry_size_must_be_0x4[
-    sizeof(daDemo_c::anmModel_c::AnimEntry) == 0x4 ? 1 : -1];
+typedef char daDemo_c_anmModel_c_AnimEntry_size_must_be_0x4
+    [sizeof(daDemo_c::anmModel_c::AnimEntry) == 0x4 ? 1 : -1];
 typedef char
     daDemo_c_simpleModel_c_size_must_be_0x60[sizeof(daDemo_c::simpleModel_c) == 0x60 ? 1 : -1];
 typedef char daDemo_c_ScrollState_size_must_be_0x36[

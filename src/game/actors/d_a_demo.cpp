@@ -2526,9 +2526,7 @@ int daDemo_c::func_ov002_020f6448(unsigned char *arg1)
     return func_ov002_020f6424();
 }
 
-
-void daDemo_c::anmModel_c::func_ov002_020f64ac(const AnimEntry *table)
-{
+void daDemo_c::anmModel_c::func_ov002_020f64ac(const AnimEntry *table) {
     Advance();
     if (!Finished())
         return;
@@ -2538,9 +2536,7 @@ void daDemo_c::anmModel_c::func_ov002_020f64ac(const AnimEntry *table)
     func_ov002_020f6514(table, next);
 }
 
-
-void daDemo_c::anmModel_c::func_ov002_020f6514(const AnimEntry *table, unsigned char entry)
-{
+void daDemo_c::anmModel_c::func_ov002_020f6514(const AnimEntry *table, unsigned char entry) {
     const AnimEntry *e;
     int flags;
     mAnimEntry = entry;
@@ -2556,7 +2552,6 @@ void daDemo_c::anmModel_c::func_ov002_020f6514(const AnimEntry *table, unsigned 
         ts->SetFile(*(BTP_File *)mTexSeqFiles[idx]->filePtr, flags, 0x1000, 0);
     }
 }
-
 
 void daDemo_c::anmModel_c::func_ov002_020f65b8()
 {

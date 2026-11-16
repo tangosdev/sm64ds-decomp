@@ -789,14 +789,14 @@
       "ordinal": 106
     },
     {
-      "symbol": "_ZN8daDemo_c10anmModel_c19func_ov002_020f64acEPc",
+      "symbol": "_ZN8daDemo_c10anmModel_c19func_ov002_020f64acEPKNS0_9AnimEntryE",
       "address": "0x020f64ac",
       "size": "0x00000068",
       "legacy_source": "src/func_ov002_020f64ac.c",
       "ordinal": 107
     },
     {
-      "symbol": "_ZN8daDemo_c10anmModel_c19func_ov002_020f6514EPvh",
+      "symbol": "_ZN8daDemo_c10anmModel_c19func_ov002_020f6514EPKNS0_9AnimEntryEh",
       "address": "0x020f6514",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov002_020f6514.c",
