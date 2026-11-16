@@ -320,9 +320,8 @@ int daObjBlockL_c::Behavior() {
             mBroken = 0;
 
         if (mSwitch == 0) {
-            unsigned int id = 0xb;
             do {
-                mSwitch = (daObjSwitch_c *)FindWithActorID(id, mSwitch);
+                mSwitch = (daObjSwitch_c *)FindWithActorID(0xb, mSwitch);
             } while (mSwitch == 0 || mEventID != mSwitch->mEventBit);
         }
 
@@ -337,14 +336,14 @@ int daObjBlockL_c::Behavior() {
 
         mPrevEventBit = Event::GetBit(mEventID);
     } else {
-        int v1 = 0x15e000;
-        int v5 = 0x64000;
+        int clipRadius = 0x15e000;
+        int clipOffsetY = 0x64000;
         if (IsActorID(this, 0x10) || IsActorID(this, 0x11) || IsActorID(this, 0x2e)) {
-            v1 = 0x1c2000;
-            v5 = 0x96000;
+            clipRadius = 0x1c2000;
+            clipOffsetY = 0x96000;
         }
-        mMeshCollider.SetClipRadius(v1);
-        mMeshCollider.SetClipOffsetY(v5);
+        mMeshCollider.SetClipRadius(clipRadius);
+        mMeshCollider.SetClipOffsetY(clipOffsetY);
         IsClsnInRangeOnScreen(0x600000, 0);
     }
     return 1;

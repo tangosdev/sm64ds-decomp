@@ -117,18 +117,14 @@ void daSBird_c::StateFly() {
     if (mIsLeader) {
         Vector3 d1;
         Vec3_Sub(&d1, &mTargetPos, &mPos);
-        diff.x = d1.x;
-        diff.y = d1.y;
-        diff.z = d1.z;
+        diff = d1;
         s32 hl = Vec3_HorzLen(&diff);
         mTargetPitch = cstd::atan2(hl, mPosY + 0xfd8f0000);
         mTargetYaw = cstd::atan2(diff.z, diff.x);
     } else {
         Vector3 d2;
         Vec3_Sub(&d2, &owner->mPos, &mPos);
-        diff.x = d2.x;
-        diff.y = d2.y;
-        diff.z = d2.z;
+        diff = d2;
         s32 hl = Vec3_HorzLen(&diff);
         mTargetPitch = cstd::atan2(hl, -diff.y);
         mTargetYaw = cstd::atan2(diff.z, diff.x);
@@ -138,12 +134,11 @@ void daSBird_c::StateFly() {
     ApproachLinear(mPrevAngleX, mTargetPitch, 0x8c);
     ApproachLinear(mPrevAngleY, mTargetYaw, 0x320);
 
-    s32 hi = 0x3000;
     s32 dd = (s16)(mPrevAngleY - mTargetYaw);
-    if (dd < -hi)
-        dd = -hi;
-    else if (dd > hi)
-        dd = hi;
+    if (dd < -0x3000)
+        dd = -0x3000;
+    else if (dd > 0x3000)
+        dd = 0x3000;
     mBank = (s16)dd;
     ApproachLinear(mAngleZ, mBank, 0x258);
 

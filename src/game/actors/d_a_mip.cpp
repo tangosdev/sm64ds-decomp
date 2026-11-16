@@ -503,10 +503,7 @@ int daMip_c::StateCaughtMain()
                 if (func_02013890(mRabbitId, (s32)pl->param1) == 0) {
                     if ((s32)pl->param1 != 3) {
                         Message::PrepareTalk();
-                        {
-                            int z = soundId;
-                            Sound::PlaySub(0x27, 0x12, 0x7f, 0x15ccc, z);
-                        }
+                        Sound::PlaySub(0x27, 0x12, 0x7f, 0x15ccc, false);
                         if (mRabbitId != 6) {
                             msg = (s16)((s32)pl->param1 + 0x11b);
                             soundId = 0x163;
@@ -524,10 +521,7 @@ int daMip_c::StateCaughtMain()
                     if ((s32)pl->param1 != 3) {
                         Message::PrepareTalk();
                         if (mIsGlowing == 0) {
-                            {
-                                int z = soundId;
-                                Sound::PlaySub(0x26, 0x12, 0x7f, 0x15ccc, z);
-                            }
+                            Sound::PlaySub(0x26, 0x12, 0x7f, 0x15ccc, false);
                             if (mRabbitId != 6) {
                                 msg = (s16)((s32)pl->param1 + 0x11f);
                                 soundId = 0x163;
@@ -536,7 +530,7 @@ int daMip_c::StateCaughtMain()
                                 soundId = 0x161;
                             }
                         } else {
-                            Sound::PlaySub(0x27, 0x12, 0x7f, 0x15ccc, soundId);
+                            Sound::PlaySub(0x27, 0x12, 0x7f, 0x15ccc, false);
                             if (SaveData::NumGlowingRabbitsFound() == 7) {
                                 msg = 0x143;
                                 soundId = 0x160;
@@ -563,16 +557,11 @@ int daMip_c::StateCaughtMain()
                 msg = 0x13c;
             }
 
-            {
-                int y = pos.y;
-                int zero = 0;
-                y = y + 0x64000;
-                pos.y = y;
-                if (pl->ShowMessage(*this, (u32)msg, (::Vector3 *)&pos, zero, zero) == 1) {
-                    mActionStep = 1;
-                    if (soundId != 0)
-                        func_02012694(soundId, &mCamSpacePos);
-                }
+            pos.y += 0x64000;
+            if (pl->ShowMessage(*this, (u32)msg, (::Vector3 *)&pos, 0, 0) == 1) {
+                mActionStep = 1;
+                if (soundId != 0)
+                    func_02012694(soundId, &mCamSpacePos);
             }
             return 1;
         }
@@ -584,8 +573,7 @@ int daMip_c::StateCaughtMain()
     if (pl->GetTalkState() != -1) {
         if (data_0209d660 != 0 && data_0209d6bc == 9 &&
             (mRabbitId == 7 || func_02013890(mRabbitId, (s32)pl->param1) == 0 || mIsGlowing != 0)) {
-            int z = 0;
-            Sound::PlaySub(0x27, 0x12, z, 0x8777, z);
+            Sound::PlaySub(0x27, 0x12, 0, 0x8777, false);
         }
         return 1;
     }
@@ -598,12 +586,10 @@ int daMip_c::StateCaughtMain()
         pos7.x = mPosX;
         pos7.y = mPosY;
         pos7.z = mPosZ;
-        pos7.y = pos7.y + 0x32000;
+        pos7.y += 0x32000;
         {
-            s8 cc = mAreaId;
-            int m1 = -1;
             dActor_c *spawned =
-                dActor_c::Spawn(0xe5, mRabbitId, *(::Vector3 *)&pos7, &mAngle, cc, m1);
+                dActor_c::Spawn(0xe5, mRabbitId, *(::Vector3 *)&pos7, &mAngle, mAreaId, -1);
             if (spawned != 0)
                 ((daObj_Mip_Key_c *)spawned)->unk_190 = uniqueID;
         }
@@ -625,11 +611,10 @@ int daMip_c::StateCaughtMain()
                 param = 0x4d;
                 func_02013944();
             }
-            posR.y = posR.y + 0x32000;
+            posR.y += 0x32000;
             {
-                s8 cc = mAreaId;
-                int m1 = -1;
-                dActor_c *spawned = dActor_c::Spawn(0xe5, param, *(::Vector3 *)&posR, 0, cc, m1);
+                dActor_c *spawned =
+                    dActor_c::Spawn(0xe5, param, *(::Vector3 *)&posR, 0, mAreaId, -1);
                 if (spawned != 0)
                     ((daObj_Mip_Key_c *)spawned)->unk_190 = uniqueID;
             }

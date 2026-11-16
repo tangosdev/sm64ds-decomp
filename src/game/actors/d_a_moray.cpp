@@ -155,11 +155,9 @@ void daMoray_c::UpdateHitCylinders() {
     Vector3 out;
     Vector3 hv;
     int r4;
-    int r6;
     dActor_c *p;
     int t;
     u32 id;
-    int *ctr;
     int idx;
     int *px;
 
@@ -177,9 +175,7 @@ void daMoray_c::UpdateHitCylinders() {
     r4 = 0x52000;
 
     if (gCurrentStarId == 1 && this->mState != &data_ov016_02114dbc) {
-        r6 = 0x128000;
-        r6 = -r6;
-        vb.y = r6;
+        vb.y = -0x128000;
         vb.z = 0x7c000;
         va.x = 0x15e0000;
         va.y = 0xfee90000;
@@ -190,18 +186,13 @@ void daMoray_c::UpdateHitCylinders() {
         va.y = va.y + out.y;
         va.z = va.z + out.z;
         this->mdCcAcPos_c2.pos.x = va.x;
-        {
-            int c1 = 0xc8000;
-            this->mdCcAcPos_c2.pos.y = va.y;
-            int c2 = 0xf0000;
-            this->mdCcAcPos_c2.pos.z = va.z;
-            this->mdCcAcPos_c2.radius = c1;
-            this->mdCcAcPos_c2.height = c2;
-        }
+        this->mdCcAcPos_c2.pos.y = va.y;
+        this->mdCcAcPos_c2.pos.z = va.z;
+        this->mdCcAcPos_c2.radius = 0xc8000;
+        this->mdCcAcPos_c2.height = 0xf0000;
     }
 
-    ctr = &this->mCylSegment;
-    *ctr = *ctr + 1;
+    this->mCylSegment++;
     if (this->mCylSegment > 6)
         this->mCylSegment = 0;
 

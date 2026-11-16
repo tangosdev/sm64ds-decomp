@@ -145,9 +145,8 @@ s32 daObjNumber_c::Render() {
        kind 6 at camera step 0x64 removes the popup. */
     if (gNextActorUpdateMask & 0x4000000) {
         daStar_c *a = 0;
-        u32 id = 0xb2;
         for (;;) {
-            if ((a = (daStar_c *)FindWithActorID(id, a)) == 0)
+            if ((a = (daStar_c *)FindWithActorID(0xb2, a)) == 0)
                 break;
             if (a->mKind == daStar_c::KIND_6 && a->mCamSeq == 0x64) {
                 MarkForDestruction();
