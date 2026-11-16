@@ -3047,7 +3047,6 @@ void daPly_c::func_ov002_020c18b0(int p1) {
 }
 
 int daPly_c::func_ov002_020c19d0(int arg1, int arg2) {
-    char* self = (char*)this;
     int angle = (unsigned short)mAngleY;
     dBgCh_Lin line;
     int k = angle >> 4;
@@ -3056,7 +3055,7 @@ int daPly_c::func_ov002_020c19d0(int arg1, int arg2) {
     Vector3 v1(this->mPosX, this->mPosY + (arg2 << 12), this->mPosZ);
     Vector3 v2(arg1 * cs + this->mPosX, this->mPosY + (arg2 << 12), arg1 * sn + this->mPosZ);
     Vector3 nrm;
-    line.SetObjAndLine(v1, v2, (dActor_c *)self);
+    line.SetObjAndLine(v1, v2, this);
     if (!line.DetectClsn()) {
         return 0;
     }
