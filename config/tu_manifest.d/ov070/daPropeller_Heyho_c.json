@@ -347,49 +347,49 @@
       "evidence": "model file handle constructed with file ID 0x411; InitResources loads it with dExtSimpleModel_c::LoadFile and CleanupResources releases it"
     },
     {
-      "symbol": "@146",
+      "symbol": "@937",
       "address": "0x02123538",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x416 animation handle"
     },
     {
-      "symbol": "@140",
+      "symbol": "@931",
       "address": "0x02123544",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x411 model handle"
     },
     {
-      "symbol": "@141",
+      "symbol": "@932",
       "address": "0x02123550",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x417 animation handle"
     },
     {
-      "symbol": "@142",
+      "symbol": "@933",
       "address": "0x0212355c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x412 animation handle"
     },
     {
-      "symbol": "@143",
+      "symbol": "@934",
       "address": "0x02123568",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x413 animation handle"
     },
     {
-      "symbol": "@144",
+      "symbol": "@935",
       "address": "0x02123574",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x414 animation handle"
     },
     {
-      "symbol": "@145",
+      "symbol": "@936",
       "address": "0x02123580",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -470,39 +470,39 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@952",
-      "to": "@140",
-      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @998 in the current object. Preserve the established fleet-unique @140 alias for the first registration node. Re-keyed from @998 to @997 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @997 to @982 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @981 to @927 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @927 to @976 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @976 to @952 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "from": "@931",
+      "to": "@931",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @998 in the current object. Preserve the established fleet-unique @931 alias for the first registration node. Re-keyed from @998 to @997 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @997 to @982 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @981 to @927 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @927 to @976 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @976 to @952 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@953",
-      "to": "@141",
-      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @999 in the current object. Preserve the established fleet-unique @141 alias for the second registration node. Re-keyed from @999 to @998 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @998 to @983 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @982 to @928 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @928 to @977 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @977 to @953 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "from": "@932",
+      "to": "@932",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @999 in the current object. Preserve the established fleet-unique @932 alias for the second registration node. Re-keyed from @999 to @998 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @998 to @983 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @982 to @928 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @928 to @977 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @977 to @953 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@954",
-      "to": "@142",
-      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1000 in the current object. Preserve the established fleet-unique @142 alias for the third registration node. Re-keyed from @1000 to @999 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @999 to @984 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @983 to @929 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @929 to @978 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @978 to @954 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "from": "@933",
+      "to": "@933",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1000 in the current object. Preserve the established fleet-unique @933 alias for the third registration node. Re-keyed from @1000 to @999 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @999 to @984 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @983 to @929 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @929 to @978 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @978 to @954 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@955",
-      "to": "@143",
-      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1001 in the current object. Preserve the established fleet-unique @143 alias for the fourth registration node. Re-keyed from @1001 to @1000 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1000 to @985 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @984 to @930 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @930 to @979 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @979 to @955 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "from": "@934",
+      "to": "@934",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1001 in the current object. Preserve the established fleet-unique @934 alias for the fourth registration node. Re-keyed from @1001 to @1000 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1000 to @985 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @984 to @930 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @930 to @979 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @979 to @955 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@956",
-      "to": "@144",
-      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1002 in the current object. Preserve the established fleet-unique @144 alias for the fifth registration node. Re-keyed from @1002 to @1001 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1001 to @986 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @985 to @931 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @931 to @980 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @980 to @956 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "from": "@935",
+      "to": "@935",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1002 in the current object. Preserve the established fleet-unique @935 alias for the fifth registration node. Re-keyed from @1002 to @1001 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1001 to @986 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @985 to @931 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @931 to @980 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @980 to @956 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@957",
-      "to": "@145",
-      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1003 in the current object. Preserve the established fleet-unique @145 alias for the sixth registration node. Re-keyed from @1003 to @1002 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1002 to @987 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @986 to @932 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @932 to @981 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @981 to @957 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "from": "@936",
+      "to": "@936",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1003 in the current object. Preserve the established fleet-unique @936 alias for the sixth registration node. Re-keyed from @1003 to @1002 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1002 to @987 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @986 to @932 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @932 to @981 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @981 to @957 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     },
     {
-      "from": "@958",
-      "to": "@146",
-      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1004 in the current object. Preserve the established fleet-unique @146 alias for the seventh registration node. Re-keyed from @1004 to @1003 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1003 to @988 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @987 to @933 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @933 to @982 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @982 to @958 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "from": "@937",
+      "to": "@937",
+      "evidence": "Re-keyed when address-named helpers became methods (initializer use sites unchanged). The mHomePos Vector3 overlay adds two anonymous aggregate numbering slots; this destructor-registration node is emitted as @1004 in the current object. Preserve the established fleet-unique @937 alias for the seventh registration node. Re-keyed from @1004 to @1003 when the anonymous M48 typedef was retired (#4570). Re-keyed by address from @1003 to @988 when the ApproachAngleInt namespace view and two duplicate ApproachAngle declarations (fifteen named parameters) were retired (#4570). | re-keyed when func_ov070_02120070 became a daPropeller_Heyho_c member: every raw @N moved to @N-1 (measured: the seven 12-byte .bss registration nodes keep their .init use sites +0x1ec..+0x238 between the old and new objects) Re-keyed from @987 to @933 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @933 to @982 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @982 to @958 when d_a_propeller_heyho dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -519,43 +519,43 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@140",
+      "symbol": "@931",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02123544"
     },
     {
-      "symbol": "@141",
+      "symbol": "@932",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02123550"
     },
     {
-      "symbol": "@142",
+      "symbol": "@933",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0212355c"
     },
     {
-      "symbol": "@143",
+      "symbol": "@934",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02123568"
     },
     {
-      "symbol": "@144",
+      "symbol": "@935",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02123574"
     },
     {
-      "symbol": "@145",
+      "symbol": "@936",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02123580"
     },
     {
-      "symbol": "@146",
+      "symbol": "@937",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02123538"
@@ -1097,7 +1097,7 @@
       "source": "0x02122ce8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@140",
+      "symbol": "@931",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x02123544"
@@ -1127,7 +1127,7 @@
       "source": "0x02122cf8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@141",
+      "symbol": "@932",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x02123550"
@@ -1147,7 +1147,7 @@
       "source": "0x02122d04",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@142",
+      "symbol": "@933",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x0212355c"
@@ -1167,7 +1167,7 @@
       "source": "0x02122d10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@143",
+      "symbol": "@934",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x02123568"
@@ -1187,7 +1187,7 @@
       "source": "0x02122d1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@144",
+      "symbol": "@935",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x02123574"
@@ -1207,7 +1207,7 @@
       "source": "0x02122d28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@145",
+      "symbol": "@936",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x02123580"
@@ -1227,7 +1227,7 @@
       "source": "0x02122d34",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@146",
+      "symbol": "@937",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x02123538"
@@ -1419,7 +1419,7 @@
     "ROM-PROVEN CLASS IDENTITY: _ZTV19daPropeller_Heyho_c at 0x02123168 points through _ZTI19daPropeller_Heyho_c at 0x02123120 to the exact length-prefixed string `19daPropeller_Heyho_c` at 0x0212312c. FlyGuy was a coined decomp class name. FlyGuy_Spawn (now the reconstructed daPropeller_Heyho_c_classInit), FlyGuy_SpawnInfo (now the reconstructed g_profile_PROPELLER_HEYHO), and FlyGuy_ChangeState remain explicit semantic C-ABI aliases; the cartridge proves their addresses and relationship to this class, not those exact source spellings.",
     "Inlining the virtual destructor in the directly included class header makes mwccarm emit only the retail D1 then D0 pair in ROM order. The former out-of-line definition emitted an additional homeless D2 and reversed the D1/D0 section-order check.",
     "27/27 MATCH, objisolate clean, reloc-destinations clean. Hand-assembled (create refuses extern-C-wrapped bodies). Carries the NEW struct-copy lever: mwccarm's C++ front end scalarizes a plain struct assignment where the C front end emits an ldm/stm block copy; an array-wrapper view (struct V3w { int w[3]; }) restores the block copy -- fixed func_ov070_0211f48c (-4B) and func_ov070_0211f6e0 (+8B) after fdiff proved the idiom byte-exact. Also: two members keep their own int-target ApproachAngle view via BLOCK-SCOPE extern declarations (C++ name hiding), because the TU-wide extern-C declaration cannot serve both signatures and the parameter width is byte-load-bearing. FlyGuy_Spawn (now the reconstructed daPropeller_Heyho_c_classInit) stores &_ZTV19daPropeller_Heyho_c[2] (+8 rule).",
-    "Static initializer folded: the HeyhoModelFile handle (file 0x411), the six HeyhoAnimationFilePtr handles (files 0x417/0x412/0x413/0x414/0x415/0x416), their destructor-registration nodes and the six state-record copies make mwcc emit __sinit_d_a_propeller_heyho.cpp itself (0x284, raw-byte-identical to retail __sinit_ov070_02122afc with the same instruction sequence, literal pool order and relocation sites); the handwritten shard is retired. @992-@998 clashed with the fleet and are renamed (@992->@140, @993->@141, @994->@142, @995->@143, @996->@144, @997->@145, @998->@146). This fold does NOT license the .data PMF descriptors or any other .data.",
+    "Static initializer folded: the HeyhoModelFile handle (file 0x411), the six HeyhoAnimationFilePtr handles (files 0x417/0x412/0x413/0x414/0x415/0x416), their destructor-registration nodes and the six state-record copies make mwcc emit __sinit_d_a_propeller_heyho.cpp itself (0x284, raw-byte-identical to retail __sinit_ov070_02122afc with the same instruction sequence, literal pool order and relocation sites); the handwritten shard is retired. @992-@998 clashed with the fleet and are renamed (@992->@931, @993->@932, @994->@933, @995->@934, @996->@935, @997->@936, @998->@937). This fold does NOT license the .data PMF descriptors or any other .data.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
     "Collision property member calls replace local helper declarations. Reconciled 7 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (62 sections, 299 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
   ],

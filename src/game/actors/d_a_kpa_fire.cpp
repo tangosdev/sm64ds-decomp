@@ -61,6 +61,7 @@
 #include "math/MtxStack.h"
 #include "LevelRng.h"
 #include "math/CalcLib.h"
+#include "Sound.h"
 
 /* The shadow update copies its matrix through Mtx43: the plain word union
  * keeps the block copy in C++ with Vector3's user-declared constructor in
@@ -108,21 +109,10 @@ enum {
 /* Sound id variant 0 plays through its mSoundHandle; named by use site, not decoded. */
 enum { SOUND_ID_MOUTH = 0x180 };
 
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
-
 extern "C" {
 /* This file's own helpers, defined further down. */
 extern Entry data_ov060_0211afb4[];
 extern PMF data_ov060_0211af74[];
-
-extern u32 d_a_kpa_fireNewCleanParticleHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e,
-                                            const struct Vector3_16f *f);
-extern u32 d_a_kpa_fireNewHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e, const void *f, void *g);
-void d_a_kpa_fireNewSimpleHold(u32 id, fx32 x, fx32 y, fx32 z);
-extern void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
 
 extern int RandomIntInternal(int *seed);
 

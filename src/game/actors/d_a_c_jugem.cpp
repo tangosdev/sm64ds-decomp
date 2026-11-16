@@ -114,8 +114,6 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
 int AngleDiff(int a, int b);
 
-int d_a_c_jugemPlaySubHold(u32 a, u32 b, u32 c, fx32 d, bool loop);
-
 /* other overlays / arm9 */
 void func_ov002_020c3e8c(void *player);
 void func_ov002_020c3f18(void *p);

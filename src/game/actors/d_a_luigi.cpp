@@ -41,6 +41,7 @@
 #include "private/mtx43.h"
 #include "nitro/fx/fx.h"
 #include "SaveBlock.h"
+#include "math/CalcLib.h"
 
 /* The matrix copies go through the flat Mtx43. Assigning Matrix4x3 itself
    is a different sequence (.text grows by 0xa0 bytes). */
@@ -102,9 +103,6 @@ int func_ov002_020e496c(daPly_c *player);
 
 void func_0203c178(Matrix4x3 *m, int sx, int sy, int sz);
 void MTX_Concat33(const int *a, const int *b, int *dst);
-/* local extern: math/CalcLib.h's spelling is the one below, but including
-   that header renumbers this TU's @NNN .data locals. */
-void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 }
 
 /* Reconstructed source-style name: SM64DS proves daLuigi_c through RTTI,

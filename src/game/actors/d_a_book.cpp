@@ -82,11 +82,7 @@ enum {
 enum { kFlightSpeed = 0x32000 };
 
 extern "C" {
-short atan2_hold_d_a_book_1(int, int);
 void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height,
-                         Vector3_16 *first, Vector3_16 *second);
 }
 
 /* BOOK_SWITCH push order, indexed by the book's param1: the value the

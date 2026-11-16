@@ -35,9 +35,6 @@
  * - `*(u16 *)&member` puns stay on mStateTimer and the angle fields: the
  *   header declares s16 but the retail code loads those sites unsigned
  *   (ldrh), and the signed member spelling emits ldrsh.
- * - The MERRYGOROUND/KAIDAN (daTrsTrap_c), released coin (daCoin_c) and
- *   SpawnFireball result (daFPknBall_c) are reached through file-local views:
- *   including any of their headers renumbers this file's @NNN labels.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -73,30 +70,10 @@ enum daTrs_c_AssetId {
 #include "SaveBlock.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/MtxStack.h"
+#include "daCoin_c.h"
+#include "daTrsTrap_c.h"
+#include "daFPknBall_c.h"
 
-/* Views of three classes this Boo reaches through other actors' pointers.
-   Their headers are not included because each one renumbers this file's
-   pinned @NNN labels; offsets and member names are the headers'. */
-struct daCoinView { /* daCoin_c.h: the released coin */
-    u8 pad[0x3a8];
-    u16 mDisappearTimer; /* 0x3a8 */
-    u8 mNoClsnTimer;     /* 0x3aa */
-};
-struct daTrsTrapView { /* daTrsTrap_c.h: KAIDAN, MERRYGOROUND */
-    u8 pad[0x150];
-    u8 mState;        /* 0x150 */
-    u8 mStepIndex;    /* 0x151 */
-    u8 mInitLatch;    /* 0x152 */
-    u8 mOccupiedFlag; /* 0x153 */
-    u8 pad_154;       /* 0x154 */
-    u8 mTriggered;    /* 0x155 */
-};
-struct daFPknBallView { /* daFPknBall_c.h: SpawnFireball's result */
-    u8 pad[0x364];
-    s32 mMaxDistance; /* 0x364 */
-    u8 pad_368[0x6];
-    u8 mMirrored; /* 0x36e */
-};
 /* One 0x34-byte runtime bone of mAnmModel.data.bones (ModelComponents types
    the array as BMD_Bone). Same rotX/rotY/rotZ at 0x1a as d_a_moray.cpp's
    MorayBone and d_a_cnn.cpp's CnnBone; the two render paths pose bone 0
@@ -116,11 +93,6 @@ extern "C" {
 /* shared engine entry points without a header declaration */
 
 /* ABI seams whose header member forms do not reproduce the ROM (see notes) */
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *actor, fx32 radius, fx32 height, Vector3_16 *a,
-                         Vector3_16 *b);
-unsigned int d_a_trsNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
-                            const void *dir, void *callback);
 
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentEntranceId;
@@ -165,11 +137,9 @@ extern SharedFilePtr data_ov002_0210d9b8;
 /* File-local helpers and engine entry points, with the C-linkage spellings
  * these bodies were matched against. */
 extern "C" {
-int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
 int func_020092c4(void *cam, void *out, void *target);
 u16 func_0201277c(unsigned int a);
 extern dCamera_c *gCamera;
-extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
 extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];
 /* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the
@@ -313,9 +283,9 @@ void daTrs_c::func_ov063_021162c8() {
                                     *(Vector3*)&this->mCarriedPosX, 0,
                                     this->mAreaIdx, -1);
             if (a != 0) {
-                ((daCoinView *)a)->mNoClsnTimer = 10;
+                ((daCoin_c *)a)->mNoClsnTimer = 10;
                 if (this->mCarriedID == TRS_ID_RED_COIN)
-                    ((daCoinView *)a)->mDisappearTimer = 0;
+                    ((daCoin_c *)a)->mDisappearTimer = 0;
             }
             this->mBooFlags.carrying = 0;
         }
@@ -330,7 +300,7 @@ unsigned char daTrs_c::func_ov063_021163d0() {
     if(id==0) return 0;
     char *a = (char*)(unsigned int)dActor_c::FindWithID(id);
     if(a==0) return 0;
-    return ((daTrsTrapView *)a)->mOccupiedFlag;
+    return ((daTrsTrap_c *)a)->mOccupiedFlag;
 }
 
 
@@ -1360,10 +1330,10 @@ void daTrs_c::func_ov063_02118458() {
             fb = SpawnFireball(*(const Vector3 *)&v, &this->mAngle, 0x14000, 0x6999, 4);
             this->mAngleX = 0;
             if (this->mBooFlags.mirrored)
-                ((daFPknBallView *)fb)->mMirrored = 1;
+                ((daFPknBall_c *)fb)->mMirrored = 1;
             else
-                ((daFPknBallView *)fb)->mMirrored = 0;
-            ((daFPknBallView *)fb)->mMaxDistance = 0x3e8000;
+                ((daFPknBall_c *)fb)->mMirrored = 0;
+            ((daFPknBall_c *)fb)->mMaxDistance = 0x3e8000;
             func_02012694(0x122, &this->mCamSpacePos);
         }
     }
@@ -1570,7 +1540,7 @@ bigblock:
             if ((r1->param1 >> 8 & 3) == 0)
                 break;
         }
-        ((daTrsTrapView *)r1)->mTriggered = 1;
+        ((daTrsTrap_c *)r1)->mTriggered = 1;
     }
 after_strb:
     this->MarkForDestruction();
@@ -1640,7 +1610,7 @@ void daTrs_c::func_ov063_02118e5c() {
     this->mFoundActor = (dActor_c *)actor;
     void *p = this->mFoundActor;
     if (p != 0) {
-        ((daTrsTrapView *)p)->mState = 1;
+        ((daTrsTrap_c *)p)->mState = 1;
     }
     this->mFoundActor = 0;
 }

@@ -8109,11 +8109,11 @@ matched: yes</title></rect><rect x="50.79" y="664.65" width="6.60" height="6.50"
 module: arm9
 addr: 0x0204effc
 size: 64 bytes
-matched: yes</title></rect><rect x="57.39" y="664.65" width="5.36" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f03c
+matched: yes</title></rect><rect x="57.39" y="664.65" width="5.36" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndMain
 module: arm9
 addr: 0x0204f03c
 size: 52 bytes
-matched: yes</title></rect><rect x="62.76" y="664.65" width="7.43" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f070
+matched: yes</title></rect><rect x="62.76" y="664.65" width="7.43" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndInit
 module: arm9
 addr: 0x0204f070
 size: 72 bytes
@@ -8145,67 +8145,67 @@ matched: yes</title></rect><rect x="101.53" y="664.65" width="4.54" height="6.50
 module: arm9
 addr: 0x0204f1e8
 size: 44 bytes
-matched: yes</title></rect><rect x="106.07" y="664.65" width="10.31" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f214
+matched: yes</title></rect><rect x="106.07" y="664.65" width="10.31" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SetPlayerPriority
 module: arm9
 addr: 0x0204f214
 size: 100 bytes
-matched: yes</title></rect><rect x="116.39" y="664.65" width="9.49" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f278
+matched: yes</title></rect><rect x="116.39" y="664.65" width="9.49" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>PlayerHeapDisposeCallback
 module: arm9
 addr: 0x0204f278
 size: 92 bytes
-matched: yes</title></rect><rect x="125.87" y="664.65" width="14.85" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f2d4
+matched: yes</title></rect><rect x="125.87" y="664.65" width="14.85" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>ShutdownPlayer
 module: arm9
 addr: 0x0204f2d4
 size: 144 bytes
-matched: yes</title></rect><rect x="140.73" y="664.65" width="12.79" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f364
+matched: yes</title></rect><rect x="140.73" y="664.65" width="12.79" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>AllocSeqPlayer
 module: arm9
 addr: 0x0204f364
 size: 124 bytes
-matched: yes</title></rect><rect x="153.51" y="664.65" width="3.30" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f3e0
+matched: yes</title></rect><rect x="153.51" y="664.65" width="3.30" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>ForceStopSeq
 module: arm9
 addr: 0x0204f3e0
 size: 32 bytes
-matched: yes</title></rect><rect x="156.82" y="664.65" width="9.90" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f400
+matched: yes</title></rect><rect x="156.82" y="664.65" width="9.90" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>InsertPrioList
 module: arm9
 addr: 0x0204f400
 size: 96 bytes
-matched: yes</title></rect><rect x="166.72" y="664.65" width="9.49" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f460
+matched: yes</title></rect><rect x="166.72" y="664.65" width="9.49" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>InsertPlayerList
 module: arm9
 addr: 0x0204f460
 size: 92 bytes
-matched: yes</title></rect><rect x="176.20" y="664.65" width="7.43" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f4bc
+matched: yes</title></rect><rect x="176.20" y="664.65" width="7.43" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>InitPlayer
 module: arm9
 addr: 0x0204f4bc
 size: 72 bytes
-matched: yes</title></rect><rect x="183.63" y="664.65" width="8.66" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f504
+matched: yes</title></rect><rect x="183.63" y="664.65" width="8.66" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndPlayerAllocHeap
 module: arm9
 addr: 0x0204f504
 size: 84 bytes
-matched: yes</title></rect><rect x="192.29" y="664.65" width="7.43" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f558
+matched: yes</title></rect><rect x="192.29" y="664.65" width="7.43" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndPlayerPause
 module: arm9
 addr: 0x0204f558
 size: 72 bytes
-matched: yes</title></rect><rect x="199.72" y="664.65" width="9.90" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f5a0
+matched: yes</title></rect><rect x="199.72" y="664.65" width="9.90" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndPlayerStopSeq
 module: arm9
 addr: 0x0204f5a0
 size: 96 bytes
-matched: yes</title></rect><rect x="209.62" y="664.65" width="4.95" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f600
+matched: yes</title></rect><rect x="209.62" y="664.65" width="4.95" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndPlayerStartSeq
 module: arm9
 addr: 0x0204f600
 size: 48 bytes
-matched: yes</title></rect><rect x="214.57" y="664.65" width="1.24" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f630
+matched: yes</title></rect><rect x="214.57" y="664.65" width="1.24" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndPlayerFreeSeqPlayer
 module: arm9
 addr: 0x0204f630
 size: 12 bytes
-matched: yes</title></rect><rect x="215.81" y="664.65" width="19.39" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f63c
+matched: yes</title></rect><rect x="215.81" y="664.65" width="19.39" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndPlayerAllocSeqPlayer
 module: arm9
 addr: 0x0204f63c
 size: 188 bytes
-matched: yes</title></rect><rect x="235.20" y="664.65" width="4.13" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f6f8
+matched: yes</title></rect><rect x="235.20" y="664.65" width="4.13" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndPlayerSetSeqArcNo
 module: arm9
 addr: 0x0204f6f8
 size: 40 bytes
-matched: yes</title></rect><rect x="239.32" y="664.65" width="2.89" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f720
+matched: yes</title></rect><rect x="239.32" y="664.65" width="2.89" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndPlayerSetSeqNo
 module: arm9
 addr: 0x0204f720
 size: 28 bytes
@@ -8253,27 +8253,27 @@ matched: yes</title></rect><rect x="292.54" y="664.65" width="1.65" height="6.50
 module: arm9
 addr: 0x0204f924
 size: 16 bytes
-matched: yes</title></rect><rect x="294.19" y="664.65" width="2.48" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f934
+matched: yes</title></rect><rect x="294.19" y="664.65" width="2.48" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndHandleReleaseSeq
 module: arm9
 addr: 0x0204f934
 size: 24 bytes
-matched: yes</title></rect><rect x="296.67" y="664.65" width="1.24" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f94c
+matched: yes</title></rect><rect x="296.67" y="664.65" width="1.24" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndHandleInit
 module: arm9
 addr: 0x0204f94c
 size: 12 bytes
-matched: yes</title></rect><rect x="297.90" y="664.65" width="11.14" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f958
+matched: yes</title></rect><rect x="297.90" y="664.65" width="11.14" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndPlayerPauseByPlayerNo
 module: arm9
 addr: 0x0204f958
 size: 108 bytes
-matched: yes</title></rect><rect x="309.04" y="664.65" width="10.73" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f9c4
+matched: yes</title></rect><rect x="309.04" y="664.65" width="10.73" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndPlayerStopSeqByPlayerNo
 module: arm9
 addr: 0x0204f9c4
 size: 104 bytes
-matched: yes</title></rect><rect x="319.77" y="664.65" width="1.65" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204fa2c
+matched: yes</title></rect><rect x="319.77" y="664.65" width="1.65" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndPlayerStopSeq
 module: arm9
 addr: 0x0204fa2c
 size: 16 bytes
-matched: yes</title></rect><rect x="5.00" y="671.15" width="21.02" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204fa3c
+matched: yes</title></rect><rect x="5.00" y="671.15" width="21.02" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndPlayerCreateHeap
 module: arm9
 addr: 0x0204fa3c
 size: 160 bytes
@@ -8281,11 +8281,11 @@ matched: yes</title></rect><rect x="26.02" y="671.15" width="4.20" height="5.10"
 module: arm9
 addr: 0x0204fadc
 size: 32 bytes
-matched: yes</title></rect><rect x="30.23" y="671.15" width="42.57" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204fafc
+matched: yes</title></rect><rect x="30.23" y="671.15" width="42.57" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndPlayerMain
 module: arm9
 addr: 0x0204fafc
 size: 324 bytes
-matched: yes</title></rect><rect x="72.80" y="671.15" width="22.08" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204fc40
+matched: yes</title></rect><rect x="72.80" y="671.15" width="22.08" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNSi_SndPlayerInit
 module: arm9
 addr: 0x0204fc40
 size: 168 bytes
@@ -8369,43 +8369,43 @@ matched: yes</title></rect><rect x="122.32" y="676.26" width="2.59" height="8.30
 module: arm9
 addr: 0x02050950
 size: 32 bytes
-matched: yes</title></rect><rect x="124.91" y="676.26" width="0.97" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050970
+matched: yes</title></rect><rect x="124.91" y="676.26" width="0.97" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SymbolDisposeCallback
 module: arm9
 addr: 0x02050970
 size: 12 bytes
-matched: yes</title></rect><rect x="125.88" y="676.26" width="0.97" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205097c
+matched: yes</title></rect><rect x="125.88" y="676.26" width="0.97" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FatDisposeCallback
 module: arm9
 addr: 0x0205097c
 size: 12 bytes
-matched: yes</title></rect><rect x="126.85" y="676.26" width="0.97" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050988
+matched: yes</title></rect><rect x="126.85" y="676.26" width="0.97" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>InfoDisposeCallback
 module: arm9
 addr: 0x02050988
 size: 12 bytes
-matched: yes</title></rect><rect x="127.82" y="676.26" width="2.26" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050994
+matched: yes</title></rect><rect x="127.82" y="676.26" width="2.26" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcSetFileAddress
 module: arm9
 addr: 0x02050994
 size: 28 bytes
-matched: yes</title></rect><rect x="130.08" y="676.26" width="3.23" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020509b0
+matched: yes</title></rect><rect x="130.08" y="676.26" width="3.23" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcGetFileAddress
 module: arm9
 addr: 0x020509b0
 size: 40 bytes
-matched: yes</title></rect><rect x="133.31" y="676.26" width="10.67" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020509d8
+matched: yes</title></rect><rect x="133.31" y="676.26" width="10.67" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcReadFile
 module: arm9
 addr: 0x020509d8
 size: 132 bytes
-matched: yes</title></rect><rect x="143.98" y="676.26" width="3.23" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050a5c
+matched: yes</title></rect><rect x="143.98" y="676.26" width="3.23" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcGetFileSize
 module: arm9
 addr: 0x02050a5c
 size: 40 bytes
-matched: yes</title></rect><rect x="147.21" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050a84
+matched: yes</title></rect><rect x="147.21" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcGetGroupInfo
 module: arm9
 addr: 0x02050a84
 size: 100 bytes
-matched: yes</title></rect><rect x="155.29" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050ae8
+matched: yes</title></rect><rect x="155.29" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcGetPlayerInfo
 module: arm9
 addr: 0x02050ae8
 size: 100 bytes
-matched: yes</title></rect><rect x="163.37" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050b4c
+matched: yes</title></rect><rect x="163.37" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcGetWaveArcInfo
 module: arm9
 addr: 0x02050b4c
 size: 100 bytes
@@ -8413,7 +8413,7 @@ matched: yes</title></rect><rect x="171.45" y="676.26" width="8.08" height="8.30
 module: arm9
 addr: 0x02050bb0
 size: 100 bytes
-matched: yes</title></rect><rect x="179.53" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050c14
+matched: yes</title></rect><rect x="179.53" y="676.26" width="8.08" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcGetSeqArcInfo
 module: arm9
 addr: 0x02050c14
 size: 100 bytes
@@ -8421,15 +8421,15 @@ matched: yes</title></rect><rect x="187.61" y="676.26" width="8.08" height="8.30
 module: arm9
 addr: 0x02050c78
 size: 100 bytes
-matched: yes</title></rect><rect x="195.69" y="676.26" width="6.46" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050cdc
+matched: yes</title></rect><rect x="195.69" y="676.26" width="6.46" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcGetSeqArcParam
 module: arm9
 addr: 0x02050cdc
 size: 80 bytes
-matched: yes</title></rect><rect x="202.16" y="676.26" width="1.29" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050d2c
+matched: yes</title></rect><rect x="202.16" y="676.26" width="1.29" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcGetCurrent
 module: arm9
 addr: 0x02050d2c
 size: 16 bytes
-matched: yes</title></rect><rect x="203.45" y="676.26" width="1.94" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050d3c
+matched: yes</title></rect><rect x="203.45" y="676.26" width="1.94" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcSetCurrent
 module: arm9
 addr: 0x02050d3c
 size: 24 bytes
@@ -8437,51 +8437,51 @@ matched: yes</title></rect><rect x="205.39" y="676.26" width="38.78" height="8.3
 module: arm9
 addr: 0x02050d54
 size: 480 bytes
-matched: yes</title></rect><rect x="244.17" y="676.26" width="10.02" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050f34
+matched: yes</title></rect><rect x="244.17" y="676.26" width="10.02" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndArcInit
 module: arm9
 addr: 0x02050f34
 size: 124 bytes
-matched: yes</title></rect><rect x="254.19" y="676.26" width="2.91" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050fb0
+matched: yes</title></rect><rect x="254.19" y="676.26" width="2.91" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>EraseSync
 module: arm9
 addr: 0x02050fb0
 size: 36 bytes
-matched: yes</title></rect><rect x="257.10" y="676.26" width="6.46" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02050fd4
+matched: yes</title></rect><rect x="257.10" y="676.26" width="6.46" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NewSection
 module: arm9
 addr: 0x02050fd4
 size: 80 bytes
-matched: yes</title></rect><rect x="263.57" y="676.26" width="5.17" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02051024
+matched: yes</title></rect><rect x="263.57" y="676.26" width="5.17" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>InitHeap
 module: arm9
 addr: 0x02051024
 size: 64 bytes
-matched: yes</title></rect><rect x="268.74" y="676.26" width="1.29" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02051064
+matched: yes</title></rect><rect x="268.74" y="676.26" width="1.29" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>InitHeapSection
 module: arm9
 addr: 0x02051064
 size: 16 bytes
-matched: yes</title></rect><rect x="270.03" y="676.26" width="3.88" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02051074
+matched: yes</title></rect><rect x="270.03" y="676.26" width="3.88" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndHeapGetFreeSize
 module: arm9
 addr: 0x02051074
 size: 48 bytes
-matched: yes</title></rect><rect x="273.91" y="676.26" width="17.45" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020510a4
+matched: yes</title></rect><rect x="273.91" y="676.26" width="17.45" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndHeapLoadState
 module: arm9
 addr: 0x020510a4
 size: 216 bytes
-matched: yes</title></rect><rect x="291.36" y="676.26" width="7.11" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205117c
+matched: yes</title></rect><rect x="291.36" y="676.26" width="7.11" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndHeapSaveState
 module: arm9
 addr: 0x0205117c
 size: 88 bytes
-matched: yes</title></rect><rect x="298.47" y="676.26" width="9.05" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020511d4
+matched: yes</title></rect><rect x="298.47" y="676.26" width="9.05" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndHeapAlloc
 module: arm9
 addr: 0x020511d4
 size: 112 bytes
-matched: yes</title></rect><rect x="307.52" y="676.26" width="13.90" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02051244
+matched: yes</title></rect><rect x="307.52" y="676.26" width="13.90" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndHeapClear
 module: arm9
 addr: 0x02051244
 size: 172 bytes
-matched: yes</title></rect><rect x="5.00" y="684.56" width="4.91" height="3.83" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020512f0
+matched: yes</title></rect><rect x="5.00" y="684.56" width="4.91" height="3.83" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndHeapDestroy
 module: arm9
 addr: 0x020512f0
 size: 28 bytes
-matched: yes</title></rect><rect x="5.00" y="688.38" width="4.91" height="21.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205130c
+matched: yes</title></rect><rect x="5.00" y="688.38" width="4.91" height="21.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>NNS_SndHeapCreate
 module: arm9
 addr: 0x0205130c
 size: 156 bytes
@@ -12561,11 +12561,11 @@ matched: yes</title></rect><rect x="525.58" y="27.00" width="22.35" height="12.2
 module: ov002
 addr: 0x020ae2b8
 size: 412 bytes
-matched: yes</title></rect><rect x="547.93" y="27.00" width="6.51" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11EnemyDeathC19func_ov002_020ae454ER10dBgCh_Actr
+matched: yes</title></rect><rect x="547.93" y="27.00" width="6.51" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae454ER10dBgCh_Actr
 module: ov002
 addr: 0x020ae454
 size: 120 bytes
-matched: yes</title></rect><rect x="554.45" y="27.00" width="13.67" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11EnemyDeathC19func_ov002_020ae4ccER10dBgCh_Actr
+matched: yes</title></rect><rect x="554.45" y="27.00" width="13.67" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae4ccER10dBgCh_Actr
 module: ov002
 addr: 0x020ae4cc
 size: 252 bytes
@@ -12573,11 +12573,11 @@ matched: yes</title></rect><rect x="568.12" y="27.00" width="3.47" height="12.27
 module: ov002
 addr: 0x020ae5c8
 size: 64 bytes
-matched: yes</title></rect><rect x="571.59" y="27.00" width="3.69" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11EnemyDeathC19func_ov002_020ae608ER10dBgCh_Actr
+matched: yes</title></rect><rect x="571.59" y="27.00" width="3.69" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae608ER10dBgCh_Actr
 module: ov002
 addr: 0x020ae608
 size: 68 bytes
-matched: yes</title></rect><rect x="575.28" y="27.00" width="4.99" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11EnemyDeathC19func_ov002_020ae64cER10dBgCh_Actr
+matched: yes</title></rect><rect x="575.28" y="27.00" width="4.99" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae64cER10dBgCh_Actr
 module: ov002
 addr: 0x020ae64c
 size: 92 bytes
@@ -12585,23 +12585,23 @@ matched: yes</title></rect><rect x="580.27" y="27.00" width="8.03" height="12.27
 module: ov002
 addr: 0x020ae6a8
 size: 148 bytes
-matched: yes</title></rect><rect x="588.30" y="27.00" width="11.29" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Aea30C19func_ov002_020ae73cEP8dActor_cP10dBgCh_Actr
+matched: yes</title></rect><rect x="588.30" y="27.00" width="11.29" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae73cEP8dActor_cP10dBgCh_Actr
 module: ov002
 addr: 0x020ae73c
 size: 208 bytes
-matched: yes</title></rect><rect x="599.59" y="27.00" width="3.04" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Aea30C19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr
+matched: yes</title></rect><rect x="599.59" y="27.00" width="3.04" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr
 module: ov002
 addr: 0x020ae80c
 size: 56 bytes
-matched: yes</title></rect><rect x="602.63" y="27.00" width="3.04" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Aea30C19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr
+matched: yes</title></rect><rect x="602.63" y="27.00" width="3.04" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr
 module: ov002
 addr: 0x020ae844
 size: 56 bytes
-matched: yes</title></rect><rect x="354.12" y="39.27" width="2.75" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Aea30C19func_ov002_020ae87cEP8dActor_cP10dBgCh_Actr
+matched: yes</title></rect><rect x="354.12" y="39.27" width="2.75" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae87cEP8dActor_cP10dBgCh_Actr
 module: ov002
 addr: 0x020ae87c
 size: 20 bytes
-matched: yes</title></rect><rect x="356.87" y="39.27" width="5.49" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Aea30C19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr
+matched: yes</title></rect><rect x="356.87" y="39.27" width="5.49" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr
 module: ov002
 addr: 0x020ae890
 size: 40 bytes
@@ -12609,7 +12609,7 @@ matched: yes</title></rect><rect x="362.36" y="39.27" width="21.42" height="4.85
 module: ov002
 addr: 0x020ae8b8
 size: 156 bytes
-matched: yes</title></rect><rect x="383.78" y="39.27" width="2.75" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Aea30C19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr
+matched: yes</title></rect><rect x="383.78" y="39.27" width="2.75" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr
 module: ov002
 addr: 0x020ae954
 size: 20 bytes
@@ -12617,19 +12617,19 @@ matched: yes</title></rect><rect x="386.53" y="39.27" width="19.77" height="4.85
 module: ov002
 addr: 0x020ae968
 size: 144 bytes
-matched: yes</title></rect><rect x="406.30" y="39.27" width="6.04" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Aea30C19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr
+matched: yes</title></rect><rect x="406.30" y="39.27" width="6.04" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr
 module: ov002
 addr: 0x020ae9f8
 size: 44 bytes
-matched: yes</title></rect><rect x="412.34" y="39.27" width="1.10" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11EnemyDeathC19func_ov002_020aea24ER10dBgCh_Actr
+matched: yes</title></rect><rect x="412.34" y="39.27" width="1.10" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020aea24ER10dBgCh_Actr
 module: ov002
 addr: 0x020aea24
 size: 8 bytes
-matched: yes</title></rect><rect x="413.44" y="39.27" width="0.55" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Aea30C19func_ov002_020aea2cEP8dActor_cP10dBgCh_Actr
+matched: yes</title></rect><rect x="413.44" y="39.27" width="0.55" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020aea2cEP8dActor_cP10dBgCh_Actr
 module: ov002
 addr: 0x020aea2c
 size: 4 bytes
-matched: yes</title></rect><rect x="413.99" y="39.27" width="19.22" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z19func_ov002_020aea30P6Aea30CP8dActor_cP10dBgCh_Actr
+matched: yes</title></rect><rect x="413.99" y="39.27" width="19.22" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020aea30EP8dActor_cP10dBgCh_Actr
 module: ov002
 addr: 0x020aea30
 size: 140 bytes

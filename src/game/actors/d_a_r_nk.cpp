@@ -161,10 +161,6 @@ enum {
    __sinit_d_a_r_nk.cpp. */
 extern StateFunc data_ov062_0211e0a4[6];
 
-/* Scalar fixed-point ABI entry; the class-valued form still needs
-   caller reconstruction under the pinned compiler. */
-extern "C" s16 atan2_hold_d_a_r_nk_1(int y, int x);
-
 /* Positional sound at the actor's camera-space position (Sound::Play(3, id, pos)). */
 /* This scalar entry follows its C definition, including u16 startFrame.
    dExtAnmModel_c.h instead declares u32; that shared contract is still unresolved. */
@@ -172,16 +168,11 @@ extern "C" s16 atan2_hold_d_a_r_nk_1(int y, int x);
 extern "C" unsigned int func_0201277c(unsigned int id);
 extern signed char gCurrentSublevel; /* LEVEL_ID */
 extern u8 gShowRaceTimer;            /* nonzero: dMeter_c draws the race timer */
-extern "C" bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 void func_02012694(u32 a, const Vector3 *b);
 extern u8 data_0209d684;            /* MESSAGE_RESULT: which answer the player picked (1 or 2) */
 extern Timer gRaceTimer;            /* TIME_TIMER: the course timer */
 /* The existing C initializer erases pointer slots to integers. Keep the
    evidenced actor view here; repairing the shared initializer is separate. */
-/* Parameter names keep this TU's @NNN. */
-extern "C" {
-typedef void BgchInitAt_(void *self, void *actor, int r, int h, void *p, int q);
-}
 /* The files InitResources loads and CleanupResources releases; see ANIM_*. */
 extern RNkModelFileHandle gdaRNkNokonokoModelFile;      /* the model (BMD) */
 extern RNkAnimationFileHandle data_ov062_0211e014;  /* ANIM_RUN_START */

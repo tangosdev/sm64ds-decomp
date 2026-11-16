@@ -26,8 +26,8 @@ void func_0204ae2c(ParticleSystem *o, void *p18, struct Vector3 *src3) {
     o->callbackValue = 0;
     {
         PtclData *s = o->mDefinition->data;
-        *(struct H2 *)o->direction = *(struct H2 *)s->axis;
-        o->direction[2] = s->axis[2];
+        *(struct H2 *)&o->direction = *(struct H2 *)s->axis;
+        o->direction.z = s->axis[2];
         o->emitRadius = o->mDefinition->data->emitRadius;
         o->callbackParam = o->mDefinition->data->callbackParam;
         o->callbackVelocity = o->mDefinition->data->callbackVelocity;

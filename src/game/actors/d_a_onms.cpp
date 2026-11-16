@@ -100,12 +100,9 @@ extern OnmsCollisionFilePtr gOnimasuCollisionFile;
 extern daOnms_cStateEntry data_ov092_02132568[9];
 
 extern "C" int func_ov002_020de328(void *player);
-extern "C" void d_a_onmsEarthquakeHold(void *v, int f);
 /* Sound::Play(3, id, pos). The overlay calls this wrapper, not Sound::Play. */
 void func_02012694(unsigned int id, const Vector3 *v);
 /* Stores mRadius: p[6] = value, the word at dBgCh_Actr + 0x18. */
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(dBgCh_Actr *self, int a1, int a2, int a3, int sp0, int sp1);
 extern "C" void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angX);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short angZ);

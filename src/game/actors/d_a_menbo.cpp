@@ -90,10 +90,6 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" int func_02035638(u8 *p);
 
-struct Aea30C {
-    void func_ov002_020aea30(dActor_c *actor, dBgCh_Actr *collision);
-};
-
 extern Matrix4x3     data_020a0e68;
 extern int           data_02092138;
 extern unsigned char gGameMode;
@@ -192,23 +188,23 @@ void daMenbo_c::func_ov090_021310b4() {
 
     if (flags & 0x2400) {
         mDeathState = 2;
-        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
+        func_ov002_020aea30(p, 0);
         return;
     }
     if (flags & 0x40000) {
         mDeathState = 4;
-        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
+        func_ov002_020aea30(p, 0);
         return;
     }
     if (flags & 0x40) {
         mDeathState = 2;
-        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
+        func_ov002_020aea30(p, 0);
         return;
     }
     if (JumpedOnByPlayer(mdCcAcPos_c, *(daPly_c *)p)) {
         ((daPly_c *)p)->Bounce(0x28000);
         mDeathState = 1;
-        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
+        func_ov002_020aea30(p, 0);
         return;
     }
     if (flags & 0x20) {
@@ -217,7 +213,7 @@ void daMenbo_c::func_ov090_021310b4() {
         mVertSpeed = 0;
         mSpeedZ = 0;
         mDeathState = 1;
-        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
+        func_ov002_020aea30(p, 0);
         return;
     }
     if (flags & 0x10) {
@@ -231,7 +227,7 @@ void daMenbo_c::func_ov090_021310b4() {
     if (flags & 0x4380) {
         mDeathTumble = 3;
         mDeathState = 3;
-        ((Aea30C *)this)->func_ov002_020aea30(p, 0);
+        func_ov002_020aea30(p, 0);
         return;
     }
     if (!IsPlayerActor(p))
@@ -699,7 +695,7 @@ int daMenbo_c::Behavior()
                 mVertSpeed = 0;
                 mSpeedZ = 0;
                 mDeathState = 1;
-                ((Aea30C *)c)->func_ov002_020aea30(ClosestPlayer(), 0);
+                func_ov002_020aea30(ClosestPlayer(), 0);
                 return 1;
             }
         }
@@ -722,7 +718,7 @@ int daMenbo_c::Behavior()
         mVertSpeed = 0;
         mSpeedZ = 0;
         mDeathState = 1;
-        ((Aea30C *)c)->func_ov002_020aea30(ClosestPlayer(), 0);
+        func_ov002_020aea30(ClosestPlayer(), 0);
         return 1;
     }
 
