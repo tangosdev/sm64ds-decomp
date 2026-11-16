@@ -1272,7 +1272,7 @@ void daTrs_c::func_ov063_02117cdc() {
 
 
 void daTrs_c::func_ov063_02118458() {
-    int r4 = GetAttackStatus();
+    int status = GetAttackStatus();
 
     ApproachLinear(this->mPrevAngleY, this->mAngleToPlayer,
         data_ov063_0211e1c0[this->mHitPoints - 1]);
@@ -1307,12 +1307,11 @@ void daTrs_c::func_ov063_02118458() {
         if (this->mAnmModel.file == (BCA_File *)data_ov063_0211edd4.filePtr &&
             this->mAnmModel.WillHitFrame(6)) {
             VecFx32 v;
-            s16 m = 0x78;
             v.x = this->mPosX;
             v.y = this->mPosY;
             v.z = this->mPosZ;
-            v.x = FX_SinIdx((u16)this->mAngleY >> 4) * m + v.x;
-            v.z = FX_CosIdx((u16)this->mAngleY >> 4) * m + v.z;
+            v.x += FX_SinIdx((u16)this->mAngleY >> 4) * 0x78;
+            v.z += FX_CosIdx((u16)this->mAngleY >> 4) * 0x78;
             dActor_c *fb;
             this->mAngleX = 0x1000;
             func_02012694(0x156, &this->mCamSpacePos);
@@ -1327,11 +1326,11 @@ void daTrs_c::func_ov063_02118458() {
         }
     }
 
-    if (r4 == -1) {
+    if (status == -1) {
         this->mState = 2;
         return;
     }
-    if (r4 != 1)
+    if (status != 1)
         return;
     this->mState = 3;
     func_02012694(0x152, &this->mCamSpacePos);
