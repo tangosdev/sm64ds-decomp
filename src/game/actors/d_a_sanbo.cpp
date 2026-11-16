@@ -416,28 +416,15 @@ int daSanbo_c::UpdateStackedOnGrowingBody() {
         int fullHeight = 0x6e000;
         int scale = next->mScaleX;
         int raised = FX_MUL(scale, fullHeight);
-        int offset = 0xe000;
-        s16 sine;
-        s16 cosine;
-        u16 ang;
 
         mPosX = next->mPosX;
-        next = mNextSegment;
-        mPosY = raised + next->mPosY;
-        next = mNextSegment;
-        mPosZ = next->mPosZ;
-        next = mNextSegment;
-        mAngleY = next->mAngleY;
-        next = mNextSegment;
-        s16 segAng = (next->mSegAngY + 0x13000);
-        mSegAngY = segAng;
-        ang = (u16)mSegAngY;
-        sine = FX_SinIdx(ang >> 4);
-        mOffsetX = FX_MUL(sine, offset);
+        mPosY = raised + mNextSegment->mPosY;
+        mPosZ = mNextSegment->mPosZ;
+        mAngleY = mNextSegment->mAngleY;
+        mSegAngY = mNextSegment->mSegAngY + 0x13000;
+        mOffsetX = FX_MUL(FX_SinIdx((u16)mSegAngY >> 4), 0xe000);
         mOffsetY = 0;
-        ang = (u16)mSegAngY;
-        cosine = FX_CosIdx(ang >> 4);
-        mOffsetZ = FX_MUL(cosine, offset);
+        mOffsetZ = FX_MUL(FX_CosIdx((u16)mSegAngY >> 4), 0xe000);
         if (raised == fullHeight)
             ChangeState(0);
     }
