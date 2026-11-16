@@ -1326,11 +1326,8 @@ void dScMgBase_c::UpdateMenu() {
     }
 }
 
-/* What SaveScreenForMenu and RestoreScreenFromMenu keep in the header's
-   pad_228 while the menu is up. A file-local view: dScMgBase_c.h is shared
-   by 36 sources, and only these two bodies touch the buffers. It overlays
-   the whole object from `this`; a view cast from pad_228 moves the literal
-   pool. */
+/* SaveScreenForMenu's view of the buffers it fills while the menu is up.
+   It overlays the whole object from `this`. */
 struct MgMenuSaveArea {
     u8 pad_000[0x2228];     /* 0x000 -- the dScMgBase_c members before them */
     u8 subObjChars[0x2000]; /* 0x2228 -- sub-screen OBJ VRAM at 0x06606000 */
@@ -1369,8 +1366,6 @@ struct MgMenuSaveArea {
    already said void; the retail source did too. */
 
 void dScMgBase_c::RestoreScreenFromMenu() {
-    MgMenuSaveArea *save = (MgMenuSaveArea *)this;
-
     gMainScreenLayers = 0;
     gSubScreenLayers = 0;
 
@@ -1380,16 +1375,15 @@ void dScMgBase_c::RestoreScreenFromMenu() {
     GX_SetVisibleWnd(data_0209d460);
     GXS_SetVisibleWnd(data_0209d458);
 
-    GX_LoadBGPltt(save->mainBgPltt, 0x20, 0x1e0);
-    {
-        /* stepped from mainBgPltt: save->subBgPltt moves the literal pool */
-        char *p = (char *)save->mainBgPltt;
-        p += 0x200;
-        GXS_LoadBGPltt(p, 0, 0x80);
-    }
+    GX_LoadBGPltt(mSavedBgPltt, 0x20, 0x1e0);
+    /* The sub palette is reached as colour 0x100 of the buffer: as
+       mSavedBgPltt + 0x200 (or &mSavedBgPltt[0x200], a stepped u8 local, or a
+       u16 [0x200] / [2][0x100] buffer) mwccarm folds the two offsets into one
+       0x4428 literal, 53 of 93 words off (#821, 2026-11-16). */
+    GXS_LoadBGPltt((u16 *)mSavedBgPltt + 0x100, 0, 0x80);
 
     if (GetDisplayMode() != 2) {
-        MI_CpuCopy32(save->subObjChars, (u8 *)G2S_GetOBJCharPtr() + 0x6000, 0x2000);
+        MI_CpuCopy32(mSavedSubObjChars, (u8 *)G2S_GetOBJCharPtr() + 0x6000, 0x2000);
     }
 
     gMainScreenLayers = mSavedMainBgBits;
