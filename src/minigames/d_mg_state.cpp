@@ -150,34 +150,46 @@ extern int sMgBannerButtonsArmed;
 extern int gMgCoinsShowDelta;
 extern int sMgCoinsDeltaShown;
 
-extern int sMgScoreX;
-extern int sMgRecordBannerX;
-extern int sMgDrawBannerY;
-extern int sMgScoreDigitsX;
-extern int sMgWinBannerY;
-extern int sMgResultsBannerY;
-extern int sMgDrawBannerX;
-extern int sMgQuitX;
-extern int sMgScoreDigitsY;
-extern int sMgRetryBannerY;
-extern int sMgLoseBannerX;
-extern int sMgRecordBannerY;
-extern int sMgClearBannerX;
-extern int sMgClearBannerY;
-extern int sMgResultsBannerX;
-extern int sMgWinBannerX;
-extern int sMgLoseBannerY;
-extern int sMgRetryBannerX;
-extern int sMgPlayAgainY;
-extern int sMgScoreY;
-extern int sMgNextBanner;
-extern int sMgQuitY;
-extern int sMgPlayAgainX;
-extern int sMgTopBannerY;
-extern int sMgTopBannerX;
-extern int sMgMainBannerY;
-extern int sMgMainBannerX;
-extern unsigned char *sMgStateTextSpritesByLanguage[];
+int sMgScoreX = 0x80;
+int sMgRecordBannerX = 0x80;
+int sMgDrawBannerY = 0x58;
+int sMgScoreDigitsX = 0x80;
+int sMgWinBannerY = 0x60;
+int sMgResultsBannerY = -0x60;
+int sMgDrawBannerX = 0x80;
+int sMgQuitX = 0x80;
+int sMgScoreDigitsY = 0x80;
+int sMgRetryBannerY = 0x28;
+int sMgLoseBannerX = 0x80;
+int sMgRecordBannerY = 0x60;
+int sMgClearBannerX = 0x80;
+int sMgClearBannerY = 0x60;
+int sMgResultsBannerX = 0x80;
+int sMgWinBannerX = 0x80;
+int sMgLoseBannerY = 0x60;
+int sMgRetryBannerX = 0x80;
+int sMgPlayAgainY = 0x6c;
+int sMgScoreY = 0x60;
+int sMgNextBanner = 0x1d;
+int sMgQuitY = 0x9c;
+int sMgPlayAgainX = 0x80;
+int sMgTopBannerY = 0x60;
+int sMgTopBannerX = 0x80;
+int sMgMainBannerY = 0x40;
+int sMgMainBannerX = 0x80;
+struct OamAttr;
+extern struct OamAttr *sMgTextSpritesEnglish[];
+extern struct OamAttr *sMgTextSpritesSpanish[];
+extern struct OamAttr *sMgTextSpritesFrench[];
+extern struct OamAttr *sMgTextSpritesGerman[];
+extern struct OamAttr *sMgTextSpritesItalian[];
+unsigned char *sMgStateTextSpritesByLanguage[] = {
+    (unsigned char *)sMgTextSpritesEnglish,
+    (unsigned char *)sMgTextSpritesSpanish,
+    (unsigned char *)sMgTextSpritesFrench,
+    (unsigned char *)sMgTextSpritesGerman,
+    (unsigned char *)sMgTextSpritesItalian,
+};
 
 /* Behavior and render records. Each comment names the member the record
    points at (ov004 relocs.txt). */
