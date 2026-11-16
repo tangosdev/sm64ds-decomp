@@ -143,9 +143,7 @@ void dScMgJump_c::StartRound(int arg)
         idx = mLevel;
     } else {
         do {
-            idx =
-                (int)((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) * 0xa >>
-                0xc;
+            idx = RAND_FX_SCALE(10);
         } while (idx == (u32)sJumpLastPick);
         sJumpLastPick = idx;
     }

@@ -305,11 +305,7 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
 
     mInputEnabled = 0;
     mRoundOver = 0;
-    mDoorSwitchTimer =
-        (((int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) *
-          0x2d0) >>
-         12) +
-        0x2d0;
+    mDoorSwitchTimer = RAND_FX_SCALE(0x2d0) + 0x2d0;
     mDoorBlinkTimer = 0;
     mDoorBlinkPhase = 1;
     mArrow1X = 0;
@@ -384,11 +380,7 @@ void dScMgTrampoline_c::StateIntro() {
         mTouchX = (s16)(penX >> 12);
         mTouchY = sTrmpStartTouchY;
 
-        mTouchY +=
-            ((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) -
-               0x800)
-              << 2) >>
-             12);
+        mTouchY += ((RAND_FX() - 0x800) << 2) >> 12;
 
         Mg_DrawLine(prevX, prevY, mTouchX, mTouchY, 2, 0xc);
 

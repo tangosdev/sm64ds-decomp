@@ -1015,15 +1015,13 @@ int RouletteBoard_FreeModels(RouletteBoard *res) {
 
 void RouletteBoard_StartSpin(char *slider) {
     RouletteBoard *board = (RouletteBoard *)slider;
-    unsigned rand;
     board->mBallRadius = 0x4200;
     board->mBallRadiusVel = 0;
     board->mOrbitAngle = 0;
     board->mBoardAngle = 0;
     board->mAngleStep = 0x400;
     board->mBoardSpin = -0x200;
-    rand = (unsigned)RandomIntInternal(&data_0209e650.value);
-    board->mSpinSpeed = ((rand & 0x7fffffff) >> 0x13) + 0x2000;
+    board->mSpinSpeed = RAND_FX() + 0x2000;
     board->mBraking = 0;
     RouletteBoard_SetStateSpin(board);
 }

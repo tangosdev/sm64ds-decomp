@@ -807,18 +807,18 @@ void dMgJump3DMario_c::HideAndIdle()
 
 void dMgJump3DMario_c::StateRespawn()
 {
-    unsigned int rnd;
+    fx32 rnd;
     int speed;
 
     mTimer -= 1;
     if (mTimer == 0) {
         mPos.y = 0x100000;
-        rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
-        mPos.x = ((int)rnd - 0x800) * 0xc0;
+        rnd = RAND_FX();
+        mPos.x = (rnd - 0x800) * 0xc0;
         mVel.y = 0;
         speed = sJump3DMoveSpeed;
-        rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
-        mVel.x = FX_MUL((((int)rnd - 0x800) << 1), speed);
+        rnd = RAND_FX();
+        mVel.x = FX_MUL((rnd - 0x800) << 1, speed);
         mAnmModel.SetAnim(sJump3DAnimWallJump, 0x40000000, kAnimSpeed, 0);
         EnterMove();
         return;
