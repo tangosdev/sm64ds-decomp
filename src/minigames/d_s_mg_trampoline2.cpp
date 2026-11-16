@@ -275,10 +275,10 @@ s32 dScMgTrampoline2_c::InitResources() {
 void dScMgTrampoline2_c::StartRound(int /* arg */) {
     G2_SetBlendAlpha(1, 0x2e, 0x10, 0x10);
 
-    mTouchStartX = data_020a0dbc[0];
-    mTouchStartY = data_020a0dbc[1];
-    mTouchX = data_020a0dbc[0];
-    mTouchY = data_020a0dbc[1];
+    mTouchStart.x = data_020a0dbc[0];
+    mTouchStart.y = data_020a0dbc[1];
+    mTouch.x = data_020a0dbc[0];
+    mTouch.y = data_020a0dbc[1];
 
     mLevel = 0;
     if (mLevel > 0x270e)
@@ -321,11 +321,11 @@ void dScMgTrampoline2_c::BeginIntro() {
     short a, b;
     mTimer = 90;
     a = sTrmpStartTouchX;
-    mTouchStartX = a;
+    mTouchStart.x = a;
     b = sTrmpStartTouchY;
-    mTouchStartY = b;
-    mTouchX = a;
-    mTouchY = b;
+    mTouchStart.y = b;
+    mTouch.x = a;
+    mTouch.y = b;
     mDragSoundHandle = 0;
     mScoreGate = 0x3e8;
     mState = &dScMgTrampoline2_c::StateIntro;
@@ -359,19 +359,19 @@ void dScMgTrampoline2_c::StateIntro() {
 
     {
         int t = FX_Div(counter << 12, 0x5a000);
-        volatile s16 old9c = mTouchX;
-        volatile s16 old9e = mTouchY;
+        volatile s16 old9c = mTouch.x;
+        volatile s16 old9e = mTouch.y;
         int mixRaw = sTrmp2IntroToX * t + sTrmp2IntroFromX * (0x1000 - t);
-        mTouchX = (mixRaw >> 12);
-        mTouchY = sTrmpStartTouchY;
+        mTouch.x = (mixRaw >> 12);
+        mTouch.y = sTrmpStartTouchY;
 
-        mTouchY +=
+        mTouch.y +=
             ((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) -
                0x800)
               << 2) >>
              12);
 
-        Mg_DrawLine(old9c, old9e, mTouchX, mTouchY, 2, 0xc);
+        Mg_DrawLine(old9c, old9e, mTouch.x, mTouch.y, 2, 0xc);
 
         mDragSoundHandle =
             func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mixRaw), 0, 0);
@@ -517,10 +517,10 @@ void dScMgTrampoline2_c::UpdateTouchInput() {
     i = ACTIVE_SLOT;
     b = (gTouchInfo[i].held != 0 && gTouchInfo[i].edge != 0);
     if (b) {
-        mTouchX = gTouchInfo[i].x;
-        mTouchStartX = mTouchX;
-        mTouchY = gTouchInfo[i].y;
-        mTouchStartY = mTouchY;
+        mTouch.x = gTouchInfo[i].x;
+        mTouchStart.x = mTouch.x;
+        mTouch.y = gTouchInfo[i].y;
+        mTouchStart.y = mTouch.y;
         mTouching = 1;
         mDragSoundHandle = 0;
     }
@@ -530,12 +530,12 @@ void dScMgTrampoline2_c::UpdateTouchInput() {
 
     i = ACTIVE_SLOT;
     if (gTouchInfo[i].held != 0) {
-        Mg_DrawLine(mTouchX, mTouchY, gTouchInfo[i].x, gTouchInfo[i].y, 2, 4);
+        Mg_DrawLine(mTouch.x, mTouch.y, gTouchInfo[i].x, gTouchInfo[i].y, 2, 4);
         i = ACTIVE_SLOT;
-        mTouchX = gTouchInfo[i].x;
-        mTouchY = gTouchInfo[i].y;
+        mTouch.x = gTouchInfo[i].x;
+        mTouch.y = gTouchInfo[i].y;
         mDragSoundHandle =
-            func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mTouchX << 12), 0, 0);
+            func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mTouch.x << 12), 0, 0);
     } else {
         b = (gTouchInfo[i].held == 0 && gTouchInfo[i].edge != 0);
         if (b != 0) {
@@ -839,16 +839,16 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
         return 0;
 
     if (mTouchReleased != 0) {
-        s16 a = *(volatile s16 *)&mTouchStartX;
-        if ((a < 0x18 && mTouchX < 0x18) || (a > 0xe8 && mTouchX > 0xe8)) {
+        s16 a = *(volatile s16 *)&mTouchStart.x;
+        if ((a < 0x18 && mTouch.x < 0x18) || (a > 0xe8 && mTouch.x > 0xe8)) {
             func_02012790(0xe);
         } else {
-            buf[1] = mTouchStartX;
-            buf[2] = mTouchStartY;
-            buf[3] = mTouchX;
-            buf[4] = mTouchY;
+            buf[1] = mTouchStart.x;
+            buf[2] = mTouchStart.y;
+            buf[3] = mTouch.x;
+            buf[4] = mTouch.y;
             if (TrmpLine::Create(&buf[1], &buf[3])) {
-                func_02012718(0x1af, (mTouchStartX + mTouchX) << 11);
+                func_02012718(0x1af, (mTouchStart.x + mTouch.x) << 11);
             } else {
                 func_02012790(0xe);
             }
