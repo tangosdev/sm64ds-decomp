@@ -1,6 +1,7 @@
 #include "types.h"
 #include "Ov007Tween.h"
 #include "math/CalcLib.h"
+/* Vector3 VEC_*: `out` is Ov007Camera's eye/target, G3i_LookAt_'s Vector3s (#5207). */
 
 extern void func_ov007_020c90c0(void *self);
 extern void VEC_Normalize(const Vector3 *v, Vector3 *out);
