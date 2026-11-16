@@ -1640,8 +1640,10 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
                reads at both sites give 0x280. Re-measured (#821 r17): the
                three saves as an inline helper (pointer or reference) are
                still 0x280; the state test as an inline predicate is 0x298
-               (if chain) or 0x2d0 (switch). */
-            mResumeState = *(volatile s32 *)&mState;
+               (if chain) or 0x2d0 (switch). The pointer cast is what
+               matters, not a qualifier: these reads were `volatile s32 *`
+               until #821 r18, and dropping it left the object unchanged. */
+            mResumeState = *(s32 *)&mState;
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
         }
@@ -1663,7 +1665,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
             }
         }
         if (mState != 0xa) {
-            mResumeState = *(volatile s32 *)&mState;
+            mResumeState = *(s32 *)&mState;
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
         }
