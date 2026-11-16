@@ -14935,13 +14935,13 @@ void daPly_c::func_ov002_020d9c70() {
  * The int view keeps the 0/1 and gives the return 0 its own path. */
 int daPly_c::func_ov002_020d9dcc() {
     extern s16 data_0209f4a0[];
-    char* p;
+    dActor_c *p;
 
     if (param1 != 2)
         return 0;
 
-    p = (char *)mHeldObj;
-    if (p == 0 || (int)(((dActor_c *)p)->actorID == 0xbf) == 0)
+    p = mHeldObj;
+    if (p == 0 || (int)(p->actorID == 0xbf) == 0)
         return 0;
 
     if (data_0209f498[gActivePlayerSlot].mag == 0 || mIsAirborne != 0) {
