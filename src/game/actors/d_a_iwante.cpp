@@ -358,7 +358,6 @@ void func_02012694(unsigned int a, const Vector3 *p);
 /* Unreferenced. */
 extern "C" void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 
-extern "C" u32 d_a_iwanteNewHold(u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. These int-returning predicates are what make the ROM

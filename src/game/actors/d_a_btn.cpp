@@ -105,11 +105,8 @@ int AngleDiff(int, int);
 int func_ov002_020dd8b8(void *c);
 }
 
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *c, void *d);
 extern "C" {
 extern void hold_d_a_btn(void *mc, void *kcl, void *mtx, int fix, s16 s, void *clps);
-void d_a_btnEarthquakeHold(void *self, const void *v, int f);
 }
 
 /* ---- data ---- */

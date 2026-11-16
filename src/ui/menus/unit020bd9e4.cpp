@@ -42,9 +42,9 @@
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
 
-extern "C" void func_0204f934(NNSSndHandle *);
-extern "C" void func_0204f94c(NNSSndHandle *);
-extern "C" int func_0204fa2c(NNSSndHandle *, int);
+extern "C" void NNS_SndHandleReleaseSeq(NNSSndHandle *);
+extern "C" void NNS_SndHandleInit(NNSSndHandle *);
+extern "C" int NNS_SndPlayerStopSeq(NNSSndHandle *, int);
 extern "C" int func_02051f1c(void *, unsigned int, int);
 extern "C" void *func_ov007_020c3df4(const char *name, int size);
 extern "C" void func_ov007_020c3d1c(void *);
@@ -61,7 +61,7 @@ extern int *data_ov007_02104bb8;
 extern NNSSndHandle *data_ov007_02104bbc;
 
 int func_ov007_020be098(int idx) {
-    func_0204f94c(&data_ov007_02104bbc[idx]);
+    NNS_SndHandleInit(&data_ov007_02104bbc[idx]);
     return func_02051f1c(&data_ov007_02104bbc[idx], 2, data_ov007_02103134[idx]);
 }
 
@@ -73,7 +73,7 @@ void MenuSound_Create(void) {
     data_ov007_02104bb8 = (int *)func_ov007_020c3df4(data_ov007_02103220, 0x10);
 
     for (i = 0; i < 57; i++)
-        func_0204f94c(&data_ov007_02104bbc[i]);
+        NNS_SndHandleInit(&data_ov007_02104bbc[i]);
 
     for (j = 0; j < 4; j++)
         data_ov007_02104bb8[j] = 0;
@@ -83,9 +83,9 @@ void MenuSound_Destroy(void) {
     int i;
     for (i = 0; i < 57; i++) {
         if (data_ov007_02104bbc[i].player != 0) {
-            func_0204fa2c(&data_ov007_02104bbc[i], 5);
+            NNS_SndPlayerStopSeq(&data_ov007_02104bbc[i], 5);
         }
-        func_0204f934(&data_ov007_02104bbc[i]);
+        NNS_SndHandleReleaseSeq(&data_ov007_02104bbc[i]);
     }
     if (data_ov007_02104bb8 != 0) {
         func_ov007_020c3d1c(data_ov007_02104bb8);
@@ -105,7 +105,7 @@ int *MenuSound_UpdateLoops(void) {
         sound = i + 0x35;
         if (data_ov007_02104bb8[i] == 0) {
             if (data_ov007_02104bbc[sound].player != 0) {
-                func_0204fa2c(&data_ov007_02104bbc[sound], 1);
+                NNS_SndPlayerStopSeq(&data_ov007_02104bbc[sound], 1);
                 /* Never true (i is a loop index, 0..3): the reset of
                  * func_ov007_020bdbcc's smoothed input looks meant for
                  * sound 0x35. The ROM keeps the test; without it 020bdebc
@@ -131,7 +131,7 @@ extern "C" int func_ov007_020bdeb0(int idx) {
 void func_ov007_020bde70(int idx, int arg) {
     if (data_ov007_02104bbc[idx].player == 0)
         return;
-    func_0204fa2c(&data_ov007_02104bbc[idx], arg);
+    NNS_SndPlayerStopSeq(&data_ov007_02104bbc[idx], arg);
 }
 
 void func_ov007_020bde2c(int idx) {
@@ -250,7 +250,7 @@ extern "C" void func_ov007_020bd9e4(int arg) {
     int i;
     for (i = 0; i < 57; i++) {
         if (data_ov007_02104bbc[i].player != 0) {
-            func_0204fa2c(&data_ov007_02104bbc[i], arg);
+            NNS_SndPlayerStopSeq(&data_ov007_02104bbc[i], arg);
         }
     }
 }

@@ -98,8 +98,6 @@ extern u8  data_ov084_021302ec[];        /* five indices {0,3,4,5,6}; 0212ec60 s
 
 extern "C" int *Vec3_LslInPlace(int *v, int sh);
 
-extern "C" void *d_a_pknNewHold(u32 handle, u32 id, int x, int y, int z, const void *f, void *cb);
-extern "C" int d_a_pknPlaySubHold(u32 a, u32 b, u32 c, int t, int flag);
 
 /* ==========================================================================
  *

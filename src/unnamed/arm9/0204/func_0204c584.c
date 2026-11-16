@@ -1,6 +1,7 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
+#include "nitro/fx/fx_vec.h"
 #include "private/spl_particle_views.h"
 
 typedef struct Node {
@@ -31,14 +32,11 @@ typedef struct TexAnim {
     u32 prest : 15;
 } TexAnim;
 
-extern Vector3s data_02099fc4;
-extern void VEC_Fx16Normalize(void *a, Vector3s *b);
+extern VecFx16 data_02099fc4;
 extern Node *func_0204d958(List *list);
 extern void func_0204d9a0(List *list, Node *node);
-extern void SPLRandom_VecFx32(Vector3 *out);
-extern void SPLRandom_VecFx32_XY(Vector3 *out);
-struct Vector3;
-extern void VEC_Normalize(const struct Vector3 *v, struct Vector3 *out);
+extern void SPLRandom_VecFx32(VecFx32 *out);
+extern void SPLRandom_VecFx32_XY(VecFx32 *out);
 extern u32 data_020a4d30;
 
 static inline u32 RandVal(void) {
@@ -56,11 +54,11 @@ static inline int FMul(int a, int b) {
 }
 
 void func_0204cebc(ParticleSystem *sys) {
-    Vector3s vecA;
-    Vector3s vecB;
+    VecFx16 vecA;
+    VecFx16 vecB;
 
     vecA = data_02099fc4;
-    VEC_Fx16Normalize(sys->direction, &vecB);
+    VEC_Fx16Normalize(&sys->direction, &vecB);
 
     if (vecA.x == vecB.x && vecA.y == vecB.y && vecA.z == vecB.z) {
         vecA.x = 0x1000;
@@ -77,7 +75,7 @@ void func_0204cebc(ParticleSystem *sys) {
     sys->basisV.z = (s16)(FX_MUL(vecB.x, sys->basisU.y) - FX_MUL(vecB.y, sys->basisU.x));
 }
 
-void func_0204cd5c(Vector3 *out, Vector3 *in, int sel, ParticleSystem *sys) {
+void func_0204cd5c(VecFx32 *out, VecFx32 *in, int sel, ParticleSystem *sys) {
     switch (sel) {
     case 2:
         out->x = 0;
@@ -109,10 +107,10 @@ void func_0204c584(ParticleSystem *sys, List *list) {
     int mag2;
     int ringAngle;
     u16 arr[3];
-    Vector3 vecB;
-    Vector3 vecC;
-    Vector3 vecE;
-    Vector3 nrm;
+    VecFx32 vecB;
+    VecFx32 vecC;
+    VecFx32 vecE;
+    VecFx32 nrm;
     PtclDef *emitter;
     PtclData *def;
     ParticleElement *p;
@@ -194,9 +192,9 @@ void func_0204c584(ParticleSystem *sys, List *list) {
             SPLRandom_VecFx32(&nrm);
         else
             VEC_Normalize(&p->offset, &nrm);
-        p->velocity.x = (nrm.x * mag1 + sys->direction[0] * mag2) >> 12;
-        p->velocity.y = (nrm.y * mag1 + sys->direction[1] * mag2) >> 12;
-        p->velocity.z = (nrm.z * mag1 + sys->direction[2] * mag2) >> 12;
+        p->velocity.x = (nrm.x * mag1 + sys->direction.x * mag2) >> 12;
+        p->velocity.y = (nrm.y * mag1 + sys->direction.y * mag2) >> 12;
+        p->velocity.z = (nrm.z * mag1 + sys->direction.z * mag2) >> 12;
         p->basePosition = sys->position;
         {
             u32 s;
