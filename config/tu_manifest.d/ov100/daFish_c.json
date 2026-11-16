@@ -31,6 +31,16 @@
       "name": ".bss",
       "start": "0x021489a4",
       "end": "0x02148a54"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021473a4",
+      "end": "0x021473bc"
+    },
+    {
+      "name": ".data",
+      "start": "0x02148448",
+      "end": "0x02148480"
     }
   ],
   "functions": [
@@ -161,7 +171,57 @@
       "ordinal": 17
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov100_02148448",
+      "address": "0x02148448",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the wait until the school is gone state"
+    },
+    {
+      "symbol": "data_ov100_02148450",
+      "address": "0x02148450",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the wait for the player state"
+    },
+    {
+      "symbol": "data_ov100_02148458",
+      "address": "0x02148458",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the flee state"
+    },
+    {
+      "symbol": "data_ov100_02148460",
+      "address": "0x02148460",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the wait until the player leaves state"
+    },
+    {
+      "symbol": "data_ov100_02148468",
+      "address": "0x02148468",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the idle state"
+    },
+    {
+      "symbol": "data_ov100_02148470",
+      "address": "0x02148470",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the wander state"
+    },
+    {
+      "symbol": "data_ov100_02148478",
+      "address": "0x02148478",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the turn about state"
+    }
+  ],
   "bss": [
     {
       "symbol": "gFishModelFile",
@@ -1055,6 +1115,152 @@
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148478"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489a4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishAModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489bc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishBModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489b4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishSwimAnimationFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489c4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishAbSwimAnimationFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489ac"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishAbSwimAnimationFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148448",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c19StateWaitSchoolGoneEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021467d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148450",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c18StateWaitForPlayerEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02146828"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148458",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c9StateFleeEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021464f4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148460",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c19StateWaitPlayerAwayEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021467e8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148468",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02146640"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148470",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c11StateWanderEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02146468"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148478",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c14StateTurnAboutEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021463b0"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov100_021473a4",
+      "address": "0x021473a4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "model handles indexed by mModelIndex"
+    },
+    {
+      "symbol": "data_ov100_021473b0",
+      "address": "0x021473b0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation handles indexed by mModelIndex"
     }
   ]
 }

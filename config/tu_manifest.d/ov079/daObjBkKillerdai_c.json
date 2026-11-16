@@ -31,6 +31,11 @@
       "name": ".bss",
       "start": "0x021282f0",
       "end": "0x02128340"
+    },
+    {
+      "name": ".data",
+      "start": "0x02127f64",
+      "end": "0x02127f70"
     }
   ],
   "functions": [
@@ -98,7 +103,15 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov079_02127f64",
+      "address": "0x02127f64",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "launcher model, collision, and CLPS"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov079_021282f0",
@@ -794,6 +807,36 @@
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02127a10"
+    },
+    {
+      "section": ".data",
+      "source": "0x02127f64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkKillerDaiModelFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02128308"
+    },
+    {
+      "section": ".data",
+      "source": "0x02127f68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkKillerDaiCollisionFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x021282f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02127f6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov079_02127e7c",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02127e7c"
     }
   ],
   "production_mode": "intact-object"

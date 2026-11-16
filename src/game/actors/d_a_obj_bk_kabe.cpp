@@ -75,7 +75,16 @@ struct BkKabeCollisionFilePtr : SharedFilePtr {
     ~BkKabeCollisionFilePtr();
 };
 
-extern KabeFiles data_ov079_02128058[];
+extern BkKabeModelFile gBkKabe00ModelFile;
+extern BkKabeCollisionFilePtr gBkKabe00CollisionFile;
+extern BkKabeModelFile gBkKabe01ModelFile;
+extern BkKabeCollisionFilePtr gBkKabe01CollisionFile;
+extern char data_ov009_021136d4;
+extern char data_ov009_02113534;
+KabeFiles data_ov079_02128058[2] = {
+    {&gBkKabe00ModelFile, &gBkKabe00CollisionFile, (CLPS_Block *)&data_ov009_021136d4},
+    {&gBkKabe01ModelFile, &gBkKabe01CollisionFile, (CLPS_Block *)&data_ov009_02113534},
+};
 
 enum {
     kBreakableActor = 0x30, /* BK_KABE00 */

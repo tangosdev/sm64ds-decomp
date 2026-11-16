@@ -208,7 +208,7 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
 }
 
-extern DoorEntry data_ov100_02148204[];
+extern DoorEntry data_ov100_02148204[19];
 /* Indexed by mKeyModelIdx - 1: the character func_ov100_02144528 switches the
    player to (the first four bytes are 00 01 02 00). */
 extern unsigned char data_ov100_021480d0[];
@@ -294,6 +294,28 @@ DoorModelFilePtr data_ov100_0214874c(0x9c0b);
 DoorModelFilePtr gObjDoor4YamiModelFile(ASSET_OBJ_DOOR4_YAMI_BMD);
 DoorModelFilePtr gObjDoor5HorrorModelFile(ASSET_OBJ_DOOR5_HORROR_BMD);
 DoorAnimationFileHandle data_ov100_02148744(0x9c08);
+
+DoorEntry data_ov100_02148204[19] = {
+    {&data_ov100_0214875c, 0, -1, -1, -1, 0, -1, 0},
+    {&data_ov100_0214875c, &gObjDoor0StarModelFile, -1, -1, -1, 0, -1, 0},
+    {&data_ov100_0214875c, &gObjDoor0Star1ModelFile, 1, -1, 0, 0, 25, 0},
+    {&data_ov100_0214875c, &gObjDoor0Star1ModelFile, 1, -1, 1, 0, 25, 0},
+    {&data_ov100_0214875c, &gObjDoor0Star3ModelFile, 3, -1, 2, 0, 26, 0},
+    {&data_ov100_0214875c, &gObjDoor0Star3ModelFile, 3, -1, 3, 0, 26, 0},
+    {&data_ov100_0214875c, &gObjDoor0Star10ModelFile, 8, -1, 4, 0, 27, 0},
+    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 0, 0, 0, 24, 0},
+    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 1, 1, 0, 24, 0},
+    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 2, 2, 0, 32, 0},
+    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 3, 3, 0, 33, 0},
+    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 4, 4, 0, 34, 0},
+    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 5, 5, 0, 24, 0},
+    {&data_ov100_0214875c, &data_ov100_0214877c, -1, 6, 6, 0, 24, 0},
+    {&gObjDoor1ModelFile, 0, -1, -1, -1, 0, -1, 0},
+    {&gObjDoor2BoroModelFile, 0, -1, -1, -1, 0, -1, 0},
+    {&data_ov100_0214874c, 0, -1, -1, -1, 0, -1, 0},
+    {&gObjDoor4YamiModelFile, 0, -1, -1, -1, 0, -1, 0},
+    {&gObjDoor5HorrorModelFile, 0, -1, -1, -1, 0, -1, 0},
+};
 
 /* -------------------------------------------------------------------------- */
 /* The nine door states, in static-initializer order. Each is a
