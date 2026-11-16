@@ -283,6 +283,17 @@ int dMeter_c::InitResources() {
         if (gCurrentSublevel == 0x33)
             mVsTimer = 30;
         else if (gCurrentSublevel == 0x2B)
+            /* Kept (#821, measured 2026-11-16 against ov002 0x020fda04,
+               0x750). The ROM keeps three separate 30-stores (strheq,
+               strheq, strhne) after cmp #0x33 and cmp #0x2b.
+                 plain `mVsTimer = 30` here: 0x740, -4 words (this arm
+                   merges with the else).
+                 30u here or in the else, `30 * 1`, `(u16)30`, braces,
+                   `else if (true)`: 0x740.
+                 one unconditional store: 0x6fc. switch: 0x75c.
+                 u16 local holding 30: 0x738. `!IsVsMode()` first: 0x73c.
+               The arms most likely stored different values in another
+               build. Nothing in this ROM says what they were. */
             *(volatile u16 *)&mVsTimer = 30;
         else
             mVsTimer = 30;
