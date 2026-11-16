@@ -717,6 +717,13 @@ int daMip_c::StateFleeMain() {
     }
 
     if (TestWaterBelow() == 1) {
+        /* Kept (#821 r17). StateIdleMain's `Vector3 sp(mPosX, mFloorY + 0x3000,
+           mPosZ)` reproduces this code there, but here the block-scope
+           Vector3 lands above node/node2/delta/scaled in the frame: 18-19
+           words of stack offsets differ, wherever those four are declared.
+           An outer `Vector3 pos` assigned `pos = Vector3(...)` is 3 words
+           off (0x68 frame against 0x58); field-by-field stores in any order
+           are 13-14 words off. */
         s32 pair[2];
         pair[0] = mPosX;
         pair[1] = mFloorY;
