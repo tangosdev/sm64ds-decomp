@@ -39,9 +39,8 @@ namespace cstd {
 s16 atan2(s32, s32);
 }
 
-/* ResultWait and RoundDealHard retain the partial views below.
- * Their array extents span unrelated fields to retain specific address
- * calculations; they are not original class layouts. */
+/* ResultWait retains the partial view below; it is not an original class
+ * layout. */
 
 typedef void (dScMgMemory2_c::*dScMgMemory2_cState)();
 typedef void (dScMgMemory2_c::*dScMgMemory2_cCardState)(int);
@@ -52,25 +51,6 @@ struct ScoreView {
     int hudScore;
     int bestHudScore;
 };
-
-typedef struct {
-    char _pad0[0x13];
-    u8 active; /* +0x13 */
-    char _pad1[4];
-} DealCardView; /* 0x18 */
-
-typedef struct {
-    char _pad0[0x51a8];
-    DealCardView cards[23]; /* 0x51a8 */
-    char _pad1[8];
-    int substate; /* 0x53d8 */
-    char _pad2[0xa];
-    short dealSignals; /* 0x53e6 */
-    short cardsDealt;  /* 0x53e8 */
-    u16 targetPairs;   /* 0x53ea */
-    char _pad3[0x1e];
-    u8 difficulty; /* 0x540a */
-} DealSceneView;
 
 extern "C" dScMgMemory2_cState sMemory2ResultTable[];
 extern "C" dScMgMemory2_cState sMemory2StateTable[];
@@ -771,19 +751,19 @@ void dScMgMemory2_c::RoundDealFourth() {
  * difficulty's limit (sMemory2HardDealsPerMode) move to substate 5 on difficulty 1, 4
  * otherwise. */
 void dScMgMemory2_c::RoundDealHard() {
-    DealSceneView *view = (DealSceneView *)this;
-    u8 difficulty;
-    if (view->dealSignals < 3)
+    int cardIndex;
+    if (mDealSignals < 3) {
         return;
-    view->cards[view->targetPairs * 2 - 1 - view->cardsDealt].active = 1;
+    }
+    cardIndex = mTargetPairs * 2 - 1 - mCardsDealt;
+    mCards[cardIndex].active = 1;
     mCardsDealt++;
-    difficulty = view->difficulty;
-    if (view->cardsDealt < sMemory2HardDealsPerMode[difficulty])
-        return;
-    if (difficulty == 1)
-        view->substate = ROUND_SHOW_CARDS;
-    else
-        view->substate = ROUND_DEAL_FOURTH;
+    if (mCardsDealt >= sMemory2HardDealsPerMode[mDifficulty]) {
+        if (mDifficulty == 1)
+            mSubstate = ROUND_SHOW_CARDS;
+        else
+            mSubstate = ROUND_DEAL_FOURTH;
+    }
 }
 
 void dScMgMemory2_c::RoundDealNormal() {
