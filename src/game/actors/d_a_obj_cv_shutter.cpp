@@ -81,3 +81,9 @@ s32 daObjCvShutter_c::CleanupResources() {
  * handle, then the collision handle. */
 CvShutterModelFilePtr gCvShutterModelFile(ASSET_CV_SHUTTER_BMD);
 CvShutterCollisionFilePtr gCvShutterCollisionFile(ASSET_CV_SHUTTER_KCL);
+extern char data_ov021_02113a00;
+ResourceDescriptor data_ov021_021148d0 = {
+    &gCvShutterModelFile,
+    &gCvShutterCollisionFile,
+    (CLPS_Block *)&data_ov021_02113a00,
+};
