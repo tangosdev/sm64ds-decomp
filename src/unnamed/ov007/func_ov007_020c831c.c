@@ -1,4 +1,5 @@
 #include "Ov007Spring.h"
+/* Vector3 VEC_* until Ov007Spring, Ov007Picker and func_ov007_020bfe4c go VecFx32 (#5207). */
 
 /* out = b + s * a, per component in Q12. */
 extern void VEC_MultAdd(int s, int *a, int *b, int *out);

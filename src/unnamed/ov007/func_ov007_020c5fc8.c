@@ -4,6 +4,7 @@
 #include "Ov007StrokePath.h"
 #include "Ov007Picker.h"
 #include "math/CalcLib.h"
+/* Vector3 VEC_* until Ov007Spring, Ov007Picker and func_ov007_020bfe4c go VecFx32 (#5207). */
 
 /* Re-measures group idx's links at a pose blended between groupPoints
  * (weight t, Q12) and groupPointCopies: x and y blended, z from the copies.

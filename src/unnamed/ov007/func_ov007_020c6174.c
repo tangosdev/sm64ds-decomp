@@ -1,5 +1,6 @@
 #include "Ov007Picker.h"
 #include "math/CalcLib.h"
+/* Vector3 VEC_* until Ov007Spring, Ov007Picker and func_ov007_020bfe4c go VecFx32 (#5207). */
 
 extern void func_ov007_020c7694(Ov007PointList *list, Vector3 *rest);
 extern void func_ov007_020c775c(Ov007PointList *list);
