@@ -468,23 +468,9 @@
       ]
     },
     "MTX_Inverse43": {
-      "src/game/actors/d_a_obj_cv_news_lift.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
-        "return:void"
-      ],
-      "src/game/actors/d_a_obj_guragura.cpp": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
-        "return:void"
-      ],
-      "src/unnamed/arm9/0204/func_02044efc.c": [
-        "param:#1 Matrix4x3 *",
-        "param:#2 Matrix4x3 *",
-        "return:void"
-      ],
-      "src/unnamed/ov007/func_ov007_020bfe4c.cpp": [
-        "return:void"
+      "include/nitro/fx/fx_mtx43.h": [
+        "param:#1 const MtxFx43 *",
+        "param:#2 MtxFx43 *"
       ]
     },
     "IsCannonOpenInCurLevel": {
@@ -16745,6 +16731,14 @@
         "param:#2 int *",
         "param:#3 int *",
         "param:#4 int *"
+      ]
+    },
+    "G3i_LookAt_": {
+      "include/nitro/gx/g3_util.h": [
+        "param:#1 const VecFx32 *",
+        "param:#2 const VecFx32 *",
+        "param:#3 const VecFx32 *",
+        "param:#5 MtxFx43 *"
       ]
     }
   },
