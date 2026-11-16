@@ -42,9 +42,7 @@
  * data; it sits between this block's last user and unit020b8f50, whose start
  * edge leaves it out, and every caller of it is here.
  *
- * Code generation. The whole unit is compiled with opt_loop_invariants off:
- * MenuText_DrawGlyph's glyph loop needs it, and the other functions compile
- * the same either way. Each place where a shape is load-bearing says so.
+ * Code generation. Each place where a shape is load-bearing says so.
  *
  * Emission order: mwccarm 2004/b56 emits one .text section per function in
  * the reverse of source order, so the highest-address function is written
@@ -61,7 +59,6 @@
 #include "Ov007Settings.h"
 #include "nitro/mi/memory.h"
 
-#pragma opt_loop_invariants off
 
 /* The window's state machine, as MessageWindow_Update steps it. */
 enum Ov007MessageWindowState {
@@ -176,7 +173,6 @@ void MenuText_DrawGlyph(int plane, int glyph) {
     u32 *dst;
     u32 palmask;
     u32 *src;
-    int rshift;
     u32 mask;
     int q, rem;
     int shift;
@@ -213,7 +209,6 @@ void MenuText_DrawGlyph(int plane, int glyph) {
     src = data_ov007_0210345c + t * 8;
 
     shift = rem * 4;
-    rshift = 0x20 - shift;
     palmask = data_ov007_020d7ac4[pal];
     mask = data_ov007_020d7aa0[rem];
 
@@ -221,8 +216,11 @@ void MenuText_DrawGlyph(int plane, int glyph) {
         u32 s = *src++ & palmask;
         *dst = (*dst & mask) | (s << shift);
         if (rem != 0) {
+            /* The spill re-reads the keep-mask and recomputes its shift;
+               the compiler hoists both out of the loop, which is the ROM's
+               shape. Through `mask` and a precomputed shift it is 0x174. */
             u32 *d2 = (dst + 8);
-            *d2 = (*d2 & ~mask) | (s >> rshift);
+            *d2 = (*d2 & ~data_ov007_020d7aa0[rem]) | (s >> (32 - shift));
         }
         dst++;
         if (i == 7) {
