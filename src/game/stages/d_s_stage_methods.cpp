@@ -29,8 +29,8 @@
 // - LoadTextureTransformers spells `new` as an explicit operator new call
 //   plus a null-guarded constructor call, a form from before the allocator
 //   was named _Znwm, when a new-expression could not link; the fader array passes dFdWipe_c's constructor and destructor by address.
-// - CheckCameraInput keeps `#pragma opt_strength_reduction off`; PS_Update and Behavior keep
-//   `#pragma opt_common_subs off` (switched back on after each), the
+// - CheckCameraInput keeps `#pragma opt_strength_reduction off`; PS_Update keeps
+//   `#pragma opt_common_subs off` (switched back on after it), the
 //   stale-tmpv levers in PS_Update's case 0xa and the `aa` staging in its
 //   case-1 star scroll, and its
 //   sp0..sp10/var_r0/var_sl/var_fp locals stay unrenamed until each slot's
@@ -2652,6 +2652,7 @@ void dScStage_c::PS_Update() {
         return;
     }
 }
+#pragma opt_common_subs on
 
 /* Can the current player pause? Forwards to daPly_c::CanPause on the active
  * entry of the live player list (gPlayers, indexed by gLocalPlayerId).
@@ -3975,8 +3976,6 @@ static inline u32 MaskOff(u32 x, u32 m) {
     return x & ~m;
 }
 
-#pragma opt_common_subs off
-
 int dScStage_c::Behavior() {
     gActorUpdateMask = gNextActorUpdateMask;
     CheckCameraInput();
@@ -4031,7 +4030,7 @@ int dScStage_c::Behavior() {
                         func_02012790(0x2b);
                     if (gGamePaused == 0) {
                         if (data_0209f304 != 0 || data_0209f2bc != 0) {
-                            data_0209f304 = data_0209f304 - data_0208ee44;
+                            data_0209f304 -= data_0208ee44;
                             if (data_0209f304 == 0 && data_0209f2bc != 0) {
                                 data_0209f2bc -= 1;
                                 data_0209f304 = 40;
@@ -4102,7 +4101,7 @@ int dScStage_c::Behavior() {
                     if (b3 == 0) {
                         if (sPauseInputLockout == 0) {
                             u32 pj = gActivePlayerSlot;
-                            u16 h2 = data_020a0e58[pj].pressed;
+                            int h2 = data_020a0e58[pj].pressed;
                             int t8 = h2 & 8;
                             if ((t8 != 0 && (data_020a0e58[pj].held & 4) == 0) ||
                                 (b1 == 0 && t8 == 0 && (h2 & 4) != 0)) {
@@ -4131,7 +4130,6 @@ int dScStage_c::Behavior() {
     }
     return 1;
 }
-#pragma opt_common_subs on
 
 void dScStage_c::CheckInput() {
     u8 mode = gGameMode;

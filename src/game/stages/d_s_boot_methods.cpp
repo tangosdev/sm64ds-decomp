@@ -4,13 +4,8 @@
  * - UpdateButtonPalettes (0x02005348) is a coined name. It is a
  *   dScBoot_c method: Behavior is its only caller, and the body reads
  *   mSelectedButton and mButtonFlashTimer.
- * - opt_common_subs off stays file-global for Behavior's two touch
- *   tests (STATE_CONFIRM_ERASE / STATE_FINAL_CONFIRM): the cartridge
- *   rebuilds playerSlot * 4 for each condition that reads a touch lane,
- *   and CSE shares one copy across them (0x638 against 0x640). The other
- *   three functions compile the same either way, and reading the lanes
- *   as ((TouchInfo *)gTouchHeld)[playerSlot] does not help: the cartridge
- *   loads each lane's own address.
+ * - Behavior's touch tests read each lane through TOUCH_REC, the
+ *   4-byte-record view d_s_mg_base and the trampoline scenes also use.
  * - The destructor pair and dScBoot_c_classInit live in src/game/stages/d_s_boot.cpp.
  *
  * dScBoot_c, the title screen. fBase_c, dBase_c, dScene_c, then this
@@ -40,8 +35,6 @@ enum dScBoot_c_AssetId { ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN = 0x022d };
 #include "private/controller_input.h"
 #include "nitro/pad/pad.h"
 
-#pragma opt_common_subs off
-
 extern "C" {
 extern dFdBrightness_c *gSceneFader;
 /* Whether the boot job InitResources starts has finished. d_s_boot's own
@@ -58,6 +51,11 @@ void *LoadFile(int handle);
 
 void DecompressLZ16(const void *src, void *dst);
 }
+
+/* The touch lanes are read as 4-byte records, gTouchX[slot][0]: the cartridge
+   scales the slot into each lane's addressing mode, which the flat
+   `gTouchX[slot * 4]` and TouchInfo forms do not reproduce. */
+#define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
 
 /* These names describe the observed transitions; original state names are unknown. */
 enum BootMenuState {
@@ -242,25 +240,24 @@ s32 dScBoot_c::Behavior() {
         case STATE_CONFIRM_ERASE:
         case STATE_FINAL_CONFIRM: {
             int playerSlot = gActivePlayerSlot;
-            u8 touchDown;
-
             int touchStarted = 0;
-            touchDown = gTouchHeld[playerSlot * 4];
-            if (touchDown != 0 && gTouchEdge[playerSlot * 4] != 0) {
+            if (TOUCH_REC(gTouchHeld)[playerSlot][0] != 0 &&
+                TOUCH_REC(gTouchEdge)[playerSlot][0] != 0) {
                 touchStarted = 1;
             }
             if (touchStarted != 0 ||
                 (keysPressed & (PAD_BUTTON_A | PAD_BUTTON_START | PAD_KEY_LEFT | PAD_KEY_RIGHT))) {
                 int leftTouchStarted;
 
-                if (touchDown != 0 && gTouchEdge[playerSlot * 4] != 0) {
+                if (TOUCH_REC(gTouchHeld)[playerSlot][0] != 0 &&
+                    TOUCH_REC(gTouchEdge)[playerSlot][0] != 0) {
                     leftTouchStarted = 1;
                 } else {
                     leftTouchStarted = 0;
                 }
                 /* left button: touch x 0x28..0x78, y 0x98..0xb8, or Left */
-                if ((leftTouchStarted != 0 && (u8)(gTouchX[playerSlot * 4] - 40) < 80 &&
-                     (u8)(gTouchY[playerSlot * 4] - 152) < 32) ||
+                if ((leftTouchStarted != 0 && (u8)(TOUCH_REC(gTouchX)[playerSlot][0] - 40) < 80 &&
+                     (u8)(TOUCH_REC(gTouchY)[playerSlot][0] - 152) < 32) ||
                     (keysPressed & PAD_KEY_LEFT)) {
                     if (mSelectedButton == 0) {
                         mButtonFlashTimer = 16;
@@ -268,8 +265,8 @@ s32 dScBoot_c::Behavior() {
                     mSelectedButton = 0;
                     UpdateButtonPalettes();
                     func_02012790(0);
-                    if ((u8)(gTouchX[gActivePlayerSlot * 4] - 40) < 80 &&
-                        (u8)(gTouchY[gActivePlayerSlot * 4] - 152) < 32) {
+                    if ((u8)(TOUCH_REC(gTouchX)[gActivePlayerSlot][0] - 40) < 80 &&
+                        (u8)(TOUCH_REC(gTouchY)[gActivePlayerSlot][0] - 152) < 32) {
                         mInputLockTimer = 32;
                         if (mState == STATE_CONFIRM_ERASE) {
                             mState = STATE_OPEN_FINAL_CONFIRM;
@@ -280,14 +277,16 @@ s32 dScBoot_c::Behavior() {
                 } else {
                     int rightTouchStarted;
 
-                    if (touchDown != 0 && gTouchEdge[playerSlot * 4] != 0) {
+                    if (TOUCH_REC(gTouchHeld)[playerSlot][0] != 0 &&
+                        TOUCH_REC(gTouchEdge)[playerSlot][0] != 0) {
                         rightTouchStarted = 1;
                     } else {
                         rightTouchStarted = 0;
                     }
                     /* right button: touch x 0x88..0xd8, same rows, or Right */
-                    if ((rightTouchStarted != 0 && (u8)(gTouchX[playerSlot * 4] - 136) < 80 &&
-                         (u8)(gTouchY[playerSlot * 4] - 152) < 32) ||
+                    if ((rightTouchStarted != 0 &&
+                         (u8)(TOUCH_REC(gTouchX)[playerSlot][0] - 136) < 80 &&
+                         (u8)(TOUCH_REC(gTouchY)[playerSlot][0] - 152) < 32) ||
                         (keysPressed & PAD_KEY_RIGHT)) {
                         if (mSelectedButton == 1) {
                             mButtonFlashTimer = 16;
@@ -295,8 +294,8 @@ s32 dScBoot_c::Behavior() {
                         mSelectedButton = 1;
                         UpdateButtonPalettes();
                         func_02012790(0);
-                        if ((u8)(gTouchX[gActivePlayerSlot * 4] - 136) < 80) {
-                            if ((u8)(gTouchY[gActivePlayerSlot * 4] - 152) < 32) {
+                        if ((u8)(TOUCH_REC(gTouchX)[gActivePlayerSlot][0] - 136) < 80) {
+                            if ((u8)(TOUCH_REC(gTouchY)[gActivePlayerSlot][0] - 152) < 32) {
                                 mInputLockTimer = 32;
                                 mState = STATE_CANCEL_ERASE;
                             }
