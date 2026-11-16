@@ -13614,10 +13614,6 @@ struct PVec { int x, y, z; PVec() {} ~PVec() {} };
 
 int daPly_c::St_YoshiPower_Main() {
     extern int data_ov002_0210e3d8[];
-    /* The helpers this calls are all declared taking char*, and there are
-       thirty-odd call sites. One alias keeps them untouched; the field
-       accesses below are the part that needed recovering. */
-    char* c = (char*)this;
     Vector3_16f dir;
     Vector3 tmp;
     PVec pos;
@@ -13825,7 +13821,7 @@ int daPly_c::St_YoshiPower_Main() {
                                                    &dir, 0);
                 mParticle2 = Particle::System::New(mParticle2, kPtclYoshiFireB, pos.x, pos.y, pos.z,
                                                    &dir, 0);
-                func_ov002_020dc09c(c);
+                func_ov002_020dc09c((char *)this);
                 mAttackClsn.Clear();
                 mAttackClsn.Update();
                 if (mStateTimer == 1 && mFireBreaths == 0) {
