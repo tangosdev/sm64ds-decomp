@@ -1754,10 +1754,6 @@ void dScEntry_c::EnterSoloConfirm() {
     }
 }
 
-struct SinePair {
-    short a, b;
-};
-
 /* Render step of the recruit steps: RenderWaitingText's wave, drawn from
    the language's glyph list data_ov075_0211c968 at y 0x1c. */
 void dScEntry_c::RenderRecruitText() {
@@ -1767,31 +1763,22 @@ void dScEntry_c::RenderRecruitText() {
 
     if (mWaiting.waveDelay <= 0) {
         int ang;
-        int flag;
-        int fallback = 28;
-        int zero = 0;
-        int one = 1;
-        int minus = -1;
-        int fx = 0x1000;
-        int x = 128;
+        bool flag;
 
         ang = mWaiting.wavePhase;
-        flag = 0;
+        flag = false;
 
         do {
             int y;
 
             if (ang >= 0 && ang < 0x10000) {
-                flag = one;
-                y = (((SinePair *)FX_SinCosTable_)[(unsigned short)(short)(unsigned short)ang >> 4]
-                         .a >>
-                     0xa) +
-                    fallback;
+                flag = true;
+                y = (FX_SinCosTable_[2 * ((u16)(s16)(u16)ang >> 4)] >> 10) + 28;
             } else {
-                y = fallback;
+                y = 28;
             }
 
-            OAM::Render(one, attr, x, y, minus, minus, fx, zero);
+            OAM::Render(true, attr, 128, y, -1, -1, 0x1000, 0);
 
             if (attr->attr3 == 0xffff)
                 break;
@@ -1802,7 +1789,7 @@ void dScEntry_c::RenderRecruitText() {
 
         mWaiting.wavePhase += 0x800;
 
-        if (flag == zero)
+        if (!flag)
             mWaiting.waveDelay = 120;
     } else {
         OAM::RenderSub(attr, 128, 28);
