@@ -4,9 +4,13 @@
  * - UpdateButtonPalettes (0x02005348) is a coined name. It is a
  *   dScBoot_c method: Behavior is its only caller, and the body reads
  *   mSelectedButton and mButtonFlashTimer.
- * - opt_common_subs off stays file-global. Behavior's countdown
- *   updates need it: without it the compiler reuses each timer's
- *   field address and Behavior drops an instruction.
+ * - opt_common_subs off stays file-global for Behavior's two touch
+ *   tests (STATE_CONFIRM_ERASE / STATE_FINAL_CONFIRM): the cartridge
+ *   rebuilds playerSlot * 4 for each condition that reads a touch lane,
+ *   and CSE shares one copy across them (0x638 against 0x640). The other
+ *   three functions compile the same either way, and reading the lanes
+ *   as ((TouchInfo *)gTouchHeld)[playerSlot] does not help: the cartridge
+ *   loads each lane's own address.
  * - The destructor pair and dScBoot_c_classInit live in src/game/stages/d_s_boot.cpp.
  *
  * dScBoot_c, the title screen. fBase_c, dBase_c, dScene_c, then this

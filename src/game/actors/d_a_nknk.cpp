@@ -12,13 +12,6 @@
 
 // leftovers:
 // - func_0201267c is the bank-3 Sound::Play wrapper.
-// - GetFloorResult is still called through its local extern (the wall
-//   lookup uses the dBgCh_Actr method). Deleting that prototype shifts the
-//   static initializer's @NNN temps, which the intact-object manifest pins
-//   by name, by one (code bytes otherwise identical).
-// - Vec3 / V3 below are local three-int aggregates. inline_fn() returns
-//   MATRIX_SCRATCH_PAPER; deleting its definition shifts the same @NNN
-//   temps by three (code bytes otherwise identical).
 // Inline definitions in Koopa.h, emitted here by the two factories.
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_nknk_AssetId {
@@ -79,30 +72,13 @@ struct NknkAnimationFileHandle : SharedFilePtr {
     ~NknkAnimationFileHandle();
 };
 
-extern "C" int d_a_nknkNewHold(u32 uniqueID, u32 effectID, s32 x, s32 y, s32 z, const void *dir,
-                               void *callback);
 extern NknkAnimationFileHandle *data_ov062_0211cee8[];
 extern int data_ov062_0211cf0c[];
-/* Reconstructed receiver/attacker/nullable collision interface; the original
- * source prototype is not uniquely recoverable from the register traffic. */
-extern "C" struct Aea30C;
-void func_ov002_020aea30(Aea30C *self, dActor_c *attacker, dBgCh_Actr *collision);
-extern "C" void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
 extern "C" int RandomIntInternal(int *seed);
 
 extern SharedFilePtr* data_ov062_0211ced8[2];
 extern SharedFilePtr* data_ov062_0211cee0[2];
 
-/* Parameter names keep this TU's @NNN. */
-extern "C" {
-typedef void BgchInitAt_(void *self, dActor_c *a, int r, int h, Vector3_16 *p, int q);
-}
-
-extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-inline struct Matrix4x3 *inline_fn()
-{
-  return &data_020a0e68;
-}
 
 int SurfaceInfo_TestFlag0x20(int *p); /* CLPS bit 0x20: water */
 
@@ -659,22 +635,16 @@ void daNknk_c::func_ov062_021183e0()
 }
 
 void daNknk_c::UpdateModelMatrixAndShadow() {
-    short *angleY;
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
-    if (1) {
-        Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-        angleY = &mAngleY;
-        Matrix4x3_ApplyInPlaceToRotationY(inline_fn(), *angleY);
-        /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
-        *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
-        {
-            int b = (int)((mFlags & 0x40000) != 0);
-            if (b != 0) {
-                return;
-            }
-        }
-    }
+    MtxStack::transS(v.x, v.y, v.z);
+    MtxStack::YrotM(mAngleY);
+    /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
+    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    /* No drop shadow while in Yoshi's mouth. */
+    int inMouth = (mFlags & 0x40000) != 0;
+    if (inMouth != 0)
+        return;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x50000, 0x50000, 0xf);
 }
 
@@ -796,7 +766,7 @@ void daNknk_c::func_ov062_02117c98()
             return;
         }
         mDeathState = 5;
-        func_ov002_020aea30((Aea30C *)this, found, (dBgCh_Actr *)turnAround);
+        func_ov002_020aea30(found, (dBgCh_Actr *)turnAround);
         return;
     }
     if (flags & 0x4000) {
@@ -823,7 +793,7 @@ void daNknk_c::func_ov062_02117c98()
                 mScaleY = 0x1000;
                 mScaleZ = 0x1000;
             }
-            func_ov002_020aea30((Aea30C *)this, found, 0);
+            func_ov002_020aea30(found, 0);
             return;
         }
     } else {
@@ -842,7 +812,7 @@ void daNknk_c::func_ov062_02117c98()
                 goto tail;
             }
             mDeathState = 6;
-            func_ov002_020aea30((Aea30C *)this, found, 0);
+            func_ov002_020aea30(found, 0);
             return;
         }
         {
@@ -861,7 +831,7 @@ void daNknk_c::func_ov062_02117c98()
                 DropShell();
             } else {
                 mDeathState = 1;
-                func_ov002_020aea30((Aea30C *)this, found, 0);
+                func_ov002_020aea30(found, 0);
                 mScaleX = 0x1000;
                 mScaleY = 0x1000;
                 mScaleZ = 0x1000;
@@ -895,7 +865,7 @@ void daNknk_c::func_ov062_02117c98()
     }
 
 tail:
-    func_ov002_020aea30((Aea30C *)this, found, &mWithMeshClsn);
+    func_ov002_020aea30(found, &mWithMeshClsn);
     if (turnAround)
         mAngleY = (u16)(mPrevAngleY + 0x8000);
 }

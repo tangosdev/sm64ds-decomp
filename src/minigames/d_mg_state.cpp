@@ -116,11 +116,6 @@
 #include "Sound.h"
 #include "math/Approach.h"
 
-/* local extern: including Sound.h renumbers SetState's local static. */
-namespace Sound {
-u32 PlayBank2_2D(u32);
-}
-
 extern "C" {
 extern void FreeGfxSlotsById(int arg);
 extern int GetGameLanguage(void);
