@@ -203,6 +203,7 @@ src/SublevelToLevel.cpp:
     .text start:0x02013558 end:0x02013568
     .init start:0x02074dc0 end:0x02074dc4
     .ctor start:0x02086b74 end:0x02086b78
+    .rodata start:0x02075298 end:0x020752cc
 
 src/engine/save/SaveData.cpp:
     complete
@@ -884,6 +885,7 @@ src/game/stages/d_s_stage_methods.cpp:
     .init start:0x02074e84 end:0x02074edc
     .ctor start:0x02086b88 end:0x02086b8c
     .bss start:0x0209f1ec end:0x0209f5b8
+    .rodata start:0x02075804 end:0x02075b04
 
 src/data/arm9/data_02092654.c:
     complete
