@@ -23,11 +23,6 @@
       "name": ".ctor",
       "start": "0x02086ba4",
       "end": "0x02086ba8"
-    },
-    {
-      "name": ".bss",
-      "start": "0x020a0df0",
-      "end": "0x020a0df4"
     }
   ],
   "functions": [
@@ -40,15 +35,7 @@
     }
   ],
   "data": [],
-  "bss": [
-    {
-      "symbol": "data_020a0df0",
-      "address": "0x020a0df0",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "file-scope EmptyInit. The constructor body is empty, so the initializer is bx lr. The word is padding between gTouchY and data_020a0df8."
-    }
-  ],
+  "bss": [],
   "init": [
     {
       "symbol": "__sinit_func_0203bb5c.cpp",
@@ -67,7 +54,13 @@
       "evidence": "constructor-table word relocates to __sinit_func_0203bb5c.cpp, as retail .p__sinit_020750b4 does"
     }
   ],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "sEmptyInit",
+      "disposition": "deadstrip",
+      "reason": "One-byte file-local object whose empty constructor is what makes mwcc emit the bx lr initializer. The initializer does not reference the object and the cartridge has no symbol or storage for it: every .bss word from data_020a0dd8 to data_020a0e40 is a live touch object (TPData, TPCalibrateParam, gTouchInfo[4], the nine-sample TPData ring). Same model as unit0203d7b8's sEmptyInit."
+    }
+  ],
   "undefined_symbol_aliases": [],
   "symbol_binding_rewrites": [
     {
@@ -97,7 +90,7 @@
     }
   ],
   "notes": [
-    "Folded __sinit_020750b4. One EmptyInit global, empty inline constructor, no destructor, so no registration node."
+    "Folded __sinit_020750b4. One static EmptyInit, empty inline constructor, no destructor, so no registration node; the linker drops the object. The .bss claim 0x020a0df0..0x020a0df4 (data_020a0df0, called padding) is retired: that word is gTouchInfo[2], which func_0203bb60 writes and func_0203bb14 clears. gTouchInfo stays ROM-owned until a .bss start alias for gTouchHeld can be linked."
   ],
   "production_mode": "intact-object",
   "verification": {
@@ -141,17 +134,11 @@
           "end": "0x02086ba8",
           "differingBytes": 0,
           "firstDiff": null
-        },
-        {
-          "section": ".bss",
-          "start": "0x020a0df0",
-          "end": "0x020a0df4",
-          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 4
+          "LICENSED": 3
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -175,15 +162,6 @@
             ],
             "desired": [
               7
-            ]
-          },
-          {
-            "section": ".bss",
-            "original": [
-              5
-            ],
-            "desired": [
-              5
             ]
           }
         ],

@@ -4946,8 +4946,6 @@ gTouchHeld kind:bss addr:0x020a0de8
 gTouchEdge kind:bss addr:0x020a0de9
 gTouchX kind:bss addr:0x020a0dea
 gTouchY kind:bss addr:0x020a0deb
-data_020a0df0 kind:bss addr:0x020a0df0
-data_020a0df4 kind:bss addr:0x020a0df4
 data_020a0df8 kind:bss addr:0x020a0df8
 gActivePlayerSlot kind:bss addr:0x020a0e40
 data_020a0e44 kind:bss addr:0x020a0e44
