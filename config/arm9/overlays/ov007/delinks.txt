@@ -12,15 +12,15 @@
     .rodata.data_ov007_020cccc8 start:0x020cccc8 end:0x020cccc9 kind:rodata align:4
     .rodata.data_ov007_020ccccc start:0x020ccccc end:0x020cccce kind:rodata align:4
     .rodata.data_ov007_020cccd0 start:0x020cccd0 end:0x020cccd2 kind:rodata align:4
-    .rodata.gap4 start:0x020cccd2 end:0x020cccdc kind:rodata align:4
+    .rodata.gap4 start:0x020cccd2 end:0x020cccdc kind:rodata align:1
     .rodata.data_ov007_020cccdc start:0x020cccdc end:0x020cccde kind:rodata align:4
     .rodata.data_ov007_020ccce0 start:0x020ccce0 end:0x020ccce2 kind:rodata align:4
     .rodata.data_ov007_020ccce4 start:0x020ccce4 end:0x020ccce6 kind:rodata align:4
-    .rodata.gap5 start:0x020ccce6 end:0x020cccec kind:rodata align:4
+    .rodata.gap5 start:0x020ccce6 end:0x020cccec kind:rodata align:1
     .rodata.data_ov007_020cccec start:0x020cccec end:0x020cccee kind:rodata align:4
-    .rodata.gap6 start:0x020cccee end:0x020cccf4 kind:rodata align:4
+    .rodata.gap6 start:0x020cccee end:0x020cccf4 kind:rodata align:1
     .rodata.data_ov007_020cccf4 start:0x020cccf4 end:0x020cccf6 kind:rodata align:4
-    .rodata.gap7 start:0x020cccf6 end:0x020cccfc kind:rodata align:4
+    .rodata.gap7 start:0x020cccf6 end:0x020cccfc kind:rodata align:1
     .rodata.data_ov007_020cccfc start:0x020cccfc end:0x020cccfe kind:rodata align:4
     .rodata.data_ov007_020ccd00 start:0x020ccd00 end:0x020ccd02 kind:rodata align:4
     .rodata.data_ov007_020ccd04 start:0x020ccd04 end:0x020ccd06 kind:rodata align:4
@@ -44,7 +44,7 @@
     .rodata.data_ov007_020ccd4c start:0x020ccd4c end:0x020ccd4f kind:rodata align:4
     .rodata.data_ov007_020ccd50 start:0x020ccd50 end:0x020ccd53 kind:rodata align:4
     .rodata.data_ov007_020ccd54 start:0x020ccd54 end:0x020ccd57 kind:rodata align:4
-    .rodata.gap8 start:0x020ccd57 end:0x020ccd64 kind:rodata align:4
+    .rodata.gap8 start:0x020ccd57 end:0x020ccd64 kind:rodata align:1
     .rodata.data_ov007_020ccd64 start:0x020ccd64 end:0x020ccd68 kind:rodata align:4
     .rodata.gap9 start:0x020ccd68 end:0x020ccd6c kind:rodata align:4
     .rodata.data_ov007_020ccd6c start:0x020ccd6c end:0x020ccd70 kind:rodata align:4
