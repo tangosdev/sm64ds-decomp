@@ -48,7 +48,8 @@ struct CLPS_Block {
 };
 
 CLPS_Block data_ov026_02112f74 = {
-    0x53504c43, 0x00010008,
+    0x53504c43,
+    0x00010008,
 };
 
 /* Emission order is ROM order: the destructor pair must stay first.

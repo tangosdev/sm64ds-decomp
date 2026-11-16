@@ -52,8 +52,7 @@ struct CLPS_Block {
 };
 
 CLPS_Block data_ov029_0211302c = {
-    0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff,
-    0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+    0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
 };
 
 /* -------------------------------------------------------------------------- */
