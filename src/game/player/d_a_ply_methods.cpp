@@ -617,13 +617,9 @@ struct P2 data_ov002_0210a34c = {{(void *)0x6e, (void *)0x6f}};
  * them the PMF spelling the descriptor tables use. */
 extern "C" void func_ov002_020c9de4(daPly_c *);
 extern "C" void func_ov002_020e200c(daPly_c *);
-extern "C" void func_ov002_020c72a4(void *);
+extern "C" void func_ov002_020c72a4(daPly_c *);
 union PlayerFreePmf {
     void (*free)(daPly_c *);
-    void (daPly_c::*pmf)();
-};
-union PlayerFreeVoidPmf {
-    void (*free)(void *);
     void (daPly_c::*pmf)();
 };
 union PlayerStateFn {
@@ -640,7 +636,7 @@ PlayerFreePmf data_ov002_0210a10c = {func_ov002_020e200c};
 PlayerFreePmf data_ov002_0210a23c = {func_ov002_020c9de4};
 PlayerFreePmf data_ov002_0210a244 = {func_ov002_020c9de4};
 PlayerFreePmf data_ov002_0210a264 = {func_ov002_020c9de4};
-PlayerFreeVoidPmf data_ov002_0210a334 = {func_ov002_020c72a4};
+PlayerFreePmf data_ov002_0210a334 = {func_ov002_020c72a4};
 }
 
 /* func_ov002_020e1e70 stays a free C-linkage body; the table slot is a PMF. */
@@ -5783,10 +5779,7 @@ void daPly_c::func_ov002_020c71e0() {
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 extern "C" {
-void func_ov002_020c72a4(void* thisptr)
-{
-    unsigned char* r4 = (unsigned char*)thisptr;
-    daPly_c *player = (daPly_c *)r4;
+void func_ov002_020c72a4(daPly_c *player) {
     dBgCh_Gnd rg;
     Vector3 v;
     int z = player->mPosZ;
@@ -5796,7 +5789,7 @@ void func_ov002_020c72a4(void* thisptr)
     v.y = d;
     v.z = z;
     rg.mProbeHeight = d << 1;
-    rg.SetObjAndPos(v, (dActor_c*)thisptr);
+    rg.SetObjAndPos(v, player);
     rg.StartDetectingWater();
     if (rg.DetectClsn()) {
         if (SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
@@ -5805,7 +5798,7 @@ void func_ov002_020c72a4(void* thisptr)
         }
     }
     rg.mProbeHeight = 0x1f4000;
-    ((daPly_c *)(thisptr))->func_ov002_020c71e0();
+    player->func_ov002_020c71e0();
 }
 }
 
@@ -22785,7 +22778,7 @@ extern PlayerFreePmf data_ov002_0210a264;
 extern void (daPly_c::*data_ov002_0210a274)();
 extern void (daPly_c::*data_ov002_0210a29c)();
 extern void (daPly_c::*data_ov002_0210a30c)();
-extern PlayerFreeVoidPmf data_ov002_0210a334;
+extern PlayerFreePmf data_ov002_0210a334;
 
 /* daPly_c handler tables; the second is indexed by mNoCtrlKind, the third by mStateWork.
  * The objects below 0x02110884 are defined in the zero-filled block. C linkage
