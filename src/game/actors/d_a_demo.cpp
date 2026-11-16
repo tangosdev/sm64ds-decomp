@@ -1646,7 +1646,6 @@ void StaffRoll::func_ov002_020f4710(int i) {
 }
 
 void StaffRoll::func_ov002_020f4a2c(int i) {
-    char *c = (char *)this;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
@@ -1674,13 +1673,13 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
         }
 
         if (this->stars[i].speed <= -0x2000)
-            this->stars[i].speed = this->stars[i].speed + 0x120;
+            this->stars[i].speed += 0x120;
 
         dx = (this->stars[i].targetX - this->stars[i].x) >> 12;
         dy = (this->stars[i].targetY - this->stars[i].y) >> 12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-            this->stars[i].phase += 1;
+            this->stars[i].phase++;
             this->stars[i].orbitTravel = 0;
             this->stars[i].heading = 0xc000;
             return;
@@ -1727,28 +1726,26 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
     this->stars[i].heading -= this->stars[i].angSpeed;
     this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
-    if (i != func_ov002_020f5a94(c) - 1)
+    if (i != func_ov002_020f5a94(this) - 1)
         return;
     if ((unsigned int)this->stars[0].orbitTravel < 0x10000)
         return;
 
     {
         int j;
-        char *p = c;
         for (j = 0; j < 4; j++) {
-            if (((StaffRoll *)p)->stars[0].active != 0) {
-                ((StaffRoll *)p)->stars[0].step += 1;
-                ((StaffRoll *)p)->stars[0].loops = 0;
-                ((StaffRoll *)p)->stars[0].phase = 0;
-                ((StaffRoll *)p)->stars[0].radius = 0x38000;
-                ((StaffRoll *)p)->stars[0].heading = data_ov002_021000c8[j];
-                if (func_ov002_020f5a94(c) == 3) {
+            if (this->stars[j].active != 0) {
+                this->stars[j].step++;
+                this->stars[j].loops = 0;
+                this->stars[j].phase = 0;
+                this->stars[j].radius = 0x38000;
+                this->stars[j].heading = data_ov002_021000c8[j];
+                if (func_ov002_020f5a94(this) == 3) {
                     if (j == 2)
-                        ((StaffRoll *)p)->stars[0].heading = 0;
+                        this->stars[j].heading = 0;
                 }
-                ((StaffRoll *)p)->stars[0].orbitTravel = 0;
+                this->stars[j].orbitTravel = 0;
             }
-            p += 0x4c;
         }
     }
 }
@@ -1832,20 +1829,17 @@ void StaffRoll::func_ov002_020f4d70(int i) {
     this->stars[i].targetY = 0x28000;
 }
 
-/* recovered: the third of the three per-slot cursor/target updaters in this
- * family (func_ov002_020f43cc, func_ov002_020f4a2c, this one), same 0x4c-byte
- * record layout: hold timer +0x30, arrival flag +0x48, position +0/+4,
- * heading +0x2e, approach speed +8, target +0x1c/+0x20, orbit radius +0x10,
- * angular speed +0x42, orbit angle +0x24.
+/* recovered: the third of the three per-star approach/orbit updaters in this
+ * family (func_ov002_020f43cc, func_ov002_020f4a2c, this one), over the same
+ * stars[] fields: delay, phase, x/y, heading, speed, targetX/targetY,
+ * radius, angSpeed, orbitTravel.
  *
  * Differences from func_ov002_020f4a2c, each visible in the bytes: the speed
  * clamp works from the +0x2000 side (`cmp #0x2000 / subge #0x120`), the
- * arrived slots orbit with the heading ADDED to the angular speed, the
- * re-arm loop reads data_ov002_021000d0 and has no mode==3 special case.
- * With fewer live values the compiler needs only r4-r8/sb and keeps c in r6.
+ * arrived stars orbit with the heading ADDED to the angular speed, the
+ * re-arm loop reads data_ov002_021000d0 and has no unlock-count==3 case.
  */
 void StaffRoll::func_ov002_020f5010(int i) {
-    char *c = (char *)this;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
@@ -1873,13 +1867,13 @@ void StaffRoll::func_ov002_020f5010(int i) {
         }
 
         if (this->stars[i].speed >= 0x2000)
-            this->stars[i].speed = this->stars[i].speed - 0x120;
+            this->stars[i].speed -= 0x120;
 
         dx = (this->stars[i].targetX - this->stars[i].x) >> 12;
         dy = (this->stars[i].targetY - this->stars[i].y) >> 12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-            this->stars[i].phase += 1;
+            this->stars[i].phase++;
             this->stars[i].orbitTravel = 0;
             this->stars[i].heading = 0xc000;
             return;
@@ -1926,24 +1920,22 @@ void StaffRoll::func_ov002_020f5010(int i) {
     this->stars[i].heading += this->stars[i].angSpeed;
     this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
-    if (i != func_ov002_020f5a94(c) - 1)
+    if (i != func_ov002_020f5a94(this) - 1)
         return;
     if ((unsigned int)this->stars[0].orbitTravel < 0x10000)
         return;
 
     {
         int j;
-        char *p = c;
         for (j = 0; j < 4; j++) {
-            if (((StaffRoll *)p)->stars[0].active != 0) {
-                ((StaffRoll *)p)->stars[0].step += 1;
-                ((StaffRoll *)p)->stars[0].loops = 0;
-                ((StaffRoll *)p)->stars[0].phase = 0;
-                ((StaffRoll *)p)->stars[0].radius = 0x38000;
-                ((StaffRoll *)p)->stars[0].heading = data_ov002_021000d0[j];
-                ((StaffRoll *)p)->stars[0].orbitTravel = 0;
+            if (this->stars[j].active != 0) {
+                this->stars[j].step++;
+                this->stars[j].loops = 0;
+                this->stars[j].phase = 0;
+                this->stars[j].radius = 0x38000;
+                this->stars[j].heading = data_ov002_021000d0[j];
+                this->stars[j].orbitTravel = 0;
             }
-            p += 0x4c;
         }
     }
 }
