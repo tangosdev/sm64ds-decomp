@@ -21,7 +21,6 @@ inline int imin(int a, int b)
 }
 
 int func_0206bc8c(u64 d) {
-    int zero;
     unsigned digit;
     int max;
     int j;
@@ -49,10 +48,7 @@ int func_0206bc8c(u64 d) {
     idx = exp - 0x3fe;
     max = 53;
     digit = 0;
-    zero = (int)digit;
-    i = (int)digit;
-    j = (int)digit;
-    for (; i < imin(idx, max); i++) {
+    for (i = 0; i < imin(idx, max); i++) {
         digit <<= 1;
         t = mant;
         count = 52 - i;

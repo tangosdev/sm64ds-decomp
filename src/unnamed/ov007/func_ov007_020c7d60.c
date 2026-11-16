@@ -3,22 +3,20 @@
 #include "nitro/cp/sqrt.h"
 #include "nitro/fx/fx.h"
 #include "Ov007Spring.h"
-#include "math/CalcLib.h"
-
-extern void VEC_MultAdd(int s, int *a, int *b, int *out);
+#include "nitro/fx/fx_vec.h"
 
 /* func_ov007_020c7560's spring step that holds the link's rest length: adds
  * -r5 times the stretch along the unit from - to direction into each end's
  * force (opposite signs), then damps each end's velocity along that
  * direction by r4. */
 void func_ov007_020c7d60(Ov007Link *link, int r5, int r4) {
-    Vector3 d;
+    VecFx32 d;
     s64 sq;
     int sqrt_raw, len, dot, s, rest;
-    Vector3 v1, v2;
+    VecFx32 v1, v2;
     int delta;
 
-    VEC_Subtract((Vector3 *)link->from->target, (Vector3 *)link->to->target, &d);
+    VEC_Subtract(link->from->target, link->to->target, &d);
 
     /* x-first in source; mwccarm emits y-first loads (same as Vec3_DistSq) */
     sq = (s64)(d.x) * (d.x);
@@ -49,8 +47,8 @@ void func_ov007_020c7d60(Ov007Link *link, int r5, int r4) {
         d.z = (int)((t * d.z + (1LL << 44)) >> 45);
     }
 
-    VEC_MultAdd(r5, &d.x, &link->from->force.x, &link->from->force.x);
-    VEC_MultAdd(-r5, &d.x, &link->to->force.x, &link->to->force.x);
+    VEC_MultAdd(r5, &d, &link->from->force, &link->from->force);
+    VEC_MultAdd(-r5, &d, &link->to->force, &link->to->force);
 
     dot = VEC_DotProduct(&d, &link->from->velocity);
     v1.x = (int)(((s64)dot * d.x) >> 12);
@@ -63,6 +61,6 @@ void func_ov007_020c7d60(Ov007Link *link, int r5, int r4) {
     v2.z = (int)(((s64)dot * d.z) >> 12);
 
     s = -r4;
-    VEC_MultAdd(s, &v1.x, &link->from->force.x, &link->from->force.x);
-    VEC_MultAdd(s, &v2.x, &link->to->force.x, &link->to->force.x);
+    VEC_MultAdd(s, &v1, &link->from->force, &link->from->force);
+    VEC_MultAdd(s, &v2, &link->to->force, &link->to->force);
 }

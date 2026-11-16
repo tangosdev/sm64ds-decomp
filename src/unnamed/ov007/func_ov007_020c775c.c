@@ -1,5 +1,5 @@
 #include "Ov007Spring.h"
-#include "math/CalcLib.h"
+#include "nitro/fx/fx_vec.h"
 
 /* Re-measures each link of the list between its followers' targets. */
 void func_ov007_020c775c(Ov007PointList *list) {

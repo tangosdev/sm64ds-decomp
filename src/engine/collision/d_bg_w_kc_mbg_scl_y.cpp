@@ -20,12 +20,9 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 extern "C" {
-/* Shared math worker.
-   local extern: no header in include/ declares it. */
-void VEC_Normalize(const Vector3 *src, Vector3 *dst);
-
 /* local extern: no header in include/ declares these three. */
 extern dBgCh_Lin data_020a0d0c; /* the scratch line, in collider space */
 extern Vector3 data_020a0d60;   /* == data_020a0d0c.lineEnd  (+0x54) */

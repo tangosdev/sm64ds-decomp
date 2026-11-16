@@ -1,5 +1,6 @@
 //cpp
 #include "common.h"
+#include "math/Matrix.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g3imm_cmd.h"
 
@@ -8,7 +9,7 @@
 #define REG_VTX_XY (*(volatile u32 *)0x04000494)
 
 extern "C" {
-extern void MTX_RotZ33_(int *m, int s, int c);
+extern void MTX_RotZ33_(Matrix3x3 *m, int s, int c);
 extern void G3_MultTransMtx33(int *a, int *v);
 
 /* Draws a ribbon `half` units either side of the point path `pts` as one
@@ -17,20 +18,20 @@ extern void G3_MultTransMtx33(int *a, int *v);
  * (0, half) and (0, -half). The last point is placed `t` (Q12) of the way
  * from the point before it, 0x1000 being the point itself. A one-point path
  * draws a single square at that point. */
-void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t) {
+void func_ov007_020c19cc(int count, VecFx32 *pts, int half, int t) {
     int z;
     int nh;
     u32 upperXY;
     u32 lowerXY;
     int i;
     int ang;
-    Vector3 *p;
+    VecFx32 *p;
     int prevAng;
-    Vector3 *prev;
+    VecFx32 *prev;
     int inv;
-    Vector3 tmp;
-    int mtx[9];
-    Vector3 *pos;
+    VecFx32 tmp;
+    Matrix3x3 mtx;
+    VecFx32 *pos;
 
     z = (s16)half;
     nh = -z;
@@ -77,7 +78,7 @@ void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t) {
             } else if (t != 0x1000) {
                 int vx = p->x;
                 int qi = i - 1;
-                Vector3 *q = &pts[qi];
+                VecFx32 *q = &pts[qi];
                 int px = q->x;
                 if (t < 0x1000) {
                     if (t <= 0) {
@@ -116,8 +117,8 @@ void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t) {
             {
                 s16 halfd = (s16)(ang - prevAng) / 2;
                 int idx = (unsigned short)((s16)prevAng + halfd) >> 4;
-                MTX_RotZ33_(mtx, FX_SinIdx(idx), FX_CosIdx(idx));
-                G3_MultTransMtx33(mtx, (int *)pos);
+                MTX_RotZ33_(&mtx, FX_SinIdx(idx), FX_CosIdx(idx));
+                G3_MultTransMtx33(mtx.m, (int *)pos);
             }
             prev++;
             i++;

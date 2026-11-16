@@ -33,7 +33,7 @@
 #include "math/ProgressRatio.h"
 #include "Ov007MenuMem.h"
 
-extern int func_ov007_020c30ac(Vector3 *points, int count, Vector3 *target, int maxDist,
+extern int func_ov007_020c30ac(VecFx32 *points, int count, VecFx32 *target, int maxDist,
                                int *outDist);
 extern "C" void func_ov007_020c7504(Ov007PointList *list, int damping, int shift);
 extern "C" void func_ov007_020c7560(Ov007PointList *list, int stiffness, int damping);
@@ -46,10 +46,10 @@ extern "C" void func_ov007_020c8098(void *p);
 extern "C" Ov007Link *func_ov007_020c80a4(void);
 extern "C" void func_ov007_020c80c8(Ov007Follower *f, int damping, int shift);
 extern "C" void func_ov007_020c8440(void *p);
-extern "C" Ov007Follower *func_ov007_020c844c(Vector3 *p, int q);
+extern "C" Ov007Follower *func_ov007_020c844c(VecFx32 *p, int q);
 
-/* The ROM copies a Vector3 here as a block move (ldm/stm). The C++ front end
-   copies Vector3, and any struct of three named ints, member by member; a
+/* The ROM copies a VecFx32 here as a block move (ldm/stm). The C++ front end
+   copies VecFx32, and any struct of three named ints, member by member; a
    struct whose only member is an array keeps the block move, so every copy
    goes through Vector3Bits. */
 struct Vector3Bits {
@@ -57,7 +57,7 @@ struct Vector3Bits {
 };
 
 /* *dst = *src, as the block move. */
-static inline void CopyVec3(Vector3 *dst, const Vector3 *src) {
+static inline void CopyVec3(VecFx32 *dst, const VecFx32 *src) {
     *(Vector3Bits *)dst = *(const Vector3Bits *)src;
 }
 
@@ -92,13 +92,13 @@ Ov007Swing *func_ov007_020ca010(Ov007SwingParams *params) {
     chainLength = params->chainLength;
     /* A temporary, not a named zero: the ROM gives it the frame's last slot. */
     (Vector3Bits &)swing->anchor = Vector3Bits();
-    swing->chainPositions = (Vector3 *)func_ov007_020c3df4(0, chainLength * sizeof(Vector3));
+    swing->chainPositions = (VecFx32 *)func_ov007_020c3df4(0, chainLength * sizeof(VecFx32));
     swing->chain = func_ov007_020c798c(2, params->chainLength, params->chainPointMass, 1);
     chain = swing->chain;
     for (i = 0; i < params->chainLength; i++) {
         VecFx32 v = {0, 0, 0};
         v.z = i << 12;
-        CopyVec3(&swing->chainPositions[i], (Vector3 *)&v);
+        CopyVec3(&swing->chainPositions[i], &v);
         chain->items[i]->target = &swing->chainPositions[i];
     }
     func_ov007_020c7804(chain);
@@ -140,7 +140,7 @@ void func_ov007_020c9fa0(Ov007Swing *self) {
 
 /* Places the swing at pos: the anchor there, the x side pair w apart along
  * x and the y side pair h apart along y, both centred on it. */
-void func_ov007_020c9f10(Ov007Swing *self, Vector3 *pos, int w, int h) {
+void func_ov007_020c9f10(Ov007Swing *self, VecFx32 *pos, int w, int h) {
     CopyVec3(&self->yPointPos[1], pos);
     CopyVec3(&self->yPointPos[0], &self->yPointPos[1]);
     CopyVec3(&self->xPointPos[1], &self->yPointPos[0]);
@@ -248,8 +248,8 @@ static inline int Sign(int v) {
  * half turn less one. Its size over maxRot, held to [0, 1], is eased out
  * as t (2 - t), and the rotation is that share of maxRot with the tilt's
  * sign. */
-void func_ov007_020c9a84(Ov007Swing *self, Vector3 *offset, u16 *rotX, u16 *rotY) {
-    Vector3 span;
+void func_ov007_020c9a84(Ov007Swing *self, VecFx32 *offset, u16 *rotX, u16 *rotY) {
+    VecFx32 span;
     int angleX, angleY;
     s16 tiltX, tiltY;
     int sizeX, sizeY;

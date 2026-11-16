@@ -398,14 +398,16 @@ void dScMgCup_c::StateSelect() {
     int cup;
     unsigned char touchX;
     unsigned char touchY;
+    TouchInfo *touch;
 
-    if (gTouchHeld[playerSlot * 4] != 0 && gTouchEdge[playerSlot * 4] != 0)
+    if (gTouchInfo[playerSlot].held != 0 && gTouchInfo[playerSlot].edge != 0)
         touchPressed = 1;
     if (touchPressed == 0)
         return;
 
-    touchX = ((TouchInfo *)gTouchHeld)[playerSlot].x;
-    touchY = ((TouchInfo *)gTouchHeld)[playerSlot].y;
+    touch = &gTouchInfo[playerSlot];
+    touchX = touch->x;
+    touchY = touch->y;
 
     for (cup = 0; cup < 3; cup++) {
         int dx = touchX - (mCup[cup].x >> 12);
@@ -427,10 +429,14 @@ void dScMgCup_c::StateSelect() {
         mTimer = 60;
         FreeGfxSlotsById(0x1d);
 
+        /* The ROM loads touch y and x before it stores mTouchLocked. Without
+           the volatile reads mwcc folds the loads into the stores (8-11 of 97
+           words differ for every statement order, by-value and by-reference
+           inline setters on Presenter tried too). */
         {
             unsigned int currentPlayerSlot = gActivePlayerSlot;
-            unsigned char lockedTouchY = *(volatile unsigned char *)&gTouchY[currentPlayerSlot * 4];
-            unsigned char lockedTouchX = *(volatile unsigned char *)&gTouchX[currentPlayerSlot * 4];
+            unsigned char lockedTouchY = gTouchInfo[currentPlayerSlot].y;
+            unsigned char lockedTouchX = gTouchInfo[currentPlayerSlot].x;
             mModel.mTouchLocked = 1;
             mModel.mTouchX = lockedTouchX;
             mModel.mTouchY = lockedTouchY;

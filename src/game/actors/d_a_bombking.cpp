@@ -1556,12 +1556,9 @@ int daBombking_c::InitResources()
     mHealth = 3;
     mStarID = param1 & 0xf;
     mStarTracked = TrackStar(mStarID, 2);
-    {
-    int z = 0;
     for (i = 0; i < 2; i++) {
-        mSpawnedId[i] = z;
-        mSpawnedThrown[i] = z;
-    }
+        mSpawnedId[i] = 0;
+        mSpawnedThrown[i] = 0;
     }
     mPhase = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x1e) & 1;
     mPhase = mPhase + 1;

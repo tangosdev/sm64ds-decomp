@@ -1,5 +1,5 @@
 #include "Ov007Sprite.h"
-#include "math/CalcLib.h"
+#include "nitro/fx/fx_vec.h"
 
 /* Draws sprite `child` relative to sprite `parent`: child takes parent's
  * scale, colour and alpha, is offset by parent's screen position and depth
