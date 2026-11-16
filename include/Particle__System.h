@@ -120,6 +120,11 @@ struct System {
        dPa_c.h); named for the effect. */
     static u32 NewSplash(fx32, fx32, fx32);
     static u32 NewBubble(fx32, fx32, fx32);
+    /* The bubble at a position vector, read through the reference: a
+       caller that has just tested one coordinate still reloads it. Defined
+       where it is used (d_a_ply_methods.cpp): a body in this header costs a
+       compiler @NNN number in every includer. */
+    static inline u32 NewBubble(const Vector3 &);
     static u32 NewRedFlame(fx32, fx32, fx32);
     static u32 NewBlueFlame(fx32, fx32, fx32);
     static void NewFlamethrowerRedA(fx32, fx32, fx32, s16, s16);
