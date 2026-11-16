@@ -13341,7 +13341,7 @@ int daPly_c::TongueWallProbe() {
     Vector3 p1;
     Vector3 p2;
     dBgCh_Lin rl;
-    char *actor;
+    dActor_c *actor;
     s16 ang;
     int t;
     int idx;
@@ -13375,8 +13375,8 @@ int daPly_c::TongueWallProbe() {
     }
 
     dBgPi res(rl);
-    actor = (char *)dActor_c::FindWithID(res.GetClsnID());
-    if (actor != 0 && (t = (int)(((dActor_c *)actor)->actorID == 0xc2)) != 0) {
+    actor = dActor_c::FindWithID(res.GetClsnID());
+    if (actor != 0 && (t = (int)(actor->actorID == 0xc2)) != 0) {
         return 0;
     }
 
