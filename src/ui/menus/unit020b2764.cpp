@@ -65,11 +65,11 @@ typedef struct Ov007CornerPair {
     u16 inner;
 } Ov007CornerPair;
 
-extern int data_ov007_020ccc48[2];             /* [figureIndex]: model file */
-extern Ov007CornerPair data_ov007_020ccc50[3]; /* colours at blend 0 */
-extern Ov007CornerPair data_ov007_020ccc5c[3]; /* colours at blend 0x1000 */
-extern int data_ov007_020ccc68[][3];           /* [figureIndex]: animation files */
-extern int data_ov007_020ccc80[3][3];          /* [set]: animation files */
+extern const int data_ov007_020ccc48[2];             /* [figureIndex]: model file */
+extern const Ov007CornerPair data_ov007_020ccc50[3]; /* colours at blend 0 */
+extern const Ov007CornerPair data_ov007_020ccc5c[3]; /* colours at blend 0x1000 */
+extern const int data_ov007_020ccc68[][3];           /* [figureIndex]: animation files */
+extern const int data_ov007_020ccc80[3][3];          /* [set]: animation files */
 extern void *data_ov007_020d7ee8[3][3];        /* [set]: animation data in the overlay */
 extern void *data_ov007_02103348[3];           /* data_ov007_020ccc80[set], loaded */
 extern void *data_ov007_02103354[3];           /* data_ov007_020ccc68[figureIndex], loaded */
@@ -107,8 +107,8 @@ Ov007Model *func_ov007_020b2bd4(int figureIndex, int stage) {
     else
         set = figureIndex;
     file = func_ov007_020b3f20(data_ov007_020ccc48[figureIndex]);
-    setFiles = data_ov007_020ccc80[set];
-    figureFiles = data_ov007_020ccc68[figureIndex];
+    setFiles = (int *)data_ov007_020ccc80[set];
+    figureFiles = (int *)data_ov007_020ccc68[figureIndex];
     for (i = 0; i < 3; i++) {
         data_ov007_02103348[i] = func_ov007_020b3f20(setFiles[i]);
         data_ov007_02103354[i] = func_ov007_020b3f20(figureFiles[i]);
@@ -253,3 +253,39 @@ extern "C" void FigureScene_SetScreenBlend(int t) {
         }
     }
 }
+
+extern const int data_ov007_020ccc48[2] = {
+    1, 2,
+};
+extern const Ov007CornerPair data_ov007_020ccc50[3] = {
+    0x5fbf, 0x6bff,
+    0x537d, 0x579e,
+    0x0, 0x0,
+};
+extern const Ov007CornerPair data_ov007_020ccc5c[3] = {
+    0x7d8a, 0x7fd5,
+    0x69a4, 0x6b2b,
+    0x0, 0x0,
+};
+extern const int data_ov007_020ccc68[2][3] = {
+    16, 17, 18,
+    19, 20, 21,
+};
+extern const int data_ov007_020ccc80[3][3] = {
+    4, 5, 7,
+    8, 9, 10,
+    4, 6, 7,
+};
+extern char data_ov007_020cd9b4[];
+extern char data_ov007_020cd9e4[];
+extern char data_ov007_020cda14[];
+extern char data_ov007_020cda2c[];
+extern char data_ov007_020cda5c[];
+extern char data_ov007_020cdabc[];
+extern char data_ov007_020cdb04[];
+
+void *data_ov007_020d7ee8[3][3] = {
+    data_ov007_020cdb04, data_ov007_020cd9b4, data_ov007_020cdabc,
+    data_ov007_020cda2c, data_ov007_020cd9e4, data_ov007_020cda5c,
+    data_ov007_020cdb04, data_ov007_020cda14, data_ov007_020cdabc,
+};
