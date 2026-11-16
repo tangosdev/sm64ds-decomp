@@ -724,8 +724,7 @@ int daMip_c::StateFleeMain() {
            An outer `Vector3 pos` assigned `pos = Vector3(...)` is 3 words
            off (0x68 frame against 0x58); field-by-field stores in any order
            are 13-14 words off. The pos.x store goes through an `s32 *`
-           cast; it was `volatile s32 *` until #821 r18, and dropping the
-           qualifier left the object unchanged. */
+           cast; making it `volatile s32 *` builds the same object. */
         s32 pair[2];
         pair[0] = mPosX;
         pair[1] = mFloorY;

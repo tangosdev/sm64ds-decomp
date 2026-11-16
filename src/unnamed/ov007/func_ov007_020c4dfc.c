@@ -13,8 +13,7 @@ extern void func_ov007_020c19cc(int count, VecFx32 *pts, int half, int t);
  * limitGroup and groupCount do the same). Re-measured (#821 r17):
  * limitGroup re-read into a local after the loop, or the group's points
  * named in the body, are still 0x98 against 0x9c; the tail as a static
- * inline is 0x78. The cast was `volatile int *` until #821 r18; the
- * qualifier made no difference to the object. */
+ * inline is 0x78. A `volatile` qualifier on the cast changes nothing. */
 void func_ov007_020c4dfc(Ov007Picker *self, int half, int color, int alpha) {
     int i;
 

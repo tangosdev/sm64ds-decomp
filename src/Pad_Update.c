@@ -34,9 +34,9 @@ void Pad_Update(Ov007Pad *pad, u16 *src) {
                    the outer test).
                  u32 field: 0x1ec. 1-bit bitfield: 0x1f0.
                ov007's menu (unit020b2cdc.cpp) sets bit 0 of its own
-               inputLock with the same reload-through-a-cast shape. The cast
-               was `volatile u32 *` until #821 r18; the qualifier made no
-               difference to the object. */
+               inputLock with the same reload-through-a-cast shape. The cast is
+               what forces the reload; a `volatile` qualifier on it changes
+               nothing. */
             u32 w = *(u32 *)&pad->inputLock;
             pad->inputLock = w & ~1u;
         } else {
