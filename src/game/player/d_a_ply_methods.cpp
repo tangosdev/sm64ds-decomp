@@ -17624,9 +17624,8 @@ int daPly_c::IsBeingShotOutOfCannon() {
 }
 
 extern "C" {
-int func_ov002_020df300(char* p) {
+int func_ov002_020df300(daPly_c *player) {
     extern int gCamera;
-    daPly_c *player = (daPly_c *)p;
     if (player->mStateStep)
         return 0;
     player->mStateStep = 1;
