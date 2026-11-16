@@ -2581,17 +2581,16 @@ void daDemo_c::anmModel_c::func_ov002_020f65ec() {
 int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, SharedFilePtr **anims,
                         int arg5, unsigned char texByte, SharedFilePtr **texs, int tsData)
 {
-    char *self = (char *)this;
     int i;
     mModelFile = mdl;
-    if (((dExtModel_c *)self)->SetFile(dExtSimpleModel_c::LoadFile(*mModelFile), 1, tsData) == 0)
+    if (SetFile(dExtSimpleModel_c::LoadFile(*mModelFile), 1, tsData) == 0)
         return 0;
     mNumAnimFiles = (u8)nAnims;
     mAnimFiles = anims;
     for (i = 0; i < mNumAnimFiles; i++) {
         dExtFrameCtrl_c::LoadFile(*mAnimFiles[i]);
     }
-    ((dExtAnmModel_c *)self)->SetAnim((BCA_File *)(mAnimFiles[0]->filePtr), 0, 0x1000, 0);
+    SetAnim((BCA_File *)(mAnimFiles[0]->filePtr), 0, 0x1000, 0);
     if (texByte) {
         mTexSeq = new dExtAnmTexPat_c;
         if (mTexSeq == 0)
