@@ -534,11 +534,11 @@ void daTrs_c::func_ov063_02116bf4() {
         if (this->mChildDeaths < 5) {
             unsigned char cb = this->mSpawnCount;
             if (cb != 5 && (int)cb - this->mChildDeaths < 2) {
-                char *p = (char *)dActor_c::Spawn(TRS_ID_TERESA, 0xfff1, this->mPos,
-                                                  &this->mPrevAngle, this->mAreaIdx, -1);
+                daTrs_c *p = (daTrs_c *)dActor_c::Spawn(TRS_ID_TERESA, 0xfff1, this->mPos,
+                                                        &this->mPrevAngle, this->mAreaIdx, -1);
                 if (p != 0) {
-                    ((daTrs_c *)p)->mSpawnerID = this->uniqueID;
-                    ((daTrs_c *)p)->mCachedActorID = this->mCachedActorID;
+                    p->mSpawnerID = this->uniqueID;
+                    p->mCachedActorID = this->mCachedActorID;
                 }
                 {
                     unsigned char *q = &this->mSpawnCount;
