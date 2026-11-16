@@ -512,9 +512,10 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
         j = 0;
         if (part->count > 0) {
             do {
-                unsigned char b = *(volatile unsigned char*)(part->ids + j);
                 int t;
-                int ix = modelFile->transformBoneMap[b];
+                int ix;
+                ix = part->ids[j];
+                ix = modelFile->transformBoneMap[ix];
                 mp = (Mtx43 *)&transforms[ix];
                 if (mtx) {
                     MTX_Scale43_(&mw, dir->x, dir->y, dir->z);
