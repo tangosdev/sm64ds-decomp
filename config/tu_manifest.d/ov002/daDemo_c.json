@@ -30,12 +30,17 @@
     {
       "name": ".data",
       "start": "0x0210b600",
-      "end": "0x0210b958"
+      "end": "0x0210b9a8"
     },
     {
       "name": ".bss",
       "start": "0x02110afc",
       "end": "0x0211110c"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021000b8",
+      "end": "0x021001b0"
     }
   ],
   "functions": [
@@ -1730,6 +1735,36 @@
       "address": "0x0210b94c",
       "size": "0xc",
       "evidence": "compiler-emitted single-inheritance RTTI record matches retail and points to the ROM-proven dActor_c base identity"
+    },
+    {
+      "symbol": "data_ov002_0210b958",
+      "address": "0x0210b958",
+      "size": "0xc"
+    },
+    {
+      "symbol": "data_ov002_0210b964",
+      "address": "0x0210b964",
+      "size": "0xc"
+    },
+    {
+      "symbol": "data_ov002_0210b970",
+      "address": "0x0210b970",
+      "size": "0xc"
+    },
+    {
+      "symbol": "data_ov002_0210b97c",
+      "address": "0x0210b97c",
+      "size": "0xc"
+    },
+    {
+      "symbol": "data_ov002_0210b988",
+      "address": "0x0210b988",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_0210b998",
+      "address": "0x0210b998",
+      "size": "0x10"
     }
   ],
   "bss": [
@@ -2611,7 +2646,7 @@
         {
           "section": ".data",
           "start": "0x0210b600",
-          "end": "0x0210b958",
+          "end": "0x0210b9a8",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -2620,6 +2655,13 @@
           "start": "0x02110afc",
           "end": "0x0211110c",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021000b8",
+          "end": "0x021001b0",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -8293,6 +8335,116 @@
       "addend": 8,
       "target_module": "arm9",
       "target_address": "0x0209a774"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b97c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_021001b0",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021001b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b980",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_02100200",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02100200"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b984",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_02100250",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02100250"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b988",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210bb5c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210bb5c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b98c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210ba7c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210ba7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b990",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210b9cc",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210b9cc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b994",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210ba9c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210ba9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b998",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210b658",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210b658"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b99c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210b630",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210b630"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b9a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210b638",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210b638"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b9a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210b6e8",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210b6e8"
     }
   ],
   "defined_symbol_renames": [
@@ -9018,6 +9170,88 @@
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov002_021000b8",
+      "address": "0x021000b8",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov002_021000c0",
+      "address": "0x021000c0",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov002_021000c8",
+      "address": "0x021000c8",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov002_021000d0",
+      "address": "0x021000d0",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov002_021000d8",
+      "address": "0x021000d8",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov002_021000e0",
+      "address": "0x021000e0",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_021000f0",
+      "address": "0x021000f0",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100100",
+      "address": "0x02100100",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100110",
+      "address": "0x02100110",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100120",
+      "address": "0x02100120",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100130",
+      "address": "0x02100130",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100140",
+      "address": "0x02100140",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100150",
+      "address": "0x02100150",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100160",
+      "address": "0x02100160",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100170",
+      "address": "0x02100170",
+      "size": "0x20"
+    },
+    {
+      "symbol": "data_ov002_02100190",
+      "address": "0x02100190",
+      "size": "0x20"
     }
   ]
 }
