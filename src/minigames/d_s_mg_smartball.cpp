@@ -1155,7 +1155,6 @@ void cMgSmartball_slot_c::BeginStop() {
     /* Leftover: the stop counts are stored through a copy of `this`. */
     cMgSmartball_slot_c *c = this;
     int i;
-    unsigned char z;
     int *seed;
     if ((mIsSpinning) != 1) {
         return;
@@ -1164,9 +1163,8 @@ void cMgSmartball_slot_c::BeginStop() {
         return;
     }
     mIsSlowingDown = 1;
-    z = 0;
     for (i = 0; i < 3; i++) {
-        mReelStopping[i] = z;
+        mReelStopping[i] = 0;
         c->mReelStopCount[i] =
             ((((((unsigned)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff) * 3) >> 15) +
             3;
