@@ -6688,7 +6688,6 @@ int daPly_c::func_ov002_020c8f0c() {
 
 /* recovered: shared common types */
 int daPly_c::func_ov002_020c8f80() {
-    char *p = (char *)this;
 
     this->mScaleX -= 0x80;
     this->mScaleY -= 0x80;
