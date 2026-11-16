@@ -1766,7 +1766,11 @@ void dScMgPachinko2_c::Ball_StateWaitGrab(int i) {
    first site, the literal hoisting at the second), a volatile TouchInfo at
    both 165, a volatile &gTouchInfo[idx].x 14; the flat view at only one site
    leaves 11 (first) or 5 (second). Measured under 2004/b56 against the
-   lane-symbol form this replaced, which compiled the same bytes. */
+   lane-symbol form this replaced, which compiled the same bytes.
+   Re-measured (#821, 2026-11-16): typed gTouchInfo[idx].x/.y at the first
+   site alone is 5 words off (r3/r6 swapped) with y read first, y declared
+   first, the shift operands swapped or u8 locals; read inline 9; through a
+   TouchInfo reference 0x374. Typed at the second site alone is 11. */
 void dScMgPachinko2_c::Ball_StateAim(int i) {
     int idx = gActivePlayerSlot;
 
