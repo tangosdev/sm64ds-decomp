@@ -235,7 +235,7 @@ s32 dScMgFlower_c::Render() {
 /* Slot 6, the whole minigame: pick up a petal within the stylus radius, drag it,
  * drop it, flip "loves me" and "loves me not", and run the end-of-round
  * results. */
-/* Kept: the ROM re-reads gTouchHeld[playerSlot * 4] before the grab test; CSE reuses the first read
+/* Kept: the ROM re-reads gTouchInfo[playerSlot].held before the grab test; CSE reuses the first read
    (with CSE on Behavior is 0x7f8, not 0x80c; measured #821). */
 #pragma opt_common_subs off
 s32 dScMgFlower_c::Behavior() {
@@ -267,9 +267,9 @@ s32 dScMgFlower_c::Behavior() {
         mPrevCursorX = mCursorX;
         mPrevCursorY = mCursorY;
         playerSlot = gActivePlayerSlot;
-        if (gTouchHeld[playerSlot * 4] != 0) {
-            int touchY = gTouchY[playerSlot * 4];
-            int touchX = gTouchX[playerSlot * 4];
+        if (gTouchInfo[playerSlot].held != 0) {
+            int touchY = gTouchInfo[playerSlot].y;
+            int touchX = gTouchInfo[playerSlot].x;
             mCursorX = (touchY ? touchX : touchX) << 12;
             mCursorY = touchY << 12;
         }
@@ -285,7 +285,7 @@ s32 dScMgFlower_c::Behavior() {
             }
         } else if (mHeldPetal < 0) {
             int touchPressed;
-            if (gTouchHeld[playerSlot * 4] != 0 && gTouchEdge[playerSlot * 4] != 0)
+            if (gTouchInfo[playerSlot].held != 0 && gTouchInfo[playerSlot].edge != 0)
                 touchPressed = 1;
             else
                 touchPressed = 0;
@@ -334,7 +334,7 @@ s32 dScMgFlower_c::Behavior() {
             }
         } else {
             newlyCounted = 0;
-            if (gTouchHeld[playerSlot * 4] != 0) {
+            if (gTouchInfo[playerSlot].held != 0) {
                 Vec2_Sub(&drag.x, &mCursorX, &mPrevCursorX);
                 PetalPos *pos = &mPetals[mHeldPetal].pos;
                 pos->x += drag.x;

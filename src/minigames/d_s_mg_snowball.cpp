@@ -1443,20 +1443,22 @@ s32 dScMgSnowball_c::Behavior() {
         }
 
         slot = gActivePlayerSlot;
-        held = gTouchHeld[slot * 4];
+        held = gTouchInfo[slot].held;
         touched = 0;
         if (held != 0)
-            touched = (gTouchEdge[slot * 4] != 0);
+            touched = (gTouchInfo[slot].edge != 0);
         if (touched != 0) {
-            int vb = ((volatile unsigned char *)gTouchY)[(unsigned int)slot * 4];
-            int va = gTouchX[(unsigned int)slot * 4];
+            int vb = gTouchInfo[slot].y;
+            int va = gTouchInfo[slot].x;
             mTouchX = va;
             mTouchY = vb;
         } else if (held != 0) {
-            steer[0] = ((gTouchX[(unsigned int)slot * 4] - mTouchX) << 12) / 296;
-            steer[1] = ((gTouchY[(unsigned int)slot * 4] - mTouchY) << 12) / 296;
-            mTouchX = gTouchX[(unsigned int)slot * 4];
-            mTouchY = gTouchY[(unsigned int)slot * 4];
+            int tx = gTouchInfo[slot].x;
+            steer[0] = ((tx - mTouchX) << 12) / 296;
+            int ty = gTouchInfo[slot].y;
+            steer[1] = ((ty - mTouchY) << 12) / 296;
+            mTouchX = tx;
+            mTouchY = ty;
             if (Vec2_Len((const Vector2 *)steer) >= 0x400) {
                 steer[0] = 0;
                 steer[1] = 0;
@@ -1569,10 +1571,10 @@ s32 dScMgSnowball_c::Behavior() {
         if (mEndDelayTimer > 0)
             mEndDelayTimer -= 1;
         slot = gActivePlayerSlot;
-        held = gTouchHeld[slot * 4];
+        held = gTouchInfo[slot].held;
         touched = 0;
         if (held != 0)
-            touched = (gTouchEdge[slot * 4] != 0);
+            touched = (gTouchInfo[slot].edge != 0);
         if (touched != 0)
             mEndDelayTimer = 0;
         UpdateSnowball();

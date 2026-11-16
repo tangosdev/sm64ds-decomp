@@ -54,11 +54,6 @@ extern "C" void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
 extern "C" void Mg_CommitRecords(void);
 extern "C" s32 GetGameLanguage(void);
 
-/* local: UpdateTouchInput only reproduces through a 4-byte-record view of
-   each lane; the flat `gTouchHeld[slot * 4]` and TouchInfo forms DIFF there
-   (measured 2026-11-08). */
-#define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
-
 
 typedef struct Vec2s {
     s16 x, y;
@@ -526,7 +521,7 @@ void dScMgTrampoline_c::StateWaitExit() {
     if (mTimer != 0) {
         slot = gActivePlayerSlot;
         tapped = 0;
-        if (gTouchHeld[slot * 4] != 0 && gTouchEdge[slot * 4] != 0)
+        if (gTouchInfo[slot].held != 0 && gTouchInfo[slot].edge != 0)
             tapped = 1;
         if (tapped == 0)
             return;
@@ -563,11 +558,11 @@ void dScMgTrampoline_c::UpdateTouchInput() {
     }
 
     slot = gActivePlayerSlot;
-    edge = (TOUCH_REC(gTouchHeld)[slot][0] != 0 && TOUCH_REC(gTouchEdge)[slot][0] != 0);
+    edge = (gTouchInfo[slot].held != 0 && gTouchInfo[slot].edge != 0);
     if (edge) {
-        mTouchX = TOUCH_REC(gTouchX)[slot][0];
+        mTouchX = gTouchInfo[slot].x;
         mTouchStartX = mTouchX;
-        mTouchY = TOUCH_REC(gTouchY)[slot][0];
+        mTouchY = gTouchInfo[slot].y;
         mTouchStartY = mTouchY;
         mTouching = 1;
         mDragSoundHandle = 0;
@@ -577,16 +572,15 @@ void dScMgTrampoline_c::UpdateTouchInput() {
         return;
 
     slot = gActivePlayerSlot;
-    if (TOUCH_REC(gTouchHeld)[slot][0] != 0) {
-        Mg_DrawLine(mTouchX, mTouchY, TOUCH_REC(gTouchX)[slot][0], TOUCH_REC(gTouchY)[slot][0], 2,
-                    4);
+    if (gTouchInfo[slot].held != 0) {
+        Mg_DrawLine(mTouchX, mTouchY, gTouchInfo[slot].x, gTouchInfo[slot].y, 2, 4);
         slot = gActivePlayerSlot;
-        mTouchX = TOUCH_REC(gTouchX)[slot][0];
-        mTouchY = TOUCH_REC(gTouchY)[slot][0];
+        mTouchX = gTouchInfo[slot].x;
+        mTouchY = gTouchInfo[slot].y;
         mDragSoundHandle =
             func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mTouchX << 12), 0, 0);
     } else {
-        edge = (TOUCH_REC(gTouchHeld)[slot][0] == 0 && TOUCH_REC(gTouchEdge)[slot][0] != 0);
+        edge = (gTouchInfo[slot].held == 0 && gTouchInfo[slot].edge != 0);
         if (edge != 0) {
             mTouchReleased = 1;
         }

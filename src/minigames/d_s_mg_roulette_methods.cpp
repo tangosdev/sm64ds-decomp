@@ -751,9 +751,9 @@ void RouletteRacer_Update(RouletteRacer *racer) {
     } else if (state == 2) {
         s32 vec[2];
         u8 idx = gActivePlayerSlot;
-        if (gTouchHeld[idx * 4] != 0) {
-            vec[0] = gTouchX[idx * 4] << 12;
-            vec[1] = gTouchY[idx * 4] << 12;
+        if (gTouchInfo[idx].held != 0) {
+            vec[0] = gTouchInfo[idx].x << 12;
+            vec[1] = gTouchInfo[idx].y << 12;
             RouletteRacer_SetTarget(racer, vec);
         } else {
             type = Roulette_TileAt(racer->targetX >> 12, racer->targetY >> 12);
@@ -780,17 +780,15 @@ void RouletteRacer_Update(RouletteRacer *racer) {
 int RouletteRacer_CheckLandingA(RouletteRacer *racer) {
     int idx;
     int flag;
-    int stride;
     int dx;
     int dy;
-    stride = 4;
     if (sRouletteLandedRacer != 0) {
         return 0;
     }
     idx = gActivePlayerSlot;
     flag = 0;
-    if (gTouchHeld[idx * 4]) {
-        if (gTouchEdge[idx * 4] != 0) {
+    if (gTouchInfo[idx].held) {
+        if (gTouchInfo[idx].edge != 0) {
             flag = 1;
         }
     }
@@ -798,8 +796,8 @@ int RouletteRacer_CheckLandingA(RouletteRacer *racer) {
         return 0;
     }
     idx = gActivePlayerSlot;
-    dx = (racer->x >> 0xc) - gTouchX[idx * stride];
-    dy = (racer->y >> 0xc) - gTouchY[idx * 4];
+    dx = (racer->x >> 0xc) - gTouchInfo[idx].x;
+    dy = (racer->y >> 0xc) - gTouchInfo[idx].y;
     if ((((dx >= (-8)) && (dx < 8)) && (dy >= (-8))) && (dy < 8)) {
         Sound::PlayBank2_2D(0x15d);
         sRouletteLandedRacer = (void *)racer;
@@ -814,18 +812,16 @@ int RouletteRacer_CheckLandingA(RouletteRacer *racer) {
 void RouletteRacer_CheckLandingB(RouletteRacer *racer) {
     int idx;
     int flag;
-    int stride;
     int dx;
     int dy;
     int px, py, touchX, touchY;
     s16 tile;
-    stride = 4;
     if (sRouletteLandedRacer != 0)
         return;
     idx = gActivePlayerSlot;
     flag = 0;
-    if (gTouchHeld[idx * 4]) {
-        if (gTouchEdge[idx * 4] != 0) {
+    if (gTouchInfo[idx].held) {
+        if (gTouchInfo[idx].edge != 0) {
             flag = 1;
         }
     }
@@ -836,10 +832,10 @@ void RouletteRacer_CheckLandingB(RouletteRacer *racer) {
     idx = gActivePlayerSlot;
     px = racer->x;
     py = racer->y;
-    touchX = gTouchX[idx * stride];
+    touchX = gTouchInfo[idx].x;
     tile = racer->tile;
     px >>= 12;
-    touchY = gTouchY[idx * 4];
+    touchY = gTouchInfo[idx].y;
     py >>= 12;
     dx = px - touchX;
     dy = py - touchY;

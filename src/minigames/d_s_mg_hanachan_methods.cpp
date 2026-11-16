@@ -1673,7 +1673,7 @@ void dScMgHanachan_c::Phase_WaitTouch() {
     if (mPhaseTimer != 0) {
         idx = gActivePlayerSlot;
         b = 0;
-        if (gTouchHeld[idx * 4] != 0 && gTouchEdge[idx * 4] != 0)
+        if (gTouchInfo[idx].held != 0 && gTouchInfo[idx].edge != 0)
             b = 1;
         if (b == 0)
             return;
@@ -1738,14 +1738,14 @@ void dScMgHanachan_c::Phase_Play() {
     int b = 0;
     int idx = gActivePlayerSlot;
 
-    if (gTouchHeld[idx * 4] != 0 && gTouchEdge[idx * 4] != 0)
+    if (gTouchInfo[idx].held != 0 && gTouchInfo[idx].edge != 0)
         b = 1;
 
     if (b != 0) {
         Wiggler *p;
         Vector2 *src;
-        a.x = gTouchX[(unsigned int)idx * 4] << 12;
-        a.y = gTouchY[(unsigned int)idx * 4] << 12;
+        a.x = gTouchInfo[(unsigned int)idx].x << 12;
+        a.y = gTouchInfo[(unsigned int)idx].y << 12;
         p = mTarget;
         src = p->seg;
         vec[0] = src->x;

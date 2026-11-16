@@ -22,9 +22,9 @@
  *   - ProbeRung took the two rung ends as int pointers; it now takes them
  *     as by-value Points, the way the pen handler already declared it,
  *     and uses the member names.
- *   - gTouchX/gTouchY are declared as 4-byte rows, the form
- *     CheckHurryButton matched under. Indexing them as flat arrays costs
- *     it four words.
+ *   - the touch reads index gTouchInfo by player, the form
+ *     CheckHurryButton matches under. Indexing the bytes as one flat
+ *     array costs it four words.
  *   - each shard's file-wide optimisation pragma is now a push/pop bracket
  *     around its own function.
  *   - StepWalkers was the last to match. It was an unmatched draft from
@@ -44,8 +44,7 @@
  * - Amida_RestoreBgChars and Amida_SaveBgChars stay free helpers: the
  *   object pointer they take is never read -- both only copy BG char VRAM --
  *   so membership cannot be proven from the bodies.
- * - gTouchX/gTouchY stay 4-byte rows (flat indexing costs CheckHurryButton
- *   four words, measured at promotion), the pattern table is five separate
+ * - The pattern table is five separate
  *   data symbols. mLineColor is named for its only use, the colour
  *   argument of the line-draw helper (always 2).
  */
@@ -474,15 +473,14 @@ void dScMgAmida_c::CheckHurryButton() {
         return;
     unsigned int pressed = 0;
     int playerSlot = gActivePlayerSlot;
-    if (gTouchHeld[playerSlot << 2] != 0) {
-        unsigned int touchOffset = playerSlot << 2;
-        if (gTouchEdge[touchOffset] != 0)
+    if (gTouchInfo[playerSlot].held != 0) {
+        if (gTouchInfo[playerSlot].edge != 0)
             pressed = 1;
     }
     if (pressed == 0)
         return;
-    int touchX = ((u8(*)[4])gTouchX)[playerSlot][0];
-    int touchY = ((u8(*)[4])gTouchY)[playerSlot][0];
+    int touchX = gTouchInfo[playerSlot].x;
+    int touchY = gTouchInfo[playerSlot].y;
     if (touchX < 0x60)
         return;
     if (touchX >= 0xa0)
@@ -506,8 +504,8 @@ void dScMgAmida_c::CheckEdgeBoost() {
 
     playerSlot = gActivePlayerSlot;
     pressed = 0;
-    if (gTouchHeld[playerSlot * 4]) {
-        if (gTouchEdge[playerSlot * 4] != 0)
+    if (gTouchInfo[playerSlot].held) {
+        if (gTouchInfo[playerSlot].edge != 0)
             pressed = 1;
     }
     if (pressed != 0) {
@@ -515,9 +513,9 @@ void dScMgAmida_c::CheckEdgeBoost() {
         mEdgeBoostCount = 0;
     }
     playerSlot = gActivePlayerSlot;
-    if (gTouchHeld[playerSlot * 4] != 0) {
-        touchX = ((u8(*)[4])gTouchX)[playerSlot][0];
-        touchY = ((u8(*)[4])gTouchY)[playerSlot][0];
+    if (gTouchInfo[playerSlot].held != 0) {
+        touchX = gTouchInfo[playerSlot].x;
+        touchY = gTouchInfo[playerSlot].y;
         if ((touchX >= 0 && touchX < 0x10 && touchY >= 0x40 && touchY < 0x80) ||
             (touchX >= 0xf0 && touchX < 0x100 && touchY >= 0x40 && touchY < 0x80)) {
             if (mEdgeBoostCount >= 5) {
@@ -554,9 +552,9 @@ void dScMgAmida_c::HandlePen() {
     oldX = this->mPen.x;
     oldY = this->mPen.y;
 
-    if (gTouchHeld[gActivePlayerSlot * 4] != 0) {
-        int newX = ((u8(*)[4])gTouchX)[gActivePlayerSlot][0];
-        int newY = ((u8(*)[4])gTouchY)[gActivePlayerSlot][0];
+    if (gTouchInfo[gActivePlayerSlot].held != 0) {
+        int newX = gTouchInfo[gActivePlayerSlot].x;
+        int newY = gTouchInfo[gActivePlayerSlot].y;
         if (newX < 0)
             return;
         if (newX >= 0x100)
@@ -591,7 +589,7 @@ void dScMgAmida_c::HandlePen() {
         return;
     } else {
         int released;
-        if (gTouchHeld[gActivePlayerSlot * 4] == 0 && gTouchEdge[gActivePlayerSlot * 4] != 0) {
+        if (gTouchInfo[gActivePlayerSlot].held == 0 && gTouchInfo[gActivePlayerSlot].edge != 0) {
             released = 1;
         } else {
             released = 0;
@@ -1933,8 +1931,8 @@ s32 dScMgAmida_c::Behavior() {
             mEndDelayTimer -= 1;
         touched = 0;
         touchSlot = gActivePlayerSlot;
-        if (gTouchHeld[touchSlot * 4] != 0) {
-            if (gTouchEdge[touchSlot * 4] != 0)
+        if (gTouchInfo[touchSlot].held != 0) {
+            if (gTouchInfo[touchSlot].edge != 0)
                 touched = 1;
         }
         if (touched != 0)

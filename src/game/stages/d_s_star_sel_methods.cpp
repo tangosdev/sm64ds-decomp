@@ -231,14 +231,13 @@ void dScStarSel_c::RenderLifeCount() {
 // ROM 0x020ae358, size 0x398. Per-frame selection handling: record hit
 // tests and the D-pad.
 //
-// gActivePlayerSlot selects the active record in the 4-byte-stride tables at
-// gTouchHeld..gTouchY. If byte 0 of that record is set and byte 1 (gTouchEdge)
-// is set, its bytes 2 and 3 are tested against a box around the face at
+// gActivePlayerSlot selects the active TouchInfo in gTouchInfo. If that record is
+// held and its edge flag is set, its x and y are tested against a box around the face at
 // (0x80, mFaceY); a hit sets mCursorTarget 2, mPickedChar 3, mAnimMode 1, seeds
 // mPickPressTimer and mExitDelay and plays sound data_0209caa0.file.mCharacter + 0x3c.
 //
 // Failing that (and only with mStripMode above 1 and data_0209caa0.file.mCharacter == 3),
-// the three characters are scanned in order: for each unlocked i, bytes 2 and 3
+// the three characters are scanned in order: for each unlocked i, x and y
 // of the same record are tested against mCharX/mCharY, and a hit sets
 // mCursorTarget 1, mCharCursor to its strip slot, and mPickedChar, data_02092128
 // and data_02092114 to the character, mAnimMode 2, and plays the same sound.
@@ -249,9 +248,9 @@ void dScStarSel_c::RenderLifeCount() {
 // or 8 depending on the active player's pressed word.
 //
 // Codegen note: the stride belongs in the TYPE, and the INDEX is what gets named.
-// The 4-byte records are viewed as `[][4]` so each read refolds its own scale
-// (`add r2, r4, r1, lsl #2`); flattening gTouchX/gTouchY to a bare `[]` with an
-// explicit `* 4` costs 17 words, and the same is true of the PadData records. The last
+// Each gTouchInfo[idx] read refolds its own scale (`add r2, r4, r1, lsl #2`);
+// flattening the records to a bare byte array with an explicit `* 4` costs 17
+// words, and the same is true of the PadData records. The last
 // six words were a register transposition between the `c + i` and record-row
 // address temps, and what closed it was naming the INDEX (`int ri`) for the second
 // record read instead of naming the row POINTER: a named row pointer welds both
@@ -261,12 +260,12 @@ void dScStarSel_c::UpdateCharacterSelect() {
     int idx = gActivePlayerSlot;
     int valid = 0;
     int i;
-    if (((u8(*)[4])gTouchHeld)[idx][0] != 0) {
-        valid = ((u8(*)[4])gTouchEdge)[idx][0] != 0;
+    if (gTouchInfo[idx].held != 0) {
+        valid = gTouchInfo[idx].edge != 0;
     }
     if (valid != 0) {
-        if ((((unsigned char)(((u8(*)[4])gTouchX)[idx][0] - 88)) < 80) &&
-            (((unsigned char)((((u8(*)[4])gTouchY)[idx][0] - mFaceY) + 40)) < 80)) {
+        if ((((unsigned char)(gTouchInfo[idx].x - 88)) < 80) &&
+            (((unsigned char)((gTouchInfo[idx].y - mFaceY) + 40)) < 80)) {
             mCursorTarget = 2;
             mPickedChar = 3;
             mPickPressTimer = (data_0208ee44 * 6);
@@ -284,9 +283,8 @@ void dScStarSel_c::UpdateCharacterSelect() {
         for (i = 0; i < 3; i++) {
             if (SaveData::IsCharacterUnlocked(i) != 0) {
                 int ri = gActivePlayerSlot;
-                if (((unsigned short)((((u8(*)[4])gTouchHeld)[gActivePlayerSlot][2] - mCharX[i]) +
-                                      24)) < 48) {
-                    if (((unsigned short)((((u8(*)[4])gTouchHeld)[ri][3] - mCharY[i]) + 24)) < 43) {
+                if (((unsigned short)((gTouchInfo[gActivePlayerSlot].x - mCharX[i]) + 24)) < 48) {
+                    if (((unsigned short)((gTouchInfo[ri].y - mCharY[i]) + 24)) < 43) {
                         mCursorTarget = 1;
                         mCharCursor = GetCharacterSlot(i);
                         data_02092128[0] = i;
@@ -548,11 +546,11 @@ s32 dScStarSel_c::Render() {
 
 // ROM 0x020af038, size 0x834; vtable slot 6.
 //
-// The stylus-hit loop reads the touch record as one 4-byte row of gTouchHeld (the
-// gTouchHeld/gTouchEdge/gTouchX/gTouchY layout PlayerInput.h describes). The
-// record's y byte is not a named local: it is read in the loop condition straight off
-// the row, and the compiler hoists that invariant read into the preheader itself,
-// which is what gives it a fresh register. The slot index is a byte; a 32-bit index
+// The stylus-hit loop takes the touch x through a pointer to the slot's TouchInfo.
+// The y byte is not a named local: it is read in the loop condition straight off
+// gTouchInfo, and the compiler hoists that invariant read into the preheader itself,
+// which is what gives it a fresh register (reading y through the same pointer
+// shares its base register instead: 24 words differ). The slot index is a byte; a 32-bit index
 // CSEs idx * 4 instead of refolding it for the edge read.
 //
 // Two scratch locals are shared between the character-pick branch and the stylus
@@ -569,7 +567,6 @@ extern dFdColor_c gSceneColorFader;
 }
 
 s32 dScStarSel_c::Behavior() {
-    u8 *rec;
     u8 hit;
     int pressed;
     s32 cur;
@@ -624,17 +621,17 @@ s32 dScStarSel_c::Behavior() {
             idx = gActivePlayerSlot;
             cur = mSelectedPlate;
             found = 0;
-            val = ((u8(*)[4])gTouchHeld)[idx][0];
+            val = gTouchInfo[idx].held;
             if (val != 0) {
                 num = mPlateCount;
                 i = 0;
                 if (num > 0) {
-                    rec = ((u8(*)[4])gTouchHeld)[idx];
-                    tx = rec[2];
+                    TouchInfo *touch = &gTouchInfo[idx];
+                    tx = touch->x;
                     do {
-                        if ((u8)(tx - mPlateX[i] + 8) < 16 && ((u8(*)[4])gTouchHeld)[idx][3] < 40 &&
+                        if ((u8)(tx - mPlateX[i] + 8) < 16 && gTouchInfo[idx].y < 40 &&
                             ((mPlateMask >> i) & 1)) {
-                            hit = (val != 0 && ((u8(*)[4])gTouchEdge)[idx][0] != 0);
+                            hit = (val != 0 && gTouchInfo[idx].edge != 0);
                             if (hit != 0 || cur != i) {
                                 mPlatePressTimer = data_0208ee44 * 3;
                             }

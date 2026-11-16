@@ -59,8 +59,6 @@ enum d_s_mg_trampoline2_AssetId {
 
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (gActivePlayerSlot)
-/* local: these readers only reproduce through a 4-byte-record view of the lane. */
-#define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
 
 /* The forward declarations below are local stand-ins for types that have
  * no header yet (issue #2497). */
@@ -483,7 +481,7 @@ void dScMgTrampoline2_c::StateWaitExit() {
     if (mTimer != 0) {
         idx = ACTIVE_SLOT;
         b = 0;
-        if (gTouchHeld[idx * 4] != 0 && gTouchEdge[idx * 4] != 0)
+        if (gTouchInfo[idx].held != 0 && gTouchInfo[idx].edge != 0)
             b = 1;
         if (b == 0)
             return;
@@ -511,11 +509,11 @@ void dScMgTrampoline2_c::UpdateTouchInput() {
     }
 
     i = ACTIVE_SLOT;
-    b = (TOUCH_REC(gTouchHeld)[i][0] != 0 && TOUCH_REC(gTouchEdge)[i][0] != 0);
+    b = (gTouchInfo[i].held != 0 && gTouchInfo[i].edge != 0);
     if (b) {
-        mTouchX = TOUCH_REC(gTouchX)[i][0];
+        mTouchX = gTouchInfo[i].x;
         mTouchStartX = mTouchX;
-        mTouchY = TOUCH_REC(gTouchY)[i][0];
+        mTouchY = gTouchInfo[i].y;
         mTouchStartY = mTouchY;
         mTouching = 1;
         mDragSoundHandle = 0;
@@ -525,15 +523,15 @@ void dScMgTrampoline2_c::UpdateTouchInput() {
         return;
 
     i = ACTIVE_SLOT;
-    if (TOUCH_REC(gTouchHeld)[i][0] != 0) {
-        Mg_DrawLine(mTouchX, mTouchY, TOUCH_REC(gTouchX)[i][0], TOUCH_REC(gTouchY)[i][0], 2, 4);
+    if (gTouchInfo[i].held != 0) {
+        Mg_DrawLine(mTouchX, mTouchY, gTouchInfo[i].x, gTouchInfo[i].y, 2, 4);
         i = ACTIVE_SLOT;
-        mTouchX = TOUCH_REC(gTouchX)[i][0];
-        mTouchY = TOUCH_REC(gTouchY)[i][0];
+        mTouchX = gTouchInfo[i].x;
+        mTouchY = gTouchInfo[i].y;
         mDragSoundHandle =
             func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mTouchX << 12), 0, 0);
     } else {
-        b = (TOUCH_REC(gTouchHeld)[i][0] == 0 && TOUCH_REC(gTouchEdge)[i][0] != 0);
+        b = (gTouchInfo[i].held == 0 && gTouchInfo[i].edge != 0);
         if (b != 0) {
             mTouchReleased = 1;
         }
