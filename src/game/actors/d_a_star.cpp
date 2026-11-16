@@ -1424,31 +1424,27 @@ void daStar_c::StateSaveMessage() {
  * 14.0 in water or 23.0 on land after each ground contact. The pickup test
  * runs once mStateTimer has counted out, unless the no-pickup flag is set. */
 void daStar_c::StateBounce() {
-    char *c = (char *)this;
     CheckBounds();
     mPrevPosY = mPosY;
     UpdateWMClsn(mWithMeshClsn, 2);
     if (mWithMeshClsn.IsOnWall()) {
-        mPrevAngleY = ((dActor_c *)c)->ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
     }
     UpdateWater();
     if (mWithMeshClsn.JustHitGround()) {
         OnBounceLand();
     } else if (mWithMeshClsn.IsOnGround()) {
-        mPrevAngleY = ((dActor_c *)c)->ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
         if (mBits.water == WATER_IN)
             mVertSpeed = 0xe000;
         else
             mVertSpeed = 0x17000;
     }
-    {
-        unsigned short *ctr = &mStateTimer;
-        if (*ctr == 0) {
-            if (!mBits.noPickup)
-                CheckPickup();
-        } else {
-            *ctr = *ctr - 1;
-        }
+    if (mStateTimer == 0) {
+        if (!mBits.noPickup)
+            CheckPickup();
+    } else {
+        mStateTimer--;
     }
     ProbeGround();
     UpdateSparkleEffect();
