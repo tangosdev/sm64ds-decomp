@@ -1267,7 +1267,6 @@ void daPly_c::func_ov002_020bdb50(int arg) {
 }
 
 void daPly_c::func_ov002_020bdc18() {
-    char *c = (char *)this;
     int i;
     for (i = 0; i < 5; i++) {
         dActor_c **a = mHeldObjQueue;
