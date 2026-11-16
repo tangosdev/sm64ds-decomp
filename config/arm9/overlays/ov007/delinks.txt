@@ -1655,7 +1655,6 @@ src/ui/menus/unit020be0dc.cpp:
 src/ui/menus/unit020bed60.cpp:
     complete
     .text start:0x020bed60 end:0x020bf690
-    .rodata.menu start:0x020d7c98 end:0x020d7d60
 
 
 src/ui/menus/unit020bf690.cpp:
