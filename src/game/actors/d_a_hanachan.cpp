@@ -801,19 +801,18 @@ void daHanachan_c::UpdateSegments()
 /* Copies each segment's rotation and position into its model matrix. */
 void daHanachan_c::UpdateSegmentModels()
 {
-    /* rot steps by one Vector3s from this, so the y load keeps add #0x400.
-       model steps by one dExtAnmModel_c. &mAnmModels[i].mat4x3 folds +0x1c into
-       the base and drops that add; a dExtSimpleModel_c* walk keeps it. */
+    /* The rotation call takes its matrix through a model pointer (the ROM
+       steps &mAnmModels[i] and adds 0x1c at the call); the translation stores
+       index the array. Spelling the call as &mAnmModels[i].mat4x3 folds the
+       0x1c into the base, and routing the stores through model moves them
+       onto its register too. */
     int i;
-    char *rot = (char *)this;
-    dExtSimpleModel_c *model = &mAnmModels[0];
     for (i = 0; i < 5; i++) {
-        Matrix4x3_FromRotationY(&model->mat4x3, ((daHanachan_c *)rot)->mSegmentRot[0].y);
+        dExtAnmModel_c *model = &mAnmModels[i];
+        Matrix4x3_FromRotationY(&model->mat4x3, mSegmentRot[i].y);
         mAnmModels[i].mat4x3.t.x = mSegmentPos[i].x >> 3;
         mAnmModels[i].mat4x3.t.y = mSegmentPos[i].y >> 3;
         mAnmModels[i].mat4x3.t.z = mSegmentPos[i].z >> 3;
-        rot += sizeof(Vector3s);
-        model = (dExtSimpleModel_c *)((char *)model + sizeof(dExtAnmModel_c));
     }
 }
 
