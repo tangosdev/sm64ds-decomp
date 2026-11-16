@@ -14544,7 +14544,7 @@ void daPly_c::Bounce(fx32 f) {
 int daPly_c::func_ov002_020d93ac() {
     extern u8 gGameMode;
     Vector3 pos;
-    char *spawned;
+    dActor_c *spawned;
     u32 chr;
     int xv, yv, sum, zv;
     int b;
@@ -14567,7 +14567,7 @@ int daPly_c::func_ov002_020d93ac() {
     pos.x = xv;
     pos.y = sum;
     pos.z = zv;
-    spawned = (char *)Spawn(0x10d, (chr << 8) | 5, pos, 0, this->mAreaId, -1);
+    spawned = Spawn(0x10d, (chr << 8) | 5, pos, 0, this->mAreaId, -1);
     if (spawned == 0) goto fail;
 
     b = (gGameMode == 1);
@@ -14576,15 +14576,15 @@ int daPly_c::func_ov002_020d93ac() {
         zz = this->mPrevAngleZ;
         xx = this->mPrevAngleX;
         ang += 0x8000;
-        ((dActor_c *)spawned)->mPrevAngleX = xx;
-        ((dActor_c *)spawned)->mPrevAngleY = ang;
-        ((dActor_c *)spawned)->mPrevAngleZ = zz;
+        spawned->mPrevAngleX = xx;
+        spawned->mPrevAngleY = ang;
+        spawned->mPrevAngleZ = zz;
     } else {
-        ((dActor_c *)spawned)->mPrevAngleX = this->mPrevAngleX;
-        ((dActor_c *)spawned)->mPrevAngleY = this->mPrevAngleY;
-        ((dActor_c *)spawned)->mPrevAngleZ = this->mPrevAngleZ;
+        spawned->mPrevAngleX = this->mPrevAngleX;
+        spawned->mPrevAngleY = this->mPrevAngleY;
+        spawned->mPrevAngleZ = this->mPrevAngleZ;
     }
-    ((dActor_c *)spawned)->mHorzSpeed = 0xb000;
+    spawned->mHorzSpeed = 0xb000;
     return 1;
 fail:
     return 0;
