@@ -427,6 +427,10 @@ void dScMgCup_c::StateSelect() {
         mTimer = 60;
         FreeGfxSlotsById(0x1d);
 
+        /* The ROM loads touch y and x before it stores mTouchLocked. Without
+           the volatile reads mwcc folds the loads into the stores (8-11 of 97
+           words differ for every statement order, by-value and by-reference
+           inline setters on Presenter tried too). */
         {
             unsigned int currentPlayerSlot = gActivePlayerSlot;
             unsigned char lockedTouchY = *(volatile unsigned char *)&gTouchY[currentPlayerSlot * 4];
