@@ -106,7 +106,7 @@ int func_01ffa344(int, int);
 void func_0203d384(void);
 void *__cxa_vec_new(unsigned int, unsigned int, unsigned int, void (*)(void *), void (*)(void *));
 void *_ZN7Vector3D1Ev(void *);
-void func_ov002_020bcdf0(char *);
+void func_ov002_020bcdf0(daPly_c *);
 void func_ov002_020cd190(char *);
 int func_ov002_020cf700(daPly_c *);
 int func_ov002_020d5cec(void *);
@@ -794,8 +794,7 @@ u32 data_ov002_0210a7e8[] = {
     71, 168, 74, 86, 84, 16, 84, 84, 133, 16, 86, 133, 16, 83, 83, 133, 133, 83, 133,
 };
 
-extern "C" void func_ov002_020bcdf0(char *self) {
-    daPly_c *player = reinterpret_cast<daPly_c *>(self);
+extern "C" void func_ov002_020bcdf0(daPly_c *player) {
     AnimScriptStep *base;
     AnimScriptStep cur;
     int id;
@@ -810,7 +809,7 @@ extern "C" void func_ov002_020bcdf0(char *self) {
     base = data_ov002_0210a7a0[player->mAnimScriptId - 1];
     cur = base[player->mAnimScriptStep];
 
-    ((daPly_c *)self)->SetAnim(cur.w[0], cur.w[1], 0x1000, 0);
+    player->SetAnim(cur.w[0], cur.w[1], 0x1000, 0);
 
     if (cur.w[0] == 0xbd) {
         id = player->GetBodyModelID(player->param1 & 0xff, 0);
@@ -11121,7 +11120,7 @@ int daPly_c::St_Wait_Main() {
                     goto blk0_35;
                 }
             blk0_34:
-                func_ov002_020bcdf0((char *)this);
+                func_ov002_020bcdf0(this);
                 goto blk0_36;
             }
         blk0_35:
