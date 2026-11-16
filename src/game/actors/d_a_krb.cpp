@@ -520,9 +520,9 @@ int daKrb_c::func_ov084_021298d0() {
                cylinder update always run for a king minion in this death phase. */
             unsigned int id = goomba->mdCcAc_c.otherOwner;
             if (id != 0) {
-                char *r = (char *)dActor_c::FindWithID(id);
+                dActor_c *r = dActor_c::FindWithID(id);
                 if (r != 0) {
-                    int b = (((dActor_c *)r)->actorID == ACTOR_KURIKING);
+                    int b = (r->actorID == ACTOR_KURIKING);
                     if (b != 0) {
                         goomba->SpawnCoin();
                         goomba->func_ov084_02129498();
