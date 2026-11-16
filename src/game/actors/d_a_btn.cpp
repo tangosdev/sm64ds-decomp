@@ -1640,7 +1640,12 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
                reads at both sites give 0x280. Re-measured (#821 r17): the
                three saves as an inline helper (pointer or reference) are
                still 0x280; the state test as an inline predicate is 0x298
-               (if chain) or 0x2d0 (switch). The pointer cast is what
+               (if chain) or 0x2d0 (switch). Re-measured (#821 r20), plain
+               reads at both sites: storing mResumeState after the other two
+               saves keeps the reload but leaves 16 of 162 words wrong; the
+               outer test on the r1 local, a (u32) or (s32)(u32) cast,
+               `this->` spelling, an empty `== 0xa` arm and the negated
+               `!=` chain are all 0x280. The pointer cast is what
                matters, not a qualifier: a `volatile s32 *` cast builds the
                same object. */
             mResumeState = *(s32 *)&mState;
