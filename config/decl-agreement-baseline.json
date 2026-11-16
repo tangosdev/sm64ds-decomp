@@ -6952,7 +6952,6 @@
       "include/decl_common.h": [
         "return:unsigned char"
       ]
-
     },
     "gReturnSublevel": {
       "src/_ZN7daPly_c13InitResourcesEv.cpp": [
@@ -6961,7 +6960,6 @@
       "src/game/stages/d_s_stage_methods.cpp": [
         "return:signed char"
       ]
-
     },
     "data_02092128": {
       "src/game/stages/LevelObjects.cpp": [
@@ -7611,7 +7609,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "return:char * []"
       ]
-
     },
     "data_0209f3a4": {
       "src/ui/hud/d_map.cpp": [
@@ -9090,7 +9087,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "return:SharedFilePtr"
       ]
-
     },
     "data_ov002_02110ac4": {
       "src/unnamed/ov002/__sinit_ov002_02107304.c": [
@@ -11368,6 +11364,9 @@
       ]
     },
     "sEntryGraphCallback": {
+      "include/decl_common.h": [
+        "return:void *"
+      ],
       "src/_ZN10dScEntry_c17EnterCourseSelectEv.cpp": [
         "return:int"
       ],
@@ -11394,6 +11393,9 @@
       ]
     },
     "data_ov075_0211d930": {
+      "include/decl_common.h": [
+        "return:int"
+      ],
       "src/unnamed/ov075/func_ov075_02119dc4.cpp": [
         "return:int []"
       ]
@@ -12403,7 +12405,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "param:#1 int"
       ]
-
     },
     "func_02011f7c": {
       "src/unnamed/ov002/func_ov002_020e6330.c": [
@@ -12412,7 +12413,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "param:#1 int"
       ]
-
     },
     "func_02012120": {
       "src/unnamed/ov002/func_ov002_020e1c20.c": [
