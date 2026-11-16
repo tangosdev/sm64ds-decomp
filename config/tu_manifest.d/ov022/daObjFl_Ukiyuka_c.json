@@ -31,6 +31,11 @@
       "name": ".bss",
       "start": "0x021145c8",
       "end": "0x02114618"
+    },
+    {
+      "name": ".data",
+      "start": "0x021140d4",
+      "end": "0x021140ec"
     }
   ],
   "functions": [
@@ -77,7 +82,15 @@
       "ordinal": 5
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov022_021140d4",
+      "address": "0x021140d4",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "two resource rows, the floating floor and the tilting floor"
+    }
+  ],
   "bss": [
     {
       "symbol": "gdaObjFl_UkiyukaFlShisoCollisionFile",
@@ -381,6 +394,13 @@
           "start": "0x021145c8",
           "end": "0x02114618",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x021140d4",
+          "end": "0x021140ec",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -579,6 +599,66 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x021140d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlUkiYukaModelFile",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x021145e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021140d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlUkiYukaCollisionFile",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x021145d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021140dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211baec",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211baec"
+    },
+    {
+      "section": ".data",
+      "source": "0x021140e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gdaObjFl_UkiyukaFlShisoModelFile",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x021145d8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021140e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gdaObjFl_UkiyukaFlShisoCollisionFile",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x021145c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021140e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211bacc",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211bacc"
+    },
     {
       "section": ".init",
       "source": "0x02112ed0",

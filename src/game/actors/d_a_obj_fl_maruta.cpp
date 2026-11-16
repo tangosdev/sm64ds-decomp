@@ -22,9 +22,8 @@
 #include "daObjFlMaruta_c.h"
 #include "SharedFilePtr.h"
 
-extern "C" {
-extern int data_ov022_02112c98[];
-}
+extern CLPS_Block data_ov064_0211bbcc;
+extern "C" int data_ov022_02112c98[];
 
 #pragma defer_codegen off
 
@@ -73,3 +72,14 @@ struct FlLogCollisionFile : SharedFilePtr {
 /* Definition order is the retail initializer's construction order. */
 FlLogModelFile gFlLogModelFile(0x05fb);
 FlLogCollisionFile gFlLogCollisionFile(0x05fc);
+extern "C" {
+#pragma define_section rodatasec ".rodata" ".rodata" ".rodata" far_absolute R
+#pragma section rodatasec begin
+int data_ov022_02112c98[1] = {0x7d0000};
+int data_ov022_02112c9c[3] = {
+    (int)&gFlLogModelFile,
+    (int)&gFlLogCollisionFile,
+    (int)&data_ov064_0211bbcc,
+};
+#pragma section rodatasec end
+}

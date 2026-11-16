@@ -1,8 +1,8 @@
 //cpp
 /* What stays:
  * - FX_SinCosTable_ is the sine table. gCurrentStarId is the star index.
- * - data_ov016_021136dc, 021136e4 and 021149d4 are the overlay file
- *   and CLPS tables, indexed by mModelIndex. This TU does not own them.
+ * - data_ov016_021136dc, 021136e4 and 021149d4 are the file and CLPS
+ *   tables, indexed by mModelIndex.
  * - UpdateModelMatrix is a coined name; the ROM records none.
  *
  * daObjKi_Fune_c, the Jolly Roger Bay ship (KI_FUNE / KI_FUNE_UP).
@@ -137,3 +137,21 @@ KiFuneModelFilePtr gKiFuneUpModelFile(ASSET_KI_FUNE_UP_BMD);
 KiFuneModelFilePtr gKiFuneDownAModelFile(ASSET_KI_FUNE_DOWN_A_BMD);
 KiFuneClsnFileHandle gKiFuneUpCollisionFile(ASSET_KI_FUNE_UP_KCL);
 KiFuneClsnFileHandle gKiFuneDownACollisionFile(ASSET_KI_FUNE_DOWN_A_KCL);
+
+extern int data_ov016_02113c6c;
+extern int data_ov016_02113c4c;
+extern "C" void *data_ov016_021149d4[2] = {
+    &data_ov016_02113c6c,
+    &data_ov016_02113c4c,
+};
+#pragma define_section rodatasec ".rodata" ".rodata" ".rodata" far_absolute R
+#pragma section rodatasec begin
+extern "C" void *data_ov016_021136e4[2] = {
+    &gKiFuneUpModelFile,
+    &gKiFuneDownAModelFile,
+};
+extern "C" void *data_ov016_021136dc[2] = {
+    &gKiFuneUpCollisionFile,
+    &gKiFuneDownACollisionFile,
+};
+#pragma section rodatasec end

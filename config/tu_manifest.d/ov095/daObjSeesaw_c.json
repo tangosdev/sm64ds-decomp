@@ -32,6 +32,11 @@
       "name": ".bss",
       "start": "0x02137780",
       "end": "0x02137898"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02136f58",
+      "end": "0x02136f68"
     }
   ],
   "functions": [
@@ -170,6 +175,15 @@
     }
   ],
   "data": [],
+  "rodata": [
+    {
+      "symbol": "data_ov095_02136f58",
+      "address": "0x02136f58",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four 20.12 actor weights indexed by param1 & 3"
+    }
+  ],
   "bss": [
     {
       "symbol": "gBSiSoModelFile",
@@ -584,6 +598,13 @@
           "start": "0x02137780",
           "end": "0x02137898",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02136f58",
+          "end": "0x02136f68",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
