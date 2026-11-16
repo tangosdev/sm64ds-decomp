@@ -125,7 +125,6 @@ extern ControllerInput data_0209f498[];
 }
 extern u8 NumStars(void);
 extern int func_020138dc(void);
-void func_02031cd4(void *arg);
 int func_020321fc(void);
 void func_020326ac(void);
 void func_02032f54(void);
@@ -1627,7 +1626,7 @@ void Message_DrawLineBG2VS(void) {
         (u8 *)(data_0209fd14 + (sizeof(MessageBankHeader) + sizeof(MessageDataSection)) +
                ((MessageInfoSection *)data_0209fcf8)->sectionSize +
                ((MessageEntry *)(base + idx * 8))->textOffset);
-    func_02031cd4((void *)1);
+    Message::func_02031cd4((void *)1);
     data_0209fc7c = 0;
     n = ((data_0209fc88 + 7) / 8) << 6;
     {
@@ -1650,7 +1649,7 @@ extern "C" void Message_DrawCenteredLineVS(int a0, int a1) {
         (u8 *)(data_0209fd14 + (sizeof(MessageBankHeader) + sizeof(MessageDataSection)) +
                ((MessageInfoSection *)data_0209fcf8)->sectionSize +
                ((MessageEntry *)(base + idx * 8))->textOffset);
-    func_02031cd4((void *)1);
+    Message::func_02031cd4((void *)1);
     oldc = data_0209fc88;
     data_0209fc7c = (((a1 << 3) - oldc) & 0xf) >> 1;
     data_0209fc88 = oldc + data_0209fc7c;
