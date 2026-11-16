@@ -308,7 +308,9 @@ void Message::AddCharPairVS() {
 }
 
 /* opt_common_subs stays off: the ROM re-reads every mask and row word per use
- * and spills the scaled row indices, a CSE-off recompute no spelling reaches. */
+ * and spills the scaled row indices, a CSE-off recompute no spelling reaches.
+ * Re-measured (#821 r17): without the bracket it is 0x23c against 0x2b0, the
+ * same with the row indices assigned inside the subscripts. */
 #pragma push
 #pragma opt_common_subs off
 void func_02031428(void) {
