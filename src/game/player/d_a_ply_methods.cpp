@@ -15332,11 +15332,11 @@ int daPly_c::func_ov002_020daa74() {
 }
 
 int daPly_c::ReleaseHeldActor() {
-    char *p = (char *)mHeldObj;
+    dActor_c *p = mHeldObj;
     int ok = (p != 0);
     int is_bf;
     if (ok == 0) return 0;
-    is_bf = (int)(((dActor_c *)p)->actorID == 0xbf);
+    is_bf = (int)(p->actorID == 0xbf);
     if (is_bf != 0) {
         func_ov002_020db54c(p, 0x10000, 0x10000, mAngleY);
     }
