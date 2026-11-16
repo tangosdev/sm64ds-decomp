@@ -615,11 +615,11 @@ struct P2 data_ov002_0210a34c = {{(void *)0x6e, (void *)0x6f}};
 
 /* Free handlers are stored as their actual function pointers; the union gives
  * them the PMF spelling the descriptor tables use. */
-extern "C" void func_ov002_020c9de4(char *);
-extern "C" void func_ov002_020e200c(char *);
+extern "C" void func_ov002_020c9de4(daPly_c *);
+extern "C" void func_ov002_020e200c(daPly_c *);
 extern "C" void func_ov002_020c72a4(void *);
-union PlayerFreeCharPmf {
-    void (*free)(char *);
+union PlayerFreePmf {
+    void (*free)(daPly_c *);
     void (daPly_c::*pmf)();
 };
 union PlayerFreeVoidPmf {
@@ -634,12 +634,12 @@ union PlayerStateFn {
     void (*freeVoid)(void *);
 };
 extern "C" {
-PlayerFreeCharPmf data_ov002_02109dfc = {func_ov002_020c9de4};
-PlayerFreeCharPmf data_ov002_02109f0c = {func_ov002_020e200c};
-PlayerFreeCharPmf data_ov002_0210a10c = {func_ov002_020e200c};
-PlayerFreeCharPmf data_ov002_0210a23c = {func_ov002_020c9de4};
-PlayerFreeCharPmf data_ov002_0210a244 = {func_ov002_020c9de4};
-PlayerFreeCharPmf data_ov002_0210a264 = {func_ov002_020c9de4};
+PlayerFreePmf data_ov002_02109dfc = {func_ov002_020c9de4};
+PlayerFreePmf data_ov002_02109f0c = {func_ov002_020e200c};
+PlayerFreePmf data_ov002_0210a10c = {func_ov002_020e200c};
+PlayerFreePmf data_ov002_0210a23c = {func_ov002_020c9de4};
+PlayerFreePmf data_ov002_0210a244 = {func_ov002_020c9de4};
+PlayerFreePmf data_ov002_0210a264 = {func_ov002_020c9de4};
 PlayerFreeVoidPmf data_ov002_0210a334 = {func_ov002_020c72a4};
 }
 
@@ -7109,12 +7109,12 @@ tail:
 }
 
 extern "C" {
-void func_ov002_020c9de4(char* c){
-    ((daPly_c *)(c))->func_ov002_020bdd9c();
-    ((daPly_c *)(c))->func_ov002_020bdef0();
-    ((daPly_c *)(c))->func_ov002_020bdd2c();
-    ((daPly_c *)c)->func_ov002_020d80d0();
-    ((daPly_c *)(c))->func_ov002_020c9d68();
+void func_ov002_020c9de4(daPly_c *player) {
+    player->func_ov002_020bdd9c();
+    player->func_ov002_020bdef0();
+    player->func_ov002_020bdd2c();
+    player->func_ov002_020d80d0();
+    player->func_ov002_020c9d68();
 }
 }
 
@@ -18961,9 +18961,8 @@ void func_ov002_020e1e70(char *c) {
 }
 
 extern "C" {
-void func_ov002_020e200c(char* c){
+void func_ov002_020e200c(daPly_c *player) {
     extern unsigned char data_0209f49c[];
-    daPly_c *player = (daPly_c *)c;
     player->mVertAccel = player->func_ov002_020bf27c(-0x4000);
     player->mTerminalVelocity = -0x4b000;
     if (player->mVertSpeed >= 0) {
@@ -18974,7 +18973,7 @@ void func_ov002_020e200c(char* c){
     if (player->mVertSpeed >= 0)
         return;
     if (player->mJumpComboStage == 1)
-        ((daPly_c *)c)->SetAnim(0x50, 0x40000000, 0x1000, 0);
+        player->SetAnim(0x50, 0x40000000, 0x1000, 0);
     if ((data_0209f498[gActivePlayerSlot].held & 2) == 0)
         return;
     if (player->mHasWings == 0)
@@ -22771,11 +22770,11 @@ extern int (daPly_c::*data_ov002_0210a324)();
 extern int (daPly_c::*data_ov002_0210a32c)();
 extern int (daPly_c::*data_ov002_0210a33c)();
 extern int (daPly_c::*data_ov002_0210a344)();
-extern PlayerFreeCharPmf data_ov002_02109dfc;
-extern PlayerFreeCharPmf data_ov002_02109f0c;
+extern PlayerFreePmf data_ov002_02109dfc;
+extern PlayerFreePmf data_ov002_02109f0c;
 extern void (daPly_c::*data_ov002_02109f54)();
 extern void (daPly_c::*data_ov002_0210a074)();
-extern PlayerFreeCharPmf data_ov002_0210a10c;
+extern PlayerFreePmf data_ov002_0210a10c;
 extern void (daPly_c::*data_ov002_0210a12c)();
 extern void (daPly_c::*data_ov002_0210a134)();
 extern void (daPly_c::*data_ov002_0210a144)();
@@ -22785,9 +22784,9 @@ extern void (daPly_c::*data_ov002_0210a1cc)();
 extern void (daPly_c::*data_ov002_0210a1ec)();
 extern void (daPly_c::*data_ov002_0210a1fc)();
 extern void (daPly_c::*data_ov002_0210a22c)();
-extern PlayerFreeCharPmf data_ov002_0210a23c;
-extern PlayerFreeCharPmf data_ov002_0210a244;
-extern PlayerFreeCharPmf data_ov002_0210a264;
+extern PlayerFreePmf data_ov002_0210a23c;
+extern PlayerFreePmf data_ov002_0210a244;
+extern PlayerFreePmf data_ov002_0210a264;
 extern void (daPly_c::*data_ov002_0210a274)();
 extern void (daPly_c::*data_ov002_0210a29c)();
 extern void (daPly_c::*data_ov002_0210a30c)();
