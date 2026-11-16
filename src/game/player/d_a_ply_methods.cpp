@@ -6888,7 +6888,6 @@ done:
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (overlay ov002).
  */
 void daPly_c::func_ov002_020c9718() {
-    unsigned char *self = (unsigned char *)this;
     int r2;
     if (mIsUnderwater == 0)
         return;
