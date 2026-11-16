@@ -1427,6 +1427,7 @@ src/runtime/actor/ActorBase.cpp:
 src/data/arm9/data_02082178.c:
     complete
     .rodata start:0x02082178 end:0x02082190
+    .data start:0x02099f28 end:0x02099f48
 
 src/fListNode.cpp:
     complete
