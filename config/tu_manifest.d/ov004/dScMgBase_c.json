@@ -33,9 +33,33 @@
       "end": "0x020b9de8"
     },
     {
-      "name": ".data",
+      "name": ".rodata",
+      "start": "0x020b944c",
+      "end": "0x020b9488"
+    },
+    {
+      "name": ".data.fxpmf",
+      "input_section": ".data",
       "start": "0x020bbf4c",
       "end": "0x020bbf6c"
+    },
+    {
+      "name": ".data.menutbl",
+      "input_section": ".data",
+      "start": "0x020bbf94",
+      "end": "0x020bc034"
+    },
+    {
+      "name": ".data.scenekind",
+      "input_section": ".data",
+      "start": "0x020bc070",
+      "end": "0x020bc0b8"
+    },
+    {
+      "name": ".data.menuplt",
+      "input_section": ".data",
+      "start": "0x020bea14",
+      "end": "0x020beb48"
     },
     {
       "name": ".bss",
@@ -969,6 +993,106 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN4MgFx9DrawFlyToEv"
+    },
+    {
+      "symbol": "sMgMenuScreenByLanguage",
+      "address": "0x020bbf94",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five compressed menu screens, one per language"
+    },
+    {
+      "symbol": "sMgSpriteTables",
+      "address": "0x020bbfa8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language OAM lists"
+    },
+    {
+      "symbol": "sMgMenuItem1SpritesByLanguage",
+      "address": "0x020bbfbc",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "menu item 1 sprites, five languages"
+    },
+    {
+      "symbol": "sMgMenuItem2SpritesByLanguage",
+      "address": "0x020bbfd0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "menu item 2 sprites, five languages"
+    },
+    {
+      "symbol": "sMgStockCounterFiles",
+      "address": "0x020bbfe4",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five stock-counter file ids"
+    },
+    {
+      "symbol": "sMgPauseBgNcgByLanguage",
+      "address": "0x020bbff8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five pause-screen character file ids"
+    },
+    {
+      "symbol": "sMgOptionNcgByLanguage",
+      "address": "0x020bc00c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five option-screen character file ids"
+    },
+    {
+      "symbol": "sMgMenuItem0SpritesByLanguage",
+      "address": "0x020bc020",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "menu item 0 sprites, five languages"
+    },
+    {
+      "symbol": "sMgSceneKindByGame",
+      "address": "0x020bc070",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "36 scene-kind ids indexed by the menu game"
+    },
+    {
+      "symbol": "data_ov004_020bea14",
+      "address": "0x020bea14",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five sparkle sprite lists"
+    },
+    {
+      "symbol": "sMgMenuBgPltt",
+      "address": "0x020bea28",
+      "size": "0xa0",
+      "binding": "STB_GLOBAL",
+      "evidence": "160-byte main menu background palette"
+    },
+    {
+      "symbol": "sMgMenuSubBgPltt",
+      "address": "0x020beac8",
+      "size": "0x80",
+      "binding": "STB_GLOBAL",
+      "evidence": "128-byte sub menu background palette"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "sMgCounterMaxByDigits",
+      "address": "0x020b944c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven digit caps: 0, 9, 99, 999, 9999, 99999, 999999"
+    },
+    {
+      "symbol": "sMgBrushPalette",
+      "address": "0x020b9468",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "32-byte brush palette loaded by GX_LoadBGPltt"
     }
   ],
   "bss": [
@@ -1473,6 +1597,306 @@
   ],
   "relocations": [
     {
+      "section": ".data.menutbl",
+      "source": "0x20bbf94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bcaa0",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bcaa0"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbf98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bdccc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bdccc"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbf9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bd074",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bd074"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfa0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020be34c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020be34c"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfa4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bd698",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bd698"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfa8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021373a4"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesSpanish",
+      "addend": 0,
+      "target_module": "overlays(6,95)",
+      "target_address": "0x021373fc"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesFrench",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213734c"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesGerman",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021372f4"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesItalian",
+      "addend": 0,
+      "target_module": "overlays(6,95)",
+      "target_address": "0x02137454"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213491c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213491c"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134914",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134914"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134918",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134918"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134924",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134924"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfcc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134920",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134920"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134a0c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134a0c"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134a04",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134a04"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfd8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134a08",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134a08"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfdc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134a10",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134a10"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfe0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134a00",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134a00"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bc020",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021347cc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021347cc"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bc024",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021347c0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021347c0"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bc028",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021347c4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021347c4"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bc02c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021347d0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021347d0"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bc030",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021347c8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021347c8"
+    },
+    {
+      "section": ".data.menuplt",
+      "source": "0x20bea14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bea0c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bea0c"
+    },
+    {
+      "section": ".data.menuplt",
+      "source": "0x20bea18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bea04",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bea04"
+    },
+    {
+      "section": ".data.menuplt",
+      "source": "0x20bea1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020be9fc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020be9fc"
+    },
+    {
+      "section": ".data.menuplt",
+      "source": "0x20bea20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020be9f4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020be9f4"
+    },
+    {
+      "section": ".data.menuplt",
+      "source": "0x20bea24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020be9ec",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020be9ec"
+    },
+    {
       "section": ".init",
       "source": "0x020b9498",
       "type": "R_ARM_PC24",
@@ -1633,7 +2057,7 @@
       "target_address": "0x020b948c"
     },
     {
-      "section": ".data",
+      "section": ".data.fxpmf",
       "source": "0x020bbf4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1643,7 +2067,7 @@
       "target_address": "0x020adeb0"
     },
     {
-      "section": ".data",
+      "section": ".data.fxpmf",
       "source": "0x020bbf54",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1653,7 +2077,7 @@
       "target_address": "0x020adcc8"
     },
     {
-      "section": ".data",
+      "section": ".data.fxpmf",
       "source": "0x020bbf5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1663,7 +2087,7 @@
       "target_address": "0x020addcc"
     },
     {
-      "section": ".data",
+      "section": ".data.fxpmf",
       "source": "0x020bbf64",
       "type": "R_ARM_ABS32",
       "kind": "load",

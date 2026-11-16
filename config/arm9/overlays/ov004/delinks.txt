@@ -2,14 +2,85 @@
     .rodata     start:0x020b944c end:0x020b948c kind:rodata align:4
     .init       start:0x020b948c end:0x020b9de4 kind:code align:4
     .ctor       start:0x020b9de4 end:0x020b9df4 kind:rodata align:4
-    .data       start:0x020b9e00 end:0x020beb60 kind:data align:32
+    .data.gap0 start:0x020b9e00 end:0x020b9e50 kind:data align:32
+    .data.MsgSuperEsperSpritesEnglish start:0x020b9e50 end:0x020b9e54 kind:data align:4
+    .data.gap1 start:0x020b9e54 end:0x020b9e70 kind:data align:4
+    .data.MsgNoPairSpritesEnglish start:0x020b9e70 end:0x020b9e74 kind:data align:4
+    .data.gap2 start:0x020b9e74 end:0x020b9e78 kind:data align:4
+    .data.MsgFullHouseSpritesEnglish start:0x020b9e78 end:0x020b9e7c kind:data align:4
+    .data.MsgTimeOverSpritesEnglish start:0x020b9e7c end:0x020b9e80 kind:data align:4
+    .data.gap3 start:0x020b9e80 end:0x020b9e8c kind:data align:4
+    .data.MsgQuitSpritesEnglish start:0x020b9e8c end:0x020b9e90 kind:data align:4
+    .data.MsgYouWinSpritesEnglish start:0x020b9e90 end:0x020b9e94 kind:data align:4
+    .data.gap4 start:0x020b9e94 end:0x020b9e98 kind:data align:4
+    .data.MsgRetrySpritesEnglish start:0x020b9e98 end:0x020b9e9c kind:data align:4
+    .data.gap5 start:0x020b9e9c end:0x020b9ea4 kind:data align:4
+    .data.MsgGoalSpritesEnglish start:0x020b9ea4 end:0x020b9ea8 kind:data align:4
+    .data.MsgHateSpritesEnglish start:0x020b9ea8 end:0x020b9eac kind:data align:4
+    .data.gap6 start:0x020b9eac end:0x020b9eb8 kind:data align:4
+    .data.MsgPerfectSpritesEnglish start:0x020b9eb8 end:0x020b9ebc kind:data align:4
+    .data.MsgWhereSpritesEnglish start:0x020b9ebc end:0x020b9ec0 kind:data align:4
+    .data.gap7 start:0x020b9ec0 end:0x020b9ed4 kind:data align:4
+    .data.MsgTooBadSpritesEnglish start:0x020b9ed4 end:0x020b9ed8 kind:data align:4
+    .data.gap8 start:0x020b9ed8 end:0x020b9ee4 kind:data align:4
+    .data.MsgLikeSpritesEnglish start:0x020b9ee4 end:0x020b9ee8 kind:data align:4
+    .data.MsgFiveCardSpritesEnglish start:0x020b9ee8 end:0x020b9eec kind:data align:4
+    .data.gap9 start:0x020b9eec end:0x020b9ef0 kind:data align:4
+    .data.MsgLoveSpritesEnglish start:0x020b9ef0 end:0x020b9ef4 kind:data align:4
+    .data.gap10 start:0x020b9ef4 end:0x020b9efc kind:data align:4
+    .data.MsgTwoPairSpritesEnglish start:0x020b9efc end:0x020b9f00 kind:data align:4
+    .data.gap11 start:0x020b9f00 end:0x020b9f0c kind:data align:4
+    .data.MsgEsperSpritesEnglish start:0x020b9f0c end:0x020b9f10 kind:data align:4
+    .data.gap12 start:0x020b9f10 end:0x020b9f2c kind:data align:4
+    .data.MsgLevelClearSpritesEnglish start:0x020b9f2c end:0x020b9f30 kind:data align:4
+    .data.gap13 start:0x020b9f30 end:0x020b9f54 kind:data align:4
+    .data.MsgGiveUpSprites start:0x020b9f54 end:0x020b9f58 kind:data align:4
+    .data.gap14 start:0x020b9f58 end:0x020b9f5c kind:data align:4
+    .data.MsgResultHiScoreSpritesEnglish start:0x020b9f5c end:0x020b9f60 kind:data align:4
+    .data.MsgOnePairSpritesEnglish start:0x020b9f60 end:0x020b9f64 kind:data align:4
+    .data.gap15 start:0x020b9f64 end:0x020b9f78 kind:data align:4
+    .data.MsgStartSpritesEnglish start:0x020b9f78 end:0x020b9f7c kind:data align:4
+    .data.MsgDislikeSpritesEnglish start:0x020b9f7c end:0x020b9f80 kind:data align:4
+    .data.gap16 start:0x020b9f80 end:0x020b9f88 kind:data align:4
+    .data.MsgThreeCardSpritesEnglish start:0x020b9f88 end:0x020b9f8c kind:data align:4
+    .data.gap17 start:0x020b9f8c end:0x020b9fa0 kind:data align:4
+    .data.MsgLevelSpritesEnglish start:0x020b9fa0 end:0x020b9fa4 kind:data align:4
+    .data.gap18 start:0x020b9fa4 end:0x020b9fc8 kind:data align:4
+    .data.MsgFourCardSpritesEnglish start:0x020b9fc8 end:0x020b9fcc kind:data align:4
+    .data.gap19 start:0x020b9fcc end:0x020b9fd8 kind:data align:4
+    .data.MsgHiScoreSpritesEnglish start:0x020b9fd8 end:0x020b9fdc kind:data align:4
+    .data.gap20 start:0x020b9fdc end:0x020b9ffc kind:data align:4
+    .data.MsgDrawSpritesEnglish start:0x020b9ffc end:0x020ba000 kind:data align:4
+    .data.gap21 start:0x020ba000 end:0x020ba010 kind:data align:4
+    .data.MsgGameOverSpritesEnglish start:0x020ba010 end:0x020ba014 kind:data align:4
+    .data.gap22 start:0x020ba014 end:0x020bbf4c kind:data align:4
+    .data.fxpmf start:0x020bbf4c end:0x020bbf6c kind:data align:4
+    .data.gap23 start:0x020bbf6c end:0x020bbf94 kind:data align:4
+    .data.menutbl start:0x020bbf94 end:0x020bc034 kind:data align:4
+    .data.gap24 start:0x020bc034 end:0x020bc070 kind:data align:4
+    .data.scenekind start:0x020bc070 end:0x020bc0b8 kind:data align:4
+    .data.gap25 start:0x020bc0b8 end:0x020bc27c kind:data align:4
+    .data start:0x020bc27c end:0x020bc7d4 kind:data align:4
+    .data.gap26 start:0x020bc7d4 end:0x020bc828 kind:data align:4
+    .data.coinspr start:0x020bc828 end:0x020bc850 kind:data align:4
+    .data.layout start:0x020bc850 end:0x020bc8bc kind:data align:4
+    .data.gap27 start:0x020bc8bc end:0x020bca44 kind:data align:4
+    .data.statetext start:0x020bca44 end:0x020bca58 kind:data align:4
+    .data.psopt start:0x020bca58 end:0x020bcaa0 kind:data align:4
+    .data.gap28 start:0x020bcaa0 end:0x020bea14 kind:data align:4
+    .data.menuplt start:0x020bea14 end:0x020beb48 kind:data align:4
+    .data.gap29 start:0x020beb48 end:0x020beb60 kind:data align:4
     .bss        start:0x020beb60 end:0x020bfec0 kind:bss align:32
 src/minigames/d_s_mg_base.cpp:
     complete
     .text start:0x020ad660 end:0x020b2c84
     .init start:0x020b948c end:0x020b955c
     .ctor start:0x020b9de4 end:0x020b9de8
-    .data start:0x020bbf4c end:0x020bbf6c
+    .rodata start:0x020b944c end:0x020b9488
+    .data.fxpmf start:0x020bbf4c end:0x020bbf6c
+    .data.menutbl start:0x020bbf94 end:0x020bc034
+    .data.scenekind start:0x020bc070 end:0x020bc0b8
+    .data.menuplt start:0x020bea14 end:0x020beb48
     .bss start:0x020beb74 end:0x020bf3e8
 
 src/minigames/unit020b2c84.cpp:
@@ -17,19 +88,53 @@ src/minigames/unit020b2c84.cpp:
     .text start:0x020b2c84 end:0x020b4aa4
     .init start:0x020b955c end:0x020b9ad0
     .ctor start:0x020b9de8 end:0x020b9dec
-    .data start:0x020bc6e8 end:0x020bc7d0
+    .data start:0x020bc27c end:0x020bc7d0
+    .data.MsgSuperEsperSpritesEnglish start:0x20b9e50 end:0x20b9e54
+    .data.MsgNoPairSpritesEnglish start:0x20b9e70 end:0x20b9e74
+    .data.MsgFullHouseSpritesEnglish start:0x20b9e78 end:0x20b9e7c
+    .data.MsgTimeOverSpritesEnglish start:0x20b9e7c end:0x20b9e80
+    .data.MsgQuitSpritesEnglish start:0x20b9e8c end:0x20b9e90
+    .data.MsgYouWinSpritesEnglish start:0x20b9e90 end:0x20b9e94
+    .data.MsgRetrySpritesEnglish start:0x20b9e98 end:0x20b9e9c
+    .data.MsgGoalSpritesEnglish start:0x20b9ea4 end:0x20b9ea8
+    .data.MsgHateSpritesEnglish start:0x20b9ea8 end:0x20b9eac
+    .data.MsgPerfectSpritesEnglish start:0x20b9eb8 end:0x20b9ebc
+    .data.MsgWhereSpritesEnglish start:0x20b9ebc end:0x20b9ec0
+    .data.MsgTooBadSpritesEnglish start:0x20b9ed4 end:0x20b9ed8
+    .data.MsgLikeSpritesEnglish start:0x20b9ee4 end:0x20b9ee8
+    .data.MsgFiveCardSpritesEnglish start:0x20b9ee8 end:0x20b9eec
+    .data.MsgLoveSpritesEnglish start:0x20b9ef0 end:0x20b9ef4
+    .data.MsgTwoPairSpritesEnglish start:0x20b9efc end:0x20b9f00
+    .data.MsgEsperSpritesEnglish start:0x20b9f0c end:0x20b9f10
+    .data.MsgLevelClearSpritesEnglish start:0x20b9f2c end:0x20b9f30
+    .data.MsgGiveUpSprites start:0x20b9f54 end:0x20b9f58
+    .data.MsgResultHiScoreSpritesEnglish start:0x20b9f5c end:0x20b9f60
+    .data.MsgOnePairSpritesEnglish start:0x20b9f60 end:0x20b9f64
+    .data.MsgStartSpritesEnglish start:0x20b9f78 end:0x20b9f7c
+    .data.MsgDislikeSpritesEnglish start:0x20b9f7c end:0x20b9f80
+    .data.MsgThreeCardSpritesEnglish start:0x20b9f88 end:0x20b9f8c
+    .data.MsgLevelSpritesEnglish start:0x20b9fa0 end:0x20b9fa4
+    .data.MsgFourCardSpritesEnglish start:0x20b9fc8 end:0x20b9fcc
+    .data.MsgHiScoreSpritesEnglish start:0x20b9fd8 end:0x20b9fdc
+    .data.MsgDrawSpritesEnglish start:0x20b9ffc end:0x20ba000
+    .data.MsgGameOverSpritesEnglish start:0x20ba010 end:0x20ba014
     .bss start:0x020bf3ec end:0x020bf9e4
 
 src/minigames/unit020b4aa4.cpp:
     complete
     .text start:0x020b4aa4 end:0x020b67e8
     .init start:0x020b9ad0 end:0x020b9b24
+    .rodata start:0x020b9488 end:0x020b948c
     .ctor start:0x020b9dec end:0x020b9df0
+    .data start:0x020bc7d0 end:0x020bc7d4
+    .data.coinspr start:0x020bc828 end:0x020bc850
     .bss start:0x020bfa28 end:0x020bfd04
 
 src/minigames/d_mg_state.cpp:
     complete
     .text start:0x020b67e8 end:0x020b8c18
+    .data.layout start:0x020bc850 end:0x020bc8bc
+    .data.statetext start:0x020bca44 end:0x020bca58
     .bss start:0x020bfd04 end:0x020bfda8
 
 src/minigames/d_mg_ps_opt.cpp:
@@ -38,5 +143,5 @@ src/minigames/d_mg_ps_opt.cpp:
     .init start:0x020b9b24 end:0x020b9de4
     .ctor start:0x020b9df0 end:0x020b9df4
     .bss start:0x020bfda8 end:0x020bfeb8
-    .data start:0x020bca68 end:0x020bcaa0
+    .data.psopt start:0x020bca58 end:0x020bcaa0
 
