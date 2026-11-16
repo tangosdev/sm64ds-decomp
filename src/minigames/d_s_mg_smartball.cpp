@@ -4024,7 +4024,11 @@ void dScMgSmartball_c::CollideBalls() {
 #pragma opt_strength_reduction off
 /* Tears the whole table down and rebuilds it from the two tile maps.
  * Leftovers: the spawn counters and the scan stores stay as written, and
- * every slot walk steps `this` instead of indexing. */
+ * every slot walk steps `this` instead of indexing.
+ * Kept, measured (#821, 2026-11-16): without the pragma this body is 0x18e8
+ * against 0x18bc, every slot walk turned into a stepped pointer; a u8, s16
+ * or unsigned counter does not stop it (0x18e8-0x18f0). &mpBalls[i] in the
+ * first walk is 0x18e4 without the pragma and 20 words off with it. */
 void dScMgSmartball_c::SpawnObjects() {
     V2 pos[25];
 
