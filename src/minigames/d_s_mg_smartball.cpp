@@ -160,7 +160,6 @@ extern void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6);
 extern void Mg_PlayJingle(void *c);
 extern int Mg_GetSubmittedScore(void);
 extern void Mg_SubmitScore(int self);
-extern s16 atan2_hold_d_s_mg_smartball_1(int y, int x);
 extern void Mg_SetTopScreenYOffset(int a);
 extern void *Ov004_LoadFileByPath(void *p);
 extern void DecompressLZ16(void *src, void *dst);

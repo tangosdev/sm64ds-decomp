@@ -121,12 +121,7 @@ struct MorayRenderStep {
 };
 
 extern "C" MorayRenderStep data_ov016_02114908[6] = {
-    {0, 0, 1},
-    {0, 0, 1},
-    {0, 0, 1},
-    {0, 0, 1},
-    {0, 0, -1},
-    {0, 0, 0},
+    {0, 0, 1}, {0, 0, 1}, {0, 0, 1}, {0, 0, 1}, {0, 0, -1}, {0, 0, 0},
 };
 
 /* Out of line, and FIRST in this ROM-ascending file: that puts D1 and D0 at

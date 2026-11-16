@@ -341,7 +341,7 @@ extern int data_ov018_02112c0c[];
 extern int data_ov018_02112f48[];
 extern int data_ov021_021148d0[];
 extern int data_ov022_02112c9c[];
-extern int data_ov022_0211427c[];
+extern struct ResourceDescriptor data_ov022_0211427c;
 extern int data_ov025_02112654(void *);
 /* data_ov026_02113f2c is defined by d_a_water_tatumaki.cpp. */
 extern int data_ov029_02112b2c[];
@@ -1009,7 +1009,7 @@ extern void*data_ov081_02128db8;
 extern void*data_ov100_0214857c[];
 extern void*func_0201787c(void*);
 extern void *func_0204d958(void *);
-extern void*func_02050cdc(int, int);
+extern void *NNS_SndArcGetSeqArcParam(int, int);
 extern int func_ov007_020aebac(void);
 extern volatile struct Matrix4x3 sDealerIdentityMtx;
 extern volatile unsigned short data_ov002_0210c208[];

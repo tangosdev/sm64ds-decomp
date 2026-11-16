@@ -28,12 +28,6 @@
  * __si_class_type_info reaches them through its +8 word.
  *
  * leftovers:
- *   - Aea30C and EnemyDeathC are derived stand-in receivers for the two
- *     state tables (eight start handlers dispatched by func_ov002_020aea30,
- *     five per-frame handlers dispatched by UpdateDeath). They belong on
- *     dEnemyBase_c, but a member declaration in dEnemyBase_c.h renumbers the
- *     @NNN temporaries of every promoted TU that includes it, so the move
- *     waits for those TUs to stop recording per-TU numbers.
  *   - Each named local draws one @NNN number, so dropping one renumbers this
  *     TU's pointer-to-member records (measured). The manifest's
  *     defined_symbol_renames rows pair the numbers mwcc emits now with the
@@ -187,77 +181,36 @@ void dEnemyBase_c::SpawnCoin()
     PoofDust();
 }
 
-/* Start the selected enemy death sequence. This reconstructed interface uses
-   receiver, attacker and nullable collision pointers, matching all callers.
-   The handler table forwards the latter two registers; current handlers use
-   the attacker and ignore collision. The exact original prototype is unknown.
-   Incoming r3 is overwritten before use. Prior fourth-argument claims confused
-   death-state stores with argument setup; three-argument compiler probes match.
-   ov004 has a different function at this address and remains separately named.
+/* Start the death the caller stored in mDeathState: clear mFlags bit
+   0x10000000, zero mDeathTimer, run that state's start handler from
+   data_ov002_0210db80, then set mVertAccel to -0x2000 and clear the bit again.
+   The attacker and the (nullable) collision are passed through to the
+   handler; the handlers read the attacker and ignore the collision. The body
+   overwrites r3 before reading it: what callers leave there comes from their
+   mDeathState store, not a fourth argument. ov004 has a different function at
+   this address. */
+typedef void (dEnemyBase_c::*DeathStartPMF)(dActor_c *, dBgCh_Actr *);
+extern DeathStartPMF data_ov002_0210db80[];
 
-   If mDeathState is set: clears mFlags bit 0x10000000, zeroes mDeathTimer,
-   invokes the pointer-to-member-function from data_ov002_0210db80[state-1]
-   (forwarding both pointer args), then sets mVertAccel to -0x2000 and clears
-   the mFlags bit again.
-
-   The eight targets are declared on `Aea30C`, a derived stand-in receiver like
-   EnemyDeathC below and for the same reason: they are dEnemyBase_c methods, but
-   a member declaration in dEnemyBase_c.h renumbers @NNN in its consumers. It
-   used to be a non-polymorphic shadow struct of padN/fNN fields; deriving it
-   from dEnemyBase_c measured byte-identical, PMF calls included. */
-struct Aea30C;
-typedef void (Aea30C::*Aea30PMF)(dActor_c*, dBgCh_Actr*);
-extern Aea30PMF data_ov002_0210db80[];
-struct Aea30C : dEnemyBase_c {
-    /* The eight state-table targets. Member spellings are what let the table
-     below be written as real pointer-to-member initializers. */
-    void func_ov002_020ae9f8(dActor_c *, dBgCh_Actr *);
-    void func_ov002_020ae954(dActor_c *, dBgCh_Actr *);
-    void func_ov002_020ae890(dActor_c *, dBgCh_Actr *);
-    void func_ov002_020ae87c(dActor_c *, dBgCh_Actr *);
-    void func_ov002_020ae844(dActor_c *, dBgCh_Actr *);
-    void func_ov002_020ae80c(dActor_c *, dBgCh_Actr *);
-    void func_ov002_020ae73c(dActor_c *, dBgCh_Actr *);
-    void func_ov002_020aea2c(dActor_c *, dBgCh_Actr *);
-};
-void func_ov002_020aea30(Aea30C *c, dActor_c *a, dBgCh_Actr *b) {
-    if (c->mDeathState == 0)
+void dEnemyBase_c::func_ov002_020aea30(dActor_c *a, dBgCh_Actr *b) {
+    if (mDeathState == 0)
         return;
-    c->mFlags &= ~0x10000000;
-    c->mDeathTimer = 0;
-    (c->*data_ov002_0210db80[c->mDeathState - 1])(a, b);
-    c->mVertAccel = -0x2000;
-    c->mFlags &= ~0x10000000;
+    mFlags &= ~0x10000000;
+    mDeathTimer = 0;
+    (this->*data_ov002_0210db80[mDeathState - 1])(a, b);
+    mVertAccel = -0x2000;
+    mFlags &= ~0x10000000;
 }
 
-/* The five death-state handlers UpdateDeath dispatches through
-   data_ov002_0210dbc0. They are dEnemyBase_c methods in all but name, but a
-   member declaration added to dEnemyBase_c.h renumbers mwcc's @NNN
-   temporaries in every TU that includes it, and eleven promoted TUs record
-   theirs. So they are declared here on a derived stand-in receiver with no
-   fields or virtuals of its own; the table entries static_cast back to
-   dEnemyBase_c's pointer-to-member type, which is a zero adjustment. */
-struct EnemyDeathC : dEnemyBase_c {
-  int func_ov002_020ae64c(dBgCh_Actr & clsn_);
-  int func_ov002_020ae608(dBgCh_Actr & clsn_);
-  int func_ov002_020ae4cc(dBgCh_Actr & clsn_);
-  int func_ov002_020ae454(dBgCh_Actr & clsn_);
-  int func_ov002_020aea24(dBgCh_Actr & clsn_);
-};
+void dEnemyBase_c::func_ov002_020aea2c(dActor_c *, dBgCh_Actr *) {}
 
-void Aea30C::func_ov002_020aea2c(dActor_c*, dBgCh_Actr*)
-{
-}
-
-int EnemyDeathC::func_ov002_020aea24(dBgCh_Actr&)
-{
+int dEnemyBase_c::func_ov002_020aea24(dBgCh_Actr &) {
     return 0;
 }
 
 /* Stop the enemy (zero mHorzSpeed and mVertSpeed), start a 0xf-frame
    mDeathTimer, then clear mFlags bit 0x1. */
-void Aea30C::func_ov002_020ae9f8(dActor_c*, dBgCh_Actr*)
-{
+void dEnemyBase_c::func_ov002_020ae9f8(dActor_c *, dBgCh_Actr *) {
     mHorzSpeed = 0;
     mVertSpeed = 0;
     mDeathTimer = 15;
@@ -287,8 +240,7 @@ void func_ov002_020ae968(dEnemyBase_c *c, dActor_c *arg) {
     Sound::PlayBank0(9, c->mCamSpacePos);
 }
 
-void Aea30C::func_ov002_020ae954(dActor_c* a, dBgCh_Actr*)
-{
+void dEnemyBase_c::func_ov002_020ae954(dActor_c *a, dBgCh_Actr *) {
     mPrevAngleY = a->mAngleY;
     func_ov002_020ae968(this, a);
 }
@@ -309,34 +261,29 @@ void func_ov002_020ae8b8(dEnemyBase_c *c, dActor_c *arg) {
     c->mFlags &= ~1;
 }
 
-void Aea30C::func_ov002_020ae890(dActor_c* a, dBgCh_Actr*)
-{
+void dEnemyBase_c::func_ov002_020ae890(dActor_c *a, dBgCh_Actr *) {
     mPrevAngleY = a->mAngleY;
     func_ov002_020ae8b8(this, a);
     Sound::PlayBank0(0xa, mCamSpacePos);
 }
 
-void Aea30C::func_ov002_020ae87c(dActor_c* a, dBgCh_Actr*)
-{
+void dEnemyBase_c::func_ov002_020ae87c(dActor_c *a, dBgCh_Actr *) {
     mPrevAngleY = a->mAngleY;
     func_ov002_020ae8b8(this, a);
 }
 
-void Aea30C::func_ov002_020ae844(dActor_c* a, dBgCh_Actr*)
-{
+void dEnemyBase_c::func_ov002_020ae844(dActor_c *a, dBgCh_Actr *) {
     s16 angle = Vec3_HorzAngle(&a->mPos, &mPos);
     mPrevAngleY = angle;
     func_ov002_020ae968(this, a);
 }
 
-void Aea30C::func_ov002_020ae80c(dActor_c* a, dBgCh_Actr*)
-{
+void dEnemyBase_c::func_ov002_020ae80c(dActor_c *a, dBgCh_Actr *) {
     mPrevAngleY = Vec3_HorzAngle(&a->mPos, &mPos);
     func_ov002_020ae8b8(this, a);
 }
 
-void Aea30C::func_ov002_020ae73c(dActor_c* a, dBgCh_Actr*)
-{
+void dEnemyBase_c::func_ov002_020ae73c(dActor_c *a, dBgCh_Actr *) {
     mPrevAngleY = Vec3_HorzAngle(&a->mPos, &mPos);
     mVertSpeed = 0xa000;
 
@@ -380,7 +327,7 @@ int dEnemyBase_c::UpdateDeath(dBgCh_Actr &clsn) {
    carries the parameter unused. */
 int func_ov002_020ae5c8(dEnemyBase_c *c, int x);
 
-int EnemyDeathC::func_ov002_020ae64c(dBgCh_Actr &clsn) {
+int dEnemyBase_c::func_ov002_020ae64c(dBgCh_Actr &clsn) {
     int x = (int)&clsn;
     if (mDeathTimer >= 5) {
         int v = mScaleY - 0x23d;
@@ -393,7 +340,7 @@ int EnemyDeathC::func_ov002_020ae64c(dBgCh_Actr &clsn) {
     return func_ov002_020ae5c8(this, x);
 }
 
-int EnemyDeathC::func_ov002_020ae608(dBgCh_Actr &clsn) {
+int dEnemyBase_c::func_ov002_020ae608(dBgCh_Actr &clsn) {
     if (clsn.IsOnGround() == 0)
         return 0;
     SpawnCoin();
@@ -412,14 +359,7 @@ int func_ov002_020ae5c8(dEnemyBase_c *c, int x) {
     return 1;
 }
 
-extern "C" {
-extern void *d_enemy_baseNewHold(unsigned int a, unsigned int b, int c, int d, int e, const void *f,
-                                 void *g);
-extern u32 d_enemy_baseNewCleanParticleHold(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z,
-                                            const Vector3_16f *dir);
-}
-
-int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
+int dEnemyBase_c::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
     Vector3 v;
     int n = mScaleY;
     if (n == 0) {
@@ -449,7 +389,7 @@ int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
     return 0;
 }
 
-int EnemyDeathC::func_ov002_020ae454(dBgCh_Actr &clsn) {
+int dEnemyBase_c::func_ov002_020ae454(dBgCh_Actr &clsn) {
     if (mDeathTimer == 0 || clsn.IsOnGround() != 0 || clsn.IsOnWall() != 0) {
         SpawnCoin();
         KillAndTrackInDeathTable();
@@ -661,7 +601,6 @@ int dEnemyBase_c::SpawnParticlesIfHitOtherObj(dCc_c &clsn) {
 
 extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern s16 atan2_hold_d_enemy_base_1(s32 y, s32 x);
 extern s32 *Vec3_AsrInPlace(s32 *v, s32 sh);
 }
 
@@ -810,24 +749,16 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
    mDeathState; UpdateDeath dispatches the second on mDeathState. Non-const
    pointer-to-member arrays live in .bss, so mwcc generates this TU's static
    initializer to copy the descriptor records in at overlay load. */
-Aea30PMF data_ov002_0210db80[8] = {
-    &Aea30C::func_ov002_020ae9f8,
-    &Aea30C::func_ov002_020ae954,
-    &Aea30C::func_ov002_020ae890,
-    &Aea30C::func_ov002_020ae87c,
-    &Aea30C::func_ov002_020ae844,
-    &Aea30C::func_ov002_020ae80c,
-    &Aea30C::func_ov002_020ae73c,
-    &Aea30C::func_ov002_020aea2c,
+DeathStartPMF data_ov002_0210db80[8] = {
+    &dEnemyBase_c::func_ov002_020ae9f8, &dEnemyBase_c::func_ov002_020ae954,
+    &dEnemyBase_c::func_ov002_020ae890, &dEnemyBase_c::func_ov002_020ae87c,
+    &dEnemyBase_c::func_ov002_020ae844, &dEnemyBase_c::func_ov002_020ae80c,
+    &dEnemyBase_c::func_ov002_020ae73c, &dEnemyBase_c::func_ov002_020aea2c,
 };
 
 DeathPMF data_ov002_0210dbc0[8] = {
-    static_cast<DeathPMF>(&EnemyDeathC::func_ov002_020ae64c),
-    static_cast<DeathPMF>(&EnemyDeathC::func_ov002_020ae608),
-    static_cast<DeathPMF>(&EnemyDeathC::func_ov002_020ae608),
-    static_cast<DeathPMF>(&EnemyDeathC::func_ov002_020ae4cc),
-    static_cast<DeathPMF>(&EnemyDeathC::func_ov002_020ae608),
-    static_cast<DeathPMF>(&EnemyDeathC::func_ov002_020ae608),
-    static_cast<DeathPMF>(&EnemyDeathC::func_ov002_020ae454),
-    static_cast<DeathPMF>(&EnemyDeathC::func_ov002_020aea24),
+    &dEnemyBase_c::func_ov002_020ae64c, &dEnemyBase_c::func_ov002_020ae608,
+    &dEnemyBase_c::func_ov002_020ae608, &dEnemyBase_c::func_ov002_020ae4cc,
+    &dEnemyBase_c::func_ov002_020ae608, &dEnemyBase_c::func_ov002_020ae608,
+    &dEnemyBase_c::func_ov002_020ae454, &dEnemyBase_c::func_ov002_020aea24,
 };
