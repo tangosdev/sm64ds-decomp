@@ -82,7 +82,6 @@ extern daPly_c *gPlayers[];
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern struct Matrix4x3 data_020a0e68;
-extern "C" int atan2_hold_d_a_snowman_1(int a, int b);
 
 /* File handles the static initializer constructs. The two models use
  * func_02017acc; the five animations use SharedFilePtr::Construct.

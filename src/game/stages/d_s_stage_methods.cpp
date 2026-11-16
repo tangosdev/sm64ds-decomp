@@ -4166,10 +4166,6 @@ int dScStage_c::Behavior() {
 // field offsets, not through the per-lane gTouchX/gTouchY/gTouchEdge symbols.
 #define TOUCH_DATA ((TouchInfo *)gTouchHeld)
 
-extern "C" {
-s16 atan2_hold_d_s_stage_methods_1(int y, int x);
-}
-
 void dScStage_c::CheckInput() {
     u8 mode = gGameMode;
     int isVsMode = (mode == 1);

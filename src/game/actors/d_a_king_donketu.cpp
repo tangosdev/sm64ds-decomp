@@ -226,7 +226,6 @@ extern dCamera_c *gCamera;
 extern struct Matrix4x3 data_020a0e68;
 /* Vec3_Sub is not declared by math/CalcLib.h. */
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int atan2_hold_d_a_king_donketu_1(fx32 y, fx32 x);
 /* local extern: CalcLib.h clashes with this TU's C DecIfAbove0_Short and Vec3_Lsl (void *) */
 extern fx32 Vec3_HorzLen(const Vector3 *v);
 
@@ -1823,8 +1822,6 @@ int daKing_Donketu_c::Behavior()
     return 1;
 }
 
-extern "C" {
-}
 extern void LoadKeyModels(int idx);
 
 #pragma pop
