@@ -732,7 +732,13 @@ void dScMgPachinko_c::ClearAimLine() {
    data, 4bpp tiles laid out 32 to a row: y picks the tile row and the
    4-byte line inside the tile, x the tile column and the nibble. It does
    not read `this`.
-   opt_loop_invariants stays off: the ROM keeps j on the stack and every spelling without these staged locals is a word short (0x7c of 0x80). */
+   Kept, measured (#821, 2026-11-16): without opt_loop_invariants off this
+   body is the right 0x80 (j's zero still comes off the stack) but 10 of 32
+   words off: py & 7 and py >> 3 swap order and xb, lineOfs and rowTile
+   rotate registers. 36 orders of the staged assignments land on the same
+   10 words or a word short; dropping x0 (a fresh px), or hoisting rowTile
+   and xb out of the inner loop, is 0x7c, and the unstaged one-line index
+   is 0x78. dScMgPachinko2_c's twin keeps the same pragma. */
 void dScMgPachinko_c::PlotSubBg2Pixels(int x, int y, int colour) {
     int i, j, py, line, tileY, lineOfs, rowTile, xb, x0;
     u32 *bp;
