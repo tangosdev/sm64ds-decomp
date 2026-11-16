@@ -542,6 +542,22 @@ void dScMgSlot3_c::StartRound(int mode) {
 // the functions between them. Measured -- this member DIFFs without them and
 // the members outside them DIFF with them applied file-wide.
 // Kept: pragma-free member spellings match except the mReelPos[i] load, which needs it.
+// Re-measured (#821): with the pragma, the `c` alias and every launder gone --
+// mResultSymbols[i2][j2], mReelStrip[i2][row], mReelWinPos[i2], mReelPos[i2],
+// j2 * 0x50 + 0x30 for the y counters, and the marker scan comparing mWinSymbol
+// directly instead of through a `u8 t` copy -- 401 of 410 words align and
+// the body is 0x664 against 0x668. The one miss is the scrolling pass's
+// mReelPos[i2] load: the ROM loads =0x4fe4 from the pool and does
+// `ldr [this + i2 * 4, r0]`, mwcc folds it to add #0x4000 / ldr #0xfe4 and
+// drops the pool word. Spellings tried for that load, none of which brings
+// the pool word back (all 0x664): `int a = mReelPos[i2]; a >>= 12`,
+// `(int)mReelPos[i2]`, `*(mReelPos + i2)`, a `s32 *pos = &mReelPos[i2]`,
+// `a` hoisted to the branch block and `row++; row %= mStripLength` (each
+// 401/410); rem before row 395/410; row/rem each reading mReelPos[i2]
+// 387/410; the outer loop on `i` 390/410. Keeping the old `(int)this`
+// offset launder without the pragma grows the body to 0x678. Keeping the
+// y counters (`y += 0x50`) instead measured 395/410; the indexed spelling
+// under the pragma measured 257 words off.
 #pragma opt_strength_reduction off
 /* dScMgSlot3_c::Render -- vtable slot 9.
  *
