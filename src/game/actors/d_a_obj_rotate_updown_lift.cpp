@@ -202,7 +202,6 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     /* Holding mShadowMat in a Matrix4x3 * local steals r4 from `this` and
        the function grows. The three translation words are stored from
        `this`, not from that pointer. */
-    char *c = (char *)this;
     VariantWords shadowBaseY = data_ov091_02134bac;
     VariantWords shadowSizeX = data_ov091_02134bd0;
     VariantWords shadowSizeZ = data_ov091_02134bb8;
