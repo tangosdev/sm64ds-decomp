@@ -107,7 +107,7 @@ void func_0203d384(void);
 void *__cxa_vec_new(unsigned int, unsigned int, unsigned int, void (*)(void *), void (*)(void *));
 void *_ZN7Vector3D1Ev(void *);
 void func_ov002_020bcdf0(daPly_c *);
-void func_ov002_020cd190(char *);
+void func_ov002_020cd190(daPly_c *);
 int func_ov002_020cf700(daPly_c *);
 int func_ov002_020d5cec(void *);
 int func_ov002_020d85fc(daPly_c *, daPly_c *, int);
@@ -8619,7 +8619,7 @@ int daPly_c::St_MetalWaterGround_Main() {
         this->ChangeState(data_ov002_0211067c);
         return 1;
     }
-    func_ov002_020cd190((char *)this);
+    func_ov002_020cd190(this);
     int approach = 0;
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
         ApproachAngle(&mPrevAngleY, mDesiredAngleY, 8, 0x1000, 0x80);
@@ -8688,13 +8688,12 @@ int daPly_c::St_MetalWaterGround_Init() {
 }
 
 extern "C" {
-extern "C" void func_ov002_020cd190(char *c) {
-    daPly_c *self = (daPly_c *)c;
-    if (self->mIsMega == 0)
+extern "C" void func_ov002_020cd190(daPly_c *player) {
+    if (player->mIsMega == 0)
         return;
-    if (self->mPosY + 0x180000 <= data_0209f32c)
+    if (player->mPosY + 0x180000 <= data_0209f32c)
         return;
-    self->func_ov002_020ce8bc(self->mHorzSpeed);
+    player->func_ov002_020ce8bc(player->mHorzSpeed);
 }
 }
 

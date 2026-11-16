@@ -779,7 +779,7 @@ extern void __cxa_vec_delete(void *, int, int, void (*)(void *));
 extern void data_ov001_020ad494(void);
 
 extern void func_ov002_020bcdf0(struct daPly_c *);
-extern void func_ov002_020cd190(void *);
+extern void func_ov002_020cd190(struct daPly_c *);
 extern void func_ov002_020cd2c4(void *);
 extern void func_ov002_020cd308(void *);
 extern void func_ov002_020cd39c(void *);
