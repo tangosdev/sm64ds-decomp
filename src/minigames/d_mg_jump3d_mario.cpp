@@ -516,13 +516,10 @@ void dMgJump3DMario_c::StateHold()
 
 void dMgJump3DMario_c::EnterHold()
 {
-    /* VecFx32, not Vector3: Vector3 matches here too, but it makes this
-       file emit Vector3's destructor, which the manifest does not license
-       (notes/experiments/jump3d-2711-scratch-vector3.md). */
-    VecFx32 v;
+    Vector3 v;
 
-    Vec3_Sub((Vector3 *)&v, (const Vector3 *)&mPos, (const Vector3 *)&mAnchor);
-    if (NormalizeVec3IfNonZero((Vector3 *)&v) != 0) {
+    Vec3_Sub(&v, (const Vector3 *)&mPos, (const Vector3 *)&mAnchor);
+    if (NormalizeVec3IfNonZero(&v) != 0) {
         mVel.x = v.x;
         mVel.y = v.y;
         mVel.z = v.z;
