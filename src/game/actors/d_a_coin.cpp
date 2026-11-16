@@ -45,17 +45,8 @@
 #include "ParticleIds.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
-
-/* Views of daObjBC_Switch_c.h and daObjFl_Coin_c.h, same member names and
-   offsets: including either header renumbers this TU's @NNN labels. */
-struct daObjBC_Switch_cView {
-    u8 pad_000[0x32a];
-    u16 mCoinTimerSeed; /* 0x32a */
-};
-struct daObjFl_Coin_cView {
-    u8 pad_000[0xd6];
-    u8 mLiveCoinCount; /* 0x0d6 */
-};
+#include "daObjBC_Switch_c.h"
+#include "daObjFl_Coin_c.h"
 
 namespace Event { s32 GetBit(u32 bit); void SetBit(u32 bit); }
 
@@ -106,7 +97,6 @@ extern int SurfaceInfo_TestFlag0x20(int *p);
 
 extern "C" {
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern short atan2_hold_d_a_coin_1(int a, int b);
 }
 
 daCoin_c::~daCoin_c()
@@ -686,7 +676,7 @@ void daCoin_c::StateIdle() {
     mdCc_c.flags &= ~1;
     found = dActor_c::FindWithActorID(0xa, 0);
     if (found) {
-        mDisappearTimer = ((daObjBC_Switch_cView *)found)->mCoinTimerSeed;
+        mDisappearTimer = ((daObjBC_Switch_c *)found)->mCoinTimerSeed;
     } else {
         mDisappearTimer = 250;
     }
@@ -728,9 +718,8 @@ s32 daCoin_c::CleanupResources()
     if (manager != 0) {
         int isFlCoin = (manager->actorID == 0x4f);
         if (isFlCoin != 0) {
-            if (((daObjFl_Coin_cView *)manager)->mLiveCoinCount != 0) {
-                unsigned char *count = &((daObjFl_Coin_cView *)manager)->mLiveCoinCount;
-                *count = *count - 1;
+            if (((daObjFl_Coin_c *)manager)->mLiveCoinCount != 0) {
+                ((daObjFl_Coin_c *)manager)->mLiveCoinCount--;
             }
         }
     }
@@ -809,8 +798,6 @@ int daCoin_c::Behavior()
 }
 
 extern void SetStarMarker(int i, dActor_c *actor, int v2);
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *thiz, void *actor, s32 f1, s32 f2, void *v, s32 f3);
 
 s32 daCoin_c::InitResources()
 {

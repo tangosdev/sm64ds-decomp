@@ -15122,7 +15122,7 @@
         "param:#1 int"
       ]
     },
-    "func_0204fa2c": {
+    "NNS_SndPlayerStopSeq": {
       "src/engine/sound/Sound.cpp": [
         "return:void"
       ]
@@ -15134,23 +15134,23 @@
         "param:#7 void *"
       ]
     },
-    "func_02051074": {
+    "NNS_SndHeapGetFreeSize": {
       "src/engine/sound/Sound.cpp": [
         "param:#1 int"
       ]
     },
-    "func_020510a4": {
+    "NNS_SndHeapLoadState": {
       "src/engine/sound/Sound.cpp": [
         "param:#1 int",
         "return:int"
       ]
     },
-    "func_0205117c": {
+    "NNS_SndHeapSaveState": {
       "src/engine/sound/Sound.cpp": [
         "param:#1 int"
       ]
     },
-    "func_020511d4": {
+    "NNS_SndHeapAlloc": {
       "src/engine/sound/Sound.cpp": [
         "param:#1 int",
         "return:int"

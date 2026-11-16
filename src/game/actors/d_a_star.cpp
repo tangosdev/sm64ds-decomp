@@ -81,6 +81,7 @@ enum daStar_c_AssetId {
 #include "math/CalcLib.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
+#include "KuppaScript.h"
 
 /* Plain-data stand-ins. Vector3 and Matrix4x3 carry declared destructors, so
  * a local or a struct copy of either one adds cleanup code the cartridge does
@@ -192,10 +193,6 @@ extern "C" {
 extern u8 *data_0209f344;
 }
 
-/* local extern: the header KuppaScript.h would renumber this TU's compiler temps (@NNN pins in its manifest) */
-namespace KuppaScript {
-void End(void);
-}
 extern "C" {
 extern u8 data_0209d660;
 extern s8 gNumStageStars[];
@@ -209,12 +206,6 @@ extern StarModelFilePtr data_ov002_0211093c;
 extern StarAnimationFileHandle data_ov002_02110924;
 extern StarAnimationFileHandle data_ov002_02110964;
 extern SharedFilePtr data_ov002_0210d9a8;
-/* Numbering pin: func_ov002_020d718c is now a daPly_c member (see daPly_c.h);
-   no call in this TU uses the free spelling anymore. The declaration stays,
-   spelled exactly as it was, because each named parameter advances mwccarm's
-   @NNN counter: removing or un-naming it renumbers this TU's .data temps
-   (measured on daYegg_c, same mechanism). */
-extern void func_ov002_020d718c(void *p);
 extern int data_ov002_0210aa0c[3];
 extern StateHandler data_ov002_021109d8[];
 extern u8 gCurrentStarId;
@@ -227,8 +218,6 @@ extern StarModelFilePtr data_ov002_0211095c;
 
 extern void LoadSilverStarAndNumber(void);
 
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *actor, s32 a, s32 b, void *p1, void *p2);
 extern s32 IsStarCollected(s32 level, s32 idx);
 
 /* The two destructor bodies are defined first so their D1/D0 groups lead the
@@ -2328,8 +2317,6 @@ Vector3 daStar_c::func_ov002_020e8244() {
 /* ROM ordinal 32 -- UpdateTrailEffect, 0x020e81e0, size 0x64 */
 /* -------------------------------------------------------------------------- */
 /* Keeps trail effect 0x113 (mParticle[0]) 13.0 above the star. */
-extern "C" void *d_a_starNewHold(int a0, unsigned int a1, int a2, int a3, int a4, void *a5,
-                                 void *a6);
 void daStar_c::UpdateTrailEffect() {
     Vector3 v;
     v.x = mPosX;

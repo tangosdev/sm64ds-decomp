@@ -285,11 +285,11 @@ data_ov085_0213072c kind:bss addr:0x0213072c
 data_ov085_0213073c kind:bss addr:0x0213073c
 data_ov085_02130744 kind:bss addr:0x02130744
 data_ov085_0213074c kind:bss addr:0x0213074c
-@1066 kind:bss addr:0x02130754
-@1067 kind:bss addr:0x02130760
-@1063 kind:bss addr:0x0213076c
-@1064 kind:bss addr:0x02130778
-@1065 kind:bss addr:0x02130784
+@1220 kind:bss addr:0x02130754
+@1221 kind:bss addr:0x02130760
+@1217 kind:bss addr:0x0213076c
+@1218 kind:bss addr:0x02130778
+@1219 kind:bss addr:0x02130784
 data_ov085_02130790 kind:bss addr:0x02130790
 data_ov085_021307a0 kind:bss addr:0x021307a0
 data_ov085_021307b0 kind:bss addr:0x021307b0

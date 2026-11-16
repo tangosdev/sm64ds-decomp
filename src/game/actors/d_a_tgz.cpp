@@ -95,8 +95,6 @@ extern "C" {
 extern DaJgmModelFile data_ov077_02127b48;
 extern DaJgmModelFile data_ov077_02127b38;
 
-unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
-                            const void *dir, void *callback);
 extern int data_0209f32c;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern signed char gCurrentSublevel;

@@ -120,7 +120,6 @@ void SetSoundMode(int m);
 void TurnBacklightOn(void);
 void TurnBacklightOff(void);
 
-bool d_s_stage_methodsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int fix, int e);
 
 
 extern int data_0208ee44;
@@ -4165,10 +4164,6 @@ int dScStage_c::Behavior() {
 // The ROM reads the touch records through one base pointer (gTouchHeld) plus
 // field offsets, not through the per-lane gTouchX/gTouchY/gTouchEdge symbols.
 #define TOUCH_DATA ((TouchInfo *)gTouchHeld)
-
-extern "C" {
-s16 atan2_hold_d_s_stage_methods_1(int y, int x);
-}
 
 void dScStage_c::CheckInput() {
     u8 mode = gGameMode;

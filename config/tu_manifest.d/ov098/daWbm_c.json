@@ -146,7 +146,7 @@
       "evidence": "the bomb model resource handle constructed with file ID 0x42c"
     },
     {
-      "symbol": "@513",
+      "symbol": "@579",
       "address": "0x0213c924",
       "size": "0x0000000c",
       "binding": "STB_GLOBAL",
@@ -496,7 +496,7 @@
       "source": "0x0213c328",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@513",
+      "symbol": "@579",
       "addend": 0,
       "target_module": "ov098",
       "target_address": "0x0213c924"
@@ -582,7 +582,7 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@513",
+      "symbol": "@579",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured ini-file symbol only"
@@ -590,9 +590,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@585",
-      "to": "@513",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @527 now; licensed under the existing pin @513 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @638 to @646 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @646 to @644 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @646 to @592 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @590 to @582 when d_a_wbm dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "from": "@579",
+      "to": "@579",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @527 now; licensed under the existing pin @579 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @638 to @646 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @646 to @644 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @646 to @592 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @590 to @582 when d_a_wbm dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @582 to @576 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     }
   ]
 }

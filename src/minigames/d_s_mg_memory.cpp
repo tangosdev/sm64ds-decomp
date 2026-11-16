@@ -66,8 +66,6 @@ extern "C" dScMgMemory_cPlayerState sMemoryPlayerTable[];
 extern "C" {
 extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
-/* Unused. Deleting this named prototype renumbers @NNN later in the file. */
-extern short atan2_hold_d_s_mg_memory_1(int y, int x);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemoryCardFrameSprites[];
 extern void *sMemoryCardSprites[];

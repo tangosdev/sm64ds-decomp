@@ -186,28 +186,28 @@
       "evidence": "model file handle constructed with file ID 0x9c02"
     },
     {
-      "symbol": "@169",
+      "symbol": "@947",
       "address": "0x021486c4",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x9c02 model handle"
     },
     {
-      "symbol": "@170",
+      "symbol": "@948",
       "address": "0x021486d0",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x9c01 model handle"
     },
     {
-      "symbol": "@171",
+      "symbol": "@949",
       "address": "0x021486dc",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x9c04 animation handle"
     },
     {
-      "symbol": "@172",
+      "symbol": "@950",
       "address": "0x021486e8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -230,9 +230,9 @@
     "func_ov100_02143b18 and Behavior share one pointer-to-member pair type (ChompState: enter, execute) over a non-polymorphic stand-in class; the two legacy shards each spelled their own.",
     "func_ov100_02143aa4 is the execute member of the only state (pointer-to-member constant data_ov100_02147ff8, copied by the module's static initializer into data_ov100_021486f4), with func_ov100_02143ae0 as its enter (data_ov100_02148000). Those constants follow daIbl_c's 31-slot vtable directly, which is where tu_map's daIbl_c tag and the old 'RollingIronBall_Kill' label came from.",
     "HISTORY before the classInit tail fold: an older default-new probe emitted 0xa4 without the three array construction calls. The factory is now folded and its pre-lifecycle probe emitted 0xec with two Vector3 array calls and one omitted Vector3s array call; see the lifecycle continuation below. The old no-Vector3-constructor explanation is superseded.",
-    "Static initializer folded: the two Wanwan2ModelFilePtr handles (files 0x9c02/0x9c01), the two Wanwan2AnimFileHandle handles (files 0x9c04/0x9c03), their destructor-registration nodes, and the ChompState walking record move out of the handwritten src/unnamed shard into src/game/actors/d_a_wanwan2.cpp. The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov100_021475a4 with the same instruction sequence, literal pool order and relocation sites; the handwritten shard is retired. Unlike the stale fold/ov100-wanwan2-sinit attempt, the two state functions stay free functions and the record plain-copies the ROM PMF constants (curling precedent). @962/@963/@964/@965 all clashed with the fleet and are renamed (@962->@169, @963->@170, @964->@171, @965->@172). The .bss claim 0x021486a4..0x02148704 ends exactly at the next symbol; no bound row is needed. The retired shard converted-baseline row is dropped per the c62c3266 precedent.",
+    "Static initializer folded: the two Wanwan2ModelFilePtr handles (files 0x9c02/0x9c01), the two Wanwan2AnimFileHandle handles (files 0x9c04/0x9c03), their destructor-registration nodes, and the ChompState walking record move out of the handwritten src/unnamed shard into src/game/actors/d_a_wanwan2.cpp. The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov100_021475a4 with the same instruction sequence, literal pool order and relocation sites; the handwritten shard is retired. Unlike the stale fold/ov100-wanwan2-sinit attempt, the two state functions stay free functions and the record plain-copies the ROM PMF constants (curling precedent). @962/@963/@964/@965 all clashed with the fleet and are renamed (@962->@947, @963->@948, @964->@949, @965->@950). The .bss claim 0x021486a4..0x02148704 ends exactly at the next symbol; no bound row is needed. The retired shard converted-baseline row is dropped per the c62c3266 precedent.",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares.",
-    "Native factory continuation after the Vector3s lifecycle dependency: return new daWanwan2_c() retains the retail 0x118-byte factory and all five array-construction calls. The actual Vector3[6] arrays at +0x6d8/+0x720 use func_0203d384 with Vector3 D1; Vector3s[6] at+0x768 uses func_0203d73c with Vector3s D1. Existing canonical duplicate policy forms verify both complete emitted constructor bodies. Four raw destructor-registration node inputs are measured at @1007..@1010 instead of @1006..@1009; initializer offsets and canonical @169..@172 remain unchanged. Earlier factory measurements in this manifest are historical.",
+    "Native factory continuation after the Vector3s lifecycle dependency: return new daWanwan2_c() retains the retail 0x118-byte factory and all five array-construction calls. The actual Vector3[6] arrays at +0x6d8/+0x720 use func_0203d384 with Vector3 D1; Vector3s[6] at+0x768 uses func_0203d73c with Vector3s D1. Existing canonical duplicate policy forms verify both complete emitted constructor bodies. Four raw destructor-registration node inputs are measured at @1007..@1010 instead of @1006..@1009; initializer offsets and canonical @947..@950 remain unchanged. Earlier factory measurements in this manifest are historical.",
     "Collision property member calls replace local helper declarations. Reconciled 4 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (44 sections, 243 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
   ],
   "compiler_only_output": [
@@ -637,24 +637,24 @@
   ],
   "defined_symbol_renames": [
     {
+      "from": "@947",
+      "to": "@947",
+      "evidence": "Native factory constructor declarations change raw @1006 to @1007; identical complete initializer bytes and typed ABS32 edge at 0xbc identify this same 12B destructor-registration node. Canonical target @947 unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @963 to @965 when Behavior's volatile coin-speed vector became a Vector3 local (#821). Re-keyed from @965 to @911 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @911 to @921 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @921 to @925 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @925 to @929 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object). Re-keyed from @944 to @942 when the unused *_hold_ prototypes and count-holding locals were removed (measured from the compiled object)."
+    },
+    {
+      "from": "@948",
+      "to": "@948",
+      "evidence": "Native factory constructor declarations change raw @1007 to @1008; identical complete initializer bytes and typed ABS32 edge at 0xc8 identify this same 12B destructor-registration node. Canonical target @948 unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @964 to @966 when Behavior's volatile coin-speed vector became a Vector3 local (#821). Re-keyed from @966 to @912 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @912 to @922 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @922 to @926 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @926 to @930 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object). Re-keyed from @945 to @943 when the unused *_hold_ prototypes and count-holding locals were removed (measured from the compiled object)."
+    },
+    {
       "from": "@949",
-      "to": "@169",
-      "evidence": "Native factory constructor declarations change raw @1006 to @1007; identical complete initializer bytes and typed ABS32 edge at 0xbc identify this same 12B destructor-registration node. Canonical target @169 unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @963 to @965 when Behavior's volatile coin-speed vector became a Vector3 local (#821). Re-keyed from @965 to @911 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @911 to @921 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @921 to @925 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @925 to @929 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object)."
+      "to": "@949",
+      "evidence": "Native factory constructor declarations change raw @1008 to @1009; identical complete initializer bytes and typed ABS32 edge at 0xd8 identify this same 12B destructor-registration node. Canonical target @949 unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @965 to @967 when Behavior's volatile coin-speed vector became a Vector3 local (#821). Re-keyed from @967 to @913 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @913 to @923 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @923 to @927 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @927 to @931 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object). Re-keyed from @946 to @944 when the unused *_hold_ prototypes and count-holding locals were removed (measured from the compiled object)."
     },
     {
       "from": "@950",
-      "to": "@170",
-      "evidence": "Native factory constructor declarations change raw @1007 to @1008; identical complete initializer bytes and typed ABS32 edge at 0xc8 identify this same 12B destructor-registration node. Canonical target @170 unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @964 to @966 when Behavior's volatile coin-speed vector became a Vector3 local (#821). Re-keyed from @966 to @912 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @912 to @922 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @922 to @926 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @926 to @930 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object)."
-    },
-    {
-      "from": "@951",
-      "to": "@171",
-      "evidence": "Native factory constructor declarations change raw @1008 to @1009; identical complete initializer bytes and typed ABS32 edge at 0xd8 identify this same 12B destructor-registration node. Canonical target @171 unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @965 to @967 when Behavior's volatile coin-speed vector became a Vector3 local (#821). Re-keyed from @967 to @913 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @913 to @923 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @923 to @927 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @927 to @931 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object)."
-    },
-    {
-      "from": "@952",
-      "to": "@172",
-      "evidence": "Native factory constructor declarations change raw @1009 to @1010; identical complete initializer bytes and typed ABS32 edge at 0xe4 identify this same 12B destructor-registration node. Canonical target @172 unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @966 to @968 when Behavior's volatile coin-speed vector became a Vector3 local (#821). Re-keyed from @968 to @914 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @914 to @924 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @924 to @928 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @928 to @932 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object)."
+      "to": "@950",
+      "evidence": "Native factory constructor declarations change raw @1009 to @1010; identical complete initializer bytes and typed ABS32 edge at 0xe4 identify this same 12B destructor-registration node. Canonical target @950 unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @966 to @968 when Behavior's volatile coin-speed vector became a Vector3 local (#821). Re-keyed from @968 to @914 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @914 to @924 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @924 to @928 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @928 to @932 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object). Re-keyed from @947 to @945 when the unused *_hold_ prototypes and count-holding locals were removed (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -671,25 +671,25 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@169",
+      "symbol": "@947",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x021486c4"
     },
     {
-      "symbol": "@170",
+      "symbol": "@948",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x021486d0"
     },
     {
-      "symbol": "@171",
+      "symbol": "@949",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x021486dc"
     },
     {
-      "symbol": "@172",
+      "symbol": "@950",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x021486e8"
@@ -811,7 +811,7 @@
       "source": "0x02147660",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@169",
+      "symbol": "@947",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x021486c4"
@@ -831,7 +831,7 @@
       "source": "0x0214766c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@170",
+      "symbol": "@948",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x021486d0"
@@ -861,7 +861,7 @@
       "source": "0x0214767c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@171",
+      "symbol": "@949",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x021486dc"
@@ -881,7 +881,7 @@
       "source": "0x02147688",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@172",
+      "symbol": "@950",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x021486e8"

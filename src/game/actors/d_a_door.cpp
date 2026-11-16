@@ -110,6 +110,7 @@ enum daDoor_c_AssetId {
 #include "private/mtx43.h"
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* The vector temps below are VecFx32: a stack Vector3 would run its destructor. */
 /* The door's matrix copies go through the flat Mtx43: a copy through the
@@ -202,8 +203,6 @@ int func_ov002_020ca78c(void *p);
 void Vec3_RotateYAndTranslate(Vector3 *res, const Vector3 *translation, short angY,
                               const Vector3 *v);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
 int AngleDiff(int a, int b);
 }
 
@@ -250,9 +249,6 @@ extern signed char gNextSublevel;
 extern int gMusicVolume;
 extern int gSubVolume;
 extern Vector3 data_020a0ebc;
-/* local extern: including math/MtxStack.h instead renumbers every @NNN and
-   $NNN in this TU (+72, measured). */
-extern Matrix4x3 data_020a0e68;
 extern char data_ov002_0211094c;
 extern SharedFilePtr data_ov089_02132c50;
 /* ov089's key-model file table, not a function: eight SharedFilePtr*
@@ -1076,8 +1072,8 @@ s32 daDoor_c::InitResources() {
 
     /* The model matrix takes the position >> 3. */
     Vec3_Asr(&tmp, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, tmp.x, tmp.y, tmp.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    MtxStack::transS(tmp.x, tmp.y, tmp.z);
+    MtxStack::YrotM(mAngleY);
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     if (e->keyFile != 0) {

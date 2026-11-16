@@ -70,9 +70,6 @@ extern daHyuhyu_c_State data_ov091_021356d0; /* cloud: waiting */
 
 /* C helpers with no shared header. */
 
-struct Aea30C {
-    void func_ov002_020aea30(dActor_c *actor, dBgCh_Actr *collision);
-};
 void func_02012694(u32 id, const Vector3 *pos);
 extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
 extern "C" int RandomIntInternal(int *seed);
@@ -406,7 +403,7 @@ void daHyuhyu_c::HandleCylinderHit() {
         hitFlags = mdCcAc_c.hitFlags;
         if ((hitFlags & 0x40000) != 0) {
             mDeathState = 4;
-            ((Aea30C *)this)->func_ov002_020aea30(player, 0);
+            func_ov002_020aea30(player, 0);
             return;
         }
         if ((hitFlags & 0x2000) != 0) {

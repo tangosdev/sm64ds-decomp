@@ -61,8 +61,9 @@
  *   (re-keyed in config/tu_manifest.d/ov063/daTrsTrap_c.json).
  * - Behavior names mStateTimer directly at both sites (TRAP-2709
  *   experiment: unified spelling matches).
- * - +0x418 on the spawned BOOK_SWITCH is daBookGen_c's, which has no header;
- *   +0x154 here has no recovered reader. S14: no g_profile_* rows live here.
+ * - The trap stores its uniqueID in the spawned BOOK_SWITCH's
+ *   daBook_c::mLinkedActorID. +0x154 here has no recovered reader. No
+ *   g_profile_* rows live here.
  */
 
 /* common.h first, so this TU reads the flat Matrix4x3 words: the two matrix
@@ -86,15 +87,7 @@ enum d_a_trs_trap_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "Sound.h"
-
-/* daBook_c::mLinkedActorID (daBook_c.h, 0x418): the BOOK_SWITCH (0xd5)
-   looks its trap up by this ID (daBook_c's FindWithID calls). Seen through
-   a local view: including daBook_c.h renumbers this TU's @NNN labels. */
-struct BookSwitchView {
-    u8 head[0x418];
-    u32 mLinkedActorID;
-};
-typedef char BookSwitchView_size_must_be_0x41c[sizeof(BookSwitchView) == 0x41c ? 1 : -1];
+#include "daBook_c.h"
 
 #pragma defer_codegen off
 
@@ -532,7 +525,7 @@ int daTrsTrap_c::InitResources()
             base.y = mHomePosY + data_ov063_0211e9f8[odd];
             base.z = mHomePosZ - 0xb4000;
             sp = dActor_c::Spawn(actorId, j, base, &v16, mAreaId, neg1);
-            ((BookSwitchView *)sp)->mLinkedActorID = uniqueID;
+            ((daBook_c *)sp)->mLinkedActorID = uniqueID;
             even += 2; odd += 2;
         }
         mSavedAreaId = mAreaId;

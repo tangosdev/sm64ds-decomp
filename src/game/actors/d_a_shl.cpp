@@ -34,19 +34,6 @@
  * deslop leftovers:
  * - func_ov002_020ad660, func_ov002_020cc16c and func_020105cc are other
  *   TUs' helpers and stay free externs.
- * - The manifest pins eight @NNN statics (@721..@735), so the count of
- *   named locals, named parameters, labels and unnamed struct types
- *   ahead of __sinit is load-bearing. Including a header moves it
- *   (measured: daPly_c.h +94, the first pin becomes @815; Sound.h +15), so
- *   daPly_c and Sound stay reached through local mangled externs and
- *   daPly_c::mIsAirborne stays the raw 0x6de read.
- * - dBgCh_Gnd.h adds 9 to the count. Including it let five mangled
- *   dBgCh_Gnd externs (7 named parameters), a `surface` local in
- *   func_ov102_0214c7fc and an unnamed struct type for `dir` in
- *   func_ov102_0214cbec go, which nets to 0 (measured: same bytes,
- *   relocations and pins).
- * - The unnamed struct type of `pos` in func_ov102_0214c84c also holds
- *   the count (an unnamed struct type takes one number, measured).
  * - daShl_c_classInit stays a free factory and the destructor stays
  *   inline (D1-then-D0 cartridge order).
  */
@@ -60,6 +47,7 @@
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
+#include "Sound.h"
 
 /* Two 8-byte pointers-to-member. The second word is the this-adjustment;
    retail stores 0 for every entry. */
@@ -75,11 +63,6 @@ struct ShlStateEnd {
     ShlStateFn tail[3];
 };
 
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
-
 extern "C" {
 
 /* -- the four state records (.bss) and the model handles (.rodata) -- */
@@ -93,13 +76,6 @@ extern SharedFilePtr *data_ov102_0214d70c[];
 int func_ov002_020cc16c(void *player, void *actor);
 void Matrix4x3_FromRotationY(void *m, int angle);
 
-int d_a_shlNewHold(u32 uniqueID, u32 effectID, fx32 x, fx32 y, fx32 z, void *dir, void *cb);
-/* local extern: these five names hold the @NNN count. Sound::PlayLong is the call. */
-void d_a_shlPlayLongHold(u32 handle, u32 a, u32 soundID, const Vector3 &pos, s16 e);
-
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *owner, fx32 radius, fx32 height, Vector3_16 *d,
-                         int e);
 }
 int SurfaceInfo_TestFlag0x20(int *si);
 
