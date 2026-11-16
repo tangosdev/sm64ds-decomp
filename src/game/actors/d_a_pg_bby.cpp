@@ -42,8 +42,6 @@ typedef char PgBbyModelFile_size_must_be_0x08[sizeof(PgBbyModelFile) == 0x08 ? 1
 typedef char PgBbyAnimationFile_size_must_be_0x08[sizeof(PgBbyAnimationFile) == 0x08 ? 1 : -1];
 
 extern "C" {
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *thiz, void *actor, int r, int h, void *v, int b);
 
 void Matrix4x3_FromRotationY(void *m, int angle);
 

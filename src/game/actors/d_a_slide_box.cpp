@@ -71,8 +71,6 @@ extern "C" SlideBoxModelFilePtr gKiSlideBoxModelFile;
 extern "C" SlideBoxClsnFilePtr gKiSlideBoxCollisionFile;
 
 extern "C" {
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(dBgCh_Actr *self, int actor, fx32 radius, fx32 height, int a, int b);
 extern int data_ov016_02113bac[];
 extern void Matrix4x3_FromRotationXYZExt(void *mtx, int angleX, int angleY, int angleZ);
 
