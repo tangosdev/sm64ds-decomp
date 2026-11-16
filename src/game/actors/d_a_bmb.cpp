@@ -708,22 +708,22 @@ void daBmb_c::func_ov102_0214b53c() {
     Vector3 p;
     Vector3 eaterPos;
     Vector3 d;
-    char *src;
+    Matrix4x3 *src;
     /* Plain short-circuit.  A chain of `& 0xFFFFFFFFu` masks is C-only: under
      -lang c++ the `&&` is a bool and the mask costs three instructions. */
-    if ((mVariant == 2) && ((src = (char *)mCarryMatrix) != 0)) {
-        mAnmModel.mat4x3 = *((Matrix4x3 *)src);
+    if ((mVariant == 2) && ((src = mCarryMatrix) != 0)) {
+        mAnmModel.mat4x3 = *src;
     } else {
         int haveMtx = (int)((mFlags & 0x4000) != 0);
         daPly_c *player0;
         if (((haveMtx != 0) && ((player0 = mCarrier) != 0)) && (player0->mCarryMatrix != 0)) {
-            char *ret = (char *)func_ov002_020e496c(player0);
+            dExtAnmModel_c *ret = (dExtAnmModel_c *)func_ov002_020e496c(player0);
             u8 idx = 0;
             if (mCarrier->IsFrontSliding() != 0) {
                 idx = 1;
             }
             if ((mCarrier->LostGrabbedObject() != 0) &&
-                (((u32)(((u32)(((dExtAnmModel_c *)ret)->currFrame << 4)) >> 0x10)) < 0xe)) {
+                (((u32)(((u32)(ret->currFrame << 4)) >> 0x10)) < 0xe)) {
                 idx = 1;
             }
             if (mCarrier->param1 == 2) {
