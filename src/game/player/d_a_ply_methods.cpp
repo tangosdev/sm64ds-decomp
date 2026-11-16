@@ -15634,7 +15634,7 @@ int daPly_c::St_Grabbed_Cleanup() {
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::St_Grabbed_Main() {
-    char* grab;
+    dActor_c *grab;
     u8* p;
     unsigned int id;
     int ret;
@@ -15642,9 +15642,9 @@ int daPly_c::St_Grabbed_Main() {
     char* model;
 
     mPeakY = mPosY;
-    grab = (char *)mGrabbedByActor;
+    grab = mGrabbedByActor;
     if (grab != 0) {
-        int isBob = (((dActor_c *)grab)->actorID == 0xbf);
+        int isBob = (grab->actorID == 0xbf);
         if (isBob != 0) {
             ret = func_ov002_020beb38();
             if (ret != 0) {
@@ -15660,6 +15660,11 @@ int daPly_c::St_Grabbed_Main() {
         }
     }
 
+    /* r19: the pRate launder keeps the dExtFrameCtrl_c base (+0x50) and
+     * the speed field as separate adds, as the ROM has them. Typed stores
+     * (a dExtFrameCtrl_c reference, a dExtAnmModel_c * local, a
+     * dExtFrameCtrl_c * from the reference cast, both locals) fold them
+     * into one offset, 0x11c -> 0x114. */
     if (mStateTimer != 0) {
         id = this->GetBodyModelID(param1 & 0xff, 0);
         model = (char *)mModels.mBodyModels[id];
