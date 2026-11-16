@@ -3728,7 +3728,6 @@ void dScMgSmartball_c::CountCell() {
 }
 
 unsigned short dScMgSmartball_c::GetTile(int *pos) {
-    unsigned char *base = (unsigned char *)this;
     int a = pos[1];
     if (a >= 0 && a < 0xc0000) {
         int b = pos[0];
