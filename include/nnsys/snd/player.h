@@ -14,15 +14,6 @@
 #include "nnsys/snd/fader.h"
 
 #ifdef __cplusplus
-struct Elem;
-struct ElemTable;
-struct SNDBankData;
-namespace Sound {
-struct InfoSequenceEntry;
-}
-#endif
-
-#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -48,37 +39,12 @@ typedef struct NNSSndSeqPlayer {
     u8 initVolume;               /* 0x40 */
     u8 extVolume;                /* 0x41 */
     u16 pad3_;                   /* 0x42 */
-#ifdef __cplusplus
-    void func_0204f214(int);
-    void func_0204f2d4();
-    void func_0204f3e0();
-    void func_0204f400();
-    void func_0204f4bc();
-    void func_0204f558(int);
-    void func_0204f5a0(int);
-    int func_0204f600(const void *, u32, struct SNDBankData *);
-    void func_0204f630();
-#endif
 } NNSSndSeqPlayer;
 
 typedef char NNSSndSeqPlayer_size_must_be_0x44[sizeof(NNSSndSeqPlayer) == 0x44 ? 1 : -1];
 
 typedef struct NNSSndHandle {
     NNSSndSeqPlayer *player;
-#ifdef __cplusplus
-    void func_02012860(int, int, int, int);
-    void func_020123c8(int, int, const Vector3 *);
-    int func_02011dcc(int);
-    void func_02013524(int, int);
-    int func_02051a98(int, unsigned int, int, struct Elem *, struct ElemTable *, int, int);
-    int func_02051bd0(int, unsigned int, int, Sound::InfoSequenceEntry *, int);
-    int func_02051e60(int, int, int, unsigned int, int);
-    int func_02051f1c(u32, int);
-    int func_02051fb4(unsigned int);
-    NNSSndSeqPlayer *func_0204f63c(int, int);
-    void func_0204f6f8(int, int);
-    void func_0204f720(int);
-#endif
 } NNSSndHandle;
 
 /* The snd_player.c setters SoundEngine.cpp defines. The SDK spells

@@ -42,21 +42,21 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN11SndRegTable13func_02011654EPc",
+      "symbol": "_Z13func_02011654PcS_",
       "address": "0x02011654",
       "legacy_source": "src/func_02011654.c",
       "size": "0x00000044",
       "ordinal": 0
     },
     {
-      "symbol": "_ZN11SndRegTable13func_02011698EP11SndRegEntry",
+      "symbol": "_Z13func_02011698P11SndRegTableP11SndRegEntry",
       "address": "0x02011698",
       "legacy_source": "src/func_02011698.c",
       "size": "0x0000002c",
       "ordinal": 1
     },
     {
-      "symbol": "_ZN11SndRegTable13func_020116c4EiiPK7Vector3is",
+      "symbol": "_Z13func_020116c4P11SndRegTableiiPK7Vector3is",
       "address": "0x020116c4",
       "legacy_source": "src/func_020116c4.c",
       "size": "0x000000d8",
@@ -77,63 +77,63 @@
       "ordinal": 4
     },
     {
-      "symbol": "_ZN11SndRegTable13func_02011934Ei",
+      "symbol": "_Z13func_02011934P11SndRegTablei",
       "address": "0x02011934",
       "legacy_source": "src/func_02011934.c",
       "size": "0x00000040",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN11SndRegTable13func_02011974Ev",
+      "symbol": "_Z13func_02011974Pv",
       "address": "0x02011974",
       "legacy_source": "src/func_02011974.c",
       "size": "0x00000054",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN11SndRegTable13func_020119c8Ev",
+      "symbol": "_Z13func_020119c8Pv",
       "address": "0x020119c8",
       "legacy_source": "src/func_020119c8.c",
       "size": "0x00000060",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN11SndRegTable13func_02011a28Ev",
+      "symbol": "_Z13func_02011a28P11SndRegTable",
       "address": "0x02011a28",
       "legacy_source": "src/func_02011a28.c",
       "size": "0x00000034",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN11SndRegTable13func_02011a5cEv",
+      "symbol": "_Z13func_02011a5cPv",
       "address": "0x02011a5c",
       "legacy_source": "src/func_02011a5c.c",
       "size": "0x00000044",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN11SndRegEntry13func_02011aa0Ev",
+      "symbol": "_Z13func_02011aa0Pv",
       "address": "0x02011aa0",
       "legacy_source": "src/func_02011aa0.c",
       "size": "0x00000024",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN11SndRegEntry13func_02011ac4EiiiPK7Vector3is",
+      "symbol": "_Z13func_02011ac4PviiiPK7Vector3is",
       "address": "0x02011ac4",
       "legacy_source": "src/func_02011ac4.c",
       "size": "0x00000034",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN11SndRegEntry13func_02011af8EiiiPK7Vector3s",
+      "symbol": "_Z13func_02011af8PviiiPK7Vector3s",
       "address": "0x02011af8",
       "legacy_source": "src/func_02011af8.c",
       "size": "0x00000040",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN11SndRegEntry13func_02011b38Eiiis",
+      "symbol": "_Z13func_02011b38Pviiis",
       "address": "0x02011b38",
       "legacy_source": "src/func_02011b38.c",
       "size": "0x00000044",
@@ -252,7 +252,7 @@
       "ordinal": 29
     },
     {
-      "symbol": "_ZN12NNSSndHandle13func_02011dccEi",
+      "symbol": "_Z13func_02011dccP12NNSSndHandlei",
       "address": "0x02011dcc",
       "legacy_source": "src/func_02011dcc.c",
       "size": "0x0000005c",
@@ -364,7 +364,7 @@
       "ordinal": 45
     },
     {
-      "symbol": "_ZN12NNSSndHandle13func_020123c8EiiPK7Vector3",
+      "symbol": "_Z13func_020123c8P12NNSSndHandleiiPK7Vector3",
       "address": "0x020123c8",
       "legacy_source": "src/func_020123c8.c",
       "size": "0x000000a0",
@@ -497,7 +497,7 @@
       "ordinal": 64
     },
     {
-      "symbol": "_ZN12NNSSndHandle13func_02012860Eiiii",
+      "symbol": "_Z13func_02012860P12NNSSndHandleiiii",
       "address": "0x02012860",
       "legacy_source": "src/func_02012860.c",
       "size": "0x00000064",
@@ -658,7 +658,7 @@
       "ordinal": 87
     },
     {
-      "symbol": "_ZN12NNSSndHandle13func_02013524Eii",
+      "symbol": "_Z13func_02013524P12NNSSndHandleii",
       "address": "0x02013524",
       "legacy_source": "src/func_02013524.c",
       "size": "0x00000024",
@@ -1372,7 +1372,7 @@
       "source": "0x02074db4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11SndRegTable13func_02011a5cEv",
+      "symbol": "_Z13func_02011a5cPv",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02011a5c"

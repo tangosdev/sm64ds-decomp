@@ -1,18 +1,18 @@
-//cpp
 #include "private/arm9_archive_table.h"
 
 #include "nitro/os/system.h"
 #include "nitro/fs/file.h"
 
-extern "C" void func_02018598(FSFileID *c, int arg);
-extern "C" int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
-extern "C" int LoadArchive(int idx);
+extern void func_02018598(FSFileID *c, int arg);
+extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
+extern int LoadArchive(int idx);
+extern int func_0204eda4(int file, char *archive, unsigned int index);
 
 /* Open game file id into the FSFile at file. Ids below 0x8000 are FAT ids
    in the ROM archive (func_02018598 builds the FSFileID); higher ids are
    opened inside the archive whose range holds them, mounting it first if
    needed (and recording it in data_0208eb54). Any failure is fatal. */
-extern "C" int func_020185c0(FSFile *file, unsigned int id) {
+int func_020185c0(FSFile *file, unsigned int id) {
     int result = 0;
 
     FS_InitFile(file);
@@ -37,7 +37,7 @@ extern "C" int func_020185c0(FSFile *file, unsigned int id) {
                         return 0;
                     }
                 }
-                result = file->func_0204eda4((char *)e->archive, id - e->firstFileId);
+                result = func_0204eda4((int)file, e->archive, id - e->firstFileId);
                 break;
             }
             i++;
