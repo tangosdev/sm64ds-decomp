@@ -46,6 +46,7 @@
 
 #include "KuppaScript.h"
 #include "types.h"
+#include "Vector3s.h"
 #include "ParticleIds.h"
 #include "common.h"
 #include "daPly_c.h"
@@ -20025,15 +20026,11 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
 
 int daPly_c::func_ov002_020e3f90() {
     extern Matrix4x3 data_020a0e68;
-    struct S {
-        short angs[3];
-        volatile int v[3];
-        int tgt[3];
-    } s; // without volatile, the function shrinks 0x3e4 to 0x39c
+    Vector3s angs;
+    Vector3 v;
+    Vector3 tgt;
     int b;
     int t;
-    int t1;
-    int t2;
     daPly_c *p;
     unsigned int n;
     char* m;
@@ -20044,9 +20041,9 @@ int daPly_c::func_ov002_020e3f90() {
         return 0;
 
     b = 0;
-    s.v[0] = 0;
-    s.v[1] = 0;
-    s.v[2] = 0;
+    v.x = 0;
+    v.y = 0;
+    v.z = 0;
     data_020a0e68 = **(Matrix4x3 **)&((dActor_c *)*(char **)&mGrabbedByActor)->mCarryMatrix;
     p = (daPly_c *)mGrabbedByActor;
     if ((p)->actorID == 0xbf)
@@ -20057,26 +20054,26 @@ int daPly_c::func_ov002_020e3f90() {
         t = (unsigned int)(((int)mFlags & 0x4000) != 0);
         if (t == 0) return 0;
         if ((unsigned int)(((int)p->mCharFileBase >> 2) - 0x6c) <= 1) {
-            s.tgt[0] = -0x3000;
-            s.tgt[1] = -0x1000;
-            s.tgt[2] = -0x4000;
-            s.angs[0] = -0x2000;
-            s.angs[1] = -0x1000;
-            s.angs[2] = -0x1000;
+            tgt.x = -0x3000;
+            tgt.y = -0x1000;
+            tgt.z = -0x4000;
+            angs.x = -0x2000;
+            angs.y = -0x1000;
+            angs.z = -0x1000;
         } else {
-            s.tgt[0] = 0;
-            s.tgt[1] = -0x3000;
-            s.tgt[2] = -0x4000;
-            s.angs[0] = 0x1000;
-            s.angs[1] = 0x7000;
-            s.angs[2] = 0;
+            tgt.x = 0;
+            tgt.y = -0x3000;
+            tgt.z = -0x4000;
+            angs.x = 0x1000;
+            angs.y = 0x7000;
+            angs.z = 0;
         }
-        ApproachLinear(mStateTargetX, s.tgt[0], 0x400);
-        ApproachLinear(mStateTargetY, s.tgt[1], 0x400);
-        ApproachLinear(mStateTargetZ, s.tgt[2], 0x400);
-        ApproachAngle(&mAngleX, s.angs[0], 0x10, 0x1000, 0x100);
-        ApproachAngle(&mAngleY, s.angs[1], 0x10, 0x1000, 0x100);
-        ApproachAngle(&mAngleZ, s.angs[2], 0x10, 0x1000, 0x100);
+        ApproachLinear(mStateTargetX, tgt.x, 0x400);
+        ApproachLinear(mStateTargetY, tgt.y, 0x400);
+        ApproachLinear(mStateTargetZ, tgt.z, 0x400);
+        ApproachAngle(&mAngleX, angs.x, 0x10, 0x1000, 0x100);
+        ApproachAngle(&mAngleY, angs.y, 0x10, 0x1000, 0x100);
+        ApproachAngle(&mAngleZ, angs.z, 0x10, 0x1000, 0x100);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, mStateTargetX, mStateTargetY,
                                             mStateTargetZ);
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
@@ -20093,15 +20090,12 @@ int daPly_c::func_ov002_020e3f90() {
         }
     }
     mShadowMatrix = data_020a0e68;
-    t = (&data_020a0e68)->m[9];
-    t1 = ((volatile Matrix4x3 *)&data_020a0e68)->m[10]; // without volatile, 7 words differ
-    t2 = ((volatile Matrix4x3 *)&data_020a0e68)->m[11]; // without volatile, 10 words differ
-    s.v[1] = t1;
-    s.v[2] = t2;
-    s.v[0] = t;
-    mPosX = t << 3;
-    mPosY = s.v[1] << 3;
-    mPosZ = s.v[2] << 3;
+    v.x = data_020a0e68.m[9];
+    v.y = data_020a0e68.m[10];
+    v.z = data_020a0e68.m[11];
+    mPosX = v.x << 3;
+    mPosY = v.y << 3;
+    mPosZ = v.z << 3;
     mPrevAngleY = mGrabbedByActor->mAngleY;
     n = GetBodyModelID(param1 & 0xff, 0);
     m = (char *)mModels.mBodyModels[n];
