@@ -1,6 +1,5 @@
 #include "Ov007Picker.h"
-#include "math/CalcLib.h"
-/* Vector3 VEC_* until Ov007Spring, Ov007Picker and func_ov007_020bfe4c go VecFx32 (#5207). */
+#include "nitro/fx/fx_vec.h"
 
 /* Re-measures every group's rest links (func_ov007_020c6314 with `b`); in
  * link mode also drops the anchor onto pos and re-measures `link`. */
