@@ -65,15 +65,10 @@
 #include "SaveData.h"
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
+#include "PlayerInput.h"
 
 struct OamAttr;
 
-struct TouchRec {
-    u8 held;
-    u8 edge;
-    u8 x;
-    u8 y;
-};
 typedef struct Pair { int x, y; } Pair;
 struct Off9 { int v[9]; };
 
@@ -91,16 +86,6 @@ extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
 extern int data_0208ee44;
-// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-extern TouchRec gTouchHeld[];
-// local extern: see above.
-extern u8 gTouchEdge[];
-// local extern: see above.
-extern u8 gTouchX[];
-// local extern: see above.
-extern u8 gTouchY[];
-// local extern: see above.
-extern u8 gActivePlayerSlot;
 extern unsigned short data_020a0e5a[];
 
 /* ---- ov005 statics ---- */
@@ -819,9 +804,9 @@ void dScMiniGm_c::UpdateGroupTabs() {
     {
         int flag = 0;
         unsigned char idx = gActivePlayerSlot;
-        unsigned char v = ((unsigned char*)gTouchHeld)[idx * 4];
+        unsigned char v = gTouchInfo[idx].held;
         if (v != 0) {
-            if (gTouchEdge[idx * 4] != 0)
+            if (gTouchInfo[idx].edge != 0)
                 flag = 1;
         }
         if (flag != 0 || (mScrollDelay <= 0 && v != 0)) {
@@ -834,8 +819,8 @@ void dScMiniGm_c::UpdateGroupTabs() {
                 int e = sMiniGmGroupBases[i];
                 if (gMgGroupBase != e) {
                     unsigned char ix = gActivePlayerSlot;
-                    unsigned char* p = (unsigned char*)gTouchHeld + (ix * 4);
-                    if (p[2] <= 0x30 && p[3] >= lo && p[3] <= hi) {
+                    TouchInfo *touch = &gTouchInfo[ix];
+                    if (touch->x <= 0x30 && touch->y >= lo && touch->y <= hi) {
                         gMgGroupBase = e;
                         mGroupBase = e;
                         func_02012790(z);
@@ -864,8 +849,8 @@ void dScMiniGm_c::UpdateGroupTabs() {
                 int e = sMiniGmGroupBases[i];
                 if (mGroupBase != e) {
                     unsigned char ix = gActivePlayerSlot;
-                    unsigned char* p = (unsigned char*)gTouchHeld + (ix * 4);
-                    if (p[2] <= 0x30 && p[3] >= lo && p[3] <= hi) {
+                    TouchInfo *touch = &gTouchInfo[ix];
+                    if (touch->x <= 0x30 && touch->y >= lo && touch->y <= hi) {
                         mGroupBase = e;
                         func_02012790(z);
                         mScrollDelay = t;
@@ -896,28 +881,32 @@ void dScMiniGm_c::UpdatePageArrows() {
         return;
 
     {
-        u8 idx = gActivePlayerSlot;
-        int off = idx*4;
         int has = 0;
-        if (((u8*)gTouchHeld)[off]) {
-            if (gTouchEdge[off]) has = 1;
+        u8 idx = gActivePlayerSlot;
+        if (gTouchInfo[idx].held) {
+            if (gTouchInfo[idx].edge)
+                has = 1;
         }
         if (has == 0) return;
         if (gMgMenuPage == 0) {
-            u8 v = gTouchX[idx*4];
+            u8 v = gTouchInfo[idx].x;
             if (v < 0xd8) return;
             if (v > 0xf8) return;
-            if (gTouchY[idx*4] < 0x40) return;
-            if (gTouchY[idx*4] > 0x80) return;
+            if (gTouchInfo[idx].y < 0x40)
+                return;
+            if (gTouchInfo[idx].y > 0x80)
+                return;
             func_02012790(0);
             mNextPageTimer = 18;
             return;
         } else {
-            u8 v = gTouchX[idx*4];
+            u8 v = gTouchInfo[idx].x;
             if (v < 0x38) return;
             if (v > 0x58) return;
-            if (gTouchY[idx*4] < 0x40) return;
-            if (gTouchY[idx*4] > 0x80) return;
+            if (gTouchInfo[idx].y < 0x40)
+                return;
+            if (gTouchInfo[idx].y > 0x80)
+                return;
             func_02012790(0);
             mPrevPageTimer = 18;
             return;
@@ -941,22 +930,27 @@ void dScMiniGm_c::UpdateGameSelect()
 
     sel = -1;
     ok = 0;
-    if (gTouchHeld[gActivePlayerSlot].held != 0) {
-        if (gTouchHeld[gActivePlayerSlot].edge != 0) ok = 1;
+    if (gTouchInfo[gActivePlayerSlot].held != 0) {
+        if (gTouchInfo[gActivePlayerSlot].edge != 0)
+            ok = 1;
     }
     if (ok != 0) {
         if (gMgMenuPage == 0) {
             for (row = 0; row < 2; row++) {
                 for (int col = 0; col < 3; col++) {
-                    if (gTouchHeld[gActivePlayerSlot].x >= 0x40 + col * 0x30 && gTouchHeld[gActivePlayerSlot].x < 0x70 + col * 0x30 &&
-                        gTouchHeld[gActivePlayerSlot].y >= 0x18 + row * 0x48 && gTouchHeld[gActivePlayerSlot].y < 0x60 + row * 0x48)
+                    if (gTouchInfo[gActivePlayerSlot].x >= 0x40 + col * 0x30 &&
+                        gTouchInfo[gActivePlayerSlot].x < 0x70 + col * 0x30 &&
+                        gTouchInfo[gActivePlayerSlot].y >= 0x18 + row * 0x48 &&
+                        gTouchInfo[gActivePlayerSlot].y < 0x60 + row * 0x48)
                         sel = gMgGroupBase + (row * 0xc + col * 4);
                 }
             }
         } else {
             for (int col = 0; col < 3; col++) {
-                if (gTouchHeld[gActivePlayerSlot].x >= 0x60 + col * 0x30 && gTouchHeld[gActivePlayerSlot].x < 0x90 + col * 0x30 &&
-                    gTouchHeld[gActivePlayerSlot].y >= 0x38 && gTouchHeld[gActivePlayerSlot].y < 0x80)
+                if (gTouchInfo[gActivePlayerSlot].x >= 0x60 + col * 0x30 &&
+                    gTouchInfo[gActivePlayerSlot].x < 0x90 + col * 0x30 &&
+                    gTouchInfo[gActivePlayerSlot].y >= 0x38 &&
+                    gTouchInfo[gActivePlayerSlot].y < 0x80)
                     sel = gMgGroupBase + (0x18 + col * 4);
             }
         }
@@ -1007,14 +1001,15 @@ void dScMiniGm_c::UpdateExitButton() {
         return;
     unsigned int i = gActivePlayerSlot;
     bool ok = false;
-    if (gTouchHeld[i].held != 0) {
-        if (gTouchHeld[i].edge != 0) ok = true;
+    if (gTouchInfo[i].held != 0) {
+        if (gTouchInfo[i].edge != 0)
+            ok = true;
     }
     if (!ok) return;
-    unsigned char x = gTouchHeld[i].x;
+    unsigned char x = gTouchInfo[i].x;
     if (x < 0xd8) return;
     if (x > 0xf8) return;
-    unsigned char y = gTouchHeld[i].y;
+    unsigned char y = gTouchInfo[i].y;
     if (y < 0x90) return;
     if (y > 0xb0) return;
     func_02012790(0x63);
