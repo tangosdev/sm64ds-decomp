@@ -8924,10 +8924,9 @@ int daPly_c::St_Swim_Main() {
     func_ov002_020cd550();
 
     if (mJumpComboTimer != 0) {
-        int eid = 0xcd;
         pos = mPos;
         pos.y += 0x32000;
-        mParticle3 = Particle::System::NewCheckWater(mParticle3, eid, pos.x, pos.y, pos.z, 0);
+        mParticle3 = Particle::System::NewCheckWater(mParticle3, 0xcd, pos.x, pos.y, pos.z, 0);
     }
 
     if (mPrevVertSpeed == 0 && mMeshClsn.IsOnGround() != 0) {
