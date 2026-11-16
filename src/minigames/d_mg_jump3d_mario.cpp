@@ -27,10 +27,6 @@
  *
  * leftovers:
  * - The helper functions and data_ov006_ tables have no header or name yet.
- * - The five gTouch-lane and gActivePlayerSlot externs keep the file-local record
- *   spellings (u8 [][4] lanes) because the ROM scales the slot in the
- *   addressing mode, which conflicts with PlayerInput.h's declarations;
- *   that header stays unincluded and the sites are marked `local extern`.
  * - The *(volatile int *)&v[2] store in StateMove, the int* zeroing of
  *   Mtx in Draw, and the `int t` temp in LoadResources
  *   are codegen-pinned; each site carries its measured note.
@@ -459,18 +455,18 @@ void dMgJump3DMario_c::StateHold()
     u32 idx = gActivePlayerSlot;
     int flag = 0;
 
-    if (((u8(*)[4])gTouchHeld)[idx][0] != 0) {
-        if (((u8(*)[4])gTouchEdge)[idx][0] != 0) {
+    if (gTouchInfo[idx].held != 0) {
+        if (gTouchInfo[idx].edge != 0) {
             flag = 1;
         }
     }
     if (flag != 0) {
         /* Keep reusing `flag` here: reading the table straight into `b`
            costs 5 words (notes/experiments/jump3d-2711-statehold-flag-reuse.md). */
-        flag = ((u8(*)[4])gTouchY)[idx][0];
+        flag = gTouchInfo[idx].y;
         int b = flag;
         int x = mScreenY - 0x20;
-        int dz = mScreenX - ((u8(*)[4])gTouchX)[idx][0];
+        int dz = mScreenX - gTouchInfo[idx].x;
         if (dz < 0) {
             dz = -dz;
         }
@@ -562,13 +558,13 @@ void dMgJump3DMario_c::StateMove()
     {
         int flag = 0;
         u8 idx = gActivePlayerSlot;
-        if (((u8(*)[4])gTouchHeld)[idx][0] != 0 && ((u8(*)[4])gTouchEdge)[idx][0] != 0)
+        if (gTouchInfo[idx].held != 0 && gTouchInfo[idx].edge != 0)
             flag = 1;
 
         if (flag != 0) {
             s16 y = mScreenY;
-            int ax = ((u8(*)[4])gTouchX)[idx][0];
-            int az = ((u8(*)[4])gTouchY)[idx][0];
+            int ax = gTouchInfo[idx].x;
+            int az = gTouchInfo[idx].y;
             int dx = (int)mScreenX - ax;
             int ym = (int)y - 0x20;
             int t = dx < 0 ? -dx : dx;
