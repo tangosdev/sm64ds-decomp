@@ -4046,9 +4046,9 @@ int daPly_c::St_OpeningWakeUp_Init() {
 }
 
 extern "C" {
-void func_ov002_020c3f18(char* p) {
-    ((daPly_c *)p)->mStatePhase = 1;
-    func_ov002_020d2e74((daPly_c *)p);
+void func_ov002_020c3f18(daPly_c *player) {
+    player->mStatePhase = 1;
+    func_ov002_020d2e74(player);
 }
 }
 
