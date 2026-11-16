@@ -18261,9 +18261,6 @@ tail:
     return 1;
 }
 
-#pragma push                // without it, the later pop does not compile
-#pragma opt_common_subs off // without it, St_Land_Init shrinks 0x1d8 to 0x1d4
-
 int daPly_c::St_Land_Init() {
     extern char data_0209f4a0[];
     char* c = (char*)this;
@@ -18322,8 +18319,6 @@ int daPly_c::St_Land_Init() {
 
     return 1;
 }
-
-#pragma pop // without it, opt_common_subs stays off and later functions change
 
 int daPly_c::func_ov002_020e0a64() {
     if (IsAnim(0x54) == 0)
