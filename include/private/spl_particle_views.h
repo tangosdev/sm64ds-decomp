@@ -2,6 +2,7 @@
 #define SPL_PARTICLE_VIEWS_H
 
 #include "types.h"
+#include "nitro/fx/fx.h"
 
 /* C views of the particle code's records, shared by the particle draw routines
  * (func_0204b028 .. func_0204be40), the child spawn (func_0204c304) and the
@@ -132,7 +133,7 @@ typedef struct ParticleSystem {
     Vector3 velocity;        /* 0x2c */
     u16 age;                 /* 0x38 */
     s16 callbackValue;       /* 0x3a */
-    s16 direction[3];        /* 0x3c */
+    VecFx16 direction;       /* 0x3c */
     char pad_42[2];
     int emitRadius;       /* 0x44 */
     int callbackParam;    /* 0x48 */
@@ -164,7 +165,7 @@ typedef struct ParticleElement {
     struct ParticleElement *next;     /* 0x00 */
     struct ParticleElement *previous; /* 0x04 */
     Vector3 basePosition;             /* 0x08 */
-    Vector3 offset;                   /* 0x14 */
+    VecFx32 offset;                   /* 0x14 */
     Vector3 velocity;                 /* 0x20 */
     u16 lifetime;                     /* 0x2c */
     u16 age;                          /* 0x2e */

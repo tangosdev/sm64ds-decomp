@@ -895,8 +895,6 @@ extern daPropeller_Heyho_c::State data_ov070_021235cc;
 /* (data_ov070_02123528: SharedFilePtr view declared earlier in this TU) */
 
 int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
-struct Aea30C;
-extern void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
 extern void func_02012694(unsigned int a, const Vector3 *b);
 /* Hit reaction, run once per frame outside the knocked state. Takes the colliding
  * actor from the collider (mdCcAc_c.otherOwner) and reads hitFlags: fire sends it
@@ -929,7 +927,7 @@ void func_ov070_0211f100(daPropeller_Heyho_c *c) {
     }
     if (hitFlags & kHitSpinPound) {
         c->mDeathState = 1;
-        func_ov002_020aea30((Aea30C *)c, hitPlayer, 0);
+        c->func_ov002_020aea30(hitPlayer, 0);
         return;
     }
     if (hitFlags & kHitAttackMask) {
@@ -946,7 +944,7 @@ void func_ov070_0211f100(daPropeller_Heyho_c *c) {
     if (c->JumpedOnByPlayer(c->mdCcAc_c, *hitPlayer)) {
         hitPlayer->SpinBounce(0x28000);
         c->mDeathState = 1;
-        func_ov002_020aea30((Aea30C *)c, hitPlayer, 0);
+        c->func_ov002_020aea30(hitPlayer, 0);
         return;
     }
 
