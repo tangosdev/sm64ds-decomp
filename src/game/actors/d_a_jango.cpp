@@ -1034,7 +1034,6 @@ int daJango_c::HandleCylinderHit() {
     u8 hc;
     u8 st;
     int newchar;
-    int zero;
 
     id = mdCcAc_c1.otherOwner;
     if (id != 0) {
