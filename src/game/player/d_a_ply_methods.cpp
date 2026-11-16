@@ -974,7 +974,6 @@ int daPly_c::func_ov002_020bd20c(unsigned char *params, int beginFrame, int endF
 }
 
 int daPly_c::func_ov002_020bd250(unsigned char *params, int beginFrame, int endFrame) {
-    char *self = (char *)this;
     Vector3 out1, off1, out2, off2, v;
     this->mAngleY = ReadUnalignedShort(params);
     off1.x = 0;
