@@ -513,23 +513,21 @@ int dMgMCarloCardObj_c::IsPairWith(dMgMCarloCardObj_c *other) {
  * point -- the same 32x48 slot grid DealIn lays the board out on. */
 int dMgMCarloCardObj_c::HitTest(void) {
     u8 touchSlot;
-    int touchOffset;
     int touching;
     int touchXOffset, touchYOffset;
 
     if (sMCarloPickAllowed == 0)
         return 0;
     if (dScMgMCarlo_c::BoardBusy() == 0) {
-        touchSlot = gActivePlayerSlot;
-        touchOffset = touchSlot * 4;
         touching = 0;
-        if (gTouchHeld[touchOffset]) {
-            if (gTouchEdge[touchOffset])
+        touchSlot = gActivePlayerSlot;
+        if (gTouchInfo[touchSlot].held) {
+            if (gTouchInfo[touchSlot].edge)
                 touching = 1;
         }
         if (touching != 0) {
-            touchXOffset = gTouchX[touchSlot * 4] - (mX >> 12);
-            touchYOffset = gTouchY[touchSlot * 4] - (mY >> 12);
+            touchXOffset = gTouchInfo[touchSlot].x - (mX >> 12);
+            touchYOffset = gTouchInfo[touchSlot].y - (mY >> 12);
             if (touchXOffset > 7 && touchXOffset < 0x28 && touchYOffset > 0 && touchYOffset < 0x31)
                 return 1;
         }
