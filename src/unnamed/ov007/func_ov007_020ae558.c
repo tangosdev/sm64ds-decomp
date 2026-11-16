@@ -114,7 +114,7 @@ int func_ov007_020ae558(Ov007ItemNode *self) {
                 ret = 7;
             else {
                 /* the ROM reloads the work pointer here */
-                Ov007Work *g2 = *(Ov007Work *volatile *)&data_ov007_0210342c;
+                Ov007Work *g2 = data_ov007_0210342c;
                 short menuState = g2->states[1]->currentState;
                 u8 nodeAnim = g2->itemNodes[1]->node->animIndex;
                 int x;

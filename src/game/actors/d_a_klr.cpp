@@ -240,7 +240,7 @@ void daKlr_c::UpdateModelAndShadow() {
     /* One 0x30-byte block copy. Matrix4x3's own assignment goes member by
        member through Vector3 and comes out 0x18 bytes longer. */
     *(Mtx43 *)&mModel2.mat4x3 = *(Mtx43 *)&mModel.mat4x3;
-    DropShadowRadHeight(mShadow, mModel.mat4x3, 0x50000, 0x50000, 0xf);
+    DropShadowRadHeight(mShadow, mModel.mat4x3, 0x50000, 0x50000, 15);
 }
 
 int daKlr_c::OnAimedAtWithEgg() {

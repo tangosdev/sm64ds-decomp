@@ -21,7 +21,7 @@
  * each emits its D1,D0 pair at the definition, and they must stay first or the
  * second class's pair rides the deferred flush to the end of the object.
  *
- * In comments a Fix12 value reads 0x1000 = 1.0 and an angle 0x10000 = a full
+ * In comments an fx32 value reads 0x1000 = 1.0 and an angle 0x10000 = a full
  * turn.
  *
  * Leftovers:
@@ -389,7 +389,7 @@ int daKpaTail_c::InitResources()
  * cylinder; idle animation (0x10) and its texture pattern; body cylinder
  * (radius 0x78000 = 120 units, height 0x118000 = 280, flags 0x200004); spawn
  * position into mHomePos; gravity -0x2000 (-2.0) and terminal velocity
- * -0x3c000 (-60.0); floor collider (0x50000 = 80 for both Fix12 arguments);
+ * -0x3c000 (-60.0); floor collider (0x50000 = 80 for both fx32 arguments);
  * param1 (bits 0-1 = variant, bit 2 = jump-only); InitFightState for the rest;
  * then spawn KOOPAFIRE and KOOPATAIL at his position and exchange uniqueIDs.
  * Returns 0 only if the shadow cylinder fails, otherwise 1.
@@ -409,7 +409,7 @@ int daKpa_c::InitResources()
 
     this->mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov060_0211ac78), 1, 0x16);
 
-    for (i = 0; i < 0x1c; i++)
+    for (i = 0; i < 28; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov060_021192dc[i]);
 
     for (i = 0; i < 6; i++)
@@ -438,7 +438,7 @@ int daKpa_c::InitResources()
     this->mHomePosX = this->mPosX;
     this->mHomePosY = this->mPosY;
     this->mHomePosZ = this->mPosZ;
-    /* Fix12 gravity and terminal velocity. */
+    /* fx32 gravity and terminal velocity. */
     this->mVertAccel = -0x2000;
     this->mTerminalVelocity = -0x3c000;
     this->mTargetPlayer = 0;
@@ -594,7 +594,7 @@ int daKpa_c::CleanupResources()
 {
     int i;
     data_ov060_0211ac78.Release();
-    for (i = 0; i < 0x1c; i++)
+    for (i = 0; i < 28; i++)
         data_ov060_021192dc[i]->Release();
     for (i = 0; i < 6; i++)
         data_ov060_0211927c[i]->Release();
@@ -647,14 +647,14 @@ skip_13:
     bowser->SetTangible(0);
     bowser->mHoldState = BOWSER_HOLD_HELD;
     bowser->mGrabbedPlayer = player;
-    this->mHoldCountdown = 0x96;
+    this->mHoldCountdown = 150;
 }
 
 /*
 Tail state BOWSER_TAIL_COOLDOWN (1), per frame: once mTimer is above 0x1e (30)
 the tail goes back to BOWSER_TAIL_FREE. */
 void daKpaTail_c::func_ov060_02115d50(){
-    if (this->mTimer > 0x1e)
+    if (this->mTimer > 30)
         this->mState = BOWSER_TAIL_FREE;
 }
 
@@ -711,7 +711,7 @@ do_drop:
     goto tail;
 
 set_default:
-    this->mHoldCountdown = 0x96;
+    this->mHoldCountdown = 150;
 
 tail:
     this->mdCcAc_c.flags |= BOWSER_CC_DISABLED;
@@ -742,7 +742,7 @@ void daKpaTail_c::func_ov060_02115b84(){
 
 /*
 Landing effect for the variant-2 fight (nothing happens for the other variants):
-dActor_c::Earthquake at his position with the Fix12 argument 0x7d0000 (2000.0,
+dActor_c::Earthquake at his position with the fx32 argument 0x7d0000 (2000.0,
 the same value daKirai_c passes when a bomb goes off) and a FIRERING actor
 (0x119) spawned at his position. */
 void daKpa_c::SpawnShockwave() {
@@ -1692,7 +1692,7 @@ State BOWSER_STATE_FIREBALLS (9). On the first frame choose mFireballShots: 3 if
 the target daPly_c has 4 or fewer health (daPly_c::GetHealth), else a random 1 to 3
 (also when there is no daPly_c). When animation 0x14 (data_ov060_0211abe0 is entry
 0x14 of the animation table) will cross frame 5, spawn a fireball (SpawnFireball,
-horizontal speed 0x1e000 = 30.0, second Fix12 argument 0xa000) at his position
+horizontal speed 0x1e000 = 30.0, second fx32 argument 0xa000) at his position
 plus 0xe8 (232) units out along mAngleY and 0x58000 (88 units) up, with sound
 0x122. At the last frame of an animation: if it was animation 0x14, count the
 shot in mStep and go to BOWSER_STATE_IDLE once mStep reaches mFireballShots;
@@ -1829,9 +1829,9 @@ void daKpa_c::ActChargeMario() {
         this->mHorzSpeed = 0;
         if (Bowser_IsAnimAtLastFrame() != 0) {
             if (this->mVariantID == 2)
-                this->mTimer = 0xa;
+                this->mTimer = 10;
             else
-                this->mTimer = 0x1e;
+                this->mTimer = 30;
             if (this->mStepCounter > this->mTimer) {
                 this->mState = BOWSER_STATE_IDLE;
                 this->mAnimSpeed = 0x1000;
@@ -2434,7 +2434,7 @@ void daKpa_c::ActDead() {
 Tilt the arena: find the KOOPA2BG actor by mArenaBgUniqueID (nothing if it is
 gone) and set its mAngleXSpeed to tiltSpeed * cos and its mAngleZSpeed to
 -(tiltSpeed * sin) of the angle mAngleToCenter + 0x8000 (the opposite of the direction to the
-centre), both Fix12 products shifted back down by 12. */
+centre), both fx32 products shifted back down by 12. */
 void daKpa_c::TiltPlatform(int tiltSpeed) {
     daKpa2Bg_c *arena = (daKpa2Bg_c *)dActor_c::FindWithID(this->mArenaBgUniqueID);
     if (arena == 0)
@@ -2854,7 +2854,7 @@ int daKpa_c::UpdateIntroCamera() {
             this->mCutsceneTimer = 0;
         else
             this->mCutsceneTimer++;
-        if (this->mCutsceneTimer > 0x1e)
+        if (this->mCutsceneTimer > 30)
             this->mCutsceneStep++;
         break;
     case 2:
@@ -2985,7 +2985,7 @@ ac90 are entries 0x11, 0x12, 0x18, 0x19, 0xf and 0xd of the animation table.)
 mFootfallLatch remembers that the previous frame was in a window, so the effect
 fires only on entering one: huge landing dust at the chosen foot point, sound
 0xb0 at his camera-space position and dActor_c::Earthquake at his position with
-the Fix12 argument 0x320000 (800.0). */
+the fx32 argument 0x320000 (800.0). */
 void daKpa_c::UpdateFootfalls() {
     /* (unsigned short)(u32 >> 12) forces ROM prologue load order
        (mAnmModel.currFrame at 0x12c into r0, then mFootfallLatch at 0x446 into r1)

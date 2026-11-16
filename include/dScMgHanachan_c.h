@@ -54,7 +54,7 @@ struct dScMgHanachan_c : dScMgBase_c {
         Vector2 seg[5];      /* 0x18 segment positions */
         int speed;           /* 0x40 */
         int speedTarget;     /* 0x44 */
-        int flower;          /* 0x48 bloom, Fix12; 0x3000 when the flower shows */
+        int flower;          /* 0x48 bloom, fx32; 0x3000 when the flower shows */
         int stretch[5];      /* 0x4c extra gap per segment */
         int popCount;        /* 0x60 */
         int index;           /* 0x64 index in the scene array */

@@ -18,7 +18,7 @@
  * pair (slots 16/17) are overridden.
  *
  * SIZE 0xd8 is daSldMng_c_classInit's own allocation literal. dActor_c ends
- * at 0xd0; the intervening word has no observed meaning. InitResources seeds
+ * at 0xd4, where mKillTimer starts. InitResources seeds
  * mKillTimer with 120, and Behavior counts it down before killing the actor.
  * Behavior's two-way switch and byte increment pin mState.
  *
@@ -27,7 +27,6 @@
  * class's cartridge vtable for the SLIDER_MANAGER registry profile.
  */
 struct daSldMng_c : dActor_c {
-    u32 unk_0d0;          /* 0x0d0 */
     u16 mKillTimer;       /* 0x0d4 */
     u8 mState;            /* 0x0d6 */
     u8 pad_0d7;           /* 0x0d7 -- never dereferenced */

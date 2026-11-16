@@ -97,7 +97,7 @@ int daFeather_c::InitResources() {
         /* dCamera_c::mAngleY, the same halfword Behavior re-reads every frame. */
         mAngleY = gCamera->mAngleY + 0x4000;
     }
-    mLifeTimer = 0xb4;
+    mLifeTimer = 180;
     mVertSpeed = 0x3000;
     return 1;
 }

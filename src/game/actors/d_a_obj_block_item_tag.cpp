@@ -78,7 +78,7 @@ void daObjBlockItemTag_c::SpawnKoopaShell() {
     GetSpawnPos(spawnPos, *this);
     dActor_c *shell = Spawn(0x11d, 0, spawnPos, 0, mAreaId, -1);
     if (shell)
-        ((daShl_c *)shell)->mDespawnTimer = 0xb4;
+        ((daShl_c *)shell)->mDespawnTimer = 180;
 }
 
 void daObjBlockItemTag_c::SpawnMegaMushroom() {

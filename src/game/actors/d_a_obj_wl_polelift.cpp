@@ -130,7 +130,7 @@ s32 daObjWlPolelift_c::Behavior()
                 if (path.Loops()) {
                     curNodeIdx = numNodes - 1;
                 } else {
-                    bounceTimer = 0x3c;
+                    bounceTimer = 60;
                     moveSpeed = 1;
                     curNodeIdx += moveSpeed << 1;
                 }
@@ -139,7 +139,7 @@ s32 daObjWlPolelift_c::Behavior()
                 if (path.Loops()) {
                     curNodeIdx = 0;
                 } else {
-                    bounceTimer = 0x3c;
+                    bounceTimer = 60;
                     moveSpeed = -1;
                     curNodeIdx += moveSpeed << 1;
                 }

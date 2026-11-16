@@ -39,7 +39,7 @@ int func_0206bc8c(u64 d) {
     q = (char *)(&d);
     q = pad(q, 6);
     mant |= 0x10;
-    mant |= READ8(q) & ((i = 5), 0xf);
+    mant |= READ8(q) & ((i = 5), 15);
     for (; i >= 0; i--) {
         p = pad((char *)(&d), i);
         mant <<= 8;
@@ -47,7 +47,7 @@ int func_0206bc8c(u64 d) {
     }
 
     idx = exp - 0x3fe;
-    max = 0x35;
+    max = 53;
     digit = 0;
     zero = (int)digit;
     i = (int)digit;
@@ -55,7 +55,7 @@ int func_0206bc8c(u64 d) {
     for (; i < imin(idx, max); i++) {
         digit <<= 1;
         t = mant;
-        count = 0x34 - i;
+        count = 52 - i;
         for (j = 0; j < count; j++)
             t >>= 1;
         if ((t & 1) != 0)

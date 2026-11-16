@@ -29,7 +29,6 @@
  * its 31-slot vtable has the same extent as dActor_c's. Only resource,
  * behavior, render, pending-destroy, and destructor slots are overridden. */
 struct daStarBase_c : dActor_c {
-    u8 pad_0d0[0x4];
     /* dCcAcPos_c member. The cartridge's own ~daStarBase_c calls _ZN10dCcAcPos_cD1Ev at
        +0x0d4 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */

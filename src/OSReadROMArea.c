@@ -34,13 +34,13 @@ void OSReadROMArea(u32 src, void *dst, int len) {
         (u32)((*hdr_GAME_BUF & ~CARD_CTRL_CMD_MASK) |
               (CARD_CTRL_CMD_PAGE | CARD_CTRL_READ | CARD_CTRL_START | CARD_CTRL_RESET_HI));
 
-    int pos = -(int)(src & (512 - 1));
+    int pos = -(int)(src & (0x200 - 1));
 
     while ((*reg_CARD_CNT & CARD_CTRL_START) != 0) {
     }
     *reg_CARD_MASTERCNT = (u32)(CARD_MASTER_SELECT_ROM | CARD_MASTER_ENABLE);
 
-    for (src = (u32)(src + pos); pos < len; src += 512) {
+    for (src = (u32)(src + pos); pos < len; src += 0x200) {
         reg_CARD_CMD[0] = (u8)(CARD_CMD_READ_PAGE);
         reg_CARD_CMD[1] = (u8)(src >> 24);
         reg_CARD_CMD[2] = (u8)(src >> 16);

@@ -342,7 +342,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
     if (ApproachLinear(mHorzSpeed, mTerminalVelocity, 0x8000) != 0) {
         if (mTerminalVelocity != 0) {
             if (mCloseDoorTimer == 0) {
-                mCloseDoorTimer = 0x1c;
+                mCloseDoorTimer = 28;
             } else if (DecIfAbove0_Byte(&mCloseDoorTimer) == 0) {
                 mTerminalVelocity = 0;
                 func_02012694(0x4f, (const Vector3 *)(&mCamSpacePosX));

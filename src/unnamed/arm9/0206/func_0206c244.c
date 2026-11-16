@@ -11,7 +11,7 @@
 #pragma optimize_for_size on
 /* opt_common_subs stays off for register and schedule colour only: with it on the
    function is still 0x2d8, with 26 words moved. The pad() identity, the shr_n()
-   loop, the volatile store that zeroes mant and the (i = 5) comma are each
+   loop, the pointer store that zeroes mant and the (i = 5) comma are each
    load-bearing on top of that -- measured one at a time, every one of them
    changes the object. */
 #pragma opt_common_subs off
@@ -50,11 +50,14 @@ u64 func_0206c244(u64 d)
 
     sign = func_0206c90c(d);
     exp = func_0206c8b4(d);
-    { volatile u64 *pm = &mant; *pm = 0; }
+    {
+        u64 *pm = &mant;
+        *pm = 0;
+    }
     q = (char *)&d;
     q = pad(q, 6);
     mant |= 0x10;
-    mant |= READ8(q) & ((i = 5), 0xf);
+    mant |= READ8(q) & ((i = 5), 15);
     for (; i >= 0; i--) {
         p = pad((char *)&d, i);
         mant <<= 8;
@@ -79,7 +82,7 @@ u64 func_0206c244(u64 d)
     WRITE8(q, t);
     q = pad((char *)&out, 6);
     b = READ8(q);
-    b |= (exp & 0xf) << 4;
+    b |= (exp & 15) << 4;
     q = pad((char *)&out, 6);
     WRITE8(q, b);
     mant &= 0x000fffffffffffffULL;

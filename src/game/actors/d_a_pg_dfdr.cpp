@@ -289,11 +289,11 @@ int daPgDfdr_c::StateWalk() {
     {
         unsigned short frame = (unsigned short)(mAnmModel.currFrame >> 12);
         if (mAnmModel.file == (BCA_File *)data_ov027_02113c74.filePtr) {
-            if (frame == 0xa || frame == 0x16) {
+            if (frame == 10 || frame == 22) {
                 func_0201267c(0xf3, &mCamSpacePos);
             }
         } else if (mAnmModel.file == (BCA_File *)data_ov027_02113c8c.filePtr) {
-            if (frame == 9 || frame == 0x16) {
+            if (frame == 9 || frame == 22) {
                 func_0201267c(0xf3, &mCamSpacePos);
             }
         }

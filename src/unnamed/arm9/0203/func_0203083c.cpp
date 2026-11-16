@@ -21,7 +21,7 @@ void func_0203083c(void)
 {
     if (data_0209fc68 != 0) {
         struct OamAttr *oam = data_020927a0[func_0203d9f4()];
-        OAM::Render(false, oam, 8, 0xb8, -1, -1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(false, oam, 8, 184, -1, -1, 0x1000, 0x1000, 0, -1);
     }
     func_02030838();
 }

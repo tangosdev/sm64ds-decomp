@@ -33,9 +33,9 @@ struct daStarBase_c;
  * SIZE 0x3b4 is the factory's own literal; the last member (mInBrickBlock, 1 byte)
  * closes at 0x3b1 and rounds up to 0x3b4 under 4-byte alignment.
  *
- * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
- * names -- dActor_c ends at exactly 0x0d0 (mAreaId + pad_0cd + unk_0ce), so
- * mEatingPlayer at 0x0d0 is daCoin_c's first own field. Consumers that used the
+ * Everything below 0x0d4 duplicated dActor_c's own fields under placeholder
+ * names -- dActor_c ends at exactly 0x0d4 (mDeathTableID, then mEatingPlayer),
+ * so mPuzzleManagerID at 0x0d4 is daCoin_c's first own field. Consumers that used the
  * old duplicated names (mParam, mActorID, mAreaId, unk_074, unk_0b0, ...)
  * were repointed to the inherited dActor_c/fBase_c names.
  *
@@ -49,7 +49,6 @@ struct daStarBase_c;
  * key function, so that TU owns the vtable.
  */
 struct daCoin_c : dActor_c {
-    s32 mEatingPlayer;            /* 0x0d0 */
     s32 mPuzzleManagerID;            /* 0x0d4 */
     /* dExtCommonModel_c member, named by the class's own destructor calling
        dExtCommonModel_c's D1 at +0x0d8 -- a relocation the ROM build

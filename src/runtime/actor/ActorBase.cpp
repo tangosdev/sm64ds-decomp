@@ -523,7 +523,7 @@ int fBase_c::Virtual34(u32 a, u32 b)
         u32 topH = ((Heap *)h)->heapSize;
         void *h2 = 0;
         u32 availInH = topH - ((Heap *)h)->MaxAllocationUnitSize();
-        u32 needed = ((availInH + 0xf) & ~0xf) + 0x30;
+        u32 needed = ((availInH + 15) & ~15) + 0x30;
         if (needed < ((Heap *)b)->MaxAllocationUnitSize()) {
             h2 = Heap::InitializeSolidHeapAsDefault(avail, (Heap *)b, 0x20);
         }

@@ -145,7 +145,7 @@ int daObjBk_Lift_c::InitResources() {
     UpdateShadow();
 
     mPrevAngleY = mAngleY + 0x8000;
-    mMoveTimer = 0x87;
+    mMoveTimer = 135;
 
     int kind = param1 & 0xff;
     if (kind != 2) {
@@ -204,7 +204,7 @@ int daObjBk_Lift_c::Behavior() {
                     if (flag == 0) {
                         mPosY = (y > bound) ? bound : y;
                         mVertSpeed = -0xa000;
-                        mMoveTimer = 0x5a;
+                        mMoveTimer = 90;
                     }
                 }
             }

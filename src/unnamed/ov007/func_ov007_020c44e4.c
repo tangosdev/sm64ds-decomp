@@ -54,7 +54,7 @@ Ov007Sprite *func_ov007_020c44e4(int count) {
     p->polygonAttr = 0;
     p->shadowScaleY = 0x1000;
     p->shadowScaleX = p->shadowScaleY;
-    p->shadowAlphaDrop = 0x19;
+    p->shadowAlphaDrop = 25;
     p->shadowPolygonId = 0x24;
 
     {

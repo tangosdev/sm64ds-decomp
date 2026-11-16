@@ -28,16 +28,12 @@
  * section per function in the reverse of source order.
  *
  * Known limits:
- * - daPly_c::Hurt and Particle::System::New stay mangled: each takes Fix12<int> by value
- *   (notes/mwccarm-codegen.md 6az). Particle::System::New is declared
- *   with the seven arguments its call sites pass.
  * - data_ov102_0214d70c is this TU's .rodata pair of model-file handles
  *   and the state records are .bss; this text-only TU claims neither.
  *
  * deslop leftovers:
  * - func_ov002_020ad660, func_ov002_020cc16c and func_020105cc are other
- *   TUs' helpers and stay free externs; the Fix12<int>-by-value callees
- *   listed above stay mangled (notes/mwccarm-codegen.md 6az).
+ *   TUs' helpers and stay free externs.
  * - The manifest pins eight @NNN statics (@721..@735), so the count of
  *   named locals, named parameters, labels and unnamed struct types
  *   ahead of __sinit is load-bearing. Including a header moves it
@@ -235,7 +231,7 @@ s32 daShl_c::Render()
         return 1;
     {
         unsigned char v = mDespawnTimer;
-        if (v < 0x2d) {
+        if (v < 45) {
             if (v & 1)
                 return 1;
         }
@@ -403,7 +399,7 @@ void daShl_c::func_ov102_0214ce60()
     int hidden = (mFlags & 0x40000) != 0;
     if (hidden)
         return;
-    DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x50000, 0x50000, 0xf);
+    DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x50000, 0x50000, 15);
 }
 
 /* What touching the player does, read off the body cylinder's last hit.

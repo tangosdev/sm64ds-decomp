@@ -12,9 +12,6 @@
  * reduction's, not the source's.
  */
 // leftovers:
-// - dExtAnmModel_c::SetAnim and the other Fix12<int>-by-value calls stay
-//   mangled. A member SetAnim with Fix12<int> speed in func_ov065_021182e4
-//   changes that function.
 // - These three helpers stay as address-named free-function seams. The
 //   original ownership and names are unproven; func_ov065_02119210 is typed
 //   with its caller's daDossyCap_c * view.
@@ -67,17 +64,6 @@ s16 atan2(s32, s32);
 }
 
 typedef enum { FALSE = 0, TRUE = 1 } BOOL;
-
-/* The spawned daObjMarioCap_c (actor 0x10d) seen only as far as
-   dEnemyBase_c::mEatingPlayer, which daDossyCap_c::Behavior hands over.
-   Including dEnemyBase_c.h instead renumbers this TU's @NNN pins by 26. */
-struct MarioCapEatView : dActor_c {
-    s32 mEatingPlayer; /* 0x0d0 */
-};
-
-#ifndef SM64DS_PLATFORM_PC
-typedef char MarioCapEatView_size_must_be_0xd4[sizeof(MarioCapEatView) == 0xd4 ? 1 : -1];
-#endif
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
    model handle constructs through func_02017acc and destroys through
@@ -265,8 +251,8 @@ int daDossyCap_c::Behavior()
     if (eaten != 0) {
         dActor_c *spit = dActor_c::Spawn(0x10d, 0x1210, mPos, &mAngle, mAreaId, -1);
         if (spit != 0) {
-            ((MarioCapEatView *)spit)->mEatingPlayer = mEatingPlayer;
-            ((daPly_c *)mEatingPlayer)->mObjInMouth = spit;
+            spit->mEatingPlayer = mEatingPlayer;
+            mEatingPlayer->mObjInMouth = spit;
             spit->mFlags |= 0x20000;
             mFlags &= ~0x20000;
             mEatingPlayer = 0;
@@ -547,7 +533,7 @@ void daDossy_c::func_ov065_021183c8()
         if (Vec3_HorzDist(&mPos, &mClsnPlayer->mPos) < 0x1f4000)
             mStateTimer = 0;
     } else {
-        if (mStateTimer > 0x96) {
+        if (mStateTimer > 150) {
             mState++;
             mStateState = 0;
             mAnmModel.SetAnim((BCA_File *)data_ov065_0211d748.filePtr, 0x40000000, 0x1000, 0);
@@ -622,7 +608,7 @@ int func_ov065_021180d4(daDossyCap_c *cap) {
                 if (dActor_c::Spawn(0x10d, 0x1210, pos, &cap->mAngle, cap->mAreaId, -1) != 0) {
                     cap->mCapIcon.Unlink();
                     cap->mCapIcon.Link((char *)cap, 2, 0, 0);
-                    cap->mCarrier->mRideCooldown = 0x1e;
+                    cap->mCarrier->mRideCooldown = 30;
                 }
                 return 1;
             }
