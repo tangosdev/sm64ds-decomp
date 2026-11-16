@@ -47,8 +47,6 @@ int dBgCh_Gnd::DetectClsn()
         dBgPi::SetCollider(0, o->GetActorUniqueID(), o->GetActor(), o);
         ret = 1;
     }
-    int flag = 1;
-    int one = 1;
     Vector3 ownerPos;
     for (int i = 1; i < 24; i++) {
         dBgW *obj = data_020a0c80[i];
@@ -56,7 +54,7 @@ int dBgCh_Gnd::DetectClsn()
         dActor_c *owner = obj->GetActor();
         if (IsOwnedBy(owner))
             continue;
-        if (owner != 0 && ((owner->mFlags & 2) ? flag : 0) != 0) {
+        if (owner != 0 && ((owner->mFlags & 2) ? 1 : 0)) {
             const Vector3 *position = &owner->mPos;
             ownerPos.x = position->x;
             ownerPos.y = position->y;
@@ -77,7 +75,7 @@ int dBgCh_Gnd::DetectClsn()
         }
         if (obj->DetectClsn(*this) != 0) {
             dBgPi::SetCollider(i, obj->GetActorUniqueID(), obj->GetActor(), obj);
-            ret = one;
+            ret = 1;
         }
     }
     return ret;
