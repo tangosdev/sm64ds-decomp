@@ -13260,7 +13260,6 @@ int daPly_c::func_ov002_020d6790() {
 
 int daPly_c::func_ov002_020d6998() {
     typedef int (*VFunc)(void*);
-    char* self = (char*)this;
     s16 saved;
     void* other;
     u32 id;
