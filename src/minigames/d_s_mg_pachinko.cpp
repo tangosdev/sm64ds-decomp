@@ -1736,7 +1736,9 @@ void dScMgPachinko_c::BobOmb_StateWaitGrab(int i) {
  * release branch, FX_CosIdx/FX_SinIdx products included, is exact. 16 held-
  * branch variants (touch locals or inline, int or u32 idx, operand and
  * read order) give 65-71; a shot pointer for the x clamps 62. With the pragma
- * that shape is 0x3e8.
+ * that shape is 0x3e8. Round 18: plain mShot[i] at every use with typed
+ * touch reads is 84 off (0x3e8 with the pragma); the twin's flat byte-view
+ * touch reads bring it to 35, a launder for a pragma, so not taken.
  * The two velocity reads stay hand-indexed into FX_SinCosTable_: through
  * FX_CosIdx / FX_SinIdx the products take swapped registers (17-22 DIFF in
  * eleven spellings: inline, index local, fx16 local, speed read first).
