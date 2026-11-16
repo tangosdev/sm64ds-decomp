@@ -518,7 +518,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -532,6 +532,27 @@
           "section": ".text",
           "start": "0x02130f00",
           "end": "0x02132074",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.launch_vert",
+          "start": "0x02132074",
+          "end": "0x02132080",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.launch_horz",
+          "start": "0x02132080",
+          "end": "0x0213208c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.bank",
+          "start": "0x0213208c",
+          "end": "0x021320cc",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -557,6 +578,48 @@
           "firstDiff": null
         },
         {
+          "section": ".data.clps",
+          "start": "0x02132220",
+          "end": "0x02132230",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.moves",
+          "start": "0x02132294",
+          "end": "0x021322a0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.vt",
+          "start": "0x021322c8",
+          "end": "0x02132350",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.seq0",
+          "start": "0x02132350",
+          "end": "0x021323dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.seq1",
+          "start": "0x021323dc",
+          "end": "0x0213246c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.seq2",
+          "start": "0x0213246c",
+          "end": "0x0213253c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02132540",
           "end": "0x021325b0",
@@ -565,7 +628,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 39
+          "LICENSED": 48
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -574,63 +637,144 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata.launch_vert",
             "original": [
-              97
+              5
             ],
             "desired": [
-              97
+              5
+            ]
+          },
+          {
+            "section": ".rodata.launch_horz",
+            "original": [
+              6
+            ],
+            "desired": [
+              6
+            ]
+          },
+          {
+            "section": ".rodata.bank",
+            "original": [
+              10
+            ],
+            "desired": [
+              10
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              106
+            ],
+            "desired": [
+              106
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              95
+              104
             ],
             "desired": [
-              95
+              104
             ]
           },
           {
             "section": ".data",
             "original": [
-              59,
-              61,
-              63,
-              65,
-              67,
-              69,
-              71,
-              73,
-              75
+              68,
+              70,
+              72,
+              74,
+              76,
+              78,
+              80,
+              82,
+              84
             ],
             "desired": [
-              65,
-              71,
-              67,
-              63,
-              69,
-              59,
-              75,
-              73,
-              61
+              74,
+              80,
+              76,
+              72,
+              78,
+              68,
+              84,
+              82,
+              70
+            ]
+          },
+          {
+            "section": ".data.clps",
+            "original": [
+              9
+            ],
+            "desired": [
+              9
+            ]
+          },
+          {
+            "section": ".data.moves",
+            "original": [
+              7
+            ],
+            "desired": [
+              7
+            ]
+          },
+          {
+            "section": ".data.vt",
+            "original": [
+              87
+            ],
+            "desired": [
+              87
+            ]
+          },
+          {
+            "section": ".data.seq0",
+            "original": [
+              11
+            ],
+            "desired": [
+              11
+            ]
+          },
+          {
+            "section": ".data.seq1",
+            "original": [
+              12
+            ],
+            "desired": [
+              12
+            ]
+          },
+          {
+            "section": ".data.seq2",
+            "original": [
+              13
+            ],
+            "desired": [
+              13
             ]
           },
           {
             "section": ".bss",
             "original": [
-              55,
-              56,
-              57,
-              58,
-              77
+              64,
+              65,
+              66,
+              67,
+              86
             ],
             "desired": [
-              56,
-              58,
-              57,
-              55,
-              77
+              65,
+              67,
+              66,
+              64,
+              86
             ]
           }
         ],
@@ -639,61 +783,61 @@
             {
               "section": ".data",
               "original": [
-                59,
-                61,
-                63,
-                65,
-                67,
-                69,
-                71,
-                73,
-                75
+                68,
+                70,
+                72,
+                74,
+                76,
+                78,
+                80,
+                82,
+                84
               ],
               "desired": [
-                65,
-                71,
-                67,
-                63,
-                69,
-                59,
-                75,
-                73,
-                61
+                74,
+                80,
+                76,
+                72,
+                78,
+                68,
+                84,
+                82,
+                70
               ],
               "slots": [
-                59,
-                61,
-                63,
-                65,
-                67,
-                69,
-                71,
-                73,
-                75
+                68,
+                70,
+                72,
+                74,
+                76,
+                78,
+                80,
+                82,
+                84
               ]
             },
             {
               "section": ".bss",
               "original": [
-                55,
-                56,
-                57,
-                58,
-                77
+                64,
+                65,
+                66,
+                67,
+                86
               ],
               "desired": [
-                56,
-                58,
-                57,
-                55,
-                77
+                65,
+                67,
+                66,
+                64,
+                86
               ],
               "slots": [
-                55,
-                56,
-                57,
-                58,
-                77
+                64,
+                65,
+                66,
+                67,
+                86
               ]
             }
           ],
@@ -1235,6 +1379,366 @@
       "addend": 0,
       "target_module": "ov092",
       "target_address": "0x02131578"
+    },
+    {
+      "section": ".data.moves",
+      "source": "0x02132294",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov092_0213246c",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x0213246c"
+    },
+    {
+      "section": ".data.moves",
+      "source": "0x02132298",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov092_02132350",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02132350"
+    },
+    {
+      "section": ".data.moves",
+      "source": "0x0213229c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov092_021323dc",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x021323dc"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8daOnms_c",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x021322a0"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daOnms_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02131da0"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daOnms_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02131bd8"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daOnms_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02131c44"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daOnms_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02131c1c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132300",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132304",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132308",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x0213230c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132310",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daOnms_cD1Ev",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02130f00"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132314",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daOnms_cD0Ev",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02130f5c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132318",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x0213231c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132320",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132324",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132328",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x0213232c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132330",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132334",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132338",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x0213233c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132340",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132344",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132348",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x0213234c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dBgActor_c4KillEv",
+      "addend": 0,
+      "target_module": "overlays(2,7)",
+      "target_address": "0x020ee55c"
     }
   ],
   "defined_symbol_renames": [
