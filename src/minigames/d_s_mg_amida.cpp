@@ -1674,19 +1674,13 @@ void dScMgAmida_c::SetupRound() {
         mPenLocked = 0;
         {
             int lane = 0;
-            /* Kept: the lane x and the zero share a two-slot array; scalar
-               locals DIFF SetupRound by 9 words (measured 2026-11-08). */
-            int xw[2];
-            xw[0] = 0x20;
-            xw[1] = 0;
             for (; lane < 4; lane++) {
-                mLanePos[lane].x = xw[0] << 12;
+                mLanePos[lane].x = (lane * 0x40 + 0x20) << 12;
                 mLanePos[lane].y = 0xb0000;
-                mLaneVel[lane].x = xw[1];
-                mLaneVel[lane].y = xw[1];
-                xw[0] += 0x40;
+                mLaneVel[lane].x = 0;
+                mLaneVel[lane].y = 0;
             }
-            mFinaleTimer = xw[1];
+            mFinaleTimer = 0;
             {
                 int v = 0;
                 for (; v < 128; v++) {
@@ -1699,12 +1693,6 @@ void dScMgAmida_c::SetupRound() {
     }
 }
 
-/* This bracket is SetupRound's. mwcc reads opt_strength_reduction for
-   SetupRound only after its closing brace, so a pop right after SetupRound
-   undoes it; RenderBoard compiles the same either way. Without it SetupRound
-   strength-reduces the lane x (xw[0] << 12) into its own induction register. */
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgAmida_c::RenderBoard() {
     int i;
     int y;
@@ -1761,7 +1749,6 @@ void dScMgAmida_c::RenderBoard() {
     Mg_RenderSpriteBoth(sAmidaSideSprite, 8, 96, -1, 0);
     Mg_RenderSpriteBoth(sAmidaSideSprite, 248, 96, -1, 0);
 }
-#pragma pop
 
 void dScMgAmida_c::RenderBoardAlt() {
     int i;
