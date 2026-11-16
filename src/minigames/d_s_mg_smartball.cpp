@@ -5127,7 +5127,12 @@ s32 dScMgSmartball_c::Render() {
 
 #pragma pop
 
-/* Leftover: Behavior needs strength reduction off. */
+/* Leftover: Behavior needs strength reduction off.
+ * Re-measured (#821, 2026-11-16): 0x620 without it against 0x604. The
+ * snapshot loops written as mpBalls[i]->SaveSnapshot() (and siblings) are
+ * 0x5e8 with or without the pragma: the ROM keeps each table's 0x46xx
+ * offset in a register from the literal pool and loads [this + i*4, r6],
+ * where mwcc folds the offset into add #0x4000 / ldr #imm. */
 #pragma push
 #pragma opt_strength_reduction off
 /* Slot 6: the scene's per-frame rules. Phase 0 updates every object, then the
