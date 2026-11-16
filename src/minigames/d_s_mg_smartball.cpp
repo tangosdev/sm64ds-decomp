@@ -3685,41 +3685,27 @@ unsigned short dScMgSmartball_c::GetTile(int *pos) {
     return 0;
 }
 
-#pragma push
-#pragma opt_strength_reduction off
-/* Kept (#821): UpdateDust needs strength reduction off. Without it the
- * body is 0x108, not 0xf8; indexed with SR on it is 13 of 62 words off,
- * with a stepped velocity cursor 8 (register rotation only). */
+/* Moves each live dust puff, slows it to three quarters of its speed, and
+ * retires it once mDustAge reaches 0xf. */
 void dScMgSmartball_c::UpdateDust() {
-    char *self = (char *)this;
     int i;
-    char *obj = (char *)mDustVel;
     for (i = 0; i < 16; i++) {
-        unsigned char *flag = (unsigned char *)((dScMgSmartball_c *)(self + i))->mDustActive;
-        if (*flag != 0) {
-            dScMgSmartball_c *entry = (dScMgSmartball_c *)(self + i * 8);
-            entry->mDustPos[0][0] += entry->mDustVel[0][0];
-            entry->mDustPos[0][1] += entry->mDustVel[0][1];
-            {
-                int m = Vec2_Len((const Vector2 *)obj) * 6 / 8;
-                if (func_0203d434((V2 *)obj)) {
-                    func_0203d630((V2 *)obj, m);
-                }
+        if (mDustActive[i] != 0) {
+            mDustPos[i][0] += mDustVel[i][0];
+            mDustPos[i][1] += mDustVel[i][1];
+            int speed = Vec2_Len((const Vector2 *)mDustVel[i]);
+            speed = speed * 6 / 8;
+            if (func_0203d434((V2 *)mDustVel[i])) {
+                func_0203d630((V2 *)mDustVel[i], speed);
             }
-            {
-                int *counter = ((dScMgSmartball_c *)(self + i * 4))->mDustAge;
-                *counter += 1;
-                if (*counter >= 0xf) {
-                    *flag = 0;
-                    *counter = 0;
-                }
+            mDustAge[i]++;
+            if (mDustAge[i] >= 0xf) {
+                mDustActive[i] = 0;
+                mDustAge[i] = 0;
             }
         }
-        obj += 8;
     }
 }
-
-#pragma pop
 
 /* Spawns up to four dust puffs at a point.
  * Leftover: TVec2's empty destructor keeps `v` in memory, and `sa` must be its
