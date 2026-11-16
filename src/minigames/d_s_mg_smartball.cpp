@@ -2639,19 +2639,20 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     V2xz radial;
     V2xz hazardDelta;
     V2xz correction;
-    V2xz pos0;
-    V2xz pos1;
-    V2xz pos2;
-    V2xz pos3;
-    V2xz pos4;
-    V2xz pos5;
-    V2xz pos6;
-    V2xz pos7;
-    V2xz pos8;
-    V2xz pos9;
-    V2xz pos10;
-    V2xz pos11;
-    V2xz pos12;
+    V2xz kinokoPos;
+    /* One copy of the probe point per test: the ROM gives each call its own slot. */
+    V2xz respawnProbe;
+    V2xz slopeProbe;
+    V2xz exitProbe;
+    V2xz respawnProbe2;
+    V2xz exitProbe2;
+    V2xz kinokoProbe;
+    V2xz dokanProbe;
+    V2xz pakkunProbe;
+    V2xz switchProbe;
+    V2xz wingProbe;
+    V2xz springProbe;
+    V2xz propellerProbe;
     V2xz entityPos;
     V2xz entityDelta;
     V2xz entityPos2;
@@ -2679,10 +2680,6 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     void *fallback;
     dScMgSmartball_c *mgr;
     s64 square;
-    int correctionZ;
-    int correctionX;
-    int *velXPtr;
-    int *velZPtr;
 
     savedVel.x = mVel0;
     state.flags[0] = 0;
@@ -2721,10 +2718,10 @@ void cMgSmartball_ball_c::UpdatePhysics() {
                 dist.x = mCurrent0;
                 dist.z = mCurrent1;
                 mgr = mpManager;
-                CopyObjectPos(&pos0,
+                CopyObjectPos(&kinokoPos,
                               probeIndex >= mgr->mKinokoCount ? 0 : mgr->mpKinokos[probeIndex]);
-                dist.x -= pos0.x;
-                dist.z -= pos0.z;
+                dist.x -= kinokoPos.x;
+                dist.z -= kinokoPos.z;
                 if (func_0203d5bc(&dist.x) <= 0x900000LL) {
                     nearby[probeIndex] = 1;
                     state.iteration = 1;
@@ -2761,24 +2758,24 @@ outer_loop:
             work.x += mCurrent0;
             work.z += mCurrent1;
             if ((u8)mpManager->param1 == 0) {
-                pos1 = work;
-                if (NeedsRespawn(&pos1.x) != 0) {
+                respawnProbe = work;
+                if (NeedsRespawn(&respawnProbe.x) != 0) {
                     hit[i] = 1;
                     hitA[i] = 1;
                     anyHit = 1;
                     blocked = 1;
                     goto final_checks;
                 } else {
-                    pos2 = work;
-                    if (OnSlope(&pos2.x) != 0) {
+                    slopeProbe = work;
+                    if (OnSlope(&slopeProbe.x) != 0) {
                         hit[i] = 1;
                         hitA[i] = 1;
                         anyHit = 1;
                         state.flags[0] = 1;
                         blocked = 1;
                     } else {
-                        pos3 = work;
-                        if (CheckExits(&pos3.x) != 0) {
+                        exitProbe = work;
+                        if (CheckExits(&exitProbe.x) != 0) {
                             hit[i] = 1;
                             hitA[i] = 1;
                             anyHit = 1;
@@ -2789,15 +2786,15 @@ outer_loop:
                     }
                 }
             } else {
-                pos4 = work;
-                if (NeedsRespawn(&pos4.x) != 0) {
+                respawnProbe2 = work;
+                if (NeedsRespawn(&respawnProbe2.x) != 0) {
                     hit[i] = 1;
                     hitA[i] = 1;
                     anyHit = 1;
                     blocked = 1;
                 } else {
-                    pos5 = work;
-                    if (CheckExits(&pos5.x) != 0) {
+                    exitProbe2 = work;
+                    if (CheckExits(&exitProbe2.x) != 0) {
                         hit[i] = 1;
                         hitA[i] = 1;
                         anyHit = 1;
@@ -2807,8 +2804,8 @@ outer_loop:
                         goto final_checks;
                     } else {
                         if (state.iteration == 1) {
-                            pos6 = work;
-                            if (HitKinokos(&pos6.x) != 0) {
+                            kinokoProbe = work;
+                            if (HitKinokos(&kinokoProbe.x) != 0) {
                                 hit[i] = 1;
                                 hitA[i] = 1;
                                 anyHit = 1;
@@ -2818,29 +2815,29 @@ outer_loop:
                                 goto final_checks;
                             }
                         }
-                        pos7 = work;
-                        if (HitDokans(&pos7.x) != 0) {
+                        dokanProbe = work;
+                        if (HitDokans(&dokanProbe.x) != 0) {
                             hit[i] = 1;
                             hitA[i] = 1;
                             anyHit = 1;
                             blocked = 1;
                         } else {
-                            pos8 = work;
-                            if (HitPakkuns(&pos8.x) != 0) {
+                            pakkunProbe = work;
+                            if (HitPakkuns(&pakkunProbe.x) != 0) {
                                 hit[i] = 1;
                                 hitA[i] = 1;
                                 anyHit = 1;
                                 blocked = 1;
                             } else {
-                                pos9 = work;
-                                if (HitSwitches(&pos9.x) != 0) {
+                                switchProbe = work;
+                                if (HitSwitches(&switchProbe.x) != 0) {
                                     hit[i] = 1;
                                     hitA[i] = 1;
                                     anyHit = 1;
                                     blocked = 1;
                                 } else {
-                                    pos10 = work;
-                                    if (HitWing(&pos10.x) != 0) {
+                                    wingProbe = work;
+                                    if (HitWing(&wingProbe.x) != 0) {
                                         hit[i] = 1;
                                         hitA[i] = 1;
                                         anyHit = 1;
@@ -2860,8 +2857,8 @@ outer_loop:
 
     final_checks:
         if (blocked == 0) {
-            pos11 = work;
-            if (AtSpring(&pos11.x) != 0) {
+            springProbe = work;
+            if (AtSpring(&springProbe.x) != 0) {
                 hit[i] = 1;
                 hitA[i] = 1;
                 anyHit = 1;
@@ -2869,8 +2866,8 @@ outer_loop:
                 if (angle == 0)
                     state.flags[5] = 1;
             } else {
-                pos12 = work;
-                if (HitPropellers(&pos12.x) != 0) {
+                propellerProbe = work;
+                if (HitPropellers(&propellerProbe.x) != 0) {
                     hit[i] = 1;
                     hitA[i] = 1;
                     anyHit = 1;
@@ -3034,10 +3031,8 @@ outer_loop:
         } else {
             responseScale = FX_MUL(dot, 0x1200);
         }
-        velXPtr = &mVel0;
-        *velXPtr -= FX_MUL(responseScale, response.x);
-        velZPtr = &mVel1;
-        *velZPtr -= FX_MUL(responseScale, response.z);
+        mVel0 -= FX_MUL(responseScale, response.x);
+        mVel1 -= FX_MUL(responseScale, response.z);
     }
 
     if (state.flags[5] == 1) {
@@ -3139,12 +3134,8 @@ outer_loop:
                 correction.x /= 64;
                 correction.z = FX_MUL(correction.z, dot);
                 correction.z /= 64;
-                correctionX = correction.x;
-                correctionZ = correction.z;
-                velXPtr = &mVel0;
-                *velXPtr -= correctionX;
-                velZPtr = &mVel1;
-                *velZPtr -= correction.z;
+                mVel0 -= correction.x;
+                mVel1 -= correction.z;
                 return;
             }
         }
