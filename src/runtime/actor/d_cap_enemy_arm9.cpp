@@ -15,8 +15,10 @@
  * Source order is reverse ROM order. The constructor is written before D1.
  *
  * leftovers:
- *  - The 0x17f flags byte (mCapIcon.mFlags high byte) and the 0xf4 shadow
- *    flags word have no member names; the measured ldrb/launder forms stay.
+ *  - The 0xf4 shadow flags word has no member name; its measured launder
+ *    form stays. UpdateCapPos reads mCapIcon.mFlags (+0x17f) through a
+ *    local bitfield view, and func_02005ed8 shifts bit 2 out of it: a
+ *    plain `& 4` test is a word shorter.
  *    AddCap's mFlags &= ~1 and its mCapId store go through plain `&member`
  *    pointers.
  *  - UpdateCapPos keeps a POD VecFx32 local: Vector3's empty destructor
@@ -254,7 +256,7 @@ int dCapEnemy_c::DestroyIfCapNotNeeded() {
 }
 
 void dCapEnemy_c::func_02005ed8() {
-    if ( ((unsigned)((unsigned char *)this)[0x17f] << 29) >> 31 )
+    if (((unsigned)mCapIcon.mFlags << 29) >> 31)
         return;
     mCapIcon.Unlink();
 }
