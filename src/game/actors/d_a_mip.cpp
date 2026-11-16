@@ -677,8 +677,8 @@ int daMip_c::StateRestInit()
 /* Runs the path away from the player. Dust or splash at a node, steps
    mPathDir, and falls back to Rest past 0x4b0000. */
 int daMip_c::StateFleeMain() {
-    /* POD VecFx32 locals. V3Blk's array member is what makes the player-position
-       copy a block move; a three-scalar struct scalarises. */
+    /* V3Blk's array member is what makes the player-position copy a block
+       move; a three-scalar struct scalarises. */
     struct V3Blk {
         s32 w[3];
     };
@@ -686,7 +686,7 @@ int daMip_c::StateFleeMain() {
 
     daPly_c *pl;
     struct V3Blk v;
-    VecFx32 pos;
+    Vector3 pos;
     VecFx32 node;
     VecFx32 node2;
     VecFx32 delta;
@@ -717,27 +717,18 @@ int daMip_c::StateFleeMain() {
     }
 
     if (TestWaterBelow() == 1) {
-        /* Kept (#821 r17). StateIdleMain's `Vector3 sp(mPosX, mFloorY + 0x3000,
-           mPosZ)` reproduces this code there, but here the block-scope
-           Vector3 lands above node/node2/delta/scaled in the frame: 18-19
-           words of stack offsets differ, wherever those four are declared.
-           An outer `Vector3 pos` assigned `pos = Vector3(...)` is 3 words
-           off (0x68 frame against 0x58); field-by-field stores in any order
-           are 13-14 words off. The pos.x store goes through an `s32 *`
-           cast; making it `volatile s32 *` builds the same object. */
-        s32 pair[2];
-        pair[0] = mPosX;
-        pair[1] = mFloorY;
-        {
-            s32 z = mPosZ;
-            s32 y = pair[1] + 0x3000;
-            s32 x = pair[0];
-            *((s32 *)(&pos.x)) = x;
-            pos.y = y;
-            pos.z = z;
-            mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove,
-                                                          pos.x, pos.y, z, 0);
-        }
+        /* pos is the outer Vector3 so it lives in the frame (pos.x and pos.y
+           are read back from it for the call); a VecFx32 there is kept in
+           registers, and a block-scope Vector3 lands above node/node2/delta/
+           scaled in the frame. */
+        s32 z = mPosZ;
+        s32 y = mFloorY + 0x3000;
+        s32 x = mPosX;
+        pos.x = x;
+        pos.y = y;
+        pos.z = z;
+        mDustParticle =
+            Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, pos.x, pos.y, z, 0);
     }
 
     PathPtr pathptr;
