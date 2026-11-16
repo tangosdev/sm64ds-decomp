@@ -886,7 +886,6 @@ particle:
 }
 
 void daPly_c::func_ov002_020bd06c(unsigned int state2) {
-    char *self = (char *)this;
     int flag;
 
     flag = 0;
