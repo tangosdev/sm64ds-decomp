@@ -245,16 +245,11 @@ int daSanbo_c::UpdateStackedBody() {
     if (!next) {
         ChangeState(1);
     } else {
-        int offset = 0xe000;
         int vy;
         int clamped;
-        s16 sine;
-        s16 cosine;
-        u16 ang;
 
         mPosX = next->mPosX;
-        next = mNextSegment;
-        mPosZ = next->mPosZ;
+        mPosZ = mNextSegment->mPosZ;
 
         vy = mVertSpeed - 0x2000;
         clamped = mTerminalVelocity;
@@ -263,24 +258,16 @@ int daSanbo_c::UpdateStackedBody() {
         mVertSpeed = clamped;
         mPosY += mVertSpeed;
 
-        next = mNextSegment;
-        if (mPosY < next->mPosY + 0x6e000) {
-            mPosY = next->mPosY + 0x6e000;
+        if (mPosY < mNextSegment->mPosY + 0x6e000) {
+            mPosY = mNextSegment->mPosY + 0x6e000;
             mVertSpeed = 0;
         }
 
-        next = mNextSegment;
-        mAngleY = next->mAngleY;
-        next = mNextSegment;
-        s16 segAng = (next->mSegAngY + 0x13000);
-        mSegAngY = segAng;
-        ang = (u16)mSegAngY;
-        sine = FX_SinIdx(ang >> 4);
-        mOffsetX = FX_MUL(sine, offset);
+        mAngleY = mNextSegment->mAngleY;
+        mSegAngY = mNextSegment->mSegAngY + 0x13000;
+        mOffsetX = FX_MUL(FX_SinIdx((u16)mSegAngY >> 4), 0xe000);
         mOffsetY = 0;
-        ang = (u16)mSegAngY;
-        cosine = FX_CosIdx(ang >> 4);
-        mOffsetZ = FX_MUL(cosine, offset);
+        mOffsetZ = FX_MUL(FX_CosIdx((u16)mSegAngY >> 4), 0xe000);
     }
     HandleAttacks();
     mdCcAc_c.Clear();
