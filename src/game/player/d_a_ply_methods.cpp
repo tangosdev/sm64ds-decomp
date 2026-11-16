@@ -17461,7 +17461,6 @@ void daPly_c::InitBalloonMario() {
 }
 
 int daPly_c::St_WindCarry_Main() {
-    char* c = (char*)this;
 
     if (mIsAirborne == 0) {
         this->func_ov002_020c2f64();
