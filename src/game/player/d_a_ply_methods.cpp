@@ -15050,13 +15050,12 @@ int daPly_c::St_SwingPlayer_Cleanup() {
 // angular speed is declared before the difference, which gives it ip and the step r3.
 
 int daPly_c::St_SwingPlayer_Main() {
-    char* c = (char*)this;
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     switch (this->mStateStep) {
     case 0:
         if (this->FinishedAnim()) {
-            ((daPly_c *)c)->SetAnim(0x6d, 0x40000000, 0x1000, 0);
+            SetAnim(0x6d, 0x40000000, 0x1000, 0);
             this->mStateStep = 1;
         }
         this->mAngleY += this->mAngleYSpeed;
@@ -15071,7 +15070,7 @@ int daPly_c::St_SwingPlayer_Main() {
                 if (!b) {
                     func_ov002_020d9c70();
                     func_ov002_020da95c();
-                    ((daPly_c *)c)->SetAnim(0x6e, 0x40000000, 0x1000, 0);
+                    SetAnim(0x6e, 0x40000000, 0x1000, 0);
                     this->mStateStep = 3;
                 } else {
                     DropHeldObj();
@@ -15115,7 +15114,7 @@ int daPly_c::St_SwingPlayer_Main() {
                 this->mStateTimer = 10;
         }
         if (this->mStateTimer == 0) {
-            ((daPly_c *)c)->SetAnim(0x6f, 0x40000000, 0x1000, 0);
+            SetAnim(0x6f, 0x40000000, 0x1000, 0);
             this->mStateStep = 2;
         }
         {
