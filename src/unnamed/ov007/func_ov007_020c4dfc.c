@@ -8,7 +8,12 @@ extern void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t);
  * func_ov007_020c19cc: each whole group before limitGroup at full progress,
  * then limitGroup itself cut at limitIndex points and limitFraction.
  * The loop test reads limitGroup volatile: plain, the function
- * compiles 4 bytes short (either read alone being volatile matches). */
+ * compiles 4 bytes short (either read alone being volatile matches).
+ * The ROM reloads limitGroup after the loop; every plain spelling reuses
+ * the loop test's register instead, 0x98 not 0x9c (measured): for and
+ * while loops, a guarded do-while, the post-loop test as an early return
+ * or through a local copy of limitGroup or of self, and the same body
+ * compiled as C++. */
 void func_ov007_020c4dfc(Ov007Picker *self, int r1, int r2, int r3) {
     func_ov007_020c4fcc(r2, r3);
     int i = 0;
