@@ -304,28 +304,24 @@ void dScMgCurling2_c::StepYRestart(int entry) {
 /* Step the piece, hold while countdown is set (the hold decrements
  * countdown2, not countdown), then bleed xInc toward zero 8 a frame. */
 void dScMgCurling2_c::StepXSettle(int entry) {
-    /* xInc, x, y: the ROM loads those bases in that order. */
-    s32 *xInc = &mPiece[entry].xInc;
-    s32 *x = &mPiece[entry].x;
-    s32 *y = &mPiece[entry].y;
-    *x = *x + *xInc;
-    *y = *y + mPiece[entry].yInc;
+    mPiece[entry].x = mPiece[entry].x + mPiece[entry].xInc;
+    mPiece[entry].y = mPiece[entry].y + mPiece[entry].yInc;
     if (mPiece[entry].countdown != 0) {
         mPiece[entry].countdown2--;
         if ((s16)mPiece[entry].countdown2 < 0)
             mPiece[entry].countdown2 = 0;
         return;
     }
-    if (*xInc > 0) {
-        *xInc = *xInc - 8;
-        if ((s16)*xInc < 0)
-            *xInc = 0;
+    if (mPiece[entry].xInc > 0) {
+        mPiece[entry].xInc = mPiece[entry].xInc - 8;
+        if ((s16)mPiece[entry].xInc < 0)
+            mPiece[entry].xInc = 0;
         return;
     }
-    if (*xInc < 0) {
-        *xInc = *xInc + 8;
-        if (*xInc > 0)
-            *xInc = 0;
+    if (mPiece[entry].xInc < 0) {
+        mPiece[entry].xInc = mPiece[entry].xInc + 8;
+        if (mPiece[entry].xInc > 0)
+            mPiece[entry].xInc = 0;
         return;
     }
     mPiece[entry].xIndex = 0;
