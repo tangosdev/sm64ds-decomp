@@ -14884,7 +14884,7 @@ void daPly_c::func_ov002_020d9c70() {
     int absv;
     int A, Braw;
     short Bnarrow, Bresult;
-    char *p;
+    dActor_c *p;
 
     absv = (v < 0) ? (short)(-v) : v;
     A = FX_MUL(absv, 0x28000);
@@ -14895,12 +14895,12 @@ void daPly_c::func_ov002_020d9c70() {
 
     Bresult = (v < 0) ? (short)(mAngleY - Bnarrow) : (short)(mAngleY + Bnarrow);
 
-    p = (char *)mHeldObj;
+    p = mHeldObj;
     if (p == 0)
         return;
 
     {
-        int t = ((dActor_c *)p)->actorID;
+        int t = p->actorID;
         t = t == 0xbf;
         if (t != false) {
             func_ov002_020db54c(p, A, 0x20000, Bresult);
@@ -14908,23 +14908,22 @@ void daPly_c::func_ov002_020d9c70() {
         }
     }
 
-    ((dActor_c *)p)->mPrevAngleX = 0;
-    ((dActor_c *)p)->mPrevAngleY = Bresult;
-    ((dActor_c *)p)->mPrevAngleZ = 0;
+    p->mPrevAngleX = 0;
+    p->mPrevAngleY = Bresult;
+    p->mPrevAngleZ = 0;
     {
-        char *q = (char *)mHeldObj;
-        short *r = (short *)(int)(&((dActor_c *)q)->mPrevAngle);
-        short first = r[0];
-        ((dActor_c *)q)->mAngleX = first;
-        ((dActor_c *)q)->mAngleY = r[1];
-        ((dActor_c *)q)->mAngleZ = r[2];
+        dActor_c *q = mHeldObj;
+        Vector3_16 *prev = &q->mPrevAngle;
+        q->mAngleX = prev->x;
+        q->mAngleY = prev->y;
+        q->mAngleZ = prev->z;
     }
     mHeldObj->mHorzSpeed = A;
     {
-        char *q = (char *)mHeldObj;
-        ((dActor_c *)q)->mSpeedX = 0;
-        ((dActor_c *)q)->mVertSpeed = 0x20000;
-        ((dActor_c *)q)->mSpeedZ = 0;
+        dActor_c *q = mHeldObj;
+        q->mSpeedX = 0;
+        q->mVertSpeed = 0x20000;
+        q->mSpeedZ = 0;
     }
 }
 
