@@ -11680,7 +11680,6 @@ int daPly_c::func_ov002_020d36d8(int arg) {
 /* recovered: named members + shared header, real C++ method */
 
 int daPly_c::St_Walk_Main() {
-    extern s16 data_0209f4a0[];
 
     if ((u16)(mStateFlags & 0x800)) {
         this->ChangeState(daPly_c::ST_WAIT);
@@ -11727,14 +11726,8 @@ int daPly_c::St_Walk_Main() {
             goto label_29c;
 
         {
-            u8 idx = gActivePlayerSlot;
-            int off = idx * 0x18;
-            u8 b = data_0209f4ae[off];
-            int thresh = (b != 2) ? 0x471 : 0x555;
-            u8 v710 = mIsWalkPace;
-            int rhs = thresh - (v710 << 7);
-            short lhs = *(s16 *)((char *)data_0209f4a0 + off);
-            if (lhs < rhs)
+            int thresh = (data_0209f498[gActivePlayerSlot].mode != 2) ? 0x471 : 0x555;
+            if (data_0209f498[gActivePlayerSlot].mag < thresh - (mIsWalkPace << 7))
                 goto label_1f0;
             if ((u16)(mStateFlags & 0xc) == 0)
                 goto label_29c;
