@@ -14768,8 +14768,7 @@
     },
     "func_0203d388": {
       "src/minigames/d_s_mg_smartball.cpp": [
-        "param:#1 V2 *",
-        "param:#2 short"
+        "param:#1 V2 *"
       ]
     },
     "func_0203d434": {

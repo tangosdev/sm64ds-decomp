@@ -79,7 +79,6 @@ enum dScMgSnowball_c_AssetId {
 extern "C" {
 extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, void *f);
 extern OamAttr *sSnowballBitSprites[];
-extern void func_0203d388(int *p, int angle);
 extern int func_0203d434(int *p);
 extern void func_0203d630(int *p, int m);
 extern void func_02012718(int a, int b);
@@ -407,7 +406,7 @@ void dScMgSnowball_c::UpdateSnowball() {
     int floatDirX;
     int floatDirY;
     int zNotAllWater;
-    int angle;
+    s16 angle;
     int j;
     int sample[2];
     dScMgSnowball_c::Vec2 hit;
@@ -589,7 +588,7 @@ void dScMgSnowball_c::UpdateSnowball() {
         if (mProbePush[k] == 1) {
             rotPush[0] = 0;
             rotPush[1] = 0x1000;
-            func_0203d388(rotPush, (s16)(k * 0x10000 / 32));
+            func_0203d388(rotPush, k * 0x10000 / 32);
             push[0] -= rotPush[0];
             push[1] -= rotPush[1];
         }
@@ -1398,7 +1397,7 @@ s32 dScMgSnowball_c::Behavior() {
     int scrollStart, scrollMax;
     int speed;
     int slot, held, touched;
-    int heading;
+    s16 heading;
     int steer[2];
     int moved[2];
     Vector3 part;
@@ -1463,7 +1462,7 @@ s32 dScMgSnowball_c::Behavior() {
                 steer[1] = 0;
             }
             heading = cstd::atan2(mVel.y, mVel.x);
-            func_0203d388(steer, (short)-heading);
+            func_0203d388(steer, -heading);
             steer[1] = steer[1] << 2;
             func_0203d388(steer, heading);
             if (mVel.y >= 0) {
