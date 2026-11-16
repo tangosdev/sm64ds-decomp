@@ -94,11 +94,6 @@ extern VecFx32 data_ov032_021137d8; /* head cylinder */
 extern "C" int AngleDiff(int a, int b);
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
-/* Parameter names keep this TU's @NNN. */
-extern "C" {
-typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height, void *a,
-                         void *b);
-}
 /* Sets daPly_c::mStateStep to 6 and stores this fish in mAttachedActor. */
 extern "C" int func_ov002_020c5cd8(daPly_c *a, dActor_c *self);
 /* Sound::Play with bank 3. */

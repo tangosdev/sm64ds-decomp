@@ -111,8 +111,6 @@ extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern "C" int *Vec3_LslInPlace(void *v, int sh);
 extern "C" void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 
-extern "C" u32 d_a_f_pknNewHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e, const void *f, void *g);
-
 extern SharedFilePtr data_ov084_02130dfc;   /* the plant's model */
 extern SharedFilePtr *data_ov084_021302f4[];/* the six shared animation handles */
 extern SharedFilePtr data_ov002_0210da38;   /* the sleep-bubble model, out of ov002 */

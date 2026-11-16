@@ -74,7 +74,7 @@ typedef struct Vector3 {
 #ifdef VECTOR3_DECLARE_STRUCTORS
     ~Vector3();
     Vector3();
-    Vector3(fx32 x_, fx32 y_, fx32 z_);
+    Vector3(fx32, fx32, fx32);
 #else
     ~Vector3() {}
 

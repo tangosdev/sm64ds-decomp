@@ -15,16 +15,8 @@
  * pointer-to-member constants are real. StateStart returns an int, so its
  * table entry casts the pointer-to-member to the table's void handler type.
  *
- * __sinit at the end of this file emits compiler-numbered statics; they
- * compile as @578..@598, @600 and @602, and the manifest maps them to the ROM's
- * @456..@479 and @506. mwcc's counter for those names advances for
- * named variables, named parameters (prototypes included) and some
- * compiler temporaries declared before them (`new daKpa3Bg_c` alone
- * advances it by 25, and including daKpa_c.h by 171), so adding or
- * deleting one renumbers them. These
- * names are there for the count:
- * - InitResources loads the model through the named local bmd.
- * - StateCheck steps its timer through two named locals.
+ * __sinit at the end of this file emits compiler-numbered statics, which
+ * the manifest maps to the ROM's @456..@479 and @506.
  *
  * leftovers:
  * - StateStart, StateCheck and StateFall take N64's names for the same
@@ -116,9 +108,7 @@ s32 daKpa3Bg_c::InitResources()
 {
     mVariant = (param1 & 15);
     data_0208e738 = 0;
-    /* bmd is named for the @NNN count (see the banner). */
-    BMD_File *bmd = dExtSimpleModel_c::LoadFile(*data_ov060_02119514[mVariant]);
-    mModel.SetFile(bmd, 1, -1);
+    mModel.SetFile(dExtSimpleModel_c::LoadFile(*data_ov060_02119514[mVariant]), 1, -1);
     CopyTexPalFromLevelModel(&mModel.data);
     data_0208e738 = 1;
     UpdateClsnPosAndRot();
@@ -196,11 +186,9 @@ void daKpa3Bg_c::StateCheck() {
         mTimer = 0;
         return;
     }
-    int dropAfter = mVariant * 20;
-    u16 *timer = &mTimer;
-    if (dropAfter < mTimer)
+    if (mVariant * 20 < mTimer)
         mState = 2;
-    (*timer)++;
+    mTimer++;
 }
 
 /* mState 2, N64's falling_bowser_plat_act_fall: the platform lifts, then

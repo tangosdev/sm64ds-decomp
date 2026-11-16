@@ -188,8 +188,6 @@ extern void (daPropeller_Heyho_c::*data_ov070_021230e0)();
 extern int (daPropeller_Heyho_c::*data_ov070_021230f8)();
 extern void (daPropeller_Heyho_c::*data_ov070_02123100)();
 
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *a, int r, int h, Vector3_16 *p, Vector3_16 *q);
 int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 /* Loads the model (shared file 02123530) and six animation files, then seeds:
@@ -856,10 +854,6 @@ short func_ov070_0211f450(daPropeller_Heyho_c *c) {
 /* -------------------------------------------------------------------------- */
 int func_ov070_0211f0a4(daPropeller_Heyho_c *c);
 
-extern "C" unsigned d_a_propeller_heyhoNewHold(unsigned a, unsigned b, fx32 c, fx32 d, fx32 e,
-                                               void *f, void *g);
-extern "C" u32 d_a_propeller_heyhoNewCleanParticleHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e,
-                                                       const Vector3_16f *f);
 
 /* Knocked main. While mStateStep is non-zero (normally a fire hit; the
  * mega-character hit leaves it unchanged) it refreshes the effects 0x13a and
@@ -901,8 +895,6 @@ extern daPropeller_Heyho_c::State data_ov070_021235cc;
 /* (data_ov070_02123528: SharedFilePtr view declared earlier in this TU) */
 
 int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
-struct Aea30C;
-extern void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
 extern void func_02012694(unsigned int a, const Vector3 *b);
 /* Hit reaction, run once per frame outside the knocked state. Takes the colliding
  * actor from the collider (mdCcAc_c.otherOwner) and reads hitFlags: fire sends it
@@ -935,7 +927,7 @@ void func_ov070_0211f100(daPropeller_Heyho_c *c) {
     }
     if (hitFlags & kHitSpinPound) {
         c->mDeathState = 1;
-        func_ov002_020aea30((Aea30C *)c, hitPlayer, 0);
+        c->func_ov002_020aea30(hitPlayer, 0);
         return;
     }
     if (hitFlags & kHitAttackMask) {
@@ -952,7 +944,7 @@ void func_ov070_0211f100(daPropeller_Heyho_c *c) {
     if (c->JumpedOnByPlayer(c->mdCcAc_c, *hitPlayer)) {
         hitPlayer->SpinBounce(0x28000);
         c->mDeathState = 1;
-        func_ov002_020aea30((Aea30C *)c, hitPlayer, 0);
+        c->func_ov002_020aea30(hitPlayer, 0);
         return;
     }
 
