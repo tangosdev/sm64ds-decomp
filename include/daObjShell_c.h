@@ -23,7 +23,6 @@
  * +0x138. D1/D0 destroy the same subobjects in reverse, independently pinning
  * both the inheritance and owned-member layout. */
 struct daObjShell_c : dActor_c {
-    u8 pad_0d0[0x4];          /* 0x0d0 */
     dExtAnmModel_c mAnmModel; /* 0x0d4 */
     dCcAc_c mdCcAc_c;         /* 0x138 */
     u8 mState;                /* 0x16c: 0 shut, 1 lunging */

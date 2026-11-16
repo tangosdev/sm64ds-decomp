@@ -310,15 +310,19 @@ struct dScMgPachinko_c : dScMgBase_c {
     void UpdateNextBall();
     void ResetRound();
 
-    dScMgPachinko_ball mBall[30];    /* 0x4660, stride 0x38, ends 0x4cf0 */
-    dScMgPachinko_popup mPopup[30];  /* 0x4cf0 */
+    static const int BALL_NUM = 30;
+    dScMgPachinko_ball mBall[BALL_NUM]; /* 0x4660, stride 0x38, ends 0x4cf0 */
+    static const int POPUP_NUM = 30;
+    dScMgPachinko_popup mPopup[POPUP_NUM]; /* 0x4cf0 */
     dScMgPachinko_row   mRow[3];     /* 0x4e58 */
     dScMgPachinko_pipe  mPipe[2];    /* 0x4ea0 */
     /* 48: Flyer_CheckHits, BobOmb_ClearAll/_DrawAll/_UpdateAll,
        UpdateNextBall and ResetRound all walk 0x30 records,
        which end exactly at mFx (0x4ed8 + 48 * 0x38 = 0x5958). */
-    dScMgPachinko_shot mShot[48];     /* 0x4ed8, stride 0x38 */
-    dScMgPachinko_fx     mFx[30];     /* 0x5958 */
+    static const int SHOT_NUM = 48;
+    dScMgPachinko_shot mShot[SHOT_NUM]; /* 0x4ed8, stride 0x38 */
+    static const int FX_NUM = 30;
+    dScMgPachinko_fx mFx[FX_NUM]; /* 0x5958 */
     /* mFlyer and mBg are one-element arrays: their state handlers take an
        index and step it (i * 0x1c, i * 0x14) the way the array handlers do,
        and both dispatchers pass 0. [inference from codegen] */

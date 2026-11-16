@@ -47,7 +47,7 @@ int fflush(FILE *file);
 extern void _ExitProcess(void);
 
 extern volatile int __atexit_curr_func;
-extern void (*volatile __atexit_funcs[])(void);
+extern void (*__atexit_funcs[])(void);
 extern void (*__console_exit)(void);
 
 /* MSL __exit, statement for statement with Spirit Tracks' copy of

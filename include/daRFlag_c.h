@@ -13,7 +13,6 @@
 #include "dCcAc_c.h"
 
 struct daRFlag_c : dActor_c {
-    u8 pad_0d0[0x4];
     dCcAc_c mdCcAc_c;         /* 0x0d4 touch cylinder */
     dExtAnmModel_c mAnmModel; /* 0x108 */
     u16 mVictoryTimer;        /* 0x16c frames since Mario touched the flag */

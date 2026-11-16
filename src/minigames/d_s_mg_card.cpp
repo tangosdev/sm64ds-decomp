@@ -241,7 +241,7 @@ int dScMgCard_c::CanEndState(int mode)
                 mStateTimer = 0;
             } else {
                 MgCoins_StartRefund();
-                mStateTimer = 0x1e;
+                mStateTimer = 30;
             }
             mState += 1;
         }
@@ -269,7 +269,7 @@ int dScMgCard_c::CanEndState(int mode)
             mArray1[i].FlyOff();
             mArray2[i].FlyOff();
         }
-        mStateTimer = 0x3c;
+        mStateTimer = 60;
         mState += 1;
         break;
     }
@@ -346,7 +346,7 @@ void dScMgCard_c::UpdateState()
         break;
     case 2:
         if (mDealer.IsIdle() != 0) {
-            mStateTimer = 0x10;
+            mStateTimer = 16;
             mState++;
         } else {
             cnt = mDealCount;
@@ -496,7 +496,7 @@ void dScMgCard_c::UpdateState()
         break;
     case 10:
         if (dScMgCard_c::AllInState(mArray1, 8) != 0 && dScMgCard_c::AllInState(mArray2, 8) != 0) {
-            mStateTimer = 0x14;
+            mStateTimer = 20;
             mState++;
         }
         break;
@@ -512,7 +512,7 @@ void dScMgCard_c::UpdateState()
             dScMgCard_c::SettleHand(mArray1);
             dScMgCard_c::SettleHand(mArray2);
             Sound::PlayBank2_2D(0x147);
-            mStateTimer = 0x3c;
+            mStateTimer = 60;
             mState++;
         }
         break;
@@ -541,7 +541,7 @@ void dScMgCard_c::UpdateState()
                 a0 = g ? g->mCredits : 0;
                 a1 = g ? g->mHudScore : 0;
                 Mg_SaveRecordPair(a0, a1 - 1);
-                mStateTimer = 0x5a;
+                mStateTimer = 90;
             } else if (r == 1) {
                 g = gMgScene;
                 {
@@ -555,9 +555,9 @@ void dScMgCard_c::UpdateState()
                     r = g ? g->mHudScore : 0;
                     Mg_SaveRecordPair(prod, r + 1);
                 }
-                mStateTimer = 0x1e;
+                mStateTimer = 30;
             } else {
-                mStateTimer = 0x5a;
+                mStateTimer = 90;
             }
             mState++;
         }
@@ -647,11 +647,11 @@ s32 dScMgCard_c::Render()
         y = 0xc;
         for (; i < 6; i++) {
             if (i != hiddenRank)
-                RenderOamMainScreen(sCardPayoutRowSprites[i], 0x28, y, -1, -1);
+                RenderOamMainScreen(sCardPayoutRowSprites[i], 40, y, -1, -1);
             y += 0x10;
         }
 
-        RenderOamMainScreen(data_ov006_02134028, 0x28, 0x38, -1, -1);
+        RenderOamMainScreen(data_ov006_02134028, 40, 56, -1, -1);
     }
 
     Mg_DrawCredits(c, 0xc, 0xc, 0);

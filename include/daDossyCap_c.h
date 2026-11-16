@@ -45,9 +45,6 @@ struct daDossy_c;
  * registry profile.
  */
 struct daDossyCap_c : dActor_c {
-    /* The player whose mouth holds the cap; Behavior hands it to the spawned
-       daObjMarioCap_c's dEnemyBase_c::mEatingPlayer. */
-    daPly_c *mEatingPlayer;                     /* 0x0d0 */
     dCapIcon_c         mCapIcon;                /* 0x0d4 */
     dExtSimpleModel_c mModel;                   /* 0x0f0 */
     dCcAc_c mdCcAc_c;     /* 0x140 */

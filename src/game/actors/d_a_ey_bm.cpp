@@ -23,7 +23,6 @@
  * - VecFx32, not Vector3: a Vector3 stack local would
  *   instantiate its vague-linkage D1 into this TU. EyBmVec3's
  *   declared-not-defined destructor is that D1's alias.
- * - daPly_c::Hurt stays mangled: by-value Fix12<int> is wall 6az.
  * - The UpdateDiscreteNoLava veneer stays because
  *   the named method is WRONG-DEST (ROM 0x02038420).
  * - data_ov071_021230b8 is this TU's sinit-constructed bss;
@@ -97,7 +96,7 @@ int daEyBm_c::InitResources() {
     mVertAccel = 0;
     mTerminalVelocity = 0;
     mHorzSpeed = 0xa000;
-    mLifeTimer = 0x96;
+    mLifeTimer = 150;
     mMatrix = IDENTITY_MATRIX4X3;
     UpdateShadow();
     return 1;
@@ -168,8 +167,7 @@ void daEyBm_c::UpdateShadow() {
 }
 
 /*
- * 0x02121ba4, size 0xc8. daPly_c::Hurt retains the measured by-value Fix12
- * ABI seam; daPly_c itself and all accessed fields are the real type. */
+ * 0x02121ba4, size 0xc8. */
 
 void daEyBm_c::HurtPlayer() {
     u32 ownerID = mdCcAcPos_c.otherOwner;

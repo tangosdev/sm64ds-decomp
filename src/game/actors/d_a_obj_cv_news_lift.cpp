@@ -131,7 +131,7 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player) {
         MTX_Inverse43(&data_020a0e68, &data_020a0e68);
         Vector3 inFrame;
         MTX_MultVec43(&player->mPos, &data_020a0e68, &inFrame);
-        inFrame.y *= 0x30;
+        inFrame.y *= 48;
         Vector3 axis;
         axis.x = 0;
         axis.y = 0x1000;

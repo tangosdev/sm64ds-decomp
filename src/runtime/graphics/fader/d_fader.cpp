@@ -61,10 +61,10 @@ void dFdBrightness_c::AdvanceFade()
     if (currInterp == before)
         return;
 
-    level = -(currInterp << 4) >> 0xc;
+    level = -(currInterp << 4) >> 12;
     GX_SetMasterBrightness(level);
     GXS_SetMasterBrightness(level);
-    if (level > -0x10)
+    if (level > -16)
         return;
 
     DC_FlushRange(data_0209d3ac, 2);
@@ -149,7 +149,7 @@ void dFdColor_c::AdvanceFade()
     if (currInterp == old) return;
     {
         unsigned short color = this->color;
-        int m = color ? 0x10 : -0x10;
+        int m = color ? 16 : -16;
         int r = (currInterp * m) >> 12;
         if (r != 0) {
             G2_SetBlendBrightness(0x3f, r);
@@ -185,7 +185,7 @@ void dFdWipe_c::AdvanceFade()
     cur = currInterp;
     if (cur == 0 && cur == old) return;
     if (cur == 0x1000) {
-        G2_SetBlendBrightness(0x3f, -0x10);
+        G2_SetBlendBrightness(0x3f, -16);
     } else {
         if (speed != 0) {
             if (old != 0x1000)
@@ -203,7 +203,7 @@ void dFdWipe_c::AdvanceFade()
         return;
     {
         u16 color = this->color;
-        int m = color ? 0x10 : -0x10;
+        int m = color ? 16 : -16;
         int prod = currInterp * m;
         int r = prod >> 12;
         if (r != 0) {

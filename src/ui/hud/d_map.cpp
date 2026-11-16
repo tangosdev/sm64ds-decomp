@@ -23,10 +23,7 @@
  *   a plain `playerPos = o->mPos` uses [r8,#0x5c] addressing and shortens
  *   Behavior by 4 bytes. The focus copy already goes through a pointer
  *   local, so `&focus->mPos` needs no launder.
- * - GetPosFromMinimapPos and GetPosOnMinimap are static fx32 methods;
- *   the third parameter is the scalar, not Fix12<int>.
- * - The OAM and Vec3 helpers stay on C-linkage or hand-mangled
- *   externs for the same reason.
+ * - GetPosFromMinimapPos and GetPosOnMinimap are static fx32 methods.
  */
 #include "dMap_c.h"
 #include "decl_common.h"
@@ -460,7 +457,7 @@ int dMap_c::Render()
                     if (*p != 4) {
                         if (data_ov002_02111148 == lvl) {
                             this->mStarIconAnimFrame[i] += data_0208ee44;
-                            if (this->mStarIconAnimFrame[i] >= 0xc)
+                            if (this->mStarIconAnimFrame[i] >= 12)
                                 this->mStarIconAnimFrame[i] = 0;
                             {
                                 int flag = 0;
@@ -591,9 +588,9 @@ s32 dMap_c::Behavior()
         if (v == 0 && this->mTouchCircleTimer == 0) goto L200;
         gSubScreenLayers |= 4;
         if (v != 0) {
-            this->mTouchCircleTimer = 0x1e;
-            SetSubBg2Offset(0x100 - data_0209f498[gActivePlayerSlot].tx,
-                            0x80 - data_0209f498[gActivePlayerSlot].ty);
+            this->mTouchCircleTimer = 30;
+            SetSubBg2Offset(256 - data_0209f498[gActivePlayerSlot].tx,
+                            128 - data_0209f498[gActivePlayerSlot].ty);
         }
         G2S_SetBlendAlpha(4, 0x28, 4, 0xd);
         if (data_0209f498[gActivePlayerSlot].mode != 2)
@@ -796,7 +793,7 @@ L738:
         }
     }
 
-    for (i = 0; i < 0xc; i++) {
+    for (i = 0; i < 12; i++) {
         dActor_c *o = STAR_MARKERS[i];
         if (o != 0) {
             GetPosOnMinimap(&o->mPos, (Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
@@ -982,7 +979,7 @@ int dMap_c::InitResources()
             SublevelToLevel(gCurrentSublevel) == -1) {
             REG_DB_BG3CNT =
                 (((0x1f - data_ov002_02111148) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x4010));
-            mMapWidth = 0x100;
+            mMapWidth = 256;
             mMapCenterOffset = 0x80;
 
             if (SublevelToLevel(gCurrentSublevel) == 4) {
@@ -1003,7 +1000,7 @@ int dMap_c::InitResources()
             mArrowType = 1;
         } else {
             REG_DB_BG3CNT = (((0x1f - data_ov002_02111148) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x10));
-            mMapWidth = 0x80;
+            mMapWidth = 128;
             mMapCenterOffset = 0x40;
             mMapOriginX = 0;
             mMapOriginY = 0;

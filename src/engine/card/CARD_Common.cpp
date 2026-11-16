@@ -54,7 +54,7 @@ void CARDi_SetTask(void (*task)(CARDiCommon *)) {
         break;
     case CARD_THREAD_PRIORITY_LOWER:
         priority = OS_GetThreadPriority(OSi_ThreadInfo.current);
-        if (priority < 0x1f)
+        if (priority < 31)
             priority += 1;
         break;
     }

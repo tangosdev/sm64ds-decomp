@@ -21,15 +21,15 @@ void func_ov007_020b1b74(void)
     if (ticks == 0)
         func_ov007_020b2614(0, 0, -1);
 
-    if (ticks == 0xa)
+    if (ticks == 10)
         WORK->states[2]->requestedState = 3;
 
-    if (ticks >= 0 && ticks <= 0xa) {
-        int rise = ProgressRatio(ticks, 0xa);
+    if (ticks >= 0 && ticks <= 10) {
+        int rise = ProgressRatio(ticks, 10);
         int sq = (fx32)(((fx64)rise * rise) >> FX32_SHIFT);
         WORK->modelGrowth = FX_MUL(sq, 0x17d0);
-    } else if (ticks <= 0x1e) {
-        int fall = 0x1000 - RangeRatio(ticks, 0xa, 0x1e);
+    } else if (ticks <= 30) {
+        int fall = 0x1000 - RangeRatio(ticks, 10, 30);
         int sq = (fx32)(((fx64)fall * fall) >> FX32_SHIFT);
         WORK->modelGrowth = FX_MUL(sq, 0x7d0) + 0x1000;
     } else {

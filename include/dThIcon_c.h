@@ -16,7 +16,7 @@
  * dMgPsOpt_c::TouchIcon_c the graphic style and variant.
  */
 struct dThIcon_c {
-    /* Centre and half extents in pixels. func_ov001_020ab5b0 stores them;
+    /* Centre and half extents in pixels. Place stores them;
        TouchArea_Update tests the pen against centre +/- half extent, and
        the derived Renders draw or fill the BG at them. */
     s16 mX;     /* 0x004 */
@@ -32,17 +32,17 @@ struct dThIcon_c {
        back; the derived Renders pick the lit sprite or palette by it. */
     u8 mOn; /* 0x010 */
     /* TouchArea_Update returns 0 unless set. func_ov001_020ab3f0 clears
-       it; func_ov001_020ab5b0 and Behavior set it when mTouchKind >= 1. */
+       it; Place and Behavior set it when mTouchKind >= 1. */
     u8 mReady; /* 0x011 */
     /* TouchArea_Update stores whether the pen is inside this frame, so
        mTouchKind 2 fires only on entry. */
     u8 mPenInside; /* 0x012 */
     u8 pad_013[0x1];
     /* How TouchArea_Update fires: 1 on a new pen touch inside, 2 when the
-       pen enters, 0 never. func_ov001_020ab5b0 stores it. */
+       pen enters, 0 never. Place stores it. */
     s32 mTouchKind; /* 0x014 */
-    /* mPressTimer's reload: func_ov001_020ab5b0 stores 10 and
-       SlotBet_Place 6. */
+    /* mPressTimer's reload: Place stores 10 and
+       dScMgSlot1_c::betIcon_c::Place 6. */
     s32 mPressTime; /* 0x018 */
     s32 unk_01c;
     s32 unk_020;
@@ -52,6 +52,9 @@ struct dThIcon_c {
     /* Light an icon a menu has just picked: an unlit icon turns on, a lit
        one plays the press pulse. */
     void Select();
+    /* Set the touch kind, centre and half extents, and reset the press
+       state. Each derived icon's own Place wraps it. */
+    void Place(int, s16, s16, s16, s16);
     virtual void Behavior();
     virtual void Render();
 };

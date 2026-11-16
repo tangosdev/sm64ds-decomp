@@ -30,7 +30,6 @@
  * where dCcAc_c's reads through its owner pointer.
  */
 
-#include "math/Fix12.h"
 
 struct dCcPos_c : dCc_c {
     Vector3 pos;            /* 0x30 */

@@ -288,11 +288,11 @@ void func_0204a730(void *arg0, void *self) {
 
             if (emitChildren != 0) {
                 u16 life = node->age;
-                s32 a = (s32)node->lifetime << 0xc;
-                s32 b = ((s32)cfg->emissionDelay + 1) << 0xc;
+                s32 a = (s32)node->lifetime << 12;
+                s32 b = ((s32)cfg->emissionDelay + 1) << 12;
                 s32 r1 = FX_MUL(a, b);
-                s32 r0 = ((s32)life << 0xc) - (r1 >> 8);
-                if (life != 0 && r0 >= 0 && ((r0 >> 0xc) % (u8)cfg->emissionInterval) == 0) {
+                s32 r0 = ((s32)life << 12) - (r1 >> 8);
+                if (life != 0 && r0 >= 0 && ((r0 >> 12) % (u8)cfg->emissionInterval) == 0) {
                     func_0204c304(node, self, &mgr->freeParticles);
                 }
             }

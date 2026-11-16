@@ -222,7 +222,7 @@ void daObjBk_Dossunbar_c::ExecuteWaitMid() {
 
 /* State 3 enter. */
 void daObjBk_Dossunbar_c::EnterEaseHome() {
-    mStateTimer = 0x18;
+    mStateTimer = 24;
     Sound::PlayBank3(0xc3, mCamSpacePos);
 }
 

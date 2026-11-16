@@ -15,12 +15,9 @@
  * 0x0211d440).
  */
 
-// Notes: dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange are header member
-// calls whose headers take Fix12 as the scalar fx32, a plain s32 (Fix12<int> by value
-// homes the argument and size-DIFFs, 6az). The data_ov065_0211c0d0 motion
-// table, data_0209f2c0 clock byte, data_0209e650 RNG, and the
-// ov035 CLPS block stay linker-named. g_profile_CT_MECHA08A/B live outside
-// this TU.
+// Notes: the data_ov065_0211c0d0 motion table, data_0209f2c0 clock byte,
+// data_0209e650 RNG, and the ov035 CLPS block stay linker-named.
+// g_profile_CT_MECHA08A/B live outside this TU.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjCtMecha08_c_AssetId {
@@ -143,7 +140,7 @@ int daObjCtMecha08_c::Behavior() {
                 mVertSpeed = data_ov065_0211c0d0[setting][d].vertSpeed;
                 if (data_0209f2c0 == CLOCK_SETTING_RANDOM) {
                     u32 rnd = (u32)RandomIntInternal(&data_0209e650.value);
-                    mMoveTimer = (u16)((rnd % 6) * 0x14 + 0xa);
+                    mMoveTimer = (u16)((rnd % 6) * 20 + 10);
                 }
             }
         }

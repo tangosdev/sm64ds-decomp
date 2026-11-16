@@ -10,8 +10,8 @@ struct Quat {
 
 #define FX_MUL(a, b) ((s32)(((a) * (b) + 0x800) >> 12))
 
-/* out = q1 * q2, the Hamilton product of two Fix12 quaternions stored
-   (x, y, z, w) with w the scalar part, each term rounded as a Fix12 multiply.
+/* out = q1 * q2, the Hamilton product of two fx32 quaternions stored
+   (x, y, z, w) with w the scalar part, each term rounded as an fx32 multiply.
    out may alias either input: every component is read before any is written.
    ov006's FallingPetal (unit020bfec0.cpp) composes its rotation with it. */
 void Quaternion_Multiply(struct Quat *q1, struct Quat *q2, struct Quat *out) {

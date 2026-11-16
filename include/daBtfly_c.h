@@ -37,7 +37,6 @@
 struct daBtfly_c : dActor_c {
     /* The ROM leaves the usual derived-actor word between dActor_c and the
        first owned subobject. */
-    u8  pad_0d0[0x4];
     /* dExtAnmModel_c member, named by _ZN14dExtAnmModel_cD1Ev at +0xd4 -- a relocation the ROM build
        checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
        stopped short of the object, so the member also takes over unk_0f0 (+0x1c = mat4x3),

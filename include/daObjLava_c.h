@@ -13,7 +13,6 @@
  * field closes on it.
  */
 struct daObjLava_c : dActor_c {
-    u8 pad_0d0[0x4];
     u32 mEffectHandle; /* 0x0d4 -- live particle handle */
 
     /* Inline and first: out-of-line mwccarm emits D0 before D1; retail

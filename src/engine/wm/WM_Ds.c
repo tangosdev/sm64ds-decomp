@@ -91,7 +91,7 @@ WMErrCode WM_StartDataSharing(WMDataSharingInfo *dsInfo, u16 port, int aidBitmap
     dsInfo->aidBitmap = bits;
 
     cnt = 0;
-    for (j = 0; j < 0x10; j++) {
+    for (j = 0; j < 16; j++) {
         if (bits & mbit)
             cnt++;
         mbit = (u16)(mbit << 1);

@@ -43,9 +43,9 @@ s32 daWarpkun_c::InitResources() {
        assignment (r5/r6) and DIFFs. height reads the local because the
        SetRanges call below may clobber this->param1. */
     u32 spawnParam = param1;
-    fx32 radius = ((param1 & 0xf) + 1) << 0x12;
+    fx32 radius = ((param1 & 15) + 1) << 18;
     SetRanges(0, radius, radius + 0x7d0000, 0);
-    fx32 height = (((spawnParam >> 4) & 0xf) + 1) << 0x12;
+    fx32 height = (((spawnParam >> 4) & 15) + 1) << 18;
     mdCcAc_c.Init(this, radius, height, 2, 0x400000);
     return 1;
 }
@@ -62,7 +62,7 @@ s32 daWarpkun_c::Behavior() {
                 if (IsPlayerWarping(player->mPlayerNo) != 0) {
                     mAngleY = 1;
                 } else if (player->CanWarp()) {
-                    u32 warpParam = (param1 >> 0xc) + 1;
+                    u32 warpParam = (param1 >> 12) + 1;
                     WarpPlayer(player->mPlayerNo, warpParam & 0xff);
                 }
             }

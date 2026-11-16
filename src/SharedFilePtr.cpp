@@ -183,7 +183,7 @@ void *SharedFilePtr::LoadFile() {
             return 0;
     }
 
-    if (numRefs >= 0xff) {
+    if (numRefs >= 255) {
         return 0;
     }
 

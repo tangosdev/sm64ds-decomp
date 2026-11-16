@@ -147,9 +147,9 @@ struct dScMgAmida_c : dScMgBase_c {
                                  PaintSquare probes it for collisions */
     s32 mLaneResult[4];       /* 0x4714 -- ShuffleGoals' result table: which
                                  lanes win (mode 1) or each lane's goal */
-    Vector2 mLanePos[4];      /* 0x4724 -- Fix12 {x,y} of the four lane
+    Vector2 mLanePos[4];      /* 0x4724 -- fx32 {x,y} of the four lane
                                  markers; seeded to x=0x20+0x40*i, y=0xb0 */
-    Vector2 mLaneVel[4];      /* 0x4744 -- Fix12 {dx,dy} added into mLanePos
+    Vector2 mLaneVel[4];      /* 0x4744 -- fx32 {dx,dy} added into mLanePos
                                  each tick; dy loses 0x100 per tick (gravity) */
     s32 mFinaleTimer;         /* 0x4764 -- ticks in the state-3 finale */
     dScMgAmida_c_Piece mPieces[0x80]; /* 0x4768 */

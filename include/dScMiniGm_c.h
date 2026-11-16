@@ -50,7 +50,14 @@ struct dScMiniGm_c : dScene_c {
     void DrawNewBadges();
     void DrawRecords();
     void LoadIconPalette(int);
-    void MiniGm_LoadGroupIcons();
+    void LoadGroupIcons();
+    void DrawNumber(int x, int y, int val);
+    int HasSecondPage();
+    int IsUnlocked(int n);
+    int IsNew(int n);
+    int GetSaveTable(int i);
+    int GetRecord(int i, int slot);
+    void SaveIfDirty();
 };
 
 #ifndef SM64DS_PLATFORM_PC

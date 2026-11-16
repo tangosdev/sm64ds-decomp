@@ -142,7 +142,8 @@ struct dScMgMemory_c : dScMgSingle3DBase_c {
     void SetupDifficulty();
 
     Dealer mDealer;                 /* 0x4f38 */
-    dMgMemoryCard_c mCards[12];     /* 0x51a8 */
+    static const int CARD_NUM = 12;
+    dMgMemoryCard_c mCards[CARD_NUM]; /* 0x51a8 */
     dMgMemoryPlayer_c mPlayers[3];  /* 0x52c8 */
     dMgMemoryCursor_c mCursor;      /* 0x5304 */
     s32 mState;                     /* 0x5314 */
@@ -156,7 +157,8 @@ struct dScMgMemory_c : dScMgSingle3DBase_c {
     u16 mTargetPairs;               /* 0x532a */
     u8 mSelectedValues[2];          /* 0x532c */
     u8 mSelectedCards[2];           /* 0x532e */
-    u8 mValueCounts[7];             /* 0x5330 */
+    static const int VALUE_NUM = 7;
+    u8 mValueCounts[VALUE_NUM];     /* 0x5330 */
     u8 mPairsFound;                 /* 0x5337 */
     u8 mSelectedCount;              /* 0x5338 */
     u8 unk_5339;                    /* 0x5339, write-only: ResetGame zeroes it */

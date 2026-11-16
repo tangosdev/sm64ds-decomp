@@ -16,13 +16,13 @@ int func_0205e7e0(SHA1Context *context, unsigned char *out) {
     if (r != 0) return r;
     if (context->Computed == 0) {
         func_0205e280(context);
-        for (i = 0; i < 0x40; i++)
+        for (i = 0; i < 64; i++)
             context->Message_Block[i] = 0;
         context->Length_Low = 0;
         context->Length_High = 0;
         context->Computed = 1;
     }
-    for (i = 0; i < 0x14; i++) {
+    for (i = 0; i < 20; i++) {
         unsigned int idx = i >> 2;
         int shift = (3 - (i & 3)) * 8;
         out[i] = (unsigned char)(context->Intermediate_Hash[idx] >> shift);
