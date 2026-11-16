@@ -5533,7 +5533,10 @@ s32 dScMgSmartball_c::InitResources() {
     return 1;
 }
 
-/* Leftover: AfterCleanupResources needs strength reduction off. */
+/* Leftover: AfterCleanupResources needs strength reduction off.
+ * Re-measured (#821, 2026-11-16): 0x3f8 without it against 0x3d8. Each slot
+ * taken as &mpBalls[i] (and siblings) instead of through SlotAddress is the
+ * right size under the pragma but 90 of 246 words off, 0x3cc without it. */
 #pragma push
 #pragma opt_strength_reduction off
 /* Slot 5: frees every board object, then chains to the base. */
