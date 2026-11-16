@@ -246,7 +246,6 @@ int daSnmBth_c::Behavior()
     Vector3 pos;
     int i;
     SnowmanBreathParticle *slot;
-    int zero;
 
     b = gGameMode;
     b = (b == 2);
@@ -267,12 +266,10 @@ int daSnmBth_c::Behavior()
             break;
         case 1:
             pos.x = mPosX;
-            zero = 0;
             pos.y = mPosY;
             pos.z = mPosZ;
             pos.y = pos.y + 0x12c000;
-            if (mTalkPlayer->ShowMessage(
-                    *this, 0xbb, &pos, zero, zero) == 0) {
+            if (mTalkPlayer->ShowMessage(*this, 0xbb, &pos, 0, 0) == 0) {
                 break;
             }
             mTalkState++;
