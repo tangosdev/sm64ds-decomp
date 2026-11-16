@@ -748,12 +748,8 @@ int daMky_c::EnterState7()
 int daMky_c::func_ov030_02112da0()
 {
     extern u8 data_0209d684;
-    if (IsInYoshiMouth(this)) {
-        int *p = &this->mPlayer->mPosX;
-        this->mPosX = p[0];
-        this->mPosY = p[1];
-        this->mPosZ = p[2];
-    }
+    if (IsInYoshiMouth(this))
+        mPos = mPlayer->mPos;
 
     if (IsFlagSet(this, 0x80000)) {
         this->mPrevState = 1;
@@ -764,14 +760,8 @@ int daMky_c::func_ov030_02112da0()
     switch (this->mSubState) {
     case 0: {
         if (IsInYoshiMouth(this)) {
-            daPly_c *s = this->mPlayer;
-            int *p = &s->mPosX;
-            int x = *p;
-            u8 *st = &this->mSubState;
-            this->mPosX = x;
-            this->mPosY = p[1];
-            this->mPosZ = p[2];
-            (*st)++;
+            mPos = mPlayer->mPos;
+            mSubState++;
         } else if (!IsBeingEaten(this) && !IsInYoshiMouth(this)) {
             /* Out of Yoshi altogether; the ROM re-tests the mouth bit. */
             mEatingPlayer = 0;
@@ -787,15 +777,8 @@ int daMky_c::func_ov030_02112da0()
                 this->mSubState++;
             }
         }
-        {
-            daPly_c *s = this->mPlayer;
-            u8 val = 60;
-            int *p = &s->mPosX;
-            this->mPosX = *p;
-            this->mPosY = p[1];
-            this->mPosZ = p[2];
-            this->mActionTimer = val;
-        }
+        mPos = mPlayer->mPos;
+        mActionTimer = 60;
         break;
     case 2:
         if (this->mPlayer->GetTalkState() == -1) {
