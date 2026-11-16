@@ -407,6 +407,9 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
             nz = 0;
             strip = 1;
             flags |= 0x2000;
+            /* Byte 7 of the double is its sign byte, addressed the way
+               func_0206c90c does. A union local (u64 / u32[2] / char[8])
+               in place of d and these casts compiles to 0x13b4, not 0x1364. */
             b = (char *)&d + 7;
             if (READ8(b) & 0x80) {
                 flags |= 0x4000;
