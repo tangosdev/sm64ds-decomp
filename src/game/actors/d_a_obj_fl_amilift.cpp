@@ -210,25 +210,17 @@ s32 daObjFl_Amilift_c::Render() {
 s32 daObjFl_Amilift_c::Behavior() {
     int idx = mState;
     (this->*data_ov064_0211c750[idx].pmf)();
-    unsigned short *p338 = &mStateFrames;
-    *p338 = (*p338 + 1);
+    mStateFrames++;
     if (idx != mState) {
         mStateFrames = 0;
     }
     int target = mRiderOn ? -0x28000 : 0;
     if (ApproachLinear(mSinkOffset, target, 0x5000)) {
-        short *pAng = &mBobPhase;
-        *pAng = (*pAng + 0xa00);
-        unsigned short h = *&mBobPhase;
-        short s = FX_SinIdx(h >> 4);
-        short ten = 10;
-        mBobOffset = s * ten;
+        mBobPhase += 0xa00;
+        mBobOffset = FX_SinIdx((u16)mBobPhase >> 4) * 10;
     }
-    int t330 = mHomeY;
-    int t320 = mSinkOffset;
-    int t324 = mBobOffset;
     int saved = mPosY;
-    mPosY = t324 + (t330 + t320);
+    mPosY = mHomeY + mSinkOffset + mBobOffset;
     UpdateModelPosAndRotY();
     if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();

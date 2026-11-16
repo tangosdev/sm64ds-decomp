@@ -679,11 +679,11 @@ void dScMgCurling2_c::DragUpdate() {
     int mag;
 
     idx = gActivePlayerSlot;
-    if (gTouchHeld[idx * 4] != 0) {
+    if (gTouchInfo[idx].held != 0) {
         int dy2;
         int dy;
-        u8 bx = (gTouchX)[idx * 4];
-        u8 by = ((u8 *)gTouchY)[idx * 4];
+        u8 bx = gTouchInfo[idx].x;
+        u8 by = gTouchInfo[idx].y;
 
         oldx = mDragX;
         oldy = mDragY;
@@ -750,8 +750,8 @@ void dScMgCurling2_c::DragUpdate() {
             mThrowSpeed -= (mThrowSpeed - mag) >> 1;
         {
             int j = gActivePlayerSlot;
-            int ay = (mDragY >> 12) - gTouchY[j * 4];
-            int ax = (mDragX >> 12) - gTouchX[j * 4];
+            int ay = (mDragY >> 12) - gTouchInfo[j].y;
+            int ax = (mDragX >> 12) - gTouchInfo[j].x;
 
             mGrabOffsetX = ax << 12;
             mGrabOffsetY = ay << 12;
@@ -771,18 +771,15 @@ void dScMgCurling2_c::DragBegin() {
     int y;
 
     idx = gActivePlayerSlot;
-    /* `4 & 0xFFFFFFFF` is not decoration: 0xFFFFFFFF is unsigned, so the mask
-       makes this one subscript unsigned where the next is signed, and that is
-       what the ROM's index arithmetic does.  Deleting it costs 20 words. */
-    if (gTouchHeld[idx * (4 & 0xFFFFFFFF)] != 0) {
-        if (gTouchEdge[idx * 4] != 0)
+    if (gTouchInfo[idx].held != 0) {
+        if (gTouchInfo[idx].edge != 0)
             flag = 1;
     }
     if (flag == 0)
         return;
 
-    x = (mDragX >> 0xc) - gTouchX[idx * 4];
-    y = (mDragY >> 0xc) - gTouchY[idx * 4];
+    x = (mDragX >> 0xc) - gTouchInfo[idx].x;
+    y = (mDragY >> 0xc) - gTouchInfo[idx].y;
 
     mGrabOffsetX = x << 0xc;
     mGrabOffsetY = y << 0xc;
@@ -1053,19 +1050,18 @@ void dScMgCurling2_c::StoneSpin(int stoneIndex) {
  * stone is armed again and, when the drag point is close, snaps above it. */
 void dScMgCurling2_c::StoneSteer(int stoneIndex) {
     u8 playerSlot = gActivePlayerSlot;
-    int touchOffset = playerSlot * 4;
-    if (gTouchHeld[playerSlot * 4] != 0) {
+    if (gTouchInfo[playerSlot].held != 0) {
         int grabX = mStone[stoneIndex].grabX;
-        mStone[stoneIndex].x = grabX + (gTouchX[touchOffset] << 12);
+        mStone[stoneIndex].x = grabX + (gTouchInfo[playerSlot].x << 12);
         int stoneXPixels = mStone[stoneIndex].x >> 12;
         if (stoneXPixels < 0xe)
             mStone[stoneIndex].x = 0xe000;
         if (stoneXPixels > 0xf2)
             mStone[stoneIndex].x = 0xf2000;
         int stoneX = mStone[stoneIndex].x >> 12;
-        int grabXPixels = stoneX - gTouchX[playerSlot * 4];
+        int grabXPixels = stoneX - gTouchInfo[playerSlot].x;
         int stoneY = mStone[stoneIndex].y >> 12;
-        int grabYPixels = stoneY - gTouchY[playerSlot * 4];
+        int grabYPixels = stoneY - gTouchInfo[playerSlot].y;
         mStone[stoneIndex].grabX = grabXPixels << 12;
         mStone[stoneIndex].grabY = grabYPixels << 12;
     } else {

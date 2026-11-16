@@ -91,7 +91,6 @@ extern s32 data_020a0db0;
 extern dFdBrightness_c *gSceneFader;
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
-extern s32  data_0209d4b0;
 extern u8   data_0209f350[];
 extern s8 gNextSublevel;
 extern u8   data_0209f204;

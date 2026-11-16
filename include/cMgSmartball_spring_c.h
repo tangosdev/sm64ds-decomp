@@ -19,8 +19,8 @@
  * below) -- read exhaustively, it says nothing about the other four.
  *
  * SaveSnapshot is a three-way state machine gated by two slot-indexed
- * byte tables (gTouchHeld/gTouchEdge) and driven by the touch x/y lanes -- the two more (gTouchX/
- * gTouchY, both shifted left 12 to become fixed-point):
+ * touch bytes (gTouchInfo's held/edge) and driven by its x/y, both shifted
+ * left 12 to become fixed-point:
  *   - "trigger" (a new flag byte set): sets mTriggered, zeroes the
  *     base's mVel0/mVel1, latches mGrabX/mDriveNow from the tables and
  *     mirrors each into mGrabXSaved/mDriveBase -- then, only if mCurrent1 is above
@@ -82,10 +82,10 @@ struct cMgSmartball_spring_c : cMgSmartball_object_c {
                           height is recomputed as
                           `mCurrent1 = mDriveNow - mDriveBase + 0xa0000`, so this
                           is the zero point that reading is measured from. */
-    s32 mGrabX;      /* 0x03c -- gTouchX[slot*4] << 12, latched once in
+    s32 mGrabX;      /* 0x03c -- gTouchInfo[slot].x << 12, latched once in
                           the trigger branch (and mirrored into mGrabXSaved).
                           Nothing in the tree reads either back. No name. */
-    s32 mDriveNow;   /* 0x040 -- gTouchY[slot*4] << 12, the live drive
+    s32 mDriveNow;   /* 0x040 -- gTouchInfo[slot].y << 12, the live drive
                           reading. Latched at trigger, then re-read every active
                           frame and clamped to
                           [mDriveBase, mDriveBase + 0x38000] before it sets the

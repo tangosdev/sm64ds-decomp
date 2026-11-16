@@ -1662,11 +1662,11 @@ void dScMgPachinko_c::BobOmb_StateWaitGrab(int i) {
     int grabbed = 0;
     int dx, dy;
 
-    if (((u8(*)[4])gTouchHeld)[slot][0] != 0)
-        grabbed = ((u8(*)[4])gTouchEdge)[slot][0] != 0;
+    if (gTouchInfo[slot].held != 0)
+        grabbed = gTouchInfo[slot].edge != 0;
     if (grabbed != 0) {
-        dx = (mShot[i].x >> 12) - ((u8(*)[4])gTouchX)[slot][0];
-        dy = (mShot[i].y >> 12) - ((u8(*)[4])gTouchY)[slot][0];
+        dx = (mShot[i].x >> 12) - gTouchInfo[slot].x;
+        dy = (mShot[i].y >> 12) - gTouchInfo[slot].y;
         mShot[i].state = 1;
         mShot[i].offX = dx << 12;
         mShot[i].offY = dy << 12;
@@ -1712,12 +1712,12 @@ void dScMgPachinko_c::BobOmb_StateAim(int i) {
     s32 cy;
     u32 idx = gActivePlayerSlot;
 
-    if (((u8(*)[4])gTouchHeld)[idx][0] != 0) {
+    if (gTouchInfo[idx].held != 0) {
         int off = i * 0x38;
         s32 vy, vx;
 
-        cx = ((u8(*)[4])gTouchX)[idx][0];
-        cy = ((u8(*)[4])gTouchY)[idx][0];
+        cx = gTouchInfo[idx].x;
+        cy = gTouchInfo[idx].y;
         s32 grab = *(s32 *)(c + SHOT_OFF(offX) + off);
         dScMgPachinko_shot *shot = (dScMgPachinko_shot *)((char *)mShot + off);
         shot->x = (cx << 12) + grab;
@@ -1736,8 +1736,8 @@ void dScMgPachinko_c::BobOmb_StateAim(int i) {
             *py = 0x8000;
 
         {
-            s32 nx = (*(s32 *)(c + SHOT_OFF(x) + off) >> 12) - gTouchX[gActivePlayerSlot * 4];
-            s32 ny = (*(s32 *)(c + SHOT_OFF(y) + off) >> 12) - gTouchY[gActivePlayerSlot * 4];
+            s32 nx = (*(s32 *)(c + SHOT_OFF(x) + off) >> 12) - gTouchInfo[gActivePlayerSlot].x;
+            s32 ny = (*(s32 *)(c + SHOT_OFF(y) + off) >> 12) - gTouchInfo[gActivePlayerSlot].y;
 
             *(s32 *)(c + SHOT_OFF(offX) + off) = nx << 12;
             *(s32 *)(c + SHOT_OFF(offY) + off) = ny << 12;

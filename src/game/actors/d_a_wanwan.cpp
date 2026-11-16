@@ -102,26 +102,12 @@ int daWanwan_c::InitResources() {
     dExtFrameCtrl_c::LoadFile(data_ov014_02114980);
     dExtFrameCtrl_c::LoadFile(data_ov014_02114970);
 
-    {
-        int i = 0;
-        dExtSimpleModel_c *p = mLinkModels;
-        do {
-            p->SetFile((BMD_File *)data_ov014_02114978.filePtr, 1, 1);
-            i = i + 1;
-            p++;
-        } while (i < 7);
-    }
+    for (int i = 0; i < 7; i++)
+        mLinkModels[i].SetFile((BMD_File *)data_ov014_02114978.filePtr, 1, 1);
 
     mShadowModel.InitCylinder();
-    {
-        int si = 0;
-        dExtShadowModel_c *sp = mLinkShadows;
-        do {
-            sp->InitCylinder();
-            si = si + 1;
-            sp++;
-        } while (si < 7);
-    }
+    for (int i = 0; i < 7; i++)
+        mLinkShadows[i].InitCylinder();
 
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
@@ -157,19 +143,18 @@ int daWanwan_c::InitResources() {
 
     dActor_c *spawned = dActor_c::Spawn(kStumpActorId, 0x11, mPos, 0, mAreaId, -1);
     mStumpUniqueID = spawned->uniqueID;
-    int one = 1;
-    ((daObjPile_c *)spawned)->mBusy = (unsigned char)one;
+    ((daObjPile_c *)spawned)->mBusy = 1;
     mFenceUniqueID = 0;
 
-    mPosX = mPosX + kRestLift;
-    mPosY = mPosY + kRestLift;
-    mPosZ = mPosZ + kRestLift;
+    mPosX += kRestLift;
+    mPosY += kRestLift;
+    mPosZ += kRestLift;
 
     mChainExtension = kChainSlack;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    return one;
+    return 1;
 }
 
 int daWanwan_c::Behavior() {
@@ -770,12 +755,10 @@ void daWanwan_c::StateEscapeDemoMain() {
     fence = (daObjWanwanShutter_c *)dActor_c::FindWithID((unsigned)mFenceUniqueID);
     {
         s32 *src = &fence->mPosX;
-        s32 fifth = 0x80;
         partnerPos.x = src[0];
         partnerPos.y = src[1];
-        s32 z = 0;
         partnerPos.z = src[2];
-        ApproachAngle(&mAngleX, z, 4, 0x200, fifth);
+        ApproachAngle(&mAngleX, 0, 4, 0x200, 0x80);
     }
     camera = gCamera;
     angleToPlayer = HorzAngleToCPlayer();

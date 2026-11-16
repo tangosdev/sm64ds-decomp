@@ -799,7 +799,6 @@ void daKpa_c::UpdateModelMatrix() {
     Vector3 pos;
     Vector3 v;
     Vector3 v2;
-    int zero;
 
     if (this->mWithMeshClsn.IsOnGround() == 0)
         goto skip_angles;
@@ -816,19 +815,18 @@ skip_angles:
     this->mAnmModel.mat4x3 = data_020a0e68;
     this->mAnmModel.ApplyOpacity((unsigned char)((int)this->mOpacity >> 3), 1);
     saved = data_020a0e68;
-    zero = 0;
-    this->mFootPosBX = zero;
-    this->mFootPosBY = zero;
-    this->mFootPosBZ = zero;
+    this->mFootPosBX = 0;
+    this->mFootPosBY = 0;
+    this->mFootPosBZ = 0;
     MTX_Concat43(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
     this->mFootPosBX = data_020a0e68.m[9];
     this->mFootPosBY = data_020a0e68.m[10];
     this->mFootPosBZ = data_020a0e68.m[11];
     Vec3_LslInPlace(&this->mFootPosBX, 3);
     this->mFootPosBY = this->mPosY;
-    this->mFootPosAX = zero;
-    this->mFootPosAY = zero;
-    this->mFootPosAZ = zero;
+    this->mFootPosAX = 0;
+    this->mFootPosAY = 0;
+    this->mFootPosAZ = 0;
     data_020a0e68 = saved;
     MTX_Concat43(&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
     this->mFootPosAX = data_020a0e68.m[9];
@@ -926,7 +924,6 @@ void daKpa_c::RunIntroTalk() {
                 int y;
                 int z;
                 int y2;
-                int zero;
                 int scale;
                 int msg;
                 s16 *msgs;
@@ -945,7 +942,6 @@ void daKpa_c::RunIntroTalk() {
                 y2 = y + 0xc8000;
                 pos[2] = z;
                 ang = this->mAngleY;
-                zero = 0;
                 msgs = data_ov060_0211a4e0;
                 sx = FX_SinIdx(ang >> 4);
                 pos[0] = sx * scale + x;
@@ -955,7 +951,7 @@ void daKpa_c::RunIntroTalk() {
                 pos[2] = sz * scale + z;
                 msg = msgs[this->mVariantID];
                 if (this->mTargetPlayer->ShowMessage(
-                        *this, msg, reinterpret_cast<const Vector3 *>(pos), zero, zero) == 0) {
+                        *this, msg, reinterpret_cast<const Vector3 *>(pos), 0, 0) == 0) {
                     return;
                 }
             }

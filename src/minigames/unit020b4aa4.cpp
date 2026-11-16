@@ -222,10 +222,10 @@ void MgCoins_Update(void) {
 
     if (sMgCoinsBetPlaced == 0 && gMgCoinsInPlay != 0) {
         int idx = gActivePlayerSlot;
-        int flag = ((unsigned char (*)[4])gTouchHeld)[idx][0] != 0 && ((unsigned char (*)[4])gTouchEdge)[idx][0] != 0;
+        int flag = gTouchInfo[idx].held != 0 && gTouchInfo[idx].edge != 0;
         if (flag) {
-            int a = ((unsigned char (*)[4])gTouchX)[idx][0];
-            int b = ((unsigned char (*)[4])gTouchY)[idx][0];
+            int a = gTouchInfo[idx].x;
+            int b = gTouchInfo[idx].y;
             if (a < 0x40 && b < 0x50) {
                 MgCoins_AddBetCoin();
             }
