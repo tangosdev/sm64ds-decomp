@@ -14616,7 +14616,6 @@ void daPly_c::Bounce(fx32 f) {
 
 int daPly_c::func_ov002_020d93ac() {
     extern u8 gGameMode;
-    char *self = (char*)this;
     Vector3 pos;
     char *spawned;
     u32 chr;
