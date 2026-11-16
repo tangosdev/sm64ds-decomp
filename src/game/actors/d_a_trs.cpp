@@ -623,12 +623,12 @@ void daTrs_c::func_ov063_02116e14() {
     }
     this->mState = 3;
     {
-        char *r = (char *)dActor_c::Spawn(
-            this->mCarriedID, 0, *(const Vector3 *)&this->mCarriedPosX, (0), this->mAreaIdx, -1);
+        dActor_c *r = dActor_c::Spawn(this->mCarriedID, 0, *(const Vector3 *)&this->mCarriedPosX,
+                                      (0), this->mAreaIdx, -1);
         if (r != 0) {
-            ((dActor_c *)r)->mSpeedX = 0;
-            ((dActor_c *)r)->mVertSpeed = 0x32000;
-            ((dActor_c *)r)->mSpeedZ = 0;
+            r->mSpeedX = 0;
+            r->mVertSpeed = 0x32000;
+            r->mSpeedZ = 0;
         }
     }
     this->mBooFlags.carrying = 0;
