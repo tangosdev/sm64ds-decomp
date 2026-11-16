@@ -82,7 +82,7 @@ struct Closure {
 extern BCA_File *sTrmpAnimJump, *sTrmpAnimDoubleJump1, *sTrmpAnimWallJump, *sTrmpAnimHangUp,
     *sTrmpAnimRollJumpEnd, *sTrmpAnimWalk, *sTrmpAnimDoubleJump2, *sTrmpAnimJumpEnd, *sTrmpAnimTurn,
     *sTrmpAnimTurnEnd, *sTrmpAnimBounce, *sTrmpAnimStruggle, *sTrmpAnimSdown;
-extern BCA_File **sTrmpBounceAnimTable[];
+BCA_File **sTrmpBounceAnimTable[] = {&sTrmpAnimJump, &sTrmpAnimDoubleJump1, &sTrmpAnimWallJump};
 
 /* The model handle constructs through func_02017a24, the animation handles
  * through SharedFilePtr::Construct. Neither constructor nor destructor is

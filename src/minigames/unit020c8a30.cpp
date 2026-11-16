@@ -46,7 +46,19 @@ int GetGameLanguage(void);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 }
 
-extern void **sPuffSprites[];
+extern "C" void *data_ov006_02134b6c[];
+extern "C" void *data_ov006_02134b78[];
+extern "C" void *data_ov006_02134b84[];
+extern "C" void *data_ov006_02134b60[];
+extern "C" void *data_ov006_02134b54[];
+
+extern "C" void **sPuffSprites[] = {
+    data_ov006_02134b6c,
+    data_ov006_02134b78,
+    data_ov006_02134b84,
+    data_ov006_02134b60,
+    data_ov006_02134b54,
+};
 
 int sPuffNextIndex;
 void **sPuffXTable;

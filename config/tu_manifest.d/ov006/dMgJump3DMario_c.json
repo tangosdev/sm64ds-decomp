@@ -32,6 +32,54 @@
       "name": ".bss",
       "start": "0x02140438",
       "end": "0x021404c4"
+    },
+    {
+      "name": ".data.data_ov006_02134d1c",
+      "input_section": ".data",
+      "start": "0x02134d1c",
+      "end": "0x02134d20"
+    },
+    {
+      "name": ".data.sJump3DBounceVy",
+      "input_section": ".data",
+      "start": "0x0213b008",
+      "end": "0x0213b00c"
+    },
+    {
+      "name": ".data.sJump3DRiseVy",
+      "input_section": ".data",
+      "start": "0x0213b00c",
+      "end": "0x0213b010"
+    },
+    {
+      "name": ".data.sJump3DFallSpeed",
+      "input_section": ".data",
+      "start": "0x0213b010",
+      "end": "0x0213b014"
+    },
+    {
+      "name": ".data.sJump3DStartVx",
+      "input_section": ".data",
+      "start": "0x0213b014",
+      "end": "0x0213b018"
+    },
+    {
+      "name": ".data.sJump3DGravityStep",
+      "input_section": ".data",
+      "start": "0x0213b018",
+      "end": "0x0213b01c"
+    },
+    {
+      "name": ".data.sJump3DMoveSpeed",
+      "input_section": ".data",
+      "start": "0x0213b01c",
+      "end": "0x0213b020"
+    },
+    {
+      "name": ".data.sJump3DAnimTable",
+      "input_section": ".data",
+      "start": "0x0213b098",
+      "end": "0x0213b0a4"
     }
   ],
   "functions": [
@@ -323,7 +371,64 @@
       "ordinal": 40
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov006_02134d1c",
+      "address": "0x02134d1c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sJump3DBounceVy",
+      "address": "0x0213b008",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sJump3DRiseVy",
+      "address": "0x0213b00c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sJump3DFallSpeed",
+      "address": "0x0213b010",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sJump3DStartVx",
+      "address": "0x0213b014",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sJump3DGravityStep",
+      "address": "0x0213b018",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sJump3DMoveSpeed",
+      "address": "0x0213b01c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sJump3DAnimTable",
+      "address": "0x0213b098",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    }
+  ],
   "bss": [
     {
       "symbol": "sJump3DMarioWallJumpAnimFile",
@@ -580,6 +685,62 @@
           "start": "0x02140438",
           "end": "0x021404c4",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.data_ov006_02134d1c",
+          "start": "0x02134d1c",
+          "end": "0x02134d20",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DBounceVy",
+          "start": "0x0213b008",
+          "end": "0x0213b00c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DRiseVy",
+          "start": "0x0213b00c",
+          "end": "0x0213b010",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DFallSpeed",
+          "start": "0x0213b010",
+          "end": "0x0213b014",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DStartVx",
+          "start": "0x0213b014",
+          "end": "0x0213b018",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DGravityStep",
+          "start": "0x0213b018",
+          "end": "0x0213b01c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DMoveSpeed",
+          "start": "0x0213b01c",
+          "end": "0x0213b020",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DAnimTable",
+          "start": "0x0213b098",
+          "end": "0x0213b0a4",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -1200,6 +1361,46 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212f52c"
+    },
+    {
+      "section": ".data.data_ov006_02134d1c",
+      "source": "0x02134d1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134d20",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134d20"
+    },
+    {
+      "section": ".data.sJump3DAnimTable",
+      "source": "0x0213b0a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sJump3DAnimWallJump",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02140424"
+    },
+    {
+      "section": ".data.sJump3DAnimTable",
+      "source": "0x0213b09c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sJump3DAnimDoubleJump1",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0214040c"
+    },
+    {
+      "section": ".data.sJump3DAnimTable",
+      "source": "0x0213b098",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sJump3DAnimJump",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02140430"
     }
   ],
   "defined_symbol_renames": [

@@ -20,8 +20,26 @@
     },
     {
       "name": ".data",
-      "start": "0x0213faa0",
+      "start": "0x0213fa9c",
       "end": "0x0213fbc4"
+    },
+    {
+      "name": ".data.sTrmpDoorSignSprites",
+      "input_section": ".data",
+      "start": "0x02134f00",
+      "end": "0x02134f08"
+    },
+    {
+      "name": ".data.sTrmpArrowSprite",
+      "input_section": ".data",
+      "start": "0x02134f08",
+      "end": "0x02134f0c"
+    },
+    {
+      "name": ".data.sTrmpRowMarkerSprite",
+      "input_section": ".data",
+      "start": "0x02134f24",
+      "end": "0x02134f28"
     }
   ],
   "functions": [
@@ -408,6 +426,34 @@
       "address_point_bias": "0x8",
       "size": "0x98",
       "evidence": "compiler storage includes the two-word vtable preamble at 0x0213fb2c; all emitted relocation words match and storage ends exactly at the next minigame TU data"
+    },
+    {
+      "symbol": "sTrmpDoorSignSprites",
+      "address": "0x02134f00",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sTrmpArrowSprite",
+      "address": "0x02134f08",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sTrmpRowMarkerSprite",
+      "address": "0x02134f24",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sTrmpTouchBlocked",
+      "address": "0x0213fa9c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     }
   ],
   "relocations": [
@@ -970,6 +1016,46 @@
       "addend": 0,
       "target_module": "overlays(2,3,4,7)",
       "target_address": "0x020ad660"
+    },
+    {
+      "section": ".data.sTrmpDoorSignSprites",
+      "source": "0x02134f04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134ef0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134ef0"
+    },
+    {
+      "section": ".data.sTrmpDoorSignSprites",
+      "source": "0x02134f00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134ef8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134ef8"
+    },
+    {
+      "section": ".data.sTrmpArrowSprite",
+      "source": "0x02134f08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134f0c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134f0c"
+    },
+    {
+      "section": ".data.sTrmpRowMarkerSprite",
+      "source": "0x02134f24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134f28",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134f28"
     }
   ],
   "bss": [],
@@ -1120,8 +1206,29 @@
         },
         {
           "section": ".data",
-          "start": "0x0213faa0",
+          "start": "0x0213fa9c",
           "end": "0x0213fbc4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sTrmpDoorSignSprites",
+          "start": "0x02134f00",
+          "end": "0x02134f08",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sTrmpArrowSprite",
+          "start": "0x02134f08",
+          "end": "0x02134f0c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sTrmpRowMarkerSprite",
+          "start": "0x02134f24",
+          "end": "0x02134f28",
           "differingBytes": 0,
           "firstDiff": null
         }

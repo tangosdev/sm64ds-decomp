@@ -66,7 +66,8 @@ typedef struct Vec2s {
 
 extern int sTrmpRowScreenY[];
 
-extern int sTrmpRowMarkerSprite;
+extern "C" char data_ov006_02134f28[];
+int sTrmpRowMarkerSprite = (int)data_ov006_02134f28;
 void TrmpFx_Link(TrmpScorePopup *entry);
 
 extern TrmpScorePopup *sTrmpFxList;
@@ -81,7 +82,7 @@ extern const unsigned char sTrmpBrushPltt[];
 
 extern dFdBrightness_c *gSceneFader;
 
-extern int sTrmpTouchBlocked;
+int sTrmpTouchBlocked = 1;
 extern "C" {
 void SetBg2Offset(int a, int b);
 }
@@ -136,9 +137,12 @@ void Puff_ClearAll(int a0, int a1);
 extern "C" void func_02012718(int, int);
 void TrmpFx_UpdateAll(void);
 void TrmpFx_DrawAll(void);
-extern void *sTrmpDoorSignSprites[];
+extern "C" char data_ov006_02134ef8[];
+extern "C" char data_ov006_02134ef0[];
+void * sTrmpDoorSignSprites[] = {data_ov006_02134ef8, data_ov006_02134ef0};
 
-extern void *sTrmpArrowSprite;
+extern "C" char data_ov006_02134f0c[];
+void * sTrmpArrowSprite = data_ov006_02134f0c;
 extern "C" void Trmp3DMario_DrawAll(void);
 void TrmpLine_DrawAll(void);
 dScMgTrampoline_c *dScMgTrampoline_c_classInit(void);

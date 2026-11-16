@@ -43,6 +43,36 @@
       "name": ".bss",
       "start": "0x021417b0",
       "end": "0x02141870"
+    },
+    {
+      "name": ".data.sCoinValuesSprites",
+      "input_section": ".data",
+      "start": "0x02133f10",
+      "end": "0x02133f18"
+    },
+    {
+      "name": ".data.sCoinPopupSprites",
+      "input_section": ".data",
+      "start": "0x021341ec",
+      "end": "0x021341f0"
+    },
+    {
+      "name": ".data.sCoinBagSprites",
+      "input_section": ".data",
+      "start": "0x02134b4c",
+      "end": "0x02134b54"
+    },
+    {
+      "name": ".data.sCoinSparkleSprites",
+      "input_section": ".data",
+      "start": "0x02136e24",
+      "end": "0x02136e2c"
+    },
+    {
+      "name": ".data.sCoinCaptionSprites",
+      "input_section": ".data",
+      "start": "0x0213a9fc",
+      "end": "0x0213aa24"
     }
   ],
   "functions": [
@@ -488,7 +518,43 @@
       "ordinal": 62
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "sCoinValuesSprites",
+      "address": "0x02133f10",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sCoinPopupSprites",
+      "address": "0x021341ec",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sCoinBagSprites",
+      "address": "0x02134b4c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sCoinSparkleSprites",
+      "address": "0x02136e24",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sCoinCaptionSprites",
+      "address": "0x0213a9fc",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    }
+  ],
   "bss": [
     {
       "symbol": "sCoinCoinStateTable",
@@ -657,6 +723,41 @@
           "start": "0x021417b0",
           "end": "0x02141870",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.sCoinValuesSprites",
+          "start": "0x02133f10",
+          "end": "0x02133f18",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sCoinPopupSprites",
+          "start": "0x021341ec",
+          "end": "0x021341f0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sCoinBagSprites",
+          "start": "0x02134b4c",
+          "end": "0x02134b54",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sCoinSparkleSprites",
+          "start": "0x02136e24",
+          "end": "0x02136e2c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sCoinCaptionSprites",
+          "start": "0x0213a9fc",
+          "end": "0x0213aa24",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -891,16 +992,6 @@
     }
   ],
   "relocations": [
-    {
-      "section": ".ctor",
-      "source": "0x02133588",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "__sinit_d_s_mg_coin.cpp",
-      "addend": 0,
-      "target_module": "ov006",
-      "target_address": "0x0213014c"
-    },
     {
       "section": ".init",
       "source": "0x0213035c",
@@ -1190,6 +1281,186 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021417c8"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02133588",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_s_mg_coin.cpp",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213014c"
+    },
+    {
+      "section": ".data.sCoinValuesSprites",
+      "source": "0x02133f10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133f08",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133f08"
+    },
+    {
+      "section": ".data.sCoinValuesSprites",
+      "source": "0x02133f14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133f00",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133f00"
+    },
+    {
+      "section": ".data.sCoinPopupSprites",
+      "source": "0x021341ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021341f0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021341f0"
+    },
+    {
+      "section": ".data.sCoinBagSprites",
+      "source": "0x02134b4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134b44",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134b44"
+    },
+    {
+      "section": ".data.sCoinBagSprites",
+      "source": "0x02134b50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134b3c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134b3c"
+    },
+    {
+      "section": ".data.sCoinSparkleSprites",
+      "source": "0x02136e24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02136e1c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02136e1c"
+    },
+    {
+      "section": ".data.sCoinSparkleSprites",
+      "source": "0x02136e28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02136e14",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02136e14"
+    },
+    {
+      "section": ".data.sCoinCaptionSprites",
+      "source": "0x0213a9fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a9a4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a9a4"
+    },
+    {
+      "section": ".data.sCoinCaptionSprites",
+      "source": "0x0213aa00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a9ac",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a9ac"
+    },
+    {
+      "section": ".data.sCoinCaptionSprites",
+      "source": "0x0213aa04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a9c4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a9c4"
+    },
+    {
+      "section": ".data.sCoinCaptionSprites",
+      "source": "0x0213aa08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a99c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a99c"
+    },
+    {
+      "section": ".data.sCoinCaptionSprites",
+      "source": "0x0213aa0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213ab1c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213ab1c"
+    },
+    {
+      "section": ".data.sCoinCaptionSprites",
+      "source": "0x0213aa10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213aad4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213aad4"
+    },
+    {
+      "section": ".data.sCoinCaptionSprites",
+      "source": "0x0213aa14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213aa94",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213aa94"
+    },
+    {
+      "section": ".data.sCoinCaptionSprites",
+      "source": "0x0213aa18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213aa5c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213aa5c"
+    },
+    {
+      "section": ".data.sCoinCaptionSprites",
+      "source": "0x0213aa1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213a9dc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213a9dc"
+    },
+    {
+      "section": ".data.sCoinCaptionSprites",
+      "source": "0x0213aa20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213aa24",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213aa24"
     }
   ],
   "rodata": [
