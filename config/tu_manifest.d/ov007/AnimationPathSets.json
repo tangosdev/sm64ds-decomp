@@ -86,7 +86,7 @@
       "name": ".rodata.data_ov007_020cccd0",
       "input_section": ".rodata",
       "start": "0x20cccd0",
-      "end": "0x20cccd2"
+      "end": "0x020cccd4"
     },
     {
       "name": ".rodata.data_ov007_020cccdc",
@@ -104,19 +104,19 @@
       "name": ".rodata.data_ov007_020ccce4",
       "input_section": ".rodata",
       "start": "0x20ccce4",
-      "end": "0x20ccce6"
+      "end": "0x020ccce8"
     },
     {
       "name": ".rodata.data_ov007_020cccec",
       "input_section": ".rodata",
       "start": "0x20cccec",
-      "end": "0x20cccee"
+      "end": "0x020cccf0"
     },
     {
       "name": ".rodata.data_ov007_020cccf4",
       "input_section": ".rodata",
       "start": "0x20cccf4",
-      "end": "0x20cccf6"
+      "end": "0x020cccf8"
     },
     {
       "name": ".rodata.data_ov007_020cccfc",
@@ -254,7 +254,7 @@
       "name": ".rodata.data_ov007_020ccd54",
       "input_section": ".rodata",
       "start": "0x20ccd54",
-      "end": "0x20ccd57"
+      "end": "0x020ccd58"
     },
     {
       "name": ".rodata.data_ov007_020ccd64",
@@ -2760,7 +2760,7 @@
     {
       "symbol": "data_ov007_020cccd0",
       "address": "0x20cccd0",
-      "size": "0x2",
+      "size": "0x4",
       "binding": "STB_GLOBAL"
     },
     {
@@ -2778,19 +2778,19 @@
     {
       "symbol": "data_ov007_020ccce4",
       "address": "0x20ccce4",
-      "size": "0x2",
+      "size": "0x4",
       "binding": "STB_GLOBAL"
     },
     {
       "symbol": "data_ov007_020cccec",
       "address": "0x20cccec",
-      "size": "0x2",
+      "size": "0x4",
       "binding": "STB_GLOBAL"
     },
     {
       "symbol": "data_ov007_020cccf4",
       "address": "0x20cccf4",
-      "size": "0x2",
+      "size": "0x4",
       "binding": "STB_GLOBAL"
     },
     {
@@ -2928,7 +2928,7 @@
     {
       "symbol": "data_ov007_020ccd54",
       "address": "0x20ccd54",
-      "size": "0x3",
+      "size": "0x4",
       "binding": "STB_GLOBAL"
     },
     {
@@ -5479,7 +5479,7 @@
     "The existing lower allocator func_ov007_020c2c68 returns an integer address while some declarations use pointers; that separately scoped historical debt remains untouched."
   ],
   "verification": {
-    "round": "Native table enrollment; current scratch admission and independent normal provider proof required.",
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
       "result": "scratch-data-verified",
@@ -5587,7 +5587,7 @@
         {
           "section": ".rodata.data_ov007_020cccd0",
           "start": "0x20cccd0",
-          "end": "0x20cccd2",
+          "end": "0x020cccd4",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -5608,21 +5608,21 @@
         {
           "section": ".rodata.data_ov007_020ccce4",
           "start": "0x20ccce4",
-          "end": "0x20ccce6",
+          "end": "0x020ccce8",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".rodata.data_ov007_020cccec",
           "start": "0x20cccec",
-          "end": "0x20cccee",
+          "end": "0x020cccf0",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".rodata.data_ov007_020cccf4",
           "start": "0x20cccf4",
-          "end": "0x20cccf6",
+          "end": "0x020cccf8",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -5783,7 +5783,7 @@
         {
           "section": ".rodata.data_ov007_020ccd54",
           "start": "0x20ccd54",
-          "end": "0x20ccd57",
+          "end": "0x020ccd58",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -8855,7 +8855,25 @@
       },
       "linkerOutput": null
     },
-    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off"
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "object": "build/tu/ov007-AnimationPathSets/func_ov007_020bbe60.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 1,
+    "functions_declared": 1,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
   },
   "relocations": [
     {

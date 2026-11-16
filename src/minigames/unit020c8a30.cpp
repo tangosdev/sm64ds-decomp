@@ -17,6 +17,7 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
+#include "OamAttr.h"
 
 /* One puff sprite: position, velocity, a swaying spread that shrinks by
    mScale each frame, and a lifetime. */
@@ -46,13 +47,30 @@ int GetGameLanguage(void);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 }
 
-extern "C" void *data_ov006_02134b6c[];
-extern "C" void *data_ov006_02134b78[];
-extern "C" void *data_ov006_02134b84[];
-extern "C" void *data_ov006_02134b60[];
-extern "C" void *data_ov006_02134b54[];
+/* sPuffSprites[language] holds one sprite list per puff slot; each of the
+   fifteen lists below is three OamAttr records. */
+extern "C" OamAttr data_ov006_02134b90[3];
+extern "C" OamAttr data_ov006_02134ba8[3];
+extern "C" OamAttr data_ov006_02134bc0[3];
+extern "C" OamAttr data_ov006_02134bd8[3];
+extern "C" OamAttr data_ov006_02134bf0[3];
+extern "C" OamAttr data_ov006_02134c08[3];
+extern "C" OamAttr data_ov006_02134c20[3];
+extern "C" OamAttr data_ov006_02134c38[3];
+extern "C" OamAttr data_ov006_02134c50[3];
+extern "C" OamAttr data_ov006_02134c68[3];
+extern "C" OamAttr data_ov006_02134c80[3];
+extern "C" OamAttr data_ov006_02134c98[3];
+extern "C" OamAttr data_ov006_02134cb0[3];
+extern "C" OamAttr data_ov006_02134cc8[3];
+extern "C" OamAttr data_ov006_02134ce0[3];
+extern "C" OamAttr *data_ov006_02134b54[3];
+extern "C" OamAttr *data_ov006_02134b60[3];
+extern "C" OamAttr *data_ov006_02134b6c[3];
+extern "C" OamAttr *data_ov006_02134b78[3];
+extern "C" OamAttr *data_ov006_02134b84[3];
 
-extern "C" void **sPuffSprites[] = {
+extern "C" OamAttr **sPuffSprites[5] = {
     data_ov006_02134b6c, data_ov006_02134b78, data_ov006_02134b84,
     data_ov006_02134b60, data_ov006_02134b54,
 };
@@ -159,3 +177,97 @@ void Puff_DrawAll(void) {
 inline Puff::~Puff() {}
 
 inline Puff::Puff() {}
+
+/* The fifteen sprite lists, three per language. attr3 == 0xffff ends each. */
+extern "C" OamAttr data_ov006_02134b90[3] = {
+    {0x00f8, 0x4018, 0x001a, 0x0000},
+    {0x40f8, 0x81d8, 0x0000, 0x0000},
+    {0x40f8, 0x81f8, 0x0004, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134ba8[3] = {
+    {0x00f8, 0x4018, 0x001c, 0x0000},
+    {0x40f8, 0x81d8, 0x0000, 0x0000},
+    {0x40f8, 0x81f8, 0x0004, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134bc0[3] = {
+    {0x00f8, 0x4018, 0x001a, 0x0000},
+    {0x40f8, 0x81d8, 0x0040, 0x0000},
+    {0x40f8, 0x81f8, 0x0044, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134bd8[3] = {
+    {0x00f8, 0x4018, 0x001a, 0x0000},
+    {0x40f8, 0x81d8, 0x0000, 0x0000},
+    {0x40f8, 0x81f8, 0x0004, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134bf0[3] = {
+    {0x00f8, 0x4018, 0x0018, 0x0000},
+    {0x40f8, 0x81d8, 0x0000, 0x0000},
+    {0x40f8, 0x81f8, 0x0004, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134c08[3] = {
+    {0x00f8, 0x4018, 0x0018, 0x0000},
+    {0x40f8, 0x81d8, 0x0000, 0x0000},
+    {0x40f8, 0x81f8, 0x0004, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134c20[3] = {
+    {0x00f8, 0x4018, 0x001c, 0x0000},
+    {0x40f8, 0x81d8, 0x0000, 0x0000},
+    {0x40f8, 0x81f8, 0x0004, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134c38[3] = {
+    {0x00f8, 0x41d8, 0x001c, 0x0000},
+    {0x40f8, 0x81e8, 0x0040, 0x0000},
+    {0x40f8, 0x8008, 0x0044, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134c50[3] = {
+    {0x00f8, 0x41d8, 0x001a, 0x0000},
+    {0x40f8, 0x81e8, 0x0040, 0x0000},
+    {0x40f8, 0x8008, 0x0044, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134c68[3] = {
+    {0x00f8, 0x4018, 0x001c, 0x0000},
+    {0x40f8, 0x81d8, 0x0000, 0x0000},
+    {0x40f8, 0x81f8, 0x0004, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134c80[3] = {
+    {0x00f8, 0x41d8, 0x0018, 0x0000},
+    {0x40f8, 0x81e8, 0x0000, 0x0000},
+    {0x40f8, 0x8008, 0x0004, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134c98[3] = {
+    {0x00f8, 0x4018, 0x0018, 0x0000},
+    {0x40f8, 0x81d8, 0x0000, 0x0000},
+    {0x40f8, 0x81f8, 0x0004, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134cb0[3] = {
+    {0x00f8, 0x4018, 0x001a, 0x0000},
+    {0x40f8, 0x81d8, 0x0000, 0x0000},
+    {0x40f8, 0x81f8, 0x0004, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134cc8[3] = {
+    {0x00f8, 0x4018, 0x0018, 0x0000},
+    {0x40f8, 0x81d8, 0x0000, 0x0000},
+    {0x40f8, 0x81f8, 0x0004, 0xffff},
+};
+extern "C" OamAttr data_ov006_02134ce0[3] = {
+    {0x00f8, 0x4018, 0x001c, 0x0000},
+    {0x40f8, 0x81d8, 0x0040, 0x0000},
+    {0x40f8, 0x81f8, 0x0044, 0xffff},
+};
+
+/* One table per language, in its ROM order. */
+extern "C" OamAttr *data_ov006_02134b54[3] = {
+    data_ov006_02134cc8, data_ov006_02134bc0, data_ov006_02134ce0,
+};
+extern "C" OamAttr *data_ov006_02134b60[3] = {
+    data_ov006_02134c98, data_ov006_02134b90, data_ov006_02134ba8,
+};
+extern "C" OamAttr *data_ov006_02134b6c[3] = {
+    data_ov006_02134bf0, data_ov006_02134cb0, data_ov006_02134c68,
+};
+extern "C" OamAttr *data_ov006_02134b78[3] = {
+    data_ov006_02134c80, data_ov006_02134c50, data_ov006_02134c38,
+};
+extern "C" OamAttr *data_ov006_02134b84[3] = {
+    data_ov006_02134c08, data_ov006_02134bd8, data_ov006_02134c20,
+};

@@ -132,15 +132,40 @@ extern Vector3 sPresenterScale;
 Matrix4x3 sDealerIdentityMtx = {0x1000, 0x0, 0x0,    0x0, 0x1000, 0x0,
                                 0x0,    0x0, 0x1000, 0x0, 0x0,    0x0};
 extern short sDealerLampTimes[];
-extern "C" char data_ov006_0213ad58[];
-extern "C" char data_ov006_0213ad88[];
-extern "C" char data_ov006_0213ad04[];
-extern "C" char data_ov006_0213ace0[];
+/* The mascot walker's four routes, each paired with its reverse; 20.12 world
+   points the walk cycle visits in order. */
+extern "C" VecFx32 data_ov006_0213ad58[4];
+extern "C" VecFx32 data_ov006_0213ad88[4];
+extern "C" VecFx32 data_ov006_0213ad04[3];
+extern "C" VecFx32 data_ov006_0213ace0[3];
 WalkPath sMascotWalkerPaths[] = {
     {4, (Vector3 *)data_ov006_0213ad58},
     {4, (Vector3 *)data_ov006_0213ad88},
     {3, (Vector3 *)data_ov006_0213ad04},
     {3, (Vector3 *)data_ov006_0213ace0},
+};
+
+extern "C" VecFx32 data_ov006_0213ad58[4] = {
+    {0x27000, 0, -0x34000},
+    {0xc000, 0, -0x34000},
+    {-0x4000, 0, -0x11000},
+    {-0x27000, 0, -0x11000},
+};
+extern "C" VecFx32 data_ov006_0213ad88[4] = {
+    {-0x27000, 0, -0x11000},
+    {-0x4000, 0, -0x11000},
+    {0xc000, 0, -0x34000},
+    {0x27000, 0, -0x34000},
+};
+extern "C" VecFx32 data_ov006_0213ad04[3] = {
+    {0x27000, 0, -0x11000},
+    {0xc000, 0, -0x11000},
+    {-0x27000, 0, -0x11000},
+};
+extern "C" VecFx32 data_ov006_0213ace0[3] = {
+    {-0x27000, 0, -0x11000},
+    {0xc000, 0, -0x11000},
+    {0x27000, 0, -0x11000},
 };
 extern QuaternionBlock data_02092768; /* identity */
 extern dClipper data_0209f43c;

@@ -63,9 +63,11 @@ const unsigned char data_ov007_020ccccc[2] = {
     115,
 };
 
-const unsigned char data_ov007_020cccd0[2] = {
+const unsigned char data_ov007_020cccd0[4] = {
     103,
     101,
+    0,
+    0,
 };
 
 const unsigned char data_ov007_020cccdc[2] = {
@@ -78,19 +80,25 @@ const unsigned char data_ov007_020ccce0[2] = {
     112,
 };
 
-const unsigned char data_ov007_020ccce4[2] = {
+const unsigned char data_ov007_020ccce4[4] = {
     106,
     110,
+    0,
+    0,
 };
 
-const unsigned char data_ov007_020cccec[2] = {
+const unsigned char data_ov007_020cccec[4] = {
     145,
     140,
+    0,
+    0,
 };
 
-const unsigned char data_ov007_020cccf4[2] = {
+const unsigned char data_ov007_020cccf4[4] = {
     103,
     107,
+    0,
+    0,
 };
 
 const unsigned char data_ov007_020cccfc[2] = {
@@ -222,10 +230,11 @@ const unsigned char data_ov007_020ccd50[3] = {
     100,
 };
 
-const unsigned char data_ov007_020ccd54[3] = {
+const unsigned char data_ov007_020ccd54[4] = {
     178,
     177,
     173,
+    0,
 };
 
 const int data_ov007_020ccd64[1] = {
