@@ -179,10 +179,8 @@ extern struct OamAttr *sMgTextSpritesFrench[];
 extern struct OamAttr *sMgTextSpritesGerman[];
 extern struct OamAttr *sMgTextSpritesItalian[];
 unsigned char *sMgStateTextSpritesByLanguage[] = {
-    (unsigned char *)sMgTextSpritesEnglish,
-    (unsigned char *)sMgTextSpritesSpanish,
-    (unsigned char *)sMgTextSpritesFrench,
-    (unsigned char *)sMgTextSpritesGerman,
+    (unsigned char *)sMgTextSpritesEnglish, (unsigned char *)sMgTextSpritesSpanish,
+    (unsigned char *)sMgTextSpritesFrench,  (unsigned char *)sMgTextSpritesGerman,
     (unsigned char *)sMgTextSpritesItalian,
 };
 
