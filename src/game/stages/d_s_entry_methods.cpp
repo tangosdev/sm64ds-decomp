@@ -1050,14 +1050,7 @@ void dScEntry_c::RenderWinCounts() {
     int i = 0;
 
     if (count > 0) {
-        int sz = 0x1000;
-        int xTens = 206;
-        int eight = 8;
-        int yOff = i;
-        int zT = 0;
-        int zO = 0;
-        int minus1 = -1;
-        int xOnes = 216;
+        int yOff = 0;
 
         do {
             int *p;
@@ -1066,16 +1059,16 @@ void dScEntry_c::RenderWinCounts() {
             n = n % 100;
             tens = n / 10;
             if (tens != 0) {
-                p = (int *)OAM::Render(zT, (OamAttr *)data_ov075_0211c8b0, xTens, yBase + yOff,
-                                       eight, minus1, sz, zT);
+                p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0, 206, yBase + yOff, 8,
+                                       -1, 0x1000, 0);
                 if (p != 0) {
                     int *q = (p + 1);
                     int val = *q;
                     *q = (val & ~0x3ff) | ((tens + ((u32)(val << 22) >> 22)) & 0x3ff);
                 }
             }
-            p = (int *)OAM::Render(zO, (OamAttr *)data_ov075_0211c8b0, xOnes, yBase + yOff, eight,
-                                   minus1, sz, zO);
+            p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0, 216, yBase + yOff, 8, -1,
+                                   0x1000, 0);
             if (p != 0) {
                 int *q = (p + 1);
                 int val = *q;
