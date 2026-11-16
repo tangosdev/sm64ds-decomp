@@ -1228,18 +1228,11 @@ void daBtn_c::func_ov079_021246dc()
             if (mPounder->GetTalkState() != 0)
                 return;
             {
-                int idx = mNearestPlayer;
-                daPly_c *other = mPlayers[idx];
-                Vector3 *op = &other->mPos;
-                unsigned short ang;
-                short mag = 0x10e;
-                pos.x = op->x;
-                pos.y = op->y;
-                pos.z = op->z;
-                ang = ::Vec3_HorzAngle(&pos, &mPos);
+                pos = mPlayers[mNearestPlayer]->mPos;
+                unsigned short ang = ::Vec3_HorzAngle(&pos, &mPos);
                 pos.y += 0x32000;
-                pos.x = FX_SinIdx(ang >> 4) * mag + pos.x;
-                pos.z = FX_CosIdx(ang >> 4) * mag + pos.z;
+                pos.x = FX_SinIdx(ang >> 4) * 0x10e + pos.x;
+                pos.z = FX_CosIdx(ang >> 4) * 0x10e + pos.z;
                 if (mPounder->ShowMessage(*this, 0xa5, &pos, 0, 0) == 0)
                     return;
                 mSubState++;
@@ -1253,18 +1246,14 @@ void daBtn_c::func_ov079_021246dc()
             return;
         case 3:
             mState = 9;
-            starPos.x = mPosX;
-            starPos.y = mPosY;
-            starPos.z = mPosZ;
+            starPos = mPos;
             starPos.y += 0x64000;
             func_0201267c(0xc6, &mCamSpacePos);
             Sound::StopLoadedMusic_Layer3();
             func_02011cfc();
             func_ov079_02123d4c(&v, this);
             v.y += 0x50000;
-            dp.x = v.x;
-            dp.y = v.y;
-            dp.z = v.z;
+            dp = v;
             TriplePoofDustAt(dp);
             Particle::System::NewSimple(kPtclWhompKingDefeat, v.x, v.y, v.z);
             mShouldRender = 0;
@@ -1278,9 +1267,7 @@ void daBtn_c::func_ov079_021246dc()
         func_0201267c(0xc6, &mCamSpacePos);
         func_ov079_02123d4c(&v2, this);
         v2.y += 0x28000;
-        dp2.x = v2.x;
-        dp2.y = v2.y;
-        dp2.z = v2.z;
+        dp2 = v2;
         PoofDustAt(dp2);
         Particle::System::NewSimple(kPtclWhompDefeat, v2.x, v2.y, v2.z);
         MarkForDestruction();

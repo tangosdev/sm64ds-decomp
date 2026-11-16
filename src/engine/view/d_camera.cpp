@@ -2653,20 +2653,11 @@ int func_02009d70(dCamera_c *cam) {
 /* Entry to the behind-the-player state: mode data_0208729c, turning to the
    yaw behind the target player. */
 int dCamera_c::func_02009d30() {
-    int result = 1;
-
     mMode = &data_0208729c;
-
-    mTurningToTarget = result;
-
-    {
-        dActor_c *player = mTargetPlayer;
-        short yaw = player->mAngleY;
-        mTargetAngleY = (yaw + 0x8000);
-        mFlags &= ~0x100u;
-    }
-
-    return result;
+    mTurningToTarget = 1;
+    mTargetAngleY = mTargetPlayer->mAngleY + 0x8000;
+    mFlags &= ~0x100u;
+    return 1;
 }
 
 /* The behind-the-player state: while mTurningToTarget is set, carry lookAt

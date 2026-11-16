@@ -1848,16 +1848,16 @@ void dScMgBase_c::UpdateMenu() {
 
     idx = gActivePlayerSlot;
     unlocked = 0;
-    if (gTouchHeld[idx * 4] != 0) {
-        unlocked = (gTouchEdge[idx * 4] != 0);
+    if (gTouchInfo[idx].held != 0) {
+        unlocked = (gTouchInfo[idx].edge != 0);
     }
     do {
         if (unlocked == 0)
             break;
         if (mMenuCursor >= 0)
             break;
-        tmp[0] = gTouchX[idx * 4];
-        tmp[1] = gTouchY[idx * 4];
+        tmp[0] = gTouchInfo[idx].x;
+        tmp[1] = gTouchInfo[idx].y;
         func_0203b958(d0, tmp, &mMenuItem0X);
         func_0203b958(d1, tmp, &mMenuItem1X);
         func_0203b958(d2, tmp, &mMenuItem2X);
@@ -2713,7 +2713,7 @@ int dScMgBase_c::BeforeBehavior()
                         CloseMenu();
                 }
             } else {
-                if (gTouchHeld[mode * 4] == 0)
+                if (gTouchInfo[mode].held == 0)
                     OpenMenu();
             }
         }
@@ -2901,21 +2901,20 @@ struct Vec2 {
 
 extern MgBanner gMgBanners[3];
 
-// The ROM scales idx into the addressing mode here, which only the 4-byte-record view of the lane reproduces.
-#define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
 int Mg_CheckBannerButton(int arg) {
     int idx = gActivePlayerSlot;
     int flag = 0;
     int i;
 
-    if (TOUCH_REC(gTouchHeld)[idx][0] != 0) {
-        if (TOUCH_REC(gTouchEdge)[idx][0] != 0) flag = 1;
+    if (gTouchInfo[idx].held != 0) {
+        if (gTouchInfo[idx].edge != 0)
+            flag = 1;
     }
 
     if (flag) {
         MgBanner *o = gMgBanners;
-        int cx = TOUCH_REC(gTouchX)[idx][0];
-        int cy = TOUCH_REC(gTouchY)[idx][0];
+        int cx = gTouchInfo[idx].x;
+        int cy = gTouchInfo[idx].y;
         for (i = 0; i < 3; i++, o++) {
             if (arg == o->mFileIndex && o->mArrived != 0) {
                 volatile struct Vec2 pos;

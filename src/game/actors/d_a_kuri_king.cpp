@@ -378,10 +378,8 @@ void daKuriKing_c::UpdateDefeat() {
     vzero.x = 0;
     vzero.y = 0;
     vzero.z = 0;
-    vmsg.x = this->mPosX;
-    vmsg.y = this->mPosY;
-    vmsg.z = this->mPosZ;
-    vmsg.y = vmsg.y + 0x78000;
+    vmsg = mPos;
+    vmsg.y += 0x78000;
     cam = gCamera;
     player = this->mTalkPlayer;
 
@@ -413,7 +411,6 @@ void daKuriKing_c::UpdateDefeat() {
         if (DecIfAbove0_Short(&this->mTimer) == 0) {
             dActor_c *actor = dActor_c::FindWithActorID(0xc8, 0);
             if (actor != 0) {
-                u32 id = 0xc8;
                 while (1) {
                     s32 flag = (actor->mFlags & 0x40000) ? 1 : 0;
                     if (flag == 0) {
@@ -427,7 +424,7 @@ void daKuriKing_c::UpdateDefeat() {
                         this->mTimer = 2;
                         return;
                     }
-                    actor = dActor_c::FindWithActorID(id, actor);
+                    actor = dActor_c::FindWithActorID(0xc8, actor);
                     if (actor == 0)
                         break;
                 }
@@ -470,10 +467,8 @@ void daKuriKing_c::UpdateDefeat() {
         if (player->HasFinishedTalking() == 0)
             return;
         this->mShouldRender = 0;
-        vzero.x = this->mPosX;
-        vzero.y = this->mPosY;
-        vzero.z = this->mPosZ;
-        vzero.y = vzero.y + 0x190000;
+        vzero = mPos;
+        vzero.y += 0x190000;
         Particle::System::NewSimple(kPtclGoombossVanishA, vzero.x, vzero.y, vzero.z);
         Particle::System::NewSimple(kPtclGoombossVanishB, vzero.x, vzero.y, vzero.z);
         func_02012694(0x15f, &this->mCamSpacePos);

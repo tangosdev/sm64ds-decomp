@@ -100,7 +100,6 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     *(Mtx43 *)&invMat = *(Mtx43 *)&mat;
     MTX_Inverse43(&invMat, &invMat);
 
-    int zero = 0;
     *(Mtx43 *)&mat = *(const Mtx43 *)&mtx;
 
     s16 oldAngle = angY;
@@ -115,9 +114,9 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     pos.z = mtx.t.z;
 
     Mtx43 rotation = *(Mtx43 *)&mat;
-    rotation.r[3].x = zero;
-    rotation.r[3].y = zero;
-    rotation.r[3].z = zero;
+    rotation.r[3].x = 0;
+    rotation.r[3].y = 0;
+    rotation.r[3].z = 0;
     *(Mtx43 *)&invRotMat = rotation;
     MTX_Inverse43(&invRotMat, &invRotMat);
 

@@ -1,6 +1,6 @@
 #include "Ov007Picker.h"
 
-extern int func_ov007_020c704c(Ov007Follower *f, Vector3 *target, int pull, int reach,
+extern int func_ov007_020c704c(Ov007Follower *f, VecFx32 *target, int pull, int reach,
                                int snapRadius);
 
 inline long long mul_add(long long a, int b, long long c) {
@@ -11,7 +11,7 @@ inline long long mul_add(long long a, int b, long long c) {
  * then pulls every point of every group toward target with
  * func_ov007_020c704c: a point within snapRadius snaps onto it, one within
  * reach is pulled with strength pull. Returns how many points snapped. */
-int func_ov007_020c5854(Ov007Picker *self, Vector3 *target, int pull, int snapRadius, int reach,
+int func_ov007_020c5854(Ov007Picker *self, VecFx32 *target, int pull, int snapRadius, int reach,
                         int scale) {
     long long v;
     int i, j, cnt = 0;

@@ -1612,7 +1612,9 @@ void dScMgPachinko2_c::ClearAimLine() {
 
 #pragma push
 /* Kept: without opt_loop_invariants off the hoisted x >> 3 and x & 7 swap
- * order and the row and column take other registers. */
+ * order and the row and column take other registers (10 of 32 words).
+ * Plain (x - 1 + j, y - 1 + i) bodies with it on are 31 words: the ROM
+ * spills the shared 0 for j to the stack (measured #821). */
 #pragma opt_loop_invariants off
 void dScMgPachinko2_c::PlotSubBg2Pixels(int a1, int a2, int a3) {
     int i, j, x, lo, hi, col, row, yb, s;
@@ -1637,7 +1639,8 @@ void dScMgPachinko2_c::PlotSubBg2Pixels(int a1, int a2, int a3) {
 
 #pragma push
 /* Kept: without opt_dead_assignments off the scheduler stores the right pivot
- * x (0x94) before the pivot y (0x22); the stores are otherwise the same. */
+ * x (0x94) before the pivot y (0x22); the stores are otherwise the same
+ * (4 of 246 words; also with a pivot[3] table; measured #821). */
 #pragma opt_dead_assignments off
 void dScMgPachinko2_c::DrawAimLine() {
     int k;
@@ -1860,20 +1863,18 @@ void dScMgPachinko2_c::StartCountdown() {
 
 void dScMgPachinko2_c::Ball_StateWaitGrab(int i) {
     u8 slot;
-    int off;
     int touched;
     int dx, dy;
 
-    slot = gActivePlayerSlot;
-    off = slot * 4;
     touched = 0;
-    if (gTouchHeld[off]) {
-        if (gTouchEdge[off])
+    slot = gActivePlayerSlot;
+    if (gTouchInfo[slot].held) {
+        if (gTouchInfo[slot].edge)
             touched = 1;
     }
     if (touched != 0) {
-        dx = (mBalls[i].x >> 12) - gTouchX[slot * 4];
-        dy = (mBalls[i].y >> 12) - gTouchY[slot * 4];
+        dx = (mBalls[i].x >> 12) - gTouchInfo[slot].x;
+        dy = (mBalls[i].y >> 12) - gTouchInfo[slot].y;
         mBalls[i].state = 1;
         mBalls[i].px = dx << 12;
         mBalls[i].py = dy << 12;
@@ -1885,17 +1886,18 @@ void dScMgPachinko2_c::Ball_StateWaitGrab(int i) {
 /* dScMgPachinko2_c ball i under a live pen record: while the pen is down the
    ball follows the pen (x/y = pen + held offset, clamped to the field, offset
    re-derived); on release it aims the ball at (0x80, 0x20) and launches it.
-   Touch record reads: gTouchX (pen x) is a volatile byte read and
-   gTouchY (pen y) is read through a plain u8 pointer. Measured under
-   2004/b56: both volatile 4 div (ldrb/add and literal/ldr order), both plain
-   arrays 18 div (the y read sinks past the x store), both pointer reads 7 div
-   (r3/r6 colouring); only this pairing reproduces the ROM's literal hoisting
-   and load order at both sites. */
+   Touch record reads: the pen x is a volatile byte read and the pen y a
+   plain byte read, both as a flat byte view of gTouchInfo strided by 4. This
+   is a launder, kept because nothing natural reaches the ROM: plain
+   gTouchInfo[idx].x/.y at both sites is 16 words off (r3/r6 colouring at the
+   first site, the literal hoisting at the second), a volatile TouchInfo at
+   both 165, a volatile &gTouchInfo[idx].x 14; the flat view at only one site
+   leaves 11 (first) or 5 (second). Measured under 2004/b56 against the
+   lane-symbol form this replaced, which compiled the same bytes. */
 void dScMgPachinko2_c::Ball_StateAim(int i) {
     int idx = gActivePlayerSlot;
-    int off = idx * 4;
 
-    if (gTouchHeld[off] != 0) {
+    if (gTouchInfo[idx].held != 0) {
         int sx;
         int sy;
         int dx;
@@ -1903,8 +1905,8 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
         int dist;
         int sq;
         int prev;
-        int tx = ((volatile u8 *)gTouchX)[off];
-        int ty = ((u8 *)gTouchY)[off];
+        int tx = ((volatile u8 *)&gTouchInfo->x)[idx * 4];
+        int ty = ((u8 *)&gTouchInfo->y)[idx * 4];
 
         this->mBalls[i].x = this->mBalls[i].px + (tx << 12);
         this->mBalls[i].y = this->mBalls[i].py + (ty << 12);
@@ -1923,8 +1925,9 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
             this->mBalls[i].y = 0x8000;
         }
         {
-            int nx = (this->mBalls[i].x >> 12) - ((volatile u8 *)gTouchX)[gActivePlayerSlot * 4];
-            int ny = (this->mBalls[i].y >> 12) - ((u8 *)gTouchY)[gActivePlayerSlot * 4];
+            int nx =
+                (this->mBalls[i].x >> 12) - ((volatile u8 *)&gTouchInfo->x)[gActivePlayerSlot * 4];
+            int ny = (this->mBalls[i].y >> 12) - ((u8 *)&gTouchInfo->y)[gActivePlayerSlot * 4];
             this->mBalls[i].px = nx << 12;
             this->mBalls[i].py = ny << 12;
         }

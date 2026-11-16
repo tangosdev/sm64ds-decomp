@@ -959,16 +959,15 @@ void TrmpLine::ComputeNormals() {
     for (row = 0; row < 4; row++) {
         for (column = 0; column < 4; column++) {
             int *components;
-            int zero = 0;
 
             components = (int *)&columnEdge;
-            components[0] = zero;
-            components[1] = zero;
-            components[2] = zero;
+            components[0] = 0;
+            components[1] = 0;
+            components[2] = 0;
             components = (int *)&rowEdge;
-            components[0] = zero;
-            components[1] = zero;
-            components[2] = zero;
+            components[0] = 0;
+            components[1] = 0;
+            components[2] = 0;
 
             if (column == 0)
                 VEC_Subtract((Vector3 *)p, (Vector3 *)p + 1, &columnEdge);

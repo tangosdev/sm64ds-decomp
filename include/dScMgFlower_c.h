@@ -166,7 +166,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
                               FlowerFace_* helpers take its address */
     u8 pad_5fa4[0x14];  /* 0x5fa4 -- untouched up to mCursorX */
     s32 mCursorX;       /* 0x5fb8 -- fx32 stylus position, from the touch
-                              sample gTouchX/gTouchY << 12 */
+                              sample gTouchInfo x/y << 12 */
     s32 mCursorY;       /* 0x5fbc */
     s32 mPrevCursorX;   /* 0x5fc0 -- last tick's mCursor; the drag delta */
     s32 mPrevCursorY;   /* 0x5fc4 */

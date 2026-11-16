@@ -116,8 +116,8 @@ void DecompressLZ16(void *src, void *dst);
 static inline int IsTouchStarted() {
     int started = 0;
     unsigned char slot = gActivePlayerSlot;
-    if (gTouchHeld[slot * 4] != 0)
-        started = gTouchEdge[slot * 4] != 0;
+    if (gTouchInfo[slot].held != 0)
+        started = gTouchInfo[slot].edge != 0;
     return started;
 }
 
@@ -317,8 +317,8 @@ s32 dScGameOver_c::Behavior() {
             if (!IsTouchStarted() && !IsButtonInputValid())
                 break;
             idx = gActivePlayerSlot;
-            if (((unsigned char)(gTouchX[idx * 4] - 8) < 240 &&
-                 (unsigned char)(gTouchY[idx * 4] - 56) < 32) ||
+            if (((unsigned char)(gTouchInfo[idx].x - 8) < 240 &&
+                 (unsigned char)(gTouchInfo[idx].y - 56) < 32) ||
                 (mSelection == 0 && IsButtonInputValid())) {
                 if (mSelection == 0)
                     mFlashTimer = (data_0208ee44 << 3);
@@ -330,8 +330,8 @@ s32 dScGameOver_c::Behavior() {
                 break;
             }
             idx = gActivePlayerSlot;
-            if (((unsigned char)(gTouchX[idx * 4] - 8) < 240 &&
-                 (unsigned char)(gTouchY[idx * 4] - 104) < 32) ||
+            if (((unsigned char)(gTouchInfo[idx].x - 8) < 240 &&
+                 (unsigned char)(gTouchInfo[idx].y - 104) < 32) ||
                 (mSelection == 1 && IsButtonInputValid())) {
                 if (mSelection == 1)
                     mFlashTimer = (data_0208ee44 << 3);

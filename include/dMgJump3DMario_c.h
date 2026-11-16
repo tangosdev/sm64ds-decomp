@@ -26,10 +26,10 @@
  * the reason is measured rather than assumed --
  * notes/experiments/jump3d-2711-members-vector3.md. types.h's Vector3
  * declares an (empty) destructor; swapping these members to it leaves D1, C1
- * and EnterHold byte-identical, but makes this TU define _ZN7Vector3D1Ev,
- * which no compiler_only_output row in
- * config/tu_manifest.d/ov006/dMgJump3DMario_c.json licenses, and packaging
- * then refuses the emission. Accepted as partial scope alongside issue #2722. */
+ * and EnterHold byte-identical, but makes this TU define _ZN7Vector3D1Ev.
+ * StateMove's Vector3 local now emits it anyway, and
+ * config/tu_manifest.d/ov006/dMgJump3DMario_c.json licenses it as a
+ * deadstrip-duplicate, so the member swap is open work, not a wall. */
 
 struct dMgJump3DMario_c;
 /* The state handler at +0x3c. Formed over the INCOMPLETE class on purpose:

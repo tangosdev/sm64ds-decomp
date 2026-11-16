@@ -96,7 +96,7 @@ extern void func_ov007_020bda8c(int a, int b);
 extern void func_ov007_020bdbcc(int a0, int a1);
 extern void func_ov007_020bde2c(int idx);
 extern "C" int func_ov007_020bdeb0(int a);
-extern "C" void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, Vector3 *out);
+extern "C" void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, VecFx32 *out);
 extern int func_ov007_020c1da0(int i);
 extern "C" int func_ov007_020c3ba8(int);
 extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
@@ -109,8 +109,8 @@ extern "C" void func_ov007_020c5188(void *, int);
 extern "C" void func_ov007_020c5490(void *obj, int *m);
 extern "C" void func_ov007_020c55bc(Ov007Picker *self, int m1, int m2);
 extern "C" void func_ov007_020c56bc(void *c, int a, int b, int d, int e, int f);
-extern void func_ov007_020c5a6c(Ov007Picker *, void *, int);
-extern "C" void func_ov007_020c5c14(void *o, void *p);
+extern void func_ov007_020c5a6c(Ov007Picker *, VecFx32 *, int);
+extern "C" void func_ov007_020c5c14(Ov007Picker *picker, VecFx32 *out);
 extern "C" int func_ov007_020c5d5c(void *o);
 extern "C" int func_ov007_020c5db0(void *p);
 extern void func_ov007_020c5dec(Ov007Picker *c);
@@ -761,7 +761,7 @@ int PickerScene_UpdateIntro(int t) {
     Ov007Picker *s;
     int done = 0;
     int state;
-    int local[3];
+    VecFx32 local;
 
     {
         Ov007PickerScene *m = SCENE;
@@ -832,7 +832,7 @@ int PickerScene_UpdateIntro(int t) {
         }
         {
             Ov007Camera *o = WORK->cameras[0];
-            func_ov007_020bfe4c(o, 0xe8000, 0xa8000, -o->distance, (Vector3 *)local);
+            func_ov007_020bfe4c(o, 0xe8000, 0xa8000, -o->distance, &local);
         }
         PickerScene_UpdatePicker();
         v = RangeRatio(t, 200, 600);
@@ -852,8 +852,8 @@ int PickerScene_UpdateIntro(int t) {
             }
         }
         {
-            int ret = func_ov007_020c5854(s, (Vector3 *)local, (ratio * 0xc8) >> 0xc, 0x2000,
-                                          ratio * 0x12c, r8arg);
+            int ret =
+                func_ov007_020c5854(s, &local, (ratio * 0xc8) >> 0xc, 0x2000, ratio * 0x12c, r8arg);
             int dv = FX_DivS32(ret << 0xc, SCENE->totalPoints);
             SPRITES->sprites[1]->alpha = dv * 0x1f;
             if (dv >= 0x1000) {
@@ -1072,7 +1072,7 @@ void PickerScene_BeginEdit(void) {
 void PickerScene_UpdateEdit(void) {
     Ov007Picker *r5 = SCENE->picker;
     Ov007Touch *r4 = WORK->touch;
-    int v[3];
+    VecFx32 v;
 
     PickerScene_HandleEditKeys();
 
@@ -1080,11 +1080,10 @@ void PickerScene_UpdateEdit(void) {
         Ov007Camera *camera;
         SCENE->springSet = 0;
         camera = WORK->cameras[0];
-        func_ov007_020bfe4c(camera, r4->cur.x << 12, r4->cur.y << 12, -camera->distance,
-                            (Vector3 *)v);
+        func_ov007_020bfe4c(camera, r4->cur.x << 12, r4->cur.y << 12, -camera->distance, &v);
         if (r4->heldFrames == 1) {
             int s;
-            func_ov007_020c5a6c(r5, v, 0);
+            func_ov007_020c5a6c(r5, &v, 0);
             s = 0x25;
             if (FX_ModS32(SCENE->restartCount, 3) == 2) {
                 switch (FX_ModS32(SCENE->restartCount, 9)) {
@@ -1126,7 +1125,7 @@ void PickerScene_UpdateEdit(void) {
         r5->hitOffset.x = r5->hitOffset.y;
     }
 
-    func_ov007_020c5948(r5, (Vector3 *)v);
+    func_ov007_020c5948(r5, &v);
 
     if (r4->cur.touch != 0 || WORK->pad->keys != 0) {
         SCENE->idleFrames = 0;

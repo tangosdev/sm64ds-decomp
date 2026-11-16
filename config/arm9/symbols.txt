@@ -4418,7 +4418,7 @@ data_0209a068 kind:data(any) addr:0x0209a068
 data_0209a06c kind:data(any) addr:0x0209a06c
 data_0209a070 kind:data(any) addr:0x0209a070
 data_0209a074 kind:data(any) addr:0x0209a074
-data_0209a078 kind:data(any) addr:0x0209a078
+prev_fid$305 kind:data(byte) addr:0x0209a078 local
 mbi_seg_header kind:data(any) addr:0x0209a07c
 data_0209a080 kind:data(any) addr:0x0209a080
 data_0209a084 kind:data(any) addr:0x0209a084
@@ -4941,12 +4941,11 @@ data_020a0dbc kind:bss addr:0x020a0dbc
 @19 kind:bss addr:0x020a0dcc
 data_020a0dd8 kind:bss addr:0x020a0dd8
 data_020a0de0 kind:bss addr:0x020a0de0
+gTouchInfo kind:bss addr:0x020a0de8
 gTouchHeld kind:bss addr:0x020a0de8
 gTouchEdge kind:bss addr:0x020a0de9
 gTouchX kind:bss addr:0x020a0dea
 gTouchY kind:bss addr:0x020a0deb
-data_020a0df0 kind:bss addr:0x020a0df0
-data_020a0df4 kind:bss addr:0x020a0df4
 data_020a0df8 kind:bss addr:0x020a0df8
 gActivePlayerSlot kind:bss addr:0x020a0e40
 data_020a0e44 kind:bss addr:0x020a0e44

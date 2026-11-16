@@ -139,7 +139,7 @@ void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 int Mg_CopySpriteList(int a, void *b, int c, int d);
 void func_0203d704(int *o, int *a, int *b);
-void func_0203d388(int *p, int angle);
+void func_0203d388(int *p, s16 angle);
 void Mg_SpawnFx(int state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
 void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e);
@@ -1479,11 +1479,6 @@ void Banner_UpdateWave(MgBanner *e) {
     }
 }
 
-/* A random int in [0, n) from the actors' random state, the top 12 bits of the
-   positive draw scaled by n (d_s_mg_pachinko.cpp's PACHINKO_RAND does the same
-   from the minigame state). */
-#define BANNER_RAND(n) ((int)((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) * (n) >> 12)
-
 void Banner_StartWaveBurst(MgBanner *e) {
     int i;
 
@@ -1511,7 +1506,7 @@ void Banner_StartWaveBurst(MgBanner *e) {
         func_0203d388((int *)&ringOffset, 0x800);
         func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
-        Mg_SpawnFx(0, BANNER_RAND(60) + 90, &spawnPos, &spawnVel, &sBannerWaveFxGravity);
+        Mg_SpawnFx(0, RAND_FX_SCALE(60) + 90, &spawnPos, &spawnVel, &sBannerWaveFxGravity);
     }
 }
 
@@ -1872,7 +1867,7 @@ void Banner_SetupZoomBurst(MgBanner *e) {
         func_0203d388((int *)&ringOffset, 0x800);
         func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
-        Mg_SpawnFx(0, BANNER_RAND(60) + 90, &spawnPos, &spawnVel, &sBannerZoomFxGravity);
+        Mg_SpawnFx(0, RAND_FX_SCALE(60) + 90, &spawnPos, &spawnVel, &sBannerZoomFxGravity);
     }
 }
 

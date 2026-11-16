@@ -852,14 +852,14 @@ void Message::Update() {
            The ROM keeps this 0/1 in a register; an inline predicate folds
            it away. */
         touchBegan = 0;
-        f0 = gTouchHeld[idx * 4];
-        if (f0 != 0 && gTouchEdge[idx * 4] != 0)
+        f0 = gTouchInfo[idx].held;
+        if (f0 != 0 && gTouchInfo[idx].edge != 0)
             touchBegan = 1;
         if (touchBegan != 0) {
-            data_0209d6d8 = ((u8(*)[4])gTouchY)[idx][0];
+            data_0209d6d8 = gTouchInfo[idx].y;
             data_0209d6d8 -= (s16)(gMsgChoiceIndex * 8);
         } else if (f0 != 0) {
-            s16 debval = ((u8(*)[4])gTouchY)[idx][0];
+            s16 debval = gTouchInfo[idx].y;
             data_0209d6dc = debval - data_0209d6d8;
             if (data_0209d6dc > 16) {
                 data_0209d6dc = 16;

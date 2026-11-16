@@ -744,13 +744,13 @@ void dScMgCoin_c::Coin_StateWaitTouch(int idx) {
 
     int slot = gActivePlayerSlot;
     touched = 0;
-    if (gTouchHeld[slot * 4] != 0 && gTouchEdge[slot * 4] != 0)
+    if (gTouchInfo[slot].held != 0 && gTouchInfo[slot].edge != 0)
         touched = 1;
     if (touched == 0)
         return;
 
-    dx = gTouchX[gActivePlayerSlot * 4] - (mCoins[idx].x >> 12);
-    dy = gTouchY[gActivePlayerSlot * 4] - (mCoins[idx].y >> 12);
+    dx = gTouchInfo[gActivePlayerSlot].x - (mCoins[idx].x >> 12);
+    dy = gTouchInfo[gActivePlayerSlot].y - (mCoins[idx].y >> 12);
     if (dx <= -0x10 || dx >= 0x10 || dy <= -0x10 || dy >= 0x10)
         return;
 
@@ -1198,7 +1198,7 @@ void dScMgCoin_c::Phase_StateResult() {
     mCountdown--;
     int slot = gActivePlayerSlot;
     int touched = 0;
-    if (gTouchHeld[slot * 4] != 0 && gTouchEdge[slot * 4] != 0)
+    if (gTouchInfo[slot].held != 0 && gTouchInfo[slot].edge != 0)
         touched = 1;
     if (touched != 0 && mCountdown <= 128) {
         mCountdown = 0;

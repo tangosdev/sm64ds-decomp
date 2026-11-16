@@ -16,12 +16,6 @@
       "name": ".text",
       "start": "0x020bed60",
       "end": "0x020bf690"
-    },
-    {
-      "name": ".rodata.menu",
-      "input_section": ".rodata",
-      "start": "0x20d7c98",
-      "end": "0x20d7d60"
     }
   ],
   "functions": [
@@ -76,53 +70,12 @@
     }
   ],
   "data": [],
-  "rodata": [
-    {
-      "symbol": "data_ov007_020d7c98",
-      "address": "0x20d7c98",
-      "size": "0x4",
-      "binding": "STB_GLOBAL"
-    },
-    {
-      "symbol": "data_ov007_020d7c9c",
-      "address": "0x20d7c9c",
-      "size": "0x14",
-      "binding": "STB_GLOBAL"
-    },
-    {
-      "symbol": "data_ov007_020d7cb0",
-      "address": "0x20d7cb0",
-      "size": "0x18",
-      "binding": "STB_GLOBAL"
-    },
-    {
-      "symbol": "data_ov007_020d7cc8",
-      "address": "0x20d7cc8",
-      "size": "0x30",
-      "binding": "STB_GLOBAL"
-    },
-    {
-      "symbol": "data_ov007_020d7cf8",
-      "address": "0x20d7cf8",
-      "size": "0x68",
-      "binding": "STB_GLOBAL"
-    }
-  ],
   "bss": [],
-  "compiler_only_output": [
-    {
-      "symbol": "_ZN7Vector3D1Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "arm9",
-      "canonical_address": "0x020072c0",
-      "reason": "func_ov007_020bf630's Vector3 point local emits the vague-linkage ~Vector3 into this object; the ROM keeps one copy, in arm9."
-    }
-  ],
   "notes": [
     "Text only: the bss word 0x02104bd4 and the .data templates 0x020d7c98..0x020d7d60 stay ROM-owned and are reached by extern, as the one-function sources did.",
     "Folded from 7 one-function sources. They spelled data_ov007_02104bd4 as int, int *, char * and u8[] with offset arithmetic; the unit declares it Ov007MeshScene * (no file outside the unit names it) and drops its stale include/decl_common.h line, with those of func_ov007_020ca5f0, func_ov007_020cb3dc and data_ov007_020d7d60, whose only decl_common consumer was func_ov007_020bee14.c.",
     "Two of the sources needed file-scope #pragma opt_strength_reduction off (and one opt_common_subs off); in the unit every function matches with neither pragma.",
-    "func_ov007_020bf57c's sprite copy is a block move through a union of a word view and a POD layout twin (Ov007SpriteCopy): Ov007Sprite holds Vector3s, so in C++ a plain assignment copies member by member. func_ov007_020bee14's point copy is a block move through Ov007Point, a POD view of Vector3, for the same reason: a Vector3 local assigned from data_ov007_020d7d60 does not match. func_ov007_020bf630's point is a real Vector3; its destructor is the deadstripped duplicate above.",
+    "func_ov007_020bf57c's sprite copy is the copy-initialisation of a local Ov007Sprite, a block move now that Ov007Sprite holds VecFx32s and is POD. func_ov007_020bee14's point is a VecFx32 local copy-initialised from data_ov007_020d7d60, also a block move. func_ov007_020bf630's point is a VecFx32, so the unit emits no ~Vector3.",
     "func_ov007_020bf630 now returns func_ov007_020c30ac's result, as its one caller func_ov007_020bed60 reads it; the source spelled it void."
   ],
   "verification": {
@@ -141,18 +94,10 @@
     "object": "build/tu/ov007-unit020bed60/unit020bed60.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "compilerOnlyOutput": {
-      "requested": [
-        "_ZN7Vector3D1Ev"
-      ],
-      "deadstripped": [
-        "_ZN7Vector3D1Ev"
-      ],
-      "droppedSections": [
-        19
-      ],
+      "requested": [],
+      "deadstripped": [],
       "data": [],
-      "dataExternalized": [],
-      "canonicalDuplicates": []
+      "dataExternalized": []
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
@@ -232,6 +177,5 @@
       },
       "linkerOutput": null
     }
-  },
-  "production_mode": "intact-object"
+  }
 }

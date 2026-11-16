@@ -306,24 +306,14 @@ int daShl_c::func_ov102_0214d0bc()
    is off, the shell breaks. */
 int daShl_c::func_ov102_0214d044()
 {
-    /* The riderPos/angle/x/ret locals below are needed: without them the
-       function is 4 bytes shorter. */
     if (mCarrier == 0 || mCarrier->IsOnShell() == 0) {
         PoofDust();
         MarkForDestruction();
         return 0;
     }
-    {
-        dActor_c *rider = mCarrier;
-        s32 *riderPos = &rider->mPosX;
-        int x = riderPos[0];
-        int ret = 1;
-        mPosX = x;
-        mPosY = riderPos[1];
-        mPosZ = riderPos[2];
-        mAngleY += 0x1000;
-        return ret;
-    }
+    mPos = mCarrier->mPos;
+    mAngleY += 0x1000;
+    return 1;
 }
 
 /* Held: enter. */

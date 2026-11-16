@@ -1,6 +1,5 @@
 #include "Ov007Picker.h"
-#include "math/CalcLib.h"
-/* Vector3 VEC_* until Ov007Spring, Ov007Picker and func_ov007_020bfe4c go VecFx32 (#5207). */
+#include "nitro/fx/fx_vec.h"
 
 /* Re-measures group idx's links: from restPos to each rest point (flag 0),
  * between their own end points (flag 1), or from restPos to each live point
