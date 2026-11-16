@@ -12,7 +12,7 @@
  * D1 at 0x0212568c, D0 at 0x0212573c.
  *
  * Functions run in ROM order under `#pragma defer_codegen off`; removing it
- * breaks five functions and the section order. The three bracketed optimizer
+ * breaks five functions and the section order. The two bracketed optimizer
  * pragmas are needed too, and so is the include order (see below).
  *
  * The helpers whose first parameter was the scene are now members of
@@ -27,8 +27,8 @@
 //   type with a destructor and no constructor (see the header); it was not
 //   swapped for Vector2 in the pass that typed mArray1/mArray2.
 // - Measured residue, each with a note at the site: DrawCourseColumn's
-//   volatile tile locals and SNOW_OFF row arithmetic, Render's y loads through
-//   a stepped receiver, Behavior's volatile touch read,
+//   volatile tile locals and SNOW_OFF row arithmetic, Behavior's volatile
+//   touch read,
 //   and the opt_common_subs / opt_strength_reduction brackets.
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScMgSnowball_c_AssetId {
@@ -1253,14 +1253,8 @@ void dScMgSnowball_c::ResetScene() {
     mEndDelayTimer = 0;
 }
 
-// kept: with strength reduction on, the two slot loops grow (0x6b0) and no indexed spelling recovers 0x694;
-// natural mArray1Active[i] / mArray1[i].y comes out 0x68c, short exactly the two
-// `ldr rN, =0xacdc` / `=0xb5dc` pool loads the ROM uses for the y reads
-#pragma opt_strength_reduction off
-/* Slot 9. `p` (this + i) is the stepping base for the mArray1Active/mArray1Hit
- * byte flags and colours r7; the indexed spelling colours it last. The y reads
- * go through an int cast of `&(this + i * 8)->mArray[0].y` because the ROM loads them
- * as `[this + i * 8, pool offset]`, which `mArray1[i].y` does not reproduce. */
+/* Slot 9. Draws the course meter, the snowball, and every live mArray1 and
+ * mArray2 slot inside the visible scroll window. */
 s32 dScMgSnowball_c::Render() {
     int light[3];
     Vector3 scale;
@@ -1297,22 +1291,19 @@ s32 dScMgSnowball_c::Render() {
     RedrawCourse();
 
     for (int i = 0; i < 128; i++) {
-        char *p = (char *)this + i;
-        if (((dScMgSnowball_c *)p)->mArray1Active[0] == 1) {
-            int scrollY = mScrollY;
-            int y = *(int *)(int)&((dScMgSnowball_c *)((char *)this + i * 8))->mArray1[0].y;
-            if (y >= scrollY - 0x20000 &&
-                y < scrollY + 0x1a0000 + (Mg_GetTopScreenYOffset() << 0xc)) {
+        if (mArray1Active[i] == 1) {
+            if (mArray1[i].y >= mScrollY - 0x20000 &&
+                mArray1[i].y < mScrollY + 0x1a0000 + (Mg_GetTopScreenYOffset() << 0xc)) {
                 if (mArray1Kind[i] == 1) {
                     int idx = (mAnimCounter / 4) & 7;
-                    if (((dScMgSnowball_c *)p)->mArray1Hit[0] == 1)
+                    if (mArray1Hit[i] == 1)
                         idx += 8;
                     Mg_RenderSpriteBoth(sSnowballBreakableAnimSprites[idx],
                                         (mArray1[i].x - mScrollX) >> 0xc,
-                                        ((y - scrollY) >> 0xc) - 0x110, -1, -1);
+                                        ((mArray1[i].y - mScrollY) >> 0xc) - 0x110, -1, -1);
                 } else {
                     Mg_RenderSpriteBoth(sSnowballBreakableSprite, (mArray1[i].x - mScrollX) >> 0xc,
-                                        ((y - scrollY) >> 0xc) - 0x110, -1, 2);
+                                        ((mArray1[i].y - mScrollY) >> 0xc) - 0x110, -1, 2);
                 }
             }
         }
@@ -1320,22 +1311,20 @@ s32 dScMgSnowball_c::Render() {
 
     for (int i = 0; i < 128; i++) {
         if (mArray2Active[i] == 1) {
-            int scrollY = mScrollY;
-            int y = *(int *)(int)&((dScMgSnowball_c *)((char *)this + i * 8))->mArray2[0].y;
-            if (y >= scrollY - 0x40000 &&
-                y < scrollY + 0x1c0000 + (Mg_GetTopScreenYOffset() << 0xc)) {
+            if (mArray2[i].y >= mScrollY - 0x40000 &&
+                mArray2[i].y < mScrollY + 0x1c0000 + (Mg_GetTopScreenYOffset() << 0xc)) {
                 switch (mArray2Kind[i]) {
                 case 0:
                 case 1:
                 case 2:
                     Mg_RenderSpriteBoth(sSnowballObstacleSprite, (mArray2[i].x - mScrollX) >> 0xc,
-                                        ((y - scrollY) >> 0xc) - 0x110, -1, 1);
+                                        ((mArray2[i].y - mScrollY) >> 0xc) - 0x110, -1, 1);
                     break;
                 case 3: {
                     int x = mArray2[i].x;
                     Mg_RenderSpriteBoth(sSnowballObstacleSideSprites[(x < 0x80000) ? 1 : 0],
-                                        (x - mScrollX) >> 0xc, ((y - scrollY) >> 0xc) - 0x110, -1,
-                                        1);
+                                        (x - mScrollX) >> 0xc,
+                                        ((mArray2[i].y - mScrollY) >> 0xc) - 0x110, -1, 1);
                     break;
                 }
                 }
@@ -1388,7 +1377,6 @@ s32 dScMgSnowball_c::Render() {
     SnowSpray_DrawAll();
     return 1;
 }
-#pragma opt_strength_reduction on
 
 /* Slot 6. The five-state snowball roll: 0 counts in, 1 steers with the
  * touch screen and grows the ball, 2 and 3 are the crash, 4 is the melt and
