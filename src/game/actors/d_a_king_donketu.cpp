@@ -915,69 +915,58 @@ int daKing_Donketu_c::EnterLeapToSpawn() {
    (0x7d0000), plays SND_HOP_LANDING and counts the landing in mJumpCount: past
    7 the state becomes ..3340, otherwise it re-enters ..3320. */
 int daKing_Donketu_c::UpdateWaypointHop() {
-    daKing_Donketu_c *c = this;
     Vector3 v;
 
-    if (c->mStateTimer == 0)
-        goto mainblock;
+    if (mStateTimer != 0) {
+        if (mStateTimer == 1) {
+            mVertSpeed = 0x5a000;
+            mVertAccel = -0x5000;
+            mWaypointCursor++;
+            mWaypointCursor &= 7;
 
-    if (c->mStateTimer == 1) {
-
-        int neg = 0x5000;
-        c->mVertSpeed = 0x5a000;
-        c->mVertAccel = -neg;
-        {
-            unsigned char *p = &c->mWaypointCursor;
-            *p = *p + 1;
-            *p = *p & 7;
+            mBlendAnmModel.SetAnim(*(BCA_File *)gKingIceDonketuDamageAnimationFile.filePtr, 4, 0,
+                                   0x1000, 0);
+            mBlendAnmModel.speed = 0x2000;
         }
-
-        c->mBlendAnmModel.SetAnim(
-            *(BCA_File *)((BCA_File *)gKingIceDonketuDamageAnimationFile.filePtr), 4, 0, 0x1000, 0);
-        c->mBlendAnmModel.speed = 0x2000;
+        return 1;
     }
-    return 1;
 
-mainblock:
-    if (c->mHitsRemaining == 2) {
-        v = c->mWaypointsB[c->mWaypointCursor];
+    if (mHitsRemaining == 2) {
+        v = mWaypointsB[mWaypointCursor];
     } else {
-        v = c->mWaypointsA[c->mWaypointCursor];
+        v = mWaypointsA[mWaypointCursor];
     }
     {
-        short hz = Vec3_HorzAngle(&c->mPos, &v);
-        short vt = Vec3_VertAngle(&c->mPos, &v);
+        short hz = Vec3_HorzAngle(&mPos, &v);
+        short vt = Vec3_VertAngle(&mPos, &v);
         int in[3];
         int out[3];
-        ApproachLinear(c->mPrevAngleY, hz, 0x800);
+        ApproachLinear(mPrevAngleY, hz, 0x800);
         in[0] = 0; in[1] = 0; in[2] = 0;
         out[0] = 0; out[1] = 0; out[2] = 0;
         in[2] = 0x50000;
         Matrix4x3_FromRotationY(&data_020a0e68, hz);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, vt);
         MTX_MultVec43((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
-        c->mSpeedX = out[0];
-        c->mSpeedZ = out[2];
+        mSpeedX = out[0];
+        mSpeedZ = out[2];
     }
-    if (c->mWithMeshClsn.IsOnGround() != 0) {
-        c->mLandedWaypoint = c->mWaypointCursor;
-        c->mHorzSpeed = 0;
-        c->mSpeedX = 0;
-        c->mVertSpeed = 0;
-        c->mSpeedZ = 0;
-        c->SpawnLandingEffects(0x7d0000);
-        func_02012694(SND_HOP_LANDING, &c->mCamSpacePos);
-        {
-            int *cnt = &c->mJumpCount;
-            *cnt = *cnt + 1;
-        }
-        if (c->mJumpCount > 7) {
-            ChiefChilly_ChangeState((C *)(c), (PMF *)&data_ov073_02123340);
+    if (mWithMeshClsn.IsOnGround() != 0) {
+        mLandedWaypoint = mWaypointCursor;
+        mHorzSpeed = 0;
+        mSpeedX = 0;
+        mVertSpeed = 0;
+        mSpeedZ = 0;
+        SpawnLandingEffects(0x7d0000);
+        func_02012694(SND_HOP_LANDING, &mCamSpacePos);
+        mJumpCount++;
+        if (mJumpCount > 7) {
+            ChiefChilly_ChangeState((C *)this, (PMF *)&data_ov073_02123340);
         } else {
-            ChiefChilly_ChangeState((C *)(c), (PMF *)&data_ov073_02123320);
+            ChiefChilly_ChangeState((C *)this, (PMF *)&data_ov073_02123320);
         }
     }
-    c->mAngleY = c->mPrevAngleY;
+    mAngleY = mPrevAngleY;
     return 1;
 }
 
