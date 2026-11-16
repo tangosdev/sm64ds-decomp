@@ -18280,7 +18280,6 @@ tail:
 
 int daPly_c::St_Land_Init() {
     extern char data_0209f4a0[];
-    char* c = (char*)this;
     daPly_c::State *r4;
 
     this->func_ov002_020c2f64();
@@ -18322,7 +18321,7 @@ int daPly_c::St_Land_Init() {
     int idx = gActivePlayerSlot;
     short sval = data_0209f498[idx].mag;
     if (sval == 0 && (IsAnim(0x2b) || IsAnim(0x4c))) {
-        func_ov002_020e25d4(c);
+        func_ov002_020e25d4((char *)this);
     }
     mStateStep = 0;
     if (r4 == &data_ov002_0211019c && mJumpComboStage == 2) {
