@@ -85,14 +85,7 @@ enum daKrb_c_AssetId {
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
-
-/* daStar_c::mMarkerID (daStar_c.h, 0x434), seen through a local view:
-   including daStar_c.h renumbers this TU's @NNN labels. */
-struct SilverStarView {
-    u8 head[0x434];
-    u32 mMarkerID;
-};
-typedef char SilverStarView_size_must_be_0x438[sizeof(SilverStarView) == 0x438 ? 1 : -1];
+#include "daStar_c.h"
 
 typedef struct {
     unsigned char b0 : 1;
@@ -182,9 +175,6 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 int SurfaceInfo_TestFlag0x20(int *p);
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
-/* Three-register reconstructed interface; death-state stores also use r3. */
-extern "C" struct Aea30C;
-void func_ov002_020aea30(Aea30C *self, dActor_c *actor, dBgCh_Actr *collision);
 extern BMA_File data_ov084_0213088c;
 extern int data_ov084_02130248[];
 extern u8 data_ov084_02130204[];
@@ -194,10 +184,6 @@ void func_ov074_0212087c(int *out, daKuriKing_c *player, int flag);
 extern "C" int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
 extern s8 gCurrentSublevel;
 void LoadSilverStarAndNumber(void);
-/* Parameter names keep this TU's @NNN. */
-extern "C" {
-typedef void BgchInitAt_(void *self, void *a, fx32 b, fx32 cc, void *d, fx32 e);
-}
 extern SharedFilePtr *const sKuriboAnimationFiles[7];
 extern int data_ov084_02130258[];
 extern int data_ov084_02130208[];
@@ -227,10 +213,8 @@ inline s32 *chaseRadius(daKrb_c *goomba)
 
 void daKrb_c::func_ov084_021290d4() {
     daKrb_c *c = this;
-    int timerOff;
     daKrb_c *self2;
     int state;
-    timerOff = 0x458;
     if (c->mUnstickTimer != 0)
     {
         /* Comparison stays in the `if`: assigning `== 1` to an int is a bool
@@ -239,11 +223,7 @@ void daKrb_c::func_ov084_021290d4() {
         if (state == daKrb_c::STATE_ATTACKED_MARIO) {
             c->mUnstickTimer = 0;
         } else {
-            /* timerOff is the offset of mUnstickTimer (0x458). The plain
-               `c->mUnstickTimer--` builds the same .text but drops nine
-               @NNN numbers that daKrb_c.json pins, so this stays raw. */
-            *((unsigned short *)(((int)c) + timerOff)) =
-                (*((unsigned short *)(((int)c) + 0x458))) - 1;
+            c->mUnstickTimer--;
         }
         return;
     }
@@ -478,7 +458,7 @@ void daKrb_c::func_ov084_021296cc() {
         silverStar =
             (char *)dActor_c::Spawn(ACTOR_SILVER_STAR, 0x10, goomba->mPos, 0, goomba->mAreaId, -1);
         if (starMarker != 0 && silverStar != 0) {
-            ((SilverStarView *)silverStar)->mMarkerID = ((dActor_c *)starMarker)->uniqueID;
+            ((daStar_c *)silverStar)->mMarkerID = ((dActor_c *)starMarker)->uniqueID;
             ((daStarBase_c *)starMarker)->LinkSilverStarAndStarMarker(silverStar);
             goomba->SpawnSoundObj(1);
         }
@@ -621,7 +601,7 @@ int daKrb_c::func_ov084_02129a00() {
         if (goomba->SpawnParticlesIfHitOtherObj(goomba->mdCcAc_c) != 0) {
             void *actor = dActor_c::FindWithID(goomba->mdCcAc_c.otherOwner);
             goomba->mDeathState = daKrb_c::DEATH_HIT_20000;
-            func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)actor, &goomba->mWithMeshClsn);
+            goomba->func_ov002_020aea30((dActor_c *)actor, &goomba->mWithMeshClsn);
             goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000,
                                       0);
             goomba->mdCcAc_c.flags |= 1;
@@ -970,7 +950,7 @@ void daKrb_c::func_ov084_02129ed4() {
         capReleaseOnExit.z = 0; /* 108.0 */
         goomba->ReleaseCap(capReleaseOnExit);
     }
-    func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)other, &goomba->mWithMeshClsn);
+    goomba->func_ov002_020aea30((dActor_c *)other, &goomba->mWithMeshClsn);
     if (turnAround != 0) {
         goomba->mAngleY = (goomba->mPrevAngleY + 0x8000); /* half a turn */
     }
@@ -1142,7 +1122,7 @@ void daKrb_c::ActTumble() {
     if (goomba->SpawnParticlesIfHitOtherObj(goomba->mdCcAc_c) != 0) {
         void *a = dActor_c::FindWithID(goomba->mdCcAc_c.otherOwner);
         goomba->mDeathState = daKrb_c::DEATH_HIT_20000;
-        func_ov002_020aea30((Aea30C *)goomba, (dActor_c *)a, &goomba->mWithMeshClsn);
+        goomba->func_ov002_020aea30((dActor_c *)a, &goomba->mWithMeshClsn);
         goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000, 0);
         goomba->mdCcAc_c.flags |= 1;
     }
@@ -1462,8 +1442,6 @@ int daKrb_c::OnAimedAtWithEgg()
  * silver star). If it is 4 (KURIBO_S) only the coin is given. Finally the
  * Goomba is removed (func_ov084_02129498). */
 void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef) {
-    /* self is unused; deleting it drops @NNN numbers daKrb_c.json pins. */
-    dActor_c *self = this;
     daPly_c *player = &playerRef;
     int b5;
     bool b4;

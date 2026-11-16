@@ -83,6 +83,7 @@
 #include "cstd.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* mwccarm rejects a block-scope extern "C" (declarator expected). These six
  * stay at file scope so the calls emit the plain ROM names. The macro is
@@ -131,19 +132,6 @@ extern "C" {
 extern ControllerInput data_0209f498[];
 extern PadData data_020a0e58[];
 extern dFdColor_c gSceneColorFader;
-extern int atan2_hold_Player_11(int a, int b);
-extern int atan2_hold_Player_12(int, int);
-extern int atan2_hold_Player_13(int a, int b);
-extern int atan2_hold_Player_14(int a, int b);
-extern int atan2_hold_Player_16(int y, int x);
-extern int atan2_hold_Player_17(int y, int x);
-extern int atan2_hold_Player_18(int x, int z);
-extern s16 atan2_hold_Player_19(s32 y, s32 x);
-extern int atan2_hold_Player_2(int, int);
-extern int atan2_hold_Player_3(int a, int b);
-extern s16 atan2_hold_Player_4(s32, s32);
-extern short atan2_hold_Player_8(int a, int b);
-extern int atan2_hold_Player_9(int x, int z);
 extern int gSubSoundID;
 extern signed char gNextSublevel;
 extern signed char gCurrentAreaId;
@@ -831,38 +819,12 @@ extern void LoadKeyModels(int idx);
 extern void LoadSilverStarAndNumber(void);
 extern "C" {
 extern int Math_Function_0203b14c(void *, int a, int b, int c, int d);
-extern int PlayerChangeMusicVolumeHold(u32 vol, int t);
-extern void PlayerChangeMusicVolumeHold2(int, int);
-extern void PlayerChangeMusicVolumeHold3(unsigned int, int);
-extern void PlayerNewSimpleHold(unsigned int id, int x, int y, int z);
-extern void PlayerNewSimpleHold1(unsigned int, int, int, int);
-extern void PlayerNewSimpleHold13(u32 id, int a, int b, int cc);
-extern void PlayerNewSimpleHold16(unsigned int id, int x, int y, int z);
-extern void PlayerNewSimpleHold2(unsigned int id, int x, int y, int z);
-extern void PlayerNewSimpleHold3(unsigned int, int, int, int);
-extern void PlayerNewSimpleHold4(unsigned int, int, int, int);
-extern void PlayerNewSimpleHold5(unsigned int id, int x, int y, int z);
-extern void PlayerNewSimpleHold6(unsigned int id, int x, int y, int z);
-extern void PlayerNewSimpleHold7(u32 id, int x, int y, int z);
-extern void PlayerNewSimpleHold9(u32 a, int b, int c, int d);
-extern void PlayerPlayLongHold_bfa74(u32 handle, u32 bank, u32 id, const void *pos, s16 e);
-extern void PlayerPlayLongHold_deadpit(u32 a, u32 b, u32 c, void *, u32 d);
-extern void PlayerPlayLongHold_electro(u32 a, u32 b, u32 c, Vector3 *v, u32 d);
-extern void PlayerPlayLongHold_swing(u32 h, u32 a, u32 b, void *v, u32 d);
 }
 
 extern "C" int SublevelToLevel(int);
 extern int SurfaceInfo_TestFlag0x20(int *);
 extern "C" {
 extern void Vec3_MulScalar(Vector3 *, const Vector3 *, int s);
-extern int atan2_hold_Player_1(fx32 a, int b);
-extern int atan2_hold_Player_10(fx32 a, int b);
-extern int atan2_hold_Player_15(fx32, fx32);
-extern int atan2_hold_Player_5(fx32 y, fx32 x);
-extern fx32 atan2_hold_Player_6(fx32 a, fx32 b);
-extern int atan2_hold_Player_7(fx32 a, int b);
-/* local extern: including nitro/fx/fx_trig.h renumbers this TU; spelled as the header does. */
-extern const fx16 FX_SinCosTable_[];
 extern signed char gCurrentSublevel;
 extern unsigned char data_0209f4ae[];
 extern const unsigned int data_ov002_020ff220[4] = {
@@ -1018,12 +980,6 @@ extern u8 gShowTouchScreenArrows;
 
 extern void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 returnState);
 extern u8 NumStars(void);
-extern "C" {
-extern void PlayerNewSimpleHold10(unsigned int id, fx32 a, fx32 b, fx32 c);
-extern void PlayerNewSimpleHold11(u32 id, fx32 x, fx32 y, fx32 z);
-extern void PlayerNewSimpleHold15(unsigned int id, fx32 a, fx32 b, fx32 d);
-extern void PlayerNewSimpleHold8(unsigned int id, fx32 a, fx32 b, fx32 c);
-}
 
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int func_ov002_020f02c8(int sel);
@@ -1035,14 +991,6 @@ extern void func_ov002_020dc09c(char *c);
 extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
-extern u32 PlayerNewHold(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                         void *callback);
-extern u32 PlayerNewHold3(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                          void *callback);
-extern u32 PlayerNewHold4(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                          void *callback);
-extern void PlayerPlayLongHold_c133c(unsigned int a, unsigned int b, unsigned int c,
-                                     Vector3 const *v, unsigned int d);
 extern signed char data_02092114;
 extern unsigned char data_0209f2bc[];
 extern int data_0209f32c;
@@ -1054,37 +1002,9 @@ extern void func_ov002_020eedc0(dBgCh_Actr *, dActor_c *);
 extern "C" {
 extern u8 gMeterShownHealth;
 extern unsigned char gShowRaceTimer[];
-extern u32 PlayerNewHold5(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                          void *callback);
-extern void PlayerPlayLongHold_cec2c(unsigned int a, unsigned int b, unsigned int c,
-                                     const Vector3 *v, unsigned int d);
 extern struct P2 data_ov002_0210a084;
 extern struct P2 data_ov002_0210a34c;
-/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
-extern int RandomIntInternal(int *seed);
-extern u32 PlayerNewHold7(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                          void *callback);
-extern u32 PlayerNewHold8(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                          void *callback);
-extern u32 PlayerNewHold9(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                          void *callback);
-extern u32 PlayerNewHold10(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                           void *callback);
-extern u32 PlayerNewHold11(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                           void *callback);
-extern u32 PlayerNewHold12(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                           void *callback);
-extern u32 PlayerNewHold13(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                           void *callback);
-extern u32 PlayerNewHold14(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                           void *callback);
-extern u32 PlayerNewHold15(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                           void *callback);
-extern void PlayerPlayLongHold_burnfire(unsigned int handle, unsigned int id, unsigned int vol,
-                                        const void *vec, unsigned int flags);
 extern char *gPlayers[];
-extern u32 PlayerNewHold16(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                           void *callback);
 }
 
 extern int func_02012120(unsigned int p0, unsigned int p1, unsigned int p2, const Vector3 *p3,
@@ -1096,21 +1016,15 @@ extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
 extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, fx32 x, fx32 y, fx32 z);
 /* local extern: MtxStack's named parameters take an @NNN in every includer. */
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern u8 gReturnSublevel;
 }
 
 extern void func_02011f7c(void *a);
 extern int func_02011ee4(void *x);
 
-extern u32 PlayerNewHold2(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                          void *callback);
 
 class dFdColor_c;
 extern dFdColor_c gSceneColorFader;
-extern u32 PlayerNewHold6(u32 handle, u32 kind, fx32 x, fx32 y, fx32 z, const void *dir,
-                          void *callback);
 
 /* ---------------------------------------------------------------------------
  * Shadow types and ABI stand-ins that cannot live inside a function body.
@@ -14954,7 +14868,6 @@ struct PVec8944 {
 };
 
 int daPly_c::func_ov002_020d8944(daPly_c *enemy, daPly_c *v1) {
-    void PlayerNewSimpleHold12(unsigned int id, int x, int y, int z);
     PVec8944 p;
     Vector3 sum;
     Vector3 asr;
@@ -17675,7 +17588,6 @@ int daPly_c::St_GroundPound_Cleanup() {
 
 int daPly_c::St_GroundPound_Main() {
     void func_ov002_020ef2a4(dBgCh_Actr * c, dActor_c * arg);
-    void PlayerNewSimpleHold14(unsigned int id, int x, int y, int z);
     extern dCamera_c *gCamera;
     extern char data_0209f4a0[];
     s8 timer = (s8)mStateStep;

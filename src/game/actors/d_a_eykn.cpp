@@ -112,12 +112,6 @@ u8 DecIfAbove0_Byte(u8 *counter);
 s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
-int d_a_eyknNewHold(u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir,
-                    void *callback);
-u32 d_a_eyknNewCleanParticleHold(u32 uniqueID, u32 effectID, int x, int y, int z,
-                                 const Vector3_16f *dir);
-void d_a_eyknNewSimpleHold(u32 effectID, int x, int y, int z);
-
 /* Sine and cosine pairs indexed by (angle >> 4) * 2. */
 extern s8 gCurrentSublevel; /* current sublevel id */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
