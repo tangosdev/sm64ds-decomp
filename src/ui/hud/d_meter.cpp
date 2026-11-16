@@ -292,6 +292,9 @@ int dMeter_c::InitResources() {
                    `else if (true)`: 0x740.
                  one unconditional store: 0x6fc. switch: 0x75c.
                  u16 local holding 30: 0x738. `!IsVsMode()` first: 0x73c.
+                 (#821 r20) `30L`, `(s16)30` or `(u8)30` here, or `30L` in
+                   the else: 0x740. `mVsTimer = mVsTimer = 30` matches but
+                   is the same trick spelled another way.
                The arms most likely stored different values in another
                build. Nothing in this ROM says what they were. The `u16 *` pun is
                what keeps the stores apart; a `volatile` qualifier on it
