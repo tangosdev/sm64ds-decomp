@@ -834,10 +834,6 @@ int func_020321fc(void) {
     return 0;
 }
 
-/* opt_common_subs stays off for register colour only: without it case 6
- * swaps the slot index and the held byte (r3/r2), 8 words, same size. */
-#pragma push
-#pragma opt_common_subs off
 void func_020326ac(void) {
     switch (data_0209fcc8) {
     case 0:
@@ -921,7 +917,9 @@ void func_020326ac(void) {
     }
     case 6: {
         int hasf1;
-        u8 idx;
+        /* An int slot index takes r3 and leaves r2 to the held byte, the
+           ROM's colours; a u8 index swaps them (8 words). */
+        int idx;
         u8 f0;
         if (IsButtonInputValid() != 0) {
             data_0209fc98 = data_0209fcd0 + 1;
@@ -1020,7 +1018,6 @@ void func_020326ac(void) {
     }
     }
 }
-#pragma pop
 
 /* Splits the VS-mode text blob at 0x0209fd14 into the four pointers the renderer
  * reads. The blob's own header carries the offset from its second section to the
