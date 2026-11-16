@@ -1705,10 +1705,8 @@ void MascotWalker::StatePause() {
     if (ApproachLinear2(mStateTimer, 0, 1) == 0)
         return;
     mModel.SetAnim(*(BCA_File *)mWalkAnimFile.filePtr, 0, 0, 0x800, 0);
-    /* Walk for 0x258..0x4af frames: a random 0..0xfff scaled into 0x258. */
-    int roll = RandomIntInternal(&data_0209e650.value);
-    int frac = ((unsigned int)(roll & 0x7fffffff) >> 0x13);
-    mStateTimer = (((frac * 0x258) >> 12) + 0x258);
+    /* Walk for 0x258 to 0x4af frames. */
+    mStateTimer = RAND_FX_SCALE(0x258) + 0x258;
     mPaused = 0;
     *(StateSlot *)mState = pmf_MascotWalker_StateWalk_3;
 }

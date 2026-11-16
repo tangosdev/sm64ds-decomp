@@ -1039,21 +1039,17 @@ int Hana_PickUnused(int n, int mask) {
 
 void Hana_ChooseStarWiggler(int count) {
     int i, j;
+    fx32 r;
     sHanaPickedLow = (short)(RandomIntInternal(&data_0209e650.value) & 0xf);
     sHanaPickedCount = (short)count;
     for (i = 0; i < count; i++) {
-        int r = RandomIntInternal(&data_0209e650.value);
-        sHanaPickedIds[i] = (unsigned short)((int)((int)((unsigned int)(r & 0x7fffffff) >> 0x13) *
-                                                   sHanaFieldWigglerCount) >>
-                                             0xc);
+        r = RAND_FX();
+        sHanaPickedIds[i] = (unsigned short)(r * sHanaFieldWigglerCount >> 12);
         j = 0;
         while (j < i) {
             if (sHanaPickedIds[j] == sHanaPickedIds[i]) {
-                r = RandomIntInternal(&data_0209e650.value);
-                sHanaPickedIds[i] =
-                    (unsigned short)((int)((int)((unsigned int)(r & 0x7fffffff) >> 0x13) *
-                                           sHanaFieldWigglerCount) >>
-                                     0xc);
+                r = RAND_FX();
+                sHanaPickedIds[i] = (unsigned short)(r * sHanaFieldWigglerCount >> 12);
                 j = 0;
             } else {
                 j++;
@@ -1064,7 +1060,7 @@ void Hana_ChooseStarWiggler(int count) {
 
 int Hana_PickMoveKind(void) {
     int v = 3;
-    int r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+    fx32 r = RAND_FX();
     if (r < 0x400)
         v = 0;
     else if (r < 0x800)
@@ -1375,12 +1371,7 @@ void dScMgHanachan_c::Wiggler::MoveBounce() {
         timer -= 1;
         if (timer >= 0)
             return;
-        timer =
-            (s16)((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >>
-                          19) *
-                    0x1e) >>
-                   12) +
-                  0x3c);
+        timer = (s16)(RAND_FX_SCALE(0x1e) + 0x3c);
         randomX = RandomIntInternal(&data_0209e650.value);
         randomY = RandomIntInternal(&data_0209e650.value);
         targetAngle =
@@ -1400,12 +1391,8 @@ void dScMgHanachan_c::Wiggler::StartBounce(int) {
     speed = 0xa00;
     speedTarget = 0xa00;
     for (i = 0; i < 5; i++) {
-        seg[i].x =
-            (int)(((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13)
-                  << 8);
-        seg[i].y =
-            (int)(((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) *
-                  0xc0);
+        seg[i].x = RAND_FX() << 8;
+        seg[i].y = RAND_FX() * 0xc0;
         ang[i] = (short)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
     }
     aim = (short)((ang[0] + ang[1]) >> 1);
@@ -1458,11 +1445,11 @@ void dScMgHanachan_c::Wiggler::StartPathB(int idx) {
     if (RandomIntInternal(&data_0209e650.value) & 0x8000000) {
         aim = -0x4000;
         pos.x = 0x80000;
-        pos.x += ((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) << 7;
+        pos.x += RAND_FX() << 7;
     } else {
         aim = 0x4000;
         pos.x = 0x80000;
-        pos.x -= ((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) << 7;
+        pos.x -= RAND_FX() << 7;
     }
 
     for (i = 0, off = 0; i < 5; i++) {

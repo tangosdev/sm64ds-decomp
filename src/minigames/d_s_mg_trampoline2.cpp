@@ -160,8 +160,6 @@ BaseSpawnInfo<dScMgTrampoline2_c> g_profile_MG_TRAMPOLINE2 = {
 };
 Tbl sTrmp2SpinnerSpeeds = {0x600, 0xc00, 0xe00};
 
-/* A random fx32 in [0, 1.0): the top 12 bits of the 31-bit draw. */
-#define TRMP2_RAND_FX ((fx32)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19))
 int sTrmp2ScoreGates[] = {1000, 5000, 10000, 20000};
 int sTrmp2PuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
                                (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
@@ -367,11 +365,7 @@ void dScMgTrampoline2_c::StateIntro() {
         mTouchX = (mixRaw >> 12);
         mTouchY = sTrmpStartTouchY;
 
-        mTouchY +=
-            ((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) -
-               0x800)
-              << 2) >>
-             12);
+        mTouchY += ((RAND_FX() - 0x800) << 2) >> 12;
 
         Mg_DrawLine(old9c, old9e, mTouchX, mTouchY, 2, 0xc);
 
@@ -600,26 +594,26 @@ unsigned short Trmp2_OccupancyBits(int sel, int b) {
 }
 
 int Trmp2_PickFaceA(int x) {
-    int r;
+    fx32 r;
     if (x < 5) {
-        r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+        r = RAND_FX();
         return r < 0xc00 ? 4 : 5;
     }
-    r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+    r = RAND_FX();
     return r < 0xc00 ? 6 : 7;
 }
 
 int Trmp2_PickFaceB(int a) {
-    int r;
+    fx32 r;
     if (a < 5) {
-        r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+        r = RAND_FX();
         if (r < 0xc00)
             return 4;
         if (r < 0xe00)
             return 5;
         return 8;
     }
-    r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+    r = RAND_FX();
     if (r < 0xc00)
         return 6;
     if (r < 0xe00)
@@ -1067,7 +1061,7 @@ void func_020169f4(char *self, int kind);
 void Trmp2Spinner_Init(void *r0, int value) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;
     struct Tbl t = sTrmp2SpinnerSpeeds;
-    fx32 rnd = TRMP2_RAND_FX;
+    fx32 rnd = RAND_FX();
     int idx;
     if (rnd < t.a) {
         idx = 0;
@@ -1095,9 +1089,9 @@ void Trmp2Spinner_Init(void *r0, int value) {
     spinner->mVel.x = drop;
     spinner->mVel.y = drop;
     spinner->mVel.z = 0;
-    spinner->mPos.x += (TRMP2_RAND_FX - 0x800) * 0x40;
-    spinner->mVel.x -= TRMP2_RAND_FX >> 1;
-    spinner->mVel.y -= TRMP2_RAND_FX >> 1;
+    spinner->mPos.x += (RAND_FX() - 0x800) * 0x40;
+    spinner->mVel.x -= RAND_FX() >> 1;
+    spinner->mVel.y -= RAND_FX() >> 1;
     func_02016a14((char *)spinner, 0);
     func_02016a04((char *)spinner, 0);
 }

@@ -743,17 +743,17 @@ void dMgTrmpln2Mario_c::EnterBounce() {
 }
 
 void dMgTrmpln2Mario_c::StateRespawnWait() {
-    unsigned int r;
+    fx32 r;
     int tbl;
     mTimer -= 1;
     if (mTimer == 0) {
         mPos.y = 0x100000;
-        r = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
-        mPos.x = ((int)r - 0x800) * 0xc0;
+        r = RAND_FX();
+        mPos.x = (r - 0x800) * 0xc0;
         mVel.y = 0;
         tbl = sTrmp2DriftScale;
-        r = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
-        mVel.x = FX_MUL(((int)r - 0x800) << 1, tbl);
+        r = RAND_FX();
+        mVel.x = FX_MUL((r - 0x800) << 1, tbl);
         mAnmModel.SetAnim(sTrmpAnimWallJump, 0x40000000, 0x800, 0);
         mPrevPos.x = mPos.x;
         mPrevPos.y = mPos.y;
@@ -1833,8 +1833,7 @@ void dMgTrmpln3DMario_c::JumpOff() {
     int b;
 
     mGravityStep = sTrmp3DGravityStep;
-    mVel.x = sTrmp3DJumpOffSpeed +
-             (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19);
+    mVel.x = sTrmp3DJumpOffSpeed + RAND_FX();
 
     b = mPos.x;
     if (b > 0)

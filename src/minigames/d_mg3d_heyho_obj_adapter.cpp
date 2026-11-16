@@ -63,9 +63,6 @@ extern fBase_c *gCurrentScene;
 
 typedef void (Heyho::*HeyhoMotion)();
 
-/* A random int in [0, n) from the actors' random state. */
-#define HEYHO_RAND(n) ((int)(((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) * (n)) >> 12)
-
 extern "C" {
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -919,7 +916,7 @@ void Heyho::MotionCircleLower() {
 /* ---- Heyho::StartMotionChase ---- */
 void Heyho::StartMotionChase() {
     mLean = 0;
-    mDelay = HEYHO_RAND(45) + 15;
+    mDelay = RAND_FX_SCALE(45) + 15;
     mWaypoint.x = mPos.x;
     mWaypoint.y = mPos.y;
     mWaypoint.z = mPos.z;
@@ -1032,7 +1029,7 @@ void Heyho::MotionChase() {
                     mVel.y = w;
                 }
             }
-            mDelay = HEYHO_RAND(45) + 15;
+            mDelay = RAND_FX_SCALE(45) + 15;
         }
     } else {
         int df = mWaypoint.x - mPos.x;
@@ -1279,12 +1276,12 @@ void Heyho_SpawnAll(void *arg0, int layout) {
             sHeyhos[i].StartMotionFlyIn(&sHeyhoLayoutFlyInPaths[sHeyhoLayout][i]);
             sHeyhos[i].UpdateMatrix();
         } else {
-            int row = HEYHO_RAND(4);
-            int col = HEYHO_RAND(4);
+            int row = RAND_FX_SCALE(4);
+            int col = RAND_FX_SCALE(4);
             int j;
             for (j = 0; j < i - 3; j++) {
                 if (row == data_ov006_021403b8[j]) {
-                    row = HEYHO_RAND(4);
+                    row = RAND_FX_SCALE(4);
                     j = 0;
                 }
             }
@@ -1353,7 +1350,7 @@ void Heyho_SettleAll(void) {
     int i;
     for (i = 0; i < sHeyhoCount; i++) {
         if (sHeyhos[i].mMotion == data_ov006_0213afc8) {
-            sHeyhos[i].StartMotionRegroup(&sHeyhoSettlePaths[HEYHO_RAND(9)][HEYHO_RAND(5)]);
+            sHeyhos[i].StartMotionRegroup(&sHeyhoSettlePaths[RAND_FX_SCALE(9)][RAND_FX_SCALE(5)]);
             ApproachLinear(sHeyhoUnsettledCount, sHeyhoCount, 1);
             return;
         }
