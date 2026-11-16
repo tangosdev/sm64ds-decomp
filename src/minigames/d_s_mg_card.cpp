@@ -1143,7 +1143,7 @@ void dMgCardObj_c::DealIn(const s32 *src)
     mX = src[0];
     mY = src[1];
     {
-        int *b = (int *)(((int)this + 4));
+        s32 *b = &mX;
         mTargetX = b[0];
         mTargetY = b[1];
     }
