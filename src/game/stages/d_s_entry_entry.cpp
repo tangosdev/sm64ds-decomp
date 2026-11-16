@@ -187,7 +187,8 @@ void EntryMesh::CalcNormals() {
             VEC_CrossProduct((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
             n.z >>= 1;
             VEC_Normalize((const Vector3 *)&n, (Vector3 *)&n);
-            p->normal = (n.x >> 3 & 0x3ff) | ((n.y >> 3 & 0x3ff) << 10) | ((n.z >> 3 & 0x3ff) << 20);
+            p->normal =
+                (n.x >> 3 & 0x3ff) | ((n.y >> 3 & 0x3ff) << 10) | ((n.z >> 3 & 0x3ff) << 20);
             p++;
         }
     }

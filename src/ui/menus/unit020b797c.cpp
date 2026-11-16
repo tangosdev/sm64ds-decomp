@@ -580,8 +580,8 @@ extern "C" void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
             break;
         case 1:
             data_ov007_02103464 = 0x30;
-            MenuText_DrawString(
-                2, (u8 *)func_ov007_020c94a0(0, MenuText_MessageIDToIndex(0x1f57)), 1);
+            MenuText_DrawString(2, (u8 *)func_ov007_020c94a0(0, MenuText_MessageIDToIndex(0x1f57)),
+                                1);
             if (alt != 0) {
                 data_ov007_02103464 = 0xc0;
                 MenuText_DrawString(
@@ -594,8 +594,8 @@ extern "C" void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
             break;
         case 0x11:
             data_ov007_02103464 = 0xc;
-            MenuText_DrawString(
-                2, (u8 *)func_ov007_020c94a0(0, MenuText_MessageIDToIndex(0x13b0)), 1);
+            MenuText_DrawString(2, (u8 *)func_ov007_020c94a0(0, MenuText_MessageIDToIndex(0x13b0)),
+                                1);
             data_ov007_02103464 = 0x9c;
             MenuText_DrawGlyph(2, 0xf0);
             MenuText_DrawGlyph(2, 0xef);
