@@ -10247,14 +10247,8 @@ int daPly_c::St_LedgeHang_Cleanup() {
 }
 
 void daPly_c::func_ov002_020d0948() {
-
-    /* The two header reads go through a byte pointer: with the int-typed
-       self, mwcc materializes the +0x703 offset from the literal pool
-       (ldr r1,[pc] / ldrb r2,[r0,r1]) instead of folding it into the ldrb. */
-    char *s = (char *)this;
-    daPly_c *player = (daPly_c *)s;
-    int base = (short)(player->mAngleY + 0x8000);
-    if (player->mIsMega != 0) {
+    int base = (short)(mAngleY + 0x8000);
+    if (mIsMega != 0) {
         int idx = (unsigned short)base >> 4;
         int *p0 = (&mPosX);
         int *p1 = (&mPosY);
