@@ -4787,7 +4787,11 @@ void dScMgSmartball_c::SpawnObjects() {
 #pragma pop
 
 /* Leftover: Render needs both pragmas off, and the locals below must stay in
- * this order (each one pins a stack slot). */
+ * this order (each one pins a stack slot). The tally and popup pointers still
+ * step the byte view `g`: the ROM forms (this + i*4) + offset. Measured
+ * against 0x10c0: &mLineTally[row] 0x10bc, &mAwardTally[j] same size but
+ * offset-first, &mPopupScore[sb] 0x10c8, &mPopupMultiplier[sb] 0x10c8,
+ * &mPopupPos[sb][1] / [0] 0x10c4, the mPopupScore[sb] re-read offset-first. */
 #pragma push
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
@@ -4958,17 +4962,17 @@ s32 dScMgSmartball_c::Render() {
         /* Continue prompt. */
         if (mPhase == 1 && mResultTimer >= 300) {
             if (col >= 7)
-                Mg_DrawBlinkSprite(g, 0x80, 0xa8);
+                Mg_DrawBlinkSprite(this, 0x80, 0xa8);
             else if (col == 6)
-                Mg_DrawBlinkSprite(g, 0xe0, 0xa8);
+                Mg_DrawBlinkSprite(this, 0xe0, 0xa8);
             else
-                Mg_DrawBlinkSprite(g, 0xe0, 0xa0);
+                Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
         }
     }
 
     /* Sparks, except while draining on the main screen. */
     if ((param1 & 0xff) != 0 || mDraining == 0)
-        ((dScMgSmartball_c *)(g))->RenderSparks();
+        RenderSparks();
 
     /* Score counters at the top of both screens. */
     Mg_DrawTopRightCounter(Mg_GetSubmittedScore(), 6);
@@ -5012,9 +5016,8 @@ s32 dScMgSmartball_c::Render() {
                     }
                     Mg_DrawNumber((*px >> 12) + nd * 8 + 8, *py >> 12, *slot[0], -1, 0, 0, 0);
                 } else {
-                    dScMgSmartball_c *popup = (dScMgSmartball_c *)(g + sb * 8);
-                    int y = popup->mPopupPos[0][1];
-                    int x = popup->mPopupPos[0][0];
+                    int y = mPopupPos[sb][1];
+                    int x = mPopupPos[sb][0];
                     Mg_DrawNumber(x >> 12, y >> 12, cnt, -1, 0, 0, 0);
                 }
             }
@@ -5030,9 +5033,8 @@ s32 dScMgSmartball_c::Render() {
                 int idx = mDustAge[slot] / 5;
                 if (idx > 3)
                     idx = two;
-                dScMgSmartball_c *dust = (dScMgSmartball_c *)(g + slot * 8);
-                Mg_RenderSpriteBoth(data_ov006_02137a60[idx], dust->mDustPos[0][0] >> 12,
-                                    dust->mDustPos[0][1] >> 12, neg, zero);
+                Mg_RenderSpriteBoth(data_ov006_02137a60[idx], mDustPos[slot][0] >> 12,
+                                    mDustPos[slot][1] >> 12, neg, zero);
             }
         }
     }
@@ -5121,7 +5123,7 @@ s32 dScMgSmartball_c::Render() {
     }
 
     if ((param1 & 0xff) == 0 && mDraining != 0)
-        ((dScMgSmartball_c *)(g))->RenderSparks();
+        RenderSparks();
 
     return 1;
 }
