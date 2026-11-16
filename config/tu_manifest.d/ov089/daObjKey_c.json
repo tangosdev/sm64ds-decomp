@@ -260,20 +260,6 @@
       "size": "0x20",
       "binding": "STB_GLOBAL",
       "evidence": "eight model handles indexed by key kind; LoadFile/Release index this array"
-    },
-    {
-      "symbol": "data_ov089_021328b4",
-      "address": "0x021328b4",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "eight optional animation handles indexed by key kind; null for kinds without an extra file"
-    },
-    {
-      "symbol": "data_ov089_02132880",
-      "address": "0x02132880",
-      "size": "0x14",
-      "binding": "STB_GLOBAL",
-      "evidence": "five collect-animation handles indexed by mAnimID; slot 0 is null"
     }],
   "rodata": [
     {

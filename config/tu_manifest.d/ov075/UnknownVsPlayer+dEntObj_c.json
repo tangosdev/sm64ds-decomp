@@ -511,14 +511,7 @@
       "binding": "STB_GLOBAL",
       "evidence": "four animation-handle pointers; the following eight bytes are the vtable preamble"
     }
-  ,
-    {
-      "symbol": "data_ov075_0211b524",
-      "address": "0x0211b524",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "shared six-entry pose-choice byte pattern that refills the random draw"
-    }],
+  ],
   "bss": [
     {
       "symbol": "data_ov075_0211d384",
