@@ -839,6 +839,16 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
         return 0;
 
     if (mTouchReleased != 0) {
+        /* Kept volatile: the ROM reloads mTouchStart.x for the Create copy
+           after the edge test. dScMgTrampoline_c's twin gets that reload from
+           `from = mTouchStart; to = mTouch;` (struct copies, lowered after
+           CSE), but here buf[0] carries the fill value and only an
+           address-taken array reproduces its strh/ldrh spill. Measured
+           2026-11-16 against 0x1a0: a plain `a` read gives 0x19c (r1 forwarded
+           into buf[1]); Vec2s struct copies with a separate u16 fill, u16
+           fill[1] or Vec2s line[2] give 0x198 (the fill folds to a register,
+           frame 0x10 -> 0x8). The twin's `volatile u16 fill` would match but
+           only moves the volatile. */
         s16 a = *(volatile s16 *)&mTouchStart.x;
         if ((a < 0x18 && mTouch.x < 0x18) || (a > 0xe8 && mTouch.x > 0xe8)) {
             func_02012790(0xe);
