@@ -239,8 +239,13 @@ void dScMgMemory_c::CheckFinished() {
         mResultTimer = 64;
         mState = STATE_RESULT;
         mSubstate = RESULT_WAIT;
-        /* Read mCredits through WordAt: as a plain member the multiply-add takes
-       its registers the other way round. */
+        /* Read mCredits through WordAt: as a plain member the multiply-add
+           takes its registers the other way round (4 of 41 words, measured
+           2026-11-16). The same 4 words with the operands swapped, `6 * (3 -
+           mMisses)`, `(int)mMisses`, this->mCredits, a named bonus / credits
+           / score / left / misses (s32 or u8) local, `int *credits =
+           &mCredits`, `*&mCredits` and `*(int *)(char *)&mCredits`; only the
+           inline call moves the load. */
         Mg_SaveRecordPair(*WordAt((char *)&mCredits) + (3 - mMisses) * 6, mHudScore + 1);
     }
     if (mMisses >= mMaxMisses) {
