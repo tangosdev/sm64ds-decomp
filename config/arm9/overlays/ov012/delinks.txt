@@ -2,13 +2,20 @@
     .rodata     start:0x02111768 end:0x02111a88 kind:rodata align:4
     .init       start:0x02111a88 end:0x02111b60 kind:code align:4
     .ctor       start:0x02111b60 end:0x02111b68 kind:rodata align:4
-    .data       start:0x02111b80 end:0x021124a0 kind:data align:32
+    .data.c0Pre   start:0x02111b80 end:0x02111c24 kind:data align:32
+    .data.c0Bta   start:0x02111c24 end:0x02111c3c kind:data align:4
+    .data.c0Mid   start:0x02111c3c end:0x02111c90 kind:data align:4
+    .data.c0Clps  start:0x02111c90 end:0x02111cb0 kind:data align:4
+    .data.c0Mid2  start:0x02111cb0 end:0x02111cd0 kind:data align:4
+    .data.c0Sw    start:0x02111cd0 end:0x02111cf0 kind:data align:4
+    .data.c0Rest  start:0x02111cf0 end:0x021124a0 kind:data align:4
     .bss        start:0x021124a0 end:0x02112500 kind:bss align:32
 src/game/actors/d_a_obj_c0_switch.cpp:
     complete
     .text start:0x021111a0 end:0x02111450
     .init start:0x02111a88 end:0x02111af4
     .ctor start:0x02111b60 end:0x02111b64
+    .data.c0Sw start:0x02111cd0 end:0x02111cf0
     .bss start:0x021124a0 end:0x021124c8
 
 src/game/actors/d_a_obj_c0_water.cpp:
@@ -16,4 +23,6 @@ src/game/actors/d_a_obj_c0_water.cpp:
     .text start:0x02111450 end:0x02111768
     .init start:0x02111af4 end:0x02111b60
     .ctor start:0x02111b64 end:0x02111b68
+    .data.c0Bta start:0x02111c24 end:0x02111c3c
+    .data.c0Clps start:0x02111c90 end:0x02111cb0
     .bss start:0x021124c8 end:0x021124f0

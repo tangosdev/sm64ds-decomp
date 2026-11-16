@@ -38,8 +38,13 @@ enum d_a_obj_td_water_AssetId { ASSET_TD_OBJ_WATER_BMD = 0x06b7, ASSET_TD_OBJ_WA
 #include "dBgW_Kc.h"
 #include "Event.h"
 
+#include "private/BTA_File.h"
+
 struct KCL_File;
-struct CLPS_Block;
+
+struct CLPS_Block {
+    u32 words[6];
+};
 
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4; collision handles construct through func_02017b4c and
@@ -57,8 +62,19 @@ struct TdWaterClsnFileHandle : SharedFilePtr {
 
 extern TdWaterModelFilePtr data_ov032_02113afc;   /* the water model's BMD */
 extern TdWaterClsnFileHandle data_ov032_02113af4; /* the collision KCL */
-extern BTA_File data_ov032_02112f64;              /* the scrolling texture animation */
-extern CLPS_Block data_ov032_02112fb8;
+extern fx32 data_ov032_021128fc[];
+extern u16 data_ov032_021128f0[];
+extern fx32 data_ov032_02112aa4[];
+extern BTAMaterialRecord data_ov032_0211291c[];
+
+BTA_File data_ov032_02112f64 = {
+    91, 0, data_ov032_021128fc, data_ov032_021128f0, data_ov032_02112aa4, 1, 0,
+    data_ov032_0211291c,
+};
+
+CLPS_Block data_ov032_02112fb8 = {
+    0x53504c43, 0x00010008, 0x00000fe0, 0x000000ff, 0xffffffff, 0xffffffff,
+};
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */

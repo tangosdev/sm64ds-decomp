@@ -9,7 +9,9 @@
 
 #pragma defer_codegen off
 
+#define data_ov072_02121ffc data_ov072_02121ffc_decl
 #include "decl_common.h"
+#undef data_ov072_02121ffc
 #include "daBgSnmHed_c.h"
 #include "SpawnInfo.h"
 #include "daPly_c.h"
@@ -52,6 +54,11 @@ enum BgSnmHedAssetId {
 BgSnmHedModelFile gBgSnmHedModelFile(ASSET_BIG_SNOWMAN_HEAD_BMD);
 BgSnmHedTexSeqFile gBigSnowmanCryTextureSequenceFile(ASSET_BIG_SNOWMAN_CRY_BTP);
 BgSnmHedTexSeqFile gBigSnowmanSmileTextureSequenceFile(ASSET_BIG_SNOWMAN_SMILE_BTP);
+
+extern SharedFilePtr *const data_ov072_02121ffc[2] = {
+    &gBigSnowmanCryTextureSequenceFile,
+    &gBigSnowmanSmileTextureSequenceFile,
+};
 
 daBgSnmHed_c::StateEntry gBgSnmHedStates[4] = {
     {&daBgSnmHed_c::InitState0, &daBgSnmHed_c::State0},

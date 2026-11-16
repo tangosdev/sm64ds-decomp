@@ -38,7 +38,7 @@ struct HsBillboardModelFilePtr : SharedFilePtr {
 };
 typedef char HsBillboardModelFilePtr_size_must_be_8[sizeof(HsBillboardModelFilePtr) == 8 ? 1 : -1];
 
-extern SharedFilePtr *data_ov031_02111424[];
+extern SharedFilePtr *const data_ov031_02111424[4];
 
 /* Four C-linkage factories: one `new`, four names. The EAD classInit spelling
  * would collide, so each profile keeps its HS_* suffix. */
@@ -113,3 +113,10 @@ HsBillboardModelFilePtr gHsMoonModelFile(ASSET_HS_MOON_BMD);
 HsBillboardModelFilePtr gHsStarModelFile(ASSET_HS_STAR_BMD);
 HsBillboardModelFilePtr gHsYStarModelFile(ASSET_HS_Y_STAR_BMD);
 HsBillboardModelFilePtr gHsBStarModelFile(ASSET_HS_B_STAR_BMD);
+
+extern SharedFilePtr *const data_ov031_02111424[4] = {
+    &gHsMoonModelFile,
+    &gHsStarModelFile,
+    &gHsYStarModelFile,
+    &gHsBStarModelFile,
+};

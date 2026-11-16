@@ -13,6 +13,12 @@
   ],
   "sections": [
     {
+      "name": ".data.tdFuta",
+      "input_section": ".data",
+      "start": "0x02112f98",
+      "end": "0x02112fb8"
+    },
+    {
       "name": ".text",
       "start": "0x021124a8",
       "end": "0x02112698"
@@ -84,7 +90,15 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov032_02112f98",
+      "address": "0x02112f98",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS words for the lid."
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov032_02113acc",
@@ -217,6 +231,13 @@
         "firstDiff": null
       },
       "tuRanges": [
+        {
+          "section": ".data.tdFuta",
+          "start": "0x02112f98",
+          "end": "0x02112fb8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
         {
           "section": ".text",
           "start": "0x021124a8",

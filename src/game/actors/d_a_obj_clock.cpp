@@ -44,10 +44,15 @@ u8 IsAreaShowing(int areaId);
 
 extern s8 gNextSublevel; /* hands advance while it is not positive */
 extern u8 data_0209f2c0; /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */
-extern s16 data_ov013_021116ac[];
-extern SharedFilePtr *data_ov013_021116b0[];
 extern ClockModelFilePtr data_ov013_02112294;
 extern ClockModelFilePtr data_ov013_0211229c;
+
+extern const s16 data_ov013_021116ac[2] = {0xfe80, 0xffe0};
+
+extern SharedFilePtr *const data_ov013_021116b0[2] = {
+    &data_ov013_0211229c,
+    &data_ov013_02112294,
+};
 
 enum { ACTOR_CLOCK_SHORT = 0x124, ACTOR_CLOCK_LONG = 0x125 };
 
