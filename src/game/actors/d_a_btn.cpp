@@ -1637,7 +1637,10 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         if (mState != 0xa) {
             /* Both reads are measured. A plain mState read here or at the
                second site below shrinks the function 0x288 -> 0x284; plain
-               reads at both sites give 0x280. */
+               reads at both sites give 0x280. Re-measured (#821 r17): the
+               three saves as an inline helper (pointer or reference) are
+               still 0x280; the state test as an inline predicate is 0x298
+               (if chain) or 0x2d0 (switch). */
             mResumeState = *(volatile s32 *)&mState;
             mSavedStateTimer = mStateTimer;
             mSavedSubState = mSubState;
