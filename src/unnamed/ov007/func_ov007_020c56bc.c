@@ -12,7 +12,7 @@ void func_ov007_020c56bc(char *sl, int mode, int percent, int rangeX, int rangeY
     Ov007Picker *self = (Ov007Picker *)sl;
     int i, j;
     int threshold, minX, spanX, minY, spanY;
-    Vector3 *dir;
+    VecFx32 *dir;
     int dx;
     int offset;
 
@@ -50,10 +50,10 @@ void func_ov007_020c56bc(char *sl, int mode, int percent, int rangeX, int rangeY
                     case 2:
                         dir->x =
                             dx + (self->restPos.x -
-                                  ((Vector3 *)((char *)self->groupPointCopies[i] + offset))->x);
+                                  ((VecFx32 *)((char *)self->groupPointCopies[i] + offset))->x);
                         dir->y =
                             dy + (self->restPos.y -
-                                  ((Vector3 *)((char *)self->groupPointCopies[i] + offset))->y);
+                                  ((VecFx32 *)((char *)self->groupPointCopies[i] + offset))->y);
                         break;
                     }
                 }

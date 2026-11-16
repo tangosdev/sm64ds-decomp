@@ -1,8 +1,7 @@
 #include "common.h"
 #include "nitro/fx/fx.h"
 #include "Ov007Picker.h"
-#include "math/CalcLib.h"
-/* Vector3 VEC_* until Ov007Spring, Ov007Picker and func_ov007_020bfe4c go VecFx32 (#5207). */
+#include "nitro/fx/fx_vec.h"
 
 extern void func_ov007_020c7560(Ov007PointList *list, int stiffness, int damping);
 extern void func_ov007_020c7b2c(struct Ov007Link *link, int stiffness, int damping);
@@ -24,9 +23,9 @@ void func_ov007_020c5188(char *sb, int arg1) {
     int v18;
     int v1c;
     int v20;
-    struct Vector3 backup;
-    Vector3 *min;
-    Vector3 *max;
+    VecFx32 backup;
+    VecFx32 *min;
+    VecFx32 *max;
 
     p = arg1;
     damping = self->params->damping;
@@ -63,7 +62,7 @@ void func_ov007_020c5188(char *sb, int arg1) {
                                                 self->springConstants[3]);
                             func_ov007_020c81a0(node, damping, p);
                             {
-                                Vector3 *pt = node->target;
+                                VecFx32 *pt = node->target;
                                 if (min->x > pt->x) {
                                     pt->x = min->x;
                                     node->velocity.x = DIVR(node->velocity.x);
@@ -73,7 +72,7 @@ void func_ov007_020c5188(char *sb, int arg1) {
                                 }
                             }
                             {
-                                Vector3 *pt = node->target;
+                                VecFx32 *pt = node->target;
                                 if (min->y > pt->y) {
                                     pt->y = min->y;
                                     node->velocity.y = DIVR(node->velocity.y);

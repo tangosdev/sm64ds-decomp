@@ -22,7 +22,7 @@ Ov007Sprite *func_ov007_020c44e4(int count) {
     p->width = p->height;
 
     {
-        struct Vector3 z3 = {0, 0, 0};
+        VecFx32 z3 = {0, 0, 0};
         p->pos = z3;
 
         p->worldHeight = 0;
@@ -34,7 +34,7 @@ Ov007Sprite *func_ov007_020c44e4(int count) {
         p->rotX = p->rotY;
 
         {
-            struct Vector3 z3b = {0, 0, 0};
+            VecFx32 z3b = {0, 0, 0};
             p->posOffset = z3b;
         }
     }
