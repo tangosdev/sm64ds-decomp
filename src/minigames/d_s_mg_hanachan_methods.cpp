@@ -42,7 +42,6 @@
  * - Wiggler::DrawField: OAM::Render(int, OamAttr*, int, int, int,
  *   int, int, int) does not typecheck (the sprite table is void*).
  *   One sprite offset is still read back through the stack word under s.
- * - Wiggler::StartPathA reads base.y through a volatile; a plain read DIFFs.
  */
 
 /* .text in source order (ROM-ascending; do not reorder) and per-function
@@ -1270,6 +1269,7 @@ void dScMgHanachan_c::Wiggler::StartPathA(int n) {
     int rA, rB, rC, rD;
     int g1;
     int cm, dm;
+    Vector2 base;
 
     speed = 0xa00;
     speedTarget = 0xa00;
@@ -1293,7 +1293,6 @@ void dScMgHanachan_c::Wiggler::StartPathA(int n) {
     }
 
     {
-        Point base;
         int i = 0;
         int delta;
 
@@ -1304,11 +1303,8 @@ void dScMgHanachan_c::Wiggler::StartPathA(int n) {
         base.y = (int)((((long long)rA << 16) + 0x800) >> 12) + FX_MUL(rB, 0xb0000);
 
         for (; i < 5; i++) {
-            int bx = base.x;
-            seg[i].x = bx;
-            /* Kept volatile: a plain base.y read DIFFs StartPathA
-               (measured 2026-11-08). */
-            seg[i].y = *(volatile int *)&base.y;
+            seg[i].x = base.x;
+            seg[i].y = base.y;
             if (aim < 0)
                 seg[i].x += delta;
             else
