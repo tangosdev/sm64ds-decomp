@@ -41,7 +41,6 @@
  *   the B72 bitfield view.
  * - Wiggler::DrawField: OAM::Render(int, OamAttr*, int, int, int,
  *   int, int, int) does not typecheck (the sprite table is void*).
- *   One sprite offset is still read back through the stack word under s.
  */
 
 /* .text in source order (ROM-ascending; do not reorder) and per-function
@@ -634,9 +633,8 @@ void dScMgHanachan_c::Wiggler::DrawField() {
                     s.vc.x = s3.vc0.x;
                     s.vc.y = s3.vc0.y;
                     if (hold < 0x26) {
-                        int d = (0x30 - hold) * 0x600;
-                        int vy;
-                        s.vc.y = (vy = *(int *)((char *)&s - 4), (idx = 1) ? vy : vy) - d;
+                        idx = 1;
+                        s.vc.y -= (0x30 - hold) * 0x600;
                     }
                     func_0203d388(&s.vc.x, rot);
                     s.vc.x += s.pos.x;
