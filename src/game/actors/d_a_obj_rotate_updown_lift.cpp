@@ -110,7 +110,12 @@ struct RotateUpdownLiftCollisionFilePtr : SharedFilePtr {
 
 extern UpdownPath data_ov091_02134cdc[3];
 extern UpdownTopY data_ov091_02134d1c[3];
-extern s32 data_ov091_021344e8[];
+#pragma define_section updown_ro ".rodata" ".rodata" ".rodata" far_absolute R
+#pragma section updown_ro begin
+s32 data_ov091_021344e8[3] = {
+    0x5000, 0x5000, 0x5000,
+};
+#pragma section updown_ro end
 /* Per-variant word triples copied onto the stack. The shadow-width
    triple lives in its own file: it sits between this class's typeinfo
    and its name. */

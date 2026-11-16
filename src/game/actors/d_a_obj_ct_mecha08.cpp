@@ -67,7 +67,15 @@ struct LiftMotion {
     s32 vertSpeed;
     u16 moveTimer;
 };
-extern LiftMotion data_ov065_0211c0d0[][2]; /* by setting, by direction */
+#pragma define_section mecha08_ro ".rodata" ".rodata" ".rodata" far_absolute R
+#pragma section mecha08_ro begin
+LiftMotion data_ov065_0211c0d0[4][2] = {
+    {{0xb000, 0x14}, {-0x9000, 0x1e}},
+    {{0x12000, 0xf}, {-0xb000, 0xf}},
+    {{0xb000, 0x14}, {-0x9000, 0x0}},
+    {{0x0, 0x0}, {0x0, 0x0}},
+};
+#pragma section mecha08_ro end
 extern u8 data_0209f2c0;                /* arm9 clock setting */
 
 /* int-returning, so the ROM materializes the 0/1 before testing it. */

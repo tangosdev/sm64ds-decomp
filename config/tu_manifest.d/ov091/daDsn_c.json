@@ -32,6 +32,11 @@
       "name": ".bss",
       "start": "0x02135610",
       "end": "0x0213564c"
+    },
+    {
+      "name": ".data",
+      "start": "0x02135138",
+      "end": "0x02135150"
     }
   ],
   "functions": [
@@ -85,7 +90,15 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov091_02135138",
+      "address": "0x02135138",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Thwomp model, collision, CLPS, texture sequence, and two shadow extents"
+    }
+  ],
   "bss": [
     {
       "symbol": "gDosuneModelFile",
@@ -749,6 +762,46 @@
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02134930"
+    },
+    {
+      "section": ".data",
+      "source": "0x02135138",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDosuneModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135620"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213513c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDosuneCollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135618"
+    },
+    {
+      "section": ".data",
+      "source": "0x02135140",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov091_02135100",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135100"
+    },
+    {
+      "section": ".data",
+      "source": "0x02135144",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDosuneTextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135610"
     }
   ]
 }
