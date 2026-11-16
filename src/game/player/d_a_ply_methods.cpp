@@ -12939,7 +12939,7 @@ int daPly_c::St_InYoshiMouth_Main() {
         daPly_c *eater = r4;
         u32 t;
         int d;
-        if (r4 != 0 && (char *)eater->mObjInMouth != ((char *)this)) {
+        if (r4 != 0 && eater->mObjInMouth != this) {
             if (func_ov002_020d5cec(this))
                 return 1;
         }
