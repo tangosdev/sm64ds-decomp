@@ -623,7 +623,6 @@ s32 dScMgCard_c::Behavior()
  * (dScMgBase_c::Render). */
 s32 dScMgCard_c::Render()
 {
-    char *c = (char *)this;
     int hiddenRank;
     short state;
     int i;
@@ -653,8 +652,8 @@ s32 dScMgCard_c::Render()
         RenderOamMainScreen(data_ov006_02134028, 40, 56, -1, -1);
     }
 
-    Mg_DrawCredits(c, 0xc, 0xc, 0);
-    Mg_DrawScoreTally(c, 0xe0, 0x14, 1);
+    Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
+    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
 
     if (this->mScore < this->mHudScore)
         this->mScore = this->mHudScore;
