@@ -2292,7 +2292,6 @@ void StaffRoll::func_ov002_020f5d34() {
     func_ov002_020f2958((char *)this);
 }
 
-
 extern StaffRollCue data_ov002_02110f34[];
 void StaffRoll::func_ov002_020f5dd8(int idx) {
     (this->*data_ov002_02110f34[idx])();
