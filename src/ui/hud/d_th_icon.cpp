@@ -82,16 +82,16 @@ int TouchArea_Update(void *c, int player) {
         player = func_0203da9c();
     fired = 0;
     inside = 0;
-    if (gTouchHeld[player * 4] != 0) {
-        dx = gTouchX[player * 4] - icon->mX;
-        dy = gTouchY[player * 4] - icon->mY;
+    if (gTouchInfo[player].held != 0) {
+        dx = gTouchInfo[player].x - icon->mX;
+        dy = gTouchInfo[player].y - icon->mY;
         if (dx >= -icon->mHalfW && dx <= icon->mHalfW && dy >= -icon->mHalfH && dy <= icon->mHalfH)
             inside = 1;
     }
     if (inside != 0) {
         kind = icon->mTouchKind;
         /* The unsigned index is load-bearing; a signed one DIFFs. */
-        if ((kind == 1 && gTouchEdge[(unsigned int)player * 4] != 0) ||
+        if ((kind == 1 && gTouchInfo[(unsigned int)player].edge != 0) ||
             (kind == 2 && icon->mPenInside == 0))
             fired = 1;
     }

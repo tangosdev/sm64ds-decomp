@@ -250,11 +250,11 @@ void dScMgTeresa_c::BigBoo_StateExit(int i) {
     *p16 = *p16 + 1;
     if (*p16 >= 8) {
         unsigned char *p8;
-        int z = 0;
-        *p16 = z;
+        *p16 = 0;
         p8 = &mBigBoo[i].frame;
         *p8 = *p8 + 1;
-        if (*p8 >= 4) *p8 = z;
+        if (*p8 >= 4)
+            *p8 = 0;
     }
     add = &mBigBoo[i].xVel;
     sum = &mBigBoo[i].x;
@@ -1409,20 +1409,20 @@ void dScMgTeresa_c::UpdateRubbing() {
 
 void dScMgTeresa_c::ReadRubTouch() {
     int i = gActivePlayerSlot;
-    if (gTouchHeld[i * 4] != 0 && mRubTouching == 0) {
-        mRubX = gTouchX[i * 4];
-        mRubY = gTouchY[i * 4];
+    if (gTouchInfo[i].held != 0 && mRubTouching == 0) {
+        mRubX = gTouchInfo[i].x;
+        mRubY = gTouchInfo[i].y;
         mRubPrevX = mRubX;
         mRubPrevY = mRubY;
         mRubTouching += 1;
     }
-    if (gTouchHeld[gActivePlayerSlot * 4] == 0) {
+    if (gTouchInfo[gActivePlayerSlot].held == 0) {
         mRubTouching = 0;
     }
     if (mRubTouching == 0)
         return;
-    mRubX = gTouchX[gActivePlayerSlot * 4];
-    mRubY = gTouchY[gActivePlayerSlot * 4];
+    mRubX = gTouchInfo[gActivePlayerSlot].x;
+    mRubY = gTouchInfo[gActivePlayerSlot].y;
 }
 
 void dScMgTeresa_c::ResetRound() {

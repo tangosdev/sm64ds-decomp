@@ -20,30 +20,30 @@ extern int data_0209d6f8;
 extern unsigned char data_0209d660;
 extern short data_0209d6d4;
 
-extern "C" void LoadFont(unsigned char arg);
 extern "C" void LoadFont(unsigned char arg) {
     void *file;
-    void *r4;
+    void *chars;
     data_0209d698 = arg;
-    r4 = LoadFile(0x980e);
+    chars = LoadFile(0x980e);
     if (data_0209d698 == 2) {
         LoadFileAt(0x980e, Mg_GetWorkBuffer());
         data_0209d6f8 = Mg_GetWorkBuffer();
         file = LoadFile(ASSET_D_2D_MARIO_3DFONT_NCL_BIN);
-        GX_LoadBGPltt((char *)file + 2, 2, 0x20);
+        /* colours 1.. of the palette; colour 0 stays the backdrop */
+        GX_LoadBGPltt((u16 *)file + 1, 2, 0x20);
         Deallocate(file);
     } else if (data_0209d698 == 1) {
-        MI_CpuCopy32(r4, (int *)G2S_GetBG1CharPtr(), 0x4000);
+        MI_CpuCopy32(chars, G2S_GetBG1CharPtr(), 0x4000);
         file = LoadFile(ASSET_D_2D_MARIO_3DFONT_NCL_BIN);
         GXS_LoadBGPltt(file, 0x40, 0x20);
         Deallocate(file);
     } else {
-        MI_CpuCopy32(r4, (int *)G2_GetBG3CharPtr(), 0x4000);
+        MI_CpuCopy32(chars, G2_GetBG3CharPtr(), 0x4000);
         file = LoadFile(0x980d);
-        DecompressLZ16(file, (void *)((int)G2_GetBG3CharPtr() + 0x8000));
+        DecompressLZ16(file, (u8 *)G2_GetBG3CharPtr() + 0x8000);
         Deallocate(file);
     }
-    Deallocate(r4);
+    Deallocate(chars);
     data_0209d660 = 0;
     data_0209d6d4 = -1;
 }

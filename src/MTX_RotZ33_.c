@@ -4,8 +4,10 @@
 // faithful source. Counts as matched (asm-primitive policy), not a C transcription.
 // MTX_RotZ33_ @ 0x02052588 (arm9, Thumb): build 3x3 fx32 Z-rotation
 // matrix from (sin, cos): {c, s, 0, -s, c, 0, 0, 0, 1} with 4096 = 1.0.
+#include "math/Matrix.h"
+
 #pragma thumb on
-asm void MTX_RotZ33_(int *m, int s, int c) {
+asm void MTX_RotZ33_(Matrix3x3 *m, int s, int c) {
     stmia r0!, {r2}
     mov r3, #0
     stmia r0!, {r1, r3}

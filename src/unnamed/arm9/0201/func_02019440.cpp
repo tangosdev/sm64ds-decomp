@@ -13,7 +13,7 @@ class dFdBrightness_c;
 extern dFdBrightness_c *data_0209d4ac;
 /* the brightness fader (d_scene.cpp) */
 /* the active transition fader (d_s_stage_methods.cpp wipes, KuppaScript.cpp colour fades) */
-extern int data_0209d4b0;
+extern dFdBrightness_c *data_0209d4b0;
 extern "C" {
 
 

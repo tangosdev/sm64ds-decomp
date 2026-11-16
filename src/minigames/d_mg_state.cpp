@@ -818,15 +818,11 @@ void dMgState_c::Results_Enter() {
 
 void dMgState_c::Results_Update() {
     int ok;
-    unsigned char idx;
-    int i;
     if (mTimer != 0)
         return;
-    idx = gActivePlayerSlot;
     ok = 0;
-    i = idx * 4;
-    if (gTouchHeld[i] != 0) {
-        if (gTouchEdge[i] != 0)
+    if (gTouchInfo[gActivePlayerSlot].held != 0) {
+        if (gTouchInfo[gActivePlayerSlot].edge != 0)
             ok = 1;
     }
     if (ok == 0)
@@ -856,8 +852,8 @@ void dMgState_c::ResultsNewRecord_Update() {
     if (mTimer == 0) {
         idx = gActivePlayerSlot;
         flag = 0;
-        if (gTouchHeld[idx * 4] != 0) {
-            if (gTouchEdge[idx * 4] != 0)
+        if (gTouchInfo[idx].held != 0) {
+            if (gTouchInfo[idx].edge != 0)
                 flag = 1;
         }
         if (flag != 0) {
@@ -902,11 +898,9 @@ void dMgState_c::GameOver_Update() {
     int x = mTimer;
     dScMgBase_c *g = gMgScene;
     if (x != 0) {
-        unsigned char idx = gActivePlayerSlot;
-        int off = idx * 4;
         int ok = 0;
-        if (gTouchHeld[off]) {
-            if (gTouchEdge[off])
+        if (gTouchInfo[gActivePlayerSlot].held) {
+            if (gTouchInfo[gActivePlayerSlot].edge)
                 ok = 1;
         }
         if (ok == 0)
@@ -941,11 +935,9 @@ void dMgState_c::Finished_Update() {
     int x = mTimer;
     dScMgBase_c *g = gMgScene;
     if (x != 0) {
-        unsigned char idx = gActivePlayerSlot;
-        int off = idx * 4;
         int ok = 0;
-        if (gTouchHeld[off]) {
-            if (gTouchEdge[off])
+        if (gTouchInfo[gActivePlayerSlot].held) {
+            if (gTouchInfo[gActivePlayerSlot].edge)
                 ok = 1;
         }
         if (ok == 0)

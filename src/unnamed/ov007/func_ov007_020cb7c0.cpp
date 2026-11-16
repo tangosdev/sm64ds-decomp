@@ -30,7 +30,6 @@ void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, int *pts, s16 a5, s16 a6
     int dx;
     int dy;
     int dxdy;
-    int z0;
     int *curr;
     int *nxt;
     int *new_var;
@@ -43,18 +42,17 @@ void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, int *pts, s16 a5, s16 a6
     if (h > 0) {
         dx = a5;
         dy = a6;
-        rowIndex = row;
+        rowIndex = 0;
         ndx = -dx;
         ndy = -dy;
         ndxndy = ndx * ndy;
         int halfNdx = ndx / 2;
         int halfDx = dx / 2;
         dxdy = dx * dy;
-        z0 = row;
         do {
             curr = (int *)((char *)pts + rowIndex * 0xc);
             nxt = (int *)((char *)pts + (rowIndex + w1) * 0xc);
-            i = z0;
+            i = 0;
             if (w > 0) {
                 do {
                     int *curr1 = new_var = curr + 3;

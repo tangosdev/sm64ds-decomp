@@ -266,15 +266,15 @@ void dScMgBSC_c::StateChooseCard() {
     unsigned int playerSlot = gActivePlayerSlot;
     int touchPressed = 0;
     int lane;
-    if (gTouchHeld[playerSlot * 4] != 0) {
-        if (gTouchEdge[playerSlot * 4] != 0)
+    if (gTouchInfo[playerSlot].held != 0) {
+        if (gTouchInfo[playerSlot].edge != 0)
             touchPressed = 1;
     }
     if (touchPressed == 0)
         return;
     for (lane = 0; lane < 2; lane++) {
-        int dx = (int)((TouchInfo *)gTouchHeld)[gActivePlayerSlot].x - (sBscLaneX[lane] >> 12);
-        int dy = (int)((TouchInfo *)gTouchHeld)[gActivePlayerSlot].y - 0x60;
+        int dx = (int)gTouchInfo[gActivePlayerSlot].x - (sBscLaneX[lane] >> 12);
+        int dy = (int)gTouchInfo[gActivePlayerSlot].y - 0x60;
         if (dx < -0x10)
             continue;
         if (dx > 0x10)
