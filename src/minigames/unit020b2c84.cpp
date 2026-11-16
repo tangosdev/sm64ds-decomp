@@ -352,21 +352,39 @@ extern int data_ov004_020ba000;
 extern int data_ov004_020b9f30;
 extern int data_ov004_020b9f18;
 
-int *sMgMsgWhereSpritesByLanguage[] = {&sMgMsgWhereSpritesEnglish, &data_ov004_020b9f68, &data_ov004_020b9f28, &data_ov004_020b9ec8, &data_ov004_020b9e64};
-int *sMgMsgLikeSpritesByLanguage[] = {&sMgMsgLikeSpritesEnglish, &data_ov004_020b9e34, &data_ov004_020b9ec0, &data_ov004_020b9e28, &data_ov004_020b9e10};
-int *sMgMsgLoveSpritesByLanguage[] = {&sMgMsgLoveSpritesEnglish, &data_ov004_020ba004, &data_ov004_020b9fe8, &data_ov004_020ba01c, &data_ov004_020b9fe4};
-int *sMgMsgDislikeSpritesByLanguage[] = {&sMgMsgDislikeSpritesEnglish, &data_ov004_020b9e74, &data_ov004_020b9ff0, &data_ov004_020b9f9c, &data_ov004_020ba008};
-int *sMgMsgEsperSpritesByLanguage[] = {&sMgMsgEsperSpritesEnglish, &data_ov004_020b9fa8, &data_ov004_020b9f14, &data_ov004_020b9ff8, &data_ov004_020ba020};
-int *sMgMsgSuperEsperSpritesByLanguage[] = {&sMgMsgSuperEsperSpritesEnglish, &data_ov004_020b9e4c, &data_ov004_020ba018, &data_ov004_020b9fd4, &data_ov004_020b9fb8};
-int *sMgMsgGoalSpritesByLanguage[] = {&sMgMsgGoalSpritesEnglish, &data_ov004_020b9f10, &data_ov004_020b9f70, &data_ov004_020b9f80, &data_ov004_020b9fc0};
+int *sMgMsgWhereSpritesByLanguage[] = {&sMgMsgWhereSpritesEnglish, &data_ov004_020b9f68,
+                                       &data_ov004_020b9f28, &data_ov004_020b9ec8,
+                                       &data_ov004_020b9e64};
+int *sMgMsgLikeSpritesByLanguage[] = {&sMgMsgLikeSpritesEnglish, &data_ov004_020b9e34,
+                                      &data_ov004_020b9ec0, &data_ov004_020b9e28,
+                                      &data_ov004_020b9e10};
+int *sMgMsgLoveSpritesByLanguage[] = {&sMgMsgLoveSpritesEnglish, &data_ov004_020ba004,
+                                      &data_ov004_020b9fe8, &data_ov004_020ba01c,
+                                      &data_ov004_020b9fe4};
+int *sMgMsgDislikeSpritesByLanguage[] = {&sMgMsgDislikeSpritesEnglish, &data_ov004_020b9e74,
+                                         &data_ov004_020b9ff0, &data_ov004_020b9f9c,
+                                         &data_ov004_020ba008};
+int *sMgMsgEsperSpritesByLanguage[] = {&sMgMsgEsperSpritesEnglish, &data_ov004_020b9fa8,
+                                       &data_ov004_020b9f14, &data_ov004_020b9ff8,
+                                       &data_ov004_020ba020};
+int *sMgMsgSuperEsperSpritesByLanguage[] = {&sMgMsgSuperEsperSpritesEnglish, &data_ov004_020b9e4c,
+                                            &data_ov004_020ba018, &data_ov004_020b9fd4,
+                                            &data_ov004_020b9fb8};
+int *sMgMsgGoalSpritesByLanguage[] = {&sMgMsgGoalSpritesEnglish, &data_ov004_020b9f10,
+                                      &data_ov004_020b9f70, &data_ov004_020b9f80,
+                                      &data_ov004_020b9fc0};
 int sMgMsgOnePairNcgByLanguage[] = {273, 274, 270, 271, 272};
 int sMgMsgTwoPairNcgByLanguage[] = {278, 279, 275, 276, 277};
 int sMgMsgFourCardNcgByLanguage[] = {288, 289, 285, 286, 287};
-int *sMgMsgHateSpritesByLanguage[] = {&sMgMsgHateSpritesEnglish, &data_ov004_020b9fcc, &data_ov004_020b9f48, &data_ov004_020b9eac, &data_ov004_020b9fb0};
+int *sMgMsgHateSpritesByLanguage[] = {&sMgMsgHateSpritesEnglish, &data_ov004_020b9fcc,
+                                      &data_ov004_020b9f48, &data_ov004_020b9eac,
+                                      &data_ov004_020b9fb0};
 int sMgMsgFiveCardNcgByLanguage[] = {293, 294, 290, 291, 292};
 int sMgMsgDrawNcgByLanguage[] = {303, 304, 300, 301, 302};
 int sMgMsgNoPairNcgByLanguage[] = {359, 360, 356, 357, 358};
-int *sMgMsgTimeOverSpritesByLanguage[] = {&sMgMsgTimeOverSpritesEnglish, &data_ov004_020ba028, &data_ov004_020b9eb4, &data_ov004_020b9f50, &data_ov004_020b9ec4};
+int *sMgMsgTimeOverSpritesByLanguage[] = {&sMgMsgTimeOverSpritesEnglish, &data_ov004_020ba028,
+                                          &data_ov004_020b9eb4, &data_ov004_020b9f50,
+                                          &data_ov004_020b9ec4};
 int sMgMsgGameOverNcgByLanguage[] = {318, 319, 315, 316, 317};
 int sMgMsgLevelClearNcgByLanguage[] = {339, 340, 336, 337, 338};
 int sMgMsgHiScoreNcgByLanguage[] = {334, 335, 331, 332, 333};
@@ -384,28 +402,66 @@ int sMgMsgDislikeNcgByLanguage[] = {298, 299, 295, 296, 297};
 int sMgMsgEsperNcgByLanguage[] = {308, 309, 305, 306, 307};
 int sMgMsgSuperEsperNcgByLanguage[] = {389, 390, 386, 387, 388};
 int sMgMsgGoalNcgByLanguage[] = {324, 325, 321, 322, 323};
-int *sMgMsgNoPairSpritesByLanguage[] = {&sMgMsgNoPairSpritesEnglish, &data_ov004_020b9fc4, &data_ov004_020b9ff4, &data_ov004_020b9f4c, &data_ov004_020b9eb0};
-int *sMgMsgOnePairSpritesByLanguage[] = {&sMgMsgOnePairSpritesEnglish, &data_ov004_020b9e40, &data_ov004_020b9e58, &data_ov004_020b9e80, &data_ov004_020b9e3c};
-int *sMgMsgTwoPairSpritesByLanguage[] = {&sMgMsgTwoPairSpritesEnglish, &data_ov004_020b9e24, &data_ov004_020b9e44, &data_ov004_020b9e08, &data_ov004_020b9e20};
-int *sMgMsgThreeCardSpritesByLanguage[] = {&sMgMsgThreeCardSpritesEnglish, &data_ov004_020b9e60, &data_ov004_020b9e00, &data_ov004_020b9f90, &data_ov004_020b9e5c};
-int *sMgMsgFourCardSpritesByLanguage[] = {&sMgMsgFourCardSpritesEnglish, &data_ov004_020b9e14, &data_ov004_020b9e2c, &data_ov004_020b9ee0, &data_ov004_020b9e30};
-int *sMgMsgFiveCardSpritesByLanguage[] = {&sMgMsgFiveCardSpritesEnglish, &data_ov004_020ba014, &data_ov004_020ba030, &data_ov004_020b9fd0, &data_ov004_020b9ea0};
+int *sMgMsgNoPairSpritesByLanguage[] = {&sMgMsgNoPairSpritesEnglish, &data_ov004_020b9fc4,
+                                        &data_ov004_020b9ff4, &data_ov004_020b9f4c,
+                                        &data_ov004_020b9eb0};
+int *sMgMsgOnePairSpritesByLanguage[] = {&sMgMsgOnePairSpritesEnglish, &data_ov004_020b9e40,
+                                         &data_ov004_020b9e58, &data_ov004_020b9e80,
+                                         &data_ov004_020b9e3c};
+int *sMgMsgTwoPairSpritesByLanguage[] = {&sMgMsgTwoPairSpritesEnglish, &data_ov004_020b9e24,
+                                         &data_ov004_020b9e44, &data_ov004_020b9e08,
+                                         &data_ov004_020b9e20};
+int *sMgMsgThreeCardSpritesByLanguage[] = {&sMgMsgThreeCardSpritesEnglish, &data_ov004_020b9e60,
+                                           &data_ov004_020b9e00, &data_ov004_020b9f90,
+                                           &data_ov004_020b9e5c};
+int *sMgMsgFourCardSpritesByLanguage[] = {&sMgMsgFourCardSpritesEnglish, &data_ov004_020b9e14,
+                                          &data_ov004_020b9e2c, &data_ov004_020b9ee0,
+                                          &data_ov004_020b9e30};
+int *sMgMsgFiveCardSpritesByLanguage[] = {&sMgMsgFiveCardSpritesEnglish, &data_ov004_020ba014,
+                                          &data_ov004_020ba030, &data_ov004_020b9fd0,
+                                          &data_ov004_020b9ea0};
 int sMgMsgHateNcgByLanguage[] = {329, 330, 326, 327, 328};
-int *sMgMsgDrawSpritesByLanguage[] = {&sMgMsgDrawSpritesEnglish, &data_ov004_020b9e0c, &data_ov004_020b9fe0, &data_ov004_020b9f6c, &data_ov004_020b9f44};
-int *sMgMsgFullHouseSpritesByLanguage[] = {&sMgMsgFullHouseSpritesEnglish, &data_ov004_020b9ef8, &data_ov004_020b9fbc, &data_ov004_020ba02c, &data_ov004_020b9e04};
-int *sMgMsgGameOverSpritesByLanguage[] = {&sMgMsgGameOverSpritesEnglish, &data_ov004_020b9eec, &data_ov004_020b9e94, &data_ov004_020b9fa4, &data_ov004_020b9ef4};
+int *sMgMsgDrawSpritesByLanguage[] = {&sMgMsgDrawSpritesEnglish, &data_ov004_020b9e0c,
+                                      &data_ov004_020b9fe0, &data_ov004_020b9f6c,
+                                      &data_ov004_020b9f44};
+int *sMgMsgFullHouseSpritesByLanguage[] = {&sMgMsgFullHouseSpritesEnglish, &data_ov004_020b9ef8,
+                                           &data_ov004_020b9fbc, &data_ov004_020ba02c,
+                                           &data_ov004_020b9e04};
+int *sMgMsgGameOverSpritesByLanguage[] = {&sMgMsgGameOverSpritesEnglish, &data_ov004_020b9eec,
+                                          &data_ov004_020b9e94, &data_ov004_020b9fa4,
+                                          &data_ov004_020b9ef4};
 int sMgMsgTimeOverNcgByLanguage[] = {394, 395, 391, 392, 393};
-int *sMgMsgLevelClearSpritesByLanguage[] = {&sMgMsgLevelClearSpritesEnglish, &data_ov004_020b9e54, &data_ov004_020b9e38, &data_ov004_020b9e18, &data_ov004_020b9e1c};
-int *sMgMsgHiScoreSpritesByLanguage[] = {&sMgMsgHiScoreSpritesEnglish, &data_ov004_020b9fb4, &data_ov004_020b9f98, &data_ov004_020b9f58, &data_ov004_020b9f00};
-int *sMgMsgPerfectSpritesByLanguage[] = {&sMgMsgPerfectSpritesEnglish, &data_ov004_020b9f8c, &data_ov004_020b9f38, &data_ov004_020b9ed8, &data_ov004_020b9f94};
+int *sMgMsgLevelClearSpritesByLanguage[] = {&sMgMsgLevelClearSpritesEnglish, &data_ov004_020b9e54,
+                                            &data_ov004_020b9e38, &data_ov004_020b9e18,
+                                            &data_ov004_020b9e1c};
+int *sMgMsgHiScoreSpritesByLanguage[] = {&sMgMsgHiScoreSpritesEnglish, &data_ov004_020b9fb4,
+                                         &data_ov004_020b9f98, &data_ov004_020b9f58,
+                                         &data_ov004_020b9f00};
+int *sMgMsgPerfectSpritesByLanguage[] = {&sMgMsgPerfectSpritesEnglish, &data_ov004_020b9f8c,
+                                         &data_ov004_020b9f38, &data_ov004_020b9ed8,
+                                         &data_ov004_020b9f94};
 int sMgMsgStartNcgByLanguage[] = {384, 385, 381, 382, 383};
-int *sMgMsgResultHiScoreSpritesByLanguage[] = {&sMgMsgResultHiScoreSpritesEnglish, &data_ov004_020b9f20, &data_ov004_020b9fac, &data_ov004_020ba024, &data_ov004_020b9f1c};
-int *sMgMsgQuitSpritesByLanguage[] = {&sMgMsgQuitSpritesEnglish, &data_ov004_020b9e48, &data_ov004_020b9f74, &data_ov004_020b9f64, &data_ov004_020b9e84};
-int *sMgMsgRetrySpritesByLanguage[] = {&sMgMsgRetrySpritesEnglish, &data_ov004_020ba00c, &data_ov004_020b9f34, &data_ov004_020b9f24, &data_ov004_020b9f3c};
-int *sMgMsgStartSpritesByLanguage[] = {&sMgMsgStartSpritesEnglish, &data_ov004_020b9fec, &data_ov004_020b9f08, &data_ov004_020b9ed0, &data_ov004_020b9f84};
-int *sMgMsgLevelSpritesByLanguage[] = {&sMgMsgLevelSpritesEnglish, &data_ov004_020b9ecc, &data_ov004_020b9edc, &data_ov004_020b9f04, &data_ov004_020b9e9c};
-int *sMgMsgTooBadSpritesByLanguage[] = {&sMgMsgTooBadSpritesEnglish, &data_ov004_020b9e6c, &data_ov004_020b9fdc, &data_ov004_020b9e88, &data_ov004_020b9e68};
-int *sMgMsgYouWinSpritesByLanguage[] = {&sMgMsgYouWinSpritesEnglish, &data_ov004_020b9f40, &data_ov004_020ba000, &data_ov004_020b9f30, &data_ov004_020b9f18};
+int *sMgMsgResultHiScoreSpritesByLanguage[] = {&sMgMsgResultHiScoreSpritesEnglish,
+                                               &data_ov004_020b9f20, &data_ov004_020b9fac,
+                                               &data_ov004_020ba024, &data_ov004_020b9f1c};
+int *sMgMsgQuitSpritesByLanguage[] = {&sMgMsgQuitSpritesEnglish, &data_ov004_020b9e48,
+                                      &data_ov004_020b9f74, &data_ov004_020b9f64,
+                                      &data_ov004_020b9e84};
+int *sMgMsgRetrySpritesByLanguage[] = {&sMgMsgRetrySpritesEnglish, &data_ov004_020ba00c,
+                                       &data_ov004_020b9f34, &data_ov004_020b9f24,
+                                       &data_ov004_020b9f3c};
+int *sMgMsgStartSpritesByLanguage[] = {&sMgMsgStartSpritesEnglish, &data_ov004_020b9fec,
+                                       &data_ov004_020b9f08, &data_ov004_020b9ed0,
+                                       &data_ov004_020b9f84};
+int *sMgMsgLevelSpritesByLanguage[] = {&sMgMsgLevelSpritesEnglish, &data_ov004_020b9ecc,
+                                       &data_ov004_020b9edc, &data_ov004_020b9f04,
+                                       &data_ov004_020b9e9c};
+int *sMgMsgTooBadSpritesByLanguage[] = {&sMgMsgTooBadSpritesEnglish, &data_ov004_020b9e6c,
+                                        &data_ov004_020b9fdc, &data_ov004_020b9e88,
+                                        &data_ov004_020b9e68};
+int *sMgMsgYouWinSpritesByLanguage[] = {&sMgMsgYouWinSpritesEnglish, &data_ov004_020b9f40,
+                                        &data_ov004_020ba000, &data_ov004_020b9f30,
+                                        &data_ov004_020b9f18};
 int sMgMsgFullHouseNcgByLanguage[] = {313, 314, 310, 311, 312};
 int sMgMsgThreeCardNcgByLanguage[] = {283, 284, 280, 281, 282};
 
