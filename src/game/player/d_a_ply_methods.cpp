@@ -3473,7 +3473,6 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
 }
 
 void daPly_c::func_ov002_020c29d4() {
-    char *base = (char *)this;
     if (param1 != 1)
         return;
     if (this->mIsMega != 0) return;
