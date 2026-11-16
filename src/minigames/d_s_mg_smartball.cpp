@@ -115,7 +115,6 @@ typedef struct State2 {
     int null3c;
     int angle40;
     int index44;
-    int zero48;
     int zero4c;
     int baseZ;
 } State2;
@@ -2740,7 +2739,6 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     state.index44 = 0;
     state.zero4c = 0;
     state.baseZ = 0x800;
-    state.zero48 = 0;
     state.zeroAngle = 0;
 
 outer_loop:
@@ -2933,10 +2931,10 @@ outer_loop:
         }
     }
 
-    normal.x = state.zero48;
-    normal.z = state.zero48;
-    angle = state.zero48;
-    i = state.zero48;
+    normal.x = 0;
+    normal.z = 0;
+    angle = 0;
+    i = 0;
     do {
         if (hit[i] == 1) {
             unit.x = state.zero4c;
