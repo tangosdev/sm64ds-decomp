@@ -81,8 +81,8 @@ struct NknkAnimationFileHandle : SharedFilePtr {
 
 extern "C" int d_a_nknkNewHold(u32 uniqueID, u32 effectID, s32 x, s32 y, s32 z, const void *dir,
                                void *callback);
-extern NknkAnimationFileHandle *data_ov062_0211cee8[];
-extern int data_ov062_0211cf0c[];
+extern NknkAnimationFileHandle *const data_ov062_0211cee8[9];
+extern const int data_ov062_0211cf0c[9];
 /* Reconstructed receiver/attacker/nullable collision interface; the original
  * source prototype is not uniquely recoverable from the register traffic. */
 extern "C" struct Aea30C;
@@ -90,8 +90,10 @@ void func_ov002_020aea30(Aea30C *self, dActor_c *attacker, dBgCh_Actr *collision
 extern "C" void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
 extern "C" int RandomIntInternal(int *seed);
 
-extern SharedFilePtr* data_ov062_0211ced8[2];
-extern SharedFilePtr* data_ov062_0211cee0[2];
+extern SharedFilePtr *const data_ov062_0211ced8[2];
+extern SharedFilePtr *const data_ov062_0211cee0[2];
+extern SharedFilePtr data_ov002_0210da18;
+extern SharedFilePtr data_ov002_0210da20;
 
 /* Parameter names keep this TU's @NNN. */
 extern "C" {
@@ -1109,3 +1111,27 @@ NknkAnimationFileHandle gNokonokoWait2AnimationFile(ASSET_NOKONOKO_WAIT2_BCA);
 NknkAnimationFileHandle gNokonokoDiveStAnimationFile(ASSET_NOKONOKO_DIVE_ST_BCA);
 NknkAnimationFileHandle gNokonokoDiveAnimationFile(ASSET_NOKONOKO_DIVE_BCA);
 NknkAnimationFileHandle gNokonokoDiveEdAnimationFile(ASSET_NOKONOKO_DIVE_ED_BCA);
+
+extern SharedFilePtr *const data_ov062_0211ced8[2] = {
+    &gNokonokoModelFile,
+    &gNokonokoRedModelFile,
+};
+extern SharedFilePtr *const data_ov062_0211cee0[2] = {
+    &data_ov002_0210da18,
+    &data_ov002_0210da20,
+};
+extern NknkAnimationFileHandle *const data_ov062_0211cee8[9] = {
+    &gNokonokoWalkStAnimationFile,
+    &gNokonokoWalkAnimationFile,
+    &gNokonokoWalkEdAnimationFile,
+    &gNokonokoRunAnimationFile,
+    &gNokonokoWait1AnimationFile,
+    &gNokonokoWait2AnimationFile,
+    &gNokonokoDiveStAnimationFile,
+    &gNokonokoDiveAnimationFile,
+    &gNokonokoDiveEdAnimationFile,
+};
+extern const int data_ov062_0211cf0c[9] = {
+    0x40000000, 0x00000000, 0x40000000, 0x00000000, 0x00000000,
+    0x00000000, 0x40000000, 0x40000000, 0x40000000,
+};
