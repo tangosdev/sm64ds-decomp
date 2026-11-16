@@ -4989,15 +4989,14 @@ s32 dScMgSmartball_c::Render() {
     /* Dust puffs. */
     {
         int slot;
-        int two = 2, neg = -1, zero = 0;
         for (slot = 0; slot < 16; slot++) {
             if (mDustActive[slot] == 1) {
                 int idx = mDustAge[slot] / 5;
                 if (idx > 3)
-                    idx = two;
+                    idx = 2;
                 dScMgSmartball_c *dust = (dScMgSmartball_c *)(g + slot * 8);
                 Mg_RenderSpriteBoth(data_ov006_02137a60[idx], dust->mDustPos[0][0] >> 12,
-                                    dust->mDustPos[0][1] >> 12, neg, zero);
+                                    dust->mDustPos[0][1] >> 12, -1, 0);
             }
         }
     }
