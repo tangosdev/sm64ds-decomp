@@ -1946,7 +1946,7 @@ void daStar_c::AddStarMarker()
 /* -------------------------------------------------------------------------- */
 /* Bounds test: a star more than 80000.0 from the origin on X or Z, higher than
  * 80000.0, or below mMinPosY goes to ReturnToHome. */
-volatile unsigned int daStar_c::CheckBounds() {
+void daStar_c::CheckBounds() {
     int v;
     int y;
     v = mPosX;

@@ -248,7 +248,7 @@ struct daStar_c : dEnemyBase_c {
     void UpdateWater();
     void OnBounceLand();
     void ReturnToHome();
-    volatile unsigned int CheckBounds();
+    void CheckBounds();
     int MaybeAddStarMarker();
     void CollectByEgg(int a);
     int Collect(void *p);
