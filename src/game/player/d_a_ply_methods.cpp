@@ -14112,7 +14112,7 @@ extern "C" int func_ov002_020d85fc(daPly_c *player, daPly_c *arg, int flags) {
 struct PVec869c { s32 x, y, z; ~PVec869c() {} };
 
 int daPly_c::func_ov002_020d869c() {
-    char *r6;
+    daPly_c *other;
     u32 flags;
     u32 f2;
     int t;
@@ -14125,27 +14125,27 @@ int daPly_c::func_ov002_020d869c() {
         return 0;
     if (mdCcAcPos_c.otherOwner == 0)
         return 0;
-    r6 = (char *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
-    if (r6 == 0 || r6 == (char *)this)
+    other = (daPly_c *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
+    if (other == 0 || other == this)
         return 0;
-    t = (int)(((dActor_c *)r6)->actorID == 0xbf);
+    t = (int)(other->actorID == 0xbf);
     if (t == 0)
         return 0;
 
     flags = mdCcAcPos_c.hitFlags & 0x27fe0;
     if (flags != 0) {
-        if (func_ov002_020d85fc((daPly_c *)(char *)this, (daPly_c *)r6, (int)flags) == 1)
+        if (func_ov002_020d85fc(this, other, (int)flags) == 1)
             return 0;
         f2 = flags & ~0x1000u;
         if (f2 != 0)
-            func_ov002_020d8360((daPly_c *)r6, f2);
+            func_ov002_020d8360(other, f2);
     } else {
         if (mIsNoControl != 0)
             return 0;
-        if (JumpedOnByPlayer(mdCcAcPos_c, *(daPly_c *)r6) != 0) {
-            if (((daPly_c *)r6)->IsInAir() == 0)
+        if (JumpedOnByPlayer(mdCcAcPos_c, *other) != 0) {
+            if (other->IsInAir() == 0)
                 return 0;
-            if (func_ov002_020d9298((daPly_c *)r6) != 0) {
+            if (func_ov002_020d9298(other) != 0) {
                 func_ov002_020db8bc(0);
                 x = mPosX;
                 y = mPosY + 0x82000;
