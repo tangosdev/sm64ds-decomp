@@ -3202,9 +3202,8 @@ void daPly_c::func_ov002_020c1eb4(int dmg) {
 }
 
 int daPly_c::func_ov002_020c200c(int arg) {
-    char* self = (char*)this;
     if (this->mSlideType == 1)
-        return func_ov002_020c1e44(self, arg);
+        return func_ov002_020c1e44(this, arg);
 
     if (this->mIsNoControl)
         return 0;
@@ -3216,7 +3215,7 @@ int daPly_c::func_ov002_020c200c(int arg) {
             return 0;
 
         if (this->IsBeingShotOutOfCannon())
-            func_ov002_020eedc0(&mMeshClsn, (dActor_c *)self);
+            func_ov002_020eedc0(&mMeshClsn, this);
     } else {
         return 0;
     }
