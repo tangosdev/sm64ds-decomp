@@ -2,6 +2,7 @@
 #include "nitro/fx/fx.h"
 #include "Ov007Picker.h"
 #include "math/CalcLib.h"
+/* Vector3 VEC_* until Ov007Spring, Ov007Picker and func_ov007_020bfe4c go VecFx32 (#5207). */
 
 extern void func_ov007_020c7560(Ov007PointList *list, int stiffness, int damping);
 extern void func_ov007_020c7b2c(struct Ov007Link *link, int stiffness, int damping);

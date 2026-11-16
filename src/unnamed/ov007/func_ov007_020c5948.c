@@ -1,5 +1,6 @@
 #include "Ov007Picker.h"
 #include "math/CalcLib.h"
+/* Vector3 VEC_* until Ov007Spring, Ov007Picker and func_ov007_020bfe4c go VecFx32 (#5207). */
 
 /* Moves the picked point to src: its follower's velocity and force are
  * cleared and its x/y set. Then mode 0 moves pos to src, mode 1 moves it

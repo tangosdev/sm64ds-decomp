@@ -7,8 +7,8 @@
 #include "nitro/gx/g3x.h"
 
 /* The lights' source points: lights[0] per menu, lights[1] in menu 0. */
-extern Vector3 data_ov007_020d7c34[];
-extern Vector3 data_ov007_020d7c28;
+extern VecFx32 data_ov007_020d7c34[];
+extern VecFx32 data_ov007_020d7c28;
 
 extern void func_ov007_020bce70(short n, int m);
 extern void* func_ov007_020b3f20(int idx);
