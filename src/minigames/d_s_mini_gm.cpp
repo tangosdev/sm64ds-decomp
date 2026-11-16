@@ -814,12 +814,10 @@ void dScMiniGm_c::UpdateGroupTabs() {
                 flag = 1;
         }
         if (flag != 0 || (mScrollDelay <= 0 && v != 0)) {
-            int i = 0;
-            int lo = 2;
-            int hi = 0x2e;
-            int z = 0;
-            int t = 0x1e;
-            do {
+            int i;
+            int lo;
+            int hi;
+            for (i = 0, lo = 2, hi = 0x2e; i < 4; i++, lo += 0x30, hi += 0x30) {
                 int e = sMiniGmGroupBases[i];
                 if (gMgGroupBase != e) {
                     unsigned char ix = gActivePlayerSlot;
@@ -827,15 +825,12 @@ void dScMiniGm_c::UpdateGroupTabs() {
                     if (p[2] <= 0x30 && p[3] >= lo && p[3] <= hi) {
                         gMgGroupBase = e;
                         mGroupBase = e;
-                        func_02012790(z);
+                        func_02012790(0);
                         LoadGroupIcons();
-                        mScrollDelay = t;
+                        mScrollDelay = 30;
                     }
                 }
-                i++;
-                lo += 0x30;
-                hi += 0x30;
-            } while (i < 4);
+            }
             return;
         }
 
@@ -844,26 +839,21 @@ void dScMiniGm_c::UpdateGroupTabs() {
         if (v == 0)
             return;
         {
-            int i = 0;
-            int lo = 2;
-            int hi = 0x2e;
-            int z = 0;
-            int t = 0x1e;
-            do {
+            int i;
+            int lo;
+            int hi;
+            for (i = 0, lo = 2, hi = 0x2e; i < 4; i++, lo += 0x30, hi += 0x30) {
                 int e = sMiniGmGroupBases[i];
                 if (mGroupBase != e) {
                     unsigned char ix = gActivePlayerSlot;
                     unsigned char* p = (unsigned char*)gTouchHeld + (ix * 4);
                     if (p[2] <= 0x30 && p[3] >= lo && p[3] <= hi) {
                         mGroupBase = e;
-                        func_02012790(z);
-                        mScrollDelay = t;
+                        func_02012790(0);
+                        mScrollDelay = 30;
                     }
                 }
-                i++;
-                lo += 0x30;
-                hi += 0x30;
-            } while (i < 4);
+            }
         }
     }
 }
