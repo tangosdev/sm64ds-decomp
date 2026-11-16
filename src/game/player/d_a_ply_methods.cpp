@@ -3237,7 +3237,6 @@ int daPly_c::func_ov002_020c200c(int arg) {
 
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 int daPly_c::func_ov002_020c2138() {
-    char* self = (char*)this;
 int ang;
 if (this->mIsUnderwater || this->mIsBalloon) return 0;
 if (this->mWallNormalY) return 0;
