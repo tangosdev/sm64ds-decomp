@@ -13521,25 +13521,24 @@ void daPly_c::func_ov002_020d71ec(int arg1) {
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::St_YoshiPower_Cleanup() {
-    char *r2 = (char *)mObjInMouth;
-    if (r2 != 0) {
-        int t = (int)((((dActor_c *)r2)->mFlags & 0x20000) != 0);
+    dActor_c *eaten = mObjInMouth;
+    if (eaten != 0) {
+        int t = (int)((eaten->mFlags & 0x20000) != 0);
         if (t != 0) {
-            ((dActor_c *)r2)->mFlags &= ~0xe0000;
+            eaten->mFlags &= ~0xe0000;
             func_ov002_020d718c();
             return 1;
         }
-        ((dActor_c *)r2)->mFlags &= ~0x20000;
+        eaten->mFlags &= ~0x20000;
     }
     if (mUseAltBodyModel == 0) {
-        char *q = (char *)mObjInMouth;
-        if (q != 0 && (int)(((dActor_c *)q)->actorID == 0xbf) == 0) {
+        if (mObjInMouth != 0 && (int)(mObjInMouth->actorID == 0xbf) == 0) {
             func_ov002_020d6790();
         } else {
             func_ov002_020d718c();
         }
     } else {
-        if ((char *)mObjInMouth == 0 && mFireBreaths == 0)
+        if (mObjInMouth == 0 && mFireBreaths == 0)
             func_ov002_020d71a0();
     }
     return 1;
