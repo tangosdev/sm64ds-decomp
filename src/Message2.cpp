@@ -6,8 +6,7 @@
  *
  * leftovers:
  * - defer_codegen is off so this file emits in source order. The definitions
- *   run ROM-ascending, and func_0201b388's opt_common_subs off is a bracket;
- *   under deferred codegen it would be last-wins for the whole file.
+ *   run ROM-ascending.
  * - The G2/G2S getters are declared locally in their namespaces. No
  *   header declares them yet.
  * - data_0209d6f4 is u8 * here. Message.cpp spells the same word volatile int
@@ -402,11 +401,6 @@ void func_0201b100(int mode) {
     }
 }
 
-#pragma push
-/* opt_common_subs stays off: the inner loop reads data_0209d74c[j + i * 16] once
- * per store the way the cartridge does, and CSE shares the two loads
- * (0x218 against 0x220). */
-#pragma opt_common_subs off
 void func_0201b388(int a0) {
     int start;
     int *sl;
@@ -416,6 +410,7 @@ void func_0201b388(int a0) {
     int off;
     u8 n;
     int step;
+    int *buf;
 
     if (data_0209d668 != 0) {
         sl = (int *)((u32)G2S_GetBG0CharPtr() + ((data_0209d6c0 * data_0209d6a8 * 2 + 0x200) << 5));
@@ -432,6 +427,7 @@ void func_0201b388(int a0) {
                      ((data_0209d6c0 * data_0209d6a8 * 2 + 0x200) << 5));
     }
 
+    buf = data_0209d74c;
     start = data_0209d65c;
     n = data_0209d6a4;
     step = (a0 - 1) << 5;
@@ -442,9 +438,9 @@ void func_0201b388(int a0) {
             int blk = sb >> 3;
             u8 col = sb & 7;
             int row = blk * 8;
-            sl[row] = sl[row] | (data_0208eeac[col] & data_0209d74c[j + i * 16]);
+            sl[row] = sl[row] | (data_0208eeac[col] & buf[j + i * 16]);
             if (col != 0) {
-                (sl + row)[8] = data_0208ee8c[col] & data_0209d74c[j + i * 16];
+                (sl + row)[8] = data_0208ee8c[col] & buf[j + i * 16];
             }
             sb = (sb + data_0209d710[i]) & 0xff;
         }
@@ -457,7 +453,6 @@ void func_0201b388(int a0) {
 
     data_0209d6c0 = data_0209d6c0 + 1;
 }
-#pragma pop
 
 void Message::AddChar(u8 c) {
     int i;
