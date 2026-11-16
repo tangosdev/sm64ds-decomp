@@ -234,16 +234,14 @@ s32 dScBoot_c::Behavior() {
         case STATE_FINAL_CONFIRM: {
             int playerSlot = gActivePlayerSlot;
             int touchStarted = 0;
-            if (gTouchInfo[playerSlot].held != 0 &&
-                gTouchInfo[playerSlot].edge != 0) {
+            if (gTouchInfo[playerSlot].held != 0 && gTouchInfo[playerSlot].edge != 0) {
                 touchStarted = 1;
             }
             if (touchStarted != 0 ||
                 (keysPressed & (PAD_BUTTON_A | PAD_BUTTON_START | PAD_KEY_LEFT | PAD_KEY_RIGHT))) {
                 int leftTouchStarted;
 
-                if (gTouchInfo[playerSlot].held != 0 &&
-                    gTouchInfo[playerSlot].edge != 0) {
+                if (gTouchInfo[playerSlot].held != 0 && gTouchInfo[playerSlot].edge != 0) {
                     leftTouchStarted = 1;
                 } else {
                     leftTouchStarted = 0;
@@ -270,15 +268,13 @@ s32 dScBoot_c::Behavior() {
                 } else {
                     int rightTouchStarted;
 
-                    if (gTouchInfo[playerSlot].held != 0 &&
-                        gTouchInfo[playerSlot].edge != 0) {
+                    if (gTouchInfo[playerSlot].held != 0 && gTouchInfo[playerSlot].edge != 0) {
                         rightTouchStarted = 1;
                     } else {
                         rightTouchStarted = 0;
                     }
                     /* right button: touch x 0x88..0xd8, same rows, or Right */
-                    if ((rightTouchStarted != 0 &&
-                         (u8)(gTouchInfo[playerSlot].x - 136) < 80 &&
+                    if ((rightTouchStarted != 0 && (u8)(gTouchInfo[playerSlot].x - 136) < 80 &&
                          (u8)(gTouchInfo[playerSlot].y - 152) < 32) ||
                         (keysPressed & PAD_KEY_RIGHT)) {
                         if (mSelectedButton == 1) {
