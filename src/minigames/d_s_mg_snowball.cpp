@@ -79,7 +79,7 @@ enum dScMgSnowball_c_AssetId {
 extern "C" {
 extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, void *f);
 extern OamAttr *sSnowballBitSprites[];
-extern void func_0203d388(int *p, int angle);
+extern void func_0203d388(int *p, s16 angle);
 extern int func_0203d434(int *p);
 extern void func_0203d630(int *p, int m);
 extern void func_02012718(int a, int b);
@@ -407,7 +407,7 @@ void dScMgSnowball_c::UpdateSnowball() {
     int floatDirX;
     int floatDirY;
     int zNotAllWater;
-    int angle;
+    s16 angle;
     int j;
     int sample[2];
     dScMgSnowball_c::Vec2 hit;
@@ -493,7 +493,7 @@ void dScMgSnowball_c::UpdateSnowball() {
                 mProbeWater[j] = 1;
             else
                 mProbeWater[j] = zDry;
-            angle = (s16)(angle + 0x800);
+            angle += 0x800;
         }
 
         response[0] = zOrigin;
@@ -508,7 +508,7 @@ void dScMgSnowball_c::UpdateSnowball() {
                     response[0] += hitNormal[0];
                     response[1] += hitNormal[1];
                 }
-                angle = (s16)(angle + 0x800);
+                angle += 0x800;
             }
             func_0203d434(response);
             if (Vec2_Len(&mVel) < 0x800)
@@ -529,7 +529,7 @@ void dScMgSnowball_c::UpdateSnowball() {
                 } else {
                     allWater = zNotAllWater;
                 }
-                angle = (s16)(angle + 0x800);
+                angle += 0x800;
             }
             func_0203d434(response);
             mVel.x += response[0];
@@ -1393,7 +1393,7 @@ s32 dScMgSnowball_c::Behavior() {
     int scrollStart, scrollMax;
     int speed;
     int slot, held, touched;
-    int heading;
+    s16 heading;
     int steer[2];
     int moved[2];
     Vector3 part;
@@ -1460,7 +1460,7 @@ s32 dScMgSnowball_c::Behavior() {
                 steer[1] = 0;
             }
             heading = cstd::atan2(mVel.y, mVel.x);
-            func_0203d388(steer, (short)-heading);
+            func_0203d388(steer, -heading);
             steer[1] = steer[1] << 2;
             func_0203d388(steer, heading);
             if (mVel.y >= 0) {

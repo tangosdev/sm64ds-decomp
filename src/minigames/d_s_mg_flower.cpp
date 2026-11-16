@@ -53,7 +53,7 @@ struct SpriteAttr {
 };
 
 extern "C" {
-extern void func_0203d388(int *p, int angle);
+extern void func_0203d388(int *p, s16 angle);
 extern void Mg_SetTopScreenYOffset(int n);
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);

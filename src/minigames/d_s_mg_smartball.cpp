@@ -121,7 +121,7 @@ typedef struct State2 {
 } State2;
 
 extern "C" {
-extern void func_0203d388(V2 *p, int angle);
+extern void func_0203d388(V2 *p, s16 angle);
 extern long long func_0203d5bc(int *p);
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern struct OamAttr *sSmartballWingSprites[];
@@ -2670,7 +2670,8 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     int blocked;
     int i;
     int entityLoopIndex;
-    int angle;
+    s16 angle;
+    int radialAngle;
     int responseScale;
     int dot;
     int volume;
@@ -2878,7 +2879,7 @@ outer_loop:
                 }
             }
         }
-        angle = (s16)(angle + 0x800);
+        angle += 0x800;
         i++;
     } while (i < 32);
 
@@ -2922,7 +2923,7 @@ outer_loop:
                                             hitC[i] = 1;
                                             blocked = 1;
                                         }
-                                        angle = (s16)(angle + 0x800);
+                                        angle += 0x800;
                                         i++;
                                     } while (i < 32);
                                 }
@@ -2947,7 +2948,7 @@ outer_loop:
             normal.x += unit.x;
             normal.z += unit.z;
         }
-        angle = (s16)(angle + 0x800);
+        angle += 0x800;
         i++;
     } while (i < 32);
     func_0203d434((V2 *)&normal);
@@ -2967,30 +2968,30 @@ outer_loop:
     response.x = 0;
     response.z = 0;
     if (state.flags[2] == 1) {
-        angle = 0;
+        radialAngle = 0;
         do {
             if (hitB[i] == 1) {
                 radial.x = 0;
                 radial.z = 0x1000;
-                func_0203d388((V2 *)&radial, (s16)(angle / 0x20));
+                func_0203d388((V2 *)&radial, (s16)(radialAngle / 0x20));
                 response.x -= radial.x;
                 response.z -= radial.z;
             }
             i++;
-            angle += 0x10000;
+            radialAngle += 0x10000;
         } while (i < 32);
     } else {
-        angle = 0;
+        radialAngle = 0;
         do {
             if (hitA[i] == 1 && hitC[i] == 0) {
                 radial.x = 0;
                 radial.z = 0x1000;
-                func_0203d388((V2 *)&radial, (s16)(angle / 0x20));
+                func_0203d388((V2 *)&radial, (s16)(radialAngle / 0x20));
                 response.x -= radial.x;
                 response.z -= radial.z;
             }
             i++;
-            angle += 0x10000;
+            radialAngle += 0x10000;
         } while (i < 32);
     }
 
@@ -3927,9 +3928,6 @@ int dScMgSmartball_c::IsTableAtRest() {
     return 1;
 }
 
-#pragma push
-#pragma opt_common_subs off
-/* Leftover: ResolveBallPair needs common subexpression folding off. */
 void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firstObject,
                                        u8 *secondObject) {
     // Leftover: keep the pair materialized in memory; direct casts keep the
@@ -3947,7 +3945,6 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
     V2 firstResult;
     V2 secondResult;
     s16 collisionAngle;
-    int inverseAngle;
 
     if (firstIndex == secondIndex) {
         return;
@@ -4001,9 +3998,8 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
         secondVelocity = secondSavedVelocity;
     }
     // Rotate into the ball-to-ball line, swap the shared component, rotate back.
-    inverseAngle = -collisionAngle;
-    func_0203d388(&firstVelocity, (s16)inverseAngle);
-    func_0203d388(&secondVelocity, (s16)inverseAngle);
+    func_0203d388(&firstVelocity, -collisionAngle);
+    func_0203d388(&secondVelocity, -collisionAngle);
     {
         int normalVelocity = firstVelocity.x;
         firstVelocity.x = secondVelocity.x;
@@ -4017,7 +4013,6 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
     ((cMgSmartball_ball_c *)secondObject)->SetVel(&secondResult.x);
 }
 
-#pragma pop
 
 void dScMgSmartball_c::CollideBalls() {
     int ballCount = mBallCount;
