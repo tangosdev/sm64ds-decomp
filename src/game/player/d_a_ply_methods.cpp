@@ -12125,19 +12125,12 @@ void daPly_c::func_ov002_020d45c0() {
     }
 }
 
-/* local extern: the call passes an untyped this, so it cannot use the header method. */
-extern "C" {
-static inline int* GetAnim(char* c)
-{
-    daPly_c *player = (daPly_c *)c;
-    return (
-        int *)((char *)player->mModels
-                   .mBodyModels[((daPly_c *)c)->GetBodyModelID((unsigned char)player->param1, 0)] +
-               0x50);
+/* The body model's frame controller: dExtAnm2Model_c's dExtFrameCtrl_c base. */
+static inline dExtFrameCtrl_c &BodyAnim(daPly_c *player) {
+    return *player->mModels.mBodyModels[player->GetBodyModelID((unsigned char)player->param1, 0)];
 }
-static inline u16 AnimSpeed(char *c) {
-    return GetAnim(c)[2] >> 12;
-}
+static inline u16 BodyAnimFrame(daPly_c *player) {
+    return BodyAnim(player).currFrame >> 12;
 }
 
 void daPly_c::func_ov002_020d4748() {
@@ -12145,7 +12138,6 @@ void daPly_c::func_ov002_020d4748() {
     extern unsigned short data_0209f49c;
     extern short data_0209f4a0;
     extern unsigned char gGameMode;
-    char* c = (char*)this;
     int i = gActivePlayerSlot * 0x18;
     int flag = 0;
 
@@ -12175,14 +12167,14 @@ void daPly_c::func_ov002_020d4748() {
                 } else {
                     spd = v * 3;
                 }
-                ((daPly_c *)c)->SetAnim(0x9e, 0, spd, 0);
+                SetAnim(0x9e, 0, spd, 0);
                 return;
             } else {
-                ((daPly_c *)c)->SetAnim(0xa4, 0, 0x2000, 0);
+                SetAnim(0xa4, 0, 0x2000, 0);
                 return;
             }
         } else {
-            ((daPly_c *)c)->SetAnim(0x9d, 0x40000000, 0x1000, 0);
+            SetAnim(0x9d, 0x40000000, 0x1000, 0);
             return;
         }
     } else {
@@ -12214,21 +12206,20 @@ void daPly_c::func_ov002_020d4748() {
         }
 
         if (this->mSinkDepth > 0x32000) {
-            ((daPly_c *)c)
-                ->SetAnim(0x7e, 0, *(short *)((char *)&data_0209f4a0 + gActivePlayerSlot * 0x18),
-                          AnimSpeed(c));
+            SetAnim(0x7e, 0, *(short *)((char *)&data_0209f4a0 + gActivePlayerSlot * 0x18),
+                    BodyAnimFrame(this));
         } else if (this->mStateStep >= 0x17) {
             this->mStateStep = 0x17;
-            ((daPly_c *)c)->SetAnim(0x61, 0, 0x1000, AnimSpeed(c));
+            SetAnim(0x61, 0, 0x1000, BodyAnimFrame(this));
         } else if (this->mFloorClass == 4 && *(short*)((char*)&data_0209f4a0 + gActivePlayerSlot * 0x18) == 0) {
             Particle::RunningSlidingDustAt(this->mPosX, this->mPosY, this->mPosZ);
-            ((daPly_c *)c)->SetAnim(0x47, 0, 0x1000, 0);
+            SetAnim(0x47, 0, 0x1000, 0);
         } else if (this->mIsWalkPace != 0) {
-            u16 s5 = AnimSpeed(c);
+            u16 s5 = BodyAnimFrame(this);
             int spd = this->mHorzSpeed >> 3;
             if (spd < 0x400)
                 spd = 0x400;
-            ((daPly_c *)c)->SetAnim(0x48, 0, spd, s5);
+            SetAnim(0x48, 0, spd, s5);
         } else {
             int t = 0x1000 - this->mFloorNormalY;
             int f = (int)((((long long)t << 10) + 0x800) >> 12);
@@ -12237,11 +12228,10 @@ void daPly_c::func_ov002_020d4748() {
             v = FX_MUL(diff, f);
             if (v < 0)
                 v = 0;
-            ((daPly_c *)c)->SetAnim(0x3f, 0, v + 0x2800, AnimSpeed(c));
+            SetAnim(0x3f, 0, v + 0x2800, BodyAnimFrame(this));
         }
 
-        if (((dExtFrameCtrl_c *)(GetAnim(c)))->WillHitFrame(4) != 0 ||
-            ((dExtFrameCtrl_c *)(GetAnim(c)))->WillHitFrame(0x13) != 0) {
+        if (BodyAnim(this).WillHitFrame(4) != 0 || BodyAnim(this).WillHitFrame(0x13) != 0) {
             PlayLandingEffects();
         }
     }
