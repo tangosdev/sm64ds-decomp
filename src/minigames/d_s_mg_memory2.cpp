@@ -442,16 +442,16 @@ void dScMgMemory2_c::CardSelect(int cardIndex) {
 
     playerSlot = gActivePlayerSlot;
     touchPressed = 0;
-    if (gTouchHeld[playerSlot * 4] != 0) {
-        if (gTouchEdge[playerSlot * 4] != 0) {
+    if (gTouchInfo[playerSlot].held != 0) {
+        if (gTouchInfo[playerSlot].edge != 0) {
             touchPressed = 1;
         }
     }
     if (touchPressed == 0)
         return;
 
-    dx = gTouchX[gActivePlayerSlot * 4] - (mCards[cardIndex].x >> 12);
-    dy = gTouchY[gActivePlayerSlot * 4] - (mCards[cardIndex].y >> 12);
+    dx = gTouchInfo[gActivePlayerSlot].x - (mCards[cardIndex].x >> 12);
+    dy = gTouchInfo[gActivePlayerSlot].y - (mCards[cardIndex].y >> 12);
 
     if (dx < -0x10)
         return;
@@ -521,8 +521,8 @@ void dScMgMemory2_c::ResultFinish() {
 
     int touchPressed = 0;
     int playerSlot = gActivePlayerSlot;
-    if (gTouchHeld[playerSlot * 4] != 0) {
-        if (gTouchEdge[playerSlot * 4] != 0) {
+    if (gTouchInfo[playerSlot].held != 0) {
+        if (gTouchInfo[playerSlot].edge != 0) {
             touchPressed = 1;
         }
     }
