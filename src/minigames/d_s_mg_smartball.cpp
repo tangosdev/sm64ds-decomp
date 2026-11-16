@@ -16,8 +16,10 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 
 // Leftovers kept for byte-exactness; each has a note at its site:
 // - several slot-0 overrides repeat the base's SaveSnapshot body inline;
-// - the object tables, popups, dust and score arrays are walked by stepping
-//   `this` and reading element 0, because indexing changes the addressing.
+// - SpawnDust, UpdateScores and Render still walk the popup, dust and tally
+//   arrays by stepping `this` and reading element 0, and Behavior reads the
+//   object tables through TableEntry, because indexing changes the
+//   addressing there.
 
 #include "dScMgSmartball_c.h"
 #include "nitro/hw/registers.h"
@@ -3755,7 +3757,10 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
 #pragma opt_strength_reduction off
 /* Kept (#821): UpdateScores needs strength reduction off. Without it the
  * body is 0x128, not 0x118; indexed with SR on 0x11c (the ROM forms all
- * six slot addresses at the loop head), pointer locals 0x12c. */
+ * six slot addresses at the loop head), pointer locals 0x12c. Also measured
+ * with SR on: references or pointers declared above the loop 0x12c, no
+ * `continue` 0x128; indexed with a long counter 0x114, unsigned 0x11c,
+ * u8 0x120, short or char 0x124. */
 void dScMgSmartball_c::UpdateScores() {
     char *o = (char *)this;
     int i;
@@ -4659,9 +4664,13 @@ void dScMgSmartball_c::SpawnObjects() {
     __cxa_vec_cleanup(pos, 25, 8, (dtor_t)NullDestructor_0203d47c);
 }
 
-/* Leftover: Render needs both pragmas off, and the locals below must stay in
- * this order (each one pins a stack slot). Kept (#821): without SR off the
- * body is 0x1124, not 0x10c0; without CSE off it changes size too. */
+/* Kept (#821): Render needs both pragmas off, and the locals below must stay
+ * in this order (each one pins a stack slot). Without SR off the body is
+ * 0x1124, not 0x10c0. Indexing every tally, popup and dust array by name
+ * with both pragmas on gives 0x10b8: CSE folds the popup's first digit-count
+ * read into the address of mPopupScore[sb], where the ROM forms it again with
+ * the offset in a register. The same indexed body with either pragma off is
+ * 0x109c, and indexing one array alone under the pragmas is 0x10bc. */
 #pragma push
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
@@ -5002,8 +5011,12 @@ s32 dScMgSmartball_c::Render() {
 #pragma pop
 
 /* Kept (#821): Behavior needs strength reduction off. Without it the body is
- * 0x620, not 0x604; mpBalls[i] indexing with SR on is 0x5e8 (the slot
- * offset folds into the load instead of a hoisted literal). */
+ * 0x620, not 0x604. The ROM's seven SaveSnapshot loops keep each table's
+ * offset in a register hoisted above the loop, a shape only the integer
+ * address below produces. Measured with SR on: mpBalls[i] 0x5e8 (with SR off
+ * too; the offset folds into the load), and the same with an unsigned or long
+ * counter; a short counter 0x628; `&mpBalls[i]`, a reference to mpBalls[i],
+ * `i << 2` and a null-checked mpBalls[i] each 0x620. */
 #pragma push
 #pragma opt_strength_reduction off
 /* Slot 6: the scene's per-frame rules. Phase 0 updates every object, then the
