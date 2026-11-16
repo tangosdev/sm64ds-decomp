@@ -5187,7 +5187,6 @@ int daPly_c::St_DeadHit_Init() {
 }
 
 int daPly_c::func_ov002_020c607c(int p1, int p2, int *outptr) {
-    char *self = (char *)this;
     mLineClsnActor = 0;
     *outptr = (int)0x80000000;
 
@@ -5195,7 +5194,7 @@ int daPly_c::func_ov002_020c607c(int p1, int p2, int *outptr) {
 
     Vector3 a(this->mPosX, p1, this->mPosZ);
     Vector3 b(this->mPosX, p2, this->mPosZ);
-    rc.SetObjAndLine(a, b, (dActor_c *)self);
+    rc.SetObjAndLine(a, b, this);
     if (rc.DetectClsn() != 0) {
         Vector3 pos = rc.GetClsnPos();
         *outptr = pos.y;
