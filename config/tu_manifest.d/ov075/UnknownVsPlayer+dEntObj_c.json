@@ -18,6 +18,18 @@
       "end": "0x02115ab8"
     },
     {
+      "name": ".rodata.ent_pat",
+      "input_section": ".rodata",
+      "start": "0x0211b524",
+      "end": "0x0211b52c"
+    },
+    {
+      "name": ".data.ent_step",
+      "input_section": ".data",
+      "start": "0x0211b52c",
+      "end": "0x0211b534"
+    },
+    {
       "name": ".rodata",
       "start": "0x0211b534",
       "end": "0x0211b5d4"
@@ -36,6 +48,18 @@
       "name": ".data",
       "start": "0x0211c5c0",
       "end": "0x0211c648"
+    },
+    {
+      "name": ".data.ent_anim",
+      "input_section": ".data",
+      "start": "0x0211c678",
+      "end": "0x0211c688"
+    },
+    {
+      "name": ".data.ent_anim2",
+      "input_section": ".data",
+      "start": "0x0211c688",
+      "end": "0x0211c698"
     },
     {
       "name": ".bss",
@@ -465,6 +489,27 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer14MoveTurnToExitEv"
+    },
+    {
+      "symbol": "data_ov075_0211b52c",
+      "address": "0x0211b52c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "four player-slot step halfwords; decl_common.h keeps the array non-const"
+    },
+    {
+      "symbol": "data_ov075_0211c678",
+      "address": "0x0211c678",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four animation-handle pointers indexed by player slot"
+    },
+    {
+      "symbol": "data_ov075_0211c688",
+      "address": "0x0211c688",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four animation-handle pointers; the following eight bytes are the vtable preamble"
     }
   ],
   "bss": [
@@ -3247,6 +3292,13 @@
       "address": "0x211b594",
       "size": "0x40",
       "evidence": "Native signed32 Q12 constant table; consumer-derived role and observed four-player indexing. Original identifier and original declaration syntax are not recovered."
+    },
+    {
+      "symbol": "data_ov075_0211b524",
+      "address": "0x0211b524",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte pattern; the consumer indexes the first six"
     }
   ]
 }
