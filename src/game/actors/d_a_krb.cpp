@@ -1581,8 +1581,7 @@ int daKrb_c::Behavior() {
         PoofDust();
     }
     if (mGoombaType != GOOMBA_KING_MINION && mState != STATE_TUMBLE && mEatenByYoshi == 0 &&
-        mDeathState == DEATH_NONE &&
-        ((dActor_c *)(char *)this)->IsTooFarAwayFromPlayer(0x5dc000) != 0) /* 1500.0 */
+        mDeathState == DEATH_NONE && IsTooFarAwayFromPlayer(0x5dc000) != 0) /* 1500.0 */
     {
         Unk_02005d94();
         return 1;
