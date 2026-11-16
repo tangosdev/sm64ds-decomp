@@ -40,8 +40,8 @@
  * - data_ov015_02113574 is the CLPS block in overlay .data that
  *   this TU does not own; FX_SinCosTable_ is arm9's sin/cos table,
  *   data_020a0e68 arm9's scratch matrix, and gCurrentStarId / gCurrentSublevel
- *   arm9 scene state. AngleDiff, IsStarCollectedInCurLevel, MTX_MultVec43
- *   and Vec3_Add have no shared header, so they keep a local extern "C" block.
+ *   arm9 scene state. AngleDiff, IsStarCollectedInCurLevel and Vec3_Add
+ *   have no shared header, so they keep a local extern "C" block.
  * - g_profile_BK_BOTAOSI lives outside this TU.
  */
 
@@ -83,7 +83,6 @@ extern u8 gCurrentStarId;
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
 int AngleDiff(int a, int b);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 int IsStarCollectedInCurLevel(int starID);

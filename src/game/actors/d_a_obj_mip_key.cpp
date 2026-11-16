@@ -5,8 +5,8 @@
 // Notes:
 // - unk_190 and unk_19c stay the header's names. The loose update
 //   approaches through mSpeedX/mSpeedZ, and 19c selects the entry.
-// - CollectMinigameKey, StartMinigameMenu, Vec3_VertAngle and MTX_MultVec43
-//   are arm9 C helpers no header declares yet.
+// - CollectMinigameKey, StartMinigameMenu and Vec3_VertAngle are arm9
+//   helpers no header declares yet.
 // - The model handle data_ov085_021305d8 is constructed by daMip_c.
 //   g_profile stays with the registry.
 
@@ -23,9 +23,6 @@
 #include "private/mtx43.h"
 #include "SaveBlock.h"
 
-extern "C" {
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-}
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void CollectMinigameKey(int t, int x);
 void StartMinigameMenu(u8 a);

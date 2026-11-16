@@ -42,7 +42,6 @@ enum d_a_obj_cannon_shutter_AssetId {
 #include "math/CalcLib.h"
 
 extern "C" {
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 }
