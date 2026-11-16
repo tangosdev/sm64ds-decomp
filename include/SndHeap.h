@@ -20,7 +20,10 @@ struct SndHeapBlock {
 };
 
 /* A sound heap (func_0205130c): a frame heap and the stack of levels
-   func_02050fd4 pushes. */
+   func_02050fd4 pushes. NNSFndHeapHandle is NNSiFndHeapHead *. */
+#ifndef SM64DS_PLATFORM_PC
+typedef char NNSFndHeapHandle_size_must_be_0x4[sizeof(NNSFndHeapHandle) == 0x4 ? 1 : -1];
+#endif
 struct SndHeap {
     NNSFndHeapHandle frmHeap; /* 0x0 */
     NNSFndList levels;        /* 0x4 */
