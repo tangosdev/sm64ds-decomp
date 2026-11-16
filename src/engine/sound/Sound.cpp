@@ -1153,7 +1153,11 @@ void func_020133bc(void) {
  * 2004/b56, and the deferred queue's codegen binds when the next function
  * parses. The defer_codegen brackets emit func_020132d8 and func_020133bc at
  * parse position -- func_020132d8 first, flushing the queued functions under
- * on -- so func_020133bc alone sees off and keeps `anim` in r4 like the ROM. */
+ * on -- so func_020133bc alone sees off and keeps `anim` in r4 like the ROM.
+ * Re-measured (#821 r17): without the off it is 0x110 against the ROM's 0x10c
+ * whether anim is initialised at its declaration, assigned before or after
+ * the heap is created, reuses a dead local, or is dropped for the array
+ * passed straight to NNS_SndArcInit. */
 #pragma opt_propagation on
 #pragma defer_codegen on
 
