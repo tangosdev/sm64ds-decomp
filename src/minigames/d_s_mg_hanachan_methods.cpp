@@ -794,13 +794,8 @@ void dScMgHanachan_c::Wiggler::StateMoveB() {
         state = sub;
         return;
     }
-    {
-        int z = 0;
-        int n = 0x10000;
-        n = -n;
-        va[0] = z;
-        va[1] = n;
-    }
+    va[0] = 0;
+    va[1] = -0x10000;
     tgt = aim - 0x1000;
     ApproachLinear(ang[0], tgt, 0x400);
     func_0203d388(va, ang[0]);
