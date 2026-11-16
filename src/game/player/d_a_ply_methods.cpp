@@ -943,18 +943,8 @@ void daPly_c::func_ov002_020bd06c(unsigned int state2) {
     if (this->mCapActor != 0)
         return;
 
-    {
-        s8 var_areaID;
-        u32 var_self8;
-        s16 var_deathTableID;
-
-        var_areaID = this->mAreaId;
-        var_self8 = *(volatile u32 *)&this->param1; // without volatile, 8 words differ
-        var_deathTableID = -1;
-
-        this->mCapActor =
-            Spawn(0x10d, flag | (var_self8 << 8), mPos, 0, var_areaID, var_deathTableID);
-    }
+    flag |= param1 << 8;
+    this->mCapActor = Spawn(0x10d, flag, mPos, 0, mAreaId, -1);
 
     {
         dActor_c *p2 = this->mCapActor;
