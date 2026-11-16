@@ -287,8 +287,12 @@ void dScMgMemory_c::JudgePair() {
 }
 
 #pragma push
-/* Kept: indexed or cursor forms without it give the card counter sl, not r4
- * (colour only). */
+/* Kept: without it, mCards[i] is 26-27 of 42 words off in every loop form
+ * tried (for, do, while, goto), in any declaration order or flag type. The
+ * card counter is ranked first and takes sl; the ROM ranks it after the
+ * hoisted constants, in r4 (colour only). A card pointer or reference is 36
+ * off. With the pragma, mCards[i] gets the right colours but starts the walk
+ * with an mla (one word more). memory2's DrawCards keeps the same pragma. */
 #pragma opt_propagation off
 void dScMgMemory_c::DrawCards() {
     char *raw = (char *)this;
