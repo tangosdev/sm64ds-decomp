@@ -3760,7 +3760,6 @@ static inline int FX(int a, int b) {
    AnimSplinePoll blends; mSplineState picks the clamped-end variant. The
    caller passes a fx32[4]. */
 void daPly_c::SplineGetWeights(fx32 *out) {
-    typedef long long s64;
     int t = mSplineKeyframeFraction;
     int u = 0x1000 - t;
     int u2 = FX(u, u);
@@ -3781,16 +3780,8 @@ void daPly_c::SplineGetWeights(fx32 *out) {
         break;
     }
     case CURVE_BEGIN_2: {
-        int k1400 = 0x1400;
-        s64 p955 = (s64)t3 * 0x955;
-        s64 p1400 = (s64)t2 * k1400;
         out[0] = FX(u3, 0x400);
-        {
-            int b = FX(t, 0x400);
-            int c = (int)((p955 + 0x800) >> 12);
-            int d = (int)((p1400 + 0x800) >> 12);
-            out[1] = b + (c - d) + 0x955;
-        }
+        out[1] = FX(t, 0x400) + (FX(t3, 0x955) - FX(t2, 0x1400)) + 0x955;
         out[2] = FX(t, 0x800) + (FX(t2, 0x800) - FX(t3, 0x800)) + 0x2aa;
         out[3] = FX(t3, 0x2aa);
         break;
