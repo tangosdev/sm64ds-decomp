@@ -37,6 +37,7 @@ enum daObjCasket_c_AssetId { ASSET_CASKET_BMD = 0x05b4, ASSET_CASKET_KCL = 0x05b
 #include "daPly_c.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 typedef void (daObjCasket_c::*StateFunc)();
 
@@ -78,7 +79,6 @@ extern CLPS_Block data_ov063_0211ebd8;
 extern "C" {
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *out);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 }

@@ -32,8 +32,6 @@ extern "C" {
 /* local extern: no header declares these arm9 vector helpers.
    EntryMeshVec is the POD view used for the grid data; APIs taking Vector3
    receive explicit pointer views so the C++ Vector3 destructor is not emitted. */
-void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
-void VEC_Normalize(const Vector3 *, Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
 /* local extern: the geometry-engine matrix load and the

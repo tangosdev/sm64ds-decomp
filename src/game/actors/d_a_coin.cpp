@@ -84,7 +84,6 @@ struct CoinFlagBits {
 
 extern "C" int SublevelToLevel(int i);
 extern "C" {
-extern int VEC_Mag(const Vector3 *v);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 }

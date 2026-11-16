@@ -39,10 +39,10 @@ enum d_a_obj_cannon_shutter_AssetId {
 #include "SharedFilePtr.h"
 #include "decl_common.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 extern "C" {
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 }

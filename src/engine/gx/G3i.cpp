@@ -27,12 +27,7 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/gx/g3imm_cmd.h"
-
-extern "C" {
-void VEC_Normalize(const Vector3 *v, Vector3 *out);
-void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
-fx32 VEC_DotProduct(const Vector3 *a, const Vector3 *b);
-}
+#include "math/CalcLib.h"
 
 #define reg_CP_DIV_NUMER    (*(volatile u64 *)0x04000290)
 #define reg_CP_DIV_DENOM    (*(volatile u64 *)0x04000298)
