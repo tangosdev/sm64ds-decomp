@@ -234,7 +234,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -281,7 +281,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 14
+          "LICENSED": 15
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -292,19 +292,19 @@
           {
             "section": ".init",
             "original": [
-              46
+              47
             ],
             "desired": [
-              46
+              47
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              44
+              45
             ],
             "desired": [
-              44
+              45
             ]
           },
           {
@@ -320,6 +320,15 @@
               8,
               14,
               21
+            ]
+          },
+          {
+            "section": ".data.hasira",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
             ]
           }
         ],
