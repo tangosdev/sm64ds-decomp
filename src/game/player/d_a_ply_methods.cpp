@@ -13070,33 +13070,22 @@ int daPly_c::func_ov002_020d6334(dActor_c *val) {
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 void daPly_c::func_ov002_020d6368() {
-    typedef long long s64;
     Vector3_16 rot;
     Vector3 pos;
-    daYegg_c *spawned;
-    int a;
-    int zero = 0;
-    short rotY;
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos = mPos;
+    pos.x -= FX_MUL(FX_SinIdx((u16)mAngleY >> 4), 0x14000);
+    pos.y -= FX_MUL(FX_CosIdx((u16)mAngleY >> 4), 0x14000);
 
-    a = (u16)mAngleY >> 4;
-    pos.x = pos.x - FX_MUL(FX_SinCosTable_[a * 2], 0x14000);
-
-    a = (u16)mAngleY >> 4;
-    pos.y = pos.y - FX_MUL(FX_SinCosTable_[a * 2 + 1], 0x14000);
-
-    rotY = mAngleY;
-    rot.x = zero;
-    rot.z = zero;
+    short rotY = mAngleY;
+    rot.x = 0;
+    rot.z = 0;
     rot.y = rotY;
 
-    spawned = (daYegg_c *)dActor_c::Spawn(9, mEggParams << 4, pos, &rot, mAreaId, -1);
+    daYegg_c *spawned = (daYegg_c *)dActor_c::Spawn(9, mEggParams << 4, pos, &rot, mAreaId, -1);
     spawned->mPlayer = this;
     func_ov002_020d6334(spawned);
-    mEggParams = zero;
+    mEggParams = 0;
 }
 
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
