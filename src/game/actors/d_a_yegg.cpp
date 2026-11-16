@@ -148,16 +148,11 @@ extern int RandomIntInternal(int *seed);
    destinations (measured). */
 extern int func_ov002_020d5f98(void *c, unsigned char *a, unsigned char *b);
 extern int func_ov002_020d6048(void *c);
-extern s32 d_a_yeggNewHold(u32 a, u32 b, s32 x, s32 y, s32 z, Vector3_16 *rot, void *cb);
-extern void d_a_yeggRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
-extern void d_a_yeggPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *actor, int radius, int height, void *a, void *b);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern int Math_Function_0203b14c(void *ptr, int target, int rate, int limit, int step);
 extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);

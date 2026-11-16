@@ -182,7 +182,6 @@ extern ObjKeyStateTable data_ov089_02132cec;
 extern "C" {
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
-extern void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
 extern void func_ov002_020c3dbc(void *player);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void *data_ov089_021328b4[];
@@ -198,16 +197,12 @@ extern ObjKeyModelFile gWarioKeyModelFile;
 extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
 extern int *Vec3_LslInPlace(void *v, int sh);
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *thiz, void *actor, int a, int b, void *v, void *w);
 /* An ObjKeyFile in layout, but daDemo_c::InitResources declares it `char`;
    keep that spelling so the declarations of this symbol stay in agreement. */
 extern char data_ov002_0211094c;
 extern int data_0209cef0;
 /* The collect animations, by mAnimID. */
 extern ObjKeyFile *data_ov089_02132880[];
-/* Names stay on this unused prototype so this file's @NNN numbers do not move. */
-extern int d_a_obj_keyChangeMusicVolumeHold(unsigned int id, int vol);
 /* Level-overlay BSS: ov089 relocs record the store as claimed by fourteen
    overlays, and ov055 is the one that names 0x02111b68 unambiguous kind:bss
    (the func_ov002_020e3e00 precedent for its neighbours 0x02111b64/6c). */

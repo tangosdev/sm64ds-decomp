@@ -129,7 +129,6 @@ extern void *LoadFile(int handle);
 extern void *func_020182bc(const char *path);
 extern int sMgSparkleSpritesGuard;
 extern OamAttr *data_ov004_020bea14[];
-extern void d_s_mg_basePlaySubHold(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 extern int Mg_GetMusicMode(void);
 extern int Mg_GetMusicTrack(void);
 extern int sMgPaintWord;

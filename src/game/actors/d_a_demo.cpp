@@ -248,8 +248,6 @@ extern u8 data_ov002_02111144;
 extern u32 data_020a0db0;
 extern struct OamAttr *data_ov002_0210b6a8[];
 
-extern u32 d_a_demoNewHold(u32 slot, u32 unk, fx32 x, fx32 y, fx32 z, void *rot,
-                           struct ParticleCallback *callback);
 extern int data_ov002_02100140[];
 }
 

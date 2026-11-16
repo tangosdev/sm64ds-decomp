@@ -118,12 +118,6 @@ extern "C" {
 extern Entry data_ov060_0211afb4[];
 extern PMF data_ov060_0211af74[];
 
-extern u32 d_a_kpa_fireNewCleanParticleHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e,
-                                            const struct Vector3_16f *f);
-extern u32 d_a_kpa_fireNewHold(u32 a, u32 b, fx32 c, fx32 d, fx32 e, const void *f, void *g);
-void d_a_kpa_fireNewSimpleHold(u32 id, fx32 x, fx32 y, fx32 z);
-extern void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
-
 extern int RandomIntInternal(int *seed);
 
 /* ov060 tables indexed by mSubVariant (02119358, 0211934c) and the mouth-pose

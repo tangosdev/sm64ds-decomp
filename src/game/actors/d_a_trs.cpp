@@ -116,11 +116,6 @@ extern "C" {
 /* shared engine entry points without a header declaration */
 
 /* ABI seams whose header member forms do not reproduce the ROM (see notes) */
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, dActor_c *actor, fx32 radius, fx32 height, Vector3_16 *a,
-                         Vector3_16 *b);
-unsigned int d_a_trsNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
-                            const void *dir, void *callback);
 
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentEntranceId;
@@ -165,11 +160,9 @@ extern SharedFilePtr data_ov002_0210d9b8;
 /* File-local helpers and engine entry points, with the C-linkage spellings
  * these bodies were matched against. */
 extern "C" {
-int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
 int func_020092c4(void *cam, void *out, void *target);
 u16 func_0201277c(unsigned int a);
 extern dCamera_c *gCamera;
-extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
 extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];
 /* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the

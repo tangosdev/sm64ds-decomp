@@ -159,9 +159,6 @@ extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern "C" int *Vec3_LslInPlace(void *v, int n);
 extern struct Matrix4x3 data_020a0e68;
 extern struct Matrix4x3 IDENTITY_MATRIX4X3;
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *actor, s32 fa, s32 fb, void *v0, void *v1);
-extern "C" void d_a_kuri_kingEarthquakeHold(void *thiz, void *v, int f);
 struct KuriKingBoneIdx {
     int v[3];
 };

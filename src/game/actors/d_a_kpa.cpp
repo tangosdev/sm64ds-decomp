@@ -42,10 +42,6 @@
  *    Bowser_Anim lists where each one is used.
  *  - unk_420 and unk_422 are written here and never read, so they keep
  *    placeholder names.
- *  - BgchInitAt_ and the three d_a_kpa*Hold prototypes are unused, but their
- *    named parameters pin mwcc's per-TU @NNN counter, which the manifest's
- *    compiler temporaries are keyed to; deleting them renumbers those
- *    temporaries unless the manifest is re-keyed.
  */
 
 /* common.h must precede the class headers: both Matrix4x3 spellings are real,
@@ -285,9 +281,6 @@ extern PmfEnt data_ov060_0211aeb4[];
  * signature. */
 /* Veneer to dBgCh_Actr::UpdateContinuousExceptSlot0. */
 extern PmfEnt data_ov060_0211aed4[];
-/* Unused; the named parameters pin this TU's @NNN counter (see the header). */
-extern void *d_a_kpaNewHold(unsigned a, unsigned b, int x, int y, int z, void *v, void *cb);
-extern void d_a_kpaChangeMusicVolumeHold(unsigned int a, int b);
 extern KpaAnimationFileHandle data_ov060_0211ac88;
 extern KpaAnimationFileHandle data_ov060_0211ac60;
 extern int RandomIntInternal(int *seed);
@@ -302,8 +295,6 @@ extern s16 data_ov060_0211a4e0[];
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern Matrix4x3 data_020a0e68;
-/* Unused; the named parameters pin this TU's @NNN counter (see the header). */
-void d_a_kpaEarthquakeHold(void *self, struct Vector3 *v, int f);
 /* Sound.cpp 0xc-byte cleanup veneer. */
 extern void func_02011cfc(void);
 /* One declaration per resource handle, typed from how InitResources and
@@ -341,8 +332,6 @@ extern KpaAnimationFileHandle data_ov060_0211ac90;
 extern short data_ov060_02119294[];
 extern short data_ov060_02119296[];
 extern short data_ov060_02119298[];
-/* Unused; the named parameters pin this TU's @NNN counter (see the header). */
-typedef void BgchInitAt_(void *self, void *act, int a, int b, void *d1, void *d2);
 }
 extern void func_02012694(unsigned int id, const Vector3 *v);
 void func_02038408(dBgCh_Actr *self);

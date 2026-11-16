@@ -194,10 +194,6 @@ void func_ov074_0212087c(int *out, daKuriKing_c *player, int flag);
 extern "C" int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
 extern s8 gCurrentSublevel;
 void LoadSilverStarAndNumber(void);
-/* Parameter names keep this TU's @NNN. */
-extern "C" {
-typedef void BgchInitAt_(void *self, void *a, fx32 b, fx32 cc, void *d, fx32 e);
-}
 extern SharedFilePtr *const sKuriboAnimationFiles[7];
 extern int data_ov084_02130258[];
 extern int data_ov084_02130208[];

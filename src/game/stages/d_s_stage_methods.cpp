@@ -120,7 +120,6 @@ void SetSoundMode(int m);
 void TurnBacklightOn(void);
 void TurnBacklightOff(void);
 
-bool d_s_stage_methodsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int fix, int e);
 
 
 extern int data_0208ee44;

@@ -36,8 +36,6 @@ extern unsigned char data_0209d684;                /* talk-script choice */
 extern void func_02038414(void *clsn);
 extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 
-extern void d_a_pg_rcerPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int d, int e);
-extern void *d_a_pg_rcerNewHold(u32 handle, u32 effect, int x, int y, int z, void *dir, void *cb);
 }
 extern unsigned char NumStars(void);
 
