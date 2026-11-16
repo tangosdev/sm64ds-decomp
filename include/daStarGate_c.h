@@ -35,7 +35,6 @@ struct daStarGate_c : dActor_c {
         StateFunc main;
     };
 
-    u8          pad_0d0[0x4];
     dExtCommonModel_c mModel;          /* 0x0d4 */
     State      *mState;          /* 0x110 */
     u8          mCloseDoorTimer; /* 0x114 */

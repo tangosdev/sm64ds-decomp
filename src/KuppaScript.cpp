@@ -4678,32 +4678,32 @@ void KuppaScript::Process() {
                 dFdColor_c *f = &gKuppaScriptFader;
                 f->SetToStart();
                 f->color = 0x7fff;
-                f->SetForwardTime(0xe, 0);
+                f->SetForwardTime(14, 0);
                 data_0209d4b0 = f;
             } else if (command == KS_WHITE_FADE_BACKWARD) {
                 dFdColor_c *f = &gKuppaScriptFader;
                 f->SetToEnd();
                 f->color = 0x7fff;
-                f->SetBackwardTime(0x50, 0);
+                f->SetBackwardTime(80, 0);
                 data_0209d4b0 = f;
             } else if (command == KS_BLACK_FADE_FORWARD) {
                 dFdColor_c *f = &gKuppaScriptFader;
                 f->SetToStart();
                 f->color = 0;
-                f->SetForwardTime(0x1e, 0);
+                f->SetForwardTime(30, 0);
                 data_0209d4b0 = f;
             } else if (command == KS_BLACK_FADE_BACKWARD) {
                 dFdColor_c *f = &gKuppaScriptFader;
                 gMainScreenLayers = DISPLAY_LAYER_OBJ;
                 f->SetToEnd();
                 f->color = 0;
-                f->SetBackwardTime(0x50, 0);
+                f->SetBackwardTime(80, 0);
                 data_0209d4b0 = f;
             } else if (command == KS_SCENE_FADE) {
                 dFdColor_c *f = &gKuppaScriptFader;
                 f->SetToEnd();
                 f->color = 0;
-                f->SetForwardTime(0x1e, 0);
+                f->SetForwardTime(30, 0);
                 dScene_c::SetFaders(f);
             } else if (command == KS_WATERFALL_SOUNDS) {
                 data_ov002_02110aec = 0;

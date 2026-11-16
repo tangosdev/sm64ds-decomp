@@ -39,10 +39,6 @@
  *     dExtFrameCtrl_c base sits inside a dExtAnmModel_c. The second base lands where the
  *     class says it should.
  *
- * unk_0d0 IS AN UNKNOWN FIELD, NOT ALIGNMENT. dActor_c asserts its own size
- * at 0xd0 and dExtAnmModel_c needs no more than 4-byte alignment, so those four
- * bytes are a gap the ROM leaves and nothing in this TU reads or writes.
- *
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c (arm9 0x0208e3a4).
  * Both tables are 31 words, and they differ in exactly slots 0, 3, 6, 9, 16 and
  * 17 -- InitResources, CleanupResources, Behavior, Render, D1 and D0, precisely
@@ -54,7 +50,6 @@
  * and whose one base, at subobject offset 0, is arm9 0x0208e390 = _ZTI8dActor_c.
  */
 struct daObjWakame_c : dActor_c {
-    u32 unk_0d0;              /* 0x0d0 -- not accessed by this TU */
     dExtAnmModel_c mAnmModel; /* 0x0d4 -- model and its animation */
 
     /* All four are overrides of fBase_c/dActor_c, not new members -- see the

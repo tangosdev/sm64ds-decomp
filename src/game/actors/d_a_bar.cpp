@@ -12,11 +12,11 @@
 #include "SpawnInfo.h"
 
 enum {
-    kHeightParamBias = 10,    /* subtracted from the param byte first */
-    kHeightMul = 10,          /* then x10 */
-    kMinHeightFix12 = 0x1000, /* 1.0 if that underflowed */
-    kClipPadFix12 = 0x640000, /* extra clip past half-height */
-    kCylinderRadiusFix12 = 0x35555,
+    kHeightParamBias = 10, /* subtracted from the param byte first */
+    kHeightMul = 10,       /* then x10 */
+    kMinHeight = 0x1000,   /* 1.0 if that underflowed */
+    kClipPad = 0x640000,   /* extra clip past half-height */
+    kCylinderRadius = 0x35555,
     kParamHurtBit = 0x100, /* param1 bit 8: cylinder hurts */
     kClsnFlags = 0x0080000c,
     kClsnHurtBit = 0x02000000, /* the one extra bit on the hurt cylinder */
@@ -41,11 +41,11 @@ extern "C" SpawnInfo<daBar_c> g_profile_BAR = {
 s32 daBar_c::InitResources() {
     s32 height = (((param1 & 0xff) - kHeightParamBias) * kHeightMul) << 12;
     if (height <= 0)
-        height = kMinHeightFix12;
+        height = kMinHeight;
     s32 halfHeight = height >> 1;
 
-    SetRanges(halfHeight, halfHeight, halfHeight + kClipPadFix12, 0);
-    mClsn.Init(this, kCylinderRadiusFix12, height,
+    SetRanges(halfHeight, halfHeight, halfHeight + kClipPad, 0);
+    mClsn.Init(this, kCylinderRadius, height,
                (param1 & kParamHurtBit) ? kClsnFlagsHurt : kClsnFlags, 0);
     return 1;
 }

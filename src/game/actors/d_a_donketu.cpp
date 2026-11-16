@@ -151,7 +151,7 @@ void daDonketu_c::UpdateDeathState() {
  * conversions; the wind-up arm's u16* leaves the timer's address in r0, which
  * plain member access does not (5 words differ). */
 int daDonketu_c::UpdateRunState() {
-    if (mStateTimer < 0xa) {
+    if (mStateTimer < 10) {
         mHorzSpeed = 0;
         int result = func_ov064_02116110(0x700);
         if (result != 0)
@@ -163,7 +163,7 @@ int daDonketu_c::UpdateRunState() {
     }
     mHorzSpeed = 0xf000;
     u16 timer = mStateTimer;
-    if (timer > 0x2c) {
+    if (timer > 44) {
         timer = 0;
         mStateTimer = 0;
     }

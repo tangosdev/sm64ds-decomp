@@ -35,7 +35,6 @@
 
 #ifdef __cplusplus
 
-#include "math/Fix12.h"
 
 struct dActor_c;
 

@@ -81,7 +81,7 @@ s32 daObjUkiyuka_c::Behavior() {
         if (d < 0)
             d = -d;
         if (d == 0)
-            mRestTimer = 0x3c;
+            mRestTimer = 60;
     }
     UpdateModelPosAndRotY();
     if (IsClsnInRange(0, 0) != 0)

@@ -313,7 +313,6 @@ struct daDemo_c : dActor_c {
         void StartCredit(int);
     };
 
-    u8 pad_0d0[4];          /* 0x0d0 */
     ScrollState *mScroll;   /* 0x0d4 - param1 0x2f only */
     StaffRoll *mStaffRoll;  /* 0x0d8 - param1 0x2e only */
     dExtSimpleModel_c *mModel;  /* 0x0dc */

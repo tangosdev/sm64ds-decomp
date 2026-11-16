@@ -177,7 +177,10 @@ void daSCoin_c::Collect()
         SpawnNumber(v, leader->mCollectedCount, false, 0, 0);
     }
     mdCcAc_c.flags |= 1;
-    if (leader->mCollectedCount == 5) { mDeathTimer = 0x1e; return; }
+    if (leader->mCollectedCount == 5) {
+        mDeathTimer = 30;
+        return;
+    }
     if (mGroupRole != 2) return;
     MarkForDestruction();
 }

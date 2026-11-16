@@ -108,11 +108,6 @@ s32 AngleDiff(s32 a, s32 b);
 /* game state */
 int func_02013a44(void);
 int ObjectMessageIDToActualMessageID(s16 id);
-
-/* dActor_c / Sound.
-   The mangled spellings are kept wherever the real declaration takes a
-   Fix12<int> BY VALUE, because mwccarm passes those differently at
-   the call site than a loose spelling would. */
 }
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int func_020138dc(void);
@@ -197,7 +192,7 @@ void daKinopio_c::St_Talk_Main()
             if ((data_0209caa0.file.flags1 & 0x40000000) == 0)
                 data_0209caa0.file.flags1 |= 0x40000000;
         }
-        if (Sound::PlaySub(0x25, 0x14, 0x7f, 0x15666, 1) == 0)
+        if (Sound::PlaySub(0x25, 20, 127, 0x15666, 1) == 0)
             return;
         {
             int z = mPosZ;
@@ -247,7 +242,7 @@ void daKinopio_c::St_Talk_Main()
         }
     }
 
-    if (Sound::PlaySub(0x25, 0x7f, 0, 0x7222, 0) == 0)
+    if (Sound::PlaySub(0x25, 127, 0, 0x7222, 0) == 0)
         return;
     Message::EndTalk();
     SetState(0);
@@ -351,7 +346,7 @@ void daKinopio_c::UpdateModelPose()
     mShadowTransform.m[9] = mPosX >> 3;
     mShadowTransform.m[10] = (mPosY - 0x8000) >> 3;
     mShadowTransform.m[11] = mPosZ >> 3;
-    DropShadowRadHeight(mShadowModel, mShadowTransform, 0x50000, 0x64000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowTransform, 0x50000, 0x64000, 15);
 }
 
 /* The three ov002 handles are released only by the variant that took them. The
@@ -433,9 +428,9 @@ int daKinopio_c::Behavior()
         s16 pitchToPlayer = Vec3_VertAngle(&mPos, &lookTarget);
 
         if (horzDist < 0x190000)
-            mTargetOpacity = 0xff;
+            mTargetOpacity = 255;
         else
-            mTargetOpacity = 0x3c;
+            mTargetOpacity = 60;
 
         if (horzDist < threshold && AngleDiff(yawToPlayer, mAngleY) < 0x3000) {
             mHeadYawTarget = (s16)(yawToPlayer - mAngleY);
@@ -449,19 +444,19 @@ int daKinopio_c::Behavior()
             mHeadPitchTarget = 0;
         }
     } else {
-        mTargetOpacity = 0x3c;
+        mTargetOpacity = 60;
     }
 
     {
         u32 id = mCapUniqueID;
         if (id != 0) {
             if (dActor_c::FindWithID(id) != 0)
-                mTargetOpacity = 0xff;
+                mTargetOpacity = 255;
         }
     }
 
     if (gCurrentSublevel == 0x32)
-        mTargetOpacity = 0xff;
+        mTargetOpacity = 255;
 
     ApproachLinear(mHeadYaw, mHeadYawTarget, 0x250);
     ApproachLinear(mHeadPitch, mHeadPitchTarget, 0x100);
@@ -513,8 +508,8 @@ int daKinopio_c::InitResources()
     mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(gKinopioModelFile), 1, 0x16);
     mShadowModel.InitCylinder();
     mCollider.Init(this, 0x78000, 0x8c000, 0x4200004, 0);
-    mOpacity = 0xff;
-    mTargetOpacity = 0xff;
+    mOpacity = 255;
+    mTargetOpacity = 255;
     mMessageID = param1;
     mStarID = (u8)mAngleX;
     mVariant = (u8)(mAngleX >> 8);

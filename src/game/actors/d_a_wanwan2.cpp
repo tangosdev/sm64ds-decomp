@@ -48,8 +48,6 @@
  *   include/decl_common.h declares them that way and check_decl_agreement
  *   compares the two. func_ov100_02143aa4 and func_ov100_02143ae0 are the
  *   state pair's members, called through ChompPmfSelf rather than as methods.
- * - daPly_c::Hurt, which takes a Fix12<int> parameter, stays spelled as a
- *   mangled extern-C free function.
  * - func_ov100_02143b68 reaches the link positions and the link models'
  *   translations through two raw char pointers that start at the chomp,
  *   and InitResources' link seeding loop does the same. Written as
@@ -115,7 +113,7 @@ enum {
     daWanwan2_SND_COIN_SPAWN  = 0x3a    /* Behavior's COIN spawn (played whether or not Spawn returned an actor) */
 };
 
-/* The daPly_c::Hurt ABI bridge and chain-link arithmetic below use NitroSDK
+/* The daPly_c::Hurt call and chain-link arithmetic below use NitroSDK
    VecFx32; the collision offset uses the real Vector3 interface. */
 
 /* func_ov100_02143b68 copies its identity matrix through the flat Mtx43: a
@@ -463,7 +461,7 @@ void func_ov100_021437d4(daWanwan2_c *thisx) {
    identity": the pointer-to-member constant that holds it follows daIbl_c's
    vtable directly, and that is the whole of the old claim. Was a C source. */
 int func_ov100_02143aa4(daWanwan2_c *c) {
-    c->mAnmModel.speed = 4096; /* 1.0 */
+    c->mAnmModel.speed = 0x1000; /* 1.0 */
     c->mAnmModel.Advance();
     func_ov100_021437d4(c);
     func_ov100_0214344c(c);
@@ -632,7 +630,7 @@ int daWanwan2_c::Behavior()
             sp->mVertSpeed = vy << 12;
             sp->mSpeedZ = vx << 12;
         }
-        mCoinTimer = 0xc8;
+        mCoinTimer = 200;
     }
 
     {
@@ -753,7 +751,7 @@ int daWanwan2_c::InitResources()
         } while (i < daWanwan2_NUM_LINKS);
     }
 
-    mCoinTimer = 0xc8;
+    mCoinTimer = 200;
 
     /* Start at node 1: GetNode writes that node's position over mPosX/Y/Z,
        after the links were seeded above from the placed position. */

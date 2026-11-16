@@ -13,7 +13,6 @@
  * that was replaced by the ROM's.
  */
 struct daBookGen_c : dActor_c {
-    u8  pad_0d0[0x4];
     u16 mSpawnTimer;        /* 0x0d4 */
     u8  pad_0d6[0x2];
 

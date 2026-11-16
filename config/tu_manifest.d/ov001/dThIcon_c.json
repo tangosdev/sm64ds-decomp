@@ -49,7 +49,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "_Z19func_ov001_020ab5b0Pcissss",
+      "symbol": "_ZN9dThIcon_c5PlaceEissss",
       "address": "0x020ab5b0",
       "size": "0x00000048",
       "legacy_source": "src/unnamed/ov001/func_ov001_020ab5b0.c",

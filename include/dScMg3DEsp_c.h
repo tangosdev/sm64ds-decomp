@@ -27,7 +27,7 @@ struct dScMg3DEsp_c : dScMgSingle3DBase_c {
     /* One of the five cards, 0x18 bytes. DealCards places it and
        CardTouch/CardSeek fly it to the reveal spot at (0x80, 0x30). */
     struct Card {
-        s32 mX;       /* 0x00, Fix12 screen position */
+        s32 mX;       /* 0x00, fx32 screen position */
         s32 mY;       /* 0x04 */
         s32 mSpeed;   /* 0x08, CardSeek adds 0x300 a frame; CardTouch zeroes it */
         u16 mTimer;   /* 0x0c, CardSeek waits it out; CardTouch sets 0x20 */
@@ -45,7 +45,7 @@ struct dScMg3DEsp_c : dScMgSingle3DBase_c {
     struct Row {
         s32 mX;       /* 0x00 */
         s32 mY;       /* 0x04 */
-        s32 mScale;   /* 0x08, Fix12 sprite scale; 0x1400 at spawn, then decays */
+        s32 mScale;   /* 0x08, fx32 sprite scale; 0x1400 at spawn, then decays */
         u16 mTimer;   /* 0x0c, RowWait's countdown */
         u8 pad_0e[2]; /* 0x0e */
         u8 mActive;   /* 0x10, UpdateRows runs the row while set */
@@ -56,7 +56,7 @@ struct dScMg3DEsp_c : dScMgSingle3DBase_c {
 
     /* One of the twenty falling slots, 0x20 bytes. */
     struct Slot {
-        s32 mX;        /* 0x00, Fix12 screen position */
+        s32 mX;        /* 0x00, fx32 screen position */
         s32 mY;        /* 0x04 */
         s32 mVelX;     /* 0x08, added to mX each frame by the type handlers */
         s32 mVelY;     /* 0x0c, added to mY; SlotFall pulls it down by mGravity */
@@ -85,7 +85,8 @@ struct dScMg3DEsp_c : dScMgSingle3DBase_c {
     dExtAnmTexSRT_c mTextureTransformer; /* 0x51f4 */
     Card mCards[5];                /* 0x5208 */
     Row mRows[3];                  /* 0x5280 */
-    Slot mSlots[20];               /* 0x52bc */
+    static const int SLOT_NUM = 20;
+    Slot mSlots[SLOT_NUM];         /* 0x52bc */
     s32 mRoundState;               /* 0x553c, the state index Behavior dispatches on */
     s32 mPhase;                    /* 0x5540, the play sub-state index */
     s32 mDifficulty;               /* 0x5544 */

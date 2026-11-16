@@ -127,7 +127,7 @@ int daObjSimpleLift_c::Behavior() {
         if (DecIfAbove0_Short(&mMoveTimer) == 0) {
             mMoveTimer = data_ov091_02134504[mVariant];
             mPrevAngleY += 0x8000;
-            mPauseTimer = 0xf;
+            mPauseTimer = 15;
         } else {
             UpdatePos(0);
         }

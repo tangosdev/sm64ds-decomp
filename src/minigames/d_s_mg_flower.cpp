@@ -84,7 +84,7 @@ void dScMgFlower_c::UpdatePetals() {
     int i;
 
     mPetalsSettled = 1;
-    for (i = 0; i < 22; i++) {
+    for (i = 0; i < PETAL_NUM; i++) {
         if (mPetals[i].active == 0)
             continue;
         if (mPetals[i].held == 1) {
@@ -128,7 +128,7 @@ void dScMgFlower_c::DealPetals() {
     mPrevCursorX = mCursorX;
     mPrevCursorY = mCursorY;
     Mg_SetTopScreenYOffset(0x20);
-    for (clearIndex = 0; clearIndex < 0x16; clearIndex++) {
+    for (clearIndex = 0; clearIndex < PETAL_NUM; clearIndex++) {
         mPetals[clearIndex].active = 0;
         mPetals[clearIndex].held = 0;
         mPetals[clearIndex].released = 0;
@@ -140,10 +140,10 @@ void dScMgFlower_c::DealPetals() {
         mPetals[clearIndex].driftX = 0;
         mPetals[clearIndex].fallSpeed = 0;
     }
-    if (mHoldTimer == 0x14) {
+    if (mHoldTimer == 20) {
         mPetalsLeft = MG_RAND(2) + 1;
     } else if (MG_RAND(10) == 0) {
-        mPetalsLeft = MG_RAND(2) + 0x14;
+        mPetalsLeft = MG_RAND(2) + 20;
     } else {
         mPetalsLeft = MG_RAND(8) + 8;
     }
@@ -189,7 +189,7 @@ void dScMgFlower_c::DealPetals() {
 /* Slot 18: bump mHoldTimer (reset once it passes 0x14), reset the face
  * object mFace and restart the round. */
 void dScMgFlower_c::StartRound(int /* arg */) {
-    if (mHoldTimer <= 0x14) {
+    if (mHoldTimer <= 20) {
         mHoldTimer++;
     } else {
         mHoldTimer = 0;
@@ -206,16 +206,16 @@ s32 dScMgFlower_c::Render() {
 
     mBgScrollPhase += 0xc0;
     {
-        int off = (FX_SinIdx(mBgScrollPhase >> 4) + 0x80) / 256;
+        int off = (FX_SinIdx(mBgScrollPhase >> 4) + 0x80) / 0x100;
         SetSubBg2Offset(off, off + 8);
     }
     {
-        int off = (0x80 - FX_SinIdx(mBgScrollPhase >> 4)) / 256;
+        int off = (0x80 - FX_SinIdx(mBgScrollPhase >> 4)) / 0x100;
         SetSubBg3Offset(off, off);
     }
-    Mg_RenderSpriteBoth(sFlowerFaceSprites[mFaceSprite], 0x80, 0x60, -1, 1);
+    Mg_RenderSpriteBoth(sFlowerFaceSprites[mFaceSprite], 128, 96, -1, 1);
 
-    for (i = 0; i < 0x16; i++) {
+    for (i = 0; i < PETAL_NUM; i++) {
         if (mPetals[i].active != 0) {
             SpriteAttr *spriteTemplate = (SpriteAttr *)data_ov006_0213abe0;
             struct SpriteAttr attr = *spriteTemplate;
@@ -259,7 +259,7 @@ s32 dScMgFlower_c::Behavior() {
                     mFaceSprite = 2;
             }
         } else {
-            mHintTimer = 0x3c;
+            mHintTimer = 60;
         }
     }
     switch (mState) {
@@ -273,7 +273,7 @@ s32 dScMgFlower_c::Behavior() {
             mCursorX = (touchY ? touchX : touchX) << 12;
             mCursorY = touchY << 12;
         }
-        if (mHoldTimer > 0x14) {
+        if (mHoldTimer > 20) {
             if (mPetalsLeft > 0) {
                 for (releaseIndex = 0; releaseIndex < mPetalsLeft; releaseIndex++) {
                     mPetals[releaseIndex].released = 1;
@@ -292,7 +292,7 @@ s32 dScMgFlower_c::Behavior() {
             /* Prefer attached petals; then allow re-grabbing a falling petal. */
             if (touchPressed != 0) {
                 int attachedIndex;
-                for (attachedIndex = 0; attachedIndex < 0x16; attachedIndex++) {
+                for (attachedIndex = 0; attachedIndex < PETAL_NUM; attachedIndex++) {
                     if (mPetals[attachedIndex].active != 0 && mPetals[attachedIndex].held != 1 &&
                         mPetals[attachedIndex].released != 1) {
                         int withinGrabRadius;
@@ -314,7 +314,7 @@ s32 dScMgFlower_c::Behavior() {
                 }
                 if (mHeldPetal < 0) {
                     int freeIndex;
-                    for (freeIndex = 0; freeIndex < 0x16; freeIndex++) {
+                    for (freeIndex = 0; freeIndex < PETAL_NUM; freeIndex++) {
                         if (mPetals[freeIndex].active != 0 && mPetals[freeIndex].held != 1) {
                             int withinGrabRadius2;
                             Vec2_Sub(&toCursor2.x, &mPetals[freeIndex].pos.x, &mCursorX);
@@ -370,7 +370,7 @@ s32 dScMgFlower_c::Behavior() {
                         Sound::PlayBank2_2D(0x103);
                     }
                 }
-                mHintTimer = 0x3c;
+                mHintTimer = 60;
             }
         }
         if (mPetalsLeft <= 0 && mPetalsSettled == 1) {
@@ -388,11 +388,11 @@ s32 dScMgFlower_c::Behavior() {
                 }
             } else {
                 FreeGfxSlotsById(0x1d);
-                if (mHoldTimer > 0x14) {
+                if (mHoldTimer > 20) {
                     if (mPetalsSettled == 1) {
                         Sound::PlayBank2_2D(0x106);
                         mFaceSprite = 4;
-                        mResultTimer = 0x3c;
+                        mResultTimer = 60;
                     }
                 } else {
                     if (mPetalToggle == 1) {
@@ -424,7 +424,7 @@ s32 dScMgFlower_c::Behavior() {
                             Sound::PlayBank2_2D(0x106);
                         }
                     }
-                    mResultTimer = 0x3c;
+                    mResultTimer = 60;
                 }
             }
         }

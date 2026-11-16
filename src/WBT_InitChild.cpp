@@ -39,7 +39,7 @@ void WBT_InitChild(WBTCallback callback) {
     work->system_cmd.target_bmp = 0;
     work->system_cmd.peer_bmp = 0;
     work->system_cmd.callback = callback;
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         work->peer[i].last_cmd_counter = 0;
     }
     cmd.command = WBT_CMD_REQ_NONE;

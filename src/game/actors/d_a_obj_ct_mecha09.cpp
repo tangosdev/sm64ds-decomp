@@ -75,7 +75,7 @@ void daObjCtMecha09_c::UpdateShadow() {
     mShadowMat.t.x = mPosX >> 3;
     mShadowMat.t.y = (mGroundY + 0x1000) >> 3;
     mShadowMat.t.z = mPosZ >> 3;
-    DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x1e0000, 0x32000, 0xfa000, 0xf);
+    DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x1e0000, 0x32000, 0xfa000, 15);
 }
 
 int daObjCtMecha09_c::CleanupResources() {

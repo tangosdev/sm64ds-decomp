@@ -18,16 +18,11 @@
  * The helpers are members with coined names: icon_c::Place, the three
  *   graphCallback_c setters, RenderIcons, SetSlotBorderPalette and
  *   RenderPlayerScores. The cartridge keeps none of their spellings.
- * Leftover: func_ov001_020ab5b0 is still the linker name of the ov001
- *   dThIcon field writer (kind, x, y, w, h). This TU's icon_c::Place
- *   calls it. Naming belongs in ov001.
  * Leftover: func_0203d974 is still the arm9 vs/region gate
  *   (MB_IsMultiBootChild, else data_020a0f10). This TU's icon_c::Render
  *   case 13. Naming belongs in arm9.
  * Leftover: ApproachLinear2 stays mangled. No header. This TU's
  *   icon_c::Behavior.
- * Leftover: OAM::Render Fix12-by-value stays mangled (OAM.h, wall 6az).
- *   This TU's icon_c::Render.
  * Leftover: data_ov075_0211cb64 / 0211c720 / 0211c730 / 0211c954 are
  *   OAM. 0211d72c / 0211d72e / 0211d740 / 0211d742 / 0211d754 /
  *   0211d756 / 0211d948 / 0211d94a are language- or type-indexed
@@ -75,8 +70,6 @@ void Deallocate(void *);
 
 extern unsigned char data_0209b2e4;
 
-extern void OamRender10_d_s_entry(int a, void *oam, int b, int c, int d, int e, int f, int g, int h,
-                                  int i);
 extern int func_0203d974(void);
 
 int GetLanguageIndex(void);
@@ -90,7 +83,6 @@ extern short data_ov075_0211d742[];
 extern short data_ov075_0211d756[];
 extern short data_ov075_0211d94a[];
 }
-void func_ov001_020ab5b0(char *r0, int r1, short r2, short r3, short s4, short s5);
 
 struct EntryPair {
     short w;
@@ -219,9 +211,9 @@ void dScEntry_c::icon_c::Render() {
 void dScEntry_c::icon_c::Behavior() {
     if (unk_01c == 0xd) {
         if (unk_020 == data_0209b2e4) {
-            ApproachLinear2(mY, 0x14, 8);
+            ApproachLinear2(mY, 20, 8);
         } else {
-            if (ApproachLinear2(mY, -0x24, 8) != 0)
+            if (ApproachLinear2(mY, -36, 8) != 0)
                 unk_020 = data_0209b2e4;
         }
     }
@@ -242,21 +234,20 @@ void dScEntry_c::icon_c::Place(int type, int index, s16 x, s16 y) {
     if (type == 5) {
         widthLanguage = GetLanguageIndex();
         heightLanguage = GetLanguageIndex();
-        func_ov001_020ab5b0((char *)this, touchKind, x, y, data_ov075_0211d72c[widthLanguage].w,
-                            data_ov075_0211d72c[heightLanguage].h);
+        dThIcon_c::Place(touchKind, x, y, data_ov075_0211d72c[widthLanguage].w,
+                         data_ov075_0211d72c[heightLanguage].h);
     } else if (type == 6) {
         widthLanguage = GetLanguageIndex();
         heightLanguage = GetLanguageIndex();
-        func_ov001_020ab5b0((char *)this, touchKind, x, y, data_ov075_0211d740[widthLanguage].w,
-                            data_ov075_0211d740[heightLanguage].h);
+        dThIcon_c::Place(touchKind, x, y, data_ov075_0211d740[widthLanguage].w,
+                         data_ov075_0211d740[heightLanguage].h);
     } else if (type == 0xb) {
         widthLanguage = GetLanguageIndex();
         heightLanguage = GetLanguageIndex();
-        func_ov001_020ab5b0((char *)this, touchKind, x, y, data_ov075_0211d754[widthLanguage].w,
-                            data_ov075_0211d754[heightLanguage].h);
+        dThIcon_c::Place(touchKind, x, y, data_ov075_0211d754[widthLanguage].w,
+                         data_ov075_0211d754[heightLanguage].h);
     } else {
-        func_ov001_020ab5b0((char *)this, touchKind, x, y, data_ov075_0211d948[type].w,
-                            data_ov075_0211d948[type].h);
+        dThIcon_c::Place(touchKind, x, y, data_ov075_0211d948[type].w, data_ov075_0211d948[type].h);
     }
 }
 
@@ -413,7 +404,7 @@ void dScEntry_c::RenderPlayerScores() {
     int d = 4 - count;
     int xbase;
     xbase = data_ov075_0211c6e8[d];
-    stride = (d * 16) + 0x38;
+    stride = (d * 16) + 56;
     {
         if (count > 0) {
             int minus1 = -1;
@@ -430,20 +421,20 @@ void dScEntry_c::RenderPlayerScores() {
             zE = i;
             zD = i;
             zB = i;
-            off14 = 0x14;
+            off14 = 20;
             zF = i;
             zA = i;
-            yIcon = 0x98;
+            yIcon = 152;
             zC = i;
             scale = 0x1000;
-            yNum = 0xb0;
+            yNum = 176;
             do {
                 int *p;
                 int pid = EntryPlayerIndex(i);
                 OAM::Render(zA, data_ov075_0211c7c0, xbase + i * stride, yIcon, minus1, minus1,
                             scale, scale, zA, minus1);
-                p = (int *)OAM::Render(zC, (OamAttr *)data_ov075_0211c8b0,
-                                       xbase + 0x1c + i * stride, yIcon, minus1, minus1, scale, zC);
+                p = (int *)OAM::Render(zC, (OamAttr *)data_ov075_0211c8b0, xbase + 28 + i * stride,
+                                       yIcon, minus1, minus1, scale, zC);
                 if (p != 0) {
                     int *q = p + 1;
                     int val = *q;
@@ -462,8 +453,8 @@ void dScEntry_c::RenderPlayerScores() {
                     tens = rem / 10;
                     if (hundreds != 0) {
                         p = (int *)OAM::Render(zD, (OamAttr *)data_ov075_0211c8b0,
-                                               xbase + 0x14 + i * stride, yNum, minus1, minus1,
-                                               scale, zD);
+                                               xbase + 20 + i * stride, yNum, minus1, minus1, scale,
+                                               zD);
                         if (p != 0) {
                             int *q = p + 1;
                             int val = *q;

@@ -2454,7 +2454,7 @@ void func_0203ea5c(void) {
         data_02099e1c = 0;
     }
     synced = 0;
-    timeout = data_020a0ef0 != 0 ? 0x12C : 0x4B0;
+    timeout = data_020a0ef0 != 0 ? 300 : 1200;
     data_020a0f1c |= 0x2000;
     data_020a0f1c &= 0xF0FF;
     data_020a0f1c |= (data_020a0f28 << 8) & 0xF00;
@@ -2536,7 +2536,7 @@ void func_0203ea5c(void) {
         if (data_020a0f1c & 0x4000) {
             data_020a0f10 = func_02040704();
             data_02099e18 = 0;
-            timeout = 0x12C;
+            timeout = 300;
             hostPkt = (u8 *)func_0204068c(0);
             if (hostPkt != 0) {
                 MI_CpuCopy8(hostPkt, &data_020a1154[0].flags, 2);
@@ -2904,7 +2904,7 @@ void func_0203e20c(void) {
             idx += 1;
             pIdx += 1;
             childProfile++;
-        } while (idx < 0x10);
+        } while (idx < 16);
 
         if (data_020a0f70 != 0 && data_020a0f08 == cnt2) {
             if ((u32)data_020a0f08 > 1U) {
@@ -2920,7 +2920,7 @@ void func_0203e20c(void) {
                         cnt = (u8)(cnt + 1);
                     }
                     j = (u8)(j + 1);
-                } while ((u32)j <= 0xF);
+                } while ((u32)j <= 15);
                 result = (cnt != 0) ? 1 : 0;
             }
             data_020a0f50 += 1;
@@ -2960,7 +2960,7 @@ void func_0203e20c(void) {
                         cnt = (u8)(cnt + 1);
                     }
                     m = (u8)(m + 1);
-                } while ((u32)m <= 0xF);
+                } while ((u32)m <= 15);
                 result = (cnt != 0) ? 1 : 0;
             } while (result == 0);
         }
@@ -3024,7 +3024,7 @@ void func_0203e20c(void) {
             data_020a1154[3].touch = data_020a1040.touch;
         data_020a1154[0].inputYaw = data_020a1154[1].inputYaw = data_020a1154[2].inputYaw =
             data_020a1154[3].inputYaw = data_020a1040.inputYaw;
-        for (i = 0; i < 0x11; i++) {
+        for (i = 0; i < 17; i++) {
             dst[0x12] = dst[0x36] = dst[0x5a] = dst[0x7e] = src[0x12];
             src++;
             dst++;
@@ -3052,7 +3052,7 @@ void func_0203e0ac(void) {
         data_020a1154[3].touch = data_020a1040.touch;
     data_020a1154[0].inputYaw = data_020a1154[1].inputYaw = data_020a1154[2].inputYaw =
         data_020a1154[3].inputYaw = data_020a1040.inputYaw;
-    for (i = 0; i < 0x11; i++) {
+    for (i = 0; i < 17; i++) {
         data_020a1154[0].settings[i] = data_020a1154[1].settings[i] = data_020a1154[2].settings[i] =
             data_020a1154[3].settings[i] = data_020a1040.settings[i];
     }
@@ -3160,7 +3160,7 @@ void func_0203db64(void *arg0, void *arg1) {
         int count;
 
         data_020a0f04 = 2;
-        count = 0x4b0;
+        count = 1200;
         while (!(WFS_GetStatus() == 2 && data_02099e18 == data_020a0f08 && data_020a0f08 != 0) &&
                count != 0) {
             data_020a0f1c |= 0x2000;
@@ -3174,7 +3174,7 @@ void func_0203db64(void *arg0, void *arg1) {
             OS_SleepThread(0);
         }
 
-        count = 0x258;
+        count = 600;
         data_020a1040.flags |= 1;
         while ((data_020a1040.flags & 1) && count != 0) {
             data_020a0f1c |= 0x2000;
@@ -3189,7 +3189,7 @@ void func_0203db64(void *arg0, void *arg1) {
         }
 
         func_0203d854();
-        count = 0x258;
+        count = 600;
         while (func_0203d81c() == 0 && count != 0) {
             data_020a0f1c |= 0x2000;
             func_02042778();
@@ -3203,7 +3203,7 @@ void func_0203db64(void *arg0, void *arg1) {
         }
 
         func_0203d918();
-        count = 0x258;
+        count = 600;
         while (func_0203d8fc() == 0 && count != 0) {
             data_020a0f1c |= 0x2000;
             func_02042778();
@@ -3417,7 +3417,7 @@ int GetOwnerLanguage(void) {
 /* Raise the link handshake flag, 0x1000 of this console's input record
    (func_020308b4; func_0203d81c polls it). */
 void func_0203d868(void) {
-    data_020a1040.flags |= 4096;
+    data_020a1040.flags |= 0x1000;
 }
 
 /* Clear the link handshake's passed latch (func_020308b4). */
@@ -3453,7 +3453,7 @@ int func_0203d7d4(int arg) {
    set by func_0203d7d4). LoadOverlay, UnloadOverlay and func_02017e94
    then leave the overlay's RAM alone, and dScMb_c waits on it. */
 int func_0203d7b8(void) {
-    return (data_020a0f1c & 128) != 0;
+    return (data_020a0f1c & 0x80) != 0;
 }
 
 } /* extern "C" */

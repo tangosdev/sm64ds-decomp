@@ -8,12 +8,11 @@
 /**
  * Whomp's Fortress pole billboard (profile BK_BILLBOARD /
  * POLE_BILLBOARD 42). Direct base is dActor_c. Factory allocates
- * 0x124 = sizeof(dActor_c) plus pad_0d0[4] plus dExtSimpleModel_c.
+ * 0x124 = sizeof(dActor_c) plus dExtSimpleModel_c.
  *
  * `daObjBkBillboard_c` is the RTTI name.
  */
 struct daObjBkBillboard_c : dActor_c {
-    u8 pad_0d0[0x4];
     dExtSimpleModel_c mModel; /* 0x0d4 */
 
     /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */

@@ -31,9 +31,8 @@
  * Notes (measured spellings that do not match):
  * - SpawnStar: one UntrackAndSpawnStar with a chosen mode size-DIFFs
  *   (999 words). The two call sites, mode 2 and mode 4, match.
- * - HandleMeshCollision: ReflectAngle(Fix12<int>, Fix12<int>, s16)
- *   size-DIFFs. The wall angle is held in a short so GetSubtraction gets
- *   it without a re-extension.
+ * - HandleMeshCollision: the wall angle is held in a short so
+ *   GetSubtraction gets it without a re-extension.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -299,7 +298,7 @@ int daGrock_c::Behavior() {
     } else {
         int dist = DistToCPlayer();
         if (dist > 0x5dc000) {
-            u32 threshold = (dist < 0x1770000) ? 0x70 : 0xe0;
+            u32 threshold = (dist < 0x1770000) ? 112 : 224;
             if ((u16)mStateTimer >= threshold) {
                 u32 rnd;
 

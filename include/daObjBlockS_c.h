@@ -9,7 +9,7 @@
  * storing _ZTV10dBgActor_c (inlined) and chaining to dActor_c.
  *
  * The word at 0x0d0 the crate's spit-out and in-mouth states use is
- * dBgActor_c::mEatingPlayer (include/dBgActor_c.h), not a daObjBlockS_c field.
+ * dActor_c::mEatingPlayer (include/dActor_c.h), not a daObjBlockS_c field.
  *
  * Field names come from what the matched bodies do with each offset; the
  * per-offset citations for the older members are in notes/bgobject-provenance.md
