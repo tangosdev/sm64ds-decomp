@@ -17813,10 +17813,8 @@ int daPly_c::func_ov002_020df840(void *arg1, Vector3 *arg2) {
 }
 
 extern "C" {
-void func_ov002_020df8f0(char* c)
-{
+void func_ov002_020df8f0(daPly_c *player) {
     typedef unsigned long long u64;
-    daPly_c *player = (daPly_c *)c;
     int vb = player->mVertSpeed;
     int va = player->mHorzSpeed;
     int b = vb >> 8;
@@ -17951,8 +17949,6 @@ void func_ov002_020df8f0(char* c)
 }
 }
 
-#define c ((char *)this)
-
 int daPly_c::St_Fly_Main() {
     extern u16 data_0209f49e;
     extern u16 data_0209f49c;
@@ -18000,10 +17996,10 @@ skip:
         } else {
             mVertAccel = 0;
             mTerminalVelocity = -0x4b000;
-            func_ov002_020df8f0(c);
+            func_ov002_020df8f0(this);
         }
     } else {
-        func_ov002_020df8f0(c);
+        func_ov002_020df8f0(this);
     }
 
     Vector3_16f vec16;
@@ -18080,7 +18076,6 @@ skip:
 #undef sp14
 #undef sp18
 #undef sp1C
-#undef c
 
 /* recovered: named members + shared header, real C++ method */
 
