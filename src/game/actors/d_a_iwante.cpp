@@ -2426,7 +2426,6 @@ int daIwante_c::Behavior() {
  * mHitPoints = 3; data_ov066_0211ae00 = 0; it enters the rise state
  * (data_ov066_0211b05c). */
 int daIwante_c::InitResources() {
-    char *c = (char *)(this);
     Vector3 v;
     Vector3 w;
 
@@ -2486,7 +2485,7 @@ int daIwante_c::InitResources() {
         w.x = data_ov066_0211ad18[0];
         w.y = data_ov066_0211ad18[1];
         w.z = data_ov066_0211ad18[2];
-        mdCcAcPos_c.Init((dActor_c *)c, w, 0x64000, 0x64000, 0x200002, 0);
+        mdCcAcPos_c.Init(this, w, 0x64000, 0x64000, 0x200002, 0);
     }
 
     for (int i = 0; i < 20; i++) {
