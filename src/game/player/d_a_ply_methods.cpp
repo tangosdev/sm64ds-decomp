@@ -17742,16 +17742,9 @@ int daPly_c::St_Owl_Main() {
 
     case 1:
     case 4: {
-        int x;
-        short ang;
-        int i;
-        short mag = 10;
-        x = ((daOwl_c *)mHeldObj)->mAnmModel.currFrame;
-        x = (unsigned short)((unsigned int)x >> 12);
-        x += 0xb;
-        ang = x * 0xccc;
-        i = (unsigned short)ang >> 4;
-        mVertSpeed = FX_SinCosTable_[i * 2 + 1] * mag;
+        int frame = (u16)((u32)((daOwl_c *)mHeldObj)->mAnmModel.currFrame >> 12);
+        short ang = (frame + 0xb) * 0xccc;
+        mVertSpeed = FX_CosIdx((u16)ang >> 4) * 10;
         mHorzSpeed = 0x14000;
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
             ApproachAngle(&mAngleY, mDesiredAngleY, 0x20, 0x100, 0);
