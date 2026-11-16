@@ -3077,7 +3077,9 @@ extern "C" {
    38 of 137 words off (the counters start from a zero in r3 or lr, not the
    thousands counter in r0, and the two smulls take other registers); through
    fx.h's FX_MUL 36; `th = hu = te = 0` or three separate zeros 36-40; the
-   counters as for-loop variables 51-52; divide-and-subtract digits 0x23c. */
+   counters as for-loop variables 51-52; divide-and-subtract digits 0x23c.
+   Round 17: each counter zeroed just before its own while loop 52, the
+   `x = x - k` / `th = th + 1` spellings 52. */
 struct M { int _00, _01, _10, _11; };
 extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, struct M *a5);
 extern OamAttr *sMgDigitSprites[];
