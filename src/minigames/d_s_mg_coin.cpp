@@ -48,6 +48,7 @@ enum dScMgCoin_c_AssetId {
 };
 
 #include "types.h"
+#include "OamAttr.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "decl_common.h"
@@ -100,18 +101,55 @@ extern "C" {
 extern const int sCoinBagRowTopY[];
 extern const int sCoinBagRowHeight[];
 extern const int sCoinBagHopVX[];
-extern "C" OamAttr data_ov006_0213a9a4[];
-extern "C" OamAttr data_ov006_0213a9ac[];
-extern "C" OamAttr data_ov006_0213a9c4[];
-extern "C" OamAttr data_ov006_0213a99c[];
-extern "C" OamAttr data_ov006_0213ab1c[];
-extern "C" OamAttr data_ov006_0213aad4[];
-extern "C" OamAttr data_ov006_0213aa94[];
-extern "C" OamAttr data_ov006_0213aa5c[];
-extern "C" OamAttr data_ov006_0213a9dc[];
-extern "C" OamAttr data_ov006_0213aa24[];
+/* The caption sprite lists, in sCoinCaptionSprites index order. */
+OamAttr data_ov006_0213a9a4 = {0x00f0, 0x81f0, 0x40a5, 0xffff};
+OamAttr data_ov006_0213a9ac[3] = {
+    {0x00f0, 0x81f0, 0x40ae, 0x0000}, {0x40e8, 0x01f8, 0x408f, 0x0000},
+    {0x8000, 0x0010, 0x40f2, 0xffff},
+};
+OamAttr data_ov006_0213a9c4[3] = {
+    {0x00f0, 0x81f0, 0x40a9, 0x0000}, {0x40e8, 0x01f8, 0x408a, 0x0000},
+    {0x8000, 0x0010, 0x40ed, 0xffff},
+};
+OamAttr data_ov006_0213a99c = {0x00f0, 0x81f0, 0x40b3, 0xffff};
+OamAttr data_ov006_0213ab1c[10] = {
+    {0x00f0, 0x01f9, 0x40b4, 0x0000}, {0x00f8, 0x01f9, 0x40d4, 0x0000},
+    {0x0000, 0x01f9, 0x40f4, 0x0000}, {0x0008, 0x01f9, 0x4118, 0x0000},
+    {0x00ee, 0x4001, 0x40b5, 0x0000}, {0x40fe, 0x0001, 0x40f5, 0x0000},
+    {0x4006, 0x0001, 0x4119, 0x0000}, {0x0006, 0x0011, 0x411b, 0x0000},
+    {0x8000, 0x01f1, 0x40f7, 0x0000}, {0x00f0, 0x01f1, 0x40b7, 0xffff},
+};
+OamAttr data_ov006_0213aad4[9] = {
+    {0x80e8, 0x800c, 0x40bc, 0x0000}, {0x80e8, 0x81f9, 0x4098, 0x0000},
+    {0x80e8, 0x4009, 0x409a, 0x0000}, {0x4008, 0x01f9, 0x4118, 0x0000},
+    {0x0008, 0x0009, 0x411a, 0x0000}, {0x80f0, 0x4011, 0x40bb, 0x0000},
+    {0x80f8, 0x01f1, 0x40d7, 0x0000}, {0x0008, 0x01f1, 0x4117, 0x0000},
+    {0x00f0, 0x01f1, 0x40b7, 0xffff},
+};
+OamAttr data_ov006_0213aa94[8] = {
+    {0x80e8, 0x81f9, 0x4098, 0x0000}, {0x80e8, 0x4009, 0x409a, 0x0000},
+    {0x4008, 0x01f9, 0x4118, 0x0000}, {0x0008, 0x0009, 0x411a, 0x0000},
+    {0x80f0, 0x4011, 0x40bb, 0x0000}, {0x80f8, 0x01f1, 0x40d7, 0x0000},
+    {0x0008, 0x01f1, 0x4117, 0x0000}, {0x00f0, 0x01f1, 0x40b7, 0xffff},
+};
+OamAttr data_ov006_0213aa5c[7] = {
+    {0x80e5, 0x81f9, 0x4121, 0x0000}, {0x80e5, 0x4009, 0x4123, 0x0000},
+    {0x4005, 0x01f9, 0x41a1, 0x0000}, {0x0005, 0x0009, 0x41a3, 0x0000},
+    {0x80e5, 0x41f1, 0x4120, 0x0000}, {0x80ed, 0x0011, 0x4144, 0x0000},
+    {0x00fd, 0x0011, 0x4184, 0xffff},
+};
+OamAttr data_ov006_0213a9dc[4] = {
+    {0x40f8, 0x81fa, 0x4166, 0x0000}, {0x4008, 0x41fa, 0x41a6, 0x0000},
+    {0x0008, 0x001a, 0x41aa, 0x0000}, {0x8000, 0x01f2, 0x4185, 0xffff},
+};
+OamAttr data_ov006_0213aa24[7] = {
+    {0x00f8, 0x400a, 0x4168, 0x0000}, {0x4008, 0x000a, 0x41a8, 0x0000},
+    {0x0008, 0x001a, 0x41aa, 0x0000}, {0x00f8, 0x41fa, 0x4126, 0x0000},
+    {0x4008, 0x01f2, 0x41a5, 0x0000}, {0x0008, 0x0002, 0x41a7, 0x0000},
+    {0x0000, 0x01f2, 0x4185, 0xffff},
+};
 OamAttr *sCoinCaptionSprites[] = {
-    data_ov006_0213a9a4, data_ov006_0213a9ac, data_ov006_0213a9c4, data_ov006_0213a99c,
+    &data_ov006_0213a9a4, data_ov006_0213a9ac, data_ov006_0213a9c4, &data_ov006_0213a99c,
     data_ov006_0213ab1c, data_ov006_0213aad4, data_ov006_0213aa94, data_ov006_0213aa5c,
     data_ov006_0213a9dc, data_ov006_0213aa24,
 };
@@ -125,8 +163,8 @@ extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern const int sCoinSparkleSpawnOffsets[];
 extern const u16 sCoinSparkleAngles[];
-extern "C" char data_ov006_021341f0[];
-int sCoinPopupSprites = (int)data_ov006_021341f0;
+OamAttr data_ov006_021341f0 = {0x40f8, 0x81f0, 0x100a, 0xffff};
+OamAttr *sCoinPopupSprites = &data_ov006_021341f0;
 extern const int sCoinPopupY[];
 extern "C" OamAttr *sMgTextSpritesEnglish[];
 extern "C" OamAttr *sMgTextSpritesSpanish[];
@@ -140,15 +178,15 @@ struct OamAttr;
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-extern "C" char data_ov006_02133f08[];
-extern "C" char data_ov006_02133f00[];
-void *sCoinValuesSprites[] = {data_ov006_02133f08, data_ov006_02133f00};
-extern "C" char data_ov006_02136e1c[];
-extern "C" char data_ov006_02136e14[];
-void *sCoinSparkleSprites[] = {data_ov006_02136e1c, data_ov006_02136e14};
-extern "C" char data_ov006_02134b44[];
-extern "C" char data_ov006_02134b3c[];
-void *sCoinBagSprites[] = {data_ov006_02134b44, data_ov006_02134b3c};
+OamAttr data_ov006_02133f00 = {0x00f0, 0x81f0, 0x10a0, 0xffff};
+OamAttr data_ov006_02133f08 = {0x00f0, 0x81f0, 0x1004, 0xffff};
+OamAttr *sCoinValuesSprites[] = {&data_ov006_02133f08, &data_ov006_02133f00};
+OamAttr data_ov006_02136e14 = {0x00fc, 0x01fc, 0x1031, 0xffff};
+OamAttr data_ov006_02136e1c = {0x00fc, 0x01fc, 0x1030, 0xffff};
+OamAttr *sCoinSparkleSprites[] = {&data_ov006_02136e1c, &data_ov006_02136e14};
+OamAttr data_ov006_02134b3c = {0x00f0, 0x81f0, 0x512b, 0xffff};
+OamAttr data_ov006_02134b44 = {0x00f0, 0x81f0, 0x512f, 0xffff};
+OamAttr *sCoinBagSprites[] = {&data_ov006_02134b44, &data_ov006_02134b3c};
 extern void Mg_RenderSpriteBothPalMtx(void *obj, int x, int y, int w, int *vec);
 extern const int sCoinRowY[];
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
@@ -592,7 +630,7 @@ void dScMgCoin_c::Popup_DrawAll() {
         y = sCoinPopupY[i];
         x = 0x10;
         for (j = 0; j < kTileCols; j++) {
-            Mg_RenderSpriteBothMtx((void *)sCoinPopupSprites, x, y, (void *)0);
+            Mg_RenderSpriteBothMtx(sCoinPopupSprites, x, y, (void *)0);
             x += kTileStep;
         }
     }

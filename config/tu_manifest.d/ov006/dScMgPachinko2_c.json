@@ -144,6 +144,198 @@
       "input_section": ".data",
       "start": "0x02138d08",
       "end": "0x02138d28"
+    },
+    {
+      "name": ".data.data_ov006_02133870",
+      "input_section": ".data",
+      "start": "0x02133870",
+      "end": "0x02133890"
+    },
+    {
+      "name": ".data.data_ov006_02136be4",
+      "input_section": ".data",
+      "start": "0x02136be4",
+      "end": "0x02136c0c"
+    },
+    {
+      "name": ".data.data_ov006_02136c0c",
+      "input_section": ".data",
+      "start": "0x02136c0c",
+      "end": "0x02136c34"
+    },
+    {
+      "name": ".data.data_ov006_02136c34",
+      "input_section": ".data",
+      "start": "0x02136c34",
+      "end": "0x02136c7c"
+    },
+    {
+      "name": ".data.data_ov006_02136c7c",
+      "input_section": ".data",
+      "start": "0x02136c7c",
+      "end": "0x02136cd4"
+    },
+    {
+      "name": ".data.data_ov006_021389f0",
+      "input_section": ".data",
+      "start": "0x021389f0",
+      "end": "0x021389f8"
+    },
+    {
+      "name": ".data.data_ov006_02138c48",
+      "input_section": ".data",
+      "start": "0x02138c48",
+      "end": "0x02138c60"
+    },
+    {
+      "name": ".data.data_ov006_02138c60",
+      "input_section": ".data",
+      "start": "0x02138c60",
+      "end": "0x02138c78"
+    },
+    {
+      "name": ".data.data_ov006_02138c78",
+      "input_section": ".data",
+      "start": "0x02138c78",
+      "end": "0x02138c90"
+    },
+    {
+      "name": ".data.data_ov006_02138c90",
+      "input_section": ".data",
+      "start": "0x02138c90",
+      "end": "0x02138ca8"
+    },
+    {
+      "name": ".data.data_ov006_02138ca8",
+      "input_section": ".data",
+      "start": "0x02138ca8",
+      "end": "0x02138cc0"
+    },
+    {
+      "name": ".data.data_ov006_02138cc0",
+      "input_section": ".data",
+      "start": "0x02138cc0",
+      "end": "0x02138cd8"
+    },
+    {
+      "name": ".data.data_ov006_02138cd8",
+      "input_section": ".data",
+      "start": "0x02138cd8",
+      "end": "0x02138cf0"
+    },
+    {
+      "name": ".data.data_ov006_02138cf0",
+      "input_section": ".data",
+      "start": "0x02138cf0",
+      "end": "0x02138d08"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ebd0",
+      "input_section": ".rodata",
+      "start": "0x0212ebd0",
+      "end": "0x0212ebd8"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ebe8",
+      "input_section": ".rodata",
+      "start": "0x0212ebe8",
+      "end": "0x0212ebf0"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ebf0",
+      "input_section": ".rodata",
+      "start": "0x0212ebf0",
+      "end": "0x0212ebf8"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ebf8",
+      "input_section": ".rodata",
+      "start": "0x0212ebf8",
+      "end": "0x0212ec00"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec00",
+      "input_section": ".rodata",
+      "start": "0x0212ec00",
+      "end": "0x0212ec08"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec10",
+      "input_section": ".rodata",
+      "start": "0x0212ec10",
+      "end": "0x0212ec18"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec18",
+      "input_section": ".rodata",
+      "start": "0x0212ec18",
+      "end": "0x0212ec20"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec20",
+      "input_section": ".rodata",
+      "start": "0x0212ec20",
+      "end": "0x0212ec28"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec28",
+      "input_section": ".rodata",
+      "start": "0x0212ec28",
+      "end": "0x0212ec30"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec38",
+      "input_section": ".rodata",
+      "start": "0x0212ec38",
+      "end": "0x0212ec40"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec40",
+      "input_section": ".rodata",
+      "start": "0x0212ec40",
+      "end": "0x0212ec48"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec48",
+      "input_section": ".rodata",
+      "start": "0x0212ec48",
+      "end": "0x0212ec50"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec50",
+      "input_section": ".rodata",
+      "start": "0x0212ec50",
+      "end": "0x0212ec58"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec58",
+      "input_section": ".rodata",
+      "start": "0x0212ec58",
+      "end": "0x0212ec60"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec60",
+      "input_section": ".rodata",
+      "start": "0x0212ec60",
+      "end": "0x0212ec68"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec68",
+      "input_section": ".rodata",
+      "start": "0x0212ec68",
+      "end": "0x0212ec70"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec70",
+      "input_section": ".rodata",
+      "start": "0x0212ec70",
+      "end": "0x0212ec78"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec78",
+      "input_section": ".rodata",
+      "start": "0x0212ec78",
+      "end": "0x0212ec80"
     }
   ],
   "functions": [
@@ -708,6 +900,104 @@
       "size": "0x18",
       "binding": "STB_GLOBAL",
       "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133870",
+      "address": "0x02133870",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "Four OamAttr entries ending at the attr3 0xffff terminator; sPachinko2PaddleSprite draws this list."
+    },
+    {
+      "symbol": "data_ov006_02136be4",
+      "address": "0x02136be4",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "Five OamAttr entries ending at the attr3 0xffff terminator; sPachinko2SparkSprites[2]."
+    },
+    {
+      "symbol": "data_ov006_02136c0c",
+      "address": "0x02136c0c",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "Five OamAttr entries ending at the attr3 0xffff terminator; sPachinko2SparkSprites[3]."
+    },
+    {
+      "symbol": "data_ov006_02136c34",
+      "address": "0x02136c34",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "Nine OamAttr entries ending at the attr3 0xffff terminator; sPachinko2SparkSprites[1]."
+    },
+    {
+      "symbol": "data_ov006_02136c7c",
+      "address": "0x02136c7c",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "Eleven OamAttr entries ending at the attr3 0xffff terminator; sPachinko2SparkSprites[0]."
+    },
+    {
+      "symbol": "data_ov006_021389f0",
+      "address": "0x021389f0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Single OamAttr entry (attr3 0xffff); sPachinko2BallSprite draws it."
+    },
+    {
+      "symbol": "data_ov006_02138c48",
+      "address": "0x02138c48",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three OamAttr entries ending at the attr3 0xffff terminator; sPachinko2BallCountSprites[7]."
+    },
+    {
+      "symbol": "data_ov006_02138c60",
+      "address": "0x02138c60",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three OamAttr entries ending at the attr3 0xffff terminator; sPachinko2BallCountSprites[6]."
+    },
+    {
+      "symbol": "data_ov006_02138c78",
+      "address": "0x02138c78",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three OamAttr entries ending at the attr3 0xffff terminator; sPachinko2BallCountSprites[5]."
+    },
+    {
+      "symbol": "data_ov006_02138c90",
+      "address": "0x02138c90",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three OamAttr entries ending at the attr3 0xffff terminator; sPachinko2BallCountSprites[4]."
+    },
+    {
+      "symbol": "data_ov006_02138ca8",
+      "address": "0x02138ca8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three OamAttr entries ending at the attr3 0xffff terminator; sPachinko2BallCountSprites[3]."
+    },
+    {
+      "symbol": "data_ov006_02138cc0",
+      "address": "0x02138cc0",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three OamAttr entries ending at the attr3 0xffff terminator; sPachinko2BallCountSprites[2]."
+    },
+    {
+      "symbol": "data_ov006_02138cd8",
+      "address": "0x02138cd8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three OamAttr entries ending at the attr3 0xffff terminator; sPachinko2BallCountSprites[1]."
+    },
+    {
+      "symbol": "data_ov006_02138cf0",
+      "address": "0x02138cf0",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three OamAttr entries ending at the attr3 0xffff terminator; sPachinko2BallCountSprites[0]."
     }
   ],
   "bss": [
@@ -831,6 +1121,132 @@
       "size": "0x18",
       "binding": "STB_GLOBAL",
       "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0212ebd0",
+      "address": "0x0212ebd0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Two s32 lane limits read through sPachinko2PaddleDescendLimits[5]; Q12 paddle velocity."
+    },
+    {
+      "symbol": "data_ov006_0212ebe8",
+      "address": "0x0212ebe8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Two s32 lane limits read through sPachinko2PaddleSweepLimits[5]; Q12 paddle velocity."
+    },
+    {
+      "symbol": "data_ov006_0212ebf0",
+      "address": "0x0212ebf0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Two s32 lane limits read through sPachinko2PaddleSweepLimits[2]; Q12 paddle velocity."
+    },
+    {
+      "symbol": "data_ov006_0212ebf8",
+      "address": "0x0212ebf8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Per-lane paddle gather Y, [lane][paddle]; sPachinko2PaddleGatherTargets[3]."
+    },
+    {
+      "symbol": "data_ov006_0212ec00",
+      "address": "0x0212ec00",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Two s32 lane limits read through sPachinko2PaddleDescendLimits[4]; Q12 paddle velocity."
+    },
+    {
+      "symbol": "data_ov006_0212ec10",
+      "address": "0x0212ec10",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Per-lane paddle gather Y, [lane][paddle]; sPachinko2PaddleGatherTargets[4]."
+    },
+    {
+      "symbol": "data_ov006_0212ec18",
+      "address": "0x0212ec18",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Per-lane paddle gather Y, [lane][paddle]; sPachinko2PaddleGatherTargets[2]."
+    },
+    {
+      "symbol": "data_ov006_0212ec20",
+      "address": "0x0212ec20",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Per-lane paddle gather Y, [lane][paddle]; sPachinko2PaddleGatherTargets[1]."
+    },
+    {
+      "symbol": "data_ov006_0212ec28",
+      "address": "0x0212ec28",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Per-lane paddle gather Y, [lane][paddle]; sPachinko2PaddleGatherTargets[0]."
+    },
+    {
+      "symbol": "data_ov006_0212ec38",
+      "address": "0x0212ec38",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Per-lane paddle gather Y, [lane][paddle]; sPachinko2PaddleGatherTargets[5]."
+    },
+    {
+      "symbol": "data_ov006_0212ec40",
+      "address": "0x0212ec40",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Two s32 lane limits read through sPachinko2PaddleSweepLimits[4]; Q12 paddle velocity."
+    },
+    {
+      "symbol": "data_ov006_0212ec48",
+      "address": "0x0212ec48",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Two s32 lane limits read through sPachinko2PaddleSweepLimits[3]; Q12 paddle velocity."
+    },
+    {
+      "symbol": "data_ov006_0212ec50",
+      "address": "0x0212ec50",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Two s32 lane limits read through sPachinko2PaddleSweepLimits[1]; Q12 paddle velocity."
+    },
+    {
+      "symbol": "data_ov006_0212ec58",
+      "address": "0x0212ec58",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Two s32 lane limits read through sPachinko2PaddleSweepLimits[0]; Q12 paddle velocity."
+    },
+    {
+      "symbol": "data_ov006_0212ec60",
+      "address": "0x0212ec60",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Two s32 lane limits read through sPachinko2PaddleDescendLimits[3]; Q12 paddle velocity."
+    },
+    {
+      "symbol": "data_ov006_0212ec68",
+      "address": "0x0212ec68",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Two s32 lane limits read through sPachinko2PaddleDescendLimits[2]; Q12 paddle velocity."
+    },
+    {
+      "symbol": "data_ov006_0212ec70",
+      "address": "0x0212ec70",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Two s32 lane limits read through sPachinko2PaddleDescendLimits[1]; Q12 paddle velocity."
+    },
+    {
+      "symbol": "data_ov006_0212ec78",
+      "address": "0x0212ec78",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Two s32 lane limits read through sPachinko2PaddleDescendLimits[0]; Q12 paddle velocity."
     }
   ],
   "notes": [
@@ -958,6 +1374,139 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
+          "section": ".data",
+          "start": "0x0213db6c",
+          "end": "0x0213db9c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sPachinko2PaddleSprite",
+          "start": "0x0213386c",
+          "end": "0x02133870",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133870",
+          "start": "0x02133870",
+          "end": "0x02133890",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sPachinko2SparkSprites",
+          "start": "0x02136bd4",
+          "end": "0x02136be4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02136be4",
+          "start": "0x02136be4",
+          "end": "0x02136c0c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02136c0c",
+          "start": "0x02136c0c",
+          "end": "0x02136c34",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02136c34",
+          "start": "0x02136c34",
+          "end": "0x02136c7c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02136c7c",
+          "start": "0x02136c7c",
+          "end": "0x02136cd4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sPachinko2BallSprite",
+          "start": "0x021389ec",
+          "end": "0x021389f0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021389f0",
+          "start": "0x021389f0",
+          "end": "0x021389f8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02138c48",
+          "start": "0x02138c48",
+          "end": "0x02138c60",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02138c60",
+          "start": "0x02138c60",
+          "end": "0x02138c78",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02138c78",
+          "start": "0x02138c78",
+          "end": "0x02138c90",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02138c90",
+          "start": "0x02138c90",
+          "end": "0x02138ca8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02138ca8",
+          "start": "0x02138ca8",
+          "end": "0x02138cc0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02138cc0",
+          "start": "0x02138cc0",
+          "end": "0x02138cd8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02138cd8",
+          "start": "0x02138cd8",
+          "end": "0x02138cf0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02138cf0",
+          "start": "0x02138cf0",
+          "end": "0x02138d08",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sPachinko2BallCountSprites",
+          "start": "0x02138d08",
+          "end": "0x02138d28",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".rodata.sPachinko2CupHopRightStartFrames",
           "start": "0x0212ebac",
           "end": "0x0212ebb0",
@@ -1000,6 +1549,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata.data_ov006_0212ebd0",
+          "start": "0x0212ebd0",
+          "end": "0x0212ebd8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".rodata.sPachinko2CupWaitFrames",
           "start": "0x0212ebd8",
           "end": "0x0212ebe0",
@@ -1014,6 +1570,34 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata.data_ov006_0212ebe8",
+          "start": "0x0212ebe8",
+          "end": "0x0212ebf0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ebf0",
+          "start": "0x0212ebf0",
+          "end": "0x0212ebf8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ebf8",
+          "start": "0x0212ebf8",
+          "end": "0x0212ec00",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec00",
+          "start": "0x0212ec00",
+          "end": "0x0212ec08",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".rodata.sPachinko2CupX",
           "start": "0x0212ec08",
           "end": "0x0212ec10",
@@ -1021,9 +1605,100 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata.data_ov006_0212ec10",
+          "start": "0x0212ec10",
+          "end": "0x0212ec18",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec18",
+          "start": "0x0212ec18",
+          "end": "0x0212ec20",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec20",
+          "start": "0x0212ec20",
+          "end": "0x0212ec28",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec28",
+          "start": "0x0212ec28",
+          "end": "0x0212ec30",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".rodata.sPachinko2CrossRowY",
           "start": "0x0212ec30",
           "end": "0x0212ec38",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec38",
+          "start": "0x0212ec38",
+          "end": "0x0212ec40",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec40",
+          "start": "0x0212ec40",
+          "end": "0x0212ec48",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec48",
+          "start": "0x0212ec48",
+          "end": "0x0212ec50",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec50",
+          "start": "0x0212ec50",
+          "end": "0x0212ec58",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec58",
+          "start": "0x0212ec58",
+          "end": "0x0212ec60",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec60",
+          "start": "0x0212ec60",
+          "end": "0x0212ec68",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec68",
+          "start": "0x0212ec68",
+          "end": "0x0212ec70",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec70",
+          "start": "0x0212ec70",
+          "end": "0x0212ec78",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec78",
+          "start": "0x0212ec78",
+          "end": "0x0212ec80",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1052,41 +1727,6 @@
           "section": ".rodata.sPachinko2CupLeftStops",
           "start": "0x0212ecd4",
           "end": "0x0212ecec",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.sPachinko2PaddleSprite",
-          "start": "0x0213386c",
-          "end": "0x02133870",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.sPachinko2SparkSprites",
-          "start": "0x02136bd4",
-          "end": "0x02136be4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.sPachinko2BallSprite",
-          "start": "0x021389ec",
-          "end": "0x021389f0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.sPachinko2BallCountSprites",
-          "start": "0x02138d08",
-          "end": "0x02138d28",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data",
-          "start": "0x0213db6c",
-          "end": "0x0213db9c",
           "differingBytes": 0,
           "firstDiff": null
         }
