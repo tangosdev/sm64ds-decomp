@@ -47,18 +47,9 @@
 #include "math/CalcLib.h"
 
 #pragma defer_codegen off
-/* Codegen is deferred by default in mwccarm 2004/b56, which makes its
- * optimisation pragmas file-global, last one wins. With it off, the
- * positional brackets below bind to the members they enclose -- and .text is
- * then emitted in SOURCE order, so this file is written in ascending ROM
- * order.
- *
- * Render and InitResources were each matched under
- * #pragma opt_strength_reduction off; Behavior, between them, needs it on.
- * Only the bound form gets all eleven. A function is not generated at its
- * closing brace but at the next top-level token, so a pragma written
- * directly after Behavior would still reach it; the declarations that sit
- * between Behavior and InitResources are that token. */
+/* Codegen is deferred by default in mwccarm 2004/b56. With it off, .text is
+ * emitted in SOURCE order, so this file is written in ascending ROM order.
+ * Every member now builds under the default optimisation settings. */
 
 struct Event {
     static int GetBit(unsigned int bit);
@@ -918,9 +909,6 @@ extern u16 *gMinimapTileObjs;
 extern s32 gRunningKuppaScript;
 }
 
-#pragma opt_strength_reduction off
-/* Kept: the ROM recomputes i << 11 for each screen block; strength reduction
- * turns it into a running offset and needs one more register. */
 int dMap_c::InitResources()
 {
     u16 *p;
@@ -956,7 +944,9 @@ int dMap_c::InitResources()
     for (i = 0; i < gNumMinimapTileObjs; i++) {
         if (*p != 0) {
             void *f3 = LoadFile(*p);
-            DecompressLZ16(f3, (char *)G2S_GetBG3ScrPtr() - (i << 11));
+            /* Each tile object fills one 0x800-byte text screen block,
+             * stacked downward from BG3's screen base. */
+            DecompressLZ16(f3, (char *)G2S_GetBG3ScrPtr() - i * 0x800u);
             Deallocate(f3);
         }
         p++;
@@ -1053,8 +1043,6 @@ int dMap_c::InitResources()
 
     return 1;
 }
-
-#pragma opt_strength_reduction on
 
 void dMap_c::GetPosFromMinimapPos(Vector3 &minimapPos, Vector3 &center, fx32 scale, short angle,
                                   Vector3 &out) {
