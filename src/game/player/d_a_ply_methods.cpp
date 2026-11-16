@@ -14358,7 +14358,7 @@ void daPly_c::func_ov002_020d8d10(Vector3 *pos) {
 
 int daPly_c::Hurt(const Vector3 &a, u32 b, fx32 dmg, u8 arg4, u8 arg5, u8 arg6) {
     s16 ang;
-    void* p360;
+    dActor_c *eaten;
     int hasCap;
 
     if (func_ov002_020d82f0() == 0) {
@@ -14383,11 +14383,11 @@ int daPly_c::Hurt(const Vector3 &a, u32 b, fx32 dmg, u8 arg4, u8 arg5, u8 arg6) 
     if (this->mIsMetal != 0) {
         b = 0;
     }
-    p360 = (void *)this->mObjInMouth;
-    if (p360 != 0) {
-        int match = (((dActor_c *)p360)->actorID == 0xbf);
+    eaten = this->mObjInMouth;
+    if (eaten != 0) {
+        int match = (eaten->actorID == 0xbf);
         if (match) {
-            func_ov002_020d5cec((char*)p360);
+            func_ov002_020d5cec(eaten);
             this->mStateFlags &= ~2;
         }
         this->mUseAltBodyModel = 0;
