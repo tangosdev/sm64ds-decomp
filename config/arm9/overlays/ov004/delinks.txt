@@ -67,7 +67,12 @@
     .data.gap27 start:0x020bc8bc end:0x020bca44 kind:data align:4
     .data.statetext start:0x020bca44 end:0x020bca58 kind:data align:4
     .data.psopt start:0x020bca58 end:0x020bcaa0 kind:data align:4
-    .data.gap28 start:0x020bcaa0 end:0x020bea14 kind:data align:4
+    .data.menuScreenEnglish start:0x020bcaa0 end:0x020bd074 kind:data align:4
+    .data.menuScreenFrench start:0x020bd074 end:0x020bd698 kind:data align:4
+    .data.menuScreenItalian start:0x020bd698 end:0x020bdccc kind:data align:4
+    .data.menuScreenSpanish start:0x020bdccc end:0x020be34c kind:data align:4
+    .data.menuScreenGerman start:0x020be34c end:0x020be9ec kind:data align:4
+    .data.sparkleSprites start:0x020be9ec end:0x020bea14 kind:data align:4
     .data.menuplt start:0x020bea14 end:0x020beb48 kind:data align:4
     .data.gap29 start:0x020beb48 end:0x020beb60 kind:data align:4
     .bss        start:0x020beb60 end:0x020bfec0 kind:bss align:32
@@ -80,6 +85,12 @@ src/minigames/d_s_mg_base.cpp:
     .data.fxpmf start:0x020bbf4c end:0x020bbf6c
     .data.menutbl start:0x020bbf94 end:0x020bc034
     .data.scenekind start:0x020bc070 end:0x020bc0b8
+    .data.menuScreenEnglish start:0x020bcaa0 end:0x020bd074
+    .data.menuScreenFrench start:0x020bd074 end:0x020bd698
+    .data.menuScreenItalian start:0x020bd698 end:0x020bdccc
+    .data.menuScreenSpanish start:0x020bdccc end:0x020be34c
+    .data.menuScreenGerman start:0x020be34c end:0x020be9ec
+    .data.sparkleSprites start:0x020be9ec end:0x020bea14
     .data.menuplt start:0x020bea14 end:0x020beb48
     .bss start:0x020beb74 end:0x020bf3e8
 
