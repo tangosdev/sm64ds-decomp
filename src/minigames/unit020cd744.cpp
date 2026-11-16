@@ -1241,8 +1241,10 @@ void TrmpLine::SetStateFlex() {
  *
  * Shape notes: the +-1 clamps are a ternary macro so the constants rank
  * above the coordinate/index locals in the callee-saved band and still
- * hoist in the compiler's own order; jumpers is assigned after the null/active checks so its pool
- * load sits in the hoisted-constant sequence; the +0x320/+0x324 halfword
+ * hoist in the compiler's own order; each jumper is read straight out of
+ * sTrmpJumpers (no named pool local), so the pool address is a compiler
+ * temporary and ranks below currentAlong, as the VEC_DotProduct results
+ * returned through math/CalcLib.h's inlines do; the +0x320/+0x324 halfword
  * accesses go through line directly, which yields the ROM's shared
  * line+0x300 base and the copied read.
  */
@@ -1253,7 +1255,6 @@ void TrmpLine::SetStateFlex() {
 int TrmpLine::PushJumper() {
     int jumperIndex;
     int currentAlong;
-    struct TrampolineContactView **jumpers;
 
     jumperIndex = 0;
     do {
@@ -1271,14 +1272,13 @@ int TrmpLine::PushJumper() {
             continue;
         if (((TrampolineContactView *)sTrmpJumpers[jumperIndex])->IsActive() == 0)
             continue;
-        jumpers = (TrampolineContactView **)sTrmpJumpers;
 
-        currentPositionPtr = jumpers[jumperIndex]->GetPos();
+        currentPositionPtr = ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->GetPos();
         currentPos.x = currentPositionPtr->x;
         currentPos.y = currentPositionPtr->y;
         currentPos.z = currentPositionPtr->z;
 
-        previousPositionPtr = jumpers[jumperIndex]->GetPrevPos();
+        previousPositionPtr = ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->GetPrevPos();
         previousPos.x = previousPositionPtr->x;
         previousPos.y = previousPositionPtr->y;
         previousPos.z = previousPositionPtr->z;
@@ -1350,13 +1350,13 @@ int TrmpLine::PushJumper() {
             }
 
             if (offsetTimesHalfLength < 0x400000) {
-                jumpers[jumperIndex]->contactState = 2;
+                ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->contactState = 2;
                 D3D_PlaySePannedLoop(0x1b1, mCenter.x,
                                      (sTrmpLinePushWeakPitchEnd * edgeRatio +
                                       sTrmpLinePushWeakPitchMid * (0x1000 - edgeRatio)) >>
                                          12);
             } else {
-                jumpers[jumperIndex]->contactState = 1;
+                ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->contactState = 1;
                 D3D_PlaySePannedLoop(0x1ae, mCenter.x,
                                      (sTrmpLinePushStrongPitchEnd * edgeRatio +
                                       sTrmpLinePushStrongPitchMid * (0x1000 - edgeRatio)) >>
@@ -1364,12 +1364,13 @@ int TrmpLine::PushJumper() {
             }
 
             {
-                Vector3 *lineNormal = &jumpers[jumperIndex]->lineNormal;
+                Vector3 *lineNormal =
+                    &((TrampolineContactView *)sTrmpJumpers[jumperIndex])->lineNormal;
                 lineNormal->x = mNormal.x;
                 lineNormal->y = mNormal.y;
                 lineNormal->z = mNormal.z;
-                jumpers[jumperIndex]->alongLine = currentAlong;
-                jumpers[jumperIndex]->lineHalfLength = mHalfWidth;
+                ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->alongLine = currentAlong;
+                ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->lineHalfLength = mHalfWidth;
                 mWobblePhase = 0;
                 PointDistance(&mContactPoint, &mContactMotion);
 
@@ -1390,13 +1391,13 @@ int TrmpLine::PushJumper() {
             if (fromStart.y < 0 && fromStart.y > -0x30000) {
                 if (fromStart.x > -0x8000 && fromStart.x < 0) {
                     if (movementDelta.x > 0) {
-                        jumpers[jumperIndex]->contactState = 3;
+                        ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->contactState = 3;
                     }
                 }
             } else {
                 if (fromEnd.y < 0 && fromEnd.y > -0x30000 && fromEnd.x > 0 && fromEnd.x < 0x8000 &&
                     movementDelta.x < 0) {
-                    jumpers[jumperIndex]->contactState = 3;
+                    ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->contactState = 3;
                 }
             }
         }

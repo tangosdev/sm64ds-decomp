@@ -1765,32 +1765,32 @@ void Camera_UpdateMatrices(MgCamera *camera) {
 
 
 void Camera_ProjectToScreen(MgCamera *camera, void *pos, int *screenX, int *screenY) {
-    int view[3];
-    MTX_MultVec43((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
+    VecFx32 view;
+    MTX_MultVec43((const VecFx32 *)pos, &camera->mViewMtx, &view);
     int fovIdx = camera->mFovAngle >> 4;
     int tanFov = FX_Div(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
-    int height = FX_MUL(tanFov, -view[2]);
-    int fracY = FX_Div(view[1], height);
+    int height = FX_MUL(tanFov, -view.z);
+    int fracY = FX_Div(view.y, height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
     screenY[0] = -((pixelY + (int)0xfffa0800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
-    int fracX = FX_Div(view[0], width);
+    int fracX = FX_Div(view.x, width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
     screenX[0] = (pixelX + 0x7f800) >> 0xc;
 }
 
 
 void Camera_ProjectToScreen16(MgCamera *camera, void *pos, short *screen) {
-    int view[3];
-    MTX_MultVec43((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
+    VecFx32 view;
+    MTX_MultVec43((const VecFx32 *)pos, &camera->mViewMtx, &view);
     int fovIdx = camera->mFovAngle >> 4;
     int tanFov = FX_Div(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
-    int height = FX_MUL(tanFov, -view[2]);
-    int fracY = FX_Div(view[1], height);
+    int height = FX_MUL(tanFov, -view.z);
+    int fracY = FX_Div(view.y, height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
     screen[1] = -((pixelY + (int)0xfffa0800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
-    int fracX = FX_Div(view[0], width);
+    int fracX = FX_Div(view.x, width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
     screen[0] = (pixelX + 0x7f800) >> 0xc;
 }

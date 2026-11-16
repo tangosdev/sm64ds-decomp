@@ -58,12 +58,6 @@ struct FileTable {
 
 extern FileTable data_ov064_0211adbc;
 
-/* local extern: MTX_MultVec43 has no shared header yet. */
-extern "C" {
-/* local extern: removing this copy renumbers the TU's @NNN compiler temporaries (measured). */
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-}
-
 daObjFl_KomaU_c::~daObjFl_KomaU_c() {}
 
 s32 daObjFl_KomaU_c::CleanupResources() {

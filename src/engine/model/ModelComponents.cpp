@@ -74,6 +74,7 @@
 #include "nitro/os/cache.h"
 #include "nitro/mi/dma.h"
 #include "nitro/gx/g3_util.h"
+#include "math/CalcLib.h"
 
 /* The four-pointer block at BMD_File::skin (UpdateFileOffsets rebases all
    four). */
@@ -147,7 +148,6 @@ struct Dst;
 void func_0204547c(Ctx *a, Src *b, int c, Dst *elem);
 extern "C" {
 void MTX_Scale43_(Mtx43 *m, int x, int y, int z);
-void VEC_Normalize(const Vector3 *a, Vector3 *b);
 void func_020458a8(void *src, void *dst);
 void G3_MultMtx33(void *m);
 }

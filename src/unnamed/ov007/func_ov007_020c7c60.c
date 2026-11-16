@@ -4,6 +4,7 @@
 #include "common.h"
 #include "nitro/fx/fx.h"
 #include "Ov007Spring.h"
+/* Vector3 VEC_* until Ov007Spring, Ov007Picker and func_ov007_020bfe4c go VecFx32 (#5207). */
 extern void VEC_Subtract(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern void VEC_Add(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 

@@ -24,8 +24,8 @@
  * - data_ov071_02122ecc, data_ov071_021230d0 and data_ov071_021230d8 are
  *   defined at the end of this file so their dynamic init stays out of
  *   .text.
- * - MTX_MultVec43, Vec3_Add, VEC_Add, Vec3_HorzDist and DecIfAbove0_Short
- *   stay local externs; no shared header declares them.
+ * - Vec3_Add, VEC_Add, Vec3_HorzDist and DecIfAbove0_Short stay local
+ *   externs; no shared header declares them.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -37,6 +37,7 @@ enum daObjCasket_c_AssetId { ASSET_CASKET_BMD = 0x05b4, ASSET_CASKET_KCL = 0x05b
 #include "daPly_c.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 typedef void (daObjCasket_c::*StateFunc)();
 
@@ -76,9 +77,7 @@ extern CasketCollisionFilePtr data_ov071_021230d8;
 extern CLPS_Block data_ov063_0211ebd8;
 
 extern "C" {
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *out);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 }

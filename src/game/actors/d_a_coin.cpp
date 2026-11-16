@@ -84,8 +84,6 @@ struct CoinFlagBits {
 
 extern "C" int SublevelToLevel(int i);
 extern "C" {
-/* local extern: removing this copy renumbers the TU's @NNN compiler temporaries (measured). */
-extern int VEC_Mag(const Vector3 *v);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 }

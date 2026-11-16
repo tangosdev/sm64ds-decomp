@@ -89,8 +89,6 @@ extern StateFunc gLinelift2StateFuncs[];          /* by mState */
 /* arm9 C helpers with no shared header. */
 extern "C" {
 void Vec3_Sub(Vector3 *res, const Vector3 *a, const Vector3 *b);
-/* local extern: removing this copy renumbers the TU's @NNN compiler temporaries (measured). */
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *out);
 }
 
 enum {

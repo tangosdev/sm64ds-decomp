@@ -21,10 +21,9 @@
 #include "nitro/fx/fx_cp.h"
 
 extern "C" {
-/* Shared math workers.
-   local extern: no header in include/ declares them. */
+/* Shared math worker.
+   local extern: no header in include/ declares it. */
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, s32 x, s32 y, s32 z);
-void VEC_Normalize(const Vector3 *src, Vector3 *dst);
 
 /* The scratch line's lineEnd and dBgPi base (both inside data_020a0d0c,
    below), and the scratch scaled matrix.
@@ -182,15 +181,15 @@ void dBgW_KcMbg::GetTriangleOrigin(s16 triID, Vector3 &res) {
 }
 
 void dBgW_KcMbg::WorldToLocalPosition(const Vector3 &position, Vector3 &result) {
-    MTX_MultVec43(const_cast<Vector3 *>(&position), &invScaledMat, &result);
+    MTX_MultVec43(&position, &invScaledMat, &result);
 }
 
 void dBgW_KcMbg::LocalToWorldPosition(const Vector3 &position, Vector3 &result) {
-    MTX_MultVec43(const_cast<Vector3 *>(&position), &newScaledMat, &result);
+    MTX_MultVec43(&position, &newScaledMat, &result);
 }
 
 void dBgW_KcMbg::WorldToLocalDirection(const Vector3 &direction, Vector3 &result) {
-    MTX_MultVec43(const_cast<Vector3 *>(&direction), &invRotMat, &result);
+    MTX_MultVec43(&direction, &invRotMat, &result);
 }
 
 /* Transform a direction by mat, leaving out the translation. */
@@ -200,7 +199,7 @@ void dBgW_KcMbg::LocalToWorldDirection(const Vector3 &direction, Vector3 &result
     rotation.t.x = 0;
     rotation.t.y = 0;
     rotation.t.z = 0;
-    MTX_MultVec43(const_cast<Vector3 *>(&direction), &rotation, &result);
+    MTX_MultVec43(&direction, &rotation, &result);
 }
 
 int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray) {
@@ -318,7 +317,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Lin &ray) {
 /* Out of the previous frame's space, into the current one. */
 int dBgW_KcMbg::TransformPos(const Vector3 &localCentre, Vector3 &res) {
     Vector3 localPos;
-    MTX_MultVec43(const_cast<Vector3 *>(&localCentre), &invMat, &localPos);
+    MTX_MultVec43(&localCentre, &invMat, &localPos);
     MTX_MultVec43(&localPos, &mat, &res);
     return 1;
 }

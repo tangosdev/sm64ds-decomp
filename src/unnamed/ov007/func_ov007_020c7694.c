@@ -1,5 +1,6 @@
 #include "Ov007Spring.h"
 #include "math/CalcLib.h"
+/* Vector3 VEC_* until Ov007Spring, Ov007Picker and func_ov007_020bfe4c go VecFx32 (#5207). */
 
 /* Sets each link's rest offset and length from the rest points: link i
  * runs from rest[i] to rest[i + 1], and in a closed list (flags bit 1) the

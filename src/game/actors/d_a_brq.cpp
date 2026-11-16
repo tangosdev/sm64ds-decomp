@@ -47,8 +47,6 @@
 /* arm9 C helpers with no shared header. */
 extern "C" {
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-/* local extern: removing this copy renumbers the TU's @NNN compiler temporaries (measured). */
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 }
 extern signed char gCurrentSublevel;
 
