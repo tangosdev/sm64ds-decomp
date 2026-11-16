@@ -14162,13 +14162,10 @@ int daPly_c::func_ov002_020d869c() {
     return 1;
 }
 
-// Set bit 0x20 in the halfword flag at self+0x6ce and return. The u64-mask launder
-// forces the base+offset to materialize into a register (pool-loaded 0x6ce + add) so
-// the ldrh/strh reuse it, matching the ROM instead of folding the address.
+// Set bit 0x20 in mStateFlags. d_bg_actor.cpp calls it when a ray from the player
+// hits a level object.
 extern "C" {
-void func_ov002_020d8838(char *self)
-{
-    daPly_c *player = (daPly_c *)self;
+void func_ov002_020d8838(daPly_c *player) {
     player->mStateFlags |= 0x20;
 }
 }
