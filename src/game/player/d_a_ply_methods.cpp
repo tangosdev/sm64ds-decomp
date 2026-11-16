@@ -14996,9 +14996,8 @@ int daPly_c::func_ov002_020d9dcc() {
 
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::St_SwingPlayer_Cleanup() {
-    char *p = (char *)mHeldObj;
-    if (p) {
-        ((dActor_c *)p)->mFlags &= ~0x800;
+    if (mHeldObj) {
+        mHeldObj->mFlags &= ~0x800;
     }
     mPrevAngleY = mAngleY;
     return 1;
