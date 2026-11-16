@@ -1893,19 +1893,19 @@ void cMgSmartball_spring_c::SaveSnapshot() {
     if (mpManager->mRoundEnded != 0)
         return;
 
-    held = gTouchHeld[gActivePlayerSlot * 4];
+    held = gTouchInfo[gActivePlayerSlot].held;
     slot = gActivePlayerSlot;
     flag = 0;
     if (held != 0)
-        flag = gTouchEdge[slot * 4] != 0;
+        flag = gTouchInfo[slot].edge != 0;
 
     if (flag != 0) {
         mTriggered = 1;
         mVel0 = 0;
         mVel1 = 0;
-        mGrabX = gTouchX[gActivePlayerSlot * 4] << 12;
+        mGrabX = gTouchInfo[gActivePlayerSlot].x << 12;
         mGrabXSaved = mGrabX;
-        mDriveNow = gTouchY[gActivePlayerSlot * 4] << 12;
+        mDriveNow = gTouchInfo[gActivePlayerSlot].y << 12;
         mDriveBase = mDriveNow;
         if (mCurrent1 <= 0xa0000)
             return;
@@ -1914,7 +1914,7 @@ void cMgSmartball_spring_c::SaveSnapshot() {
     }
 
     if (mTriggered == 1 && held != 0) {
-        mDriveNow = gTouchY[slot * 4] << 12;
+        mDriveNow = gTouchInfo[slot].y << 12;
         d = mDriveNow - mDriveBase;
         if (d >= 0x38000)
             mDriveNow = mDriveBase + 0x38000;
@@ -1929,7 +1929,7 @@ void cMgSmartball_spring_c::SaveSnapshot() {
 
     {
         int m;
-        if (held == 0 && gTouchEdge[slot * 4] != 0)
+        if (held == 0 && gTouchInfo[slot].edge != 0)
             m = 1;
         else
             m = 0;
@@ -5286,7 +5286,7 @@ s32 dScMgSmartball_c::Behavior() {
                 (*p)++;
             } else {
                 int idx = gActivePlayerSlot;
-                if (gTouchHeld[idx * 4] != 0 && gTouchEdge[idx * 4] != 0) {
+                if (gTouchInfo[idx].held != 0 && gTouchInfo[idx].edge != 0) {
                     flag = 1;
                 }
                 if (flag != 0) {
