@@ -88,7 +88,7 @@ struct CLPS_Block {
     u32 rest[4];
 };
 
-extern "C" CLPS_Block data_ov016_02113cac = {
+CLPS_Block data_ov016_02113cac = {
     0x53504c43,
     0x00010008,
     0x01000fc4,

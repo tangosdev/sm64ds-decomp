@@ -921,10 +921,10 @@ extern "C" WanwanStateRow data_ov014_0211476c[6] = {
 
 /* Names and the collision offset. Pointer-to-member descriptors stay ROM
    copies: mwcc puts `&Method` in .bss and copies it from an @ temporary. */
-extern "C" char data_ov014_02114688[8] = "WALK";
-extern "C" char data_ov014_02114690[8] = "WAIT";
-extern "C" char data_ov014_02114698[8] = "ATTACK";
-extern "C" char data_ov014_0211470c[12] = "ESCAPE_DEMO";
-extern "C" char data_ov014_02114724[12] = "BOMB_DAMAGE";
-extern "C" char data_ov014_02114730[16] = "GIANT_DAMAGE";
-extern "C" int data_ov014_02114700[3] = {0, 0xfff38000, 0};
+char data_ov014_02114688[8] = "WALK";
+char data_ov014_02114690[8] = "WAIT";
+char data_ov014_02114698[8] = "ATTACK";
+char data_ov014_0211470c[12] = "ESCAPE_DEMO";
+char data_ov014_02114724[12] = "BOMB_DAMAGE";
+char data_ov014_02114730[16] = "GIANT_DAMAGE";
+int data_ov014_02114700[3] = {0, 0xfff38000, 0};

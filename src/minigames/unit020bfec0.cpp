@@ -145,24 +145,24 @@ WalkPath sMascotWalkerPaths[] = {
     {3, (Vector3 *)data_ov006_0213ace0},
 };
 
-extern "C" VecFx32 data_ov006_0213ad58[4] = {
+VecFx32 data_ov006_0213ad58[4] = {
     {0x27000, 0, -0x34000},
     {0xc000, 0, -0x34000},
     {-0x4000, 0, -0x11000},
     {-0x27000, 0, -0x11000},
 };
-extern "C" VecFx32 data_ov006_0213ad88[4] = {
+VecFx32 data_ov006_0213ad88[4] = {
     {-0x27000, 0, -0x11000},
     {-0x4000, 0, -0x11000},
     {0xc000, 0, -0x34000},
     {0x27000, 0, -0x34000},
 };
-extern "C" VecFx32 data_ov006_0213ad04[3] = {
+VecFx32 data_ov006_0213ad04[3] = {
     {0x27000, 0, -0x11000},
     {0xc000, 0, -0x11000},
     {-0x27000, 0, -0x11000},
 };
-extern "C" VecFx32 data_ov006_0213ace0[3] = {
+VecFx32 data_ov006_0213ace0[3] = {
     {-0x27000, 0, -0x11000},
     {0xc000, 0, -0x11000},
     {0x27000, 0, -0x11000},

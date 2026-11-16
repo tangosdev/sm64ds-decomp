@@ -31,7 +31,7 @@ enum daFRing_c_AssetId {
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
-extern "C" int data_ov060_0211ab20[] = {0x787, 0x800, 0x0f0f, 0x1000};
+int data_ov060_0211ab20[] = {0x787, 0x800, 0x0f0f, 0x1000};
 
 /* The static-init file handles: the model file constructs through
  * func_02017acc and destroys through func_02017ab4, the animation handle

@@ -1526,7 +1526,7 @@ void *sCardObjSprites[15] = {
 
 /* The card-table templates Init rewrites in place: attr0's shape field to 1
    and attr2's palette bank to 0, walking until attr3 == 0xffff. */
-extern "C" OamAttr data_ov006_0213402c[8] = {
+OamAttr data_ov006_0213402c[8] = {
     {0x00cc, 0xc1dc, 0x0008, 0x0000}, {0x80cc, 0x401c, 0x0010, 0x0000},
     {0x80ec, 0x401c, 0x0090, 0x0000}, {0x400c, 0xc1dc, 0x0108, 0x0000},
     {0x800c, 0x401c, 0x0110, 0x0000}, {0x402c, 0x41dc, 0x0188, 0x0000},
@@ -1534,7 +1534,7 @@ extern "C" OamAttr data_ov006_0213402c[8] = {
 };
 
 /* The two play-field sprite lists sCardHudSprites selects between. */
-extern "C" OamAttr data_ov006_02134074[22] = {
+OamAttr data_ov006_02134074[22] = {
     {0x40f8, 0x81c0, 0x01c0, 0x0000}, {0x40f8, 0x81e0, 0x01c4, 0x0000},
     {0x40f8, 0x8000, 0x01c8, 0x0000}, {0x40f8, 0x8020, 0x01cc, 0x0000},
     {0x80f0, 0x41b8, 0x0106, 0x0000}, {0x80f0, 0x4040, 0x0108, 0x0000},
@@ -1547,7 +1547,7 @@ extern "C" OamAttr data_ov006_02134074[22] = {
     {0x80f0, 0x4030, 0x0107, 0x0000}, {0x80f0, 0x41c8, 0x0107, 0x0000},
     {0x80f0, 0x4038, 0x0107, 0x0000}, {0x80f0, 0x41c0, 0x0107, 0xffff},
 };
-extern "C" OamAttr data_ov006_02134124[22] = {
+OamAttr data_ov006_02134124[22] = {
     {0x40f8, 0x81c0, 0x0180, 0x0000}, {0x40f8, 0x81e0, 0x0184, 0x0000},
     {0x40f8, 0x8000, 0x0188, 0x0000}, {0x40f8, 0x8020, 0x018c, 0x0000},
     {0x80f0, 0x41b8, 0x0106, 0x0000}, {0x80f0, 0x4040, 0x0108, 0x0000},
@@ -1563,12 +1563,12 @@ extern "C" OamAttr data_ov006_02134124[22] = {
 
 /* Single-sprite lists between the play-field pair and the coin popup list;
    this scene does not index them. */
-extern "C" OamAttr data_ov006_021341d4[1] = {
+OamAttr data_ov006_021341d4[1] = {
     {0x80f0, 0x41fc, 0x000f, 0xffff},
 };
-extern "C" OamAttr data_ov006_021341dc[1] = {
+OamAttr data_ov006_021341dc[1] = {
     {0x80f0, 0x41fc, 0x000e, 0xffff},
 };
-extern "C" OamAttr data_ov006_021341e4[1] = {
+OamAttr data_ov006_021341e4[1] = {
     {0x80f0, 0x81f8, 0x0008, 0xffff},
 };

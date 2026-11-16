@@ -163,7 +163,7 @@ EmmYukaCollisionFilePtr gEmmYukaCollisionFile(ASSET_EMM_YUKA_KCL);
 
 extern CLPS_Block data_ov064_0211ba0c;
 
-extern "C" EmmYukaFiles data_ov052_021125a0 = {
+EmmYukaFiles data_ov052_021125a0 = {
     &gEmmYukaModelFile,
     &gEmmYukaCollisionFile,
     &data_ov064_0211ba0c,

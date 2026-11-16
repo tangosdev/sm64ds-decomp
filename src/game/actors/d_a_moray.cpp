@@ -120,7 +120,7 @@ struct MorayRenderStep {
     s32 angleScale;
 };
 
-extern "C" MorayRenderStep data_ov016_02114908[6] = {
+MorayRenderStep data_ov016_02114908[6] = {
     {0, 0, 1}, {0, 0, 1}, {0, 0, 1}, {0, 0, 1}, {0, 0, -1}, {0, 0, 0},
 };
 

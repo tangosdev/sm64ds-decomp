@@ -109,10 +109,10 @@ extern UdliftCollisionFilePtr gRcRift02CollisionFile;
  * dBgW_KcMbg::SetFile, all indexed by mVariant. */
 #pragma define_section rodatasec ".rodata" ".rodata" ".rodata" far_absolute R
 #pragma section rodatasec begin
-extern "C" SharedFilePtr *data_ov095_02136f68[3] = {
+SharedFilePtr *data_ov095_02136f68[3] = {
     &gThLiftModelFile, &gCvUdLiftModelFile, &gRcRift02ModelFile,
 };
-extern "C" SharedFilePtr *data_ov095_02136f74[3] = {
+SharedFilePtr *data_ov095_02136f74[3] = {
     &gThLiftCollisionFile, &gCvUdLiftCollisionFile, &gRcRift02CollisionFile,
 };
 #pragma section rodatasec end

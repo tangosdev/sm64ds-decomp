@@ -59,7 +59,7 @@ KiItaModelFilePtr data_ov016_02114e44(1601);
 KiItaCollisionFilePtr data_ov016_02114e4c(1602);
 
 extern CLPS_Block data_ov016_02113bec;
-extern "C" daObjFloatBoard_c_Resources data_ov016_02114b8c = {
+daObjFloatBoard_c_Resources data_ov016_02114b8c = {
     &data_ov016_02114e44,
     &data_ov016_02114e4c,
     &data_ov016_02113bec,

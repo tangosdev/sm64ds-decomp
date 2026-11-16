@@ -154,17 +154,17 @@ CLPS_Block data_ov016_02113c6c = {
     0x53504c43, 0x00010008,
     {0x00000fc5, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
 };
-extern "C" void *data_ov016_021149d4[2] = {
+void *data_ov016_021149d4[2] = {
     &data_ov016_02113c6c,
     &data_ov016_02113c4c,
 };
 #pragma define_section rodatasec ".rodata" ".rodata" ".rodata" far_absolute R
 #pragma section rodatasec begin
-extern "C" void *data_ov016_021136e4[2] = {
+void *data_ov016_021136e4[2] = {
     &gKiFuneUpModelFile,
     &gKiFuneDownAModelFile,
 };
-extern "C" void *data_ov016_021136dc[2] = {
+void *data_ov016_021136dc[2] = {
     &gKiFuneUpCollisionFile,
     &gKiFuneDownACollisionFile,
 };

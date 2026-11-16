@@ -225,7 +225,7 @@ YajirusiModelFile gYajirusiLModelFile(0x0497);
 YajirusiModelFile gYajirusiRModelFile(0x0499);
 YajirusiCollisionFile gYajirusiLCollisionFile(0x0498);
 YajirusiCollisionFile gYajirusiRCollisionFile(0x049a);
-extern "C" ArrowSignAssets data_ov098_0213c380[2] = {
+ArrowSignAssets data_ov098_0213c380[2] = {
     {&gYajirusiLModelFile, &gYajirusiLCollisionFile, &data_ov002_0210d914},
     {&gYajirusiRModelFile, &gYajirusiRCollisionFile, &data_ov002_0210d734},
 };

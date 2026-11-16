@@ -488,7 +488,7 @@ s8 data_ov064_0211c128[] = {
 s8 data_ov064_0211c144[] = {
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 0};
 
-extern "C" SpawnInfo<daObjFl_Puzzle_c> g_profile_FL_PUZZLE = {
+SpawnInfo<daObjFl_Puzzle_c> g_profile_FL_PUZZLE = {
     daObjFl_Puzzle_c_classInit,
     0x004e,
     0x011e,
@@ -499,7 +499,7 @@ extern "C" SpawnInfo<daObjFl_Puzzle_c> g_profile_FL_PUZZLE = {
     0x02000000,
 };
 
-extern "C" SpawnInfo<daObjFl_Coin_c> g_profile_FL_COIN = {
+SpawnInfo<daObjFl_Coin_c> g_profile_FL_COIN = {
     daObjFl_Coin_c_classInit,
     0x004f,
     0x011f,

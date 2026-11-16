@@ -72,7 +72,7 @@ PeachAnimFile gPeachJumpLoopAnimationFile(ASSET_PEACH_JUMP_LOOP_BCA);
 PeachAnimFile gPeachOpWaitAnimationFile(ASSET_PEACH_OP_WAIT_BCA);
 #pragma define_section rodatasec ".rodata" ".rodata" ".rodata" far_absolute R
 #pragma section rodatasec begin
-extern "C" int data_ov085_0212f280[7] = {
+int data_ov085_0212f280[7] = {
     (int)&gPeachWaitAnimationFile,    (int)&gPeachWalkAnimationFile,
     (int)&gPeachRunAnimationFile,     (int)&gPeachJumpAnimationFile,
     (int)&gPeachJumpEndAnimationFile, (int)&gPeachJumpLoopAnimationFile,

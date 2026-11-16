@@ -891,6 +891,6 @@ Jump3DModelFilePtr gMarioModelMgModelFile(534);
 
 /* The one sprite record Draw hands OAM::Render for the shadow; attr3 == 0xffff
    ends the list. */
-extern "C" OamAttr data_ov006_02134d20[1] = {
+OamAttr data_ov006_02134d20[1] = {
     {0x00f8, 0x41f8, 0x001e, 0xffff},
 };

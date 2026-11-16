@@ -174,7 +174,7 @@ extern BTA_File data_ov010_021124ac;
 extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern "C" int func_02037e20(int *p);
 extern "C" unsigned int func_0201277c(unsigned int a);
-extern "C" u8 data_ov074_02122d80[4] = {16, 9, 6, 3};
+u8 data_ov074_02122d80[4] = {16, 9, 6, 3};
 extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov084_02130cf8;
 extern SharedFilePtr data_ov084_0213089c;

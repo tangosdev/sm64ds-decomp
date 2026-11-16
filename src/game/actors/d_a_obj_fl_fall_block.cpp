@@ -67,7 +67,7 @@ int daObjFl_Fall_Block_c::CleanupResources() {
  * model handle (file 0x5f9), then the collision handle (file 0x5fa). */
 FallBlockModelFile data_ov022_02114648(0x5f9);
 FallBlockCollisionFilePtr data_ov022_02114640(0x5fa);
-extern "C" ResourceDescriptor data_ov022_0211427c = {
+ResourceDescriptor data_ov022_0211427c = {
     &data_ov022_02114648,
     &data_ov022_02114640,
     &data_ov064_0211ba8c,
