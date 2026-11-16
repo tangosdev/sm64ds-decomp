@@ -12555,6 +12555,14 @@
       "canonical_address": "0x020072c0"
     },
     {
+      "symbol": "_ZN7Vector3C1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "func_0203d384",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d384",
+      "reason": "daPly_c::InitResources allocates the trail with new Vector3[50]. That new-expression is parsed before Vector3's empty constructor is defined, so it passes the constructor. The emitted 4-byte body is the arm9 function at 0x0203d384; this copy is discarded and the relocation is retargeted there."
+    },
+    {
       "symbol": "_ZN11SurfaceInfoD1Ev",
       "disposition": "deadstrip",
       "reason": "The floor probes (func_ov002_020c14b8, func_ov002_020c25a8), the ceiling bump (func_ov002_020cef84) and TongueWallProbe copy-construct a local dBgPi from a collision result. That pulls in the implicit destructor of its SurfaceInfo member, which holds a non-POD Vector3, as vague linkage. The body is trivial, nothing here references it, and the cartridge has no copy, so the section is dropped (the dBgCh_Actr TU books the same symbol the same way)."
