@@ -9,7 +9,7 @@
  * acknowledgements, which a 1 would clear. The SDK's BOOL is spelled bool
  * in these setters. Not in
  * g3imm.h: an inline body there renumbers ov075/d_s_entry_entry's pinned
- * @NNN (src/unnamed/ov007/func_ov007_020c4684.c). */
+ * @NNN (src/unnamed/ov007/func_ov007_020c4684.cpp). */
 
 #define REG_G3X_DISP3DCNT_TME_MASK 0x0001
 #define REG_G3X_DISP3DCNT_THS_MASK 0x0002
