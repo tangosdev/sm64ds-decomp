@@ -332,15 +332,13 @@ int daBmb_c::Behavior()
 
 int daBmb_c::Render()
 {
-    int result = 1;
     if (mShouldRender != 0) {
-        int flags = mFlags;
-        int b = (flags & 0x40000) != 0;
-        if (!b) {
+        int inYoshiMouth = (mFlags & 0x40000) != 0;
+        if (!inYoshiMouth) {
             mAnmModel.Render(&mScale);
         }
     }
-    return result;
+    return 1;
 }
 
 /* ==========================================================================
