@@ -642,52 +642,34 @@ void daHanachan_c::StateDemoWaitMain()
 /* DEMOWAIT entry: lay the body out in a line behind the head. */
 void daHanachan_c::StateDemoWaitInit()
 {
-    /* Strength reduction is off. posRow and rotRow start at this and step by
-       one element. Indexing mSegmentPos[seg] is 47 words off, so the fields
-       are named off the shifted pointer. */
-    char *self = (char *)this;
     int seg;
-    char *posRow;
-    char *rotRow;
-    int zero;
     Vector3 in;
     Vector3 out;
     Vector3 sum;
 
-    seg = 0;
     mPlayer = 0;
     mHorzSpeed = data_ov034_02114488[0];
-    posRow = self;
-    rotRow = self;
-    zero = seg;
-    for (; seg < 5; seg++, posRow += sizeof(Vector3), rotRow += sizeof(Vector3s)) {
+    for (seg = 0; seg < 5; seg++) {
         if (seg == 0) {
-            ((daHanachan_c *)posRow)->mSegmentPos[0].x = mPosX;
-            ((daHanachan_c *)posRow)->mSegmentPos[0].y = mPosY;
-            ((daHanachan_c *)posRow)->mSegmentPos[0].z = mPosZ;
-            {
-                short ang = HorzAngleToCPlayer();
-                ((daHanachan_c *)rotRow)->mSegmentRot[0].y = ang;
-                mPrevAngleY = ((daHanachan_c *)rotRow)->mSegmentRot[0].y;
-            }
+            mSegmentPos[seg].x = mPosX;
+            mSegmentPos[seg].y = mPosY;
+            mSegmentPos[seg].z = mPosZ;
+            mSegmentRot[seg].y = HorzAngleToCPlayer();
+            mPrevAngleY = mSegmentRot[seg].y;
         } else {
-            int prev;
-            int zval;
-            zval = -mSegmentSpacing[seg];
-            in.x = zero;
-            in.y = zero;
-            out.x = zero;
-            out.y = zero;
-            out.z = zero;
-            in.z = zval;
+            in.z = -mSegmentSpacing[seg];
+            in.x = 0;
+            in.y = 0;
+            out.x = 0;
+            out.y = 0;
+            out.z = 0;
             Matrix4x3_FromRotationY(&data_020a0e68, (short)(mSegmentRot[0].y + 0x200));
             MTX_MultVec43(&in, &data_020a0e68, &out);
-            prev = seg - 1;
-            Vec3_Add(&sum, &mSegmentPos[prev], &out);
-            ((daHanachan_c *)posRow)->mSegmentPos[0].x = sum.x;
-            ((daHanachan_c *)posRow)->mSegmentPos[0].y = sum.y;
-            ((daHanachan_c *)posRow)->mSegmentPos[0].z = sum.z;
-            ((daHanachan_c *)rotRow)->mSegmentRot[0].y = mSegmentRot[prev].y;
+            Vec3_Add(&sum, &mSegmentPos[seg - 1], &out);
+            mSegmentPos[seg].x = sum.x;
+            mSegmentPos[seg].y = sum.y;
+            mSegmentPos[seg].z = sum.z;
+            mSegmentRot[seg].y = mSegmentRot[seg - 1].y;
         }
     }
 }
