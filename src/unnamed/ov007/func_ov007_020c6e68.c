@@ -21,7 +21,7 @@
 extern int func_ov007_020c249c(Ov007StrokePath *path);
 extern Ov007Link *func_ov007_020c80a4(void);
 extern void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
-extern void func_ov007_020bfe4c(Ov007Camera *cam, int a, int b, int c, Vector3 *out);
+extern void func_ov007_020bfe4c(Ov007Camera *cam, int a, int b, int c, VecFx32 *out);
 
 extern Ov007PointList *func_ov007_020c798c(int springMode, int count, int pointMass, int flags);
 extern void func_ov007_020c7804(Ov007PointList *list);
@@ -76,19 +76,19 @@ void func_ov007_020c6e68(Ov007Picker *self, int idx) {
             func_ov007_020c8010(p, self->posPoint, sb->items[i]);
             {
                 int base = (int)self->groupPoints[idx];
-                sb->items[i]->target = (Vector3 *)(base + flag);
+                sb->items[i]->target = (VecFx32 *)(base + flag);
             }
             {
                 Ov007Camera *a8 = self->camera;
                 int base = (int)self->groupPoints[idx];
-                Vector3 *out = (Vector3 *)(base + flag);
+                VecFx32 *out = (VecFx32 *)(base + flag);
                 func_ov007_020bfe4c(a8, grp->xCoords[i], grp->yCoords[i], -a8->distance, out);
             }
             {
                 int base_d = (int)self->groupPointCopies[idx];
                 int base_s = (int)self->groupPoints[idx];
-                Vector3 *d = (Vector3 *)(base_d + flag);
-                Vector3 *s = (Vector3 *)(base_s + flag);
+                VecFx32 *d = (VecFx32 *)(base_d + flag);
+                VecFx32 *s = (VecFx32 *)(base_s + flag);
                 flag += 0xc;
                 i++;
                 *d = *s;

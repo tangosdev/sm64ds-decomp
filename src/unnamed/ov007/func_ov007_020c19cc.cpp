@@ -17,20 +17,20 @@ extern void G3_MultTransMtx33(int *a, int *v);
  * (0, half) and (0, -half). The last point is placed `t` (Q12) of the way
  * from the point before it, 0x1000 being the point itself. A one-point path
  * draws a single square at that point. */
-void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t) {
+void func_ov007_020c19cc(int count, VecFx32 *pts, int half, int t) {
     int z;
     int nh;
     u32 upperXY;
     u32 lowerXY;
     int i;
     int ang;
-    Vector3 *p;
+    VecFx32 *p;
     int prevAng;
-    Vector3 *prev;
+    VecFx32 *prev;
     int inv;
-    Vector3 tmp;
+    VecFx32 tmp;
     int mtx[9];
-    Vector3 *pos;
+    VecFx32 *pos;
 
     z = (s16)half;
     nh = -z;
@@ -77,7 +77,7 @@ void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t) {
             } else if (t != 0x1000) {
                 int vx = p->x;
                 int qi = i - 1;
-                Vector3 *q = &pts[qi];
+                VecFx32 *q = &pts[qi];
                 int px = q->x;
                 if (t < 0x1000) {
                     if (t <= 0) {
