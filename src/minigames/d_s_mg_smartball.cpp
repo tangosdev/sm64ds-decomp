@@ -4039,7 +4039,6 @@ void dScMgSmartball_c::CollideBalls() {
  * Leftovers: the spawn counters and the scan stores stay as written, and
  * every slot walk steps `this` instead of indexing. */
 void dScMgSmartball_c::SpawnObjects() {
-    char *c = (char *)this;
     V2 pos[25];
 
     Mg_SubmitScore(0);
@@ -4766,19 +4765,17 @@ void dScMgSmartball_c::SpawnObjects() {
         mPopupScore[i] = 0;
         mPopupMultiplier[i] = 0;
         mPopupAge[i] = 0;
-        dScMgSmartball_c *popup = (dScMgSmartball_c *)(c + i * 8);
-        popup->mPopupPos[0][0] = 0;
-        popup->mPopupPos[0][1] = 0;
+        mPopupPos[i][0] = 0;
+        mPopupPos[i][1] = 0;
         mPopupDelay[i] = 0;
     }
     for (int i = 0; i < 16; i++) {
         mDustActive[i] = 0;
         mDustAge[i] = 0;
-        dScMgSmartball_c *dust = (dScMgSmartball_c *)(c + i * 8);
-        dust->mDustPos[0][0] = 0;
-        dust->mDustPos[0][1] = 0;
-        dust->mDustVel[0][0] = 0;
-        dust->mDustVel[0][1] = 0;
+        mDustPos[i][0] = 0;
+        mDustPos[i][1] = 0;
+        mDustVel[i][0] = 0;
+        mDustVel[i][1] = 0;
     }
     mPhase = 0;
     mResultSlideX = 0x100;
