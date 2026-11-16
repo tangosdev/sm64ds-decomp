@@ -3812,7 +3812,11 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
 
 #pragma push
 #pragma opt_strength_reduction off
-/* Leftover: UpdateScores needs strength reduction off. */
+/* Leftover: UpdateScores needs strength reduction off, and the byte view of
+ * `this`: the ROM takes each popup slot's address as (this + i*4) + offset,
+ * all six before the first test. Plain mPopupScore[i] at every use: 0x11c
+ * against 0x118 (with or without the pragma); element pointers or references
+ * (&mPopupScore[i]): 0x128, they add the offset before i*4. */
 void dScMgSmartball_c::UpdateScores() {
     char *o = (char *)this;
     int i;
