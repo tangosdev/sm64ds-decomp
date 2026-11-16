@@ -385,7 +385,7 @@ extern "C" {
 extern int AngleDiff(int a, int b);
 extern struct S18a data_0209f4a4[];
 extern void func_ov002_020db54c(void *self, int a, int b, short c);
-extern void func_ov002_020dc09c(char *c);
+extern void func_ov002_020dc09c(daPly_c *player);
 extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
@@ -13789,7 +13789,7 @@ int daPly_c::St_YoshiPower_Main() {
                                                    &dir, 0);
                 mParticle2 = Particle::System::New(mParticle2, kPtclYoshiFireB, pos.x, pos.y, pos.z,
                                                    &dir, 0);
-                func_ov002_020dc09c((char *)this);
+                func_ov002_020dc09c(this);
                 mAttackClsn.Clear();
                 mAttackClsn.Update();
                 if (mStateTimer == 1 && mFireBreaths == 0) {
@@ -16107,8 +16107,7 @@ void daPly_c::func_ov002_020dc020() {
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
  */
 extern "C" {
-void func_ov002_020dc09c(char *c) {
-    daPly_c *player = (daPly_c *)c;
+void func_ov002_020dc09c(daPly_c *player) {
     Vector3 v;
     int r2, r3;
     if (player->mIsMega == 0) {

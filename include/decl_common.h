@@ -789,7 +789,7 @@ extern void func_ov002_020d2e74(void *);
 extern void func_ov002_020d99a4(struct daPly_c *);
 extern void func_ov002_020db54c(void *, int, int, short);
 extern void func_ov002_020db704(void *);
-extern void func_ov002_020dc09c(char *);
+extern void func_ov002_020dc09c(struct daPly_c *);
 extern void func_ov002_020e3e00(void *, void *, u32);
 extern void func_ov002_020e6330(void *);
 extern void func_ov002_020e69c0(void *);
