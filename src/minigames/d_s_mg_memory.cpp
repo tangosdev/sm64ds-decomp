@@ -640,38 +640,22 @@ void dScMgMemory_c::RoundReveal() {
  * contract and preserves the complete emitted body; the historical return
  * type cannot be recovered from the unused value left in r0. */
 void dScMgMemory_c::RoundWaitDeal() {
-    char *raw = (char *)this;
     int waiting = 0;
-    int cardIndex = 0;
-    char *cardBase = raw;
-    for (; cardIndex < CARD_NUM;) {
-        dScMgMemory_c *card = (dScMgMemory_c *)cardBase;
-        if (card->mCards[0].active != 0) {
-            if (card->mCards[0].state != CARD_IDLE) {
+    for (int cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
+        if (mCards[cardIndex].active != 0) {
+            if (mCards[cardIndex].state != CARD_IDLE) {
                 waiting++;
                 break;
             }
         }
-        cardIndex++;
-        cardBase += 0x18;
     }
     if (waiting != 0)
         return;
-    cardBase = raw;
-    cardIndex = 0;
-    {
-        unsigned char selectState = CARD_SELECTABLE;
-        for (; cardIndex < CARD_NUM;) {
-            ((dScMgMemory_c *)cardBase)->mCards[0].state = selectState;
-            cardIndex++;
-            cardBase += 0x18;
-        }
+    for (int cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
+        mCards[cardIndex].state = CARD_SELECTABLE;
     }
-    {
-        mSubstate = ROUND_START;
-        mState = STATE_JUDGE_PAIRS;
-        return;
-    }
+    mSubstate = ROUND_START;
+    mState = STATE_JUDGE_PAIRS;
 }
 
 void dScMgMemory_c::RoundDealHard() {
