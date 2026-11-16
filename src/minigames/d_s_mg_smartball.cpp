@@ -4360,7 +4360,6 @@ void dScMgSmartball_c::SpawnObjects() {
     {
         int mask = 0x3ff;
         int tile = 0x3d2;
-        int zero = 0;
         for (int i = 0; i < 768; i++) {
             u16 raw;
             int k = mDokanCount;
@@ -4369,9 +4368,8 @@ void dScMgSmartball_c::SpawnObjects() {
             raw = mBg1Map[i];
             if ((raw & mask) == tile && (raw & 0x800) == 0) {
                 int x = (i % 0x20) << 0xf;
-                int y = zero;
                 pos[k].x = x;
-                pos[k].y = y;
+                pos[k].y = 0;
                 mDokanCount++;
             }
         }
@@ -4383,9 +4381,8 @@ void dScMgSmartball_c::SpawnObjects() {
             raw = mBg2Map[i];
             if ((raw & mask) == tile && (raw & 0x800) == 0) {
                 int x = (i % 0x20) << 0xf;
-                int y = zero;
                 pos[k].x = x;
-                pos[k].y = y;
+                pos[k].y = 0;
                 mDokanCount++;
             }
         }
