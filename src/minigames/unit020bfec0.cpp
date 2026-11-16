@@ -1719,7 +1719,7 @@ void MascotWalker::StatePause() {
  */
 
 void Camera_UpdateMatrices(MgCamera *camera) {
-    Vector3 up;
+    VecFx32 up;
     Vector3 forward;
     Vector3 right;
     Vector3 scratch0;
@@ -1744,8 +1744,7 @@ void Camera_UpdateMatrices(MgCamera *camera) {
     G3i_PerspectiveW_(FX_SinIdx(camera->mFovAngle >> 4), FX_CosIdx(camera->mFovAngle >> 4), 0x1555,
                       0x1000, 0x1388000, 0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
 
-    G3i_LookAt_((Vector3 *)&camera->mPos, &up, (Vector3 *)&camera->mLookAt, true,
-                (Matrix4x3 *)&camera->mViewMtx);
+    G3i_LookAt_(&camera->mPos, &up, &camera->mLookAt, true, &camera->mViewMtx);
 
     CopyToViewMat((Matrix4x3 *)&camera->mViewMtx);
 
