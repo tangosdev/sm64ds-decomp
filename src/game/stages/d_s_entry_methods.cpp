@@ -1165,11 +1165,9 @@ void dScEntry_c::RenderResults() {
 
     {
         int i = 0;
-        int x = 128;
-        int y = 96;
         do {
             int fix = (i == mStepWork[1]) ? 0xe00 : 0x1000;
-            OAM::Render(true, sb, x, y, -1, -1, fix, 0);
+            OAM::Render(true, sb, 128, 96, -1, -1, fix, 0);
             if (sb->attr3 == 0xffff)
                 break;
             sb++;
