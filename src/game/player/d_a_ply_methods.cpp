@@ -2346,7 +2346,6 @@ int daPly_c::func_ov002_020bfec0() {
 }
 
 int daPly_c::func_ov002_020c0108(int p1) {
-    char *self = (char *)this;
     typedef unsigned char u8;
     typedef unsigned short u16;
     typedef short s16;
