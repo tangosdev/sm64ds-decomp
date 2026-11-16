@@ -18,11 +18,8 @@
  * so each lands at its own cartridge address; their extra C2/D2 are dropped
  * at link.
  *
- * comment leftovers:
- *  - The FlowerFace and FallingPetal methods live in
- *    src/minigames/unit020bfec0.cpp.
- *  - Behavior keeps one launder: the touch sample's `touchY ? touchX : touchX`,
- *    which loads both bytes before the first cursor store.
+ * The FlowerFace and FallingPetal methods live in
+ * src/minigames/unit020bfec0.cpp.
  */
 
 #include "dScMgFlower_c.h"
@@ -265,7 +262,7 @@ s32 dScMgFlower_c::Behavior() {
         if (gTouchInfo[playerSlot].held != 0) {
             int touchY = gTouchInfo[playerSlot].y;
             int touchX = gTouchInfo[playerSlot].x;
-            mCursorX = (touchY ? touchX : touchX) << 12;
+            mCursorX = touchX << 12;
             mCursorY = touchY << 12;
         }
         if (mHoldTimer > 20) {
