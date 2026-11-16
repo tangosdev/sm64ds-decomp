@@ -1713,6 +1713,13 @@ void dScMgPachinko_c::BobOmb_StateWaitGrab(int i) {
  * the touch loads, the x/y reloads and the clamps differently (74 words,
  * unmoved by declaration order, idx type, vx/vy order, `py`, inline touch
  * reads, `+=` or else-if clamps).
+ * Kept, re-measured (#821, 2026-11-16) in dScMgPachinko2_c::Ball_StateAim's
+ * typed shape without the pragma: 0x3bc and 65 of 239 words off, every one in
+ * the held branch (touch loads, x/y stores and reloads, clamp addresses); the
+ * release branch, FX_CosIdx/FX_SinIdx products included, is exact. 16 held-
+ * branch variants (touch locals or inline, int or u32 idx, operand and
+ * read order) give 65-71; a shot pointer for the x clamps 62. With the pragma
+ * that shape is 0x3e8.
  * The two velocity reads stay hand-indexed into FX_SinCosTable_: through
  * FX_CosIdx / FX_SinIdx the products take swapped registers (17-22 DIFF in
  * eleven spellings: inline, index local, fx16 local, speed read first).
