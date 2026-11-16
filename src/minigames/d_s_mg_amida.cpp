@@ -254,18 +254,12 @@ int dScMgAmida_c::InitSubScreenBg() {
    reshuffled until it differs somewhere from that copy as seen through
    mLanePerm; otherwise the first arg1 entries (at most 4) are 1 and
    the rest 0, shuffled once. */
-/* Kept: measured 2026-11-06, ShuffleGoals is the only function this bracket
-   reaches, and its size changes with strength reduction on -- the swap loops'
-   `this + (i << 2) + off` addressing is what the setting binds. */
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgAmida_c::ShuffleGoals(int arg1) {
     int i;
     int k;
     int j;
     int t;
     int u;
-    int *pi;
 
     if (IsVariant2()) {
         switch (mPatternIndex) {
@@ -290,33 +284,22 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
         }
         for (i = 0; i < 4; i++)
             mLaneWants[i] = mLaneResult[i];
-        {
-            /* The swap addresses are built as this + i*4 + offset: the
-               plain &mLaneResult[i] form shrinks ShuffleGoals by 0x18
-               (measured 2026-10-20). */
-            int off = (int)&((dScMgAmida_c *)0)->mLaneResult;
-            arg1 = 1;
-            do {
-                for (i = 0; i < 4; i++) {
-                    t = RandomIntInternal(&data_0209d4b8.value);
-                    pi = (int *)((char *)this + (i << 2) + off);
-                    j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
-                    t = *pi;
-                    {
-                        int *pjx = (int *)((char *)this + (j << 2) + off);
-                        u = *pjx;
-                        *pi = u;
-                        *pjx = t;
-                    }
+        arg1 = 1;
+        do {
+            for (i = 0; i < 4; i++) {
+                t = RandomIntInternal(&data_0209d4b8.value);
+                u = mLaneResult[i];
+                j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
+                mLaneResult[i] = mLaneResult[j];
+                mLaneResult[j] = u;
+            }
+            for (k = 0; k < 4; k++) {
+                if (mLaneWants[k] != mLaneResult[mLanePerm[k]]) {
+                    arg1 = 0;
+                    break;
                 }
-                for (k = 0; k < 4; k++) {
-                    if (mLaneWants[k] != mLaneResult[mLanePerm[k]]) {
-                        arg1 = 0;
-                        break;
-                    }
-                }
-            } while (arg1 == 1);
-        }
+            }
+        } while (arg1 == 1);
     } else {
         if (arg1 > 4)
             arg1 = 4;
@@ -324,24 +307,15 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
             mLaneResult[k] = 1;
         for (; arg1 < 4; arg1++)
             mLaneResult[arg1] = 0;
-        {
-            int off = (int)&((dScMgAmida_c *)0)->mLaneResult;
-            for (i = 0; i < 4; i++) {
-                t = RandomIntInternal(&data_0209d4b8.value);
-                pi = (int *)((char *)this + (i << 2) + off);
-                j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
-                t = *pi;
-                {
-                    int *pjx = (int *)((char *)this + (j << 2) + off);
-                    u = *pjx;
-                    *pi = u;
-                    *pjx = t;
-                }
-            }
+        for (i = 0; i < 4; i++) {
+            t = RandomIntInternal(&data_0209d4b8.value);
+            u = mLaneResult[i];
+            j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
+            mLaneResult[i] = mLaneResult[j];
+            mLaneResult[j] = u;
         }
     }
 }
-#pragma pop
 
 void dScMgAmida_c::ClearStroke() {
     int row = 0;
