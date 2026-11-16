@@ -1343,8 +1343,12 @@ void daKuriKing_c::UpdateShadows() {
 
     /* self and src are this shifted by i shadow matrices (0x30) and i
      * mCylClsnPos entries (0xc), read back through the class so each load
-     * keeps the member offset: typed pointers or indexing re-base them and
-     * the loop changes. Words 9..11 are a matrix's translation row. */
+     * keeps the member offset. Words 9..11 are a matrix's translation row.
+     * Measured (2004/b56): mShadowMatrices[i] / mCylClsnPos[i] /
+     * mShadowModels[i] at every use is 8/87 words off (the matrix copy and
+     * the DropShadowRadHeight argument share one this + 0x2ec induction
+     * register, where the ROM copies through the this-based one); keeping m
+     * as a Matrix4x3 * walk with the rest indexed grows it by 0x10 bytes. */
     mtx = IDENTITY_MATRIX4X3;
     self = (char *)this;
     src = (char *)this;
