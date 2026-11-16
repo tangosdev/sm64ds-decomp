@@ -1034,8 +1034,6 @@ void dScMgSlot1_c::InitHud() {
 
 /* Slot 18. */
 void dScMgSlot1_c::StartRound(int i) {
-    char *raw = (char *)this;
-
     if (i == 4) {
         mPrevMatchedSymbol = mMatchedSymbol;
     } else if (i == 3) {
@@ -1051,22 +1049,18 @@ void dScMgSlot1_c::StartRound(int i) {
    include/dScMgSlot1_c.h's file banner). mBetIcon.Render() is the ROM's
    virtual call through the typed nested betIcon_c member at 0x4660. */
 s32 dScMgSlot1_c::Render() {
-    unsigned char *sceneBytes = (unsigned char *)this;
     int i, pos, drawY, j;
-    unsigned char *reelBytes = sceneBytes;
     unsigned char wildCount;
     for (i = 0; i < 3; i++) {
         pos = mSymbolIndex[i];
         drawY = sSlot1ReelPos[i][1] - ((s32)mReelScroll[i] >> 12);
         for (j = 0; j < 2; j++) {
-            Hud_RenderSprite(sSlot1Sprites[((dScMgSlot1_c *)(reelBytes + pos))->mReelStrip[0][0]],
-                             sSlot1ReelPos[i][0], drawY, -1, 3);
+            Hud_RenderSprite(sSlot1Sprites[mReelStrip[i][pos]], sSlot1ReelPos[i][0], drawY, -1, 3);
             pos--;
             drawY += 0x40;
             if (pos < 0)
                 pos += 0x15;
         }
-        reelBytes += 0x15;
     }
     mBetIcon.Render();
     Mg_DrawBigNumber(0x70, 0xb0, mCredits, 0, 1, 1, 0x14);
@@ -1262,13 +1256,11 @@ s32 dScMgSlot1_c::Behavior() {
                 StartRound(5);
             } else {
                 int j;
-                char *p = (char *)this;
                 for (j = 0; j < 3; j++) {
                     mReelScroll[j] += 0x40000;
                     mSymbolIndex[j]++;
                     mSymbolIndex[j] %= 21;
-                    ((dScMgSlot1_c *)(p + mSymbolIndex[j]))->mReelStrip[0][0] = 0xd;
-                    p += 0x15;
+                    mReelStrip[j][mSymbolIndex[j]] = 0xd;
                 }
                 mState = 9;
             }
@@ -1320,10 +1312,10 @@ s32 dScMgSlot1_c::Behavior() {
 }
 
 /* The ov004 scroll words (sMgScoreDigitsX..sMgMainBannerX) name
- * no struct; they are stored raw. The reel-table fill keeps a stepped char*
- * cursor over mReelStrip (see leftovers). */
+ * no struct; they are stored raw. The reel-table fill walks the source table
+ * with a stepped pointer: indexing it as tbl[j * 21 + i] measured 0x4cc vs
+ * 0x4bc. Folding the two fill loops onto one counter measured 13 words off. */
 s32 dScMgSlot1_c::InitResources() {
-    char *c = (char *)this;
     volatile unsigned short fill;
     int i, j;
 
@@ -1407,30 +1399,26 @@ s32 dScMgSlot1_c::InitResources() {
 
     if ((int)param1 & 0xff) {
         unsigned char *tbl = sSlotReelSymbolsAlt;
-        char *p = c;
         for (j = 0; j < 3; j++) {
             for (i = 0; i < 21; i++) {
-                ((dScMgSlot1_c *)(p + i))->mReelStrip[0][0] = tbl[i];
+                mReelStrip[j][i] = tbl[i];
             }
             mSymbolIndex[j] = 0;
             mReelScroll[j] = 0x40000;
             mReelSpinning[j] = 1;
             tbl += 0x15;
-            p += 0x15;
         }
     } else {
         int k;
         unsigned char *tbl = sSlotReelSymbols;
-        char *p = c;
         for (k = 0; k < 3; k++) {
             for (i = 0; i < 21; i++) {
-                ((dScMgSlot1_c *)(p + i))->mReelStrip[0][0] = tbl[i];
+                mReelStrip[k][i] = tbl[i];
             }
             mSymbolIndex[k] = 0;
             mReelScroll[k] = 0x40000;
             mReelSpinning[k] = 1;
             tbl += 0x15;
-            p += 0x15;
         }
     }
 
