@@ -24,6 +24,11 @@
       ]
     },
     "VEC_Add": {
+      "include/nitro/fx/fx_vec.h": [
+        "param:#1 const VecFx32 *",
+        "param:#2 const VecFx32 *",
+        "param:#3 VecFx32 *"
+      ],
       "src/engine/view/d_camera.cpp": [
         "param:#2 const void *",
         "param:#1 const Vector3 *",
@@ -283,6 +288,11 @@
       ]
     },
     "VEC_CrossProduct": {
+      "include/nitro/fx/fx_vec.h": [
+        "param:#1 const VecFx32 *",
+        "param:#2 const VecFx32 *",
+        "param:#3 VecFx32 *"
+      ],
       "src/engine/collision/d_clipper.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
@@ -386,6 +396,10 @@
       ]
     },
     "VEC_DotProduct": {
+      "include/nitro/fx/fx_vec.h": [
+        "param:#1 const VecFx32 *",
+        "param:#2 const VecFx32 *"
+      ],
       "src/Quaternion_FromVector3.cpp": [
         "param:#1 const Vec3 *",
         "param:#2 const Vec3 *"
@@ -505,6 +519,9 @@
       ]
     },
     "VEC_Mag": {
+      "include/nitro/fx/fx_vec.h": [
+        "param:#1 const VecFx32 *"
+      ],
       "src/game/actors/d_a_c_jugem.cpp": [
         "param:#1 const void *"
       ],
@@ -948,6 +965,10 @@
       ]
     },
     "VEC_Normalize": {
+      "include/nitro/fx/fx_vec.h": [
+        "param:#1 const VecFx32 *",
+        "param:#2 VecFx32 *"
+      ],
       "src/engine/collision/d_bg_w_kc_mbg_scl_y.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
@@ -1862,6 +1883,11 @@
       ]
     },
     "VEC_Subtract": {
+      "include/nitro/fx/fx_vec.h": [
+        "param:#1 const VecFx32 *",
+        "param:#2 const VecFx32 *",
+        "param:#3 VecFx32 *"
+      ],
       "src/engine/view/d_camera.cpp": [
         "param:#2 const void *",
         "param:#1 Vector3 *",
@@ -15181,6 +15207,10 @@
       ]
     },
     "VEC_Distance": {
+      "include/nitro/fx/fx_vec.h": [
+        "param:#1 const VecFx32 *",
+        "param:#2 const VecFx32 *"
+      ],
       "include/decl_common.h": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *"
