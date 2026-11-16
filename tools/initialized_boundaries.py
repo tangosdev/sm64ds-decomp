@@ -59,6 +59,31 @@ def terminal_extent(claim, emitted_end):
     return amount
 
 
+def terminal_placement(claim, module_section):
+    """Which input ends the fill: the section-end marker, or the next provider.
+
+    "section-end": the claim owns the whole logical module section, so the fill is
+    the section's own terminal ALIGN(4). "interior": the claim starts inside the
+    section and ends before its end, so the fill is the ALIGNALL(4) padding that
+    the linker inserts before the next input section. That successor must then be
+    proven to land exactly at the claim end (verify_terminal_lcf, successor_start).
+    A claim that reaches the section end without owning its start is neither.
+    """
+    if terminal_policy(claim) is None:
+        raise ValueError("no explicit terminal fill policy")
+    start, end = integer(claim["start"]), integer(claim["end"])
+    if module_section.get("name") != claim["name"]:
+        raise ValueError("claim must lie in its own logical module section")
+    first, last = integer(module_section["start"]), integer(module_section["end"])
+    if (first, last) == (start, end):
+        return "section-end"
+    if first <= start and end < last:
+        return "interior"
+    raise ValueError(
+        "claim must own whole logical module section or end inside it"
+    )
+
+
 def license_terminal_fill(
     claim, module_section, emitted_end, *, configured_symbols, relocations, retail_fill
 ):
@@ -66,16 +91,11 @@ def license_terminal_fill(
 
     Configured symbol rows have address/size; relocation rows have site/size and
     resolved target. The caller owns parsing and exact module-set validation.
+    An interior license is only half the proof: the actual link must also show
+    the next input section lands at the claim end (link_plan does this).
     """
-    if terminal_policy(claim) is None:
-        raise ValueError("no explicit terminal fill policy")
+    placement = terminal_placement(claim, module_section)
     start, end = integer(claim["start"]), integer(claim["end"])
-    if (
-        module_section.get("name") != claim["name"]
-        or integer(module_section["start"]) != start
-        or integer(module_section["end"]) != end
-    ):
-        raise ValueError("claim must own whole logical module section")
     emitted_end = integer(emitted_end)
     amount = terminal_extent(claim, emitted_end)
     for row in configured_symbols:
@@ -119,11 +139,19 @@ def license_terminal_fill(
         linkedBytes=end - start,
         linkerFillBytes=amount,
         value=0,
+        placement=placement,
     )
 
 
-def verify_terminal_lcf(path, *, module, section, provider):
-    """Conservative exact generated-selector grammar; no alternate script dialect."""
+def verify_terminal_lcf(path, *, module, section, provider, placement="section-end"):
+    """Conservative exact generated-selector grammar; no alternate script dialect.
+
+    "section-end": the provider is the section's sole selector, followed by the
+    terminal ALIGN(4) and end marker. "interior": the provider is selected once,
+    between the section markers, and the very next statement is another literal
+    selector of the same section; the caller must then prove from that object's
+    actual section headers that it lands at the claim end (successor_start).
+    """
     LA.verify_lcf(path)
     text = pathlib.Path(path).read_text(encoding="utf-8")
     text = re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.S)
@@ -167,6 +195,12 @@ def verify_terminal_lcf(path, *, module, section, provider):
             raise ValueError("unsupported LCF input-section selector grammar")
         if literal[1] == section:
             all_selectors.append(call[1] + "(" + literal[1] + ")")
+    if placement == "interior":
+        return _interior_successor(
+            text, matching[0], begin, end, module, section, provider, all_selectors
+        )
+    if placement != "section-end":
+        raise ValueError("unknown terminal fill placement")
     if len(all_selectors) != 1 or re.fullmatch(selector, all_selectors[0]) is None:
         raise ValueError("logical section must have exactly one selector in LCF")
     pattern = (
@@ -183,6 +217,78 @@ def verify_terminal_lcf(path, *, module, section, provider):
             "section must select sole provider then terminal ALIGN4/end marker"
         )
     return dict(module=module, section=section, provider=provider, alignment=4, fill=0)
+
+
+_OBJECT_NAME = r"[A-Za-z0-9_@+.-]+\.o"
+
+
+def _interior_successor(text, block, begin, end, module, section, provider, selectors):
+    """The literal selector that directly follows an interior provider."""
+    if selectors.count(provider + "(" + section + ")") != 1:
+        raise ValueError("provider selector must occur exactly once")
+    body = block[2]
+    own = list(
+        re.finditer(
+            r"(?<![A-Za-z0-9_@+.-])"
+            + re.escape(provider)
+            + r"\s*\(\s*"
+            + re.escape(section)
+            + r"\s*\)",
+            body,
+        )
+    )
+    first = re.search(r"\b" + re.escape(begin) + r"\s*=\s*\.\s*;", body)
+    last = re.search(r"\b" + re.escape(end) + r"\s*=\s*\.\s*;", body)
+    if (
+        len(own) != 1
+        or first is None
+        or last is None
+        or not first.end() <= own[0].start() < own[0].end() <= last.start()
+    ):
+        raise ValueError("interior provider must be selected between its section markers")
+    # Nothing but whitespace may separate the two selectors: an assignment, ALIGN,
+    # WRITEW or symbol definition there would move or explain the fill instead.
+    successor = re.match(
+        r"\s*(" + _OBJECT_NAME + r")\s*\(\s*" + re.escape(section) + r"\s*\)",
+        body[own[0].end() : last.start()],
+    )
+    if successor is None or successor[1] == provider:
+        raise ValueError(
+            "interior provider must be followed directly by another provider"
+        )
+    return dict(
+        module=module,
+        section=section,
+        provider=provider,
+        alignment=4,
+        fill=0,
+        placement="interior",
+        successor=successor[1],
+    )
+
+
+def successor_start(raw, section, cursor):
+    """Where the linker places a successor object's first bytes of ``section``.
+
+    One literal selector places every same-named input section of the object in
+    header order, each at ALIGNALL(4) or its own larger sh_addralign. Empty
+    sections still align the cursor. An object that contributes no bytes cannot
+    prove what lands at the claim end, so it is refused.
+    """
+    try:
+        rows = [
+            (sec["sh_addralign"], sec["sh_size"])
+            for sec in ELFFile(io.BytesIO(raw)).iter_sections()
+            if sec.name == section
+        ]
+    except (ELFError, IndexError, KeyError, struct.error) as exc:
+        raise ValueError("malformed successor object") from exc
+    for alignment, size in rows:
+        step = LA.effective_alignment(alignment)
+        cursor = (cursor + step - 1) // step * step
+        if size:
+            return cursor
+    raise ValueError("successor object contributes no bytes to the section")
 
 
 def json_digest(value):
@@ -743,7 +849,29 @@ def link_plan(entries, objects_txt, lcf_path, config_root):
                 module=entry["module"].upper(),
                 section=claim["name"],
                 provider=path.name,
+                placement=fill["placement"],
             )
+            if fill["placement"] == "interior":
+                # The LCF names the successor by basename; it must be one actual
+                # link input, and its own headers must put it at the claim end.
+                successors = [
+                    successor_raw
+                    for successor_path, successor_raw in raw_objects
+                    if successor_path.name == lcf["successor"]
+                ]
+                if len(successors) != 1:
+                    raise ValueError(
+                        f"{source}: interior fill successor {lcf['successor']} "
+                        "is not exactly one link input"
+                    )
+                placed = successor_start(
+                    successors[0], claim["name"], fill["emittedEnd"]
+                )
+                if placed != fill["end"]:
+                    raise ValueError(
+                        f"{source}: interior fill successor {lcf['successor']} "
+                        f"links at 0x{placed:08x}, claim ends at 0x{fill['end']:08x}"
+                    )
             result["terminalFill"].append(
                 dict(fill, lcf=lcf, source=source, objectSha256=proof["objectSha256"])
             )
