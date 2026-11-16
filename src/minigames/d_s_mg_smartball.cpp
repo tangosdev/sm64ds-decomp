@@ -3747,52 +3747,39 @@ unsigned short dScMgSmartball_c::GetTile(int *pos) {
     return 0;
 }
 
-#pragma push
-#pragma opt_strength_reduction off
-/* Leftover: UpdateDust needs strength reduction off. */
+/* Moves each live dust puff by its velocity, cuts the velocity to 3/4 of
+ * its length, and retires the puff after 0xf frames. */
 void dScMgSmartball_c::UpdateDust() {
-    char *self = (char *)this;
+    int m;
     int i;
-    char *obj = (char *)mDustVel;
     for (i = 0; i < 16; i++) {
-        unsigned char *flag = (unsigned char *)((dScMgSmartball_c *)(self + i))->mDustActive;
-        if (*flag != 0) {
-            dScMgSmartball_c *entry = (dScMgSmartball_c *)(self + i * 8);
-            entry->mDustPos[0][0] += entry->mDustVel[0][0];
-            entry->mDustPos[0][1] += entry->mDustVel[0][1];
-            {
-                int m = Vec2_Len((const Vector2 *)obj) * 6 / 8;
-                if (func_0203d434((V2 *)obj)) {
-                    func_0203d630((V2 *)obj, m);
-                }
+        if (mDustActive[i] != 0) {
+            mDustPos[i][0] += mDustVel[i][0];
+            mDustPos[i][1] += mDustVel[i][1];
+            m = Vec2_Len((const Vector2 *)mDustVel[i]);
+            m = m * 6 / 8;
+            if (func_0203d434((V2 *)mDustVel[i])) {
+                func_0203d630((V2 *)mDustVel[i], m);
             }
-            {
-                int *counter = ((dScMgSmartball_c *)(self + i * 4))->mDustAge;
-                *counter += 1;
-                if (*counter >= 0xf) {
-                    *flag = 0;
-                    *counter = 0;
-                }
+            mDustAge[i] += 1;
+            if (mDustAge[i] >= 0xf) {
+                mDustActive[i] = 0;
+                mDustAge[i] = 0;
             }
         }
-        obj += 8;
     }
 }
-
-#pragma pop
 
 /* Spawns up to four dust puffs at a point.
  * Leftover: TVec2's empty destructor keeps `v` in memory, and `sa` must be its
  * own assignment before the first product. */
 void dScMgSmartball_c::SpawnDust(int *origin) {
-    char *c = (char *)this;
     int i;
     int j;
 
     for (i = 0; i < 4; i++) {
         for (j = 0; j < 16; j++) {
-            u8 *flag = ((dScMgSmartball_c *)(c + j))->mDustActive;
-            if (*flag == 1) {
+            if (mDustActive[j] == 1) {
                 continue;
             }
             {
@@ -3807,18 +3794,16 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
                 TVec2 v;
                 sa = (s64)sinA;
                 v.x = FX_MUL(sinB, FX_MUL(sinA, 0x8000));
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][0] = v.x;
+                mDustPos[j][0] = v.x;
                 cosA = FX_SinCosTable_[(angA >> 4) * 2];
                 v.y = FX_MUL(sinB, FX_MUL(cosA, 0x8000));
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][1] = v.y;
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][0] += origin[0];
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][1] += origin[1];
-                ((dScMgSmartball_c *)(c + j * 8))->mDustVel[0][0] =
-                    FX_MUL(sinB, FX_MUL(sa, 0x4000));
-                ((dScMgSmartball_c *)(c + j * 8))->mDustVel[0][1] =
-                    FX_MUL(sinB, FX_MUL(cosA, 0x4000));
+                mDustPos[j][1] = v.y;
+                mDustPos[j][0] += origin[0];
+                mDustPos[j][1] += origin[1];
+                mDustVel[j][0] = FX_MUL(sinB, FX_MUL(sa, 0x4000));
+                mDustVel[j][1] = FX_MUL(sinB, FX_MUL(cosA, 0x4000));
                 mDustAge[j] = 0;
-                *flag = 1;
+                mDustActive[j] = 1;
             }
             break;
         }
