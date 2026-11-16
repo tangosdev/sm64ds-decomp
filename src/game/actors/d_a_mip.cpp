@@ -1163,7 +1163,7 @@ void daMip_c::RenderMirrorImage()
  *
  * The block before Advance calls MipStatePair::b, the record's second
  * pointer-to-member, on the daMip_cSelf shadow. mState stays an s32: the four
- * comparisons above identify the states by address. `c` is the char* this.
+ * comparisons above identify the states by address.
  * */
 int daMip_c::Behavior()
 {
@@ -1186,7 +1186,6 @@ int daMip_c::Behavior()
     extern MipStatePair data_ov085_021306bc;
     extern MipStatePair data_ov085_021306dc;
 
-    char* c = (char*)this;
     daPly_c *player;
 
     if (gCurrentSublevel != 0x32) {
@@ -1207,7 +1206,7 @@ int daMip_c::Behavior()
     }
 
     if (mRabbitId == 7 && !(data_0209caa0.file.flags1 & 0x40))
-        data_0209f33c = c;
+        data_0209f33c = this;
 
     if (mIsGlowing != 0) {
         Vec3Scratch pv;
@@ -1305,7 +1304,7 @@ int daMip_c::Behavior()
     DecIfAbove0_Short(&mStateTimer);
 
     {
-        daMip_cSelf *self = (daMip_cSelf *)c;
+        daMip_cSelf *self = (daMip_cSelf *)this;
         MipStatePair *state = (MipStatePair *)mState;
         if (state->b != 0)
             (self->*(state->b))();
