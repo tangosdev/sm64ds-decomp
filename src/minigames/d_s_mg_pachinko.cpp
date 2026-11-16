@@ -1165,7 +1165,12 @@ void dScMgPachinko_c::Ball_CheckPipes(int idx) {
  * The two velocity-component base offsets must be introduced in the order
  * below: the constant pool emits 0x4668 before 0x466c, and the declaration
  * order is what fixes it.
- * opt_common_subs stays off: typed mBall[i] spellings land at 0x1fc-0x260 of 0x240 with or without it, so the field-base forms remain. */
+ * opt_common_subs stays off: typed mBall[i] spellings land at 0x1fc-0x260 of 0x240 with or without it, so the field-base forms remain.
+ * Kept, re-measured (#821, 2026-11-16): this body without the pragma is 0x23c;
+ * the plain typed body (one sqrt expression, while-loop re-roll, every field
+ * as mBall[i].f) is 0x260 without it and 0x230 with it. The ROM reaches each
+ * field as its own this + offset base indexed by i * 0x38, the shape common
+ * subexpressions off gives. */
 void dScMgPachinko_c::Ball_AimAtTarget(int i) {
     int idx;
     int n;
