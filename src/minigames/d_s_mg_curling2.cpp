@@ -403,13 +403,12 @@ void dScMgCurling2_c::StepXPick(int entry) {
     mPiece[entry].countdown2 = (u8)(MG_RAND(0x40) + 0x60);
 }
 
-/* Run one piece's xIndex callback, then its yIndex callback.
- * yIndex is re-read through the pointer-to-member receiver. */
+/* Run one piece's xIndex callback, then its yIndex callback. */
 void dScMgCurling2_c::StepXAndY(int entry) {
     C *self = (C *)this;
     unsigned char k0 = mPiece[entry].xIndex;
     (self->*sCurling2StepXTable[k0])(entry);
-    unsigned char k1 = ((dScMgCurling2_c *)self)->mPiece[entry].yIndex;
+    unsigned char k1 = mPiece[entry].yIndex;
     (self->*sCurling2StepYTable[k1])(entry);
 }
 
