@@ -17,13 +17,13 @@
 
 #define FALSE 0
 
+typedef int (*CardCallback)(void);
+
 namespace IRQ {
 
 void GameCardIREQMCHandler(void);
 
 }
-
-typedef int (*CardCallback)(void);
 
 extern "C" {
 extern int data_020a89a0;          /* set once the card has been pulled */
