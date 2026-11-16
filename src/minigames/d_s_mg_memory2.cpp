@@ -936,16 +936,14 @@ void dScMgMemory2_c::ChoosePreviewCards() {
     int previewCount = sMemory2PreviewCountPerDifficulty[difficulty];
     int cardCount = sMemory2PreviewTimePerDifficulty[difficulty];
     int previewIndex;
-    int zero = 0;
     for (previewIndex = 0; previewIndex < previewCount; previewIndex++) {
-        int cardIndex;
-        cardIndex = MG_RAND(cardCount);
+        int cardIndex = MG_RAND(cardCount);
         if (previewIndex != 0) {
             int duplicate;
             int previousIndex;
             do {
-                duplicate = zero;
-                for (previousIndex = zero; previousIndex < previewIndex; previousIndex++) {
+                duplicate = 0;
+                for (previousIndex = 0; previousIndex < previewIndex; previousIndex++) {
                     if (cardIndex == mPreviewCards[previousIndex]) {
                         duplicate++;
                         break;
