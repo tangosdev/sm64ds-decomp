@@ -105,10 +105,11 @@ struct TVec2 {
 typedef void (*VFunc)(void *);
 
 extern "C" {
-/* local extern: the angle is an s16. ResolveBallPair negates its angle once
+/* local extern: decl_common.h, not included here, declares the pair as
+   int *; this file passes its V2 pairs. The angle is an s16, as the
+   definition (func_0203d384.c) says: ResolveBallPair negates its angle once
    and the ROM narrows it again at each of the two calls, which is the
-   argument conversion of an s16 parameter. The definition
-   (func_0203d384.c) still says `int` and compiles identically with s16. */
+   argument conversion of an s16 parameter. */
 extern void func_0203d388(V2 *p, s16 angle);
 extern long long func_0203d5bc(int *p);
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
