@@ -124,6 +124,7 @@ enum {
 };
 
 extern u32 gNextActorUpdateMask;
+extern CLPS_Block data_ov002_0210d934;
 extern ResourceDescriptor data_ov098_0213c4c8;
 extern "C" u8 DecIfAbove0_Byte(u8 *p);
 namespace Particle {
@@ -1283,9 +1284,18 @@ daObjBlockS_c *daObjBlockS_c_classInit() {
 BlockSModelFilePtr gBrokenBlockSModelFile(ASSET_BROKEN_BLOCK_S_BMD);       /* model */
 BlockSCollisionFilePtr gBrokenBlockSCollisionFile(ASSET_BROKEN_BLOCK_S_KCL);   /* collision */
 
+ResourceDescriptor data_ov098_0213c4c8 = {
+    &gBrokenBlockSModelFile,
+    &gBrokenBlockSCollisionFile,
+    &data_ov002_0210d934,
+};
+
 /* The fourteen state member-pointer records live in .data
  * (0x0213c458..0x0213c4c8); the static initializer copies them into the
- * .bss table below, an enter/update pair per state. */
+ * .bss table below, an enter/update pair per state. A file-scope
+ * definition of `&daObjBlockS_c::Method` is a BSS object filled from a
+ * compiler temporary, so these stay the ROM descriptors the initializer
+ * already loads. */
 extern BlockSStateFn data_ov098_0213c4a8;
 extern BlockSStateFn data_ov098_0213c488;
 extern BlockSStateFn data_ov098_0213c490;

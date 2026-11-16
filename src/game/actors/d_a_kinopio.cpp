@@ -87,7 +87,10 @@ bool PlaySub(u32, u32, u32, int, bool);
 extern "C" {
 
 /* ov085 statics */
-extern u8 data_ov085_0212f27c[];           /* star-count requirement table */
+#pragma define_section rodatasec ".rodata" ".rodata" ".rodata" far_absolute R
+#pragma section rodatasec begin
+u8 data_ov085_0212f27c[4] = {20, 40, 60, 0}; /* star-count requirement table */
+#pragma section rodatasec end
 
 /* ov002 statics -- the three models the variant-1 Toad preloads */
 extern SharedFilePtr data_ov002_0210da40;

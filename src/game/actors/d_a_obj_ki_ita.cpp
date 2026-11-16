@@ -9,16 +9,15 @@
  * daObjKi_Ita_c_classInit / g_profile_KI_ITA are reconstructed (RTTI
  * daObjKi_Ita_c, KI_ITA registry). Retail does not store those spellings.
  *
- * Note: data_ov016_02114b8c is still the linker name of this
- * overlay's three-word file table. Those words sit between this
- * class's RTTI and type-name; this TU does not own them.
+ * data_ov016_02114b8c is the model, collision and CLPS row between
+ * this class's RTTI and type-name string.
  */
 
 #include "daObjKi_Ita_c.h"
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 
-extern daObjFloatBoard_c_Resources data_ov016_02114b8c;
+extern "C" daObjFloatBoard_c_Resources data_ov016_02114b8c;
 
 /* File 1601 / 1602 resource handles. The static initializer registers
  * their destructors; the spellings are this TU's, mapped onto
@@ -58,3 +57,10 @@ int daObjKi_Ita_c::InitResources() {
  * handle, then the collision handle. */
 KiItaModelFilePtr data_ov016_02114e44(1601);
 KiItaCollisionFilePtr data_ov016_02114e4c(1602);
+
+extern CLPS_Block data_ov016_02113bec;
+extern "C" daObjFloatBoard_c_Resources data_ov016_02114b8c = {
+    &data_ov016_02114e44,
+    &data_ov016_02114e4c,
+    &data_ov016_02113bec,
+};

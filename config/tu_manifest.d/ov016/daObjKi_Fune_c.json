@@ -32,6 +32,17 @@
       "name": ".bss",
       "start": "0x02114dcc",
       "end": "0x02114e1c"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021136dc",
+      "end": "0x021136ec"
+    },
+    {
+      "name": ".data.morayTail",
+      "input_section": ".data",
+      "start": "0x021149d4",
+      "end": "0x021149dc"
     }
   ],
   "functions": [
@@ -99,7 +110,31 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov016_021149d4",
+      "address": "0x021149d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two CLPS pointers, one per hull"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov016_021136dc",
+      "address": "0x021136dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision handles for the two hulls"
+    },
+    {
+      "symbol": "data_ov016_021136e4",
+      "address": "0x021136e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model handles for the two hulls"
+    }
+  ],
   "bss": [
     {
       "symbol": "gKiFuneDownACollisionFile",
@@ -284,6 +319,20 @@
           "start": "0x02114dcc",
           "end": "0x02114e1c",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021136dc",
+          "end": "0x021136ec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.morayTail",
+          "start": "0x021149d4",
+          "end": "0x021149dc",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -588,6 +637,66 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x021136dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKiFuneUpCollisionFile",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114ddc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021136e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKiFuneDownACollisionFile",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114dcc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021136e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKiFuneUpModelFile",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114dd4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021136e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKiFuneDownAModelFile",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02114de4"
+    },
+    {
+      "section": ".data.morayTail",
+      "source": "0x021149d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov016_02113c6c",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02113c6c"
+    },
+    {
+      "section": ".data.morayTail",
+      "source": "0x021149d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov016_02113c4c",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02113c4c"
+    },
     {
       "section": ".init",
       "source": "0x021138cc",

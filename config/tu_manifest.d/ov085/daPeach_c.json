@@ -35,6 +35,11 @@
       "name": ".bss",
       "start": "0x021304bc",
       "end": "0x021305ac"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0212f280",
+      "end": "0x0212f29c"
     }
   ],
   "functions": [
@@ -312,6 +317,15 @@
       "evidence": "compiler storage has the two-word ABI preamble; the configured public address point remains unchanged at 0x0212ffc0, and the storage ends at 0x0213003c, where d_a_mip's .data begins"
     }
   ],
+  "rodata": [
+    {
+      "symbol": "data_ov085_0212f280",
+      "address": "0x0212f280",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven animation file handles"
+    }
+  ],
   "bss": [
     {
       "symbol": "gPeachOpWaitAnimationFile",
@@ -581,6 +595,13 @@
           "start": "0x021304bc",
           "end": "0x021305ac",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0212f280",
+          "end": "0x0212f29c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -1104,6 +1125,76 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x0212f280",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPeachWaitAnimationFile",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021304d4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f284",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPeachWalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021304c4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f288",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPeachRunAnimationFile",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021304e4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f28c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPeachJumpAnimationFile",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021304ec"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f290",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPeachJumpEndAnimationFile",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021304cc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f294",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPeachJumpLoopAnimationFile",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021304dc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212f298",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPeachOpWaitAnimationFile",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021304bc"
+    },
     {
       "section": ".init",
       "source": "0x0212f3b0",
