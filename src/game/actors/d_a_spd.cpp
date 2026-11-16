@@ -502,11 +502,10 @@ int daSpd_c::func_ov071_0211f7d4() {
         mVertSpeed = 0;
         mWithMeshClsn.ClearLimMovFlag();
         mFlags |= 1;
-        short z = 0;
         short ang = mPrevAngleY;
-        mAngleX = z;
+        mAngleX = 0;
         mAngleY = ang;
-        mAngleZ = z;
+        mAngleZ = 0;
         SetState(2);
     }
     UpdatePos(&mdCcAc_c);
