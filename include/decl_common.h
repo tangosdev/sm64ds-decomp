@@ -1069,7 +1069,6 @@ extern void RouletteRacer_PlaceAtStart(int *);
 int RouletteResults_Tick(void);
 extern void RouletteStrip_LinkAll(char *);
 extern void RouletteStrip_ResetAll(void);
-extern void Roulette_DrawResultsThunk(char *);
 extern void SmartballObj_ElemDtor(void);
 unsigned char StarPopup_Clear(void);
 extern void StarPopup_Draw(void);

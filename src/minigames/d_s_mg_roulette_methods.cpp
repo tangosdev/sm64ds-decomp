@@ -412,7 +412,7 @@ s32 dScMgRoulette_c::Behavior() {
 }
 
 /* A tail-call veneer to RouletteResults_Draw. */
-void Roulette_DrawResultsThunk(char *) {
+void Roulette_DrawResultsThunk(dScMgRoulette_c *) {
     RouletteResults_Draw();
 }
 
@@ -429,7 +429,7 @@ s32 dScMgRoulette_c::Render() {
             RouletteRacer_Draw((char *)&mRacers[i]);
     }
 
-    Roulette_DrawResultsThunk((char *)this);
+    Roulette_DrawResultsThunk(this);
 
     {
         int idle = (int)(mBoard.mSpinSpeed == 0);
