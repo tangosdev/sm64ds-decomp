@@ -869,16 +869,13 @@ void daTrs_c::func_ov063_0211776c() {
 
 void daTrs_c::func_ov063_021177b0() {
 
-    if (this->mStateTimer == 0) {
-        unsigned char *p = &this->mHitPoints;
-        *p = (unsigned char)(*p - 1);
-    }
+    if (this->mStateTimer == 0)
+        this->mHitPoints--;
 
     if (this->mHitPoints == 0) {
         dCamera_c *cam = gCamera;
-        unsigned short flags = *(unsigned short*)&this->mBooFlags;
 
-        if (((unsigned)(flags << 21)) >> 31) {
+        if (this->mBooFlags.camHeld) {
             daPly_c *pl = ClosestPlayer();
             if (pl != 0) {
                 Vector3 v;
@@ -929,10 +926,7 @@ void daTrs_c::func_ov063_021177b0() {
         if (UpdateDuringDeath() == 0)
             return;
 
-        {
-            unsigned short* pf = (unsigned short*)&this->mBooFlags;
-            *pf = (unsigned short)(*pf & ~TRS_FLAG_VISIBLE);
-        }
+        this->mBooFlags.visible = 0;
         this->mState = 8;
         Stop();
         this->mPrevAngleX = 0;
@@ -951,11 +945,8 @@ void daTrs_c::func_ov063_021177b0() {
         return;
     }
 
-    if (this->mStateTimer == 0) {
-        int *p584 = &this->mClsnScale;
-        int dec = 0x255;
-        *p584 = *p584 - dec;
-    }
+    if (this->mStateTimer == 0)
+        this->mClsnScale -= 0x255;
     if (UpdateDuringNonlethalHit(0x28) == 0)
         return;
     this->mState = 6;
