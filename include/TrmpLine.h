@@ -9,6 +9,7 @@
 struct Vec2s {
     s16 x, y;
 };
+typedef char Vec2s_size_must_be_0x4[sizeof(Vec2s) == 0x4 ? 1 : -1];
 
 /* TrmpLine, one stylus-drawn trampoline of Trampoline and Trampoline2: the
  * 0x32c-byte slot whose methods in src/minigames/unit020cd744.cpp build, flex
