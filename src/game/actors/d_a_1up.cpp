@@ -182,7 +182,6 @@ short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 void Vec3_Asr(Vector3 *, Vector3 *, int);
 void Matrix4x3_FromRotationY(void*, int);
 void Matrix4x3_FromTranslation(void*, int, int, int);
-short atan2_hold_d_a_1up_1(int, int);
 }
 void GiveCoins(int, int);
 /* ONE definition, both variants. The complete-object destructor (D1) tears the
@@ -967,11 +966,6 @@ void da1up_c::UpdatePopOutDrift() {
     UpdateTrailEffect();
 }
 
-/* File-scope `extern "C"` region for the members below. Every one of these
-   is spelt as the shard that uses it recovered it; nothing above declares
-   any of them, so nothing here overrides a recovered view. */
-extern "C" {
-}
 int IsStarCollectedInCurLevel(int a);
 
 /* Ordinal 34 dispatches through this pointer-to-member-function type: the

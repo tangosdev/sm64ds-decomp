@@ -87,9 +87,6 @@ enum { daIbl_PTCL_BREAK = 0xf };
 void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" void func_02038414(void *p);
 int func_ov002_020ad660(void *a, void *b, void *d, int e);
-extern "C" {
-int atan2_hold_d_a_ibl_1(int y, int x);
-}
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
