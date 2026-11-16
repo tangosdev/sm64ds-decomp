@@ -723,7 +723,9 @@ int daMip_c::StateFleeMain() {
            words of stack offsets differ, wherever those four are declared.
            An outer `Vector3 pos` assigned `pos = Vector3(...)` is 3 words
            off (0x68 frame against 0x58); field-by-field stores in any order
-           are 13-14 words off. */
+           are 13-14 words off. The pos.x store goes through an `s32 *`
+           cast; it was `volatile s32 *` until #821 r18, and dropping the
+           qualifier left the object unchanged. */
         s32 pair[2];
         pair[0] = mPosX;
         pair[1] = mFloorY;
@@ -731,7 +733,7 @@ int daMip_c::StateFleeMain() {
             s32 z = mPosZ;
             s32 y = pair[1] + 0x3000;
             s32 x = pair[0];
-            *((volatile s32 *)(&pos.x)) = x;
+            *((s32 *)(&pos.x)) = x;
             pos.y = y;
             pos.z = z;
             mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove,
