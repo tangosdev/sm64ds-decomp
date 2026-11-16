@@ -166,8 +166,15 @@ void Heyho::StartMotionFlyIn(const HeyhoPath *path) {
 
     mPath = *path;
 
-    /* The ROM re-loads goal.x from the record after the copy instead of
-       reusing the copied register; only a volatile read reproduces it. */
+    /* The ROM re-loads goal.x for each mPos store instead of reusing the
+       test's load: the stores read goal through a reference, as Vector3's
+       implicit operator= does (`mPos = *(Vector3 *)&mPath.goal` and a local
+       inline taking const VecFx32 & both match 0/106). No spelling without
+       a cast or an invented helper does (measured): plain field stores
+       reuse the test's register (0x1a0, not 0x1a8); testing path->goal.x
+       is 1 word off; a `const VecFx32 &goal` for the stores keeps its own
+       base register (6 words off); HeyhoPath::goal as Vector3 copies mPath
+       memberwise through Vector3 (0x1b0, 0x1b8 with startVel too). */
     if (*(volatile int *)&mPath.goal.x > 0) {
         mPos.x = mPath.goal.x;
         mPos.y = mPath.goal.y;
