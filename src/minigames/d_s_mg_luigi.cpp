@@ -45,6 +45,7 @@ enum dScMgLuigi_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "SpawnInfo.h"
+#include "PlayerInput.h"
 #include "OamAttr.h"
 #include "nitro/gx/g2_oam.h"
 #include "nitro/gx/gx_bgcnt.h"
@@ -1000,24 +1001,14 @@ void dScMgLuigi_c::BeginCatch(int found) {
 }
 
 void dScMgLuigi_c::CheckTouch() {
-    // local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-    extern unsigned char gActivePlayerSlot;
-    // local extern: see above.
-    extern unsigned char gTouchHeld[][4];
-    // local extern: see above.
-    extern unsigned char gTouchEdge[][4];
-    // local extern: see above.
-    extern unsigned char gTouchX[][4];
-    // local extern: see above.
-    extern unsigned char gTouchY[][4];
     extern unsigned short sLuigiTouchSfx[];
     int playerSlot = gActivePlayerSlot;
     int touchPressed = 0;
     int target;
     int pictureIndex;
 
-    if (gTouchHeld[playerSlot][0] != 0) {
-        if (gTouchEdge[playerSlot][0] != 0)
+    if (gTouchInfo[playerSlot].held != 0) {
+        if (gTouchInfo[playerSlot].edge != 0)
             touchPressed = 1;
     }
     if (touchPressed == 0)
@@ -1025,8 +1016,8 @@ void dScMgLuigi_c::CheckTouch() {
 
     target = mTarget;
     {
-        int dx = gTouchX[playerSlot][0] - (mPosX[target - 1] >> 12);
-        int dy = gTouchY[playerSlot][0] - (mPosY[target - 1] >> 12);
+        int dx = gTouchInfo[playerSlot].x - (mPosX[target - 1] >> 12);
+        int dy = gTouchInfo[playerSlot].y - (mPosY[target - 1] >> 12);
         if (dx <= 0x10 && dx >= -0x10 && dy <= 0x10 && dy >= -0x10) {
             int level, soundTier;
 
@@ -1053,8 +1044,8 @@ void dScMgLuigi_c::CheckTouch() {
     for (pictureIndex = 0; pictureIndex < PICTURE_NUM; pictureIndex++) {
         if (mActive[pictureIndex] == 1) {
             if (mKind[pictureIndex] != PICTURE_FLASH) {
-                int dx2 = gTouchHeld[playerSlot][2] - (mPosX[pictureIndex] >> 12);
-                int dy2 = gTouchHeld[playerSlot][3] - (mPosY[pictureIndex] >> 12);
+                int dx2 = gTouchInfo[playerSlot].x - (mPosX[pictureIndex] >> 12);
+                int dy2 = gTouchInfo[playerSlot].y - (mPosY[pictureIndex] >> 12);
                 if (dx2 <= 0x10 && dx2 >= -0x10 && dy2 <= 0x10 && dy2 >= -0x10) {
                     AddPenalty(pictureIndex);
                     mFound = 0;
