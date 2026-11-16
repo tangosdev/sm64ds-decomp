@@ -1699,6 +1699,26 @@ int daKing_Donketu_c::Render()
  * before generating the body, so a pop there is already in force when
  * Behavior is compiled and Behavior no longer matches. The extern block below
  * Behavior (the declarations InitResources needs) is what keeps it clear.
+ *
+ * Kept (#821, measured 2026-11-16 against ov073 0x021218a0, 0x42c):
+ *   - bracket removed: 0x428; fdiff aligns 182 of 267 words, 85 replaced and
+ *     1 deleted. `this` moves from r5 to r4 for the whole body, because r4 no
+ *     longer holds the data_020a0e68 address across the ldm/stm copy and
+ *     MTX_Concat43, or 0x2000 across Matrix4x3_FromRotationY.
+ *   - the same pragma at file level (no bracket): Behavior matches, but 10
+ *     other members stop matching (SpawnHitParticles, UpdateDefeat,
+ *     UpdateWaypointHop, UpdateEdgeWobble, UpdateHitReaction,
+ *     EnterHitReaction, UpdateChase, UpdateIntroTalkEnd,
+ *     UpdateModelAndShadow and InitResources).
+ *   - bracket removed, matrix block spelled as `Matrix4x3 *m =
+ *     &data_020a0e68`, as `Matrix4x3 &m = data_020a0e68`, or with the bone
+ *     position as one Vector3 copy from m[9]: each is 0x428, the same 85
+ *     replaced words.
+ *   SpawnLandingEffects (0x0211f2c0) is the same copy-and-concat block, and
+ *   it holds the address in lr under the default propagation. So the r4 hold
+ *   in Behavior comes from how the rest of Behavior is shaped. The
+ *   RayParams/`C *` spellings below are themselves launders, and the real
+ *   fix is to rewrite the whole body. That is too big for this pass.
  */
 struct RayParams { Vector3 start, end, in, out; };
 
