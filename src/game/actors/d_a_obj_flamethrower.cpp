@@ -147,11 +147,6 @@ int daObjFlamethrower_c::Behavior() {
     int count;
     int i;
     int im1;
-    int zero;
-    int one;
-    int no;
-    int ang0;
-    int ang1;
     char *ppos;
     int wavePhase;
     char *pclsn;
@@ -166,7 +161,6 @@ int daObjFlamethrower_c::Behavior() {
     dActor_c *other;
     int isPlayer;
     s16 ang;
-    int a2;
     u8 *active;
 
     self = (char *)this;
@@ -217,11 +211,6 @@ int daObjFlamethrower_c::Behavior() {
         Matrix4x3_FromRotationXYZExt(&mTransform, mAngleX, mAngleY, mAngleZ);
 
     if (mActiveFlames != 0) {
-        zero = 0;
-        one = 1;
-        no = 0;
-        ang0 = 0;
-        ang1 = 0;
         i = 0;
         if (i < count) {
             ppos = self;
@@ -232,12 +221,12 @@ int daObjFlamethrower_c::Behavior() {
                     break;
                 if (((param1 & 0xff) != kAltParam) || (gCurrentSublevel == kBigBoosHaunt)) {
                     im1 = i - 1;
-                    in.x = zero;
-                    in.y = zero;
-                    in.z = zero;
-                    dst.x = zero;
-                    dst.y = zero;
-                    dst.z = zero;
+                    in.x = 0;
+                    in.y = 0;
+                    in.z = 0;
+                    dst.x = 0;
+                    dst.y = 0;
+                    dst.z = 0;
                     in.z = data_ov095_02136fb0[i];
                     MTX_MultVec43(&in, &mTransform, &dst);
                     if (im1 < 0) {
@@ -268,9 +257,9 @@ int daObjFlamethrower_c::Behavior() {
                     other = dActor_c::FindWithID(id);
                     if (other != 0) {
                         if (other->actorID == kPlayerActorId)
-                            isPlayer = one;
+                            isPlayer = 1;
                         else
-                            isPlayer = no;
+                            isPlayer = 0;
                         if (isPlayer != 0)
                             ((daPly_c *)other)->Burn();
                     }
@@ -279,14 +268,12 @@ int daObjFlamethrower_c::Behavior() {
                 part.y += kParticleLift;
                 if ((param1 & 0xff) != kAltParam) {
                     ang = data_ov095_02136f80[i];
-                    a2 = ang0;
-                    Particle::System::NewFlamethrowerBlueA(part.x, part.y, part.z, ang, a2);
+                    Particle::System::NewFlamethrowerBlueA(part.x, part.y, part.z, ang, 0);
                     Particle::System::NewFlamethrowerBlueB(part.x, part.y, part.z, ang,
                                                            data_ov095_02136f98[i]);
                 } else {
                     ang = data_ov095_02136f80[i];
-                    a2 = ang1;
-                    Particle::System::NewFlamethrowerRedA(part.x, part.y, part.z, ang, a2);
+                    Particle::System::NewFlamethrowerRedA(part.x, part.y, part.z, ang, 0);
                     Particle::System::NewFlamethrowerRedB(part.x, part.y, part.z, ang,
                                                           data_ov095_02136f98[i]);
                 }
