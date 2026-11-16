@@ -89,7 +89,8 @@ struct CLPS_Block {
     u32 entries[6];
 };
 CLPS_Block data_ov021_02113a00 = {
-    0x53504c43, 0x00010008,
+    0x53504c43,
+    0x00010008,
     {0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
 };
 ResourceDescriptor data_ov021_021148d0 = {

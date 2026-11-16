@@ -62,15 +62,18 @@ struct CLPS_Block {
     u32 entries[6];
 };
 CLPS_Block data_ov047_02111a74 = {
-    0x53504c43, 0x00020008,
+    0x53504c43,
+    0x00020008,
     {0x00000fc0, 0x000000ff, 0x00004fc0, 0x000000ff, 0xffffffff, 0xffffffff},
 };
 CLPS_Block data_ov047_02111a94 = {
-    0x53504c43, 0x00020008,
+    0x53504c43,
+    0x00020008,
     {0x00000fc0, 0x000000ff, 0x00004fc0, 0x000000ff, 0xffffffff, 0xffffffff},
 };
 CLPS_Block data_ov047_02111bb4 = {
-    0x53504c43, 0x00020008,
+    0x53504c43,
+    0x00020008,
     {0x00000fc0, 0x000000ff, 0x00002fc0, 0x000000ff, 0xffffffff, 0xffffffff},
 };
 /* Forty bytes: three resource rows and the next row's model pointer.

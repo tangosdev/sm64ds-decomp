@@ -80,7 +80,8 @@ struct CLPS_Block {
     u32 entries[6];
 };
 CLPS_Block data_ov091_02135100 = {
-    0x53504c43, 0x00020008,
+    0x53504c43,
+    0x00020008,
     {0x01001fc4, 0x000000ff, 0x01000fc4, 0x000000ff, 0xffffffff, 0xffffffff},
 };
 DsnBaseFileTable data_ov091_02135138 = {

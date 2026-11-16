@@ -257,17 +257,27 @@ extern "C" OamAttr data_ov006_02134ce0[3] = {
 
 /* One table per language, in its ROM order. */
 extern "C" OamAttr *data_ov006_02134b54[3] = {
-    data_ov006_02134cc8, data_ov006_02134bc0, data_ov006_02134ce0,
+    data_ov006_02134cc8,
+    data_ov006_02134bc0,
+    data_ov006_02134ce0,
 };
 extern "C" OamAttr *data_ov006_02134b60[3] = {
-    data_ov006_02134c98, data_ov006_02134b90, data_ov006_02134ba8,
+    data_ov006_02134c98,
+    data_ov006_02134b90,
+    data_ov006_02134ba8,
 };
 extern "C" OamAttr *data_ov006_02134b6c[3] = {
-    data_ov006_02134bf0, data_ov006_02134cb0, data_ov006_02134c68,
+    data_ov006_02134bf0,
+    data_ov006_02134cb0,
+    data_ov006_02134c68,
 };
 extern "C" OamAttr *data_ov006_02134b78[3] = {
-    data_ov006_02134c80, data_ov006_02134c50, data_ov006_02134c38,
+    data_ov006_02134c80,
+    data_ov006_02134c50,
+    data_ov006_02134c38,
 };
 extern "C" OamAttr *data_ov006_02134b84[3] = {
-    data_ov006_02134c08, data_ov006_02134bd8, data_ov006_02134c20,
+    data_ov006_02134c08,
+    data_ov006_02134bd8,
+    data_ov006_02134c20,
 };

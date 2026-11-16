@@ -80,33 +80,33 @@ extern const BTA_File data_ov007_020cda2c;
 extern const BTA_File data_ov007_020cda5c;
 extern const BTA_File data_ov007_020cdabc;
 extern const BTA_File data_ov007_020cdb04;
-extern "C" fx32 data_ov007_020ccd5c[];   /* 020cd9b4: scales */
-extern "C" u16 data_ov007_020ccd68[];    /* 020cd9b4: rotations */
-extern "C" fx32 data_ov007_020d042c[];   /* 020cd9b4: translations */
+extern "C" fx32 data_ov007_020ccd5c[]; /* 020cd9b4: scales */
+extern "C" u16 data_ov007_020ccd68[];  /* 020cd9b4: rotations */
+extern "C" fx32 data_ov007_020d042c[]; /* 020cd9b4: translations */
 extern "C" BTAMaterialRecord data_ov007_020ce6cc[];
-extern "C" fx32 data_ov007_020cfdec[];   /* 020cd9e4: scales */
-extern "C" u16 data_ov007_020cccf8[];    /* 020cd9e4: rotations */
-extern "C" fx32 data_ov007_020d0194[];   /* 020cd9e4: translations */
+extern "C" fx32 data_ov007_020cfdec[]; /* 020cd9e4: scales */
+extern "C" u16 data_ov007_020cccf8[];  /* 020cd9e4: rotations */
+extern "C" fx32 data_ov007_020d0194[]; /* 020cd9e4: translations */
 extern "C" BTAMaterialRecord data_ov007_020cf0cc[];
-extern "C" fx32 data_ov007_020ccd58[];   /* 020cda14: scales */
-extern "C" u16 data_ov007_020ccd7c[];    /* 020cda14: rotations */
-extern "C" fx32 data_ov007_020ccdb8[];   /* 020cda14: translations */
+extern "C" fx32 data_ov007_020ccd58[]; /* 020cda14: scales */
+extern "C" u16 data_ov007_020ccd7c[];  /* 020cda14: rotations */
+extern "C" fx32 data_ov007_020ccdb8[]; /* 020cda14: translations */
 extern "C" BTAMaterialRecord data_ov007_020ce73c[];
-extern "C" fx32 data_ov007_020d072c[];   /* 020cda2c: scales */
-extern "C" u16 data_ov007_020ccce8[];    /* 020cda2c: rotations */
-extern "C" fx32 data_ov007_020d403c[];   /* 020cda2c: translations */
+extern "C" fx32 data_ov007_020d072c[]; /* 020cda2c: scales */
+extern "C" u16 data_ov007_020ccce8[];  /* 020cda2c: rotations */
+extern "C" fx32 data_ov007_020d403c[]; /* 020cda2c: translations */
 extern "C" BTAMaterialRecord data_ov007_020cf024[];
-extern "C" fx32 data_ov007_020cd03c[];   /* 020cda5c: scales */
-extern "C" u16 data_ov007_020cccd4[];    /* 020cda5c: rotations */
-extern "C" fx32 data_ov007_020cdb1c[];   /* 020cda5c: translations */
+extern "C" fx32 data_ov007_020cd03c[]; /* 020cda5c: scales */
+extern "C" u16 data_ov007_020cccd4[];  /* 020cda5c: rotations */
+extern "C" fx32 data_ov007_020cdb1c[]; /* 020cda5c: translations */
 extern "C" BTAMaterialRecord data_ov007_020cf078[];
-extern "C" fx32 data_ov007_020ccd60[];   /* 020cdabc: scales */
-extern "C" u16 data_ov007_020cccf0[];    /* 020cdabc: rotations */
-extern "C" fx32 data_ov007_020ccdac[];   /* 020cdabc: translations */
+extern "C" fx32 data_ov007_020ccd60[]; /* 020cdabc: scales */
+extern "C" u16 data_ov007_020cccf0[];  /* 020cdabc: rotations */
+extern "C" fx32 data_ov007_020ccdac[]; /* 020cdabc: translations */
 extern "C" BTAMaterialRecord data_ov007_020ce854[];
-extern "C" fx32 data_ov007_020ccd90[];   /* 020cdb04: scales */
-extern "C" u16 data_ov007_020cccd8[];    /* 020cdb04: rotations */
-extern "C" fx32 data_ov007_020d147c[];   /* 020cdb04: translations */
+extern "C" fx32 data_ov007_020ccd90[]; /* 020cdb04: scales */
+extern "C" u16 data_ov007_020cccd8[];  /* 020cdb04: rotations */
+extern "C" fx32 data_ov007_020d147c[]; /* 020cdb04: translations */
 extern "C" BTAMaterialRecord data_ov007_020ce8c4[];
 extern const BTA_File *data_ov007_020d7ee8[3][3]; /* [set]: animation data in the overlay */
 extern void *data_ov007_02103348[3];           /* data_ov007_020ccc80[set], loaded */
@@ -310,31 +310,29 @@ extern const int data_ov007_020ccc80[3][3] = {
 };
 extern const BTA_File data_ov007_020cd9b4 = {
     0x30, 0, data_ov007_020ccd5c, data_ov007_020ccd68, data_ov007_020d042c,
-    2, 0, data_ov007_020ce6cc,
+    2,    0, data_ov007_020ce6cc,
 };
 extern const BTA_File data_ov007_020cd9e4 = {
     0x29, 0, data_ov007_020cfdec, data_ov007_020cccf8, data_ov007_020d0194,
-    3, 0, data_ov007_020cf0cc,
+    3,    0, data_ov007_020cf0cc,
 };
 extern const BTA_File data_ov007_020cda14 = {
     0x30, 0, data_ov007_020ccd58, data_ov007_020ccd7c, data_ov007_020ccdb8,
-    2, 0, data_ov007_020ce73c,
+    2,    0, data_ov007_020ce73c,
 };
 extern const BTA_File data_ov007_020cda2c = {
     0x354, 0, data_ov007_020d072c, data_ov007_020ccce8, data_ov007_020d403c,
-    3, 0, data_ov007_020cf024,
+    3,     0, data_ov007_020cf024,
 };
 extern const BTA_File data_ov007_020cda5c = {
-    2, 0, data_ov007_020cd03c, data_ov007_020cccd4, data_ov007_020cdb1c,
-    3, 0, data_ov007_020cf078,
+    2, 0, data_ov007_020cd03c, data_ov007_020cccd4, data_ov007_020cdb1c, 3, 0, data_ov007_020cf078,
 };
 extern const BTA_File data_ov007_020cdabc = {
-    2, 0, data_ov007_020ccd60, data_ov007_020cccf0, data_ov007_020ccdac,
-    2, 0, data_ov007_020ce854,
+    2, 0, data_ov007_020ccd60, data_ov007_020cccf0, data_ov007_020ccdac, 2, 0, data_ov007_020ce854,
 };
 extern const BTA_File data_ov007_020cdb04 = {
     0x2bc, 0, data_ov007_020ccd90, data_ov007_020cccd8, data_ov007_020d147c,
-    2, 0, data_ov007_020ce8c4,
+    2,     0, data_ov007_020ce8c4,
 };
 
 const BTA_File *data_ov007_020d7ee8[3][3] = {

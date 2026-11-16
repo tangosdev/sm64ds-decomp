@@ -48,7 +48,8 @@ struct CLPS_Block {
     u32 entries[6];
 };
 CLPS_Block data_ov029_0211308c = {
-    0x53504c43, 0x00020008,
+    0x53504c43,
+    0x00020008,
     {0x01000fc0, 0x000000ff, 0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff},
 };
 

@@ -59,8 +59,14 @@ extern const BTAMaterialRecord data_ov017_021114c0[];
 extern char data_ov017_02111a18[];
 
 BTA_File data_ov017_02111a60 = {
-    300, 0, (fx32 *)data_ov017_021114bc, (u16 *)data_ov017_021114b8,
-    (fx32 *)data_ov017_021114dc, 1, 0, (BTAMaterialRecord *)data_ov017_021114c0,
+    300,
+    0,
+    (fx32 *)data_ov017_021114bc,
+    (u16 *)data_ov017_021114b8,
+    (fx32 *)data_ov017_021114dc,
+    1,
+    0,
+    (BTAMaterialRecord *)data_ov017_021114c0,
 };
 
 /* The texture-SRT keys and the one material record this file table drives.

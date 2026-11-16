@@ -69,8 +69,14 @@ extern const BTAMaterialRecord data_ov032_0211291c[];
 extern char data_ov032_02112edc[];
 
 BTA_File data_ov032_02112f64 = {
-    91, 0, (fx32 *)data_ov032_021128fc, (u16 *)data_ov032_021128f0,
-    (fx32 *)data_ov032_02112aa4, 1, 0, (BTAMaterialRecord *)data_ov032_0211291c,
+    91,
+    0,
+    (fx32 *)data_ov032_021128fc,
+    (u16 *)data_ov032_021128f0,
+    (fx32 *)data_ov032_02112aa4,
+    1,
+    0,
+    (BTAMaterialRecord *)data_ov032_0211291c,
 };
 
 /* The keys and the material record of the file table above. Retail keeps
