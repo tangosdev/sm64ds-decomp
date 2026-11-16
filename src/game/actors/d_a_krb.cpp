@@ -459,7 +459,7 @@ void daKrb_c::func_ov084_021296cc() {
             (char *)dActor_c::Spawn(ACTOR_SILVER_STAR, 0x10, goomba->mPos, 0, goomba->mAreaId, -1);
         if (starMarker != 0 && silverStar != 0) {
             ((daStar_c *)silverStar)->mMarkerID = ((dActor_c *)starMarker)->uniqueID;
-            ((daStarBase_c *)starMarker)->LinkSilverStarAndStarMarker(silverStar);
+            ((daStarBase_c *)starMarker)->LinkSilverStarAndStarMarker((daStar_c *)silverStar);
             goomba->SpawnSoundObj(1);
         }
         /* The (int) cast on the load is load-bearing: a plain

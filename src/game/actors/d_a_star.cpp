@@ -37,8 +37,6 @@
  *   output vector, not the star.
  * - Still unnamed: the dActor_c word at +0xc8 and the halfword at
  *   data_02082714 + 0x56, which lands mid-word in an untyped arm9 table.
- * - `this` goes to LinkSilverStarAndStarMarker as (char *)this to keep its
- *   declared signature.
  * - The Kind names are numbers (KIND_n): only what the code evidences is
  *   said about each one.
  * Methods are named for what their bodies do (and, for the State handlers and the
@@ -451,7 +449,7 @@ s32 daStar_c::InitResources()
 
     sp = (char *)dActor_c::FindWithID(mMarkerID);
     if (sp != 0)
-        ((daStarBase_c *)(sp))->LinkSilverStarAndStarMarker((char *)this);
+        ((daStarBase_c *)(sp))->LinkSilverStarAndStarMarker(this);
     if (gCurrentSublevel == 8 && mStarID == 7) {
         if (IsStarCollected(SublevelToLevel(8), 1) == 0 || gCurrentStarId == 1) {
             MarkForDestruction();
@@ -1598,7 +1596,7 @@ void daStar_c::FindMarker() {
         }
     }
     mMarkerID = found->uniqueID;
-    found->LinkSilverStarAndStarMarker((char *)this);
+    found->LinkSilverStarAndStarMarker(this);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1727,7 +1725,7 @@ int daStar_c::Collect(void *p) {
     mState = STATE_TOUCHED;
     found = dActor_c::FindWithID(mMarkerID);
     if (found) {
-        ((daStarBase_c *)((char *)found))->LinkSilverStarAndStarMarker((char *)0);
+        ((daStarBase_c *)((char *)found))->LinkSilverStarAndStarMarker(0);
     }
     mPlayer = (daPly_c *)p;
 
@@ -2718,7 +2716,7 @@ void daStar_c::LinkRandomFreeMarker() {
     found = arr[idx];
     if (found == 0) return;
     mMarkerID = found->uniqueID;
-    found->LinkSilverStarAndStarMarker((char *)this);
+    found->LinkSilverStarAndStarMarker(this);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2826,10 +2824,9 @@ void daStar_c::SeekNewMarker(daPly_c *player, int gate) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- LinkSilverStarAndStarMarker, 0x020e71d4, size 0x44 */
 /* -------------------------------------------------------------------------- */
-/* Links the marker to the star b, copying its uniqueID, State and (when it has
+/* Links the marker to star, copying its uniqueID, State and (when it has
  * one) death-table id; with 0 it forgets the star. */
-void daStarBase_c::LinkSilverStarAndStarMarker(char* b) {
-    daStar_c *star = (daStar_c *)b;
+void daStarBase_c::LinkSilverStarAndStarMarker(daStar_c *star) {
     if (star != 0) {
         mLinkedStarID = star->uniqueID;
         mLinkedStarState = star->mState;

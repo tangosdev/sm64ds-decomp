@@ -23,6 +23,8 @@
 #include "dCcAcPos_c.h"
 #include "math/Matrix.h"
 
+struct daStar_c;
+
 /* RTTI calls this class daStarBase_c. daStarBase_c is the readable compatibility
  * spelling already fixed by the matched function names. The ROM's
  * __si_class_type_info record gives it one dActor_c base at offset zero, and
@@ -108,7 +110,7 @@ struct daStarBase_c : dActor_c {
     void Collect();
 
     /* Receivers. The address is the method name. */
-    void LinkSilverStarAndStarMarker(char* b);
+    void LinkSilverStarAndStarMarker(daStar_c *star);
 };
 
 #ifndef SM64DS_PLATFORM_PC
