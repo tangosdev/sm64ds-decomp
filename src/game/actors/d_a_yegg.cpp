@@ -112,11 +112,6 @@ typedef void (daYegg_c::*PMF)();
 struct Entry { PMF pmf[2]; };
 extern Entry data_ov002_02110a5c[];
 
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
-
 extern "C" {
 /* Defined below. */
 

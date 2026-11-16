@@ -213,11 +213,6 @@ extern daKing_Donketu_c::State data_ov073_021233f0;
 extern daKing_Donketu_c::State data_ov073_02123400;
 extern daKing_Donketu_c::State data_ov073_02123410;
 
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
-
 extern "C" {
 
 struct BCA_File;

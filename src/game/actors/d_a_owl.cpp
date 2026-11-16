@@ -79,6 +79,7 @@ enum daOwl_c_AssetId {
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 #include "LevelRng.h"
+#include "Sound.h"
 
 /* Resource handles the static initializer constructs. The wrapper spellings
  * are reconstructed; the constructor and destructor addresses, the file IDs
@@ -144,11 +145,6 @@ enum {
 
 /* Whole animation frame of the dExtAnmModel_c, as the ROM extracts it. */
 #define OWL_FRAME(o)        ((u16)((o)->mAnmModel.currFrame >> 12))
-
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
 
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;

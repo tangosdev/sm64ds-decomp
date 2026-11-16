@@ -84,11 +84,6 @@ enum { daIbl_PTCL_BREAK = 0xf };
 /* The model and shadow matrix copies go through the flat Mtx43: assigning
    the C++ Matrix4x3 grows .text by 0x34 bytes. */
 
-namespace Sound {
-/* local extern: including Sound.h renumbers @NNN. */
-int PlayLong(u32, u32, u32, const Vector3 &, s16);
-}
-
 void func_02012694(unsigned int a, const Vector3 *p);
 extern "C" void func_02038414(void *p);
 int func_ov002_020ad660(void *a, void *b, void *d, int e);
