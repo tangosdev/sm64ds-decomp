@@ -314,15 +314,12 @@ void daTrs_c::func_ov063_0211640c() {
     if (!this->mBooFlags.visible)
         return;
 
-    pos.x = this->mPosX;
-    pos.y = this->mPosY;
-    pos.z = this->mPosZ;
+    pos = this->mPos;
     ang = this->mAngleY;
 
     if (this->mBooFlags.mirrored) {
-        s16 neg = -1;
-        pos.x *= (int)neg;
-        ang *= (int)neg;
+        pos.x *= -1;
+        ang *= -1;
     }
 
     if (this->mState == 3) {
@@ -353,8 +350,7 @@ void daTrs_c::func_ov063_0211640c() {
         DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x12c000, 0xc8000, 0xf);
 
         if (this->mBooFlags.mirrored) {
-            s16 neg = -1;
-            pos.x *= (int)neg;
+            pos.x *= -1;
             Matrix4x3_FromTranslation(&data_020a0e68,
                 pos.x >> 3, pos.y >> 3, pos.z >> 3);
             this->mShadowMtx2 = data_020a0e68;
