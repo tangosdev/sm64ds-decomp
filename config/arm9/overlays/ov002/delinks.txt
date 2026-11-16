@@ -23,6 +23,7 @@ src/game/actors/d_a_1up.cpp:
     .ctor start:0x021080d8 end:0x021080dc
     .data start:0x02108300 end:0x02108370
     .bss start:0x0210dc00 end:0x0210dc70
+    .rodata start:0x020ff040 end:0x020ff060
 
 src/game/actors/d_a_bar.cpp:
     complete
@@ -71,6 +72,7 @@ src/game/actors/d_a_obj_block_item_tag.cpp:
     .ctor start:0x021080e4 end:0x021080e8
     .data start:0x02108b5c end:0x02108b7c
     .bss start:0x0210dd30 end:0x0210dd50
+    .rodata start:0x020ff090 end:0x020ff0a0
 
 src/game/actors/d_a_obj_kinoko_tag.cpp:
     complete
@@ -198,6 +200,7 @@ src/game/player/d_a_ply_methods.cpp:
     .ctor start:0x02108110 end:0x02108114
     .data start:0x02109db8 end:0x0210a8b8
     .bss start:0x0210e14c end:0x02110924
+    .rodata start:0x020ff0ec end:0x02100000
 
 src/game/player/d_a_ply.cpp:
     complete
