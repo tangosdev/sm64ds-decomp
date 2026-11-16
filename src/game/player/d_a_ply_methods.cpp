@@ -644,18 +644,14 @@ PlayerFreeVoidPmf data_ov002_0210a334 = {func_ov002_020c72a4};
 }
 
 /* func_ov002_020e1e70 stays a free C-linkage body; the table slot is a PMF. */
-union PlayerFreeCleanupTarget {
-    void (*code)(char *);
-    void (daPly_c::*pmf)();
-};
 extern "C" {
 /* Non-PMF records in the descriptor band and the free cleanup handler's PMF
  * record. */
 AnimScriptStep data_ov002_0210a3dc[] = {{1, 0}};
 int data_ov002_0210a424[] = {19, 21};
 AnimScriptStep data_ov002_0210a434[] = {{188, 0}};
-void func_ov002_020e1e70(char *);
-PlayerFreeCleanupTarget data_ov002_0210a47c = {func_ov002_020e1e70};
+void func_ov002_020e1e70(daPly_c *);
+PlayerFreePmf data_ov002_0210a47c = {func_ov002_020e1e70};
 AnimScriptStep data_ov002_0210a4bc[] = {{191, 0}};
 
 /* Player animation scripts, frame windows, hurt tables, and body-model
@@ -18927,9 +18923,8 @@ void daPly_c::func_ov002_020e1c20() {
 }
 
 extern "C" {
-void func_ov002_020e1e70(char *c) {
+void func_ov002_020e1e70(daPly_c *player) {
     extern unsigned char data_0209f49c[];
-    daPly_c *player = (daPly_c *)c;
     player->mVertAccel = -0x4000;
     player->mTerminalVelocity = -0x4b000;
     if ((player->mVertSpeed) >= 0) {
@@ -18942,9 +18937,9 @@ void func_ov002_020e1e70(char *c) {
         return;
     }
     if ((data_0209f498[gActivePlayerSlot].held) & 2) {
-        ((daPly_c *)c)->SetAnim(0x3f, 0, 0x1000, 0);
+        player->SetAnim(0x3f, 0, 0x1000, 0);
         dExtFrameCtrl_c &anim =
-            *player->mModels.mBodyModels[((daPly_c *)c)->GetBodyModelID(player->param1 & 0xff, 0)];
+            *player->mModels.mBodyModels[player->GetBodyModelID(player->param1 & 0xff, 0)];
         anim.speed = 0x4000;
         player->mLoopingSoundHandle = func_02012120(player->mLoopingSoundHandle, player->mCharacter,
                                                     0x18, &player->mCamSpacePos, 0);
@@ -18954,8 +18949,8 @@ void func_ov002_020e1e70(char *c) {
         } else {
             player->mVertAccel = player->func_ov002_020bf27c(-0x4000);
         }
-    } else if (((daPly_c *)c)->IsAnim(0x3f) != 0) {
-        ((daPly_c *)c)->SetAnim(0x54, 0, 0x1000, 0);
+    } else if (player->IsAnim(0x3f) != 0) {
+        player->SetAnim(0x54, 0, 0x1000, 0);
     }
 }
 }
