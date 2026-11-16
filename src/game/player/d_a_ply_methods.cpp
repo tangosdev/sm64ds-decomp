@@ -5294,7 +5294,6 @@ int daPly_c::func_ov002_020c61ac() {
 /* recovered: shared common types */
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 int daPly_c::func_ov002_020c647c(int arg1) {
-    char* c = (char*)this;
     Vector3 v1;
     Vector3 v2;
     dBgCh_Lin line;
@@ -5309,7 +5308,7 @@ int daPly_c::func_ov002_020c647c(int arg1) {
     v2.z = z2;
     v2.y = arg1 + 0xaa000;
     int r5 = -64;
-    line.SetObjAndLine(v1, v2, (dActor_c*)c);
+    line.SetObjAndLine(v1, v2, this);
     if (line.DetectClsn()) {
         ::Vector3 clsnPos = line.GetClsnPos();
         int d = (clsnPos.y - this->mPosY) / 0x1000;
