@@ -50,7 +50,7 @@ extern "C" OamAttr data_ov006_0213453c[];
 extern "C" OamAttr data_ov006_0213462c[];
 extern "C" OamAttr data_ov006_021344a4[];
 extern "C" OamAttr data_ov006_021345ac[];
-OamAttr * sBomroomPenGateSprites[] = {
+OamAttr *sBomroomPenGateSprites[] = {
     data_ov006_02134514, data_ov006_0213466c, data_ov006_021345ec, data_ov006_02134484,
     data_ov006_0213456c, data_ov006_021344c4, data_ov006_0213453c, data_ov006_0213462c,
     data_ov006_021344a4, data_ov006_021345ac,
@@ -62,18 +62,18 @@ extern "C" OamAttr data_ov006_021342d0[];
 extern "C" OamAttr data_ov006_021342f0[];
 extern "C" OamAttr data_ov006_02134310[];
 extern "C" OamAttr data_ov006_02134370[];
-OamAttr * sBomroomHatchPanelSprites[] = {
-    data_ov006_02134340, data_ov006_021342d0, data_ov006_021342f0, data_ov006_02134310,
-    data_ov006_02134370,
+OamAttr *sBomroomHatchPanelSprites[] = {
+    data_ov006_02134340, data_ov006_021342d0, data_ov006_021342f0,
+    data_ov006_02134310, data_ov006_02134370,
 };
 extern "C" OamAttr data_ov006_02134404[];
 extern "C" OamAttr data_ov006_021343a0[];
 extern "C" OamAttr data_ov006_021343e4[];
 extern "C" OamAttr data_ov006_021343c4[];
 extern "C" OamAttr data_ov006_02134444[];
-OamAttr * sBomroomTopDoorSprites[] = {
-    data_ov006_02134404, data_ov006_021343a0, data_ov006_021343e4, data_ov006_021343c4,
-    data_ov006_02134444,
+OamAttr *sBomroomTopDoorSprites[] = {
+    data_ov006_02134404, data_ov006_021343a0, data_ov006_021343e4,
+    data_ov006_021343c4, data_ov006_02134444,
 };
 extern int sBomroomHatchPanelX[];
 extern int sBomroomHatchPanelY[];
@@ -109,17 +109,19 @@ extern "C" char data_ov006_02133d50[];
 extern void *sBomroomBombsSprites[];
 extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern "C" OamAttr data_ov006_02134f34[];
-OamAttr * sBomroomRoundOverSprites = data_ov006_02134f34;
+OamAttr *sBomroomRoundOverSprites = data_ov006_02134f34;
 extern "C" char data_ov006_02133b60[];
 extern "C" char data_ov006_02133ba0[];
 extern "C" char data_ov006_02133af0[];
 extern "C" char data_ov006_02133b28[];
-void * sBomroomMarkerPlainSprites[] = {data_ov006_02133b60, data_ov006_02133ba0, data_ov006_02133af0, data_ov006_02133b28};
+void *sBomroomMarkerPlainSprites[] = {data_ov006_02133b60, data_ov006_02133ba0, data_ov006_02133af0,
+                                      data_ov006_02133b28};
 extern "C" char data_ov006_02133ab0[];
 extern "C" char data_ov006_02133a98[];
 extern "C" char data_ov006_02133a80[];
 extern "C" char data_ov006_02133ac8[];
-void * sBomroomMarkerLitSprites[] = {data_ov006_02133ab0, data_ov006_02133a98, data_ov006_02133a80, data_ov006_02133ac8};
+void *sBomroomMarkerLitSprites[] = {data_ov006_02133ab0, data_ov006_02133a98, data_ov006_02133a80,
+                                    data_ov006_02133ac8};
 extern int sBomroomMarkerY[];
 extern int Mg_GetSubmittedScore(void);
 extern u16 sBomroomSpawnDelays[];

@@ -93,7 +93,10 @@ extern CupShuffleOffset sCupShuffleOffsets[];
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 void Mg_DrawStockCounter(int arg0, int arg1);
 void Mg_DrawScoreTally(void *a, int b, int c, int d);
-char data_ov006_02139df4[24] = {(char)0xe8, 0, (char)0xe5, 65, (char)0xb6, 53, 0, 0, (char)0xf8, 64, (char)0xdd, 65, (char)0xfc, 53, 0, 0, 0, 64, (char)0xe1, (char)0x81, (char)0xd8, 53, (char)0xff, (char)0xff};
+char data_ov006_02139df4[24] = {(char)0xe8, 0,          (char)0xe5, 65, (char)0xb6, 53,
+                                0,          0,          (char)0xf8, 64, (char)0xdd, 65,
+                                (char)0xfc, 53,         0,          0,  0,          64,
+                                (char)0xe1, (char)0x81, (char)0xd8, 53, (char)0xff, (char)0xff};
 extern PMF sCupStateTable[];
 extern AnimStep *sCupAnimTable[];
 extern u8 gMainScreenLayers;
@@ -878,18 +881,12 @@ extern "C" OamAttr data_ov006_02139dc4[];
 extern "C" OamAttr data_ov006_02139de4[];
 AnimStep data_ov006_02139dbc[] = {{data_ov006_02139e74, 0}};
 AnimStep data_ov006_02139e9c[] = {
-    {data_ov006_02139e74, 1},
-    {data_ov006_0213a13c, 3},
-    {data_ov006_02139dc4, 3},
-    {data_ov006_02139de4, 3},
-    {data_ov006_02139dd4, 0},
+    {data_ov006_02139e74, 1}, {data_ov006_0213a13c, 3}, {data_ov006_02139dc4, 3},
+    {data_ov006_02139de4, 3}, {data_ov006_02139dd4, 0},
 };
 AnimStep data_ov006_02139ec4[] = {
-    {data_ov006_02139dd4, 1},
-    {data_ov006_02139de4, 3},
-    {data_ov006_02139dc4, 3},
-    {data_ov006_0213a13c, 3},
-    {data_ov006_02139e74, 0},
+    {data_ov006_02139dd4, 1}, {data_ov006_02139de4, 3}, {data_ov006_02139dc4, 3},
+    {data_ov006_0213a13c, 3}, {data_ov006_02139e74, 0},
 };
 extern "C" OamAttr data_ov006_02139fdc[];
 AnimStep data_ov006_02139db4[] = {{data_ov006_02139fdc, 0}};
@@ -897,11 +894,8 @@ extern "C" OamAttr data_ov006_0213a18c[];
 extern "C" OamAttr data_ov006_02139e2c[];
 extern "C" OamAttr data_ov006_02139e0c[];
 AnimStep data_ov006_02139e4c[] = {
-    {data_ov006_02139fdc, 1},
-    {data_ov006_0213a18c, 3},
-    {data_ov006_02139e2c, 3},
-    {data_ov006_02139e0c, 3},
-    {data_ov006_02139dd4, 0},
+    {data_ov006_02139fdc, 1}, {data_ov006_0213a18c, 3}, {data_ov006_02139e2c, 3},
+    {data_ov006_02139e0c, 3}, {data_ov006_02139dd4, 0},
 };
 AnimStep data_ov006_0213a274[] = {
     {data_ov006_02139dd4, 1},
@@ -912,23 +906,12 @@ extern "C" OamAttr data_ov006_0213a064[];
 extern "C" OamAttr data_ov006_0213a0ac[];
 extern "C" OamAttr data_ov006_0213a0f4[];
 AnimStep data_ov006_0213a1ec[] = {
-    {data_ov006_02139dd4, 1},
-    {data_ov006_02139e0c, 3},
-    {data_ov006_02139e2c, 3},
-    {data_ov006_0213a18c, 3},
-    {data_ov006_0213a01c, 45},
-    {data_ov006_0213a064, 3},
-    {data_ov006_0213a0ac, 3},
-    {data_ov006_0213a0f4, 3},
-    {data_ov006_0213a0ac, 3},
-    {data_ov006_0213a064, 3},
-    {data_ov006_0213a01c, 7},
-    {data_ov006_0213a064, 3},
-    {data_ov006_0213a0ac, 3},
-    {data_ov006_0213a0f4, 3},
-    {data_ov006_0213a0ac, 3},
-    {data_ov006_0213a064, 3},
-    {data_ov006_0213a01c, 0},
+    {data_ov006_02139dd4, 1}, {data_ov006_02139e0c, 3},  {data_ov006_02139e2c, 3},
+    {data_ov006_0213a18c, 3}, {data_ov006_0213a01c, 45}, {data_ov006_0213a064, 3},
+    {data_ov006_0213a0ac, 3}, {data_ov006_0213a0f4, 3},  {data_ov006_0213a0ac, 3},
+    {data_ov006_0213a064, 3}, {data_ov006_0213a01c, 7},  {data_ov006_0213a064, 3},
+    {data_ov006_0213a0ac, 3}, {data_ov006_0213a0f4, 3},  {data_ov006_0213a0ac, 3},
+    {data_ov006_0213a064, 3}, {data_ov006_0213a01c, 0},
 };
 }
 

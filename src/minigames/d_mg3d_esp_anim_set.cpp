@@ -153,7 +153,8 @@ extern int sMgClearBannerX;
 
 extern int sMgClearBannerY;
 
-Matrix4x3 data_ov006_0213c85c = {0x1000, 0x0, 0x0, 0x0, 0x1000, 0x0, 0x0, 0x0, 0x1000, 0x8c000, 0x8c000, 0x40000};
+Matrix4x3 data_ov006_0213c85c = {0x1000, 0x0, 0x0,    0x0,     0x1000,  0x0,
+                                 0x0,    0x0, 0x1000, 0x8c000, 0x8c000, 0x40000};
 
 /* Both models' starting matrix. Declaring it non-volatile adds 32 bytes to
    dScMg3DEsp_c::InitResources, and copying it without the stack temporary
@@ -166,9 +167,7 @@ extern volatile Matrix4x3 sEsp3DIdentityMtx;
    the vtable stores, mParticle's destruction and the chain to
    ~dScMgBase_c are all compiler-generated; the deleting variant reaches
    dScMgBase_c's operator delete. */
-dScMg3DEsp_c::~dScMg3DEsp_c()
-{
-}
+dScMg3DEsp_c::~dScMg3DEsp_c() {}
 
 /* ---- dMg3DEspAnimSet_c ------------------------------------------------- */
 
@@ -511,10 +510,10 @@ void dScMg3DEsp_c::FlashOnce() {
     mEspModel.mPolygonID = 0x1f;
 }
 
-void dScMg3DEsp_c::UpdateFlash()
-{
+void dScMg3DEsp_c::UpdateFlash() {
     unsigned char idx = mFlashMode;
-    if (idx >= 3) return;
+    if (idx >= 3)
+        return;
     (this->*s3DEspFlashTable[idx])();
 }
 
@@ -526,7 +525,7 @@ extern "C" char data_ov006_02133a14[];
 extern "C" char data_ov006_02133a0c[];
 extern "C" char data_ov006_02133a04[];
 extern "C" char data_ov006_021339fc[];
-void * sEsp3DAnimSetSlotsSprites[] = {
+void *sEsp3DAnimSetSlotsSprites[] = {
     data_ov006_02133a34, data_ov006_02133a2c, data_ov006_02133a24, data_ov006_02133a1c,
     data_ov006_02133a14, data_ov006_02133a0c, data_ov006_02133a04, data_ov006_021339fc,
 };
@@ -784,15 +783,17 @@ void dScMg3DEsp_c::SpawnRows(int idx) {
     }
 }
 
-struct Ent_8e10 { u16 f0, f2, f4, f6; };
+struct Ent_8e10 {
+    u16 f0, f2, f4, f6;
+};
 extern "C" Ent_8e10 data_ov006_02133f80[];
 extern "C" Ent_8e10 data_ov006_02133f68[];
 extern "C" Ent_8e10 data_ov006_02133f50[];
 extern "C" Ent_8e10 data_ov006_02133f38[];
 extern "C" Ent_8e10 data_ov006_02133f98[];
-Ent_8e10 * data_ov006_02133f24[] = {
-    data_ov006_02133f80, data_ov006_02133f68, data_ov006_02133f50, data_ov006_02133f38,
-    data_ov006_02133f98,
+Ent_8e10 *data_ov006_02133f24[] = {
+    data_ov006_02133f80, data_ov006_02133f68, data_ov006_02133f50,
+    data_ov006_02133f38, data_ov006_02133f98,
 };
 
 void dScMg3DEsp_c::RenderCards() {

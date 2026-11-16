@@ -110,7 +110,7 @@ extern "C" OamAttr data_ov006_0213aa94[];
 extern "C" OamAttr data_ov006_0213aa5c[];
 extern "C" OamAttr data_ov006_0213a9dc[];
 extern "C" OamAttr data_ov006_0213aa24[];
-OamAttr * sCoinCaptionSprites[] = {
+OamAttr *sCoinCaptionSprites[] = {
     data_ov006_0213a9a4, data_ov006_0213a9ac, data_ov006_0213a9c4, data_ov006_0213a99c,
     data_ov006_0213ab1c, data_ov006_0213aad4, data_ov006_0213aa94, data_ov006_0213aa5c,
     data_ov006_0213a9dc, data_ov006_0213aa24,
@@ -128,11 +128,11 @@ extern const u16 sCoinSparkleAngles[];
 extern "C" char data_ov006_021341f0[];
 int sCoinPopupSprites = (int)data_ov006_021341f0;
 extern const int sCoinPopupY[];
-extern "C" OamAttr * sMgTextSpritesEnglish[];
-extern "C" OamAttr * sMgTextSpritesSpanish[];
-extern "C" OamAttr * sMgTextSpritesFrench[];
-extern "C" OamAttr * sMgTextSpritesGerman[];
-extern "C" OamAttr * sMgTextSpritesItalian[];
+extern "C" OamAttr *sMgTextSpritesEnglish[];
+extern "C" OamAttr *sMgTextSpritesSpanish[];
+extern "C" OamAttr *sMgTextSpritesFrench[];
+extern "C" OamAttr *sMgTextSpritesGerman[];
+extern "C" OamAttr *sMgTextSpritesItalian[];
 extern OamAttr **sCoinScorePlayerSprites[];
 extern int GetGameLanguage(void);
 extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
@@ -142,13 +142,13 @@ extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern "C" char data_ov006_02133f08[];
 extern "C" char data_ov006_02133f00[];
-void * sCoinValuesSprites[] = {data_ov006_02133f08, data_ov006_02133f00};
+void *sCoinValuesSprites[] = {data_ov006_02133f08, data_ov006_02133f00};
 extern "C" char data_ov006_02136e1c[];
 extern "C" char data_ov006_02136e14[];
-void * sCoinSparkleSprites[] = {data_ov006_02136e1c, data_ov006_02136e14};
+void *sCoinSparkleSprites[] = {data_ov006_02136e1c, data_ov006_02136e14};
 extern "C" char data_ov006_02134b44[];
 extern "C" char data_ov006_02134b3c[];
-void * sCoinBagSprites[] = {data_ov006_02134b44, data_ov006_02134b3c};
+void *sCoinBagSprites[] = {data_ov006_02134b44, data_ov006_02134b3c};
 extern void Mg_RenderSpriteBothPalMtx(void *obj, int x, int y, int w, int *vec);
 extern const int sCoinRowY[];
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
