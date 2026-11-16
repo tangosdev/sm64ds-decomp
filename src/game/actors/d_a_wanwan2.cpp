@@ -164,7 +164,8 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
-/* local extern: no shared math header declares MTX_MultVec43. */
+/* local extern: math/MtxStack.h declares it, but clashes with the void *
+   Matrix4x3_* spellings above. */
 void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);

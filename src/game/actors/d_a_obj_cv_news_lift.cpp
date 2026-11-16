@@ -92,7 +92,6 @@ extern "C" {
 void Matrix4x3_FromQuaternion(const struct Quaternion *q, struct Matrix4x3 *mF);
 void Vec3_Asr(void *d, void *s, int sh);
 int MTX_Inverse43(const struct Matrix4x3 *s, struct Matrix4x3 *d);
-void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
 u16 DecIfAbove0_Short(u16 *p);

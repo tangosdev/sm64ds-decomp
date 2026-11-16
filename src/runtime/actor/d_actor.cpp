@@ -178,9 +178,6 @@ void dActor_c::AfterCleanupResources(u32 vfSuccess)
 }
 
 u8 IsAreaShowing(int areaId);
-extern "C" {
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-}
 
 extern int data_0209fc68;
 /* nonzero forces the actor to think anyway */

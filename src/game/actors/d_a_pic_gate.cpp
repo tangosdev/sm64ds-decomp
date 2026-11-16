@@ -58,9 +58,10 @@
 
 /* Locals take the type of the call that fills them: the CalcLib Vec3_* helpers
    write Vector3, the NitroSDK VEC_* and MTX_MultVec43 write VecFx32. The VEC_*
-   calls take VecFx32 directly (nitro/fx/fx_vec.h, through math/CalcLib.h);
-   MTX_MultVec43's prototype (math/MtxStack.h) still says Vector3
-   (tangosdev/sm64ds-decomp#5207), hence the casts there. */
+   calls take VecFx32 directly (nitro/fx/fx_vec.h, through math/CalcLib.h).
+   MTX_MultVec43 takes VecFx32 with the SDK's MtxFx43, or Vector3 with the
+   game's Matrix4x3 through math/MtxStack.h's overload (#5207); these calls
+   use the game's matrix stack, hence the casts on the VecFx32 outputs. */
 
 extern "C" void G3_LoadMtx43(void *m);
 void func_02012694(u32 id, const Vector3 *pos);

@@ -44,6 +44,7 @@
 #include "LevelRng.h"
 #include "nitro/gx/g3_util.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/MtxStack.h"
 
 struct BTP_File;
 
@@ -81,13 +82,9 @@ int RandomIntInternal(int *seed);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 void Vec3_MulScalarInPlace(Vector3 *v, int scale);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
 int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 
-extern Matrix4x3 data_020a0e68;
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 extern short data_02082614[];
