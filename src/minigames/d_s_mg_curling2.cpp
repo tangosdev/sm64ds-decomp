@@ -202,7 +202,6 @@ void dScMgCurling2_c::SpawnValue(int stone, int other) {
     int i;
     int sx;
     int sy;
-    unsigned char *count;
 
     for (i = 0; i < 60; i++) {
         if (mValue[i].live != 0)
@@ -230,8 +229,7 @@ void dScMgCurling2_c::SpawnValue(int stone, int other) {
             mValue[i].mode = 2;
         }
 
-        count = &combo;
-        *count = *count + 1;
+        combo++;
         if (combo >= 0x17)
             combo = 0x17;
         Mg_SubmitScore(mValue[i].value + Mg_GetSubmittedScore());
