@@ -818,6 +818,14 @@
       "evidence": "origin/main:src/game/player/d_a_ply_methods.cpp spelled `*(void **)(b + 0xd0) = a;` with `char *b`; tubuild verify ov002/daPly_c 624/624 MATCH with the cast"
     },
     {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "unknown-field",
+      "match": "unk_407",
+      "count": 1,
+      "reason": "St_Squish_Main stores 1 to a Whomp's or King Whomp's byte 0x407 through daBtn_c, replacing the raw `*((u8 *)a + 0x407)` store with the header's existing member name. The only reader is daBtn_c's lying-flat state, which gets up after 30 frames instead of 100 (120 for the king) while the byte is 1 and then clears it; InitResources zeroes it. Why a finished squash should make the Whomp rise early is not established, so no name is invented. Follow-up: name it from a runtime observation of the Whomp getting up early after it flattens the player.",
+      "evidence": "include/daBtn_c.h line 119 (`u8 unk_407; /* 0x407 -- zeroed by InitResources */`); src/game/actors/d_a_btn.cpp daBtn_c::func_ov079_02124b08 reads and clears it; the compiled d_a_ply_methods.cpp object is byte-identical"
+    },
+    {
       "path": "src/game/actors/d_a_kinopio.cpp",
       "rule": "raw-offset",
       "match": "(dExtShadowModel_c*)(c+0x16c",
