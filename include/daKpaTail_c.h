@@ -14,7 +14,7 @@
  * One sub-object, and its offset is checked twice -- once by dCcAc_c's
  * own size assertion, once by closing exactly on the next named field:
  *
- *     dActor_c   0x000 + 0x0d0 = 0x0d0   -> pad_0d0
+ *     dActor_c   0x000 + 0x0d4 = 0x0d4   -> mdCcAc_c
  *     dCcAc_c    0x0d4 + 0x034 = 0x108   -> mBowserUniqueID
  *
  * The last 0x10 bytes (0x108..0x118) are Bowser's uniqueID, the daPly_c the tail
@@ -36,7 +36,6 @@
 #include "dActor_c.h"
 
 struct daKpaTail_c : dActor_c {
-    u8  pad_0d0[0x4];
     /* Named by the class's own destructor calling dCcAc_c's D1 at
        +0x0d4 -- a relocation the ROM build checks. */
     dCcAc_c mdCcAc_c;                                   /* 0x0d4 */

@@ -14,6 +14,6 @@ struct ParticleAlphaView {
  * SDK symbol. */
 void SPLAnim_ChildAlpha(struct ParticleAlphaView *ptcl, void *def, int lifeRate) {
     u16 *visibility = &ptcl->visibility;
-    u16 alpha = ((0xff - lifeRate) * 0x1f) / 0xff;
+    u16 alpha = ((255 - lifeRate) * 31) / 255;
     *visibility = (*visibility & ~0x3e0) | ((alpha & 0x1f) << 5);
 }

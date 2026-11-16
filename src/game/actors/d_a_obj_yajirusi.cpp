@@ -127,7 +127,7 @@ int daObjYajirusi_c::Behavior() {
         return 1;
     mMeshCollider.SetClipOffsetY(0xc0000);
     mMeshCollider.SetClipRadius(0xe0000);
-    DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMat, 0x10e000, 0x64000, 0x46000, 0xf);
+    DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMat, 0x10e000, 0x64000, 0x46000, 15);
     IsClsnInRangeOnScreen(0x600000, 0);
     return 1;
 }

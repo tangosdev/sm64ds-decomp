@@ -10,22 +10,22 @@ int func_02065538(void *buf, int size) {
     int i;
     WBTWork *work = func_02065b94();
 
-    for (i = 1; i < 0x10; i++) {
+    for (i = 1; i < 16; i++) {
         r = func_02063d3c(work, i, buf, size);
         if (r) return r;
     }
 
-    for (i = 1; i < 0x10; i++) {
+    for (i = 1; i < 16; i++) {
         r = func_02063e08(work, i, buf, size);
         if (r) return r;
     }
 
-    for (i = 1; i < 0x10; i++) {
+    for (i = 1; i < 16; i++) {
         r = func_02063ae4(work, i, buf, size);
         if (r) return r;
     }
 
-    for (i = 1; i < 0x10; i++) {
+    for (i = 1; i < 16; i++) {
         r = func_02063da0(work, i, buf, size);
         if (r) return r;
     }

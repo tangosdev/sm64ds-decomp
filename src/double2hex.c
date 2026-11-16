@@ -153,7 +153,7 @@ char *double2hex(double x, char *buff_end, print_format format) {
             if ((bitpos & ~7) != ((bitpos - 4) & ~7))
                 digit |= (r[(bitpos >> 3) - 1] << 8) >> (7 - (bitpos & 7));
 
-            digit &= 0xf;
+            digit &= 15;
 
             if (digit < 10)
                 digit += '0';

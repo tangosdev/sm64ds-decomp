@@ -17,12 +17,6 @@
  * to front); do not reorder.
  *
  * Notes:
- * - dBgW_KcMbg::SetFile, dActor_c::DropShadowRadHeight and
- *   dBgActor_c::IsClsnInRange are header member calls; their headers
- *   take the Fix12 parameters as the scalar fx32, a plain s32. Passing a
- *   Fix12<int> by value size-DIFFs this TU: InitResources 0x14c against
- *   0x140, and UpdateShadow 0x80 against 0x70 (notes/mwccarm-codegen.md
- *   6az).
  * - dBgW::SetBeforeClsnCallback is the store of dBgW::beforeClsnCallback (+0x18).
  *   This InitResources calls it with &dBgW::UpdatePosAndAngs.
  * - The sign flip and the yaw add go through a pointer. Writing
@@ -158,10 +152,10 @@ int daObjCtKaitendai_c::Behavior() {
         break;
 
     case 2: /* random hand */
-        if (ApproachLinear(mPrevAngleZ, mPrevAngleX, 50) != 0) {
+        if (ApproachLinear(mPrevAngleZ, mPrevAngleX, 0x32) != 0) {
             u16 roll = ((u32)RandomIntInternal(&data_0209e650.value) >> 16);
 
-            mPrevAngleX = ((roll % 7) * 200);
+            mPrevAngleX = ((roll % 7) * 0xc8);
             if (roll >= 0x7fff) {
                 s16 *target = &mPrevAngleX;
                 *target *= -1;
@@ -207,7 +201,7 @@ int daObjCtKaitendai_c::CleanupResources() {
 void daObjCtKaitendai_c::UpdateShadow() {
     mShadowMat = mModel.mat4x3;
     mShadowMat.m[10] = (mGroundY + 0x32000) >> 3;
-    DropShadowRadHeight(mShadowModel, mShadowMat, 0x258000, 0xc8000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMat, 0x258000, 0xc8000, 15);
 }
 
 /* Static-init globals (was the handwritten __sinit_ov065_0211c8fc shard).

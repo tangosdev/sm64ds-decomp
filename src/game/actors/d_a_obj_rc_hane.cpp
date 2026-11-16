@@ -159,7 +159,7 @@ s32 daObjRc_Hane_c::Behavior() {
        runs the full 16 bits and wraps on its own -- the table only ever sees
        the low bits either way. */
     if (mPlaySound != 0) {
-        if (mFrame == 0x40) {
+        if (mFrame == 64) {
             Sound::PlayBank3(0x75, mCamSpacePos);
             mFrame = 0;
         }

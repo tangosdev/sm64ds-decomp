@@ -15,7 +15,6 @@
  * table selects the corresponding action below after the physical block links
  * itself to this tag. */
 struct daObjBlockItemTag_c : dActor_c {
-    u8 pad_0d0[0x4];
     s8 mStarID;        /* 0x0d4 -- Silver Star number, 0x7f -> 0 */
     s8 mTrackStarID;   /* 0x0d5 -- dActor_c::TrackStar result */
     u8 mActionPending; /* 0x0d6 */

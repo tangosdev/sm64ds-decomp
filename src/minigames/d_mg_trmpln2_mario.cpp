@@ -766,7 +766,7 @@ void dMgTrmpln2Mario_c::StateRespawnWait() {
 }
 
 void dMgTrmpln2Mario_c::EnterRespawnWait() {
-    mTimer = 0x3c;
+    mTimer = 60;
     mPos.y = 0x100000;
     mPrevPos.x = mPos.x;
     mPrevPos.y = mPos.y;
@@ -805,7 +805,7 @@ void dMgTrmpln2Mario_c::EnterMissed() {
     else
         Sound::PlayBank2_2D(0x1c9);
     mAnmModel.SetAnim(sTrmpAnimStruggle, 0, 0x800, 0);
-    mTimer = 0x28;
+    mTimer = 40;
     mState = pmf_Trmp2Mario_StateMissed_2;
 }
 
@@ -1022,7 +1022,7 @@ int Trmp2Mario_Hide(void) {
     int i;
     for (i = 0; i < sTrmp2MarioCount; i++) {
         int *v = ((dMgTrmpln2Mario_c *)sTrmp2Marios)[i].mState;
-        volatile int *q = (volatile int *)pmf_Trmp2Mario_StateHidden_2;
+        volatile int *q = (int *)pmf_Trmp2Mario_StateHidden_2;
         if (v[0] != pmf_Trmp2Mario_StateHidden_2[0] ||
             (v[1] != q[1] && ((dMgTrmpln2Mario_c *)sTrmp2Marios)[i].mState[0] != 0))
             return 0;
@@ -1069,7 +1069,7 @@ void Trmp2Mario_MoveToStart(void) {
     for (;;) {
 
         int *v = MARIO2(e)->mState;
-        volatile int *q = (volatile int *)pmf_Trmp2Mario_StateHidden;
+        volatile int *q = (int *)pmf_Trmp2Mario_StateHidden;
         if (v[0] == q0 && (v[1] == q[1] || MARIO2(e)->mState[0] == 0)) {
 
             ((dMgTrmpln2Mario_c *)(base + i * 0xdc))->EnterAppearWait((short)(i * 0x14));
@@ -1886,7 +1886,7 @@ void dMgTrmpln3DMario_c::EnterMissed() {
     else
         Sound::PlayBank2_2D(0x1c9);
     mAnmModel.SetAnim(sTrmpAnimStruggle, 0, 0x800, 0);
-    mTimer = 0x28;
+    mTimer = 40;
     mState = pmf_Trmp3DMario_StateMissed_2;
 }
 

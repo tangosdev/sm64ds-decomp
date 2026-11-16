@@ -27,8 +27,6 @@
  * Behavior calls through.
  *
  * What stays, and why:
- * - dExtAnmModel_c::SetAnim stays mangled: it takes Fix12<int> by value
- *   (notes/mwccarm-codegen.md 6az).
  * - SharedFilePtr::filePtr is a void *, so LoadedBCA casts it to the
  *   BCA_File * SetAnim takes.
  * - data_0209caa0 / data_0209f32c are the arm9 level-state words that
@@ -331,7 +329,7 @@ void daFish_c::StateFlee() {
             (((unsigned int)RandomIntInternal(&data_0209e650.value) % 0x12c) + 0x1f4) << 12;
         this->mTurnSpeed = (RandomIntInternal(&data_0209e650.value) & 0x3ff) + 0x400;
         this->mAnmModel.speed = 0x4000;
-    } else if (this->mStateTimer == 0x14) {
+    } else if (this->mStateTimer == 20) {
         this->mAnmModel.speed = 0x1000;
     }
     if (this->mHorzSpeed < this->mMaxSpeed) {
@@ -378,8 +376,7 @@ void daFish_c::StateTurnAbout() {
     this->mHorzSpeed =
         (((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x1fff) + 0x2000;
     this->mAnmModel.speed = 0x1000;
-    this->mWanderTimer =
-        ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 0x3c);
+    this->mWanderTimer = ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 60);
     this->mState = 5;
 }
 
@@ -411,7 +408,7 @@ void daFish_c::InitFromSpawner(u32 spawnerID) {
         this->mHorzSpeed =
             (((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x1fff) + 0x2000;
         this->mWanderTimer =
-            ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 0x3c);
+            ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 60);
         this->mState = 5;
     } else {
         this->mState = 3;

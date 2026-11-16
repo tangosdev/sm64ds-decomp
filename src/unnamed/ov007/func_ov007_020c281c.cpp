@@ -14,7 +14,7 @@ void func_ov007_020c281c(Ov007StrokePath *path, int minTurn) {
     int i;
     if (path->pointCount < 3)
         return;
-    FX_DivS32(minTurn << 16, 0x168);
+    FX_DivS32(minTurn << 16, 360);
     switch (path->representation) {
     case OV007_PATH_PLANAR:
         for (i = 2; i < path->pointCount; i++) {

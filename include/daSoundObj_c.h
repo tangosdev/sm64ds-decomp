@@ -19,7 +19,6 @@
  * pad_0e1 reaches the factory's 0xe4; it is padding to a known total,
  * not evidence of a field boundary. */
 struct daSoundObj_c : dActor_c {
-    u8  pad_0d0[0x4];
     s32 mSoundID;                /* 0x0d4 -- PlaySub arg 1 */
     s32 mVolume;                 /* 0x0d8 -- PlaySub arg 2 */
     u16 mCounter;                /* 0x0dc */

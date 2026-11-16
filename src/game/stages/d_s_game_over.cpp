@@ -17,10 +17,8 @@
  * deslop leftovers:
  * - UpdateIntro (0x020b060c) and UpdateButtonPalettes (0x020b0730) are
  *   non-virtual methods under coined names.
- * - OAM::Render's Fix12 overload stays mangled: OAM.h excludes the by-value
- *   Fix12<int> overloads (codegen wall, pinned in
- *   notes/experiments/gameover-2711-oam-render-fix12.md). G2S_GetBG1ScrPtr
- *   comes from nitro/gx/gx_bgcnt.h as `void *` and UpdateButtonPalettes casts it to u16* for its pointer
+ * - G2S_GetBG1ScrPtr comes from nitro/gx/gx_bgcnt.h as `void *` and
+ *   UpdateButtonPalettes casts it to u16* for its pointer
  *   arithmetic (typing ergonomics, not a codegen wall -- see
  *   notes/experiments/gameover-2711-bg1scrptr-u16.md).
  * - gSceneFader, the dFdBrightness_c dScene_c::SetFaders installed, gates
@@ -108,8 +106,6 @@ extern u8 data_0209f204;
  * at both consumers (see notes/experiments/gameover-2711-bg1scrptr-u16.md).
  * Init passes the result to DecompressLZ16's void* param either way. */
 
-void OamRender10_d_s_game_over(s32 sub, OamAttr *data, s32 x, s32 y, s32 palette, s32 priority,
-                               fx32 scaleX, fx32 scaleY, s32 rotation, s32 mode);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 }
@@ -282,8 +278,8 @@ s32 dScGameOver_c::InitResources() {
     mIntroPhase = 0;
     for (i = 0; i < 8; i++) {
         mGlyphX[i] = data_ov003_020b1764[i];
-        mGlyphY[i] = 0x60;
-        mGlyphDelay[i] = 0x30;
+        mGlyphY[i] = 96;
+        mGlyphDelay[i] = 48;
         mGlyphUnused[i] = 0;
     }
 
@@ -321,8 +317,8 @@ s32 dScGameOver_c::Behavior() {
             if (!IsTouchStarted() && !IsButtonInputValid())
                 break;
             idx = gActivePlayerSlot;
-            if (((unsigned char)(gTouchX[idx * 4] - 8) < 0xf0 &&
-                 (unsigned char)(gTouchY[idx * 4] - 0x38) < 0x20) ||
+            if (((unsigned char)(gTouchX[idx * 4] - 8) < 240 &&
+                 (unsigned char)(gTouchY[idx * 4] - 56) < 32) ||
                 (mSelection == 0 && IsButtonInputValid())) {
                 if (mSelection == 0)
                     mFlashTimer = (data_0208ee44 << 3);
@@ -334,8 +330,8 @@ s32 dScGameOver_c::Behavior() {
                 break;
             }
             idx = gActivePlayerSlot;
-            if (((unsigned char)(gTouchX[idx * 4] - 8) < 0xf0 &&
-                 (unsigned char)(gTouchY[idx * 4] - 0x68) < 0x20) ||
+            if (((unsigned char)(gTouchX[idx * 4] - 8) < 240 &&
+                 (unsigned char)(gTouchY[idx * 4] - 104) < 32) ||
                 (mSelection == 1 && IsButtonInputValid())) {
                 if (mSelection == 1)
                     mFlashTimer = (data_0208ee44 << 3);
@@ -360,7 +356,7 @@ s32 dScGameOver_c::Behavior() {
                         func_0202ae74();
                     else
                         dScene_c::StartSceneFade(1, 0, 0);
-                    Sound::StopLoadedMusic_Layer1(0x3c);
+                    Sound::StopLoadedMusic_Layer1(60);
                 }
             }
             break;
@@ -409,7 +405,7 @@ void dScGameOver_c::UpdateButtonPalettes(int unselectAll) {
                 w = 0x1000;
             v = (unsigned short)w;
         }
-        for (j = 0; j < 0x20; j++) {
+        for (j = 0; j < 32; j++) {
             p[0] = (p[0] & 0x3ff) | v;
             p[0x20] = (p[0x20] & 0x3ff) | v;
             p[0x40] = (p[0x40] & 0x3ff) | v;
@@ -435,7 +431,7 @@ void dScGameOver_c::UpdateIntro() {
     switch (s) {
     case 0:
         i = 0;
-        ip = 0xa;
+        ip = 10;
         do {
             if (mGlyphDelay[i] != 0) {
                 mGlyphDelay[i]--;
@@ -444,13 +440,13 @@ void dScGameOver_c::UpdateIntro() {
                 short x = mGlyphX[i];
                 if (x != tgt) {
                     if (i < 4) {
-                        mGlyphX[i] += 0xc;
+                        mGlyphX[i] += 12;
                         if (mGlyphX[i] >= tgt) {
                             mGlyphX[i] = tgt;
                             mGlyphDelay[i] = ip;
                         }
                     } else {
-                        mGlyphX[i] -= 0xc;
+                        mGlyphX[i] -= 12;
                         if (mGlyphX[i] <= tgt) {
                             mGlyphX[i] = tgt;
                             mGlyphDelay[i] = ip;

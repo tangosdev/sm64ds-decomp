@@ -337,7 +337,7 @@ int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p) {
 
 /* Face home, on the walk animation, and wait before turning. */
 int daHolhei_c::func_ov062_02116c78() {
-    mTurnWait = 0x3c;
+    mTurnWait = 60;
     mChargeStep = 0;
     mModel.speed = 0x1000;
     mModel.SetAnim((BCA_File *)(gHoruheiWalkAnimationFile.filePtr), 0, 0x1000, 0);
@@ -426,7 +426,7 @@ int daHolhei_c::func_ov062_02116980() {
         mTargetAngY = (s16)(mPrevAngleY - 0x1000);
     else
         mTargetAngY = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
-    mStateTimer = 0x46;
+    mStateTimer = 70;
     return 1;
 }
 
@@ -440,7 +440,7 @@ int daHolhei_c::func_ov062_02116894() {
         } else {
             mPrevAngleY = mTargetAngY;
             ::daHolhei_c_ChangeState(this, &data_ov062_0211dee0);
-            mChaseCooldown = 0x1e;
+            mChaseCooldown = 30;
             mTargetAngY = mPrevAngleY;
             return 1;
         }
@@ -455,7 +455,7 @@ int daHolhei_c::func_ov062_02116894() {
 int daHolhei_c::func_ov062_02116850() {
     mVertSpeed = 0;
     mTargetAngY = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
-    mStateTimer = 0x14;
+    mStateTimer = 20;
     mHorzSpeed = 0;
     return 1;
 }
@@ -467,9 +467,9 @@ int daHolhei_c::func_ov062_021167c0() {
     if (AngleDiff(mTargetAngY, mAngleY) < 0x100)
         mHorzSpeed = 0xa000;
     else
-        mStateTimer = 0x14;
+        mStateTimer = 20;
     if (mStateTimer == 0) {
-        mChaseCooldown = 0x1e;
+        mChaseCooldown = 30;
         ::daHolhei_c_ChangeState(this, &data_ov062_0211dee0);
     }
     return 1;

@@ -14,7 +14,7 @@ struct dScMgCurling2_stone {
     s32 speed;     /* 0x08 */
     s32 prevX;     /* 0x0c, snapshot of x before this frame's step */
     s32 prevY;     /* 0x10 */
-    s32 grabX;     /* 0x14, stone position minus stylus position, in Fix12 */
+    s32 grabX;     /* 0x14, stone position minus stylus position, in fx32 */
     s32 grabY;     /* 0x18 */
     s32 snd;       /* 0x1c, rolling-sound slot for func_02012468 */
     u16 timer;     /* 0x20, counts down while the stone is active */
@@ -207,7 +207,8 @@ struct dScMgCurling2_c : dScMgBase_c {
     void DrawStones();
     void SeparateStones(int idx);
 
-    dScMgCurling2_stone mStone[11];   /* 0x4660, stride 0x30 */
+    static const int STONE_NUM = 11;
+    dScMgCurling2_stone mStone[STONE_NUM]; /* 0x4660, stride 0x30 */
     dScMgCurling2_mark mMark[5];      /* 0x4870 */
     dScMgCurling2_piece mPiece[0x32]; /* 0x48c0 */
     s32 bg2x;                         /* 0x4fc8, BG2 scroll, 20.12 */

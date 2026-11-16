@@ -11,7 +11,7 @@
  * POWER_STAR at the STARBASE marker whose mStarID matches the group's
  * mStarID.
  *
- * SIZE 0x114. dActor_c ends at 0xd0; the class's POD group is 0x108..0x114:
+ * SIZE 0x114. dActor_c ends at 0xd4; the class's POD group is 0x108..0x114:
  *
  *   0x0d4  mdCcAc_c        -- touch collider
  *   0x108  mLeaderUniqueID -- uniqueID of the elected leader
@@ -27,7 +27,6 @@
  */
 
 struct daSCoin_c : dActor_c {
-    u8  pad_0d0[0x4];
     dCcAc_c mdCcAc_c;            /* 0x0d4 */
     s32 mLeaderUniqueID;         /* 0x108 */
     u8  pad_10c[0x1];

@@ -32,7 +32,6 @@ struct daPly_c;
  * reconstructed as g_profile_PEACH_PRINCESS.
  */
 struct daPeach_c : dActor_c {
-    u8 mPad0d0[0x4];                    /* 0x0d0 */
     dExtAnmModel_c mAnmModel;           /* 0x0d4 */
     dExtShadowModel_c mShadowModel;           /* 0x0138 */
     dCcAc_c mCylinder;                  /* 0x0160 */

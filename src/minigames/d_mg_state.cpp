@@ -313,7 +313,7 @@ void dMgState_c::Render() {
 
 void dMgState_c::RoundClear_Enter() {
     int prevId, id;
-    mTimer = 0xb4;
+    mTimer = 180;
     prevId = sMgNextBanner;
     id = 3;
     if (prevId != 0x1d) {
@@ -379,7 +379,7 @@ void dMgState_c::NextRound_Update() {
 }
 
 void dMgState_c::RoundBanner5_Enter() {
-    mTimer = 0xb4;
+    mTimer = 180;
     Mg_ShowBanner(5, sMgRecordBannerX, sMgRecordBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)1);
     mBehavior = pmf_dMgState_c_RoundBanner5_Update;
@@ -411,7 +411,7 @@ void dMgState_c::RoundBanner5_Update() {
 
 void dMgState_c::RetryPrompt_Enter() {
     int prevId, id;
-    mTimer = 0x3c;
+    mTimer = 60;
     prevId = sMgNextBanner;
     id = 8;
     if (prevId != 0x1d) {
@@ -466,7 +466,7 @@ void dMgState_c::UpdateRetryFadeOut() {
 
 void dMgState_c::Win_Enter() {
     int prevId, id;
-    mTimer = 0x78;
+    mTimer = 120;
     prevId = sMgNextBanner;
     id = 9;
     if (prevId != 0x1d) {
@@ -479,7 +479,7 @@ void dMgState_c::Win_Enter() {
 }
 
 void dMgState_c::Win_Update() {
-    if (mTimer > 0x64)
+    if (mTimer > 100)
         return;
     if (mTimer != 0)
         return;
@@ -499,7 +499,7 @@ void dMgState_c::Win_Update() {
 }
 
 void dMgState_c::Lose_Enter() {
-    mTimer = 0x78;
+    mTimer = 120;
     Mg_ShowBanner(0xa, sMgLoseBannerX, sMgLoseBannerY, -1, -1, 0xd);
     Sound::PlayBank2_2D(0x137);
     mBehavior = pmf_dMgState_c_Lose_Update;
@@ -523,7 +523,7 @@ void dMgState_c::Lose_Update() {
         sMgCoinsDeltaShown = 0;
         Mg_RestoreMusic();
         FreeGfxSlotsById(0x1d);
-        mTimer = 0xb4;
+        mTimer = 180;
         mBehavior = pmf_dMgState_c_UpdateGameOverToMenu;
     } else {
         if (state != 0)
@@ -564,7 +564,7 @@ void dMgState_c::UpdateGameOverToMenu() {
 }
 
 void dMgState_c::LoseResume_Enter() {
-    mTimer = 0x78;
+    mTimer = 120;
     Mg_ShowBanner(0xa, sMgLoseBannerX, sMgLoseBannerY, -1, -1, 0xd);
     Sound::PlayBank2_2D(0x137);
     mBehavior = pmf_dMgState_c_LoseResume_Update;
@@ -593,7 +593,7 @@ void dMgState_c::UpdateAfterHidden() {
         if (!g->CanEndState(mState))
             return;
         Mg_RestoreMusic();
-        mTimer = 0xb4;
+        mTimer = 180;
         mBehavior = pmf_dMgState_c_UpdateGameOverToMenu_2;
         return;
     }
@@ -612,7 +612,7 @@ void dMgState_c::UpdateAfterHidden() {
 }
 
 void dMgState_c::Draw_Enter() {
-    mTimer = 0x78;
+    mTimer = 120;
     Mg_ShowBanner(0xb, sMgDrawBannerX, sMgDrawBannerY, -1, -1, 0xd);
     mBehavior = pmf_dMgState_c_UpdateWaitThenResume;
 }
@@ -641,7 +641,7 @@ void dMgState_c::UpdateWaitThenResume() {
 
 void dMgState_c::RoundClearTop_Enter() {
     int id;
-    mTimer = 0xb4;
+    mTimer = 180;
     Mg_PlayJingle((void *)4);
     id = 3;
     if (sMgNextBanner != 0x1d) {
@@ -671,7 +671,7 @@ void dMgState_c::RoundClearTop_Update() {
 }
 
 void dMgState_c::RetryPromptB_Enter() {
-    mTimer = 0xb4;
+    mTimer = 180;
     Mg_PlayJingle((void *)3);
     Mg_ShowBanner(8, sMgRetryBannerX, sMgRetryBannerY, -1, -1, 0xb);
     mBehavior = pmf_dMgState_c_RetryPromptB_Update;
@@ -702,7 +702,7 @@ void dMgState_c ::RetryPromptB_Update() {
 }
 
 void dMgState_c::ScoreThenRound_Enter() {
-    mTimer = 0xb4;
+    mTimer = 180;
     Mg_PlayJingle((void *)1);
     mBehavior = pmf_dMgState_c_ScoreThenRound_Update;
     mRender = pmf_dMgState_c_DrawScore;
@@ -766,7 +766,7 @@ void dMgState_c::UpdateRetryPrompt() {
 }
 
 void dMgState_c::DigitsThenRound_Enter() {
-    mTimer = 0xb4;
+    mTimer = 180;
     Mg_ShowBanner(5, sMgRecordBannerX, sMgRecordBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)1);
     mBehavior = pmf_dMgState_c_UpdateFadeThenResume;
@@ -798,7 +798,7 @@ void dMgState_c::UpdateFadeThenResume() {
 }
 
 void dMgState_c::BannerEThenRound_Enter() {
-    mTimer = 0x3c;
+    mTimer = 60;
     Mg_ShowBanner(0xe, sMgMainBannerX, sMgMainBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)3);
     mBehavior = pmf_dMgState_c_UpdateFadeThenResume_2;
@@ -810,7 +810,7 @@ void dMgState_c::Results_Enter() {
         return;
     }
     Mg_ShowBanner(7, 0x80, 0x14, -1, -1, 0xd);
-    mTimer = 0x78;
+    mTimer = 120;
     mBehavior = pmf_dMgState_c_Results_Update;
     mRender = pmf_dMgState_c_DrawRecordTable;
     Mg_CommitRecords();
@@ -839,7 +839,7 @@ void dMgState_c::Results_Update() {
 
 void dMgState_c::ResultsNewRecord_Enter() {
     Mg_ShowBanner(7, 0x80, 0x14, -1, -1, 0xd);
-    mTimer = 0x12c;
+    mTimer = 300;
     mBehavior = pmf_dMgState_c_ResultsNewRecord_Update;
     mRender = pmf_dMgState_c_DrawRecordTable_2;
     Mg_CommitRecords();
@@ -868,7 +868,7 @@ void dMgState_c::ResultsNewRecord_Update() {
         }
     }
 
-    if (mTimer != 0xb4)
+    if (mTimer != 180)
         return;
 
     scene = gMgScene;
@@ -892,7 +892,7 @@ void dMgState_c::ResultsNewRecord_Update() {
 }
 
 void dMgState_c::GameOver_Enter() {
-    mTimer = 0xb4;
+    mTimer = 180;
     Mg_ShowBanner(8, sMgMainBannerX, sMgMainBannerY, -1, -1, 0xd);
     Mg_PlayJingle((void *)3);
     mBehavior = pmf_dMgState_c_GameOver_Update;
@@ -925,7 +925,7 @@ void dMgState_c::GameOver_Update() {
 
 void dMgState_c::Finished_Enter() {
     int prevId, id;
-    mTimer = 0xb4;
+    mTimer = 180;
     prevId = sMgNextBanner;
     id = 3;
     if (prevId != 0x1d) {

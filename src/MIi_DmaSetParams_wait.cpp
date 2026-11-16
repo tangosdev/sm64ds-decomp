@@ -36,7 +36,7 @@ void MIi_DmaSetParams_wait(u32 channel, u32 src, u32 dst, u32 cnt) {
 
     savedState = OS_DisableInterrupts();
 
-    reg = (volatile DMAChannelRegs *)REG_DMA_BASE + channel;
+    reg = (DMAChannelRegs *)REG_DMA_BASE + channel;
     reg->src = src;
     reg->dst = dst;
     reg->cnt = cnt;

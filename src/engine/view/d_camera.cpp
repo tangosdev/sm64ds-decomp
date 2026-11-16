@@ -685,7 +685,6 @@ void dCamera_c::func_0200d508(unsigned char playerID) {
 void dCamera_c::StartDanceCutscene(unsigned int playerID, int arg2) {
     unsigned char localID = gLocalPlayerId;
     if (playerID == localID) {
-        volatile int dummy;
         struct dActor_c *player;
         mOrbitTargetYaw = mAngleY;
         player = mTargetPlayer;
@@ -830,7 +829,6 @@ int dCamera_c::func_0200d0ac(unsigned int playerID) {
 void dCamera_c::func_0200d064(unsigned char playerID) {
     unsigned char localID = gLocalPlayerId;
     if (playerID == localID) {
-        volatile int dummy;
         unsigned int *addr = &mFlags;
         unsigned int val = *addr;
         val &= ~2u;
@@ -1582,7 +1580,7 @@ void dCamera_c::Mode8DirectionsCamera(CamViewObj *view) {
                         mBaseAngleOffset += 0x2000;
                         mFlags |= 0x40;
                     }
-                    mStateTimer = 0x14;
+                    mStateTimer = 20;
                 }
             }
         }
@@ -2578,7 +2576,6 @@ int func_02009db0(dCamera_c *cam) {
 }
 
 int func_02009d90(dCamera_c *cam) {
-    volatile int dummy __attribute__((unused));
     cam->SetMode(7);
     return 1;
 }
@@ -2764,7 +2761,7 @@ int dCamera_c::func_020098e0() {
 /* Entry to state 0x13: arm mStateTimer, which func_0200987c counts down. */
 int func_020098b8(dCamera_c *cam) {
     cam->SetMode(0x13);
-    cam->mStateTimer = 0x1c;
+    cam->mStateTimer = 28;
     return 1;
 }
 

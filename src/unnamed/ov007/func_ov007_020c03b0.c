@@ -9,7 +9,7 @@ extern void func_ov007_020c076c(Ov007BgLayer *layer, int engines);
  * layer with a valid BG and priority that is visible and in the mask is
  * uploaded (func_ov007_020c076c) and its priority written into BGnCNT. */
 void func_ov007_020c03b0(Ov007BgList *list) {
-    Ov007BgLayer *volatile layers[4];
+    Ov007BgLayer *layers[4];
     int shown[4];
     Ov007BgLayer *volatile *pa;
     int *pb;

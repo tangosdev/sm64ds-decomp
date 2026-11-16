@@ -10,7 +10,7 @@
 asm void MTX_Scale43_(Matrix4x3 *m, int sx, int sy, int sz) {
     stmia r0!, {r1}
     mov r1, #0
-    str r3, [r0, #28]
+    str r3, [r0, #0x1c]
     mov r3, #0
     stmia r0!, {r1, r3}
     stmia r0!, {r1, r2, r3}

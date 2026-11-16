@@ -28,17 +28,12 @@
  *   the veneer at arm9 0x020383fc, not _ZN10dBgCh_Actr16UpdateContinuousEv.
  * - Behavior: mShip->mAngleX/Y/Z each reloads mShip and grows the
  *   function 0x2dc to 0x2e0. One pointer, then the three halfwords.
- * - Behavior: IsClsnInRange(Fix12<int>, Fix12<int>) homes the two
- *   zeros and grows the function 0x2dc to 0x2e8. dBgActor_c.h does
- *   not declare it; the int extern is the call that matches.
  * - Behavior: keeping the pre-clear slide speed for the rolling-sound
  *   test differs by 99 words. The ROM reloads mHorzSpeed after the
  *   store of 0, so the gate does not open.
  * - Behavior: GetFloorResult is not declared on dBgCh_Actr.h. A
  *   temporary declaration made the member call match; that edit is
  *   the shared header, not this TU, so the call stays mangled.
- * - InitResources: SetFile(Fix12<int> by value) grows the function
- *   0xdc to 0xe8. The int extern is the call that matches.
  * - InitResources: storing beforeClsnCallback directly shrinks the
  *   function 0xdc to 0xd8. The ROM calls dBgW::SetBeforeClsnCallback, the store.
  */
@@ -91,12 +86,7 @@ enum { kMeshScale = 0x199 };
 
 /* Pitch-to-speed scale, and the travel clamp along the ship.
  * 1279.0 and -50.0 in 20.12. kFixRound is the 0.5 added before >> 12. */
-enum {
-    kSlideScale = 0x8c,
-    kHorzPosMax = 0x4ff000,
-    kHorzPosMin = -0x32000,
-    kFixRound = 0x800
-};
+enum { kSlideScale = 140, kHorzPosMax = 0x4ff000, kHorzPosMin = -0x32000, kFixRound = 0x800 };
 
 /* How close a player has to be, and how fast the crate has to be
  * moving, before the rolling sound would start. 2000.0 and 3.0. */

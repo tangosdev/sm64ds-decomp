@@ -22,14 +22,8 @@
  * UpdateVertsUsingBones. mBlendBuffer is a buffer the destructor frees and
  * InitBlendBuffer (DoSetFile's tail) sets up.
  *
- * SetAnim IS A REAL METHOD, and its symbol is
- * _ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileiiit. It used to be a mangled
- * extern "C" free function taking an explicit `thiz`, on the grounds that wall
- * 6az forbade the method form. That was wrong: the wall was the NAME. The old
- * symbol spelled a by-value `Fix12<int>` that we invented -- the cartridge
- * carries no mangled names at all -- and under the honest scalar `fx32` the
- * method reproduces 0x020163e0/0x9c exactly. See notes/mwccarm-codegen.md
- * section 6az, MEASURED 2026-10-22.
+ * SetAnim is a real method taking the scalar fx32 speed; it reproduces
+ * 0x020163e0/0x9c.
  */
 
 struct dExtBlendAnmModel_c : dExtAnmModel_c {

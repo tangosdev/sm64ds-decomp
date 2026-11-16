@@ -1065,10 +1065,10 @@ void dScMgAmida_c::StepWalkers() {
                                 if (mScore > 0x270f) {
                                     mScore = 0x270f;
                                 }
-                                mRoundTimer = 0x78;
+                                mRoundTimer = 120;
                                 return;
                             }
-                            mRoundTimer = 0x1e;
+                            mRoundTimer = 30;
                         } else {
                             s32 *walkerX =
                                 &((dScMgAmida_c *)(sceneBytes + walker * 8))->mWalkerCell[0].x;
@@ -1103,7 +1103,7 @@ void dScMgAmida_c::StepWalkers() {
                                 mScrollSpeed = 0x64;
                             }
                             if (mRoundCount >= 5) {
-                                mResultWaitTimer = 0x3c;
+                                mResultWaitTimer = 60;
                                 mState = 2;
                                 mFinished = 1;
                                 return;
@@ -1124,12 +1124,12 @@ void dScMgAmida_c::StepWalkers() {
                         mRoundFailed = 1;
                         mWalkersDone += 1;
                         if (mWalkersDone >= mWalkerCount) {
-                            mRoundTimer = 0x3c;
+                            mRoundTimer = 60;
                         }
                         return;
                     }
                     func_02012718(0xe1, mWalkerCell[walker].x << 0xc);
-                    mResultWaitTimer = 0x3c;
+                    mResultWaitTimer = 60;
                     mState = 2;
                     mRoundFailed = 1;
                     return;
@@ -1562,7 +1562,7 @@ void dScMgAmida_c::SetupRound() {
 
     {
         int i;
-        for (i = 0; i < 0xb; i++) {
+        for (i = 0; i < 11; i++) {
             skip[i] = 0;
         }
     }
@@ -1640,7 +1640,7 @@ void dScMgAmida_c::SetupRound() {
         case 2:
         case 3: {
             int i;
-            for (i = 0; i < 0xb; i++) {
+            for (i = 0; i < 11; i++) {
                 if (skip[i] == 0) {
                     int x = rungs.e[i].x;
                     int y = rungs.e[i].y - 0x20;
@@ -1681,7 +1681,7 @@ void dScMgAmida_c::SetupRound() {
     G2S_SetBlendAlpha(4, 8, 6, 0x10);
     Mg_ShowBanner(0xd, 0x80, 0x60, 1, -1, 0xd);
 
-    mStartBannerTimer = 0x3c;
+    mStartBannerTimer = 60;
     mState = 1;
     {
         int i = 0;
@@ -1715,7 +1715,7 @@ void dScMgAmida_c::SetupRound() {
             mFinaleTimer = xw[1];
             {
                 int v = 0;
-                for (; v < 0x80; v++) {
+                for (; v < 128; v++) {
                     PIECE_AT(raw)->active = 0;
                     PIECE_AT(raw)->timer = 0;
                     raw += 0x18;
@@ -1774,7 +1774,7 @@ void dScMgAmida_c::RenderBoard() {
                 }
             }
             frames = sAmidaBoardAnimationFrames;
-            Mg_RenderSpriteBoth(sAmidaBoardAnimSprites[frames.a[mLaneFlashFrame[i]]], y, 0xb8, -1,
+            Mg_RenderSpriteBoth(sAmidaBoardAnimSprites[frames.a[mLaneFlashFrame[i]]], y, 184, -1,
                                 0);
         }
     }
@@ -1784,8 +1784,8 @@ void dScMgAmida_c::RenderBoard() {
             Mg_RenderSpriteBoth(sAmidaWalkerSprite, mWalkerCell[j].x, mWalkerCell[j].y, -1, 0);
         }
     }
-    Mg_RenderSpriteBoth(sAmidaSideSprite, 8, 0x60, -1, 0);
-    Mg_RenderSpriteBoth(sAmidaSideSprite, 0xf8, 0x60, -1, 0);
+    Mg_RenderSpriteBoth(sAmidaSideSprite, 8, 96, -1, 0);
+    Mg_RenderSpriteBoth(sAmidaSideSprite, 248, 96, -1, 0);
 }
 #pragma pop
 
@@ -1794,7 +1794,7 @@ void dScMgAmida_c::RenderBoardAlt() {
     int j;
     int x;
     if (mHurry == 0) {
-        Mg_RenderSpriteBoth(sAmidaHurryButtonSprite, 0x80, 0xb0, -1, 0);
+        Mg_RenderSpriteBoth(sAmidaHurryButtonSprite, 128, 176, -1, 0);
     }
     for (i = 0; i < 4; i++) {
         Mg_RenderSpriteBoth((void *)sAmidaLaneWantSprites[mLaneWants[i]], mWalkerCell[i].x,
@@ -1803,7 +1803,7 @@ void dScMgAmida_c::RenderBoardAlt() {
     j = 0;
     x = 0x20;
     for (; j < 4; x += 0x40, j++) {
-        Mg_RenderSpriteBoth((void *)sAmidaLaneResultSprites[mLaneResult[j]], x, 0x78, -1, 0);
+        Mg_RenderSpriteBoth((void *)sAmidaLaneResultSprites[mLaneResult[j]], x, 120, -1, 0);
     }
 }
 s32 dScMgAmida_c::Render() {
@@ -1811,7 +1811,7 @@ s32 dScMgAmida_c::Render() {
     {
         u16 idx = mBgScrollPhase;
         int sine = FX_SinIdx(idx >> 4);
-        int off = sine / 256;
+        int off = sine / 0x100;
         SetSubBg2Offset(off, 0);
     }
     Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
@@ -1837,7 +1837,7 @@ s32 dScMgAmida_c::Render() {
             }
 
             int piece;
-            for (piece = 0; piece < 0x80; piece++) {
+            for (piece = 0; piece < 128; piece++) {
                 if (mPieces[piece].active != 0) {
                     Mg_RenderSpriteBoth(sAmidaPieceSprites[mPieces[piece].timer / 4],
                                         mPieces[piece].posX >> 12, mPieces[piece].posY >> 12, -1,
@@ -1910,12 +1910,12 @@ s32 dScMgAmida_c::Behavior() {
                 mRoundTimer -= 1;
                 if (mRoundTimer == 0) {
                     if (mRoundFailed == 1) {
-                        mResultWaitTimer = 0x3c;
+                        mResultWaitTimer = 60;
                         mState = 2;
                     } else if (mRoundCount < 5) {
                         mState = 0;
                     } else {
-                        mResultWaitTimer = 0x3c;
+                        mResultWaitTimer = 60;
                         mState = 2;
                         mFinished = 1;
                     }
@@ -1963,7 +1963,7 @@ s32 dScMgAmida_c::Behavior() {
         } else {
             mState = 3;
             Mg_SetSharedState(MG_STATE_GAME_OVER);
-            mEndDelayTimer = 0xb4;
+            mEndDelayTimer = 180;
             mFinaleTimer = 0;
         }
         break;
@@ -1993,7 +1993,7 @@ s32 dScMgAmida_c::Behavior() {
 
         piecePtr = raw;
         vel = &mPieces[0].velX;
-        for (piece = 0; piece < 0x80; piece++) {
+        for (piece = 0; piece < 128; piece++) {
             if (PIECE_AT(piecePtr)->active != 0) {
                 PIECE_AT(piecePtr)->posX += PIECE_AT(piecePtr)->velX;
                 IAP(piecePtr, PIECE_OFF(posY)) += IP(piecePtr, PIECE_OFF(velY));
@@ -2002,7 +2002,7 @@ s32 dScMgAmida_c::Behavior() {
                     func_0203d630(vel, speed);
                 IAP(piecePtr, PIECE_OFF(timer)) = IAP(piecePtr, PIECE_OFF(timer)) + 1;
                 {
-                    if (PIECE_AT(piecePtr)->timer >= 0x10)
+                    if (PIECE_AT(piecePtr)->timer >= 16)
                         PIECE_AT(piecePtr)->active = 0;
                 }
             }
@@ -2041,7 +2041,7 @@ s32 dScMgAmida_c::Behavior() {
                     }
                     slot++;
                     scan += 0x18;
-                } while (slot < 0x80);
+                } while (slot < 128);
             }
         }
         break;

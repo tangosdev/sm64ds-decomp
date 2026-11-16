@@ -251,7 +251,7 @@ void daRedBombhei_c::UpdateModelTransform() {
     this->mShadowMat.t.x = this->mPosX >> 3;
     this->mShadowMat.t.y = (this->mPosY - 0x8000) >> 3;
     this->mShadowMat.t.z = this->mPosZ >> 3;
-    DropShadowRadHeight(this->mShadowModel, this->mShadowMat, 0x64000, 0x32000, 0xf);
+    DropShadowRadHeight(this->mShadowModel, this->mShadowMat, 0x64000, 0x32000, 15);
 }
 
 /* Moves the camera point *cur one step toward target, easing the distance

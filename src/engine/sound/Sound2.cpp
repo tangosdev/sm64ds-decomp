@@ -74,13 +74,13 @@ extern "C" int func_02049018(const Vector3 *v) {
 
 /* Copies pair mode (0..8) from data_020821c0 into the near/far range. */
 void SetSoundRange(int mode) {
-    volatile u32 *tbl;
+    const u32 *tbl;
     int j;
     if (mode < 0)
         return;
     if (mode > 8)
         return;
-    tbl = (volatile u32 *)data_020821c0;
+    tbl = data_020821c0;
     j = mode * 2;
     data_02099fa8 = tbl[j];
     j++;
@@ -169,15 +169,15 @@ extern "C" void func_02048d80(NNSSndHandle *handle, const Vector3 *p) {
     if ((unsigned)dist >= (unsigned)farRange)
         return;
     if ((unsigned)nearRange > (unsigned)dist)
-        volume = 0x7f;
+        volume = 127;
     else
-        volume = (farRange - dist) * 0x7f / (farRange - nearRange);
+        volume = (farRange - dist) * 127 / (farRange - nearRange);
     NNS_SndPlayerSetVolume(handle, volume);
     pan = pan / 2;
-    if (pan > 0x3f)
-        pan = 0x3f;
-    else if (pan < -0x40)
-        pan = -0x40;
+    if (pan > 63)
+        pan = 63;
+    else if (pan < -64)
+        pan = -64;
     NNS_SndPlayerSetTrackPan(handle, data_02099fa4, pan);
 }
 
@@ -197,28 +197,28 @@ extern "C" void func_02048c30(NNSSndHandle *handle, const Vector3 *p, int q) {
         if (n < hi) {
             lo = data_02099fa8;
             if (lo > n) {
-                t = 0x7f;
+                t = 127;
             } else {
-                t = (int)((hi - n) * 0x7f) / (int)(hi - lo);
+                t = (int)((hi - n) * 127) / (int)(hi - lo);
             }
         } else {
             func_0204fa2c(handle, 0);
         }
     } else {
-        t = 0x7f;
-        a = 0x40;
+        t = 127;
+        a = 64;
     }
     if (b < 0) {
-        t = 0x18;
-    } else if (b <= 0x28) {
-        t = t * (b * 103 / 40 + 0x18) / 0x7f;
+        t = 24;
+    } else if (b <= 40) {
+        t = t * (b * 103 / 40 + 24) / 127;
     }
     NNS_SndPlayerSetVolume(handle, t);
     a = a / 2;
-    if (a > 0x3f) {
-        a = 0x3f;
-    } else if (a < -0x40) {
-        a = -0x40;
+    if (a > 63) {
+        a = 63;
+    } else if (a < -64) {
+        a = -64;
     }
     NNS_SndPlayerSetTrackPan(handle, data_02099fa4, a);
 }
@@ -237,22 +237,22 @@ extern "C" void func_02048af4(NNSSndHandle *handle, const Vector3 *p, int q) {
     if (n < hi) {
         lo = data_02099fa8;
         if (lo > n) {
-            t = 0x7f;
+            t = 127;
         } else {
-            t = (int)((hi - n) * 0x7f) / (int)(hi - lo);
+            t = (int)((hi - n) * 127) / (int)(hi - lo);
         }
         if (b < 0) {
-            t = 0x3f;
-        } else if (b <= 0x28) {
-            t = t * (b * 64 / 40 + 0x3f) / 0x7f;
+            t = 63;
+        } else if (b <= 40) {
+            t = t * (b * 64 / 40 + 63) / 127;
         }
         NNS_SndPlayerSetVolume(handle, t);
-        NNS_SndPlayerSetTrackPitch(handle, 3, (b - 0x28) * 2);
+        NNS_SndPlayerSetTrackPitch(handle, 3, (b - 40) * 2);
         a = a / 2;
-        if (a > 0x3f) {
-            a = 0x3f;
-        } else if (a < -0x40) {
-            a = -0x40;
+        if (a > 63) {
+            a = 63;
+        } else if (a < -64) {
+            a = -64;
         }
         NNS_SndPlayerSetTrackPan(handle, data_02099fa4, a);
         return;
@@ -265,20 +265,20 @@ extern "C" int func_02048a1c(const Vector3 *pos, int kind, int id) {
     u32 dist;
     if (kind == 3) {
         if (id >= 0x100 && id <= 0x103) {
-            lim = 0x8bc;
+            lim = 2236;
         } else if (id == 0x18d) {
-            lim = 0x1f4;
+            lim = 500;
         } else if (id == 0x81) {
-            lim = 0x4b0;
+            lim = 1200;
         } else {
             if (id >= 0x99 && id <= 0x9a) {
-                lim = 0x384;
+                lim = 900;
             }
         }
     } else if (kind == 1) {
         if (id >= 0xea) {
             if (id <= 0x2b) {
-                lim = 0x44c;
+                lim = 1100;
             }
         }
     }
@@ -301,7 +301,7 @@ extern "C" int func_02048a18(int a, int b) {
 extern "C" void func_02048908(SoundSlot *slot, const Vector3 *p) {
     int num = data_02099fac;
     int den = data_02099fa8;
-    int a = 0x7f;
+    int a = 127;
     int b = 0;
     NNSSndSeqPlayer *s;
     int typ, val;
@@ -319,17 +319,17 @@ extern "C" void func_02048908(SoundSlot *slot, const Vector3 *p) {
 
     if (typ == 3) {
         if (val >= 0x4b && val <= 0x4c) {
-            num = 0x384;
-            den = 0xc8;
-            b = 0x28;
+            num = 900;
+            den = 200;
+            b = 40;
         } else if (val == 0x28) {
-            b = 0x78;
-            a = 0x7f;
+            b = 120;
+            a = 127;
         }
     } else if (typ == 1) {
         if (val >= 0x2a && val <= 0x2b) {
-            num = 0x44c;
-            den = 0xc8;
+            num = 1100;
+            den = 200;
         }
     }
 
@@ -342,10 +342,10 @@ extern "C" void func_02048908(SoundSlot *slot, const Vector3 *p) {
 
     half = p->x >> 12;
     half = half / 2;
-    if (half > 0x3f)
-        half = 0x3f;
-    else if (half < -0x40)
-        half = -0x40;
+    if (half > 63)
+        half = 63;
+    else if (half < -64)
+        half = -64;
     NNS_SndPlayerSetTrackPan(&slot->handle, data_02099fa4, half);
 }
 
@@ -394,7 +394,7 @@ extern "C" SoundSlot *func_02048720(const Vector3 *v, int kind, int id) {
     dist = (u32)func_02049018(v);
 
     if (id >= 0x4b && id <= 0x4c) {
-        lim = 0x384;
+        lim = 900;
     }
     if (dist > lim) {
         return 0;
@@ -451,26 +451,26 @@ extern "C" void func_020485f0(NNSSndHandle *handle, const Vector3 *pos) {
     dist = func_02049018(pos);
     id = handle->player->seqArcIndex;
     if (id == 0x81) {
-        if (dist > 0x4b0)
+        if (dist > 1200)
             volume = 0;
-        else if (dist <= 0x64)
-            volume = 0x7f;
+        else if (dist <= 100)
+            volume = 127;
         else
-            volume = (int)(0x4b0 - dist) * 0x7f / 1100;
+            volume = (int)(1200 - dist) * 127 / 1100;
     } else {
-        if (dist >= 0x8bc)
+        if (dist >= 2236)
             volume = 0;
-        else if (dist < 0x3e8)
-            volume = 0x7f;
+        else if (dist < 1000)
+            volume = 127;
         else
-            volume = (int)(0x8bc - dist) * 0x7f / 1236;
+            volume = (int)(2236 - dist) * 127 / 1236;
     }
     NNS_SndPlayerSetVolume(handle, volume);
     pan = pan >> 4;
-    if (pan > 0x3f)
-        pan = 0x3f;
-    else if (pan < -0x40)
-        pan = -0x40;
+    if (pan > 63)
+        pan = 63;
+    else if (pan < -64)
+        pan = -64;
     if (id == 0x103) {
         NNS_SndPlayerSetTrackPan(handle, 1, pan);
     } else {
@@ -487,18 +487,18 @@ extern "C" void func_02048528(NNSSndHandle *handle, const Vector3 *pos) {
     if (handle->player == 0)
         return;
     dist = func_02049018(pos);
-    if (dist >= 0x1f4) {
-        volume = 0x1e;
-    } else if (dist < 0x14) {
-        volume = 0x7f;
+    if (dist >= 500) {
+        volume = 30;
+    } else if (dist < 20) {
+        volume = 127;
     } else {
-        volume = (int)(0x1f4 - dist) * 0x61 / 0x1e0 + 0x1e;
+        volume = (int)(500 - dist) * 97 / 480 + 30;
     }
     NNS_SndPlayerSetVolume(handle, volume);
     pan = pan >> 2;
-    if (pan > 0x3f)
-        pan = 0x3f;
-    else if (pan < -0x40)
-        pan = -0x40;
+    if (pan > 63)
+        pan = 63;
+    else if (pan < -64)
+        pan = -64;
     NNS_SndPlayerSetTrackPan(handle, data_02099fa4, pan);
 }

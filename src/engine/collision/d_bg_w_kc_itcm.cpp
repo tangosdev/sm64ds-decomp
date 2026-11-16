@@ -104,7 +104,7 @@ extern dBgPc data_020a0cec;
    `pos + cross(fn, ea) * (length / dot(cross(fn, ea), en3))`. The cross goes
    through a 6-byte s16 scratch (sp+0x16c, reused by both rounds), so it really
    does truncate to 16 bits. The quotient's `>> 2` and the product's `>> 14` are
-   FX_Div's Fix12 result reconciled with the 0x400 normal scale.
+   FX_Div's fx32 result reconciled with the 0x400 normal scale.
 
    `cr` being a Vector3s rather than an `s16[3]` is load-bearing and is why nothing
    here needs a cast -- see its declaration. */
@@ -120,7 +120,7 @@ extern dBgPc data_020a0cec;
     (out)[2] = (o2) + (s32)(((s64)cr.z * u) >> 14);
 
 /* Post-subtraction form: components already relative to the centre. The wall
-   block is the one place that uses the ROUNDED Fix12 multiply, FX_MUL --
+   block is the one place that uses the ROUNDED fx32 multiply, FX_MUL --
    `smull` / `adds #0x800` / `adc` / `lsr #0xc` / `orr lsl #20`: the collider's
    axis is fx32 where the edge normals are 0x400-scale, so MUL10 is wrong here
    and FX_MUL is wrong everywhere else. */
@@ -134,7 +134,7 @@ extern dBgPc data_020a0cec;
 
    `IsNearZeroDivisor(den)` is the divisor guard: |den| <= 8 means the two edge
    normals are within a hair of parallel and the 2x2 is singular. The `>> 2` on
-   the quotient is FX_Div's Fix12 result brought back to the 0x400 scale. */
+   the quotient is FX_Div's fx32 result brought back to the 0x400 scale. */
 #define VERTEX_BLOCK(nn, nnh, den, ea, eb, dotI, dotJ)                        \
     den = MUL10(nn, nn) - 0x400;                                              \
     den += (nnh) - (nnh);                                                     \

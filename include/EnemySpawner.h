@@ -13,7 +13,6 @@
  * fields are constrained by InitResources and Behavior at 0xd4..0xdc.
  */
 struct daECreate_c : dActor_c {
-    u8  pad_0d0[0x4];
     u16 mActorToSpawn;      /* 0x0d4 */
     u8  pad_0d6[0x2];
     s32 mPreviousEventBit;  /* 0x0d8 */

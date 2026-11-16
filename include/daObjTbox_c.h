@@ -24,7 +24,6 @@
  * independently pinning both member types, offsets and the total class size.
  */
 struct daObjTbox_c : dActor_c {
-    u32 unk_0d0;              /* 0x0d0 -- not accessed by this TU */
     dExtAnmModel_c mAnmModel; /* 0x0d4 */
     dCcAc_c mCylinder;        /* 0x138 */
     s32 mState;               /* 0x16c -- indexes the three PMF pairs */

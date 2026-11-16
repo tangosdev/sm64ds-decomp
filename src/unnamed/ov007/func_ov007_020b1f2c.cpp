@@ -4,9 +4,9 @@
 
 extern "C" {
 int func_ov007_020b1f2c(int x, int *out) {
-    if (x >= 0 && x <= 0x3c) {
+    if (x >= 0 && x <= 60) {
         int r;
-        r = ProgressRatio(x, 0x3c);
+        r = ProgressRatio(x, 60);
         int v = (int)(((long long)r * r) >> 0xc);
         int v2 = (int)(((long long)v * v) >> 0xc);
         *out = 0x1000 - v2;
