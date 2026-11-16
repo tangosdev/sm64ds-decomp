@@ -794,7 +794,11 @@ extern void MTX_Copy33To44_(void *, void *);
 extern void MTX_RotX43_(struct Matrix4x3 *, int, int);
 extern void MTX_RotY43_(struct Matrix4x3 *, int, int);
 extern void MTX_RotZ43_(struct Matrix4x3 *, int, int);
+#ifndef __cplusplus
+/* The ov007 spring code's C spelling, over the int words of its vectors.
+   C++ sees the SDK's own declaration, from nitro/fx/fx_vec.h. */
 extern void VEC_MultAdd(int, int *, int *, int *);
+#endif
 extern void GX_DispOff(void);
 extern void G3_MultMtx43(void *);
 extern void G3_LoadMtx43(void *);
