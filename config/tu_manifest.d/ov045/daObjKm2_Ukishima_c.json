@@ -33,6 +33,11 @@
       "name": ".bss",
       "start": "0x021131f8",
       "end": "0x02113220"
+    },
+    {
+      "name": ".data",
+      "start": "0x02112f08",
+      "end": "0x02112f14"
     }
   ],
   "functions": [
@@ -72,7 +77,14 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov045_02112f08",
+      "address": "0x02112f08",
+      "size": "0xc",
+      "binding": "STB_GLOBAL"
+    }
+  ],
   "bss": [
     {
       "symbol": "gKm2UkishimaModelFile",
@@ -354,6 +366,13 @@
           "start": "0x021131f8",
           "end": "0x02113220",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02112f08",
+          "end": "0x02112f14",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -531,6 +550,36 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02112f08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm2UkishimaModelFile",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x02113200"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112f0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm2UkishimaCollisionFile",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x021131f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112f10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov045_02112550",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x02112550"
+    },
     {
       "section": ".init",
       "source": "0x021122fc",

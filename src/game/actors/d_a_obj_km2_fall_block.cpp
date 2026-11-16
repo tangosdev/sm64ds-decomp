@@ -41,7 +41,15 @@ typedef char Km2FallClsnFileHandle_size_must_be_8[sizeof(Km2FallClsnFileHandle) 
 
 #include "ResourceDescriptor.h"
 
-extern ResourceDescriptor data_ov045_021130ac;
+extern Km2FallModelFilePtr gKm2KuzureModelFile;
+extern Km2FallClsnFileHandle gKm2KuzureCollisionFile;
+extern CLPS_Block data_ov045_021125f0;
+
+ResourceDescriptor data_ov045_021130ac = {
+    &gKm2KuzureModelFile,
+    &gKm2KuzureCollisionFile,
+    &data_ov045_021125f0,
+};
 
 daObjKm2_Fall_Block_c *daObjKm2_Fall_Block_c_classInit() {
     return new daObjKm2_Fall_Block_c();
