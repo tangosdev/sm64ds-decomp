@@ -12127,35 +12127,29 @@ static inline u16 BodyAnimFrame(daPly_c *player) {
 }
 
 void daPly_c::func_ov002_020d4748() {
-    extern unsigned char data_0209f4ac;
-    extern unsigned short data_0209f49c;
-    extern short data_0209f4a0;
     extern unsigned char gGameMode;
-    int i = gActivePlayerSlot * 0x18;
     int flag = 0;
 
-    if (*(unsigned char*)((char*)&data_0209f4ac + i) == 0) {
+    if (data_0209f498[gActivePlayerSlot].touching == 0) {
         if (!(data_0209f498[gActivePlayerSlot].held & 0x800))
             flag = 1;
     } else {
         int k = (data_0209f498[gActivePlayerSlot].mode != 2) ? 0xdc7 : 0xe00;
-        if (*(short *)((char *)&data_0209f4a0 + i) < k + (this->mIsWalkPace << 7))
+        if (data_0209f498[gActivePlayerSlot].mag < k + (this->mIsWalkPace << 7))
             flag = 1;
     }
     this->mIsWalkPace = flag;
 
     if (this->mIsMega != 0) {
-        int i2;
         short v;
         this->func_ov002_020bf5e0();
         if (this->IsAnim(0x9f) != 0)
             return;
-        i2 = gActivePlayerSlot * 0x18;
-        v = *(short*)((char*)&data_0209f4a0 + i2);
+        v = data_0209f498[gActivePlayerSlot].mag;
         if (v != 0) {
             if (flag != 0) {
                 int spd;
-                if (*(unsigned char*)((char*)&data_0209f4ac + i2) == 0) {
+                if (data_0209f498[gActivePlayerSlot].touching == 0) {
                     spd = (this->mStateTimer != 0) ? 0x1000 : 0x2000;
                 } else {
                     spd = v * 3;
@@ -12171,17 +12165,14 @@ void daPly_c::func_ov002_020d4748() {
             return;
         }
     } else {
-        int i3 = gActivePlayerSlot * 0x18;
-        if (*(unsigned char*)((char*)&data_0209f4ac + i3) != 0) {
+        if (data_0209f498[gActivePlayerSlot].touching != 0) {
             unsigned char* p = &this->mStateStep;
             unsigned char d;
             int b;
-            int i4;
             int thr;
             *p = *p + 1;
-            i4 = gActivePlayerSlot * 0x18;
             thr = (data_0209f498[gActivePlayerSlot].mode != 2) ? 0x955 : 0xaaa;
-            if (*(short*)((char*)&data_0209f4a0 + i4) > thr)
+            if (data_0209f498[gActivePlayerSlot].mag > thr)
                 this->mStateStep = 0;
             d = gGameMode;
             b = (d == 1);
@@ -12199,12 +12190,12 @@ void daPly_c::func_ov002_020d4748() {
         }
 
         if (this->mSinkDepth > 0x32000) {
-            SetAnim(0x7e, 0, *(short *)((char *)&data_0209f4a0 + gActivePlayerSlot * 0x18),
+            SetAnim(0x7e, 0, data_0209f498[gActivePlayerSlot].mag,
                     BodyAnimFrame(this));
         } else if (this->mStateStep >= 0x17) {
             this->mStateStep = 0x17;
             SetAnim(0x61, 0, 0x1000, BodyAnimFrame(this));
-        } else if (this->mFloorClass == 4 && *(short*)((char*)&data_0209f4a0 + gActivePlayerSlot * 0x18) == 0) {
+        } else if (this->mFloorClass == 4 && data_0209f498[gActivePlayerSlot].mag == 0) {
             Particle::RunningSlidingDustAt(this->mPosX, this->mPosY, this->mPosZ);
             SetAnim(0x47, 0, 0x1000, 0);
         } else if (this->mIsWalkPace != 0) {
