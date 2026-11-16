@@ -6,9 +6,9 @@
 
 extern "C" {
 
-/* Vector3 declares a constructor and destructor under C++, which makes its
- * assignment copy word by word. The ROM copies these with C's ldm/stm block
- * move, which C++ keeps for a struct with an array member. */
+/* C++ copies a struct of three named ints, VecFx32 included, word by word.
+ * The ROM copies these with C's ldm/stm block move, which C++ keeps for a
+ * struct with an array member. */
 typedef struct Vec3Words {
     fx32 w[3];
 } Vec3Words;
@@ -17,7 +17,7 @@ typedef struct Vec3Words {
 /* Pulls follower f toward target. Within snapRadius it snaps onto target,
  * its velocity and force cleared (returns 2). Within reach, a force of
  * strength pull along the offset is added (returns 1). Otherwise returns 0. */
-int func_ov007_020c704c(Ov007Follower *f, Vector3 *target, int pull, int reach, int snapRadius) {
+int func_ov007_020c704c(Ov007Follower *f, VecFx32 *target, int pull, int reach, int snapRadius) {
     int dx, dy, sum, spd, ratio;
     s64 sdx, sdy;
 

@@ -32,7 +32,6 @@ enum Scuttlebug_AssetId {
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dExtFrameCtrl_c.h"
-#include "SurfaceInfo.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "Sound.h"
@@ -492,8 +491,7 @@ int daSpd_c::func_ov071_0211f7d4() {
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     mAngleX = mAngleX + 0x1000;
     if (mWithMeshClsn.JustHitGround()) {
-        if (((SurfaceInfo *)((char *)mWithMeshClsn.GetFloorResult() + 4))->clps.GetSurfaceType() ==
-            4) {
+        if (mWithMeshClsn.GetFloorResult()->surface.clps.GetSurfaceType() == 4) {
             func_ov071_0211f498();
         } else {
             mVertSpeed = (mVertSpeed * -0x3c) / 0x64;
@@ -502,11 +500,11 @@ int daSpd_c::func_ov071_0211f7d4() {
         mVertSpeed = 0;
         mWithMeshClsn.ClearLimMovFlag();
         mFlags |= 1;
-        short z = 0;
-        short ang = mPrevAngleY;
-        mAngleX = z;
-        mAngleY = ang;
-        mAngleZ = z;
+        short zero = 0;
+        short heading = mPrevAngleY;
+        mAngleX = zero;
+        mAngleY = heading;
+        mAngleZ = zero;
         SetState(2);
     }
     UpdatePos(&mdCcAc_c);
@@ -653,21 +651,10 @@ void daSpd_c::func_ov071_0211f29c() {
 }
 
 void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
-    Vector3 pos;
-    Vector3 normal;
-    Vector3 wallnormal;
-
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
     if (w->IsOnGround()) {
         dBgCh_Gnd rc;
-        {
-            int p60 = mPosY;
-            int pz = mPosZ;
-            int py = p60 + 0x1e000;
-            pos.x = mPosX;
-            pos.y = py;
-            pos.z = pz;
-        }
+        Vector3 pos(mPosX, mPosY + 0x1e000, mPosZ);
         rc.SetObjAndPos(pos, this);
         if (!rc.DetectClsn() || rc.clsnY < mPosY - 0x32000) {
             mHorzSpeed = 0;
@@ -675,8 +662,8 @@ void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
             mPosY = mPrevPosY;
             mPosZ = mPrevPosZ;
         } else {
-            void *fr = w->GetFloorResult();
-            ((SurfaceInfo *)((char *)fr + 4))->CopyNormalTo(normal);
+            Vector3 normal;
+            w->GetFloorResult()->surface.CopyNormalTo(normal);
             if (normal.y != 0) {
                 mVertSpeed =
                     -(FX_Div(FX_MUL(normal.x, mSpeedX) + FX_MUL(normal.z, mSpeedZ), normal.y) +
@@ -685,8 +672,8 @@ void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
         }
     }
     if (w->IsOnWall()) {
-        void *wr = w->GetWallResult();
-        ((SurfaceInfo *)((char *)wr + 4))->CopyNormalTo(wallnormal);
+        Vector3 wallNormal;
+        w->GetWallResult()->surface.CopyNormalTo(wallNormal);
     }
 }
 

@@ -3,12 +3,13 @@
    (func_0203bbc0). */
 void func_0203bb5c(void) {}
 
-/* One file-scope object with an empty inline constructor. mwcc emits the
-   4-byte bx lr at 0x020750b4. The word is padding before data_020a0df8,
-   so nothing later moves. */
+/* A file-scope object with an empty inline constructor. mwcc emits the
+   4-byte bx lr at 0x020750b4. The object stays static so the linker drops
+   it: the cartridge has no storage for it. This file sits among the touch
+   functions, and their .bss from data_020a0dd8 to 0x020a0e40 is all live
+   touch state, gTouchInfo's four records included. */
 struct EmptyInit {
-    int unused;
     EmptyInit() {}
 };
 
-EmptyInit data_020a0df0;
+static EmptyInit sEmptyInit;

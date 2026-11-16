@@ -9,14 +9,14 @@ extern TPData *func_0203dabc(int idx);
 
 void func_0203bb60(void)
 {
-    u8 *p = gTouchHeld;
+    TouchInfo *p = gTouchInfo;
     int i;
     for (i = 0; i < 4; i++) {
         TPData *s = func_0203dabc(i);
-        p[1] = (u8)(s->touch ^ p[0]);
-        p[0] = (u8)s->touch;
-        p[2] = (u8)s->x;
-        p[3] = (u8)s->y;
-        p += 4;
+        p->edge = (u8)(s->touch ^ p->held);
+        p->held = (u8)s->touch;
+        p->x = (u8)s->x;
+        p->y = (u8)s->y;
+        p++;
     }
 }
