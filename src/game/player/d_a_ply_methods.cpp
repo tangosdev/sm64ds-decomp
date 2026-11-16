@@ -15744,21 +15744,19 @@ int func_ov002_020db5f4(daPly_c *c, dActor_c *arg) {
 }
 
 extern "C" {
-int func_ov002_020db674(char* c, int a1, int a2, int a3)
-{
-    daPly_c *p = (daPly_c *)c;
-    if (p->func_ov002_020d82f0() == 0)
+int func_ov002_020db674(daPly_c *player, int a1, int a2, int a3) {
+    if (player->func_ov002_020d82f0() == 0)
         return 0;
-    Sound::PlayCharVoice(p->mCharacter, 0x1d, p->mCamSpacePos);
-    p->mPrevAngleY = a3;
-    p->mAngleY = a3 + 0x8000;
-    p->mHorzSpeed = a1;
-    p->mVertSpeed = a2;
-    p->mHurtDamage = 0;
-    p->mStateStep = 4;
-    p->mIsAirborne = 1;
-    p->mLandSoundPlayed = 0;
-    ((daPly_c *)c)->ChangeState(data_ov002_02110094);
+    Sound::PlayCharVoice(player->mCharacter, 0x1d, player->mCamSpacePos);
+    player->mPrevAngleY = a3;
+    player->mAngleY = a3 + 0x8000;
+    player->mHorzSpeed = a1;
+    player->mVertSpeed = a2;
+    player->mHurtDamage = 0;
+    player->mStateStep = 4;
+    player->mIsAirborne = 1;
+    player->mLandSoundPlayed = 0;
+    player->ChangeState(data_ov002_02110094);
     return 1;
 }
 }
