@@ -7818,22 +7818,20 @@ int daPly_c::St_Headstand_Init() {
 
 /* recovered: shared common types */
 int daPly_c::func_ov002_020cb354() {
-    unsigned char *p = (unsigned char *)this;
-    daPly_c *player = (daPly_c *)p;
     int a = IsAnim(0x24);
     if (a == 0) return a;
-    dExtFrameCtrl_c &anim = *player->mModels.mBodyModels[GetBodyModelID(player->param1 & 0xff, 0)];
+    dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
     if ((int)((unsigned int)(anim.currFrame << 4) >> 0x10) < 8) {
-        unsigned char f = player->mStateArg;
+        unsigned char f = mStateArg;
         if (f != 0) return f;
-        if (player->mClimbClsn->flags & 0x1000000)
-            Sound::PlayBank0(0xd, player->mCamSpacePos);
+        if (mClimbClsn->flags & 0x1000000)
+            Sound::PlayBank0(0xd, mCamSpacePos);
         else
-            Sound::PlayBank0(0xb0, player->mCamSpacePos);
-        player->mStateArg = 1;
+            Sound::PlayBank0(0xb0, mCamSpacePos);
+        mStateArg = 1;
         return 1;
     }
-    player->mStateArg = 0;
+    mStateArg = 0;
     return 0;
 }
 
