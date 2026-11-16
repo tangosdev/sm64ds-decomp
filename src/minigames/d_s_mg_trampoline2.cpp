@@ -161,7 +161,7 @@ BaseSpawnInfo<dScMgTrampoline2_c> g_profile_MG_TRAMPOLINE2 = {
 Tbl sTrmp2SpinnerSpeeds = {0x600, 0xc00, 0xe00};
 
 /* A random fx32 in [0, 1.0): the top 12 bits of the 31-bit draw. */
-#define TRMP2_RAND_FX ((((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13))
+#define TRMP2_RAND_FX ((fx32)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19))
 int sTrmp2ScoreGates[] = {1000, 5000, 10000, 20000};
 int sTrmp2PuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
                                (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
@@ -1067,13 +1067,13 @@ void func_020169f4(char *self, int kind);
 void Trmp2Spinner_Init(void *r0, int value) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;
     struct Tbl t = sTrmp2SpinnerSpeeds;
-    unsigned int rnd = TRMP2_RAND_FX;
+    fx32 rnd = TRMP2_RAND_FX;
     int idx;
-    if ((int)rnd < t.a) {
+    if (rnd < t.a) {
         idx = 0;
-    } else if ((int)rnd < t.b) {
+    } else if (rnd < t.b) {
         idx = 1;
-    } else if ((int)rnd < t.c) {
+    } else if (rnd < t.c) {
         idx = 2;
     } else {
         idx = 3;
@@ -1096,8 +1096,8 @@ void Trmp2Spinner_Init(void *r0, int value) {
     spinner->mVel.y = drop;
     spinner->mVel.z = 0;
     spinner->mPos.x += (TRMP2_RAND_FX - 0x800) * 0x40;
-    spinner->mVel.x -= (int)TRMP2_RAND_FX >> 1;
-    spinner->mVel.y -= (int)TRMP2_RAND_FX >> 1;
+    spinner->mVel.x -= TRMP2_RAND_FX >> 1;
+    spinner->mVel.y -= TRMP2_RAND_FX >> 1;
     func_02016a14((char *)spinner, 0);
     func_02016a04((char *)spinner, 0);
 }
