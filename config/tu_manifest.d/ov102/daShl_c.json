@@ -209,56 +209,56 @@
   ],
   "data": [
     {
-      "symbol": "@767",
+      "symbol": "@675",
       "address": "0x0214e5d4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous held tick pointer-to-member; retail first word is 0x0214cfe4. mwcc numbers it @721, which ov063 already owns, so the row uses the unused same-length @767."
     },
     {
-      "symbol": "@779",
+      "symbol": "@768",
       "address": "0x0214e5dc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous ridden tick pointer-to-member; retail first word is 0x0214d044. mwcc numbers it @717, which ov002 already owns, so the row uses the unused same-length @779."
     },
     {
-      "symbol": "@769",
+      "symbol": "@746",
       "address": "0x0214e5e4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous idle enter pointer-to-member; retail first word is 0x0214d1b8. mwcc numbers it @707, which ov060 already owns, so the row uses the unused same-length @769."
     },
     {
-      "symbol": "@781",
+      "symbol": "@770",
       "address": "0x0214e5ec",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous held enter pointer-to-member; retail first word is 0x0214d020. mwcc numbers it @719, which ov063 already owns, so the row uses the unused same-length @781."
     },
     {
-      "symbol": "@771",
+      "symbol": "@750",
       "address": "0x0214e5f4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous idle tick pointer-to-member; retail first word is 0x0214d1b0. mwcc numbers it @709, which ov060 already owns, so the row uses the unused same-length @771."
     },
     {
-      "symbol": "@777",
+      "symbol": "@765",
       "address": "0x0214e5fc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous ridden enter pointer-to-member; retail first word is 0x0214d0bc. mwcc numbers it @715, which ov063 already owns, so the row uses the unused same-length @777."
     },
     {
-      "symbol": "@773",
+      "symbol": "@752",
       "address": "0x0214e604",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous sliding enter pointer-to-member; retail first word is 0x0214d148. mwcc numbers it @711, which ov060 already owns, so the row uses the unused same-length @773."
     },
     {
-      "symbol": "@775",
+      "symbol": "@754",
       "address": "0x0214e60c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -660,7 +660,7 @@
       "source": "0x0214e070",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@769",
+      "symbol": "@746",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e5e4"
@@ -670,7 +670,7 @@
       "source": "0x0214e074",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@771",
+      "symbol": "@750",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e5f4"
@@ -680,7 +680,7 @@
       "source": "0x0214e078",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@773",
+      "symbol": "@752",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e604"
@@ -690,7 +690,7 @@
       "source": "0x0214e07c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@775",
+      "symbol": "@754",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e60c"
@@ -700,7 +700,7 @@
       "source": "0x0214e080",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@777",
+      "symbol": "@765",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e5fc"
@@ -710,7 +710,7 @@
       "source": "0x0214e084",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@779",
+      "symbol": "@768",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e5dc"
@@ -720,7 +720,7 @@
       "source": "0x0214e088",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@781",
+      "symbol": "@770",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e5ec"
@@ -730,7 +730,7 @@
       "source": "0x0214e08c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@767",
+      "symbol": "@675",
       "addend": 0,
       "target_module": "ov102",
       "target_address": "0x0214e5d4"
@@ -880,49 +880,49 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@767",
+      "symbol": "@675",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local held tick descriptor is a configured initializer relocation destination at 0x0214e5d4"
     },
     {
-      "symbol": "@779",
+      "symbol": "@768",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local ridden tick descriptor is a configured initializer relocation destination at 0x0214e5dc"
     },
     {
-      "symbol": "@769",
+      "symbol": "@746",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local idle enter descriptor is a configured initializer relocation destination at 0x0214e5e4"
     },
     {
-      "symbol": "@781",
+      "symbol": "@770",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local held enter descriptor is a configured initializer relocation destination at 0x0214e5ec"
     },
     {
-      "symbol": "@771",
+      "symbol": "@750",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local idle tick descriptor is a configured initializer relocation destination at 0x0214e5f4"
     },
     {
-      "symbol": "@777",
+      "symbol": "@765",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local ridden enter descriptor is a configured initializer relocation destination at 0x0214e5fc"
     },
     {
-      "symbol": "@773",
+      "symbol": "@752",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local sliding enter descriptor is a configured initializer relocation destination at 0x0214e604"
     },
     {
-      "symbol": "@775",
+      "symbol": "@754",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local sliding tick descriptor is a configured initializer relocation destination at 0x0214e60c"
@@ -931,42 +931,42 @@
   "defined_symbol_renames": [
     {
       "from": "@781",
-      "to": "@767",
+      "to": "@675",
       "evidence": "mwcc numbers this PMF descriptor @721. ov063 already defines @721, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @767. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @849 to @790 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @790 to @789 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @789 to @787 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @785 to @767 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @767 to @782 when the local Sound declaration copy gave way to the one in Sound.h (measured from the compiled object)."
     },
     {
       "from": "@777",
-      "to": "@779",
+      "to": "@768",
       "evidence": "mwcc numbers this PMF descriptor @717. ov002 already defines @717, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @779. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @845 to @786 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @786 to @785 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @785 to @783 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @781 to @763 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @763 to @778 when the local Sound declaration copy gave way to the one in Sound.h (measured from the compiled object)."
     },
     {
       "from": "@767",
-      "to": "@769",
+      "to": "@746",
       "evidence": "mwcc numbers this PMF descriptor @707. ov060 already defines @707, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @769. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @835 to @776 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @776 to @775 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @775 to @773 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @771 to @753 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @753 to @779 when the local Sound declaration copy gave way to the one in Sound.h (measured from the compiled object)."
     },
     {
       "from": "@779",
-      "to": "@781",
+      "to": "@770",
       "evidence": "mwcc numbers this PMF descriptor @719. ov063 already defines @719, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @781. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @847 to @788 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @788 to @787 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @787 to @785 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @783 to @777 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @777 to @780 when the local Sound declaration copy gave way to the one in Sound.h (measured from the compiled object)."
     },
     {
       "from": "@769",
-      "to": "@771",
+      "to": "@750",
       "evidence": "mwcc numbers this PMF descriptor @709. ov060 already defines @709, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @771. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @837 to @778 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @778 to @777 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @777 to @775 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @773 to @755 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @755 to @781 when the local Sound declaration copy gave way to the one in Sound.h (measured from the compiled object)."
     },
     {
       "from": "@775",
-      "to": "@777",
+      "to": "@765",
       "evidence": "mwcc numbers this PMF descriptor @715. ov063 already defines @715, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @777. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @843 to @784 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @784 to @783 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @783 to @781 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @779 to @761 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @761 to @776 when the local Sound declaration copy gave way to the one in Sound.h (measured from the compiled object)."
     },
     {
       "from": "@771",
-      "to": "@773",
+      "to": "@752",
       "evidence": "mwcc numbers this PMF descriptor @711. ov060 already defines @711, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @773. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @839 to @780 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @780 to @779 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @779 to @777 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @775 to @757 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @757 to @772 when the local Sound declaration copy gave way to the one in Sound.h (measured from the compiled object)."
     },
     {
       "from": "@773",
-      "to": "@775",
+      "to": "@754",
       "evidence": "mwcc numbers this PMF descriptor @713. ov060 already defines @713, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @775. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @841 to @782 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @782 to @781 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @781 to @779 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @777 to @759 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @759 to @774 when the local Sound declaration copy gave way to the one in Sound.h (measured from the compiled object)."
     }
   ],

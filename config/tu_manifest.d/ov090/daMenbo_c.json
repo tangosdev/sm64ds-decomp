@@ -237,56 +237,56 @@
   ],
   "data": [
     {
-      "symbol": "@1162",
+      "symbol": "@1153",
       "address": "0x021340e0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the patrol update pointer-to-member descriptor; retail first word is 0x02131648"
     },
     {
-      "symbol": "@1160",
+      "symbol": "@1151",
       "address": "0x021340e8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the patrol entry pointer-to-member descriptor; retail first word is 0x02131a74"
     },
     {
-      "symbol": "@1164",
+      "symbol": "@1155",
       "address": "0x021340f0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the idle entry pointer-to-member descriptor; retail first word is 0x02131608"
     },
     {
-      "symbol": "@1158",
+      "symbol": "@1149",
       "address": "0x021340f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the water-rest update pointer-to-member descriptor; retail first word is 0x02131ac4"
     },
     {
-      "symbol": "@1166",
+      "symbol": "@1157",
       "address": "0x02134100",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the idle update pointer-to-member descriptor; retail first word is 0x02131584"
     },
     {
-      "symbol": "@1154",
+      "symbol": "@1145",
       "address": "0x02134108",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the water-chase update pointer-to-member descriptor; retail first word is 0x02131c48"
     },
     {
-      "symbol": "@1152",
+      "symbol": "@1143",
       "address": "0x02134110",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the water-chase entry pointer-to-member descriptor; retail first word is 0x02131db0"
     },
     {
-      "symbol": "@1156",
+      "symbol": "@1147",
       "address": "0x02134118",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -325,35 +325,35 @@
       "evidence": "model resource handle constructed with file ID 0x39f"
     },
     {
-      "symbol": "@1148",
+      "symbol": "@1139",
       "address": "0x021344a8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the patrol anim handle"
     },
     {
-      "symbol": "@1150",
+      "symbol": "@1141",
       "address": "0x021344b4",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the idle anim handle"
     },
     {
-      "symbol": "@1146",
+      "symbol": "@1137",
       "address": "0x021344c0",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the model handle"
     },
     {
-      "symbol": "@1149",
+      "symbol": "@1140",
       "address": "0x021344cc",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the water-rest anim handle"
     },
     {
-      "symbol": "@1147",
+      "symbol": "@1138",
       "address": "0x021344d8",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -432,79 +432,79 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@1146",
+      "symbol": "@1137",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
+    },
+    {
+      "symbol": "@1138",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
+    },
+    {
+      "symbol": "@1139",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
+    },
+    {
+      "symbol": "@1140",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
+    },
+    {
+      "symbol": "@1141",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
+    },
+    {
+      "symbol": "@1143",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
+    },
+    {
+      "symbol": "@1145",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
     },
     {
       "symbol": "@1147",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
-    },
-    {
-      "symbol": "@1148",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
+      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
     },
     {
       "symbol": "@1149",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
+      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
     },
     {
-      "symbol": "@1150",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination"
-    },
-    {
-      "symbol": "@1152",
+      "symbol": "@1151",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
     },
     {
-      "symbol": "@1154",
+      "symbol": "@1153",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
     },
     {
-      "symbol": "@1156",
+      "symbol": "@1155",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
     },
     {
-      "symbol": "@1158",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
-    },
-    {
-      "symbol": "@1160",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
-    },
-    {
-      "symbol": "@1162",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
-    },
-    {
-      "symbol": "@1164",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
-    },
-    {
-      "symbol": "@1166",
+      "symbol": "@1157",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local pointer-to-member descriptor is a configured initializer relocation destination"
@@ -636,7 +636,7 @@
       "source": "0x02133e44",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1146",
+      "symbol": "@1137",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021344c0"
@@ -666,7 +666,7 @@
       "source": "0x02133e50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1147",
+      "symbol": "@1138",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021344d8"
@@ -686,7 +686,7 @@
       "source": "0x02133e5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1148",
+      "symbol": "@1139",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021344a8"
@@ -706,7 +706,7 @@
       "source": "0x02133e68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1149",
+      "symbol": "@1140",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021344cc"
@@ -726,7 +726,7 @@
       "source": "0x02133e74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1150",
+      "symbol": "@1141",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021344b4"
@@ -746,7 +746,7 @@
       "source": "0x02133e7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1152",
+      "symbol": "@1143",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02134110"
@@ -756,7 +756,7 @@
       "source": "0x02133e80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1154",
+      "symbol": "@1145",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02134108"
@@ -776,7 +776,7 @@
       "source": "0x02133e88",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1156",
+      "symbol": "@1147",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02134118"
@@ -786,7 +786,7 @@
       "source": "0x02133e8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1158",
+      "symbol": "@1149",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021340f8"
@@ -806,7 +806,7 @@
       "source": "0x02133e94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1160",
+      "symbol": "@1151",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021340e8"
@@ -816,7 +816,7 @@
       "source": "0x02133e98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1162",
+      "symbol": "@1153",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021340e0"
@@ -836,7 +836,7 @@
       "source": "0x02133ea0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1164",
+      "symbol": "@1155",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x021340f0"
@@ -846,7 +846,7 @@
       "source": "0x02133ea4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1166",
+      "symbol": "@1157",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02134100"
@@ -1370,67 +1370,67 @@
   "defined_symbol_renames": [
     {
       "from": "@1146",
-      "to": "@1146",
+      "to": "@1137",
       "evidence": "Re-keyed from @1156 to @1148 (measured from the compiled object). compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | Re-keyed from @1182 to @1200 when the opt pragma was removed (#821). Re-keyed +1 (@1200 -> @1201) when opt_strength_reduction off came off the file and func_ov090_02130f94's ripple loop was respelled as for (i = 0; i < 4; ++i) with the bone index 6 + i * 3 (#821). Re-keyed from @1201 to @1224 when Re-keyed when #821 made the Menbo's collider-offset copies whole Vector3 assignments (retiring a volatile-pointer launder); the source change shifts mwccarm's @NNN numbering.. | re-keyed when func_ov090_021310b4, 02131378 and 02131e50 became daMenbo_c members, every raw @N moved to @N-3 (measured: verify reported .bss @1221..@1225 and .data @1227..@1241 as EXTRA, @1226 as a 0-symbol rename source) Re-keyed from @1221 to @1162 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1160 to @1156 when the never-called hold declarations came out (measured by pairing compiled objects)."
     },
     {
       "from": "@1147",
-      "to": "@1147",
+      "to": "@1138",
       "evidence": "Re-keyed from @1148 to @1158 (measured from the compiled object). compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | Re-keyed from @1183 to @1201 when the opt pragma was removed (#821). Re-keyed +1 (@1201 -> @1202) when opt_strength_reduction off came off the file and func_ov090_02130f94's ripple loop was respelled as for (i = 0; i < 4; ++i) with the bone index 6 + i * 3 (#821). Re-keyed from @1202 to @1225 when Re-keyed when #821 made the Menbo's collider-offset copies whole Vector3 assignments (retiring a volatile-pointer launder); the source change shifts mwccarm's @NNN numbering.. | re-keyed when func_ov090_021310b4, 02131378 and 02131e50 became daMenbo_c members, every raw @N moved to @N-3 (measured: verify reported .bss @1221..@1225 and .data @1227..@1241 as EXTRA, @1226 as a 0-symbol rename source) Re-keyed from @1222 to @1163 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1161 to @1148 when the never-called hold declarations came out (measured by pairing compiled objects)."
     },
     {
       "from": "@1148",
-      "to": "@1148",
+      "to": "@1139",
       "evidence": "Re-keyed from @1158 to @1150 (measured from the compiled object). compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | Re-keyed from @1184 to @1202 when the opt pragma was removed (#821). Re-keyed +1 (@1202 -> @1203) when opt_strength_reduction off came off the file and func_ov090_02130f94's ripple loop was respelled as for (i = 0; i < 4; ++i) with the bone index 6 + i * 3 (#821). Re-keyed from @1203 to @1226 when Re-keyed when #821 made the Menbo's collider-offset copies whole Vector3 assignments (retiring a volatile-pointer launder); the source change shifts mwccarm's @NNN numbering.. | re-keyed when func_ov090_021310b4, 02131378 and 02131e50 became daMenbo_c members, every raw @N moved to @N-3 (measured: verify reported .bss @1221..@1225 and .data @1227..@1241 as EXTRA, @1226 as a 0-symbol rename source) Re-keyed from @1223 to @1164 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1162 to @1158 when the never-called hold declarations came out (measured by pairing compiled objects)."
     },
     {
       "from": "@1149",
-      "to": "@1149",
+      "to": "@1140",
       "evidence": "Re-keyed from @1150 to @1160 (measured from the compiled object). compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | Re-keyed from @1185 to @1203 when the opt pragma was removed (#821). Re-keyed +1 (@1203 -> @1204) when opt_strength_reduction off came off the file and func_ov090_02130f94's ripple loop was respelled as for (i = 0; i < 4; ++i) with the bone index 6 + i * 3 (#821). Re-keyed from @1204 to @1227 when Re-keyed when #821 made the Menbo's collider-offset copies whole Vector3 assignments (retiring a volatile-pointer launder); the source change shifts mwccarm's @NNN numbering.. | re-keyed when func_ov090_021310b4, 02131378 and 02131e50 became daMenbo_c members, every raw @N moved to @N-3 (measured: verify reported .bss @1221..@1225 and .data @1227..@1241 as EXTRA, @1226 as a 0-symbol rename source) Re-keyed from @1224 to @1165 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1163 to @1150 when the never-called hold declarations came out (measured by pairing compiled objects)."
     },
     {
       "from": "@1150",
-      "to": "@1150",
+      "to": "@1141",
       "evidence": "Re-keyed from @1160 to @1152 (measured from the compiled object). compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | Re-keyed from @1186 to @1204 when the opt pragma was removed (#821). Re-keyed +1 (@1204 -> @1205) when opt_strength_reduction off came off the file and func_ov090_02130f94's ripple loop was respelled as for (i = 0; i < 4; ++i) with the bone index 6 + i * 3 (#821). Re-keyed from @1205 to @1228 when Re-keyed when #821 made the Menbo's collider-offset copies whole Vector3 assignments (retiring a volatile-pointer launder); the source change shifts mwccarm's @NNN numbering.. | re-keyed when func_ov090_021310b4, 02131378 and 02131e50 became daMenbo_c members, every raw @N moved to @N-3 (measured: verify reported .bss @1221..@1225 and .data @1227..@1241 as EXTRA, @1226 as a 0-symbol rename source) Re-keyed from @1225 to @1166 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1164 to @1160 when the never-called hold declarations came out (measured by pairing compiled objects)."
     },
     {
       "from": "@1152",
-      "to": "@1152",
+      "to": "@1143",
       "evidence": "Re-keyed from @1162 to @1154 (measured from the compiled object). compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | Re-keyed from @1188 to @1206 when the opt pragma was removed (#821). Re-keyed +1 (@1206 -> @1207) when opt_strength_reduction off came off the file and func_ov090_02130f94's ripple loop was respelled as for (i = 0; i < 4; ++i) with the bone index 6 + i * 3 (#821). Re-keyed from @1207 to @1230 when Re-keyed when #821 made the Menbo's collider-offset copies whole Vector3 assignments (retiring a volatile-pointer launder); the source change shifts mwccarm's @NNN numbering.. | re-keyed when func_ov090_021310b4, 02131378 and 02131e50 became daMenbo_c members, every raw @N moved to @N-3 (measured: verify reported .bss @1221..@1225 and .data @1227..@1241 as EXTRA, @1226 as a 0-symbol rename source) Re-keyed from @1227 to @1168 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1166 to @1162 when the never-called hold declarations came out (measured by pairing compiled objects)."
     },
     {
       "from": "@1154",
-      "to": "@1154",
+      "to": "@1145",
       "evidence": "Re-keyed from @1164 to @1156 (measured from the compiled object). compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | Re-keyed from @1190 to @1208 when the opt pragma was removed (#821). Re-keyed +1 (@1208 -> @1209) when opt_strength_reduction off came off the file and func_ov090_02130f94's ripple loop was respelled as for (i = 0; i < 4; ++i) with the bone index 6 + i * 3 (#821). Re-keyed from @1209 to @1232 when Re-keyed when #821 made the Menbo's collider-offset copies whole Vector3 assignments (retiring a volatile-pointer launder); the source change shifts mwccarm's @NNN numbering.. | re-keyed when func_ov090_021310b4, 02131378 and 02131e50 became daMenbo_c members, every raw @N moved to @N-3 (measured: verify reported .bss @1221..@1225 and .data @1227..@1241 as EXTRA, @1226 as a 0-symbol rename source) Re-keyed from @1229 to @1170 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1168 to @1164 when the never-called hold declarations came out (measured by pairing compiled objects)."
     },
     {
       "from": "@1156",
-      "to": "@1156",
+      "to": "@1147",
       "evidence": "Re-keyed from @1166 to @1158 (measured from the compiled object). compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | Re-keyed from @1192 to @1210 when the opt pragma was removed (#821). Re-keyed +1 (@1210 -> @1211) when opt_strength_reduction off came off the file and func_ov090_02130f94's ripple loop was respelled as for (i = 0; i < 4; ++i) with the bone index 6 + i * 3 (#821). Re-keyed from @1211 to @1234 when Re-keyed when #821 made the Menbo's collider-offset copies whole Vector3 assignments (retiring a volatile-pointer launder); the source change shifts mwccarm's @NNN numbering.. | re-keyed when func_ov090_021310b4, 02131378 and 02131e50 became daMenbo_c members, every raw @N moved to @N-3 (measured: verify reported .bss @1221..@1225 and .data @1227..@1241 as EXTRA, @1226 as a 0-symbol rename source) Re-keyed from @1231 to @1172 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1170 to @1166 when the never-called hold declarations came out (measured by pairing compiled objects)."
     },
     {
       "from": "@1158",
-      "to": "@1158",
+      "to": "@1149",
       "evidence": "Re-keyed from @1159 to @1160 (measured from the compiled object). compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | Re-keyed from @1194 to @1212 when the opt pragma was removed (#821). Re-keyed +1 (@1212 -> @1213) when opt_strength_reduction off came off the file and func_ov090_02130f94's ripple loop was respelled as for (i = 0; i < 4; ++i) with the bone index 6 + i * 3 (#821). Re-keyed from @1213 to @1236 when Re-keyed when #821 made the Menbo's collider-offset copies whole Vector3 assignments (retiring a volatile-pointer launder); the source change shifts mwccarm's @NNN numbering.. | re-keyed when func_ov090_021310b4, 02131378 and 02131e50 became daMenbo_c members, every raw @N moved to @N-3 (measured: verify reported .bss @1221..@1225 and .data @1227..@1241 as EXTRA, @1226 as a 0-symbol rename source) Re-keyed from @1233 to @1174 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1172 to @1159 when the never-called hold declarations came out (measured by pairing compiled objects)."
     },
     {
       "from": "@1160",
-      "to": "@1160",
+      "to": "@1151",
       "evidence": "Re-keyed from @1161 to @1162 (measured from the compiled object). compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | Re-keyed from @1196 to @1214 when the opt pragma was removed (#821). Re-keyed +1 (@1214 -> @1215) when opt_strength_reduction off came off the file and func_ov090_02130f94's ripple loop was respelled as for (i = 0; i < 4; ++i) with the bone index 6 + i * 3 (#821). Re-keyed from @1215 to @1238 when Re-keyed when #821 made the Menbo's collider-offset copies whole Vector3 assignments (retiring a volatile-pointer launder); the source change shifts mwccarm's @NNN numbering.. | re-keyed when func_ov090_021310b4, 02131378 and 02131e50 became daMenbo_c members, every raw @N moved to @N-3 (measured: verify reported .bss @1221..@1225 and .data @1227..@1241 as EXTRA, @1226 as a 0-symbol rename source) Re-keyed from @1235 to @1176 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1174 to @1161 when the never-called hold declarations came out (measured by pairing compiled objects)."
     },
     {
       "from": "@1162",
-      "to": "@1162",
+      "to": "@1153",
       "evidence": "Re-keyed from @1163 to @1164 (measured from the compiled object). compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | Re-keyed from @1198 to @1216 when the opt pragma was removed (#821). Re-keyed +1 (@1216 -> @1217) when opt_strength_reduction off came off the file and func_ov090_02130f94's ripple loop was respelled as for (i = 0; i < 4; ++i) with the bone index 6 + i * 3 (#821). Re-keyed from @1217 to @1240 when Re-keyed when #821 made the Menbo's collider-offset copies whole Vector3 assignments (retiring a volatile-pointer launder); the source change shifts mwccarm's @NNN numbering.. | re-keyed when func_ov090_021310b4, 02131378 and 02131e50 became daMenbo_c members, every raw @N moved to @N-3 (measured: verify reported .bss @1221..@1225 and .data @1227..@1241 as EXTRA, @1226 as a 0-symbol rename source) Re-keyed from @1237 to @1178 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1176 to @1163 when the never-called hold declarations came out (measured by pairing compiled objects)."
     },
     {
       "from": "@1164",
-      "to": "@1164",
+      "to": "@1155",
       "evidence": "Re-keyed from @1165 to @1166 (measured from the compiled object). compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | Re-keyed from @1200 to @1218 when the opt pragma was removed (#821). Re-keyed +1 (@1218 -> @1219) when opt_strength_reduction off came off the file and func_ov090_02130f94's ripple loop was respelled as for (i = 0; i < 4; ++i) with the bone index 6 + i * 3 (#821). Re-keyed from @1219 to @1242 when Re-keyed when #821 made the Menbo's collider-offset copies whole Vector3 assignments (retiring a volatile-pointer launder); the source change shifts mwccarm's @NNN numbering.. | re-keyed when func_ov090_021310b4, 02131378 and 02131e50 became daMenbo_c members, every raw @N moved to @N-3 (measured: verify reported .bss @1221..@1225 and .data @1227..@1241 as EXTRA, @1226 as a 0-symbol rename source) Re-keyed from @1239 to @1180 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1178 to @1165 when the never-called hold declarations came out (measured by pairing compiled objects)."
     },
     {
       "from": "@1166",
-      "to": "@1166",
+      "to": "@1157",
       "evidence": "Re-keyed from @1167 to @1168 (measured from the compiled object). compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | Re-keyed from @1202 to @1220 when the opt pragma was removed (#821). Re-keyed +1 (@1220 -> @1221) when opt_strength_reduction off came off the file and func_ov090_02130f94's ripple loop was respelled as for (i = 0; i < 4; ++i) with the bone index 6 + i * 3 (#821). Re-keyed from @1221 to @1244 when Re-keyed when #821 made the Menbo's collider-offset copies whole Vector3 assignments (retiring a volatile-pointer launder); the source change shifts mwccarm's @NNN numbering.. | re-keyed when func_ov090_021310b4, 02131378 and 02131e50 became daMenbo_c members, every raw @N moved to @N-3 (measured: verify reported .bss @1221..@1225 and .data @1227..@1241 as EXTRA, @1226 as a 0-symbol rename source) Re-keyed from @1241 to @1182 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1180 to @1167 when the never-called hold declarations came out (measured by pairing compiled objects)."
     }
   ]

@@ -293,28 +293,28 @@
       "evidence": "animation resource handle constructed with file ID 0x9c04"
     },
     {
-      "symbol": "@1060",
+      "symbol": "@1165",
       "address": "0x02114988",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x9c02 model handle"
     },
     {
-      "symbol": "@1061",
+      "symbol": "@1166",
       "address": "0x02114994",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x9c01 model handle"
     },
     {
-      "symbol": "@1062",
+      "symbol": "@1167",
       "address": "0x021149a0",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x9c04 animation handle"
     },
     {
-      "symbol": "@1063",
+      "symbol": "@1168",
       "address": "0x021149ac",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -365,25 +365,25 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@1060",
+      "symbol": "@1165",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local registration node is a configured initializer relocation destination at 0x02114988"
     },
     {
-      "symbol": "@1061",
+      "symbol": "@1166",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local registration node is a configured initializer relocation destination at 0x02114994"
     },
     {
-      "symbol": "@1062",
+      "symbol": "@1167",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local registration node is a configured initializer relocation destination at 0x021149a0"
     },
     {
-      "symbol": "@1063",
+      "symbol": "@1168",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local registration node is a configured initializer relocation destination at 0x021149ac"
@@ -495,7 +495,7 @@
       "source": "0x0211329c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1060",
+      "symbol": "@1165",
       "addend": 0,
       "target_module": "ov014",
       "target_address": "0x02114988"
@@ -515,7 +515,7 @@
       "source": "0x021132a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1061",
+      "symbol": "@1166",
       "addend": 0,
       "target_module": "ov014",
       "target_address": "0x02114994"
@@ -545,7 +545,7 @@
       "source": "0x021132b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1062",
+      "symbol": "@1167",
       "addend": 0,
       "target_module": "ov014",
       "target_address": "0x021149a0"
@@ -565,7 +565,7 @@
       "source": "0x021132c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1063",
+      "symbol": "@1168",
       "addend": 0,
       "target_module": "ov014",
       "target_address": "0x021149ac"
@@ -1129,22 +1129,22 @@
   "defined_symbol_renames": [
     {
       "from": "@1060",
-      "to": "@1060",
+      "to": "@1165",
       "evidence": "The readability pass (typed daWanwan_c parameters replacing char*/void* aliases, removed block-scope declarations and index locals, the WanwanState stand-in replaced by daWanwan_c) changes raw @1061 to @1120; the complete identical initializer and ABS32 edge at +0x184 identify the same 12-byte, alignment-4 NOBITS registration node. Canonical @1060 and its retail address are unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed by __sinit relocation-site order after the daObjWanwanShutter_c::Break conversion removed a local declaration and shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) | re-keyed by whole-object identity after the decl-agreement pass dropped the call3_267c namespace declaration of func_0201267c (three named parameters) for Sound.h's two-argument one: every raw @N moves to @N-3 and the object is byte-identical once renamed back | re-keyed when func_ov014_02111fe0, 02112114 and 0211250c became daWanwan_c members, every raw @N moved to @N-3 (measured: verify reported @1148..@1151 as EXTRA .bss and @1152 as a 0-symbol rename source) | re-keyed by __sinit relocation-site order after batch 35 of #821 turned the four extern \"C\" free helpers (each declared with a named daWanwan_c *c parameter) and the twelve state handlers into members, lowering the per-TU @NNN uniquifier by 4 | re-keyed again by -3 (by __sinit relocation-site order) when the Vec3_ApproachHorz local extern moved from StateEscapeDemoMain's block scope into the file-scope extern \"C\" block to keep its C linkage Re-keyed from @1141 to @1139 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1141 to @1072 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1084 to @1082 when the TU took the hand pass over the sine-table holdouts (measured from the compiled object). Re-keyed from @1082 to @1081 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @1081 to @1076 when the incRelease inline was folded into its six callers (measured from the compiled object). Re-keyed from @1076 to @1063 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @1063 to @1059 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1059 to @1057 when the unused *_hold_ prototypes and count-holding locals were removed (measured from the compiled object)."
     },
     {
       "from": "@1061",
-      "to": "@1061",
+      "to": "@1166",
       "evidence": "The readability pass (typed daWanwan_c parameters replacing char*/void* aliases, removed block-scope declarations and index locals, the WanwanState stand-in replaced by daWanwan_c) changes raw @1062 to @1121; the complete identical initializer and ABS32 edge at +0x190 identify the same 12-byte, alignment-4 NOBITS registration node. Canonical @1061 and its retail address are unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed by __sinit relocation-site order after the daObjWanwanShutter_c::Break conversion removed a local declaration and shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) | re-keyed by whole-object identity after the decl-agreement pass dropped the call3_267c namespace declaration of func_0201267c (three named parameters) for Sound.h's two-argument one: every raw @N moves to @N-3 and the object is byte-identical once renamed back | re-keyed when func_ov014_02111fe0, 02112114 and 0211250c became daWanwan_c members, every raw @N moved to @N-3 (measured: verify reported @1148..@1151 as EXTRA .bss and @1152 as a 0-symbol rename source) | re-keyed by __sinit relocation-site order after batch 35 of #821 turned the four extern \"C\" free helpers (each declared with a named daWanwan_c *c parameter) and the twelve state handlers into members, lowering the per-TU @NNN uniquifier by 4 | re-keyed again by -3 (by __sinit relocation-site order) when the Vec3_ApproachHorz local extern moved from StateEscapeDemoMain's block scope into the file-scope extern \"C\" block to keep its C linkage Re-keyed from @1142 to @1140 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1142 to @1073 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1085 to @1083 when the TU took the hand pass over the sine-table holdouts (measured from the compiled object). Re-keyed from @1083 to @1082 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @1082 to @1077 when the incRelease inline was folded into its six callers (measured from the compiled object). Re-keyed from @1077 to @1064 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @1064 to @1060 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1060 to @1058 when the unused *_hold_ prototypes and count-holding locals were removed (measured from the compiled object)."
     },
     {
       "from": "@1062",
-      "to": "@1062",
+      "to": "@1167",
       "evidence": "The readability pass (typed daWanwan_c parameters replacing char*/void* aliases, removed block-scope declarations and index locals, the WanwanState stand-in replaced by daWanwan_c) changes raw @1063 to @1122; the complete identical initializer and ABS32 edge at +0x1a0 identify the same 12-byte, alignment-4 NOBITS registration node. Canonical @1062 and its retail address are unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed by __sinit relocation-site order after the daObjWanwanShutter_c::Break conversion removed a local declaration and shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) | re-keyed by whole-object identity after the decl-agreement pass dropped the call3_267c namespace declaration of func_0201267c (three named parameters) for Sound.h's two-argument one: every raw @N moves to @N-3 and the object is byte-identical once renamed back | re-keyed when func_ov014_02111fe0, 02112114 and 0211250c became daWanwan_c members, every raw @N moved to @N-3 (measured: verify reported @1148..@1151 as EXTRA .bss and @1152 as a 0-symbol rename source) | re-keyed by __sinit relocation-site order after batch 35 of #821 turned the four extern \"C\" free helpers (each declared with a named daWanwan_c *c parameter) and the twelve state handlers into members, lowering the per-TU @NNN uniquifier by 4 | re-keyed again by -3 (by __sinit relocation-site order) when the Vec3_ApproachHorz local extern moved from StateEscapeDemoMain's block scope into the file-scope extern \"C\" block to keep its C linkage Re-keyed from @1143 to @1141 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1143 to @1074 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1086 to @1084 when the TU took the hand pass over the sine-table holdouts (measured from the compiled object). Re-keyed from @1084 to @1083 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @1083 to @1078 when the incRelease inline was folded into its six callers (measured from the compiled object). Re-keyed from @1078 to @1065 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @1065 to @1061 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1061 to @1059 when the unused *_hold_ prototypes and count-holding locals were removed (measured from the compiled object)."
     },
     {
       "from": "@1063",
-      "to": "@1063",
+      "to": "@1168",
       "evidence": "The readability pass (typed daWanwan_c parameters replacing char*/void* aliases, removed block-scope declarations and index locals, the WanwanState stand-in replaced by daWanwan_c) changes raw @1169 to @1123; the complete identical initializer and ABS32 edge at +0x1ac identify the same 12-byte, alignment-4 NOBITS registration node. Canonical @1063 and its retail address are unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed by __sinit relocation-site order after the daObjWanwanShutter_c::Break conversion removed a local declaration and shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) | re-keyed by whole-object identity after the decl-agreement pass dropped the call3_267c namespace declaration of func_0201267c (three named parameters) for Sound.h's two-argument one: every raw @N moves to @N-3 and the object is byte-identical once renamed back | re-keyed when func_ov014_02111fe0, 02112114 and 0211250c became daWanwan_c members, every raw @N moved to @N-3 (measured: verify reported @1148..@1151 as EXTRA .bss and @1152 as a 0-symbol rename source) | re-keyed by __sinit relocation-site order after batch 35 of #821 turned the four extern \"C\" free helpers (each declared with a named daWanwan_c *c parameter) and the twelve state handlers into members, lowering the per-TU @NNN uniquifier by 4 | re-keyed again by -3 (by __sinit relocation-site order) when the Vec3_ApproachHorz local extern moved from StateEscapeDemoMain's block scope into the file-scope extern \"C\" block to keep its C linkage Re-keyed from @1144 to @1142 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1144 to @1075 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1087 to @1085 when the TU took the hand pass over the sine-table holdouts (measured from the compiled object). Re-keyed from @1085 to @1084 when the member-pointer locals were removed (measured from the compiled object). Re-keyed from @1084 to @1079 when the incRelease inline was folded into its six callers (measured from the compiled object). Re-keyed from @1079 to @1066 when the TU took CalcLib.h, MtxStack.h and the SDK declarations from their headers instead of local copies (#5368-#5376) (measured from the compiled object). Re-keyed from @1066 to @1062 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1062 to @1060 when the unused *_hold_ prototypes and count-holding locals were removed (measured from the compiled object)."
     }
   ]

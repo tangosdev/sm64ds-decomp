@@ -572,10 +572,10 @@ data_ov004_020bbd7c kind:data(any) addr:0x020bbd7c
 data_ov004_020bbdec kind:data(any) addr:0x020bbdec
 data_ov004_020bbe5c kind:data(any) addr:0x020bbe5c
 data_ov004_020bbecc kind:data(any) addr:0x020bbecc
-@541 kind:data(any) addr:0x020bbf4c
-@545 kind:data(any) addr:0x020bbf54
-@543 kind:data(any) addr:0x020bbf5c
-@547 kind:data(any) addr:0x020bbf64
+@317 kind:data(any) addr:0x020bbf4c
+@321 kind:data(any) addr:0x020bbf54
+@319 kind:data(any) addr:0x020bbf5c
+@323 kind:data(any) addr:0x020bbf64
 _ZTI11dScMgBase_c kind:data(any) addr:0x020bbf6c
 _ZTIN11dScMgBase_c15graphCallback_cE kind:data(any) addr:0x020bbf78
 _ZTS11dScMgBase_c kind:data(any) addr:0x020bbf84
@@ -805,7 +805,7 @@ gMgScene kind:bss addr:0x020beb68
 sMgTopScreenYOffset kind:bss addr:0x020beb6c
 sMgSparkleSpritesGuard kind:bss addr:0x020beb70
 sMgGraphCallback kind:bss addr:0x020beb74
-@539 kind:bss addr:0x020beb7c
+@315 kind:bss addr:0x020beb7c
 sMgFxUpdateTable kind:bss addr:0x020beb88
 sMgFxDrawTable kind:bss addr:0x020beb98
 sMgSparkleSprites kind:bss addr:0x020beba8

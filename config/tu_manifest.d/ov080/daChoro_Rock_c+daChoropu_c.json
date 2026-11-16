@@ -224,42 +224,42 @@
   ],
   "data": [
     {
-      "symbol": "@1033",
+      "symbol": "@1023",
       "address": "0x02127f80",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for the ThrowRock state slot; retail first word is 0x02123a34"
     },
     {
-      "symbol": "@1029",
+      "symbol": "@1019",
       "address": "0x02127f88",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for the Hidden state slot; retail first word is 0x02123ecc"
     },
     {
-      "symbol": "@1037",
+      "symbol": "@1027",
       "address": "0x02127f90",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for the Leap state slot; retail first word is 0x02123860"
     },
     {
-      "symbol": "@1035",
+      "symbol": "@1025",
       "address": "0x02127f98",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for the Wait state slot; retail first word is 0x02123924"
     },
     {
-      "symbol": "@1027",
+      "symbol": "@1017",
       "address": "0x02127fa0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for the Setup state slot; retail first word is 0x02123fcc"
     },
     {
-      "symbol": "@1031",
+      "symbol": "@1021",
       "address": "0x02127fa8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -310,42 +310,42 @@
       "evidence": "animation file handle constructed with file ID 0x2d2; reached through the rodata handle table at 0x0212766c and read as word 1 at SetAnim sites"
     },
     {
-      "symbol": "@1024",
+      "symbol": "@1014",
       "address": "0x021283f0",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x2d4 animation handle"
     },
     {
-      "symbol": "@1025",
+      "symbol": "@1015",
       "address": "0x021283fc",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x2d5 animation handle"
     },
     {
-      "symbol": "@1020",
+      "symbol": "@1010",
       "address": "0x02128408",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x2d1 model handle"
     },
     {
-      "symbol": "@1023",
+      "symbol": "@1013",
       "address": "0x02128414",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x2d3 animation handle"
     },
     {
-      "symbol": "@1021",
+      "symbol": "@1011",
       "address": "0x02128420",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x2d6 model handle"
     },
     {
-      "symbol": "@1022",
+      "symbol": "@1012",
       "address": "0x0212842c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -892,73 +892,73 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@1033",
+      "symbol": "@1023",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02127f80"
     },
     {
-      "symbol": "@1029",
+      "symbol": "@1019",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02127f88"
     },
     {
-      "symbol": "@1037",
+      "symbol": "@1027",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02127f90"
     },
     {
-      "symbol": "@1035",
+      "symbol": "@1025",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02127f98"
     },
     {
-      "symbol": "@1027",
+      "symbol": "@1017",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02127fa0"
     },
     {
-      "symbol": "@1031",
+      "symbol": "@1021",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local member descriptor is a configured initializer relocation destination at 0x02127fa8"
     },
     {
-      "symbol": "@1020",
+      "symbol": "@1010",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02128408"
     },
     {
-      "symbol": "@1021",
+      "symbol": "@1011",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02128420"
     },
     {
-      "symbol": "@1022",
+      "symbol": "@1012",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0212842c"
     },
     {
-      "symbol": "@1023",
+      "symbol": "@1013",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02128414"
     },
     {
-      "symbol": "@1024",
+      "symbol": "@1014",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x021283f0"
     },
     {
-      "symbol": "@1025",
+      "symbol": "@1015",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x021283fc"
@@ -1110,7 +1110,7 @@
       "source": "0x02127a04",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1020",
+      "symbol": "@1010",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02128408"
@@ -1130,7 +1130,7 @@
       "source": "0x02127a10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1021",
+      "symbol": "@1011",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02128420"
@@ -1160,7 +1160,7 @@
       "source": "0x02127a20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1022",
+      "symbol": "@1012",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x0212842c"
@@ -1180,7 +1180,7 @@
       "source": "0x02127a2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1023",
+      "symbol": "@1013",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02128414"
@@ -1200,7 +1200,7 @@
       "source": "0x02127a34",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1024",
+      "symbol": "@1014",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x021283f0"
@@ -1220,7 +1220,7 @@
       "source": "0x02127a40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1025",
+      "symbol": "@1015",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x021283fc"
@@ -1240,7 +1240,7 @@
       "source": "0x02127a48",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1027",
+      "symbol": "@1017",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02127fa0"
@@ -1250,7 +1250,7 @@
       "source": "0x02127a4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1029",
+      "symbol": "@1019",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02127f88"
@@ -1260,7 +1260,7 @@
       "source": "0x02127a50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1031",
+      "symbol": "@1021",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02127fa8"
@@ -1270,7 +1270,7 @@
       "source": "0x02127a54",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1033",
+      "symbol": "@1023",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02127f80"
@@ -1280,7 +1280,7 @@
       "source": "0x02127a58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1035",
+      "symbol": "@1025",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02127f98"
@@ -1290,7 +1290,7 @@
       "source": "0x02127a5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1037",
+      "symbol": "@1027",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02127f90"
@@ -1369,62 +1369,62 @@
   "defined_symbol_renames": [
     {
       "from": "@1020",
-      "to": "@1020",
+      "to": "@1010",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1070 to @1016 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1016 to @1028 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1028 to @1035 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1035 to @1031 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1031 to @1018 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@1021",
-      "to": "@1021",
+      "to": "@1011",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1071 to @1027 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1027 to @1029 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1029 to @1036 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1036 to @1032 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1032 to @1029 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@1022",
-      "to": "@1022",
+      "to": "@1012",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1072 to @1018 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1018 to @1030 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1030 to @1037 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1037 to @1033 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1033 to @1020 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@1023",
-      "to": "@1023",
+      "to": "@1013",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1073 to @1029 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1029 to @1031 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1031 to @1038 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1038 to @1034 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1034 to @1031 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@1024",
-      "to": "@1024",
+      "to": "@1014",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1074 to @1020 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1020 to @1032 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1032 to @1039 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1039 to @1035 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1035 to @1022 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@1025",
-      "to": "@1025",
+      "to": "@1015",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1075 to @1031 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1031 to @1033 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1033 to @1040 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1040 to @1036 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1036 to @1033 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@1027",
-      "to": "@1027",
+      "to": "@1017",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1077 to @1033 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1033 to @1035 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1035 to @1042 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1042 to @1038 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1038 to @1035 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@1029",
-      "to": "@1029",
+      "to": "@1019",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1079 to @1035 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1035 to @1037 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1037 to @1044 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1044 to @1040 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1040 to @1037 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@1031",
-      "to": "@1031",
+      "to": "@1021",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1081 to @1037 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1037 to @1039 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1039 to @1046 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1046 to @1042 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1042 to @1029 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@1033",
-      "to": "@1033",
+      "to": "@1023",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1083 to @1029 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1029 to @1041 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1041 to @1048 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1048 to @1044 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1044 to @1031 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     },
     {
       "from": "@1035",
-      "to": "@1035",
+      "to": "@1025",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1085 to @1031 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1031 to @1043 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1043 to @1050 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1050 to @1046 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects)."
     },
     {
       "from": "@1037",
-      "to": "@1037",
+      "to": "@1027",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1087 to @1033 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1033 to @1045 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1045 to @1052 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1052 to @1048 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1048 to @1035 when the unused declarations kept only to hold the count were removed (measured from the compiled object)."
     }
   ]
