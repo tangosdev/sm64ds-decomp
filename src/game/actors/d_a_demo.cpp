@@ -80,8 +80,8 @@
  *   the dispatchers call (this->*table[step])(i) on the credit and window
  *   entries. The {addr, 0} words in .data before the tables are the
  *   compiler's literals for those initializers. Indexed entry fields
- *   are the members. 43cc's speed clamp, 55b4's step and 5894's kira
- *   fields add the index in bytes to the field address.
+ *   are the members. 43cc's speed clamp and 55b4's step add the index
+ *   in bytes to the field address.
  *   common.h must precede daDemo_c.h: dExtAnmModel_c.h's nested Matrix4x3
  *   otherwise wins and scalarizes Behavior's 12-word matrix copy.
  */
@@ -2134,38 +2134,29 @@ void StaffRoll::func_ov002_020f5848(int idx) {
 }
 
 void StaffRoll::func_ov002_020f5894(int i) {
-    int off;
-    unsigned short *p34;
-    short s2c;
     if (i != 0) return;
-    off = i * 0x4c;
-    p34 = (unsigned short *)((char *)&this->stars[0].kiraTimer + off);
-    *p34 = *p34 + 1;
-    if (*(int *)((char *)&this->stars[0].kiraDefParam + off) != 0x1000) {
-        unsigned short v = *p34;
+    this->stars[i].kiraTimer++;
+    if (this->stars[i].kiraDefParam != 0x1000) {
+        unsigned short v = this->stars[i].kiraTimer;
         if (v == 0xf || v == 0x1e) {
-            *(int *)((char *)&this->stars[0].kiraDefParam + off) =
-                *(int *)((char *)&this->stars[0].kiraDefParam + off) + 0x199;
-            if (*(int *)((char *)&this->stars[0].kiraDefParam + off) >= 0x1000)
-                *(int *)((char *)&this->stars[0].kiraDefParam + off) = 0x1000;
+            this->stars[i].kiraDefParam += 0x199;
+            if (this->stars[i].kiraDefParam >= 0x1000)
+                this->stars[i].kiraDefParam = 0x1000;
         }
     }
-    s2c = *(short *)((char *)&this->stars[0].kiraSysParam + off);
-    if (s2c != 0x800) {
-        if (((StaffRoll *)((char *)this + off))->stars[0].kiraPeriods >= 5) {
-            if ((*p34 & 3) == 3) {
-                *(short *)((char *)&this->stars[0].kiraSysParam + off) = s2c + 0x199;
-                if (*(short *)((char *)&this->stars[0].kiraSysParam + off) >= 0x800)
-                    *(short *)((char *)&this->stars[0].kiraSysParam + off) = 0x800;
+    if (this->stars[i].kiraSysParam != 0x800) {
+        if (this->stars[i].kiraPeriods >= 5) {
+            if ((this->stars[i].kiraTimer & 3) == 3) {
+                this->stars[i].kiraSysParam += 0x199;
+                if (this->stars[i].kiraSysParam >= 0x800)
+                    this->stars[i].kiraSysParam = 0x800;
             }
         }
     }
-    if (*p34 < 0x1e) return;
-    *p34 = 0;
-    {
-        unsigned short *p3e = (unsigned short *)((char *)&this->stars[0].kiraPeriods + off);
-        *p3e = *p3e + 1;
-    }
+    if (this->stars[i].kiraTimer < 0x1e)
+        return;
+    this->stars[i].kiraTimer = 0;
+    this->stars[i].kiraPeriods++;
 }
 
 void StaffRoll::func_ov002_020f5990() {
