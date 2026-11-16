@@ -28,6 +28,10 @@
  * leftovers (member spellings measured and rejected on size):
  * - func_ov091_02131160: a Matrix4x3 * local for mShadowMat is +4
  *   (0x1e0 -> 0x1e4); the translation row is stored through `this`.
+ *   Declaring mShadowMat as a Matrix4x3 instead of u8[0x30] keeps this
+ *   function 0/120 but makes the TU emit Matrix4x3's destructor
+ *   (_ZN9Matrix4x3D1Ev, 4 bytes of .text the ROM does not have), so the
+ *   casts stay (#821).
  * - Behavior: one this+0x3a2 halfword for the arrived pitch is
  *   -0xc (0x488 -> 0x47c); &mPitchBase is a pool add of 0x3a2 and the
  *   step stays this+0x300+0xa4.
