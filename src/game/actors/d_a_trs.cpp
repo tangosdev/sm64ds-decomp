@@ -300,9 +300,9 @@ unsigned char daTrs_c::func_ov063_021163d0() {
 
     unsigned int id = this->mCachedActorID;
     if(id==0) return 0;
-    char *a = (char*)(unsigned int)dActor_c::FindWithID(id);
+    daTrsTrap_c *a = (daTrsTrap_c *)dActor_c::FindWithID(id);
     if(a==0) return 0;
-    return ((daTrsTrap_c *)a)->mOccupiedFlag;
+    return a->mOccupiedFlag;
 }
 
 
