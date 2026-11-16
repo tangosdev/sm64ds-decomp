@@ -21,9 +21,8 @@
  * thresholds, i.e. the countdown is shown to the player. RestoreInitial
  * zeroes it after calling the base's RestoreInitial.
  *
- * CONSTRUCTED BY cMgSmartball_ana_c_Construct, left a free function per the recipe
- * (this tree has migrated zero constructors), with only its vtable-symbol
- * reference renamed. */
+ * CONSTRUCTED BY the real cMgSmartball_ana_c(dScMgSmartball_c *, int, Vector2)
+ * constructor; the cartridge keeps its C1, the C2 is deadstripped. */
 #ifndef CMGSMARTBALL_ANA_C_H
 #define CMGSMARTBALL_ANA_C_H
 #include "types.h"
@@ -33,6 +32,7 @@ struct cMgSmartball_ana_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    cMgSmartball_ana_c(dScMgSmartball_c *manager, int index, Vector2 pos);
     ~cMgSmartball_ana_c() {}
 
     /* Recovered helpers: HasBall reads mHasBall (a ball has fallen in);

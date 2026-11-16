@@ -223,7 +223,8 @@ Obj cast also treats it as padding. pad_101 / pad_111 / pad_122 / pad_12a are
 pure alignment gaps between adjacent int fields (house style: explicit pads over
 implicit compiler-inserted ones).
 
-Constructed by [cMgSmartball_ball_c_Construct](../src/minigames/d_s_mg_smartball.cpp), left a free function per the recipe. It
+Constructed by the real `cMgSmartball_ball_c(dScMgSmartball_c *, int, Vector2)`
+constructor in [d_s_mg_smartball.cpp](../src/minigames/d_s_mg_smartball.cpp). It
 calls the base constructor and writes only this vtable and the base's
 `unk_028 = 0x8000`; it touches nothing at or past 0x34, so it adds no evidence
 to the field list.
