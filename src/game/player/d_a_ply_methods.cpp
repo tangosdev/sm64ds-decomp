@@ -13517,7 +13517,6 @@ void daPly_c::func_ov002_020d71a0() {
         int w[2];
     };
     extern struct G data_ov002_0210eb88;
-    char *p = (char*)this;
     this->mUseAltBodyModel = 0;
     ((dExtAnmModel_c *)mModels.mHeadModels[3])
         ->SetAnim((BCA_File *)((void *)data_ov002_0210eb88.w[1]), 0x40000000, 0x1000, 0);
