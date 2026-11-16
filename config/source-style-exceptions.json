@@ -1496,6 +1496,22 @@
       "count": 1,
       "reason": "Declares the write-only byte at 0x4707 that Slot1_InitHud sets to 1, replacing pad_4707[0x1] at the same offset and size; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
       "evidence": "src/minigames/d_s_mg_slots.cpp Slot1_InitHud is the only access; check_header_offsets include/dScMgSlot1_c.h 0 mismatched"
+    },
+    {
+      "path": "src/game/actors/d_a_propeller_heyho_fire.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN24daPropeller_Heyho_Fire_c6State0Ev",
+      "count": 2,
+      "reason": "The state pair stores the code address of State0 as an int. &daPropeller_Heyho_Fire_c::State0 is a pointer-to-member, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int; ov002/daPropeller_Heyho_Fire_c SCRATCH-DATA-VERIFIED, .data 0x0210d5f8..0x0210d608 16 bytes IDENTICAL"
+    },
+    {
+      "path": "src/game/actors/d_a_propeller_heyho_fire.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN24daPropeller_Heyho_Fire_c10InitState0Ev",
+      "count": 2,
+      "reason": "The state pair stores the code address of InitState0 as an int. &daPropeller_Heyho_Fire_c::InitState0 is a pointer-to-member, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int; ov002/daPropeller_Heyho_Fire_c SCRATCH-DATA-VERIFIED, .data 0x0210d5f8..0x0210d608 16 bytes IDENTICAL"
     }
   ]
 }

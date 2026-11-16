@@ -1058,14 +1058,18 @@ CoinHandler data_ov002_0210dc70[9] = {
 /* Initialized data this file is the only complete referrer for. */
 extern "C" char data_ov002_0210da48;
 extern "C" char data_ov002_0210da50;
-extern "C" char data_ov002_0210da00;
-extern "C" char data_ov002_0210d9b8;
-extern "C" char data_ov002_0210d9f8;
-extern "C" char data_ov002_0210d9c8;
-extern SharedFilePtr * const data_ov002_020ff060[3] = {
-    (SharedFilePtr *)&data_ov002_0210da48, (SharedFilePtr *)&data_ov002_0210da50, (SharedFilePtr *)&data_ov002_0210da00,
+extern SharedFilePtr data_ov002_0210da00;
+extern SharedFilePtr data_ov002_0210d9b8;
+extern SharedFilePtr data_ov002_0210d9f8;
+extern SharedFilePtr data_ov002_0210d9c8;
+extern SharedFilePtr *const data_ov002_020ff060[3] = {
+    (SharedFilePtr *)&data_ov002_0210da48,
+    (SharedFilePtr *)&data_ov002_0210da50,
+    &data_ov002_0210da00,
 };
-extern SharedFilePtr * const data_ov002_020ff06c[3] = {
-    (SharedFilePtr *)&data_ov002_0210d9b8, (SharedFilePtr *)&data_ov002_0210d9f8, (SharedFilePtr *)&data_ov002_0210d9c8,
+extern SharedFilePtr *const data_ov002_020ff06c[3] = {
+    &data_ov002_0210d9b8,
+    &data_ov002_0210d9f8,
+    &data_ov002_0210d9c8,
 };
-extern const int data_ov002_020ff078[6] = { 5, 0, 0, 10, 15, 20 };
+extern const int data_ov002_020ff078[6] = {5, 0, 0, 10, 15, 20};
