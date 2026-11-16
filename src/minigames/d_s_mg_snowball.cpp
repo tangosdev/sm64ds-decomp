@@ -298,7 +298,9 @@ int dScMgSnowball_c::HitsBreakable(int *point) {
 // kept: the ROM recomputes x >> 12 and courseY >> 12 after the tile lookup; with
 // CSE on they are reused and the function is 0x288. A tile-lookup inline helper,
 // u16/unsigned casts or % 16 on the locals, and reading point[0] directly do not
-// break the reuse.
+// break the reuse. Re-measured (#821, 2026-11-16): a ternary tile-row pick 0x264,
+// the two lookup branches swapped 0x288, x / 0x10000 0x1e0, the else branch
+// re-reading point[] 0x288.
 #pragma opt_common_subs off
 int dScMgSnowball_c::HitsWall(int *point) {
     int courseY = point[1];
