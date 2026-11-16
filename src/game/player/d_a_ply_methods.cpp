@@ -13406,19 +13406,18 @@ int daPly_c::func_ov002_020d7030(void *b) {
     return 1;
 }
 
-char *daPly_c::func_ov002_020d708c() {
-    char* a;
-    char* best = 0;
+dActor_c *daPly_c::func_ov002_020d708c() {
+    dActor_c *a;
+    dActor_c *best = 0;
     int bestAng = 0x238e;
-    a = (char *)Next((dActor_c *)best);
+    a = Next(best);
     if (a) {
         int thresh = bestAng;
         do {
-            if ((dActor_c *)a != this) {
-                if (((dActor_c *)a)->OnYoshiTryEat()) {
-                    if (Vec3_Dist(&mPos, &((dActor_c *)a)->mPos) < 0x15e000) {
-                        int diff =
-                            (short)(this->mAngleY - Vec3_HorzAngle(&mPos, &((dActor_c *)a)->mPos));
+            if (a != this) {
+                if (a->OnYoshiTryEat()) {
+                    if (Vec3_Dist(&mPos, &a->mPos) < 0x15e000) {
+                        int diff = (short)(this->mAngleY - Vec3_HorzAngle(&mPos, &a->mPos));
                         int ad = diff < 0 ? -diff : diff;
                         if (ad <= thresh) {
                             int ad2 = diff < 0 ? (short)(-diff) : diff;
@@ -13430,11 +13429,11 @@ char *daPly_c::func_ov002_020d708c() {
                     }
                 }
             }
-            a = (char *)Next((dActor_c *)a);
+            a = Next(a);
         } while (a);
     }
     if (best) {
-        short v = Vec3_VertAngle(&mPos, &((dActor_c *)best)->mPos);
+        short v = Vec3_VertAngle(&mPos, &best->mPos);
         this->mHeadRot[0] = 0;
         this->mHeadRot[1] = (short)bestAng;
         this->mHeadRot[2] = v;
