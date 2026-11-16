@@ -485,7 +485,6 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
 void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
     int i;
     struct MeshEntry* e;
-    int off;
     VecFx32 dirv;
     Mtx43 mw;
     Mtx43 m;
@@ -515,9 +514,8 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
             do {
                 unsigned char b = *(volatile unsigned char*)(part->ids + j);
                 int t;
-                int ix = *(volatile u16 *)&modelFile->transformBoneMap[b];
-                mp = (Mtx43 *)*(Matrix4x3 *volatile *)&transforms + ix;
-                off = ix * 0x30;
+                int ix = modelFile->transformBoneMap[b];
+                mp = (Mtx43 *)&transforms[ix];
                 if (mtx) {
                     MTX_Scale43_(&mw, dir->x, dir->y, dir->z);
                     MTX_Concat43((const Matrix4x3 *)&mw, mtx, (Matrix4x3 *)&mw);
@@ -530,8 +528,7 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                 m.r[3].y = mp->r[3].y;
                 m.r[3].z = mp->r[3].z;
                 if (mtx) {
-                    MTX_Concat43((const Matrix4x3 *)((char *)transforms + off), mtx,
-                                 (Matrix4x3 *)&mw);
+                    MTX_Concat43(&transforms[ix], mtx, (Matrix4x3 *)&mw);
                     mp = &mw;
                 }
                 if (mp->r[1].x * mp->r[1].x + mp->r[1].y * mp->r[1].y > 0x4000) {
