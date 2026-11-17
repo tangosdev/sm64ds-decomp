@@ -265,7 +265,7 @@ int daOwl_c::UpdateCarrying() {
 
     if (OWL_TIMER(this) != 0) {
         if (unk_3e8 == 0 && OWL_FRAME(this) <= 2) {
-            func_02012694(0x139, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(0x139, &mCamSpacePos);
             unk_3e8 = 1;
         } else {
             if (OWL_FRAME(this) > 2)
@@ -328,7 +328,7 @@ int daOwl_c::UpdateHover() {
                 if ((u16)(player->mStateFlags & 0x800) == 0) {
                     if (player->StartTalk(*this, 1) != 0) {
                         if (mTalkTarget->ShowMessage(*this, 0xa2, &mPos, 0, 0) == 1) {
-                            func_02012694(0x176, (const Vector3 *)(&mCamSpacePosX));
+                            func_02012694(0x176, &mCamSpacePos);
                             mTalkState = TALK_TALKING;
                             ChangeState(OWL_STATE_TALK);
                             return 1;
@@ -551,7 +551,7 @@ int daOwl_c::Behavior()
         if ((m == OWL_STATE_TALK || m == OWL_STATE_HOVER ||
              m == OWL_STATE_RETURN) &&
             (unsigned short)(mAnmModel.currFrame >> 0xc) == 0) {
-            func_02012694(0x139, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(0x139, &mCamSpacePos);
         }
     }
     /* The ROM tests this state twice; the else is unreachable. */

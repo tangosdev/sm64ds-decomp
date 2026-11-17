@@ -825,7 +825,7 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
             vel.x = Vec3_VertAngle(&mPos, &fp);
         }
         SpawnFireball(mPos, &vel, 0x1e000, 0xa000, 1);
-        func_02012694(kSndFireSpit, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(kSndFireSpit, &mCamSpacePos);
     }
     if (mAnmModel.dExtFrameCtrl_c::Finished() != 0) {
         mAnmModel.currFrame = 0;

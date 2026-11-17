@@ -299,7 +299,7 @@ void daPkn_c::StateSleep()
     if (mPlayerDist < thr && PlayerMovingFast()) {
         mAnmModel.SetAnim((BCA_File *)data_ov084_02130e0c.filePtr, 0x40000000, 0x1000, 0);
         mState = 3;
-        func_02012694(0x175, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(0x175, &mCamSpacePos);
         Particle::System::NewSimple(kPtclPiranhaWakeA, mBubblePos.x, mBubblePos.y, mBubblePos.z);
         Particle::System::NewSimple(kPtclPiranhaWakeB, mBubblePos.x, mBubblePos.y, mBubblePos.z);
         return;
@@ -361,7 +361,7 @@ void daPkn_c::StateBite()
                 flags = mdCcAc_c1.hitFlags;
                 if (flags & 0x10) {
                     ((daPly_c *)actor)->IncMegaKillCount();
-                    func_02012694(0x1d, (const Vector3 *)(&mCamSpacePosX));
+                    func_02012694(0x1d, &mCamSpacePos);
                     Die();
                     return;
                 }
@@ -400,7 +400,7 @@ void daPkn_c::StateBite()
             if (isPlayer != 0) {
                 if ((mdCcAc_c1.hitFlags & 0x10) != 0) {
                     ((daPly_c *)actor)->IncMegaKillCount();
-                    func_02012694(0x1d, (const Vector3 *)(&mCamSpacePosX));
+                    func_02012694(0x1d, &mCamSpacePos);
                     Die();
                     return;
                 }
@@ -435,7 +435,7 @@ void daPkn_c::StateBite()
         return;
     if ((mdCcAcPos_c.hitFlags & 0x10) != 0) {
         ((daPly_c *)actor)->IncMegaKillCount();
-        func_02012694(0x1d, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(0x1d, &mCamSpacePos);
         Die();
         return;
     }
@@ -510,7 +510,7 @@ void daPkn_c::StateShrink()
     mClsnEnabled = 0;
     scale = mScaleX;
     if (mStateTimer == 0) {
-        func_02012694(0x11f, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(0x11f, &mCamSpacePos);
         scale = 0x1000;
     }
 
@@ -620,7 +620,7 @@ int daPkn_c::CheckHits()
                 if (flags != 0) {
                     if (flags & 0x10) {
                         actor->IncMegaKillCount();
-                        func_02012694(0x1d, (const Vector3 *)(&mCamSpacePosX));
+                        func_02012694(0x1d, &mCamSpacePos);
                     }
                     func_020105cc(flags);
                     Die();
@@ -638,7 +638,7 @@ int daPkn_c::CheckHits()
                     mAnmModel.SetAnim((BCA_File *)data_ov084_02130e0c.filePtr, 0, 0x1000, 0);
                     mAnmModel.SetFlags(0x40000000);
                     mState = 3;
-                    func_02012694(0x175, (const Vector3 *)(&mCamSpacePosX));
+                    func_02012694(0x175, &mCamSpacePos);
                     return 0;
                 }
                 return 1;
@@ -663,7 +663,7 @@ int daPkn_c::CheckHits()
                 if (flags != 0) {
                     if (flags & 0x10) {
                         actor->IncMegaKillCount();
-                        func_02012694(0x1d, (const Vector3 *)(&mCamSpacePosX));
+                        func_02012694(0x1d, &mCamSpacePos);
                     }
                     func_020105cc(flags);
                     Die();
