@@ -44,10 +44,14 @@ enum daObjCtRotateBlock_c_AssetId {
 #undef data_ov065_0211c0a8
 extern void *const data_ov065_0211c0a8[2];
 u8 data_ov065_0211cfa4[4] = {
-    120, 40, 0, 0,
+    120,
+    40,
+    0,
+    0,
 };
 s16 data_ov065_0211cfa8[2] = {
-    0x4000, 0x5555,
+    0x4000,
+    0x5555,
 };
 #include "daObjCtRotateBlock_c.h"
 #include "dBgCh_Gnd.h"

@@ -73,9 +73,8 @@ struct CLPS_Block {
 };
 
 CLPS_Block data_ov064_0211bb8c = {
-    0x53504c43, 0x00020008, 0x00002fc0, 0x000000ff,
-    0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff,
+    0x53504c43, 0x00020008, 0x00002fc0, 0x000000ff, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff,
 };
 
-extern const ResourceDescriptor data_ov064_0211adb0 = {
-    &gFlGuraModelFile, &gFlGuraCollisionFile, &data_ov064_0211bb8c};
+extern const ResourceDescriptor data_ov064_0211adb0 = {&gFlGuraModelFile, &gFlGuraCollisionFile,
+                                                       &data_ov064_0211bb8c};

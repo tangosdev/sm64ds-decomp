@@ -108,10 +108,14 @@ extern UdliftCollisionFilePtr gRcRift02CollisionFile;
 /* Per-variant model and collision files, and the CLPS block handed to
  * dBgW_KcMbg::SetFile, all indexed by mVariant. */
 extern SharedFilePtr *const data_ov095_02136f68[3] = {
-    &gThLiftModelFile, &gCvUdLiftModelFile, &gRcRift02ModelFile,
+    &gThLiftModelFile,
+    &gCvUdLiftModelFile,
+    &gRcRift02ModelFile,
 };
 extern SharedFilePtr *const data_ov095_02136f74[3] = {
-    &gThLiftCollisionFile, &gCvUdLiftCollisionFile, &gRcRift02CollisionFile,
+    &gThLiftCollisionFile,
+    &gCvUdLiftCollisionFile,
+    &gRcRift02CollisionFile,
 };
 extern CLPS_Block *data_ov095_021375a4[];
 /* The state table, indexed by mState. */
