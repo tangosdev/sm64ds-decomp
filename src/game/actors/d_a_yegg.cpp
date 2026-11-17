@@ -847,10 +847,9 @@ void daYegg_c::EnterFollowPlayer() {
 /* Switches to state `i` and runs that state's enter handler. daPly_c's
  * St_YoshiPower_Init calls it with state 1 on the egg it holds. */
 void daYegg_c::func_ov002_020ed63c(int i) {
-    daYegg_c *c = this;
-    c->mState = i;
-    int j = c->mState;
-    (c->*data_ov002_02110a5c[j].pmf[0])();
+    mState = i;
+    int j = mState;
+    (this->*data_ov002_02110a5c[j].pmf[0])();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1089,40 +1088,39 @@ int daYegg_c::FindTarget(int a1, int best) {
  * position and sets mBurstDone. d_a_ply_methods.cpp still calls the free
  * function on the held egg. */
 void daYegg_c::func_ov002_020edca4() {
-    daYegg_c *self = this;
     struct Vector3 pos;
     char* spawned;
     int xv, zv, yv, sy;
 
-    if (self->mBurstDone != 0) return;
+    if (mBurstDone != 0)
+        return;
 
-    self->PayOut();
+    PayOut();
 
-    yv = self->mPosY;
-    zv = self->mPosZ;
+    yv = mPosY;
+    zv = mPosZ;
     sy = yv + 0x28000;
-    xv = self->mPosX;
+    xv = mPosX;
     pos.x = xv;
     pos.y = sy;
     pos.z = zv;
-    if (self->HasStarPayout() != 0) {
-        self->UntrackStar(*(s8 *)&self->mStarSlot);
+    if (HasStarPayout() != 0) {
+        UntrackStar(*(s8 *)&mStarSlot);
 
-        spawned =
-            (char *)dActor_c::Spawn(ACTOR_SILVER_STAR, 0x10, pos, 0, self->mPlayer->mAreaId, -1);
+        spawned = (char *)dActor_c::Spawn(ACTOR_SILVER_STAR, 0x10, pos, 0, mPlayer->mAreaId, -1);
         if (spawned != 0) {
-            ((daStar_c *)spawned)->SeekNewMarker((char *)self->mPlayer, 1);
+            ((daStar_c *)spawned)->SeekNewMarker((char *)mPlayer, 1);
         }
     }
 
-    Particle::System::NewSimple(kPtclYoshiEggBreakA, self->mPosX, self->mPosY, self->mPosZ);
-    Particle::System::NewSimple(kPtclYoshiEggBreakB, self->mPosX, self->mPosY, self->mPosZ);
-    Particle::System::NewSimple(kPtclYoshiEggBreakC, self->mPosX, self->mPosY, self->mPosZ);
-    Particle::System::NewSimple(kPtclYoshiEggBreakD, self->mPosX, self->mPosY, self->mPosZ);
-    self->MarkForDestruction();
-    Sound::PlayCharVoice(0, 0x103, self->mCamSpacePos);
+    Particle::System::NewSimple(kPtclYoshiEggBreakA, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclYoshiEggBreakB, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclYoshiEggBreakC, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclYoshiEggBreakD, mPosX, mPosY, mPosZ);
+    MarkForDestruction();
+    Sound::PlayCharVoice(0, 0x103, mCamSpacePos);
 
-    self->mBurstDone = 1;
+    mBurstDone = 1;
 }
 
 /* -------------------------------------------------------------------------- */
