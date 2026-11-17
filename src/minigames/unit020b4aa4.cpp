@@ -10,8 +10,8 @@
  * (MgCoins_Update through Sprite::Update) and, while visible, is
  * drawn at its position by MgCoins_Draw. The Sprite states slide a
  * sprite from its position to a target by a fixed step, then hand it the
- * next state; the records at pmf_Coin_MoveThenRise..0x020bc820 hold those
- * states, and the comment on each extern names its target. Over the array
+ * next state, named as a real &Sprite:: member pointer (mwcc emits each use
+ * as its own 8-byte {fn, 0} .data constant, 0x020bc7d8..0x020bc828). Over the array
  * runs a second machine, one plain function pointer at sMgCoinsStep
  * that MgCoins_Update calls once a frame and that each step replaces
  * (or clears) when it is done. The external entry points that start a
@@ -151,20 +151,8 @@ extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 #pragma section coinframes begin
 int sMgCoinRiseFrames = 20;
 #pragma section coinframes end
-int sMgCoinsBetCap = 5;   /* cap MgCoins_AddBetCoin raises the count to */
-extern int gMgCoinsShowDelta;   /* nonzero: sequences also show their count */
-/* Sprite states: member-pointer records (ov004 relocs.txt names each
-   target). */
-extern SpriteFn pmf_Coin_MoveThenRise; /* Coin_MoveThenRise */
-extern SpriteFn pmf_Coin_RiseSpent; /* Coin_RiseSpent */
-extern SpriteFn pmf_Coin_Move; /* Coin_Move */
-extern SpriteFn pmf_Coin_Move_2; /* Coin_Move */
-extern SpriteFn pmf_Coin_Rise; /* Coin_Rise */
-extern SpriteFn pmf_Coin_MoveThenBank; /* Coin_MoveThenBank */
-extern SpriteFn pmf_Coin_FlyToCounter; /* Coin_FlyToCounter */
-extern SpriteFn pmf_Coin_MoveThenRiseSpent; /* Coin_MoveThenRiseSpent */
-extern SpriteFn pmf_Coin_MoveThenRefund; /* Coin_MoveThenRefund */
-extern SpriteFn pmf_Coin_Move_3; /* Coin_Move */
+int sMgCoinsBetCap = 5;    /* cap MgCoins_AddBetCoin raises the count to */
+int gMgCoinsShowDelta = 1; /* nonzero: sequences also show their count */
 extern int data_ov006_021338c4[];
 extern int data_ov006_021338ac[];
 extern int data_ov006_021338b8[];
@@ -769,7 +757,7 @@ void MgCoins_StepPayoutFinish(void) {
 void Sprite::Reset() {
     Hide();
     mDelay = 0;
-    mState = pmf_Coin_Move;
+    mState = &Sprite::Move;
 }
 
 void Sprite::Update() {
@@ -800,7 +788,7 @@ void Sprite::MoveThenBank() {
         return;
     Mg_GainCredits(1);
     Hide();
-    mState = pmf_Coin_Move_2;
+    mState = &Sprite::Move;
 }
 
 void Sprite::Hide() {
@@ -832,9 +820,9 @@ void Sprite::Launch(Vec2i *in) {
         if (v < 0) v = -v;
         mStep.y = v;
     }
-    if (mState != pmf_Coin_MoveThenBank)
+    if (mState != &Sprite::MoveThenBank)
         Mg_LoseCredits(1);
-    mState = pmf_Coin_Move_3;
+    mState = &Sprite::Move;
 }
 
 /* Send the sprite to x = 128 at 0xc0/0x1000 of the distance per frame
@@ -859,7 +847,7 @@ void Sprite::SendOff() {
     }
     mDelay = 20;
     Sound::PlayBank2_2D(0x14a);
-    mState = pmf_Coin_MoveThenRise;
+    mState = &Sprite::MoveThenRise;
 }
 
 /* State: move; on arrival rise (Sprite::Rise). */
@@ -871,7 +859,7 @@ void Sprite::MoveThenRise() {
     if (v.x != 0)
         return;
     if (v.y == 0)
-        mState = pmf_Coin_Rise;
+        mState = &Sprite::Rise;
 }
 
 /* State: rise. g = sMgCoinRiseFrames is 0x14 in the ROM; for mDelay
@@ -916,7 +904,7 @@ void Sprite::Spend() {
     }
     mDelay = 20;
     Sound::PlayBank2_2D(0x14a);
-    mState = pmf_Coin_MoveThenRiseSpent;
+    mState = &Sprite::MoveThenRiseSpent;
 }
 
 /* State: move; on arrival rise (Sprite::RiseSpent). */
@@ -928,7 +916,7 @@ void Sprite::MoveThenRiseSpent() {
     if (v.x != 0)
         return;
     if (v.y == 0)
-        mState = pmf_Coin_RiseSpent;
+        mState = &Sprite::RiseSpent;
 }
 
 /* State: the same rise as Sprite::Rise. */
@@ -962,7 +950,7 @@ void Sprite::Return() {
     if (b < 0)
         b = -b;
     mStep.y = b;
-    mState = pmf_Coin_MoveThenRefund;
+    mState = &Sprite::MoveThenRefund;
 }
 
 /* State: move; on arrival leave play, call Mg_GainCredits(1), reset. */
@@ -1007,7 +995,7 @@ void Sprite::PlacePayout(Vec2i *in) {
             y = -y;
         mStep.y = y;
     }
-    mState = pmf_Coin_FlyToCounter;
+    mState = &Sprite::FlyToCounter;
 }
 
 /* State: wait out mDelay, then move; on arrival play sound 0x149, call

@@ -28,7 +28,7 @@
     {
       "name": ".data",
       "start": "0x020bc7d0",
-      "end": "0x020bc7d4"
+      "end": "0x020bc828"
     },
     {
       "name": ".data.coinspr",
@@ -373,6 +373,83 @@
       "evidence": "MgCoins_AddBetCoin stops at 5"
     },
     {
+      "symbol": "gMgCoinsShowDelta",
+      "address": "0x020bc7d4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object: the int 1 (retail word 0x00000001) between sMgCoinsBetCap and the Sprite state constants; MgCoins_Update and MgCoins_Reset read and clear it, the minigame scenes set it"
+    },
+    {
+      "symbol": "pmf_Coin_MoveThenRise",
+      "address": "0x020bc7d8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Sprite::MoveThenRise (0x020b4ff0), emitted by Sprite::SendOff; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Coin_RiseSpent",
+      "address": "0x020bc7e0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Sprite::RiseSpent (0x020b4d50), emitted by Sprite::MoveThenRiseSpent; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Coin_Move",
+      "address": "0x020bc7e8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Sprite::Move (0x020b5288), emitted by Sprite::Reset; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Coin_Move_2",
+      "address": "0x020bc7f0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Sprite::Move (0x020b5288), emitted by Sprite::MoveThenBank; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Coin_Rise",
+      "address": "0x020bc7f8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Sprite::Rise (0x020b4f44), emitted by Sprite::MoveThenRise; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Coin_MoveThenBank",
+      "address": "0x020bc800",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Sprite::MoveThenBank (0x020b51f0), emitted by Sprite::Launch; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Coin_FlyToCounter",
+      "address": "0x020bc808",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Sprite::FlyToCounter (0x020b4aa4), emitted by Sprite::PlacePayout; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Coin_MoveThenRiseSpent",
+      "address": "0x020bc810",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Sprite::MoveThenRiseSpent (0x020b4dfc), emitted by Sprite::Spend; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Coin_MoveThenRefund",
+      "address": "0x020bc818",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Sprite::MoveThenRefund (0x020b4c30), emitted by Sprite::Return; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Coin_Move_3",
+      "address": "0x020bc820",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Sprite::Move (0x020b5288), emitted by Sprite::Launch; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
       "symbol": "sMgCoinsButtonSprites",
       "address": "0x020bc828",
       "size": "0x14",
@@ -468,7 +545,7 @@
         {
           "section": ".data",
           "start": "0x020bc7d0",
-          "end": "0x020bc7d4",
+          "end": "0x020bc828",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -502,7 +579,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 47
+          "LICENSED": 62
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -511,36 +588,139 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              87
+              5
             ],
             "desired": [
-              87
+              5
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              6,
+              7,
+              8,
+              10,
+              12,
+              14,
+              16,
+              18,
+              20,
+              22,
+              24,
+              26
+            ],
+            "desired": [
+              7,
+              6,
+              10,
+              8,
+              18,
+              16,
+              20,
+              22,
+              26,
+              24,
+              14,
+              12
+            ]
+          },
+          {
+            "section": ".data.coinspr",
+            "original": [
+              29,
+              31
+            ],
+            "desired": [
+              29,
+              31
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              114
+            ],
+            "desired": [
+              114
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              85
+              112
             ],
             "desired": [
-              85
+              112
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6
+              28,
+              33
             ],
             "desired": [
-              5,
-              6
+              28,
+              33
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                6,
+                7,
+                8,
+                10,
+                12,
+                14,
+                16,
+                18,
+                20,
+                22,
+                24,
+                26
+              ],
+              "desired": [
+                7,
+                6,
+                10,
+                8,
+                18,
+                16,
+                20,
+                22,
+                26,
+                24,
+                14,
+                12
+              ],
+              "slots": [
+                6,
+                7,
+                8,
+                10,
+                12,
+                14,
+                16,
+                18,
+                20,
+                22,
+                24,
+                26
+              ]
+            }
+          ],
+          "symbolIndices": 12,
+          "sectionLinks": 0,
+          "sectionInfos": 10,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -599,6 +779,66 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-owned destructor-registration node; DSD requires a configured global symbol at 0x020bfa28, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "pmf_Coin_MoveThenRise",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Coin_RiseSpent",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Coin_Move",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Coin_Move_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Coin_Rise",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Coin_MoveThenBank",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Coin_FlyToCounter",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Coin_MoveThenRiseSpent",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Coin_MoveThenRefund",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Coin_Move_3",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "relocations": [
@@ -781,6 +1021,106 @@
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x020b9ad0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bc7d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Sprite12MoveThenRiseEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b4ff0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bc7e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Sprite9RiseSpentEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b4d50"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bc7e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Sprite4MoveEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b5288"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bc7f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Sprite4MoveEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b5288"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bc7f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Sprite4RiseEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b4f44"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bc800",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Sprite12MoveThenBankEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b51f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bc808",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Sprite12FlyToCounterEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b4aa4"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bc810",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Sprite17MoveThenRiseSpentEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b4dfc"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bc818",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Sprite14MoveThenRefundEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b4c30"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bc820",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN6Sprite4MoveEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b5288"
     }
   ],
   "defined_symbol_renames": [
@@ -801,6 +1141,56 @@
         "raw_binding": "STB_LOCAL"
       },
       "evidence": "the sMgCoins array destructor thunk; after using shared Vec2i from ov006_ec4dc_obj.h and dropping its local __aeabi_idiv declaration, the candidate ELF emits it as __arraydtor$199. It is renamed onto the configured __arraydtor$192 at 0x020b67bc; TU verification checks its relocation destination. Re-keyed from __arraydtor$199 to __arraydtor$197 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from __arraydtor$197 to __arraydtor$186 when the Coin_ free functions became Sprite members (their prototypes' named parameters went) (paired by consumer relocation)."
+    },
+    {
+      "from": "@579",
+      "to": "pmf_Coin_MoveThenRise",
+      "evidence": "Compiler PMF literal: Sprite::SendOff assigns &Sprite::MoveThenRise, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::SendOff+0x98 loads 0x020bc7d8 in the ROM) and by its own relocation target (Sprite::MoveThenRise at 0x020b4ff0)."
+    },
+    {
+      "from": "@623",
+      "to": "pmf_Coin_RiseSpent",
+      "evidence": "Compiler PMF literal: Sprite::MoveThenRiseSpent assigns &Sprite::RiseSpent, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::MoveThenRiseSpent+0x78 loads 0x020bc7e0 in the ROM) and by its own relocation target (Sprite::RiseSpent at 0x020b4d50)."
+    },
+    {
+      "from": "@504",
+      "to": "pmf_Coin_Move",
+      "evidence": "Compiler PMF literal: Sprite::Reset assigns &Sprite::Move, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Reset+0x30 loads 0x020bc7e8 in the ROM) and by its own relocation target (Sprite::Move at 0x020b5288)."
+    },
+    {
+      "from": "@535",
+      "to": "pmf_Coin_Move_2",
+      "evidence": "Compiler PMF literal: Sprite::MoveThenBank assigns &Sprite::Move, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::MoveThenBank+0x94 loads 0x020bc7f0 in the ROM) and by its own relocation target (Sprite::Move at 0x020b5288)."
+    },
+    {
+      "from": "@590",
+      "to": "pmf_Coin_Rise",
+      "evidence": "Compiler PMF literal: Sprite::MoveThenRise assigns &Sprite::Rise, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::MoveThenRise+0x78 loads 0x020bc7f8 in the ROM) and by its own relocation target (Sprite::Rise at 0x020b4f44)."
+    },
+    {
+      "from": "@553",
+      "to": "pmf_Coin_MoveThenBank",
+      "evidence": "Compiler PMF literal: Sprite::Launch assigns &Sprite::MoveThenBank, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Launch+0xd4 loads 0x020bc800 in the ROM) and by its own relocation target (Sprite::MoveThenBank at 0x020b51f0)."
+    },
+    {
+      "from": "@669",
+      "to": "pmf_Coin_FlyToCounter",
+      "evidence": "Compiler PMF literal: Sprite::PlacePayout assigns &Sprite::FlyToCounter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::PlacePayout+0xa8 loads 0x020bc808 in the ROM) and by its own relocation target (Sprite::FlyToCounter at 0x020b4aa4)."
+    },
+    {
+      "from": "@612",
+      "to": "pmf_Coin_MoveThenRiseSpent",
+      "evidence": "Compiler PMF literal: Sprite::Spend assigns &Sprite::MoveThenRiseSpent, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Spend+0xc8 loads 0x020bc810 in the ROM) and by its own relocation target (Sprite::MoveThenRiseSpent at 0x020b4dfc)."
+    },
+    {
+      "from": "@645",
+      "to": "pmf_Coin_MoveThenRefund",
+      "evidence": "Compiler PMF literal: Sprite::Return assigns &Sprite::MoveThenRefund, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Return+0x88 loads 0x020bc818 in the ROM) and by its own relocation target (Sprite::MoveThenRefund at 0x020b4c30)."
+    },
+    {
+      "from": "@561",
+      "to": "pmf_Coin_Move_3",
+      "evidence": "Compiler PMF literal: Sprite::Launch assigns &Sprite::Move, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Sprite::Launch+0xd8 loads 0x020bc820 in the ROM) and by its own relocation target (Sprite::Move at 0x020b5288)."
     }
   ]
 }
