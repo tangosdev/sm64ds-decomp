@@ -29,12 +29,12 @@
     "by_kind": {
       "C1": {
         "draft": 0,
-        "migrated": 83,
+        "migrated": 94,
         "unmigrated": 0
       },
       "C2": {
         "draft": 0,
-        "migrated": 25,
+        "migrated": 26,
         "unmigrated": 0
       },
       "D0": {
@@ -54,7 +54,7 @@
       },
       "method": {
         "draft": 0,
-        "migrated": 7954,
+        "migrated": 7942,
         "unmigrated": 0
       }
     },
