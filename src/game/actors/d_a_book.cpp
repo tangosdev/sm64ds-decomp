@@ -89,7 +89,7 @@ void func_ov063_0211cae8(daTrsTrap_c *c, int m);
 /* BOOK_SWITCH push order, indexed by the book's param1: the value the
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}
  * is book 0, then book 1, then book 2. */
-extern u8 data_ov020_02114828[];
+u8 data_ov020_02114828[4] = {0, 1, 3, 0};
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4. Animation handles construct through SharedFilePtr::Construct
  * and destroy through SharedFilePtr_Destruct_Anim. The manifest aliases those

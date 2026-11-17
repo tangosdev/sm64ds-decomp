@@ -85,17 +85,17 @@ extern FishModelFilePtr gFishAModelFile;
 extern FishModelFilePtr gFishBModelFile;
 extern FishAnimationFileHandle gFishSwimAnimationFile;
 extern FishAnimationFileHandle gFishAbSwimAnimationFile;
-extern SharedFilePtr *data_ov100_021473a4[]; /* BMD, by mModelIndex */
-extern SharedFilePtr *data_ov100_021473b0[]; /* BCA, by mModelIndex */
-extern daFishState data_ov100_02148a1c[];    /* by mState */
-/* The ROM PMF constants the state table copies from (unlicensed .data). */
-extern daFishState data_ov100_02148450;
-extern daFishState data_ov100_02148460;
-extern daFishState data_ov100_02148448;
-extern daFishState data_ov100_02148468;
-extern daFishState data_ov100_02148458;
-extern daFishState data_ov100_02148470;
-extern daFishState data_ov100_02148478;
+extern SharedFilePtr *const data_ov100_021473a4[3] = {
+    &gFishModelFile,
+    &gFishAModelFile,
+    &gFishBModelFile,
+};
+extern SharedFilePtr *const data_ov100_021473b0[3] = {
+    &gFishSwimAnimationFile,
+    &gFishAbSwimAnimationFile,
+    &gFishAbSwimAnimationFile,
+};
+extern daFishState data_ov100_02148a1c[];
 extern int data_0209f32c;
 
 /* local extern: arm9 C helpers with no shared header yet. */
@@ -436,7 +436,10 @@ FishModelFilePtr gFishBModelFile(ASSET_FISH_B_BMD);
 FishAnimationFileHandle gFishSwimAnimationFile(ASSET_FISH_SWIM_BCA);
 FishAnimationFileHandle data_ov100_021489cc(ASSET_FISH_WAIT_BCA);
 FishAnimationFileHandle gFishAbSwimAnimationFile(ASSET_FISH_AB_SWIM_BCA);
+/* StateWaitPlayerAway returns int. The table calls every handler as void. */
 daFishState data_ov100_02148a1c[7] = {
-    data_ov100_02148450, data_ov100_02148460, data_ov100_02148448, data_ov100_02148468,
-    data_ov100_02148458, data_ov100_02148470, data_ov100_02148478,
+    {&daFish_c::StateWaitForPlayer},  {(void(daFish_c::*)()) & daFish_c::StateWaitPlayerAway},
+    {&daFish_c::StateWaitSchoolGone}, {&daFish_c::StateIdle},
+    {&daFish_c::StateFlee},           {&daFish_c::StateWander},
+    {&daFish_c::StateTurnAbout},
 };

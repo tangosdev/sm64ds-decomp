@@ -36,6 +36,18 @@
       "name": ".bss",
       "start": "0x021284ac",
       "end": "0x02128688"
+    },
+    {
+      "name": ".rodata.rows",
+      "start": "0x02127714",
+      "end": "0x0212771c",
+      "input_section": ".rodata"
+    },
+    {
+      "name": ".rodata.pic",
+      "input_section": ".rodata",
+      "start": "0x02127834",
+      "end": "0x02127848"
     }
   ],
   "functions": [
@@ -562,6 +574,20 @@
           "start": "0x021284ac",
           "end": "0x02128688",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata.rows",
+          "start": "0x02127714",
+          "end": "0x0212771c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.pic",
+          "start": "0x02127834",
+          "end": "0x02127848",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -2325,6 +2351,22 @@
       "from": "@821",
       "to": "@199",
       "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @650 to @646 x (measured from the compiled object). Re-keyed from @654 to @650 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @650 to @753 when the TU took NitroSDK's immediate-mode G3 commands from nitro/gx/g3imm_cmd.h in place of its file-local plain-store geometry ports (#5157) (measured from the compiled object). Re-keyed from @753 to @768 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @768 to @767 when d_a_pic_gate_methods dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @767 to @804 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @804 to @816 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @816 to @821 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov080_02127714",
+      "address": "0x02127714",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "row counts for widths 3, 4, 5, 6, 7, 8 and 16"
+    },
+    {
+      "symbol": "data_ov080_02127834",
+      "address": "0x02127834",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "default wave parameters"
     }
   ]
 }

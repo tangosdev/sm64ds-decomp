@@ -2,13 +2,19 @@
     .rodata     start:0x021275dc end:0x02127618 kind:rodata align:4
     .init       start:0x02127618 end:0x02127b88 kind:code align:4
     .ctor       start:0x02127b88 end:0x02127b98 kind:rodata align:4
-    .data       start:0x02127ba0 end:0x02128140 kind:data align:32
+    .data.btnA  start:0x02127ba0 end:0x02127c28 kind:data align:32
+    .data.w127c28 start:0x02127c28 end:0x02127e7c kind:data align:4
+    .data.bkKillerdaiClps start:0x02127e7c end:0x02127e9c kind:data align:4
+    .data start:0x02127e9c end:0x02128140 kind:data align:4
     .bss        start:0x02128140 end:0x021283a0 kind:bss align:32
 src/game/actors/d_a_btn.cpp:
     complete
     .text start:0x02123740 end:0x02126648
     .init start:0x02127618 end:0x021279d4
     .ctor start:0x02127b88 end:0x02127b8c
+    .rodata start:0x021275dc end:0x02127618
+    .data.btnA start:0x02127ba0 end:0x02127c28
+    .data.w127c28 start:0x02127cfc end:0x02127e7c
     .bss start:0x02128140 end:0x021282e0
 
 src/game/actors/d_a_klr.cpp:
@@ -21,6 +27,8 @@ src/game/actors/d_a_klr.cpp:
 
 src/game/actors/d_a_obj_bk_killerdai.cpp:
     complete
+    .data.bkKillerdaiClps start:0x02127e7c end:0x02127e9c
+    .data start:0x02127f64 end:0x02127f70
     .text start:0x02126dbc end:0x021271e4
     .init start:0x02127a10 end:0x02127acc
     .ctor start:0x02127b90 end:0x02127b94
@@ -28,6 +36,7 @@ src/game/actors/d_a_obj_bk_killerdai.cpp:
 
 src/game/actors/d_a_obj_bk_kabe.cpp:
     complete
+    .data start:0x02128058 end:0x02128070
     .text start:0x021271e4 end:0x021275dc
     .init start:0x02127acc end:0x02127b88
     .ctor start:0x02127b94 end:0x02127b98

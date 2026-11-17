@@ -38,6 +38,7 @@ enum d_s_mg_trampoline_AssetId {
 #include "TrmpLine.h"
 #include "SpawnInfo.h"
 #include "types.h"
+#include "OamAttr.h"
 #include "nitro/gx/g2.h"
 #include "Sound.h"
 #include "PlayerInput.h"
@@ -57,7 +58,8 @@ extern "C" s32 GetGameLanguage(void);
 
 extern int sTrmpRowScreenY[];
 
-extern int sTrmpRowMarkerSprite;
+OamAttr data_ov006_02134f28[1] = {{0x00f0, 0x81f0, 0x101c, 0xffff}};
+int sTrmpRowMarkerSprite = (int)data_ov006_02134f28;
 void TrmpFx_Link(TrmpScorePopup *entry);
 
 extern TrmpScorePopup *sTrmpFxList;
@@ -72,7 +74,7 @@ extern const unsigned char sTrmpBrushPltt[];
 
 extern dFdBrightness_c *gSceneFader;
 
-extern int sTrmpTouchBlocked;
+int sTrmpTouchBlocked = 1;
 extern "C" {
 void SetBg2Offset(int a, int b);
 }
@@ -127,22 +129,101 @@ void Puff_ClearAll(int a0, int a1);
 extern "C" void func_02012718(int, int);
 void TrmpFx_UpdateAll(void);
 void TrmpFx_DrawAll(void);
-extern void *sTrmpDoorSignSprites[];
+OamAttr data_ov006_02134ef8[1] = {{0x40fc, 0x01f8, 0x1078, 0xffff}};
+OamAttr data_ov006_02134ef0[1] = {{0x40fc, 0x01f8, 0x107a, 0xffff}};
+void *sTrmpDoorSignSprites[] = {data_ov006_02134ef8, data_ov006_02134ef0};
 
-extern void *sTrmpArrowSprite;
+OamAttr data_ov006_02134f0c[3] = {
+    {0x00e0, 0x81f0, 0x1014, 0x0000},
+    {0x4000, 0x81f0, 0x1018, 0x0000},
+    {0x4010, 0x41f0, 0x1058, 0xffff},
+};
+void *sTrmpArrowSprite = data_ov006_02134f0c;
 extern "C" void Trmp3DMario_DrawAll(void);
 void TrmpLine_DrawAll(void);
 dScMgTrampoline_c *dScMgTrampoline_c_classInit(void);
 
-extern int sTrmpPuffEnglish[];
+OamAttr data_ov006_02134d64[3] = {
+    {0x40f8, 0x81d8, 0x0002, 0x0000},
+    {0x40f8, 0x81f8, 0x0006, 0x0000},
+    {0x00f8, 0x4018, 0x0040, 0xffff},
+};
+OamAttr data_ov006_02134d7c[3] = {
+    {0x40f8, 0x81d8, 0x0002, 0x0000},
+    {0x40f8, 0x81f8, 0x0006, 0x0000},
+    {0x00f8, 0x4018, 0x0044, 0xffff},
+};
+OamAttr data_ov006_02134d94[3] = {
+    {0x40f8, 0x81d8, 0x0082, 0x0000},
+    {0x40f8, 0x81f8, 0x0086, 0x0000},
+    {0x00f8, 0x4018, 0x0040, 0xffff},
+};
+OamAttr data_ov006_02134dac[3] = {
+    {0x40f8, 0x81d8, 0x0002, 0x0000},
+    {0x40f8, 0x81f8, 0x0006, 0x0000},
+    {0x00f8, 0x4018, 0x0040, 0xffff},
+};
+OamAttr data_ov006_02134dc4[3] = {
+    {0x00f8, 0x4018, 0x0000, 0x0000},
+    {0x40f8, 0x81d8, 0x0002, 0x0000},
+    {0x40f8, 0x81f8, 0x0006, 0xffff},
+};
+OamAttr data_ov006_02134ddc[3] = {
+    {0x40f8, 0x81d8, 0x0002, 0x0000},
+    {0x40f8, 0x81f8, 0x0006, 0x0000},
+    {0x00f8, 0x4018, 0x0000, 0xffff},
+};
+OamAttr data_ov006_02134df4[3] = {
+    {0x40f8, 0x81d8, 0x0002, 0x0000},
+    {0x40f8, 0x81f8, 0x0006, 0x0000},
+    {0x00f8, 0x4018, 0x0044, 0xffff},
+};
+OamAttr data_ov006_02134e0c[3] = {
+    {0x40f8, 0x81e8, 0x0082, 0x0000},
+    {0x40f8, 0x8008, 0x0086, 0x0000},
+    {0x00f8, 0x41d8, 0x0044, 0xffff},
+};
+OamAttr data_ov006_02134e24[3] = {
+    {0x40f8, 0x81e8, 0x0082, 0x0000},
+    {0x40f8, 0x8008, 0x0086, 0x0000},
+    {0x00f8, 0x41d8, 0x0040, 0xffff},
+};
+OamAttr data_ov006_02134e3c[3] = {
+    {0x00f8, 0x4018, 0x0044, 0x0000},
+    {0x40f8, 0x81d8, 0x0002, 0x0000},
+    {0x40f8, 0x81f8, 0x0006, 0xffff},
+};
+OamAttr data_ov006_02134e54[3] = {
+    {0x40f8, 0x81e8, 0x0002, 0x0000},
+    {0x40f8, 0x8008, 0x0006, 0x0000},
+    {0x00f8, 0x41d8, 0x0000, 0xffff},
+};
+OamAttr data_ov006_02134e6c[3] = {
+    {0x40f8, 0x81d8, 0x0002, 0x0000},
+    {0x40f8, 0x81f8, 0x0006, 0x0000},
+    {0x00f8, 0x4018, 0x0000, 0xffff},
+};
+OamAttr data_ov006_02134e84[3] = {
+    {0x40f8, 0x81d8, 0x0002, 0x0000},
+    {0x40f8, 0x81f8, 0x0006, 0x0000},
+    {0x00f8, 0x4018, 0x0040, 0xffff},
+};
+OamAttr data_ov006_02134e9c[3] = {
+    {0x40f8, 0x81d8, 0x0002, 0x0000},
+    {0x40f8, 0x81f8, 0x0006, 0x0000},
+    {0x00f8, 0x4018, 0x0000, 0xffff},
+};
+OamAttr data_ov006_02134eb4[3] = {
+    {0x40f8, 0x81d8, 0x0082, 0x0000},
+    {0x40f8, 0x81f8, 0x0086, 0x0000},
+    {0x00f8, 0x4018, 0x0044, 0xffff},
+};
 
-extern int sTrmpPuffSpanish[];
-
-extern int sTrmpPuffFrench[];
-
-extern int sTrmpPuffGerman[];
-
-extern int sTrmpPuffItalian[];
+OamAttr *sTrmpPuffItalian[3] = {data_ov006_02134e9c, data_ov006_02134d94, data_ov006_02134eb4};
+OamAttr *sTrmpPuffGerman[3] = {data_ov006_02134e6c, data_ov006_02134d64, data_ov006_02134d7c};
+OamAttr *sTrmpPuffEnglish[3] = {data_ov006_02134dc4, data_ov006_02134e84, data_ov006_02134e3c};
+OamAttr *sTrmpPuffSpanish[3] = {data_ov006_02134e54, data_ov006_02134e24, data_ov006_02134e0c};
+OamAttr *sTrmpPuffFrench[3] = {data_ov006_02134ddc, data_ov006_02134dac, data_ov006_02134df4};
 
 extern OamAttr *sMgTextSpritesEnglish[];
 

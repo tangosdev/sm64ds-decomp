@@ -3623,6 +3623,16 @@
         "return:unsigned int"
       ]
     },
+    "_ZN24daPropeller_Heyho_Fire_c10InitState0Ev": {
+      "src/game/actors/d_a_propeller_heyho_fire.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN24daPropeller_Heyho_Fire_c6State0Ev": {
+      "src/game/actors/d_a_propeller_heyho_fire.cpp": [
+        "arity:0"
+      ]
+    },
     "_ZN2G212GetBG0ScrPtrEv": {
       "src/minigames/d_s_mg_trampoline2.cpp": [
         "return:char *"
@@ -4581,6 +4591,66 @@
     "_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev": {
       "src/game/actors/d_a_demo.cpp": [
         "return:void"
+      ]
+    },
+    "_ZN7daBtn_c19func_ov079_02124530Ev": {
+      "src/game/actors/d_a_btn.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN7daBtn_c19func_ov079_02124638Ev": {
+      "src/game/actors/d_a_btn.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN7daBtn_c19func_ov079_021246d8Ev": {
+      "src/game/actors/d_a_btn.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN7daBtn_c19func_ov079_021246dcEv": {
+      "src/game/actors/d_a_btn.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN7daBtn_c19func_ov079_021249f0Ev": {
+      "src/game/actors/d_a_btn.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN7daBtn_c19func_ov079_02124b08Ev": {
+      "src/game/actors/d_a_btn.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN7daBtn_c19func_ov079_02125240Ev": {
+      "src/game/actors/d_a_btn.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN7daBtn_c19func_ov079_0212538cEv": {
+      "src/game/actors/d_a_btn.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN7daBtn_c19func_ov079_021254b4Ev": {
+      "src/game/actors/d_a_btn.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN7daBtn_c19func_ov079_021256d4Ev": {
+      "src/game/actors/d_a_btn.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN7daBtn_c19func_ov079_021258fcEv": {
+      "src/game/actors/d_a_btn.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN7daBtn_c19func_ov079_02125b44Ev": {
+      "src/game/actors/d_a_btn.cpp": [
+        "arity:0"
       ]
     },
     "_ZN7daPly_c11ChangeStateERNS_5StateE": {
@@ -6516,6 +6586,41 @@
       ],
       "src/unnamed/ov002/func_ov002_020b6c54.c": [
         "return:void"
+      ]
+    },
+    "_ZN8daFish_c11StateWanderEv": {
+      "src/game/actors/d_a_fish.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN8daFish_c14StateTurnAboutEv": {
+      "src/game/actors/d_a_fish.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN8daFish_c18StateWaitForPlayerEv": {
+      "src/game/actors/d_a_fish.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN8daFish_c19StateWaitPlayerAwayEv": {
+      "src/game/actors/d_a_fish.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN8daFish_c19StateWaitSchoolGoneEv": {
+      "src/game/actors/d_a_fish.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN8daFish_c9StateFleeEv": {
+      "src/game/actors/d_a_fish.cpp": [
+        "arity:0"
+      ]
+    },
+    "_ZN8daFish_c9StateIdleEv": {
+      "src/game/actors/d_a_fish.cpp": [
+        "arity:0"
       ]
     },
     "_ZN9dBgCh_Gnd10DetectClsnEv": {
@@ -10546,6 +10651,14 @@
         "return:SharedFilePtr * []"
       ]
     },
+    "data_ov063_0211ecb8": {
+      "include/decl_common.h": [
+        "return:char"
+      ],
+      "src/game/actors/d_a_piano.cpp": [
+        "return:int []"
+      ]
+    },
     "data_ov063_0211edc4": {
       "src/unnamed/ov063/__sinit_ov063_0211e29c.c": [
         "return:char []"
@@ -10579,6 +10692,11 @@
     "data_ov063_0211edf4": {
       "src/unnamed/ov063/__sinit_ov063_0211e29c.c": [
         "return:char []"
+      ]
+    },
+    "data_ov064_0211ba6c": {
+      "src/game/actors/d_a_obj_fl_uki_ki.cpp": [
+        "return:CLPS_Block"
       ]
     },
     "data_ov064_0211c728": {
@@ -10619,6 +10737,11 @@
     "data_ov064_0211c9cc": {
       "src/unnamed/ov064/__sinit_ov064_0211b698.c": [
         "return:int []"
+      ]
+    },
+    "data_ov065_0211d35c": {
+      "src/game/actors/d_a_obj_ct_kaitendai.cpp": [
+        "return:KaitendaiResources []"
       ]
     },
     "data_ov065_0211d610": {

@@ -43,9 +43,26 @@ struct UkishimaCollisionFilePtr : SharedFilePtr {
     ~UkishimaCollisionFilePtr();
 };
 
-extern daObjUkiyuka_c::Resources data_ov045_02112f08;
 extern UkishimaModelFilePtr gKm2UkishimaModelFile;         /* BMD, file 1643 */
 extern UkishimaCollisionFilePtr gKm2UkishimaCollisionFile; /* KCL, file 1644 */
+/* Collision properties: the 'CLPS' tag, the 8-byte stride header with two
+ * entries, then the default entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+CLPS_Block data_ov045_02112550 = {
+    0x53504c43,
+    0x00020008,
+    {0x00000fc0, 0x000000ff, 0x00002fc0, 0x000000ff, 0xffffffff, 0xffffffff},
+};
+
+daObjUkiyuka_c::Resources data_ov045_02112f08 = {
+    &gKm2UkishimaModelFile,
+    &gKm2UkishimaCollisionFile,
+    &data_ov045_02112550,
+};
 
 /* 20.12; InitResourcesFrom writes this to mBobAmplitude. */
 enum { kBobAmplitude = 0xf50 };

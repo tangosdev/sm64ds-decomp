@@ -32,6 +32,11 @@
       "name": ".bss",
       "start": "0x021486a4",
       "end": "0x02148704"
+    },
+    {
+      "name": ".data",
+      "start": "0x02147ff8",
+      "end": "0x02148014"
     }
   ],
   "functions": [
@@ -155,7 +160,29 @@
       "ordinal": 16
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov100_02147ff8",
+      "address": "0x02147ff8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "walk execute pointer-to-member image"
+    },
+    {
+      "symbol": "data_ov100_02148000",
+      "address": "0x02148000",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "walk enter pointer-to-member image"
+    },
+    {
+      "symbol": "data_ov100_02148008",
+      "address": "0x02148008",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "home offset, -160 units in Y"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov100_021486a4",
@@ -471,6 +498,13 @@
           "start": "0x021486a4",
           "end": "0x02148704",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02147ff8",
+          "end": "0x02148014",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -915,6 +949,26 @@
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02147ff8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02147ff8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z19func_ov100_02143aa4P11daWanwan2_c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02143aa4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148000",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z19func_ov100_02143ae0P11daWanwan2_c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02143ae0"
     }
   ]
 }

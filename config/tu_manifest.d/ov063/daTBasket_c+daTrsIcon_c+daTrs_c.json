@@ -32,6 +32,11 @@
       "name": ".bss",
       "start": "0x0211edc0",
       "end": "0x0211ee98"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0211e1c0",
+      "end": "0x0211e26c"
     }
   ],
   "functions": [
@@ -1174,6 +1179,13 @@
           "start": "0x0211edc0",
           "end": "0x0211ee98",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0211e1c0",
+          "end": "0x0211e26c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -1846,6 +1858,57 @@
       "from": "sSpawnOff$2769",
       "to": "sSpawnOff$2361",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from sSpawnOff$2403 to sSpawnOff$2401 when the opt pragma was removed (#821). Re-keyed from sSpawnOff$2399 to sSpawnOff$2426 when the two particle-position launders became Vector3 locals (#821). Re-keyed from sSpawnOff$2426 to sSpawnOff$2362 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sSpawnOff$2362 to sSpawnOff$2388 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from sSpawnOff$2388 to sSpawnOff$2391 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from sSpawnOff$2391 to sSpawnOff$2387 when the TU took hand pass: FX_SinIdx/FX_CosIdx rewrite (trs) (measured from the compiled object). Re-keyed from sSpawnOff$2387 to sSpawnOff$2397 when the TU took hand pass: FX_SinIdx/FX_CosIdx rewrite (trs2) (measured from the compiled object). Re-keyed from sSpawnOff$2397 to sSpawnOff$2392 when the TU took hand pass: daTrs_c hit-reaction functions lose their pointer locals (measured from the compiled object). Re-keyed from sSpawnOff$2392 to sSpawnOff$2416 when Re-keyed when cast Vector3 views became real Vector3 members/locals (#5210; measured from the compiled object: same section, size and order). (measured from the compiled object: same section, size and order). Re-keyed from sSpawnOff$2416 to sSpawnOff$2414 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from sSpawnOff$2414 to sSpawnOff$2465 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from sSpawnOff$2465 to sSpawnOff$2464 when GetAttackStatus dropped its gotos (measured from the compiled object). Re-keyed from sSpawnOff$2464 to sSpawnOff$2460 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from sSpawnOff$2460 to sSpawnOff$2456 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from sSpawnOff$2456 to sSpawnOff$2454 when the dual-name mBooFlagsWord union field of #5404 went back to mBooFlags read through a visible (u16 *) cast (measured from the compiled object, paired by relocation reference sites). Re-keyed from sSpawnOff$2454 to sSpawnOff$2434 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from sSpawnOff$2434 to sSpawnOff$2530 when the local class views gave way to the classes' own headers (measured from the compiled object). Re-keyed from sSpawnOff$2530 to sSpawnOff$2571 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sSpawnOff$2571 to sSpawnOff$2583 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sSpawnOff$2583 to sSpawnOff$2588 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sSpawnOff$2588 to sSpawnOff$2594 when #5486's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sSpawnOff$2594 to sSpawnOff$2655 when func_ov063_02116fac's padded Frame struct became a Vector3 target (measured from the compiled object). Re-keyed from sSpawnOff$2655 to sSpawnOff$2767 after the carried, cap and talk-camera positions became Vector3 members and the scratch vectors Vector3 locals (measured from the compiled object). Re-keyed from sSpawnOff$2766 to sSpawnOff$2769 when the last grounded position became a Vector3 member (#821, composed onto the 1116b batch) (measured from the compiled object)."
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov063_0211e1c0",
+      "address": "0x0211e1c0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "approach steps indexed by hit points"
+    },
+    {
+      "symbol": "data_ov063_0211e1c8",
+      "address": "0x0211e1c8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "message ids"
+    },
+    {
+      "symbol": "data_ov063_0211e1d0",
+      "address": "0x0211e1d0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision scales for variants 0xc through 0xe"
+    },
+    {
+      "symbol": "data_ov063_0211e1dc",
+      "address": "0x0211e1dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "message ids"
+    },
+    {
+      "symbol": "data_ov063_0211e1e4",
+      "address": "0x0211e1e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "message ids"
+    },
+    {
+      "symbol": "data_ov063_0211e1ec",
+      "address": "0x0211e1ec",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "hurt damage indexed by variant"
+    },
+    {
+      "symbol": "data_ov063_0211e22c",
+      "address": "0x0211e22c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "death mode indexed by variant"
     }
   ]
 }

@@ -120,7 +120,9 @@ struct MorayRenderStep {
     s32 angleScale;
 };
 
-extern "C" MorayRenderStep data_ov016_02114908[];
+MorayRenderStep data_ov016_02114908[6] = {
+    {0, 0, 1}, {0, 0, 1}, {0, 0, 1}, {0, 0, 1}, {0, 0, -1}, {0, 0, 0},
+};
 
 /* Out of line, and FIRST in this ROM-ascending file: that puts D1 and D0 at
  * 0x021111a0 / 0x02111208, the two lowest addresses in the unit.

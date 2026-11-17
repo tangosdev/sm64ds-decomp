@@ -32,6 +32,16 @@
       "name": ".bss",
       "start": "0x0211d814",
       "end": "0x0211d88c"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0211c0a8",
+      "end": "0x0211c0b0"
+    },
+    {
+      "name": ".data",
+      "start": "0x0211cfa4",
+      "end": "0x0211cfac"
     }
   ],
   "functions": [
@@ -113,7 +123,31 @@
       "ordinal": 10
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov065_0211cfa4",
+      "address": "0x0211cfa4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "four byte timers"
+    },
+    {
+      "symbol": "data_ov065_0211cfa8",
+      "address": "0x0211cfa8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "two angle halfwords"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov065_0211c0a8",
+      "address": "0x0211c0a8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two variant model file pointers"
+    }
+  ],
   "bss": [
     {
       "symbol": "gCtMechaObj01ModelFile",
@@ -429,6 +463,20 @@
           "start": "0x0211d814",
           "end": "0x0211d88c",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0211c0a8",
+          "end": "0x0211c0b0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0211cfa4",
+          "end": "0x0211cfac",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -959,6 +1007,26 @@
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211d880"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c0a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gCtMechaObj01aModelFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d83c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c0ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gCtMechaObj02aModelFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d81c"
     }
   ]
 }

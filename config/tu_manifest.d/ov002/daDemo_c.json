@@ -30,12 +30,41 @@
     {
       "name": ".data",
       "start": "0x0210b600",
-      "end": "0x0210b958"
+      "end": "0x0210b9a8"
+    },
+    {
+      "name": ".data.demoEnd2",
+      "input_section": ".data",
+      "start": "0x0210b9cc",
+      "end": "0x0210b9e4"
+    },
+    {
+      "name": ".data.demoEnd1",
+      "input_section": ".data",
+      "start": "0x0210ba7c",
+      "end": "0x0210ba9c"
+    },
+    {
+      "name": ".data.demoEnd3",
+      "input_section": ".data",
+      "start": "0x0210ba9c",
+      "end": "0x0210babc"
+    },
+    {
+      "name": ".data.demoEnd0",
+      "input_section": ".data",
+      "start": "0x0210bb5c",
+      "end": "0x0210bb7c"
     },
     {
       "name": ".bss",
       "start": "0x02110afc",
       "end": "0x0211110c"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021000b8",
+      "end": "0x021002a0"
     }
   ],
   "functions": [
@@ -1730,6 +1759,64 @@
       "address": "0x0210b94c",
       "size": "0xc",
       "evidence": "compiler-emitted single-inheritance RTTI record matches retail and points to the ROM-proven dActor_c base identity"
+    },
+    {
+      "symbol": "data_ov002_0210b958",
+      "address": "0x0210b958",
+      "size": "0xc"
+    },
+    {
+      "symbol": "data_ov002_0210b964",
+      "address": "0x0210b964",
+      "size": "0xc"
+    },
+    {
+      "symbol": "data_ov002_0210b970",
+      "address": "0x0210b970",
+      "size": "0xc"
+    },
+    {
+      "symbol": "data_ov002_0210b97c",
+      "address": "0x0210b97c",
+      "size": "0xc"
+    },
+    {
+      "symbol": "data_ov002_0210b988",
+      "address": "0x0210b988",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_0210b998",
+      "address": "0x0210b998",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_0210b9cc",
+      "address": "0x0210b9cc",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "THE END sprite list for data_ov002_0210b988[2] (French/Spanish); three entries, attr3 0xffff terminates"
+    },
+    {
+      "symbol": "data_ov002_0210ba7c",
+      "address": "0x0210ba7c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "THE END sprite list for data_ov002_0210b988[1] (German); four entries, attr3 0xffff terminates"
+    },
+    {
+      "symbol": "data_ov002_0210ba9c",
+      "address": "0x0210ba9c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "THE END sprite list for data_ov002_0210b988[3] (Italian); four entries, attr3 0xffff terminates"
+    },
+    {
+      "symbol": "data_ov002_0210bb5c",
+      "address": "0x0210bb5c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "THE END sprite list for data_ov002_0210b988[0] (Japanese/English); four entries, attr3 0xffff terminates"
     }
   ],
   "bss": [
@@ -2611,7 +2698,35 @@
         {
           "section": ".data",
           "start": "0x0210b600",
-          "end": "0x0210b958",
+          "end": "0x0210b9a8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.demoEnd2",
+          "start": "0x0210b9cc",
+          "end": "0x0210b9e4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.demoEnd1",
+          "start": "0x0210ba7c",
+          "end": "0x0210ba9c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.demoEnd3",
+          "start": "0x0210ba9c",
+          "end": "0x0210babc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.demoEnd0",
+          "start": "0x0210bb5c",
+          "end": "0x0210bb7c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -2620,11 +2735,18 @@
           "start": "0x02110afc",
           "end": "0x0211110c",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021000b8",
+          "end": "0x021002a0",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 352
+          "LICENSED": 381
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -2635,19 +2757,19 @@
           {
             "section": ".init",
             "original": [
-              610
+              642
             ],
             "desired": [
-              610
+              642
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              608
+              640
             ],
             "desired": [
-              608
+              640
             ]
           },
           {
@@ -2759,9 +2881,15 @@
               562,
               564,
               566,
-              571,
-              572,
-              585
+              588,
+              589,
+              590,
+              591,
+              597,
+              599,
+              603,
+              604,
+              617
             ],
             "desired": [
               408,
@@ -2848,7 +2976,7 @@
               560,
               558,
               439,
-              585,
+              617,
               525,
               431,
               441,
@@ -2871,8 +2999,50 @@
               291,
               289,
               287,
-              571,
-              572
+              603,
+              604,
+              588,
+              589,
+              590,
+              591,
+              597,
+              599
+            ]
+          },
+          {
+            "section": ".data.demoEnd2",
+            "original": [
+              593
+            ],
+            "desired": [
+              593
+            ]
+          },
+          {
+            "section": ".data.demoEnd1",
+            "original": [
+              594
+            ],
+            "desired": [
+              594
+            ]
+          },
+          {
+            "section": ".data.demoEnd3",
+            "original": [
+              595
+            ],
+            "desired": [
+              595
+            ]
+          },
+          {
+            "section": ".data.demoEnd0",
+            "original": [
+              596
+            ],
+            "desired": [
+              596
             ]
           },
           {
@@ -3067,6 +3237,51 @@
               465,
               317
             ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              569,
+              570,
+              571,
+              572,
+              573,
+              574,
+              575,
+              576,
+              577,
+              578,
+              579,
+              580,
+              581,
+              582,
+              583,
+              584,
+              585,
+              586,
+              587
+            ],
+            "desired": [
+              569,
+              570,
+              571,
+              572,
+              573,
+              574,
+              575,
+              576,
+              577,
+              578,
+              579,
+              580,
+              581,
+              582,
+              583,
+              584,
+              585,
+              586,
+              587
+            ]
           }
         ],
         "objisolate": {
@@ -3180,9 +3395,15 @@
                 562,
                 564,
                 566,
-                571,
-                572,
-                585
+                588,
+                589,
+                590,
+                591,
+                597,
+                599,
+                603,
+                604,
+                617
               ],
               "desired": [
                 408,
@@ -3269,7 +3490,7 @@
                 560,
                 558,
                 439,
-                585,
+                617,
                 525,
                 431,
                 441,
@@ -3292,8 +3513,14 @@
                 291,
                 289,
                 287,
-                571,
-                572
+                603,
+                604,
+                588,
+                589,
+                590,
+                591,
+                597,
+                599
               ],
               "slots": [
                 269,
@@ -3402,9 +3629,15 @@
                 562,
                 564,
                 566,
-                571,
-                572,
-                585
+                588,
+                589,
+                590,
+                591,
+                597,
+                599,
+                603,
+                604,
+                617
               ]
             },
             {
@@ -3696,9 +3929,9 @@
               ]
             }
           ],
-          "symbolIndices": 202,
+          "symbolIndices": 208,
           "sectionLinks": 0,
-          "sectionInfos": 101,
+          "sectionInfos": 104,
           "error": null
         },
         "errors": null
@@ -8293,6 +8526,116 @@
       "addend": 8,
       "target_module": "arm9",
       "target_address": "0x0209a774"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b97c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_021001b0",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021001b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b980",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_02100200",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02100200"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b984",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_02100250",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02100250"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b988",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210bb5c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210bb5c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b98c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210ba7c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210ba7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b990",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210b9cc",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210b9cc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b994",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210ba9c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210ba9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b998",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210b658",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210b658"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b99c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210b630",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210b630"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b9a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210b638",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210b638"
+    },
+    {
+      "section": ".data",
+      "source": "0x0210b9a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210b6e8",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210b6e8"
     }
   ],
   "defined_symbol_renames": [
@@ -9018,6 +9361,109 @@
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov002_021000b8",
+      "address": "0x021000b8",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov002_021000c0",
+      "address": "0x021000c0",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov002_021000c8",
+      "address": "0x021000c8",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov002_021000d0",
+      "address": "0x021000d0",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov002_021000d8",
+      "address": "0x021000d8",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov002_021000e0",
+      "address": "0x021000e0",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_021000f0",
+      "address": "0x021000f0",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100100",
+      "address": "0x02100100",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100110",
+      "address": "0x02100110",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100120",
+      "address": "0x02100120",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100130",
+      "address": "0x02100130",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100140",
+      "address": "0x02100140",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100150",
+      "address": "0x02100150",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100160",
+      "address": "0x02100160",
+      "size": "0x10"
+    },
+    {
+      "symbol": "data_ov002_02100170",
+      "address": "0x02100170",
+      "size": "0x20"
+    },
+    {
+      "symbol": "data_ov002_02100190",
+      "address": "0x02100190",
+      "size": "0x20"
+    },
+    {
+      "symbol": "data_ov002_021001b0",
+      "address": "0x021001b0",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-language doll placements for data_ov002_0210b97c: five (x, y, priority, frame) rows"
+    },
+    {
+      "symbol": "data_ov002_02100200",
+      "address": "0x02100200",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-language doll placements for data_ov002_0210b97c: five (x, y, priority, frame) rows"
+    },
+    {
+      "symbol": "data_ov002_02100250",
+      "address": "0x02100250",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-language doll placements for data_ov002_0210b97c: five (x, y, priority, frame) rows"
     }
   ]
 }

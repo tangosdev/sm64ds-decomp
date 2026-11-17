@@ -19,8 +19,9 @@
       "end": "0x020b944c"
     },
     {
-      "name": ".data",
-      "start": "0x020bca68",
+      "name": ".data.psopt",
+      "input_section": ".data",
+      "start": "0x020bca58",
       "end": "0x020bcaa0"
     },
     {
@@ -120,6 +121,20 @@
   ],
   "data": [
     {
+      "symbol": "sPsOptSoundPrevSprite",
+      "address": "0x020bca58",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "one OAM entry, tile 0x49 palette 13, plus the 0xffff terminator"
+    },
+    {
+      "symbol": "sPsOptSoundNextSprite",
+      "address": "0x020bca60",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "one OAM entry, tile 0x47 palette 13, plus the 0xffff terminator"
+    },
+    {
       "symbol": "_ZTIN10dMgPsOpt_c11TouchIcon_cE",
       "address": "0x020bca68",
       "size": "0x0000000c",
@@ -142,7 +157,7 @@
   ],
   "relocations": [
     {
-      "section": ".data",
+      "section": ".data.psopt",
       "source": "0x020bca68",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -152,7 +167,7 @@
       "target_address": "0x0209a764"
     },
     {
-      "section": ".data",
+      "section": ".data.psopt",
       "source": "0x020bca6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -162,7 +177,7 @@
       "target_address": "0x020bca84"
     },
     {
-      "section": ".data",
+      "section": ".data.psopt",
       "source": "0x020bca70",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -172,7 +187,7 @@
       "target_address": "0x020ad478"
     },
     {
-      "section": ".data",
+      "section": ".data.psopt",
       "source": "0x020bca78",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -182,7 +197,7 @@
       "target_address": "0x020bca68"
     },
     {
-      "section": ".data",
+      "section": ".data.psopt",
       "source": "0x020bca7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -192,7 +207,7 @@
       "target_address": "0x020ab550"
     },
     {
-      "section": ".data",
+      "section": ".data.psopt",
       "source": "0x020bca80",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1015,8 +1030,8 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
-          "start": "0x020bca68",
+          "section": ".data.psopt",
+          "start": "0x020bca58",
           "end": "0x020bcaa0",
           "differingBytes": 0,
           "firstDiff": null

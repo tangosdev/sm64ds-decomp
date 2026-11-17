@@ -35,6 +35,12 @@
       "name": ".bss",
       "start": "0x021428c8",
       "end": "0x02142bdc"
+    },
+    {
+      "name": ".rodata.sRouletteTables",
+      "start": "0x0212ed14",
+      "end": "0x0212ed88",
+      "input_section": ".rodata"
     }
   ],
   "functions": [
@@ -317,6 +323,43 @@
       "size": "0x0000026c",
       "legacy_source": "src/_ZN15dScMgRoulette_c13InitResourcesEv.cpp",
       "ordinal": 39
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "sRoulettePayoutMultipliers",
+      "address": "0x0212ed14",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "Roulette table read by index. Declared length matches this symbol's window."
+    },
+    {
+      "symbol": "sRouletteStripSpriteBase",
+      "address": "0x0212ed24",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "Roulette table read by index. Declared length matches this symbol's window."
+    },
+    {
+      "symbol": "sRouletteStopTiles",
+      "address": "0x0212ed34",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Roulette table read by index. Declared length matches this symbol's window."
+    },
+    {
+      "symbol": "sRouletteTileBounds",
+      "address": "0x0212ed4c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "Roulette table read by index. Declared length matches this symbol's window."
+    },
+    {
+      "symbol": "sRouletteRowEdgesY",
+      "address": "0x0212ed68",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "Roulette table read by index. Declared length matches this symbol's window."
     }
   ],
   "data": [],
@@ -799,6 +842,13 @@
           "start": "0x021428c8",
           "end": "0x02142bdc",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata.sRouletteTables",
+          "start": "0x0212ed14",
+          "end": "0x0212ed88",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

@@ -13,6 +13,12 @@
   ],
   "sections": [
     {
+      "name": ".data.owlVec",
+      "input_section": ".data",
+      "start": "0x02136a1c",
+      "end": "0x02136a28"
+    },
+    {
       "name": ".text",
       "start": "0x02135700",
       "end": "0x021367e8"
@@ -202,6 +208,13 @@
     }
   ],
   "data": [
+    {
+      "symbol": "data_ov094_02136a1c",
+      "address": "0x02136a1c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Spawn offset, middle word -32.0 in 20.12."
+    },
     {
       "symbol": "@936",
       "address": "0x021369c0",
@@ -469,6 +482,13 @@
         "firstDiff": null
       },
       "tuRanges": [
+        {
+          "section": ".data.owlVec",
+          "start": "0x02136a1c",
+          "end": "0x02136a28",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
         {
           "section": ".text",
           "start": "0x02135700",

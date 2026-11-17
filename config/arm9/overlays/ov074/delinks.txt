@@ -1,8 +1,12 @@
     .text       start:0x0211f000 end:0x0212290c kind:code align:32
-    .rodata     start:0x0212290c end:0x02122978 kind:rodata align:4
+    .rodata.kuriQ start:0x0212290c end:0x0212291c kind:rodata align:4
+    .rodata.kuriD start:0x0212291c end:0x0212292c kind:rodata align:4
+    .rodata       start:0x0212292c end:0x02122978 kind:rodata align:4
     .init       start:0x02122978 end:0x02122d70 kind:code align:4
     .ctor       start:0x02122d70 end:0x02122d74 kind:rodata align:4
-    .data       start:0x02122d80 end:0x02122e30 kind:data align:32
+    .data.kuriId   start:0x02122d80 end:0x02122d84 kind:data align:32
+    .data          start:0x02122d84 end:0x02122e24 kind:data align:4
+    .data.kuriBone start:0x02122e24 end:0x02122e30 kind:data align:4
     .data.kuriMeta0 start:0x02122e30 end:0x02122e4c kind:data align:4
     .data.kuriMiddle start:0x02122e4c end:0x02122e78 kind:data align:4
     .data.kuriMeta1 start:0x02122e78 end:0x02122f34 kind:data align:4
@@ -10,11 +14,15 @@
     .bss        start:0x02122fe0 end:0x021231a0 kind:bss align:32
 src/game/actors/d_a_kuri_king.cpp:
     complete
+    .rodata.kuriQ start:0x0212290c end:0x0212291c
+    .rodata.kuriD start:0x0212291c end:0x0212292c
     .rodata start:0x0212292c end:0x02122978
     .text start:0x0211f000 end:0x0212290c
     .init start:0x02122978 end:0x02122d70
     .ctor start:0x02122d70 end:0x02122d74
+    .data.kuriId start:0x02122d80 end:0x02122d84
     .data start:0x02122d84 end:0x02122e24
+    .data.kuriBone start:0x02122e24 end:0x02122e30
     .data.kuriMeta0 start:0x02122e30 end:0x02122e4c
     .data.kuriMeta1 start:0x02122e78 end:0x02122f34
     .bss start:0x02122fe0 end:0x021231a0

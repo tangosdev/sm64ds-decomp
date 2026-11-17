@@ -149,44 +149,559 @@ extern ControllerInput data_0209f498[];
 extern u8 data_0209f4ab[];
 extern u8 data_0209fc5c[];
 extern s32 data_0209fc68;
-extern u8 data_ov002_020ff0ec[];
-extern unsigned char data_ov002_020ff0f0[];
-extern unsigned char data_ov002_020ff0f4[];
-extern u8 data_ov002_020ff0f8[];
-extern int data_ov002_020ff100[];
-extern s16 data_ov002_020ff108[];
-extern u16 data_ov002_020ff110[];
-extern unsigned int data_ov002_020ff118[];
-extern int data_ov002_020ff120[];
-extern u16 data_ov002_020ff128[];
-extern int data_ov002_020ff130[];
-extern u16 data_ov002_020ff138[];
-extern u16 data_ov002_020ff13c[];
-extern unsigned short data_ov002_020ff140[];
-extern u8 data_ov002_020ff14c[];
-extern unsigned short data_ov002_020ff158[];
-extern int data_ov002_020ff164[];
-extern unsigned short data_ov002_020ff170[];
-extern int data_ov002_020ff17c[];
-extern int data_ov002_020ff188[];
-extern int data_ov002_020ff194[];
-extern short data_ov002_020ff1a0[];
-extern int data_ov002_020ff1b0[4];
-extern int data_ov002_020ff1c0[];
-extern int data_ov002_020ff1d0[];
-extern int data_ov002_020ff1e0[];
-extern int data_ov002_020ff1f0[];
-extern s32 data_ov002_020ff200[];
-extern s32 data_ov002_020ff210[];
-extern int data_ov002_020ff230[];
-extern unsigned char data_ov002_020ff240[];
-extern int data_ov002_020ff254[];
-extern short data_ov002_020ff26c[];
-extern unsigned int data_ov002_020ff284[];
-extern unsigned short data_ov002_020ff29c[];
-extern int data_ov002_020ff2c0[];
-extern SharedFilePtr *data_ov002_020ff2f0[];
-extern void *data_ov002_020ff790[];
+extern const u8 data_ov002_020ff0ec[4] = {40, 30, 36, 0};
+extern const unsigned char data_ov002_020ff0f0[4] = {0x30, 0x31, 0x32, 0x33};
+extern const unsigned char data_ov002_020ff0f4[4] = {0x34, 0x35, 0x36, 0x37};
+extern const u8 data_ov002_020ff0f8[8] = {11, 10, 9, 8, 7, 0, 0, 0};
+extern const int data_ov002_020ff100[2] = {14, 15};
+extern const s16 data_ov002_020ff108[4] = {383, 384, 385, 383};
+extern const u16 data_ov002_020ff110[4] = {40, 44, 55, 40};
+extern const unsigned int data_ov002_020ff118[2] = {140, 141};
+extern const int data_ov002_020ff120[2] = {6, 7};
+extern const u16 data_ov002_020ff128[4] = {150, 150, 80, 200};
+extern const int data_ov002_020ff130[2] = {14, 15};
+extern const u16 data_ov002_020ff138[2] = {17, 11};
+extern const u16 data_ov002_020ff13c[2] = {70, 34};
+extern const unsigned short data_ov002_020ff140[6] = {0x1000, 0x1000, 0xd1e, 0xe66, 0x1000, 0x0};
+extern const u8 data_ov002_020ff14c[12] = {20, 10, 30, 15, 15, 31, 21, 21, 21, 10, 0, 0};
+extern const unsigned short data_ov002_020ff158[6] = {0x1000, 0x1800, 0xa66, 0xe66, 0x1000, 0x0};
+extern const int data_ov002_020ff164[3] = {92, 93, 101};
+extern const unsigned short data_ov002_020ff170[6] = {0xe66, 0xccc, 0xc00, 0xccc, 0xe66, 0x1333};
+extern const int data_ov002_020ff17c[3] = {0x2d000, 0x3c000, 0x6e000};
+extern const int data_ov002_020ff188[3] = {0x24000, 0x36000, 0x44000};
+extern const int data_ov002_020ff194[3] = {8, 9, 10};
+extern const short data_ov002_020ff1a0[8] = {376, 377, 378, 379, 380, 381, 382, 0};
+extern const int data_ov002_020ff1b0[4] = {30, 31, 32, 31};
+extern const int data_ov002_020ff1c0[4] = {0x11000, 0xc000, 0x1e000, 0x11000};
+extern const int data_ov002_020ff1d0[4] = {0x4000, 0x2000, 0x18000, 0x4000};
+extern const int data_ov002_020ff1e0[4] = {0x1000, 0xccc, 0x1800, 0xb33};
+extern const int data_ov002_020ff1f0[4] = {0x1000, 0x1333, 0xb33, 0x1333};
+extern const s32 data_ov002_020ff200[4] = {4, 8, 12, 28};
+extern const s32 data_ov002_020ff210[4] = {0x400, 0x800, 0xc00, 0x1400};
+extern const int data_ov002_020ff230[4] = {0x100, 0x200, 0x180, 0x300};
+extern const unsigned char data_ov002_020ff240[20] = {0,  1,  2,  3,  4, 4, 4, 4,  8, 8,
+                                                      10, 11, 11, 13, 0, 4, 8, 17, 0, 0};
+extern const int data_ov002_020ff254[6] = {142, 47, 144, 51, 143, 72};
+extern const short data_ov002_020ff26c[12] = {397, 398, 399, 400, 401, 403,
+                                              352, 353, 355, 360, 369, 371};
+extern const unsigned int data_ov002_020ff284[6] = {0, 1, 2, 3, 4, 5};
+extern const unsigned short data_ov002_020ff29c[18] = {
+    0x0,    0x1800, 0xccc,  0x2000, 0x1800, 0x0,   0xccc, 0x2000, 0x4000,
+    0x4000, 0x0,    0x4000, 0xccc,  0xccc,  0xccc, 0x0,   0x4000, 0xa66};
+extern const int data_ov002_020ff2c0[12] = {0x800, 0xd00, 0x880, 0xf00, 0x900, 0x1000,
+                                            0x400, 0xc00, 0x600, 0xe00, 0x800, 0x1000};
+extern SharedFilePtr data_ov002_0210e458;
+extern SharedFilePtr data_ov002_0210e9d0;
+extern SharedFilePtr data_ov002_0210eba8;
+extern SharedFilePtr data_ov002_0210e438;
+extern SharedFilePtr data_ov002_0210e270;
+extern SharedFilePtr data_ov002_0210e958;
+extern SharedFilePtr data_ov002_0210eb10;
+extern SharedFilePtr data_ov002_0210e288;
+extern SharedFilePtr data_ov002_0210e898;
+extern SharedFilePtr data_ov002_0210e670;
+extern SharedFilePtr data_ov002_0210e400;
+extern SharedFilePtr data_ov002_0210e7e8;
+extern SharedFilePtr data_ov002_0210ea70;
+extern SharedFilePtr data_ov002_0210eb38;
+extern SharedFilePtr data_ov002_0210e708;
+extern SharedFilePtr data_ov002_0210e800;
+extern SharedFilePtr data_ov002_0210e460;
+extern SharedFilePtr data_ov002_0210eb58;
+extern SharedFilePtr data_ov002_0210ec00;
+extern SharedFilePtr data_ov002_0210e1d0;
+extern SharedFilePtr data_ov002_0210e910;
+extern SharedFilePtr data_ov002_0210e6a0;
+extern SharedFilePtr data_ov002_0210ec10;
+extern SharedFilePtr data_ov002_0210e4e8;
+extern SharedFilePtr data_ov002_0210ea88;
+extern SharedFilePtr data_ov002_0210e620;
+extern SharedFilePtr data_ov002_0210e250;
+extern SharedFilePtr data_ov002_0210e4d0;
+extern SharedFilePtr data_ov002_0210e600;
+extern SharedFilePtr data_ov002_0210e6b8;
+extern SharedFilePtr data_ov002_0210e738;
+extern SharedFilePtr data_ov002_0210e1e8;
+extern SharedFilePtr data_ov002_0210eca8;
+extern SharedFilePtr data_ov002_0210e3e8;
+extern SharedFilePtr data_ov002_0210e430;
+extern SharedFilePtr data_ov002_0210e1e0;
+extern SharedFilePtr data_ov002_0210ec98;
+extern SharedFilePtr data_ov002_0210eb90;
+extern SharedFilePtr data_ov002_0210ec40;
+extern SharedFilePtr data_ov002_0210e788;
+extern SharedFilePtr data_ov002_0210e8e8;
+extern SharedFilePtr data_ov002_0210ea30;
+extern SharedFilePtr data_ov002_0210e6e0;
+extern SharedFilePtr data_ov002_0210e450;
+extern SharedFilePtr data_ov002_0210e540;
+extern SharedFilePtr data_ov002_0210e660;
+extern SharedFilePtr data_ov002_0210ebc8;
+extern SharedFilePtr data_ov002_0210e4b8;
+extern SharedFilePtr data_ov002_0210e2f0;
+extern SharedFilePtr data_ov002_0210e3e0;
+extern SharedFilePtr data_ov002_0210e728;
+extern SharedFilePtr data_ov002_0210e1c8;
+extern SharedFilePtr data_ov002_0210ea10;
+extern SharedFilePtr data_ov002_0210eb70;
+extern SharedFilePtr data_ov002_0210e3b0;
+extern SharedFilePtr data_ov002_0210e770;
+extern SharedFilePtr data_ov002_0210e538;
+extern SharedFilePtr data_ov002_0210eaf0;
+extern SharedFilePtr data_ov002_0210e3c8;
+extern SharedFilePtr data_ov002_0210e230;
+extern SharedFilePtr data_ov002_0210eac8;
+extern SharedFilePtr data_ov002_0210e640;
+extern SharedFilePtr data_ov002_0210e408;
+extern SharedFilePtr data_ov002_0210e478;
+extern SharedFilePtr data_ov002_0210e9e8;
+extern SharedFilePtr data_ov002_0210e680;
+extern SharedFilePtr data_ov002_0210ecb8;
+extern SharedFilePtr data_ov002_0210e500;
+extern SharedFilePtr data_ov002_0210e798;
+extern SharedFilePtr data_ov002_0210e4f0;
+extern SharedFilePtr data_ov002_0210e248;
+extern SharedFilePtr data_ov002_0210e238;
+extern SharedFilePtr data_ov002_0210e510;
+extern SharedFilePtr data_ov002_0210ea00;
+extern SharedFilePtr data_ov002_0210e368;
+extern SharedFilePtr data_ov002_0210e268;
+extern SharedFilePtr data_ov002_0210e440;
+extern SharedFilePtr data_ov002_0210e740;
+extern SharedFilePtr data_ov002_0210ec48;
+extern SharedFilePtr data_ov002_0210e420;
+extern SharedFilePtr data_ov002_0210e330;
+extern SharedFilePtr data_ov002_0210e328;
+extern SharedFilePtr data_ov002_0210e1a0;
+extern SharedFilePtr data_ov002_0210e960;
+extern SharedFilePtr data_ov002_0210ea28;
+extern SharedFilePtr data_ov002_0210e4b0;
+extern SharedFilePtr data_ov002_0210e668;
+extern SharedFilePtr data_ov002_0210e3f8;
+extern SharedFilePtr data_ov002_0210ea90;
+extern SharedFilePtr data_ov002_0210e168;
+extern SharedFilePtr data_ov002_0210e180;
+extern SharedFilePtr data_ov002_0210e3b8;
+extern SharedFilePtr data_ov002_0210e1b0;
+extern SharedFilePtr data_ov002_0210ec18;
+extern SharedFilePtr data_ov002_0210ec58;
+extern SharedFilePtr data_ov002_0210ed00;
+extern SharedFilePtr data_ov002_0210eaa0;
+extern SharedFilePtr data_ov002_0210eb28;
+extern SharedFilePtr data_ov002_0210ec30;
+extern SharedFilePtr data_ov002_0210ec28;
+extern SharedFilePtr data_ov002_0210ea50;
+extern SharedFilePtr data_ov002_0210e638;
+extern SharedFilePtr data_ov002_0210e418;
+extern SharedFilePtr data_ov002_0210e1f0;
+extern SharedFilePtr data_ov002_0210e928;
+extern SharedFilePtr data_ov002_0210ea18;
+extern SharedFilePtr data_ov002_0210e210;
+extern SharedFilePtr data_ov002_0210ec68;
+extern SharedFilePtr data_ov002_0210e4d8;
+extern SharedFilePtr data_ov002_0210e490;
+extern SharedFilePtr data_ov002_0210e838;
+extern SharedFilePtr data_ov002_0210e848;
+extern SharedFilePtr data_ov002_0210e560;
+extern SharedFilePtr data_ov002_0210e338;
+extern SharedFilePtr data_ov002_0210e340;
+extern SharedFilePtr data_ov002_0210e940;
+extern SharedFilePtr data_ov002_0210e370;
+extern SharedFilePtr data_ov002_0210e978;
+extern SharedFilePtr data_ov002_0210e580;
+extern SharedFilePtr data_ov002_0210e968;
+extern SharedFilePtr data_ov002_0210e578;
+extern SharedFilePtr data_ov002_0210e208;
+extern SharedFilePtr data_ov002_0210e7f8;
+extern SharedFilePtr data_ov002_0210e4a8;
+extern SharedFilePtr data_ov002_0210e7e0;
+extern SharedFilePtr data_ov002_0210ed58;
+extern SharedFilePtr data_ov002_0210ed60;
+extern SharedFilePtr data_ov002_0210e1c0;
+extern SharedFilePtr data_ov002_0210e290;
+extern SharedFilePtr data_ov002_0210e7d0;
+extern SharedFilePtr data_ov002_0210e480;
+extern SharedFilePtr data_ov002_0210e9d8;
+extern SharedFilePtr data_ov002_0210e220;
+extern SharedFilePtr data_ov002_0210e610;
+extern SharedFilePtr data_ov002_0210e5c8;
+extern SharedFilePtr data_ov002_0210e198;
+extern SharedFilePtr data_ov002_0210ea78;
+extern SharedFilePtr data_ov002_0210e358;
+extern SharedFilePtr data_ov002_0210e688;
+extern SharedFilePtr data_ov002_0210eac0;
+extern SharedFilePtr data_ov002_0210e630;
+extern SharedFilePtr data_ov002_0210ead0;
+extern SharedFilePtr data_ov002_0210eb40;
+extern SharedFilePtr data_ov002_0210e9f0;
+extern SharedFilePtr data_ov002_0210e930;
+extern SharedFilePtr data_ov002_0210eab8;
+extern SharedFilePtr data_ov002_0210e6c8;
+extern SharedFilePtr data_ov002_0210ed28;
+extern SharedFilePtr data_ov002_0210e398;
+extern SharedFilePtr data_ov002_0210ea80;
+extern SharedFilePtr data_ov002_0210e5e0;
+extern SharedFilePtr data_ov002_0210e5e8;
+extern SharedFilePtr data_ov002_0210ea60;
+extern SharedFilePtr data_ov002_0210e218;
+extern SharedFilePtr data_ov002_0210e5d8;
+extern SharedFilePtr data_ov002_0210ea58;
+extern SharedFilePtr data_ov002_0210ea40;
+extern SharedFilePtr data_ov002_0210ea48;
+extern SharedFilePtr data_ov002_0210e380;
+extern SharedFilePtr data_ov002_0210ea68;
+extern SharedFilePtr data_ov002_0210e388;
+extern SharedFilePtr data_ov002_0210e188;
+extern SharedFilePtr data_ov002_0210e9b0;
+extern SharedFilePtr data_ov002_0210e598;
+extern SharedFilePtr data_ov002_0210e508;
+extern SharedFilePtr data_ov002_0210ec90;
+extern SharedFilePtr data_ov002_0210e808;
+extern SharedFilePtr data_ov002_0210e5b8;
+extern SharedFilePtr data_ov002_0210e348;
+extern SharedFilePtr data_ov002_0210e178;
+extern SharedFilePtr data_ov002_0210e200;
+extern SharedFilePtr data_ov002_0210e588;
+extern SharedFilePtr data_ov002_0210e988;
+extern SharedFilePtr data_ov002_0210e980;
+extern SharedFilePtr data_ov002_0210e4a0;
+extern SharedFilePtr data_ov002_0210e498;
+extern SharedFilePtr data_ov002_0210e2f8;
+extern SharedFilePtr data_ov002_0210e8c0;
+extern SharedFilePtr data_ov002_0210e300;
+extern SharedFilePtr data_ov002_0210e8a8;
+extern SharedFilePtr data_ov002_0210ed30;
+extern SharedFilePtr data_ov002_0210e938;
+extern SharedFilePtr data_ov002_0210e568;
+extern SharedFilePtr data_ov002_0210eae0;
+extern SharedFilePtr data_ov002_0210e280;
+extern SharedFilePtr data_ov002_0210e468;
+extern SharedFilePtr data_ov002_0210e470;
+extern SharedFilePtr data_ov002_0210e170;
+extern SharedFilePtr data_ov002_0210e890;
+extern SharedFilePtr data_ov002_0210e8d8;
+extern SharedFilePtr data_ov002_0210e520;
+extern SharedFilePtr data_ov002_0210e190;
+extern SharedFilePtr data_ov002_0210ecf8;
+extern SharedFilePtr data_ov002_0210ed08;
+extern SharedFilePtr data_ov002_0210ecd8;
+extern SharedFilePtr data_ov002_0210ece0;
+extern SharedFilePtr data_ov002_0210ecd0;
+extern SharedFilePtr data_ov002_0210ece8;
+extern SharedFilePtr data_ov002_0210ed18;
+extern SharedFilePtr data_ov002_0210ed20;
+extern SharedFilePtr data_ov002_0210ed10;
+extern SharedFilePtr data_ov002_0210ecf0;
+extern SharedFilePtr data_ov002_0210e360;
+extern SharedFilePtr data_ov002_0210ecc8;
+extern SharedFilePtr data_ov002_0210ec88;
+extern SharedFilePtr data_ov002_0210ec70;
+extern SharedFilePtr data_ov002_0210e5a0;
+extern SharedFilePtr data_ov002_0210e9c8;
+extern SharedFilePtr data_ov002_0210e5a8;
+extern SharedFilePtr data_ov002_0210ec80;
+extern SharedFilePtr data_ov002_0210eca0;
+extern SharedFilePtr data_ov002_0210ecc0;
+extern SharedFilePtr data_ov002_0210e768;
+extern SharedFilePtr data_ov002_0210e350;
+extern SharedFilePtr data_ov002_0210ec78;
+extern SharedFilePtr data_ov002_0210e590;
+extern SharedFilePtr data_ov002_0210e530;
+extern SharedFilePtr data_ov002_0210e9b8;
+extern SharedFilePtr data_ov002_0210ebb0;
+extern SharedFilePtr data_ov002_0210e9a8;
+extern SharedFilePtr data_ov002_0210e3f0;
+extern SharedFilePtr data_ov002_0210e6d8;
+extern SharedFilePtr data_ov002_0210e528;
+extern SharedFilePtr data_ov002_0210eb08;
+extern SharedFilePtr data_ov002_0210ebc0;
+extern SharedFilePtr data_ov002_0210e548;
+extern SharedFilePtr data_ov002_0210eaf8;
+extern SharedFilePtr data_ov002_0210ecb0;
+extern SharedFilePtr data_ov002_0210e948;
+extern SharedFilePtr data_ov002_0210e8b0;
+extern SharedFilePtr data_ov002_0210e5b0;
+extern SharedFilePtr data_ov002_0210e618;
+extern SharedFilePtr data_ov002_0210e840;
+extern SharedFilePtr data_ov002_0210e2b0;
+extern SharedFilePtr data_ov002_0210e2c0;
+extern SharedFilePtr data_ov002_0210e970;
+extern SharedFilePtr data_ov002_0210eb68;
+extern SharedFilePtr data_ov002_0210e298;
+extern SharedFilePtr data_ov002_0210e390;
+extern SharedFilePtr data_ov002_0210e378;
+extern SharedFilePtr data_ov002_0210e8a0;
+extern SharedFilePtr data_ov002_0210e1b8;
+extern SharedFilePtr data_ov002_0210e880;
+extern SharedFilePtr data_ov002_0210e1f8;
+extern SharedFilePtr data_ov002_0210e8f0;
+extern SharedFilePtr data_ov002_0210ea08;
+extern SharedFilePtr data_ov002_0210eba0;
+extern SharedFilePtr data_ov002_0210e950;
+extern SharedFilePtr data_ov002_0210e900;
+extern SharedFilePtr data_ov002_0210e990;
+extern SharedFilePtr data_ov002_0210e6d0;
+extern SharedFilePtr data_ov002_0210eaa8;
+extern SharedFilePtr data_ov002_0210e5c0;
+extern SharedFilePtr data_ov002_0210e658;
+extern SharedFilePtr data_ov002_0210e6f0;
+extern SharedFilePtr data_ov002_0210ea98;
+extern SharedFilePtr data_ov002_0210e550;
+extern SharedFilePtr data_ov002_0210e650;
+extern SharedFilePtr data_ov002_0210e6e8;
+extern SharedFilePtr data_ov002_0210eab0;
+extern SharedFilePtr data_ov002_0210e998;
+extern SharedFilePtr data_ov002_0210e678;
+extern SharedFilePtr data_ov002_0210e3c0;
+extern SharedFilePtr data_ov002_0210e608;
+extern SharedFilePtr data_ov002_0210e748;
+extern SharedFilePtr data_ov002_0210eb18;
+extern SharedFilePtr data_ov002_0210ebd0;
+extern SharedFilePtr data_ov002_0210e488;
+extern SharedFilePtr data_ov002_0210e228;
+extern SharedFilePtr data_ov002_0210e9f8;
+extern SharedFilePtr data_ov002_0210e810;
+extern SharedFilePtr data_ov002_0210ea38;
+extern SharedFilePtr data_ov002_0210e258;
+extern SharedFilePtr data_ov002_0210e5f8;
+extern SharedFilePtr data_ov002_0210e918;
+extern SharedFilePtr data_ov002_0210e2e0;
+extern SharedFilePtr data_ov002_0210e2e8;
+extern SharedFilePtr data_ov002_0210e448;
+extern SharedFilePtr data_ov002_0210ebe0;
+extern SharedFilePtr data_ov002_0210ed38;
+extern SharedFilePtr data_ov002_0210e9e0;
+extern SharedFilePtr data_ov002_0210e240;
+extern SharedFilePtr data_ov002_0210e1a8;
+extern SharedFilePtr data_ov002_0210e8e0;
+extern SharedFilePtr data_ov002_0210e310;
+extern SharedFilePtr data_ov002_0210e308;
+extern SharedFilePtr data_ov002_0210e318;
+extern SharedFilePtr data_ov002_0210e908;
+extern SharedFilePtr data_ov002_0210e8f8;
+extern SharedFilePtr data_ov002_0210e320;
+extern SharedFilePtr data_ov002_0210e920;
+extern SharedFilePtr data_ov002_0210e7c8;
+extern SharedFilePtr data_ov002_0210eb48;
+extern SharedFilePtr data_ov002_0210ead8;
+extern SharedFilePtr data_ov002_0210e878;
+extern SharedFilePtr data_ov002_0210e830;
+extern SharedFilePtr data_ov002_0210e760;
+extern SharedFilePtr data_ov002_0210e428;
+extern SharedFilePtr data_ov002_0210ed40;
+extern SharedFilePtr data_ov002_0210ed48;
+extern SharedFilePtr data_ov002_0210ed50;
+extern SharedFilePtr data_ov002_0210e7a0;
+extern SharedFilePtr data_ov002_0210e4c8;
+extern SharedFilePtr data_ov002_0210e278;
+extern SharedFilePtr data_ov002_0210eb30;
+extern SharedFilePtr *const data_ov002_020ff2f0[100] = {
+    &data_ov002_0210e458, &data_ov002_0210e9d0, &data_ov002_0210eba8, &data_ov002_0210e438,
+    &data_ov002_0210e270, &data_ov002_0210e958, &data_ov002_0210eb10, &data_ov002_0210e438,
+    &data_ov002_0210e288, &data_ov002_0210e898, &data_ov002_0210e670, &data_ov002_0210e400,
+    &data_ov002_0210e288, &data_ov002_0210e898, &data_ov002_0210e670, &data_ov002_0210e400,
+    &data_ov002_0210e288, &data_ov002_0210e898, &data_ov002_0210e670, &data_ov002_0210e400,
+    &data_ov002_0210e7e8, &data_ov002_0210ea70, &data_ov002_0210eb38, &data_ov002_0210e708,
+    &data_ov002_0210e288, &data_ov002_0210e898, &data_ov002_0210e670, &data_ov002_0210e400,
+    &data_ov002_0210e288, &data_ov002_0210e898, &data_ov002_0210e670, &data_ov002_0210e400,
+    &data_ov002_0210e800, &data_ov002_0210e460, &data_ov002_0210eb58, &data_ov002_0210ec00,
+    &data_ov002_0210e1d0, &data_ov002_0210e910, &data_ov002_0210e6a0, &data_ov002_0210ec10,
+    &data_ov002_0210e4e8, &data_ov002_0210ea88, &data_ov002_0210e620, &data_ov002_0210e250,
+    &data_ov002_0210e4d0, &data_ov002_0210e600, &data_ov002_0210e6b8, &data_ov002_0210e738,
+    &data_ov002_0210e1e8, &data_ov002_0210eca8, &data_ov002_0210e3e8, &data_ov002_0210e430,
+    &data_ov002_0210e1e0, &data_ov002_0210ec98, &data_ov002_0210eb90, &data_ov002_0210ec40,
+    &data_ov002_0210e788, &data_ov002_0210e8e8, &data_ov002_0210ea30, &data_ov002_0210e6e0,
+    &data_ov002_0210e450, &data_ov002_0210e540, &data_ov002_0210e660, &data_ov002_0210ebc8,
+    &data_ov002_0210e4b8, &data_ov002_0210e2f0, &data_ov002_0210e3e0, &data_ov002_0210e728,
+    &data_ov002_0210e288, &data_ov002_0210e898, &data_ov002_0210e670, &data_ov002_0210e400,
+    &data_ov002_0210e1c8, &data_ov002_0210ea10, &data_ov002_0210eb70, &data_ov002_0210e3b0,
+    &data_ov002_0210e770, &data_ov002_0210e538, &data_ov002_0210eaf0, &data_ov002_0210e3c8,
+    &data_ov002_0210e1c8, &data_ov002_0210ea10, &data_ov002_0210eb70, &data_ov002_0210e3b0,
+    &data_ov002_0210e230, &data_ov002_0210eac8, &data_ov002_0210e640, &data_ov002_0210e408,
+    &data_ov002_0210e288, &data_ov002_0210e898, &data_ov002_0210e670, &data_ov002_0210e400,
+    &data_ov002_0210e478, &data_ov002_0210e9e8, &data_ov002_0210e680, &data_ov002_0210ecb8,
+    &data_ov002_0210e500, &data_ov002_0210e9d0, &data_ov002_0210eba8, &data_ov002_0210e438};
+extern void *const data_ov002_020ff790[540] = {
+    (void *)&data_ov002_0210e798, (void *)&data_ov002_0210e798, (void *)&data_ov002_0210e4f0,
+    (void *)&data_ov002_0210e798, (void *)&data_ov002_0210e248, (void *)&data_ov002_0210e248,
+    (void *)&data_ov002_0210e248, (void *)&data_ov002_0210e248, (void *)&data_ov002_0210e238,
+    (void *)&data_ov002_0210e238, (void *)&data_ov002_0210e510, (void *)&data_ov002_0210e238,
+    (void *)&data_ov002_0210ea00, (void *)&data_ov002_0210ea00, (void *)&data_ov002_0210ea00,
+    (void *)&data_ov002_0210ea00, (void *)&data_ov002_0210e368, (void *)&data_ov002_0210e368,
+    (void *)&data_ov002_0210e368, (void *)&data_ov002_0210e368, (void *)&data_ov002_0210e268,
+    (void *)&data_ov002_0210e268, (void *)&data_ov002_0210e268, (void *)&data_ov002_0210e268,
+    (void *)&data_ov002_0210e440, (void *)&data_ov002_0210e440, (void *)&data_ov002_0210e440,
+    (void *)&data_ov002_0210e440, (void *)&data_ov002_0210e740, (void *)&data_ov002_0210e740,
+    (void *)&data_ov002_0210e740, (void *)&data_ov002_0210e740, (void *)&data_ov002_0210ec48,
+    (void *)&data_ov002_0210ec48, (void *)&data_ov002_0210ec48, (void *)&data_ov002_0210ec48,
+    (void *)&data_ov002_0210e420, (void *)&data_ov002_0210e420, (void *)&data_ov002_0210e420,
+    (void *)&data_ov002_0210e420, (void *)&data_ov002_0210e330, (void *)&data_ov002_0210e330,
+    (void *)&data_ov002_0210e330, (void *)&data_ov002_0210e330, (void *)&data_ov002_0210e328,
+    (void *)&data_ov002_0210e328, (void *)&data_ov002_0210e328, (void *)&data_ov002_0210e328,
+    (void *)&data_ov002_0210e1a0, (void *)&data_ov002_0210e1a0, (void *)&data_ov002_0210e1a0,
+    (void *)&data_ov002_0210e1a0, (void *)&data_ov002_0210e960, (void *)&data_ov002_0210e960,
+    (void *)&data_ov002_0210e960, (void *)&data_ov002_0210e960, (void *)&data_ov002_0210ea28,
+    (void *)&data_ov002_0210e4b0, (void *)&data_ov002_0210e668, (void *)&data_ov002_0210e3f8,
+    (void *)&data_ov002_0210ea90, (void *)&data_ov002_0210ea90, (void *)&data_ov002_0210ea90,
+    (void *)&data_ov002_0210ea90, (void *)&data_ov002_0210e168, (void *)&data_ov002_0210e168,
+    (void *)&data_ov002_0210e168, (void *)&data_ov002_0210e168, (void *)&data_ov002_0210e180,
+    (void *)&data_ov002_0210e180, (void *)&data_ov002_0210e180, (void *)&data_ov002_0210e180,
+    (void *)&data_ov002_0210e3b8, (void *)&data_ov002_0210e3b8, (void *)&data_ov002_0210e3b8,
+    (void *)&data_ov002_0210e3b8, (void *)&data_ov002_0210e1b0, (void *)&data_ov002_0210e1b0,
+    (void *)&data_ov002_0210e1b0, (void *)&data_ov002_0210e1b0, (void *)&data_ov002_0210ec18,
+    (void *)&data_ov002_0210ec18, (void *)&data_ov002_0210ec18, (void *)&data_ov002_0210ec18,
+    (void *)&data_ov002_0210ec58, (void *)&data_ov002_0210ec58, (void *)&data_ov002_0210ec58,
+    (void *)&data_ov002_0210ec58, (void *)&data_ov002_0210ed00, (void *)&data_ov002_0210eaa0,
+    (void *)&data_ov002_0210eb28, (void *)&data_ov002_0210ec30, (void *)&data_ov002_0210ec28,
+    (void *)&data_ov002_0210ea50, (void *)&data_ov002_0210e638, (void *)&data_ov002_0210e418,
+    (void *)&data_ov002_0210e1f0, (void *)&data_ov002_0210e1f0, (void *)&data_ov002_0210e1f0,
+    (void *)&data_ov002_0210e1f0, (void *)&data_ov002_0210e928, (void *)&data_ov002_0210e928,
+    (void *)&data_ov002_0210e928, (void *)&data_ov002_0210e928, (void *)&data_ov002_0210ea18,
+    (void *)&data_ov002_0210ea18, (void *)&data_ov002_0210ea18, (void *)&data_ov002_0210ea18,
+    (void *)&data_ov002_0210e210, (void *)&data_ov002_0210e210, (void *)&data_ov002_0210e210,
+    (void *)&data_ov002_0210e210, (void *)&data_ov002_0210ec68, (void *)&data_ov002_0210ec68,
+    (void *)&data_ov002_0210ec68, (void *)&data_ov002_0210ec68, (void *)&data_ov002_0210e4d8,
+    (void *)&data_ov002_0210e4d8, (void *)&data_ov002_0210e4d8, (void *)&data_ov002_0210e4d8,
+    (void *)&data_ov002_0210e490, (void *)&data_ov002_0210e490, (void *)&data_ov002_0210e490,
+    (void *)&data_ov002_0210e490, (void *)&data_ov002_0210e838, (void *)&data_ov002_0210e838,
+    (void *)&data_ov002_0210e838, (void *)&data_ov002_0210e838, (void *)&data_ov002_0210e848,
+    (void *)&data_ov002_0210e848, (void *)&data_ov002_0210e848, (void *)&data_ov002_0210e848,
+    (void *)&data_ov002_0210e560, (void *)&data_ov002_0210e560, (void *)&data_ov002_0210e560,
+    (void *)&data_ov002_0210e560, (void *)&data_ov002_0210e338, (void *)&data_ov002_0210e338,
+    (void *)&data_ov002_0210e338, (void *)&data_ov002_0210e338, (void *)&data_ov002_0210e340,
+    (void *)&data_ov002_0210e340, (void *)&data_ov002_0210e340, (void *)&data_ov002_0210e340,
+    (void *)&data_ov002_0210e940, (void *)&data_ov002_0210e940, (void *)&data_ov002_0210e940,
+    (void *)&data_ov002_0210e940, (void *)&data_ov002_0210e370, (void *)&data_ov002_0210e370,
+    (void *)&data_ov002_0210e370, (void *)&data_ov002_0210e370, (void *)&data_ov002_0210e978,
+    (void *)&data_ov002_0210e978, (void *)&data_ov002_0210e978, (void *)&data_ov002_0210e978,
+    (void *)&data_ov002_0210e580, (void *)&data_ov002_0210e580, (void *)&data_ov002_0210e580,
+    (void *)&data_ov002_0210e580, (void *)&data_ov002_0210e968, (void *)&data_ov002_0210e968,
+    (void *)&data_ov002_0210e968, (void *)&data_ov002_0210e968, (void *)&data_ov002_0210e578,
+    (void *)&data_ov002_0210e578, (void *)&data_ov002_0210e578, (void *)&data_ov002_0210e578,
+    (void *)&data_ov002_0210e208, (void *)&data_ov002_0210e208, (void *)&data_ov002_0210e208,
+    (void *)&data_ov002_0210e208, (void *)&data_ov002_0210e7f8, (void *)&data_ov002_0210e7f8,
+    (void *)&data_ov002_0210e7f8, (void *)&data_ov002_0210e7f8, (void *)&data_ov002_0210e4a8,
+    (void *)&data_ov002_0210e4a8, (void *)&data_ov002_0210e4a8, (void *)&data_ov002_0210e4a8,
+    (void *)&data_ov002_0210e7e0, (void *)&data_ov002_0210e7e0, (void *)&data_ov002_0210e7e0,
+    (void *)&data_ov002_0210e7e0, (void *)&data_ov002_0210ed58, (void *)&data_ov002_0210ed58,
+    (void *)&data_ov002_0210ed58, (void *)&data_ov002_0210ed58, (void *)&data_ov002_0210ed60,
+    (void *)&data_ov002_0210ed60, (void *)&data_ov002_0210ed60, (void *)&data_ov002_0210ed60,
+    (void *)&data_ov002_0210e1c0, (void *)&data_ov002_0210e1c0, (void *)&data_ov002_0210e1c0,
+    (void *)&data_ov002_0210e1c0, (void *)&data_ov002_0210e290, (void *)&data_ov002_0210e290,
+    (void *)&data_ov002_0210e290, (void *)&data_ov002_0210e290, (void *)&data_ov002_0210e7d0,
+    (void *)&data_ov002_0210e7d0, (void *)&data_ov002_0210e7d0, (void *)&data_ov002_0210e7d0,
+    (void *)&data_ov002_0210e480, (void *)&data_ov002_0210e480, (void *)&data_ov002_0210e480,
+    (void *)&data_ov002_0210e480, (void *)&data_ov002_0210e9d8, (void *)&data_ov002_0210e9d8,
+    (void *)&data_ov002_0210e9d8, (void *)&data_ov002_0210e9d8, (void *)&data_ov002_0210e220,
+    (void *)&data_ov002_0210e220, (void *)&data_ov002_0210e220, (void *)&data_ov002_0210e220,
+    (void *)&data_ov002_0210e610, (void *)&data_ov002_0210e610, (void *)&data_ov002_0210e610,
+    (void *)&data_ov002_0210e610, (void *)&data_ov002_0210e5c8, (void *)&data_ov002_0210e5c8,
+    (void *)&data_ov002_0210e5c8, (void *)&data_ov002_0210e5c8, (void *)&data_ov002_0210e198,
+    (void *)&data_ov002_0210e198, (void *)&data_ov002_0210e198, (void *)&data_ov002_0210e198,
+    (void *)&data_ov002_0210ea78, (void *)&data_ov002_0210ea78, (void *)&data_ov002_0210ea78,
+    (void *)&data_ov002_0210ea78, (void *)&data_ov002_0210e358, (void *)&data_ov002_0210e358,
+    (void *)&data_ov002_0210e358, (void *)&data_ov002_0210e358, (void *)&data_ov002_0210e688,
+    (void *)&data_ov002_0210e688, (void *)&data_ov002_0210eac0, (void *)&data_ov002_0210e688,
+    (void *)&data_ov002_0210e630, (void *)&data_ov002_0210e630, (void *)&data_ov002_0210ead0,
+    (void *)&data_ov002_0210e630, (void *)&data_ov002_0210eb40, (void *)&data_ov002_0210eb40,
+    (void *)&data_ov002_0210e9f0, (void *)&data_ov002_0210eb40, (void *)&data_ov002_0210e930,
+    (void *)&data_ov002_0210e930, (void *)&data_ov002_0210eab8, (void *)&data_ov002_0210e930,
+    (void *)&data_ov002_0210e6c8, (void *)&data_ov002_0210e6c8, (void *)&data_ov002_0210e6c8,
+    (void *)&data_ov002_0210e6c8, (void *)&data_ov002_0210ed28, (void *)&data_ov002_0210ed28,
+    (void *)&data_ov002_0210ed28, (void *)&data_ov002_0210ed28, (void *)&data_ov002_0210e398,
+    (void *)&data_ov002_0210e398, (void *)&data_ov002_0210e398, (void *)&data_ov002_0210e398,
+    (void *)&data_ov002_0210ea80, (void *)&data_ov002_0210ea80, (void *)&data_ov002_0210ea80,
+    (void *)&data_ov002_0210ea80, (void *)&data_ov002_0210e5e0, (void *)&data_ov002_0210e5e0,
+    (void *)&data_ov002_0210e5e0, (void *)&data_ov002_0210e5e0, (void *)&data_ov002_0210e5e8,
+    (void *)&data_ov002_0210e5e8, (void *)&data_ov002_0210e5e8, (void *)&data_ov002_0210e5e8,
+    (void *)&data_ov002_0210ea60, (void *)&data_ov002_0210ea60, (void *)&data_ov002_0210ea60,
+    (void *)&data_ov002_0210ea60, (void *)&data_ov002_0210e218, (void *)&data_ov002_0210e218,
+    (void *)&data_ov002_0210e218, (void *)&data_ov002_0210e218, (void *)&data_ov002_0210e5d8,
+    (void *)&data_ov002_0210e5d8, (void *)&data_ov002_0210e5d8, (void *)&data_ov002_0210e5d8,
+    (void *)&data_ov002_0210ea58, (void *)&data_ov002_0210ea58, (void *)&data_ov002_0210ea58,
+    (void *)&data_ov002_0210ea58, (void *)&data_ov002_0210ea40, (void *)&data_ov002_0210ea40,
+    (void *)&data_ov002_0210ea40, (void *)&data_ov002_0210ea40, (void *)&data_ov002_0210ea48,
+    (void *)&data_ov002_0210ea48, (void *)&data_ov002_0210ea48, (void *)&data_ov002_0210ea48,
+    (void *)&data_ov002_0210e380, (void *)&data_ov002_0210e380, (void *)&data_ov002_0210e380,
+    (void *)&data_ov002_0210e380, (void *)&data_ov002_0210ea68, (void *)&data_ov002_0210ea68,
+    (void *)&data_ov002_0210ea68, (void *)&data_ov002_0210ea68, (void *)&data_ov002_0210e388,
+    (void *)&data_ov002_0210e388, (void *)&data_ov002_0210e388, (void *)&data_ov002_0210e388,
+    (void *)&data_ov002_0210e188, (void *)&data_ov002_0210e188, (void *)&data_ov002_0210e188,
+    (void *)&data_ov002_0210e188, (void *)&data_ov002_0210e9b0, (void *)&data_ov002_0210e9b0,
+    (void *)&data_ov002_0210e9b0, (void *)&data_ov002_0210e9b0, (void *)&data_ov002_0210e598,
+    (void *)&data_ov002_0210e598, (void *)&data_ov002_0210e598, (void *)&data_ov002_0210e598,
+    (void *)&data_ov002_0210e508, (void *)&data_ov002_0210e508, (void *)&data_ov002_0210e508,
+    (void *)&data_ov002_0210e508, (void *)&data_ov002_0210ec90, (void *)&data_ov002_0210ec90,
+    (void *)&data_ov002_0210ec90, (void *)&data_ov002_0210ec90, (void *)&data_ov002_0210e808,
+    (void *)&data_ov002_0210e808, (void *)&data_ov002_0210e808, (void *)&data_ov002_0210e808,
+    (void *)&data_ov002_0210e5b8, (void *)&data_ov002_0210e5b8, (void *)&data_ov002_0210e5b8,
+    (void *)&data_ov002_0210e5b8, (void *)&data_ov002_0210e348, (void *)&data_ov002_0210e348,
+    (void *)&data_ov002_0210e348, (void *)&data_ov002_0210e348, (void *)&data_ov002_0210e178,
+    (void *)&data_ov002_0210e178, (void *)&data_ov002_0210e178, (void *)&data_ov002_0210e178,
+    (void *)&data_ov002_0210e200, (void *)&data_ov002_0210e200, (void *)&data_ov002_0210e200,
+    (void *)&data_ov002_0210e200, (void *)&data_ov002_0210e588, (void *)&data_ov002_0210e588,
+    (void *)&data_ov002_0210e588, (void *)&data_ov002_0210e588, (void *)&data_ov002_0210e988,
+    (void *)&data_ov002_0210e988, (void *)&data_ov002_0210e988, (void *)&data_ov002_0210e988,
+    (void *)&data_ov002_0210e980, (void *)&data_ov002_0210e980, (void *)&data_ov002_0210e980,
+    (void *)&data_ov002_0210e980, (void *)&data_ov002_0210e4a0, (void *)&data_ov002_0210e4a0,
+    (void *)&data_ov002_0210e4a0, (void *)&data_ov002_0210e4a0, (void *)&data_ov002_0210e498,
+    (void *)&data_ov002_0210e498, (void *)&data_ov002_0210e498, (void *)&data_ov002_0210e498,
+    (void *)&data_ov002_0210e2f8, (void *)&data_ov002_0210e2f8, (void *)&data_ov002_0210e2f8,
+    (void *)&data_ov002_0210e2f8, (void *)&data_ov002_0210e8c0, (void *)&data_ov002_0210e8c0,
+    (void *)&data_ov002_0210e8c0, (void *)&data_ov002_0210e8c0, (void *)&data_ov002_0210e300,
+    (void *)&data_ov002_0210e300, (void *)&data_ov002_0210e300, (void *)&data_ov002_0210e300,
+    (void *)&data_ov002_0210e8a8, (void *)&data_ov002_0210e8a8, (void *)&data_ov002_0210e8a8,
+    (void *)&data_ov002_0210e8a8, (void *)&data_ov002_0210ed30, (void *)&data_ov002_0210ed30,
+    (void *)&data_ov002_0210ed30, (void *)&data_ov002_0210ed30, (void *)&data_ov002_0210e938,
+    (void *)&data_ov002_0210e938, (void *)&data_ov002_0210e938, (void *)&data_ov002_0210e938,
+    (void *)&data_ov002_0210e568, (void *)&data_ov002_0210e568, (void *)&data_ov002_0210e568,
+    (void *)&data_ov002_0210eae0, (void *)&data_ov002_0210e280, (void *)&data_ov002_0210e280,
+    (void *)&data_ov002_0210e280, (void *)&data_ov002_0210e280, (void *)&data_ov002_0210e468,
+    (void *)&data_ov002_0210e468, (void *)&data_ov002_0210e468, (void *)&data_ov002_0210e468,
+    (void *)&data_ov002_0210e470, (void *)&data_ov002_0210e470, (void *)&data_ov002_0210e470,
+    (void *)&data_ov002_0210e470, (void *)&data_ov002_0210e170, (void *)&data_ov002_0210e170,
+    (void *)&data_ov002_0210e170, (void *)&data_ov002_0210e170, (void *)&data_ov002_0210e890,
+    (void *)&data_ov002_0210e8d8, (void *)&data_ov002_0210e520, (void *)&data_ov002_0210e890,
+    (void *)&data_ov002_0210e190, (void *)&data_ov002_0210e190, (void *)&data_ov002_0210e190,
+    (void *)&data_ov002_0210e190, (void *)&data_ov002_0210ecf8, (void *)&data_ov002_0210ecf8,
+    (void *)&data_ov002_0210ecf8, (void *)&data_ov002_0210ecf8, (void *)&data_ov002_0210ed08,
+    (void *)&data_ov002_0210ed08, (void *)&data_ov002_0210ed08, (void *)&data_ov002_0210ed08,
+    (void *)&data_ov002_0210ecd8, (void *)&data_ov002_0210ecd8, (void *)&data_ov002_0210ecd8,
+    (void *)&data_ov002_0210ecd8, (void *)&data_ov002_0210ece0, (void *)&data_ov002_0210ece0,
+    (void *)&data_ov002_0210ece0, (void *)&data_ov002_0210ece0, (void *)&data_ov002_0210ecd0,
+    (void *)&data_ov002_0210ecd0, (void *)&data_ov002_0210ecd0, (void *)&data_ov002_0210ecd0,
+    (void *)&data_ov002_0210ece8, (void *)&data_ov002_0210ece8, (void *)&data_ov002_0210ece8,
+    (void *)&data_ov002_0210ece8, (void *)&data_ov002_0210ed18, (void *)&data_ov002_0210ed18,
+    (void *)&data_ov002_0210ed18, (void *)&data_ov002_0210ed18, (void *)&data_ov002_0210ed20,
+    (void *)&data_ov002_0210ed20, (void *)&data_ov002_0210ed20, (void *)&data_ov002_0210ed20,
+    (void *)&data_ov002_0210ed10, (void *)&data_ov002_0210ed10, (void *)&data_ov002_0210ed10,
+    (void *)&data_ov002_0210ed10, (void *)&data_ov002_0210ecf0, (void *)&data_ov002_0210ecf0,
+    (void *)&data_ov002_0210ecf0, (void *)&data_ov002_0210ecf0, (void *)&data_ov002_0210e360,
+    (void *)&data_ov002_0210e360, (void *)&data_ov002_0210e360, (void *)&data_ov002_0210e360,
+    (void *)&data_ov002_0210ecc8, (void *)&data_ov002_0210ecc8, (void *)&data_ov002_0210ecc8,
+    (void *)&data_ov002_0210ecc8, (void *)&data_ov002_0210ec88, (void *)&data_ov002_0210ec88,
+    (void *)&data_ov002_0210ec88, (void *)&data_ov002_0210ec88, (void *)&data_ov002_0210ec70,
+    (void *)&data_ov002_0210ec70, (void *)&data_ov002_0210ec70, (void *)&data_ov002_0210ec70,
+    (void *)&data_ov002_0210e5a0, (void *)&data_ov002_0210e5a0, (void *)&data_ov002_0210e5a0,
+    (void *)&data_ov002_0210e5a0, (void *)&data_ov002_0210e9c8, (void *)&data_ov002_0210e9c8,
+    (void *)&data_ov002_0210e9c8, (void *)&data_ov002_0210e9c8, (void *)&data_ov002_0210e5a8,
+    (void *)&data_ov002_0210e5a8, (void *)&data_ov002_0210e5a8, (void *)&data_ov002_0210e5a8,
+    (void *)&data_ov002_0210ec80, (void *)&data_ov002_0210ec80, (void *)&data_ov002_0210ec80,
+    (void *)&data_ov002_0210ec80, (void *)&data_ov002_0210eca0, (void *)&data_ov002_0210eca0,
+    (void *)&data_ov002_0210eca0, (void *)&data_ov002_0210eca0, (void *)&data_ov002_0210ecc0,
+    (void *)&data_ov002_0210ecc0, (void *)&data_ov002_0210ecc0, (void *)&data_ov002_0210ecc0,
+    (void *)&data_ov002_0210e768, (void *)&data_ov002_0210e768, (void *)&data_ov002_0210e768,
+    (void *)&data_ov002_0210e768, (void *)&data_ov002_0210e350, (void *)&data_ov002_0210e350,
+    (void *)&data_ov002_0210e350, (void *)&data_ov002_0210e350, (void *)&data_ov002_0210ec78,
+    (void *)&data_ov002_0210ec78, (void *)&data_ov002_0210ec78, (void *)&data_ov002_0210ec78,
+    (void *)&data_ov002_0210e590, (void *)&data_ov002_0210e530, (void *)&data_ov002_0210e9b8,
+    (void *)&data_ov002_0210ebb0, (void *)&data_ov002_0210e9a8, (void *)&data_ov002_0210e9a8,
+    (void *)&data_ov002_0210e9a8, (void *)&data_ov002_0210e3f0, (void *)&data_ov002_0210e6d8,
+    (void *)&data_ov002_0210e528, (void *)&data_ov002_0210eb08, (void *)&data_ov002_0210e6d8,
+    (void *)&data_ov002_0210ebc0, (void *)&data_ov002_0210e548, (void *)&data_ov002_0210eaf8,
+    (void *)&data_ov002_0210ebc0, (void *)&data_ov002_0210ecb0, (void *)&data_ov002_0210ecb0,
+    (void *)&data_ov002_0210ecb0, (void *)&data_ov002_0210ecb0, (void *)&data_ov002_0210e948,
+    (void *)&data_ov002_0210e8b0, (void *)&data_ov002_0210e5b0, (void *)&data_ov002_0210e618};
 /* Frame windows ahead of the handler PMF band. */
 u8 data_ov002_02109db8[] = {46, 20, 0, 0};
 u16 data_ov002_02109dbc[] = {6, 9, 15, 0};
@@ -275,8 +790,57 @@ extern "C" {
 extern void Vec3_MulScalar(Vector3 *, const Vector3 *, int s);
 extern signed char gCurrentSublevel;
 extern unsigned char data_0209f4ae[];
-extern unsigned int data_ov002_020ff220[];
-extern SharedFilePtr *data_ov002_020ff480[];
+extern const unsigned int data_ov002_020ff220[4] = {71, 72, 45, 100};
+extern SharedFilePtr *const data_ov002_020ff480[196] = {
+    &data_ov002_0210e840, &data_ov002_0210e840, &data_ov002_0210e840, &data_ov002_0210e840,
+    &data_ov002_0210e2b0, &data_ov002_0210e2c0, &data_ov002_0210e970, &data_ov002_0210eb68,
+    &data_ov002_0210e298, &data_ov002_0210e298, &data_ov002_0210e298, &data_ov002_0210e298,
+    &data_ov002_0210e390, &data_ov002_0210e390, &data_ov002_0210e390, &data_ov002_0210e390,
+    &data_ov002_0210e378, &data_ov002_0210e378, &data_ov002_0210e378, &data_ov002_0210e378,
+    &data_ov002_0210e8a0, &data_ov002_0210e8a0, &data_ov002_0210e8a0, &data_ov002_0210e8a0,
+    &data_ov002_0210e1b8, &data_ov002_0210e1b8, &data_ov002_0210e1b8, &data_ov002_0210e1b8,
+    &data_ov002_0210e880, &data_ov002_0210e880, &data_ov002_0210e880, &data_ov002_0210e880,
+    &data_ov002_0210e1f8, &data_ov002_0210e8f0, &data_ov002_0210ea08, &data_ov002_0210eba0,
+    &data_ov002_0210e950, &data_ov002_0210e900, &data_ov002_0210e990, &data_ov002_0210e6d0,
+    &data_ov002_0210eaa8, &data_ov002_0210e5c0, &data_ov002_0210e658, &data_ov002_0210e6f0,
+    &data_ov002_0210ea98, &data_ov002_0210e550, &data_ov002_0210e650, &data_ov002_0210e6e8,
+    &data_ov002_0210eab0, &data_ov002_0210e998, &data_ov002_0210e678, &data_ov002_0210e3c0,
+    &data_ov002_0210e608, &data_ov002_0210e748, &data_ov002_0210eb18, &data_ov002_0210ebd0,
+    &data_ov002_0210e488, &data_ov002_0210e488, &data_ov002_0210e488, &data_ov002_0210e488,
+    &data_ov002_0210e228, &data_ov002_0210e228, &data_ov002_0210e228, &data_ov002_0210e228,
+    &data_ov002_0210e9f8, &data_ov002_0210e9f8, &data_ov002_0210e9f8, &data_ov002_0210e9f8,
+    &data_ov002_0210e810, &data_ov002_0210e810, &data_ov002_0210e810, &data_ov002_0210e810,
+    &data_ov002_0210ea38, &data_ov002_0210ea38, &data_ov002_0210ea38, &data_ov002_0210ea38,
+    &data_ov002_0210e258, &data_ov002_0210e258, &data_ov002_0210e258, &data_ov002_0210e258,
+    &data_ov002_0210e5f8, &data_ov002_0210e5f8, &data_ov002_0210e5f8, &data_ov002_0210e5f8,
+    &data_ov002_0210e918, &data_ov002_0210e918, &data_ov002_0210e918, &data_ov002_0210e918,
+    &data_ov002_0210e2e0, &data_ov002_0210e2e0, &data_ov002_0210e2e0, &data_ov002_0210e2e0,
+    &data_ov002_0210e2e8, &data_ov002_0210e2e8, &data_ov002_0210e2e8, &data_ov002_0210e2e8,
+    &data_ov002_0210e448, &data_ov002_0210e448, &data_ov002_0210ebe0, &data_ov002_0210e448,
+    &data_ov002_0210ed38, &data_ov002_0210ed38, &data_ov002_0210ed38, &data_ov002_0210ed38,
+    &data_ov002_0210e9e0, &data_ov002_0210e9e0, &data_ov002_0210e9e0, &data_ov002_0210e9e0,
+    &data_ov002_0210e240, &data_ov002_0210e240, &data_ov002_0210e240, &data_ov002_0210e240,
+    &data_ov002_0210e1a8, &data_ov002_0210e1a8, &data_ov002_0210e1a8, &data_ov002_0210e1a8,
+    &data_ov002_0210e8e0, &data_ov002_0210e8e0, &data_ov002_0210e8e0, &data_ov002_0210e8e0,
+    &data_ov002_0210e310, &data_ov002_0210e310, &data_ov002_0210e310, &data_ov002_0210e310,
+    &data_ov002_0210e308, &data_ov002_0210e308, &data_ov002_0210e308, &data_ov002_0210e308,
+    &data_ov002_0210e318, &data_ov002_0210e318, &data_ov002_0210e318, &data_ov002_0210e318,
+    &data_ov002_0210e908, &data_ov002_0210e908, &data_ov002_0210e908, &data_ov002_0210e908,
+    &data_ov002_0210e8f8, &data_ov002_0210e8f8, &data_ov002_0210e8f8, &data_ov002_0210e8f8,
+    &data_ov002_0210e320, &data_ov002_0210e320, &data_ov002_0210e320, &data_ov002_0210e320,
+    &data_ov002_0210e920, &data_ov002_0210e920, &data_ov002_0210e920, &data_ov002_0210e920,
+    &data_ov002_0210e7c8, &data_ov002_0210e7c8, &data_ov002_0210e7c8, &data_ov002_0210e7c8,
+    &data_ov002_0210eb48, &data_ov002_0210eb48, &data_ov002_0210eb48, &data_ov002_0210eb48,
+    &data_ov002_0210ead8, &data_ov002_0210ead8, &data_ov002_0210ead8, &data_ov002_0210ead8,
+    &data_ov002_0210e878, &data_ov002_0210e878, &data_ov002_0210e878, &data_ov002_0210e878,
+    &data_ov002_0210e830, &data_ov002_0210e830, &data_ov002_0210e830, &data_ov002_0210e830,
+    &data_ov002_0210e760, &data_ov002_0210e760, &data_ov002_0210e760, &data_ov002_0210e760,
+    &data_ov002_0210e428, &data_ov002_0210e428, &data_ov002_0210e428, &data_ov002_0210e428,
+    &data_ov002_0210ed40, &data_ov002_0210ed40, &data_ov002_0210ed40, &data_ov002_0210ed40,
+    &data_ov002_0210ed48, &data_ov002_0210ed48, &data_ov002_0210ed48, &data_ov002_0210ed48,
+    &data_ov002_0210ed50, &data_ov002_0210ed50, &data_ov002_0210ed50, &data_ov002_0210ed50,
+    &data_ov002_0210e7a0, &data_ov002_0210e7a0, &data_ov002_0210e4c8, &data_ov002_0210e7a0,
+    &data_ov002_0210e278, &data_ov002_0210e278, &data_ov002_0210eb30, &data_ov002_0210e278};
 extern unsigned int data_ov002_0210e158;
 extern SharedFilePtr data_ov002_0210e1c8;
 extern SharedFilePtr data_ov002_0210e1d0;

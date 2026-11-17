@@ -27,6 +27,11 @@
       "end": "0x0214e0b0"
     },
     {
+      "name": ".rodata",
+      "start": "0x0214d70c",
+      "end": "0x0214d714"
+    },
+    {
       "name": ".data",
       "start": "0x0214e5d4",
       "end": "0x0214e614"
@@ -265,6 +270,14 @@
       "evidence": "anonymous sliding tick pointer-to-member; retail first word is 0x0214d114. mwcc numbers it @713, which ov060 already owns, so the row uses the unused same-length @754."
     }
   ],
+  "rodata": [
+    {
+      "symbol": "data_ov102_0214d70c",
+      "address": "0x0214d70c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov102_0214ea48",
@@ -424,6 +437,13 @@
           "start": "0x0214ea48",
           "end": "0x0214eaa0",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0214d70c",
+          "end": "0x0214d714",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -655,6 +675,26 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x0214d70c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210da18",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210da18"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0214d710",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210da20",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210da20"
+    },
     {
       "section": ".init",
       "source": "0x0214e070",

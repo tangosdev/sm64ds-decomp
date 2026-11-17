@@ -31,6 +31,12 @@
       "name": ".bss",
       "start": "0x02114248",
       "end": "0x02114270"
+    },
+    {
+      "name": ".data.w12ea0",
+      "start": "0x0211302c",
+      "end": "0x0211304c",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -116,7 +122,14 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov029_0211302c",
+      "address": "0x0211302c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov029_02114248",
@@ -450,6 +463,13 @@
           "start": "0x02114248",
           "end": "0x02114270",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.w12ea0",
+          "start": "0x0211302c",
+          "end": "0x0211304c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

@@ -24,6 +24,11 @@
       "name": ".bss",
       "start": "0x0211d720",
       "end": "0x0211d814"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0211c078",
+      "end": "0x0211c0a8"
     }
   ],
   "functions": [
@@ -270,6 +275,29 @@
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov065_0211c078",
+      "address": "0x0211c078",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bone index bytes read by the neck setup loop"
+    },
+    {
+      "symbol": "data_ov065_0211c080",
+      "address": "0x0211c080",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three animation SharedFilePtr pointers"
+    },
+    {
+      "symbol": "data_ov065_0211c08c",
+      "address": "0x0211c08c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven collision SharedFilePtr pointers"
     }
   ],
   "bss": [
@@ -1096,6 +1124,106 @@
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x02118634"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c080",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov065_0211d768",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d768"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c084",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov065_0211d748",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d748"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c088",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov065_0211d770",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d770"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c08c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyBodyCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d740"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c090",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyNeckCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d758"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c094",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyHeadCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d730"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c098",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyArmLCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d738"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c09c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyArmRCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d750"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c0a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyLegLCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d728"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c0a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyLegRCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d760"
     }
   ],
   "undefined_symbol_aliases": [
@@ -1385,6 +1513,13 @@
           "start": "0x0211d720",
           "end": "0x0211d814",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0211c078",
+          "end": "0x0211c0a8",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

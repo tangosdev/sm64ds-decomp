@@ -33,6 +33,12 @@
       "end": "0x021148c8"
     },
     {
+      "name": ".data.morayBend",
+      "input_section": ".data",
+      "start": "0x02114908",
+      "end": "0x02114950"
+    },
+    {
       "name": ".bss",
       "start": "0x02114d20",
       "end": "0x02114dcc"
@@ -257,6 +263,13 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler PMF record for daMoray_c::StateLungeMain"
+    },
+    {
+      "symbol": "data_ov016_02114908",
+      "address": "0x02114908",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "six render bend steps, angle scales 1, 1, 1, 1, -1, 0"
     }
   ],
   "bss": [
@@ -592,6 +605,13 @@
           "start": "0x02114d20",
           "end": "0x02114dcc",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.morayBend",
+          "start": "0x02114908",
+          "end": "0x02114950",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

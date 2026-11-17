@@ -123,6 +123,7 @@ enum daDemo_c_AssetId {
 #include "daDemo_c.h"
 #include "CutsceneSpline.h"
 #include "SharedFilePtr.h"
+#include "OamAttr.h"
 #include "decl_common.h"
 #include "dBgCh_Gnd.h"
 #include "Sound.h"
@@ -248,7 +249,7 @@ extern u8 data_ov002_02111144;
 extern u32 data_020a0db0;
 extern struct OamAttr *data_ov002_0210b6a8[];
 
-extern int data_ov002_02100140[];
+extern const int data_ov002_02100140[];
 }
 
 extern void func_ov002_020f2790(char *c, int p1, int p2, int p3, short p4);
@@ -285,22 +286,25 @@ extern void func_ov002_020f3828(int *c);
 extern "C" {
 extern int data_ov002_021002a0[];
 extern StaffRollStep data_ov002_02110e34[];
-extern unsigned short data_ov002_021000c0[];
-extern int data_ov002_02100120[];
-extern int data_ov002_02100130[];
-extern unsigned short data_ov002_021000b8[];
-extern int data_ov002_02100100[];
-extern int data_ov002_02100110[];
-extern unsigned short data_ov002_021000c8[];
-extern int data_ov002_021000e0[];
-extern int data_ov002_021000f0[];
-extern unsigned short data_ov002_021000d0[];
-extern int data_ov002_02100150[];
-extern int data_ov002_02100160[];
-extern unsigned short data_ov002_021000d8[];
+extern const unsigned short data_ov002_021000c0[];
+extern const int data_ov002_02100120[];
+extern const int data_ov002_02100130[];
+extern const unsigned short data_ov002_021000b8[];
+extern const int data_ov002_02100100[];
+extern const int data_ov002_02100110[];
+extern const unsigned short data_ov002_021000c8[];
+extern const int data_ov002_021000e0[];
+extern const int data_ov002_021000f0[];
+extern const unsigned short data_ov002_021000d0[];
+extern const int data_ov002_02100150[];
+extern const int data_ov002_02100160[];
+extern const unsigned short data_ov002_021000d8[];
 extern StaffRollStep data_ov002_02110eec[];
-extern int data_ov002_02100190[];
-extern int data_ov002_02100170[];
+extern const int data_ov002_02100190[];
+extern const int data_ov002_021001b0[];
+extern const int data_ov002_02100200[];
+extern const int data_ov002_02100250[];
+extern const int data_ov002_02100170[];
 extern StaffRollStep data_ov002_02110e64[];
 }
 
@@ -347,7 +351,7 @@ extern daDemo_c::anmModel_c::AnimEntry data_ov002_0210bc88[];
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern char *gCamera;
-extern int data_ov002_0210b958;
+extern int data_ov002_0210b958[3];
 }
 
 /* local extern dropped: decl_common.h declares data_0209b41c */
@@ -3638,3 +3642,78 @@ StaffRollStep data_ov002_02110ebc[6] = {
     &StaffRoll::func_ov002_020f2bf4, &StaffRoll::func_ov002_020f2aec,
     &StaffRoll::func_ov002_020f2a88, &StaffRoll::func_ov002_020f2a78};
 }
+
+/* Initialized data this file is the only complete referrer for.  The three
+ * data_ov002_021001b0/200/250 tables are per-language doll placements: five
+ * (x, y, priority, frame) rows, the x/y biased by 0xe0/0x66 where they are
+ * used.  data_ov002_0210b97c selects one by language (func_ov002_020f5a94 - 2).
+ * data_ov002_0210b988 selects the four "THE END" text sprite lists, one per
+ * language group, each terminated by attr3 == 0xffff. */
+const unsigned short data_ov002_021000b8[4] = {0xc000, 0x4000, 0x8000, 0x0};
+const unsigned short data_ov002_021000c0[4] = {0xc000, 0x4000, 0x8000, 0x0};
+const unsigned short data_ov002_021000c8[4] = {0xc000, 0x4000, 0x8000, 0x0};
+const unsigned short data_ov002_021000d0[4] = {0xc000, 0x4000, 0x8000, 0x0};
+const unsigned short data_ov002_021000d8[4] = {0xc000, 0x4000, 0x8000, 0x0};
+const int data_ov002_021000e0[4] = {0x8000, 0x10000, 0xc000, 0x14000};
+const int data_ov002_021000f0[4] = {0, 2, 3, 1};
+const int data_ov002_02100100[4] = {0xc000, 0xc000, 0x10000, 0x10000};
+const int data_ov002_02100110[4] = {0, 2, 3, 1};
+const int data_ov002_02100120[4] = {0x8000, 0x10000, 0x14000, 0xc000};
+const int data_ov002_02100130[4] = {0, 2, 1, 3};
+const int data_ov002_02100140[4] = {45, 30, 15, 0};
+const int data_ov002_02100150[4] = {0xc000, 0xc000, 0x10000, 0x10000};
+const int data_ov002_02100160[4] = {0, 2, 1, 3};
+const int data_ov002_02100170[8] = {0x0, -0x1000, 0x0, 0x1000, -0x1000, 0x0, 0x1000, 0x0};
+const int data_ov002_02100190[8] = {128, 40, 128, 152, 72, 96, 184, 96};
+const int data_ov002_021001b0[20] = {
+    -19, 36, 1, 0, 19, 36, 1, 2, 0, 36, 1, 4, 0, 36, 1, 6, 0, 36, 1, 8,
+};
+const int data_ov002_02100200[20] = {
+    -21, 32, 2, 0, 10, 40, 1, 2, 22, 32, 2, 4, 22, 32, 2, 6, -6, 41, 1, 8,
+};
+const int data_ov002_02100250[20] = {
+    -12, 40, 1, 0, 11, 40, 1, 2, 23, 32, 2, 4, -24, 32, 2, 6, 0, 32, 2, 8,
+};
+int data_ov002_0210b958[3] = {-0x29dc00, 0x0, -0x650c00};
+int data_ov002_0210b964[3] = {-0x468000, 0x230000, 0x1a08000};
+int data_ov002_0210b970[3] = {-0x64000, 0x64000, -0x12c000};
+int *data_ov002_0210b97c[3] = {
+    (int *)&data_ov002_021001b0,
+    (int *)&data_ov002_02100200,
+    (int *)&data_ov002_02100250,
+};
+OamAttr data_ov002_0210b9cc[3] = {
+    {0x00f0, 0x81df, 0x1019, 0x0000},
+    {0x80f0, 0x81f8, 0x101d, 0x0000},
+    {0x00f0, 0x8000, 0x1011, 0xffff},
+};
+OamAttr data_ov002_0210ba7c[4] = {
+    {0x00f0, 0x81d1, 0x100d, 0x0000},
+    {0x00f0, 0x81e5, 0x1011, 0x0000},
+    {0x00f0, 0x81fa, 0x1015, 0x0000},
+    {0x00f0, 0x800f, 0x100d, 0xffff},
+};
+OamAttr data_ov002_0210ba9c[4] = {
+    {0x00f0, 0x81d5, 0x1019, 0x0000},
+    {0x80f0, 0x81ee, 0x101d, 0x0000},
+    {0x00f0, 0x81f6, 0x1011, 0x0000},
+    {0x00f0, 0x800b, 0x100d, 0xffff},
+};
+OamAttr data_ov002_0210bb5c[4] = {
+    {0x40f8, 0x81cc, 0x0000, 0x0000},
+    {0x40f8, 0x81ec, 0x0004, 0x0000},
+    {0x40f8, 0x800c, 0x0008, 0x0000},
+    {0x80f8, 0x002c, 0x000c, 0xffff},
+};
+OamAttr *data_ov002_0210b988[4] = {
+    (OamAttr *)&data_ov002_0210bb5c,
+    (OamAttr *)&data_ov002_0210ba7c,
+    (OamAttr *)&data_ov002_0210b9cc,
+    (OamAttr *)&data_ov002_0210ba9c,
+};
+void *data_ov002_0210b998[4] = {
+    (void *)&data_ov002_0210b658,
+    (void *)&data_ov002_0210b630,
+    (void *)&data_ov002_0210b638,
+    (void *)&data_ov002_0210b6e8,
+};

@@ -549,7 +549,7 @@ void daCoin_c::StateSlideAwayFromMario() {
  * floor's class, caps the speed at 0x1c000 and steers toward the slope. The
  * coin settles (BEHAVIOR_RESTING) once its vertical speed is spent. */
 void daCoin_c::StateBounce() {
-    extern int data_ov002_020ff078[];
+    extern const int data_ov002_020ff078[];
 
     Vector3 normal;
     char *floor;
@@ -702,8 +702,8 @@ s32 daCoin_c::CleanupResources()
      * manager that spawned it and, unless it is disappearing on a timer, puts up
      * the collection sparkle a little above itself. */
     extern SharedFilePtr data_ov002_0210d9a8;
-    extern SharedFilePtr *data_ov002_020ff06c[];
-    extern SharedFilePtr *data_ov002_020ff060[];
+    extern SharedFilePtr *const data_ov002_020ff06c[];
+    extern SharedFilePtr *const data_ov002_020ff060[];
 
     dActor_c *manager;
     int isRed = (actorID == 0x121);
@@ -819,8 +819,8 @@ s32 daCoin_c::InitResources()
     extern u8 gCurrentStarId;
     extern dActor_c *STAR_MARKERS[12];
     extern u8 gGameMode;
-    extern SharedFilePtr *data_ov002_020ff06c[];
-    extern SharedFilePtr *data_ov002_020ff060[];
+    extern SharedFilePtr *const data_ov002_020ff06c[];
+    extern SharedFilePtr *const data_ov002_020ff060[];
     extern SharedFilePtr data_ov002_0210d9a8;
 
     s32 ccRadius;
@@ -1053,3 +1053,22 @@ CoinHandler data_ov002_0210dc70[9] = {
     &daCoin_c::StateRest,        &daCoin_c::StateLaunchNearPlayer,
     &daCoin_c::StateBounce,      &daCoin_c::StateIdle,
     &daCoin_c::StateFollowTarget};
+
+/* Initialized data this file is the only complete referrer for. */
+extern "C" char data_ov002_0210da48;
+extern "C" char data_ov002_0210da50;
+extern SharedFilePtr data_ov002_0210da00;
+extern SharedFilePtr data_ov002_0210d9b8;
+extern SharedFilePtr data_ov002_0210d9f8;
+extern SharedFilePtr data_ov002_0210d9c8;
+extern SharedFilePtr *const data_ov002_020ff060[3] = {
+    (SharedFilePtr *)&data_ov002_0210da48,
+    (SharedFilePtr *)&data_ov002_0210da50,
+    &data_ov002_0210da00,
+};
+extern SharedFilePtr *const data_ov002_020ff06c[3] = {
+    &data_ov002_0210d9b8,
+    &data_ov002_0210d9f8,
+    &data_ov002_0210d9c8,
+};
+extern const int data_ov002_020ff078[6] = {5, 0, 0, 10, 15, 20};

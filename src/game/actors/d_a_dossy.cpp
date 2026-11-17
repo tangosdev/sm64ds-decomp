@@ -99,11 +99,21 @@ extern DossyCollisionFileHandle gDossyBodyCollisionFile;
 extern DossyCollisionFileHandle gDossyHeadCollisionFile;
 
 extern "C" {
-extern u8 data_ov065_0211c078[];
+extern const u8 data_ov065_0211c078[8] = {
+    0, 3, 4, 1, 2, 6, 7, 0,
+};
+extern SharedFilePtr *const data_ov065_0211c080[3] = {
+    &data_ov065_0211d768,
+    &data_ov065_0211d748,
+    &data_ov065_0211d770,
+};
+extern SharedFilePtr *const data_ov065_0211c08c[7] = {
+    &gDossyBodyCollisionFile, &gDossyNeckCollisionFile, &gDossyHeadCollisionFile,
+    &gDossyArmLCollisionFile, &gDossyArmRCollisionFile, &gDossyLegLCollisionFile,
+    &gDossyLegRCollisionFile,
+};
 extern void *data_ov065_0211cd68[];
 extern SharedFilePtr data_ov002_0210d9c0;
-extern SharedFilePtr *data_ov065_0211c080[];
-extern SharedFilePtr *data_ov065_0211c08c[];
 
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
 extern int AngleDiff(int a, int b);

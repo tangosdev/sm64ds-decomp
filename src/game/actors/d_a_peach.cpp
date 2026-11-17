@@ -31,9 +31,8 @@ int AngleDiff(int, int);
 }
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 
-/* ov085 statics. data_ov085_0212f280 keeps include/decl_common.h's
- * spelling, so this file adds no new reading of it. */
-extern int data_ov085_0212f280[]; /* the seven animation files */
+/* ov085 statics. This file does not include decl_common.h.
+ * data_ov085_0212f280 is the seven animation files, defined below. */
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daPeach_c_AssetId {
@@ -70,6 +69,12 @@ PeachAnimFile gPeachJumpAnimationFile(ASSET_PEACH_JUMP_BCA);
 PeachAnimFile gPeachJumpEndAnimationFile(ASSET_PEACH_JUMP_END_BCA);
 PeachAnimFile gPeachJumpLoopAnimationFile(ASSET_PEACH_JUMP_LOOP_BCA);
 PeachAnimFile gPeachOpWaitAnimationFile(ASSET_PEACH_OP_WAIT_BCA);
+extern const int data_ov085_0212f280[7] = {
+    (int)&gPeachWaitAnimationFile,    (int)&gPeachWalkAnimationFile,
+    (int)&gPeachRunAnimationFile,     (int)&gPeachJumpAnimationFile,
+    (int)&gPeachJumpEndAnimationFile, (int)&gPeachJumpLoopAnimationFile,
+    (int)&gPeachOpWaitAnimationFile,
+};
 
 /* SetState indexes this by state. Each record is {init, behavior} as SetState
    and Behavior call it; the member names predate this table and do not

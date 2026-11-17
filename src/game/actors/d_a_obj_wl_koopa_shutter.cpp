@@ -43,7 +43,14 @@ struct KoopaShutterCollisionFilePtr : SharedFilePtr {
 };
 extern KoopaShutterCollisionFilePtr BowserShutter_ClsnFile;
 
-extern CLPS_Block data_ov026_02112f74;
+struct CLPS_Block {
+    u32 words[2];
+};
+
+CLPS_Block data_ov026_02112f74 = {
+    0x53504c43,
+    0x00010008,
+};
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */

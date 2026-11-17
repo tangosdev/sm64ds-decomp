@@ -67,7 +67,12 @@ struct Mecha03ClsnFilePtr : SharedFilePtr {
 };
 
 extern u8 data_0209f2c0;
-extern s16 data_ov065_0211c0b0[];
+extern const s16 data_ov065_0211c0b0[4] = {
+    13,
+    22,
+    13,
+    0,
+};
 extern Mecha03ModelFilePtr data_ov065_0211d88c;
 extern Mecha03ClsnFilePtr data_ov065_0211d894;
 extern CLPS_Block data_ov035_02112198;

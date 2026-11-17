@@ -1,8 +1,13 @@
     .text       start:0x02113ee0 end:0x0211b524 kind:code align:32
-    .rodata     start:0x0211b524 end:0x0211b5e0 kind:rodata align:4
+    .rodata.ent_pat start:0x0211b524 end:0x0211b52c kind:rodata align:1
+    .data.ent_step start:0x0211b52c end:0x0211b534 kind:data align:2
+    .rodata     start:0x0211b534 end:0x0211b5e0 kind:rodata align:4
     .init       start:0x0211b5e0 end:0x0211c5a4 kind:code align:4
     .ctor       start:0x0211c5a4 end:0x0211c5b0 kind:rodata align:4
-    .data start:0x0211c5c0 end:0x0211c6f0 kind:data align:32
+    .data start:0x0211c5c0 end:0x0211c678 kind:data align:32
+    .data.ent_anim start:0x0211c678 end:0x0211c688 kind:data align:4
+    .data.ent_anim2 start:0x0211c688 end:0x0211c698 kind:data align:4
+    .data.gap_vt start:0x0211c698 end:0x0211c6f0 kind:data align:4
     .data.entry_sprites0 start:0x0211c6f0 end:0x0211c6f8 kind:data align:4
     .data.entry_sprite_gap0 start:0x0211c6f8 end:0x0211c708 kind:data align:4
     .data.entry_sprites1 start:0x0211c708 end:0x0211c710 kind:data align:4
@@ -35,10 +40,14 @@
 src/game/stages/d_ent_obj.cpp:
     complete
     .text start:0x02113ee0 end:0x02115ab8
+    .rodata.ent_pat start:0x0211b524 end:0x0211b52c
+    .data.ent_step start:0x0211b52c end:0x0211b534
     .rodata start:0x0211b534 end:0x0211b5d4
     .init start:0x0211b5e0 end:0x0211bb00
     .ctor start:0x0211c5a4 end:0x0211c5a8
     .data start:0x0211c5c0 end:0x0211c648
+    .data.ent_anim start:0x0211c678 end:0x0211c688
+    .data.ent_anim2 start:0x0211c688 end:0x0211c698
     .bss start:0x0211d384 end:0x0211d5bc
 
 src/game/stages/d_s_entry.cpp:

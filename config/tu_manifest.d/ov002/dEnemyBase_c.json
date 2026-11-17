@@ -37,6 +37,11 @@
       "name": ".bss",
       "start": "0x0210db80",
       "end": "0x0210dc00"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x020ff014",
+      "end": "0x020ff028"
     }
   ],
   "functions": [
@@ -678,6 +683,13 @@
           "start": "0x0210db80",
           "end": "0x0210dc00",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x020ff014",
+          "end": "0x020ff028",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -1332,6 +1344,18 @@
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ae9f8"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov002_020ff014",
+      "address": "0x020ff014",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov002_020ff01c",
+      "address": "0x020ff01c",
+      "size": "0xc"
     }
   ]
 }

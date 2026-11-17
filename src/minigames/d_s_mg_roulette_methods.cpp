@@ -128,10 +128,20 @@ void *sRouletteLandedRacer;
 extern int data_020a0db0;
 /* The first of the two blink frames in sRouletteStripSprites for each strip's
    marker: {0, 2, 6, 8} for strips 0..3. A horizontal pair adds 2. */
-extern s32 sRouletteStripSpriteBase[];
+extern const s32 sRouletteStripSpriteBase[4] = {
+    0,
+    2,
+    6,
+    8,
+};
 extern void *sRouletteStripSprites[];
 extern void **sRouletteTextSpritesByLanguage[];
-extern int sRoulettePayoutMultipliers[];
+extern const int sRoulettePayoutMultipliers[4] = {
+    12,
+    6,
+    3,
+    2,
+};
 extern void *sRouletteRacerSprites;
 /* Bet tiles: 0..0xb are single numbers, 0xc..0x1c pairs of numbers and
  * 0x1d..0x22 groups of four (RouletteRacer_GetPayout checks 1, 2 and 4
@@ -148,13 +158,19 @@ extern ShortTbl12 sRouletteSlowStops;
 
 /* The single number (0..0xb) under each of the twelve stops in
    sRouletteSlowStops, in wheel order. */
-extern short sRouletteStopTiles[12];
+extern const short sRouletteStopTiles[12] = {
+    2, 9, 5, 6, 4, 8, 1, 10, 3, 11, 0, 7,
+};
 
 extern RouletteBoardState pmf_RouletteBoard_StateSlow;
 
 extern RouletteBoardState pmf_RouletteBoard_StateSpin;
-extern int sRouletteTileBounds[];
-extern int sRouletteRowEdgesY[];
+extern const int sRouletteTileBounds[7] = {
+    0x38, 0x58, 0x80, 0x90, 0xb0, 0xc0, 0xe8,
+};
+extern const int sRouletteRowEdgesY[8] = {
+    0x10, 0x30, 0x40, 0x58, 0x68, 0x80, 0x90, 0xb0,
+};
 /* The numbers each pair tile (0xc..0x1c) and each group-of-four tile
    (0x1d..0x22) covers. */
 extern short sRoulettePairNumbers[17][2];

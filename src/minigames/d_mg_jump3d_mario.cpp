@@ -40,6 +40,7 @@
 #include "dMgJump3DMario_c.h"
 #include "SharedFilePtr.h"
 #include "OAM.h"
+#include "OamAttr.h"
 #include "PlayerInput.h"
 #include "fBase_c.h"
 #include "Sound.h"
@@ -83,27 +84,27 @@ extern Jump3DState pmf_dMgJump3DMario_c_StateRiseOut;
 extern Jump3DState pmf_dMgJump3DMario_c_StateRespawn_2;
 extern Jump3DState pmf_dMgJump3DMario_c_StateFallOut;
 
-/* Slots the current mAnimIdx (0/1/2) picks the anim file from. */
-extern BCA_File **sJump3DAnimTable[];
-
 /* Tuning words, read as plain ints. */
-extern int sJump3DBounceVy;
-extern int sJump3DRiseVy;
-extern int sJump3DStartVx;
-extern int sJump3DFallSpeed;
-extern int sJump3DGravityStep;
-extern int sJump3DMoveSpeed;
-extern int sJump3DMariosLeft;
-extern int sJump3DRisenOutCount;
+int sJump3DBounceVy = 0x5000;
+int sJump3DRiseVy = 0x4c00;
+int sJump3DStartVx = 0x180;
+int sJump3DFallSpeed = 0xffffdc00;
+int sJump3DGravityStep = 224;
+int sJump3DMoveSpeed = 0x200;
+int sJump3DMariosLeft;
+int sJump3DRisenOutCount;
 
 /* The six anim files LoadResources loads. The destructor clears only
  * five of them; 0214041c survives in the ROM too. */
-extern BCA_File *sJump3DAnimSdown;
-extern BCA_File *sJump3DAnimDoubleJump1;
-extern BCA_File *sJump3DAnimRollJump;
-extern BCA_File *sJump3DAnimWallJump;
-extern BCA_File *sJump3DAnimStruggle;
-extern BCA_File *sJump3DAnimJump;
+BCA_File *sJump3DAnimSdown;
+BCA_File *sJump3DAnimDoubleJump1;
+BCA_File *sJump3DAnimRollJump;
+BCA_File *sJump3DAnimWallJump;
+BCA_File *sJump3DAnimStruggle;
+BCA_File *sJump3DAnimJump;
+
+/* Slots the current mAnimIdx (0/1/2) picks the anim file from. */
+BCA_File **sJump3DAnimTable[] = {&sJump3DAnimJump, &sJump3DAnimDoubleJump1, &sJump3DAnimWallJump};
 
 /* Six anim handles call SharedFilePtr::Construct. The model handle calls
    func_02017a24. */
@@ -128,17 +129,19 @@ extern Jump3DMarioAnimFilePtr sJump3DMarioDoubleJump1AnimFile;
 
 /* The pool the minigame scenes hand in: count, base pointer, level, round
  * and the three player slots. */
-extern int sJump3DArrangeLevel;
-extern int sJump3DLayout;
-extern int sJump3DMarioCount;
-extern char *sJump3DMarioPool;
+int sJump3DArrangeLevel;
+int sJump3DLayout;
+int sJump3DMarioCount;
+char *sJump3DMarioPool;
 extern char *sJumpAdapters[];
 
-extern u8  data_ov006_02140400;
-extern u16 sJump3DSpinAngle;
+/* Input gate, spin phase and the model sprite list Draw hands OAM::Render. */
+u8 data_ov006_02140400;
+u16 sJump3DSpinAngle;
 extern struct MgCamera *sMgMainCamera;
 extern void *sMgCurCamera;
-extern OamAttr *data_ov006_02134d1c;
+extern "C" OamAttr data_ov006_02134d20[1];
+OamAttr *data_ov006_02134d1c = data_ov006_02134d20;
 extern Vector3 sJump3DMarioScale;
 extern char sJump3DRoundLayouts[];
 
@@ -875,3 +878,9 @@ Jump3DMarioAnimFilePtr sJump3DMarioWallJumpAnimFile(32958);
 Jump3DMarioAnimFilePtr sJump3DMarioSdownAnimFile(32914);
 Jump3DMarioAnimFilePtr sJump3DMarioStruggleAnimFile(32932);
 Jump3DModelFilePtr gMarioModelMgModelFile(534);
+
+/* The one sprite record Draw hands OAM::Render for the shadow; attr3 == 0xffff
+   ends the list. */
+OamAttr data_ov006_02134d20[1] = {
+    {0x00f8, 0x41f8, 0x001e, 0xffff},
+};

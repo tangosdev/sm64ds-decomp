@@ -57,6 +57,7 @@
 #include "Ov007Model.h"
 #include "dExtModel_c.h"
 #include "Ov007Figure.h"
+#include "private/BTA_File.h"
 
 /* One sprite's corner-colour pair (BGR555): `outer` feeds cornerColors[0]
  * and [3], `inner` cornerColors[1] and [2]. */
@@ -65,12 +66,49 @@ typedef struct Ov007CornerPair {
     u16 inner;
 } Ov007CornerPair;
 
-extern int data_ov007_020ccc48[2];             /* [figureIndex]: model file */
-extern Ov007CornerPair data_ov007_020ccc50[3]; /* colours at blend 0 */
-extern Ov007CornerPair data_ov007_020ccc5c[3]; /* colours at blend 0x1000 */
-extern int data_ov007_020ccc68[][3];           /* [figureIndex]: animation files */
-extern int data_ov007_020ccc80[3][3];          /* [set]: animation files */
-extern void *data_ov007_020d7ee8[3][3];        /* [set]: animation data in the overlay */
+extern const int data_ov007_020ccc48[2];             /* [figureIndex]: model file */
+extern const Ov007CornerPair data_ov007_020ccc50[3]; /* colours at blend 0 */
+extern const Ov007CornerPair data_ov007_020ccc5c[3]; /* colours at blend 0x1000 */
+extern const int data_ov007_020ccc68[][3];           /* [figureIndex]: animation files */
+extern const int data_ov007_020ccc80[3][3];          /* [set]: animation files */
+/* The three sets of three portable BTA files the model binds directly: the
+   record and the arrays its key ranges index. */
+extern const BTA_File data_ov007_020cd9b4;
+extern const BTA_File data_ov007_020cd9e4;
+extern const BTA_File data_ov007_020cda14;
+extern const BTA_File data_ov007_020cda2c;
+extern const BTA_File data_ov007_020cda5c;
+extern const BTA_File data_ov007_020cdabc;
+extern const BTA_File data_ov007_020cdb04;
+extern "C" fx32 data_ov007_020ccd5c[]; /* 020cd9b4: scales */
+extern "C" u16 data_ov007_020ccd68[];  /* 020cd9b4: rotations */
+extern "C" fx32 data_ov007_020d042c[]; /* 020cd9b4: translations */
+extern "C" BTAMaterialRecord data_ov007_020ce6cc[];
+extern "C" fx32 data_ov007_020cfdec[]; /* 020cd9e4: scales */
+extern "C" u16 data_ov007_020cccf8[];  /* 020cd9e4: rotations */
+extern "C" fx32 data_ov007_020d0194[]; /* 020cd9e4: translations */
+extern "C" BTAMaterialRecord data_ov007_020cf0cc[];
+extern "C" fx32 data_ov007_020ccd58[]; /* 020cda14: scales */
+extern "C" u16 data_ov007_020ccd7c[];  /* 020cda14: rotations */
+extern "C" fx32 data_ov007_020ccdb8[]; /* 020cda14: translations */
+extern "C" BTAMaterialRecord data_ov007_020ce73c[];
+extern "C" fx32 data_ov007_020d072c[]; /* 020cda2c: scales */
+extern "C" u16 data_ov007_020ccce8[];  /* 020cda2c: rotations */
+extern "C" fx32 data_ov007_020d403c[]; /* 020cda2c: translations */
+extern "C" BTAMaterialRecord data_ov007_020cf024[];
+extern "C" fx32 data_ov007_020cd03c[]; /* 020cda5c: scales */
+extern "C" u16 data_ov007_020cccd4[];  /* 020cda5c: rotations */
+extern "C" fx32 data_ov007_020cdb1c[]; /* 020cda5c: translations */
+extern "C" BTAMaterialRecord data_ov007_020cf078[];
+extern "C" fx32 data_ov007_020ccd60[]; /* 020cdabc: scales */
+extern "C" u16 data_ov007_020cccf0[];  /* 020cdabc: rotations */
+extern "C" fx32 data_ov007_020ccdac[]; /* 020cdabc: translations */
+extern "C" BTAMaterialRecord data_ov007_020ce854[];
+extern "C" fx32 data_ov007_020ccd90[]; /* 020cdb04: scales */
+extern "C" u16 data_ov007_020cccd8[];  /* 020cdb04: rotations */
+extern "C" fx32 data_ov007_020d147c[]; /* 020cdb04: translations */
+extern "C" BTAMaterialRecord data_ov007_020ce8c4[];
+extern const BTA_File *data_ov007_020d7ee8[3][3]; /* [set]: animation data in the overlay */
 extern void *data_ov007_02103348[3];           /* data_ov007_020ccc80[set], loaded */
 extern void *data_ov007_02103354[3];           /* data_ov007_020ccc68[figureIndex], loaded */
 
@@ -107,8 +145,8 @@ Ov007Model *func_ov007_020b2bd4(int figureIndex, int stage) {
     else
         set = figureIndex;
     file = func_ov007_020b3f20(data_ov007_020ccc48[figureIndex]);
-    setFiles = data_ov007_020ccc80[set];
-    figureFiles = data_ov007_020ccc68[figureIndex];
+    setFiles = (int *)data_ov007_020ccc80[set];
+    figureFiles = (int *)data_ov007_020ccc68[figureIndex];
     for (i = 0; i < 3; i++) {
         data_ov007_02103348[i] = func_ov007_020b3f20(setFiles[i]);
         data_ov007_02103354[i] = func_ov007_020b3f20(figureFiles[i]);
@@ -253,3 +291,52 @@ extern "C" void FigureScene_SetScreenBlend(int t) {
         }
     }
 }
+
+extern const int data_ov007_020ccc48[2] = {
+    1,
+    2,
+};
+extern const Ov007CornerPair data_ov007_020ccc50[3] = {
+    0x5fbf, 0x6bff, 0x537d, 0x579e, 0x0, 0x0,
+};
+extern const Ov007CornerPair data_ov007_020ccc5c[3] = {
+    0x7d8a, 0x7fd5, 0x69a4, 0x6b2b, 0x0, 0x0,
+};
+extern const int data_ov007_020ccc68[2][3] = {
+    16, 17, 18, 19, 20, 21,
+};
+extern const int data_ov007_020ccc80[3][3] = {
+    4, 5, 7, 8, 9, 10, 4, 6, 7,
+};
+extern const BTA_File data_ov007_020cd9b4 = {
+    0x30, 0, data_ov007_020ccd5c, data_ov007_020ccd68, data_ov007_020d042c,
+    2,    0, data_ov007_020ce6cc,
+};
+extern const BTA_File data_ov007_020cd9e4 = {
+    0x29, 0, data_ov007_020cfdec, data_ov007_020cccf8, data_ov007_020d0194,
+    3,    0, data_ov007_020cf0cc,
+};
+extern const BTA_File data_ov007_020cda14 = {
+    0x30, 0, data_ov007_020ccd58, data_ov007_020ccd7c, data_ov007_020ccdb8,
+    2,    0, data_ov007_020ce73c,
+};
+extern const BTA_File data_ov007_020cda2c = {
+    0x354, 0, data_ov007_020d072c, data_ov007_020ccce8, data_ov007_020d403c,
+    3,     0, data_ov007_020cf024,
+};
+extern const BTA_File data_ov007_020cda5c = {
+    2, 0, data_ov007_020cd03c, data_ov007_020cccd4, data_ov007_020cdb1c, 3, 0, data_ov007_020cf078,
+};
+extern const BTA_File data_ov007_020cdabc = {
+    2, 0, data_ov007_020ccd60, data_ov007_020cccf0, data_ov007_020ccdac, 2, 0, data_ov007_020ce854,
+};
+extern const BTA_File data_ov007_020cdb04 = {
+    0x2bc, 0, data_ov007_020ccd90, data_ov007_020cccd8, data_ov007_020d147c,
+    2,     0, data_ov007_020ce8c4,
+};
+
+const BTA_File *data_ov007_020d7ee8[3][3] = {
+    {&data_ov007_020cdb04, &data_ov007_020cd9b4, &data_ov007_020cdabc},
+    {&data_ov007_020cda2c, &data_ov007_020cd9e4, &data_ov007_020cda5c},
+    {&data_ov007_020cdb04, &data_ov007_020cda14, &data_ov007_020cdabc},
+};

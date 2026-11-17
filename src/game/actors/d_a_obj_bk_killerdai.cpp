@@ -76,13 +76,30 @@ BkKillerdaiModelFile data_ov079_02128300(ASSET_KILLER_BODY_BMD);
 BkKillerdaiModelFile gBkKillerDaiModelFile(ASSET_BK_KILLER_DAI_BMD);
 BkKillerdaiCollisionFile gBkKillerDaiCollisionFile(ASSET_BK_KILLER_DAI_KCL);
 
+/* Collision properties: the 'CLPS' tag, the 8-byte stride header with one
+ * entry, then the default entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+CLPS_Block data_ov079_02127e7c = {
+    0x53504c43,
+    0x00010008,
+    {0x01040fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
+
 /* Launcher model, mesh, and CLPS block: three pointers. */
 struct BkKillerFiles {
     SharedFilePtr *model;
     SharedFilePtr *collision;
     CLPS_Block *clps;
 };
-extern BkKillerFiles data_ov079_02127f64;
+BkKillerFiles data_ov079_02127f64 = {
+    &gBkKillerDaiModelFile,
+    &gBkKillerDaiCollisionFile,
+    &data_ov079_02127e7c,
+};
 
 extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;

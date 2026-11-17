@@ -41,6 +41,7 @@ enum dScMgPachinko2_c_AssetId {
 #pragma defer_codegen off
 
 #include "types.h"
+#include "OamAttr.h"
 #include "nitro/hw/registers.h"
 #include "cstd.h"
 #include "dScMgPachinko2_c.h"
@@ -73,7 +74,6 @@ extern "C" {
 
 /* --- shared ov004, main and library helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-struct OamAttr;
 extern int Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 extern int Mg_GetSubmittedScore(void);
@@ -98,28 +98,137 @@ extern void GX_LoadBG3Scr(void *, u32, u32);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern int sPachinkoPipeSprites[];
-extern OamAttr *sPachinko2SparkSprites[];
-extern OamAttr *sPachinko2PaddleSprite;
-extern OamAttr *sPachinko2BallSprite;
-extern OamAttr *sPachinko2BallCountSprites[];
-extern u8 sPachinko2CupHopRightStartFrames[];
-extern u8 sPachinko2CupHopLeftStartFrames[];
-extern unsigned char sPachinko2BallWalkOffSprites[];
-extern unsigned char sPachinko2PaddleCountPerLanes[];
-extern u8 sPachinko2CupHopLeftFrames[];
-extern u8 sPachinko2CupHopRightFrames[];
-extern unsigned char sPachinko2CupWaitFrames[];
-extern unsigned char sPachinko2CupWaitTimes[];
-extern int sPachinko2CupX[];
-extern int sPachinko2CrossRowY[];
-extern int sPachinko2PaddleFlyAwayVX[];
-extern unsigned short sPachinko2CupWaitTimesAlt[];
-extern s32 sPachinko2CupRightStops[];
-extern s32 sPachinko2CupLeftStops[];
-extern unsigned short *sPachinko2CupWaitFramesPerCup[];
-extern int *sPachinko2PaddleDescendLimits[];
-extern int *sPachinko2PaddleSweepLimits[];
+/* Sprite lists: each run ends at the entry whose attr3 is 0xffff. */
+OamAttr data_ov006_02136c7c[11] = {
+    {0x00f0, 0x41e9, 0x501a, 0x0000}, {0x00f4, 0x41f4, 0x501c, 0x0000},
+    {0x80f4, 0x0004, 0x501e, 0x0000}, {0x4004, 0x01f4, 0x505c, 0x0000},
+    {0x0004, 0x0004, 0x505e, 0x0000}, {0x00e9, 0x41fc, 0x5018, 0x0000},
+    {0x00ef, 0x4001, 0x501c, 0x0000}, {0x80ef, 0x0011, 0x501e, 0x0000},
+    {0x40ff, 0x0001, 0x505c, 0x0000}, {0x00ff, 0x0011, 0x505e, 0x0000},
+    {0x00ed, 0x41f2, 0x501a, 0xffff},
+};
+OamAttr data_ov006_02136c34[9] = {
+    {0x00f3, 0x41f8, 0x501a, 0x0000}, {0x00ea, 0x41e8, 0x5018, 0x0000},
+    {0x00e9, 0x0001, 0x5058, 0x0000}, {0x00ed, 0x4007, 0x501a, 0x0000},
+    {0x00e4, 0x61f3, 0x5018, 0x0000}, {0x00e7, 0x41f1, 0x501c, 0x0000},
+    {0x80e7, 0x0001, 0x501e, 0x0000}, {0x40f7, 0x01f1, 0x505c, 0x0000},
+    {0x00f7, 0x0001, 0x505e, 0xffff},
+};
+OamAttr data_ov006_02136be4[5] = {
+    {0x00ee, 0x41f9, 0x5018, 0x0000}, {0x00e6, 0x01ea, 0x5058, 0x0000},
+    {0x00e1, 0x0002, 0x5078, 0x0000}, {0x00e5, 0x4009, 0x5018, 0x0000},
+    {0x00e0, 0x31f6, 0x5078, 0xffff},
+};
+OamAttr data_ov006_02136c0c[5] = {
+    {0x00f1, 0x01fe, 0x5058, 0x0000}, {0x00e5, 0x01eb, 0x5078, 0x0000},
+    {0x00e1, 0x0004, 0x5059, 0x0000}, {0x00ea, 0x000c, 0x5078, 0x0000},
+    {0x00df, 0x01f6, 0x5059, 0xffff},
+};
+OamAttr *sPachinko2SparkSprites[] = {data_ov006_02136c7c, data_ov006_02136c34, data_ov006_02136be4,
+                                     data_ov006_02136c0c};
+OamAttr data_ov006_02133870[4] = {
+    {0x0000, 0x8008, 0x1090, 0x0000},
+    {0x4001, 0x91d8, 0x1090, 0x0000},
+    {0x4011, 0x81d8, 0x10d0, 0x0000},
+    {0x40ee, 0xc1e0, 0x3098, 0xffff},
+};
+OamAttr *sPachinko2PaddleSprite = data_ov006_02133870;
+OamAttr data_ov006_021389f0 = {0x00f0, 0x81f0, 0x7158, 0xffff};
+OamAttr *sPachinko2BallSprite = &data_ov006_021389f0;
+OamAttr data_ov006_02138cf0[3] = {
+    {0x40f0, 0x81f0, 0x716c, 0x0000},
+    {0x4000, 0x41f0, 0x71ac, 0x0000},
+    {0x4000, 0x81f0, 0x61cc, 0xffff},
+};
+OamAttr data_ov006_02138cd8[3] = {
+    {0x40f1, 0x81f0, 0x7174, 0x0000},
+    {0x4001, 0x41f0, 0x71b4, 0x0000},
+    {0x4000, 0x81f0, 0x61d0, 0xffff},
+};
+OamAttr data_ov006_02138cc0[3] = {
+    {0x40f0, 0x81f0, 0x7170, 0x0000},
+    {0x4000, 0x41f0, 0x71b0, 0x0000},
+    {0x40fe, 0x81f0, 0x61d4, 0xffff},
+};
+OamAttr data_ov006_02138ca8[3] = {
+    {0x40f2, 0x81f0, 0x7174, 0x0000},
+    {0x4002, 0x41f0, 0x71b4, 0x0000},
+    {0x4000, 0x81f0, 0x61d8, 0xffff},
+};
+OamAttr data_ov006_02138c90[3] = {
+    {0x40f0, 0x91f0, 0x716c, 0x0000},
+    {0x4000, 0x51f0, 0x71ac, 0x0000},
+    {0x4000, 0x91f0, 0x61cc, 0xffff},
+};
+OamAttr data_ov006_02138c78[3] = {
+    {0x40f1, 0x91f0, 0x7174, 0x0000},
+    {0x4001, 0x51f0, 0x71b4, 0x0000},
+    {0x4000, 0x91f0, 0x61d0, 0xffff},
+};
+OamAttr data_ov006_02138c60[3] = {
+    {0x40f0, 0x91f0, 0x7170, 0x0000},
+    {0x4000, 0x51f0, 0x71b0, 0x0000},
+    {0x40fe, 0x91f0, 0x61d4, 0xffff},
+};
+OamAttr data_ov006_02138c48[3] = {
+    {0x40f2, 0x91f0, 0x7174, 0x0000},
+    {0x4002, 0x51f0, 0x71b4, 0x0000},
+    {0x4000, 0x91f0, 0x61d8, 0xffff},
+};
+OamAttr *sPachinko2BallCountSprites[] = {
+    data_ov006_02138cf0, data_ov006_02138cd8, data_ov006_02138cc0, data_ov006_02138ca8,
+    data_ov006_02138c90, data_ov006_02138c78, data_ov006_02138c60, data_ov006_02138c48,
+};
+extern const u8 sPachinko2CupHopRightStartFrames[4] = {6, 5, 4, 0};
+extern const u8 sPachinko2CupHopLeftStartFrames[4] = {4, 5, 6, 0};
+extern const unsigned char sPachinko2BallWalkOffSprites[4] = {1, 2, 3, 4};
+extern const unsigned char sPachinko2PaddleCountPerLanes[8] = {2, 2, 2, 2, 2, 2, 0, 0};
+extern const u8 sPachinko2CupHopLeftFrames[8] = {0, 1, 2, 3, 2, 1, 0, 0};
+extern const u8 sPachinko2CupHopRightFrames[8] = {7, 8, 9, 10, 9, 8, 0, 0};
+extern const unsigned char sPachinko2CupWaitFrames[8] = {11, 12, 13, 14, 15, 14, 13, 12};
+extern const unsigned char sPachinko2CupWaitTimes[8] = {4, 2, 3, 2, 4, 2, 3, 2};
+extern const int sPachinko2CupX[2] = {0x40, 0xc0};
+extern const int sPachinko2CrossRowY[2] = {0xffffff98, 0xffffff68};
+extern const int sPachinko2PaddleFlyAwayVX[3] = {0x400, 0xfffffc00, 0x0};
+extern const unsigned short sPachinko2CupWaitTimesAlt[8] = {5, 5, 80, 8, 80, 5, 75, 0};
+extern const s32 sPachinko2CupRightStops[6] = {0x60, 0xe0, 0x58, 0xd8, 0x40, 0xc0};
+extern const s32 sPachinko2CupLeftStops[6] = {0x20, 0xa0, 0x28, 0xa8, 0x40, 0xc0};
+/* Per-lane paddle limits, indexed [lane][paddle]: descend stops the paddle at
+ * a screen Y, sweep caps |vx|, gather is the Y it steers back to. */
+extern const int data_ov006_0212ebd0[2] = {0xffffff98, 0xffffff68};
+extern const int data_ov006_0212ebe8[2] = {0x00000c00, 0x00000c00};
+extern const int data_ov006_0212ebf0[2] = {0x00002000, 0x00000800};
+extern const int data_ov006_0212ebf8[2] = {0xffffffb0, 0xffffff70};
+extern const int data_ov006_0212ec00[2] = {0xffffff98, 0xffffff68};
+extern const int data_ov006_0212ec10[2] = {0xffffffb0, 0xffffff70};
+extern const int data_ov006_0212ec18[2] = {0xffffffb0, 0xffffff70};
+extern const int data_ov006_0212ec20[2] = {0xffffffb0, 0xffffff70};
+extern const int data_ov006_0212ec28[2] = {0xffffffb0, 0xffffff70};
+extern const int data_ov006_0212ec38[2] = {0xffffffb0, 0xffffff70};
+extern const int data_ov006_0212ec40[2] = {0x00000c00, 0x00000c00};
+extern const int data_ov006_0212ec48[2] = {0x00000c00, 0x00000c00};
+extern const int data_ov006_0212ec50[2] = {0x00000c00, 0x00000c00};
+extern const int data_ov006_0212ec58[2] = {0x00000c00, 0x00000c00};
+extern const int data_ov006_0212ec60[2] = {0xffffff80, 0xffffff80};
+extern const int data_ov006_0212ec68[2] = {0xffffffb8, 0xffffff58};
+extern const int data_ov006_0212ec70[2] = {0xffffff80, 0xffffff80};
+extern const int data_ov006_0212ec78[2] = {0xffffffb8, 0xffffff58};
+const int *sPachinko2PaddleDescendLimits[6] = {
+    data_ov006_0212ec78, data_ov006_0212ec70, data_ov006_0212ec68,
+    data_ov006_0212ec60, data_ov006_0212ec00, data_ov006_0212ebd0,
+};
+const int *sPachinko2PaddleSweepLimits[6] = {
+    data_ov006_0212ec58, data_ov006_0212ec50, data_ov006_0212ebf0,
+    data_ov006_0212ec48, data_ov006_0212ec40, data_ov006_0212ebe8,
+};
+/* Leftover: the gather-target pointer table at 0x0213db9c and the cup
+ * step-frame table at 0x0213daa4 both sit in the module .data tail, which is a
+ * single shared plain .data section; a named claim cannot be carved inside it,
+ * and the gather table's symbol extent runs into the class vtable storage.
+ * The gather pairs above are indexed by that cartridge table in the order
+ * ec28, ec20, ec18, ebf8, ec10, ec38. */
 extern int *sPachinko2PaddleGatherTargets[];
+extern unsigned short *sPachinko2CupWaitFramesPerCup[];
 
 /* The three pointer-to-member tables the helpers dispatch through. */
 extern Entry sPachinko2CupStateTable[];

@@ -33,9 +33,69 @@
       "end": "0x020b9de8"
     },
     {
-      "name": ".data",
+      "name": ".rodata",
+      "start": "0x020b944c",
+      "end": "0x020b9488"
+    },
+    {
+      "name": ".data.fxpmf",
+      "input_section": ".data",
       "start": "0x020bbf4c",
       "end": "0x020bbf6c"
+    },
+    {
+      "name": ".data.menutbl",
+      "input_section": ".data",
+      "start": "0x020bbf94",
+      "end": "0x020bc034"
+    },
+    {
+      "name": ".data.scenekind",
+      "input_section": ".data",
+      "start": "0x020bc070",
+      "end": "0x020bc0b8"
+    },
+    {
+      "name": ".data.menuScreenEnglish",
+      "input_section": ".data",
+      "start": "0x020bcaa0",
+      "end": "0x020bd074"
+    },
+    {
+      "name": ".data.menuScreenFrench",
+      "input_section": ".data",
+      "start": "0x020bd074",
+      "end": "0x020bd698"
+    },
+    {
+      "name": ".data.menuScreenItalian",
+      "input_section": ".data",
+      "start": "0x020bd698",
+      "end": "0x020bdccc"
+    },
+    {
+      "name": ".data.menuScreenSpanish",
+      "input_section": ".data",
+      "start": "0x020bdccc",
+      "end": "0x020be34c"
+    },
+    {
+      "name": ".data.menuScreenGerman",
+      "input_section": ".data",
+      "start": "0x020be34c",
+      "end": "0x020be9ec"
+    },
+    {
+      "name": ".data.sparkleSprites",
+      "input_section": ".data",
+      "start": "0x020be9ec",
+      "end": "0x020bea14"
+    },
+    {
+      "name": ".data.menuplt",
+      "input_section": ".data",
+      "start": "0x020bea14",
+      "end": "0x020beb48"
     },
     {
       "name": ".bss",
@@ -969,6 +1029,176 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN4MgFx9DrawFlyToEv"
+    },
+    {
+      "symbol": "sMgMenuScreenByLanguage",
+      "address": "0x020bbf94",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five compressed menu screens, one per language"
+    },
+    {
+      "symbol": "sMgSpriteTables",
+      "address": "0x020bbfa8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language OAM lists"
+    },
+    {
+      "symbol": "sMgMenuItem1SpritesByLanguage",
+      "address": "0x020bbfbc",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "menu item 1 sprites, five languages"
+    },
+    {
+      "symbol": "sMgMenuItem2SpritesByLanguage",
+      "address": "0x020bbfd0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "menu item 2 sprites, five languages"
+    },
+    {
+      "symbol": "sMgStockCounterFiles",
+      "address": "0x020bbfe4",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five stock-counter file ids"
+    },
+    {
+      "symbol": "sMgPauseBgNcgByLanguage",
+      "address": "0x020bbff8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five pause-screen character file ids"
+    },
+    {
+      "symbol": "sMgOptionNcgByLanguage",
+      "address": "0x020bc00c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five option-screen character file ids"
+    },
+    {
+      "symbol": "sMgMenuItem0SpritesByLanguage",
+      "address": "0x020bc020",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "menu item 0 sprites, five languages"
+    },
+    {
+      "symbol": "sMgSceneKindByGame",
+      "address": "0x020bc070",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "36 scene-kind ids indexed by the menu game"
+    },
+    {
+      "symbol": "data_ov004_020bcaa0",
+      "address": "0x020bcaa0",
+      "size": "0x5d4",
+      "binding": "STB_GLOBAL",
+      "evidence": "English sub-screen OBJ image; LZ16 stream expanding to 0x2000 bytes for DecompressLZ16 in dScMgBase_c::SaveScreenForMenu (sMgMenuScreenByLanguage[0])"
+    },
+    {
+      "symbol": "data_ov004_020bd074",
+      "address": "0x020bd074",
+      "size": "0x624",
+      "binding": "STB_GLOBAL",
+      "evidence": "French sub-screen OBJ image; LZ16 stream expanding to 0x2000 bytes (sMgMenuScreenByLanguage[2])"
+    },
+    {
+      "symbol": "data_ov004_020bd698",
+      "address": "0x020bd698",
+      "size": "0x634",
+      "binding": "STB_GLOBAL",
+      "evidence": "Italian sub-screen OBJ image; LZ16 stream expanding to 0x2000 bytes (sMgMenuScreenByLanguage[4])"
+    },
+    {
+      "symbol": "data_ov004_020bdccc",
+      "address": "0x020bdccc",
+      "size": "0x680",
+      "binding": "STB_GLOBAL",
+      "evidence": "Spanish sub-screen OBJ image; LZ16 stream expanding to 0x2000 bytes (sMgMenuScreenByLanguage[1])"
+    },
+    {
+      "symbol": "data_ov004_020be34c",
+      "address": "0x020be34c",
+      "size": "0x6a0",
+      "binding": "STB_GLOBAL",
+      "evidence": "German sub-screen OBJ image; LZ16 stream expanding to 0x2000 bytes (sMgMenuScreenByLanguage[3])"
+    },
+    {
+      "symbol": "data_ov004_020be9ec",
+      "address": "0x020be9ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "one-entry OamAttr sparkle template, attr3 = 0xffff list terminator; last entry of data_ov004_020bea14"
+    },
+    {
+      "symbol": "data_ov004_020be9f4",
+      "address": "0x020be9f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "one-entry OamAttr sparkle template; fourth entry of data_ov004_020bea14"
+    },
+    {
+      "symbol": "data_ov004_020be9fc",
+      "address": "0x020be9fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "one-entry OamAttr sparkle template; third entry of data_ov004_020bea14"
+    },
+    {
+      "symbol": "data_ov004_020bea04",
+      "address": "0x020bea04",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "one-entry OamAttr sparkle template; second entry of data_ov004_020bea14"
+    },
+    {
+      "symbol": "data_ov004_020bea0c",
+      "address": "0x020bea0c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "one-entry OamAttr sparkle template; first entry of data_ov004_020bea14"
+    },
+    {
+      "symbol": "data_ov004_020bea14",
+      "address": "0x020bea14",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five sparkle sprite lists"
+    },
+    {
+      "symbol": "sMgMenuBgPltt",
+      "address": "0x020bea28",
+      "size": "0xa0",
+      "binding": "STB_GLOBAL",
+      "evidence": "160-byte main menu background palette"
+    },
+    {
+      "symbol": "sMgMenuSubBgPltt",
+      "address": "0x020beac8",
+      "size": "0x80",
+      "binding": "STB_GLOBAL",
+      "evidence": "128-byte sub menu background palette"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "sMgCounterMaxByDigits",
+      "address": "0x020b944c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven digit caps: 0, 9, 99, 999, 9999, 99999, 999999"
+    },
+    {
+      "symbol": "sMgBrushPalette",
+      "address": "0x020b9468",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "32-byte brush palette loaded by GX_LoadBGPltt"
     }
   ],
   "bss": [
@@ -1023,7 +1253,8 @@
     "The D2 and D0 shards carried _MSC_VER arms giving the host the flat D2 and D0 names. They are kept as one #ifdef _MSC_VER block after the destructor; mwccarm never defines _MSC_VER.",
     "The file-global #pragma opt_strength_reduction off the eight-member TU carried is gone: BeforeBehavior matches without it once the file is ROM-ascending under defer_codegen off.",
     "Static-initializer fold: __sinit_ov004_020b948c retired; the unit now emits it from the static state -- the graphCallback_c registry object, the 0x40-entry Ent pool (__cxa_vec_ctor + __arraydtor$328 cleanup registration), and the two PMF state tables. func_ov004_020ae104 is the graphCallback_c complete-object ctor; func_ov004_020b2c58 is the array cleanup thunk; func_ov004_020b2c7c/020b2c80 are Ent's trivial dtor/ctor; the four state handlers memberized onto Ent.",
-    "Local scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this machine's stock control (EU ASMP dump; the divergent bytes are NDS container/packaging fields outside every module range). The recorded rom.sha256 is the fleet SHA every other intact entry shares. Module set, symbol inventory, and the five owned ranges matched."
+    "Local scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this machine's stock control (EU ASMP dump; the divergent bytes are NDS container/packaging fields outside every module range). The recorded rom.sha256 is the fleet SHA every other intact entry shares. Module set, symbol inventory, and the five owned ranges matched.",
+    "Data fold (batch-01): the five per-language sub-screen OBJ images and the five one-entry OamAttr sparkle templates are now real definitions in d_s_mg_base.cpp instead of externs, so sMgMenuScreenByLanguage and data_ov004_020bea14 have no raw ROM targets left. The old .data.gap28 (0x020bcaa0..0x020bea14) is split into .data.menuScreenEnglish/French/Italian/Spanish/German and .data.sparkleSprites; each new object is one native .data section and data_section_routes routes it by its manifest row. Measured: `python tools/romdata_check.py --files src/minigames/d_s_mg_base.cpp` reports all ten VERIFIED over their full extents (0 DIFFERS, 8980 bytes), and tools/data_section_routes.apply() after the defined_symbol_renames pass routes all 26 .data sections with no errors. The recorded verification.linkcheck block above predates this fold; a fresh whole-tree linkcheck is still blocked by eight unrelated intact TUs on this branch (d_bg_ch_gnd/lin/sph_crr vtable baselines, daObjCvShutter, daObjKey, daObjRcCarpet, daPropeller_Heyho, d_ent_obj reloc licences), so its tuRanges do not yet list the new sections."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -1082,9 +1313,79 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".rodata",
+          "start": "0x020b944c",
+          "end": "0x020b9488",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.fxpmf",
           "start": "0x020bbf4c",
           "end": "0x020bbf6c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.menutbl",
+          "start": "0x020bbf94",
+          "end": "0x020bc034",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.scenekind",
+          "start": "0x020bc070",
+          "end": "0x020bc0b8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.menuScreenEnglish",
+          "start": "0x020bcaa0",
+          "end": "0x020bd074",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.menuScreenFrench",
+          "start": "0x020bd074",
+          "end": "0x020bd698",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.menuScreenItalian",
+          "start": "0x020bd698",
+          "end": "0x020bdccc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.menuScreenSpanish",
+          "start": "0x020bdccc",
+          "end": "0x020be34c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.menuScreenGerman",
+          "start": "0x020be34c",
+          "end": "0x020be9ec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sparkleSprites",
+          "start": "0x020be9ec",
+          "end": "0x020bea14",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.menuplt",
+          "start": "0x020bea14",
+          "end": "0x020beb48",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1473,6 +1774,306 @@
   ],
   "relocations": [
     {
+      "section": ".data.menutbl",
+      "source": "0x20bbf94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bcaa0",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bcaa0"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbf98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bdccc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bdccc"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbf9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bd074",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bd074"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfa0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020be34c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020be34c"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfa4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bd698",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bd698"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfa8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021373a4"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesSpanish",
+      "addend": 0,
+      "target_module": "overlays(6,95)",
+      "target_address": "0x021373fc"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesFrench",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213734c"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesGerman",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021372f4"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesItalian",
+      "addend": 0,
+      "target_module": "overlays(6,95)",
+      "target_address": "0x02137454"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213491c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213491c"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134914",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134914"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134918",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134918"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134924",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134924"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfcc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134920",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134920"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134a0c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134a0c"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134a04",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134a04"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfd8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134a08",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134a08"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfdc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134a10",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134a10"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bbfe0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134a00",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134a00"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bc020",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021347cc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021347cc"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bc024",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021347c0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021347c0"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bc028",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021347c4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021347c4"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bc02c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021347d0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021347d0"
+    },
+    {
+      "section": ".data.menutbl",
+      "source": "0x20bc030",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021347c8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021347c8"
+    },
+    {
+      "section": ".data.menuplt",
+      "source": "0x20bea14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bea0c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bea0c"
+    },
+    {
+      "section": ".data.menuplt",
+      "source": "0x20bea18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bea04",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bea04"
+    },
+    {
+      "section": ".data.menuplt",
+      "source": "0x20bea1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020be9fc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020be9fc"
+    },
+    {
+      "section": ".data.menuplt",
+      "source": "0x20bea20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020be9f4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020be9f4"
+    },
+    {
+      "section": ".data.menuplt",
+      "source": "0x20bea24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020be9ec",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020be9ec"
+    },
+    {
       "section": ".init",
       "source": "0x020b9498",
       "type": "R_ARM_PC24",
@@ -1633,7 +2234,7 @@
       "target_address": "0x020b948c"
     },
     {
-      "section": ".data",
+      "section": ".data.fxpmf",
       "source": "0x020bbf4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1643,7 +2244,7 @@
       "target_address": "0x020adeb0"
     },
     {
-      "section": ".data",
+      "section": ".data.fxpmf",
       "source": "0x020bbf54",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1653,7 +2254,7 @@
       "target_address": "0x020adcc8"
     },
     {
-      "section": ".data",
+      "section": ".data.fxpmf",
       "source": "0x020bbf5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1663,7 +2264,7 @@
       "target_address": "0x020addcc"
     },
     {
-      "section": ".data",
+      "section": ".data.fxpmf",
       "source": "0x020bbf64",
       "type": "R_ARM_ABS32",
       "kind": "load",

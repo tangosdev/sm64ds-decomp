@@ -122,7 +122,7 @@ struct EntAnimSlot {
 extern EntAnimSlot *data_ov075_0211c678[];
 extern EntAnimSlot *data_ov075_0211c688[];
 
-extern unsigned char data_ov075_0211b524[];
+extern const unsigned char data_ov075_0211b524[];
 /* Q12 takeoff thresholds and speed limits, indexed by the four player slots.
  * These descriptive names are inferred from the consumers. */
 extern const int sVsPlayerTakeoffZ[4] = {-2662400, -2703360, -2867200, -2785280};
@@ -1004,4 +1004,19 @@ extern "C" UnknownVsPlayerStateRow sVsPlayerAnimStates[6] = {
     {&UnknownVsPlayer::AnimNone},        {&UnknownVsPlayer::AnimWalkSounds},
     {&UnknownVsPlayer::AnimWaitForNext}, {&UnknownVsPlayer::AnimWaitForIdle},
     {&UnknownVsPlayer::AnimSlowGait},    {&UnknownVsPlayer::AnimFastGait},
+};
+
+const unsigned char data_ov075_0211b524[8] = {70, 137, 18, 152, 33, 100, 0, 0};
+short data_ov075_0211b52c[4] = {0x1000, 0x0c00, 0x0a00, 0x0e00};
+EntAnimSlot *data_ov075_0211c678[4] = {
+    (EntAnimSlot *)&data_ov075_0211d394,
+    (EntAnimSlot *)&data_ov075_0211d3cc,
+    (EntAnimSlot *)&data_ov075_0211d39c,
+    (EntAnimSlot *)&data_ov075_0211d3d4,
+};
+EntAnimSlot *data_ov075_0211c688[4] = {
+    (EntAnimSlot *)&data_ov075_0211d3b4,
+    (EntAnimSlot *)&data_ov075_0211d3f4,
+    (EntAnimSlot *)&data_ov075_0211d38c,
+    0,
 };

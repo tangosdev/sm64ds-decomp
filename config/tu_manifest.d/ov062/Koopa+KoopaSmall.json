@@ -19,6 +19,11 @@
       "end": "0x0211975c"
     },
     {
+      "name": ".rodata",
+      "start": "0x0211ced8",
+      "end": "0x0211cf30"
+    },
+    {
       "name": ".init",
       "start": "0x0211d2d8",
       "end": "0x0211d4a0"
@@ -621,6 +626,13 @@
           "section": ".text",
           "start": "0x021174cc",
           "end": "0x0211975c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0211ced8",
+          "end": "0x0211cf30",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1507,6 +1519,136 @@
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x0211d2d8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211ced8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gNokonokoModelFile",
+      "addend": 0,
+      "target_module": "ov062",
+      "target_address": "0x0211df40"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211cedc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gNokonokoRedModelFile",
+      "addend": 0,
+      "target_module": "ov062",
+      "target_address": "0x0211df48"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211cee0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210da18",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210da18"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211cee4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210da20",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210da20"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211cee8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gNokonokoWalkStAnimationFile",
+      "addend": 0,
+      "target_module": "ov062",
+      "target_address": "0x0211df70"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211ceec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gNokonokoWalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov062",
+      "target_address": "0x0211df38"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211cef0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gNokonokoWalkEdAnimationFile",
+      "addend": 0,
+      "target_module": "ov062",
+      "target_address": "0x0211df50"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211cef4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gNokonokoRunAnimationFile",
+      "addend": 0,
+      "target_module": "ov062",
+      "target_address": "0x0211df60"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211cef8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gNokonokoWait1AnimationFile",
+      "addend": 0,
+      "target_module": "ov062",
+      "target_address": "0x0211df78"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211cefc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gNokonokoWait2AnimationFile",
+      "addend": 0,
+      "target_module": "ov062",
+      "target_address": "0x0211df68"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211cf00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gNokonokoDiveStAnimationFile",
+      "addend": 0,
+      "target_module": "ov062",
+      "target_address": "0x0211df28"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211cf04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gNokonokoDiveAnimationFile",
+      "addend": 0,
+      "target_module": "ov062",
+      "target_address": "0x0211df30"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211cf08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gNokonokoDiveEdAnimationFile",
+      "addend": 0,
+      "target_module": "ov062",
+      "target_address": "0x0211df58"
     }
   ],
   "defined_symbol_renames": [
@@ -1564,6 +1706,36 @@
       "from": "@1300",
       "to": "@1291",
       "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 22, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1263 to @1270 after adding the mHomePos Vector3 view. The existing target @1291 is unchanged. Re-keyed from @1270 to @1269 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1341 to @1340 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1340 to @1344 when Render's scale save became a Vector3 local (#821). Re-keyed from @1344 to @1285 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1285 to @1286 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1286 to @1284 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @1281 to @1265 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1265 to @1256 when the unused *_hold_ prototypes and count-holding locals were removed (measured from the compiled object). Re-keyed from @1256 to @1253 when the death handlers moved onto dEnemyBase_c and the callers dropped their local Aea30C declarations (measured from the compiled object). Re-keyed from @1253 to @1290 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1290 to @1302 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1302 to @1307 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1307 to @1300 when daNknk_c's home and safe positions became plain Vector3 members (mHomePos, mSafePos) and the anonymous union went (measured from the compiled object)."
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov062_0211ced8",
+      "address": "0x0211ced8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "green and red model file pointers"
+    },
+    {
+      "symbol": "data_ov062_0211cee0",
+      "address": "0x0211cee0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two ov002 file pointers"
+    },
+    {
+      "symbol": "data_ov062_0211cee8",
+      "address": "0x0211cee8",
+      "size": "0x24",
+      "binding": "STB_GLOBAL",
+      "evidence": "nine animation file pointers"
+    },
+    {
+      "symbol": "data_ov062_0211cf0c",
+      "address": "0x0211cf0c",
+      "size": "0x24",
+      "binding": "STB_GLOBAL",
+      "evidence": "nine animation flags"
     }
   ]
 }

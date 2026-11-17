@@ -2,7 +2,14 @@
     .rodata     start:0x020ff014 end:0x02100560 kind:rodata align:4
     .init       start:0x02100560 end:0x021080d0 kind:code align:4
     .ctor       start:0x021080d0 end:0x02108138 kind:rodata align:4
-    .data       start:0x02108140 end:0x0210d9a0 kind:data align:32
+    .data       start:0x02108140 end:0x0210b9cc kind:data align:32
+    .data.demoEnd2 start:0x0210b9cc end:0x0210b9e4 kind:data align:4
+    .data.w10b9e4 start:0x0210b9e4 end:0x0210ba7c kind:data align:4
+    .data.demoEnd1 start:0x0210ba7c end:0x0210ba9c kind:data align:4
+    .data.demoEnd3 start:0x0210ba9c end:0x0210babc kind:data align:4
+    .data.w10babc start:0x0210babc end:0x0210bb5c kind:data align:4
+    .data.demoEnd0 start:0x0210bb5c end:0x0210bb7c kind:data align:4
+    .data.w10bb7c start:0x0210bb7c end:0x0210d9a0 kind:data align:4
     .bss        start:0x0210d9a0 end:0x021111a0 kind:bss align:32
 src/runtime/actor/d_enemy_base.cpp:
     complete
@@ -11,6 +18,7 @@ src/runtime/actor/d_enemy_base.cpp:
     .ctor start:0x021080d4 end:0x021080d8
     .data start:0x02108140 end:0x021081c0
     .bss start:0x0210db80 end:0x0210dc00
+    .rodata start:0x020ff014 end:0x020ff028
 
 src/runtime/actor/d_cap_enemy.cpp:
     complete
@@ -23,6 +31,7 @@ src/game/actors/d_a_1up.cpp:
     .ctor start:0x021080d8 end:0x021080dc
     .data start:0x02108300 end:0x02108370
     .bss start:0x0210dc00 end:0x0210dc70
+    .rodata start:0x020ff040 end:0x020ff060
 
 src/game/actors/d_a_bar.cpp:
     complete
@@ -48,6 +57,7 @@ src/game/actors/d_a_coin.cpp:
     .ctor start:0x021080dc end:0x021080e0
     .data start:0x02108730 end:0x02108868
     .bss start:0x0210dc70 end:0x0210dcb8
+    .rodata start:0x020ff060 end:0x020ff090
 
 src/game/actors/d_a_feather.cpp:
     complete
@@ -71,6 +81,7 @@ src/game/actors/d_a_obj_block_item_tag.cpp:
     .ctor start:0x021080e4 end:0x021080e8
     .data start:0x02108b5c end:0x02108b7c
     .bss start:0x0210dd30 end:0x0210dd50
+    .rodata start:0x020ff090 end:0x020ff0a0
 
 src/game/actors/d_a_obj_kinoko_tag.cpp:
     complete
@@ -135,6 +146,7 @@ src/game/actors/d_a_obj_mario_cap.cpp:
     .init start:0x02101064 end:0x02101478
     .ctor start:0x021080f0 end:0x021080f4
     .bss start:0x0210de00 end:0x0210df94
+    .rodata start:0x020ff0b8 end:0x020ff0d0
 
 src/game/actors/d_a_obj_pushblock.cpp:
     complete
@@ -169,6 +181,7 @@ src/game/actors/d_a_obj_tatefuda.cpp:
     .ctor start:0x02108100 end:0x02108104
     .data start:0x02109a64 end:0x02109ab4
     .bss start:0x0210e05c end:0x0210e0d4
+    .rodata start:0x020ff0d4 end:0x020ff0ec
 
 src/game/actors/d_a_obj_wakame.cpp:
     complete
@@ -198,6 +211,7 @@ src/game/player/d_a_ply_methods.cpp:
     .ctor start:0x02108110 end:0x02108114
     .data start:0x02109db8 end:0x0210a8b8
     .bss start:0x0210e14c end:0x02110924
+    .rodata start:0x020ff0ec end:0x02100000
 
 src/game/player/d_a_ply.cpp:
     complete
@@ -243,6 +257,7 @@ src/game/actors/d_a_yegg.cpp:
     .ctor start:0x02108118 end:0x0210811c
     .data start:0x0210ad38 end:0x0210ad78
     .bss start:0x02110a5c end:0x02110a9c
+    .rodata start:0x021000a8 end:0x021000b8
 
 src/runtime/actor/d_bg_actor.cpp:
     complete
@@ -298,8 +313,13 @@ src/game/actors/d_a_demo.cpp:
     .text start:0x020f1f70 end:0x020f8858
     .init start:0x02107370 end:0x02107f88
     .ctor start:0x02108128 end:0x0210812c
-    .data start:0x0210b600 end:0x0210b958
+    .data start:0x0210b600 end:0x0210b9a8
+    .data.demoEnd2 start:0x0210b9cc end:0x0210b9e4
+    .data.demoEnd1 start:0x0210ba7c end:0x0210ba9c
+    .data.demoEnd3 start:0x0210ba9c end:0x0210babc
+    .data.demoEnd0 start:0x0210bb5c end:0x0210bb7c
     .bss start:0x02110afc end:0x0211110c
+    .rodata start:0x021000b8 end:0x021002a0
 
 src/game/actors/d_a_f_pkn_ball.cpp:
     complete
@@ -310,7 +330,7 @@ src/game/actors/d_a_sound_obj.cpp:
     .text start:0x020f934c end:0x020f975c
     .init start:0x02107f88 end:0x0210804c
     .ctor start:0x0210812c end:0x02108130
-    .data start:0x0210c010 end:0x0210c048
+    .data.w10bb7c start:0x0210c010 end:0x0210c048
     .bss start:0x0211110c end:0x02111144
 
 src/ui/hud/d_map.cpp:
@@ -338,6 +358,7 @@ src/game/actors/d_a_propeller_heyho_fire.cpp:
     .init start:0x02108094 end:0x021080d0
     .ctor start:0x02108134 end:0x02108138
     .bss start:0x02111190 end:0x021111a0
+    .data.w10bb7c start:0x0210d5f8 end:0x0210d608
 
 src/ov002_handles.cpp:
     complete

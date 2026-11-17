@@ -70,7 +70,12 @@ extern ShlState data_ov102_0214ea48;
 extern ShlState data_ov102_0214ea58;
 extern ShlState data_ov102_0214ea68;
 extern ShlStateEnd data_ov102_0214ea78;
-extern SharedFilePtr *data_ov102_0214d70c[];
+extern SharedFilePtr data_ov002_0210da18;
+extern SharedFilePtr data_ov002_0210da20;
+extern SharedFilePtr *const data_ov102_0214d70c[2] = {
+    &data_ov002_0210da18,
+    &data_ov002_0210da20,
+};
 
 /* -- other modules -- */
 int func_ov002_020cc16c(void *player, void *actor);

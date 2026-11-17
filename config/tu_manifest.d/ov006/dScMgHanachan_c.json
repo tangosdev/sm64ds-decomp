@@ -44,6 +44,126 @@
       "name": ".bss",
       "start": "0x02142018",
       "end": "0x02142044"
+    },
+    {
+      "name": ".rodata.sHanaRoundPatterns",
+      "input_section": ".rodata",
+      "start": "0x0212e80c",
+      "end": "0x0212e820"
+    },
+    {
+      "name": ".rodata.sHanaFieldWigglerCounts",
+      "input_section": ".rodata",
+      "start": "0x0212e820",
+      "end": "0x0212e848"
+    },
+    {
+      "name": ".data.data_ov006_021374ac",
+      "input_section": ".data",
+      "start": "0x021374ac",
+      "end": "0x021374b0"
+    },
+    {
+      "name": ".data.data_ov006_021374b0",
+      "input_section": ".data",
+      "start": "0x021374b0",
+      "end": "0x021374b8"
+    },
+    {
+      "name": ".data.data_ov006_021374b8",
+      "input_section": ".data",
+      "start": "0x021374b8",
+      "end": "0x021374bc"
+    },
+    {
+      "name": ".data.data_ov006_021374bc",
+      "input_section": ".data",
+      "start": "0x021374bc",
+      "end": "0x021374c4"
+    },
+    {
+      "name": ".data.data_ov006_021374c4",
+      "input_section": ".data",
+      "start": "0x021374c4",
+      "end": "0x021374c8"
+    },
+    {
+      "name": ".data.data_ov006_021374c8",
+      "input_section": ".data",
+      "start": "0x021374c8",
+      "end": "0x021374d0"
+    },
+    {
+      "name": ".data.data_ov006_021374f4",
+      "input_section": ".data",
+      "start": "0x021374f4",
+      "end": "0x021374f8"
+    },
+    {
+      "name": ".data.data_ov006_021374f8",
+      "input_section": ".data",
+      "start": "0x021374f8",
+      "end": "0x02137500"
+    },
+    {
+      "name": ".data.data_ov006_02137590",
+      "input_section": ".data",
+      "start": "0x02137590",
+      "end": "0x02137598"
+    },
+    {
+      "name": ".data.data_ov006_02137598",
+      "input_section": ".data",
+      "start": "0x02137598",
+      "end": "0x021375a0"
+    },
+    {
+      "name": ".data.sHanaWigglerFieldSprites",
+      "input_section": ".data",
+      "start": "0x021375a0",
+      "end": "0x021375a8"
+    },
+    {
+      "name": ".data.data_ov006_021375a8",
+      "input_section": ".data",
+      "start": "0x021375a8",
+      "end": "0x021375b0"
+    },
+    {
+      "name": ".data.data_ov006_021375b0",
+      "input_section": ".data",
+      "start": "0x021375b0",
+      "end": "0x021375b8"
+    },
+    {
+      "name": ".data.data_ov006_021375b8",
+      "input_section": ".data",
+      "start": "0x021375b8",
+      "end": "0x021375c0"
+    },
+    {
+      "name": ".data.sHanaWigglerTargetSprites",
+      "input_section": ".data",
+      "start": "0x021375c0",
+      "end": "0x021375cc"
+    },
+    {
+      "name": ".data.data_ov006_021375cc",
+      "input_section": ".data",
+      "start": "0x021375cc",
+      "end": "0x021375d4"
+    },
+    {
+      "name": ".data.data_ov006_021375d4",
+      "input_section": ".data",
+      "start": "0x021375d4",
+      "end": "0x021375dc"
+    },
+    {
+      "name": ".data.sHanaBackgroundPartsB",
+      "input_section": ".data",
+      "start": "0x021375dc",
+      "end": "0x021375e4"
     }
   ],
   "functions": [
@@ -745,6 +865,132 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "Eight-byte native member-pointer constant; identified by exact consumer function and relocation offset, with its target relocation and zero adjustment verified against retail."
+    },
+    {
+      "symbol": "sHanaWigglerFieldSprites",
+      "address": "0x021375a0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sHanaWigglerTargetSprites",
+      "address": "0x021375c0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021374ac",
+      "address": "0x021374ac",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021374b8",
+      "address": "0x021374b8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021374c4",
+      "address": "0x021374c4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021374f4",
+      "address": "0x021374f4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sHanaBackgroundPartsB",
+      "address": "0x021375dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021374b0",
+      "address": "0x021374b0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021374bc",
+      "address": "0x021374bc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021374c8",
+      "address": "0x021374c8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021374f8",
+      "address": "0x021374f8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02137590",
+      "address": "0x02137590",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02137598",
+      "address": "0x02137598",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021375a8",
+      "address": "0x021375a8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021375b0",
+      "address": "0x021375b0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021375b8",
+      "address": "0x021375b8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021375cc",
+      "address": "0x021375cc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021375d4",
+      "address": "0x021375d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     }
   ],
   "bss": [
@@ -1430,6 +1676,132 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x20ecb80"
+    },
+    {
+      "section": ".data.data_ov006_021374ac",
+      "source": "0x021374ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021374b0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021374b0"
+    },
+    {
+      "section": ".data.data_ov006_021374b8",
+      "source": "0x021374b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021374bc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021374bc"
+    },
+    {
+      "section": ".data.data_ov006_021374c4",
+      "source": "0x021374c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021374c8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021374c8"
+    },
+    {
+      "section": ".data.data_ov006_021374f4",
+      "source": "0x021374f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021374f8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021374f8"
+    },
+    {
+      "section": ".data.sHanaWigglerFieldSprites",
+      "source": "0x021375a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02137590",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02137590"
+    },
+    {
+      "section": ".data.sHanaWigglerFieldSprites",
+      "source": "0x021375a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02137598",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02137598"
+    },
+    {
+      "section": ".data.sHanaWigglerTargetSprites",
+      "source": "0x021375c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021375a8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021375a8"
+    },
+    {
+      "section": ".data.sHanaWigglerTargetSprites",
+      "source": "0x021375c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021375b0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021375b0"
+    },
+    {
+      "section": ".data.sHanaWigglerTargetSprites",
+      "source": "0x021375c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021375b8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021375b8"
+    },
+    {
+      "section": ".data.sHanaBackgroundPartsB",
+      "source": "0x021375e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021375cc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021375cc"
+    },
+    {
+      "section": ".data.sHanaBackgroundPartsB",
+      "source": "0x021375dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021375d4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021375d4"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "sHanaRoundPatterns",
+      "address": "0x0212e80c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sHanaFieldWigglerCounts",
+      "address": "0x0212e820",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     }
   ],
   "notes": [
@@ -1598,6 +1970,146 @@
           "start": "0x02142018",
           "end": "0x02142044",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata.sHanaRoundPatterns",
+          "start": "0x0212e80c",
+          "end": "0x0212e820",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sHanaFieldWigglerCounts",
+          "start": "0x0212e820",
+          "end": "0x0212e848",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021374ac",
+          "start": "0x021374ac",
+          "end": "0x021374b0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021374b8",
+          "start": "0x021374b8",
+          "end": "0x021374bc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021374c4",
+          "start": "0x021374c4",
+          "end": "0x021374c8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021374f4",
+          "start": "0x021374f4",
+          "end": "0x021374f8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sHanaWigglerFieldSprites",
+          "start": "0x021375a0",
+          "end": "0x021375a8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sHanaWigglerTargetSprites",
+          "start": "0x021375c0",
+          "end": "0x021375cc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sHanaBackgroundPartsB",
+          "start": "0x021375dc",
+          "end": "0x021375e4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021374b0",
+          "start": "0x021374b0",
+          "end": "0x021374b8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021374bc",
+          "start": "0x021374bc",
+          "end": "0x021374c4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021374c8",
+          "start": "0x021374c8",
+          "end": "0x021374d0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021374f8",
+          "start": "0x021374f8",
+          "end": "0x02137500",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02137590",
+          "start": "0x02137590",
+          "end": "0x02137598",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02137598",
+          "start": "0x02137598",
+          "end": "0x021375a0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021375a8",
+          "start": "0x021375a8",
+          "end": "0x021375b0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021375b0",
+          "start": "0x021375b0",
+          "end": "0x021375b8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021375b8",
+          "start": "0x021375b8",
+          "end": "0x021375c0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021375cc",
+          "start": "0x021375cc",
+          "end": "0x021375d4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021375d4",
+          "start": "0x021375d4",
+          "end": "0x021375dc",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

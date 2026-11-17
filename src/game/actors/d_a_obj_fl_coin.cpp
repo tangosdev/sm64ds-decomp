@@ -7,7 +7,8 @@
  * Typeinfo: _ZTI14daObjFl_Coin_c at 0x0211bf98, _ZTI16daObjFl_Puzzle_c at
  * 0x0211bfa4. The run ends with the piece's touch helper
  * MarkTouchedByPlayer, its collision callback StoodOnCallback and the
- * two registry factories; both g_profile rows live outside this file.
+ * two registry factories. g_profile_FL_PUZZLE and g_profile_FL_COIN are
+ * defined with the step scripts they sit between.
  *
  * Source order is the reverse of the ROM. mwccarm 2004/b56 emits one .text
  * section per function in reverse source order, so the highest address is
@@ -67,6 +68,7 @@ enum daObjFl_Coin_c_AssetId {
 #include "dExtSimpleModel_c.h"
 #include "Sound.h"
 #include "math/MtxStack.h"
+#include "SpawnInfo.h"
 
 /* State table at 0x0211c904. Each entry is a pointer-to-member that Behavior
  * calls. The targets are the piece methods below. */
@@ -94,8 +96,11 @@ struct FlCoinCollisionFilePtr : SharedFilePtr {
 };
 
 extern Entry data_ov064_0211c904[];
-extern SharedFilePtr *data_ov064_0211adc8[];
+extern SharedFilePtr *const data_ov064_0211adc8[];
 extern FlCoinCollisionFilePtr data_ov064_0211c800;
+struct CLPS_Block {
+    u32 words[8];
+};
 extern CLPS_Block data_ov064_0211baac;
 /* Per-type step scripts, indexed by mType (ov064 .data). */
 extern int data_ov064_0211c198[];
@@ -437,4 +442,51 @@ extern Entry data_ov064_0211bf90;
 Entry data_ov064_0211c904[6] = {
     data_ov064_0211bf80, data_ov064_0211bf68, data_ov064_0211bf90,
     data_ov064_0211bf70, data_ov064_0211bf88, data_ov064_0211bf78,
+};
+
+extern SharedFilePtr *const data_ov064_0211adc8[] = {
+    &gFl1400ModelFile, &gFl1401ModelFile, &gFl1402ModelFile, &gFl1403ModelFile, &gFl1404ModelFile,
+    &gFl1405ModelFile, &gFl1406ModelFile, &gFl1407ModelFile, &gFl1408ModelFile, &gFl1409ModelFile,
+    &gFl1410ModelFile, &gFl1411ModelFile, &gFl1412ModelFile, &gFl1413ModelFile,
+};
+
+CLPS_Block data_ov064_0211baac = {
+    0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+};
+
+s8 data_ov064_0211bfd8[] = {1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1,
+                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, -1, 0};
+s8 data_ov064_0211bff4[] = {1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1,
+                            1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, -1, 0};
+s8 data_ov064_0211c010[] = {1, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1,
+                            1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, -1, 0};
+s8 data_ov064_0211c02c[] = {1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1,  1,
+                            1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, -1, 0};
+s8 data_ov064_0211c048[] = {1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1,  1,
+                            1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, -1, 0};
+s8 data_ov064_0211c064[] = {1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1,  1,
+                            1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, -1, 0};
+s8 data_ov064_0211c080[] = {1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1,  1,
+                            1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, -1, 0};
+s8 data_ov064_0211c09c[] = {1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1,  1,
+                            1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, -1, 0};
+s8 data_ov064_0211c0b8[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1,  1,
+                            1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 0};
+s8 data_ov064_0211c0d4[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1,  1,
+                            1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 0};
+s8 data_ov064_0211c0f0[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1,  1,
+                            4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 0};
+s8 data_ov064_0211c10c[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,  3,
+                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 0};
+s8 data_ov064_0211c128[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1,
+                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 0};
+s8 data_ov064_0211c144[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1,
+                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 0};
+
+SpawnInfo<daObjFl_Puzzle_c> g_profile_FL_PUZZLE = {
+    daObjFl_Puzzle_c_classInit, 0x004e, 0x011e, 2, 0, 0x180000, 0x02000000, 0x02000000,
+};
+
+SpawnInfo<daObjFl_Coin_c> g_profile_FL_COIN = {
+    daObjFl_Coin_c_classInit, 0x004f, 0x011f, 0, 0, 0x400000, 0x02000000, 0x02000000,
 };

@@ -74,8 +74,8 @@ extern void Mg_DrawSpriteListEntry(void *sprite, int x, int y, Matrix2x2 *matrix
 /* The two arrow sprites: one 16x16 OAM entry each (tile 0x49 previous,
    0x47 next, palette 13) and a 0xffff terminator. Mg_DrawSpriteListEntry
    copies the entry and draws it. */
-extern u16 sPsOptSoundPrevSprite[];
-extern u16 sPsOptSoundNextSprite[];
+u16 sPsOptSoundPrevSprite[] = {0x00f8, 0x41f8, 0xd249, 0xffff};
+u16 sPsOptSoundNextSprite[] = {0x00f8, 0x41f8, 0xd247, 0xffff};
 extern int GetGameLanguage(void);
 /* Writes the icon center, half extents, touch kind, and clears the blink. */
 /* Toggles mOn, drops mReady, and reloads mPressTimer from mPressTime. */

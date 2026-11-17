@@ -29,6 +29,12 @@
       "end": "0x02112878"
     },
     {
+      "name": ".data.clps",
+      "input_section": ".data",
+      "start": "0x021129f0",
+      "end": "0x02112a00"
+    },
+    {
       "name": ".bss",
       "start": "0x02113960",
       "end": "0x02113988"
@@ -166,7 +172,15 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov024_021129f0",
+      "address": "0x021129f0",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS header plus one entry; the following 0xFF bytes stay unclaimed"
+    }
+  ],
   "bss": [
     {
       "symbol": "gDlPyramidCollisionFile",
@@ -628,6 +642,13 @@
           "section": ".ctor",
           "start": "0x02112874",
           "end": "0x02112878",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.clps",
+          "start": "0x021129f0",
+          "end": "0x02112a00",
           "differingBytes": 0,
           "firstDiff": null
         },

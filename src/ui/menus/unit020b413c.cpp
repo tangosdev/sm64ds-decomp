@@ -80,32 +80,32 @@ typedef struct Ov007ItemRow {
  * 2 for 0x16, 3 for 0x17. */
 extern int data_ov007_02103428;
 
-extern Ov007ItemRow data_ov007_020d77d8[];
-extern Ov007ItemLayout data_ov007_020d76e8[];
-extern Ov007ItemLayout data_ov007_020d7680[];
-extern Ov007HitBox data_ov007_020d78f8[];
-extern Ov007HitBox data_ov007_020d76c0[];
-extern Ov007HitBox data_ov007_020d7658;
-extern Ov007HitBox data_ov007_020d766c;
+extern const Ov007ItemRow data_ov007_020d77d8[];
+extern const Ov007ItemLayout data_ov007_020d76e8[];
+extern const Ov007ItemLayout data_ov007_020d7680[];
+extern const Ov007HitBox data_ov007_020d78f8[];
+extern const Ov007HitBox data_ov007_020d76c0[];
+extern const Ov007HitBox data_ov007_020d7658;
+extern const Ov007HitBox data_ov007_020d766c;
 /* { width, height } per hit box; symbols.txt also names the height
  * column data_ov007_020d76a1. */
-extern u8 data_ov007_020d76a0[][2];
-extern s32 data_ov007_020d7648[];
-extern u16 data_ov007_020d75e8[];
-extern u16 data_ov007_020d75f8[];
-extern u16 data_ov007_020d7608[];
-extern u16 data_ov007_020d7600[];
-extern u16 data_ov007_020d7628[];
-extern u16 data_ov007_020d7638[];
+extern const u8 data_ov007_020d76a0[][2];
+extern const s32 data_ov007_020d7648[];
+extern const u16 data_ov007_020d75e8[];
+extern const u16 data_ov007_020d75f8[];
+extern const u16 data_ov007_020d7608[];
+extern const u16 data_ov007_020d7600[];
+extern const u16 data_ov007_020d7628[];
+extern const u16 data_ov007_020d7638[];
 /* the number sprites' screen { x, y } and { width, height }, one row per
  * sprite. symbols.txt also names the second columns data_ov007_020d761e
  * and data_ov007_020d75f1. */
-extern s16 data_ov007_020d761c[][2];
-extern u8 data_ov007_020d75f0[][2];
-extern u8 data_ov007_020d75e0[];
-extern u8 data_ov007_020d75e4[];
+extern const s16 data_ov007_020d761c[][2];
+extern const u8 data_ov007_020d75f0[][2];
+extern const u8 data_ov007_020d75e0[];
+extern const u8 data_ov007_020d75e4[];
 /* each digit's width in pixels */
-extern unsigned char data_ov007_020d7610[];
+extern const unsigned char data_ov007_020d7610[];
 
 extern "C" void func_ov007_020ae834(Ov007Item *item);
 extern "C" Ov007Item *func_ov007_020aea6c(int id, Ov007ItemLayout *layout, Ov007HitBox *hitBox);
@@ -400,8 +400,8 @@ extern "C" Ov007ItemView *ItemView_Create(int id) {
 
     view = (Ov007ItemView *)func_ov007_020c3df4(0, 0x1c);
     hitBoxIndex = data_ov007_020d77d8[id].hitBoxIndex;
-    view->item =
-        func_ov007_020aea6c(id, &data_ov007_020d76e8[id], &data_ov007_020d78f8[hitBoxIndex]);
+    view->item = func_ov007_020aea6c(id, (Ov007ItemLayout *)&data_ov007_020d76e8[id],
+                                     (Ov007HitBox *)&data_ov007_020d78f8[hitBoxIndex]);
     view->sprite = func_ov007_020c44e4(data_ov007_020d77d8[view->item->id].spriteMode);
     sprite = view->sprite;
     if (id == 0x15) {
@@ -428,8 +428,8 @@ extern "C" Ov007ItemView *ItemView_Create(int id) {
         sprite->texS = data_ov007_020d75e8[id];
         sprite->texT = data_ov007_020d75f8[id];
         if (WORK->settings->language == 5) {
-            view->item->hitBox = &data_ov007_020d76c0[hitBoxIndex - 1];
-            view->item->layout = &data_ov007_020d7680[id];
+            view->item->hitBox = (Ov007HitBox *)&data_ov007_020d76c0[hitBoxIndex - 1];
+            view->item->layout = (Ov007ItemLayout *)&data_ov007_020d7680[id];
             if (id != 0) {
                 sprite->width = 72;
             } else {
@@ -460,14 +460,14 @@ extern "C" Ov007ItemView *ItemView_Create(int id) {
                 sprite->texS = 0;
                 sprite->texT = 0;
                 sprite->width = 80;
-                view->item->hitBox = &data_ov007_020d7658;
+                view->item->hitBox = (Ov007HitBox *)&data_ov007_020d7658;
                 break;
             case 4:
                 sprite->frames[0] = WORK->textures[7];
                 sprite->texS = 0x50;
                 sprite->texT = 0;
                 sprite->width = 96;
-                view->item->hitBox = &data_ov007_020d766c;
+                view->item->hitBox = (Ov007HitBox *)&data_ov007_020d766c;
                 break;
             }
             break;
@@ -865,7 +865,7 @@ void func_ov007_020b413c(Ov007ItemView *view, int number) {
         }
         /* through a local: indexing data_ov007_020d7610 directly in the
          * second loop re-lays it */
-        widths = data_ov007_020d7610;
+        widths = (unsigned char *)data_ov007_020d7610;
         x = x + ((-width / 2) << 12);
         digit->screenX = x + 0xa000;
         d = &digits[2];
@@ -888,3 +888,104 @@ void func_ov007_020b413c(Ov007ItemView *view, int number) {
     }
     G3_PopMtx(1);
 }
+
+extern const u8 data_ov007_020d75e0[4] = {
+    0x0,
+    0x0,
+    0x10,
+    0x0,
+};
+extern const u8 data_ov007_020d75e4[4] = {
+    0xe8,
+    0xd0,
+    0xb8,
+    0x0,
+};
+extern const u16 data_ov007_020d75e8[4] = {
+    0x0,
+    0x0,
+    0x0,
+    0x0,
+};
+extern const u8 data_ov007_020d75f0[4][2] = {
+    24, 24, 72, 24, 16, 24, 0, 0,
+};
+extern const u16 data_ov007_020d75f8[4] = {
+    0x28,
+    0x0,
+    0x50,
+    0x0,
+};
+extern const u16 data_ov007_020d7600[4] = {
+    0x28,
+    0x28,
+    0x70,
+    0x0,
+};
+extern const u16 data_ov007_020d7608[4] = {
+    0x28,
+    0x0,
+    0x0,
+    0x0,
+};
+extern const unsigned char data_ov007_020d7610[12] = {
+    15, 10, 15, 15, 15, 15, 15, 15, 15, 15, 0, 0,
+};
+extern const s16 data_ov007_020d761c[3][2] = {
+    0x0, 0x8, 0x0, 0x8, 0x0, 0x8,
+};
+extern const u16 data_ov007_020d7628[8] = {
+    0x0, 0x48, 0x90, 0x0, 0x48, 0x90, 0x80, 0x0,
+};
+extern const u16 data_ov007_020d7638[8] = {
+    0x0, 0x0, 0x0, 0x30, 0x30, 0x30, 0x58, 0x58,
+};
+extern const s32 data_ov007_020d7648[4] = {
+    -0x11fe,
+    -0x20ff,
+    -0x21fe,
+    -0x22fd,
+};
+extern const Ov007HitBox data_ov007_020d7658 = {{0, 0, 0, 0}, -0x28, -0x10, 0x28, 0x10};
+extern const Ov007HitBox data_ov007_020d766c = {{0, 0, 0, 0}, -0x30, -0x10, 0x30, 0x10};
+extern const Ov007ItemLayout data_ov007_020d7680[3] = {
+    0x0, 0x80, 0xa8, 0x0, 0x30, 0x0, 0x26, 0xa8, -0x50, 0x0, 0x0, 0xdb, 0xa8, 0x50, 0x0,
+};
+extern const u8 data_ov007_020d76a0[16][2] = {
+    0,  0,  128, 40, 64,  40, 40, 40, 80, 16, 40,  40, 32, 32, 64, 32,
+    16, 16, 56,  32, 120, 32, 72, 48, 72, 40, 128, 40, 72, 40, 0,  0,
+};
+extern const Ov007HitBox data_ov007_020d76c0[2] = {
+    {{0, 0, 0, 0}, -0x34, -0x14, 0x34, 0x14},
+    {{0, 0, 0, 0}, -0x24, -0x14, 0x24, 0x14},
+};
+extern const Ov007ItemLayout data_ov007_020d76e8[24] = {
+    0x0, 0x80, 0xa8, 0x0, 0x30,   0x0, 0x22, 0xa8, -0x48, 0x0,    0x0, 0xde, 0xa8, 0x48, 0x0,
+    0x2, 0xe8, 0xa8, 0x0, 0x30,   0x2, 0xe8, 0xa8, 0x0,   0x30,   0x2, 0x80, 0xb4, 0x0,  0x30,
+    0x2, 0x18, 0xa8, 0x0, 0x30,   0x6, 0xec, 0x14, 0x0,   -0x28,  0x7, 0x80, 0xa4, 0x0,  -0x100,
+    0x7, 0xac, 0x29, 0x0, -0x100, 0x7, 0x66, 0x29, 0x0,   -0x100, 0x7, 0xf0, 0x29, 0x0,  -0x100,
+    0x7, 0x8c, 0x59, 0x0, -0x100, 0x7, 0xcc, 0x59, 0x0,   -0x100, 0x3, 0x2c, 0x44, 0x0,  0x0,
+    0x3, 0x80, 0x5c, 0x0, 0x0,    0x3, 0xd4, 0x44, 0x0,   0x0,    0x4, 0x32, 0x72, 0x0,  0x12,
+    0x4, 0x80, 0x72, 0x0, 0x12,   0x4, 0xce, 0x72, 0x0,   0x12,   0x3, 0xd8, 0x9e, 0x0,  0x0,
+    0x3, 0x5c, 0x9e, 0x0, -0x12,  0x8, 0x5a, 0x80, 0x0,   0x20,   0x8, 0xa6, 0x80, 0x0,  0x20,
+};
+extern const Ov007ItemRow data_ov007_020d77d8[24] = {
+    {0x1, 0x0, 0x1, 0x1, {0, 0}}, {0x2, 0x0, 0x1, 0x1, {0, 0}}, {0x2, 0x0, 0x1, 0x1, {0, 0}},
+    {0x3, 0x0, 0x1, 0x1, {0, 0}}, {0x3, 0x0, 0x1, 0x1, {0, 0}}, {0x4, 0x1, 0x1, 0x1, {0, 0}},
+    {0x3, 0x0, 0x1, 0x1, {0, 0}}, {0x6, 0x0, 0x1, 0x1, {0, 0}}, {0x7, 0x0, 0x1, 0x1, {0, 0}},
+    {0xa, 0x0, 0x1, 0x1, {0, 0}}, {0x8, 0x0, 0x1, 0x1, {0, 0}}, {0x8, 0x0, 0x1, 0x1, {0, 0}},
+    {0x9, 0x0, 0x1, 0x1, {0, 0}}, {0x9, 0x0, 0x1, 0x1, {0, 0}}, {0xb, 0x2, 0x1, 0x1, {0, 0}},
+    {0xb, 0x2, 0x1, 0x1, {0, 0}}, {0xb, 0x2, 0x1, 0x1, {0, 0}}, {0xc, 0x0, 0x1, 0x0, {0, 0}},
+    {0xc, 0x0, 0x1, 0x0, {0, 0}}, {0xc, 0x0, 0x1, 0x0, {0, 0}}, {0xc, 0x0, 0x1, 0x1, {0, 0}},
+    {0xd, 0x0, 0x1, 0x1, {0, 0}}, {0xe, 0x0, 0x1, 0x0, {0, 0}}, {0xe, 0x0, 0x1, 0x0, {0, 0}},
+};
+extern const Ov007HitBox data_ov007_020d78f8[15] = {
+    {{0, 0, 0, 0}, 0x0, 0x0, 0x0, 0x0},       {{0, 0, 0, 0}, -0x38, -0x14, 0x38, 0x14},
+    {{0, 0, 0, 0}, -0x20, -0x14, 0x20, 0x14}, {{0, 0, 0, 0}, -0x14, -0x14, 0x14, 0x14},
+    {{0, 0, 0, 0}, -0x28, -0x8, 0x28, 0x8},   {{0, 0, 0, 0}, -0x14, -0x14, 0x14, 0x14},
+    {{0, 0, 0, 0}, -0x14, -0x14, 0x14, 0x14}, {{0, 0, 0, 0}, -0x20, -0x10, 0x20, 0x10},
+    {{0, 0, 0, 0}, -0x10, -0x10, 0x10, 0x10}, {{0, 0, 0, 0}, -0x1c, -0x10, 0x1c, 0x10},
+    {{0, 0, 0, 0}, -0x3c, -0x10, 0x3c, 0x10}, {{0, 0, 0, 0}, -0x24, -0x18, 0x24, 0x18},
+    {{0, 0, 0, 0}, -0x24, -0x12, 0x24, 0x12}, {{0, 0, 0, 0}, -0x40, -0x12, 0x40, 0x12},
+    {{0, 0, 0, 0}, -0x24, -0x14, 0x24, 0x14},
+};

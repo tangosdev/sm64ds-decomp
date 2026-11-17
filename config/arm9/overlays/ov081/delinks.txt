@@ -30,6 +30,7 @@ src/game/actors/d_a_snowball.cpp:
 src/game/actors/d_a_gmch.cpp:
     complete
     .text start:0x02126504 end:0x02127b34
+    .rodata start:0x021280d8 end:0x021280e8
     .init start:0x021284f0 end:0x021287b8
     .ctor start:0x02128830 end:0x02128834
     .data start:0x02128b38 end:0x02128c80

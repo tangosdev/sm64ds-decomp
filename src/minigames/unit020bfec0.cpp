@@ -98,7 +98,8 @@ void func_0203cebc(void *, void *, void *, void *);
 }
 
 /* The overlay's own identity matrix, which the flower model loads. */
-extern Matrix4x3 data_ov006_0213aee8;
+Matrix4x3 data_ov006_0213aee8 = {0x1000, 0x0, 0x0,    0x0, 0x1000, 0x0,
+                                 0x0,    0x0, 0x1000, 0x0, 0x0,    0x0};
 /* The scene-shared start position and rotation of the dealer and the walker. */
 extern Vector3 data_020a0ebc;
 extern Vector3_16 data_020a0edc;
@@ -106,9 +107,44 @@ extern Vector3_16 data_020a0edc;
 extern Vector3 sPetalUpAxis;
 extern Vector3 sMascotWalkerOffset;
 extern Vector3 sPresenterScale;
-extern Matrix4x3 sDealerIdentityMtx;
+Matrix4x3 sDealerIdentityMtx = {0x1000, 0x0, 0x0,    0x0, 0x1000, 0x0,
+                                0x0,    0x0, 0x1000, 0x0, 0x0,    0x0};
 extern short sDealerLampTimes[];
-extern WalkPath sMascotWalkerPaths[];
+/* The mascot walker's four routes, each paired with its reverse; 20.12 world
+   points the walk cycle visits in order. */
+extern "C" VecFx32 data_ov006_0213ad58[4];
+extern "C" VecFx32 data_ov006_0213ad88[4];
+extern "C" VecFx32 data_ov006_0213ad04[3];
+extern "C" VecFx32 data_ov006_0213ace0[3];
+WalkPath sMascotWalkerPaths[] = {
+    {4, (Vector3 *)data_ov006_0213ad58},
+    {4, (Vector3 *)data_ov006_0213ad88},
+    {3, (Vector3 *)data_ov006_0213ad04},
+    {3, (Vector3 *)data_ov006_0213ace0},
+};
+
+VecFx32 data_ov006_0213ad58[4] = {
+    {0x27000, 0, -0x34000},
+    {0xc000, 0, -0x34000},
+    {-0x4000, 0, -0x11000},
+    {-0x27000, 0, -0x11000},
+};
+VecFx32 data_ov006_0213ad88[4] = {
+    {-0x27000, 0, -0x11000},
+    {-0x4000, 0, -0x11000},
+    {0xc000, 0, -0x34000},
+    {0x27000, 0, -0x34000},
+};
+VecFx32 data_ov006_0213ad04[3] = {
+    {0x27000, 0, -0x11000},
+    {0xc000, 0, -0x11000},
+    {-0x27000, 0, -0x11000},
+};
+VecFx32 data_ov006_0213ace0[3] = {
+    {-0x27000, 0, -0x11000},
+    {0xc000, 0, -0x11000},
+    {0x27000, 0, -0x11000},
+};
 extern QuaternionBlock data_02092768; /* identity */
 extern dClipper data_0209f43c;
 extern dFdBrightness_c *gSceneFader;

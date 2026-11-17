@@ -36,6 +36,11 @@
       "name": ".bss",
       "start": "0x0210dc70",
       "end": "0x0210dcb8"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x020ff060",
+      "end": "0x020ff090"
     }
   ],
   "functions": [
@@ -1028,6 +1033,66 @@
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020100dc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff060",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210da48",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210da48"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff064",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210da50",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210da50"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff068",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210da00",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210da00"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff06c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d9b8",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d9b8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff070",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d9f8",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d9f8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff074",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d9c8",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d9c8"
     }
   ],
   "production_mode": "intact-object",
@@ -1096,7 +1161,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -1139,11 +1204,18 @@
           "start": "0x0210dc70",
           "end": "0x0210dcb8",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x020ff060",
+          "end": "0x020ff090",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 49
+          "LICENSED": 52
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1154,19 +1226,19 @@
           {
             "section": ".init",
             "original": [
-              109
+              114
             ],
             "desired": [
-              109
+              114
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              107
+              112
             ],
             "desired": [
-              107
+              112
             ]
           },
           {
@@ -1184,9 +1256,9 @@
               86,
               88,
               90,
-              93,
-              95,
-              96
+              98,
+              100,
+              101
             ],
             "desired": [
               74,
@@ -1198,12 +1270,12 @@
               80,
               88,
               76,
-              95,
-              96,
+              100,
+              101,
               68,
               70,
               72,
-              93
+              98
             ]
           },
           {
@@ -1213,6 +1285,19 @@
             ],
             "desired": [
               92
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              93,
+              95,
+              97
+            ],
+            "desired": [
+              93,
+              95,
+              97
             ]
           }
         ],
@@ -1233,9 +1318,9 @@
                 86,
                 88,
                 90,
-                93,
-                95,
-                96
+                98,
+                100,
+                101
               ],
               "desired": [
                 74,
@@ -1247,12 +1332,12 @@
                 80,
                 88,
                 76,
-                95,
-                96,
+                100,
+                101,
                 68,
                 70,
                 72,
-                93
+                98
               ],
               "slots": [
                 68,
@@ -1267,9 +1352,9 @@
                 86,
                 88,
                 90,
-                93,
-                95,
-                96
+                98,
+                100,
+                101
               ]
             }
           ],
@@ -1424,6 +1509,23 @@
       "from": "@1583",
       "to": "@1545",
       "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1567 to @1564. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1545. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now Re-keyed from @1597 to @1611 when the red-coin handler's volatile position and LAUNDER casts were retired (#821). Re-keyed from @1611 to @1542 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1542 to @1541 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @1541 to @1539 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @1534 to @1536 when the dual-name union fields and locals of #5404 went back to one name and a visible cast at the use site (measured from the compiled object, paired by relocation reference sites). Re-keyed from @1536 to @1530 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1530 to @1545 when the local class views gave way to the classes' own headers (measured from the compiled object). Re-keyed from @1545 to @1543 when the unused *_hold_ prototypes and count-holding locals were removed (measured from the compiled object). Re-keyed from @1543 to @1583 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov002_020ff060",
+      "address": "0x020ff060",
+      "size": "0xc"
+    },
+    {
+      "symbol": "data_ov002_020ff06c",
+      "address": "0x020ff06c",
+      "size": "0xc"
+    },
+    {
+      "symbol": "data_ov002_020ff078",
+      "address": "0x020ff078",
+      "size": "0x18"
     }
   ]
 }

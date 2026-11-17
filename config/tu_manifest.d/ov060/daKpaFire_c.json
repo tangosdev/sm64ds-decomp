@@ -18,6 +18,11 @@
       "end": "0x02117980"
     },
     {
+      "name": ".rodata",
+      "start": "0x0211934c",
+      "end": "0x02119514"
+    },
+    {
       "name": ".init",
       "start": "0x02119df0",
       "end": "0x02119f94"
@@ -224,7 +229,31 @@
       "ordinal": 26
     }
   ],
+  "rodata": [
+    {
+      "symbol": "data_ov060_0211934c",
+      "address": "0x0211934c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three terminal velocities, sub-variant 0..2, 20.12 fixed-point"
+    },
+    {
+      "symbol": "data_ov060_02119358",
+      "address": "0x02119358",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three particle ids, sub-variant 0..2"
+    },
+    {
+      "symbol": "data_ov060_02119364",
+      "address": "0x02119364",
+      "size": "0x1b0",
+      "binding": "STB_GLOBAL",
+      "evidence": "variant 0 mouth-pose rows, five u16 values each"
+    }
+  ],
   "data": [],
+
   "bss": [
     {
       "symbol": "data_ov060_0211af74",
@@ -435,6 +464,13 @@
           "section": ".text",
           "start": "0x02116484",
           "end": "0x02117980",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0211934c",
+          "end": "0x02119514",
           "differingBytes": 0,
           "firstDiff": null
         },

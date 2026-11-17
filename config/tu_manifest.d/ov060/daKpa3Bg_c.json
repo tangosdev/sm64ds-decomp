@@ -18,6 +18,11 @@
       "end": "0x02118438"
     },
     {
+      "name": ".rodata",
+      "start": "0x02119514",
+      "end": "0x021195dc"
+    },
+    {
       "name": ".init",
       "start": "0x0211a000",
       "end": "0x0211a388"
@@ -122,6 +127,29 @@
       "size": "0x00000030",
       "legacy_source": "src/d_a_kpa3_bg.c",
       "ordinal": 11
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov060_02119514",
+      "address": "0x02119514",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "ten model handles, one per platform piece"
+    },
+    {
+      "symbol": "data_ov060_0211953c",
+      "address": "0x0211953c",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "ten collision handles, one per platform piece"
+    },
+    {
+      "symbol": "data_ov060_02119564",
+      "address": "0x02119564",
+      "size": "0x78",
+      "binding": "STB_GLOBAL",
+      "evidence": "ten piece spots, x z and facing angle"
     }
   ],
   "data": [
@@ -542,6 +570,13 @@
           "section": ".text",
           "start": "0x02117d1c",
           "end": "0x02118438",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02119514",
+          "end": "0x021195dc",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1175,6 +1210,206 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x02119514",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b06c",
+      "target_module": "ov060",
+      "target_address": "0x0211b06c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119518",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b034",
+      "target_module": "ov060",
+      "target_address": "0x0211b034"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211951c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b0a4",
+      "target_module": "ov060",
+      "target_address": "0x0211b0a4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119520",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b03c",
+      "target_module": "ov060",
+      "target_address": "0x0211b03c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119524",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b0b4",
+      "target_module": "ov060",
+      "target_address": "0x0211b0b4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119528",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b044",
+      "target_module": "ov060",
+      "target_address": "0x0211b044"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211952c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b094",
+      "target_module": "ov060",
+      "target_address": "0x0211b094"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119530",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b09c",
+      "target_module": "ov060",
+      "target_address": "0x0211b09c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119534",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b054",
+      "target_module": "ov060",
+      "target_address": "0x0211b054"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119538",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b024",
+      "target_module": "ov060",
+      "target_address": "0x0211b024"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211953c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b0ac",
+      "target_module": "ov060",
+      "target_address": "0x0211b0ac"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119540",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b02c",
+      "target_module": "ov060",
+      "target_address": "0x0211b02c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119544",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b05c",
+      "target_module": "ov060",
+      "target_address": "0x0211b05c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119548",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b064",
+      "target_module": "ov060",
+      "target_address": "0x0211b064"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211954c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b07c",
+      "target_module": "ov060",
+      "target_address": "0x0211b07c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119550",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b01c",
+      "target_module": "ov060",
+      "target_address": "0x0211b01c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119554",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b074",
+      "target_module": "ov060",
+      "target_address": "0x0211b074"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119558",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b084",
+      "target_module": "ov060",
+      "target_address": "0x0211b084"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211955c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b08c",
+      "target_module": "ov060",
+      "target_address": "0x0211b08c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02119560",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "addend": 0,
+      "symbol": "data_ov060_0211b04c",
+      "target_module": "ov060",
+      "target_address": "0x0211b04c"
+    },
     {
       "section": ".init",
       "source": "0x0211a010",

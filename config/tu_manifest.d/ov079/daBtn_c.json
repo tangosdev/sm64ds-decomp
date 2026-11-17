@@ -31,6 +31,23 @@
       "name": ".bss",
       "start": "0x02128140",
       "end": "0x021282e0"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021275dc",
+      "end": "0x02127618"
+    },
+    {
+      "name": ".data.btnA",
+      "input_section": ".data",
+      "start": "0x02127ba0",
+      "end": "0x02127c28"
+    },
+    {
+      "name": ".data.w127c28",
+      "start": "0x02127cfc",
+      "end": "0x02127e7c",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -287,7 +304,113 @@
       "ordinal": 35
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov079_02127ba0",
+      "address": "0x02127ba0",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "plain Whomp CLPS block passed to the moving mesh collider"
+    },
+    {
+      "symbol": "data_ov079_02127bc0",
+      "address": "0x02127bc0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of daBtn_c::func_ov079_0212538c"
+    },
+    {
+      "symbol": "data_ov079_02127bc8",
+      "address": "0x02127bc8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of daBtn_c::func_ov079_02125240"
+    },
+    {
+      "symbol": "data_ov079_02127bd0",
+      "address": "0x02127bd0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of daBtn_c::func_ov079_021258fc"
+    },
+    {
+      "symbol": "data_ov079_02127bd8",
+      "address": "0x02127bd8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of daBtn_c::func_ov079_021254b4"
+    },
+    {
+      "symbol": "data_ov079_02127be0",
+      "address": "0x02127be0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of daBtn_c::func_ov079_02124638"
+    },
+    {
+      "symbol": "data_ov079_02127be8",
+      "address": "0x02127be8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of daBtn_c::func_ov079_021246dc"
+    },
+    {
+      "symbol": "data_ov079_02127bf0",
+      "address": "0x02127bf0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "plain and king collision file handles"
+    },
+    {
+      "symbol": "data_ov079_02127bf8",
+      "address": "0x02127bf8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of daBtn_c::func_ov079_021246d8"
+    },
+    {
+      "symbol": "data_ov079_02127c00",
+      "address": "0x02127c00",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of daBtn_c::func_ov079_02125b44"
+    },
+    {
+      "symbol": "data_ov079_02127c08",
+      "address": "0x02127c08",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of daBtn_c::func_ov079_02124530"
+    },
+    {
+      "symbol": "data_ov079_02127c10",
+      "address": "0x02127c10",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of daBtn_c::func_ov079_021256d4"
+    },
+    {
+      "symbol": "data_ov079_02127c18",
+      "address": "0x02127c18",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of daBtn_c::func_ov079_02124b08"
+    },
+    {
+      "symbol": "data_ov079_02127c20",
+      "address": "0x02127c20",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of daBtn_c::func_ov079_021249f0"
+    },
+    {
+      "symbol": "data_ov079_02127cfc",
+      "address": "0x02127cfc",
+      "size": "0x180",
+      "binding": "STB_GLOBAL",
+      "evidence": "plain and king tip-lift samples, 48 entries each"
+    }
+  ],
   "bss": [
     {
       "symbol": "gBattanKingAttack02AnimationFile",
@@ -645,6 +768,27 @@
           "start": "0x02128140",
           "end": "0x021282e0",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021275dc",
+          "end": "0x02127618",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.btnA",
+          "start": "0x02127ba0",
+          "end": "0x02127c28",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.w127c28",
+          "start": "0x02127cfc",
+          "end": "0x02127e7c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -1155,6 +1299,78 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local resource-handle registration node is a configured initializer relocation destination at 0x02128274"
+    },
+    {
+      "symbol": "data_ov079_02127c00",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov079_02127bd0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov079_02127c10",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov079_02127bd8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov079_02127bc0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov079_02127bc8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov079_02127c18",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov079_02127c20",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov079_02127be8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov079_02127bf8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov079_02127be0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov079_02127c08",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
     }
   ],
   "relocations": [
@@ -1977,6 +2193,256 @@
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02127c08"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021275ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBattanAttack01AnimationFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02128188"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021275f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBattanAttack02AnimationFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02128180"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021275f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBattanRecoverAnimationFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02128190"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021275f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBattanWalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02128158"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021275fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBattanWalkstartAnimationFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02128160"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127600",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBattanKingAttack01AnimationFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x021281a0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127604",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBattanKingAttack02AnimationFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02128140"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127608",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBattanKingRecoverAnimationFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02128148"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212760c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBattanKingWalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02128150"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127610",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBattanKingWalkstartAnimationFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x021281b8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127614",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov079_021281b0",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x021281b0"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127bf0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBattanCollisionFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x021281a8"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127bf4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBattanKingCollisionFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02128198"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127bc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBtn_c19func_ov079_0212538cEv",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x0212538c"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127bc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBtn_c19func_ov079_02125240Ev",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02125240"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127bd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBtn_c19func_ov079_021258fcEv",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x021258fc"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127bd8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBtn_c19func_ov079_021254b4Ev",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x021254b4"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127be0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBtn_c19func_ov079_02124638Ev",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02124638"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127be8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBtn_c19func_ov079_021246dcEv",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x021246dc"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127bf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBtn_c19func_ov079_021246d8Ev",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x021246d8"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127c00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBtn_c19func_ov079_02125b44Ev",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02125b44"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127c08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBtn_c19func_ov079_02124530Ev",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02124530"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127c10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBtn_c19func_ov079_021256d4Ev",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x021256d4"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127c18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBtn_c19func_ov079_02124b08Ev",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02124b08"
+    },
+    {
+      "section": ".data.btnA",
+      "source": "0x02127c20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7daBtn_c19func_ov079_021249f0Ev",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x021249f0"
     }
   ],
   "externalized_output": [],
@@ -2060,6 +2526,96 @@
       "from": "@788",
       "to": "@644",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates. Re-keyed from @751 to @748 after the dBgW_Kc ITCM accessors became members (three named-parameter local externs removed; measured). Re-keyed from @748 to @679 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @679 to @687 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @687 to @686 when d_a_btn dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @686 to @750 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @743 to @734 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @734 to @771 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @771 to @783 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @783 to @788 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@790",
+      "to": "data_ov079_02127c00",
+      "evidence": "Member-pointer constant for daBtn_c::func_ov079_02125b44. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@792",
+      "to": "data_ov079_02127bd0",
+      "evidence": "Member-pointer constant for daBtn_c::func_ov079_021258fc. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@794",
+      "to": "data_ov079_02127c10",
+      "evidence": "Member-pointer constant for daBtn_c::func_ov079_021256d4. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@796",
+      "to": "data_ov079_02127bd8",
+      "evidence": "Member-pointer constant for daBtn_c::func_ov079_021254b4. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@798",
+      "to": "data_ov079_02127bc0",
+      "evidence": "Member-pointer constant for daBtn_c::func_ov079_0212538c. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@800",
+      "to": "data_ov079_02127bc8",
+      "evidence": "Member-pointer constant for daBtn_c::func_ov079_02125240. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@802",
+      "to": "data_ov079_02127c18",
+      "evidence": "Member-pointer constant for daBtn_c::func_ov079_02124b08. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@804",
+      "to": "data_ov079_02127c20",
+      "evidence": "Member-pointer constant for daBtn_c::func_ov079_021249f0. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@806",
+      "to": "data_ov079_02127be8",
+      "evidence": "Member-pointer constant for daBtn_c::func_ov079_021246dc. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@808",
+      "to": "data_ov079_02127bf8",
+      "evidence": "Member-pointer constant for daBtn_c::func_ov079_021246d8. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@810",
+      "to": "data_ov079_02127be0",
+      "evidence": "Member-pointer constant for daBtn_c::func_ov079_02124638. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@812",
+      "to": "data_ov079_02127c08",
+      "evidence": "Member-pointer constant for daBtn_c::func_ov079_02124530. The initializer relocation names that method, so this local keeps the configured image."
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov079_021275dc",
+      "address": "0x021275dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "plain and king horizontal speeds, indexed by mIsKing"
+    },
+    {
+      "symbol": "data_ov079_021275e4",
+      "address": "0x021275e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "plain and king vertical speeds, indexed by mIsKing"
+    },
+    {
+      "symbol": "data_ov079_021275ec",
+      "address": "0x021275ec",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "plain Whomp's five animation handles"
+    },
+    {
+      "symbol": "data_ov079_02127600",
+      "address": "0x02127600",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "king Whomp's six animation handles"
     }
   ]
 }

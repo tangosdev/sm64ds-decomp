@@ -30,6 +30,17 @@
       "name": ".bss",
       "start": "0x021142ac",
       "end": "0x021142d4"
+    },
+    {
+      "name": ".data",
+      "start": "0x02113f00",
+      "end": "0x02113f0c"
+    },
+    {
+      "name": ".data.wcObj06Clps",
+      "input_section": ".data",
+      "start": "0x0211308c",
+      "end": "0x021130ac"
     }
   ],
   "functions": [
@@ -62,7 +73,21 @@
       "ordinal": 3
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov029_02113f00",
+      "address": "0x02113f00",
+      "size": "0xc",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_ov029_0211308c",
+      "address": "0x0211308c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "two entries: the 0x01000fc0 floor and the 0x01000fc5 wall"
+    }
+  ],
   "bss": [
     {
       "symbol": "gWcObj06ModelFile",
@@ -116,11 +141,13 @@
     "compilerOnlyOutput": {
       "requested": [
         "_ZN17daObjFloatBoard_cD2Ev",
-        "_ZN10dBgActor_cD2Ev"
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
         "_ZN10dBgActor_cD2Ev",
-        "_ZN17daObjFloatBoard_cD2Ev"
+        "_ZN17daObjFloatBoard_cD2Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
         7,
@@ -138,15 +165,16 @@
         19,
         20,
         21,
-        24,
-        25,
         26,
         27,
         28,
-        37,
+        30,
+        31,
         38,
-        39,
-        40
+        41,
+        42,
+        43,
+        44
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -177,7 +205,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV14daObjWcObj06_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
@@ -225,6 +254,20 @@
           "start": "0x021142ac",
           "end": "0x021142d4",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02113f00",
+          "end": "0x02113f0c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.wcObj06Clps",
+          "start": "0x0211308c",
+          "end": "0x021130ac",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -485,6 +528,36 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02113f00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gWcObj06ModelFile",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x021142ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gWcObj06CollisionFile",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x021142b4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_0211308c",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x0211308c"
+    },
     {
       "section": ".init",
       "source": "0x02112cc8",

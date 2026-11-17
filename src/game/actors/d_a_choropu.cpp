@@ -43,7 +43,11 @@ enum daChoropu_c_AssetId {
     ASSET_ROCK_BMD = 0x02d6
 };
 
+/* decl_common.h declares data_ov080_021276c4 as a non-const int[],
+   which cannot be this .rodata object. Hide that declaration. */
+#define data_ov080_021276c4 data_ov080_021276c4_decl
 #include "decl_common.h"
+#undef data_ov080_021276c4
 #include "daChoropu_c.h"
 #include "daChoro_Rock_c.h"
 #include "decl_Player.h"
@@ -93,9 +97,19 @@ void func_02012694(unsigned int a, const Vector3 *p);
 
 void  func_ov080_02124418(daChoro_Rock_c *t);
 
-extern int data_ov080_0212767c[];
+extern const int data_ov080_0212767c[18] = {
+    90, 78, 62, 116, 176, 228, 252, 264, 288, 288, 288, 248, 208, 128, 32, 0, 0, 0,
+};
+extern const int data_ov080_021276c4[20] = {
+    24, 32, 40, 48, 56, 68, 76, 80, 88, 94, 100, 100, 100, 100, 100, 100, 100, 100, 90, 80,
+};
 extern SharedFilePtr data_ov002_0210d9d8;
-extern SharedFilePtr *data_ov080_0212766c[];
+extern SharedFilePtr *const data_ov080_0212766c[4] = {
+    &data_ov080_021283e8,
+    &data_ov080_021283d0,
+    &data_ov080_021283d8,
+    &data_ov080_021283e0,
+};
 
 #pragma defer_codegen off
 

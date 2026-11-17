@@ -36,6 +36,11 @@
       "name": ".bss",
       "start": "0x021283c0",
       "end": "0x02128468"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0212766c",
+      "end": "0x02127714"
     }
   ],
   "functions": [
@@ -531,6 +536,13 @@
           "start": "0x021283c0",
           "end": "0x02128468",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0212766c",
+          "end": "0x02127714",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -1364,6 +1376,46 @@
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02123c24"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212766c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov080_021283e8",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021283e8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127670",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov080_021283d0",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021283d0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127674",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov080_021283d8",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021283d8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127678",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov080_021283e0",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x021283e0"
     }
   ],
   "defined_symbol_renames": [
@@ -1426,6 +1478,29 @@
       "from": "@1072",
       "to": "@1027",
       "evidence": "compiler temp; removing the local Spawn declaration shifts this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @1087 to @1033 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1033 to @1045 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1045 to @1052 when the TU took the folded sine-table index temps and hand-pass cleanups (measured from the compiled object). Re-keyed from @1052 to @1048 when its local copies of header-declared functions gave way to the header (measured by pairing compiled objects). Re-keyed from @1048 to @1035 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1035 to @1072 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov080_0212766c",
+      "address": "0x0212766c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four animation handles"
+    },
+    {
+      "symbol": "data_ov080_0212767c",
+      "address": "0x0212767c",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "leap cylinder heights in whole units, 18 frames"
+    },
+    {
+      "symbol": "data_ov080_021276c4",
+      "address": "0x021276c4",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "cylinder heights for frames 6 through 25"
     }
   ]
 }

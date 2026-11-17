@@ -174,11 +174,12 @@ int ApproachAngle(short *cur, short target, int step, int a, int b);
 }
 
 extern SharedFilePtr data_ov002_0211092c;
-extern s32 data_ov100_02148008[3];
 extern ChompState data_ov100_021486f4;
-/* The ROM PMF constants the state record copies from (unlicensed .data). */
-extern ChompPmf data_ov100_02148000;
-extern ChompPmf data_ov100_02147ff8;
+int func_ov100_02143aa4(daWanwan2_c *);
+int func_ov100_02143ae0(daWanwan2_c *);
+int data_ov100_02147ff8[2] = {(int)&func_ov100_02143aa4, 0};
+int data_ov100_02148000[2] = {(int)&func_ov100_02143ae0, 0};
+s32 data_ov100_02148008[3] = {0, -0xa0000, 0};
 extern unsigned char gGameMode;
 extern Matrix4x3 data_020a0e68;
 
@@ -803,6 +804,6 @@ Wanwan2ModelFilePtr data_ov100_021486a4(0x9c01);
 Wanwan2AnimFileHandle data_ov100_021486ac(0x9c04);
 Wanwan2AnimFileHandle data_ov100_021486b4(0x9c03);
 ChompState data_ov100_021486f4 = {
-    data_ov100_02148000,
-    data_ov100_02147ff8,
+    *(ChompPmf *)&data_ov100_02148000,
+    *(ChompPmf *)&data_ov100_02147ff8,
 };

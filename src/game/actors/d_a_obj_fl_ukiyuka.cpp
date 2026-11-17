@@ -35,7 +35,9 @@ enum daObjFl_Ukiyuka_c_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
-extern daObjUkiyuka_c::Resources data_ov022_021140d4[];
+extern "C" daObjUkiyuka_c::Resources data_ov022_021140d4[];
+extern CLPS_Block data_ov064_0211baec;
+extern CLPS_Block data_ov064_0211bacc;
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */
@@ -91,6 +93,12 @@ UkiyukaModelFilePtr gFlUkiYukaModelFile(ASSET_FL_UKI_YUKA_BMD);
 UkiyukaCollisionFilePtr gFlUkiYukaCollisionFile(ASSET_FL_UKI_YUKA_KCL);
 UkiyukaModelFilePtr gdaObjFl_UkiyukaFlShisoModelFile(ASSET_FL_SHISO_BMD);
 UkiyukaCollisionFilePtr gdaObjFl_UkiyukaFlShisoCollisionFile(ASSET_FL_SHISO_KCL);
+
+daObjUkiyuka_c::Resources data_ov022_021140d4[2] = {
+    {&gFlUkiYukaModelFile, &gFlUkiYukaCollisionFile, &data_ov064_0211baec},
+    {&gdaObjFl_UkiyukaFlShisoModelFile, &gdaObjFl_UkiyukaFlShisoCollisionFile,
+     &data_ov064_0211bacc},
+};
 
 /* Reconstructed source-style name: SM64DS proves daObjFl_Ukiyuka_c through RTTI,
  * allocation size, vtable identity, and the FL_UKIYUKA_L registry profile;

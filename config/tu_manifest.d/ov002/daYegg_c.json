@@ -36,6 +36,11 @@
       "name": ".bss",
       "start": "0x02110a5c",
       "end": "0x02110a9c"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021000a8",
+      "end": "0x021000b8"
     }
   ],
   "functions": [
@@ -565,6 +570,13 @@
           "start": "0x02110a5c",
           "end": "0x02110a9c",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021000a8",
+          "end": "0x021000b8",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -987,6 +999,13 @@
       "from": "@1663",
       "to": "@1536",
       "evidence": "Compiler-generated PMF descriptor name for the three real-interface Source rewrite; raw8-byte body and relocation/section coordinate match prior @1568 and retained licensed @1536. No function alias, new metadata, or deadstrip policy introduced. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @1670 to @1684 when Re-keyed when fx_trig.h was included for func_ov002_020ecb0c's FX_SinIdx/FX_CosIdx (#821).. Re-keyed from @1684 to @1683 when func_ov002_020ed998's carried-position launder became a Vector3 local (#821). Re-keyed from @1683 to @1725 when Re-keyed +42 when func_ov002_020ed0d4's volatile Vector3 pair and its walk pointers became plain Vector3 copies through const references (#821).. Re-keyed from @1725 to @1733 when Re-keyed +8 when func_ov002_020ecb0c's particle position became a block-scoped Vector3(x, y + 0x28000, z) construction, retiring its volatile mPosY read and the file-local Spawn struct (#821).. Re-keyed from @1733 to @1659 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1657 to @1659 when daBtn_c.h typed mMeshMatrix as a Matrix4x3 member (measured from the compiled object). Re-keyed from @1656 to @1649 when the goto cleanup shifted this compiler-local number (measured from the compiled object; same section, offset, size, type and binding). Re-keyed from @1649 to @1676 by object pairing (section, value, size) when this source replaced raw offset arithmetic with member access (measured from the compiled object). Re-keyed from @1676 to @1655 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1655 to @1651 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1651 to @1663 when daYegg_c's spawn, last and hold-target positions became Vector3 members (measured from the compiled object)."
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov002_021000a8",
+      "address": "0x021000a8",
+      "size": "0x10"
     }
   ]
 }

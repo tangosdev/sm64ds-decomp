@@ -95,10 +95,21 @@ enum d_a_trs_trap_AssetId {
    collision-mesh handle, the CLPS block, and the bookshelf's six book-switch
    spawn offsets (x/y pairs). Symbols keep their data_ov063_* names; only the
    entry types are recovered. */
-extern SharedFilePtr *data_ov063_0211e27c[];
-extern SharedFilePtr *data_ov063_0211e28c[];
-extern CLPS_Block *data_ov063_0211e9e8[];
-extern s32 data_ov063_0211e9f8[];
+extern SharedFilePtr *const data_ov063_0211e27c[4];
+extern SharedFilePtr *const data_ov063_0211e28c[4];
+int data_ov063_0211ebf8[8] = {0x53504c43, 0x00010008, 0x00000fc5, 0x000000ff,
+                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+int data_ov063_0211ec18[8] = {0x53504c43, 0x00010008, 0x00000fcb, 0x000000ff,
+                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+int data_ov063_0211ec58[8] = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
+                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+int data_ov063_0211ec78[8] = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
+                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+CLPS_Block *data_ov063_0211e9e8[4] = {
+    (CLPS_Block *)data_ov063_0211ec58, (CLPS_Block *)data_ov063_0211ebf8,
+    (CLPS_Block *)data_ov063_0211ec78, (CLPS_Block *)data_ov063_0211ec18};
+s32 data_ov063_0211e9f8[6] = {0x00002000, 0x000d4000, 0x00055000,
+                              0x00043000, 0xfff83000, 0x0008e000};
 
 /* The four dispatch records, bound to this trap's own class (see above).
    Defined at the bottom of this file. */
@@ -127,9 +138,9 @@ extern void hold_d_a_trs_trap(void *self, void *f, const Matrix4x3 *m, int fx, s
 
 extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
 /* Staircase settle offsets, one signed byte per frame 0..3. */
-extern signed char data_ov063_0211e26c[];
+extern const signed char data_ov063_0211e26c[4] = {-8, 8, -4, 4};
 /* Staircase rise limits, indexed by mStepIndex. */
-extern int data_ov063_0211e270[];
+extern const int data_ov063_0211e270[3] = {200, 400, 600};
 
 void Vec3_Asr(void *dst, void *src, int n);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -541,6 +552,26 @@ int daTrsTrap_c::InitResources()
  * dispatch records. __sinit_d_a_trs_trap.cpp emits the constructions, the
  * destructor registrations and the record copies; the registration nodes are
  * compiler temporaries. */
+extern TrsTrapModelFilePtr gThKaidanModelFile;
+extern TrsTrapModelFilePtr gThTrapModelFile;
+extern TrsTrapModelFilePtr gThHondanaModelFile;
+extern TrsTrapModelFilePtr gThMeryGoModelFile;
+extern TrsTrapCollisionFilePtr gThKaidanCollisionFile;
+extern TrsTrapCollisionFilePtr gThTrapCollisionFile;
+extern TrsTrapCollisionFilePtr gThHondanaCollisionFile;
+extern TrsTrapCollisionFilePtr gThMeryGoCollisionFile;
+extern SharedFilePtr *const data_ov063_0211e27c[4] = {
+    &gThKaidanModelFile,
+    &gThTrapModelFile,
+    &gThHondanaModelFile,
+    &gThMeryGoModelFile,
+};
+extern SharedFilePtr *const data_ov063_0211e28c[4] = {
+    &gThKaidanCollisionFile,
+    &gThTrapCollisionFile,
+    &gThHondanaCollisionFile,
+    &gThMeryGoCollisionFile,
+};
 TrsTrapModelFilePtr gThHondanaModelFile(ASSET_TH_HONDANA_BMD);
 TrsTrapModelFilePtr gThKaidanModelFile(ASSET_TH_KAIDAN_BMD);
 TrsTrapModelFilePtr gThMeryGoModelFile(ASSET_TH_MERY_GO_BMD);

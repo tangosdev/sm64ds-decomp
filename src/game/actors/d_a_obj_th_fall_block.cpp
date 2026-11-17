@@ -59,3 +59,10 @@ struct ThFallBlockCollisionFilePtr : SharedFilePtr {
  * file. */
 ThFallBlockModelFilePtr gThDownBModelFile(ASSET_TH_DOWN_B_BMD);         /* model */
 ThFallBlockCollisionFilePtr gThDownBCollisionFile(ASSET_TH_DOWN_B_KCL); /* collision */
+int data_ov063_0211ec98[8] = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
+                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+ResourceDescriptor data_ov063_0211eb10 = {
+    &gThDownBModelFile,
+    &gThDownBCollisionFile,
+    (CLPS_Block *)data_ov063_0211ec98,
+};

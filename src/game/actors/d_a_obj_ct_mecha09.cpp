@@ -56,7 +56,12 @@ extern int RandomIntInternal(int *seed);
 extern Mecha09ClsnFilePtr data_ov065_0211d9cc;
 extern Mecha09ModelFilePtr data_ov065_0211d9d4;
 extern u8 data_0209f2c0;
-extern s32 data_ov065_0211d520[];
+s32 data_ov065_0211d520[4] = {
+    0x6000,
+    0xa000,
+    0x6000,
+    0x0,
+};
 
 extern CLPS_Block data_ov035_02112118;
 

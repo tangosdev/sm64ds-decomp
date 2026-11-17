@@ -28,6 +28,11 @@
       "end": "0x02112e84"
     },
     {
+      "name": ".rodata",
+      "start": "0x02112b2c",
+      "end": "0x02112b38"
+    },
+    {
       "name": ".bss",
       "start": "0x021142fc",
       "end": "0x02114324"
@@ -117,6 +122,14 @@
     }
   ],
   "data": [],
+  "rodata": [
+    {
+      "symbol": "data_ov029_02112b2c",
+      "address": "0x02112b2c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL"
+    }
+  ],
   "bss": [
     {
       "symbol": "daObjWc_Obj07_c_ModelFile",
@@ -453,6 +466,13 @@
           "start": "0x021142fc",
           "end": "0x02114324",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02112b2c",
+          "end": "0x02112b38",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

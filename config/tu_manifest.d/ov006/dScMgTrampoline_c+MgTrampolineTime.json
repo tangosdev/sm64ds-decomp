@@ -20,8 +20,170 @@
     },
     {
       "name": ".data",
-      "start": "0x0213faa0",
+      "start": "0x0213fa9c",
       "end": "0x0213fbc4"
+    },
+    {
+      "name": ".data.sTrmpPuffItalian",
+      "input_section": ".data",
+      "start": "0x02134d28",
+      "end": "0x02134d34"
+    },
+    {
+      "name": ".data.sTrmpPuffGerman",
+      "input_section": ".data",
+      "start": "0x02134d34",
+      "end": "0x02134d40"
+    },
+    {
+      "name": ".data.sTrmpPuffEnglish",
+      "input_section": ".data",
+      "start": "0x02134d40",
+      "end": "0x02134d4c"
+    },
+    {
+      "name": ".data.sTrmpPuffSpanish",
+      "input_section": ".data",
+      "start": "0x02134d4c",
+      "end": "0x02134d58"
+    },
+    {
+      "name": ".data.sTrmpPuffFrench",
+      "input_section": ".data",
+      "start": "0x02134d58",
+      "end": "0x02134d64"
+    },
+    {
+      "name": ".data.data_ov006_02134d64",
+      "input_section": ".data",
+      "start": "0x02134d64",
+      "end": "0x02134d7c"
+    },
+    {
+      "name": ".data.data_ov006_02134d7c",
+      "input_section": ".data",
+      "start": "0x02134d7c",
+      "end": "0x02134d94"
+    },
+    {
+      "name": ".data.data_ov006_02134d94",
+      "input_section": ".data",
+      "start": "0x02134d94",
+      "end": "0x02134dac"
+    },
+    {
+      "name": ".data.data_ov006_02134dac",
+      "input_section": ".data",
+      "start": "0x02134dac",
+      "end": "0x02134dc4"
+    },
+    {
+      "name": ".data.data_ov006_02134dc4",
+      "input_section": ".data",
+      "start": "0x02134dc4",
+      "end": "0x02134ddc"
+    },
+    {
+      "name": ".data.data_ov006_02134ddc",
+      "input_section": ".data",
+      "start": "0x02134ddc",
+      "end": "0x02134df4"
+    },
+    {
+      "name": ".data.data_ov006_02134df4",
+      "input_section": ".data",
+      "start": "0x02134df4",
+      "end": "0x02134e0c"
+    },
+    {
+      "name": ".data.data_ov006_02134e0c",
+      "input_section": ".data",
+      "start": "0x02134e0c",
+      "end": "0x02134e24"
+    },
+    {
+      "name": ".data.data_ov006_02134e24",
+      "input_section": ".data",
+      "start": "0x02134e24",
+      "end": "0x02134e3c"
+    },
+    {
+      "name": ".data.data_ov006_02134e3c",
+      "input_section": ".data",
+      "start": "0x02134e3c",
+      "end": "0x02134e54"
+    },
+    {
+      "name": ".data.data_ov006_02134e54",
+      "input_section": ".data",
+      "start": "0x02134e54",
+      "end": "0x02134e6c"
+    },
+    {
+      "name": ".data.data_ov006_02134e6c",
+      "input_section": ".data",
+      "start": "0x02134e6c",
+      "end": "0x02134e84"
+    },
+    {
+      "name": ".data.data_ov006_02134e84",
+      "input_section": ".data",
+      "start": "0x02134e84",
+      "end": "0x02134e9c"
+    },
+    {
+      "name": ".data.data_ov006_02134e9c",
+      "input_section": ".data",
+      "start": "0x02134e9c",
+      "end": "0x02134eb4"
+    },
+    {
+      "name": ".data.data_ov006_02134eb4",
+      "input_section": ".data",
+      "start": "0x02134eb4",
+      "end": "0x02134ecc"
+    },
+    {
+      "name": ".data.data_ov006_02134ef0",
+      "input_section": ".data",
+      "start": "0x02134ef0",
+      "end": "0x02134ef8"
+    },
+    {
+      "name": ".data.data_ov006_02134ef8",
+      "input_section": ".data",
+      "start": "0x02134ef8",
+      "end": "0x02134f00"
+    },
+    {
+      "name": ".data.sTrmpDoorSignSprites",
+      "input_section": ".data",
+      "start": "0x02134f00",
+      "end": "0x02134f08"
+    },
+    {
+      "name": ".data.sTrmpArrowSprite",
+      "input_section": ".data",
+      "start": "0x02134f08",
+      "end": "0x02134f0c"
+    },
+    {
+      "name": ".data.data_ov006_02134f0c",
+      "input_section": ".data",
+      "start": "0x02134f0c",
+      "end": "0x02134f24"
+    },
+    {
+      "name": ".data.sTrmpRowMarkerSprite",
+      "input_section": ".data",
+      "start": "0x02134f24",
+      "end": "0x02134f28"
+    },
+    {
+      "name": ".data.data_ov006_02134f28",
+      "input_section": ".data",
+      "start": "0x02134f28",
+      "end": "0x02134f30"
     }
   ],
   "functions": [
@@ -408,6 +570,202 @@
       "address_point_bias": "0x8",
       "size": "0x98",
       "evidence": "compiler storage includes the two-word vtable preamble at 0x0213fb2c; all emitted relocation words match and storage ends exactly at the next minigame TU data"
+    },
+    {
+      "symbol": "sTrmpDoorSignSprites",
+      "address": "0x02134f00",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sTrmpArrowSprite",
+      "address": "0x02134f08",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sTrmpRowMarkerSprite",
+      "address": "0x02134f24",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sTrmpTouchBlocked",
+      "address": "0x0213fa9c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sTrmpPuffItalian",
+      "address": "0x02134d28",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sTrmpPuffGerman",
+      "address": "0x02134d34",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sTrmpPuffEnglish",
+      "address": "0x02134d40",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sTrmpPuffSpanish",
+      "address": "0x02134d4c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sTrmpPuffFrench",
+      "address": "0x02134d58",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134d64",
+      "address": "0x02134d64",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134d7c",
+      "address": "0x02134d7c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134d94",
+      "address": "0x02134d94",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134dac",
+      "address": "0x02134dac",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134dc4",
+      "address": "0x02134dc4",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134ddc",
+      "address": "0x02134ddc",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134df4",
+      "address": "0x02134df4",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134e0c",
+      "address": "0x02134e0c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134e24",
+      "address": "0x02134e24",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134e3c",
+      "address": "0x02134e3c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134e54",
+      "address": "0x02134e54",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134e6c",
+      "address": "0x02134e6c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134e84",
+      "address": "0x02134e84",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134e9c",
+      "address": "0x02134e9c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134eb4",
+      "address": "0x02134eb4",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134ef0",
+      "address": "0x02134ef0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134ef8",
+      "address": "0x02134ef8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134f0c",
+      "address": "0x02134f0c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134f28",
+      "address": "0x02134f28",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     }
   ],
   "relocations": [
@@ -970,6 +1328,196 @@
       "addend": 0,
       "target_module": "overlays(2,3,4,7)",
       "target_address": "0x020ad660"
+    },
+    {
+      "section": ".data.sTrmpDoorSignSprites",
+      "source": "0x02134f04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134ef0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134ef0"
+    },
+    {
+      "section": ".data.sTrmpDoorSignSprites",
+      "source": "0x02134f00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134ef8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134ef8"
+    },
+    {
+      "section": ".data.sTrmpArrowSprite",
+      "source": "0x02134f08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134f0c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134f0c"
+    },
+    {
+      "section": ".data.sTrmpRowMarkerSprite",
+      "source": "0x02134f24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134f28",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134f28"
+    },
+    {
+      "section": ".data.sTrmpPuffItalian",
+      "source": "0x02134d28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134e9c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134e9c"
+    },
+    {
+      "section": ".data.sTrmpPuffItalian",
+      "source": "0x02134d2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134d94",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134d94"
+    },
+    {
+      "section": ".data.sTrmpPuffItalian",
+      "source": "0x02134d30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134eb4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134eb4"
+    },
+    {
+      "section": ".data.sTrmpPuffGerman",
+      "source": "0x02134d34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134e6c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134e6c"
+    },
+    {
+      "section": ".data.sTrmpPuffGerman",
+      "source": "0x02134d38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134d64",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134d64"
+    },
+    {
+      "section": ".data.sTrmpPuffGerman",
+      "source": "0x02134d3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134d7c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134d7c"
+    },
+    {
+      "section": ".data.sTrmpPuffEnglish",
+      "source": "0x02134d40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134dc4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134dc4"
+    },
+    {
+      "section": ".data.sTrmpPuffEnglish",
+      "source": "0x02134d44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134e84",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134e84"
+    },
+    {
+      "section": ".data.sTrmpPuffEnglish",
+      "source": "0x02134d48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134e3c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134e3c"
+    },
+    {
+      "section": ".data.sTrmpPuffSpanish",
+      "source": "0x02134d4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134e54",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134e54"
+    },
+    {
+      "section": ".data.sTrmpPuffSpanish",
+      "source": "0x02134d50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134e24",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134e24"
+    },
+    {
+      "section": ".data.sTrmpPuffSpanish",
+      "source": "0x02134d54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134e0c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134e0c"
+    },
+    {
+      "section": ".data.sTrmpPuffFrench",
+      "source": "0x02134d58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134ddc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134ddc"
+    },
+    {
+      "section": ".data.sTrmpPuffFrench",
+      "source": "0x02134d5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134dac",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134dac"
+    },
+    {
+      "section": ".data.sTrmpPuffFrench",
+      "source": "0x02134d60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134df4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134df4"
     }
   ],
   "bss": [],
@@ -1120,8 +1668,197 @@
         },
         {
           "section": ".data",
-          "start": "0x0213faa0",
+          "start": "0x0213fa9c",
           "end": "0x0213fbc4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sTrmpDoorSignSprites",
+          "start": "0x02134f00",
+          "end": "0x02134f08",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sTrmpArrowSprite",
+          "start": "0x02134f08",
+          "end": "0x02134f0c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sTrmpRowMarkerSprite",
+          "start": "0x02134f24",
+          "end": "0x02134f28",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134d64",
+          "start": "0x02134d64",
+          "end": "0x02134d7c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134d7c",
+          "start": "0x02134d7c",
+          "end": "0x02134d94",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134d94",
+          "start": "0x02134d94",
+          "end": "0x02134dac",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134dac",
+          "start": "0x02134dac",
+          "end": "0x02134dc4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134dc4",
+          "start": "0x02134dc4",
+          "end": "0x02134ddc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134ddc",
+          "start": "0x02134ddc",
+          "end": "0x02134df4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134df4",
+          "start": "0x02134df4",
+          "end": "0x02134e0c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134e0c",
+          "start": "0x02134e0c",
+          "end": "0x02134e24",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134e24",
+          "start": "0x02134e24",
+          "end": "0x02134e3c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134e3c",
+          "start": "0x02134e3c",
+          "end": "0x02134e54",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134e54",
+          "start": "0x02134e54",
+          "end": "0x02134e6c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134e6c",
+          "start": "0x02134e6c",
+          "end": "0x02134e84",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134e84",
+          "start": "0x02134e84",
+          "end": "0x02134e9c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134e9c",
+          "start": "0x02134e9c",
+          "end": "0x02134eb4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134eb4",
+          "start": "0x02134eb4",
+          "end": "0x02134ecc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sTrmpPuffItalian",
+          "start": "0x02134d28",
+          "end": "0x02134d34",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sTrmpPuffGerman",
+          "start": "0x02134d34",
+          "end": "0x02134d40",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sTrmpPuffEnglish",
+          "start": "0x02134d40",
+          "end": "0x02134d4c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sTrmpPuffSpanish",
+          "start": "0x02134d4c",
+          "end": "0x02134d58",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sTrmpPuffFrench",
+          "start": "0x02134d58",
+          "end": "0x02134d64",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134ef0",
+          "start": "0x02134ef0",
+          "end": "0x02134ef8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134ef8",
+          "start": "0x02134ef8",
+          "end": "0x02134f00",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134f0c",
+          "start": "0x02134f0c",
+          "end": "0x02134f24",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134f28",
+          "start": "0x02134f28",
+          "end": "0x02134f30",
           "differingBytes": 0,
           "firstDiff": null
         }

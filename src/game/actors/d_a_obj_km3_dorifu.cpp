@@ -54,18 +54,42 @@ struct DorifuClsnFileHandle : SharedFilePtr {
 typedef char DorifuModelFilePtr_size_must_be_8[sizeof(DorifuModelFilePtr) == 8 ? 1 : -1];
 typedef char DorifuClsnFileHandle_size_must_be_8[sizeof(DorifuClsnFileHandle) == 8 ? 1 : -1];
 
-extern daObjDorifuResources data_ov047_02112508[5];
+/* Collision properties, one block per group of planks: the 'CLPS' tag, the
+ * 8-byte stride header with two entries, then the default entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+CLPS_Block data_ov047_02111a74 = {
+    0x53504c43,
+    0x00020008,
+    {0x00000fc0, 0x000000ff, 0x00004fc0, 0x000000ff, 0xffffffff, 0xffffffff},
+};
+CLPS_Block data_ov047_02111a94 = {
+    0x53504c43,
+    0x00020008,
+    {0x00000fc0, 0x000000ff, 0x00004fc0, 0x000000ff, 0xffffffff, 0xffffffff},
+};
+CLPS_Block data_ov047_02111bb4 = {
+    0x53504c43,
+    0x00020008,
+    {0x00000fc0, 0x000000ff, 0x00002fc0, 0x000000ff, 0xffffffff, 0xffffffff},
+};
+/* Forty bytes: three resource rows and the next row's model pointer.
+   The following twenty bytes are the next symbol. */
+extern SharedFilePtr *data_ov047_02112508[10];
 
 daObjKm3_Dorifu_c *daObjKm3_Dorifu_c_classInit() {
     return new daObjKm3_Dorifu_c();
 }
 
 s32 daObjKm3_Dorifu_c::InitResources() {
-    return daObjDorifu_c::InitResources(data_ov047_02112508);
+    return daObjDorifu_c::InitResources((daObjDorifuResources *)data_ov047_02112508);
 }
 
 s32 daObjKm3_Dorifu_c::CleanupResources() {
-    return daObjDorifu_c::CleanupResources(data_ov047_02112508);
+    return daObjDorifu_c::CleanupResources((daObjDorifuResources *)data_ov047_02112508);
 }
 
 /* Retail construction order. mwcc emits __sinit_d_a_obj_km3_dorifu.cpp. */
@@ -79,3 +103,10 @@ DorifuClsnFileHandle gKm3Dan1CollisionFile(ASSET_KM3_DAN1_KCL);
 DorifuClsnFileHandle gKm3Dan2CollisionFile(ASSET_KM3_DAN2_KCL);
 DorifuClsnFileHandle gKm3Dan3CollisionFile(ASSET_KM3_DAN3_KCL);
 DorifuClsnFileHandle gKm3Dan4CollisionFile(ASSET_KM3_DAN4_KCL);
+
+SharedFilePtr *data_ov047_02112508[10] = {
+    &gKm3Dan0ModelFile, &gKm3Dan0CollisionFile, (SharedFilePtr *)&data_ov047_02111bb4,
+    &gKm3Dan1ModelFile, &gKm3Dan1CollisionFile, (SharedFilePtr *)&data_ov047_02111a74,
+    &gKm3Dan2ModelFile, &gKm3Dan2CollisionFile, (SharedFilePtr *)&data_ov047_02111a94,
+    &gKm3Dan3ModelFile,
+};

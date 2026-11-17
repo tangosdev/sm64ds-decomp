@@ -123,13 +123,8 @@ extern daPly_c *gPlayers[];
    words are mid-table), so the data settles it. */
 extern CLPS_Block data_ov015_021135d4;
 
-extern int data_ov079_021275dc[];
-extern int data_ov079_021275e4[];
-extern SharedFilePtr *data_ov079_021275ec[];
-extern void *data_ov079_02127600[];
-extern CLPS_Block data_ov079_02127ba0;   /* the plain Whomp's CLPS block */
-extern void *data_ov079_02127bf0[];
-extern int data_ov079_02127cfc[];
+extern const int data_ov079_021275dc[2] = {0x00003000, 0x00002000};
+extern const int data_ov079_021275e4[2] = {0x00028000, 0x00046000};
 
 /* File-scope resource handles: each ctor/dtor pair is a ROM SharedFilePtr
    veneer (func_02017acc/func_02017ab4 for the two BMDs, SharedFilePtr::
@@ -172,28 +167,47 @@ BtnAnimationFileHandle  data_ov079_021281b0(ASSET_BATTAN_KING_DAMAGE_BCA);
 BtnCollisionFilePtr     gBattanCollisionFile(ASSET_BATTAN_KCL);   /* the plain Whomp's KCL */
 BtnCollisionFilePtr     gBattanKingCollisionFile(ASSET_BATTAN_KING_KCL);   /* the king's KCL */
 
-/* The twelve state handler records live in .data (0x02127bc0..0x02127c28);
-   the static initializer copies them into the table below, one member
-   pointer per mState. */
+/* Plain Whomp animation handles, then the king's six. */
+extern SharedFilePtr *const data_ov079_021275ec[5] = {
+    &gBattanAttack01AnimationFile, &gBattanAttack02AnimationFile,  &gBattanRecoverAnimationFile,
+    &gBattanWalkAnimationFile,     &gBattanWalkstartAnimationFile,
+};
+extern void *const data_ov079_02127600[6] = {
+    &gBattanKingAttack01AnimationFile,  &gBattanKingAttack02AnimationFile,
+    &gBattanKingRecoverAnimationFile,   &gBattanKingWalkAnimationFile,
+    &gBattanKingWalkstartAnimationFile, &data_ov079_021281b0,
+};
 
-extern daBtn_c::StateFunc data_ov079_02127c00;   /* 0 func_ov079_02125b44 */
-extern daBtn_c::StateFunc data_ov079_02127bd0;   /* 1 func_ov079_021258fc */
-extern daBtn_c::StateFunc data_ov079_02127c10;   /* 2 func_ov079_021256d4 */
-extern daBtn_c::StateFunc data_ov079_02127bd8;   /* 3 func_ov079_021254b4 */
-extern daBtn_c::StateFunc data_ov079_02127bc0;   /* 4 func_ov079_0212538c */
-extern daBtn_c::StateFunc data_ov079_02127bc8;   /* 5 func_ov079_02125240 */
-extern daBtn_c::StateFunc data_ov079_02127c18;   /* 6 func_ov079_02124b08 */
-extern daBtn_c::StateFunc data_ov079_02127c20;   /* 7 func_ov079_021249f0 */
-extern daBtn_c::StateFunc data_ov079_02127be8;   /* 8 func_ov079_021246dc */
-extern daBtn_c::StateFunc data_ov079_02127bf8;   /* 9 func_ov079_021246d8 */
-extern daBtn_c::StateFunc data_ov079_02127be0;   /* 10 func_ov079_02124638 */
-extern daBtn_c::StateFunc data_ov079_02127c08;   /* 11 func_ov079_02124530 */
+/* CLPS for the moving mesh, then the two collision handles. */
+int data_ov079_02127ba0[8] = {
+    0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+};
+void *data_ov079_02127bf0[2] = {
+    &gBattanCollisionFile,
+    &gBattanKingCollisionFile,
+};
 
+int data_ov079_02127cfc[96] = {
+    0x00025000, 0x0002c000, 0x00030000, 0x00034000, 0x00038000, 0x00040000, 0x00046000, 0x0004a000,
+    0x0004e000, 0x00054000, 0x00052000, 0x00050000, 0x0004c000, 0x00048000, 0x00044000, 0x00040000,
+    0x0003c000, 0x00034000, 0x0002c000, 0x00028000, 0x00024000, 0x00024000, 0x00020000, 0x0001c000,
+    0x0001c000, 0x00018000, 0x00014000, 0x00010000, 0x0000c000, 0x00008000, 0x00004000, 0x00000000,
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+    0x00053000, 0x00053000, 0x00063000, 0x00078000, 0x00095000, 0x000a8000, 0x000b7000, 0x000c4000,
+    0x000c4000, 0x000c4000, 0x000c4000, 0x000be000, 0x000b6000, 0x000ae000, 0x000a8000, 0x0009a000,
+    0x0008c000, 0x00088000, 0x00080000, 0x00078000, 0x00070000, 0x00068000, 0x00060000, 0x00058000,
+    0x00058000, 0x00058000, 0x00054000, 0x00040000, 0x00030000, 0x0001e000, 0x0000a000, 0x00000000,
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+};
+
+/* Twelve state handlers. The initializer copies each member pointer into this table. */
 daBtn_c::StateFunc data_ov079_02128280[12] = {
-    data_ov079_02127c00, data_ov079_02127bd0, data_ov079_02127c10,
-    data_ov079_02127bd8, data_ov079_02127bc0, data_ov079_02127bc8,
-    data_ov079_02127c18, data_ov079_02127c20, data_ov079_02127be8,
-    data_ov079_02127bf8, data_ov079_02127be0, data_ov079_02127c08,
+    &daBtn_c::func_ov079_02125b44, &daBtn_c::func_ov079_021258fc, &daBtn_c::func_ov079_021256d4,
+    &daBtn_c::func_ov079_021254b4, &daBtn_c::func_ov079_0212538c, &daBtn_c::func_ov079_02125240,
+    &daBtn_c::func_ov079_02124b08, &daBtn_c::func_ov079_021249f0, &daBtn_c::func_ov079_021246dc,
+    &daBtn_c::func_ov079_021246d8, &daBtn_c::func_ov079_02124638, &daBtn_c::func_ov079_02124530,
 };
 
 /* OnAimedAtWithEggReturnVec's view of func_ov079_02123d4c: the (out, this)
@@ -273,7 +287,7 @@ int daBtn_c::InitResources()
     if (idx == 0) {
         mMovingMeshCollider.dBgW_KcMbg::SetFile(
             (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr), mMeshMatrix, 0x199,
-            mAngleY, data_ov079_02127ba0);
+            mAngleY, *(CLPS_Block *)data_ov079_02127ba0);
     } else {
         mMovingMeshCollider.dBgW_KcMbg::SetFile(
             (KCL_File *)(((SharedFilePtr *)data_ov079_02127bf0[idx])->filePtr), mMeshMatrix, 0x1000,
@@ -694,7 +708,7 @@ void daBtn_c::func_ov079_021256d4()
         mPosY = mSpawnPos.y;
         five = 5;
         mPosZ = mSpawnPos.z;
-        tab = data_ov079_021275ec;
+        tab = (SharedFilePtr **)data_ov079_021275ec;
         t = mSpawnAngleX;
         ma = &mAnmModel;
         mAngleX = t;

@@ -28,6 +28,16 @@
       "name": ".ctor",
       "start": "0x02086bb4",
       "end": "0x02086bb8"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02082158",
+      "end": "0x02082178"
+    },
+    {
+      "name": ".data",
+      "start": "0x02099e18",
+      "end": "0x02099e70"
     }
   ],
   "functions": [
@@ -879,7 +889,46 @@
       "ordinal": 120
     }
   ],
-  "data": [],
+  "rodata": [
+    {
+      "symbol": "data_02082158",
+      "address": "0x02082158",
+      "size": "0x20",
+      "evidence": "zero block registered with WBT_RegisterBlock"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "data_02099e18",
+      "address": "0x02099e18",
+      "size": "0x1",
+      "evidence": "peer count tested by the parent download loop"
+    },
+    {
+      "symbol": "data_02099e1c",
+      "address": "0x02099e1c",
+      "size": "0x1",
+      "evidence": "one-byte latch cleared after the parent check"
+    },
+    {
+      "symbol": "data_02099e20",
+      "address": "0x02099e20",
+      "size": "0x4",
+      "evidence": "parent mode compared against 3"
+    },
+    {
+      "symbol": "data_02099e24",
+      "address": "0x02099e24",
+      "size": "0x48",
+      "evidence": "card-force-wakeup message passed to the card IRQ handler"
+    },
+    {
+      "symbol": "data_02099e6c",
+      "address": "0x02099e6c",
+      "size": "0x4",
+      "evidence": "archive name passed to FS_FindArchive"
+    }
+  ],
   "bss": [],
   "init": [
     {
@@ -993,6 +1042,20 @@
           "section": ".ctor",
           "start": "0x02086bb4",
           "end": "0x02086bb8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02082158",
+          "end": "0x02082178",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02099e18",
+          "end": "0x02099e70",
           "differingBytes": 0,
           "firstDiff": null
         }

@@ -27,6 +27,12 @@
       "end": "0x02113424"
     },
     {
+      "name": ".data.rote",
+      "input_section": ".data",
+      "start": "0x02113654",
+      "end": "0x02113674"
+    },
+    {
       "name": ".bss",
       "start": "0x02114a84",
       "end": "0x02114aac"
@@ -83,7 +89,15 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov015_02113654",
+      "address": "0x02113654",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "rotating bar CLPS block"
+    }
+  ],
   "production_mode": "intact-object",
   "bss": [
     {
@@ -431,6 +445,13 @@
           "section": ".ctor",
           "start": "0x02113420",
           "end": "0x02113424",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.rote",
+          "start": "0x02113654",
+          "end": "0x02113674",
           "differingBytes": 0,
           "firstDiff": null
         },

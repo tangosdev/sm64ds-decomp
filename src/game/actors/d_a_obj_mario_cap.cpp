@@ -263,8 +263,8 @@ extern McapStatePmf data_ov002_0210958c, data_ov002_02109594;
 extern McapStatePmf data_ov002_0210959c, data_ov002_021095a4;
 
 extern SharedFilePtr *data_ov002_020ff0a0[];
-extern SharedFilePtr *data_ov002_020ff0b8[];
-extern int            *data_ov002_020ff0c4[];
+extern SharedFilePtr *const data_ov002_020ff0b8[];
+extern int *const data_ov002_020ff0c4[];
 }
 void func_02013a88(void);
 void func_020167a4(dExtAnmModel_c *model);
@@ -1367,6 +1367,18 @@ McapStateRec data_ov002_0210df04 = { data_ov002_0210959c, data_ov002_02109544 };
 McapStateRec data_ov002_0210df24 = { data_ov002_0210955c, data_ov002_02109564 };
 McapStateRec data_ov002_0210df34 = { data_ov002_0210956c, data_ov002_02109574 };
 McapStateRec data_ov002_0210df54 = { data_ov002_0210957c, data_ov002_0210954c };
-McapStateRec data_ov002_0210df74 = { data_ov002_02109594, data_ov002_02109554 };
-McapStateRec data_ov002_0210df14 = { data_ov002_0210951c, data_ov002_021095a4 };
-McapStateRec data_ov002_0210df44 = { data_ov002_02109584, data_ov002_0210953c };
+McapStateRec data_ov002_0210df74 = {data_ov002_02109594, data_ov002_02109554};
+McapStateRec data_ov002_0210df14 = {data_ov002_0210951c, data_ov002_021095a4};
+McapStateRec data_ov002_0210df44 = {data_ov002_02109584, data_ov002_0210953c};
+
+/* Initialized data this file is the only complete referrer for. */
+SharedFilePtr *const data_ov002_020ff0b8[3] = {
+    (SharedFilePtr *)&data_ov002_0210de28,
+    (SharedFilePtr *)&data_ov002_0210de08,
+    (SharedFilePtr *)&data_ov002_0210de20,
+};
+int *const data_ov002_020ff0c4[3] = {
+    (int *)&data_ov002_0210de40,
+    (int *)&data_ov002_0210de10,
+    (int *)&data_ov002_0210de00,
+};

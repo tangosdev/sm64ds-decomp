@@ -231,6 +231,48 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler PMF record for the bookshelf state body (mIndex 2)"
+    },
+    {
+      "symbol": "data_ov063_0211e9e8",
+      "address": "0x0211e9e8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS blocks indexed by trap variant"
+    },
+    {
+      "symbol": "data_ov063_0211e9f8",
+      "address": "0x0211e9f8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "book-switch spawn offsets"
+    },
+    {
+      "symbol": "data_ov063_0211ebf8",
+      "address": "0x0211ebf8",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block"
+    },
+    {
+      "symbol": "data_ov063_0211ec18",
+      "address": "0x0211ec18",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block"
+    },
+    {
+      "symbol": "data_ov063_0211ec58",
+      "address": "0x0211ec58",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block"
+    },
+    {
+      "symbol": "data_ov063_0211ec78",
+      "address": "0x0211ec78",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block"
     }
   ],
   "externalized_output": [],
@@ -383,6 +425,41 @@
       "name": ".bss",
       "start": "0x0211ee98",
       "end": "0x0211ef58"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0211e26c",
+      "end": "0x0211e29c"
+    },
+    {
+      "name": ".data.trap",
+      "input_section": ".data",
+      "start": "0x0211e9e8",
+      "end": "0x0211ea10"
+    },
+    {
+      "name": ".data.clps0",
+      "input_section": ".data",
+      "start": "0x0211ebf8",
+      "end": "0x0211ec18"
+    },
+    {
+      "name": ".data.clps1",
+      "input_section": ".data",
+      "start": "0x0211ec18",
+      "end": "0x0211ec38"
+    },
+    {
+      "name": ".data.clps2",
+      "input_section": ".data",
+      "start": "0x0211ec58",
+      "end": "0x0211ec78"
+    },
+    {
+      "name": ".data.clps3",
+      "input_section": ".data",
+      "start": "0x0211ec78",
+      "end": "0x0211ec98"
     }
   ],
   "source": "src/game/actors/d_a_trs_trap.cpp",
@@ -506,6 +583,48 @@
           "start": "0x0211ee98",
           "end": "0x0211ef58",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0211e26c",
+          "end": "0x0211e29c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.trap",
+          "start": "0x0211e9e8",
+          "end": "0x0211ea10",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.clps0",
+          "start": "0x0211ebf8",
+          "end": "0x0211ec18",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.clps1",
+          "start": "0x0211ec18",
+          "end": "0x0211ec38",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.clps2",
+          "start": "0x0211ec58",
+          "end": "0x0211ec78",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.clps3",
+          "start": "0x0211ec78",
+          "end": "0x0211ec98",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -1155,6 +1274,126 @@
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211c89c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e27c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThKaidanModelFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eeb0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e280",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThTrapModelFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eea8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e284",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThHondanaModelFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eeb8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e288",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThMeryGoModelFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ee98"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e28c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThKaidanCollisionFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eea0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e290",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThTrapCollisionFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eed0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e294",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThHondanaCollisionFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eec0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211e298",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThMeryGoCollisionFile",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211eec8"
+    },
+    {
+      "section": ".data.trap",
+      "source": "0x0211e9e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov063_0211ec58",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ec58"
+    },
+    {
+      "section": ".data.trap",
+      "source": "0x0211e9ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov063_0211ebf8",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ebf8"
+    },
+    {
+      "section": ".data.trap",
+      "source": "0x0211e9f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov063_0211ec78",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ec78"
+    },
+    {
+      "section": ".data.trap",
+      "source": "0x0211e9f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov063_0211ec18",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211ec18"
     }
   ],
   "defined_symbol_renames": [
@@ -1333,6 +1572,36 @@
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov063_0211e26c",
+      "address": "0x0211e26c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "staircase settle offsets, frames 0 through 3"
+    },
+    {
+      "symbol": "data_ov063_0211e270",
+      "address": "0x0211e270",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "staircase rise limits"
+    },
+    {
+      "symbol": "data_ov063_0211e27c",
+      "address": "0x0211e27c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "model handles indexed by trap variant"
+    },
+    {
+      "symbol": "data_ov063_0211e28c",
+      "address": "0x0211e28c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision handles indexed by trap variant"
     }
   ]
 }

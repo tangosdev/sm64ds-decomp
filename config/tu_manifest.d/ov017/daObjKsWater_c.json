@@ -13,6 +13,18 @@
   ],
   "sections": [
     {
+      "name": ".data.ksBta",
+      "input_section": ".data",
+      "start": "0x02111a60",
+      "end": "0x02111a78"
+    },
+    {
+      "name": ".data.ksClps",
+      "input_section": ".data",
+      "start": "0x02111a94",
+      "end": "0x02111ab4"
+    },
+    {
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x021114b8"
@@ -31,6 +43,17 @@
       "name": ".bss",
       "start": "0x02111c80",
       "end": "0x02111ca8"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021114b8",
+      "end": "0x0211198c"
+    },
+    {
+      "name": ".data.ksWaterName",
+      "input_section": ".data",
+      "start": "0x02111a18",
+      "end": "0x02111a24"
     }
   ],
   "functions": [
@@ -84,7 +107,29 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov017_02111a60",
+      "address": "0x02111a60",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "BTA header: 300 frames, one material."
+    },
+    {
+      "symbol": "data_ov017_02111a94",
+      "address": "0x02111a94",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS words for the sunken-ship water."
+    },
+    {
+      "symbol": "data_ov017_02111a18",
+      "address": "0x02111a18",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "the BMD material name the animation record resolves: water_mat"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov017_02111c80",
@@ -222,25 +267,25 @@
         "_ZN10dBgActor_cD2Ev"
       ],
       "droppedSections": [
-        6,
         7,
-        9,
-        10,
+        8,
         11,
         12,
         13,
+        14,
         15,
-        16,
         17,
         18,
         19,
         20,
         22,
         23,
-        24,
         25,
-        40,
-        41
+        26,
+        32,
+        33,
+        49,
+        50
       ],
       "data": [
         "_ZTI7dBase_c",
@@ -267,7 +312,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV14daObjKsWater_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -297,6 +343,20 @@
       },
       "tuRanges": [
         {
+          "section": ".data.ksBta",
+          "start": "0x02111a60",
+          "end": "0x02111a78",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.ksClps",
+          "start": "0x02111a94",
+          "end": "0x02111ab4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".text",
           "start": "0x021111a0",
           "end": "0x021114b8",
@@ -322,6 +382,20 @@
           "start": "0x02111c80",
           "end": "0x02111ca8",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021114b8",
+          "end": "0x0211198c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.ksWaterName",
+          "start": "0x02111a18",
+          "end": "0x02111a24",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -412,6 +486,46 @@
       "addend": 0,
       "target_module": "ov017",
       "target_address": "0x0211198c"
+    },
+    {
+      "section": ".data.ksBta",
+      "source": "0x02111a64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov017_021114bc",
+      "addend": 0,
+      "target_module": "ov017",
+      "target_address": "0x021114bc"
+    },
+    {
+      "section": ".data.ksBta",
+      "source": "0x02111a68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov017_021114b8",
+      "addend": 0,
+      "target_module": "ov017",
+      "target_address": "0x021114b8"
+    },
+    {
+      "section": ".data.ksBta",
+      "source": "0x02111a6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov017_021114dc",
+      "addend": 0,
+      "target_module": "ov017",
+      "target_address": "0x021114dc"
+    },
+    {
+      "section": ".data.ksBta",
+      "source": "0x02111a74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov017_021114c0",
+      "addend": 0,
+      "target_module": "ov017",
+      "target_address": "0x021114c0"
     },
     {
       "section": ".init",
@@ -512,6 +626,16 @@
       "addend": 0,
       "target_module": "ov017",
       "target_address": "0x02111c90"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021114c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov017_02111a18",
+      "addend": 0,
+      "target_module": "ov017",
+      "target_address": "0x02111a18"
     }
   ],
   "undefined_symbol_aliases": [
@@ -580,6 +704,36 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local registration node is a configured relocation destination at 0x02111c90"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov017_021114b8",
+      "address": "0x021114b8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "rotation key of the water texture-SRT animation: the identity angle"
+    },
+    {
+      "symbol": "data_ov017_021114bc",
+      "address": "0x021114bc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "scale key of the water texture-SRT animation: 0x1000, an unscaled texture"
+    },
+    {
+      "symbol": "data_ov017_021114c0",
+      "address": "0x021114c0",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "the water's single BTA material record; func_02046b64 fills in its material id"
+    },
+    {
+      "symbol": "data_ov017_021114dc",
+      "address": "0x021114dc",
+      "size": "0x4b0",
+      "binding": "STB_GLOBAL",
+      "evidence": "300 texture-translation keys, one per animation frame, named by the record's transS/transT ranges"
     }
   ]
 }

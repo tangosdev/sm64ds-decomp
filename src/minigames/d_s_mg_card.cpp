@@ -16,6 +16,7 @@
 #include "nitro/hw/registers.h"
 #include "types.h"
 #include "Vector2.h"
+#include "OamAttr.h"
 #include "PlayerInput.h"
 #include "decl_common.h"
 #include "Sound.h"
@@ -42,22 +43,31 @@ typedef struct OamAttrTmpl {
 extern "C" {
 extern int pmf_Dealer_StateDeal_2[2];
 extern int pmf_Dealer_StateReveal[2];
-extern unsigned short sCardFaceSprites[];
+extern unsigned short sCardFaceSprites[36];
 extern void *sCardObjSprites[];
 extern int sMgCardSprites[];
 extern void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
+extern "C" void *data_ov006_021369ec[];
+extern "C" void *data_ov006_021369b0[];
+extern "C" void *data_ov006_02136974[];
+extern "C" void *data_ov006_0213509c[];
+extern "C" void *data_ov006_02135018[];
+extern "C" void *data_ov006_02134fdc[];
 extern void **sCardPayoutHighlightSprites[];
-extern void *sCardHudSprites[];
+extern "C" OamAttr data_ov006_02134074[];
+extern "C" OamAttr data_ov006_02134124[];
+void *sCardHudSprites[] = {data_ov006_02134074, data_ov006_02134124};
 extern int sCardSelectLocked;
 extern int sCardSwapRequested;
 extern int data_ov006_02141770;
 extern void Vec2_Sub(int *o, int *a, int *b);
 extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 extern const Five sCardHandOrder;
-extern int sCardFaceWeights[];
+extern int sCardFaceWeights[6];
 extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
-extern OamAttr *data_ov006_02134028;
+extern "C" OamAttr data_ov006_0213402c[];
+OamAttr *data_ov006_02134028 = data_ov006_0213402c;
 extern void Mg_SaveRecordPair(int a0, int a1);
 extern void Mg_ShowBanner(int a0, int a1, int a2, int a3, int a4, s16 a5);
 extern void Mg_SubmitScore(int v);
@@ -65,7 +75,7 @@ extern void Mg_SetSharedState(int v);
 extern int sMgCoinsBetPlaced;
 extern int sCardDrawsLeft;
 extern int gMgCoinsInPlay;
-extern int sCardHandPayouts[];
+extern int sCardHandPayouts[7];
 extern void FreeGfxSlotsById(int arg);
 extern s16 gMgCoinsStatus;
 extern u8 gMainScreenLayers;
@@ -1512,3 +1522,52 @@ void *sCardObjSprites[15] = {
     (void *)sMgCardSprites[0xe], (void *)sMgCardSprites[0xb], (void *)sMgCardSprites[0xc],
     (void *)sMgCardSprites[7],   (void *)sMgCardSprites[8],   (void *)sMgCardSprites[9],
     (void *)sMgCardSprites[0xa], (void *)sMgCardSprites[3],   (void *)sMgCardSprites[4]};
+
+/* The card-table templates Init rewrites in place: attr0's shape field to 1
+   and attr2's palette bank to 0, walking until attr3 == 0xffff. */
+OamAttr data_ov006_0213402c[8] = {
+    {0x00cc, 0xc1dc, 0x0008, 0x0000}, {0x80cc, 0x401c, 0x0010, 0x0000},
+    {0x80ec, 0x401c, 0x0090, 0x0000}, {0x400c, 0xc1dc, 0x0108, 0x0000},
+    {0x800c, 0x401c, 0x0110, 0x0000}, {0x402c, 0x41dc, 0x0188, 0x0000},
+    {0x402c, 0x41fc, 0x018c, 0x0000}, {0x002c, 0x001c, 0x0190, 0xffff},
+};
+
+/* The two play-field sprite lists sCardHudSprites selects between. */
+OamAttr data_ov006_02134074[22] = {
+    {0x40f8, 0x81c0, 0x01c0, 0x0000}, {0x40f8, 0x81e0, 0x01c4, 0x0000},
+    {0x40f8, 0x8000, 0x01c8, 0x0000}, {0x40f8, 0x8020, 0x01cc, 0x0000},
+    {0x80f0, 0x41b8, 0x0106, 0x0000}, {0x80f0, 0x4040, 0x0108, 0x0000},
+    {0x80f0, 0x41d8, 0x0107, 0x0000}, {0x80f0, 0x41e0, 0x0107, 0x0000},
+    {0x80f0, 0x41e8, 0x0107, 0x0000}, {0x80f0, 0x41f0, 0x0107, 0x0000},
+    {0x80f0, 0x41f8, 0x0107, 0x0000}, {0x80f0, 0x4000, 0x0107, 0x0000},
+    {0x80f0, 0x4008, 0x0107, 0x0000}, {0x80f0, 0x4010, 0x0107, 0x0000},
+    {0x80f0, 0x4018, 0x0107, 0x0000}, {0x80f0, 0x4020, 0x0107, 0x0000},
+    {0x80f0, 0x4028, 0x0107, 0x0000}, {0x80f0, 0x41d0, 0x0107, 0x0000},
+    {0x80f0, 0x4030, 0x0107, 0x0000}, {0x80f0, 0x41c8, 0x0107, 0x0000},
+    {0x80f0, 0x4038, 0x0107, 0x0000}, {0x80f0, 0x41c0, 0x0107, 0xffff},
+};
+OamAttr data_ov006_02134124[22] = {
+    {0x40f8, 0x81c0, 0x0180, 0x0000}, {0x40f8, 0x81e0, 0x0184, 0x0000},
+    {0x40f8, 0x8000, 0x0188, 0x0000}, {0x40f8, 0x8020, 0x018c, 0x0000},
+    {0x80f0, 0x41b8, 0x0106, 0x0000}, {0x80f0, 0x4040, 0x0108, 0x0000},
+    {0x80f0, 0x41d8, 0x0107, 0x0000}, {0x80f0, 0x41e0, 0x0107, 0x0000},
+    {0x80f0, 0x41e8, 0x0107, 0x0000}, {0x80f0, 0x41f0, 0x0107, 0x0000},
+    {0x80f0, 0x41f8, 0x0107, 0x0000}, {0x80f0, 0x4000, 0x0107, 0x0000},
+    {0x80f0, 0x4008, 0x0107, 0x0000}, {0x80f0, 0x4010, 0x0107, 0x0000},
+    {0x80f0, 0x4018, 0x0107, 0x0000}, {0x80f0, 0x4020, 0x0107, 0x0000},
+    {0x80f0, 0x4028, 0x0107, 0x0000}, {0x80f0, 0x41d0, 0x0107, 0x0000},
+    {0x80f0, 0x4030, 0x0107, 0x0000}, {0x80f0, 0x41c8, 0x0107, 0x0000},
+    {0x80f0, 0x4038, 0x0107, 0x0000}, {0x80f0, 0x41c0, 0x0107, 0xffff},
+};
+
+/* Single-sprite lists between the play-field pair and the coin popup list;
+   this scene does not index them. */
+OamAttr data_ov006_021341d4[1] = {
+    {0x80f0, 0x41fc, 0x000f, 0xffff},
+};
+OamAttr data_ov006_021341dc[1] = {
+    {0x80f0, 0x41fc, 0x000e, 0xffff},
+};
+OamAttr data_ov006_021341e4[1] = {
+    {0x80f0, 0x81f8, 0x0008, 0xffff},
+};

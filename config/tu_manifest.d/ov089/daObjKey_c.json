@@ -26,6 +26,24 @@
       "end": "0x02132af8"
     },
     {
+      "name": ".rodata.anims",
+      "input_section": ".rodata",
+      "start": "0x02132880",
+      "end": "0x02132894"
+    },
+    {
+      "name": ".data.models",
+      "input_section": ".data",
+      "start": "0x02132894",
+      "end": "0x021328b4"
+    },
+    {
+      "name": ".rodata.extra",
+      "input_section": ".rodata",
+      "start": "0x021328b4",
+      "end": "0x021328d4"
+    },
+    {
       "name": ".data",
       "start": "0x02132b00",
       "end": "0x02132b40"
@@ -234,6 +252,29 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor for a StateDrop slot; retail first word is 0x02131b18"
+    },
+    {
+      "symbol": "data_ov089_02132894",
+      "address": "0x02132894",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight model handles indexed by key kind, in the overlay's model-handle band"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov089_02132880",
+      "address": "0x02132880",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five collect-animation handles indexed by mAnimID; the first slot is null"
+    },
+    {
+      "symbol": "data_ov089_021328b4",
+      "address": "0x021328b4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight extra-model handles indexed by key kind; slots 2..4 point at ov002"
     }
   ],
   "bss": [
@@ -484,6 +525,27 @@
           "section": ".ctor",
           "start": "0x02132af4",
           "end": "0x02132af8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.anims",
+          "start": "0x02132880",
+          "end": "0x02132894",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.models",
+          "start": "0x02132894",
+          "end": "0x021328b4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.extra",
+          "start": "0x021328b4",
+          "end": "0x021328d4",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -966,6 +1028,156 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata.anims",
+      "source": "0x02132884",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov089_02132c60",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c60"
+    },
+    {
+      "section": ".rodata.anims",
+      "source": "0x02132888",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov089_02132c70",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c70"
+    },
+    {
+      "section": ".rodata.anims",
+      "source": "0x0213288c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov089_02132c40",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c40"
+    },
+    {
+      "section": ".rodata.anims",
+      "source": "0x02132890",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov089_02132c48",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c48"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x02132894",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov089_02132c50",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c50"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x02132898",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov089_02132c50",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c50"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x0213289c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gMarioKeyModelFile",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c68"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x021328a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gLuigiKeyModelFile",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c78"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x021328a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gWarioKeyModelFile",
+      "addend": 0,
+      "target_module": "ov089",
+      "target_address": "0x02132c58"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x021328a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_021305d8",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021305d8"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x021328ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov085_021305d8",
+      "addend": 0,
+      "target_module": "ov085",
+      "target_address": "0x021305d8"
+    },
+    {
+      "section": ".data.models",
+      "source": "0x021328b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0211094c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0211094c"
+    },
+    {
+      "section": ".rodata.extra",
+      "source": "0x021328bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210da40",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210da40"
+    },
+    {
+      "section": ".rodata.extra",
+      "source": "0x021328c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d9a0",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d9a0"
+    },
+    {
+      "section": ".rodata.extra",
+      "source": "0x021328c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d9c0",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d9c0"
+    },
     {
       "section": ".init",
       "source": "0x021328e4",

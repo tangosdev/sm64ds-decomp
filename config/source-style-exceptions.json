@@ -1498,6 +1498,174 @@
       "evidence": "src/minigames/d_s_mg_slots.cpp Slot1_InitHud is the only access; check_header_offsets include/dScMgSlot1_c.h 0 mismatched"
     },
     {
+      "path": "src/game/actors/d_a_propeller_heyho_fire.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN24daPropeller_Heyho_Fire_c6State0Ev",
+      "count": 2,
+      "reason": "The state pair stores the code address of State0 as an int. &daPropeller_Heyho_Fire_c::State0 is a pointer-to-member, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int; ov002/daPropeller_Heyho_Fire_c SCRATCH-DATA-VERIFIED, .data 0x0210d5f8..0x0210d608 16 bytes IDENTICAL"
+    },
+    {
+      "path": "src/game/actors/d_a_propeller_heyho_fire.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN24daPropeller_Heyho_Fire_c10InitState0Ev",
+      "count": 2,
+      "reason": "The state pair stores the code address of InitState0 as an int. &daPropeller_Heyho_Fire_c::InitState0 is a pointer-to-member, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int; ov002/daPropeller_Heyho_Fire_c SCRATCH-DATA-VERIFIED, .data 0x0210d5f8..0x0210d608 16 bytes IDENTICAL"
+    },
+    {
+      "path": "src/game/actors/d_a_btn.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daBtn_c19func_ov079_02124530Ev",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_btn.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daBtn_c19func_ov079_02124638Ev",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_btn.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daBtn_c19func_ov079_021246d8Ev",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_btn.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daBtn_c19func_ov079_021246dcEv",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_btn.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daBtn_c19func_ov079_021249f0Ev",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_btn.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daBtn_c19func_ov079_02124b08Ev",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_btn.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daBtn_c19func_ov079_02125240Ev",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_btn.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daBtn_c19func_ov079_0212538cEv",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_btn.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daBtn_c19func_ov079_021254b4Ev",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_btn.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daBtn_c19func_ov079_021256d4Ev",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_btn.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daBtn_c19func_ov079_021258fcEv",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_btn.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN7daBtn_c19func_ov079_02125b44Ev",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_fish.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daFish_c11StateWanderEv",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_fish.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daFish_c14StateTurnAboutEv",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_fish.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daFish_c18StateWaitForPlayerEv",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_fish.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daFish_c19StateWaitPlayerAwayEv",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_fish.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daFish_c19StateWaitSchoolGoneEv",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_fish.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daFish_c9StateFleeEv",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/game/actors/d_a_fish.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daFish_c9StateIdleEv",
+      "count": 2,
+      "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
+      "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
       "path": "src/minigames/d_s_mg_curling2.cpp",
       "rule": "unknown-field",
       "match": "unk_55b0",

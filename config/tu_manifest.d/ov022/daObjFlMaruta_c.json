@@ -31,6 +31,11 @@
       "name": ".bss",
       "start": "0x02114668",
       "end": "0x02114690"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02112c98",
+      "end": "0x02112ca8"
     }
   ],
   "functions": [
@@ -78,6 +83,22 @@
     }
   ],
   "data": [],
+  "rodata": [
+    {
+      "symbol": "data_ov022_02112c98",
+      "address": "0x02112c98",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "one 20.12 value, 0x7d0000, read as a height or offset"
+    },
+    {
+      "symbol": "data_ov022_02112c9c",
+      "address": "0x02112c9c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "model handle, collision handle and CLPS block"
+    }
+  ],
   "bss": [
     {
       "symbol": "gFlLogModelFile",
@@ -303,6 +324,36 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x02112c9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlLogModelFile",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114668"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112ca0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlLogCollisionFile",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114670"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112ca4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211bbcc",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211bbcc"
+    },
     {
       "section": ".ctor",
       "source": "0x02113118",
@@ -546,6 +597,13 @@
           "start": "0x02114668",
           "end": "0x02114690",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02112c98",
+          "end": "0x02112ca8",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

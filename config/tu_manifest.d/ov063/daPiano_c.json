@@ -29,9 +29,10 @@
       "end": "0x0211e70c"
     },
     {
-      "name": ".data",
-      "start": "0x0211ecd8",
-      "end": "0x0211ecf8"
+      "name": ".data.piano",
+      "start": "0x0211ecb8",
+      "end": "0x0211ecf8",
+      "input_section": ".data"
     },
     {
       "name": ".bss",
@@ -188,6 +189,13 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN9daPiano_c19func_ov063_0211d8ccEv"
+    },
+    {
+      "symbol": "data_ov063_0211ecb8",
+      "address": "0x0211ecb8",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "piano collision CLPS block"
     }
   ],
   "bss": [
@@ -447,8 +455,8 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
-          "start": "0x0211ecd8",
+          "section": ".data.piano",
+          "start": "0x0211ecb8",
           "end": "0x0211ecf8",
           "differingBytes": 0,
           "firstDiff": null
@@ -909,7 +917,7 @@
       "target_address": "0x0211e5fc"
     },
     {
-      "section": ".data",
+      "section": ".data.piano",
       "source": "0x0211ecd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -919,7 +927,7 @@
       "target_address": "0x0211dd78"
     },
     {
-      "section": ".data",
+      "section": ".data.piano",
       "source": "0x0211ece0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -929,7 +937,7 @@
       "target_address": "0x0211dba4"
     },
     {
-      "section": ".data",
+      "section": ".data.piano",
       "source": "0x0211ece8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -939,7 +947,7 @@
       "target_address": "0x0211dbb8"
     },
     {
-      "section": ".data",
+      "section": ".data.piano",
       "source": "0x0211ecf0",
       "type": "R_ARM_ABS32",
       "kind": "load",

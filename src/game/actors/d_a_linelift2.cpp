@@ -63,9 +63,24 @@ struct Linelift2CollisionFilePtr : SharedFilePtr {
     ~Linelift2CollisionFilePtr();
 };
 
-extern SharedFilePtr *gLinelift2ModelFiles[];     /* BMD, by mVariant */
-extern SharedFilePtr *gLinelift2CollisionFiles[]; /* KCL, by mVariant */
-extern CLPS_Block *gLinelift2ClpsBlocks[];        /* CLPS, by mVariant */
+extern Linelift2CollisionFilePtr gKm3RiftCollisionFile;
+extern Linelift2CollisionFilePtr gKm2SusumuCollisionFile;
+extern Linelift2ModelFilePtr gKm3RiftModelFile;
+extern Linelift2ModelFilePtr gKm2SusumuModelFile;
+extern SharedFilePtr *const gLinelift2CollisionFiles[2] = {
+    &gKm3RiftCollisionFile,
+    &gKm2SusumuCollisionFile,
+};
+extern SharedFilePtr *const gLinelift2ModelFiles[2] = {
+    &gKm3RiftModelFile,
+    &gKm2SusumuModelFile,
+};
+extern CLPS_Block data_ov058_02111af4;
+extern CLPS_Block data_ov056_02112610;
+CLPS_Block *gLinelift2ClpsBlocks[2] = {
+    &data_ov058_02111af4,
+    &data_ov056_02112610,
+};
 extern StateFunc gLinelift2StateFuncs[];          /* by mState */
 
 /* arm9 C helpers with no shared header. */

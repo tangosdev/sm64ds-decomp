@@ -109,16 +109,16 @@ extern u16 data_ov007_02103998[];               /* BG screen, 32x24 */
 extern u16 data_ov007_02103f98[];               /* BG screen copy */
 extern u16 data_ov007_02104598[];               /* BG screen copy */
 
-extern u8 data_ov007_020d7a34[];    /* slot-heading glyphs */
-extern u8 data_ov007_020d7a38[];    /* digit glyphs */
-extern u16 data_ov007_020d7a44[];   /* font palette, 10 colours */
-extern s32 data_ov007_020d7a50[];   /* file-select header messages */
-extern s32 data_ov007_020d7a5c[3];  /* plane sizes in bytes */
-extern u16 data_ov007_020d7a68[];   /* message per window kind */
-extern s16 data_ov007_020d7a84[];   /* shown-state frames per window kind; 0 stays open */
-extern u32 data_ov007_020d7aa0[];   /* keep-masks per pixel offset in a tile */
-extern u32 data_ov007_020d7ac4[];   /* colour masks per text colour */
-extern u8 data_ov007_020d7b04[][6]; /* first text line per kind and language */
+extern const u8 data_ov007_020d7a34[];   /* slot-heading glyphs */
+extern const u8 data_ov007_020d7a38[];   /* digit glyphs */
+extern const u16 data_ov007_020d7a44[];  /* font palette, 10 colours */
+extern const s32 data_ov007_020d7a50[];  /* file-select header messages */
+extern const s32 data_ov007_020d7a5c[3]; /* plane sizes in bytes */
+extern const u16 data_ov007_020d7a68[];  /* message per window kind */
+extern const s16 data_ov007_020d7a84[];  /* shown-state frames per window kind; 0 stays open */
+extern const u32 data_ov007_020d7aa0[];  /* keep-masks per pixel offset in a tile */
+extern const u32 data_ov007_020d7ac4[];  /* colour masks per text colour */
+extern const u8 data_ov007_020d7b04[80]; /* first text line per kind and language */
 
 extern "C" int func_ov007_020bdeb0(int sound);
 extern void func_ov007_020c0308(unsigned short *dst, int b, int c);
@@ -173,7 +173,6 @@ void MenuText_DrawGlyph(int plane, int glyph) {
     u32 *dst;
     u32 palmask;
     u32 *src;
-    u32 mask;
     int q, rem;
     int shift;
 
@@ -210,15 +209,14 @@ void MenuText_DrawGlyph(int plane, int glyph) {
 
     shift = rem * 4;
     palmask = data_ov007_020d7ac4[pal];
-    mask = data_ov007_020d7aa0[rem];
 
     for (i = 0; i < 16; i++) {
         u32 s = *src++ & palmask;
-        *dst = (*dst & mask) | (s << shift);
+        *dst = (*dst & data_ov007_020d7aa0[rem]) | (s << shift);
         if (rem != 0) {
-            /* The spill re-reads the keep-mask and recomputes its shift;
-               the compiler hoists both out of the loop, which is the ROM's
-               shape. Through `mask` and a precomputed shift it is 0x174. */
+            /* Both halves index the const keep-mask table directly; the
+               compiler shares the one load. A `mask` local hoists the
+               complement out of the loop instead (0x174). */
             u32 *d2 = (dst + 8);
             *d2 = (*d2 & ~data_ov007_020d7aa0[rem]) | (s >> (32 - shift));
         }
@@ -732,7 +730,7 @@ extern "C" void func_ov007_020b7d94(int kind) {
         data_ov007_02102ddc.textLine = 0xa;
         break;
     }
-    data_ov007_02102ddc.textLine = data_ov007_020d7b04[kind][data_ov007_02103474];
+    data_ov007_02102ddc.textLine = ((const u8(*)[6])data_ov007_020d7b04)[kind][data_ov007_02103474];
     MessageWindow_Start(kind, OV007_WINDOW_OPENING);
     MessageWindow_LayoutFrame();
 }
@@ -869,3 +867,62 @@ void MenuText_ClearMainPlane(void) {
     MI_CpuFillFast(data_ov007_02103478[0], x, data_ov007_020d7a5c[0]);
     data_ov007_02102ddc.pad_14 = 0;
 }
+
+extern const u8 data_ov007_020d7a34[4] = {
+    10,
+    11,
+    12,
+    0,
+};
+extern const u8 data_ov007_020d7a38[12] = {
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0,
+};
+extern const u16 data_ov007_020d7a44[6] = {
+    0x111, 0x68, 0x57ff, 0x7fff, 0x0, 0x0,
+};
+extern const s32 data_ov007_020d7a50[3] = {
+    8016,
+    8014,
+    8015,
+};
+extern const s32 data_ov007_020d7a5c[3] = {
+    0x6000,
+    0x6000,
+    0x9000,
+};
+extern const u16 data_ov007_020d7a68[14] = {
+    0, 8040, 8041, 8042, 8044, 8045, 8072, 8073, 8074, 8043, 8047, 8048, 8046, 0,
+};
+extern const s16 data_ov007_020d7a84[14] = {
+    0, -1, -1, 70, 60, 70, -1, -1, -1, -1, 60, 70, -1, 0,
+};
+extern const u32 data_ov007_020d7aa0[9] = {
+    0x0, 0xf, 0xff, 0xfff, 0xffff, 0xfffff, 0xffffff, 0xfffffff, 0xffffffff,
+};
+extern const u32 data_ov007_020d7ac4[16] = {
+    0x0,        0x11111111, 0x22222222, 0x33333333, 0x44444444, 0x55555555, 0x66666666, 0x77777777,
+    0x88888888, 0x99999999, 0xaaaaaaaa, 0xbbbbbbbb, 0xcccccccc, 0xdddddddd, 0xeeeeeeee, 0xffffffff,
+};
+extern const u8 data_ov007_020d7b04[80] = {
+    0,  0,  0,  0,  0,  0,  10, 10, 10, 9,  10, 10, 10, 10, 9,  9,  10, 9,  10, 10,
+    10, 10, 10, 9,  10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+    10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 9,  10, 10,
+    10, 10, 10, 10, 10, 9,  10, 10, 10, 10, 10, 10, 10, 10, 10, 9,  10, 10, 0,  0,
+};
+s32 data_ov007_02102dd8 = 14;
+Ov007MessageWindow data_ov007_02102ddc = {0x0, 0x4, 0x0, 0x0, 0x0, 0xffffffff, 0x0};
+u8 data_ov007_02102df8[256] = {
+    7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 4, 6, 6, 5, 6, 6, 6, 6, 7, 6, 6, 6, 6, 6,
+    6, 6, 6, 6, 5, 5, 7, 4, 8, 3, 6, 6, 3, 5, 5, 5, 5, 5, 6, 6, 5, 2, 5, 5, 4, 6, 5, 5, 5, 5, 5, 5,
+    5, 5, 6, 6, 6, 6, 5, 6, 3, 3, 3, 3, 7, 6, 6, 0, 7, 0, 3, 6, 6, 9, 6, 6, 6, 9, 6, 5, 7, 0, 6, 0,
+    0, 3, 3, 6, 6, 6, 6, 8, 6, 9, 5, 5, 8, 0, 5, 6, 0, 3, 6, 6, 0, 6, 2, 6, 4, 5, 5, 9, 8, 6, 7, 9,
+    4, 6, 4, 4, 4, 5, 7, 3, 0, 3, 4, 9, 9, 9, 9, 7, 6, 6, 6, 6, 6, 6, 7, 6, 6, 6, 6, 6, 4, 4, 6, 4,
+    7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 6, 5, 5, 8, 6, 5, 5, 5, 5, 4, 4, 4, 4,
+    5, 6, 5, 5, 5, 6, 5, 6, 5, 5, 5, 5, 5, 6, 5, 6, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 7, 9, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+};
+char data_ov007_02102ef8[48] = {
+    0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x64, 0x61, 0x74, 0x61, 0x00, 0x00, 0x00, 0x00,
+    0x4e, 0x43, 0x43, 0x4c, 0xff, 0xfe, 0x00, 0x01, 0x2c, 0x02, 0x00, 0x00, 0x10, 0x00, 0x02, 0x00,
+    0x50, 0x41, 0x4c, 0x54, 0x10, 0x02, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00,
+};

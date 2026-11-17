@@ -27,15 +27,11 @@
  *   call it. Naming belongs in arm9.
  * Leftover: Disable3dEngines / func_020233f4 are arm9 graphics-setup
  *   tails. This TU's InitResources calls them.
- * Leftover: sMiniGmGroupBases group-base table,
- *   sMiniGmBgFiles / sMiniGmIconPalettes / sMiniGmIconChars
- *   file-id tables, sMiniGmRecordPos / sMiniGmBadgePos icon
- *   positions, sMiniGmIconScreenOffsets screen-offset table,
- *   sMiniGmRows minigame entries, sMiniGmGroupTabs /
- *   sMiniGmPageArrows / sMiniGmExitButton / sMiniGmDigits /
- *   sMiniGmRecordLabels / sMiniGmNewBadge / sMiniGmSavingCaption /
- *   sMiniGmCaption OAM. Overlay .rodata/.data this TU does not
- *   own.
+ * Leftover: _ZTV11dScMiniGm_c is emitted by the key function. The
+ *   public symbol is eight bytes into that storage, between the
+ *   screen offsets and the menu rows, so a second array under the
+ *   same name would be a duplicate definition. sMiniGmSaveTable is
+ *   the first row's sceneParam at sMiniGmRows + 4.
  * Leftover: g_profile_MINIGAME lives outside this TU (S14).
  * Leftover: inline destructor (out-of-line emits D0 before D1 plus a
  *   homeless D2).
@@ -50,6 +46,7 @@
 #include "types.h"
 #include "Sound.h"
 #include "OAM.h"
+#include "OamAttr.h"
 #include "decl_Scene.h"
 #include "decl_common.h"
 #include "nitro/gx/gx_bgcnt.h"
@@ -88,35 +85,172 @@ extern dWipe_c data_0209f61c;
 extern int data_0208ee44;
 extern unsigned short data_020a0e5a[];
 
-/* ---- ov005 statics ---- */
-extern int sMiniGmBgFiles[];
-extern Pair sMiniGmRecordPos[];
-extern Pair sMiniGmBadgePos[];
-extern u32 sMiniGmIconPalettes[];
-extern int sMiniGmIconChars[];
-extern struct Off9 sMiniGmIconScreenOffsets; /* 9-entry screen-offset table, not a matrix */
-/* The menu rows (MgEntry, MgMenuRow.h), 36 of them: rows 0-23 are the first
-   page of each tab, 24-35 the second. StartSceneFade(id, sceneParam, 0) opens the
-   game, so sceneParam becomes the scene's fBase_c param1. Its low byte is the
-   variant that dScMgBase_c::IsAltVariant tests. Six games are listed twice:
-   Amida (rows 0/24), Snowball (6/34), Smartball (10/22), Coin (14/30), Panel
-   (15/35) and Slot1 (17/33). Each first entry has low byte 0 and each second
-   1, except Amida's row 24 with 2 (Amida's override asks for exactly 1).
-   Sound's only entry (row 19) has 0, so its IsAltVariant branch is not
-   reached from this menu. Seen in play: the two Snowballs start with param1
-   0x0a00 and 0x2201. Bytes 1 and 2 each give every row a distinct number
-   0..35. */
-extern const MgEntry sMiniGmRows[];
-/* OAM sprite tables: each entry points at one sprite's OamAttr list. */
-extern OamAttr *sMiniGmGroupTabs[];
-extern OamAttr *sMiniGmExitButton;
-extern OamAttr *sMiniGmPageArrows[];
-extern OamAttr *sMiniGmDigits[];
-extern OamAttr *sMiniGmRecordLabels[];
-extern OamAttr *sMiniGmNewBadge[];
-extern OamAttr *sMiniGmSavingCaption;
-extern OamAttr *sMiniGmCaption;
+/* ---- ov005 tables ---- */
+extern "C" {
+extern const int sMiniGmGroupBases[] = {3, 0, 1, 2};
 
+extern const int sMiniGmBgFiles[] = {80, 79, 81, 82, 85, 84, 86, 87};
+
+extern const Pair sMiniGmRecordPos[] = {{0x58, 0x10}, {0x88, 0x10}, {0xb8, 0x10},
+                                        {0x58, 0xb0}, {0x88, 0xb0}, {0xb8, 0xb0},
+                                        {0x78, 0x30}, {0xa8, 0x30}, {0xd8, 0x30}};
+
+extern const Pair sMiniGmBadgePos[] = {{0x58, 0x28}, {0x88, 0x28}, {0xb8, 0x28},
+                                       {0x58, 0x70}, {0x88, 0x70}, {0xb8, 0x70},
+                                       {0x78, 0x48}, {0xa8, 0x48}, {0xd8, 0x48}};
+
+extern const u32 sMiniGmIconPalettes[] = {
+    415, 471, 465, 461, 459, 463, 483, 481, 421, 429, 417, 477, 479, 469, 423, 467, 427, 413,
+    431, 475, 433, 419, 473, 425, 437, 447, 449, 443, 441, 453, 439, 445, 455, 435, 457, 451};
+
+extern const int sMiniGmIconChars[] = {414, 470, 464, 460, 458, 462, 482, 480, 420, 428, 416, 476,
+                                       478, 468, 422, 466, 426, 412, 430, 474, 432, 418, 472, 424,
+                                       436, 446, 448, 442, 440, 452, 438, 444, 454, 434, 456, 450};
+
+struct Off9 sMiniGmIconScreenOffsets = {
+    {0x68, 0x6e, 0x74, 0x188, 0x18e, 0x194, 0x4e2, 0x4e8, 0x4ee}};
+
+/* 36 menu rows. sMiniGmSaveTable is row 0's sceneParam, at this symbol + 4. */
+MgEntry sMiniGmRows[] = {{371, 0, 0x0, 1, 9999, 0, {0, 0, 0, 0, 0}, 13, 1, 0},
+                         {362, 0, 0x10100, 2, 9999, 1, {12, 0, 0, 0, 0}, 9, 2, 0},
+                         {368, 0, 0xa0600, 3, 999999, 0, {0, 0, 0, 0, 0}, 11, 1, 0},
+                         {366, 0, 0x30300, 1, 9999, 0, {0, 0, 0, 0, 0}, 13, 1, 0},
+                         {372, 0, 0x40400, 1, 9999, 0, {0, 0, 0, 0, 0}, 15, 1, 0},
+                         {381, 0, 0xd0500, 2, 9999, 1, {10, 0, 0, 0, 0}, 9, 2, 0},
+                         {377, 0, 0x60a00, 5, 0, 0, {1200, 1200, 1200, 1200, 1200}, 12, 1, 0},
+                         {390, 0, 0x171300, 0, 0, 1, {0, 0, 0, 0, 0}, 19, 2, 0},
+                         {370, 0, 0x140800, 3, 9999, 0, {0, 0, 0, 0, 0}, 11, 1, 0},
+                         {379, 0, 0x50900, 2, 9999, 1, {10, 0, 0, 0, 0}, 9, 2, 0},
+                         {376, 0, 0x20200, 3, 999999, 0, {0, 0, 0, 0, 0}, 10, 2, 0},
+                         {387, 0, 0x130b00, 1, 9999, 0, {0, 0, 0, 0, 0}, 14, 1, 0},
+                         {384, 0, 0xc0c00, 3, 9999, 0, {0, 0, 0, 0, 0}, 16, 1, 0},
+                         {383, 0, 0x90d00, 2, 9999, 1, {10, 0, 0, 0, 0}, 9, 2, 0},
+                         {378, 0, 0xe0e00, 3, 9999, 0, {0, 0, 0, 0, 0}, 14, 1, 0},
+                         {380, 0, 0x160f00, 1, 9999, 0, {0, 0, 0, 0, 0}, 8, 1, 0},
+                         {374, 0, 0x101000, 3, 9999, 0, {0, 0, 0, 0, 0}, 12, 2, 0},
+                         {364, 0, 0x111100, 2, 9999, 1, {10, 0, 0, 0, 0}, 9, 2, 0},
+                         {389, 0, 0x121200, 1, 9999, 0, {0, 0, 0, 0, 0}, 20, 2, 0},
+                         {367, 0, 0x70700, 1, 9999, 0, {0, 0, 0, 0, 0}, 6, 0, 0},
+                         {373, 0, 0x1c1c01, 3, 9999, 0, {0, 0, 0, 0, 0}, 15, 1, 0},
+                         {388, 0, 0x151500, 2, 9999, 1, {10, 0, 0, 0, 0}, 9, 2, 0},
+                         {376, 0, 0x221601, 3, 999999, 0, {0, 0, 0, 0, 0}, 10, 2, 0},
+                         {361, 0, 0xb1700, 1, 9999, 0, {0, 0, 0, 0, 0}, 17, 2, 0},
+                         {371, 0, 0x181802, 1, 9999, 0, {0, 0, 0, 0, 0}, 13, 1, 0},
+                         {382, 0, 0x191901, 3, 9999, 0, {0, 0, 0, 0, 0}, 9, 2, 0},
+                         {369, 0, 0x1a1a01, 3, 9999, 0, {0, 0, 0, 0, 0}, 10, 1, 0},
+                         {386, 0, 0xf1b00, 1, 9999, 0, {0, 0, 0, 0, 0}, 18, 2, 0},
+                         {375, 0, 0x1f1f01, 3, 999999, 0, {0, 0, 0, 0, 0}, 12, 2, 0},
+                         {363, 0, 0x1d1d01, 2, 9999, 1, {15, 0, 0, 0, 0}, 9, 2, 0},
+                         {378, 0, 0x1e1e01, 3, 9999, 0, {0, 0, 0, 0, 0}, 14, 1, 0},
+                         {365, 0, 0x1b1400, 1, 9999, 0, {0, 0, 0, 0, 0}, 8, 2, 0},
+                         {385, 0, 0x202001, 3, 999999, 0, {0, 0, 0, 0, 0}, 16, 1, 0},
+                         {364, 0, 0x212101, 2, 9999, 1, {10, 0, 0, 0, 0}, 9, 2, 0},
+                         {377, 0, 0x82201, 5, 0, 0, {2400, 2400, 2400, 2400, 2400}, 12, 1, 0},
+                         {380, 0, 0x232301, 1, 9999, 0, {0, 0, 0, 0, 0}, 7, 2, 0}};
+
+/* OAM lists. The entry with attr3 0xffff is the last one drawn. */
+OamAttr data_ov005_020c2c48[9] = {
+    {0x00f1, 0x81f1, 0x200e, 0x0000}, {0x00e8, 0x81e8, 0x401a, 0x0000},
+    {0x80e8, 0x8008, 0x401e, 0x0000}, {0x4008, 0x81e8, 0x409a, 0x0000},
+    {0x0008, 0x4008, 0x409e, 0x0000}, {0x00e8, 0x81e8, 0x7000, 0x0000},
+    {0x80e8, 0x8008, 0x7004, 0x0000}, {0x4008, 0x81e8, 0x7080, 0x0000},
+    {0x0008, 0x4008, 0x7084, 0xffff}};
+OamAttr data_ov005_020c2c90[9] = {
+    {0x00f1, 0x81f1, 0x100a, 0x0000}, {0x00e8, 0x81e8, 0x601a, 0x0000},
+    {0x80e8, 0x8008, 0x601e, 0x0000}, {0x4008, 0x81e8, 0x609a, 0x0000},
+    {0x0008, 0x4008, 0x609e, 0x0000}, {0x00e8, 0x81e8, 0x4000, 0x0000},
+    {0x80e8, 0x8008, 0x4004, 0x0000}, {0x4008, 0x81e8, 0x4080, 0x0000},
+    {0x0008, 0x4008, 0x4084, 0xffff}};
+OamAttr data_ov005_020c2cd8[9] = {
+    {0x00f1, 0x81f1, 0x5016, 0x0000}, {0x00e8, 0x81e8, 0x401a, 0x0000},
+    {0x80e8, 0x8008, 0x401e, 0x0000}, {0x4008, 0x81e8, 0x409a, 0x0000},
+    {0x0008, 0x4008, 0x409e, 0x0000}, {0x00e8, 0x81e8, 0x7000, 0x0000},
+    {0x80e8, 0x8008, 0x7004, 0x0000}, {0x4008, 0x81e8, 0x7080, 0x0000},
+    {0x0008, 0x4008, 0x7084, 0xffff}};
+OamAttr data_ov005_020c2d20[9] = {
+    {0x00f1, 0x81f1, 0x3012, 0x0000}, {0x00e8, 0x81e8, 0x601a, 0x0000},
+    {0x80e8, 0x8008, 0x601e, 0x0000}, {0x4008, 0x81e8, 0x609a, 0x0000},
+    {0x0008, 0x4008, 0x609e, 0x0000}, {0x00e8, 0x81e8, 0x4000, 0x0000},
+    {0x80e8, 0x8008, 0x4004, 0x0000}, {0x4008, 0x81e8, 0x4080, 0x0000},
+    {0x0008, 0x4008, 0x4084, 0xffff}};
+OamAttr data_ov005_020c2d68[9] = {
+    {0x00f1, 0x81f1, 0x200e, 0x0000}, {0x00e8, 0x81e8, 0x601a, 0x0000},
+    {0x80e8, 0x8008, 0x601e, 0x0000}, {0x4008, 0x81e8, 0x609a, 0x0000},
+    {0x0008, 0x4008, 0x609e, 0x0000}, {0x00e8, 0x81e8, 0x4000, 0x0000},
+    {0x80e8, 0x8008, 0x4004, 0x0000}, {0x4008, 0x81e8, 0x4080, 0x0000},
+    {0x0008, 0x4008, 0x4084, 0xffff}};
+OamAttr data_ov005_020c2db0[9] = {
+    {0x00f1, 0x81f1, 0x100a, 0x0000}, {0x00e8, 0x81e8, 0x401a, 0x0000},
+    {0x80e8, 0x8008, 0x401e, 0x0000}, {0x4008, 0x81e8, 0x409a, 0x0000},
+    {0x0008, 0x4008, 0x409e, 0x0000}, {0x00e8, 0x81e8, 0x7000, 0x0000},
+    {0x80e8, 0x8008, 0x7004, 0x0000}, {0x4008, 0x81e8, 0x7080, 0x0000},
+    {0x0008, 0x4008, 0x7084, 0xffff}};
+OamAttr data_ov005_020c2df8[9] = {
+    {0x00f1, 0x81f1, 0x5016, 0x0000}, {0x00e8, 0x81e8, 0x601a, 0x0000},
+    {0x80e8, 0x8008, 0x601e, 0x0000}, {0x4008, 0x81e8, 0x609a, 0x0000},
+    {0x0008, 0x4008, 0x609e, 0x0000}, {0x00e8, 0x81e8, 0x4000, 0x0000},
+    {0x80e8, 0x8008, 0x4004, 0x0000}, {0x4008, 0x81e8, 0x4080, 0x0000},
+    {0x0008, 0x4008, 0x4084, 0xffff}};
+OamAttr data_ov005_020c2e40[9] = {
+    {0x00f1, 0x81f1, 0x3012, 0x0000}, {0x00e8, 0x81e8, 0x401a, 0x0000},
+    {0x80e8, 0x8008, 0x401e, 0x0000}, {0x4008, 0x81e8, 0x409a, 0x0000},
+    {0x0008, 0x4008, 0x409e, 0x0000}, {0x00e8, 0x81e8, 0x7000, 0x0000},
+    {0x80e8, 0x8008, 0x7004, 0x0000}, {0x4008, 0x81e8, 0x7080, 0x0000},
+    {0x0008, 0x4008, 0x7084, 0xffff}};
+OamAttr data_ov005_020c2e8c[1] = {{0x00e0, 0xc1e0, 0x0198, 0xffff}};
+OamAttr data_ov005_020c2e94[1] = {{0x80e0, 0xc1f0, 0x0194, 0xffff}};
+OamAttr data_ov005_020c2e9c[1] = {{0x80e0, 0xc1f0, 0x0190, 0xffff}};
+OamAttr data_ov005_020c2eac[1] = {{0x80f8, 0x01fc, 0x408f, 0xffff}};
+OamAttr data_ov005_020c2eb4[1] = {{0x80f8, 0x01fc, 0x408e, 0xffff}};
+OamAttr data_ov005_020c2ebc[1] = {{0x80f8, 0x01fc, 0x408d, 0xffff}};
+OamAttr data_ov005_020c2ec4[1] = {{0x80f8, 0x01fc, 0x408c, 0xffff}};
+OamAttr data_ov005_020c2ecc[1] = {{0x80f8, 0x01fc, 0x408b, 0xffff}};
+OamAttr data_ov005_020c2ed4[1] = {{0x80f8, 0x01fc, 0x408a, 0xffff}};
+OamAttr data_ov005_020c2edc[1] = {{0x80f8, 0x01fc, 0x4089, 0xffff}};
+OamAttr data_ov005_020c2ee4[1] = {{0x80f8, 0x01fc, 0x4088, 0xffff}};
+OamAttr data_ov005_020c2eec[1] = {{0x80f8, 0x01fc, 0x4087, 0xffff}};
+OamAttr data_ov005_020c2ef4[1] = {{0x80f8, 0x01fc, 0x4086, 0xffff}};
+OamAttr data_ov005_020c2f24[1] = {{0x00fc, 0x01fc, 0x70b4, 0xffff}};
+OamAttr data_ov005_020c2f2c[1] = {{0x00fc, 0x01fc, 0x7094, 0xffff}};
+OamAttr data_ov005_020c2f34[1] = {{0x00f8, 0x41f8, 0x6095, 0xffff}};
+OamAttr data_ov005_020c2f3c[1] = {{0x00f8, 0x41f8, 0x6092, 0xffff}};
+OamAttr data_ov005_020c2f44[1] = {{0x00f8, 0x41f8, 0x6090, 0xffff}};
+OamAttr data_ov005_020c2f68[2] = {{0x40f8, 0x81e0, 0x60c6, 0x0000},
+                                  {0x40f8, 0x8000, 0x60ca, 0xffff}};
+OamAttr data_ov005_020c2f78[2] = {{0x40f8, 0x81e0, 0x00c6, 0x0000},
+                                  {0x40f8, 0x8000, 0x00ca, 0xffff}};
+OamAttr data_ov005_020c2f8c[8] = {
+    {0x40f8, 0x8180, 0x4140, 0x0000}, {0x40f8, 0x81a0, 0x4144, 0x0000},
+    {0x40f8, 0x81c0, 0x4148, 0x0000}, {0x40f8, 0x81e0, 0x414c, 0x0000},
+    {0x40f8, 0x8000, 0x4150, 0x0000}, {0x40f8, 0x8020, 0x4154, 0x0000},
+    {0x40f8, 0x8040, 0x4158, 0x0000}, {0x40f8, 0x8060, 0x415c, 0xffff}};
+/* attr3 0xffff ends the caption. The two zero sprites are this symbol's tail through the end of .data. */
+OamAttr data_ov005_020c2fd0[10] = {
+    {0x40f8, 0x8180, 0x4100, 0x0000}, {0x40f8, 0x81a0, 0x4104, 0x0000},
+    {0x40f8, 0x81c0, 0x4108, 0x0000}, {0x40f8, 0x81e0, 0x410c, 0x0000},
+    {0x40f8, 0x8000, 0x4110, 0x0000}, {0x40f8, 0x8020, 0x4114, 0x0000},
+    {0x40f8, 0x8040, 0x4118, 0x0000}, {0x40f8, 0x8060, 0x411c, 0xffff},
+    {0x0000, 0x0000, 0x0000, 0x0000}, {0x0000, 0x0000, 0x0000, 0x0000}};
+
+OamAttr *sMiniGmGroupTabs[] = {
+    data_ov005_020c2df8, data_ov005_020c2c90, data_ov005_020c2d68, data_ov005_020c2d20,
+    data_ov005_020c2cd8, data_ov005_020c2db0, data_ov005_020c2c48, data_ov005_020c2e40,
+};
+OamAttr *sMiniGmExitButton = data_ov005_020c2e8c;
+OamAttr *sMiniGmPageArrows[] = {data_ov005_020c2e9c, data_ov005_020c2e94};
+OamAttr *sMiniGmDigits[] = {
+    data_ov005_020c2ef4, data_ov005_020c2eec, data_ov005_020c2ee4, data_ov005_020c2edc,
+    data_ov005_020c2ed4, data_ov005_020c2ecc, data_ov005_020c2ec4, data_ov005_020c2ebc,
+    data_ov005_020c2eb4, data_ov005_020c2eac,
+};
+OamAttr *sMiniGmRecordLabels[] = {
+    data_ov005_020c2f44, data_ov005_020c2f3c, data_ov005_020c2f34,
+    data_ov005_020c2f2c, data_ov005_020c2f24,
+};
+OamAttr *sMiniGmNewBadge[] = {data_ov005_020c2f68, data_ov005_020c2f78};
+OamAttr *sMiniGmSavingCaption = data_ov005_020c2f8c;
+OamAttr *sMiniGmCaption = data_ov005_020c2fd0;
+}
 /* ---- arm9 / cross-overlay externals ---- */
 void func_02013568(int a, int b, int v);
 int  func_02013580(int a, int b);

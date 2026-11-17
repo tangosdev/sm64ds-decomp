@@ -24,7 +24,7 @@ enum d_a_obj_fl_gura_AssetId { ASSET_FL_GURA_BMD = 0x05f3, ASSET_FL_GURA_KCL = 0
 
 #include "ResourceDescriptor.h"
 
-extern ResourceDescriptor data_ov064_0211adb0;
+extern const ResourceDescriptor data_ov064_0211adb0;
 
 daObjFl_Gura_c *daObjFl_Gura_c_classInit() {
     return new daObjFl_Gura_c();
@@ -42,11 +42,11 @@ extern "C" SpawnInfo<daObjFl_Gura_c> g_profile_FL_GURA = {
 };
 
 s32 daObjFl_Gura_c::InitResources() {
-    return InitResourcesFrom(&data_ov064_0211adb0);
+    return InitResourcesFrom((ResourceDescriptor *)&data_ov064_0211adb0);
 }
 
 s32 daObjFl_Gura_c::CleanupResources() {
-    return CleanupResourcesFrom(&data_ov064_0211adb0);
+    return CleanupResourcesFrom((ResourceDescriptor *)&data_ov064_0211adb0);
 }
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
@@ -67,3 +67,14 @@ struct FlGuraCollisionFilePtr : SharedFilePtr {
  * file. */
 FlGuraModelFilePtr gFlGuraModelFile(ASSET_FL_GURA_BMD);         /* model */
 FlGuraCollisionFilePtr gFlGuraCollisionFile(ASSET_FL_GURA_KCL); /* collision */
+
+struct CLPS_Block {
+    u32 words[8];
+};
+
+CLPS_Block data_ov064_0211bb8c = {
+    0x53504c43, 0x00020008, 0x00002fc0, 0x000000ff, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff,
+};
+
+extern const ResourceDescriptor data_ov064_0211adb0 = {&gFlGuraModelFile, &gFlGuraCollisionFile,
+                                                       &data_ov064_0211bb8c};

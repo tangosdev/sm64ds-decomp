@@ -32,6 +32,18 @@
       "name": ".bss",
       "start": "0x02135610",
       "end": "0x0213564c"
+    },
+    {
+      "name": ".data.w135120",
+      "start": "0x02135138",
+      "end": "0x02135150",
+      "input_section": ".data"
+    },
+    {
+      "name": ".data.dsnClps",
+      "input_section": ".data",
+      "start": "0x02135100",
+      "end": "0x02135120"
     }
   ],
   "functions": [
@@ -85,7 +97,22 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov091_02135138",
+      "address": "0x02135138",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "Thwomp model, collision, CLPS, texture sequence, and two shadow extents"
+    },
+    {
+      "symbol": "data_ov091_02135100",
+      "address": "0x02135100",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "two entries: the 0x01001fc4 and 0x01000fc4 collision surfaces"
+    }
+  ],
   "bss": [
     {
       "symbol": "gDosuneModelFile",
@@ -142,7 +169,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov091-daDsn_c/daDsn_c.o (gitignored)",
+    "object": "build/tu/ov091-daDsn_c/d_a_dsn.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 7,
     "functions_declared": 7,
@@ -176,13 +203,13 @@
         23,
         27,
         28,
-        29,
-        30,
-        38,
-        45,
-        46,
-        47,
-        48
+        32,
+        33,
+        41,
+        48,
+        49,
+        50,
+        51
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -213,12 +240,13 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV7daDsn_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 4 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -268,6 +296,20 @@
           "start": "0x02135610",
           "end": "0x0213564c",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.w135120",
+          "start": "0x02135138",
+          "end": "0x02135150",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.dsnClps",
+          "start": "0x02135100",
+          "end": "0x02135120",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -749,6 +791,46 @@
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02134930"
+    },
+    {
+      "section": ".data.w135120",
+      "source": "0x02135138",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDosuneModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135620"
+    },
+    {
+      "section": ".data.w135120",
+      "source": "0x0213513c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDosuneCollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135618"
+    },
+    {
+      "section": ".data.w135120",
+      "source": "0x02135140",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov091_02135100",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135100"
+    },
+    {
+      "section": ".data.w135120",
+      "source": "0x02135144",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDosuneTextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135610"
     }
   ]
 }

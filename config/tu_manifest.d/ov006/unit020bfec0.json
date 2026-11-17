@@ -25,6 +25,48 @@
       "name": ".bss",
       "start": "0x021402e0",
       "end": "0x021402fc"
+    },
+    {
+      "name": ".data.sMascotWalkerPaths",
+      "input_section": ".data",
+      "start": "0x0213acc0",
+      "end": "0x0213ace0"
+    },
+    {
+      "name": ".data.data_ov006_0213ace0",
+      "input_section": ".data",
+      "start": "0x0213ace0",
+      "end": "0x0213ad04"
+    },
+    {
+      "name": ".data.data_ov006_0213ad04",
+      "input_section": ".data",
+      "start": "0x0213ad04",
+      "end": "0x0213ad28"
+    },
+    {
+      "name": ".data.sDealerIdentityMtx",
+      "input_section": ".data",
+      "start": "0x0213ad28",
+      "end": "0x0213ad58"
+    },
+    {
+      "name": ".data.data_ov006_0213ad58",
+      "input_section": ".data",
+      "start": "0x0213ad58",
+      "end": "0x0213ad88"
+    },
+    {
+      "name": ".data.data_ov006_0213ad88",
+      "input_section": ".data",
+      "start": "0x0213ad88",
+      "end": "0x0213adb8"
+    },
+    {
+      "name": ".data.data_ov006_0213aee8",
+      "input_section": ".data",
+      "start": "0x0213aee8",
+      "end": "0x0213af18"
     }
   ],
   "functions": [
@@ -680,7 +722,57 @@
       "ordinal": 92
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "sMascotWalkerPaths",
+      "address": "0x0213acc0",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213ace0",
+      "address": "0x0213ace0",
+      "size": "0x24",
+      "binding": "STB_GLOBAL",
+      "evidence": "first walk path's point list (three VecFx32 positions, 20.12): the straight run"
+    },
+    {
+      "symbol": "data_ov006_0213ad04",
+      "address": "0x0213ad04",
+      "size": "0x24",
+      "binding": "STB_GLOBAL",
+      "evidence": "second walk path's point list (three VecFx32 positions, 20.12): the reverse run"
+    },
+    {
+      "symbol": "sDealerIdentityMtx",
+      "address": "0x0213ad28",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213ad58",
+      "address": "0x0213ad58",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "third walk path's point list (four VecFx32 positions, 20.12): the long tour"
+    },
+    {
+      "symbol": "data_ov006_0213ad88",
+      "address": "0x0213ad88",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "fourth walk path's point list (four VecFx32 positions, 20.12): the reverse tour"
+    },
+    {
+      "symbol": "data_ov006_0213aee8",
+      "address": "0x0213aee8",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    }
+  ],
   "bss": [
     {
       "symbol": "_ZGVsAxis$543",
@@ -762,49 +854,49 @@
         "_ZN9PresenterD2Ev"
       ],
       "droppedSections": [
-        14,
-        31,
-        32,
-        37,
-        38,
+        22,
         39,
         40,
-        41,
-        42,
-        88,
-        89,
-        94,
-        95,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
         96,
         97,
-        98,
-        99,
-        112,
-        113,
-        118,
-        119,
-        162,
-        163,
-        168,
-        169,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        120,
+        121,
+        126,
+        127,
         170,
         171,
-        172,
-        173,
-        174,
-        175,
-        211,
-        212,
-        215,
-        216,
-        221,
-        222,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        219,
+        220,
         223,
         224,
-        225,
-        226,
         229,
-        230
+        230,
+        231,
+        232,
+        233,
+        234,
+        237,
+        238
       ],
       "data": [],
       "dataExternalized": [],
@@ -849,6 +941,55 @@
           "start": "0x021402e0",
           "end": "0x021402fc",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.sMascotWalkerPaths",
+          "start": "0x0213acc0",
+          "end": "0x0213ace0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213ace0",
+          "start": "0x0213ace0",
+          "end": "0x0213ad04",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213ad04",
+          "start": "0x0213ad04",
+          "end": "0x0213ad28",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sDealerIdentityMtx",
+          "start": "0x0213ad28",
+          "end": "0x0213ad58",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213ad58",
+          "start": "0x0213ad58",
+          "end": "0x0213ad88",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213ad88",
+          "start": "0x0213ad88",
+          "end": "0x0213adb8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213aee8",
+          "start": "0x0213aee8",
+          "end": "0x0213af18",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -891,6 +1032,48 @@
       "linkerOutput": null
     }
   },
+  "relocations": [
+    {
+      "section": ".data.sMascotWalkerPaths",
+      "source": "0x0213acdc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213ace0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213ace0"
+    },
+    {
+      "section": ".data.sMascotWalkerPaths",
+      "source": "0x0213acd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213ad04",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213ad04"
+    },
+    {
+      "section": ".data.sMascotWalkerPaths",
+      "source": "0x0213accc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213ad88",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213ad88"
+    },
+    {
+      "section": ".data.sMascotWalkerPaths",
+      "source": "0x0213acc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213ad58",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213ad58"
+    }
+  ],
   "notes": [
     "Text-only fold; data and bss stay in the ROM image. The unit is probably more than one original TU (by data use, three groups), but nothing in the ROM can cut it.",
     "include/types.h gives Vector3 an empty inline destructor, so this TU emits _ZN7Vector3D1Ev; it is licensed as a deadstrip duplicate of the arm9 copy.",

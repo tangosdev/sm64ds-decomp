@@ -183,7 +183,7 @@ extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
 extern void func_ov002_020c3dbc(void *player);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern void *data_ov089_021328b4[];
+extern void *const data_ov089_021328b4[];
 extern ObjKeyFile data_ov002_02110964;
 extern ObjKeyAnimationFilePtr data_ov089_02132c60;
 extern ObjKeyAnimationFilePtr data_ov089_02132c40;
@@ -201,7 +201,7 @@ extern int *Vec3_LslInPlace(void *v, int sh);
 extern char data_ov002_0211094c;
 extern int data_0209cef0;
 /* The collect animations, by mAnimID. */
-extern ObjKeyFile *data_ov089_02132880[];
+extern ObjKeyFile *const data_ov089_02132880[];
 /* Level-overlay BSS: ov089 relocs record the store as claimed by fourteen
    overlays, and ov055 is the one that names 0x02111b68 unambiguous kind:bss
    (the func_ov002_020e3e00 precedent for its neighbours 0x02111b64/6c). */
@@ -928,3 +928,21 @@ ObjKeyAnimationFilePtr data_ov089_02132c48(ASSET_KOOPA_KEY_W_GET_BCA);
 VecFx32 data_ov089_02132ca4;
 
 ObjKeyStateTable data_ov089_02132cec;
+
+/* Collect animations, models, and the extra-model row. Defined after the
+   static-init objects so this file's @NNN numbers stay put. */
+extern "C" SharedFilePtr data_ov002_0210da40;
+extern "C" SharedFilePtr data_ov002_0210d9a0;
+extern "C" SharedFilePtr data_ov002_0210d9c0;
+struct DaMipModelFile;
+extern "C" DaMipModelFile data_ov085_021305d8;
+extern ObjKeyFile *const data_ov089_02132880[5] = {
+    0, &data_ov089_02132c60, &data_ov089_02132c70, &data_ov089_02132c40, &data_ov089_02132c48,
+};
+void *data_ov089_02132894[8] = {
+    &data_ov089_02132c50, &data_ov089_02132c50, &gMarioKeyModelFile,  &gLuigiKeyModelFile,
+    &gWarioKeyModelFile,  &data_ov085_021305d8, &data_ov085_021305d8, &data_ov002_0211094c,
+};
+extern void *const data_ov089_021328b4[8] = {
+    0, 0, &data_ov002_0210da40, &data_ov002_0210d9a0, &data_ov002_0210d9c0, 0, 0, 0,
+};

@@ -37,6 +37,7 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g2_oam.h"
+#include "OamAttr.h"
 #include "SharedFilePtr.h"
 #include "dScMg3DEsp_c.h"
 #include "dMg3DEspModel_c.h"
@@ -152,7 +153,8 @@ extern int sMgClearBannerX;
 
 extern int sMgClearBannerY;
 
-extern Matrix4x3 data_ov006_0213c85c;
+Matrix4x3 data_ov006_0213c85c = {0x1000, 0x0, 0x0,    0x0,     0x1000,  0x0,
+                                 0x0,    0x0, 0x1000, 0x8c000, 0x8c000, 0x40000};
 
 /* Both models' starting matrix. Declaring it non-volatile adds 32 bytes to
    dScMg3DEsp_c::InitResources, and copying it without the stack temporary
@@ -165,9 +167,7 @@ extern volatile Matrix4x3 sEsp3DIdentityMtx;
    the vtable stores, mParticle's destruction and the chain to
    ~dScMgBase_c are all compiler-generated; the deleting variant reaches
    dScMgBase_c's operator delete. */
-dScMg3DEsp_c::~dScMg3DEsp_c()
-{
-}
+dScMg3DEsp_c::~dScMg3DEsp_c() {}
 
 /* ---- dMg3DEspAnimSet_c ------------------------------------------------- */
 
@@ -510,14 +510,25 @@ void dScMg3DEsp_c::FlashOnce() {
     mEspModel.mPolygonID = 0x1f;
 }
 
-void dScMg3DEsp_c::UpdateFlash()
-{
+void dScMg3DEsp_c::UpdateFlash() {
     unsigned char idx = mFlashMode;
-    if (idx >= 3) return;
+    if (idx >= 3)
+        return;
     (this->*s3DEspFlashTable[idx])();
 }
 
-extern void *sEsp3DAnimSetSlotsSprites[];
+OamAttr data_ov006_02133a34[1] = {{0x00fc, 0x01fc, 0x010c, 0xffff}};
+OamAttr data_ov006_02133a2c[1] = {{0x00fb, 0x01fc, 0x00ec, 0xffff}};
+OamAttr data_ov006_02133a24[1] = {{0x00fc, 0x01fc, 0x00cc, 0xffff}};
+OamAttr data_ov006_02133a1c[1] = {{0x00f8, 0x41f8, 0x008c, 0xffff}};
+OamAttr data_ov006_02133a14[1] = {{0x00f8, 0x41f8, 0x0006, 0xffff}};
+OamAttr data_ov006_02133a0c[1] = {{0x00f8, 0x41f8, 0x0004, 0xffff}};
+OamAttr data_ov006_02133a04[1] = {{0x00f8, 0x41f8, 0x0002, 0xffff}};
+OamAttr data_ov006_021339fc[1] = {{0x00f8, 0x41f8, 0x0000, 0xffff}};
+void *sEsp3DAnimSetSlotsSprites[] = {
+    data_ov006_02133a34, data_ov006_02133a2c, data_ov006_02133a24, data_ov006_02133a1c,
+    data_ov006_02133a14, data_ov006_02133a0c, data_ov006_02133a04, data_ov006_021339fc,
+};
 
 void dScMg3DEsp_c::RenderSlots() {
     int i;
@@ -610,7 +621,7 @@ void dScMg3DEsp_c::SlotRise(int i)
     mSlots[i].mType = 3;
 }
 
-extern unsigned char data_ov006_0212e57c[];
+extern const unsigned char data_ov006_0212e57c[4] = {1, 2, 0, 0};
 
 void dScMg3DEsp_c::SlotSetup(int idx) {
     mSlots[idx].mVelX = 0;
@@ -685,7 +696,8 @@ void dScMg3DEsp_c::ResetSlots() {
     }
 }
 
-extern int sEsp3DAnimSetRowsSprites;
+OamAttr data_ov006_02136e3c[1] = {{0x00e0, 0xc1e0, 0x1040, 0xffff}};
+int sEsp3DAnimSetRowsSprites = (int)data_ov006_02136e3c;
 
 void dScMg3DEsp_c::RenderRows()
 {
@@ -755,7 +767,7 @@ void dScMg3DEsp_c::UpdateRows()
     }
 }
 
-extern unsigned short data_ov006_0212e58c[];
+extern const unsigned short data_ov006_0212e58c[4] = {0, 17, 34, 0};
 
 void dScMg3DEsp_c::SpawnRows(int idx) {
     int i;
@@ -771,8 +783,38 @@ void dScMg3DEsp_c::SpawnRows(int idx) {
     }
 }
 
-struct Ent_8e10 { u16 f0, f2, f4, f6; };
-extern Ent_8e10 *data_ov006_02133f24[];
+struct Ent_8e10 {
+    u16 f0, f2, f4, f6;
+};
+Ent_8e10 data_ov006_02133f80[] = {
+    {0x00f0, 0x81f0, 0x2018, 0x0000},
+    {0x00e8, 0x81f0, 0x2088, 0x0000},
+    {0x4008, 0x81f0, 0x2108, 0xffff},
+};
+Ent_8e10 data_ov006_02133f68[] = {
+    {0x00f0, 0x81f0, 0x201c, 0x0000},
+    {0x00e8, 0x81f0, 0x2088, 0x0000},
+    {0x4008, 0x81f0, 0x2108, 0xffff},
+};
+Ent_8e10 data_ov006_02133f50[] = {
+    {0x00f0, 0x81f0, 0x2008, 0x0000},
+    {0x00e8, 0x81f0, 0x2088, 0x0000},
+    {0x4008, 0x81f0, 0x2108, 0xffff},
+};
+Ent_8e10 data_ov006_02133f38[] = {
+    {0x00f0, 0x81f0, 0x200c, 0x0000},
+    {0x00e8, 0x81f0, 0x2088, 0x0000},
+    {0x4008, 0x81f0, 0x2108, 0xffff},
+};
+Ent_8e10 data_ov006_02133f98[] = {
+    {0x00f0, 0x81f0, 0x2010, 0x0000},
+    {0x00e8, 0x81f0, 0x2088, 0x0000},
+    {0x4008, 0x81f0, 0x2108, 0xffff},
+};
+Ent_8e10 *data_ov006_02133f24[] = {
+    data_ov006_02133f80, data_ov006_02133f68, data_ov006_02133f50,
+    data_ov006_02133f38, data_ov006_02133f98,
+};
 
 void dScMg3DEsp_c::RenderCards() {
     int i;
@@ -922,7 +964,7 @@ void dScMg3DEsp_c::UpdateCards()
     }
 }
 
-extern unsigned char sEsp3DCardsPerDifficulty[];
+extern const unsigned char sEsp3DCardsPerDifficulty[4] = {2, 3, 4, 5};
 extern int volatile data_ov006_0213c818[];
 
 void dScMg3DEsp_c::DealCards() {
@@ -1078,7 +1120,7 @@ void dScMg3DEsp_c::ResetRound() {
     mFlashBeats = 0;
     mDone = 1;
 }
-extern unsigned int sEsp3DResultSfx[];
+extern const unsigned int sEsp3DResultSfx[5] = {402, 403, 404, 405, 406};
 
 void dScMg3DEsp_c::Results() {
     UpdateRows();

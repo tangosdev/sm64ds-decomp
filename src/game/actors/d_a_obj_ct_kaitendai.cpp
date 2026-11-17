@@ -87,8 +87,11 @@ typedef char KaitendaiModelFile_size_must_be_0x08[sizeof(KaitendaiModelFile) == 
 typedef char
     KaitendaiCollisionFilePtr_size_must_be_0x08[sizeof(KaitendaiCollisionFilePtr) == 0x08 ? 1 : -1];
 
-extern u8 data_0209f2c0;           /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */
-extern s16 data_ov065_0211d334[2]; /* yaw speed for the slow and fast hands: 200, 400 */
+extern u8 data_0209f2c0; /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */
+s16 data_ov065_0211d334[2] = {
+    200,
+    400,
+};
 extern KaitendaiResources data_ov065_0211d35c[];
 
 /* local extern: RandomIntInternal has no shared header, and its named parameter preserves

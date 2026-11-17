@@ -97,8 +97,12 @@ extern "C" {
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentEntranceId;
 /* Per-variant tables indexed by mVariant: death mode, hurt damage. */
-extern int data_ov063_0211e22c[];
-extern int data_ov063_0211e1ec[];
+extern const int data_ov063_0211e22c[16] = {
+    1, 2, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 2, 1, 0, 1,
+};
+extern const int data_ov063_0211e1ec[16] = {
+    2, 2, 2, 0, 0, 3, 2, 0, 2, 2, 2, 0, 3, 3, 3, 3,
+};
 extern Matrix4x3 data_020a0e68;
 }
 void LoadKeyModels(int n);
@@ -141,16 +145,16 @@ int func_020092c4(void *cam, void *out, void *target);
 u16 func_0201277c(unsigned int a);
 extern dCamera_c *gCamera;
 extern void func_02011cfc(void);
-extern s16 data_ov063_0211e1c8[];
+extern const s16 data_ov063_0211e1c8[4] = {223, 224, 225, 226};
 /* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the
    state timer there, so the callee takes no object: ov055's free function at
    0x02111264, not ov027's daObjSlIceBlock_c::CleanupResources. */
 extern int func_ov002_020c51d0(daPly_c *player, Vector3 *pos);
 extern int data_ov008_02111b6c;
-extern s16 data_ov063_0211e1dc[];
-extern s16 data_ov063_0211e1e4[];
-extern s16 data_ov063_0211e1c0[];
-extern int data_ov063_0211e1d0[];
+extern const s16 data_ov063_0211e1dc[4] = {219, 220, 221, 222};
+extern const s16 data_ov063_0211e1e4[4] = {235, 220, 221, 222};
+extern const s16 data_ov063_0211e1c0[4] = {0x380, 0x240, 0x180, 0x0};
+extern const int data_ov063_0211e1d0[3] = {0x1000, 0xfa0, 0xee0};
 extern int gMusicVolume;
 extern u8 data_0209d660;
 extern short data_ov063_0211e7e0[];

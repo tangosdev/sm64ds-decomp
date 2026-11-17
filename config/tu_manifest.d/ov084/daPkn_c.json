@@ -34,6 +34,11 @@
       "end": "0x02130ca4"
     },
     {
+      "name": ".rodata",
+      "start": "0x021302ec",
+      "end": "0x021302f4"
+    },
+    {
       "name": ".bss",
       "start": "0x02130df4",
       "end": "0x02130ec8"
@@ -298,6 +303,14 @@
       "address_point_bias": "0x8",
       "size": "0x84",
       "evidence": "compiler storage has the two-word ABI preamble; the configured public address point remains unchanged at 0x02130c28, and the storage ends at 0x02130ca4, the end of the module's .data"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov084_021302ec",
+      "address": "0x021302ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL"
     }
   ],
   "bss": [
@@ -755,6 +768,13 @@
           "start": "0x02130df4",
           "end": "0x02130ec8",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021302ec",
+          "end": "0x021302f4",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

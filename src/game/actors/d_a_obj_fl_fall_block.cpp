@@ -46,7 +46,8 @@ struct FallBlockCollisionFilePtr : SharedFilePtr {
 
 #include "ResourceDescriptor.h"
 
-extern ResourceDescriptor data_ov022_0211427c;
+extern "C" ResourceDescriptor data_ov022_0211427c;
+extern CLPS_Block data_ov064_0211ba8c;
 
 daObjFl_Fall_Block_c *daObjFl_Fall_Block_c_classInit() {
     return new daObjFl_Fall_Block_c();
@@ -66,3 +67,8 @@ int daObjFl_Fall_Block_c::CleanupResources() {
  * model handle (file 0x5f9), then the collision handle (file 0x5fa). */
 FallBlockModelFile data_ov022_02114648(0x5f9);
 FallBlockCollisionFilePtr data_ov022_02114640(0x5fa);
+ResourceDescriptor data_ov022_0211427c = {
+    &data_ov022_02114648,
+    &data_ov022_02114640,
+    &data_ov064_0211ba8c,
+};

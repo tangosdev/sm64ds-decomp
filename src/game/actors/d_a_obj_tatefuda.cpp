@@ -130,7 +130,7 @@ extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern char *func_ov002_020e496c(daPly_c *p);
 extern void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 extern short data_ov002_020ff0d0[];
-extern Vector3 data_ov002_020ff0d4[];
+extern const VecFx32 data_ov002_020ff0d4[];
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern u8 data_0209d660;
@@ -1090,4 +1090,10 @@ Entry data_ov002_0210e084[5] = {
     { &daObjTatefuda_c::InitCarried, &daObjTatefuda_c::Carried },
     { &daObjTatefuda_c::InitThrown,  &daObjTatefuda_c::Thrown  },
     { &daObjTatefuda_c::InitDropped, &daObjTatefuda_c::Dropped },
+};
+
+/* Initialized data this file is the only complete referrer for. */
+const VecFx32 data_ov002_020ff0d4[2] = {
+    {0x6000, 0xa00, 0x0},
+    {0x6000, -0xa000, -0xa000},
 };

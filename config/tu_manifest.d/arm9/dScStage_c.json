@@ -38,6 +38,11 @@
       "name": ".bss",
       "start": "0x0209f1ec",
       "end": "0x0209f5b8"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02075804",
+      "end": "0x02075b04"
     }
   ],
   "functions": [
@@ -904,6 +909,29 @@
     }
   ],
   "data": [],
+  "rodata": [
+    {
+      "symbol": "data_02075804",
+      "address": "0x02075804",
+      "size": "0xc4",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven-by-seven overlay table the stage indexes"
+    },
+    {
+      "symbol": "data_020758c8",
+      "address": "0x020758c8",
+      "size": "0xd0",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-level words indexed by the stage"
+    },
+    {
+      "symbol": "data_02075998",
+      "address": "0x02075998",
+      "size": "0x16c",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-level byte table indexed with data_02075804"
+    }
+  ],
   "bss": [
     {
       "symbol": "sNextPauseState",
@@ -1950,6 +1978,13 @@
           "start": "0x0209f1ec",
           "end": "0x0209f5b8",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02075804",
+          "end": "0x02075b04",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

@@ -119,7 +119,7 @@ extern "C" {
    handles; d_a_ply_methods.cpp's static initializer constructs both. */
 extern SharedFilePtr data_ov002_0210e6b0;
 extern SharedFilePtr data_ov002_0210eb78;
-extern s16 data_ov002_021000a8[];
+extern const s16 data_ov002_021000a8[];
 /* local extern: math/MtxStack.h's spellings of the Matrix4x3_ calls below
    clash with these. The copies go through the flat Mtx43: assigning this
    TU's nested Matrix4x3 grows the object by 0x30 bytes. */
@@ -1419,3 +1419,6 @@ Entry data_ov002_02110a5c[4] = {
     {&daYegg_c::EnterWobble, &daYegg_c::ExecuteWobble},
     {&daYegg_c::EnterDrop, &daYegg_c::ExecuteDrop},
 };
+
+/* Initialized data this file is the only complete referrer for. */
+const short data_ov002_021000a8[8] = {0x800, 0x0, -0x800, 0x0, 0x0, 0x800, 0x0, -0x800};

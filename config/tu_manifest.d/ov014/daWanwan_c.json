@@ -30,6 +30,48 @@
       "end": "0x02113370"
     },
     {
+      "name": ".data.w4688",
+      "input_section": ".data",
+      "start": "0x02114688",
+      "end": "0x02114690"
+    },
+    {
+      "name": ".data.w4690",
+      "input_section": ".data",
+      "start": "0x02114690",
+      "end": "0x02114698"
+    },
+    {
+      "name": ".data.w4698",
+      "input_section": ".data",
+      "start": "0x02114698",
+      "end": "0x021146a0"
+    },
+    {
+      "name": ".data.w4700",
+      "input_section": ".data",
+      "start": "0x02114700",
+      "end": "0x0211470c"
+    },
+    {
+      "name": ".data.w470c",
+      "input_section": ".data",
+      "start": "0x0211470c",
+      "end": "0x02114718"
+    },
+    {
+      "name": ".data.w4724",
+      "input_section": ".data",
+      "start": "0x02114724",
+      "end": "0x02114730"
+    },
+    {
+      "name": ".data.w4730",
+      "input_section": ".data",
+      "start": "0x02114730",
+      "end": "0x02114740"
+    },
+    {
       "name": ".data",
       "start": "0x0211476c",
       "end": "0x021147e4"
@@ -893,6 +935,55 @@
           "firstDiff": null
         },
         {
+          "section": ".data.w4688",
+          "start": "0x02114688",
+          "end": "0x02114690",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.w4690",
+          "start": "0x02114690",
+          "end": "0x02114698",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.w4698",
+          "start": "0x02114698",
+          "end": "0x021146a0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.w4700",
+          "start": "0x02114700",
+          "end": "0x0211470c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.w470c",
+          "start": "0x0211470c",
+          "end": "0x02114718",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.w4724",
+          "start": "0x02114724",
+          "end": "0x02114730",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.w4730",
+          "start": "0x02114730",
+          "end": "0x02114740",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data",
           "start": "0x0211476c",
           "end": "0x021147e4",
@@ -1124,6 +1215,55 @@
       "size": "0x78",
       "binding": "STB_GLOBAL",
       "evidence": "six-entry Chain Chomp state table: enter PMF at +0 and update PMF at +8 copied at static-init time from the ROM PMF descriptors at 0x021146a0..0x021146f8, name pointer at +0x10 the only static part, matching the retail .data bytes and six name-pointer relocations; boundary symbol data_ov014_021147e4 sizes it against the claim"
+    },
+    {
+      "symbol": "data_ov014_02114688",
+      "address": "0x02114688",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "WALK state name, 8 bytes"
+    },
+    {
+      "symbol": "data_ov014_02114690",
+      "address": "0x02114690",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "WAIT state name, 8 bytes"
+    },
+    {
+      "symbol": "data_ov014_02114698",
+      "address": "0x02114698",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "ATTACK state name, 8 bytes"
+    },
+    {
+      "symbol": "data_ov014_02114700",
+      "address": "0x02114700",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision offset (0, -200, 0) in 20.12"
+    },
+    {
+      "symbol": "data_ov014_0211470c",
+      "address": "0x0211470c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "ESCAPE_DEMO state name, 12 bytes"
+    },
+    {
+      "symbol": "data_ov014_02114724",
+      "address": "0x02114724",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "BOMB_DAMAGE state name, 12 bytes"
+    },
+    {
+      "symbol": "data_ov014_02114730",
+      "address": "0x02114730",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "GIANT_DAMAGE state name, 16 bytes"
     }
   ],
   "defined_symbol_renames": [

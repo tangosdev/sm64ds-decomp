@@ -32,6 +32,11 @@
       "name": ".bss",
       "start": "0x0210de00",
       "end": "0x0210df94"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x020ff0b8",
+      "end": "0x020ff0d0"
     }
   ],
   "functions": [
@@ -665,6 +670,13 @@
           "start": "0x0210de00",
           "end": "0x0210df94",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x020ff0b8",
+          "end": "0x020ff0d0",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -1934,6 +1946,66 @@
       "symbol": "__sinit_d_a_obj_mario_cap.cpp",
       "target_module": "ov002",
       "target_address": "0x02101064"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff0b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210de28",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210de28"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff0bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210de08",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210de08"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff0c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210de20",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210de20"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff0c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210de40",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210de40"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff0c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210de10",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210de10"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff0cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210de00",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210de00"
     }
   ],
   "defined_symbol_renames": [
@@ -2001,6 +2073,18 @@
       "from": "@1025",
       "to": "@2718",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az); replaced the local unsigned V16 angle triple with Vector3_16; baseline/candidate .bss records paired by section index, offset, size, binding and type, so the compiler-local label shifts down one Re-keyed from @1093 to @1090 when InitSlide's pointer launder became a plain |= on mdCcAc_c.vulnFlags, dropping three named locals (#821). Re-keyed from @1090 to @1026 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1026 to @1033 when the TU took the hand pass over the sine-table holdouts (measured from the compiled object). Re-keyed from @1030 to @1031 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @1031 to @1025 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1025 to @1023 when the unused *_hold_ prototypes and count-holding locals were removed (measured from the compiled object). Re-keyed from @1023 to @1025 after mHomePos became a Vector3 member and the wall normal and shadow probe Vector3 locals (measured from the compiled object)."
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov002_020ff0b8",
+      "address": "0x020ff0b8",
+      "size": "0xc"
+    },
+    {
+      "symbol": "data_ov002_020ff0c4",
+      "address": "0x020ff0c4",
+      "size": "0xc"
     }
   ]
 }

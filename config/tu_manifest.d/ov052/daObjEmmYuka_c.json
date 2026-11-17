@@ -14,6 +14,11 @@
   ],
   "sections": [
     {
+      "name": ".data",
+      "start": "0x021125a0",
+      "end": "0x021125ac"
+    },
+    {
       "name": ".text",
       "start": "0x02111440",
       "end": "0x02111868"
@@ -85,7 +90,15 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov052_021125a0",
+      "address": "0x021125a0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Model, collision and CLPS pointers for the floor."
+    }
+  ],
   "bss": [
     {
       "symbol": "gEmmYukaModelFile",
@@ -217,6 +230,13 @@
         "firstDiff": null
       },
       "tuRanges": [
+        {
+          "section": ".data",
+          "start": "0x021125a0",
+          "end": "0x021125ac",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
         {
           "section": ".text",
           "start": "0x02111440",
@@ -504,6 +524,36 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x021125a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gEmmYukaModelFile",
+      "addend": 0,
+      "target_module": "ov052",
+      "target_address": "0x021126a8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gEmmYukaCollisionFile",
+      "addend": 0,
+      "target_module": "ov052",
+      "target_address": "0x021126b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211ba0c",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211ba0c"
+    },
     {
       "section": ".init",
       "source": "0x02111be0",

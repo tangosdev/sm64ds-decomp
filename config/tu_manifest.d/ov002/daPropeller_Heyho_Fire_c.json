@@ -32,6 +32,12 @@
       "name": ".bss",
       "start": "0x02111190",
       "end": "0x021111a0"
+    },
+    {
+      "name": ".data.w10bb7c",
+      "start": "0x0210d5f8",
+      "end": "0x0210d608",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -134,7 +140,18 @@
       "ordinal": 13
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov002_0210d5f8",
+      "address": "0x0210d5f8",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov002_0210d600",
+      "address": "0x0210d600",
+      "size": "0x8"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov002_02111190",
@@ -363,6 +380,13 @@
           "start": "0x02111190",
           "end": "0x021111a0",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.w10bb7c",
+          "start": "0x0210d5f8",
+          "end": "0x0210d608",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -437,6 +461,18 @@
       "evidence": "ctor-table word pointing at __sinit_d_a_propeller_heyho_fire.cpp"
     }
   ],
+  "defined_symbol_renames": [
+    {
+      "from": "@754",
+      "to": "data_ov002_0210d600",
+      "evidence": "Member-pointer constant for daPropeller_Heyho_Fire_c::InitState0. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@756",
+      "to": "data_ov002_0210d5f8",
+      "evidence": "Member-pointer constant for daPropeller_Heyho_Fire_c::State0. The initializer relocation names that method, so this local keeps the configured image."
+    }
+  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_d_a_propeller_heyho_fire.cpp",
@@ -449,6 +485,18 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally"
+    },
+    {
+      "symbol": "data_ov002_0210d600",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov002_0210d5f8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
     }
   ],
   "relocations": [
@@ -491,6 +539,26 @@
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x02108094"
+    },
+    {
+      "section": ".data.w10bb7c",
+      "source": "0x0210d5f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN24daPropeller_Heyho_Fire_c6State0Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020fec94"
+    },
+    {
+      "section": ".data.w10bb7c",
+      "source": "0x0210d600",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN24daPropeller_Heyho_Fire_c10InitState0Ev",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x020fed18"
     }
   ]
 }

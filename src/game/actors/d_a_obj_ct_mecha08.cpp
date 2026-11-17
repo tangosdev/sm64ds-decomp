@@ -67,7 +67,12 @@ struct LiftMotion {
     s32 vertSpeed;
     u16 moveTimer;
 };
-extern LiftMotion data_ov065_0211c0d0[][2]; /* by setting, by direction */
+extern const LiftMotion data_ov065_0211c0d0[4][2] = {
+    {{0xb000, 0x14}, {-0x9000, 0x1e}},
+    {{0x12000, 0xf}, {-0xb000, 0xf}},
+    {{0xb000, 0x14}, {-0x9000, 0x0}},
+    {{0x0, 0x0}, {0x0, 0x0}},
+};
 extern u8 data_0209f2c0;                /* arm9 clock setting */
 
 /* int-returning, so the ROM materializes the 0/1 before testing it. */

@@ -16,6 +16,59 @@
       "name": ".text",
       "start": "0x020b2764",
       "end": "0x020b2cdc"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x20ccc48",
+      "end": "0x20ccca4"
+    },
+    {
+      "name": ".rodata.data_ov007_020cd9b4",
+      "input_section": ".rodata",
+      "start": "0x020cd9b4",
+      "end": "0x020cd9cc"
+    },
+    {
+      "name": ".rodata.data_ov007_020cd9e4",
+      "input_section": ".rodata",
+      "start": "0x020cd9e4",
+      "end": "0x020cd9fc"
+    },
+    {
+      "name": ".rodata.data_ov007_020cda14",
+      "input_section": ".rodata",
+      "start": "0x020cda14",
+      "end": "0x020cda2c"
+    },
+    {
+      "name": ".rodata.data_ov007_020cda2c",
+      "input_section": ".rodata",
+      "start": "0x020cda2c",
+      "end": "0x020cda44"
+    },
+    {
+      "name": ".rodata.data_ov007_020cda5c",
+      "input_section": ".rodata",
+      "start": "0x020cda5c",
+      "end": "0x020cda74"
+    },
+    {
+      "name": ".rodata.data_ov007_020cdabc",
+      "input_section": ".rodata",
+      "start": "0x020cdabc",
+      "end": "0x020cdad4"
+    },
+    {
+      "name": ".rodata.data_ov007_020cdb04",
+      "input_section": ".rodata",
+      "start": "0x020cdb04",
+      "end": "0x020cdb1c"
+    },
+    {
+      "name": ".data.corner",
+      "input_section": ".data",
+      "start": "0x20d7ee8",
+      "end": "0x20d7f0c"
     }
   ],
   "functions": [
@@ -48,7 +101,95 @@
       "ordinal": 3
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov007_020d7ee8",
+      "address": "0x20d7ee8",
+      "size": "0x24",
+      "binding": "STB_GLOBAL"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov007_020ccc48",
+      "address": "0x20ccc48",
+      "size": "0x8",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_ov007_020ccc50",
+      "address": "0x20ccc50",
+      "size": "0xc",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_ov007_020ccc5c",
+      "address": "0x20ccc5c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_ov007_020ccc68",
+      "address": "0x20ccc68",
+      "size": "0x18",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_ov007_020ccc80",
+      "address": "0x20ccc80",
+      "size": "0x24",
+      "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_ov007_020cd9b4",
+      "address": "0x020cd9b4",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "BTA_File record: set 0: the 0x30-frame file with two material records; data_ov007_020d7ee8 points at it"
+    },
+    {
+      "symbol": "data_ov007_020cd9e4",
+      "address": "0x020cd9e4",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "BTA_File record: set 0's second file: 0x29 frames, three material records; data_ov007_020d7ee8 points at it"
+    },
+    {
+      "symbol": "data_ov007_020cda14",
+      "address": "0x020cda14",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "BTA_File record: set 1: the 0x30-frame file with two material records; data_ov007_020d7ee8 points at it"
+    },
+    {
+      "symbol": "data_ov007_020cda2c",
+      "address": "0x020cda2c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "BTA_File record: set 1's second file: 0x354 frames, three material records; data_ov007_020d7ee8 points at it"
+    },
+    {
+      "symbol": "data_ov007_020cda5c",
+      "address": "0x020cda5c",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "BTA_File record: set 2: the 2-frame file with three material records; data_ov007_020d7ee8 points at it"
+    },
+    {
+      "symbol": "data_ov007_020cdabc",
+      "address": "0x020cdabc",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "BTA_File record: set 2's second file: 2 frames, two material records; data_ov007_020d7ee8 points at it"
+    },
+    {
+      "symbol": "data_ov007_020cdb04",
+      "address": "0x020cdb04",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "BTA_File record: the model's own file: 0x2bc frames, two material records; data_ov007_020d7ee8 points at it"
+    }
+  ],
   "bss": [],
   "compiler_only_output": [
     {
@@ -63,7 +204,7 @@
     "Text-only fold of four one-function shards; the callees' declarations keep their definitions' spellings, so typed values are cast where they are handed over. func_ov007_020b283c's set is a long long only for the register allocation (see its comment)."
   ],
   "verification": {
-    "round": "tools/match.py per function against the one unit source -- text-only, whole TU compiled",
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "functions_matched": 4,
@@ -71,7 +212,604 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "functions_occur_in_expected_order": "PASS"
+      "functions_occur_in_expected_order": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov007-unit020b2764/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020b2764",
+        "end": "0x020b2cdc",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020b2764",
+          "end": "0x020b2cdc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x020ccc48",
+          "end": "0x020ccca4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov007_020cd9b4",
+          "start": "0x020cd9b4",
+          "end": "0x020cd9cc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov007_020cd9e4",
+          "start": "0x020cd9e4",
+          "end": "0x020cd9fc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov007_020cda14",
+          "start": "0x020cda14",
+          "end": "0x020cda2c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov007_020cda2c",
+          "start": "0x020cda2c",
+          "end": "0x020cda44",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov007_020cda5c",
+          "start": "0x020cda5c",
+          "end": "0x020cda74",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov007_020cdabc",
+          "start": "0x020cdabc",
+          "end": "0x020cdad4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov007_020cdb04",
+          "start": "0x020cdb04",
+          "end": "0x020cdb1c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.corner",
+          "start": "0x020d7ee8",
+          "end": "0x020d7f0c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 17
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".rodata",
+            "original": [
+              5,
+              6,
+              7,
+              18,
+              23
+            ],
+            "desired": [
+              5,
+              6,
+              7,
+              18,
+              23
+            ]
+          },
+          {
+            "section": ".rodata.data_ov007_020cd9b4",
+            "original": [
+              19
+            ],
+            "desired": [
+              19
+            ]
+          },
+          {
+            "section": ".rodata.data_ov007_020cd9e4",
+            "original": [
+              12
+            ],
+            "desired": [
+              12
+            ]
+          },
+          {
+            "section": ".rodata.data_ov007_020cda14",
+            "original": [
+              10
+            ],
+            "desired": [
+              10
+            ]
+          },
+          {
+            "section": ".rodata.data_ov007_020cda2c",
+            "original": [
+              14
+            ],
+            "desired": [
+              14
+            ]
+          },
+          {
+            "section": ".rodata.data_ov007_020cda5c",
+            "original": [
+              16
+            ],
+            "desired": [
+              16
+            ]
+          },
+          {
+            "section": ".rodata.data_ov007_020cdabc",
+            "original": [
+              8
+            ],
+            "desired": [
+              8
+            ]
+          },
+          {
+            "section": ".rodata.data_ov007_020cdb04",
+            "original": [
+              21
+            ],
+            "desired": [
+              21
+            ]
+          },
+          {
+            "section": ".data.corner",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    },
+    "object": "build/tu/ov007-unit020b2764/unit020b2764.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        32
+      ],
+      "data": [],
+      "dataExternalized": [],
+      "canonicalDuplicates": []
     }
-  }
+  },
+  "relocations": [
+    {
+      "source": "0x020d7ee8",
+      "section": ".data.corner",
+      "kind": "load",
+      "symbol": "data_ov007_020cdb04",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cdb04",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020d7eec",
+      "section": ".data.corner",
+      "kind": "load",
+      "symbol": "data_ov007_020cd9b4",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cd9b4",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020d7ef0",
+      "section": ".data.corner",
+      "kind": "load",
+      "symbol": "data_ov007_020cdabc",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cdabc",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020d7ef4",
+      "section": ".data.corner",
+      "kind": "load",
+      "symbol": "data_ov007_020cda2c",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cda2c",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020d7ef8",
+      "section": ".data.corner",
+      "kind": "load",
+      "symbol": "data_ov007_020cd9e4",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cd9e4",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020d7efc",
+      "section": ".data.corner",
+      "kind": "load",
+      "symbol": "data_ov007_020cda5c",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cda5c",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020d7f00",
+      "section": ".data.corner",
+      "kind": "load",
+      "symbol": "data_ov007_020cdb04",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cdb04",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020d7f04",
+      "section": ".data.corner",
+      "kind": "load",
+      "symbol": "data_ov007_020cda14",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cda14",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020d7f08",
+      "section": ".data.corner",
+      "kind": "load",
+      "symbol": "data_ov007_020cdabc",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cdabc",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cd9b8",
+      "section": ".rodata.data_ov007_020cd9b4",
+      "kind": "load",
+      "symbol": "data_ov007_020ccd5c",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccd5c",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cd9bc",
+      "section": ".rodata.data_ov007_020cd9b4",
+      "kind": "load",
+      "symbol": "data_ov007_020ccd68",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccd68",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cd9c0",
+      "section": ".rodata.data_ov007_020cd9b4",
+      "kind": "load",
+      "symbol": "data_ov007_020d042c",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020d042c",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cd9c8",
+      "section": ".rodata.data_ov007_020cd9b4",
+      "kind": "load",
+      "symbol": "data_ov007_020ce6cc",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ce6cc",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cd9e8",
+      "section": ".rodata.data_ov007_020cd9e4",
+      "kind": "load",
+      "symbol": "data_ov007_020cfdec",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cfdec",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cd9ec",
+      "section": ".rodata.data_ov007_020cd9e4",
+      "kind": "load",
+      "symbol": "data_ov007_020cccf8",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cccf8",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cd9f0",
+      "section": ".rodata.data_ov007_020cd9e4",
+      "kind": "load",
+      "symbol": "data_ov007_020d0194",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020d0194",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cd9f8",
+      "section": ".rodata.data_ov007_020cd9e4",
+      "kind": "load",
+      "symbol": "data_ov007_020cf0cc",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cf0cc",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cda18",
+      "section": ".rodata.data_ov007_020cda14",
+      "kind": "load",
+      "symbol": "data_ov007_020ccd58",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccd58",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cda1c",
+      "section": ".rodata.data_ov007_020cda14",
+      "kind": "load",
+      "symbol": "data_ov007_020ccd7c",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccd7c",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cda20",
+      "section": ".rodata.data_ov007_020cda14",
+      "kind": "load",
+      "symbol": "data_ov007_020ccdb8",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccdb8",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cda28",
+      "section": ".rodata.data_ov007_020cda14",
+      "kind": "load",
+      "symbol": "data_ov007_020ce73c",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ce73c",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cda30",
+      "section": ".rodata.data_ov007_020cda2c",
+      "kind": "load",
+      "symbol": "data_ov007_020d072c",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020d072c",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cda34",
+      "section": ".rodata.data_ov007_020cda2c",
+      "kind": "load",
+      "symbol": "data_ov007_020ccce8",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccce8",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cda38",
+      "section": ".rodata.data_ov007_020cda2c",
+      "kind": "load",
+      "symbol": "data_ov007_020d403c",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020d403c",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cda40",
+      "section": ".rodata.data_ov007_020cda2c",
+      "kind": "load",
+      "symbol": "data_ov007_020cf024",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cf024",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cda60",
+      "section": ".rodata.data_ov007_020cda5c",
+      "kind": "load",
+      "symbol": "data_ov007_020cd03c",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cd03c",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cda64",
+      "section": ".rodata.data_ov007_020cda5c",
+      "kind": "load",
+      "symbol": "data_ov007_020cccd4",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cccd4",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cda68",
+      "section": ".rodata.data_ov007_020cda5c",
+      "kind": "load",
+      "symbol": "data_ov007_020cdb1c",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cdb1c",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cda70",
+      "section": ".rodata.data_ov007_020cda5c",
+      "kind": "load",
+      "symbol": "data_ov007_020cf078",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cf078",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cdac0",
+      "section": ".rodata.data_ov007_020cdabc",
+      "kind": "load",
+      "symbol": "data_ov007_020ccd60",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccd60",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cdac4",
+      "section": ".rodata.data_ov007_020cdabc",
+      "kind": "load",
+      "symbol": "data_ov007_020cccf0",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cccf0",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cdac8",
+      "section": ".rodata.data_ov007_020cdabc",
+      "kind": "load",
+      "symbol": "data_ov007_020ccdac",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccdac",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cdad0",
+      "section": ".rodata.data_ov007_020cdabc",
+      "kind": "load",
+      "symbol": "data_ov007_020ce854",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ce854",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cdb08",
+      "section": ".rodata.data_ov007_020cdb04",
+      "kind": "load",
+      "symbol": "data_ov007_020ccd90",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ccd90",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cdb0c",
+      "section": ".rodata.data_ov007_020cdb04",
+      "kind": "load",
+      "symbol": "data_ov007_020cccd8",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020cccd8",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cdb10",
+      "section": ".rodata.data_ov007_020cdb04",
+      "kind": "load",
+      "symbol": "data_ov007_020d147c",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020d147c",
+      "target_module": "ov007"
+    },
+    {
+      "source": "0x020cdb18",
+      "section": ".rodata.data_ov007_020cdb04",
+      "kind": "load",
+      "symbol": "data_ov007_020ce8c4",
+      "type": "R_ARM_ABS32",
+      "addend": 0,
+      "target_address": "0x020ce8c4",
+      "target_module": "ov007"
+    }
+  ],
+  "production_mode": "intact-object"
 }

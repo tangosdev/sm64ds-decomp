@@ -28,9 +28,10 @@
       "end": "0x02108130"
     },
     {
-      "name": ".data",
+      "name": ".data.w10bb7c",
       "start": "0x0210c010",
-      "end": "0x0210c048"
+      "end": "0x0210c048",
+      "input_section": ".data"
     },
     {
       "name": ".bss",
@@ -183,7 +184,7 @@
   ],
   "relocations": [
     {
-      "section": ".data",
+      "section": ".data.w10bb7c",
       "source": "0x0210c010",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -193,7 +194,7 @@
       "target_address": "0x0200f874"
     },
     {
-      "section": ".data",
+      "section": ".data.w10bb7c",
       "source": "0x0210c018",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -203,7 +204,7 @@
       "target_address": "0x020f9468"
     },
     {
-      "section": ".data",
+      "section": ".data.w10bb7c",
       "source": "0x0210c020",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -213,7 +214,7 @@
       "target_address": "0x0200f7f0"
     },
     {
-      "section": ".data",
+      "section": ".data.w10bb7c",
       "source": "0x0210c028",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -223,7 +224,7 @@
       "target_address": "0x020f9468"
     },
     {
-      "section": ".data",
+      "section": ".data.w10bb7c",
       "source": "0x0210c030",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -233,7 +234,7 @@
       "target_address": "0x020f93a8"
     },
     {
-      "section": ".data",
+      "section": ".data.w10bb7c",
       "source": "0x0210c038",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -243,7 +244,7 @@
       "target_address": "0x020f9468"
     },
     {
-      "section": ".data",
+      "section": ".data.w10bb7c",
       "source": "0x0210c040",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -452,7 +453,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.w10bb7c",
           "start": "0x0210c010",
           "end": "0x0210c048",
           "differingBytes": 0,

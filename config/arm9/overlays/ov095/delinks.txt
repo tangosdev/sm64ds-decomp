@@ -6,6 +6,7 @@
     .bss        start:0x02137780 end:0x02137940 kind:bss align:32
 src/game/actors/d_a_obj_seesaw.cpp:
     complete
+    .rodata start:0x02136f58 end:0x02136f68
     .text start:0x02135700 end:0x02135ff4
     .init start:0x02136fe0 end:0x0213722c
     .ctor start:0x021373b4 end:0x021373b8
@@ -13,6 +14,7 @@ src/game/actors/d_a_obj_seesaw.cpp:
 
 src/game/actors/d_a_udlift.cpp:
     complete
+    .rodata start:0x02136f68 end:0x02136f80
     .text start:0x02135ff4 end:0x0213682c
     .init start:0x0213722c end:0x021373b4
     .ctor start:0x021373b8 end:0x021373bc

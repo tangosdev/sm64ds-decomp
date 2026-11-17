@@ -1,26 +1,385 @@
     .text       start:0x020bfec0 end:0x0212b890 kind:code align:32
     .rodata.before_coin_tables start:0x0212b890 end:0x0212e308 kind:rodata align:4
     .rodata.coin_tables start:0x0212e308 end:0x0212e450 kind:rodata align:4
-    .rodata start:0x0212e450 end:0x0212ee0c kind:rodata align:4
+    .rodata.gap0 start:0x0212e450 end:0x0212e574 kind:rodata align:4
+    .rodata.sD3DSoundPanOffsets start:0x0212e574 end:0x0212e57c kind:rodata align:4
+    .rodata.data_ov006_0212e57c start:0x0212e57c end:0x0212e580 kind:rodata align:4
+    .rodata.gap1 start:0x0212e580 end:0x0212e588 kind:rodata align:4
+    .rodata.sEsp3DCardsPerDifficulty start:0x0212e588 end:0x0212e58c kind:rodata align:4
+    .rodata.data_ov006_0212e58c start:0x0212e58c end:0x0212e594 kind:rodata align:4
+    .rodata.sEsp3DResultSfx start:0x0212e594 end:0x0212e5a8 kind:rodata align:4
+    .rodata.gap2 start:0x0212e5a8 end:0x0212e80c kind:rodata align:4
+    .rodata.sHanaRoundPatterns start:0x0212e80c end:0x0212e820 kind:rodata align:4
+    .rodata.sHanaFieldWigglerCounts start:0x0212e820 end:0x0212e848 kind:rodata align:4
+    .rodata.sLuigiTouchSfx start:0x0212e848 end:0x0212e850 kind:rodata align:4
+    .rodata.sLuigiCurtainX start:0x0212e850 end:0x0212e858 kind:rodata align:4
+    .rodata.sLuigiDriftByColumnSpeed start:0x0212e858 end:0x0212e868 kind:rodata align:4
+    .rodata.sLuigiDriftByRowSpeed start:0x0212e868 end:0x0212e878 kind:rodata align:4
+    .rodata.sLuigiDriftRandomSpeed start:0x0212e878 end:0x0212e888 kind:rodata align:4
+    .rodata.sLuigiSwaySpeed start:0x0212e888 end:0x0212e898 kind:rodata align:4
+    .rodata.sLuigiSwayStartVY start:0x0212e898 end:0x0212e8a8 kind:rodata align:4
+    .rodata.sLuigiSwayAccel start:0x0212e8a8 end:0x0212e8b8 kind:rodata align:4
+    .rodata.sLuigiBounceSpeeds start:0x0212e8b8 end:0x0212e8c8 kind:rodata align:4
+    .rodata.sLuigiDriftFixedSpeed start:0x0212e8c8 end:0x0212e8d8 kind:rodata align:4
+    .rodata.sLuigiDriftByLevelSpeed start:0x0212e8d8 end:0x0212e8e8 kind:rodata align:4
+    .rodata.sMemory2Tables start:0x0212e8e8 end:0x0212e954 kind:rodata align:4
+    .rodata.gap3 start:0x0212e954 end:0x0212ebac kind:rodata align:4
+    .rodata.sPachinko2CupHopRightStartFrames start:0x0212ebac end:0x0212ebb0 kind:rodata align:4
+    .rodata.sPachinko2CupHopLeftStartFrames start:0x0212ebb0 end:0x0212ebb4 kind:rodata align:4
+    .rodata.sPachinko2BallWalkOffSprites start:0x0212ebb4 end:0x0212ebb8 kind:rodata align:4
+    .rodata.sPachinko2PaddleCountPerLanes start:0x0212ebb8 end:0x0212ebc0 kind:rodata align:4
+    .rodata.sPachinko2CupHopLeftFrames start:0x0212ebc0 end:0x0212ebc8 kind:rodata align:4
+    .rodata.sPachinko2CupHopRightFrames start:0x0212ebc8 end:0x0212ebd0 kind:rodata align:4
+    .rodata.data_ov006_0212ebd0 start:0x0212ebd0 end:0x0212ebd8 kind:rodata align:4
+    .rodata.sPachinko2CupWaitFrames start:0x0212ebd8 end:0x0212ebe0 kind:rodata align:4
+    .rodata.sPachinko2CupWaitTimes start:0x0212ebe0 end:0x0212ebe8 kind:rodata align:4
+    .rodata.data_ov006_0212ebe8 start:0x0212ebe8 end:0x0212ebf0 kind:rodata align:4
+    .rodata.data_ov006_0212ebf0 start:0x0212ebf0 end:0x0212ebf8 kind:rodata align:4
+    .rodata.data_ov006_0212ebf8 start:0x0212ebf8 end:0x0212ec00 kind:rodata align:4
+    .rodata.data_ov006_0212ec00 start:0x0212ec00 end:0x0212ec08 kind:rodata align:4
+    .rodata.sPachinko2CupX start:0x0212ec08 end:0x0212ec10 kind:rodata align:4
+    .rodata.data_ov006_0212ec10 start:0x0212ec10 end:0x0212ec18 kind:rodata align:4
+    .rodata.data_ov006_0212ec18 start:0x0212ec18 end:0x0212ec20 kind:rodata align:4
+    .rodata.data_ov006_0212ec20 start:0x0212ec20 end:0x0212ec28 kind:rodata align:4
+    .rodata.data_ov006_0212ec28 start:0x0212ec28 end:0x0212ec30 kind:rodata align:4
+    .rodata.sPachinko2CrossRowY start:0x0212ec30 end:0x0212ec38 kind:rodata align:4
+    .rodata.data_ov006_0212ec38 start:0x0212ec38 end:0x0212ec40 kind:rodata align:4
+    .rodata.data_ov006_0212ec40 start:0x0212ec40 end:0x0212ec48 kind:rodata align:4
+    .rodata.data_ov006_0212ec48 start:0x0212ec48 end:0x0212ec50 kind:rodata align:4
+    .rodata.data_ov006_0212ec50 start:0x0212ec50 end:0x0212ec58 kind:rodata align:4
+    .rodata.data_ov006_0212ec58 start:0x0212ec58 end:0x0212ec60 kind:rodata align:4
+    .rodata.data_ov006_0212ec60 start:0x0212ec60 end:0x0212ec68 kind:rodata align:4
+    .rodata.data_ov006_0212ec68 start:0x0212ec68 end:0x0212ec70 kind:rodata align:4
+    .rodata.data_ov006_0212ec70 start:0x0212ec70 end:0x0212ec78 kind:rodata align:4
+    .rodata.data_ov006_0212ec78 start:0x0212ec78 end:0x0212ec80 kind:rodata align:4
+    .rodata.sPachinko2PaddleFlyAwayVX start:0x0212ec80 end:0x0212ec8c kind:rodata align:4
+    .rodata.gap8 start:0x0212ec8c end:0x0212ecac kind:rodata align:4
+    .rodata.sPachinko2CupWaitTimesAlt start:0x0212ecac end:0x0212ecbc kind:rodata align:4
+    .rodata.sPachinko2CupRightStops start:0x0212ecbc end:0x0212ecd4 kind:rodata align:4
+    .rodata.sPachinko2CupLeftStops start:0x0212ecd4 end:0x0212ecec kind:rodata align:4
+    .rodata.gap9 start:0x0212ecec end:0x0212ed14 kind:rodata align:4
+    .rodata.sRouletteTables start:0x0212ed14 end:0x0212ed88 kind:rodata align:4
+    .rodata.gap9b start:0x0212ed88 end:0x0212ee0c kind:rodata align:4
     .rodata.sound_tables start:0x0212ee0c end:0x0212ef5c kind:rodata align:4
     .rodata.sound_row_views start:0x0212ef5c end:0x0212ef9c kind:rodata align:4
     .rodata.sound_note_offsets start:0x0212ef9c end:0x0212efc4 kind:rodata align:4
     .rodata.after_sound start:0x0212efc4 end:0x0212f4c4 kind:rodata align:4
     .init       start:0x0212f4c4 end:0x0213356c kind:code align:4
     .ctor       start:0x0213356c end:0x021335e8 kind:rodata align:4
-    .data       start:0x02133600 end:0x021402e0 kind:data align:32
+    .data.gap0 start:0x02133600 end:0x0213386c kind:data align:32
+    .data.sPachinko2PaddleSprite start:0x0213386c end:0x02133870 kind:data align:4
+    .data.data_ov006_02133870 start:0x02133870 end:0x02133890 kind:data align:4
+    .data.gap1 start:0x02133890 end:0x021339fc kind:data align:4
+    .data.data_ov006_021339fc start:0x021339fc end:0x02133a04 kind:data align:4
+    .data.data_ov006_02133a04 start:0x02133a04 end:0x02133a0c kind:data align:4
+    .data.data_ov006_02133a0c start:0x02133a0c end:0x02133a14 kind:data align:4
+    .data.data_ov006_02133a14 start:0x02133a14 end:0x02133a1c kind:data align:4
+    .data.data_ov006_02133a1c start:0x02133a1c end:0x02133a24 kind:data align:4
+    .data.data_ov006_02133a24 start:0x02133a24 end:0x02133a2c kind:data align:4
+    .data.data_ov006_02133a2c start:0x02133a2c end:0x02133a34 kind:data align:4
+    .data.data_ov006_02133a34 start:0x02133a34 end:0x02133a3c kind:data align:4
+    .data.sEsp3DAnimSetSlotsSprites start:0x02133a3c end:0x02133a5c kind:data align:4
+    .data.sTeresaExclaimSprites start:0x02133a5c end:0x02133a60 kind:data align:4
+    .data.data_ov006_02133a60 start:0x02133a60 end:0x02133a70 kind:data align:4
+    .data.sBomroomMarkerLitSprites start:0x02133a70 end:0x02133a80 kind:data align:4
+    .data.data_ov006_02133a80 start:0x02133a80 end:0x02133a98 kind:data align:4
+    .data.data_ov006_02133a98 start:0x02133a98 end:0x02133ab0 kind:data align:4
+    .data.data_ov006_02133ab0 start:0x02133ab0 end:0x02133ac8 kind:data align:4
+    .data.data_ov006_02133ac8 start:0x02133ac8 end:0x02133ae0 kind:data align:4
+    .data.sBomroomMarkerPlainSprites start:0x02133ae0 end:0x02133af0 kind:data align:4
+    .data.data_ov006_02133af0 start:0x02133af0 end:0x02133b28 kind:data align:4
+    .data.data_ov006_02133b28 start:0x02133b28 end:0x02133b60 kind:data align:4
+    .data.data_ov006_02133b60 start:0x02133b60 end:0x02133ba0 kind:data align:4
+    .data.data_ov006_02133ba0 start:0x02133ba0 end:0x02133be0 kind:data align:4
+    .data.gap4 start:0x02133be0 end:0x02133f00 kind:data align:4
+    .data.data_ov006_02133f00 start:0x02133f00 end:0x02133f08 kind:data align:4
+    .data.data_ov006_02133f08 start:0x02133f08 end:0x02133f10 kind:data align:4
+    .data.sCoinValuesSprites start:0x02133f10 end:0x02133f18 kind:data align:4
+    .data.gap5 start:0x02133f18 end:0x02133f24 kind:data align:4
+    .data.data_ov006_02133f24 start:0x02133f24 end:0x02133f38 kind:data align:4
+    .data.data_ov006_02133f38 start:0x02133f38 end:0x02133f50 kind:data align:4
+    .data.data_ov006_02133f50 start:0x02133f50 end:0x02133f68 kind:data align:4
+    .data.data_ov006_02133f68 start:0x02133f68 end:0x02133f80 kind:data align:4
+    .data.data_ov006_02133f80 start:0x02133f80 end:0x02133f98 kind:data align:4
+    .data.data_ov006_02133f98 start:0x02133f98 end:0x02133fb0 kind:data align:4
+    .data.gap6 start:0x02133fb0 end:0x02134028 kind:data align:4
+    .data.data_ov006_02134028 start:0x02134028 end:0x0213402c kind:data align:4
+    .data.data_ov006_0213402c start:0x0213402c end:0x0213406c kind:data align:4
+    .data.sCardHudSprites start:0x0213406c end:0x02134074 kind:data align:4
+    .data.data_ov006_02134074 start:0x02134074 end:0x02134124 kind:data align:4
+    .data.data_ov006_02134124 start:0x02134124 end:0x021341d4 kind:data align:4
+    .data.data_ov006_021341d4 start:0x021341d4 end:0x021341dc kind:data align:4
+    .data.data_ov006_021341dc start:0x021341dc end:0x021341e4 kind:data align:4
+    .data.data_ov006_021341e4 start:0x021341e4 end:0x021341ec kind:data align:4
+    .data.sCoinPopupSprites start:0x021341ec end:0x021341f0 kind:data align:4
+    .data.data_ov006_021341f0 start:0x021341f0 end:0x021341f8 kind:data align:4
+    .data.data_ov006_021341f8 start:0x021341f8 end:0x02134200 kind:data align:4
+    .data.gap9b start:0x02134200 end:0x02134210 kind:data align:4
+    .data.sTeresaVanishPuffSprites start:0x02134210 end:0x02134218 kind:data align:4
+    .data.gap10 start:0x02134218 end:0x0213424c kind:data align:4
+    .data.data_ov006_0213424c start:0x0213424c end:0x02134274 kind:data align:4
+    .data.gap10b start:0x02134274 end:0x021342bc kind:data align:4
+    .data.sBomroomHatchPanelSprites start:0x021342bc end:0x021342d0 kind:data align:4
+    .data.data_ov006_021342d0 start:0x021342d0 end:0x021342f0 kind:data align:4
+    .data.data_ov006_021342f0 start:0x021342f0 end:0x02134310 kind:data align:4
+    .data.data_ov006_02134310 start:0x02134310 end:0x02134340 kind:data align:4
+    .data.data_ov006_02134340 start:0x02134340 end:0x02134370 kind:data align:4
+    .data.data_ov006_02134370 start:0x02134370 end:0x021343a0 kind:data align:4
+    .data.data_ov006_021343a0 start:0x021343a0 end:0x021343b0 kind:data align:4
+    .data.sBomroomTopDoorSprites start:0x021343b0 end:0x021343c4 kind:data align:4
+    .data.data_ov006_021343c4 start:0x021343c4 end:0x021343e4 kind:data align:4
+    .data.data_ov006_021343e4 start:0x021343e4 end:0x02134404 kind:data align:4
+    .data.data_ov006_02134404 start:0x02134404 end:0x02134444 kind:data align:4
+    .data.data_ov006_02134444 start:0x02134444 end:0x02134484 kind:data align:4
+    .data.data_ov006_02134484 start:0x02134484 end:0x021344a4 kind:data align:4
+    .data.data_ov006_021344a4 start:0x021344a4 end:0x021344c4 kind:data align:4
+    .data.data_ov006_021344c4 start:0x021344c4 end:0x021344ec kind:data align:4
+    .data.sBomroomPenGateSprites start:0x021344ec end:0x02134514 kind:data align:4
+    .data.data_ov006_02134514 start:0x02134514 end:0x0213453c kind:data align:4
+    .data.data_ov006_0213453c start:0x0213453c end:0x0213456c kind:data align:4
+    .data.data_ov006_0213456c start:0x0213456c end:0x021345ac kind:data align:4
+    .data.data_ov006_021345ac start:0x021345ac end:0x021345ec kind:data align:4
+    .data.data_ov006_021345ec start:0x021345ec end:0x0213462c kind:data align:4
+    .data.data_ov006_0213462c start:0x0213462c end:0x0213466c kind:data align:4
+    .data.data_ov006_0213466c start:0x0213466c end:0x021346bc kind:data align:4
+    .data.gap13 start:0x021346bc end:0x02134b3c kind:data align:4
+    .data.data_ov006_02134b3c start:0x02134b3c end:0x02134b44 kind:data align:4
+    .data.data_ov006_02134b44 start:0x02134b44 end:0x02134b4c kind:data align:4
+    .data.sCoinBagSprites start:0x02134b4c end:0x02134b54 kind:data align:4
+    .data.data_ov006_02134b54 start:0x02134b54 end:0x02134b60 kind:data align:4
+    .data.data_ov006_02134b60 start:0x02134b60 end:0x02134b6c kind:data align:4
+    .data.data_ov006_02134b6c start:0x02134b6c end:0x02134b78 kind:data align:4
+    .data.data_ov006_02134b78 start:0x02134b78 end:0x02134b84 kind:data align:4
+    .data.data_ov006_02134b84 start:0x02134b84 end:0x02134b90 kind:data align:4
+    .data.data_ov006_02134b90 start:0x02134b90 end:0x02134ba8 kind:data align:4
+    .data.data_ov006_02134ba8 start:0x02134ba8 end:0x02134bc0 kind:data align:4
+    .data.data_ov006_02134bc0 start:0x02134bc0 end:0x02134bd8 kind:data align:4
+    .data.data_ov006_02134bd8 start:0x02134bd8 end:0x02134bf0 kind:data align:4
+    .data.data_ov006_02134bf0 start:0x02134bf0 end:0x02134c08 kind:data align:4
+    .data.data_ov006_02134c08 start:0x02134c08 end:0x02134c20 kind:data align:4
+    .data.data_ov006_02134c20 start:0x02134c20 end:0x02134c38 kind:data align:4
+    .data.data_ov006_02134c38 start:0x02134c38 end:0x02134c50 kind:data align:4
+    .data.data_ov006_02134c50 start:0x02134c50 end:0x02134c68 kind:data align:4
+    .data.data_ov006_02134c68 start:0x02134c68 end:0x02134c80 kind:data align:4
+    .data.data_ov006_02134c80 start:0x02134c80 end:0x02134c98 kind:data align:4
+    .data.data_ov006_02134c98 start:0x02134c98 end:0x02134cb0 kind:data align:4
+    .data.data_ov006_02134cb0 start:0x02134cb0 end:0x02134cc8 kind:data align:4
+    .data.data_ov006_02134cc8 start:0x02134cc8 end:0x02134ce0 kind:data align:4
+    .data.data_ov006_02134ce0 start:0x02134ce0 end:0x02134cf8 kind:data align:4
+    .data.gap14 start:0x02134cf8 end:0x02134d1c kind:data align:4
+    .data.data_ov006_02134d1c start:0x02134d1c end:0x02134d20 kind:data align:4
+    .data.data_ov006_02134d20 start:0x02134d20 end:0x02134d28 kind:data align:4
+    .data.sTrmpPuffItalian start:0x02134d28 end:0x02134d34 kind:data align:4
+    .data.sTrmpPuffGerman start:0x02134d34 end:0x02134d40 kind:data align:4
+    .data.sTrmpPuffEnglish start:0x02134d40 end:0x02134d4c kind:data align:4
+    .data.sTrmpPuffSpanish start:0x02134d4c end:0x02134d58 kind:data align:4
+    .data.sTrmpPuffFrench start:0x02134d58 end:0x02134d64 kind:data align:4
+    .data.data_ov006_02134d64 start:0x02134d64 end:0x02134d7c kind:data align:4
+    .data.data_ov006_02134d7c start:0x02134d7c end:0x02134d94 kind:data align:4
+    .data.data_ov006_02134d94 start:0x02134d94 end:0x02134dac kind:data align:4
+    .data.data_ov006_02134dac start:0x02134dac end:0x02134dc4 kind:data align:4
+    .data.data_ov006_02134dc4 start:0x02134dc4 end:0x02134ddc kind:data align:4
+    .data.data_ov006_02134ddc start:0x02134ddc end:0x02134df4 kind:data align:4
+    .data.data_ov006_02134df4 start:0x02134df4 end:0x02134e0c kind:data align:4
+    .data.data_ov006_02134e0c start:0x02134e0c end:0x02134e24 kind:data align:4
+    .data.data_ov006_02134e24 start:0x02134e24 end:0x02134e3c kind:data align:4
+    .data.data_ov006_02134e3c start:0x02134e3c end:0x02134e54 kind:data align:4
+    .data.data_ov006_02134e54 start:0x02134e54 end:0x02134e6c kind:data align:4
+    .data.data_ov006_02134e6c start:0x02134e6c end:0x02134e84 kind:data align:4
+    .data.data_ov006_02134e84 start:0x02134e84 end:0x02134e9c kind:data align:4
+    .data.data_ov006_02134e9c start:0x02134e9c end:0x02134eb4 kind:data align:4
+    .data.data_ov006_02134eb4 start:0x02134eb4 end:0x02134ecc kind:data align:4
+    .data.gap15b start:0x02134ecc end:0x02134ef0 kind:data align:4
+    .data.data_ov006_02134ef0 start:0x02134ef0 end:0x02134ef8 kind:data align:4
+    .data.data_ov006_02134ef8 start:0x02134ef8 end:0x02134f00 kind:data align:4
+    .data.sTrmpDoorSignSprites start:0x02134f00 end:0x02134f08 kind:data align:4
+    .data.sTrmpArrowSprite start:0x02134f08 end:0x02134f0c kind:data align:4
+    .data.data_ov006_02134f0c start:0x02134f0c end:0x02134f24 kind:data align:4
+    .data.sTrmpRowMarkerSprite start:0x02134f24 end:0x02134f28 kind:data align:4
+    .data.data_ov006_02134f28 start:0x02134f28 end:0x02134f30 kind:data align:4
+    .data.sBomroomRoundOverSprites start:0x02134f30 end:0x02134f34 kind:data align:4
+    .data.data_ov006_02134f34 start:0x02134f34 end:0x02134fdc kind:data align:4
+    .data.gap18 start:0x02134fdc end:0x021350d8 kind:data align:4
+    .data.sLuigiCurtainSprite start:0x021350d8 end:0x021350dc kind:data align:4
+    .data.data_ov006_021350dc start:0x021350dc end:0x021350fc kind:data align:4
+    .data.sTeresaBigBooSprites start:0x021350fc end:0x02135128 kind:data align:4
+    .data.data_ov006_02135128 start:0x02135128 end:0x02135268 kind:data align:4
+    .data.data_ov006_02135268 start:0x02135268 end:0x021353a8 kind:data align:4
+    .data.data_ov006_021353a8 start:0x021353a8 end:0x021354f8 kind:data align:4
+    .data.data_ov006_021354f8 start:0x021354f8 end:0x02135648 kind:data align:4
+    .data.data_ov006_02135648 start:0x02135648 end:0x02135798 kind:data align:4
+    .data.data_ov006_02135798 start:0x02135798 end:0x021358e8 kind:data align:4
+    .data.data_ov006_021358e8 start:0x021358e8 end:0x02135a48 kind:data align:4
+    .data.data_ov006_02135a48 start:0x02135a48 end:0x02135ba8 kind:data align:4
+    .data.data_ov006_02135ba8 start:0x02135ba8 end:0x02135d08 kind:data align:4
+    .data.data_ov006_02135d08 start:0x02135d08 end:0x02135e68 kind:data align:4
+    .data.data_ov006_02135e68 start:0x02135e68 end:0x02135fc8 kind:data align:4
+    .data.sTeresaBigBooHoverSprites start:0x02135fc8 end:0x02135fe4 kind:data align:4
+    .data.data_ov006_02135fe4 start:0x02135fe4 end:0x0213609c kind:data align:4
+    .data.data_ov006_0213609c start:0x0213609c end:0x02136154 kind:data align:4
+    .data.data_ov006_02136154 start:0x02136154 end:0x0213620c kind:data align:4
+    .data.data_ov006_0213620c start:0x0213620c end:0x0213635c kind:data align:4
+    .data.data_ov006_0213635c start:0x0213635c end:0x02136524 kind:data align:4
+    .data.data_ov006_02136524 start:0x02136524 end:0x0213672c kind:data align:4
+    .data.data_ov006_0213672c start:0x0213672c end:0x02136974 kind:data align:4
+    .data.gap21 start:0x02136974 end:0x02136bd4 kind:data align:4
+    .data.sPachinko2SparkSprites start:0x02136bd4 end:0x02136be4 kind:data align:4
+    .data.data_ov006_02136be4 start:0x02136be4 end:0x02136c0c kind:data align:4
+    .data.data_ov006_02136c0c start:0x02136c0c end:0x02136c34 kind:data align:4
+    .data.data_ov006_02136c34 start:0x02136c34 end:0x02136c7c kind:data align:4
+    .data.data_ov006_02136c7c start:0x02136c7c end:0x02136cd4 kind:data align:4
+    .data.gap22 start:0x02136cd4 end:0x02136e14 kind:data align:4
+    .data.data_ov006_02136e14 start:0x02136e14 end:0x02136e1c kind:data align:4
+    .data.data_ov006_02136e1c start:0x02136e1c end:0x02136e24 kind:data align:4
+    .data.sCoinSparkleSprites start:0x02136e24 end:0x02136e2c kind:data align:4
+    .data.gap23 start:0x02136e2c end:0x02136e38 kind:data align:4
+    .data.sEsp3DAnimSetRowsSprites start:0x02136e38 end:0x02136e3c kind:data align:4
+    .data.data_ov006_02136e3c start:0x02136e3c end:0x02136e44 kind:data align:4
+    .data.gap24 start:0x02136e44 end:0x021374ac kind:data align:4
+    .data.data_ov006_021374ac start:0x021374ac end:0x021374b0 kind:data align:4
+    .data.data_ov006_021374b0 start:0x021374b0 end:0x021374b8 kind:data align:4
+    .data.data_ov006_021374b8 start:0x021374b8 end:0x021374bc kind:data align:4
+    .data.data_ov006_021374bc start:0x021374bc end:0x021374c4 kind:data align:4
+    .data.data_ov006_021374c4 start:0x021374c4 end:0x021374c8 kind:data align:4
+    .data.data_ov006_021374c8 start:0x021374c8 end:0x021374d0 kind:data align:4
+    .data.gap27 start:0x021374d0 end:0x021374f4 kind:data align:4
+    .data.data_ov006_021374f4 start:0x021374f4 end:0x021374f8 kind:data align:4
+    .data.data_ov006_021374f8 start:0x021374f8 end:0x02137500 kind:data align:4
+    .data.gap28 start:0x02137500 end:0x02137590 kind:data align:4
+    .data.data_ov006_02137590 start:0x02137590 end:0x02137598 kind:data align:4
+    .data.data_ov006_02137598 start:0x02137598 end:0x021375a0 kind:data align:4
+    .data.sHanaWigglerFieldSprites start:0x021375a0 end:0x021375a8 kind:data align:4
+    .data.data_ov006_021375a8 start:0x021375a8 end:0x021375b0 kind:data align:4
+    .data.data_ov006_021375b0 start:0x021375b0 end:0x021375b8 kind:data align:4
+    .data.data_ov006_021375b8 start:0x021375b8 end:0x021375c0 kind:data align:4
+    .data.sHanaWigglerTargetSprites start:0x021375c0 end:0x021375cc kind:data align:4
+    .data.data_ov006_021375cc start:0x021375cc end:0x021375d4 kind:data align:4
+    .data.data_ov006_021375d4 start:0x021375d4 end:0x021375dc kind:data align:4
+    .data.sHanaBackgroundPartsB start:0x021375dc end:0x021375e4 kind:data align:4
+    .data.gap31 start:0x021375e4 end:0x021389ec kind:data align:4
+    .data.sPachinko2BallSprite start:0x021389ec end:0x021389f0 kind:data align:4
+    .data.data_ov006_021389f0 start:0x021389f0 end:0x021389f8 kind:data align:4
+    .data.gap32 start:0x021389f8 end:0x02138c48 kind:data align:4
+    .data.data_ov006_02138c48 start:0x02138c48 end:0x02138c60 kind:data align:4
+    .data.data_ov006_02138c60 start:0x02138c60 end:0x02138c78 kind:data align:4
+    .data.data_ov006_02138c78 start:0x02138c78 end:0x02138c90 kind:data align:4
+    .data.data_ov006_02138c90 start:0x02138c90 end:0x02138ca8 kind:data align:4
+    .data.data_ov006_02138ca8 start:0x02138ca8 end:0x02138cc0 kind:data align:4
+    .data.data_ov006_02138cc0 start:0x02138cc0 end:0x02138cd8 kind:data align:4
+    .data.data_ov006_02138cd8 start:0x02138cd8 end:0x02138cf0 kind:data align:4
+    .data.data_ov006_02138cf0 start:0x02138cf0 end:0x02138d08 kind:data align:4
+    .data.sPachinko2BallCountSprites start:0x02138d08 end:0x02138d28 kind:data align:4
+    .data.gap33 start:0x02138d28 end:0x02139db4 kind:data align:4
+    .data.data_ov006_02139db4 start:0x02139db4 end:0x02139dbc kind:data align:4
+    .data.data_ov006_02139dbc start:0x02139dbc end:0x02139dc4 kind:data align:4
+    .data.data_ov006_02139dc4 start:0x02139dc4 end:0x02139dd4 kind:data align:4
+    .data.data_ov006_02139dd4 start:0x02139dd4 end:0x02139de4 kind:data align:4
+    .data.data_ov006_02139de4 start:0x02139de4 end:0x02139df4 kind:data align:4
+    .data.data_ov006_02139df4 start:0x02139df4 end:0x02139e0c kind:data align:4
+    .data.data_ov006_02139e0c start:0x02139e0c end:0x02139e2c kind:data align:4
+    .data.data_ov006_02139e2c start:0x02139e2c end:0x02139e4c kind:data align:4
+    .data.data_ov006_02139e4c start:0x02139e4c end:0x02139e74 kind:data align:4
+    .data.data_ov006_02139e74 start:0x02139e74 end:0x02139e9c kind:data align:4
+    .data.data_ov006_02139e9c start:0x02139e9c end:0x02139ec4 kind:data align:4
+    .data.data_ov006_02139ec4 start:0x02139ec4 end:0x02139eec kind:data align:4
+    .data.gap37 start:0x02139eec end:0x02139fdc kind:data align:4
+    .data.data_ov006_02139fdc start:0x02139fdc end:0x0213a01c kind:data align:4
+    .data.data_ov006_0213a01c start:0x0213a01c end:0x0213a064 kind:data align:4
+    .data.data_ov006_0213a064 start:0x0213a064 end:0x0213a0ac kind:data align:4
+    .data.data_ov006_0213a0ac start:0x0213a0ac end:0x0213a0f4 kind:data align:4
+    .data.data_ov006_0213a0f4 start:0x0213a0f4 end:0x0213a13c kind:data align:4
+    .data.data_ov006_0213a13c start:0x0213a13c end:0x0213a18c kind:data align:4
+    .data.data_ov006_0213a18c start:0x0213a18c end:0x0213a1ec kind:data align:4
+    .data.data_ov006_0213a1ec start:0x0213a1ec end:0x0213a274 kind:data align:4
+    .data.data_ov006_0213a274 start:0x0213a274 end:0x0213a284 kind:data align:4
+    .data.gap38 start:0x0213a284 end:0x0213a5f4 kind:data align:4
+    .data.sTeresaMarkerSprites start:0x0213a5f4 end:0x0213a5f8 kind:data align:4
+    .data.data_ov006_0213a5f8 start:0x0213a5f8 end:0x0213a628 kind:data align:4
+    .data.sTeresaRevealSprites start:0x0213a628 end:0x0213a63c kind:data align:4
+    .data.data_ov006_0213a63c start:0x0213a63c end:0x0213a694 kind:data align:4
+    .data.data_ov006_0213a694 start:0x0213a694 end:0x0213a6ec kind:data align:4
+    .data.data_ov006_0213a6ec start:0x0213a6ec end:0x0213a744 kind:data align:4
+    .data.data_ov006_0213a744 start:0x0213a744 end:0x0213a79c kind:data align:4
+    .data.data_ov006_0213a79c start:0x0213a79c end:0x0213a7f4 kind:data align:4
+    .data.data_ov006_0213a7f4 start:0x0213a7f4 end:0x0213a804 kind:data align:4
+    .data.data_ov006_0213a804 start:0x0213a804 end:0x0213a814 kind:data align:4
+    .data.data_ov006_0213a814 start:0x0213a814 end:0x0213a82c kind:data align:4
+    .data.data_ov006_0213a82c start:0x0213a82c end:0x0213a844 kind:data align:4
+    .data.data_ov006_0213a844 start:0x0213a844 end:0x0213a85c kind:data align:4
+    .data.data_ov006_0213a85c start:0x0213a85c end:0x0213a874 kind:data align:4
+    .data.data_ov006_0213a874 start:0x0213a874 end:0x0213a88c kind:data align:4
+    .data.data_ov006_0213a88c start:0x0213a88c end:0x0213a8a4 kind:data align:4
+    .data.data_ov006_0213a8a4 start:0x0213a8a4 end:0x0213a8c4 kind:data align:4
+    .data.data_ov006_0213a8c4 start:0x0213a8c4 end:0x0213a8e4 kind:data align:4
+    .data.data_ov006_0213a8e4 start:0x0213a8e4 end:0x0213a904 kind:data align:4
+    .data.data_ov006_0213a904 start:0x0213a904 end:0x0213a924 kind:data align:4
+    .data.data_ov006_0213a924 start:0x0213a924 end:0x0213a944 kind:data align:4
+    .data.data_ov006_0213a944 start:0x0213a944 end:0x0213a964 kind:data align:4
+    .data.sTeresaBooFrameSprites start:0x0213a964 end:0x0213a99c kind:data align:4
+    .data.data_ov006_0213a99c start:0x0213a99c end:0x0213a9a4 kind:data align:4
+    .data.data_ov006_0213a9a4 start:0x0213a9a4 end:0x0213a9ac kind:data align:4
+    .data.data_ov006_0213a9ac start:0x0213a9ac end:0x0213a9c4 kind:data align:4
+    .data.data_ov006_0213a9c4 start:0x0213a9c4 end:0x0213a9dc kind:data align:4
+    .data.data_ov006_0213a9dc start:0x0213a9dc end:0x0213a9fc kind:data align:4
+    .data.sCoinCaptionSprites start:0x0213a9fc end:0x0213aa24 kind:data align:4
+    .data.data_ov006_0213aa24 start:0x0213aa24 end:0x0213aa5c kind:data align:4
+    .data.data_ov006_0213aa5c start:0x0213aa5c end:0x0213aa94 kind:data align:4
+    .data.data_ov006_0213aa94 start:0x0213aa94 end:0x0213aad4 kind:data align:4
+    .data.data_ov006_0213aad4 start:0x0213aad4 end:0x0213ab1c kind:data align:4
+    .data.data_ov006_0213ab1c start:0x0213ab1c end:0x0213ab6c kind:data align:4
+    .data.gap42 start:0x0213ab6c end:0x0213aba8 kind:data align:4
+    .data.data_ov006_0213aba8 start:0x0213aba8 end:0x0213abb0 kind:data align:4
+    .data.data_ov006_0213abb0 start:0x0213abb0 end:0x0213abb8 kind:data align:4
+    .data.data_ov006_0213abb8 start:0x0213abb8 end:0x0213abc0 kind:data align:4
+    .data.data_ov006_0213abc0 start:0x0213abc0 end:0x0213abc8 kind:data align:4
+    .data.sLuigiPictureSprites start:0x0213abc8 end:0x0213abd8 kind:data align:4
+    .data.gap43 start:0x0213abd8 end:0x0213acc0 kind:data align:4
+    .data.sMascotWalkerPaths start:0x0213acc0 end:0x0213ace0 kind:data align:4
+    .data.data_ov006_0213ace0 start:0x0213ace0 end:0x0213ad04 kind:data align:4
+    .data.data_ov006_0213ad04 start:0x0213ad04 end:0x0213ad28 kind:data align:4
+    .data.sDealerIdentityMtx start:0x0213ad28 end:0x0213ad58 kind:data align:4
+    .data.data_ov006_0213ad58 start:0x0213ad58 end:0x0213ad88 kind:data align:4
+    .data.data_ov006_0213ad88 start:0x0213ad88 end:0x0213adb8 kind:data align:4
+    .data.gap45 start:0x0213adb8 end:0x0213aee8 kind:data align:4
+    .data.data_ov006_0213aee8 start:0x0213aee8 end:0x0213af18 kind:data align:4
+    .data.pmf_Heyho start:0x0213af18 end:0x0213afd0 kind:data align:4
+    .data.gap46 start:0x0213afd0 end:0x0213b008 kind:data align:4
+    .data.sJump3DBounceVy start:0x0213b008 end:0x0213b00c kind:data align:4
+    .data.sJump3DRiseVy start:0x0213b00c end:0x0213b010 kind:data align:4
+    .data.sJump3DFallSpeed start:0x0213b010 end:0x0213b014 kind:data align:4
+    .data.sJump3DStartVx start:0x0213b014 end:0x0213b018 kind:data align:4
+    .data.sJump3DGravityStep start:0x0213b018 end:0x0213b01c kind:data align:4
+    .data.sJump3DMoveSpeed start:0x0213b01c end:0x0213b020 kind:data align:4
+    .data.gap47 start:0x0213b020 end:0x0213b098 kind:data align:4
+    .data.sJump3DAnimTable start:0x0213b098 end:0x0213b0a4 kind:data align:4
+    .data.gap48 start:0x0213b0a4 end:0x0213b0d8 kind:data align:4
+    .data.sPuffSprites start:0x0213b0d8 end:0x0213b0ec kind:data align:4
+    .data.gap49 start:0x0213b0ec end:0x0213b22c kind:data align:4
+    .data.sTrmpBounceAnimTable start:0x0213b22c end:0x0213b238 kind:data align:4
+    .data.gap50 start:0x0213b238 end:0x0213b31c kind:data align:4
+    .data.pmf_unit020cd744 start:0x0213b31c end:0x0213b3a4 kind:data align:4
+    .data.gap50b start:0x0213b3a4 end:0x0213b3f4 kind:data align:4
+    .data.sTrmpLineTex start:0x0213b3f4 end:0x0213b814 kind:data align:4
+    .data start:0x0213b814 end:0x021402e0 kind:data align:4
     .bss        start:0x021402e0 end:0x021430a0 kind:bss align:32
 src/minigames/unit020bfec0.cpp:
     complete
     .text start:0x020bfec0 end:0x020c4048
     .bss start:0x021402e0 end:0x021402fc
+    .data.sMascotWalkerPaths start:0x0213acc0 end:0x0213ace0
+    .data.data_ov006_0213ace0 start:0x0213ace0 end:0x0213ad04
+    .data.data_ov006_0213ad04 start:0x0213ad04 end:0x0213ad28
+    .data.sDealerIdentityMtx start:0x0213ad28 end:0x0213ad58
+    .data.data_ov006_0213ad58 start:0x0213ad58 end:0x0213ad88
+    .data.data_ov006_0213ad88 start:0x0213ad88 end:0x0213adb8
+    .data.data_ov006_0213aee8 start:0x0213aee8 end:0x0213af18
 
 src/minigames/d_mg3d_heyho_obj_adapter.cpp:
     complete
     .text start:0x020c4048 end:0x020c6f8c
     .init start:0x0212f4c4 end:0x0212f52c
     .ctor start:0x0213356c end:0x02133570
-    .data start:0x0213af18 end:0x0213afd0
+    .data.pmf_Heyho start:0x0213af18 end:0x0213afd0
     .bss start:0x02140300 end:0x02140400
 
 src/minigames/d_mg_jump3d_mario.cpp:
@@ -28,7 +387,16 @@ src/minigames/d_mg_jump3d_mario.cpp:
     .text start:0x020c6f8c end:0x020c8a30
     .init start:0x0212f52c end:0x0212f660
     .ctor start:0x02133570 end:0x02133574
-    .bss start:0x02140438 end:0x021404c4
+    .bss start:0x02140400 end:0x021404c4
+    .data.data_ov006_02134d1c start:0x02134d1c end:0x02134d20
+    .data.data_ov006_02134d20 start:0x02134d20 end:0x02134d28
+    .data.sJump3DBounceVy start:0x0213b008 end:0x0213b00c
+    .data.sJump3DRiseVy start:0x0213b00c end:0x0213b010
+    .data.sJump3DFallSpeed start:0x0213b010 end:0x0213b014
+    .data.sJump3DStartVx start:0x0213b014 end:0x0213b018
+    .data.sJump3DGravityStep start:0x0213b018 end:0x0213b01c
+    .data.sJump3DMoveSpeed start:0x0213b01c end:0x0213b020
+    .data.sJump3DAnimTable start:0x0213b098 end:0x0213b0a4
 
 src/minigames/unit020c8a30.cpp:
     complete
@@ -36,6 +404,27 @@ src/minigames/unit020c8a30.cpp:
     .init start:0x0212f660 end:0x0212f6b4
     .ctor start:0x02133574 end:0x02133578
     .bss start:0x021404c4 end:0x02140538
+    .data.data_ov006_02134b54 start:0x02134b54 end:0x02134b60
+    .data.data_ov006_02134b60 start:0x02134b60 end:0x02134b6c
+    .data.data_ov006_02134b6c start:0x02134b6c end:0x02134b78
+    .data.data_ov006_02134b78 start:0x02134b78 end:0x02134b84
+    .data.data_ov006_02134b84 start:0x02134b84 end:0x02134b90
+    .data.data_ov006_02134b90 start:0x02134b90 end:0x02134ba8
+    .data.data_ov006_02134ba8 start:0x02134ba8 end:0x02134bc0
+    .data.data_ov006_02134bc0 start:0x02134bc0 end:0x02134bd8
+    .data.data_ov006_02134bd8 start:0x02134bd8 end:0x02134bf0
+    .data.data_ov006_02134bf0 start:0x02134bf0 end:0x02134c08
+    .data.data_ov006_02134c08 start:0x02134c08 end:0x02134c20
+    .data.data_ov006_02134c20 start:0x02134c20 end:0x02134c38
+    .data.data_ov006_02134c38 start:0x02134c38 end:0x02134c50
+    .data.data_ov006_02134c50 start:0x02134c50 end:0x02134c68
+    .data.data_ov006_02134c68 start:0x02134c68 end:0x02134c80
+    .data.data_ov006_02134c80 start:0x02134c80 end:0x02134c98
+    .data.data_ov006_02134c98 start:0x02134c98 end:0x02134cb0
+    .data.data_ov006_02134cb0 start:0x02134cb0 end:0x02134cc8
+    .data.data_ov006_02134cc8 start:0x02134cc8 end:0x02134ce0
+    .data.data_ov006_02134ce0 start:0x02134ce0 end:0x02134cf8
+    .data.sPuffSprites start:0x0213b0d8 end:0x0213b0ec
 
 src/minigames/d_mg_trmpln2_mario.cpp:
     complete
@@ -43,14 +432,16 @@ src/minigames/d_mg_trmpln2_mario.cpp:
     .init start:0x0212f6b4 end:0x0212fc7c
     .ctor start:0x02133578 end:0x0213357c
     .bss start:0x0214053c end:0x02140808
+    .data.sTrmpBounceAnimTable start:0x0213b22c end:0x0213b238
 
 src/minigames/unit020cd744.cpp:
     complete
     .text start:0x020cd744 end:0x020d1018
     .init start:0x0212fc7c end:0x0212fd48
     .ctor start:0x0213357c end:0x02133580
-    .data start:0x0213b31c end:0x0213b3a4
+    .data.pmf_unit020cd744 start:0x0213b31c end:0x0213b3a4
     .bss start:0x02140808 end:0x02141640
+    .data.sTrmpLineTex start:0x0213b3f4 end:0x0213b814
 
 src/minigames/d_s_mg_amida.cpp:
     complete
@@ -63,6 +454,41 @@ src/minigames/d_s_mg_bomroom.cpp:
     .init start:0x0212fd48 end:0x021300b0
     .ctor start:0x02133580 end:0x02133584
     .bss start:0x02141660 end:0x02141768
+    .data.sBomroomMarkerLitSprites start:0x02133a70 end:0x02133a80
+    .data.sBomroomMarkerPlainSprites start:0x02133ae0 end:0x02133af0
+    .data.sBomroomHatchPanelSprites start:0x021342bc end:0x021342d0
+    .data.sBomroomTopDoorSprites start:0x021343b0 end:0x021343c4
+    .data.sBomroomPenGateSprites start:0x021344ec end:0x02134514
+    .data.sBomroomRoundOverSprites start:0x02134f30 end:0x02134f34
+    .data.data_ov006_02133a80 start:0x02133a80 end:0x02133a98
+    .data.data_ov006_02133a98 start:0x02133a98 end:0x02133ab0
+    .data.data_ov006_02133ab0 start:0x02133ab0 end:0x02133ac8
+    .data.data_ov006_02133ac8 start:0x02133ac8 end:0x02133ae0
+    .data.data_ov006_02133af0 start:0x02133af0 end:0x02133b28
+    .data.data_ov006_02133b28 start:0x02133b28 end:0x02133b60
+    .data.data_ov006_02133b60 start:0x02133b60 end:0x02133ba0
+    .data.data_ov006_02133ba0 start:0x02133ba0 end:0x02133be0
+    .data.data_ov006_021342d0 start:0x021342d0 end:0x021342f0
+    .data.data_ov006_021342f0 start:0x021342f0 end:0x02134310
+    .data.data_ov006_02134310 start:0x02134310 end:0x02134340
+    .data.data_ov006_02134340 start:0x02134340 end:0x02134370
+    .data.data_ov006_02134370 start:0x02134370 end:0x021343a0
+    .data.data_ov006_021343a0 start:0x021343a0 end:0x021343b0
+    .data.data_ov006_021343c4 start:0x021343c4 end:0x021343e4
+    .data.data_ov006_021343e4 start:0x021343e4 end:0x02134404
+    .data.data_ov006_02134404 start:0x02134404 end:0x02134444
+    .data.data_ov006_02134444 start:0x02134444 end:0x02134484
+    .data.data_ov006_02134484 start:0x02134484 end:0x021344a4
+    .data.data_ov006_021344a4 start:0x021344a4 end:0x021344c4
+    .data.data_ov006_021344c4 start:0x021344c4 end:0x021344ec
+    .data.data_ov006_02134514 start:0x02134514 end:0x0213453c
+    .data.data_ov006_0213453c start:0x0213453c end:0x0213456c
+    .data.data_ov006_0213456c start:0x0213456c end:0x021345ac
+    .data.data_ov006_021345ac start:0x021345ac end:0x021345ec
+    .data.data_ov006_021345ec start:0x021345ec end:0x0213462c
+    .data.data_ov006_0213462c start:0x0213462c end:0x0213466c
+    .data.data_ov006_0213466c start:0x0213466c end:0x021346bc
+    .data.data_ov006_02134f34 start:0x02134f34 end:0x02134fdc
 
 src/minigames/d_s_mg_card.cpp:
     complete
@@ -70,6 +496,14 @@ src/minigames/d_s_mg_card.cpp:
     .init start:0x021300b0 end:0x0213014c
     .ctor start:0x02133584 end:0x02133588
     .bss start:0x02141774 end:0x021417b0
+    .data.data_ov006_02134028 start:0x02134028 end:0x0213402c
+    .data.data_ov006_0213402c start:0x0213402c end:0x0213406c
+    .data.sCardHudSprites start:0x0213406c end:0x02134074
+    .data.data_ov006_02134074 start:0x02134074 end:0x02134124
+    .data.data_ov006_02134124 start:0x02134124 end:0x021341d4
+    .data.data_ov006_021341d4 start:0x021341d4 end:0x021341dc
+    .data.data_ov006_021341dc start:0x021341dc end:0x021341e4
+    .data.data_ov006_021341e4 start:0x021341e4 end:0x021341ec
 
 src/minigames/d_s_mg_coin.cpp:
     complete
@@ -78,6 +512,28 @@ src/minigames/d_s_mg_coin.cpp:
     .init start:0x0213014c end:0x021303d0
     .ctor start:0x02133588 end:0x0213358c
     .bss start:0x021417b0 end:0x02141870
+    .data.data_ov006_02133f00 start:0x02133f00 end:0x02133f08
+    .data.data_ov006_02133f08 start:0x02133f08 end:0x02133f10
+    .data.sCoinValuesSprites start:0x02133f10 end:0x02133f18
+    .data.sCoinPopupSprites start:0x021341ec end:0x021341f0
+    .data.data_ov006_021341f0 start:0x021341f0 end:0x021341f8
+    .data.data_ov006_02134b3c start:0x02134b3c end:0x02134b44
+    .data.data_ov006_02134b44 start:0x02134b44 end:0x02134b4c
+    .data.sCoinBagSprites start:0x02134b4c end:0x02134b54
+    .data.data_ov006_02136e14 start:0x02136e14 end:0x02136e1c
+    .data.data_ov006_02136e1c start:0x02136e1c end:0x02136e24
+    .data.sCoinSparkleSprites start:0x02136e24 end:0x02136e2c
+    .data.data_ov006_0213a99c start:0x0213a99c end:0x0213a9a4
+    .data.data_ov006_0213a9a4 start:0x0213a9a4 end:0x0213a9ac
+    .data.data_ov006_0213a9ac start:0x0213a9ac end:0x0213a9c4
+    .data.data_ov006_0213a9c4 start:0x0213a9c4 end:0x0213a9dc
+    .data.data_ov006_0213a9dc start:0x0213a9dc end:0x0213a9fc
+    .data.sCoinCaptionSprites start:0x0213a9fc end:0x0213aa24
+    .data.data_ov006_0213aa24 start:0x0213aa24 end:0x0213aa5c
+    .data.data_ov006_0213aa5c start:0x0213aa5c end:0x0213aa94
+    .data.data_ov006_0213aa94 start:0x0213aa94 end:0x0213aad4
+    .data.data_ov006_0213aad4 start:0x0213aad4 end:0x0213ab1c
+    .data.data_ov006_0213ab1c start:0x0213ab1c end:0x0213ab6c
 
 src/minigames/d_s_mg_cup.cpp:
     complete
@@ -86,6 +542,27 @@ src/minigames/d_s_mg_cup.cpp:
     .ctor start:0x0213358c end:0x02133590
     .bss start:0x02141870 end:0x021418b0
     .data start:0x0213bfe0 end:0x0213c1e4
+    .data.data_ov006_02139db4 start:0x02139db4 end:0x02139dbc
+    .data.data_ov006_02139dbc start:0x02139dbc end:0x02139dc4
+    .data.data_ov006_02139dc4 start:0x02139dc4 end:0x02139dd4
+    .data.data_ov006_02139dd4 start:0x02139dd4 end:0x02139de4
+    .data.data_ov006_02139de4 start:0x02139de4 end:0x02139df4
+    .data.data_ov006_02139df4 start:0x02139df4 end:0x02139e0c
+    .data.data_ov006_02139e0c start:0x02139e0c end:0x02139e2c
+    .data.data_ov006_02139e2c start:0x02139e2c end:0x02139e4c
+    .data.data_ov006_02139e4c start:0x02139e4c end:0x02139e74
+    .data.data_ov006_02139e74 start:0x02139e74 end:0x02139e9c
+    .data.data_ov006_02139e9c start:0x02139e9c end:0x02139ec4
+    .data.data_ov006_02139ec4 start:0x02139ec4 end:0x02139eec
+    .data.data_ov006_02139fdc start:0x02139fdc end:0x0213a01c
+    .data.data_ov006_0213a01c start:0x0213a01c end:0x0213a064
+    .data.data_ov006_0213a064 start:0x0213a064 end:0x0213a0ac
+    .data.data_ov006_0213a0ac start:0x0213a0ac end:0x0213a0f4
+    .data.data_ov006_0213a0f4 start:0x0213a0f4 end:0x0213a13c
+    .data.data_ov006_0213a13c start:0x0213a13c end:0x0213a18c
+    .data.data_ov006_0213a18c start:0x0213a18c end:0x0213a1ec
+    .data.data_ov006_0213a1ec start:0x0213a1ec end:0x0213a274
+    .data.data_ov006_0213a274 start:0x0213a274 end:0x0213a284
 
 src/minigames/d_s_mg_curling.cpp:
     complete
@@ -109,6 +586,8 @@ src/minigames/d_s_mg_d3d_base.cpp:
     .init start:0x02130a04 end:0x02130a08
     .ctor start:0x02133598 end:0x0213359c
     .bss start:0x02141a40 end:0x02141e54
+    .rodata.sD3DSoundPanOffsets start:0x0212e574 end:0x0212e57c
+    .data start:0x0213c5e8 end:0x0213c610
 
 src/minigames/d_mg3d_esp_anim_set.cpp:
     complete
@@ -116,6 +595,28 @@ src/minigames/d_mg3d_esp_anim_set.cpp:
     .init start:0x02130a08 end:0x02130df8
     .ctor start:0x0213359c end:0x021335a0
     .bss start:0x02141e54 end:0x02141fcc
+    .rodata.data_ov006_0212e57c start:0x0212e57c end:0x0212e580
+    .rodata.sEsp3DCardsPerDifficulty start:0x0212e588 end:0x0212e58c
+    .rodata.data_ov006_0212e58c start:0x0212e58c end:0x0212e594
+    .rodata.sEsp3DResultSfx start:0x0212e594 end:0x0212e5a8
+    .data.sEsp3DAnimSetSlotsSprites start:0x02133a3c end:0x02133a5c
+    .data.data_ov006_02133f24 start:0x02133f24 end:0x02133f38
+    .data.sEsp3DAnimSetRowsSprites start:0x02136e38 end:0x02136e3c
+    .data.data_ov006_021339fc start:0x021339fc end:0x02133a04
+    .data.data_ov006_02133a04 start:0x02133a04 end:0x02133a0c
+    .data.data_ov006_02133a0c start:0x02133a0c end:0x02133a14
+    .data.data_ov006_02133a14 start:0x02133a14 end:0x02133a1c
+    .data.data_ov006_02133a1c start:0x02133a1c end:0x02133a24
+    .data.data_ov006_02133a24 start:0x02133a24 end:0x02133a2c
+    .data.data_ov006_02133a2c start:0x02133a2c end:0x02133a34
+    .data.data_ov006_02133a34 start:0x02133a34 end:0x02133a3c
+    .data.data_ov006_02133f38 start:0x02133f38 end:0x02133f50
+    .data.data_ov006_02133f50 start:0x02133f50 end:0x02133f68
+    .data.data_ov006_02133f68 start:0x02133f68 end:0x02133f80
+    .data.data_ov006_02133f80 start:0x02133f80 end:0x02133f98
+    .data.data_ov006_02133f98 start:0x02133f98 end:0x02133fb0
+    .data.data_ov006_02136e3c start:0x02136e3c end:0x02136e44
+    .data start:0x0213c85c end:0x0213c88c
 
 src/minigames/d_s_mg_hanachan_methods.cpp:
     complete
@@ -124,6 +625,26 @@ src/minigames/d_s_mg_hanachan_methods.cpp:
     .ctor start:0x021335a0 end:0x021335a4
     .data start:0x0213c95c end:0x0213ca7c
     .bss start:0x02142018 end:0x02142044
+    .rodata.sHanaRoundPatterns start:0x0212e80c end:0x0212e820
+    .rodata.sHanaFieldWigglerCounts start:0x0212e820 end:0x0212e848
+    .data.data_ov006_021374ac start:0x021374ac end:0x021374b0
+    .data.data_ov006_021374b8 start:0x021374b8 end:0x021374bc
+    .data.data_ov006_021374c4 start:0x021374c4 end:0x021374c8
+    .data.data_ov006_021374f4 start:0x021374f4 end:0x021374f8
+    .data.sHanaWigglerFieldSprites start:0x021375a0 end:0x021375a8
+    .data.sHanaWigglerTargetSprites start:0x021375c0 end:0x021375cc
+    .data.sHanaBackgroundPartsB start:0x021375dc end:0x021375e4
+    .data.data_ov006_021374b0 start:0x021374b0 end:0x021374b8
+    .data.data_ov006_021374bc start:0x021374bc end:0x021374c4
+    .data.data_ov006_021374c8 start:0x021374c8 end:0x021374d0
+    .data.data_ov006_021374f8 start:0x021374f8 end:0x02137500
+    .data.data_ov006_02137590 start:0x02137590 end:0x02137598
+    .data.data_ov006_02137598 start:0x02137598 end:0x021375a0
+    .data.data_ov006_021375a8 start:0x021375a8 end:0x021375b0
+    .data.data_ov006_021375b0 start:0x021375b0 end:0x021375b8
+    .data.data_ov006_021375b8 start:0x021375b8 end:0x021375c0
+    .data.data_ov006_021375cc start:0x021375cc end:0x021375d4
+    .data.data_ov006_021375d4 start:0x021375d4 end:0x021375dc
 
 src/minigames/d_s_mg_hanachan.cpp:
     complete
@@ -156,6 +677,24 @@ src/minigames/d_s_mg_luigi.cpp:
     .ctor start:0x021335ac end:0x021335b0
     .data start:0x0213cd8c end:0x0213ce54
     .bss start:0x021421ec end:0x021422a4
+    .rodata.sLuigiTouchSfx start:0x0212e848 end:0x0212e850
+    .rodata.sLuigiCurtainX start:0x0212e850 end:0x0212e858
+    .rodata.sLuigiDriftByColumnSpeed start:0x0212e858 end:0x0212e868
+    .rodata.sLuigiDriftByRowSpeed start:0x0212e868 end:0x0212e878
+    .rodata.sLuigiDriftRandomSpeed start:0x0212e878 end:0x0212e888
+    .rodata.sLuigiSwaySpeed start:0x0212e888 end:0x0212e898
+    .rodata.sLuigiSwayStartVY start:0x0212e898 end:0x0212e8a8
+    .rodata.sLuigiSwayAccel start:0x0212e8a8 end:0x0212e8b8
+    .rodata.sLuigiBounceSpeeds start:0x0212e8b8 end:0x0212e8c8
+    .rodata.sLuigiDriftFixedSpeed start:0x0212e8c8 end:0x0212e8d8
+    .rodata.sLuigiDriftByLevelSpeed start:0x0212e8d8 end:0x0212e8e8
+    .data.sLuigiCurtainSprite start:0x021350d8 end:0x021350dc
+    .data.sLuigiPictureSprites start:0x0213abc8 end:0x0213abd8
+    .data.data_ov006_021350dc start:0x021350dc end:0x021350fc
+    .data.data_ov006_0213aba8 start:0x0213aba8 end:0x0213abb0
+    .data.data_ov006_0213abb0 start:0x0213abb0 end:0x0213abb8
+    .data.data_ov006_0213abb8 start:0x0213abb8 end:0x0213abc0
+    .data.data_ov006_0213abc0 start:0x0213abc0 end:0x0213abc8
 
 src/minigames/d_s_mg_memory.cpp:
     complete
@@ -172,6 +711,7 @@ src/minigames/d_s_mg_memory2.cpp:
     .ctor start:0x021335b4 end:0x021335b8
     .data start:0x0213d248 end:0x0213d338
     .bss start:0x021423a8 end:0x021424ec
+    .rodata.sMemory2Tables start:0x0212e8e8 end:0x0212e954
 
 src/minigames/d_s_mg_m_carlo.cpp:
     complete
@@ -179,6 +719,7 @@ src/minigames/d_s_mg_m_carlo.cpp:
     .init start:0x021318a0 end:0x0213195c
     .ctor start:0x021335b8 end:0x021335bc
     .bss start:0x0214250c end:0x02142558
+    .data start:0x0213d5e0 end:0x0213d600
 
 src/minigames/d_s_mg_m_carlo2.cpp:
     complete
@@ -201,6 +742,57 @@ src/minigames/d_s_mg_pachinko2.cpp:
     .init start:0x02131cd0 end:0x02131fa4
     .ctor start:0x021335c4 end:0x021335c8
     .bss start:0x021426cc end:0x021427ac
+    .rodata.sPachinko2CupHopRightStartFrames start:0x0212ebac end:0x0212ebb0
+    .rodata.sPachinko2CupHopLeftStartFrames start:0x0212ebb0 end:0x0212ebb4
+    .rodata.sPachinko2BallWalkOffSprites start:0x0212ebb4 end:0x0212ebb8
+    .rodata.sPachinko2PaddleCountPerLanes start:0x0212ebb8 end:0x0212ebc0
+    .rodata.sPachinko2CupHopLeftFrames start:0x0212ebc0 end:0x0212ebc8
+    .rodata.sPachinko2CupHopRightFrames start:0x0212ebc8 end:0x0212ebd0
+    .rodata.data_ov006_0212ebd0 start:0x0212ebd0 end:0x0212ebd8
+    .rodata.sPachinko2CupWaitFrames start:0x0212ebd8 end:0x0212ebe0
+    .rodata.sPachinko2CupWaitTimes start:0x0212ebe0 end:0x0212ebe8
+    .rodata.data_ov006_0212ebe8 start:0x0212ebe8 end:0x0212ebf0
+    .rodata.data_ov006_0212ebf0 start:0x0212ebf0 end:0x0212ebf8
+    .rodata.data_ov006_0212ebf8 start:0x0212ebf8 end:0x0212ec00
+    .rodata.data_ov006_0212ec00 start:0x0212ec00 end:0x0212ec08
+    .rodata.sPachinko2CupX start:0x0212ec08 end:0x0212ec10
+    .rodata.data_ov006_0212ec10 start:0x0212ec10 end:0x0212ec18
+    .rodata.data_ov006_0212ec18 start:0x0212ec18 end:0x0212ec20
+    .rodata.data_ov006_0212ec20 start:0x0212ec20 end:0x0212ec28
+    .rodata.data_ov006_0212ec28 start:0x0212ec28 end:0x0212ec30
+    .rodata.sPachinko2CrossRowY start:0x0212ec30 end:0x0212ec38
+    .rodata.data_ov006_0212ec38 start:0x0212ec38 end:0x0212ec40
+    .rodata.data_ov006_0212ec40 start:0x0212ec40 end:0x0212ec48
+    .rodata.data_ov006_0212ec48 start:0x0212ec48 end:0x0212ec50
+    .rodata.data_ov006_0212ec50 start:0x0212ec50 end:0x0212ec58
+    .rodata.data_ov006_0212ec58 start:0x0212ec58 end:0x0212ec60
+    .rodata.data_ov006_0212ec60 start:0x0212ec60 end:0x0212ec68
+    .rodata.data_ov006_0212ec68 start:0x0212ec68 end:0x0212ec70
+    .rodata.data_ov006_0212ec70 start:0x0212ec70 end:0x0212ec78
+    .rodata.data_ov006_0212ec78 start:0x0212ec78 end:0x0212ec80
+    .rodata.sPachinko2PaddleFlyAwayVX start:0x0212ec80 end:0x0212ec8c
+    .rodata.sPachinko2CupWaitTimesAlt start:0x0212ecac end:0x0212ecbc
+    .rodata.sPachinko2CupRightStops start:0x0212ecbc end:0x0212ecd4
+    .rodata.sPachinko2CupLeftStops start:0x0212ecd4 end:0x0212ecec
+    .data.sPachinko2PaddleSprite start:0x0213386c end:0x02133870
+    .data.data_ov006_02133870 start:0x02133870 end:0x02133890
+    .data.sPachinko2SparkSprites start:0x02136bd4 end:0x02136be4
+    .data.data_ov006_02136be4 start:0x02136be4 end:0x02136c0c
+    .data.data_ov006_02136c0c start:0x02136c0c end:0x02136c34
+    .data.data_ov006_02136c34 start:0x02136c34 end:0x02136c7c
+    .data.data_ov006_02136c7c start:0x02136c7c end:0x02136cd4
+    .data.sPachinko2BallSprite start:0x021389ec end:0x021389f0
+    .data.data_ov006_021389f0 start:0x021389f0 end:0x021389f8
+    .data.data_ov006_02138c48 start:0x02138c48 end:0x02138c60
+    .data.data_ov006_02138c60 start:0x02138c60 end:0x02138c78
+    .data.data_ov006_02138c78 start:0x02138c78 end:0x02138c90
+    .data.data_ov006_02138c90 start:0x02138c90 end:0x02138ca8
+    .data.data_ov006_02138ca8 start:0x02138ca8 end:0x02138cc0
+    .data.data_ov006_02138cc0 start:0x02138cc0 end:0x02138cd8
+    .data.data_ov006_02138cd8 start:0x02138cd8 end:0x02138cf0
+    .data.data_ov006_02138cf0 start:0x02138cf0 end:0x02138d08
+    .data.sPachinko2BallCountSprites start:0x02138d08 end:0x02138d28
+    .data start:0x0213db6c end:0x0213db9c
 
 src/minigames/d_s_mg_panel.cpp:
     complete
@@ -216,6 +808,7 @@ src/minigames/d_s_mg_roulette_methods.cpp:
     .init start:0x021322bc end:0x02132894
     .ctor start:0x021335cc end:0x021335d0
     .bss start:0x021428c8 end:0x02142bdc
+    .rodata.sRouletteTables start:0x0212ed14 end:0x0212ed88
 
 src/minigames/d_s_mg_roulette.cpp:
     complete
@@ -252,11 +845,87 @@ src/minigames/d_s_mg_teresa.cpp:
     .init start:0x02132f68 end:0x0213322c
     .ctor start:0x021335d8 end:0x021335dc
     .bss start:0x02142e88 end:0x02142f60
+    .data.sTeresaExclaimSprites start:0x02133a5c end:0x02133a60
+    .data.sTeresaVanishPuffSprites start:0x02134210 end:0x02134218
+    .data.sTeresaBigBooSprites start:0x021350fc end:0x02135128
+    .data.sTeresaBigBooHoverSprites start:0x02135fc8 end:0x02135fe4
+    .data.sTeresaMarkerSprites start:0x0213a5f4 end:0x0213a5f8
+    .data.sTeresaRevealSprites start:0x0213a628 end:0x0213a63c
+    .data.sTeresaBooFrameSprites start:0x0213a964 end:0x0213a99c
+    .data.data_ov006_02133a60 start:0x02133a60 end:0x02133a70
+    .data.data_ov006_021341f8 start:0x021341f8 end:0x02134200
+    .data.data_ov006_0213424c start:0x0213424c end:0x02134274
+    .data.data_ov006_02135128 start:0x02135128 end:0x02135268
+    .data.data_ov006_02135268 start:0x02135268 end:0x021353a8
+    .data.data_ov006_021353a8 start:0x021353a8 end:0x021354f8
+    .data.data_ov006_021354f8 start:0x021354f8 end:0x02135648
+    .data.data_ov006_02135648 start:0x02135648 end:0x02135798
+    .data.data_ov006_02135798 start:0x02135798 end:0x021358e8
+    .data.data_ov006_021358e8 start:0x021358e8 end:0x02135a48
+    .data.data_ov006_02135a48 start:0x02135a48 end:0x02135ba8
+    .data.data_ov006_02135ba8 start:0x02135ba8 end:0x02135d08
+    .data.data_ov006_02135d08 start:0x02135d08 end:0x02135e68
+    .data.data_ov006_02135e68 start:0x02135e68 end:0x02135fc8
+    .data.data_ov006_02135fe4 start:0x02135fe4 end:0x0213609c
+    .data.data_ov006_0213609c start:0x0213609c end:0x02136154
+    .data.data_ov006_02136154 start:0x02136154 end:0x0213620c
+    .data.data_ov006_0213620c start:0x0213620c end:0x0213635c
+    .data.data_ov006_0213635c start:0x0213635c end:0x02136524
+    .data.data_ov006_02136524 start:0x02136524 end:0x0213672c
+    .data.data_ov006_0213672c start:0x0213672c end:0x02136974
+    .data.data_ov006_0213a5f8 start:0x0213a5f8 end:0x0213a628
+    .data.data_ov006_0213a63c start:0x0213a63c end:0x0213a694
+    .data.data_ov006_0213a694 start:0x0213a694 end:0x0213a6ec
+    .data.data_ov006_0213a6ec start:0x0213a6ec end:0x0213a744
+    .data.data_ov006_0213a744 start:0x0213a744 end:0x0213a79c
+    .data.data_ov006_0213a79c start:0x0213a79c end:0x0213a7f4
+    .data.data_ov006_0213a7f4 start:0x0213a7f4 end:0x0213a804
+    .data.data_ov006_0213a804 start:0x0213a804 end:0x0213a814
+    .data.data_ov006_0213a814 start:0x0213a814 end:0x0213a82c
+    .data.data_ov006_0213a82c start:0x0213a82c end:0x0213a844
+    .data.data_ov006_0213a844 start:0x0213a844 end:0x0213a85c
+    .data.data_ov006_0213a85c start:0x0213a85c end:0x0213a874
+    .data.data_ov006_0213a874 start:0x0213a874 end:0x0213a88c
+    .data.data_ov006_0213a88c start:0x0213a88c end:0x0213a8a4
+    .data.data_ov006_0213a8a4 start:0x0213a8a4 end:0x0213a8c4
+    .data.data_ov006_0213a8c4 start:0x0213a8c4 end:0x0213a8e4
+    .data.data_ov006_0213a8e4 start:0x0213a8e4 end:0x0213a904
+    .data.data_ov006_0213a904 start:0x0213a904 end:0x0213a924
+    .data.data_ov006_0213a924 start:0x0213a924 end:0x0213a944
+    .data.data_ov006_0213a944 start:0x0213a944 end:0x0213a964
+    .data start:0x0213f9d0 end:0x0213f9e4
 
 src/minigames/d_s_mg_trampoline.cpp:
     complete
     .text start:0x021207dc end:0x021225ac
-    .data start:0x0213faa0 end:0x0213fbc4
+    .data start:0x0213fa9c end:0x0213fbc4
+    .data.sTrmpDoorSignSprites start:0x02134f00 end:0x02134f08
+    .data.sTrmpArrowSprite start:0x02134f08 end:0x02134f0c
+    .data.sTrmpRowMarkerSprite start:0x02134f24 end:0x02134f28
+    .data.sTrmpPuffItalian start:0x02134d28 end:0x02134d34
+    .data.sTrmpPuffGerman start:0x02134d34 end:0x02134d40
+    .data.sTrmpPuffEnglish start:0x02134d40 end:0x02134d4c
+    .data.sTrmpPuffSpanish start:0x02134d4c end:0x02134d58
+    .data.sTrmpPuffFrench start:0x02134d58 end:0x02134d64
+    .data.data_ov006_02134d64 start:0x02134d64 end:0x02134d7c
+    .data.data_ov006_02134d7c start:0x02134d7c end:0x02134d94
+    .data.data_ov006_02134d94 start:0x02134d94 end:0x02134dac
+    .data.data_ov006_02134dac start:0x02134dac end:0x02134dc4
+    .data.data_ov006_02134dc4 start:0x02134dc4 end:0x02134ddc
+    .data.data_ov006_02134ddc start:0x02134ddc end:0x02134df4
+    .data.data_ov006_02134df4 start:0x02134df4 end:0x02134e0c
+    .data.data_ov006_02134e0c start:0x02134e0c end:0x02134e24
+    .data.data_ov006_02134e24 start:0x02134e24 end:0x02134e3c
+    .data.data_ov006_02134e3c start:0x02134e3c end:0x02134e54
+    .data.data_ov006_02134e54 start:0x02134e54 end:0x02134e6c
+    .data.data_ov006_02134e6c start:0x02134e6c end:0x02134e84
+    .data.data_ov006_02134e84 start:0x02134e84 end:0x02134e9c
+    .data.data_ov006_02134e9c start:0x02134e9c end:0x02134eb4
+    .data.data_ov006_02134eb4 start:0x02134eb4 end:0x02134ecc
+    .data.data_ov006_02134ef0 start:0x02134ef0 end:0x02134ef8
+    .data.data_ov006_02134ef8 start:0x02134ef8 end:0x02134f00
+    .data.data_ov006_02134f0c start:0x02134f0c end:0x02134f24
+    .data.data_ov006_02134f28 start:0x02134f28 end:0x02134f30
 
 src/minigames/d_s_mg_trampoline2.cpp:
     complete
@@ -273,6 +942,7 @@ src/minigames/d_s_mg_bsc.cpp:
     .init start:0x0213326c end:0x021333e0
     .ctor start:0x021335e0 end:0x021335e4
     .bss start:0x02142f94 end:0x02143004
+    .data start:0x0213fe78 end:0x0213fe8c
 
 src/minigames/d_s_mg_snowball.cpp:
     complete

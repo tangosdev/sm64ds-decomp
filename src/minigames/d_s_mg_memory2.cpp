@@ -51,21 +51,57 @@ extern "C" {
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemory2CardFrameSprites[];
 extern void *sMemory2CardSprites[];
-extern s32 sMemory2FlyAwayLimitPerMode[];
+extern const s32 sMemory2FlyAwayLimitPerMode[3] = {
+    4,
+    6,
+    5,
+};
 extern unsigned short sMemory2FlipFrameTimes[];
 extern void Mg_SaveRecordPair(int a, int b);
 extern u16 *sMemory2CardPositionsPerDifficulty[];
-extern int sMemory2ResultRowsPerDifficulty[];
-extern int sMemory2ResultColsPerDifficulty[];
+extern const int sMemory2ResultRowsPerDifficulty[3] = {
+    4,
+    3,
+    4,
+};
+extern const int sMemory2ResultColsPerDifficulty[3] = {
+    4,
+    6,
+    5,
+};
 extern short gMgCoinsStatus;
 extern void Mg_SetSharedState(int);
 extern void Mg_SubmitScore(int self);
-extern int sMemory2FourthDealsPerDifficulty[];
-extern int sMemory2HardDealsPerMode[];
-extern int sMemory2NormalDealsPerDifficulty[];
-extern int sMemory2EasyDealsPerDifficulty[];
-extern int sMemory2PreviewCountPerDifficulty[];
-extern int sMemory2PreviewTimePerDifficulty[];
+extern const int sMemory2FourthDealsPerDifficulty[3] = {
+    16,
+    18,
+    20,
+};
+extern const int sMemory2HardDealsPerMode[3] = {
+    12,
+    18,
+    15,
+};
+extern const int sMemory2NormalDealsPerDifficulty[3] = {
+    8,
+    12,
+    10,
+};
+extern const int sMemory2EasyDealsPerDifficulty[3] = {
+    4,
+    6,
+    5,
+};
+extern const int sMemory2PreviewCountPerDifficulty[3] = {
+    4,
+    6,
+    8,
+};
+extern const int sMemory2PreviewTimePerDifficulty[3] = {
+    16,
+    18,
+    20,
+};
 extern void FreeGfxSlotsById(int x);
 s32 GetGameLanguage(void);
 void *LoadFile(int handle);

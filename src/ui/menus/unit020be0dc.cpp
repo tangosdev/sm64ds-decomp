@@ -129,7 +129,7 @@ extern Ov007ParticleSprites *data_ov007_02104bc0;
 extern int data_ov007_02103230;
 extern char data_ov007_02103234[]; /* "2DEffect" */
 extern int data_ov007_020d7c6c;
-extern u16 data_ov007_020d7c58[];
+extern const u16 data_ov007_020d7c58[];
 
 extern "C" void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask,
                               void *cb);
@@ -144,7 +144,7 @@ extern "C" Ov007SpriteGroup *func_ov007_020c3f00(int *layout, int extraAnims);
 extern "C" void func_ov007_020c3fe4(Ov007SpriteItem *item);
 
 /* the figure and its files */
-extern int data_ov007_020d7c5c[2][2]; /* [figureIndex][index]: animation file */
+extern const int data_ov007_020d7c5c[2][2]; /* [figureIndex][index]: animation file */
 extern void *data_ov007_02104bc4[2][2];
 extern "C" int VEC_Fx16Mag(s16 *v);
 extern "C" void VEC_Fx16Normalize(s16 *in, s16 *out);
@@ -588,3 +588,13 @@ int func_ov007_020be0dc(void) {
     node->visible = shown;
     return shown;
 }
+
+extern const u16 data_ov007_020d7c58[2] = {0x136, 0xf2};
+extern const int data_ov007_020d7c5c[2][2] = {
+    11,
+    0,
+    12,
+    13,
+};
+int data_ov007_02103230 = 0xffffffff;
+char data_ov007_02103234[] = {'2', 'D', 'E', 'f', 'f', 'e', 'c', 't', 0, 0, 0, 0};
