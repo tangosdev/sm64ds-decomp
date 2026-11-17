@@ -13,7 +13,7 @@
  * func_ov070_0211f48c, and the Vector3 write through ((int *)&v)[i] in
  * func_ov070_0211f368, stay as written. The mPrevAngle triple keeps
  * the base-class names.
- * FlyGuy_ChangeState keeps its C-ABI name. V3w and V3h keep the ldm/stm copy in
+ * FlyGuy_ChangeState keeps its C-ABI name. V3w keeps the ldm/stm copy in
  * func_ov070_0211f6e0 and func_ov070_0211f48c. The six state records and
  * the file handles keep address names; this file's static initializer
  * fills them. daPropeller_Heyho_Fire_c is a separate TU.
@@ -57,8 +57,10 @@ SpawnInfo<daPropeller_Heyho_c> g_profile_PROPELLER_HEYHO = {daPropeller_Heyho_c_
                                                             0x01000000,
                                                             0x01000000};
 
-struct V3w { int w[3]; };  /* array-wrapper: C++ scalarizes a plain struct copy; this form keeps the C front end's ldm/stm block copy */
-struct V3h { short h[3]; };
+/* Kept for the two player-position snapshots (measured r57): any Vector3 copy is
+ * memberwise; a `VecFx32 tmp =` copy-init stays in registers in 0211f6e0 and in
+ * 0211f48c misses the ROM's posbuf < fp < tmp frame order. */
+struct V3w { int w[3]; };
 
 /* Named constants.  fx32 values are written as the raw word (0x1000 = 1.0)
  * with the unit value in the comment; frame counts are game-logic frames (the frame rate is not established here). */
@@ -795,7 +797,6 @@ extern daPropeller_Heyho_c::State data_ov070_0212359c;
  * cooldown and returns to wander. */
 int daPropeller_Heyho_c::func_ov070_0211f48c() {
     daPly_c *pl;
-    struct Vector3_16 vel;
     struct Vector3 posbuf;
     struct Vector3 fp;
     struct Vector3 tmp;
@@ -813,7 +814,7 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
     }
 
     if (mAnmModel.dExtFrameCtrl_c::WillHitFrame(kFireFrame) != 0) {
-        *(V3h *)&vel = *(V3h *)&mAngle.x;
+        Vector3_16 vel = mAngle;
         if (pl != 0) {
             int *base = (int *)M(&pl->mPos.x);
             fp.x = base[0];
