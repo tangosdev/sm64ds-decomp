@@ -79,7 +79,22 @@ coordinated v2 fleet.
 - A new match needs a new row. Do not change or delete an existing author.
 - Moving a source file does not change the row, so a fold does not need a credit edit.
 
-## 6. After merging
+## 6. Who decompiled data
+
+- The record is [`data-authors.json`](data-authors.json). One row per claimed data
+  address. The key is the module and the address, not the source filename.
+- New data work must add a row. `python tools/data_tiers.py --credit-source <path>
+  --author <name>` adds the rows for one source file. Existing uncredited claims are
+  named in `config/data-tracking-baseline.json`; they do not need a retroactive edit.
+- Do not change or delete an existing data author. If a seeded git-blame row is
+  demonstrably wrong, correct it in a normal PR with the evidence.
+- Moving a data definition or renaming an alias does not change the key, so it does
+  not need a credit edit.
+- The PR check is `python tools/data_tiers.py --check --base origin/main`. It requires
+  an author for every newly claimed address; `rombuild.py`/`validate_merge.py` still
+  decide whether the bytes are real.
+
+## 7. After merging
 
 Nothing to do by hand — pushing to `main` auto-runs the workflows that refresh the README
 progress bar, the treemap, `chaos-db.json`, and `contributions.json`.

@@ -61,6 +61,8 @@ class SummarizeCountsSymbols(unittest.TestCase):
                            rec("_ZTV4Bar", RDC.UNNAMED)])
         self.assertEqual((s["symbols"], s["verified"], s["partial"], s["unnamed"]),
                          (3, 1, 1, 1))
+        self.assertEqual(s["partialSymbols"], [
+            {"module": None, "symbol": "_ZTS4Foo", "addr": None, "bytes": 4}])
 
     def test_same_name_in_two_modules_is_two_symbols(self):
         """The same spelling in two overlays is two cartridge symbols, not one."""

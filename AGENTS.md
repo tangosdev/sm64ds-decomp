@@ -71,7 +71,10 @@ Two shapes cover almost everything now:
   merge them into one genuine `.cpp` the way the original TU was almost
   certainly shaped, partitioned-link verified. Who matched each function is
   already recorded by its address in `function-authors.json`. Moving the
-  source does not change that, and there is no credit script to run. Read
+  source does not change that, and there is no credit script to run.
+  Data credit uses the same address rule in `data-authors.json`; see
+  [`notes/data-tracking.md`](notes/data-tracking.md) and
+  [`MERGE.md`](MERGE.md#6-who-decompiled-data). Read
   [`notes/tu-promotion-conventions.md`](notes/tu-promotion-conventions.md)
   before opening or reviewing one; `tools/tu_promote.py` does the mechanical
   part (file move, manifest flip).
