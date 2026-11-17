@@ -19025,7 +19025,7 @@ matched: yes</title></rect><rect x="901.50" y="44.84" width="7.93" height="4.53"
 module: ov004
 addr: 0x020af27c
 size: 124 bytes
-matched: yes</title></rect><rect x="909.42" y="27.00" width="9.64" height="22.37" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Mg_InitBrush
+matched: yes</title></rect><rect x="909.42" y="27.00" width="9.64" height="22.37" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dScMgBase_c9InitBrushEcii
 module: ov004
 addr: 0x020af2f8
 size: 744 bytes
@@ -19145,7 +19145,7 @@ matched: yes</title></rect><rect x="996.35" y="27.00" width="4.40" height="6.05"
 module: ov004
 addr: 0x020b0d30
 size: 92 bytes
-matched: yes</title></rect><rect x="996.35" y="33.05" width="4.40" height="5.53" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Mg_DrawBlinkSprite
+matched: yes</title></rect><rect x="996.35" y="33.05" width="4.40" height="5.53" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dScMgBase_c15DrawBlinkSpriteEii
 module: ov004
 addr: 0x020b0d8c
 size: 84 bytes
@@ -19153,7 +19153,7 @@ matched: yes</title></rect><rect x="996.35" y="38.58" width="4.40" height="10.79
 module: ov004
 addr: 0x020b0de0
 size: 164 bytes
-matched: yes</title></rect><rect x="1000.76" y="27.00" width="21.29" height="22.37" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Mg_DrawTally
+matched: yes</title></rect><rect x="1000.76" y="27.00" width="21.29" height="22.37" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dScMgBase_c9DrawTallyEi
 module: ov004
 addr: 0x020b0e84
 size: 1644 bytes
@@ -19185,15 +19185,15 @@ matched: yes</title></rect><rect x="1042.98" y="27.00" width="5.60" height="2.90
 module: ov004
 addr: 0x020b1b40
 size: 56 bytes
-matched: yes</title></rect><rect x="1042.98" y="29.90" width="5.60" height="2.07" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Mg_SubCredits
+matched: yes</title></rect><rect x="1042.98" y="29.90" width="5.60" height="2.07" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dScMgBase_c10SubCreditsEi
 module: ov004
 addr: 0x020b1b78
 size: 40 bytes
-matched: yes</title></rect><rect x="1042.98" y="31.97" width="5.60" height="2.07" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Mg_AddCredits
+matched: yes</title></rect><rect x="1042.98" y="31.97" width="5.60" height="2.07" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dScMgBase_c10AddCreditsEi
 module: ov004
 addr: 0x020b1ba0
 size: 40 bytes
-matched: yes</title></rect><rect x="1042.98" y="34.04" width="5.60" height="8.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Mg_DrawCredits
+matched: yes</title></rect><rect x="1042.98" y="34.04" width="5.60" height="8.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dScMgBase_c11DrawCreditsEiii
 module: ov004
 addr: 0x020b1bc8
 size: 160 bytes
@@ -19213,7 +19213,7 @@ matched: yes</title></rect><rect x="1048.57" y="44.13" width="4.20" height="5.25
 module: ov004
 addr: 0x020b1de8
 size: 76 bytes
-matched: yes</title></rect><rect x="1052.77" y="27.00" width="1.45" height="3.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Mg_DrawScoreTally
+matched: yes</title></rect><rect x="1052.77" y="27.00" width="1.45" height="3.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dScMgBase_c14DrawScoreTallyEiii
 module: ov004
 addr: 0x020b1e34
 size: 16 bytes
