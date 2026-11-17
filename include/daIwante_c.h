@@ -85,9 +85,7 @@ struct daIwante_c : dBgActor_c {
     /* The part's rest position: InitResources seeds it from the actor position
        and then offsets it (a hand goes -+0x31f000 in X, -0x32000 in Z), and
        Behavior re-derives its Y from mSpawnPosY every frame. */
-    s32 mRestPosX;                                          /* 0x4a4 */
-    s32 mRestPosY;                                          /* 0x4a8 */
-    s32 mRestPosZ;                                          /* 0x4ac */
+    Vector3 mRestPos; /* 0x4a4 */
     /* The unmoved spawn position, snapshotted only on the two hands. */
     s32 mSpawnPosX;                                         /* 0x4b0 */
     s32 mSpawnPosY;                                         /* 0x4b4 */
