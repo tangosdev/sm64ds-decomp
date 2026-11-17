@@ -9164,6 +9164,10 @@ int daPly_c::St_Swim_Init() {
 
 /* recovered: shared common types */
 
+inline u32 Particle::System::NewBubble(const Vector3 &pos) {
+    return NewBubble(pos.x, pos.y, pos.z);
+}
+
 int daPly_c::func_ov002_020ce5f8() {
     int y, threshold;
     Vector3 pos;
@@ -9211,8 +9215,7 @@ int daPly_c::func_ov002_020ce5f8() {
     Vec3_LslInPlace((int *)&pos, 3);
 
     if (pos.y < data_0209f32c - 0x1e000) {
-        Particle::System::NewBubble(pos.x, *(volatile int *)&pos.y,
-                                    pos.z); // without volatile, the function shrinks 0x1a0 to 0x19c
+        Particle::System::NewBubble(pos);
         if (mStateWaitTimer == 0) {
             Sound::PlayBank3(0xb, mCamSpacePos);
             mStateWaitTimer = 10;

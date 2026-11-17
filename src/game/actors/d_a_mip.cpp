@@ -100,9 +100,10 @@ struct daMip_cSelf { char pad[0x364]; daMip_cStateFn *pp; };
  * aliased in the manifest. MipVec3's plain overload builds the first vector
  * with ordinary stores; the (int, int, long) overload builds the other
  * three through a volatile lvalue, exactly as retail. Both share the one
- * declared-not-defined destructor (never ~Vector3: a Vector3 here would
- * instantiate its vague-linkage D1 into this TU, which deliberately avoids
- * it); the destructor alias points at the ROM's canonical copy. */
+ * declared-not-defined destructor; the destructor alias points at the ROM's
+ * canonical copy. (This was spelled to keep Vector3's vague-linkage D1 out
+ * of the TU; Behavior's Vector3 locals now emit it, so whether a plain
+ * Vector3 reproduces these is open.) */
 struct DaMipModelFile : SharedFilePtr {
     DaMipModelFile(u32 fileID);
     ~DaMipModelFile();
