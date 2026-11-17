@@ -522,7 +522,7 @@ void *Ov004_LoadFileByPath(const char *path) {
 namespace s20adc80 {
 extern "C" {
 extern int GetGameLanguage(void);
-extern void Mg_RenderSpriteOnNoMtx(void *, int, int, int, int);
+extern void Mg_RenderSpriteOnNoMtx(OamAttr *, int, int, int, int);
 }
 }
 /* State 1's draw: word 2 of the current language's entry in
@@ -535,7 +535,7 @@ void MgFx::DrawFlyTo() {
 
 namespace s20adcc8 {
 extern "C" {
-extern void Mg_RenderSpriteOnNoMtx(void *a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteOnNoMtx(OamAttr *a0, int a1, int a2, int a3, int a4);
 }
 }
 /* State 0's draw. The first call builds the 16-entry frame table
@@ -2882,19 +2882,19 @@ void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int sel, int e) {
 
 namespace s20b1d60 {
 extern "C" {
-extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
-extern void Mg_RenderMainSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
-/* Mg_RenderSpriteOnMtx without a matrix: the wrappers get 0. */
-void Mg_RenderSpriteOnNoMtx(void* a0, int a1, int a2, int a3, int a4){
-  if(a3==-1){
-    RenderOamBothScreens(a0, a1, a2, -1, a4, 0);
-    return;
-  }
-  if(a3==0){
-    Mg_RenderSubSpritePalMtx(a0, a1, a2, -1, a4, 0);
-    return;
-  }
-  Mg_RenderMainSpritePalMtx(a0, a1, a2, -1, a4, 0);
+/* Mg_RenderSpriteOnMtx without a matrix: the wrappers get 0. `screen` picks
+   the wrapper as there; `list` is the sprite list each one hands on to
+   OAM::Render. */
+void Mg_RenderSpriteOnNoMtx(OamAttr *list, int x, int y, int screen, int priority) {
+    if (screen == -1) {
+        RenderOamBothScreens(list, x, y, -1, priority, 0);
+        return;
+    }
+    if (screen == 0) {
+        Mg_RenderSubSpritePalMtx(list, x, y, -1, priority, 0);
+        return;
+    }
+    Mg_RenderMainSpritePalMtx(list, x, y, -1, priority, 0);
 }
 }
 }
@@ -2902,7 +2902,7 @@ void Mg_RenderSpriteOnNoMtx(void* a0, int a1, int a2, int a3, int a4){
 namespace s20b1de8 {
 extern "C" {
 extern int GetGameLanguage(void);
-extern void Mg_RenderSpriteOnNoMtx(void *, int, int, int, int);
+extern void Mg_RenderSpriteOnNoMtx(OamAttr *, int, int, int, int);
 
 /* Draws sprite word 2 at (r0, r1) through Mg_RenderSpriteOnNoMtx. */
 void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3) {
@@ -2936,7 +2936,7 @@ void Mg_DrawTopCenterCounter(int arg) {
 namespace s20b1ea4 {
 extern "C" {
 extern OamAttr *sMgDigitSprites[];
-extern void Mg_RenderSpriteOnNoMtx(void *glyph, int x, int a2, int a3, int a4);
+extern void Mg_RenderSpriteOnNoMtx(OamAttr *glyph, int x, int a2, int a3, int a4);
 
 /* Draws `val`, capped at 999999, in digits 8 px apart: glyph
    sMgDigitSprites[fb + digit], where fb 0 means 0xa and 0x14 means
@@ -3094,7 +3094,7 @@ void Mg_DrawNumberRotated(int x, int y, int value, int a3, int a4, int scale, u1
 namespace s20b2444 {
 extern "C" {
 extern OamAttr *sMgDigitSprites[];
-extern void Mg_RenderSpriteOnNoMtx(void *a0, int a1, int a2, int a3, int a4);
+extern void Mg_RenderSpriteOnNoMtx(OamAttr *a0, int a1, int a2, int a3, int a4);
 
 /* Draws `num` in digits 16 px apart, glyph sMgDigitSprites[idx +
    digit]. The units digit sits at a1 for sel 1 (or any value but 0 and
