@@ -651,8 +651,8 @@ s32 dScMgCard_c::Render()
         RenderOamMainScreen(data_ov006_02134028, 40, 56, -1, -1);
     }
 
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawCredits(0xc, 0xc, 0);
+    DrawScoreTally(0xe0, 0x14, 1);
 
     if (this->mScore < this->mHudScore)
         this->mScore = this->mHudScore;

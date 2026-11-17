@@ -13,8 +13,8 @@
  *   unk_5407 is only cleared.
  * - Camera_InitDealerView sets mCamera and tail-calls
  *   Camera_UpdateMatrices. Render and InitResources call that wrapper.
- * - Mg_DrawScoreTally and Mg_SaveRecordPair stay the linker names. Their
- *   bodies are not in this file.
+ * - Mg_SaveRecordPair stays the linker name. Its body is not in this
+ *   file.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -48,8 +48,6 @@ extern "C" dScMgMemory2_cState sMemory2StateTable[];
 extern "C" dScMgMemory2_cState sMemory2RoundTable[];
 
 extern "C" {
-extern void Mg_DrawScoreTally(void *thiz, int a, int b, int c);
-extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemory2CardFrameSprites[];
 extern void *sMemory2CardSprites[];
@@ -101,13 +99,13 @@ dScMgMemory2_c::~dScMgMemory2_c() {}
 void dScMgMemory2_c::DrawMessage() {
     if (mMessageVisible == 0)
         return;
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
 }
 
 void dScMgMemory2_c::DrawCursor() {
     if (mCursor.enabled == 0)
         return;
-    Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
+    DrawBlinkSprite(0xe0, 0xa0);
 }
 
 void dScMgMemory2_c::UpdateCursor() {
@@ -1035,7 +1033,7 @@ void dScMgMemory2_c::StartRound(int /* arg */) {
  * cursor, cards and dealer. */
 s32 dScMgMemory2_c::Render() {
     Camera_InitDealerView(&mCamera);
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
+    DrawCredits(0xc, 0xc, 0);
     MgCoins_Draw();
     DrawMessage();
     DrawCursor();

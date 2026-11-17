@@ -2272,7 +2272,7 @@ s32 dScMgPachinko2_c::InitResources() {
         }
     }
 
-    Mg_InitBrush(this, 0, 2, 0);
+    InitBrush(0, 2, 0);
 
     G2S_SetBG3Priority(2);
     G2S_BG3Mosaic(0);

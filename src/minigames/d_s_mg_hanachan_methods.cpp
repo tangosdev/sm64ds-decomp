@@ -154,7 +154,6 @@ extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
 extern unsigned short sHanaUsedIds[];
 extern void Mg_CommitRecords(void);
-extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
 extern int GetGameLanguage(void);
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
@@ -1570,7 +1569,7 @@ s32 dScMgHanachan_c::Render() {
     int i;
     Wiggler *arr;
 
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     HanaPopup_DrawAll();
     StarPopup_Draw();
 

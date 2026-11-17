@@ -19139,7 +19139,7 @@
     },
     "ov004:0x020af2f8": {
       "author": "lunavyqo",
-      "name": "Mg_InitBrush"
+      "name": "_ZN11dScMgBase_c9InitBrushEcii"
     },
     "ov004:0x020af5e0": {
       "author": "andrewboudreau",
@@ -19267,7 +19267,7 @@
     },
     "ov004:0x020b0d8c": {
       "author": "tangosdev",
-      "name": "Mg_DrawBlinkSprite"
+      "name": "_ZN11dScMgBase_c15DrawBlinkSpriteEii"
     },
     "ov004:0x020b0de0": {
       "author": "tangosdev",
@@ -19275,7 +19275,7 @@
     },
     "ov004:0x020b0e84": {
       "author": "lunavyqo",
-      "name": "Mg_DrawTally"
+      "name": "_ZN11dScMgBase_c9DrawTallyEi"
     },
     "ov004:0x020b14f0": {
       "author": "ruspecial",
@@ -19307,15 +19307,15 @@
     },
     "ov004:0x020b1b78": {
       "author": "tangosdev",
-      "name": "Mg_SubCredits"
+      "name": "_ZN11dScMgBase_c10SubCreditsEi"
     },
     "ov004:0x020b1ba0": {
       "author": "tangosdev",
-      "name": "Mg_AddCredits"
+      "name": "_ZN11dScMgBase_c10AddCreditsEi"
     },
     "ov004:0x020b1bc8": {
       "author": "tangosdev",
-      "name": "Mg_DrawCredits"
+      "name": "_ZN11dScMgBase_c11DrawCreditsEiii"
     },
     "ov004:0x020b1c68": {
       "author": "tangosdev",
@@ -19335,7 +19335,7 @@
     },
     "ov004:0x020b1e34": {
       "author": "ruspecial",
-      "name": "Mg_DrawScoreTally"
+      "name": "_ZN11dScMgBase_c14DrawScoreTallyEiii"
     },
     "ov004:0x020b1e44": {
       "author": "tangosdev",

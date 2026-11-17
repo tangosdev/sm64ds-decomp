@@ -420,7 +420,7 @@ void Roulette_DrawResultsThunk(dScMgRoulette_c *) {
    countdown (its volume ramps over the last 3 seconds), and moves the camera
    to the current preset. */
 s32 dScMgRoulette_c::Render() {
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
+    DrawCredits(0xc, 0xc, 0);
     MgCoins_Draw();
 
     {

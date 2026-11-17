@@ -62,8 +62,6 @@ extern dScMgMemory_cCardState sMemoryCardTable[];
 extern "C" dScMgMemory_cPlayerState sMemoryPlayerTable[];
 
 extern "C" {
-extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
-extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemoryCardFrameSprites[];
 extern void *sMemoryCardSprites[];
@@ -105,13 +103,13 @@ dScMgMemory_c::~dScMgMemory_c() {
 void dScMgMemory_c::DrawMessage() {
     if (mMessageVisible == 0)
         return;
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
 }
 
 void dScMgMemory_c::DrawCursor() {
     if (mCursor.enabled == 0)
         return;
-    Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
+    DrawBlinkSprite(0xe0, 0xa0);
 }
 
 void dScMgMemory_c::UpdateCursor() {
@@ -916,7 +914,7 @@ void dScMgMemory_c::StartRound(int /* arg */) {
 /* Slot 9. */
 s32 dScMgMemory_c::Render() {
     Camera_InitDealerView(&mCamera);
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
+    DrawCredits(0xc, 0xc, 0);
     MgCoins_Draw();
     DrawMessage();
     DrawCursor();
