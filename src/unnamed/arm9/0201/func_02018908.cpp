@@ -4,7 +4,8 @@
 
 extern "C" {
 
-/* A mounted .narc archive (src/engine/sound/SoundEngine.cpp). */
+/* A mounted .narc archive (src/engine/sound/SoundEngine.cpp): its
+   FSArchive, then the NARC it was mounted from. */
 struct S82;
 
 /* func_02018908 at 0x02018908 */

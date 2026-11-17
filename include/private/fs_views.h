@@ -143,9 +143,6 @@ typedef struct FSFile {
         FSOpenFileFastInfo openfilefast;
         FSOpenFileDirectInfo openfiledirect;
     } arg; /* 0x2c */
-#ifdef __cplusplus
-    int func_0204eda4(char *a, unsigned int idx);
-#endif
 } FSFile;
 
 /* FS_SeekFile's origin. */
