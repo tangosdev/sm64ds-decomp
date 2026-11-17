@@ -1079,36 +1079,34 @@ void *func_02011934(SndRegTable *table, int id) {
 }
 
 int SndRegTable::func_0201186c(int a1, int a2, short a3) {
-    SndRegTable *reg = this;
     int i = 0;
     do {
-        if (reg->entries[reg->cursor].id == 0) {
-            reg->counter += 1;
-            if (reg->counter == 0) {
-                reg->counter += 1;
+        if (entries[cursor].id == 0) {
+            counter += 1;
+            if (counter == 0) {
+                counter += 1;
             }
-            func_02011b38(&reg->entries[reg->cursor], reg->counter, a1, a2, a3);
-            func_02011698(this, &reg->entries[reg->cursor]);
-            return reg->counter;
+            func_02011b38(&entries[cursor], counter, a1, a2, a3);
+            func_02011698(this, &entries[cursor]);
+            return counter;
         }
-        reg->cursor = (reg->cursor + 1) % 64;
+        cursor = (cursor + 1) % 64;
     } while (++i < 64);
     return 0;
 }
 
 int SndRegTable::func_0201179c(int a1, int a2, const Vector3 *a3, short s1) {
-    SndRegTable *reg = this;
     int i;
     for (i = 0; i < 64; i++) {
-        if (reg->entries[reg->cursor].id == 0) {
-            reg->counter += 1;
-            if (reg->counter == 0)
-                reg->counter += 1;
-            func_02011af8(&reg->entries[reg->cursor], reg->counter, a1, a2, a3, s1);
-            func_02011698(this, &reg->entries[reg->cursor]);
-            return reg->counter;
+        if (entries[cursor].id == 0) {
+            counter += 1;
+            if (counter == 0)
+                counter += 1;
+            func_02011af8(&entries[cursor], counter, a1, a2, a3, s1);
+            func_02011698(this, &entries[cursor]);
+            return counter;
         }
-        reg->cursor = (reg->cursor + 1) % 64;
+        cursor = (cursor + 1) % 64;
     }
     return 0;
 }
