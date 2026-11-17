@@ -186,7 +186,7 @@ int daSlide_Box_c::Behavior()
         mAngle.x = shipAngles[0];
         mAngle.y = shipAngles[1];
         mAngle.z = shipAngles[2];
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         mHorzSpeed = FX_SinIdx((u16)mAngle.x >> 4) * kSlideScale;
         mHorzPos += mHorzSpeed;
         spd = mHorzPos;

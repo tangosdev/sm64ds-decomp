@@ -298,7 +298,7 @@ void daYegg_c::PayOut() {
  * because the product is stored back into `sl`. The four fields written at
  * +0x92, +0x94, +0x96 and +0x98 of each new actor (three halfwords and a
  * word) are dActor_c's
- * mPrevAngleX/Y/Z and mHorzSpeed; whether the coin reads them as spawn
+ * mPrevAngle.x/.y/.z and mHorzSpeed; whether the coin reads them as spawn
  * arguments is not shown here. */
 void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short arg5) {
     unsigned int r;
@@ -325,11 +325,11 @@ void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short arg5) {
             } while (rv == prev);
             r = RandomIntInternal(&data_0209e650.value);
             r = r >> 16;
-            coin->mPrevAngleX = zero;
+            coin->mPrevAngle.x = zero;
             sl = sl * ((r % 50) + 100) / 100;
             prev = rv;
-            coin->mPrevAngleY = arg5 + rv;
-            coin->mPrevAngleZ = zero;
+            coin->mPrevAngle.y = arg5 + rv;
+            coin->mPrevAngle.z = zero;
             coin->mHorzSpeed = sl;
         }
         i++;
@@ -629,7 +629,7 @@ void daYegg_c::EnterSeek() {
         }
     }
     mdCcAc_c.Init(this, 0x64000, 0xc8000, 0x202000, 0);
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
 }
 
 /* -------------------------------------------------------------------------- */

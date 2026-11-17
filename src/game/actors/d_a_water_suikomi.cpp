@@ -121,9 +121,9 @@ int daWater_Suikomi_c::Behavior() {
         (this->*(s->mMain))();
     }
     UpdatePos(&mdCcAcPos_c);
-    mAngle.x = mPrevAngleX;
-    mAngle.y = mPrevAngleY;
-    mAngle.z = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     func_ov026_02112324();
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();

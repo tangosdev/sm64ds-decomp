@@ -372,7 +372,7 @@ void daChoropu_c::func_ov080_02123c24()
  * units (0x5dc000) horizontally (no daPly_c counts as exactly 1500, so no) and this
  * mole holds the turn (mHasTurn == 1). Then:
  *   - daPly_c 250 units (0xfa000) or more away: start emerging -- state 2, animation
- *     file 0x2d4, face the daPly_c (mAngle.y and mPrevAngleY), enable the collision
+ *     file 0x2d4, face the daPly_c (mAngle.y and mPrevAngle.y), enable the collision
  *     cylinder, set the mFlags bit, sound effect 0x116 at the mole;
  *   - daPly_c closer than 250 units: stay hidden and pass the turn on (func_ov080_02124360). */
 void daChoropu_c::func_ov080_02123ecc()
@@ -392,7 +392,7 @@ void daChoropu_c::func_ov080_02123ecc()
         {
             u32 *a = (u32 *)((int)&mdCcAc_c.flags);
             u32 *b = (u32 *)((int)&mFlags);
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
             *a = *a & ~daChoropu_CC_DISABLED;
             *b = *b | daChoropu_FLAG_EMERGED;
             func_0201267c(0x116, &mCamSpacePos);
@@ -692,7 +692,7 @@ s32 daChoropu_c::Behavior()
  * passes 2 for the first one) when it is Metal, or when it is not Vanish. On the
  * ground (mWithMeshClsn.IsOnGround) a big rock (mIsSmall == 0) first spawns two
  * small rocks (actor 0x137, spawn parameter 1) at its own position, each with a
- * random heading (RandomIntInternal >> 8 as mPrevAngleY), half its horizontal speed
+ * random heading (RandomIntInternal >> 8 as mPrevAngle.y), half its horizontal speed
  * and vertical speed 5 units (0x5000); then, big or small, it is marked for
  * destruction. After that: UpdatePos, UpdateWMClsn, the model matrix
  * (func_ov080_02124418), and the cylinder's Clear and Update. */
@@ -728,9 +728,9 @@ s32 daChoro_Rock_c::Behavior()
 
             s = dActor_c::Spawn(daChoro_Rock_ACTOR_ID, 1, mPos, 0, mAreaId, -1);
             r = RandomIntInternal(&data_0209e650.value);
-            s->mPrevAngleX = 0;
-            s->mPrevAngleY = (short)((unsigned int)r >> 8);
-            s->mPrevAngleZ = 0;
+            s->mPrevAngle.x = 0;
+            s->mPrevAngle.y = (short)((unsigned int)r >> 8);
+            s->mPrevAngle.z = 0;
             s->mHorzSpeed = mHorzSpeed >> 1;
             s->mSpeed.x = 0;
             s->mSpeed.y = 0x5000;
@@ -738,9 +738,9 @@ s32 daChoro_Rock_c::Behavior()
 
             s = dActor_c::Spawn(daChoro_Rock_ACTOR_ID, 1, mPos, 0, mAreaId, -1);
             r = RandomIntInternal(&data_0209e650.value);
-            s->mPrevAngleX = 0;
-            s->mPrevAngleY = (short)((unsigned int)r >> 8);
-            s->mPrevAngleZ = 0;
+            s->mPrevAngle.x = 0;
+            s->mPrevAngle.y = (short)((unsigned int)r >> 8);
+            s->mPrevAngle.z = 0;
             s->mHorzSpeed = mHorzSpeed >> 1;
             s->mSpeed.x = 0;
             s->mSpeed.y = 0x5000;

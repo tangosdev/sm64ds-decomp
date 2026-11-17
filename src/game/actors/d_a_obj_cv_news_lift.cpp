@@ -278,14 +278,14 @@ s32 daObjCvNewsLift_c::Behavior() {
             else
                 mLoweredPlatform--;
             mBumped = 0;
-            mPrevAngleY = sNewsLiftPlatformYaws[mLoweredPlatform];
+            mPrevAngle.y = sNewsLiftPlatformYaws[mLoweredPlatform];
             mAngle.x = 0;
             mAngle.z = 0;
             mPos.y = mHomePos.y;
         }
         if (mPrevLoweredPlatform != mLoweredPlatform) {
             mBumped = 0;
-            mPrevAngleY = sNewsLiftPlatformYaws[mLoweredPlatform];
+            mPrevAngle.y = sNewsLiftPlatformYaws[mLoweredPlatform];
             mAngle.x = 0;
             mAngle.z = 0;
             mPos.y = mHomePos.y;
@@ -293,7 +293,7 @@ s32 daObjCvNewsLift_c::Behavior() {
     } else {
         if (mLoweredPlatform != -1) {
             mMotorSound = Sound::PlayLong(mMotorSound, 3, 0x88, mCamSpacePos, 0);
-            mPrevAngleY = sNewsLiftPlatformYaws[mLoweredPlatform];
+            mPrevAngle.y = sNewsLiftPlatformYaws[mLoweredPlatform];
             mHorzSpeed = 0x5000;
             rayStart[0].x = 0;
             rayStart[0].y = -0xa000;
@@ -334,7 +334,7 @@ s32 daObjCvNewsLift_c::Behavior() {
                 ray->y = 0;
                 ray->z = 0;
             }
-            Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
+            Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
             {
                 Vector3 *start = rayStart;
                 Vector3 *from = rayFrom;

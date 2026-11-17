@@ -176,13 +176,13 @@ void daDkk_c::StateLandPause() {
 }
 
 /* mState 7, the turn. Steps mAngle.y toward mTurnTargetAngle; once
- * ApproachLinear reports it has arrived, copies it into mPrevAngleY, clears the
+ * ApproachLinear reports it has arrived, copies it into mPrevAngle.y, clears the
  * landing counter and goes back to state 6. */
 int daDkk_c::StateTurn() {
     int arrived = ApproachLinear(mAngle.y, mTurnTargetAngle, 0x400);
     if (arrived == 0)
         return arrived;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mState = 6;
     mLandCount = 0;
     mTimer = 40;

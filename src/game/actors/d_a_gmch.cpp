@@ -279,8 +279,8 @@ void daGmch_c::CheckPlayerContact()
     }
 
     if (mdCcAc_c.hitFlags & HIT_MEGA_CHARACTER) {
-        mPrevAngleY = Vec3_HorzAngle(&player->mPos, &mPos);
-        mAngle.y = (mPrevAngleY + 0x8000);
+        mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &mPos);
+        mAngle.y = (mPrevAngle.y + 0x8000);
         player->IncMegaKillCount();
         SetState(8);
         return;
@@ -417,7 +417,7 @@ int daGmch_c::UpdateState7()
         mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
         {
-            short heading = mPrevAngleY;
+            short heading = mPrevAngle.y;
             mAngle.x = 0;
             mAngle.y = heading;
             mAngle.z = 0;
@@ -453,7 +453,7 @@ int daGmch_c::EnterState7()
     holder = mEatingPlayer;
     holderAngle = holder->mAngle.y;
     mAngle.y = holderAngle;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
 
     /* Word triple through &mPos.x. Naming the three fields is 0x178 vs 0x17c. */
     holder = mEatingPlayer;
@@ -527,11 +527,11 @@ int daGmch_c::UpdateState5()
     fx32 distToSpawn = Vec3_Dist(&mPos, &mSpawnPos);
     if (distToSpawn < mHorzSpeed) {
         mAngle.y = Vec3_HorzAngle(&mPos, &mSpawnPos);
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         mHorzSpeed = distToSpawn;
     } else {
         ApproachLinear(mAngle.y, Vec3_HorzAngle(&mPos, &mSpawnPos), 0x2bc);
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
     }
     mAnmModel.Advance();
     UpdatePos(&mdCcAc_c);
@@ -616,7 +616,7 @@ int daGmch_c::EnterState3()
     mAnmModel.SetAnim((BCA_File *)gGamaguchiJumpAnimationFile.filePtr, 0x40000000, 0x1000, 0);
     mAnmModel.currFrame = 0;
     mAngle.y = (short)RandomIntInternal(data_0209e650);
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mHorzSpeed = 0;
     mPhase = 0;
     mStateIndex = 3;
@@ -649,7 +649,7 @@ int daGmch_c::EnterState2()
 int daGmch_c::UpdateState1()
 {
     ApproachLinear(mAngle.y, mTargetAngleY, 0x2bc);
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     UpdatePos(&mdCcAc_c);
     ApplySlopeToVertSpeed(&mWithMeshClsn);
     CheckPlayerContact();

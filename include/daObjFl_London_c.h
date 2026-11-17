@@ -14,7 +14,7 @@
  * mCooldown/mFlag sit at 0x31e/0x31f in dBgActor_c's tail padding (same
  * placement as daObjRc_Guruguru_c's mAngVelY). InitResources seeds
  * mCooldown to 0xf and mFlag to 0; Behavior decrements the cooldown,
- * tilts mPrevAngleZ, and plays bank-3 SFX at the ends of each swing.
+ * tilts mPrevAngle.z, and plays bank-3 SFX at the ends of each swing.
  */
 struct daObjFl_London_c : dBgActor_c {
     /* The destructor is declared FIRST and defined INLINE: mwcc then emits the

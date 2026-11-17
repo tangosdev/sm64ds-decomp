@@ -149,7 +149,7 @@ int daYurei_Mucho_c::InitResources()
     dExtFrameCtrl_c::LoadFile(gYureiMuchoAttackAnimFile);
     mTerminalVelocity = -0x1e000;
     mdCcAc_c.Init(this, 0x38000, 0x7e000, 0x200000, 0x7eff0);
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     mWithMeshClsn.Init(this, 0x46000, 0, 0, 0);
     mCoinType = 1;
     mExtraCoinCount = 1;
@@ -223,9 +223,9 @@ int daYurei_Mucho_c::Behavior()
     UpdateWMClsn(mWithMeshClsn, 0);
     UpdateModelTransform();
     if (mCurrentState != &data_ov065_0211d660) {
-        mAngle.x = mPrevAngleX;
-        mAngle.y = mPrevAngleY;
-        mAngle.z = mPrevAngleZ;
+        mAngle.x = mPrevAngle.x;
+        mAngle.y = mPrevAngle.y;
+        mAngle.z = mPrevAngle.z;
         HandleCollision();
     }
     mdCcAc_c.Clear();
@@ -352,8 +352,8 @@ int daYurei_Mucho_c::UpdateIdle() {
             mStateTimer = 20;
     }
 
-    ApproachAngle(&mPrevAngleY, mTargetAngle, 0xa, 0x200, 0x100);
-    ApproachAngle(&mPrevAngleX, 0, 1, 0x500, 0x500);
+    ApproachAngle(&mPrevAngle.y, mTargetAngle, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.x, 0, 1, 0x500, 0x500);
 
     in.z = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
@@ -427,8 +427,8 @@ int daYurei_Mucho_c::UpdateChase() {
     } else {
         mStateTimer = pitch;
     }
-    ApproachAngle(&mPrevAngleY, mTargetAngle, 1, 0x500, 0x500);
-    ApproachAngle(&mPrevAngleX, pitch, 1, 0x500, 0x500);
+    ApproachAngle(&mPrevAngle.y, mTargetAngle, 1, 0x500, 0x500);
+    ApproachAngle(&mPrevAngle.x, pitch, 1, 0x500, 0x500);
     if ((u16)mStateTimer == 0)
         ChangeState(&data_ov065_0211d650);
     return 1;
@@ -455,7 +455,7 @@ int daYurei_Mucho_c::UpdateShoot() {
         *(V3A *)(&L.pp) = *(V3A *)(&pl->mPos.x);
         L.tgt = L.pp;
         mTargetAngle = Vec3_HorzAngle(&mPos, &L.tgt);
-        ApproachAngle(&mPrevAngleY, mTargetAngle, 1, 0x500, 0x500);
+        ApproachAngle(&mPrevAngle.y, mTargetAngle, 1, 0x500, 0x500);
 
         if ((((u32)mAnmModel.currFrame << 4) >> 16) >= 0xf && (u16)mStateTimer == 0 &&
             mShotCount < 3) {

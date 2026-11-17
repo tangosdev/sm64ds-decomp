@@ -2,8 +2,8 @@
 /* The turntable platforms' shared base -- ov002/daObjKaitendai_c.
  * Abstract: slots 0 (InitResources) and 3 (CleanupResources) are pure.
  * Five leaves call InitResourcesFrom / CleanupResourcesFrom with their
- * own file tables. Setup seeds mPrevAngleZ from arg 3 (or mAngle.z when
- * that is non-zero); Behavior advances mPrevAngleY by that increment.
+ * own file tables. Setup seeds mPrevAngle.z from arg 3 (or mAngle.z when
+ * that is non-zero); Behavior advances mPrevAngle.y by that increment.
  * No fields of its own; all five factories pass 0x320.
  *
  * InitResourcesFrom / CleanupResourcesFrom are coined names (slots 0 and 3
@@ -62,8 +62,8 @@ s32 daObjKaitendai_c::Render() {
 
 /* ROM ordinal 4 -- vtable slot 6, ov002 0x020b6718. */
 s32 daObjKaitendai_c::Behavior() {
-    mPrevAngleY += mPrevAngleZ;
-    mAngle.y = mPrevAngleY;
+    mPrevAngle.y += mPrevAngle.z;
+    mAngle.y = mPrevAngle.y;
     UpdateModelPosAndRotY();
     if (IsClsnInRangeOnScreen(0, 0))
         UpdateClsnPosAndRot();
@@ -73,7 +73,7 @@ s32 daObjKaitendai_c::Behavior() {
 /* ROM ordinal 5 -- ov002 0x020b676c, size 0xa8.
  * Shared resource setup the five leaves call. Slot 0 is dExtSimpleModel_c::LoadFile,
  * slot 1 is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile; then bind
- * UpdatePosAndAngs and seed mPrevAngleZ. */
+ * UpdatePosAndAngs and seed mPrevAngle.z. */
 int daObjKaitendai_c::InitResourcesFrom(ResourceDescriptor *descriptor, s16 angle) {
     s16 y;
 
@@ -83,10 +83,10 @@ int daObjKaitendai_c::InitResourcesFrom(ResourceDescriptor *descriptor, s16 angl
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x199, mAngle.y,
                           *descriptor->clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
-    mPrevAngleZ = angle;
+    mPrevAngle.z = angle;
     y = mAngle.z;
     if (y != 0) {
-        mPrevAngleZ = y;
+        mPrevAngle.z = y;
         mAngle.z = 0;
     }
     return 1;

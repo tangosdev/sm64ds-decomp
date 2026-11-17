@@ -299,13 +299,13 @@ void daChair_c::State2() {
                 playerPos.y = pp->y;
                 playerPos.z = pp->z;
                 Vec3_Sub(&diff, &playerPos, &mPos);
-                mPrevAngleY = cstd::atan2(diff.x, diff.z);
-                mPrevAngleX = cstd::atan2(diff.y, Vec3_HorzLen(&diff)) * -1;
+                mPrevAngle.y = cstd::atan2(diff.x, diff.z);
+                mPrevAngle.x = cstd::atan2(diff.y, Vec3_HorzLen(&diff)) * -1;
                 /* mSpeed.x / mSpeed.z: lateral velocity beside mSpeed.y. */
-                reach = FX_MUL(FX_CosIdx((u16)mPrevAngleX >> 4), 0x32000);
-                mSpeed.x = FX_MUL(reach, FX_SinIdx((u16)mPrevAngleY >> 4));
-                mSpeed.y = FX_MUL(FX_SinIdx((u16)mPrevAngleX >> 4), -0x32000);
-                mSpeed.z = FX_MUL(reach, FX_CosIdx((u16)mPrevAngleY >> 4));
+                reach = FX_MUL(FX_CosIdx((u16)mPrevAngle.x >> 4), 0x32000);
+                mSpeed.x = FX_MUL(reach, FX_SinIdx((u16)mPrevAngle.y >> 4));
+                mSpeed.y = FX_MUL(FX_SinIdx((u16)mPrevAngle.x >> 4), -0x32000);
+                mSpeed.z = FX_MUL(reach, FX_CosIdx((u16)mPrevAngle.y >> 4));
             } else {
                 if (mActionTimer > 20) {
                     mAngle.y += 0x2710;
@@ -318,7 +318,7 @@ void daChair_c::State2() {
                 dBgPi *wall = mWithMeshClsn.GetWallResult();
                 VecFx32 normal;
                 wall->surface.CopyNormalTo((Vector3 &)normal);
-                if (GetSubtraction(mPrevAngleY, cstd::atan2(normal.x, normal.z)) > 0x4000)
+                if (GetSubtraction(mPrevAngle.y, cstd::atan2(normal.x, normal.z)) > 0x4000)
                     Break();
             }
         }

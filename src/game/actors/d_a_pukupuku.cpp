@@ -109,7 +109,7 @@ int daPukupuku_c::InitResources() {
     mHomePos.x = mPos.x;
     mHomePos.y = mPos.y;
     mHomePos.z = mPos.z;
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     mWithMeshClsn.Init(this, 0x1e000, 0x1e000, 0, 0);
 
     mAnmModel.SetAnim((BCA_File *)data_ov090_0213455c.filePtr, 0, 0x1000, 0);
@@ -137,7 +137,7 @@ int daPukupuku_c::Behavior() {
         if (q->main != 0)
             (this->*(q->main))();
     }
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     mAnmModel.speed = 0x1000;
     static_cast<dExtFrameCtrl_c &>(mAnmModel).Advance();
     UpdateModelMatrix();
@@ -205,7 +205,7 @@ int daPukupuku_c::StateSwim() {
         mStateTimer = 50;
         mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
     }
-    ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x100, 0x200);
+    ApproachAngle(&mPrevAngle.y, mTargetAngleY, 1, 0x100, 0x200);
     if (mStateTimer == 0)
         SetState((PukuStatePMF *)&data_ov090_02134584);
     return 1;

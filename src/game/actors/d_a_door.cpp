@@ -831,7 +831,7 @@ int daDoor_c::func_ov100_02145080(daPly_c *arg1) {
 /* -------------------------------------------------------------------------- */
 /* Place the player at the door: offset a, facing the door's mAngle.y turned
    half round, when mScale.z > 0; offset b, facing mAngle.y, otherwise -- the new facing also copied to the player's
-   mPrevAngleY, and either offset rotated by mAngle.y about the door's
+   mPrevAngle.y, and either offset rotated by mAngle.y about the door's
    position. Was a C source taking the door and the player as char *. */
 void daDoor_c::func_ov100_02145170(daPly_c *pl, Vector3 *a, Vector3 *b) {
     Vector3 *v;
@@ -842,7 +842,7 @@ void daDoor_c::func_ov100_02145170(daPly_c *pl, Vector3 *a, Vector3 *b) {
         pl->mAngle.y = mAngle.y;
         v = b;
     }
-    pl->mPrevAngleY = pl->mAngle.y;
+    pl->mPrevAngle.y = pl->mAngle.y;
     Vec3_RotateYAndTranslate(&pl->mPos, &mPos, mAngle.y, v);
 }
 

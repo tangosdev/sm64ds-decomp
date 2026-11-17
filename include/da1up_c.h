@@ -63,7 +63,7 @@
 enum da1up_MushroomType {
     MUSHROOM_POP_OUT_DRIFT        = 0,  /* arc out, drift at 2 units a frame, blink, vanish */
     MUSHROOM_POP_OUT_FLEE         = 1,  /* arc out, then walk away from the player */
-    MUSHROOM_WAIT_THEN_ACCELERATE = 2,  /* wait for the player, then speed up along mPrevAngleY */
+    MUSHROOM_WAIT_THEN_ACCELERATE = 2,  /* wait for the player, then speed up along mPrevAngle.y */
     MUSHROOM_STATIONARY           = 3,  /* no movement; just waits to be touched */
     MUSHROOM_WAIT_THEN_FACE_AWAY  = 4,  /* wait for the player, hop, then face away from him; no horizontal speed is set here */
     MUSHROOM_HIDDEN_FLEE          = 5,  /* hidden, then arc out and walk away */

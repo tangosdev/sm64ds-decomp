@@ -219,15 +219,15 @@ int daShark_c::Behavior() {
             if (mPathNodeIdx >= mPathNodeCount)
                 mPathNodeIdx = 0;
         }
-        ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, &node), 0x180);
-        ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &node), 0x40);
-        mAngle.x = mPrevAngleX;
-        mAngle.y = mPrevAngleY;
-        mAngle.z = mPrevAngleZ;
+        ApproachLinear(mPrevAngle.y, Vec3_HorzAngle(&mPos, &node), 0x180);
+        ApproachLinear(mPrevAngle.x, Vec3_VertAngle(&mPos, &node), 0x40);
+        mAngle.x = mPrevAngle.x;
+        mAngle.y = mPrevAngle.y;
+        mAngle.z = mPrevAngle.z;
         velocity.y = velocity.x = velocity.z = 0;
         velocity.z = 0x14000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
+        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
         MTX_MultVec43(&velocity, &data_020a0e68, &mSpeed);
     }
     {

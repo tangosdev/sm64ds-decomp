@@ -83,14 +83,14 @@ void daPropeller_Heyho_Fire_c::CheckPlayerHit() {
         return;
     }
     if (player->mIsMetal != 0) {
-        /* Deflected: mPrevAngleY (which Behavior copies into mAngle.y)
+        /* Deflected: mPrevAngle.y (which Behavior copies into mAngle.y)
            swings half a turn, so only the facing flips. mSpeed.x and mSpeed.z
            are the x and z of the velocity UpdatePosWithOnlySpeed adds, so
            zeroing them stops the horizontal motion; the vertical speed
            becomes 0x1e000 up with -0x4000 acceleration. */
         mDeflected = 1;
         Sound::Play(0, 0xa5, mCamSpacePos);
-        mPrevAngleY -= 0x8000;
+        mPrevAngle.y -= 0x8000;
         mSpeed.x = 0;
         mSpeed.y = 0x1e000;
         mSpeed.z = 0;
@@ -184,7 +184,7 @@ int daPropeller_Heyho_Fire_c::Behavior() {
         UpdatePosWithOnlySpeed(&mdCcAc_c);
     }
     UpdateWMClsn(mWithMeshClsn, 0);
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     UpdateModelMatrix();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
@@ -200,7 +200,7 @@ int daPropeller_Heyho_Fire_c::InitResources() {
         unk_358 = 0;
     mTerminalVelocity = -0x64000;
     mdCcAc_c.Init(this, 0xa000, 0xa000, 0x200004, 0);
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     mWithMeshClsn.Init(this, 0xa000, 0xa000, 0, 0);
     SetState(&data_ov002_02111190);
     return 1;

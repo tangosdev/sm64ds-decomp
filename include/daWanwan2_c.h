@@ -58,7 +58,7 @@ struct daWanwan2_c : dEnemyBase_c {
        allocation). */
     s32 mChainTimer;                        /* 0x6a0 */
     /* The heading to the path node the chomp is walking to: Behavior stores it
-       (Vec3_HorzAngle) on each frame it is not halted and eases mPrevAngleY
+       (Vec3_HorzAngle) on each frame it is not halted and eases mPrevAngle.y
        toward it, and InitResources seeds it with the placed angle. */
     s16 mTargetAngle;                       /* 0x6a4 */
     /* Set to 90 by func_ov100_0214344c on a hit. While Behavior's count-down

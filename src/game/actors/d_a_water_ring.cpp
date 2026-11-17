@@ -147,7 +147,7 @@ int daWater_Ring_c::StateActive() {
     mSpinPhase += 0x800;
     {
         s16 phase = mSpinPhase;
-        mPrevAngleX += FX_MUL(FX_SinIdx((u16)phase >> 4), 0x100);
+        mPrevAngle.x += FX_MUL(FX_SinIdx((u16)phase >> 4), 0x100);
     }
     mScale.z = mScale.x;
     mScale.y = mScale.z;
@@ -199,9 +199,9 @@ int daWater_Ring_c::Behavior() {
     if (mState->execute)
         (this->*mState->execute)();
     UpdatePos(&mdCcAcPos_c);
-    mAngle.x = mPrevAngleX;
-    mAngle.y = mPrevAngleY;
-    mAngle.z = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     UpdateModel();
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();

@@ -149,7 +149,7 @@ int daKpFr_c::func_ov070_02121f18() {
     if (player) {
         short angleToPlayer = Vec3_HorzAngle(&mPos, &player->mPos);
         ApproachLinear(mAngle.y, angleToPlayer, 0x180);
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
     }
   UpdatePos(&mdCcAc_c);
   func_ov070_02121be4();

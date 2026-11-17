@@ -19,7 +19,7 @@
  *
  * The Wander, Chase and Pause handlers read mStateTimer as an unsigned short
  * (ldrh; a plain read of dEnemyBase_c's s16 is ldrsh), so they convert it with
- * (unsigned short). "heading" below means mPrevAngleY, which Behavior copies
+ * (unsigned short). "heading" below means mPrevAngle.y, which Behavior copies
  * into mAngle.y every frame.
  *
  * deslop leftovers:
@@ -161,7 +161,7 @@ int daPopoi_c::InitResources()
     v.y = data_ov077_02127a5c.y;
     v.z = data_ov077_02127a5c.z;
     mdCcAcPos_c.Init(this, v, 0x54000, 0x32000, 0x200004, 0);
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     mWithMeshClsn.Init(this, 0x64000, 0x64000, 0, 0);
     mCaughtPlayer = 0;
     mHomePos.x = mPos.x;
@@ -237,7 +237,7 @@ int daPopoi_c::Behavior()
     mSavedPos.z = mPos.z;
     UpdateWMClsn(mWithMeshClsn, 2);
 
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     UpdateModelTransform();
 
     /* On the ground and not already in Grab (data_ov077_02127cd8): see whether the
@@ -374,9 +374,9 @@ int daPopoi_c::UpdateWanderState() {
         mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
         if (mStateTimer < 20)
             mStateTimer = 20;
-        ApproachLinear(mPrevAngleY, mTargetAngleY, 0x400);
+        ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x400);
     }
-    ApproachLinear(mPrevAngleY, mTargetAngleY, 0x100);
+    ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x100);
 
     if (mStateTimer < 100)
         mAnmModel.speed = 0x1000 / (0x64 - mStateTimer);
@@ -443,8 +443,8 @@ int daPopoi_c::UpdateTurnAwayState() {
     /* (short,short) view of AngleDiff (decl_common says int,int); the cast keeps
        C linkage and the short call-site typing, which is byte-load-bearing. */
     short tgt = mTargetAngleY;
-    ApproachLinear(mPrevAngleY, tgt, 0x500);
-    int diff = (AngleDiff)(mPrevAngleY, mTargetAngleY);
+    ApproachLinear(mPrevAngle.y, tgt, 0x500);
+    int diff = (AngleDiff)(mPrevAngle.y, mTargetAngleY);
     if (diff < 0x100) {
         mCooldown = 30;
         ChangeState(&data_ov077_02127ce8); /* Wander */
@@ -510,7 +510,7 @@ int daPopoi_c::UpdateChaseState() {
         mTargetAngleY = Vec3_HorzAngle(&mPos, &pv);
     }
 
-    ApproachLinear(mPrevAngleY, mTargetAngleY, mTurnRate);
+    ApproachLinear(mPrevAngle.y, mTargetAngleY, mTurnRate);
     ApproachLinear(mTurnRate, 0x600, 0x100);
 
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, daPopoi_SND_MOVE_LOOP, mCamSpacePos, 0);
@@ -546,7 +546,7 @@ int daPopoi_c::EnterGrabState() {
  * the daPly_c is not Metal, not Mega, not mIsNoControl and has a negative
  * GetHurtState(), launch them with func_ov002_020db674 (horizontal speed 0x28000 = 40
  * units/frame, vertical speed 0x70000 = 112 units/frame, heading argument mAngle.y +
- * 0x8000; the callee stores that argument as the daPly_c's mPrevAngleY and the argument
+ * 0x8000; the callee stores that argument as the daPly_c's mPrevAngle.y and the argument
  * + 0x8000 as the daPly_c's mAngle.y, so the daPly_c ends up facing this actor's heading,
  * and puts the daPly_c in ST_HURT). If that call returns nonzero, mCaughtPlayer = 0 and
  * daPopoi_SND_THROW_PLAYER plays at the actor's position.

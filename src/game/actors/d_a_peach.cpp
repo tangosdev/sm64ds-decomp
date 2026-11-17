@@ -227,7 +227,7 @@ int daPeach_c::InitState2() {
 
 int daPeach_c::InitState4() {
     short angY = mAngle.y;
-    mPrevAngleY = angY;
+    mPrevAngle.y = angY;
     UpdatePos(&mCylinder);
     UpdateGroundCollision(&mWithMeshClsn);
     IsTouchingPlayer();

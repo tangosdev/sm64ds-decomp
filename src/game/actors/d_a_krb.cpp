@@ -255,7 +255,7 @@ void daKrb_c::func_ov084_02129168(dActor_c *actor) {
     mSpeed.y = FX_Div(0xd000 - mVertAccel, mFloorNormal.y);
     mHorzSpeed = Vec3_HorzLen(&mSpeed) * -1;
     if (actor != 0)
-        mPrevAngleY = Vec3_HorzAngle(&mPos, &actor->mPos);
+        mPrevAngle.y = Vec3_HorzAngle(&mPos, &actor->mPos);
     mAnmModel.SetAnim((BCA_File *)data_ov084_02130cc0.filePtr, 0, 0x1000, 0);
     mState = daKrb_c::STATE_TUMBLE;
     mEatenByYoshi = 0;
@@ -601,7 +601,7 @@ int daKrb_c::func_ov084_02129a00() {
                 } else if (s == 5) {
                     mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce0.filePtr, 0x40000000, 0x1000,
                                       0);
-                    mPrevAngleY += 0x8000; /* half a turn */
+                    mPrevAngle.y += 0x8000; /* half a turn */
                     mHorzSpeed = -mHorzSpeed;
                     dExtAnmMaterial_c::Prepare(*(BMD_File *)(data_ov084_02130cf8.filePtr),
                                                data_ov084_0213088c);
@@ -924,7 +924,7 @@ void daKrb_c::func_ov084_02129ed4() {
     }
     func_ov002_020aea30((dActor_c *)other, &mWithMeshClsn);
     if (turnAround != 0) {
-        mAngle.y = (mPrevAngleY + 0x8000); /* half a turn */
+        mAngle.y = (mPrevAngle.y + 0x8000); /* half a turn */
     }
     if (mGoombaType != daKrb_c::GOOMBA_KING_MINION)
         return;
@@ -1019,7 +1019,7 @@ void daKrb_c::ActTumble() {
         mTargetHorzSpeed = data_ov084_02130228[mGoombaType];
         mWithMeshClsn.ClearLimMovFlag();
         {
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
             mdCcAc_c.flags &= ~0x20000;
         }
         dExtAnmMaterial_c::Prepare(*(BMD_File *)(data_ov084_02130cf8.filePtr),
@@ -1102,7 +1102,7 @@ void daKrb_c::ActTumble() {
 /* STATE_JUMP: after a hop begins. On the frame it touches down a large
  * Goomba kicks up HugeLandingDust and a normal one LandingDust. Once on the
  * ground it returns to STATE_WALK and clears dCcAc_c flag bit 0x4 (set by
- * BeginJump); in the air it turns mPrevAngleY toward mTargetAngleY
+ * BeginJump); in the air it turns mPrevAngle.y toward mTargetAngleY
  * by at most 0x800 (11.25 degrees) a frame.
  * N64: goomba_act_jump -- back to GOOMBA_ACT_WALK on the ground, otherwise
  * cur_obj_rotate_yaw_toward(oGoombaTargetYaw, 0x800). The landing dust is
@@ -1118,15 +1118,15 @@ void daKrb_c::ActJump() {
         mState = STATE_WALK;
         mdCcAc_c.flags &= ~4;
     } else {
-        ApproachLinear(mPrevAngleY, mTargetAngleY, 0x800);
+        ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x800);
     }
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
 }
 
 /* STATE_ATTACKED_MARIO: begin a hop (BeginJump, which enters
  * STATE_JUMP). A KURIBO_L then scales its vertical speed by
  * 0x1800 / 0x1000 = 1.5. The target heading becomes the spawn heading
- * (mInitAngleY), MOVE_AVOIDING is cleared, and mAngle.y follows mPrevAngleY.
+ * (mInitAngleY), MOVE_AVOIDING is cleared, and mAngle.y follows mPrevAngle.y.
  * N64: goomba_act_attacked_mario's non-tiny branch -- goomba_begin_jump, a new
  * oGoombaTargetYaw, oGoombaTurningAwayFromWall = FALSE. Its tiny branch (the
  * Goomba dies) is in func_ov084_02129ed4 here, where KURIBO_S removes itself
@@ -1141,14 +1141,14 @@ void daKrb_c::ActAttackedMario() {
     }
     mTargetAngleY = mInitAngleY;
     mMoveFlags &= ~daKrb_c::MOVE_AVOIDING;
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
 }
 
 /* STATE_WALK for an ordinary Goomba (not a king minion): wander and chase.
  *
  * func_ov084_02129cf4 picks the target (mDistToPlayer and mInitAngleY), the
  * horizontal speed eases toward mTargetHorzSpeed (0.3125 a frame), and at the
- * end mPrevAngleY is turned toward mTargetAngleY by `step` (0x200 = 2.8
+ * end mPrevAngle.y is turned toward mTargetAngleY by `step` (0x200 = 2.8
  * degrees a frame unless a branch below changes it).
  *  - MOVE_AVOIDING set: turn toward mInitAngleY; the flag is cleared when
  *    ApproachLinear returns nonzero. Nothing else happens this frame.
@@ -1173,7 +1173,7 @@ void daKrb_c::func_ov084_0212abd4() {
     func_ov084_02129cf4(0x3e8000);
     ApproachLinear(mHorzSpeed, mTargetHorzSpeed, 0x500);
     if (((Flags *)&mMoveFlags)->b0) {
-        if (ApproachLinear(mPrevAngleY, mInitAngleY, step)) {
+        if (ApproachLinear(mPrevAngle.y, mInitAngleY, step)) {
             mMoveFlags &= ~daKrb_c::MOVE_AVOIDING;
             return;
         }
@@ -1199,7 +1199,7 @@ void daKrb_c::func_ov084_0212abd4() {
             mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
             step = 0x400;
         }
-        ApproachLinear(mPrevAngleY, mTargetAngleY, step);
+        ApproachLinear(mPrevAngle.y, mTargetAngleY, step);
         return;
     }
     if (mDistToPlayer >= 0x61a8000) {
@@ -1235,7 +1235,7 @@ void daKrb_c::func_ov084_0212abd4() {
                 *(u16 *)((int)&mHeadingHoldTimer) = *(u16 *)((int)&mHeadingHoldTimer) - 1;
             } else if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 3) {
                 mTargetAngleY =
-                    mPrevAngleY + (s16)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
+                    mPrevAngle.y + (s16)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
                 mHeadingHoldTimer = 100;
             } else {
                 mTargetAngleY = ((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
@@ -1247,7 +1247,7 @@ void daKrb_c::func_ov084_0212abd4() {
         if (mStuckTimer > 30)
             mUnstickTimer = mStuckTimer;
     }
-    ApproachLinear(mPrevAngleY, mTargetAngleY, step);
+    ApproachLinear(mPrevAngle.y, mTargetAngleY, step);
 }
 
 /* STATE_WALK for a king minion (mGoombaType 3): follow the Goomba King
@@ -1257,7 +1257,7 @@ void daKrb_c::func_ov084_0212abd4() {
  * The standing animation (data_ov084_02130cc8) plays while mTargetHorzSpeed
  * is 0, the walk animation otherwise. func_ov074_0212087c turns the king and
  * mMinionIndex into the spot (targetPos) this minion should stand at. When
- * ApproachAngle (mPrevAngleY toward mInitAngleY) returns 0 and the Goomba is
+ * ApproachAngle (mPrevAngle.y toward mInitAngleY) returns 0 and the Goomba is
  * on the ground:
  *  - If the king's mState is 4 with mWalkSpeed 0, or the mFreeRoamTimer countdown
  *    (DecIfAbove0_Byte) is nonzero, or the spot is more than 1000.0 away, the
@@ -1302,7 +1302,7 @@ void daKrb_c::func_ov084_0212af74() {
 
     Vector3 targetPos = king->func_ov074_0212087c(mMinionIndex);
 
-    if (ApproachAngle(&mPrevAngleY, mInitAngleY, 4, 0x1000, 0x400) == 0 &&
+    if (ApproachAngle(&mPrevAngle.y, mInitAngleY, 4, 0x1000, 0x400) == 0 &&
         mWithMeshClsn.IsOnGround() != 0) {
         Vec3_HorzDist(&mPos, &mHomePos);
         dist = Vec3_HorzDist(&mPos, &targetPos);
@@ -1368,7 +1368,7 @@ void daKrb_c::func_ov084_0212af74() {
 }
 
 /* STATE_WALK handler: the king's minions follow the king, everything else
- * wanders / chases. mAngle.y then follows mPrevAngleY.
+ * wanders / chases. mAngle.y then follows mPrevAngle.y.
  * N64: goomba_act_walk (func_ov084_0212abd4 holds its body; its target picker
  * func_ov084_02129cf4 takes treat_far_home_as_mario's 1000.0). The minion
  * branch is DS-only. */
@@ -1377,7 +1377,7 @@ void daKrb_c::ActWalk() {
         func_ov084_0212af74();
     else
         func_ov084_0212abd4();
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
 }
 
 /* Returns an fx32 value by size: 65.0 for KURIBO, 150.0 for KURIBO_L and
@@ -1776,7 +1776,7 @@ int daKrb_c::InitResources() {
     mDeathState = DEATH_NONE;
     mClosestPlayer = 0;
     mDistToPlayer = 0x7fffffff;
-    mInitAngleY = mPrevAngleY;
+    mInitAngleY = mPrevAngle.y;
     mTargetHorzSpeed = data_ov084_02130228[mGoombaType];
     mHeadingHoldTimer = 0;
     mTargetUniqueID = 0;

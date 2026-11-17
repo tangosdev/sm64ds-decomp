@@ -171,9 +171,9 @@ void dEnemyBase_c::SpawnCoin()
                 int rnd2 = RandomIntInternal(&data_0209e650.value);
                 int a = (int)((u32)rnd1 >> 16 << 27) >> 16;
                 u32 b = (u32)rnd2 >> 16;
-                coin->mPrevAngleX = 0;
-                coin->mPrevAngleY = (s16)(a * i);
-                coin->mPrevAngleZ = 0;
+                coin->mPrevAngle.x = 0;
+                coin->mPrevAngle.y = (s16)(a * i);
+                coin->mPrevAngle.z = 0;
                 coin->mHorzSpeed = (((b % 50) + 100) << 15) / 100;
             }
         }
@@ -241,7 +241,7 @@ void dEnemyBase_c::func_ov002_020ae968(dActor_c *arg) {
 }
 
 void dEnemyBase_c::func_ov002_020ae954(dActor_c *a, dBgCh_Actr *) {
-    mPrevAngleY = a->mAngle.y;
+    mPrevAngle.y = a->mAngle.y;
     func_ov002_020ae968(a);
 }
 
@@ -262,29 +262,29 @@ void dEnemyBase_c::func_ov002_020ae8b8(dActor_c *arg) {
 }
 
 void dEnemyBase_c::func_ov002_020ae890(dActor_c *a, dBgCh_Actr *) {
-    mPrevAngleY = a->mAngle.y;
+    mPrevAngle.y = a->mAngle.y;
     func_ov002_020ae8b8(a);
     Sound::PlayBank0(0xa, mCamSpacePos);
 }
 
 void dEnemyBase_c::func_ov002_020ae87c(dActor_c *a, dBgCh_Actr *) {
-    mPrevAngleY = a->mAngle.y;
+    mPrevAngle.y = a->mAngle.y;
     func_ov002_020ae8b8(a);
 }
 
 void dEnemyBase_c::func_ov002_020ae844(dActor_c *a, dBgCh_Actr *) {
     s16 angle = Vec3_HorzAngle(&a->mPos, &mPos);
-    mPrevAngleY = angle;
+    mPrevAngle.y = angle;
     func_ov002_020ae968(a);
 }
 
 void dEnemyBase_c::func_ov002_020ae80c(dActor_c *a, dBgCh_Actr *) {
-    mPrevAngleY = Vec3_HorzAngle(&a->mPos, &mPos);
+    mPrevAngle.y = Vec3_HorzAngle(&a->mPos, &mPos);
     func_ov002_020ae8b8(a);
 }
 
 void dEnemyBase_c::func_ov002_020ae73c(dActor_c *a, dBgCh_Actr *) {
-    mPrevAngleY = Vec3_HorzAngle(&a->mPos, &mPos);
+    mPrevAngle.y = Vec3_HorzAngle(&a->mPos, &mPos);
     mSpeed.y = 0xa000;
 
     if (IsPlayerActor(a))
@@ -446,7 +446,7 @@ int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr &clsn, short &outAngle) {
     if (clsn.IsOnWall()) {
         outAngle = ReflectAngle(mWallNormal.x, mWallNormal.z, outAngle);
     } else if (mCliffState) {
-        outAngle = (short)(mPrevAngleY + 0x8000);
+        outAngle = (short)(mPrevAngle.y + 0x8000);
     } else {
         return 0;
     }
@@ -524,9 +524,9 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
                 }
                 {
                     Vector3_16 *p = &mEatingPlayer->mAngle;
-                    mPrevAngleX = p->x;
-                    mPrevAngleY = p->y;
-                    mPrevAngleZ = p->z;
+                    mPrevAngle.x = p->x;
+                    mPrevAngle.y = p->y;
+                    mPrevAngle.z = p->z;
                 }
                 v = mEatingPlayer->mHorzSpeed;
             } else {
@@ -558,7 +558,7 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
             mSpeed.z += mFloorNormal.z << 3;
             mHorzSpeed = Vec3_HorzLen(&mSpeed);
         }
-        mAngle.y = mPrevAngleY;
+        mAngle.y = mPrevAngle.y;
         if (lim == 0)
             clsn.ClearLimMovFlag();
         return 3;
@@ -675,7 +675,7 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
    function at the same address. */
 void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player, fx32) {
     mFlags &= ~0x10000001;
-    mPrevAngleY = Vec3_HorzAngle(&player.mPos, &mPos);
+    mPrevAngle.y = Vec3_HorzAngle(&player.mPos, &mPos);
     mHorzSpeed = 0xa000;
     mSpeed.y = 0x28000;
     mDeathTimer = 30;
@@ -723,7 +723,7 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
     if (&clsn != 0) {
         UpdateWMClsn(clsn, 0);
         if (clsn.IsOnWall() != 0)
-            mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
+            mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
     }
 
     if (&anim != 0) {

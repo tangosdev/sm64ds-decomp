@@ -482,7 +482,7 @@ void daDossy_c::func_ov065_02118634()
         ApproachLinear(mAngVelY, (s16)(target - mAngle.y) / 100, 5);
 
         mAngle.y += mAngVelY;
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
 
         mCylClsn1.Clear();
         mCylClsn2.Clear();

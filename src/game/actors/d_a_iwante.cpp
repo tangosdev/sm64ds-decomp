@@ -951,7 +951,7 @@ int daIwante_c::HandPattern9Enter() {
  *   0  pick the target: the closest player's position with Z lowered by 0xc8000
  *      (200.0) and held within -3154.0..-1850.0; X is a fixed spot (820.0 when
  *      data_ov066_0211ae0c is 1, otherwise -370.0, and 242.0 further toward -X
- *      for hand 1); mPrevAngleY is set to -0x4000 or 0x4000 (a quarter turn); Y is
+ *      for hand 1); mPrevAngle.y is set to -0x4000 or 0x4000 (a quarter turn); Y is
  *      the rest height + 0x1c2000 (450.0). SE_START_MOVING. -> 1 (needs a player).
  *   1  fly there at 0x28000 (40.0) per frame; on arrival set this hand's bit in
  *      data_ov066_0211ae00 and wait for both bits; then mTimer1 = 10 frames (18
@@ -989,13 +989,13 @@ int daIwante_c::HandPattern8Execute() {
             mTargetPos.z = (int)0xff8c6000;
         }
         if (data_ov066_0211ae0c == PART_HAND_1) {
-            mPrevAngleY = -0x4000;
+            mPrevAngle.y = -0x4000;
             mTargetPos.x = 0x334000;
             if (mPartIdx == PART_HAND_1) {
                 mTargetPos.x -= 0xf2000;
             }
         } else {
-            mPrevAngleY = 0x4000;
+            mPrevAngle.y = 0x4000;
             mTargetPos.x = (int)0xffe8e000;
             if (mPartIdx == PART_HAND_1) {
                 mTargetPos.x -= 0xf2000;
@@ -1119,7 +1119,7 @@ int daIwante_c::HandPattern8Enter() {
  *   2  after the timer, come down at 50.0 per frame; on arrival the landing
  *      effect plays, mTimer1 = 10 and the state moves on to 7. If the player is
  *      in no depth band (GetPlayerDepthBand == 0): mTimer1 = 0x24 (36) and, if
- *      the player is less than 0x400000 (1024.0) away horizontally, mPrevAngleY is
+ *      the player is less than 0x400000 (1024.0) away horizontally, mPrevAngle.y is
  *      set to +-0x4000 toward the player's side and the hand starts a sideways
  *      run -> 3.
  *   3  sideways run: mHorzAccelStep grows (by 0x1a while mTimer1 is nonzero, by
@@ -1197,9 +1197,9 @@ int daIwante_c::HandPattern7Execute() {
                     mTimer1 = 0x24;
                     if (Vec3_HorzDist(&mPos, &v) < 0x400000) {
                         if (v.x < mPos.x)
-                            mPrevAngleY = -0x4000;
+                            mPrevAngle.y = -0x4000;
                         else
-                            mPrevAngleY = 0x4000;
+                            mPrevAngle.y = 0x4000;
                         mHorzAccelStep = 0;
                         mHorzSpeed = 0;
                         mSubState = 3;
@@ -1218,7 +1218,7 @@ int daIwante_c::HandPattern7Execute() {
         ApproachLinear(mHorzSpeed, 0x258000, mHorzAccelStep);
         if (ClampToArena() == 1) {
             mHorzSpeed = 0;
-            mPrevAngleY = 0;
+            mPrevAngle.y = 0;
             mSubState = 7;
         }
         break;
@@ -1373,9 +1373,9 @@ int daIwante_c::HandPattern6Execute() {
                     mTimer1 = 0x24;
                     if (Vec3_HorzDist(&mPos, &v) < 0x400000) {
                         if (v.x < mPos.x)
-                            mPrevAngleY = -0x4000;
+                            mPrevAngle.y = -0x4000;
                         else
-                            mPrevAngleY = 0x4000;
+                            mPrevAngle.y = 0x4000;
                         mHorzAccelStep = 0;
                         mHorzSpeed = 0;
                         mSubState = 2;
@@ -1394,7 +1394,7 @@ int daIwante_c::HandPattern6Execute() {
         ApproachLinear(mHorzSpeed, 0x258000, mHorzAccelStep);
         if (ClampToArena() == 1) {
             mHorzSpeed = 0;
-            mPrevAngleY = 0;
+            mPrevAngle.y = 0;
             mSubState = 6;
         }
         break;

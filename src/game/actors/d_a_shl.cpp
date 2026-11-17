@@ -137,7 +137,7 @@ s32 daShl_c::Behavior()
 
     if (UpdateYoshiEat(mMeshClsn) != 0) {
         if (mEatenByYoshi != 0) {
-            mSpawnAngleY = mPrevAngleY;
+            mSpawnAngleY = mPrevAngle.y;
             func_ov102_0214d1f8(&data_ov102_0214ea78.rec);
             mFlags &= ~0x80000u;
             mEatenByYoshi = 0;
@@ -273,8 +273,8 @@ int daShl_c::func_ov102_0214d1b0()
    Yoshi spat it along -- slide at 30.0, and arm the second cylinder. */
 int daShl_c::func_ov102_0214d148()
 {
-    mPrevAngleY = mSpawnAngleY;
-    mAngle.y = mPrevAngleY;
+    mPrevAngle.y = mSpawnAngleY;
+    mAngle.y = mPrevAngle.y;
     mHorzSpeed = 0x1e000;
     mVertAccel = -0x2000;
     mdCc_c2.Init(this, 0x28000, 0x3c000, 0x102002, 0);

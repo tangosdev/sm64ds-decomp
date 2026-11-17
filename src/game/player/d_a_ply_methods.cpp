@@ -1131,7 +1131,7 @@ int daPly_c::func_ov002_020bcd38(unsigned char *params, int beginFrame, int endF
 
     cur = this->mAngleYSpeed;
     ApproachAngle(&this->mAngle.y, ReadUnalignedShort(params), this->mStateWork, cur, cur);
-    this->mPrevAngleY = this->mAngle.y;
+    this->mPrevAngle.y = this->mAngle.y;
     return 1;
 }
 
@@ -1618,7 +1618,7 @@ int daPly_c::func_ov002_020bd600(unsigned char *data, int beginFrame, int endFra
     this->mPos.y = y;
     this->mPos.z = z;
     this->mAngle.y = ReadUnalignedShort(data + 6);
-    this->mPrevAngleY = this->mAngle.y;
+    this->mPrevAngle.y = this->mAngle.y;
     return 1;
 }
 
@@ -2744,11 +2744,11 @@ int daPly_c::func_ov002_020bfa74() {
             }
         } else {
             if (this->IsState(data_ov002_021101b4) || this->IsState(data_ov002_021102d4)) return 1;
-            vel.x = FX_MUL(mHorzSpeed, SIN(mPrevAngleY));
+            vel.x = FX_MUL(mHorzSpeed, SIN(mPrevAngle.y));
             vel.x += FX_MUL(dir.x, 0x2800);
-            vel.z = FX_MUL(mHorzSpeed, COS(mPrevAngleY));
+            vel.z = FX_MUL(mHorzSpeed, COS(mPrevAngle.y));
             vel.z += FX_MUL(dir.z, 0x2800);
-            mPrevAngleY = cstd::atan2(vel.x, vel.z);
+            mPrevAngle.y = cstd::atan2(vel.x, vel.z);
             mHorzSpeed = Vec3_HorzLen(&vel);
         }
         return 1;
@@ -2945,7 +2945,7 @@ int daPly_c::ApplySlopeAccel() {
     int ret;
 
     horzLen = Vec3_HorzLen(&mFloorNormal);
-    angDiff = AngleDiff(mFloorAngle, this->mPrevAngleY);
+    angDiff = AngleDiff(mFloorAngle, this->mPrevAngle.y);
 
     if (mWalkTimer != 0) {
         if (mFloorClass == 0)
@@ -3046,7 +3046,7 @@ int daPly_c::func_ov002_020c06fc(int arg) {
     a = 0;
     b = a;
     if (data_0209f498[gActivePlayerSlot].mag >= 0x200) {
-        s16 d = (s16)(this->mDesiredAngleY - this->mPrevAngleY);
+        s16 d = (s16)(this->mDesiredAngleY - this->mPrevAngle.y);
         int j = ((u16)d >> 4) * 2;
         a = FX_SinCosTable_[j + 1];
         b = FX_SinCosTable_[j];
@@ -3057,7 +3057,7 @@ int daPly_c::func_ov002_020c06fc(int arg) {
 
     v = func_ov002_020f02c8(this->func_ov002_020c031c());
     {
-        int j = ((u16)mPrevAngleY >> 4) * 2;
+        int j = ((u16)mPrevAngle.y >> 4) * 2;
         spd = this->mHorzSpeed;
         r5v = FX_MUL(spd, (int)FX_SinCosTable_[j]);
         r4v = FX_MUL(spd, (int)FX_SinCosTable_[j + 1]);
@@ -3135,11 +3135,11 @@ int daPly_c::func_ov002_020c06fc(int arg) {
     this->mHorzSpeed = Vec3_HorzLen(&vel);
     if (this->mHorzSpeed > 0x64000)
         this->mHorzSpeed = 0x64000;
-    this->mPrevAngleY = (s16)(ang + this->mAngleYSpeed);
+    this->mPrevAngle.y = (s16)(ang + this->mAngleYSpeed);
     {
-        s16 cur = this->mPrevAngleY;
+        s16 cur = this->mPrevAngle.y;
         if (AngleDiff(cur, this->mAngle.y) >= 0x4000)
-            cur = (s16)(this->mPrevAngleY + 0x8000);
+            cur = (s16)(this->mPrevAngle.y + 0x8000);
         ApproachAngle(&this->mAngle.y, cur, 8, 0x4000, 0x10);
     }
     {
@@ -3468,7 +3468,7 @@ void daPly_c::SetFloorSurfaceInfo(const dBgPi &hit) {
 int daPly_c::func_ov002_020c179c(int angle) {
     Vector3 v1;
     Vector3 v2;
-    int idx = (unsigned short)(short)(mPrevAngleY + angle);
+    int idx = (unsigned short)(short)(mPrevAngle.y + angle);
     int y1 = mPos.y;
     int y2 = y1;
     idx >>= 4;
@@ -3599,7 +3599,7 @@ int daPly_c::func_ov002_020c1c84(int arg) {
         this->mIsMega || func_ov002_020e0478() || this->mEatingPlayer || this->mIsUnderwater)
         return 0;
 
-    if (AngleDiff(arg, this->mPrevAngleY) < 0x6000)
+    if (AngleDiff(arg, this->mPrevAngle.y) < 0x6000)
         return 0;
 
     if (this->IsState(data_ov002_02110694) || mIsTakingDamage || this->mIsNoControl)
@@ -3612,10 +3612,10 @@ int daPly_c::func_ov002_020c1c84(int arg) {
         return 0;
 
     a = arg + 0x8000;
-    p = this->mPrevAngleY;
+    p = this->mPrevAngle.y;
     this->mAngleYSpeed = (s16)(p - (s16)(p - a) * 2);
     this->mAngle.y = (s16)a;
-    this->mPrevAngleY = this->mAngle.y;
+    this->mPrevAngle.y = this->mAngle.y;
 
     if (param1 == 0) {
         if (this->func_ov002_020c19d0(0x3c, 0x78))
@@ -3634,7 +3634,7 @@ int daPly_c::func_ov002_020c1c84(int arg) {
 extern "C" {
 int func_ov002_020c1e44(void* a, int x) {
     daPly_c *p = (daPly_c *)a;
-    p->mPrevAngleY = (short)((x << 1) - p->mPrevAngleY + 0x8000);
+    p->mPrevAngle.y = (short)((x << 1) - p->mPrevAngle.y + 0x8000);
     p->mHorzSpeed = FX_MUL(p->mHorzSpeed, 0xe00);
     if (p->mHorzSpeed < 0x4000)
         p->mHorzSpeed = 0x4000;
@@ -3649,7 +3649,7 @@ void daPly_c::func_ov002_020c1eb4(int dmg) {
     Vector3_16 vec;
 
     Sound::PlayBank0(0x13, mCamSpacePos);
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     mAngle.z = 0;
     mAngle.x = mAngle.z;
     mStateStep = 0;
@@ -3657,7 +3657,7 @@ void daPly_c::func_ov002_020c1eb4(int dmg) {
         mStateStep += 2;
     }
     mAngle.y = (short)(dmg * 2 - mAngle.y);
-    mPrevAngleY = (short)(mAngle.y + 0x8000);
+    mPrevAngle.y = (short)(mAngle.y + 0x8000);
     mHorzSpeed = 0xa000;
     mStateStep |= 0x20;
     mHurtDamage = 0;
@@ -3710,7 +3710,7 @@ if (this->mWallNormal.y)
 if (mClimbClsn || mIsTakingDamage)
     return 0;
 ang = cstd::atan2(this->mWallNormal.x, this->mWallNormal.z);
-if (AngleDiff(ang, this->mPrevAngleY) < 0x6000) return 0;
+if (AngleDiff(ang, this->mPrevAngle.y) < 0x6000) return 0;
 if (this->func_ov002_020c200c(ang)) return 1;
 if ((this->mHeldObj ? 1 : 0) || (this->mRidingShell ? 1 : 0)) return 0;
 if (this->func_ov002_020c1c84(ang)) return 1;
@@ -3778,7 +3778,7 @@ int daPly_c::func_ov002_020c231c() {
             }
 
             if (f70f == 0) {
-                idx = (u16)(s16)(this->mPrevAngleY + 0x8000) >> 4;
+                idx = (u16)(s16)(this->mPrevAngle.y + 0x8000) >> 4;
                 zz = FX_SinCosTable_[idx * 2 + 1] * 0x50 + this->mPos.z;
                 xx = FX_SinCosTable_[idx * 2] * 0x50 + this->mPos.x;
                 pos.x = xx;
@@ -4379,8 +4379,8 @@ void daPly_c::JumboStarCutsceneFalling() {
   if (mStateWork == 0){
     mHasWings = 1;
     mPowerupTimer = 1800;
-    this->mPrevAngleY = -0x8000;
-    this->mAngle.y = this->mPrevAngleY;
+    this->mPrevAngle.y = -0x8000;
+    this->mAngle.y = this->mPrevAngle.y;
     this->mPos.z = 0;
     this->mPos.x = this->mPos.z;
     this->mHorzSpeed = 0;
@@ -4566,8 +4566,8 @@ int daPly_c::St_Respawn_Init() {
     mPrevPos.x = mPos.x;
     mPrevPos.y = mPos.y;
     mPrevPos.z = mPos.z;
-    mPrevAngleY = mSpawnAngleY;
-    mAngle.y = mPrevAngleY;
+    mPrevAngle.y = mSpawnAngleY;
+    mAngle.y = mPrevAngle.y;
     mIsBodyClsnEnabled = 1;
     mSkipGroundUpdate = 0;
     if (mPlayerNo == gLocalPlayerId) {
@@ -4911,7 +4911,7 @@ int daPly_c::St_Talk_Main() {
             else
                 mStateStep = 7;
             mStateWork = 0;
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
             char *cam = gCamera;
             ((::dCamera_c *)cam)->func_0200d81c(mPlayerNo);
             ((dCamera_c *)cam)->mFlags &= ~8;
@@ -5179,7 +5179,7 @@ int daPly_c::St_StuckInGround_Main() {
         }
     }
         if (this->FinishedAnim()) {
-            mAngle.y = mPrevAngleY;
+            mAngle.y = mPrevAngle.y;
             this->ChangeState(data_ov002_0211013c);
         }
         break;
@@ -5969,7 +5969,7 @@ int daPly_c::St_Teleport_Main() {
             mPos.z = tz;
             mAreaId = obj->param & 0xf;
             mAngle.y = ((obj->param >> 4) & 0xf) << 12;
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
             mGroundY = 0x80000000;
             mWaterSurfaceY = 0x80000000;
             func_02035860(&mMeshClsn, &mPos);
@@ -6180,7 +6180,7 @@ void daPly_c::func_ov002_020c71e0() {
     mLevelEntryDone = 1;
     if (data_0209f2bc[0] != 0) return;
     if (mStateWaitTimer == 0) {
-        this->mPrevAngleY = this->mAngle.y;
+        this->mPrevAngle.y = this->mAngle.y;
         if (mStateStep == 1) {
             this->ChangeState(data_ov002_0211067c);
         } else {
@@ -6399,7 +6399,7 @@ int daPly_c::St_LevelEnter_Init() {
     mJumpComboStage = 0;
     mHorzSpeed = 0;
     mStateArg = 0;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mStateWork = 0;
     dBgCh_Gnd rg;
 
@@ -6654,7 +6654,7 @@ int daPly_c::St_NoControl_Main() {
     if (mode == 0 || mode == 1 || (mode == 0x11 && mStateStep != 0x18)) {
         if (KuppaScript::IsDanceRotateCutsceneRunning() == 0) {
             mAngle.y = GetAngleToCamera(mPlayerNo);
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
         }
     }
 
@@ -6911,8 +6911,8 @@ int daPly_c::func_ov002_020c8a4c() {
     int spd = this->mHorzSpeed >> 3;
     if (spd < 0x400) spd = 0x400;
     this->SetAnim(0x48, 0, spd, 0);
-    this->mPrevAngleY = Vec3_HorzAngle(&mPos, &mStateTarget);
-    this->mAngle.y = this->mPrevAngleY;
+    this->mPrevAngle.y = Vec3_HorzAngle(&mPos, &mStateTarget);
+    this->mAngle.y = this->mPrevAngle.y;
     if (VEC_Distance(&mPos, &mStateTarget) < 0xa000) {
         if (mStateArg == 0) {
             mStateArg = 1;
@@ -7468,7 +7468,7 @@ void daPly_c::func_ov002_020c9d68() {
   this->SetAnim(0x54, 0x40000000, 0x1000, 0);
 tail:
   this->mAngle.y = GetAngleToCamera(mPlayerNo);
-  this->mPrevAngleY = this->mAngle.y;
+  this->mPrevAngle.y = this->mAngle.y;
   mStateStep = 0;
   mStateArg = 0;
   this->mHorzSpeed = 0;
@@ -7783,7 +7783,7 @@ int daPly_c::St_DebugFly_Main() {
     mClsnFlags = 0;
 
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
-        mPrevAngleY = mDesiredAngleY;
+        mPrevAngle.y = mDesiredAngleY;
         mHorzSpeed = func_ov002_020bf224(0x50000, 0);
     }
 
@@ -7979,7 +7979,7 @@ int daPly_c::St_CameraZoom_Main() {
             this->ChangeState(data_ov002_0211013c);
             dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
             anim.currFrame = 0;
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
             return 1;
         }
         if (mIsAirborne) {
@@ -8120,7 +8120,7 @@ int daPly_c::St_Headstand_Main() {
         func_ov002_020cc05c(mag);
         mAngle.y += mAngleYSpeed;
         if (data_0209f498[gActivePlayerSlot].pressed & 2) {
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
             this->ChangeState(data_ov002_02110724);
             return 1;
         }
@@ -8367,7 +8367,7 @@ int daPly_c::St_Climb_Main() {
             return 1;
         }
         if (data_0209f498[gActivePlayerSlot].pressed & 2) {
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
             this->ChangeState(data_ov002_0211070c);
             return 1;
         }
@@ -8624,7 +8624,7 @@ int daPly_c::St_Shell_Main() {
 
     if (mMeshClsn.IsOnWall()) {
         int ang = cstd::atan2(mWallNormal.x, mWallNormal.z);
-        if (AngleDiff(ang, mPrevAngleY) > 0x6000) {
+        if (AngleDiff(ang, mPrevAngle.y) > 0x6000) {
             if (mMeshClsn.GetWallResult()->surface.clps.GetFloorClass() != 1) {
                 flag = 1;
             }
@@ -8646,9 +8646,9 @@ int daPly_c::St_Shell_Main() {
             target = mAngle.y;
             accel = 0x18000;
         }
-        s16 angleSave = mPrevAngleY;
-        ApproachAngle(&mPrevAngleY, target, 8, 0x800, 0x100);
-        mAngle.y = mPrevAngleY;
+        s16 angleSave = mPrevAngle.y;
+        ApproachAngle(&mPrevAngle.y, target, 8, 0x800, 0x100);
+        mAngle.y = mPrevAngle.y;
         func_ov002_020cc660(angleSave);
         {
             int spd = mHorzSpeed;
@@ -8716,7 +8716,7 @@ void daPly_c::func_ov002_020cc660(int angle) {
     s16 v, w;
     int delta;
     int third;
-    delta = angle - mPrevAngleY;
+    delta = angle - mPrevAngle.y;
     third = mHorzSpeed / 12;
     v = (s16)FX_MUL(delta, third);
     if (v < -0x1800)
@@ -8752,8 +8752,8 @@ int daPly_c::St_HurtWater_Main() {
     ApproachLinear(mSpeed.y, t, 0x800);
     if (this->FinishedAnim()) {
         if ((mStateStep & 1) == 0) {
-            mPrevAngleY = mPrevAngleY + 0x8000;
-            mAngle.y = mPrevAngleY;
+            mPrevAngle.y = mPrevAngle.y + 0x8000;
+            mAngle.y = mPrevAngle.y;
         }
         if (this->GetHealth()) {
             if (mIsMetal == 0)
@@ -8830,9 +8830,9 @@ int daPly_c::St_MetalWaterWater_Main() {
         v = 0;
         if (data_0209f4a0[gActivePlayerSlot].a != 0) {
             v = func_ov002_020bf224(0x14000, 0x1000);
-            ApproachAngle(&mPrevAngleY, mDesiredAngleY, 0x20, 0x1000, 0x10);
+            ApproachAngle(&mPrevAngle.y, mDesiredAngleY, 0x20, 0x1000, 0x10);
         }
-        mAngle.y = mPrevAngleY;
+        mAngle.y = mPrevAngle.y;
         ApproachLinear(mHorzSpeed, v, 0x400);
         py = mPos.y;
         lim = py + 0x46000;
@@ -8919,11 +8919,11 @@ int daPly_c::St_MetalWaterGround_Main() {
     func_ov002_020cd190(this);
     int approach = 0;
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
-        ApproachAngle(&mPrevAngleY, mDesiredAngleY, 8, 0x1000, 0x80);
+        ApproachAngle(&mPrevAngle.y, mDesiredAngleY, 8, 0x1000, 0x80);
         approach = func_ov002_020bf224(0x14000, 0x1000);
     }
     ApproachLinear(mHorzSpeed, approach, 0x1000);
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     if(mIsMega != 0){
         if(mHorzSpeed == 0){
             this->SetAnim(0xa0, 0, 0x1000, 0);
@@ -9002,8 +9002,8 @@ int daPly_c::St_Swim_Cleanup() {
 }
 
 void daPly_c::func_ov002_020cd218(int v, int *out1, int *out2) {
-    *out1 = FX_MUL(v, FX_SinCosTable_[((unsigned short)mPrevAngleX >> 4) * 2 + 1]);
-    *out2 = -FX_MUL(v, FX_SinCosTable_[((unsigned short)mPrevAngleX >> 4) * 2]);
+    *out1 = FX_MUL(v, FX_SinCosTable_[((unsigned short)mPrevAngle.x >> 4) * 2 + 1]);
+    *out2 = -FX_MUL(v, FX_SinCosTable_[((unsigned short)mPrevAngle.x >> 4) * 2]);
 }
 
 extern "C" {
@@ -9056,23 +9056,23 @@ void daPly_c::func_ov002_020cd448() {
         fl = mClsnFlags;
         if (fl & 1) {
             short before;
-            mAngle.x = mPrevAngleX;
+            mAngle.x = mPrevAngle.x;
             before = mAngle.x;
             func_ov002_020c18b0(0);
             if (before >= mAngle.x)
-                ApproachLinear2(mPrevAngleX, mAngle.x, 0x200);
+                ApproachLinear2(mPrevAngle.x, mAngle.x, 0x200);
         } else if (fl & 2) {
             if (data_0209f498[gActivePlayerSlot].ny == 0) {
-                if (mPrevAngleX > 0) {
-                    short *q = &mPrevAngleX;
+                if (mPrevAngle.x > 0) {
+                    short *q = &mPrevAngle.x;
                     *q += 0x200;
-                    if (mPrevAngleX > 0x3f00)
-                        mPrevAngleX = 0x3f00;
+                    if (mPrevAngle.x > 0x3f00)
+                        mPrevAngle.x = 0x3f00;
                 } else {
-                    short *q = &mPrevAngleX;
+                    short *q = &mPrevAngle.x;
                     *q -= 0x200;
-                    if (mPrevAngleX < -0x3f00)
-                        mPrevAngleX = -0x3f00;
+                    if (mPrevAngle.x < -0x3f00)
+                        mPrevAngle.x = -0x3f00;
                 }
             }
         }
@@ -9088,20 +9088,20 @@ void daPly_c::func_ov002_020cd550() {
     lim = (short)FX_MUL(data_0209f4a4[gActivePlayerSlot].f0, -0x3f00);
     lim &= 0xfff0;
 
-    step = mPrevAngleX > 0 ? 0x100 : 0x200;
-    if (mPrevAngleX < lim) {
-        mPrevAngleX += step;
-        if (mPrevAngleX > lim)
-            mPrevAngleX = lim;
-    } else if (mPrevAngleX > lim) {
-        mPrevAngleX -= step;
-        if (mPrevAngleX < lim)
-            mPrevAngleX = lim;
+    step = mPrevAngle.x > 0 ? 0x100 : 0x200;
+    if (mPrevAngle.x < lim) {
+        mPrevAngle.x += step;
+        if (mPrevAngle.x > lim)
+            mPrevAngle.x = lim;
+    } else if (mPrevAngle.x > lim) {
+        mPrevAngle.x -= step;
+        if (mPrevAngle.x < lim)
+            mPrevAngle.x = lim;
     }
 
     func_ov002_020cd448();
 
-    v = mPrevAngleX;
+    v = mPrevAngle.x;
     if (v < 0)
         mAngle.x = v * 6 / 10;
     else
@@ -9162,7 +9162,7 @@ void daPly_c::func_ov002_020cd71c() {
         *q = *q + mAngleYSpeed;
     }
     mAngle.z = -(mAngleYSpeed << 3);
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
 }
 
 /* Swimming, per frame. The metal cap sends the player to the metal
@@ -9251,8 +9251,8 @@ int daPly_c::St_Swim_Main() {
 
     switch (mStateStep) {
     case 0:
-        mPrevAngleX = -0x4000;
-        mPrevAngleZ = 0;
+        mPrevAngle.x = -0x4000;
+        mPrevAngle.z = 0;
         mAngle.x = 0;
         mAngle.z = 0;
         mAngleYSpeed = 0;
@@ -9262,7 +9262,7 @@ int daPly_c::St_Swim_Main() {
         }
         if (mPrevVertSpeed == 0) {
             mStateStep = 1;
-            mPrevAngleX = 0;
+            mPrevAngle.x = 0;
             mStateTimer = 30;
         }
         break;
@@ -9899,8 +9899,8 @@ void daPly_c::func_ov002_020cf2f8() {
     if (data_0209f498[gActivePlayerSlot].mag == 0)
         return;
     ApproachLinear(mHorzSpeed, func_ov002_020bf224(0x8000, 0x2000), 0x1000);
-    ApproachAngle(&mPrevAngleY, mDesiredAngleY, 0x10, 0x1000, 0x200);
-    mAngle.y = mPrevAngleY;
+    ApproachAngle(&mPrevAngle.y, mDesiredAngleY, 0x10, 0x1000, 0x200);
+    mAngle.y = mPrevAngle.y;
 }
 
 void daPly_c::func_ov002_020cf384() {
@@ -10016,7 +10016,7 @@ int daPly_c::St_OnWall_Main() {
     if (func_ov002_020c5244() != 0)
         return 1;
     if (CheckGroundCancels(0) != 0) {
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         return 1;
     }
     if ((mClsnFlags & 2) == 0) {
@@ -10042,7 +10042,7 @@ int daPly_c::St_OnWall_Main() {
             return 1;
         }
         ApproachLinear(mAngle.y, (s16)a, 0x800);
-        mPrevAngleY = a;
+        mPrevAngle.y = a;
         mHorzSpeed = func_ov002_020bf224(0xa000, 0x2000);
         ((BgChEvt *)(char *)&mMeshClsn)->func_ov002_020eee3c((char *)this);
     } else {
@@ -10062,10 +10062,10 @@ int daPly_c::St_OnWall_Main() {
             ApproachLinear(mAngle.y, (s16)a2, 0x800);
             u32 anim;
             if ((s16)a2 == (s16)(mDesiredAngleY + d)) {
-                mPrevAngleY = ang + 0x4000;
+                mPrevAngle.y = ang + 0x4000;
                 anim = 0x5d;
             } else {
-                mPrevAngleY = ang - 0x4000;
+                mPrevAngle.y = ang - 0x4000;
                 anim = 0x5c;
             }
             fx32 spd = FX_MUL(mHorzSpeed, 0x600);
@@ -10631,7 +10631,7 @@ int daPly_c::St_LedgeHang_Init() {
         this->SetAnim(0x21, 0, 0x1000, 0);
     }
     mStateWaitTimer = 2;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mSpeed.y = 0;
     mHorzSpeed = 0;
     mIsAirborne = 0;
@@ -10727,8 +10727,8 @@ int daPly_c::St_Crawl_Main() {
             int r2v = ScaleByCharFactor(0x1000);
             a = func_ov002_020bf224(r4v, r2v);
             b = 0x1000;
-            ApproachAngle(&mPrevAngleY, mDesiredAngleY, 0x10, 0x2000, 0x100);
-            mAngle.y = mPrevAngleY;
+            ApproachAngle(&mPrevAngle.y, mDesiredAngleY, 0x10, 0x2000, 0x100);
+            mAngle.y = mPrevAngle.y;
             func_ov002_020c18b0(0);
         } else {
             mHorzSpeed = 0;
@@ -10893,7 +10893,7 @@ int daPly_c::St_Crouch_Init() {
     }
     if (mStateStep == 0) {
         this->SetAnim(0x2d, 0x40000000, 0x1000, 0);
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
     } else if (mStateStep == 1) {
         this->SetAnim(0x2c, 0, 0x1000, 0);
     }
@@ -10949,7 +10949,7 @@ int daPly_c::St_HoldHeavy_Main() {
             {
                 s16 t = data_0209f498[gActivePlayerSlot].mag;
                 if (t != 0) {
-                    ApproachAngle(&mPrevAngleY, mDesiredAngleY, 8, 0x1000, 0x400);
+                    ApproachAngle(&mPrevAngle.y, mDesiredAngleY, 8, 0x1000, 0x400);
                     targetSpeed = data_ov002_020ff1d0[param1];
                 }
             }
@@ -10967,11 +10967,11 @@ int daPly_c::St_HoldHeavy_Main() {
         }
 
         if (mHorzSpeed == 0) {
-            mAngle.y = mPrevAngleY;
+            mAngle.y = mPrevAngle.y;
         } else if (param1 == 1) {
-            ApproachAngle(&mAngle.y, mPrevAngleY, 0x10, 0x1000, 0x100);
+            ApproachAngle(&mAngle.y, mPrevAngle.y, 0x10, 0x1000, 0x100);
         } else {
-            ApproachAngle(&mAngle.y, mPrevAngleY, 8, 0x2000, 0x400);
+            ApproachAngle(&mAngle.y, mPrevAngle.y, 8, 0x2000, 0x400);
         }
 
         if (mHorzSpeed == 0) {
@@ -11032,7 +11032,7 @@ int daPly_c::St_HoldLight_Main() {
                 if (func_ov002_020e0ccc(mHeldObj)) {
                     return 1;
                 }
-                mPrevAngleY = mAngle.y;
+                mPrevAngle.y = mAngle.y;
                 mHorzSpeed = 0;
                 mStateStep = 1;
             } else {
@@ -11063,10 +11063,10 @@ int daPly_c::St_HoldLight_Main() {
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
             s16 t = mDesiredAngleY;
             if (mStateArg != 0) {
-                mPrevAngleY = t;
+                mPrevAngle.y = t;
                 mStateArg = 0;
             }
-            ApproachAngle(&mPrevAngleY, t, 4, 0x2000, 0x800);
+            ApproachAngle(&mPrevAngle.y, t, 4, 0x2000, 0x800);
             targetSpeed = data_ov002_020ff1c0[param1];
         }
 
@@ -11081,9 +11081,9 @@ int daPly_c::St_HoldLight_Main() {
         mStateArg = 0;
         if (mHorzSpeed == 0) {
             mStateArg = 1;
-            mAngle.y = mPrevAngleY;
+            mAngle.y = mPrevAngle.y;
         } else {
-            ApproachAngle(&mAngle.y, mPrevAngleY, 8, 0x2000, 0x800);
+            ApproachAngle(&mAngle.y, mPrevAngle.y, 8, 0x2000, 0x800);
         }
 
         UpdateGroundSpeed(targetSpeed, 0x1000);
@@ -11380,8 +11380,8 @@ int daPly_c::St_Wait_Main() {
                 if (lvl0 != 0) {
                     int thr0 = (*(data_0209f4ae + idx0) != 2) ? 0x471 : 0x555;
                     if (lvl0 < thr0) {
-                        mPrevAngleY = mDesiredAngleY;
-                        mAngle.y = mPrevAngleY;
+                        mPrevAngle.y = mDesiredAngleY;
+                        mAngle.y = mPrevAngle.y;
                     }
                 }
                 {
@@ -11405,8 +11405,8 @@ int daPly_c::St_Wait_Main() {
                 if (lvl10 != 0) {
                     int thr10 = (*(data_0209f4ae + idx10) != 2) ? 0x471 : 0x555;
                     if (lvl10 < thr10) {
-                        mPrevAngleY = mDesiredAngleY;
-                        mAngle.y = mPrevAngleY;
+                        mPrevAngle.y = mDesiredAngleY;
+                        mAngle.y = mPrevAngle.y;
                     }
                 }
                 {
@@ -11820,7 +11820,7 @@ void daPly_c::func_ov002_020d3498() {
 
     mHorzSpeed = -mHorzSpeed;
     mAngle.y = mAngle.y + 0x8000;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
 }
 
 int daPly_c::St_TurnAround_Main() {
@@ -11838,7 +11838,7 @@ int daPly_c::St_TurnAround_Main() {
         angle = (s16)(raw + 0x8000);
         sel = (mHorzSpeed < 0) ? 0x1800 : 0x8000;
         r5v = GetSlopeDecel(sel);
-        ApproachAngle(&mPrevAngleY, angle, 0x10, 0x1000, 0x200);
+        ApproachAngle(&mPrevAngle.y, angle, 0x10, 0x1000, 0x200);
         tmp = ScaleByCharFactor(0x28000);
         ApproachLinear(mHorzSpeed, -tmp, r5v);
     } else {
@@ -11846,7 +11846,7 @@ int daPly_c::St_TurnAround_Main() {
         return 1;
     }
 
-    ApproachAngle(&mAngle.y, mPrevAngleY, 8, 0x2000, 0x800);
+    ApproachAngle(&mAngle.y, mPrevAngle.y, 8, 0x2000, 0x800);
 
     if ((data_0209f498[gActivePlayerSlot].pressed & 2) != 0) {
         this->ChangeState(data_ov002_021101e4);
@@ -11936,16 +11936,16 @@ int daPly_c::St_Walk_Main() {
         return 1;
 
     UpdateRunDust();
-    short startYaw = mPrevAngleY;
+    short startYaw = mPrevAngle.y;
     if (UpdateWalkingSpeed())
         return 1;
 
     TiltBodyWalking(startYaw);
 
     if (mHorzSpeed == 0) {
-        mAngle.y = mPrevAngleY;
+        mAngle.y = mPrevAngle.y;
     } else {
-        ApproachAngle(&mAngle.y, mPrevAngleY, 4, 0x2000, 0x800);
+        ApproachAngle(&mAngle.y, mPrevAngle.y, 4, 0x2000, 0x800);
     }
 
     if (mIsBraking != 0) {
@@ -12117,7 +12117,7 @@ int daPly_c::UpdateWalkingSpeed() {
             acc = 0x1000;
         }
         targetYaw = mDesiredAngleY;
-        yawDiff = AngleDiff(mPrevAngleY, targetYaw);
+        yawDiff = AngleDiff(mPrevAngle.y, targetYaw);
         if (yawDiff < 0) {
             yawDiff = -yawDiff;
         }
@@ -12129,9 +12129,9 @@ int daPly_c::UpdateWalkingSpeed() {
                 return 1;
             }
             if (cur == 0) {
-                mPrevAngleY = targetYaw;
+                mPrevAngle.y = targetYaw;
             } else {
-                ApproachAngle(&mPrevAngleY, targetYaw, 4, 0x2000, 0x800);
+                ApproachAngle(&mPrevAngle.y, targetYaw, 4, 0x2000, 0x800);
             }
         } else {
             int turnDivisor;
@@ -12142,7 +12142,7 @@ int daPly_c::UpdateWalkingSpeed() {
             turnDivisor = 4;
             if ((*((data_0209f4ac + slot))) == 0) {
                 if ((*((s16 *)(((char *)data_0209f4a0) + slot))) >= 0xa00) {
-                    if (AngleDiff(mPrevAngleY, targetYaw) >= 0x1000) {
+                    if (AngleDiff(mPrevAngle.y, targetYaw) >= 0x1000) {
                         if (mTurnRamp < 24) {
                             mTurnRamp++;
                             turnDivisor = (s16)(0x10 - (mTurnRamp >> 1));
@@ -12158,7 +12158,7 @@ int daPly_c::UpdateWalkingSpeed() {
                     mTurnRamp -= 2;
                 }
             }
-            ApproachAngle(&mPrevAngleY, targetYaw, turnDivisor, 0x2000, maxTurnStep);
+            ApproachAngle(&mPrevAngle.y, targetYaw, turnDivisor, 0x2000, maxTurnStep);
         }
         if (mIsBraking != 0) {
             ClearBraking();
@@ -12212,7 +12212,7 @@ void daPly_c::TiltBodyWalking(int startYaw) {
         ApproachAngle(&mSpineRot[2], t, 4, 0x2000, 0x100);
     }
     {
-        short t = (short)((startYaw - mPrevAngleY) * 6);
+        short t = (short)((startYaw - mPrevAngle.y) * 6);
         if (t < -0x1555) t = -0x1555;
         else if (t > 0x1555) t = 0x1555;
         ApproachAngle(&mSpineRot[1], t, 8, 0x100, 0x10);
@@ -12283,8 +12283,8 @@ merge:
     if (WasState(&daPly_c::ST_WAIT) != 0) {
         mWalkTimer = 16;
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
-            mPrevAngleY = mDesiredAngleY;
-            mAngle.y = mPrevAngleY;
+            mPrevAngle.y = mDesiredAngleY;
+            mAngle.y = mPrevAngle.y;
         }
         if (mDashBoostTimer != 0) {
             unsigned int rnd = (unsigned int)RandomIntInternal(data_ov002_0210e160);
@@ -12555,8 +12555,8 @@ int daPly_c::St_Bonk_Main() {
     } else {
         mStateWork = 0;
         if (this->FinishedAnim() != 0) {
-            mPrevAngleY = mPrevAngleY + 0x8000;
-            mAngle.y = mPrevAngleY;
+            mPrevAngle.y = mPrevAngle.y + 0x8000;
+            mAngle.y = mPrevAngle.y;
             this->ChangeState(data_ov002_0211013c);
             return 1;
         }
@@ -12588,7 +12588,7 @@ void daPly_c::BlowAway(short v) {
         return;
     if (mIsBalloon)
         return;
-    mPrevAngleY = v;
+    mPrevAngle.y = v;
     mAngle.y = (short)(v + 0x8000);
     this->ChangeState(data_ov002_0211037c);
 }
@@ -12614,7 +12614,7 @@ int daPly_c::St_BurnLava_Main() {
             Vector3_16f dir;
             Vector3 pos(mPos.x, mPos.y, mPos.z - 0x1e000);
             /* The u16 cast is the semantics, not a missing type fix. mAngle.y
-               really is signed -- AngleDiff takes it signed and mPrevAngleY is
+               really is signed -- AngleDiff takes it signed and mPrevAngle.y is
                assigned from it directly -- but indexing this table wants the
                angle to WRAP, so the shift must be logical. Spelling it
                `mAngle.y >> 4` costs 2 words and changes the meaning for
@@ -12650,7 +12650,7 @@ int daPly_c::St_BurnLava_Main() {
         }
     } else {
         if (FinishedAnim() != 0) {
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
             if (GetHealth() == 0)
                 Die(2);
             else
@@ -12784,7 +12784,7 @@ int daPly_c::St_BurnFire_Main() {
             if (data_0209f498[gActivePlayerSlot].mag != 0) {
                 ApproachAngle(&mAngle.y, mDesiredAngleY, 8, 0x4000, 0x10);
             }
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
         }
         break;
     }
@@ -12920,9 +12920,9 @@ extern "C" int func_ov002_020d5ab4(daPly_c *p) {
     p->mAngle.x = rp[0];
     p->mAngle.y = rp[1];
     p->mAngle.z = rp[2];
-    p->mPrevAngleX = p->mAngle.x;
-    p->mPrevAngleY = p->mAngle.y;
-    p->mPrevAngleZ = p->mAngle.z;
+    p->mPrevAngle.x = p->mAngle.x;
+    p->mPrevAngle.y = p->mAngle.y;
+    p->mPrevAngle.z = p->mAngle.z;
 
     pp = &p->mEatingPlayer->mPos.x;
     pos.x = pp[0];
@@ -12980,10 +12980,10 @@ extern "C" int func_ov002_020d5cec(void *self) {
 
     d0 = player->mEatingPlayer;
     m = &d0->mAngle.x;
-    player->mPrevAngleX = m[0];
-    player->mPrevAngleY = m[1];
-    player->mPrevAngleZ = m[2];
-    player->mAngle.y = player->mPrevAngleY;
+    player->mPrevAngle.x = m[0];
+    player->mPrevAngle.y = m[1];
+    player->mPrevAngle.z = m[2];
+    player->mAngle.y = player->mPrevAngle.y;
     player->mHorzSpeed = 0x18000;
     player->mSpeed.y = 0x18000;
 
@@ -13968,7 +13968,7 @@ int daPly_c::St_YoshiPower_Main() {
         if (p != 0) {
             ApproachAngle(&mAngle.y, p->mAngle.y, 4, 0x2000, 0x10);
         }
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         int id10 = this->GetBodyModelID(this->param1 & 0xff, 0);
         if (mModels.mBodyModels[id10]->WillHitFrame(6) != 0) {
             this->func_ov002_020daa74();
@@ -14351,12 +14351,12 @@ int daPly_c::func_ov002_020d8944(daPly_c *enemy, daPly_c *v1) {
             return 0;
         (enemy)->mHorzSpeed = 0xa000;
         (v1)->mHorzSpeed = 0xa000;
-        (enemy)->mPrevAngleX = 0;
-        (enemy)->mPrevAngleY = ang + 0x8000;
-        (enemy)->mPrevAngleZ = 0;
-        (v1)->mPrevAngleX = 0;
-        (v1)->mPrevAngleY = ang;
-        (v1)->mPrevAngleZ = 0;
+        (enemy)->mPrevAngle.x = 0;
+        (enemy)->mPrevAngle.y = ang + 0x8000;
+        (enemy)->mPrevAngle.z = 0;
+        (v1)->mPrevAngle.x = 0;
+        (v1)->mPrevAngle.y = ang;
+        (v1)->mPrevAngle.z = 0;
         Vec3_Add(&sum, &(enemy)->mPos, &(v1)->mPos);
         Vec3_Asr(&asr, &sum, 1);
         p.x = asr.x;
@@ -14405,7 +14405,7 @@ void daPly_c::func_ov002_020d8a50(int which) {
 
     if (mAttackClsn.otherOwner != 0) {
         mHorzSpeed = 0xa000;
-        mPrevAngleY = mAngle.y + 0x8000;
+        mPrevAngle.y = mAngle.y + 0x8000;
         func_ov002_020d8854();
     }
 
@@ -14461,7 +14461,7 @@ void daPly_c::func_ov002_020d8a50(int which) {
             ray.surface.CopyNormalTo(normal);
             if (normal.y == 0) {
                 mHorzSpeed = 0xa000;
-                mPrevAngleY = mAngle.y + 0x8000;
+                mPrevAngle.y = mAngle.y + 0x8000;
                 ::Vector3 clsnPos = ray.GetClsnPos();
                 func_ov002_020d8d10(&clsnPos);
             }
@@ -14557,9 +14557,9 @@ int daPly_c::Hurt(const Vector3 &a, u32 b, fx32 dmg, u8 arg4, u8 arg5, u8 arg6) 
     if (AngleDiff(this->mAngle.y, ang) > 0x4000) {
         this->mStateStep += 1;
     }
-    this->mPrevAngleY = ang + 0x8000;
+    this->mPrevAngle.y = ang + 0x8000;
     if (this->mStateStep & 1) {
-        this->mAngle.y = this->mPrevAngleY;
+        this->mAngle.y = this->mPrevAngle.y;
     } else {
         this->mAngle.y = ang;
     }
@@ -14706,16 +14706,16 @@ int daPly_c::func_ov002_020d93ac() {
     b = (gGameMode == 1);
     if (!b) {
         ang = GetAngleToCamera(this->mPlayerNo);
-        zz = this->mPrevAngleZ;
-        xx = this->mPrevAngleX;
+        zz = this->mPrevAngle.z;
+        xx = this->mPrevAngle.x;
         ang += 0x8000;
-        spawned->mPrevAngleX = xx;
-        spawned->mPrevAngleY = ang;
-        spawned->mPrevAngleZ = zz;
+        spawned->mPrevAngle.x = xx;
+        spawned->mPrevAngle.y = ang;
+        spawned->mPrevAngle.z = zz;
     } else {
-        spawned->mPrevAngleX = this->mPrevAngleX;
-        spawned->mPrevAngleY = this->mPrevAngleY;
-        spawned->mPrevAngleZ = this->mPrevAngleZ;
+        spawned->mPrevAngle.x = this->mPrevAngle.x;
+        spawned->mPrevAngle.y = this->mPrevAngle.y;
+        spawned->mPrevAngle.z = this->mPrevAngle.z;
     }
     spawned->mHorzSpeed = 0xb000;
     return 1;
@@ -14768,16 +14768,16 @@ int daPly_c::func_ov002_020d94cc() {
     b = (gGameMode == 1);
     if (!b) {
         ang = GetAngleToCamera(this->mPlayerNo);
-        zz = this->mPrevAngleZ;
-        xx = this->mPrevAngleX;
+        zz = this->mPrevAngle.z;
+        xx = this->mPrevAngle.x;
         ang += 0x8000;
-        spawned->mPrevAngleX = xx;
-        spawned->mPrevAngleY = ang;
-        spawned->mPrevAngleZ = zz;
+        spawned->mPrevAngle.x = xx;
+        spawned->mPrevAngle.y = ang;
+        spawned->mPrevAngle.z = zz;
     } else {
-        spawned->mPrevAngleX = this->mPrevAngleX;
-        spawned->mPrevAngleY = this->mPrevAngleY;
-        spawned->mPrevAngleZ = this->mPrevAngleZ;
+        spawned->mPrevAngle.x = this->mPrevAngle.x;
+        spawned->mPrevAngle.y = this->mPrevAngle.y;
+        spawned->mPrevAngle.z = this->mPrevAngle.z;
     }
     spawned->mHorzSpeed = this->mHorzSpeed;
     return 1;
@@ -14850,8 +14850,8 @@ int daPly_c::St_Hurt_Main() {
         mStateWork &= 0xf0;
         if (FinishedAnim()) {
             if ((mStateStep & 1) == 0) {
-                mPrevAngleY = mPrevAngleY + 0x8000;
-                mAngle.y = mPrevAngleY;
+                mPrevAngle.y = mPrevAngle.y + 0x8000;
+                mAngle.y = mPrevAngle.y;
             }
             mIsTakingDamage = 0;
             if (mStateArg & 2) {
@@ -15019,9 +15019,9 @@ void daPly_c::func_ov002_020d9c70() {
         }
     }
 
-    p->mPrevAngleX = 0;
-    p->mPrevAngleY = Bresult;
-    p->mPrevAngleZ = 0;
+    p->mPrevAngle.x = 0;
+    p->mPrevAngle.y = Bresult;
+    p->mPrevAngle.z = 0;
     {
         dActor_c *q = mHeldObj;
         Vector3_16 *prev = &q->mPrevAngle;
@@ -15109,7 +15109,7 @@ int daPly_c::St_SwingPlayer_Cleanup() {
     if (mHeldObj) {
         mHeldObj->mFlags &= ~0x800;
     }
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     return 1;
 }
 
@@ -15659,7 +15659,7 @@ int daPly_c::St_Thrown_Main() {
                 return 1;
             }
         }
-        mAngle.y = mPrevAngleY;
+        mAngle.y = mPrevAngle.y;
         mHorzSpeed = FX_MUL(mHorzSpeed, 0xfae);
         if (mIsAirborne != 0) {
             int a = cstd::atan2(mHorzSpeed, mSpeed.y);
@@ -15678,7 +15678,7 @@ int daPly_c::St_Thrown_Main() {
         }
         if (this->FinishedAnim() != 0) {
             this->ChangeState(data_ov002_0211013c);
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
         }
         AdvanceAnims();
         break;
@@ -15698,7 +15698,7 @@ int daPly_c::St_Thrown_Init() {
     this->SetAnim(0x15, 0x40000000, 0x1000, 0x12);
     mStateStep = 0;
     mStateWork = 0;
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     mStateArg = 0;
     return 1;
 }
@@ -15791,7 +15791,7 @@ int daPly_c::St_Grabbed_Init() {
 extern "C" void func_ov002_020db54c(void *self, int a, int b, short c) {
     daPly_c *p = (daPly_c *)self;
     void *node;
-    p->mPrevAngleY = c;
+    p->mPrevAngle.y = c;
     p->mHorzSpeed = a;
     p->mSpeed.y = b;
     node = p->mGrabbedByActor;
@@ -15837,7 +15837,7 @@ int func_ov002_020db674(daPly_c *player, int a1, int a2, int a3) {
     if (player->func_ov002_020d82f0() == 0)
         return 0;
     Sound::PlayCharVoice(player->mCharacter, 0x1d, player->mCamSpacePos);
-    player->mPrevAngleY = a3;
+    player->mPrevAngle.y = a3;
     player->mAngle.y = a3 + 0x8000;
     player->mHorzSpeed = a1;
     player->mSpeed.y = a2;
@@ -16247,7 +16247,7 @@ int daPly_c::St_SlideKick_Main() {
     goto L1d8;
 
 L88:
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mStateStep = 1;
     this->ChangeState(data_ov002_021104e4);
     goto L1d8;
@@ -16351,7 +16351,7 @@ void daPly_c::func_ov002_020dc560() {
     {
         int tblval = data_0209f498[gActivePlayerSlot].mag;
         if (tblval != 0) {
-            short diff = (short)(mDesiredAngleY - mPrevAngleY);
+            short diff = (short)(mDesiredAngleY - mPrevAngle.y);
             int idx2 = ((unsigned short)diff >> 4) * 2;
             int r1 = func_01ffa344(0x48400000, (unsigned short)diff >> 4);
             int sinv = FX_SinCosTable_[idx2 + 1];
@@ -16360,7 +16360,7 @@ void daPly_c::func_ov002_020dc560() {
             ApproachLinear(mHorzSpeed, r1, combined);
 
             {
-                short *p94 = (short *)ADDR(&mPrevAngleY);
+                short *p94 = (short *)ADDR(&mPrevAngle.y);
                 int cosv = FX_SinCosTable_[idx2];
                 int tblval2 = data_0209f498[gActivePlayerSlot].mag;
                 int scaled2 = FX_MUL(cosv, 0x200);
@@ -16371,11 +16371,11 @@ void daPly_c::func_ov002_020dc560() {
     }
 
     {
-        short cur = mPrevAngleY;
+        short cur = mPrevAngle.y;
         int ad = AngleDiff(cur, mAngle.y);
         short target = cur;
         if (ad >= 0x4000)
-            target = (short)(mPrevAngleY + 0x8000);
+            target = (short)(mPrevAngle.y + 0x8000);
         ApproachAngle(&mAngle.y, target, 8, 0x4000, 0x10);
     }
 
@@ -16467,7 +16467,7 @@ int daPly_c::St_ButtSlide_Main() {
         mAngle.x = mAngle.z;
         if (mStateWork == 0) {
             this->SetAnim(0x42, 0x40000000, 0x1000, 0);
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
             mStateWork = 1;
         } else if (this->FinishedAnim() != 0) {
             this->ChangeState(data_ov002_0211013c);
@@ -16507,7 +16507,7 @@ void daPly_c::TiltBodyButtSlide() {
         spineRotZ = (s16)FX_MUL(-stickY, 0x1555);
     }
 
-    if (AngleDiff(mAngle.y, mPrevAngleY) >= 0x4000) {
+    if (AngleDiff(mAngle.y, mPrevAngle.y) >= 0x4000) {
         spineRotY = (s16)(-spineRotY);
         spineRotZ = (s16)(-spineRotZ);
     }
@@ -16646,7 +16646,7 @@ int daPly_c::St_StomachSlide_Main() {
             } else {
                 this->SetAnim(0x3e, 0x40000000, 0x1000, 0);
             }
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
             {
                 u8 *p = &mStateStep;
                 *p = (u8)(*p + 1);
@@ -16734,14 +16734,14 @@ int daPly_c::DeflectSlideOffWall() {
         return 0;
 
     atan = cstd::atan2(mWallNormal.x, mWallNormal.z);
-    if (AngleDiff(atan, mPrevAngleY) < 0x6000)
+    if (AngleDiff(atan, mPrevAngle.y) < 0x6000)
         return 0;
 
     if (FloorIsSlippery() != 0) {
         mHorzSpeed = FX_MUL(mHorzSpeed, 0xe66);
         if (mHorzSpeed < 0x4000)
             mHorzSpeed = 0x4000;
-        mPrevAngleY = atan - (s16)(mPrevAngleY - atan) + 0x8000;
+        mPrevAngle.y = atan - (s16)(mPrevAngle.y - atan) + 0x8000;
     }
     return 0;
 }
@@ -16792,9 +16792,9 @@ int daPly_c::St_PunchKick_Main() {
             if (mPunchKickStep != 2)
                 mHorzSpeed = 0;
 
-            if (mPrevAngleY != mAngle.y) {
+            if (mPrevAngle.y != mAngle.y) {
                 mHorzSpeed = 0;
-                mPrevAngleY = mAngle.y;
+                mPrevAngle.y = mAngle.y;
             }
 
             {
@@ -16802,7 +16802,7 @@ int daPly_c::St_PunchKick_Main() {
                 s16 val = data_0209f498[idx2].mag;
                 if (val == 0 && mPunchKickStep == 2) {
                     this->SetAnim(0x52, 0x40000000, 0x1000, 0);
-                    mPrevAngleY = mAngle.y;
+                    mPrevAngle.y = mAngle.y;
                     mHorzSpeed = 0;
                 }
             }
@@ -17076,7 +17076,7 @@ int daPly_c::St_GroundPound_Init() {
   mJumpComboStage = 0;
   mSpeed.y = 0;
   mHorzSpeed = 0;
-  mPrevAngleY = mAngle.y;
+  mPrevAngle.y = mAngle.y;
   anim=0x3b;
   if (mIsMega)
       anim = 0xa3;
@@ -17248,7 +17248,7 @@ void daPly_c::func_ov002_020de428() {
 /* Balloon (wing-cap style) flight, per frame. Bails out to one of two states
  * when the balloon timer runs out or the global flag says so; otherwise the
  * A-button bit adds lift in one of two bands, a collision bit bounces the
- * player off a wall by reflecting mPrevAngleY, and the pitch/roll pair is
+ * player off a wall by reflecting mPrevAngle.y, and the pitch/roll pair is
  * driven from the turn rate.
  */
 /* local extern: the call passes an untyped this, so it cannot use the header method. */
@@ -17297,10 +17297,10 @@ s32 daPly_c::St_Balloon_Main() {
 
     if (mClsnFlags & 2) {
         s16 ang = cstd::atan2(mWallNormal.x, mWallNormal.z);
-        s16 diff = AngleDiff(ang, mPrevAngleY);
+        s16 diff = AngleDiff(ang, mPrevAngle.y);
         if ((s32)diff > 0x4000) {
             this->func_ov002_020de428();
-            mPrevAngleY = (s16)((ang * 2 + 0x8000) - mPrevAngleY);
+            mPrevAngle.y = (s16)((ang * 2 + 0x8000) - mPrevAngle.y);
             mHorzSpeed = FX_MUL(mHorzSpeed, 0x1400);
             if (mHorzSpeed > 0x14000)
                 mHorzSpeed = 0x14000;
@@ -17337,10 +17337,10 @@ s32 daPly_c::St_Balloon_Main() {
 
     s32 r4 = 0;
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
-        ApproachAngle(&mPrevAngleY, mDesiredAngleY, 0x20, 0x2000, 0x10);
+        ApproachAngle(&mPrevAngle.y, mDesiredAngleY, 0x20, 0x2000, 0x10);
         r4 = 0x10000;
     }
-    ApproachLinear2(mAngle.y, mPrevAngleY, 0x200);
+    ApproachLinear2(mAngle.y, mPrevAngle.y, 0x200);
     ApproachLinear(mHorzSpeed, func_ov002_020bf224(r4, 0), 0x100);
     func_ov002_020de3d0(&mAngle.z, &mAngleYSpeed);
     func_ov002_020de3d0(&mAngle.x, &mAngleXSpeed);
@@ -17529,8 +17529,8 @@ int daPly_c::St_Cannon_Main() {
             break;
 
         char *p = gCamera;
-        mPrevAngleY = GetAngleToCamera(mPlayerNo) + 0x8000;
-        mAngle.y = mPrevAngleY;
+        mPrevAngle.y = GetAngleToCamera(mPlayerNo) + 0x8000;
+        mAngle.y = mPrevAngle.y;
 
         int ang = (u16)((dCamera_c *)p)->mAngleX;
         int j = ang >> 4;
@@ -17744,7 +17744,7 @@ int daPly_c::St_Owl_Main() {
     if (this->FinishedAnim()) {
         this->SetAnim(0x58, 0, 0x1000, 0);
     }
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     AdvanceAnims();
     return 1;
 }
@@ -17880,10 +17880,10 @@ void func_ov002_020df8f0(daPly_c *player) {
         }
     }
 
-    player->mPrevAngleY += player->mAngleYSpeed;
-    player->mPrevAngleZ = (s16)((0 - player->mAngleYSpeed) * 0x14);
+    player->mPrevAngle.y += player->mAngleYSpeed;
+    player->mPrevAngle.z = (s16)((0 - player->mAngleYSpeed) * 0x14);
 
-    player->mPrevVertSpeed -= ((player->mPrevAngleX >> 1) + 0x100);
+    player->mPrevVertSpeed -= ((player->mPrevAngle.x >> 1) + 0x100);
     if (player->mPrevVertSpeed < 0)
         player->mPrevVertSpeed = -player->mPrevVertSpeed;
 
@@ -17895,29 +17895,29 @@ void func_ov002_020df8f0(daPly_c *player) {
         player->mPrevVertSpeed = 0;
 
     if (player->mPrevVertSpeed > 0x10000) {
-        player->mPrevAngleX += ((player->mPrevVertSpeed - 0x20000) * 6) >> 12;
+        player->mPrevAngle.x += ((player->mPrevVertSpeed - 0x20000) * 6) >> 12;
     } else if (player->mPrevVertSpeed <= 0x4000) {
-        player->mPrevAngleX -= 0x600;
+        player->mPrevAngle.x -= 0x600;
     } else {
-        player->mPrevAngleX += ((player->mPrevVertSpeed - 0x20000) * 0xa) >> 12;
+        player->mPrevAngle.x += ((player->mPrevVertSpeed - 0x20000) * 0xa) >> 12;
     }
 
-    player->mPrevAngleX += player->mAngleXSpeed;
-    if (player->mPrevAngleX > 0x2aaa)
-        player->mPrevAngleX = 0x2aaa;
-    if (player->mPrevAngleX < (s16)0xd556)
-        player->mPrevAngleX = (s16)0xd556;
+    player->mPrevAngle.x += player->mAngleXSpeed;
+    if (player->mPrevAngle.x > 0x2aaa)
+        player->mPrevAngle.x = 0x2aaa;
+    if (player->mPrevAngle.x < (s16)0xd556)
+        player->mPrevAngle.x = (s16)0xd556;
 
     player->mSpeed.y =
-        FX_MUL(player->mPrevVertSpeed, FX_SinCosTable_[((u16)player->mPrevAngleX >> 4) * 2]);
+        FX_MUL(player->mPrevVertSpeed, FX_SinCosTable_[((u16)player->mPrevAngle.x >> 4) * 2]);
     player->mHorzSpeed =
-        FX_MUL(player->mPrevVertSpeed, FX_SinCosTable_[((u16)player->mPrevAngleX >> 4) * 2 + 1]);
+        FX_MUL(player->mPrevVertSpeed, FX_SinCosTable_[((u16)player->mPrevAngle.x >> 4) * 2 + 1]);
 
     {
-        player->mAngle.x = player->mPrevAngleX;
-        player->mAngle.y = player->mPrevAngleY;
-        player->mAngle.z = player->mPrevAngleZ;
-        s16 r = (s16)(0 - player->mPrevAngleX);
+        player->mAngle.x = player->mPrevAngle.x;
+        player->mAngle.y = player->mPrevAngle.y;
+        player->mAngle.z = player->mPrevAngle.z;
+        s16 r = (s16)(0 - player->mPrevAngle.x);
         int spd = player->mPrevVertSpeed;
         int t = spd >> 5;
         if (t >= 0x1000) t = 0x1000;
@@ -17991,7 +17991,7 @@ skip:
 #define sp18 vec32.y
 #define sp1C vec32.z
     {
-        s16 n = FX_SinCosTable_[((u16)mPrevAngleX >> 4) * 2 + 1];
+        s16 n = FX_SinCosTable_[((u16)mPrevAngle.x >> 4) * 2 + 1];
         s32 r0 = (s16)-n;
         s16 t = FX_SinCosTable_[((u16)mAngle.y >> 4) * 2];
         spC = (s16)FX_MUL(r0, t);
@@ -18005,7 +18005,7 @@ skip:
     }
 
     if (mPrevVertSpeed >= 0x30000) {
-        if (mPrevAngleX > 0x800) {
+        if (mPrevAngle.x > 0x800) {
             if (mStateArg == 0) {
                 Sound::PlayBank0(0xb9, mCamSpacePos);
                 PlayJumpSound(2);
@@ -18061,9 +18061,9 @@ int daPly_c::St_Fly_Init() {
     extern int gCamera[];
     mAngleXSpeed = 0;
     mAngleYSpeed = 0;
-    mPrevAngleX = 0;
-    mPrevAngleZ = 0;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.x = 0;
+    mPrevAngle.z = 0;
+    mPrevAngle.y = mAngle.y;
     ReleaseHeldActor();
     if (mStateStep == 0) {
         mSpeed.y = 0x5d000;
@@ -18146,7 +18146,7 @@ int daPly_c::St_Land_Main() {
                 return 1;
             }
             if (this->IsAnim(0x4e) != 0) {
-                mAngle.y = mPrevAngleY;
+                mAngle.y = mPrevAngle.y;
             }
             int v = (mHeldObj != 0);
             if (v != 0) {
@@ -18184,14 +18184,14 @@ int daPly_c::St_Land_Main() {
             mAngle.y = (s16)(mAngle.y + 0x8000);
         }
         if ((data_0209f498[gActivePlayerSlot].mag != 0) &&
-            AngleDiff(mAngle.y, mPrevAngleY) >= 0x4000) {
+            AngleDiff(mAngle.y, mPrevAngle.y) >= 0x4000) {
             if (AngleDiff(mDesiredAngleY, mAngle.y) >= 0x4000) {
-                mAngle.y = mPrevAngleY;
+                mAngle.y = mPrevAngle.y;
             } else {
                 mHorzSpeed = 0 - mHorzSpeed;
             }
         }
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         this->ChangeState(data_ov002_0211013c);
         if (this->IsState(data_ov002_0211013c) != 0 && mStateStep != 0 &&
             mHorzSpeed >= ScaleByCharFactor(0x1c000)) {
@@ -18234,7 +18234,7 @@ int daPly_c::St_Land_Init() {
     } else if (r4 == &data_ov002_021101e4) {
         r1 = 0x4e;
     } else if (r4 == &data_ov002_0211052c) {
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         mHorzSpeed = 0;
         r1 = 0x2b;
     } else if (r4 == &data_ov002_02110724 || r4 == &data_ov002_0211007c) {
@@ -18294,9 +18294,9 @@ int daPly_c::St_SmallLaunchUp_Init() {
     this->SetAnim(0x56, 0, 0x1000, 0);
     mSpeed.y = 0x2a000;
     mHorzSpeed = 0;
-    mAngle.x = mPrevAngleX;
-    mAngle.y = mPrevAngleY;
-    mAngle.z = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     return 1;
 }
 
@@ -18307,7 +18307,7 @@ int daPly_c::St_SlopeJump_Main() {
         this->ChangeState(data_ov002_0211013c);
     }
     if (data_0209f498[gActivePlayerSlot].pressed & 1) {
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         if (mIsMega == 0) {
             if (param1 == 3) {
                 this->ChangeState(data_ov002_02110034);
@@ -18364,13 +18364,13 @@ int daPly_c::St_CrazedCrate_Main() {
         int diff = AngleDiff(atan, this->mAngle.y);
         if (diff >= 0x6000) {
             mAngle.y = (s16)(2 * atan - mAngle.y) + 0x8000;
-            mPrevAngleY = mAngle.y;
-            mPos.x += FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngleY >> 4));
-            mPos.z += FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleY >> 4));
+            mPrevAngle.y = mAngle.y;
+            mPos.x += FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngle.y >> 4));
+            mPos.z += FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngle.y >> 4));
         }
     }
 
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
 
     if (mIsAirborne == 0) {
         if (mJumpComboStage < 2) {
@@ -18423,7 +18423,7 @@ int daPly_c::St_CrazedCrate_Init() {
   mLandSoundPlayed = 0;
   this->SetAnim(0x43, 0x40000000, 0x1000, 0);
   func_ov002_020e0f38(mJumpComboStage);
-  mPrevAngleY = mAngle.y;
+  mPrevAngle.y = mAngle.y;
   mdCcAcPos_c.flags |= 0x20;
   return 1;
 }
@@ -18452,7 +18452,7 @@ int daPly_c::St_Spin_Cleanup() {
 }
 
 /* Spin-jump, per frame. Landing hands off to another state after snapping the
- * facing angle back to mPrevAngleY. The global bit at data_0209f49c selects
+ * facing angle back to mPrevAngle.y. The global bit at data_0209f49c selects
  * between two spin rates and two terminal velocities.
  */
 
@@ -18460,7 +18460,7 @@ int daPly_c::St_Spin_Main() {
     extern u16 data_0209f49c[];
     UpdateAirMovement(0x1000, 0x1000);
     if (mIsAirborne == 0) {
-        mAngle.y = mPrevAngleY;
+        mAngle.y = mPrevAngle.y;
         this->ChangeState(data_ov002_02110424);
     }
     if (data_0209f498[gActivePlayerSlot].held & 2) {
@@ -18567,7 +18567,7 @@ int daPly_c::St_SideFlip_Main() {
             u16 r0v = data_0209f498[gActivePlayerSlot].pressed;
             if (r0v & 0x400) {
                 if (IsState(data_ov002_0211052c)) {
-                    mPrevAngleY = mAngle.y;
+                    mPrevAngle.y = mAngle.y;
                 }
             }
             if (CheckAirCancels()) {
@@ -18647,7 +18647,7 @@ int daPly_c::St_WallJump_Main() {
     } else {
         if (data_0209f498[gActivePlayerSlot].pressed & 0x400) {
             if (this->IsState(data_ov002_0211052c)) {
-                mPrevAngleY = mAngle.y;
+                mPrevAngle.y = mAngle.y;
             }
         }
         if (CheckAirCancels())
@@ -18662,7 +18662,7 @@ int daPly_c::St_WallJump_Main() {
  * bookkeeping, start anim 0x28, set the launch speeds, TURN AROUND, and shout.
  *
  * The turn is the whole move. mAngle.y += 0x8000 is exactly half a revolution
- * on a 16-bit angle, and mPrevAngleY is snapped to the new value in the same
+ * on a 16-bit angle, and mPrevAngle.y is snapped to the new value in the same
  * breath so nothing interpolates through the 180 degrees -- the player faces
  * away from the wall instantly rather than spinning.
  *
@@ -18695,7 +18695,7 @@ int daPly_c::St_WallJump_Init() {
     }
     mHorzSpeed = 0x18000;
     mAngle.y = mAngle.y + 0x8000;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mStateWork = 1;
     mStateStep = 0;
     Sound::PlayCharVoice(mCharacter, 0xc, mCamSpacePos);
@@ -18721,7 +18721,7 @@ int daPly_c::St_BackFlip_Init() {
         mSpeed.y = 0x4c000;
     ApplyQuicksandToJump();
     mHorzSpeed = 0x10000;
-    mPrevAngleY = mAngle.y + 0x8000;
+    mPrevAngle.y = mAngle.y + 0x8000;
     PlayJumpSound(0);
     return 1;
 }
@@ -18758,7 +18758,7 @@ int daPly_c::St_SideFlip_Init() {
     mSpeed.y = 0x3e000;
     ApplyQuicksandToJump();
     this->SetAnim(0x4d, 0x40000000, 0x1000, 0);
-    mPrevAngleY = mDesiredAngleY;
+    mPrevAngle.y = mDesiredAngleY;
     mAngle.y = mDesiredAngleY + 0x8000;
     PlayJumpSound(0);
     return 1;
@@ -19041,7 +19041,7 @@ skipclear:
 
     mHorzSpeed = FX_MUL(mHorzSpeed, 0xccc);
 
-    if (AngleDiff(mPrevAngleY, mAngle.y) >= 0x4000) {
+    if (AngleDiff(mPrevAngle.y, mAngle.y) >= 0x4000) {
         mHorzSpeed >>= 2;
     }
 
@@ -19127,7 +19127,7 @@ int daPly_c::CheckAirCancels() {
     if (IsState(data_ov002_021101e4)) {
         mAngle.y = mAngle.y + 0x8000;
     }
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
 
     if (mIsMega == 0) {
         if (param1 == 3) {
@@ -19140,7 +19140,7 @@ int daPly_c::CheckAirCancels() {
         ChangeState(data_ov002_02110574);
     }
 
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     return 1;
 
 ret0:
@@ -19157,7 +19157,7 @@ void daPly_c::UpdateAirMovement(int accel, int decel) {
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
         if (mClsnFlags & 2) {
             int t = cstd::atan2(mWallNormal.x, mWallNormal.z);
-            if (AngleDiff((s16)(t + 0x8000), mPrevAngleY) < 0x2000) {
+            if (AngleDiff((s16)(t + 0x8000), mPrevAngle.y) < 0x2000) {
                 if (mHorzSpeed >= 0x3000)
                     mHorzSpeed = 0x3000;
             }
@@ -19179,13 +19179,13 @@ void daPly_c::UpdateAirMovement(int accel, int decel) {
 
         s16 targetYaw = mDesiredAngleY;
         if (mHorzSpeed != 0) {
-            if (AngleDiff(mPrevAngleY, targetYaw) > 0x6000) {
+            if (AngleDiff(mPrevAngle.y, targetYaw) > 0x6000) {
                 targetYaw = targetYaw + 0x8000;
                 targetSpeed = -targetSpeed;
             }
-            ApproachAngle(&mPrevAngleY, targetYaw, 0x10, 0x100, 0);
+            ApproachAngle(&mPrevAngle.y, targetYaw, 0x10, 0x100, 0);
         } else {
-            mPrevAngleY = targetYaw;
+            mPrevAngle.y = targetYaw;
         }
     } else {
         targetSpeed = 0;
@@ -19194,7 +19194,7 @@ void daPly_c::UpdateAirMovement(int accel, int decel) {
 
     ApproachLinear(mHorzSpeed, targetSpeed, accel);
 
-    if (AngleDiff(mPrevAngleY, mAngle.y) < 0x4000)
+    if (AngleDiff(mPrevAngle.y, mAngle.y) < 0x4000)
         return;
 
     if (mHorzSpeed >= 0x10000)
@@ -19352,7 +19352,7 @@ int daPly_c::TryEnterBigFallLanding() {
         mStateStep = 2;
     } else {
         if (WasState(&data_ov002_021101e4)) {
-            mAngle.y = mPrevAngleY;
+            mAngle.y = mPrevAngle.y;
         }
     }
 
@@ -19968,7 +19968,7 @@ int daPly_c::func_ov002_020e3f90() {
     mPos.x = v.x << 3;
     mPos.y = v.y << 3;
     mPos.z = v.z << 3;
-    mPrevAngleY = mGrabbedByActor->mAngle.y;
+    mPrevAngle.y = mGrabbedByActor->mAngle.y;
     n = GetBodyModelID(param1 & 0xff, 0);
     m = (char *)mModels.mBodyModels[n];
     ((dExtSimpleModel_c *)m)->mat4x3 = data_020a0e68;

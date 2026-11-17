@@ -426,7 +426,7 @@ int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, f
     rayEnd.x = 0;
     rayEnd.y = 0;
     rayEnd.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
     MTX_MultVec43(&probe, &data_020a0e68, &rayEnd);
     Vec3_Add(&sum, &mPos, &rayEnd);
     rayEnd = sum;
@@ -434,7 +434,7 @@ int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, f
     dBgCh_Lin ray;
     ray.SetObjAndLine(mPos, rayEnd, this);
     if (ray.DetectClsn())
-        mPrevAngleY += 0x8000;
+        mPrevAngle.y += 0x8000;
     mAngle.x += angStepX;
     mAngle.y += angStepY;
     mAngle.z += angStepZ;
@@ -497,7 +497,7 @@ void dBgActor_c::KillByMegaChar(daPly_c &player) {
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0x14000;
     mSpeed.y = 0x1e000;
-    mPrevAngleY = Vec3_HorzAngle(&player.mPos, &mPos);
+    mPrevAngle.y = Vec3_HorzAngle(&player.mPos, &mPos);
     mMegaKnockbackTimer = 30;
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();

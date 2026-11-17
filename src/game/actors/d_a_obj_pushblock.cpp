@@ -142,7 +142,7 @@ int daObjPushblock_c::Behavior() {
         dst.z = 0;
         v.y = 0x96000;
         v.z = 0x96000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
+        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
         MTX_MultVec43(&v, &data_020a0e68, &dst);
         VEC_Add(&dst, &mPos, &dst);
         dBgCh_Gnd ray;
@@ -254,7 +254,7 @@ int daObjPushblock_c::CleanupResources() {
 int daObjPushblock_c::OnPushed(dActor_c &other) {
     dActor_c *pusher = &other;
     if (pusher != 0) {
-        mPrevAngleY = pusher->mAngle.y;
+        mPrevAngle.y = pusher->mAngle.y;
         if (pusher->param1 == 2)
             mHorzSpeed = 0x8000;
         else

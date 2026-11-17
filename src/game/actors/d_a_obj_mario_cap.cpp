@@ -672,9 +672,9 @@ void daObjMarioCap_c::UpdateMatrix()
     int m = mType;
     if (m != 5 && m != 0x12 && m != 0x10 && m != 0xb && m != 7 && m != 9 &&
         m != 0x14 && m != 0x15 && m != 0x16) {
-        mAngle.x = mPrevAngleX;
-        mAngle.y = mPrevAngleY;
-        mAngle.z = mPrevAngleZ;
+        mAngle.x = mPrevAngle.x;
+        mAngle.y = mPrevAngle.y;
+        mAngle.z = mPrevAngle.z;
     }
 
     if (mCarryMatrix != 0) {
@@ -917,7 +917,7 @@ int daObjMarioCap_c::InitSlide()
  * 0x5000..0xa000 (5..10 units a frame; func_ov002_020f02c8, which maps the
  * surface value to it), aimed along mSlopeAngle and scaled by the horizontal
  * length of the floor normal. That is added to the cap's own velocity
- * (mHorzSpeed along mPrevAngleY) and the sum becomes the new heading and
+ * (mHorzSpeed along mPrevAngle.y) and the sum becomes the new heading and
  * speed, capped at 0xf000 (15 units a frame). mSpeed.y is set from the floor
  * normal and the words at 0x0a4 / 0x0ac, with 0x8000 (8 units a frame) of
  * extra downward bias, and mAngle.x / mAngle.z move toward the floor's tilt
@@ -974,8 +974,8 @@ int daObjMarioCap_c::Slide()
     slopePush = func_ov002_020f02c8(surface);
     func_ov002_020f030c(surface);
     spd = mHorzSpeed;
-    s = FX_SinIdx((u16)mPrevAngleY >> 4);
-    co = FX_CosIdx((u16)mPrevAngleY >> 4);
+    s = FX_SinIdx((u16)mPrevAngle.y >> 4);
+    co = FX_CosIdx((u16)mPrevAngle.y >> 4);
     /* Velocity in the plane: the cap's own speed along its heading, plus the
        floor's push along the slope. */
     ownVel.x = FX_MUL(spd, s);
@@ -992,7 +992,7 @@ int daObjMarioCap_c::Slide()
     mHorzSpeed = Vec3_HorzLen(&out);
     if (mHorzSpeed > 0xf000)
         mHorzSpeed = 0xf000;
-    mPrevAngleY = ang;
+    mPrevAngle.y = ang;
     mSpeed.y = -(FX_Div(FX_MUL(mFloorNormal.x, mSpeed.x) + FX_MUL(mFloorNormal.z, mSpeed.z),
                         mFloorNormal.y) +
                  0x8000);
@@ -1079,13 +1079,13 @@ int daObjMarioCap_c::Taken() {
 
     {
         s16 *q = &mPlayer->mAngle.x;
-        mPrevAngleX = q[0];
-        mPrevAngleY = q[1];
-        mPrevAngleZ = q[2];
+        mPrevAngle.x = q[0];
+        mPrevAngle.y = q[1];
+        mPrevAngle.z = q[2];
     }
-    mAngle.x = mPrevAngleX;
-    mAngle.y = mPrevAngleY;
-    mAngle.z = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
 
     {
         s32 *q = &mPlayer->mPos.x;
@@ -1153,12 +1153,12 @@ int daObjMarioCap_c::InitAnim()
         daPly_c *closest = ClosestPlayer();
         if (closest != 0) {
             s16* src = &closest->mAngle.x;
-            mPrevAngleX = src[0];
-            mPrevAngleY = src[1];
-            mPrevAngleZ = src[2];
-            mAngle.x = mPrevAngleX;
-            mAngle.y = mPrevAngleY;
-            mAngle.z = mPrevAngleZ;
+            mPrevAngle.x = src[0];
+            mPrevAngle.y = src[1];
+            mPrevAngle.z = src[2];
+            mAngle.x = mPrevAngle.x;
+            mAngle.y = mPrevAngle.y;
+            mAngle.z = mPrevAngle.z;
             mPlayer = closest;
         }
     }
@@ -1199,12 +1199,12 @@ int daObjMarioCap_c::Anim()
     if (mType == 0xa || mType == 0xf) {
         if (mPlayer != 0) {
             sp = &mPlayer->mAngle.x;
-            mPrevAngleX = sp[0];
-            mPrevAngleY = sp[1];
-            mPrevAngleZ = sp[2];
-            mAngle.x = mPrevAngleX;
-            mAngle.y = mPrevAngleY;
-            mAngle.z = mPrevAngleZ;
+            mPrevAngle.x = sp[0];
+            mPrevAngle.y = sp[1];
+            mPrevAngle.z = sp[2];
+            mAngle.x = mPrevAngle.x;
+            mAngle.y = mPrevAngle.y;
+            mAngle.z = mPrevAngle.z;
 
             ip = &mPlayer->mPos.x;
             mPos.x = ip[0];
@@ -1251,7 +1251,7 @@ int daObjMarioCap_c::Dormant()
 }
 
 /* The touch check shared by the states that let the player pick the cap up.
- * If the cap is against a wall, reflects mPrevAngleY off the wall normal.
+ * If the cap is against a wall, reflects mPrevAngle.y off the wall normal.
  * Then it proceeds only if the collider's other owner is a daPly_c (actor ID
  * kActorPlayer), hitFlags bit 0x8000 is clear, the player is not collecting
  * a cap, and it is not a player with param1 3 that has an object in its
@@ -1271,7 +1271,7 @@ void daObjMarioCap_c::CheckTouch()
     if (mWithMeshClsn.IsOnWall() != 0) {
         dBgPi *wr = mWithMeshClsn.GetWallResult();
         wr->surface.CopyNormalTo(normal);
-        mPrevAngleY = ReflectAngle(normal.x, normal.z, mPrevAngleY);
+        mPrevAngle.y = ReflectAngle(normal.x, normal.z, mPrevAngle.y);
     }
 
     if (mdCcAc_c.otherOwner == 0) return;
@@ -1327,12 +1327,12 @@ void daObjMarioCap_c::CheckTouch()
         v.x = a;
         v.y = b;
         v.z = *(u16*)&found->mAngle.z;
-        mPrevAngleX = v.x;
-        mPrevAngleY = v.y;
-        mPrevAngleZ = *(s16*)&v.z;
-        mAngle.x = mPrevAngleX;
-        mAngle.y = mPrevAngleY;
-        mAngle.z = mPrevAngleZ;
+        mPrevAngle.x = v.x;
+        mPrevAngle.y = v.y;
+        mPrevAngle.z = *(s16*)&v.z;
+        mAngle.x = mPrevAngle.x;
+        mAngle.y = mPrevAngle.y;
+        mAngle.z = mPrevAngle.z;
     }
 
     EnterState(&data_ov002_0210df54);

@@ -208,7 +208,7 @@ void daHuwa_c::HandleCylinderHit() {
         mStateTimer = 0;
         mHorzSpeed = -speed;
     }
-    mPrevAngleY = Vec3_HorzAngle(&mPos, &player->mPos);
+    mPrevAngle.y = Vec3_HorzAngle(&mPos, &player->mPos);
 
     pos.x = mPos.x;
     pos.y = mPos.y;
@@ -285,7 +285,7 @@ int daHuwa_c::Behavior() {
             mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
         }
         ApproachLinear(mAngle.y, mTargetAngY, 0x200);
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         break;
     }
     case kStateRecoil:

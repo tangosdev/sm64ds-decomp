@@ -115,7 +115,7 @@ int daObjCtMecha11_c::Render() {
 
 int daObjCtMecha11_c::Behavior() {
     unsigned char idx = data_0209f2c0;
-    mPrevAngleX = data_ov035_02112b80[idx];
+    mPrevAngle.x = data_ov035_02112b80[idx];
     if (idx == 2) {
         if (DecIfAbove0_Short(&mRandTimer) == 0) {
             int r = (unsigned short)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
@@ -129,17 +129,17 @@ int daObjCtMecha11_c::Behavior() {
             if (mRandTimer < mRandFrames - 5) {
                 /* The temporary keeps the 0x92 address in its own register
                  * beside the this+0x300 base the timer already computed. */
-                short *angleStep = &mPrevAngleX;
+                short *angleStep = &mPrevAngle.x;
                 *angleStep = (*angleStep * mRandDirection);
             } else {
-                mPrevAngleX = 0;
+                mPrevAngle.x = 0;
             }
         }
     }
     mMeshCollider.SetClipRadius(0x180000);
     mMeshCollider.SetClipOffsetY(0x1000);
     short *angle = &mAngle.x;
-    *angle = (*angle + mPrevAngleX);
+    *angle = (*angle + mPrevAngle.x);
     UpdateModel();
     UpdateShadow();
     if (IsClsnInRange(0x180000, 0x1000))

@@ -100,8 +100,8 @@ struct daIbl_c : dEnemyBase_c {
     u8  pad_3b8[0x2];
     /* The heading from the ball to mNextNodePos: AdvancePath stores
        atan2(node.x - pos.x, node.z - pos.z) here on every call, the path
-       followers steer mPrevAngleY toward it, and InitResources copies it
-       straight into mPrevAngleY once. */
+       followers steer mPrevAngle.y toward it, and InitResources copies it
+       straight into mPrevAngle.y once. */
     s16                          mHeadingToNode;        /* 0x3ba */
     u8  pad_3bc[0x4];
     /* Spawner (kind 0) only: the horizontal distance band to the closest player

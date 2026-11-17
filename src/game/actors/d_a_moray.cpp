@@ -254,12 +254,12 @@ void daMoray_c::UpdateHitCylinders() {
 int daMoray_c::StateRetreatMain() {
     if (this->mStateTimer == 0) {
         this->mHorzSpeed = 0;
-        this->mPrevAngleX = this->mInitAngleX;
-        this->mPrevAngleY = this->mInitAngleY;
-        this->mPrevAngleZ = this->mInitAngleZ;
-        this->mAngle.x = this->mPrevAngleX;
-        this->mAngle.y = this->mPrevAngleY;
-        this->mAngle.z = this->mPrevAngleZ;
+        this->mPrevAngle.x = this->mInitAngleX;
+        this->mPrevAngle.y = this->mInitAngleY;
+        this->mPrevAngle.z = this->mInitAngleZ;
+        this->mAngle.x = this->mPrevAngle.x;
+        this->mAngle.y = this->mPrevAngle.y;
+        this->mAngle.z = this->mPrevAngle.z;
         SetState(&data_ov016_02114d8c);
     }
     return 1;
@@ -295,12 +295,12 @@ int daMoray_c::StatePathSwimMain() {
 
     headingToNode = Vec3_HorzAngle(&this->mPos, &node);
     {
-        int turn = AngleDiff(headingToNode, this->mPrevAngleY);
+        int turn = AngleDiff(headingToNode, this->mPrevAngle.y);
         this->mSegmentAngle[7] = turn / 2;
     }
-    ApproachLinear(this->mPrevAngleY, headingToNode, 0x80);
+    ApproachLinear(this->mPrevAngle.y, headingToNode, 0x80);
 
-    ApproachLinear(this->mPrevAngleX, Vec3_VertAngle(&this->mPos, &node), 0x80);
+    ApproachLinear(this->mPrevAngle.x, Vec3_VertAngle(&this->mPos, &node), 0x80);
 
     Vec3_Sub(&diff, &this->mPos, &node);
     len = VEC_Mag(&diff);
@@ -632,9 +632,9 @@ s32 daMoray_c::Behavior()
     if (mState->execute)
         (this->*mState->execute)();
     UpdatePos(&mdCcAcPos_c1);
-    mAngle.x = mPrevAngleX;
-    mAngle.y = mPrevAngleY;
-    mAngle.z = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     UpdatePose();
 
     starUniqueID = mStarUniqueID;
@@ -760,8 +760,8 @@ s32 daMoray_c::InitResources()
                node 0 there is a one-word DIFF. */
             path.GetNode(mPos, 0);
             path.GetNode(mPos, 1);
-            mPrevAngleY = Vec3_HorzAngle(&mPos, &node);
-            mAngle.y = mPrevAngleY;
+            mPrevAngle.y = Vec3_HorzAngle(&mPos, &node);
+            mAngle.y = mPrevAngle.y;
             SetState(&data_ov016_02114dbc);
         } else {
             return 0;

@@ -14,7 +14,7 @@
  * in state 2, and 2 for the small Koopa. mHomePos is the spawn point the
  * leash is measured from. mSafePos is the last spot that was not a
  * cliff edge. mAimAngle faces the closest player, or home when that
- * player is outside the leash. mTargetAngle is what mPrevAngleY is
+ * player is outside the leash. mTargetAngle is what mPrevAngle.y is
  * steered toward. mTimer counts the idle pause and the post-kick wait.
  * mTurnTimer counts down to the next random heading. mTurning stays set
  * while AngleAwayFromWallOrCliff's turn is still running. mFootstep

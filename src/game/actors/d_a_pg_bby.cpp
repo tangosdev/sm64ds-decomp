@@ -173,7 +173,7 @@ int daPgBby_c::StateKeepDistanceUpdate() {
     case 0:
         angle = (Vec3_HorzAngle(&mPos, &player->mPos) + 0x8000);
         ApproachLinear(mAngle.y, angle, 0x514);
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         mHorzSpeed = 0x5000;
         if (dist >= 0x1c2000) {
             mSubState = 2;
@@ -182,7 +182,7 @@ int daPgBby_c::StateKeepDistanceUpdate() {
     case 1:
         angle = Vec3_HorzAngle(&mPos, &player->mPos);
         ApproachLinear(mAngle.y, angle, 0x514);
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         mHorzSpeed = 0x5000;
         if (dist > 0x384000) {
             mSubState = 2;
@@ -282,7 +282,7 @@ int daPgBby_c::StateHeldEnter() {
    to the ground under the carrier and return to state 0. */
 int daPgBby_c::StateHeldUpdate() {
     mAngle.y = mCarrier->mAngle.y;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     u32 flags = mFlags;
     int held = (flags & 0x100) != 0;
     if (held) {
@@ -336,7 +336,7 @@ int daPgBby_c::StateWalkToMotherUpdate() {
         tgt = (Vec3_HorzAngle(&mPos, &mMother->mPos) + 0x8000);
     }
     ApproachLinear(mAngle.y, tgt, 0x2bc);
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mAnmModel.Advance();
     UpdatePos(&mCylClsn);
     UpdateFloorAndWalls(&mWithMeshClsn);
@@ -447,7 +447,7 @@ int daPgBby_c::func_ov072_02121368()
     angle = mAngle.y;
     posY = &mPos.y;
     posZ = &mPos.z;
-    mPrevAngleY = angle;
+    mPrevAngle.y = angle;
 
     eater = mEatingPlayer;
     {

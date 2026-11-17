@@ -881,13 +881,13 @@ void daObjTatefuda_c::Kill()
  * proved it wrong tree-wide (36bc6d1df). Same body shape
  * src/game/actors/d_a_obj_maruta.cpp records for its own
  * slot 27: dBgActor_c::KillByMegaChar is non-virtual, so the unqualified
- * call is already the direct `bl` the ROM has. mAngle.y = mPrevAngleY is
+ * call is already the direct `bl` the ROM has. mAngle.y = mPrevAngle.y is
  * dActor_c's own field pair (include/dActor_c.h, 0x08e/0x094). */
 void daObjTatefuda_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     func_02012694(0x1d, &mCamSpacePos);
     KillByMegaChar(player);
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
 }
 
 /* daObjTatefuda_c::OnGroundPounded -- vtable slot 21, ov002 0x020bb27c.
@@ -957,7 +957,7 @@ int daObjTatefuda_c::OnAttacked1(dActor_c &other)
  * the holder is front-sliding, or has lost its grabbed object while the body
  * animation's currFrame satisfies (frame << 4) >> 16 < 0xe. The X angle
  * approaches data_ov002_020ff0d0[r4] by 0x1000 per call;
- * the sign copies the holder's Y angle (into mAngle.y and mPrevAngleY); the
+ * the sign copies the holder's Y angle (into mAngle.y and mPrevAngle.y); the
  * matrix is built from a translation, a pivot offset of 0x8c00 up and back, the
  * sign's rotation (Matrix4x3_ApplyInPlaceToRotationXYZExt), and a per-pose offset from the
  * two-entry Vector3 table at data_ov002_020ff0d4 (the ROM's pool holds
@@ -989,8 +989,8 @@ void daObjTatefuda_c::AttachToHolder() {
     v.y = data_020a0e68.t.y;
     v.z = data_020a0e68.t.z;
 
-    mPrevAngleY = mHoldingPlayer->mAngle.y;
-    mAngle.y = mPrevAngleY;
+    mPrevAngle.y = mHoldingPlayer->mAngle.y;
+    mAngle.y = mPrevAngle.y;
 
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x8c00, 0);

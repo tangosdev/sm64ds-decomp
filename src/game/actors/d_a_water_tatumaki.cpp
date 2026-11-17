@@ -296,9 +296,9 @@ int daWater_Tatumaki_c::Behavior() {
     pos.y += kSprayLift;
     mParticleID = Particle::System::New(mParticleID, kSprayEffect, pos.x, pos.y, pos.z, 0, 0);
 
-    mAngle.x = mPrevAngleX;
-    mAngle.y = mPrevAngleY;
-    mAngle.z = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
 
     UpdateModelMatrix();
     mTextureTransformer.Advance();

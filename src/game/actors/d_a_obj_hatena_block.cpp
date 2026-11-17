@@ -919,7 +919,7 @@ int daObjHatenaBlock_c::GetFloorY() {
 /* Cap prize: spawns an OBJ_MARIO_CAP at the prize point with param1 =
    p2 | (p1 << 8) (cap type 0x12 for character p1) and no rotation. If it
    spawned, the cap gets heading (RandomIntInternal() + camera mAngle.y +
-   0x8000, truncated to 16 bits) in its mPrevAngleY, speed 0x3320 (about 3.2
+   0x8000, truncated to 16 bits) in its mPrevAngle.y, speed 0x3320 (about 3.2
    units) in mHorzSpeed, and a velocity vector (0, 0x11000, 0) in
    mSpeed.x / mSpeed.y / mSpeed.z (0x11000 = 17 units up). */
 void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
@@ -935,9 +935,9 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
     rnd = RandomIntInternal(&data_0209e650.value);
     {
         int vsum = rnd + (g->mAngleY + 0x8000);
-        o->mPrevAngleX = 0;
-        o->mPrevAngleY = (short)vsum;
-        o->mPrevAngleZ = 0;
+        o->mPrevAngle.x = 0;
+        o->mPrevAngle.y = (short)vsum;
+        o->mPrevAngle.z = 0;
         o->mHorzSpeed = 0x3320;
         o->mSpeed.x = vel.x;
         o->mSpeed.y = vel.y;
@@ -1039,7 +1039,7 @@ void daObjHatenaBlock_c::SpawnPrizeBobOmb() {
 }
 
 /* Spawns n COINs (param 2) at *pos. Each coin gets a heading baseAngle + dir
-   in its mPrevAngleY, where dir is a 5-bit signed value times 0x800 (-0x8000
+   in its mPrevAngle.y, where dir is a 5-bit signed value times 0x800 (-0x8000
    .. 0x7800, a full turn is 0x10000) drawn from RandomIntInternal, re-drawn
    while it equals the previous coin's dir. The speed (initially the caller's
    `speed`) is scaled by (random % 50 + 100) / 100 for each coin, and the
@@ -1062,12 +1062,12 @@ void daObjHatenaBlock_c::SpawnCoinSpray(Vector3 *pos, int n, unsigned int speed,
                 dir = (int)((rnd >> 0x10) << 0x1b) >> 0x10;
             } while (dir == prevDir);
             rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
-            a->mPrevAngleX = 0;
+            a->mPrevAngle.x = 0;
             q = rnd >> 0x10;
             speed = (speed * (q % 50 + 100)) / 100;
             prevDir = dir;
-            a->mPrevAngleY = baseAngle + dir;
-            a->mPrevAngleZ = 0;
+            a->mPrevAngle.y = baseAngle + dir;
+            a->mPrevAngle.z = 0;
             a->mHorzSpeed = speed;
         }
         i++;

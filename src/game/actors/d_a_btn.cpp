@@ -309,7 +309,7 @@ int daBtn_c::InitResources()
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
 
     mState = 0;
-    mTargetAngle = mPrevAngleY;
+    mTargetAngle = mPrevAngle.y;
     mSubState = 0;
     mSubTimer = 0;
 
@@ -498,10 +498,10 @@ void daBtn_c::func_ov079_02125b44()
             mHitPoints = 3;
             break;
         case 1:
-            if (ApproachLinear(mPrevAngleY, mTargetAngle, 0x800) != 0) {
+            if (ApproachLinear(mPrevAngle.y, mTargetAngle, 0x800) != 0) {
                 mSubState++;
             }
-            mAngle.y = mPrevAngleY;
+            mAngle.y = mPrevAngle.y;
             break;
         case 2:
             if (mPlayers[mNearestPlayer]->GetTalkState() == 0) {
@@ -665,8 +665,8 @@ void daBtn_c::func_ov079_021256d4()
     mAnmModel.speed = 0x1000;
     func_ov079_02123bcc();
 
-    ApproachLinear(mPrevAngleY, mTargetAngle, 0x200);
-    mAngle.y = mPrevAngleY;
+    ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200);
+    mAngle.y = mPrevAngle.y;
 
     if (mStateTimer > 30) {
         if (mFrontDist < 0x5dc000) {
@@ -716,11 +716,11 @@ void daBtn_c::func_ov079_021256d4()
         t = mSpawnAngleZ;
         mAngle.z = t;
         t = mSpawnAngleX;
-        mPrevAngleX = t;
+        mPrevAngle.x = t;
         t = mSpawnAngleY;
-        mPrevAngleY = t;
+        mPrevAngle.y = t;
         t = mSpawnAngleZ;
-        mPrevAngleZ = t;
+        mPrevAngle.z = t;
         mTextureSequence.currFrame = 0;
         mHorzSpeed = 0;
         anim = ((SharedFilePtr *)tab[mIsKing * five + 3])->filePtr;
@@ -1144,8 +1144,8 @@ void daBtn_c::func_ov079_021249f0()
         if (mStateTimer >= 32) {
             mSubState++;
         } else {
-            mPrevAngleY += 0x400;
-            mAngle.y = mPrevAngleY;
+            mPrevAngle.y += 0x400;
+            mAngle.y = mPrevAngle.y;
         }
     } else {
         mHorzSpeed = data_ov079_021275dc[mIsKing];
@@ -1444,8 +1444,8 @@ void daBtn_c::func_ov079_02123f34()
     s16 angle;
     Vector3 v;
 
-    mTargetAngle = mPrevAngleY;
-    minAngle = mPrevAngleY;
+    mTargetAngle = mPrevAngle.y;
+    minAngle = mPrevAngle.y;
     minDist2 = 0x7fffffff;
     minDist = 0x7fffffff;
     for (i = 0; i < 4; i++) {
@@ -1464,7 +1464,7 @@ void daBtn_c::func_ov079_02123f34()
             minDist = dist;
             minAngle = angle;
         }
-        if (GetSubtraction(angle, mPrevAngleY) < 0x2000) {
+        if (GetSubtraction(angle, mPrevAngle.y) < 0x2000) {
             if (dist < minDist2) {
                 minDist2 = dist;
                 mFrontPlayer = i;
@@ -1631,8 +1631,8 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         v.z = q[2];
     }
 
-    sinv = FX_SinIdx((u16)other->mPrevAngleY >> 4);
-    cosv = FX_CosIdx(other->mPrevAngleY >> 4);
+    sinv = FX_SinIdx((u16)other->mPrevAngle.y >> 4);
+    cosv = FX_CosIdx(other->mPrevAngle.y >> 4);
     v.x = v.x - sinv * 0x50;
     v.z = v.z - cosv * 0x50;
 

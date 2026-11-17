@@ -200,7 +200,7 @@ void daObjRotateUpdownLift_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     func_02012694(0x1e, &mCamSpacePos);
     KillByMegaChar(player);
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
 }
 
 // 0x02131160 (0x1e0)

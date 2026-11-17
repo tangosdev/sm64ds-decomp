@@ -116,10 +116,10 @@ struct daJango_c : dEnemyBase_c {
        The name rests on the ACTOR_SILVER_STAR spawns. */
     u8                           mSilverStarFlag;       /* 0x448 */
     u8  pad_449[0x1];
-    /* The yaw the actor is steering its mPrevAngleY toward. Written with
+    /* The yaw the actor is steering its mPrevAngle.y toward. Written with
        Vec3_HorzAngle toward the spawn point or the player (InitResources, the
        circling and swoop states), with mAngle.y on entering CIRCLE, or with
-       mPrevAngleY + 0x4000 after a wall hit, and read as the target of
+       mPrevAngle.y + 0x4000 after a wall hit, and read as the target of
        ApproachLinear / AngleDiff. */
     s16                          mTargetAngleY;         /* 0x44a */
     /* The uniqueID of the held actor (not its actorID); 0 when nothing is held. */

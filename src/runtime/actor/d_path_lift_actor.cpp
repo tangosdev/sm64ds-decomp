@@ -165,9 +165,9 @@ void dPathLiftActor_c::StateFallInit() {
         mTerminalVelocity = -0x3c000;
     }
     mTriggerDelay = 250;
-    mPrevAngleX = mAngle.x;
-    mPrevAngleY = mAngle.y;
-    mPrevAngleZ = mAngle.z;
+    mPrevAngle.x = mAngle.x;
+    mPrevAngle.y = mAngle.y;
+    mPrevAngle.z = mAngle.z;
     mSpeed.y = 0;
     if (HasNonzeroAngleZ() == 0) {
         mFallDelay = 60;
@@ -347,9 +347,9 @@ void dPathLiftActor_c::ResetPath()
     mAngle.x = mInitialAngle.x;
     mAngle.y = mInitialAngle.y;
     mAngle.z = mInitialAngle.z;
-    mPrevAngleX = mInitialAngle.x;
-    mPrevAngleY = mInitialAngle.y;
-    mPrevAngleZ = mInitialAngle.z;
+    mPrevAngle.x = mInitialAngle.x;
+    mPrevAngle.y = mInitialAngle.y;
+    mPrevAngle.z = mInitialAngle.z;
     mCurrPathNode = 0;
     mHorzSpeed = mPathSpeed;
     if (Param08ModeIs1Or2()) SetState(0);

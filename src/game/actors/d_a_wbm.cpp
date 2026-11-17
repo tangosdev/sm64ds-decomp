@@ -286,7 +286,7 @@ void daWbm_c::StateDrop()
     if (playerY > bombY)
         return;
 
-    angle = player->mPrevAngleY;
+    angle = player->mPrevAngle.y;
     speed = player->mHorzSpeed;
     y = playerY + 0x480000;
     uangle = (u32)(angle << 16) >> 16;
@@ -336,7 +336,7 @@ void daWbm_c::StateBounce()
             mHorzSpeed = 0x6000;
             player = ClosestPlayer();
             if (player != 0) {
-                mPrevAngleY = Vec3_HorzAngle(&mPos, &player->mPos);
+                mPrevAngle.y = Vec3_HorzAngle(&mPos, &player->mPos);
             } else {
                 Burst();
                 return;
@@ -410,9 +410,9 @@ void daWbm_c::Burst()
         frag->mSpeed.y = 0x14000;
         frag->mSpeed.z = 0;
         frag->mHorzSpeed = 0x14000;
-        frag->mPrevAngleX = 0;
-        frag->mPrevAngleY = data_ov098_0213bf90[i];
-        frag->mPrevAngleZ = 0;
+        frag->mPrevAngle.x = 0;
+        frag->mPrevAngle.y = data_ov098_0213bf90[i];
+        frag->mPrevAngle.z = 0;
     }
     func_0201267c(0xda, &mCamSpacePos);
     MarkForDestruction();

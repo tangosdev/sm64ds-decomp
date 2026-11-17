@@ -110,7 +110,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        (0xff: none). */
     u8 mLandedWaypoint; /* 0x4c5 */
     /* The heading (angle, 0x10000 = a full turn) the chase and
-       return-to-arena states turn mPrevAngleY toward: the angle to the
+       return-to-arena states turn mPrevAngle.y toward: the angle to the
        player, or to mSpawnPos. */
     s16 mTargetAngle;                                      /* 0x4c6 */
     /* Which leg of the state at data_ov073_02123360 (the chase state) is

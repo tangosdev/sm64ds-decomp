@@ -69,7 +69,7 @@ int daDonketu_c::InitResources() {
 
 /* 0 runs the shared worker, 1 is already handled, 2 drops a coin (actor
  * 0x120, subtype 2) and bumps the Big Bully's kill count. The same drop is
- * written again in UpdateDeathState. The coin faces mPrevAngleY + 0x8000
+ * written again in UpdateDeathState. The coin faces mPrevAngle.y + 0x8000
  * plus a 10-bit roll, and launches upward.
  */
 int daDonketu_c::Behavior() {
@@ -78,7 +78,7 @@ int daDonketu_c::Behavior() {
         if (outcome == 2) {
             Vector3 pos(mPos.x, mPos.y + 0x136000, mPos.z);
             int roll = RandomIntInternal(&data_0209e650.value);
-            int yrot = mPrevAngleY + 0x8000 + (((u32)roll >> 8) & 0x3ff);
+            int yrot = mPrevAngle.y + 0x8000 + (((u32)roll >> 8) & 0x3ff);
             Vector3_16 rot;
             rot.x = 0;
             rot.z = 0;
@@ -116,7 +116,7 @@ void daDonketu_c::UpdateDeathState() {
     pos.z = pz;
     int roll = RandomIntInternal(&data_0209e650.value);
     Vector3_16 rot;
-    s16 ang = (mPrevAngleY + 0x8000 + (((u32)roll >> 8) & 0x3ff));
+    s16 ang = (mPrevAngle.y + 0x8000 + (((u32)roll >> 8) & 0x3ff));
     rot.x = 0;
     rot.z = 0;
     rot.y = ang;

@@ -339,7 +339,7 @@ int daSanbo_c::EnterKnockback() {
         dActor_c::Spawn(0x122, 2, mPos, (Vector3_16 *)0, mAreaId, -1);
     }
     UnlinkSegment();
-    mPrevAngleY = Vec3_HorzAngle(&mHitActor->mPos, &mPos);
+    mPrevAngle.y = Vec3_HorzAngle(&mHitActor->mPos, &mPos);
     mSpeed.y = 0x14000;
     if (mHitActor->param1 == 2)
         mHorzSpeed = 0x28000;
@@ -443,10 +443,10 @@ int daSanbo_c::EnterMegaKill() {
     }
     Sound::PlayBank0(9, mCamSpacePos);
     UnlinkSegment();
-    mPrevAngleY = Vec3_HorzAngle(&mHitActor->mPos, &mPos);
+    mPrevAngle.y = Vec3_HorzAngle(&mHitActor->mPos, &mPos);
     rnd = RandomIntInternal(&data_0209e650.value);
-    mPrevAngleY = (mPrevAngleY + ((rnd & 0x7fff) - 0x4000));
-    mAngle.y = (mPrevAngleY + 0x8000);
+    mPrevAngle.y = (mPrevAngle.y + ((rnd & 0x7fff) - 0x4000));
+    mAngle.y = (mPrevAngle.y + 0x8000);
     mSpeed.y = 0x28000;
     mHorzSpeed = 0xa000;
     mTimer = 45;
@@ -692,7 +692,7 @@ void daSanbo_c::UpdateWanderYaw() {
     ang = Vec3_HorzAngle(&mPos, target);
     ApproachLinear(mAngle.y, ang, (short)0x320);
     turn = CalcShyAwayAngle(dist);
-    mPrevAngleY = (mAngle.y + turn);
+    mPrevAngle.y = (mAngle.y + turn);
 }
 
 int daSanbo_c::CalcShyAwayAngle(int x) {

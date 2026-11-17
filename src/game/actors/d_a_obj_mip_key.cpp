@@ -210,11 +210,11 @@ int daObj_Mip_Key_c::StateLoose() {
     pp.x = ppos->x;
     pp.y = ppos->y;
     pp.z = ppos->z;
-    mPrevAngleY = Vec3_HorzAngle(&mPos, &pp);
-    mPrevAngleX = Vec3_VertAngle(&mPos, &pp);
+    mPrevAngle.y = Vec3_HorzAngle(&mPos, &pp);
+    mPrevAngle.x = Vec3_VertAngle(&mPos, &pp);
     v.z = 0x14000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
+    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
     MTX_MultVec43(&v, &data_020a0e68, &out);
     ApproachLinear(mSpeed.x, out.x, 0x1000);
     ApproachLinear(mSpeed.y, out.y, 0x1000);

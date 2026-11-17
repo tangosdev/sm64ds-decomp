@@ -17,7 +17,7 @@
  *   and data_ov064_0211bb2c CLPS; symbols.txt has no recovered names.
  * - common.h first (dBgActor_c.h already pulls it; dExtSimpleModel_c.h's
  *   nested Matrix4x3 would scalarize a 12-word copy).
- * - Behavior writes mPrevAngleZ through a short* (member assignment
+ * - Behavior writes mPrevAngle.z through a short* (member assignment
  *   size-DIFFs).
  * - Inline destructor (out-of-line emits D0 before D1 plus a homeless D2).
  */
@@ -86,20 +86,20 @@ s32 daObjFl_London_c::InitResources() {
 s32 daObjFl_London_c::Behavior() {
     if (DecIfAbove0_Byte(&mCooldown) == 0) {
         if (mFlag == 0) {
-            /* MATCH: mPrevAngleZ = mPrevAngleZ - 0x100 size-DIFFs (member
+            /* MATCH: mPrevAngle.z = mPrevAngle.z - 0x100 size-DIFFs (member
              * addressing CSEs the field). */
-            short *p = &mPrevAngleZ;
+            short *p = &mPrevAngle.z;
             *p = *p - 0x100;
-            if (mPrevAngleZ <= -0x2000) {
-                mPrevAngleZ = -0x2000;
+            if (mPrevAngle.z <= -0x2000) {
+                mPrevAngle.z = -0x2000;
                 mCooldown = 15;
                 mFlag = 1;
             }
         } else {
-            short *p = &mPrevAngleZ;
+            short *p = &mPrevAngle.z;
             *p = *p + 0x100;
-            if (mPrevAngleZ >= 0) {
-                mPrevAngleZ = 0;
+            if (mPrevAngle.z >= 0) {
+                mPrevAngle.z = 0;
                 mCooldown = 15;
                 mFlag = 0;
             }
@@ -112,7 +112,7 @@ s32 daObjFl_London_c::Behavior() {
                 Sound::PlayBank3(0x35, mCamSpacePos);
         }
     }
-    mAngle.z = mPrevAngleZ;
+    mAngle.z = mPrevAngle.z;
     UpdateModelMatrix();
     if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();

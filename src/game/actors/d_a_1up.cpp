@@ -95,7 +95,7 @@
  *   they are not recovered original names (nor are the address-named
  *   handlers).
  * - mSpeed.x / mSpeed.z are dActor_c's velocity x/z words (UpdatePosWithHorzSpeedAndAng
- *   writes them from mHorzSpeed and mPrevAngleY); they stay unnamed here because
+ *   writes them from mHorzSpeed and mPrevAngle.y); they stay unnamed here because
  *   naming them is a shared dActor_c.h change.
  * - The SND3_* names and the effect ids are known by use only (0x68 is played
  *   as a mushroom launches, 0x69 once when type 13 starts).
@@ -236,7 +236,7 @@ void da1up_c::func_ov002_020aefa4() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* The shared per-frame physics step. Moves by mHorzSpeed along mPrevAngleY
+/* The shared per-frame physics step. Moves by mHorzSpeed along mPrevAngle.y
    (UpdatePosWithHorzSpeedAndAng). While on the ground it adds ten times the
    floor normal's x and z to the words at 0xa4 / 0xac (the x and z of a velocity
    whose y is mSpeed.y: UpdateWaitThenAccelerate saves and restores them as that
@@ -244,7 +244,7 @@ void da1up_c::func_ov002_020aefa4() {
    0 otherwise, and raises mHorzSpeed to the horizontal length of that vector
    when that is larger, capped at 15 units (0xf000). Then it integrates position
    (UpdatePosWithOnlySpeed), runs the wall/floor collision update, and on a wall
-   hit reflects mPrevAngleY about the wall normal.
+   hit reflects mPrevAngle.y about the wall normal.
    The shard carried shadow `dActor_c`/`dEnemyBase_c` tags to name three
    non-virtual methods. The merged TU has both real classes complete through
    da1up_c.h, so the shadows are gone and the calls go through the real types --
@@ -269,7 +269,7 @@ void da1up_c::UpdatePhysics() {
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     if (!mWithMeshClsn.IsOnWall()) return;
-    mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
+    mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -277,11 +277,11 @@ void da1up_c::UpdatePhysics() {
    player; if there is one, builds the vector to it -- the aim point is the
    player's y lowered by 80 units (0x50000) when func_ov002_020d0d2c says the
    player is in one of two daPly_c states and raised by 120 units (0x78000)
-   otherwise -- and steps mPrevAngleY toward the horizontal bearing and
-   mPrevAngleX toward the pitch (cstd::atan2(horizontal length, height
+   otherwise -- and steps mPrevAngle.y toward the horizontal bearing and
+   mPrevAngle.x toward the pitch (cstd::atan2(horizontal length, height
    difference)), at most 0x1000 (22.5 degrees) per frame each. mSpeed.y and
    mHorzSpeed are then 30 units (0x1e) times the cosine and the sine of
-   mPrevAngleX. Always finishes with CollectOnTouch. */
+   mPrevAngle.x. Always finishes with CollectOnTouch. */
 void da1up_c::SteerTowardPlayer() {
     /* Forward: ordinal 11 sits above this one in ROM order. */
 
@@ -303,10 +303,10 @@ void da1up_c::SteerTowardPlayer() {
         int len = Vec3_HorzLen(&diff);
         short pitch = cstd::atan2(len, diff.y);
         short yaw = Vec3_HorzAngle(&mPos, &ppos);
-        ApproachLinear(mPrevAngleY, yaw, 0x1000);
-        ApproachLinear(mPrevAngleX, pitch, 0x1000);
-        mSpeed.y = FX_CosIdx((u16)mPrevAngleX >> 4) * 0x1e;
-        mHorzSpeed = FX_SinIdx((u16)mPrevAngleX >> 4) * 0x1e;
+        ApproachLinear(mPrevAngle.y, yaw, 0x1000);
+        ApproachLinear(mPrevAngle.x, pitch, 0x1000);
+        mSpeed.y = FX_CosIdx((u16)mPrevAngle.x >> 4) * 0x1e;
+        mHorzSpeed = FX_SinIdx((u16)mPrevAngle.x >> 4) * 0x1e;
     }
     CollectOnTouch();
 }
@@ -455,8 +455,8 @@ void da1up_c::CollectOnTouch() {
 /* -------------------------------------------------------------------------- */
 /* The launch arc of the types that pop out (0, 1, 5 and 7). For the first five
    frames of the state (mStateTimer < 5) it only sets mSpeed.y to 40 units
-   (0x28000). After that, every frame it lowers mPrevAngleX by 0x1000 (22.5
-   degrees): mSpeed.y = 30 units (0x1e) times the cosine of mPrevAngleX plus
+   (0x28000). After that, every frame it lowers mPrevAngle.x by 0x1000 (22.5
+   degrees): mSpeed.y = 30 units (0x1e) times the cosine of mPrevAngle.x plus
    2 units (0x2000); mHorzSpeed = -30 units times its sine. */
 void da1up_c::UpdateLaunchArc() {
     if (mStateTimer < 5) {
@@ -464,10 +464,10 @@ void da1up_c::UpdateLaunchArc() {
         return;
     }
 
-    mPrevAngleX -= 0x1000;
+    mPrevAngle.x -= 0x1000;
 
-    mSpeed.y = FX_CosIdx((u16)mPrevAngleX >> 4) * 0x1e + 0x2000;
-    mHorzSpeed = FX_SinIdx((u16)mPrevAngleX >> 4) * -0x1e;
+    mSpeed.y = FX_CosIdx((u16)mPrevAngle.x >> 4) * 0x1e + 0x2000;
+    mHorzSpeed = FX_SinIdx((u16)mPrevAngle.x >> 4) * -0x1e;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -884,13 +884,13 @@ void da1up_c::UpdateWaitThenAccelerate() {
 
 /* -------------------------------------------------------------------------- */
 /* Walking away from the player, called from state 1 of types 1, 4 and 5. Sets
-   mPrevAngleY to the bearing from the mushroom to the closest player plus half
+   mPrevAngle.y to the bearing from the mushroom to the closest player plus half
    a turn (0x8000), runs the touch check, and goes to state 2 when the floor
    collision reports a wall or the player is not within 3000 units. */
 void da1up_c::WalkAwayFromPlayer() {
     daPly_c *p = ClosestPlayer();
     if (p) {
-        mPrevAngleY = Vec3_HorzAngle(&mPos, &p->mPos) + 0x8000;
+        mPrevAngle.y = Vec3_HorzAngle(&mPos, &p->mPos) + 0x8000;
     }
     CollectOnTouch();
     if (mWithMeshClsn.IsOnWall())

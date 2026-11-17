@@ -332,9 +332,9 @@ void daOnms_c::NextMove()
             mMoveSeqIndex = 0;
         }
     }
-    mOrientBits = (mPrevAngleX >> 0xe) & 3;
-    mOrientBits |= (mPrevAngleY >> 0xc) & 0xc;
-    mOrientBits |= (mPrevAngleZ >> 0xa) & 0x30;
+    mOrientBits = (mPrevAngle.x >> 0xe) & 3;
+    mOrientBits |= (mPrevAngle.y >> 0xc) & 0xc;
+    mOrientBits |= (mPrevAngle.z >> 0xa) & 0x30;
 }
 
 /* State 1: sit still, take the next move after 0x14 frames, watch for a hit. */
@@ -432,9 +432,9 @@ void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
     if (mStateTimer != 7)
         return;
 
-    mPrevAngleX += mAngle.x;
-    mPrevAngleY += mAngle.y;
-    mPrevAngleZ += mAngle.z;
+    mPrevAngle.x += mAngle.x;
+    mPrevAngle.y += mAngle.y;
+    mPrevAngle.z += mAngle.z;
 
     if (mMoveKind == kMoveAlongPath)
         mMoveDir = kDirLand;
@@ -459,10 +459,10 @@ void daOnms_c::Launch(dActor_c *player, u32 how)
     mTerminalVelocity = -0x48000;
     mSpeed.y = sLaunchVertSpeed[how];
     mHorzSpeed = sLaunchHorzSpeed[how];
-    if (how < 2) mPrevAngleY = player->mAngle.y;
-    else mPrevAngleY = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
+    if (how < 2) mPrevAngle.y = player->mAngle.y;
+    else mPrevAngle.y = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
 
-    unsigned n = ((u16)mPrevAngleY) >> 4;
+    unsigned n = ((u16)mPrevAngle.y) >> 4;
     mTumbleVelX = (FX_CosIdx(n) >> 2);
     mTumbleVelY = 0;
     mTumbleVelZ = ((-FX_SinIdx(n)) >> 2);

@@ -186,9 +186,9 @@ int daHyuhyu_c::Behavior() {
         if (state->execute != 0)
             (this->*state->execute)();
     }
-    mAngle.x = mPrevAngleX;
-    mAngle.y = mPrevAngleY;
-    mAngle.z = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     /* Fall, no faster than mTerminalVelocity. The cartridge reloads and
        rewrites mSpeed.z here too (a whole-vector store, most likely); a plain
        clamp misses. */
@@ -279,7 +279,7 @@ int daHyuhyu_c::StateWaitMain() {
             target.z = pos->z;
         }
         angle = Vec3_HorzAngle(&mPos, &target);
-        ApproachAngle(&mPrevAngleY, angle, 0xa, 0x200, 0x100);
+        ApproachAngle(&mPrevAngle.y, angle, 0xa, 0x200, 0x100);
         if ((u16)mStateTimer == 0 && Vec3_Dist(&mPos, &target) < 0x3e8000 && angle < 0x1000)
             SetState(&data_ov091_021356b0);
     }
@@ -335,16 +335,16 @@ int daHyuhyu_c::StateBlowMain() {
                     target.y = player->mGroundY;
 
                     {
-                        s16 base = mPrevAngleY;
+                        s16 base = mPrevAngle.y;
                         heading =
                             base + (s16)(0x2000 -
                                          ((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 3)
                                           << 12));
                     }
 
-                    gust->mPrevAngleX = Vec3_VertAngle(&mPos, &target);
-                    gust->mPrevAngleY = heading;
-                    gust->mPrevAngleZ = 0;
+                    gust->mPrevAngle.x = Vec3_VertAngle(&mPos, &target);
+                    gust->mPrevAngle.y = heading;
+                    gust->mPrevAngle.z = 0;
                 }
             }
         }
@@ -371,9 +371,9 @@ int daHyuhyu_c::StateGustFlyMain() {
     fwd.x = 0;
     fwd.y = 0;
     fwd.z = 0x1e000;
-    mPrevAngleX -= 0x80;
-    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
+    mPrevAngle.x -= 0x80;
+    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
     MTX_MultVec43(&fwd, &data_020a0e68, &mSpeed);
     if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0 || mWithMeshClsn.IsOnWall() != 0 ||
         (mFlags & 8))
@@ -435,7 +435,7 @@ void daHyuhyu_c::HandleCylinderHit() {
         return;
     if (player->IsCollectingCap() != 0)
         return;
-    player->BlowAway(mPrevAngleY);
+    player->BlowAway(mPrevAngle.y);
     {
         u8 hasWings = player->mHasWings;
         u8 character = player->mCharacter;
@@ -460,7 +460,7 @@ void daHyuhyu_c::HandleCylinderHit() {
                 rot.x = 0;
                 rot.y = 0;
                 rot.z = 0;
-                rot.y = mPrevAngleY;
+                rot.y = mPrevAngle.y;
                 capParam = capParam | (capChar << 8);
                 cap = dActor_c::Spawn(0x10d, capParam, mPos, &rot, mAreaId, -1);
                 if (cap == 0)

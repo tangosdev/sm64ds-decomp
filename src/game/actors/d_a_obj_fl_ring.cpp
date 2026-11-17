@@ -3,7 +3,7 @@
  * 9 function(s), .text 0x021111a0..0x021115a8.
  *
  * FL_RING, the fire ring of Lethal Lava Land (ov022): a dBgActor_c that turns
- * about Y at a rate kept in its own Z channel (mPrevAngleZ). It starts at
+ * about Y at a rate kept in its own Z channel (mPrevAngle.z). It starts at
  * -0x100 per frame (or the placement's Z angle); a trigger
  * slows it to 0 and holds it there while a 0x96 frame cooldown runs, during which it spawns actor 0xf3 (OBJ_VOLCANO_CANNON,
  * daObj_volcanoCannon_c) whenever it is on screen and its spawn guard has run
@@ -127,9 +127,9 @@ s32 daObjFl_Ring_c::InitResources() {
 
     /* The ring's own Z channel carries its spin rate, not an angle: it rests
        at -0x100 per frame unless the map row gave it one. */
-    mPrevAngleZ = -0x100;
+    mPrevAngle.z = -0x100;
     if (mAngle.z != 0)
-        mPrevAngleZ = mAngle.z;
+        mPrevAngle.z = mAngle.z;
     return 1;
 }
 
@@ -142,7 +142,7 @@ s32 daObjFl_Ring_c::Behavior() {
             break;
         if (mTriggered == 0)
             break;
-        if (ApproachAngle(&mPrevAngleZ, 0, 0xf, 0x30, 2) != 0)
+        if (ApproachAngle(&mPrevAngle.z, 0, 0xf, 0x30, 2) != 0)
             break;
         mCooldown = 150;
         mState = 1;
@@ -152,7 +152,7 @@ s32 daObjFl_Ring_c::Behavior() {
     case 1:
         /* Stopped: spawn while the cooldown runs, then spin back up. */
         if (DecIfAbove0_Short(&mCooldown) == 0) {
-            if (ApproachAngle(&mPrevAngleZ, -0x100, 0xf, 0x30, 2) != 0)
+            if (ApproachAngle(&mPrevAngle.z, -0x100, 0xf, 0x30, 2) != 0)
                 break;
             mCooldown = 150;
             mState = 0;
@@ -183,10 +183,10 @@ s32 daObjFl_Ring_c::Behavior() {
     }
 
     {
-        s16 *ip = &mPrevAngleY;
-        *ip = (s16)(*ip + mPrevAngleZ);
+        s16 *ip = &mPrevAngle.y;
+        *ip = (s16)(*ip + mPrevAngle.z);
     }
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
 
     mMeshCollider.SetClipRadius(0x780000);
     mMeshCollider.SetClipOffsetY(0x1000);

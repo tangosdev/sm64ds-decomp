@@ -278,15 +278,15 @@ int daManta_c::Behavior() {
             if (mPathNode >= mNumNodes)
                 mPathNode = 0;
         }
-        ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, &node), 0x60);
-        ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &node), 0x40);
-        mAngle.x = mPrevAngleX;
-        mAngle.y = mPrevAngleY;
-        mAngle.z = mPrevAngleZ;
+        ApproachLinear(mPrevAngle.y, Vec3_HorzAngle(&mPos, &node), 0x60);
+        ApproachLinear(mPrevAngle.x, Vec3_VertAngle(&mPos, &node), 0x40);
+        mAngle.x = mPrevAngle.x;
+        mAngle.y = mPrevAngle.y;
+        mAngle.z = mPrevAngle.z;
         forward.y = forward.x = forward.z = 0;
         forward.z = MANTA_FORWARD;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
+        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngle.x);
         MTX_MultVec43(&forward, &data_020a0e68, &mSpeed);
     }
     {
@@ -345,9 +345,9 @@ int daManta_c::InitResources() {
         int kuppa = (int)(gGameMode == 2);
         if (kuppa != 0) {
             mPathNode = 3;
-            mPrevAngleX = (short)0xf303;
-            mPrevAngleY = 0xb50;
-            mPrevAngleZ = 0;
+            mPrevAngle.x = (short)0xf303;
+            mPrevAngle.y = 0xb50;
+            mPrevAngle.z = 0;
             mPos.x = (int)0xfdfb8000;
             mPos.y = (int)0xff8f8000;
             mPos.z = 0x29a000;

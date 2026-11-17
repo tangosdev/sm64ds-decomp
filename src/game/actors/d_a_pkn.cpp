@@ -152,7 +152,7 @@ int daPkn_c::InitResources()
     mScale.y = 0x1000;
     mScale.z = 0x1000;
     mState = 0;
-    mTargetAngleY = mPrevAngleY;
+    mTargetAngleY = mPrevAngle.y;
     mPlayerDist = 0x7fffffff;
     mClosestPlayer = 0;
     mClsnEnabled = 0;
@@ -335,8 +335,8 @@ void daPkn_c::StateBite()
         func_0201267c(0xc0, &mCamSpacePos);
     }
 
-    ApproachLinear(mPrevAngleY, mTargetAngleY, 0x800);
-    mAngle.y = mPrevAngleY;
+    ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x800);
+    mAngle.y = mPrevAngle.y;
 
     if (mAnmModel.Finished() != 0) {
         int thr;

@@ -655,7 +655,7 @@ void daHanachan_c::StateDemoWaitInit()
             mSegmentPos[seg].y = mPos.y;
             mSegmentPos[seg].z = mPos.z;
             mSegmentRot[seg].y = HorzAngleToCPlayer();
-            mPrevAngleY = mSegmentRot[seg].y;
+            mPrevAngle.y = mSegmentRot[seg].y;
         } else {
             in.z = -mSegmentSpacing[seg];
             in.x = 0;
@@ -932,7 +932,7 @@ int daHanachan_c::Behavior()
             mTextureSequences[0].currFrame = 0;
     }
 
-    mPrevAngleY = mSegmentRot[0].y;
+    mPrevAngle.y = mSegmentRot[0].y;
     UpdatePos(0);
 
     if (mFalling == 0)
@@ -1085,7 +1085,7 @@ int daHanachan_c::InitResources()
             ((daHanachan_c *)rotRow)->mSegmentRot[0].x = mAngle.x;
             ((daHanachan_c *)rotRow)->mSegmentRot[0].y = mAngle.y;
             ((daHanachan_c *)rotRow)->mSegmentRot[0].z = mAngle.z;
-            mPrevAngleY = ((daHanachan_c *)rotRow)->mSegmentRot[0].y;
+            mPrevAngle.y = ((daHanachan_c *)rotRow)->mSegmentRot[0].y;
         } else {
             va.z = 0 - mSegmentSpacing[i];
             va.x = zeroC;

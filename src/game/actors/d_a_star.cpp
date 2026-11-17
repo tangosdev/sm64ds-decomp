@@ -1153,7 +1153,7 @@ void daStar_c::StateCollectBegin() {
             *posY += 0x1e000;
         }
 
-        mPrevAngleY = mPlayer->mAngle.y;
+        mPrevAngle.y = mPlayer->mAngle.y;
         mAngle.x = 0;
 
         if (common->mIsMega != 0) {
@@ -1220,7 +1220,7 @@ void daStar_c::StateCollectHold() {
     mPos.x = s[0];
     mPos.y = s[1];
     mPos.z = s[2];
-    mPrevAngleY = mPlayer->mAngle.y;
+    mPrevAngle.y = mPlayer->mAngle.y;
     mState = STATE_COLLECT_TALK;
     mSeqTimer = 0;
     mTalkStep = 0;
@@ -1259,7 +1259,7 @@ void daStar_c::StateCollectTalk() {
     mPos.x = src[0];
     mPos.y = src[1];
     mPos.z = src[2];
-    mPrevAngleY = mPlayer->mAngle.y;
+    mPrevAngle.y = mPlayer->mAngle.y;
     if (mKind == KIND_9) {
         if (mMusicTimer < 120) {
             Sound::ChangeMusicVolume(0, 0x7f000);
@@ -1361,7 +1361,7 @@ void daStar_c::StateSaveMessage() {
             Sound::ChangeMusicVolume(0x40, 0xcb33);
         }
     }
-    mPrevAngleY = mPlayer->mAngle.y;
+    mPrevAngle.y = mPlayer->mAngle.y;
     switch (mTalkStep) {
     case 2:
         if (mPlayer->GetTalkState() == -1) {
@@ -1414,13 +1414,13 @@ void daStar_c::StateBounce() {
     mPrevPos.y = mPos.y;
     UpdateWMClsn(mWithMeshClsn, 2);
     if (mWithMeshClsn.IsOnWall()) {
-        mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
+        mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
     }
     UpdateWater();
     if (mWithMeshClsn.JustHitGround()) {
         OnBounceLand();
     } else if (mWithMeshClsn.IsOnGround()) {
-        mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
+        mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
         if (mBits.water == WATER_IN)
             mSpeed.y = 0xe000;
         else
@@ -1483,7 +1483,7 @@ void daStar_c::StateWaitMarker() {
 
         mBits.noPickup = 1;
         mHorzSpeed = 0xc000;
-        mPrevAngleY = GetAngleToCamera(r3->mPlayerNo) + 0x8000;
+        mPrevAngle.y = GetAngleToCamera(r3->mPlayerNo) + 0x8000;
     }
 }
 
@@ -1622,7 +1622,7 @@ void daStar_c::AimArcTo(Vector3 *p, int n) {
     }
     mTerminalVelocity = -0x32000;
     mHorzSpeed = Vec3_HorzDist(&mPos, p) / 50;
-    mPrevAngleY = Vec3_HorzAngle(&mPos, p);
+    mPrevAngle.y = Vec3_HorzAngle(&mPos, p);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2017,7 +2017,7 @@ void daStar_c::ReturnToHome() {
  * floor types 1 and 9 it aims back at the last safe position
  * (AimArcTo, arc 200.0); on 4 and 5 it goes home
  * (ReturnToHome); on any other floor it saves the spot as safe and sets
- * mPrevAngleY from the closest player when one is within 1200.0 (away from it
+ * mPrevAngle.y from the closest player when one is within 1200.0 (away from it
  * on a flat floor, toward it on a steep one), or toward the farthest player
  * when none is near. */
 void daStar_c::OnBounceLand() {
@@ -2059,7 +2059,7 @@ void daStar_c::OnBounceLand() {
         v.z = s[2];
     }
     if (Vec3_Dist(&mPos, &v) < 0x4b0000) {
-        mPrevAngleY = Vec3_HorzAngle(&v, &mPos);
+        mPrevAngle.y = Vec3_HorzAngle(&v, &mPos);
         if (mFloorNormal.y >= *(short *)(data_02082714 + 0x56)) {
             if (gCurrentSublevel != 0x1d)
                 return;
@@ -2067,13 +2067,13 @@ void daStar_c::OnBounceLand() {
                 return;
         }
         {
-            short *a = &mPrevAngleY;
+            short *a = &mPrevAngle.y;
             *a = *a + 0x8000;
         }
     } else {
         dActor_c *q = FarthestPlayer();
         if (q != 0) {
-            mPrevAngleY = Vec3_HorzAngle(&mPos, &q->mPos);
+            mPrevAngle.y = Vec3_HorzAngle(&mPos, &q->mPos);
         }
     }
 }
@@ -2165,7 +2165,7 @@ void daStar_c::FinishCollection() {
 /* Builds the model matrix for this frame. Kind 8 sits at its position. A
  * matrix pointer in the unnamed dActor_c word at +0xc8 is copied as it is.
  * Otherwise the star spins about Y by 0xc00 per frame, or, with the no-spin
- * flag, faces mPrevAngleY and hangs 50.0 higher. The translucent model takes a
+ * flag, faces mPrevAngle.y and hangs 50.0 higher. The translucent model takes a
  * copy, then DrawShadow draws the shadow. */
 void daStar_c::UpdateModelMatrix() {
     struct Vector3 v;
@@ -2190,7 +2190,7 @@ void daStar_c::UpdateModelMatrix() {
         mAnmModel1.mat4x3.t.y = mPos.y >> 3;
         mAnmModel1.mat4x3.t.z = mPos.z >> 3;
     } else {
-        Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mPrevAngleY);
+        Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mPrevAngle.y);
         mAnmModel1.mat4x3.t.x = mPos.x >> 3;
         mAnmModel1.mat4x3.t.y = (mPos.y + 0x32000) >> 3;
         mAnmModel1.mat4x3.t.z = mPos.z >> 3;
@@ -2270,7 +2270,7 @@ Vector3 daStar_c::func_ov002_020e8244() {
         return result;
     }
     Matrix4x3_FromTranslation(&data_020a0e68, b->mPos.x, b->mPos.y, b->mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngle.y);
     local = *(Mtx43 *)b->mAnmModel1.data.transforms;
     MTX_Concat43(&local, &data_020a0e68, &data_020a0e68);
     b->mCenter.x = data_020a0e68.t.x;

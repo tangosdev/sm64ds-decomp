@@ -8,7 +8,7 @@
  * Whomp's Fortress rotating bar (profile BK_ROTEBAR). Factory
  * allocates 0x324 = sizeof(dBgActor_c) plus mPauseTimer / mTurnSound.
  * Pauses 0x3c frames, then steps yaw by 0x100 until
- * (mPrevAngleY & 0x7fff) == 0 -- a half turn -- and pauses again.
+ * (mPrevAngle.y & 0x7fff) == 0 -- a half turn -- and pauses again.
  *
  * `daObjBk_Rotebar_c` is the RTTI name. Direct base is dBgActor_c.
  */

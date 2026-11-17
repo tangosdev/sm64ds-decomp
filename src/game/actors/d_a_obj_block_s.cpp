@@ -358,7 +358,7 @@ void daObjBlockS_c::UpdateSpitOut() {
 /* STATE_SPIT_OUT, enter. Zeroes the sink offset and target, then puts the
  * crate 80 units ahead of mEatingPlayer along that player's Y angle (the x
  * offset is FX_SinIdx and the z offset FX_CosIdx of that angle, scaled by
- * 0x50000) and 80 units above it, facing the same way (mAngle.y, mPrevAngleY). Clears mFlags bit
+ * 0x50000) and 80 units above it, facing the same way (mAngle.y, mPrevAngle.y). Clears mFlags bit
  * 0x80000, launches it with horizontal speed 30 units (0x1e000) and vertical
  * speed 15 units (0xf000), hands mEatingPlayer over to mPrevHolder and sets
  * dCc_c flags bit 0x2000 on the first cylinder. */
@@ -373,7 +373,7 @@ void daObjBlockS_c::EnterSpitOut() {
     obj = mEatingPlayer;
     angle = obj->mAngle.y;
     mAngle.y = angle;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
 
     mPos = mEatingPlayer->mPos;
 
@@ -797,7 +797,7 @@ void daObjBlockS_c::Kill()
  * ID, or no actor is found for it, that check is skipped). Then func_ov002_020ef228 (nonzero) restarts
  * mWallCooldown at 3 and ends the test. Otherwise, with a wall hit, the crate
  * is killed if it is faster than 20 units per frame (0x14000), and
- * if not mPrevAngleY is reflected off the wall's normal (ReflectAngle on the
+ * if not mPrevAngle.y is reflected off the wall's normal (ReflectAngle on the
  * normal's x and z). */
 void daObjBlockS_c::HandleWallHit() {
     if (DecIfAbove0_Byte(&mWallCooldown) != 0)
@@ -827,7 +827,7 @@ void daObjBlockS_c::HandleWallHit() {
     }
     Vector3 v;
     mWithMeshClsn.GetWallResult()->surface.CopyNormalTo(v);
-    mPrevAngleY = ReflectAngle(v.x, v.z, mPrevAngleY);
+    mPrevAngle.y = ReflectAngle(v.x, v.z, mPrevAngle.y);
 }
 
 /* Ground contact and slide step; returns 1 when it ran to the end, 0 when the
@@ -846,10 +846,10 @@ void daObjBlockS_c::HandleWallHit() {
  * The slide: CopyNormalTo fills mFloorNormal.x/Y/Z, n is the floor's CLPS
  * floor class (CLPS::GetFloorClass; include/daPly_c.h calls it the slipperiness class),
  * hl its slide acceleration (func_ov002_020f02c8). a1 is the current
- * velocity (mHorzSpeed along mPrevAngleY, through the sin / cos table at
+ * velocity (mHorzSpeed along mPrevAngle.y, through the sin / cos table at
  * FX_SinCosTable_), a2 is hl in the direction atan2 of the normal's x and z
  * gives (through the same table), scaled by Vec3_HorzLen of the normal;
- * their sum becomes the new mPrevAngleY and mHorzSpeed (capped at 100 units,
+ * their sum becomes the new mPrevAngle.y and mHorzSpeed (capped at 100 units,
  * 0x64000). mSpeed.y is set to -((normalX * mSpeed.x + normalZ * mSpeed.z)
  * / normalY + 8 units); mSpeed.x / mSpeed.z sit either side of mSpeed.y and
  * are treated here as its x and z companions, which this file does not
@@ -917,7 +917,7 @@ int daObjBlockS_c::UpdateFloorContact() {
 
 
     {
-        int sPrev = (u16)mPrevAngleY >> 4;
+        int sPrev = (u16)mPrevAngle.y >> 4;
         s32 speed = mHorzSpeed;
         a1.x = FX_MUL(speed, FX_SinIdx(sPrev));
         a1.y = 0;
@@ -932,8 +932,8 @@ int daObjBlockS_c::UpdateFloorContact() {
     mHorzSpeed = Vec3_HorzLen(&sum);
     if (mHorzSpeed > 0x64000)
         mHorzSpeed = 0x64000;
-    mPrevAngleY = newAng;
-    AngleDiff(mPrevAngleY, mAngle.y);
+    mPrevAngle.y = newAng;
+    AngleDiff(mPrevAngle.y, mAngle.y);
 
     {
         s32 m0 = FX_MUL(mFloorNormal.x, mSpeed.x);

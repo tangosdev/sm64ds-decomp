@@ -110,9 +110,9 @@ dActor_c::dActor_c() : mActorListNode(this) {
             mAngle.z = spawnRot[2];
             /* The ROM reloads the global. Folding the two reads drops an ldr. */
             spawnRot = data_0209b45c;
-            mPrevAngleX = spawnRot[0];
-            mPrevAngleY = spawnRot[1];
-            mPrevAngleZ = spawnRot[2];
+            mPrevAngle.x = spawnRot[0];
+            mPrevAngle.y = spawnRot[1];
+            mPrevAngle.z = spawnRot[2];
         }
     }
     mAreaId = data_0209b44c;
@@ -373,7 +373,7 @@ void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
     func_02010da4();
 }
 
-/* Splits mHorzSpeed along mPrevAngleY (the heading the velocity follows) into
+/* Splits mHorzSpeed along mPrevAngle.y (the heading the velocity follows) into
    the x/z velocity words, x by sin and z by cos, and applies mVertAccel to
    mSpeed.y, clamped at mTerminalVelocity. */
 void dActor_c::UpdatePosWithHorzSpeedAndAng() {
@@ -395,7 +395,7 @@ void dActor_c::UpdatePosWithHorzSpeedAndAng() {
         s32 next;
         s16 sinv;
         s32 speedX;
-        cosv = FX_CosIdx((u16)mPrevAngleY >> 4);
+        cosv = FX_CosIdx((u16)mPrevAngle.y >> 4);
         vertSpeed = mSpeed.y;
         accel = mVertAccel;
         terminal = mTerminalVelocity;
@@ -403,7 +403,7 @@ void dActor_c::UpdatePosWithHorzSpeedAndAng() {
         next = vertSpeed + accel;
         if (next >= terminal)
             terminal = next;
-        sinv = FX_SinIdx((u16)mPrevAngleY >> 4);
+        sinv = FX_SinIdx((u16)mPrevAngle.y >> 4);
         speedX = FX_MUL(horzSpeed, sinv);
         mSpeed.x = speedX;
         mSpeed.y = terminal;
@@ -595,11 +595,11 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, fx32 spread, s16 angle)
             r = (u32)RandomIntInternal(&data_0209e650.value);
             r >>= 16;
 
-            actor->mPrevAngleX = 0;
+            actor->mPrevAngle.x = 0;
             spread = (u32)((u32)spread * ((r % 50) + 100)) / 100;
             prev = ang;
-            actor->mPrevAngleY = (s16)(ang0 + ang);
-            actor->mPrevAngleZ = 0;
+            actor->mPrevAngle.y = (s16)(ang0 + ang);
+            actor->mPrevAngle.z = 0;
             actor->mHorzSpeed = spread;
         }
     }
@@ -799,8 +799,8 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     t.x = data_020a0e68.m[9];
     t.y = data_020a0e68.m[10];
     t.z = data_020a0e68.m[11];
-    mPrevAngleY = player.mAngle.y;
-    mAngle.y = mPrevAngleY;
+    mPrevAngle.y = player.mAngle.y;
+    mAngle.y = mPrevAngle.y;
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     Vector3 asr;

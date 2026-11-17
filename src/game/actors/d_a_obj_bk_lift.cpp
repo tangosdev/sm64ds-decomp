@@ -27,7 +27,7 @@
  * - data_ov015_02113594 is the CLPS block this TU does not own;
  *   FX_SinCosTable_ is arm9's sin/cos table; gCurrentStarId / gCurrentSublevel
  *   are arm9 scene state; g_profile_BK_LIFT01 lives outside this TU.
- * - Behavior kind 1 writes the half-turn through s16 *p = &mPrevAngleY
+ * - Behavior kind 1 writes the half-turn through s16 *p = &mPrevAngle.y
  *   and a u8 temporary for 0x87: a direct member add if-converts
  *   (ldrsheq / addeq / strheq) and Behavior shrinks from 0x1cc to 0x1c4.
  * - Behavior kind 2 keeps the 0/1 flag, the second compare, and the
@@ -155,7 +155,7 @@ int daObjBk_Lift_c::InitResources() {
 
     UpdateShadow();
 
-    mPrevAngleY = mAngle.y + 0x8000;
+    mPrevAngle.y = mAngle.y + 0x8000;
     mMoveTimer = 135;
 
     int kind = param1 & 0xff;
@@ -180,7 +180,7 @@ int daObjBk_Lift_c::Behavior() {
 
     if (kind == 1) {
         if (DecIfAbove0_Byte(&mMoveTimer) == 0) {
-            mPrevAngleY += 0x8000;
+            mPrevAngle.y += 0x8000;
             mMoveTimer = 135;
         }
         UpdatePos(0);

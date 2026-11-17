@@ -249,7 +249,7 @@ void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
     }
     mTerminalVelocity = TERMINAL_VY;
     mHorzSpeed = Vec3_HorzDist(&mPos, target) / JUMP_FRAMES;
-    mPrevAngleY = Vec3_HorzAngle(&mPos, target);
+    mPrevAngle.y = Vec3_HorzAngle(&mPos, target);
 }
 
 /* UnloadKeyModels, 0x021310cc */
@@ -336,7 +336,7 @@ void daObjKey_c::StateFlyToCenter()
         center1.z = 0;
         mSpeed.y = FLY_VY;
         mHorzSpeed = Vec3_HorzDist(&mPos, &center1) / 80;
-        mPrevAngleY = Vec3_HorzAngle(&mPos, &center1);
+        mPrevAngle.y = Vec3_HorzAngle(&mPos, &center1);
         mBounceCount = 0;
         mVertAccel = GRAVITY;
         Message::EndTalk();
@@ -400,7 +400,7 @@ void daObjKey_c::StateFlyToCenter()
     }
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mPrevAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mPrevAngle.y);
     MTX_Concat43(mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
     v.x = data_020a0e68.m[9];
     v.y = data_020a0e68.m[10];

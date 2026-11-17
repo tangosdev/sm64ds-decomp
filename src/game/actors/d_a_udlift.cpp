@@ -185,10 +185,10 @@ int daUdlift_c::InitResources()
        says how far down it travels. The mMode == 2 arm is unreachable here:
        only 0 and 1 are ever stored. */
     if (mMode == 2)
-        mTopY = mPos.y + ((u16)mPrevAngleZ << 12);
+        mTopY = mPos.y + ((u16)mPrevAngle.z << 12);
     else
         mTopY = mPos.y;
-    mBottomY = mTopY - ((u16)mPrevAngleX << 12);
+    mBottomY = mTopY - ((u16)mPrevAngle.x << 12);
     mMiddleY = (mTopY + mBottomY) / 2;
     mIsAtBottom = 0;
     mIsArmed = 1;

@@ -74,7 +74,7 @@ daObjSm_Lift_c::~daObjSm_Lift_c() {}
 void daObjSm_Lift_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     KillByMegaChar(player);
-    mAngle.y = mPrevAngleY + 0x4000;
+    mAngle.y = mPrevAngle.y + 0x4000;
 }
 
 void daObjSm_Lift_c::UpdateModelTransform() {

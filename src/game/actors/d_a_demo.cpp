@@ -2678,7 +2678,7 @@ int daDemo_c::func_ov002_020f6b4c(unsigned char *p)
     target.y = y;
     target.z = z;
     this->mAngle.y = Vec3_HorzAngle(&this->mPos, &target);
-    this->mPrevAngleY = this->mAngle.y;
+    this->mPrevAngle.y = this->mAngle.y;
     this->mHorzSpeed = ReadUnalignedShort(p + 6);
     return 1;
 }
@@ -2694,7 +2694,7 @@ s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data)
     this->mPos.y = y;
     this->mPos.z = z;
     this->mAngle.y = ReadUnalignedShort(data + 6);
-    this->mPrevAngleY = this->mAngle.y;
+    this->mPrevAngle.y = this->mAngle.y;
     return 1;
 }
 
@@ -2756,9 +2756,9 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
       Vec3_LslInPlace((int *)&v, 3);
       func_ov002_020f6f48(&v, 8);
   }
-  this->mPrevAngleX = this->mAngle.x;
-  this->mPrevAngleY = this->mAngle.y;
-  this->mPrevAngleZ = this->mAngle.z;
+  this->mPrevAngle.x = this->mAngle.x;
+  this->mPrevAngle.y = this->mAngle.y;
+  this->mPrevAngle.z = this->mAngle.z;
   return 1;
 }
 
@@ -2790,9 +2790,9 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
     this->mAngle.x = (short)f;
     this->mAngle.y = (short)e;
     this->mAngle.z = (short)d;
-    this->mPrevAngleX = this->mAngle.x;
-    this->mPrevAngleY = this->mAngle.y;
-    this->mPrevAngleZ = this->mAngle.z;
+    this->mPrevAngle.x = this->mAngle.x;
+    this->mPrevAngle.y = this->mAngle.y;
+    this->mPrevAngle.z = this->mAngle.z;
     this->mMagnitude = (new_var = p[0xc]) << 12;
     this->mScale.x = 0xb33;
     this->mScale.y = 0xb33;
@@ -3059,17 +3059,17 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
             }
         }
 
-        this->mPrevAngleX = 0x1000;
-        this->mPrevAngleY = -0x7000;
-        this->mAngle.y = this->mPrevAngleY;
+        this->mPrevAngle.x = 0x1000;
+        this->mPrevAngle.y = -0x7000;
+        this->mAngle.y = this->mPrevAngle.y;
         this->mOpacity = 0x1f;
     } else {
         short state = *&this->mPhase;
         if (state <= 0x6a) {
             if (state > 0x3c) {
                 Math_Function_0203b0fc(&this->mMagnitude, -0xa000, 0xcc, 0x7fffffff);
-                short *p94 = &this->mPrevAngleY;
-                short *p92 = &this->mPrevAngleX;
+                short *p94 = &this->mPrevAngle.y;
+                short *p92 = &this->mPrevAngle.x;
                 *p94 = *p94 + 0x78;
                 *p92 = *p92 + 0x40;
 
@@ -3079,7 +3079,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 
             state = *&this->mPhase;
             if (state > 0x69) {
-                this->mPrevAngleX = 0xe00;
+                this->mPrevAngle.x = 0xe00;
             }
         } else {
             Math_Function_0203b0fc(&this->mMagnitude, 0x3c000, 0xcc, 0x7fffffff);
@@ -3089,20 +3089,20 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 
             state = *&this->mPhase;
             if (state < 0xa9) {
-                UpdateAngle(this->mPrevAngleY, 0x1800, 0x1e, 0x4000);
+                UpdateAngle(this->mPrevAngle.y, 0x1800, 0x1e, 0x4000);
             }
-            ApproachLinear(this->mPrevAngleX, -0x3000, 0x70);
+            ApproachLinear(this->mPrevAngle.x, -0x3000, 0x70);
         }
     }
 
     {
-        unsigned short a = this->mPrevAngleX;
+        unsigned short a = this->mPrevAngle.x;
         int t = this->mMagnitude;
         short s0 = FX_SinCosTable_[((a >> 4) << 1) + 1];
         this->mHorzSpeed = FX_MUL(t, s0);
     }
     {
-        unsigned short a = this->mPrevAngleX;
+        unsigned short a = this->mPrevAngle.x;
         int t = this->mMagnitude;
         int s1 = -FX_SinCosTable_[(a >> 4) << 1];
         this->mSpeed.y = FX_MUL(t, s1);
@@ -3125,9 +3125,9 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         *&this->mPhase = -0x1000;
         *&this->mPhaseStep = 0x800;
         this->mRate = -0xc8000;
-        this->mPrevAngleY = -0x8000;
+        this->mPrevAngle.y = -0x8000;
         this->mAngle.y = -0x4000;
-        this->mPrevAngleX = 0x800;
+        this->mPrevAngle.x = 0x800;
         this->mOpacity = 0x1f;
     } else {
         int v[3];
@@ -3136,14 +3136,14 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         int t;
 
         {
-            short *p94 = &this->mPrevAngleY;
+            short *p94 = &this->mPrevAngle.y;
             *p94 = *p94 + 0x200;
         }
         Math_Function_0203b0fc(&this->mMagnitude, 0x64000, 0x7a, 0x7fffffff);
 
         this->mAngle.x = cstd::atan2(this->mPos.y - 0x190000, 0xc8000);
 
-        ApproachAngle(&this->mAngle.y, (short)(this->mPrevAngleY + 0x8000), 4, 0x4000, 0);
+        ApproachAngle(&this->mAngle.y, (short)(this->mPrevAngle.y + 0x8000), 4, 0x4000, 0);
 
         data_ov002_02110ddc[2] = this->mMagnitude;
         v[0] = data_ov002_0210b964[0];
@@ -3152,7 +3152,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         w[0] = data_ov002_02110ddc[0];
         w[1] = data_ov002_02110ddc[1];
         w[2] = data_ov002_02110ddc[2];
-        Vec3_RotateYAndTranslate(&this->mPos.x, v, this->mPrevAngleY, w);
+        Vec3_RotateYAndTranslate(&this->mPos.x, v, this->mPrevAngle.y, w);
 
         h = (unsigned short)this->mPhase;
         t = FX_SinCosTable_[(h >> 4) * 2 + 1];

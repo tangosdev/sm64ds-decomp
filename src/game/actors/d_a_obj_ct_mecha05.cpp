@@ -100,7 +100,7 @@ int daObjCtMecha05_c::InitResources() {
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetClipRadius(0x1c0000);
     mMeshCollider.SetClipOffsetY(0x1000);
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mHomePos.x = mPos.x;
     mHomePos.y = mPos.y;
     mHomePos.z = mPos.z;
@@ -126,10 +126,10 @@ int daObjCtMecha05_c::InitResources() {
 int daObjCtMecha05_c::Behavior() {
     if (data_0209f2c0 == 3) {
         int ang;
-        /* ldrh, not the ldrsh a plain s16 mPrevAngleY read would emit. */
-        ang = (u16)mPrevAngleY;
+        /* ldrh, not the ldrsh a plain s16 mPrevAngle.y read would emit. */
+        ang = (u16)mPrevAngle.y;
         mPos.x = mHomePos.x + FX_MUL(FX_SinIdx(ang >> 4), 0xfa000);
-        ang = (u16)mPrevAngleY;
+        ang = (u16)mPrevAngle.y;
         mPos.z = mHomePos.z + FX_MUL(FX_CosIdx(ang >> 4), 0xfa000);
         UpdateModelPosAndRotY();
         UpdateShadow();

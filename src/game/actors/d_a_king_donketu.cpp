@@ -84,7 +84,7 @@
  * - void* cam in UpdateDefeat / 0212128c / 02121388: a dCamera_c*
  *   swaps two registers. Those functions also ldrh mStateTimer and
  *   mAngle.x/.y/.z through unsigned short; a plain s16 read is ldrsh.
- * - s16* behind mPrevAngleY in HandleHit and 02120d80, the
+ * - s16* behind mPrevAngle.y in HandleHit and 02120d80, the
  *   const s32* walk of mPos.x, and mFootPos[i] in the dust loops stay. The
  *   direct member forms change addressing.
  * - SpawnLandingEffects's six Vector3 locals are declared up front in
@@ -253,7 +253,7 @@ daKing_Donketu_c::~daKing_Donketu_c()
 /* The 0x77 / 0x78 effects the cut scenes and the defeat keep alive each frame. The point is
    mPos with y raised by 30.0 * the scale (mScale.x is fx32, so the 0x1e000
    constant shrinks with the boss) and x/z moved 200.0 (0xc8000) along
-   mPrevAngleY. Particle systems 0x77 and 0x78 are renewed there (ids kept in
+   mPrevAngle.y. Particle systems 0x77 and 0x78 are renewed there (ids kept in
    mParticleId0/1), and the emitRadius of each is set to 20.0 * the scale. The
    Vec3_HorzAngle result is not used. */
 void daKing_Donketu_c::RenewLoopedParticles() {
@@ -269,7 +269,7 @@ void daKing_Donketu_c::RenewLoopedParticles() {
     Vec3_HorzAngle(&mPos, &mSpawnPos);
     in.z = 0; in.z = 0xc8000; in.x = 0; in.y = 0;
     out.x = 0; out.y = 0; out.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
     MTX_MultVec43(&in, &data_020a0e68, &out);
     pos.x = pos.x + out.x;
     pos.z = pos.z + out.z;
@@ -389,14 +389,14 @@ void daKing_Donketu_c::SpawnHitParticles(void *pb) {
        (61.0).
      - A hit sounds SND_HIT_REGISTERED. One time in eight it also spawns 1 to
        3 coins (the count comes from the random word; 0 is read as 1) 100.0
-       (0x64000) above the boss, each with mPrevAngleY a multiple of 0x1000
+       (0x64000) above the boss, each with mPrevAngle.y a multiple of 0x1000
        and mHorzSpeed 0xa000 (10.0). While SaveData character 2 is unlocked each
        coin counts into mCoinsSpawned and the one that takes it past 0x1e also
        spawns a SCALEUP_KINOKO and resets the count. Then the boss goes to
        ..33a0 unless it is already in ..33a0 or ..33d0.
      - With no hit, daPly_c::Hurt is tried on the other actor. If it hurt: a
        particle 0x8a at the other actor's position, and in ..33d0
-       SND_HIT_REGISTERED plays and the function returns 1. Elsewhere the boss turns mPrevAngleY by half a turn
+       SND_HIT_REGISTERED plays and the function returns 1. Elsewhere the boss turns mPrevAngle.y by half a turn
        (0x8000), plays SND_REVERSE_AFTER_HURT, goes to ..3360 with mPhase 2,
        mStateParam 0x2000 and mStateTimer 0x1e, and the function still returns 0. */
 s32 daKing_Donketu_c::HandleHit() {
@@ -483,9 +483,9 @@ s32 daKing_Donketu_c::HandleHit() {
                     if (actor != 0) {
                         rnd = RandomIntInternal(&data_0209e650.value);
                         shortY = ((s32)((((u32)rnd >> 8) & 0xf) << 0x1c)) >> 0x10;
-                        actor->mPrevAngleX = 0;
-                        actor->mPrevAngleY = (s16)shortY;
-                        actor->mPrevAngleZ = 0;
+                        actor->mPrevAngle.x = 0;
+                        actor->mPrevAngle.y = (s16)shortY;
+                        actor->mPrevAngle.z = 0;
                         actor->mHorzSpeed = 0xa000;
                         if (SaveData::IsCharacterUnlocked(2) != 0) {
                             mCoinsSpawned += 1;
@@ -493,9 +493,9 @@ s32 daKing_Donketu_c::HandleHit() {
                                 dActor_c *actor2 =
                                     dActor_c::Spawn(ACTOR_SCALEUP_KINOKO, 0, v, 0, mAreaId, -1);
                                 if (actor2 != 0) {
-                                    actor2->mPrevAngleX = 0;
-                                    actor2->mPrevAngleY = (s16)shortY;
-                                    actor2->mPrevAngleZ = 0;
+                                    actor2->mPrevAngle.x = 0;
+                                    actor2->mPrevAngle.y = (s16)shortY;
+                                    actor2->mPrevAngle.z = 0;
                                     actor2->mHorzSpeed = 0xa000;
                                 }
                                 mCoinsSpawned = 0;
@@ -532,7 +532,7 @@ s32 daKing_Donketu_c::HandleHit() {
         return 1;
     }
     {
-        s16 *py = &mPrevAngleY;
+        s16 *py = &mPrevAngle.y;
         *py = (*py + 0x8000);
     }
     func_02012694(SND_REVERSE_AFTER_HURT, &mCamSpacePos);
@@ -808,7 +808,7 @@ int daKing_Donketu_c::EnterJumpEnd() {
    (set by the enter handler). At 1 the leap's animation starts: mSpeed.y
    0x46000 (70.0), mVertAccel -0x3000 (-3.0), and SND_HOP_LAUNCH if mEdgeRecovered is
    set. At 0, while mStateScratch is 0, mAngle.x is straightened (0x2000 a
-   frame), mPrevAngleY turns toward the angle to mSpawnPos by 0x800, and the
+   frame), mPrevAngle.y turns toward the angle to mSpawnPos by 0x800, and the
    x/z velocity words mSpeed.x / mSpeed.z are set to 50.0 (0x32000) when
    mHitsRemaining is 2, else 30.0 (0x1e000), along that angle. While falling,
    if the actor touching the boss is the player and the boss is the higher,
@@ -842,7 +842,7 @@ int daKing_Donketu_c::UpdateLeapToSpawn() {
         ApproachLinear(mAngle.x, 0, 0x2000);
         horz = Vec3_HorzAngle(&mPos, &mSpawnPos);
         Vec3_VertAngle(&mPos, &mSpawnPos);
-        ApproachLinear(mPrevAngleY, horz, 0x800);
+        ApproachLinear(mPrevAngle.y, horz, 0x800);
         offset.x = 0;
         offset.y = 0;
         offset.z = 0;
@@ -897,7 +897,7 @@ int daKing_Donketu_c::UpdateLeapToSpawn() {
         }
         ChiefChilly_ChangeState((C *)this, (PMF *)&data_ov073_02123380);
     }
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     return 1;
 }
 
@@ -912,7 +912,7 @@ int daKing_Donketu_c::EnterLeapToSpawn() {
    launches: mSpeed.y 0x5a000 (90.0), mVertAccel -0x5000 (-5.0), mWaypointCursor
    advances modulo 8 and the animation in gKingIceDonketuDamageAnimationFile.filePtr runs at speed
    0x2000. At 0 the boss steers toward the current waypoint (set B while
-   mHitsRemaining is 2, else set A): mPrevAngleY turns toward it by 0x800 and
+   mHitsRemaining is 2, else set A): mPrevAngle.y turns toward it by 0x800 and
    the x/z velocity words are set to 80.0 (0x50000) along the heading and
    pitch. On landing it copies the cursor to mLandedWaypoint, stops, shakes the camera
    (0x7d0000), plays SND_HOP_LANDING and counts the landing in mJumpCount: past
@@ -944,7 +944,7 @@ int daKing_Donketu_c::UpdateWaypointHop() {
         short vt = Vec3_VertAngle(&mPos, &v);
         Vector3 in;
         Vector3 out;
-        ApproachLinear(mPrevAngleY, hz, 0x800);
+        ApproachLinear(mPrevAngle.y, hz, 0x800);
         in.x = 0;
         in.y = 0;
         in.z = 0;
@@ -973,7 +973,7 @@ int daKing_Donketu_c::UpdateWaypointHop() {
             ChiefChilly_ChangeState((C *)this, (PMF *)&data_ov073_02123320);
         }
     }
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     return 1;
 }
 
@@ -986,7 +986,7 @@ int daKing_Donketu_c::EnterWaypointHop() {
 }
 
 /* ..3400 update: a waypoint hop like ..3320, but it also straightens mAngle.x
-   (0x2000 a frame), never turns mPrevAngleY toward the waypoint, and at
+   (0x2000 a frame), never turns mPrevAngle.y toward the waypoint, and at
    timer 1 it only sets
    mSpeed.y 0x5a000 (90.0) and the animation (no gravity change, no cursor
    advance), and at timer 0 the aim speed is 40.0 (0x28000). Once mStateScratch
@@ -1046,7 +1046,7 @@ mainblock:
         mJumpCount = 1;
         ChiefChilly_ChangeState((C *)(this), (PMF *)&data_ov073_02123320);
     }
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     return 1;
 }
 
@@ -1092,7 +1092,7 @@ int daKing_Donketu_c::func_ov073_021208e4() {
    becomes 1, mEdgeRecovered becomes 1 and the state is ..3340. Otherwise a looped
    sound plays and the boss moves toward the point 120.0 (0x78000) from the
    saved miss position (mEdgePos) along mAngle.y + 0x8000, at 20.0 (0x14000)
-   a frame; mAngle.y becomes the angle to mSpawnPos, mPrevAngleY that + 0x8000.
+   a frame; mAngle.y becomes the angle to mSpawnPos, mPrevAngle.y that + 0x8000.
    mStateScratch advances 0x500 a frame and mAngle.x approaches mStateParam times
    the sine of it (fx16) by 0x400. Then,
    when HandleHit returns nonzero (the boss took a hit or, in this
@@ -1111,7 +1111,7 @@ int daKing_Donketu_c::UpdateEdgeWobble() {
         mHitsRemaining = 1;
         ChiefChilly_ChangeState((C *)(this), (PMF *)&data_ov073_02123340);
         mEdgeRecovered = 1;
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         return 1;
     }
 
@@ -1131,7 +1131,7 @@ int daKing_Donketu_c::UpdateEdgeWobble() {
     in.z = mEdgePos.z + out.z;
     Vec3_ApproachHorz(&mPos.x, &in, 0x14000);
     mAngle.y = Vec3_HorzAngle(&mPos, &mSpawnPos);
-    mPrevAngleY = mAngle.y + 0x8000;
+    mPrevAngle.y = mAngle.y + 0x8000;
     mStateScratch += 0x500;
     ApproachLinear(mAngle.x, FX_MUL(mStateParam, FX_SinIdx((u16)(s16)mStateScratch >> 4)), 0x400);
     if (HandleHit()) {
@@ -1174,8 +1174,8 @@ int daKing_Donketu_c::func_ov073_02120b78() {
         if (mWithMeshClsn.IsOnGround()) {
             SpawnLandingEffects(0xfa0000);
             mHorzSpeed = 0;
-            mPrevAngleY = Vec3_HorzAngle(&mPos, &mSpawnPos);
-            mAngle.y = mPrevAngleY;
+            mPrevAngle.y = Vec3_HorzAngle(&mPos, &mSpawnPos);
+            mAngle.y = mPrevAngle.y;
             func_02012694(SND_BIG_LANDING, &mCamSpacePos);
             ChiefChilly_ChangeState((C *)(this), (PMF *)&data_ov073_02123400);
         }
@@ -1204,7 +1204,7 @@ int daKing_Donketu_c::func_ov073_02120c08()
    state becomes ..33c0 while it is nonzero, ..33d0 when it reaches 0.
    Otherwise mHorzSpeed is braked to 0 by 0x1000 a frame, and once the
    animation has finished with |mHorzSpeed| < 0xa the boss stops, takes mAngle.y
-   back into mPrevAngleY and returns to the chase (..3360). */
+   back into mPrevAngle.y and returns to the chase (..3360). */
 int daKing_Donketu_c::UpdateHitReaction() {
     int a = mHorzSpeed;
     if (a < 0)
@@ -1231,14 +1231,14 @@ int daKing_Donketu_c::UpdateHitReaction() {
             b = -b;
         if (b < 0xa) {
             mHorzSpeed = 0;
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
             ChiefChilly_ChangeState((C *)(this), (PMF *)&data_ov073_02123360);
         }
     }
     return 1;
 }
 
-/* ..33a0 enter: animation gKingIceDonketuDamageAnimationFile.filePtr at speed 0x1000; mPrevAngleY
+/* ..33a0 enter: animation gKingIceDonketuDamageAnimationFile.filePtr at speed 0x1000; mPrevAngle.y
    = the angle to the player + 0x8000. */
 int daKing_Donketu_c::EnterHitReaction() {
     int fix;
@@ -1251,48 +1251,48 @@ int daKing_Donketu_c::EnterHitReaction() {
                            0x40000000, fix, t);
     mBlendAnmModel.speed = fix;
     ang = HorzAngleToCPlayer();
-    short *py = &mPrevAngleY;
-    mPrevAngleY = ang;
+    short *py = &mPrevAngle.y;
+    mPrevAngle.y = ang;
     *py =
         (short)((int)*py + 0x8000);
     return 1;
 }
 
-/* ..3390 update: mPrevAngleY turns toward mTargetAngle by 0x500 a frame. When
+/* ..3390 update: mPrevAngle.y turns toward mTargetAngle by 0x500 a frame. When
    mTargetAngle is within 0x100 of mAngle.y the state becomes ..3360 with
    mStateTimer 0x1e (30 frames). The Prev angles are copied into the angles. */
 int daKing_Donketu_c::UpdateTurnToSpawn() {
-    ApproachLinear(mPrevAngleY, mTargetAngle, 0x500);
+    ApproachLinear(mPrevAngle.y, mTargetAngle, 0x500);
     if (AngleDiff(mTargetAngle, mAngle.y) < 0x100) {
         ChiefChilly_ChangeState((C *)(this), (PMF *)&data_ov073_02123360);
         mStateTimer = 30;
     }
-    mAngle.x = mPrevAngleX;
-    mAngle.y = mPrevAngleY;
-    mAngle.z = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     return 1;
 }
 
 /* ..3390 enter: animation gKingIceDonketuWalkAnimationFile.filePtr at speed 0x2000;
    mTargetAngle = the angle to mSpawnPos; mStateScratch = 0;
-   mPrevAngleY = mAngle.y. */
+   mPrevAngle.y = mAngle.y. */
 int daKing_Donketu_c::EnterTurnToSpawn() {
     mBlendAnmModel.SetAnim(*(BCA_File *)((BCA_File *)gKingIceDonketuWalkAnimationFile.filePtr), 4,
                            0, 0x1000, 0);
     mBlendAnmModel.speed = 0x2000;
     mTargetAngle = Vec3_HorzAngle(&mPos, &mSpawnPos);
     mStateScratch = 0;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     return 1;
 }
 
 /* ..3360 update, the chase, in legs selected by mPhase. mNoGroundAhead being
    1 sends the boss to ..3390 first.
      leg 0  with mStateTimer at 0: mTargetAngle = the angle to the player. If
-            mPrevAngleY is within 0x2000 of it the timer is set to 0x1e and
+            mPrevAngle.y is within 0x2000 of it the timer is set to 0x1e and
             the leg continues; otherwise leg 1 with mStateParam = 0x1000 and
             SND_CHASE_BRAKE. While the timer runs: mHorzSpeed approaches
-            0x1e000 (30.0) by 0x3000, mPrevAngleY turns toward mTargetAngle by
+            0x1e000 (30.0) by 0x3000, mPrevAngle.y turns toward mTargetAngle by
             0x1d0, and the first time the player is within 0x1f4000 (500.0)
             there is a one-in-eight chance of leg 3 (speed zeroed,
             mStateTimer 0xf).
@@ -1317,7 +1317,7 @@ int daKing_Donketu_c::UpdateChase() {
         if (mStateTimer == 0) {
             mTargetAngle = HorzAngleToCPlayer();
             mStateScratch = 0;
-            if (AngleDiff(mPrevAngleY, mTargetAngle) <= 0x2000) {
+            if (AngleDiff(mPrevAngle.y, mTargetAngle) <= 0x2000) {
                 mStateTimer = 30;
                 break;
             } else {
@@ -1340,10 +1340,10 @@ int daKing_Donketu_c::UpdateChase() {
                     }
                 }
             }
-            ApproachLinear(mPrevAngleY, mTargetAngle, 0x1d0);
-            mAngle.x = mPrevAngleX;
-            mAngle.y = mPrevAngleY;
-            mAngle.z = mPrevAngleZ;
+            ApproachLinear(mPrevAngle.y, mTargetAngle, 0x1d0);
+            mAngle.x = mPrevAngle.x;
+            mAngle.y = mPrevAngle.y;
+            mAngle.z = mPrevAngle.z;
             break;
         }
 
@@ -1399,7 +1399,7 @@ int daKing_Donketu_c::UpdateChase() {
             }
         }
         mHorzSpeed = 0;
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         mStateTimer = 30;
         mBlendAnmModel.SetAnim(*(BCA_File *)((BCA_File *)gKingIceDonketuWalkAnimationFile.filePtr),
                                4, 0, 0x1000, 0);
@@ -1478,7 +1478,7 @@ int daKing_Donketu_c::EnterIntroTalkEnd() {
 }
 
 /* ..3330 update, the opening talk. Returns at once without a player. The
-   camera is placed as in ..3350 and mPrevAngleY turns toward the player by
+   camera is placed as in ..3350 and mPrevAngle.y turns toward the player by
    0x800. The player is stored in mTalkPlayer and, once StartTalk accepts,
    layer-3 music 0x2c is loaded (nothing in this file changes mPhase while this
    state runs, so the test always passes) and ShowMessage runs for message (player's param1 + 0xe3) at mPos
@@ -1526,7 +1526,7 @@ int daKing_Donketu_c::UpdateIntroTalk() {
     cam->SetPos(ps);
 
     vmsg.y = vmsg.y + 0x64000;
-    ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, &vplayer), 0x800);
+    ApproachLinear(mPrevAngle.y, Vec3_HorzAngle(&mPos, &vplayer), 0x800);
 
     mTalkPlayer = player;
     p = mTalkPlayer;
@@ -1659,7 +1659,7 @@ int daKing_Donketu_c::Render()
  *   two states         get an extra per-frame call
  *
  * THE GROUND RAY IS A FALL-THROUGH GUARD. It starts 120.0 (0x78000) above the
- * boss and runs along mPrevAngleY, tilted by 0x2000 (45 degrees) about X, for
+ * boss and runs along mPrevAngle.y, tilted by 0x2000 (45 degrees) about X, for
  * 300.0 (0x12c000) -- 600.0 while mHitsRemaining > 1. When it finds NOTHING it
  * saves the current position into mGroundMissPos and, outside the ..33a0
  * state, rewinds mPos to the previous position and zeroes mHorzSpeed -- so the
@@ -1788,7 +1788,7 @@ int daKing_Donketu_c::Behavior()
             dir.z = 0x258000;
         else
             dir.z = 0x12c000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
+        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngle.y);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, pitch);
         MTX_MultVec43(&dir, &data_020a0e68, &ray);
         end = start;
@@ -1868,8 +1868,8 @@ int daKing_Donketu_c::InitResources()
         mWaypointsB[i].z = mPos.z;
     }
     mLandedWaypoint = 0xff;
-    mPrevAngleY = HorzAngleToCPlayer();
-    mAngle.y = mPrevAngleY;
+    mPrevAngle.y = HorzAngleToCPlayer();
+    mAngle.y = mPrevAngle.y;
     mTargetAngle = mAngle.y;
     mStepBoneIdx = 2;
     mHitsRemaining = 3;

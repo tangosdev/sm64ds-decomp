@@ -251,7 +251,7 @@ void daTgz_c::func_ov077_02124eb0() {
     }
 
     if (this->mdCcAc_c.hitFlags & 0x10) {
-        this->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &this->mPos);
+        this->mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &this->mPos);
         player->IncMegaKillCount();
         this->func_ov077_02125e94(5);
         return;
@@ -288,8 +288,8 @@ void daTgz_c::func_ov077_021250a8() {
     }
     int flags = this->mdCcAc_c.hitFlags;
     if ((flags & 0x10) != 0) {
-        this->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &this->mPos);
-        this->mAngle.y = this->mPrevAngleY + 0x8000;
+        this->mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &this->mPos);
+        this->mAngle.y = this->mPrevAngle.y + 0x8000;
         player->IncMegaKillCount();
         this->func_ov077_02125e94(5);
         return;
@@ -457,7 +457,7 @@ int daTgz_c::func_ov077_021256b4() {
     mAngle.y = carrierYaw;
     mAngle.z = 0;
 
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
 
     carrier = mEatingPlayer;
     one = 1;
@@ -534,7 +534,7 @@ int daTgz_c::func_ov077_02125908() {
         mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
         mChasePlayer = 0;
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         this->func_ov077_02125e94(1);
     }
 
@@ -562,7 +562,7 @@ int daTgz_c::func_ov077_02125a0c() {
     mHorzSpeed = 0x5000;
     mSpeed.y = 0xd000;
     short ang = Vec3_HorzAngle(&mChasePlayer->mPos, &mPos);
-    mPrevAngleY = ang;
+    mPrevAngle.y = ang;
     mWithMeshClsn.SetLimMovFlag();
     mState = 2;
     return 1;
@@ -572,7 +572,7 @@ int daTgz_c::func_ov077_02125a0c() {
 int daTgz_c::func_ov077_02125a54() {
     int d;
     ApproachLinear(mAngle.y, mTurnTarget, 0x64);
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mAnmModel.dExtFrameCtrl_c::Advance();
     this->func_ov077_02124eb0();
     if (mWaterY)
@@ -646,9 +646,9 @@ int daTgz_c::func_ov077_02125bb4() {
             MarkForDestruction();
         } else if (mSpeed.y < 0xa000) {
             mSpeed.y = 0;
-            mAngle.x = mPrevAngleX;
-            mAngle.y = mPrevAngleY;
-            mAngle.z = mPrevAngleZ;
+            mAngle.x = mPrevAngle.x;
+            mAngle.y = mPrevAngle.y;
+            mAngle.z = mPrevAngle.z;
             mWithMeshClsn.ClearLimMovFlag();
             mFlags |= 0x10000000u;
             this->func_ov077_02125e94(1);

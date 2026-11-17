@@ -339,8 +339,8 @@ void daKrpa_c::HandlePlayerHit() {
     }
     if ((this->mdCcAcPos_c.hitFlags & 0x10) == 0)
         return;
-    this->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &this->mPos);
-    this->mAngle.y = (short)(this->mPrevAngleY + 0x8000);
+    this->mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &this->mPos);
+    this->mAngle.y = (short)(this->mPrevAngle.y + 0x8000);
     player->IncMegaKillCount();
     this->ChangeState(3);
 }

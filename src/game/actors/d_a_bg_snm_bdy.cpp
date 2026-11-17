@@ -379,7 +379,7 @@ int daBgSnmBdy_c::State3() {
     case 0: {
         int distToLanding = Vec3_HorzDist(&gBgSnmBdyLandingPoint, &mPos);
         UpdateAngle(mAngle.y, Vec3_HorzAngle(&mPos, &gBgSnmBdyLandingPoint), 2, 0x600);
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         Particle::RunningSlidingDustAt(mPos.x, mPos.y, mPos.z);
         mSoundID = Sound::PlayLong(mSoundID, 3, 0x8a, mCamSpacePos, 0);
         if (distToLanding < 0x17c000) {
@@ -463,9 +463,9 @@ int daBgSnmBdy_c::State5()
     mAngle.x = mHomeAngleX;
     mAngle.y = mHomeAngleY;
     mAngle.z = mHomeAngleZ;
-    mPrevAngleX = mAngle.x;
-    mPrevAngleY = mAngle.y;
-    mPrevAngleZ = mAngle.z;
+    mPrevAngle.x = mAngle.x;
+    mPrevAngle.y = mAngle.y;
+    mPrevAngle.z = mAngle.z;
     mTalkPlayer = 0;
     SetState(0);
     return 1;
@@ -529,7 +529,7 @@ int daBgSnmBdy_c::AdvancePath()
     mPath.GetNode(node, mPathNode);
     int dist = Vec3_HorzDist(&mPos, &node);
     UpdateAngle(mAngle.y, Vec3_HorzAngle(&mPos, &node), 2, 0x600);
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     if (dist < mRadius) {
         numNodes = mPath.NumNodes();
         /* Signed compare. mPathNode is u32; comparing it as u32 is unsigned. */

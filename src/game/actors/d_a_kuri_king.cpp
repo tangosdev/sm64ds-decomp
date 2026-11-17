@@ -289,11 +289,11 @@ void daKuriKing_c::LaunchVanishCopies() {
             rv &= 0x1000;
             pos.y = (short)(pos.y + rv);
             short x = pos.x + 0;
-            t->mPrevAngleX = x;
+            t->mPrevAngle.x = x;
             short y = pos.y + 0;
-            t->mPrevAngleY = y;
+            t->mPrevAngle.y = y;
             short z = pos.z + 0;
-            t->mPrevAngleZ = z;
+            t->mPrevAngle.z = z;
             t->mAngle.x = x;
             t->mAngle.y = y;
             t->mAngle.z = z;
@@ -1800,9 +1800,9 @@ int daKuriKing_c::InitVanishResources() {
 
     this->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cc8.filePtr, 0, 0x1000, 0);
 
-    this->mPrevAngleX = this->mAngle.x;
-    this->mPrevAngleY = this->mAngle.y;
-    this->mPrevAngleZ = this->mAngle.z;
+    this->mPrevAngle.x = this->mAngle.x;
+    this->mPrevAngle.y = this->mAngle.y;
+    this->mPrevAngle.z = this->mAngle.z;
     this->mTerminalVelocity = -0x3c000;
     this->mMegaMushroomID = 0;
 

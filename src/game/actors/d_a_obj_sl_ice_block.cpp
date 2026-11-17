@@ -132,7 +132,7 @@ int daObjSlIceBlock_c::InitResources() {
         mMeshCollider.Enable(this);
         mHorzSpeed = 0x2d000;
         mDelayTimer = 100;
-        mPrevAngleY = -0x4000;
+        mPrevAngle.y = -0x4000;
         mMinPosY = mPos.y - 0xc8000;
     } else {
         mDelayTimer = (u8)mNumToBigIce * 20;

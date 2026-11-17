@@ -250,7 +250,7 @@ int daMky_c::FollowPath() {
   d = Vec3_HorzDist(&this->mPos, &v);
   ang = Vec3_HorzAngle(&this->mPos, &v);
   UpdateAngle(this->mAngle.y, ang, 2, 0x400);
-  this->mPrevAngleY = this->mAngle.y;
+  this->mPrevAngle.y = this->mAngle.y;
   if (d < this->mHorzSpeed) {
       n = mPathPtr.NumNodes();
       p = &mPathNode;
@@ -429,7 +429,7 @@ int daMky_c::func_ov030_021122b0()
 {
     short ang = this->HorzAngleToCPlayer() + 0x8000;
     ApproachLinear(this->mAngle.y, ang, 0xa28);
-    this->mPrevAngleY = this->mAngle.y;
+    this->mPrevAngle.y = this->mAngle.y;
     if (DecIfAbove0_Byte(&this->mActionTimer) == 0)
         ChangeState(0);
     this->mAnmModel.Advance();
@@ -561,7 +561,7 @@ int daMky_c::func_ov030_02112578()
         if (ApproachLinear(this->mAngle.y, (s16)0xffffe04e, 0x400) != 0) {
             this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpStAnimationFile[1], 0x40000000, 0x1000,
                                     0);
-            this->mPrevAngleY = this->mAngle.y;
+            this->mPrevAngle.y = this->mAngle.y;
             this->mHorzSpeed = 0xf000;
             this->mSpeed.y = 0x2f000;
             func_0201267c(0xf1, &this->mCamSpacePos);
@@ -704,7 +704,7 @@ int daMky_c::EnterState7()
     s = this->mAngle.y;
     py = &mPos.y;
     pz = &mPos.z;
-    this->mPrevAngleY = s;
+    this->mPrevAngle.y = s;
     other = this->mPlayer;
     {
         int *op = &other->mPos.x;
@@ -887,7 +887,7 @@ int daMky_c::func_ov030_02113324()
     extern unsigned char data_0209d684;
 
     this->mAngle.y = this->mPlayer->mAngle.y;
-    this->mPrevAngleY = this->mAngle.y;
+    this->mPrevAngle.y = this->mAngle.y;
 
     if (!IsFlagSet(this, 0x100) || IsFlagSet(this, 0x2000)) {
         daPly_c *other = this->mPlayer;
@@ -1000,7 +1000,7 @@ int daMky_c::func_ov030_021136b0()
     int msg;
     s16 a = this->mPlayer->mAngle.y;
     this->mAngle.y = a;
-    this->mPrevAngleY = this->mAngle.y;
+    this->mPrevAngle.y = this->mAngle.y;
 
     switch (this->mSubState) {
     case 0:
@@ -1200,7 +1200,7 @@ int daMky_c::EnterState2() {
         this->mAngle.y = Vec3_HorzAngle(&this->mPos, &this->mPerchPos);
     }
 
-    this->mPrevAngleY = this->mAngle.y;
+    this->mPrevAngle.y = this->mAngle.y;
     this->mHorzSpeed = 0xd000;
     this->mSpeed.y = IsUkikiThief(this) ? 0x23000 : 0x1e000;
 
@@ -1259,7 +1259,7 @@ int daMky_c::func_ov030_02113d20()
     }
 
     ApproachLinear(this->mAngle.y, angle, 0xa28);
-    this->mPrevAngleY = this->mAngle.y;
+    this->mPrevAngle.y = this->mAngle.y;
     if (this->mHorzSpeed != 0)
         this->mAnmModel.SetAnim((BCA_File *)gMonkeyRunAnimationFile.filePtr, 0, 0x1000, 0);
     else
@@ -1311,7 +1311,7 @@ int daMky_c::func_ov030_02113ff0()
         CycleIdleAnimation();
     }
     ApproachLinear(this->mAngle.y, this->HorzAngleToCPlayer(), 0x514);
-    this->mPrevAngleY = this->mAngle.y;
+    this->mPrevAngle.y = this->mAngle.y;
     this->mAnmModel.speed = 0x1000;
     this->mAnmModel.Advance();
     if (IsUkikiThief(this)) {

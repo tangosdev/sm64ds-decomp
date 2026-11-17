@@ -3,7 +3,7 @@
  * Whomp's Fortress rotating bar.
  *
  * Pauses 0x3c frames, then turns in yaw until a half turn
- * (mPrevAngleY & 0x7fff == 0) and pauses again.
+ * (mPrevAngle.y & 0x7fff == 0) and pauses again.
  *
  * daObjBk_Rotebar_c_classInit is reconstructed (RTTI
  * daObjBk_Rotebar_c, BK_ROTEBAR registry). Retail does not store
@@ -82,10 +82,10 @@ s32 daObjBk_Rotebar_c::InitResources() {
 
 s32 daObjBk_Rotebar_c::Behavior() {
     if (DecIfAbove0_Byte((unsigned char *)&mPauseTimer) == 0) {
-        mPrevAngleY += 0x100;
-        mAngle.y = mPrevAngleY;
+        mPrevAngle.y += 0x100;
+        mAngle.y = mPrevAngle.y;
         mTurnSound = Sound::PlayLong(mTurnSound, 3, 0x88, mCamSpacePos, 0);
-        if ((mPrevAngleY & 0x7fff) == 0)
+        if ((mPrevAngle.y & 0x7fff) == 0)
             mPauseTimer = 60;
     }
 

@@ -334,7 +334,7 @@ int daPgMthr_c::StateFollowEnter() {
 
 int daPgMthr_c::StateFollowUpdate() {
     ApproachLinear(mAngle.y, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514);
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     UpdatePos(&mdCcAc_c);
     UpdateFloorAndWalls(&mWithMeshClsn);
     TurnHeadToward((char *)mPlayer);

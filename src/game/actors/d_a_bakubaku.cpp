@@ -176,9 +176,9 @@ s32 daBakubaku_c::Behavior()
     if (state->main != 0)
         (this->*(state->main))();
 
-    mAngle.x = mPrevAngleX;
-    mAngle.y = mPrevAngleY;
-    mAngle.z = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     UpdatePos(&mBodyClsn);
     UpdateWMClsn(mWithMeshClsn, 0);
     UpdateModelMatrix();
@@ -269,9 +269,9 @@ int daBakubaku_c::ExecuteWander() {
         ang = Vec3_HorzAngle(&mPos, &mSpawnPos);
         mAngTarget = ang;
     }
-    ApproachLinear(mPrevAngleY, mAngTarget, 0x100);
+    ApproachLinear(mPrevAngle.y, mAngTarget, 0x100);
     ang = Vec3_VertAngle(&mPos, &mSpawnPos);
-    ApproachLinear(mPrevAngleX, ang, 0x100);
+    ApproachLinear(mPrevAngle.x, ang, 0x100);
     in.z = 0;
     in.z = 0x5000;
     in.x = 0;
@@ -341,7 +341,7 @@ int daBakubaku_c::ExecuteChase() {
     mAngTarget = Vec3_HorzAngle(&mPos, &mTargetPos);
     unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value);
     int s5 = (int)(((r >> 8) & 3) << 0x1c) >> 0x10;
-    ApproachLinear(mPrevAngleY, mAngTarget, 0x200);
+    ApproachLinear(mPrevAngle.y, mAngTarget, 0x200);
     if (Vec3_HorzDist(&mPos, &mTargetPos) < 0x258000) {
         int d = AngleDiff(mAngle.y, mAngTarget);
         if (d < (int)(short)(s5 + 0x200)) {
@@ -439,11 +439,11 @@ int daBakubaku_c::ExecuteDive() {
         mSpeed.y = out2.y;
     }
     ApproachLinear(mAngTarget, speed, 0x200);
-    ApproachLinear(mPrevAngleX, mAngTarget, 0x200);
+    ApproachLinear(mPrevAngle.x, mAngTarget, 0x200);
     if (mAnmModel.Finished() != 0) {
         mMouthOpen = 0;
         if (speed == 0) {
-            s16 a = mPrevAngleX;
+            s16 a = mPrevAngle.x;
             if (a < 0) a = -a;
             if (a < 0x100) {
                 mChaseCooldown = 100;
@@ -505,11 +505,11 @@ int daBakubaku_c::ExecuteSurface() {
     /* Once the lunge has started or the bite animation is over, level out
        and go back to wandering; until then, pitch toward the player. */
     if (mLungePhase != 0 || mAnmModel.Finished() != 0) {
-        ApproachLinear(mPrevAngleX, 0, 0x200);
+        ApproachLinear(mPrevAngle.x, 0, 0x200);
         mLungePhase = 1;
         mMouthOpen = 0;
-        if (AngleDiff(mPrevAngleX, 0) < 0x200) {
-            mPrevAngleX = 0;
+        if (AngleDiff(mPrevAngle.x, 0) < 0x200) {
+            mPrevAngle.x = 0;
             mChaseCooldown = 100;
             mAngTarget = mAngle.y;
             mFlags = 3;
@@ -524,9 +524,9 @@ int daBakubaku_c::ExecuteSurface() {
         vec.y = playerPos[1];
         vec.z = playerPos[2];
         if (data_0209f32c > mPos.y) {
-            ApproachLinear(mPrevAngleX, 0, 0x200);
+            ApproachLinear(mPrevAngle.x, 0, 0x200);
         } else {
-            ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &vec), 0x200);
+            ApproachLinear(mPrevAngle.x, Vec3_VertAngle(&mPos, &vec), 0x200);
         }
         n = (unsigned int)(mAnmModel.currFrame << 4) >> 0x10;
         if (n > 0x14 && n < 0x3c)

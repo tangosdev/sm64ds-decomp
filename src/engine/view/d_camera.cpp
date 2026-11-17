@@ -2352,7 +2352,7 @@ s32 dCamera_c::func_02009e70() {
                                     UpdateRadialCamera(view, r7);
                                 } else if (framing == 0) {
                                     if (m == &data_0208724c)
-                                        t0 = mTargetPlayer->mPrevAngleY;
+                                        t0 = mTargetPlayer->mPrevAngle.y;
                                     else
                                         t0 = mTargetPlayer->mAngle.y;
                                     t0 = (s16)(t0 + 0x8000);

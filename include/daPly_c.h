@@ -387,8 +387,8 @@ struct daPly_c : dActor_c {
     s16 mAngleYSpeed;            /* 0x69c */
     /* X-axis counterpart of mAngleYSpeed. St_Fly_Init zeroes both, and
        func_ov002_020df8f0 eases this one toward a stick-times-speed target
-       and adds it to mPrevAngleX (clamped to +-0x2aaa) as mAngleYSpeed is
-       added to mPrevAngleY. St_Balloon_Init sets both to 0x100, and
+       and adds it to mPrevAngle.x (clamped to +-0x2aaa) as mAngleYSpeed is
+       added to mPrevAngle.y. St_Balloon_Init sets both to 0x100, and
        St_Balloon_Main runs (mAngle.x, mAngleXSpeed) and (mAngle.z,
        mAngleYSpeed) through func_ov002_020de3d0. Other code borrows the
        slot: St_Swim_Main loads it from mAngle.z, func_ov002_020cd448 eases
@@ -515,7 +515,7 @@ struct daPly_c : dActor_c {
     u8 pad_6ef[0x1];
     /* Turn ramp in UpdateWalkingSpeed's walk turning (input mode byte
        data_0209f4ac == 0, stick at least 0xa00): counts up to 0x18 while the
-       stick is 0x1000 or more off mPrevAngleY and drops by 2 otherwise. The
+       stick is 0x1000 or more off mPrevAngle.y and drops by 2 otherwise. The
        ApproachAngle divisor is 0x10 - ramp / 2, so the longer a sharp turn is
        held, the faster the player swings round. */
     u16 mTurnRamp; /* 0x6f0 */

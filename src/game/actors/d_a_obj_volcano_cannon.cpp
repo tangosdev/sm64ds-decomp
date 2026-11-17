@@ -88,7 +88,7 @@ int daObj_volcanoCannon_c::ExecuteFly() {
 int daObj_volcanoCannon_c::EnterFly() {
     unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 8;
     mKillTimer = 60;
-    mPrevAngleY = (short)((r & 0xf) << 0xc);
+    mPrevAngle.y = (short)((r & 0xf) << 0xc);
     mHorzSpeed = (r & 0x1f) + 0x14;
     mHorzSpeed <<= 0xc;
     mVertAccel = -0x4000;

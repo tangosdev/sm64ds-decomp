@@ -252,7 +252,7 @@ int daNknk_c::Behavior()
         }
 
         {
-            int ang = mPrevAngleY;
+            int ang = mPrevAngle.y;
             mAngle.y = (s16)ang;
             {
                 u16 *p100 = &mStateTimer;
@@ -364,10 +364,10 @@ void daNknk_c::func_ov062_02118de8()
         mState = 2;
     if (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x8000) {
         int r = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
-        mTargetAngle = (s16)(mPrevAngleY - r);
+        mTargetAngle = (s16)(mPrevAngle.y - r);
     } else {
         int r = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
-        mTargetAngle = (s16)(mPrevAngleY + r);
+        mTargetAngle = (s16)(mPrevAngle.y + r);
     }
     func_ov062_02118058();
 }
@@ -375,13 +375,13 @@ void daNknk_c::func_ov062_02118de8()
 void daNknk_c::func_ov062_02118cdc()
 {
     if (mTurning) {
-        mTurning = (ApproachLinear(mPrevAngleY, mTargetAngle, 0x200) ^ 1) != 0;
+        mTurning = (ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200) ^ 1) != 0;
     } else {
         if (mPlayerDist >= 0x61a8000) {
             mTargetAngle = mAimAngle;
         }
         mTurning = AngleAwayFromWallOrCliff(mWithMeshClsn, mTargetAngle);
-        ApproachLinear(mPrevAngleY, mTargetAngle, 0x200);
+        ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200);
     }
     if (mAnimIndex == 1) {
         SpawnFootstepDust(2, 8, 0x13, 0x19);
@@ -412,7 +412,7 @@ void daNknk_c::func_ov062_02118b4c() {
             SetAnimByIndex(2);
             return;
         }
-        ApproachLinear(mPrevAngleY, mAimAngle, 0x400);
+        ApproachLinear(mPrevAngle.y, mAimAngle, 0x400);
         ApproachLinear(mHorzSpeed, 0x11000, 0x1000);
         return;
     }
@@ -429,7 +429,7 @@ void daNknk_c::func_ov062_02118b4c() {
         SetAnimByIndex(2);
         return;
     }
-    ApproachLinear(mPrevAngleY, (s16)(mAimAngle + 0x8000), 0x400);
+    ApproachLinear(mPrevAngle.y, (s16)(mAimAngle + 0x8000), 0x400);
     ApproachLinear(mHorzSpeed, 0x11000, 0x1000);
 }
 
@@ -441,7 +441,7 @@ void daNknk_c::func_ov062_02118a50()
         if (mWithMeshClsn.IsOnWall() != 0) {
             dBgPi *wall = mWithMeshClsn.GetWallResult();
             wall->surface.CopyNormalTo(mWallNormal);
-            mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
+            mPrevAngle.y = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngle.y);
         }
         SlideToStop(0x4cc);
         return;
@@ -489,7 +489,7 @@ void daNknk_c::func_ov062_02118718()
 
     if (mTurning) {
         mTurning =
-            (ApproachLinear(mPrevAngleY, mTargetAngle, 0x200) ^ 1) != 0;
+            (ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200) ^ 1) != 0;
     } else {
         if (mPlayerDist >= 0x61a8000)
             mTargetAngle = mAimAngle;
@@ -518,13 +518,13 @@ void daNknk_c::func_ov062_02118718()
         }
 
         if (mPlayerDist > 0x320000 ||
-            (other != 0 && GetSubtraction(mTargetAngle, (mPrevAngleY + 0x8000)) < 0x2000)) {
-            ApproachLinear(mPrevAngleY, mTargetAngle, 0x600);
+            (other != 0 && GetSubtraction(mTargetAngle, (mPrevAngle.y + 0x8000)) < 0x2000)) {
+            ApproachLinear(mPrevAngle.y, mTargetAngle, 0x600);
         } else {
             if (mModelIndex != 0)
-                ApproachLinear(mPrevAngleY, mAimAngle, 0x600);
+                ApproachLinear(mPrevAngle.y, mAimAngle, 0x600);
             else
-                ApproachLinear(mPrevAngleY, (short)(mAimAngle + 0x8000), 0x600);
+                ApproachLinear(mPrevAngle.y, (short)(mAimAngle + 0x8000), 0x600);
         }
     }
 
@@ -532,10 +532,10 @@ void daNknk_c::func_ov062_02118718()
         return;
     if (dist >= 0xc8000)
         return;
-    if (GetSubtraction(mTargetAngle, mPrevAngleY) >= 0xc00)
+    if (GetSubtraction(mTargetAngle, mPrevAngle.y) >= 0xc00)
         return;
 
-    mPrevAngleY = mTargetAngle;
+    mPrevAngle.y = mTargetAngle;
     mState = 2;
     mHorzSpeed += mHorzSpeed / 5;
     mSpeed.y = dist / 30;
@@ -603,7 +603,7 @@ void daNknk_c::func_ov062_021183e0()
         SetAnimByIndex(1);
 
     if (mTurning) {
-        mTurning = (ApproachLinear(mPrevAngleY, mTargetAngle, 0x200) ^ 1) != 0;
+        mTurning = (ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200) ^ 1) != 0;
     } else {
         if (mPlayerDist >= 0x61a8000)
             mTargetAngle = mAimAngle;
@@ -614,11 +614,11 @@ void daNknk_c::func_ov062_021183e0()
                 mTargetAngle = Vec3_HorzAngle(&mPos, &other->mPos);
         }
         mTurning = AngleAwayFromWallOrCliff(mWithMeshClsn, mTargetAngle);
-        ApproachLinear(mPrevAngleY, mTargetAngle, 0x200);
+        ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200);
     }
 
-    if (dist < 0xc8000 && GetSubtraction(mTargetAngle, mPrevAngleY) < 0xc00) {
-        mPrevAngleY = mTargetAngle;
+    if (dist < 0xc8000 && GetSubtraction(mTargetAngle, mPrevAngle.y) < 0xc00) {
+        mPrevAngle.y = mTargetAngle;
         mState = 2;
         mHorzSpeed = 0x18000;
         mSpeed.y = dist / 30;
@@ -716,7 +716,7 @@ void daNknk_c::func_ov062_02118058() {
         d = Vec3_Dist(&mPos, &o->mPos);
     if (d >= 0x12c000)
         return;
-    int s = GetSubtraction(mAimAngle, mPrevAngleY);
+    int s = GetSubtraction(mAimAngle, mPrevAngle.y);
     if (s >= 0x3000)
         return;
     if (mKoopaVariant == 1)
@@ -777,7 +777,7 @@ void daNknk_c::func_ov062_02117c98()
         if (mKoopaVariant == 0) {
             DropShell();
             if (flags & 0x3c0)
-                mPrevAngleY = found->mAngle.y;
+                mPrevAngle.y = found->mAngle.y;
         } else {
             if (flags & 0x40040)
                 mDeathState = 2;
@@ -862,7 +862,7 @@ void daNknk_c::func_ov062_02117c98()
 tail:
     func_ov002_020aea30(found, &mWithMeshClsn);
     if (turnAround)
-        mAngle.y = (u16)(mPrevAngleY + 0x8000);
+        mAngle.y = (u16)(mPrevAngle.y + 0x8000);
 }
 
 void daNknk_c::DropShell() {

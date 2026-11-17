@@ -255,7 +255,7 @@ int daSpd_c::func_ov071_02120200() {
     z = 0;
     mPos.y = mHome.y;
     mPos.z = mHome.z;
-    mPrevAngleY = mHomeAngleY;
+    mPrevAngle.y = mHomeAngleY;
     ang = mHomeAngleY;
     mAngle.x = z;
     mAngle.y = ang;
@@ -326,7 +326,7 @@ int daSpd_c::func_ov071_0211ff84() {
 
 int daSpd_c::func_ov071_0211fee4() {
     mAngle.y = (short)(mAngle.y + 0x2bc);
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mAnmModel.Advance();
     unsigned short f = (unsigned short)(mAnmModel.currFrame >> 12);
     if (f == 0 || f == 8 || f == 0x17 || f == 0x1f) {
@@ -348,7 +348,7 @@ int daSpd_c::func_ov071_0211fe38() {
     mHorzSpeed = 0xf000;
     mSpeed.y = 0x12000;
     mAngle.y = mLeapAngle;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     *p3a0 += 0x12c000;
     mAnmModel.SetAnim((BCA_File *)gSpiderWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x2c00;
@@ -419,7 +419,7 @@ int daSpd_c::func_ov071_0211fbf4() {
 int daSpd_c::func_ov071_0211fb24() {
     short ang = Vec3_HorzAngle(&mPos, &mAnchor);
     ApproachLinear(mAngle.y, ang, 0x2bc);
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mAnmModel.Advance();
     if (Vec3_Dist(&mPos, &mAnchor) < 0x12c000)
         SetState(2);
@@ -474,7 +474,7 @@ int daSpd_c::func_ov071_0211f8d0() {
     mHorzSpeed = mEatingPlayer->mHorzSpeed + 0x7000;
     mSpeed.y = 0;
     mAngle.y = mEatingPlayer->mAngle.y;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mPos = mEatingPlayer->mPos;
     mPos.x += FX_MUL(FX_SinIdx((u16)mAngle.y >> 4), 0x5a000);
     mPos.y += 0x50000;
@@ -500,7 +500,7 @@ int daSpd_c::func_ov071_0211f7d4() {
         mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
         mFlags |= 1;
-        short heading = mPrevAngleY;
+        short heading = mPrevAngle.y;
         mAngle.x = 0;
         mAngle.y = heading;
         mAngle.z = 0;
@@ -623,8 +623,8 @@ void daSpd_c::func_ov071_0211f29c() {
     }
 
     if (mdCcAc_c.hitFlags & 0x10) {
-        mPrevAngleY = Vec3_HorzAngle(&hitPlayer->mPos, &mPos);
-        mAngle.y = (short)(mPrevAngleY + 0x8000);
+        mPrevAngle.y = Vec3_HorzAngle(&hitPlayer->mPos, &mPos);
+        mAngle.y = (short)(mPrevAngle.y + 0x8000);
         hitPlayer->IncMegaKillCount();
         SetState(8);
         return;

@@ -355,7 +355,7 @@ struct daDemo_c : dActor_c {
     u32 mParticleID[3];     /* 0x0e8 - Particle::System::New handles, passed back likewise */
     /* A fix12 magnitude each script handler sets or eases, then scales by:
        the speed along the model's facing (6c60, 6e48, 6f48) or along
-       mPrevAngleX (7780), the orbit radius (79c0), the opacity level that
+       mPrevAngle.x (7780), the orbit radius (79c0), the opacity level that
        mOpacity takes as mMagnitude >> 12 (71c4, 7410, 7538), and the
        segment progress MovePointAlongSpline advances (7bb8). Medium confidence:
        no single role covers every reader. */

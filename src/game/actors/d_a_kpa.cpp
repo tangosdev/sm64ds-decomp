@@ -484,7 +484,7 @@ int daKpa_c::InitResources()
 /*
 Per frame: find Bowser by mBowserUniqueID (return 1 if he is gone), put the tail
 0x8c (140) units behind him -- his position plus 0x8c times the table entry for
-mPrevAngleY + 0x8000, Y copied as is -- run func_ov060_02115b84, return 1.
+mPrevAngle.y + 0x8000, Y copied as is -- run func_ov060_02115b84, return 1.
    The copy goes through a held `const Vector3 &`; `pos = a->mPos` directly is
    a word short (0xb4 vs 0xb8). */
 int daKpaTail_c::Behavior()
@@ -492,7 +492,7 @@ int daKpaTail_c::Behavior()
     dActor_c* a = dActor_c::FindWithID(mBowserUniqueID);
     if (!a) return 1;
 
-    s16 ang = a->mPrevAngleY + 0x8000;
+    s16 ang = a->mPrevAngle.y + 0x8000;
     Vector3 pos;
     const Vector3 &p = a->mPos;
     pos = p;
@@ -507,7 +507,7 @@ int daKpaTail_c::Behavior()
 /* One frame of the fight: advance the random state once (result unused), pick
  * the closest player and record the angle and distance to him (none: his own
  * facing and 0x7fffffff), run BowserLoop and UpdateFootfalls, copy mAngle.y to
- * mPrevAngleY, advance the model animation at mAnimSpeed, place the model and
+ * mPrevAngle.y, advance the model animation at mAnimSpeed, place the model and
  * shadow (UpdateModelMatrix), publish `this` into the camera's mFramedActor,
  * then rebuild the body cylinder 0x50000 in front of the actor. Always 1.
  *
@@ -528,7 +528,7 @@ int daKpa_c::Behavior()
     }
     BowserLoop();
     UpdateFootfalls();
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mAnmModel.speed = mAnimSpeed;
     mAnmModel.Advance();
     UpdateModelMatrix();
@@ -637,9 +637,9 @@ skip_13:
     player->mAngle.x = ip[0];
     player->mAngle.y = ip[1];
     player->mAngle.z = ip[2];
-    player->mPrevAngleX = ip[0];
-    player->mPrevAngleY = ip[1];
-    player->mPrevAngleZ = ip[2];
+    player->mPrevAngle.x = ip[0];
+    player->mPrevAngle.y = ip[1];
+    player->mPrevAngle.z = ip[2];
     this->mState = BOWSER_TAIL_HOLDING;
     this->mHeldPlayer = player;
     bowser->SetTangible(0);
@@ -1397,7 +1397,7 @@ State BOWSER_STATE_FIRE_BREATH (8). While animation 0x15 plays, or animation 0x1
 after frame 0x2a (data_ov060_0211acd8 and data_ov060_0211acf0 are entries 0x15
 and 0x16 of the animation table): keep the looping sound 0x180 going, spawn a
 KOOPAFIRE every 5th frame of mFireTimer at his position plus 200 units out along
-mPrevAngleY and 0xb4000 (180 units) up, with the angles mPrevAngleX/Y/Z as
+mPrevAngle.y and 0xb4000 (180 units) up, with the angles mPrevAngle.x/.y/.z as
 rotation and spawn parameter (random modulo 10) << 10 | 1, or | 0x11 while the
 frame number is 0xf..0x13; mFireTimer counts the frames in that window.
 BOWSER_COND_BREATHING is set every call. At the last frame of an animation, by
@@ -1414,9 +1414,9 @@ void daKpa_c::ActSpitFireIntoSky() {
         mSoundHandle = Sound::PlayLong(mSoundHandle, 3, mSoundID, mCamSpacePos, 0);
         if (mFireTimer % 5 == 0) {
             Vector3 pos = mPos;
-            pos.x += FX_SinIdx((u16)mPrevAngleY >> 4) * 0xc8;
+            pos.x += FX_SinIdx((u16)mPrevAngle.y >> 4) * 0xc8;
             pos.y += 0xb4000;
-            pos.z += FX_CosIdx((u16)mPrevAngleY >> 4) * 0xc8;
+            pos.z += FX_CosIdx((u16)mPrevAngle.y >> 4) * 0xc8;
             if (frame >= 0xf && frame < 0x14) {
                 dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE,
                                 ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % 10 << 10 |
@@ -2021,7 +2021,7 @@ void daKpa_c::ActJumpOntoStage() {
         InitAnimation(0xb, 0x40000000);
         if ((((u32)this->mAnmModel.currFrame << 4) >> 16) >= 0x20) {
             this->mAngle.y = this->mAngleToCenter;
-            this->mPrevAngleY = this->mAngle.y;
+            this->mPrevAngle.y = this->mAngle.y;
             this->mSpeed.y = 0x28000;
             func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
             this->mVertAccel = 0;

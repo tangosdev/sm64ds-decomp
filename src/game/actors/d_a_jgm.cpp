@@ -361,11 +361,11 @@ s32 daJgm_c::EnterSpitState()
     mFlags &= ~0x80000;
 
     mHorzSpeed = mEatingPlayer->mHorzSpeed + 0xa000;
-    mPrevAngleY = mEatingPlayer->mAngle.y;
+    mPrevAngle.y = mEatingPlayer->mAngle.y;
     mPos = mEatingPlayer->mPos;
-    mPos.x += FX_MUL(FX_SinIdx((u16)mPrevAngleY >> 4), 0x50000);
+    mPos.x += FX_MUL(FX_SinIdx((u16)mPrevAngle.y >> 4), 0x50000);
     mPos.y += 0x50000;
-    mPos.z += FX_MUL(FX_CosIdx((u16)mPrevAngleY >> 4), 0x50000);
+    mPos.z += FX_MUL(FX_CosIdx((u16)mPrevAngle.y >> 4), 0x50000);
 
     mAngVelY = 0x7000;
     mTimer = 30;
@@ -543,8 +543,8 @@ void daJgm_c::HandlePlayerCollision()
     }
 
     if (mdCcAcPos_c.hitFlags & 0x10) {
-        mPrevAngleY = Vec3_HorzAngle(&player->mPos, &mPos);
-        mAngle.y = (short)(mPrevAngleY + 0x8000);
+        mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &mPos);
+        mAngle.y = (short)(mPrevAngle.y + 0x8000);
         player->IncMegaKillCount();
         SetState(4);
         return;
@@ -599,9 +599,9 @@ void daJgm_c::UpdateFlight() {
     short ha = Vec3_HorzAngle(&mPos, target);
     ApproachLinear(mAngle.y, ha, 0x5e8);
     if (mTurnDir != 0)
-        mPrevAngleY = (short)(mAngle.y - TurnOffsetFromDist(hd));
+        mPrevAngle.y = (short)(mAngle.y - TurnOffsetFromDist(hd));
     else
-        mPrevAngleY = (short)(mAngle.y + TurnOffsetFromDist(hd));
+        mPrevAngle.y = (short)(mAngle.y + TurnOffsetFromDist(hd));
     ApproachLinear(mPos.y, target->y + 0x12c000, 0x2000);
     UpdatePos(&mdCcAcPos_c);
     UpdateWallAndWater(mWithMeshClsn);

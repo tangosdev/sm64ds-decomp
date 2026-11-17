@@ -291,17 +291,17 @@ int daLinelift2_c::StepAlongPath() {
 }
 
 /* Aim the velocity from `from` toward `to` at mHorzSpeed: pitch into
-   mPrevAngleX, heading into mPrevAngleY, components into mSpeed.x /
+   mPrevAngle.x, heading into mPrevAngle.y, components into mSpeed.x /
    mSpeed.y / mSpeed.z. */
 void daLinelift2_c::SetVelocityToward(const Vector3 *to, const Vector3 *from) {
     Vector3 d;
     Vec3_Sub(&d, to, from);
-    mPrevAngleY = cstd::atan2(d.x, d.z);
-    mPrevAngleX = cstd::atan2(d.y, Vec3_HorzLen(&d));
-    s32 horz = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngleX >> 4));
-    mSpeed.x = FX_MUL(horz, FX_SinIdx((u16)mPrevAngleY >> 4));
-    mSpeed.y = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleX >> 4));
-    mSpeed.z = FX_MUL(horz, FX_CosIdx((u16)mPrevAngleY >> 4));
+    mPrevAngle.y = cstd::atan2(d.x, d.z);
+    mPrevAngle.x = cstd::atan2(d.y, Vec3_HorzLen(&d));
+    s32 horz = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngle.x >> 4));
+    mSpeed.x = FX_MUL(horz, FX_SinIdx((u16)mPrevAngle.y >> 4));
+    mSpeed.y = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngle.x >> 4));
+    mSpeed.z = FX_MUL(horz, FX_CosIdx((u16)mPrevAngle.y >> 4));
 }
 
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header

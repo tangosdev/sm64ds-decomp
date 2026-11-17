@@ -141,7 +141,7 @@ int daCnn_c::InitResources() {
     mSpawnPos.x = mPos.x;
     mSpawnPos.y = mPos.y;
     mSpawnPos.z = mPos.z;
-    mHomeAngleY = mPrevAngleY;
+    mHomeAngleY = mPrevAngle.y;
     mLoadStep = 0;
 
     if (mVariant != 2) {
@@ -212,19 +212,19 @@ void daCnn_c::PickNextAim() {
 /* -------------------------------------------------------------------------- */
 /* State 0, aim. */
 void daCnn_c::StateAim() {
-    short prevAngleY = mPrevAngleY;
-    ApproachLinear(mPrevAngleX, mTargetPitch, 0x100);
-    ApproachLinear(mPrevAngleY, mTargetAngleY, 0x100);
-    mAngle.x = mPrevAngleX;
-    mAngle.y = mPrevAngleY;
+    short prevAngleY = mPrevAngle.y;
+    ApproachLinear(mPrevAngle.x, mTargetPitch, 0x100);
+    ApproachLinear(mPrevAngle.y, mTargetAngleY, 0x100);
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
     {
         short target = mTargetAngleY;
-        if (prevAngleY != target && mPrevAngleY == target)
+        if (prevAngleY != target && mPrevAngle.y == target)
             Sound::PlayBank3(0x14d, mCamSpacePos);
     }
-    if (mPrevAngleX != mTargetPitch)
+    if (mPrevAngle.x != mTargetPitch)
         return;
-    if (mPrevAngleY == mTargetAngleY) {
+    if (mPrevAngle.y == mTargetAngleY) {
         mState = 1;
         mTimer = 120;
     }
@@ -273,7 +273,7 @@ void daCnn_c::StateFire() {
         {
             dActor_c *spawned = dActor_c::Spawn(kWaterBombActorID, 3, pos, 0, mAreaId, -1);
             const s16 *table = FX_SinCosTable_;
-            s16 pitch = mPrevAngleX;
+            s16 pitch = mPrevAngle.x;
             int up = (s16)(0x4000 - pitch);
             int i = (u16)up >> 4;
             int sine = table[i * 2];
@@ -284,15 +284,15 @@ void daCnn_c::StateFire() {
             ball->mSpeed.z = 0;
         }
 
-        elevation = (0x4000 - mPrevAngleX);
+        elevation = (0x4000 - mPrevAngle.x);
         idx = (u16)elevation >> 4;
         ball->mHorzSpeed = sinCos[idx * 2 + 1] * 100;
 
         {
-            s16 yaw = mPrevAngleY;
-            ball->mPrevAngleX = 0;
-            ball->mPrevAngleY = yaw;
-            ball->mPrevAngleZ = 0;
+            s16 yaw = mPrevAngle.y;
+            ball->mPrevAngle.x = 0;
+            ball->mPrevAngle.y = yaw;
+            ball->mPrevAngle.z = 0;
         }
 
         ball->UpdatePos(0);
@@ -320,8 +320,8 @@ void daCnn_c::StateFire() {
         rot.x = data_ov098_0213c63c[0];
         rot.y = data_ov098_0213c63c[1];
         rot.z = data_ov098_0213c63c[2];
-        rot.x = FX_SinIdx((u16)mPrevAngleY >> 4);
-        rot.z = FX_CosIdx((u16)mPrevAngleY >> 4);
+        rot.x = FX_SinIdx((u16)mPrevAngle.y >> 4);
+        rot.z = FX_CosIdx((u16)mPrevAngle.y >> 4);
 
         Particle::System::New(0, kPtclCannonShotA, mMuzzlePos.x, mMuzzlePos.y, mMuzzlePos.z,
                               (const Vector3_16f *)(&rot), 0);
@@ -411,9 +411,9 @@ void daCnn_c::StateLoad() {
             angleY = mAngle.y;
             angleX = mAngle.x;
             rider = mPlayer;
-            rider->mPrevAngleX = angleX;
-            rider->mPrevAngleY = angleY;
-            rider->mPrevAngleZ = 0;
+            rider->mPrevAngle.x = angleX;
+            rider->mPrevAngle.y = angleY;
+            rider->mPrevAngle.z = 0;
         }
     }
 
@@ -478,7 +478,7 @@ void daCnn_c::StateLoad() {
         mPos.y = mSpawnPos.y - 0x190000;
         mPlayer = 0;
         mAngle.y = mHomeAngleY;
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         break;
     }
     }

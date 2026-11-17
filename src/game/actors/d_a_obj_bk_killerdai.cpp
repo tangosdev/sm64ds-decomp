@@ -137,7 +137,7 @@ void daObjBkKillerdai_c::Kill() {
 void daObjBkKillerdai_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     KillByMegaChar(player);
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
 }
 
 s32 daObjBkKillerdai_c::CleanupResources() {

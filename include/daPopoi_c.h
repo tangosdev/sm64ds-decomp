@@ -97,8 +97,8 @@ struct daPopoi_c : dEnemyBase_c {
        the actor is against a wall (or the probe fires). */
     Vector3 mSavedPos;                                  /* 0x410 */
     s32                          unk_41c;               /* 0x41c -- only ever zeroed (Wander and Chase enter) */
-    /* The heading mPrevAngleY is stepped toward (ApproachLinear); Behavior then
-       copies mPrevAngleY into mAngle.y. Wander enter picks a random multiple of
+    /* The heading mPrevAngle.y is stepped toward (ApproachLinear); Behavior then
+       copies mPrevAngle.y into mAngle.y. Wander enter picks a random multiple of
        0x1000, Chase update sets the heading to the daPly_c, TurnAway enter sets
        mAngle.y + 0x4000. */
     s16                          mTargetAngleY;         /* 0x420 */

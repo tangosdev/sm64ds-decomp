@@ -510,7 +510,7 @@ void daWanwan_c::HandleCylinderHit() {
         ang = Vec3_HorzAngle(&mPos, &other->mPos);
         if (mdCcAcPos_c.hitFlags & 0x10) {
             SetState(5);
-            mPrevAngleY = other->mAngle.y;
+            mPrevAngle.y = other->mAngle.y;
         }
         if (AngleDiff(ang, mAngle.y) < 0x4000) {
             Vector3 v;
@@ -670,7 +670,7 @@ void daWanwan_c::StateWalkMain() {
     if (mIsOnGround) {
         int d = DistToCPlayer();
         mTargetAngY = HorzAngleToCPlayer();
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         mHorzSpeed = 0xa000;
         mSpeed.y = 0x14000;
         unk_600 = 0;
@@ -768,7 +768,7 @@ void daWanwan_c::StateEscapeDemoMain() {
         if (ApproachLinear(mAngle.y, angleToPlayer, 0x320) != 0 &&
             DecIfAbove0_Short(&mActionTimer) == 0)
             mReleaseStep++;
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         break;
     case 1:
     case 2:
@@ -777,8 +777,8 @@ void daWanwan_c::StateEscapeDemoMain() {
         camera->mFocusActor = this;
         ApproachLinear(mHorzSpeed, 0, 0x400);
         if (mIsOnGround != 0) {
-            mPrevAngleY = (s16)(angleToAnchor + 0x2000);
-            mAngle.y = mPrevAngleY;
+            mPrevAngle.y = (s16)(angleToAnchor + 0x2000);
+            mAngle.y = mPrevAngle.y;
             mSpeed.y = 0x32000;
             mHorzSpeed = 0x1e000;
             mReleaseStep++;
@@ -788,8 +788,8 @@ void daWanwan_c::StateEscapeDemoMain() {
         camera->mFocusActor = this;
         ApproachLinear(mHorzSpeed, 0, 0x400);
         if (mIsOnGround != 0) {
-            mPrevAngleY = angleToAnchor;
-            mAngle.y = mPrevAngleY;
+            mPrevAngle.y = angleToAnchor;
+            mAngle.y = mPrevAngle.y;
             mSpeed.y = 0x32000;
             mHorzSpeed = 0x1e000;
             mReleaseStep++;
@@ -803,7 +803,7 @@ void daWanwan_c::StateEscapeDemoMain() {
         if (mIsOnGround != 0) {
             SetChompAnim(this, data_ov014_02114970);
             mAngle.y = Vec3_HorzAngle(&mPos, &partnerPos);
-            mPrevAngleY = mAngle.y;
+            mPrevAngle.y = mAngle.y;
             mSpeed.y = 0x14000;
             mReleaseSpeed = kChainMax;
         }
@@ -813,7 +813,7 @@ void daWanwan_c::StateEscapeDemoMain() {
             target.z += FX_MUL(FX_CosIdx((u16)fence->mAngle.y >> 4), 0x96000);
             if (Vec3_ApproachHorz(&mPos, &target, mReleaseSpeed) != 0) {
                 mReleaseStep++;
-                mPrevAngleY = (s16)(Vec3_HorzAngle(&mPos, &partnerPos) + 0x8000);
+                mPrevAngle.y = (s16)(Vec3_HorzAngle(&mPos, &partnerPos) + 0x8000);
                 mHorzSpeed = 0x28000;
                 mSpeed.y = 0xa000;
                 fence->Break();
@@ -824,9 +824,9 @@ void daWanwan_c::StateEscapeDemoMain() {
     case 7:
         if (mIsOnGround != 0) {
             SetChompAnim(this, data_ov014_02114980);
-            mPrevAngleY = Vec3_HorzAngle(&mPos, &partnerPos);
+            mPrevAngle.y = Vec3_HorzAngle(&mPos, &partnerPos);
             mActionTimer = 60;
-            mAngle.y = mPrevAngleY;
+            mAngle.y = mPrevAngle.y;
             if (fence->mDisabled != 0) {
                 mHorzSpeed = 0x28000;
                 mSpeed.y = 0x5a000;
@@ -877,9 +877,9 @@ int daWanwan_c::StateBombDamageMain() {
     }
 }
 
-/* State 5 enter: face mPrevAngleY and launch. */
+/* State 5 enter: face mPrevAngle.y and launch. */
 void daWanwan_c::StateGiantDamageInit() {
-    mAngle.y = mPrevAngleY;
+    mAngle.y = mPrevAngle.y;
     mActionTimer = 60;
     mHorzSpeed = kChainMax;
     mSpeed.y = kRestLift;

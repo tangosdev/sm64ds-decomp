@@ -458,7 +458,7 @@ void daBook_c::StateFly() {
         dBgPi *w = mWithMeshClsn.GetWallResult();
         w->surface.CopyNormalTo(normal);
         short angle = cstd::atan2(normal.x, normal.z);
-        if (GetSubtraction(mPrevAngleY, angle) <= 0x4000)
+        if (GetSubtraction(mPrevAngle.y, angle) <= 0x4000)
             return;
     }
     mCoinType = 0;
@@ -488,10 +488,10 @@ void daBook_c::StateWindUp() {
         mHorzSpeed = 0;
         AimAtPlayer();
 
-        mPrevAngleX = -mAimPitch;
-        mAngle.x = mPrevAngleX;
-        mPrevAngleY = mAimYaw;
-        mAngle.y = mPrevAngleY;
+        mPrevAngle.x = -mAimPitch;
+        mAngle.x = mPrevAngle.x;
+        mPrevAngle.y = mAimYaw;
+        mAngle.y = mPrevAngle.y;
 
         {
             /* velocity = kFlightSpeed along (yaw, pitch) */
@@ -571,7 +571,7 @@ void daBook_c::StateWait() {
         return;
     {
         short ang = Vec3_HorzAngle(&mPos, &v);
-        if (GetSubtraction(mPrevAngleY, ang) >= 0x3000) return;
+        if (GetSubtraction(mPrevAngle.y, ang) >= 0x3000) return;
     }
     mState = STATE_TILT_BACK;
     mHorzSpeed = 0x5000;

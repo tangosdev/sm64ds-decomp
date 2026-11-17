@@ -137,7 +137,7 @@ int daObjSimpleLift_c::Behavior() {
     if (DecIfAbove0_Byte(&mPauseTimer) == 0) {
         if (DecIfAbove0_Short(&mMoveTimer) == 0) {
             mMoveTimer = data_ov091_02134504[mVariant];
-            mPrevAngleY += 0x8000;
+            mPrevAngle.y += 0x8000;
             mPauseTimer = 15;
         } else {
             UpdatePos(0);
@@ -177,9 +177,9 @@ int daObjSimpleLift_c::InitResources() {
     void *bmd = dExtSimpleModel_c::LoadFile(*data_ov091_02135024[mVariant].modelFile);
     mModel.SetFile((BMD_File *)bmd, 1, -1);
 
-    mPrevAngleY = mAngle.y + data_ov091_02134514[mVariant];
+    mPrevAngle.y = mAngle.y + data_ov091_02134514[mVariant];
     if (mAngle.x != 0)
-        mPrevAngleY = mAngle.y + mAngle.x;
+        mPrevAngle.y = mAngle.y + mAngle.x;
 
     mMoveTimer = data_ov091_02134504[mVariant];
     mHorzSpeed = 0xa000;

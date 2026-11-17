@@ -137,7 +137,7 @@ s32 daPgDfdr_c::InitResources() {
     mTextureSequence.SetFile(*(BTP_File *)data_ov027_02113c94.filePtr, 0, 0x1000, 0);
 
     mAngle.y = 0xdd30;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.y = mAngle.y;
     mPos.x = 0x6c4000;
     mPos.y = 0xcb2000;
     mPos.z = 0x182bb8;
@@ -251,7 +251,7 @@ int daPgDfdr_c::StateTurn() {
 void daPgDfdr_c::InitStateWalk() {
     mDistanceLeft = data_ov027_02113a1c[mStepIndex].distance;
     mHorzSpeed = data_ov027_02113a1c[mStepIndex].speed;
-    mPrevAngleY = data_ov027_02113a1c[mStepIndex].startHeading;
+    mPrevAngle.y = data_ov027_02113a1c[mStepIndex].startHeading;
     if (data_ov027_02113a1c[mStepIndex].startHeading !=
         data_ov027_02113a1c[mStepIndex].endHeading) {
         mAnmModel.SetAnim((BCA_File *)data_ov027_02113c8c.filePtr, 0, 0x1000, 0);

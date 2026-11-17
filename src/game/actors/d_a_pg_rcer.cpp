@@ -313,8 +313,8 @@ int daPgRcer_c::StatePrepareForRace() {
         }
         break;
     case 1:
-        UpdateAngle(mPrevAngleY, mTargetAngY, 2, 0x800);
-        mAngle.y = mPrevAngleY;
+        UpdateAngle(mPrevAngle.y, mTargetAngY, 2, 0x800);
+        mAngle.y = mPrevAngle.y;
         UpdatePos(&mdCcAc_c);
         UpdateFloorAndWalls(&mWithMeshClsn);
         if (mWithMeshClsn.JustHitGround() != 0) {
@@ -480,7 +480,7 @@ int daPgRcer_c::StateFinishRace() {
         mPathDist = Vec3_Dist(&mPos, &node);
         mTargetAngY = Vec3_HorzAngle(&mPos, &node);
         ApproachLinear(mAngle.y, mTargetAngY, 0x200);
-        mPrevAngleY = mAngle.y;
+        mPrevAngle.y = mAngle.y;
         if (mPathDist < mHorzSpeed) {
             mHorzSpeed = mPathDist;
             ++mActionStep;
@@ -613,10 +613,10 @@ void daPgRcer_c::AdvancePathNode() {
 }
 
 int daPgRcer_c::FollowPath() {
-    UpdateAngle(mPrevAngleY, mTargetAngY, 2, 0x600);
+    UpdateAngle(mPrevAngle.y, mTargetAngY, 2, 0x600);
     int n = mPathNodeIndex;
     if (n >= (int)mPath.NumNodes() - 2) {
-        mAngle.y = mPrevAngleY;
+        mAngle.y = mPrevAngle.y;
     } else {
         Vector3 node;
         mPath.GetNode(node, n + 1);

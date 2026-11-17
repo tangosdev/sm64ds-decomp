@@ -203,8 +203,8 @@ int daBttBk_c::StateYoshiMouthInit() {
 int daBttBk_c::StateCarriedMain() {
     mAngle.x = mCarrier->mAngle.x;
     mAngle.y = mCarrier->mAngle.y;
-    mPrevAngleX = mAngle.x;
-    mPrevAngleY = mAngle.y;
+    mPrevAngle.x = mAngle.x;
+    mPrevAngle.y = mAngle.y;
     {
         int flags = mFlags;
         int hasBit8 = (int)((flags & 0x100) != 0);

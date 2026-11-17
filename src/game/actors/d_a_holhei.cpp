@@ -195,9 +195,9 @@ int daHolhei_c::Behavior()
             (this->*(m->update))();
     }
 
-    mAngle.x = mPrevAngleX;
-    mAngle.y = mPrevAngleY;
-    mAngle.z = mPrevAngleZ;
+    mAngle.x = mPrevAngle.x;
+    mAngle.y = mPrevAngle.y;
+    mAngle.z = mPrevAngle.z;
     UpdatePos(&mdCc_c);
 
     if (mState != &data_ov062_0211dea0) {
@@ -347,7 +347,7 @@ int daHolhei_c::func_ov062_02116c78() {
 int daHolhei_c::func_ov062_02116bf8() {
     ApproachLinear(mHorzSpeed, 0, 0x2000);
     if (mTurnWait == 0) {
-        ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
+        ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
         if (AngleDiff(mTargetAngY, mAngle.y) < 0x100)
             ChangeState(&data_ov062_0211dee0);
     }
@@ -384,7 +384,7 @@ int daHolhei_c::func_ov062_02116a08() {
         return 1;
     }
 
-    ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
 
     mHorzSpeed = 0xa000;
     pl = ClosestPlayer();
@@ -415,7 +415,7 @@ int daHolhei_c::func_ov062_02116980() {
     mPos.z = mPrevPosZ;
     mHorzSpeed = 0;
     if (AngleDiff(mTargetAngY, Vec3_HorzAngle(&mPos, &mHomePos)) <= 0x2000)
-        mTargetAngY = (s16)(mPrevAngleY - 0x1000);
+        mTargetAngY = (s16)(mPrevAngle.y - 0x1000);
     else
         mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
     mStateTimer = 70;
@@ -428,18 +428,18 @@ int daHolhei_c::func_ov062_02116894() {
         return 1;
     if (mHorzSpeed != 0) {
         if (ClassifyObstruction() != 0 || mEdgeStop == 1) {
-            mTargetAngY = (s16)(mPrevAngleY - 0x2000);
+            mTargetAngY = (s16)(mPrevAngle.y - 0x2000);
         } else {
-            mPrevAngleY = mTargetAngY;
+            mPrevAngle.y = mTargetAngY;
             ChangeState(&data_ov062_0211dee0);
             mChaseCooldown = 30;
-            mTargetAngY = mPrevAngleY;
+            mTargetAngY = mPrevAngle.y;
             return 1;
         }
     }
     if (AngleDiff(mTargetAngY, mAngle.y) < 0x100)
         mHorzSpeed = 0xa000;
-    ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
     return 1;
 }
 
@@ -455,7 +455,7 @@ int daHolhei_c::func_ov062_02116850() {
 /* Turn toward mTargetAngY. Facing it starts the walk; otherwise the timer
    is refreshed. When the timer expires, cool down and return to the walk. */
 int daHolhei_c::func_ov062_021167c0() {
-    ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngle.y, mTargetAngY, 0xa, 0x200, 0x100);
     if (AngleDiff(mTargetAngY, mAngle.y) < 0x100)
         mHorzSpeed = 0xa000;
     else
@@ -502,7 +502,7 @@ int daHolhei_c::func_ov062_021165e8()
 
     if (mChargeStep == 0) {
         mTargetAngY = HorzAngleToCPlayer();
-        ApproachAngle(&mPrevAngleY, mTargetAngY, 0x80, 0x200, 0x400);
+        ApproachAngle(&mPrevAngle.y, mTargetAngY, 0x80, 0x200, 0x400);
         if (AngleDiff(mTargetAngY, mAngle.y) < 0x200) {
             mHorzSpeed = 0x1e000;
             mChargeStep = 1;
@@ -543,7 +543,7 @@ int daHolhei_c::func_ov062_021164e8()
     }
     if (IsFlagSet(this, 0x400) || IsFlagSet(this, 0x2000) || !IsFlagSet(this, 0x100)) {
         dActor_c *held = mHeld;
-        mPrevAngleY = held->mAngle.y;
+        mPrevAngle.y = held->mAngle.y;
         mdCc_c.flags |= 2;
         ChangeState(&data_ov062_0211dec0);
         if (mHeld->param1 == 2) {
@@ -616,7 +616,7 @@ int daHolhei_c::func_ov062_021162b8() {
 
 /* Spin, and leave once the timer reaches zero. */
 int daHolhei_c::func_ov062_02116274() {
-    mPrevAngleY += 0x500;
+    mPrevAngle.y += 0x500;
     if (mStateTimer == 0)
         ChangeState(&data_ov062_0211deb0);
     return 1;

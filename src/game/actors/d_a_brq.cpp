@@ -241,9 +241,9 @@ s32 daBrq_c::UpdateActiveState() {
     ApproachLinear(mTurnSpeed, 1000, 20);
 
     if ((u8)(param1 & 1)) {
-        mPrevAngleY = mPrevAngleY + mTurnSpeed;
+        mPrevAngle.y = mPrevAngle.y + mTurnSpeed;
     } else {
-        mPrevAngleY = mPrevAngleY - mTurnSpeed;
+        mPrevAngle.y = mPrevAngle.y - mTurnSpeed;
     }
 
     mOrbitAngle = mOrbitAngle + 0xa00;
@@ -252,9 +252,9 @@ s32 daBrq_c::UpdateActiveState() {
 
     mOrbitCenter = mPos;
 
-    mCylinderOffset.x = FX_MUL(orbitRadius, FX_SinIdx((u16)mPrevAngleY >> 4));
+    mCylinderOffset.x = FX_MUL(orbitRadius, FX_SinIdx((u16)mPrevAngle.y >> 4));
     mCylinderOffset.y = FX_MUL(0x14000, FX_SinIdx((u16)mOrbitAngle >> 4));
-    mCylinderOffset.z = FX_MUL(orbitRadius, FX_CosIdx((u16)mPrevAngleY >> 4));
+    mCylinderOffset.z = FX_MUL(orbitRadius, FX_CosIdx((u16)mPrevAngle.y >> 4));
 
     VEC_Add(&mOrbitCenter, &mCylinderOffset, &mOrbitCenter);
 
@@ -365,8 +365,8 @@ s32 daBrq_c::HandlePlayerCollision() {
         return 0;
 
     if (mdCcAcPos_c.hitFlags & 0x10) {
-        mPrevAngleY = Vec3_HorzAngle(&player->mPos, &mPos);
-        mAngle.y = (mPrevAngleY + 0x8000);
+        mPrevAngle.y = Vec3_HorzAngle(&player->mPos, &mPos);
+        mAngle.y = (mPrevAngle.y + 0x8000);
         player->IncMegaKillCount();
         SetState(2);
     } else {

@@ -143,9 +143,9 @@ s32 daKlr_c::Behavior() {
     }
     mCylClsn.Update();
 
-    mPrevAngleX = mAngle.x;
-    mPrevAngleY = mAngle.y;
-    mPrevAngleZ = mAngle.z;
+    mPrevAngle.x = mAngle.x;
+    mPrevAngle.y = mAngle.y;
+    mPrevAngle.z = mAngle.z;
     return 1;
 }
 
@@ -184,8 +184,8 @@ void daKlr_c::StateFly() {
         Particle::System::New(this->mSmokeTrailID, kSmokeParticle, nose.x, nose.y, nose.z, 0, 0);
     this->mHorzSpeed = 0x1e000;
     if (this->DistToCPlayer() > 0x12c000)
-        ApproachLinear(this->mPrevAngleY, this->HorzAngleToCPlayer(), 0x200);
-    this->mAngle.y = this->mPrevAngleY;
+        ApproachLinear(this->mPrevAngle.y, this->HorzAngleToCPlayer(), 0x200);
+    this->mAngle.y = this->mPrevAngle.y;
     if (this->mStateTimer == 50) {
         func_0201267c(0xd4, &this->mCamSpacePos);
         this->mCylClsn.flags &= ~1;
