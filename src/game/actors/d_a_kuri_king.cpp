@@ -910,16 +910,15 @@ void daKuriKing_c::TurnIfPlayerBehind() {
 Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
     Vector3 result;
     int *out = (int *)&result;
-    daKuriKing_c *self = this;
     int n;
 
     n = n_;
 
-    out[0] = self->mPosX;
-    out[1] = self->mPosY;
-    out[2] = self->mPosZ;
+    out[0] = mPosX;
+    out[1] = mPosY;
+    out[2] = mPosZ;
 
-    if ((int)self->ClosestPlayer()->param1 == 3) {
+    if ((int)ClosestPlayer()->param1 == 3) {
         int rem;
         int quo;
         int scale;
@@ -931,7 +930,7 @@ Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
 
         rem = n % 3;
         quo = n / 3;
-        mode = self->mSizeIndex;
+        mode = mSizeIndex;
         if (mode == 3) {
             scale = 0x546000;
         } else if (mode == 2) {
@@ -940,10 +939,10 @@ Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
             scale = quo * 0xb4000 + 0x438000;
         }
 
-        q = self->mScaleX / 0x1000;
+        q = mScaleX / 0x1000;
         sum = (s16)(q * 0x350 + 0x500) + (s16)(rem * 0x600);
-        prod = self->mDirection * sum;
-        diff = (self->mWalkAngle + self->mMaxWalkSpeed) - prod;
+        prod = mDirection * sum;
+        diff = (mWalkAngle + mMaxWalkSpeed) - prod;
         out[0] = FX_MUL(scale, FX_SinIdx((u16)(s16)diff >> 4));
         out[1] += 0x32000;
         out[2] = FX_MUL(scale, FX_CosIdx((u16)(s16)diff >> 4));
@@ -960,7 +959,7 @@ Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
         int diff2;
 
         lim = 3;
-        if (self->mSizeIndex == 1)
+        if (mSizeIndex == 1)
             lim = 5;
 
         if (n < lim) {
@@ -975,11 +974,11 @@ Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
             scale2 = 0x4e2000 + (rem2 * 0x64 << 12);
         }
 
-        q2 = self->mScaleX / 0x1000;
+        q2 = mScaleX / 0x1000;
         sum2 = (s16)(q2 * 0x350 + 0x250) + (s16)(one * 0x600);
-        prod2 = self->mDirection * sum2;
+        prod2 = mDirection * sum2;
         prod3 = sign * prod2;
-        diff2 = (self->mWalkAngle + self->mWalkSpeed) - prod3;
+        diff2 = (mWalkAngle + mWalkSpeed) - prod3;
         out[0] = FX_MUL(scale2, FX_SinIdx((u16)(s16)diff2 >> 4));
         out[1] += 0x32000;
         out[2] = FX_MUL(scale2, FX_CosIdx((u16)(s16)diff2 >> 4));
