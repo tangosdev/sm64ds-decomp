@@ -231,7 +231,6 @@ extern struct OamAttr *sCardPayoutRowSprites[6];
 extern struct OamAttr *sJumpLifeIconSprite;
 extern struct OamAttr *sTrmpLifeIconSprite;
 extern int data_ov006_02138c18;
-extern int pmf_MascotWalker_StateWalk_2[2];
 extern Matrix4x3 data_ov006_0213aee8;
 extern int sJump3DFallSpeed;
 extern int sJump3DGravityStep;
