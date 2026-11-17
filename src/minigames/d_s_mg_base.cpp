@@ -35,6 +35,7 @@
 #include "decl_common.h"
 #include "MgBanner.h"
 #include "OamAttr.h"
+#include "Matrix2x2.h"
 #include "Sound.h"
 #include "types.h"
 #include "nitro/fx/fx_trig.h"
@@ -43,6 +44,7 @@
 #include "nitro/os/cache.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx.h"
+#include "nitro/gx/gxcommon.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "GX.h"
@@ -1084,7 +1086,7 @@ void dScMgBase_c::Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int si
 namespace s20ae858 {
 extern "C" {
 int GetGameLanguage(void);
-void Mg_DrawSpriteList(void *self, int a1, int a2, void *a3);
+void Mg_DrawSpriteList(OamAttr *list, int x, int y, Matrix2x2 *mtx);
 }
 }
 
@@ -1098,7 +1100,7 @@ void dScMgBase_c::DrawMenu() {
     using namespace s20ae858;
     int extra[3];
     s16 *tbl[3];
-    int buf[4];
+    Matrix2x2 mtx;
     int i;
 
     if (mTouchOptions.Draw() != 0)
@@ -1118,31 +1120,31 @@ void dScMgBase_c::DrawMenu() {
             OamAttr *cursor = (OamAttr *)extra[i];
             s16 *pos;
             u16 v;
-            int *pbuf = buf;
+            Matrix2x2 *pmtx = &mtx;
             int scale = FX_Inv(FX_MUL(FX_SinIdx(idx), 0x800) + 0x1000);
 
             /* Kept volatile: the ROM clears the matrix through a pointer
                held in r6, in order 0, 4, 8, 0xc, before the diagonal
                stores. Measured 2026-11-16 (#821 r22): plain stores through
-               pbuf, and an MtxFx22 local cleared by member (directly or
-               through pbuf), fold the address to sp-relative and reorder
-               the stores (10/118); a counted clear loop gives 0x1e0 or
-               0x1e4, and a copy from a const zero matrix 0x204, against
-               0x1d8. */
+               pmtx, and the matrix cleared by member (directly or through
+               pmtx), fold the address to sp-relative and reorder the
+               stores (10/118); a counted clear loop gives 0x1e0 or 0x1e4,
+               and a copy from a const zero matrix 0x204, against 0x1d8.
+               r28: the volatile pointer taken from &mtx in this block
+               instead of pmtx, 24 of 118 words off. */
             {
-                volatile int *vp = pbuf;
-                vp[0] = 0;
-                vp[1] = 0;
-                vp[2] = 0;
-                vp[3] = 0;
+                volatile Matrix2x2 *vp = pmtx;
+                vp->m00 = 0;
+                vp->m01 = 0;
+                vp->m10 = 0;
+                vp->m11 = 0;
             }
-            buf[0] = scale;
-            buf[3] = scale;
+            mtx.m00 = scale;
+            mtx.m11 = scale;
 
             pos = tbl[i];
             do {
-                Mg_DrawSpriteListEntry(cursor, (void *)(int)pos[0], (void *)(int)pos[1],
-                                       (void *)buf);
+                Mg_DrawSpriteListEntry(cursor, pos[0], pos[1], &mtx);
                 v = cursor->attr3;
                 cursor++;
             } while (v != 0xffff);
@@ -1150,7 +1152,7 @@ void dScMgBase_c::DrawMenu() {
             Mg_DrawSpriteList(data_ov006_021346bc, tbl[i][0], tbl[i][1], 0);
         } else {
             s16 *pos = tbl[i];
-            Mg_DrawSpriteList((void *)extra[i], pos[0], pos[1], 0);
+            Mg_DrawSpriteList((OamAttr *)extra[i], pos[0], pos[1], 0);
             Mg_DrawSpriteList(data_ov006_021346bc, pos[0], pos[1], 0);
         }
     }
@@ -1159,40 +1161,31 @@ void dScMgBase_c::DrawMenu() {
 namespace s20aea30 {
 extern "C" {
 /* Draws an OAM sprite list: calls Mg_DrawSpriteListEntry on each 8-byte
-   entry from `self`, up to and including the one whose attr3 is 0xffff. */
-extern "C" void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3) {
-    OamAttr *r8 = (OamAttr *)self;
-    void *r7 = actor;
-    void *r6 = c2;
-    void *r5 = c3;
-    u16 sentinel = 0xffff;
+   entry from `list`, up to and including the one whose attr3 is 0xffff. */
+extern "C" void Mg_DrawSpriteList(OamAttr *list, int x, int y, Matrix2x2 *mtx) {
+    u16 attr3;
     do {
-        Mg_DrawSpriteListEntry(r8, r7, r6, r5);
-        u16 v = r8->attr3;
-        r8++;
-        if (v == sentinel) break;
-    } while (1);
+        Mg_DrawSpriteListEntry(list, x, y, mtx);
+        attr3 = list->attr3;
+        list++;
+    } while (attr3 != 0xffff);
 }
 }
 }
 
 namespace s20aea78 {
 extern "C" {
-struct M { int _00, _01, _10, _11; };
-extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, struct M *a5);
+extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 
-struct BF { unsigned int lo:10; unsigned int hi:22; };
-struct S { int x; BF y; };
-
-/* Draws one sprite-list entry at (a1, a2) through Mg_RenderSpriteOnMtx.
+/* Draws one sprite-list entry at (x, y) through Mg_RenderSpriteOnMtx.
    When the scene's GetDisplayMode (slot 26) returns 2, the copy
-   drawn has 0x200 subtracted from its tile number (attr2 bits 0..9). */
-extern "C" void Mg_DrawSpriteListEntry(S *self, int a1, int a2, struct M *a3) {
-    S v = *self;
+   drawn has 0x200 subtracted from its charNo (attr2 bits 0..9). */
+extern "C" void Mg_DrawSpriteListEntry(GXOamAttr *entry, int x, int y, Matrix2x2 *mtx) {
+    GXOamAttr attr = *entry;
     if (gMgScene->GetDisplayMode() == 2) {
-        v.y.lo = (self->y.lo - 0x200) & 0x3ff;
+        attr.charNo = (entry->charNo - 0x200) & 0x3ff;
     }
-    Mg_RenderSpriteOnMtx(&v, a1, a2, 0, -1, a3);
+    Mg_RenderSpriteOnMtx(&attr, x, y, 0, -1, mtx);
 }
 }
 }
@@ -2842,10 +2835,9 @@ void dScMgBase_c::DrawCredits(int x, int y, int screen) {
 
 namespace s20b1c68 {
 extern "C" {
-struct M { int _00, _01, _10, _11; };
 /* a3 picks the wrapper: -1 RenderOamBothScreens, 0 Mg_RenderSubSpritePalMtx,
    anything else Mg_RenderMainSpritePalMtx; each is passed -1 in its place. */
-void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, struct M *a5) {
+void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5) {
     if (a3 == -1) {
         RenderOamBothScreens(a0, a1, a2, -1, a4, a5);
         return;
@@ -3039,8 +3031,7 @@ extern "C" {
    counters as for-loop variables 51-52; divide-and-subtract digits 0x23c.
    Round 17: each counter zeroed just before its own while loop 52, the
    `x = x - k` / `th = th + 1` spellings 52. */
-struct M { int _00, _01, _10, _11; };
-extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, struct M *a5);
+extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern OamAttr *sMgDigitSprites[];
 
 static inline int FX_Mul(int v1, int v2)
@@ -3049,17 +3040,16 @@ static inline int FX_Mul(int v1, int v2)
     return ((t + 0x800) >> 12);
 }
 
-static inline void MTX_Rot22(struct M *p, int sinVal, int cosVal)
-{
-    p->_00 = cosVal;
-    p->_01 = sinVal;
-    p->_10 = -sinVal;
-    p->_11 = cosVal;
+static inline void MTX_Rot22(Matrix2x2 *p, int sinVal, int cosVal) {
+    p->m00 = cosVal;
+    p->m01 = sinVal;
+    p->m10 = -sinVal;
+    p->m11 = cosVal;
 }
 
 void Mg_DrawNumberRotated(int x, int y, int value, int a3, int a4, int scale, u16 angle)
 {
-    struct M m;
+    Matrix2x2 m;
     int idx;
     int te, hu, th;
 
