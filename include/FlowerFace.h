@@ -53,6 +53,8 @@ struct FlowerFaceAnimationFileHandle : SharedFilePtr {
 };
 
 struct FlowerFace {
+    typedef void (FlowerFace::*StateFn)();
+
     FlowerFace();
     ~FlowerFace();
 
@@ -70,7 +72,7 @@ struct FlowerFace {
     void StateLike();
     void StateHate();
 
-    s32 mState[2];             /* 0x000 -- the current state's member-pointer record */
+    void (FlowerFace::*mState)(); /* 0x000 -- the current state */
     static const int PETAL_NUM = 22;
     FallingPetal mPetals[PETAL_NUM]; /* 0x008 */
     /* 0x64 bytes. Draw sets its mat4x3; Update advances its dExtFrameCtrl_c

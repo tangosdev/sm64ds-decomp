@@ -9,8 +9,8 @@
  * says so, and no code in the family touches an offset >= 0x34 through a
  * dokan pointer.
  *
- * CONSTRUCTED BY cMgSmartball_dokan_c_Construct, left a free function for the same
- * reason the base's is (this tree has migrated zero constructors). It calls
+ * CONSTRUCTED BY the real cMgSmartball_dokan_c(dScMgSmartball_c *, int, Vector2)
+ * constructor; the cartridge keeps its C1, the C2 is deadstripped. It calls
  * the base constructor, stores this vtable, and sets the base's mRadius to
  * 0x20000 -- the per-child constant every sibling's constructor also writes,
  * each with its own value. */
@@ -23,6 +23,7 @@ struct cMgSmartball_dokan_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 -- see the .cpp: a tail call */
+    cMgSmartball_dokan_c(dScMgSmartball_c *manager, int index, Vector2 pos);
     ~cMgSmartball_dokan_c() {}
 
     /* Recovered helper: the ball-vs-pipe-mouth proximity test -- inside the

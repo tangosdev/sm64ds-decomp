@@ -882,7 +882,14 @@ int dScMgAmida_c::StepWalker(int walker, int dir) {
    as written; the eight walker-x pointers as &mWalkerCell[walker].x 0xe14,
    the literal stack slots then right but each case's x compares sharing the
    walkerX address; only the two goal-check pointers typed 0xe40. Without
-   strength reduction off it is 0xe8c. */
+   strength reduction off it is 0xe8c.
+   Round 20 (2026-11-16, both pragmas kept): the delay loop as a plain
+   `if (mWalkerDelay[i] > 0) mWalkerDelay[i]--;` 0xe4c; `Vector2 &cell =
+   mWalkerCell[walker]` for walkerY / the first walkerX 0xe44, 8 words off
+   (the ROM keeps this + walker * 8 in a register and adds 0x4664 / 0x4660
+   to it; the reference adds 0x4660 first); &mWalkerDone[walker],
+   &mWalkerMark[walker] and &mWalkerDir[walker] alone 0xe48 but 9 words off;
+   every slot pointer typed 0xe4c (s8 * for the two byte arrays the same). */
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off

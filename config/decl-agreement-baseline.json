@@ -1,5 +1,20 @@
 {
   "known": {
+    "pmf_Dealer_StateDeal_2": {
+      "src/minigames/unit020bfec0.cpp": [
+        "return:Dealer::StateFn"
+      ]
+    },
+    "pmf_Dealer_StateReveal": {
+      "src/minigames/unit020bfec0.cpp": [
+        "return:Dealer::StateFn"
+      ]
+    },
+    "pmf_MascotWalker_StateWalk_2": {
+      "src/minigames/unit020bfec0.cpp": [
+        "return:MascotWalker::StateFn"
+      ]
+    },
     "__global_destructor_chain": {
       "src/__register_global_object.c": [
         "return:DestructorChain *"
@@ -235,7 +250,7 @@
       ]
     },
     "MI_CpuCopy8": {
-      "src/engine/mb/MB_WmBase.cpp": [
+      "src/engine/mb/MB_WmBase.c": [
         "param:#1 unsigned short *",
         "param:#3 int"
       ],
@@ -15056,7 +15071,7 @@
       ]
     },
     "MI_CpuFill8": {
-      "src/engine/mb/MB_WmBase.cpp": [
+      "src/engine/mb/MB_WmBase.c": [
         "param:#2 int"
       ],
       "src/engine/save/SaveData.cpp": [
