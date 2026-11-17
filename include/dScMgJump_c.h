@@ -26,8 +26,8 @@
  * therefore cannot use a typed member at all. Same class, same member, two
  * different answers, decided by the ROM's own ordering.
  *
- * 0x5004 IS A PAIR OF s32, not padding -- the {fn, 0} state pair the ten
- * state functions below assign the next data_ov006_0213cb* row into. That
+ * 0x5004 IS THE STATE MEMBER POINTER, not padding -- the state functions
+ * below assign `&dScMgJump_c::State_*` into it. That
  * write, and the s16 countdown at 0x5014 in the same functions, are what
  * bound dScMgD3DBase_c at 0x5004 from above. Both live in
  * src/minigames/d_s_mg_jump_methods.cpp now.
@@ -78,10 +78,10 @@ struct dScMgJump_c : dScMgD3DBase_c {
     s32 Behavior();         /* slot  6 -- src/minigames/d_s_mg_jump_methods.cpp */
     s32 Render();           /* slot  9 -- src/minigames/d_s_mg_jump_methods.cpp */
 
-    /* The minigame's state functions. Unnamed in the cartridge; stored as
-       {fn, 0} pairs in the pmf_dScMgJump_c_State_Result table rows, dispatched through
-       mState by Behavior. The mangled spellings are what the table relocs
-       resolve by. */
+    /* The minigame's state functions. Unnamed in the cartridge; each
+       `mState = &dScMgJump_c::State_*` makes mwcc emit an eight-byte
+       {fn, 0} member-pointer constant (pmf_dScMgJump_c_* in symbols.txt),
+       and Behavior dispatches through mState. */
     void State_Idle();
     void State_Final();
     void BeginFinal();
@@ -93,14 +93,10 @@ struct dScMgJump_c : dScMgD3DBase_c {
     void State_Intro();
     void BeginIntro();
 
-    /* 0x5004 IS A PAIR OF s32, not padding: State_Final and the other
-       state functions assign the next table row into it whole, and that write
-       plus the s16 at 0x5014 are what bound dScMgD3DBase_c at 0x5004 from
-       above. The sole member must stay an ARRAY: with two named scalars
-       mwccarm scalarises the copy member-by-member and the assigners come
-       back 2 words short of the ROM's schedule. */
-    struct StatePmf { s32 w[2]; };
-    StatePmf mState;              /* 0x5004 -- current state pair */
+    /* 0x5004 is the current state: State_Final and the other state
+       functions assign the next one into it, and that write plus the s16 at
+       0x5014 are what bound dScMgD3DBase_c at 0x5004 from above. */
+    void (dScMgJump_c::*mState)(); /* 0x5004 -- current state */
     s32 mAccum;                   /* 0x500c -- gains mAccumStep >> 12 a tick */
     s32 mAccumStep;               /* 0x5010 -- fx32 */
     s16 mStateTimer;              /* 0x5014 -- countdown to the state change */
