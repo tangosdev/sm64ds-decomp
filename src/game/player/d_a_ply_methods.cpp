@@ -12477,25 +12477,17 @@ int daPly_c::St_BurnFire_Main() {
     *(&mStateWork) += 2;
 
     {
-        struct Info {
-            s16 vec[3];
-            int pos[3];
-        } info;
-        int zz = mPosZ - 0x1e000;
-        int yy = mPosY + 0x32000;
-        int xx = mPosX;
+        Vector3_16f dir;
+        Vector3 pos(mPosX, mPosY + 0x32000, mPosZ - 0x1e000);
 
-        info.pos[0] = xx;
-        info.pos[1] = yy;
-        info.pos[2] = zz;
-        info.vec[0] = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
-        info.vec[1] = 0;
-        info.vec[2] = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
+        dir.x = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
+        dir.y = 0;
+        dir.z = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
 
-        mParticle1 = Particle::System::New(mParticle1, kPtclPlayerBurnA, info.pos[0], info.pos[1],
-                                           info.pos[2], (const Vector3_16f *)(info.vec), 0);
-        mParticle2 = Particle::System::New(mParticle2, kPtclPlayerBurnB, info.pos[0], info.pos[1],
-                                           info.pos[2], (const Vector3_16f *)(info.vec), 0);
+        mParticle1 =
+            Particle::System::New(mParticle1, kPtclPlayerBurnA, pos.x, pos.y, pos.z, &dir, 0);
+        mParticle2 =
+            Particle::System::New(mParticle2, kPtclPlayerBurnB, pos.x, pos.y, pos.z, &dir, 0);
         mLoopingSoundHandle = Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, mCamSpacePos, 0);
     }
 
