@@ -2097,23 +2097,14 @@ s32 dCamera_c::func_02009e70() {
     } else {
         mode = (mFlags & 0x100) ? &data_0208747c : mMode;
         Vec3_Sub(&targetMove, &mTargetPlayer->mPos, &mTargetPos);
-        {
-            struct Vector3 *q = &mTargetPlayer->mPos;
-            mTargetPos.x = q->x;
-            mTargetPos.y = q->y;
-            mTargetPos.z = q->z;
-        }
+        mTargetPos = mTargetPlayer->mPos;
         r7 = Vec3_HorzLen(&targetMove);
         view = 0;
         framing = 0;
         if (mFocusActor != 0) {
-            struct Vector3 *q;
             framing = 1;
             mFramedActor = 0;
-            q = &mFocusActor->mPos;
-            mLookTargetPos.x = q->x;
-            mLookTargetPos.y = q->y;
-            mLookTargetPos.z = q->z;
+            mLookTargetPos = mFocusActor->mPos;
             mFocusDist = 0xdfe60;
         }
         r6 = func_0200c66c(&mTargetPos, (int *)&view, (int *)&mode, &framing);
@@ -2206,21 +2197,13 @@ s32 dCamera_c::func_02009e70() {
                             ceil = CollisionCeiling(line, sb);
                         }
                         if ((mFlags & 0x100) == 0 && (mode->flags & 8) != 0) {
-                            {
-                                s32 tz = mTargetPos.z;
-                                s32 tx = mTargetPos.x;
-                                wallFrom.x = tx;
-                                wallFrom.y = sb;
-                                wallFrom.z = tz;
-                            }
+                            SetVec(wallFrom, mTargetPos.x, sb, mTargetPos.z);
                             if (sb <= ceil) {
                                 line.SetObjAndLine(wallFrom, pos, 0);
                                 if (line.DetectClsn() != 0) {
                                     line.surface.CopyNormalTo(wallNormal);
                                     SetCollisionPosition(this, line);
-                                    mWallNormal.x = wallNormal.x;
-                                    mWallNormal.y = wallNormal.y;
-                                    mWallNormal.z = wallNormal.z;
+                                    mWallNormal = wallNormal;
                                     t0 = wallNormal.y;
                                     if (t0 < 0)
                                         t0 = -t0;
