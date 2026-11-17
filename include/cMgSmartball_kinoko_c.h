@@ -17,7 +17,7 @@
  * written exactly twice in the whole tree, both by the spawner
  * dScMgSmartball_c::SpawnObjects, which walks two different tilemap layers looking for
  * the same tile id 0x328: the objects it builds from the first layer get 0,
- * the ones from the second get 1. The constructor cMgSmartball_kinoko_c_Construct leaves
+ * the ones from the second get 1. The constructor leaves
  * 2 behind, which is the value Update has no case for -- a kinoko the spawner
  * never claimed renders nothing. Update switches on it and SaveSnapshot only
  * reads it; nothing ever assigns it at runtime.
@@ -49,10 +49,10 @@
  * touches it (house style: explicit pad over an implicit compiler-inserted
  * one).
  *
- * CONSTRUCTED BY cMgSmartball_kinoko_c_Construct, left a free function per the recipe
- * (this tree has migrated zero constructors), with only its vtable-symbol
- * reference renamed. It sets the base's mRadius to 0x7000 and mVariant to 2;
- * it does not touch mWasHit or mHitTimer. */
+ * CONSTRUCTED BY the real cMgSmartball_kinoko_c(dScMgSmartball_c *, int, Vector2)
+ * constructor; the cartridge keeps its C1, the C2 is deadstripped. It sets
+ * the base's mRadius to 0x7000 and mVariant to 2; it does not touch mWasHit
+ * or mHitTimer. */
 #ifndef CMGSMARTBALL_KINOKO_C_H
 #define CMGSMARTBALL_KINOKO_C_H
 #include "types.h"
@@ -62,6 +62,7 @@ struct cMgSmartball_kinoko_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    cMgSmartball_kinoko_c(dScMgSmartball_c *manager, int index, Vector2 pos);
     ~cMgSmartball_kinoko_c() {}
 
     /* Recovered helper: the squared hit radius the ball's HitKinokos sweep

@@ -9,10 +9,11 @@
  * the base's 0x31-0x33 region, so no raw cast is needed anywhere here
  * (unlike wing_c/ana_c/board_c).
  *
- * FIELD EVIDENCE. The constructor (cMgSmartball_slot_c_Construct) placement-constructs
- * two 3-element, 8-byte-stride arrays via __cxa_vec_ctor(this+0x34,3,8,...)
- * and __cxa_vec_ctor(this+0x4c,3,8,...) -- that call is the source of the
- * two arrays' bounds and 8-byte stride. RestoreInitial is exhaustive over
+ * FIELD EVIDENCE. The constructor builds two 3-element, 8-byte-stride arrays
+ * through __cxa_vec_ctor(this+0x34,3,8,...) and __cxa_vec_ctor(this+0x4c,3,8,...)
+ * with Vector2's element constructor -- that call is the source of the two
+ * arrays' bounds, stride and element type, and the inlined slot deletes tear
+ * them down with Vector2's element destructor. RestoreInitial is exhaustive over
  * everything from there to the end of the class and is the strongest single
  * source for the rest of the layout: every loop bound and store width below
  * comes from its own zero pass, not a guess. Update corroborates the first
@@ -22,12 +23,10 @@
  * FIELD NAMES and their evidence are tabulated in
  * notes/smartball-provenance.md.
  *
- * mReelOffset/mReelVel ARE ARRAYS OF (x,y) PAIRS, not flat scalars, because
- * Update indexes them with a real stride-8 loop in source that already
- * byte-matched before this migration -- the nested struct type is carried over
- * unchanged, only the local cast became a real member. Update is also where
- * the pair members get their names: it adds `[i].x` to mCurrent0 and `[i].y`
- * to mCurrent1 to place each sprite.
+ * mReelOffset/mReelVel ARE ARRAYS OF Vector2, not flat scalars: the
+ * constructor's vec_ctor names the element type, and Update indexes them with
+ * a stride-8 loop, adding `[i].x` to mCurrent0 and `[i].y` to mCurrent1 to
+ * place each sprite.
  *
  * WHAT THE CLASS IS: a three-reel slot machine, and every name below comes
  * from reading its three out-of-scope helpers alongside its own four
@@ -53,26 +52,19 @@
  * zero pass jumps straight from the three flag bytes at 0x73-0x75 to the
  * s32 countdown at 0x78, skipping it entirely. UNMODELLED, NOT UNREAD.
  *
- * CONSTRUCTED BY cMgSmartball_slot_c_Construct, left a free function per the recipe
- * (this tree has migrated zero constructors), with only its vtable-symbol
- * reference renamed. */
+ * CONSTRUCTED BY the real cMgSmartball_slot_c(dScMgSmartball_c *, int, Vector2)
+ * constructor; the cartridge keeps its C1, the C2 is deadstripped. */
 #ifndef CMGSMARTBALL_SLOT_C_H
 #define CMGSMARTBALL_SLOT_C_H
 #include "types.h"
 #include "cMgSmartball_object_c.h"
+#include "Vector2.h"
 
-/* NOTE FOR ANYONE EDITING THIS HEADER: tools/check_header_offsets.py CANNOT
- * parse the two anonymous nested-struct arrays below. It reports them as
- * "2 unparsed" and then computes the struct as spanning 0x58 rather than
- * 0x88 -- and still prints "0 mismatched", which reads like a pass. The
- * offsets in this header are therefore NOT machine-checked by that gate.
- * What actually holds them is the compile-time size assert at the bottom
- * plus the byte match itself, since a wrong offset changes the emitted
- * instruction. Do not trust a clean check_header_offsets run on this file. */
 struct cMgSmartball_slot_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    cMgSmartball_slot_c(dScMgSmartball_c *manager, int index, Vector2 pos);
     ~cMgSmartball_slot_c() {}
 
     /* Recovered helpers: ReelsStopped reports all three mReelVel[i].y at or
@@ -84,17 +76,16 @@ struct cMgSmartball_slot_c : cMgSmartball_object_c {
     void StartSpin();
     void UpdateSpin();
 
-    /* 0x034 -- per-reel render offset from mCurrent, placement-constructed by
-       the ctor. Update adds .x/.y to mCurrent0/mCurrent1; .y is the reel's
-       scroll position, wrapped at 0x30000 by UpdateSpin. .x is
-       zeroed by RestoreInitial and never written anywhere else. */
-    struct { s32 x; s32 y; } mReelOffset[3];
+    /* 0x034 -- per-reel render offset from mCurrent. Update adds .x/.y to
+       mCurrent0/mCurrent1; .y is the reel's scroll position, wrapped at
+       0x30000 by UpdateSpin. .x is zeroed by RestoreInitial and never
+       written anywhere else. */
+    Vector2 mReelOffset[3];
 
-    /* 0x04c -- per-reel scroll speed, placement-constructed by the ctor. Only
-       .y is ever used: UpdateSpin ramps it up to 0x3000 while
+    /* 0x04c -- per-reel scroll speed. Only .y is ever used: UpdateSpin ramps it up to 0x3000 while
        mIsSpeedingUp, back down to 0x200/0x800 while mIsSlowingDown, and adds
        it into mReelOffset[i].y every frame. */
-    struct { s32 x; s32 y; } mReelVel[3];
+    Vector2 mReelVel[3];
 
     s32 mReelStopCount[3]; /* 0x064 -- symbols this reel still has to travel
                                before it stops. BeginStop rolls it to

@@ -2501,7 +2501,7 @@ src/engine/mb/MB_GameInfo.c:
     complete
     .text start:0x02067f68 end:0x0206879c
 
-src/engine/mb/MB_WmBase.cpp:
+src/engine/mb/MB_WmBase.c:
     complete
     .text start:0x0206879c end:0x0206a318
 

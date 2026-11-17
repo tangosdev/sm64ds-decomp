@@ -89,7 +89,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "_Z29cMgSmartball_wing_c_ConstructP19cMgSmartball_wing_cP16dScMgSmartball_ciP2V2",
+      "symbol": "_ZN19cMgSmartball_wing_cC1EP16dScMgSmartball_ci7Vector2",
       "address": "0x0210e0d0",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_0210e0d0.c",
@@ -131,7 +131,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "_Z35cMgSmartball_pushswitch_c_ConstructP25cMgSmartball_pushswitch_cP16dScMgSmartball_ciP2V2",
+      "symbol": "_ZN25cMgSmartball_pushswitch_cC1EP16dScMgSmartball_ci7Vector2",
       "address": "0x0210e480",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_0210e480.c",
@@ -187,7 +187,7 @@
       "ordinal": 23
     },
     {
-      "symbol": "_Z30cMgSmartball_board_c_ConstructP20cMgSmartball_board_cP16dScMgSmartball_ciP2V2",
+      "symbol": "_ZN20cMgSmartball_board_cC1EP16dScMgSmartball_ci7Vector2",
       "address": "0x0210f9f8",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_0210f9f8.c",
@@ -243,7 +243,7 @@
       "ordinal": 31
     },
     {
-      "symbol": "_Z29cMgSmartball_slot_c_ConstructP19cMgSmartball_slot_cP16dScMgSmartball_ciP2V2",
+      "symbol": "_ZN19cMgSmartball_slot_cC1EP16dScMgSmartball_ci7Vector2",
       "address": "0x021101bc",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_021101bc.cpp",
@@ -278,7 +278,7 @@
       "ordinal": 36
     },
     {
-      "symbol": "_Z31cMgSmartball_pakkun_c_ConstructP21cMgSmartball_pakkun_cP16dScMgSmartball_ciP2V2",
+      "symbol": "_ZN21cMgSmartball_pakkun_cC1EP16dScMgSmartball_ci7Vector2",
       "address": "0x02110874",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02110874.c",
@@ -313,7 +313,7 @@
       "ordinal": 41
     },
     {
-      "symbol": "_Z30cMgSmartball_dokan_c_ConstructP20cMgSmartball_dokan_cP16dScMgSmartball_ciP2V2",
+      "symbol": "_ZN20cMgSmartball_dokan_cC1EP16dScMgSmartball_ci7Vector2",
       "address": "0x02110bc0",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02110bc0.c",
@@ -355,7 +355,7 @@
       "ordinal": 47
     },
     {
-      "symbol": "_Z34cMgSmartball_propeller_c_ConstructP24cMgSmartball_propeller_cP16dScMgSmartball_ciP2V2",
+      "symbol": "_ZN24cMgSmartball_propeller_cC1EP16dScMgSmartball_ci7Vector2",
       "address": "0x02111220",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02111220.c",
@@ -383,7 +383,7 @@
       "ordinal": 51
     },
     {
-      "symbol": "_Z31cMgSmartball_spring_c_ConstructP21cMgSmartball_spring_cP16dScMgSmartball_ciP2V2",
+      "symbol": "_ZN21cMgSmartball_spring_cC1EP16dScMgSmartball_ci7Vector2",
       "address": "0x0211157c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_0211157c.c",
@@ -425,7 +425,7 @@
       "ordinal": 57
     },
     {
-      "symbol": "_Z28cMgSmartball_ana_c_ConstructP18cMgSmartball_ana_cP16dScMgSmartball_ciP2V2",
+      "symbol": "_ZN18cMgSmartball_ana_cC1EP16dScMgSmartball_ci7Vector2",
       "address": "0x02111774",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02111774.c",
@@ -453,7 +453,7 @@
       "ordinal": 61
     },
     {
-      "symbol": "_Z31cMgSmartball_kinoko_c_ConstructP21cMgSmartball_kinoko_cP16dScMgSmartball_ciP2V2",
+      "symbol": "_ZN21cMgSmartball_kinoko_cC1EP16dScMgSmartball_ci7Vector2",
       "address": "0x02111b40",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_02111b40.c",
@@ -628,7 +628,7 @@
       "ordinal": 86
     },
     {
-      "symbol": "_Z29cMgSmartball_ball_c_ConstructP19cMgSmartball_ball_cP16dScMgSmartball_ciP2V2",
+      "symbol": "_ZN19cMgSmartball_ball_cC1EP16dScMgSmartball_ci7Vector2",
       "address": "0x02114548",
       "size": "0x00000048",
       "legacy_source": "src/func_ov006_02114548.c",
@@ -698,7 +698,7 @@
       "ordinal": 96
     },
     {
-      "symbol": "_Z31cMgSmartball_object_c_ConstructP21cMgSmartball_object_cP16dScMgSmartball_ciPi",
+      "symbol": "_ZN21cMgSmartball_object_cC2EP16dScMgSmartball_ci7Vector2",
       "address": "0x0211474c",
       "size": "0x00000060",
       "legacy_source": "src/func_ov006_0211474c.c",
@@ -965,44 +965,74 @@
     "compilerOnlyOutput": {
       "requested": [
         "_ZN16dScMgSmartball_cD2Ev",
-        "_ZN5TVec2D1Ev"
+        "_ZN5TVec2D1Ev",
+        "_ZN19cMgSmartball_wing_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN25cMgSmartball_pushswitch_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN20cMgSmartball_board_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN19cMgSmartball_slot_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN21cMgSmartball_pakkun_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN20cMgSmartball_dokan_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN24cMgSmartball_propeller_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN21cMgSmartball_spring_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN18cMgSmartball_ana_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN21cMgSmartball_kinoko_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN19cMgSmartball_ball_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN21cMgSmartball_object_cC1EP16dScMgSmartball_ci7Vector2",
+        "_ZN21cMgSmartball_object_cD2Ev",
+        "_ZN7Vector2C1Ev",
+        "_ZN7Vector2D1Ev"
       ],
       "deadstripped": [
         "_ZN16dScMgSmartball_cD2Ev",
-        "_ZN5TVec2D1Ev"
+        "_ZN18cMgSmartball_ana_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN19cMgSmartball_ball_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN19cMgSmartball_slot_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN19cMgSmartball_wing_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN20cMgSmartball_board_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN20cMgSmartball_dokan_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN21cMgSmartball_kinoko_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN21cMgSmartball_object_cC1EP16dScMgSmartball_ci7Vector2",
+        "_ZN21cMgSmartball_object_cD2Ev",
+        "_ZN21cMgSmartball_pakkun_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN21cMgSmartball_spring_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN24cMgSmartball_propeller_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN25cMgSmartball_pushswitch_cC2EP16dScMgSmartball_ci7Vector2",
+        "_ZN5TVec2D1Ev",
+        "_ZN7Vector2C1Ev",
+        "_ZN7Vector2D1Ev"
       ],
       "droppedSections": [
         9,
         10,
+        11,
+        28,
+        29,
+        30,
+        31,
+        42,
+        43,
+        59,
+        60,
+        76,
+        77,
+        80,
+        89,
+        90,
+        100,
+        101,
+        114,
+        115,
+        124,
+        125,
+        137,
+        138,
+        147,
+        148,
+        194,
+        195,
+        211,
         212,
-        241,
-        242,
-        243,
-        244,
-        245,
-        246,
-        247,
-        248,
-        249,
-        250,
-        251,
-        252,
-        253,
-        254,
-        255,
-        256,
-        257,
-        258,
-        259,
-        260,
-        261,
-        262,
-        263,
-        264,
-        265,
-        266,
-        267,
-        268,
+        240,
         269,
         270,
         271,
@@ -1051,7 +1081,35 @@
         314,
         315,
         316,
-        317
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328,
+        329,
+        330,
+        331,
+        332,
+        333,
+        334,
+        335,
+        336,
+        337,
+        338,
+        339,
+        340,
+        341,
+        342,
+        343,
+        344,
+        345
       ],
       "data": [
         "_ZTI21cMgSmartball_object_c",
@@ -1151,7 +1209,26 @@
         "_ZTV24cMgSmartball_propeller_c",
         "_ZTV25cMgSmartball_pushswitch_c"
       ],
-      "canonicalDuplicates": []
+      "canonicalDuplicates": [
+        {
+          "symbol": "_ZN7Vector2C1Ev",
+          "canonicalSymbol": "func_0203d738",
+          "module": "arm9",
+          "address": "0x0203d738",
+          "size": 4,
+          "bodySha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": 0
+        },
+        {
+          "symbol": "_ZN7Vector2D1Ev",
+          "canonicalSymbol": "NullDestructor_0203d47c",
+          "module": "arm9",
+          "address": "0x0203d47c",
+          "size": 4,
+          "bodySha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": 0
+        }
+      ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -1235,6 +1312,87 @@
       "symbol": "_ZN5TVec2D1Ev",
       "disposition": "deadstrip",
       "reason": "Empty local two-word pair destructor, emitted as an unreferenced vague function. No configured ROM home or retained relocation; exact reduction checks references."
+    },
+    {
+      "symbol": "_ZN19cMgSmartball_wing_cC2EP16dScMgSmartball_ci7Vector2",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line cMgSmartball_wing_c::cMgSmartball_wing_c(dScMgSmartball_c *, int, Vector2). The cartridge carries only C1, so C2 has no ROM home; homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN25cMgSmartball_pushswitch_cC2EP16dScMgSmartball_ci7Vector2",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line cMgSmartball_pushswitch_c::cMgSmartball_pushswitch_c(dScMgSmartball_c *, int, Vector2). The cartridge carries only C1, so C2 has no ROM home; homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN20cMgSmartball_board_cC2EP16dScMgSmartball_ci7Vector2",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line cMgSmartball_board_c::cMgSmartball_board_c(dScMgSmartball_c *, int, Vector2). The cartridge carries only C1, so C2 has no ROM home; homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN19cMgSmartball_slot_cC2EP16dScMgSmartball_ci7Vector2",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line cMgSmartball_slot_c::cMgSmartball_slot_c(dScMgSmartball_c *, int, Vector2). The cartridge carries only C1, so C2 has no ROM home; homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_pakkun_cC2EP16dScMgSmartball_ci7Vector2",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line cMgSmartball_pakkun_c::cMgSmartball_pakkun_c(dScMgSmartball_c *, int, Vector2). The cartridge carries only C1, so C2 has no ROM home; homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN20cMgSmartball_dokan_cC2EP16dScMgSmartball_ci7Vector2",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line cMgSmartball_dokan_c::cMgSmartball_dokan_c(dScMgSmartball_c *, int, Vector2). The cartridge carries only C1, so C2 has no ROM home; homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN24cMgSmartball_propeller_cC2EP16dScMgSmartball_ci7Vector2",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line cMgSmartball_propeller_c::cMgSmartball_propeller_c(dScMgSmartball_c *, int, Vector2). The cartridge carries only C1, so C2 has no ROM home; homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_spring_cC2EP16dScMgSmartball_ci7Vector2",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line cMgSmartball_spring_c::cMgSmartball_spring_c(dScMgSmartball_c *, int, Vector2). The cartridge carries only C1, so C2 has no ROM home; homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN18cMgSmartball_ana_cC2EP16dScMgSmartball_ci7Vector2",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line cMgSmartball_ana_c::cMgSmartball_ana_c(dScMgSmartball_c *, int, Vector2). The cartridge carries only C1, so C2 has no ROM home; homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_kinoko_cC2EP16dScMgSmartball_ci7Vector2",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line cMgSmartball_kinoko_c::cMgSmartball_kinoko_c(dScMgSmartball_c *, int, Vector2). The cartridge carries only C1, so C2 has no ROM home; homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN19cMgSmartball_ball_cC2EP16dScMgSmartball_ci7Vector2",
+      "disposition": "deadstrip",
+      "reason": "Base-object constructor emitted beside C1 by the out-of-line cMgSmartball_ball_c::cMgSmartball_ball_c(dScMgSmartball_c *, int, Vector2). The cartridge carries only C1, so C2 has no ROM home; homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_object_cC1EP16dScMgSmartball_ci7Vector2",
+      "disposition": "deadstrip",
+      "reason": "Complete-object constructor emitted beside C2 by the out-of-line cMgSmartball_object_c::cMgSmartball_object_c(dScMgSmartball_c *, int, Vector2). Nothing builds a bare cMgSmartball_object_c; the eleven child constructors call the base-object C2, which is the cartridge's copy at 0x0211474c. C1 is homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN21cMgSmartball_object_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object destructor of the empty inline ~cMgSmartball_object_c(). Every child destructor is inline too and folds the base vptr store in, so nothing calls this body; the cartridge has no copy of it. Homeless and unreferenced, so a plain deadstrip."
+    },
+    {
+      "symbol": "_ZN7Vector2C1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "func_0203d738",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d738",
+      "reason": "SpawnObjects's Vector2 pos[25] and cMgSmartball_slot_c's Vector2 mReelOffset[3] / mReelVel[3] are built through __cxa_vec_ctor with func_0203d738 as the element constructor, as retail does. include/Vector2.h defines the empty Vector2() inline, so this TU emits its own 4-byte vague-linkage copy; that body is the arm9 callback at 0x0203d738, so this copy is discarded (ov006/dScMgAmida_c and dScMgBSC_c do the same)."
+    },
+    {
+      "symbol": "_ZN7Vector2D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "NullDestructor_0203d47c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d47c",
+      "reason": "The same Vector2 arrays are torn down through __cxa_vec_cleanup with NullDestructor_0203d47c, as retail does: pos at the end of SpawnObjects, the slot's two reel arrays by ~cMgSmartball_slot_c at each delete. include/Vector2.h defines the empty ~Vector2() inline, so this TU emits its own 4-byte vague-linkage copy; that body is the arm9 element destructor at 0x0203d47c, so this copy is discarded."
     },
     {
       "symbol": "_ZTI21cMgSmartball_object_c",
