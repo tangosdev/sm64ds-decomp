@@ -2921,7 +2921,7 @@
     "src/minigames/d_s_mg_teresa.cpp#_ZN13dScMgTeresa_c20FoundNumber_ClearAllEv": "tangosdev",
     "src/minigames/d_s_mg_teresa.cpp#_ZN13dScMgTeresa_c19BigBoo_StateFlyLeftEi": "tangosdev",
     "src/minigames/d_s_mg_teresa.cpp#_ZN13dScMgTeresa_c11Marker_DrawEv": "tangosdev",
-    "src/minigames/d_s_mg_teresa.cpp#_ZN13dScMgTeresa_c16BigBoo_StateGoneEv": "tangosdev",
+    "src/minigames/d_s_mg_teresa.cpp#_ZN13dScMgTeresa_c16BigBoo_StateGoneEi": "tangosdev",
     "src/minigames/d_s_mg_teresa.cpp#_ZN13dScMgTeresa_c13StepBg3ScrollEv": "ruspecial",
     "src/minigames/d_s_mg_teresa.cpp#_ZN13dScMgTeresa_c11BigBoo_HideEv": "tangosdev",
     "src/minigames/d_s_mg_teresa.cpp#_ZN13dScMgTeresa_c13BigBoo_UpdateEv": "tangosdev",

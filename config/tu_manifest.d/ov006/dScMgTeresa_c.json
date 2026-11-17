@@ -40,7 +40,7 @@
     },
     {
       "name": ".data",
-      "start": "0x0213f9d0",
+      "start": "0x0213f8d4",
       "end": "0x0213f9e4"
     },
     {
@@ -376,7 +376,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "_ZN13dScMgTeresa_c16BigBoo_StateGoneEv",
+      "symbol": "_ZN13dScMgTeresa_c16BigBoo_StateGoneEi",
       "address": "0x0211ce90",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_0211ce90.c",
@@ -917,55 +917,6 @@
       "evidence": "initialized ROM object"
     },
     {
-      "symbol": "sTeresaVanishPuffSprites",
-      "address": "0x02134210",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sTeresaBigBooSprites",
-      "address": "0x021350fc",
-      "size": "0x2c",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sTeresaBigBooHoverSprites",
-      "address": "0x02135fc8",
-      "size": "0x1c",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sTeresaMarkerSprites",
-      "address": "0x0213a5f4",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sTeresaRevealSprites",
-      "address": "0x0213a628",
-      "size": "0x14",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sTeresaBooFrameSprites",
-      "address": "0x0213a964",
-      "size": "0x38",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sTeresaCountdownSprites",
-      "address": "0x0213f9d0",
-      "size": "0x14",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
       "symbol": "data_ov006_02133a60",
       "address": "0x02133a60",
       "size": "0x10",
@@ -980,11 +931,25 @@
       "evidence": "OAM list ending at attr3 0xffff"
     },
     {
+      "symbol": "sTeresaVanishPuffSprites",
+      "address": "0x02134210",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
       "symbol": "data_ov006_0213424c",
       "address": "0x0213424c",
       "size": "0x28",
       "binding": "STB_GLOBAL",
       "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "sTeresaBigBooSprites",
+      "address": "0x021350fc",
+      "size": "0x2c",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     },
     {
       "symbol": "data_ov006_02135128",
@@ -1064,6 +1029,13 @@
       "evidence": "OAM list ending at attr3 0xffff"
     },
     {
+      "symbol": "sTeresaBigBooHoverSprites",
+      "address": "0x02135fc8",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
       "symbol": "data_ov006_02135fe4",
       "address": "0x02135fe4",
       "size": "0xb8",
@@ -1113,11 +1085,25 @@
       "evidence": "OAM list ending at attr3 0xffff"
     },
     {
+      "symbol": "sTeresaMarkerSprites",
+      "address": "0x0213a5f4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
       "symbol": "data_ov006_0213a5f8",
       "address": "0x0213a5f8",
       "size": "0x30",
       "binding": "STB_GLOBAL",
       "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "sTeresaRevealSprites",
+      "address": "0x0213a628",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     },
     {
       "symbol": "data_ov006_0213a63c",
@@ -1251,6 +1237,228 @@
       "size": "0x20",
       "binding": "STB_GLOBAL",
       "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "sTeresaBooFrameSprites",
+      "address": "0x0213a964",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFound",
+      "address": "0x0213f8d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Boo_StateFound (0x0211f040), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFly",
+      "address": "0x0213f8dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Boo_StateFly (0x0211f554), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateHiddenTimed",
+      "address": "0x0213f8e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Boo_StateHiddenTimed (0x0211f0d0), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateHidden",
+      "address": "0x0213f8ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Boo_StateHidden (0x0211f1a4), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateExit",
+      "address": "0x0213f8f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::BigBoo_StateExit (0x0211cef4), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateFlyRight",
+      "address": "0x0213f8fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::BigBoo_StateFlyRight (0x0211d0f8), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Scene_StateInit",
+      "address": "0x0213f904",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Scene_StateInit (0x021200cc), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateDropIn",
+      "address": "0x0213f90c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::BigBoo_StateDropIn (0x0211d4e8), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Scene_StateResult",
+      "address": "0x0213f914",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Scene_StateResult (0x0211fd44), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateFlyLeft",
+      "address": "0x0213f91c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::BigBoo_StateFlyLeft (0x0211d224), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateResult",
+      "address": "0x0213f924",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::BigBoo_StateResult (0x0211cd24), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Scene_StateReveal",
+      "address": "0x0213f92c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Scene_StateReveal (0x021200a8), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateAppear",
+      "address": "0x0213f934",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Boo_StateAppear (0x0211f5d4), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFadeIn",
+      "address": "0x0213f93c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Boo_StateFadeIn (0x0211ee34), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateOffscreen",
+      "address": "0x0213f944",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::BigBoo_StateOffscreen (0x0211d018), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFadeOut",
+      "address": "0x0213f94c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Boo_StateFadeOut (0x0211f224), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Scene_StatePlay",
+      "address": "0x0213f954",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Scene_StatePlay (0x02120008), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateHover",
+      "address": "0x0213f95c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::BigBoo_StateHover (0x0211d368), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Scene_StateRoundEnd",
+      "address": "0x0213f964",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Scene_StateRoundEnd (0x0211fe78), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFadeAway",
+      "address": "0x0213f96c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Boo_StateFadeAway (0x0211ebdc), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "g_profile_MG_TERESA",
+      "address": "0x0213f974",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "base scene profile (BaseSpawnInfo): word 0 relocates to dScMgTeresa_c_classInit (0x021207a8); both priority halfwords are 0x183, compared to retail"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateFinish",
+      "address": "0x0213f97c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Reveal_StateFinish (0x0211d86c), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateDipAndRise",
+      "address": "0x0213f984",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Reveal_StateDipAndRise (0x0211d924), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateAnimate",
+      "address": "0x0213f98c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Reveal_StateAnimate (0x0211dad0), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateSlideIn",
+      "address": "0x0213f994",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Reveal_StateSlideIn (0x0211db7c), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateStart",
+      "address": "0x0213f99c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::Reveal_StateStart (0x0211dce0), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateGone",
+      "address": "0x0213f9a4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::BigBoo_StateGone (0x0211ce90), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateRemove",
+      "address": "0x0213f9ac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgTeresa_c::BigBoo_StateRemove (0x0211ce94), emitted by __sinit_d_s_mg_teresa.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "_ZTI13dScMgTeresa_c",
+      "address": "0x0213f9b4",
+      "size": "0xc",
+      "evidence": "own class typeinfo: __si_class_type_info vtable+8 (0x0209a764), its own _ZTS, then base _ZTI11dScMgBase_c at ov004:0x020bbf6c; it sits between the PMF-literal run and sTeresaCountdownSprites, so the one .data claim runs through it"
+    },
+    {
+      "symbol": "_ZTS13dScMgTeresa_c",
+      "address": "0x0213f9c0",
+      "size": "0x10",
+      "evidence": "ROM type-name string '13dScMgTeresa_c': 15 chars + NUL = 0x10 emitted bytes, directly before sTeresaCountdownSprites"
+    },
+    {
+      "symbol": "sTeresaCountdownSprites",
+      "address": "0x0213f9d0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     }
   ],
   "bss": [
@@ -1284,20 +1492,6 @@
     }
   ],
   "compiler_only_output": [
-    {
-      "symbol": "_ZTI13dScMgTeresa_c",
-      "disposition": "deadstrip-data",
-      "reason": "Own record. This TU defines dScMgTeresa_c's key function -- the destructor, which include/dScMgTeresa_c.h declares out of line -- so mwcc emits the whole inheritance chain's typeinfo records as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213f9b4, outside this TU's only licensed range (.text 0x0211cbd0-0x021207a8), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
-      "canonical_module": "ov006",
-      "canonical_address": "0x0213f9b4"
-    },
-    {
-      "symbol": "_ZTS13dScMgTeresa_c",
-      "disposition": "deadstrip-data",
-      "reason": "Own record. This TU defines dScMgTeresa_c's key function -- the destructor, which include/dScMgTeresa_c.h declares out of line -- so mwcc emits the whole inheritance chain's typeinfo names as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213f9c0, outside this TU's only licensed range (.text 0x0211cbd0-0x021207a8), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
-      "canonical_module": "ov006",
-      "canonical_address": "0x0213f9c0"
-    },
     {
       "symbol": "_ZTI11dScMgBase_c",
       "disposition": "deadstrip-data",
@@ -1457,7 +1651,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -1493,6 +1687,13 @@
           "start": "0x02142e88",
           "end": "0x02142f60",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x0213f8d4",
+          "end": "0x0213f9e4",
+          "differingBytes": 0,
+          "firstDiff": null
         },
         {
           "section": ".data.sTeresaExclaimSprites",
@@ -1540,13 +1741,6 @@
           "section": ".data.sTeresaBooFrameSprites",
           "start": "0x0213a964",
           "end": "0x0213a99c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data",
-          "start": "0x0213f9d0",
-          "end": "0x0213f9e4",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1840,7 +2034,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 88
+          "LICENSED": 167
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1851,34 +2045,535 @@
           {
             "section": ".init",
             "original": [
-              165
+              278
             ],
             "desired": [
-              165
+              278
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              163
+              276
             ],
             "desired": [
-              163
+              276
             ]
           },
           {
             "section": ".bss",
             "original": [
-              142,
-              143,
-              144,
-              145
+              211,
+              228,
+              239,
+              258
             ],
             "desired": [
-              144,
-              142,
-              143,
-              145
+              239,
+              211,
+              228,
+              258
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              17,
+              199,
+              201,
+              203,
+              205,
+              207,
+              209,
+              212,
+              214,
+              216,
+              218,
+              220,
+              222,
+              224,
+              226,
+              229,
+              231,
+              233,
+              235,
+              237,
+              240,
+              242,
+              244,
+              246,
+              248,
+              250,
+              252,
+              254,
+              256,
+              261,
+              262
+            ],
+            "desired": [
+              222,
+              214,
+              220,
+              218,
+              250,
+              246,
+              201,
+              240,
+              209,
+              244,
+              256,
+              203,
+              212,
+              224,
+              248,
+              216,
+              205,
+              242,
+              207,
+              226,
+              199,
+              237,
+              235,
+              233,
+              231,
+              229,
+              254,
+              252,
+              262,
+              261,
+              17
+            ]
+          },
+          {
+            "section": ".data.sTeresaExclaimSprites",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          },
+          {
+            "section": ".data.sTeresaVanishPuffSprites",
+            "original": [
+              10
+            ],
+            "desired": [
+              10
+            ]
+          },
+          {
+            "section": ".data.sTeresaBigBooSprites",
+            "original": [
+              34
+            ],
+            "desired": [
+              34
+            ]
+          },
+          {
+            "section": ".data.sTeresaBigBooHoverSprites",
+            "original": [
+              25
+            ],
+            "desired": [
+              25
+            ]
+          },
+          {
+            "section": ".data.sTeresaMarkerSprites",
+            "original": [
+              7
+            ],
+            "desired": [
+              7
+            ]
+          },
+          {
+            "section": ".data.sTeresaRevealSprites",
+            "original": [
+              15
+            ],
+            "desired": [
+              15
+            ]
+          },
+          {
+            "section": ".data.sTeresaBooFrameSprites",
+            "original": [
+              37
+            ],
+            "desired": [
+              37
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02133a60",
+            "original": [
+              12
+            ],
+            "desired": [
+              12
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021341f8",
+            "original": [
+              9
+            ],
+            "desired": [
+              9
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213424c",
+            "original": [
+              33
+            ],
+            "desired": [
+              33
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02135128",
+            "original": [
+              48
+            ],
+            "desired": [
+              48
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02135268",
+            "original": [
+              47
+            ],
+            "desired": [
+              47
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021353a8",
+            "original": [
+              53
+            ],
+            "desired": [
+              53
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021354f8",
+            "original": [
+              50
+            ],
+            "desired": [
+              50
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02135648",
+            "original": [
+              52
+            ],
+            "desired": [
+              52
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02135798",
+            "original": [
+              51
+            ],
+            "desired": [
+              51
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021358e8",
+            "original": [
+              57
+            ],
+            "desired": [
+              57
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02135a48",
+            "original": [
+              55
+            ],
+            "desired": [
+              55
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02135ba8",
+            "original": [
+              54
+            ],
+            "desired": [
+              54
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02135d08",
+            "original": [
+              56
+            ],
+            "desired": [
+              56
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02135e68",
+            "original": [
+              58
+            ],
+            "desired": [
+              58
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02135fe4",
+            "original": [
+              44
+            ],
+            "desired": [
+              44
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213609c",
+            "original": [
+              46
+            ],
+            "desired": [
+              46
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02136154",
+            "original": [
+              45
+            ],
+            "desired": [
+              45
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213620c",
+            "original": [
+              49
+            ],
+            "desired": [
+              49
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213635c",
+            "original": [
+              59
+            ],
+            "desired": [
+              59
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02136524",
+            "original": [
+              60
+            ],
+            "desired": [
+              60
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213672c",
+            "original": [
+              61
+            ],
+            "desired": [
+              61
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a5f8",
+            "original": [
+              36
+            ],
+            "desired": [
+              36
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a63c",
+            "original": [
+              42
+            ],
+            "desired": [
+              42
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a694",
+            "original": [
+              40
+            ],
+            "desired": [
+              40
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a6ec",
+            "original": [
+              39
+            ],
+            "desired": [
+              39
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a744",
+            "original": [
+              41
+            ],
+            "desired": [
+              41
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a79c",
+            "original": [
+              43
+            ],
+            "desired": [
+              43
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a7f4",
+            "original": [
+              13
+            ],
+            "desired": [
+              13
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a804",
+            "original": [
+              14
+            ],
+            "desired": [
+              14
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a814",
+            "original": [
+              23
+            ],
+            "desired": [
+              23
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a82c",
+            "original": [
+              20
+            ],
+            "desired": [
+              20
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a844",
+            "original": [
+              19
+            ],
+            "desired": [
+              19
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a85c",
+            "original": [
+              22
+            ],
+            "desired": [
+              22
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a874",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a88c",
+            "original": [
+              21
+            ],
+            "desired": [
+              21
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a8a4",
+            "original": [
+              28
+            ],
+            "desired": [
+              28
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a8c4",
+            "original": [
+              27
+            ],
+            "desired": [
+              27
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a8e4",
+            "original": [
+              32
+            ],
+            "desired": [
+              32
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a904",
+            "original": [
+              29
+            ],
+            "desired": [
+              29
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a924",
+            "original": [
+              30
+            ],
+            "desired": [
+              30
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a944",
+            "original": [
+              31
+            ],
+            "desired": [
+              31
             ]
           }
         ],
@@ -1887,28 +2582,130 @@
             {
               "section": ".bss",
               "original": [
-                142,
-                143,
-                144,
-                145
+                211,
+                228,
+                239,
+                258
               ],
               "desired": [
-                144,
-                142,
-                143,
-                145
+                239,
+                211,
+                228,
+                258
               ],
               "slots": [
-                142,
-                143,
-                144,
-                145
+                211,
+                228,
+                239,
+                258
+              ]
+            },
+            {
+              "section": ".data",
+              "original": [
+                17,
+                199,
+                201,
+                203,
+                205,
+                207,
+                209,
+                212,
+                214,
+                216,
+                218,
+                220,
+                222,
+                224,
+                226,
+                229,
+                231,
+                233,
+                235,
+                237,
+                240,
+                242,
+                244,
+                246,
+                248,
+                250,
+                252,
+                254,
+                256,
+                261,
+                262
+              ],
+              "desired": [
+                222,
+                214,
+                220,
+                218,
+                250,
+                246,
+                201,
+                240,
+                209,
+                244,
+                256,
+                203,
+                212,
+                224,
+                248,
+                216,
+                205,
+                242,
+                207,
+                226,
+                199,
+                237,
+                235,
+                233,
+                231,
+                229,
+                254,
+                252,
+                262,
+                261,
+                17
+              ],
+              "slots": [
+                17,
+                199,
+                201,
+                203,
+                205,
+                207,
+                209,
+                212,
+                214,
+                216,
+                218,
+                220,
+                222,
+                224,
+                226,
+                229,
+                231,
+                233,
+                235,
+                237,
+                240,
+                242,
+                244,
+                246,
+                248,
+                250,
+                252,
+                254,
+                256,
+                261,
+                262
               ]
             }
           ],
-          "symbolIndices": 4,
+          "symbolIndices": 35,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 30,
           "error": null
         },
         "errors": null
@@ -1956,6 +2753,168 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFound",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFly",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateHiddenTimed",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateHidden",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateExit",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateFlyRight",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Scene_StateInit",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateDropIn",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Scene_StateResult",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateFlyLeft",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateResult",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Scene_StateReveal",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateAppear",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFadeIn",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateOffscreen",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFadeOut",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Scene_StatePlay",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateHover",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Scene_StateRoundEnd",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Boo_StateFadeAway",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateFinish",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateDipAndRise",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateAnimate",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateSlideIn",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_Reveal_StateStart",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateGone",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTeresa_c_BigBoo_StateRemove",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "relocations": [
@@ -2738,7 +3697,454 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02137454"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f8d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c14Boo_StateFoundEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211f040"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f8dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c12Boo_StateFlyEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211f554"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f8e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c20Boo_StateHiddenTimedEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211f0d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f8ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c15Boo_StateHiddenEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211f1a4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f8f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c16BigBoo_StateExitEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211cef4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f8fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c20BigBoo_StateFlyRightEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211d0f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f904",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c15Scene_StateInitEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021200cc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f90c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c18BigBoo_StateDropInEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211d4e8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f914",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c17Scene_StateResultEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211fd44"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f91c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c19BigBoo_StateFlyLeftEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211d224"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f924",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c18BigBoo_StateResultEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211cd24"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f92c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c17Scene_StateRevealEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021200a8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f934",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c15Boo_StateAppearEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211f5d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f93c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c15Boo_StateFadeInEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211ee34"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f944",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c21BigBoo_StateOffscreenEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211d018"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f94c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c16Boo_StateFadeOutEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211f224"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f954",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c15Scene_StatePlayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02120008"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f95c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c17BigBoo_StateHoverEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211d368"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f964",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c19Scene_StateRoundEndEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211fe78"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f96c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c17Boo_StateFadeAwayEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211ebdc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f974",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z23dScMgTeresa_c_classInitv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021207a8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f97c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c18Reveal_StateFinishEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211d86c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f984",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c22Reveal_StateDipAndRiseEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211d924"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f98c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c19Reveal_StateAnimateEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211dad0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f994",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c19Reveal_StateSlideInEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211db7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f99c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c17Reveal_StateStartEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211dce0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f9a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c16BigBoo_StateGoneEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211ce90"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f9ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13dScMgTeresa_c18BigBoo_StateRemoveEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0211ce94"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f9b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f9b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS13dScMgTeresa_c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213f9c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213f9bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI11dScMgBase_c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bbf6c"
     }
   ],
-  "production_mode": "intact-object"
+  "production_mode": "intact-object",
+  "defined_symbol_renames": [
+    {
+      "from": "@2455",
+      "to": "pmf_dScMgTeresa_c_Boo_StateFound",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFound, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x27c loads 0x0213f8d4 in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFound at 0x0211f040)."
+    },
+    {
+      "from": "@2447",
+      "to": "pmf_dScMgTeresa_c_Boo_StateFly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x264 loads 0x0213f8dc in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFly at 0x0211f554)."
+    },
+    {
+      "from": "@2453",
+      "to": "pmf_dScMgTeresa_c_Boo_StateHiddenTimed",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateHiddenTimed, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x278 loads 0x0213f8e4 in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateHiddenTimed at 0x0211f0d0)."
+    },
+    {
+      "from": "@2451",
+      "to": "pmf_dScMgTeresa_c_Boo_StateHidden",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateHidden, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x270 loads 0x0213f8ec in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateHidden at 0x0211f1a4)."
+    },
+    {
+      "from": "@2481",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateExit",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateExit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2b4 loads 0x0213f8f4 in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateExit at 0x0211cef4)."
+    },
+    {
+      "from": "@2477",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateFlyRight",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateFlyRight, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2ac loads 0x0213f8fc in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateFlyRight at 0x0211d0f8)."
+    },
+    {
+      "from": "@2435",
+      "to": "pmf_dScMgTeresa_c_Scene_StateInit",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StateInit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x248 loads 0x0213f904 in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StateInit at 0x021200cc)."
+    },
+    {
+      "from": "@2471",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateDropIn",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateDropIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x29c loads 0x0213f90c in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateDropIn at 0x0211d4e8)."
+    },
+    {
+      "from": "@2443",
+      "to": "pmf_dScMgTeresa_c_Scene_StateResult",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StateResult, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x25c loads 0x0213f914 in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StateResult at 0x0211fd44)."
+    },
+    {
+      "from": "@2475",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateFlyLeft",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateFlyLeft, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2a8 loads 0x0213f91c in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateFlyLeft at 0x0211d224)."
+    },
+    {
+      "from": "@2487",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateResult",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateResult, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2c0 loads 0x0213f924 in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateResult at 0x0211cd24)."
+    },
+    {
+      "from": "@2437",
+      "to": "pmf_dScMgTeresa_c_Scene_StateReveal",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StateReveal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x24c loads 0x0213f92c in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StateReveal at 0x021200a8)."
+    },
+    {
+      "from": "@2445",
+      "to": "pmf_dScMgTeresa_c_Boo_StateAppear",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateAppear, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x260 loads 0x0213f934 in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateAppear at 0x0211f5d4)."
+    },
+    {
+      "from": "@2457",
+      "to": "pmf_dScMgTeresa_c_Boo_StateFadeIn",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFadeIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x280 loads 0x0213f93c in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFadeIn at 0x0211ee34)."
+    },
+    {
+      "from": "@2479",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateOffscreen",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateOffscreen, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2b0 loads 0x0213f944 in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateOffscreen at 0x0211d018)."
+    },
+    {
+      "from": "@2449",
+      "to": "pmf_dScMgTeresa_c_Boo_StateFadeOut",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFadeOut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x26c loads 0x0213f94c in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFadeOut at 0x0211f224)."
+    },
+    {
+      "from": "@2439",
+      "to": "pmf_dScMgTeresa_c_Scene_StatePlay",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StatePlay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x254 loads 0x0213f954 in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StatePlay at 0x02120008)."
+    },
+    {
+      "from": "@2473",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateHover",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateHover, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2a4 loads 0x0213f95c in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateHover at 0x0211d368)."
+    },
+    {
+      "from": "@2441",
+      "to": "pmf_dScMgTeresa_c_Scene_StateRoundEnd",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Scene_StateRoundEnd, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x258 loads 0x0213f964 in the ROM) and by its own relocation target (dScMgTeresa_c::Scene_StateRoundEnd at 0x0211fe78)."
+    },
+    {
+      "from": "@2459",
+      "to": "pmf_dScMgTeresa_c_Boo_StateFadeAway",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Boo_StateFadeAway, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x284 loads 0x0213f96c in the ROM) and by its own relocation target (dScMgTeresa_c::Boo_StateFadeAway at 0x0211ebdc)."
+    },
+    {
+      "from": "@2469",
+      "to": "pmf_dScMgTeresa_c_Reveal_StateFinish",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateFinish, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x298 loads 0x0213f97c in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateFinish at 0x0211d86c)."
+    },
+    {
+      "from": "@2467",
+      "to": "pmf_dScMgTeresa_c_Reveal_StateDipAndRise",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateDipAndRise, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x290 loads 0x0213f984 in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateDipAndRise at 0x0211d924)."
+    },
+    {
+      "from": "@2465",
+      "to": "pmf_dScMgTeresa_c_Reveal_StateAnimate",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateAnimate, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x294 loads 0x0213f98c in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateAnimate at 0x0211dad0)."
+    },
+    {
+      "from": "@2463",
+      "to": "pmf_dScMgTeresa_c_Reveal_StateSlideIn",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateSlideIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x288 loads 0x0213f994 in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateSlideIn at 0x0211db7c)."
+    },
+    {
+      "from": "@2461",
+      "to": "pmf_dScMgTeresa_c_Reveal_StateStart",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::Reveal_StateStart, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x274 loads 0x0213f99c in the ROM) and by its own relocation target (dScMgTeresa_c::Reveal_StateStart at 0x0211dce0)."
+    },
+    {
+      "from": "@2485",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateGone",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateGone, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2bc loads 0x0213f9a4 in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateGone at 0x0211ce90)."
+    },
+    {
+      "from": "@2483",
+      "to": "pmf_dScMgTeresa_c_BigBoo_StateRemove",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_teresa.cpp assigns &dScMgTeresa_c::BigBoo_StateRemove, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_teresa.cpp+0x2b8 loads 0x0213f9ac in the ROM) and by its own relocation target (dScMgTeresa_c::BigBoo_StateRemove at 0x0211ce94)."
+    }
+  ]
 }
