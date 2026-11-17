@@ -589,9 +589,9 @@ int daStarBase_c::InitResources()
 int daStar_c::Behavior()
 {
     CheckIceBlock();
-    mCenterX = 0;
-    mCenterY = 0;
-    mCenterZ = 0;
+    mCenter.x = 0;
+    mCenter.y = 0;
+    mCenter.z = 0;
 
     if (UpdateYoshiEat(mWithMeshClsn) != 0) {
         int state = mState;
@@ -2250,7 +2250,7 @@ void daStar_c::DrawShadow() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 33 -- func_ov002_020e8244, 0x020e8244, size 0x154 */
 /* -------------------------------------------------------------------------- */
-/* The star's centre, written to *out. Cached in mCenterX/Y/Z (Behavior zeroes
+/* The star's centre, written to *out. Cached in mCenter (Behavior zeroes
  * the cache each frame). Otherwise it multiplies the first bone's matrix with
  * a translation and Y rotation of the star, scales the result about the star's
  * position (<< 3) and raises Y by 13 times a word of the bone data at +0xc. */
@@ -2264,29 +2264,29 @@ Vector3 daStar_c::func_ov002_020e8244() {
     zero.x = 0;
     zero.y = 0;
     zero.z = 0;
-    if (func_0203d024((struct Vector3 *)&b->mCenterX, &zero) != 0) {
-        ((int *)out)[0] = b->mCenterX;
-        ((int *)out)[1] = b->mCenterY;
-        ((int *)out)[2] = b->mCenterZ;
+    if (func_0203d024(&b->mCenter, &zero) != 0) {
+        ((int *)out)[0] = b->mCenter.x;
+        ((int *)out)[1] = b->mCenter.y;
+        ((int *)out)[2] = b->mCenter.z;
         return result;
     }
     Matrix4x3_FromTranslation(&data_020a0e68, b->mPosX, b->mPosY, b->mPosZ);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngleY);
     local = *(Mtx43 *)b->mAnmModel1.data.transforms;
     MTX_Concat43(&local, &data_020a0e68, &data_020a0e68);
-    b->mCenterX = data_020a0e68.t.x;
-    b->mCenterY = data_020a0e68.t.y;
-    b->mCenterZ = data_020a0e68.t.z;
-    VEC_Subtract((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);
-    Vec3_LslInPlace(&b->mCenterX, 3);
-    VEC_Add((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);
+    b->mCenter.x = data_020a0e68.t.x;
+    b->mCenter.y = data_020a0e68.t.y;
+    b->mCenter.z = data_020a0e68.t.z;
+    VEC_Subtract(&b->mCenter, &b->mPos, &b->mCenter);
+    Vec3_LslInPlace(&b->mCenter, 3);
+    VEC_Add(&b->mCenter, &b->mPos, &b->mCenter);
     {
-        int *p = &b->mCenterY;
+        int *p = &b->mCenter.y;
         *p = b->mAnmModel1.data.bones->scaleX * 0xd + *p;
     }
-    ((int *)out)[0] = b->mCenterX;
-    ((int *)out)[1] = b->mCenterY;
-    ((int *)out)[2] = b->mCenterZ;
+    ((int *)out)[0] = b->mCenter.x;
+    ((int *)out)[1] = b->mCenter.y;
+    ((int *)out)[2] = b->mCenter.z;
     return result;
 }
 
