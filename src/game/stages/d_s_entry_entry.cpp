@@ -30,8 +30,9 @@ void *dScEntry_c_classInit_ENTRY(void) {
 
 extern "C" {
 /* local extern: no header declares these arm9 vector helpers.
-   The grid data is the SDK's POD VecFx32; these EAD helpers take Vector3,
-   so they receive pointer views and the Vector3 destructor is not emitted. */
+   They take Vector3. TouchAt's locals are Vector3; the grid data is the
+   SDK's POD VecFx32 (private/ov075_entry_mesh.h), so CalcDistances hands
+   it over through pointer views. */
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
 /* local extern: the geometry-engine matrix load and the
@@ -123,14 +124,14 @@ int EntryMesh::LoadTexture(BMD_File *file) {
 
 /* Map a touched world point into grid space and start a ripple there. */
 void EntryMesh::TouchAt(Vector3 *touch) {
-    VecFx32 origin;
-    VecFx32 r;
-    VecFx32 out;
+    Vector3 origin;
+    Vector3 r;
+    Vector3 out;
     origin.x = 0;
     origin.y = 0x15e000;
     origin.z = -0x320000;
-    Vec3_Sub((Vector3 *)&out, (const Vector3 *)&origin, touch);
-    Vec3_Asr((Vector3 *)&r, (Vector3 *)&out, 3);
+    Vec3_Sub(&out, &origin, touch);
+    Vec3_Asr(&r, &out, 3);
     r.x = r.x + 0xfa000;
     r.y = r.y + 0xfa000;
     StartRipple(r.x, r.y);
@@ -234,20 +235,14 @@ short EntryMesh::RipplePhase(int dist) {
     return (v - mRipplePhase);
 }
 
-/* An array-member twin of VecFx32. Copying through it keeps C's
-   block-move schedule (ldm/stm); the C++ memberwise copy of the three named
-   words is 0x10 bytes longer (a named-field copy does not block-move). */
-struct EntryMeshVecCopy {
-    s32 words[3];
-};
-
-/* Store each vertex's flat (z = 0) distance from mRippleCenter. */
+/* Store each vertex's flat (z = 0) distance from mRippleCenter. tmp is
+   copy-initialized from the POD VecFx32, which mwcc block-moves (ldm/stm);
+   assigning it after the declaration copies the three words one by one. */
 void EntryMesh::CalcDistances() {
     int i;
-    VecFx32 tmp;
     for (i = 0; i < mNumVertices; i++) {
         EntryMeshVertex *v = &mVertices[i];
-        *(EntryMeshVecCopy *)&tmp = *(EntryMeshVecCopy *)&v->pos;
+        VecFx32 tmp = v->pos;
         tmp.z = 0;
         v->dist = Vec3_Dist((Vector3 *)&mRippleCenter, (Vector3 *)&tmp);
     }

@@ -23,7 +23,6 @@
  *   OpenClose_Init / Main).
  * Leftover: POD VecFx32 for data_ov100_02148948 -- Vector3's inline
  *   dtor is non-POD; a Vector3 BSS object would register in sinit.
- *   The messagePos local is still a VecFx32 cast at ShowMessage.
  * Leftover: data_ov100_02148390 gate table.
  * Leftover: (Vector3 *)&mSpeedX (dActor_c consecutive
  *   s32s; a Vector3 member is not this class).
@@ -229,7 +228,6 @@ void daStarGate_c::TryOpenDoor(daPly_c *player) {
 bool daStarGate_c::St_Wait_Main(daPly_c *player) {
     daStarGateInfo *entry;
     int isSpecial, notEnoughStars, isMario, messageID;
-    VecFx32 messagePos;
 
     if (IsInFrontOfPlayer(player)) {
         entry = &data_ov100_02148390[param1];
@@ -244,20 +242,13 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
            call returns 0. */
         if (!(data_0209caa0.file.flags1 & (0x8000 << entry->saveFlag))) {
             if (!isSpecial || (mScaleZ > 0 && (notEnoughStars || !isMario))) {
-                {
-                    int x = mPosX;
-                    int z = mPosZ;
-                    int y = mPosY + 0xb4000;
-                    messagePos.x = x;
-                    messagePos.y = y;
-                    messagePos.z = z;
-                }
+                Vector3 messagePos(mPosX, mPosY + 0xb4000, mPosZ);
 
                 if (!(isMario && !isSpecial && !notEnoughStars)) {
                     if (daDoor_c::func_ov100_02144f84() == 0)
                         return true;
                     messageID = isMario ? entry->notEnoughStarsMsgID : entry->notMarioMsgID;
-                    if (player->ShowMessage(*this, messageID, (Vector3 *)&messagePos, 0, 2) != 0) {
+                    if (player->ShowMessage(*this, messageID, &messagePos, 0, 2) != 0) {
                         if (isSpecial)
                             player->OpenBigDoor();
                         ChangeState(&ST_TALKING_TO_PLAYER, player);

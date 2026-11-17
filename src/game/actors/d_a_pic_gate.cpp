@@ -60,8 +60,8 @@
    write Vector3, the NitroSDK VEC_* and MTX_MultVec43 write VecFx32. The VEC_*
    calls take VecFx32 directly (nitro/fx/fx_vec.h, through math/CalcLib.h).
    MTX_MultVec43 takes VecFx32 with the SDK's MtxFx43, or Vector3 with the
-   game's Matrix4x3 through math/MtxStack.h's overload (#5207); these calls
-   use the game's matrix stack, hence the casts on the VecFx32 outputs. */
+   game's Matrix4x3 through math/MtxStack.h's overload (#5207). HitTest's
+   calls use the game's matrix stack, so their outputs are Vector3. */
 
 extern "C" void G3_LoadMtx43(void *m);
 void func_02012694(u32 id, const Vector3 *pos);
@@ -158,8 +158,8 @@ u8 *daPicGate_c::LoadTexture(s32 i) {
 void daPicGate_c::HitTest() {
     Vector3 a;
     Vector3 b;
-    VecFx32 ob;
-    VecFx32 oa;
+    Vector3 ob;
+    Vector3 oa;
     daPly_c *r5;
     int x, y;
     int lim;
@@ -173,8 +173,8 @@ void daPicGate_c::HitTest() {
     Vec3_Asr(&a, &r5->mPrevPos, 3);
     Vec3_Asr(&b, &r5->mPos, 3);
     data_020a0e68 = mInvMtx;
-    MTX_MultVec43(&a, &data_020a0e68, (Vector3 *)&oa);
-    MTX_MultVec43(&b, &data_020a0e68, (Vector3 *)&ob);
+    MTX_MultVec43(&a, &data_020a0e68, &oa);
+    MTX_MultVec43(&b, &data_020a0e68, &ob);
 
     if ((oa.z > 0 && ob.z <= 0) || (oa.z < 0 && ob.z >= 0)) {
         x = ob.x << 3;
@@ -350,7 +350,7 @@ void daPicGate_c::UpdateCellDistances() {
         Vertex *e = &mCells[i];
         VecFx32 tmp = *(VecFx32 *)&e->x;
         tmp.z = 0;
-        e->dist = Vec3_Dist((Vector3 *)mWaveOrigin, (Vector3 *)&tmp);
+        e->dist = Vec3_Dist(&mWaveOrigin, (Vector3 *)&tmp);
     }
 }
 
@@ -361,9 +361,9 @@ void daPicGate_c::BeginWave(s32 a1, s32 a2, s32 a3) {
     u32 m8;
     int r0;
     unsigned char f;
-    mWaveOrigin[0] = a1;
-    mWaveOrigin[1] = a2;
-    mWaveOrigin[2] = 0;
+    mWaveOrigin.x = a1;
+    mWaveOrigin.y = a2;
+    mWaveOrigin.z = 0;
     UpdateCellDistances();
     m8 = param1;
     r0 = 0;
