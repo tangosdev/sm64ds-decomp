@@ -24,9 +24,10 @@
  *   rather than a body edit; it is left for a separate pass.
  * - The PMF class is the CamPmfHost shadow below: it exists only to give
  *   `int (Host::*)()` a class for those .data words.
- * - func_02007f14 and func_02007e5c keep their goal and rate triples as
- *   int[3] walked by pointer; a Vector3 pair folds the three calls
- *   differently.
+ * - func_02009e70 keeps r4..r7, fp and sb: each holds several unrelated
+ *   values in turn, and that reuse is what places them in registers.
+ * - The mode records are still compared by address; the SetMode numbers are
+ *   their indices in the table at 0x02086fcc.
  * - The 0x0209b008 state table is nineteen dCamera_c::State records defined
  *   at the bottom of this file; __sinit_d_camera.cpp copies their PMFs.
  * - CleanupResources keeps both null checks. The second is the inlined
@@ -82,7 +83,7 @@ extern unsigned int gNextActorUpdateMask;
 
 extern void *data_02086efc;
 extern void *data_02086f08;
-extern s32 data_02086f14[3];
+extern Vector3 data_02086f14;
 extern Vector3 data_02086f20;
 extern Vector3 data_02086f2c;
 struct CamMode;
@@ -238,6 +239,49 @@ struct dCamera_c::State {
 };
 
 enum Bool { FALSE, TRUE };
+/* Distances and limits that recur below, in fx32 unless noted. */
+enum {
+    CAM_FAR_SCALE = 0x1800,          /* 1.5: the zoomed-out follow distances */
+    CAM_PROBE_RISE = 0x100000,       /* how far above a point the ceiling probes reach */
+    CAM_TARGET_HEAD = 0x82500,       /* above the target's feet, where the wall checks start */
+    CAM_MIN_ABOVE_TARGET = 0x25bc8,  /* pos never sits lower than this over the floor it follows */
+    CAM_FRAMING_DIST = 0xdfe60,      /* follow distance while an actor is being framed */
+    CAM_LOOK_PITCH_MAX = 0x1c00,     /* angle units: the look-around pitch limit either way */
+    CAM_NO_STEP_LIMIT = 0x7fffffff   /* Math_Function_0203b0fc's step cap, when there is none */
+};
+/* The controller-record bits the camera reads: the two turn buttons and the
+   one that swings the camera round behind the player. */
+enum {
+    CAM_BUTTON_TURN_RIGHT = 0x100,
+    CAM_BUTTON_TURN_LEFT = 0x200,
+    CAM_BUTTON_TURN = CAM_BUTTON_TURN_LEFT | CAM_BUTTON_TURN_RIGHT,
+    CAM_BUTTON_BEHIND = 0x4000
+};
+/* mFlags bits. The ones without a name here (0x80, 0x400, 0x800) are only
+   read in this file, so nothing says what sets them. */
+enum {
+    CAM_FLAG_UNDERWATER = 0x1,     /* pos is below the water line (IsUnderwater) */
+    CAM_FLAG_ZOOMED_OUT = 0x2,     /* the far view: follow distances grow by half */
+    CAM_FLAG_SNAP_POS = 0x4,       /* place pos on its goal this frame instead of easing */
+    CAM_FLAG_SCRIPT_HOLD = 0x8,    /* an actor holds the camera; treated like a running script */
+    CAM_FLAG_STATE_LOCKED = 0x10,  /* ChangeState refuses */
+    CAM_FLAG_TURN_LEFT = 0x20,     /* turning; Render draws the matching arrow */
+    CAM_FLAG_TURN_RIGHT = 0x40,
+    CAM_FLAG_TURNING = CAM_FLAG_TURN_LEFT | CAM_FLAG_TURN_RIGHT,
+    CAM_FLAG_HOLD_MODE = 0x100,    /* keep following with data_0208747c until the player gets away */
+    CAM_FLAG_WALL_STEEP = 0x200,   /* this frame's wall between player and camera faces along the view */
+    CAM_FLAG_USER_TURN = 0x1000,   /* this frame's mode takes the turn buttons (the HUD reads it) */
+    CAM_FLAG_FOV_BLEND = 0x2000,   /* ease mFovBlend up to 1.0 rather than back to 0 */
+    CAM_FLAG_TALK_SAVED = 0x4000,  /* SaveCameraStateBeforeTalk has run */
+    CAM_FLAG_TALK_RESTORE = 0x8000, /* easing back to the saved view */
+    CAM_FLAG_SLOPE_LOW = 0x10000,  /* floor asks for the low rise slope (func_0200ca14) */
+    CAM_FLAG_SLOPE_HIGH = 0x20000, /* ...or the high one, with a tripled lookAt height */
+    CAM_FLAG_WALL_HIT = 0x40000,   /* this frame's wall was hit at a glancing angle */
+    CAM_FLAG_WALL_REVERSE = 0x80000, /* swinging round to the other side of a wall */
+    /* Behavior clears these every frame. */
+    CAM_FLAG_PER_FRAME = CAM_FLAG_SNAP_POS | CAM_FLAG_WALL_STEEP | CAM_FLAG_SLOPE_LOW |
+                         CAM_FLAG_SLOPE_HIGH | CAM_FLAG_WALL_HIT
+};
 
 /* Allocation factory. new dCamera_c is the fBase constructor, the dBase and
  * dView vtables, the view-matrix clear, and the dCamera vtable. */
@@ -303,14 +347,14 @@ int dCamera_c::Behavior()
 
     mPrevLookAt = lookAt;
     mPrevPos = pos;
-    mFlags &= ~0x1000u;
+    mFlags &= ~CAM_FLAG_USER_TURN;
     if ((u32)mAreaMode != (u32)&data_0208733c) {
-        mFlags &= ~0x60u;
+        mFlags &= ~CAM_FLAG_TURNING;
     }
     flags = mFlags;
-    if ((flags & 8) || IsKuppaScriptRunning()) {
-        if (flags & 0xc000) {
-            mFlags &= ~0xc000u;
+    if ((flags & CAM_FLAG_SCRIPT_HOLD) || IsKuppaScriptRunning()) {
+        if (flags & (CAM_FLAG_TALK_SAVED | CAM_FLAG_TALK_RESTORE)) {
+            mFlags &= ~(CAM_FLAG_TALK_SAVED | CAM_FLAG_TALK_RESTORE);
             ChangeState(&data_0209b008);
         }
         mAngleY = Vec3_HorzAngle(&lookAt, &pos);
@@ -321,10 +365,10 @@ int dCamera_c::Behavior()
     if ((u8)(gVsExitScreenActive | (gGamePaused | data_0209f20c)) == 0 &&
         !(gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)) {
         if (!IsKuppaScriptRunning()) {
-            if (mFlags & 0x2000)
-                Math_Function_0203b0fc(&mFovBlend, 0x1000, 0x88, 0x7fffffff);
+            if (mFlags & CAM_FLAG_FOV_BLEND)
+                Math_Function_0203b0fc(&mFovBlend, 0x1000, 0x88, CAM_NO_STEP_LIMIT);
             else
-                Math_Function_0203b0fc(&mFovBlend, 0, 0x88, 0x7fffffff);
+                Math_Function_0203b0fc(&mFovBlend, 0, 0x88, CAM_NO_STEP_LIMIT);
             UpdateState();
             if (mShakeY != 0) {
                 ApproachLinear(mShakeY, 0, 0x1000);
@@ -371,21 +415,21 @@ int dCamera_c::Behavior()
         if (IsPlayer(mTargetPlayer)) {
             daPly_c *player = (daPly_c *)mTargetPlayer;
             s32 waterLine = data_0209f32c - FX_SinIdx((u16)mAngleX >> 4) * 0x10;
-            if (!(mFlags & 1)) {
+            if (!(mFlags & CAM_FLAG_UNDERWATER)) {
                 if (player->mIsUnderwater != 0 || player->mIsInShallowWater != 0) {
                     if (pos.y <= waterLine) {
-                        mFlags |= 1u;
+                        mFlags |= CAM_FLAG_UNDERWATER;
                     }
                 }
             } else if (pos.y > waterLine) {
-                mFlags &= ~1u;
+                mFlags &= ~CAM_FLAG_UNDERWATER;
             }
         }
     }
-    mFlags &= 0xfff8fdfbu;
+    mFlags &= ~CAM_FLAG_PER_FRAME;
     if (mFocusActor != 0) {
         mFocusActor = 0;
-        mFlags |= 4u;
+        mFlags |= CAM_FLAG_SNAP_POS;
     }
     mFramedActor = 0;
     func_0203dafc((short)(mAngleY + mInputYawLag));
@@ -427,16 +471,16 @@ int dCamera_c::Render()
 
     if (!IsKuppaScriptRunning()) {
         s32 flags = mFlags;
-        if (!(flags & 8)) {
+        if (!(flags & CAM_FLAG_SCRIPT_HOLD)) {
             if ((u8 *)mMode == &data_0208738c) {
                 OAM::Render(0, &data_ov002_0210c3b0, 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
                 G2_SetBlendAlpha(0x10, 0x2f, 0xc, 6);
             } else {
-                if (flags & 0x20) {
+                if (flags & CAM_FLAG_TURN_LEFT) {
                     OAM::Render(0, (OamAttr *)data_ov002_0210c3e0[0], 0x14, 0x60, -1, -1, 0x1000,
                                 0x1000, 0, -1);
                 }
-                if (mFlags & 0x40) {
+                if (mFlags & CAM_FLAG_TURN_RIGHT) {
                     OAM::Render(0, (OamAttr *)data_ov002_0210c3e0[1], 0xec, 0x60, -1, -1, 0x1000,
                                 0x1000, 0, -1);
                 }
@@ -579,7 +623,7 @@ void dCamera_c::func_0200d89c() {
  * ROM's `and r0,r0,#1` is the whole body. */
 int dCamera_c::IsUnderwater() const
 {
-    return mFlags & 1;
+    return mFlags & CAM_FLAG_UNDERWATER;
 }
 
 /* Moves lookAt and pos by the same offset. Its one caller is the endless
@@ -591,6 +635,8 @@ void dCamera_c::func_0200d858(const Vector3 *offset) {
     VEC_Add(&pos, (void *)offset, &pos);
 }
 
+/* Requests from the player and the actors around it. Each one is for the
+   local player's camera only, and most do nothing but switch state. */
 void dCamera_c::func_0200d81c(int playerID) {
     if (playerID != gLocalPlayerId)
         return;
@@ -716,9 +762,9 @@ void dCamera_c::GoBehindPlayer(unsigned int j)
     if (gNextSublevel >= 0)
         return;
 
-    mFlags &= 0xfffffaf7u;
+    mFlags &= ~(CAM_FLAG_SCRIPT_HOLD | CAM_FLAG_HOLD_MODE | 0x400);
     SetMode(0xa);
-    mFlags |= 4u;
+    mFlags |= CAM_FLAG_SNAP_POS;
 
     slot4 = (int)mMode;
     slotc = 0;
@@ -730,50 +776,42 @@ void dCamera_c::GoBehindPlayer(unsigned int j)
     ChangeState(&data_0209b0e8);
 }
 
+/* Put the camera behind the target player at once: lookAt ahead of the
+   player by the mode's distance and height, pos behind lookAt, then take
+   the camera area the player stands in. */
 void dCamera_c::func_0200d1e4() {
-    int lookAtDistMode;
     unsigned int lookAtDist;
     Vector3 lookAtOffset;
-    short angle;
-    int lookAtHeightMode;
     unsigned int lookAtHeight;
-    int posDistMode;
     unsigned int posDist;
     Vector3 posOffset;
 
     mTargetPos = mTargetPlayer->mPos;
 
-    lookAtDistMode = mMode->lookAtDist;
-    lookAtDist = ScaleDistByFov(lookAtDistMode);
+    lookAtDist = ScaleDistByFov(mMode->lookAtDist);
 
     lookAtOffset.x = data_02086f2c.x;
     lookAtOffset.y = data_02086f2c.y;
     lookAtOffset.z = lookAtDist;
     data_02086f2c.z = lookAtDist;
 
-    angle = mTargetPlayer->mAngleY;
-    Vec3_RotateYAndTranslate(&lookAt, &mTargetPos, angle, &lookAtOffset);
+    Vec3_RotateYAndTranslate(&lookAt, &mTargetPos, mTargetPlayer->mAngleY, &lookAtOffset);
 
-    lookAtHeightMode = mMode->lookAtHeight;
-    lookAtHeight = ScaleHeightByFov(lookAtHeightMode);
+    lookAtHeight = ScaleHeightByFov(mMode->lookAtHeight);
     lookAt.y += lookAtHeight;
 
-    posDistMode = mMode->posDist;
-    posDist = ScaleDistByFov(posDistMode);
+    posDist = ScaleDistByFov(mMode->posDist);
 
-    data_02086f14[2] = posDist;
-    posOffset.x = data_02086f14[0];
-    posOffset.y = data_02086f14[1];
+    data_02086f14.z = posDist;
+    posOffset.x = data_02086f14.x;
+    posOffset.y = data_02086f14.y;
     posOffset.z = posDist;
 
-    angle = mTargetPlayer->mAngleY;
-    Vec3_RotateYAndTranslate(&pos, &lookAt, angle, &posOffset);
+    Vec3_RotateYAndTranslate(&pos, &lookAt, mTargetPlayer->mAngleY, &posOffset);
 
     pos.y += (lookAtHeight - 0x8b000);
 
-    mLookAtOffset.x = 0;
-    mLookAtOffset.y = 0xc3f9d;
-    mLookAtOffset.z = 0;
+    SetVec(mLookAtOffset, 0, 0xc3f9d, 0);
 
     ChangeArea(mTargetPlayer->mAreaId);
 }
@@ -784,7 +822,7 @@ void dCamera_c::LookAtExit(dActor_c &actor)
     mLookTargetPos = *(Vector3 *)mLookTarget;
     mTargetAngleY = -actor.mAngleY;
     ChangeState(&data_0209b0f8);
-    mFlags |= 0x10;
+    mFlags |= CAM_FLAG_STATE_LOCKED;
 }
 
 void dCamera_c::func_0200d148(unsigned char playerID) {
@@ -799,37 +837,41 @@ void dCamera_c::SetGrabBowserTailState(unsigned char playerID) {
     ChangeState(&data_0209b128);
 }
 
+/* Zoom out to the far view (sound 7). Refused, with 0, where the area's mode
+   has flag 1. */
 int dCamera_c::func_0200d0ac(unsigned int playerID) {
     if (playerID == gLocalPlayerId) {
         unsigned short areaFlags = mAreaMode->flags;
         if (areaFlags & 1) {
             return 0;
         }
-        mFlags |= 2u;
+        mFlags |= CAM_FLAG_ZOOMED_OUT;
         func_02012790(7);
     }
     return 1;
 }
 
+/* ...and back in to the near view (sound 6). */
 void dCamera_c::func_0200d064(unsigned char playerID) {
-    unsigned char localID = gLocalPlayerId;
-    if (playerID == localID) {
-        unsigned int *addr = &mFlags;
-        unsigned int val = *addr;
-        val &= ~2u;
-        *addr = val;
+    if (playerID == gLocalPlayerId) {
+        mFlags &= ~CAM_FLAG_ZOOMED_OUT;
         func_02012790(6);
     }
 }
 
+/* Take the camera away from Behavior, as a running script does. The actor
+   that asked gives it back by clearing the bit. */
 void dCamera_c::SetFlag_3()
 {
     u32 *p = &mFlags;
-    u32 v = *p | 8;
+    u32 v = *p | CAM_FLAG_SCRIPT_HOLD;
     *p = v;
     ((void (*)(u32))FUN_02029a68)(v);
 }
 
+/* Set the camera up when it is created. With param1 0xf it starts in mode 9
+   behind the player; any other param1 names a view object, and the camera
+   starts in mode 10 at that object's position, facing the way it faces. */
 void dCamera_c::func_0200cf40() {
     mViewport[0] = 0;
     mViewport[1] = 0;
@@ -847,14 +889,7 @@ void dCamera_c::func_0200cf40() {
         SetFovAngle(mFovAngle);
         func_0200cce4();
         view = (CamViewObj *)GetViewObj(param1 & 0xff);
-        {
-            int x = view->x << 12;
-            int z = view->z << 12;
-            int y = view->y << 12;
-            pos.x = x;
-            pos.y = y;
-            pos.z = z;
-        }
+        SetVec(pos, view->x << 12, view->y << 12, view->z << 12);
         mBaseAngleY = view->angleY + 0x8000;
         return;
     }
