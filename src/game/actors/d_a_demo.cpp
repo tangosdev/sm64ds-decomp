@@ -2805,8 +2805,8 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
 }
 
 /* Turn mAngleX/mAngleY toward v by 1/amt of the remaining difference per
- * call (step capped at 0x4000, 90 degrees), then set mSpeedX, mVertSpeed and
- * mSpeedZ to mMagnitude times rotation elements 6..8 of the animated model's
+ * call (step capped at 0x4000, 90 degrees), then set mSpeed.x, mSpeed.y and
+ * mSpeed.z to mMagnitude times rotation elements 6..8 of the animated model's
  * matrix. */
 
 void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
@@ -2815,9 +2815,9 @@ void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
     ApproachAngle(&this->mAngleX, Vec3_VertAngle((&this->mPos), v), amt, 0x4000, 0);
     ApproachAngle(&this->mAngleY, Vec3_HorzAngle((&this->mPos), v), amt, 0x4000, 0);
     m = &this->mAnmModel->mat4x3;
-    this->mSpeedX = FX_MUL(this->mMagnitude, m->m[6]);
-    this->mVertSpeed = FX_MUL(this->mMagnitude, m->m[7]);
-    this->mSpeedZ = FX_MUL(this->mMagnitude, m->m[8]);
+    this->mSpeed.x = FX_MUL(this->mMagnitude, m->m[6]);
+    this->mSpeed.y = FX_MUL(this->mMagnitude, m->m[7]);
+    this->mSpeed.z = FX_MUL(this->mMagnitude, m->m[8]);
 }
 
 /* Script handler 9: clear mFlags bit 0x2. */
@@ -3105,7 +3105,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
         unsigned short a = this->mPrevAngleX;
         int t = this->mMagnitude;
         int s1 = -FX_SinCosTable_[(a >> 4) << 1];
-        this->mVertSpeed = FX_MUL(t, s1);
+        this->mSpeed.y = FX_MUL(t, s1);
     }
 
     {

@@ -332,7 +332,7 @@ void daWbm_c::StateBounce()
         if (approach != 0) {
             daPly_c *player;
             mBouncePhase++;
-            mVertSpeed = (mBounceCount << 13) + 0x30000;
+            mSpeed.y = (mBounceCount << 13) + 0x30000;
             mHorzSpeed = 0x6000;
             player = ClosestPlayer();
             if (player != 0) {
@@ -347,7 +347,7 @@ void daWbm_c::StateBounce()
         mScaleZ = 0x2000 - mScaleY;
         mScaleX = mScaleZ;
     } else {
-        if (mVertSpeed >= 0) {
+        if (mSpeed.y >= 0) {
             mScaleX = 0xf00;
             mScaleY = 0x1200;
             mScaleZ = 0xf00;
@@ -406,9 +406,9 @@ void daWbm_c::Burst()
     for (i = 0; i < 5; i++) {
         dActor_c *frag =
             dActor_c::Spawn(ACTOR_WATERBOMB, 2, mPos, (const Vector3_16 *)0, mAreaId, -1);
-        frag->mSpeedX = 0;
-        frag->mVertSpeed = 0x14000;
-        frag->mSpeedZ = 0;
+        frag->mSpeed.x = 0;
+        frag->mSpeed.y = 0x14000;
+        frag->mSpeed.z = 0;
         frag->mHorzSpeed = 0x14000;
         frag->mPrevAngleX = 0;
         frag->mPrevAngleY = data_ov098_0213bf90[i];
@@ -437,7 +437,7 @@ void daWbm_c::Land()
     mSquashScale = mScaleY;
     mBounceCount++;
     unk_3b4 = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mHorzSpeed = 0;
     mBouncePhase = 0;
     func_0201267c(0xd9, &mCamSpacePos);

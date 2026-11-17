@@ -538,7 +538,7 @@ void daNknk_c::func_ov062_02118718()
     mPrevAngleY = mTargetAngle;
     mState = 2;
     mHorzSpeed += mHorzSpeed / 5;
-    mVertSpeed = dist / 30;
+    mSpeed.y = dist / 30;
     SetAnimByIndex(6);
     mTimer = 20;
 }
@@ -621,7 +621,7 @@ void daNknk_c::func_ov062_021183e0()
         mPrevAngleY = mTargetAngle;
         mState = 2;
         mHorzSpeed = 0x18000;
-        mVertSpeed = dist / 30;
+        mSpeed.y = dist / 30;
         SetAnimByIndex(6);
         mTimer = 20;
         return;
@@ -908,7 +908,7 @@ int daNknk_c::DistToClosestPlayer() {
 
 void daNknk_c::BounceOffHurtPlayer() {
     mState = 0;
-    mVertSpeed = 81920;
+    mSpeed.y = 81920;
     mHorzSpeed = 0;
 }
 

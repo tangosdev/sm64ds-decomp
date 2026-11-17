@@ -565,8 +565,8 @@ int daWanwan2_c::Render()
    units/frame (0x14000) and kicks up landing dust. Every 200 frames
    (mCoinTimer) in game mode 1 (gGameMode is 1) it spawns a COIN at its
    position, its mPrevAngleY set to 0x10000 / mPathNodeIndex (truncated to 16
-   bits; this divides by zero if the index has wrapped to 0), its mVertSpeed to
-   4 units/frame and its mSpeedX and mSpeedZ to 0, playing SND_COIN_SPAWN
+   bits; this divides by zero if the index has wrapped to 0), its mSpeed.y to
+   4 units/frame and its mSpeed.x and mSpeed.z to 0, playing SND_COIN_SPAWN
    (unless unk_6a8 is nonzero; played even if Spawn returned no actor). It then turns
    toward the path node mPathNodeIndex: when it is closer than 400 units
    (0x190000) the index advances (back to 0 at mNumPathNodes) and the next
@@ -609,7 +609,7 @@ int daWanwan2_c::Behavior()
         if (unk_6a8 == 0) {
             func_02012694(daWanwan2_SND_FLOOR_HIT, &mCamSpacePos);
         }
-        mVertSpeed = 0x14000;
+        mSpeed.y = 0x14000;
         HugeLandingDust(true);
     }
 
@@ -632,9 +632,9 @@ int daWanwan2_c::Behavior()
             sp->mPrevAngleZ = 0;
             int vx = v.x;
             int vy = v.y;
-            sp->mSpeedX = vx << 12;
-            sp->mVertSpeed = vy << 12;
-            sp->mSpeedZ = vx << 12;
+            sp->mSpeed.x = vx << 12;
+            sp->mSpeed.y = vy << 12;
+            sp->mSpeed.z = vx << 12;
         }
         mCoinTimer = 200;
     }

@@ -24,8 +24,6 @@
  * Leftover: POD VecFx32 for data_ov100_02148948 -- Vector3's inline
  *   dtor is non-POD; a Vector3 BSS object would register in sinit.
  * Leftover: data_ov100_02148390 gate table.
- * Leftover: (Vector3 *)&mSpeedX (dActor_c consecutive
- *   s32s; a Vector3 member is not this class).
  */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_star_gate_AssetId {
@@ -148,15 +146,15 @@ int daStarGate_c::Render()
     if (IsAreaShowing((s8)mAngleX) != 0 ||
         IsAreaShowing((s8)mAngleZ) != 0) {
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-        mModel.mat4x3.t.x = (mPosX + mSpeedX) >> 3;
-        mModel.mat4x3.t.y = (mPosY + mVertSpeed) >> 3;
-        mModel.mat4x3.t.z = (mPosZ + mSpeedZ) >> 3;
+        mModel.mat4x3.t.x = (mPosX + mSpeed.x) >> 3;
+        mModel.mat4x3.t.y = (mPosY + mSpeed.y) >> 3;
+        mModel.mat4x3.t.z = (mPosZ + mSpeed.z) >> 3;
         mModel.Render(0);
 
         Matrix4x3_FromRotationY(&mModel.mat4x3, (s16)(mAngleY + 0x8000));
-        mModel.mat4x3.t.x = (mPosX - mSpeedX) >> 3;
-        mModel.mat4x3.t.y = (mPosY - mVertSpeed) >> 3;
-        mModel.mat4x3.t.z = (mPosZ - mSpeedZ) >> 3;
+        mModel.mat4x3.t.x = (mPosX - mSpeed.x) >> 3;
+        mModel.mat4x3.t.y = (mPosY - mSpeed.y) >> 3;
+        mModel.mat4x3.t.z = (mPosZ - mSpeed.z) >> 3;
         mModel.Render(0);
     }
 
@@ -358,7 +356,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
     vec.x = vd;
     vec.z = gz;
     vec.y = gy;
-    Vec3_RotateYAndTranslate((Vector3 *)&mSpeedX, &data_020a0ebc, mAngleY, &vec);
+    Vec3_RotateYAndTranslate(&mSpeed, &data_020a0ebc, mAngleY, &vec);
     return true;
 }
 

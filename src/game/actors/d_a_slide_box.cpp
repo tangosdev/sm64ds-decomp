@@ -5,8 +5,8 @@
  * lands it falls with the actor's gravity. On the deck it copies the
  * ship's angles, slides by the sine of the pitch, and steps out from
  * the landing spot by the sine and cosine of the ship's yaw. The deck
- * normal then rebuilds mVertSpeed from the horizontal velocity at
- * mSpeedX / mSpeedZ so the next step stays on the tilt.
+ * normal then rebuilds mSpeed.y from the horizontal velocity at
+ * mSpeed.x / mSpeed.z so the next step stays on the tilt.
  *
  * The rolling-sound gate reads mHorzSpeed after this state has stored
  * 0 there, so the sound does not start.
@@ -203,8 +203,8 @@ int daSlide_Box_c::Behavior()
             dBgPi *floor = mWithMeshClsn.GetFloorResult();
             floor->surface.CopyNormalTo(normal);
             if (normal.y != 0) {
-                mVertSpeed =
-                    -(FX_Div(FixMul(normal.x, mSpeedX) + FixMul(normal.z, mSpeedZ), normal.y) +
+                mSpeed.y =
+                    -(FX_Div(FixMul(normal.x, mSpeed.x) + FixMul(normal.z, mSpeed.z), normal.y) +
                       kDeckSink);
             }
         }

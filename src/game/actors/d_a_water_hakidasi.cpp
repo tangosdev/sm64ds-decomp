@@ -155,9 +155,9 @@ int daWater_Hakidasi_c::State0() {
                         mSpawnedHead = 0;
                     }
                     ring->mSpawner = this;
-                    ring->mSpeedX = 0;
-                    ring->mVertSpeed = 0x5000;
-                    ring->mSpeedZ = 0;
+                    ring->mSpeed.x = 0;
+                    ring->mSpeed.y = 0x5000;
+                    ring->mSpeed.z = 0;
                 }
                 mStateTimer = 80;
             }

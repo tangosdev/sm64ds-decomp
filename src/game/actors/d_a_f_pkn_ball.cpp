@@ -78,9 +78,9 @@ void daFPknBall_c::TryDropCoin() {
         return;
     coin = dActor_c::Spawn(ACTOR_COIN, 0, mPos, 0, mAreaId, -1);
     if (coin != 0) {
-        coin->mSpeedX = 0;
-        coin->mVertSpeed = 0;
-        coin->mSpeedZ = 0;
+        coin->mSpeed.x = 0;
+        coin->mSpeed.y = 0;
+        coin->mSpeed.z = 0;
     }
 }
 
@@ -124,9 +124,9 @@ void daFPknBall_c::TryDropItem() {
     {
         dActor_c *coin = dActor_c::Spawn(ACTOR_COIN, 0, mPos, 0, mAreaId, -1);
         if (coin != 0) {
-            coin->mSpeedX = 0;
-            coin->mVertSpeed = 0;
-            coin->mSpeedZ = 0;
+            coin->mSpeed.x = 0;
+            coin->mSpeed.y = 0;
+            coin->mSpeed.z = 0;
         }
     }
 }
@@ -229,7 +229,7 @@ int daFPknBall_c::Behavior() {
                     mFlags &= ~0x10000001;
                     mPrevAngleY = Vec3_HorzAngle(&((dActor_c *)hitActor)->mPos, &mPos);
                     mHorzSpeed = 0xa000;
-                    mVertSpeed = 0x28000;
+                    mSpeed.y = 0x28000;
                     mDeathTimer = 30;
                     mSpinRateX = 0;
                     mSpinRateY = 0;
@@ -281,12 +281,12 @@ int daFPknBall_c::Behavior() {
      * mTargetAngleY) and mPrevAngleX the pitch; FX_SinCosTable_ holds (sin, cos)
      * pairs in fix12. */
     flatSpeed = (mHorzSpeed * FX_CosIdx((u16)mPrevAngleX >> 4)) / 0x1000;
-    mSpeedX = (flatSpeed * FX_SinIdx((u16)mPrevAngleY >> 4)) / 0x1000;
-    mVertSpeed = (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 0x1000;
-    mSpeedZ = (flatSpeed * FX_CosIdx((u16)mPrevAngleY >> 4)) / 0x1000;
-    mPosX += mSpeedX;
-    mPosY += mVertSpeed;
-    mPosZ += mSpeedZ;
+    mSpeed.x = (flatSpeed * FX_SinIdx((u16)mPrevAngleY >> 4)) / 0x1000;
+    mSpeed.y = (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 0x1000;
+    mSpeed.z = (flatSpeed * FX_CosIdx((u16)mPrevAngleY >> 4)) / 0x1000;
+    mPosX += mSpeed.x;
+    mPosY += mSpeed.y;
+    mPosZ += mSpeed.z;
 
     mdCcAc_c.Clear();
     mdCcAc_c.Update();

@@ -282,9 +282,9 @@ void daKuriKing_c::LaunchVanishCopies() {
             int rv = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 8;
             t->mTimer = 48;
             t->mHorzSpeed = ((rv & 0xf) << 0xc) + 0x16000;
-            t->mSpeedX = 0;
-            t->mVertSpeed = ((rv & 0x1f) << 0xc) + 0x60000;
-            t->mSpeedZ = 0;
+            t->mSpeed.x = 0;
+            t->mSpeed.y = ((rv & 0x1f) << 0xc) + 0x60000;
+            t->mSpeed.z = 0;
             Vector3_16 pos = t->mPrevAngle;
             rv &= 0x1000;
             pos.y = (short)(pos.y + rv);
@@ -1731,7 +1731,7 @@ int daKuriKing_c::BehaviorVanish() {
         }
         this->mSubState++;
 
-        this->mVertSpeed = this->mHorzSpeed + 0xa000;
+        this->mSpeed.y = this->mHorzSpeed + 0xa000;
     }
 
     {

@@ -199,9 +199,9 @@ void daOwl_c::TryPickUpRider() {
     st.y = 0x1838000;
     if (gCurrentSublevel == 0x16)
         st.y = 0x1194000;
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     if (mRider->func_ov002_020df840(this, &st) != 1) {
         mRider = 0;
         return;
@@ -217,12 +217,12 @@ int daOwl_c::UpdateReturn() {
         if (mOpacity != 0) {
             mOpacity--;
             mPrevAngleX = 0;
-            mVertSpeed = 0x14000;
+            mSpeed.y = 0x14000;
         } else {
             unk_3e8 = 1;
-            mSpeedX = 0;
-            mVertSpeed = 0;
-            mSpeedZ = 0;
+            mSpeed.x = 0;
+            mSpeed.y = 0;
+            mSpeed.z = 0;
             mPosX = mAnchor.x;
             mPosY = mAnchor.y;
             mPosZ = mAnchor.z;
@@ -364,7 +364,7 @@ int daOwl_c::UpdateHover() {
     ApproachLinear(mPosY, mAnchor.y + FX_MUL(FX_SinIdx((u16)(s16)unk_3e8 >> 4), 0x64000), 0x3000);
 
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-    MTX_MultVec43((Vector3 *)&buf, &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43((Vector3 *)&buf, &data_020a0e68, &mSpeed);
     return 1;
 }
 
@@ -407,9 +407,9 @@ int daOwl_c::UpdateTalk() {
 
 /* Enter of the talk state: stop, and play the animation data_ov094_02136af0[1]. */
 int daOwl_c::EnterTalk() {
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af0.filePtr, 0, 0x1000, 0);
     return 1;
 }
@@ -571,13 +571,13 @@ int daOwl_c::Behavior()
         return 1;
     }
     {
-        int fallSpeed = mVertSpeed + mVertAccel;
+        int fallSpeed = mSpeed.y + mVertAccel;
         int clamped = mTerminalVelocity;
-        int keep = mSpeedZ;
+        int keep = mSpeed.z;
         if (fallSpeed >= clamped)
             clamped = fallSpeed;
-        mVertSpeed = clamped;
-        mSpeedZ = keep;
+        mSpeed.y = clamped;
+        mSpeed.z = keep;
     }
     UpdatePosWithOnlySpeed(&mdCcAcPos_c);
     mAngleX = mPrevAngleX;

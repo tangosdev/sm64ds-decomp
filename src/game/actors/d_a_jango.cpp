@@ -342,19 +342,19 @@ int daJango_c::Behavior()
     if (m->update != 0)
         (this->*(m->update))();
 
-    /* Gravity: mVertSpeed = max(mVertSpeed + mVertAccel, mTerminalVelocity).
-       (mVertAccel is negative and mTerminalVelocity is the floor.) mSpeedZ is
+    /* Gravity: mSpeed.y = max(mSpeed.y + mVertAccel, mTerminalVelocity).
+       (mVertAccel is negative and mTerminalVelocity is the floor.) mSpeed.z is
        loaded and stored back unchanged. */
     {
-        int accum = mVertSpeed;
+        int accum = mSpeed.y;
         int a0 = mVertAccel;
         int lim = mTerminalVelocity;
         int sum = accum + a0;
         if (sum >= lim)
             lim = sum;
-        int t = mSpeedZ;
-        mVertSpeed = lim;
-        mSpeedZ = t;
+        int t = mSpeed.z;
+        mSpeed.y = lim;
+        mSpeed.z = t;
     }
     UpdatePosWithOnlySpeed(&mdCcAc_c1);
     UpdateWMClsn(mWithMeshClsn, 0);
@@ -519,19 +519,19 @@ int daJango_c::ChangeState(void *p) {
     return (this->*q->enter)();
 }
 
-/* FLY_PATH enter. Clears the three velocity words (mSpeedX, mVertSpeed, mSpeedZ).
+/* FLY_PATH enter. Clears the three velocity words (mSpeed).
    If mRiseToFarNode is 1 -- ChangeTarget set it because the node it
    picked is index ^ 2 (assumed to be the far side of the square) -- the vector (0, 0, 20.0) is turned by mAngleY and
-   then by a pitch of -0x4000 (a quarter turn), and its Y becomes mVertSpeed
+   then by a pitch of -0x4000 (a quarter turn), and its Y becomes mSpeed.y
    (magnitude 20 units per frame), with mStateTimer = 60 frames. Then starts
    jango_fly.bca (4 blend frames, flags 0, speed 1.0, from frame 0). */
 int daJango_c::EnterFlyPathState() {
     Vector3 in;
     Vector3 out;
 
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
 
     if (mRiseToFarNode == 1) {
         in.x = 0; in.y = 0; in.z = 0;
@@ -540,7 +540,7 @@ int daJango_c::EnterFlyPathState() {
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
         MTX_MultVec43(&in, &data_020a0e68, &out);
-        mVertSpeed = out.y;
+        mSpeed.y = out.y;
         mStateTimer = 60;
     }
 
@@ -554,12 +554,12 @@ int daJango_c::EnterFlyPathState() {
    it by 20 units per frame (diff * (20.0 / len) is subtracted from mPos), but
    only once mAngleY is within 0x2000 (45 degrees) of the node's direction.
    While mRiseToFarNode is 1 the pull leaves mPosY alone (the vertical motion comes
-   from mVertSpeed, set by c594), and when mStateTimer has run out the vertical
+   from mSpeed.y, set by c594), and when mStateTimer has run out the vertical
    speed is cleared and the flag dropped. Within 20 units (or exactly on it) it
    has arrived: mPathPickTick = 7 so the next b3ac call runs at once, the node index advances (the next node in order
    for the silver-star variant and level ids 0x18/0x19, else b3ac's choice, else a
    random one that differs from the current), mPos is snapped to the node and
-   copied to mPathNodePos, the velocity words (mSpeedX, mVertSpeed, mSpeedZ) are
+   copied to mPathNodePos, the velocity words (mSpeed) are
    set to (0, 0, 20.0) turned by mAngleY, and the actor re-enters CIRCLE. */
 int daJango_c::UpdateFlyPathState() {
     /* Real PathPtr object (as legacy had it via PathPtr.h): its implicit
@@ -614,7 +614,7 @@ int daJango_c::UpdateFlyPathState() {
         zero[1] = 0;
         zero[2] = 0x14000;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        MTX_MultVec43((Vector3 *)zero, &data_020a0e68, (Vector3 *)&mSpeedX);
+        MTX_MultVec43((Vector3 *)zero, &data_020a0e68, &mSpeed);
         ChangeState(JANGO_STATE_CIRCLE);
         return 1;
     }
@@ -628,7 +628,7 @@ int daJango_c::UpdateFlyPathState() {
         if (mRiseToFarNode == 1) {
             mPosY = zero[1];
             if (mStateTimer == 0) {
-                mVertSpeed = 0;
+                mSpeed.y = 0;
                 mRiseToFarNode = 0;
             }
         }
@@ -833,9 +833,9 @@ int daJango_c::EnterSwoopState() {
     } else {
         mStateTimer = (((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) + 20;
     }
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     func_02012694(SND_AT_SWOOP_ENTER, &mCamSpacePos);
     mStateParam = ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 3) << 8) + 0x300;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e114.filePtr, 4, 0, 0x1000, 0);
@@ -898,7 +898,7 @@ int daJango_c::UpdateSwoopState() {
     v.z = 0x1e000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-    MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
     HandleCylinderHit();
     if (mStateTimer == 0 || mWithMeshClsn.IsOnWall() != 0) {
         mTimer = 30;
@@ -944,9 +944,9 @@ int daJango_c::EnterHurtState() {
     }
     func_02012694(SND_AT_HURT_ENTER, &mCamSpacePos);
     Particle::System::NewSimple(PARTICLE_AT_HURT_ENTER, mPosX, mPosY, mPosZ);
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     mVertAccel = 0;
     return 1;
 }
@@ -970,9 +970,9 @@ int daJango_c::UpdateHurtState() {
    flags 0, speed 1.0). */
 int daJango_c::EnterRiseState() {
     mBlendAnmModel.speed = 0x2000;
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     mVertAccel = 0;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e104.filePtr, 4, 0, 0x1000, 0);
     return 1;
@@ -983,13 +983,13 @@ int daJango_c::EnterRiseState() {
    below mPathNodePos.y or above it, it stops, snaps to that height, restores
    the animation speed to 1.0 and enters CIRCLE. */
 int daJango_c::UpdateRiseState() {
-    mVertSpeed = 0x14000;
+    mSpeed.y = 0x14000;
     ApproachLinear(mPrevAngleX, 0, 0x300);
     ApproachLinear(mPrevAngleZ, 0, 0x300);
     if (mPosY >= mPathNodePos.y - 0x2000) {
-        mSpeedX = 0;
-        mVertSpeed = 0;
-        mSpeedZ = 0;
+        mSpeed.x = 0;
+        mSpeed.y = 0;
+        mSpeed.z = 0;
         mPosY = mPathNodePos.y;
         mBlendAnmModel.speed = 0x1000;
         ChangeState(JANGO_STATE_CIRCLE);
@@ -1182,7 +1182,7 @@ int daJango_c::ChangeTarget() {
     return 1;
 }
 
-/* Sets the velocity words (mSpeedX, mVertSpeed, mSpeedZ) for the circling
+/* Sets the velocity words (mSpeed) for the circling
    state: the vector (0, 0, 20.0) turned by mAngleY then mAngleX. Empty-handed
    (nothing carried or held) it is (0, 0, 40.0) instead, and while mTimer is
    0 mPrevAngleY also drops by 0x100 (about 1.4 degrees) per call. */
@@ -1207,7 +1207,7 @@ void daJango_c::UpdateCircleVelocity() {
     }
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-    MTX_MultVec43(&v[0], &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43(&v[0], &data_020a0e68, &mSpeed);
 }
 
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body

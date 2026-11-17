@@ -147,9 +147,9 @@ void daPeach_c::UpdateGroundCollision(dBgCh_Actr *clsn) {
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(floorN);
         if (floorN.y != 0) {
-            int x = FX_MUL(floorN.x, mSpeedX);
-            int z = FX_MUL(floorN.z, mSpeedZ);
-            mVertSpeed = -(FX_Div(x + z, floorN.y) + 0x8000);
+            int x = FX_MUL(floorN.x, mSpeed.x);
+            int z = FX_MUL(floorN.z, mSpeed.z);
+            mSpeed.y = -(FX_Div(x + z, floorN.y) + 0x8000);
         }
     }
     if (clsn->IsOnWall()) {
@@ -209,7 +209,7 @@ int daPeach_c::State0() {
     mAnmModel.SetAnim((BCA_File *)gPeachJumpAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.SetFlags(0x40000000);
     mHorzSpeed = 0x4000;
-    mVertSpeed = 0xa000;
+    mSpeed.y = 0xa000;
     mStateValue = 4;
     return 1;
 }

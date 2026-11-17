@@ -284,7 +284,7 @@ int daBakubaku_c::ExecuteWander() {
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     MTX_MultVec43(&in, &data_020a0e68, &out);
-    mVertSpeed = out.y;
+    mSpeed.y = out.y;
     if (FindChaseTarget() == 1) {
         SetState(&data_ov032_02113aac);
         return 1;
@@ -305,9 +305,9 @@ int daBakubaku_c::EnterPause() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
     mStateTimer = ((r >> 8) & 0x1f) + 20;
     mAnmModel.speed = 0x1000;
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     return 1;
 }
 
@@ -422,9 +422,9 @@ int daBakubaku_c::ExecuteDive() {
     if (ShouldReturnHome() == 1 || FindChaseTarget() == 0) {
         speed = 0;
         mHorzSpeed = 0;
-        mSpeedX = 0;
-        mVertSpeed = 0;
-        mSpeedZ = 0;
+        mSpeed.x = 0;
+        mSpeed.y = 0;
+        mSpeed.z = 0;
     } else {
         Vector3 in2;
         Vector3 out2;
@@ -438,7 +438,7 @@ int daBakubaku_c::ExecuteDive() {
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
         MTX_MultVec43(&in2, &data_020a0e68, &out2);
-        mVertSpeed = out2.y;
+        mSpeed.y = out2.y;
     }
     ApproachLinear(mAngTarget, speed, 0x200);
     ApproachLinear(mPrevAngleX, mAngTarget, 0x200);
@@ -485,9 +485,9 @@ int daBakubaku_c::ExecuteSurface() {
 
     if (ShouldReturnHome() == 1 || FindChaseTarget() == 0) {
         mHorzSpeed = 0;
-        mSpeedX = 0;
-        mVertSpeed = 0;
-        mSpeedZ = 0;
+        mSpeed.x = 0;
+        mSpeed.y = 0;
+        mSpeed.z = 0;
     } else {
         Vector3 in;
         Vector3 out;
@@ -501,7 +501,7 @@ int daBakubaku_c::ExecuteSurface() {
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
         MTX_MultVec43(&in, &data_020a0e68, &out);
-        mVertSpeed = out.y;
+        mSpeed.y = out.y;
     }
 
     /* Once the lunge has started or the bite animation is over, level out

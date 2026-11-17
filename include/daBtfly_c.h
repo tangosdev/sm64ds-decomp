@@ -20,8 +20,8 @@
  *
  * 0x080..0x0a8 IS dActor_c's OWN LAYOUT, not this class's; real inheritance
  * now supplies those fields directly. This class writes 0x0a4/0x0a8/0x0ac as
- * an (x, vert, z) velocity triple, through dActor_c's mSpeedX, mVertSpeed and
- * mSpeedZ.
+ * an (x, vert, z) velocity triple, through dActor_c's mSpeed.x, mSpeed.y and
+ * mSpeed.z.
  *
  * Provenance table: notes/butterfly-tornado-provenance.md. */
 #ifndef DABTFLY_C_H

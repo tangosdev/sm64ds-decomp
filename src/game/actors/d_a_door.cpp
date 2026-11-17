@@ -67,9 +67,9 @@
  *   functions.
  * - dActor_c's mScaleX/Y/Z and mAngleX/Z carry other things for a door
  *   (the player's position in the door's frame, and two area ids), and
- *   mSpeedX/mVertSpeed/mSpeedZ hold the message position; the base names
- *   cannot change on one derived class's evidence, so the functions that read
- *   them describe them in their own comments.
+ *   mSpeed holds the message position; the base name cannot change on
+ *   one derived class's evidence, so the functions that read it describe
+ *   it in their own comments.
  * - the sound ids other than the two swing pairs, the message ids, camera
  *   flag bits 0xc00 (not in include/dCamera_c.h) and SaveData flags2 bit 16 stay
  *   numbers; their meanings are not recovered here.
@@ -679,7 +679,7 @@ int daDoor_c::func_ov100_02144ccc() {
        data_ov100_02148904 for a nonzero mKeyModelIdx, else
        data_ov100_021488f4.
    Where ShowMessage, TryTalkToDoor or TryTalkToKeyDoor returns 0, control
-   goes to the last case. The message position is mSpeedX (see
+   goes to the last case. The message position is mSpeed (see
    InitResources). Was a C source. */
 int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
     DoorEntry *entry;
@@ -691,7 +691,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                 if (NumStars() < entry->starsNeeded) {
                     if (daDoor_c::func_ov100_02144f84() == 0)
                         return 1;
-                    if (b->ShowMessage(*this, entry->msg, (Vector3 *)&mSpeedX, 0, 2) != 0) {
+                    if (b->ShowMessage(*this, entry->msg, &mSpeed, 0, 2) != 0) {
                         func_ov100_021453d8(&data_ov100_021488c4, (int)b);
                         return 1;
                     }
@@ -723,7 +723,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                                 }
                                 msg = sel ? entry->msg : 0x17;
                             }
-                            if (b->ShowMessage(*this, (short)msg, (Vector3 *)&mSpeedX, 0, 2) != 0) {
+                            if (b->ShowMessage(*this, (short)msg, &mSpeed, 0, 2) != 0) {
                                 func_ov100_021453d8(&data_ov100_021488c4, (int)b);
                                 if (entry->keyIndex == 5)
                                     data_0209caa0.file.flags2 |= 0x10000;
@@ -1025,13 +1025,11 @@ s32 daDoor_c::Behavior() {
  * matrix stores are the same store to the door model and the key model.
  *
  * The block near the end writes mPosX, mPosY + 0xb4000 (180 units up) and
- * mPosZ into 0x0a4/0x0a8/0x0ac. That triple is the Vector3 func_ov100_02144cf8
- * hands to daPly_c::ShowMessage. dActor_c.h names the middle of those three
- * `mVertSpeed`, which cannot be what a daDoor_c is storing there -- three
- * consecutive words taking a position triple say 0x0a4..0x0af is a second
- * Vector3 for at least this class. Left spelt as dActor_c has it, because
- * renaming a base field on one derived class's evidence is a dActor_c
- * change, not a daDoor_c one. */
+ * mPosZ into mSpeed. That vector is the one func_ov100_02144cf8 hands to
+ * daPly_c::ShowMessage: a door reuses the velocity it never moves by as
+ * the message position. Left spelt as dActor_c has it, because renaming
+ * a base field on one derived class's evidence is a dActor_c change, not
+ * a daDoor_c one. */
 s32 daDoor_c::InitResources() {
     unsigned int idx;
     DoorEntry *e;
@@ -1110,11 +1108,11 @@ s32 daDoor_c::InitResources() {
         z = mPosZ;
         x = mPosX;
         w = y + 0xb4000; /* 180 units up */
-        mSpeedX = x;
-        mVertSpeed = w;
+        mSpeed.x = x;
+        mSpeed.y = w;
         {
             unsigned char bi = gLocalPlayerId;
-            mSpeedZ = z;
+            mSpeed.z = z;
             r4 = (int)gPlayers[bi];
         }
     }

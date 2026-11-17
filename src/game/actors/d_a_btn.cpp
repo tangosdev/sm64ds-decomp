@@ -822,7 +822,7 @@ void daBtn_c::func_ov079_0212538c()
     mMovingMeshCollider.SetDepthByDir();
     mAnmModel.Advance();
     if (mStateTimer == 0)
-        mVertSpeed = data_ov079_021275e4[mIsKing];
+        mSpeed.y = data_ov079_021275e4[mIsKing];
     if (mStateTimer < 8)
         return;
     if (mIsKing) {
@@ -860,7 +860,7 @@ void daBtn_c::func_ov079_02125240(){
         return;
     if (!mWithMeshClsn.IsOnGround())
         return;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mMovingMeshCollider.ClearDepthByDir();
     mMovingMeshCollider.SetShallowOnly();
     mSubState++;

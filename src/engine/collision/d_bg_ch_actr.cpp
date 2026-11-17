@@ -117,7 +117,7 @@ void dBgCh_Actr::CommitFloorHit(s32 wasOnGround) {
     dBgS_RideCallBack(GetFloorResult(), mActor);
     SetGroundFlag();
     if (GetLimMovFlag() == 0)
-        mActor->mVertSpeed = 0;
+        mActor->mSpeed.y = 0;
 }
 
 void dBgCh_Actr::UpdateDiscreteNoLava()

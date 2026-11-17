@@ -262,10 +262,10 @@ int daBttBk_c::StateCarriedInit() {
 int daBttBk_c::StateFallMain() {
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround()) {
-        int v = mVertSpeed * -60;
-        mVertSpeed = v / 100;
+        int v = mSpeed.y * -60;
+        mSpeed.y = v / 100;
     } else if (mWithMeshClsn.IsOnGround()) {
-        mVertSpeed = 0xc000;
+        mSpeed.y = 0xc000;
     }
     UpdatePos(&mdCcAc_c);
     HandleCollision();
@@ -276,7 +276,7 @@ int daBttBk_c::StateFallMain() {
 
 /* State 0 enter. */
 int daBttBk_c::StateFallInit() {
-    mVertSpeed = 0xc000;
+    mSpeed.y = 0xc000;
     mWithMeshClsn.SetLimMovFlag();
     mState = 0;
     return 1;

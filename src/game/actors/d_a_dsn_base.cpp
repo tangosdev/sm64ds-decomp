@@ -141,12 +141,12 @@ void daDsnBase_c::StateRest() {
 void daDsnBase_c::StateSlam() {
     Vector3 dustPos;
     Vector3 quakePos;
-    mVertSpeed = mVertSpeed - 0x4000;
-    mPosY = mPosY + mVertSpeed;
+    mSpeed.y = mSpeed.y - 0x4000;
+    mPosY = mPosY + mSpeed.y;
     if (mPosY > mGroundY)
         return;
     mPosY = mGroundY;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mState = 3;
     mTimer = 10;
     int isDosun = (actorID == kDosunActorID);

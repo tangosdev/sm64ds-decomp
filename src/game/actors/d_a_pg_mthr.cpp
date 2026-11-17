@@ -377,8 +377,8 @@ void daPgMthr_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
         dBgPi *floor = w->GetFloorResult();
         floor->surface.CopyNormalTo(n);
         if (n.y != 0) {
-            int s = FX_MUL(n.x, mSpeedX) + FX_MUL(n.z, mSpeedZ);
-            mVertSpeed = -(FX_Div(s, n.y) + 0x8000);
+            int s = FX_MUL(n.x, mSpeed.x) + FX_MUL(n.z, mSpeed.z);
+            mSpeed.y = -(FX_Div(s, n.y) + 0x8000);
         }
     }
     if (w->IsOnWall() != 0) {

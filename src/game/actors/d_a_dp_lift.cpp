@@ -95,7 +95,7 @@ s32 daDpLift_c::Behavior() {
         mPosY = mBasePos.y + wave;
         if (mShakeTimer == 8) {
             mState = STATE_SINK;
-            mVertSpeed = -0xa000;
+            mSpeed.y = -0xa000;
         }
         mShakeTimer++;
         break;
@@ -103,7 +103,7 @@ s32 daDpLift_c::Behavior() {
     case STATE_SINK: {
         if (mPosY <= mMarkerPositions[mNextMarker].y + 0x14000)
             mNextMarker++;
-        mPosY += mVertSpeed;
+        mPosY += mSpeed.y;
         if (mPosY < 0x80000) {
             mPosY = 0x80000;
             mState = STATE_SETTLE;
@@ -116,7 +116,7 @@ s32 daDpLift_c::Behavior() {
         s32 wave = FX_MUL(FX_SinIdx((u16)ang >> 4), 10);
         mPosY = wave + 0x80000;
         if (mShakeTimer >= 8) {
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             mPosY = 0x80000;
         }
         mShakeTimer++;

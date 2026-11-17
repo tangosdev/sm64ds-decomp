@@ -137,9 +137,9 @@ void daObjFallBlock_c::ResetMotion() {
     mAngleZ = 0;
     mShakeX = 0;
     mTiltVelZ = 0;
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     mStateTimer = 4;
 }
 

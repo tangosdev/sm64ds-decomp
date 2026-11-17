@@ -14,7 +14,7 @@
  *   tables and their compiler-generated initializer are owned by this TU.
  *   State order: 0 WaitOut, 1 EaseToMid, 2 WaitMid, 3 EaseHome (small bar)
  *   or 4 CoastHome (big bar), 5 WaitHome, 6 TravelOut.
- * - mSpeedX is dActor_c's X speed (velocity at 0xa4/a8/ac),
+ * - mSpeed.x is dActor_c's X speed (velocity at 0xa4/a8/ac),
  *   not a field of this class.
  * - Resource table is two { model, KCL, CLPS } rows. Init must
  *   keep the three column symbols 02114534/38/3c; a typed
@@ -222,10 +222,10 @@ void daObjBk_Dossunbar_c::ExecuteEaseHome() {
     ChangeState(5);
 }
 
-/* State 4 enter: X speed rather than a timer. mSpeedX is dActor_c's
-   velocity X (with mVertSpeed / mSpeedZ). */
+/* State 4 enter: X speed rather than a timer. mSpeed.x is dActor_c's
+   velocity X (with mSpeed.y / mSpeed.z). */
 void daObjBk_Dossunbar_c::EnterCoastHome() {
-    mSpeedX = 0xf000;
+    mSpeed.x = 0xf000;
     Sound::PlayBank3(0xc3, mCamSpacePos);
 }
 
@@ -253,7 +253,7 @@ void daObjBk_Dossunbar_c::ExecuteWaitHome() {
 
 /* State 6 enter: X speed toward the out position. */
 void daObjBk_Dossunbar_c::EnterTravelOut() {
-    mSpeedX = -0x14000;
+    mSpeed.x = -0x14000;
     Sound::PlayBank3(0xc3, mCamSpacePos);
 }
 

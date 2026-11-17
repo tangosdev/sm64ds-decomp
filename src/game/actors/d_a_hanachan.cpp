@@ -401,7 +401,7 @@ void daHanachan_c::StateMoveMain()
             mFalling = 1;
             mVertAccel = -0x1000;
             mTerminalVelocity = -0x3c000;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
         }
     }
 
@@ -492,7 +492,7 @@ void daHanachan_c::StateMoveStartMain()
                 health = mHealth;
                 if (health < 4) {
                     if (health > 1) {
-                        mVertSpeed = 0x41000 - (((health - 2) * 10) << 12);
+                        mSpeed.y = 0x41000 - (((health - 2) * 10) << 12);
                         mVertAccel = -0x4000;
                     }
                 }
@@ -691,7 +691,7 @@ void daHanachan_c::ExecState()
 int daHanachan_c::IsStompedBy(dCcAcPos_c *cyl, dActor_c *actor)
 {
     Vector3 push = cyl->pushback;
-    if (actor->mVertSpeed < 0 && push.y < 0 && push.y > actor->mVertSpeed)
+    if (actor->mSpeed.y < 0 && push.y < 0 && push.y > actor->mSpeed.y)
         return 1;
     return 0;
 }
@@ -871,7 +871,7 @@ int daHanachan_c::Behavior()
 
     ExecState();
 
-    if (mVertSpeed <= 0) {
+    if (mSpeed.y <= 0) {
         ApproachLinear(mSegmentRot[0].y, mTargetAngleY, ((mHorzSpeed / 0x1000) * 0x1e));
     }
 

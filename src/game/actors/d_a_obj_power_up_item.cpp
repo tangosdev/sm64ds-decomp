@@ -212,7 +212,7 @@ void daObjPowerUpItem_c::StateLaunched()
     mEffectHandle = (u32)Particle::System::New(mEffectHandle, kPtclPowerFlowerLaunched, mPosX,
                                                mPosY, mPosZ, 0, 0);
 
-    a = mVertSpeed;
+    a = mSpeed.y;
     mag = (a < 0) ? -a : a;
     y = FX_MUL(mag, 0x120000);
     X = (s16)(y / 0x1000);
@@ -270,7 +270,7 @@ void daObjPowerUpItem_c::BeginLaunched()
     mEffectHandle = 0;
     mVertAccel = 0xfffff998;
     mTerminalVelocity = -0xf000;
-    mVertSpeed = 0xd000;
+    mSpeed.y = 0xd000;
 }
 
 /* Switches to state `i` and runs that state's enter action. */

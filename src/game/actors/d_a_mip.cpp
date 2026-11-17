@@ -749,12 +749,12 @@ int daMip_c::StateFleeMain() {
                 Vec3_MulScalar(&scaled, &delta, s);
                 VEC_Subtract(&mPos, &scaled, &mPos);
             }
-            if (mVertSpeed > 0) {
+            if (mSpeed.y > 0) {
                 mPosY = ysave;
             }
             if (mActionStep == 0) {
                 if (mWithMeshClsn.IsOnWall() != 0) {
-                    mVertSpeed = 0xa000;
+                    mSpeed.y = 0xa000;
                     mActionStep = 1;
                 }
             }

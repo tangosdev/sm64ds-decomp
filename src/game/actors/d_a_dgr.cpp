@@ -121,7 +121,7 @@ s32 daDgr_c::Behavior() {
             mPhaseTimer = 0;
         } else {
             mPhaseTimer++;
-            mSpeedZ = 0;
+            mSpeed.z = 0;
             mAngleXSpeed = 0;
             UpdateModelMatrix();
             if (IsClsnInRange(0, 0))
@@ -157,14 +157,14 @@ s32 daDgr_c::Behavior() {
 
     if (mPhaseTimer < rollFrames) {
         if (mRollDir == 0) {
-            mSpeedZ = kRollZStep / speedDivisor;
+            mSpeed.z = kRollZStep / speedDivisor;
             mAngleXSpeed = (s16)(kRollAngleStep / speedDivisor);
         } else {
-            mSpeedZ = (-kRollZStep) / speedDivisor;
+            mSpeed.z = (-kRollZStep) / speedDivisor;
             mAngleXSpeed = (s16)((-kRollAngleStep) / speedDivisor);
         }
 
-        mPosZ += mSpeedZ;
+        mPosZ += mSpeed.z;
         mAngleX += mAngleXSpeed;
         if ((mAngleX & kGrindAngleMask) < kGrindWindow && mAngleXSpeed != 0)
             func_02012694(kGrindSound, &mCamSpacePos);

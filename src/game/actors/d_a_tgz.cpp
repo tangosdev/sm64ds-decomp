@@ -157,7 +157,7 @@ int daTgz_c::func_ov077_02124ce4() {
 }
 
 /* Toxic floor destroys the Spiny. A sloped floor rewrites vertical speed
- * from mSpeedX/mSpeedZ and pitches mAngleX/mAngleZ to the normal. */
+ * from mSpeed.x/mSpeed.z and pitches mAngleX/mAngleZ to the normal. */
 void daTgz_c::func_ov077_02124d08(dBgCh_Actr *clsn) {
     Vector3 pos;
     Vector3 normal;
@@ -188,8 +188,8 @@ void daTgz_c::func_ov077_02124d08(dBgCh_Actr *clsn) {
                 fr->surface.CopyNormalTo(normal);
             }
             if (normal.y != 0) {
-                this->mVertSpeed =
-                    -(FX_Div(FX_MUL(normal.x, this->mSpeedX) + FX_MUL(normal.z, this->mSpeedZ),
+                this->mSpeed.y =
+                    -(FX_Div(FX_MUL(normal.x, this->mSpeed.x) + FX_MUL(normal.z, this->mSpeed.z),
                              normal.y) +
                       0x8000);
             }
@@ -356,7 +356,7 @@ int daTgz_c::func_ov077_021253a4() {
     mAnmModel.dExtFrameCtrl_c::Advance();
     UpdatePos(&mdCcAc_c);
 
-    if (mHorzSpeed >= mWithMeshClsn.mRadius || mVertSpeed >= mWithMeshClsn.mRadius)
+    if (mHorzSpeed >= mWithMeshClsn.mRadius || mSpeed.y >= mWithMeshClsn.mRadius)
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     else
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
@@ -378,7 +378,7 @@ int daTgz_c::func_ov077_021253a4() {
 int daTgz_c::func_ov077_02125480() {
     Sound::PlayBank0(9, mCamSpacePos);
     mHorzSpeed = 0xa000;
-    mVertSpeed = 0x28000;
+    mSpeed.y = 0x28000;
     mAngleX = 0;
     mAngleZ = 0;
     mActionTimer = 45;
@@ -400,14 +400,14 @@ int daTgz_c::func_ov077_02125550() {
 
     mAngleX = mAngleX + 0x4e20;
 
-    if (mHorzSpeed >= mWithMeshClsn.mRadius || mVertSpeed >= mWithMeshClsn.mRadius)
+    if (mHorzSpeed >= mWithMeshClsn.mRadius || mSpeed.y >= mWithMeshClsn.mRadius)
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     else
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
 
     if (mWithMeshClsn.JustHitGround()) {
-        mVertSpeed = mVertSpeed * -0x3c / 100;
-        if (mVertSpeed > 0x8000) {
+        mSpeed.y = mSpeed.y * -0x3c / 100;
+        if (mSpeed.y > 0x8000) {
             x = mPosX;
             y = mPosY + 0x28000;
             z = mPosZ;
@@ -417,7 +417,7 @@ int daTgz_c::func_ov077_02125550() {
             Particle::System::NewSimple(kPtclLandingDust, vec.x, vec.y, vec.z);
             func_0201267c(0x109, &mCamSpacePos);
         } else {
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             mAngleX = 0;
             mWithMeshClsn.ClearLimMovFlag();
             this->func_ov077_02125e94(1);
@@ -449,7 +449,7 @@ int daTgz_c::func_ov077_021256b4() {
 
     mFlags &= ~0x80000;
     mHorzSpeed = 0xa000;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
 
     carrier = mEatingPlayer;
     carrierYaw = carrier->mAngleY;
@@ -529,9 +529,9 @@ int daTgz_c::func_ov077_02125908() {
 
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround() != 0)
-        mVertSpeed = mVertSpeed * -50 / 100;
+        mSpeed.y = mSpeed.y * -50 / 100;
     else if (mWithMeshClsn.IsOnGround() != 0) {
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
         mChasePlayer = 0;
         mPrevAngleY = mAngleY;
@@ -560,7 +560,7 @@ int daTgz_c::func_ov077_02125908() {
 /* State 2 entry: hop toward the player that just hit us. */
 int daTgz_c::func_ov077_02125a0c() {
     mHorzSpeed = 0x5000;
-    mVertSpeed = 0xd000;
+    mSpeed.y = 0xd000;
     short ang = Vec3_HorzAngle(&mChasePlayer->mPos, &mPos);
     mPrevAngleY = ang;
     mWithMeshClsn.SetLimMovFlag();
@@ -638,14 +638,14 @@ int daTgz_c::func_ov077_02125bb4() {
     mInWater = underwater;
 
     if (mWithMeshClsn.JustHitGround()) {
-        mVertSpeed = (mVertSpeed * -0x3c) / 100;
+        mSpeed.y = (mSpeed.y * -0x3c) / 100;
         d = mWaterY ? mPosY - mWaterY : 0;
         if (d < -0xc8000) {
             PoofDust();
             func_02012694(0x166, &mCamSpacePos);
             MarkForDestruction();
-        } else if (mVertSpeed < 0xa000) {
-            mVertSpeed = 0;
+        } else if (mSpeed.y < 0xa000) {
+            mSpeed.y = 0;
             mAngleX = mPrevAngleX;
             mAngleY = mPrevAngleY;
             mAngleZ = mPrevAngleZ;
@@ -674,7 +674,7 @@ int daTgz_c::func_ov077_02125dd4() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0x4000;
-    mVertSpeed = 0x19000;
+    mSpeed.y = 0x19000;
     mWithMeshClsn.SetLimMovFlag();
     mState = 0;
     return 1;

@@ -494,10 +494,10 @@ int daBombking_c::TickKnockback() {
             mTargetAngY = Vec3_HorzAngle(&mPos, &mArenaPos);
         }
         mActionStep = 0;
-        mVertSpeed = 0x1e000;
+        mSpeed.y = 0x1e000;
         mHorzSpeed = 0xa000;
     } else {
-        if (mVertSpeed < 0) {
+        if (mSpeed.y < 0) {
             unsigned int id = mdCcAcPos_c.otherOwner;
             if (id != 0) {
                 daPly_c *a = static_cast<daPly_c *>(dActor_c::FindWithID(id));
@@ -527,7 +527,7 @@ int daBombking_c::EnterKnockback() {
     this->mTargetAngY = Vec3_HorzAngle(&this->mPos, &this->mArenaPos);
     this->mHealth -= 1;
     this->mActionStep = 0;
-    this->mVertSpeed = 0x28000;
+    this->mSpeed.y = 0x28000;
     this->mHorzSpeed = 0x5000;
     if (this->mHealth <= 0)
         this->mFlags = 0x10000000;
@@ -671,16 +671,16 @@ int daBombking_c::TickReturnHome() {
         Matrix4x3_FromRotationY(&data_020a0e68, this->mPrevAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngleX);
         MTX_MultVec43(&vB, &data_020a0e68, &vC);
-        this->mSpeedX = vC.x;
+        this->mSpeed.x = vC.x;
         if (this->mActionStep == 0) {
-            this->mVertSpeed = vC.y;
-            if (this->mVertSpeed > 0x3c000)
-                this->mVertSpeed = 0x3c000;
-            else if (this->mVertSpeed < 0x1e000)
-                this->mVertSpeed = 0x1e000;
+            this->mSpeed.y = vC.y;
+            if (this->mSpeed.y > 0x3c000)
+                this->mSpeed.y = 0x3c000;
+            else if (this->mSpeed.y < 0x1e000)
+                this->mSpeed.y = 0x1e000;
         }
-        this->mSpeedZ = vC.z;
-        this->mVertSpeed += this->mVertAccel;
+        this->mSpeed.z = vC.z;
+        this->mSpeed.y += this->mVertAccel;
         vA.x = this->mPosX;
         vA.y = this->mPosY;
         vA.z = this->mPosZ;
@@ -695,9 +695,9 @@ int daBombking_c::TickReturnHome() {
         if (pl != 0) {
             *(struct M3 *)&D = *(struct M3 *)&pl->mPosX;
             if (Vec3_Dist(&this->mArenaPos, &D) > 0x640000 || this->mArenaPos.y - 0x64000 > D.y) {
-                this->mSpeedX = 0;
-                this->mVertSpeed = 0;
-                this->mSpeedZ = 0;
+                this->mSpeed.x = 0;
+                this->mSpeed.y = 0;
+                this->mSpeed.z = 0;
                 KingBobOmb_SetState(&data_ov078_021270fc);
                 return 1;
             }
@@ -712,9 +712,9 @@ int daBombking_c::TickReturnHome() {
             ShakeScreen(0xfa0000);
             func_0200fa8c(1);
             this->mActionStep = 2;
-            this->mSpeedX = 0;
-            this->mVertSpeed = 0;
-            this->mSpeedZ = 0;
+            this->mSpeed.x = 0;
+            this->mSpeed.y = 0;
+            this->mSpeed.z = 0;
             return 1;
         }
 
@@ -748,9 +748,9 @@ int daBombking_c::EnterReturnHome() {
     this->mWithMeshClsn.ClearGroundFlag();
     this->mPrevAngleX = 0;
     this->mHorzSpeed = 0;
-    this->mSpeedX = 0;
-    this->mVertSpeed = 0;
-    this->mSpeedZ = 0;
+    this->mSpeed.x = 0;
+    this->mSpeed.y = 0;
+    this->mSpeed.z = 0;
     this->mActionStep = 0;
     this->mVertAccel = -0x6000;
     return 1;
@@ -771,7 +771,7 @@ int daBombking_c::TickBounceOffHill() {
             func_0200fa8c(1);
             func_02012694(0x128, &this->mCamSpacePos);
             this->mStateTimer = 5;
-            this->mVertSpeed = 0x14000;
+            this->mSpeed.y = 0x14000;
             this->mHorzSpeed = 0xa000;
             this->mActionStep = 1;
         } else {
@@ -785,7 +785,7 @@ int daBombking_c::TickBounceOffHill() {
 
 int daBombking_c::EnterBounceOffHill() {
     this->mVertAccel = -0x2000;
-    this->mVertSpeed = 0x1e000;
+    this->mSpeed.y = 0x1e000;
     this->mHorzSpeed = 0x14000;
     this->mActionStep = 0;
     this->mStateTimer = 5;
@@ -848,7 +848,7 @@ int daBombking_c::EnterThrown() {
     this->mWithMeshClsn.ClearGroundFlag();
     this->mActionStep = 0;
     this->mVertAccel = -0x2000;
-    this->mVertSpeed = 0x28000;
+    this->mSpeed.y = 0x28000;
     this->mHorzSpeed = 0x14000;
     this->mTerminalVelocity = -0x3c000;
     return 1;
@@ -913,7 +913,7 @@ flags:
             daPly_c *p = this->mHeldActor;
             if (p != 0) {
                 if (p->param1 == 2) {
-                    this->mVertSpeed = 0x32000;
+                    this->mSpeed.y = 0x32000;
                     this->mHorzSpeed = 0x1e000;
                 }
             }
@@ -977,9 +977,9 @@ int daBombking_c::TickThrowBomb() {
                                                       (-cstd::atan2(v[0].y, Vec3_HorzLen(&v[0]))));
                     out.y += 0x14000;
                     target->func_ov102_0214ad14();
-                    target->mSpeedX = out.x;
-                    target->mVertSpeed = out.y;
-                    target->mSpeedZ = out.z;
+                    target->mSpeed.x = out.x;
+                    target->mSpeed.y = out.y;
+                    target->mSpeed.z = out.z;
                     target->mHorzSpeed = 0x14000;
                     target->mVertAccel = -0x2000;
                     MTX_MultVec43(&in, &data_020a0e68, &out);

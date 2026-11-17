@@ -178,7 +178,7 @@ void daPiano_c::SetState(int state) {
 /* True when the candidate target is moving (either speed above 20.0). The
  * piano itself is not read. */
 int daPiano_c::IsTargetMoving(dActor_c *cand) {
-    if (cand->mVertSpeed > 0x14000 || cand->mHorzSpeed > 0x14000)
+    if (cand->mSpeed.y > 0x14000 || cand->mHorzSpeed > 0x14000)
         return 1;
     return 0;
 }

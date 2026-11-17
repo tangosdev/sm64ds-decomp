@@ -22,8 +22,6 @@
  */
 
 // Notes:
-// - (Vector3 *)&mSpeedX: dActor_c stores the speed as three scalars, so
-//   VEC_Add takes the first word's address.
 // - Vec3_Sub is defined on a file-local struct Vec3, so no shared header
 //   declares it yet; it is declared here. VEC_Add takes Vector3 now.
 // - Behavior lowers mPosY by the sink offset and restores it before the
@@ -253,7 +251,7 @@ void daLinelift2_c::StateReturn() {
    off either end of the path, 1 on reaching a node, 0 in between. */
 int daLinelift2_c::StepAlongPath() {
     int result;
-    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
+    VEC_Add(&mPos, &mSpeed, &mPos);
     if (Vec3_Dist(&mPos, &mTargetPos) < (mHorzSpeed >> 1)) {
         result = 1;
         mBasePos.x = mTargetPos.x;
@@ -293,17 +291,17 @@ int daLinelift2_c::StepAlongPath() {
 }
 
 /* Aim the velocity from `from` toward `to` at mHorzSpeed: pitch into
-   mPrevAngleX, heading into mPrevAngleY, components into mSpeedX /
-   mVertSpeed / mSpeedZ. */
+   mPrevAngleX, heading into mPrevAngleY, components into mSpeed.x /
+   mSpeed.y / mSpeed.z. */
 void daLinelift2_c::SetVelocityToward(const Vector3 *to, const Vector3 *from) {
     Vector3 d;
     Vec3_Sub(&d, to, from);
     mPrevAngleY = cstd::atan2(d.x, d.z);
     mPrevAngleX = cstd::atan2(d.y, Vec3_HorzLen(&d));
     s32 horz = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngleX >> 4));
-    mSpeedX = FX_MUL(horz, FX_SinIdx((u16)mPrevAngleY >> 4));
-    mVertSpeed = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleX >> 4));
-    mSpeedZ = FX_MUL(horz, FX_CosIdx((u16)mPrevAngleY >> 4));
+    mSpeed.x = FX_MUL(horz, FX_SinIdx((u16)mPrevAngleY >> 4));
+    mSpeed.y = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleX >> 4));
+    mSpeed.z = FX_MUL(horz, FX_CosIdx((u16)mPrevAngleY >> 4));
 }
 
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header

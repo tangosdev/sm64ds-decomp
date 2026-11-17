@@ -391,7 +391,7 @@ void daBmb_c::State0() {
             func_ov102_0214b988();
             if (mChasePlayer != 0) {
                 mHorzSpeed = 0;
-                mVertSpeed = 0x14000;
+                mSpeed.y = 0x14000;
                 mState = 2;
             } else {
                 if (mVariant == 5) {
@@ -572,7 +572,7 @@ void daBmb_c::func_ov102_0214bc20() {
         if ((unsigned)idx > 4) idx = 4;
     }
     mHorzSpeed = a1.v[idx];
-    mVertSpeed = a2.v[idx];
+    mSpeed.y = a2.v[idx];
     mState = 4;
     mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
     mVertAccel = -0x2000;

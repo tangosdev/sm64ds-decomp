@@ -131,7 +131,7 @@ void daObjKinokoTag_c::SpawnMegaMushroom() {
 
             LandingDustAt(spawnPos, true);
             dActor_c *mushroom = Spawn(0x115, 0xd, tag->mPos, 0, mAreaId, -1);
-            mushroom->mVertSpeed = 0x28000;
+            mushroom->mSpeed.y = 0x28000;
 
             tag->KillAndTrackInDeathTable();
             KillAndTrackInDeathTable();

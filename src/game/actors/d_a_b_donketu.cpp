@@ -133,12 +133,12 @@ int daBDonketu_c::Behavior() {
         int limit;
         if (Sound::PlaySecretSound(this, &mSecretSoundCounter) != 0)
             mSecretSoundCounter = 0;
-        speed = mVertSpeed + mVertAccel;
+        speed = mSpeed.y + mVertAccel;
         limit = mTerminalVelocity;
         if (speed >= limit)
             limit = speed;
-        mVertSpeed = limit;
-        mPosY = mPosY + mVertSpeed;
+        mSpeed.y = limit;
+        mPosY = mPosY + mSpeed.y;
         UpdateWMClsn(mWithMeshClsn, 0);
         if (mWithMeshClsn.IsOnGround() != 0) {
             func_0200fa8c(0);

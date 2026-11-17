@@ -387,7 +387,7 @@ s32 daStar_c::InitResources()
             mdCc_c.flags |= 1;
     } else if (kind == KIND_1) {
         mState = STATE_BOUNCE;
-        mVertSpeed = 0x20000;
+        mSpeed.y = 0x20000;
         SetDefaultGravity();
         mStateTimer = 15;
         mSparkleTimer = 50;
@@ -815,12 +815,12 @@ void daStar_c::StateLaunch() {
     gNextActorUpdateMask |= CUTSCENE_FLAG;
     mCamSeq = 0;
     func_02012694(0x57, &mCamSpacePos);
-    mVertSpeed = 0x20000;
+    mSpeed.y = 0x20000;
     SetDefaultGravity();
     other = dActor_c::FindWithID(mMarkerID);
     if (mKind == KIND_4) {
         if (other == 0 || Vec3_HorzDist(&mPos, &other->mPos) == 0) {
-            mVertSpeed = 0x18000;
+            mSpeed.y = 0x18000;
             mState = STATE_LAND;
         } else {
             mState = STATE_FLY_TO_MARKER;
@@ -864,10 +864,10 @@ void daStar_c::StateLaunch() {
  * (AimArcTo, arc value 400.0) and becomes STATE_FLY_TO_MARKER. The
  * trail effect, sound object 6 and the ground probe run every frame. */
 void daStar_c::StateRise() {
-    if (mVertSpeed <= -0x20000) {
+    if (mSpeed.y <= -0x20000) {
         dActor_c *other = dActor_c::FindWithID(mMarkerID);
         if (other == 0 || Vec3_HorzDist(&mPos, &other->mPos) == 0) {
-            mVertSpeed = 0x18000;
+            mSpeed.y = 0x18000;
             mState = STATE_LAND;
         } else {
             Vector3 *pp = &other->mPos;
@@ -916,11 +916,11 @@ void daStar_c::StateFlyToMarker() {
         mPosZ = src[2];
         *yp += 0xc8000;
         mHorzSpeed = 0;
-        mVertSpeed = 0x18000;
+        mSpeed.y = 0x18000;
         if (gCurrentSublevel == 0xb && mStarID == 3)
-            mVertSpeed = 0x10000;
+            mSpeed.y = 0x10000;
         else
-            mVertSpeed = 0x18000;
+            mSpeed.y = 0x18000;
         SetDefaultGravity();
         mState = STATE_LAND;
     }
@@ -937,7 +937,7 @@ void daStar_c::StateFlyToMarker() {
  * STATE_IDLE and sets mCamSeq to 0x1d6; the cutscene camera then counts up and
  * restores the saved view at step 0x1f4. */
 void daStar_c::StateLand() {
-    if (mVertSpeed <= -0x18000) {
+    if (mSpeed.y <= -0x18000) {
         StopMotion();
         mdCc_c.flags &= ~1;
     } else {
@@ -1064,7 +1064,7 @@ void daStar_c::StateIdle() {
         if (t != false) {
             if (mPosY <= mHomePos.y) {
                 mPosY = mHomePos.y;
-                mVertSpeed = 0x10000;
+                mSpeed.y = 0x10000;
             }
         } else {
             RearmSoundObj6();
@@ -1200,7 +1200,7 @@ void daStar_c::StateCollectBegin() {
                 }
             }
             mState = STATE_BOUNCE;
-            mVertSpeed = 0x20000;
+            mSpeed.y = 0x20000;
             mHorzSpeed = 0xc000;
             SetDefaultGravity();
             mdCc_c.flags &= ~1;
@@ -1423,9 +1423,9 @@ void daStar_c::StateBounce() {
     } else if (mWithMeshClsn.IsOnGround()) {
         mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
         if (mBits.water == WATER_IN)
-            mVertSpeed = 0xe000;
+            mSpeed.y = 0xe000;
         else
-            mVertSpeed = 0x17000;
+            mSpeed.y = 0x17000;
     }
     if (mStateTimer == 0) {
         if (!mBits.noPickup)
@@ -1471,7 +1471,7 @@ void daStar_c::StateWaitMarker() {
     mBits.noPickup = 0;
     mStateTimer = 15;
     mState = STATE_BOUNCE;
-    mVertSpeed = 0x20000;
+    mSpeed.y = 0x20000;
     SetDefaultGravity();
 
     mdCc_c.flags &= ~1;
@@ -1590,7 +1590,7 @@ void daStar_c::FindMarker() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 50 -- AimArcTo, 0x020e947c, size 0x114 */
 /* -------------------------------------------------------------------------- */
-/* Aims a hop at *p: derives mVertAccel and mVertSpeed from the height
+/* Aims a hop at *p: derives mVertAccel and mSpeed.y from the height
  * difference to p and the arc value n, spreads the horizontal distance over 50
  * frames (mHorzSpeed), sets the terminal speed to -50.0 and turns the star
  * toward p. */
@@ -1614,12 +1614,12 @@ void daStar_c::AimArcTo(Vector3 *p, int n) {
         int v = mVertAccel;
         if (v < 0)
             v = -v;
-        mVertSpeed = n * v;
+        mSpeed.y = n * v;
     } else {
         int v = mVertAccel;
         if (v < 0)
             v = -v;
-        mVertSpeed = (dy + 1) * v;
+        mSpeed.y = (dy + 1) * v;
     }
     mTerminalVelocity = -0x32000;
     mHorzSpeed = Vec3_HorzDist(&mPos, p) / 50;
@@ -1632,7 +1632,7 @@ void daStar_c::AimArcTo(Vector3 *p, int n) {
 /* Stops the star: vertical speed, gravity, terminal speed and horizontal speed
  * all zero. */
 void daStar_c::StopMotion() {
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mVertAccel = 0;
     mTerminalVelocity = 0;
     mHorzSpeed = 0;
@@ -2005,7 +2005,7 @@ void daStar_c::ReturnToHome() {
     mPos = mHomePos;
     func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, &mPos);
     mState = mHomeState;
-    mVertSpeed = 0x20000;
+    mSpeed.y = 0x20000;
     SetDefaultGravity();
     mStateTimer = 15;
 }
@@ -2034,10 +2034,10 @@ void daStar_c::OnBounceLand() {
     func_02012694(0x55, &mCamSpacePos);
     if (mBits.water == WATER_IN) {
         mHorzSpeed = 0xc000;
-        mVertSpeed = 0xe000;
+        mSpeed.y = 0xe000;
     } else {
         mHorzSpeed = 0xc000;
-        mVertSpeed = 0x17000;
+        mSpeed.y = 0x17000;
     }
     r = mWithMeshClsn.GetFloorResult()->surface.clps.GetSurfaceType();
     if (r == 1 || r == 9) {
@@ -2122,7 +2122,7 @@ void daStar_c::UpdateWater() {
                     mVertAccel = -0x700;
                     mTerminalVelocity = -0x10000;
                     mHorzSpeed = 0xc000;
-                    mVertSpeed = 0;
+                    mSpeed.y = 0;
                 }
             }
         }

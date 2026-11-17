@@ -172,11 +172,11 @@ int daObjCtRotateBlock_c::Behavior() {
                 break;
             Sound::PlayBank3(0x5b, mCamSpacePos);
             mState++;
-            mVertSpeed = -0x5000;
+            mSpeed.y = -0x5000;
             break;
         case 1:
-            mVertSpeed += 0x800;
-            mOffsetY += mVertSpeed;
+            mSpeed.y += 0x800;
+            mOffsetY += mSpeed.y;
             if (mOffsetY < 0)
                 break;
             mOffsetY = 0;

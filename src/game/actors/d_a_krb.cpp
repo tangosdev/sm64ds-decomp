@@ -252,8 +252,8 @@ void daKrb_c::func_ov084_021290d4() {
  * of the velocity vector at 0xa4, and releases it from Yoshi. */
 void daKrb_c::func_ov084_02129168(dActor_c *actor) {
     mBounceCountdown = 60;
-    mVertSpeed = FX_Div(0xd000 - mVertAccel, mFloorNormal.y);
-    mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX) * -1;
+    mSpeed.y = FX_Div(0xd000 - mVertAccel, mFloorNormal.y);
+    mHorzSpeed = Vec3_HorzLen(&mSpeed) * -1;
     if (actor != 0)
         mPrevAngleY = Vec3_HorzAngle(&mPos, &actor->mPos);
     mAnmModel.SetAnim((BCA_File *)data_ov084_02130cc0.filePtr, 0, 0x1000, 0);
@@ -568,7 +568,7 @@ int daKrb_c::func_ov084_02129a00() {
             if (GetCapEatenOffIt(v) != 0) {
                 func_ov084_02129168(actor);
                 mHorzSpeed = -0xf000; /* -15.0 */
-                mVertSpeed = 0x14000; /* 20.0 */
+                mSpeed.y = 0x14000; /* 20.0 */
                 dExtAnmMaterial_c::Prepare(*(BMD_File *)(data_ov084_02130cf8.filePtr),
                                            data_ov084_0213088c);
                 mMaterialChanger.SetFile(data_ov084_0213088c, 0x40000000, 0x1000, 0);
@@ -634,7 +634,7 @@ void daKrb_c::BeginJump() {
     func_02012694(SND_HOP, &mCamSpacePos);
     mState = daKrb_c::STATE_JUMP;
     mHorzSpeed = 0;
-    mVertSpeed = data_ov084_02130248[mGoombaType];
+    mSpeed.y = data_ov084_02130248[mGoombaType];
     mWithMeshClsn.ClearGroundFlag();
     mdCcAc_c.flags |= 4;
 }
@@ -1049,14 +1049,14 @@ void daKrb_c::ActTumble() {
         int cnt;
         if (mBounceCountdown > 60)
             mBounceCountdown = 30;
-        a8 = mVertSpeed;
+        a8 = mSpeed.y;
         cnt = mBounceCountdown;
         {
             int aa = a8 < 0 ? -a8 : a8;
             if (aa <= cnt * 0x500) {
-                mVertSpeed = (cnt << 0xa) - mVertAccel;
+                mSpeed.y = (cnt << 0xa) - mVertAccel;
             } else {
-                mVertSpeed = FX_Div((a8 * -0x50) / 100, mFloorNormal.y);
+                mSpeed.y = FX_Div((a8 * -0x50) / 100, mFloorNormal.y);
             }
         }
         {
@@ -1083,7 +1083,7 @@ void daKrb_c::ActTumble() {
         if (mWithMeshClsn.IsOnGround() != 0) {
             mWithMeshClsn.ClearLimMovFlag();
             mHorzSpeed = 0;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             if (mBounceCountdown > 60)
                 mBounceCountdown = 30;
         }
@@ -1137,7 +1137,7 @@ void daKrb_c::ActAttackedMario() {
     BeginJump();
     large = (actorID == ACTOR_KURIBO_L);
     if (large != 0) {
-        mVertSpeed = FX_MUL(mVertSpeed, 0x1800);
+        mSpeed.y = FX_MUL(mSpeed.y, 0x1800);
     }
     mTargetAngleY = mInitAngleY;
     mMoveFlags &= ~daKrb_c::MOVE_AVOIDING;
@@ -1321,7 +1321,7 @@ void daKrb_c::func_ov084_0212af74() {
                 lvl = mGoombaType;
                 if (mTargetHorzSpeed != data_ov084_02130268[lvl]) {
                     flag = 0;
-                    mVertSpeed = data_ov084_02130248[lvl];
+                    mSpeed.y = data_ov084_02130248[lvl];
                     mHorzSpeed = 0;
                     mTargetHorzSpeed = data_ov084_02130268[mGoombaType];
                 }
