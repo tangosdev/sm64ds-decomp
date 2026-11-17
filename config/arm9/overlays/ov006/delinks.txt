@@ -514,6 +514,7 @@ src/minigames/d_s_mg_coin.cpp:
     .text start:0x020dbe40 end:0x020de988
     .init start:0x0213014c end:0x021303d0
     .ctor start:0x02133588 end:0x0213358c
+    .data start:0x0213be44 end:0x0213bf48
     .bss start:0x021417b0 end:0x02141870
     .data.data_ov006_02133f00 start:0x02133f00 end:0x02133f08
     .data.data_ov006_02133f08 start:0x02133f08 end:0x02133f10

@@ -491,7 +491,7 @@ _ZN11dScMgCoin_c19Bag_StateBounceDownEi kind:function(arm,size=0x1d8) addr:0x020
 _ZN11dScMgCoin_c15Bag_StateParkedEi kind:function(arm,size=0x70) addr:0x020dc154
 _ZN11dScMgCoin_c13Bag_StateRiseEi kind:function(arm,size=0xa8) addr:0x020dc1c4
 _ZN11dScMgCoin_c11Bag_ReleaseEv kind:function(arm,size=0x28) addr:0x020dc26c
-_ZN11dScMgCoin_c13Bag_StateIdleEv kind:function(arm,size=0x4) addr:0x020dc294
+_ZN11dScMgCoin_c13Bag_StateIdleEi kind:function(arm,size=0x4) addr:0x020dc294
 _ZN11dScMgCoin_c10Bag_UpdateEv kind:function(arm,size=0x60) addr:0x020dc298
 _ZN11dScMgCoin_c8Bag_ShowEv kind:function(arm,size=0x3c) addr:0x020dc2f8
 _ZN11dScMgCoin_c8Bag_HideEv kind:function(arm,size=0x14) addr:0x020dc334
@@ -518,7 +518,7 @@ _ZN11dScMgCoin_c15DrawScorePlayerEv kind:function(arm,size=0xbc) addr:0x020dccb8
 _ZN11dScMgCoin_c14DrawScoreRivalEv kind:function(arm,size=0xc8) addr:0x020dcd74
 _ZN11dScMgCoin_c12Score_UpdateEv kind:function(arm,size=0x6c) addr:0x020dce3c
 _ZN11dScMgCoin_c14DrawCoinValuesEv kind:function(arm,size=0x154) addr:0x020dcea8
-_ZN11dScMgCoin_c17Coin_StateSettledEv kind:function(arm,size=0x4) addr:0x020dcffc
+_ZN11dScMgCoin_c17Coin_StateSettledEi kind:function(arm,size=0x4) addr:0x020dcffc
 _ZN11dScMgCoin_c13Coin_StateHopEi kind:function(arm,size=0xe0) addr:0x020dd000
 _ZN11dScMgCoin_c19Coin_StateWaitTouchEi kind:function(arm,size=0x1ec) addr:0x020dd0e0
 _ZN11dScMgCoin_c14Coin_UpdateAllEv kind:function(arm,size=0x68) addr:0x020dd2cc
@@ -526,7 +526,7 @@ _ZN11dScMgCoin_c11LayOutCoinsEv kind:function(arm,size=0x17c) addr:0x020dd334
 _ZN11dScMgCoin_c18KickBlockUnderCoinEi kind:function(arm,size=0xe4) addr:0x020dd4b0
 _ZN11dScMgCoin_c10DrawBlocksEv kind:function(arm,size=0xc4) addr:0x020dd594
 _ZN11dScMgCoin_c17Block_StateFallInEi kind:function(arm,size=0x164) addr:0x020dd658
-_ZN11dScMgCoin_c18Block_StateRestingEv kind:function(arm,size=0x4) addr:0x020dd7bc
+_ZN11dScMgCoin_c18Block_StateRestingEi kind:function(arm,size=0x4) addr:0x020dd7bc
 _ZN11dScMgCoin_c21Block_StateDropOnCoinEi kind:function(arm,size=0xc0) addr:0x020dd7c0
 _ZN11dScMgCoin_c17Block_StateWanderEi kind:function(arm,size=0x214) addr:0x020dd880
 _ZN11dScMgCoin_c18Block_StateHopDownEi kind:function(arm,size=0x20c) addr:0x020dda94
@@ -3501,7 +3501,7 @@ pmf_dScMgCoin_c_Coin_StateHop kind:data(any) addr:0x0213bf04
 sCoinBlocksSprites kind:data(any) addr:0x0213bf0c
 _ZTI11dScMgCoin_c kind:data(any) addr:0x0213bf18
 _ZTS11dScMgCoin_c kind:data(any) addr:0x0213bf24
-sCoinScorePlayerSprites kind:data(any) addr:0x0213bf34
+sCoinScorePlayerSprites kind:data(word[5]) addr:0x0213bf34
 data_ov006_0213bf50 kind:data(any) addr:0x0213bf50
 _ZTV11dScMgCoin_c kind:data(any) addr:0x0213bf50
 sCupFxTemplate3 kind:data(any) addr:0x0213bfe0
