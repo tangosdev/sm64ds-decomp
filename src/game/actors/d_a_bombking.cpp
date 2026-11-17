@@ -689,7 +689,8 @@ int daBombking_c::TickReturnHome() {
         daPly_c *pl = this->ClosestPlayer();
         if (pl != 0) {
             VecFx32 D = *(VecFx32 *)&pl->mPos;
-            if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&D) > 0x640000 || this->mArenaPos.y - 0x64000 > D.y) {
+            if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&D) > 0x640000 ||
+                this->mArenaPos.y - 0x64000 > D.y) {
                 this->mSpeed.x = 0;
                 this->mSpeed.y = 0;
                 this->mSpeed.z = 0;
