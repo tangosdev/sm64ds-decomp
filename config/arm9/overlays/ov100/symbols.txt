@@ -162,7 +162,7 @@ data_ov100_02147f38 kind:data(any) addr:0x02147f38
 _ZTS7daIbl_c kind:data(any) addr:0x02147f40
 _ZTI7daIbl_c kind:data(any) addr:0x02147f4c
 g_profile_IRONBALL kind:data(any) addr:0x02147f58
-_ZTV7daIbl_c kind:data(any) addr:0x02147f7c
+_ZTV15RollingIronBall kind:data(any) addr:0x02147f7c
 _ZTV7daIbl_c kind:data(any) addr:0x02147f7c
 data_ov100_02147ff8 kind:data(any) addr:0x02147ff8
 data_ov100_02148000 kind:data(any) addr:0x02148000

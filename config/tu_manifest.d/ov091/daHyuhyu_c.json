@@ -744,7 +744,7 @@
       "source": "0x2134b28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@614",
+      "symbol": "@547",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x0213568c"
@@ -774,7 +774,7 @@
       "source": "0x2134b34",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@613",
+      "symbol": "@545",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135698"
@@ -794,7 +794,7 @@
       "source": "0x2134b40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@615",
+      "symbol": "@549",
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x021356a4"

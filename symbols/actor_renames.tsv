@@ -4164,7 +4164,7 @@ ov100	0x02147e78	Butterfly_SpawnInfo	g_profile_BUTTERFLY	reconstructed profile g
 ov100	0x02147e9c	data_ov100_02147e9c	_ZTV9daBtfly_c	vtable alloc=0x3f4
 ov100	0x02147f58	data_ov100_02147f58	RollingIronBall_SpawnInfo	spawninfo
 ov100	0x02147f58	RollingIronBall_SpawnInfo	g_profile_IRONBALL	reconstructed profile global; literal ROM ID IRONBALL+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov100	0x02147f7c	data_ov100_02147f7c	_ZTV7daIbl_c	vtable alloc=? (was _ZTV15RollingIronBall)
+ov100	0x02147f7c	data_ov100_02147f7c	_ZTV15RollingIronBall	vtable alloc=0x3fc
 ov100	0x02148030	data_ov100_02148030	UnchainedChomp_SpawnInfo	spawninfo
 ov100	0x02148030	UnchainedChomp_SpawnInfo	g_profile_WANWAN2	reconstructed profile global; literal ROM ID WANWAN2+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov100	0x02148054	data_ov100_02148054	_ZTV11daWanwan2_c	vtable alloc=? (was _ZTV14UnchainedChomp)
