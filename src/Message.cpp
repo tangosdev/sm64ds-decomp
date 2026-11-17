@@ -15,8 +15,9 @@
  *   data_0209d70c stays int * (decl_common.h spells it so); [1] is
  *   MessageInfoSection::sectionSize. data_0209d6f0 stays u8 * for the same
  *   reason (Message2.cpp) and is read back through a MessageEntry cast.
- * - data_0209d6f4 is volatile. DisplayCourseNameForStarSelect stores it twice
- *   in a row and both stores have to emit.
+ * - data_0209d6f4 is int here; Message2.cpp reads the same word as u8 *.
+ *   The course-name lines set the cursor and then step it past three
+ *   leading bytes with `+= 3`, and both stores emit.
  * - IsStarCollected and Message::DisplayText stay local externs. The header
  *   spellings take s8 / u16 and those parameters emit a narrow the ROM does
  *   not have. DisplayText must see this untruncated.
@@ -115,10 +116,8 @@ u8 gMsgChoicePositions[4];
 int data_0209d6e8;
 int data_0209d6ec;
 u8 *data_0209d6f0;
-/* byte-forced spelling: the cell is written twice back-to-back in
-   DisplayCourseNameForStarSelect and both stores must emit, so it is
-   volatile here; plurality decl elsewhere is u8 *. */
-volatile int data_0209d6f4;
+/* The text cursor. Message2.cpp reads it as u8 *. */
+int data_0209d6f4;
 int data_0209d6f8;
 int data_0209d6fc;
 int data_0209d700;
@@ -590,7 +589,7 @@ void Message::func_0201d850(u32 course) {
             s32 sum = data_0209d6fc + 0x28 + data_0209d70c[1] +
                       ((MessageEntry *)((char *)data_0209d708 + (course + 0x196) * 8))->textOffset;
             data_0209d6f4 = sum;
-            data_0209d6f4 = sum + 3;
+            data_0209d6f4 += 3;
         }
         Message::LayoutLine();
 
@@ -965,7 +964,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     sum = data_0209d6fc + 0x28 + data_0209d70c[1] +
           ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
     data_0209d6f4 = sum;
-    data_0209d6f4 = sum + 3;
+    data_0209d6f4 += 3;
     func_0201b6f8(0);
 
     data_0209d65c = ((256 - data_0209d6b0) / 2);

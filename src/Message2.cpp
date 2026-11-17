@@ -9,8 +9,8 @@
  *   run ROM-ascending.
  * - The G2/G2S getters are declared locally in their namespaces. No
  *   header declares them yet.
- * - data_0209d6f4 is u8 * here. Message.cpp spells the same word volatile int
- *   because one store there must not be coalesced. This TU only reads bytes.
+ * - data_0209d6f4 is u8 * here. Message.cpp spells the same word int, for
+ *   the cursor arithmetic it does there. This TU only reads bytes.
  * - MsgTextChar is local. The bytes at data_0209d6f4 are the text cursor,
  *   and no header describes them.
  * - Address-named helpers stay address-named. The ROM has no English name
