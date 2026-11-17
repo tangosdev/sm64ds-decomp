@@ -544,7 +544,7 @@ int PickerScene_HandleDrawingKeys(void) {
     }
 
     {
-        Ov007PickerScene *b = *(Ov007PickerScene *volatile *)&data_ov007_02104ba0;
+        Ov007PickerScene *b = *(Ov007PickerScene **)&data_ov007_02104ba0;
         int n = r5->groupCount;
         int lim = b->strokeCount;
         if (n >= lim)

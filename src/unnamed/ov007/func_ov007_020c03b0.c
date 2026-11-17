@@ -11,7 +11,7 @@ extern void func_ov007_020c076c(Ov007BgLayer *layer, int engines);
 void func_ov007_020c03b0(Ov007BgList *list) {
     Ov007BgLayer *layers[4];
     int shown[4];
-    Ov007BgLayer *volatile *pa;
+    Ov007BgLayer **pa;
     int *pb;
     Ov007BgLayer *node;
     int mask;
@@ -21,7 +21,7 @@ void func_ov007_020c03b0(Ov007BgList *list) {
 
     /* layers is stored but never read. Both arrays are cleared through
      * pointers; direct stores do not match. */
-    pa = (Ov007BgLayer *volatile *)(layers);
+    pa = (Ov007BgLayer **)(layers);
     pa[0] = 0;
     pa[1] = 0;
     pa[2] = 0;
