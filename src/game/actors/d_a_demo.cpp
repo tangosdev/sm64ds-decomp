@@ -954,7 +954,7 @@ void StaffRoll::func_ov002_020f30f8(int i) {
         this->window[i].bgY = 0;
 
     cc = this->window[i].bgX - oldA;
-    this->func_ov002_020f2f18( cc, this->window[i].bgY - oldB);
+    this->func_ov002_020f2f18(cc, this->window[i].bgY - oldB);
 
     ee = this->window[i].right >> 12;
     ff = this->window[i].bottom >> 12;
@@ -2109,14 +2109,13 @@ void StaffRoll::func_ov002_020f5990() {
         if (this->stars[i].active == 0)
             continue;
         (this->*data_ov002_02110e7c[this->stars[i].state])(i);
-        this->func_ov002_020f39ec( i);
+        this->func_ov002_020f39ec(i);
         if (this->stars[i].sparkling == 0)
             continue;
         if (i != this->kiraStar)
             continue;
-        this->func_ov002_020f2790( (s16)(this->stars[i].x >> 12),
-                            (s16)(this->stars[i].y >> 12), this->stars[i].kiraDefParam,
-                            this->stars[i].kiraSysParam);
+        this->func_ov002_020f2790((s16)(this->stars[i].x >> 12), (s16)(this->stars[i].y >> 12),
+                                  this->stars[i].kiraDefParam, this->stars[i].kiraSysParam);
     }
 }
 
