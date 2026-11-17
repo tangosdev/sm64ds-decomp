@@ -813,7 +813,7 @@
       "source": "0x02147660",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@947",
+      "symbol": "@169",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x021486c4"
@@ -833,7 +833,7 @@
       "source": "0x0214766c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@948",
+      "symbol": "@170",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x021486d0"
@@ -863,7 +863,7 @@
       "source": "0x0214767c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@949",
+      "symbol": "@171",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x021486dc"
@@ -883,7 +883,7 @@
       "source": "0x02147688",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@950",
+      "symbol": "@172",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x021486e8"

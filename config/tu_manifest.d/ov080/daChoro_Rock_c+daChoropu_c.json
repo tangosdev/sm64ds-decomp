@@ -1111,7 +1111,7 @@
       "source": "0x02127a04",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1020",
+      "symbol": "@1010",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02128408"
@@ -1131,7 +1131,7 @@
       "source": "0x02127a10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1021",
+      "symbol": "@1011",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02128420"
@@ -1161,7 +1161,7 @@
       "source": "0x02127a20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1022",
+      "symbol": "@1012",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x0212842c"
@@ -1181,7 +1181,7 @@
       "source": "0x02127a2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1023",
+      "symbol": "@1013",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02128414"
@@ -1201,7 +1201,7 @@
       "source": "0x02127a34",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1024",
+      "symbol": "@1014",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x021283f0"
@@ -1221,7 +1221,7 @@
       "source": "0x02127a40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1025",
+      "symbol": "@1015",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x021283fc"
@@ -1241,7 +1241,7 @@
       "source": "0x02127a48",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1027",
+      "symbol": "@1017",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02127fa0"
@@ -1251,7 +1251,7 @@
       "source": "0x02127a4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1029",
+      "symbol": "@1019",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02127f88"
@@ -1261,7 +1261,7 @@
       "source": "0x02127a50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1031",
+      "symbol": "@1021",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02127fa8"
@@ -1271,7 +1271,7 @@
       "source": "0x02127a54",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1033",
+      "symbol": "@1023",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02127f80"
@@ -1281,7 +1281,7 @@
       "source": "0x02127a58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1035",
+      "symbol": "@1025",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02127f98"
@@ -1291,7 +1291,7 @@
       "source": "0x02127a5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@1037",
+      "symbol": "@1027",
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02127f90"
