@@ -127,9 +127,9 @@ s32 daObjBk_Dossunbar_c::InitResources() {
     mMeshCollider.SetDepthDir((const Vector3 *)tmp);
     mMeshCollider.SetDepthDirMinDot(0xccd);
 
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     ChangeState(5);
     return 1;
 }
@@ -182,11 +182,11 @@ void daObjBk_Dossunbar_c::EnterEaseToMid() {
 
 /* State 1 body: ease X towards home minus 0x168000, then wait-mid. */
 void daObjBk_Dossunbar_c::ExecuteEaseToMid() {
-    Math_Function_0203b0fc(&mPosX, mHomePosX - 0x168000, 0x800, 0x46000);
+    Math_Function_0203b0fc(&mPosX, mHomePos.x - 0x168000, 0x800, 0x46000);
     mStateTimer -= 1;
     if (mStateTimer > 0)
         return;
-    mPosX = mHomePosX - 0x168000;
+    mPosX = mHomePos.x - 0x168000;
     ChangeState(2);
 }
 
@@ -214,11 +214,11 @@ void daObjBk_Dossunbar_c::EnterEaseHome() {
 
 /* State 3 body: ease X back to home, then wait-home. */
 void daObjBk_Dossunbar_c::ExecuteEaseHome() {
-    Math_Function_0203b14c(&mPosX, mHomePosX, 0x800, 0xb4000, 0x28000);
+    Math_Function_0203b14c(&mPosX, mHomePos.x, 0x800, 0xb4000, 0x28000);
     mStateTimer -= 1;
     if (mStateTimer > 0)
         return;
-    mPosX = mHomePosX;
+    mPosX = mHomePos.x;
     ChangeState(5);
 }
 
@@ -232,9 +232,9 @@ void daObjBk_Dossunbar_c::EnterCoastHome() {
 /* State 4 body: coast until X reaches home, then wait-home. */
 void daObjBk_Dossunbar_c::ExecuteCoastHome() {
     UpdatePosWithOnlySpeed(0);
-    if (mPosX < mHomePosX)
+    if (mPosX < mHomePos.x)
         return;
-    mPosX = mHomePosX;
+    mPosX = mHomePos.x;
     ChangeState(5);
 }
 
@@ -260,7 +260,7 @@ void daObjBk_Dossunbar_c::EnterTravelOut() {
 /* State 6 body: travel until X is 0x1ea000 below home, then wait-out. */
 void daObjBk_Dossunbar_c::ExecuteTravelOut() {
     UpdatePosWithOnlySpeed(0);
-    int v = mHomePosX + 0xffe16000;
+    int v = mHomePos.x + 0xffe16000;
     if (mPosX > v)
         return;
     mPosX = v;

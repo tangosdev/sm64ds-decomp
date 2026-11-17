@@ -14,8 +14,6 @@
  * D1-then-D0 pair with no D2.
  *
  * Notes:
- * - (Vector3 *)&mHomePosX: the class stores its home position as three
- *   scalars, so the distance checks take its address as a Vector3.
  * - data_ov002_0210d7f4 is the CLPS block this TU passes to the mesh
  *   collider; the overlay's .data owns it.
  * - StartOpening is called from ov084 (daRedBombhei_c) once the camera has
@@ -109,9 +107,9 @@ int daObjCannonShutter_c::InitResources() {
         /* 0x199 is 409/4096, i.e. a collider scale of 0.1. */
         mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov002_0210d7f4);
     }
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     if (IsCannonOpenInCurLevel() != 0) {
         mCannonOpen = 1;
     }
@@ -123,9 +121,9 @@ int daObjCannonShutter_c::InitResources() {
 int daObjCannonShutter_c::Behavior() {
     if (mCannonOpen != 0) {
         if (ClosestPlayer()->mIsMega != 0) {
-            mPosX = mHomePosX;
-            mPosY = mHomePosY;
-            mPosZ = mHomePosZ;
+            mPosX = mHomePos.x;
+            mPosY = mHomePos.y;
+            mPosZ = mHomePos.z;
             if (IsClsnInRangeOnScreen(0, 0)) {
                 UpdateModelPosAndRotY();
                 UpdateClsnPosAndRot();
@@ -155,10 +153,10 @@ int daObjCannonShutter_c::Behavior() {
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
         MTX_MultVec43(&slide, &data_020a0e68, &rotated);
         VEC_Add(&mPos, &rotated, &mPos);
-        if (Vec3_Dist((Vector3 *)&mHomePosX, &mPos) > 0xa000) {
+        if (Vec3_Dist(&mHomePos, &mPos) > 0xa000) {
             mOpenPhase = 1; /* past 10.0: go forward */
         }
-        if (Vec3_HorzDist((Vector3 *)&mHomePosX, &mPos) > 0xc8000) {
+        if (Vec3_HorzDist(&mHomePos, &mPos) > 0xc8000) {
             /* Past 200.0 out: the cannon is clear. Tell every shutter. */
             daObjCannonShutter_c *other = (daObjCannonShutter_c *)dActor_c::FindWithActorID(0xe, 0);
             while (other != 0) {

@@ -91,9 +91,9 @@ int daObjCtMecha05_c::InitResources() {
     mMeshCollider.SetClipRadius(0x1c0000);
     mMeshCollider.SetClipOffsetY(0x1000);
     mPrevAngleY = mAngleY;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mStateTimer = data_ov065_0211c0c8[data_0209f2c0];
 
     Vector3 position;
@@ -118,9 +118,9 @@ int daObjCtMecha05_c::Behavior() {
         int ang;
         /* ldrh, not the ldrsh a plain s16 mPrevAngleY read would emit. */
         ang = (u16)mPrevAngleY;
-        mPosX = mHomePosX + FX_MUL(FX_SinIdx(ang >> 4), 0xfa000);
+        mPosX = mHomePos.x + FX_MUL(FX_SinIdx(ang >> 4), 0xfa000);
         ang = (u16)mPrevAngleY;
-        mPosZ = mHomePosZ + FX_MUL(FX_CosIdx(ang >> 4), 0xfa000);
+        mPosZ = mHomePos.z + FX_MUL(FX_CosIdx(ang >> 4), 0xfa000);
         UpdateModelPosAndRotY();
         UpdateShadow();
         if (IsClsnInRange(0, 0) != 0)
@@ -209,9 +209,9 @@ void daObjCtMecha05_c::ResetToHome() {
     mState = 0;
     mTravel = 0;
     mHorzSpeed = 0;
-    mPosX = mHomePosX;
-    mPosY = mHomePosY;
-    mPosZ = mHomePosZ;
+    mPosX = mHomePos.x;
+    mPosY = mHomePos.y;
+    mPosZ = mHomePos.z;
 
     u8 setting = data_0209f2c0;
     mStateTimer = data_ov065_0211c0c8[setting];

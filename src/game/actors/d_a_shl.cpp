@@ -106,9 +106,9 @@ s32 daShl_c::InitResources()
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     mdCc_c.Init(this, 0x3c000, 0x46000, 0x100004, 0xa083c0);
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     mVertAccel = -0x2000;          /* -2.0 */
     mTerminalVelocity = -0x32000;  /* -50.0 */
     mStateTimer = 20;

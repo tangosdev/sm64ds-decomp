@@ -207,9 +207,9 @@ int daObjTatefuda_c::InitResources()
     mdCcAc_c.Init(this, 0x64000, 0x64000, 0x4800002, 0x41000);
 
     mPoundsLeft = 2;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mHomeAngleX = mAngleX;
     mHomeAngleY = mAngleY;
     mHomeAngleZ = mAngleZ;
@@ -299,7 +299,7 @@ int daObjTatefuda_c::Behavior()
         enum Bool b = (enum Bool)((mFlags & 8) != 0);
         if (b != FALSE && DecIfAbove0_Byte(&mRespawnDelay) == 0 && DistToCPlayer() > 0x7d0000) {
             mPoundsLeft = 2;
-            mPosY = mHomePosY;
+            mPosY = mHomePos.y;
             UpdateModelPosAndRotY();
             UpdateClsnPosAndRot();
             UpdateShadowMatrix();
@@ -1041,7 +1041,7 @@ void daObjTatefuda_c::UpdateShadowMatrix()
 
 /* The reset: the sign goes back where it was spawned and hides. Sets mHidden
  * and mRespawnDelay = 0x1e (30 frames), clears the break countdown and both
- * particle handles, restores position and angles from mHomePosX/Y/Z and mHomeAngleX/Y/Z,
+ * particle handles, restores position and angles from mHomePos and mHomeAngleX/Y/Z,
  * stands it up again (mPoundsLeft = 2), refreshes the model/collision
  * matrices and the shadow matrix, returns to IDLE, re-initializes the collider
  * (same arguments as InitResources) and clears it, and switches the mesh
@@ -1054,9 +1054,9 @@ void daObjTatefuda_c::Reset()
   mBreakTimer = 0;
   mParticleHandle1 = 0;
   mParticleHandle2 = 0;
-  mPosX = mHomePosX;
-  mPosY = mHomePosY;
-  mPosZ = mHomePosZ;
+  mPosX = mHomePos.x;
+  mPosY = mHomePos.y;
+  mPosZ = mHomePos.z;
   mAngleX = mHomeAngleX;
   mAngleY = mHomeAngleY;
   mAngleZ = mHomeAngleZ;

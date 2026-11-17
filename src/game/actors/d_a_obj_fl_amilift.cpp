@@ -100,12 +100,12 @@ int daObjFl_Amilift_c::MoveAlongPath() {
     UpdatePos(0);
     r = (Vec3_HorzDist(&mPos, &mTo) < 0x69000) ? 0 : 0xa000;
     if (ApproachLinear(mHorzSpeed, r, 0x800) != 0 && r == 0) {
-        mFromX = mTo.x;
-        mFromY = mTo.y;
-        mFromZ = mTo.z;
-        mPosX = mFromX;
-        mPosY = mFromY;
-        mPosZ = mFromZ;
+        mFrom.x = mTo.x;
+        mFrom.y = mTo.y;
+        mFrom.z = mTo.z;
+        mPosX = mFrom.x;
+        mPosY = mFrom.y;
+        mPosZ = mFrom.z;
         r = 1;
         if (mState == daObjFl_Amilift_c::STATE_FORWARD) {
             ++mNodeIndex;
@@ -124,9 +124,9 @@ int daObjFl_Amilift_c::MoveAlongPath() {
         a.x = mTo.x;
         a.y = mTo.y;
         a.z = mTo.z;
-        b.x = mFromX;
-        b.y = mFromY;
-        b.z = mFromZ;
+        b.x = mFrom.x;
+        b.y = mFrom.y;
+        b.z = mFrom.z;
         FaceToward(&a, &b);
         return r;
     }
@@ -182,9 +182,9 @@ void daObjFl_Amilift_c::StateWait() {
         v0.x = mTo.x;
         v0.y = mTo.y;
         v0.z = mTo.z;
-        v1.x = mFromX;
-        v1.y = mFromY;
-        v1.z = mFromZ;
+        v1.x = mFrom.x;
+        v1.y = mFrom.y;
+        v1.z = mFrom.z;
         FaceToward(&v0, &v1);
         return;
     }
@@ -220,7 +220,7 @@ s32 daObjFl_Amilift_c::Behavior() {
         mBobOffset = FX_SinIdx((u16)mBobPhase >> 4) * 10;
     }
     int saved = mPosY;
-    mPosY = mHomeY + mSinkOffset + mBobOffset;
+    mPosY = mHome.y + mSinkOffset + mBobOffset;
     UpdateModelPosAndRotY();
     if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();
@@ -260,24 +260,24 @@ s32 daObjFl_Amilift_c::InitResources() {
     mNodeCount = mPathPtr.NumNodes();
     mNodeIndex = 1;
 
-    mFromX = mPosX;
-    mFromY = mPosY;
-    mFromZ = mPosZ;
+    mFrom.x = mPosX;
+    mFrom.y = mPosY;
+    mFrom.z = mPosZ;
 
     mPathPtr.GetNode(mTo, mNodeIndex);
 
     nodeA.x = mTo.x;
     nodeA.y = mTo.y;
     nodeA.z = mTo.z;
-    nodeB.x = mFromX;
-    nodeB.y = mFromY;
-    nodeB.z = mFromZ;
+    nodeB.x = mFrom.x;
+    nodeB.y = mFrom.y;
+    nodeB.z = mFrom.z;
 
     FaceToward(&nodeA, &nodeB);
 
-    mHomeX = mPosX;
-    mHomeY = mPosY;
-    mHomeZ = mPosZ;
+    mHome.x = mPosX;
+    mHome.y = mPosY;
+    mHome.z = mPosZ;
 
     return 1;
 }

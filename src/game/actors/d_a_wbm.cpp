@@ -169,9 +169,9 @@ int daWbm_c::InitResources()
     mStateTimer = 0;
     mBounceCount = 0;
     unk_3b4 = 0;
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
 
     if ((unsigned int)(mVariant - 1) <= 1)
     {

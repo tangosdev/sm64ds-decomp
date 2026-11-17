@@ -265,9 +265,9 @@ int daSanbo_c::UpdateStackedBody() {
 
         mAngleY = mNextSegment->mAngleY;
         mSegAngY = mNextSegment->mSegAngY + 0x13000;
-        mOffsetX = FX_MUL(FX_SinIdx((u16)mSegAngY >> 4), 0xe000);
-        mOffsetY = 0;
-        mOffsetZ = FX_MUL(FX_CosIdx((u16)mSegAngY >> 4), 0xe000);
+        mOffset.x = FX_MUL(FX_SinIdx((u16)mSegAngY >> 4), 0xe000);
+        mOffset.y = 0;
+        mOffset.z = FX_MUL(FX_CosIdx((u16)mSegAngY >> 4), 0xe000);
     }
     HandleAttacks();
     mdCcAc_c.Clear();
@@ -306,9 +306,9 @@ int daSanbo_c::UpdateLeader() {
     mScaleY = copied;
     mScaleZ = copied;
     mSegAngY = (mSegAngY + 0x500);
-    mOffsetX = 0;
-    mOffsetY = 0;
-    mOffsetZ = 0;
+    mOffset.x = 0;
+    mOffset.y = 0;
+    mOffset.z = 0;
     UpdateWanderYaw();
     if (GetSegmentIndex() < 4) {
         if (DecIfAbove0_Byte(&mTimer) == 0) {
@@ -422,9 +422,9 @@ int daSanbo_c::UpdateStackedOnGrowingBody() {
         mPosZ = mNextSegment->mPosZ;
         mAngleY = mNextSegment->mAngleY;
         mSegAngY = mNextSegment->mSegAngY + 0x13000;
-        mOffsetX = FX_MUL(FX_SinIdx((u16)mSegAngY >> 4), 0xe000);
-        mOffsetY = 0;
-        mOffsetZ = FX_MUL(FX_CosIdx((u16)mSegAngY >> 4), 0xe000);
+        mOffset.x = FX_MUL(FX_SinIdx((u16)mSegAngY >> 4), 0xe000);
+        mOffset.y = 0;
+        mOffset.z = FX_MUL(FX_CosIdx((u16)mSegAngY >> 4), 0xe000);
         if (raised == fullHeight)
             ChangeState(0);
     }
@@ -499,9 +499,9 @@ void daSanbo_c::UpdateModelAndShadow() {
     }
 
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-    mModel.mat4x3.m[9] = (mPosX + mOffsetX) >> 3;
+    mModel.mat4x3.m[9] = (mPosX + mOffset.x) >> 3;
     mModel.mat4x3.m[10] = (mPosY + 0x3c000) >> 3;
-    mModel.mat4x3.m[11] = (mPosZ + mOffsetZ) >> 3;
+    mModel.mat4x3.m[11] = (mPosZ + mOffset.z) >> 3;
 
     if (mNextSegment == 0 || mState == 2 || mState == 5) {
         DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x82000, 0x2bc000, 0xf);

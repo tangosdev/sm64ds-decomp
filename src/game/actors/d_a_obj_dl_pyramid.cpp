@@ -109,12 +109,12 @@ void daObjDlPyramid_c::FinishDescent() {
  * for the first two seconds, then spin up and sink. Keeps the dust
  * particle alive and moves to state 2 at frame 150. */
 void daObjDlPyramid_c::Descend() {
-    mPosX = FX_SinIdx((u16)(s16)(mStateTimer << 14) >> 4) * 0x28 + mHomePosX;
+    mPosX = FX_SinIdx((u16)(s16)(mStateTimer << 14) >> 4) * 0x28 + mHomePos.x;
     if (mStateTimer < 60) {
         int bob = FX_SinIdx((u16)(s16)(mStateTimer << 13) >> 4) * 0xa;
         if (bob < 0)
             bob = -bob;
-        mPosY = mHomePosY + bob;
+        mPosY = mHomePos.y + bob;
     } else {
         mAngVelY += 0x100;
         if (mAngVelY > 0x1800) {
@@ -222,9 +222,9 @@ int daObjDlPyramid_c::InitResources() {
     mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngleY, data_ov024_021129f0);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mAngVelY = 0;
     mNumTagsTriggered = 0;
     mState = 0;

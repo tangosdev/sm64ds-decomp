@@ -49,9 +49,7 @@ struct daBgSnmBdy_c : dActor_c {
     dCcAc_c mCylinder;                  /* 0x14c */
     dBgCh_Actr mWithMeshClsn;           /* 0x180 */
 
-    s32 mHomePosX;                      /* 0x33c */
-    s32 mHomePosY;                      /* 0x340 */
-    s32 mHomePosZ;                      /* 0x344 */
+    Vector3 mHomePos;                   /* 0x33c */
     s16 mHomeAngleX;                    /* 0x348 */
     s16 mHomeAngleY;                    /* 0x34a */
     s16 mHomeAngleZ;                    /* 0x34c */
