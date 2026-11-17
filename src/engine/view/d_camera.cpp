@@ -24,8 +24,9 @@
  *   rather than a body edit; it is left for a separate pass.
  * - The PMF class is the CamPmfHost shadow below: it exists only to give
  *   `int (Host::*)()` a class for those .data words.
- * - Scratch vectors are VecFx32 or s32[3]; collision-query results use
- *   Vector3 and its empty destructor.
+ * - func_02007f14 and func_02007e5c keep their goal and rate triples as
+ *   int[3] walked by pointer; a Vector3 pair folds the three calls
+ *   differently.
  * - The 0x0209b008 state table is nineteen dCamera_c::State records defined
  *   at the bottom of this file; __sinit_d_camera.cpp copies their PMFs.
  * - CleanupResources keeps both null checks. The second is the inlined
@@ -213,9 +214,6 @@ typedef struct CamViewObj {
     u8 pad_8[2];
     s16 angleY; /* 0xa */
 } CamViewObj;
-typedef struct CamEntryE {
-    s16 f0, f2, f4, f6, f8, fa;
-} CamEntryE; /* func_0200cf40's spawn view */
 /* The state objects carry member-function pointers back into the camera at
    +0 and +8; EnterState/UpdateState dispatch them through this shadow,
    which exists only to give the pointer-to-member a class. */
@@ -299,16 +297,12 @@ static inline int IsRainWeatherLevel() {
  * below the water line. */
 int dCamera_c::Behavior()
 {
-    s32 weatherPos[3];
+    Vector3 weatherPos;
     s32 flags;
     s32 weather;
 
-    mPrevLookAt.x = lookAt.x;
-    mPrevLookAt.y = lookAt.y;
-    mPrevLookAt.z = lookAt.z;
-    mPrevPos.x = pos.x;
-    mPrevPos.y = pos.y;
-    mPrevPos.z = pos.z;
+    mPrevLookAt = lookAt;
+    mPrevPos = pos;
     mFlags &= ~0x1000u;
     if ((u32)mAreaMode != (u32)&data_0208733c) {
         mFlags &= ~0x60u;
@@ -357,18 +351,18 @@ int dCamera_c::Behavior()
         else
             weather = -1;
         if (weather >= 0) {
-            MTX_MultVec43(&CAM_SPACE_CAM_POS_ASR_3, &data_0209b41c, weatherPos);
-            Vec3_LslInPlace(weatherPos, 3);
+            MTX_MultVec43(&CAM_SPACE_CAM_POS_ASR_3, &data_0209b41c, &weatherPos);
+            Vec3_LslInPlace(&weatherPos.x, 3);
             int flag;
             if (weather != 0xbc)
                 flag = 1;
             else
                 flag = IsUnderwater();
-            mWeather = Particle::System::NewWeather(mWeather, weather, weatherPos[0], weatherPos[1],
-                                                    weatherPos[2], 0, flag);
+            mWeather = Particle::System::NewWeather(mWeather, weather, weatherPos.x, weatherPos.y,
+                                                    weatherPos.z, 0, flag);
             if (weather == 0x86) {
-                mWeather2 = Particle::System::NewWeather(mWeather2, 0x87, weatherPos[0],
-                                                         weatherPos[1], weatherPos[2], 0, 1);
+                mWeather2 = Particle::System::NewWeather(mWeather2, 0x87, weatherPos.x, weatherPos.y,
+                                                         weatherPos.z, 0, 1);
             }
         }
     }
@@ -578,7 +572,7 @@ void dCamera_c::SetFovShake(int amplitude, int decay, int shakeSpeed) {
  * and phase step and only raises the shake; this one sets a fixed magnitude
  * unconditionally, so the address name stays. */
 void dCamera_c::func_0200d89c() {
-    mRollShake = 384;
+    mRollShake = 0x180;
 }
 
 /* Returns the under-water bit of mFlags MASKED, not normalised to 0/1 -- the
@@ -610,42 +604,42 @@ void dCamera_c::SetCameraZoomState(int playerID) {
 }
 
 void dCamera_c::func_0200d7a4(u8 playerID) {
-    if (playerID != *&gLocalPlayerId)
+    if (playerID != gLocalPlayerId)
         return;
     ChangeState(&data_0209b108);
 }
 
 void dCamera_c::func_0200d768(unsigned char playerID) {
-    if (playerID != *&gLocalPlayerId)
+    if (playerID != gLocalPlayerId)
         return;
     ChangeState(&data_0209b018);
 }
 
 void dCamera_c::func_0200d72c(unsigned char playerID) {
-    if (playerID == *&gLocalPlayerId)
+    if (playerID == gLocalPlayerId)
         ChangeState(&data_0209b028);
 }
 
 void dCamera_c::func_0200d6f0(unsigned char playerID) {
-    if (playerID == *&gLocalPlayerId) {
+    if (playerID == gLocalPlayerId) {
         ChangeState(&data_0209b038);
     }
 }
 
 void dCamera_c::func_0200d6b4(unsigned char playerID) {
-    if (playerID != *&gLocalPlayerId)
+    if (playerID != gLocalPlayerId)
         return;
     ChangeState(&data_0209b048);
 }
 
 void dCamera_c::SetSpinState(unsigned char playerID) {
-    if (playerID != *&gLocalPlayerId)
+    if (playerID != gLocalPlayerId)
         return;
     ChangeState(&data_0209b058);
 }
 
 void dCamera_c::func_0200d63c(unsigned char playerID) {
-    if (playerID != *&gLocalPlayerId)
+    if (playerID != gLocalPlayerId)
         return;
     ChangeState(&data_0209b068);
 }
@@ -658,7 +652,7 @@ void dCamera_c::func_0200d5fc(int playerID) {
 }
 
 void dCamera_c::func_0200d5c0(unsigned char playerID) {
-    if (playerID != *&gLocalPlayerId)
+    if (playerID != gLocalPlayerId)
         return;
     ChangeState(&data_0209b078);
 }
@@ -671,13 +665,13 @@ void dCamera_c::SetHeadstandState(int playerID) {
 }
 
 void dCamera_c::func_0200d544(unsigned char playerID) {
-    if (playerID != *&gLocalPlayerId)
+    if (playerID != gLocalPlayerId)
         return;
     ChangeState(&data_0209b088);
 }
 
 void dCamera_c::func_0200d508(unsigned char playerID) {
-    if (playerID != *&gLocalPlayerId)
+    if (playerID != gLocalPlayerId)
         return;
     ChangeState(&data_0209b0a8);
 }
@@ -694,19 +688,19 @@ void dCamera_c::StartDanceCutscene(unsigned int playerID, int arg2) {
 }
 
 void dCamera_c::func_0200d474(unsigned char playerID) {
-    if (playerID != *&gLocalPlayerId)
+    if (playerID != gLocalPlayerId)
         return;
     ChangeState(&data_0209b0b8);
 }
 
 void dCamera_c::func_0200d438(unsigned char playerID) {
-    if (playerID != *&gLocalPlayerId)
+    if (playerID != gLocalPlayerId)
         return;
     ChangeState(&data_0209b0c8);
 }
 
 void dCamera_c::func_0200d3f8(unsigned char playerID, void *ptr) {
-    unsigned char localID = *&gLocalPlayerId;
+    unsigned char localID = gLocalPlayerId;
     if (playerID != localID)
         return;
     mLookTarget = (s32 *)ptr;
@@ -737,32 +731,28 @@ void dCamera_c::GoBehindPlayer(unsigned int j)
 }
 
 void dCamera_c::func_0200d1e4() {
-    struct dActor_c *player = mTargetPlayer;
-    Vector3 *playerPos = &player->mPos;
     int lookAtDistMode;
     unsigned int lookAtDist;
-    s32 lookAtOffset[3];
+    Vector3 lookAtOffset;
     short angle;
     int lookAtHeightMode;
     unsigned int lookAtHeight;
     int posDistMode;
     unsigned int posDist;
-    s32 posOffset[3];
+    Vector3 posOffset;
 
-    mTargetPos.x = playerPos->x;
-    mTargetPos.y = playerPos->y;
-    mTargetPos.z = playerPos->z;
+    mTargetPos = mTargetPlayer->mPos;
 
     lookAtDistMode = mMode->lookAtDist;
     lookAtDist = ScaleDistByFov(lookAtDistMode);
 
-    lookAtOffset[0] = data_02086f2c.x;
-    lookAtOffset[1] = data_02086f2c.y;
-    lookAtOffset[2] = lookAtDist;
+    lookAtOffset.x = data_02086f2c.x;
+    lookAtOffset.y = data_02086f2c.y;
+    lookAtOffset.z = lookAtDist;
     data_02086f2c.z = lookAtDist;
 
     angle = mTargetPlayer->mAngleY;
-    Vec3_RotateYAndTranslate(&lookAt, &mTargetPos, angle, lookAtOffset);
+    Vec3_RotateYAndTranslate(&lookAt, &mTargetPos, angle, &lookAtOffset);
 
     lookAtHeightMode = mMode->lookAtHeight;
     lookAtHeight = ScaleHeightByFov(lookAtHeightMode);
@@ -772,12 +762,12 @@ void dCamera_c::func_0200d1e4() {
     posDist = ScaleDistByFov(posDistMode);
 
     data_02086f14[2] = posDist;
-    posOffset[0] = data_02086f14[0];
-    posOffset[1] = data_02086f14[1];
-    posOffset[2] = posDist;
+    posOffset.x = data_02086f14[0];
+    posOffset.y = data_02086f14[1];
+    posOffset.z = posDist;
 
     angle = mTargetPlayer->mAngleY;
-    Vec3_RotateYAndTranslate(&pos, &lookAt, angle, posOffset);
+    Vec3_RotateYAndTranslate(&pos, &lookAt, angle, &posOffset);
 
     pos.y += (lookAtHeight - 0x8b000);
 
@@ -790,26 +780,21 @@ void dCamera_c::func_0200d1e4() {
 
 void dCamera_c::LookAtExit(dActor_c &actor)
 {
-    int *src;
-
     mLookTarget = &actor.mPosX;
-    src = mLookTarget;
-    mLookTargetPos.x = src[0];
-    mLookTargetPos.y = src[1];
-    mLookTargetPos.z = src[2];
+    mLookTargetPos = *(Vector3 *)mLookTarget;
     mTargetAngleY = -actor.mAngleY;
     ChangeState(&data_0209b0f8);
     mFlags |= 0x10;
 }
 
 void dCamera_c::func_0200d148(unsigned char playerID) {
-    if (playerID != *&gLocalPlayerId)
+    if (playerID != gLocalPlayerId)
         return;
     ChangeState(&data_0209b118);
 }
 
 void dCamera_c::SetGrabBowserTailState(unsigned char playerID) {
-    if (playerID != *&gLocalPlayerId)
+    if (playerID != gLocalPlayerId)
         return;
     ChangeState(&data_0209b128);
 }
@@ -856,21 +841,21 @@ void dCamera_c::func_0200cf40() {
     mAreaMode = &data_0208715c;
     mViewObj = 0;
     if (param1 != 0xf) {
-        CamEntryE *v;
+        CamViewObj *view;
         SetMode(0xa);
         mFovAngle = mMode->fovAngle;
         SetFovAngle(mFovAngle);
         func_0200cce4();
-        v = (CamEntryE *)GetViewObj(param1 & 0xff);
+        view = (CamViewObj *)GetViewObj(param1 & 0xff);
         {
-            int x = v->f2 << 12;
-            int z = v->f6 << 12;
-            int y = v->f4 << 12;
+            int x = view->x << 12;
+            int z = view->z << 12;
+            int y = view->y << 12;
             pos.x = x;
             pos.y = y;
             pos.z = z;
         }
-        mBaseAngleY = v->fa + 0x8000;
+        mBaseAngleY = view->angleY + 0x8000;
         return;
     }
     SetMode(9);
