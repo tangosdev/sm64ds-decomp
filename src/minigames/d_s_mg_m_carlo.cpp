@@ -27,7 +27,6 @@ enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
-extern "C" void Mg_DrawScoreTally(void *, int, int, int);
 extern "C" void FreeGfxSlotsById(int);
 extern "C" void Hud_RenderSprite(void *attr, int, int, int, int);
 extern "C" s32 GetGameLanguage(void);
@@ -361,9 +360,9 @@ s32 dScMgMCarlo_c::Behavior() {
  * zero step. mStep.y is an absolute magnitude, not a direction. */
 s32 dScMgMCarlo_c::Render() {
     Camera_InitDealerView(&mCamera);
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
+    DrawCredits(0xc, 0xc, 0);
     MgCoins_Draw();
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
 
     {
         dMgMCarloCardObj_c *card = sMCarloCardsTail;

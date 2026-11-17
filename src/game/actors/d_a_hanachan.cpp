@@ -1024,9 +1024,9 @@ int daHanachan_c::InitResources()
     s32 cyl1Height;
     s32 cyl1Flags;
     s32 cyl2Height;
-    s32 va[3];
-    s32 vb[3];
-    s32 out[3];
+    Vector3 va;
+    Vector3 vb;
+    Vector3 out;
     s32 j;
     dExtAnmModel_c *anim;
 
@@ -1087,19 +1087,19 @@ int daHanachan_c::InitResources()
             ((daHanachan_c *)rotRow)->mSegmentRot[0].z = mAngleZ;
             mPrevAngleY = ((daHanachan_c *)rotRow)->mSegmentRot[0].y;
         } else {
-            va[2] = 0 - mSegmentSpacing[i];
-            va[0] = zeroC;
-            va[1] = zeroC;
-            vb[0] = zeroC;
-            vb[1] = zeroC;
-            vb[2] = zeroC;
+            va.z = 0 - mSegmentSpacing[i];
+            va.x = zeroC;
+            va.y = zeroC;
+            vb.x = zeroC;
+            vb.y = zeroC;
+            vb.z = zeroC;
             Matrix4x3_FromRotationY(&data_020a0e68, mSegmentRot[0].y);
-            MTX_MultVec43((Vector3 *)va, &data_020a0e68, (Vector3 *)vb);
+            MTX_MultVec43(&va, &data_020a0e68, &vb);
             prev = i - 1;
-            Vec3_Add((Vector3 *)out, &mSegmentPos[prev], (const Vector3 *)vb);
-            ((daHanachan_c *)posRow)->mSegmentPos[0].x = out[0];
-            ((daHanachan_c *)posRow)->mSegmentPos[0].y = out[1];
-            ((daHanachan_c *)posRow)->mSegmentPos[0].z = out[2];
+            Vec3_Add(&out, &mSegmentPos[prev], &vb);
+            ((daHanachan_c *)posRow)->mSegmentPos[0].x = out.x;
+            ((daHanachan_c *)posRow)->mSegmentPos[0].y = out.y;
+            ((daHanachan_c *)posRow)->mSegmentPos[0].z = out.z;
             ((daHanachan_c *)rotRow)->mSegmentRot[0].y = ((daHanachan_c *)(c + prev * 6))->mSegmentRot[0].y;
         }
         ((daHanachan_c *)posRow)->mSegmentScale[0].x = 0x1000;

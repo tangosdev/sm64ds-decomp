@@ -52,7 +52,6 @@
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "math/CalcLib.h"
-extern "C" void Mg_DrawScoreTally(void *, int, int, int);
 extern "C" void Mg_ShowBanner(int, int, int, int, int, short);
 extern "C" void Mg_SetSharedState(s32);
 extern "C" void FreeGfxSlotsById(int);
@@ -476,7 +475,7 @@ extern dScMg3DEsp_cState pmf_dScMg3DEsp_c_FlashQuick;
 void dScMg3DEsp_c::DrawBanner()
 {
     if (mDone != 0)
-        Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+        DrawScoreTally(0xe0, 0x14, 1);
 }
 
 /* Early-out once mFlashStep is set; otherwise set the embedded model's

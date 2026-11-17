@@ -93,9 +93,9 @@ dEnemyBase_c::~dEnemyBase_c()
 }
 
 /* Runs the mesh collision (sel picks which of four update flavours), then caches
-   whichever surface normals came back: the floor result's into mFloorNormal*,
-   the wall result's into mWallNormal*. Those two CopyNormalTo calls are what
-   evidence both triples as Vector3s.
+   whichever surface normals came back: the floor result's into mFloorNormal,
+   the wall result's into mWallNormal. Those two CopyNormalTo calls are what
+   evidence both as Vector3 members.
 
    On a floor that does not limit movement, the vertical velocity is re-derived
    so the motion stays in the floor plane. */
@@ -122,13 +122,13 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
         break;
     }
     if (clsn.IsOnGround()) {
-        clsn.GetFloorResult()->surface.CopyNormalTo(*(Vector3 *)&mFloorNormalX);
+        clsn.GetFloorResult()->surface.CopyNormalTo(mFloorNormal);
         if (clsn.GetLimMovFlag() == 0) {
-            int dz = mFloorNormalY;
+            int dz = mFloorNormal.y;
             if (dz != 0) {
-                int nx = mFloorNormalX;
+                int nx = mFloorNormal.x;
                 int vx = mSpeedX;
-                int nz = mFloorNormalZ;
+                int nz = mFloorNormal.z;
                 int vz = mSpeedZ;
                 int a = FX_MUL(nx, vx);
                 int b = FX_MUL(nz, vz);
@@ -139,7 +139,7 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
         }
     }
     if (clsn.IsOnWall()) {
-        clsn.GetWallResult()->surface.CopyNormalTo(*(Vector3 *)&mWallNormalX);
+        clsn.GetWallResult()->surface.CopyNormalTo(mWallNormal);
     }
 }
 
@@ -444,7 +444,7 @@ int dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &clsn, fx32 down, s16 maxSlope, boo
    around; otherwise report that nothing was done. */
 int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr &clsn, short &outAngle) {
     if (clsn.IsOnWall()) {
-        outAngle = ReflectAngle(mWallNormalX, mWallNormalZ, outAngle);
+        outAngle = ReflectAngle(mWallNormal.x, mWallNormal.z, outAngle);
     } else if (mCliffState) {
         outAngle = (short)(mPrevAngleY + 0x8000);
     } else {
@@ -546,16 +546,16 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
         dBgCh_Actr_UpdateContinuous_Veneer(&clsn);
         if (clsn.IsOnGround() != 0) {
             dBgPi *fr = clsn.GetFloorResult();
-            fr->surface.CopyNormalTo(*(Vector3 *)&mFloorNormalX);
+            fr->surface.CopyNormalTo(mFloorNormal);
             if (clsn.JustHitGround() == 0) {
                 mVertSpeed = 0;
                 mEatenByYoshi = 0;
             } else {
-                fr->surface.CopyNormalTo(*(Vector3 *)&mFloorNormalX);
-                mVertSpeed = FX_Div((mVertSpeed * -50) / 100, mFloorNormalY);
+                fr->surface.CopyNormalTo(mFloorNormal);
+                mVertSpeed = FX_Div((mVertSpeed * -50) / 100, mFloorNormal.y);
             }
-            mSpeedX += mFloorNormalX << 3;
-            mSpeedZ += mFloorNormalZ << 3;
+            mSpeedX += mFloorNormal.x << 3;
+            mSpeedZ += mFloorNormal.z << 3;
             mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
         }
         mAngleY = mPrevAngleY;
@@ -723,7 +723,7 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
     if (&clsn != 0) {
         UpdateWMClsn(clsn, 0);
         if (clsn.IsOnWall() != 0)
-            mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+            mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
     }
 
     if (&anim != 0) {

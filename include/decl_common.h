@@ -804,7 +804,6 @@ extern void Mg_RenderSpriteBothMtx(void *, int, int, void *);
 extern void Mg_SetTopScreenYOffset(int);
 extern void Mg_SetSharedState(int);
 extern void Mg_ShowBanner(int, int, int, int, int, short);
-extern void Mg_DrawBlinkSprite(void *, int, int);
 extern void Mg_DrawTopRightCounter(int, int);
 extern void Mg_DrawNumber(int, int, int, int, int, int, int);
 extern void Mg_DrawBigNumber(int, int, int, int, int, int, int);

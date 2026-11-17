@@ -497,8 +497,8 @@ void daRNk_c::func_ov062_0211a1f4()
            (135 degrees), scale by normalY * 7 - 6 (1.0 on level ground, less
            on a slope); otherwise full speed (1.0). */
         if (this->GetSubtraction(this->mPrevAngleY,
-                                 cstd::atan2(this->mFloorNormalX, this->mFloorNormalZ)) >= 0x6000)
-            speedScale = this->mFloorNormalY * 7 - 0x6000;
+                                 cstd::atan2(this->mFloorNormal.x, this->mFloorNormal.z)) >= 0x6000)
+            speedScale = this->mFloorNormal.y * 7 - 0x6000;
         else
             speedScale = 0x1000;
         if (this->mHasPlayerUsedCannon == 0)

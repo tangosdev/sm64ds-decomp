@@ -1552,7 +1552,7 @@ void dScMgPanel_c::StartRound(int flag) {
 
 /* Vtable slot 9. */
 s32 dScMgPanel_c::Render() {
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     DrawCursor();
     DrawHud();
     Particle_DrawAll();

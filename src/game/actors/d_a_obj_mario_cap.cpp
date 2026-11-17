@@ -966,9 +966,9 @@ int daObjMarioCap_c::Slide()
         return 1;
     }
     fr = (char *)mWithMeshClsn.GetFloorResult();
-    ((SurfaceInfo *)(fr + 4))->CopyNormalTo(*(Vector3 *)&mFloorNormalX);
+    ((SurfaceInfo *)(fr + 4))->CopyNormalTo(mFloorNormal);
     surface = ((SurfaceInfo *)(fr + 4))->clps.GetFloorClass();
-    mSlopeAngle = cstd::atan2(mFloorNormalX, mFloorNormalZ);
+    mSlopeAngle = cstd::atan2(mFloorNormal.x, mFloorNormal.z);
     slopePush = func_ov002_020f02c8(surface);
     func_ov002_020f030c(surface);
     spd = mHorzSpeed;
@@ -984,18 +984,18 @@ int daObjMarioCap_c::Slide()
     slopeVel.x = FX_MUL(slopePush, s);
     slopeVel.y = 0;
     slopeVel.z = FX_MUL(slopePush, co);
-    Vec3_MulScalarInPlace(&slopeVel, Vec3_HorzLen((const Vector3 *)&mFloorNormalX));
+    Vec3_MulScalarInPlace(&slopeVel, Vec3_HorzLen(&mFloorNormal));
     Vec3_Add(&out, &ownVel, &slopeVel);
     ang = cstd::atan2(out.x, out.z);
     mHorzSpeed = Vec3_HorzLen(&out);
     if (mHorzSpeed > 0xf000)
         mHorzSpeed = 0xf000;
     mPrevAngleY = ang;
-    mVertSpeed =
-        -(FX_Div(FX_MUL(mFloorNormalX, mSpeedX) + FX_MUL(mFloorNormalZ, mSpeedZ), mFloorNormalY) +
-          0x8000);
-    pitch = func_02010844((Vector3 *)&mFloorNormalX, mAngleY);
-    roll = func_02010844((Vector3 *)&mFloorNormalX, mAngleY - 0x4000);
+    mVertSpeed = -(
+        FX_Div(FX_MUL(mFloorNormal.x, mSpeedX) + FX_MUL(mFloorNormal.z, mSpeedZ), mFloorNormal.y) +
+        0x8000);
+    pitch = func_02010844(&mFloorNormal, mAngleY);
+    roll = func_02010844(&mFloorNormal, mAngleY - 0x4000);
     UpdateAngle(mAngleX, pitch, 4, 0x1000);
     UpdateAngle(mAngleZ, roll, 4, 0x1000);
     return 1;

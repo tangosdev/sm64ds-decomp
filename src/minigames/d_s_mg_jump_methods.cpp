@@ -419,7 +419,7 @@ s32 dScMgJump_c::Render()
         int y;
         int i;
 
-        Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+        DrawScoreTally(0xe0, 0x14, 1);
 
         count = sJump3DMariosLeft;
         y = 0x6e;
