@@ -13,20 +13,18 @@
  * leftovers:
  * - The record and method names are coined: the ROM carries no symbol table
  *   for this run.
- * - Measured shapes kept for the bytes they produce: the IsIdle / IsBusy /
- *   IsIdleAtRest tests return through a flag (returning the test directly
- *   shortens the function); Presenter::PlayCheerLoop stores its state through
- *   a u64 identity mask and a local copy; Presenter::PlayIdle copies its pair
- *   through two volatile reads; MascotWalker::StartNextPath keeps its no-op
- *   `adj ? fn : fn`; FallingPetal::Draw stores its scale z, y, x; and
- *   Dealer::StateReveal keeps its `goto other` (the structured rewrite moves
- *   92 words).
+ * - Measured shapes kept for the bytes they produce: FallingPetal::Draw
+ *   stores its scale z, y, x, and Dealer::StateReveal keeps its `goto other`
+ *   (the structured rewrite moves 92 words).
+ * - The state records stay extern: each is the {handler, 0} constant mwcc
+ *   emits for one `&Class::State` use, and they sit in .data between the
+ *   walker's paths, the dealer's matrices and the presenter's BTA records,
+ *   whose types are not established, so this file does not claim that run.
  * - Presenter::Draw's material table stays an int* view: the scrolled words
  *   are fields of the runtime material record (MaterialState, still local to
  *   src/engine/model/ModelComponents.cpp), not of BMD_Material. Dealer::Draw fills its lamp array through a
  *   walking pointer with an if/else body (indexing or a value-select moves
- *   three words). MascotWalker::Update compares its state words through int*
- *   (a StateSlot view changes the relocation).
+ *   three words).
  * - The identity quaternion stays a four-word QuaternionBlock: spelling
  *   math/Quaternion.h's named members makes mwcc scalarise
  *   FallingPetal::Update's 16-byte copy.
@@ -71,19 +69,6 @@ struct Sound {
 
 void CopyToViewMat(const Matrix4x3 *);
 
-/* A record whose +0 word pair is its current state handler: slot 0 is the
-   handler's code word and slot 1 its this-adjustment (zero in every record
-   here). The pair is always stored and copied whole. */
-struct StateSlot {
-    int w[2];
-};
-
-/* Presenter::PlayIdle copies its state pair through two volatile word reads;
-   a plain struct copy moves two words and costs the function its bytes. */
-struct VolatileStateSlot {
-    void *lo, *hi;
-};
-
 /* A quaternion as four raw words. The identity in data_02092768 is copied
    into a scratch quaternion with a 16-byte block move; spelling the four
    members out (math/Quaternion.h) makes mwcc scalarise that copy and costs
@@ -91,13 +76,6 @@ struct VolatileStateSlot {
 struct QuaternionBlock {
     int w[4];
 };
-
-/* A state handler is a member function of its own record, so each record
-   that dispatches through one needs its own pointer-to-member type. */
-typedef void (MascotWalker::*MascotWalkerState)();
-typedef void (Dealer::*DealerState)();
-typedef void (Presenter::*PresenterState)();
-typedef void (FlowerFace::*FlowerFaceState)();
 
 /* One of the four walks MascotWalker::mPath points at: a point count, then
    the points (coined). */
@@ -144,35 +122,35 @@ extern char sPresenterTextureAnim[];
 extern char sPresenterCheerTexAnim[];
 extern char sPresenterMatchTexAnim[];
 
-/* The {handler, this-adjustment} records of the state handlers. */
-extern StateSlot pmf_FlowerFace_StateIdle;
-extern StateSlot pmf_FlowerFace_StateLike;
-extern StateSlot pmf_FlowerFace_StateHate;
-extern StateSlot pmf_FlowerFace_StatePick;
-extern StateSlot pmf_Presenter_StateIdle;
-extern StateSlot pmf_Presenter_StateLoseStart;
-extern StateSlot pmf_Presenter_StateMistake;
-extern volatile VolatileStateSlot pmf_Presenter_StateIdle_2;
-extern long long pmf_Presenter_StateWin;
-extern volatile long long pmf_Presenter_StateSurprisedThenSmile;
-extern long long pmf_Presenter_StateSurprisedThenIdle;
-extern StateSlot pmf_MascotWalker_StatePause;
-extern StateSlot pmf_MascotWalker_StateWalk_3;
-extern StateSlot pmf_Dealer_StateIdle;
-extern StateSlot pmf_Dealer_StateShuffle;
-extern StateSlot pmf_Dealer_StateDeal;
-extern StateSlot pmf_Dealer_StateReveal_2;
-extern StateSlot pmf_Dealer_StateSwap;
-extern StateSlot pmf_Dealer_StateLose;
-extern StateSlot pmf_Dealer_StateWin;
-/* The same records where the IsIdle/IsBusy tests compare the words. */
-extern int pmf_FlowerFace_StateIdle_2[];
-extern int pmf_MascotWalker_StateWalk[];
-extern int pmf_MascotWalker_StateWalk_2[2];
-extern int pmf_Dealer_StateIdle_2[];
-extern int pmf_Dealer_StateIdle_3[];
-extern int pmf_Dealer_StateDeal_2[2];
-extern int pmf_Dealer_StateReveal[2];
+/* The state handlers' member-pointer constants (see the file header). */
+extern FlowerFace::StateFn pmf_FlowerFace_StateIdle;
+extern FlowerFace::StateFn pmf_FlowerFace_StateLike;
+extern FlowerFace::StateFn pmf_FlowerFace_StateHate;
+extern FlowerFace::StateFn pmf_FlowerFace_StatePick;
+extern Presenter::StateFn pmf_Presenter_StateIdle;
+extern Presenter::StateFn pmf_Presenter_StateLoseStart;
+extern Presenter::StateFn pmf_Presenter_StateMistake;
+extern Presenter::StateFn pmf_Presenter_StateIdle_2;
+extern Presenter::StateFn pmf_Presenter_StateWin;
+extern Presenter::StateFn pmf_Presenter_StateSurprisedThenSmile;
+extern Presenter::StateFn pmf_Presenter_StateSurprisedThenIdle;
+extern MascotWalker::StateFn pmf_MascotWalker_StatePause;
+extern MascotWalker::StateFn pmf_MascotWalker_StateWalk_3;
+extern Dealer::StateFn pmf_Dealer_StateIdle;
+extern Dealer::StateFn pmf_Dealer_StateShuffle;
+extern Dealer::StateFn pmf_Dealer_StateDeal;
+extern Dealer::StateFn pmf_Dealer_StateReveal_2;
+extern Dealer::StateFn pmf_Dealer_StateSwap;
+extern Dealer::StateFn pmf_Dealer_StateLose;
+extern Dealer::StateFn pmf_Dealer_StateWin;
+/* The same handlers' constants as the IsIdle / IsBusy tests compare them. */
+extern FlowerFace::StateFn pmf_FlowerFace_StateIdle_2;
+extern MascotWalker::StateFn pmf_MascotWalker_StateWalk;
+extern MascotWalker::StateFn pmf_MascotWalker_StateWalk_2;
+extern Dealer::StateFn pmf_Dealer_StateIdle_2;
+extern Dealer::StateFn pmf_Dealer_StateIdle_3;
+extern Dealer::StateFn pmf_Dealer_StateDeal_2;
+extern Dealer::StateFn pmf_Dealer_StateReveal;
 
 /* The file handles' constructors and destructors are the arm9 veneers the
    ROM calls: func_02017acc / func_02017ab4 for a model file,
@@ -279,7 +257,7 @@ int FlowerFace::Load() {
 }
 
 void FlowerFace::Update() {
-    (this->*(*(FlowerFaceState *)mState))();
+    (this->*mState)();
     mModel.Advance();
     int i = 0;
     do {
@@ -321,16 +299,7 @@ void FlowerFace::Reset() {
 }
 
 int FlowerFace::IsIdle() {
-    int *idle = pmf_FlowerFace_StateIdle_2;
-    int fn = mState[0];
-    /* The 0/1 result goes through a flag: returning the test directly emits a
-       shorter function than the ROM's (measured). */
-    int differs = 1;
-    if (fn == idle[0]) {
-        if (mState[1] == idle[1] || fn == 0)
-            differs = 0;
-    }
-    return differs == 0;
+    return mState == pmf_FlowerFace_StateIdle_2;
 }
 
 /* Camera_InitFlowerView at 0x020c3b2c
@@ -352,7 +321,7 @@ void Camera_InitFlowerView(MgCamera *camera) {
 
 void FlowerFace::PlayIdle() {
     mModel.SetAnim((BCA_File *)mWaitAnim.filePtr, 0, 0x800, 0);
-    *(StateSlot *)mState = pmf_FlowerFace_StateIdle;
+    mState = pmf_FlowerFace_StateIdle;
 }
 
 void FlowerFace::StateIdle() {}
@@ -401,7 +370,7 @@ void FlowerFace::PlayPetalPulled() {
         }
     }
 
-    *(StateSlot *)this = pmf_FlowerFace_StatePick;
+    mState = pmf_FlowerFace_StatePick;
 }
 
 void FlowerFace::StatePick() {
@@ -412,14 +381,14 @@ void FlowerFace::StatePick() {
 
 void FlowerFace::PlayLike() {
     mModel.SetAnim((BCA_File *)mLikeAnim.filePtr, 0x40000000, 0x800, 0);
-    *(StateSlot *)mState = pmf_FlowerFace_StateLike;
+    mState = pmf_FlowerFace_StateLike;
 }
 
 void FlowerFace::StateLike() {}
 
 void FlowerFace::PlayHate() {
     mModel.SetAnim((BCA_File *)mHateAnim.filePtr, 0x40000000, 0x800, 0);
-    *(StateSlot *)mState = pmf_FlowerFace_StateHate;
+    mState = pmf_FlowerFace_StateHate;
 }
 
 void FlowerFace::StateHate() {}
@@ -673,8 +642,8 @@ void Presenter::TrackStylus() {
 
 void Presenter::Update() {
     TrackStylus();
-    if (mState[0])
-        (this->*(*(PresenterState *)mState))();
+    if (mState)
+        (this->*mState)();
     mTexSeq.Advance();
     mTexAnim.Advance();
     mFace.Advance();
@@ -718,15 +687,7 @@ void Presenter::Draw() {
 }
 
 int Presenter::IsIdle() {
-    int differs = 1;
-    StateSlot *idle = &pmf_Presenter_StateIdle;
-    if (mState[0] == idle->w[0]) {
-        if (mState[1] != idle->w[1] && mState[0] != 0)
-            ;
-        else
-            differs = 0;
-    }
-    return differs == 0;
+    return mState == pmf_Presenter_StateIdle;
 }
 
 /* Presenter::IsAnimDone @ 0x20c2984 (ov006) -- veneer: add r0,r0,#0x58; b dExtFrameCtrl_c::Finished(). */
@@ -761,14 +722,7 @@ void Presenter::PlayIdle() {
         mTexSeq.SetFile(*(BTP_File *)mWaitTexSeq.filePtr, 0, 0x800, 0);
         mTexAnim.SetFile(*(BTA_File *)sPresenterIdleTexAnim, 0, 0x800, 0);
     }
-    /* The volatile word reads are load-bearing: a plain struct copy moves two
-       words (measured 2026-11-08). */
-    {
-        void *lo = pmf_Presenter_StateIdle_2.lo;
-        void *hi = pmf_Presenter_StateIdle_2.hi;
-        mState[0] = (int)lo;
-        mState[1] = (int)hi;
-    }
+    mState = pmf_Presenter_StateIdle_2;
 }
 
 void Presenter::StateIdle() {
@@ -780,20 +734,13 @@ void Presenter::StateIdle() {
 }
 
 void Presenter::PlayMatch() {
-    unsigned long long stateValue;
-    long long *stateRecord;
     if (mQuiet == 0) {
         func_02012174(0, 0x1c);
     }
     mFace.SetAnim(*(BCA_File *)mWinAnim.filePtr, 4, 0x40000000, 0x800, 0);
-    /* The state pointer and the unsigned copy are load-bearing: storing
-       pmf_Presenter_StateWin straight through the record costs the function its bytes
-       (measured 2026-11-08). */
-    stateRecord = (long long *)this;
     mTexSeq.SetFile(*(BTP_File *)mWinTexSeq.filePtr, 0x40000000, 0x800, 0);
     mTexAnim.SetFile(*(BTA_File *)sPresenterMatchTexAnim, 0x40000000, 0x800, 0);
-    stateValue = pmf_Presenter_StateWin;
-    *stateRecord = stateValue;
+    mState = pmf_Presenter_StateWin;
 }
 
 void Presenter::StateWin() {
@@ -807,7 +754,7 @@ void Presenter::PlayMiss() {
     mFace.SetAnim(*(BCA_File *)mMistakeAnim.filePtr, 4, 0x40000000, 0x800, 0);
     mTexSeq.SetFile(*(BTP_File *)mMistakeTexSeq.filePtr, 0x40000000, 0x800, 0);
     mTexAnim.SetFile(*(BTA_File *)sPresenterMissTexAnim, 0x40000000, 0x800, 0);
-    *(StateSlot *)this = pmf_Presenter_StateMistake;
+    mState = pmf_Presenter_StateMistake;
 }
 
 void Presenter::StateMistake() {
@@ -817,8 +764,6 @@ void Presenter::StateMistake() {
     PlayIdle();
 }
 
-/* volatile is load-bearing: a plain long long load costs Presenter::PlayCheer
-   its bytes (measured 2026-11-08). */
 void Presenter::PlayCheer() {
     if ((mQuiet) == 0) {
         func_02012174(0, 3);
@@ -826,7 +771,7 @@ void Presenter::PlayCheer() {
     mFace.SetAnim(*(BCA_File *)mSurprisedAnim.filePtr, 8, 0x40000000, 0x800, 0);
     mTexSeq.SetFile(*(BTP_File *)mSurprisedTexSeq.filePtr, 0x40000000, 0x800, 0);
     mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
-    *((long long *)this) = pmf_Presenter_StateSurprisedThenSmile;
+    mState = pmf_Presenter_StateSurprisedThenSmile;
 }
 
 void Presenter::StateSurprisedThenSmile() {
@@ -847,7 +792,7 @@ void Presenter::PlayLose() {
     mFace.SetAnim(*(BCA_File *)mLoseStartAnim.filePtr, 0, 0x40000000, 0x800, 0);
     mTexSeq.SetFile(*(BTP_File *)mLoseStartTexSeq.filePtr, 0x40000000, 0x800, 0);
     mTexAnim.SetFile(*(BTA_File *)sPresenterLoseTexAnim, 0x40000000, 0x800, 0);
-    *(StateSlot *)this = pmf_Presenter_StateLoseStart;
+    mState = pmf_Presenter_StateLoseStart;
 }
 
 void Presenter::StateLoseStart() {
@@ -861,16 +806,13 @@ void Presenter::StateLoseStart() {
 }
 
 void Presenter::PlayCheerLoop() {
-    long long state;
     if (mQuiet == 0) {
         func_02012174(0, 3);
     }
     mFace.SetAnim(*(BCA_File *)mSurprisedAnim.filePtr, 8, 0x40000000, 0x800, 0);
     mTexSeq.SetFile(*(BTP_File *)mSurprisedTexSeq.filePtr, 0x40000000, 0x800, 0);
     mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
-    /* The u64 identity mask and the local copy are load-bearing: storing the
-       record straight through costs the function its bytes (measured). */
-    *((long long *)this) = (state = pmf_Presenter_StateSurprisedThenIdle & 0xFFFFFFFFFFFFFFFF);
+    mState = pmf_Presenter_StateSurprisedThenIdle;
 }
 
 void Presenter::StateSurprisedThenIdle() {
@@ -1100,9 +1042,8 @@ int Dealer::Load() {
 }
 
 void Dealer::Update() {
-    if (mState[0] != 0) {
-        (this->*(*(DealerState *)mState))();
-    }
+    if (mState)
+        (this->*mState)();
     mModel.Advance();
     if (ApproachLinear2(mLampTimer, 0, 1) != 0) {
         mLampPattern++;
@@ -1173,32 +1114,17 @@ void Dealer::PlayIdle() {
     } else {
         mModel.SetAnim(*(BCA_File *)mWaitAnim.filePtr, 0, 0, 0x800, 0);
     }
-    *(StateSlot *)this = pmf_Dealer_StateIdle;
+    mState = pmf_Dealer_StateIdle;
 }
 
 void Dealer::StateIdle() {}
 
 int Dealer::IsIdle() {
-    int *idle = pmf_Dealer_StateIdle_2;
-    int fn = mState[0];
-    int differs = 1;
-    if (fn == idle[0]) {
-        if (mState[1] == idle[1] || fn == 0)
-            differs = 0;
-    }
-    return differs == 0;
+    return mState == pmf_Dealer_StateIdle_2;
 }
 
 int Dealer::IsIdleAtRest() {
-    int *idle = pmf_Dealer_StateIdle_3;
-    int fn = mState[0];
-    int atRest = 0;
-    int differs = 1;
-    if (fn == idle[0] && (mState[1] == idle[1] || fn == 0))
-        differs = 0;
-    if (differs == 0 && mModel.file == mWaitAnim.filePtr)
-        atRest = 1;
-    return atRest;
+    return mState == pmf_Dealer_StateIdle_3 && mModel.file == mWaitAnim.filePtr;
 }
 
 void Dealer::StartShuffle(int, short count, s16 *counter) {
@@ -1216,7 +1142,7 @@ void Dealer::StartShuffle(int, short count, s16 *counter) {
     mDealLeft = count;
     mDealCounter = counter;
     mModel.SetAnim(*(BCA_File *)mShuffleStartAnim.filePtr, 0, 0x40000000, 0x800, 0);
-    *(StateSlot *)this = pmf_Dealer_StateShuffle;
+    mState = pmf_Dealer_StateShuffle;
 }
 
 void Dealer::StateShuffle() {
@@ -1257,7 +1183,7 @@ void Dealer::StartDeal(short count, s16 *counter) {
     } else {
         mModel.SetAnim(*(BCA_File *)mDealStartAnim.filePtr, 0, 0x40000000, 0x800, 0);
     }
-    *(StateSlot *)this = pmf_Dealer_StateDeal;
+    mState = pmf_Dealer_StateDeal;
 }
 
 void Dealer::StateDeal() {
@@ -1323,7 +1249,7 @@ void Dealer::StartReveal(int count, s16 *counter) {
     mDealLeft = count;
     mDealCounter = counter;
     mModel.SetAnim(*(BCA_File *)mDealAnim.filePtr, 8, 0, 0x800, 0);
-    *(StateSlot *)this = pmf_Dealer_StateReveal_2;
+    mState = pmf_Dealer_StateReveal_2;
 }
 
 void Dealer::StateReveal() {
@@ -1372,25 +1298,7 @@ other:
 }
 
 int Dealer::IsBusy() {
-    int *record = pmf_Dealer_StateDeal_2;
-    int busy = 1;
-    int notDealing = busy;
-    int fn = mState[0];
-    if (fn == record[0]) {
-        if (mState[1] == record[1] || fn == 0)
-            notDealing = 0;
-    }
-    if (notDealing != 0) {
-        int notRevealing = 1;
-        record = pmf_Dealer_StateReveal;
-        if (fn == record[0]) {
-            if (mState[1] == record[1] || fn == 0)
-                notRevealing = 0;
-        }
-        if (notRevealing)
-            busy = 0;
-    }
-    return busy;
+    return mState == pmf_Dealer_StateDeal_2 || mState == pmf_Dealer_StateReveal;
 }
 
 /* Dealer::IsAnimDone @ 0x20c0efc (ov006) -- veneer: add r0,r0,#0x6c; b dExtFrameCtrl_c::Finished(). */
@@ -1403,7 +1311,7 @@ void Dealer::StartSwap() {
     mModel.SetAnim(*(BCA_File *)mThrowAnim.filePtr, 0, 0x40000000, 0x800, 0);
     mModel.HideMaterial(2, 0);
     mModel.ShowMaterial(1, 0);
-    *(StateSlot *)this = pmf_Dealer_StateSwap;
+    mState = pmf_Dealer_StateSwap;
 }
 
 void Dealer::StateSwap() {
@@ -1428,7 +1336,7 @@ void Dealer::PlayLose() {
         Sound::PlayBank2_2D(0x13c);
         mModel.SetAnim(*(BCA_File *)mLoseAnim.filePtr, 0, 0x40000000, 0x800, 0);
     }
-    *(StateSlot *)this = pmf_Dealer_StateLose;
+    mState = pmf_Dealer_StateLose;
 }
 
 void Dealer::StateLose() {
@@ -1447,7 +1355,7 @@ void Dealer::PlayWin() {
     Sound::PlayBank2_2D(0x13b);
     mModel.SetAnim(*(BCA_File *)mWinStartAnim.filePtr, 0, 0x40000000, 0x800, 0);
     mShuffleLeft = 5;
-    *(StateSlot *)this = pmf_Dealer_StateWin;
+    mState = pmf_Dealer_StateWin;
 }
 
 void Dealer::StateWin() {
@@ -1531,7 +1439,7 @@ void MascotWalker::Load() {
 }
 
 void MascotWalker::Update() {
-    (this->*(*(MascotWalkerState *)mState))();
+    (this->*mState)();
 
     mModel.Advance();
 
@@ -1550,16 +1458,8 @@ void MascotWalker::Update() {
             turn = 0x3000;
         UpdateAngle(mHeadAngle, turn, 8, 0x200);
 
-        {
-            int *state = mState;
-            int *walk = pmf_MascotWalker_StateWalk_2;
-            if (state[0] == walk[0]) {
-                if (state[1] == walk[1])
-                    return;
-                if (mState[0] == 0)
-                    return;
-            }
-        }
+        if (mState == pmf_MascotWalker_StateWalk_2)
+            return;
         turn = (angle - turn);
         UpdateAngle(mAngleY, turn, 8, 0x200);
     } else {
@@ -1619,14 +1519,7 @@ void MascotWalker::StartNextPath() {
         target.z = point->z;
     }
     mTargetAngle = Vec3_HorzAngle(&mPos, &target);
-    {
-        int fn = pmf_MascotWalker_StateWalk[0];
-        int adj = pmf_MascotWalker_StateWalk[1];
-        /* The no-op ternary is load-bearing: storing the two words directly
-           moves three words (measured; the ROM keeps the conditional). */
-        mState[0] = adj ? fn : fn;
-        mState[1] = adj;
-    }
+    mState = pmf_MascotWalker_StateWalk;
 }
 
 void MascotWalker::StateWalk() {
@@ -1698,19 +1591,17 @@ void MascotWalker::StartPause() {
     mModel.SetAnim(*(BCA_File *)mPauseAnimFile.filePtr, 8, 0, 0x800, 0);
     mStateTimer = 120;
     mPaused = 1;
-    *(StateSlot *)mState = pmf_MascotWalker_StatePause;
+    mState = pmf_MascotWalker_StatePause;
 }
 
 void MascotWalker::StatePause() {
     if (ApproachLinear2(mStateTimer, 0, 1) == 0)
         return;
     mModel.SetAnim(*(BCA_File *)mWalkAnimFile.filePtr, 0, 0, 0x800, 0);
-    /* Walk for 0x258..0x4af frames: a random 0..0xfff scaled into 0x258. */
-    int roll = RandomIntInternal(&data_0209e650.value);
-    int frac = ((unsigned int)(roll & 0x7fffffff) >> 0x13);
-    mStateTimer = (((frac * 0x258) >> 12) + 0x258);
+    /* Walk for 0x258 to 0x4af frames. */
+    mStateTimer = RAND_FX_SCALE(0x258) + 0x258;
     mPaused = 0;
-    *(StateSlot *)mState = pmf_MascotWalker_StateWalk_3;
+    mState = pmf_MascotWalker_StateWalk_3;
 }
 
 /* Camera_UpdateMatrices at 0x020c0134
@@ -1719,7 +1610,7 @@ void MascotWalker::StatePause() {
  */
 
 void Camera_UpdateMatrices(MgCamera *camera) {
-    Vector3 up;
+    VecFx32 up;
     Vector3 forward;
     Vector3 right;
     Vector3 scratch0;
@@ -1744,8 +1635,7 @@ void Camera_UpdateMatrices(MgCamera *camera) {
     G3i_PerspectiveW_(FX_SinIdx(camera->mFovAngle >> 4), FX_CosIdx(camera->mFovAngle >> 4), 0x1555,
                       0x1000, 0x1388000, 0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
 
-    G3i_LookAt_((Vector3 *)&camera->mPos, &up, (Vector3 *)&camera->mLookAt, true,
-                (Matrix4x3 *)&camera->mViewMtx);
+    G3i_LookAt_(&camera->mPos, &up, &camera->mLookAt, true, &camera->mViewMtx);
 
     CopyToViewMat((Matrix4x3 *)&camera->mViewMtx);
 
@@ -1754,32 +1644,32 @@ void Camera_UpdateMatrices(MgCamera *camera) {
 
 
 void Camera_ProjectToScreen(MgCamera *camera, void *pos, int *screenX, int *screenY) {
-    int view[3];
-    MTX_MultVec43((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
+    VecFx32 view;
+    MTX_MultVec43((const VecFx32 *)pos, &camera->mViewMtx, &view);
     int fovIdx = camera->mFovAngle >> 4;
     int tanFov = FX_Div(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
-    int height = FX_MUL(tanFov, -view[2]);
-    int fracY = FX_Div(view[1], height);
+    int height = FX_MUL(tanFov, -view.z);
+    int fracY = FX_Div(view.y, height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
     screenY[0] = -((pixelY + (int)0xfffa0800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
-    int fracX = FX_Div(view[0], width);
+    int fracX = FX_Div(view.x, width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
     screenX[0] = (pixelX + 0x7f800) >> 0xc;
 }
 
 
 void Camera_ProjectToScreen16(MgCamera *camera, void *pos, short *screen) {
-    int view[3];
-    MTX_MultVec43((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
+    VecFx32 view;
+    MTX_MultVec43((const VecFx32 *)pos, &camera->mViewMtx, &view);
     int fovIdx = camera->mFovAngle >> 4;
     int tanFov = FX_Div(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
-    int height = FX_MUL(tanFov, -view[2]);
-    int fracY = FX_Div(view[1], height);
+    int height = FX_MUL(tanFov, -view.z);
+    int fracY = FX_Div(view.y, height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
     screen[1] = -((pixelY + (int)0xfffa0800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
-    int fracX = FX_Div(view[0], width);
+    int fracX = FX_Div(view.x, width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
     screen[0] = (pixelX + 0x7f800) >> 0xc;
 }

@@ -72,7 +72,6 @@ struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Hud_RenderSprite(void *fn, int a, int b, int c, int d);
 extern void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
-extern void Mg_DrawScoreTally(void *, int, int, int);
 extern int Mg_IsNewRecord(void);
 #include "OAM.h"
 #include "nitro/mi/memory.h"
@@ -245,11 +244,11 @@ void dScMgTeresa_c::BigBoo_StateExit(int i) {
     *p16 = *p16 + 1;
     if (*p16 >= 8) {
         unsigned char *p8;
-        int z = 0;
-        *p16 = z;
+        *p16 = 0;
         p8 = &mBigBoo[i].frame;
         *p8 = *p8 + 1;
-        if (*p8 >= 4) *p8 = z;
+        if (*p8 >= 4)
+            *p8 = 0;
     }
     add = &mBigBoo[i].xVel;
     sum = &mBigBoo[i].x;
@@ -623,7 +622,7 @@ void dScMgTeresa_c::Reveal_Hide()
 }
 
 /* decl_common.h declares this one with a `void *` parameter, and
-   Mg_RenderSubSpriteMtx as `(void *, int, int, void *)`. */
+   Mg_RenderSubSpriteMtx as `(void *, int, int, Matrix2x2 *)`. */
 void dScMgTeresa_c::FoundNumber_DrawAll() {
     int i;
     for (i = 0; i < FOUND_NUMBER_NUM; i++) {
@@ -1688,7 +1687,7 @@ void dScMgTeresa_c::StartRound(int reset) {
 /* Vtable slot 9. */
 s32 dScMgTeresa_c::Render()
 {
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     FoundNumber_DrawAll();
     DrawCountdown();
     Exclaim_DrawAll();
@@ -1762,7 +1761,7 @@ s32 dScMgTeresa_c::InitResources()
         fb = 0;
         MI_CpuFill16(p, fb, 0x800);
     }
-    Mg_InitBrush(this, 0, 0, 0);
+    InitBrush(0, 0, 0);
     {
         void *p = G2S_GetBG0CharPtr();
         fc = 0x1111;

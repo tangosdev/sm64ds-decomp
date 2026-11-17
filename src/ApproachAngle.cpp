@@ -5,12 +5,16 @@
  * leftovers:
  * - ApproachLinear2(int &) reads and writes the reference through an
  *   unsigned char *. A full-word store widens the byte the ROM keeps.
- * - ApproachAngle and UpdateAngle call __aeabi_idiv. The declaration is
- *   local; the host build has no divider.
+ * - ApproachAngle calls __aeabi_idiv by hand and widens diff through
+ *   (long long). Measured on 2004/b56: with `/` the function changes size,
+ *   and with `/` plus natural short/int locals it is 31 of 56 words off,
+ *   all register colouring (the ROM keeps diff in r8 and reuses c's r4 for
+ *   maxStep). UpdateAngle's twin shape (`short diff`, then `diff / divisor`)
+ *   matches with plain `/`, so the call there is gone.
  */
 
 #ifndef _MSC_VER
-/* The host smoke build has no divider. These two call __aeabi_idiv. */
+/* The host smoke build has no divider. ApproachAngle calls it by hand. */
 extern "C" int __aeabi_idiv(int a, int b);
 
 extern "C" int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep)
@@ -37,15 +41,14 @@ extern "C" int ApproachAngle(short *cur, short target, int divisor, int band, in
 }
 
 void UpdateAngle(short &angle, short target, int divisor, short maxStep) {
-    short step = (__aeabi_idiv((short)(target - angle), divisor));
+    short diff = target - angle;
+    short step = diff / divisor;
     if (step > maxStep) {
-        angle = angle + maxStep;
-        return;
-    }
-    if (step < -maxStep) {
-        angle = angle - maxStep;
+        angle += maxStep;
+    } else if (step < -maxStep) {
+        angle -= maxStep;
     } else {
-        angle = angle + step;
+        angle += step;
     }
 }
 #endif

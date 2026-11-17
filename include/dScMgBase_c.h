@@ -14,12 +14,6 @@
 struct dScMgBase_c;
 extern "C" dScMgBase_c *gMgScene;
 
-/* d_s_mg_base.cpp's scene helpers: the brush PaintSquare paints with, and the
-   credit counter every betting minigame draws. The parameters are unnamed
-   because a named one takes an @NNN number in every including TU. */
-extern "C" void Mg_InitBrush(dScMgBase_c *, char, int, int);
-extern "C" void Mg_DrawCredits(dScMgBase_c *, int, int, int);
-
 struct dScMgBase_c : dScene_c {
 
     class graphCallback_c;
@@ -893,8 +887,35 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
        PaintSquare (slot 34); a zero-length line plots once. The amida, teresa
        and both trampoline minigames draw their strokes with it. */
     void Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int size);
+    void DrawMenu();
     void UpdateMenu();
     void DrawPrompt();
+
+    /* The credit counter every betting minigame keeps: SubCredits and
+       AddCredits clamp mCredits to 0..9999, DrawCredits draws mCreditsShown.
+       The parameters are unnamed because a named one takes an @NNN number in
+       every including TU. */
+    void SubCredits(int);
+    void AddCredits(s32);
+    void DrawCredits(int, int, int);
+    /* Arms the brush PaintSquare paints with (mBrushOnMain, mBrushLayer). */
+    void InitBrush(char, int, int);
+    /* The score tally column at the right edge of the touch screen. */
+    void DrawTally(int);
+    void DrawScoreTally(int, int, int);
+    void DrawBlinkSprite(s32, s32);
+    /* The five saved records of save table GetSaveTable() (byte 1 of
+       param1): RankSessionBest places the session best among them,
+       DrawRecordTable shows them a row at a time. GetLastRecordRank's int is
+       unused. */
+    int GetLastRecordRank(int);
+    int FindRecordRank(int);
+    void RankSessionBest();
+    int GetSaveTable();
+    void DrawRecordTable();
+    void DrawRecordRow(int, int, int);
+    /* StartRound (slot 18) for dMgState_c, which passes its mState. */
+    void CallStartRound(int);
 
     s32 mTallyShown;            /* 0x050 */
     s32 mTallyAnimTimer;            /* 0x054 */
@@ -905,7 +926,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     /* The brush PaintSquare (slot 34) paints with. mBrushLayer is the BG
        layer 0..3 it draws into, any other value drawing nothing; with
        mBrushOnMain set it also paints the main engine's layer above the
-       touch screen. InitEngines resets them to 0 and -1, Mg_InitBrush arms
+       touch screen. InitEngines resets them to 0 and -1, InitBrush arms
        them. */
     u8 mBrushOnMain; /* 0x068 */
     u8 pad_069[0x3];

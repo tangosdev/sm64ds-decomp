@@ -30,15 +30,10 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/MtxStack.h"
-
-/* local extern: no non-generated header declares these vector helpers. */
-extern "C" {
-void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *result);
-void VEC_Normalize(const Vector3 *src, Vector3 *dst);
-}
+#include "math/CalcLib.h"
 
 /* Signed distance of (x, y, z) from a frustum side plane, each product rounded to fx32. */
-static inline int PlaneDistance(const ClipperPlane &n, long long x, long long y, long long z) {
+static inline int PlaneDistance(const VecFx32 &n, long long x, long long y, long long z) {
     return FX_MUL(z, n.z) + (FX_MUL(x, n.x) + FX_MUL(y, n.y));
 }
 
@@ -136,7 +131,7 @@ void dClipper::UpdateFrustumPlanes() {
     int tanHalfFov = FX_Div(FX_SinIdx(mFovAngle >> 4), FX_CosIdx(mFovAngle >> 4));
     fx32 halfHeight = FX_MUL(mNearZ, tanHalfFov);
     fx32 halfWidth = FX_MUL(mAspectRatio, halfHeight);
-    Vector3 corner0, corner1, corner2, corner3;
+    VecFx32 corner0, corner1, corner2, corner3;
     corner0.x = -halfWidth;
     corner0.y = -halfHeight;
     corner0.z = -mNearZ;
@@ -149,14 +144,14 @@ void dClipper::UpdateFrustumPlanes() {
     corner3.x = halfWidth;
     corner3.y = -halfHeight;
     corner3.z = -mNearZ;
-    VEC_CrossProduct(&corner1, &corner0, (Vector3 *)&mPlaneNormals[0]);
-    VEC_CrossProduct(&corner2, &corner1, (Vector3 *)&mPlaneNormals[1]);
-    VEC_CrossProduct(&corner3, &corner2, (Vector3 *)&mPlaneNormals[2]);
-    VEC_CrossProduct(&corner0, &corner3, (Vector3 *)&mPlaneNormals[3]);
-    VEC_Normalize((Vector3 *)&mPlaneNormals[0], (Vector3 *)&mPlaneNormals[0]);
-    VEC_Normalize((Vector3 *)&mPlaneNormals[1], (Vector3 *)&mPlaneNormals[1]);
-    VEC_Normalize((Vector3 *)&mPlaneNormals[2], (Vector3 *)&mPlaneNormals[2]);
-    VEC_Normalize((Vector3 *)&mPlaneNormals[3], (Vector3 *)&mPlaneNormals[3]);
+    VEC_CrossProduct(&corner1, &corner0, &mPlaneNormals[0]);
+    VEC_CrossProduct(&corner2, &corner1, &mPlaneNormals[1]);
+    VEC_CrossProduct(&corner3, &corner2, &mPlaneNormals[2]);
+    VEC_CrossProduct(&corner0, &corner3, &mPlaneNormals[3]);
+    VEC_Normalize(&mPlaneNormals[0], &mPlaneNormals[0]);
+    VEC_Normalize(&mPlaneNormals[1], &mPlaneNormals[1]);
+    VEC_Normalize(&mPlaneNormals[2], &mPlaneNormals[2]);
+    VEC_Normalize(&mPlaneNormals[3], &mPlaneNormals[3]);
 }
 
 /* The former `Ev` spelling claimed this method took no arguments, contradicting

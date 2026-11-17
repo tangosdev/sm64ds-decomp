@@ -378,6 +378,13 @@
       "canonical_module": "ov064",
       "canonical_address": "0x0211c5c8",
       "reason": "This TU defines every out-of-line virtual daObjShell_c declares, so it is the class's key-function TU and emits this class's own vtable. The cartridge keeps it in this same overlay; 0x0211c5c8 is the public address point, eight bytes past the offset-to-top and typeinfo words the emitted 0x84-byte object begins with, and it lies outside this entry's claimed .text range, so the emitted copy is discarded after romdata_check proves it."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "daObjShell_c::Behavior keeps its two particle positions and the hurt source in Vector3 locals, and types.h gives Vector3 an inline destructor, so the compiler emits its own copy of the four-byte bx lr body. The ROM homes it in arm9; this copy is a duplicate and is discarded by text-only isolation."
     }
   ],
   "init": [
@@ -462,19 +469,19 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@602",
+      "from": "@622",
       "to": "@88",
-      "evidence": "emitted destructor-registration node name collides with the configured @360 on ov023 on main; @88 is unused everywhere and shorter than the original Re-keyed from @656 to @602 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "emitted destructor-registration node name collides with the configured @360 on ov023 on main; @88 is unused everywhere and shorter than the original Re-keyed from @656 to @602 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @602 to @614 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @614 to @619 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @619 to @622 when daObjShell_c::Behavior's locals struct became Vector3 locals (measured from the compiled object)."
     },
     {
-      "from": "@603",
+      "from": "@623",
       "to": "@89",
-      "evidence": "emitted destructor-registration node name collides with the configured @361 on ov036 on main; @89 is unused everywhere and shorter than the original Re-keyed from @657 to @603 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "emitted destructor-registration node name collides with the configured @361 on ov036 on main; @89 is unused everywhere and shorter than the original Re-keyed from @657 to @603 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @603 to @615 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @615 to @620 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @620 to @623 when daObjShell_c::Behavior's locals struct became Vector3 locals (measured from the compiled object)."
     },
     {
-      "from": "@604",
+      "from": "@624",
       "to": "@90",
-      "evidence": "emitted destructor-registration node name collides with the configured @362 on ov036 on main; @90 is unused everywhere and shorter than the original Re-keyed from @658 to @604 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "emitted destructor-registration node name collides with the configured @362 on ov036 on main; @90 is unused everywhere and shorter than the original Re-keyed from @658 to @604 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @604 to @616 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @616 to @621 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @621 to @624 when daObjShell_c::Behavior's locals struct became Vector3 locals (measured from the compiled object)."
     }
   ],
   "relocations": [

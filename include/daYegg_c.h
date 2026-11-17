@@ -71,19 +71,13 @@ struct daYegg_c : dEnemyBase_c {
     s32 mShadowMtx[12];                         /* 0x390 */
     /* InitResources copies the actor's own position here once, and nothing
        migrated writes it again. */
-    s32 mSpawnPosX;                             /* 0x3c0 */
-    s32 mSpawnPosY;                             /* 0x3c4 */
-    s32 mSpawnPosZ;                             /* 0x3c8 */
+    Vector3 mSpawnPos; /* 0x3c0 */
     /* Position sampled by IsStalled each call, to measure how far the
        egg moved horizontally since the last one. */
-    s32 mLastPosX;                              /* 0x3cc */
-    s32 mLastPosY;                              /* 0x3d0 */
-    s32 mLastPosZ;                              /* 0x3d4 */
+    Vector3 mLastPos; /* 0x3cc */
     /* Where state 0 eases mPos toward: the followed daPly_c's position plus an
        offset rotated by mEasedAngle. */
-    s32 mHoldTargetX;                           /* 0x3d8 */
-    s32 mHoldTargetY;                           /* 0x3dc */
-    s32 mHoldTargetZ;                           /* 0x3e0 */
+    Vector3 mHoldTarget; /* 0x3d8 */
     /* TWO s16 triples. State 0 (ExecuteFollowPlayer) steps the second toward the
        first with ApproachAngle and copies its Y into mAngleY; both are seeded
        from mAngleX/Y/Z in InitResources and from the daPly_c's angles in

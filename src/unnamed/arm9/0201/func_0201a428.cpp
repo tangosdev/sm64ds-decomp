@@ -16,7 +16,6 @@ extern "C" {
  * local extern: linker-defined symbols; no header declares them. */
 extern char OV075_BSS_END;
 extern char OV100_TEXT_START;
-extern mHeap::Heap_t *data_0209d524;
 
 void *func_0201a458(void) {
     data_0209d524 = mHeap::Heap_t::CreateRootHeap(

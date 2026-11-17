@@ -62,8 +62,6 @@ extern dScMgMemory_cCardState sMemoryCardTable[];
 extern "C" dScMgMemory_cPlayerState sMemoryPlayerTable[];
 
 extern "C" {
-extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
-extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemoryCardFrameSprites[];
 extern void *sMemoryCardSprites[];
@@ -92,9 +90,9 @@ void LoadCard2SubBg3(void *);
 void MgCoins_Reset(void);
 void Mg_PlaceBannersOnTopScreen(void);
 
-/* Load-bearing: source order, and the opt pragmas on DrawCards and
- * CardFlyAway. Under deferred emission the last pragma setting wins for the
- * whole file; defer_codegen off lets push/pop scope them to one function. */
+/* Load-bearing: source order, and the opt pragma on DrawCards. Under
+ * deferred emission the last pragma setting wins for the whole file;
+ * defer_codegen off lets push/pop scope it to one function. */
 #pragma defer_codegen off
 
 /* Both D1 and D0 come from this one definition. */
@@ -105,13 +103,13 @@ dScMgMemory_c::~dScMgMemory_c() {
 void dScMgMemory_c::DrawMessage() {
     if (mMessageVisible == 0)
         return;
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
 }
 
 void dScMgMemory_c::DrawCursor() {
     if (mCursor.enabled == 0)
         return;
-    Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
+    DrawBlinkSprite(0xe0, 0xa0);
 }
 
 void dScMgMemory_c::UpdateCursor() {
@@ -289,18 +287,13 @@ void dScMgMemory_c::JudgePair() {
 }
 
 #pragma push
-/* Kept: indexed or cursor forms without it give the card counter sl, not r4
- * (colour only).
- * The `raw` cursor is kept too (#821, re-measured). mCards[cardIndex] under
- * this pragma no longer knows the walk starts at 0 and seeds the cursor with
- * `mla sl, r4, #0x18, this`: 0xbc as a for loop, 0xac as a do-while, against
- * 0xa8. The same with a block-scoped, u32 or s16 counter, or `continue`
- * on !visible, is 0xbc-0xc4. Without the pragma every indexed spelling is
- * 0xa8 but 26-29 of 42 words off, because it moves the counter from r4 to
- * sl and schedules `dimmed` ahead of the sprite lookup. The spellings tried
- * without it: for and do-while, scoped, u32 and s16 counters, `dimmed`
- * computed after the sprite, as `mState != STATE_JUDGE_PAIRS`, as if/else,
- * and inlined as a ternary argument. */
+/* Kept: without it, mCards[i] is 26-27 of 42 words off in every loop form
+ * tried (for, do, while, goto), in any declaration order or flag type. The
+ * card counter is ranked first and takes sl; the ROM ranks it after the
+ * hoisted constants, in r4 (colour only). A card pointer or reference is 36
+ * off. With the pragma, mCards[i] gets the right colours but starts the walk
+ * with an mla (one word more), which is why the `raw` cursor stays.
+ * memory2's DrawCards keeps the same pragma. */
 #pragma opt_propagation off
 void dScMgMemory_c::DrawCards() {
     char *raw = (char *)this;
@@ -336,27 +329,21 @@ void dScMgMemory_c::UpdateCards() {
     }
 }
 
-#pragma push
-/* Kept: without opt_lifetimes off the two loops' counter and limit take other registers (colour only).
- * Re-measured (#821, 2026-11-16): 41 of 102 words off without it; swapping the
- * j/n roles in the second loop gives 40, declaring n before j 41 or 40. */
-#pragma opt_lifetimes off
+/* Each branch declares its own row length and counter; declared once at
+ * function scope they take other registers. */
 void dScMgMemory_c::CardFlyAway(int cardIndex) {
-    int j;
-    int n;
-
     mCards[cardIndex].x -= 0x10000;
     if (mCards[cardIndex].flyAwayStarted == 0) {
         if (mDifficulty == 1) {
             if (cardIndex == 6 || cardIndex == 0xb) {
                 mCards[cardIndex].flyAwayStarted = 1;
             }
-            n = (cardIndex >= 7) ? 0xc - cardIndex : 7 - cardIndex;
-            for (j = 1; j < n; j++) {
-                if (mCards[cardIndex + j].active != 0) {
-                    if (((mCards[cardIndex].x - mCards[cardIndex + j].x) >> 12) <= 4) {
+            int remaining = (cardIndex >= 7) ? 0xc - cardIndex : 7 - cardIndex;
+            for (int i = 1; i < remaining; i++) {
+                if (mCards[cardIndex + i].active != 0) {
+                    if (((mCards[cardIndex].x - mCards[cardIndex + i].x) >> 12) <= 4) {
                         mCards[cardIndex].flyAwayStarted = 1;
-                        mCards[cardIndex + j].state = CARD_FLYING_AWAY;
+                        mCards[cardIndex + i].state = CARD_FLYING_AWAY;
                         break;
                     }
                 }
@@ -365,12 +352,12 @@ void dScMgMemory_c::CardFlyAway(int cardIndex) {
             if ((cardIndex & 3) == 3) {
                 mCards[cardIndex].flyAwayStarted = 1;
             }
-            j = 4 - (cardIndex & 3);
-            for (n = 1; n < j; n++) {
-                if (mCards[cardIndex + n].active != 0) {
-                    if (((mCards[cardIndex].x - mCards[cardIndex + n].x) >> 12) <= 4) {
+            int remaining = 4 - (cardIndex & 3);
+            for (int i = 1; i < remaining; i++) {
+                if (mCards[cardIndex + i].active != 0) {
+                    if (((mCards[cardIndex].x - mCards[cardIndex + i].x) >> 12) <= 4) {
                         mCards[cardIndex].flyAwayStarted = 1;
-                        mCards[cardIndex + n].state = CARD_FLYING_AWAY;
+                        mCards[cardIndex + i].state = CARD_FLYING_AWAY;
                         break;
                     }
                 }
@@ -383,8 +370,6 @@ void dScMgMemory_c::CardFlyAway(int cardIndex) {
     mCards[cardIndex].active = 0;
     mCards[cardIndex].visible = 0;
 }
-
-#pragma pop
 
 void dScMgMemory_c::CardFlipDown(int cardIndex) {
     unsigned short timer;
@@ -929,7 +914,7 @@ void dScMgMemory_c::StartRound(int /* arg */) {
 /* Slot 9. */
 s32 dScMgMemory_c::Render() {
     Camera_InitDealerView(&mCamera);
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
+    DrawCredits(0xc, 0xc, 0);
     MgCoins_Draw();
     DrawMessage();
     DrawCursor();

@@ -76,7 +76,6 @@ extern "C" int RandomIntInternal(int *seed);
 s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern "C" int ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
 extern "C" void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
-extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the BMD, SharedFilePtr::

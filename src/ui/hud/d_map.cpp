@@ -47,18 +47,9 @@
 #include "math/CalcLib.h"
 
 #pragma defer_codegen off
-/* Codegen is deferred by default in mwccarm 2004/b56, which makes its
- * optimisation pragmas file-global, last one wins. With it off, the
- * positional brackets below bind to the members they enclose -- and .text is
- * then emitted in SOURCE order, so this file is written in ascending ROM
- * order.
- *
- * Render and InitResources were each matched under
- * #pragma opt_strength_reduction off; Behavior, between them, needs it on.
- * Only the bound form gets all eleven. A function is not generated at its
- * closing brace but at the next top-level token, so a pragma written
- * directly after Behavior would still reach it; the declarations that sit
- * between Behavior and InitResources are that token. */
+/* Codegen is deferred by default in mwccarm 2004/b56. With it off, .text is
+ * emitted in SOURCE order, so this file is written in ascending ROM order.
+ * Every member now builds under the default optimisation settings. */
 
 struct Event {
     static int GetBit(unsigned int bit);
@@ -100,7 +91,6 @@ extern s32 data_020a0db0;
 extern dFdBrightness_c *gSceneFader;
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
-extern s32  data_0209d4b0;
 extern u8   data_0209f350[];
 extern s8 gNextSublevel;
 extern u8   data_0209f204;
@@ -544,10 +534,8 @@ int dMap_c::Render()
 /* One frame of the minimap: pick the map for the focus object, scroll and
  * scale the BG, then project every icon onto the screen.
  *
- * The 0x1e0 and 0x1f4 triples (mMapOrigin*, mMapCenterWorld*) are taken as
- * Vector3 at the sites that hand them to Vec3 helpers, rather than the header
- * declaring a Vector3 the other functions never need. mAngle is a u16 in the
- * header; the one `+= 0x40` reads it as s16, hence the cast at that site.
+ * mAngle is a u16 in the header; the one `+= 0x40` reads it as s16, hence
+ * the cast at that site.
  */
 s32 dMap_c::Behavior()
 {
@@ -719,19 +707,16 @@ L4d8:
     }
     this->mBgMatrixC = -this->mBgMatrixB;
     this->mBgMatrixD = this->mBgMatrixA;
-    this->mMapCenterWorldX = this->mMapOriginX;
-    this->mMapCenterWorldY = this->mMapOriginY;
-    this->mMapCenterWorldZ = this->mMapOriginZ;
+    this->mMapCenterWorld = this->mMapOrigin;
     this->mMapCenterX =
-        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorldX, this->mScale) + 0x800) >> 12);
+        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorld.x, this->mScale) + 0x800) >> 12);
     this->mMapCenterY =
-        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorldZ, this->mScale) + 0x800) >> 12);
+        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorld.z, this->mScale) + 0x800) >> 12);
 
     focusPosSrc = &focus->mPos;
     focusPos = *focusPosSrc;
     FixTHIPaintingRoomPos(focusPos);
-    GetPosOnMinimap(&focusPos, (Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
-                    this->mAngle, &miniPos);
+    GetPosOnMinimap(&focusPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle, &miniPos);
     {
         s32 p = gLocalPlayerId;
         this->mPlayerIconX[p] = (miniPos.x + 0x800) >> 12;
@@ -763,14 +748,14 @@ L6f0:
         else if (this->mPlayerIconY[p] > 0x9c) { miniPos.z = 0x9c000; }
     }
 L738:
-    GetPosFromMinimapPos(miniPos, *(Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
-                         this->mAngle, clampedWorld);
+    GetPosFromMinimapPos(miniPos, this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
+                         clampedWorld);
     Vec3_Sub(&scrollDelta, &focusPos, &clampedWorld);
-    VEC_Add((Vector3 *)&this->mMapCenterWorldX, &scrollDelta, (Vector3 *)&this->mMapCenterWorldX);
+    VEC_Add(&this->mMapCenterWorld, &scrollDelta, &this->mMapCenterWorld);
     this->mMapCenterX =
-        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorldX, this->mScale) + 0x800) >> 12);
+        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorld.x, this->mScale) + 0x800) >> 12);
     this->mMapCenterY =
-        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorldZ, this->mScale) + 0x800) >> 12);
+        this->mMapCenterOffset + ((FX_MUL(this->mMapCenterWorld.z, this->mScale) + 0x800) >> 12);
 
     /* Project each object list onto the map. A missing object gets map id -1. Stars whose
      * kind byte in gStarMarkerTypes is 4 are the ones Render draws as MM_RED_COIN. */
@@ -780,8 +765,8 @@ L738:
             /* the (int) launder keeps the ROM's precomputed copy source */
             playerPos = *(Vector3 *)((int)&o->mPos);
             FixTHIPaintingRoomPos(playerPos);
-            GetPosOnMinimap(&playerPos, (Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
-                            this->mAngle, &miniPos);
+            GetPosOnMinimap(&playerPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
+                            &miniPos);
             this->mPlayerIconX[i] = (miniPos.x + 0x800) >> 12;
             this->mPlayerIconY[i] = (miniPos.z + 0x800) >> 12;
             if (i != gLocalPlayerId)
@@ -796,8 +781,8 @@ L738:
     for (i = 0; i < 12; i++) {
         dActor_c *o = STAR_MARKERS[i];
         if (o != 0) {
-            GetPosOnMinimap(&o->mPos, (Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
-                            this->mAngle, &miniPos);
+            GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
+                            &miniPos);
             this->mStarIconX[i] = (miniPos.x + 0x800) >> 12;
             this->mStarIconY[i] = (miniPos.z + 0x800) >> 12;
             if (gStarMarkerTypes[i] != 4)
@@ -812,8 +797,8 @@ L738:
     for (i = 0; i < 9; i++) {
         dActor_c *o = (dActor_c *)data_0209f3e8[i];
         if (o != 0) {
-            GetPosOnMinimap(&o->mPos, (Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
-                            this->mAngle, &miniPos);
+            GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
+                            &miniPos);
             this->mCapIconX[i] = (miniPos.x + 0x800) >> 12;
             this->mCapIconY[i] = (miniPos.z + 0x800) >> 12;
             this->mCapMapIDs[i] = GetMinimapID(o, -1);
@@ -830,8 +815,8 @@ L738:
     {
         dActor_c *o = (dActor_c *)data_0209f33c;
         if (o == 0) { this->mStarKeyMapID = -1; goto La64; }
-        GetPosOnMinimap(&o->mPos, (Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
-                        this->mAngle, &miniPos);
+        GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
+                        &miniPos);
         this->mStarKeyIconX = (miniPos.x + 0x800) >> 12;
         this->mStarKeyIconY = (miniPos.z + 0x800) >> 12;
         this->mStarKeyMapID = 1;
@@ -841,8 +826,8 @@ La64:
     for (i = 0; i < 8; i++) {
         dActor_c *o = (dActor_c *)data_0209f3a4[i];
         if (o != 0) {
-            GetPosOnMinimap(&o->mPos, (Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
-                            this->mAngle, &miniPos);
+            GetPosOnMinimap(&o->mPos, &this->mMapCenterWorld, this->mCurrentScale, this->mAngle,
+                            &miniPos);
             this->mSpikeBombIconX[i] = (miniPos.x + 0x800) >> 12;
             this->mSpikeBombIconY[i] = (miniPos.z + 0x800) >> 12;
             this->mSpikeBombMapIDs[i] = o->mAreaId;
@@ -918,9 +903,6 @@ extern u16 *gMinimapTileObjs;
 extern s32 gRunningKuppaScript;
 }
 
-#pragma opt_strength_reduction off
-/* Kept: the ROM recomputes i << 11 for each screen block; strength reduction
- * turns it into a running offset and needs one more register. */
 int dMap_c::InitResources()
 {
     u16 *p;
@@ -956,7 +938,9 @@ int dMap_c::InitResources()
     for (i = 0; i < gNumMinimapTileObjs; i++) {
         if (*p != 0) {
             void *f3 = LoadFile(*p);
-            DecompressLZ16(f3, (char *)G2S_GetBG3ScrPtr() - (i << 11));
+            /* Each tile object fills one 32x32 text screen block,
+             * stacked downward from BG3's screen base. */
+            DecompressLZ16(f3, (char *)G2S_GetBG3ScrPtr() - i * sizeof(u16[32][32]));
             Deallocate(f3);
         }
         p++;
@@ -983,28 +967,28 @@ int dMap_c::InitResources()
             mMapCenterOffset = 0x80;
 
             if (SublevelToLevel(gCurrentSublevel) == 4) {
-                mMapOriginX = 0x258000;
-                mMapOriginY = 0;
-                mMapOriginZ = 0x64000;
+                mMapOrigin.x = 0x258000;
+                mMapOrigin.y = 0;
+                mMapOrigin.z = 0x64000;
             } else if (SublevelToLevel(gCurrentSublevel) == 0x1d && gCurrentSublevel != 1 &&
                        gCurrentSublevel != 0x33 && gCurrentSublevel != 3) {
-                mMapOriginX = -0x2bc000;
-                mMapOriginY = 0;
-                mMapOriginZ = -0x2bc000;
+                mMapOrigin.x = -0x2bc000;
+                mMapOrigin.y = 0;
+                mMapOrigin.z = -0x2bc000;
             } else {
                 SublevelToLevel(gCurrentSublevel);
-                mMapOriginX = 0;
-                mMapOriginY = 0;
-                mMapOriginZ = 0;
+                mMapOrigin.x = 0;
+                mMapOrigin.y = 0;
+                mMapOrigin.z = 0;
             }
             mArrowType = 1;
         } else {
             REG_DB_BG3CNT = (((0x1f - data_ov002_02111148) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x10));
             mMapWidth = 128;
             mMapCenterOffset = 0x40;
-            mMapOriginX = 0;
-            mMapOriginY = 0;
-            mMapOriginZ = 0;
+            mMapOrigin.x = 0;
+            mMapOrigin.y = 0;
+            mMapOrigin.z = 0;
             mArrowType = 2;
         }
         gSubScreenLayers |= DISPLAY_LAYER_BG3;
@@ -1053,8 +1037,6 @@ int dMap_c::InitResources()
 
     return 1;
 }
-
-#pragma opt_strength_reduction on
 
 void dMap_c::GetPosFromMinimapPos(Vector3 &minimapPos, Vector3 &center, fx32 scale, short angle,
                                   Vector3 &out) {

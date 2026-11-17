@@ -107,7 +107,6 @@ extern const unsigned char sCoinCaptionBlinkTimes[];
 extern const unsigned char sCoinCaptionBlinkSprites[];
 extern const u16 sCoinCaptionCountInTimes[];
 extern const u8 sCoinCaptionCountInSprites[];
-extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern const int sCoinSparkleSpawnOffsets[];
 extern const u16 sCoinSparkleAngles[];
@@ -125,7 +124,7 @@ extern void *sCoinSparkleSprites[];
 extern void *sCoinBagSprites[];
 extern void Mg_RenderSpriteBothPalMtx(void *obj, int x, int y, int w, int *vec);
 extern const int sCoinRowY[];
-extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 extern const u16 sCoinBlockFrameSprites[];
 extern void *sCoinBlocksSprites[];
@@ -478,7 +477,7 @@ void dScMgCoin_c::DrawResultPrompt() {
     if (mCountdown == 0)
         return;
 
-    Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
+    DrawBlinkSprite(0xe0, 0xa0);
 }
 
 void dScMgCoin_c::DrawResultNumbers() {

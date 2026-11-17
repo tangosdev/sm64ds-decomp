@@ -154,7 +154,6 @@ extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
 extern unsigned short sHanaUsedIds[];
 extern void Mg_CommitRecords(void);
-extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
 extern int GetGameLanguage(void);
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
@@ -367,7 +366,7 @@ typedef struct {
 } Ent_ea670;
 
 void HanaPopup_DrawAll(void) {
-    void *a = 0, *b = 0, *c = 0;
+    Matrix2x2 *a = 0, *b = 0, *c = 0;
     int i;
     for (i = 0; i < 16; i++) {
         Ent_ea670 *e = &((Ent_ea670 *)sHanaPopups)[i];
@@ -555,6 +554,12 @@ void dScMgHanachan_c::Wiggler::DrawTarget() {
 }
 
 void dScMgHanachan_c::Wiggler::DrawField() {
+    /* The three anonymous groupings set the stack layout: the ROM spills A,
+       B, (u16)rot, the hoisted zero, res and py, and keeps px in a register.
+       Measured 2026-11-16 (#821 r22) against 0x3e0 bytes: plain Vector2
+       locals give 0x3dc, the same locals unnested 0x3d8, DrawTarget's
+       Vec2_ea914 shape 0x3e4, and all 72 declaration orders of A/B with
+       the points as Vector2 miss the size. */
     struct {
         int A, B, urot, va0x, res;
     } t;
@@ -724,13 +729,8 @@ void dScMgHanachan_c::Wiggler::StateMoveA() {
         }
         return;
     }
-    {
-        int z = 0;
-        int n = 0x10000;
-        n = -n;
-        va[0] = z;
-        va[1] = n;
-    }
+    va[0] = 0;
+    va[1] = -0x10000;
     tgt = aim - 0x1000;
     ApproachLinear(ang[0], tgt, 0x400);
     func_0203d388(va, ang[0]);
@@ -796,13 +796,8 @@ void dScMgHanachan_c::Wiggler::StateMoveB() {
         state = sub;
         return;
     }
-    {
-        int z = 0;
-        int n = 0x10000;
-        n = -n;
-        va[0] = z;
-        va[1] = n;
-    }
+    va[0] = 0;
+    va[1] = -0x10000;
     tgt = aim - 0x1000;
     ApproachLinear(ang[0], tgt, 0x400);
     func_0203d388(va, ang[0]);
@@ -1036,21 +1031,17 @@ int Hana_PickUnused(int n, int mask) {
 
 void Hana_ChooseStarWiggler(int count) {
     int i, j;
+    fx32 r;
     sHanaPickedLow = (short)(RandomIntInternal(&data_0209e650.value) & 0xf);
     sHanaPickedCount = (short)count;
     for (i = 0; i < count; i++) {
-        int r = RandomIntInternal(&data_0209e650.value);
-        sHanaPickedIds[i] = (unsigned short)((int)((int)((unsigned int)(r & 0x7fffffff) >> 0x13) *
-                                                   sHanaFieldWigglerCount) >>
-                                             0xc);
+        r = RAND_FX();
+        sHanaPickedIds[i] = (unsigned short)(r * sHanaFieldWigglerCount >> 12);
         j = 0;
         while (j < i) {
             if (sHanaPickedIds[j] == sHanaPickedIds[i]) {
-                r = RandomIntInternal(&data_0209e650.value);
-                sHanaPickedIds[i] =
-                    (unsigned short)((int)((int)((unsigned int)(r & 0x7fffffff) >> 0x13) *
-                                           sHanaFieldWigglerCount) >>
-                                     0xc);
+                r = RAND_FX();
+                sHanaPickedIds[i] = (unsigned short)(r * sHanaFieldWigglerCount >> 12);
                 j = 0;
             } else {
                 j++;
@@ -1061,7 +1052,7 @@ void Hana_ChooseStarWiggler(int count) {
 
 int Hana_PickMoveKind(void) {
     int v = 3;
-    int r = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+    fx32 r = RAND_FX();
     if (r < 0x400)
         v = 0;
     else if (r < 0x800)
@@ -1176,7 +1167,6 @@ void dScMgHanachan_c::Wiggler::StepSegmentsB() {
     int segmentIndex = 4;
     Vector2 *segment = &seg[segmentIndex];
     int baseSpacing = 0x8000;
-    s16 zero = 0;
     int previousIndex;
 
     for (; segmentIndex >= 1; segmentIndex--) {
@@ -1190,7 +1180,7 @@ void dScMgHanachan_c::Wiggler::StepSegmentsB() {
             }
             offsetAngle = cstd::atan2(segmentOffset.x, segmentOffset.y);
             previousAngle = ang[previousIndex];
-            bendExcess = zero;
+            bendExcess = 0;
             targetAngle = (s16)(-offsetAngle);
             angleDifference = (s16)(previousAngle - (s16)(-offsetAngle));
             if (angleDifference > 0x2000) {
@@ -1283,8 +1273,6 @@ void dScMgHanachan_c::Wiggler::StartPathA(int n) {
     int g1;
     int cm, dm;
     Vector2 base;
-    int i;
-    int delta;
 
     speed = 0xa00;
     speedTarget = 0xa00;
@@ -1307,20 +1295,26 @@ void dScMgHanachan_c::Wiggler::StartPathA(int n) {
         dm = 0xa000;
     }
 
-    base.x = 0;
-    base.y = 0;
-    base.x = FX_MUL(cm, rC) + FX_MUL(dm, rD);
-    base.y = (int)((((long long)rA << 16) + 0x800) >> 12) + FX_MUL(rB, 0xb0000);
+    {
+        int i = 0;
+        int delta;
 
-    for (i = 0, delta = 0; i < 5; i++) {
-        seg[i].x = base.x;
-        seg[i].y = base.y;
-        if (aim < 0)
-            seg[i].x += delta;
-        else
-            seg[i].x -= delta;
-        ang[i] = aim;
-        delta += 0x20000;
+        base.x = 0;
+        base.y = 0;
+        delta = 0;
+        base.x = FX_MUL(cm, rC) + FX_MUL(dm, rD);
+        base.y = (int)((((long long)rA << 16) + 0x800) >> 12) + FX_MUL(rB, 0xb0000);
+
+        for (; i < 5; i++) {
+            seg[i].x = base.x;
+            seg[i].y = base.y;
+            if (aim < 0)
+                seg[i].x += delta;
+            else
+                seg[i].x -= delta;
+            ang[i] = aim;
+            delta += 0x20000;
+        }
     }
 
     StepSegmentsC();
@@ -1365,12 +1359,7 @@ void dScMgHanachan_c::Wiggler::MoveBounce() {
         timer -= 1;
         if (timer >= 0)
             return;
-        timer =
-            (s16)((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >>
-                          19) *
-                    0x1e) >>
-                   12) +
-                  0x3c);
+        timer = (s16)(RAND_FX_SCALE(0x1e) + 0x3c);
         randomX = RandomIntInternal(&data_0209e650.value);
         randomY = RandomIntInternal(&data_0209e650.value);
         targetAngle =
@@ -1390,12 +1379,8 @@ void dScMgHanachan_c::Wiggler::StartBounce(int) {
     speed = 0xa00;
     speedTarget = 0xa00;
     for (i = 0; i < 5; i++) {
-        seg[i].x =
-            (int)(((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13)
-                  << 8);
-        seg[i].y =
-            (int)(((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) *
-                  0xc0);
+        seg[i].x = RAND_FX() << 8;
+        seg[i].y = RAND_FX() * 0xc0;
         ang[i] = (short)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
     }
     aim = (short)((ang[0] + ang[1]) >> 1);
@@ -1448,11 +1433,11 @@ void dScMgHanachan_c::Wiggler::StartPathB(int idx) {
     if (RandomIntInternal(&data_0209e650.value) & 0x8000000) {
         aim = -0x4000;
         pos.x = 0x80000;
-        pos.x += ((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) << 7;
+        pos.x += RAND_FX() << 7;
     } else {
         aim = 0x4000;
         pos.x = 0x80000;
-        pos.x -= ((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) << 7;
+        pos.x -= RAND_FX() << 7;
     }
 
     for (i = 0, off = 0; i < 5; i++) {
@@ -1584,7 +1569,7 @@ s32 dScMgHanachan_c::Render() {
     int i;
     Wiggler *arr;
 
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     HanaPopup_DrawAll();
     StarPopup_Draw();
 

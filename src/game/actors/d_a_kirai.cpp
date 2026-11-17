@@ -11,7 +11,6 @@
  */
 /* Notes:
  * - data_ov060_0211b1c4 is the model handle (LoadFile / Release).
- * - &mHomePosX stays punned: daKirai_c stores it as three scalars.
  * - The armed state tests IsPlayerActor, an int-returning predicate: a bool
  *   local there misses.
  * - func_02012694 plays sound 0x2f at mCamSpacePos.
@@ -101,7 +100,7 @@ int daKirai_c::IsInTriggerRange(Vector3 *pos) {
     horz = Vec3_HorzLen(pos);
     homeHorz = mHomeHorzDist;
     if (horz >= homeHorz - 0x12c000 && horz <= homeHorz + 0x12c000) {
-        if (Vec3_Dist((Vector3 *)&mHomePosX, pos) < mHomeYOffset)
+        if (Vec3_Dist(&mHomePos, pos) < mHomeYOffset)
             return 1;
     }
     return 0;
@@ -296,10 +295,10 @@ int daKirai_c::InitResources() {
     z.z = 0;
     Vec3_HorzAngle(&z, &mPos);
     mHomeYOffset = 0x2ee000;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
-    mHomePosY += mHomeYOffset >> 3;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
+    mHomePos.y += mHomeYOffset >> 3;
     mHomeHorzDist = Vec3_HorzLen(&mPos);
     mStateIndex = 0;
     mSlotIndex = AddSpikeBomb(this);

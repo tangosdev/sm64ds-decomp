@@ -87,8 +87,6 @@ extern unsigned char gGameMode;
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int VEC_Mag(const Vector3 *v);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 }
 short Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
 

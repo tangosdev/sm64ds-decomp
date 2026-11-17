@@ -13,8 +13,8 @@
  *   unk_5407 is only cleared.
  * - Camera_InitDealerView sets mCamera and tail-calls
  *   Camera_UpdateMatrices. Render and InitResources call that wrapper.
- * - Mg_DrawScoreTally and Mg_SaveRecordPair stay the linker names. Their
- *   bodies are not in this file.
+ * - Mg_SaveRecordPair stays the linker name. Its body is not in this
+ *   file.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -48,8 +48,6 @@ extern "C" dScMgMemory2_cState sMemory2StateTable[];
 extern "C" dScMgMemory2_cState sMemory2RoundTable[];
 
 extern "C" {
-extern void Mg_DrawScoreTally(void *thiz, int a, int b, int c);
-extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemory2CardFrameSprites[];
 extern void *sMemory2CardSprites[];
@@ -101,13 +99,13 @@ dScMgMemory2_c::~dScMgMemory2_c() {}
 void dScMgMemory2_c::DrawMessage() {
     if (mMessageVisible == 0)
         return;
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
 }
 
 void dScMgMemory2_c::DrawCursor() {
     if (mCursor.enabled == 0)
         return;
-    Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
+    DrawBlinkSprite(0xe0, 0xa0);
 }
 
 void dScMgMemory2_c::UpdateCursor() {
@@ -144,33 +142,39 @@ void dScMgMemory2_c::HideCursor() {
 void dScMgMemory2_c::PlayerWait(int /* player */) {}
 
 void dScMgMemory2_c::PlayerMove(int player) {
-    int targetX = (player << 4) + 0xc;
-    int targetY = -0x2c;
-    u16 *angle;
-    int dx;
-    int dy;
+    int targetX = player * 16 + 12;
+    int dx, dy;
+
     dx = targetX - (mPlayers[player].x >> 12);
-    dy = targetY - (mPlayers[player].y >> 12);
+    dy = -44 - (mPlayers[player].y >> 12);
+
     mPlayers[player].angle = cstd::atan2(dy, dx);
-    mPlayers[player].speed = mPlayers[player].speed + 0x200;
-    /* The index stays by hand here: through FX_CosIdx/FX_SinIdx, with or
-       without the angle pointer, the second product takes other registers
-       (17 words). */
-    angle = (u16 *)&mPlayers[player].angle;
-    mPlayers[player].x = mPlayers[player].x +
-                         FX_MUL(FX_SinCosTable_[((*angle >> 4) << 1) + 1], mPlayers[player].speed);
-    mPlayers[player].y =
-        mPlayers[player].y + FX_MUL(FX_SinCosTable_[(*angle >> 4) << 1], mPlayers[player].speed);
+
+    mPlayers[player].speed += 0x200;
+
+    {
+        fx16 c = FX_CosIdx((u16)mPlayers[player].angle >> 4);
+        mPlayers[player].x += FX_MUL(c, mPlayers[player].speed);
+    }
+    {
+        fx16 s = FX_SinIdx((u16)mPlayers[player].angle >> 4);
+        mPlayers[player].y += FX_MUL(s, mPlayers[player].speed);
+    }
+
     dx = targetX - (mPlayers[player].x >> 12);
-    dy = targetY - (mPlayers[player].y >> 12);
-    if (dx < -3 || dx > 3) {
+    dy = -44 - (mPlayers[player].y >> 12);
+
+    if (dx < -3)
         return;
-    }
-    if (dy < -3 || dy > 3) {
+    if (dx > 3)
         return;
-    }
+    if (dy < -3)
+        return;
+    if (dy > 3)
+        return;
+
     mPlayers[player].x = targetX << 12;
-    mPlayers[player].y = targetY << 12;
+    mPlayers[player].y = -0x2c000;
     mPlayers[player].state = PLAYER_WAIT;
 }
 
@@ -877,16 +881,14 @@ void dScMgMemory2_c::ChoosePreviewCards() {
     int previewCount = sMemory2PreviewCountPerDifficulty[difficulty];
     int cardCount = sMemory2PreviewTimePerDifficulty[difficulty];
     int previewIndex;
-    int zero = 0;
     for (previewIndex = 0; previewIndex < previewCount; previewIndex++) {
-        int cardIndex;
-        cardIndex = MG_RAND(cardCount);
+        int cardIndex = MG_RAND(cardCount);
         if (previewIndex != 0) {
             int duplicate;
             int previousIndex;
             do {
-                duplicate = zero;
-                for (previousIndex = zero; previousIndex < previewIndex; previousIndex++) {
+                duplicate = 0;
+                for (previousIndex = 0; previousIndex < previewIndex; previousIndex++) {
                     if (cardIndex == mPreviewCards[previousIndex]) {
                         duplicate++;
                         break;
@@ -1031,7 +1033,7 @@ void dScMgMemory2_c::StartRound(int /* arg */) {
  * cursor, cards and dealer. */
 s32 dScMgMemory2_c::Render() {
     Camera_InitDealerView(&mCamera);
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
+    DrawCredits(0xc, 0xc, 0);
     MgCoins_Draw();
     DrawMessage();
     DrawCursor();

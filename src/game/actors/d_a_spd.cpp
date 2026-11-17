@@ -32,7 +32,6 @@ enum Scuttlebug_AssetId {
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "dExtFrameCtrl_c.h"
-#include "SurfaceInfo.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "Sound.h"
@@ -171,13 +170,13 @@ int daSpd_c::InitResources() {
     mdCcAc_c.Init(this, 0x46000, 0x64000, 0x200000, 0x6eff0);
     mWithMeshClsn.Init(this, 0x50000, 0x50000, (Vector3_16 *)0, (Vector3_16 *)0);
     mWithMeshClsn.StartDetectingWater();
-    mHomeX = mPosX;
-    mHomeY = mPosY;
-    mHomeZ = mPosZ;
+    mHome.x = mPosX;
+    mHome.y = mPosY;
+    mHome.z = mPosZ;
     mHomeAngleY = mAngleY;
-    mAnchorX = mPosX;
-    mAnchorY = mPosY;
-    mAnchorZ = mPosZ;
+    mAnchor.x = mPosX;
+    mAnchor.y = mPosY;
+    mAnchor.z = mPosZ;
     if (param1 != 0)
         SetState(0);
     else
@@ -252,10 +251,10 @@ int daSpd_c::func_ov071_02120200() {
     short ang;
 
     mFlags = mFlags & ~0x10000001;
-    mPosX = mHomeX;
+    mPosX = mHome.x;
     z = 0;
-    mPosY = mHomeY;
-    mPosZ = mHomeZ;
+    mPosY = mHome.y;
+    mPosZ = mHome.z;
     mPrevAngleY = mHomeAngleY;
     ang = mHomeAngleY;
     mAngleX = z;
@@ -299,9 +298,9 @@ int daSpd_c::func_ov071_02120028() {
     } else if (mWithMeshClsn.IsOnGround()) {
         mVertSpeed = 0;
         mWithMeshClsn.ClearLimMovFlag();
-        mAnchorX = mPosX;
-        mAnchorY = mPosY;
-        mAnchorZ = mPosZ;
+        mAnchor.x = mPosX;
+        mAnchor.y = mPosY;
+        mAnchor.z = mPosZ;
         mFlags |= 0x10000001;
         SetState(2);
     }
@@ -312,7 +311,7 @@ int daSpd_c::func_ov071_02120028() {
 }
 
 int daSpd_c::func_ov071_0211ff84() {
-    if (Vec3_Dist(&mPos, (Vector3 *)&mAnchorX) > 0x5dc000) {
+    if (Vec3_Dist(&mPos, &mAnchor) > 0x5dc000) {
         SetState(5);
         return 1;
     }
@@ -418,11 +417,11 @@ int daSpd_c::func_ov071_0211fbf4() {
 }
 
 int daSpd_c::func_ov071_0211fb24() {
-    short ang = Vec3_HorzAngle(&mPos, (Vector3 *)&mAnchorX);
+    short ang = Vec3_HorzAngle(&mPos, &mAnchor);
     ApproachLinear(mAngleY, ang, 0x2bc);
     mPrevAngleY = mAngleY;
     mAnmModel.Advance();
-    if (Vec3_Dist(&mPos, (Vector3 *)&mAnchorX) < 0x12c000)
+    if (Vec3_Dist(&mPos, &mAnchor) < 0x12c000)
         SetState(2);
     func_ov071_0211f0b4();
     UpdatePos(&mdCcAc_c);
@@ -492,8 +491,7 @@ int daSpd_c::func_ov071_0211f7d4() {
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     mAngleX = mAngleX + 0x1000;
     if (mWithMeshClsn.JustHitGround()) {
-        if (((SurfaceInfo *)((char *)mWithMeshClsn.GetFloorResult() + 4))->clps.GetSurfaceType() ==
-            4) {
+        if (mWithMeshClsn.GetFloorResult()->surface.clps.GetSurfaceType() == 4) {
             func_ov071_0211f498();
         } else {
             mVertSpeed = (mVertSpeed * -0x3c) / 0x64;
@@ -502,11 +500,10 @@ int daSpd_c::func_ov071_0211f7d4() {
         mVertSpeed = 0;
         mWithMeshClsn.ClearLimMovFlag();
         mFlags |= 1;
-        short z = 0;
-        short ang = mPrevAngleY;
-        mAngleX = z;
-        mAngleY = ang;
-        mAngleZ = z;
+        short heading = mPrevAngleY;
+        mAngleX = 0;
+        mAngleY = heading;
+        mAngleZ = 0;
         SetState(2);
     }
     UpdatePos(&mdCcAc_c);
@@ -579,7 +576,7 @@ void daSpd_c::func_ov071_0211f498() {
     v.z = mPosZ;
     SpawnCoins(v, mCoinCount, 0xf000, 0);
     PoofDust();
-    func_02012694(0xc4, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0xc4, &mCamSpacePos);
     if (param1) {
         mCoinCount = 0;
         SetState(0);
@@ -653,21 +650,10 @@ void daSpd_c::func_ov071_0211f29c() {
 }
 
 void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
-    Vector3 pos;
-    Vector3 normal;
-    Vector3 wallnormal;
-
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
     if (w->IsOnGround()) {
         dBgCh_Gnd rc;
-        {
-            int p60 = mPosY;
-            int pz = mPosZ;
-            int py = p60 + 0x1e000;
-            pos.x = mPosX;
-            pos.y = py;
-            pos.z = pz;
-        }
+        Vector3 pos(mPosX, mPosY + 0x1e000, mPosZ);
         rc.SetObjAndPos(pos, this);
         if (!rc.DetectClsn() || rc.clsnY < mPosY - 0x32000) {
             mHorzSpeed = 0;
@@ -675,8 +661,8 @@ void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
             mPosY = mPrevPosY;
             mPosZ = mPrevPosZ;
         } else {
-            void *fr = w->GetFloorResult();
-            ((SurfaceInfo *)((char *)fr + 4))->CopyNormalTo(normal);
+            Vector3 normal;
+            w->GetFloorResult()->surface.CopyNormalTo(normal);
             if (normal.y != 0) {
                 mVertSpeed =
                     -(FX_Div(FX_MUL(normal.x, mSpeedX) + FX_MUL(normal.z, mSpeedZ), normal.y) +
@@ -685,8 +671,8 @@ void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
         }
     }
     if (w->IsOnWall()) {
-        void *wr = w->GetWallResult();
-        ((SurfaceInfo *)((char *)wr + 4))->CopyNormalTo(wallnormal);
+        Vector3 wallNormal;
+        w->GetWallResult()->surface.CopyNormalTo(wallNormal);
     }
 }
 

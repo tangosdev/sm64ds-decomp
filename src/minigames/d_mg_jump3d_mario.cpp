@@ -27,8 +27,7 @@
  *
  * leftovers:
  * - The helper functions and data_ov006_ tables have no header or name yet.
- * - The *(volatile int *)&v[2] store in StateMove, the int* zeroing of
- *   Mtx in Draw, and the `int t` temp in LoadResources
+ * - The int* zeroing of Mtx in Draw and the `int t` temp in LoadResources
  *   are codegen-pinned; each site carries its measured note.
  */
 
@@ -72,6 +71,7 @@ extern Jump3DState pmf_dMgJump3DMario_c_StateMove;
 extern Jump3DState pmf_dMgJump3DMario_c_StateHold;
 extern Jump3DState pmf_dMgJump3DMario_c_StateDamp;
 extern Jump3DState pmf_dMgJump3DMario_c_StateRespawn;
+extern Jump3DState pmf_dMgJump3DMario_c_StateIdle;
 extern Jump3DState pmf_dMgJump3DMario_c_StateIdle_2;
 extern Jump3DState pmf_dMgJump3DMario_c_StateWindUp;
 extern Jump3DState pmf_dMgJump3DMario_c_StateIdle_3;
@@ -133,7 +133,6 @@ extern int sJump3DLayout;
 extern int sJump3DMarioCount;
 extern char *sJump3DMarioPool;
 extern char *sJumpAdapters[];
-extern int pmf_dMgJump3DMario_c_StateIdle[2];
 
 extern u8  data_ov006_02140400;
 extern u16 sJump3DSpinAngle;
@@ -220,21 +219,11 @@ void Jump3D_RestoreCount(void) {
     ApproachLinear(sJump3DMariosLeft, sJump3DMarioCount, 1);
 }
 
-/* Returns 0 if any entry's pair at +0x3c disagrees with the record at
- * 0213b040 (a y mismatch is tolerated when x is 0), else 1. */
-struct Jump3DEnt {
-    char _pad0[0x3c];
-    int x;
-    int y;
-    char _pad44[0x74];
-};
+/* Returns 1 when every Mario in the pool is in StateIdle, else 0. */
 int Jump3D_AllIdle(void) {
     int i;
     for (i = 0; i < sJump3DMarioCount; i++) {
-        int *v = (&((Jump3DEnt *)sJump3DMarioPool)[i].x);
-        volatile int *q = (int *)pmf_dMgJump3DMario_c_StateIdle;
-        if (v[0] != pmf_dMgJump3DMario_c_StateIdle[0] ||
-            (v[1] != q[1] && ((Jump3DEnt *)sJump3DMarioPool)[i].x != 0))
+        if (((dMgJump3DMario_c *)sJump3DMarioPool)[i].mState != pmf_dMgJump3DMario_c_StateIdle)
             return 0;
     }
     return 1;
@@ -513,13 +502,10 @@ void dMgJump3DMario_c::StateHold()
 
 void dMgJump3DMario_c::EnterHold()
 {
-    /* VecFx32, not Vector3: Vector3 matches here too, but it makes this
-       file emit Vector3's destructor, which the manifest does not license
-       (notes/experiments/jump3d-2711-scratch-vector3.md). */
-    VecFx32 v;
+    Vector3 v;
 
-    Vec3_Sub((Vector3 *)&v, (const Vector3 *)&mPos, (const Vector3 *)&mAnchor);
-    if (NormalizeVec3IfNonZero((Vector3 *)&v) != 0) {
+    Vec3_Sub(&v, (const Vector3 *)&mPos, (const Vector3 *)&mAnchor);
+    if (NormalizeVec3IfNonZero(&v) != 0) {
         mVel.x = v.x;
         mVel.y = v.y;
         mVel.z = v.z;
@@ -573,17 +559,11 @@ void dMgJump3DMario_c::StateMove()
                 t = ym - az;
                 if (t < 0) t = -t;
                 if (t < 0x26 && (int)y < kScreenYMax) {
-                    int v[3];
-                    int *p = &sJump3DRiseVy;
-                    int t0 = (ax - 0x80) << 12;
-                    int t1 = (-az) << 12;
-                    v[0] = t0;
-                    v[1] = t1;
-                    /* Keep the volatile store: a plain `v[2] = 0;` shrinks the
-                       function to 0x3a8 bytes against the ROM's 0x3c4
-                       (notes/experiments/jump3d-2711-statemove-volatile-store.md). */
-                    *(volatile int *)&v[2] = 0;
-                    mVel.y = *p;
+                    Vector3 v;
+                    v.x = (ax - 0x80) << 12;
+                    v.y = (-az) << 12;
+                    v.z = 0;
+                    mVel.y = sJump3DRiseVy;
                     mVel.x = sJump3DMoveSpeed * dx;
                     if (mAnimIdx != 0)
                         mAnimIdx = 0;
@@ -593,10 +573,8 @@ void dMgJump3DMario_c::StateMove()
                     mAnmModel.dExtFrameCtrl_c::currFrame = 0;
                     Particle::System::NewSimple(kPtclMgJump3DJumpA, mPos.x << 3, mPos.y << 3,
                                                 mPos.z << 3);
-                    Particle::System::NewSimple(kPtclMgJump3DJumpB, v[0] << 3, v[1] << 3,
-                                                v[2] << 3);
-                    Particle::System::NewSimple(kPtclMgJump3DJumpC, v[0] << 3, v[1] << 3,
-                                                v[2] << 3);
+                    Particle::System::NewSimple(kPtclMgJump3DJumpB, v.x << 3, v.y << 3, v.z << 3);
+                    Particle::System::NewSimple(kPtclMgJump3DJumpC, v.x << 3, v.y << 3, v.z << 3);
                     Sound_PlayBank1Panned(0, mAnimIdx, mPos.x);
                     func_02012718(0x1c6, mScreenX << 12);
                     EnterBounce();
@@ -803,18 +781,18 @@ void dMgJump3DMario_c::HideAndIdle()
 
 void dMgJump3DMario_c::StateRespawn()
 {
-    unsigned int rnd;
+    fx32 rnd;
     int speed;
 
     mTimer -= 1;
     if (mTimer == 0) {
         mPos.y = 0x100000;
-        rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
-        mPos.x = ((int)rnd - 0x800) * 0xc0;
+        rnd = RAND_FX();
+        mPos.x = (rnd - 0x800) * 0xc0;
         mVel.y = 0;
         speed = sJump3DMoveSpeed;
-        rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
-        mVel.x = FX_MUL((((int)rnd - 0x800) << 1), speed);
+        rnd = RAND_FX();
+        mVel.x = FX_MUL((rnd - 0x800) << 1, speed);
         mAnmModel.SetAnim(sJump3DAnimWallJump, 0x40000000, kAnimSpeed, 0);
         EnterMove();
         return;

@@ -296,11 +296,7 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
 
     mInputEnabled = 0;
     mRoundOver = 0;
-    mDoorSwitchTimer =
-        (((int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) *
-          0x2d0) >>
-         12) +
-        0x2d0;
+    mDoorSwitchTimer = RAND_FX_SCALE(0x2d0) + 0x2d0;
     mDoorBlinkTimer = 0;
     mDoorBlinkPhase = 1;
     mArrow1X = 0;
@@ -367,7 +363,11 @@ void dScMgTrampoline_c::StateIntro() {
     {
         int t = FX_Div(counter << 12, 0x5a000);
         /* Kept volatile: the ROM spills the previous point to the stack
-           across the random draw; plain locals DIFF (measured 2026-11-08). */
+           across the random draw; plain locals DIFF (measured 2026-11-08).
+           Re-measured 2026-11-16 (#821 r22): a whole-struct copy
+           `Vec2s prev = mTouch` keeps the stack slot but loads it with
+           ldrh, not ldrsh (10/104); member-wise Vec2s, s16[2] (assigned
+           or brace-initialised) and (&prev)->x are all kept in registers. */
         volatile s16 prevX = mTouch.x;
         volatile s16 prevY = mTouch.y;
         int penX = sTrmpStartTouchX * t + sTrmpIntroFromX * (0x1000 - t);
@@ -375,11 +375,7 @@ void dScMgTrampoline_c::StateIntro() {
         mTouch.x = (s16)(penX >> 12);
         mTouch.y = sTrmpStartTouchY;
 
-        mTouch.y +=
-            ((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) -
-               0x800)
-              << 2) >>
-             12);
+        mTouch.y += ((RAND_FX() - 0x800) << 2) >> 12;
 
         Mg_DrawLine(prevX, prevY, mTouch.x, mTouch.y, 2, 0xc);
 
@@ -696,6 +692,7 @@ int dScMgTrampoline_c::OnGraphCallback0() {
     volatile u16 fill;
     Vec2s from;
     Vec2s to;
+    s16 startX;
     int dst;
 
     if (!dScMgBase_c::OnGraphCallback0())
@@ -714,8 +711,8 @@ int dScMgTrampoline_c::OnGraphCallback0() {
         return 0;
 
     if (mTouchReleased != 0) {
-        if ((mTouchStart.x < 0x24 && mTouch.x < 0x24) ||
-            (mTouchStart.x > 0xd4 && mTouch.x > 0xd4)) {
+        startX = mTouchStart.x;
+        if ((startX < 0x24 && mTouch.x < 0x24) || (startX > 0xd4 && mTouch.x > 0xd4)) {
             func_02012790(0xe);
         } else {
             from = mTouchStart;

@@ -25,11 +25,9 @@ struct daObjDlPyramid_c : dBgActor_c {
     /* The collider's own matrix: InitResources passes it as the
        `const Matrix4x3 &' argument of dBgW_KcMbg::SetFile, and the per-frame
        collider update rebuilds it from the yaw and the actor position.
-       0x370 + 0x30 lands exactly on mHomePosX. */
+       0x370 + 0x30 lands exactly on mHomePos. */
     Matrix4x3 mClsnMat2;  /* 0x370 */
-    s32 mHomePosX;        /* 0x3a0 -- InitResources copies mPosX/Y/Z here */
-    s32 mHomePosY;        /* 0x3a4 */
-    s32 mHomePosZ;        /* 0x3a8 */
+    Vector3 mHomePos;     /* 0x3a0 -- InitResources copies mPosX/Y/Z here */
     s32 mSpinParticleID;  /* 0x3ac */
     s16 mAngVelY;         /* 0x3b0 */
     u16 mStateTimer;      /* 0x3b2 */

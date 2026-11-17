@@ -1,16 +1,13 @@
 #include "common.h"
 #include "nitro/fx/fx.h"
-#include "math/Matrix.h"
-#include "math/MtxStack.h"
+#include "nitro/fx/fx_vec.h"
+#include "nitro/fx/fx_mtx33.h"
+#include "nitro/fx/fx_mtx43.h"
 #include "private/spl_particle_views.h"
 #include "nitro/gx/g3imm_cmd.h"
 #include "nitro/mi/memory.h"
 
 /* No header declares these. */
-extern void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
-struct Vector3;
-extern void VEC_Normalize(const struct Vector3 *v, struct Vector3 *out);
-extern void MTX_MultVec33(const Vector3 *in, const Matrix3x3 *m, Vector3 *out);
 extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix */
 extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
 
@@ -22,12 +19,12 @@ void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl)
     ParticleSystem *sys = mgr->mCurrentSystem;
     s16 aspectRatio = sys->mDefinition->data->aspectRatio;
     int alpha = (ptcl->visibility.baseAlpha * (ptcl->visibility.animAlpha + 1)) >> 5;
-    int *view = mgr->mDrawMatrix;
-    Vector3 velDir;
-    Vector3 trans;
-    Vector3 dir;
-    Vector3 look;
-    Matrix3x3 rot;
+    const MtxFx43 *view = mgr->mDrawMatrix;
+    VecFx32 velDir;
+    VecFx32 trans;
+    VecFx32 dir;
+    VecFx32 look;
+    MtxFx33 rot;
     int mat[12];
     u32 id;
     u32 v;
@@ -60,9 +57,9 @@ void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl)
 
     /* the quad's x axis: velocity x the view's z column, in view space */
     dir = ptcl->velocity;
-    look.x = view[2];
-    look.y = view[5];
-    look.z = view[8];
+    look.x = view->m[0][2];
+    look.y = view->m[1][2];
+    look.z = view->m[2][2];
     VEC_CrossProduct(&dir, &look, &dir);
 
     if (dir.x == 0 && dir.y == 0 && dir.z == 0)
@@ -71,15 +68,15 @@ void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl)
     VEC_Normalize(&dir, &dir);
     MI_Copy36B(view, &rot);
     MTX_MultVec33(&dir, &rot, &dir);
-    MTX_MultVec43(&trans, (Matrix4x3 *)view, &trans);
+    MTX_MultVec43(&trans, view, &trans);
     velDir = ptcl->velocity;
     VEC_Normalize(&velDir, &velDir);
 
     {
         /* |velocity . -view z|: 1 when the particle flies straight at the
          * camera, 0 across it; y stretches by (1 - that) * dbbScale + 1 */
-        int dot =
-            FX_MUL(velDir.x, -view[2]) + FX_MUL(velDir.y, -view[5]) + FX_MUL(velDir.z, -view[8]);
+        int dot = FX_MUL(velDir.x, -view->m[0][2]) + FX_MUL(velDir.y, -view->m[1][2]) +
+                  FX_MUL(velDir.z, -view->m[2][2]);
         int side;
         int stretch;
         int sy2;

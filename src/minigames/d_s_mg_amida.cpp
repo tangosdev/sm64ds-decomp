@@ -100,7 +100,6 @@ enum dScMgAmida_c_AssetId {
 extern "C" {
 /* --- shared ov004 and main helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 extern void FreeGfxSlotsById(int a);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
@@ -242,8 +241,8 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
     int i;
     int k;
     int j;
-    int tmp;
-    int rnd;
+    int t;
+    int u;
 
     if (IsVariant2()) {
         switch (mPatternIndex) {
@@ -271,11 +270,11 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
         arg1 = 1;
         do {
             for (i = 0; i < 4; i++) {
-                rnd = RandomIntInternal(&data_0209d4b8.value);
-                tmp = mLaneResult[i];
-                j = ((((u32)rnd >> 16) & 0x7fff) * 4) >> 15;
+                t = RandomIntInternal(&data_0209d4b8.value);
+                u = mLaneResult[i];
+                j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
                 mLaneResult[i] = mLaneResult[j];
-                mLaneResult[j] = tmp;
+                mLaneResult[j] = u;
             }
             for (k = 0; k < 4; k++) {
                 if (mLaneWants[k] != mLaneResult[mLanePerm[k]]) {
@@ -292,11 +291,11 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
         for (; arg1 < 4; arg1++)
             mLaneResult[arg1] = 0;
         for (i = 0; i < 4; i++) {
-            rnd = RandomIntInternal(&data_0209d4b8.value);
-            tmp = mLaneResult[i];
-            j = ((((u32)rnd >> 16) & 0x7fff) * 4) >> 15;
+            t = RandomIntInternal(&data_0209d4b8.value);
+            u = mLaneResult[i];
+            j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
             mLaneResult[i] = mLaneResult[j];
-            mLaneResult[j] = tmp;
+            mLaneResult[j] = u;
         }
     }
 }
@@ -1670,8 +1669,8 @@ void dScMgAmida_c::SetupRound() {
         mHurry = 0;
         mPenLocked = 0;
         {
-            int lane;
-            for (lane = 0; lane < 4; lane++) {
+            int lane = 0;
+            for (; lane < 4; lane++) {
                 mLanePos[lane].x = (lane * 0x40 + 0x20) << 12;
                 mLanePos[lane].y = 0xb0000;
                 mLaneVel[lane].x = 0;
@@ -1771,7 +1770,7 @@ s32 dScMgAmida_c::Render() {
         int off = sine / 0x100;
         SetSubBg2Offset(off, 0);
     }
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
 
     if (mState == 3 && mEndDelayTimer == 0) {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
@@ -2051,7 +2050,7 @@ s32 dScMgAmida_c::InitResources() {
     fillSub = 0;
     MI_CpuFill16(file, fillSub, 0x6000);
 
-    Mg_InitBrush(this, 1, 0, 2);
+    InitBrush(1, 0, 2);
 
     G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
                          GX_BG_CHARBASE_0x0c000);

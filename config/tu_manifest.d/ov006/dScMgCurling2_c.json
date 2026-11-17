@@ -32,6 +32,11 @@
       "end": "0x02133598"
     },
     {
+      "name": ".data",
+      "start": "0x0213c3d4",
+      "end": "0x0213c4bc"
+    },
+    {
       "name": ".bss",
       "start": "0x02141978",
       "end": "0x02141a40"
@@ -410,7 +415,211 @@
       "ordinal": 52
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_dScMgCurling2_c_StoneRest",
+      "address": "0x0213c3d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StoneRest (0x020e5b70), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StoneSlide",
+      "address": "0x0213c3dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StoneSlide (0x020e5b7c), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StoneWait",
+      "address": "0x0213c3e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StoneWait (0x020e5e3c), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StoneSteer",
+      "address": "0x0213c3ec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StoneSteer (0x020e5a0c), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_Idle",
+      "address": "0x0213c3f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::Idle (0x020e61c0), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "sCurling2StoneSprite",
+      "address": "0x0213c3fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Single OamAttr {0x00f0, 0x81f0, 0x2000, 0} read only by DrawStonesLeft and DrawStones; ROM bytes 81f000f0 00002000."
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_NextThrow",
+      "address": "0x0213c404",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::NextThrow (0x020e628c), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXPushPosFast",
+      "address": "0x0213c40c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StepXPushPosFast (0x020e4520), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_Play",
+      "address": "0x0213c414",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::Play (0x020e6354), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepYRestart",
+      "address": "0x0213c41c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StepYRestart (0x020e3db4), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_EndRound",
+      "address": "0x0213c424",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::EndRound (0x020e61c4), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_PickStepMode",
+      "address": "0x0213c42c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::PickStepMode (0x020e4794), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "g_profile_MG_CURLING_J",
+      "address": "0x0213c434",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "MG_CURLING_J profile {dScMgCurling2_c_classInit, 375, 375}: its classInit word relocates to 0x020e6bf4 and the module's profile table at 0x02090e40 loads it; source defines it as BaseSpawnInfo<void>, as the sibling minigame profiles are."
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXPushNeg",
+      "address": "0x0213c43c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StepXPushNeg (0x020e3f54), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXPushPos",
+      "address": "0x0213c444",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StepXPushPos (0x020e4094), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "sCurling2TargetStoneSprite",
+      "address": "0x0213c44c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Single OamAttr {0x00f0, 0x81f0, 0x4000, 0} read only by DrawStones; ROM bytes 81f000f0 00004000."
+    },
+    {
+      "symbol": "sCurling2StonesSprites",
+      "address": "0x0213c454",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Single OamAttr {0x04f0, 0x81f0, 0x3404, 0} read only by DrawStones (the shadow); ROM bytes 81f004f0 00003404."
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXSettleFast",
+      "address": "0x0213c45c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StepXSettleFast (0x020e4348), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXPushNegFast",
+      "address": "0x0213c464",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StepXPushNegFast (0x020e440c), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepYRampDown",
+      "address": "0x0213c46c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StepYRampDown (0x020e3c4c), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXPickFast",
+      "address": "0x0213c474",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StepXPickFast (0x020e4630), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_BeginRound",
+      "address": "0x0213c47c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::BeginRound (0x020e64e4), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepYRampUp",
+      "address": "0x0213c484",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StepYRampUp (0x020e3ce0), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXAndY",
+      "address": "0x0213c48c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StepXAndY (0x020e42b4), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXOnly",
+      "address": "0x0213c494",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StepXOnly (0x020e4744), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXPick",
+      "address": "0x0213c49c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StepXPick (0x020e41d0), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXSettle",
+      "address": "0x0213c4a4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::StepXSettle (0x020e3e4c), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_DragUpdate",
+      "address": "0x0213c4ac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::DragUpdate (0x020e4bd4), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_DragBegin",
+      "address": "0x0213c4b4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCurling2_c::DragBegin (0x020e4ed4), emitted by __sinit_d_s_mg_curling2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    }
+  ],
   "bss": [
     {
       "symbol": "sCurling2DragTable",
@@ -572,7 +781,8 @@
     "UPPER SIDE PROMOTED (segment B, fold/ov006-curling2-1005). The 20-member run above the Curling2_ResolveStoneCollision hole is src/actors/dScMgCurling2_c_upper.cpp under config/tu_manifest.d/ov006/dScMgCurling2_c_upper.json -- the second half of this same linker run, licensed as its own TU because no manifest shape expresses a .text claim with a hole in it. With every C-name caller folded, the twelve members this manifest's earlier notes marked byte-neutrally convertible all took their real dScMgCurling2_c:: names in the same edit (DrawValues, AgeValues, ClearValues, DrawPieces, StepPieces, SeedPieces, DrawMarks, AgeMarks, DrawCursor, DrawCounter, DrawStones, SeparateStones), 31/31 MATCH unchanged. The decl_common.h decls note 101 enumerates are gone with them; note 105's migration is complete. The eight new names are coined the same way note 106 records for the first seventeen: .data pointer-to-member records prove member-ness, the ROM preserves no identifiers.",
     "Static initializer folded: all seven PMF state tables (0x02141978..0x02141a40) move out of the handwritten src/unnamed shard into src/minigames/d_s_mg_curling2.cpp, defined through the existing PMF typedef (plus a TU-local PMF0 for the two no-arg tables) and plain-copied from the ROM PMF constants at pmf_dScMgCurling2_c_StoneRest..0x0213c4b4. The block is one contiguous .bss run shared with the upper half of this class, so every table is defined here and the upper TU externs resolve to these definitions. The emitted .init, .ctor and .bss are byte-identical to retail; no handles, no compiler temporaries, no renames. Table definition order is the retail initializer copy order.",
     "FULL-RUN FOLD (U01, 2026-10-11): src/actors/dScMgCurling2_c_upper.cpp (the 20-member upper half) and src/d_s_mg_curling2.cpp (the registry factory) merged into this file -- one contiguous .text block 0x020e3854..0x020e6c28, 53 functions. Their delinks entries merged into this TU's single entry; the upper manifest was retired. The fold is the step the upper manifest already prescribed: classInit's _ZTV15dScMgCurling2_c reference now resolves against this object's own emitted (deadstrip-data) vtable. verify: 53/53 MATCH, emission order clean; linkcheck SCRATCH-DATA-VERIFIED, all four licensed ranges IDENTICAL.",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
+    "PMF LITERAL CLAIM (2026-11-17): the seven state tables are real void (dScMgCurling2_c::*)() / (int) member pointers initialised with &dScMgCurling2_c::X; each is its own {fn, 0} .data constant, and __sinit copies them (32 relocations, 0 mismatches against ROM). .data 0x0213c3d4..0x0213c4bc is claimed: 25 PMF literals paired by consumer (__sinit offset) and handler, plus the three stone OamAttr sprites and the MG_CURLING_J profile the source now defines. The incomplete 'struct C' receiver is retired: the complete class gives the same 8-byte literals and 53/53 .text."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -654,7 +864,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -686,6 +896,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213c3d4",
+          "end": "0x0213c4bc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02141978",
           "end": "0x02141a40",
@@ -694,7 +911,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 62
+          "LICENSED": 91
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -705,79 +922,240 @@
           {
             "section": ".init",
             "original": [
-              129
+              184
             ],
             "desired": [
-              129
+              184
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              127
+              182
             ],
             "desired": [
-              127
+              182
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              6,
+              7,
+              106,
+              108,
+              110,
+              112,
+              114,
+              116,
+              119,
+              121,
+              123,
+              125,
+              128,
+              130,
+              133,
+              135,
+              137,
+              140,
+              142,
+              144,
+              146,
+              149,
+              151,
+              153,
+              155,
+              158,
+              160,
+              162
+            ],
+            "desired": [
+              123,
+              121,
+              119,
+              125,
+              116,
+              6,
+              112,
+              142,
+              110,
+              158,
+              114,
+              133,
+              106,
+              153,
+              151,
+              5,
+              7,
+              146,
+              144,
+              162,
+              140,
+              108,
+              160,
+              137,
+              135,
+              149,
+              155,
+              130,
+              128
             ]
           },
           {
             "section": ".bss",
             "original": [
-              103,
-              104,
-              105,
-              106,
-              107,
-              108,
-              109
+              118,
+              127,
+              132,
+              139,
+              148,
+              157,
+              164
             ],
             "desired": [
-              105,
-              106,
-              109,
-              107,
-              104,
-              108,
-              103
+              132,
+              139,
+              164,
+              148,
+              127,
+              157,
+              118
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".bss",
+              "section": ".data",
               "original": [
-                103,
-                104,
-                105,
+                5,
+                6,
+                7,
                 106,
-                107,
                 108,
-                109
+                110,
+                112,
+                114,
+                116,
+                119,
+                121,
+                123,
+                125,
+                128,
+                130,
+                133,
+                135,
+                137,
+                140,
+                142,
+                144,
+                146,
+                149,
+                151,
+                153,
+                155,
+                158,
+                160,
+                162
               ],
               "desired": [
-                105,
+                123,
+                121,
+                119,
+                125,
+                116,
+                6,
+                112,
+                142,
+                110,
+                158,
+                114,
+                133,
                 106,
-                109,
-                107,
-                104,
+                153,
+                151,
+                5,
+                7,
+                146,
+                144,
+                162,
+                140,
                 108,
-                103
+                160,
+                137,
+                135,
+                149,
+                155,
+                130,
+                128
               ],
               "slots": [
-                103,
-                104,
-                105,
+                5,
+                6,
+                7,
                 106,
-                107,
                 108,
-                109
+                110,
+                112,
+                114,
+                116,
+                119,
+                121,
+                123,
+                125,
+                128,
+                130,
+                133,
+                135,
+                137,
+                140,
+                142,
+                144,
+                146,
+                149,
+                151,
+                153,
+                155,
+                158,
+                160,
+                162
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                118,
+                127,
+                132,
+                139,
+                148,
+                157,
+                164
+              ],
+              "desired": [
+                132,
+                139,
+                164,
+                148,
+                127,
+                157,
+                118
+              ],
+              "slots": [
+                118,
+                127,
+                132,
+                139,
+                148,
+                157,
+                164
               ]
             }
           ],
-          "symbolIndices": 7,
+          "symbolIndices": 36,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 26,
           "error": null
         },
         "errors": null
@@ -825,6 +1203,156 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StoneRest",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StoneSlide",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StoneWait",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StoneSteer",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_Idle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_NextThrow",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXPushPosFast",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_Play",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepYRestart",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_EndRound",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_PickStepMode",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXPushNeg",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXPushPos",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXSettleFast",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXPushNegFast",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepYRampDown",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXPickFast",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_BeginRound",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepYRampUp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXAndY",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXOnly",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXPick",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_StepXSettle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_DragUpdate",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCurling2_c_DragBegin",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "relocations": [
@@ -1157,6 +1685,393 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021419a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c3d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c9StoneRestEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e5b70"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c3dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c10StoneSlideEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e5b7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c3e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c9StoneWaitEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e5e3c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c3ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c10StoneSteerEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e5a0c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c3f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c4IdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e61c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c404",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c9NextThrowEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e628c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c40c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c16StepXPushPosFastEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e4520"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c414",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c4PlayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e6354"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c41c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c12StepYRestartEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e3db4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c424",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c8EndRoundEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e61c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c42c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c12PickStepModeEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e4794"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c434",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z25dScMgCurling2_c_classInitv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e6bf4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c43c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c12StepXPushNegEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e3f54"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c444",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c12StepXPushPosEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e4094"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c45c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c15StepXSettleFastEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e4348"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c464",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c16StepXPushNegFastEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e440c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c46c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c13StepYRampDownEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e3c4c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c474",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c13StepXPickFastEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e4630"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c47c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c10BeginRoundEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e64e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c484",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c11StepYRampUpEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e3ce0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c48c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c9StepXAndYEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e42b4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c494",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c9StepXOnlyEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e4744"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c49c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c9StepXPickEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e41d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c4a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c11StepXSettleEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e3e4c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c4ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c10DragUpdateEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e4bd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c4b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN15dScMgCurling2_c9DragBeginEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020e4ed4"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@2223",
+      "to": "pmf_dScMgCurling2_c_StoneRest",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StoneRest, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x250 loads 0x0213c3d4 in the ROM) and by its own relocation target (dScMgCurling2_c::StoneRest at 0x020e5b70)."
+    },
+    {
+      "from": "@2221",
+      "to": "pmf_dScMgCurling2_c_StoneSlide",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StoneSlide, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x248 loads 0x0213c3dc in the ROM) and by its own relocation target (dScMgCurling2_c::StoneSlide at 0x020e5b7c)."
+    },
+    {
+      "from": "@2219",
+      "to": "pmf_dScMgCurling2_c_StoneWait",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StoneWait, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x244 loads 0x0213c3e4 in the ROM) and by its own relocation target (dScMgCurling2_c::StoneWait at 0x020e5e3c)."
+    },
+    {
+      "from": "@2225",
+      "to": "pmf_dScMgCurling2_c_StoneSteer",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StoneSteer, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x254 loads 0x0213c3ec in the ROM) and by its own relocation target (dScMgCurling2_c::StoneSteer at 0x020e5a0c)."
+    },
+    {
+      "from": "@2217",
+      "to": "pmf_dScMgCurling2_c_Idle",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::Idle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x240 loads 0x0213c3f4 in the ROM) and by its own relocation target (dScMgCurling2_c::Idle at 0x020e61c0)."
+    },
+    {
+      "from": "@2213",
+      "to": "pmf_dScMgCurling2_c_NextThrow",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::NextThrow, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x238 loads 0x0213c404 in the ROM) and by its own relocation target (dScMgCurling2_c::NextThrow at 0x020e628c)."
+    },
+    {
+      "from": "@2239",
+      "to": "pmf_dScMgCurling2_c_StepXPushPosFast",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StepXPushPosFast, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x278 loads 0x0213c40c in the ROM) and by its own relocation target (dScMgCurling2_c::StepXPushPosFast at 0x020e4520)."
+    },
+    {
+      "from": "@2211",
+      "to": "pmf_dScMgCurling2_c_Play",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::Play, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x230 loads 0x0213c414 in the ROM) and by its own relocation target (dScMgCurling2_c::Play at 0x020e6354)."
+    },
+    {
+      "from": "@2253",
+      "to": "pmf_dScMgCurling2_c_StepYRestart",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StepYRestart, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x29c loads 0x0213c41c in the ROM) and by its own relocation target (dScMgCurling2_c::StepYRestart at 0x020e3db4)."
+    },
+    {
+      "from": "@2215",
+      "to": "pmf_dScMgCurling2_c_EndRound",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::EndRound, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x23c loads 0x0213c424 in the ROM) and by its own relocation target (dScMgCurling2_c::EndRound at 0x020e61c4)."
+    },
+    {
+      "from": "@2231",
+      "to": "pmf_dScMgCurling2_c_PickStepMode",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::PickStepMode, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x264 loads 0x0213c42c in the ROM) and by its own relocation target (dScMgCurling2_c::PickStepMode at 0x020e4794)."
+    },
+    {
+      "from": "@2249",
+      "to": "pmf_dScMgCurling2_c_StepXPushNeg",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StepXPushNeg, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x290 loads 0x0213c43c in the ROM) and by its own relocation target (dScMgCurling2_c::StepXPushNeg at 0x020e3f54)."
+    },
+    {
+      "from": "@2247",
+      "to": "pmf_dScMgCurling2_c_StepXPushPos",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StepXPushPos, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x28c loads 0x0213c444 in the ROM) and by its own relocation target (dScMgCurling2_c::StepXPushPos at 0x020e4094)."
+    },
+    {
+      "from": "@2243",
+      "to": "pmf_dScMgCurling2_c_StepXSettleFast",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StepXSettleFast, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x284 loads 0x0213c45c in the ROM) and by its own relocation target (dScMgCurling2_c::StepXSettleFast at 0x020e4348)."
+    },
+    {
+      "from": "@2241",
+      "to": "pmf_dScMgCurling2_c_StepXPushNegFast",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StepXPushNegFast, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x27c loads 0x0213c464 in the ROM) and by its own relocation target (dScMgCurling2_c::StepXPushNegFast at 0x020e440c)."
+    },
+    {
+      "from": "@2257",
+      "to": "pmf_dScMgCurling2_c_StepYRampDown",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StepYRampDown, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x2a4 loads 0x0213c46c in the ROM) and by its own relocation target (dScMgCurling2_c::StepYRampDown at 0x020e3c4c)."
+    },
+    {
+      "from": "@2237",
+      "to": "pmf_dScMgCurling2_c_StepXPickFast",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StepXPickFast, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x274 loads 0x0213c474 in the ROM) and by its own relocation target (dScMgCurling2_c::StepXPickFast at 0x020e4630)."
+    },
+    {
+      "from": "@2209",
+      "to": "pmf_dScMgCurling2_c_BeginRound",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::BeginRound, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x22c loads 0x0213c47c in the ROM) and by its own relocation target (dScMgCurling2_c::BeginRound at 0x020e64e4)."
+    },
+    {
+      "from": "@2255",
+      "to": "pmf_dScMgCurling2_c_StepYRampUp",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StepYRampUp, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x2a0 loads 0x0213c484 in the ROM) and by its own relocation target (dScMgCurling2_c::StepYRampUp at 0x020e3ce0)."
+    },
+    {
+      "from": "@2235",
+      "to": "pmf_dScMgCurling2_c_StepXAndY",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StepXAndY, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x270 loads 0x0213c48c in the ROM) and by its own relocation target (dScMgCurling2_c::StepXAndY at 0x020e42b4)."
+    },
+    {
+      "from": "@2233",
+      "to": "pmf_dScMgCurling2_c_StepXOnly",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StepXOnly, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x26c loads 0x0213c494 in the ROM) and by its own relocation target (dScMgCurling2_c::StepXOnly at 0x020e4744)."
+    },
+    {
+      "from": "@2245",
+      "to": "pmf_dScMgCurling2_c_StepXPick",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StepXPick, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x288 loads 0x0213c49c in the ROM) and by its own relocation target (dScMgCurling2_c::StepXPick at 0x020e41d0)."
+    },
+    {
+      "from": "@2251",
+      "to": "pmf_dScMgCurling2_c_StepXSettle",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::StepXSettle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x298 loads 0x0213c4a4 in the ROM) and by its own relocation target (dScMgCurling2_c::StepXSettle at 0x020e3e4c)."
+    },
+    {
+      "from": "@2229",
+      "to": "pmf_dScMgCurling2_c_DragUpdate",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::DragUpdate, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x260 loads 0x0213c4ac in the ROM) and by its own relocation target (dScMgCurling2_c::DragUpdate at 0x020e4bd4)."
+    },
+    {
+      "from": "@2227",
+      "to": "pmf_dScMgCurling2_c_DragBegin",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_curling2.cpp assigns &dScMgCurling2_c::DragBegin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_curling2.cpp+0x258 loads 0x0213c4b4 in the ROM) and by its own relocation target (dScMgCurling2_c::DragBegin at 0x020e4ed4)."
     }
   ]
 }

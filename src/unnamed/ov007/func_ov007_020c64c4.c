@@ -1,5 +1,5 @@
 #include "Ov007Picker.h"
-#include "math/CalcLib.h"
+#include "nitro/fx/fx_vec.h"
 
 /* Re-measures every group's rest links (func_ov007_020c6314 with `b`); in
  * link mode also drops the anchor onto pos and re-measures `link`. */

@@ -32,9 +32,9 @@
  * - data_ov030_* handles stay address labels. decl_common.h types
  *   four of them as void*[] where this file's blocks say int[].
  *   g_profile is not this TU's data.
- * - func_ov030_02112578 keeps `*(s32 *)((u8 *)v + N)` stores into a v
- *   it never reads. Spelled `v[N] = ...` or `s32 v[3] = {...}`, mwcc
- *   drops the three dead stores and the function comes out 0x24 short.
+ * - func_ov030_02112578 fills a Vector3 v it never reads. As a Vector3
+ *   the three stores survive; as `s32 v[3]`, or with v removed, mwcc
+ *   drops them and the function comes out 0x24 short.
  */
 #pragma defer_codegen off
 
@@ -57,6 +57,7 @@
 #include "Sound.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
+#include "Vector3s.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 
@@ -83,6 +84,18 @@ struct MkyAnimFilePtr : SharedFilePtr {
     MkyAnimFilePtr(unsigned int fileID);
     ~MkyAnimFilePtr();
 };
+
+/* The carry offsets, one per hold pose: UpdateModelAndCap picks one by
+ * index. The table is defined at the bottom, in retail __sinit order. */
+struct MkyOff {
+    Vector3 offset;
+    MkyOff(int, int, int, int);
+    MkyOff(int, int, int);
+    ~MkyOff();
+};
+typedef char MkyOff_size_must_be_0xc[sizeof(MkyOff) == 0xc ? 1 : -1];
+
+extern MkyOff data_ov030_02115ddc[4];
 
 /* Actor IDs 0xbf, 0x10b and 0x10c are PLAYER, UKIKI_THIEF and UKIKI_STAR.
  * dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states.
@@ -162,19 +175,13 @@ void daMky_c::ReturnToPerch() {
     b.y = b.y - 0x96000;
     rc.SetObjAndLine(a, b, this);
 
-    if (this->mPerchPosY - this->mPosY > 0x96000 || rc.DetectClsn()) {
-        Vec3_Asr(&asr, (Vector3 *)&this->mPerchPosX, 3);
+    if (this->mPerchPos.y - this->mPosY > 0x96000 || rc.DetectClsn()) {
+        Vec3_Asr(&asr, &this->mPerchPos, 3);
 
         if (data_0209f43c.TransformAndClip(data_0209b3ec, asr, 0x1f400, out) > 0xc350000) {
-            this->mPosX = this->mPerchPosX;
-            this->mPosY = this->mPerchPosY;
-            this->mPosZ = this->mPerchPosZ;
-            this->mSpawnPosX = this->mPerchPosX;
-            this->mSpawnPosY = this->mPerchPosY;
-            this->mSpawnPosZ = this->mPerchPosZ;
-            this->mPrevPosX = this->mPerchPosX;
-            this->mPrevPosY = this->mPerchPosY;
-            this->mPrevPosZ = this->mPerchPosZ;
+            this->mPos = this->mPerchPos;
+            this->mSpawnPos = this->mPerchPos;
+            this->mPrevPos = this->mPerchPos;
             UpdateModelAndCap();
             this->mResetTimer = 150;
         }
@@ -314,14 +321,10 @@ int daMky_c::UpdateSafePos() {
         v.z = z;
         rg.SetObjAndPos(v, this);
         if (rg.DetectClsnSlot0() == 0 || this->mPosY - rg.clsnY > 0x2000) {
-            this->mPosX = this->mSpawnPosX;
-            this->mPosY = this->mSpawnPosY;
-            this->mPosZ = this->mSpawnPosZ;
+            this->mPos = this->mSpawnPos;
             return 1;
         }
-        this->mSpawnPosX = this->mPosX;
-        this->mSpawnPosY = this->mPosY;
-        this->mSpawnPosZ = this->mPosZ;
+        this->mSpawnPos = this->mPos;
     }
     return 0;
 }
@@ -373,16 +376,12 @@ void daMky_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
     }
 }
 void daMky_c::UpdateModelAndCap() {
-    /* from include/decl_common.h:255, which this TU does not include. */
-    extern char data_ov030_02115ddc[];
-
-    struct Bundle { Vector3_16 rot; short _p; Vector3 trans; int _tail[2]; };
-
     int idx;
     Matrix4x3 *res;
     dActor_c* obj;
     unsigned int id;
-    Bundle bnd;
+    Vector3s rot;
+    Vector3 trans;
 
     if (IsFlagSet(this, 0x100) && this->mPlayer && this->mPlayer->mCarryMatrix) {
         idx = 0;
@@ -392,7 +391,7 @@ void daMky_c::UpdateModelAndCap() {
         if (this->mPlayer->param1 == 2) {
             idx = (idx + 2) & 0xff;
         }
-        res = UpdateCarry(*this->mPlayer, *(Vector3 *)(data_ov030_02115ddc + idx * 0xc));
+        res = UpdateCarry(*this->mPlayer, data_ov030_02115ddc[idx].offset);
         mAnmModel.mat4x3 = *res;
     } else {
         Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngleY);
@@ -411,17 +410,15 @@ void daMky_c::UpdateModelAndCap() {
 
     obj = dActor_c::FindWithID(id);
 
-    bnd.trans.x = 0xa00;
-    bnd.trans.y = 0;
-    bnd.trans.z = -0x2f00;
-    bnd.rot.x = -0x3f00;
-    bnd.rot.y = 0;
-    bnd.rot.z = -0x4000;
+    trans = Vector3(0xa00, 0, -0x2f00);
+    rot.x = -0x3f00;
+    rot.y = 0;
+    rot.z = -0x4000;
 
     MtxStack::copy(mAnmModel.mat4x3);
     MtxStack::concat(mAnmModel.data.transforms[5]);
-    MtxStack::transM(bnd.trans);
-    MtxStack::XYZrotM(bnd.rot);
+    MtxStack::transM(trans);
+    MtxStack::XYZrotM(rot.x, rot.y, rot.z);
     mCapMtx = MtxStack::get();
 
     obj->mCarryMatrix = &mCapMtx;
@@ -475,8 +472,8 @@ int daMky_c::func_ov030_02112400()
     this->mdCcAc_c.Update();
 
     if (IsUkikiStar(this)) {
-        if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000) {
-            if (this->mPosY > this->mPerchPosY - 0x12c000) {
+        if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000) {
+            if (this->mPosY > this->mPerchPos.y - 0x12c000) {
                 ChangeState(1);
             }
         }
@@ -538,12 +535,9 @@ int daMky_c::func_ov030_02112578()
         PlayIdleSounds();
         break;
     case 2: {
-        s32 sp[3];
-        sp[0] = this->mPosX;
-        sp[1] = this->mPosY;
-        sp[2] = this->mPosZ;
-        sp[1] += 0x50000;
-        if (player->ShowMessage(*this, 0xbd, (const Vector3 *)sp, 1, 0) != 0) {
+        Vector3 sp = this->mPos;
+        sp.y += 0x50000;
+        if (player->ShowMessage(*this, 0xbd, &sp, 1, 0) != 0) {
             this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait3AnimationFile[1], 0, 0x1000, 0);
             this->mAnmModel.SetFlags(0);
             func_0201267c(0xd1, &this->mCamSpacePos);
@@ -671,8 +665,8 @@ int daMky_c::func_ov030_02112a84()
             else
                 ChangeState(this->mPrevState);
         } else if (IsUkikiStar(this)) {
-            if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-                this->mPosY > this->mPerchPosY - 0x12c000) {
+            if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
+                this->mPosY > this->mPerchPos.y - 0x12c000) {
                 ChangeState(this->mPrevState);
             } else {
                 ChangeState(9);
@@ -748,12 +742,8 @@ int daMky_c::EnterState7()
 int daMky_c::func_ov030_02112da0()
 {
     extern u8 data_0209d684;
-    if (IsInYoshiMouth(this)) {
-        int *p = &this->mPlayer->mPosX;
-        this->mPosX = p[0];
-        this->mPosY = p[1];
-        this->mPosZ = p[2];
-    }
+    if (IsInYoshiMouth(this))
+        mPos = mPlayer->mPos;
 
     if (IsFlagSet(this, 0x80000)) {
         this->mPrevState = 1;
@@ -764,14 +754,8 @@ int daMky_c::func_ov030_02112da0()
     switch (this->mSubState) {
     case 0: {
         if (IsInYoshiMouth(this)) {
-            daPly_c *s = this->mPlayer;
-            int *p = &s->mPosX;
-            int x = *p;
-            u8 *st = &this->mSubState;
-            this->mPosX = x;
-            this->mPosY = p[1];
-            this->mPosZ = p[2];
-            (*st)++;
+            mPos = mPlayer->mPos;
+            mSubState++;
         } else if (!IsBeingEaten(this) && !IsInYoshiMouth(this)) {
             /* Out of Yoshi altogether; the ROM re-tests the mouth bit. */
             mEatingPlayer = 0;
@@ -780,22 +764,15 @@ int daMky_c::func_ov030_02112da0()
         break;
     }
     case 1:
-        if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-            this->mPosY > this->mPerchPosY - 0x12c000) {
+        if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
+            this->mPosY > this->mPerchPos.y - 0x12c000) {
             if (this->mPlayer->ShowMessage(*this, 0xc1, 0, 0, 0) != 0) {
                 func_0201267c(0xd1, &this->mCamSpacePos);
                 this->mSubState++;
             }
         }
-        {
-            daPly_c *s = this->mPlayer;
-            u8 val = 60;
-            int *p = &s->mPosX;
-            this->mPosX = *p;
-            this->mPosY = p[1];
-            this->mPosZ = p[2];
-            this->mActionTimer = val;
-        }
+        mPos = mPlayer->mPos;
+        mActionTimer = 60;
         break;
     case 2:
         if (this->mPlayer->GetTalkState() == -1) {
@@ -820,8 +797,7 @@ int daMky_c::func_ov030_02112da0()
 int daMky_c::EnterState6()
 {
     this->mFlags &= ~0x80000;
-    if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-        mPosY > mPerchPosY - 0x12c000) {
+    if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 && mPosY > mPerchPos.y - 0x12c000) {
         mSubState = 0;
         this->SpawnSoundObj(1);
     } else {
@@ -882,12 +858,9 @@ int daMky_c::func_ov030_02113094()
                 Spawn(0x10d, (this->mCapPlayerNo << 8) | 5, this->mPlayer->mPos, 0, this->mAreaId,
                       -1);
                 ((fBase_c *)::dActor_c::FindWithID(this->mCapUniqueID))->MarkForDestruction();
-                {
-                    u32 z = 0;
-                    this->mCapUniqueID = z;
-                    this->mHasSpawnedCap = z;
-                    this->mPrevState = 0xa;
-                }
+                this->mCapUniqueID = 0;
+                this->mHasSpawnedCap = 0;
+                this->mPrevState = 0xa;
             }
             ChangeState(7);
         }
@@ -928,8 +901,8 @@ int daMky_c::func_ov030_02113324()
         v.z = oz;
         this->DetectRaycastClsn(v, this->mPos, 1);
 
-        if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-            this->mPosY > this->mPerchPosY - 0x12c000) {
+        if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
+            this->mPosY > this->mPerchPos.y - 0x12c000) {
             ChangeState(1);
         } else {
             ChangeState(9);
@@ -940,8 +913,8 @@ int daMky_c::func_ov030_02113324()
 
     switch (this->mSubState) {
     case 0:
-        if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-            this->mPosY > this->mPerchPosY - 0x12c000) {
+        if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
+            this->mPosY > this->mPerchPos.y - 0x12c000) {
             if (this->mPlayer->StartTalk(*this, 1) != 0) {
                 Vector3 camPos;
                 {
@@ -1001,8 +974,8 @@ int daMky_c::EnterState4(){
     extern int gMonkeyHoldAnimationFile[];
     this->mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyHoldAnimationFile[1]), 0, 0x1000, 0);
     this->mAnmModel.speed = 0x1000;
-    if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-        this->mPosY > mPerchPosY - 0x12c000) {
+    if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
+        this->mPosY > mPerchPos.y - 0x12c000) {
         mSubState = 0;
         this->SpawnSoundObj(1);
     } else {
@@ -1202,9 +1175,7 @@ int daMky_c::func_ov030_02113b38()
         this->mWithMeshClsn.ClearLimMovFlag();
         this->mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyRunAnimationFile[1]), 0, 0x1000, 0);
         this->mAnmModel.speed = 0x1000;
-        this->mSpawnPosX = this->mPosX;
-        this->mSpawnPosY = this->mPosY;
-        this->mSpawnPosZ = this->mPosZ;
+        this->mSpawnPos = this->mPos;
         ChangeState(this->mPrevState);
     }
     this->mdCcAc_c.Clear();
@@ -1222,12 +1193,12 @@ int daMky_c::EnterState2() {
         p = this->ClosestPlayer();
 
     if (IsUkikiThief(this)) {
-        this->mAngleY = Vec3_HorzAngle(&this->mPos, (Vector3 *)&this->mPerchPosX);
-    } else if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-               this->mPosY > this->mPerchPosY - 0x12c000) {
+        this->mAngleY = Vec3_HorzAngle(&this->mPos, &this->mPerchPos);
+    } else if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
+               this->mPosY > this->mPerchPos.y - 0x12c000) {
         this->mAngleY = Vec3_HorzAngle(&this->mPos, &p->mPos);
     } else {
-        this->mAngleY = Vec3_HorzAngle(&this->mPos, (Vector3 *)&this->mPerchPosX);
+        this->mAngleY = Vec3_HorzAngle(&this->mPos, &this->mPerchPos);
     }
 
     this->mPrevAngleY = this->mAngleY;
@@ -1258,8 +1229,8 @@ int daMky_c::func_ov030_02113d20()
 
     dist = Vec3_Dist(&this->mPos, &p->mPos);
 
-    if ((IsUkikiStar(this) && Vec3_Dist((Vector3 *)&this->mPerchPosX, &p->mPos) > 0x514000) ||
-        p->mPosY < this->mPerchPosY - 0x12c000) {
+    if ((IsUkikiStar(this) && Vec3_Dist(&this->mPerchPos, &p->mPos) > 0x514000) ||
+        p->mPosY < this->mPerchPos.y - 0x12c000) {
         this->mSubState = 2;
     }
 
@@ -1467,13 +1438,9 @@ s32 daMky_c::InitResources()
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mPerchPosX = mPosX;
-    mPerchPosY = mPosY;
-    mPerchPosZ = mPosZ;
-    mPerchPosY += 0x64000;
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mPerchPos = mPos;
+    mPerchPos.y += 0x64000;
+    mSpawnPos = mPos;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
@@ -1586,24 +1553,21 @@ extern "C" daMky_c::StateFunctions data_ov030_02115e0c[11] = {
  * three field stores. ~MkyOff is not defined here: after this TU's vague
  * ~Vector3 is stripped it is aliased onto _ZN7Vector3D1Ev, the one
  * destructor the cartridge registers for all four. */
-struct MkyOff {
-    int x, y, z;
-    MkyOff(int px, int py, int pz, int) {
-        x = px;
-        y = py;
-        z = pz;
-    }
-    MkyOff(int px, int py, int pz) {
-        unsigned int *p = (unsigned int *)this;
-        p[0] = px;
-        p[1] = py;
-        p[2] = pz;
-    }
-    ~MkyOff();
-};
-typedef char MkyOff_size_must_be_0xc[sizeof(MkyOff) == 0xc ? 1 : -1];
+inline MkyOff::MkyOff(int px, int py, int pz, int) {
+    offset.x = px;
+    offset.y = py;
+    offset.z = pz;
+}
+inline MkyOff::MkyOff(int px, int py, int pz) {
+    unsigned int *p = (unsigned int *)this;
+    p[0] = px;
+    p[1] = py;
+    p[2] = pz;
+}
 
-MkyOff data_ov030_02115ddc(0x1c000, -0x42000, 0x18000, 0);
-MkyOff data_ov030_02115de8(0x1c000, -0x28000, 0x28000);
-MkyOff data_ov030_02115df4(0x2b000, -0x42000, 0x18000);
-MkyOff data_ov030_02115e00(0x30000, -0x1e000, 0x1e000);
+MkyOff data_ov030_02115ddc[4] = {
+    MkyOff(0x1c000, -0x42000, 0x18000, 0),
+    MkyOff(0x1c000, -0x28000, 0x28000),
+    MkyOff(0x2b000, -0x42000, 0x18000),
+    MkyOff(0x30000, -0x1e000, 0x1e000),
+};

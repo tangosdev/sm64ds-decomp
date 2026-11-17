@@ -1502,7 +1502,9 @@ void dScMgPachinko2_c::ClearAimLine() {
 
 #pragma push
 /* Kept: without opt_loop_invariants off the hoisted x >> 3 and x & 7 swap
- * order and the row and column take other registers. */
+ * order and the row and column take other registers (10 of 32 words).
+ * Plain (x - 1 + j, y - 1 + i) bodies with it on are 31 words: the ROM
+ * spills the shared 0 for j to the stack (measured #821). */
 #pragma opt_loop_invariants off
 void dScMgPachinko2_c::PlotSubBg2Pixels(int a1, int a2, int a3) {
     int i, j, x, lo, hi, col, row, yb, s;
@@ -2270,7 +2272,7 @@ s32 dScMgPachinko2_c::InitResources() {
         }
     }
 
-    Mg_InitBrush(this, 0, 2, 0);
+    InitBrush(0, 2, 0);
 
     G2S_SetBG3Priority(2);
     G2S_BG3Mosaic(0);

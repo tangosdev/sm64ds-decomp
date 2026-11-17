@@ -20,13 +20,10 @@
  * inlined, per its own header's convention -- dBgW_KcMbg@0x124 and
  * dExtSimpleModel_c@0xd4), then dActor_c::~dActor_c.
  *
- * daDsnBase_c ends its own data at 0x360; this class's own storage starts
- * there. daDsnBase_c.h notes 0x360..0x3a0 exists in both leaves
- * (daDkk_c_classInit allocates 0x3a0, Thwomp_Spawn 0x3a4) but stays declared
- * per-leaf until a later pass shows both reading the same offsets. The
- * daDsnBase_c methods this class runs (its states 0..4 and the per-frame
- * shadow refresh) read and write the whole span through d_a_dsn_base.cpp's
- * DsnCycle view, which is the evidence for most of the names below:
+ * NO FIELDS OF ITS OWN: daDkk_c_classInit allocates 0x3a0, which is
+ * sizeof(daDsnBase_c). The cycle span 0x360..0x3a0 is the base's -- its
+ * states 0..4 and the per-frame shadow refresh read and write all of it on
+ * both leaves -- and this class uses these members of it:
  *
  *   0x360  mShadowMtx -- UpdateDropShadow copies the model matrix here,
  *          lowers its translation row, and hands it to the drop shadow.
@@ -61,16 +58,6 @@
 #include "daDsnBase_c.h"
 
 struct daDkk_c : daDsnBase_c {
-    /* The drop shadow's matrix; daDsnBase_c's per-frame shadow refresh
-       fills it. Kept as raw bytes: a Matrix4x3 member would add a
-       destructor. Nothing in d_a_dkk.cpp touches it. */
-    u8 mShadowMtx[0x30];  /* 0x360 */
-    s32 mRiseY;           /* 0x390 -- top of the rise (state 0) */
-    s32 mGroundY;         /* 0x394 -- ground height the falls snap to */
-    s32 mState;           /* 0x398 */
-    s16 mTurnTargetAngle; /* 0x39c -- target facing for the turn */
-    u8 mTimer;            /* 0x39e -- cycle countdown; post-landing pause */
-    u8 mLandCount;        /* 0x39f -- landings since the last turn */
 
     /* --- vtable --- */
     /* INLINE ON PURPOSE, and this is a byte-level requirement rather than a

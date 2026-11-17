@@ -88,14 +88,11 @@ int GetGameLanguage(void);
 // Retained caller ABI: narrowing to the definition's u16 adds a mask in InitMainScreenBg.
 unsigned int LoadCompressedFileAt(int fileID, void *target);
 extern unsigned char gMainScreenLayers;
-void Mg_AddCredits(void *c, int delta);
-void Mg_SubCredits(void *c, int val);
 extern void Mg_SubmitScore(int self);
 extern int data_ov006_0213e948[];
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 extern void **sSlotLangSprites[];
 extern SlotState sSlot3StateTable[];
 /* The ROM PMF constants the Slot3 state table copies from (unlicensed
@@ -115,7 +112,7 @@ extern int data_0208ee44;
 extern void RenderOamMainScreen(OamAttr *, int, int, int, int);
 extern OamAttr sSlotsSlotBlinkSprites[];
 extern void Mg_LoseCredits(int c);
-void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m);
+void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *m);
 extern void *data_ov006_0213e528[];
 void Mg_GainCredits(int x);
 extern int Mg_GetSavedRecord0(void);
@@ -123,7 +120,7 @@ extern int sSlot1ReelPos[][2];
 extern void *sSlot1Sprites[];
 extern unsigned char sSlot1Payouts[];
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
-extern void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern void Mg_SaveRecordPair(int a, int b);
 extern void Mg_PlayJingle(void *c);
 extern int sSlotReelScrollSpeeds[];
@@ -260,7 +257,7 @@ void dScMgSlot3_c::StatePayout() {
         if (mPayoutRemaining <= 0)
             return;
         mPayoutRemaining -= 1;
-        Mg_AddCredits(this, 1);
+        AddCredits(1);
         Sound::PlayBank2_2D(0x149);
         mStateTimer += 5;
         return;
@@ -275,7 +272,7 @@ void dScMgSlot3_c::StatePayout() {
             return;
     }
 
-    Mg_SubCredits(this, 1);
+    SubCredits(1);
     Sound::PlayBank2_2D(0x14a);
 }
 
@@ -680,8 +677,8 @@ s32 dScMgSlot3_c::Render() {
         }
     }
 
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawCredits(0xc, 0xc, 0);
+    DrawScoreTally(0xe0, 0x14, 1);
 
     if (mState == 3 && mWinColumn >= 0) {
         Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], mWinColumn * 0x50 + 0x20,
@@ -966,11 +963,8 @@ void dScMgSlot1_c::betIcon_c::Reset() {
 void dScMgSlot1_c::betIcon_c::Render() {
     OAM::RenderSub((OamAttr *)data_ov006_0213e528[mOn], mX, mY, -1, 1);
     int i;
-    int y = 0xb0;
-    int zero = 0;
     for (i = 0; i < BET_ICON(this)->mBetCount; i++) {
-        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], 0xb0 + i * 0x10, y,
-                              (void *)zero);
+        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], 0xb0 + i * 0x10, 0xb0, 0);
     }
 }
 

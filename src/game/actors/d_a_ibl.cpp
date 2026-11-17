@@ -52,6 +52,15 @@
 #include "nitro/fx/fx_trig.h"
 #include "nitro/fx/fx_cp.h"
 
+/* The position overload reads mPos through its reference, so the break puff
+   reloads mPosY after the kill-height test (a scalar mPosY reuses the test's
+   load and RollOffBehavior comes out 0x1e8 against the ROM's 0x1ec).
+   d_a_obj_number.cpp defines it the same way; a body in
+   Particle__System.h would renumber every includer's @NNN. */
+inline void *Particle::System::NewSimple(u32 id, const Vector3 &pos) {
+    return NewSimple(id, pos.x, pos.y, pos.z);
+}
+
 /* Actor IDs from symbols/actor_debug_names.tsv. */
 enum {
     daIbl_ACTOR_PLAYER   = 191,     /* PLAYER */
@@ -169,7 +178,7 @@ void daIbl_c::CheckContact() {
             Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
             PoofDust();
             MarkForDestruction();
-            func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
             return;
         }
         Sound::PlayBank0(daIbl_SND_HIT_NOT_BROKEN, mCamSpacePos);
@@ -200,22 +209,21 @@ void daIbl_c::UpdateWallAndFloor() {
         func_020383f0(&mWithMeshClsn);
     else func_02038414(&mWithMeshClsn);
     if (mWithMeshClsn.IsOnWall() != 0) {
-        ((SurfaceInfo *)((char *)mWithMeshClsn.GetWallResult() + 4))
-            ->CopyNormalTo(*(Vector3 *)&mWallNormalX);
-        short a = cstd::atan2(mWallNormalX, mWallNormalZ);
+        ((SurfaceInfo *)((char *)mWithMeshClsn.GetWallResult() + 4))->CopyNormalTo(mWallNormal);
+        short a = cstd::atan2(mWallNormal.x, mWallNormal.z);
         if (GetSubtraction(mPrevAngleY, a) > 0x4000)
             mHitWall = 1;
     }
     if (mWithMeshClsn.IsOnGround() == 0)
         return;
-    ((SurfaceInfo *)((char *)mWithMeshClsn.GetFloorResult() + 4))
-        ->CopyNormalTo(*(Vector3 *)&mFloorNormalX);
+    ((SurfaceInfo *)((char *)mWithMeshClsn.GetFloorResult() + 4))->CopyNormalTo(mFloorNormal);
     if (mHitWall != 0) return;
     mPosX = mPrevPosX;
     mPosZ = mPrevPosZ;
-    if (mFloorNormalY == 0) return;
-    int s = FX_MUL(mFloorNormalX, mSpeedX) + FX_MUL(mFloorNormalZ, mSpeedZ);
-    mVertSpeed = -(FX_Div(s, mFloorNormalY) + 0x8000);
+    if (mFloorNormal.y == 0)
+        return;
+    int s = FX_MUL(mFloorNormal.x, mSpeedX) + FX_MUL(mFloorNormal.z, mSpeedZ);
+    mVertSpeed = -(FX_Div(s, mFloorNormal.y) + 0x8000);
 }
 
 /* Per-frame model and shadow matrices. The model matrix is the identity with
@@ -260,14 +268,14 @@ void daIbl_c::UpdateModelMatrix() {
 int daIbl_c::AdvancePath() {
     int px = mNextNodePos.x;
     int ax = mPosX;
-    int prevx = mPrevNodePosX;
+    int prevx = mPrevNodePos.x;
     /* name A  = node.x - prev.x  (C8)  -- high-priority web -> r8 */
     int A = px - prevx;
     int pz = mNextNodePos.z;
     int az = mPosZ;
-    int prevz = mPrevNodePosZ;
+    int prevz = mPrevNodePos.z;
     int py = mNextNodePos.y;
-    int prevy = mPrevNodePosY;
+    int prevy = mPrevNodePos.y;
     /* name B  = node.y - prev.y  (C7) */
     int B = py - prevy;
     /* name C8 = node.z - prev.z  (C6) */
@@ -339,11 +347,11 @@ int daIbl_c::AdvancePath() {
     if (dot <= 0) {
         int v = mNextNodePos.x;
         int *pidx = &mPathNodeIndex;
-        mPrevNodePosX = v;
+        mPrevNodePos.x = v;
         v = mNextNodePos.y;
-        mPrevNodePosY = v;
+        mPrevNodePos.y = v;
         v = mNextNodePos.z;
-        mPrevNodePosZ = v;
+        mPrevNodePos.z = v;
         *pidx = *pidx + 1;
         if (mPathNodeIndex >= mNumPathNodes) {
             mPathNodeIndex = 0;
@@ -384,7 +392,7 @@ void daIbl_c::PathBehavior() {
         if (r != 2)
             return;
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
 
@@ -409,11 +417,11 @@ void daIbl_c::PathBehavior() {
         vy = mVertSpeed;
         UpdateWallAndFloor();
         if (mHitWall != 0 && had == 0) {
-            mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+            mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
             mRollSoundHandle = 0;
         } else if (mWithMeshClsn.IsOnGround() != 0) {
             if (mWithMeshClsn.JustHitGround() != 0) {
-                func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
+                func_02012694(daIbl_SND_LAND, &mCamSpacePos);
                 LandingDust(1);
                 if (vy < -0x14000)
                     mVertSpeed = (int)(-vy + ((u32)-vy >> 31)) >> 1;
@@ -427,8 +435,8 @@ void daIbl_c::PathBehavior() {
             } else if (mVariant == daIbl_KIND_PATH_RAMP) {
                 ApproachLinear(mHorzSpeed, 0x23000, 0x400);
             } else {
-                mSpeedX += mFloorNormalX;
-                mSpeedZ += mFloorNormalZ;
+                mSpeedX += mFloorNormal.x;
+                mSpeedZ += mFloorNormal.z;
                 mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
             }
         }
@@ -460,7 +468,7 @@ void daIbl_c::RollOffBehavior() {
             return;
 
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
 
@@ -468,25 +476,22 @@ void daIbl_c::RollOffBehavior() {
     UpdateWallAndFloor();
 
     if (mPosY < mKillY || mHitWall != 0) {
-        /* The volatile read of mPosY is measured, not style: with a plain
-           mPosY this function compiles to 0x1e8 bytes against the ROM's 0x1ec,
-           and testing mHitWall first instead moves seven words. */
-        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, *(volatile int *)&mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos);
+        func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         TriplePoofDust();
         MarkForDestruction();
         return;
     }
 
     if (mWithMeshClsn.IsOnGround()) {
-        mSpeedX += mFloorNormalX * 3;
-        mSpeedZ += mFloorNormalZ * 3;
+        mSpeedX += mFloorNormal.x * 3;
+        mSpeedZ += mFloorNormal.z * 3;
         mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
 
         mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
 
         if (mWithMeshClsn.JustHitGround()) {
-            func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(daIbl_SND_LAND, &mCamSpacePos);
             LandingDust(1);
 
             if (mVertSpeed < -0x8000)
@@ -536,7 +541,7 @@ void daIbl_c::FreeRollBehavior() {
         if (r != 2)
             return;
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
 
@@ -546,24 +551,24 @@ void daIbl_c::FreeRollBehavior() {
     UpdateWallAndFloor();
 
     if (mHitWall != 0) {
-        mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
         mSpeedX = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleY >> 4));
         mSpeedZ = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngleY >> 4));
-        mSpeedX -= mWallNormalX * 3;
-        mSpeedZ -= mWallNormalZ * 3;
+        mSpeedX -= mWallNormal.x * 3;
+        mSpeedZ -= mWallNormal.z * 3;
         mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
     } else if (mWithMeshClsn.IsOnGround()) {
-        mSpeedX += mFloorNormalX * 3;
-        mSpeedZ += mFloorNormalZ * 3;
+        mSpeedX += mFloorNormal.x * 3;
+        mSpeedZ += mFloorNormal.z * 3;
         mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
-        if (mFloorNormalY == 0x1000 && mHorzSpeed > 0x1c000) {
+        if (mFloorNormal.y == 0x1000 && mHorzSpeed > 0x1c000) {
             mHorzSpeed = 0x1c000;
             mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
             UpdatePosWithHorzSpeedAndAng();
         }
 
         if (mWithMeshClsn.JustHitGround()) {
-            func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(daIbl_SND_LAND, &mCamSpacePos);
             LandingDust(1);
         } else {
             mRollSoundHandle =
@@ -726,9 +731,9 @@ int daIbl_c::InitResources()
         mPathPtr.FromID(param1 & 0xf);
         mNumPathNodes = mPathPtr.NumNodes();
         mPathNodeIndex = 0;
-        mPrevNodePosX = mPosX;
-        mPrevNodePosY = mPosY;
-        mPrevNodePosZ = mPosZ;
+        mPrevNodePos.x = mPosX;
+        mPrevNodePos.y = mPosY;
+        mPrevNodePos.z = mPosZ;
         mPathPtr.GetNode(mNextNodePos, mPathNodeIndex);
         if (Vec3_Equal(&mPos, &mNextNodePos)) {
             mPathNodeIndex += 1;

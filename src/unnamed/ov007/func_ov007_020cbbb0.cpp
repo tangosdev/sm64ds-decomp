@@ -43,7 +43,7 @@ Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams
     halfWidth = (cellWidth * cellColumns) / 2;
     cellRows = rows - 1;
     halfHeight = (cellHeight * cellRows) / 2;
-    mesh->verts = (Vector3 *)func_ov007_020c3df4(0, columns * 0xc * rows);
+    mesh->verts = (VecFx32 *)func_ov007_020c3df4(0, columns * 0xc * rows);
     mesh->faceNormals = (Vector3_16 *)func_ov007_020c3df4(0, cellColumns * 6 * cellRows * 2);
     mesh->vertexNormals = (Vector3_16 *)func_ov007_020c3df4(0, columns * 6 * rows);
     mesh->texOffsetS = (int *)func_ov007_020c3df4(0, columns * 4);
@@ -56,7 +56,7 @@ Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams
 
     for (i = 0; i < rows; i++) {
         for (j = 0; j < columns; j++) {
-            Vector3 *elem = &mesh->verts[i * columns + j];
+            VecFx32 *elem = &mesh->verts[i * columns + j];
             elem->x = j * cellWidth - halfWidth + ((i % 2 == 0) ? 0 : cellWidth / 2);
             elem->y = cellHeight * (rows - 1 - i) - halfHeight;
             elem->z = params->restZ;

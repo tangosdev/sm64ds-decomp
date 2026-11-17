@@ -28,6 +28,10 @@
  * leftovers (member spellings measured and rejected on size):
  * - func_ov091_02131160: a Matrix4x3 * local for mShadowMat is +4
  *   (0x1e0 -> 0x1e4); the translation row is stored through `this`.
+ *   Declaring mShadowMat as a Matrix4x3 instead of u8[0x30] keeps this
+ *   function 0/120 but makes the TU emit Matrix4x3's destructor
+ *   (_ZN9Matrix4x3D1Ev, 4 bytes of .text the ROM does not have), so the
+ *   casts stay (#821).
  * - Behavior: one this+0x3a2 halfword for the arrived pitch is
  *   -0xc (0x488 -> 0x47c); &mPitchBase is a pool add of 0x3a2 and the
  *   step stays this+0x300+0xa4.
@@ -125,8 +129,6 @@ extern s8 gCurrentSublevel;
 
 extern "C" {
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-/* local extern: no shared math header declares MTX_MultVec43. */
-void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
@@ -153,14 +155,14 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     mAngleX = mSpawnAngleX;
     mAngleY = mSpawnAngleY;
     mAngleZ = mSpawnAngleZ;
-    mPosX = mBasePosX;
-    mPosY = mBasePosY;
-    mPosZ = mBasePosZ;
+    mPosX = mBasePos.x;
+    mPosY = mBasePos.y;
+    mPosZ = mBasePos.z;
     mWaypointIndex = (param1 & 15);
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
                   (Vector3 *)&tmp[0]);
-    Vec3_Add((Vector3 *)&tmp[1], (const Vector3 *)&mBasePosX, (const Vector3 *)&tmp[0]);
+    Vec3_Add((Vector3 *)&tmp[1], &mBasePos, (const Vector3 *)&tmp[0]);
     mPosX = tmp[1].x;
     mPosY = tmp[1].y;
     mPosZ = tmp[1].z;
@@ -204,7 +206,6 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     /* Holding mShadowMat in a Matrix4x3 * local steals r4 from `this` and
        the function grows. The three translation words are stored from
        `this`, not from that pointer. */
-    char *c = (char *)this;
     VariantWords shadowBaseY = data_ov091_02134bac;
     VariantWords shadowSizeX = data_ov091_02134bd0;
     VariantWords shadowSizeZ = data_ov091_02134bb8;
@@ -375,7 +376,7 @@ int daObjRotateUpdownLift_c::Behavior()
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &cur);
     MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
-    Vec3_Add(&target, (const Vector3 *)&mBasePosX, &cur);
+    Vec3_Add(&target, &mBasePos, &cur);
     Vec3_Sub(&remain, &mPos, &target);
     Vec3_Sub(&edge, &cur, &prev);
     span = VEC_Mag(&edge);
@@ -384,7 +385,7 @@ int daObjRotateUpdownLift_c::Behavior()
     mAngleX = (mPitchBase + (s16)FX_MUL(mPitchStep, along));
 
     if (dist == 0 || dist <= stepLen) {
-        Vec3_Add(&snapped, (const Vector3 *)&mBasePosX, &cur);
+        Vec3_Add(&snapped, &mBasePos, &cur);
         mPosX = snapped.x;
         mPosY = snapped.y;
         mPosZ = snapped.z;
@@ -432,7 +433,6 @@ int daObjRotateUpdownLift_c::InitResources()
     Vector3 rotated;
     Vector3 probe;
     Vector3 placed;
-    unsigned char node;
     unsigned char variant;
     void *bmd;
     void *kcl;
@@ -443,9 +443,9 @@ int daObjRotateUpdownLift_c::InitResources()
         return 1;
     }
 
-    mBasePosX = mPosX;
-    mBasePosY = mPosY;
-    mBasePosZ = mPosZ;
+    mBasePos.x = mPosX;
+    mBasePos.y = mPosY;
+    mBasePos.z = mPosZ;
     mShadowModel.InitCuboid();
 
     mVariant = 0;
@@ -460,20 +460,14 @@ int daObjRotateUpdownLift_c::InitResources()
     mWaypointIndex = (param1 & 15);
 
     if (mWaypointIndex == 2) {
-        Vec3_Add(&spawnAt, (const Vector3 *)&mBasePosX, &data_ov091_02134cdc[mVariant].node[0]);
+        Vec3_Add(&spawnAt, &mBasePos, &data_ov091_02134cdc[mVariant].node[0]);
         spawnAt.y += data_ov091_02134d1c[mVariant].y;
         Spawn(0x1d, 0xffff, spawnAt, 0, mAreaId, -1);
     }
 
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    {
-        char *tbl = (char *)data_ov091_02134cdc;
-        int stride = 0x78;
-        int i = mVariant;
-        node = mWaypointIndex;
-        MTX_MultVec43((Vector3 *)(tbl + i * stride + node * 0xc), &data_020a0e68, &rotated);
-    }
-    Vec3_Add(&placed, (const Vector3 *)&mBasePosX, &rotated);
+    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &rotated);
+    Vec3_Add(&placed, &mBasePos, &rotated);
     mPosX = placed.x;
     mPosY = placed.y;
     mPosZ = placed.z;

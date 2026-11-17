@@ -108,7 +108,7 @@ extern "C" {
 
 int GetGameLanguage(void);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 void Vec2_Sub(int *out, int *a, int *b);
 void *LoadFile(int id);
 void DecompressLZ16(void *src, void *dst);
@@ -420,7 +420,7 @@ void Roulette_DrawResultsThunk(dScMgRoulette_c *) {
    countdown (its volume ramps over the last 3 seconds), and moves the camera
    to the current preset. */
 s32 dScMgRoulette_c::Render() {
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
+    DrawCredits(0xc, 0xc, 0);
     MgCoins_Draw();
 
     {
@@ -1010,15 +1010,13 @@ int RouletteBoard_FreeModels(RouletteBoard *res) {
 
 void RouletteBoard_StartSpin(char *slider) {
     RouletteBoard *board = (RouletteBoard *)slider;
-    unsigned rand;
     board->mBallRadius = 0x4200;
     board->mBallRadiusVel = 0;
     board->mOrbitAngle = 0;
     board->mBoardAngle = 0;
     board->mAngleStep = 0x400;
     board->mBoardSpin = -0x200;
-    rand = (unsigned)RandomIntInternal(&data_0209e650.value);
-    board->mSpinSpeed = ((rand & 0x7fffffff) >> 0x13) + 0x2000;
+    board->mSpinSpeed = RAND_FX() + 0x2000;
     board->mBraking = 0;
     RouletteBoard_SetStateSpin(board);
 }

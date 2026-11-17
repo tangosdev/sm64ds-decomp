@@ -19,6 +19,7 @@
  * get with this header; C includers get the C helpers alone. */
 #ifdef __cplusplus
 #include "math/Approach.h"
+#include "nitro/fx/fx_vec.h"
 
 extern "C" {
 #endif
@@ -39,7 +40,10 @@ void Vec3_Asr(Vector3 *, Vector3 *, int);
 /* ...and left; d may alias s. */
 void Vec3_Lsl(Vector3 *, const Vector3 *, int);
 
-/* NitroSDK fx_vec (0x02053274..0x020538b8). */
+#ifndef __cplusplus
+/* NitroSDK fx_vec (0x02053274..0x020538b8), seen from C under the game's
+ * Vector3. C++ gets the SDK's own declarations and the Vector3 overloads
+ * below instead. */
 /* out = a + b and a - b, per axis; out may alias either operand. */
 void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
 void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
@@ -50,6 +54,7 @@ fx32 VEC_DotProduct(const Vector3 *, const Vector3 *);
 /* Cross product and in-place normalizer. */
 void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
 void VEC_Normalize(const Vector3 *, Vector3 *);
+#endif
 /* The same two add/subtract routines under the name the newer TUs use. */
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
@@ -68,6 +73,40 @@ void Vec3_MulScalar(Vector3 *, const Vector3 *, int);
 void Vec3_MulScalarInPlace(Vector3 *, int);
 
 #ifdef __cplusplus
+}
+
+/* NitroSDK fx_vec (0x02053274..0x020538b8) takes the SDK's VecFx32, declared
+ * in nitro/fx/fx_vec.h. A Vector3 holds the same three words but declares a
+ * constructor, so its pointer does not convert; these overloads take the
+ * game's Vector3 and forward to the C functions, the cast written once here
+ * rather than at every call. They keep the game's spellings above: Add and
+ * Subtract take plain pointers (a const operand changes the loop code of
+ * dScMgSnowball_c::SnowSpray_UpdateAll), the rest take const ones.
+ *
+ * Each definition costs every C++ includer one compiler @NNN number per
+ * parameter plus three, named or not. A value returned through one of them
+ * is a compiler temporary, which the register allocator ranks after every
+ * named local. */
+inline void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *ab) {
+    VEC_Add((const VecFx32 *)a, (const VecFx32 *)b, (VecFx32 *)ab);
+}
+inline void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *ab) {
+    VEC_Subtract((const VecFx32 *)a, (const VecFx32 *)b, (VecFx32 *)ab);
+}
+inline fx32 VEC_DotProduct(const Vector3 *a, const Vector3 *b) {
+    return VEC_DotProduct((const VecFx32 *)a, (const VecFx32 *)b);
+}
+inline void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *axb) {
+    VEC_CrossProduct((const VecFx32 *)a, (const VecFx32 *)b, (VecFx32 *)axb);
+}
+inline fx32 VEC_Mag(const Vector3 *v) {
+    return VEC_Mag((const VecFx32 *)v);
+}
+inline void VEC_Normalize(const Vector3 *src, Vector3 *dst) {
+    VEC_Normalize((const VecFx32 *)src, (VecFx32 *)dst);
+}
+inline fx32 VEC_Distance(const Vector3 *v1, const Vector3 *v2) {
+    return VEC_Distance((const VecFx32 *)v1, (const VecFx32 *)v2);
 }
 #endif
 

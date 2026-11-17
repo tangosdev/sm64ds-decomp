@@ -89,7 +89,7 @@ extern "C" {
    not mangle, so the data_* declarations stay next to their users. */
 extern int RandomIntInternal(int *seed);
 extern s32 GetGameLanguage(void);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *matrix);
 extern char *Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                        unsigned short a6);
 struct Matrix2x2;
@@ -1520,7 +1520,6 @@ extern void Mg_ShowBanner(int, int, int, int, int, short);
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 /* dScMgLuigi_c::Render */
-extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 /* dScMgLuigi_c::Behavior */
 extern LuigiStateHandler sLuigiStateTable[];
 /* dScMgLuigi_c::InitResources */
@@ -1570,7 +1569,7 @@ void dScMgLuigi_c::StartRound(int mode) {
 }
 
 s32 dScMgLuigi_c::Render() {
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     DrawCurtains();
     DrawReward();
     DrawPenalties();

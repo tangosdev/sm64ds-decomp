@@ -38,119 +38,119 @@
   ],
   "functions": [
     {
-      "symbol": "_Z17Coin_FlyToCounterP6Sprite",
+      "symbol": "_ZN6Sprite12FlyToCounterEv",
       "address": "0x020b4aa4",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov004_020b4aa4.c",
       "ordinal": 0
     },
     {
-      "symbol": "_Z16Coin_PlacePayoutP6SpriteP5Vec2i",
+      "symbol": "_ZN6Sprite11PlacePayoutEP5Vec2i",
       "address": "0x020b4b84",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov004_020b4b84.c",
       "ordinal": 1
     },
     {
-      "symbol": "_Z19Coin_MoveThenRefundP6Sprite",
+      "symbol": "_ZN6Sprite14MoveThenRefundEv",
       "address": "0x020b4c30",
       "size": "0x00000094",
       "legacy_source": "src/func_ov004_020b4c30.c",
       "ordinal": 2
     },
     {
-      "symbol": "_Z11Coin_ReturnP6Sprite",
+      "symbol": "_ZN6Sprite6ReturnEv",
       "address": "0x020b4cc4",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov004_020b4cc4.c",
       "ordinal": 3
     },
     {
-      "symbol": "_Z14Coin_RiseSpentP6Sprite",
+      "symbol": "_ZN6Sprite9RiseSpentEv",
       "address": "0x020b4d50",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov004_020b4d50.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z22Coin_MoveThenRiseSpentP6Sprite",
+      "symbol": "_ZN6Sprite17MoveThenRiseSpentEv",
       "address": "0x020b4dfc",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov004_020b4dfc.c",
       "ordinal": 5
     },
     {
-      "symbol": "_Z10Coin_SpendP6Sprite",
+      "symbol": "_ZN6Sprite5SpendEv",
       "address": "0x020b4e78",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov004_020b4e78.c",
       "ordinal": 6
     },
     {
-      "symbol": "_Z9Coin_RiseP6Sprite",
+      "symbol": "_ZN6Sprite4RiseEv",
       "address": "0x020b4f44",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov004_020b4f44.c",
       "ordinal": 7
     },
     {
-      "symbol": "_Z17Coin_MoveThenRiseP6Sprite",
+      "symbol": "_ZN6Sprite12MoveThenRiseEv",
       "address": "0x020b4ff0",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov004_020b4ff0.c",
       "ordinal": 8
     },
     {
-      "symbol": "_Z12Coin_SendOffP6Sprite",
+      "symbol": "_ZN6Sprite7SendOffEv",
       "address": "0x020b506c",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov004_020b506c.c",
       "ordinal": 9
     },
     {
-      "symbol": "_Z11Coin_LaunchP6SpriteP5Vec2i",
+      "symbol": "_ZN6Sprite6LaunchEP5Vec2i",
       "address": "0x020b5108",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov004_020b5108.c",
       "ordinal": 10
     },
     {
-      "symbol": "_Z9Coin_HideP6Sprite",
+      "symbol": "_ZN6Sprite4HideEv",
       "address": "0x020b51e4",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov004_020b51e4.c",
       "ordinal": 11
     },
     {
-      "symbol": "_Z17Coin_MoveThenBankP6Sprite",
+      "symbol": "_ZN6Sprite12MoveThenBankEv",
       "address": "0x020b51f0",
       "size": "0x00000098",
       "legacy_source": "src/func_ov004_020b51f0.c",
       "ordinal": 12
     },
     {
-      "symbol": "_Z9Coin_MoveP6Sprite",
+      "symbol": "_ZN6Sprite4MoveEv",
       "address": "0x020b5288",
       "size": "0x00000030",
       "legacy_source": "src/func_ov004_020b5288.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_Z9Coin_DrawP6Sprite",
+      "symbol": "_ZN6Sprite4DrawEv",
       "address": "0x020b52b8",
       "size": "0x00000044",
       "legacy_source": "src/func_ov004_020b52b8.c",
       "ordinal": 14
     },
     {
-      "symbol": "_Z11Coin_UpdateP6Sprite",
+      "symbol": "_ZN6Sprite6UpdateEv",
       "address": "0x020b52fc",
       "size": "0x00000038",
       "legacy_source": "src/func_ov004_020b52fc.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "_Z10Coin_ResetP6Sprite",
+      "symbol": "_ZN6Sprite5ResetEv",
       "address": "0x020b5334",
       "size": "0x00000034",
       "legacy_source": "src/func_ov004_020b5334.c",
@@ -360,7 +360,8 @@
     "Text only: this unit's .data (0x020bc7d0..0x020bc83c) and .bss (0x020bf9e4..0x020bfa56) stay ROM-owned and are reached by extern, as the one-function sources did; __sinit_ov004_020b9ad0 stays its own enrolled source.",
     "Folded from 43 one-function sources. The per-source extern declarations disagreed on type for a handful of symbols (sMgCoinsStep, sMgCoins, gMgScene, the ApproachLinear / Vec2_Sub spellings); the single declaration set in the unit source picks one type each and the bodies cast to match. ApproachLinear and ApproachLinear2 are declared as the C++ overloads (int&, int, int) and (short&, short, short), which mangle to the ROM's _Z14ApproachLinearRiii and _Z15ApproachLinear2Rsss.",
     "Struct copies of the entry templates go through structs whose only member is an int[2]; plain {int a, b} structs scalarize under C++ and miss the ROM's block move by two words in eight functions.",
-    "2026-10-28 static-initializer fold: the file defines `Sprite sMgCoins[0x14]`. mwcc emits __sinit_unit020b4aa4.cpp byte- and relocation-identical to the retired src/unnamed/ov004/__sinit_ov004_020b9ad0.c, and the old MgCoins_Cleanup / Coin_Destroy / Coin_Construct are now the compiler's __arraydtor$192 and Sprite's inline D1/C1, emitted after the initializer in ROM order (the unit020cd744 TrmpLine shape)."
+    "2026-10-28 static-initializer fold: the file defines `Sprite sMgCoins[0x14]`. mwcc emits __sinit_unit020b4aa4.cpp byte- and relocation-identical to the retired src/unnamed/ov004/__sinit_ov004_020b9ad0.c, and the old MgCoins_Cleanup / Coin_Destroy / Coin_Construct are now the compiler's __arraydtor$192 and Sprite's inline D1/C1, emitted after the initializer in ROM order (the unit020cd744 TrmpLine shape).",
+    "2026-11-17 (#821): the seventeen Coin_ free functions (0x020b4aa4..0x020b5368) are Sprite members (Reset, Update, Draw, Hide, Launch, SendOff, Spend, Return, PlacePayout and the eight member-pointer states). They are Sprite's ROM member run ahead of its inline destructor/constructor, every caller passes the sprite in r0, and Update dispatches the states through (this->*mState)(). The nine free-function prototypes' named parameters went, so @198 / __arraydtor$197 re-key to @187 / __arraydtor$186. The pmf_Coin_* records stay extern: this unit's .data is unclaimed and open PR #5478 rewrites ov004's .data delinks. tubuild verify 43/43 TEXT-VERIFIED (base 43/43); linkcheck SCRATCH-DATA-VERIFIED."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -616,12 +617,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@198",
+      "from": "@187",
       "to": "data_ov004_020bfa28",
-      "evidence": "compiler temp renumbered when unit020b4aa4.cpp uses shared Vec2i from ov006_ec4dc_obj.h and drops its local __aeabi_idiv declaration (two named parameters); candidate ELF emits @200 for the 12-byte destructor-registration node. It is renamed to the configured name at 0x020bfa28. The initializer relocation and target are checked by the TU link proof. Re-keyed from @200 to @198 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp renumbered when unit020b4aa4.cpp uses shared Vec2i from ov006_ec4dc_obj.h and drops its local __aeabi_idiv declaration (two named parameters); candidate ELF emits @200 for the 12-byte destructor-registration node. It is renamed to the configured name at 0x020bfa28. The initializer relocation and target are checked by the TU link proof. Re-keyed from @200 to @198 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @198 to @187 when the Coin_ free functions became Sprite members (their prototypes' named parameters went) (paired by consumer relocation)."
     },
     {
-      "from": "__arraydtor$197",
+      "from": "__arraydtor$186",
       "to": "__arraydtor$192",
       "owned_function": {
         "module": "ov004",
@@ -631,7 +632,7 @@
         "raw_type": "STT_FUNC",
         "raw_binding": "STB_LOCAL"
       },
-      "evidence": "the sMgCoins array destructor thunk; after using shared Vec2i from ov006_ec4dc_obj.h and dropping its local __aeabi_idiv declaration, the candidate ELF emits it as __arraydtor$199. It is renamed onto the configured __arraydtor$192 at 0x020b67bc; TU verification checks its relocation destination. Re-keyed from __arraydtor$199 to __arraydtor$197 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "the sMgCoins array destructor thunk; after using shared Vec2i from ov006_ec4dc_obj.h and dropping its local __aeabi_idiv declaration, the candidate ELF emits it as __arraydtor$199. It is renamed onto the configured __arraydtor$192 at 0x020b67bc; TU verification checks its relocation destination. Re-keyed from __arraydtor$199 to __arraydtor$197 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from __arraydtor$197 to __arraydtor$186 when the Coin_ free functions became Sprite members (their prototypes' named parameters went) (paired by consumer relocation)."
     }
   ]
 }

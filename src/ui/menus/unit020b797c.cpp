@@ -42,9 +42,7 @@
  * data; it sits between this block's last user and unit020b8f50, whose start
  * edge leaves it out, and every caller of it is here.
  *
- * Code generation. The whole unit is compiled with opt_loop_invariants off:
- * MenuText_DrawGlyph's glyph loop needs it, and the other functions compile
- * the same either way. Each place where a shape is load-bearing says so.
+ * Code generation. Each place where a shape is load-bearing says so.
  *
  * Emission order: mwccarm 2004/b56 emits one .text section per function in
  * the reverse of source order, so the highest-address function is written
@@ -61,7 +59,6 @@
 #include "Ov007Settings.h"
 #include "nitro/mi/memory.h"
 
-#pragma opt_loop_invariants off
 
 /* The window's state machine, as MessageWindow_Update steps it. */
 enum Ov007MessageWindowState {
@@ -176,7 +173,6 @@ void MenuText_DrawGlyph(int plane, int glyph) {
     u32 *dst;
     u32 palmask;
     u32 *src;
-    int rshift;
     u32 mask;
     int q, rem;
     int shift;
@@ -213,7 +209,6 @@ void MenuText_DrawGlyph(int plane, int glyph) {
     src = data_ov007_0210345c + t * 8;
 
     shift = rem * 4;
-    rshift = 0x20 - shift;
     palmask = data_ov007_020d7ac4[pal];
     mask = data_ov007_020d7aa0[rem];
 
@@ -221,8 +216,11 @@ void MenuText_DrawGlyph(int plane, int glyph) {
         u32 s = *src++ & palmask;
         *dst = (*dst & mask) | (s << shift);
         if (rem != 0) {
+            /* The spill re-reads the keep-mask and recomputes its shift;
+               the compiler hoists both out of the loop, which is the ROM's
+               shape. Through `mask` and a precomputed shift it is 0x174. */
             u32 *d2 = (dst + 8);
-            *d2 = (*d2 & ~mask) | (s >> rshift);
+            *d2 = (*d2 & ~data_ov007_020d7aa0[rem]) | (s >> (32 - shift));
         }
         dst++;
         if (i == 7) {
@@ -542,31 +540,22 @@ extern "C" void *MenuText_GetSourceScreen(void) {
  * bytes of the record at *(int *)records + slot * 0xf + line - 2 (the first
  * clamped to 7 when it reaches 8).
  *
- * Every literal below is a named local because the ROM keeps them all in the
- * frame (0x1c..0x4c, one slot per constant, in declaration order) and reloads
- * them at each use; the register set is the counter, the parameter, five
- * register constants and the column pointer. Shapes that were load-bearing:
- * `zero` is a volatile local assigned right before the call (the corpus idiom
- * for MIi_CpuClearFast's value argument); `boardLine = 0; cursorLine = 0;`
- * precede the loop so the zero-valued slots store from the counter register;
- * base15 is assigned AFTER the call (a declaration initializer computes it
- * before); the clamp is a ternary, not an if, which raises s48's web priority
- * so its spill store lands after s3c's; row/m use `+=` for the ROM's add
- * operand order; the line-1 heading is an if/else inside case 1 (the 0x1f58
- * chain is the else arm, not part of case 0x11). */
+ * The ROM keeps the repeated constants in the frame (0x1c..0x4c) and reloads
+ * them at each use; mwcc does that by itself for the literals. Shapes that
+ * are load-bearing (re-measured 2026-11-16): `zero` is a volatile local
+ * assigned right before the call (the corpus idiom for MIi_CpuClearFast's
+ * value argument); `boardLine = 0; cursorLine = 0;` precede the loop so the
+ * zero-valued slots store from the counter register; base15 is assigned
+ * AFTER the call (a declaration initializer computes it before); the clamp
+ * is a ternary, not an if (an if moves the 7's spill store); row/m use `+=`
+ * for the ROM's add operand order; the line-1 heading is an if/else inside
+ * case 1 (the 0x1f58 chain is the else arm, not part of case 0x11). */
 extern "C" void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
     volatile int zero;
-    int t = 2;
-    int one = 1;
-    int f0 = 0xf0;
-    int ef = 0xef;
-    int c0 = 0xc0;
     int boardLine;
     int b8, bc, b10;
     int cursorLine;
     int base15;
-    int s1c = 0x5d, s20 = 0x4d, s24 = 0x30, s28 = 0, s2c = 0, s30 = 0;
-    int s34 = 0xc, s38 = 0, s3c = 0x9c, s40 = 6, s44 = 0, s48 = 7, s4c = 0xee;
 
     zero = 0;
     MI_CpuFillFast(data_ov007_02103478[2], zero, data_ov007_020d7a5c[2]);
@@ -579,36 +568,36 @@ extern "C" void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
         data_ov007_02103468 = cursorLine;
         switch (boardLine) {
         case 0:
-            data_ov007_02103464 = s1c;
-            MenuText_DrawSlotHeading(t, slot);
-            MenuText_DrawGlyph(t, s20);
-            MenuText_DrawGlyph(t, s20);
-            MenuText_DrawGlyph(t, f0);
-            MenuText_DrawGlyph(t, ef);
-            MenuText_DrawNumber(t, ((s16 *)(records + 4))[slot]);
+            data_ov007_02103464 = 0x5d;
+            MenuText_DrawSlotHeading(2, slot);
+            MenuText_DrawGlyph(2, 0x4d);
+            MenuText_DrawGlyph(2, 0x4d);
+            MenuText_DrawGlyph(2, 0xf0);
+            MenuText_DrawGlyph(2, 0xef);
+            MenuText_DrawNumber(2, ((s16 *)(records + 4))[slot]);
             break;
         case 1:
-            data_ov007_02103464 = s24;
-            MenuText_DrawString(
-                t, (u8 *)func_ov007_020c94a0(s28, MenuText_MessageIDToIndex(0x1f57)), one);
+            data_ov007_02103464 = 0x30;
+            MenuText_DrawString(2, (u8 *)func_ov007_020c94a0(0, MenuText_MessageIDToIndex(0x1f57)),
+                                1);
             if (alt != 0) {
-                data_ov007_02103464 = c0;
+                data_ov007_02103464 = 0xc0;
                 MenuText_DrawString(
-                    t, (u8 *)func_ov007_020c94a0(s2c, MenuText_MessageIDToIndex(0x1f62)), one);
+                    2, (u8 *)func_ov007_020c94a0(0, MenuText_MessageIDToIndex(0x1f62)), 1);
             } else {
-                data_ov007_02103464 = c0;
+                data_ov007_02103464 = 0xc0;
                 MenuText_DrawString(
-                    t, (u8 *)func_ov007_020c94a0(s30, MenuText_MessageIDToIndex(0x1f58)), one);
+                    2, (u8 *)func_ov007_020c94a0(0, MenuText_MessageIDToIndex(0x1f58)), 1);
             }
             break;
         case 0x11:
-            data_ov007_02103464 = s34;
-            MenuText_DrawString(
-                t, (u8 *)func_ov007_020c94a0(s38, MenuText_MessageIDToIndex(0x13b0)), one);
-            data_ov007_02103464 = s3c;
-            MenuText_DrawGlyph(t, f0);
-            MenuText_DrawGlyph(t, ef);
-            MenuText_DrawNumber(t, *(u8 *)(slot + *(int *)records + 0x98));
+            data_ov007_02103464 = 0xc;
+            MenuText_DrawString(2, (u8 *)func_ov007_020c94a0(0, MenuText_MessageIDToIndex(0x13b0)),
+                                1);
+            data_ov007_02103464 = 0x9c;
+            MenuText_DrawGlyph(2, 0xf0);
+            MenuText_DrawGlyph(2, 0xef);
+            MenuText_DrawNumber(2, *(u8 *)(slot + *(int *)records + 0x98));
             break;
         default: {
             int row = MenuText_MessageIDToIndex(0x1388);
@@ -618,19 +607,19 @@ extern "C" void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
             b8 = m[0x11];
             bc = m[0x3e];
             b10 = m[0x6b];
-            data_ov007_02103464 = s40;
-            MenuText_DrawString(t, (u8 *)func_ov007_020c94a0(s44, row), one);
-            data_ov007_02103464 = s3c;
-            MenuText_DrawGlyph(t, f0);
-            MenuText_DrawGlyph(t, ef);
-            b8 = (b8 >= 8) ? s48 : b8;
-            MenuText_DrawNumber(t, b8);
-            data_ov007_02103464 = c0;
-            MenuText_DrawGlyph(t, s4c);
-            MenuText_DrawGlyph(t, ef);
-            MenuText_DrawNumber(t, bc);
+            data_ov007_02103464 = 6;
+            MenuText_DrawString(2, (u8 *)func_ov007_020c94a0(0, row), 1);
+            data_ov007_02103464 = 0x9c;
+            MenuText_DrawGlyph(2, 0xf0);
+            MenuText_DrawGlyph(2, 0xef);
+            b8 = (b8 >= 8) ? 7 : b8;
+            MenuText_DrawNumber(2, b8);
+            data_ov007_02103464 = 0xc0;
+            MenuText_DrawGlyph(2, 0xee);
+            MenuText_DrawGlyph(2, 0xef);
+            MenuText_DrawNumber(2, bc);
             if (b10 != 0)
-                MenuText_DrawGlyph(t, f0);
+                MenuText_DrawGlyph(2, 0xf0);
             break;
         }
         }

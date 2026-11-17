@@ -1,8 +1,8 @@
 {
   "id": "arm9/MB_WmBase",
   "module": "arm9",
-  "source": "src/engine/mb/MB_WmBase.cpp",
-  "promoted_source": "src/engine/mb/MB_WmBase.cpp",
+  "source": "src/engine/mb/MB_WmBase.c",
+  "promoted_source": "src/engine/mb/MB_WmBase.c",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -194,7 +194,7 @@
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/arm9-MB_WmBase/MB_WmBase.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 23,

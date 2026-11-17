@@ -15,8 +15,10 @@
  * Source order is reverse ROM order. The constructor is written before D1.
  *
  * leftovers:
- *  - The 0x17f flags byte (mCapIcon.mFlags high byte) and the 0xf4 shadow
- *    flags word have no member names; the measured ldrb/launder forms stay.
+ *  - The 0xf4 shadow flags word has no member name; its measured launder
+ *    form stays. UpdateCapPos reads mCapIcon.mFlags (+0x17f) through a
+ *    local bitfield view, and func_02005ed8 shifts bit 2 out of it: a
+ *    plain `& 4` test is a word shorter.
  *    AddCap's mFlags &= ~1 and its mCapId store go through plain `&member`
  *    pointers.
  *  - UpdateCapPos keeps a POD VecFx32 local: Vector3's empty destructor
@@ -88,7 +90,7 @@ int dCapEnemy_c::AddCap(unsigned int param)
     }
 
     mFlags &= ~1;
-    mCapIcon.Link((char *)this, mCapId, mHadBank1Cap, mCapBank != 0);
+    mCapIcon.Link(this, mCapId, mHadBank1Cap, mCapBank != 0);
 
     int result = func_02005e28();
     if (result != 0) {
@@ -163,21 +165,21 @@ int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
 {
     const Vector3 *v = &v_;
     VecFx32 local;
-    unsigned char *p;
+    dActor_c *p;
     local.x = v->x;
     local.y = v->y;
     local.z = v->z;
-    p = (unsigned char *)ReleaseCap(*(const Vector3 *)&local);
-    if (p != 0 && p != (unsigned char *)this) {
+    p = ReleaseCap(*(const Vector3 *)&local);
+    if (p != 0 && p != this) {
         unsigned char idx;
-        ((dActor_c *)p)->mEatingPlayer = mEatingPlayer;
-        mEatingPlayer->mObjInMouth = (dActor_c *)p;
-        ((dActor_c *)p)->mFlags |= 0x20000;
+        p->mEatingPlayer = mEatingPlayer;
+        mEatingPlayer->mObjInMouth = p;
+        p->mFlags |= 0x20000;
         mFlags &= ~0x20000;
         mEatingPlayer = 0;
         if (mCapBank == 0) {
             idx = mCapId & 7;
-            mCapIcon.Link((char *)this, idx, 0, 0);
+            mCapIcon.Link(this, idx, 0, 0);
         }
         return 1;
     }
@@ -254,7 +256,7 @@ int dCapEnemy_c::DestroyIfCapNotNeeded() {
 }
 
 void dCapEnemy_c::func_02005ed8() {
-    if ( ((unsigned)((unsigned char *)this)[0x17f] << 29) >> 31 )
+    if (((unsigned)mCapIcon.mFlags << 29) >> 31)
         return;
     mCapIcon.Unlink();
 }

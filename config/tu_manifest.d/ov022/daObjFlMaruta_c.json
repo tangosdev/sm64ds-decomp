@@ -125,6 +125,13 @@
       "reason": "Homeless. The same new-expression materialises daObjMaruta_c's base-object destructor as an unreferenced STB_LOPROC D2 of 0x44 bytes. ov080 names D1 and D0 only. Home count 0, so plain deadstrip rather than deadstrip-duplicate."
     },
     {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's empty destructor from include/types.h, dragged in by the base class daObjMaruta_c's Vector3 members mRestPos and mHitPos: `return new daObjFlMaruta_c();` instantiates the class chain, so mwccarm re-emits ~Vector3() with vague linkage. No section in this TU references it. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by another enrolled source; this object's copy is the identical 4-byte `bx lr` body with no relocations, and rombuild compares it against those cartridge bytes before discarding the duplicate."
+    },
+    {
       "symbol": "_ZTI15daObjFlMaruta_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov022",
@@ -631,14 +638,14 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@393",
+      "from": "@404",
       "to": "@415",
-      "evidence": "the compiler emitted @415 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @393, so the pin keeps @415 (measured from the compiled object)."
+      "evidence": "the compiler emitted @415 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @393, so the pin keeps @415 (measured from the compiled object). Re-keyed from @393 to @404 when the base class daObjMaruta_c's rest and hit positions became Vector3 members (measured from the compiled object)."
     },
     {
-      "from": "@394",
+      "from": "@405",
       "to": "@416",
-      "evidence": "the compiler emitted @416 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @394, so the pin keeps @416 (measured from the compiled object)."
+      "evidence": "the compiler emitted @416 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @394, so the pin keeps @416 (measured from the compiled object). Re-keyed from @394 to @405 when the base class daObjMaruta_c's rest and hit positions became Vector3 members (measured from the compiled object)."
     }
   ]
 }

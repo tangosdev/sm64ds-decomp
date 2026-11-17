@@ -20,12 +20,6 @@
  * it also produces has no cartridge home and is deadstripped), the factory
  * last. Same arrangement as src/game/actors/d_a_btt_bk.cpp.
  *
- * `opt_foldconstants off` is a file setting, not a per-member bracket.
- * UpdateShadow needs it: the cartridge keeps lean = 0 + tilt, yaw + 0x8000
- * and the zero high word of 0x7d0000 in the 64-bit multiply
- * unfolded (folded, the body is a different size). Every other function in
- * this TU compiles to the same bytes with it on or off (measured, 13/13).
- *
  * What stays, and why:
  * - OnKicked and OnAttacked2 keep #pragma long_calls: the ROM
  *   veneers are the pooled `ldr ip,[pc]; bx ip` absolute tail call (0xc
@@ -40,8 +34,8 @@
  * - data_ov015_02113574 is the CLPS block in overlay .data that
  *   this TU does not own; FX_SinCosTable_ is arm9's sin/cos table,
  *   data_020a0e68 arm9's scratch matrix, and gCurrentStarId / gCurrentSublevel
- *   arm9 scene state. AngleDiff, IsStarCollectedInCurLevel, MTX_MultVec43
- *   and Vec3_Add have no shared header, so they keep a local extern "C" block.
+ *   arm9 scene state. AngleDiff, IsStarCollectedInCurLevel and Vec3_Add
+ *   have no shared header, so they keep a local extern "C" block.
  * - g_profile_BK_BOTAOSI lives outside this TU.
  */
 
@@ -49,7 +43,6 @@
 enum daObjBk_Botaosi_c_AssetId { ASSET_BK_BOTAOSI_BMD = 0x0589, ASSET_BK_BOTAOSI_KCL = 0x058a };
 
 #pragma defer_codegen off
-#pragma opt_foldconstants off
 
 #include "daObjBk_Botaosi_c.h"
 #include "daPly_c.h"
@@ -83,7 +76,6 @@ extern u8 gCurrentStarId;
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
 int AngleDiff(int a, int b);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 int IsStarCollectedInCurLevel(int starID);
@@ -172,19 +164,19 @@ void daObjBk_Botaosi_c::UpdateShadow() {
     int tilt = FX_MUL(sine, 0x7d0000);
     yaw = 0x8000;
     if (tilt <= 0) {
-        yaw = yaw + 0x8000;
+        yaw += 0x8000;
         tilt = -tilt;
     }
     lean = lean + tilt;
     Matrix4x3_FromRotationY(&mShadowMat, (s16)(mAngleY + yaw));
     {
-        int front = mFrontPosX;
+        int front = mFrontPos.x;
         int cosine = FX_CosIdx((u16)(s16)(mAngleY + yaw) >> 4);
         mShadowMat.t.x = (front + FX_MUL(cosine, (lean >> 1))) >> 3;
     }
-    mShadowMat.t.y = mFrontPosY >> 3;
+    mShadowMat.t.y = mFrontPos.y >> 3;
     {
-        int front = mFrontPosZ;
+        int front = mFrontPos.z;
         int sine2 = FX_SinIdx((u16)(s16)(mAngleY + yaw) >> 4);
         mShadowMat.t.z = (front + FX_MUL(sine2, (lean >> 1))) >> 3;
     }
@@ -337,9 +329,9 @@ int daObjBk_Botaosi_c::InitResources() {
     Vec3_Add(&d, &b, &mPos);
 
     one = 1;
-    mFrontPosX = d.x;
-    mFrontPosY = d.y;
-    mFrontPosZ = d.z;
+    mFrontPos.x = d.x;
+    mFrontPos.y = d.y;
+    mFrontPos.z = d.z;
     mOriginalPosY = mPosY;
     mKnockDir = one;
 

@@ -22,7 +22,7 @@
 #include "math/CalcLib.h"
 
 /* The blitter's 2x2 matrix. This panel always passes none. */
-struct M;
+struct Matrix2x2;
 
 /* {halfW, halfH} records, stride 4. The ROM reads the width through the
    array's own symbol and the height through a second linker symbol two
@@ -70,7 +70,7 @@ enum { kSndMode = 0x64, kSndBack = 0x65, kSndLight = 0x66, kSndReject = 0x67 };
 enum { kSubBgBit = 2 };
 
 extern "C" {
-extern void Mg_DrawSpriteListEntry(void *sprite, int x, int y, struct M *matrix);
+extern void Mg_DrawSpriteListEntry(void *sprite, int x, int y, Matrix2x2 *matrix);
 /* The two arrow sprites: one 16x16 OAM entry each (tile 0x49 previous,
    0x47 next, palette 13) and a 0xffff terminator. Mg_DrawSpriteListEntry
    copies the entry and draws it. */
@@ -283,7 +283,7 @@ u8 dMgPsOpt_c::Update() {
 }
 
 /* Draw every live icon. Returns 1 while the panel is up, which makes
-   Mg_DrawMenu skip the rest of the touch-screen UI. */
+   dScMgBase_c::DrawMenu skip the rest of the touch-screen UI. */
 int dMgPsOpt_c::Draw() {
     int i;
 

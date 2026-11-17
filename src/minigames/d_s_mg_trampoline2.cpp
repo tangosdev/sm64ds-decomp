@@ -165,8 +165,6 @@ BaseSpawnInfo<dScMgTrampoline2_c> g_profile_MG_TRAMPOLINE2 = {
 };
 Tbl sTrmp2SpinnerSpeeds = {0x600, 0xc00, 0xe00};
 
-/* A random fx32 in [0, 1.0): the top 12 bits of the 31-bit draw. */
-#define TRMP2_RAND_FX ((fx32)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19))
 int sTrmp2ScoreGates[] = {1000, 5000, 10000, 20000};
 int sTrmp2PuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
                                (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
@@ -366,17 +364,19 @@ void dScMgTrampoline2_c::StateIntro() {
 
     {
         int t = FX_Div(counter << 12, 0x5a000);
+        /* Kept volatile: the ROM spills the previous point to the stack
+           across the random draw, as in dScMgTrampoline_c::StateIntro.
+           Measured 2026-11-16 (#821 r22): plain s16 locals shrink it
+           to 0x198 of 0x1a0; a whole-struct copy `Vec2s prev = mTouch`
+           keeps the stack slot but loads it with ldrh, not ldrsh
+           (10/104). */
         volatile s16 old9c = mTouch.x;
         volatile s16 old9e = mTouch.y;
         int mixRaw = sTrmp2IntroToX * t + sTrmp2IntroFromX * (0x1000 - t);
         mTouch.x = (mixRaw >> 12);
         mTouch.y = sTrmpStartTouchY;
 
-        mTouch.y +=
-            ((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) -
-               0x800)
-              << 2) >>
-             12);
+        mTouch.y += ((RAND_FX() - 0x800) << 2) >> 12;
 
         Mg_DrawLine(old9c, old9e, mTouch.x, mTouch.y, 2, 0xc);
 
@@ -605,26 +605,26 @@ unsigned short Trmp2_OccupancyBits(int sel, int b) {
 }
 
 int Trmp2_PickFaceA(int x) {
-    int r;
+    fx32 r;
     if (x < 5) {
-        r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+        r = RAND_FX();
         return r < 0xc00 ? 4 : 5;
     }
-    r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+    r = RAND_FX();
     return r < 0xc00 ? 6 : 7;
 }
 
 int Trmp2_PickFaceB(int a) {
-    int r;
+    fx32 r;
     if (a < 5) {
-        r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+        r = RAND_FX();
         if (r < 0xc00)
             return 4;
         if (r < 0xe00)
             return 5;
         return 8;
     }
-    r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+    r = RAND_FX();
     if (r < 0xc00)
         return 6;
     if (r < 0xe00)
@@ -930,8 +930,6 @@ void dScMgTrampoline2_c::InitBrush(int layer) {
  * into the current touch-screen layer. The same body as dScMgTrampoline_c's,
  * with its own scratch buffer. */
 void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
-    void *obj = this;
-
     int half;
     int x0;
     int j;
@@ -939,7 +937,6 @@ void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
     int *addr;
     int i;
     int yy;
-    int mask = 0xf;
 
     half = n / 2;
     j = 0;
@@ -952,9 +949,7 @@ void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
                 if (x >= 0 && x < 0x100) {
                     if (yy >= 0 && yy < 0xc0) {
                         void *ret;
-                        int mode = ((dScMgTrampoline2_c *)obj)->mBrushLayer;
-
-                        switch (mode) {
+                        switch (mBrushLayer) {
                         case 0:
                             ret = G2_GetBG0CharPtr();
                             break;
@@ -974,7 +969,7 @@ void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
                         addr = (int *)((char *)ret + ((x / 8) + (yy / 8) * 32) * 32 + (yy & 7) * 4);
 
                         MI_CpuCopy32(addr, sTrmp2BrushWord, 4);
-                        sTrmp2BrushWord[0] = (sTrmp2BrushWord[0] & (-1 ^ (mask << ((x & 7) * 4)))) |
+                        sTrmp2BrushWord[0] = (sTrmp2BrushWord[0] & (-1 ^ (0xf << ((x & 7) * 4)))) |
                                              (val << ((x & 7) * 4));
                         MI_CpuCopy32(sTrmp2BrushWord, addr, 4);
                     }
@@ -1082,7 +1077,7 @@ void func_020169f4(char *self, int kind);
 void Trmp2Spinner_Init(void *r0, int value) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;
     struct Tbl t = sTrmp2SpinnerSpeeds;
-    fx32 rnd = TRMP2_RAND_FX;
+    fx32 rnd = RAND_FX();
     int idx;
     if (rnd < t.a) {
         idx = 0;
@@ -1106,13 +1101,12 @@ void Trmp2Spinner_Init(void *r0, int value) {
     spinner->mPos.x = 0x60000;
     spinner->mPos.y = 0x100000;
     spinner->mPos.z = 0x18000;
-    int drop = -0x1C00;
-    spinner->mVel.x = drop;
-    spinner->mVel.y = drop;
+    spinner->mVel.x = -0x1C00;
+    spinner->mVel.y = -0x1C00;
     spinner->mVel.z = 0;
-    spinner->mPos.x += (TRMP2_RAND_FX - 0x800) * 0x40;
-    spinner->mVel.x -= TRMP2_RAND_FX >> 1;
-    spinner->mVel.y -= TRMP2_RAND_FX >> 1;
+    spinner->mPos.x += (RAND_FX() - 0x800) * 0x40;
+    spinner->mVel.x -= RAND_FX() >> 1;
+    spinner->mVel.y -= RAND_FX() >> 1;
     func_02016a14((char *)spinner, 0);
     func_02016a04((char *)spinner, 0);
 }

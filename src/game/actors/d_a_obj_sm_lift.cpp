@@ -123,7 +123,7 @@ int daObjSm_Lift_c::Behavior() {
                   256);
     } else {
         if (mNodeStep > 0 && mNodeIndex == 1) {
-            if (Vec3_HorzDist(&mPos, (Vector3 *)&mBasePosX) < 0x10000) {
+            if (Vec3_HorzDist(&mPos, &mBasePos) < 0x10000) {
                 mMoving = 0;
                 mPauseTimer = 60;
             }
@@ -226,9 +226,9 @@ s32 daObjSm_Lift_c::InitResources() {
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mPauseTimer = 60;
-    mBasePosX = mPosX;
-    mBasePosY = mPosY;
-    mBasePosZ = mPosZ;
+    mBasePos.x = mPosX;
+    mBasePos.y = mPosY;
+    mBasePos.z = mPosZ;
     mAngleY -= 0x4000;
     PathPtr p;
     p.FromID(mPathId);
