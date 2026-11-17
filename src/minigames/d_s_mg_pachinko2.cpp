@@ -45,6 +45,7 @@ enum dScMgPachinko2_c_AssetId {
 #include "nitro/hw/registers.h"
 #include "cstd.h"
 #include "dScMgPachinko2_c.h"
+#include "SpawnInfo.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
@@ -190,6 +191,10 @@ extern const unsigned char sPachinko2CupWaitTimes[8] = {4, 2, 3, 2, 4, 2, 3, 2};
 extern const int sPachinko2CupX[2] = {0x40, 0xc0};
 extern const int sPachinko2CrossRowY[2] = {0xffffff98, 0xffffff68};
 extern const int sPachinko2PaddleFlyAwayVX[3] = {0x400, 0xfffffc00, 0x0};
+/* Per-cup wait-animation frame runs, read through
+ * sPachinko2CupWaitFramesPerCup[cup][animStep]. */
+extern const unsigned short data_ov006_0212ec8c[8] = {16, 19, 20, 19, 20, 19, 16, 0};
+extern const unsigned short data_ov006_0212ec9c[8] = {16, 17, 18, 17, 18, 17, 16, 0};
 extern const unsigned short sPachinko2CupWaitTimesAlt[8] = {5, 5, 80, 8, 80, 5, 75, 0};
 extern const s32 sPachinko2CupRightStops[6] = {0x60, 0xe0, 0x58, 0xd8, 0x40, 0xc0};
 extern const s32 sPachinko2CupLeftStops[6] = {0x20, 0xa0, 0x28, 0xa8, 0x40, 0xc0};
@@ -221,50 +226,21 @@ const int *sPachinko2PaddleSweepLimits[6] = {
     data_ov006_0212ec58, data_ov006_0212ec50, data_ov006_0212ebf0,
     data_ov006_0212ec48, data_ov006_0212ec40, data_ov006_0212ebe8,
 };
-/* Leftover: the gather-target pointer table at 0x0213db9c and the cup
- * step-frame table at 0x0213daa4 both sit in the module .data tail, which is a
- * single shared plain .data section; a named claim cannot be carved inside it,
- * and the gather table's symbol extent runs into the class vtable storage.
- * The gather pairs above are indexed by that cartridge table in the order
- * ec28, ec20, ec18, ebf8, ec10, ec38. */
+const unsigned short *sPachinko2CupWaitFramesPerCup[2] = {
+    data_ov006_0212ec8c,
+    data_ov006_0212ec9c,
+};
+/* Leftover: the gather-target pointer table at 0x0213db9c sits in the module
+ * .data tail, which is a single shared plain .data section; a named claim
+ * cannot be carved inside it, and its symbol extent runs into the class
+ * vtable storage. The gather pairs above are indexed by that cartridge table
+ * in the order ec28, ec20, ec18, ebf8, ec10, ec38. */
 extern int *sPachinko2PaddleGatherTargets[];
-extern unsigned short *sPachinko2CupWaitFramesPerCup[];
 
 /* The three pointer-to-member tables the helpers dispatch through. */
 extern Entry sPachinko2CupStateTable[];
 extern Entry sPachinko2BallStateTable[];
 extern PMF sPachinko2PaddleStateTable[];
-
-/* The ROM {code pointer, adjustment} records the three tables copy from
-   (unlicensed .data), grouped by destination table in retail copy order. */
-extern PMF pmf_dScMgPachinko2_c_Ball_StateWaitGrab;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateAim;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateFlying;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateTumble;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateHop;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateWalkOff;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateRemove;
-extern PMF pmf_dScMgPachinko2_c_Ball_StateScored;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateSpawn;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateDescend;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateSweep;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateBoxLoop;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateOrbit;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateWeave;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateCross;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StatePause;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateKnockedDown;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateFallToGround;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateSwing;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateRiseHome;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateGather;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateDropBalls;
-extern PMF pmf_dScMgPachinko2_c_Paddle_StateFlyAway;
-extern PMF pmf_dScMgPachinko2_c_Cup_StateInit;
-extern PMF pmf_dScMgPachinko2_c_Cup_StateWait;
-extern PMF pmf_dScMgPachinko2_c_Cup_StateHopLeft;
-extern PMF pmf_dScMgPachinko2_c_Cup_StateHopRight;
-extern PMF pmf_dScMgPachinko2_c_Cup_StateDecide;
 
 } /* extern "C" */
 extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
@@ -2436,28 +2412,30 @@ dScMgPachinko2_c *dScMgPachinko2_c_classInit(void) {
     return new dScMgPachinko2_c;
 }
 
+BaseSpawnInfo<dScMgPachinko2_c> g_profile_MG_TAMAIRE = {dScMgPachinko2_c_classInit, 0x171, 0x171};
+
 /* The three state tables, defined in retail copy order: the 8-row ball
    table, the 15-row paddle table, then the 5-row cup table. mwcc emits
    __sinit_d_s_mg_pachinko2.cpp from these definitions, copying the ROM
    .data records. */
 Entry sPachinko2BallStateTable[8] = {
-    {pmf_dScMgPachinko2_c_Ball_StateWaitGrab}, {pmf_dScMgPachinko2_c_Ball_StateAim},
-    {pmf_dScMgPachinko2_c_Ball_StateFlying},   {pmf_dScMgPachinko2_c_Ball_StateTumble},
-    {pmf_dScMgPachinko2_c_Ball_StateHop},      {pmf_dScMgPachinko2_c_Ball_StateWalkOff},
-    {pmf_dScMgPachinko2_c_Ball_StateRemove},   {pmf_dScMgPachinko2_c_Ball_StateScored},
+    {&dScMgPachinko2_c::Ball_StateWaitGrab}, {&dScMgPachinko2_c::Ball_StateAim},
+    {&dScMgPachinko2_c::Ball_StateFlying},   {&dScMgPachinko2_c::Ball_StateTumble},
+    {&dScMgPachinko2_c::Ball_StateHop},      {&dScMgPachinko2_c::Ball_StateWalkOff},
+    {&dScMgPachinko2_c::Ball_StateRemove},   {&dScMgPachinko2_c::Ball_StateScored},
 };
 PMF sPachinko2PaddleStateTable[15] = {
-    pmf_dScMgPachinko2_c_Paddle_StateSpawn,       pmf_dScMgPachinko2_c_Paddle_StateDescend,
-    pmf_dScMgPachinko2_c_Paddle_StateSweep,       pmf_dScMgPachinko2_c_Paddle_StateBoxLoop,
-    pmf_dScMgPachinko2_c_Paddle_StateOrbit,       pmf_dScMgPachinko2_c_Paddle_StateWeave,
-    pmf_dScMgPachinko2_c_Paddle_StateCross,       pmf_dScMgPachinko2_c_Paddle_StatePause,
-    pmf_dScMgPachinko2_c_Paddle_StateKnockedDown, pmf_dScMgPachinko2_c_Paddle_StateFallToGround,
-    pmf_dScMgPachinko2_c_Paddle_StateSwing,       pmf_dScMgPachinko2_c_Paddle_StateRiseHome,
-    pmf_dScMgPachinko2_c_Paddle_StateGather,      pmf_dScMgPachinko2_c_Paddle_StateDropBalls,
-    pmf_dScMgPachinko2_c_Paddle_StateFlyAway,
+    &dScMgPachinko2_c::Paddle_StateSpawn,       &dScMgPachinko2_c::Paddle_StateDescend,
+    &dScMgPachinko2_c::Paddle_StateSweep,       &dScMgPachinko2_c::Paddle_StateBoxLoop,
+    &dScMgPachinko2_c::Paddle_StateOrbit,       &dScMgPachinko2_c::Paddle_StateWeave,
+    &dScMgPachinko2_c::Paddle_StateCross,       &dScMgPachinko2_c::Paddle_StatePause,
+    &dScMgPachinko2_c::Paddle_StateKnockedDown, &dScMgPachinko2_c::Paddle_StateFallToGround,
+    &dScMgPachinko2_c::Paddle_StateSwing,       &dScMgPachinko2_c::Paddle_StateRiseHome,
+    &dScMgPachinko2_c::Paddle_StateGather,      &dScMgPachinko2_c::Paddle_StateDropBalls,
+    &dScMgPachinko2_c::Paddle_StateFlyAway,
 };
 Entry sPachinko2CupStateTable[5] = {
-    {pmf_dScMgPachinko2_c_Cup_StateInit},    {pmf_dScMgPachinko2_c_Cup_StateWait},
-    {pmf_dScMgPachinko2_c_Cup_StateHopLeft}, {pmf_dScMgPachinko2_c_Cup_StateHopRight},
-    {pmf_dScMgPachinko2_c_Cup_StateDecide},
+    {&dScMgPachinko2_c::Cup_StateInit},    {&dScMgPachinko2_c::Cup_StateWait},
+    {&dScMgPachinko2_c::Cup_StateHopLeft}, {&dScMgPachinko2_c::Cup_StateHopRight},
+    {&dScMgPachinko2_c::Cup_StateDecide},
 };

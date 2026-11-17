@@ -34,7 +34,7 @@
     },
     {
       "name": ".data",
-      "start": "0x0213db6c",
+      "start": "0x0213da5c",
       "end": "0x0213db9c"
     },
     {
@@ -102,6 +102,18 @@
       "input_section": ".rodata",
       "start": "0x0212ec80",
       "end": "0x0212ec8c"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec8c",
+      "input_section": ".rodata",
+      "start": "0x0212ec8c",
+      "end": "0x0212ec9c"
+    },
+    {
+      "name": ".rodata.data_ov006_0212ec9c",
+      "input_section": ".rodata",
+      "start": "0x0212ec9c",
+      "end": "0x0212ecac"
     },
     {
       "name": ".rodata.sPachinko2CupWaitTimesAlt",
@@ -998,6 +1010,228 @@
       "size": "0x18",
       "binding": "STB_GLOBAL",
       "evidence": "Three OamAttr entries ending at the attr3 0xffff terminator; sPachinko2BallCountSprites[0]."
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateOrbit",
+      "address": "0x0213da5c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateOrbit (0x021019e0), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "g_profile_MG_TAMAIRE",
+      "address": "0x0213da64",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "base scene profile (BaseSpawnInfo): word 0 relocates to dScMgPachinko2_c_classInit (0x02104258); both priority halfwords are 0x171, compared to retail"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateCross",
+      "address": "0x0213da6c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateCross (0x021012cc), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateFlying",
+      "address": "0x0213da74",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Ball_StateFlying (0x02103360), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateWalkOff",
+      "address": "0x0213da7c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Ball_StateWalkOff (0x02103870), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateWaitGrab",
+      "address": "0x0213da84",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Ball_StateWaitGrab (0x02102f3c), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateBoxLoop",
+      "address": "0x0213da8c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateBoxLoop (0x02101af0), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateTumble",
+      "address": "0x0213da94",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Ball_StateTumble (0x02103608), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateHop",
+      "address": "0x0213da9c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Ball_StateHop (0x0210371c), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "sPachinko2CupWaitFramesPerCup",
+      "address": "0x0213daa4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two pointers to the per-cup wait-animation frame runs at 0x0212ec8c and 0x0212ec9c; Cup_StateWait reads [cup][animStep]"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateDecide",
+      "address": "0x0213daac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Cup_StateDecide (0x020ff690), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateHopRight",
+      "address": "0x0213dab4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Cup_StateHopRight (0x020ff8c8), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateHopLeft",
+      "address": "0x0213dabc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Cup_StateHopLeft (0x020ffb54), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateWait",
+      "address": "0x0213dac4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Cup_StateWait (0x020ffde4), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateInit",
+      "address": "0x0213dacc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Cup_StateInit (0x020fff54), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StatePause",
+      "address": "0x0213dad4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StatePause (0x02101224), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateRemove",
+      "address": "0x0213dadc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Ball_StateRemove (0x0210397c), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateDescend",
+      "address": "0x0213dae4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateDescend (0x021020c4), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateWeave",
+      "address": "0x0213daec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateWeave (0x021016ec), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateAim",
+      "address": "0x0213daf4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Ball_StateAim (0x02102fe8), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateScored",
+      "address": "0x0213dafc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Ball_StateScored (0x02103994), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateSpawn",
+      "address": "0x0213db04",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateSpawn (0x02102274), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateSweep",
+      "address": "0x0213db0c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateSweep (0x02101e88), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateKnockedDown",
+      "address": "0x0213db14",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateKnockedDown (0x02101088), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateFlyAway",
+      "address": "0x0213db1c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateFlyAway (0x021009b8), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateDropBalls",
+      "address": "0x0213db24",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateDropBalls (0x02100b08), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateGather",
+      "address": "0x0213db2c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateGather (0x02100bac), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateRiseHome",
+      "address": "0x0213db34",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateRiseHome (0x02100d90), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateSwing",
+      "address": "0x0213db3c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateSwing (0x02100e3c), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateFallToGround",
+      "address": "0x0213db44",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgPachinko2_c::Paddle_StateFallToGround (0x02100f7c), emitted by __sinit_d_s_mg_pachinko2.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "_ZTI16dScMgPachinko2_c",
+      "address": "0x0213db4c",
+      "size": "0xc",
+      "evidence": "own class typeinfo: __si_class_type_info vtable+8 (0x0209a764), its own _ZTS, then base _ZTI11dScMgBase_c at ov004:0x020bbf6c; it sits between the PMF-literal run and the paddle limit tables, so the one .data claim runs through it"
+    },
+    {
+      "symbol": "_ZTS16dScMgPachinko2_c",
+      "address": "0x0213db58",
+      "size": "0x13",
+      "evidence": "ROM type-name string '16dScMgPachinko2_c': 18 chars + NUL = 0x13 emitted bytes, followed by 1 byte of alignment padding before sPachinko2PaddleDescendLimits"
     }
   ],
   "bss": [
@@ -1100,6 +1334,20 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0212ec8c",
+      "address": "0x0212ec8c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight u16 wait-animation frames for cup 0, read through sPachinko2CupWaitFramesPerCup[0]"
+    },
+    {
+      "symbol": "data_ov006_0212ec9c",
+      "address": "0x0212ec9c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight u16 wait-animation frames for cup 1, read through sPachinko2CupWaitFramesPerCup[1]"
     },
     {
       "symbol": "sPachinko2CupWaitTimesAlt",
@@ -1253,7 +1501,8 @@
     "Hand-assembled from the 74 legacy one-function sources of ROM ordinals 0..73 in ROM-ascending order under #pragma defer_codegen off. tools/tubuild.py create was used only for the function table: its splitter emits members in reverse order and drops per-function pragmas, and it cannot split CheckCountdownEnd, whose legacy body sits inside an extern \"C\" block.",
     "Each legacy per-function pragma is carried in its own #pragma push and pop bracket around that member.",
     "tubuild id at inspect time was ov006/dScMgPachinko2_c+dScMgPachinko_c. The manifest id drops the second class because the label is spurious (see boundary_evidence) and a + in promoted_source blocks promotion.",
-    "dScMgPachinko2_c_classInit keeps its hand-built factory form."
+    "dScMgPachinko2_c_classInit keeps its hand-built factory form.",
+    "2026-11-17 (#821): the three state tables are initialized from real &dScMgPachinko2_c:: member pointers, and the file defines g_profile_MG_TAMAIRE and sPachinko2CupWaitFramesPerCup (with the two u16 frame runs it points at, 0x0212ec8c and 0x0212ec9c, split out of .rodata.gap8). The 28 {fn, 0} constants mwccarm emits for the initializers, the profile, the table and the class's own _ZTI16/_ZTS16dScMgPachinko2_c records are the run 0x0213da5c..0x0213db6c; the existing .data claim is extended down to it. Each @NNN is paired with its pmf_dScMgPachinko2_c_* record by its __sinit consumer relocation and its own handler relocation. The _ZTI/_ZTS records move from compiler_only_output deadstrip-data to owned data rows (precedent ov002/daObjFire_c, ov003/dScGameOver_c). verify 74/74 TEXT-VERIFIED; linkcheck SCRATCH-DATA-VERIFIED (57 section ranges)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -1336,7 +1585,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -1375,8 +1624,120 @@
         },
         {
           "section": ".data",
-          "start": "0x0213db6c",
+          "start": "0x0213da5c",
           "end": "0x0213db9c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2CupHopRightStartFrames",
+          "start": "0x0212ebac",
+          "end": "0x0212ebb0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2CupHopLeftStartFrames",
+          "start": "0x0212ebb0",
+          "end": "0x0212ebb4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2BallWalkOffSprites",
+          "start": "0x0212ebb4",
+          "end": "0x0212ebb8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2PaddleCountPerLanes",
+          "start": "0x0212ebb8",
+          "end": "0x0212ebc0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2CupHopLeftFrames",
+          "start": "0x0212ebc0",
+          "end": "0x0212ebc8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2CupHopRightFrames",
+          "start": "0x0212ebc8",
+          "end": "0x0212ebd0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2CupWaitFrames",
+          "start": "0x0212ebd8",
+          "end": "0x0212ebe0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2CupWaitTimes",
+          "start": "0x0212ebe0",
+          "end": "0x0212ebe8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2CupX",
+          "start": "0x0212ec08",
+          "end": "0x0212ec10",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2CrossRowY",
+          "start": "0x0212ec30",
+          "end": "0x0212ec38",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2PaddleFlyAwayVX",
+          "start": "0x0212ec80",
+          "end": "0x0212ec8c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec8c",
+          "start": "0x0212ec8c",
+          "end": "0x0212ec9c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212ec9c",
+          "start": "0x0212ec9c",
+          "end": "0x0212ecac",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2CupWaitTimesAlt",
+          "start": "0x0212ecac",
+          "end": "0x0212ecbc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2CupRightStops",
+          "start": "0x0212ecbc",
+          "end": "0x0212ecd4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sPachinko2CupLeftStops",
+          "start": "0x0212ecd4",
+          "end": "0x0212ecec",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1388,16 +1749,30 @@
           "firstDiff": null
         },
         {
-          "section": ".data.data_ov006_02133870",
-          "start": "0x02133870",
-          "end": "0x02133890",
+          "section": ".data.sPachinko2SparkSprites",
+          "start": "0x02136bd4",
+          "end": "0x02136be4",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
-          "section": ".data.sPachinko2SparkSprites",
-          "start": "0x02136bd4",
-          "end": "0x02136be4",
+          "section": ".data.sPachinko2BallSprite",
+          "start": "0x021389ec",
+          "end": "0x021389f0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sPachinko2BallCountSprites",
+          "start": "0x02138d08",
+          "end": "0x02138d28",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133870",
+          "start": "0x02133870",
+          "end": "0x02133890",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1426,13 +1801,6 @@
           "section": ".data.data_ov006_02136c7c",
           "start": "0x02136c7c",
           "end": "0x02136cd4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.sPachinko2BallSprite",
-          "start": "0x021389ec",
-          "end": "0x021389f0",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1500,72 +1868,9 @@
           "firstDiff": null
         },
         {
-          "section": ".data.sPachinko2BallCountSprites",
-          "start": "0x02138d08",
-          "end": "0x02138d28",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.sPachinko2CupHopRightStartFrames",
-          "start": "0x0212ebac",
-          "end": "0x0212ebb0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.sPachinko2CupHopLeftStartFrames",
-          "start": "0x0212ebb0",
-          "end": "0x0212ebb4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.sPachinko2BallWalkOffSprites",
-          "start": "0x0212ebb4",
-          "end": "0x0212ebb8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.sPachinko2PaddleCountPerLanes",
-          "start": "0x0212ebb8",
-          "end": "0x0212ebc0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.sPachinko2CupHopLeftFrames",
-          "start": "0x0212ebc0",
-          "end": "0x0212ebc8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.sPachinko2CupHopRightFrames",
-          "start": "0x0212ebc8",
-          "end": "0x0212ebd0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".rodata.data_ov006_0212ebd0",
           "start": "0x0212ebd0",
           "end": "0x0212ebd8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.sPachinko2CupWaitFrames",
-          "start": "0x0212ebd8",
-          "end": "0x0212ebe0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.sPachinko2CupWaitTimes",
-          "start": "0x0212ebe0",
-          "end": "0x0212ebe8",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1598,13 +1903,6 @@
           "firstDiff": null
         },
         {
-          "section": ".rodata.sPachinko2CupX",
-          "start": "0x0212ec08",
-          "end": "0x0212ec10",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".rodata.data_ov006_0212ec10",
           "start": "0x0212ec10",
           "end": "0x0212ec18",
@@ -1629,13 +1927,6 @@
           "section": ".rodata.data_ov006_0212ec28",
           "start": "0x0212ec28",
           "end": "0x0212ec30",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.sPachinko2CrossRowY",
-          "start": "0x0212ec30",
-          "end": "0x0212ec38",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1701,39 +1992,11 @@
           "end": "0x0212ec80",
           "differingBytes": 0,
           "firstDiff": null
-        },
-        {
-          "section": ".rodata.sPachinko2PaddleFlyAwayVX",
-          "start": "0x0212ec80",
-          "end": "0x0212ec8c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.sPachinko2CupWaitTimesAlt",
-          "start": "0x0212ecac",
-          "end": "0x0212ecbc",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.sPachinko2CupRightStops",
-          "start": "0x0212ecbc",
-          "end": "0x0212ecd4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.sPachinko2CupLeftStops",
-          "start": "0x0212ecd4",
-          "end": "0x0212ecec",
-          "differingBytes": 0,
-          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 79
+          "LICENSED": 165
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1744,32 +2007,575 @@
           {
             "section": ".init",
             "original": [
-              160
+              280
             ],
             "desired": [
-              160
+              280
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              158
+              278
             ],
             "desired": [
-              158
+              278
             ]
           },
           {
             "section": ".bss",
             "original": [
-              138,
-              139,
-              140
+              218,
+              249,
+              260
             ],
             "desired": [
-              140,
-              138,
-              139
+              260,
+              218,
+              249
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              18,
+              46,
+              58,
+              200,
+              202,
+              204,
+              206,
+              208,
+              210,
+              212,
+              214,
+              216,
+              219,
+              221,
+              223,
+              225,
+              227,
+              229,
+              231,
+              233,
+              235,
+              237,
+              239,
+              241,
+              243,
+              245,
+              247,
+              250,
+              252,
+              254,
+              256,
+              258,
+              263,
+              264
+            ],
+            "desired": [
+              227,
+              200,
+              231,
+              206,
+              212,
+              202,
+              225,
+              208,
+              210,
+              18,
+              258,
+              256,
+              254,
+              252,
+              250,
+              233,
+              214,
+              221,
+              229,
+              204,
+              216,
+              219,
+              223,
+              235,
+              247,
+              245,
+              243,
+              241,
+              239,
+              237,
+              264,
+              263,
+              46,
+              58
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2CupHopRightStartFrames",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2CupHopLeftStartFrames",
+            "original": [
+              6
+            ],
+            "desired": [
+              6
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2BallWalkOffSprites",
+            "original": [
+              7
+            ],
+            "desired": [
+              7
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2PaddleCountPerLanes",
+            "original": [
+              14
+            ],
+            "desired": [
+              14
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2CupHopLeftFrames",
+            "original": [
+              39
+            ],
+            "desired": [
+              39
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2CupHopRightFrames",
+            "original": [
+              30
+            ],
+            "desired": [
+              30
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2CupWaitFrames",
+            "original": [
+              37
+            ],
+            "desired": [
+              37
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2CupWaitTimes",
+            "original": [
+              36
+            ],
+            "desired": [
+              36
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2CupX",
+            "original": [
+              35
+            ],
+            "desired": [
+              35
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2CrossRowY",
+            "original": [
+              34
+            ],
+            "desired": [
+              34
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2PaddleFlyAwayVX",
+            "original": [
+              40
+            ],
+            "desired": [
+              40
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec8c",
+            "original": [
+              41
+            ],
+            "desired": [
+              41
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec9c",
+            "original": [
+              42
+            ],
+            "desired": [
+              42
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2CupWaitTimesAlt",
+            "original": [
+              43
+            ],
+            "desired": [
+              43
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2CupRightStops",
+            "original": [
+              48
+            ],
+            "desired": [
+              48
+            ]
+          },
+          {
+            "section": ".rodata.sPachinko2CupLeftStops",
+            "original": [
+              50
+            ],
+            "desired": [
+              50
+            ]
+          },
+          {
+            "section": ".data.sPachinko2PaddleSprite",
+            "original": [
+              10
+            ],
+            "desired": [
+              10
+            ]
+          },
+          {
+            "section": ".data.sPachinko2SparkSprites",
+            "original": [
+              44
+            ],
+            "desired": [
+              44
+            ]
+          },
+          {
+            "section": ".data.sPachinko2BallSprite",
+            "original": [
+              8
+            ],
+            "desired": [
+              8
+            ]
+          },
+          {
+            "section": ".data.sPachinko2BallCountSprites",
+            "original": [
+              61
+            ],
+            "desired": [
+              61
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02133870",
+            "original": [
+              60
+            ],
+            "desired": [
+              60
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02136be4",
+            "original": [
+              63
+            ],
+            "desired": [
+              63
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02136c0c",
+            "original": [
+              64
+            ],
+            "desired": [
+              64
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02136c34",
+            "original": [
+              65
+            ],
+            "desired": [
+              65
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02136c7c",
+            "original": [
+              66
+            ],
+            "desired": [
+              66
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021389f0",
+            "original": [
+              27
+            ],
+            "desired": [
+              27
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02138c48",
+            "original": [
+              57
+            ],
+            "desired": [
+              57
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02138c60",
+            "original": [
+              56
+            ],
+            "desired": [
+              56
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02138c78",
+            "original": [
+              55
+            ],
+            "desired": [
+              55
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02138c90",
+            "original": [
+              52
+            ],
+            "desired": [
+              52
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02138ca8",
+            "original": [
+              51
+            ],
+            "desired": [
+              51
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02138cc0",
+            "original": [
+              49
+            ],
+            "desired": [
+              49
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02138cd8",
+            "original": [
+              53
+            ],
+            "desired": [
+              53
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02138cf0",
+            "original": [
+              54
+            ],
+            "desired": [
+              54
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ebd0",
+            "original": [
+              15
+            ],
+            "desired": [
+              15
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ebe8",
+            "original": [
+              26
+            ],
+            "desired": [
+              26
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ebf0",
+            "original": [
+              13
+            ],
+            "desired": [
+              13
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ebf8",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec00",
+            "original": [
+              29
+            ],
+            "desired": [
+              29
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec10",
+            "original": [
+              32
+            ],
+            "desired": [
+              32
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec18",
+            "original": [
+              21
+            ],
+            "desired": [
+              21
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec20",
+            "original": [
+              20
+            ],
+            "desired": [
+              20
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec28",
+            "original": [
+              17
+            ],
+            "desired": [
+              17
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec38",
+            "original": [
+              38
+            ],
+            "desired": [
+              38
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec40",
+            "original": [
+              28
+            ],
+            "desired": [
+              28
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec48",
+            "original": [
+              22
+            ],
+            "desired": [
+              22
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec50",
+            "original": [
+              31
+            ],
+            "desired": [
+              31
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec58",
+            "original": [
+              33
+            ],
+            "desired": [
+              33
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec60",
+            "original": [
+              12
+            ],
+            "desired": [
+              12
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec68",
+            "original": [
+              25
+            ],
+            "desired": [
+              25
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec70",
+            "original": [
+              16
+            ],
+            "desired": [
+              16
+            ]
+          },
+          {
+            "section": ".rodata.data_ov006_0212ec78",
+            "original": [
+              23
+            ],
+            "desired": [
+              23
             ]
           }
         ],
@@ -1778,25 +2584,136 @@
             {
               "section": ".bss",
               "original": [
-                138,
-                139,
-                140
+                218,
+                249,
+                260
               ],
               "desired": [
-                140,
-                138,
-                139
+                260,
+                218,
+                249
               ],
               "slots": [
-                138,
-                139,
-                140
+                218,
+                249,
+                260
+              ]
+            },
+            {
+              "section": ".data",
+              "original": [
+                18,
+                46,
+                58,
+                200,
+                202,
+                204,
+                206,
+                208,
+                210,
+                212,
+                214,
+                216,
+                219,
+                221,
+                223,
+                225,
+                227,
+                229,
+                231,
+                233,
+                235,
+                237,
+                239,
+                241,
+                243,
+                245,
+                247,
+                250,
+                252,
+                254,
+                256,
+                258,
+                263,
+                264
+              ],
+              "desired": [
+                227,
+                200,
+                231,
+                206,
+                212,
+                202,
+                225,
+                208,
+                210,
+                18,
+                258,
+                256,
+                254,
+                252,
+                250,
+                233,
+                214,
+                221,
+                229,
+                204,
+                216,
+                219,
+                223,
+                235,
+                247,
+                245,
+                243,
+                241,
+                239,
+                237,
+                264,
+                263,
+                46,
+                58
+              ],
+              "slots": [
+                18,
+                46,
+                58,
+                200,
+                202,
+                204,
+                206,
+                208,
+                210,
+                212,
+                214,
+                216,
+                219,
+                221,
+                223,
+                225,
+                227,
+                229,
+                231,
+                233,
+                235,
+                237,
+                239,
+                241,
+                243,
+                245,
+                247,
+                250,
+                252,
+                254,
+                256,
+                258,
+                263,
+                264
               ]
             }
           ],
-          "symbolIndices": 3,
+          "symbolIndices": 37,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 33,
           "error": null
         },
         "errors": null
@@ -1826,20 +2743,6 @@
       "reason": "The class's own vtable, emitted because this TU owns the key function. Extent corroborated two ways that agree: (a) the address point in config/arm9/overlays/ov006/symbols.txt is 0x0213dbbc and the next data symbol is data_ov006_0213dc4c, giving symbol extent 0x90 = 36 slots and STORAGE 0x0213dbb4..0x0213dc4c = 0x98 once the 8-byte offset-to-top and typeinfo preamble is counted; (b) tubuild verify reports the emitted .data section for this symbol as exactly size=0x98. The cartridge keeps its canonical copy at ov006:0x0213dbbc, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "ov006",
       "canonical_address": "0x0213dbbc"
-    },
-    {
-      "symbol": "_ZTI16dScMgPachinko2_c",
-      "disposition": "deadstrip-data",
-      "reason": "Own record. This TU defines dScMgPachinko2_c's key function -- the destructor, which include/dScMgPachinko2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213db4c, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
-      "canonical_module": "ov006",
-      "canonical_address": "0x0213db4c"
-    },
-    {
-      "symbol": "_ZTS16dScMgPachinko2_c",
-      "disposition": "deadstrip-data",
-      "reason": "Own record. This TU defines dScMgPachinko2_c's key function -- the destructor, which include/dScMgPachinko2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213db58, outside this TU's only licensed range (.text 0x020ff420-0x0210428c), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
-      "canonical_module": "ov006",
-      "canonical_address": "0x0213db58"
     },
     {
       "symbol": "_ZTI11dScMgBase_c",
@@ -1929,6 +2832,174 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateOrbit",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateCross",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateFlying",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateWalkOff",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateWaitGrab",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateBoxLoop",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateTumble",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateHop",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateDecide",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateHopRight",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateHopLeft",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateWait",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Cup_StateInit",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StatePause",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateRemove",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateDescend",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateWeave",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateAim",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Ball_StateScored",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateSpawn",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateSweep",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateKnockedDown",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateFlyAway",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateDropBalls",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateGather",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateRiseHome",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateSwing",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgPachinko2_c_Paddle_StateFallToGround",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "relocations": [
@@ -2511,6 +3582,488 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212ebe8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213da5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StateOrbitEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021019e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213da64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z26dScMgPachinko2_c_classInitv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02104258"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213da6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StateCrossEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021012cc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213da74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c16Ball_StateFlyingEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02103360"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213da7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c17Ball_StateWalkOffEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02103870"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213da84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c18Ball_StateWaitGrabEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02102f3c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213da8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c19Paddle_StateBoxLoopEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02101af0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213da94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c16Ball_StateTumbleEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02103608"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213da9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c13Ball_StateHopEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0210371c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213daa4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212ec8c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212ec8c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213daa8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0212ec9c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0212ec9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213daac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c15Cup_StateDecideEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ff690"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213dab4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c17Cup_StateHopRightEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ff8c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213dabc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c16Cup_StateHopLeftEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ffb54"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213dac4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c13Cup_StateWaitEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ffde4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213dacc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c13Cup_StateInitEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020fff54"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213dad4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StatePauseEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02101224"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213dadc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c16Ball_StateRemoveEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0210397c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213dae4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c19Paddle_StateDescendEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021020c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213daec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StateWeaveEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021016ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213daf4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c13Ball_StateAimEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02102fe8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213dafc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c16Ball_StateScoredEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02103994"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213db04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StateSpawnEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02102274"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213db0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StateSweepEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02101e88"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213db14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c23Paddle_StateKnockedDownEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02101088"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213db1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c19Paddle_StateFlyAwayEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021009b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213db24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c21Paddle_StateDropBallsEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02100b08"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213db2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c18Paddle_StateGatherEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02100bac"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213db34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c20Paddle_StateRiseHomeEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02100d90"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213db3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c17Paddle_StateSwingEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02100e3c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213db44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16dScMgPachinko2_c24Paddle_StateFallToGroundEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02100f7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213db4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213db50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS16dScMgPachinko2_c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213db58"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213db54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI11dScMgBase_c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bbf6c"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@2815",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateOrbit",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateOrbit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x298 loads 0x0213da5c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateOrbit at 0x021019e0). Re-keyed from @2816 to @2815 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2819",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateCross",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateCross, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x29c loads 0x0213da6c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateCross at 0x021012cc). Re-keyed from @2820 to @2819 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2795",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateFlying",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateFlying, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x264 loads 0x0213da74 in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateFlying at 0x02103360). Re-keyed from @2796 to @2795 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2801",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateWalkOff",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateWalkOff, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x270 loads 0x0213da7c in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateWalkOff at 0x02103870). Re-keyed from @2802 to @2801 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2791",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateWaitGrab",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateWaitGrab, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x258 loads 0x0213da84 in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateWaitGrab at 0x02102f3c). Re-keyed from @2792 to @2791 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2813",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateBoxLoop",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateBoxLoop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x294 loads 0x0213da8c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateBoxLoop at 0x02101af0). Re-keyed from @2814 to @2813 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2797",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateTumble",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateTumble, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x268 loads 0x0213da94 in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateTumble at 0x02103608). Re-keyed from @2798 to @2797 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2799",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateHop",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateHop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x26c loads 0x0213da9c in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateHop at 0x0210371c). Re-keyed from @2800 to @2799 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2845",
+      "to": "pmf_dScMgPachinko2_c_Cup_StateDecide",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateDecide, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2cc loads 0x0213daac in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateDecide at 0x020ff690). Re-keyed from @2846 to @2845 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2843",
+      "to": "pmf_dScMgPachinko2_c_Cup_StateHopRight",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateHopRight, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2c8 loads 0x0213dab4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateHopRight at 0x020ff8c8). Re-keyed from @2844 to @2843 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2841",
+      "to": "pmf_dScMgPachinko2_c_Cup_StateHopLeft",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateHopLeft, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2c4 loads 0x0213dabc in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateHopLeft at 0x020ffb54). Re-keyed from @2842 to @2841 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2839",
+      "to": "pmf_dScMgPachinko2_c_Cup_StateWait",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateWait, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2c0 loads 0x0213dac4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateWait at 0x020ffde4). Re-keyed from @2840 to @2839 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2837",
+      "to": "pmf_dScMgPachinko2_c_Cup_StateInit",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Cup_StateInit, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2bc loads 0x0213dacc in the ROM) and by its own relocation target (dScMgPachinko2_c::Cup_StateInit at 0x020fff54). Re-keyed from @2838 to @2837 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2821",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StatePause",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StatePause, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x278 loads 0x0213dad4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StatePause at 0x02101224). Re-keyed from @2822 to @2821 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2803",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateRemove",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateRemove, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x274 loads 0x0213dadc in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateRemove at 0x0210397c). Re-keyed from @2804 to @2803 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2809",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateDescend",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateDescend, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x284 loads 0x0213dae4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateDescend at 0x021020c4). Re-keyed from @2810 to @2809 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2817",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateWeave",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateWeave, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2a0 loads 0x0213daec in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateWeave at 0x021016ec). Re-keyed from @2818 to @2817 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2793",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateAim",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateAim, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x25c loads 0x0213daf4 in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateAim at 0x02102fe8). Re-keyed from @2794 to @2793 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2805",
+      "to": "pmf_dScMgPachinko2_c_Ball_StateScored",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Ball_StateScored, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x27c loads 0x0213dafc in the ROM) and by its own relocation target (dScMgPachinko2_c::Ball_StateScored at 0x02103994). Re-keyed from @2806 to @2805 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2807",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateSpawn",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateSpawn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x280 loads 0x0213db04 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateSpawn at 0x02102274). Re-keyed from @2808 to @2807 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2811",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateSweep",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateSweep, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x288 loads 0x0213db0c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateSweep at 0x02101e88). Re-keyed from @2812 to @2811 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2823",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateKnockedDown",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateKnockedDown, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x290 loads 0x0213db14 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateKnockedDown at 0x02101088). Re-keyed from @2824 to @2823 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2835",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateFlyAway",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateFlyAway, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2b8 loads 0x0213db1c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateFlyAway at 0x021009b8). Re-keyed from @2836 to @2835 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2833",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateDropBalls",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateDropBalls, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2b4 loads 0x0213db24 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateDropBalls at 0x02100b08). Re-keyed from @2834 to @2833 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2831",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateGather",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateGather, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2b0 loads 0x0213db2c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateGather at 0x02100bac). Re-keyed from @2832 to @2831 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2829",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateRiseHome",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateRiseHome, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2ac loads 0x0213db34 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateRiseHome at 0x02100d90). Re-keyed from @2830 to @2829 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2827",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateSwing",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateSwing, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2a8 loads 0x0213db3c in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateSwing at 0x02100e3c). Re-keyed from @2828 to @2827 after the data/batch-01 merge (paired by consumer relocation)."
+    },
+    {
+      "from": "@2825",
+      "to": "pmf_dScMgPachinko2_c_Paddle_StateFallToGround",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_pachinko2.cpp assigns &dScMgPachinko2_c::Paddle_StateFallToGround, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_pachinko2.cpp+0x2a4 loads 0x0213db44 in the ROM) and by its own relocation target (dScMgPachinko2_c::Paddle_StateFallToGround at 0x02100f7c). Re-keyed from @2826 to @2825 after the data/batch-01 merge (paired by consumer relocation)."
     }
   ]
 }

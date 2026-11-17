@@ -155,7 +155,7 @@ struct dScMgCoin_c : dScMgBase_c {
     void Bag_StateParked(int index);
     void Bag_StateRise(int index);
     void Bag_Release();
-    void Bag_StateIdle();
+    void Bag_StateIdle(int);
     void Bag_Update();
     void Bag_Show();
     void Bag_Hide();
@@ -182,7 +182,7 @@ struct dScMgCoin_c : dScMgBase_c {
     void DrawScoreRival();
     void Score_Update();
     void DrawCoinValues();
-    void Coin_StateSettled();
+    void Coin_StateSettled(int);
     void Coin_StateHop(int index);
     void Coin_StateWaitTouch(int idx);
     void Coin_UpdateAll();
@@ -190,7 +190,7 @@ struct dScMgCoin_c : dScMgBase_c {
     void KickBlockUnderCoin(int id);
     void DrawBlocks();
     void Block_StateFallIn(int i);
-    void Block_StateResting();
+    void Block_StateResting(int);
     void Block_StateDropOnCoin(int index);
     void Block_StateWander(int i);
     void Block_StateHopDown(int i);

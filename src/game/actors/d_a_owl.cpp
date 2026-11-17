@@ -124,6 +124,11 @@ extern OwlState data_ov094_02136b70;
  * spelling. math/Matrix.h (via daOwl_c.h -> dExtAnmModel_c.h) stands down. */
 typedef char Matrix4x3_size_must_be_0x30[sizeof(Matrix4x3) == 0x30 ? 1 : -1];
 
+/* UpdateHover's scratch: v[0..2] is the forward step it rotates into the
+   speed, v[3..5] three zero words nothing reads. Measured (#821 r49):
+   Vector3 fwd(0, 0, 0x5000) alone is 0x230 of 0x23c; adding an unused
+   Vector3(0, 0, 0) after it matches, so the second word triple is a dead
+   12-byte object, not yet identified. */
 struct V6 {
     int v[6];
 };

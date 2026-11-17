@@ -160,7 +160,7 @@ struct dScMgTeresa_c : dScMgBase_c {
     void BigBoo_SetDone();
     void BigBoo_Draw();
     void BigBoo_StateResult(int idx);
-    void BigBoo_StateGone();
+    void BigBoo_StateGone(int);
     void BigBoo_StateRemove(int index);
     void BigBoo_StateExit(int i);
     void BigBoo_StateOffscreen(int idx);

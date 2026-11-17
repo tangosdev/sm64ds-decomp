@@ -60,9 +60,8 @@
     .data.menutbl start:0x020bbf94 end:0x020bc034 kind:data align:4
     .data.gap24 start:0x020bc034 end:0x020bc070 kind:data align:4
     .data.scenekind start:0x020bc070 end:0x020bc0b8 kind:data align:4
-    .data.gap25 start:0x020bc0b8 end:0x020bc27c kind:data align:4
-    .data start:0x020bc27c end:0x020bc7d4 kind:data align:4
-    .data.gap26 start:0x020bc7d4 end:0x020bc828 kind:data align:4
+    .data.gap25 start:0x020bc0b8 end:0x020bc154 kind:data align:4
+    .data start:0x020bc154 end:0x020bc828 kind:data align:4
     .data.coinspr start:0x020bc828 end:0x020bc850 kind:data align:4
     .data.layout start:0x020bc850 end:0x020bc8bc kind:data align:4
     .data.statepmf start:0x020bc8bc end:0x020bca44 kind:data align:4
@@ -100,7 +99,7 @@ src/minigames/unit020b2c84.cpp:
     .text start:0x020b2c84 end:0x020b4aa4
     .init start:0x020b955c end:0x020b9ad0
     .ctor start:0x020b9de8 end:0x020b9dec
-    .data start:0x020bc27c end:0x020bc7d0
+    .data start:0x020bc154 end:0x020bc7d0
     .data.data_ov004_020b9e00 start:0x20b9e00 end:0x20b9e50
     .data.MsgSuperEsperSpritesEnglish start:0x20b9e50 end:0x20b9e54
     .data.data_ov004_020b9e54 start:0x20b9e54 end:0x20b9e70
@@ -162,7 +161,7 @@ src/minigames/unit020b4aa4.cpp:
     .init start:0x020b9ad0 end:0x020b9b24
     .rodata start:0x020b9488 end:0x020b948c
     .ctor start:0x020b9dec end:0x020b9df0
-    .data start:0x020bc7d0 end:0x020bc7d4
+    .data start:0x020bc7d0 end:0x020bc828
     .data.coinspr start:0x020bc828 end:0x020bc850
     .bss start:0x020bfa28 end:0x020bfd04
 

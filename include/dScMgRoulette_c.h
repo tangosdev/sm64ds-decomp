@@ -70,7 +70,7 @@ typedef void (RouletteBoard::*RouletteBoardState)();
  * mWheel and mBall, and inline into the scene's. The RouletteBoard_ helpers
  * in d_s_mg_roulette_methods.cpp run its state. */
 struct RouletteBoard {
-    RouletteBoardState mState; /* 0x00 -- RouletteBoard_StateSpin, then StateSlow */
+    RouletteBoardState mState; /* 0x00 -- StateSpin, then StateSlow */
     BMD_File *mWheelFile;      /* 0x08 -- file 0x21d */
     BMD_File *mBallFile;       /* 0x0c -- file 0x21e */
     dExtSimpleModel_c mWheel;  /* 0x10 -- turned by mBoardAngle */
@@ -93,6 +93,10 @@ struct RouletteBoard {
                                   and clears it */
     s16 pad_ce;                /* 0xce */
     s32 mBraking;              /* 0xd0 -- phase 2 sets it; the spin then eases to 0 */
+
+    /* mState's two handlers; RouletteBoard_Update runs the current one. */
+    void StateSpin();
+    void StateSlow();
 };
 
 #ifndef SM64DS_PLATFORM_PC

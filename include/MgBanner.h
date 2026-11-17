@@ -22,18 +22,56 @@ struct MgBanner {
     int mScreen;      /* 0x1c -1 draws on both screens (Mg_RenderSpriteOn) */
     int mFileIndex;   /* 0x20 index into the file table; 29 when free */
     int mTimer;       /* 0x24 mostly stepped 0x1000 (1.0) per frame toward
-                            mTimerEnd; Banner_UpdateDrop counts it by 1 */
+                            mTimerEnd; UpdateDrop counts it by 1 */
     int mTimerEnd;    /* 0x28 */
     s16 mOamCount;    /* 0x2c records Mg_CopySpriteList copied */
     s16 mStyle;       /* 0x2e index into the three handler tables */
     s16 mGfxSlot;     /* 0x30 0..2, see sMgBannerGfxSlotUsed */
     u16 mArrived;     /* 0x32 set when mX reaches mTargetX
-                            (Banner_UpdateSlideFromRight, Banner_UpdateSlideFromLeft) */
+                            (UpdateSlideFromRight, UpdateSlideFromLeft) */
     u8 mOam[0x100];   /* 0x34 GXOamAttr records; the one whose attr3 is 0xffff is the
                             last drawn. The squeeze and zoom draws read x, the 9-bit
                             screen position, and fold values above 0x100 negative. */
     MgBanner();
     ~MgBanner() {}
+
+    /* Setup, behavior and render handlers: the three per-style tables
+       (sBannerSetupTable, sBannerUpdateTable, sBannerDrawTable) hold them as
+       member pointers, and the behaviors chain into each other through
+       mBehavior and mRender. */
+    void DrawLevelNumber();
+    void SetupNone();
+    void DrawSpin();
+    void UpdateSpin();
+    void StartSpin();
+    void UpdateDrop();
+    void SetupDrop();
+    void DrawWave();
+    void UpdateWave();
+    void StartWaveBurst();
+    void DrawSqueeze();
+    void UpdateFall();
+    void SetupFall();
+    void DrawPopSpinA();
+    void DrawPopSpinB();
+    void UpdatePopSpin();
+    void SetupPopSpin();
+    void DrawPressed();
+    void UpdatePressed();
+    void DrawPlain();
+    void SetupZoom();
+    void DrawZoomA();
+    void DrawZoomB();
+    void UpdateZoom();
+    void SetupZoomBurst();
+    void UpdateSlideFromRight();
+    void SetupSlideFromRight();
+    void UpdateSlideFromLeft();
+    void SetupSlideFromLeft();
+    void UpdateSlideFromBottom();
+    void SetupSlideFromBottom();
+    void UpdateSlideFromTop();
+    void SetupSlideFromTop();
 };
 typedef char MgBanner_size_must_be_0x134[sizeof(MgBanner) == 0x134 ? 1 : -1];
 
