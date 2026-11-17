@@ -1,10 +1,10 @@
 #include "Ov007Spring.h"
-#include "math/CalcLib.h"
+#include "nitro/fx/fx_vec.h"
 
 /* Sets each link's rest offset and length from the rest points: link i
  * runs from rest[i] to rest[i + 1], and in a closed list (flags bit 1) the
  * last one wraps to rest[0]. */
-void func_ov007_020c7694(Ov007PointList *list, Vector3 *rest) {
+void func_ov007_020c7694(Ov007PointList *list, VecFx32 *rest) {
     int n;
     int cnt;
     int i;

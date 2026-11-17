@@ -1747,8 +1747,14 @@ def validate_claims_in_module(delinks_path, claims):
                        f"{c['name']} -> {output_name}")
             reasons.append(f"{mapping} claim 0x{c['start']:08x}..0x{c['end']:08x} is "
                            f"not wholly inside exactly one declared module section")
-        elif IB.terminal_policy(c) is not None and homes[0] != (c["start"], c["end"]):
-            reasons.append(f"{c['name']} terminal fill requires complete logical module section ownership")
+        elif IB.terminal_policy(c) is not None:
+            # Whole-section ownership, or an interior end whose successor
+            # placement link_plan proves against the actual link.
+            try:
+                IB.terminal_placement(c, {"name": output_name, "start": homes[0][0],
+                                          "end": homes[0][1]})
+            except ValueError as exc:
+                reasons.append(f"{c['name']} terminal fill: {exc}")
     return reasons
 
 

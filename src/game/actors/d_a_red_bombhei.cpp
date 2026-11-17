@@ -43,6 +43,7 @@
 #include "private/mtx43.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 struct BCA_File;
 
@@ -121,7 +122,6 @@ extern u8 gShowRedCoinMarkers;
 extern u8  data_0209d660;               /* nonzero while a message box is open */
 extern u8  data_0209d6bc;               /* message box page state */
 extern u16 data_0209d6d4;               /* message on screen */
-extern Matrix4x3 data_020a0e68;         /* the shared scratch matrix */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* -- other modules -- */
@@ -133,8 +133,6 @@ int SublevelToLevel(int sublevel);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalarInPlace(Vector3 *v, int s);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void Matrix4x3_FromRotationY(void *m, int angle);
 int Math_Function_0203b14c(int *value, int target, int a, int b, int c);
 }
 int  IsStarCollected(int level, int star);
@@ -421,9 +419,7 @@ void daRedBombhei_c::ChangeState(int state) {
 }
 
 void daRedBombhei_c::EnterIdle() {
-    unsigned int flags = 0;
-    BCA_File *file = (BCA_File *)gRedBombheiWaitAnimFile.filePtr;
-    this->mAnmModel.SetAnim(file, 0, 0x1000, flags);
+    mAnmModel.SetAnim((BCA_File *)gRedBombheiWaitAnimFile.filePtr, 0, 0x1000, 0);
 }
 
 /* State 0 update: start talking when a player walks into the talk cylinder. */

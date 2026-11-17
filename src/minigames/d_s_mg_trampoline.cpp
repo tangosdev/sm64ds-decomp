@@ -296,11 +296,7 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
 
     mInputEnabled = 0;
     mRoundOver = 0;
-    mDoorSwitchTimer =
-        (((int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) *
-          0x2d0) >>
-         12) +
-        0x2d0;
+    mDoorSwitchTimer = RAND_FX_SCALE(0x2d0) + 0x2d0;
     mDoorBlinkTimer = 0;
     mDoorBlinkPhase = 1;
     mArrow1X = 0;
@@ -375,11 +371,7 @@ void dScMgTrampoline_c::StateIntro() {
         mTouch.x = (s16)(penX >> 12);
         mTouch.y = sTrmpStartTouchY;
 
-        mTouch.y +=
-            ((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) -
-               0x800)
-              << 2) >>
-             12);
+        mTouch.y += ((RAND_FX() - 0x800) << 2) >> 12;
 
         Mg_DrawLine(prevX, prevY, mTouch.x, mTouch.y, 2, 0xc);
 
@@ -696,6 +688,7 @@ int dScMgTrampoline_c::OnGraphCallback0() {
     volatile u16 fill;
     Vec2s from;
     Vec2s to;
+    s16 startX;
     int dst;
 
     if (!dScMgBase_c::OnGraphCallback0())
@@ -714,8 +707,8 @@ int dScMgTrampoline_c::OnGraphCallback0() {
         return 0;
 
     if (mTouchReleased != 0) {
-        if ((mTouchStart.x < 0x24 && mTouch.x < 0x24) ||
-            (mTouchStart.x > 0xd4 && mTouch.x > 0xd4)) {
+        startX = mTouchStart.x;
+        if ((startX < 0x24 && mTouch.x < 0x24) || (startX > 0xd4 && mTouch.x > 0xd4)) {
             func_02012790(0xe);
         } else {
             from = mTouchStart;

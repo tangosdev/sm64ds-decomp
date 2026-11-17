@@ -117,18 +117,14 @@ void daSBird_c::StateFly() {
     if (mIsLeader) {
         Vector3 d1;
         Vec3_Sub(&d1, &mTargetPos, &mPos);
-        diff.x = d1.x;
-        diff.y = d1.y;
-        diff.z = d1.z;
+        diff = d1;
         s32 hl = Vec3_HorzLen(&diff);
         mTargetPitch = cstd::atan2(hl, mPosY + 0xfd8f0000);
         mTargetYaw = cstd::atan2(diff.z, diff.x);
     } else {
         Vector3 d2;
         Vec3_Sub(&d2, &owner->mPos, &mPos);
-        diff.x = d2.x;
-        diff.y = d2.y;
-        diff.z = d2.z;
+        diff = d2;
         s32 hl = Vec3_HorzLen(&diff);
         mTargetPitch = cstd::atan2(hl, -diff.y);
         mTargetYaw = cstd::atan2(diff.z, diff.x);
@@ -138,12 +134,11 @@ void daSBird_c::StateFly() {
     ApproachLinear(mPrevAngleX, mTargetPitch, 0x8c);
     ApproachLinear(mPrevAngleY, mTargetYaw, 0x320);
 
-    s32 hi = 0x3000;
     s32 dd = (s16)(mPrevAngleY - mTargetYaw);
-    if (dd < -hi)
-        dd = -hi;
-    else if (dd > hi)
-        dd = hi;
+    if (dd < -0x3000)
+        dd = -0x3000;
+    else if (dd > 0x3000)
+        dd = 0x3000;
     mBank = (s16)dd;
     ApproachLinear(mAngleZ, mBank, 0x258);
 
@@ -288,20 +283,15 @@ s32 daSBird_c::InitResources() {
     BCA_File *animFile = dExtFrameCtrl_c::LoadFile(data_ov009_02113c28);
     mAnmModel.SetAnim((BCA_File *)animFile, 0, 0x1000, 0);
     mShadowModel.InitCylinder();
-    {
-        int *p60 = &mPosY;
-        int y = *p60;
-        int zero = 0;
-        *p60 = y + 0xa000;
-        mVertAccel = zero;
-        mTerminalVelocity = -0x32000;
-        mIsLeader = 1;
-        mOwnerID = uniqueID;
-        mTargetPos.x = mPosX;
-        mTargetPos.y = mPosY;
-        mTargetPos.z = mPosZ;
-        mState = zero;
-    }
+    mPosY += 0xa000;
+    mVertAccel = 0;
+    mTerminalVelocity = -0x32000;
+    mIsLeader = 1;
+    mOwnerID = uniqueID;
+    mTargetPos.x = mPosX;
+    mTargetPos.y = mPosY;
+    mTargetPos.z = mPosZ;
+    mState = 0;
     return 1;
 }
 

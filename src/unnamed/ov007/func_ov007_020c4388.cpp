@@ -3,7 +3,7 @@
 
 extern "C" {
 
-void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, Vector3 *out);
+void func_ov007_020bfe4c(Ov007Camera *camera, int x, int y, int z, VecFx32 *out);
 
 /* Places a sprite in the world: unprojects its screen position at its depth
  * through the camera into pos. */

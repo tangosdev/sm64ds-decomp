@@ -243,4 +243,8 @@ struct Heap_t {
 
 typedef mHeap::Heap_t Heap;
 
+/* The root heap func_0201a458 builds over the overlay gap 0x0211d9c0..0x02140d80
+   (0 while there is none); dScDSMT_c destroys it through func_0201a428. */
+extern "C" mHeap::Heap_t *data_0209d524;
+
 #endif

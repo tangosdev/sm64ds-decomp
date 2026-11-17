@@ -32,7 +32,7 @@ typedef char Ov007MeshParams_size_must_be_0x18[sizeof(Ov007MeshParams) == 0x18 ?
  * points with a link across each cell's diagonal, and the normals and
  * texture scratch func_ov007_020ca5f0 draws it with. */
 typedef struct Ov007Mesh {
-    Vector3 *verts;  /* 0x00: one per grid point; each grid point's target */
+    VecFx32 *verts;  /* 0x00: one per grid point; each grid point's target */
     Ov007Grid *grid; /* 0x04: func_ov007_020c73f0 */
     /* 0x08: one func_ov007_020c80a4 link per cell, (columns - 1) *
      * (rows - 1) of them */

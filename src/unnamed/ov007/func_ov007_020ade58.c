@@ -36,7 +36,6 @@ Ov007ItemNode *func_ov007_020ade58(int index) {
     Ov007OamNode *r4;
     Ov007SpriteBank **sl;
     int sb;
-    int cnt;
 
     s->item = func_ov007_020aea6c(index, &data_ov007_020ccbc4[index], 0);
     r4 = func_ov007_020c11ac(data_ov007_020ccb7d[index * 8]);
@@ -72,27 +71,20 @@ Ov007ItemNode *func_ov007_020ade58(int index) {
         break;
     }
 
-    cnt = r4->animCount;
     sl = r6->spriteBanks;
-    sb = 0;
-    if (cnt > 0) {
-        int zero = sb;
-        int one = 1;
-        do {
-            u16 state = s->item->id;
-            Ov007NodeSprites *entry = &data_ov007_020ccb7c[state];
-            int r7 = entry->bank;
+    for (sb = 0; sb < r4->animCount; sb++) {
+        u16 state = s->item->id;
+        Ov007NodeSprites *entry = &data_ov007_020ccb7c[state];
+        int r7 = entry->bank;
 
-            if (state == 1 && sb >= 4) {
-                r7 = one;
-            } else if (state == 0) {
-                r4->head->anims[sb] = &sl[r7]->anims[entry->animIndices[sb]];
-                Sprite_SetAnimation(r4->head, zero, zero, zero, zero);
-            }
+        if (state == 1 && sb >= 4) {
+            r7 = 1;
+        } else if (state == 0) {
+            r4->head->anims[sb] = &sl[r7]->anims[entry->animIndices[sb]];
+            Sprite_SetAnimation(r4->head, 0, 0, 0, 0);
+        }
 
-            r4->anims[sb] = &sl[r7]->anims[entry->animIndices[sb]];
-            sb++;
-        } while (sb < r4->animCount);
+        r4->anims[sb] = &sl[r7]->anims[entry->animIndices[sb]];
     }
 
     Sprite_SetAnimation(s->node, 0, 0, 0, 0);

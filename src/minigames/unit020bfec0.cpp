@@ -1705,10 +1705,8 @@ void MascotWalker::StatePause() {
     if (ApproachLinear2(mStateTimer, 0, 1) == 0)
         return;
     mModel.SetAnim(*(BCA_File *)mWalkAnimFile.filePtr, 0, 0, 0x800, 0);
-    /* Walk for 0x258..0x4af frames: a random 0..0xfff scaled into 0x258. */
-    int roll = RandomIntInternal(&data_0209e650.value);
-    int frac = ((unsigned int)(roll & 0x7fffffff) >> 0x13);
-    mStateTimer = (((frac * 0x258) >> 12) + 0x258);
+    /* Walk for 0x258 to 0x4af frames. */
+    mStateTimer = RAND_FX_SCALE(0x258) + 0x258;
     mPaused = 0;
     *(StateSlot *)mState = pmf_MascotWalker_StateWalk_3;
 }
@@ -1719,7 +1717,7 @@ void MascotWalker::StatePause() {
  */
 
 void Camera_UpdateMatrices(MgCamera *camera) {
-    Vector3 up;
+    VecFx32 up;
     Vector3 forward;
     Vector3 right;
     Vector3 scratch0;
@@ -1744,8 +1742,7 @@ void Camera_UpdateMatrices(MgCamera *camera) {
     G3i_PerspectiveW_(FX_SinIdx(camera->mFovAngle >> 4), FX_CosIdx(camera->mFovAngle >> 4), 0x1555,
                       0x1000, 0x1388000, 0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
 
-    G3i_LookAt_((Vector3 *)&camera->mPos, &up, (Vector3 *)&camera->mLookAt, true,
-                (Matrix4x3 *)&camera->mViewMtx);
+    G3i_LookAt_(&camera->mPos, &up, &camera->mLookAt, true, &camera->mViewMtx);
 
     CopyToViewMat((Matrix4x3 *)&camera->mViewMtx);
 
@@ -1754,32 +1751,32 @@ void Camera_UpdateMatrices(MgCamera *camera) {
 
 
 void Camera_ProjectToScreen(MgCamera *camera, void *pos, int *screenX, int *screenY) {
-    int view[3];
-    MTX_MultVec43((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
+    VecFx32 view;
+    MTX_MultVec43((const VecFx32 *)pos, &camera->mViewMtx, &view);
     int fovIdx = camera->mFovAngle >> 4;
     int tanFov = FX_Div(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
-    int height = FX_MUL(tanFov, -view[2]);
-    int fracY = FX_Div(view[1], height);
+    int height = FX_MUL(tanFov, -view.z);
+    int fracY = FX_Div(view.y, height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
     screenY[0] = -((pixelY + (int)0xfffa0800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
-    int fracX = FX_Div(view[0], width);
+    int fracX = FX_Div(view.x, width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
     screenX[0] = (pixelX + 0x7f800) >> 0xc;
 }
 
 
 void Camera_ProjectToScreen16(MgCamera *camera, void *pos, short *screen) {
-    int view[3];
-    MTX_MultVec43((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
+    VecFx32 view;
+    MTX_MultVec43((const VecFx32 *)pos, &camera->mViewMtx, &view);
     int fovIdx = camera->mFovAngle >> 4;
     int tanFov = FX_Div(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
-    int height = FX_MUL(tanFov, -view[2]);
-    int fracY = FX_Div(view[1], height);
+    int height = FX_MUL(tanFov, -view.z);
+    int fracY = FX_Div(view.y, height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
     screen[1] = -((pixelY + (int)0xfffa0800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
-    int fracX = FX_Div(view[0], width);
+    int fracX = FX_Div(view.x, width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
     screen[0] = (pixelX + 0x7f800) >> 0xc;
 }
