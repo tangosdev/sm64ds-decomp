@@ -22,9 +22,9 @@
  *
  * Everything between D0 and StartRound is a dScMgPachinko_c member: every
  * caller passes the scene in r0. The five state tables are pointer-to-member
- * tables on the scene ({code, adjustment} pairs), copied at static init from
- * the pmf_dScMgPachinko_c_* records in ov006 .data: balls (7 states), Bob-ombs
- * (5), pipes (4), the flyer (5) and the background (4).
+ * tables on the scene, filled at static init from &dScMgPachinko_c:: member
+ * pointers: balls (7 states), Bob-ombs (5), pipes (4), the flyer (5) and the
+ * background (4).
  */
 
 // leftovers:
@@ -32,10 +32,22 @@
 // - Ball_AimAtTarget and BobOmb_StateAim keep the field-base addressing
 //   above; natural indexing misses in each (AimAtTarget's note gives the
 //   sizes; StateAim's note gives its two measurements, 2026-11-13).
+//   Re-measured (#821, round 42): AimAtTarget's three trailing
+//   BALL((char *)this + n) writes as mBall[i].f are 0x24c of 0x240, through
+//   the `ball` pointer already in scope 0x234, and with the angle read
+//   through it as well 0x228.
 // - The BG2 character fills (ClearAimLine, _CheckTargetsLeft,
 //   _DrawAimLine, InitResources) go through a volatile zero; in
 //   ClearAimLine a by-reference fill wrapper is 7 words off
-//   (measured 2026-11-06).
+//   (measured 2026-11-06). Re-measured (#821, round 42): plain locals are
+//   short in all four (0x98 of 0xac, 0xc8 of 0xd0, 0x404 of 0x40c, 0x41c
+//   of 0x42c), and passing the 0 straight to MI_CpuFill16 gives the same
+//   short sizes in the first three.
+// - PlotSubBg2Pixels, Ball_DrawAll, Ball_AimAtTarget and BobOmb_StateAim
+//   each keep one optimizer pragma. No file-wide form exists (#821, round
+//   42): opt_loop_invariants off over the whole file moves 4 other
+//   functions, opt_common_subs off 32, opt_propagation off 51, and
+//   opt_prelinearize off is an internal compiler error in Bg_Update.
 
 #pragma defer_codegen off
 
@@ -45,15 +57,12 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "dScMgPachinko_c.h"
+#include "SpawnInfo.h"
 #include "LevelRng.h"
 #include "math/CalcLib.h"
 
 /* The five state tables are pointer-to-member tables on the scene. */
 typedef void (dScMgPachinko_c::*PMF)(int);
-
-struct Entry {
-    PMF pmf;
-};
 
 /* The sprite record Mg_RenderSpriteBothScaled draws; only handled by pointer here. */
 struct OamAttr;
@@ -144,41 +153,12 @@ extern int sPachinkoBobOmbSprites;
 extern u16 sPachinkoPopScores[];
 extern u8 sPachinkoWaveSlots[];
 
-/* The five state tables. Static initialisers fill them from the {code
-   pointer, adjustment} records in ov006 .data. */
-extern Entry sPachinkoBgStateTable[];
-extern Entry sPachinkoPipeStateTable[];
-extern Entry sPachinkoBobOmbStateTable[];
+/* The five state tables; their definitions are the tail of this file. */
+extern PMF sPachinkoBgStateTable[];
+extern PMF sPachinkoPipeStateTable[];
+extern PMF sPachinkoBobOmbStateTable[];
 extern PMF sPachinkoFlyerStateTable[];
-extern Entry sPachinkoBallStateTable[];
-
-/* The ROM {code pointer, adjustment} records the five tables copy from
-   (unlicensed .data), grouped by destination table in retail copy order. */
-extern PMF pmf_dScMgPachinko_c_BobOmb_StateWaitGrab;
-extern PMF pmf_dScMgPachinko_c_BobOmb_StateAim;
-extern PMF pmf_dScMgPachinko_c_BobOmb_StateFlying;
-extern PMF pmf_dScMgPachinko_c_BobOmb_StateFallAway;
-extern PMF pmf_dScMgPachinko_c_BobOmb_StateRemove;
-extern PMF pmf_dScMgPachinko_c_Ball_StateWaiting;
-extern PMF pmf_dScMgPachinko_c_Ball_StateFall;
-extern PMF pmf_dScMgPachinko_c_Ball_StateDrift;
-extern PMF pmf_dScMgPachinko_c_Ball_StateDive;
-extern PMF pmf_dScMgPachinko_c_Ball_StateGlide;
-extern PMF pmf_dScMgPachinko_c_Ball_StateSpinAway;
-extern PMF pmf_dScMgPachinko_c_Ball_StatePop;
-extern PMF pmf_dScMgPachinko_c_Pipe_StatePick;
-extern PMF pmf_dScMgPachinko_c_Pipe_StateRise;
-extern PMF pmf_dScMgPachinko_c_Pipe_StateSink;
-extern PMF pmf_dScMgPachinko_c_Pipe_StateIdle;
-extern PMF pmf_dScMgPachinko_c_Flyer_StateWaiting;
-extern PMF pmf_dScMgPachinko_c_Flyer_StateDescend;
-extern PMF pmf_dScMgPachinko_c_Flyer_StateCross;
-extern PMF pmf_dScMgPachinko_c_Flyer_StatePause;
-extern PMF pmf_dScMgPachinko_c_Flyer_StateLeave;
-extern PMF pmf_dScMgPachinko_c_Bg_StateWaiting;
-extern PMF pmf_dScMgPachinko_c_Bg_StateRiseIn;
-extern PMF pmf_dScMgPachinko_c_Bg_StateScroll;
-extern PMF pmf_dScMgPachinko_c_Bg_StateSinkOut;
+extern PMF sPachinkoBallStateTable[];
 
 } /* extern "C" */
 extern int func_020126e8(int a);
@@ -323,7 +303,7 @@ void dScMgPachinko_c::Bg_StateWaiting(int idx) {
 /* Dispatches through sPachinkoBgStateTable (0x02142604). */
 void dScMgPachinko_c::Bg_Update() {
     if (mBg[0].active) {
-        (this->*(sPachinkoBgStateTable[mBg[0].state].pmf))(0);
+        (this->*sPachinkoBgStateTable[mBg[0].state])(0);
     }
     Deco_UpdateAll();
 }
@@ -898,7 +878,7 @@ void dScMgPachinko_c::Pipe_SetAll(int phase) {
     }
 }
 
-int dScMgPachinko_c::Pipe_StateIdle(int idx) {
+void dScMgPachinko_c::Pipe_StateIdle(int idx) {
     u16 *counter = &mPipe[idx].timer;
     u8 *frame = &mPipe[idx].frame;
     u16 c = *counter;
@@ -913,20 +893,13 @@ int dScMgPachinko_c::Pipe_StateIdle(int idx) {
         }
         mPipe[idx].sprite = sPachinkoPipeIdleFrames[*frame];
     }
-    {
-        if (mPipe[idx].phase != 0) {
-            mPipe[idx].laps = 0;
-            return 0;
-        }
+    if (mPipe[idx].phase != 0) {
+        mPipe[idx].laps = 0;
+        return;
     }
-    {
-        u8 c3 = mPipe[idx].laps;
-        if (c3 >= 2) {
-            c3 = 0;
-            mPipe[idx].state = c3;
-            mPipe[idx].laps = c3;
-        }
-        return c3;
+    if (mPipe[idx].laps >= 2) {
+        mPipe[idx].state = 0;
+        mPipe[idx].laps = 0;
     }
 }
 
@@ -1052,7 +1025,7 @@ void dScMgPachinko_c::Pipe_UpdateAll() {
     int i;
     for (i = 0; i < 2; i++) {
         if (mPipe[i].active != 0) {
-            (this->*sPachinkoPipeStateTable[mPipe[i].state].pmf)(i);
+            (this->*sPachinkoPipeStateTable[mPipe[i].state])(i);
         }
     }
 }
@@ -1519,7 +1492,7 @@ void dScMgPachinko_c::Ball_UpdateAll() {
     int i;
     for (i = 0; i < BALL_NUM; i++) {
         if (mBall[i].active != 0) {
-            (this->*sPachinkoBallStateTable[mBall[i].state].pmf)(i);
+            (this->*sPachinkoBallStateTable[mBall[i].state])(i);
         }
     }
 }
@@ -1676,7 +1649,7 @@ void dScMgPachinko_c::BobOmb_UpdateAll() {
     int i;
     for (i = 0; i < SHOT_NUM; i++) {
         if (mShot[i].active != 0) {
-            (this->*sPachinkoBobOmbStateTable[mShot[i].state].pmf)(i);
+            (this->*sPachinkoBobOmbStateTable[mShot[i].state])(i);
         }
     }
 }
@@ -2249,34 +2222,37 @@ void *dScMgPachinko_c_classInit() {
     return new dScMgPachinko_c;
 }
 
+BaseSpawnInfo<void> g_profile_MG_PACHINKO = {dScMgPachinko_c_classInit, 368, 368};
+
 /* The five state tables, defined in retail copy order: Bob-ombs, balls,
-   pipes, the flyer, then the background. mwcc emits __sinit_d_s_mg_pachinko.cpp from
-   these definitions, copying the ROM .data records. */
-Entry sPachinkoBobOmbStateTable[5] = {
-    {pmf_dScMgPachinko_c_BobOmb_StateWaitGrab}, {pmf_dScMgPachinko_c_BobOmb_StateAim},
-    {pmf_dScMgPachinko_c_BobOmb_StateFlying},   {pmf_dScMgPachinko_c_BobOmb_StateFallAway},
-    {pmf_dScMgPachinko_c_BobOmb_StateRemove},
+   pipes, the flyer, then the background. Each &dScMgPachinko_c::X is its
+   own {function, adjustment} constant in .data, which
+   __sinit_d_s_mg_pachinko.cpp copies in. */
+PMF sPachinkoBobOmbStateTable[5] = {
+    &dScMgPachinko_c::BobOmb_StateWaitGrab, &dScMgPachinko_c::BobOmb_StateAim,
+    &dScMgPachinko_c::BobOmb_StateFlying,   &dScMgPachinko_c::BobOmb_StateFallAway,
+    &dScMgPachinko_c::BobOmb_StateRemove,
 };
-Entry sPachinkoBallStateTable[7] = {
-    {pmf_dScMgPachinko_c_Ball_StateWaiting}, {pmf_dScMgPachinko_c_Ball_StateFall},
-    {pmf_dScMgPachinko_c_Ball_StateDrift},   {pmf_dScMgPachinko_c_Ball_StateDive},
-    {pmf_dScMgPachinko_c_Ball_StateGlide},   {pmf_dScMgPachinko_c_Ball_StateSpinAway},
-    {pmf_dScMgPachinko_c_Ball_StatePop},
+PMF sPachinkoBallStateTable[7] = {
+    &dScMgPachinko_c::Ball_StateWaiting, &dScMgPachinko_c::Ball_StateFall,
+    &dScMgPachinko_c::Ball_StateDrift,   &dScMgPachinko_c::Ball_StateDive,
+    &dScMgPachinko_c::Ball_StateGlide,   &dScMgPachinko_c::Ball_StateSpinAway,
+    &dScMgPachinko_c::Ball_StatePop,
 };
-Entry sPachinkoPipeStateTable[4] = {
-    {pmf_dScMgPachinko_c_Pipe_StatePick},
-    {pmf_dScMgPachinko_c_Pipe_StateRise},
-    {pmf_dScMgPachinko_c_Pipe_StateSink},
-    {pmf_dScMgPachinko_c_Pipe_StateIdle},
+PMF sPachinkoPipeStateTable[4] = {
+    &dScMgPachinko_c::Pipe_StatePick,
+    &dScMgPachinko_c::Pipe_StateRise,
+    &dScMgPachinko_c::Pipe_StateSink,
+    &dScMgPachinko_c::Pipe_StateIdle,
 };
 PMF sPachinkoFlyerStateTable[5] = {
-    pmf_dScMgPachinko_c_Flyer_StateWaiting, pmf_dScMgPachinko_c_Flyer_StateDescend,
-    pmf_dScMgPachinko_c_Flyer_StateCross,   pmf_dScMgPachinko_c_Flyer_StatePause,
-    pmf_dScMgPachinko_c_Flyer_StateLeave,
+    &dScMgPachinko_c::Flyer_StateWaiting, &dScMgPachinko_c::Flyer_StateDescend,
+    &dScMgPachinko_c::Flyer_StateCross,   &dScMgPachinko_c::Flyer_StatePause,
+    &dScMgPachinko_c::Flyer_StateLeave,
 };
-Entry sPachinkoBgStateTable[4] = {
-    {pmf_dScMgPachinko_c_Bg_StateWaiting},
-    {pmf_dScMgPachinko_c_Bg_StateRiseIn},
-    {pmf_dScMgPachinko_c_Bg_StateScroll},
-    {pmf_dScMgPachinko_c_Bg_StateSinkOut},
+PMF sPachinkoBgStateTable[4] = {
+    &dScMgPachinko_c::Bg_StateWaiting,
+    &dScMgPachinko_c::Bg_StateRiseIn,
+    &dScMgPachinko_c::Bg_StateScroll,
+    &dScMgPachinko_c::Bg_StateSinkOut,
 };

@@ -33,6 +33,8 @@ enum dScMgCurling_c_AssetId {
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "dScMgCurling_c.h"
+#include "OamAttr.h"
+#include "SpawnInfo.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
@@ -42,15 +44,9 @@ enum dScMgCurling_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 
-/* `C` is the receiver of the pointer-to-member state tables. It must stay
- * incomplete: mwccarm picks the pointer-to-member layout from whether the
- * class is complete, and completing it changes all four dispatchers. */
-struct C;
-typedef void (C::*PMF)(int);
-struct Entry {
-    PMF pmf;
-};
-typedef void (C::*PMF0)();
+/* The state handler shapes the pointer-to-member tables hold. */
+typedef void (dScMgCurling_c::*PMF)(int);
+typedef void (dScMgCurling_c::*PMF0)();
 
 /* A random integer in [0, n): the top 15 bits of the minigame generator,
    scaled. */
@@ -66,7 +62,6 @@ extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
 extern void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern void func_02012718(int a, int b);
-struct OamAttr;
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
@@ -89,8 +84,6 @@ extern u8 sCurlingScoreDelays[];
 extern int sCurlingBitKinds[];
 extern int sCurlingStonesLeftX[];
 extern OamAttr *sCurlingBitSprites[];
-extern int sCurlingStoneLeftSprite;
-extern int sCurlingStoneLeftShadowSprite;
 extern int sCurlingAimMarkerSprites[];
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
@@ -107,39 +100,17 @@ extern int sCurlingHouseSpots[];
 extern PMF0 sCurlingAimTable[];
 extern PMF sCurlingBitKindTable[];
 extern PMF sCurlingBitStateTable[];
-extern Entry sCurlingBitBStateTable[];
+extern PMF sCurlingBitBStateTable[];
 extern PMF sCurlingStoneTable[];
 extern PMF sCurlingBitAStateTable[];
 extern PMF0 sCurlingSceneTable[];
-/* The ROM PMF constants the seven state tables copy from (unlicensed
- * .data), grouped by destination table in retail copy order. */
-extern PMF0 pmf_dScMgCurling_c_Scene_StartRound;
-extern PMF0 pmf_dScMgCurling_c_Scene_Play;
-extern PMF0 pmf_dScMgCurling_c_Scene_Score;
-extern PMF0 pmf_dScMgCurling_c_Scene_End;
-extern PMF0 pmf_dScMgCurling_c_Scene_Idle;
-extern PMF pmf_dScMgCurling_c_Stone_WaitRelease;
-extern PMF pmf_dScMgCurling_c_Stone_Slide;
-extern PMF pmf_dScMgCurling_c_Stone_Collide;
-extern PMF pmf_dScMgCurling_c_Stone_Drag;
-extern PMF0 pmf_dScMgCurling_c_Aim_WaitTouch;
-extern PMF0 pmf_dScMgCurling_c_Aim_Swing;
-extern PMF pmf_dScMgCurling_c_Bit_PickKind;
-extern PMF pmf_dScMgCurling_c_Bit_RunKindB;
-extern PMF pmf_dScMgCurling_c_Bit_RunKindA;
-extern PMF pmf_dScMgCurling_c_BitB_StatePause;
-extern PMF pmf_dScMgCurling_c_BitB_StateDriftRight;
-extern PMF pmf_dScMgCurling_c_BitB_StateDriftLeft;
-extern PMF pmf_dScMgCurling_c_BitB_StateDriftStop;
-extern PMF pmf_dScMgCurling_c_BitA_StatePause;
-extern PMF pmf_dScMgCurling_c_BitA_StateDriftRight;
-extern PMF pmf_dScMgCurling_c_BitA_StateDriftLeft;
-extern PMF pmf_dScMgCurling_c_BitA_StateDriftStop;
-extern PMF pmf_dScMgCurling_c_Bit_StateFallStart;
-extern PMF pmf_dScMgCurling_c_Bit_StateFallSpeedUp;
-extern PMF pmf_dScMgCurling_c_Bit_StateFallSlowDown;
 
 } /* extern "C" */
+
+/* The stones-left icon: the stone body and the shadow drawn under it. */
+OamAttr sCurlingStoneLeftSprite = {0x00f0, 0x81f0, 0x2000, 0x0000};
+OamAttr sCurlingStoneLeftShadowSprite = {0x04f0, 0x81f0, 0x3404, 0x0000};
+
 extern int func_020126e8(int a);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
@@ -292,8 +263,8 @@ void dScMgCurling_c::BitA_StatePause(int index) {
 }
 
 void dScMgCurling_c::Bit_RunKindA(int index) {
-    (((C *)this)->*sCurlingBitAStateTable[mBit[index].driftState])(index);
-    (((C *)this)->*sCurlingBitStateTable[mBit[index].fallState])(index);
+    (this->*sCurlingBitAStateTable[mBit[index].driftState])(index);
+    (this->*sCurlingBitStateTable[mBit[index].fallState])(index);
 }
 
 void dScMgCurling_c::BitB_StateDriftStop(int index) {
@@ -373,7 +344,7 @@ void dScMgCurling_c::BitB_StatePause(int idx) {
 }
 
 void dScMgCurling_c::Bit_RunKindB(int idx) {
-    (((C *)this)->*sCurlingBitBStateTable[mBit[idx].driftState].pmf)(idx);
+    (this->*sCurlingBitBStateTable[mBit[idx].driftState])(idx);
 }
 
 void dScMgCurling_c::Bit_PickKind(int idx) {
@@ -389,7 +360,7 @@ void dScMgCurling_c::Bit_UpdateAll() {
     int i;
     for (i = 0; i < 50; i++) {
         if (mBit[i].active != 0) {
-            (((C *)this)->*sCurlingBitKindTable[mBit[i].kind])(i);
+            (this->*sCurlingBitKindTable[mBit[i].kind])(i);
             if ((mBit[i].y >> 0xc) >= 0xc8) {
                 mBit[i].x = CURL_RAND(32) << 0xf;
                 mBit[i].y = -0x8000;
@@ -1250,7 +1221,7 @@ void dScMgCurling_c::Scene_Play() {
     if (mSwingTimer != 0) {
         mSwingTimer--;
     }
-    (((C *)this)->*sCurlingAimTable[mStylusHeld])();
+    (this->*sCurlingAimTable[mStylusHeld])();
 
     {
         int count = 0;
@@ -1261,7 +1232,7 @@ void dScMgCurling_c::Scene_Play() {
                 mStone[i].lastY = mStone[i].y;
                 if (mStone[i].timer != 0)
                     mStone[i].timer--;
-                (((C *)this)->*sCurlingStoneTable[mStone[i].state])(i);
+                (this->*sCurlingStoneTable[mStone[i].state])(i);
                 if (mStone[i].state != 2)
                     count++;
             }
@@ -1388,12 +1359,10 @@ s32 dScMgCurling_c::Render() {
     return 1;
 }
 
-/* Slot 6. The scene state through its table, then the falling bits. The
- * table's receiver C stays incomplete. */
+/* Slot 6. The scene state through its table, then the falling bits. */
 s32 dScMgCurling_c::Behavior() {
-    C *c = (C *)this;
     int j = mState;
-    (c->*sCurlingSceneTable[j])();
+    (this->*sCurlingSceneTable[j])();
     Bit_UpdateAll();
     return 1;
 }
@@ -1477,45 +1446,46 @@ void *dScMgCurling_c_classInit() {
     return new dScMgCurling_c;
 }
 
-/* Static-init globals (was the handwritten __sinit_ov006_021304ac shard).
- * The seven PMF state tables plain-copied from the ROM PMF constants, in
- * retail copy order: the five no-arg scene states, the four per-state
- * tables, the two stylus states, the three kind states, the four Entry
- * states, the four reveal states, then the three fallState states. */
+BaseSpawnInfo<void> g_profile_MG_CURLING = {dScMgCurling_c_classInit, 374, 374};
+
+/* The seven state tables, in retail copy order: the five scene states, the
+ * four stone states, the two stylus states, the three kind states, the four
+ * kind-B drift states, the four kind-A drift states, then the three fall
+ * states. Each &dScMgCurling_c::X is its own {function, adjustment} constant
+ * in .data, which the static initializer copies in. */
 PMF0 sCurlingSceneTable[5] = {
-    pmf_dScMgCurling_c_Scene_StartRound, pmf_dScMgCurling_c_Scene_Play,
-    pmf_dScMgCurling_c_Scene_Score,      pmf_dScMgCurling_c_Scene_End,
-    pmf_dScMgCurling_c_Scene_Idle,
+    &dScMgCurling_c::Scene_StartRound, &dScMgCurling_c::Scene_Play, &dScMgCurling_c::Scene_Score,
+    &dScMgCurling_c::Scene_End,        &dScMgCurling_c::Scene_Idle,
 };
 PMF sCurlingStoneTable[4] = {
-    pmf_dScMgCurling_c_Stone_WaitRelease,
-    pmf_dScMgCurling_c_Stone_Slide,
-    pmf_dScMgCurling_c_Stone_Collide,
-    pmf_dScMgCurling_c_Stone_Drag,
+    &dScMgCurling_c::Stone_WaitRelease,
+    &dScMgCurling_c::Stone_Slide,
+    &dScMgCurling_c::Stone_Collide,
+    &dScMgCurling_c::Stone_Drag,
 };
 PMF0 sCurlingAimTable[2] = {
-    pmf_dScMgCurling_c_Aim_WaitTouch,
-    pmf_dScMgCurling_c_Aim_Swing,
+    &dScMgCurling_c::Aim_WaitTouch,
+    &dScMgCurling_c::Aim_Swing,
 };
 PMF sCurlingBitKindTable[3] = {
-    pmf_dScMgCurling_c_Bit_PickKind,
-    pmf_dScMgCurling_c_Bit_RunKindB,
-    pmf_dScMgCurling_c_Bit_RunKindA,
+    &dScMgCurling_c::Bit_PickKind,
+    &dScMgCurling_c::Bit_RunKindB,
+    &dScMgCurling_c::Bit_RunKindA,
 };
-Entry sCurlingBitBStateTable[4] = {
-    {pmf_dScMgCurling_c_BitB_StatePause},
-    {pmf_dScMgCurling_c_BitB_StateDriftRight},
-    {pmf_dScMgCurling_c_BitB_StateDriftLeft},
-    {pmf_dScMgCurling_c_BitB_StateDriftStop},
+PMF sCurlingBitBStateTable[4] = {
+    &dScMgCurling_c::BitB_StatePause,
+    &dScMgCurling_c::BitB_StateDriftRight,
+    &dScMgCurling_c::BitB_StateDriftLeft,
+    &dScMgCurling_c::BitB_StateDriftStop,
 };
 PMF sCurlingBitAStateTable[4] = {
-    pmf_dScMgCurling_c_BitA_StatePause,
-    pmf_dScMgCurling_c_BitA_StateDriftRight,
-    pmf_dScMgCurling_c_BitA_StateDriftLeft,
-    pmf_dScMgCurling_c_BitA_StateDriftStop,
+    &dScMgCurling_c::BitA_StatePause,
+    &dScMgCurling_c::BitA_StateDriftRight,
+    &dScMgCurling_c::BitA_StateDriftLeft,
+    &dScMgCurling_c::BitA_StateDriftStop,
 };
 PMF sCurlingBitStateTable[3] = {
-    pmf_dScMgCurling_c_Bit_StateFallStart,
-    pmf_dScMgCurling_c_Bit_StateFallSpeedUp,
-    pmf_dScMgCurling_c_Bit_StateFallSlowDown,
+    &dScMgCurling_c::Bit_StateFallStart,
+    &dScMgCurling_c::Bit_StateFallSpeedUp,
+    &dScMgCurling_c::Bit_StateFallSlowDown,
 };
