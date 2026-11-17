@@ -1971,7 +1971,7 @@ void daPly_c::func_ov002_020bf36c(void *arg) {
         return;
     saved = this->mHorzSpeed;
     if (this->mClsnFlags & 1)
-        this->mHorzSpeed = FX_MUL(saved, this->mFloorNormalY);
+        this->mHorzSpeed = FX_MUL(saved, this->mFloorNormal.y);
     UpdatePos((dCc_c *)arg);
     this->mHorzSpeed = saved;
     func_ov002_020ce798();
@@ -2377,7 +2377,7 @@ extern daPly_c::State data_ov002_02110514;
 int daPly_c::func_ov002_020c031c() {
 
     int r4 = this->mFloorClass;
-    if (this->IsState(data_ov002_02110514) && this->mFloorNormalY > 0x800) {
+    if (this->IsState(data_ov002_02110514) && this->mFloorNormal.y > 0x800) {
         if (r4 == 0)
             r4 = 2;
     }
@@ -2433,7 +2433,7 @@ int daPly_c::func_ov002_020c04e0() {
     int accel;
     int ret;
 
-    horzLen = Vec3_HorzLen((const Vector3 *)&mFloorNormalX);
+    horzLen = Vec3_HorzLen(&mFloorNormal);
     angDiff = AngleDiff(mFloorAngle, this->mPrevAngleY);
 
     if (mWalkTimer != 0) {
@@ -2442,7 +2442,7 @@ int daPly_c::func_ov002_020c04e0() {
     }
 
     sel = func_ov002_020c031c();
-    ret = func_ov002_020f035c(sel, mFloorNormalY);
+    ret = func_ov002_020f035c(sel, mFloorNormal.y);
     if (ret == 0)
         return ret;
 
@@ -2529,7 +2529,7 @@ int daPly_c::func_ov002_020c06fc(int arg) {
 
     if (this->mIsAirborne != 0)
         return 0;
-    if ((this->mFloorNormalY | this->mHorzSpeed) == 0)
+    if ((this->mFloorNormal.y | this->mHorzSpeed) == 0)
         return 0;
 
     a = 0;
@@ -2577,7 +2577,7 @@ int daPly_c::func_ov002_020c06fc(int arg) {
     slide.x = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2]);
     slide.z = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2 + 1]);
     {
-        int len = Vec3_HorzLen((const Vector3 *)&mFloorNormalX);
+        int len = Vec3_HorzLen(&mFloorNormal);
         slide.x = FX_MUL(slide.x, len);
         slide.z = FX_MUL(slide.z, len);
     }
@@ -2636,7 +2636,7 @@ int daPly_c::func_ov002_020c06fc(int arg) {
         if (s < 0)
             s = -s;
         if (s < arg) {
-            if (func_ov002_020f035c(this->func_ov002_020c031c(), this->mFloorNormalY) == 0) {
+            if (func_ov002_020f035c(this->func_ov002_020c031c(), this->mFloorNormal.y) == 0) {
                 this->mHorzSpeed = 0;
                 return 0;
             }
@@ -2666,7 +2666,7 @@ int daPly_c::func_ov002_020c0cbc() {
     case 1:
     case 2: t = 0; break;
     }
-  if(mFloorNormalY <= t){
+  if(mFloorNormal.y <= t){
     (this->mStateFlags) |= 1;
     return 1;
   }
@@ -2945,10 +2945,10 @@ void daPly_c::SetFloorSurfaceInfo(const dBgPi &hit) {
         return;
     mFloorClass = hit.surface.clps.GetFloorClass();
     hit.surface.CopyNormalTo(v);
-    mFloorNormalX = v.x;
-    mFloorNormalY = v.y;
-    mFloorNormalZ = v.z;
-    mFloorAngle = cstd::atan2(mFloorNormalX, mFloorNormalZ);
+    mFloorNormal.x = v.x;
+    mFloorNormal.y = v.y;
+    mFloorNormal.z = v.z;
+    mFloorAngle = cstd::atan2(mFloorNormal.x, mFloorNormal.z);
 }
 
 /* recovered: shared common types */
@@ -2995,18 +2995,18 @@ int daPly_c::func_ov002_020c179c(int angle) {
 void daPly_c::func_ov002_020c18b0(int p1) {
     if (mIsAirborne != 0)
         return;
-    if (mFloorNormalY == 0)
+    if (mFloorNormal.y == 0)
         return;
     {
         int a = func_ov002_020c179c(0);
         int idx = (unsigned short)a >> 4;
         int sinv = FX_SinCosTable_[idx * 2 + 1];
-        int f554 = mFloorNormalX;
-        int f55c = mFloorNormalZ;
+        int nx = mFloorNormal.x;
+        int nz = mFloorNormal.z;
         Vector3 v;
-        v.x = f554;
+        v.x = nx;
         v.y = sinv;
-        v.z = f55c;
+        v.z = nz;
         mAngleX = (short)func_02010844(&v, mAngleY);
         mAngleZ = (short)func_02010844(&v, (short)(mAngleY - 0x4000));
     }
@@ -3201,10 +3201,10 @@ int daPly_c::func_ov002_020c200c(int arg) {
 int daPly_c::func_ov002_020c2138() {
 int ang;
 if (this->mIsUnderwater || this->mIsBalloon) return 0;
-if (this->mWallNormalY) return 0;
+if (this->mWallNormal.y) return 0;
 if (mClimbClsn || mIsTakingDamage)
     return 0;
-ang = cstd::atan2(this->mWallNormalX, this->mWallNormalZ);
+ang = cstd::atan2(this->mWallNormal.x, this->mWallNormal.z);
 if (AngleDiff(ang, this->mPrevAngleY) < 0x6000) return 0;
 if (this->func_ov002_020c200c(ang)) return 1;
 if ((this->mHeldObj ? 1 : 0) || (this->mRidingShell ? 1 : 0)) return 0;
@@ -3264,7 +3264,7 @@ int daPly_c::func_ov002_020c231c() {
 
     if (this->IsState(data_ov002_0211013c) || this->IsState(data_ov002_02110184) || this->IsState(data_ov002_02110304) || (this->IsState(data_ov002_02110364) && (this->IsAnim(0x33) | this->IsAnim(0x87)) == 0) || this->IsState(data_ov002_021104e4) || this->IsState(data_ov002_02110514) || this->IsState(data_ov002_021100dc))
     {
-        if (mFloorClass == 1 && mFloorNormalY < 0xfff) {
+        if (mFloorClass == 1 && mFloorNormal.y < 0xfff) {
             p644 = mGroundY;
             p60 = this->mPosY;
             d = p60 - p644;
@@ -3415,13 +3415,13 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
     }
 
     mMeshClsn.GetWallResult()->surface.CopyNormalTo(wn);
-    mWallNormalX = wn.x;
-    mWallNormalY = wn.y;
-    mWallNormalZ = wn.z;
+    mWallNormal.x = wn.x;
+    mWallNormal.y = wn.y;
+    mWallNormal.z = wn.z;
 
     if (mIsUnderwater == 0) {
-        mPosX -= mWallNormalX * 2;
-        mPosZ -= mWallNormalZ * 2;
+        mPosX -= mWallNormal.x * 2;
+        mPosZ -= mWallNormal.z * 2;
     }
 
     ret = func_ov002_020d0580();
@@ -3515,11 +3515,11 @@ void daPly_c::func_ov002_020c2b08() {
                 mWaterRunTimer = 30;
         }
 
-        mFloorNormalZ = 0;
+        mFloorNormal.z = 0;
         {
-            int t = mFloorNormalZ;
-            mFloorNormalX = t;
-            mFloorNormalY = 0x1000;
+            int t = mFloorNormal.z;
+            mFloorNormal.x = t;
+            mFloorNormal.y = 0x1000;
         }
 
         {
@@ -8285,7 +8285,7 @@ int daPly_c::St_Shell_Main() {
     }
 
     if (mMeshClsn.IsOnWall()) {
-        int ang = cstd::atan2(mWallNormalX, mWallNormalZ);
+        int ang = cstd::atan2(mWallNormal.x, mWallNormal.z);
         if (AngleDiff(ang, mPrevAngleY) > 0x6000) {
             if (mMeshClsn.GetWallResult()->surface.clps.GetFloorClass() != 1) {
                 flag = 1;
@@ -9702,7 +9702,7 @@ int daPly_c::St_OnWall_Main() {
             this->ChangeState(data_ov002_0211013c);
             return 1;
         }
-        int a = cstd::atan2(mWallNormalX, mWallNormalZ) + 0x8000;
+        int a = cstd::atan2(mWallNormal.x, mWallNormal.z) + 0x8000;
         int d = AngleDiff((s16)a, mDesiredAngleY);
         if (d >= 0x4000) {
             this->ChangeState(data_ov002_0211013c);
@@ -9721,7 +9721,7 @@ int daPly_c::St_OnWall_Main() {
         func_ov002_020eee3c((char *)&mMeshClsn, (char *)this);
     } else {
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
-            int ang = cstd::atan2(mWallNormalX, mWallNormalZ);
+            int ang = cstd::atan2(mWallNormal.x, mWallNormal.z);
             int d = AngleDiff((s16)(ang + 0x8000), mDesiredAngleY);
             if (d >= 0x4000) {
                 this->ChangeState(data_ov002_0211013c);
@@ -10258,7 +10258,7 @@ int daPly_c::St_LedgeHang_Main() {
         if (d < 0x28000) {
             mPosY = v;
             mIsAirborne = 0;
-            if (mFloorNormalY < 0xddb) {
+            if (mFloorNormal.y < 0xddb) {
                 func_ov002_020d0948();
                 return 1;
             }
@@ -11841,7 +11841,7 @@ int daPly_c::func_ov002_020d3b9c() {
                 }
             }
         }
-        if (func_ov002_020f035c(func_ov002_020c031c(), mFloorNormalY) != 0) {
+        if (func_ov002_020f035c(func_ov002_020c031c(), mFloorNormal.y) != 0) {
             acc = 0x1000;
         }
         targ = mDesiredAngleY;
@@ -12177,7 +12177,7 @@ void daPly_c::func_ov002_020d4748() {
                 spd = 0x400;
             SetAnim(0x48, 0, spd, s5);
         } else {
-            int t = 0x1000 - this->mFloorNormalY;
+            int t = 0x1000 - this->mFloorNormal.y;
             int f = (int)((((long long)t << 10) + 0x800) >> 12);
             int v;
             int diff = ScaleByCharFactor(0x1c000) - this->mHorzSpeed;
@@ -15514,7 +15514,7 @@ int daPly_c::St_Thrown_Main() {
             if (r5 != 0) {
                 return 1;
             }
-            if (mFloorNormalY == 0x1000) {
+            if (mFloorNormal.y == 0x1000) {
                 if (mHorzSpeed == 0) {
                     mStateStep = 1;
                     break;
@@ -16341,7 +16341,7 @@ int daPly_c::St_ButtSlide_Main() {
                 mLandSoundPlayed = 1;
                 Sound::PlayBank0(mGroundSoundType + 0x50, mCamSpacePos);
             }
-            if (mStateWork == 0 && mFloorNormalY >= 0xfc1) {
+            if (mStateWork == 0 && mFloorNormal.y >= 0xfc1) {
                 mVertSpeed = -mPrevVertSpeed / 2;
                 (this->mStateWork)++;
             } else {
@@ -16648,7 +16648,7 @@ int daPly_c::func_ov002_020dd2f4() {
     if (!(mClsnFlags & 2))
         return 0;
 
-    atan = cstd::atan2(mWallNormalX, mWallNormalZ);
+    atan = cstd::atan2(mWallNormal.x, mWallNormal.z);
     if (AngleDiff(atan, mPrevAngleY) < 0x6000)
         return 0;
 
@@ -17233,7 +17233,7 @@ s32 daPly_c::St_Balloon_Main() {
     }
 
     if (mClsnFlags & 2) {
-        s16 ang = cstd::atan2(mWallNormalX, mWallNormalZ);
+        s16 ang = cstd::atan2(mWallNormal.x, mWallNormal.z);
         s16 diff = AngleDiff(ang, mPrevAngleY);
         if ((s32)diff > 0x4000) {
             this->func_ov002_020de428();
@@ -18351,7 +18351,7 @@ int daPly_c::St_CrazedCrate_Main() {
     func_ov002_020e28d4(0x1000, 0x1800);
 
     if (mClsnFlags & 2) {
-        int atan = cstd::atan2(mWallNormalX, this->mWallNormalZ);
+        int atan = cstd::atan2(mWallNormal.x, this->mWallNormal.z);
         int diff = AngleDiff(atan, this->mAngleY);
         if (diff >= 0x6000) {
             int t = (s16)(2 * atan - this->mAngleY);
@@ -19198,7 +19198,7 @@ void daPly_c::func_ov002_020e28d4(int a, int b) {
 
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
         if (mClsnFlags & 2) {
-            int t = cstd::atan2(mWallNormalX, mWallNormalZ);
+            int t = cstd::atan2(mWallNormal.x, mWallNormal.z);
             if (AngleDiff((s16)(t + 0x8000), mPrevAngleY) < 0x2000) {
                 if (mHorzSpeed >= 0x3000)
                     mHorzSpeed = 0x3000;
@@ -19289,7 +19289,7 @@ int daPly_c::func_ov002_020e2be4() {
         thr = 0xddb;
         break;
     }
-    if (mFloorNormalY > thr)
+    if (mFloorNormal.y > thr)
         return 0;
     ChangeState(data_ov002_021103f4);
     return 1;
@@ -19386,7 +19386,7 @@ int daPly_c::TryEnterBigFallLanding() {
     if (diff <= 0x3e8000) {
         goto ret0;
     }
-    if (mFloorNormalY < 0xddb) {
+    if (mFloorNormal.y < 0xddb) {
         goto ret0;
     }
 

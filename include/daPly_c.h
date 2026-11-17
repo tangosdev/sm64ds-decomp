@@ -250,24 +250,20 @@ struct daPly_c : dActor_c {
      * (0x020c16ec) at 0x020c1768 / 0x020c1770 / 0x020c1778, sourced
      * from SurfaceInfo::CopyNormalTo (func_02037dcc). 0x554 and 0x55c were
      * marked padding until those stores were disassembled.
-     * mFloorNormalY is the slope-test input: func_ov002_020f035c compares it
+     * mFloorNormal.y is the slope-test input: func_ov002_020f035c compares it
      * against a per-floor-class cosine threshold. */
-    s32 mFloorNormalX;            /* 0x554 */
-    s32 mFloorNormalY;            /* 0x558 */
-    s32 mFloorNormalZ;            /* 0x55c */
+    Vector3 mFloorNormal; /* 0x554 */
     /* Wall normal, fx12, and the exact counterpart of the floor normal above.
      * func_ov002_020c25a8 writes all three from
      * mMeshClsn.GetWallResult()->surface.CopyNormalTo(wn)
      * -- the same helper, the same shape, one surface over. It then pushes the
-     * actor out along it (`mPosX -= mWallNormalX * 2`, `mPosZ -= mWallNormalZ * 2`).
-     * Seven bodies read the pair back as `cstd::atan2(mWallNormalX, mWallNormalZ)`
+     * actor out along it (`mPosX -= mWallNormal.x * 2`, `mPosZ -= mWallNormal.z * 2`).
+     * Seven bodies read the pair back as `cstd::atan2(mWallNormal.x, mWallNormal.z)`
      * to get the wall's facing: St_Shell_Main, St_OnWall_Main (twice),
      * St_Balloon_Main, St_CrazedCrate_Main, func_ov002_020c2138,
      * func_ov002_020dd2f4 and func_ov002_020e28d4. 0x564 was marked padding until
      * that store was disassembled, exactly as 0x554/0x55c were. */
-    s32 mWallNormalX;            /* 0x560 */
-    s32 mWallNormalY;            /* 0x564 */
-    s32 mWallNormalZ;            /* 0x568 */
+    Vector3 mWallNormal; /* 0x560 */
     /* The sleep bubble's scale, fx12, the Vector3 Render passes to the bubble
        model's draw. func_ov002_020d228c and St_Wait_Main zero all three as
        they enter sleep stage 2; func_ov002_020d2f24 (Yoshi only) shrinks it by 0x180
@@ -388,8 +384,8 @@ struct daPly_c : dActor_c {
     s32 mModelOffsetZ;           /* 0x694 */
     s16 mSpawnAngleY;            /* 0x698 */
     /* Downhill direction of the current floor, binary angle (0x10000 per turn).
-     * daPly_c::SetFloorSurfaceInfo computes it as cstd::atan2(mFloorNormalX,
-     * mFloorNormalZ) and stores it with a 16-bit strh at 0x020c178c (written
+     * daPly_c::SetFloorSurfaceInfo computes it as cstd::atan2(mFloorNormal.x,
+     * mFloorNormal.z) and stores it with a 16-bit strh at 0x020c178c (written
      * as [r5 + 0x600] + 0x9a). Consumed by daPly_c::ApplySlopeAccel
      * (func_ov002_020c04e0) via AngleDiff(mFloorAngle, moveYaw) to decide
      * whether a slope speeds you up or slows you down. */
