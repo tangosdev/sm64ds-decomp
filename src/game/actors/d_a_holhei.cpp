@@ -369,13 +369,11 @@ int daHolhei_c::func_ov062_02116b80() {
 /* Walk. A wall or the edge bails out; a player near home pulls Chuckya off
    the path once the chase cooldown has run out. */
 int daHolhei_c::func_ov062_02116a08() {
-    struct { int vd0[3]; int vd1[3]; } L;
+    /* Zeroed and never read again; the three stores are in the ROM. */
+    Vector3 unused(0, 0, 0);
+    Vector3 plPos;
     int r;
     dActor_c *pl;
-
-    L.vd0[0] = 0;
-    L.vd0[1] = 0;
-    L.vd0[2] = 0;
 
     Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
 
@@ -396,13 +394,10 @@ int daHolhei_c::func_ov062_02116a08() {
     mMoveSound = Sound::PlayLong(mMoveSound, 3, 0x18a, mCamSpacePos, 0);
 
     if (pl != 0 && mChaseCooldown == 0) {
-        int *pos = &pl->mPosX;
-        L.vd1[0] = pos[0];
-        L.vd1[1] = pos[1];
-        L.vd1[2] = pos[2];
+        Vector3 *pos = &pl->mPos;
+        plPos = *pos;
 
-        if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mHomePosX),
-                      reinterpret_cast<const Vector3 *>(L.vd1)) < 0x3e8000) {
+        if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mHomePosX), &plPos) < 0x3e8000) {
             mHorzSpeed = 0;
             ::daHolhei_c_ChangeState(this, &data_ov062_0211de90);
         }
