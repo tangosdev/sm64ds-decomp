@@ -4471,8 +4471,7 @@ static inline int IsCastleFallCutsceneRunning() {
 
 /* Stylus down this frame with its edge bit set: the touch just began. */
 static inline int IsTouchJustBegun(u32 slot) {
-    TouchInfo *touch = (TouchInfo *)gTouchHeld;
-    return touch[slot].held != 0 && touch[slot].edge != 0;
+    return gTouchInfo[slot].held != 0 && gTouchInfo[slot].edge != 0;
 }
 
 /* Shaped like RunPlayerCommand, but the demo dispatcher returns nothing, so the

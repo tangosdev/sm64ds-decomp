@@ -60,6 +60,7 @@
 #include "private/ov007_picker_scene.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
+#include "Matrix2x2.h"
 
 /* data_ov007_02104b9c: the 0x14-byte sprite record. */
 typedef struct Ov007PickerSprites {
@@ -89,14 +90,14 @@ extern u16 data_ov007_020d7b54[];
 extern int data_ov007_020d7b60;
 extern char data_ov007_020d7b80[];
 
-extern "C" void MTX_Rot22_(int *p, int a, int b);
+extern "C" void MTX_Rot22_(Matrix2x2 *mtx, fx32 sinVal, fx32 cosVal);
 extern "C" void func_ov007_020bbe60(int idx);
 extern void func_ov007_020bda38(int v);
 extern void func_ov007_020bda8c(int a, int b);
 extern void func_ov007_020bdbcc(int a0, int a1);
 extern void func_ov007_020bde2c(int idx);
 extern "C" int func_ov007_020bdeb0(int a);
-extern "C" void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, Vector3 *out);
+extern "C" void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, VecFx32 *out);
 extern int func_ov007_020c1da0(int i);
 extern "C" int func_ov007_020c3ba8(int);
 extern "C" unsigned short func_ov007_020c3be0(int t, int a, int b);
@@ -106,11 +107,11 @@ extern "C" void func_ov007_020c4f50(void *c, int a1, int a2, int a3, int a4);
 extern "C" void func_ov007_020c4e98(Ov007Picker *c, int a1, int a2, int a3, int a4,
                                     unsigned short a5, int a6);
 extern "C" void func_ov007_020c5188(void *, int);
-extern "C" void func_ov007_020c5490(void *obj, int *m);
+extern "C" void func_ov007_020c5490(void *obj, Matrix2x2 *m);
 extern "C" void func_ov007_020c55bc(Ov007Picker *self, int m1, int m2);
 extern "C" void func_ov007_020c56bc(void *c, int a, int b, int d, int e, int f);
-extern void func_ov007_020c5a6c(Ov007Picker *, void *, int);
-extern "C" void func_ov007_020c5c14(void *o, void *p);
+extern void func_ov007_020c5a6c(Ov007Picker *, VecFx32 *, int);
+extern "C" void func_ov007_020c5c14(Ov007Picker *picker, VecFx32 *out);
 extern "C" int func_ov007_020c5d5c(void *o);
 extern "C" int func_ov007_020c5db0(void *p);
 extern void func_ov007_020c5dec(Ov007Picker *c);
@@ -235,7 +236,7 @@ void PickerScene_HandleEditKeys(void) {
     int t1;
     Ov007Picker *s;
     Ov007Pad *pad;
-    int mat[4];
+    Matrix2x2 mat;
     u16 h;
 
     s = SCENE->picker;
@@ -362,8 +363,8 @@ void PickerScene_HandleEditKeys(void) {
             }
             if (md == 0) {
                 int idx = (u16)(((dir2 * amp) * 0x3555) >> 12) >> 4;
-                MTX_Rot22_(mat, FX_SinIdx(idx), FX_CosIdx(idx));
-                func_ov007_020c5490(s, mat);
+                MTX_Rot22_(&mat, FX_SinIdx(idx), FX_CosIdx(idx));
+                func_ov007_020c5490(s, &mat);
             } else {
                 int n = FX_DivS32(s->groupCount, 4) + 1;
                 if (n == 1) {
@@ -395,7 +396,7 @@ void PickerScene_HandleEditKeys(void) {
  * B/down step tweens[0] between its three stops, R/L request menu state 3 or
  * 4 by sprites[1]'s alpha, and Y/left and A/right undo or redo the last
  * committed stroke. */
-int PickerScene_HandleDrawingKeys(void) {
+void PickerScene_HandleDrawingKeys(void) {
     Ov007Picker *r5 = SCENE->picker;
     Ov007Pad *r4 = WORK->pad;
     unsigned short r2 = r4->keys;
@@ -485,79 +486,57 @@ int PickerScene_HandleDrawingKeys(void) {
     }
 
     {
-        Ov007Touch *r1 = WORK->touch;
-        if (r1->cur.touch != 0) {
-            return r1->cur.touch;
-        }
-        if (r1->releasedFrames < 1U) {
-            return r1->releasedFrames;
-        }
+        Ov007Touch *touch = WORK->touch;
+        if (touch->cur.touch != 0 || touch->releasedFrames < 1U)
+            return;
     }
 
-    {
-        int rv = func_ov007_020c1da0(0);
-        if (rv != 0) {
-            return rv;
-        }
-    }
+    if (func_ov007_020c1da0(0) != 0)
+        return;
 
     {
         Ov007PickerScene *b = (Ov007PickerScene *)data_ov007_02104ba0;
         short st = b->states[1]->currentState;
-        if (st == 6)
-            return st;
-        if (st == 7)
-            return st;
-        if (b->awaitingTap != 0) {
-            return b->awaitingTap;
-        }
+        if (st == 6 || st == 7 || b->awaitingTap != 0)
+            return;
     }
 
     {
-        unsigned short r1 = r4->keys;
-        int r2b = 0;
-        if ((r1 & 0x800) && !(r4->prevKeys & 0x800)) {
-            r2b = 1;
+        unsigned short keys = r4->keys;
+        int undo = 0;
+        if ((keys & 0x800) && !(r4->prevKeys & 0x800)) {
+            undo = 1;
         }
-        if (r2b != 0 || ((r1 & 0x20) && !(r4->prevKeys & 0x20))) {
+        if (undo != 0 || ((keys & 0x20) && !(r4->prevKeys & 0x20))) {
             int n = r5->groupCount;
             if (n <= 0)
-                return n;
-            {
-                Ov007StrokePath *e = r5->groups[n - 1];
-                int *p14 = &r5->totalPoints;
-                int *p8 = &r5->groupCount;
-                *p14 = *p14 - e->capacity;
-                *p8 = *p8 - 1;
-                SCENE->states[1]->requestedState = 6;
-                return func_ov007_020bdeb0(0x20);
-            }
+                return;
+            r5->totalPoints -= r5->groups[n - 1]->capacity;
+            r5->groupCount--;
+            SCENE->states[1]->requestedState = 6;
+            func_ov007_020bdeb0(0x20);
+            return;
         }
-        if ((r1 & 1) && !(r4->prevKeys & 1)) {
-            /* fallthrough to block_66 */
-        } else {
-            if (!(r1 & 0x10))
-                return r1 & 0x10;
-            if (r4->prevKeys & 0x10)
-                return r4->prevKeys & 0x10;
-        }
+        if (!((keys & 1) && !(r4->prevKeys & 1)) && !((keys & 0x10) && !(r4->prevKeys & 0x10)))
+            return;
     }
 
     {
-        Ov007PickerScene *b = *(Ov007PickerScene *volatile *)&data_ov007_02104ba0;
+        /* Kept (#821 r20). The ROM reloads the scene pointer here instead of
+           reusing the one the busy test above loaded. A plain SCENE read,
+           with or without the local, reading strokeCount before groupCount,
+           an `n < strokeCount` guard around the redo, or the scene held in a
+           local from the top of the function all reuse it: 0x410, -1 word.
+           Retyping data_ov007_02104ba0 as an Ov007PickerScene * changes
+           nothing either way. */
+        Ov007PickerScene *b = *(Ov007PickerScene **)&data_ov007_02104ba0;
         int n = r5->groupCount;
-        int lim = b->strokeCount;
-        if (n >= lim)
-            return lim;
-        {
-            Ov007StrokePath *e = r5->groups[n];
-            int *p14 = &r5->totalPoints;
-            int *p8 = &r5->groupCount;
-            *p14 = *p14 + e->capacity;
-            *p8 = *p8 + 1;
-            ((Ov007PickerScene *)data_ov007_02104ba0)->states[1]->requestedState = 7;
-            return func_ov007_020bdeb0(0x21);
-        }
+        if (n >= b->strokeCount)
+            return;
+        r5->totalPoints += r5->groups[n]->capacity;
+        r5->groupCount++;
+        SCENE->states[1]->requestedState = 7;
+        func_ov007_020bdeb0(0x21);
     }
 }
 
@@ -761,7 +740,7 @@ int PickerScene_UpdateIntro(int t) {
     Ov007Picker *s;
     int done = 0;
     int state;
-    int local[3];
+    VecFx32 local;
 
     {
         Ov007PickerScene *m = SCENE;
@@ -832,7 +811,7 @@ int PickerScene_UpdateIntro(int t) {
         }
         {
             Ov007Camera *o = WORK->cameras[0];
-            func_ov007_020bfe4c(o, 0xe8000, 0xa8000, -o->distance, (Vector3 *)local);
+            func_ov007_020bfe4c(o, 0xe8000, 0xa8000, -o->distance, &local);
         }
         PickerScene_UpdatePicker();
         v = RangeRatio(t, 200, 600);
@@ -852,8 +831,8 @@ int PickerScene_UpdateIntro(int t) {
             }
         }
         {
-            int ret = func_ov007_020c5854(s, (Vector3 *)local, (ratio * 0xc8) >> 0xc, 0x2000,
-                                          ratio * 0x12c, r8arg);
+            int ret =
+                func_ov007_020c5854(s, &local, (ratio * 0xc8) >> 0xc, 0x2000, ratio * 0x12c, r8arg);
             int dv = FX_DivS32(ret << 0xc, SCENE->totalPoints);
             SPRITES->sprites[1]->alpha = dv * 0x1f;
             if (dv >= 0x1000) {
@@ -1072,7 +1051,7 @@ void PickerScene_BeginEdit(void) {
 void PickerScene_UpdateEdit(void) {
     Ov007Picker *r5 = SCENE->picker;
     Ov007Touch *r4 = WORK->touch;
-    int v[3];
+    VecFx32 v;
 
     PickerScene_HandleEditKeys();
 
@@ -1080,11 +1059,10 @@ void PickerScene_UpdateEdit(void) {
         Ov007Camera *camera;
         SCENE->springSet = 0;
         camera = WORK->cameras[0];
-        func_ov007_020bfe4c(camera, r4->cur.x << 12, r4->cur.y << 12, -camera->distance,
-                            (Vector3 *)v);
+        func_ov007_020bfe4c(camera, r4->cur.x << 12, r4->cur.y << 12, -camera->distance, &v);
         if (r4->heldFrames == 1) {
             int s;
-            func_ov007_020c5a6c(r5, v, 0);
+            func_ov007_020c5a6c(r5, &v, 0);
             s = 0x25;
             if (FX_ModS32(SCENE->restartCount, 3) == 2) {
                 switch (FX_ModS32(SCENE->restartCount, 9)) {
@@ -1126,7 +1104,7 @@ void PickerScene_UpdateEdit(void) {
         r5->hitOffset.x = r5->hitOffset.y;
     }
 
-    func_ov007_020c5948(r5, (Vector3 *)v);
+    func_ov007_020c5948(r5, &v);
 
     if (r4->cur.touch != 0 || WORK->pad->keys != 0) {
         SCENE->idleFrames = 0;
@@ -1487,6 +1465,12 @@ void func_ov007_020b8fd4(Ov007Camera *camera) {
         Ov007PickerScene *c;
         Ov007Work *g;
         f8 = (int)data_ov007_02104b9c;
+        /* Kept (#821 r21). The ROM loads the scene pointer before the work
+           pointer; the volatile reads are what hold that order. Plain SCENE
+           and WORK reads into c and g (in any order around the sprite read),
+           direct SCENE->/WORK->/SPRITES-> spellings with or without scene and
+           sprite locals, and the sprite reads first all schedule the work
+           chain ahead of the scene: 16 to 20 of 120 words wrong. */
         c = *((Ov007PickerScene *volatile *)&data_ov007_02104ba0);
         g = *((Ov007Work *volatile *)&data_ov007_0210342c);
         flag = c->awaitingTap;

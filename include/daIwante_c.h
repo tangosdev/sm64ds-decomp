@@ -84,14 +84,10 @@ struct daIwante_c : dBgActor_c {
     s32 mSubState;                                          /* 0x4a0 */
     /* The part's rest position: InitResources seeds it from the actor position
        and then offsets it (a hand goes -+0x31f000 in X, -0x32000 in Z), and
-       Behavior re-derives its Y from mSpawnPosY every frame. */
-    s32 mRestPosX;                                          /* 0x4a4 */
-    s32 mRestPosY;                                          /* 0x4a8 */
-    s32 mRestPosZ;                                          /* 0x4ac */
+       Behavior re-derives its Y from mSpawnPos.y every frame. */
+    Vector3 mRestPos; /* 0x4a4 */
     /* The unmoved spawn position, snapshotted only on the two hands. */
-    s32 mSpawnPosX;                                         /* 0x4b0 */
-    s32 mSpawnPosY;                                         /* 0x4b4 */
-    s32 mSpawnPosZ;                                         /* 0x4b8 */
+    Vector3 mSpawnPos; /* 0x4b0 */
     /* The point a hand is currently moving to. The state handlers fill it
        (from the closest player's position, or a fixed spot) and then walk
        mPosX/Z toward it with Vec3_ApproachHorz / ApproachLinear. */

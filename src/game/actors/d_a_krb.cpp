@@ -245,20 +245,19 @@ void daKrb_c::func_ov084_021290d4() {
     *chaseRadius(self2) = 0x1f4000;
 }
 
-
 /* Enter STATE_TUMBLE: the Goomba is thrown clear. Called when the cap comes
  * off (func_ov084_02129a00) and, with a null `actor`, when a Yoshi-held Goomba
  * lands. `actor` is the eater
  * (mEatingPlayer) when there is one; the Goomba is turned toward it.
  *
  * Starts the 60-frame bounce countdown (mBounceCountdown) and the tumble
- * animation, gives it a vertical speed of (13.0 - mVertAccel) / mFloorNormalY
+ * animation, gives it a vertical speed of (13.0 - mVertAccel) / mFloorNormal.y
  * and a backward horizontal speed equal to the length of the horizontal part
  * of the velocity vector at 0xa4, and releases it from Yoshi. */
 void daKrb_c::func_ov084_02129168(dActor_c *actor) {
     daKrb_c *goomba = this;
     goomba->mBounceCountdown = 60;
-    goomba->mVertSpeed = FX_Div(0xd000 - goomba->mVertAccel, goomba->mFloorNormalY);
+    goomba->mVertSpeed = FX_Div(0xd000 - goomba->mVertAccel, goomba->mFloorNormal.y);
     goomba->mHorzSpeed = Vec3_HorzLen((const Vector3 *)&goomba->mSpeedX) * -1;
     if (actor != 0)
         goomba->mPrevAngleY = Vec3_HorzAngle(&goomba->mPos, &actor->mPos);
@@ -459,7 +458,7 @@ void daKrb_c::func_ov084_021296cc() {
             (char *)dActor_c::Spawn(ACTOR_SILVER_STAR, 0x10, goomba->mPos, 0, goomba->mAreaId, -1);
         if (starMarker != 0 && silverStar != 0) {
             ((daStar_c *)silverStar)->mMarkerID = ((dActor_c *)starMarker)->uniqueID;
-            ((daStarBase_c *)starMarker)->LinkSilverStarAndStarMarker(silverStar);
+            ((daStarBase_c *)starMarker)->LinkSilverStarAndStarMarker((daStar_c *)silverStar);
             goomba->SpawnSoundObj(1);
         }
         /* The (int) cast on the load is load-bearing: a plain
@@ -520,9 +519,9 @@ int daKrb_c::func_ov084_021298d0() {
                cylinder update always run for a king minion in this death phase. */
             unsigned int id = goomba->mdCcAc_c.otherOwner;
             if (id != 0) {
-                char *r = (char *)dActor_c::FindWithID(id);
+                dActor_c *r = dActor_c::FindWithID(id);
                 if (r != 0) {
-                    int b = (((dActor_c *)r)->actorID == ACTOR_KURIKING);
+                    int b = (r->actorID == ACTOR_KURIKING);
                     if (b != 0) {
                         goomba->SpawnCoin();
                         goomba->func_ov084_02129498();
@@ -1086,7 +1085,7 @@ void daKrb_c::ActTumble() {
             if (aa <= cnt * 0x500) {
                 goomba->mVertSpeed = (cnt << 0xa) - goomba->mVertAccel;
             } else {
-                goomba->mVertSpeed = FX_Div((a8 * -0x50) / 100, goomba->mFloorNormalY);
+                goomba->mVertSpeed = FX_Div((a8 * -0x50) / 100, goomba->mFloorNormal.y);
             }
         }
         {
@@ -1581,8 +1580,7 @@ int daKrb_c::Behavior() {
         PoofDust();
     }
     if (mGoombaType != GOOMBA_KING_MINION && mState != STATE_TUMBLE && mEatenByYoshi == 0 &&
-        mDeathState == DEATH_NONE &&
-        ((dActor_c *)(char *)this)->IsTooFarAwayFromPlayer(0x5dc000) != 0) /* 1500.0 */
+        mDeathState == DEATH_NONE && IsTooFarAwayFromPlayer(0x5dc000) != 0) /* 1500.0 */
     {
         Unk_02005d94();
         return 1;

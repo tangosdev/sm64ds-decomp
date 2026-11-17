@@ -16,8 +16,10 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 
 // Leftovers kept for byte-exactness; each has a note at its site:
 // - several slot-0 overrides repeat the base's SaveSnapshot body inline;
-// - the object tables, popups, dust and score arrays are walked by stepping
-//   `this` and reading element 0, because indexing changes the addressing.
+// - SpawnDust, UpdateScores and Render still walk the popup, dust and tally
+//   arrays by stepping `this` and reading element 0, and Behavior reads the
+//   object tables through TableEntry, because indexing changes the
+//   addressing there.
 
 #include "dScMgSmartball_c.h"
 #include "nitro/hw/registers.h"
@@ -25,6 +27,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "cMgSmartball_wing_c.h"
 #include "OamAttr.h"
 #include "OAM.h"
+#include "Matrix2x2.h"
 #include "cMgSmartball_pushswitch_c.h"
 #include "cMgSmartball_board_c.h"
 #include "types.h"
@@ -102,33 +105,20 @@ struct TVec2 {
 /* First virtual slot, as Behavior dispatches it. */
 typedef void (*VFunc)(void *);
 
-/* cMgSmartball_ball_c::UpdatePhysics's search state. */
-typedef struct State2 {
-    int flags[7];
-    int iteration;
-    int depth;
-    int zeroAngle;
-    int zero;
-    int entityIndex;
-    void *null34;
-    void *null38;
-    int null3c;
-    int angle40;
-    int index44;
-    int zero48;
-    int zero4c;
-    int baseZ;
-} State2;
-
 extern "C" {
-extern void func_0203d388(V2 *p, int angle);
+/* local extern: decl_common.h, not included here, declares the pair as
+   int *; this file passes its V2 pairs. The angle is an s16, as the
+   definition (func_0203d384.c) says: ResolveBallPair negates its angle once
+   and the ROM narrows it again at each of the two calls, which is the
+   argument conversion of an s16 parameter. */
+extern void func_0203d388(V2 *p, s16 angle);
 extern long long func_0203d5bc(int *p);
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern struct OamAttr *sSmartballWingSprites[];
 extern void OamRender10_d_s_mg_smartball(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
                                          s32 priority, fx32 scaleX, fx32 scaleY, s32 rotation,
                                          s32 mode);
-extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern int GetOwnerLanguage(void);
 extern OamAttr *sSmartballLineSpritesItalian[];
 extern OamAttr *sSmartballLineSpritesSpanish[];
@@ -188,7 +178,6 @@ int GetGameLanguage(void);
 int Mg_GetTopRecord(void);
 void Mg_DrawTopRightCounter(int a0, int a1);
 void Mg_DrawTopLeftCounter(int self);
-void Mg_DrawBlinkSprite(void *c, int a1, int a2);
 extern OamAttr *data_ov006_02138ae0[];
 extern OamAttr **sSmartballTextSpritesByLanguage[];
 extern int sSmartballCellScores[];
@@ -742,19 +731,19 @@ void cMgSmartball_board_c::Update() {
             Mg_RenderSpriteBoth(sSmartballCellSprites[1], (j % 3 - 1) * 24 + (mCurrent0 >> 12),
                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1);
         } else {
-            s32 vec[4];
+            Matrix2x2 mtx;
 
             if (ang < 0x4000)
-                vec[0] = -FX_Div(0x1000, FX_SinCosTable_[((u16)(ang + 0x8000) >> 4) * 2 + 1]);
+                mtx.m00 = -FX_Div(0x1000, FX_SinCosTable_[((u16)(ang + 0x8000) >> 4) * 2 + 1]);
             else
-                vec[0] = -FX_Div(0x1000, FX_SinCosTable_[((u16)ang >> 4) * 2 + 1]);
-            vec[1] = 0;
-            vec[2] = 0;
-            vec[3] = 0x1000;
+                mtx.m00 = -FX_Div(0x1000, FX_SinCosTable_[((u16)ang >> 4) * 2 + 1]);
+            mtx.m01 = 0;
+            mtx.m10 = 0;
+            mtx.m11 = 0x1000;
             RenderOamBothScreens(sSmartballCellSprites[idx], (j % 3 - 1) * 24 + (mCurrent0 >> 12),
-                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, vec);
+                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, &mtx);
             RenderOamBothScreens(sSmartballCellSprites[0], (j % 3 - 1) * 24 + (mCurrent0 >> 12),
-                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, vec);
+                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, &mtx);
         }
     }
 
@@ -769,9 +758,6 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
     int cy;
     int base;
     int i;
-    int j;
-    int k;
-    int layer;
     char *p;
     u16 tile;
     int jj;
@@ -788,16 +774,13 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
     cx = (pos[0] >> 12) / 8;
     cy = (pos[1] >> 12) / 8;
 
-    j = -1;
-    k = -2;
-    layer = 2;
     b1 = 0x31a;
     b0 = 0x314;
 
     for (i = -1; i <= 1; i++) {
         int row = (cy + i) << 6;
-        jj = j;
-        kk = k;
+        jj = -1;
+        kk = -2;
         do {
             if (idx == 0) {
                 tile = (u16)(jj + b0);
@@ -806,7 +789,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
             }
             p = (char *)G2S_GetBG3ScrPtr();
             t1 = tile | 0xf000;
-            MI_CpuFill16(p + row + cx * 2 + kk, t1, layer);
+            MI_CpuFill16(p + row + cx * 2 + kk, t1, 2);
             kk += 2;
             jj++;
         } while (jj <= 0);
@@ -821,48 +804,40 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
     }
 
     {
-        int lay2 = 2;
         int i2;
-        int bas2 = base;
         for (i2 = -1; i2 <= 1; i2++) {
             p = (char *)G2S_GetBG3ScrPtr() + ((cy + i2) << 6);
-            t2 = (bas2 + 0x20 * i2) | 0xf000;
-            MI_CpuFill16(p + cx * 2 - 4, t2, lay2);
+            t2 = (base + 0x20 * i2) | 0xf000;
+            MI_CpuFill16(p + cx * 2 - 4, t2, 2);
         }
     }
 
     if (idx == 8) {
-        int lay3 = 2;
         int i3;
-        int bas3 = 0x336;
         for (i3 = -1; i3 <= 0; i3++) {
             p = (char *)G2S_GetBG3ScrPtr() + ((cy + i3) << 6);
-            t3 = (bas3 + 0x20 * i3) | 0xf000;
-            MI_CpuFill16(p + cx * 2 + 2, t3, lay3);
+            t3 = (0x336 + 0x20 * i3) | 0xf000;
+            MI_CpuFill16(p + cx * 2 + 2, t3, 2);
         }
         return;
     }
 
     if (mCells[sSmartballCellOrder[idx + 1]] == 1) {
-        int lay4 = 2;
         int i4;
-        int bas4 = 0x33f;
         for (i4 = -1; i4 <= 1; i4++) {
             p = (char *)G2S_GetBG3ScrPtr() + ((cy + i4) << 6);
-            t4 = (bas4 + 0x20 * i4) | 0xf000;
-            MI_CpuFill16(p + cx * 2 + 2, t4, lay4);
+            t4 = (0x33f + 0x20 * i4) | 0xf000;
+            MI_CpuFill16(p + cx * 2 + 2, t4, 2);
         }
         return;
     }
 
     {
-        int lay5 = 2;
         int i5;
-        int bas5 = 0x33e;
         for (i5 = -1; i5 <= 1; i5++) {
             p = (char *)G2S_GetBG3ScrPtr() + ((cy + i5) << 6);
-            t5 = (bas5 + 0x20 * i5) | 0xf000;
-            MI_CpuFill16(p + cx * 2 + 2, t5, lay5);
+            t5 = (0x33e + 0x20 * i5) | 0xf000;
+            MI_CpuFill16(p + cx * 2 + 2, t5, 2);
         }
     }
 }
@@ -1183,7 +1158,6 @@ void cMgSmartball_slot_c::BeginStop() {
     /* Leftover: the stop counts are stored through a copy of `this`. */
     cMgSmartball_slot_c *c = this;
     int i;
-    unsigned char z;
     int *seed;
     if ((mIsSpinning) != 1) {
         return;
@@ -1192,9 +1166,8 @@ void cMgSmartball_slot_c::BeginStop() {
         return;
     }
     mIsSlowingDown = 1;
-    z = 0;
     for (i = 0; i < 3; i++) {
-        mReelStopping[i] = z;
+        mReelStopping[i] = 0;
         c->mReelStopCount[i] =
             ((((((unsigned)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff) * 3) >> 15) +
             3;
@@ -1513,9 +1486,7 @@ void cMgSmartball_pakkun_c::Update() {
             int scale;
             int idx = 1;
             int b, a;
-            struct {
-                int _00, _01, _10, _11;
-            } vec;
+            Matrix2x2 mtx;
             if (f38 < 0x20) {
                 scale = FX_Div(0x20000, f38 << 12);
             } else {
@@ -1525,14 +1496,14 @@ void cMgSmartball_pakkun_c::Update() {
             }
             b = (int)((((long long)FX_SinCosTable_[1] * scale) + 0x800) >> 12);
             a = (int)((((long long)FX_SinCosTable_[0] * scale) + 0x800) >> 12);
-            vec._00 = b;
-            vec._01 = a;
-            vec._10 = -a;
-            vec._11 = b;
+            mtx.m00 = b;
+            mtx.m01 = a;
+            mtx.m10 = -a;
+            mtx.m11 = b;
             RenderOamBothScreens(sSmartballPakkunSprites[idx], mCurrent0 >> 12, mCurrent1 >> 12, -1,
-                                 0, &vec);
+                                 0, &mtx);
             RenderOamBothScreens(sSmartballPakkunSprites[2], mCurrent0 >> 12, (mCurrent1 >> 12) + 5,
-                                 -1, 2, &vec);
+                                 -1, 2, &mtx);
         } else {
             if (mTriggered != 0) {
                 Mg_RenderSpriteBoth(sSmartballPakkunSprites[0], mCurrent0 >> 12, mCurrent1 >> 12,
@@ -1806,19 +1777,19 @@ void cMgSmartball_propeller_c::Update() {
                      0x800) >>
                     12);
     int a;
-    int vec[4];
+    Matrix2x2 mtx;
 
-    vec[0] = b;
+    mtx.m00 = b;
     a = (short)((((long long)FX_SinCosTable_[((unsigned short)mAngle >> 4) * 2] << 12) + 0x800) >>
                 12);
-    vec[3] = b;
-    vec[1] = a;
-    vec[2] = -a;
+    mtx.m11 = b;
+    mtx.m01 = a;
+    mtx.m10 = -a;
 
     RenderOamBothScreens(sSmartballPropellerSprites[0], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1,
-                         vec);
+                         &mtx);
     RenderOamBothScreens(sSmartballPropellerSprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5, -1,
-                         2, vec);
+                         2, &mtx);
 }
 
 /* Slot 0: steps the spin speed toward its target, advances the angle and
@@ -1893,19 +1864,19 @@ void cMgSmartball_spring_c::SaveSnapshot() {
     if (mpManager->mRoundEnded != 0)
         return;
 
-    held = gTouchHeld[gActivePlayerSlot * 4];
+    held = gTouchInfo[gActivePlayerSlot].held;
     slot = gActivePlayerSlot;
     flag = 0;
     if (held != 0)
-        flag = gTouchEdge[slot * 4] != 0;
+        flag = gTouchInfo[slot].edge != 0;
 
     if (flag != 0) {
         mTriggered = 1;
         mVel0 = 0;
         mVel1 = 0;
-        mGrabX = gTouchX[gActivePlayerSlot * 4] << 12;
+        mGrabX = gTouchInfo[gActivePlayerSlot].x << 12;
         mGrabXSaved = mGrabX;
-        mDriveNow = gTouchY[gActivePlayerSlot * 4] << 12;
+        mDriveNow = gTouchInfo[gActivePlayerSlot].y << 12;
         mDriveBase = mDriveNow;
         if (mCurrent1 <= 0xa0000)
             return;
@@ -1914,7 +1885,7 @@ void cMgSmartball_spring_c::SaveSnapshot() {
     }
 
     if (mTriggered == 1 && held != 0) {
-        mDriveNow = gTouchY[slot * 4] << 12;
+        mDriveNow = gTouchInfo[slot].y << 12;
         d = mDriveNow - mDriveBase;
         if (d >= 0x38000)
             mDriveNow = mDriveBase + 0x38000;
@@ -1929,7 +1900,7 @@ void cMgSmartball_spring_c::SaveSnapshot() {
 
     {
         int m;
-        if (held == 0 && gTouchEdge[slot * 4] != 0)
+        if (held == 0 && gTouchInfo[slot].edge != 0)
             m = 1;
         else
             m = 0;
@@ -2047,20 +2018,20 @@ void cMgSmartball_kinoko_c::Update() {
     case 1: {
         int d;
         int b, a;
-        int vec[4];
+        Matrix2x2 mtx;
         if (mRadius < 0x1000)
             return;
         d = FX_Div(0x7000, mRadius);
         b = FX_MUL(FX_SinCosTable_[1], d);
         a = FX_MUL(FX_SinCosTable_[0], d);
-        vec[0] = b;
-        vec[1] = a;
-        vec[2] = -a;
-        vec[3] = b;
+        mtx.m00 = b;
+        mtx.m01 = a;
+        mtx.m10 = -a;
+        mtx.m11 = b;
         RenderOamBothScreens(sSmartballKinokoTurnSprites[0], mCurrent0 >> 12, mCurrent1 >> 12, -1,
-                             1, vec);
+                             1, &mtx);
         RenderOamBothScreens(sSmartballKinokoTurnSprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5,
-                             -1, 2, vec);
+                             -1, 2, &mtx);
     } break;
     }
 }
@@ -2618,14 +2589,19 @@ block2:
     }
 }
 
-/* Leftover: UpdatePhysics needs strength reduction off. */
-#pragma push
-#pragma opt_strength_reduction off
 /* Leftover: the owner selection keeps its own address computation. */
 extern "C" { /* C linkage, as in the original .c file */
 
 void cMgSmartball_ball_c::UpdatePhysics() {
-    State2 state;
+    int hitSlope = 0;
+    int hitPropeller = 0;
+    int hitExit = 0;
+    int hitKinoko = 0;
+    int hitWing = 0;
+    int onSpring = 0;
+    int nearKinoko;
+    int pass = 0;
+    int depth;
     V2xz work;
     /* volatile: the ROM keeps the entry velocity on the stack and reloads it. */
     volatile V2xz savedVel;
@@ -2638,19 +2614,20 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     V2xz radial;
     V2xz hazardDelta;
     V2xz correction;
-    V2xz pos0;
-    V2xz pos1;
-    V2xz pos2;
-    V2xz pos3;
-    V2xz pos4;
-    V2xz pos5;
-    V2xz pos6;
-    V2xz pos7;
-    V2xz pos8;
-    V2xz pos9;
-    V2xz pos10;
-    V2xz pos11;
-    V2xz pos12;
+    V2xz kinokoPos;
+    /* One copy of the probe point per test: the ROM gives each call its own slot. */
+    V2xz respawnProbe;
+    V2xz slopeProbe;
+    V2xz exitProbe;
+    V2xz respawnProbe2;
+    V2xz exitProbe2;
+    V2xz kinokoProbe;
+    V2xz dokanProbe;
+    V2xz pakkunProbe;
+    V2xz switchProbe;
+    V2xz wingProbe;
+    V2xz springProbe;
+    V2xz propellerProbe;
     V2xz entityPos;
     V2xz entityDelta;
     V2xz entityPos2;
@@ -2670,7 +2647,7 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     int blocked;
     int i;
     int entityLoopIndex;
-    int angle;
+    s16 angle;
     int responseScale;
     int dot;
     int volume;
@@ -2678,81 +2655,58 @@ void cMgSmartball_ball_c::UpdatePhysics() {
     void *fallback;
     dScMgSmartball_c *mgr;
     s64 square;
-    int correctionZ;
-    int correctionX;
-    int *velXPtr;
-    int *velZPtr;
 
     savedVel.x = mVel0;
-    state.flags[0] = 0;
     savedVel.z = mVel1;
     targetIndex = -1;
-    state.flags[1] = 0;
-    state.flags[2] = 0;
-    state.flags[3] = 0;
-    state.flags[4] = 0;
-    state.flags[5] = 0;
-    state.iteration = 0;
-    state.flags[6] = 0;
     i = 0;
-    state.iteration = 0;
     do {
-        hitA[i] = (u8)state.iteration;
-        hitC[i] = (u8)state.iteration;
-        hitB[i] = (u8)state.iteration;
+        hitA[i] = 0;
+        hitC[i] = 0;
+        hitB[i] = 0;
         i++;
     } while (i < 32);
-    anyHit = (u8)state.iteration;
-    specialHit = (u8)state.iteration;
-    state.iteration = 0;
+    anyHit = 0;
+    specialHit = 0;
+    nearKinoko = 0;
 
     if (mCurrent1 >= 0x77000) {
-        int clearIndex = state.iteration;
+        int clearIndex = 0;
         do {
             nearby[clearIndex] = 0;
             clearIndex++;
         } while (clearIndex < 25);
     } else {
-        int probeIndex = state.iteration;
+        int probeIndex = 0;
         do {
             nearby[probeIndex] = 0;
             if (probeIndex < mpManager->mKinokoCount) {
                 dist.x = mCurrent0;
                 dist.z = mCurrent1;
                 mgr = mpManager;
-                CopyObjectPos(&pos0,
+                CopyObjectPos(&kinokoPos,
                               probeIndex >= mgr->mKinokoCount ? 0 : mgr->mpKinokos[probeIndex]);
-                dist.x -= pos0.x;
-                dist.z -= pos0.z;
+                dist.x -= kinokoPos.x;
+                dist.z -= kinokoPos.z;
                 if (func_0203d5bc(&dist.x) <= 0x900000LL) {
                     nearby[probeIndex] = 1;
-                    state.iteration = 1;
+                    nearKinoko = 1;
                 }
             }
             probeIndex++;
         } while (probeIndex < 25);
     }
 
-    state.depth = 0;
-    state.zero = 0;
-    state.null34 = 0;
-    state.null38 = 0;
-    state.null3c = 0;
-    state.angle40 = 0;
-    state.index44 = 0;
-    state.zero4c = 0;
-    state.baseZ = 0x800;
-    state.zero48 = 0;
-    state.zeroAngle = 0;
+    depth = 0;
 
 outer_loop:
-    angle = state.zeroAngle;
-    blocked = angle;
-    i = angle;
+    angle = 0;
+    blocked = 0;
+    i = 0;
     do {
-        hit[i] = (u8)state.zero;
-        work.x = state.zero;
-        work.z = state.zero;
+        hit[i] = 0;
+        work.x = 0;
+        work.z = 0;
         work.z += mRadius;
         func_0203d388((V2 *)&work, angle);
         dot = func_0203d570((V2 *)&work, (V2 *)&mVel0);
@@ -2760,91 +2714,91 @@ outer_loop:
             work.x += mCurrent0;
             work.z += mCurrent1;
             if ((u8)mpManager->param1 == 0) {
-                pos1 = work;
-                if (NeedsRespawn(&pos1.x) != 0) {
+                respawnProbe = work;
+                if (NeedsRespawn(&respawnProbe.x) != 0) {
                     hit[i] = 1;
                     hitA[i] = 1;
                     anyHit = 1;
                     blocked = 1;
                     goto final_checks;
                 } else {
-                    pos2 = work;
-                    if (OnSlope(&pos2.x) != 0) {
+                    slopeProbe = work;
+                    if (OnSlope(&slopeProbe.x) != 0) {
                         hit[i] = 1;
                         hitA[i] = 1;
                         anyHit = 1;
-                        state.flags[0] = 1;
+                        hitSlope = 1;
                         blocked = 1;
                     } else {
-                        pos3 = work;
-                        if (CheckExits(&pos3.x) != 0) {
+                        exitProbe = work;
+                        if (CheckExits(&exitProbe.x) != 0) {
                             hit[i] = 1;
                             hitA[i] = 1;
                             anyHit = 1;
                             hitB[i] = 1;
-                            state.flags[2] = 1;
+                            hitExit = 1;
                             blocked = 1;
                         }
                     }
                 }
             } else {
-                pos4 = work;
-                if (NeedsRespawn(&pos4.x) != 0) {
+                respawnProbe2 = work;
+                if (NeedsRespawn(&respawnProbe2.x) != 0) {
                     hit[i] = 1;
                     hitA[i] = 1;
                     anyHit = 1;
                     blocked = 1;
                 } else {
-                    pos5 = work;
-                    if (CheckExits(&pos5.x) != 0) {
+                    exitProbe2 = work;
+                    if (CheckExits(&exitProbe2.x) != 0) {
                         hit[i] = 1;
                         hitA[i] = 1;
                         anyHit = 1;
                         hitB[i] = 1;
-                        state.flags[2] = 1;
+                        hitExit = 1;
                         blocked = 1;
                         goto final_checks;
                     } else {
-                        if (state.iteration == 1) {
-                            pos6 = work;
-                            if (HitKinokos(&pos6.x) != 0) {
+                        if (nearKinoko == 1) {
+                            kinokoProbe = work;
+                            if (HitKinokos(&kinokoProbe.x) != 0) {
                                 hit[i] = 1;
                                 hitA[i] = 1;
                                 anyHit = 1;
                                 specialHit = 1;
-                                state.flags[3] = 1;
+                                hitKinoko = 1;
                                 blocked = 1;
                                 goto final_checks;
                             }
                         }
-                        pos7 = work;
-                        if (HitDokans(&pos7.x) != 0) {
+                        dokanProbe = work;
+                        if (HitDokans(&dokanProbe.x) != 0) {
                             hit[i] = 1;
                             hitA[i] = 1;
                             anyHit = 1;
                             blocked = 1;
                         } else {
-                            pos8 = work;
-                            if (HitPakkuns(&pos8.x) != 0) {
+                            pakkunProbe = work;
+                            if (HitPakkuns(&pakkunProbe.x) != 0) {
                                 hit[i] = 1;
                                 hitA[i] = 1;
                                 anyHit = 1;
                                 blocked = 1;
                             } else {
-                                pos9 = work;
-                                if (HitSwitches(&pos9.x) != 0) {
+                                switchProbe = work;
+                                if (HitSwitches(&switchProbe.x) != 0) {
                                     hit[i] = 1;
                                     hitA[i] = 1;
                                     anyHit = 1;
                                     blocked = 1;
                                 } else {
-                                    pos10 = work;
-                                    if (HitWing(&pos10.x) != 0) {
+                                    wingProbe = work;
+                                    if (HitWing(&wingProbe.x) != 0) {
                                         hit[i] = 1;
                                         hitA[i] = 1;
                                         anyHit = 1;
                                         blocked = 1;
-                                        state.flags[4] = 1;
+                                        hitWing = 1;
                                     }
                                 }
                             }
@@ -2859,54 +2813,51 @@ outer_loop:
 
     final_checks:
         if (blocked == 0) {
-            pos11 = work;
-            if (AtSpring(&pos11.x) != 0) {
+            springProbe = work;
+            if (AtSpring(&springProbe.x) != 0) {
                 hit[i] = 1;
                 hitA[i] = 1;
                 anyHit = 1;
                 blocked = 1;
                 if (angle == 0)
-                    state.flags[5] = 1;
+                    onSpring = 1;
             } else {
-                pos12 = work;
-                if (HitPropellers(&pos12.x) != 0) {
+                propellerProbe = work;
+                if (HitPropellers(&propellerProbe.x) != 0) {
                     hit[i] = 1;
                     hitA[i] = 1;
                     anyHit = 1;
                     blocked = 1;
-                    state.flags[1] = 1;
+                    hitPropeller = 1;
                 }
             }
         }
-        angle = (s16)(angle + 0x800);
+        angle += 0x800;
         i++;
     } while (i < 32);
 
-    if (state.flags[6] < 0x11 && state3a == 0) {
+    if (pass < 0x11 && state3a == 0) {
         entityLoopIndex = 0;
         if (mpManager->mBallCount > 0) {
             do {
                 if (entityLoopIndex != mIndex) {
-                    other =
-                        entityLoopIndex >= 0xd ? state.null34 : mpManager->mpBalls[entityLoopIndex];
+                    other = entityLoopIndex >= 0xd ? 0 : mpManager->mpBalls[entityLoopIndex];
                     if (((cMgSmartball_ball_c *)other)->state3a == 0) {
-                        other = entityLoopIndex >= 0xd ? state.null38
-                                                       : mpManager->mpBalls[entityLoopIndex];
+                        other = entityLoopIndex >= 0xd ? 0 : mpManager->mpBalls[entityLoopIndex];
                         if (((cMgSmartball_object_c *)other)->mIsActive != 0) {
-                            other = entityLoopIndex >= 0xd ? (void *)state.null3c
-                                                           : mpManager->mpBalls[entityLoopIndex];
+                            other =
+                                entityLoopIndex >= 0xd ? 0 : mpManager->mpBalls[entityLoopIndex];
                             CopyObjectPos(&entityPos, other);
                             Vec2_Sub(&entityDelta.x, &mCurrent0, &entityPos.x);
                             delta = entityDelta;
                             if (func_0203d5bc(&delta.x) <= 0x100000LL) {
-                                angle = state.angle40;
+                                angle = 0;
                                 mgr = mpManager;
-                                other = entityLoopIndex >= 0xd ? (void *)angle
-                                                               : mgr->mpBalls[entityLoopIndex];
+                                other = entityLoopIndex >= 0xd ? 0 : mgr->mpBalls[entityLoopIndex];
                                 CopyObjectPos(&entityPos2, other);
                                 otherPos = entityPos2;
                                 if (mCurrent1 < 0x90000 || mCurrent0 <= otherPos.x) {
-                                    i = state.index44;
+                                    i = 0;
                                     do {
                                         work.z = mRadius;
                                         work.x = 0;
@@ -2922,7 +2873,7 @@ outer_loop:
                                             hitC[i] = 1;
                                             blocked = 1;
                                         }
-                                        angle = (s16)(angle + 0x800);
+                                        angle += 0x800;
                                         i++;
                                     } while (i < 32);
                                 }
@@ -2935,71 +2886,67 @@ outer_loop:
         }
     }
 
-    normal.x = state.zero48;
-    normal.z = state.zero48;
-    angle = state.zero48;
-    i = state.zero48;
+    normal.x = 0;
+    normal.z = 0;
+    angle = 0;
+    i = 0;
     do {
         if (hit[i] == 1) {
-            unit.x = state.zero4c;
-            unit.z = state.baseZ;
+            unit.x = 0;
+            unit.z = 0x800;
             func_0203d388((V2 *)&unit, angle);
             normal.x += unit.x;
             normal.z += unit.z;
         }
-        angle = (s16)(angle + 0x800);
+        angle += 0x800;
         i++;
     } while (i < 32);
     func_0203d434((V2 *)&normal);
-    func_0203d630((V2 *)&normal, state.baseZ);
+    func_0203d630((V2 *)&normal, 0x800);
     {
         mCurrent0 -= normal.x;
         mCurrent1 -= normal.z;
         Vec2_Sub(&moveDelta.x, &mCurrent0, &mSnapshot0);
     }
     dot = Vec2_Len((const Vector2 *)&moveDelta);
-    state.depth += 0x80;
-    state.flags[6]++;
-    if (blocked == 1 && state.flags[6] < 0x21 && state.depth <= dot)
+    depth += 0x80;
+    pass++;
+    if (blocked == 1 && pass < 0x21 && depth <= dot)
         goto outer_loop;
 
     i = 0;
     response.x = 0;
     response.z = 0;
-    if (state.flags[2] == 1) {
-        angle = 0;
+    if (hitExit == 1) {
         do {
             if (hitB[i] == 1) {
                 radial.x = 0;
                 radial.z = 0x1000;
-                func_0203d388((V2 *)&radial, (s16)(angle / 0x20));
+                func_0203d388((V2 *)&radial, i * 0x10000 / 32);
                 response.x -= radial.x;
                 response.z -= radial.z;
             }
             i++;
-            angle += 0x10000;
         } while (i < 32);
     } else {
-        angle = 0;
         do {
             if (hitA[i] == 1 && hitC[i] == 0) {
                 radial.x = 0;
                 radial.z = 0x1000;
-                func_0203d388((V2 *)&radial, (s16)(angle / 0x20));
+                func_0203d388((V2 *)&radial, i * 0x10000 / 32);
                 response.x -= radial.x;
                 response.z -= radial.z;
             }
             i++;
-            angle += 0x10000;
         } while (i < 32);
     }
 
     if (response.x != 0 || response.z != 0) {
         func_0203d480((V2 *)&normalized, (V2 *)&response);
         dot = FX_MUL(mVel0, response.x) + FX_MUL(mVel1, response.z);
-        if (state.flags[5] == 1) {
+        if (onSpring == 1) {
             responseScale = FX_MUL(dot, 0x1800);
-        } else if (state.flags[0] == 1) {
+        } else if (hitSlope == 1) {
             u32 randomScale;
             u32 randomAngle;
             responseScale = FX_MUL(dot, 0x1400);
@@ -3010,7 +2957,7 @@ outer_loop:
             randomAngle = (u32)RandomIntInternal(&data_0209d4b8.value);
             func_0203d388((V2 *)&response,
                           (s16)(((((randomAngle >> 16) & 0x7fff) << 12) >> 15) - 0x800));
-        } else if (state.flags[3] == 1) {
+        } else if (hitKinoko == 1) {
             u32 randomScale;
             u32 randomAngle;
             mVel0 = 0;
@@ -3023,7 +2970,7 @@ outer_loop:
             randomAngle = (u32)RandomIntInternal(&data_0209d4b8.value);
             func_0203d388((V2 *)&response,
                           (s16)(((((randomAngle >> 16) & 0x7fff) << 12) >> 15) - 0x800));
-        } else if (state.flags[2] == 1) {
+        } else if (hitExit == 1) {
             u32 randomScale;
             responseScale = FX_MUL(dot, 0x1a00);
             randomScale =
@@ -3037,13 +2984,11 @@ outer_loop:
         } else {
             responseScale = FX_MUL(dot, 0x1200);
         }
-        velXPtr = &mVel0;
-        *velXPtr -= FX_MUL(responseScale, response.x);
-        velZPtr = &mVel1;
-        *velZPtr -= FX_MUL(responseScale, response.z);
+        mVel0 -= FX_MUL(responseScale, response.x);
+        mVel1 -= FX_MUL(responseScale, response.z);
     }
 
-    if (state.flags[5] == 1) {
+    if (onSpring == 1) {
         if (mCurrent0 < 0xd0000)
             return;
         if (mCurrent0 < 0xd8000) {
@@ -3090,19 +3035,19 @@ outer_loop:
         return;
     }
 
-    if (state.flags[0] == 1) {
+    if (hitSlope == 1) {
         event0.x = savedVel.x;
         event0.z = savedVel.z;
         PlayHitSound(0x171, &event0.x);
-    } else if (state.flags[1] == 1) {
+    } else if (hitPropeller == 1) {
         event1.x = savedVel.x;
         event1.z = savedVel.z;
         PlayHitSound(0x172, &event1.x);
-    } else if (state.flags[2] == 1) {
+    } else if (hitExit == 1) {
         event2.x = savedVel.x;
         event2.z = savedVel.z;
         PlayHitSound(0x16f, &event2.x);
-    } else if (state.flags[4] == 1) {
+    } else if (hitWing == 1) {
         event3.x = savedVel.x;
         event3.z = savedVel.z;
         PlayHitSound(0x1a3, &event3.x);
@@ -3142,12 +3087,8 @@ outer_loop:
                 correction.x /= 64;
                 correction.z = FX_MUL(correction.z, dot);
                 correction.z /= 64;
-                correctionX = correction.x;
-                correctionZ = correction.z;
-                velXPtr = &mVel0;
-                *velXPtr -= correctionX;
-                velZPtr = &mVel1;
-                *velZPtr -= correction.z;
+                mVel0 -= correction.x;
+                mVel1 -= correction.z;
                 return;
             }
         }
@@ -3155,8 +3096,6 @@ outer_loop:
     } while (i < mpManager->mAnaCount);
 }
 }
-
-#pragma pop
 
 void cMgSmartball_ball_c::DrawMarker() {
     long long sq;
@@ -3728,7 +3667,6 @@ void dScMgSmartball_c::CountCell() {
 }
 
 unsigned short dScMgSmartball_c::GetTile(int *pos) {
-    unsigned char *base = (unsigned char *)this;
     int a = pos[1];
     if (a >= 0 && a < 0xc0000) {
         int b = pos[0];
@@ -3747,52 +3685,38 @@ unsigned short dScMgSmartball_c::GetTile(int *pos) {
     return 0;
 }
 
-#pragma push
-#pragma opt_strength_reduction off
-/* Leftover: UpdateDust needs strength reduction off. */
+/* Moves each live dust puff, slows it to three quarters of its speed, and
+ * retires it once mDustAge reaches 0xf. */
 void dScMgSmartball_c::UpdateDust() {
-    char *self = (char *)this;
     int i;
-    char *obj = (char *)mDustVel;
     for (i = 0; i < 16; i++) {
-        unsigned char *flag = (unsigned char *)((dScMgSmartball_c *)(self + i))->mDustActive;
-        if (*flag != 0) {
-            dScMgSmartball_c *entry = (dScMgSmartball_c *)(self + i * 8);
-            entry->mDustPos[0][0] += entry->mDustVel[0][0];
-            entry->mDustPos[0][1] += entry->mDustVel[0][1];
-            {
-                int m = Vec2_Len((const Vector2 *)obj) * 6 / 8;
-                if (func_0203d434((V2 *)obj)) {
-                    func_0203d630((V2 *)obj, m);
-                }
+        if (mDustActive[i] != 0) {
+            mDustPos[i][0] += mDustVel[i][0];
+            mDustPos[i][1] += mDustVel[i][1];
+            int speed = Vec2_Len((const Vector2 *)mDustVel[i]);
+            speed = speed * 6 / 8;
+            if (func_0203d434((V2 *)mDustVel[i])) {
+                func_0203d630((V2 *)mDustVel[i], speed);
             }
-            {
-                int *counter = ((dScMgSmartball_c *)(self + i * 4))->mDustAge;
-                *counter += 1;
-                if (*counter >= 0xf) {
-                    *flag = 0;
-                    *counter = 0;
-                }
+            mDustAge[i]++;
+            if (mDustAge[i] >= 0xf) {
+                mDustActive[i] = 0;
+                mDustAge[i] = 0;
             }
         }
-        obj += 8;
     }
 }
-
-#pragma pop
 
 /* Spawns up to four dust puffs at a point.
  * Leftover: TVec2's empty destructor keeps `v` in memory, and `sa` must be its
  * own assignment before the first product. */
 void dScMgSmartball_c::SpawnDust(int *origin) {
-    char *c = (char *)this;
     int i;
     int j;
 
     for (i = 0; i < 4; i++) {
         for (j = 0; j < 16; j++) {
-            u8 *flag = ((dScMgSmartball_c *)(c + j))->mDustActive;
-            if (*flag == 1) {
+            if (mDustActive[j] == 1) {
                 continue;
             }
             {
@@ -3807,18 +3731,16 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
                 TVec2 v;
                 sa = (s64)sinA;
                 v.x = FX_MUL(sinB, FX_MUL(sinA, 0x8000));
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][0] = v.x;
+                mDustPos[j][0] = v.x;
                 cosA = FX_SinCosTable_[(angA >> 4) * 2];
                 v.y = FX_MUL(sinB, FX_MUL(cosA, 0x8000));
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][1] = v.y;
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][0] += origin[0];
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][1] += origin[1];
-                ((dScMgSmartball_c *)(c + j * 8))->mDustVel[0][0] =
-                    FX_MUL(sinB, FX_MUL(sa, 0x4000));
-                ((dScMgSmartball_c *)(c + j * 8))->mDustVel[0][1] =
-                    FX_MUL(sinB, FX_MUL(cosA, 0x4000));
+                mDustPos[j][1] = v.y;
+                mDustPos[j][0] += origin[0];
+                mDustPos[j][1] += origin[1];
+                mDustVel[j][0] = FX_MUL(sinB, FX_MUL(sa, 0x4000));
+                mDustVel[j][1] = FX_MUL(sinB, FX_MUL(cosA, 0x4000));
                 mDustAge[j] = 0;
-                *flag = 1;
+                mDustActive[j] = 1;
             }
             break;
         }
@@ -3827,7 +3749,12 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
 
 #pragma push
 #pragma opt_strength_reduction off
-/* Leftover: UpdateScores needs strength reduction off. */
+/* Kept (#821): UpdateScores needs strength reduction off. Without it the
+ * body is 0x128, not 0x118; indexed with SR on 0x11c (the ROM forms all
+ * six slot addresses at the loop head), pointer locals 0x12c. Also measured
+ * with SR on: references or pointers declared above the loop 0x12c, no
+ * `continue` 0x128; indexed with a long counter 0x114, unsigned 0x11c,
+ * u8 0x120, short or char 0x124. */
 void dScMgSmartball_c::UpdateScores() {
     char *o = (char *)this;
     int i;
@@ -3939,9 +3866,6 @@ int dScMgSmartball_c::IsTableAtRest() {
     return 1;
 }
 
-#pragma push
-#pragma opt_common_subs off
-/* Leftover: ResolveBallPair needs common subexpression folding off. */
 void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firstObject,
                                        u8 *secondObject) {
     // Leftover: keep the pair materialized in memory; direct casts keep the
@@ -3959,7 +3883,6 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
     V2 firstResult;
     V2 secondResult;
     s16 collisionAngle;
-    int inverseAngle;
 
     if (firstIndex == secondIndex) {
         return;
@@ -4013,9 +3936,8 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
         secondVelocity = secondSavedVelocity;
     }
     // Rotate into the ball-to-ball line, swap the shared component, rotate back.
-    inverseAngle = -collisionAngle;
-    func_0203d388(&firstVelocity, (s16)inverseAngle);
-    func_0203d388(&secondVelocity, (s16)inverseAngle);
+    func_0203d388(&firstVelocity, -collisionAngle);
+    func_0203d388(&secondVelocity, -collisionAngle);
     {
         int normalVelocity = firstVelocity.x;
         firstVelocity.x = secondVelocity.x;
@@ -4028,8 +3950,6 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
     secondResult = secondVelocity;
     ((cMgSmartball_ball_c *)secondObject)->SetVel(&secondResult.x);
 }
-
-#pragma pop
 
 void dScMgSmartball_c::CollideBalls() {
     int ballCount = mBallCount;
@@ -4044,99 +3964,88 @@ void dScMgSmartball_c::CollideBalls() {
     }
 }
 
-#pragma push
-#pragma opt_strength_reduction off
 /* Tears the whole table down and rebuilds it from the two tile maps.
- * Leftovers: the spawn counters and the scan stores stay as written, and
- * every slot walk steps `this` instead of indexing. */
+ * Leftover: the spawn counters and the scan stores stay as written. */
 void dScMgSmartball_c::SpawnObjects() {
-    char *c = (char *)this;
     V2 pos[25];
 
     Mg_SubmitScore(0);
 
     for (int i = 0; i < 13; i++) {
-        cMgSmartball_ball_c **slot = ((cMgSmartball_ball_c **)this) + i + 0x4688 / 4;
-        cMgSmartball_ball_c *p = *slot;
+        cMgSmartball_ball_c *p = mpBalls[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_ball_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpBalls[i] = 0;
         }
     }
     for (int i = 0; i < 8; i++) {
-        cMgSmartball_ana_c **slot = ((cMgSmartball_ana_c **)this) + i + 0x4720 / 4;
-        cMgSmartball_ana_c *p = *slot;
+        cMgSmartball_ana_c *p = mpAnas[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_ana_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpAnas[i] = 0;
         }
     }
     for (int i = 0; i < 25; i++) {
-        cMgSmartball_kinoko_c **slot = ((cMgSmartball_kinoko_c **)this) + i + 0x46bc / 4;
-        cMgSmartball_kinoko_c *p = *slot;
+        cMgSmartball_kinoko_c *p = mpKinokos[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_kinoko_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpKinokos[i] = 0;
         }
     }
     for (int i = 0; i < 3; i++) {
-        cMgSmartball_propeller_c **slot = ((cMgSmartball_propeller_c **)this) + i + 0x4740 / 4;
-        cMgSmartball_propeller_c *p = *slot;
+        cMgSmartball_propeller_c *p = mpPropellers[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_propeller_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpPropellers[i] = 0;
         }
     }
     for (int i = 0; i < 6; i++) {
-        cMgSmartball_dokan_c **slot = ((cMgSmartball_dokan_c **)this) + i + 0x474c / 4;
-        cMgSmartball_dokan_c *p = *slot;
+        cMgSmartball_dokan_c *p = mpDokans[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_dokan_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpDokans[i] = 0;
         }
     }
     for (int i = 0; i < 3; i++) {
-        cMgSmartball_pakkun_c **slot = ((cMgSmartball_pakkun_c **)this) + i + 0x4764 / 4;
-        cMgSmartball_pakkun_c *p = *slot;
+        cMgSmartball_pakkun_c *p = mpPakkuns[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_pakkun_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpPakkuns[i] = 0;
         }
     }
     for (int i = 0; i < 2; i++) {
-        cMgSmartball_pushswitch_c **slot = ((cMgSmartball_pushswitch_c **)this) + i + 0x4770 / 4;
-        cMgSmartball_pushswitch_c *p = *slot;
+        cMgSmartball_pushswitch_c *p = mpPushSwitches[i];
         if (p != 0) {
             if (p != 0) {
                 *(VFunc **)p = cMgSmartball_pushswitch_c_vtbl;
                 *(VFunc **)p = cMgSmartball_object_c_vtbl;
                 ::operator delete(p);
             }
-            *slot = 0;
+            mpPushSwitches[i] = 0;
         }
     }
 
@@ -4247,13 +4156,50 @@ void dScMgSmartball_c::SpawnObjects() {
 
     __cxa_vec_ctor(pos, 25, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
 
+    for (int i = 0; i < 768; i++) {
+        int k = mKinokoCount;
+        if (k >= 25)
+            break;
+        if ((mBg1Map[i] & 0x3ff) == 0x2e8) {
+            int x = (i % 0x20) << 0xf;
+            int y = (i / 0x20) * 8 - 0xf0;
+            V2 &pp = pos[k];
+            pp.x = x;
+            pp.y = y << 0xc;
+            mKinokoCount++;
+        }
+    }
+    for (int i = 0; i < 768; i++) {
+        int k = mKinokoCount;
+        if (k >= 25)
+            break;
+        if ((mBg2Map[i] & 0x3ff) == 0x2e8) {
+            int x = (i % 0x20) << 0xf;
+            int y = i / 0x20;
+            V2 &pp = pos[k];
+            pp.x = x;
+            pp.y = y << 0xf;
+            mKinokoCount++;
+        }
+    }
     {
-        int mask = 0x3ff;
+        int n = mKinokoCount;
+        int j;
+        for (j = 0; j < n; j++) {
+            cMgSmartball_kinoko_c *spawned = (cMgSmartball_kinoko_c *)::operator new(0x40);
+            if (spawned != 0) {
+                V2 tmp = pos[j];
+                spawned = cMgSmartball_kinoko_c_Construct(spawned, this, j, &tmp);
+            }
+            mpKinokos[j] = spawned;
+            if (mpKinokos[j] != 0)
+                mpKinokos[j]->mVariant = 0;
+        }
         for (int i = 0; i < 768; i++) {
             int k = mKinokoCount;
             if (k >= 25)
                 break;
-            if ((mBg1Map[i] & mask) == 0x2e8) {
+            if ((mBg1Map[i] & 0x3ff) == 0x328) {
                 int x = (i % 0x20) << 0xf;
                 int y = (i / 0x20) * 8 - 0xf0;
                 V2 &pp = pos[k];
@@ -4266,59 +4212,13 @@ void dScMgSmartball_c::SpawnObjects() {
             int k = mKinokoCount;
             if (k >= 25)
                 break;
-            if ((mBg2Map[i] & mask) == 0x2e8) {
+            if ((mBg2Map[i] & 0x3ff) == 0x328) {
                 int x = (i % 0x20) << 0xf;
                 int y = i / 0x20;
                 V2 &pp = pos[k];
                 pp.x = x;
                 pp.y = y << 0xf;
                 mKinokoCount++;
-            }
-        }
-    }
-    {
-        int n = mKinokoCount;
-        int j;
-        for (j = 0; j < n; j++) {
-            cMgSmartball_kinoko_c *spawned = (cMgSmartball_kinoko_c *)::operator new(0x40);
-            if (spawned != 0) {
-                V2 tmp = pos[j];
-                spawned = cMgSmartball_kinoko_c_Construct(spawned, this, j, &tmp);
-            }
-            {
-                cMgSmartball_kinoko_c **slot = ((cMgSmartball_kinoko_c **)this) + j + 0x46bc / 4;
-                *slot = spawned;
-                if (*slot != 0)
-                    (*slot)->mVariant = 0;
-            }
-        }
-        {
-            int mask = 0x3ff;
-            for (int i = 0; i < 768; i++) {
-                int k = mKinokoCount;
-                if (k >= 25)
-                    break;
-                if ((mBg1Map[i] & mask) == 0x328) {
-                    int x = (i % 0x20) << 0xf;
-                    int y = (i / 0x20) * 8 - 0xf0;
-                    V2 &pp = pos[k];
-                    pp.x = x;
-                    pp.y = y << 0xc;
-                    mKinokoCount++;
-                }
-            }
-            for (int i = 0; i < 768; i++) {
-                int k = mKinokoCount;
-                if (k >= 25)
-                    break;
-                if ((mBg2Map[i] & mask) == 0x328) {
-                    int x = (i % 0x20) << 0xf;
-                    int y = i / 0x20;
-                    V2 &pp = pos[k];
-                    pp.x = x;
-                    pp.y = y << 0xf;
-                    mKinokoCount++;
-                }
             }
         }
         for (; n < mKinokoCount; n++) {
@@ -4331,56 +4231,49 @@ void dScMgSmartball_c::SpawnObjects() {
                 tmp.y = ty;
                 spawned = cMgSmartball_kinoko_c_Construct(spawned, this, n, &tmp);
             }
-            {
-                cMgSmartball_kinoko_c **slot = ((cMgSmartball_kinoko_c **)this) + n + 0x46bc / 4;
-                *slot = spawned;
-                if (*slot != 0)
-                    (*slot)->mVariant = 1;
-            }
+            mpKinokos[n] = spawned;
+            if (mpKinokos[n] != 0)
+                mpKinokos[n]->mVariant = 1;
         }
     }
 
+    for (int i = 0; i < 768; i++) {
+        int k = mAnaCount;
+        if (k >= 8)
+            break;
+        if ((mBg1Map[i] & 0x3ff) == 0x2cb) {
+            int x = (i % 0x20) << 0xf;
+            int y = (i / 0x20) * 8 - 0xf0;
+            V2 &pp = pos[k];
+            pp.x = x;
+            pp.y = y << 0xc;
+            mAnaCount++;
+        }
+    }
+    for (int i = 0; i < 768; i++) {
+        int k = mAnaCount;
+        if (k >= 8)
+            break;
+        if ((mBg2Map[i] & 0x3ff) == 0x2cb) {
+            int x = (i % 0x20) << 0xf;
+            int y = i / 0x20;
+            V2 &pp = pos[k];
+            pp.x = x;
+            pp.y = y << 0xf;
+            mAnaCount++;
+        }
+    }
     {
-        int mask = 0x3ff;
-        int tile = 0x2cb;
-        for (int i = 0; i < 768; i++) {
-            int k = mAnaCount;
-            if (k >= 8)
-                break;
-            if ((mBg1Map[i] & mask) == tile) {
-                int x = (i % 0x20) << 0xf;
-                int y = (i / 0x20) * 8 - 0xf0;
-                V2 &pp = pos[k];
-                pp.x = x;
-                pp.y = y << 0xc;
-                mAnaCount++;
+        int n = mAnaCount;
+        int j;
+        for (j = 0; j < n; j++) {
+            cMgSmartball_ana_c *spawned = (cMgSmartball_ana_c *)::operator new(0x38);
+            if (spawned != 0) {
+                V2 tmp = pos[j];
+                spawned = cMgSmartball_ana_c_Construct(spawned, this, j, &tmp);
             }
-        }
-        for (int i = 0; i < 768; i++) {
-            int k = mAnaCount;
-            if (k >= 8)
-                break;
-            if ((mBg2Map[i] & mask) == tile) {
-                int x = (i % 0x20) << 0xf;
-                int y = i / 0x20;
-                V2 &pp = pos[k];
-                pp.x = x;
-                pp.y = y << 0xf;
-                mAnaCount++;
-            }
-        }
-        {
-            int n = mAnaCount;
-            int j;
-            for (j = 0; j < n; j++) {
-                cMgSmartball_ana_c *spawned = (cMgSmartball_ana_c *)::operator new(0x38);
-                if (spawned != 0) {
-                    V2 tmp = pos[j];
-                    spawned = cMgSmartball_ana_c_Construct(spawned, this, j, &tmp);
-                }
-                mpAnas[j] = spawned;
-                n = mAnaCount;
-            }
+            mpAnas[j] = spawned;
+            n = mAnaCount;
         }
     }
 
@@ -4404,149 +4297,133 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
 
+    for (int i = 0; i < 768; i++) {
+        u16 raw;
+        int k = mDokanCount;
+        if (k >= 6)
+            break;
+        raw = mBg1Map[i];
+        if ((raw & 0x3ff) == 0x3d2 && (raw & 0x800) == 0) {
+            int x = (i % 0x20) << 0xf;
+            pos[k].x = x;
+            pos[k].y = 0;
+            mDokanCount++;
+        }
+    }
+    for (int i = 0; i < 768; i++) {
+        u16 raw;
+        int k = mDokanCount;
+        if (k >= 6)
+            break;
+        raw = mBg2Map[i];
+        if ((raw & 0x3ff) == 0x3d2 && (raw & 0x800) == 0) {
+            int x = (i % 0x20) << 0xf;
+            pos[k].x = x;
+            pos[k].y = 0;
+            mDokanCount++;
+        }
+    }
     {
-        int mask = 0x3ff;
-        int tile = 0x3d2;
-        int zero = 0;
-        for (int i = 0; i < 768; i++) {
-            u16 raw;
-            int k = mDokanCount;
-            if (k >= 6)
-                break;
-            raw = mBg1Map[i];
-            if ((raw & mask) == tile && (raw & 0x800) == 0) {
-                int x = (i % 0x20) << 0xf;
-                int y = zero;
-                pos[k].x = x;
-                pos[k].y = y;
-                mDokanCount++;
+        int n = mDokanCount;
+        int j;
+        for (j = 0; j < n; j++) {
+            cMgSmartball_dokan_c *spawned = (cMgSmartball_dokan_c *)::operator new(0x34);
+            if (spawned != 0) {
+                V2 tmp = pos[j];
+                spawned = cMgSmartball_dokan_c_Construct(spawned, this, j, &tmp);
             }
-        }
-        for (int i = 0; i < 768; i++) {
-            u16 raw;
-            int k = mDokanCount;
-            if (k >= 6)
-                break;
-            raw = mBg2Map[i];
-            if ((raw & mask) == tile && (raw & 0x800) == 0) {
-                int x = (i % 0x20) << 0xf;
-                int y = zero;
-                pos[k].x = x;
-                pos[k].y = y;
-                mDokanCount++;
-            }
-        }
-        {
-            int n = mDokanCount;
-            int j;
-            for (j = 0; j < n; j++) {
-                cMgSmartball_dokan_c *spawned = (cMgSmartball_dokan_c *)::operator new(0x34);
-                if (spawned != 0) {
-                    V2 tmp = pos[j];
-                    spawned = cMgSmartball_dokan_c_Construct(spawned, this, j, &tmp);
-                }
-                mpDokans[j] = spawned;
-                n = mDokanCount;
-            }
+            mpDokans[j] = spawned;
+            n = mDokanCount;
         }
     }
 
+    for (int i = 0; i < 768; i++) {
+        int k = mPakkunCount;
+        if (k >= 3)
+            break;
+        if ((mBg1Map[i] & 0x3ff) == 0x292) {
+            int x = (i % 0x20) << 0xf;
+            int y = (i / 0x20) * 8 - 0xf0;
+            V2 &pp = pos[k];
+            pp.x = x;
+            pp.y = y << 0xc;
+            mPakkunCount++;
+        }
+    }
+    for (int i = 0; i < 768; i++) {
+        int k = mPakkunCount;
+        if (k >= 3)
+            break;
+        if ((mBg2Map[i] & 0x3ff) == 0x292) {
+            int x = (i % 0x20) << 0xf;
+            int y = i / 0x20;
+            V2 &pp = pos[k];
+            pp.x = x;
+            pp.y = y << 0xf;
+            mPakkunCount++;
+        }
+    }
     {
-        int mask = 0x3ff;
-        int tile = 0x292;
-        for (int i = 0; i < 768; i++) {
-            int k = mPakkunCount;
-            if (k >= 3)
-                break;
-            if ((mBg1Map[i] & mask) == tile) {
-                int x = (i % 0x20) << 0xf;
-                int y = (i / 0x20) * 8 - 0xf0;
-                V2 &pp = pos[k];
-                pp.x = x;
-                pp.y = y << 0xc;
-                mPakkunCount++;
+        int n = mPakkunCount;
+        int j;
+        for (j = 0; j < n; j++) {
+            cMgSmartball_pakkun_c *spawned = (cMgSmartball_pakkun_c *)::operator new(0x3c);
+            if (spawned != 0) {
+                V2 tmp = pos[j];
+                spawned = cMgSmartball_pakkun_c_Construct(spawned, this, j, &tmp);
             }
-        }
-        for (int i = 0; i < 768; i++) {
-            int k = mPakkunCount;
-            if (k >= 3)
-                break;
-            if ((mBg2Map[i] & mask) == tile) {
-                int x = (i % 0x20) << 0xf;
-                int y = i / 0x20;
-                V2 &pp = pos[k];
-                pp.x = x;
-                pp.y = y << 0xf;
-                mPakkunCount++;
-            }
-        }
-        {
-            int n = mPakkunCount;
-            int j;
-            for (j = 0; j < n; j++) {
-                cMgSmartball_pakkun_c *spawned = (cMgSmartball_pakkun_c *)::operator new(0x3c);
-                if (spawned != 0) {
-                    V2 tmp = pos[j];
-                    spawned = cMgSmartball_pakkun_c_Construct(spawned, this, j, &tmp);
-                }
-                mpPakkuns[j] = spawned;
-                n = mPakkunCount;
-            }
+            mpPakkuns[j] = spawned;
+            n = mPakkunCount;
         }
     }
 
+    for (int i = 0; i < 768; i++) {
+        int k = mPropellerCount;
+        if (k >= 3)
+            break;
+        if ((mBg1Map[i] & 0x3ff) == 0x84) {
+            int x = (i % 0x20) << 0xf;
+            int y = (i / 0x20) * 8 - 0xf0;
+            V2 &pp = pos[k];
+            pp.x = x;
+            pp.y = y << 0xc;
+            mPropellerCount++;
+        }
+    }
+    for (int i = 0; i < 768; i++) {
+        int k = mPropellerCount;
+        if (k >= 3)
+            break;
+        if ((mBg2Map[i] & 0x3ff) == 0x84) {
+            int x = (i % 0x20) << 0xf;
+            int y = i / 0x20;
+            V2 &pp = pos[k];
+            pp.x = x;
+            pp.y = y << 0xf;
+            mPropellerCount++;
+        }
+    }
     {
-        int mask = 0x3ff;
-        for (int i = 0; i < 768; i++) {
-            int k = mPropellerCount;
-            if (k >= 3)
-                break;
-            if ((mBg1Map[i] & mask) == 0x84) {
-                int x = (i % 0x20) << 0xf;
-                int y = (i / 0x20) * 8 - 0xf0;
-                V2 &pp = pos[k];
-                pp.x = x;
-                pp.y = y << 0xc;
-                mPropellerCount++;
+        int n = mPropellerCount;
+        int j;
+        for (j = 0; j < n; j++) {
+            cMgSmartball_propeller_c *spawned = (cMgSmartball_propeller_c *)::operator new(0x78);
+            if (spawned != 0) {
+                V2 tmp = pos[j];
+                spawned = cMgSmartball_propeller_c_Construct(spawned, this, j, &tmp);
             }
-        }
-        for (int i = 0; i < 768; i++) {
-            int k = mPropellerCount;
-            if (k >= 3)
-                break;
-            if ((mBg2Map[i] & mask) == 0x84) {
-                int x = (i % 0x20) << 0xf;
-                int y = i / 0x20;
-                V2 &pp = pos[k];
-                pp.x = x;
-                pp.y = y << 0xf;
-                mPropellerCount++;
-            }
-        }
-        {
-            int n = mPropellerCount;
-            int j;
-            for (j = 0; j < n; j++) {
-                cMgSmartball_propeller_c *spawned =
-                    (cMgSmartball_propeller_c *)::operator new(0x78);
-                if (spawned != 0) {
-                    V2 tmp = pos[j];
-                    spawned = cMgSmartball_propeller_c_Construct(spawned, this, j, &tmp);
-                }
-                mpPropellers[j] = spawned;
-                n = mPropellerCount;
-            }
+            mpPropellers[j] = spawned;
+            n = mPropellerCount;
         }
     }
 
     {
         int k = 0;
-        int mask = 0x3ff;
         int j;
         for (j = 0; j < 768; j++) {
             if (k >= 1)
                 break;
-            if ((mBg1Map[j] & mask) == 0x57) {
+            if ((mBg1Map[j] & 0x3ff) == 0x57) {
                 int x = (j % 0x20) << 0xf;
                 int y = ((j / 0x20) * 8 - 0xf0) << 0xc;
                 pos[k].x = x;
@@ -4554,18 +4431,15 @@ void dScMgSmartball_c::SpawnObjects() {
                 k++;
             }
         }
-        {
-            int mask2 = 0x3ff;
-            for (j = 0; j < 768; j++) {
-                if (k >= 1)
-                    break;
-                if ((mBg2Map[j] & mask2) == 0x57) {
-                    int x = (j % 0x20) << 0xf;
-                    int y = (j / 0x20) << 0xf;
-                    pos[k].x = x;
-                    pos[k].y = y;
-                    k++;
-                }
+        for (j = 0; j < 768; j++) {
+            if (k >= 1)
+                break;
+            if ((mBg2Map[j] & 0x3ff) == 0x57) {
+                int x = (j % 0x20) << 0xf;
+                int y = (j / 0x20) << 0xf;
+                pos[k].x = x;
+                pos[k].y = y;
+                k++;
             }
         }
         if (k >= 1) {
@@ -4580,12 +4454,11 @@ void dScMgSmartball_c::SpawnObjects() {
 
     {
         int k = 0;
-        int mask = 0x3ff;
         int j;
         for (j = 0; j < 768; j++) {
             if (k >= 9)
                 break;
-            if ((mBg1Map[j] & mask) == 0x4a) {
+            if ((mBg1Map[j] & 0x3ff) == 0x4a) {
                 int x = (j % 0x20) << 0xf;
                 int y = ((j / 0x20) * 8 - 0xf0) << 0xc;
                 pos[k].x = x;
@@ -4593,18 +4466,15 @@ void dScMgSmartball_c::SpawnObjects() {
                 k++;
             }
         }
-        {
-            int mask2 = 0x3ff;
-            for (j = 0; j < 768; j++) {
-                if (k >= 9)
-                    break;
-                if ((mBg2Map[j] & mask2) == 0x4a) {
-                    int x = (j % 0x20) << 0xf;
-                    int y = (j / 0x20) << 0xf;
-                    pos[k].x = x;
-                    pos[k].y = y;
-                    k++;
-                }
+        for (j = 0; j < 768; j++) {
+            if (k >= 9)
+                break;
+            if ((mBg2Map[j] & 0x3ff) == 0x4a) {
+                int x = (j % 0x20) << 0xf;
+                int y = (j / 0x20) << 0xf;
+                pos[k].x = x;
+                pos[k].y = y;
+                k++;
             }
         }
         if (k >= 9) {
@@ -4617,58 +4487,53 @@ void dScMgSmartball_c::SpawnObjects() {
         }
     }
 
+    for (int i = 0; i < 768; i++) {
+        int k = mPushSwitchCount;
+        if (k >= 2)
+            break;
+        if ((mBg1Map[i] & 0x3ff) == 0x50) {
+            int x = (i % 0x20) << 0xf;
+            int y = (i / 0x20) * 8 - 0xf0;
+            V2 &pp = pos[k];
+            pp.x = x;
+            pp.y = y << 0xc;
+            mPushSwitchCount++;
+        }
+    }
+    for (int i = 0; i < 768; i++) {
+        int k = mPushSwitchCount;
+        if (k >= 2)
+            break;
+        if ((mBg2Map[i] & 0x3ff) == 0x50) {
+            int x = (i % 0x20) << 0xf;
+            int y = i / 0x20;
+            V2 &pp = pos[k];
+            pp.x = x;
+            pp.y = y << 0xf;
+            mPushSwitchCount++;
+        }
+    }
     {
-        int mask = 0x3ff;
-        for (int i = 0; i < 768; i++) {
-            int k = mPushSwitchCount;
-            if (k >= 2)
-                break;
-            if ((mBg1Map[i] & mask) == 0x50) {
-                int x = (i % 0x20) << 0xf;
-                int y = (i / 0x20) * 8 - 0xf0;
-                V2 &pp = pos[k];
-                pp.x = x;
-                pp.y = y << 0xc;
-                mPushSwitchCount++;
+        int n = mPushSwitchCount;
+        int j;
+        for (j = 0; j < n; j++) {
+            cMgSmartball_pushswitch_c *spawned = (cMgSmartball_pushswitch_c *)::operator new(0x38);
+            if (spawned != 0) {
+                V2 tmp = pos[j];
+                spawned = cMgSmartball_pushswitch_c_Construct(spawned, this, j, &tmp);
             }
-        }
-        for (int i = 0; i < 768; i++) {
-            int k = mPushSwitchCount;
-            if (k >= 2)
-                break;
-            if ((mBg2Map[i] & mask) == 0x50) {
-                int x = (i % 0x20) << 0xf;
-                int y = i / 0x20;
-                V2 &pp = pos[k];
-                pp.x = x;
-                pp.y = y << 0xf;
-                mPushSwitchCount++;
-            }
-        }
-        {
-            int n = mPushSwitchCount;
-            int j;
-            for (j = 0; j < n; j++) {
-                cMgSmartball_pushswitch_c *spawned =
-                    (cMgSmartball_pushswitch_c *)::operator new(0x38);
-                if (spawned != 0) {
-                    V2 tmp = pos[j];
-                    spawned = cMgSmartball_pushswitch_c_Construct(spawned, this, j, &tmp);
-                }
-                mpPushSwitches[j] = spawned;
-                n = mPushSwitchCount;
-            }
+            mpPushSwitches[j] = spawned;
+            n = mPushSwitchCount;
         }
     }
 
     {
         int k = 0;
-        int mask = 0x3ff;
         int j;
         for (j = 0; j < 768; j++) {
             if (k >= 1)
                 break;
-            if ((mBg1Map[j] & mask) == 0xab) {
+            if ((mBg1Map[j] & 0x3ff) == 0xab) {
                 int x = (j % 0x20) << 0xf;
                 int y = ((j / 0x20) * 8 - 0xf0) << 0xc;
                 pos[k].x = x;
@@ -4676,18 +4541,15 @@ void dScMgSmartball_c::SpawnObjects() {
                 k++;
             }
         }
-        {
-            int mask2 = 0x3ff;
-            for (j = 0; j < 768; j++) {
-                if (k >= 1)
-                    break;
-                if ((mBg2Map[j] & mask2) == 0xab) {
-                    int x = (j % 0x20) << 0xf;
-                    int y = (j / 0x20) << 0xf;
-                    pos[k].x = x;
-                    pos[k].y = y;
-                    k++;
-                }
+        for (j = 0; j < 768; j++) {
+            if (k >= 1)
+                break;
+            if ((mBg2Map[j] & 0x3ff) == 0xab) {
+                int x = (j % 0x20) << 0xf;
+                int y = (j / 0x20) << 0xf;
+                pos[k].x = x;
+                pos[k].y = y;
+                k++;
             }
         }
         if (k >= 1) {
@@ -4777,19 +4639,17 @@ void dScMgSmartball_c::SpawnObjects() {
         mPopupScore[i] = 0;
         mPopupMultiplier[i] = 0;
         mPopupAge[i] = 0;
-        dScMgSmartball_c *popup = (dScMgSmartball_c *)(c + i * 8);
-        popup->mPopupPos[0][0] = 0;
-        popup->mPopupPos[0][1] = 0;
+        mPopupPos[i][0] = 0;
+        mPopupPos[i][1] = 0;
         mPopupDelay[i] = 0;
     }
     for (int i = 0; i < 16; i++) {
         mDustActive[i] = 0;
         mDustAge[i] = 0;
-        dScMgSmartball_c *dust = (dScMgSmartball_c *)(c + i * 8);
-        dust->mDustPos[0][0] = 0;
-        dust->mDustPos[0][1] = 0;
-        dust->mDustVel[0][0] = 0;
-        dust->mDustVel[0][1] = 0;
+        mDustPos[i][0] = 0;
+        mDustPos[i][1] = 0;
+        mDustVel[i][0] = 0;
+        mDustVel[i][1] = 0;
     }
     mPhase = 0;
     mResultSlideX = 0x100;
@@ -4798,12 +4658,11 @@ void dScMgSmartball_c::SpawnObjects() {
     __cxa_vec_cleanup(pos, 25, 8, (dtor_t)NullDestructor_0203d47c);
 }
 
-#pragma pop
-
-/* Leftover: Render needs both pragmas off, and the locals below must stay in
- * this order (each one pins a stack slot). */
+/* Kept (#821): Render needs strength reduction off (without it the body is
+ * larger than the ROM's 0x10c0), and the locals below must stay in this order
+ * (each one pins a stack slot). The tally and popup-score pointers still step
+ * the byte view `g`: the ROM forms (this + i*4) + offset. */
 #pragma push
-#pragma opt_common_subs off
 #pragma opt_strength_reduction off
 /* Slot 9: the frame draw. On the result screen it reveals the tally rows one
  * at a time, then draws the side lamps, every board object and the score
@@ -4972,17 +4831,17 @@ s32 dScMgSmartball_c::Render() {
         /* Continue prompt. */
         if (mPhase == 1 && mResultTimer >= 300) {
             if (col >= 7)
-                Mg_DrawBlinkSprite(g, 0x80, 0xa8);
+                DrawBlinkSprite(0x80, 0xa8);
             else if (col == 6)
-                Mg_DrawBlinkSprite(g, 0xe0, 0xa8);
+                DrawBlinkSprite(0xe0, 0xa8);
             else
-                Mg_DrawBlinkSprite(g, 0xe0, 0xa0);
+                DrawBlinkSprite(0xe0, 0xa0);
         }
     }
 
     /* Sparks, except while draining on the main screen. */
     if ((param1 & 0xff) != 0 || mDraining == 0)
-        ((dScMgSmartball_c *)(g))->RenderSparks();
+        RenderSparks();
 
     /* Score counters at the top of both screens. */
     Mg_DrawTopRightCounter(Mg_GetSubmittedScore(), 6);
@@ -5004,9 +4863,7 @@ s32 dScMgSmartball_c::Render() {
                     int *px = &((dScMgSmartball_c *)(g + sb * 8))->mPopupPos[0][0];
                     Mg_DrawNumber((*px >> 12) - 0x10, *py >> 12, cnt, -1, 0, 0, 0);
                     nd = 0;
-                    /* Leftover: the score is read again through an int address. */
-                    u = (unsigned int)*(int *)SlotAddress(
-                        this, OFFSET_OF(dScMgSmartball_c, mPopupScore), sb, 4);
+                    u = mPopupScore[sb];
                     if (u != 0) {
                         do {
                             u /= 10;
@@ -5026,9 +4883,8 @@ s32 dScMgSmartball_c::Render() {
                     }
                     Mg_DrawNumber((*px >> 12) + nd * 8 + 8, *py >> 12, *slot[0], -1, 0, 0, 0);
                 } else {
-                    dScMgSmartball_c *popup = (dScMgSmartball_c *)(g + sb * 8);
-                    int y = popup->mPopupPos[0][1];
-                    int x = popup->mPopupPos[0][0];
+                    int y = mPopupPos[sb][1];
+                    int x = mPopupPos[sb][0];
                     Mg_DrawNumber(x >> 12, y >> 12, cnt, -1, 0, 0, 0);
                 }
             }
@@ -5038,15 +4894,13 @@ s32 dScMgSmartball_c::Render() {
     /* Dust puffs. */
     {
         int slot;
-        int two = 2, neg = -1, zero = 0;
         for (slot = 0; slot < 16; slot++) {
             if (mDustActive[slot] == 1) {
                 int idx = mDustAge[slot] / 5;
                 if (idx > 3)
-                    idx = two;
-                dScMgSmartball_c *dust = (dScMgSmartball_c *)(g + slot * 8);
-                Mg_RenderSpriteBoth(data_ov006_02137a60[idx], dust->mDustPos[0][0] >> 12,
-                                    dust->mDustPos[0][1] >> 12, neg, zero);
+                    idx = 2;
+                Mg_RenderSpriteBoth(data_ov006_02137a60[idx], mDustPos[slot][0] >> 12,
+                                    mDustPos[slot][1] >> 12, -1, 0);
             }
         }
     }
@@ -5135,14 +4989,20 @@ s32 dScMgSmartball_c::Render() {
     }
 
     if ((param1 & 0xff) == 0 && mDraining != 0)
-        ((dScMgSmartball_c *)(g))->RenderSparks();
+        RenderSparks();
 
     return 1;
 }
 
 #pragma pop
 
-/* Leftover: Behavior needs strength reduction off. */
+/* Kept (#821): Behavior needs strength reduction off. Without it the body is
+ * 0x620, not 0x604. The ROM's seven SaveSnapshot loops keep each table's
+ * offset in a register hoisted above the loop, a shape only the integer
+ * address below produces. Measured with SR on: mpBalls[i] 0x5e8 (with SR off
+ * too; the offset folds into the load), and the same with an unsigned or long
+ * counter; a short counter 0x628; `&mpBalls[i]`, a reference to mpBalls[i],
+ * `i << 2` and a null-checked mpBalls[i] each 0x620. */
 #pragma push
 #pragma opt_strength_reduction off
 /* Slot 6: the scene's per-frame rules. Phase 0 updates every object, then the
@@ -5152,7 +5012,6 @@ s32 dScMgSmartball_c::Render() {
  * address in a register instead of folding it into an indexed load), and the
  * declarations below must keep C linkage and their `extern` keyword. */
 s32 dScMgSmartball_c::Behavior() {
-    char *c = (char *)this;
     int vec[3];
 
     if (mPromptBlinkCount == 0) {
@@ -5255,9 +5114,9 @@ s32 dScMgSmartball_c::Behavior() {
                         ((i >= 13) ? 0 : mpBalls[i])->ArmExpire(1) != 0) {
                         ((i >= 13) ? 0 : mpBalls[i])->Burst();
                         CopyObjectPos(vec, (i >= 13) ? 0 : mpBalls[i]);
-                        ((dScMgSmartball_c *)c)->EmitScore(vec, 0x7d0, 0, 1);
+                        EmitScore(vec, 0x7d0, 0, 1);
                         Sound::PlayBank2_2D(0x175);
-                        ((dScMgSmartball_c *)(c))->CountOut();
+                        CountOut();
                         found = 1;
                         break;
                     }
@@ -5286,7 +5145,7 @@ s32 dScMgSmartball_c::Behavior() {
                 (*p)++;
             } else {
                 int idx = gActivePlayerSlot;
-                if (gTouchHeld[idx * 4] != 0 && gTouchEdge[idx * 4] != 0) {
+                if (gTouchInfo[idx].held != 0 && gTouchInfo[idx].edge != 0) {
                     flag = 1;
                 }
                 if (flag != 0) {
@@ -5315,7 +5174,7 @@ s32 dScMgSmartball_c::Behavior() {
         (*p)--;
     }
 
-    ((dScMgSmartball_c *)(c))->UpdateSparks();
+    UpdateSparks();
     return 1;
 }
 
@@ -5366,11 +5225,10 @@ inline void G2_SetOBJMode(OamAttr *oam_, int mode, int cParam) {
  * Leftover: the mode byte needs both the mask and the (u8) cast, and the last
  * Pakkun G2_SetOBJMode reads its colour param from [2] instead of [2]+1. */
 s32 dScMgSmartball_c::InitResources() {
-    char *c = (char *)this;
     void *f;
     s32 i;
-    if ((*((s32 *)(c + 8))) & 0xff) {
-        mLevel = (u8)((*((s32 *)(c + 8))) & 0xFF);
+    if (param1 & 0xff) {
+        mLevel = (u8)(param1 & 0xFF);
         if ((mLevel) > 0x270e) {
             mLevel = 0x270e;
         }
@@ -5416,7 +5274,7 @@ s32 dScMgSmartball_c::InitResources() {
     G2S_BG3Mosaic(false);
     G2S_SetBG3Offset(0, 0);
     G2S_SetBG3Priority(2);
-    if (((u8)(*((s32 *)(c + 8)))) == 0) {
+    if ((u8)param1 == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1FrameNcgPath);
         DecompressLZ16(f, G2_GetBG2CharPtr());
         Ov004_Deallocate(f);
@@ -5443,7 +5301,7 @@ s32 dScMgSmartball_c::InitResources() {
         DecompressLZ16(f, G2S_GetBG3CharPtr());
         Ov004_Deallocate(f);
     }
-    if (((u8)(*((s32 *)(c + 8)))) == 0) {
+    if ((u8)param1 == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1NclPath);
         DC_FlushRange(f, 0x1a0);
         GX_LoadBGPltt(f, 0x60, 0x1a0);
@@ -5550,55 +5408,46 @@ s32 dScMgSmartball_c::InitResources() {
     return 1;
 }
 
-/* Leftover: AfterCleanupResources needs strength reduction off. */
-#pragma push
-#pragma opt_strength_reduction off
 /* Slot 5: frees every board object, then chains to the base. */
 void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
     if (vfSuccess != 2)
         return;
 
     for (int i = 0; i < 13; i++) {
-        cMgSmartball_ball_c **slot =
-            (cMgSmartball_ball_c **)SlotAddress(this, OFFSET_OF(dScMgSmartball_c, mpBalls), i, 4);
-        cMgSmartball_ball_c *object = *slot;
+        cMgSmartball_ball_c *object = mpBalls[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_ball_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpBalls[i] = 0;
         }
     }
     mBallCount = 0;
 
     for (int i = 0; i < 25; i++) {
-        cMgSmartball_kinoko_c **slot = (cMgSmartball_kinoko_c **)SlotAddress(
-            this, OFFSET_OF(dScMgSmartball_c, mpKinokos), i, 4);
-        cMgSmartball_kinoko_c *object = *slot;
+        cMgSmartball_kinoko_c *object = mpKinokos[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_kinoko_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpKinokos[i] = 0;
         }
     }
     mKinokoCount = 0;
 
     for (int i = 0; i < 8; i++) {
-        cMgSmartball_ana_c **slot =
-            (cMgSmartball_ana_c **)SlotAddress(this, OFFSET_OF(dScMgSmartball_c, mpAnas), i, 4);
-        cMgSmartball_ana_c *object = *slot;
+        cMgSmartball_ana_c *object = mpAnas[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_ana_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpAnas[i] = 0;
         }
     }
     mAnaCount = 0;
@@ -5616,60 +5465,52 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
     }
 
     for (int i = 0; i < 3; i++) {
-        cMgSmartball_propeller_c **slot = (cMgSmartball_propeller_c **)SlotAddress(
-            this, OFFSET_OF(dScMgSmartball_c, mpPropellers), i, 4);
-        cMgSmartball_propeller_c *object = *slot;
+        cMgSmartball_propeller_c *object = mpPropellers[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_propeller_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpPropellers[i] = 0;
         }
     }
 
     for (int i = 0; i < 6; i++) {
-        cMgSmartball_dokan_c **slot =
-            (cMgSmartball_dokan_c **)SlotAddress(this, OFFSET_OF(dScMgSmartball_c, mpDokans), i, 4);
-        cMgSmartball_dokan_c *object = *slot;
+        cMgSmartball_dokan_c *object = mpDokans[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_dokan_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpDokans[i] = 0;
         }
     }
     mDokanCount = 0;
 
     for (int i = 0; i < 3; i++) {
-        cMgSmartball_pakkun_c **slot = (cMgSmartball_pakkun_c **)SlotAddress(
-            this, OFFSET_OF(dScMgSmartball_c, mpPakkuns), i, 4);
-        cMgSmartball_pakkun_c *object = *slot;
+        cMgSmartball_pakkun_c *object = mpPakkuns[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_pakkun_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpPakkuns[i] = 0;
         }
     }
     mPakkunCount = 0;
 
     for (int i = 0; i < 2; i++) {
-        cMgSmartball_pushswitch_c **slot = (cMgSmartball_pushswitch_c **)SlotAddress(
-            this, OFFSET_OF(dScMgSmartball_c, mpPushSwitches), i, 4);
-        cMgSmartball_pushswitch_c *object = *slot;
+        cMgSmartball_pushswitch_c *object = mpPushSwitches[i];
         if (object != 0) {
             if (object != 0) {
                 *(VFunc **)object = cMgSmartball_pushswitch_c_vtbl;
                 *(VFunc **)object = cMgSmartball_object_c_vtbl;
                 ::operator delete(object);
             }
-            *slot = 0;
+            mpPushSwitches[i] = 0;
         }
     }
     mPushSwitchCount = 0;
@@ -5712,8 +5553,6 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
 
     dScMgBase_c::AfterCleanupResources(vfSuccess);
 }
-
-#pragma pop
 
 /* The scene factory and its empty particle-element constructor. */
 void SmartballObj_ElemCtor(void);

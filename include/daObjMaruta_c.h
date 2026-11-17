@@ -44,12 +44,8 @@
 
 struct daObjMaruta_c : dBgActor_c {
     u8 pad_31e[0x2];
-    s32 mRestPosX;    /* 0x320 -- InitResources copies mPosX */
-    s32 mRestPosY;    /* 0x324 */
-    s32 mRestPosZ;    /* 0x328 */
-    s32 mHitPosX;     /* 0x32c -- BeforeClsn copies PLAYER mPos */
-    s32 mHitPosY;     /* 0x330 */
-    s32 mHitPosZ;     /* 0x334 */
+    Vector3 mRestPos; /* 0x320 -- InitResources copies mPosX */
+    Vector3 mHitPos;  /* 0x32c -- BeforeClsn copies PLAYER mPos */
     s32 mPathAngDiff; /* 0x338 -- AngleDiff of travel vs mAngleY */
     s16 mRollAngVel;  /* 0x33c */
     u8 mHitTimer;     /* 0x33e -- DecIfAbove0_Byte */

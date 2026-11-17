@@ -47,6 +47,12 @@ typedef struct MtxFx43 {
     fx32 m[4][3];
 } MtxFx43;
 
+/* NitroSDK's MtxFx33: a 3x3 fixed-point matrix, row by row. The same nine
+ * words as include/math/Matrix.h's Matrix3x3, a distinct type. */
+typedef struct MtxFx33 {
+    fx32 m[3][3];
+} MtxFx33;
+
 #define FX32_SHIFT 12
 #define FX32_ONE   ((fx32)0x00001000L)
 #define FX32_CAST(x) ((fx32)(x))

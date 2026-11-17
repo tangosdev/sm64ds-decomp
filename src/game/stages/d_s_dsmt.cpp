@@ -182,13 +182,13 @@ u8 DSMT_MenuCallback(s32 command) {
     } else if (command == 18) {
         DSMT_SetPendingMusic(0x38, 8);
     } else if (command == 20) {
-        u8 *fileBytes = (u8 *)::operator new[](0xcc);
+        FileSaveData *files = new FileSaveData[3];
         u32 saveSlot;
-        DSMT_SetFileBuffers((FileSaveData *)fileBytes);
-        for (saveSlot = 0; (s32)saveSlot < 3; saveSlot++, fileBytes += 0x44) {
-            if (SaveData::ReadFileData(saveSlot, (FileSaveData *)fileBytes) == 0)
+        DSMT_SetFileBuffers(files);
+        for (saveSlot = 0; (s32)saveSlot < 3; saveSlot++, files++) {
+            if (SaveData::ReadFileData(saveSlot, files) == 0)
                 failed = 1;
-            func_02013c84(saveSlot, fileBytes, -1, &data_0209caa0.file);
+            func_02013c84(saveSlot, files, -1, &data_0209caa0.file);
             DSMT_UpdateBootArgs(saveSlot);
         }
     } else if (command == 21) {

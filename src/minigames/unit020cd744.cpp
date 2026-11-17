@@ -17,10 +17,6 @@
  * - TrmpItem::Init's fifth parameter is short: retail's callee loads it with
  *   ldrsh, and TrmpItem::Spawn takes the scene tables' short motion type, so
  *   the call passes the value without a narrowing step.
- * - The pmf_* records are {function, adjustment} pairs. The dispatch reads the
- *   pair and calls through an object overlay; spelling it as a real
- *   `void (TrmpItem::*StateFn)()` member pointer emits the ARM this-adjustment
- *   and no longer fits the ROM function (measured on TrmpItem::Update).
  * - Vector3 locals emit an empty destructor, licensed as a deadstrip duplicate
  *   of arm9:0x020072c0. TrmpLine::Build's never-written stack slot is held by
  *   Spare4, whose empty destructor is deadstripped as compiler-only output.
@@ -91,14 +87,6 @@ struct V2 {
 /* A line patch vertex: the same three-fx32 spelling as TrmpLine::Vtx. */
 typedef TrmpLine::Vtx Vec3;
 
-/* The object a state record is installed in, seen only as its first two words:
-   both update functions call through a member pointer read from the record. */
-struct C;
-typedef void (C::*PMF)();
-struct C {
-    PMF pmf;
-};
-
 /* The three ring model handles (files 0x21a..0x21c), defined at the end of the
    file. The wrapper's constructor and destructor alias the ROM resource-family
    pair func_02017acc / func_02017ab4 (see the manifest's
@@ -113,14 +101,6 @@ extern TrmpItemRingModelFile sTrmpItemRingCModelFile;
 
 /* The four line slots, defined beside TrmpLine's constructor below. */
 extern TrmpLine sTrmpLines[4];
-
-/* A state record: the {function, adjustment} member pointer the setters copy
-   into TrmpItem::mState and TrmpLine::mState, and the update functions call.
-   The array spelling is load-bearing: splitting it into two int members
-   changes the setters' copy shape (2 words differ in 14 functions). */
-struct StateRecord {
-    int w[2];
-};
 
 /* This unit's own globals (its .bss claim). sTrmp2MarioPtrs is read only by
    d_mg_trmpln2_mario. */
@@ -159,24 +139,6 @@ extern Matrix4x3 data_0209b3ec; /* the view matrix, Graphics3D.cpp */
 extern int data_02092768[4];
 extern int data_020a0db0;
 
-/* The state records installed by the setters, compared by the updates. */
-extern StateRecord pmf_TrmpItem_GrowScale;
-extern StateRecord pmf_TrmpItem_StateAppear;
-extern StateRecord pmf_TrmpItem_StateAppear_2;
-extern StateRecord pmf_TrmpItem_GrowScale_2;
-extern StateRecord pmf_TrmpItem_MotionSpinHover;
-extern StateRecord pmf_TrmpItem_MotionSpinDrift;
-extern StateRecord pmf_TrmpItem_MotionSpinSway;
-extern StateRecord pmf_TrmpItem_MotionHover;
-extern StateRecord pmf_TrmpItem_MotionSway;
-extern StateRecord pmf_TrmpItem_MotionSpin;
-extern StateRecord pmf_TrmpItem_MotionBob;
-extern StateRecord pmf_TrmpItem_MotionPatrol;
-extern StateRecord pmf_TrmpItem_MotionStill;
-extern StateRecord pmf_TrmpLine_StateFade;
-extern StateRecord pmf_TrmpLine_StateSettle;
-extern StateRecord pmf_TrmpLine_StateFlex;
-
 void TrmpItem::GrowScale() {
     ApproachLinear(mScale.x, 0x1200, 0x80);
     ApproachLinear(mScale.z, 0x1200, 0x80);
@@ -196,7 +158,7 @@ void TrmpItem::ProjectToScreen(unsigned short scoreValue) {
         Camera_ProjectToScreen(sMgMainCamera, &mPos, &screenX, &screenY);
     }
     Jump2Popup_Spawn(screenX << 0xc, screenY << 0xc, (short)scoreValue);
-    *(StateRecord *)this = pmf_TrmpItem_GrowScale;
+    mState = &TrmpItem::GrowScale;
 }
 
 void TrmpItem::MotionSpinHover() {
@@ -221,7 +183,7 @@ void TrmpItem::MotionSpinHover() {
 
 void TrmpItem::SetMotionSpinHover() {
     mPhase = 0;
-    *(StateRecord *)this = pmf_TrmpItem_MotionSpinHover;
+    mState = &TrmpItem::MotionSpinHover;
 }
 
 void TrmpItem::MotionSpinDrift() {
@@ -243,7 +205,7 @@ void TrmpItem::MotionSpinDrift() {
 }
 
 void TrmpItem::SetMotionSpinDrift() {
-    *(StateRecord *)mState = pmf_TrmpItem_MotionSpinDrift;
+    mState = &TrmpItem::MotionSpinDrift;
 }
 
 void TrmpItem::MotionSpinSway() {
@@ -268,7 +230,7 @@ void TrmpItem::MotionSpinSway() {
 
 void TrmpItem::SetMotionSpinSway() {
     mPhase = 0x2000;
-    *(StateRecord *)this = pmf_TrmpItem_MotionSpinSway;
+    mState = &TrmpItem::MotionSpinSway;
 }
 
 void TrmpItem::MotionHover() {
@@ -282,7 +244,7 @@ void TrmpItem::MotionHover() {
 
 void TrmpItem::SetMotionHover() {
     mPhase = 0;
-    *(StateRecord *)this = pmf_TrmpItem_MotionHover;
+    mState = &TrmpItem::MotionHover;
 }
 
 void TrmpItem::MotionSway() {
@@ -304,7 +266,7 @@ void TrmpItem::MotionSway() {
 
 void TrmpItem::SetMotionSway() {
     mPhase = 0x2000;
-    *(StateRecord *)this = pmf_TrmpItem_MotionSway;
+    mState = &TrmpItem::MotionSway;
 }
 
 void TrmpItem::MotionSpin() {
@@ -327,7 +289,7 @@ void TrmpItem::MotionSpin() {
 
 void TrmpItem::SetMotionSpin() {
     mVel.y = 0;
-    *(StateRecord *)this = pmf_TrmpItem_MotionSpin;
+    mState = &TrmpItem::MotionSpin;
 }
 
 void TrmpItem::MotionBob() {
@@ -342,7 +304,7 @@ void TrmpItem::MotionBob() {
 
 void TrmpItem::SetMotionBob() {
     mVel.y = 0x1000;
-    *(StateRecord *)this = pmf_TrmpItem_MotionBob;
+    mState = &TrmpItem::MotionBob;
 }
 
 void TrmpItem::MotionPatrol() {
@@ -359,13 +321,13 @@ void TrmpItem::MotionPatrol() {
 void TrmpItem::SetMotionPatrol() {
     int itemType = mSizeIdx;
     mVel.x = sTrmpItemPatrolSpeed[itemType];
-    *(StateRecord *)this = pmf_TrmpItem_MotionPatrol;
+    mState = &TrmpItem::MotionPatrol;
 }
 
 void TrmpItem::MotionStill() {}
 
 void TrmpItem::SetMotionStill() {
-    *(StateRecord *)mState = pmf_TrmpItem_MotionStill;
+    mState = &TrmpItem::MotionStill;
 }
 
 void TrmpItem::StateAppear() {
@@ -416,7 +378,7 @@ void TrmpItem::StartAppear() {
     mVel.x = 0;
     mVel.y = 0;
     mVel.z = 0;
-    *(StateRecord *)this = pmf_TrmpItem_StateAppear_2;
+    mState = &TrmpItem::StateAppear;
 }
 
 void TrmpItem::ReflectOffLine(TrampolineObjectCallbacks *jumper) {
@@ -437,16 +399,8 @@ void TrmpItem::ReflectOffLine(TrampolineObjectCallbacks *jumper) {
     int positiveEndDistance;
     int across;
 
-    {
-        int *growState = pmf_TrmpItem_GrowScale_3;
-        int stateWord = mState[0];
-        if (stateWord == growState[0]) {
-            if (mState[1] == growState[1])
-                return;
-            if (stateWord == 0)
-                return;
-        }
-    }
+    if (mState == &TrmpItem::GrowScale)
+        return;
 
     position = jumper->GetPos();
     velocity = jumper->GetVelocity();
@@ -590,19 +544,11 @@ int TrmpItem::HitTest2D(TrampolineObjectCallbacks *jumper, int) {
     struct V2 currentProjection, previousProjection, lineStart, lineEnd;
     struct V2 testDirection, firstOffset, secondOffset;
     struct V2 movementDirection, toEnd, toStart;
-    int stateWord = mState[0];
     int currentSide, previousSide, endSide, startSide;
     int result;
 
-    {
-        StateRecord *appearState = &pmf_TrmpItem_StateAppear;
-        StateRecord *growState;
-        if ((stateWord == appearState->w[0] &&
-             (mState[1] == appearState->w[1] || stateWord == 0)) ||
-            (growState = &pmf_TrmpItem_GrowScale_2,
-             stateWord == growState->w[0] && (mState[1] == growState->w[1] || stateWord == 0)))
-            return 0;
-    }
+    if (mState == &TrmpItem::StateAppear || mState == &TrmpItem::GrowScale)
+        return 0;
 
     result = 0;
     ProjectOnLine(jumper, &currentProjection, &previousProjection);
@@ -692,8 +638,7 @@ void TrmpItem::UpdateMatrix() {
 }
 
 void TrmpItem::Update() {
-    PMF *state = (PMF *)this;
-    (((C *)this)->**state)();
+    (this->*mState)();
     VEC_Add(&mPos, &mVel, &mPos);
     mTexAnim.Advance();
     mPrevPos.x = mPos.x;
@@ -891,16 +836,15 @@ void TrmpLine::ComputeNormals() {
     for (row = 0; row < 4; row++) {
         for (column = 0; column < 4; column++) {
             int *components;
-            int zero = 0;
 
             components = (int *)&columnEdge;
-            components[0] = zero;
-            components[1] = zero;
-            components[2] = zero;
+            components[0] = 0;
+            components[1] = 0;
+            components[2] = 0;
             components = (int *)&rowEdge;
-            components[0] = zero;
-            components[1] = zero;
-            components[2] = zero;
+            components[0] = 0;
+            components[1] = 0;
+            components[2] = 0;
 
             if (column == 0)
                 VEC_Subtract((Vector3 *)p, (Vector3 *)p + 1, &columnEdge);
@@ -1018,10 +962,8 @@ void TrmpLine::Draw() {
     }
 }
 
-struct C;
 void TrmpLine::Update() {
-    C *line = (C *)this;
-    (line->*(line->pmf))();
+    (this->*mState)();
 }
 
 void TrmpLine::StateFade() {
@@ -1036,7 +978,7 @@ void TrmpLine::StateFade() {
 }
 
 void TrmpLine::SetStateFade() {
-    *(StateRecord *)mState = pmf_TrmpLine_StateFade;
+    mState = &TrmpLine::StateFade;
 }
 
 void TrmpLine::StateSettle() {
@@ -1090,7 +1032,7 @@ void TrmpLine::StateSettle() {
 }
 
 void TrmpLine::SetStateSettle() {
-    *(StateRecord *)mState = pmf_TrmpLine_StateSettle;
+    mState = &TrmpLine::StateSettle;
 }
 
 void TrmpLine::StateFlex() {
@@ -1157,7 +1099,7 @@ void TrmpLine::StateFlex() {
 }
 
 void TrmpLine::SetStateFlex() {
-    *(StateRecord *)mState = pmf_TrmpLine_StateFlex;
+    mState = &TrmpLine::StateFlex;
 }
 
 /*
@@ -1173,8 +1115,10 @@ void TrmpLine::SetStateFlex() {
  *
  * Shape notes: the +-1 clamps are a ternary macro so the constants rank
  * above the coordinate/index locals in the callee-saved band and still
- * hoist in the compiler's own order; jumpers is assigned after the null/active checks so its pool
- * load sits in the hoisted-constant sequence; the +0x320/+0x324 halfword
+ * hoist in the compiler's own order; each jumper is read straight out of
+ * sTrmpJumpers (no named pool local), so the pool address is a compiler
+ * temporary and ranks below currentAlong, as the VEC_DotProduct results
+ * returned through math/CalcLib.h's inlines do; the +0x320/+0x324 halfword
  * accesses go through line directly, which yields the ROM's shared
  * line+0x300 base and the copied read.
  */
@@ -1185,7 +1129,6 @@ void TrmpLine::SetStateFlex() {
 int TrmpLine::PushJumper() {
     int jumperIndex;
     int currentAlong;
-    struct TrampolineContactView **jumpers;
 
     jumperIndex = 0;
     do {
@@ -1203,14 +1146,13 @@ int TrmpLine::PushJumper() {
             continue;
         if (((TrampolineContactView *)sTrmpJumpers[jumperIndex])->IsActive() == 0)
             continue;
-        jumpers = (TrampolineContactView **)sTrmpJumpers;
 
-        currentPositionPtr = jumpers[jumperIndex]->GetPos();
+        currentPositionPtr = ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->GetPos();
         currentPos.x = currentPositionPtr->x;
         currentPos.y = currentPositionPtr->y;
         currentPos.z = currentPositionPtr->z;
 
-        previousPositionPtr = jumpers[jumperIndex]->GetPrevPos();
+        previousPositionPtr = ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->GetPrevPos();
         previousPos.x = previousPositionPtr->x;
         previousPos.y = previousPositionPtr->y;
         previousPos.z = previousPositionPtr->z;
@@ -1282,13 +1224,13 @@ int TrmpLine::PushJumper() {
             }
 
             if (offsetTimesHalfLength < 0x400000) {
-                jumpers[jumperIndex]->contactState = 2;
+                ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->contactState = 2;
                 D3D_PlaySePannedLoop(0x1b1, mCenter.x,
                                      (sTrmpLinePushWeakPitchEnd * edgeRatio +
                                       sTrmpLinePushWeakPitchMid * (0x1000 - edgeRatio)) >>
                                          12);
             } else {
-                jumpers[jumperIndex]->contactState = 1;
+                ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->contactState = 1;
                 D3D_PlaySePannedLoop(0x1ae, mCenter.x,
                                      (sTrmpLinePushStrongPitchEnd * edgeRatio +
                                       sTrmpLinePushStrongPitchMid * (0x1000 - edgeRatio)) >>
@@ -1296,12 +1238,13 @@ int TrmpLine::PushJumper() {
             }
 
             {
-                Vector3 *lineNormal = &jumpers[jumperIndex]->lineNormal;
+                Vector3 *lineNormal =
+                    &((TrampolineContactView *)sTrmpJumpers[jumperIndex])->lineNormal;
                 lineNormal->x = mNormal.x;
                 lineNormal->y = mNormal.y;
                 lineNormal->z = mNormal.z;
-                jumpers[jumperIndex]->alongLine = currentAlong;
-                jumpers[jumperIndex]->lineHalfLength = mHalfWidth;
+                ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->alongLine = currentAlong;
+                ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->lineHalfLength = mHalfWidth;
                 mWobblePhase = 0;
                 PointDistance(&mContactPoint, &mContactMotion);
 
@@ -1322,13 +1265,13 @@ int TrmpLine::PushJumper() {
             if (fromStart.y < 0 && fromStart.y > -0x30000) {
                 if (fromStart.x > -0x8000 && fromStart.x < 0) {
                     if (movementDelta.x > 0) {
-                        jumpers[jumperIndex]->contactState = 3;
+                        ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->contactState = 3;
                     }
                 }
             } else {
                 if (fromEnd.y < 0 && fromEnd.y > -0x30000 && fromEnd.x > 0 && fromEnd.x < 0x8000 &&
                     movementDelta.x < 0) {
-                    jumpers[jumperIndex]->contactState = 3;
+                    ((TrampolineContactView *)sTrmpJumpers[jumperIndex])->contactState = 3;
                 }
             }
         }

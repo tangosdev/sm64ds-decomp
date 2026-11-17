@@ -122,7 +122,7 @@ extern void Mg_DrawCreditsIcon(int a, int b, int c, int d);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Mg_GetScoringMode(void);
 extern void Mg_SubmitScore(int score);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, struct Matrix2x2 *d);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 
 extern int sMgCoinRiseFrames;
@@ -222,10 +222,10 @@ void MgCoins_Update(void) {
 
     if (sMgCoinsBetPlaced == 0 && gMgCoinsInPlay != 0) {
         int idx = gActivePlayerSlot;
-        int flag = ((unsigned char (*)[4])gTouchHeld)[idx][0] != 0 && ((unsigned char (*)[4])gTouchEdge)[idx][0] != 0;
+        int flag = gTouchInfo[idx].held != 0 && gTouchInfo[idx].edge != 0;
         if (flag) {
-            int a = ((unsigned char (*)[4])gTouchX)[idx][0];
-            int b = ((unsigned char (*)[4])gTouchY)[idx][0];
+            int a = gTouchInfo[idx].x;
+            int b = gTouchInfo[idx].y;
             if (a < 0x40 && b < 0x50) {
                 MgCoins_AddBetCoin();
             }

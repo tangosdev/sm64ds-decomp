@@ -90,16 +90,12 @@ struct daPopoi_c : dEnemyBase_c {
        file writes it again. Behavior snaps the actor back to it when it falls
        below the water height, and the Wander/Chase handlers measure their
        distances from it. */
-    s32                          mHomePosX;             /* 0x404 */
-    s32                          mHomePosY;             /* 0x408 */
-    s32                          mHomePosZ;             /* 0x40c */
+    Vector3 mHomePos; /* 0x404 */
     /* The actor's position at the end of the previous Behavior call. Behavior
        restores it when this frame's step would walk off a ledge or onto steep
        ground; the Wander/Chase handlers and the ahead probe restore it when
        the actor is against a wall (or the probe fires). */
-    s32                          mSavedPosX;            /* 0x410 */
-    s32                          mSavedPosY;            /* 0x414 */
-    s32                          mSavedPosZ;            /* 0x418 */
+    Vector3 mSavedPos;                                  /* 0x410 */
     s32                          unk_41c;               /* 0x41c -- only ever zeroed (Wander and Chase enter) */
     /* The heading mPrevAngleY is stepped toward (ApproachLinear); Behavior then
        copies mPrevAngleY into mAngleY. Wander enter picks a random multiple of

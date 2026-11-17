@@ -8,6 +8,7 @@ extern int OVERLAY_4_ID;
 void func_0201a754(int id) {
     if (id == -1) return;
     UnloadOverlay(id);
-    if (id != (intptr_t)(&OVERLAY_6_ID)) return;
+    if (id != (intptr_t)(&OVERLAY_6_ID))
+        return;
     UnloadOverlay((intptr_t)(&OVERLAY_4_ID));
 }

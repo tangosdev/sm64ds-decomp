@@ -3,7 +3,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "private/spl_particle_views.h"
 #include "nitro/gx/g3imm_cmd.h"
-#include "math/MtxStack.h"
+#include "nitro/fx/fx_mtx43.h"
 
 extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix */
 extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
@@ -15,8 +15,8 @@ void func_0204bbd8(ManagerView *mgr, ParticleElement *ptcl) {
     ParticleSystem *sys = mgr->mCurrentSystem;
     s16 aspectRatio = sys->mDefinition->data->aspectRatio;
     int alpha = (ptcl->visibility.baseAlpha * (ptcl->visibility.animAlpha + 1)) >> 5;
-    int *view = mgr->mDrawMatrix;
-    Vector3 trans;
+    const MtxFx43 *view = mgr->mDrawMatrix;
+    VecFx32 trans;
     int mat[12];
     u32 id;
     u32 v;
@@ -45,7 +45,7 @@ void func_0204bbd8(ManagerView *mgr, ParticleElement *ptcl) {
     trans.x = ptcl->offset.x + ptcl->basePosition.x;
     trans.y = ptcl->offset.y + ptcl->basePosition.y;
     trans.z = ptcl->offset.z + ptcl->basePosition.z;
-    MTX_MultVec43(&trans, (Matrix4x3 *)view, &trans);
+    MTX_MultVec43(&trans, view, &trans);
 
     {
         int idx = ptcl->angle >> 4;

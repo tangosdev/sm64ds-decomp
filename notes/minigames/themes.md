@@ -77,7 +77,7 @@ A pass must not change a single emitted byte or relocation target.
    - Measured negative: `mCards[i]` did not match in `dScMgMemory_c`'s `DrawCards`, `RoundWaitDeal` and `ShuffleCards`. It does match in the class's other members.
    - Measured negative in `dScMgSingle3DBase_c::InitEngines`: both plainer spellings of its two `DecompressLZ16` destinations differ by 44 words.
    - Where it does not match, keep the cursor, with a one-line comment.
-10. **The touch sample**, `{down, changed, x, y}` in `gTouchHeld`, is spelled as `u8[]`, as scalars, or as local structs.
+10. **The touch sample**, `TouchInfo {held, edge, x, y}` in `gTouchInfo[4]`, was once spelled as `u8[]` lanes, as scalars, or as local structs; it is now read by field everywhere (#821).
     - Some local views name the bytes `{pressed, held}`, which is wrong: byte 1 flips on both press and release.
     - Readable form: one shared type.
     - Status: untested. It would change every consumer.

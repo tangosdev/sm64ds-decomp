@@ -308,7 +308,9 @@ void Message::AddCharPairVS() {
 }
 
 /* opt_common_subs stays off: the ROM re-reads every mask and row word per use
- * and spills the scaled row indices, a CSE-off recompute no spelling reaches. */
+ * and spills the scaled row indices, a CSE-off recompute no spelling reaches.
+ * Re-measured (#821 r17): without the bracket it is 0x23c against 0x2b0, the
+ * same with the row indices assigned inside the subscripts. */
 #pragma push
 #pragma opt_common_subs off
 void func_02031428(void) {
@@ -834,10 +836,6 @@ int func_020321fc(void) {
     return 0;
 }
 
-/* opt_common_subs stays off for register colour only: without it case 6
- * swaps the slot index and the held byte (r3/r2), 8 words, same size. */
-#pragma push
-#pragma opt_common_subs off
 void func_020326ac(void) {
     switch (data_0209fcc8) {
     case 0:
@@ -921,7 +919,7 @@ void func_020326ac(void) {
     }
     case 6: {
         int hasf1;
-        u8 idx;
+        int idx;
         u8 f0;
         if (IsButtonInputValid() != 0) {
             data_0209fc98 = data_0209fcd0 + 1;
@@ -930,17 +928,17 @@ void func_020326ac(void) {
         }
         idx = gActivePlayerSlot;
         hasf1 = 0;
-        f0 = gTouchHeld[idx * 4];
+        f0 = gTouchInfo[idx].held;
         if (f0 != 0) {
-            if (gTouchEdge[idx * 4] != 0) {
+            if (gTouchInfo[idx].edge != 0) {
                 hasf1 = 1;
             }
         }
         if (hasf1 != 0) {
-            data_0209fcec = gTouchY[idx * 4];
+            data_0209fcec = gTouchInfo[idx].y;
             data_0209fcec -= (s16)(data_0209fcd0 * 8);
         } else if (f0 != 0) {
-            s16 debval = gTouchY[idx * 4];
+            s16 debval = gTouchInfo[idx].y;
             data_0209fcf0 = debval - data_0209fcec;
             if (data_0209fcf0 > 16) {
                 data_0209fcf0 = 16;
@@ -1020,7 +1018,6 @@ void func_020326ac(void) {
     }
     }
 }
-#pragma pop
 
 /* Splits the VS-mode text blob at 0x0209fd14 into the four pointers the renderer
  * reads. The blob's own header carries the offset from its second section to the
@@ -1445,7 +1442,9 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
 }
 
 /* opt_common_subs stays off: CSE recompute. The ROM re-reads and recomputes
- * what CSE would share (0x298 bytes; 0x278 with CSE on). */
+ * what CSE would share (0x298 bytes; 0x278 with CSE on). Re-measured (#821
+ * r17): still 0x278 without the bracket, and 0x2a8 with the second and third
+ * rows re-reading data_0209fc88 for their tile count. */
 #pragma push
 #pragma opt_common_subs off
 void func_02033bb8(int param0) {

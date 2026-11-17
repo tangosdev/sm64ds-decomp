@@ -49,11 +49,14 @@ void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
         file.displayListGroups = (BMD_DisplayListGroup *)REBASE(file.displayListGroups);
     for (i = 0; i < file.numDisplayListGroups; i++) {
         BMD_DisplayListGroup *g = file.displayListGroups + i;
-        if (g->lists) g->lists = (BMD_DisplayList *)((intptr_t)(g->lists) + base);
+        if (g->lists)
+            g->lists = (BMD_DisplayList *)((intptr_t)(g->lists) + base);
         for (k = 0; k < (int)g->numLists; k++) {
             BMD_DisplayList *d = g->lists + k;
-            if (d->unk_04) d->unk_04 = (void *)((intptr_t)(d->unk_04) + base);
-            if (d->data) d->data = (void *)((intptr_t)(d->data) + base);
+            if (d->unk_04)
+                d->unk_04 = (void *)((intptr_t)(d->unk_04) + base);
+            if (d->data)
+                d->data = (void *)((intptr_t)(d->data) + base);
         }
     }
 

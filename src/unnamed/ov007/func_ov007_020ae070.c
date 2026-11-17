@@ -5,8 +5,8 @@
 #include "Ov007Item.h"
 extern void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev, int frame);
 
-typedef char
-    Ov007Work_selectedSlot_must_be_at_0x58[(intptr_t)(&((Ov007Work *)0)->selectedSlot) == 0x58 ? 1 : -1];
+typedef char Ov007Work_selectedSlot_must_be_at_0x58
+    [(intptr_t)(&((Ov007Work *)0)->selectedSlot) == 0x58 ? 1 : -1];
 
 /* func_ov007_020add3c calls this while the item is in state 3. On that
  * state's first tick, item 1 sets its node's animation to follow the mode

@@ -10,8 +10,7 @@
  * actorID and mFlags are tested through an int. ExecutePerch keeps its base
  * pointer. mSpeedZ is reloaded because a named temporary moves a word.
  * EnterDrop's PoofPos is a three-int constructor; a Vector3 assignment does
- * not schedule the same stores. mHomePosX..Z stay three words: a Vector3
- * union member emits a local-class destructor this TU has no home for.
+ * not schedule the same stores.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -59,7 +58,6 @@ struct BasabasaAnimationFileHandle : SharedFilePtr {
 
 void func_02012694(unsigned int id, const Vector3 *pos);
 extern "C" {
-void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 }
 
@@ -179,9 +177,9 @@ int daBasabasa_c::ExecuteReturn() {
     v.x = 0;
     v.y = 0;
     v.z = 0;
-    int dist = Vec3_Dist(&mPos, (Vector3 *)&mHomePosX);
+    int dist = Vec3_Dist(&mPos, &mHomePos);
     if (dist > 0x1f4000 || mWithMeshClsn.IsOnWall() != 0) {
-        mTargetAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mHomePosX);
+        mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
         /* The states read mStateTimer unsigned (ldrh). */
         if (mStateTimer < 20)
             mStateTimer = 20;
@@ -193,9 +191,9 @@ int daBasabasa_c::ExecuteReturn() {
             mFlags |= 1;
             mPrevAngleX = -0x8000;
             mAngleX = mPrevAngleX;
-            mPosX = mHomePosX;
-            mPosY = mHomePosY;
-            mPosZ = mHomePosZ;
+            mPosX = mHomePos.x;
+            mPosY = mHomePos.y;
+            mPosZ = mHomePos.z;
             mSpeedX = 0;
             mVertSpeed = 0;
             mSpeedZ = 0;
@@ -239,7 +237,7 @@ int daBasabasa_c::ExecuteChase() {
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
     MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
-    if (Vec3_Dist(&mPos, (Vector3 *)&mHomePosX) > 0x5dc000 || mStateTimer == 0) {
+    if (Vec3_Dist(&mPos, &mHomePos) > 0x5dc000 || mStateTimer == 0) {
         mPerchTimer = 0;
         SetState(&data_ov065_0211d6f0);
     }
@@ -440,9 +438,9 @@ int daBasabasa_c::InitResources() {
     mAnmModel1.speed = 0x1000;
     mAnmModel2.speed = 0x1000;
     mWithMeshClsn.Init(this, 0x28000, 0x1e000, 0, 0);
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mCoinType = 1;
     SetState(&data_ov065_0211d700);
     return 1;

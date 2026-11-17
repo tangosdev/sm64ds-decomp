@@ -10,9 +10,8 @@ extern void func_ov007_020b76a0(void);
 extern void func_ov007_020bd1c0(int i);
 extern Ov007MenuState *PickerScene_GetDisplayState(void);
 
-typedef char Ov007Work_transitionMode_must_be_at_0x20[(intptr_t)(&((Ov007Work *)0)->transitionMode) == 0x20
-                                                          ? 1
-                                                          : -1];
+typedef char Ov007Work_transitionMode_must_be_at_0x20
+    [(intptr_t)(&((Ov007Work *)0)->transitionMode) == 0x20 ? 1 : -1];
 
 void func_ov007_020b0358(void)
 {

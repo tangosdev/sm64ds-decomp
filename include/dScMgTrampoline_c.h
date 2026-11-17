@@ -104,11 +104,9 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     s32 mArrow2X;           /* 0x5da8 */
     s32 mDragSoundHandle;   /* 0x5dac -- returned by the positional drag-sound
                                updater and fed back on the next frame */
-    s16 mTouchX;            /* 0x5db0 -- the current stylus sample */
-    s16 mTouchY;            /* 0x5db2 */
-    s16 mTouchStartX;       /* 0x5db4 -- copied from mTouch on the press edge and
+    Vec2s mTouch;           /* 0x5db0 -- the current stylus sample */
+    Vec2s mTouchStart;      /* 0x5db4 -- copied from mTouch on the press edge and
                                left alone; the swipe is measured against it */
-    s16 mTouchStartY;       /* 0x5db6 */
     s16 mInputEnabled;      /* 0x5db8 -- while 0 the touch handler clears
                                mTouching and returns at once */
     s16 mDoorSide;          /* 0x5dba -- 0 or 1, the lit door; the arrows slide

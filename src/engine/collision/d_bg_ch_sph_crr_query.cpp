@@ -48,8 +48,6 @@ int dBgCh_Gnd::DetectClsn()
         dBgPi::SetCollider(0, o->GetActorUniqueID(), o->GetActor(), o);
         ret = 1;
     }
-    int flag = 1;
-    int one = 1;
     Vector3 ownerPos;
     for (int i = 1; i < 24; i++) {
         dBgW *obj = data_020a0c80[i];
@@ -57,7 +55,7 @@ int dBgCh_Gnd::DetectClsn()
         dActor_c *owner = obj->GetActor();
         if (IsOwnedBy(owner))
             continue;
-        if (owner != 0 && ((owner->mFlags & 2) ? flag : 0) != 0) {
+        if (owner != 0 && ((owner->mFlags & 2) ? 1 : 0)) {
             const Vector3 *position = &owner->mPos;
             ownerPos.x = position->x;
             ownerPos.y = position->y;
@@ -78,7 +76,7 @@ int dBgCh_Gnd::DetectClsn()
         }
         if (obj->DetectClsn(*this) != 0) {
             dBgPi::SetCollider(i, obj->GetActorUniqueID(), obj->GetActor(), obj);
-            ret = one;
+            ret = 1;
         }
     }
     return ret;
@@ -206,8 +204,6 @@ int dBgCh_SphCrr::DetectClsnSlot0() {
 int dBgCh_SphCrr::DetectClsnExceptSlot0() {
     int reach = ((dM3dGSph &)*this).radius + 0x1000;
     int result = 0;
-    int zero = 0;
-    int one = 1;
     int i;
     for (i = 1; i < 24; i++) {
         dBgW *o = data_020a0c80[i];
@@ -216,7 +212,7 @@ int dBgCh_SphCrr::DetectClsnExceptSlot0() {
         dActor_c *owner = o->GetActor();
         if (IsOwnedBy(owner))
             continue;
-        if (owner != 0 && ((owner->mFlags & 2) ? one : zero)) {
+        if (owner != 0 && ((owner->mFlags & 2) ? 1 : 0)) {
             /* The address local must stay declared int -- a pointer local
                diffs. Its value is the dM3dGSph base's centre. */
             int pos = (intptr_t)(&((dM3dGSph &)*this).centre);
@@ -247,7 +243,7 @@ int dBgCh_SphCrr::DetectClsnExceptSlot0() {
             SetWallCollider(i, o->GetActorUniqueID(), o->GetActor(), o);
         if (hits & 4)
             SetUnderCollider(i, o->GetActorUniqueID(), o->GetActor(), o);
-        result = one;
+        result = 1;
     }
     this->UpdateDisplacement();
     return result;

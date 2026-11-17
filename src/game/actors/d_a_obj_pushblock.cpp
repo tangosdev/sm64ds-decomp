@@ -15,8 +15,6 @@
  * What stays:
  * - dBgCh_Actr_UpdateContinuous_Veneer: named UpdateContinuous misses the
  *   veneer dest (Behavior).
- * - (Vector3 *)&mHomePosX: the class stores that triple as scalars, and the
- *   address-of-first-component form is the MATCH shape.
  * - data_ov002_0210d7b4 CLPS: this TU consumes it, overlay .data owns it.
  *   S14: g_profile_PUSHBLOCK stays outside the licensed .text.
  * - daSCoin_c::Collect linked-actor helper (Behavior).
@@ -110,9 +108,9 @@ int daObjPushblock_c::InitResources() {
     mGroundY = v.y;
     if (ground.DetectClsn())
         mGroundY = ground.clsnY;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     return 1;
 }
 
@@ -170,14 +168,14 @@ int daObjPushblock_c::Behavior() {
         mSlideSound = Sound::PlayLong(mSlideSound, 3, 0x97, mCamSpacePos, 0);
     }
 
-    if (Vec3_HorzDist((Vector3 *)&mHomePosX, &mPos) >= 0x12c000) {
+    if (Vec3_HorzDist(&mHomePos, &mPos) >= 0x12c000) {
         if (mLinkedActor != 0) {
             if (mLinkedActor->actorID == 0x149) {
-                const int homeX = mHomePosX;
+                const int homeX = mHomePos.x;
                 pos.x = homeX;
-                const int homeY = mHomePosY;
+                const int homeY = mHomePos.y;
                 pos.y = homeY;
-                const int homeZ = mHomePosZ;
+                const int homeZ = mHomePos.z;
                 pos.z = homeZ;
                 pos.y = homeY + 0x96000;
                 q = mLinkedActor;

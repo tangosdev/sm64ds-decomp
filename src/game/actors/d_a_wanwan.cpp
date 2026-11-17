@@ -73,7 +73,6 @@ extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern dCamera_c *gCamera;  /* CAMERA */
 
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
@@ -104,26 +103,12 @@ int daWanwan_c::InitResources() {
     dExtFrameCtrl_c::LoadFile(data_ov014_02114980);
     dExtFrameCtrl_c::LoadFile(data_ov014_02114970);
 
-    {
-        int i = 0;
-        dExtSimpleModel_c *p = mLinkModels;
-        do {
-            p->SetFile((BMD_File *)data_ov014_02114978.filePtr, 1, 1);
-            i = i + 1;
-            p++;
-        } while (i < 7);
-    }
+    for (int i = 0; i < 7; i++)
+        mLinkModels[i].SetFile((BMD_File *)data_ov014_02114978.filePtr, 1, 1);
 
     mShadowModel.InitCylinder();
-    {
-        int si = 0;
-        dExtShadowModel_c *sp = mLinkShadows;
-        do {
-            sp->InitCylinder();
-            si = si + 1;
-            sp++;
-        } while (si < 7);
-    }
+    for (int i = 0; i < 7; i++)
+        mLinkShadows[i].InitCylinder();
 
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
@@ -153,31 +138,30 @@ int daWanwan_c::InitResources() {
         } while (cnt < 7);
     }
 
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
 
     dActor_c *spawned = dActor_c::Spawn(kStumpActorId, 0x11, mPos, 0, mAreaId, -1);
     mStumpUniqueID = spawned->uniqueID;
-    int one = 1;
-    ((daObjPile_c *)spawned)->mBusy = (unsigned char)one;
+    ((daObjPile_c *)spawned)->mBusy = 1;
     mFenceUniqueID = 0;
 
-    mPosX = mPosX + kRestLift;
-    mPosY = mPosY + kRestLift;
-    mPosZ = mPosZ + kRestLift;
+    mPosX += kRestLift;
+    mPosY += kRestLift;
+    mPosZ += kRestLift;
 
     mChainExtension = kChainSlack;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    return one;
+    return 1;
 }
 
 int daWanwan_c::Behavior() {
     mIsOnGround = 0;
     {
-        int rest = mSpawnPosY + kRestLift;
+        int rest = mSpawnPos.y + kRestLift;
         if (mPosY <= rest) {
             mPosY = rest;
             if (mWasOnGround == 0)
@@ -256,7 +240,7 @@ void daWanwan_c::UpdateModelTransform() {
     mAnmModel.mat4x3.m[9] = mPosX >> 3;
     mAnmModel.mat4x3.m[10] = mPosY >> 3;
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
-    t = mPosY - mSpawnPosY;
+    t = mPosY - mSpawnPos.y;
     if (t <= 0x1000)
         t = 0x1000;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000 - FX_MUL(t, 0x180), t + 0x28000,
@@ -272,7 +256,7 @@ void daWanwan_c::UpdateModelTransform() {
         o->mLinkModels[0].mat4x3.m[9] = e->mLinkPos[0].x >> 3;
         o->mLinkModels[0].mat4x3.m[10] = e->mLinkPos[0].y >> 3;
         o->mLinkModels[0].mat4x3.m[11] = e->mLinkPos[0].z >> 3;
-        t = e->mLinkPos[0].y - mSpawnPosY;
+        t = e->mLinkPos[0].y - mSpawnPos.y;
         if (t <= 0x1000)
             t = 0x1000;
         DropShadowRadHeight(*sm, m->mat4x3, 0x78000 - FX_MUL(t, 0x180), t + 0x28000, 0xf);
@@ -380,8 +364,8 @@ void daWanwan_c::UpdateChainSegments() {
         dst->y = mul.y;
         dst->z = mul.z;
 
-        if (*bound <= mSpawnPosY)
-            *bound = mSpawnPosY + 0x28000;
+        if (*bound <= mSpawnPos.y)
+            *bound = mSpawnPos.y + 0x28000;
 
         seg++;
         dst++;
@@ -419,11 +403,11 @@ void daWanwan_c::CapChainToPivot() {
     rotated.y = 0;
     rotated.z = 0;
 
-    prevpos.x = mSpawnPosX;
+    prevpos.x = mSpawnPos.x;
     {
-        int py = mSpawnPosY;
+        int py = mSpawnPos.y;
         prevpos.y = py;
-        prevpos.z = mSpawnPosZ;
+        prevpos.z = mSpawnPos.z;
         prevpos.y = py + 0x1e000;
     }
 
@@ -553,7 +537,7 @@ void daWanwan_c::RestrictToChain() {
     Vector3 out;
     int len;
     int lim;
-    Vec3_Sub(&v, &mPos, (const Vector3 *)&mSpawnPosX);
+    Vec3_Sub(&v, &mPos, &mSpawnPos);
     len = VEC_Mag(&v);
     lim = mChainExtension * 7 + kRestLift;
     if (len <= lim)
@@ -561,7 +545,7 @@ void daWanwan_c::RestrictToChain() {
     v.x = FX_MUL(v.x, FX_Div(lim, len));
     v.y = FX_MUL(v.y, FX_Div(lim, len));
     v.z = FX_MUL(v.z, FX_Div(lim, len));
-    Vec3_Add(&out, (Vector3 *)&mSpawnPosX, &v);
+    Vec3_Add(&out, &mSpawnPos, &v);
     mPosX = out.x;
     mPosY = out.y;
     mPosZ = out.z;
@@ -757,7 +741,7 @@ void daWanwan_c::StateEscapeDemoInit() {
     unk_600 = 0;
     mActionTimer = 60;
     mFlags &= ~3;
-    mPosY = mSpawnPosY + kRestLift;
+    mPosY = mSpawnPos.y + kRestLift;
 }
 
 /* State 3 update: the fence-break cutscene. mReleaseStep is the phase. */
@@ -772,16 +756,14 @@ void daWanwan_c::StateEscapeDemoMain() {
     fence = (daObjWanwanShutter_c *)dActor_c::FindWithID((unsigned)mFenceUniqueID);
     {
         s32 *src = &fence->mPosX;
-        s32 fifth = 0x80;
         partnerPos.x = src[0];
         partnerPos.y = src[1];
-        s32 z = 0;
         partnerPos.z = src[2];
-        ApproachAngle(&mAngleX, z, 4, 0x200, fifth);
+        ApproachAngle(&mAngleX, 0, 4, 0x200, 0x80);
     }
     camera = gCamera;
     angleToPlayer = HorzAngleToCPlayer();
-    angleToAnchor = Vec3_HorzAngle(&mPos, (Vector3 *)&mSpawnPosX);
+    angleToAnchor = Vec3_HorzAngle(&mPos, &mSpawnPos);
     /* Steps 0-6 make the chomp the camera's mFocusActor. */
     switch (mReleaseStep) {
     case 0:

@@ -153,9 +153,9 @@ int daYurei_Mucho_c::InitResources()
     mWithMeshClsn.Init(this, 0x46000, 0, 0, 0);
     mCoinType = 1;
     mExtraCoinCount = 1;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mAnmModel.speed = 0x1000;
     ChangeState(&data_ov065_0211d670);
     return 1;
@@ -173,9 +173,9 @@ int daYurei_Mucho_c::Behavior()
             }
         }
         UpdateModelTransform();
-        mHomePosX = mPosX;
-        mHomePosY = mPosY;
-        mHomePosZ = mPosZ;
+        mHomePos.x = mPosX;
+        mHomePos.y = mPosY;
+        mHomePos.z = mPosZ;
         ChangeState(&data_ov065_0211d670);
         return 1;
     }
@@ -217,7 +217,7 @@ int daYurei_Mucho_c::Behavior()
            signed s16 would read the wrong table entry for negative angles. */
         sine = FX_SinIdx((unsigned short)(short)ang >> 4);
         result = FX_MUL(sine, 0x46000);
-        ApproachLinear(mPosY, mHomePosY + (result + 0xb4000), 0x3000);
+        ApproachLinear(mPosY, mHomePos.y + (result + 0xb4000), 0x3000);
     }
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
@@ -280,20 +280,20 @@ void daYurei_Mucho_c::UpdateModelTransform() {
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
 
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
-    mShotPosX = 0;
-    mShotPosY = 0;
-    mShotPosZ = 0;
+    mShotPos.x = 0;
+    mShotPos.y = 0;
+    mShotPos.z = 0;
     *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&mAnmModel.mat4x3;
 
     MTX_Concat43(&mAnmModel.data.transforms[4], &data_020a0e68, &data_020a0e68);
 
-    mShotPosX = data_020a0e68.t.x;
-    mShotPosY = data_020a0e68.t.y;
-    mShotPosZ = data_020a0e68.t.z;
-    mShotPosX <<= 3;
-    mShotPosY <<= 3;
-    mShotPosY -= 0xa000;
-    mShotPosZ <<= 3;
+    mShotPos.x = data_020a0e68.t.x;
+    mShotPos.y = data_020a0e68.t.y;
+    mShotPos.z = data_020a0e68.t.z;
+    mShotPos.x <<= 3;
+    mShotPos.y <<= 3;
+    mShotPos.y -= 0xa000;
+    mShotPos.z <<= 3;
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
 
@@ -346,8 +346,8 @@ int daYurei_Mucho_c::UpdateIdle() {
     in.y = 0;
     in.z = 0;
 
-    if (Vec3_Dist(&mPos, (Vector3 *)&mHomePosX) > 0x1f4000 || mWithMeshClsn.IsOnWall() != 0) {
-        mTargetAngle = Vec3_HorzAngle(&mPos, (Vector3 *)&mHomePosX);
+    if (Vec3_Dist(&mPos, &mHomePos) > 0x1f4000 || mWithMeshClsn.IsOnWall() != 0) {
+        mTargetAngle = Vec3_HorzAngle(&mPos, &mHomePos);
         if ((u16)mStateTimer < 20)
             mStateTimer = 20;
     }
@@ -459,10 +459,10 @@ int daYurei_Mucho_c::UpdateShoot() {
 
         if ((((u32)mAnmModel.currFrame << 4) >> 16) >= 0xf && (u16)mStateTimer == 0 &&
             mShotCount < 3) {
-            void *spawned = dActor_c::Spawn(0xe9, 1, *(Vector3 *)&mShotPosX, 0, mAreaId, -1);
+            void *spawned = dActor_c::Spawn(0xe9, 1, mShotPos, 0, mAreaId, -1);
             if (spawned != 0) {
                 dActor_c *shot = (dActor_c *)spawned;
-                func_02012694(0xfb, (const Vector3 *)&mCamSpacePosX);
+                func_02012694(0xfb, &mCamSpacePos);
                 L.spv.x = 0;
                 L.spv.y = 0;
                 L.spv.z = 0x1e000;
@@ -551,23 +551,23 @@ void daYurei_Mucho_c::HandleCollision() {
     if (flags & 0x40000) {
         mDeathState = 4;
         func_ov002_020aea30(p, 0);
-        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
+        func_02012694(0x11e, &mCamSpacePos);
         return;
     }
     if (flags & 0x2400) {
         mDeathState = 2;
         func_ov002_020aea30(p, 0);
-        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
+        func_02012694(0x11e, &mCamSpacePos);
         return;
     }
     if (flags & 0x4380) {
         mDeathState = 3;
         func_ov002_020aea30(p, 0);
-        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
+        func_02012694(0x11e, &mCamSpacePos);
         return;
     }
     if (BumpedUnderneathByPlayer(*p) == 1) {
-        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
+        func_02012694(0x11e, &mCamSpacePos);
         ChangeState(&data_ov065_0211d660);
         return;
     }
@@ -576,19 +576,19 @@ void daYurei_Mucho_c::HandleCollision() {
         v.y = 0;
         v.z = 0;
         KillByInvincibleChar(v, *p, 0);
-        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
+        func_02012694(0x11e, &mCamSpacePos);
         return;
     }
     if (flags & 0x40) {
         mDeathState = 2;
         func_ov002_020aea30(p, 0);
-        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
+        func_02012694(0x11e, &mCamSpacePos);
         return;
     }
     if (flags & 0x20) {
         mDeathState = 1;
         func_ov002_020aea30(p, 0);
-        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
+        func_02012694(0x11e, &mCamSpacePos);
         return;
     }
     {
@@ -603,7 +603,7 @@ void daYurei_Mucho_c::HandleCollision() {
         p->Bounce(0x28000);
         mDeathState = 1;
         func_ov002_020aea30(p, 0);
-        func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
+        func_02012694(0x11e, &mCamSpacePos);
         return;
     }
     hv.x = mPosX;
@@ -622,7 +622,7 @@ void daYurei_Mucho_c::KillWithCoins() {
     v.z = mPosZ;
     SpawnCoins(v, mExtraCoinCount + 1, 0xa000, 0);
     KillAndTrackInDeathTable();
-    func_02012694(0x11e, (const Vector3 *)&mCamSpacePosX);
+    func_02012694(0x11e, &mCamSpacePos);
 }
 
 /* -------------------------------------------------------------------------- */

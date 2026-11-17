@@ -549,9 +549,6 @@ void WFSi_TaskThread(void) {
     int i;
     WFSiFileList *node;
     FSArchive *arc = FS_FindArchive(data_02099e6c, 3);
-    int b = 2;
-    int c = 3;
-    int d = 1;
     WFSWork *work = &data_020a1fc0;
     char *base = data_020a2400;
 
@@ -584,10 +581,10 @@ void WFSi_TaskThread(void) {
                 }
             }
             node->ack_seq = 0;
-            node->last_page = b;
-            node->busy_page = c;
+            node->last_page = 2;
+            node->busy_page = 3;
             irq = OS_DisableInterrupts();
-            WFSi_SendOpenAck(base, node, d);
+            WFSi_SendOpenAck(base, node, 1);
             OS_RestoreInterrupts(irq);
         } else {
             FS_CloseFile(&node->file);
@@ -1824,8 +1821,8 @@ void func_02040384(void *arg) {}
 
 /* A file-scope object with an empty inline constructor. mwcc emits the
    4-byte bx lr at 0x02075150. The object stays static so the linker drops
-   it: data_020a0df4 is padding between data_020a0df0 and data_020a0df8.
-   Claiming that word here would list it after cstd_sqrt's .bss. */
+   it: the cartridge has no storage for it, since this file's .bss run
+   starts at 0x020a0ef0, right after cstd_sqrt's. */
 static EmptyInit sEmptyInit;
 
 /* The callback Wireless_Reset hands WM_Reset (command 1).

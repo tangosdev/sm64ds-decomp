@@ -700,13 +700,13 @@ void dScMgBomroom_c::Bomb_CheckGrab(int index) {
     u8 slot = gActivePlayerSlot;
     int touchBegan = 0;
     int dx, dy;
-    if (gTouchHeld[slot * 4] != 0)
-        touchBegan = gTouchEdge[slot * 4] != 0;
+    if (gTouchInfo[slot].held != 0)
+        touchBegan = gTouchInfo[slot].edge != 0;
     if (touchBegan == 0)
         return;
     if (mHeldColor != 0xff) return;
-    dx = gTouchX[slot * 4] - (mBombs[index].x >> 0xc);
-    dy = gTouchY[slot * 4] - (mBombs[index].y >> 0xc);
+    dx = gTouchInfo[slot].x - (mBombs[index].x >> 0xc);
+    dy = gTouchInfo[slot].y - (mBombs[index].y >> 0xc);
     if (dx > 0xc) return;
     if (dx < -0xc) return;
     if (dy > 0xf) return;
@@ -1166,8 +1166,8 @@ void dScMgBomroom_c::Bomb_StateHeld(int idx) {
         u8 was;
         int t = gActivePlayerSlot;
 
-        mBombs[idx].x = (gTouchX[t * 4] << 12) - mBombs[idx].grabX;
-        mBombs[idx].y = (gTouchY[t * 4] << 12) - mBombs[idx].grabY;
+        mBombs[idx].x = (gTouchInfo[t].x << 12) - mBombs[idx].grabX;
+        mBombs[idx].y = (gTouchInfo[t].y << 12) - mBombs[idx].grabY;
         cx = old_x >> 12;
         cy = old_y >> 12;
 
@@ -1175,8 +1175,8 @@ void dScMgBomroom_c::Bomb_StateHeld(int idx) {
 
         {
             int t2 = gActivePlayerSlot;
-            mBombs[idx].x = (gTouchX[t2 * 4] << 12) - mBombs[idx].grabX;
-            mBombs[idx].y = (gTouchY[t2 * 4] << 12) - mBombs[idx].grabY;
+            mBombs[idx].x = (gTouchInfo[t2].x << 12) - mBombs[idx].grabX;
+            mBombs[idx].y = (gTouchInfo[t2].y << 12) - mBombs[idx].grabY;
         }
 
         was = mBombs[idx].overPen;
@@ -1266,7 +1266,7 @@ void dScMgBomroom_c::Bomb_StateWaiting(int i) {
 
 extern PMF sBomroomBombStateTable[];
 void dScMgBomroom_c::UpdateBombs() {
-    if (gTouchHeld[gActivePlayerSlot * 4] == 0)
+    if (gTouchInfo[gActivePlayerSlot].held == 0)
         mHeldColor = 0xff;
     int i;
     for (i = 0; i < 112; i++) {

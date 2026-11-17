@@ -353,9 +353,7 @@ int daObjMarioCap_c::InitResources()
     mWithMeshClsn.Init(this, kClsnSizeSmall, 0x16000, 0, 0);
 
     /* Remember where the cap was placed. */
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos = mPos;
 
     mVertAccel = -0x1000;       /* gravity: -1 unit a frame each frame */
     mTerminalVelocity = -0x1e000;     /* -30 units a frame */
@@ -467,7 +465,7 @@ int daObjMarioCap_c::InitResources()
             v = 1;
         else
             v = 0;
-        mCapIcon.Link((char *)this, mModelIndex & 0xff, mIconKind, v);
+        mCapIcon.Link(this, mModelIndex & 0xff, mIconKind, v);
     }
 
     /* Keep only the type and character bits (0..11) of param1. This is the
@@ -668,7 +666,7 @@ void daObjMarioCap_c::OnTurnIntoEgg(daPly_c &player) {
 /* -------------------------------------------------------------------------- */
 void daObjMarioCap_c::UpdateMatrix()
 {
-    int probe[3];
+    Vector3 probe;
     Vector3 v;
     int m = mType;
     if (m != 5 && m != 0x12 && m != 0x10 && m != 0xb && m != 7 && m != 9 &&
@@ -710,13 +708,11 @@ void daObjMarioCap_c::UpdateMatrix()
         int y = mPosY;
         int off;
         if (mWithMeshClsn.IsOnGround() == 0) {
-            probe[0] = mPosX;
-            probe[1] = mPosY;
-            probe[2] = mPosZ;
-            probe[1] = probe[1] + 0x28000;
+            probe = mPos;
+            probe.y = probe.y + 0x28000;
             dBgCh_Gnd ray;
-            ray.SetObjAndPos(*(Vector3 *)probe, 0);
-            y = probe[1];
+            ray.SetObjAndPos(probe, 0);
+            y = probe.y;
             if (ray.DetectClsn() != 0)
                 y = ray.clsnY;
         }
@@ -971,9 +967,9 @@ int daObjMarioCap_c::Slide()
         return 1;
     }
     fr = (char *)mWithMeshClsn.GetFloorResult();
-    ((SurfaceInfo *)(fr + 4))->CopyNormalTo(*(Vector3 *)&mFloorNormalX);
+    ((SurfaceInfo *)(fr + 4))->CopyNormalTo(mFloorNormal);
     surface = ((SurfaceInfo *)(fr + 4))->clps.GetFloorClass();
-    mSlopeAngle = cstd::atan2(mFloorNormalX, mFloorNormalZ);
+    mSlopeAngle = cstd::atan2(mFloorNormal.x, mFloorNormal.z);
     slopePush = func_ov002_020f02c8(surface);
     func_ov002_020f030c(surface);
     spd = mHorzSpeed;
@@ -989,18 +985,18 @@ int daObjMarioCap_c::Slide()
     slopeVel.x = FX_MUL(slopePush, s);
     slopeVel.y = 0;
     slopeVel.z = FX_MUL(slopePush, co);
-    Vec3_MulScalarInPlace(&slopeVel, Vec3_HorzLen((const Vector3 *)&mFloorNormalX));
+    Vec3_MulScalarInPlace(&slopeVel, Vec3_HorzLen(&mFloorNormal));
     Vec3_Add(&out, &ownVel, &slopeVel);
     ang = cstd::atan2(out.x, out.z);
     mHorzSpeed = Vec3_HorzLen(&out);
     if (mHorzSpeed > 0xf000)
         mHorzSpeed = 0xf000;
     mPrevAngleY = ang;
-    mVertSpeed =
-        -(FX_Div(FX_MUL(mFloorNormalX, mSpeedX) + FX_MUL(mFloorNormalZ, mSpeedZ), mFloorNormalY) +
-          0x8000);
-    pitch = func_02010844((Vector3 *)&mFloorNormalX, mAngleY);
-    roll = func_02010844((Vector3 *)&mFloorNormalX, mAngleY - 0x4000);
+    mVertSpeed = -(
+        FX_Div(FX_MUL(mFloorNormal.x, mSpeedX) + FX_MUL(mFloorNormal.z, mSpeedZ), mFloorNormal.y) +
+        0x8000);
+    pitch = func_02010844(&mFloorNormal, mAngleY);
+    roll = func_02010844(&mFloorNormal, mAngleY - 0x4000);
     UpdateAngle(mAngleX, pitch, 4, 0x1000);
     UpdateAngle(mAngleZ, roll, 4, 0x1000);
     return 1;
@@ -1127,8 +1123,7 @@ int daObjMarioCap_c::Taken() {
     if (mAnimStarted == 1) {
         if (mAnmModel.Finished() != 0) {
             if (mType == 4) {
-                dActor_c::Spawn(kActorMarioCap, param1, *(const Vector3 *)&mHomePosX, 0, mAreaId,
-                                -1);
+                dActor_c::Spawn(kActorMarioCap, param1, mHomePos, 0, mAreaId, -1);
             }
             MarkForDestruction();
         }
@@ -1269,13 +1264,13 @@ int daObjMarioCap_c::Dormant()
 void daObjMarioCap_c::CheckTouch()
 {
     Vector3_16 v;
-    int normal[3];
+    Vector3 normal;
     int state;
 
     if (mWithMeshClsn.IsOnWall() != 0) {
         dBgPi *wr = mWithMeshClsn.GetWallResult();
-        wr->surface.CopyNormalTo(*(Vector3 *)&normal[0]);
-        mPrevAngleY = ReflectAngle(normal[0], normal[2], mPrevAngleY);
+        wr->surface.CopyNormalTo(normal);
+        mPrevAngleY = ReflectAngle(normal.x, normal.z, mPrevAngleY);
     }
 
     if (mdCcAc_c.otherOwner == 0) return;

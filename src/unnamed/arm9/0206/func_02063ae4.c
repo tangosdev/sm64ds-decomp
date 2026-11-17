@@ -2,14 +2,14 @@
 #include "private/arm9_wbt.h"
 extern int func_0206491c(unsigned int a, int b);
 extern char *func_02064888(unsigned int id, int idx);
-extern int func_02064c2c(u8 *dst, int a, int b, int c, int d, const void *p, int n);
+extern int func_02064c2c(u8 *dst, u16 a, u8 b, int c, int d, const void *p, int n);
 extern int func_02065bc0(void);
 
 int func_02063ae4(WBTWork *work, int idx, void *buf, int size) {
     WBTPeerRecord *e = &work->peer[idx];
     int r7 = 0;
     if (e->state == 2) {
-        int r5;
+        u16 r5;
         if (WBT_GetOwnAid() == 0)
             r5 = 0xffff;
         else

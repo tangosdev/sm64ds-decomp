@@ -786,7 +786,8 @@ void dBgCh_Actr::UpdateExtraContinous()
                     mRaycastLine.SetObjAndLine(top, foot, mActor);
                     if (mRaycastLine.DetectClsn()) {
                         Vector3 *hit = &mRaycastLine.lineEnd;
-                        Vector3 *normal = (Vector3 *)func_02037dc4((intptr_t)(&mRaycastLine.surface));
+                        Vector3 *normal =
+                            (Vector3 *)func_02037dc4((intptr_t)(&mRaycastLine.surface));
                         pos->x = hit->x + (normal->x >> 2);
                         pos->y = hit->y + (normal->y >> 2);
                         pos->z = hit->z + (normal->z >> 2);
@@ -822,7 +823,8 @@ void dBgCh_Actr::UpdateExtraContinous()
                     mRaycastLine.SetObjAndLine(foot, top, mActor);
                     if (mRaycastLine.DetectClsn()) {
                         Vector3 *hit = &mRaycastLine.lineEnd;
-                        Vector3 *normal = (Vector3 *)func_02037dc4((intptr_t)(&mRaycastLine.surface));
+                        Vector3 *normal =
+                            (Vector3 *)func_02037dc4((intptr_t)(&mRaycastLine.surface));
                         pos->x = hit->x + (normal->x >> 2);
                         pos->y = hit->y + (normal->y >> 2) - twiceHeight;
                         pos->z = hit->z + (normal->z >> 2);

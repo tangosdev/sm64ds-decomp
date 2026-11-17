@@ -16,9 +16,7 @@ struct daPly_c;
  */
 struct daObjBk_Dossunbar_c : dBgActor_c {
     u8 pad_31e[0x2];
-    s32 mHomePosX;   /* 0x320 -- Init copies mPos here */
-    s32 mHomePosY;   /* 0x324 */
-    s32 mHomePosZ;   /* 0x328 */
+    Vector3 mHomePos; /* 0x320 -- Init copies mPos here */
     s32 mVariant;    /* 0x32c -- 1 if actor 0x35 (big), else 0 */
     u32 mState;      /* 0x330 -- 0..6, indexes the .bss dispatch table */
     s32 mStateTimer; /* 0x334 */

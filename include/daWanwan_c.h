@@ -25,14 +25,12 @@ struct daWanwan_c : dEnemyBase_c {
        with the scaled movement. [0] is constructed and that loop never touches it. */
     Vector3 mLinkDelta[7];                                 /* 0x578 */
     u8  pad_5cc[4];
-    /* UpdateChainSegments, one floor per link [1..6]. Raised to mSpawnPosY + 0x28000. */
+    /* UpdateChainSegments, one floor per link [1..6]. Raised to mSpawnPos.y + 0x28000. */
     s32 mLinkFloorY[6];                                    /* 0x5d0 */
     u8  pad_5e8[4];
     /* InitResources copies the position here, then adds 0xc8000 to the live
-       position. Behavior clamps mPosY up to mSpawnPosY + 0xc8000. */
-    s32 mSpawnPosX;         /* 0x5ec */
-    s32 mSpawnPosY;         /* 0x5f0 */
-    s32 mSpawnPosZ;         /* 0x5f4 */
+       position. Behavior clamps mPosY up to mSpawnPos.y + 0xc8000. */
+    Vector3 mSpawnPos;      /* 0x5ec */
     s32 mChainExtension;    /* 0x5f8 -- leash slack; RestrictToChain uses it * 7 */
     u16 mActionTimer;       /* 0x5fc -- DecIfAbove0_Short */
     u16 mSecretSound;       /* 0x5fe -- Sound::PlaySecretSound counter */

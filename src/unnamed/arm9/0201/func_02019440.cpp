@@ -4,6 +4,7 @@
 #include "nitro/gx/gx_vramcnt.h"
 #include "dGraph_c.h"
 #include "nitro/hw/registers.h"
+#include "nitro/hw/mmap_global.h"
 #include "nitro/mi/memory.h"
 #include "nitro/gx/gx.h"
 
@@ -13,7 +14,7 @@ class dFdBrightness_c;
 extern dFdBrightness_c *data_0209d4ac;
 /* the brightness fader (d_scene.cpp) */
 /* the active transition fader (d_s_stage_methods.cpp wipes, KuppaScript.cpp colour fades) */
-extern int data_0209d4b0;
+extern dFdBrightness_c *data_0209d4b0;
 extern "C" {
 
 
@@ -43,12 +44,12 @@ void func_02019440(void) {
     GX_VBlankIntr(1);
     GX_SetBankForLCDC(GX_VRAM_LCDC_ALL);
     a = 0;
-    MI_CpuFillFast((int *)0x6800000, a, 0xa4000);
+    MI_CpuFillFast((void *)HW_LCDC_VRAM, a, HW_LCDC_VRAM_SIZE);
     GX_DisableBankForLCDC();
     b = 0xc0;
-    MI_CpuFillFast((int *)0x7000000, b, 0x400);
+    MI_CpuFillFast((void *)HW_OAM, b, HW_OAM_SIZE);
     c = 0;
-    MI_CpuFillFast((int *)0x5000000, c, 0x400);
+    MI_CpuFillFast((void *)HW_PLTT, c, HW_PLTT_SIZE);
     gGraphCallback = 0;
     data_0209d4ac = 0;
     data_0209d4b0 = 0;

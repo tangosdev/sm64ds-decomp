@@ -58,6 +58,7 @@ enum dScMgPanel_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
+#include "PlayerInput.h"
 
 /* Callees of the member helpers. Declared here, not in the bodies: a
    declaration inside a member body gets C++ linkage and names a symbol the ROM
@@ -71,10 +72,10 @@ struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void Hud_RenderSprite(void *a, int b, int c, int d, int e);
 void Mg_SubmitScore(int a);
-void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
+void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *d);
 void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
 void Mg_SetSharedState(int a);
-void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
+void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 void Mg_DrawBigNumber(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 }
 
@@ -684,19 +685,7 @@ void dScMgPanel_c::Answer_StateResetBoard() {
     }
 }
 
-extern "C" {
-typedef struct WarpEntry_730 {
-    u8 a;
-    u8 b;
-    u8 c;
-    u8 d;
-} WarpEntry_730;
-}
 void dScMgPanel_c::Answer_StateWaitButton() {
-    // local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-    extern u8 gActivePlayerSlot;
-    // local extern: see above.
-    extern WarpEntry_730 gTouchHeld[];
     u8 idx;
     s32 b;
     s32 dx;
@@ -707,14 +696,14 @@ void dScMgPanel_c::Answer_StateWaitButton() {
     }
     idx = gActivePlayerSlot;
     b = 0;
-    if (gTouchHeld[idx].a != 0) {
-        b = (gTouchHeld[idx].b != 0);
+    if (gTouchInfo[idx].held != 0) {
+        b = (gTouchInfo[idx].edge != 0);
     }
     if (b == 0) {
         return;
     }
-    dx = gTouchHeld[idx].c - 0xe8;
-    dy = gTouchHeld[idx].d - 0x10;
+    dx = gTouchInfo[idx].x - 0xe8;
+    dy = gTouchInfo[idx].y - 0x10;
     if (dx < -15) {
         return;
     }
@@ -915,12 +904,6 @@ void dScMgPanel_c::CheckSolved() {
 /* Accept a new touch within 16 pixels of a panel centre, flip its clipped
    3x3 neighbourhood, and record the move. */
 void dScMgPanel_c::UpdateTouch() {
-    // local extern: see above.
-    extern u8 gActivePlayerSlot;
-    // local extern: see above.
-    extern u8 gTouchHeld[];
-    // local extern: see above.
-    extern u8 gTouchEdge[];
     u8 playerSlot;
     int n;
     int i;
@@ -931,8 +914,8 @@ void dScMgPanel_c::UpdateTouch() {
 
     playerSlot = gActivePlayerSlot;
     n = 0;
-    if (gTouchHeld[playerSlot * 4] != 0)
-        n = gTouchEdge[playerSlot * 4] != 0;
+    if (gTouchInfo[playerSlot].held != 0)
+        n = gTouchInfo[playerSlot].edge != 0;
     if (n == 0)
         return;
 
@@ -942,9 +925,9 @@ void dScMgPanel_c::UpdateTouch() {
         return;
 
     {
-        u8 *e = &gTouchHeld[playerSlot * 4];
-        touchX = e[2];
-        touchY = e[3];
+        TouchInfo *touch = &gTouchInfo[playerSlot];
+        touchX = touch->x;
+        touchY = touch->y;
     }
 
     do {
@@ -1373,12 +1356,6 @@ void dScMgPanel_c::Scene_StateGameOver() {
 
 void dScMgPanel_c::Scene_StateResult() {
     extern PanelStateFnI sPanelPanelStateTable[];
-    // local extern: see above.
-    extern u8 gActivePlayerSlot;
-    // local extern: see above.
-    extern u8 gTouchHeld[];
-    // local extern: see above.
-    extern u8 gTouchEdge[];
     int found;
     int i;
 
@@ -1399,8 +1376,8 @@ void dScMgPanel_c::Scene_StateResult() {
             u8 index;
             hit = 0;
             index = gActivePlayerSlot;
-            if (gTouchHeld[index * 4] != 0) {
-                if (gTouchEdge[index * 4] != 0)
+            if (gTouchInfo[index].held != 0) {
+                if (gTouchInfo[index].edge != 0)
                     hit = 1;
             }
             if (hit)
@@ -1575,7 +1552,7 @@ void dScMgPanel_c::StartRound(int flag) {
 
 /* Vtable slot 9. */
 s32 dScMgPanel_c::Render() {
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     DrawCursor();
     DrawHud();
     Particle_DrawAll();

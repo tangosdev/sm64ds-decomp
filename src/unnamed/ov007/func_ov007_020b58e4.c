@@ -4,9 +4,8 @@
 #include "Ov007Work.h"
 #include "Ov007Item.h"
 
-typedef char Ov007Work_transitionMode_must_be_at_0x20[(intptr_t)(&((Ov007Work *)0)->transitionMode) == 0x20
-                                                          ? 1
-                                                          : -1];
+typedef char Ov007Work_transitionMode_must_be_at_0x20
+    [(intptr_t)(&((Ov007Work *)0)->transitionMode) == 0x20 ? 1 : -1];
 
 /* Load-bearing: reading view->item in place instead of through this inline
  * costs 19 mismatches at 2004/b56. */

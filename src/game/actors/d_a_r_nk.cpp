@@ -193,9 +193,6 @@ int *daRNk_c_classInit(void)
    the model or shadow cannot be set up. */
 int daRNk_c::InitResources()
 {
-    unsigned char b;
-    int zero;
-
     dExtSimpleModel_c::LoadFile(gdaRNkNokonokoModelFile);
     dExtFrameCtrl_c::LoadFile(data_ov062_0211e014);
     dExtFrameCtrl_c::LoadFile(data_ov062_0211e024);
@@ -214,10 +211,9 @@ int daRNk_c::InitResources()
     mScaleZ = 0x14cc;
     /* Body cylinder: radius 120 units, height 300 units. */
     mdCcAc_c.Init(this, 0x78000, 0x12c000, 0x800004, 0);
-    zero = 0;
-    mState = zero;
-    unk_3aa = (s16)zero;
-    mHasFinished = (unsigned char)zero;
+    mState = 0;
+    unk_3aa = 0;
+    mHasFinished = 0;
     mSpawnPos.x = mPosX;
     mSpawnPos.y = mPosY;
     mSpawnPos.z = mPosZ;
@@ -227,27 +223,24 @@ int daRNk_c::InitResources()
     mWithMeshClsn.Init(this, 0x78000, 0x78000, 0, 0);
     mPathPtr.FromID(param1 & 0xf);
     mNumPathPts = mPathPtr.NumNodes();
-    mCurPathPt = zero;
+    mCurPathPt = 0;
     mPrevPathPt.x = mPosX;
     mPrevPathPt.y = mPosY;
     mPrevPathPt.z = mPosZ;
     mPathPtr.GetNode(mPathTarget, mCurPathPt);
-    mHasPlayerUsedCannon = (unsigned char)zero;
-    b = (unsigned char)(((param1 >> 4) + 1) & 0x3f);
-    mPathPtToJumpAt1 = b;
-    b = (unsigned char)(((param1 >> 10) + 1) & 0x3f);
-    mPathPtToJumpAt2 = b;
+    mHasPlayerUsedCannon = 0;
+    mPathPtToJumpAt1 = ((param1 >> 4) + 1) & 0x3f;
+    mPathPtToJumpAt2 = ((param1 >> 10) + 1) & 0x3f;
     if (mPathPtToJumpAt1 <= 1)
         mPathPtToJumpAt1 = 0xff;
     if (mPathPtToJumpAt2 <= 1)
         mPathPtToJumpAt2 = 0xff;
-    mStarID = (unsigned char)(mAngleX & 0xf);
-    b = mStarID;
-    mTrackedStar = TrackStar(b, 2);
-    mFlagID = zero;
+    mStarID = mAngleX & 0xf;
+    mTrackedStar = TrackStar(mStarID, 2);
+    mFlagID = 0;
     mPlayer = 0;
-    mIsRacing = (unsigned char)zero;
-    mIsTalkingToMario = (unsigned char)zero;
+    mIsRacing = 0;
+    mIsTalkingToMario = 0;
     return 1;
 }
 
@@ -471,7 +464,7 @@ void daRNk_c::func_ov062_0211a1f4()
         if (this->mPlayer->GetTalkState() != -1)
             return;
         Sound::PlaySub(0x1f, 0x7f, 0, 0x7f000, 0);
-        func_02012694(kSfx4D, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(kSfx4D, &this->mCamSpacePos);
         Sound::LoadAndSetMusic_Layer2(kMusicRace);
         this->mIsRacing = 1;
         this->mStep++;
@@ -504,8 +497,8 @@ void daRNk_c::func_ov062_0211a1f4()
            (135 degrees), scale by normalY * 7 - 6 (1.0 on level ground, less
            on a slope); otherwise full speed (1.0). */
         if (this->GetSubtraction(this->mPrevAngleY,
-                                 cstd::atan2(this->mFloorNormalX, this->mFloorNormalZ)) >= 0x6000)
-            speedScale = this->mFloorNormalY * 7 - 0x6000;
+                                 cstd::atan2(this->mFloorNormal.x, this->mFloorNormal.z)) >= 0x6000)
+            speedScale = this->mFloorNormal.y * 7 - 0x6000;
         else
             speedScale = 0x1000;
         if (this->mHasPlayerUsedCannon == 0)

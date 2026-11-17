@@ -1079,7 +1079,15 @@
       "target_address": "0x02148954"
     }
   ],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's empty destructor from include/types.h, dragged in by the Vector3 locals tmp (the player offset) and vec (the open/close velocity): mwccarm re-emits ~Vector3() with vague linkage. No section in this TU references it. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by another enrolled source; this object's copy is the identical 4-byte `bx lr` body with no relocations, and rombuild compares it against those cartridge bytes before discarding the duplicate."
+    }
+  ],
   "externalized_output": [
     {
       "symbol": "_ZTI7fBase_c",
@@ -3979,49 +3987,49 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@455",
+      "from": "@492",
       "to": "@485",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @510 to @456 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @456 to @455 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @510 to @456 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @456 to @455 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @455 to @492 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@457",
+      "from": "@494",
       "to": "@487",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @512 to @458 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @458 to @457 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @512 to @458 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @458 to @457 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @457 to @494 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@459",
+      "from": "@496",
       "to": "@489",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @514 to @460 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @460 to @459 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @514 to @460 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @460 to @459 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @459 to @496 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@461",
+      "from": "@498",
       "to": "@491",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @516 to @462 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @462 to @461 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @516 to @462 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @462 to @461 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @461 to @498 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@463",
+      "from": "@500",
       "to": "@493",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @518 to @464 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @464 to @463 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @518 to @464 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @464 to @463 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @463 to @500 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@465",
+      "from": "@502",
       "to": "@495",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @520 to @466 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @466 to @465 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @520 to @466 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @466 to @465 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @465 to @502 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@467",
+      "from": "@504",
       "to": "@497",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @522 to @468 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @468 to @467 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @522 to @468 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @468 to @467 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @467 to @504 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@469",
+      "from": "@506",
       "to": "@25",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @524 to @470 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @470 to @469 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @524 to @470 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @470 to @469 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @469 to @506 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@471",
+      "from": "@508",
       "to": "@26",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @526 to @472 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @472 to @471 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @526 to @472 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @472 to @471 when d_a_star_gate dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @471 to @508 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ]
 }

@@ -1050,14 +1050,7 @@ void dScEntry_c::RenderWinCounts() {
     int i = 0;
 
     if (count > 0) {
-        int sz = 0x1000;
-        int xTens = 206;
-        int eight = 8;
-        int yOff = i;
-        int zT = 0;
-        int zO = 0;
-        int minus1 = -1;
-        int xOnes = 216;
+        int yOff = 0;
 
         do {
             int *p;
@@ -1066,16 +1059,16 @@ void dScEntry_c::RenderWinCounts() {
             n = n % 100;
             tens = n / 10;
             if (tens != 0) {
-                p = (int *)OAM::Render(zT, (OamAttr *)data_ov075_0211c8b0, xTens, yBase + yOff,
-                                       eight, minus1, sz, zT);
+                p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0, 206, yBase + yOff, 8,
+                                       -1, 0x1000, 0);
                 if (p != 0) {
                     int *q = (p + 1);
                     int val = *q;
                     *q = (val & ~0x3ff) | ((tens + ((u32)(val << 22) >> 22)) & 0x3ff);
                 }
             }
-            p = (int *)OAM::Render(zO, (OamAttr *)data_ov075_0211c8b0, xOnes, yBase + yOff, eight,
-                                   minus1, sz, zO);
+            p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0, 216, yBase + yOff, 8, -1,
+                                   0x1000, 0);
             if (p != 0) {
                 int *q = (p + 1);
                 int val = *q;
@@ -1172,11 +1165,9 @@ void dScEntry_c::RenderResults() {
 
     {
         int i = 0;
-        int x = 128;
-        int y = 96;
         do {
             int fix = (i == mStepWork[1]) ? 0xe00 : 0x1000;
-            OAM::Render(true, sb, x, y, -1, -1, fix, 0);
+            OAM::Render(true, sb, 128, 96, -1, -1, fix, 0);
             if (sb->attr3 == 0xffff)
                 break;
             sb++;
@@ -1226,8 +1217,7 @@ void dScEntry_c::UpdateResults() {
                 for (i = 0; i < 4; i++) {
                     if (data_0209fc5c[i] != 0) {
                         acc |= data_020a0e58[i].pressed & 0xc;
-                        acc |=
-                            ((TouchInfo *)gTouchHeld)[i].held && ((TouchInfo *)gTouchHeld)[i].edge;
+                        acc |= gTouchInfo[i].held && gTouchInfo[i].edge;
                     }
                 }
                 mStepDelay -= data_0208ee44;
@@ -1763,10 +1753,6 @@ void dScEntry_c::EnterSoloConfirm() {
     }
 }
 
-struct SinePair {
-    short a, b;
-};
-
 /* Render step of the recruit steps: RenderWaitingText's wave, drawn from
    the language's glyph list data_ov075_0211c968 at y 0x1c. */
 void dScEntry_c::RenderRecruitText() {
@@ -1776,31 +1762,22 @@ void dScEntry_c::RenderRecruitText() {
 
     if (mWaiting.waveDelay <= 0) {
         int ang;
-        int flag;
-        int fallback = 28;
-        int zero = 0;
-        int one = 1;
-        int minus = -1;
-        int fx = 0x1000;
-        int x = 128;
+        bool flag;
 
         ang = mWaiting.wavePhase;
-        flag = 0;
+        flag = false;
 
         do {
             int y;
 
             if (ang >= 0 && ang < 0x10000) {
-                flag = one;
-                y = (((SinePair *)FX_SinCosTable_)[(unsigned short)(short)(unsigned short)ang >> 4]
-                         .a >>
-                     0xa) +
-                    fallback;
+                flag = true;
+                y = (FX_SinCosTable_[2 * ((u16)(s16)(u16)ang >> 4)] >> 10) + 28;
             } else {
-                y = fallback;
+                y = 28;
             }
 
-            OAM::Render(one, attr, x, y, minus, minus, fx, zero);
+            OAM::Render(true, attr, 128, y, -1, -1, 0x1000, 0);
 
             if (attr->attr3 == 0xffff)
                 break;
@@ -1811,7 +1788,7 @@ void dScEntry_c::RenderRecruitText() {
 
         mWaiting.wavePhase += 0x800;
 
-        if (flag == zero)
+        if (!flag)
             mWaiting.waveDelay = 120;
     } else {
         OAM::RenderSub(attr, 128, 28);

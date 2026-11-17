@@ -27,6 +27,7 @@
  */
 
 #include "common.h"
+#include "Vector3s.h"
 #include "daFPkn_c.h"
 #include "daPkn_c.h"
 #include "SharedFilePtr.h"
@@ -41,13 +42,6 @@
 #include "math/CalcLib.h"
 
 #pragma defer_codegen off
-
-/* UpdateClsnOffset's stack locals: three bone-angle sums, then the
-   position shifted down by 3. */
-struct ClsnOffsetLocals {
-    s16 acc[3];
-    int tmp[3];
-};
 
 /* Actor ids, from symbols/actor_debug_names.tsv. */
 enum {
@@ -109,7 +103,6 @@ int IsStarCollectedInCurLevel(s32 flag);
 void SetStarMarker(int i, dActor_c *self, int v);
 extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern "C" int *Vec3_LslInPlace(void *v, int sh);
-extern "C" void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 
 extern SharedFilePtr data_ov084_02130dfc;   /* the plant's model */
 extern SharedFilePtr *data_ov084_021302f4[];/* the six shared animation handles */
@@ -189,7 +182,8 @@ void daFPkn_c::OnGroupMemberDefeated()
 
 void daFPkn_c::UpdateClsnOffset()
 {
-    struct ClsnOffsetLocals locals;
+    Vector3s rot;
+    Vector3 pos;
     int scaledSinAcc0, sinAcc1, cosAcc1, scaledCosAcc0, isFirepakun;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
@@ -200,17 +194,17 @@ void daFPkn_c::UpdateClsnOffset()
     if ((u32)(mState - STATE_SPIT) > 1) return;
     if (mScale != mMaxScale) return;
 
-    locals.acc[0] = 0;
-    locals.acc[1] = 0;
-    locals.acc[2] = 0;
+    rot.x = 0;
+    rot.y = 0;
+    rot.z = 0;
     {
         ModelBone *bones = mAnmModel.data.bones;
         int i;
         for (i = 0; i < 5; i++) {
             u8* p = data_ov084_02130294 + i;
-            locals.acc[0] = (s16)(locals.acc[0] + (s16)bones[*p].rotX);
-            locals.acc[1] = (s16)(locals.acc[1] + (s16)bones[*p].rotY);
-            locals.acc[2] = (s16)(locals.acc[2] + (s16)bones[*p].rotZ);
+            rot.x += (s16)bones[*p].rotX;
+            rot.y += (s16)bones[*p].rotY;
+            rot.z += (s16)bones[*p].rotZ;
         }
     }
 
@@ -218,8 +212,8 @@ void daFPkn_c::UpdateClsnOffset()
     mClsnOffset.y = 0;
     mClsnOffset.z = 0;
 
-    Vec3_Asr((Vector3 *)locals.tmp, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, locals.tmp[0], locals.tmp[1], locals.tmp[2]);
+    Vec3_Asr(&pos, &mPos, 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     MTX_Concat43(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
     mClsnOffset.x = data_020a0e68.m[9];
     mClsnOffset.y = data_020a0e68.m[10];
@@ -227,22 +221,22 @@ void daFPkn_c::UpdateClsnOffset()
     Vec3_LslInPlace(&mClsnOffset, 3);
     VEC_Subtract(&mClsnOffset, &mPos, &mClsnOffset);
 
-    scaledSinAcc0 = FX_SinIdx((u16)locals.acc[0] >> 4) * 0x32;
-    sinAcc1 = FX_SinIdx((u16)locals.acc[1] >> 4);
+    scaledSinAcc0 = FX_SinIdx((u16)rot.x >> 4) * 0x32;
+    sinAcc1 = FX_SinIdx((u16)rot.y >> 4);
 
     mClsnOffset.x = mClsnOffset.x + FX_MUL(scaledSinAcc0, sinAcc1);
 
     /* The int isFirepakun keeps the ROM's compare; a direct test DIFFs. */
     isFirepakun = (actorID == ACTOR_FIREPAKUN);
     if (isFirepakun != false) {
-        scaledCosAcc0 = FX_CosIdx((u16)locals.acc[0] >> 4) * 0x32;
+        scaledCosAcc0 = FX_CosIdx((u16)rot.x >> 4) * 0x32;
         mClsnOffset.y = mClsnOffset.y - (0x19000 - scaledCosAcc0);
     } else {
-        scaledCosAcc0 = FX_CosIdx((u16)locals.acc[0] >> 4) * 0x32;
+        scaledCosAcc0 = FX_CosIdx((u16)rot.x >> 4) * 0x32;
         mClsnOffset.y = mClsnOffset.y - (0x32000 - scaledCosAcc0);
     }
 
-    cosAcc1 = FX_CosIdx((u16)locals.acc[1] >> 4);
+    cosAcc1 = FX_CosIdx((u16)rot.y >> 4);
     mClsnOffset.z = mClsnOffset.z + FX_MUL(scaledSinAcc0, cosAcc1);
 
     mClsnOffset.x = FX_MUL(mClsnOffset.x, mScale);
@@ -466,7 +460,7 @@ void daFPkn_c::StateSpit()
     pos.y += mMaxScale * 0x5a;
     mAngleX = 0x1000;
 
-    SpawnFireball(pos, (const Vector3_16 *)(&mAngleX), 0x1e000, 0xa000, 3);
+    SpawnFireball(pos, &mAngle, 0x1e000, 0xa000, 3);
     return;
 
 cold:

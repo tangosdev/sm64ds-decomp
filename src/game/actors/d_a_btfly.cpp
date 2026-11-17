@@ -221,12 +221,12 @@ void daBtfly_c::State5()
     if (mStateTimer >= 60)
         hAngle = mWanderAngle;
     else
-        hAngle = Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX);
+        hAngle = Vec3_HorzAngle(&mPos, &mHomePos);
 
     {
         s16 target;
         if (mPosY <
-            mHomePosY +
+            mHomePos.y +
                 (int)(((unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0xfff) * 0x32 +
                       0x32000))
             target = -0x2000;
@@ -289,8 +289,8 @@ void daBtfly_c::State4()
 
 void daBtfly_c::State3()
 {
-    ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX), 0x800);
-    ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, (Vector3 *)&mHomePosX), 0x50);
+    ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, &mHomePos), 0x800);
+    ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &mHomePos), 0x50);
     UpdatePos(0);
 
     {
@@ -307,9 +307,9 @@ void daBtfly_c::State3()
     if (IsPlayerInRange(0xbb8))
         return;
 
-    mPosX = mHomePosX;
-    mPosY = mHomePosY;
-    mPosZ = mHomePosZ;
+    mPosX = mHomePos.x;
+    mPosY = mHomePos.y;
+    mPosZ = mHomePos.z;
     mState = 1;
 }
 
@@ -319,9 +319,9 @@ void daBtfly_c::State2()
     Vector3 v;
     Vector3 d;
 
-    mPosX = mHomePosX;
-    mPosY = mHomePosY;
-    mPosZ = mHomePosZ;
+    mPosX = mHomePos.x;
+    mPosY = mHomePos.y;
+    mPosZ = mHomePos.z;
 
     player = ClosestPlayer();
     if (player != 0) {
@@ -503,9 +503,9 @@ int daBtfly_c::InitResources()
         mState = 4;
     }
 
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
 
     int r = RandomIntInternal(&data_0209e650.value);
     int fc = mAnmModel.GetFrameCount();

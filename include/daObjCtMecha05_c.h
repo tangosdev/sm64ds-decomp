@@ -13,9 +13,7 @@
 #include "dExtShadowModel_c.h"
 
 struct daObjCtMecha05_c : dBgActor_c {
-    s32 mHomePosX;   /* 0x320 -- snapshot of mPosX at InitResources */
-    s32 mHomePosY;   /* 0x324 -- snapshot of mPosY at InitResources */
-    s32 mHomePosZ;   /* 0x328 -- snapshot of mPosZ at InitResources */
+    Vector3 mHomePos; /* 0x320 -- snapshot of mPos at InitResources */
     s32 mTravel;     /* 0x32c -- += mHorzSpeed each tick; compared to 0xfa000 */
     s32 mPrevTravel; /* 0x330 -- previous tick's mTravel */
     u16 mStateTimer; /* 0x334 -- DecIfAbove0_Short countdown */

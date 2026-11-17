@@ -21,9 +21,9 @@
  *   (this, player); the body is 0-arg.
  * Leftover: func_02012694 sound at mCamSpacePosX (TalkingToPlayer_Init,
  *   OpenClose_Init / Main).
- * Leftover: POD VecFx32 for data_ov100_02148948, messagePos, tmp,
- *   vec -- Vector3's inline dtor is non-POD; a Vector3 BSS object would
- *   register in sinit.
+ * Leftover: POD VecFx32 for data_ov100_02148948 -- Vector3's inline
+ *   dtor is non-POD; a Vector3 BSS object would register in sinit.
+ *   The messagePos local is still a VecFx32 cast at ShowMessage.
  * Leftover: data_ov100_02148390 gate table.
  * Leftover: (Vector3 *)&mSpeedX (dActor_c consecutive
  *   s32s; a Vector3 member is not this class).
@@ -194,10 +194,10 @@ bool daStarGate_c::ChangeState(State *nextState, daPly_c *player) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 daPly_c *daStarGate_c::CalculateRelativePlayerPos() {
-    VecFx32 tmp;
+    Vector3 tmp;
     daPly_c *player = gPlayers[gLocalPlayerId];
-    Vec3_Sub((Vector3 *)&tmp, &player->mPos, &mPos);
-    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, -mAngleY, (Vector3 *)&tmp);
+    Vec3_Sub(&tmp, &player->mPos, &mPos);
+    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, -mAngleY, &tmp);
     return player;
 }
 
@@ -327,7 +327,7 @@ bool daStarGate_c::St_OpenClose_Init(daPly_c *) {
     ShowArea((s8)mAngleZ);
     gCamera->SetFlag_3();
     mTerminalVelocity = -0x8a000;
-    func_02012694(0x4e, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x4e, &mCamSpacePos);
     return true;
 }
 
@@ -335,7 +335,7 @@ bool daStarGate_c::St_OpenClose_Init(daPly_c *) {
 /* -------------------------------------------------------------------------- */
 bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
     int ready;
-    VecFx32 vec;
+    Vector3 vec;
     int gy, gz, vd;
 
     ready = func_ov100_02144fcc();
@@ -345,7 +345,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
                 mCloseDoorTimer = 28;
             } else if (DecIfAbove0_Byte(&mCloseDoorTimer) == 0) {
                 mTerminalVelocity = 0;
-                func_02012694(0x4f, (const Vector3 *)(&mCamSpacePosX));
+                func_02012694(0x4f, &mCamSpacePos);
             } else if (mCloseDoorTimer == 8) {
                 gCamera->GoBehindPlayer(gLocalPlayerId);
             }
@@ -371,7 +371,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
     vec.x = vd;
     vec.z = gz;
     vec.y = gy;
-    Vec3_RotateYAndTranslate((Vector3 *)&mSpeedX, &data_020a0ebc, mAngleY, (Vector3 *)&vec);
+    Vec3_RotateYAndTranslate((Vector3 *)&mSpeedX, &data_020a0ebc, mAngleY, &vec);
     return true;
 }
 

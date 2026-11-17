@@ -9,13 +9,8 @@
  * leftovers:
  * - mLevel (dScMgBase_c) and mDrawSubScreen (dScMgD3DBase_c) are read here
  *   as the `mLevel % 5` egg check and the Render flag test.
- * - struct C must stay a non-polymorphic stand-in for the state PMF at
- *   0x5004: mwccarm lays out a pointer-to-member of a polymorphic class
- *   differently, so Behavior cannot dispatch through dScMgJump_c itself.
- * - The pmf_dScMgJump_c_* records (0x0213cb54..0x0213cb84) are ROM-owned
- *   {fn, 0} table rows, declared as StatePmf externs and named for the
- *   state each one points at; gMgScene is the live dScMgBase_c (its
- *   mHudScore and mBestHudScore are read by name).
+ * - gMgScene is the live dScMgBase_c (its mHudScore and mBestHudScore are
+ *   read by name).
  * - the func_ov006_020c and func_ov004 externs are other TUs' workers; they
  *   keep address names until their owners name them.
  */
@@ -31,13 +26,18 @@
 #include "nitro/gx/g3x.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
+#include "SpawnInfo.h"
 
-/* `C` stands in for the receiver of the state pointer-to-member at 0x5004.
- * It must stay non-polymorphic: mwccarm lays out a pointer-to-member of a
- * polymorphic class differently, so dScMgJump_c itself cannot be used. */
-struct C;
-typedef void (C::*PMF)();
-struct C { char pad[0x5004]; PMF m; };
+dScMgJump_c *dScMgJump_c_classInit();
+
+/* Each `mState = &dScMgJump_c::State_*` below emits an eight-byte {fn, 0}
+ * member-pointer constant into .data; the cartridge keeps them in one run
+ * (0x0213cb4c..0x0213cb8c) with this profile among them. */
+BaseSpawnInfo<dScMgJump_c> g_profile_MG_JUMP = {
+    dScMgJump_c_classInit,
+    0x174,
+    0x174,
+};
 
 /* Whole-matrix copies go through this so they stay one block move. */
 #include "private/mtx43.h"
@@ -46,6 +46,27 @@ struct C { char pad[0x5004]; PMF m; };
 #include "nitro/gx/gx_bgcnt.h"
 
 struct V3 { int w[3]; };
+
+/* The 0x30-byte runtime material ModelComponents::materials points at
+   (ModelComponents.cpp's MaterialState; dExtModel_c.h types the pointer as
+   the file's BMD_Material, whose layout it does not share). Render scrolls
+   the first material's texture T offset. */
+struct MaterialState {
+    u32 textureId;     /* 0x00 */
+    u32 paletteId;     /* 0x04 */
+    fx32 texScaleS;    /* 0x08 */
+    fx32 texScaleT;    /* 0x0c */
+    u16 texRotation;   /* 0x10 */
+    u16 pad_12;        /* 0x12 */
+    fx32 texTransS;    /* 0x14 */
+    fx32 texTransT;    /* 0x18 */
+    u32 texImageParam; /* 0x1c */
+    u32 texPlttBase;   /* 0x20 */
+    u32 polygonAttr;   /* 0x24 */
+    u32 difAmb;        /* 0x28 */
+    u32 speEmi;        /* 0x2c */
+};
+typedef char MaterialState_size_must_be_0x30[sizeof(MaterialState) == 0x30 ? 1 : -1];
 
 /* The two model file handles InitResources swaps between through
  * sJumpBackFile; a declared-only subclass so the static initializer
@@ -79,17 +100,10 @@ int Jump3D_InitPool(void *base, int count);
 extern Matrix4x3 data_020a0e68;
 extern int sJumpLastPick;
 extern u8 gMainScreenLayers;
-extern s16 data_02082614;
+extern s16 data_02082614[];
 extern int sJump3DMarioCount;
 extern int sHeyhoUnsettledCount;
 extern int sJump3DRisenOutCount;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Result;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Intro;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_End;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Final;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle_2;
-extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Play;
 }
 void Heyho_ReactAll(void);
 void Heyho_SeparateAll(void);
@@ -143,9 +157,7 @@ void dScMgJump_c::StartRound(int arg)
         idx = mLevel;
     } else {
         do {
-            idx =
-                (int)((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) * 0xa >>
-                0xc;
+            idx = RAND_FX_SCALE(10);
         } while (idx == (u32)sJumpLastPick);
         sJumpLastPick = idx;
     }
@@ -207,7 +219,7 @@ s32 dScMgJump_c::InitResources()
     G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     G2_SetBG0Priority(1);
-    fov = FX_Div(0xc0000, (s32)data_02082614);
+    fov = FX_Div(0xc0000, data_02082614[0]);
 
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
@@ -259,7 +271,7 @@ void dScMgJump_c::BeginIntro()
     mStateTimer = 120;
     mAccum = 0;
     mAccumStep = 0x4000;
-    mState = pmf_dScMgJump_c_State_Intro;
+    mState = &dScMgJump_c::State_Intro;
 }
 
 /* Counts down mStateTimer, then shows the prompt and moves to the next state.
@@ -287,7 +299,7 @@ void dScMgJump_c::State_Intro()
 
 void dScMgJump_c::BeginPlay()
 {
-    mState = pmf_dScMgJump_c_State_Play;
+    mState = &dScMgJump_c::State_Play;
 }
 
 void dScMgJump_c::State_Play()
@@ -310,7 +322,7 @@ void dScMgJump_c::State_Play()
 void dScMgJump_c::BeginEnd()
 {
     mStateTimer = 32;
-    mState = pmf_dScMgJump_c_State_End;
+    mState = &dScMgJump_c::State_End;
 }
 
 void dScMgJump_c::State_End() {
@@ -325,7 +337,7 @@ void dScMgJump_c::State_End() {
     }
     Jump3D_SetLowGravity();
     Heyho_ReactAll();
-    mState = pmf_dScMgJump_c_State_Result;
+    mState = &dScMgJump_c::State_Result;
 }
 
 void dScMgJump_c::State_Result()
@@ -337,7 +349,7 @@ void dScMgJump_c::State_Result()
             Mg_SetSharedState(MG_STATE_GAME_OVER);
             mPromptEnabled = 0;
             mStateTimer = 0;
-            mState = pmf_dScMgJump_c_State_Idle;
+            mState = &dScMgJump_c::State_Idle;
         }
     }
     Heyho_SeparateAll();
@@ -347,7 +359,7 @@ void dScMgJump_c::State_Result()
 void dScMgJump_c::BeginFinal()
 {
     Jump3D_StopGravity();
-    mState = pmf_dScMgJump_c_State_Final;
+    mState = &dScMgJump_c::State_Final;
 }
 
 /* Its writes to 0x5004 and 0x5014 are what bound dScMgD3DBase_c's size
@@ -372,7 +384,7 @@ void dScMgJump_c::State_Final()
   Mg_SetSharedState(MG_STATE_ROUND_CLEAR);
   mPromptEnabled = 0;
   mStateTimer = 0;
-  mState = pmf_dScMgJump_c_State_Idle_2;
+  mState = &dScMgJump_c::State_Idle;
 }
 
 /* An empty state. */
@@ -383,8 +395,7 @@ void dScMgJump_c::State_Idle()
 /* Slot 6: run the current state. */
 s32 dScMgJump_c::Behavior()
 {
-    C *c = (C *)this;
-    (c->*c->m)();
+    (this->*mState)();
     return 1;
 }
 
@@ -400,7 +411,7 @@ s32 dScMgJump_c::Render()
         int y;
         int i;
 
-        Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+        DrawScoreTally(0xe0, 0x14, 1);
 
         count = sJump3DMariosLeft;
         y = 0x6e;
@@ -440,16 +451,14 @@ s32 dScMgJump_c::Render()
     {
         V3 t;
         ModelComponents *obj;
-        BMD_Material *p;
+        MaterialState *mat;
 
         t = *(V3 *)sJumpRenderScale;
 
         obj = &mModel.data;
-        p = obj->materials;
+        mat = (MaterialState *)obj->materials;
         func_02045e44(obj, 1, 0);
-        /* +0x18 is texTransT of the runtime material record (MaterialState, still
-           local to src/engine/model/ModelComponents.cpp), not a BMD_Material field. */
-        *(int *)((char *)p + 0x18) = mAccum;
+        mat->texTransT = mAccum;
 
         {
             dExtSimpleModel_c *model = &mModel;
