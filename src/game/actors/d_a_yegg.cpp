@@ -1024,6 +1024,12 @@ int daYegg_c::FindTarget(int a1, int best) {
     dActor_c *actor;
     int matched;
     int b;
+    /* Kept (#821 r21). The ROM reserves 0x10 bytes of frame it never
+       touches; without this the function is 0x15c against 0x168. An unused
+       `Vector3 pos;` reproduces it exactly, but a dead local only sizes the
+       frame too, so it buys nothing over this one. A used copy, `Vector3 pos
+       = actor->mPos;` in the loop or `= mPos;` at the top, keeps its stores:
+       0x180. */
     struct P { int a, b, c, d; };
     volatile struct P _p;
     struct P *_q = const_cast<struct P *>(&_p);
