@@ -7591,7 +7591,7 @@
     "src/minigames/d_s_mg_base.cpp#Mg_CheckBannerButton": "tangosdev",
     "src/minigames/d_s_mg_base.cpp#Mg_ShowBanner": "tangosdev",
     "src/minigames/d_s_mg_base.cpp#Mg_ResetOverlays": "tangosdev",
-    "src/minigames/d_s_mg_base.cpp#Mg_DrawBlinkSprite": "tangosdev",
+    "src/minigames/d_s_mg_base.cpp#_ZN11dScMgBase_c15DrawBlinkSpriteEii": "tangosdev",
     "src/minigames/d_s_mg_base.cpp#_ZN11dScMgBase_c10DrawPromptEv": "tangosdev",
     "src/minigames/d_s_mg_base.cpp#_ZN11dScMgBase_c9DrawTallyEi": "lunavyqo",
     "src/minigames/d_s_mg_base.cpp#Mg_DrawRecordTable": "ruspecial",

@@ -19267,7 +19267,7 @@
     },
     "ov004:0x020b0d8c": {
       "author": "tangosdev",
-      "name": "Mg_DrawBlinkSprite"
+      "name": "_ZN11dScMgBase_c15DrawBlinkSpriteEii"
     },
     "ov004:0x020b0de0": {
       "author": "tangosdev",

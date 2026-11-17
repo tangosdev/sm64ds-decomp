@@ -107,7 +107,6 @@ extern const unsigned char sCoinCaptionBlinkTimes[];
 extern const unsigned char sCoinCaptionBlinkSprites[];
 extern const u16 sCoinCaptionCountInTimes[];
 extern const u8 sCoinCaptionCountInSprites[];
-extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern const int sCoinSparkleSpawnOffsets[];
 extern const u16 sCoinSparkleAngles[];
@@ -478,7 +477,7 @@ void dScMgCoin_c::DrawResultPrompt() {
     if (mCountdown == 0)
         return;
 
-    Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
+    DrawBlinkSprite(0xe0, 0xa0);
 }
 
 void dScMgCoin_c::DrawResultNumbers() {

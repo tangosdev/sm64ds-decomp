@@ -188,7 +188,6 @@ int GetGameLanguage(void);
 int Mg_GetTopRecord(void);
 void Mg_DrawTopRightCounter(int a0, int a1);
 void Mg_DrawTopLeftCounter(int self);
-void Mg_DrawBlinkSprite(void *c, int a1, int a2);
 extern OamAttr *data_ov006_02138ae0[];
 extern OamAttr **sSmartballTextSpritesByLanguage[];
 extern int sSmartballCellScores[];
@@ -4953,11 +4952,11 @@ s32 dScMgSmartball_c::Render() {
         /* Continue prompt. */
         if (mPhase == 1 && mResultTimer >= 300) {
             if (col >= 7)
-                Mg_DrawBlinkSprite(this, 0x80, 0xa8);
+                DrawBlinkSprite(0x80, 0xa8);
             else if (col == 6)
-                Mg_DrawBlinkSprite(this, 0xe0, 0xa8);
+                DrawBlinkSprite(0xe0, 0xa8);
             else
-                Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
+                DrawBlinkSprite(0xe0, 0xa0);
         }
     }
 

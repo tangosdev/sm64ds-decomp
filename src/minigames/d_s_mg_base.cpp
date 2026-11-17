@@ -2375,18 +2375,19 @@ namespace s20b0d8c {
 extern "C" {
 extern s32 GetGameLanguage(void);
 extern void Hud_RenderSprite(void *fn, s32 a, s32 b, s32 r3arg, s32 stack_arg);
-/* Draws per-language sprite word 0x11 or 0x12 at (arg1, arg2): word 0x11
-   for the first 20 frames of the scene's 40-frame mFrameCounter cycle,
-   word 0x12 for the rest. */
-void Mg_DrawBlinkSprite(void *c, s32 arg1, s32 arg2)
-{
-    s32 idx1 = ((dScMgBase_c *)c)->mFrameCounter;
-    s32 r4 = (idx1 < 0x14) ? 0x11 : 0x12;
-    s32 idx2 = GetGameLanguage();
-    OamAttr **table = sMgSpriteTables[idx2];
-    Hud_RenderSprite(table[r4], arg1, arg2, -1, -1);
 }
 }
+
+/* Draws per-language sprite word 0x11 or 0x12 at (x, y): word 0x11 for the
+   first 20 frames of the 40-frame mFrameCounter cycle, word 0x12 for the
+   rest. */
+void dScMgBase_c::DrawBlinkSprite(s32 x, s32 y) {
+    using namespace s20b0d8c;
+    s32 frame = mFrameCounter;
+    s32 word = (frame < 20) ? 0x11 : 0x12;
+    s32 language = GetGameLanguage();
+    OamAttr **table = sMgSpriteTables[language];
+    Hud_RenderSprite(table[word], x, y, -1, -1);
 }
 
 namespace s20b0de0 {

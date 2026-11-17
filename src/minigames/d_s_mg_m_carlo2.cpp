@@ -281,7 +281,7 @@ s32 dScMgMCarlo2_c::Render()
     RenderOamMainScreen(sMCarloHudSprite, 232, 24, -1, -1);
 
     if (this->mRoundState == 5)
-        Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
+        DrawBlinkSprite(0xe0, 0xa0);
 
     lifted = sMCarlo2CardsTail;
     for (i = 0; i < 20; i++) {

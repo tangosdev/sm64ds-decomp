@@ -902,6 +902,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     /* The score tally column at the right edge of the touch screen. */
     void DrawTally(int);
     void DrawScoreTally(int, int, int);
+    void DrawBlinkSprite(s32, s32);
 
     s32 mTallyShown;            /* 0x050 */
     s32 mTallyAnimTimer;            /* 0x054 */
