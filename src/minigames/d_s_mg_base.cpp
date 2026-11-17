@@ -24,8 +24,7 @@
  * file emits both classes' vtables and RTTI.
  *
  * Still unnamed: the header's unk_ fields, and the bytes it leaves as
- * padding that this file reaches by offset (+0xb0; the menu save buffers
- * go through the file-local MgMenuSaveArea); the func_ov004 and data_ov004
+ * padding that this file reaches by offset (+0xb0); the func_ov004 and data_ov004
  * helpers are unnamed in symbols.txt.
  */
 
@@ -1326,18 +1325,6 @@ void dScMgBase_c::UpdateMenu() {
     }
 }
 
-/* What SaveScreenForMenu and RestoreScreenFromMenu keep in the header's
-   pad_228 while the menu is up. A file-local view: dScMgBase_c.h is shared
-   by 36 sources, and only these two bodies touch the buffers. It overlays
-   the whole object from `this`; a view cast from pad_228 moves the literal
-   pool. */
-struct MgMenuSaveArea {
-    u8 pad_000[0x2228];     /* 0x000 -- the dScMgBase_c members before them */
-    u8 subObjChars[0x2000]; /* 0x2228 -- sub-screen OBJ VRAM at 0x06606000 */
-    u8 mainBgPltt[0x200];   /* 0x4228 -- main BG palette from colour 16 on */
-    u8 subBgPltt[0x200];    /* 0x4428 -- first 0x80 bytes of the sub BG palette */
-};
-
 /* dScMgBase_c::RestoreScreenFromMenu - slot 30.
 
    WHAT IT DOES, because the name says the opposite of both halves.  This is
@@ -1369,8 +1356,6 @@ struct MgMenuSaveArea {
    already said void; the retail source did too. */
 
 void dScMgBase_c::RestoreScreenFromMenu() {
-    MgMenuSaveArea *save = (MgMenuSaveArea *)this;
-
     gMainScreenLayers = 0;
     gSubScreenLayers = 0;
 
@@ -1380,16 +1365,15 @@ void dScMgBase_c::RestoreScreenFromMenu() {
     GX_SetVisibleWnd(data_0209d460);
     GXS_SetVisibleWnd(data_0209d458);
 
-    GX_LoadBGPltt(save->mainBgPltt, 0x20, 0x1e0);
-    {
-        /* stepped from mainBgPltt: save->subBgPltt moves the literal pool */
-        char *p = (char *)save->mainBgPltt;
-        p += 0x200;
-        GXS_LoadBGPltt(p, 0, 0x80);
-    }
+    GX_LoadBGPltt(mSavedBgPltt, 0x20, 0x1e0);
+    /* The sub palette is reached as colour 0x100 of the buffer: as
+       mSavedBgPltt + 0x200 (or &mSavedBgPltt[0x200], a stepped u8 local, or a
+       u16 [0x200] / [2][0x100] buffer) mwccarm folds the two offsets into one
+       0x4428 literal, 53 of 93 words off (#821, 2026-11-16). */
+    GXS_LoadBGPltt((u16 *)mSavedBgPltt + 0x100, 0, 0x80);
 
     if (GetDisplayMode() != 2) {
-        MI_CpuCopy32(save->subObjChars, (u8 *)G2S_GetOBJCharPtr() + 0x6000, 0x2000);
+        MI_CpuCopy32(mSavedSubObjChars, (u8 *)G2S_GetOBJCharPtr() + 0x6000, 0x2000);
     }
 
     gMainScreenLayers = mSavedMainBgBits;
@@ -1428,8 +1412,10 @@ namespace s20af094 {
 extern "C" {
 /* dScMgBase_c::SaveScreenForMenu - slot 29.
 
-   The two buffers at +0x2228 and +0x4228 sit inside the header's pad_228;
-   this body and RestoreScreenFromMenu reach them through MgMenuSaveArea.
+   It fills mSavedSubObjChars and mSavedBgPltt; RestoreScreenFromMenu puts
+   them back. The sub palette goes in as `(u16 *)mSavedBgPltt + 0x100`, as in
+   RestoreScreenFromMenu: mSavedBgPltt + 0x200 folds the two offsets into one
+   0x4428 literal, 63 of 122 words off (#821, 2026-11-16).
 
    WHAT IT DOES.  The name is coined from this body; until 2026-10-14 the
    slot carried `OnAimedAtWithEgg`, transplanted from include/dActor_c.h at
@@ -1449,8 +1435,6 @@ extern int GetGameLanguage(void);
 
 int dScMgBase_c::SaveScreenForMenu() {
     using s20af094::GetGameLanguage;
-    MgMenuSaveArea *save = (MgMenuSaveArea *)this;
-
     if (GetDisplayMode() != 0)
         Disable3dEngines();
 
@@ -1468,13 +1452,9 @@ int dScMgBase_c::SaveScreenForMenu() {
     REG_DISPCNT &= ~0xe000;
     REG_DISPCNT_SUB &= ~0xe000;
 
-    MI_CpuCopy32((int *)0x5000020, save->mainBgPltt, 0x1e0);
-    {
-        /* stepped from mainBgPltt: save->subBgPltt moves the literal pool */
-        int *pltt = (int *)save->mainBgPltt;
-        MI_CpuCopy32((int *)0x5000400, pltt + 0x80, 0x80);
-    }
-    DC_FlushRange(save->mainBgPltt, 0x400);
+    MI_CpuCopy32((int *)0x5000020, mSavedBgPltt, 0x1e0);
+    MI_CpuCopy32((int *)0x5000400, (u16 *)mSavedBgPltt + 0x100, 0x80);
+    DC_FlushRange(mSavedBgPltt, 0x400);
 
     GX_LoadBGPltt((const void *)sMgMenuBgPltt, 0x20, 0xa0);
     GXS_LoadBGPltt((const void *)sMgMenuSubBgPltt, 0, 0x80);
@@ -1495,10 +1475,10 @@ int dScMgBase_c::SaveScreenForMenu() {
 
     if (GetDisplayMode() != 2) {
         int *vram = (int *)((u8 *)G2S_GetOBJCharPtr() + 0x6000);
-        MI_CpuCopy32(vram, save->subObjChars, 0x2000);
+        MI_CpuCopy32(vram, mSavedSubObjChars, 0x2000);
         int idx = GetGameLanguage();
         DecompressLZ16(sMgMenuScreenByLanguage[idx], vram);
-        DC_FlushRange(save->subObjChars, 0x2000);
+        DC_FlushRange(mSavedSubObjChars, 0x2000);
     }
 }
 

@@ -43,14 +43,6 @@ enum d_s_mg_jump2_AssetId {
 #include "nitro/fx/fx_cp.h"
 #include "nitro/gx/gx_bgcnt.h"
 
-/* The list link at the head of each Jump2Popup. Its two methods link `this` into
- * and back out of the live list at sJump2PopupList. */
-struct Jump2PopupLink {
-    struct Jump2PopupLink *next;
-    void Link();   /* push */
-    void Unlink(); /* remove */
-};
-
 /* Three words as an array, not three ints: as separate members the copy
  * in Render is scalarised and grows by 12 bytes. */
 struct S3 {
@@ -508,14 +500,14 @@ void Jump2Popup ::Spawn(int startX, int startY, int value) {
     life = 0x80;
     active = 1;
     number = (short)value;
-    ((Jump2PopupLink *)this)->Link();
+    Link();
 }
 
 void Jump2Popup::Tick() {
     if (active == 0)
         return;
     if (ApproachLinear2(life, 0, 1) != 0) {
-        ((Jump2PopupLink *)this)->Unlink();
+        Unlink();
         active = 0;
     }
     ApproachLinear(x, targetX, speedX);
