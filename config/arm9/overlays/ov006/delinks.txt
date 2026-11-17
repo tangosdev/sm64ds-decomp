@@ -450,6 +450,7 @@ src/minigames/d_s_mg_bomroom.cpp:
     .init start:0x0212fd48 end:0x021300b0
     .ctor start:0x02133580 end:0x02133584
     .bss start:0x02141660 end:0x02141768
+    .data start:0x0213b9ec end:0x0213bafc
     .data.sBomroomMarkerLitSprites start:0x02133a70 end:0x02133a80
     .data.sBomroomMarkerPlainSprites start:0x02133ae0 end:0x02133af0
     .data.sBomroomHatchPanelSprites start:0x021342bc end:0x021342d0
