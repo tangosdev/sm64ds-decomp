@@ -614,11 +614,6 @@ def summarize(records):
     differing_symbols = sorted(
         (_identity(r) for r in best.values() if r["verdict"] == DIFFERS),
         key=lambda r: (r["module"] or "", r["symbol"]))
-    # Partial identities let the data tracker mark a per-address row without
-    # treating a short or blind tail as a difference.
-    partial_symbols = sorted(
-        (_identity(r) for r in best.values() if r["verdict"] == PARTIAL),
-        key=lambda r: (r["module"] or "", r["symbol"]))
     return {
         "symbols": len(best),
         "verified": symbol_counts[VERIFIED],
@@ -630,7 +625,6 @@ def summarize(records):
         # Identities, not only a count. A count-only ratchet can lose one known-good
         # vtable while gaining an unrelated one and report no regression at all.
         "verifiedSymbols": verified_symbols,
-        "partialSymbols": partial_symbols,
         "differingSymbols": differing_symbols,
         # Per-object-record totals, kept for visibility -- these move with file topology
         # (a TU merge or a duplicate-file cleanup changes them without a symbol's verdict

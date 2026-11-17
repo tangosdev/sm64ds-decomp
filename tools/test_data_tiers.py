@@ -51,8 +51,8 @@ def inventory(records):
 def verification(by_address, **extra):
     out = {
         "available": True, "by_address": by_address, "by_symbol": {},
-        "symbols": len(by_address), "verified": 0, "partial": 0,
-        "differs": 0, "unnamed": 0, "verifiedBytes": 0, "partialBytes": 0,
+        "symbols": len(by_address), "verified": 0,
+        "differs": 0, "unnamed": 0, "verifiedBytes": 0,
         "sourceBuild": None,
     }
     out.update(extra)
@@ -68,7 +68,7 @@ class SummarizeTests(unittest.TestCase):
         self.assertEqual(report["items"][0]["aliases"], ["data_1", "named_table"])
         self.assertEqual(report["items"][0]["status"], "CLAIMED")
 
-    def test_verified_partial_and_differ_are_distinct_tiers(self):
+    def test_a_short_compare_stays_claimed_or_unclaimed(self):
         rows = [
             rec(0x100),
             rec(0x108),
@@ -79,14 +79,12 @@ class SummarizeTests(unittest.TestCase):
             "ov002:0x00000100": "VERIFIED",
             "ov002:0x00000108": "PARTIAL",
             "ov002:0x00000110": "DIFFERS",
-        }, verified=1, partial=1, differs=1, verifiedBytes=8, partialBytes=3)
+        }, verified=1, differs=1, verifiedBytes=8)
         report = DT.summarize(inventory(rows), ver)
         self.assertEqual([r["status"] for r in report["items"]],
-                         ["VERIFIED", "PARTIAL", "DIFFERS", "UNCLAIMED"])
-        self.assertEqual(report["counts"]["verified"], 1)
-        self.assertEqual(report["counts"]["partial"], 1)
-        self.assertEqual(report["counts"]["differs"], 1)
-        self.assertEqual(report["counts"]["unclaimed"], 1)
+                         ["VERIFIED", "CLAIMED", "DIFFERS", "UNCLAIMED"])
+        self.assertEqual(report["counts"]["claimed"], 3)
+        self.assertNotIn("partial", report["counts"])
 
     def test_bss_is_storage_and_does_not_borrow_a_rom_verdict(self):
         rows = [rec(0x200, section=".bss"), rec(0x208, section=".bss",
@@ -118,7 +116,7 @@ class SummarizeTests(unittest.TestCase):
         self.assertNotIn("credited", report["counts"])
         self.assertNotIn("authors", report)
 
-    def test_later_partial_does_not_downgrade_verified(self):
+    def test_a_short_compare_does_not_change_a_verified_address(self):
         with tempfile.TemporaryDirectory() as td:
             path = pathlib.Path(td) / "romdata.json"
             path.write_text(json.dumps([
@@ -190,9 +188,9 @@ class ReportRenderingTests(unittest.TestCase):
             ]), encoding="utf-8")
             ver = DT.load_verification(path)
         self.assertEqual(ver["by_address"]["ov002:0x00000100"], "VERIFIED")
-        self.assertEqual(ver["by_address"]["ov002:0x00000108"], "PARTIAL")
+        self.assertNotIn("ov002:0x00000108", ver["by_address"])
         self.assertEqual(ver["by_address"]["ov002:0x00000110"], "DIFFERS")
-        self.assertEqual((ver["verified"], ver["partial"], ver["differs"]), (1, 1, 1))
+        self.assertEqual((ver["verified"], ver["differs"]), (1, 1))
 
     def test_report_normalizes_a_rombuild_romdata_report(self):
         with tempfile.TemporaryDirectory() as td:
@@ -202,14 +200,11 @@ class ReportRenderingTests(unittest.TestCase):
                 "unnamed": 0, "verifiedBytes": 8, "partialBytes": 3,
                 "verifiedSymbols": [{"module": "ov002", "symbol": "data_1",
                                      "addr": 0x100, "bytes": 8}],
-                "partialSymbols": [{"module": "ov002", "symbol": "data_2",
-                                    "addr": 0x108, "bytes": 3}],
                 "differingSymbols": [],
             }}), encoding="utf-8")
             ver = DT.load_verification(path)
         self.assertEqual(ver["verified"], 1)
-        self.assertEqual(ver["by_address"]["ov002:0x00000100"], "VERIFIED")
-        self.assertEqual(ver["by_address"]["ov002:0x00000108"], "PARTIAL")
+        self.assertEqual(ver["by_address"], {"ov002:0x00000100": "VERIFIED"})
 
 
 if __name__ == "__main__":

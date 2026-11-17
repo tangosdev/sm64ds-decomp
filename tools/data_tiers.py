@@ -6,19 +6,18 @@ whether a complete delinks claim covers it. A claim is ownership, not proof.
 The full build's ``romData`` report is the proof: which emitted data symbols
 match the cartridge. This tool joins the two and reports one picture.
 
-  CLAIMED    a complete delinks claim covers the address
-  VERIFIED   the full build compared an emitted symbol there byte-for-byte
-  PARTIAL    the emitted symbol was compared, but coverage is short or blind
-  DIFFERS    at least one emitted copy disagreed with the cartridge
-  UNCLAIMED  no complete source claim covers the address
+  CLAIMED    a complete delinks claim covers the address. This is decompiled.
+  UNCLAIMED  no complete claim covers the address
+  VERIFIED   the full build compared the whole emitted symbol and it matched
+  DIFFERS    at least one compared byte disagreed
 
 The address is the item. Aliases, renames and TU moves do not create a second
 one. The key is ``module:0xaddress``.
 
-The public bar is one DATA line, the same way the function tiers are the code
-lines. BSS is data: a claimed BSS address counts in that line. The README does
-not split storage by section. Verified, partial and differing stay in the text
-report, because those are build results, not a second progress bar.
+Decompiled or not is the complete claim. The public bar is one DATA line, and
+BSS counts in it. A short or blind byte compare is not a third state: the
+address stays claimed or unclaimed. Verified and differing are byte results
+in the text report.
 
 ``source_coverage.py`` and ``validate_merge.py`` remain the byte ratchets.
 This tool does not duplicate them.
@@ -98,8 +97,8 @@ def load_inventory(path=None, repo=REPO):
 
 def _empty_verification(reason):
     return {"available": False, "reason": reason, "by_address": {},
-            "symbols": 0, "verified": 0, "partial": 0, "differs": 0,
-            "unnamed": 0, "verifiedBytes": 0, "partialBytes": 0}
+            "symbols": 0, "verified": 0, "differs": 0,
+            "unnamed": 0, "verifiedBytes": 0}
 
 
 def load_verification(path=None):
@@ -113,7 +112,7 @@ def load_verification(path=None):
     if isinstance(data, list):
         # The --data-json form: one record per emitted object/symbol. Dedupe a
         # symbol across duplicate vague-linkage copies, with DIFFERS winning.
-        rank = {"UNNAMED": 0, "PARTIAL": 1, "VERIFIED": 2, "DIFFERS": 3}
+        rank = {"UNNAMED": 0, "VERIFIED": 1, "DIFFERS": 2}
         best = {}
         for row in data:
             if not isinstance(row, dict):
@@ -131,23 +130,18 @@ def load_verification(path=None):
         counts = collections.Counter(r["verdict"] for r in rows)
         verified_bytes = sum(int(r.get("bytes", 0) or 0) for r in rows
                              if r["verdict"] == "VERIFIED")
-        partial_bytes = sum(int(r.get("bytes", 0) or 0) for r in rows
-                            if r["verdict"] == "PARTIAL")
         symbol_count = len(rows)
     else:
         if not isinstance(rom, dict) or "verified" not in rom:
             return _empty_verification("report has no romData verdicts")
         counts = collections.Counter({
             "VERIFIED": int(rom.get("verified", 0)),
-            "PARTIAL": int(rom.get("partial", 0)),
             "DIFFERS": int(rom.get("differs", 0)),
             "UNNAMED": int(rom.get("unnamed", 0)),
         })
         verified_bytes = int(rom.get("verifiedBytes", 0))
-        partial_bytes = int(rom.get("partialBytes", 0))
         rows = []
         for field, verdict in (("verifiedSymbols", "VERIFIED"),
-                               ("partialSymbols", "PARTIAL"),
                                ("differingSymbols", "DIFFERS")):
             for row in rom.get(field, []) or []:
                 if isinstance(row, dict):
@@ -158,7 +152,9 @@ def load_verification(path=None):
     by_symbol = {}
     for row in rows:
         verdict = row.get("verdict")
-        if verdict not in ("VERIFIED", "PARTIAL", "DIFFERS"):
+        # A short or blind compare is not a progress state. The address stays
+        # claimed or unclaimed.
+        if verdict not in ("VERIFIED", "DIFFERS"):
             continue
         module = row.get("module")
         if module not in ("arm9", "itcm", "dtcm") and not re.fullmatch(r"ov\d{3}", str(module)):
@@ -173,8 +169,8 @@ def load_verification(path=None):
         if isinstance(addr, int):
             key = canonical_id(module, addr)
             old = by_address.get(key)
-            # DIFFERS hides nothing. VERIFIED beats PARTIAL. A later PARTIAL
-            # must not downgrade an exact comparison of the same address.
+            # DIFFERS hides nothing. A later non-difference must not downgrade
+            # an exact comparison of the same address.
             if old is None or verdict == "DIFFERS" or (
                     old != "DIFFERS" and verdict == "VERIFIED"):
                 by_address[key] = verdict
@@ -187,11 +183,9 @@ def load_verification(path=None):
         "by_symbol": by_symbol,
         "symbols": symbol_count,
         "verified": counts["VERIFIED"],
-        "partial": counts["PARTIAL"],
         "differs": counts["DIFFERS"],
         "unnamed": counts["UNNAMED"],
         "verifiedBytes": verified_bytes,
-        "partialBytes": partial_bytes,
         "sourceBuild": (data.get("analysis", {}).get("sourceBuild")
                         if isinstance(data, dict) else None),
     }
@@ -214,7 +208,7 @@ def _record_rows(inventory, verification):
         verdict = None if bss else by_address.get(key)
         if bss:
             status = "BSS_CLAIMED" if complete else "BSS_UNCLAIMED"
-        elif verdict in ("VERIFIED", "PARTIAL", "DIFFERS"):
+        elif verdict in ("VERIFIED", "DIFFERS"):
             status = verdict
         elif complete:
             status = "CLAIMED"
@@ -248,7 +242,7 @@ def summarize(inventory, verification=None):
     sizes = collections.Counter()
     modules = collections.defaultdict(lambda: {
         "items": 0, "claimed": 0, "initializedClaimed": 0, "verified": 0,
-        "partial": 0, "differs": 0, "unclaimed": 0, "bssClaimed": 0,
+        "differs": 0, "unclaimed": 0, "bssClaimed": 0,
         "bssUnclaimed": 0, "named": 0, "bytes": 0, "claimedBytes": 0,
         "verifiedBytes": 0,
     })
@@ -275,9 +269,6 @@ def summarize(inventory, verification=None):
             counts["verified"] += 1
             mod["verified"] += 1
             mod["verifiedBytes"] += row["bytes"]
-        elif status == "PARTIAL":
-            counts["partial"] += 1
-            mod["partial"] += 1
         elif status == "DIFFERS":
             counts["differs"] += 1
             mod["differs"] += 1
@@ -317,7 +308,6 @@ def summarize(inventory, verification=None):
             "claimed": counts["claimed"],
             "initializedClaimed": counts["initializedClaimed"],
             "verified": counts["verified"],
-            "partial": counts["partial"],
             "differs": counts["differs"],
             "unclaimed": counts["unclaimed"],
             "bssClaimed": counts["bssClaimed"],
@@ -330,24 +320,22 @@ def summarize(inventory, verification=None):
             "bssClaimedWindow": sizes["bssClaimedWindowBytes"],
             "sectionCoverage": dict(sorted(section.items())),
             "verified": int((verification or {}).get("verifiedBytes", 0)),
-            "partial": int((verification or {}).get("partialBytes", 0)),
         },
         "verification": {
             "available": bool(verification.get("available")),
             "symbols": int(verification.get("symbols", 0)),
             "verified": int(verification.get("verified", 0)),
-            "partial": int(verification.get("partial", 0)),
             "differs": int(verification.get("differs", 0)),
             "unnamed": int(verification.get("unnamed", 0)),
             "verifiedBytes": int(verification.get("verifiedBytes", 0)),
-            "partialBytes": int(verification.get("partialBytes", 0)),
         },
         "sourceBuild": source_build,
         "modules": [{"module": key, **value} for key, value in sorted(modules.items())],
         "items": rows,
         "limits": [
             "A complete claim is declared ownership; it is not compiled proof.",
-            "VERIFIED/PARTIAL/DIFFERS require the full build's romData report.",
+            "A short byte compare is not its own state. Decompiled means a complete claim.",
+            "VERIFIED and DIFFERS require the full build's romData report.",
             "The DATA bar counts every storage address, BSS included.",
             "Per-address window bytes are the next configured boundary upper bound, not object sizes.",
             "BSS has no ROM payload. A claim counts it as data; the build cannot byte-compare it.",
@@ -415,8 +403,6 @@ def _summary(report):
         f"({_pct(c['claimed'], c['items']):.1f}%)",
         f"  verified:      {c['verified']:,}"
         + (f", {v['verifiedBytes']:,} B exact" if v["available"] else " (no romData report)"),
-        f"  partial:       {c['partial']:,}"
-        + (f", {v['partialBytes']:,} B compared" if v["available"] else ""),
         f"  differs:       {c['differs']:,}",
     ]
     section = report["bytes"]["sectionCoverage"]

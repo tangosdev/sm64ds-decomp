@@ -21,30 +21,26 @@ whichever section it is in. There is no BSS line.
 The address is the item. Aliases, renames and TU moves do not create a second
 data item. The key is `module:0xaddress`.
 
-The text report still says how a build treated the initialized bytes:
+An address is decompiled or it is not. Decompiled means one complete
+`delinks.txt` claim covers it. That is the README count.
 
-- **CLAIMED** — exactly one complete `delinks.txt` claim covers the address.
-  This is the README count. It is declared source ownership, not a byte proof.
-- **VERIFIED** — the full build's `romData` report compared an emitted symbol
-  at that address and every compared byte matched.
-- **PARTIAL** — it was compared, but the emitted extent or a blind relocation
-  leaves some bytes unproven. `romdata_check.summarize` lists these as
-  `partialSymbols` so a short proof is not dropped.
-- **DIFFERS** — at least one emitted copy disagreed with the cartridge. One
-  differing copy wins over a correct sibling at the same address.
-- **UNCLAIMED** — no complete claim covers the address; the cartridge supplies
-  the bytes.
+The text report can also say what a full build did to the bytes:
 
-BSS has no ROM payload, so the build cannot mark it verified. A claimed BSS
-address still counts on the DATA line.
+- **VERIFIED** — every byte of the symbol was compared and matched.
+- **DIFFERS** — at least one compared byte disagreed.
+
+A compare that stopped short does not get a status. The address stays
+decompiled if the claim is complete, and not decompiled if it is not.
+
+BSS has no ROM payload. A claimed BSS address still counts on the DATA line.
 
 ## Commands
 
 ```sh
-# The DATA line, plus verified/partial/differs when a build report exists.
+# The DATA line. Verified and differing appear when a build report exists.
 python tools/data_tiers.py
 
-# Same report with the full build's verified, partial and differing verdicts.
+# Same report with the full build's verified and differing verdicts.
 python tools/data_tiers.py --rom-report build/rombuild-report.json
 
 # Per-address rows and a summary report for another tool.
@@ -61,9 +57,9 @@ The inventory is read from `data_inventory.py` when `--inventory` is omitted.
 `build/rombuild-report.json`. If that file is absent the verification tiers
 are unavailable rather than guessed.
 
-The DATA line is claimed addresses over every storage address. It needs no ROM.
-Verified, partial and differing counts are printed only when `--rom-report`
-points at a full build.
+The DATA line is complete claims over every storage address. It needs no ROM.
+Verified and differing counts are printed only when `--rom-report` points at
+a full build.
 
 ## How to add data
 
