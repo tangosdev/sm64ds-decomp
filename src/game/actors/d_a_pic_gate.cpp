@@ -350,7 +350,7 @@ void daPicGate_c::UpdateCellDistances() {
         Vertex *e = &mCells[i];
         VecFx32 tmp = *(VecFx32 *)&e->x;
         tmp.z = 0;
-        e->dist = Vec3_Dist((Vector3 *)mWaveOrigin, (Vector3 *)&tmp);
+        e->dist = Vec3_Dist(&mWaveOrigin, (Vector3 *)&tmp);
     }
 }
 
@@ -361,9 +361,9 @@ void daPicGate_c::BeginWave(s32 a1, s32 a2, s32 a3) {
     u32 m8;
     int r0;
     unsigned char f;
-    mWaveOrigin[0] = a1;
-    mWaveOrigin[1] = a2;
-    mWaveOrigin[2] = 0;
+    mWaveOrigin.x = a1;
+    mWaveOrigin.y = a2;
+    mWaveOrigin.z = 0;
     UpdateCellDistances();
     m8 = param1;
     r0 = 0;
