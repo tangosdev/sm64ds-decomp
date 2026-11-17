@@ -180,9 +180,7 @@ void daMky_c::ReturnToPerch() {
 
         if (data_0209f43c.TransformAndClip(data_0209b3ec, asr, 0x1f400, out) > 0xc350000) {
             this->mPos = this->mPerchPos;
-            this->mSpawnPosX = this->mPerchPos.x;
-            this->mSpawnPosY = this->mPerchPos.y;
-            this->mSpawnPosZ = this->mPerchPos.z;
+            this->mSpawnPos = this->mPerchPos;
             this->mPrevPos = this->mPerchPos;
             UpdateModelAndCap();
             this->mResetTimer = 150;
@@ -323,14 +321,10 @@ int daMky_c::UpdateSafePos() {
         v.z = z;
         rg.SetObjAndPos(v, this);
         if (rg.DetectClsnSlot0() == 0 || this->mPosY - rg.clsnY > 0x2000) {
-            this->mPosX = this->mSpawnPosX;
-            this->mPosY = this->mSpawnPosY;
-            this->mPosZ = this->mSpawnPosZ;
+            this->mPos = this->mSpawnPos;
             return 1;
         }
-        this->mSpawnPosX = this->mPosX;
-        this->mSpawnPosY = this->mPosY;
-        this->mSpawnPosZ = this->mPosZ;
+        this->mSpawnPos = this->mPos;
     }
     return 0;
 }
@@ -1181,9 +1175,7 @@ int daMky_c::func_ov030_02113b38()
         this->mWithMeshClsn.ClearLimMovFlag();
         this->mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyRunAnimationFile[1]), 0, 0x1000, 0);
         this->mAnmModel.speed = 0x1000;
-        this->mSpawnPosX = this->mPosX;
-        this->mSpawnPosY = this->mPosY;
-        this->mSpawnPosZ = this->mPosZ;
+        this->mSpawnPos = this->mPos;
         ChangeState(this->mPrevState);
     }
     this->mdCcAc_c.Clear();
@@ -1448,9 +1440,7 @@ s32 daMky_c::InitResources()
     mTerminalVelocity = -0x3c000;
     mPerchPos = mPos;
     mPerchPos.y += 0x64000;
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos = mPos;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;

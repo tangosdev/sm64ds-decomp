@@ -704,12 +704,8 @@ struct daPly_c : dActor_c {
        func_ov002_020c47f4, St_Talk_Main's camera focus, daC_Jugem's position),
        the walk-to point (func_ov002_020c8a4c, TryEnterStarDoor), and the
        cage JumpIntoBooCage records. mRootMotionMode reuses it as last frame's
-       bone translation and func_ov002_020e3f90 as an eased carry offset.
-       Still three s32 only because its retype is pending; mStateAnchor
-       below became a Vector3 with no byte change. */
-    s32 mStateTargetX; /* 0x744 */
-    s32 mStateTargetY; /* 0x748 */
-    s32 mStateTargetZ; /* 0x74c */
+       bone translation and func_ov002_020e3f90 as an eased carry offset. */
+    Vector3 mStateTarget; /* 0x744 */
     /* The fixed point mStateTarget is derived from: the door position
        TryEnterStarDoor records (the approach point is rotated off it), or
        the bone translation mRootMotionMode latches on its first frame. */

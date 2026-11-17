@@ -64,17 +64,15 @@ struct daKpa_c : dActor_c {
     /* uniqueID of the KOOPA2BG actor (ID 166) found with FindWithActorID. The
        tilt state writes that actor's tilt speeds (+0x31e/+0x320/+0x322). */
     u32 mArenaBgUniqueID;         /* 0x3ac */
-    s32 mHomePosX;            /* 0x3b0 -- spawn position; Y is the arena floor level */
-    s32 mHomePosY;            /* 0x3b4    that the fall and recover tests measure from */
-    s32 mHomePosZ;            /* 0x3b8 */
+    /* Spawn position; Y is the arena floor level that the fall and recover
+       tests measure from. */
+    Vector3 mHomePos; /* 0x3b0 */
     /* Normal of the floor under him, copied out of the floor result by
        SurfaceInfo::CopyNormalTo. */
     Vector3 mGroundNormal; /* 0x3bc */
     /* Position recorded the last frame he stood on the ground; restored when he
        walks off the floor. */
-    s32 mLastGroundPosX;      /* 0x3c8 */
-    s32 mLastGroundPosY;      /* 0x3cc */
-    s32 mLastGroundPosZ;      /* 0x3d0 */
+    Vector3 mLastGroundPos; /* 0x3c8 */
     /* Two world-space points taken from bone matrices 3 and 6 of his skeleton
        (offsets +0x90 and +0x120 of the bone array), with Y replaced by his own
        Y. Landing dust is spawned at one or the other. */
