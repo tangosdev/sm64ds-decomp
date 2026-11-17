@@ -53,7 +53,8 @@
     .rodata.data_ov006_0212ec70 start:0x0212ec70 end:0x0212ec78 kind:rodata align:4
     .rodata.data_ov006_0212ec78 start:0x0212ec78 end:0x0212ec80 kind:rodata align:4
     .rodata.sPachinko2PaddleFlyAwayVX start:0x0212ec80 end:0x0212ec8c kind:rodata align:4
-    .rodata.gap8 start:0x0212ec8c end:0x0212ecac kind:rodata align:4
+    .rodata.data_ov006_0212ec8c start:0x0212ec8c end:0x0212ec9c kind:rodata align:4
+    .rodata.data_ov006_0212ec9c start:0x0212ec9c end:0x0212ecac kind:rodata align:4
     .rodata.sPachinko2CupWaitTimesAlt start:0x0212ecac end:0x0212ecbc kind:rodata align:4
     .rodata.sPachinko2CupRightStops start:0x0212ecbc end:0x0212ecd4 kind:rodata align:4
     .rodata.sPachinko2CupLeftStops start:0x0212ecd4 end:0x0212ecec kind:rodata align:4
@@ -763,6 +764,8 @@ src/minigames/d_s_mg_pachinko2.cpp:
     .rodata.data_ov006_0212ec70 start:0x0212ec70 end:0x0212ec78
     .rodata.data_ov006_0212ec78 start:0x0212ec78 end:0x0212ec80
     .rodata.sPachinko2PaddleFlyAwayVX start:0x0212ec80 end:0x0212ec8c
+    .rodata.data_ov006_0212ec8c start:0x0212ec8c end:0x0212ec9c
+    .rodata.data_ov006_0212ec9c start:0x0212ec9c end:0x0212ecac
     .rodata.sPachinko2CupWaitTimesAlt start:0x0212ecac end:0x0212ecbc
     .rodata.sPachinko2CupRightStops start:0x0212ecbc end:0x0212ecd4
     .rodata.sPachinko2CupLeftStops start:0x0212ecd4 end:0x0212ecec
@@ -784,7 +787,7 @@ src/minigames/d_s_mg_pachinko2.cpp:
     .data.data_ov006_02138cd8 start:0x02138cd8 end:0x02138cf0
     .data.data_ov006_02138cf0 start:0x02138cf0 end:0x02138d08
     .data.sPachinko2BallCountSprites start:0x02138d08 end:0x02138d28
-    .data start:0x0213db6c end:0x0213db9c
+    .data start:0x0213da5c end:0x0213db9c
 
 src/minigames/d_s_mg_panel.cpp:
     complete
