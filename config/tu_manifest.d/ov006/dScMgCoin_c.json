@@ -40,6 +40,12 @@
       "end": "0x0213358c"
     },
     {
+      "name": ".data.w13b814",
+      "input_section": ".data",
+      "start": "0x0213be44",
+      "end": "0x0213bf48"
+    },
+    {
       "name": ".bss",
       "start": "0x021417b0",
       "end": "0x02141870"
@@ -228,7 +234,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "_ZN11dScMgCoin_c13Bag_StateIdleEv",
+      "symbol": "_ZN11dScMgCoin_c13Bag_StateIdleEi",
       "address": "0x020dc294",
       "size": "0x00000004",
       "legacy_source": "src/_ZN11dScMgCoin_c19func_ov006_020dc294Ev.c",
@@ -417,7 +423,7 @@
       "ordinal": 33
     },
     {
-      "symbol": "_ZN11dScMgCoin_c17Coin_StateSettledEv",
+      "symbol": "_ZN11dScMgCoin_c17Coin_StateSettledEi",
       "address": "0x020dcffc",
       "size": "0x00000004",
       "legacy_source": "src/_ZN11dScMgCoin_c19func_ov006_020dcffcEv.c",
@@ -473,7 +479,7 @@
       "ordinal": 41
     },
     {
-      "symbol": "_ZN11dScMgCoin_c18Block_StateRestingEv",
+      "symbol": "_ZN11dScMgCoin_c18Block_StateRestingEi",
       "address": "0x020dd7bc",
       "size": "0x00000004",
       "legacy_source": "src/_ZN11dScMgCoin_c19func_ov006_020dd7bcEv.c",
@@ -622,41 +628,6 @@
   ],
   "data": [
     {
-      "symbol": "sCoinValuesSprites",
-      "address": "0x02133f10",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sCoinPopupSprites",
-      "address": "0x021341ec",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sCoinBagSprites",
-      "address": "0x02134b4c",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sCoinSparkleSprites",
-      "address": "0x02136e24",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
-      "symbol": "sCoinCaptionSprites",
-      "address": "0x0213a9fc",
-      "size": "0x28",
-      "binding": "STB_GLOBAL",
-      "evidence": "initialized ROM object"
-    },
-    {
       "symbol": "data_ov006_02133f00",
       "address": "0x02133f00",
       "size": "0x8",
@@ -669,6 +640,20 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "Single OamAttr entry (attr3 0xffff); sCoinValuesSprites[0]."
+    },
+    {
+      "symbol": "sCoinValuesSprites",
+      "address": "0x02133f10",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sCoinPopupSprites",
+      "address": "0x021341ec",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     },
     {
       "symbol": "data_ov006_021341f0",
@@ -692,6 +677,13 @@
       "evidence": "Single OamAttr entry (attr3 0xffff); sCoinBagSprites[0]."
     },
     {
+      "symbol": "sCoinBagSprites",
+      "address": "0x02134b4c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
       "symbol": "data_ov006_02136e14",
       "address": "0x02136e14",
       "size": "0x8",
@@ -704,6 +696,13 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "Single OamAttr entry (attr3 0xffff); sCoinSparkleSprites[0]."
+    },
+    {
+      "symbol": "sCoinSparkleSprites",
+      "address": "0x02136e24",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     },
     {
       "symbol": "data_ov006_0213a99c",
@@ -741,6 +740,13 @@
       "evidence": "Four OamAttr entries ending at the attr3 0xffff terminator; sCoinCaptionSprites[8]."
     },
     {
+      "symbol": "sCoinCaptionSprites",
+      "address": "0x0213a9fc",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
       "symbol": "data_ov006_0213aa24",
       "address": "0x0213aa24",
       "size": "0x38",
@@ -774,6 +780,207 @@
       "size": "0x50",
       "binding": "STB_GLOBAL",
       "evidence": "Ten OamAttr entries ending at the attr3 0xffff terminator; sCoinCaptionSprites[4]."
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Bag_StateIdle",
+      "address": "0x0213be44",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Bag_StateIdle (0x020dc294), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Bag_StateRise",
+      "address": "0x0213be4c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Bag_StateRise (0x020dc1c4), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Phase_StateScoreDelay",
+      "address": "0x0213be54",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Phase_StateScoreDelay (0x020de1d4), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Phase_StateResult",
+      "address": "0x0213be5c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Phase_StateResult (0x020de0e0), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Block_StateWander",
+      "address": "0x0213be64",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Block_StateWander (0x020dd880), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Phase_StateIntro",
+      "address": "0x0213be6c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Phase_StateIntro (0x020de584), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Block_StateHopDown",
+      "address": "0x0213be74",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Block_StateHopDown (0x020dda94), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Phase_StatePlay",
+      "address": "0x0213be7c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Phase_StatePlay (0x020de440), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Block_StateDropOnCoin",
+      "address": "0x0213be84",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Block_StateDropOnCoin (0x020dd7c0), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Bag_StateBounceDown",
+      "address": "0x0213be8c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Bag_StateBounceDown (0x020dbf7c), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Coin_StateSettled",
+      "address": "0x0213be94",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Coin_StateSettled (0x020dcffc), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Block_StateFallIn",
+      "address": "0x0213be9c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Block_StateFallIn (0x020dd658), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Phase_StateSettle",
+      "address": "0x0213bea4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Phase_StateSettle (0x020de26c), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Caption_StateHidden",
+      "address": "0x0213beac",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Caption_StateHidden (0x020dc4b0), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Block_StateResting",
+      "address": "0x0213beb4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Block_StateResting (0x020dd7bc), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Caption_StateLoop",
+      "address": "0x0213bebc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Caption_StateLoop (0x020dc414), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Caption_StateDelay",
+      "address": "0x0213bec4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Caption_StateDelay (0x020dc6d0), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Caption_StateBlink",
+      "address": "0x0213becc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Caption_StateBlink (0x020dc4c8), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Caption_StateCountIn",
+      "address": "0x0213bed4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Caption_StateCountIn (0x020dc5c4), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "g_profile_MG_COIN",
+      "address": "0x0213bedc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "base scene profile (BaseSpawnInfo): word 0 relocates to dScMgCoin_c_classInit (0x020de940); both priority halfwords are 0x17a, compared to retail"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Phase_StateIdle",
+      "address": "0x0213bee4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Phase_StateIdle (0x020de5ac), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Block_StateWaiting",
+      "address": "0x0213beec",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Block_StateWaiting (0x020ddca0), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Bag_StateParked",
+      "address": "0x0213bef4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Bag_StateParked (0x020dc154), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Coin_StateWaitTouch",
+      "address": "0x0213befc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Coin_StateWaitTouch (0x020dd0e0), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Coin_StateHop",
+      "address": "0x0213bf04",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgCoin_c::Coin_StateHop (0x020dd000), emitted by __sinit_d_s_mg_coin.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "sCoinBlocksSprites",
+      "address": "0x0213bf0c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object: three OamAttr list pointers (0x021341e4, 0x021341dc, 0x021341d4), compared to retail"
+    },
+    {
+      "symbol": "_ZTI11dScMgCoin_c",
+      "address": "0x0213bf18",
+      "size": "0xc",
+      "evidence": "own class typeinfo: __si_class_type_info vtable+8 (0x0209a764), its own _ZTS, then base _ZTI11dScMgBase_c; it sits between sCoinBlocksSprites and sCoinScorePlayerSprites, so the one .data claim runs through it"
+    },
+    {
+      "symbol": "_ZTS11dScMgCoin_c",
+      "address": "0x0213bf24",
+      "size": "0xe",
+      "evidence": "ROM type-name string '11dScMgCoin_c': 13 chars + NUL = 0xe emitted bytes, padded to 0x10 before sCoinScorePlayerSprites"
+    },
+    {
+      "symbol": "sCoinScorePlayerSprites",
+      "address": "0x0213bf34",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object: the five sMgTextSprites language tables, compared to retail"
     }
   ],
   "bss": [
@@ -901,7 +1108,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -940,18 +1147,17 @@
           "firstDiff": null
         },
         {
-          "section": ".data.data_ov006_02133f00",
-          "start": "0x02133f00",
-          "end": "0x02133f08",
+          "section": ".data.w13b814",
+          "start": "0x0213be44",
+          "end": "0x0213bf48",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
-          "section": ".data.data_ov006_02133f08",
-          "start": "0x02133f08",
-          "end": "0x02133f10",
-          "differingBytes": 0,
-          "firstDiff": null
+          "section": ".bss",
+          "start": "0x021417b0",
+          "end": "0x02141870",
+          "comparison": "NOBITS -- symbol/module gates"
         },
         {
           "section": ".data.sCoinValuesSprites",
@@ -964,6 +1170,41 @@
           "section": ".data.sCoinPopupSprites",
           "start": "0x021341ec",
           "end": "0x021341f0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sCoinBagSprites",
+          "start": "0x02134b4c",
+          "end": "0x02134b54",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sCoinSparkleSprites",
+          "start": "0x02136e24",
+          "end": "0x02136e2c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sCoinCaptionSprites",
+          "start": "0x0213a9fc",
+          "end": "0x0213aa24",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133f00",
+          "start": "0x02133f00",
+          "end": "0x02133f08",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133f08",
+          "start": "0x02133f08",
+          "end": "0x02133f10",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -989,13 +1230,6 @@
           "firstDiff": null
         },
         {
-          "section": ".data.sCoinBagSprites",
-          "start": "0x02134b4c",
-          "end": "0x02134b54",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".data.data_ov006_02136e14",
           "start": "0x02136e14",
           "end": "0x02136e1c",
@@ -1006,13 +1240,6 @@
           "section": ".data.data_ov006_02136e1c",
           "start": "0x02136e1c",
           "end": "0x02136e24",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.sCoinSparkleSprites",
-          "start": "0x02136e24",
-          "end": "0x02136e2c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1052,13 +1279,6 @@
           "firstDiff": null
         },
         {
-          "section": ".data.sCoinCaptionSprites",
-          "start": "0x0213a9fc",
-          "end": "0x0213aa24",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".data.data_ov006_0213aa24",
           "start": "0x0213aa24",
           "end": "0x0213aa5c",
@@ -1092,17 +1312,11 @@
           "end": "0x0213ab6c",
           "differingBytes": 0,
           "firstDiff": null
-        },
-        {
-          "section": ".bss",
-          "start": "0x021417b0",
-          "end": "0x02141870",
-          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 92
+          "LICENSED": 143
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1113,91 +1327,457 @@
           {
             "section": ".rodata.coin_tables",
             "original": [
-              120,
-              121,
-              122,
-              123,
-              124,
-              125,
-              126,
-              127,
-              128,
-              129,
-              130,
-              131,
-              132,
-              133,
-              134,
-              135,
-              136,
-              137,
-              138,
-              139,
-              140,
-              141
+              201,
+              202,
+              203,
+              204,
+              205,
+              206,
+              207,
+              208,
+              209,
+              210,
+              211,
+              212,
+              213,
+              214,
+              215,
+              216,
+              217,
+              218,
+              219,
+              220,
+              221,
+              222
             ],
             "desired": [
-              120,
-              121,
-              122,
-              123,
-              124,
-              125,
-              126,
-              127,
-              128,
-              129,
-              130,
-              131,
-              132,
-              133,
-              134,
-              135,
-              136,
-              137,
-              138,
-              139,
-              140,
-              141
+              201,
+              202,
+              203,
+              204,
+              205,
+              206,
+              207,
+              208,
+              209,
+              210,
+              211,
+              212,
+              213,
+              214,
+              215,
+              216,
+              217,
+              218,
+              219,
+              220,
+              221,
+              222
             ]
           },
           {
             "section": ".init",
             "original": [
-              161
+              242
             ],
             "desired": [
-              161
+              242
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              159
+              240
             ],
             "desired": [
-              159
+              240
+            ]
+          },
+          {
+            "section": ".data.w13b814",
+            "original": [
+              8,
+              10,
+              13,
+              15,
+              17,
+              19,
+              21,
+              23,
+              25,
+              27,
+              29,
+              32,
+              34,
+              36,
+              38,
+              40,
+              42,
+              44,
+              47,
+              49,
+              51,
+              53,
+              55,
+              57,
+              70,
+              72,
+              199,
+              225,
+              226
+            ],
+            "desired": [
+              10,
+              15,
+              42,
+              38,
+              53,
+              27,
+              25,
+              51,
+              36,
+              19,
+              49,
+              32,
+              44,
+              8,
+              34,
+              29,
+              47,
+              17,
+              40,
+              199,
+              55,
+              23,
+              21,
+              57,
+              13,
+              70,
+              226,
+              225,
+              72
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
-              6,
-              7,
-              8,
-              9
+              76,
+              77,
+              79,
+              82,
+              83
             ],
             "desired": [
-              5,
-              6,
-              7,
-              8,
-              9
+              76,
+              77,
+              79,
+              82,
+              83
+            ]
+          },
+          {
+            "section": ".data.sCoinValuesSprites",
+            "original": [
+              67
+            ],
+            "desired": [
+              67
+            ]
+          },
+          {
+            "section": ".data.sCoinPopupSprites",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          },
+          {
+            "section": ".data.sCoinBagSprites",
+            "original": [
+              59
+            ],
+            "desired": [
+              59
+            ]
+          },
+          {
+            "section": ".data.sCoinSparkleSprites",
+            "original": [
+              63
+            ],
+            "desired": [
+              63
+            ]
+          },
+          {
+            "section": ".data.sCoinCaptionSprites",
+            "original": [
+              80
+            ],
+            "desired": [
+              80
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02133f00",
+            "original": [
+              7
+            ],
+            "desired": [
+              7
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02133f08",
+            "original": [
+              69
+            ],
+            "desired": [
+              69
+            ]
+          },
+          {
+            "section": ".data.data_ov006_021341f0",
+            "original": [
+              12
+            ],
+            "desired": [
+              12
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02134b3c",
+            "original": [
+              62
+            ],
+            "desired": [
+              62
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02134b44",
+            "original": [
+              61
+            ],
+            "desired": [
+              61
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02136e14",
+            "original": [
+              66
+            ],
+            "desired": [
+              66
+            ]
+          },
+          {
+            "section": ".data.data_ov006_02136e1c",
+            "original": [
+              65
+            ],
+            "desired": [
+              65
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a99c",
+            "original": [
+              31
+            ],
+            "desired": [
+              31
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a9a4",
+            "original": [
+              46
+            ],
+            "desired": [
+              46
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a9ac",
+            "original": [
+              74
+            ],
+            "desired": [
+              74
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a9c4",
+            "original": [
+              75
+            ],
+            "desired": [
+              75
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213a9dc",
+            "original": [
+              78
+            ],
+            "desired": [
+              78
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213aa24",
+            "original": [
+              85
+            ],
+            "desired": [
+              85
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213aa5c",
+            "original": [
+              84
+            ],
+            "desired": [
+              84
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213aa94",
+            "original": [
+              86
+            ],
+            "desired": [
+              86
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213aad4",
+            "original": [
+              87
+            ],
+            "desired": [
+              87
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213ab1c",
+            "original": [
+              88
+            ],
+            "desired": [
+              88
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data.w13b814",
+              "original": [
+                8,
+                10,
+                13,
+                15,
+                17,
+                19,
+                21,
+                23,
+                25,
+                27,
+                29,
+                32,
+                34,
+                36,
+                38,
+                40,
+                42,
+                44,
+                47,
+                49,
+                51,
+                53,
+                55,
+                57,
+                70,
+                72,
+                199,
+                225,
+                226
+              ],
+              "desired": [
+                10,
+                15,
+                42,
+                38,
+                53,
+                27,
+                25,
+                51,
+                36,
+                19,
+                49,
+                32,
+                44,
+                8,
+                34,
+                29,
+                47,
+                17,
+                40,
+                199,
+                55,
+                23,
+                21,
+                57,
+                13,
+                70,
+                226,
+                225,
+                72
+              ],
+              "slots": [
+                8,
+                10,
+                13,
+                15,
+                17,
+                19,
+                21,
+                23,
+                25,
+                27,
+                29,
+                32,
+                34,
+                36,
+                38,
+                40,
+                42,
+                44,
+                47,
+                49,
+                51,
+                53,
+                55,
+                57,
+                70,
+                72,
+                199,
+                225,
+                226
+              ]
+            }
+          ],
+          "symbolIndices": 29,
+          "sectionLinks": 0,
+          "sectionInfos": 28,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -1277,20 +1857,6 @@
       "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
     },
     {
-      "symbol": "_ZTI11dScMgCoin_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov006",
-      "canonical_address": "0x0213bf18",
-      "reason": "this class RTTI record; the canonical cartridge copy remains ROM-gap owned"
-    },
-    {
-      "symbol": "_ZTS11dScMgCoin_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov006",
-      "canonical_address": "0x0213bf24",
-      "reason": "this class RTTI name; the canonical cartridge copy remains ROM-gap owned"
-    },
-    {
       "symbol": "_ZTV11dScMgCoin_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov006",
@@ -1329,6 +1895,150 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "The compiler emits this existing initializer/constructor-slot identity locally; preserve its established configured global identity through this guarded rewrite. DSD can encode local symbols; this is compatibility with the current configuration, not a format limitation."
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Bag_StateIdle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Bag_StateRise",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Phase_StateScoreDelay",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Phase_StateResult",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Block_StateWander",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Phase_StateIntro",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Block_StateHopDown",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Phase_StatePlay",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Block_StateDropOnCoin",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Bag_StateBounceDown",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Coin_StateSettled",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Block_StateFallIn",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Phase_StateSettle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Caption_StateHidden",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Block_StateResting",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Caption_StateLoop",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Caption_StateDelay",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Caption_StateBlink",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Caption_StateCountIn",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Phase_StateIdle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Block_StateWaiting",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Bag_StateParked",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Coin_StateWaitTouch",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgCoin_c_Coin_StateHop",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "relocations": [
@@ -1801,6 +2511,366 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213aa24"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213be44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c13Bag_StateIdleEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dc294"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213be4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c13Bag_StateRiseEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dc1c4"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213be54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c21Phase_StateScoreDelayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020de1d4"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213be5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c17Phase_StateResultEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020de0e0"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213be64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c17Block_StateWanderEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dd880"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213be6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c16Phase_StateIntroEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020de584"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213be74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c18Block_StateHopDownEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dda94"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213be7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c15Phase_StatePlayEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020de440"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213be84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c21Block_StateDropOnCoinEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dd7c0"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213be8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c19Bag_StateBounceDownEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dbf7c"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213be94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c17Coin_StateSettledEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dcffc"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213be9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c17Block_StateFallInEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dd658"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bea4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c17Phase_StateSettleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020de26c"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213beac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c19Caption_StateHiddenEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dc4b0"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213beb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c18Block_StateRestingEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dd7bc"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bebc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c17Caption_StateLoopEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dc414"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bec4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c18Caption_StateDelayEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dc6d0"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213becc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c18Caption_StateBlinkEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dc4c8"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bed4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c20Caption_StateCountInEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dc5c4"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bedc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z21dScMgCoin_c_classInitv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020de940"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bee4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c15Phase_StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020de5ac"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213beec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c18Block_StateWaitingEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020ddca0"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bef4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c15Bag_StateParkedEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dc154"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213befc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c19Coin_StateWaitTouchEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dd0e0"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bf04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN11dScMgCoin_c13Coin_StateHopEi",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020dd000"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bf0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021341e4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021341e4"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bf10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021341dc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021341dc"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bf14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021341d4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021341d4"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bf18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bf1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS11dScMgCoin_c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213bf24"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bf20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI11dScMgBase_c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bbf6c"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bf34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021373a4"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bf38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesSpanish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021373fc"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bf3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesFrench",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213734c"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bf40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesGerman",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021372f4"
+    },
+    {
+      "section": ".data.w13b814",
+      "source": "0x0213bf44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesItalian",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02137454"
     }
   ],
   "rodata": [
@@ -1957,6 +3027,128 @@
       "size": "0x20",
       "binding": "STB_GLOBAL",
       "evidence": "Native const int[8] from the measured consumer indexing and retail bytes; exact original declaration spelling is unknown."
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@329",
+      "to": "pmf_dScMgCoin_c_Bag_StateIdle",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Bag_StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x270 loads 0x0213be44 in the ROM) and by its own relocation target (dScMgCoin_c::Bag_StateIdle at 0x020dc294)."
+    },
+    {
+      "from": "@331",
+      "to": "pmf_dScMgCoin_c_Bag_StateRise",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Bag_StateRise, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x274 loads 0x0213be4c in the ROM) and by its own relocation target (dScMgCoin_c::Bag_StateRise at 0x020dc1c4)."
+    },
+    {
+      "from": "@297",
+      "to": "pmf_dScMgCoin_c_Phase_StateScoreDelay",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateScoreDelay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x224 loads 0x0213be54 in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateScoreDelay at 0x020de1d4)."
+    },
+    {
+      "from": "@299",
+      "to": "pmf_dScMgCoin_c_Phase_StateResult",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateResult, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x228 loads 0x0213be5c in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateResult at 0x020de0e0)."
+    },
+    {
+      "from": "@305",
+      "to": "pmf_dScMgCoin_c_Block_StateWander",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateWander, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x238 loads 0x0213be64 in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateWander at 0x020dd880)."
+    },
+    {
+      "from": "@291",
+      "to": "pmf_dScMgCoin_c_Phase_StateIntro",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateIntro, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x214 loads 0x0213be6c in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateIntro at 0x020de584)."
+    },
+    {
+      "from": "@303",
+      "to": "pmf_dScMgCoin_c_Block_StateHopDown",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateHopDown, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x234 loads 0x0213be74 in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateHopDown at 0x020dda94)."
+    },
+    {
+      "from": "@293",
+      "to": "pmf_dScMgCoin_c_Phase_StatePlay",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StatePlay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x21c loads 0x0213be7c in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StatePlay at 0x020de440)."
+    },
+    {
+      "from": "@307",
+      "to": "pmf_dScMgCoin_c_Block_StateDropOnCoin",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateDropOnCoin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x23c loads 0x0213be84 in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateDropOnCoin at 0x020dd7c0)."
+    },
+    {
+      "from": "@335",
+      "to": "pmf_dScMgCoin_c_Bag_StateBounceDown",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Bag_StateBounceDown, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x27c loads 0x0213be8c in the ROM) and by its own relocation target (dScMgCoin_c::Bag_StateBounceDown at 0x020dbf7c)."
+    },
+    {
+      "from": "@317",
+      "to": "pmf_dScMgCoin_c_Coin_StateSettled",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Coin_StateSettled, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x254 loads 0x0213be94 in the ROM) and by its own relocation target (dScMgCoin_c::Coin_StateSettled at 0x020dcffc)."
+    },
+    {
+      "from": "@311",
+      "to": "pmf_dScMgCoin_c_Block_StateFallIn",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateFallIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x244 loads 0x0213be9c in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateFallIn at 0x020dd658)."
+    },
+    {
+      "from": "@295",
+      "to": "pmf_dScMgCoin_c_Phase_StateSettle",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateSettle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x220 loads 0x0213bea4 in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateSettle at 0x020de26c)."
+    },
+    {
+      "from": "@325",
+      "to": "pmf_dScMgCoin_c_Caption_StateHidden",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateHidden, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x268 loads 0x0213beac in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateHidden at 0x020dc4b0)."
+    },
+    {
+      "from": "@309",
+      "to": "pmf_dScMgCoin_c_Block_StateResting",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateResting, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x240 loads 0x0213beb4 in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateResting at 0x020dd7bc)."
+    },
+    {
+      "from": "@327",
+      "to": "pmf_dScMgCoin_c_Caption_StateLoop",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateLoop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x26c loads 0x0213bebc in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateLoop at 0x020dc414)."
+    },
+    {
+      "from": "@319",
+      "to": "pmf_dScMgCoin_c_Caption_StateDelay",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateDelay, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x258 loads 0x0213bec4 in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateDelay at 0x020dc6d0)."
+    },
+    {
+      "from": "@323",
+      "to": "pmf_dScMgCoin_c_Caption_StateBlink",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateBlink, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x260 loads 0x0213becc in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateBlink at 0x020dc4c8)."
+    },
+    {
+      "from": "@321",
+      "to": "pmf_dScMgCoin_c_Caption_StateCountIn",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Caption_StateCountIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x25c loads 0x0213bed4 in the ROM) and by its own relocation target (dScMgCoin_c::Caption_StateCountIn at 0x020dc5c4)."
+    },
+    {
+      "from": "@289",
+      "to": "pmf_dScMgCoin_c_Phase_StateIdle",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Phase_StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x210 loads 0x0213bee4 in the ROM) and by its own relocation target (dScMgCoin_c::Phase_StateIdle at 0x020de5ac)."
+    },
+    {
+      "from": "@301",
+      "to": "pmf_dScMgCoin_c_Block_StateWaiting",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Block_StateWaiting, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x22c loads 0x0213beec in the ROM) and by its own relocation target (dScMgCoin_c::Block_StateWaiting at 0x020ddca0)."
+    },
+    {
+      "from": "@333",
+      "to": "pmf_dScMgCoin_c_Bag_StateParked",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Bag_StateParked, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x278 loads 0x0213bef4 in the ROM) and by its own relocation target (dScMgCoin_c::Bag_StateParked at 0x020dc154)."
+    },
+    {
+      "from": "@313",
+      "to": "pmf_dScMgCoin_c_Coin_StateWaitTouch",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Coin_StateWaitTouch, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x248 loads 0x0213befc in the ROM) and by its own relocation target (dScMgCoin_c::Coin_StateWaitTouch at 0x020dd0e0)."
+    },
+    {
+      "from": "@315",
+      "to": "pmf_dScMgCoin_c_Coin_StateHop",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_coin.cpp assigns &dScMgCoin_c::Coin_StateHop, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_coin.cpp+0x250 loads 0x0213bf04 in the ROM) and by its own relocation target (dScMgCoin_c::Coin_StateHop at 0x020dd000)."
     }
   ]
 }

@@ -32,8 +32,10 @@
  * (measured: Mg_FreeBannerFiles comes out last), and the ROM has them
  * ascending. Source is therefore ROM-ascending.
  *
- * The bodies were matched as one-function C or C++ sources and keep that
- * spelling under extern "C" and their ROM names.
+ * The bodies were matched as one-function C or C++ sources. The entry points
+ * dScMgBase_c's unit calls (Banner_Init, Banner_Update, Banner_Draw,
+ * Banner_Free, Banner_Press, Banner_IsPressFinished) stay free functions; the
+ * handlers the per-style tables hold are MgBanner methods.
  *
  * Numbered names. mwccarm numbers its generated names from one counter that
  * every named parameter (prototypes included), local and temporary before a
@@ -42,14 +44,16 @@
  * defined_symbol_renames hold the current N); symbols.txt names the thunk
  * __arraydtor$954, and the manifest renames both onto their configured
  * names, so an edit here that moves the count re-keys those two rows. The
- * two function-local Vector2 statics (Banner_StartWaveBurst,
- * Banner_SetupZoomBurst) are renamed the same way, onto the ov004 .bss names
+ * two function-local Vector2 statics (MgBanner::StartWaveBurst,
+ * MgBanner::SetupZoomBurst) are renamed the same way, onto the ov004 .bss names
  * at 0x020bf3ec..0x020bf41c that this unit owns.
  *
- * Member-pointer records. The pmf_Banner_* words are the {function, 0}
- * records mwccarm emits for each `&MgBanner::handler` use, and data_02086b58
- * is __ptmf_null; they are declared here as ElemFn, so the handlers assign,
- * compare and index the three per-style tables as member pointers.
+ * Member pointers. The setup, behavior and render handlers are MgBanner
+ * methods, and the handlers and the three per-style tables name them as
+ * &MgBanner::handler. mwccarm emits each such use as its own {function, 0}
+ * .data constant, which is the run of 37 pmf_Banner_* records at
+ * 0x020bc154..0x020bc27c just below this unit's .data; data_02086b58 is
+ * __ptmf_null, the null member pointer the tables copy.
  *
  * Retired one-function sources (ROM address order):
  *   0x020b2c84  Mg_FreeBannerFiles
@@ -146,9 +150,6 @@ void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e);
 int Mg_GetLevel(void);
 void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 }
-void Banner_DrawPlain(MgBanner *e);
-void Banner_StartSpin(MgBanner *e);
-void Banner_StartWaveBurst(MgBanner *e);
 
 /* The first OBJ character number of each graphics slot, {0x380, 0x300, 0x340}
    (MG_BANNER_SLOTn_CHARS / 32). Banner_Init copies it whole to the stack and
@@ -1024,13 +1025,6 @@ static EntryTable sMgBannerFileTemplate = {{{0, 0}, {0x140, &sMgMsgGiveUpSprites
 extern OamAttr *data_ov006_021346bc;
 extern int sMgTopScreenYOffset;
 extern int sMgBannerButtonsArmed;
-extern ElemFn pmf_Banner_UpdateWave;
-extern ElemFn pmf_Banner_DrawWave;
-extern ElemFn pmf_Banner_UpdatePressed;
-extern ElemFn pmf_Banner_DrawPressed;
-extern ElemFn pmf_Banner_DrawSpin;
-extern ElemFn pmf_Banner_UpdateSpin;
-extern ElemFn pmf_Banner_UpdatePressed_2;
 extern unsigned char sMgBannerGfxSlotUsed[];
 /* Where Banner_Init decompresses a banner for each graphics slot: the byte
    offset into the OBJ character VRAM of each screen it draws on. */
@@ -1255,7 +1249,7 @@ void Banner_Draw(MgBanner *e) {
         (e->*(e->mRender))();
         return;
     }
-    Banner_DrawPlain(e);
+    e->DrawPlain();
 }
 
 void Banner_Update(MgBanner *e) {
@@ -1362,12 +1356,12 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
     e->mRender = sBannerDrawTable[e->mStyle];
 }
 
-void Banner_DrawLevelNumber(MgBanner *e) {
+void MgBanner::DrawLevelNumber() {
     int x;
-    int originX = e->mX;
+    int originX = mX;
     int n;
     /* the first OAM record's 9-bit signed x, made positive */
-    int oamX = ((GXOamAttr *)e->mOam)->x;
+    int oamX = ((GXOamAttr *)mOam)->x;
     int w;
     unsigned long left;
     n = Mg_GetLevel() + 1;
@@ -1377,7 +1371,7 @@ void Banner_DrawLevelNumber(MgBanner *e) {
     if (oamX < 0) {
         oamX = -oamX;
     }
-    x = e->mX + oamX + 0x10;
+    x = mX + oamX + 0x10;
     w = 0x10;
     {
         int p = 1;
@@ -1393,15 +1387,15 @@ void Banner_DrawLevelNumber(MgBanner *e) {
        off (measured). */
     left = w >> 1;
     left = originX - left;
-    Mg_RenderSpriteOn((OamAttr *)e->mOam, left, e->mY, e->mScreen, e->mPriority);
-    Mg_DrawBigNumber(x, e->mY, n, e->mScreen, e->mPriority, 2, 0);
+    Mg_RenderSpriteOn((OamAttr *)mOam, left, mY, mScreen, mPriority);
+    Mg_DrawBigNumber(x, mY, n, mScreen, mPriority, 2, 0);
 }
 
-void Banner_SetupNone(void) {}
+void MgBanner::SetupNone() {}
 
-void Banner_DrawSpin(MgBanner *e) {
-    GXOamAttr *oam = (GXOamAttr *)e->mOam;
-    int angle = (u16)e->mTimer;
+void MgBanner::DrawSpin() {
+    GXOamAttr *oam = (GXOamAttr *)mOam;
+    int angle = (u16)mTimer;
     Matrix2x2 m;
     u16 flag;
     do {
@@ -1414,44 +1408,44 @@ void Banner_DrawSpin(MgBanner *e) {
         m.m11 = fc;
         m.m01 = fs;
         m.m10 = -fs;
-        Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
+        Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m);
         angle = (u16)(angle + 0x4000);
         flag = oam->attr3;
         oam++;
     } while (flag != 0xffff);
 }
 
-void Banner_UpdateSpin(MgBanner *e) {
-    if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
-        e->mTimer = 0;
+void MgBanner::UpdateSpin() {
+    if (ApproachLinear(mTimer, mTimerEnd, 0x1000)) {
+        mTimer = 0;
     }
 }
 
-void Banner_StartSpin(MgBanner *e) {
-    e->mTimer = 0;
-    e->mTimerEnd = 0x27000;
-    e->mBehavior = pmf_Banner_UpdateSpin;
-    e->mRender = pmf_Banner_DrawSpin;
+void MgBanner::StartSpin() {
+    mTimer = 0;
+    mTimerEnd = 0x27000;
+    mBehavior = &MgBanner::UpdateSpin;
+    mRender = &MgBanner::DrawSpin;
 }
 
-void Banner_UpdateDrop(MgBanner *e) {
-    if (e->mTimer < 48) {
-        e->mTimer++;
+void MgBanner::UpdateDrop() {
+    if (mTimer < 48) {
+        mTimer++;
         return;
     }
-    if (ApproachLinear2(e->mY, e->mTargetY, 16)) {
-        Banner_StartSpin(e);
+    if (ApproachLinear2(mY, mTargetY, 16)) {
+        StartSpin();
     }
 }
 
-void Banner_SetupDrop(MgBanner *e) {
-    e->mTimer = 0;
-    e->mY = -(sMgTopScreenYOffset + 96);
+void MgBanner::SetupDrop() {
+    mTimer = 0;
+    mY = -(sMgTopScreenYOffset + 96);
 }
 
-void Banner_DrawWave(MgBanner *e) {
-    GXOamAttr *oam = (GXOamAttr *)e->mOam;
-    int x = e->mTimer >> 2;
+void MgBanner::DrawWave() {
+    GXOamAttr *oam = (GXOamAttr *)mOam;
+    int x = mTimer >> 2;
     int t = 0x1000;
     u16 flag;
     do {
@@ -1465,7 +1459,7 @@ void Banner_DrawWave(MgBanner *e) {
             Matrix2x2 m = {0};
             m.m00 = v;
             m.m11 = v;
-            Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
+            Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m);
         }
         t += 0x1000;
         flag = oam->attr3;
@@ -1473,26 +1467,26 @@ void Banner_DrawWave(MgBanner *e) {
     } while (flag != 0xffff);
 }
 
-void Banner_UpdateWave(MgBanner *e) {
-    if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
-        e->mTimer = 0;
+void MgBanner::UpdateWave() {
+    if (ApproachLinear(mTimer, mTimerEnd, 0x1000)) {
+        mTimer = 0;
     }
 }
 
-void Banner_StartWaveBurst(MgBanner *e) {
+void MgBanner::StartWaveBurst() {
     int i;
 
-    e->mTimer = 0;
-    e->mTimerEnd = (e->mOamCount + 1) << 14;
+    mTimer = 0;
+    mTimerEnd = (mOamCount + 1) << 14;
 
-    e->mBehavior = pmf_Banner_UpdateWave;
-    e->mRender = pmf_Banner_DrawWave;
+    mBehavior = &MgBanner::UpdateWave;
+    mRender = &MgBanner::DrawWave;
 
     Vector2 burstVel(0, -0x2000);
     Vector2 liftVel(0, -0x1800);
     Vector2 ringOffset(0, -0x4000);
 
-    Vector2 center(e->mX << 12, e->mY << 12);
+    Vector2 center(mX << 12, mY << 12);
     Vector2 spawnPos, spawnVel;
 
     /* The particles' acceleration, which MgFx::UpdateDrift adds to their
@@ -1510,13 +1504,14 @@ void Banner_StartWaveBurst(MgBanner *e) {
     }
 }
 
-void Banner_DrawSqueeze(MgBanner *e) {
+void MgBanner::DrawSqueeze() {
     int m, t, v;
     unsigned short term;
-    if (e->mTimer == 0) return;
-    m = FX_MUL(e->mTimer, 0xcc);
+    if (mTimer == 0)
+        return;
+    m = FX_MUL(mTimer, 0xcc);
     {
-        GXOamAttr *oam = (GXOamAttr *)e->mOam;
+        GXOamAttr *oam = (GXOamAttr *)mOam;
         t = FX_MUL(FX_Div(m, 0x1000), 0x1000);
         v = FX_Inv(m);
         {
@@ -1529,7 +1524,7 @@ void Banner_DrawSqueeze(MgBanner *e) {
                 if (x > 0x100)
                     x -= 0x200;
                 x = x * t >> 12;
-                Mg_RenderSpriteOnMtx(oam, e->mX - x, e->mY, e->mScreen, e->mPriority, &buf);
+                Mg_RenderSpriteOnMtx(oam, mX - x, mY, mScreen, mPriority, &buf);
                 term = oam->attr3;
                 oam++;
             } while (term != 0xffff);
@@ -1537,31 +1532,32 @@ void Banner_DrawSqueeze(MgBanner *e) {
     }
 }
 
-void Banner_UpdateFall(MgBanner *e) {
-    ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000);
-    if (ApproachLinear2(e->mY, e->mTargetY, 0x10) == 0)
+void MgBanner::UpdateFall() {
+    ApproachLinear(mTimer, mTimerEnd, 0x1000);
+    if (ApproachLinear2(mY, mTargetY, 0x10) == 0)
         return;
-    Banner_StartWaveBurst(e);
+    StartWaveBurst();
 }
 
-void Banner_SetupFall(MgBanner *e) {
-    e->mTimer = 0;
-    e->mTimerEnd = 0x14000;
-    e->mY = 96;
+void MgBanner::SetupFall() {
+    mTimer = 0;
+    mTimerEnd = 0x14000;
+    mY = 96;
 }
 
-void Banner_DrawPopSpinA(MgBanner *e) {
+void MgBanner::DrawPopSpinA() {
     u16 flag;
-    if (e->mTimer == 0) return;
+    if (mTimer == 0)
+        return;
     {
-        GXOamAttr *oam = (GXOamAttr *)e->mOam;
-        if (e->mTimer < 0x18000) {
+        GXOamAttr *oam = (GXOamAttr *)mOam;
+        if (mTimer < 0x18000) {
             int v = 0x2000;
-            if (e->mTimer >= 0x14000) {
+            if (mTimer >= 0x14000) {
                 v = 0x1000;
             } else {
                 int t = FX_Div(0x1000, 0x18000);
-                v -= FX_MUL(e->mTimer, t);
+                v -= FX_MUL(mTimer, t);
                 v = FX_Inv(v);
             }
             {
@@ -1569,13 +1565,13 @@ void Banner_DrawPopSpinA(MgBanner *e) {
                 m.m00 = v;
                 m.m11 = v;
                 do {
-                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
+                    Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m);
                     flag = oam->attr3;
                     oam++;
                 } while (flag != 0xffff);
             }
         } else {
-            int angle = (u16)(e->mTimer - 0x18000);
+            int angle = (u16)(mTimer - 0x18000);
             Matrix2x2 m2;
             do {
                 int mm = FX_MUL(FX_SinIdx(angle >> 4), 0x800);
@@ -1587,7 +1583,7 @@ void Banner_DrawPopSpinA(MgBanner *e) {
                 m2.m11 = fc;
                 m2.m01 = fs;
                 m2.m10 = -fs;
-                Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m2);
+                Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m2);
                 angle = (u16)(angle + 0x4000);
                 flag = oam->attr3;
                 oam++;
@@ -1596,18 +1592,19 @@ void Banner_DrawPopSpinA(MgBanner *e) {
     }
 }
 
-void Banner_DrawPopSpinB(MgBanner *e) {
+void MgBanner::DrawPopSpinB() {
     u16 flag;
-    if (e->mTimer == 0) return;
+    if (mTimer == 0)
+        return;
     {
-        GXOamAttr *oam = (GXOamAttr *)e->mOam;
-        if (e->mTimer < 0x18000) {
+        GXOamAttr *oam = (GXOamAttr *)mOam;
+        if (mTimer < 0x18000) {
             int v = 0x2000;
-            if (e->mTimer >= 0x14000) {
+            if (mTimer >= 0x14000) {
                 v = 0x1000;
             } else {
                 int t = FX_Div(0x1000, 0x18000);
-                v -= FX_MUL(e->mTimer, t);
+                v -= FX_MUL(mTimer, t);
                 v = FX_Inv(v);
             }
             {
@@ -1615,13 +1612,13 @@ void Banner_DrawPopSpinB(MgBanner *e) {
                 m.m00 = v;
                 m.m11 = v;
                 do {
-                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
+                    Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m);
                     flag = oam->attr3;
                     oam++;
                 } while (flag != 0xffff);
             }
         } else {
-            int angle = (u16)(e->mTimer - 0x18000);
+            int angle = (u16)(mTimer - 0x18000);
             Matrix2x2 m2;
             do {
                 int mm = FX_MUL(FX_SinIdx(angle >> 4), 0x800);
@@ -1633,7 +1630,7 @@ void Banner_DrawPopSpinB(MgBanner *e) {
                 m2.m11 = fc;
                 m2.m01 = fs;
                 m2.m10 = -fs;
-                Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m2);
+                Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m2);
                 angle = (u16)(angle + 0x4000);
                 flag = oam->attr3;
                 oam++;
@@ -1642,26 +1639,26 @@ void Banner_DrawPopSpinB(MgBanner *e) {
     }
 }
 
-void Banner_UpdatePopSpin(MgBanner *e) {
-    if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
-        e->mTimer = 0x18000;
+void MgBanner::UpdatePopSpin() {
+    if (ApproachLinear(mTimer, mTimerEnd, 0x1000)) {
+        mTimer = 0x18000;
     }
 }
 
-void Banner_SetupPopSpin(MgBanner *e) {
-    e->mTimer = 0;
-    e->mTimerEnd = 0x27000;
+void MgBanner::SetupPopSpin() {
+    mTimer = 0;
+    mTimerEnd = 0x27000;
 }
 
 int Banner_IsPressFinished(MgBanner *e) {
-    if (e->mBehavior == pmf_Banner_UpdatePressed_2 && e->mTimer == e->mTimerEnd)
+    if (e->mBehavior == &MgBanner::UpdatePressed && e->mTimer == e->mTimerEnd)
         return 1;
     return 0;
 }
 
-void Banner_DrawPressed(MgBanner *e) {
-    GXOamAttr *oam = (GXOamAttr *)e->mOam;
-    int x = e->mTimer;
+void MgBanner::DrawPressed() {
+    GXOamAttr *oam = (GXOamAttr *)mOam;
+    int x = mTimer;
     u16 ang = (unsigned int)x >> 1;
     fx16 s = FX_SinIdx(ang >> 4);
     int v = FX_Inv(FX_MUL(s, 0x800) + 0x1000);
@@ -1670,21 +1667,19 @@ void Banner_DrawPressed(MgBanner *e) {
     m.m00 = v;
     m.m11 = v;
     do {
-        Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
+        Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m);
         flag = oam->attr3;
         oam++;
     } while (flag != 0xffff);
 
-    x = e->mFileIndex;
+    x = mFileIndex;
     if (x != 0 && x != 1 && x != 2)
         return;
-    Mg_RenderSpriteOn(data_ov006_021346bc,
-        e->mX, e->mY,
-        e->mScreen, e->mPriority);
+    Mg_RenderSpriteOn(data_ov006_021346bc, mX, mY, mScreen, mPriority);
 }
 
-void Banner_UpdatePressed(MgBanner *e) {
-    ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000);
+void MgBanner::UpdatePressed() {
+    ApproachLinear(mTimer, mTimerEnd, 0x1000);
 }
 
 void Banner_Press(MgBanner *e) {
@@ -1700,28 +1695,28 @@ void Banner_Press(MgBanner *e) {
     }
     e->mTimer = 0;
     e->mTimerEnd = 0x10000;
-    e->mBehavior = pmf_Banner_UpdatePressed;
-    e->mRender = pmf_Banner_DrawPressed;
+    e->mBehavior = &MgBanner::UpdatePressed;
+    e->mRender = &MgBanner::DrawPressed;
 }
 
-void Banner_DrawPlain(MgBanner *e) {
-    Mg_RenderSpriteOn((OamAttr *)e->mOam, e->mX, e->mY, e->mScreen, e->mPriority);
-    if (e->mFileIndex != 0 && e->mFileIndex != 1 && e->mFileIndex != 2)
+void MgBanner::DrawPlain() {
+    Mg_RenderSpriteOn((OamAttr *)mOam, mX, mY, mScreen, mPriority);
+    if (mFileIndex != 0 && mFileIndex != 1 && mFileIndex != 2)
         return;
-    Mg_RenderSpriteOn(data_ov006_021346bc, e->mX, e->mY, e->mScreen, e->mPriority);
+    Mg_RenderSpriteOn(data_ov006_021346bc, mX, mY, mScreen, mPriority);
 }
 
-void Banner_SetupZoom(MgBanner *e) {
-    e->mTimer = 0;
-    e->mTimerEnd = ((e->mOamCount + 1) << 2) + 0x1e << 0xc;
+void MgBanner::SetupZoom() {
+    mTimer = 0;
+    mTimerEnd = ((mOamCount + 1) << 2) + 0x1e << 0xc;
 }
 
-void Banner_DrawZoomA(MgBanner *e) {
+void MgBanner::DrawZoomA() {
     u16 flag;
-    int val = e->mTimer;
+    int val = mTimer;
     if (val == 0) return;
     {
-        GXOamAttr *oam = (GXOamAttr *)e->mOam;
+        GXOamAttr *oam = (GXOamAttr *)mOam;
         if (val < 0x1e000) {
             int d;
             int scale;
@@ -1748,7 +1743,7 @@ void Banner_DrawZoomA(MgBanner *e) {
                     if (x > 0x100)
                         x -= 0x200;
                     x = x * scale >> 12;
-                    Mg_RenderSpriteOnMtx(oam, e->mX - x, e->mY, e->mScreen, e->mPriority, &m);
+                    Mg_RenderSpriteOnMtx(oam, mX - x, mY, mScreen, mPriority, &m);
                     flag = oam->attr3;
                     oam++;
                 } while (flag != 0xffff);
@@ -1768,7 +1763,7 @@ void Banner_DrawZoomA(MgBanner *e) {
                     Matrix2x2 m2 = {0};
                     m2.m00 = r;
                     m2.m11 = r;
-                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m2);
+                    Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m2);
                 }
                 i += 0x1000;
                 flag = oam->attr3;
@@ -1778,12 +1773,12 @@ void Banner_DrawZoomA(MgBanner *e) {
     }
 }
 
-void Banner_DrawZoomB(MgBanner *e) {
+void MgBanner::DrawZoomB() {
     u16 flag;
-    int val = e->mTimer;
+    int val = mTimer;
     if (val == 0) return;
     {
-        GXOamAttr *oam = (GXOamAttr *)e->mOam;
+        GXOamAttr *oam = (GXOamAttr *)mOam;
         if (val < 0x1e000) {
             int d;
             int scale;
@@ -1810,7 +1805,7 @@ void Banner_DrawZoomB(MgBanner *e) {
                     if (x > 0x100)
                         x -= 0x200;
                     x = x * scale >> 12;
-                    Mg_RenderSpriteOnMtx(oam, e->mX - x, e->mY, e->mScreen, e->mPriority, &m);
+                    Mg_RenderSpriteOnMtx(oam, mX - x, mY, mScreen, mPriority, &m);
                     flag = oam->attr3;
                     oam++;
                 } while (flag != 0xffff);
@@ -1830,7 +1825,7 @@ void Banner_DrawZoomB(MgBanner *e) {
                     Matrix2x2 m2 = {0};
                     m2.m00 = r;
                     m2.m11 = r;
-                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m2);
+                    Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m2);
                 }
                 i += 0x1000;
                 flag = oam->attr3;
@@ -1840,23 +1835,23 @@ void Banner_DrawZoomB(MgBanner *e) {
     }
 }
 
-void Banner_UpdateZoom(MgBanner *e) {
-    if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
-        e->mTimer = 0x1e000;
+void MgBanner::UpdateZoom() {
+    if (ApproachLinear(mTimer, mTimerEnd, 0x1000)) {
+        mTimer = 0x1e000;
     }
 }
 
-void Banner_SetupZoomBurst(MgBanner *e) {
+void MgBanner::SetupZoomBurst() {
     int i;
 
-    e->mTimer = 0;
-    e->mTimerEnd = (((e->mOamCount + 1) << 2) + 0x1e) << 0xc;
+    mTimer = 0;
+    mTimerEnd = (((mOamCount + 1) << 2) + 0x1e) << 0xc;
 
     Vector2 burstVel(0, -0x2000);
     Vector2 liftVel(0, -0x1800);
     Vector2 ringOffset(0, -0x4000);
 
-    Vector2 center(e->mX << 12, e->mY << 12);
+    Vector2 center(mX << 12, mY << 12);
     Vector2 spawnPos, spawnVel;
 
     static Vector2 sBannerZoomFxGravity(0, 0xc0);
@@ -1871,64 +1866,50 @@ void Banner_SetupZoomBurst(MgBanner *e) {
     }
 }
 
-void Banner_UpdateSlideFromRight(MgBanner *e) {
-    if (ApproachLinear2(e->mX, e->mTargetX, 0x10))
-        e->mArrived = 1;
+void MgBanner::UpdateSlideFromRight() {
+    if (ApproachLinear2(mX, mTargetX, 0x10))
+        mArrived = 1;
 }
 
-void Banner_SetupSlideFromRight(MgBanner *e) {
-    e->mX = 320;
+void MgBanner::SetupSlideFromRight() {
+    mX = 320;
 }
 
-void Banner_UpdateSlideFromLeft(MgBanner *e) {
-    if (ApproachLinear2(e->mX, e->mTargetX, 0x10))
-        e->mArrived = 1;
+void MgBanner::UpdateSlideFromLeft() {
+    if (ApproachLinear2(mX, mTargetX, 0x10))
+        mArrived = 1;
 }
 
-void Banner_SetupSlideFromLeft(MgBanner *e) {
-    e->mX = -0x40;
+void MgBanner::SetupSlideFromLeft() {
+    mX = -0x40;
 }
 
-void Banner_UpdateSlideFromBottom(MgBanner *e) {
-    ApproachLinear2(e->mY, e->mTargetY, 4);
+void MgBanner::UpdateSlideFromBottom() {
+    ApproachLinear2(mY, mTargetY, 4);
 }
 
-void Banner_SetupSlideFromBottom(MgBanner *e) {
-    e->mY = 200;
+void MgBanner::SetupSlideFromBottom() {
+    mY = 200;
 }
 
-void Banner_UpdateSlideFromTop(MgBanner *e) {
-    ApproachLinear2(e->mY, e->mTargetY, 4);
+void MgBanner::UpdateSlideFromTop() {
+    ApproachLinear2(mY, mTargetY, 4);
 }
 
-void Banner_SetupSlideFromTop(MgBanner *e) {
-    e->mY = -8;
+void MgBanner::SetupSlideFromTop() {
+    mY = -8;
 }
 
 MgBanner::MgBanner() {
     mFileIndex = MG_BANNER_FILE_NUM;
 }
 
-/* __sinit_ov004_020b955c sources: the member-pointer records the three
+/* __sinit_ov004_020b955c sources: the null member pointer the three
    per-style tables copy (setup sBannerSetupTable, behavior
    sBannerUpdateTable, render sBannerDrawTable), and the words the
    29-entry file-id table copies. */
 extern "C" {
 extern ElemFn data_02086b58; /* __ptmf_null's address: the null member pointer */
-extern ElemFn pmf_Banner_SetupSlideFromTop, pmf_Banner_SetupSlideFromBottom,
-    pmf_Banner_SetupSlideFromLeft, pmf_Banner_SetupSlideFromRight;
-extern ElemFn pmf_Banner_SetupZoomBurst, pmf_Banner_SetupPopSpin, pmf_Banner_SetupZoom,
-    pmf_Banner_SetupZoomBurst_2;
-extern ElemFn pmf_Banner_SetupPopSpin_2, pmf_Banner_SetupFall, pmf_Banner_SetupDrop,
-    pmf_Banner_SetupNone;
-extern ElemFn pmf_Banner_UpdateSlideFromTop, pmf_Banner_UpdateSlideFromBottom,
-    pmf_Banner_UpdateSlideFromLeft, pmf_Banner_UpdateSlideFromRight;
-extern ElemFn pmf_Banner_UpdateZoom_2, pmf_Banner_UpdatePopSpin_2, pmf_Banner_UpdateZoom_3,
-    pmf_Banner_UpdateZoom;
-extern ElemFn pmf_Banner_UpdatePopSpin, pmf_Banner_UpdateFall, pmf_Banner_UpdateDrop;
-extern ElemFn pmf_Banner_DrawZoomB, pmf_Banner_DrawPopSpinB, pmf_Banner_DrawZoomB_2,
-    pmf_Banner_DrawZoomA;
-extern ElemFn pmf_Banner_DrawPopSpinA, pmf_Banner_DrawSqueeze, pmf_Banner_DrawLevelNumber;
 }
 
 namespace s20b955c {
@@ -1955,43 +1936,43 @@ OamAttr *sMgBannerSprites[MG_BANNER_FILE_NUM] = {
     sMgMsgFullHouseSpritesEnglish, sMgMsgFourCardSpritesEnglish,
     sMgMsgFiveCardSpritesEnglish};
 ElemFn sBannerSetupTable[13] = {data_02086b58,
-                                pmf_Banner_SetupSlideFromTop,
-                                pmf_Banner_SetupSlideFromBottom,
-                                pmf_Banner_SetupSlideFromLeft,
-                                pmf_Banner_SetupSlideFromRight,
-                                pmf_Banner_SetupZoomBurst,
-                                pmf_Banner_SetupPopSpin,
-                                pmf_Banner_SetupZoom,
-                                pmf_Banner_SetupZoomBurst_2,
-                                pmf_Banner_SetupPopSpin_2,
-                                pmf_Banner_SetupFall,
-                                pmf_Banner_SetupDrop,
-                                pmf_Banner_SetupNone};
+                                &MgBanner::SetupSlideFromTop,
+                                &MgBanner::SetupSlideFromBottom,
+                                &MgBanner::SetupSlideFromLeft,
+                                &MgBanner::SetupSlideFromRight,
+                                &MgBanner::SetupZoomBurst,
+                                &MgBanner::SetupPopSpin,
+                                &MgBanner::SetupZoom,
+                                &MgBanner::SetupZoomBurst,
+                                &MgBanner::SetupPopSpin,
+                                &MgBanner::SetupFall,
+                                &MgBanner::SetupDrop,
+                                &MgBanner::SetupNone};
 ElemFn sBannerUpdateTable[13] = {data_02086b58,
-                                 pmf_Banner_UpdateSlideFromTop,
-                                 pmf_Banner_UpdateSlideFromBottom,
-                                 pmf_Banner_UpdateSlideFromLeft,
-                                 pmf_Banner_UpdateSlideFromRight,
-                                 pmf_Banner_UpdateZoom_2,
-                                 pmf_Banner_UpdatePopSpin_2,
-                                 pmf_Banner_UpdateZoom_3,
-                                 pmf_Banner_UpdateZoom,
-                                 pmf_Banner_UpdatePopSpin,
-                                 pmf_Banner_UpdateFall,
-                                 pmf_Banner_UpdateDrop,
+                                 &MgBanner::UpdateSlideFromTop,
+                                 &MgBanner::UpdateSlideFromBottom,
+                                 &MgBanner::UpdateSlideFromLeft,
+                                 &MgBanner::UpdateSlideFromRight,
+                                 &MgBanner::UpdateZoom,
+                                 &MgBanner::UpdatePopSpin,
+                                 &MgBanner::UpdateZoom,
+                                 &MgBanner::UpdateZoom,
+                                 &MgBanner::UpdatePopSpin,
+                                 &MgBanner::UpdateFall,
+                                 &MgBanner::UpdateDrop,
                                  data_02086b58};
 ElemFn sBannerDrawTable[13] = {data_02086b58,
                                data_02086b58,
                                data_02086b58,
                                data_02086b58,
                                data_02086b58,
-                               pmf_Banner_DrawZoomB,
-                               pmf_Banner_DrawPopSpinB,
-                               pmf_Banner_DrawZoomB_2,
-                               pmf_Banner_DrawZoomA,
-                               pmf_Banner_DrawPopSpinA,
-                               pmf_Banner_DrawSqueeze,
+                               &MgBanner::DrawZoomB,
+                               &MgBanner::DrawPopSpinB,
+                               &MgBanner::DrawZoomB,
+                               &MgBanner::DrawZoomA,
+                               &MgBanner::DrawPopSpinA,
+                               &MgBanner::DrawSqueeze,
                                data_02086b58,
-                               pmf_Banner_DrawLevelNumber};
+                               &MgBanner::DrawLevelNumber};
 void *sMgBannerFiles[MG_BANNER_FILE_NUM];
 }

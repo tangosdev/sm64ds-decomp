@@ -15,8 +15,9 @@
  */
 
 // leftovers:
-// - The RouletteBoard_, RouletteRacer_ and RouletteStrip_ helpers are
-//   still free functions over their record. The ones decl_common.h declares
+// - Apart from RouletteBoard's two states (StateSpin, StateSlow), the
+//   RouletteBoard_, RouletteRacer_ and RouletteStrip_ helpers are still free
+//   functions over their record. The ones decl_common.h declares
 //   (RouletteBoard_LoadModels, _StartSpin, _Draw, RouletteRacer_Draw,
 //   RouletteStrip_LinkAll) keep its char* parameter. mMeter stays bytes in
 //   the header, reached through the local RouletteStrip view. Most func_
@@ -52,6 +53,13 @@ enum dScMgRoulette_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_cp.h"
+#include "SpawnInfo.h"
+
+/* The scene's profile. Its factory follows this unit's .text in the ROM and
+   is kept in d_s_mg_roulette.cpp, but the profile itself sits in this unit's
+   .data, between the &RouletteBoard::StateSpin and StateSlow records. */
+void *dScMgRoulette_c_classInit(void);
+BaseSpawnInfo<void> g_profile_MG_ROULETTE = {dScMgRoulette_c_classInit, 0x17f, 0x17f};
 
 /* Local views of the records the helpers walk. */
 
@@ -59,17 +67,6 @@ enum dScMgRoulette_c_AssetId {
 typedef struct {
     short v[12];
 } ShortTbl12;
-
-/* Two fx32 words copied as a unit out of pmf_RouletteBoard_StateSlow and
-   pmf_RouletteBoard_StateSpin. Both keep the array member: a whole-struct copy of
-   `{int a, b;}` is split into load, store, load, store, where the ROM does
-   both loads first. */
-struct Pair {
-    int w[2];
-};
-struct Pair2W {
-    int w[2];
-};
 
 /* One payout strip, 0x18 bytes. The scene's mMeter holds four, linked into
    sRouletteStrips; each collects the racers paid at one multiplier. */
@@ -162,9 +159,6 @@ extern const short sRouletteStopTiles[12] = {
     2, 9, 5, 6, 4, 8, 1, 10, 3, 11, 0, 7,
 };
 
-extern RouletteBoardState pmf_RouletteBoard_StateSlow;
-
-extern RouletteBoardState pmf_RouletteBoard_StateSpin;
 extern const int sRouletteTileBounds[7] = {
     0x38, 0x58, 0x80, 0x90, 0xb0, 0xc0, 0xe8,
 };
@@ -191,9 +185,7 @@ void RouletteResults_Draw(void);
 void RouletteStrip_AddRacer(RouletteStrip *strip, RouletteRacer *racer);
 void RouletteStrip_Reset(RouletteStrip *strip);
 void RouletteBoard_Update(RouletteBoard *board);
-void RouletteBoard_StateSlow(RouletteBoard *board);
 void RouletteBoard_StartSlowdown(RouletteBoard *board);
-void RouletteBoard_StateSpin(RouletteBoard *board);
 void RouletteBoard_SetStateSpin(RouletteBoard *board);
 int RouletteBoard_FreeModels(RouletteBoard *board);
 short Roulette_TileAt(int x, int y);
@@ -1038,46 +1030,46 @@ void RouletteBoard_StartSpin(char *slider) {
 }
 
 void RouletteBoard_SetStateSpin(RouletteBoard *board) {
-    board->mState = pmf_RouletteBoard_StateSpin;
+    board->mState = &RouletteBoard::StateSpin;
 }
 
-void RouletteBoard_StateSpin(RouletteBoard *board) {
-    int spin = board->mSpinSpeed;
-    int pull = FX_Div(FX_MUL(spin, spin), board->mBallRadius) - 0xc00;
+void RouletteBoard::StateSpin() {
+    int spin = mSpinSpeed;
+    int pull = FX_Div(FX_MUL(spin, spin), mBallRadius) - 0xc00;
 
-    spin = board->mSpinSpeed;
+    spin = mSpinSpeed;
     int scaled = FX_MUL(spin, 0x500);
-    int step = FX_Div(scaled, board->mBallRadius);
-    board->mAngleStep = (s16)step;
+    int step = FX_Div(scaled, mBallRadius);
+    mAngleStep = (s16)step;
 
-    board->mOrbitAngle += board->mAngleStep;
+    mOrbitAngle += mAngleStep;
 
-    board->mBallRadiusVel = (int)(((s64)board->mBallRadiusVel * 0xfe0 + 0x800) >> 12);
+    mBallRadiusVel = (int)(((s64)mBallRadiusVel * 0xfe0 + 0x800) >> 12);
 
-    board->mBallRadiusVel += pull;
-    board->mBallRadius += board->mBallRadiusVel;
+    mBallRadiusVel += pull;
+    mBallRadius += mBallRadiusVel;
 
-    int radius = board->mBallRadius;
+    int radius = mBallRadius;
     if (radius > 0x4200) {
         radius = 0x4200;
-        board->mBallRadius = radius;
-        board->mBallRadiusVel = 0;
+        mBallRadius = radius;
+        mBallRadiusVel = 0;
     } else if (radius < 0x2c00) {
-        ApproachLinear(board->mSpinSpeed, 0xfffff667, 0x28);
-        RouletteBoard_StartSlowdown(board);
+        ApproachLinear(mSpinSpeed, 0xfffff667, 0x28);
+        RouletteBoard_StartSlowdown(this);
     } else {
-        if (board->mRollSound == 1) {
-            board->mRollSoundHandle = 0;
-            board->mRollSound = 2;
+        if (mRollSound == 1) {
+            mRollSoundHandle = 0;
+            mRollSound = 2;
         }
     }
 
-    if (board->mBraking != 0) {
-        ApproachLinear(board->mSpinSpeed, 0, 0x10);
+    if (mBraking != 0) {
+        ApproachLinear(mSpinSpeed, 0, 0x10);
     }
 
-    u16 angle = (u16)board->mOrbitAngle;
-    int dist = board->mBallRadius;
+    u16 angle = (u16)mOrbitAngle;
+    int dist = mBallRadius;
     int idx = angle >> 4;
     s16 val1 = FX_CosIdx(idx);
     s16 val0 = FX_SinIdx(idx);
@@ -1088,16 +1080,16 @@ void RouletteBoard_StateSpin(RouletteBoard *board) {
     ballPos.z = FX_MUL(dist, val0);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, ballPos.x, ballPos.y, ballPos.z);
 
-    board->mBall.mat4x3 = data_020a0e68;
+    mBall.mat4x3 = data_020a0e68;
 }
 
 void RouletteBoard_StartSlowdown(RouletteBoard *board) {
     board->mSpinSpeed += 0x140;
     board->mSlowBias = -board->mBoardAngle;
-    board->mState = pmf_RouletteBoard_StateSlow;
+    board->mState = &RouletteBoard::StateSlow;
 }
 
-void RouletteBoard_StateSlow(RouletteBoard *board) {
+void RouletteBoard::StateSlow() {
     int spinAbs;
     int pull;
     short sum;
@@ -1110,28 +1102,28 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
     int x, y, z;
     Vector3 ballPos;
 
-    spinAbs = board->mSpinSpeed - 0x140;
+    spinAbs = mSpinSpeed - 0x140;
     if (spinAbs < 0)
         spinAbs = -spinAbs;
-    pull = FX_Div(FX_MUL(spinAbs, spinAbs), board->mBallRadius) - 0xc00;
+    pull = FX_Div(FX_MUL(spinAbs, spinAbs), mBallRadius) - 0xc00;
 
-    board->mAngleStep = FX_Div(FX_MUL(board->mSpinSpeed, 0x500), board->mBallRadius);
+    mAngleStep = FX_Div(FX_MUL(mSpinSpeed, 0x500), mBallRadius);
 
-    board->mOrbitAngle += board->mAngleStep;
+    mOrbitAngle += mAngleStep;
 
-    board->mBallRadiusVel = FX_MUL(board->mBallRadiusVel, 0x600);
-    board->mBallRadiusVel += pull;
-    board->mBallRadius += board->mBallRadiusVel;
+    mBallRadiusVel = FX_MUL(mBallRadiusVel, 0x600);
+    mBallRadiusVel += pull;
+    mBallRadius += mBallRadiusVel;
 
-    if (board->mBallRadius > 0x2c00) {
-        board->mBallRadius = 0x2c00;
-        board->mBallRadiusVel = 0;
-    } else if (board->mBallRadius < 0x1600) {
-        board->mBallRadius = 0x1600;
-        board->mBallRadiusVel = 0;
+    if (mBallRadius > 0x2c00) {
+        mBallRadius = 0x2c00;
+        mBallRadiusVel = 0;
+    } else if (mBallRadius < 0x1600) {
+        mBallRadius = 0x1600;
+        mBallRadiusVel = 0;
     }
 
-    sum = board->mOrbitAngle + board->mSlowBias;
+    sum = mOrbitAngle + mSlowBias;
 
     stops = sRouletteSlowStops;
 
@@ -1143,51 +1135,51 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
             break;
     }
 
-    board->mStopTile = sRouletteStopTiles[idx];
+    mStopTile = sRouletteStopTiles[idx];
 
     extra = 0;
-    if (board->mBallRadius < 0x2000) {
-        if (diff < -0x400 && (diff - board->mAngleStep) >= -0x400) {
-            board->mOrbitAngle = (stops.v[idx] - 0x400) - board->mSlowBias;
-            board->mSpinSpeed = -FX_MUL(board->mSpinSpeed, 0xf00);
-            ApproachLinear(board->mSpinSpeed, 0xfffff667, 0x30);
-            if (board->mRollSound != 0) {
+    if (mBallRadius < 0x2000) {
+        if (diff < -0x400 && (diff - mAngleStep) >= -0x400) {
+            mOrbitAngle = (stops.v[idx] - 0x400) - mSlowBias;
+            mSpinSpeed = -FX_MUL(mSpinSpeed, 0xf00);
+            ApproachLinear(mSpinSpeed, 0xfffff667, 0x30);
+            if (mRollSound != 0) {
                 Sound::PlayBank2_2D(0x159);
-                board->mRollSound = 0;
+                mRollSound = 0;
             }
-        } else if (diff > 0x400 && (diff - board->mAngleStep) <= 0x400) {
-            board->mOrbitAngle = (stops.v[idx] + 0x400) - board->mSlowBias;
-            board->mSpinSpeed = -FX_MUL(board->mSpinSpeed, 0xe00);
-            if (board->mRollSound != 0) {
+        } else if (diff > 0x400 && (diff - mAngleStep) <= 0x400) {
+            mOrbitAngle = (stops.v[idx] + 0x400) - mSlowBias;
+            mSpinSpeed = -FX_MUL(mSpinSpeed, 0xe00);
+            if (mRollSound != 0) {
                 Sound::PlayBank2_2D(0x159);
-                board->mRollSound = 0;
+                mRollSound = 0;
             }
         } else {
             if (diff < 0)
                 diff = -diff;
             if (diff > 0x400) {
-                board->mBallRadius = 0x2000;
-                board->mBallRadiusVel = 0;
+                mBallRadius = 0x2000;
+                mBallRadiusVel = 0;
             }
         }
-        extra = FX_MUL(board->mBallRadius - 0x2000, 0x100);
+        extra = FX_MUL(mBallRadius - 0x2000, 0x100);
     }
 
-    ApproachLinear(board->mSpinSpeed, 0, 0x30);
+    ApproachLinear(mSpinSpeed, 0, 0x30);
 
-    angidx = ((unsigned short)(sum + board->mBoardAngle)) >> 4;
+    angidx = ((unsigned short)(sum + mBoardAngle)) >> 4;
     t0 = FX_CosIdx(angidx);
     t1 = FX_SinIdx(angidx);
 
-    x = FX_MUL(board->mBallRadius, t0);
-    y = FX_MUL(board->mBallRadius, 0x400) + 0x780 + extra;
-    z = FX_MUL(board->mBallRadius, t1);
+    x = FX_MUL(mBallRadius, t0);
+    y = FX_MUL(mBallRadius, 0x400) + 0x780 + extra;
+    z = FX_MUL(mBallRadius, t1);
     ballPos.x = x;
     ballPos.y = y;
     ballPos.z = z;
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, ballPos.x, ballPos.y, ballPos.z);
 
-    board->mBall.mat4x3 = data_020a0e68;
+    mBall.mat4x3 = data_020a0e68;
 }
 
 void RouletteBoard_Update(RouletteBoard *c) {

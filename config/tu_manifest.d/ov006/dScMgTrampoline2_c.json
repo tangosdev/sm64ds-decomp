@@ -1771,7 +1771,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -1836,12 +1836,12 @@
           {
             "section": ".data",
             "original": [
-              6,
-              21,
+              5,
+              20,
+              22,
               24,
               26,
               28,
-              30,
               32,
               45,
               48,
@@ -1853,13 +1853,13 @@
               74
             ],
             "desired": [
-              6,
-              21,
-              26,
-              28,
-              30,
-              24,
+              5,
               32,
+              20,
+              26,
+              24,
+              28,
+              22,
               45,
               48,
               56,
@@ -1873,36 +1873,36 @@
           {
             "section": ".init",
             "original": [
-              159
+              172
             ],
             "desired": [
-              159
+              172
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              157
+              170
             ],
             "desired": [
-              157
+              170
             ]
           },
           {
             "section": ".bss",
             "original": [
-              23,
+              31,
               50
             ],
             "desired": [
-              23,
+              31,
               50
             ]
           },
           {
             "section": ".rodata.after_sound",
             "original": [
-              5,
+              6,
               7,
               8,
               9,
@@ -1914,12 +1914,12 @@
               15,
               16,
               17,
-              20,
+              30,
               36,
               37,
               38,
+              39,
               40,
-              41,
               42,
               64,
               65,
@@ -1932,25 +1932,25 @@
               73
             ],
             "desired": [
-              7,
-              5,
+              6,
               8,
+              7,
+              11,
+              12,
+              9,
+              17,
+              16,
               13,
               15,
-              12,
-              11,
-              17,
-              9,
               14,
-              16,
               10,
-              20,
+              30,
               36,
               37,
-              38,
-              40,
-              41,
               42,
+              40,
+              39,
+              38,
               64,
               65,
               66,
@@ -1968,12 +1968,12 @@
             {
               "section": ".data",
               "original": [
-                6,
-                21,
+                5,
+                20,
+                22,
                 24,
                 26,
                 28,
-                30,
                 32,
                 45,
                 48,
@@ -1985,13 +1985,13 @@
                 74
               ],
               "desired": [
-                6,
-                21,
-                26,
-                28,
-                30,
-                24,
+                5,
                 32,
+                20,
+                26,
+                24,
+                28,
+                22,
                 45,
                 48,
                 56,
@@ -2002,12 +2002,12 @@
                 74
               ],
               "slots": [
-                6,
-                21,
+                5,
+                20,
+                22,
                 24,
                 26,
                 28,
-                30,
                 32,
                 45,
                 48,
@@ -2022,7 +2022,7 @@
             {
               "section": ".rodata.after_sound",
               "original": [
-                5,
+                6,
                 7,
                 8,
                 9,
@@ -2034,12 +2034,12 @@
                 15,
                 16,
                 17,
-                20,
+                30,
                 36,
                 37,
                 38,
+                39,
                 40,
-                41,
                 42,
                 64,
                 65,
@@ -2052,25 +2052,25 @@
                 73
               ],
               "desired": [
-                7,
-                5,
+                6,
                 8,
+                7,
+                11,
+                12,
+                9,
+                17,
+                16,
                 13,
                 15,
-                12,
-                11,
-                17,
-                9,
                 14,
-                16,
                 10,
-                20,
+                30,
                 36,
                 37,
-                38,
-                40,
-                41,
                 42,
+                40,
+                39,
+                38,
                 64,
                 65,
                 66,
@@ -2082,7 +2082,7 @@
                 73
               ],
               "slots": [
-                5,
+                6,
                 7,
                 8,
                 9,
@@ -2094,12 +2094,12 @@
                 15,
                 16,
                 17,
-                20,
+                30,
                 36,
                 37,
                 38,
+                39,
                 40,
-                41,
                 42,
                 64,
                 65,
@@ -2623,9 +2623,9 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@1263",
+      "from": "@1262",
       "to": "@1086",
-      "evidence": "data-trampoline2-wave-tables1017: named local wave-record type shifts compiler-local destructor registration node from@1111 to@1110. Both are unique12-byte local NOBITS objects; identical64-byte initializer references the node at the same relocation offset/type/addend. Its configured canonicalidentity remains@1086. Complete71-definition proof permits only this exactsite-derived bijection and the random-position semanticrename. Re-keyed -1 (from @1156) when this TU's extern Mg_DrawLine was removed and dScMgBase_c.h gained Mg_DrawLine. Re-keyed -1 (from @1148) when the unread TU-local vtable-slot scaffold struct C was deleted.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed -2 (from @1215) when the unread pointer parameters of Trmp2Mario_EnterAll and Trmp2Mario_PlaceAtStart were dropped from this TU's externs. Re-keyed -1 (from @1213) when Trmp2Spinner_Init took its hit count as an int parameter instead of re-reading a void * into a local (decl agreement with Trmp2Spinner_InitAll's caller); paired by symtab index 92, every non-strtab section byte-identical. Re-keyed from @1212 to @1211 (same symtab index 92, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1211 to @1209 when StateWaitExit copied its PMF state as a struct P2 instead of a b ? a : a ternary. Re-keyed from @1209 to @1215 when the five state assignments became mState = &dScMgTrampoline2_c::X (five new PMF literals ahead of it) and the dead P2/S2/StateValue types were deleted. Re-keyed from @1209 to @1212 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @1209 to @1231 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @1209 to @1177 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1208 to @1211 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @1211 to @1224 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @1224 to @1218 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @1218 to @1213 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1213 to @1231 when this branch's TrmpLine method conversion was merged over main's CalcLib.h/MtxStack.h declaration cleanup; the merged object emits this index (measured from the compiled object). Re-keyed from @1231 to @1225 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1225 to @1213 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1213 to @1250 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1250 to @1262 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1262 to @1267 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1267 to @1263 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "data-trampoline2-wave-tables1017: named local wave-record type shifts compiler-local destructor registration node from@1111 to@1110. Both are unique12-byte local NOBITS objects; identical64-byte initializer references the node at the same relocation offset/type/addend. Its configured canonicalidentity remains@1086. Complete71-definition proof permits only this exactsite-derived bijection and the random-position semanticrename. Re-keyed -1 (from @1156) when this TU's extern Mg_DrawLine was removed and dScMgBase_c.h gained Mg_DrawLine. Re-keyed -1 (from @1148) when the unread TU-local vtable-slot scaffold struct C was deleted.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed -2 (from @1215) when the unread pointer parameters of Trmp2Mario_EnterAll and Trmp2Mario_PlaceAtStart were dropped from this TU's externs. Re-keyed -1 (from @1213) when Trmp2Spinner_Init took its hit count as an int parameter instead of re-reading a void * into a local (decl agreement with Trmp2Spinner_InitAll's caller); paired by symtab index 92, every non-strtab section byte-identical. Re-keyed from @1212 to @1211 (same symtab index 92, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1211 to @1209 when StateWaitExit copied its PMF state as a struct P2 instead of a b ? a : a ternary. Re-keyed from @1209 to @1215 when the five state assignments became mState = &dScMgTrampoline2_c::X (five new PMF literals ahead of it) and the dead P2/S2/StateValue types were deleted. Re-keyed from @1209 to @1212 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @1209 to @1231 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @1209 to @1177 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1208 to @1211 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @1211 to @1224 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed from @1224 to @1218 when nitro/mi/memory.h replaced named-parameter local MIi_CpuCopy32/MIi_CpuClear16 declarations (measured from the compiled object, same symtab index). Re-keyed from @1218 to @1213 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1213 to @1231 when this branch's TrmpLine method conversion was merged over main's CalcLib.h/MtxStack.h declaration cleanup; the merged object emits this index (measured from the compiled object). Re-keyed from @1231 to @1225 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1225 to @1213 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1213 to @1250 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1250 to @1262 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1262 to @1267 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1267 to @1263 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1263 to @1262 when InitBrush dropped its `self = this` alias (measured from the compiled object: the one renumbered symbol, every non-strtab section byte-identical)."
     },
     {
       "from": "@735",

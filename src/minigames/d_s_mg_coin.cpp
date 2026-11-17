@@ -56,6 +56,7 @@ enum dScMgCoin_c_AssetId {
 #include "math/CalcLib.h"
 #include "Sound.h"
 #include "dScMgCoin_c.h"
+#include "SpawnInfo.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
@@ -174,7 +175,10 @@ extern "C" OamAttr *sMgTextSpritesSpanish[];
 extern "C" OamAttr *sMgTextSpritesFrench[];
 extern "C" OamAttr *sMgTextSpritesGerman[];
 extern "C" OamAttr *sMgTextSpritesItalian[];
-extern OamAttr **sCoinScorePlayerSprites[];
+OamAttr **sCoinScorePlayerSprites[] = {
+    sMgTextSpritesEnglish, sMgTextSpritesSpanish, sMgTextSpritesFrench,
+    sMgTextSpritesGerman,  sMgTextSpritesItalian,
+};
 extern int GetGameLanguage(void);
 extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
 struct OamAttr;
@@ -195,7 +199,12 @@ extern const int sCoinRowY[];
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 extern const u16 sCoinBlockFrameSprites[];
-extern void *sCoinBlocksSprites[];
+/* The three one-entry block sprite lists, defined beside the card scene's
+   sprites; DrawBlocks picks one through sCoinBlockFrameSprites. */
+extern OamAttr data_ov006_021341d4[];
+extern OamAttr data_ov006_021341dc[];
+extern OamAttr data_ov006_021341e4[];
+OamAttr *sCoinBlocksSprites[] = {data_ov006_021341e4, data_ov006_021341dc, data_ov006_021341d4};
 extern const int sCoinBlockFallRowY[];
 extern const int sCoinBlockDropRowY[];
 extern const int sCoinBlockWanderRowY[];
@@ -218,10 +227,10 @@ extern void func_0203b9b4(int *p, int v);
 extern void func_020127a4(int a, int b, int c, int d);
 
 /* The per-state handler tables: {pmf, delta} records indexed by the
-   record's own state byte. Static initialisation fills each one from the
-   pointer-to-member constants at 0x0213be44..0x0213bf0c in .data, which
-   stay outside this TU's claim, so they are reached by extern. The
-   definitions are in the order the initialiser fills them. */
+   record's own state byte. mwcc emits each &dScMgCoin_c:: initializer as
+   its own 8-byte {fn, 0} .data constant (0x0213be44..0x0213bf0c) and
+   __sinit_d_s_mg_coin.cpp copies it into the table. The definitions are
+   in the order the initialiser fills them. */
 typedef void (dScMgCoin_c::*CoinPmf)(int);
 struct CoinPmfEntry {
     CoinPmf pmf;
@@ -231,45 +240,31 @@ struct Entry_Behavior {
     PMF_Behavior pmf;
 };
 extern "C" {
-extern const Entry_Behavior pmf_dScMgCoin_c_Phase_StateIdle, pmf_dScMgCoin_c_Phase_StateIntro,
-    pmf_dScMgCoin_c_Phase_StatePlay, pmf_dScMgCoin_c_Phase_StateSettle,
-    pmf_dScMgCoin_c_Phase_StateScoreDelay, pmf_dScMgCoin_c_Phase_StateResult;
-extern const CoinPmfEntry pmf_dScMgCoin_c_Block_StateWaiting, pmf_dScMgCoin_c_Block_StateHopDown,
-    pmf_dScMgCoin_c_Block_StateWander, pmf_dScMgCoin_c_Block_StateDropOnCoin,
-    pmf_dScMgCoin_c_Block_StateResting, pmf_dScMgCoin_c_Block_StateFallIn;
-extern const CoinPmfEntry pmf_dScMgCoin_c_Coin_StateWaitTouch, pmf_dScMgCoin_c_Coin_StateHop,
-    pmf_dScMgCoin_c_Coin_StateSettled;
-extern const CoinPmfEntry pmf_dScMgCoin_c_Caption_StateDelay, pmf_dScMgCoin_c_Caption_StateCountIn,
-    pmf_dScMgCoin_c_Caption_StateBlink, pmf_dScMgCoin_c_Caption_StateHidden,
-    pmf_dScMgCoin_c_Caption_StateLoop;
-extern const CoinPmfEntry pmf_dScMgCoin_c_Bag_StateIdle, pmf_dScMgCoin_c_Bag_StateRise,
-    pmf_dScMgCoin_c_Bag_StateParked, pmf_dScMgCoin_c_Bag_StateBounceDown;
-
 /* the phases (Behavior) */
 Entry_Behavior sCoinPhaseStateTable[6] = {
-    {pmf_dScMgCoin_c_Phase_StateIdle},       {pmf_dScMgCoin_c_Phase_StateIntro},
-    {pmf_dScMgCoin_c_Phase_StatePlay},       {pmf_dScMgCoin_c_Phase_StateSettle},
-    {pmf_dScMgCoin_c_Phase_StateScoreDelay}, {pmf_dScMgCoin_c_Phase_StateResult}};
+    {&dScMgCoin_c::Phase_StateIdle},       {&dScMgCoin_c::Phase_StateIntro},
+    {&dScMgCoin_c::Phase_StatePlay},       {&dScMgCoin_c::Phase_StateSettle},
+    {&dScMgCoin_c::Phase_StateScoreDelay}, {&dScMgCoin_c::Phase_StateResult}};
 /* the blocks */
 CoinPmfEntry sCoinBlockStateTable[6] = {
-    {pmf_dScMgCoin_c_Block_StateWaiting}, {pmf_dScMgCoin_c_Block_StateHopDown},
-    {pmf_dScMgCoin_c_Block_StateWander},  {pmf_dScMgCoin_c_Block_StateDropOnCoin},
-    {pmf_dScMgCoin_c_Block_StateResting}, {pmf_dScMgCoin_c_Block_StateFallIn}};
+    {&dScMgCoin_c::Block_StateWaiting}, {&dScMgCoin_c::Block_StateHopDown},
+    {&dScMgCoin_c::Block_StateWander},  {&dScMgCoin_c::Block_StateDropOnCoin},
+    {&dScMgCoin_c::Block_StateResting}, {&dScMgCoin_c::Block_StateFallIn}};
 /* the coins */
-CoinPmfEntry sCoinCoinStateTable[3] = {{pmf_dScMgCoin_c_Coin_StateWaitTouch},
-                                       {pmf_dScMgCoin_c_Coin_StateHop},
-                                       {pmf_dScMgCoin_c_Coin_StateSettled}};
+CoinPmfEntry sCoinCoinStateTable[3] = {{&dScMgCoin_c::Coin_StateWaitTouch},
+                                       {&dScMgCoin_c::Coin_StateHop},
+                                       {&dScMgCoin_c::Coin_StateSettled}};
 /* the caption */
-CoinPmfEntry sCoinCaptionStateTable[5] = {{pmf_dScMgCoin_c_Caption_StateDelay},
-                                          {pmf_dScMgCoin_c_Caption_StateCountIn},
-                                          {pmf_dScMgCoin_c_Caption_StateBlink},
-                                          {pmf_dScMgCoin_c_Caption_StateHidden},
-                                          {pmf_dScMgCoin_c_Caption_StateLoop}};
+CoinPmfEntry sCoinCaptionStateTable[5] = {{&dScMgCoin_c::Caption_StateDelay},
+                                          {&dScMgCoin_c::Caption_StateCountIn},
+                                          {&dScMgCoin_c::Caption_StateBlink},
+                                          {&dScMgCoin_c::Caption_StateHidden},
+                                          {&dScMgCoin_c::Caption_StateLoop}};
 /* the moneybag */
-CoinPmfEntry sCoinBagStateTable[4] = {{pmf_dScMgCoin_c_Bag_StateIdle},
-                                      {pmf_dScMgCoin_c_Bag_StateRise},
-                                      {pmf_dScMgCoin_c_Bag_StateParked},
-                                      {pmf_dScMgCoin_c_Bag_StateBounceDown}};
+CoinPmfEntry sCoinBagStateTable[4] = {{&dScMgCoin_c::Bag_StateIdle},
+                                      {&dScMgCoin_c::Bag_StateRise},
+                                      {&dScMgCoin_c::Bag_StateParked},
+                                      {&dScMgCoin_c::Bag_StateBounceDown}};
 }
 
 /* Nothing to destroy by hand: D1 stores the vptr and calls dScMgBase_c's
@@ -385,7 +380,7 @@ void dScMgCoin_c::Bag_Release() {
     mBouncer[0].vy = kKickVy;
 }
 
-void dScMgCoin_c::Bag_StateIdle() {}
+void dScMgCoin_c::Bag_StateIdle(int) {}
 
 /* Dispatch the moneybag while mBouncer[0].active is set. Not a vtable:
    the records live in sCoinBagStateTable. */
@@ -715,7 +710,7 @@ void dScMgCoin_c::DrawCoinValues() {
     }
 }
 
-void dScMgCoin_c::Coin_StateSettled() {}
+void dScMgCoin_c::Coin_StateSettled(int) {}
 
 void dScMgCoin_c::Coin_StateHop(int index) {
     mCoins[index].y += mCoins[index].vy;
@@ -936,7 +931,7 @@ void dScMgCoin_c::Block_StateFallIn(int i) {
     }
 }
 
-void dScMgCoin_c::Block_StateResting() {}
+void dScMgCoin_c::Block_StateResting(int) {}
 
 /* A block dropping onto its coin's row. It stops at the row height from
    sCoinBlockDropRowY, takes the coin's x and rests (state 4). */
@@ -1472,6 +1467,8 @@ inline dScMgCoin_c::dScMgCoin_c() {
 void *dScMgCoin_c_classInit() {
     return new dScMgCoin_c;
 }
+
+BaseSpawnInfo<void> g_profile_MG_COIN = {dScMgCoin_c_classInit, 0x17a, 0x17a};
 
 /* Scalar animation and movement tables. Blink has two frames; the other
  * caption sequences have four and eight. The two blink arrays each acquire

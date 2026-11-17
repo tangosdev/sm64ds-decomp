@@ -16,9 +16,8 @@
  *   and moves its pool off data_020a0e68.
  * - GetNode writes node 0 onto mPos, then node 1 over it. Filling a
  *   stack vector for the facing DIFFs InitResources by one word.
- * - Indexing mSegmentPos[i] shrinks 02111c40. The walk advances a
- *   daMoray_c* one Vector3 at a time, which is what the ROM does.
- *   The volatile stores into va, and the c1/c2 locals, stay.
+ * - UpdatePose walks mSegmentPos with a daMoray_c* advanced one Vector3 at
+ *   a time beside the pos walker; see the note there.
  * - ModelComponents::UpdateBones grows Render. Render keeps
  *   func_020167a4, which is that wrapper.
  * - Sound::Play(3, 0xfa, pos) grows 02111860. func_02012694 is Play
@@ -509,7 +508,6 @@ void daMoray_c::UpdatePose() {
     Vector3 localOffset;
     Vector3 worldTarget;
     Vector3 asr;
-    int zero[1];
     int i;
     daMoray_c *row;
     int transformOffset;
@@ -537,19 +535,19 @@ void daMoray_c::UpdatePose() {
     i = 0;
     modelMtx = &this->mBlendAnmModel.mat4x3;
     this->mSegmentAngle[5] = this->mSegmentAngle[6];
-    /* mSegmentPos[i] / transforms[i] is 0x10 smaller than this walk
-       (UpdatePose 0x2f8 -> 0x2e8). row steps one Vector3 at a time
-       so the clear and the << 3 hit mSegmentPos[i] through the actor base;
-       pos receives the bone translation before that shift. */
+    /* row steps one Vector3 at a time so the clear and the << 3 hit
+       mSegmentPos[i] through the actor base; pos receives the bone
+       translation before that shift. Measured (#821 r49): this->mSegmentPos[i]
+       for the clear and the shift is the right size but 17 words off
+       (register order); pos-> for all three is 0x2dc of 0x2f8. */
     row = this;
     transformOffset = i;
     pos = this->mSegmentPos;
-    zero[0] = i;
     do {
         Matrix4x3 *dst;
-        row->mSegmentPos[0].x = zero[0];
-        row->mSegmentPos[0].y = zero[0];
-        row->mSegmentPos[0].z = zero[0];
+        row->mSegmentPos[0].x = 0;
+        row->mSegmentPos[0].y = 0;
+        row->mSegmentPos[0].z = 0;
         dst = &data_020a0e68;
         *dst = *modelMtx;
         MTX_Concat43((Matrix4x3 *)((char *)this->mBlendAnmModel.data.transforms + transformOffset),

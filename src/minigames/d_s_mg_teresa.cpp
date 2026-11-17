@@ -29,8 +29,10 @@
  * at sTeresaBigBooStateTable (9 states by BigBoo::state), the reveal pair at
  * sTeresaRevealStateTable (5 states by mReveal[0].state), the 16-Boo rows at
  * sTeresaBooStateTable (8 states), and the scene table sTeresaSceneStateTable
- * (5 no-argument states by mSceneState). __sinit_ov006_02132f68 fills them
- * from the .data descriptor records at data_ov006_0213f8xx.
+ * (5 no-argument states by mSceneState). The tables are initialized from
+ * &dScMgTeresa_c:: member pointers: mwcc emits each one as its own 8-byte
+ * {fn, 0} .data constant and __sinit_d_s_mg_teresa.cpp copies it into the
+ * table, as the cartridge does from 0x0213f8d4..0x0213f9b4.
  */
 
 // leftovers:
@@ -50,6 +52,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "OamAttr.h"
 #include "dScMgTeresa_c.h"
+#include "SpawnInfo.h"
 #include "decl_common.h"
 #include "LevelRng.h"
 #include "math/CalcLib.h"
@@ -689,35 +692,6 @@ extern Pmf sTeresaBigBooStateTable[];     /* big Boo flight states, by BigBoo::s
 extern Pmf sTeresaRevealStateTable[];     /* reveal states, by mReveal[0].state */
 extern Pmf sTeresaBooStateTable[];        /* per-Boo states, one call per live row */
 extern PmfEntry sTeresaSceneStateTable[]; /* scene states, by mSceneState */
-/* The ROM PMF constants the four state tables copy from (unlicensed .data),
- * grouped by destination table in retail copy order. */
-extern Pmf0 pmf_dScMgTeresa_c_Scene_StateInit;
-extern Pmf0 pmf_dScMgTeresa_c_Scene_StateReveal;
-extern Pmf0 pmf_dScMgTeresa_c_Scene_StatePlay;
-extern Pmf0 pmf_dScMgTeresa_c_Scene_StateRoundEnd;
-extern Pmf0 pmf_dScMgTeresa_c_Scene_StateResult;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateAppear;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateFly;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateFadeOut;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateHidden;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateHiddenTimed;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateFound;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateFadeIn;
-extern Pmf pmf_dScMgTeresa_c_Boo_StateFadeAway;
-extern Pmf pmf_dScMgTeresa_c_Reveal_StateStart;
-extern Pmf pmf_dScMgTeresa_c_Reveal_StateSlideIn;
-extern Pmf pmf_dScMgTeresa_c_Reveal_StateAnimate;
-extern Pmf pmf_dScMgTeresa_c_Reveal_StateDipAndRise;
-extern Pmf pmf_dScMgTeresa_c_Reveal_StateFinish;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateDropIn;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateHover;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateFlyLeft;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateFlyRight;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateOffscreen;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateExit;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateRemove;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateGone;
-extern Pmf pmf_dScMgTeresa_c_BigBoo_StateResult;
 
 } /* extern "C" */
 extern int func_020126e8(int a);
@@ -804,7 +778,9 @@ void dScMgTeresa_c::BigBoo_StateResult(int idx) {
     }
 }
 
-void dScMgTeresa_c::BigBoo_StateGone() {}
+/* State 7 does nothing. It takes the index like every other state in
+   sTeresaBigBooStateTable, and ignores it. */
+void dScMgTeresa_c::BigBoo_StateGone(int) {}
 
 void dScMgTeresa_c::BigBoo_StateRemove(int index) {
     void *data;
@@ -2390,30 +2366,31 @@ void *dScMgTeresa_c_classInit() {
     return new dScMgTeresa_c;
 }
 
-/* Static-init globals (was the handwritten __sinit_ov006_02132f68 shard).
- * The four PMF state tables plain-copied from the ROM PMF constants, in
- * retail copy order: the scene table, the per-Boo table, the reveal-pair
- * table, then the big-Boo flight table. */
+BaseSpawnInfo<void> g_profile_MG_TERESA = {dScMgTeresa_c_classInit, 0x183, 0x183};
+
+/* The four state tables, defined in retail copy order: the scene table,
+ * the per-Boo table, the reveal-pair table, then the big-Boo flight table.
+ * mwcc emits __sinit_d_s_mg_teresa.cpp from these definitions. */
 PmfEntry sTeresaSceneStateTable[5] = {
-    {pmf_dScMgTeresa_c_Scene_StateInit},   {pmf_dScMgTeresa_c_Scene_StateReveal},
-    {pmf_dScMgTeresa_c_Scene_StatePlay},   {pmf_dScMgTeresa_c_Scene_StateRoundEnd},
-    {pmf_dScMgTeresa_c_Scene_StateResult},
+    {&dScMgTeresa_c::Scene_StateInit},   {&dScMgTeresa_c::Scene_StateReveal},
+    {&dScMgTeresa_c::Scene_StatePlay},   {&dScMgTeresa_c::Scene_StateRoundEnd},
+    {&dScMgTeresa_c::Scene_StateResult},
 };
 Pmf sTeresaBooStateTable[8] = {
-    pmf_dScMgTeresa_c_Boo_StateAppear,      pmf_dScMgTeresa_c_Boo_StateFly,
-    pmf_dScMgTeresa_c_Boo_StateFadeOut,     pmf_dScMgTeresa_c_Boo_StateHidden,
-    pmf_dScMgTeresa_c_Boo_StateHiddenTimed, pmf_dScMgTeresa_c_Boo_StateFound,
-    pmf_dScMgTeresa_c_Boo_StateFadeIn,      pmf_dScMgTeresa_c_Boo_StateFadeAway,
+    &dScMgTeresa_c::Boo_StateAppear,      &dScMgTeresa_c::Boo_StateFly,
+    &dScMgTeresa_c::Boo_StateFadeOut,     &dScMgTeresa_c::Boo_StateHidden,
+    &dScMgTeresa_c::Boo_StateHiddenTimed, &dScMgTeresa_c::Boo_StateFound,
+    &dScMgTeresa_c::Boo_StateFadeIn,      &dScMgTeresa_c::Boo_StateFadeAway,
 };
 Pmf sTeresaRevealStateTable[5] = {
-    pmf_dScMgTeresa_c_Reveal_StateStart,   pmf_dScMgTeresa_c_Reveal_StateSlideIn,
-    pmf_dScMgTeresa_c_Reveal_StateAnimate, pmf_dScMgTeresa_c_Reveal_StateDipAndRise,
-    pmf_dScMgTeresa_c_Reveal_StateFinish,
+    &dScMgTeresa_c::Reveal_StateStart,   &dScMgTeresa_c::Reveal_StateSlideIn,
+    &dScMgTeresa_c::Reveal_StateAnimate, &dScMgTeresa_c::Reveal_StateDipAndRise,
+    &dScMgTeresa_c::Reveal_StateFinish,
 };
 Pmf sTeresaBigBooStateTable[9] = {
-    pmf_dScMgTeresa_c_BigBoo_StateDropIn,    pmf_dScMgTeresa_c_BigBoo_StateHover,
-    pmf_dScMgTeresa_c_BigBoo_StateFlyLeft,   pmf_dScMgTeresa_c_BigBoo_StateFlyRight,
-    pmf_dScMgTeresa_c_BigBoo_StateOffscreen, pmf_dScMgTeresa_c_BigBoo_StateExit,
-    pmf_dScMgTeresa_c_BigBoo_StateRemove,    pmf_dScMgTeresa_c_BigBoo_StateGone,
-    pmf_dScMgTeresa_c_BigBoo_StateResult,
+    &dScMgTeresa_c::BigBoo_StateDropIn,    &dScMgTeresa_c::BigBoo_StateHover,
+    &dScMgTeresa_c::BigBoo_StateFlyLeft,   &dScMgTeresa_c::BigBoo_StateFlyRight,
+    &dScMgTeresa_c::BigBoo_StateOffscreen, &dScMgTeresa_c::BigBoo_StateExit,
+    &dScMgTeresa_c::BigBoo_StateRemove,    &dScMgTeresa_c::BigBoo_StateGone,
+    &dScMgTeresa_c::BigBoo_StateResult,
 };

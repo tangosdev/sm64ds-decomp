@@ -53,7 +53,8 @@
     .rodata.data_ov006_0212ec70 start:0x0212ec70 end:0x0212ec78 kind:rodata align:4
     .rodata.data_ov006_0212ec78 start:0x0212ec78 end:0x0212ec80 kind:rodata align:4
     .rodata.sPachinko2PaddleFlyAwayVX start:0x0212ec80 end:0x0212ec8c kind:rodata align:4
-    .rodata.gap8 start:0x0212ec8c end:0x0212ecac kind:rodata align:4
+    .rodata.data_ov006_0212ec8c start:0x0212ec8c end:0x0212ec9c kind:rodata align:4
+    .rodata.data_ov006_0212ec9c start:0x0212ec9c end:0x0212ecac kind:rodata align:4
     .rodata.sPachinko2CupWaitTimesAlt start:0x0212ecac end:0x0212ecbc kind:rodata align:4
     .rodata.sPachinko2CupRightStops start:0x0212ecbc end:0x0212ecd4 kind:rodata align:4
     .rodata.sPachinko2CupLeftStops start:0x0212ecd4 end:0x0212ecec kind:rodata align:4
@@ -361,7 +362,8 @@
     .data.sJump3DAnimTable start:0x0213b098 end:0x0213b0a4 kind:data align:4
     .data.gap48 start:0x0213b0a4 end:0x0213b0d8 kind:data align:4
     .data.sPuffSprites start:0x0213b0d8 end:0x0213b0ec kind:data align:4
-    .data.gap49 start:0x0213b0ec end:0x0213b22c kind:data align:4
+    .data.gap49 start:0x0213b0ec end:0x0213b0f4 kind:data align:4
+    .data.trmpmariopmf start:0x0213b0f4 end:0x0213b22c kind:data align:4
     .data.sTrmpBounceAnimTable start:0x0213b22c end:0x0213b238 kind:data align:4
     .data.gap50 start:0x0213b238 end:0x0213b31c kind:data align:4
     .data.pmf_unit020cd744 start:0x0213b31c end:0x0213b3a4 kind:data align:4
@@ -453,6 +455,7 @@ src/minigames/d_mg_trmpln2_mario.cpp:
     .init start:0x0212f6b4 end:0x0212fc7c
     .ctor start:0x02133578 end:0x0213357c
     .bss start:0x0214053c end:0x02140808
+    .data.trmpmariopmf start:0x0213b0f4 end:0x0213b22c
     .data.sTrmpBounceAnimTable start:0x0213b22c end:0x0213b238
 
 src/minigames/unit020cd744.cpp:
@@ -475,7 +478,7 @@ src/minigames/d_s_mg_bomroom.cpp:
     .init start:0x0212fd48 end:0x021300b0
     .ctor start:0x02133580 end:0x02133584
     .bss start:0x02141660 end:0x02141768
-    .data start:0x0213b9ec end:0x0213bafc
+    .data.w13b814 start:0x0213b9ec end:0x0213bafc
     .data.sBomroomMarkerLitSprites start:0x02133a70 end:0x02133a80
     .data.sBomroomMarkerPlainSprites start:0x02133ae0 end:0x02133af0
     .data.sBomroomHatchPanelSprites start:0x021342bc end:0x021342d0
@@ -533,6 +536,7 @@ src/minigames/d_s_mg_coin.cpp:
     .text start:0x020dbe40 end:0x020de988
     .init start:0x0213014c end:0x021303d0
     .ctor start:0x02133588 end:0x0213358c
+    .data.w13b814 start:0x0213be44 end:0x0213bf48
     .bss start:0x021417b0 end:0x02141870
     .data.data_ov006_02133f00 start:0x02133f00 end:0x02133f08
     .data.data_ov006_02133f08 start:0x02133f08 end:0x02133f10
@@ -797,6 +801,8 @@ src/minigames/d_s_mg_pachinko2.cpp:
     .rodata.data_ov006_0212ec70 start:0x0212ec70 end:0x0212ec78
     .rodata.data_ov006_0212ec78 start:0x0212ec78 end:0x0212ec80
     .rodata.sPachinko2PaddleFlyAwayVX start:0x0212ec80 end:0x0212ec8c
+    .rodata.data_ov006_0212ec8c start:0x0212ec8c end:0x0212ec9c
+    .rodata.data_ov006_0212ec9c start:0x0212ec9c end:0x0212ecac
     .rodata.sPachinko2CupWaitTimesAlt start:0x0212ecac end:0x0212ecbc
     .rodata.sPachinko2CupRightStops start:0x0212ecbc end:0x0212ecd4
     .rodata.sPachinko2CupLeftStops start:0x0212ecd4 end:0x0212ecec
@@ -818,7 +824,7 @@ src/minigames/d_s_mg_pachinko2.cpp:
     .data.data_ov006_02138cd8 start:0x02138cd8 end:0x02138cf0
     .data.data_ov006_02138cf0 start:0x02138cf0 end:0x02138d08
     .data.sPachinko2BallCountSprites start:0x02138d08 end:0x02138d28
-    .data start:0x0213db6c end:0x0213db9c
+    .data start:0x0213da5c end:0x0213db9c
 
 src/minigames/d_s_mg_panel.cpp:
     complete
@@ -835,6 +841,7 @@ src/minigames/d_s_mg_roulette_methods.cpp:
     .ctor start:0x021335cc end:0x021335d0
     .bss start:0x021428c8 end:0x02142bdc
     .rodata.sRouletteTables start:0x0212ed14 end:0x0212ed88
+    .data start:0x0213e2e8 end:0x0213e300
 
 src/minigames/d_s_mg_roulette.cpp:
     complete
@@ -920,7 +927,7 @@ src/minigames/d_s_mg_teresa.cpp:
     .data.data_ov006_0213a904 start:0x0213a904 end:0x0213a924
     .data.data_ov006_0213a924 start:0x0213a924 end:0x0213a944
     .data.data_ov006_0213a944 start:0x0213a944 end:0x0213a964
-    .data start:0x0213f9d0 end:0x0213f9e4
+    .data start:0x0213f8d4 end:0x0213f9e4
 
 src/minigames/d_s_mg_trampoline.cpp:
     complete
@@ -969,7 +976,7 @@ src/minigames/d_s_mg_bsc.cpp:
     .init start:0x0213326c end:0x021333e0
     .ctor start:0x021335e0 end:0x021335e4
     .bss start:0x02142f94 end:0x02143004
-    .data start:0x0213fe78 end:0x0213fe8c
+    .data start:0x0213fd0c end:0x0213fe8c
 
 src/minigames/d_s_mg_snowball.cpp:
     complete

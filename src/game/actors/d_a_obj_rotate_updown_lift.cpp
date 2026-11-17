@@ -153,7 +153,8 @@ daObjRotateUpdownLift_c::~daObjRotateUpdownLift_c()
 /* Put a killed lift back on its spawn node. The watcher calls this. */
 void daObjRotateUpdownLift_c::func_ov091_02130fac()
 {
-    VecFx32 tmp[2];
+    Vector3 offset;
+    Vector3 pos;
 
     mIsDead = 0;
     mAngleX = mSpawnAngleX;
@@ -164,12 +165,11 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     mPosZ = mBasePos.z;
     mWaypointIndex = (param1 & 15);
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
-                  (Vector3 *)&tmp[0]);
-    Vec3_Add((Vector3 *)&tmp[1], &mBasePos, (const Vector3 *)&tmp[0]);
-    mPosX = tmp[1].x;
-    mPosY = tmp[1].y;
-    mPosZ = tmp[1].z;
+    MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &offset);
+    Vec3_Add(&pos, &mBasePos, &offset);
+    mPosX = pos.x;
+    mPosY = pos.y;
+    mPosZ = pos.z;
 }
 
 // 0x02131070 (0x8c)

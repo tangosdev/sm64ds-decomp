@@ -42,7 +42,7 @@
     },
     {
       "name": ".data",
-      "start": "0x0213fe78",
+      "start": "0x0213fd0c",
       "end": "0x0213fe8c"
     }
   ],
@@ -195,6 +195,221 @@
       "size": "0x14",
       "binding": "STB_GLOBAL",
       "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateWaitTable",
+      "address": "0x0213fd0c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateWaitTable (0x02124ae4), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateWaitTable_2",
+      "address": "0x0213fd14",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateWaitTable (0x02124ae4), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateDone",
+      "address": "0x0213fd1c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateDone (0x02124a04), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateMoveCards",
+      "address": "0x0213fd24",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateMoveCards (0x02124e1c), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateDone_2",
+      "address": "0x0213fd2c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateDone (0x02124a04), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateRevealCards",
+      "address": "0x0213fd34",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateRevealCards (0x02124cb4), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateWaitMove",
+      "address": "0x0213fd3c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateWaitMove (0x02124dc0), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "sBscLaneX",
+      "address": "0x0213fd44",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "the two card lanes' rest x, fx32, compared to retail (0x58000, 0xa8000); StateMoveCards and the touch test read it by lane index"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateChooseCard",
+      "address": "0x0213fd4c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateChooseCard (0x02124ec4), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateTableReaction",
+      "address": "0x0213fd54",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateTableReaction (0x02124b58), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateWaitDeal",
+      "address": "0x0213fd5c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateWaitDeal (0x02124fd8), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateJudgeCards",
+      "address": "0x0213fd64",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateJudgeCards (0x02124bb4), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "g_profile_MG_BS_CARD",
+      "address": "0x0213fd6c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "base scene profile (BaseSpawnInfo): word 0 relocates to dScMgBSC_c_classInit (0x021255f8); both priority halfwords are 0x184, compared to retail"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateReturnCards",
+      "address": "0x0213fd74",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateReturnCards (0x02124a08), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateDealCards",
+      "address": "0x0213fd7c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateDealCards (0x021250e4), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateTableReaction_2",
+      "address": "0x0213fd84",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgBSC_c::StateTableReaction (0x02124b58), emitted by __sinit_d_s_mg_bsc.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "_ZTI10dScMgBSC_c",
+      "address": "0x0213fd8c",
+      "size": "0xc",
+      "evidence": "own class typeinfo: __si_class_type_info vtable+8 (0x0209a764), its own _ZTS, then base _ZTI19dScMgSingle3DBase_c at 0x0213bc64; it sits between the PMF-literal run and the card sprites, so the one .data claim runs through it"
+    },
+    {
+      "symbol": "_ZTS10dScMgBSC_c",
+      "address": "0x0213fd98",
+      "size": "0xd",
+      "evidence": "ROM type-name string '10dScMgBSC_c': 12 chars + NUL = 0xd emitted bytes, followed by 3 bytes of alignment padding before the first card sprite list"
+    },
+    {
+      "symbol": "data_ov006_0213fda8",
+      "address": "0x0213fda8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "card sprite list: two OamAttr records, the second ending the list (attr3 0xffff), compared to retail; sBscCardSprites[0] (0x0213fe8c) points at it"
+    },
+    {
+      "symbol": "data_ov006_0213fdb8",
+      "address": "0x0213fdb8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "card sprite list: two OamAttr records, the second ending the list (attr3 0xffff), compared to retail; sBscCardSprites[2] (0x0213fe94) points at it"
+    },
+    {
+      "symbol": "data_ov006_0213fdc8",
+      "address": "0x0213fdc8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "card sprite list: two OamAttr records, the second ending the list (attr3 0xffff), compared to retail; sBscCardSprites[3] (0x0213fe98) points at it"
+    },
+    {
+      "symbol": "data_ov006_0213fdd8",
+      "address": "0x0213fdd8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "card sprite list: two OamAttr records, the second ending the list (attr3 0xffff), compared to retail; sBscCardSprites[4] (0x0213fe9c) points at it"
+    },
+    {
+      "symbol": "data_ov006_0213fde8",
+      "address": "0x0213fde8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "card sprite list: two OamAttr records, the second ending the list (attr3 0xffff), compared to retail; sBscCardSprites[6] (0x0213fea4) points at it"
+    },
+    {
+      "symbol": "data_ov006_0213fdf8",
+      "address": "0x0213fdf8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "card sprite list: two OamAttr records, the second ending the list (attr3 0xffff), compared to retail; sBscCardSprites[7] (0x0213fea8) points at it"
+    },
+    {
+      "symbol": "data_ov006_0213fe08",
+      "address": "0x0213fe08",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "card sprite list: two OamAttr records, the second ending the list (attr3 0xffff), compared to retail; sBscCardSprites[8] (0x0213feac) points at it"
+    },
+    {
+      "symbol": "data_ov006_0213fe18",
+      "address": "0x0213fe18",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "card sprite list: two OamAttr records, the second ending the list (attr3 0xffff), compared to retail; sBscCardSprites[9] (0x0213feb0) points at it"
+    },
+    {
+      "symbol": "data_ov006_0213fe28",
+      "address": "0x0213fe28",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "card sprite list: two OamAttr records, the second ending the list (attr3 0xffff), compared to retail; sBscCardSprites[10] (0x0213feb4) points at it"
+    },
+    {
+      "symbol": "data_ov006_0213fe38",
+      "address": "0x0213fe38",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "card sprite list: two OamAttr records, the second ending the list (attr3 0xffff), compared to retail; sBscCardSprites[11] (0x0213feb8) points at it"
+    },
+    {
+      "symbol": "data_ov006_0213fe48",
+      "address": "0x0213fe48",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "card sprite list: two OamAttr records, the second ending the list (attr3 0xffff), compared to retail; sBscCardSprites[5] (0x0213fea0) points at it"
+    },
+    {
+      "symbol": "data_ov006_0213fe58",
+      "address": "0x0213fe58",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "card sprite list: two OamAttr records, the second ending the list (attr3 0xffff), compared to retail; sBscCardSprites[12] (0x0213febc) points at it"
+    },
+    {
+      "symbol": "data_ov006_0213fe68",
+      "address": "0x0213fe68",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "card sprite list: two OamAttr records, the second ending the list (attr3 0xffff), compared to retail; sBscCardSprites[1] (0x0213fe90) points at it"
     }
   ],
   "bss": [
@@ -222,7 +437,8 @@
     "D3 declarations: Math_Function_0203b14c, Dealer_IsIdle, Dealer_Load, Dealer_Update and Dealer_PlayLose are declared at the definition's own signatures where this TU alone owns the declaration (the first four); Dealer_PlayLose and Dealer_PlayWin keep decl_common.h's void* spellings because redeclaring a C-linkage symbol with different parameter types is an illegal overloading. Sound::PlayBank2_2D, GXS::LoadOBJPltt and ApproachLinear are declared in their RATIFIED_TRUE_NAMES forms with C++ linkage.",
     "tubuild reconcile note: the conflict markers the warnings above were frozen against are no longer present in src/minigames/d_s_mg_bsc.cpp. They were reconciled in place and the notes were not updated at the time, so the entry claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py.",
     "Static initializer folded: the state table sBSCStateTable[14] moves out of the handwritten src/unnamed shard into src/minigames/d_s_mg_bsc.cpp, defined through the existing StateHandler typedef and plain-copied from the fourteen ROM PMF constants in retail copy order (curling/slots precedent). The emitted .init, .ctor and .bss are byte-identical to retail __sinit_ov006_0213326c; no handles, no compiler temporaries, no renames. The .bss claim 0x02142f94..0x02143004 ends exactly at the next symbol; no bound row is needed. The retired shard converted-baseline row is dropped per the c62c3266 precedent.",
-    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares."
+    "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded rom.sha256 is the fleet-canonical d1506e90...c478e8 that every intact entry shares.",
+    "2026-11-17 (#821): the state table is initialized from real &dScMgBSC_c:: member pointers. The 14 {fn, 0} constants mwccarm emits for the initializers are the run 0x0213fd0c..0x0213fd8c; with the objects between it and the existing claim at 0x0213fe78 that the file now defines (sBscLaneX, g_profile_MG_BS_CARD, the class's own _ZTI10/_ZTS10dScMgBSC_c, and the 13 two-OamAttr card sprite lists sBscCardSprites points at) the .data claim runs 0x0213fd0c..0x0213fe8c. Each @NNN is paired with its pmf_dScMgBSC_c_* record by its __sinit consumer relocation and its own handler relocation. The _ZTI/_ZTS records move from compiler_only_output deadstrip-data to owned data rows (precedent ov002/daObjFire_c, ov003/dScGameOver_c). verify 20/20 TEXT-VERIFIED (base 20/20); linkcheck SCRATCH-DATA-VERIFIED."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -305,7 +521,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -344,7 +560,7 @@
         },
         {
           "section": ".data",
-          "start": "0x0213fe78",
+          "start": "0x0213fd0c",
           "end": "0x0213fe8c",
           "differingBytes": 0,
           "firstDiff": null
@@ -352,7 +568,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 23
+          "LICENSED": 55
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -363,32 +579,215 @@
           {
             "section": ".init",
             "original": [
-              67
+              116
             ],
             "desired": [
-              67
+              116
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              65
+              114
             ],
             "desired": [
-              65
+              114
             ]
           },
           {
             "section": ".bss",
             "original": [
-              23
+              68
             ],
             "desired": [
-              23
+              68
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              9,
+              11,
+              13,
+              15,
+              17,
+              21,
+              23,
+              25,
+              27,
+              29,
+              31,
+              33,
+              35,
+              36,
+              45,
+              51,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62,
+              63,
+              64,
+              65,
+              66
+            ],
+            "desired": [
+              36,
+              5,
+              21,
+              23,
+              29,
+              15,
+              9,
+              35,
+              13,
+              33,
+              27,
+              31,
+              25,
+              7,
+              17,
+              11,
+              45,
+              51,
+              55,
+              56,
+              57,
+              63,
+              58,
+              59,
+              60,
+              61,
+              62,
+              64,
+              65,
+              53,
+              54,
+              66
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                7,
+                9,
+                11,
+                13,
+                15,
+                17,
+                21,
+                23,
+                25,
+                27,
+                29,
+                31,
+                33,
+                35,
+                36,
+                45,
+                51,
+                53,
+                54,
+                55,
+                56,
+                57,
+                58,
+                59,
+                60,
+                61,
+                62,
+                63,
+                64,
+                65,
+                66
+              ],
+              "desired": [
+                36,
+                5,
+                21,
+                23,
+                29,
+                15,
+                9,
+                35,
+                13,
+                33,
+                27,
+                31,
+                25,
+                7,
+                17,
+                11,
+                45,
+                51,
+                55,
+                56,
+                57,
+                63,
+                58,
+                59,
+                60,
+                61,
+                62,
+                64,
+                65,
+                53,
+                54,
+                66
+              ],
+              "slots": [
+                5,
+                7,
+                9,
+                11,
+                13,
+                15,
+                17,
+                21,
+                23,
+                25,
+                27,
+                29,
+                31,
+                33,
+                35,
+                36,
+                45,
+                51,
+                53,
+                54,
+                55,
+                56,
+                57,
+                58,
+                59,
+                60,
+                61,
+                62,
+                63,
+                64,
+                65,
+                66
+              ]
+            }
+          ],
+          "symbolIndices": 32,
+          "sectionLinks": 0,
+          "sectionInfos": 16,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -475,20 +874,6 @@
       "reason": "dragged in as an ancestor RTTI passenger typeinfo record by naming this class's key function; the cartridge's copy lives at arm9:0x020914d4 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
     },
     {
-      "symbol": "_ZTI10dScMgBSC_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov006",
-      "canonical_address": "0x0213fd8c",
-      "reason": "emitted for this class itself typeinfo record by naming this class's key function; the cartridge's copy lives at ov006:0x0213fd8c and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
-    },
-    {
-      "symbol": "_ZTS10dScMgBSC_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov006",
-      "canonical_address": "0x0213fd98",
-      "reason": "emitted for this class itself typeinfo name string by naming this class's key function; the cartridge's copy lives at ov006:0x0213fd98 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
-    },
-    {
       "symbol": "_ZTI19dScMgSingle3DBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov006",
@@ -561,6 +946,90 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateWaitTable",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateWaitTable_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateDone",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateMoveCards",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateDone_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateRevealCards",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateWaitMove",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateChooseCard",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateTableReaction",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateWaitDeal",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateJudgeCards",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateReturnCards",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateDealCards",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgBSC_c_StateTableReaction_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "relocations": [
@@ -723,7 +1192,259 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0213fd2c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c14StateWaitTableEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02124ae4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c14StateWaitTableEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02124ae4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c9StateDoneEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02124a04"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c14StateMoveCardsEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02124e1c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c9StateDoneEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02124a04"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c16StateRevealCardsEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02124cb4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c13StateWaitMoveEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02124dc0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c15StateChooseCardEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02124ec4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c18StateTableReactionEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02124b58"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c13StateWaitDealEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02124fd8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c15StateJudgeCardsEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02124bb4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z20dScMgBSC_c_classInitv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021255f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c16StateReturnCardsEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02124a08"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c14StateDealCardsEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021250e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dScMgBSC_c18StateTableReactionEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02124b58"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS10dScMgBSC_c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213fd98"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213fd94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI19dScMgSingle3DBase_c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213bc64"
     }
   ],
-  "undefined_symbol_aliases": []
+  "undefined_symbol_aliases": [],
+  "defined_symbol_renames": [
+    {
+      "from": "@687",
+      "to": "pmf_dScMgBSC_c_StateWaitTable",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateWaitTable, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x164 loads 0x0213fd0c in the ROM) and by its own relocation target (dScMgBSC_c::StateWaitTable at 0x02124ae4). Re-keyed from @695 to @687 after the data/batch-01 merge."
+    },
+    {
+      "from": "@685",
+      "to": "pmf_dScMgBSC_c_StateWaitTable_2",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateWaitTable, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x160 loads 0x0213fd14 in the ROM) and by its own relocation target (dScMgBSC_c::StateWaitTable at 0x02124ae4). Re-keyed from @693 to @685 after the data/batch-01 merge."
+    },
+    {
+      "from": "@691",
+      "to": "pmf_dScMgBSC_c_StateDone",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateDone, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x16c loads 0x0213fd1c in the ROM) and by its own relocation target (dScMgBSC_c::StateDone at 0x02124a04). Re-keyed from @699 to @691 after the data/batch-01 merge."
+    },
+    {
+      "from": "@673",
+      "to": "pmf_dScMgBSC_c_StateMoveCards",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateMoveCards, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x148 loads 0x0213fd24 in the ROM) and by its own relocation target (dScMgBSC_c::StateMoveCards at 0x02124e1c). Re-keyed from @681 to @673 after the data/batch-01 merge."
+    },
+    {
+      "from": "@693",
+      "to": "pmf_dScMgBSC_c_StateDone_2",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateDone, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x170 loads 0x0213fd2c in the ROM) and by its own relocation target (dScMgBSC_c::StateDone at 0x02124a04). Re-keyed from @701 to @693 after the data/batch-01 merge."
+    },
+    {
+      "from": "@677",
+      "to": "pmf_dScMgBSC_c_StateRevealCards",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateRevealCards, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x150 loads 0x0213fd34 in the ROM) and by its own relocation target (dScMgBSC_c::StateRevealCards at 0x02124cb4). Re-keyed from @685 to @677 after the data/batch-01 merge."
+    },
+    {
+      "from": "@675",
+      "to": "pmf_dScMgBSC_c_StateWaitMove",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateWaitMove, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x14c loads 0x0213fd3c in the ROM) and by its own relocation target (dScMgBSC_c::StateWaitMove at 0x02124dc0). Re-keyed from @683 to @675 after the data/batch-01 merge."
+    },
+    {
+      "from": "@671",
+      "to": "pmf_dScMgBSC_c_StateChooseCard",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateChooseCard, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x144 loads 0x0213fd4c in the ROM) and by its own relocation target (dScMgBSC_c::StateChooseCard at 0x02124ec4). Re-keyed from @679 to @671 after the data/batch-01 merge."
+    },
+    {
+      "from": "@681",
+      "to": "pmf_dScMgBSC_c_StateTableReaction",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateTableReaction, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x158 loads 0x0213fd54 in the ROM) and by its own relocation target (dScMgBSC_c::StateTableReaction at 0x02124b58). Re-keyed from @689 to @681 after the data/batch-01 merge."
+    },
+    {
+      "from": "@669",
+      "to": "pmf_dScMgBSC_c_StateWaitDeal",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateWaitDeal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x140 loads 0x0213fd5c in the ROM) and by its own relocation target (dScMgBSC_c::StateWaitDeal at 0x02124fd8). Re-keyed from @677 to @669 after the data/batch-01 merge."
+    },
+    {
+      "from": "@679",
+      "to": "pmf_dScMgBSC_c_StateJudgeCards",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateJudgeCards, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x154 loads 0x0213fd64 in the ROM) and by its own relocation target (dScMgBSC_c::StateJudgeCards at 0x02124bb4). Re-keyed from @687 to @679 after the data/batch-01 merge."
+    },
+    {
+      "from": "@689",
+      "to": "pmf_dScMgBSC_c_StateReturnCards",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateReturnCards, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x168 loads 0x0213fd74 in the ROM) and by its own relocation target (dScMgBSC_c::StateReturnCards at 0x02124a08). Re-keyed from @697 to @689 after the data/batch-01 merge."
+    },
+    {
+      "from": "@667",
+      "to": "pmf_dScMgBSC_c_StateDealCards",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateDealCards, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x138 loads 0x0213fd7c in the ROM) and by its own relocation target (dScMgBSC_c::StateDealCards at 0x021250e4). Re-keyed from @675 to @667 after the data/batch-01 merge."
+    },
+    {
+      "from": "@683",
+      "to": "pmf_dScMgBSC_c_StateTableReaction_2",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_bsc.cpp assigns &dScMgBSC_c::StateTableReaction, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_bsc.cpp+0x15c loads 0x0213fd84 in the ROM) and by its own relocation target (dScMgBSC_c::StateTableReaction at 0x02124b58). Re-keyed from @691 to @683 after the data/batch-01 merge."
+    }
+  ]
 }
