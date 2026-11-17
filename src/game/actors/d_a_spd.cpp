@@ -174,9 +174,9 @@ int daSpd_c::InitResources() {
     mHomeY = mPosY;
     mHomeZ = mPosZ;
     mHomeAngleY = mAngleY;
-    mAnchorX = mPosX;
-    mAnchorY = mPosY;
-    mAnchorZ = mPosZ;
+    mAnchor.x = mPosX;
+    mAnchor.y = mPosY;
+    mAnchor.z = mPosZ;
     if (param1 != 0)
         SetState(0);
     else
@@ -298,9 +298,9 @@ int daSpd_c::func_ov071_02120028() {
     } else if (mWithMeshClsn.IsOnGround()) {
         mVertSpeed = 0;
         mWithMeshClsn.ClearLimMovFlag();
-        mAnchorX = mPosX;
-        mAnchorY = mPosY;
-        mAnchorZ = mPosZ;
+        mAnchor.x = mPosX;
+        mAnchor.y = mPosY;
+        mAnchor.z = mPosZ;
         mFlags |= 0x10000001;
         SetState(2);
     }
@@ -311,7 +311,7 @@ int daSpd_c::func_ov071_02120028() {
 }
 
 int daSpd_c::func_ov071_0211ff84() {
-    if (Vec3_Dist(&mPos, (Vector3 *)&mAnchorX) > 0x5dc000) {
+    if (Vec3_Dist(&mPos, &mAnchor) > 0x5dc000) {
         SetState(5);
         return 1;
     }
@@ -417,11 +417,11 @@ int daSpd_c::func_ov071_0211fbf4() {
 }
 
 int daSpd_c::func_ov071_0211fb24() {
-    short ang = Vec3_HorzAngle(&mPos, (Vector3 *)&mAnchorX);
+    short ang = Vec3_HorzAngle(&mPos, &mAnchor);
     ApproachLinear(mAngleY, ang, 0x2bc);
     mPrevAngleY = mAngleY;
     mAnmModel.Advance();
-    if (Vec3_Dist(&mPos, (Vector3 *)&mAnchorX) < 0x12c000)
+    if (Vec3_Dist(&mPos, &mAnchor) < 0x12c000)
         SetState(2);
     func_ov071_0211f0b4();
     UpdatePos(&mdCcAc_c);
