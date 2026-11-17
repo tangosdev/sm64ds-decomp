@@ -35,6 +35,8 @@ struct WalkPath;
  * Unnamed regions are touched in one place at most, or sit inside an embedded
  * object. */
 struct MascotWalker {
+    typedef void (MascotWalker::*StateFn)();
+
     MascotWalker();
     ~MascotWalker();
 
@@ -59,7 +61,7 @@ struct MascotWalker {
     /* InitCylinder'd by Load and InitModel'd on mModel.mat4x3 by Draw. */
     dExtShadowModel_c mShadow; /* 0x88 */
     WalkPath *mPath;           /* 0xb0 -- the path walked: a point count, then the points */
-    s32 mState[2];    /* 0xb4 -- the current state's member-pointer record */
+    void (MascotWalker::*mState)(); /* 0xb4 -- the current state */
     /* Load sets all three to 0x1000 (1.0), beside mPos and the angles; nothing
        in this file reads it back. */
     Vector3 mScale;   /* 0xbc */

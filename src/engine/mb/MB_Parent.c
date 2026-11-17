@@ -47,7 +47,7 @@ typedef int BOOL;
 
 #define MB_SEND_THRESHOLD 2
 
-/* mb_private.h: the WM callback codes MB_WmBase.cpp passes on. */
+/* mb_private.h: the WM callback codes MB_WmBase.c passes on. */
 #define MB_CALLBACK_CHILD_CONNECTED 0
 #define MB_CALLBACK_CHILD_DISCONNECTED 1
 #define MB_CALLBACK_MP_PARENT_RECV 3

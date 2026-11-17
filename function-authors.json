@@ -19603,71 +19603,71 @@
     },
     "ov004:0x020b4aa4": {
       "author": "tangosdev",
-      "name": "_Z17Coin_FlyToCounterP6Sprite"
+      "name": "_ZN6Sprite12FlyToCounterEv"
     },
     "ov004:0x020b4b84": {
       "author": "tangosdev",
-      "name": "_Z16Coin_PlacePayoutP6SpriteP5Vec2i"
+      "name": "_ZN6Sprite11PlacePayoutEP5Vec2i"
     },
     "ov004:0x020b4c30": {
       "author": "tangosdev",
-      "name": "_Z19Coin_MoveThenRefundP6Sprite"
+      "name": "_ZN6Sprite14MoveThenRefundEv"
     },
     "ov004:0x020b4cc4": {
       "author": "tangosdev",
-      "name": "_Z11Coin_ReturnP6Sprite"
+      "name": "_ZN6Sprite6ReturnEv"
     },
     "ov004:0x020b4d50": {
       "author": "tangosdev",
-      "name": "_Z14Coin_RiseSpentP6Sprite"
+      "name": "_ZN6Sprite9RiseSpentEv"
     },
     "ov004:0x020b4dfc": {
       "author": "tangosdev",
-      "name": "_Z22Coin_MoveThenRiseSpentP6Sprite"
+      "name": "_ZN6Sprite17MoveThenRiseSpentEv"
     },
     "ov004:0x020b4e78": {
       "author": "andrewboudreau",
-      "name": "_Z10Coin_SpendP6Sprite"
+      "name": "_ZN6Sprite5SpendEv"
     },
     "ov004:0x020b4f44": {
       "author": "tangosdev",
-      "name": "_Z9Coin_RiseP6Sprite"
+      "name": "_ZN6Sprite4RiseEv"
     },
     "ov004:0x020b4ff0": {
       "author": "tangosdev",
-      "name": "_Z17Coin_MoveThenRiseP6Sprite"
+      "name": "_ZN6Sprite12MoveThenRiseEv"
     },
     "ov004:0x020b506c": {
       "author": "tangosdev",
-      "name": "_Z12Coin_SendOffP6Sprite"
+      "name": "_ZN6Sprite7SendOffEv"
     },
     "ov004:0x020b5108": {
       "author": "tangosdev",
-      "name": "_Z11Coin_LaunchP6SpriteP5Vec2i"
+      "name": "_ZN6Sprite6LaunchEP5Vec2i"
     },
     "ov004:0x020b51e4": {
       "author": "tangosdev",
-      "name": "_Z9Coin_HideP6Sprite"
+      "name": "_ZN6Sprite4HideEv"
     },
     "ov004:0x020b51f0": {
       "author": "tangosdev",
-      "name": "_Z17Coin_MoveThenBankP6Sprite"
+      "name": "_ZN6Sprite12MoveThenBankEv"
     },
     "ov004:0x020b5288": {
       "author": "tangosdev",
-      "name": "_Z9Coin_MoveP6Sprite"
+      "name": "_ZN6Sprite4MoveEv"
     },
     "ov004:0x020b52b8": {
       "author": "tangosdev",
-      "name": "_Z9Coin_DrawP6Sprite"
+      "name": "_ZN6Sprite4DrawEv"
     },
     "ov004:0x020b52fc": {
       "author": "tangosdev",
-      "name": "_Z11Coin_UpdateP6Sprite"
+      "name": "_ZN6Sprite6UpdateEv"
     },
     "ov004:0x020b5334": {
       "author": "tangosdev",
-      "name": "_Z10Coin_ResetP6Sprite"
+      "name": "_ZN6Sprite5ResetEv"
     },
     "ov004:0x020b5368": {
       "author": "tangosdev",

@@ -1,4 +1,3 @@
-//cpp
 /* The multiboot library's use of the wireless manager (the Nitro SDK's
  * mb_wm_base.c), arm9 .text 0x0206879c..0x0206a318.
  *
@@ -57,15 +56,9 @@
 #include "nitro/mi/memory.h"
 #include "nitro/mi/dma.h"
 
-/* The SDK built this file as C, where the GameInfo copy in
- * RecordScannedParent is an inline 0x20-pass halfword loop. As C++ it is an
- * implicit operator=, which mwccarm calls out of line unless always_inline is
- * on. mwccarm generates code for the file's bodies after it has read all of
- * them, so the pragma has to be in force at the end of the file: scoped with
- * push/pop around RecordScannedParent and its caller, it changes nothing. */
-#pragma always_inline on
-
-extern "C" {
+/* C, as the SDK built it: the GameInfo struct copy in RecordScannedParent
+ * is then an inline 0x20-pass halfword loop. Compiled as C++ the copy is an
+ * implicit operator= that mwccarm calls out of line. */
 
 /* sDmaNo, sWmWork and sScanParam; mbc and pPwork are mb_parent's
  * (private/arm9_a9db8_mb_parent.h). */
@@ -911,5 +904,4 @@ void MBi_CheckWmErrcode(int apiid, int errcode) {
     p.apiid = apiid;
     p.errcode = errcode;
     WM_WORK->userCallback(0xff, &p);
-}
 }

@@ -29,8 +29,8 @@
  * for its PointInTriangle tests. The wing models its own vertex ring the
  * same way (cMgSmartball_wing_c::mVertices).
  *
- * CONSTRUCTED BY cMgSmartball_propeller_c_Construct, left a free function for the same
- * reason the base's is (this tree has migrated zero constructors). It calls
+ * CONSTRUCTED BY the real cMgSmartball_propeller_c(dScMgSmartball_c *, int, Vector2)
+ * constructor; the cartridge keeps its C1, the C2 is deadstripped. It calls
  * the base constructor, stores this vtable, and sets the base's mRadius to
  * 0x20000 -- the per-child constant every sibling's constructor also
  * writes, each with its own value. It does not touch 0x34/0x36 itself; they
@@ -50,6 +50,7 @@ struct cMgSmartball_propeller_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    cMgSmartball_propeller_c(dScMgSmartball_c *manager, int index, Vector2 pos);
     ~cMgSmartball_propeller_c() {}
 
     /* Recovered helpers: HitTest runs the ball-vs-blade fan collision (the

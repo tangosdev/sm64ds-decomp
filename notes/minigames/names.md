@@ -496,7 +496,7 @@ Medium confidence:
 **Small leftovers (one batch).**
 
 High confidence:
-- **Smartball:** the hand-written constructors of the twelve RTTI-named object classes (`cMgSmartball_wing_c_Construct` ... `cMgSmartball_object_c_Construct`), and `SmartballBall_UpdatePhysics`.
+- **Smartball:** the hand-written constructors of the twelve RTTI-named object classes (`cMgSmartball_wing_c_Construct` ... `cMgSmartball_object_c_Construct`; since replaced by the classes' real constructors), and `SmartballBall_UpdatePhysics`.
 - **Jump:** the phases (`BeginIntro`, `State_Intro`, `BeginPlay`, `State_Play`, `BeginEnd`, `State_End`, `BeginFinal`, `State_Final`, `State_Result`, `State_Idle`). Each `Begin*` stores the record of the state named after it.
 - **D3DBase:** the dual-3D display helpers (`D3D_InitDualScreen`, `D3D_CaptureToSub`, `D3D_CaptureToMain`, which write DISPCAPCNT) and the panned-sound thunks.
 - **Elsewhere:**

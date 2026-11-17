@@ -8,8 +8,8 @@
  * tail padding; the two ints follow at 0x34. All three are read and written
  * only by this child's own SaveSnapshot/Update/RestoreInitial.
  *
- * CONSTRUCTED BY cMgSmartball_pakkun_c_Construct, left a free function for the same
- * reason the base's is (this tree has migrated zero constructors). It calls
+ * CONSTRUCTED BY the real cMgSmartball_pakkun_c(dScMgSmartball_c *, int, Vector2)
+ * constructor; the cartridge keeps its C1, the C2 is deadstripped. It calls
  * the base constructor, stores this vtable, and sets the base's mRadius to
  * 0x14000 -- the per-child constant every sibling's constructor also writes,
  * each with its own value. It does not touch mIdleTimer/mActionTimer; they
@@ -35,6 +35,7 @@ struct cMgSmartball_pakkun_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    cMgSmartball_pakkun_c(dScMgSmartball_c *manager, int index, Vector2 pos);
     ~cMgSmartball_pakkun_c() {}
 
     /* Recovered helper: the ball-vs-mouth region test -- checks the two head

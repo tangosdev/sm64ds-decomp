@@ -10,13 +10,15 @@
  * NO VIRTUAL DESTRUCTOR. Its vtable is exactly THREE slots and none of them
  * is a structor -- all three are ordinary virtual methods. That makes this
  * family a different shape from every other class in this tree, where the
- * destructor pair is what gets migrated first. There is nothing to migrate
- * here but real methods, and no operator delete is involved.
+ * destructor pair is what gets migrated first. The destructor is an empty
+ * non-virtual inline: SpawnObjects and AfterCleanupResources delete through
+ * the child pointer types, so each delete inlines the child's destructor,
+ * which rewrites the child's vtable and then this one before operator delete.
  *
- * The inline constructor writes the manager, the slot, and the incoming pair
- * into both position slots, then zeroes radius and velocity and sets
- * mIsActive. cMgSmartball_object_c_Construct writes those same stores into
- * the object it is given.
+ * The constructor takes the incoming pair by value and writes it into both
+ * position slots, then zeroes radius and velocity and sets mIsActive. The
+ * cartridge keeps one copy (0x0211474c), the C2 every child constructor
+ * calls; C1 is deadstripped since nothing builds a bare cMgSmartball_object_c.
  *
  * SIZE 0x34, DATA SIZE 0x31. The constructor's last write is the u8 at 0x30
  * and nothing in the class lies past it. The class is not a POD (it has a
@@ -43,6 +45,7 @@
 struct dScMgSmartball_c;
 struct S;
 struct V2xz;
+struct Vector2;
 
 struct cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 -- mSnapshot = mCurrent */
@@ -111,23 +114,8 @@ struct cMgSmartball_object_c {
                           and cMgSmartball_kinoko_c::SaveSnapshot skip a
                           tracked ball whose byte at 0x30 is 0. */
 
-    cMgSmartball_object_c(dScMgSmartball_c *a1, int a2, int *a3) {
-        int lo, hi;
-        mpManager = a1;
-        mIndex = a2;
-        hi = a3[1];
-        lo = a3[0];
-        mInitial0 = lo;
-        mInitial1 = hi;
-        hi = a3[1];
-        lo = a3[0];
-        mCurrent0 = lo;
-        mCurrent1 = hi;
-        mRadius = 0;
-        mVel0 = 0;
-        mVel1 = 0;
-        mIsActive = 1;
-    }
+    cMgSmartball_object_c(dScMgSmartball_c *manager, int index, Vector2 pos);
+    ~cMgSmartball_object_c() {}
 };
 
 #ifndef SM64DS_PLATFORM_PC
