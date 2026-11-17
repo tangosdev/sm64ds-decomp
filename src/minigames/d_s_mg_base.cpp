@@ -35,6 +35,7 @@
 #include "decl_common.h"
 #include "MgBanner.h"
 #include "OamAttr.h"
+#include "Matrix2x2.h"
 #include "Sound.h"
 #include "types.h"
 #include "nitro/fx/fx_trig.h"
@@ -1178,8 +1179,7 @@ extern "C" void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3) {
 
 namespace s20aea78 {
 extern "C" {
-struct M { int _00, _01, _10, _11; };
-extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, struct M *a5);
+extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 
 struct BF { unsigned int lo:10; unsigned int hi:22; };
 struct S { int x; BF y; };
@@ -1187,7 +1187,7 @@ struct S { int x; BF y; };
 /* Draws one sprite-list entry at (a1, a2) through Mg_RenderSpriteOnMtx.
    When the scene's GetDisplayMode (slot 26) returns 2, the copy
    drawn has 0x200 subtracted from its tile number (attr2 bits 0..9). */
-extern "C" void Mg_DrawSpriteListEntry(S *self, int a1, int a2, struct M *a3) {
+extern "C" void Mg_DrawSpriteListEntry(S *self, int a1, int a2, Matrix2x2 *a3) {
     S v = *self;
     if (gMgScene->GetDisplayMode() == 2) {
         v.y.lo = (self->y.lo - 0x200) & 0x3ff;
@@ -2842,10 +2842,9 @@ void dScMgBase_c::DrawCredits(int x, int y, int screen) {
 
 namespace s20b1c68 {
 extern "C" {
-struct M { int _00, _01, _10, _11; };
 /* a3 picks the wrapper: -1 RenderOamBothScreens, 0 Mg_RenderSubSpritePalMtx,
    anything else Mg_RenderMainSpritePalMtx; each is passed -1 in its place. */
-void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, struct M *a5) {
+void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5) {
     if (a3 == -1) {
         RenderOamBothScreens(a0, a1, a2, -1, a4, a5);
         return;
@@ -3039,8 +3038,7 @@ extern "C" {
    counters as for-loop variables 51-52; divide-and-subtract digits 0x23c.
    Round 17: each counter zeroed just before its own while loop 52, the
    `x = x - k` / `th = th + 1` spellings 52. */
-struct M { int _00, _01, _10, _11; };
-extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, struct M *a5);
+extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern OamAttr *sMgDigitSprites[];
 
 static inline int FX_Mul(int v1, int v2)
@@ -3049,17 +3047,16 @@ static inline int FX_Mul(int v1, int v2)
     return ((t + 0x800) >> 12);
 }
 
-static inline void MTX_Rot22(struct M *p, int sinVal, int cosVal)
-{
-    p->_00 = cosVal;
-    p->_01 = sinVal;
-    p->_10 = -sinVal;
-    p->_11 = cosVal;
+static inline void MTX_Rot22(Matrix2x2 *p, int sinVal, int cosVal) {
+    p->m00 = cosVal;
+    p->m01 = sinVal;
+    p->m10 = -sinVal;
+    p->m11 = cosVal;
 }
 
 void Mg_DrawNumberRotated(int x, int y, int value, int a3, int a4, int scale, u16 angle)
 {
-    struct M m;
+    Matrix2x2 m;
     int idx;
     int te, hu, th;
 
