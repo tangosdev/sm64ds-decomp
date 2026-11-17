@@ -1946,7 +1946,7 @@ void daStar_c::AddStarMarker()
 /* -------------------------------------------------------------------------- */
 /* Bounds test: a star more than 80000.0 from the origin on X or Z, higher than
  * 80000.0, or below mMinPosY goes to ReturnToHome. */
-volatile unsigned int daStar_c::CheckBounds() {
+void daStar_c::CheckBounds() {
     int v;
     int y;
     v = mPosX;
@@ -2382,26 +2382,15 @@ void daStar_c::SpawnPoseEffects() {
 /* Keeps effect 0x114 (mParticle[2]) 13.0 above the star until mSparkleTimer
  * runs out. */
 void daStar_c::UpdateSparkleEffect() {
-    volatile s32 x, y, zvar;
-    s32 z, yraw;
-
     if (mSparkleTimer == 0)
         return;
     mSparkleTimer--;
     if (mSparkleTimer == 0)
         mParticle[2] = 0;
-    x = mPosX;
-    yraw = mPosY;
-    y = yraw;
-    {
-        s32 zraw = mPosZ;
-        s32 yadj = yraw + 0xd000;
-        z = zraw;
-        zvar = zraw;
-        y = yadj;
-    }
-    volatile u32 &slot = mParticle[2];
-    mParticle[2] = (u32)Particle::System::New(slot, kPtclStarSparkle, x, y, z, 0, 0);
+    Vector3 pos = mPos;
+    pos.y += 0xd000;
+    mParticle[2] =
+        (u32)Particle::System::New(mParticle[2], kPtclStarSparkle, pos.x, pos.y, pos.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */

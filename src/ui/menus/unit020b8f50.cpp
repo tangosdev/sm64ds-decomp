@@ -395,7 +395,7 @@ void PickerScene_HandleEditKeys(void) {
  * B/down step tweens[0] between its three stops, R/L request menu state 3 or
  * 4 by sprites[1]'s alpha, and Y/left and A/right undo or redo the last
  * committed stroke. */
-int PickerScene_HandleDrawingKeys(void) {
+void PickerScene_HandleDrawingKeys(void) {
     Ov007Picker *r5 = SCENE->picker;
     Ov007Pad *r4 = WORK->pad;
     unsigned short r2 = r4->keys;
@@ -485,79 +485,57 @@ int PickerScene_HandleDrawingKeys(void) {
     }
 
     {
-        Ov007Touch *r1 = WORK->touch;
-        if (r1->cur.touch != 0) {
-            return r1->cur.touch;
-        }
-        if (r1->releasedFrames < 1U) {
-            return r1->releasedFrames;
-        }
+        Ov007Touch *touch = WORK->touch;
+        if (touch->cur.touch != 0 || touch->releasedFrames < 1U)
+            return;
     }
 
-    {
-        int rv = func_ov007_020c1da0(0);
-        if (rv != 0) {
-            return rv;
-        }
-    }
+    if (func_ov007_020c1da0(0) != 0)
+        return;
 
     {
         Ov007PickerScene *b = (Ov007PickerScene *)data_ov007_02104ba0;
         short st = b->states[1]->currentState;
-        if (st == 6)
-            return st;
-        if (st == 7)
-            return st;
-        if (b->awaitingTap != 0) {
-            return b->awaitingTap;
-        }
+        if (st == 6 || st == 7 || b->awaitingTap != 0)
+            return;
     }
 
     {
-        unsigned short r1 = r4->keys;
-        int r2b = 0;
-        if ((r1 & 0x800) && !(r4->prevKeys & 0x800)) {
-            r2b = 1;
+        unsigned short keys = r4->keys;
+        int undo = 0;
+        if ((keys & 0x800) && !(r4->prevKeys & 0x800)) {
+            undo = 1;
         }
-        if (r2b != 0 || ((r1 & 0x20) && !(r4->prevKeys & 0x20))) {
+        if (undo != 0 || ((keys & 0x20) && !(r4->prevKeys & 0x20))) {
             int n = r5->groupCount;
             if (n <= 0)
-                return n;
-            {
-                Ov007StrokePath *e = r5->groups[n - 1];
-                int *p14 = &r5->totalPoints;
-                int *p8 = &r5->groupCount;
-                *p14 = *p14 - e->capacity;
-                *p8 = *p8 - 1;
-                SCENE->states[1]->requestedState = 6;
-                return func_ov007_020bdeb0(0x20);
-            }
+                return;
+            r5->totalPoints -= r5->groups[n - 1]->capacity;
+            r5->groupCount--;
+            SCENE->states[1]->requestedState = 6;
+            func_ov007_020bdeb0(0x20);
+            return;
         }
-        if ((r1 & 1) && !(r4->prevKeys & 1)) {
-            /* fallthrough to block_66 */
-        } else {
-            if (!(r1 & 0x10))
-                return r1 & 0x10;
-            if (r4->prevKeys & 0x10)
-                return r4->prevKeys & 0x10;
-        }
+        if (!((keys & 1) && !(r4->prevKeys & 1)) && !((keys & 0x10) && !(r4->prevKeys & 0x10)))
+            return;
     }
 
     {
+        /* Kept (#821 r20). The ROM reloads the scene pointer here instead of
+           reusing the one the busy test above loaded. A plain SCENE read,
+           with or without the local, reading strokeCount before groupCount,
+           an `n < strokeCount` guard around the redo, or the scene held in a
+           local from the top of the function all reuse it: 0x410, -1 word.
+           Retyping data_ov007_02104ba0 as an Ov007PickerScene * changes
+           nothing either way. */
         Ov007PickerScene *b = *(Ov007PickerScene **)&data_ov007_02104ba0;
         int n = r5->groupCount;
-        int lim = b->strokeCount;
-        if (n >= lim)
-            return lim;
-        {
-            Ov007StrokePath *e = r5->groups[n];
-            int *p14 = &r5->totalPoints;
-            int *p8 = &r5->groupCount;
-            *p14 = *p14 + e->capacity;
-            *p8 = *p8 + 1;
-            ((Ov007PickerScene *)data_ov007_02104ba0)->states[1]->requestedState = 7;
-            return func_ov007_020bdeb0(0x21);
-        }
+        if (n >= b->strokeCount)
+            return;
+        r5->totalPoints += r5->groups[n]->capacity;
+        r5->groupCount++;
+        SCENE->states[1]->requestedState = 7;
+        func_ov007_020bdeb0(0x21);
     }
 }
 
