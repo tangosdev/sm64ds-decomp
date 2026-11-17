@@ -253,9 +253,7 @@ void daBtfly_c::State4()
             int sel;
             int i;
             int mask = typ & 0x30;
-            struct AngleTriple { u16 w[3]; };
-            AngleTriple rot;
-            rot = *(AngleTriple *)&mPrevAngle.x;
+            Vector3_16 rot = mPrevAngle;
             for (i = 1; i < 3; i++) {
                 if (i == sb)
                     sel = 1;
@@ -263,10 +261,8 @@ void daBtfly_c::State4()
                     sel = 2;
                 else
                     sel = 3;
-                rot.w[1] =
-                    (s16)((s16)rot.w[1] +
-                          (s16)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10));
-                dActor_c::Spawn(0x150, mask | (sel << 6), mPos, (Vector3_16 *)&rot, mAreaId, -1);
+                rot.y += (s16)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
+                dActor_c::Spawn(0x150, mask | (sel << 6), mPos, &rot, mAreaId, -1);
             }
             if (sb == 0)
                 mKind = 1;
@@ -377,12 +373,10 @@ void daBtfly_c::State1()
 
 void daBtfly_c::State0()
 {
-    struct AngleTriple { u16 w[3]; };
-    AngleTriple rot;
     int n;
     int i;
     n = (param1 & 0xf) - 1;
-    rot = *(AngleTriple *)&mPrevAngle.x;
+    Vector3_16 rot = mPrevAngle;
     for (i = 0; i < n; i++) {
         Vector3 pos;
         int r;
@@ -393,8 +387,8 @@ void daBtfly_c::State0()
         r = RandomIntInternal(&data_0209e650.value);
         pos.z = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPos.z;
         r = RandomIntInternal(&data_0209e650.value);
-        rot.w[1] = (s16)((s16)rot.w[1] + ((r << 1) >> 16));
-        dActor_c::Spawn(0x150, 0, pos, (Vector3_16 *)&rot, mAreaId, -1);
+        rot.y += (r << 1) >> 16;
+        dActor_c::Spawn(0x150, 0, pos, &rot, mAreaId, -1);
     }
     mState = 1;
 }
