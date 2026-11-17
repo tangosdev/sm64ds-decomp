@@ -272,15 +272,15 @@ int daHuwa_c::Behavior() {
         ApproachLinear(mHorzSpeed, 0x4000, 0x1000);
         player = ClosestPlayer();
         if (player != 0) {
-            int *src = (int *)((int)player + 0x5c);
-            int playerPos[3];
-            playerPos[0] = src[0];
-            playerPos[1] = src[1];
-            playerPos[2] = src[2];
-            if (Vec3_HorzDist(&mHomePos, (const Vector3 *)playerPos) > 0x3e8000)
+            Vector3 *src = &player->mPos;
+            Vector3 playerPos;
+            playerPos.x = src->x;
+            playerPos.y = src->y;
+            playerPos.z = src->z;
+            if (Vec3_HorzDist(&mHomePos, &playerPos) > 0x3e8000)
                 mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
-            else if (Vec3_HorzDist(&mPos, (const Vector3 *)playerPos) > 0x12c000)
-                mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)playerPos);
+            else if (Vec3_HorzDist(&mPos, &playerPos) > 0x12c000)
+                mTargetAngY = Vec3_HorzAngle(&mPos, &playerPos);
         } else {
             mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
         }

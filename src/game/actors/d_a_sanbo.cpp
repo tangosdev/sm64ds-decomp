@@ -509,22 +509,22 @@ void daSanbo_c::UpdateModelAndShadow() {
 }
 
 void daSanbo_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
-    int n0[3];
-    int n1[3];
+    Vector3 n0;
+    Vector3 n1;
 
     func_02038414(clsn);
     if (clsn->IsOnGround()) {
-        static_cast<dBgPi *>(clsn->GetFloorResult())->surface.CopyNormalTo(*(Vector3 *)n0);
-        if (n0[1] != 0) {
-            int x = FX_MUL(n0[0], mSpeedX);
-            int z = FX_MUL(n0[2], mSpeedZ);
+        static_cast<dBgPi *>(clsn->GetFloorResult())->surface.CopyNormalTo(n0);
+        if (n0.y != 0) {
+            int x = FX_MUL(n0.x, mSpeedX);
+            int z = FX_MUL(n0.z, mSpeedZ);
             int dot = x + z;
-            int slope = FX_Div(dot, n0[1]);
+            int slope = FX_Div(dot, n0.y);
             mVertSpeed = -(slope + 0x8000);
         }
     }
     if (clsn->IsOnWall()) {
-        static_cast<dBgPi *>(clsn->GetWallResult())->surface.CopyNormalTo(*(Vector3 *)n1);
+        static_cast<dBgPi *>(clsn->GetWallResult())->surface.CopyNormalTo(n1);
     }
 }
 
@@ -545,12 +545,12 @@ void daSanbo_c::HandleAttacks() {
     int state;
     daSanbo_c *prev;
     struct Vector3 pos;
-    /* Five arrays on purpose. One shared int[3] changes this function. */
-    int vv1[3];
-    int vv2[3];
-    int vv3[3];
-    int vv4[3];
-    int vv5[3];
+    /* Five vectors on purpose. One shared local changes this function. */
+    Vector3 vv1;
+    Vector3 vv2;
+    Vector3 vv3;
+    Vector3 vv4;
+    Vector3 vv5;
     int x;
     int y;
     int z;
@@ -631,37 +631,37 @@ void daSanbo_c::HandleAttacks() {
                 prev = mPrevSegment;
                 if (prev == 0) {
                     if (mVertSpeed == 0) {
-                        vv1[0] = mPosX;
-                        vv1[1] = mPosY;
-                        vv1[2] = mPosZ;
-                        player->Hurt(*(Vector3 *)vv1, 2, 0xc000, 1, 0, 1);
+                        vv1.x = mPosX;
+                        vv1.y = mPosY;
+                        vv1.z = mPosZ;
+                        player->Hurt(vv1, 2, 0xc000, 1, 0, 1);
                     }
                 } else if (mVertSpeed == 0 && prev->mVertSpeed == 0) {
-                    vv2[0] = mPosX;
-                    vv2[1] = mPosY;
-                    vv2[2] = mPosZ;
-                    player->Hurt(*(Vector3 *)vv2, 2, 0xc000, 1, 0, 1);
+                    vv2.x = mPosX;
+                    vv2.y = mPosY;
+                    vv2.z = mPosZ;
+                    player->Hurt(vv2, 2, 0xc000, 1, 0, 1);
                 }
             } else if (state == 1) {
                 if (mPrevSegment == 0) {
                     if (mWithMeshClsn.IsOnGround() != 0) {
-                        vv3[0] = mPosX;
-                        vv3[1] = mPosY;
-                        vv3[2] = mPosZ;
-                        player->Hurt(*(Vector3 *)vv3, 2, 0xc000, 1, 0, 1);
+                        vv3.x = mPosX;
+                        vv3.y = mPosY;
+                        vv3.z = mPosZ;
+                        player->Hurt(vv3, 2, 0xc000, 1, 0, 1);
                     }
                 } else if (mWithMeshClsn.IsOnGround() != 0 &&
                            mPrevSegment->mVertSpeed == 0) {
-                    vv4[0] = mPosX;
-                    vv4[1] = mPosY;
-                    vv4[2] = mPosZ;
-                    player->Hurt(*(Vector3 *)vv4, 2, 0xc000, 1, 0, 1);
+                    vv4.x = mPosX;
+                    vv4.y = mPosY;
+                    vv4.z = mPosZ;
+                    player->Hurt(vv4, 2, 0xc000, 1, 0, 1);
                 }
             } else {
-                vv5[0] = mPosX;
-                vv5[1] = mPosY;
-                vv5[2] = mPosZ;
-                player->Hurt(*(Vector3 *)vv5, 2, 0xc000, 1, 0, 1);
+                vv5.x = mPosX;
+                vv5.y = mPosY;
+                vv5.z = mPosZ;
+                player->Hurt(vv5, 2, 0xc000, 1, 0, 1);
             }
         }
     }

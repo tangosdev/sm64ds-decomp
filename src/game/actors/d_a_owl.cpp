@@ -176,12 +176,12 @@ daOwl_c::~daOwl_c()
  * counts. Attaches the player, zeroes the owl's velocity and enters the carry
  * state; if the attach is refused the rider is dropped again. */
 void daOwl_c::TryPickUpRider() {
-    int st[3];
-    VecFx32 tmp;
+    Vector3 st;
+    Vector3 tmp;
     tmp.x = data_ov094_02136a1c[0];
     tmp.y = data_ov094_02136a1c[1];
     tmp.z = data_ov094_02136a1c[2];
-    mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)&tmp);
+    mdCcAcPos_c.SetPosRelativeToActor(tmp);
     if (mdCcAcPos_c.otherOwner == 0)
         return;
     dActor_c *other = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
@@ -190,16 +190,16 @@ void daOwl_c::TryPickUpRider() {
     if (!IsPlayerActor(other))
         return;
     mRider = (daPly_c *)other;
-    st[0] = 0;
-    st[1] = 0;
-    st[2] = 0;
-    st[1] = 0x1838000;
+    st.x = 0;
+    st.y = 0;
+    st.z = 0;
+    st.y = 0x1838000;
     if (gCurrentSublevel == 0x16)
-        st[1] = 0x1194000;
+        st.y = 0x1194000;
     mSpeedX = 0;
     mVertSpeed = 0;
     mSpeedZ = 0;
-    if (mRider->func_ov002_020df840(this, (Vector3 *)st) != 1) {
+    if (mRider->func_ov002_020df840(this, &st) != 1) {
         mRider = 0;
         return;
     }
@@ -420,16 +420,16 @@ int daOwl_c::UpdateDormant() {
     daPly_c *p = ClosestPlayer();
     if (p != 0 && p->mClimbClsn != 0) {
         const Vector3 *playerPos = &p->mPos;
-        VecFx32 pp;
-        VecFx32 d;
+        Vector3 pp;
+        Vector3 d;
         const Vector3 *selfpos = &mPos;
         pp.x = playerPos->x;
         pp.y = playerPos->y;
         pp.z = playerPos->z;
         mPosY = p->mGroundY + 0x190000;
         mTalkTarget = p;
-        Vec3_Sub((Vector3 *)&d, selfpos, (const Vector3 *)&pp);
-        if (VEC_Mag((const Vector3 *)&d) < 0x28000) {
+        Vec3_Sub(&d, selfpos, &pp);
+        if (VEC_Mag(&d) < 0x28000) {
             d.x = mPosX;
             d.y = mPosY;
             d.z = mPosZ;
@@ -437,7 +437,7 @@ int daOwl_c::UpdateDormant() {
             d.y = 0;
             d.z = 0x320000;
             Matrix4x3_FromRotationY(&data_020a0e68, 0x4000);
-            MTX_MultVec43((Vector3 *)&d, &data_020a0e68, &mAnchor);
+            MTX_MultVec43(&d, &data_020a0e68, &mAnchor);
             {
                 int *px = &mAnchor.x;
                 int *py = &mAnchor.y;
@@ -473,8 +473,8 @@ int daOwl_c::ChangeState(State *state) {
  * model's opacity, its shadow matrix, and the drop shadow. */
 void daOwl_c::UpdateModelTransform() {
     Matrix4x3 out;
-    VecFx32 v;
-    Vec3_Asr((Vector3 *)&v, &mPos, 3);
+    Vector3 v;
+    Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
         mAngleX, mAngleY, mAngleZ);
@@ -591,7 +591,7 @@ int daOwl_c::Behavior()
 
 int daOwl_c::InitResources()
 {
-    int v0[3];
+    Vector3 v0;
     void *f;
 
     f = dExtSimpleModel_c::LoadFile(data_ov094_02136ae0);
@@ -600,10 +600,10 @@ int daOwl_c::InitResources()
     dExtFrameCtrl_c::LoadFile(data_ov094_02136af8);
     dExtFrameCtrl_c::LoadFile(data_ov094_02136ae8);
     dExtFrameCtrl_c::LoadFile(data_ov094_02136af0);
-    v0[0] = data_ov094_02136a1c[0];
-    v0[1] = data_ov094_02136a1c[1];
-    v0[2] = data_ov094_02136a1c[2];
-    mdCcAcPos_c.Init(this, *(Vector3 *)v0, 0x64000, 0x64000, 0x800004, 0);
+    v0.x = data_ov094_02136a1c[0];
+    v0.y = data_ov094_02136a1c[1];
+    v0.z = data_ov094_02136a1c[2];
+    mdCcAcPos_c.Init(this, v0, 0x64000, 0x64000, 0x800004, 0);
 
     mRider = 0;
     mdCcAcPos_c.flags |= 2;

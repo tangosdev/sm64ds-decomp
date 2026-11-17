@@ -1962,7 +1962,7 @@ void daPly_c::func_ov002_020bf36c(void *arg) {
         return;
     saved = this->mHorzSpeed;
     if (this->mClsnFlags & 1)
-        this->mHorzSpeed = FX_MUL(saved, this->mFloorNormalY);
+        this->mHorzSpeed = FX_MUL(saved, this->mFloorNormal.y);
     UpdatePos((dCc_c *)arg);
     this->mHorzSpeed = saved;
     func_ov002_020ce798();
@@ -2075,8 +2075,7 @@ flag_done:
     src.y = 0x1b000;
     src.z = 0x40000;
 
-    Vec3_RotateYAndTranslate((Vector3 *)&out.x, (const Vector3 *)&this->mPosX, this->mAngleY,
-                             (const Vector3 *)&src.x);
+    Vec3_RotateYAndTranslate(&out, &mPos, this->mAngleY, &src);
 
     if (mIsInShallowWater != 0 || mIsUnderwater != 0) {
         Particle::System::NewSimple(kPtclHeavyStepWater, out.x, out.y, out.z);
@@ -2368,7 +2367,7 @@ extern daPly_c::State data_ov002_02110514;
 int daPly_c::func_ov002_020c031c() {
 
     int r4 = this->mFloorClass;
-    if (this->IsState(data_ov002_02110514) && this->mFloorNormalY > 0x800) {
+    if (this->IsState(data_ov002_02110514) && this->mFloorNormal.y > 0x800) {
         if (r4 == 0)
             r4 = 2;
     }
@@ -2424,7 +2423,7 @@ int daPly_c::func_ov002_020c04e0() {
     int accel;
     int ret;
 
-    horzLen = Vec3_HorzLen((const Vector3 *)&mFloorNormalX);
+    horzLen = Vec3_HorzLen(&mFloorNormal);
     angDiff = AngleDiff(mFloorAngle, this->mPrevAngleY);
 
     if (mWalkTimer != 0) {
@@ -2433,7 +2432,7 @@ int daPly_c::func_ov002_020c04e0() {
     }
 
     sel = func_ov002_020c031c();
-    ret = func_ov002_020f035c(sel, mFloorNormalY);
+    ret = func_ov002_020f035c(sel, mFloorNormal.y);
     if (ret == 0)
         return ret;
 
@@ -2520,7 +2519,7 @@ int daPly_c::func_ov002_020c06fc(int arg) {
 
     if (this->mIsAirborne != 0)
         return 0;
-    if ((this->mFloorNormalY | this->mHorzSpeed) == 0)
+    if ((this->mFloorNormal.y | this->mHorzSpeed) == 0)
         return 0;
 
     a = 0;
@@ -2568,7 +2567,7 @@ int daPly_c::func_ov002_020c06fc(int arg) {
     slide.x = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2]);
     slide.z = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2 + 1]);
     {
-        int len = Vec3_HorzLen((const Vector3 *)&mFloorNormalX);
+        int len = Vec3_HorzLen(&mFloorNormal);
         slide.x = FX_MUL(slide.x, len);
         slide.z = FX_MUL(slide.z, len);
     }
@@ -2627,7 +2626,7 @@ int daPly_c::func_ov002_020c06fc(int arg) {
         if (s < 0)
             s = -s;
         if (s < arg) {
-            if (func_ov002_020f035c(this->func_ov002_020c031c(), this->mFloorNormalY) == 0) {
+            if (func_ov002_020f035c(this->func_ov002_020c031c(), this->mFloorNormal.y) == 0) {
                 this->mHorzSpeed = 0;
                 return 0;
             }
@@ -2657,10 +2656,10 @@ int daPly_c::func_ov002_020c0cbc() {
     case 1:
     case 2: t = 0; break;
     }
-  if(mFloorNormalY <= t){
-    (this->mStateFlags) |= 1;
-    return 1;
-  }
+    if (mFloorNormal.y <= t) {
+        (this->mStateFlags) |= 1;
+        return 1;
+    }
   return 0;
 }
 
@@ -2936,10 +2935,10 @@ void daPly_c::SetFloorSurfaceInfo(const dBgPi &hit) {
         return;
     mFloorClass = hit.surface.clps.GetFloorClass();
     hit.surface.CopyNormalTo(v);
-    mFloorNormalX = v.x;
-    mFloorNormalY = v.y;
-    mFloorNormalZ = v.z;
-    mFloorAngle = cstd::atan2(mFloorNormalX, mFloorNormalZ);
+    mFloorNormal.x = v.x;
+    mFloorNormal.y = v.y;
+    mFloorNormal.z = v.z;
+    mFloorAngle = cstd::atan2(mFloorNormal.x, mFloorNormal.z);
 }
 
 /* recovered: shared common types */
@@ -2986,18 +2985,18 @@ int daPly_c::func_ov002_020c179c(int angle) {
 void daPly_c::func_ov002_020c18b0(int p1) {
     if (mIsAirborne != 0)
         return;
-    if (mFloorNormalY == 0)
+    if (mFloorNormal.y == 0)
         return;
     {
         int a = func_ov002_020c179c(0);
         int idx = (unsigned short)a >> 4;
         int sinv = FX_SinCosTable_[idx * 2 + 1];
-        int f554 = mFloorNormalX;
-        int f55c = mFloorNormalZ;
+        int nx = mFloorNormal.x;
+        int nz = mFloorNormal.z;
         Vector3 v;
-        v.x = f554;
+        v.x = nx;
         v.y = sinv;
-        v.z = f55c;
+        v.z = nz;
         mAngleX = (short)func_02010844(&v, mAngleY);
         mAngleZ = (short)func_02010844(&v, (short)(mAngleY - 0x4000));
     }
@@ -3192,10 +3191,11 @@ int daPly_c::func_ov002_020c200c(int arg) {
 int daPly_c::func_ov002_020c2138() {
 int ang;
 if (this->mIsUnderwater || this->mIsBalloon) return 0;
-if (this->mWallNormalY) return 0;
+if (this->mWallNormal.y)
+    return 0;
 if (mClimbClsn || mIsTakingDamage)
     return 0;
-ang = cstd::atan2(this->mWallNormalX, this->mWallNormalZ);
+ang = cstd::atan2(this->mWallNormal.x, this->mWallNormal.z);
 if (AngleDiff(ang, this->mPrevAngleY) < 0x6000) return 0;
 if (this->func_ov002_020c200c(ang)) return 1;
 if ((this->mHeldObj ? 1 : 0) || (this->mRidingShell ? 1 : 0)) return 0;
@@ -3239,11 +3239,11 @@ int daPly_c::func_ov002_020c231c() {
         if (f70f == 0)
             return 0;
 
-        VEC_Subtract(&mPos, (Vector3 *)&mPreClsnPosX, &tmp);
+        VEC_Subtract(&mPos, &mPreClsnPos, &tmp);
         tmp.x >>= 1;
         tmp.y >>= 1;
         tmp.z >>= 1;
-        VEC_Add((Vector3 *)&mPreClsnPosX, &tmp, &mPos);
+        VEC_Add(&mPreClsnPos, &tmp, &mPos);
         func_ov002_020c14b8();
 
         if (mGroundY == (s32)0x80000000)
@@ -3255,7 +3255,7 @@ int daPly_c::func_ov002_020c231c() {
 
     if (this->IsState(data_ov002_0211013c) || this->IsState(data_ov002_02110184) || this->IsState(data_ov002_02110304) || (this->IsState(data_ov002_02110364) && (this->IsAnim(0x33) | this->IsAnim(0x87)) == 0) || this->IsState(data_ov002_021104e4) || this->IsState(data_ov002_02110514) || this->IsState(data_ov002_021100dc))
     {
-        if (mFloorClass == 1 && mFloorNormalY < 0xfff) {
+        if (mFloorClass == 1 && mFloorNormal.y < 0xfff) {
             p644 = mGroundY;
             p60 = this->mPosY;
             d = p60 - p644;
@@ -3406,13 +3406,13 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
     }
 
     mMeshClsn.GetWallResult()->surface.CopyNormalTo(wn);
-    mWallNormalX = wn.x;
-    mWallNormalY = wn.y;
-    mWallNormalZ = wn.z;
+    mWallNormal.x = wn.x;
+    mWallNormal.y = wn.y;
+    mWallNormal.z = wn.z;
 
     if (mIsUnderwater == 0) {
-        mPosX -= mWallNormalX * 2;
-        mPosZ -= mWallNormalZ * 2;
+        mPosX -= mWallNormal.x * 2;
+        mPosZ -= mWallNormal.z * 2;
     }
 
     ret = func_ov002_020d0580();
@@ -3454,7 +3454,7 @@ void daPly_c::func_ov002_020c29d4() {
 void daPly_c::func_ov002_020c2b08() {
     void *arg0 = this;
     daPly_c *c = (daPly_c *)arg0;
-    int v[3];
+    Vector3 v;
 
     if (param1 != 1)
         return;
@@ -3506,11 +3506,11 @@ void daPly_c::func_ov002_020c2b08() {
                 mWaterRunTimer = 30;
         }
 
-        mFloorNormalZ = 0;
+        mFloorNormal.z = 0;
         {
-            int t = mFloorNormalZ;
-            mFloorNormalX = t;
-            mFloorNormalY = 0x1000;
+            int t = mFloorNormal.z;
+            mFloorNormal.x = t;
+            mFloorNormal.y = 0x1000;
         }
 
         {
@@ -3518,14 +3518,14 @@ void daPly_c::func_ov002_020c2b08() {
             int zz = mPosZ;
             int xx = mPosX;
             int yy2 = yy + 0x64000;
-            v[0] = xx;
-            v[1] = yy2;
-            v[2] = zz;
+            v.x = xx;
+            v.y = yy2;
+            v.z = zz;
         }
 
         {
             dBgCh_Gnd rg;
-            rg.SetObjAndPos(*(const Vector3 *)v, c);
+            rg.SetObjAndPos(v, c);
 
             if (rg.DetectClsn() != 0) {
                 mGroundY = rg.clsnY;
@@ -4065,11 +4065,9 @@ int daPly_c::St_Respawn_Main() {
 int daPly_c::St_Respawn_Init() {
     extern char *gCamera;
     DisableInteraction();
-    mPosX = mSpawnPosX;
-    mPosY = mSpawnPosY;
-    mPosZ = mSpawnPosZ;
+    mPos = mSpawnPos;
     mPosY += 0x3e8000;
-    func_02035860(&mMeshClsn, (const Vector3 *)&mPosX);
+    func_02035860(&mMeshClsn, &mPos);
     mPrevPosX = mPosX;
     mPrevPosY = mPosY;
     mPrevPosZ = mPosZ;
@@ -4252,8 +4250,7 @@ cont:
             data_0209caa0.file.flags2 |= 0x200;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
             static Vector3 sLevelIntroOff(0, 0x96000, 0x64000);
-            Vec3_RotateYAndTranslate(&pos, (const Vector3 *)&this->mPosX, this->mAngleY,
-                                     &sLevelIntroOff);
+            Vec3_RotateYAndTranslate(&pos, &mPos, this->mAngleY, &sLevelIntroOff);
             this->ShowMessage(*this, 0x177, &pos, 2, 2);
             func_ov100_02145070(0x1e);
             func_ov100_02145014();
@@ -4474,9 +4471,7 @@ int daPly_c::St_Talk_Init() {
     mVertAccel = mVertSpeed;
     mSkipGroundUpdate = 1;
     mIsBodyClsnEnabled = 0;
-    mPosX = mPreClsnPosX;
-    mPosY = mPreClsnPosY;
-    mPosZ = mPreClsnPosZ;
+    mPos = mPreClsnPos;
     mStateWork = 0;
     mIsOpeningBigDoor = 0;
     return 1;
@@ -4880,13 +4875,13 @@ int daPly_c::St_DeadPit_Main() {
         break;
     }
     case 6: {
-        int src[3];
-        src[0] = 0;
-        src[1] = -0x1e000;
-        src[2] = 0x64000;
+        Vector3 src;
+        src.x = 0;
+        src.y = -0x1e000;
+        src.z = 0x64000;
         dActor_c *q = mAttachedActor;
         s16 angle = q->mAngleY;
-        Vec3_RotateYAndTranslate((Vector3 *)&mPosX, &q->mPos, angle, (const Vector3 *)src);
+        Vec3_RotateYAndTranslate(&mPos, &q->mPos, angle, &src);
         if (mStateTimer < 30) {
             mOpacity = 0;
         }
@@ -5170,7 +5165,7 @@ int daPly_c::func_ov002_020c607c(int p1, int p2, int *outptr) {
 int daPly_c::func_ov002_020c61ac() {
     int outA;
     int outB;
-    int v[3];
+    Vector3 v;
     dActor_c *saved;
     int a;
     int b;
@@ -5189,12 +5184,12 @@ int daPly_c::func_ov002_020c61ac() {
                 d = 0x96000;
             yv = this->mPosY + d;
             xv = this->mPosX;
-            v[0] = xv;
-            v[1] = yv;
-            v[2] = zv;
+            v.x = xv;
+            v.y = yv;
+            v.z = zv;
             dBgCh_Gnd obj;
             obj.StartDetectingWater();
-            obj.SetObjAndPos(*(const Vector3 *)v, this);
+            obj.SetObjAndPos(v, this);
             if (obj.DetectClsn()) {
                 mGroundY = obj.clsnY;
                 this->mPosY = mGroundY;
@@ -6482,8 +6477,8 @@ int daPly_c::func_ov002_020c8a4c() {
             mStateArg = 1;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
             static Vector3 sAnchorOff(0, 0, 0x12c000);
-            Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, (Vector3 *)&mStateAnchorX,
-                                     mAngleXSpeed, &sAnchorOff);
+            Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, &mStateAnchor, mAngleXSpeed,
+                                     &sAnchorOff);
         } else {
             func_ov002_020ca108();
         }
@@ -7300,15 +7295,13 @@ int daPly_c::TryEnterStarDoor(Vector3 &pos_, short kind) {
     int *pos = (int *)&pos_;
     if (IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) || IsState(data_ov002_0211043c)) {
         if (this->SetNoControlState(0xa, -1, 0)) {
-            mStateAnchorX = pos_.x;
-            mStateAnchorY = pos_.y;
-            mStateAnchorZ = pos_.z;
+            mStateAnchor = pos_;
             mAngleXSpeed = kind;
             mStateArg = 0;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
             static Vector3 sStarDoorOff(0, 0, 0x64000);
-            Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, (const Vector3 *)&mStateAnchorX,
-                                     mAngleXSpeed, &sStarDoorOff);
+            Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, &mStateAnchor, mAngleXSpeed,
+                                     &sStarDoorOff);
             mAngleY = Vec3_HorzAngle(&pos_, &mPos) + 0x8000;
             return 1;
         }
@@ -7857,25 +7850,25 @@ int daPly_c::St_Climb_Cleanup() {
 int daPly_c::St_Climb_Main() {
     extern void *gCamera;
     extern ControllerInput data_0209f498[];
-    s32 vbuf[6];
+    Vector3 pos;
+    Vector3 off;
 
     mPeakY = mPosY;
 
     {
         Vector3 &p = mClimbClsn->GetPos();
-        vbuf[0] = p.x;
-        vbuf[1] = p.y;
-        vbuf[2] = p.z;
+        pos.x = p.x;
+        pos.y = p.y;
+        pos.z = p.z;
     }
     if (param1 == 2) {
-        vbuf[4] = 0;
-        vbuf[3] = 0;
-        vbuf[5] = -0x10000;
-        Vec3_RotateYAndTranslate((Vector3 *)&vbuf[0], &mClimbClsn->GetPos(), mAngleY,
-                                 (const Vector3 *)&vbuf[3]);
+        off.y = 0;
+        off.x = 0;
+        off.z = -0x10000;
+        Vec3_RotateYAndTranslate(&pos, &mClimbClsn->GetPos(), mAngleY, &off);
     }
-    mPosX = vbuf[0];
-    mPosZ = vbuf[2];
+    mPosX = pos.x;
+    mPosZ = pos.z;
 
     {
         void *cam = gCamera;
@@ -8257,7 +8250,7 @@ int daPly_c::St_Shell_Main() {
     }
 
     if (mMeshClsn.IsOnWall()) {
-        int ang = cstd::atan2(mWallNormalX, mWallNormalZ);
+        int ang = cstd::atan2(mWallNormal.x, mWallNormal.z);
         if (AngleDiff(ang, mPrevAngleY) > 0x6000) {
             if (mMeshClsn.GetWallResult()->surface.clps.GetFloorClass() != 1) {
                 flag = 1;
@@ -8829,8 +8822,8 @@ int daPly_c::St_Swim_Main() {
     Vector3 pos;
     int* fr;
     int ang;
-    int out[3];
-    int vec[3];
+    Vector3 out;
+    Vector3 vec;
     short yaw;
     int var_r2;
     unsigned short a4;
@@ -8872,18 +8865,17 @@ int daPly_c::St_Swim_Main() {
         ang = fr[1];
         if (ang < 0x720 && ang > 0x400 && mPosY >= mWaterSurfaceY - 0xc8000) {
             int at;
-            mPosY = mPreClsnPosY - 0x8000;
+            mPosY = mPreClsnPos.y - 0x8000;
             at = cstd::atan2(fr[0], fr[2]);
-            vec[0] = 0;
-            vec[1] = 0;
+            vec.x = 0;
+            vec.y = 0;
             at = at + 0x8000;
             yaw = (short)at;
-            vec[2] = (*(int*)((char*)data_0209ee90 + 0x244)) << 0xc;
-            Vec3_RotateYAndTranslate((Vector3 *)out, (const Vector3 *)&mPosX, yaw,
-                                     (const Vector3 *)vec);
-            mPosX = out[0];
-            mPosY = out[1];
-            mPosZ = out[2];
+            vec.z = (*(int *)((char *)data_0209ee90 + 0x244)) << 0xc;
+            Vec3_RotateYAndTranslate(&out, &mPos, yaw, &vec);
+            mPosX = out.x;
+            mPosY = out.y;
+            mPosZ = out.z;
         }
     }
 
@@ -9555,9 +9547,7 @@ int daPly_c::St_CeilingGrate_Main() {
 
     r4 = func_ov002_020cf20c();
     if (r4 == 0x80000000) {
-        mPosX = mPreClsnPosX;
-        mPosY = mPreClsnPosY;
-        mPosZ = mPreClsnPosZ;
+        mPos = mPreClsnPos;
         r4 = mPosY + 0x90000;
     }
 
@@ -9676,7 +9666,7 @@ int daPly_c::St_OnWall_Main() {
             this->ChangeState(data_ov002_0211013c);
             return 1;
         }
-        int a = cstd::atan2(mWallNormalX, mWallNormalZ) + 0x8000;
+        int a = cstd::atan2(mWallNormal.x, mWallNormal.z) + 0x8000;
         int d = AngleDiff((s16)a, mDesiredAngleY);
         if (d >= 0x4000) {
             this->ChangeState(data_ov002_0211013c);
@@ -9695,7 +9685,7 @@ int daPly_c::St_OnWall_Main() {
         func_ov002_020eee3c((char *)&mMeshClsn, (char *)this);
     } else {
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
-            int ang = cstd::atan2(mWallNormalX, mWallNormalZ);
+            int ang = cstd::atan2(mWallNormal.x, mWallNormal.z);
             int d = AngleDiff((s16)(ang + 0x8000), mDesiredAngleY);
             if (d >= 0x4000) {
                 this->ChangeState(data_ov002_0211013c);
@@ -10232,7 +10222,7 @@ int daPly_c::St_LedgeHang_Main() {
         if (d < 0x28000) {
             mPosY = v;
             mIsAirborne = 0;
-            if (mFloorNormalY < 0xddb) {
+            if (mFloorNormal.y < 0xddb) {
                 func_ov002_020d0948();
                 return 1;
             }
@@ -10302,12 +10292,12 @@ int daPly_c::St_LedgeHang_Init() {
     Sound::PlayCharVoice(mCharacter, 0x16, mCamSpacePos);
     {
         VecFx32 z3 = {0, 0, 0};
-        VecFx32 off;
+        Vector3 off;
         z3.y = -0x64000;
         off.x = z3.x;
         off.y = z3.y;
         off.z = z3.z;
-        mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)&off);
+        mdCcAcPos_c.SetPosRelativeToActor(off);
     }
     mStatePhase = 0;
     return 1;
@@ -10962,9 +10952,9 @@ void daPly_c::func_ov002_020d228c() {
     ChangeState(daPly_c::ST_WAIT);
     SetAnim(9, 0, 0x1000, 0);
     mStateStep = 4;
-    mSleepBubbleScaleX = 0;
-    mSleepBubbleScaleY = 0;
-    mSleepBubbleScaleZ = 0;
+    mSleepBubbleScale.x = 0;
+    mSleepBubbleScale.y = 0;
+    mSleepBubbleScale.z = 0;
     mSleepStage = 2;
     mStateArg = 0;
 }
@@ -11214,9 +11204,9 @@ int daPly_c::St_Wait_Main() {
             if (this->FinishedAnim()) {
                 this->SetAnim(9, 0, 0x1000, 0);
                 mStateStep = 4;
-                mSleepBubbleScaleX = 0;
-                mSleepBubbleScaleY = 0;
-                mSleepBubbleScaleZ = 0;
+                mSleepBubbleScale.x = 0;
+                mSleepBubbleScale.y = 0;
+                mSleepBubbleScale.z = 0;
                 mSleepStage = 2;
                 mStateArg = 1;
             }
@@ -11255,7 +11245,7 @@ int daPly_c::St_Wait_Main() {
                     if (b4b != false)
                         break;
                 }
-                if (func_ov002_020d2da0() == 1 || mSleepBubbleScaleX >= 0x3000 ||
+                if (func_ov002_020d2da0() == 1 || mSleepBubbleScale.x >= 0x3000 ||
                     mIsInShallowWater != 0 || (unsigned short)(mStateFlags & 4)) {
                     func_ov002_020d2e74(this);
                     mSleepStage = 0;
@@ -11352,7 +11342,7 @@ void daPly_c::func_ov002_020d2f24() {
     id = param1;
     if (id != 3) return;
 
-    r4 = mSleepBubbleScaleX;
+    r4 = mSleepBubbleScale.x;
     {
         dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(id & 0xff, 0)];
         v = (u32)(anim.currFrame << 4) >> 0x10;
@@ -11370,9 +11360,9 @@ void daPly_c::func_ov002_020d2f24() {
 
     if (r4 < 0x400) r4 = 0x400;
     if (r4 > 0x4000) r4 = 0x4000;
-    mSleepBubbleScaleX = r4;
-    mSleepBubbleScaleY = r4;
-    mSleepBubbleScaleZ = r4;
+    mSleepBubbleScale.x = r4;
+    mSleepBubbleScale.y = r4;
+    mSleepBubbleScale.z = r4;
 }
 
 int daPly_c::func_ov002_020d2fdc() {
@@ -11815,7 +11805,7 @@ int daPly_c::func_ov002_020d3b9c() {
                 }
             }
         }
-        if (func_ov002_020f035c(func_ov002_020c031c(), mFloorNormalY) != 0) {
+        if (func_ov002_020f035c(func_ov002_020c031c(), mFloorNormal.y) != 0) {
             acc = 0x1000;
         }
         targ = mDesiredAngleY;
@@ -12151,7 +12141,7 @@ void daPly_c::func_ov002_020d4748() {
                 spd = 0x400;
             SetAnim(0x48, 0, spd, s5);
         } else {
-            int t = 0x1000 - this->mFloorNormalY;
+            int t = 0x1000 - this->mFloorNormal.y;
             int f = (int)((((long long)t << 10) + 0x800) >> 12);
             int v;
             int diff = ScaleByCharFactor(0x1c000) - this->mHorzSpeed;
@@ -13180,9 +13170,8 @@ int daPly_c::func_ov002_020d6998() {
                             rotSrc.y = 0x32000;
                             rotSrc.z = 0x32000;
 
-                            Vec3_RotateYAndTranslate((Vector3 *)&out.x,
-                                                     (const Vector3 *)&((dActor_c *)other)->mPosX,
-                                                     angle, (const Vector3 *)&rotSrc.x);
+                            Vec3_RotateYAndTranslate(&out, &((dActor_c *)other)->mPos, angle,
+                                                     &rotSrc);
 
                             Particle::System::New(0, kPtclTongueHitA, out.x, out.y, out.z,
                                                   (const Vector3_16f *)(&pos16), 0);
@@ -13961,7 +13950,7 @@ int daPly_c::func_ov002_020d8360(daPly_c *other, unsigned int flags) {
             tr.x = 0;
             tr.y = 0x50000;
             tr.z = 0x64000;
-            Vec3_RotateYAndTranslate(&out, (const Vector3 *)&mPosX, mAngleY, &tr);
+            Vec3_RotateYAndTranslate(&out, &mPos, mAngleY, &tr);
             cp.x = out.x;
             cp.y = out.y;
             cp.z = out.z;
@@ -15476,7 +15465,7 @@ int daPly_c::St_Thrown_Main() {
             if (r5 != 0) {
                 return 1;
             }
-            if (mFloorNormalY == 0x1000) {
+            if (mFloorNormal.y == 0x1000) {
                 if (mHorzSpeed == 0) {
                     mStateStep = 1;
                     break;
@@ -16303,7 +16292,7 @@ int daPly_c::St_ButtSlide_Main() {
                 mLandSoundPlayed = 1;
                 Sound::PlayBank0(mGroundSoundType + 0x50, mCamSpacePos);
             }
-            if (mStateWork == 0 && mFloorNormalY >= 0xfc1) {
+            if (mStateWork == 0 && mFloorNormal.y >= 0xfc1) {
                 mVertSpeed = -mPrevVertSpeed / 2;
                 (this->mStateWork)++;
             } else {
@@ -16610,7 +16599,7 @@ int daPly_c::func_ov002_020dd2f4() {
     if (!(mClsnFlags & 2))
         return 0;
 
-    atan = cstd::atan2(mWallNormalX, mWallNormalZ);
+    atan = cstd::atan2(mWallNormal.x, mWallNormal.z);
     if (AngleDiff(atan, mPrevAngleY) < 0x6000)
         return 0;
 
@@ -17195,7 +17184,7 @@ s32 daPly_c::St_Balloon_Main() {
     }
 
     if (mClsnFlags & 2) {
-        s16 ang = cstd::atan2(mWallNormalX, mWallNormalZ);
+        s16 ang = cstd::atan2(mWallNormal.x, mWallNormal.z);
         s16 diff = AngleDiff(ang, mPrevAngleY);
         if ((s32)diff > 0x4000) {
             this->func_ov002_020de428();
@@ -17943,7 +17932,7 @@ skip:
                 dExtAnmModel_c *m2 =
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
                 MTX_MultVec43((Vector3 *)&bone->m[9], &m2->mat4x3, &vec32);
-                Vec3_MulScalarInPlace((Vector3 *)&vec32.x, 0x8000);
+                Vec3_MulScalarInPlace(&vec32, 0x8000);
                 mParticle2 = Particle::System::New(mParticle2, 0xd0, sp14, sp18, sp1C,
                                                    (const Vector3_16f *)(&vec16), 0);
             }
@@ -17954,7 +17943,7 @@ skip:
                 dExtAnmModel_c *m2 =
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
                 MTX_MultVec43((Vector3 *)&bone->m[9], &m2->mat4x3, &vec32);
-                Vec3_MulScalarInPlace((Vector3 *)&vec32.x, 0x8000);
+                Vec3_MulScalarInPlace(&vec32, 0x8000);
                 mParticle3 = Particle::System::New(mParticle3, 0xd0, sp14, sp18, sp1C,
                                                    (const Vector3_16f *)(&vec16), 0);
             }
@@ -18303,7 +18292,7 @@ int daPly_c::St_CrazedCrate_Main() {
     func_ov002_020e28d4(0x1000, 0x1800);
 
     if (mClsnFlags & 2) {
-        int atan = cstd::atan2(mWallNormalX, this->mWallNormalZ);
+        int atan = cstd::atan2(mWallNormal.x, this->mWallNormal.z);
         int diff = AngleDiff(atan, this->mAngleY);
         if (diff >= 0x6000) {
             mAngleY = (s16)(2 * atan - mAngleY) + 0x8000;
@@ -19142,7 +19131,7 @@ void daPly_c::func_ov002_020e28d4(int a, int b) {
 
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
         if (mClsnFlags & 2) {
-            int t = cstd::atan2(mWallNormalX, mWallNormalZ);
+            int t = cstd::atan2(mWallNormal.x, mWallNormal.z);
             if (AngleDiff((s16)(t + 0x8000), mPrevAngleY) < 0x2000) {
                 if (mHorzSpeed >= 0x3000)
                     mHorzSpeed = 0x3000;
@@ -19233,7 +19222,7 @@ int daPly_c::func_ov002_020e2be4() {
         thr = 0xddb;
         break;
     }
-    if (mFloorNormalY > thr)
+    if (mFloorNormal.y > thr)
         return 0;
     ChangeState(data_ov002_021103f4);
     return 1;
@@ -19330,7 +19319,7 @@ int daPly_c::TryEnterBigFallLanding() {
     if (diff <= 0x3e8000) {
         goto ret0;
     }
-    if (mFloorNormalY < 0xddb) {
+    if (mFloorNormal.y < 0xddb) {
         goto ret0;
     }
 
@@ -19823,7 +19812,7 @@ int daPly_c::Render() {
                 func_ov002_020e3e00((dExtSimpleModel_c *)(char *)mModels.mHeadModels[i], &mScale,
                                     mOpacity);
                 if (func_ov002_020d225c()) {
-                    ((VObj *)mModels.mSleepBubbleModel)->m14(&mSleepBubbleScaleX);
+                    mModels.mSleepBubbleModel->Render(&mSleepBubbleScale);
                 }
             }
         }
@@ -20022,15 +20011,14 @@ void daPly_c::func_ov002_020e444c() {
         mShadowMatrix = data_020a0e68;
 
         {
-            int out[3];
-            int src[3];
+            Vector3 out;
+            Vector3 src;
             int offsetZ = mModelOffsetZ;
-            src[1] = mModelOffsetY - mSinkDepth;
-            src[2] = offsetZ;
-            src[0] = 0;
-            Vec3_RotateYAndTranslate((Vector3 *)out, (const Vector3 *)&mPosX, mAngleY,
-                                     (const Vector3 *)src);
-            Matrix4x3_FromTranslation(&data_020a0e68, out[0] >> 3, out[1] >> 3, out[2] >> 3);
+            src.y = mModelOffsetY - mSinkDepth;
+            src.z = offsetZ;
+            src.x = 0;
+            Vec3_RotateYAndTranslate(&out, &mPos, mAngleY, &src);
+            Matrix4x3_FromTranslation(&data_020a0e68, out.x >> 3, out.y >> 3, out.z >> 3);
         }
 
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
@@ -20056,7 +20044,7 @@ void daPly_c::func_ov002_020e444c() {
         }
 
         if (func_ov002_020d225c() != 0) {
-            int z = FX_MUL(mSleepBubbleScaleZ, 0x2400) + 0xc000;
+            int z = FX_MUL(mSleepBubbleScale.z, 0x2400) + 0xc000;
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x7000, z);
             mModels.mSleepBubbleModel->mat4x3 = data_020a0e68;
         }
@@ -20421,9 +20409,7 @@ after_player_slot:
     if (mHasWings != 0)
         mModels.mAnmModel2.Advance();
 
-    mPreClsnPosX = mPosX;
-    mPreClsnPosY = mPosY;
-    mPreClsnPosZ = mPosZ;
+    mPreClsnPos = mPos;
     func_ov002_020bf36c(&mdCcAcPos_c);
     func_ov002_020bf13c();
 
@@ -20609,9 +20595,7 @@ Ld0:
     mMeshClsn.Init(this, 0x32000, 0x32000, &mPrevAngle, &mAngle);
     func_02035644((int *)&mMeshClsn, 0x28000);
     mTerminalVelocity = -0x4b000;
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos = mPos;
     mSpawnAngleY = mAngleY;
     mGroundY = 0x80000000;
     mWaterSurfaceY = 0x80000000;
@@ -20944,11 +20928,11 @@ void daPly_c::func_ov002_020e6350() {
 }
 
 void daPly_c::func_ov002_020e63a4() {
-    int v[3];
-    v[0] = data_ov002_0210f92c[0];
-    v[1] = data_ov002_0210f92c[1];
-    v[2] = data_ov002_0210f92c[2];
-    mdCcAcPos_c.Init(this, *(Vector3 *)v, 0x28000, 0x96000, 0x400008, 0x4f3ffe0);
+    Vector3 v;
+    v.x = data_ov002_0210f92c[0];
+    v.y = data_ov002_0210f92c[1];
+    v.z = data_ov002_0210f92c[2];
+    mdCcAcPos_c.Init(this, v, 0x28000, 0x96000, 0x400008, 0x4f3ffe0);
 }
 
 /* Writes the head (bone 15) and spine (bone 8) rotations, reads bone 1's
@@ -21018,9 +21002,9 @@ void daPly_c::func_ov002_020e640c() {
                 else
                     mStateTargetY = md[1].transY;
                 mStateTargetZ = md[1].transZ;
-                mStateAnchorX = mStateTargetX;
-                mStateAnchorY = mStateTargetY;
-                mStateAnchorZ = mStateTargetZ;
+                mStateAnchor.x = mStateTargetX;
+                mStateAnchor.y = mStateTargetY;
+                mStateAnchor.z = mStateTargetZ;
                 mRootMotionMode++;
             } else {
                 d.x = (md[1].transX - mStateTargetX) << 3;

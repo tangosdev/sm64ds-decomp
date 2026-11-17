@@ -1509,16 +1509,14 @@ void dScMgBase_c::OpenMenu()
     mMenuCursorPhase = 0;
 }
 
-namespace s20af2f8 {
-extern "C" {
-/* Sets up the brush that PaintSquare paints with on `scene`: stores
+/* Sets up the brush that PaintSquare paints with: stores
    `en` in mBrushOnMain and the layer `mode` (0..3) in mBrushLayer, fills
    the first 0x300 screen entries of that sub-screen BG layer (and of the
    main-screen one when `en` is set) with tile numbers 0..0x2ff under
    palette `base`, zeroes 0x6000 bytes of the layer's character data, and
    loads the 0x20-byte palette sMgBrushPalette into palette slot `base` on
    both screens. Any other mode returns at once. */
-void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
+void dScMgBase_c::InitBrush(char en, int mode, int base) {
     volatile unsigned short v0, v1, v2, v3, v4, v5, v6, v7;
     volatile unsigned short w0, w1, w2, w3, w4, w5, w6, w7;
     int val;
@@ -1526,17 +1524,17 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
     int off;
     void *t;
 
-    scene->mBrushOnMain = en;
+    mBrushOnMain = en;
     i = 0;
     off = i;
-    scene->mBrushLayer = mode;
+    mBrushLayer = mode;
     val = i;
     val += base << 12;
 
     for (; i < 768; i++, val++, off += 2) {
-        switch (scene->mBrushLayer) {
+        switch (mBrushLayer) {
         case 0:
-            if (scene->mBrushOnMain) {
+            if (mBrushOnMain) {
                 t = (char *)G2_GetBG0ScrPtr() + off;
                 MI_CpuFill16(t, v0 = val, 2);
             }
@@ -1544,7 +1542,7 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
             MI_CpuFill16(t, v1 = val, 2);
             break;
         case 1:
-            if (scene->mBrushOnMain) {
+            if (mBrushOnMain) {
                 t = (char *)G2_GetBG1ScrPtr() + off;
                 MI_CpuFill16(t, v2 = val, 2);
             }
@@ -1552,7 +1550,7 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
             MI_CpuFill16(t, v3 = val, 2);
             break;
         case 2:
-            if (scene->mBrushOnMain) {
+            if (mBrushOnMain) {
                 t = (char *)G2_GetBG2ScrPtr() + off;
                 MI_CpuFill16(t, v4 = val, 2);
             }
@@ -1560,7 +1558,7 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
             MI_CpuFill16(t, v5 = val, 2);
             break;
         case 3:
-            if (scene->mBrushOnMain) {
+            if (mBrushOnMain) {
                 t = (char *)G2_GetBG3ScrPtr() + off;
                 MI_CpuFill16(t, v6 = val, 2);
             }
@@ -1572,9 +1570,9 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
         }
     }
 
-    switch (scene->mBrushLayer) {
+    switch (mBrushLayer) {
     case 0:
-        if (scene->mBrushOnMain) {
+        if (mBrushOnMain) {
             t = G2_GetBG0CharPtr();
             w0 = 0;
             MI_CpuFill16(t, w0, 0x6000);
@@ -1584,7 +1582,7 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
         MI_CpuFill16(t, w1, 0x6000);
         break;
     case 1:
-        if (scene->mBrushOnMain) {
+        if (mBrushOnMain) {
             t = G2_GetBG1CharPtr();
             w2 = 0;
             MI_CpuFill16(t, w2, 0x6000);
@@ -1594,7 +1592,7 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
         MI_CpuFill16(t, w3, 0x6000);
         break;
     case 2:
-        if (scene->mBrushOnMain) {
+        if (mBrushOnMain) {
             t = G2_GetBG2CharPtr();
             w4 = 0;
             MI_CpuFill16(t, w4, 0x6000);
@@ -1604,7 +1602,7 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
         MI_CpuFill16(t, w5, 0x6000);
         break;
     case 3:
-        if (scene->mBrushOnMain) {
+        if (mBrushOnMain) {
             t = (void *)G2_GetBG3CharPtr();
             w6 = 0;
             MI_CpuFill16(t, w6, 0x6000);
@@ -1619,8 +1617,6 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
 
     GX_LoadBGPltt(&sMgBrushPalette, base << 5, 0x20);
     GXS_LoadBGPltt(&sMgBrushPalette, base << 5, 0x20);
-}
-}
 }
 
 namespace s20af5e0 {
@@ -2379,18 +2375,19 @@ namespace s20b0d8c {
 extern "C" {
 extern s32 GetGameLanguage(void);
 extern void Hud_RenderSprite(void *fn, s32 a, s32 b, s32 r3arg, s32 stack_arg);
-/* Draws per-language sprite word 0x11 or 0x12 at (arg1, arg2): word 0x11
-   for the first 20 frames of the scene's 40-frame mFrameCounter cycle,
-   word 0x12 for the rest. */
-void Mg_DrawBlinkSprite(void *c, s32 arg1, s32 arg2)
-{
-    s32 idx1 = ((dScMgBase_c *)c)->mFrameCounter;
-    s32 r4 = (idx1 < 0x14) ? 0x11 : 0x12;
-    s32 idx2 = GetGameLanguage();
-    OamAttr **table = sMgSpriteTables[idx2];
-    Hud_RenderSprite(table[r4], arg1, arg2, -1, -1);
 }
 }
+
+/* Draws per-language sprite word 0x11 or 0x12 at (x, y): word 0x11 for the
+   first 20 frames of the 40-frame mFrameCounter cycle, word 0x12 for the
+   rest. */
+void dScMgBase_c::DrawBlinkSprite(s32 x, s32 y) {
+    using namespace s20b0d8c;
+    s32 frame = mFrameCounter;
+    s32 word = (frame < 20) ? 0x11 : 0x12;
+    s32 language = GetGameLanguage();
+    OamAttr **table = sMgSpriteTables[language];
+    Hud_RenderSprite(table[word], x, y, -1, -1);
 }
 
 namespace s20b0de0 {
@@ -2435,6 +2432,8 @@ static inline int sdiv4(int d) {
 static inline int sdiv2(int e) {
     return (e + (int)((unsigned)e >> 31)) >> 1;
 }
+}
+}
 
 /* Draws a tally of `sb` in a column at x 0xf0, upward from y 0xa8: one
    icon (per-language sprite word 9) per unit, and from five upward the
@@ -2446,26 +2445,27 @@ static inline int sdiv2(int e) {
    stops it. When the tally reaches a multiple of
    five, the icons close up as mTallyAnimTimer runs from mTimeLimit to
    mTimeLimit + 0x20, with sound 0x1ba as they start. */
-extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
+void dScMgBase_c::DrawTally(int sb) {
+    using namespace s20b0e84;
     OamAttr **r8;
     int r7;
     int i;
     int pin;
 
     {
-        int t = sl->mTallyShown;
+        int t = mTallyShown;
         if (t < sb) {
-            sl->mTallyAnimTimer = 1;
-            sl->mTallyShown = sb;
+            mTallyAnimTimer = 1;
+            mTallyShown = sb;
             func_02012790(0x1bb);
         } else if (t > sb) {
-            sl->mTallyAnimTimer = 0;
-            sl->mTallyShown = sb;
-        } else if (sl->mTallyAnimTimer > 0) {
-            if (sl->GetDisplayMode() == 2) {
-                sl->mTallyAnimTimer += 2;
+            mTallyAnimTimer = 0;
+            mTallyShown = sb;
+        } else if (mTallyAnimTimer > 0) {
+            if (GetDisplayMode() == 2) {
+                mTallyAnimTimer += 2;
             } else {
-                sl->mTallyAnimTimer += 1;
+                mTallyAnimTimer += 1;
             }
         }
     }
@@ -2478,7 +2478,7 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
         i = 0;
         if (sb > 0) {
             do {
-                if (i == sb - 1 && sl->mTallyAnimTimer > 0 && sl->mTallyAnimTimer % 60 >= 30) {
+                if (i == sb - 1 && mTallyAnimTimer > 0 && mTallyAnimTimer % 60 >= 30) {
                     break;
                 }
                 RenderOamMainScreen(r8[9], 240, r7, -1, -1);
@@ -2486,18 +2486,18 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
                 r7 -= 16;
             } while (i < sb);
         }
-        if (sl->mTallyAnimTimer >= sl->mTimeLimit) {
-            sl->mTallyAnimTimer = 0;
+        if (mTallyAnimTimer >= mTimeLimit) {
+            mTallyAnimTimer = 0;
         }
         return;
     }
 
     if (sb == 5) {
-        int u = sl->mTallyAnimTimer;
+        int u = mTallyAnimTimer;
         if (u == 0) {
             Mg_DrawNumber(240, r7, 5, 1, 0, 0, 0x14);
             RenderOamMainScreen(r8[11], 240, r7, -1, -1);
-        } else if (u < sl->mTimeLimit) {
+        } else if (u < mTimeLimit) {
             r7 -= 8;
             i = 0;
             do {
@@ -2505,33 +2505,33 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
                 i += 1;
                 r7 -= 16;
             } while (i < 4);
-            if (sl->mTallyAnimTimer % 60 < 30) {
+            if (mTallyAnimTimer % 60 < 30) {
                 RenderOamMainScreen(r8[9], 240, r7, -1, -1);
             }
         } else {
-            int d = (sl->mTimeLimit + 32) - sl->mTallyAnimTimer;
+            int d = (mTimeLimit + 32) - mTallyAnimTimer;
             r7 -= sdiv4(d);
             i = 0;
             do {
                 RenderOamMainScreen(r8[9], 240, r7, -1, -1);
                 {
-                    unsigned e = (sl->mTimeLimit + 32) - sl->mTallyAnimTimer;
+                    unsigned e = (mTimeLimit + 32) - mTallyAnimTimer;
                     r7 -= sdiv2(e);
                 }
                 i += 1;
             } while (i < 5);
         }
-        if (sl->GetDisplayMode() == 2) {
-            int b = sl->mTimeLimit;
-            int c = sl->mTallyAnimTimer;
+        if (GetDisplayMode() == 2) {
+            int b = mTimeLimit;
+            int c = mTallyAnimTimer;
             if (c == b || c == b + 1) {
                 func_02012790(0x1ba);
             }
-        } else if (sl->mTallyAnimTimer == sl->mTimeLimit) {
+        } else if (mTallyAnimTimer == mTimeLimit) {
             func_02012790(0x1ba);
         }
-        if (sl->mTallyAnimTimer >= sl->mTimeLimit + 32) {
-            sl->mTallyAnimTimer = 0;
+        if (mTallyAnimTimer >= mTimeLimit + 32) {
+            mTallyAnimTimer = 0;
         }
         return;
     }
@@ -2539,17 +2539,17 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
     {
         int rem = sb % 5;
         if (rem == 0) {
-            int u = sl->mTallyAnimTimer;
+            int u = mTallyAnimTimer;
             if (u == 0) {
                 Mg_DrawNumber(240, r7, sb, 1, 0, 0, 0x14);
                 RenderOamMainScreen(r8[11], 240, r7, -1, -1);
-            } else if (u < sl->mTimeLimit) {
+            } else if (u < mTimeLimit) {
                 Mg_DrawNumber(240, r7, sb - 5, 1, 0, 0, 0x14);
                 RenderOamMainScreen(r8[11], 240, r7, -1, -1);
                 r7 -= 24;
                 i = 0;
                 do {
-                    if (i == 4 && sl->mTallyAnimTimer > 0 && sl->mTallyAnimTimer % 60 >= 30) {
+                    if (i == 4 && mTallyAnimTimer > 0 && mTallyAnimTimer % 60 >= 30) {
                         break;
                     }
                     RenderOamMainScreen(r8[9], 240, r7, -1, -1);
@@ -2560,27 +2560,27 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
                 int d;
                 Mg_DrawNumber(240, r7, sb - 5, 1, 0, 0, 0x14);
                 RenderOamMainScreen(r8[11], 240, r7, -1, -1);
-                d = (sl->mTimeLimit + 32) - sl->mTallyAnimTimer;
+                d = (mTimeLimit + 32) - mTallyAnimTimer;
                 r7 -= sdiv4(d);
                 i = 0;
                 do {
-                    unsigned e = (sl->mTimeLimit + 32) - sl->mTallyAnimTimer;
+                    unsigned e = (mTimeLimit + 32) - mTallyAnimTimer;
                     r7 -= sdiv2(e);
                     RenderOamMainScreen(r8[9], 240, r7, -1, -1);
                     i += 1;
                 } while (i < 5);
             }
-            if (sl->GetDisplayMode() == 2) {
-                int b = sl->mTimeLimit;
-                int c = sl->mTallyAnimTimer;
+            if (GetDisplayMode() == 2) {
+                int b = mTimeLimit;
+                int c = mTallyAnimTimer;
                 if (c == b || c == b + 1) {
                     func_02012790(0x1ba);
                 }
-            } else if (sl->mTallyAnimTimer == sl->mTimeLimit) {
+            } else if (mTallyAnimTimer == mTimeLimit) {
                 func_02012790(0x1ba);
             }
-            if (sl->mTallyAnimTimer >= sl->mTimeLimit + 32) {
-                sl->mTallyAnimTimer = 0;
+            if (mTallyAnimTimer >= mTimeLimit + 32) {
+                mTallyAnimTimer = 0;
             }
             return;
         }
@@ -2595,7 +2595,7 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
         if (rem > 0) {
             pin = rem - 1;
             do {
-                if (sb == pin && sl->mTallyAnimTimer > 0 && sl->mTallyAnimTimer % 60 >= 30) {
+                if (sb == pin && mTallyAnimTimer > 0 && mTallyAnimTimer % 60 >= 30) {
                     break;
                 }
                 RenderOamMainScreen(r8[9], 240, r7, -1, -1);
@@ -2603,12 +2603,10 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
                 r7 -= 16;
             } while (sb < rem);
         }
-        if (sl->mTallyAnimTimer >= sl->mTimeLimit) {
-            sl->mTallyAnimTimer = 0;
+        if (mTallyAnimTimer >= mTimeLimit) {
+            mTallyAnimTimer = 0;
         }
     }
-}
-}
 }
 
 namespace s20b14f0 {
@@ -2805,69 +2803,60 @@ int Mg_GetLevel(void) {
 
 namespace s20b1b08 {
 extern "C" {
-/* Subtracts `amount` from the scene's mCredits (Mg_SubCredits). */
+/* Subtracts `amount` from the scene's mCredits (dScMgBase_c::SubCredits). */
 void Mg_LoseCredits(int amount) {
-    void *v = gMgScene;
-    if (v == 0) return;
-    Mg_SubCredits(v, amount);
+    dScMgBase_c *scene = gMgScene;
+    if (scene == 0)
+        return;
+    scene->SubCredits(amount);
 }
 }
 }
 
 namespace s20b1b40 {
 extern "C" {
-/* Adds `amount` to the scene's mCredits (Mg_AddCredits). */
+/* Adds `amount` to the scene's mCredits (dScMgBase_c::AddCredits). */
 void Mg_GainCredits(int amount) {
-    void *v = gMgScene;
-    if (v == 0) return;
-    Mg_AddCredits(v, amount);
+    dScMgBase_c *scene = gMgScene;
+    if (scene == 0)
+        return;
+    scene->AddCredits(amount);
 }
 }
 }
 
-namespace s20b1b78 {
-extern "C" {
 /* mCredits -= val, clamped to 0..9999. */
-void Mg_SubCredits(void* c, int val) {
-    dScMgBase_c *scene = (dScMgBase_c *)c;
-    int r2 = scene->mCredits;
-    r2 -= val;
-    if (r2 < 0) r2 = 0;
-    else if (r2 > 0x270f) r2 = 0x270f;
-    scene->mCredits = r2;
-}
-}
+void dScMgBase_c::SubCredits(int val) {
+    int credits = mCredits;
+    credits -= val;
+    if (credits < 0)
+        credits = 0;
+    else if (credits > 9999)
+        credits = 9999;
+    mCredits = credits;
 }
 
-namespace s20b1ba0 {
-extern "C" {
 /* mCredits += delta, clamped to 0..9999. */
-void Mg_AddCredits(void *c, s32 delta)
-{
-    dScMgBase_c *scene = (dScMgBase_c *)c;
-    s32 v = scene->mCredits + delta;
-    if (v < 0) v = 0;
-    else if (v > 0x270f) v = 0x270f;
-    scene->mCredits = v;
-}
-}
+void dScMgBase_c::AddCredits(s32 delta) {
+    s32 credits = mCredits + delta;
+    if (credits < 0)
+        credits = 0;
+    else if (credits > 9999)
+        credits = 9999;
+    mCredits = credits;
 }
 
-namespace s20b1bc8 {
-extern "C" {
-/* Draws sprite word 2 at (a1, a2) on wrapper a3 (Mg_DrawCreditsIcon),
-   then the scene's mCreditsShown beside it: below 100 through
-   Mg_DrawBigNumber, otherwise through Mg_DrawNumber. */
-void Mg_DrawCredits(dScMgBase_c *scene, int a1, int a2, int a3) {
-    Mg_DrawCreditsIcon(a1, a2, a3, -1);
-    int v = scene->mCreditsShown;
-    if (v < 0x64) {
-        Mg_DrawBigNumber(a1+0x12, a2, v, a3, -1, 2, 0);
+/* Draws sprite word 2 at (x, y) on wrapper `screen` (Mg_DrawCreditsIcon),
+   then mCreditsShown beside it: below 100 through Mg_DrawBigNumber,
+   otherwise through Mg_DrawNumber. */
+void dScMgBase_c::DrawCredits(int x, int y, int screen) {
+    Mg_DrawCreditsIcon(x, y, screen, -1);
+    int shown = mCreditsShown;
+    if (shown < 100) {
+        Mg_DrawBigNumber(x + 18, y, shown, screen, -1, 2, 0);
     } else {
-        Mg_DrawNumber(a1 + 12, a2, v, a3, -1, 2, 0x32);
+        Mg_DrawNumber(x + 12, y, shown, screen, -1, 2, 50);
     }
-}
-}
 }
 
 namespace s20b1c68 {
@@ -2943,15 +2932,10 @@ void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3) {
 }
 }
 
-namespace s20b1e34 {
-extern "C" {
-extern void Mg_DrawTally(dScMgBase_c *sl, int sb);
-
-/* Draws the mHudScore tally through Mg_DrawTally (a tail call). */
-void Mg_DrawScoreTally(void* a, int unused1, int unused2, int unused3) {
-    Mg_DrawTally((dScMgBase_c *)a, ((dScMgBase_c *)a)->mHudScore);
-}
-}
+/* Draws the mHudScore tally through DrawTally (a tail call). The three
+   arguments every caller passes go unread. */
+void dScMgBase_c::DrawScoreTally(int, int, int) {
+    DrawTally(mHudScore);
 }
 
 namespace s20b1e44 {

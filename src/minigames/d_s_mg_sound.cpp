@@ -166,7 +166,6 @@ u16 sSoundNotePositions8[16] = {32, 32,  96, 32,  160, 32,  224, 32,
 u16 sSoundNotePositions10[20] = {32, 32,  80, 32,  128, 32,  176, 32,  224, 32,
                                  32, 112, 80, 112, 128, 112, 176, 112, 224, 112};
 u16 *sSoundNotePositions[3] = {sSoundNotePositions6, sSoundNotePositions8, sSoundNotePositions10};
-extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 void FreeGfxSlotsById(int id);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
@@ -405,7 +404,7 @@ s32 dScMgSound_c::Behavior() {
 
 /* Draws the HUD and each of the scene's layers, then the table. */
 s32 dScMgSound_c::Render() {
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     DrawPops();
     DrawNotes();
     DrawTries();

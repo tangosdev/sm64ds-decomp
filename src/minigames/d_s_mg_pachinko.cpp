@@ -2179,7 +2179,7 @@ s32 dScMgPachinko_c::InitResources()
     G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
                           GX_BG_CHARBASE_0x18000);
 
-    Mg_InitBrush(this, 0, 2, 0);
+    InitBrush(0, 2, 0);
 
     b = (char *)G2S_GetBG2CharPtr();
     fillZero = 0;

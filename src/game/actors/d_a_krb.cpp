@@ -245,20 +245,19 @@ void daKrb_c::func_ov084_021290d4() {
     *chaseRadius(self2) = 0x1f4000;
 }
 
-
 /* Enter STATE_TUMBLE: the Goomba is thrown clear. Called when the cap comes
  * off (func_ov084_02129a00) and, with a null `actor`, when a Yoshi-held Goomba
  * lands. `actor` is the eater
  * (mEatingPlayer) when there is one; the Goomba is turned toward it.
  *
  * Starts the 60-frame bounce countdown (mBounceCountdown) and the tumble
- * animation, gives it a vertical speed of (13.0 - mVertAccel) / mFloorNormalY
+ * animation, gives it a vertical speed of (13.0 - mVertAccel) / mFloorNormal.y
  * and a backward horizontal speed equal to the length of the horizontal part
  * of the velocity vector at 0xa4, and releases it from Yoshi. */
 void daKrb_c::func_ov084_02129168(dActor_c *actor) {
     daKrb_c *goomba = this;
     goomba->mBounceCountdown = 60;
-    goomba->mVertSpeed = FX_Div(0xd000 - goomba->mVertAccel, goomba->mFloorNormalY);
+    goomba->mVertSpeed = FX_Div(0xd000 - goomba->mVertAccel, goomba->mFloorNormal.y);
     goomba->mHorzSpeed = Vec3_HorzLen((const Vector3 *)&goomba->mSpeedX) * -1;
     if (actor != 0)
         goomba->mPrevAngleY = Vec3_HorzAngle(&goomba->mPos, &actor->mPos);
@@ -1086,7 +1085,7 @@ void daKrb_c::ActTumble() {
             if (aa <= cnt * 0x500) {
                 goomba->mVertSpeed = (cnt << 0xa) - goomba->mVertAccel;
             } else {
-                goomba->mVertSpeed = FX_Div((a8 * -0x50) / 100, goomba->mFloorNormalY);
+                goomba->mVertSpeed = FX_Div((a8 * -0x50) / 100, goomba->mFloorNormal.y);
             }
         }
         {

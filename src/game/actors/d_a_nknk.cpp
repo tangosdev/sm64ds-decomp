@@ -439,8 +439,8 @@ void daNknk_c::func_ov062_02118a50()
     if (mHorzSpeed != 0) {
         if (mWithMeshClsn.IsOnWall() != 0) {
             dBgPi *wall = mWithMeshClsn.GetWallResult();
-            wall->surface.CopyNormalTo(*(Vector3*)&mWallNormalX);
-            mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+            wall->surface.CopyNormalTo(mWallNormal);
+            mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
         }
         SlideToStop(0x4cc);
         return;

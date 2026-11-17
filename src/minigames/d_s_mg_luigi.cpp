@@ -1520,7 +1520,6 @@ extern void Mg_ShowBanner(int, int, int, int, int, short);
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 /* dScMgLuigi_c::Render */
-extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 /* dScMgLuigi_c::Behavior */
 extern LuigiStateHandler sLuigiStateTable[];
 /* dScMgLuigi_c::InitResources */
@@ -1570,7 +1569,7 @@ void dScMgLuigi_c::StartRound(int mode) {
 }
 
 s32 dScMgLuigi_c::Render() {
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     DrawCurtains();
     DrawReward();
     DrawPenalties();

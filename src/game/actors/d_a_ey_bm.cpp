@@ -103,8 +103,8 @@ int daEyBm_c::InitResources() {
 }
 
 int daEyBm_c::Behavior() {
-    VecFx32 offset;
-    VecFx32 velocity;
+    Vector3 offset;
+    Vector3 velocity;
     if (IsInYoshiMouth(this))
         return 1;
 
@@ -112,14 +112,14 @@ int daEyBm_c::Behavior() {
         offset.x = data_ov071_021230b8.x;
         offset.y = data_ov071_021230b8.y;
         offset.z = data_ov071_021230b8.z;
-        mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)&offset);
+        mdCcAcPos_c.SetPosRelativeToActor(offset);
 
         velocity.z = mHorzSpeed;
         velocity.x = 0;
         velocity.y = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-        MTX_MultVec43((Vector3 *)&velocity, &data_020a0e68, (Vector3 *)&mSpeedX);
+        MTX_MultVec43(&velocity, &data_020a0e68, (Vector3 *)&mSpeedX);
 
         /* Retail retains a typed whole-vector writeback after the transform. */
         *(VecFx32 *)&mSpeedX = *(VecFx32 *)&mSpeedX;
@@ -185,11 +185,11 @@ void daEyBm_c::HurtPlayer() {
     if (player->mIsVanish)
         return;
 
-    VecFx32 position;
+    Vector3 position;
     position.x = mPosX;
     position.y = mPosY;
     position.z = mPosZ;
-    player->Hurt(*(Vector3 *)&position, 1, 0xc000, 1, 0, 1);
+    player->Hurt(position, 1, 0xc000, 1, 0, 1);
     SpawnDestroyEffect();
 }
 
