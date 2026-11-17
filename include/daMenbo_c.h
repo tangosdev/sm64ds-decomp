@@ -44,7 +44,7 @@ struct daMenbo_c : dEnemyBase_c {
     dCcAcPos_c    mdCcAcPos_c; /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x150 */
     dExtAnmModel_c mAnmModel;                         /* 0x30c */
-    StateFn                     *mState;                /* 0x370 */
+    StateFn *mState;                                  /* 0x370 */
     /* Where the skeeter drops anchor: InitResources and, whenever it is off
        the water, the water-rest and water-chase updates (02131ac4, 02131c48)
        copy mPos here. Patrol (02131648) and 021314a0 aim back at it through

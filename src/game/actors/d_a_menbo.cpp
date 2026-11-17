@@ -91,10 +91,10 @@ extern MenboAnimationFilePtr data_ov090_02134498; /* idle anim, file 0x3a3 */
 extern MenboModelFilePtr     data_ov090_021344a0; /* model, file 0x39f */
 /* Each node is the (entry, update) PMF pair the Behavior installs.
  * e4 idle, f4 water chase, 504 water rest, 514 patrol. */
-extern daMenbo_c::StateFn  data_ov090_021344e4[2];
-extern daMenbo_c::StateFn  data_ov090_021344f4[2];
-extern daMenbo_c::StateFn  data_ov090_02134504[2];
-extern daMenbo_c::StateFn  data_ov090_02134514[2];
+extern daMenbo_c::StateFn data_ov090_021344e4[2];
+extern daMenbo_c::StateFn data_ov090_021344f4[2];
+extern daMenbo_c::StateFn data_ov090_02134504[2];
+extern daMenbo_c::StateFn data_ov090_02134514[2];
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. Actor ID 0xbf is PLAYER. gGameMode is the current game
