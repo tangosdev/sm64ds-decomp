@@ -13,12 +13,12 @@
       "opt_lifetimes": 1,
       "opt_loop_invariants": 10,
       "opt_prelinearize": 1,
-      "opt_propagation": 10,
+      "opt_propagation": 9,
       "opt_strength_reduction": 12,
       "optimize_for_size": 13
     },
-    "pragma_files": 38,
-    "pragma_overrides": 62,
+    "pragma_files": 37,
+    "pragma_overrides": 61,
     "pragma_resets": 0,
     "pragma_resets_by_name": {}
   },
@@ -74,8 +74,8 @@
     "pad_layout": 12
   },
   "totals": {
-    "c_extension": 757,
-    "cpp_extension": 679,
+    "c_extension": 758,
+    "cpp_extension": 678,
     "src_files": 1436
   }
 }
