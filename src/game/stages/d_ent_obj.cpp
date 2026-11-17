@@ -738,8 +738,7 @@ void dEntObj_c::SetCamera() {
     Matrix4x3 view;
     G3i_PerspectiveW_(data_02082614[10], data_02082614[11], 0x1555, 0x1000, 0x1388000, 0x1000, true,
                       0);
-    G3i_LookAt_((Vector3 *)&mCamPosX, (Vector3 *)&data_ov075_0211c660, (Vector3 *)&mCamTargetX,
-                true, &view);
+    G3i_LookAt_(&mCamPos, (Vector3 *)&data_ov075_0211c660, &mCamTarget, true, &view);
     CopyToViewMat(&view);
     data_0209f43c.Func_020156DC(0x1555, 0x105b, 0x1000, 0x1388000);
 }
@@ -827,8 +826,7 @@ int dEntObj_c::Behavior() {
             mState = STATE_RUN_OFF_STAGE;
         }
         if (mState != STATE_IDLE) {
-            if (mPlayers[mFocusedPlayer].UpdateCamera((Vector3 *)&mCamTargetX,
-                                                      (Vector3 *)&mCamPosX) != 0)
+            if (mPlayers[mFocusedPlayer].UpdateCamera(&mCamTarget, &mCamPos) != 0)
                 SetCamera();
         }
         if (mAnimActive) {
@@ -914,12 +912,12 @@ int dEntObj_c::InitResources() {
         func_ov075_02115098(localPlayer);
     }
 
-    mCamTargetX = 0;
-    mCamPosX = mCamTargetX;
-    mCamTargetY = 0x14000;
-    mCamPosY = mCamTargetY;
-    mCamPosZ = 0x50000;
-    mCamTargetZ = -0x8000;
+    mCamTarget.x = 0;
+    mCamPos.x = mCamTarget.x;
+    mCamTarget.y = 0x14000;
+    mCamPos.y = mCamTarget.y;
+    mCamPos.z = 0x50000;
+    mCamTarget.z = -0x8000;
 
     SetCamera();
 
