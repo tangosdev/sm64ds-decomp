@@ -193,11 +193,11 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
        0x5c0 = 0x2e0 * sizeof(u16) and the row index the halfword. 0x10 lanes
        times 0x5c0 is 0x5c00, which closes exactly on mPos. */
     u16 mTileMap[0x10][0x2e0]; /* 0x4f38 */
-    Vector2 mPos;           /* 0xab38 -- fx32 world position of the ball */
-    Vector2 mPrevPos;       /* 0xab40 -- Behavior's copy of mPos at tick start */
-    Vector2 mDrawPos;       /* 0xab48 -- where Render puts the ball sprite */
-    Vector2 mSoundPos;      /* 0xab50 -- position of the last roll sound; a new
-                                one fires every 0x30000 of travel */
+    Vector2 mPos;              /* 0xab38 -- fx32 world position of the ball */
+    Vector2 mPrevPos;          /* 0xab40 -- Behavior's copy of mPos at tick start */
+    Vector2 mDrawPos;          /* 0xab48 -- where Render puts the ball sprite */
+    Vector2 mSoundPos;         /* 0xab50 -- position of the last roll sound; a new
+                                   one fires every 0x30000 of travel */
     s32 mUphillDebt;        /* 0xab58 -- Behavior adds every tick's backwards
                                 (+Y) travel here and pays it off from later
                                 downhill travel; only while it is 0 does the
@@ -256,15 +256,15 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
                                 read in this TU */
     s32   mState;           /* 0xb9f4 -- 0 count-in, 1 rolling, 2/3 crash,
                                 4 melt, 5 over */
-    u8    mScreensSwapped;  /* 0xb9f8 -- set once mPos.y passes 0xe8000; swaps
+    u8 mScreensSwapped;     /* 0xb9f8 -- set once mPos.y passes 0xe8000; swaps
                                 which physical screen shows the upper half */
     u8    pad_b9f9[0x3];    /* 0xb9f9 */
     s32   mCountdownTimer;  /* 0xb9fc -- 0xf1 down to 0x3c; Render draws the
                                 3-2-1 banner from it */
-    s32   mStartY;          /* 0xba00 -- mPos.y starts here (<< 12) */
+    s32 mStartY;            /* 0xba00 -- mPos.y starts here (<< 12) */
     s32   mGoalY;           /* 0xba04 -- the finish; also the progress bar's
                                 other end */
-    s32   mScrollLimit;     /* 0xba08 -- mScroll.y stops at (n << 16) - 0x1d0000 */
+    s32 mScrollLimit;       /* 0xba08 -- mScroll.y stops at (n << 16) - 0x1d0000 */
     s32   mCrashTimer;      /* 0xba0c -- counts up through states 2 and 4 */
     s32   mEndDelayTimer;   /* 0xba10 -- 0xb4 frames of state 3 */
     SnowSpray mSprays[0x20];     /* 0xba14 */
