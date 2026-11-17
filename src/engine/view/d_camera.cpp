@@ -3154,25 +3154,15 @@ int RunCameraCommand(dCamera_c *cam, u8 *command, int first, int last) {
 
 /* Script op: set lookAt from three whole-unit shorts. */
 int func_02008500(dCamera_c *cam, u8 *data) {
-    fx32 x, y, z;
-    z = ReadUnalignedShort(data + 4) << 12;
-    y = ReadUnalignedShort(data + 2) << 12;
-    x = ReadUnalignedShort(data) << 12;
-    cam->lookAt.x = x;
-    cam->lookAt.y = y;
-    cam->lookAt.z = z;
+    SetVec(cam->lookAt, ReadUnalignedShort(data) << 12, ReadUnalignedShort(data + 2) << 12,
+           ReadUnalignedShort(data + 4) << 12);
     return 1;
 }
 
 /* Script op: set pos from three whole-unit shorts. */
 s32 func_020084b0(dCamera_c *cam, u8 *data, int a, int b) {
-    s32 y, z, x;
-    z = ReadUnalignedShort(data + 4) << 12;
-    y = ReadUnalignedShort(data + 2) << 12;
-    x = ReadUnalignedShort(data) << 12;
-    cam->pos.x = x;
-    cam->pos.y = y;
-    cam->pos.z = z;
+    SetVec(cam->pos, ReadUnalignedShort(data) << 12, ReadUnalignedShort(data + 2) << 12,
+           ReadUnalignedShort(data + 4) << 12);
     return 1;
 }
 
@@ -3277,13 +3267,7 @@ int func_020080b0(dCamera_c *cam) {
     dActor_c *obj = KuppaScript::FindDemoActor(0x13);
     Vector3 *base = &obj->mPos;
 
-    int z = base->z;
-    int y = base->y + cam->mScriptParam;
-    int x = base->x;
-
-    cam->lookAt.x = x;
-    cam->lookAt.y = y;
-    cam->lookAt.z = z;
+    SetVec(cam->lookAt, base->x, base->y + cam->mScriptParam, base->z);
     return 1;
 }
 
@@ -3458,14 +3442,9 @@ extern "C" void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, fx32 ma
    whole-unit offset. */
 int func_02007b98(dCamera_c *cam, u8 *data) {
     struct Vector3 v;
-    fx32 x, y, z;
     int b;
-    z = ReadUnalignedShort(data + 4) << 12;
-    y = ReadUnalignedShort(data + 2) << 12;
-    x = ReadUnalignedShort(data) << 12;
-    v.x = x;
-    v.y = y;
-    v.z = z;
+    SetVec(v, ReadUnalignedShort(data) << 12, ReadUnalignedShort(data + 2) << 12,
+           ReadUnalignedShort(data + 4) << 12);
     b = data[6] << 4;
     VEC_Add(&v, &cam->mTargetPlayer->mPos, &v);
     func_02007cec(&cam->lookAt, &v, b);
@@ -3480,13 +3459,8 @@ int FocusInFrontOfMario(dCamera_c *cam, u8 *rec) {
     Vector3 res;
     dActor_c *owner;
     int step;
-    fx32 vx, vy, vz;
-    vz = ReadUnalignedShort(rec + 4) << 12;
-    vy = ReadUnalignedShort(rec + 2) << 12;
-    vx = ReadUnalignedShort(rec + 0) << 12;
-    v.x = vx;
-    v.y = vy;
-    v.z = vz;
+    SetVec(v, ReadUnalignedShort(rec) << 12, ReadUnalignedShort(rec + 2) << 12,
+           ReadUnalignedShort(rec + 4) << 12);
     step = rec[6] << 4;
     owner = cam->mTargetPlayer;
     Vec3_RotateYAndTranslate(&res, &owner->mPos, owner->mAngleY + 0x8000, &v);
@@ -3517,9 +3491,7 @@ int CutscenePanCvar9(dCamera_c *cam, u8 *data, int frame) {
     int dist;
     short vert, horz;
     if (frame == gKuppaScriptFrame) {
-        cam->savedLookAt.x = cam->lookAt.x;
-        cam->savedLookAt.y = cam->lookAt.y;
-        cam->savedLookAt.z = cam->lookAt.z;
+        cam->savedLookAt = cam->lookAt;
     }
     cam->mPitchOffset -= ReadUnalignedShort(data);
     cam->mYawOffset += ReadUnalignedShort(data + 2);
@@ -3604,22 +3576,11 @@ int CutsceneKeyDanceJumpCvar(dCamera_c *cam, u8 *rec) {
     dActor_c *owner;
     short angle;
     Vector3 *pos;
-    int vx, vy, vz;
-    int wx, wy, wz;
 
-    vz = ReadUnalignedShort(rec + 4) << 12;
-    vy = ReadUnalignedShort(rec + 2) << 12;
-    vx = ReadUnalignedShort(rec + 0) << 12;
-    v.x = vx;
-    v.y = vy;
-    v.z = vz;
-
-    wz = ReadUnalignedShort(rec + 0xa) << 12;
-    wy = ReadUnalignedShort(rec + 8) << 12;
-    wx = ReadUnalignedShort(rec + 6) << 12;
-    w.x = wx;
-    w.y = wy;
-    w.z = wz;
+    SetVec(v, ReadUnalignedShort(rec) << 12, ReadUnalignedShort(rec + 2) << 12,
+           ReadUnalignedShort(rec + 4) << 12);
+    SetVec(w, ReadUnalignedShort(rec + 6) << 12, ReadUnalignedShort(rec + 8) << 12,
+           ReadUnalignedShort(rec + 0xa) << 12);
 
     owner = cam->mTargetPlayer;
     pos = &owner->mPos;
@@ -3632,15 +3593,12 @@ int CutsceneKeyDanceJumpCvar(dCamera_c *cam, u8 *rec) {
 /* Script op, Super Mario 64's cutscene_grand_star_start: savedLookAt at
    data_02086ec0 in front of the target player, at height 0x1c9000. */
 int CutsceneGrandStarStart(dCamera_c *cam) {
-    int offset[3];
-    offset[0] = data_02086ec0[0];
-    offset[1] = data_02086ec0[1];
-    offset[2] = data_02086ec0[2];
+    Vector3 offset = *(Vector3 *)data_02086ec0;
 
     short angle = cam->mTargetPlayer->mAngleY;
     angle = (angle + 0x8000);
 
-    Vec3_RotateYAndTranslate(&cam->savedLookAt, &cam->mTargetPlayer->mPos, angle, offset);
+    Vec3_RotateYAndTranslate(&cam->savedLookAt, &cam->mTargetPlayer->mPos, angle, &offset);
 
     cam->savedLookAt.y = 0x1c9000;
     return 1;
@@ -3663,13 +3621,8 @@ int CutsceneGrandStarFrontOfMario(dCamera_c *cam) {
    toward a point above the target player. */
 int CutsceneGrandStarFocusMario(dCamera_c *cam) {
     Vector3 *base = &cam->mTargetPlayer->mPos;
-    int y0 = base->y + 0xffecd000;
-    int tz = base->z;
-    int tx = base->x;
     Vector3 src;
-    src.y = 0x197000 + (y0 >> 1);
-    src.x = tx;
-    src.z = tz;
+    SetVec(src, base->x, 0x197000 + ((base->y - 0x133000) >> 1), base->z);
     ApproachVec3fAsymptotic(&cam->lookAt, &src, 0x800, 0xccc, 0x800);
     return 1;
 }
@@ -3680,9 +3633,7 @@ int CutsceneGrandStarMarioJump(dCamera_c *cam) {
     int yaw = cam->mTargetPlayer->mAngleY;
     yaw += 0x8000;
     cam->mTargetAngleY = yaw;
-    cam->savedLookAt.x = 0;
-    cam->savedLookAt.y = 0;
-    cam->savedLookAt.z = 0;
+    SetVec(cam->savedLookAt, 0, 0, 0);
     return 1;
 }
 
@@ -3722,17 +3673,8 @@ int CutsceneGrandStarMoveCvar2(dCamera_c *cam) {
    savedLookAt, sets savedPos to (0, lookAt's height above the target player,
    0), and clears mScriptParam and mRampSpeed. */
 int CutsceneGrandStarFlyStart(dCamera_c *cam) {
-    cam->savedLookAt.x = 0;
-    cam->savedLookAt.y = 0;
-    cam->savedLookAt.z = 0;
-
-    dActor_c *player = cam->mTargetPlayer;
-    int lookAtY = cam->lookAt.y;
-    int playerY = player->mPosY;
-
-    cam->savedPos.x = 0;
-    cam->savedPos.y = lookAtY - playerY;
-    cam->savedPos.z = 0;
+    SetVec(cam->savedLookAt, 0, 0, 0);
+    SetVec(cam->savedPos, 0, cam->lookAt.y - cam->mTargetPlayer->mPosY, 0);
     cam->mScriptParam = 0;
     cam->mRampSpeed = 0;
 
@@ -3743,12 +3685,9 @@ int CutsceneGrandStarFlyStart(dCamera_c *cam) {
    savedLookAt toward data_02086ed8 and ease savedPos's y to 0 and its z to
    -0xc8000. Its member-function constant is data_02086cb0. */
 int CutsceneGrandStarFlyMoveToMario(dCamera_c *cam) {
-    int offset[3];
-    offset[0] = data_02086ed8[0];
-    offset[1] = data_02086ed8[1];
-    offset[2] = data_02086ed8[2];
+    Vector3 offset = *(Vector3 *)data_02086ed8;
 
-    func_02007cec(&cam->savedLookAt, (Vector3 *)offset, 0xcc);
+    func_02007cec(&cam->savedLookAt, &offset, 0xcc);
     ApproachLinear(cam->savedPos.y, 0, 0x2000);
     ApproachLinear(cam->savedPos.z, -0xc8000, 0x6aaa);
     return 1;
