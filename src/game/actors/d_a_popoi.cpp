@@ -168,9 +168,9 @@ int daPopoi_c::InitResources()
     mHomePos.y = mPosY;
     mHomePos.z = mPosZ;
     mAnmModel.speed = 0x1000;
-    mSavedPosX = mPosX;
-    mSavedPosY = mPosY;
-    mSavedPosZ = mPosZ;
+    mSavedPos.x = mPosX;
+    mSavedPos.y = mPosY;
+    mSavedPos.z = mPosZ;
     ChangeState(&data_ov077_02127ce8); /* start in Wander */
     return 1;
 }
@@ -228,13 +228,13 @@ int daPopoi_c::Behavior()
      * upward probe of 50 units (0x32000). */
     goingOffCliff = IsGoingOffCliff(mWithMeshClsn, 0x3c000, 0x2888, 0, 1, 0x32000);
     if (goingOffCliff != 0 || (slope < 0 ? (s16)-slope : slope) > 0x100) {
-        mPosX = mSavedPosX;
-        mPosY = mSavedPosY;
-        mPosZ = mSavedPosZ;
+        mPosX = mSavedPos.x;
+        mPosY = mSavedPos.y;
+        mPosZ = mSavedPos.z;
     }
-    mSavedPosX = mPosX;
-    mSavedPosY = mPosY;
-    mSavedPosZ = mPosZ;
+    mSavedPos.x = mPosX;
+    mSavedPos.y = mPosY;
+    mSavedPos.z = mPosZ;
     UpdateWMClsn(mWithMeshClsn, 2);
 
     mAngleY = mPrevAngleY;
@@ -364,9 +364,9 @@ int daPopoi_c::UpdateWanderState() {
     }
 
     if (mWithMeshClsn.IsOnWall() != 0) {
-        mPosX = mSavedPosX;
-        mPosY = mSavedPosY;
-        mPosZ = mSavedPosZ;
+        mPosX = mSavedPos.x;
+        mPosY = mSavedPos.y;
+        mPosZ = mSavedPos.z;
     }
 
     if (dist > 0x1f4000) {
@@ -495,9 +495,9 @@ int daPopoi_c::UpdateChaseState() {
     }
 
     if (mWithMeshClsn.IsOnWall() != 0) {
-        mPosX = mSavedPosX;
-        mPosY = mSavedPosY;
-        mPosZ = mSavedPosZ;
+        mPosX = mSavedPos.x;
+        mPosY = mSavedPos.y;
+        mPosZ = mSavedPos.z;
     }
 
     p = ClosestPlayer();
@@ -713,9 +713,9 @@ int daPopoi_c::IsBlockedAhead() {
         ray2.SetObjAndLine(start, end, this);
 
         if (ray1.DetectClsn() != 0 || ray2.DetectClsn() == 0) {
-            mPosX = mSavedPosX;
-            mPosY = mSavedPosY;
-            mPosZ = mSavedPosZ;
+            mPosX = mSavedPos.x;
+            mPosY = mSavedPos.y;
+            mPosZ = mSavedPos.z;
             mHorzSpeed = 0;
             return 1;
         }

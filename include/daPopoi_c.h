@@ -95,9 +95,7 @@ struct daPopoi_c : dEnemyBase_c {
        restores it when this frame's step would walk off a ledge or onto steep
        ground; the Wander/Chase handlers and the ahead probe restore it when
        the actor is against a wall (or the probe fires). */
-    s32                          mSavedPosX;            /* 0x410 */
-    s32                          mSavedPosY;            /* 0x414 */
-    s32                          mSavedPosZ;            /* 0x418 */
+    Vector3 mSavedPos;                                  /* 0x410 */
     s32                          unk_41c;               /* 0x41c -- only ever zeroed (Wander and Chase enter) */
     /* The heading mPrevAngleY is stepped toward (ApproachLinear); Behavior then
        copies mPrevAngleY into mAngleY. Wander enter picks a random multiple of
