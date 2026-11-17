@@ -984,7 +984,6 @@ struct dActor_c;
 struct dEnemyBase_c;
 void Banner_Draw(MgBanner *);
 extern void Bomroom_DrawScore();
-extern void CupFx_ElemDtor();
 extern void D3D_CaptureToMain(void);
 extern void D3D_CaptureToSub(void);
 extern int D3D_PlaySeAtX(int, int);
