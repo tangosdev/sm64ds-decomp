@@ -31,8 +31,8 @@
  *   BCA_File * SetAnim takes.
  * - data_0209caa0 / data_0209f32c are the arm9 level-state words that
  *   carry the "has water" flag and the water height; neither is named yet.
- * - Mtx43 / RawVector3_16 are POD views whose aggregate copies keep the
- *   ROM's ldm/stm / halfword-move shapes.
+ * - Mtx43 is a POD view whose aggregate copy keeps the ROM's ldm/stm
+ *   shape.
  * - func_0203b9b4, Vec3_Sub and Vec3_Asr have no shared header, so they
  *   keep a local extern "C" block.
  */
@@ -114,11 +114,6 @@ enum {
  * schedules differently. Copying through Mtx43 preserves the ROM's three
  * ldm/stm copies.
  */
-/* The same for the spawn rotation: C++'s memberwise Vector3_16 copy loads
- * each field sign-extended; the ROM moves three plain halfwords. */
-struct RawVector3_16 {
-    s16 words[3];
-};
 
 /* The animation file a handle has loaded. */
 static inline BCA_File *LoadedBCA(SharedFilePtr *ptr) {
@@ -200,7 +195,6 @@ s32 daFish_c::CleanupResources() {
    TU matches without it. */
 void daFish_c::StateWaitForPlayer() {
     Vector3 diff;
-    Vector3_16 rot;
     Vector3 pos;
     int n;
     int i;
@@ -222,13 +216,11 @@ void daFish_c::StateWaitForPlayer() {
         }
     }
 
-    {
-        n = this->param1 & 0xf;
-        *(RawVector3_16 *)&rot = *(RawVector3_16 *)&this->mPrevAngle.x;
-        this->mNumFish = 0;
-        if (n < 1)
-            n = 1;
-    }
+    n = this->param1 & 0xf;
+    Vector3_16 rot = this->mPrevAngle;
+    this->mNumFish = 0;
+    if (n < 1)
+        n = 1;
     if (this->mVariant != 0) {
         kind = (this->mVariant + 2) << 4;
     } else {
