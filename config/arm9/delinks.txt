@@ -2830,3 +2830,82 @@ src/typeinfo.cpp:
     complete
     .text start:0x0207359c end:0x020736f4
 
+src/data/arm9/data_0209b2e4.cpp:
+    complete
+    .bss start:0x0209b2e4 end:0x0209b468
+
+src/data/arm9/data_0209ba84.cpp:
+    complete
+    .bss start:0x0209ba84 end:0x0209d4b8
+
+src/data/arm9/data_0209d4d4.cpp:
+    complete
+    .bss start:0x0209d4d4 end:0x0209d528
+
+src/data/arm9/data_0209d5b8.cpp:
+    complete
+    .bss start:0x0209d5b8 end:0x0209d64c
+
+src/data/arm9/data_0209e64c.cpp:
+    complete
+    .bss start:0x0209e64c end:0x0209e650
+
+src/data/arm9/data_0209e660.cpp:
+    complete
+    .bss start:0x0209e660 end:0x0209f1d8
+
+src/data/arm9/sBootJobDone.cpp:
+    complete
+    .bss start:0x0209f1e8 end:0x0209f1ec
+
+src/data/arm9/gNextSceneParam.cpp:
+    complete
+    .bss start:0x0209f5b8 end:0x0209f5c4
+
+src/data/arm9/data_0209f5f8.cpp:
+    complete
+    .bss start:0x0209f5f8 end:0x0209f610
+
+src/data/arm9/data_0209f648.cpp:
+    complete
+    .bss start:0x0209f648 end:0x020a0c5c
+
+src/data/arm9/data_020a0c78.cpp:
+    complete
+    .bss start:0x020a0c78 end:0x020a0ce0
+
+src/data/arm9/PATH_DEFS.cpp:
+    complete
+    .bss start:0x020a0d84 end:0x020a0db8
+
+src/data/arm9/data_020a0dd8.cpp:
+    complete
+    .bss start:0x020a0dd8 end:0x020a0de8
+
+src/data/arm9/data_020a0df8.cpp:
+    complete
+    .bss start:0x020a0df8 end:0x020a0eb0
+
+src/data/arm9/data_020a0ef0.cpp:
+    complete
+    .bss start:0x020a0ef0 end:0x020a4b6c
+
+src/data/arm9/data_020a4bb8.cpp:
+    complete
+    .bss start:0x020a4bb8 end:0x020a7fc4
+
+src/data/arm9/arc_list.cpp:
+    complete
+    .bss start:0x020a8048 end:0x020a8058
+
+src/data/arm9/fsi_card_lock_id.cpp:
+    complete
+    .bss start:0x020a805c end:0x020a80c8
+
+src/data/arm9/PMi_IsInit.cpp:
+    complete
+    .bss start:0x020a8104 end:0x020a89a8
+
+src/data/arm9/data_020a94c0.cpp:
+    complete
+    .bss start:0x020a94c0 end:0x020aa420
