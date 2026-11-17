@@ -263,7 +263,8 @@ void daPicGate_c::BuildNormals() {
             VEC_CrossProduct(&ej, &ei, &n);
             n.z >>= 1;
             VEC_Normalize(&n, &n);
-            p->normal = (n.x >> 3 & 0x3ff) | ((n.y >> 3 & 0x3ff) << 10) | ((n.z >> 3 & 0x3ff) << 20);
+            p->normal =
+                (n.x >> 3 & 0x3ff) | ((n.y >> 3 & 0x3ff) << 10) | ((n.z >> 3 & 0x3ff) << 20);
             p += 1;
         }
     }
