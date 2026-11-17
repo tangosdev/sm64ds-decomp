@@ -35483,7 +35483,7 @@
     },
     "ov062:0x02116cd8": {
       "author": "tangosdev",
-      "name": "_Z22daHolhei_c_ChangeStateP10daHolhei_cP11HolheiState"
+      "name": "_ZN10daHolhei_c11ChangeStateEP11HolheiState"
     },
     "ov062:0x02116d28": {
       "author": "tangosdev",

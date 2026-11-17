@@ -4009,7 +4009,7 @@
     "src/game/actors/d_a_holhei.cpp#_ZN10daHolhei_c8BehaviorEv": "tangosdev",
     "src/game/actors/d_a_holhei.cpp#_ZN10daHolhei_cD0Ev": "tangosdev",
     "src/game/actors/d_a_holhei.cpp#_ZN10daHolhei_cD1Ev": "tangosdev",
-    "src/game/actors/d_a_holhei.cpp#daHolhei_c_ChangeState": "tangosdev",
+    "src/game/actors/d_a_holhei.cpp#_ZN10daHolhei_c11ChangeStateEP11HolheiState": "tangosdev",
     "src/game/actors/d_a_piano.cpp#_ZN9daPiano_c13InitResourcesEv": "tangosdev",
     "src/game/actors/d_a_piano.cpp#_ZN9daPiano_c16CleanupResourcesEv": "tangosdev",
     "src/game/actors/d_a_piano.cpp#_ZN9daPiano_c6RenderEv": "tangosdev",

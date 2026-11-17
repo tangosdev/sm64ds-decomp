@@ -22,9 +22,8 @@
  * - BuildHoldMatrix hands &mHoldMtx out through this object's
  *   mCarryMatrix; a grabbed actor's mCarryMatrix gates the hold path.
  *
- * Naming: helpers keep func_ov062_* names; daHolhei_c_ChangeState is
- * coined. The state handlers are members; the remaining extern "C"
- * helpers take the actor as daHolhei_c *self.
+ * Naming: helpers keep func_ov062_* names; ChangeState is coined. The
+ * state handlers and ChangeState are members.
  */
 
 #include "common.h"
@@ -41,7 +40,7 @@
 #include "LevelRng.h"
 #include "math/MtxStack.h"
 
-/* A state record: daHolhei_c_ChangeState stores its address in mState
+/* A state record: ChangeState stores its address in mState
    and calls a non-null enter; past the UpdateKillByInvincibleChar check,
    Behavior calls a non-null update. Every handler returns 1. */
 typedef int (daHolhei_c::*HolheiStateFn)();
@@ -51,7 +50,6 @@ struct HolheiState {
 };
 
 extern void func_02012694(unsigned int a, const Vector3 *p);
-int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
 extern "C" int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern "C" void func_ov002_020db54c(void *self, int a, int b, short c);
 extern int data_02092138;
@@ -178,7 +176,7 @@ int daHolhei_c::InitResources()
     mPrevPosX = mPosX;
     mPrevPosY = mPosY;
     mPrevPosZ = mPosZ;
-    ::daHolhei_c_ChangeState(this, &data_ov062_0211dee0);
+    ChangeState(&data_ov062_0211dee0);
     return 1;
 }
 
@@ -327,12 +325,12 @@ void daHolhei_c::UpdateHeldShadow() {
 
 /* Coined name. Switches to state p and runs its enter function, if any;
    Behavior runs the record's update from then on. */
-int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p) {
-    self->mState = p;
-    HolheiState *q = self->mState;
+int daHolhei_c::ChangeState(HolheiState *p) {
+    mState = p;
+    HolheiState *q = mState;
     if (q->enter == 0)
         return 1;
-    return (self->*q->enter)();
+    return (this->*q->enter)();
 }
 
 /* Face home, on the walk animation, and wait before turning. */
@@ -351,7 +349,7 @@ int daHolhei_c::func_ov062_02116bf8() {
     if (mTurnWait == 0) {
         ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
         if (AngleDiff(mTargetAngY, mAngleY) < 0x100)
-            ::daHolhei_c_ChangeState(this, &data_ov062_0211dee0);
+            ChangeState(&data_ov062_0211dee0);
     }
     return 1;
 }
@@ -380,9 +378,9 @@ int daHolhei_c::func_ov062_02116a08() {
     r = ClassifyObstruction();
     if (r != 0 || mEdgeStop == 1) {
         if (r != 2)
-            ::daHolhei_c_ChangeState(this, &data_ov062_0211df00);
+            ChangeState(&data_ov062_0211df00);
         else
-            ::daHolhei_c_ChangeState(this, &data_ov062_0211de70);
+            ChangeState(&data_ov062_0211de70);
         return 1;
     }
 
@@ -399,13 +397,13 @@ int daHolhei_c::func_ov062_02116a08() {
 
         if (Vec3_Dist(&mHomePos, &plPos) < 0x3e8000) {
             mHorzSpeed = 0;
-            ::daHolhei_c_ChangeState(this, &data_ov062_0211de90);
+            ChangeState(&data_ov062_0211de90);
         }
         return 1;
     }
 
     if (mStateTimer == 0)
-        ::daHolhei_c_ChangeState(this, &data_ov062_0211dee0);
+        ChangeState(&data_ov062_0211dee0);
 
     return 1;
 }
@@ -433,7 +431,7 @@ int daHolhei_c::func_ov062_02116894() {
             mTargetAngY = (s16)(mPrevAngleY - 0x2000);
         } else {
             mPrevAngleY = mTargetAngY;
-            ::daHolhei_c_ChangeState(this, &data_ov062_0211dee0);
+            ChangeState(&data_ov062_0211dee0);
             mChaseCooldown = 30;
             mTargetAngY = mPrevAngleY;
             return 1;
@@ -464,7 +462,7 @@ int daHolhei_c::func_ov062_021167c0() {
         mStateTimer = 20;
     if (mStateTimer == 0) {
         mChaseCooldown = 30;
-        ::daHolhei_c_ChangeState(this, &data_ov062_0211dee0);
+        ChangeState(&data_ov062_0211dee0);
     }
     return 1;
 }
@@ -488,9 +486,9 @@ int daHolhei_c::func_ov062_021165e8()
     r = ClassifyObstruction();
     if (r != 0 || mEdgeStop == 1) {
         if (r != 2)
-            ::daHolhei_c_ChangeState(this, &data_ov062_0211df00);
+            ChangeState(&data_ov062_0211df00);
         else
-            ::daHolhei_c_ChangeState(this, &data_ov062_0211de70);
+            ChangeState(&data_ov062_0211de70);
         return 1;
     }
 
@@ -524,7 +522,7 @@ int daHolhei_c::func_ov062_021165e8()
                     mChargeStep = 2;
             } else {
                 if (Vec3_Dist(&mPos, &mChasePos) > 0xc8000)
-                    ::daHolhei_c_ChangeState(this, &data_ov062_0211ded0);
+                    ChangeState(&data_ov062_0211ded0);
             }
         }
     }
@@ -547,7 +545,7 @@ int daHolhei_c::func_ov062_021164e8()
         dActor_c *held = mHeld;
         mPrevAngleY = held->mAngleY;
         mdCc_c.flags |= 2;
-        ::daHolhei_c_ChangeState(this, &data_ov062_0211dec0);
+        ChangeState(&data_ov062_0211dec0);
         if (mHeld->param1 == 2) {
             mVertSpeed = 0x50000;
             mHorzSpeed = 0x14000;
@@ -602,7 +600,7 @@ int daHolhei_c::func_ov062_02116368() {
 int daHolhei_c::func_ov062_0211632c() {
     if (mModel.Finished()) {
         mChargeStep = 0;
-        ::daHolhei_c_ChangeState(this, &data_ov062_0211de80);
+        ChangeState(&data_ov062_0211de80);
     }
     return 1;
 }
@@ -620,7 +618,7 @@ int daHolhei_c::func_ov062_021162b8() {
 int daHolhei_c::func_ov062_02116274() {
     mPrevAngleY += 0x500;
     if (mStateTimer == 0)
-        ::daHolhei_c_ChangeState(this, &data_ov062_0211deb0);
+        ChangeState(&data_ov062_0211deb0);
     return 1;
 }
 
@@ -639,7 +637,7 @@ int daHolhei_c::func_ov062_021161a8() {
     }
     if (mModel.Finished()) {
         mdCc_c.flags &= ~2;
-        ::daHolhei_c_ChangeState(this, &data_ov062_0211ded0);
+        ChangeState(&data_ov062_0211ded0);
     }
     return 1;
 }
@@ -687,14 +685,14 @@ void daHolhei_c::HandleCylinderHit() {
         mHeld = player;
         mdCc_c.flags |= 2;
         mHorzSpeed = 0;
-        ::daHolhei_c_ChangeState(this, &data_ov062_0211dea0);
+        ChangeState(&data_ov062_0211dea0);
         return;
     }
     if (func_ov002_020db5f4(player, this) == 0)
         return;
     mHeld = player;
     mHorzSpeed = 0;
-    ::daHolhei_c_ChangeState(this, &data_ov062_0211def0);
+    ChangeState(&data_ov062_0211def0);
 }
 
 /* 1 on a wall, 2 on a slope steeper than 0x1000, else 0. */
