@@ -67,14 +67,14 @@ void daObj_Mip_Key_c::FinishConversation() {
 int daObj_Mip_Key_c::StateCarried() {
     daPly_c *other = mPlayer;
     unsigned char mode;
-    int *playerPos;
+    Vector3 *playerPos;
 
     if (other == 0)
         return 1;
 
-    playerPos = (&other->mPosX);
+    playerPos = (&other->mPos);
     Vector3 v;
-    v = *(Vector3 *)playerPos;
+    v = *playerPos;
     v.y += 0xc8000;
     ApproachLinear(mPosY, v.y, 0xa000);
 
