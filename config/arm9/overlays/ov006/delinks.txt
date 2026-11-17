@@ -92,6 +92,7 @@ src/minigames/d_s_mg_curling.cpp:
     .text start:0x020e0638 end:0x020e3854
     .init start:0x021304ac end:0x02130758
     .ctor start:0x02133590 end:0x02133594
+    .data start:0x0213c1e4 end:0x0213c2c4
     .bss start:0x021418b0 end:0x02141978
 
 src/minigames/d_s_mg_curling2.cpp:
@@ -191,6 +192,7 @@ src/minigames/d_s_mg_pachinko.cpp:
     .text start:0x020fa75c end:0x020ff420
     .init start:0x02131a38 end:0x02131cd0
     .ctor start:0x021335c0 end:0x021335c4
+    .data start:0x0213d878 end:0x0213d948
     .bss start:0x02142604 end:0x021426cc
 
 src/minigames/d_s_mg_pachinko2.cpp:

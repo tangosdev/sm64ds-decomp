@@ -31,8 +31,8 @@
  *   pairs, so the owner cannot be the polymorphic leaf.
  * Leftover: func_ov002_020f9468/020f93a8 keep their linker names; the
  *   cartridge spells no member for them and both are table entries.
- * Leftover: #pragma opt_loop_invariants off is load-bearing for the
- *   FindWithActorID loop (file-global; dropping it un-matches
+ * Leftover: the file-level #pragma opt_loop_invariants off is
+ *   load-bearing for the FindWithActorID loop (dropping it un-matches
  *   InitResources).
  * Leftover: g_profile_SOUND_OBJ is ov002 gap data outside this TU
  *   (S14), as is the sound table. The callback table is this file's.
@@ -44,6 +44,14 @@
  */
 
 #include "daSoundObj_c.h"
+
+/* opt_loop_invariants is set once, for the whole file. The one loop in
+   the file is InitResources' FindWithActorID walk, whose 0x167 and
+   PlaySub constants the ROM loads inside the loop. With loop-invariant
+   motion on they are hoisted into callee-saved registers: 0x15c, not
+   0x14c. Re-measured (#821 r17): the loop as a goto back-edge is also
+   0x15c. */
+#pragma opt_loop_invariants off
 
 /* One row of the 0xc-stride sound table: the four members InitResources
  * loads, in table order. */
@@ -109,13 +117,6 @@ daSoundObj_c *daSoundObj_c_classInit() {
     return new daSoundObj_c();
 }
 
-/* opt_loop_invariants is file-global last-wins: this off covers the
-   FindWithActorID loop below (dropping it un-matches InitResources),
-   and no other member has a loop. Without it the loop's constant
-   arguments are hoisted: 0x15c, not 0x14c. Re-measured (#821 r17): the
-   loop as a goto back-edge is also 0x15c, the ROM's in-loop literal load
-   of 0x167 still hoisted. */
-#pragma opt_loop_invariants off
 int daSoundObj_c::InitResources()
 {
     dActor_c *actor;
