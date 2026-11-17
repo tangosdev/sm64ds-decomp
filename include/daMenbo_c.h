@@ -46,9 +46,7 @@ struct daMenbo_c : dEnemyBase_c {
        copy mPos here. Patrol (02131648) and 021314a0 aim back at it through
        Vec3_HorzAngle, and patrol turns around past 0x3c0000 from it. Was
        unk_374/378/37c. */
-    s32 mAnchorPosX; /* 0x374 */
-    s32 mAnchorPosY; /* 0x378 */
-    s32 mAnchorPosZ; /* 0x37c */
+    Vector3 mAnchorPos; /* 0x374 */
     /* The four ripple particles func_ov090_02130f94 re-feeds every frame,
        one per leg bone, through Particle::System::New. Was pad_380. */
     u32 mRippleParticles[4]; /* 0x380 */
