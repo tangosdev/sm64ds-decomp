@@ -1324,6 +1324,13 @@
       "canonical_module": "ov077",
       "canonical_address": "0x0212786c",
       "reason": "InitResources naturally emits the complete class vtable; romdata_check applies the measured eight-byte public address-point bias. Text-only: deadstripped, data: []. The symbols.txt address point 0x0212786c is unchanged."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "daJgm_c::UpdateModels keeps the throw offset and the shifted throw position in Vector3 locals, and types.h gives Vector3 an inline destructor, so the compiler emits its own copy of the four-byte bx lr body. The ROM homes it in arm9; this copy is a duplicate and is discarded by text-only isolation."
     }
   ],
   "production_mode": "intact-object",

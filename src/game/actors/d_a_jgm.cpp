@@ -479,10 +479,8 @@ void daJgm_c::UpdateModels()
     if (t > 0x3a)
         return;
 
-    struct { int t[3]; int v[3]; } lv;
-    lv.t[0] = -0x2000;
-    lv.t[1] = 0x1800;
-    lv.t[2] = 0x1000;
+    Vector3 offset(-0x2000, 0x1800, 0x1000);
+    Vector3 pos;
 
     data_020a0e68 = mAnmModel.mat4x3;
     MTX_Concat43(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
@@ -492,11 +490,11 @@ void daJgm_c::UpdateModels()
     mThrowPosZ = data_020a0e68.m[11];
 
     Vec3_LslInPlace(&mThrowPosX, 3);
-    Vec3_Asr(lv.v, &mThrowPosX, 3);
+    Vec3_Asr(&pos, &mThrowPosX, 3);
 
-    Matrix4x3_FromTranslation(&data_020a0e68, lv.v[0], lv.v[1], lv.v[2]);
+    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, lv.t[0], lv.t[1], lv.t[2]);
+    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, offset.x, offset.y, offset.z);
 
     mModel.mat4x3 = data_020a0e68;
 }

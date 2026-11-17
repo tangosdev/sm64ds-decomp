@@ -793,8 +793,6 @@ extern "C" void func_ov002_020bcdf0(daPly_c *player) {
     int id;
     dExtFrameCtrl_c *anim;
     unsigned int frame;
-    struct { int x, y, z; } vv[2];
-    int x0, y0, z0;
 
     if (player->mAnimScriptId == 0)
         return;
@@ -819,13 +817,8 @@ extern "C" void func_ov002_020bcdf0(daPly_c *player) {
             id = player->GetBodyModelID(player->param1 & 0xff, 0);
             anim = &static_cast<dExtFrameCtrl_c &>(*player->mModels.mBodyModels[id]);
             if (anim->WillHitFrame(0x45)) {
-                x0 = player->mPosX;
-                y0 = player->mPosY + 0x50000;
-                z0 = player->mPosZ;
-                vv[0].x = x0;
-                vv[0].y = y0;
-                vv[0].z = z0;
-                Particle::System::NewSimple(0x37, vv[0].x, vv[0].y, vv[0].z);
+                Vector3 ptclPos(player->mPosX, player->mPosY + 0x50000, player->mPosZ);
+                Particle::System::NewSimple(0x37, ptclPos.x, ptclPos.y, ptclPos.z);
 
                 Sound::PlayCharVoice(player->mCharacter, 0x33, player->mCamSpacePos);
             }
@@ -842,15 +835,10 @@ extern "C" void func_ov002_020bcdf0(daPly_c *player) {
                 goto particle;
         }
         if (cur.w[0] == 0xbc) {
-particle:
-            z0 = player->mPosZ;
-            y0 = player->mPosY + 0x4b000;
-            x0 = player->mPosX;
-            vv[1].x = x0;
-            vv[1].y = y0;
-            vv[1].z = z0;
-            player->mParticle1 = Particle::System::New(player->mParticle1, 0x36, *(int *)&vv[1].x,
-                                                       vv[1].y, vv[1].z, 0, 0);
+        particle:
+            Vector3 ptclPos(player->mPosX, player->mPosY + 0x4b000, player->mPosZ);
+            player->mParticle1 = Particle::System::New(player->mParticle1, 0x36, ptclPos.x,
+                                                       ptclPos.y, ptclPos.z, 0, 0);
         }
     }
 
