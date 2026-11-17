@@ -2302,7 +2302,7 @@ static inline u32 NewDust(u32 handle, u32 id, const Vector3 &pos) {
  * nonzero slots have particles 0x13a and 0x13b (re)issued. The counter then goes
  * up by one, and past 0x26 the slots are cleared and it returns to 0. After that
  * the body refreshes its matrices and collision and returns. A hand also sets
- * mRestPos.y to mSpawnPosY + 0x8000 (8.0), runs UpdatePos(0), moves its hit cylinder
+ * mRestPos.y to mSpawnPos.y + 0x8000 (8.0), runs UpdatePos(0), moves its hit cylinder
  * (mdCcAcPos_c) to its position plus data_ov066_0211ad18, refreshes matrices and
  * collision, clears its hit results, re-registers it (Update links it into the
  * collision list) and advances both animations. */
@@ -2389,7 +2389,7 @@ int daIwante_c::Behavior() {
     }
 
     {
-        mRestPos.y = mSpawnPosY + 0x8000;
+        mRestPos.y = mSpawnPos.y + 0x8000;
         UpdatePos(0);
         mdCcAcPos_c.pos.x = mPosX;
         mdCcAcPos_c.pos.y = mPosY;
@@ -2533,9 +2533,9 @@ int daIwante_c::InitResources() {
         mRestPos.x = mPosX;
         mRestPos.y = mPosY;
         mRestPos.z = mPosZ;
-        mSpawnPosX = mPosX;
-        mSpawnPosY = mPosY;
-        mSpawnPosZ = mPosZ;
+        mSpawnPos.x = mPosX;
+        mSpawnPos.y = mPosY;
+        mSpawnPos.z = mPosZ;
         if (mPartIdx == PART_HAND_1) {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
                                    mAngleY, data_ov025_02112c08);
