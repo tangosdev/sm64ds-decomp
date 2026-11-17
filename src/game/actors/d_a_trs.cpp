@@ -275,7 +275,7 @@ void daTrs_c::func_ov063_021162c8() {
         v.x = this->mCapPosX;
         v.y = this->mCapPosY;
         v.z = this->mCapPosZ;
-        (this)->ReleaseCap(v);
+        ReleaseCap(v);
         if (this->mBooFlags.carrying) {
             unsigned int flags = 2;
             if (this->mCarriedID == TRS_ID_RED_COIN) flags |= 0x10;
@@ -362,19 +362,18 @@ void daTrs_c::func_ov063_0211640c() {
 
 void daTrs_c::func_ov063_021166ac() {
 
-    daTrs_c *t = this;
     Vector3_16 rot;
     Vector3 t1;
     Vector3 t2;
     Vector3 pos;
 
-    if (t->mVariant == 0xf) {
+    if (mVariant == 0xf) {
         func_ov063_0211640c();
         return;
     }
-    if (!t->mBooFlags.visible)
+    if (!mBooFlags.visible)
         return;
-    if (t->mBooFlags.carrying) {
+    if (mBooFlags.carrying) {
         if (this->mCarriedID != TRS_ID_T_BASKET) {
             s16 *ap = &this->mCarriedAngleY;
             *ap += 0xc00;
@@ -385,8 +384,7 @@ void daTrs_c::func_ov063_021166ac() {
         this->mCarriedModel.mat4x3.m[11] = this->mCarriedPosZ >> 3;
     }
 
-    if (t->mState == 3 || t->mState == 3 ||
-        t->mState == 3 || t->mState == 3) {
+    if (mState == 3 || mState == 3 || mState == 3 || mState == 3) {
         Vec3_Asr(&t1, &this->mPos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, t1.x, t1.y, t1.z);
         this->mAnmModel.mat4x3 = data_020a0e68;
@@ -2511,10 +2509,8 @@ void daTrs_c::SetMoveYawForDuringHit(int cond) {
 
 int daTrs_c::VanishOrAppear() {
 
-    dActor_c *a = this;
-    int r6 = a->GetSubtraction(this->mAngleToPlayer, this->mPrevAngleY);
-    int r0 = a->GetSubtraction(this->mPrevAngleY,
-                               this->mClosestPlayer->mAngleY);
+    int r6 = GetSubtraction(this->mAngleToPlayer, this->mPrevAngleY);
+    int r0 = GetSubtraction(this->mPrevAngleY, this->mClosestPlayer->mAngleY);
     int ret = 0;
     this->mVertSpeed = 0;
     if (r6 > 0x1568 || r0 < 0x6b58) {
