@@ -1260,7 +1260,6 @@ void dScMgLuigi_c::PlaceNextPicture() {
 
     attempts = 0;
     while (1) {
-        u8 *cell;
         if (attempts >= 100) {
             col++;
             if (col >= 12) {
@@ -1273,8 +1272,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
             col = LUIGI_RAND(13);
             row = LUIGI_RAND(9);
         }
-        cell = ((dScMgLuigi_c *)((char *)this + col * 9 + row))->mGrid[0];
-        if (*cell == 0) {
+        if (mGrid[col][row] == 0) {
             int jitterX;
             int jitterY;
             jitterY = -2;
@@ -1283,7 +1281,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
             jitterY += LUIGI_RAND(5);
             mPosX[pictureIndex] = (col * 20 + (jitterX + 8)) << 12;
             mPosY[pictureIndex] = (row * 20 + (jitterY + 16)) << 12;
-            *cell = 1;
+            mGrid[col][row] = 1;
             break;
         }
         attempts++;
