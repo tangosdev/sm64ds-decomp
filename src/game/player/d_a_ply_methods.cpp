@@ -12282,7 +12282,8 @@ void daPly_c::PlayLandingEffects() {
 }
 
 /* Step the ground speed toward targetSpeed, then let the slope pull on it
- * while the player is moving or standing on one. Returns 1 when it did. */
+ * while targetSpeed is nonzero or FloorIsSlippery has flagged the floor
+ * (state flag bit 0). Returns 1 when the slope was applied. */
 int daPly_c::UpdateGroundSpeed(int targetSpeed, int accel) {
     ApproachLinear(mHorzSpeed, targetSpeed, accel);
     if (targetSpeed != 0 || (unsigned short)(mStateFlags & 1)) {
