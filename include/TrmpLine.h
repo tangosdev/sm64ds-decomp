@@ -59,7 +59,7 @@ struct TrmpLine {
         fx32 x, y, z;
     };
 
-    StateFn mState;         /* 0x000 -- the current state */
+    void (TrmpLine::*mState)(); /* 0x000 -- the current state */
     Vector3 mCenter;        /* 0x008 -- midpoint of the drawn stroke */
     Vector3 mNormal;        /* 0x014 -- copied into a jumper's mContactNormal */
     Vector3 mAxis;          /* 0x020 -- unit vector along the stroke */
