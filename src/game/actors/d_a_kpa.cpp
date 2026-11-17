@@ -815,25 +815,25 @@ skip_angles:
     this->mAnmModel.mat4x3 = data_020a0e68;
     this->mAnmModel.ApplyOpacity((unsigned char)((int)this->mOpacity >> 3), 1);
     saved = data_020a0e68;
-    this->mFootPosBX = 0;
-    this->mFootPosBY = 0;
-    this->mFootPosBZ = 0;
+    this->mFootPosB.x = 0;
+    this->mFootPosB.y = 0;
+    this->mFootPosB.z = 0;
     MTX_Concat43(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
-    this->mFootPosBX = data_020a0e68.m[9];
-    this->mFootPosBY = data_020a0e68.m[10];
-    this->mFootPosBZ = data_020a0e68.m[11];
-    Vec3_LslInPlace(&this->mFootPosBX, 3);
-    this->mFootPosBY = this->mPosY;
-    this->mFootPosAX = 0;
-    this->mFootPosAY = 0;
-    this->mFootPosAZ = 0;
+    this->mFootPosB.x = data_020a0e68.m[9];
+    this->mFootPosB.y = data_020a0e68.m[10];
+    this->mFootPosB.z = data_020a0e68.m[11];
+    Vec3_LslInPlace(&this->mFootPosB, 3);
+    this->mFootPosB.y = this->mPos.y;
+    this->mFootPosA.x = 0;
+    this->mFootPosA.y = 0;
+    this->mFootPosA.z = 0;
     data_020a0e68 = saved;
     MTX_Concat43(&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-    this->mFootPosAX = data_020a0e68.m[9];
-    this->mFootPosAY = data_020a0e68.m[10];
-    this->mFootPosAZ = data_020a0e68.m[11];
-    Vec3_LslInPlace(&this->mFootPosAX, 3);
-    this->mFootPosAY = this->mPosY;
+    this->mFootPosA.x = data_020a0e68.m[9];
+    this->mFootPosA.y = data_020a0e68.m[10];
+    this->mFootPosA.z = data_020a0e68.m[11];
+    Vec3_LslInPlace(&this->mFootPosA, 3);
+    this->mFootPosA.y = this->mPos.y;
     if (this->mDropsShadow == 0)
         return;
     {
@@ -3021,16 +3021,10 @@ void daKpa_c::UpdateFootfalls() {
         return;
 
     if (foot == 1) {
-        Vector3 dust;
-        dust.x = this->mFootPosAX;
-        dust.y = this->mFootPosAY;
-        dust.z = this->mFootPosAZ;
+        Vector3 dust = this->mFootPosA;
         this->HugeLandingDustAt(dust, 0);
     } else {
-        Vector3 dust;
-        dust.x = this->mFootPosBX;
-        dust.y = this->mFootPosBY;
-        dust.z = this->mFootPosBZ;
+        Vector3 dust = this->mFootPosB;
         this->HugeLandingDustAt(dust, 0);
     }
     Sound::Play(3, BOWSER_SND_FOOTFALL, this->mCamSpacePos);

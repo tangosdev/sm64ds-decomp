@@ -81,12 +81,8 @@ struct daKpa_c : dActor_c {
     /* Two world-space points taken from bone matrices 3 and 6 of his skeleton
        (offsets +0x90 and +0x120 of the bone array), with Y replaced by his own
        Y. Landing dust is spawned at one or the other. */
-    s32 mFootPosAX;           /* 0x3d4 */
-    s32 mFootPosAY;           /* 0x3d8 */
-    s32 mFootPosAZ;           /* 0x3dc */
-    s32 mFootPosBX;           /* 0x3e0 */
-    s32 mFootPosBY;           /* 0x3e4 */
-    s32 mFootPosBZ;           /* 0x3e8 */
+    Vector3 mFootPosA;            /* 0x3d4 */
+    Vector3 mFootPosB;            /* 0x3e0 */
     s32 mDistToTarget;            /* 0x3ec -- horizontal distance to mTargetPlayer, 0x7fffffff if none */
     /* Copy of a halfword at +0x69c of the daPly_c holding the tail, refreshed every
        frame while held; its magnitude sets his tilt and, on release, his launch
