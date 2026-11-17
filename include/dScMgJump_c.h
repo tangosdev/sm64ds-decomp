@@ -96,8 +96,7 @@ struct dScMgJump_c : dScMgD3DBase_c {
     /* 0x5004 is the current state: State_Final and the other state
        functions assign the next one into it, and that write plus the s16 at
        0x5014 are what bound dScMgD3DBase_c at 0x5004 from above. */
-    typedef void (dScMgJump_c::*StatePmf)();
-    StatePmf mState;              /* 0x5004 -- current state */
+    void (dScMgJump_c::*mState)(); /* 0x5004 -- current state */
     s32 mAccum;                   /* 0x500c -- gains mAccumStep >> 12 a tick */
     s32 mAccumStep;               /* 0x5010 -- fx32 */
     s16 mStateTimer;              /* 0x5014 -- countdown to the state change */
