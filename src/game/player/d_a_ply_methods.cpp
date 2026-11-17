@@ -6634,14 +6634,15 @@ void daPly_c::func_ov002_020c7ff8() {
 }
 
 int daPly_c::St_NoControl_Cleanup() {
-  int v=0x1000;
-  if(mIsMega) v=0x3000;
-  mScale.x=v;
-  mScale.y=v;
-  mScale.z=v;
-  if (mNoCtrlKind == 0x11)
-      KuppaScript::End();
-  return 1;
+    int v = 0x1000;
+    if (mIsMega)
+        v = 0x3000;
+    mScale.x = v;
+    mScale.y = v;
+    mScale.z = v;
+    if (mNoCtrlKind == 0x11)
+        KuppaScript::End();
+    return 1;
 }
 
 int daPly_c::St_NoControl_Main() {
@@ -7021,22 +7022,22 @@ int daPly_c::func_ov002_020c8d14() {
 }
 
 int daPly_c::func_ov002_020c8f0c() {
-  int *p0 = &this->mScale.x;
-  int *p1 = &this->mScale.y;
-  int *p2 = &this->mScale.z;
-  *p0 -= 0x80;
-  *p1 -= 0x80;
-  *p2 -= 0x80;
-  if (this->mScale.x < 0) {
-    this->mScale.x = 0;
-    this->mScale.y = 0;
-    this->mScale.z = 0;
-  }
-  if (mIsAirborne == 0) {
-    EnterBigBoosHaunt();
-    mStateStep = 6;
-  }
-  return 0;
+    int *p0 = &this->mScale.x;
+    int *p1 = &this->mScale.y;
+    int *p2 = &this->mScale.z;
+    *p0 -= 0x80;
+    *p1 -= 0x80;
+    *p2 -= 0x80;
+    if (this->mScale.x < 0) {
+        this->mScale.x = 0;
+        this->mScale.y = 0;
+        this->mScale.z = 0;
+    }
+    if (mIsAirborne == 0) {
+        EnterBigBoosHaunt();
+        mStateStep = 6;
+    }
+    return 0;
 }
 
 int daPly_c::func_ov002_020c8f80() {

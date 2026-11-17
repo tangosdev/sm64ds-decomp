@@ -46,8 +46,8 @@ struct daObjYajirusi_c {
     s32 mPosY;                         /* 0x060 */
     s32 mPosZ;                         /* 0x064 */
     u8  pad_068[0xc];
-    Vector3 mCamSpacePos;              /* 0x074 */
-    u8  pad_080[0xe];
+    Vector3 mCamSpacePos; /* 0x074 */
+    u8 pad_080[0xe];
     s16 mAngleY;                       /* 0x08e */
     u8  pad_090[0x44];
     dExtSimpleModel_c mModel;          /* 0x0d4 */

@@ -206,7 +206,7 @@ int daRNk_c::InitResources()
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     SET_ANIM(this, ANIM_IDLE, kAnimLoop);
-    mScale.x = 0x14cc;   /* 0x14cc / 0x1000 = ~1.3 (1.2998) */
+    mScale.x = 0x14cc; /* 0x14cc / 0x1000 = ~1.3 (1.2998) */
     mScale.y = 0x14cc;
     mScale.z = 0x14cc;
     /* Body cylinder: radius 120 units, height 300 units. */

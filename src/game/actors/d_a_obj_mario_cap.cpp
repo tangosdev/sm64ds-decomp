@@ -340,7 +340,7 @@ int daObjMarioCap_c::InitResources()
 
     mShadowModel.InitCylinder();
 
-    mScale.x = 0x1000;           /* 1.0 */
+    mScale.x = 0x1000; /* 1.0 */
     mScale.y = 0x1000;
     mScale.z = 0x1000;
 
@@ -566,8 +566,10 @@ int daObjMarioCap_c::Behavior()
 int daObjMarioCap_c::Render()
 {
     int b = (mFlags & 0x40000) ? 1 : 0;
-    if (b) return 1;
-    if (mDormant == 1 || mScale.x < 0x100) return 1;
+    if (b)
+        return 1;
+    if (mDormant == 1 || mScale.x < 0x100)
+        return 1;
 
     int t = mType;
     if (t == 4 || t == 17 || t == 5 || t == 18 || t == 16 || t == 11 || (unsigned)(t - 6) <= 3) {

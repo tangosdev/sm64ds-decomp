@@ -88,9 +88,9 @@ struct dActor_c : dBase_c {
         };
         Vector3 mPos; /* 0x05c */
     };
-    Vector3 mPrevPos;       /* 0x068 -- last frame's position, snapshotted by BeforeBehavior */
-    Vector3 mCamSpacePos;   /* 0x074 */
-    Vector3 mScale;         /* 0x080 */
+    Vector3 mPrevPos;     /* 0x068 -- last frame's position, snapshotted by BeforeBehavior */
+    Vector3 mCamSpacePos; /* 0x074 */
+    Vector3 mScale;       /* 0x080 */
     union {
         struct {
             s16 mAngleX, mAngleY, mAngleZ;
@@ -295,7 +295,7 @@ struct dActor_c : dBase_c {
     void TriplePoofDustAt(const Vector3 &pos); /* particles 0x124..0x126 */
     void LandingDust(bool doRaycast);
     void HugeLandingDust(bool doRaycast);
-    void HugeLandingDustAt(Vector3 &pos, bool doRaycast);     /* particle 0xb2 */
+    void HugeLandingDustAt(Vector3 &pos, bool doRaycast);  /* particle 0xb2 */
     void LandingDustAt(Vector3 &pos, bool doRaycast);      /* particle 0xb1 */
     /* The boss landing-dust worker and its no-argument wrapper. */
     void *func_0200fa04(Vector3 *, int);
@@ -405,9 +405,9 @@ struct dActor_c {
         };
         Vector3 mPos; /* 0x05c */
     };
-    Vector3 mPrevPos;       /* 0x068 */
-    Vector3 mCamSpacePos;   /* 0x074 */
-    Vector3 mScale;         /* 0x080 */
+    Vector3 mPrevPos;     /* 0x068 */
+    Vector3 mCamSpacePos; /* 0x074 */
+    Vector3 mScale;       /* 0x080 */
     union {
         struct {
             s16 mAngleX, mAngleY, mAngleZ;
