@@ -366,6 +366,12 @@ void dScMgTrampoline2_c::StateIntro() {
 
     {
         int t = FX_Div(counter << 12, 0x5a000);
+        /* Kept volatile: the ROM spills the previous point to the stack
+           across the random draw, as in dScMgTrampoline_c::StateIntro.
+           Measured 2026-11-16 (#821 r22): plain s16 locals shrink it
+           to 0x198 of 0x1a0; a whole-struct copy `Vec2s prev = mTouch`
+           keeps the stack slot but loads it with ldrh, not ldrsh
+           (10/104). */
         volatile s16 old9c = mTouch.x;
         volatile s16 old9e = mTouch.y;
         int mixRaw = sTrmp2IntroToX * t + sTrmp2IntroFromX * (0x1000 - t);
