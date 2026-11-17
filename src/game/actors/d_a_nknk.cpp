@@ -798,10 +798,8 @@ void daNknk_c::func_ov062_02117c98()
         }
     } else {
         daPly_c *player = (daPly_c *)found;
-        struct {
-            VecFx32 sv;
-            VecFx32 hv;
-        } L;
+        Vector3 plPos; /* copied below and never read; the copy is in the ROM */
+        Vector3 hurtFrom;
         int isPlayer;
         isPlayer = (player->actorID == 0xbf /* PLAYER */) ? 1 : turnAround;
         if (isPlayer == 0)
@@ -816,10 +814,8 @@ void daNknk_c::func_ov062_02117c98()
             return;
         }
         {
-            s32 *s = &player->mPosX;
-            L.sv.x = s[0];
-            L.sv.y = s[1];
-            L.sv.z = s[2];
+            Vector3 *s = &player->mPos;
+            plPos = *s;
         }
         if (player->IsOnShell()) {
             mDeathState = 5;
@@ -848,13 +844,11 @@ void daNknk_c::func_ov062_02117c98()
             goto tail;
         {
             s32 pw;
-            L.hv.x = mPosX;
-            L.hv.y = mPosY;
-            L.hv.z = mPosZ;
+            hurtFrom = mPos;
             pw = mHorzSpeed;
             if (pw < 0xf000)
                 pw = 0xf000;
-            player->Hurt(*(Vector3 *)&L.hv, 0, pw, 1, 0, 1);
+            player->Hurt(hurtFrom, 0, pw, 1, 0, 1);
             BounceOffHurtPlayer();
             if (mKoopaVariant == 2) {
                 PoofDust();
