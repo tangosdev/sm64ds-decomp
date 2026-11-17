@@ -439,7 +439,7 @@
       "ordinal": 55
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020bf2d8Ei",
+      "symbol": "_ZN7daPly_c24SetVertSpeedByCharFactorEi",
       "address": "0x020bf2d8",
       "size": "0x00000034",
       "legacy_source": "src/func_ov002_020bf2d8.c",
@@ -488,7 +488,7 @@
       "ordinal": 62
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020bf56cEi",
+      "symbol": "_ZN7daPly_c13GetSlopeDecelEi",
       "address": "0x020bf56c",
       "size": "0x00000074",
       "legacy_source": "src/func_ov002_020bf56c.cpp",
@@ -565,21 +565,21 @@
       "ordinal": 73
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c0434Ev",
+      "symbol": "_ZN7daPly_c18ShouldBeginSlidingEv",
       "address": "0x020c0434",
       "size": "0x00000078",
       "legacy_source": "src/func_ov002_020c0434.c",
       "ordinal": 74
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c04acEv",
+      "symbol": "_ZN7daPly_c16IsFacingDownhillEv",
       "address": "0x020c04ac",
       "size": "0x00000034",
       "legacy_source": "src/func_ov002_020c04ac.c",
       "ordinal": 75
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c04e0Ev",
+      "symbol": "_ZN7daPly_c15ApplySlopeAccelEv",
       "address": "0x020c04e0",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov002_020c04e0.c",
@@ -600,7 +600,7 @@
       "ordinal": 78
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c0cbcEv",
+      "symbol": "_ZN7daPly_c15FloorIsSlipperyEv",
       "address": "0x020c0cbc",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov002_020c0cbc.c",
@@ -2574,14 +2574,14 @@
       "ordinal": 360
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020d3b9cEv",
+      "symbol": "_ZN7daPly_c18UpdateWalkingSpeedEv",
       "address": "0x020d3b9c",
       "size": "0x000005a0",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d3b9c.c",
       "ordinal": 361
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020d413cEi",
+      "symbol": "_ZN7daPly_c15TiltBodyWalkingEi",
       "address": "0x020d413c",
       "size": "0x00000134",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d413c.c",
@@ -2609,7 +2609,7 @@
       "ordinal": 365
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020d45c0Ev",
+      "symbol": "_ZN7daPly_c13UpdateRunDustEv",
       "address": "0x020d45c0",
       "size": "0x00000188",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d45c0.c",
@@ -2630,7 +2630,7 @@
       "ordinal": 368
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020d4d88Eii",
+      "symbol": "_ZN7daPly_c17UpdateGroundSpeedEii",
       "address": "0x020d4d88",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d4d88.c",
@@ -4121,7 +4121,7 @@
       "ordinal": 581
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020e28d4Eii",
+      "symbol": "_ZN7daPly_c17UpdateAirMovementEii",
       "address": "0x020e28d4",
       "size": "0x000001fc",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e28d4.c",

@@ -1956,10 +1956,10 @@ int daPly_c::func_ov002_020bf27c(int r1) {
     return r1;
 }
 
-void daPly_c::func_ov002_020bf2d8(fx32 a) {
+void daPly_c::SetVertSpeedByCharFactor(fx32 speed) {
     void *c = this;
-    unsigned int t = data_ov002_020ff140[param1];
-    this->mVertSpeed = FX_MUL(a, (int)t);
+    unsigned int factor = data_ov002_020ff140[param1];
+    this->mVertSpeed = FX_MUL(speed, (int)factor);
 }
 
 fx32 daPly_c::ScaleByCharFactor(fx32 a) {
@@ -2046,26 +2046,26 @@ int daPly_c::GetHealth() {
   return (signed char)(gPlayerHealth[i] >> 8);
 }
 
-int daPly_c::func_ov002_020bf56c(int b) {
-    int m;
+int daPly_c::GetSlopeDecel(int decelCoef) {
+    int factor;
     switch (func_ov002_020c031c()) {
     case 4:
     case 5:
-        m = 0x199;
+        factor = 0x199;
         break;
     case 3:
-        m = 0x599;
+        factor = 0x599;
         break;
     default:
     case 0:
-        m = 0x1000;
+        factor = 0x1000;
         break;
     case 1:
     case 2:
-        m = 0x1000;
+        factor = 0x1000;
         break;
     }
-    return FX_MUL(b, m);
+    return FX_MUL(decelCoef, factor);
 }
 
 void daPly_c::func_ov002_020bf5e0() {
@@ -2429,68 +2429,68 @@ void daPly_c::func_ov002_020c0364(u32 arg) {
     }
 }
 
-int daPly_c::func_ov002_020c0434() {
-    unsigned short f = mStateFlags & 1;
-    if (f) {
+int daPly_c::ShouldBeginSliding() {
+    unsigned short aboveSlide = mStateFlags & 1;
+    if (aboveSlide) {
         if (mFloorClass == 5)
             return 1;
         if (this->mHorzSpeed < 0)
             return 1;
-        if (func_ov002_020c04ac())
+        if (IsFacingDownhill())
             return 1;
     }
     return 0;
 }
 
-int daPly_c::func_ov002_020c04ac() {
+int daPly_c::IsFacingDownhill() {
   return AngleDiff(mFloorAngle, this->mAngleY) <= 0x4000;
 }
 
-int daPly_c::func_ov002_020c04e0() {
-    int horzLen;
-    int angDiff;
-    int sel;
-    int accelBase;
+int daPly_c::ApplySlopeAccel() {
+    int steepness;
+    int floorDYaw;
+    int slopeClass;
+    int slopeAccel;
     int speed;
     int accel;
-    int ret;
+    int isSlope;
 
-    horzLen = Vec3_HorzLen((const Vector3 *)&mFloorNormalX);
-    angDiff = AngleDiff(mFloorAngle, this->mPrevAngleY);
+    steepness = Vec3_HorzLen((const Vector3 *)&mFloorNormalX);
+    floorDYaw = AngleDiff(mFloorAngle, this->mPrevAngleY);
 
     if (mWalkTimer != 0) {
         if (mFloorClass == 0)
             return mFloorClass;
     }
 
-    sel = func_ov002_020c031c();
-    ret = func_ov002_020f035c(sel, mFloorNormalY);
-    if (ret == 0)
-        return ret;
+    slopeClass = func_ov002_020c031c();
+    isSlope = func_ov002_020f035c(slopeClass, mFloorNormalY);
+    if (isSlope == 0)
+        return isSlope;
 
-    sel = 0;
+    slopeClass = 0;
     if (!this->IsState(data_ov002_0211010c))
-        sel = func_ov002_020c031c();
+        slopeClass = func_ov002_020c031c();
     if (this->IsState(data_ov002_02110304)) {
-        if (sel == 4)
-            sel = 0;
+        if (slopeClass == 4)
+            slopeClass = 0;
     }
 
-    switch (sel) {
+    switch (slopeClass) {
     case 4:
     case 5:
-        accelBase = 0x54cc;
+        slopeAccel = 0x54cc;
         break;
     case 3:
-        accelBase = 0x2b33;
+        slopeAccel = 0x2b33;
         break;
     case 0:
     default:
-        accelBase = 0x1b33;
+        slopeAccel = 0x1b33;
         break;
     case 1:
     case 2:
-        accelBase = 0;
+        slopeAccel = 0;
         break;
     }
 
@@ -2500,16 +2500,16 @@ int daPly_c::func_ov002_020c04e0() {
     if (speed >= 0x1800)
         speed = 0x1800;
 
-    accel = FX_MUL(accelBase, speed);
+    accel = FX_MUL(slopeAccel, speed);
 
-    if (angDiff < 0x4000) {
+    if (floorDYaw < 0x4000) {
         int *p = &this->mHorzSpeed;
-        int v = *p + FX_MUL(accel, horzLen);
+        int v = *p + FX_MUL(accel, steepness);
         *p = v;
         return v;
     } else {
         int *p = &this->mHorzSpeed;
-        int v = *p - FX_MUL(accel, horzLen);
+        int v = *p - FX_MUL(accel, steepness);
         *p = v;
         return v;
     }
@@ -2672,26 +2672,26 @@ int daPly_c::func_ov002_020c06fc(int arg) {
     return 1;
 }
 
-int daPly_c::func_ov002_020c0cbc() {
-    int t;
-    int d;
+int daPly_c::FloorIsSlippery() {
+    int maxNormalY;
+    int floorDist;
     if ((mClsnFlags & 1) == 0)
         return 0;
-    d = mGroundY - this->mPosY;
-    if (d < 0)
-        d = -d;
-    if (d >= 0x50000)
+    floorDist = mGroundY - this->mPosY;
+    if (floorDist < 0)
+        floorDist = -floorDist;
+    if (floorDist >= 0x50000)
         return 0;
     switch (func_ov002_020c031c()) {
-    case 4: t = 0xfc1; break;
-    case 5: t = 0xfff; break;
-    case 3: t = 0xf04; break;
+    case 4: maxNormalY = 0xfc1; break;
+    case 5: maxNormalY = 0xfff; break;
+    case 3: maxNormalY = 0xf04; break;
     default:
-    case 0: t = 0xc9b; break;
+    case 0: maxNormalY = 0xc9b; break;
     case 1:
-    case 2: t = 0; break;
+    case 2: maxNormalY = 0; break;
     }
-  if(mFloorNormalY <= t){
+  if(mFloorNormalY <= maxNormalY){
     (this->mStateFlags) |= 1;
     return 1;
   }
@@ -2825,7 +2825,7 @@ int daPly_c::func_ov002_020c0fb4() {
     if ((r = func_ov002_020d06c0()) != 0) {
         return r;
     }
-    return this->func_ov002_020c0cbc();
+    return this->FloorIsSlippery();
 }
 
 void daPly_c::func_ov002_020c1234() {
@@ -3075,7 +3075,7 @@ int daPly_c::func_ov002_020c1ad8(int ang) {
     int a = ang;
 
     if (this->mIsAirborne != 0) return 0;
-    if (this->func_ov002_020c0434() != 0) {
+    if (this->ShouldBeginSliding() != 0) {
         this->func_ov002_020c0364(3);
         return 0;
     }
@@ -8330,7 +8330,7 @@ int daPly_c::St_Shell_Main() {
             if (spd > 0) step = 0x600;
             ApproachLinear(mHorzSpeed, accel, step);
         }
-        func_ov002_020c04e0();
+        ApplySlopeAccel();
         if (mIsAirborne != 0) {
             mStateStep++;
             mIsAirborne = 1;
@@ -8362,7 +8362,7 @@ int daPly_c::St_Shell_Main() {
         } else {
             mHeadRot[2] = 0;
             mSpineRot[2] = mHeadRot[2];
-            func_ov002_020e28d4(0x1800, 0x800);
+            UpdateAirMovement(0x1800, 0x800);
             mVertAccel = -0x4000;
             mTerminalVelocity = -0x4b000;
             if (mVertSpeed >= 0) {
@@ -8563,7 +8563,7 @@ int daPly_c::St_MetalWaterWater_Init() {
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
     if (mStateStep == 0) {
-        func_ov002_020bf2d8(0x20000);
+        SetVertSpeedByCharFactor(0x20000);
         this->SetAnim(0x53, 0x40000000, 0x1000, 0);
     } else {
         this->SetAnim(0x54, 0x40000000, 0x1000, 0);
@@ -9760,7 +9760,7 @@ int daPly_c::St_OnWall_Main() {
             if (spd < 0x400)
                 spd = 0x400;
             this->SetAnim(anim, 0, spd, 0);
-            func_ov002_020d4d88(func_ov002_020bf224(0x6000, 0x1000), 0x1000);
+            UpdateGroundSpeed(func_ov002_020bf224(0x6000, 0x1000), 0x1000);
         } else {
             mHorzSpeed = 0;
             this->SetAnim(0x5e, 0, 0x1000, 0);
@@ -10462,7 +10462,7 @@ int daPly_c::St_Crawl_Main() {
         break;
     }
 
-    func_ov002_020d4d88(a, b);
+    UpdateGroundSpeed(a, b);
     AdvanceAnims();
     return 1;
 }
@@ -10693,7 +10693,7 @@ int daPly_c::St_HoldHeavy_Main() {
             } else {
                 var_r1 = func_ov002_020bf224(var_r1, 0);
             }
-            func_ov002_020d4d88(var_r1, 0x1000);
+            UpdateGroundSpeed(var_r1, 0x1000);
         }
 
         if (mHorzSpeed == 0) {
@@ -10750,7 +10750,7 @@ int daPly_c::St_HoldLight_Main() {
         this->ChangeState(data_ov002_0211013c);
         return 1;
     }
-    if (func_ov002_020c0434()) {
+    if (ShouldBeginSliding()) {
         func_ov002_020c0364(3);
         return 1;
     }
@@ -10816,7 +10816,7 @@ int daPly_c::St_HoldLight_Main() {
             ApproachAngle(&mAngleY, mPrevAngleY, 8, 0x2000, 0x800);
         }
 
-        func_ov002_020d4d88(var_r4, 0x1000);
+        UpdateGroundSpeed(var_r4, 0x1000);
 
         {
             u16 flags = data_0209f498[gActivePlayerSlot].pressed;
@@ -11582,7 +11582,7 @@ int daPly_c::St_TurnAround_Main() {
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
         angle = (s16)(raw + 0x8000);
         sel = (mHorzSpeed < 0) ? 0x1800 : 0x8000;
-        r5v = func_ov002_020bf56c(sel);
+        r5v = GetSlopeDecel(sel);
         ApproachAngle(&mPrevAngleY, angle, 0x10, 0x1000, 0x200);
         tmp = ScaleByCharFactor(0x28000);
         ApproachLinear(mHorzSpeed, -tmp, r5v);
@@ -11629,7 +11629,7 @@ int daPly_c::func_ov002_020d36d8(int arg) {
     if ((unsigned short)(mStateFlags & 0x40))
         return 0;
 
-    if (func_ov002_020c0434() != 0) {
+    if (ShouldBeginSliding() != 0) {
         func_ov002_020c0364(3);
         return 1;
     }
@@ -11685,12 +11685,12 @@ int daPly_c::St_Walk_Main() {
     if (func_ov002_020d36d8(0))
         return 1;
 
-    func_ov002_020d45c0();
-    short r5 = mPrevAngleY;
-    if (func_ov002_020d3b9c())
+    UpdateRunDust();
+    short startYaw = mPrevAngleY;
+    if (UpdateWalkingSpeed())
         return 1;
 
-    func_ov002_020d413c(r5);
+    TiltBodyWalking(startYaw);
 
     if (mHorzSpeed == 0) {
         mAngleY = mPrevAngleY;
@@ -11792,53 +11792,53 @@ static inline int StickLoSpd(void) { return (GetMode() != 2) ? 0xa : 0x10; }
 static inline int StickHiSpd(void) { return (GetMode() != 2) ? 0x15 : 0x20; }
 }
 
-int daPly_c::func_ov002_020d3b9c() {
+int daPly_c::UpdateWalkingSpeed() {
     extern short data_0209f4a0[];
     extern char data_0209f49c[];
     extern unsigned char data_0209f4ac[];
-    int spd;
-    int acc;
+    int targetSpeed;
+    int accel;
     s16 stick;
-    s16 targ;
-    int diff;
-    spd = 0;
+    s16 targetYaw;
+    int yawDiff;
+    targetSpeed = 0;
     stick = *((s16 *)(((char *)data_0209f4a0) + (gActivePlayerSlot * 0x18)));
-    acc = spd;
+    accel = targetSpeed;
     if ((stick != 0) && (((u16)(mStateFlags & 0xc)) == 0)) {
         mStickGraceTimer = 4;
         if ((*((u8 *)(data_0209f4ac + (gActivePlayerSlot * 0x18)))) == 0) {
-            spd = ScaleByCharFactor(0x14000);
-            acc = 0x1000;
+            targetSpeed = ScaleByCharFactor(0x14000);
+            accel = 0x1000;
             if (((data_0209f498[gActivePlayerSlot].held) & 0x800) == 0) {
                 if (mStateTimer != 0) {
-                    spd = ScaleByCharFactor(0xa000);
+                    targetSpeed = ScaleByCharFactor(0xa000);
                 }
             } else {
-                spd = ScaleByCharFactor(0x28000);
+                targetSpeed = ScaleByCharFactor(0x28000);
             }
         } else {
             if (GetStick() <= StickLo()) {
-                spd = 0;
+                targetSpeed = 0;
             } else if (GetStick() <= StickHi()) {
                 int t = (GetStick() * StickScale()) >> 12;
-                spd = (t - StickLoSpd()) << 15;
-                spd = spd / (StickHiSpd() - StickLoSpd());
+                targetSpeed = (t - StickLoSpd()) << 15;
+                targetSpeed = targetSpeed / (StickHiSpd() - StickLoSpd());
             } else {
                 int a = ScaleByCharFactor(0x28000);
                 int b = ScaleByCharFactor(0xa000);
-                spd = func_ov002_020bf224(a, b);
+                targetSpeed = func_ov002_020bf224(a, b);
             }
-            acc = 0x1000;
+            accel = 0x1000;
             if ((*((s16 *)(((char *)data_0209f4a0) + (gActivePlayerSlot * 0x18)))) >= 0xf00) {
-                acc = 0x1000;
+                accel = 0x1000;
             }
         }
         if (mDashBoostTimer != 0) {
             if (((data_0209f498[gActivePlayerSlot].held) & 0x800) != 0) {
                 u8 *p = &mDashBoostTimer;
                 *p = (u8)((*p) - 1);
-                spd = FX_MUL(spd, 0x1333);
-                acc = 0x1e000;
+                targetSpeed = FX_MUL(targetSpeed, 0x1333);
+                accel = 0x1e000;
                 func_ov002_020bf88c();
             } else {
                 mDashBoostTimer = 0;
@@ -11848,7 +11848,7 @@ int daPly_c::func_ov002_020d3b9c() {
             int v = mSinkDepth;
             if (v > 0xa000) {
                 int q = 0x6400 / (v >> 12);
-                spd = FX_MUL(spd, q);
+                targetSpeed = FX_MUL(targetSpeed, q);
             }
         }
         mModelOffsetY = 0;
@@ -11859,8 +11859,8 @@ int daPly_c::func_ov002_020d3b9c() {
                 int prod = h * a;
                 {
                     int cap = prod / 30;
-                    if (spd > cap) {
-                        spd = cap;
+                    if (targetSpeed > cap) {
+                        targetSpeed = cap;
                     }
                 }
                 {
@@ -11871,14 +11871,14 @@ int daPly_c::func_ov002_020d3b9c() {
             }
         }
         if (func_ov002_020f035c(func_ov002_020c031c(), mFloorNormalY) != 0) {
-            acc = 0x1000;
+            accel = 0x1000;
         }
-        targ = mDesiredAngleY;
-        diff = AngleDiff(mPrevAngleY, targ);
-        if (diff < 0) {
-            diff = -diff;
+        targetYaw = mDesiredAngleY;
+        yawDiff = AngleDiff(mPrevAngleY, targetYaw);
+        if (yawDiff < 0) {
+            yawDiff = -yawDiff;
         }
-        if (diff > 0x6000) {
+        if (yawDiff > 0x6000) {
             int cur = mHorzSpeed;
             if ((cur >= ScaleByCharFactor(0x1c000)) && (mIsMega == 0)) {
                 ChangeState(data_ov002_02110184);
@@ -11886,36 +11886,36 @@ int daPly_c::func_ov002_020d3b9c() {
                 return 1;
             }
             if (cur == 0) {
-                mPrevAngleY = targ;
+                mPrevAngleY = targetYaw;
             } else {
-                ApproachAngle(&mPrevAngleY, targ, 4, 0x2000, 0x800);
+                ApproachAngle(&mPrevAngleY, targetYaw, 4, 0x2000, 0x800);
             }
         } else {
-            int dv;
-            int step;
-            int idx2;
-            step = 0x800;
-            idx2 = gActivePlayerSlot * 0x18;
-            dv = 4;
-            if ((*((data_0209f4ac + idx2))) == 0) {
-                if ((*((s16 *)(((char *)data_0209f4a0) + idx2))) >= 0xa00) {
-                    if (AngleDiff(mPrevAngleY, targ) >= 0x1000) {
+            int turnDivisor;
+            int maxTurnStep;
+            int slot;
+            maxTurnStep = 0x800;
+            slot = gActivePlayerSlot * 0x18;
+            turnDivisor = 4;
+            if ((*((data_0209f4ac + slot))) == 0) {
+                if ((*((s16 *)(((char *)data_0209f4a0) + slot))) >= 0xa00) {
+                    if (AngleDiff(mPrevAngleY, targetYaw) >= 0x1000) {
                         if (mTurnRamp < 24) {
                             mTurnRamp++;
-                            dv = (s16)(0x10 - (mTurnRamp >> 1));
+                            turnDivisor = (s16)(0x10 - (mTurnRamp >> 1));
                         }
                     } else {
-                        dv = 0x10;
+                        turnDivisor = 0x10;
                         if (mTurnRamp >= 2) {
                             mTurnRamp -= 2;
                         }
                     }
-                    step = (s16)((0x10 - (dv - 4)) << 3);
+                    maxTurnStep = (s16)((0x10 - (turnDivisor - 4)) << 3);
                 } else if (mTurnRamp >= 2) {
                     mTurnRamp -= 2;
                 }
             }
-            ApproachAngle(&mPrevAngleY, targ, dv, 0x2000, step);
+            ApproachAngle(&mPrevAngleY, targetYaw, turnDivisor, 0x2000, maxTurnStep);
         }
         if (mIsBraking != 0) {
             func_ov002_020d4540();
@@ -11923,13 +11923,13 @@ int daPly_c::func_ov002_020d3b9c() {
     } else {
         mDashBoostTimer = 0;
         if (mIsBraking != 0) {
-            acc = func_ov002_020bf56c(0x2000);
+            accel = GetSlopeDecel(0x2000);
             func_ov002_020bf88c();
         } else if (mStickGraceTimer == 0) {
             if (mIsMega == 0)
-                acc = 0x1000;
+                accel = 0x1000;
             else
-                acc = 0x4000;
+                accel = 0x4000;
             if (mHorzSpeed < (-0xa000)) {
                 mHorzSpeed = -0xa000;
             }
@@ -11943,33 +11943,33 @@ int daPly_c::func_ov002_020d3b9c() {
             mStateTimer = 60;
         }
     }
-    func_ov002_020d4d88(spd, acc);
+    UpdateGroundSpeed(targetSpeed, accel);
     func_ov002_020c18b0(1);
     mAngleZ = 0;
     return 0;
 }
 
-void daPly_c::func_ov002_020d413c(int arg) {
-    int v;
-    int diff;
-    short s;
+void daPly_c::TiltBodyWalking(int startYaw) {
+    int threshold;
+    int speed;
+    short pitch;
     if (mIsMega)
         return;
-    v = ScaleByCharFactor(0x1c000);
-    diff = mHorzSpeed;
-    if (diff < v) {
+    threshold = ScaleByCharFactor(0x1c000);
+    speed = mHorzSpeed;
+    if (speed < threshold) {
         mSpineRot[1] = 0;
         mSpineRot[2] = mSpineRot[1];
         return;
     }
-    s = (short)(FX_MUL(((diff - v) / 12), 0x1c71));
+    pitch = (short)(FX_MUL(((speed - threshold) / 12), 0x1c71));
     {
-        short t = s;
+        short t = pitch;
         if (t >= 0x2000) t = 0x2000;
         ApproachAngle(&mSpineRot[2], t, 4, 0x2000, 0x100);
     }
     {
-        short t = (short)((arg - mPrevAngleY) * 6);
+        short t = (short)((startYaw - mPrevAngleY) * 6);
         if (t < -0x1555) t = -0x1555;
         else if (t > 0x1555) t = 0x1555;
         ApproachAngle(&mSpineRot[1], t, 8, 0x100, 0x10);
@@ -12079,7 +12079,7 @@ void daPly_c::func_ov002_020d454c() {
     SetAnim(0x36, 0x40000000, 0x1000, 0);
 }
 
-void daPly_c::func_ov002_020d45c0() {
+void daPly_c::UpdateRunDust() {
     extern s16 data_0209f4a0[];
     extern u8 data_0209f4ac[];
     extern u16 data_0209f49c[];
@@ -12281,14 +12281,12 @@ void daPly_c::PlayLandingEffects() {
     Particle::System::NewSimple(id, mPosX, mPosY, mPosZ);
 }
 
-/* func_ov002_020d4d88 at 0x020d4d88
- *
- * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
- */
-int daPly_c::func_ov002_020d4d88(int a, int b) {
-    ApproachLinear(mHorzSpeed, a, b);
-    if (a != 0 || (unsigned short)(mStateFlags & 1)) {
-        func_ov002_020c04e0();
+/* Step the ground speed toward targetSpeed, then let the slope pull on it
+ * while the player is moving or standing on one. Returns 1 when it did. */
+int daPly_c::UpdateGroundSpeed(int targetSpeed, int accel) {
+    ApproachLinear(mHorzSpeed, targetSpeed, accel);
+    if (targetSpeed != 0 || (unsigned short)(mStateFlags & 1)) {
+        ApplySlopeAccel();
         return 1;
     }
     return 0;
@@ -12434,7 +12432,7 @@ int daPly_c::St_BurnLava_Main() {
     }
 
     if (mStateStep == 0) {
-        func_ov002_020e28d4(0x1000, 0x1000);
+        UpdateAirMovement(0x1000, 0x1000);
         if (mIsAirborne == 0) {
             mStateWork++;
             if (mStateWork >= 3) {
@@ -16717,7 +16715,7 @@ int daPly_c::func_ov002_020dd2f4() {
     if (AngleDiff(atan, mPrevAngleY) < 0x6000)
         return 0;
 
-    if (func_ov002_020c0cbc() != 0) {
+    if (FloorIsSlippery() != 0) {
         mHorzSpeed = FX_MUL(mHorzSpeed, 0xe66);
         if (mHorzSpeed < 0x4000)
             mHorzSpeed = 0x4000;
@@ -16763,7 +16761,7 @@ int daPly_c::St_PunchKick_Main() {
         ApproachLinear(mHorzSpeed, 0, 0x800);
         func_ov002_020c2f64();
 
-        if (func_ov002_020c0434() != 0) {
+        if (ShouldBeginSliding() != 0) {
             func_ov002_020c0364(3);
             return 1;
         }
@@ -17430,7 +17428,7 @@ int daPly_c::St_WindCarry_Main() {
         return 1;
     }
 
-    func_ov002_020e28d4(0x1800, 0x800);
+    UpdateAirMovement(0x1800, 0x800);
     {
         int val = mPosY + 0x514000;
         if (mSurfaceType == 0x13 && val > (int)0xfdecc000 && val < 0x898000) {
@@ -18176,7 +18174,7 @@ int daPly_c::St_Land_Main() {
     extern u16 data_0209f49e[];
     extern u16 data_0209f49c[];
     extern s16 data_0209f4a0[];
-    if (func_ov002_020c0434()) {
+    if (ShouldBeginSliding()) {
         func_ov002_020c0364(3);
         func_ov002_020c06fc(0x4000);
         return 1;
@@ -18411,7 +18409,7 @@ int daPly_c::St_CrazedCrate_Cleanup() {
 }
 
 int daPly_c::St_CrazedCrate_Main() {
-    func_ov002_020e28d4(0x1000, 0x1800);
+    UpdateAirMovement(0x1000, 0x1800);
 
     if (mClsnFlags & 2) {
         int atan = cstd::atan2(mWallNormalX, this->mWallNormalZ);
@@ -18523,7 +18521,7 @@ int daPly_c::St_Spin_Cleanup() {
 
 int daPly_c::St_Spin_Main() {
     extern u16 data_0209f49c[];
-    func_ov002_020e28d4(0x1000, 0x1000);
+    UpdateAirMovement(0x1000, 0x1000);
     if (mIsAirborne == 0) {
         mAngleY = mPrevAngleY;
         this->ChangeState(data_ov002_02110424);
@@ -18567,7 +18565,7 @@ int daPly_c::St_Spin_Init() {
 
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::St_LongJump_Main() {
-    func_ov002_020e28d4(0x1800, 0x800);
+    UpdateAirMovement(0x1800, 0x800);
     if (mIsAirborne == 0) {
         this->ChangeState(data_ov002_02110424);
     }
@@ -18631,9 +18629,9 @@ int daPly_c::St_SideFlip_Main() {
         if (mVertSpeed < 0) {
             mHorzSpeed = 0x12000;
         }
-        func_ov002_020e28d4(0, 0x800);
+        UpdateAirMovement(0, 0x800);
     } else {
-        func_ov002_020e28d4(0x1800, 0x800);
+        UpdateAirMovement(0x1800, 0x800);
     }
 
     if (mIsAirborne == 0) {
@@ -18723,7 +18721,7 @@ int daPly_c::St_WallJump_Main() {
     extern unsigned short data_0209f49e[];
     extern void (daPly_c::*data_ov002_0211073c[])();
     func_ov002_020eeca8(&mMeshClsn, this);
-    func_ov002_020e28d4(0x1800, 0x800);
+    UpdateAirMovement(0x1800, 0x800);
     if (mIsAirborne == 0) {
         this->ChangeState(data_ov002_02110424);
     } else {
@@ -18775,7 +18773,7 @@ int daPly_c::St_WallJump_Init() {
     if (param1 == 2) {
         mVertSpeed = 0x2aa00;
     } else {
-        func_ov002_020bf2d8(0x3e000);
+        SetVertSpeedByCharFactor(0x3e000);
     }
     mHorzSpeed = 0x18000;
     mAngleY = mAngleY + 0x8000;
@@ -18856,7 +18854,7 @@ int daPly_c::St_SideFlip_Init() {
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::St_Fall_Main() {
-    func_ov002_020e28d4(0x1800, 0x800);
+    UpdateAirMovement(0x1800, 0x800);
     if (mIsAirborne == 0) {
         this->ChangeState(data_ov002_02110424);
     } else if (func_ov002_020e2664()) {
@@ -19009,7 +19007,7 @@ int daPly_c::St_Jump_Main() {
     extern u16 data_0209f49e[];
     extern void (daPly_c::*data_ov002_0211073c[])();
     func_ov002_020eeca8(&mMeshClsn, this);
-    func_ov002_020e28d4(0xd00, 0x800);
+    UpdateAirMovement(0xd00, 0x800);
 
     if (mIsAirborne == 0) {
         if (mStateTimer != 0) {
@@ -19113,9 +19111,9 @@ skipclear:
     } else {
         int v = data_ov002_0210a59c[mJumpComboStage] + (mHorzSpeed >> 2);
         if (mIsMega != 0) {
-            func_ov002_020bf2d8(FX_MUL(v, 0x1400));
+            SetVertSpeedByCharFactor(FX_MUL(v, 0x1400));
         } else {
-            func_ov002_020bf2d8(v);
+            SetVertSpeedByCharFactor(v);
         }
         func_ov002_020e2ad0();
         if (mIsMega == 0) {
@@ -19248,12 +19246,12 @@ ret0:
     return 0;
 }
 
-void daPly_c::func_ov002_020e28d4(int a, int b) {
+void daPly_c::UpdateAirMovement(int accel, int decel) {
     extern s16 data_0209f4a0[];
-    int r4;
+    int targetSpeed;
 
     if (param1 == 1)
-        a <<= 1;
+        accel <<= 1;
 
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
         if (mClsnFlags & 2) {
@@ -19264,35 +19262,35 @@ void daPly_c::func_ov002_020e28d4(int a, int b) {
             }
         }
         if (IsState(data_ov002_0211055c)) {
-            r4 = ScaleByCharFactor(0x3c000);
-            s16 e = AngleDiff(mDesiredAngleY, mAngleY);
-            e = e + 0x4000;
-            s16 tv = FX_SinCosTable_[((u16)e >> 4) * 2];
-            r4 = FX_MUL(r4, tv);
-            if (r4 < 0)
-                r4 = -r4;
-            if (r4 < 0xa000)
-                r4 = 0xa000;
+            targetSpeed = ScaleByCharFactor(0x3c000);
+            s16 yawDiff = AngleDiff(mDesiredAngleY, mAngleY);
+            yawDiff = yawDiff + 0x4000;
+            s16 cosine = FX_SinCosTable_[((u16)yawDiff >> 4) * 2];
+            targetSpeed = FX_MUL(targetSpeed, cosine);
+            if (targetSpeed < 0)
+                targetSpeed = -targetSpeed;
+            if (targetSpeed < 0xa000)
+                targetSpeed = 0xa000;
         } else {
-            r4 = func_ov002_020bf224(ScaleByCharFactor(0x21000), ScaleByCharFactor(0xa000));
+            targetSpeed = func_ov002_020bf224(ScaleByCharFactor(0x21000), ScaleByCharFactor(0xa000));
         }
 
-        s16 r7 = mDesiredAngleY;
+        s16 targetYaw = mDesiredAngleY;
         if (mHorzSpeed != 0) {
-            if (AngleDiff(mPrevAngleY, r7) > 0x6000) {
-                r7 = r7 + 0x8000;
-                r4 = -r4;
+            if (AngleDiff(mPrevAngleY, targetYaw) > 0x6000) {
+                targetYaw = targetYaw + 0x8000;
+                targetSpeed = -targetSpeed;
             }
-            ApproachAngle(&mPrevAngleY, r7, 0x10, 0x100, 0);
+            ApproachAngle(&mPrevAngleY, targetYaw, 0x10, 0x100, 0);
         } else {
-            mPrevAngleY = r7;
+            mPrevAngleY = targetYaw;
         }
     } else {
-        r4 = 0;
-        a = b;
+        targetSpeed = 0;
+        accel = decel;
     }
 
-    ApproachLinear(mHorzSpeed, r4, a);
+    ApproachLinear(mHorzSpeed, targetSpeed, accel);
 
     if (AngleDiff(mPrevAngleY, mAngleY) < 0x4000)
         return;
@@ -19330,7 +19328,7 @@ int daPly_c::func_ov002_020e2ba8() {
 
 int daPly_c::func_ov002_020e2be4() {
     int thr;
-    if (func_ov002_020c04ac())
+    if (IsFacingDownhill())
         return 0;
     switch (func_ov002_020c031c()) {
     case 4:
@@ -19389,7 +19387,7 @@ int daPly_c::func_ov002_020e2c84() {
         mIsFallScreaming = 0;
         Sound::PlayCharVoice(mCharacter, 7, mCamSpacePos);
     } else if (diff > 0x47e000) {
-        if (func_ov002_020c0cbc() == 0) {
+        if (FloorIsSlippery() == 0) {
             if (func_ov002_020d91e0(0x200, 1) != 0) {
                 if (IsState(data_ov002_02110094) != 0) {
                     {
