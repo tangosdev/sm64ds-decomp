@@ -1762,7 +1762,7 @@ s32 dScMgTeresa_c::InitResources()
         fb = 0;
         MI_CpuFill16(p, fb, 0x800);
     }
-    Mg_InitBrush(this, 0, 0, 0);
+    InitBrush(0, 0, 0);
     {
         void *p = G2S_GetBG0CharPtr();
         fc = 0x1111;

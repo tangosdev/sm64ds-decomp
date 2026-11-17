@@ -15868,11 +15868,6 @@
         "param:#3 void *"
       ]
     },
-    "Mg_InitBrush": {
-      "include/decl_common.h": [
-        "param:#2 int"
-      ]
-    },
     "Mg_CopySpriteList": {
       "src/minigames/unit020b2c84.cpp": [
         "arity:4"

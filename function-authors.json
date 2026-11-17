@@ -19139,7 +19139,7 @@
     },
     "ov004:0x020af2f8": {
       "author": "lunavyqo",
-      "name": "Mg_InitBrush"
+      "name": "_ZN11dScMgBase_c9InitBrushEcii"
     },
     "ov004:0x020af5e0": {
       "author": "andrewboudreau",

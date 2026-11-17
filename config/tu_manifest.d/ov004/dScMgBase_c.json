@@ -437,7 +437,7 @@
       "ordinal": 55
     },
     {
-      "symbol": "Mg_InitBrush",
+      "symbol": "_ZN11dScMgBase_c9InitBrushEcii",
       "address": "0x020af2f8",
       "size": "0x000002e8",
       "legacy_source": "src/func_ov004_020af2f8.cpp",

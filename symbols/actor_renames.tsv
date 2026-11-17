@@ -10558,3 +10558,4 @@ ov002	0x020f6514	_ZN8daDemo_c10anmModel_c19func_ov002_020f6514EPvh	_ZN8daDemo_c1
 ov004	0x020b1b78	Mg_SubCredits	_ZN11dScMgBase_c10SubCreditsEi	extern "C" (scene) -> member: sits inside dScMgBase_c's ROM member run and every caller passes the scene in r0; the Mg_ prefix stood in for the class
 ov004	0x020b1ba0	Mg_AddCredits	_ZN11dScMgBase_c10AddCreditsEi	extern "C" (scene) -> member: sits inside dScMgBase_c's ROM member run and every caller passes the scene in r0; the Mg_ prefix stood in for the class
 ov004	0x020b1bc8	Mg_DrawCredits	_ZN11dScMgBase_c11DrawCreditsEiii	extern "C" (scene) -> member: sits inside dScMgBase_c's ROM member run and every caller passes the scene in r0; the Mg_ prefix stood in for the class
+ov004	0x020af2f8	Mg_InitBrush	_ZN11dScMgBase_c9InitBrushEcii	extern "C" (scene) -> member: sits inside dScMgBase_c's ROM member run and every caller passes the scene in r0; the Mg_ prefix stood in for the class

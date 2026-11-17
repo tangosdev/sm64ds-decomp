@@ -14,11 +14,6 @@
 struct dScMgBase_c;
 extern "C" dScMgBase_c *gMgScene;
 
-/* d_s_mg_base.cpp's scene helper: the brush PaintSquare paints with. The
-   parameters are unnamed because a named one takes an @NNN number in every
-   including TU. */
-extern "C" void Mg_InitBrush(dScMgBase_c *, char, int, int);
-
 struct dScMgBase_c : dScene_c {
 
     class graphCallback_c;
@@ -902,6 +897,8 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     void SubCredits(int);
     void AddCredits(s32);
     void DrawCredits(int, int, int);
+    /* Arms the brush PaintSquare paints with (mBrushOnMain, mBrushLayer). */
+    void InitBrush(char, int, int);
 
     s32 mTallyShown;            /* 0x050 */
     s32 mTallyAnimTimer;            /* 0x054 */
@@ -912,7 +909,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     /* The brush PaintSquare (slot 34) paints with. mBrushLayer is the BG
        layer 0..3 it draws into, any other value drawing nothing; with
        mBrushOnMain set it also paints the main engine's layer above the
-       touch screen. InitEngines resets them to 0 and -1, Mg_InitBrush arms
+       touch screen. InitEngines resets them to 0 and -1, InitBrush arms
        them. */
     u8 mBrushOnMain; /* 0x068 */
     u8 pad_069[0x3];

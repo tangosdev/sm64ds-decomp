@@ -1509,16 +1509,14 @@ void dScMgBase_c::OpenMenu()
     mMenuCursorPhase = 0;
 }
 
-namespace s20af2f8 {
-extern "C" {
-/* Sets up the brush that PaintSquare paints with on `scene`: stores
+/* Sets up the brush that PaintSquare paints with: stores
    `en` in mBrushOnMain and the layer `mode` (0..3) in mBrushLayer, fills
    the first 0x300 screen entries of that sub-screen BG layer (and of the
    main-screen one when `en` is set) with tile numbers 0..0x2ff under
    palette `base`, zeroes 0x6000 bytes of the layer's character data, and
    loads the 0x20-byte palette sMgBrushPalette into palette slot `base` on
    both screens. Any other mode returns at once. */
-void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
+void dScMgBase_c::InitBrush(char en, int mode, int base) {
     volatile unsigned short v0, v1, v2, v3, v4, v5, v6, v7;
     volatile unsigned short w0, w1, w2, w3, w4, w5, w6, w7;
     int val;
@@ -1526,17 +1524,17 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
     int off;
     void *t;
 
-    scene->mBrushOnMain = en;
+    mBrushOnMain = en;
     i = 0;
     off = i;
-    scene->mBrushLayer = mode;
+    mBrushLayer = mode;
     val = i;
     val += base << 12;
 
     for (; i < 768; i++, val++, off += 2) {
-        switch (scene->mBrushLayer) {
+        switch (mBrushLayer) {
         case 0:
-            if (scene->mBrushOnMain) {
+            if (mBrushOnMain) {
                 t = (char *)G2_GetBG0ScrPtr() + off;
                 MI_CpuFill16(t, v0 = val, 2);
             }
@@ -1544,7 +1542,7 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
             MI_CpuFill16(t, v1 = val, 2);
             break;
         case 1:
-            if (scene->mBrushOnMain) {
+            if (mBrushOnMain) {
                 t = (char *)G2_GetBG1ScrPtr() + off;
                 MI_CpuFill16(t, v2 = val, 2);
             }
@@ -1552,7 +1550,7 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
             MI_CpuFill16(t, v3 = val, 2);
             break;
         case 2:
-            if (scene->mBrushOnMain) {
+            if (mBrushOnMain) {
                 t = (char *)G2_GetBG2ScrPtr() + off;
                 MI_CpuFill16(t, v4 = val, 2);
             }
@@ -1560,7 +1558,7 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
             MI_CpuFill16(t, v5 = val, 2);
             break;
         case 3:
-            if (scene->mBrushOnMain) {
+            if (mBrushOnMain) {
                 t = (char *)G2_GetBG3ScrPtr() + off;
                 MI_CpuFill16(t, v6 = val, 2);
             }
@@ -1572,9 +1570,9 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
         }
     }
 
-    switch (scene->mBrushLayer) {
+    switch (mBrushLayer) {
     case 0:
-        if (scene->mBrushOnMain) {
+        if (mBrushOnMain) {
             t = G2_GetBG0CharPtr();
             w0 = 0;
             MI_CpuFill16(t, w0, 0x6000);
@@ -1584,7 +1582,7 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
         MI_CpuFill16(t, w1, 0x6000);
         break;
     case 1:
-        if (scene->mBrushOnMain) {
+        if (mBrushOnMain) {
             t = G2_GetBG1CharPtr();
             w2 = 0;
             MI_CpuFill16(t, w2, 0x6000);
@@ -1594,7 +1592,7 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
         MI_CpuFill16(t, w3, 0x6000);
         break;
     case 2:
-        if (scene->mBrushOnMain) {
+        if (mBrushOnMain) {
             t = G2_GetBG2CharPtr();
             w4 = 0;
             MI_CpuFill16(t, w4, 0x6000);
@@ -1604,7 +1602,7 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
         MI_CpuFill16(t, w5, 0x6000);
         break;
     case 3:
-        if (scene->mBrushOnMain) {
+        if (mBrushOnMain) {
             t = (void *)G2_GetBG3CharPtr();
             w6 = 0;
             MI_CpuFill16(t, w6, 0x6000);
@@ -1619,8 +1617,6 @@ void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
 
     GX_LoadBGPltt(&sMgBrushPalette, base << 5, 0x20);
     GXS_LoadBGPltt(&sMgBrushPalette, base << 5, 0x20);
-}
-}
 }
 
 namespace s20af5e0 {

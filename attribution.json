@@ -7567,7 +7567,7 @@
     "src/minigames/d_s_mg_base.cpp#_ZN11dScMgBase_c9CloseMenuEv": "andrewboudreau",
     "src/minigames/d_s_mg_base.cpp#_ZN11dScMgBase_c17SaveScreenForMenuEv": "andrewboudreau",
     "src/minigames/d_s_mg_base.cpp#_ZN11dScMgBase_c8OpenMenuEv": "tangosdev",
-    "src/minigames/d_s_mg_base.cpp#Mg_InitBrush": "lunavyqo",
+    "src/minigames/d_s_mg_base.cpp#_ZN11dScMgBase_c9InitBrushEcii": "lunavyqo",
     "src/minigames/d_s_mg_base.cpp#Mg_CopySpriteList": "andrewboudreau",
     "src/minigames/d_s_mg_base.cpp#Hud_RenderSprite": "tangosdev",
     "src/minigames/d_s_mg_base.cpp#Mg_RenderSubSpriteScaled": "tangosdev",
