@@ -1433,12 +1433,12 @@ extern u8 gGameMode;
 extern int data_02086cc8[2];
 extern int data_02086d50[2];
 extern Vector3 data_02086e84;
-extern int data_02086e90[3];
-extern int data_02086e9c[3];
-extern int data_02086ea8[3];
-extern int data_02086eb4[3];
-extern int data_02086ec0[3];
-extern int data_02086ed8[3];
+extern Vector3 data_02086e90;
+extern Vector3 data_02086e9c;
+extern Vector3 data_02086ea8;
+extern Vector3 data_02086eb4;
+extern Vector3 data_02086ec0;
+extern Vector3 data_02086ed8;
 extern int data_02086f38[4];
 extern int data_02086f48[4];
 extern struct CamMode data_020870e4;
@@ -2499,7 +2499,7 @@ int func_02009aa8(dCamera_c *cam) {
     Vector3 delta;
     Vector3 src;
 
-    src = *(Vector3 *)data_02086e90;
+    src = data_02086e90;
 
     Vec3_RotateYAndTranslate(&lookAtGoal, &cam->mTargetPlayer->mPos, cam->mTargetPlayer->mAngleY,
                              &src);
@@ -2581,7 +2581,7 @@ int dCamera_c::func_02009a8c() {
 int dCamera_c::func_020098e0() {
     if (mTurningToTarget != 0) {
         Vector3 goal;
-        Vector3 offset = *(Vector3 *)data_02086e9c;
+        Vector3 offset = data_02086e9c;
 
         Vec3_RotateYAndTranslate(&goal, &mTargetPlayer->mPos, mTargetPlayer->mAngleY, &offset);
 
@@ -2725,7 +2725,7 @@ int func_02009540(dCamera_c *cam) {
     cam->ApproachLookAtAndAngles(&cam->mLookTargetPos, cam->mTargetAngleY, 0);
 
     Vector3 goal;
-    Vector3 offset = *(Vector3 *)data_02086ea8;
+    Vector3 offset = data_02086ea8;
 
     Vec3_RotateYAndTranslate(&goal, cam->mLookTarget, cam->mTargetAngleY, &offset);
 
@@ -2738,7 +2738,7 @@ int func_02009540(dCamera_c *cam) {
 
 int func_020094e4(dCamera_c *cam) {
     cam->SetMode(0x1f);
-    Vector3 offset = *(Vector3 *)data_02086eb4;
+    Vector3 offset = data_02086eb4;
     Vec3_RotateYAndTranslate(&cam->pos, &cam->mTargetPos, cam->mTargetPlayer->mAngleY, &offset);
     return 1;
 }
@@ -3215,7 +3215,7 @@ int func_02008200(dCamera_c *cam, u8 *data, int first) {
     diff = a->mPosY - a->mGroundY;
     val = FX_MUL(diff, 0x1199);
     target = a->mGroundY + 0x50000 + val;
-    Math_Function_0203b0fc(&cam->savedLookAt.y, target, 0xa3, 0x7fffffff);
+    Math_Function_0203b0fc(&cam->savedLookAt.y, target, 0xa3, CAM_NO_STEP_LIMIT);
     if (cam->lookAt.y < cam->savedLookAt.y)
         cam->lookAt.y = cam->savedLookAt.y;
     return 1;
@@ -3230,9 +3230,7 @@ int func_0200814c(dCamera_c *cam) {
 
     a = KuppaScript::FindScriptPlayer(0);
     diff = a->mPos.y - cam->pos.y;
-    v.x = 0;
-    v.y = 0x50000;
-    v.z = diff;
+    SetVec(v, 0, 0x50000, diff);
     absdiff = diff < 0 ? -diff : diff;
     val = FX_MUL(absdiff, -0x199);
     v.z = val;
@@ -3248,9 +3246,9 @@ int func_020080f0(dCamera_c *cam) {
     dActor_c *actor = KuppaScript::FindDemoActor(0x13);
     Vector3 *pos = &actor->mPos;
     int v1 = pos->y;
-    Math_Function_0203b0fc(&cam->pos.y, v1 + 0x23000, 0x51, 0x7fffffff);
+    Math_Function_0203b0fc(&cam->pos.y, v1 + 0x23000, 0x51, CAM_NO_STEP_LIMIT);
     int v2 = pos->y;
-    Math_Function_0203b0fc(&cam->lookAt.y, v2 + 0x7d000, 0x266, 0x7fffffff);
+    Math_Function_0203b0fc(&cam->lookAt.y, v2 + 0x7d000, 0x266, CAM_NO_STEP_LIMIT);
     return 1;
 }
 
@@ -3283,7 +3281,7 @@ int func_02008028(dCamera_c *cam) {
     y = cam->pos.y;
     func_02009414(cam);
     obj = KuppaScript::FindDemoActor(0x13);
-    Math_Function_0203b0fc(&y, cam->pos.y + obj->mPosY, 0x11e, 0x7fffffff);
+    Math_Function_0203b0fc(&y, cam->pos.y + obj->mPosY, 0x11e, CAM_NO_STEP_LIMIT);
     cam->pos.y = y;
     return 1;
 }
@@ -3302,66 +3300,36 @@ int func_02007fcc(dCamera_c *cam, u8 *data) {
     return 1;
 }
 
+/* Ease each axis of cur toward goal by its own rate (Super Mario 64's
+   approach_vec3f_asymptotic). */
+static inline void ApproachVecAsymptotic(Vector3 &cur, const Vector3 &goal, const Vector3 &rate) {
+    Math_Function_0203b0fc(&cur.x, goal.x, rate.x, CAM_NO_STEP_LIMIT);
+    Math_Function_0203b0fc(&cur.y, goal.y, rate.y, CAM_NO_STEP_LIMIT);
+    Math_Function_0203b0fc(&cur.z, goal.z, rate.z, CAM_NO_STEP_LIMIT);
+}
+
 /* Script op: step each lookAt axis toward a whole-unit target by its own
    rate. */
 int func_02007f14(dCamera_c *cam, u8 *data) {
-    int pos[3];
-    int rot[3];
-    int *posPtr, *rotPtr;
-    fx32 px, py, pz;
-    int rx, ry, rz;
-    pz = ReadUnalignedShort(data + 4) << 12;
-    py = ReadUnalignedShort(data + 2) << 12;
-    px = ReadUnalignedShort(data) << 12;
-    pos[0] = px;
-    pos[1] = py;
-    pos[2] = pz;
-    rz = ReadUnalignedShort(data + 0xa);
-    ry = ReadUnalignedShort(data + 8);
-    rx = ReadUnalignedShort(data + 6);
-    rot[0] = rx;
-    rot[1] = ry;
-    rot[2] = rz;
-    posPtr = pos;
-    rotPtr = rot;
-    Math_Function_0203b0fc(&cam->lookAt.x, posPtr[0], rotPtr[0], 0x7fffffff);
-    posPtr++;
-    rotPtr++;
-    Math_Function_0203b0fc(&cam->lookAt.y, posPtr[0], rotPtr[0], 0x7fffffff);
-    posPtr++;
-    rotPtr++;
-    Math_Function_0203b0fc(&cam->lookAt.z, posPtr[0], rotPtr[0], 0x7fffffff);
+    Vector3 goal;
+    Vector3 rate;
+    SetVec(goal, ReadUnalignedShort(data) << 12, ReadUnalignedShort(data + 2) << 12,
+           ReadUnalignedShort(data + 4) << 12);
+    SetVec(rate, ReadUnalignedShort(data + 6), ReadUnalignedShort(data + 8),
+           ReadUnalignedShort(data + 0xa));
+    ApproachVecAsymptotic(cam->lookAt, goal, rate);
     return 1;
 }
 
 /* Script op: the same for pos. */
 int func_02007e5c(dCamera_c *cam, u8 *data) {
-    int pos[3];
-    int rot[3];
-    int *posPtr, *rotPtr;
-    fx32 px, py, pz;
-    int rx, ry, rz;
-    pz = ReadUnalignedShort(data + 4) << 12;
-    py = ReadUnalignedShort(data + 2) << 12;
-    px = ReadUnalignedShort(data) << 12;
-    pos[0] = px;
-    pos[1] = py;
-    pos[2] = pz;
-    rz = ReadUnalignedShort(data + 0xa);
-    ry = ReadUnalignedShort(data + 8);
-    rx = ReadUnalignedShort(data + 6);
-    rot[0] = rx;
-    rot[1] = ry;
-    rot[2] = rz;
-    posPtr = pos;
-    rotPtr = rot;
-    Math_Function_0203b0fc(&cam->pos.x, posPtr[0], rotPtr[0], 0x7fffffff);
-    posPtr++;
-    rotPtr++;
-    Math_Function_0203b0fc(&cam->pos.y, posPtr[0], rotPtr[0], 0x7fffffff);
-    posPtr++;
-    rotPtr++;
-    Math_Function_0203b0fc(&cam->pos.z, posPtr[0], rotPtr[0], 0x7fffffff);
+    Vector3 goal;
+    Vector3 rate;
+    SetVec(goal, ReadUnalignedShort(data) << 12, ReadUnalignedShort(data + 2) << 12,
+           ReadUnalignedShort(data + 4) << 12);
+    SetVec(rate, ReadUnalignedShort(data + 6), ReadUnalignedShort(data + 8),
+           ReadUnalignedShort(data + 0xa));
+    ApproachVecAsymptotic(cam->pos, goal, rate);
     return 1;
 }
 
@@ -3395,9 +3363,9 @@ int CutsceneDanceFlyAwayStart(dCamera_c *cam) {
    of self toward src by its own fraction of the gap (0x1000 = all of it).
    self is a Vector3, not the camera: callers pass &camera->lookAt. */
 void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int stepX, int stepY, int stepZ) {
-    Math_Function_0203b0fc(&self->x, src->x, stepX, 0x7fffffff);
-    Math_Function_0203b0fc(&self->y, src->y, stepY, 0x7fffffff);
-    Math_Function_0203b0fc(&self->z, src->z, stepZ, 0x7fffffff);
+    Math_Function_0203b0fc(&self->x, src->x, stepX, CAM_NO_STEP_LIMIT);
+    Math_Function_0203b0fc(&self->y, src->y, stepY, CAM_NO_STEP_LIMIT);
+    Math_Function_0203b0fc(&self->z, src->z, stepZ, CAM_NO_STEP_LIMIT);
 }
 
 /* The same with one rate for all three axes. Its callers' declaration
@@ -3585,7 +3553,7 @@ int CutsceneKeyDanceJumpCvar(dCamera_c *cam, u8 *rec) {
 /* Script op, Super Mario 64's cutscene_grand_star_start: savedLookAt at
    data_02086ec0 in front of the target player, at height 0x1c9000. */
 int CutsceneGrandStarStart(dCamera_c *cam) {
-    Vector3 offset = *(Vector3 *)data_02086ec0;
+    Vector3 offset = data_02086ec0;
 
     short angle = cam->mTargetPlayer->mAngleY;
     angle = (angle + 0x8000);
@@ -3647,8 +3615,8 @@ int CutsceneGrandStarApproachMario(dCamera_c *cam) {
 
     Vector3 *target = &cam->mTargetPlayer->mPos;
 
-    Math_Function_0203b0fc(&cam->pos.x, target->x, 0x28, 0x7fffffff);
-    Math_Function_0203b0fc(&cam->pos.z, target->z, 0x28, 0x7fffffff);
+    Math_Function_0203b0fc(&cam->pos.x, target->x, 0x28, CAM_NO_STEP_LIMIT);
+    Math_Function_0203b0fc(&cam->pos.z, target->z, 0x28, CAM_NO_STEP_LIMIT);
 
     return 1;
 }
@@ -3677,7 +3645,7 @@ int CutsceneGrandStarFlyStart(dCamera_c *cam) {
    savedLookAt toward data_02086ed8 and ease savedPos's y to 0 and its z to
    -0xc8000. Its member-function constant is data_02086cb0. */
 int CutsceneGrandStarFlyMoveToMario(dCamera_c *cam) {
-    Vector3 offset = *(Vector3 *)data_02086ed8;
+    Vector3 offset = data_02086ed8;
 
     func_02007cec(&cam->savedLookAt, &offset, 0xcc);
     ApproachLinear(cam->savedPos.y, 0, 0x2000);
