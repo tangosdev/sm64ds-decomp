@@ -195,7 +195,6 @@ extern int data_ov002_0210a59c[];
 extern int data_ov002_0210a5a8[];
 extern int data_ov002_0210b498[];
 extern int data_ov002_0210bb7c[];
-extern int data_ov002_0210bc88;
 extern int data_ov002_0210c080[];
 extern int data_ov002_0210c084[];
 extern int data_ov002_0210c29c[];

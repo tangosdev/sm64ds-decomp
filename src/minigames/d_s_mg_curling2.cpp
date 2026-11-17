@@ -202,7 +202,6 @@ void dScMgCurling2_c::SpawnValue(int stone, int other) {
     int i;
     int sx;
     int sy;
-    unsigned char *count;
 
     for (i = 0; i < 60; i++) {
         if (mValue[i].live != 0)
@@ -230,8 +229,7 @@ void dScMgCurling2_c::SpawnValue(int stone, int other) {
             mValue[i].mode = 2;
         }
 
-        count = &combo;
-        *count = *count + 1;
+        combo++;
         if (combo >= 0x17)
             combo = 0x17;
         Mg_SubmitScore(mValue[i].value + Mg_GetSubmittedScore());
@@ -269,10 +267,9 @@ void dScMgCurling2_c::StepYRampDown(int entry) {
         if ((s16)mPiece[entry].countdown3 < 0)
             mPiece[entry].countdown3 = 0;
     } else if (mPiece[entry].yInc > 0x100) {
-        int *q = &mPiece[entry].yInc;
-        *q = *q - 0x10;
-        if ((short)*q < 0x100)
-            *q = 0x100;
+        mPiece[entry].yInc -= 0x10;
+        if ((short)mPiece[entry].yInc < 0x100)
+            mPiece[entry].yInc = 0x100;
     } else {
         mPiece[entry].yIndex = 0;
     }
@@ -307,28 +304,24 @@ void dScMgCurling2_c::StepYRestart(int entry) {
 /* Step the piece, hold while countdown is set (the hold decrements
  * countdown2, not countdown), then bleed xInc toward zero 8 a frame. */
 void dScMgCurling2_c::StepXSettle(int entry) {
-    /* xInc, x, y: the ROM loads those bases in that order. */
-    s32 *xInc = &mPiece[entry].xInc;
-    s32 *x = &mPiece[entry].x;
-    s32 *y = &mPiece[entry].y;
-    *x = *x + *xInc;
-    *y = *y + mPiece[entry].yInc;
+    mPiece[entry].x = mPiece[entry].x + mPiece[entry].xInc;
+    mPiece[entry].y = mPiece[entry].y + mPiece[entry].yInc;
     if (mPiece[entry].countdown != 0) {
         mPiece[entry].countdown2--;
         if ((s16)mPiece[entry].countdown2 < 0)
             mPiece[entry].countdown2 = 0;
         return;
     }
-    if (*xInc > 0) {
-        *xInc = *xInc - 8;
-        if ((s16)*xInc < 0)
-            *xInc = 0;
+    if (mPiece[entry].xInc > 0) {
+        mPiece[entry].xInc = mPiece[entry].xInc - 8;
+        if ((s16)mPiece[entry].xInc < 0)
+            mPiece[entry].xInc = 0;
         return;
     }
-    if (*xInc < 0) {
-        *xInc = *xInc + 8;
-        if (*xInc > 0)
-            *xInc = 0;
+    if (mPiece[entry].xInc < 0) {
+        mPiece[entry].xInc = mPiece[entry].xInc + 8;
+        if (mPiece[entry].xInc > 0)
+            mPiece[entry].xInc = 0;
         return;
     }
     mPiece[entry].xIndex = 0;
@@ -410,32 +403,27 @@ void dScMgCurling2_c::StepXPick(int entry) {
     mPiece[entry].countdown2 = (u8)(MG_RAND(0x40) + 0x60);
 }
 
-/* Run one piece's xIndex callback, then its yIndex callback.
- * yIndex is re-read through the pointer-to-member receiver. */
+/* Run one piece's xIndex callback, then its yIndex callback. */
 void dScMgCurling2_c::StepXAndY(int entry) {
     C *self = (C *)this;
     unsigned char k0 = mPiece[entry].xIndex;
     (self->*sCurling2StepXTable[k0])(entry);
-    unsigned char k1 = ((dScMgCurling2_c *)self)->mPiece[entry].yIndex;
+    unsigned char k1 = mPiece[entry].yIndex;
     (self->*sCurling2StepYTable[k1])(entry);
 }
 
 /* Step the piece, then bleed xInc toward zero 0x20 a frame. */
 void dScMgCurling2_c::StepXSettleFast(int entry) {
-    /* x, xInc, y -- the ROM's load order, not a tidy one. */
-    int *x = &mPiece[entry].x;
-    int *xInc = &mPiece[entry].xInc;
-    int *y = &mPiece[entry].y;
-    *x += *xInc;
-    *y += mPiece[entry].yInc;
-    if (*xInc > 0) {
-        *xInc -= 0x20;
-        if ((short)*xInc < 0)
-            *xInc = 0;
-    } else if (*xInc < 0) {
-        *xInc += 0x20;
-        if (*xInc > 0)
-            *xInc = 0;
+    mPiece[entry].x += mPiece[entry].xInc;
+    mPiece[entry].y += mPiece[entry].yInc;
+    if (mPiece[entry].xInc > 0) {
+        mPiece[entry].xInc -= 0x20;
+        if ((short)mPiece[entry].xInc < 0)
+            mPiece[entry].xInc = 0;
+    } else if (mPiece[entry].xInc < 0) {
+        mPiece[entry].xInc += 0x20;
+        if (mPiece[entry].xInc > 0)
+            mPiece[entry].xInc = 0;
     } else {
         mPiece[entry].xIndex = 0;
     }

@@ -338,11 +338,12 @@ extern int func_ov002_020f27e8(char *c);
 extern int func_ov002_020f2990(char *c);
 extern void func_ov002_020f5fe4(char *c);
 
-/* local extern dropped: decl_common.h declares func_ov002_020f6514(unsigned char*, void*, unsigned char) */
 extern void func_02012694(unsigned int, const Vector3 *);
 extern "C" {
 
-/* local extern dropped: decl_common.h declares data_ov002_0210bc88 as 'int'; callers cast the address */
+/* The animation table of the anmModel_c variants: handlers 6c34 and 7038
+   start an entry, and Behavior chains through it. */
+extern daDemo_c::anmModel_c::AnimEntry data_ov002_0210bc88[];
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern char *gCamera;
@@ -2525,44 +2526,32 @@ int daDemo_c::func_ov002_020f6448(unsigned char *arg1)
     return func_ov002_020f6424();
 }
 
-
-void daDemo_c::anmModel_c::func_ov002_020f64ac(char *r4)
-{
-    struct AnimEntry {
-        u8 anim;
-        s8 btp;
-        u8 loop;
-        s8 next;
-    };
+void daDemo_c::anmModel_c::func_ov002_020f64ac(const AnimEntry *table) {
     Advance();
     if (!Finished())
         return;
-    AnimEntry *entry = (AnimEntry *)r4 + mAnimEntry;
-    signed char r2 = entry->next;
-    if (r2 < 0)
+    s8 next = table[mAnimEntry].next;
+    if (next < 0)
         return;
-    func_ov002_020f6514((u8 *)r4, (u8)(r2 & 0xff));
+    func_ov002_020f6514(table, next);
 }
 
-
-void daDemo_c::anmModel_c::func_ov002_020f6514(void *tbl, unsigned char arg)
-{
-    u8 *e;
-    int v;
-    mAnimEntry = arg;
-    e = (u8 *)tbl + mAnimEntry * 4;
-    v = (e[2] == 0) ? 0x40000000 : 0;
-    ((dExtAnmModel_c *)this)->SetAnim((BCA_File *)(mAnimFiles[e[0]]->filePtr), v, 0x1000, 0);
+void daDemo_c::anmModel_c::func_ov002_020f6514(const AnimEntry *table, unsigned char entry) {
+    const AnimEntry *e;
+    int flags;
+    mAnimEntry = entry;
+    e = &table[mAnimEntry];
+    flags = (e->loop == 0) ? 0x40000000 : 0;
+    ((dExtAnmModel_c *)this)->SetAnim((BCA_File *)(mAnimFiles[e->anim]->filePtr), flags, 0x1000, 0);
     {
         dExtAnmTexPat_c *ts = mTexSeq;
         s8 idx;
         if (ts == 0) return;
-        idx = e[1];
+        idx = e->texSeq;
         if (idx < 0) return;
-        ts->SetFile(*(BTP_File *)mTexSeqFiles[idx]->filePtr, v, 0x1000, 0);
+        ts->SetFile(*(BTP_File *)mTexSeqFiles[idx]->filePtr, flags, 0x1000, 0);
     }
 }
-
 
 void daDemo_c::anmModel_c::func_ov002_020f65b8()
 {
@@ -2772,7 +2761,7 @@ int daDemo_c::func_ov002_020f6c24(unsigned char *src)
 int daDemo_c::func_ov002_020f6c34(unsigned char *src)
 {
     unsigned char v = *src;
-    ((anmModel_c *)this->mAnmModel)->func_ov002_020f6514(&data_ov002_0210bc88, v);
+    ((anmModel_c *)this->mAnmModel)->func_ov002_020f6514(data_ov002_0210bc88, v);
     return 1;
 }
 
@@ -2911,7 +2900,7 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
     {
         anmModel_c *obj = (anmModel_c *)this->mAnmModel;
         if (obj->mAnimEntry == 0 && (this->mGroundFlags & 1)) {
-            obj->func_ov002_020f6514(&data_ov002_0210bc88, 1);
+            obj->func_ov002_020f6514(data_ov002_0210bc88, 1);
         }
     }
     this->mPosY -= FX_MUL(mRate, 0x199);
@@ -3445,7 +3434,7 @@ int daDemo_c::Behavior()
     }
     if (this->mAnmModel != 0) {
         this->mAnmModel->mat4x3 = data_020a0e68;
-        (((anmModel_c *)this->mAnmModel))->func_ov002_020f64ac((char *)&data_ov002_0210bc88);
+        (((anmModel_c *)this->mAnmModel))->func_ov002_020f64ac(data_ov002_0210bc88);
         (((anmModel_c *)this->mAnmModel))->func_ov002_020f65ec();
     }
     return 1;
