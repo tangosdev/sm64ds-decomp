@@ -129,7 +129,6 @@ extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Mg_CheckBannerButton(int arg);
 extern void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6);
-extern void Mg_DrawRecordTable(void *);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Mg_CallStartRound(void *c, void *arg);
 }
@@ -990,7 +989,7 @@ void dMgState_c::DrawRecordTable() {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
-    Mg_DrawRecordTable(scene);
+    scene->DrawRecordTable();
     if (mTimer > 0)
         return;
     scene->DrawBlinkSprite(0xe0, 0xa0);

@@ -903,6 +903,16 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     void DrawTally(int);
     void DrawScoreTally(int, int, int);
     void DrawBlinkSprite(s32, s32);
+    /* The five saved records of save table GetSaveTable() (byte 1 of
+       param1): RankSessionBest places the session best among them,
+       DrawRecordTable shows them a row at a time. GetLastRecordRank's int is
+       unused. */
+    int GetLastRecordRank(int);
+    int FindRecordRank(int);
+    void RankSessionBest();
+    int GetSaveTable();
+    void DrawRecordTable();
+    void DrawRecordRow(int, int, int);
 
     s32 mTallyShown;            /* 0x050 */
     s32 mTallyAnimTimer;            /* 0x054 */

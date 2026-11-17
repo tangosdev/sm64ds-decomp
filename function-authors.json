@@ -18923,11 +18923,11 @@
     },
     "ov004:0x020ad6f4": {
       "author": "tangosdev",
-      "name": "Mg_GetLastRecordRank"
+      "name": "_ZN11dScMgBase_c17GetLastRecordRankEi"
     },
     "ov004:0x020ad6fc": {
       "author": "tangosdev",
-      "name": "Mg_FindRecordRank"
+      "name": "_ZN11dScMgBase_c14FindRecordRankEi"
     },
     "ov004:0x020ad79c": {
       "author": "tangosdev",
@@ -18947,7 +18947,7 @@
     },
     "ov004:0x020ad940": {
       "author": "tangosdev",
-      "name": "Mg_RankSessionBest"
+      "name": "_ZN11dScMgBase_c15RankSessionBestEv"
     },
     "ov004:0x020ada20": {
       "author": "tangosdev",
@@ -18983,7 +18983,7 @@
     },
     "ov004:0x020adc3c": {
       "author": "tangosdev",
-      "name": "Mg_GetSaveTable"
+      "name": "_ZN11dScMgBase_c12GetSaveTableEv"
     },
     "ov004:0x020adc4c": {
       "author": "tangosdev",
@@ -19279,11 +19279,11 @@
     },
     "ov004:0x020b14f0": {
       "author": "ruspecial",
-      "name": "Mg_DrawRecordTable"
+      "name": "_ZN11dScMgBase_c15DrawRecordTableEv"
     },
     "ov004:0x020b1710": {
       "author": "lunavyqo",
-      "name": "Mg_DrawRecordRow"
+      "name": "_ZN11dScMgBase_c13DrawRecordRowEiii"
     },
     "ov004:0x020b19f0": {
       "author": "tangosdev",

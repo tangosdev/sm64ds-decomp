@@ -15814,11 +15814,6 @@
         "return:void"
       ]
     },
-    "Mg_GetLastRecordRank": {
-      "src/minigames/d_s_mg_base.cpp": [
-        "arity:2"
-      ]
-    },
     "Mg_SetSessionBest": {
       "src/minigames/d_s_mg_base.cpp": [
         "return:int"

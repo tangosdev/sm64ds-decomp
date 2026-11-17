@@ -59,14 +59,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "Mg_GetLastRecordRank",
+      "symbol": "_ZN11dScMgBase_c17GetLastRecordRankEi",
       "address": "0x020ad6f4",
       "size": "0x00000008",
       "legacy_source": "src/func_ov004_020ad6f4.c",
       "ordinal": 2
     },
     {
-      "symbol": "Mg_FindRecordRank",
+      "symbol": "_ZN11dScMgBase_c14FindRecordRankEi",
       "address": "0x020ad6fc",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov004_020ad6fc.c",
@@ -101,7 +101,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "Mg_RankSessionBest",
+      "symbol": "_ZN11dScMgBase_c15RankSessionBestEv",
       "address": "0x020ad940",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov004_020ad940.cpp",
@@ -164,7 +164,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "Mg_GetSaveTable",
+      "symbol": "_ZN11dScMgBase_c12GetSaveTableEv",
       "address": "0x020adc3c",
       "size": "0x00000010",
       "legacy_source": "src/func_ov004_020adc3c.c",
@@ -682,14 +682,14 @@
       "ordinal": 90
     },
     {
-      "symbol": "Mg_DrawRecordTable",
+      "symbol": "_ZN11dScMgBase_c15DrawRecordTableEv",
       "address": "0x020b14f0",
       "size": "0x00000220",
       "legacy_source": "src/func_ov004_020b14f0.c",
       "ordinal": 91
     },
     {
-      "symbol": "Mg_DrawRecordRow",
+      "symbol": "_ZN11dScMgBase_c13DrawRecordRowEiii",
       "address": "0x020b1710",
       "size": "0x000002e0",
       "legacy_source": "src/func_ov004_020b1710.c",
