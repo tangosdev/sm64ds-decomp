@@ -734,8 +734,6 @@ void func_ov074_021201ec(void) {}
  * by mMusicStarted) and the state advances to 1.
  */
 void daKuriKing_c::UpdateIntroTalk() {
-    struct Ang16 { short v[3]; };
-    struct Ang16 ang;
     struct Vector3 look, pos;
     struct Vector3 msgpos[2];
     daPly_c *player;
@@ -761,11 +759,9 @@ void daKuriKing_c::UpdateIntroTalk() {
     cam->SetLookAt(look);
     cam->SetPos(pos);
 
-    ang = *(struct Ang16 *)&this->mAngle.x;
-    ang.v[1] += 0x7fff;
-    player->mAngle.x = ang.v[0];
-    player->mAngle.y = ang.v[1];
-    player->mAngle.z = ang.v[2];
+    Vector3_16 ang = this->mAngle;
+    ang.y += 0x7fff;
+    player->mAngle = ang;
 
     {
         const Vector3 *pv = &player->mPos;
