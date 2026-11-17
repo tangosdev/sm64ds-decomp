@@ -2611,8 +2611,8 @@ flag_done:
     Sound::PlayBank0(0xd0, mCamSpacePos);
 
     if (mIsInShallowWater != 0 && mIsUnderwater == 0) {
-        newId = Particle::System::NewCheckWaterRipple(mParticle1, kPtclHeavyStepRipple, this->mPos.x,
-                                                      data_0209f32c, this->mPos.z, 0);
+        newId = Particle::System::NewCheckWaterRipple(mParticle1, kPtclHeavyStepRipple,
+                                                      this->mPos.x, data_0209f32c, this->mPos.z, 0);
         mParticle1 = newId;
     }
 
@@ -3201,12 +3201,14 @@ int daPly_c::func_ov002_020c0d90(int y) {
                 Particle::System::NewSplash(this->mPos.x, y, this->mPos.z);
             } else {
                 this->mParticle1 = Particle::System::NewCheckWaterRipple(
-                    this->mParticle1, kPtclMegaSplash, this->mPos.x, data_0209f32c, this->mPos.z, 0);
+                    this->mParticle1, kPtclMegaSplash, this->mPos.x, data_0209f32c, this->mPos.z,
+                    0);
             }
         }
     }
 
-    if (((y - 0x64000) >> 12) < (this->mPos.y >> 12)) return 0;
+    if (((y - 0x64000) >> 12) < (this->mPos.y >> 12))
+        return 0;
     if (this->mSpeed.y > 0)
         return 0;
 
@@ -5503,10 +5505,12 @@ void daPly_c::func_ov002_020c5d60() {
         if (this->mStateStep == 1)
             return;
     }
-  if (this->mPos.y >= (int)0xf8ad0000) return;
-  if (this->IsState(data_ov002_02110064)) return;
-  (this->mStateFlags) |= 0x400;
-  this->Die(1);
+    if (this->mPos.y >= (int)0xf8ad0000)
+        return;
+    if (this->IsState(data_ov002_02110064))
+        return;
+    (this->mStateFlags) |= 0x400;
+    this->Die(1);
 }
 
 extern "C" {
@@ -7069,7 +7073,8 @@ int daPly_c::func_ov002_020c904c() {
     char *anim;
     ApproachLinear(this->mPos.x, this->mStateTarget.x, 0x8000);
     ApproachLinear(this->mPos.z, this->mStateTarget.z, 0x8000);
-    if (Math_Function_0203b14c(&mPos.y, (this->mGroundY) + 0x190000, 0x200, 0x64000, 0x10000) == 0) {
+    if (Math_Function_0203b14c(&mPos.y, (this->mGroundY) + 0x190000, 0x200, 0x64000, 0x10000) ==
+        0) {
         this->mStateStep = 0xc;
         this->SetAnim(0x56, 0, 0x1000, 0);
         this->mStateArg = 0;
@@ -8830,8 +8835,9 @@ int daPly_c::St_MetalWaterWater_Main() {
         mAngleY = mPrevAngleY;
         ApproachLinear(mHorzSpeed, v, 0x400);
         py = mPos.y;
-    lim = py + 0x46000;
-    if (mIsMega != 0) lim = py + 0xd2000;
+        lim = py + 0x46000;
+        if (mIsMega != 0)
+            lim = py + 0xd2000;
         if (data_0209f32c > lim) {
             mVertAccel = -0x1800;
             mTerminalVelocity = -0x14000;
@@ -8901,7 +8907,7 @@ int daPly_c::St_MetalWaterGround_Main() {
         this->ChangeState(data_ov002_021106c4);
         return 1;
     }
-    if(mIsAirborne != 0 && (mPos.y - mGroundY) >= 0x32000){
+    if (mIsAirborne != 0 && (mPos.y - mGroundY) >= 0x32000) {
         mStateStep = 1;
         this->ChangeState(data_ov002_021106c4);
         return 1;
@@ -12459,8 +12465,8 @@ void daPly_c::func_ov002_020d4748() {
 void daPly_c::PlayLandingEffects() {
     int id;
     if (mIsInShallowWater) {
-        mParticle1 = Particle::System::NewCheckWaterRipple(mParticle1, kPtclShallowWaterLand, mPos.x,
-                                                           data_0209f32c, mPos.z, 0);
+        mParticle1 = Particle::System::NewCheckWaterRipple(mParticle1, kPtclShallowWaterLand,
+                                                           mPos.x, data_0209f32c, mPos.z, 0);
     }
     if (mSinkDepth > 0x32000) {
         Sound::PlayBank0(0xb3, mCamSpacePos);
@@ -13924,7 +13930,7 @@ int daPly_c::St_YoshiPower_Main() {
             if (((unsigned int)(anim8.currFrame << 4) >> 0x10) >= 4) {
                 int i2 = ((u16)mAngleY >> 4) * 2;
                 const short *tbl = FX_SinCosTable_;
-                int zv = mPos.z + (int)(((((long long)tbl[i2+1]) << 18) + 0x800) >> 12);
+                int zv = mPos.z + (int)(((((long long)tbl[i2 + 1]) << 18) + 0x800) >> 12);
                 int yv = mPos.y + 0x37000;
                 pos.x = mPos.x + (int)(((((long long)tbl[i2]) << 18) + 0x800) >> 12);
                 pos.z = zv;
@@ -16451,8 +16457,7 @@ int daPly_c::St_ButtSlide_Main() {
             func_ov002_020dc560();
         }
         (this->mStateStep)++;
-        if (mStateStep > 0x1e
-            && mPos.y - mGroundY > 0x1f4000) {
+        if (mStateStep > 0x1e && mPos.y - mGroundY > 0x1f4000) {
             this->ChangeState(data_ov002_021101b4);
             return 1;
         }
@@ -20390,9 +20395,8 @@ after_player_slot:
         Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
         mIsFallScreaming = 0;
     }
-    if (mIsAirborne != 0 && mIsFallScreaming == 0
-        && IsState(data_ov002_02110454) == 0
-        && (mPeakY - mPos.y) > 0x47e000) {
+    if (mIsAirborne != 0 && mIsFallScreaming == 0 && IsState(data_ov002_02110454) == 0 &&
+        (mPeakY - mPos.y) > 0x47e000) {
         mIsFallScreaming = 1;
         Sound::PlayCharVoice(mCharacter, 0x1d, mCamSpacePos);
     }

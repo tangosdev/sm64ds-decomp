@@ -657,7 +657,7 @@ void daNknk_c::UpdateClosestPlayer(int lim) {
         mPlayerDist = 0x61a8000;
     } else {
         Vector3 v;
-        int* src = &mClosestPlayer->mPos.x;
+        int *src = &mClosestPlayer->mPos.x;
         v.x = src[0];
         v.y = src[1];
         v.z = src[2];

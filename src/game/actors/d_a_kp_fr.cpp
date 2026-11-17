@@ -186,7 +186,7 @@ void daKpFr_c::func_ov070_02121e14() {
   dBgCh_Gnd ground;
   ground.SetObjAndPos(mPos, this);
   if (ground.DetectClsn() != 0)
-    shadowDepth = (mPos.y - ground.clsnY) + 0x1e000;
+      shadowDepth = (mPos.y - ground.clsnY) + 0x1e000;
   else
     shadowDepth = 0x12c000;
   DropShadowRadHeight(mShadowModel, mMatrix, 0x64000, shadowDepth, 15);
@@ -258,8 +258,7 @@ void daKpFr_c::func_ov070_02121be4()
         pos[2] = z;
     }
     ground.SetObjAndPos(*(Vector3*)pos, this);
-    if (ground.DetectClsn() == 0 ||
-        ground.clsnY < mPos.y - 0x32000) {
+    if (ground.DetectClsn() == 0 || ground.clsnY < mPos.y - 0x32000) {
         mPos.x = mPrevPos.x;
         mPos.y = mPrevPos.y;
         mPos.z = mPrevPos.z;

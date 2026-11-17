@@ -865,8 +865,8 @@ int daObjMarioCap_c::Fall() {
     }
   }
   if (data_02092138 > mPos.y) {
-    SaveData::PlayerLoseCap();
-    MarkForDestruction();
+      SaveData::PlayerLoseCap();
+      MarkForDestruction();
   }
   return 1;
 }

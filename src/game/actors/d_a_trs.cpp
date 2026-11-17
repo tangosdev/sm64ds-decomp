@@ -402,7 +402,8 @@ void daTrs_c::func_ov063_021166ac() {
         this->mAnmModel.ApplyOpacity((u8)(this->mOpacity >> 3), 1);
     }
 
-    Matrix4x3_FromTranslation(&data_020a0e68, this->mPos.x >> 3, this->mPos.y >> 3, this->mPos.z >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, this->mPos.x >> 3, this->mPos.y >> 3,
+                              this->mPos.z >> 3);
     this->mShadowMtx = data_020a0e68;
     {
         int big = (this->actorID == TRS_ID_BOSS_TERESA);
@@ -432,7 +433,8 @@ void daTrs_c::func_ov063_021166ac() {
 
 void daTBasket_c::func_ov063_021169c4() {
 
-    Matrix4x3_FromTranslation(&this->mModel.mat4x3, this->mPos.x>>3, this->mPos.y>>3, this->mPos.z>>3);
+    Matrix4x3_FromTranslation(&this->mModel.mat4x3, this->mPos.x >> 3, this->mPos.y >> 3,
+                              this->mPos.z >> 3);
     DropShadowRadHeight(this->mShadowModel, this->mModel.mat4x3, 0x64000, 0x64000, 0xf);
 }
 
@@ -1569,8 +1571,7 @@ void daTrs_c::func_ov063_02118eac() {
     v.x = this->mPos.x;
     v.y = this->mPos.y;
     v.z = this->mPos.z;
-    this->mPos.y =
-        this->mPos.y + 0x64000;
+    this->mPos.y = this->mPos.y + 0x64000;
     if (this->mSpawnedActorID == 0) {
         return;
     }
@@ -2943,8 +2944,7 @@ block_39:
             if (d1 != 0) {
                 if (mVariant < 8) {
                     if (mBooFlags.groundSeen != 0) {
-                        if ((rc2.DetectClsn() == 0) ||
-                            ((mPos.y - rc2.clsnY) > 0x12c000)) {
+                        if ((rc2.DetectClsn() == 0) || ((mPos.y - rc2.clsnY) > 0x12c000)) {
                             mPos = mLastGroundPos;
                         } else {
                             mLastGroundPos = mPos;
@@ -2957,8 +2957,7 @@ block_39:
                 }
             } else {
             ray_e:
-                if ((rc2.DetectClsn() != 0) &&
-                    ((mPos.y - rc2.clsnY) < 0x12c000)) {
+                if ((rc2.DetectClsn() != 0) && ((mPos.y - rc2.clsnY) < 0x12c000)) {
                     fp = (u16 *)&this->mBooFlags;
                     *fp = (*fp) | TRS_FLAG_GROUND_SEEN;
                     mLastGroundPos = mPos;

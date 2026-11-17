@@ -344,8 +344,7 @@ int daMky_c::RevertOffLedge() {
             pos.z = z;
         }
         rg.SetObjAndPos(pos, this);
-        if (rg.DetectClsn() == 0 ||
-            ABS(rg.clsnY - this->mPos.y) > 0x1000) {
+        if (rg.DetectClsn() == 0 || ABS(rg.clsnY - this->mPos.y) > 0x1000) {
             this->mHorzSpeed = 0;
             this->mPos.x = this->mPrevPos.x;
             this->mPos.y = this->mPrevPos.y;

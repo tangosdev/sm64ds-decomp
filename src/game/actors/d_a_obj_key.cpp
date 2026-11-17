@@ -553,15 +553,15 @@ void daObjKey_c::StateStarJump()
 
     case 5:
         {
-            s32 *pos = &mPlayer->mPos.x;
-            mPos.x = pos[0];
-            mPos.y = pos[1];
-            mPos.z = pos[2];
-            mAngleY = mPlayer->mAngleY;
-            mAnmModel.Advance();
-            if (mAnmModel.Finished())
-                mStep++;
-            return;
+        s32 *pos = &mPlayer->mPos.x;
+        mPos.x = pos[0];
+        mPos.y = pos[1];
+        mPos.z = pos[2];
+        mAngleY = mPlayer->mAngleY;
+        mAnmModel.Advance();
+        if (mAnmModel.Finished())
+            mStep++;
+        return;
         }
     }
 }

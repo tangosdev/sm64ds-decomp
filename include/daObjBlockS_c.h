@@ -81,7 +81,7 @@ struct daObjBlockS_c : dBgActor_c {
        those the quicksand tiers) and zeroed on entering every state
        except STATE_IDLE. */
     s32 mClsnYOffsetTarget;     /* 0x5f0 */
-    s32 mClsnYOffset;           /* 0x5f4 -- how far the model, collider and cylinders sit below mPos.y */
+    s32 mClsnYOffset; /* 0x5f4 -- how far the model, collider and cylinders sit below mPos.y */
     /* Handle threaded through Sound::PlayLong in the slide step, which plays
        it together with the sliding-dust particle. */
     u32 mSlideSoundHandle;      /* 0x5f8 */

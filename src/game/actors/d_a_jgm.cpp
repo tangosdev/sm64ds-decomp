@@ -258,7 +258,8 @@ s32 daJgm_c::UpdateHoverState()
         /* Nested on purpose: one flat && chain is 12 bytes shorter. */
         daPly_c *p = ClosestNonVanishPlayer();
         if (p != 0) {
-            if (p->mPos.y < mPos.y && Vec3_HorzDist(&mPos, &p->mPos) < 0x190000 && CountSpinies() < 4)
+            if (p->mPos.y < mPos.y && Vec3_HorzDist(&mPos, &p->mPos) < 0x190000 &&
+                CountSpinies() < 4)
                 SetState(1);
             else
                 mTimer = 150;

@@ -353,7 +353,7 @@ void daBtfly_c::State2()
         UpdatePos(0);
 
         mPos.y -= (FX_MUL(mHorzSpeed, FX_SinIdx((unsigned short)mPrevAngleX >> 4)) +
-                  FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 20 / 4);
+                   FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 20 / 4);
         mStateTimer++;
         if (mStateTimer > 100)
             mStateTimer = 0;

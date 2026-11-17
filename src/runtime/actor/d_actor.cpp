@@ -665,8 +665,7 @@ int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
     s32 vel = player.mSpeed.y;
 
     if (clsn.flags & 6) {
-        if (vel < 0 && player.mIsAirborne != 0
-            && mPos.y < player.mPos.y - 0xa000)
+        if (vel < 0 && player.mIsAirborne != 0 && mPos.y < player.mPos.y - 0xa000)
             return 1;
         return 0;
     } else {

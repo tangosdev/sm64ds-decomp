@@ -352,7 +352,9 @@ void daOnms_c::StateLand()
     mHorzSpeed = 0;
     if (!mStateTimer) {
         Vector3 v;
-        v.x = mPos.x; v.y = mPos.y; v.z = mPos.z;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         Earthquake(v, 0x860000);
         func_02012694(0x46, CamPos(this));
     }

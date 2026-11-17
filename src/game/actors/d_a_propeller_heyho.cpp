@@ -450,7 +450,8 @@ int daPropeller_Heyho_c::func_ov070_0211fd98() {
         p = this->ClosestNonVanishPlayer();
         if (p) {
             int *pos =
-                &p->mPos.x; /* int view is load-bearing: plain p->mPos.x reads change this function's size */
+                &p->mPos
+                     .x; /* int view is load-bearing: plain p->mPos.x reads change this function's size */
             t.x = pos[0];
             t.y = pos[1];
             t.z = pos[2];
@@ -521,8 +522,8 @@ int daPropeller_Heyho_c::func_ov070_0211fae4() {
 
     {
         int *q =
-            &player
-                 ->mPos.x; /* int view is load-bearing: plain player->mPos.x reads change this function's size */
+            &player->mPos
+                 .x; /* int view is load-bearing: plain player->mPos.x reads change this function's size */
         vb.x = q[0];
         vb.y = q[1];
         vb.z = q[2];
@@ -690,7 +691,8 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         return 1;
     }
 
-    *(V3w*)&tmp = *(V3w*)&player->mPos.x;  /* array-wrapper keeps the ldm/stm block copy under -lang c++ */
+    *(V3w *)&tmp =
+        *(V3w *)&player->mPos.x; /* array-wrapper keeps the ldm/stm block copy under -lang c++ */
     z = 0;
     v.x = z;
     v.y = z;
@@ -712,8 +714,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     ApproachAngle(&mPrevAngleX, vAngle, 0xa, 0x200, 0x100);
 
     v.z = 0x11000;
-    if (mPos.y <= tmp.y + 0x5000 ||
-        mPos.y <= player->mPos.y + 0x5000 ||
+    if (mPos.y <= tmp.y + 0x5000 || mPos.y <= player->mPos.y + 0x5000 ||
         Vec3_Dist(&mPos, &mHomePos) > kHomeLeashDist) {
         DecIfAbove0_Short(&mStateTimer);
         v.z = 0x9000;

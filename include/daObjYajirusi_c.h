@@ -42,7 +42,7 @@ struct daObjYajirusi_c {
         (include/dActor_c.h). The flat view drops the inheritance but
         src/game/actors/d_a_obj_yajirusi.cpp (Kill) still reads these two fields by
         name, so they are pinned here rather than buried in padding. */
-    Vector3 mPos;                      /* 0x05c */
+    Vector3 mPos; /* 0x05c */
     u8  pad_068[0xc];
     Vector3 mCamSpacePos; /* 0x074 */
     u8 pad_080[0xe];

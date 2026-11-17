@@ -292,7 +292,7 @@ int daSnowman_c::FindClosestPlayerDist() {
             daPly_c *obj = gPlayers[i];
             if (obj != 0) {
                 int dist;
-                int *s = &obj->mPos.x;   /* one base pointer; see 0212423c */
+                int *s = &obj->mPos.x; /* one base pointer; see 0212423c */
                 v.x = s[0];
                 v.y = s[1];
                 v.z = s[2];
@@ -473,7 +473,7 @@ int daSnowman_c::StateThrowSnowballExecute() {
                 player = this->ClosestPlayer();
                 if (player != 0) {
                     int angle;
-                    int *q = &player->mPos.x;   /* one base pointer; see 0212423c */
+                    int *q = &player->mPos.x; /* one base pointer; see 0212423c */
                     v[1].x = q[0];
                     v[1].y = q[1];
                     v[1].z = q[2];
@@ -786,10 +786,8 @@ void daSnowman_c::UpdateModelMatrices() {
     if (this->mType != 0)
         return;
 
-    Matrix4x3_FromTranslation(&data_020a0e68,
-        this->mPos.x >> 3,
-        (this->mPos.y - 0xe000) >> 3,
-        this->mPos.z >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, this->mPos.x >> 3, (this->mPos.y - 0xe000) >> 3,
+                              this->mPos.z >> 3);
     this->mShadowMatrix = data_020a0e68;
     DropShadowRadHeight(this->mShadowModel, this->mShadowMatrix, 0x78000, 0xc8000, 0xf);
 }

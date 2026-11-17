@@ -489,10 +489,7 @@ void daOwl_c::UpdateModelTransform() {
     mAnmModel.ApplyOpacity(mOpacity, 1);
     mAnmModel.mat4x3 = data_020a0e68;
     MTX_Concat43(&mAnmModel.data.transforms[1], &mAnmModel.mat4x3, &out);
-    Matrix4x3_FromTranslation(&data_020a0e68,
-        mPos.x >> 3,
-        (mPos.y - 0x38000) >> 3,
-        mPos.z >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
     mShadowMat = data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x64000, 0x320000, 0xf);
 }

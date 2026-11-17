@@ -430,7 +430,8 @@ int daObjHatenaBlock_c::Behavior()
     CallStateUpdate();
     if (mState != STATE_POPPED) {
         UpdatePos(0);
-        if (mPos.y <= mHomePosY) mPos.y = mHomePosY;
+        if (mPos.y <= mHomePosY)
+            mPos.y = mHomePosY;
         UpdateModelMatrix();
         UpdateDropShadow();
     }

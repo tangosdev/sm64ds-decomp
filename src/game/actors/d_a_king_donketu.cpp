@@ -524,7 +524,7 @@ s32 daKing_Donketu_c::HandleHit() {
             goto done0;
     }
     {
-        s32* pv = &target->mPos.x;
+        s32 *pv = &target->mPos.x;
         Particle::System::NewSimple(kPtclChiefChillyHitPlayer, pv[0], pv[1], pv[2]);
     }
     if (mState == &data_ov073_021233d0) {
@@ -601,7 +601,7 @@ int daKing_Donketu_c::UpdateDefeat() {
     func_02012694(SND_POOF, &mCamSpacePos);
     if (found != 0) {
         struct Vector3 fp;
-        const s32* pv = &found->mPos.x;
+        const s32 *pv = &found->mPos.x;
         fp.x = pv[0];
         fp.y = pv[1];
         fp.z = pv[2];
@@ -660,7 +660,7 @@ int daKing_Donketu_c::UpdateDefeatCutscene2() {
     RenewLoopedParticles();
 
     {
-        const s32* pv = &player->mPos.x;
+        const s32 *pv = &player->mPos.x;
         msgpos[0].x = pv[0];
         msgpos[0].y = pv[1];
         msgpos[0].z = pv[2];
@@ -1498,7 +1498,7 @@ int daKing_Donketu_c::UpdateIntroTalk() {
     if (player == 0) return 1;
 
     {
-        const s32* pv = &player->mPos.x;
+        const s32 *pv = &player->mPos.x;
         vplayer.x = pv[0];
         vplayer.y = pv[1];
         vplayer.z = pv[2];

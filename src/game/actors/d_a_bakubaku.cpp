@@ -231,9 +231,7 @@ void daBakubaku_c::UpdateModelMatrix() {
     Matrix4x3_ApplyInPlaceToRotationXYZExt(
         &data_020a0e68, mAngleX, mAngleY, mAngleZ);
     mAnmModel.mat4x3 = data_020a0e68;
-    Matrix4x3_FromTranslation(
-        &data_020a0e68, mPos.x >> 3,
-        (mPos.y - 0x5a000) >> 3, mPos.z >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x5a000) >> 3, mPos.z >> 3);
     mShadowMat = data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0xfa000, 0x258000, 0xf);
 }
@@ -611,7 +609,8 @@ int daBakubaku_c::ShouldReturnHome() {
     if (Vec3_HorzDist(&mSpawnPos, &mPos) > 0x4b0000)
         return 1;
     if (mState != &data_ov032_02113abc) {
-        if (data_0209f32c < mPos.y) return 1;
+        if (data_0209f32c < mPos.y)
+            return 1;
     }
     return 0;
 }

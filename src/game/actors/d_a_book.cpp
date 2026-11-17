@@ -197,7 +197,9 @@ int daBook_c::CheckAttacks() {
     }
     if (r == HIT_METAL_PLAYER) {
         Vector3 v;
-        v.x = mPos.x; v.y = mPos.y; v.z = mPos.z;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         mTouchedPlayer->Hurt(v, 0, 0xc000, 1, 0, 1);
         Die();
         return 1;
@@ -206,11 +208,15 @@ int daBook_c::CheckAttacks() {
         int eq = (actorID == kKillerBookActorId);
         if (eq) {
             Vector3 v;
-            v.x = mPos.x; v.y = mPos.y; v.z = mPos.z;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             mTouchedPlayer->Hurt(v, 2, 0xc000, 1, 0, 1);
         } else {
             Vector3 v;
-            v.x = mPos.x; v.y = mPos.y; v.z = mPos.z;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             mTouchedPlayer->Hurt(v, 1, 0xc000, 1, 0, 1);
         }
         mCoinType = 0;
@@ -556,7 +562,7 @@ void daBook_c::StateWait() {
     Vector3 v;
     daPly_c *p = ClosestPlayer();
     {
-        int* s = &p->mPos.x;
+        int *s = &p->mPos.x;
         v.x = s[0];
         v.y = s[1];
         v.z = s[2];

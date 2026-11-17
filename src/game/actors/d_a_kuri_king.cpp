@@ -328,9 +328,9 @@ int daKuriKing_c::SpawnVanishCopy() {
     daPly_c *player;
     spawnPos.x=0; spawnPos.y=0; spawnPos.z=0;
     spawnAngle.x=0; spawnAngle.y=0; spawnAngle.z=0;
-    spawnPos.x=this->mPos.x;
-    spawnPos.y=this->mPos.y;
-    spawnPos.z=this->mPos.z;
+    spawnPos.x = this->mPos.x;
+    spawnPos.y = this->mPos.y;
+    spawnPos.z = this->mPos.z;
     spawnPos.y+=0xe4000;
     basePos.x=spawnPos.x;
     basePos.y=spawnPos.y;
@@ -413,7 +413,7 @@ void daKuriKing_c::UpdateDefeat() {
                     s32 flag = (actor->mFlags & 0x40000) ? 1 : 0;
                     if (flag == 0) {
                         Vector3 v2;
-                        s32* src = &actor->mPos.x;
+                        s32 *src = &actor->mPos.x;
                         v2.x = src[0];
                         v2.y = src[1];
                         v2.z = src[2];
@@ -1750,10 +1750,8 @@ int daKuriKing_c::BehaviorVanish() {
     rg.StopDetectingOrdinary();
     rg.SetObjAndPos(pos, this);
 
-    if (rg.DetectClsn() != 0
-        && func_02037e20((int *)&rg.surface) != 0
-        && rg.clsnY != (int)0x80000000
-        && this->mPos.y < rg.clsnY) {
+    if (rg.DetectClsn() != 0 && func_02037e20((int *)&rg.surface) != 0 &&
+        rg.clsnY != (int)0x80000000 && this->mPos.y < rg.clsnY) {
         this->PoofDust();
         this->MarkForDestruction();
         return 1;

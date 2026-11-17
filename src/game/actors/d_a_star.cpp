@@ -668,8 +668,7 @@ int daStarBase_c::Behavior()
                 }
             }
         }
-        Matrix4x3_FromTranslation(&mModel.mat4x3, mPos.x >> 3, mPos.y >> 3,
-                                  mPos.z >> 3);
+        Matrix4x3_FromTranslation(&mModel.mat4x3, mPos.x >> 3, mPos.y >> 3, mPos.z >> 3);
     } else {
         mAngleY += 0x400;
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);

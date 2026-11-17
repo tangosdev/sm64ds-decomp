@@ -44,7 +44,7 @@ struct daWanwan_c : dEnemyBase_c {
     s32 mState;             /* 0x610 -- index into data_ov014_0211476c; SetState stores it */
     u8  pad_614[4];
     s32 mReleaseSpeed;      /* 0x618 -- release step 6 approach speed */
-    u8  mIsOnGround;        /* 0x61c -- set when mPos.y was clamped to the rest height */
+    u8 mIsOnGround;         /* 0x61c -- set when mPos.y was clamped to the rest height */
     u8  mWasOnGround;       /* 0x61d -- previous frame; landing fires on the rising edge */
 
     /* Defined INLINE on purpose. Out of line, mwccarm emits D2, D0, D1; the ROM

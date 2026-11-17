@@ -1538,7 +1538,8 @@ int daBtn_c::func_ov079_02123bcc() {
     player = mPlayers[mNearestPlayer];
     p = &player->mPos.x;
     v[0] = p[0]; v[1] = p[1]; v[2] = p[2];
-    if (v[1] > mPos.y) return 0;
+    if (v[1] > mPos.y)
+        return 0;
     dist = ::Vec3_HorzDist((const ::Vector3 *)v, &mPos);
     a0 = mAngleY; a1 = mBodyYaw; a2 = mTargetAngle;
     raw = (a0 + a1) << 16; ang = a2 + (raw >> 16); rangle = raw >> 16;
@@ -1687,7 +1688,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         }
         {
             Vector3 pos;
-            int* q = &other->mPos.x;
+            int *q = &other->mPos.x;
             pos.x = q[0];
             pos.y = q[1];
             pos.z = q[2];

@@ -855,7 +855,8 @@ int daMip_c::StateIdleMain()
         if (t == 7 || t == 1 ||
             (t == 4 && mCharacterId == 1) ||
             (t == 4 && mCharacterId == 3)) {
-            if (mPos.y + 0x64000 <= pp.y) cond = 1;
+            if (mPos.y + 0x64000 <= pp.y)
+                cond = 1;
         }
         if (!cond) {
             mHorzSpeed = 0;
@@ -939,10 +940,7 @@ void daMip_c::UpdateMatrixAndShadow()
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, tmp);
-    Matrix4x3_FromTranslation(&data_020a0e68,
-        mPos.x >> 3,
-        (mPos.y - 0xe000) >> 3,
-        mPos.z >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xe000) >> 3, mPos.z >> 3);
     mShadowMtx = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMtx, 0x46000, 0x258000, 0xf);
 }

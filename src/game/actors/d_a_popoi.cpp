@@ -257,7 +257,8 @@ int daPopoi_c::Behavior()
 int daPopoi_c::Render()
 {
     /* Nothing below the water surface is drawn. */
-    if (mPos.y < data_0209f32c) return 1;
+    if (mPos.y < data_0209f32c)
+        return 1;
     /* Through a pointer, so the call dispatches through vtable slot 5 as the
        ROM does instead of binding dExtAnmModel_c::Render directly. */
     dExtAnmModel_c *model = &mAnmModel;

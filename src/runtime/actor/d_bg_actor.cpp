@@ -391,7 +391,7 @@ int dBgActor_c::IsClsnInRange(fx32 radius, fx32 yOffset) {
 void dBgActor_c::UpdateModelPosAndRotY()
 {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-    mModel.mat4x3.m[9]  = mPos.x >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
 }
@@ -401,7 +401,7 @@ void dBgActor_c::UpdateModelPosAndRotY()
 void dBgActor_c::UpdateClsnPosAndRot()
 {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9]  = mPos.x;
+    mClsnMat.m[9] = mPos.x;
     mClsnMat.m[10] = mPos.y;
     mClsnMat.m[11] = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngleY);

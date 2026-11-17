@@ -438,8 +438,8 @@ int daPgRcer_c::StateRace() {
             mPenguinFinished = 1;
         }
         mSlideSound = Sound::PlayLong(mSlideSound, 3, 0x185, mCamSpacePos, 0);
-        mDustParticle = Particle::System::New(mDustParticle, kPtclSlideDust, mPos.x, mPos.y + 0x32000,
-                                              mPos.z, 0, 0);
+        mDustParticle = Particle::System::New(mDustParticle, kPtclSlideDust, mPos.x,
+                                              mPos.y + 0x32000, mPos.z, 0, 0);
         break;
 
     case 2:

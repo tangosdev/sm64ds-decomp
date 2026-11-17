@@ -759,10 +759,7 @@ void daC_Jugem_c::UpdateShadowPlayer()
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
-    Matrix4x3_FromTranslation(&data_020a0e68,
-        mPos.x >> 3,
-        (mPos.y - 0x38000) >> 3,
-        mPos.z >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
     *(Mtx43 *)&mShadowMat1 = *(Mtx43 *)&data_020a0e68;
 
     DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMat1, 0x46000, 0x258000, 0xf);

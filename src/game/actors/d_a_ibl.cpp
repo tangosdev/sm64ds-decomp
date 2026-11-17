@@ -633,7 +633,8 @@ void daIbl_c::SpawnerBehavior() {
     }
 
     if ((param1 & 0xf) != daIbl_KIND_PATH_RAMP) {
-        if (pos.y >= mPos.y - 0x28000) return;
+        if (pos.y >= mPos.y - 0x28000)
+            return;
     }
 
     {

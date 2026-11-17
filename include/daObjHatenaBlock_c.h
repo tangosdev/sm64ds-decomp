@@ -26,7 +26,7 @@ struct daObjHatenaBlock_c : dBgActor_c {
        translation (UpdateModelMatrix / 02149e38 / 021498e0). fx32:
        0x1000 = 1 unit. */
     s32 mBounceYOffs;                 /* 0x3dc */
-    s32 mHomePosY;                    /* 0x3e0 -- mPos.y at InitResources; Behavior clamps mPos.y up to it after UpdatePos (not while POPPED) */
+    s32 mHomePosY; /* 0x3e0 -- mPos.y at InitResources; Behavior clamps mPos.y up to it after UpdatePos (not while POPPED) */
     /* Floor Y from the ground raycast (GetFloorY); shadow height. */
     s32 mFloorY;                      /* 0x3e4 */
     s32 mState;                       /* 0x3e8 -- State */

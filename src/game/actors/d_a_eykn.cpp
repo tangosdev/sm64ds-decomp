@@ -312,8 +312,8 @@ void daEykn_c::CheckAttacks()
     if (mdCcAcPos_c.hitFlags & kKillHit) {
         mParticleID0 =
             (u32)Particle::System::New(mParticleID0, kDeathPtcl0, mPos.x, mPos.y, mPos.z, 0, 0);
-        mParticleID1 =
-            Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPos.x, mPos.y, mPos.z, 0);
+        mParticleID1 = Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPos.x, mPos.y,
+                                                          mPos.z, 0);
         SetState(2);
         return;
     }
@@ -359,8 +359,8 @@ int daEykn_c::St_Die_Main()
         Particle::System *p0;
         Particle::System *p1;
         mParticleID0 = Particle::System::New(id0, kDeathPtcl0, mPos.x, mPos.y, mPos.z, 0, 0);
-        mParticleID1 =
-            Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPos.x, mPos.y, mPos.z, 0);
+        mParticleID1 = Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPos.x, mPos.y,
+                                                          mPos.z, 0);
         p0 = Particle::System::FromUniqueID(mParticleID0);
         p1 = Particle::System::FromUniqueID(mParticleID1);
         if (p0 != 0) {
