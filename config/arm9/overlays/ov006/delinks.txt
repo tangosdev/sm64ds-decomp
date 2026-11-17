@@ -333,14 +333,21 @@
     .data.data_ov006_0213abb8 start:0x0213abb8 end:0x0213abc0 kind:data align:4
     .data.data_ov006_0213abc0 start:0x0213abc0 end:0x0213abc8 kind:data align:4
     .data.sLuigiPictureSprites start:0x0213abc8 end:0x0213abd8 kind:data align:4
-    .data.gap43 start:0x0213abd8 end:0x0213acc0 kind:data align:4
+    .data.gap43 start:0x0213abd8 end:0x0213ac48 kind:data align:4
+    .data.pmf_Dealer start:0x0213ac48 end:0x0213acc0 kind:data align:4
     .data.sMascotWalkerPaths start:0x0213acc0 end:0x0213ace0 kind:data align:4
     .data.data_ov006_0213ace0 start:0x0213ace0 end:0x0213ad04 kind:data align:4
     .data.data_ov006_0213ad04 start:0x0213ad04 end:0x0213ad28 kind:data align:4
     .data.sDealerIdentityMtx start:0x0213ad28 end:0x0213ad58 kind:data align:4
     .data.data_ov006_0213ad58 start:0x0213ad58 end:0x0213ad88 kind:data align:4
     .data.data_ov006_0213ad88 start:0x0213ad88 end:0x0213adb8 kind:data align:4
-    .data.gap45 start:0x0213adb8 end:0x0213aee8 kind:data align:4
+    .data.pmf_Presenter start:0x0213adb8 end:0x0213add8 kind:data align:4
+    .data.gap45 start:0x0213add8 end:0x0213ade0 kind:data align:4
+    .data.pmf_PresenterWin start:0x0213ade0 end:0x0213ade8 kind:data align:4
+    .data.gap45b start:0x0213ade8 end:0x0213adf0 kind:data align:4
+    .data.pmf_PresenterMiss start:0x0213adf0 end:0x0213ae00 kind:data align:4
+    .data.gap45c start:0x0213ae00 end:0x0213aec0 kind:data align:4
+    .data.pmf_FlowerFace start:0x0213aec0 end:0x0213aee8 kind:data align:4
     .data.data_ov006_0213aee8 start:0x0213aee8 end:0x0213af18 kind:data align:4
     .data.pmf_Heyho start:0x0213af18 end:0x0213afd0 kind:data align:4
     .data.gap46 start:0x0213afd0 end:0x0213b008 kind:data align:4
@@ -366,12 +373,17 @@ src/minigames/unit020bfec0.cpp:
     complete
     .text start:0x020bfec0 end:0x020c4048
     .bss start:0x021402e0 end:0x021402fc
+    .data.pmf_Dealer start:0x0213ac48 end:0x0213acc0
     .data.sMascotWalkerPaths start:0x0213acc0 end:0x0213ace0
     .data.data_ov006_0213ace0 start:0x0213ace0 end:0x0213ad04
     .data.data_ov006_0213ad04 start:0x0213ad04 end:0x0213ad28
     .data.sDealerIdentityMtx start:0x0213ad28 end:0x0213ad58
     .data.data_ov006_0213ad58 start:0x0213ad58 end:0x0213ad88
     .data.data_ov006_0213ad88 start:0x0213ad88 end:0x0213adb8
+    .data.pmf_Presenter start:0x0213adb8 end:0x0213add8
+    .data.pmf_PresenterWin start:0x0213ade0 end:0x0213ade8
+    .data.pmf_PresenterMiss start:0x0213adf0 end:0x0213ae00
+    .data.pmf_FlowerFace start:0x0213aec0 end:0x0213aee8
     .data.data_ov006_0213aee8 start:0x0213aee8 end:0x0213af18
 
 src/minigames/d_mg3d_heyho_obj_adapter.cpp:
