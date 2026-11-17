@@ -63,7 +63,7 @@ extern "C" {
        build_pin.verify compiles a single file and never links, so it returned
        (True, '2004/b56') on the broken spelling. Only rombuild.py caught it. */
 extern u32 ROOT_HEAP_ARENA_ID; /* 0x020a0ea4 */
-extern Heap *data_020a0e9c;    /* the root heap; unnamed */
+extern mHeap::Heap_t *data_020a0e9c; /* the root heap; unnamed */
 
 unsigned int OS_GetArenaLo(s32 arena);
 unsigned int OS_GetArenaHi(s32 arena);

@@ -7,7 +7,7 @@ extern "C" {
 
 extern WBTCommand *func_02065b88(void);
 extern int data_020a94c0;
-extern int data_020a9570;
+extern WBTCommand data_020a9570;
 
 int func_02065af0(int *thiz)
 {

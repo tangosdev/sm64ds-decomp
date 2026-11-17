@@ -81,15 +81,6 @@ typedef void (dScMgSlot3_c::*SlotState)();
    change those functions' code. */
 #define SLOT3_OFF(member) ((int)&((dScMgSlot3_c *)0)->member)
 
-/* One player's 4-byte touch record (PlayerInput.h): Slot1 Behavior reads
- * x/y through this view so the compiler, not the source, hoists them. */
-struct TouchRec {
-    u8 held;
-    u8 edge;
-    u8 x;
-    u8 y;
-};
-
 extern "C" {
 extern int sMgMainBannerY;
 void SetBg1Offset(int a, int b);
@@ -361,18 +352,16 @@ void dScMgSlot3_c::StateJudge() {
 void dScMgSlot3_c::StateSpin() {
     u8 playerSlot;
     int touchPressed;
-    int touchOffset;
     int reelIndex;
-    playerSlot = gActivePlayerSlot;
     touchPressed = 0;
-    touchOffset = playerSlot * 4;
-    if (gTouchHeld[playerSlot * 4]) {
-        if (gTouchEdge[touchOffset]) {
+    playerSlot = gActivePlayerSlot;
+    if (gTouchInfo[playerSlot].held) {
+        if (gTouchInfo[playerSlot].edge) {
             touchPressed = 1;
         }
     }
     if (touchPressed != 0) {
-        unsigned int touchY = gTouchY[playerSlot * 4];
+        unsigned int touchY = gTouchInfo[playerSlot].y;
         if (touchY >= 0x40 && touchY < 0x58) {
             if (mReelSpinning[0] == 1)
                 mReelSpinning[0] = 0;
@@ -974,11 +963,8 @@ void dScMgSlot1_c::betIcon_c::Reset() {
 void dScMgSlot1_c::betIcon_c::Render() {
     OAM::RenderSub((OamAttr *)data_ov006_0213e528[mOn], mX, mY, -1, 1);
     int i;
-    int y = 0xb0;
-    int zero = 0;
     for (i = 0; i < BET_ICON(this)->mBetCount; i++) {
-        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], 0xb0 + i * 0x10, y,
-                              (void *)zero);
+        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], 0xb0 + i * 0x10, 0xb0, 0);
     }
 }
 
@@ -1137,7 +1123,7 @@ s32 dScMgSlot1_c::Render() {
  * single name it materializes `lsl r1, r2, #2` / `add r0, r0, r1` as the
  * cartridge does (+0x268). Case 7 is the one deliberate exception: the ROM
  * walks the reel-symbol rows with a strided copy of `this` (mov r5, r4).
- * The touch x/y are read INSIDE the hit loop through TouchRec, not hoisted
+ * The touch x/y are read INSIDE the hit loop through gTouchInfo, not hoisted
  * by hand; the compiler hoists them and that colours the loop. */
 s32 dScMgSlot1_c::Behavior() {
     int i;
@@ -1194,16 +1180,16 @@ s32 dScMgSlot1_c::Behavior() {
         if (mStoppedReelCount < 3) {
             int hit = 0;
             u8 idx = gActivePlayerSlot;
-            if (gTouchHeld[idx * 4] != 0) {
-                if (gTouchEdge[idx * 4] != 0) {
+            if (gTouchInfo[idx].held != 0) {
+                if (gTouchInfo[idx].edge != 0) {
                     hit = 1;
                 }
             }
             if (hit != 0) {
                 for (i = 0; i < 3; i++) {
                     if (mReelSpinning[i] == 1) {
-                        int dx = ((TouchRec *)gTouchHeld)[idx].x - sSlot1ReelPos[i][0];
-                        int dy = ((TouchRec *)gTouchHeld)[idx].y - sSlot1ReelPos[i][1];
+                        int dx = gTouchInfo[idx].x - sSlot1ReelPos[i][0];
+                        int dy = gTouchInfo[idx].y - sSlot1ReelPos[i][1];
                         if (dx <= 0x20 && dx >= -0x20 && dy <= 0x20 && dy >= -0x20) {
                             mReelSpinning[i] = 0;
                             mStoppedReelCount++;

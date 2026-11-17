@@ -109,7 +109,6 @@ int IsStarCollectedInCurLevel(s32 flag);
 void SetStarMarker(int i, dActor_c *self, int v);
 extern "C" void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern "C" int *Vec3_LslInPlace(void *v, int sh);
-extern "C" void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 
 extern SharedFilePtr data_ov084_02130dfc;   /* the plant's model */
 extern SharedFilePtr *data_ov084_021302f4[];/* the six shared animation handles */

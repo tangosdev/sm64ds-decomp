@@ -144,7 +144,7 @@ dActor_c::dActor_c() : mActorListNode(this) {
 }
 
 dActor_c::~dActor_c() {
-    func_0203b27c((int)&data_0209b468, (int)&mActorListNode);
+    func_0203b27c(&data_0209b468, &mActorListNode);
 }
 
 /* Kills an actor born dead: unless its profile sets 0x08000000 ("spawn even if
@@ -181,9 +181,6 @@ void dActor_c::AfterCleanupResources(u32 vfSuccess)
 }
 
 u8 IsAreaShowing(int areaId);
-extern "C" {
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-}
 
 extern int data_0209fc68;
 /* nonzero forces the actor to think anyway */

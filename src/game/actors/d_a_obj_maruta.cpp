@@ -164,14 +164,10 @@ int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
             self->mRollAngVel += 0x10;
         }
         v = self->mRollAngVel;
-        {
-            int lim = 0x200;
-            int nlim = -lim;
-            if (v < nlim)
-                v = nlim;
-            else if (v > lim)
-                v = lim;
-        }
+        if (v < -0x200)
+            v = -0x200;
+        else if (v > 0x200)
+            v = 0x200;
         self->mRollAngVel = v;
     }
 
@@ -200,16 +196,13 @@ int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
         self->mHitTimer = 10;
     }
     self->mAngleX += self->mRollAngVel;
-    {
-        int mask = 0x1fff;
-        if ((self->mAngleX & mask) < 0x210 && self->mRollAngVel != 0) {
-            if (self->mSoundTimer == 0) {
-                Sound::PlayBank3(0x25, self->mCamSpacePos);
-                self->mSoundTimer = 14;
-            }
-        } else {
-            DecIfAbove0_Short(&self->mSoundTimer);
+    if ((self->mAngleX & 0x1fff) < 0x210 && self->mRollAngVel != 0) {
+        if (self->mSoundTimer == 0) {
+            Sound::PlayBank3(0x25, self->mCamSpacePos);
+            self->mSoundTimer = 14;
         }
+    } else {
+        DecIfAbove0_Short(&self->mSoundTimer);
     }
     self->UpdateModelTransform();
     {

@@ -903,7 +903,7 @@
     {
       "symbol": "sEmptyInit",
       "disposition": "deadstrip",
-      "reason": "One-byte file-local object whose empty constructor is what makes mwcc emit the bx lr initializer. The initializer does not reference the object, the cartridge has no symbol for it, and leaving the byte in .bss would shift every later symbol. The word at data_020a0df4 stays a gap: this file is linked after cstd_sqrt.cpp, whose .bss is at a higher address."
+      "reason": "One-byte file-local object whose empty constructor is what makes mwcc emit the bx lr initializer. The initializer does not reference the object, the cartridge has no symbol for it, and leaving the byte in .bss would shift every later symbol. This file's .bss run starts at 0x020a0ef0, right after cstd_sqrt.cpp's, so the cartridge has no word for it."
     }
   ],
   "undefined_symbol_aliases": [],
@@ -938,7 +938,7 @@
     "The .data and bss stay ROM-owned and are reached by extern, as the one-function sources did; the unit owns its .text, its static initializer (.init) and the .ctors word.",
     "Folded from 117 sources: the link module's 38 (#5389) and the wireless layer's 79 (83 functions). The file is C++ for Memory::Allocate (func_0203e20c, func_0203f604, func_020408b0) and the file-scope EmptyInit object; every function keeps C linkage inside one extern \"C\" block.",
     "No pragma. func_0203e20c's step 3 reduces its accepted-children count to a result it never reads, as step 5 does with the result it loops on; the optimiser deletes only that last assignment, which keeps the count (the cartridge's addeq/andeq). WFSi_LoadTables starts its size total at 0 and adds the leading word, which keeps the cartridge's add from the zeroed counter.",
-    "Absorbed arm9/func_02040384 (intact-object): its __sinit_func_02040384.cpp/.p__sinit_func_02040384.cpp are renamed for this file. sEmptyInit stays static and deadstripped, so data_020a0df4 stays a gap.",
+    "Absorbed arm9/func_02040384 (intact-object): its __sinit_func_02040384.cpp/.p__sinit_func_02040384.cpp are renamed for this file. sEmptyInit stays static and deadstripped, so it claims no .bss (data_020a0df4 was gTouchInfo[3], not padding).",
     "func_0203e0ac and the tail of func_0203e20c copy the local input record into all four player records with chained field assignments. PlayerInputRecord.inputYaw is u16: both copies read it back with ldrh."
   ],
   "production_mode": "intact-object",

@@ -52,16 +52,6 @@ struct Entry {
 };
 typedef void (C::*PMF0)();
 
-/* B4 is a 4-byte-record view of a touch lane, used by the stone-drag
- * reader; the other readers index the lanes flat. Measured: reading all
- * three through ((TouchInfo *)gTouchHeld)[slot] changes Stone_Drag's size,
- * and TouchInfo for held with flat gTouchX/gTouchY reads differs by 20+
- * words. */
-struct B4 {
-    unsigned char v;
-    unsigned char pad[3];
-};
-
 /* A random integer in [0, n): the top 15 bits of the minigame generator,
    scaled. */
 #define CURL_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
@@ -563,16 +553,11 @@ void dScMgCurling_c::Aim_Swing() {
     u16 ang;
 
     idx = gActivePlayerSlot;
-    if (gTouchHeld[idx * 4] != 0) {
+    if (gTouchInfo[idx].held != 0) {
         int dy2, dy;
 
-        int i4 = idx * 4;
-        /* gTouchX is already u8[]; dropping these two casts changes 12
-           words of Aim_Swing. */
-        u8 *pa = (u8 *)gTouchX;
-        u8 *pb = (u8 *)gTouchY;
-        u8 bx = pa[i4];
-        u8 by = pb[i4];
+        u8 bx = gTouchInfo[idx].x;
+        u8 by = gTouchInfo[idx].y;
 
         oldx = mAimX;
         oldy = mAimY;
@@ -653,9 +638,9 @@ void dScMgCurling_c::Aim_Swing() {
             int px = mAimX;
             int py = mAimY;
             int j = gActivePlayerSlot;
-            u8 jx = gTouchX[j * 4];
+            u8 jx = gTouchInfo[j].x;
             int ax = (px >> 12) - jx;
-            u8 jy = gTouchY[j * 4];
+            u8 jy = gTouchInfo[j].y;
             int ay = (py >> 12) - jy;
             mGrabX = ax << 12;
             mGrabY = ay << 12;
@@ -674,19 +659,16 @@ void dScMgCurling_c::Aim_WaitTouch() {
     int x;
     int y;
     idx = gActivePlayerSlot;
-    /* The held test reads the slot's whole TouchInfo record, the edge test
-       the gTouchEdge lane; with both spelled `lane[idx * 4]` the index is
-       shared and 20 words differ, and both as records grow the function. */
-    if (((TouchInfo *)gTouchHeld)[idx].held != 0) {
-        if (gTouchEdge[idx * 4] != 0) {
+    if (gTouchInfo[idx].held != 0) {
+        if (gTouchInfo[idx].edge != 0) {
             touching = 1;
         }
     }
     if (touching == 0) {
         return;
     }
-    x = (mAimX >> 0xc) - gTouchX[idx * 4];
-    y = (mAimY >> 0xc) - gTouchY[idx * 4];
+    x = (mAimX >> 0xc) - gTouchInfo[idx].x;
+    y = (mAimY >> 0xc) - gTouchInfo[idx].y;
     mGrabX = x << 0xc;
     mGrabY = y << 0xc;
     mStylusHeld = 1;
@@ -962,17 +944,16 @@ void dScMgCurling_c::SetStoneSpin(int stoneIndex) {
  * aimed stone is moved just below it. */
 void dScMgCurling_c::Stone_Drag(int stoneIndex) {
     unsigned char playerSlot = gActivePlayerSlot;
-    if (((struct B4 *)gTouchHeld)[playerSlot].v) {
+    if (gTouchInfo[playerSlot].held) {
         int stoneXPixels, grabXPixels, grabYPixels;
-        mStone[stoneIndex].x =
-            mStone[stoneIndex].grabX + (((struct B4 *)gTouchX)[playerSlot].v << 12);
+        mStone[stoneIndex].x = mStone[stoneIndex].grabX + (gTouchInfo[playerSlot].x << 12);
         stoneXPixels = mStone[stoneIndex].x >> 12;
         if (stoneXPixels < 0xe)
             mStone[stoneIndex].x = 0xe000;
         if (stoneXPixels > 0xf2)
             mStone[stoneIndex].x = 0xf2000;
-        grabXPixels = (mStone[stoneIndex].x >> 12) - ((struct B4 *)gTouchX)[gActivePlayerSlot].v;
-        grabYPixels = (mStone[stoneIndex].y >> 12) - ((struct B4 *)gTouchY)[playerSlot].v;
+        grabXPixels = (mStone[stoneIndex].x >> 12) - gTouchInfo[gActivePlayerSlot].x;
+        grabYPixels = (mStone[stoneIndex].y >> 12) - gTouchInfo[playerSlot].y;
         mStone[stoneIndex].grabX = grabXPixels << 12;
         mStone[stoneIndex].grabY = grabYPixels << 12;
     } else {

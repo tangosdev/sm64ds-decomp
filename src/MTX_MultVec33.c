@@ -1,12 +1,16 @@
 #include "types.h"
-#include "math/Matrix.h"
+#include "nitro/fx/fx_mtx33.h"
 
-void MTX_MultVec33(const Vector3 *in, const Matrix3x3 *m, Vector3 *out) {
-    int x = in->x;
-    int y = in->y;
-    int z = in->z;
+/* dst = vec * m, the rotation alone (NitroSDK fx_mtx33.c). */
+void MTX_MultVec33(const VecFx32 *vec, const MtxFx33 *m, VecFx32 *dst) {
+    fx32 x = vec->x;
+    fx32 y = vec->y;
+    fx32 z = vec->z;
 
-    out->x = (((s64)x * m->m[0] + (s64)y * m->m[3] + (s64)z * m->m[6]) >> 12);
-    out->y = (((s64)x * m->m[1] + (s64)y * m->m[4] + (s64)z * m->m[7]) >> 12);
-    out->z = (((s64)x * m->m[2] + (s64)y * m->m[5] + (s64)z * m->m[8]) >> 12);
+    dst->x =
+        (fx32)(((fx64)x * m->m[0][0] + (fx64)y * m->m[1][0] + (fx64)z * m->m[2][0]) >> FX32_SHIFT);
+    dst->y =
+        (fx32)(((fx64)x * m->m[0][1] + (fx64)y * m->m[1][1] + (fx64)z * m->m[2][1]) >> FX32_SHIFT);
+    dst->z =
+        (fx32)(((fx64)x * m->m[0][2] + (fx64)y * m->m[1][2] + (fx64)z * m->m[2][2]) >> FX32_SHIFT);
 }

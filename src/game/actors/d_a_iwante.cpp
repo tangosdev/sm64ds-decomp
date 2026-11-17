@@ -693,14 +693,14 @@ int daIwante_c::FollowPhase() {
 int daIwante_c::GetPlayerDepthBand() {
     daPly_c *p = ClosestPlayer();
     Vector3 playerPos = p->mPos;
-    int dist = playerPos.z;
-    int lo = (int)0xff3ae000;
-    if (dist < lo) return lo;
-    int lo2 = -0xb50000;
-    if (dist < lo2) return lo2;
-    int hi = (int)0xff598000;
-    if (dist >= hi) return 0;
-    return hi;
+    int z = playerPos.z;
+    if (z < -0xc52000)
+        return -0xc52000;
+    if (z < -0xb50000)
+        return -0xb50000;
+    if (z >= -0xa68000)
+        return 0;
+    return -0xa68000;
 }
 
 /* Landing effect. Calls dCamera_c::func_0200d8c8 on the camera (gCamera) with the hand's

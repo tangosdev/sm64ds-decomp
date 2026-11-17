@@ -46,6 +46,7 @@
 
 #include "KuppaScript.h"
 #include "types.h"
+#include "Vector3s.h"
 #include "ParticleIds.h"
 #include "common.h"
 #include "daPly_c.h"
@@ -98,10 +99,6 @@ MTX_C_DECL void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *, short);
 MTX_C_DECL void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *, short);
 MTX_C_DECL void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, short);
 #undef MTX_C_DECL
-
-/* local extern: nitro/fx/fx_vec.h cannot be included next to math/CalcLib.h,
- * which still declares the other VEC_* functions with Vector3 (issue #5207). */
-extern "C" fx32 VEC_Distance(const VecFx32 *, const VecFx32 *);
 
 extern "C" {
 void Vec3_RotateYAndTranslate(Vector3 *, const Vector3 *, short, const Vector3 *);
@@ -940,18 +937,8 @@ void daPly_c::func_ov002_020bd06c(unsigned int state2) {
     if (this->mCapActor != 0)
         return;
 
-    {
-        s8 var_areaID;
-        u32 var_self8;
-        s16 var_deathTableID;
-
-        var_areaID = this->mAreaId;
-        var_self8 = *(volatile u32 *)&this->param1; // without volatile, 8 words differ
-        var_deathTableID = -1;
-
-        this->mCapActor =
-            Spawn(0x10d, flag | (var_self8 << 8), mPos, 0, var_areaID, var_deathTableID);
-    }
+    flag |= this->param1 << 8;
+    this->mCapActor = Spawn(0x10d, flag, mPos, 0, this->mAreaId, -1);
 
     {
         dActor_c *p2 = this->mCapActor;
@@ -3753,7 +3740,6 @@ static inline int FX(int a, int b) {
    AnimSplinePoll blends; mSplineState picks the clamped-end variant. The
    caller passes a fx32[4]. */
 void daPly_c::SplineGetWeights(fx32 *out) {
-    typedef long long s64;
     int t = mSplineKeyframeFraction;
     int u = 0x1000 - t;
     int u2 = FX(u, u);
@@ -3774,16 +3760,8 @@ void daPly_c::SplineGetWeights(fx32 *out) {
         break;
     }
     case CURVE_BEGIN_2: {
-        int k1400 = 0x1400;
-        s64 p955 = (s64)t3 * 0x955;
-        s64 p1400 = (s64)t2 * k1400;
         out[0] = FX(u3, 0x400);
-        {
-            int b = FX(t, 0x400);
-            int c = (int)((p955 + 0x800) >> 12);
-            int d = (int)((p1400 + 0x800) >> 12);
-            out[1] = b + (c - d) + 0x955;
-        }
+        out[1] = FX(t, 0x400) + (FX(t3, 0x955) - FX(t2, 0x1400)) + 0x955;
         out[2] = FX(t, 0x800) + (FX(t2, 0x800) - FX(t3, 0x800)) + 0x2aa;
         out[3] = FX(t3, 0x2aa);
         break;
@@ -4086,8 +4064,7 @@ int daPly_c::St_Respawn_Main() {
             }
         } else {
             if (mIsAirborne == 0) {
-                u32 zero = 0;
-                this->SetAnim(0x55, 0x40000000, 0x1000, zero);
+                this->SetAnim(0x55, 0x40000000, 0x1000, 0);
                 mStateStep += 1;
             }
         }
@@ -4095,8 +4072,7 @@ int daPly_c::St_Respawn_Main() {
     }
     case 1:
         if (this->FinishedAnim() != 0) {
-            int z = 0;
-            this->SetAnim(0x47, z, 0x1000, z);
+            this->SetAnim(0x47, 0, 0x1000, 0);
             mStateStep += 1;
         }
         break;
@@ -6454,8 +6430,6 @@ int daPly_c::func_ov002_020c8540() {
  * fanfare (mode 0x10) or spawns the star and hands the player to it.
  */
 int daPly_c::func_ov002_020c8714() {
-    volatile int v[3]; // without volatile, the function shrinks 0x268 to 0x24c
-
     if (mStateArg == 0) {
         Sound::ChangeMusicVolume(0x14, 0x15666);
         if (mStateTimer == 0) {
@@ -6473,15 +6447,9 @@ int daPly_c::func_ov002_020c8714() {
             mIsAirborne = 1;
             mLandSoundPlayed = 0;
         }
-        v[0] = this->mPosX;
-        v[1] = this->mPosY;
-        v[2] = this->mPosZ;
-        /* mPosY (+0x60), re-read by index: this->mPosY lets the compiler reuse the
-           load above and drops the ROM's second load (one word short, measured). */
-        v[1] = ((int *)this)[0x18] + 0x3c000;
-        mParticle1 =
-            Particle::System::New(*(volatile int *)&this->mParticle1, 0x27, v[0], v[1], this->mPosZ,
-                                  0, 0); // without volatile, two instructions swap
+        Vector3 v = mPos;
+        v.y = mPos.y + 0x3c000;
+        mParticle1 = Particle::System::New(mParticle1, 0x27, v.x, v.y, v.z, 0, 0);
     } else if (this->FinishedAnim() != 0) {
         if (mNoCtrlKind == 0x10) {
             mStateStep = 0x19;
@@ -6544,7 +6512,7 @@ int daPly_c::func_ov002_020c8a4c() {
     this->SetAnim(0x48, 0, spd, 0);
     this->mPrevAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mStateTargetX);
     this->mAngleY = this->mPrevAngleY;
-    if (VEC_Distance((const VecFx32 *)&mPos, (const VecFx32 *)&mStateTargetX) < 0xa000) {
+    if (VEC_Distance(&mPos, (Vector3 *)&mStateTargetX) < 0xa000) {
         if (mStateArg == 0) {
             mStateArg = 1;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
@@ -8923,10 +8891,9 @@ int daPly_c::St_Swim_Main() {
     func_ov002_020cd550();
 
     if (mJumpComboTimer != 0) {
-        int eid = 0xcd;
         pos = mPos;
         pos.y += 0x32000;
-        mParticle3 = Particle::System::NewCheckWater(mParticle3, eid, pos.x, pos.y, pos.z, 0);
+        mParticle3 = Particle::System::NewCheckWater(mParticle3, 0xcd, pos.x, pos.y, pos.z, 0);
     }
 
     if (mPrevVertSpeed == 0 && mMeshClsn.IsOnGround() != 0) {
@@ -13069,33 +13036,22 @@ int daPly_c::func_ov002_020d6334(dActor_c *val) {
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 void daPly_c::func_ov002_020d6368() {
-    typedef long long s64;
     Vector3_16 rot;
     Vector3 pos;
-    daYegg_c *spawned;
-    int a;
-    int zero = 0;
-    short rotY;
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos = mPos;
+    pos.x -= FX_MUL(FX_SinIdx((u16)mAngleY >> 4), 0x14000);
+    pos.y -= FX_MUL(FX_CosIdx((u16)mAngleY >> 4), 0x14000);
 
-    a = (u16)mAngleY >> 4;
-    pos.x = pos.x - FX_MUL(FX_SinCosTable_[a * 2], 0x14000);
-
-    a = (u16)mAngleY >> 4;
-    pos.y = pos.y - FX_MUL(FX_SinCosTable_[a * 2 + 1], 0x14000);
-
-    rotY = mAngleY;
-    rot.x = zero;
-    rot.z = zero;
+    short rotY = mAngleY;
+    rot.x = 0;
+    rot.z = 0;
     rot.y = rotY;
 
-    spawned = (daYegg_c *)dActor_c::Spawn(9, mEggParams << 4, pos, &rot, mAreaId, -1);
+    daYegg_c *spawned = (daYegg_c *)dActor_c::Spawn(9, mEggParams << 4, pos, &rot, mAreaId, -1);
     spawned->mPlayer = this;
     func_ov002_020d6334(spawned);
-    mEggParams = zero;
+    mEggParams = 0;
 }
 
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
@@ -13434,7 +13390,7 @@ int daPly_c::TongueWallProbe() {
     }
 
     ::Vector3 clsnPos = rl.GetClsnPos();
-    player->mTongueHitDist = VEC_Distance((const VecFx32 *)&p1, (const VecFx32 *)&clsnPos);
+    player->mTongueHitDist = VEC_Distance(&p1, &clsnPos);
     Vector3 normal;
     rl.surface.CopyNormalTo(normal);
     ang = cstd::atan2(normal.x, normal.z);
@@ -13841,10 +13797,9 @@ int daPly_c::St_YoshiPower_Main() {
                 mAttackClsn.Clear();
                 mAttackClsn.Update();
                 if (mStateTimer == 1 && mFireBreaths == 0) {
-                    int z2 = 0;
-                    mUseAltBodyModel = z2;
+                    mUseAltBodyModel = 0;
                     dExtFrameCtrl_c &anim9 =
-                        *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, z2)];
+                        *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, 0)];
                     ((dExtAnmModel_c *)mModels.mHeadModels[3])
                         ->SetAnim((BCA_File *)data_ov002_0210e3d8[1], 0x40000000, 0x1000,
                                   anim9.currFrame >> 12);
@@ -17752,16 +17707,9 @@ int daPly_c::St_Owl_Main() {
 
     case 1:
     case 4: {
-        int x;
-        short ang;
-        int i;
-        short mag = 10;
-        x = ((daOwl_c *)mHeldObj)->mAnmModel.currFrame;
-        x = (unsigned short)((unsigned int)x >> 12);
-        x += 0xb;
-        ang = x * 0xccc;
-        i = (unsigned short)ang >> 4;
-        mVertSpeed = FX_SinCosTable_[i * 2 + 1] * mag;
+        int frame = (u16)((u32)((daOwl_c *)mHeldObj)->mAnmModel.currFrame >> 12);
+        short ang = (frame + 0xb) * 0xccc;
+        mVertSpeed = FX_CosIdx((u16)ang >> 4) * 10;
         mHorzSpeed = 0x14000;
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
             ApproachAngle(&mAngleY, mDesiredAngleY, 0x20, 0x100, 0);
@@ -18295,9 +18243,6 @@ tail:
     return 1;
 }
 
-#pragma push                // without it, the later pop does not compile
-#pragma opt_common_subs off // without it, St_Land_Init shrinks 0x1d8 to 0x1d4
-
 int daPly_c::St_Land_Init() {
     extern char data_0209f4a0[];
     char* c = (char*)this;
@@ -18356,8 +18301,6 @@ int daPly_c::St_Land_Init() {
 
     return 1;
 }
-
-#pragma pop // without it, opt_common_subs stays off and later functions change
 
 int daPly_c::func_ov002_020e0a64() {
     if (IsAnim(0x54) == 0)
@@ -18454,25 +18397,16 @@ int daPly_c::St_CrazedCrate_Cleanup() {
 }
 
 int daPly_c::St_CrazedCrate_Main() {
-    typedef long long s64;
     func_ov002_020e28d4(0x1000, 0x1800);
 
     if (mClsnFlags & 2) {
         int atan = cstd::atan2(mWallNormalX, this->mWallNormalZ);
         int diff = AngleDiff(atan, this->mAngleY);
         if (diff >= 0x6000) {
-            int t = (s16)(2 * atan - this->mAngleY);
-            t += 0x8000;
-            mAngleY = t;
-            int half = 0x800;
+            mAngleY = (s16)(2 * atan - mAngleY) + 0x8000;
             mPrevAngleY = mAngleY;
-            mPosX +=
-                (int)(((s64)mHorzSpeed * FX_SinCosTable_[(((int)(u16)mPrevAngleY >> 4) << 1) + 1] +
-                       half) >>
-                      12);
-            mPosZ += (int)(((s64)mHorzSpeed * FX_SinCosTable_[((int)(u16)mPrevAngleY >> 4) << 1] +
-                            half) >>
-                           12);
+            mPosX += FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngleY >> 4));
+            mPosZ += FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleY >> 4));
         }
     }
 
@@ -20066,15 +20000,11 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
 
 int daPly_c::func_ov002_020e3f90() {
     extern Matrix4x3 data_020a0e68;
-    struct S {
-        short angs[3];
-        volatile int v[3];
-        int tgt[3];
-    } s; // without volatile, the function shrinks 0x3e4 to 0x39c
+    Vector3s angs;
+    Vector3 v;
+    Vector3 tgt;
     int b;
     int t;
-    int t1;
-    int t2;
     daPly_c *p;
     unsigned int n;
     char* m;
@@ -20085,9 +20015,9 @@ int daPly_c::func_ov002_020e3f90() {
         return 0;
 
     b = 0;
-    s.v[0] = 0;
-    s.v[1] = 0;
-    s.v[2] = 0;
+    v.x = 0;
+    v.y = 0;
+    v.z = 0;
     data_020a0e68 = **(Matrix4x3 **)&((dActor_c *)*(char **)&mGrabbedByActor)->mCarryMatrix;
     p = (daPly_c *)mGrabbedByActor;
     if ((p)->actorID == 0xbf)
@@ -20098,26 +20028,26 @@ int daPly_c::func_ov002_020e3f90() {
         t = (unsigned int)(((int)mFlags & 0x4000) != 0);
         if (t == 0) return 0;
         if ((unsigned int)(((int)p->mCharFileBase >> 2) - 0x6c) <= 1) {
-            s.tgt[0] = -0x3000;
-            s.tgt[1] = -0x1000;
-            s.tgt[2] = -0x4000;
-            s.angs[0] = -0x2000;
-            s.angs[1] = -0x1000;
-            s.angs[2] = -0x1000;
+            tgt.x = -0x3000;
+            tgt.y = -0x1000;
+            tgt.z = -0x4000;
+            angs.x = -0x2000;
+            angs.y = -0x1000;
+            angs.z = -0x1000;
         } else {
-            s.tgt[0] = 0;
-            s.tgt[1] = -0x3000;
-            s.tgt[2] = -0x4000;
-            s.angs[0] = 0x1000;
-            s.angs[1] = 0x7000;
-            s.angs[2] = 0;
+            tgt.x = 0;
+            tgt.y = -0x3000;
+            tgt.z = -0x4000;
+            angs.x = 0x1000;
+            angs.y = 0x7000;
+            angs.z = 0;
         }
-        ApproachLinear(mStateTargetX, s.tgt[0], 0x400);
-        ApproachLinear(mStateTargetY, s.tgt[1], 0x400);
-        ApproachLinear(mStateTargetZ, s.tgt[2], 0x400);
-        ApproachAngle(&mAngleX, s.angs[0], 0x10, 0x1000, 0x100);
-        ApproachAngle(&mAngleY, s.angs[1], 0x10, 0x1000, 0x100);
-        ApproachAngle(&mAngleZ, s.angs[2], 0x10, 0x1000, 0x100);
+        ApproachLinear(mStateTargetX, tgt.x, 0x400);
+        ApproachLinear(mStateTargetY, tgt.y, 0x400);
+        ApproachLinear(mStateTargetZ, tgt.z, 0x400);
+        ApproachAngle(&mAngleX, angs.x, 0x10, 0x1000, 0x100);
+        ApproachAngle(&mAngleY, angs.y, 0x10, 0x1000, 0x100);
+        ApproachAngle(&mAngleZ, angs.z, 0x10, 0x1000, 0x100);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, mStateTargetX, mStateTargetY,
                                             mStateTargetZ);
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
@@ -20134,15 +20064,12 @@ int daPly_c::func_ov002_020e3f90() {
         }
     }
     mShadowMatrix = data_020a0e68;
-    t = (&data_020a0e68)->m[9];
-    t1 = ((volatile Matrix4x3 *)&data_020a0e68)->m[10]; // without volatile, 7 words differ
-    t2 = ((volatile Matrix4x3 *)&data_020a0e68)->m[11]; // without volatile, 10 words differ
-    s.v[1] = t1;
-    s.v[2] = t2;
-    s.v[0] = t;
-    mPosX = t << 3;
-    mPosY = s.v[1] << 3;
-    mPosZ = s.v[2] << 3;
+    v.x = data_020a0e68.m[9];
+    v.y = data_020a0e68.m[10];
+    v.z = data_020a0e68.m[11];
+    mPosX = v.x << 3;
+    mPosY = v.y << 3;
+    mPosZ = v.z << 3;
     mPrevAngleY = mGrabbedByActor->mAngleY;
     n = GetBodyModelID(param1 & 0xff, 0);
     m = (char *)mModels.mBodyModels[n];

@@ -2,7 +2,7 @@
 #include "Ov007Picker.h"
 
 void func_ov007_020c4fcc(int r0, int r1);
-void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t);
+void func_ov007_020c19cc(int count, VecFx32 *pts, int half, int t);
 
 /* Draws every committed stroke but group idx, and the stroke being drawn,
  * in full under the first style (func_ov007_020c4fcc(a2, a3)); then group
@@ -10,7 +10,7 @@ void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t);
 void func_ov007_020c4e98(Ov007Picker *self, int a1, int a2, int a3, int idx, unsigned short a5,
                          int a6) {
     int i;
-    Vector3 **base;
+    VecFx32 **base;
     base = self->groupPoints;
     func_ov007_020c4fcc(a2, a3);
     for (i = 0; i < self->groupCount; i++) {

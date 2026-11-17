@@ -170,8 +170,8 @@ int dScMgMCarlo2_c::CanEndState(int /* mode */)
         /* Nested on purpose: `found = A && B` lets the compiler drop the
          * variable, and the ROM keeps it. */
         int found = 0;
-        if (gTouchHeld[idx * 4] != 0) {
-            found = gTouchEdge[idx * 4] != 0;
+        if (gTouchInfo[idx].held != 0) {
+            found = gTouchInfo[idx].edge != 0;
         }
         if (found != 0) {
             short *p;
@@ -397,23 +397,21 @@ int dMgMCarlo2CardObj_c::IsPairWith(dMgMCarlo2CardObj_c *other)
 int dMgMCarlo2CardObj_c::HitTest()
 {
     u8 idx;
-    int off;
     int touching;
     int dx, dy;
 
     if (sMCarlo2PickAllowed == 0)
         return 0;
     if (dScMgMCarlo2_c::BoardBusy() == 0) {
-        idx = gActivePlayerSlot;
-        off = idx * 4;
         touching = 0;
-        if (gTouchHeld[off]) {
-            if (gTouchEdge[off])
+        idx = gActivePlayerSlot;
+        if (gTouchInfo[idx].held) {
+            if (gTouchInfo[idx].edge)
                 touching = 1;
         }
         if (touching != 0) {
-            dx = gTouchX[idx * 4] - (mX >> 12);
-            dy = gTouchY[idx * 4] - (mY >> 12);
+            dx = gTouchInfo[idx].x - (mX >> 12);
+            dy = gTouchInfo[idx].y - (mY >> 12);
             if (dx > 7 && dx < 0x28 && dy > 0 && dy < 0x31)
                 return 1;
         }
@@ -612,11 +610,9 @@ int dScMgMCarlo2_c::DrawCardValue(){
     unsigned char pick = 0;
     int total = 0;
     int i;
-    int roll;
     for (i = 0; i < 10; i++)
         total += sMCarlo2FaceCounts[i];
-    roll = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
-    total = (total * roll) >> 0xc;
+    total = RAND_FX_SCALE(total);
     for (i = 0; i < 10; i++) {
         total -= sMCarlo2FaceCounts[i];
         if(total < 0){
