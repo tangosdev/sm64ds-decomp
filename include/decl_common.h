@@ -240,7 +240,6 @@ extern int sTrmp2Lives;
 extern int pmf_Trmp3DMario_StateHardBounce[2];
 extern int pmf_Trmp2Mario_StateWallBounce_2[2];
 extern int pmf_Trmp3DMario_StateBounce[2];
-extern int pmf_TrmpItem_GrowScale_3[2];
 extern int sAmidaOptionNcgByLanguage[];
 extern int data_ov006_0213b918;
 extern int sCardDrawsLeft;
