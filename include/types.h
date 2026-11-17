@@ -89,11 +89,12 @@ typedef struct Vector3 {
 #endif
 } Vector3;
 
-/* One TU sets VECTOR3_DECLARE_STRUCTORS and points VECTOR3_STRUCTOR_HOOK at a
-   header whose new[] is parsed here, before the empty bodies below. A
-   new-expression parsed after those bodies passes null for both structors. */
+/* One TU sets VECTOR3_DECLARE_STRUCTORS. Its new[] is parsed here, before the
+   empty bodies below. A new-expression parsed after those bodies passes null
+   for both structors. The include is quoted: a macro include is not a
+   literal header, and the declaration check then refuses every carrier. */
 #ifdef VECTOR3_DECLARE_STRUCTORS
-#include VECTOR3_STRUCTOR_HOOK
+#include "daPly_TrailArray.h"
 inline Vector3::Vector3() {}
 inline Vector3::~Vector3() {}
 inline Vector3::Vector3(fx32 x_, fx32 y_, fx32 z_) : x(x_), y(y_), z(z_) {}

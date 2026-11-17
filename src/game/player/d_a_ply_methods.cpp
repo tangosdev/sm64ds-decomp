@@ -45,7 +45,6 @@
 #pragma defer_codegen off
 
 #define VECTOR3_DECLARE_STRUCTORS
-#define VECTOR3_STRUCTOR_HOOK "daPly_TrailArray.h"
 #include "KuppaScript.h"
 #include "types.h"
 #include "Vector3s.h"
