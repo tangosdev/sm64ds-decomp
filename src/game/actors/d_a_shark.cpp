@@ -147,7 +147,7 @@ int daShark_c::StateSwim(daShark_c *self) {
     frame = (frame >> 12) << 16;
     frame = (unsigned int)frame >> 16;
     if (frame == 0)
-        func_02012694(9, (const Vector3 *)(&self->mCamSpacePosX));
+        func_02012694(9, &self->mCamSpacePos);
     self->mAnmModel.speed = 0x1000;
     self->mAnmModel.Advance();
     self->CheckPlayerHit();

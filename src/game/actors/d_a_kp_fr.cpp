@@ -237,7 +237,7 @@ void daKpFr_c::func_ov070_02121cbc(){
 
 void daKpFr_c::func_ov070_02121c8c()
 {
-    func_02012694(0x166, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x166, &mCamSpacePos);
     SmallPoofDust();
     MarkForDestruction();
 }

@@ -225,7 +225,7 @@ struct daStar_c : dEnemyBase_c {
     void SpawnCollectSoundObj(int arg);
     void CheckIceBlock();
     void CollectNoPose(daPly_c *arg);
-    void SeekNewMarker(char *a, int gate);
+    void SeekNewMarker(daPly_c *player, int gate);
     u8 PickTalkState();
     void RelinkMarker();
     void LinkRandomFreeMarker();
@@ -248,7 +248,7 @@ struct daStar_c : dEnemyBase_c {
     void UpdateWater();
     void OnBounceLand();
     void ReturnToHome();
-    volatile unsigned int CheckBounds();
+    void CheckBounds();
     int MaybeAddStarMarker();
     void CollectByEgg(int a);
     int Collect(void *p);

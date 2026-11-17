@@ -138,9 +138,9 @@ int daCnn_c::InitResources() {
     mVariant = param1 & 3;
     mTimer = 0;
     mPosY -= 0x50000;
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     mHomeAngleY = mPrevAngleY;
     mLoadStep = 0;
 
@@ -312,9 +312,9 @@ void daCnn_c::StateFire() {
             int pz = pos.z;
             vel[2] = vz;
             int y = py + (vy << 1);
-            mMuzzlePosX = x;
-            mMuzzlePosY = y;
-            mMuzzlePosZ = pz + (vz << 1);
+            mMuzzlePos.x = x;
+            mMuzzlePos.y = y;
+            mMuzzlePos.z = pz + (vz << 1);
         }
 
         rot.x = data_ov098_0213c63c[0];
@@ -323,9 +323,9 @@ void daCnn_c::StateFire() {
         rot.x = FX_SinIdx((u16)mPrevAngleY >> 4);
         rot.z = FX_CosIdx((u16)mPrevAngleY >> 4);
 
-        Particle::System::New(0, kPtclCannonShotA, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ,
+        Particle::System::New(0, kPtclCannonShotA, mMuzzlePos.x, mMuzzlePos.y, mMuzzlePos.z,
                               (const Vector3_16f *)(&rot), 0);
-        Particle::System::New(0, kPtclCannonShotB, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ,
+        Particle::System::New(0, kPtclCannonShotB, mMuzzlePos.x, mMuzzlePos.y, mMuzzlePos.z,
                               (const Vector3_16f *)(&rot), 0);
 
         Sound::PlayBank3(0xd4, mCamSpacePos);
@@ -420,9 +420,9 @@ void daCnn_c::StateLoad() {
     switch (mLoadStep) {
     case 0:
         mPosY += 0xa000;
-        if (mPosY < mSpawnPosY)
+        if (mPosY < mSpawnPos.y)
             break;
-        mPosY = mSpawnPosY;
+        mPosY = mSpawnPos.y;
         mLoadStep++;
         mTimer = 0;
         quakePos.x = mPosX;
@@ -471,11 +471,11 @@ void daCnn_c::StateLoad() {
             settled++;
         if (settled != 2)
             break;
-        if (mPosY > mSpawnPosY - 0x190000)
+        if (mPosY > mSpawnPos.y - 0x190000)
             break;
         mState = 2;
         mdCcAc_c.flags &= ~1;
-        mPosY = mSpawnPosY - 0x190000;
+        mPosY = mSpawnPos.y - 0x190000;
         mPlayer = 0;
         mAngleY = mHomeAngleY;
         mPrevAngleY = mAngleY;

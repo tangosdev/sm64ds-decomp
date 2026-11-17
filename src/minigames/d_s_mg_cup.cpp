@@ -5,10 +5,6 @@
 
 // leftovers:
 // StateShuffle's fake-out angle bump keeps the full assignment; += changes its address calculation.
-// mFx and mCup are still built and torn down through spelled __cxa_vec_ctor /
-// __cxa_vec_cleanup calls: CupFx and CupPos have no constructor or destructor
-// of their own yet (Cup_Nothing, CupFx_ElemDtor, func_0203d738,
-// NullDestructor_0203d47c).
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScMgCup_c_AssetId {
@@ -101,7 +97,6 @@ extern u8 gSubScreenLayers;
 extern int data_0208ee44;
 extern unsigned int LoadCompressedFileAt(int, void *);
 extern void *LoadFile(int);
-void func_0203d738(void);
 }
 int CupFx_FindFree(CupFx *fx, int kind, int x, int y);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
@@ -110,20 +105,18 @@ int CupFx_Spawn(CupFx *fx, int kind, int x, int y, signed char cup);
 void CupFx_DrawForCup(CupFx *fx, int cup);
 void CupFx_UpdateAll(CupFx *fx);
 void CupFx_ClearAll(CupFx *fx);
-void Cup_Nothing(void);
 
 #pragma defer_codegen off
 /* Emit each function as it is read, so D1 lands ahead of D0. */
 
-/* Reverse of the factory: cups, effects, then the model, which the
-   compiler destroys as a member. The tracker and the base chain are the
-   inlined dScMgSingle3DBase_c destructor. */
-dScMgCup_c::~dScMgCup_c() {
-    __cxa_vec_cleanup(mCup, 3, 8, (dtor_t)NullDestructor_0203d47c);
-    __cxa_vec_cleanup(mFx, 0x20, 0x18, (dtor_t)CupFx_ElemDtor);
-}
+/* The body is empty: the compiler destroys mCup, mFx and mModel in reverse
+   of the factory. The tracker and the base chain are the inlined
+   dScMgSingle3DBase_c destructor. */
+dScMgCup_c::~dScMgCup_c() {}
 
-void CupFx_ElemDtor(void) {}
+/* The effect slot's destructor, which __cxa_vec_cleanup runs on each of
+   mFx. Empty, like its constructor. */
+CupFx::~CupFx() {}
 
 int CupFx_FindFree(CupFx *fx, int, int, int) {
     int slot;
@@ -305,9 +298,9 @@ void dScMgCup_c::SetupSwap() {
     mSwapSlotA = sCupSwapFirst[swapPair].a;
     mSwapSlotB = sCupSwapFirst[swapPair].b;
 
-    mMidX = (sCupHomePositions[mSwapSlotB].x + sCupHomePositions[mSwapSlotA].x) / 2;
-    mMidY = (sCupHomePositions[mSwapSlotB].y + sCupHomePositions[mSwapSlotA].y) / 2;
-    mHalfX = mMidX - sCupHomePositions[mSwapSlotA].x;
+    mMid.x = (sCupHomePositions[mSwapSlotB].x + sCupHomePositions[mSwapSlotA].x) / 2;
+    mMid.y = (sCupHomePositions[mSwapSlotB].y + sCupHomePositions[mSwapSlotA].y) / 2;
+    mHalfX = mMid.x - sCupHomePositions[mSwapSlotA].x;
     mShuffleAngle = 0;
 
     {
@@ -482,15 +475,15 @@ void dScMgCup_c::StateShuffle() {
         int cosine = FX_CosIdx(mShuffleAngle >> 4);
         oldX = mCup[slot].x;
         oldY = mCup[slot].y;
-        mCup[slot].x = mMidX - FX_MUL(cosine, mHalfX);
+        mCup[slot].x = mMid.x - FX_MUL(cosine, mHalfX);
     }
     {
         int slot = mCupAtSlot[mSwapSlotA];
-        mCup[slot].y = mMidY - FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
+        mCup[slot].y = mMid.y - FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
     }
     {
         int slot = mCupAtSlot[mSwapSlotA];
-        mCupScale[slot] = ((mCup[slot].y - mMidY) >> 7) + 0x1000;
+        mCupScale[slot] = ((mCup[slot].y - mMid.y) >> 7) + 0x1000;
     }
     {
         int slot = mCupAtSlot[mSwapSlotA];
@@ -502,15 +495,15 @@ void dScMgCup_c::StateShuffle() {
         int cosine = FX_CosIdx(mShuffleAngle >> 4);
         oldX = mCup[slot].x;
         oldY = mCup[slot].y;
-        mCup[slot].x = mMidX + FX_MUL(cosine, mHalfX);
+        mCup[slot].x = mMid.x + FX_MUL(cosine, mHalfX);
     }
     {
         int slot = mCupAtSlot[mSwapSlotB];
-        mCup[slot].y = mMidY + FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
+        mCup[slot].y = mMid.y + FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
     }
     {
         int slot = mCupAtSlot[mSwapSlotB];
-        mCupScale[slot] = ((mCup[slot].y - mMidY) >> 7) + 0x1000;
+        mCupScale[slot] = ((mCup[slot].y - mMid.y) >> 7) + 0x1000;
     }
     {
         int slot = mCupAtSlot[mSwapSlotB];
@@ -852,19 +845,18 @@ s32 dScMgCup_c::InitResources() {
     CupFx_ClearAll(mFx);
     return 1;
 }
-/* The constructor is inline, so the factory below holds it: the base
-   constructors, mParticle and mModel are the compiler's, then the two
-   arrays of element records. */
-inline dScMgCup_c::dScMgCup_c() {
-    __cxa_vec_ctor(mFx, 0x20, 0x18, (ctor_t)Cup_Nothing, (dtor_t)CupFx_ElemDtor);
-    __cxa_vec_ctor(mCup, 3, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
-}
+/* The constructor is inline, so the factory below holds it. The body is
+   empty: the base constructors, mParticle, mModel and the two arrays
+   (through __cxa_vec_ctor) are all the compiler's. */
+inline dScMgCup_c::dScMgCup_c() {}
 
 void *dScMgCup_c_classInit() {
     return new dScMgCup_c;
 }
 
-void Cup_Nothing() {}
+/* The effect slot's constructor, which __cxa_vec_ctor runs on each of mFx.
+   Empty, like its destructor. */
+CupFx::CupFx() {}
 
 /* Static-init globals (was the handwritten __sinit_ov006_021303d0 shard).
  * The compiler materializes and copies eight native member-pointer constants;

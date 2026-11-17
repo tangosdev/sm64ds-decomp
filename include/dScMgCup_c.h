@@ -3,24 +3,24 @@
  *
  * mModel is the Mario face (include/Presenter.h); the scene's destructor
  * destroys it as a member. mFx is the 0x20 effects under the cups. mCup is
- * the three positions (element ctor func_0203d738, empty).
+ * the three cup positions. Both arrays are of a class with an empty
+ * constructor and destructor, so the compiler builds them through
+ * __cxa_vec_ctor and tears them down through __cxa_vec_cleanup.
  */
 #ifndef DSCMGCUP_C_H
 #define DSCMGCUP_C_H
 #include "dScMgSingle3DBase_c.h"
 #include "Presenter.h"
-#include "MWCPlusLib.h"
-
-extern "C" void __cxa_vec_cleanup(void *base, unsigned int count, unsigned int stride,
-                                  void (*dtor)(void *));
-void CupFx_ElemDtor(void);
-extern "C" void NullDestructor_0203d47c(void);
+#include "Vector2.h"
 
 struct OamAttr;
 
 /* One effect slot. Init fills it, Update steps it, Draw draws
  * x>>12, y>>12. */
 struct CupFx {
+    CupFx();
+    ~CupFx();
+
     void Move(int dx, int dy);
     void Draw();
     void Update();
@@ -41,16 +41,6 @@ struct CupFx {
 
 #ifndef SM64DS_PLATFORM_PC
 typedef char CupFx_size_must_be_0x18[sizeof(CupFx) == 0x18 ? 1 : -1];
-#endif
-
-/* fx32 screen position. StateSelect subtracts x>>12, y>>12 from the touch. */
-struct CupPos {
-    s32 x;
-    s32 y;
-};
-
-#ifndef SM64DS_PLATFORM_PC
-typedef char CupPos_size_must_be_0x8[sizeof(CupPos) == 0x8 ? 1 : -1];
 #endif
 
 struct dScMgCup_c : dScMgSingle3DBase_c {
@@ -82,11 +72,10 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
        sets mModel.mTouchLocked, so the face keeps looking at the cup. */
     Presenter mModel;   /* 0x4f38 */
     u8 pad_50e4[4];     /* 0x50e4 */
-    CupFx mFx[0x20];    /* 0x50e8 -- elem dtor CupFx_ElemDtor */
-    CupPos mCup[3];     /* 0x53e8 -- elem dtor NullDestructor_0203d47c */
-    s32 mMidX;          /* 0x5400 -- average of the two cups' rest x */
-    s32 mMidY;          /* 0x5404 -- average of the two rest y */
-    s32 mHalfX;         /* 0x5408 -- mMidX minus the first cup's rest x */
+    CupFx mFx[0x20];    /* 0x50e8 */
+    Vector2 mCup[3];    /* 0x53e8 -- StateSelect subtracts x>>12, y>>12 from the touch */
+    Vector2 mMid;       /* 0x5400 -- midpoint of the two swapping cups' rest positions */
+    s32 mHalfX;         /* 0x5408 -- mMid.x minus the first cup's rest x */
     s32 mCupScale[3];   /* 0x540c -- fx32 size; converted to reciprocal for OAM rendering */
     s32 mState;         /* 0x5418 */
     s32 mTimer;         /* 0x541c */

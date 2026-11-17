@@ -8894,6 +8894,7 @@ ov002	0x020e700c	_ZN8daStar_c19func_ov002_020e700cEv	_ZN8daStar_c13CheckIceBlock
 ov002	0x020e7090	_ZN8daStar_c19func_ov002_020e7090Ei	_ZN8daStar_c13CollectNoPoseEi	daStar_c member: collects for the player passed (called by daPly_c) without the pose
 ov002	0x020e7104	_ZN8daStar_c19func_ov002_020e7104Ei	_ZN8daStar_c14SetSwitchStateEi	daStar_c member: called by daObjSwitch with the switch state; sets or clears mBits.switchOn
 ov002	0x020e7218	_ZN8daStar_c19func_ov002_020e7218EPci	_ZN8daStar_c13SeekNewMarkerEPci	daStar_c member: sends the star looking for a new marker (callers: daPly_c, daYegg_c)
+ov002	0x020e7218	_ZN8daStar_c13SeekNewMarkerEPci	_ZN8daStar_c13SeekNewMarkerEP7daPly_ci	parameter retyped char * -> daPly_c *: the body reads mPosX/mPlayerNo off it and hands it to SpawnNumber; both callers (daPly_c::func_ov002_020d94cc, daYegg_c) pass a daPly_c
 ov002	0x020e73ac	_ZN8daStar_c19func_ov002_020e73acEv	_ZN8daStar_c13PickTalkStateEv	daStar_c member: returns the player no-control talk state for this star (0..3)
 ov002	0x020e7454	_ZN8daStar_c19func_ov002_020e7454Ev	_ZN8daStar_c12RelinkMarkerEv	daStar_c member: re-links the star to its marker and takes the marker's position
 ov002	0x020e7554	_ZN8daStar_c19func_ov002_020e7554Ev	_ZN8daStar_c20LinkRandomFreeMarkerEv	daStar_c member: picks one of up to five free markers at random and links to it
@@ -10553,3 +10554,7 @@ arm9	0x02038234	_Z17dBgS_RideCallBackii	_Z17dBgS_RideCallBackP5dBgPiP8dActor_c	p
 arm9	0x02038298	_Z16dBgS_ChkPolySafePv	_Z16dBgS_ChkPolySafeP5dBgPi	parameters typed as the dBgPi, actor and vector pointers the body uses
 arm9	0x02038324	_Z17dBgS_MoveBgCrrPosPviii	_Z17dBgS_MoveBgCrrPosP5dBgPiP7Vector3P10Vector3_16S4_	parameters typed as the dBgPi, actor and vector pointers the body uses
 ov001	0x020ab5b0	_Z19func_ov001_020ab5b0Pcissss	_ZN9dThIcon_c5PlaceEissss	dThIcon_c::Place: stores the touch kind, centre and half extents and resets the press state; every caller passed its own dThIcon_c-derived icon as a char *, so it is a member; same address, same body
+ov002	0x020f64ac	_ZN8daDemo_c10anmModel_c19func_ov002_020f64acEPc	_ZN8daDemo_c10anmModel_c19func_ov002_020f64acEPKNS0_9AnimEntryE	parameter typed as the daDemo_c::anmModel_c::AnimEntry table (data_ov002_0210bc88) the body indexes by mAnimEntry; was char *
+ov002	0x020f6514	_ZN8daDemo_c10anmModel_c19func_ov002_020f6514EPvh	_ZN8daDemo_c10anmModel_c19func_ov002_020f6514EPKNS0_9AnimEntryEh	parameter typed as the daDemo_c::anmModel_c::AnimEntry table (data_ov002_0210bc88) whose 4-byte rows it reads; was void *
+ov002	0x020e71d4	_ZN12daStarBase_c27LinkSilverStarAndStarMarkerEPc	_ZN12daStarBase_c27LinkSilverStarAndStarMarkerEP8daStar_c	parameter retyped char * -> daStar_c *: the body reads uniqueID, mState and mDeathTableID off the star; every caller passes a daStar_c (daStar_c itself, daKrb_c, daObjBlockItemTag_c) or 0
+ov001	0x020ab228	_ZN10dCapIcon_c4LinkEPciih	_ZN10dCapIcon_c4LinkEP8dActor_ciih	owner parameter retyped char * -> dActor_c *: the body stores it in mOwner (dActor_c *) and reads its uniqueID; all six callers (daDossyCap_c, daObjMarioCap_c, dCapEnemy_c) pass the actor that owns the icon

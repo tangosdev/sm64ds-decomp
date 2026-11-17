@@ -92,7 +92,7 @@ s32 daDpLift_c::Behavior() {
     case STATE_SHAKE: {
         s16 ang = mShakeTimer << 12;
         s32 wave = FX_MUL(FX_SinIdx((u16)ang >> 4), 10);
-        mPosY = mBasePosY + wave;
+        mPosY = mBasePos.y + wave;
         if (mShakeTimer == 8) {
             mState = STATE_SINK;
             mVertSpeed = -0xa000;
@@ -140,9 +140,9 @@ s32 daDpLift_c::InitResources() {
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
-    mBasePosX = mPosX;
-    mBasePosY = mPosY;
-    mBasePosZ = mPosZ;
+    mBasePos.x = mPosX;
+    mBasePos.y = mPosY;
+    mBasePos.z = mPosZ;
     mState = 0;
     mHadClsn = 0;
 

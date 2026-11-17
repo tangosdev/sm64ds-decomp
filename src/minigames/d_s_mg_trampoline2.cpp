@@ -28,7 +28,14 @@ enum d_s_mg_trampoline2_AssetId {
  * invariants are hoisted, and the setting still cannot be narrowed to it --
  * this TU leaves codegen deferred, so mwccarm reads the state at the end of
  * the file and an `on` placed after PaintSquare (or after the function
- * following it) puts hoisting back for PaintSquare as well. TUBUILD CONFLICT
+ * following it) puts hoisting back for PaintSquare as well.
+ * Kept, re-measured (#821, 2026-11-16): without the pragma the other 41
+ * functions still match and PaintSquare is 0x188 of 0x170 (hoisted
+ * constants spill past the ROM's five stack words). dScMgTrampoline_c's
+ * spelling of the same body 0x188; for loops with x and y as products of
+ * the counters 0x184-0x18c; the layer read once before the loops 0x188.
+ * The siblings in d_s_mg_trampoline.cpp and d_s_mg_teresa.cpp keep the
+ * same pragma. TUBUILD CONFLICT
  * lines stay; the manifest pairs them.
  *
  * leftovers:
@@ -357,6 +364,12 @@ void dScMgTrampoline2_c::StateIntro() {
 
     {
         int t = FX_Div(counter << 12, 0x5a000);
+        /* Kept volatile: the ROM spills the previous point to the stack
+           across the random draw, as in dScMgTrampoline_c::StateIntro.
+           Measured 2026-11-16 (#821 r22): plain s16 locals shrink it
+           to 0x198 of 0x1a0; a whole-struct copy `Vec2s prev = mTouch`
+           keeps the stack slot but loads it with ldrh, not ldrsh
+           (10/104). */
         volatile s16 old9c = mTouch.x;
         volatile s16 old9e = mTouch.y;
         int mixRaw = sTrmp2IntroToX * t + sTrmp2IntroFromX * (0x1000 - t);

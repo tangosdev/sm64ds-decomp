@@ -170,13 +170,13 @@ int daSpd_c::InitResources() {
     mdCcAc_c.Init(this, 0x46000, 0x64000, 0x200000, 0x6eff0);
     mWithMeshClsn.Init(this, 0x50000, 0x50000, (Vector3_16 *)0, (Vector3_16 *)0);
     mWithMeshClsn.StartDetectingWater();
-    mHomeX = mPosX;
-    mHomeY = mPosY;
-    mHomeZ = mPosZ;
+    mHome.x = mPosX;
+    mHome.y = mPosY;
+    mHome.z = mPosZ;
     mHomeAngleY = mAngleY;
-    mAnchorX = mPosX;
-    mAnchorY = mPosY;
-    mAnchorZ = mPosZ;
+    mAnchor.x = mPosX;
+    mAnchor.y = mPosY;
+    mAnchor.z = mPosZ;
     if (param1 != 0)
         SetState(0);
     else
@@ -251,10 +251,10 @@ int daSpd_c::func_ov071_02120200() {
     short ang;
 
     mFlags = mFlags & ~0x10000001;
-    mPosX = mHomeX;
+    mPosX = mHome.x;
     z = 0;
-    mPosY = mHomeY;
-    mPosZ = mHomeZ;
+    mPosY = mHome.y;
+    mPosZ = mHome.z;
     mPrevAngleY = mHomeAngleY;
     ang = mHomeAngleY;
     mAngleX = z;
@@ -298,9 +298,9 @@ int daSpd_c::func_ov071_02120028() {
     } else if (mWithMeshClsn.IsOnGround()) {
         mVertSpeed = 0;
         mWithMeshClsn.ClearLimMovFlag();
-        mAnchorX = mPosX;
-        mAnchorY = mPosY;
-        mAnchorZ = mPosZ;
+        mAnchor.x = mPosX;
+        mAnchor.y = mPosY;
+        mAnchor.z = mPosZ;
         mFlags |= 0x10000001;
         SetState(2);
     }
@@ -311,7 +311,7 @@ int daSpd_c::func_ov071_02120028() {
 }
 
 int daSpd_c::func_ov071_0211ff84() {
-    if (Vec3_Dist(&mPos, (Vector3 *)&mAnchorX) > 0x5dc000) {
+    if (Vec3_Dist(&mPos, &mAnchor) > 0x5dc000) {
         SetState(5);
         return 1;
     }
@@ -417,11 +417,11 @@ int daSpd_c::func_ov071_0211fbf4() {
 }
 
 int daSpd_c::func_ov071_0211fb24() {
-    short ang = Vec3_HorzAngle(&mPos, (Vector3 *)&mAnchorX);
+    short ang = Vec3_HorzAngle(&mPos, &mAnchor);
     ApproachLinear(mAngleY, ang, 0x2bc);
     mPrevAngleY = mAngleY;
     mAnmModel.Advance();
-    if (Vec3_Dist(&mPos, (Vector3 *)&mAnchorX) < 0x12c000)
+    if (Vec3_Dist(&mPos, &mAnchor) < 0x12c000)
         SetState(2);
     func_ov071_0211f0b4();
     UpdatePos(&mdCcAc_c);
@@ -576,7 +576,7 @@ void daSpd_c::func_ov071_0211f498() {
     v.z = mPosZ;
     SpawnCoins(v, mCoinCount, 0xf000, 0);
     PoofDust();
-    func_02012694(0xc4, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0xc4, &mCamSpacePos);
     if (param1) {
         mCoinCount = 0;
         SetState(0);

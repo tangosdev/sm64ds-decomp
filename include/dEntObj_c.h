@@ -129,12 +129,8 @@ struct dEntObj_c : dBase_c {
     dExtAnmModel_c mAnmModel;        /* 0x8bc */
     UnknownVsPlayer mPlayers[4];     /* 0x920 */
     EntryMesh mMesh;                 /* 0xe80 -- the entry-menu grid mesh */
-    s32 mCamPosX;                    /* 0xf28 */
-    s32 mCamPosY;                    /* 0xf2c */
-    s32 mCamPosZ;                    /* 0xf30 */
-    s32 mCamTargetX;                 /* 0xf34 */
-    s32 mCamTargetY;                 /* 0xf38 */
-    s32 mCamTargetZ;                 /* 0xf3c */
+    Vector3 mCamPos;                 /* 0xf28 */
+    Vector3 mCamTarget;              /* 0xf34 */
     u8 mAnimActive;                  /* 0xf40 */
     u8 mState;                       /* 0xf41 */
     u8 mFocusedPlayer;               /* 0xf42 */

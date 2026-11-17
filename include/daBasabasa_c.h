@@ -50,9 +50,7 @@ struct daBasabasa_c : dEnemyBase_c {
     Matrix4x3 mShadowMatrix;        /* 0x3f0 -- coined */
     State *mCurrentState;           /* 0x420 */
     /* InitResources copies the spawn position into these three. */
-    s32 mHomePosX; /* 0x424 */
-    s32 mHomePosY; /* 0x428 */
-    s32 mHomePosZ; /* 0x42c */
+    Vector3 mHomePos; /* 0x424 */
     /* Coined names from here down. */
     s32 mPerchTimer;   /* 0x430 -- frames spent back at home before perching */
     s16 mTargetAngleY; /* 0x434 */

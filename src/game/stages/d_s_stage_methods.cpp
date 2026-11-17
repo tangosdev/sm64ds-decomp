@@ -1003,6 +1003,12 @@ void dScStage_c::LC_Update() {
         return;
     }
 }
+/* Kept, measured (#821, 2026-11-16): without opt_strength_reduction off this
+ * is 0x450 against the ROM's 0x460, with the loop's gTouchInfo[i] and
+ * data_0209f368[i] reads reduced to walking pointers. Reading the mode
+ * through cam->mode at either site alone leaves 0x450; at both 0x440, where
+ * the ROM forms data_0209f498[i] with mla. Looping to the cached player
+ * count 0x450. */
 #pragma opt_strength_reduction off
 void dScStage_c::CheckCameraInput() {
     ControllerInput *cam = data_0209f498;
@@ -1459,6 +1465,8 @@ static inline int IsTouchPressed(u8 held, u8 slot) {
     return held != 0 && gTouchInfo[slot].edge != 0;
 }
 /* Pause-screen update. */
+/* Kept, measured (#821, 2026-11-16): without opt_common_subs off the body is
+ * 0x30a8 against 0x30ac, 33 hunks and 2907 of 3115 words aligned. */
 #pragma opt_common_subs off
 void dScStage_c::PS_Update() {
     u8 var_sl;
@@ -4298,7 +4306,7 @@ void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
     int dist;
     int step;
     int i;
-    char *p; /* walks mDensity */
+    u8 *p;
 
     this->mEnabled = 1;
     dist = 0x28000 - (nearv << 4);
@@ -4308,9 +4316,8 @@ void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
     if (dist >= 0x80000)
         dist = 0x7ffff;
     step = (0x100000 - (farv << 4) - dist) >> 5;
-    i = 0;
-    p = (char *)this->mDensity;
-    while (i < 32) {
+    p = this->mDensity;
+    for (i = 0; i < 32; i++) {
         if (dist <= 0) {
             *p = 0;
         } else if (dist > 0x80000) {
@@ -4318,7 +4325,6 @@ void Fog::Init(unsigned short color, fx32 nearv, fx32 farv) {
         } else {
             *p = (dist >> 12);
         }
-        i++;
         p++;
         dist += step;
     }

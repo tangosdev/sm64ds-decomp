@@ -27,9 +27,7 @@ struct daObjBk_Botaosi_c : dBgActor_c {
     /* The point 0x32000 units in front of the plank: InitResources rotates
        (0, 0, 0x32000) by mAngleY through data_020a0e68 and adds the plank's own
        position. mFrontFloorY below is the ground height under it. */
-    s32 mFrontPosX;    /* 0x378 */
-    s32 mFrontPosY;    /* 0x37c */
-    s32 mFrontPosZ;    /* 0x380 */
+    Vector3 mFrontPos; /* 0x378 */
     s32 mFrontFloorY;  /* 0x384 */
     s32 mOriginalPosY; /* 0x388 */
     s32 mJumpSpeed;    /* 0x38c */

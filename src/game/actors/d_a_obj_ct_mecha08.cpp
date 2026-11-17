@@ -2,7 +2,7 @@
 /* Tick Tock Clock's up-and-down lift block (CT_MECHA08A/CT_MECHA08B): one
  * class behind two profiles. InitResources loads model and collision,
  * remembers home, seeds speed/timer from per-clock-setting tables. Behavior
- * runs the lift between mHomePosY and mHomePosY + 0x14a000; setting 3 parks
+ * runs the lift between mHomePos.y and mHomePos.y + 0x14a000; setting 3 parks
  * it at the top, setting 2 re-rolls the timer.
  *
  * 8 functions, ov065 .text 0x0211b7f0..0x0211bbdc, closing with the two
@@ -58,7 +58,7 @@ extern Mecha08CollisionFilePtr gCtMechaObj08aCollisionFile;
 enum {
     CLOCK_SETTING_RANDOM = 2,  /* Behavior re-rolls the timer at random */
     CLOCK_SETTING_STOPPED = 3, /* Behavior parks the lift at the top */
-    LIFT_TRAVEL = 0x14a000     /* height above mHomePosY */
+    LIFT_TRAVEL = 0x14a000     /* height above mHomePos.y */
 };
 
 extern CLPS_Block data_ov035_021121b8;
@@ -97,9 +97,9 @@ int daObjCtMecha08_c::InitResources() {
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(gCtMechaObj08aCollisionFile), mClsnMat, 0x199, mAngleY,
                           data_ov035_021121b8);
 
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mMoveDir = 0;
 
     u8 setting = data_0209f2c0;
@@ -111,13 +111,13 @@ int daObjCtMecha08_c::InitResources() {
 
 /* Setting 3 parks the lift at the top of its travel. Otherwise it moves under
    its own speed, and each time the timer runs out it clamps back inside
-   [mHomePosY, mHomePosY + 0x14a000], turns round, and reloads speed and timer.
+   [mHomePos.y, mHomePos.y + 0x14a000], turns round, and reloads speed and timer.
    Setting 2 overrides the timer with 0xa plus a random multiple of 0x14, at most 0x6e.
    The in-range test is an int-returning inline, which is what makes the ROM
    materialize its 0/1 before branching on it. */
 int daObjCtMecha08_c::Behavior() {
     if (data_0209f2c0 == CLOCK_SETTING_STOPPED) {
-        mPosY = mHomePosY + LIFT_TRAVEL;
+        mPosY = mHomePos.y + LIFT_TRAVEL;
         UpdateModelPosAndRotY();
         if (IsClsnInRange(0, 0) != 0)
             UpdateClsnPosAndRot();
@@ -126,7 +126,7 @@ int daObjCtMecha08_c::Behavior() {
             s32 lower, upper;
 
             UpdatePos(0);
-            lower = mHomePosY;
+            lower = mHomePos.y;
             upper = lower + LIFT_TRAVEL;
             if (!IsInRange(mPosY, lower, upper)) {
                 mPosY = Clamp(mPosY, lower, upper);

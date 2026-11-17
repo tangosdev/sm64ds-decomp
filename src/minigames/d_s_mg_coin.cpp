@@ -218,7 +218,12 @@ dScMgCoin_c::~dScMgCoin_c() {}
    fifteen words. The pragma is part of that match. The table stays
    hand-indexed here: through FX_CosIdx / FX_SinIdx the two products take
    swapped registers (21 DIFF in every declaration order of vec, the icon
-   index and fx16 or int locals, with or without the pragma). */
+   index and fx16 or int locals, with or without the pragma).
+   Kept, re-measured (#821, 2026-11-16): without opt_propagation off the body
+   is 21 of 56 words off. c/s locals, a table local, vec[2] = -vec[1]
+   copies, the icon index read after the products, an int spin, an inline i
+   and an i * 2 index all stay at 21; an s16 spin is 22; a &table[i] pointer
+   grows the body to 0x124. */
 #pragma push
 #pragma opt_propagation off
 void dScMgCoin_c::Bag_Draw() {

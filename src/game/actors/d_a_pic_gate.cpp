@@ -222,7 +222,7 @@ void daPicGate_c::HitTest() {
     if (y > lim)
         return;
     BeginWave(x, y, 0);
-    func_02012694(0x7b, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x7b, &mCamSpacePos);
 }
 
 /* BuildNormals: each cell's normal is the cross product of its column and
