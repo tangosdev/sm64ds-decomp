@@ -1557,19 +1557,10 @@ void dCamera_c::Mode8DirectionsCamera(CamViewObj *view) {
         s32 radius = tbl[0];
         vsrc.z = cstd::sqrt((s64)radius * radius - (s64)comp * comp);
     }
-    {
-        s32 tz = mTargetPos.z;
-        s32 ty = lookAt.y;
-        s32 tx = mTargetPos.x;
-        vin.x = tx;
-        vin.y = ty;
-        vin.z = tz;
-    }
+    SetVec(vin, mTargetPos.x, lookAt.y, mTargetPos.z);
     Vec3_RotateYAndTranslate(&vout.x, &vin.x, mEasedAngleY, &vsrc.x);
     if (mFlags & 4) {
-        pos.x = vout.x;
-        pos.y = vout.y;
-        pos.z = vout.z;
+        pos = vout;
     }
     Math_Function_0203b14c(&pos.y, vout.y, 0x300, 0x18000, 0x100);
     vout.y = pos.y;
@@ -1593,14 +1584,7 @@ void dCamera_c::UpdateRadialCamera(CamViewObj *obj, int arg2) {
     int step;
     int rate;
 
-    {
-        int sz = obj->z << 12;
-        int sy = obj->y << 12;
-        int sx = obj->x << 12;
-        v.x = sx;
-        v.y = sy;
-        v.z = sz;
-    }
+    SetVec(v, obj->x << 12, obj->y << 12, obj->z << 12);
     angle = Vec3_HorzAngle(&v, &lookAt);
 
     rate = 8;
@@ -1676,14 +1660,7 @@ void dCamera_c::UpdateFixedCamera(CamViewObj *obj, int arg2) {
         idx = 0;
 
     e = &data_02086f58[idx];
-    {
-        int tz = obj->z << 12;
-        int ty = obj->y << 12;
-        int tx = obj->x << 12;
-        viewPos.x = tx;
-        viewPos.y = ty;
-        viewPos.z = tz;
-    }
+    SetVec(viewPos, obj->x << 12, obj->y << 12, obj->z << 12);
 
     dBgCh_Gnd ray;
     ray.SetObjAndPos(viewPos, 0);
@@ -1713,9 +1690,7 @@ void dCamera_c::UpdateFixedCamera(CamViewObj *obj, int arg2) {
     }
 
     Vec3_Sub(&v3, &v2, &lookAt);
-    v1.x = v3.x;
-    v1.y = v3.y;
-    v1.z = v3.z;
+    v1 = v3;
     len = VEC_Mag(&v1);
 
     limit = e->a;
@@ -1726,15 +1701,11 @@ void dCamera_c::UpdateFixedCamera(CamViewObj *obj, int arg2) {
         scale = FX_Div(limit, len);
         Vec3_MulScalarInPlace(&v1, scale);
         Vec3_Add(&v4, &lookAt, &v1);
-        v2.x = v4.x;
-        v2.y = v4.y;
-        v2.z = v4.z;
+        v2 = v4;
     }
 
     if (mFlags & 4) {
-        pos.x = v2.x;
-        pos.y = v2.y;
-        pos.z = v2.z;
+        pos = v2;
     } else {
         func_020092c4(this, &pos, &v2);
     }
@@ -1763,14 +1734,7 @@ void dCamera_c::UpdateSpiralStairsCamera(CamViewObj *obj, int arg2) {
     int selfZ;
     int selfX;
 
-    {
-        int tz = obj->z << 12;
-        int ty = obj->y << 12;
-        int tx = obj->x << 12;
-        v0.x = tx;
-        v0.y = ty;
-        v0.z = tz;
-    }
+    SetVec(v0, obj->x << 12, obj->y << 12, obj->z << 12);
 
     angle1 = Vec3_HorzAngle(&mTargetPos, &v0);
     angle2 = Vec3_HorzAngle(&this->pos, &v0);
@@ -1781,9 +1745,7 @@ void dCamera_c::UpdateSpiralStairsCamera(CamViewObj *obj, int arg2) {
         diff = 0x4000;
     newAngle = (angle1 + diff);
 
-    base.x = data_02086e84.x;
-    base.y = data_02086e84.y;
-    base.z = data_02086e84.z;
+    base = data_02086e84;
     Vec3_RotateYAndTranslate(&rotated, &v0, newAngle, &base);
     rotated.y = arg2;
 
@@ -1811,9 +1773,7 @@ void dCamera_c::UpdateSpiralStairsCamera(CamViewObj *obj, int arg2) {
     if (rem > 0)
         rotated.y += rem;
     if (mFlags & 4) {
-        this->pos.x = rotated.x;
-        this->pos.y = rotated.y;
-        this->pos.z = rotated.z;
+        this->pos = rotated;
     } else {
         func_020092c4(this, &this->pos, &rotated);
     }
@@ -1910,9 +1870,7 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
         Vec3_MulScalarInPlace(&nextStep, FX_Div(0x190000, VEC_Mag(&nextStep)));
         Vec3_Add(&farPoint, &node1, &nextStep);
         Vec3_Sub(&diffFar, &farPoint, &lookAt);
-        nextStep.x = diffFar.x;
-        nextStep.y = diffFar.y;
-        nextStep.z = diffFar.z;
+        nextStep = diffFar;
 
         Vec3_MulScalar(&back, &dir, -0x190000);
         Vec3_Add(&farBack, &node1, &back);
@@ -1938,9 +1896,7 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
         Vec3_MulScalarInPlace(&diffPrev, FX_Div(0x190000, VEC_Mag(&diffPrev)));
         Vec3_Add(&farPrev, &node0, &diffPrev);
         Vec3_Sub(&diffFarPrev, &farPrev, &lookAt);
-        diffPrev.x = diffFarPrev.x;
-        diffPrev.y = diffFarPrev.y;
-        diffPrev.z = diffFarPrev.z;
+        diffPrev = diffFarPrev;
 
         lenA = VEC_Mag(&diffFwd2);
         lenB = VEC_Mag(&diffPrev);
@@ -1975,9 +1931,7 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
     VEC_Add(&targetPos, &side, &targetPos);
 
     if (mFlags & 4) {
-        pos.x = targetPos.x;
-        pos.y = targetPos.y;
-        pos.z = targetPos.z;
+        pos = targetPos;
     } else {
         func_020092c4(this, &pos, &targetPos);
     }
@@ -2071,18 +2025,13 @@ static inline s32 CollisionCeiling(dBgCh_Lin &line, s32 floorHeight) {
 }
 
 static inline void SetCollisionPosition(dCamera_c *cam, dBgCh_Lin &line) {
-    Vector3 pos = line.GetClsnPos();
-    cam->mWallPos.x = pos.x;
-    cam->mWallPos.y = pos.y;
-    cam->mWallPos.z = pos.z;
+    cam->mWallPos = line.GetClsnPos();
 }
 
 static inline void MoveCameraPosition(dCamera_c *cam, const Vector3 &offset) {
     Vector3 pos;
     Vec3_Add(&pos, &cam->lookAt, &offset);
-    cam->pos.x = pos.x;
-    cam->pos.y = pos.y;
-    cam->pos.z = pos.z;
+    cam->pos = pos;
 }
 
 static inline s32 LimitCameraCeiling(dBgCh_Lin &line, Vector3 &endpoint, s32 ceiling) {
