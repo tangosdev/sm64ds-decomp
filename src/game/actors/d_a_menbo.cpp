@@ -47,12 +47,6 @@
 struct BMD_File;
 struct BCA_File;
 
-/* mState is void* on the class. The node it points at is two PMFs on
- * daMenbo_c: the entry Behavior does not call, then the update it does.
- * MenboState is the pun the installer reads them through. */
-typedef int (daMenbo_c::*MenboStateFn)();
-struct MenboState { char pad[0x370]; MenboStateFn *mState; };
-
 /* 8-byte file handles: filePtr is the loaded file. The model constructs
  * with func_02017acc and destroys with func_02017ab4; the anims use
  * SharedFilePtr::Construct and
@@ -97,10 +91,10 @@ extern MenboAnimationFilePtr data_ov090_02134498; /* idle anim, file 0x3a3 */
 extern MenboModelFilePtr     data_ov090_021344a0; /* model, file 0x39f */
 /* Each node is the (entry, update) PMF pair the Behavior installs.
  * e4 idle, f4 water chase, 504 water rest, 514 patrol. */
-extern MenboStateFn  data_ov090_021344e4[2];
-extern MenboStateFn  data_ov090_021344f4[2];
-extern MenboStateFn  data_ov090_02134504[2];
-extern MenboStateFn  data_ov090_02134514[2];
+extern daMenbo_c::StateFn  data_ov090_021344e4[2];
+extern daMenbo_c::StateFn  data_ov090_021344f4[2];
+extern daMenbo_c::StateFn  data_ov090_02134504[2];
+extern daMenbo_c::StateFn  data_ov090_02134514[2];
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. Actor ID 0xbf is PLAYER. gGameMode is the current game
@@ -128,16 +122,14 @@ daMenbo_c::~daMenbo_c()
 void daMenbo_c::func_ov090_02130f94() {
     int zero;
     int sh;
-    daMenbo_c *c;
     int i;
     Matrix4x3 *src;
     unsigned int id;
 
-    c = this;
-    if (IsOffScreen(c))
+    if (IsOffScreen(this))
         return;
 
-    src = &c->mAnmModel.mat4x3;
+    src = &mAnmModel.mat4x3;
     zero = 0;
     sh = 3;
     id = 0xea;
@@ -146,7 +138,7 @@ void daMenbo_c::func_ov090_02130f94() {
         Vector3 r;
 
         data_020a0e68 = *src;
-        MTX_Concat43((const Matrix4x3 *)c->mAnmModel.data.transforms + (6 + i * 3), &data_020a0e68,
+        MTX_Concat43((const Matrix4x3 *)mAnmModel.data.transforms + (6 + i * 3), &data_020a0e68,
                      &data_020a0e68);
         v.x = data_020a0e68.m[9];
         v.y = data_020a0e68.m[10];
@@ -155,10 +147,10 @@ void daMenbo_c::func_ov090_02130f94() {
         v.x = r.x;
         v.y = r.y;
         v.z = r.z;
-        v.y = c->mSurfaceY;
-        c->mRippleParticles[i] = Particle::System::New(c->mRippleParticles[i], id, v.x, v.y, r.z,
-                                                       (const Vector3_16f *)(zero),
-                                                       (dPa_c::level_c::callback_c *)(zero));
+        v.y = mSurfaceY;
+        mRippleParticles[i] = Particle::System::New(mRippleParticles[i], id, v.x, v.y, r.z,
+                                                    (const Vector3_16f *)(zero),
+                                                    (dPa_c::level_c::callback_c *)(zero));
     }
 }
 
@@ -575,12 +567,11 @@ int daMenbo_c::func_ov090_02131db0()
 }
 
 /* Install a state and run its entry. A null entry PMF means there is none. */
-int daMenbo_c::func_ov090_02131e00(MenboStateFn *p) {
-    MenboState *c = (MenboState *)this;
-    c->mState = p;
-    MenboStateFn *q = c->mState;
-    if (*q == 0) return 1;
-    return ((daMenbo_c *)c->**q)();
+int daMenbo_c::func_ov090_02131e00(StateFn *state) {
+    mState = state;
+    if (*mState == 0)
+        return 1;
+    return (this->**mState)();
 }
 
 /* dExtSimpleModel_c matrix from position (shifted down 3, the renderer's scale) and
@@ -709,11 +700,8 @@ int daMenbo_c::Behavior()
         return 1;
     }
 
-    {
-        MenboStateFn *n = (MenboStateFn *)mState;
-        if (n[1])
-            (this->*n[1])();
-    }
+    if (mState[1])
+        (this->*mState[1])();
     mAngleY = mPrevAngleY;
     mAnmModel.speed = mAnimSpeed;
     mAnmModel.Advance();
@@ -846,19 +834,19 @@ MenboAnimationFilePtr data_ov090_02134488(0x3a0);
 MenboAnimationFilePtr data_ov090_02134480(0x3a1);
 MenboAnimationFilePtr data_ov090_02134490(0x3a2);
 MenboAnimationFilePtr data_ov090_02134498(0x3a3);
-MenboStateFn data_ov090_021344f4[2] = {
+daMenbo_c::StateFn data_ov090_021344f4[2] = {
     &daMenbo_c::func_ov090_02131db0,
     &daMenbo_c::func_ov090_02131c48,
 };
-MenboStateFn data_ov090_02134504[2] = {
+daMenbo_c::StateFn data_ov090_02134504[2] = {
     &daMenbo_c::func_ov090_02131b94,
     &daMenbo_c::func_ov090_02131ac4,
 };
-MenboStateFn data_ov090_02134514[2] = {
+daMenbo_c::StateFn data_ov090_02134514[2] = {
     &daMenbo_c::func_ov090_02131a74,
     &daMenbo_c::func_ov090_02131648,
 };
-MenboStateFn data_ov090_021344e4[2] = {
+daMenbo_c::StateFn data_ov090_021344e4[2] = {
     &daMenbo_c::func_ov090_02131608,
     &daMenbo_c::func_ov090_02131584,
 };
