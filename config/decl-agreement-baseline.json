@@ -250,7 +250,7 @@
       ]
     },
     "MI_CpuCopy8": {
-      "src/engine/mb/MB_WmBase.cpp": [
+      "src/engine/mb/MB_WmBase.c": [
         "param:#1 unsigned short *",
         "param:#3 int"
       ],
@@ -14948,7 +14948,7 @@
       ]
     },
     "MI_CpuFill8": {
-      "src/engine/mb/MB_WmBase.cpp": [
+      "src/engine/mb/MB_WmBase.c": [
         "param:#2 int"
       ],
       "src/engine/save/SaveData.cpp": [
