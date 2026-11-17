@@ -146,7 +146,7 @@ void daSnowball_c::HandleContact() {
                 pos.y = mPosY;
                 pos.z = mPosZ;
                 player->Hurt(pos, 1, 0xc000, 1, 0, 1);
-                func_02012694(SND3_SNOWBALL_BURST, (const Vector3 *)(&mCamSpacePosX));
+                func_02012694(SND3_SNOWBALL_BURST, &mCamSpacePos);
                 Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPosX, mPosY, mPosZ);
                 MarkForDestruction();
                 return;
@@ -160,7 +160,7 @@ void daSnowball_c::HandleContact() {
  *
  * 1. While mReachedSpawnY is still 0 and mTerminalVelocity still holds the
  *    -0x3c000 (-60 units/frame) InitResources set: the first frame the snowball
- *    is below its spawn height (mSpawnPosY > mPosY) zero mVertSpeed and
+ *    is below its spawn height (mSpawnPos.y > mPosY) zero mVertSpeed and
  *    mVertAccel and set mReachedSpawnY. The snowball then hovers at (just
  *    below) the height it was placed at instead of falling further.
  * 2. Burst, with the bank-3 sound, when mStateTimer has run out to 0 or the
@@ -170,14 +170,14 @@ void daSnowball_c::HandleContact() {
  * Always returns 1. */
 int daSnowball_c::State0() {
     if (this->mReachedSpawnY == 0 && this->mTerminalVelocity == -0x3c000) {
-        if (this->mSpawnPosY > this->mPosY) {
+        if (this->mSpawnPos.y > this->mPosY) {
             this->mVertSpeed = 0;
             this->mVertAccel = 0;
             this->mReachedSpawnY = 1;
         }
     }
     if (this->mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0) {
-        func_02012694(SND3_SNOWBALL_BURST, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(SND3_SNOWBALL_BURST, &this->mCamSpacePos);
         Particle::System::NewSimple(PTCL_SNOWBALL_BURST, this->mPosX, this->mPosY, this->mPosZ);
         MarkForDestruction();
     }
@@ -286,9 +286,9 @@ int daSnowball_c::InitResources() {
     mTerminalVelocity = -0x3c000;
     mdCcAc_c.Init(this, 0x1e000, 0x1e000, SNOWBALL_CC_FLAGS, SNOWBALL_CC_VULN);
 
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     mPosY += 0x32000;
     mAngleY = mPrevAngleY;
     mWithMeshClsn.Init(this, 0x14000, 0x14000, 0, 0);

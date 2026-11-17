@@ -39,12 +39,8 @@ struct dEnemyBase_c : dActor_c {
        read them, and `X : dEnemyBase_c` cannot compile unless they exist. The counts
        are how many of dEnemyBase_c's 51 subclasses declare each -- 0x100 is in
        twenty-eight of them, which is not a coincidence. */
-    s32 mFloorNormalX;            /* 0x0d4 */
-    s32 mFloorNormalY;            /* 0x0d8 */
-    s32 mFloorNormalZ;            /* 0x0dc */
-    s32 mWallNormalX;             /* 0x0e0 */
-    s32 mWallNormalY;             /* 0x0e4 */
-    s32 mWallNormalZ;             /* 0x0e8 */
+    Vector3 mFloorNormal;         /* 0x0d4 */
+    Vector3 mWallNormal;          /* 0x0e0 */
     s16 mSpinRateX;               /* 0x0ec */
     s16 mSpinRateY;               /* 0x0ee */
     s16 mSpinRateZ;               /* 0x0f0 */
@@ -204,6 +200,12 @@ struct dEnemyBase_c : dActor_c {
     int func_ov002_020ae4cc(dBgCh_Actr &);
     int func_ov002_020ae454(dBgCh_Actr &);
     int func_ov002_020aea24(dBgCh_Actr &);
+    /* Knock-back speeds from the attacker (a player's param1 indexes the
+       strength table), shared by the death start handlers. */
+    void func_ov002_020ae968(dActor_c *);
+    void func_ov002_020ae8b8(dActor_c *);
+    /* Shrink-death tail; its caller passes an argument the body ignores. */
+    int func_ov002_020ae5c8(int);
 };
 
 /* Makes dEnemyBase_c's size a claim the compiler enforces, and makes every header

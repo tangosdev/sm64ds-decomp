@@ -22,9 +22,9 @@
  *  - G3i_PerspectiveW_ takes the SDK's fx32 scalars.
  *  - The Matrix4x3 copies go through the flat Mtx43; assigning Matrix4x3
  *    itself grows .text by 0x6c bytes.
- *  - Behavior's mFellOffThisFrame probe keeps the second `walk` induction variable
- *    alongside `player`: folding it into `player->mFellOffThisFrame` drops a
- *    register and rewrites the whole function.
+ *  - Behavior reads mFellOffThisFrame as mPlayers[i] beside the running
+ *    `player`: folding it into `player->mFellOffThisFrame` drops a register and
+ *    rewrites the whole function, and indexing every use changes its size.
  */
 
 #include "Particle__System.h"
@@ -44,6 +44,7 @@
 #include "LevelRng.h"
 #include "nitro/gx/g3_util.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/MtxStack.h"
 
 struct BTP_File;
 
@@ -81,13 +82,9 @@ int RandomIntInternal(int *seed);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 void Vec3_MulScalarInPlace(Vector3 *v, int scale);
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
 int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 
-extern Matrix4x3 data_020a0e68;
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 extern short data_02082614[];
@@ -741,8 +738,7 @@ void dEntObj_c::SetCamera() {
     Matrix4x3 view;
     G3i_PerspectiveW_(data_02082614[10], data_02082614[11], 0x1555, 0x1000, 0x1388000, 0x1000, true,
                       0);
-    G3i_LookAt_((Vector3 *)&mCamPosX, (Vector3 *)&data_ov075_0211c660, (Vector3 *)&mCamTargetX,
-                true, &view);
+    G3i_LookAt_(&mCamPos, (Vector3 *)&data_ov075_0211c660, &mCamTarget, true, &view);
     CopyToViewMat(&view);
     data_0209f43c.Func_020156DC(0x1555, 0x105b, 0x1000, 0x1388000);
 }
@@ -803,17 +799,12 @@ int dEntObj_c::Behavior() {
     if (mSuspended == 0) {
         int i;
         UnknownVsPlayer *player;
-        char *walk;
-        u8 *present;
         int allAtExit;
-        present = data_0209fc5c;
-        walk = (char *)this;
         player = mPlayers;
         allAtExit = 1;
-        i = 0;
-        for (; i < 4; i++, player++, walk += sizeof(UnknownVsPlayer), present += 1) {
+        for (i = 0; i < 4; player++, i++) {
             player->Behavior();
-            if (((dEntObj_c *)walk)->mPlayers[0].mFellOffThisFrame) {
+            if (mPlayers[i].mFellOffThisFrame) {
                 Vector3 *playerPosition = &player->mPosition;
                 Vector3 position;
                 position.x = playerPosition->x;
@@ -821,27 +812,21 @@ int dEntObj_c::Behavior() {
                 position.z = playerPosition->z;
                 mMesh.TouchAt(&position);
             }
-            if (*present) {
+            if (data_0209fc5c[i]) {
                 if (player->IsAtExit() == 0)
                     allAtExit = 0;
             }
         }
 
         if (mState == STATE_WAIT_FOR_EXIT && allAtExit != 0) {
-            int j = 0;
-            u8 *present2 = data_0209fc5c;
-            UnknownVsPlayer *player2 = mPlayers;
-            for (; j < 4; j++) {
-                if (*present2)
-                    player2->StartRunOffStage();
-                present2 += 1;
-                player2++;
+            for (int j = 0; j < 4; j++) {
+                if (data_0209fc5c[j])
+                    mPlayers[j].StartRunOffStage();
             }
             mState = STATE_RUN_OFF_STAGE;
         }
         if (mState != STATE_IDLE) {
-            if (mPlayers[mFocusedPlayer].UpdateCamera((Vector3 *)&mCamTargetX,
-                                                      (Vector3 *)&mCamPosX) != 0)
+            if (mPlayers[mFocusedPlayer].UpdateCamera(&mCamTarget, &mCamPos) != 0)
                 SetCamera();
         }
         if (mAnimActive) {
@@ -927,12 +912,12 @@ int dEntObj_c::InitResources() {
         func_ov075_02115098(localPlayer);
     }
 
-    mCamTargetX = 0;
-    mCamPosX = mCamTargetX;
-    mCamTargetY = 0x14000;
-    mCamPosY = mCamTargetY;
-    mCamPosZ = 0x50000;
-    mCamTargetZ = -0x8000;
+    mCamTarget.x = 0;
+    mCamPos.x = mCamTarget.x;
+    mCamTarget.y = 0x14000;
+    mCamPos.y = mCamTarget.y;
+    mCamPos.z = 0x50000;
+    mCamTarget.z = -0x8000;
 
     SetCamera();
 

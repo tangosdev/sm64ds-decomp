@@ -54,8 +54,6 @@ extern int sBscLaneX[];
 extern int sMgCoinsBetPlaced;
 extern void FreeGfxSlotsById(int arg);
 void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
-void Mg_DrawCredits(void *scene, int a1, int a2, int a3);
-void Mg_DrawScoreTally(void *scene, int a1, int a2, int a3);
 extern unsigned char gMainScreenLayers;
 extern int data_0208ee44;
 extern s32 GetGameLanguage(void);
@@ -132,8 +130,8 @@ s32 dScMgBSC_c::Render() {
         }
     }
     MgCoins_Draw();
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawCredits(0xc, 0xc, 0);
+    DrawScoreTally(0xe0, 0x14, 1);
     mDealer.Draw();
     return 1;
 }
@@ -266,15 +264,15 @@ void dScMgBSC_c::StateChooseCard() {
     unsigned int playerSlot = gActivePlayerSlot;
     int touchPressed = 0;
     int lane;
-    if (gTouchHeld[playerSlot * 4] != 0) {
-        if (gTouchEdge[playerSlot * 4] != 0)
+    if (gTouchInfo[playerSlot].held != 0) {
+        if (gTouchInfo[playerSlot].edge != 0)
             touchPressed = 1;
     }
     if (touchPressed == 0)
         return;
     for (lane = 0; lane < 2; lane++) {
-        int dx = (int)((TouchInfo *)gTouchHeld)[gActivePlayerSlot].x - (sBscLaneX[lane] >> 12);
-        int dy = (int)((TouchInfo *)gTouchHeld)[gActivePlayerSlot].y - 0x60;
+        int dx = (int)gTouchInfo[gActivePlayerSlot].x - (sBscLaneX[lane] >> 12);
+        int dy = (int)gTouchInfo[gActivePlayerSlot].y - 0x60;
         if (dx < -0x10)
             continue;
         if (dx > 0x10)

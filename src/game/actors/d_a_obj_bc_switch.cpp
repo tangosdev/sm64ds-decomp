@@ -190,21 +190,15 @@ void daObjBC_Switch_c::OnStoodOn(dActor_c *other) {
  * how the switch still knows which area it belongs to after it stops claiming
  * membership.
  *
- * THE ODD SPELLINGS ARE LOAD-BEARING and are kept exactly: `p` is hoisted out
- * of the branch, and the 0x32a write (mCoinTimerSeed) is reached once through
- * `(u16*)(c + 0x300)[0x15]` and once through an integer-cast &mCoinTimerSeed.
- * A plain mCoinTimerSeed = mCoinTimerSeed * 0xa CSE's the field address and
- * shrinks the function by 16 bytes (measured).
+ * The seed is scaled with `mCoinTimerSeed *= 10`: the compound assignment
+ * takes the field address once from the pool, which is the ROM's shape.
+ * Spelled `mCoinTimerSeed = mCoinTimerSeed * 10` it CSE's the address with the
+ * earlier stores and shrinks the function by 16 bytes (measured).
  */
 /* The name comes from vtable slot identity, not from the image. */
 int daObjBC_Switch_c::InitResources() {
-    char *c = (char *)this;
     void *bmd;
     void *kcl;
-    int y;
-    unsigned int x;
-    unsigned short val;
-    unsigned short *p;
 
     bmd = dExtSimpleModel_c::LoadFile(daObjBC_Switch_c_ModelFile);
     mModel.SetFile((BMD_File *)bmd, 1, -1);
@@ -222,22 +216,14 @@ int daObjBC_Switch_c::InitResources() {
 
     mPressed = 0;
 
-    /* Keep p out of the mid-block so y colors r1 and c+0x300 colors r0,
-       and so the 0xfa store rematerializes add r0,r4,#0x300 after ldrh
-       clobbers r0. */
-    y = mPosY;
-    mStopPosY = y - 0x64000;
-    x = param1;
-    mCoinTimerSeed = (x >> 8) & 0xff;
+    mStopPosY = mPosY - 0x64000;
+    mCoinTimerSeed = (param1 >> 8) & 0xff;
     mHomeAreaId = mAreaId;
-    val = mCoinTimerSeed;
-    p = (unsigned short *)(c + 0x300);
 
-    if (val == 0xff || val == 0) {
-        p = (unsigned short *)(c + 0x300);
-        p[0x15] = 250;
+    if (mCoinTimerSeed == 0xff || mCoinTimerSeed == 0) {
+        mCoinTimerSeed = 250;
     } else {
-        *(unsigned short *)((int)&mCoinTimerSeed) = *(unsigned short *)((int)&mCoinTimerSeed) * 10;
+        mCoinTimerSeed *= 10;
     }
     return 1;
 }

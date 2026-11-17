@@ -78,7 +78,7 @@ struct dCapIcon_c {
     void Unlink();
     /* Name coined: the inverse of Unlink. It pushes this node onto
        character's list for owner and stores iconKind and the bank bit. */
-    void Link(char *owner, int character, int iconKind, unsigned char bank);
+    void Link(dActor_c *owner, int character, int iconKind, unsigned char bank);
 };
 
 typedef dCapIcon_c CapIcon;

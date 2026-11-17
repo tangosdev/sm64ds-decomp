@@ -28,7 +28,14 @@ enum d_s_mg_trampoline2_AssetId {
  * invariants are hoisted, and the setting still cannot be narrowed to it --
  * this TU leaves codegen deferred, so mwccarm reads the state at the end of
  * the file and an `on` placed after PaintSquare (or after the function
- * following it) puts hoisting back for PaintSquare as well. TUBUILD CONFLICT
+ * following it) puts hoisting back for PaintSquare as well.
+ * Kept, re-measured (#821, 2026-11-16): without the pragma the other 41
+ * functions still match and PaintSquare is 0x188 of 0x170 (hoisted
+ * constants spill past the ROM's five stack words). dScMgTrampoline_c's
+ * spelling of the same body 0x188; for loops with x and y as products of
+ * the counters 0x184-0x18c; the layer read once before the loops 0x188.
+ * The siblings in d_s_mg_trampoline.cpp and d_s_mg_teresa.cpp keep the
+ * same pragma. TUBUILD CONFLICT
  * lines stay; the manifest pairs them.
  *
  * leftovers:
@@ -59,8 +66,6 @@ enum d_s_mg_trampoline2_AssetId {
 
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (gActivePlayerSlot)
-/* local: these readers only reproduce through a 4-byte-record view of the lane. */
-#define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
 
 /* The forward declarations below are local stand-ins for types that have
  * no header yet (issue #2497). */
@@ -160,8 +165,6 @@ BaseSpawnInfo<dScMgTrampoline2_c> g_profile_MG_TRAMPOLINE2 = {
 };
 Tbl sTrmp2SpinnerSpeeds = {0x600, 0xc00, 0xe00};
 
-/* A random fx32 in [0, 1.0): the top 12 bits of the 31-bit draw. */
-#define TRMP2_RAND_FX ((fx32)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19))
 int sTrmp2ScoreGates[] = {1000, 5000, 10000, 20000};
 int sTrmp2PuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
                                (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
@@ -277,10 +280,10 @@ s32 dScMgTrampoline2_c::InitResources() {
 void dScMgTrampoline2_c::StartRound(int /* arg */) {
     G2_SetBlendAlpha(1, 0x2e, 0x10, 0x10);
 
-    mTouchStartX = data_020a0dbc[0];
-    mTouchStartY = data_020a0dbc[1];
-    mTouchX = data_020a0dbc[0];
-    mTouchY = data_020a0dbc[1];
+    mTouchStart.x = data_020a0dbc[0];
+    mTouchStart.y = data_020a0dbc[1];
+    mTouch.x = data_020a0dbc[0];
+    mTouch.y = data_020a0dbc[1];
 
     mLevel = 0;
     if (mLevel > 0x270e)
@@ -323,11 +326,11 @@ void dScMgTrampoline2_c::BeginIntro() {
     short a, b;
     mTimer = 90;
     a = sTrmpStartTouchX;
-    mTouchStartX = a;
+    mTouchStart.x = a;
     b = sTrmpStartTouchY;
-    mTouchStartY = b;
-    mTouchX = a;
-    mTouchY = b;
+    mTouchStart.y = b;
+    mTouch.x = a;
+    mTouch.y = b;
     mDragSoundHandle = 0;
     mScoreGate = 0x3e8;
     mState = &dScMgTrampoline2_c::StateIntro;
@@ -361,19 +364,21 @@ void dScMgTrampoline2_c::StateIntro() {
 
     {
         int t = FX_Div(counter << 12, 0x5a000);
-        volatile s16 old9c = mTouchX;
-        volatile s16 old9e = mTouchY;
+        /* Kept volatile: the ROM spills the previous point to the stack
+           across the random draw, as in dScMgTrampoline_c::StateIntro.
+           Measured 2026-11-16 (#821 r22): plain s16 locals shrink it
+           to 0x198 of 0x1a0; a whole-struct copy `Vec2s prev = mTouch`
+           keeps the stack slot but loads it with ldrh, not ldrsh
+           (10/104). */
+        volatile s16 old9c = mTouch.x;
+        volatile s16 old9e = mTouch.y;
         int mixRaw = sTrmp2IntroToX * t + sTrmp2IntroFromX * (0x1000 - t);
-        mTouchX = (mixRaw >> 12);
-        mTouchY = sTrmpStartTouchY;
+        mTouch.x = (mixRaw >> 12);
+        mTouch.y = sTrmpStartTouchY;
 
-        mTouchY +=
-            ((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) -
-               0x800)
-              << 2) >>
-             12);
+        mTouch.y += ((RAND_FX() - 0x800) << 2) >> 12;
 
-        Mg_DrawLine(old9c, old9e, mTouchX, mTouchY, 2, 0xc);
+        Mg_DrawLine(old9c, old9e, mTouch.x, mTouch.y, 2, 0xc);
 
         mDragSoundHandle =
             func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mixRaw), 0, 0);
@@ -489,7 +494,7 @@ void dScMgTrampoline2_c::StateWaitExit() {
     if (mTimer != 0) {
         idx = ACTIVE_SLOT;
         b = 0;
-        if (gTouchHeld[idx * 4] != 0 && gTouchEdge[idx * 4] != 0)
+        if (gTouchInfo[idx].held != 0 && gTouchInfo[idx].edge != 0)
             b = 1;
         if (b == 0)
             return;
@@ -517,12 +522,12 @@ void dScMgTrampoline2_c::UpdateTouchInput() {
     }
 
     i = ACTIVE_SLOT;
-    b = (TOUCH_REC(gTouchHeld)[i][0] != 0 && TOUCH_REC(gTouchEdge)[i][0] != 0);
+    b = (gTouchInfo[i].held != 0 && gTouchInfo[i].edge != 0);
     if (b) {
-        mTouchX = TOUCH_REC(gTouchX)[i][0];
-        mTouchStartX = mTouchX;
-        mTouchY = TOUCH_REC(gTouchY)[i][0];
-        mTouchStartY = mTouchY;
+        mTouch.x = gTouchInfo[i].x;
+        mTouchStart.x = mTouch.x;
+        mTouch.y = gTouchInfo[i].y;
+        mTouchStart.y = mTouch.y;
         mTouching = 1;
         mDragSoundHandle = 0;
     }
@@ -531,15 +536,15 @@ void dScMgTrampoline2_c::UpdateTouchInput() {
         return;
 
     i = ACTIVE_SLOT;
-    if (TOUCH_REC(gTouchHeld)[i][0] != 0) {
-        Mg_DrawLine(mTouchX, mTouchY, TOUCH_REC(gTouchX)[i][0], TOUCH_REC(gTouchY)[i][0], 2, 4);
+    if (gTouchInfo[i].held != 0) {
+        Mg_DrawLine(mTouch.x, mTouch.y, gTouchInfo[i].x, gTouchInfo[i].y, 2, 4);
         i = ACTIVE_SLOT;
-        mTouchX = TOUCH_REC(gTouchX)[i][0];
-        mTouchY = TOUCH_REC(gTouchY)[i][0];
+        mTouch.x = gTouchInfo[i].x;
+        mTouch.y = gTouchInfo[i].y;
         mDragSoundHandle =
-            func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mTouchX << 12), 0, 0);
+            func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mTouch.x << 12), 0, 0);
     } else {
-        b = (TOUCH_REC(gTouchHeld)[i][0] == 0 && TOUCH_REC(gTouchEdge)[i][0] != 0);
+        b = (gTouchInfo[i].held == 0 && gTouchInfo[i].edge != 0);
         if (b != 0) {
             mTouchReleased = 1;
         }
@@ -600,26 +605,26 @@ unsigned short Trmp2_OccupancyBits(int sel, int b) {
 }
 
 int Trmp2_PickFaceA(int x) {
-    int r;
+    fx32 r;
     if (x < 5) {
-        r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+        r = RAND_FX();
         return r < 0xc00 ? 4 : 5;
     }
-    r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+    r = RAND_FX();
     return r < 0xc00 ? 6 : 7;
 }
 
 int Trmp2_PickFaceB(int a) {
-    int r;
+    fx32 r;
     if (a < 5) {
-        r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+        r = RAND_FX();
         if (r < 0xc00)
             return 4;
         if (r < 0xe00)
             return 5;
         return 8;
     }
-    r = (((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
+    r = RAND_FX();
     if (r < 0xc00)
         return 6;
     if (r < 0xe00)
@@ -841,16 +846,26 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
         return 0;
 
     if (mTouchReleased != 0) {
-        s16 a = *(volatile s16 *)&mTouchStartX;
-        if ((a < 0x18 && mTouchX < 0x18) || (a > 0xe8 && mTouchX > 0xe8)) {
+        /* Kept volatile: the ROM reloads mTouchStart.x for the Create copy
+           after the edge test. dScMgTrampoline_c's twin gets that reload from
+           `from = mTouchStart; to = mTouch;` (struct copies, lowered after
+           CSE), but here buf[0] carries the fill value and only an
+           address-taken array reproduces its strh/ldrh spill. Measured
+           2026-11-16 against 0x1a0: a plain `a` read gives 0x19c (r1 forwarded
+           into buf[1]); Vec2s struct copies with a separate u16 fill, u16
+           fill[1] or Vec2s line[2] give 0x198 (the fill folds to a register,
+           frame 0x10 -> 0x8). The twin's `volatile u16 fill` would match but
+           only moves the volatile. */
+        s16 a = *(volatile s16 *)&mTouchStart.x;
+        if ((a < 0x18 && mTouch.x < 0x18) || (a > 0xe8 && mTouch.x > 0xe8)) {
             func_02012790(0xe);
         } else {
-            buf[1] = mTouchStartX;
-            buf[2] = mTouchStartY;
-            buf[3] = mTouchX;
-            buf[4] = mTouchY;
+            buf[1] = mTouchStart.x;
+            buf[2] = mTouchStart.y;
+            buf[3] = mTouch.x;
+            buf[4] = mTouch.y;
             if (TrmpLine::Create(&buf[1], &buf[3])) {
-                func_02012718(0x1af, (mTouchStartX + mTouchX) << 11);
+                func_02012718(0x1af, (mTouchStart.x + mTouch.x) << 11);
             } else {
                 func_02012790(0xe);
             }
@@ -915,8 +930,6 @@ void dScMgTrampoline2_c::InitBrush(int layer) {
  * into the current touch-screen layer. The same body as dScMgTrampoline_c's,
  * with its own scratch buffer. */
 void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
-    void *obj = this;
-
     int half;
     int x0;
     int j;
@@ -924,7 +937,6 @@ void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
     int *addr;
     int i;
     int yy;
-    int mask = 0xf;
 
     half = n / 2;
     j = 0;
@@ -937,9 +949,7 @@ void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
                 if (x >= 0 && x < 0x100) {
                     if (yy >= 0 && yy < 0xc0) {
                         void *ret;
-                        int mode = ((dScMgTrampoline2_c *)obj)->mBrushLayer;
-
-                        switch (mode) {
+                        switch (mBrushLayer) {
                         case 0:
                             ret = G2_GetBG0CharPtr();
                             break;
@@ -959,7 +969,7 @@ void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
                         addr = (int *)((char *)ret + ((x / 8) + (yy / 8) * 32) * 32 + (yy & 7) * 4);
 
                         MI_CpuCopy32(addr, sTrmp2BrushWord, 4);
-                        sTrmp2BrushWord[0] = (sTrmp2BrushWord[0] & (-1 ^ (mask << ((x & 7) * 4)))) |
+                        sTrmp2BrushWord[0] = (sTrmp2BrushWord[0] & (-1 ^ (0xf << ((x & 7) * 4)))) |
                                              (val << ((x & 7) * 4));
                         MI_CpuCopy32(sTrmp2BrushWord, addr, 4);
                     }
@@ -1067,7 +1077,7 @@ void func_020169f4(char *self, int kind);
 void Trmp2Spinner_Init(void *r0, int value) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;
     struct Tbl t = sTrmp2SpinnerSpeeds;
-    fx32 rnd = TRMP2_RAND_FX;
+    fx32 rnd = RAND_FX();
     int idx;
     if (rnd < t.a) {
         idx = 0;
@@ -1091,13 +1101,12 @@ void Trmp2Spinner_Init(void *r0, int value) {
     spinner->mPos.x = 0x60000;
     spinner->mPos.y = 0x100000;
     spinner->mPos.z = 0x18000;
-    int drop = -0x1C00;
-    spinner->mVel.x = drop;
-    spinner->mVel.y = drop;
+    spinner->mVel.x = -0x1C00;
+    spinner->mVel.y = -0x1C00;
     spinner->mVel.z = 0;
-    spinner->mPos.x += (TRMP2_RAND_FX - 0x800) * 0x40;
-    spinner->mVel.x -= TRMP2_RAND_FX >> 1;
-    spinner->mVel.y -= TRMP2_RAND_FX >> 1;
+    spinner->mPos.x += (RAND_FX() - 0x800) * 0x40;
+    spinner->mVel.x -= RAND_FX() >> 1;
+    spinner->mVel.y -= RAND_FX() >> 1;
     func_02016a14((char *)spinner, 0);
     func_02016a04((char *)spinner, 0);
 }

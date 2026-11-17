@@ -20,6 +20,7 @@ src/minigames/d_mg3d_heyho_obj_adapter.cpp:
     .text start:0x020c4048 end:0x020c6f8c
     .init start:0x0212f4c4 end:0x0212f52c
     .ctor start:0x0213356c end:0x02133570
+    .data start:0x0213af18 end:0x0213afd0
     .bss start:0x02140300 end:0x02140400
 
 src/minigames/d_mg_jump3d_mario.cpp:
@@ -48,6 +49,7 @@ src/minigames/unit020cd744.cpp:
     .text start:0x020cd744 end:0x020d1018
     .init start:0x0212fc7c end:0x0212fd48
     .ctor start:0x0213357c end:0x02133580
+    .data start:0x0213b31c end:0x0213b3a4
     .bss start:0x02140808 end:0x02141640
 
 src/minigames/d_s_mg_amida.cpp:
@@ -97,6 +99,7 @@ src/minigames/d_s_mg_curling2.cpp:
     .text start:0x020e3854 end:0x020e6c28
     .init start:0x02130758 end:0x02130a04
     .ctor start:0x02133594 end:0x02133598
+    .data start:0x0213c3d4 end:0x0213c4bc
     .bss start:0x02141978 end:0x02141a40
 
 src/minigames/d_s_mg_d3d_base.cpp:
@@ -130,6 +133,7 @@ src/minigames/d_s_mg_jump_methods.cpp:
     .text start:0x020edec0 end:0x020eeafc
     .init start:0x02130e9c end:0x02130f00
     .ctor start:0x021335a4 end:0x021335a8
+    .data start:0x0213cb4c end:0x0213cb8c
     .bss start:0x02142188 end:0x021421b0
 
 src/minigames/d_s_mg_jump.cpp:
@@ -141,6 +145,7 @@ src/minigames/d_s_mg_jump2.cpp:
     .text start:0x020eebe8 end:0x020efc0c
     .init start:0x02130f00 end:0x02130f64
     .ctor start:0x021335a8 end:0x021335ac
+    .data start:0x0213cc74 end:0x0213cca4
     .bss start:0x021421c4 end:0x021421ec
 
 src/minigames/d_s_mg_luigi.cpp:
@@ -231,7 +236,7 @@ src/minigames/d_s_mg_smartball.cpp:
 
 src/minigames/d_s_mg_sound.cpp:
     complete
-    .data start:0x0213f6e4 end:0x0213f8d4
+    .data start:0x0213f4fc end:0x0213f8d4
     .rodata.sound_tables start:0x0212ee0c end:0x0212ef5c
     .rodata.sound_note_offsets start:0x0212ef9c end:0x0212efc4
     .text start:0x02119904 end:0x0211cbd0

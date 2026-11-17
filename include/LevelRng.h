@@ -23,4 +23,10 @@ extern LevelRng data_0209d4b8;
    their code. The user includes math/CalcLib.h for RandomIntInternal. */
 #define MG_RAND(n) ((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n) >> 15)
 
+/* A random fx32 in [0, 1.0) from the actors' state: the 12 bits below its
+   sign bit. RAND_FX_SCALE(n) is that fraction times the fx32 n, a random
+   value in [0, n). Macros for the same reason as MG_RAND. */
+#define RAND_FX() ((fx32)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19))
+#define RAND_FX_SCALE(n) (RAND_FX() * (n) >> 12)
+
 #endif

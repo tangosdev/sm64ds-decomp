@@ -232,51 +232,41 @@ struct daPly_c : dActor_c {
        top (+0x08 height); ClearClimbCollider clears it. Every access is a word. */
     dCc_c *mClimbClsn; /* 0x37c */
     /* ~daPly_c calls _ZN10dBgCh_ActrD1Ev on this FIRST, and dBgCh_Actr
-       asserts 0x1bc -- which closes exactly at mSpawnPosX. */
+       asserts 0x1bc -- which closes exactly at mSpawnPos. */
     dBgCh_Actr mMeshClsn;            /* 0x380 */
     /* The spawn point, saved once and restored on death. daPly_c::InitResources
        writes all four from the live values (0x53c..0x544 <- mPosX/Y/Z, and
        mSpawnAngleY <- mAngleY); St_Respawn_Init reads them back the other way.
        Two functions, opposite directions, the same four slots -- which is what
        makes these names evidenced rather than guessed. */
-    s32 mSpawnPosX;            /* 0x53c */
-    s32 mSpawnPosY;            /* 0x540 */
-    s32 mSpawnPosZ;            /* 0x544 */
-    s32 mPreClsnPosX;            /* 0x548 */
-    s32 mPreClsnPosY;            /* 0x54c */
-    s32 mPreClsnPosZ;            /* 0x550 */
+    Vector3 mSpawnPos;   /* 0x53c */
+    Vector3 mPreClsnPos; /* 0x548 */
     /* Floor normal, fx12 (1.0 == 0x1000 -- already rescaled from KCL's 0x400).
      * Stored as three consecutive words by daPly_c::SetFloorSurfaceInfo
      * (0x020c16ec) at 0x020c1768 / 0x020c1770 / 0x020c1778, sourced
      * from SurfaceInfo::CopyNormalTo (func_02037dcc). 0x554 and 0x55c were
      * marked padding until those stores were disassembled.
-     * mFloorNormalY is the slope-test input: func_ov002_020f035c compares it
+     * mFloorNormal.y is the slope-test input: func_ov002_020f035c compares it
      * against a per-floor-class cosine threshold. */
-    s32 mFloorNormalX;            /* 0x554 */
-    s32 mFloorNormalY;            /* 0x558 */
-    s32 mFloorNormalZ;            /* 0x55c */
+    Vector3 mFloorNormal; /* 0x554 */
     /* Wall normal, fx12, and the exact counterpart of the floor normal above.
      * func_ov002_020c25a8 writes all three from
      * mMeshClsn.GetWallResult()->surface.CopyNormalTo(wn)
      * -- the same helper, the same shape, one surface over. It then pushes the
-     * actor out along it (`mPosX -= mWallNormalX * 2`, `mPosZ -= mWallNormalZ * 2`).
-     * Seven bodies read the pair back as `cstd::atan2(mWallNormalX, mWallNormalZ)`
+     * actor out along it (`mPosX -= mWallNormal.x * 2`, `mPosZ -= mWallNormal.z * 2`).
+     * Seven bodies read the pair back as `cstd::atan2(mWallNormal.x, mWallNormal.z)`
      * to get the wall's facing: St_Shell_Main, St_OnWall_Main (twice),
      * St_Balloon_Main, St_CrazedCrate_Main, func_ov002_020c2138,
-     * func_ov002_020dd2f4 and func_ov002_020e28d4. 0x564 was marked padding until
+     * DeflectSlideOffWall and UpdateAirMovement. 0x564 was marked padding until
      * that store was disassembled, exactly as 0x554/0x55c were. */
-    s32 mWallNormalX;            /* 0x560 */
-    s32 mWallNormalY;            /* 0x564 */
-    s32 mWallNormalZ;            /* 0x568 */
+    Vector3 mWallNormal; /* 0x560 */
     /* The sleep bubble's scale, fx12, the Vector3 Render passes to the bubble
        model's draw. func_ov002_020d228c and St_Wait_Main zero all three as
        they enter sleep stage 2; func_ov002_020d2f24 (Yoshi only) shrinks it by 0x180
        over breath frames 6..0x1c and grows it over 0x24..0x3a, clamped to
        0x400..0x4000. St_Wait_Main wakes the player once X reaches 0x3000, and
        func_ov002_020e444c pushes the bubble out by Z * 0x2400. */
-    s32 mSleepBubbleScaleX; /* 0x56c */
-    s32 mSleepBubbleScaleY; /* 0x570 */
-    s32 mSleepBubbleScaleZ; /* 0x574 */
+    Vector3 mSleepBubbleScale; /* 0x56c */
     /* A 50-entry trail buffer, built by InitResources (new Vector3[50], new
        u8[50]). func_ov002_020bf13c writes entry 0 for Yoshi only: a point 0x78
        behind him, and speed/airborne/moving flags. No other reader in the ROM. */
@@ -349,8 +339,8 @@ struct daPly_c : dActor_c {
      *
      * mFloorClass is the slipperiness class, 0..5. It drives five separate
      * tables: the slope threshold (func_ov002_020f035c), slope accel
-     * (func_ov002_020c04e0), slide accel (func_ov002_020f02c8), slide loss
-     * factor (func_ov002_020f030c) and slope decel (func_ov002_020bf56c).
+     * (ApplySlopeAccel), slide accel (func_ov002_020f02c8), slide loss
+     * factor (func_ov002_020f030c) and slope decel (GetSlopeDecel).
      * It is the DS equivalent of N64's SURFACE_CLASS_*, but authored per
      * triangle in the collision data rather than derived from a surface ID.
      * NOTE the latch at 0x020c1738: if mFloorClass is already 1 the function
@@ -388,11 +378,11 @@ struct daPly_c : dActor_c {
     s32 mModelOffsetZ;           /* 0x694 */
     s16 mSpawnAngleY;            /* 0x698 */
     /* Downhill direction of the current floor, binary angle (0x10000 per turn).
-     * daPly_c::SetFloorSurfaceInfo computes it as cstd::atan2(mFloorNormalX,
-     * mFloorNormalZ) and stores it with a 16-bit strh at 0x020c178c (written
+     * daPly_c::SetFloorSurfaceInfo computes it as cstd::atan2(mFloorNormal.x,
+     * mFloorNormal.z) and stores it with a 16-bit strh at 0x020c178c (written
      * as [r5 + 0x600] + 0x9a). Consumed by daPly_c::ApplySlopeAccel
-     * (func_ov002_020c04e0) via AngleDiff(mFloorAngle, moveYaw) to decide
-     * whether a slope speeds you up or slows you down. */
+     * via AngleDiff(mFloorAngle, moveYaw) to decide whether a slope speeds
+     * you up or slows you down. */
     s16 mFloorAngle;            /* 0x69a */
     s16 mAngleYSpeed;            /* 0x69c */
     /* X-axis counterpart of mAngleYSpeed. St_Fly_Init zeroes both, and
@@ -418,7 +408,7 @@ struct daPly_c : dActor_c {
        parameter widths in dActor_c.h: a declared type nothing had checked. */
     u16 mJumpComboTimer;            /* 0x6a8 */
     u16 mPunchKickCooldown;            /* 0x6aa */
-    /* func_ov002_020d3b9c sets it to 4 each frame the stick is held,
+    /* UpdateWalkingSpeed sets it to 4 each frame the stick is held,
        Behavior counts it down; the no-stick branch only decelerates (and
        may start mIsBraking) once it reaches 0. */
     u16 mStickGraceTimer;         /* 0x6ac */
@@ -462,13 +452,13 @@ struct daPly_c : dActor_c {
     u16 mMegaTimer; /* 0x6c2 */
     /* Set to 2 by the quicksand handler func_ov002_020bfec0 in the land
        state (0x02110424) unless the previous state was 0x021104cc; Behavior
-       counts it down. func_ov002_020e2ad0, run by the jump inits, damps the
+       counts it down. ApplyQuicksandToJump, run by the jump inits, damps the
        jump out of quicksand only once it is 0; before that it just keeps
        mSinkDepth at least 0xb000. */
     u16 mQuicksandJumpTimer;        /* 0x6c4 */
     u16 mMouthHoldTimer;            /* 0x6c6 */
     u16 mTeleportTimer;            /* 0x6c8 */
-    /* func_ov002_020cec2c (the water states): counts up while the player is
+    /* UpdateSwimHealth (the water states): counts up while the player is
        0x8c000 below the water surface or in levels 0x13/0x14/0x30, and
        costs 0x100 health on reaching 0xf0 (0x50 in those levels); reset to
        0 otherwise. */
@@ -490,9 +480,9 @@ struct daPly_c : dActor_c {
     u8  mLandSoundPlayed;            /* 0x6df */
     /* Set by func_ov002_020d454c when the stick is let go above walking
        speed 0x10000 (anim 0x36, speed capped); while set, St_Walk_Main plays
-       the ground-type sound 0xe2 + mGroundSoundType and func_ov002_020d3b9c
+       the ground-type sound 0xe2 + mGroundSoundType and UpdateWalkingSpeed
        decelerates. Stick input, anim 0x37 ending and ChangeState clear it
-       (func_ov002_020d4540). */
+       (ClearBraking). */
     u8 mIsBraking;                  /* 0x6e0 */
     u8  mJumpComboStage;            /* 0x6e1 */
     u8  mPunchKickStep;            /* 0x6e2 */
@@ -514,7 +504,7 @@ struct daPly_c : dActor_c {
        non-water ground after a water run. ChangeState clears it. */
     u8 mDetectWater; /* 0x6ec */
     /* 0x1e once func_ov002_020d2fdc has ramped mStateWork to 0x1e with input
-       flag 0x800 (data_0209f49c) held; func_ov002_020d3b9c then counts it
+       flag 0x800 (data_0209f49c) held; UpdateWalkingSpeed then counts it
        down while the flag stays set, scaling walk speed by 0x1333 with accel
        0x1e000, and clears it when the flag drops. While it is nonzero,
        St_Walk_Init and St_Crouch_Init play a voice. */
@@ -523,7 +513,7 @@ struct daPly_c : dActor_c {
        4 or 2, St_YoshiPower_Init clears it; no reader in the matched code. */
     u8  unk_6ee;            /* 0x6ee */
     u8 pad_6ef[0x1];
-    /* Turn ramp in func_ov002_020d3b9c's walk turning (input mode byte
+    /* Turn ramp in UpdateWalkingSpeed's walk turning (input mode byte
        data_0209f4ac == 0, stick at least 0xa00): counts up to 0x18 while the
        stick is 0x1000 or more off mPrevAngleY and drops by 2 otherwise. The
        ApproachAngle divisor is 0x10 - ramp / 2, so the longer a sharp turn is
@@ -534,7 +524,7 @@ struct daPly_c : dActor_c {
        zeroes mScaleAnimTimer. Kinds 0 and 1 step mScaleY through the tables
        data_ov002_020ff2c0 / data_ov002_020ff230 with X and Z set to
        (0x1000 - Y) / 2 + 0x1000: 0 after a stomp (func_ov002_020d869c),
-       1 after St_Squish and a long fall (func_ov002_020e2c84). Kind 2 grows
+       1 after St_Squish and a long fall (CheckFallDamage). Kind 2 grows
        the scale to 0x3000, kind 3 shrinks it to 0x1000 (leaving Mega,
        func_ov002_020bdd2c). Step 0 is idle; starting Mega
        (func_ov002_020bdf8c), func_ov002_020c61ac and Unk_020c6a10 reset it. */
@@ -714,17 +704,12 @@ struct daPly_c : dActor_c {
        func_ov002_020c47f4, St_Talk_Main's camera focus, daC_Jugem's position),
        the walk-to point (func_ov002_020c8a4c, TryEnterStarDoor), and the
        cage JumpIntoBooCage records. mRootMotionMode reuses it as last frame's
-       bone translation and func_ov002_020e3f90 as an eased carry offset.
-       Kept as three s32: a Vector3 overlay would draw @NNN numbers. */
-    s32 mStateTargetX; /* 0x744 */
-    s32 mStateTargetY; /* 0x748 */
-    s32 mStateTargetZ; /* 0x74c */
+       bone translation and func_ov002_020e3f90 as an eased carry offset. */
+    Vector3 mStateTarget; /* 0x744 */
     /* The fixed point mStateTarget is derived from: the door position
        TryEnterStarDoor records (the approach point is rotated off it), or
        the bone translation mRootMotionMode latches on its first frame. */
-    s32 mStateAnchorX; /* 0x750 */
-    s32 mStateAnchorY; /* 0x754 */
-    s32 mStateAnchorZ; /* 0x758 */
+    Vector3 mStateAnchor; /* 0x750 */
     /* Extra rotation for body bone 8 ("spin", the spine): func_ov002_020e640c
        adds [1]/[2] every frame and sets all three in mHeadRotMode 3. */
     s16 mSpineRot[3]; /* 0x75c */
@@ -1080,7 +1065,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020d5f98(u8 *, u8 *);
     int func_ov002_020d6048();
     int func_ov002_020d6998();
-    char *func_ov002_020d708c();
+    dActor_c *func_ov002_020d708c();
     void func_ov002_020d718c();
     void func_ov002_020d71a0();
     int func_ov002_020d93ac();
@@ -1115,30 +1100,30 @@ struct daPly_c : dActor_c {
     void func_ov002_020bdd9c();
     void func_ov002_020bdef0();
     void func_ov002_020bdf8c();
-    void func_ov002_020be3b0();
+    void UpdateCharacterChange();
     int func_ov002_020bea7c();
     void func_ov002_020beabc();
     int func_ov002_020beb38();
     int func_ov002_020becf4(const int, const int);
     void func_ov002_020bf13c();
-    void func_ov002_020bf2d8(const fx32);
+    void SetVertSpeedByCharFactor(const fx32);
     void func_ov002_020bf36c(void *);
     int func_ov002_020bf40c();
     void func_ov002_020bf5e0();
-    void func_ov002_020bf88c();
-    void func_ov002_020bf90c();
+    void SpawnGroundDust();
+    void PlaySlideSoundAndDust();
     void func_ov002_020bf9d4();
     int func_ov002_020bfa74();
     int func_ov002_020bfec0();
     int func_ov002_020c0108(const int);
     int func_ov002_020c031c();
-    void func_ov002_020c0364(const u32);
-    int func_ov002_020c0434();
-    int func_ov002_020c04ac();
-    int func_ov002_020c04e0();
+    void BeginSliding(const u32);
+    int ShouldBeginSliding();
+    int IsFacingDownhill();
+    int ApplySlopeAccel();
     int func_ov002_020c0688();
     int func_ov002_020c06fc(const int);
-    int func_ov002_020c0cbc();
+    int FloorIsSlippery();
     int func_ov002_020c0d90(const int);
     int func_ov002_020c0fb4();
 
@@ -1159,7 +1144,7 @@ struct daPly_c : dActor_c {
     void func_ov002_020c2b08();
     void func_ov002_020c2db8();
     void func_ov002_020c2e78();
-    void func_ov002_020c2f64();
+    void PlayLandingSoundOnce();
     int AnimSplinePoll(int *);
     void AnimSplineInit();
     void func_ov002_020c37a4(char *);
@@ -1175,7 +1160,7 @@ struct daPly_c : dActor_c {
     void func_ov002_020c5444();
     int func_ov002_020c5d0c();
     void func_ov002_020c5d60();
-    int func_ov002_020c5dec(const int);
+    int Die(const int);
     int func_ov002_020c607c(const int, const int, int *);
     int func_ov002_020c61ac();
     int func_ov002_020c647c(const int);
@@ -1255,7 +1240,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020bf27c(const int);
     fx32 ScaleByCharFactor(const fx32);
     void func_ov002_020bf340(int *, const int, const int);
-    int func_ov002_020bf56c(const int);
+    int GetSlopeDecel(const int);
     void func_ov002_020bf800(const Vector3_16f);
     int func_ov002_020c179c(const int);
     void func_ov002_020c18b0(const int);
@@ -1288,7 +1273,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020ceaf4();
     int func_ov002_020ceb54();
     void func_ov002_020ceb7c();
-    int func_ov002_020cec2c();
+    int UpdateSwimHealth();
     fx32 func_ov002_020cedb0(const fx32);
     int func_ov002_020cef84();
     int func_ov002_020cf20c();
@@ -1303,8 +1288,8 @@ struct daPly_c : dActor_c {
     int func_ov002_020d06c0();
     void func_ov002_020d0948();
     int func_ov002_020d0d2c();
-    int func_ov002_020d1164();
-    int func_ov002_020d1204();
+    int HasLowCeiling();
+    int CheckCrouchJump();
     int func_ov002_020d12b0();
     void func_ov002_020d1f78(const u32);
     int func_ov002_020d225c();
@@ -1314,13 +1299,13 @@ struct daPly_c : dActor_c {
     void func_ov002_020d2f24();
     int func_ov002_020d2fdc();
     void func_ov002_020d3498();
-    int func_ov002_020d36d8(const int);
-    int func_ov002_020d3b9c();
-    void func_ov002_020d413c(const int);
-    void func_ov002_020d4540();
+    int CheckGroundCancels(const int);
+    int UpdateWalkingSpeed();
+    void TiltBodyWalking(const int);
+    void ClearBraking();
     void func_ov002_020d454c();
-    void func_ov002_020d45c0();
-    int func_ov002_020d4d88(const int, const int);
+    void UpdateRunDust();
+    int UpdateGroundSpeed(const int, const int);
     int func_ov002_020d5c6c();
     int func_ov002_020d6334(dActor_c *);
     void func_ov002_020d6368();
@@ -1358,15 +1343,15 @@ struct daPly_c : dActor_c {
     void func_ov002_020dbe70();
     void func_ov002_020dbf4c();
     void func_ov002_020dc020();
-    void func_ov002_020dc174(const Vector3 *, const fx32, const fx32, const u32, const u32);
+    void SetAttackClsn(const Vector3 *, const fx32, const fx32, const u32, const u32);
     void func_ov002_020dc560();
-    void func_ov002_020dcafc();
-    int func_ov002_020dd2f4();
+    void TiltBodyButtSlide();
+    int DeflectSlideOffWall();
     void func_ov002_020dd5ec();
     int func_ov002_020dd824();
     void func_ov002_020dd8f4();
     void func_ov002_020dd908();
-    int func_ov002_020dde74();
+    int BeginAttack();
     void func_ov002_020de3d0(s16 *, s16 *);
     void func_ov002_020de968();
     int func_ov002_020dec70();
@@ -1377,16 +1362,16 @@ struct daPly_c : dActor_c {
     int func_ov002_020e0ccc(void *);
     void func_ov002_020e0f38(const int);
     void func_ov002_020e1c20();
-    void func_ov002_020e25f0(const int);
-    int func_ov002_020e2664();
-    void func_ov002_020e28d4(const int, const int);
-    void func_ov002_020e2ad0();
-    int func_ov002_020e2b6c();
+    void PlayJumpSound(const int);
+    int CheckAirCancels();
+    void UpdateAirMovement(const int, const int);
+    void ApplyQuicksandToJump();
+    int TryQuicksandJump();
     int func_ov002_020e2ba8();
-    int func_ov002_020e2be4();
-    int func_ov002_020e2c84();
-    void func_ov002_020e301c();
-    int func_ov002_020e3078(void *);
+    int TrySteepJump();
+    int CheckFallDamage();
+    void ShakeCameraOnWarioLanding();
+    int WasState(void *);
     int func_ov002_020e3f90();
     void func_ov002_020e4374(int *, int *);
     void func_ov002_020e444c();

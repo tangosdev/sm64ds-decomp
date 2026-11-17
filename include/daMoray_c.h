@@ -49,9 +49,7 @@ struct daMoray_c : dEnemyBase_c {
     /* Where the carried star sits: the jaw bone's transform (bone 4) moved
        0x28000 along it. The star actor keeps a pointer to this matrix. */
     Matrix4x3 mStarMtx;                                     /* 0x3c0 */
-    s32 mHomePosX;                                          /* 0x3f0 */
-    s32 mHomePosY;                                          /* 0x3f4 */
-    s32 mHomePosZ;                                          /* 0x3f8 */
+    Vector3 mHomePos;                                       /* 0x3f0 */
     /* Which mSegmentPos entry the first hit cylinder sits on: +1 per call of
        UpdateHitCylinders, wrapping to 0 after 6. */
     s32 mCylSegment;                                        /* 0x3fc */

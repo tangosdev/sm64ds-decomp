@@ -30,10 +30,8 @@ void *dScEntry_c_classInit_ENTRY(void) {
 
 extern "C" {
 /* local extern: no header declares these arm9 vector helpers.
-   EntryMeshVec is the POD view used for the grid data; APIs taking Vector3
-   receive explicit pointer views so the C++ Vector3 destructor is not emitted. */
-void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
-void VEC_Normalize(const Vector3 *, Vector3 *);
+   The grid data is the SDK's POD VecFx32; these EAD helpers take Vector3,
+   so they receive pointer views and the Vector3 destructor is not emitted. */
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
 /* local extern: the geometry-engine matrix load and the
@@ -125,9 +123,9 @@ int EntryMesh::LoadTexture(BMD_File *file) {
 
 /* Map a touched world point into grid space and start a ripple there. */
 void EntryMesh::TouchAt(Vector3 *touch) {
-    EntryMeshVec origin;
-    EntryMeshVec r;
-    EntryMeshVec out;
+    VecFx32 origin;
+    VecFx32 r;
+    VecFx32 out;
     origin.x = 0;
     origin.y = 0x15e000;
     origin.z = -0x320000;
@@ -141,13 +139,12 @@ void EntryMesh::TouchAt(Vector3 *touch) {
 /* Pack each vertex's normal from the cross product of its row and column
  * neighbour differences (one-sided at the grid edges), z halved. */
 void EntryMesh::CalcNormals() {
-    EntryMeshVec ej;
-    EntryMeshVec ei;
-    EntryMeshVec n;
+    VecFx32 ej;
+    VecFx32 ei;
+    VecFx32 n;
     EntryMeshVertex *p;
     int i;
     int j;
-    int mask = 0x3ff;
 
     p = mVertices;
 
@@ -169,26 +166,24 @@ void EntryMesh::CalcNormals() {
             q[2] = z;
 
             if (j == 0)
-                VEC_Subtract((Vector3 *)&p->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
+                VEC_Subtract(&p->pos, &(p + 1)->pos, &ej);
             else if (j == mGridDim[0] - 1)
-                VEC_Subtract((Vector3 *)&(p - 1)->pos, (Vector3 *)&p->pos, (Vector3 *)&ej);
+                VEC_Subtract(&(p - 1)->pos, &p->pos, &ej);
             else
-                VEC_Subtract((Vector3 *)&(p - 1)->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
+                VEC_Subtract(&(p - 1)->pos, &(p + 1)->pos, &ej);
 
             if (i == 0)
-                VEC_Subtract((Vector3 *)&p->pos, (Vector3 *)&(p + mGridDim[1])->pos,
-                             (Vector3 *)&ei);
+                VEC_Subtract(&p->pos, &(p + mGridDim[1])->pos, &ei);
             else if (i == mGridDim[1] - 1)
-                VEC_Subtract((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&p->pos,
-                             (Vector3 *)&ei);
+                VEC_Subtract(&(p - mGridDim[1])->pos, &p->pos, &ei);
             else
-                VEC_Subtract((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&(p + mGridDim[1])->pos,
-                             (Vector3 *)&ei);
+                VEC_Subtract(&(p - mGridDim[1])->pos, &(p + mGridDim[1])->pos, &ei);
 
-            VEC_CrossProduct((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
+            VEC_CrossProduct(&ej, &ei, &n);
             n.z >>= 1;
-            VEC_Normalize((const Vector3 *)&n, (Vector3 *)&n);
-            p->normal = (n.x >> 3 & mask) | ((n.y >> 3 & mask) << 10) | ((n.z >> 3 & mask) << 20);
+            VEC_Normalize(&n, &n);
+            p->normal =
+                (n.x >> 3 & 0x3ff) | ((n.y >> 3 & 0x3ff) << 10) | ((n.z >> 3 & 0x3ff) << 20);
             p++;
         }
     }
@@ -239,7 +234,7 @@ short EntryMesh::RipplePhase(int dist) {
     return (v - mRipplePhase);
 }
 
-/* An array-member twin of EntryMeshVec. Copying through it keeps C's
+/* An array-member twin of VecFx32. Copying through it keeps C's
    block-move schedule (ldm/stm); the C++ memberwise copy of the three named
    words is 0x10 bytes longer (a named-field copy does not block-move). */
 struct EntryMeshVecCopy {
@@ -249,7 +244,7 @@ struct EntryMeshVecCopy {
 /* Store each vertex's flat (z = 0) distance from mRippleCenter. */
 void EntryMesh::CalcDistances() {
     int i;
-    EntryMeshVec tmp;
+    VecFx32 tmp;
     for (i = 0; i < mNumVertices; i++) {
         EntryMeshVertex *v = &mVertices[i];
         *(EntryMeshVecCopy *)&tmp = *(EntryMeshVecCopy *)&v->pos;

@@ -60,9 +60,9 @@ int daBbl_c::InitResources() {
     } else {
         mdCcAc_c.Init(this, 0x32000, 0x50000, 0x200002, 0x8000);
     }
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     if (mJumps == 0) {
         mFlags |= 1;
     } else {

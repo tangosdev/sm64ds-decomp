@@ -65,15 +65,10 @@
 #include "SaveData.h"
 #include "nitro/mi/memory.h"
 #include "math/CalcLib.h"
+#include "PlayerInput.h"
 
 struct OamAttr;
 
-struct TouchRec {
-    u8 held;
-    u8 edge;
-    u8 x;
-    u8 y;
-};
 typedef struct Pair { int x, y; } Pair;
 struct Off9 { int v[9]; };
 
@@ -91,16 +86,6 @@ extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
 extern int data_0208ee44;
-// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-extern TouchRec gTouchHeld[];
-// local extern: see above.
-extern u8 gTouchEdge[];
-// local extern: see above.
-extern u8 gTouchX[];
-// local extern: see above.
-extern u8 gTouchY[];
-// local extern: see above.
-extern u8 gActivePlayerSlot;
 extern unsigned short data_020a0e5a[];
 
 /* ---- ov005 statics ---- */
@@ -574,9 +559,6 @@ s32 dScMiniGm_c::Behavior()
 void dScMiniGm_c::DrawRecords() {
     int end;
     int i;
-    int r8;
-    int zero;
-    int neg1;
     int type;
     int x, y;
     int val;
@@ -595,55 +577,49 @@ void dScMiniGm_c::DrawRecords() {
         end = 5;
         i = 0;
     }
-    if (i > end)
-        return;
-
-    zero = 0;
-    neg1 = -1;
-    r8 = i * 4;
-    do {
-        if (IsUnlocked(gMgGroupBase + r8) != 0) {
-            type = sMiniGmRows[gMgGroupBase + r8].scoringMode;
+    for (; i <= end; i++) {
+        if (IsUnlocked(gMgGroupBase + i * 4) != 0) {
+            type = sMiniGmRows[gMgGroupBase + i * 4].scoringMode;
             if (type != 0) {
                 if (type == 1) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    OAM::RenderSub(sMiniGmRecordLabels[0], x - 16, y, neg1, zero);
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    OAM::RenderSub(sMiniGmRecordLabels[0], x - 16, y, -1, 0);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     DrawNumber(x - 4, y, val);
                 } else if (type == 2) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    OAM::RenderSub(sMiniGmRecordLabels[1], x - 16, y, neg1, zero);
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    OAM::RenderSub(sMiniGmRecordLabels[1], x - 16, y, -1, 0);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     DrawNumber(x - 4, y, val);
                 } else if (type == 4) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    OAM::RenderSub(sMiniGmRecordLabels[2], x - 16, y, neg1, zero);
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    OAM::RenderSub(sMiniGmRecordLabels[2], x - 16, y, -1, 0);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     DrawNumber(x - 4, y, val);
                 } else if (type == 3) {
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     x = sMiniGmRecordPos[i].x;
                     y = sMiniGmRecordPos[i].y;
                     DrawNumber(x - 0x14, y, val);
                 } else if (type == 5) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     u = (unsigned int)val;
                     major = u / 60u;
                     DrawNumber(x - 0x10, y, (int)major);
-                    OAM::RenderSub(sMiniGmRecordLabels[4], x, y - 8, neg1, zero);
+                    OAM::RenderSub(sMiniGmRecordLabels[4], x, y - 8, -1, 0);
 
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     u = (unsigned int)val;
                     rem = u % 60u;
                     pct = rem * 100u;
                     DrawNumber(x + 8, y, (int)(pct / 600u));
 
-                    val = GetRecord(gMgGroupBase + r8, zero);
+                    val = GetRecord(gMgGroupBase + i * 4, 0);
                     u = (unsigned int)val;
                     rem = u % 60u;
                     pct = rem * 100u / 60u;
@@ -651,9 +627,7 @@ void dScMiniGm_c::DrawRecords() {
                 }
             }
         }
-        r8 += 4;
-        i += 1;
-    } while (i <= end);
+    }
 }
 
 void dScMiniGm_c::DrawNumber(int x, int y, int val) {
@@ -819,34 +793,29 @@ void dScMiniGm_c::UpdateGroupTabs() {
     {
         int flag = 0;
         unsigned char idx = gActivePlayerSlot;
-        unsigned char v = ((unsigned char*)gTouchHeld)[idx * 4];
+        unsigned char v = gTouchInfo[idx].held;
         if (v != 0) {
-            if (gTouchEdge[idx * 4] != 0)
+            if (gTouchInfo[idx].edge != 0)
                 flag = 1;
         }
         if (flag != 0 || (mScrollDelay <= 0 && v != 0)) {
-            int i = 0;
-            int lo = 2;
-            int hi = 0x2e;
-            int z = 0;
-            int t = 0x1e;
-            do {
+            int i;
+            int lo;
+            int hi;
+            for (i = 0, lo = 2, hi = 0x2e; i < 4; i++, lo += 0x30, hi += 0x30) {
                 int e = sMiniGmGroupBases[i];
                 if (gMgGroupBase != e) {
                     unsigned char ix = gActivePlayerSlot;
-                    unsigned char* p = (unsigned char*)gTouchHeld + (ix * 4);
-                    if (p[2] <= 0x30 && p[3] >= lo && p[3] <= hi) {
+                    TouchInfo *touch = &gTouchInfo[ix];
+                    if (touch->x <= 0x30 && touch->y >= lo && touch->y <= hi) {
                         gMgGroupBase = e;
                         mGroupBase = e;
-                        func_02012790(z);
+                        func_02012790(0);
                         LoadGroupIcons();
-                        mScrollDelay = t;
+                        mScrollDelay = 30;
                     }
                 }
-                i++;
-                lo += 0x30;
-                hi += 0x30;
-            } while (i < 4);
+            }
             return;
         }
 
@@ -855,26 +824,21 @@ void dScMiniGm_c::UpdateGroupTabs() {
         if (v == 0)
             return;
         {
-            int i = 0;
-            int lo = 2;
-            int hi = 0x2e;
-            int z = 0;
-            int t = 0x1e;
-            do {
+            int i;
+            int lo;
+            int hi;
+            for (i = 0, lo = 2, hi = 0x2e; i < 4; i++, lo += 0x30, hi += 0x30) {
                 int e = sMiniGmGroupBases[i];
                 if (mGroupBase != e) {
                     unsigned char ix = gActivePlayerSlot;
-                    unsigned char* p = (unsigned char*)gTouchHeld + (ix * 4);
-                    if (p[2] <= 0x30 && p[3] >= lo && p[3] <= hi) {
+                    TouchInfo *touch = &gTouchInfo[ix];
+                    if (touch->x <= 0x30 && touch->y >= lo && touch->y <= hi) {
                         mGroupBase = e;
-                        func_02012790(z);
-                        mScrollDelay = t;
+                        func_02012790(0);
+                        mScrollDelay = 30;
                     }
                 }
-                i++;
-                lo += 0x30;
-                hi += 0x30;
-            } while (i < 4);
+            }
         }
     }
 }
@@ -896,28 +860,32 @@ void dScMiniGm_c::UpdatePageArrows() {
         return;
 
     {
-        u8 idx = gActivePlayerSlot;
-        int off = idx*4;
         int has = 0;
-        if (((u8*)gTouchHeld)[off]) {
-            if (gTouchEdge[off]) has = 1;
+        u8 idx = gActivePlayerSlot;
+        if (gTouchInfo[idx].held) {
+            if (gTouchInfo[idx].edge)
+                has = 1;
         }
         if (has == 0) return;
         if (gMgMenuPage == 0) {
-            u8 v = gTouchX[idx*4];
+            u8 v = gTouchInfo[idx].x;
             if (v < 0xd8) return;
             if (v > 0xf8) return;
-            if (gTouchY[idx*4] < 0x40) return;
-            if (gTouchY[idx*4] > 0x80) return;
+            if (gTouchInfo[idx].y < 0x40)
+                return;
+            if (gTouchInfo[idx].y > 0x80)
+                return;
             func_02012790(0);
             mNextPageTimer = 18;
             return;
         } else {
-            u8 v = gTouchX[idx*4];
+            u8 v = gTouchInfo[idx].x;
             if (v < 0x38) return;
             if (v > 0x58) return;
-            if (gTouchY[idx*4] < 0x40) return;
-            if (gTouchY[idx*4] > 0x80) return;
+            if (gTouchInfo[idx].y < 0x40)
+                return;
+            if (gTouchInfo[idx].y > 0x80)
+                return;
             func_02012790(0);
             mPrevPageTimer = 18;
             return;
@@ -941,22 +909,27 @@ void dScMiniGm_c::UpdateGameSelect()
 
     sel = -1;
     ok = 0;
-    if (gTouchHeld[gActivePlayerSlot].held != 0) {
-        if (gTouchHeld[gActivePlayerSlot].edge != 0) ok = 1;
+    if (gTouchInfo[gActivePlayerSlot].held != 0) {
+        if (gTouchInfo[gActivePlayerSlot].edge != 0)
+            ok = 1;
     }
     if (ok != 0) {
         if (gMgMenuPage == 0) {
             for (row = 0; row < 2; row++) {
                 for (int col = 0; col < 3; col++) {
-                    if (gTouchHeld[gActivePlayerSlot].x >= 0x40 + col * 0x30 && gTouchHeld[gActivePlayerSlot].x < 0x70 + col * 0x30 &&
-                        gTouchHeld[gActivePlayerSlot].y >= 0x18 + row * 0x48 && gTouchHeld[gActivePlayerSlot].y < 0x60 + row * 0x48)
+                    if (gTouchInfo[gActivePlayerSlot].x >= 0x40 + col * 0x30 &&
+                        gTouchInfo[gActivePlayerSlot].x < 0x70 + col * 0x30 &&
+                        gTouchInfo[gActivePlayerSlot].y >= 0x18 + row * 0x48 &&
+                        gTouchInfo[gActivePlayerSlot].y < 0x60 + row * 0x48)
                         sel = gMgGroupBase + (row * 0xc + col * 4);
                 }
             }
         } else {
             for (int col = 0; col < 3; col++) {
-                if (gTouchHeld[gActivePlayerSlot].x >= 0x60 + col * 0x30 && gTouchHeld[gActivePlayerSlot].x < 0x90 + col * 0x30 &&
-                    gTouchHeld[gActivePlayerSlot].y >= 0x38 && gTouchHeld[gActivePlayerSlot].y < 0x80)
+                if (gTouchInfo[gActivePlayerSlot].x >= 0x60 + col * 0x30 &&
+                    gTouchInfo[gActivePlayerSlot].x < 0x90 + col * 0x30 &&
+                    gTouchInfo[gActivePlayerSlot].y >= 0x38 &&
+                    gTouchInfo[gActivePlayerSlot].y < 0x80)
                     sel = gMgGroupBase + (0x18 + col * 4);
             }
         }
@@ -1007,14 +980,15 @@ void dScMiniGm_c::UpdateExitButton() {
         return;
     unsigned int i = gActivePlayerSlot;
     bool ok = false;
-    if (gTouchHeld[i].held != 0) {
-        if (gTouchHeld[i].edge != 0) ok = true;
+    if (gTouchInfo[i].held != 0) {
+        if (gTouchInfo[i].edge != 0)
+            ok = true;
     }
     if (!ok) return;
-    unsigned char x = gTouchHeld[i].x;
+    unsigned char x = gTouchInfo[i].x;
     if (x < 0xd8) return;
     if (x > 0xf8) return;
-    unsigned char y = gTouchHeld[i].y;
+    unsigned char y = gTouchInfo[i].y;
     if (y < 0x90) return;
     if (y > 0xb0) return;
     func_02012790(0x63);

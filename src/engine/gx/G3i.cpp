@@ -27,12 +27,7 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/gx/g3imm_cmd.h"
-
-extern "C" {
-void VEC_Normalize(const Vector3 *v, Vector3 *out);
-void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
-fx32 VEC_DotProduct(const Vector3 *a, const Vector3 *b);
-}
+#include "math/CalcLib.h"
 
 #define reg_CP_DIV_NUMER    (*(volatile u64 *)0x04000290)
 #define reg_CP_DIV_DENOM    (*(volatile u64 *)0x04000298)
@@ -126,11 +121,11 @@ void G3i_PerspectiveW_(fx32 fovySin, fx32 fovyCos, fx32 aspect, fx32 n, fx32 f, 
     }
 }
 
-void G3i_LookAt_(const Vector3 *camPos, const Vector3 *camUp, const Vector3 *target, bool draw,
-                 Matrix4x3 *mtx) {
-    Vector3 vLook;
-    Vector3 vRight;
-    Vector3 vUp;
+void G3i_LookAt_(const VecFx32 *camPos, const VecFx32 *camUp, const VecFx32 *target, int draw,
+                 MtxFx43 *mtx) {
+    VecFx32 vLook;
+    VecFx32 vRight;
+    VecFx32 vUp;
     fx32 tx;
     fx32 ty;
     fx32 tz;
@@ -176,18 +171,18 @@ void G3i_LookAt_(const Vector3 *camPos, const Vector3 *camUp, const Vector3 *tar
         return;
     }
 
-    mtx->r.m[0] = vRight.x;
-    mtx->r.m[1] = vUp.x;
-    mtx->r.m[2] = vLook.x;
-    mtx->r.m[3] = vRight.y;
-    mtx->r.m[4] = vUp.y;
-    mtx->r.m[5] = vLook.y;
-    mtx->r.m[6] = vRight.z;
-    mtx->r.m[7] = vUp.z;
-    mtx->r.m[8] = vLook.z;
-    mtx->t.x = tx;
-    mtx->t.y = ty;
-    mtx->t.z = tz;
+    mtx->m[0][0] = vRight.x;
+    mtx->m[0][1] = vUp.x;
+    mtx->m[0][2] = vLook.x;
+    mtx->m[1][0] = vRight.y;
+    mtx->m[1][1] = vUp.y;
+    mtx->m[1][2] = vLook.y;
+    mtx->m[2][0] = vRight.z;
+    mtx->m[2][1] = vUp.z;
+    mtx->m[2][2] = vLook.z;
+    mtx->m[3][0] = tx;
+    mtx->m[3][1] = ty;
+    mtx->m[3][2] = tz;
 }
 
 extern "C" void G3_LoadTexMtxEnv(int *m) {

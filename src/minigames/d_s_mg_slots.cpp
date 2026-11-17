@@ -81,15 +81,6 @@ typedef void (dScMgSlot3_c::*SlotState)();
    change those functions' code. */
 #define SLOT3_OFF(member) ((int)&((dScMgSlot3_c *)0)->member)
 
-/* One player's 4-byte touch record (PlayerInput.h): Slot1 Behavior reads
- * x/y through this view so the compiler, not the source, hoists them. */
-struct TouchRec {
-    u8 held;
-    u8 edge;
-    u8 x;
-    u8 y;
-};
-
 extern "C" {
 extern int sMgMainBannerY;
 void SetBg1Offset(int a, int b);
@@ -97,15 +88,11 @@ int GetGameLanguage(void);
 // Retained caller ABI: narrowing to the definition's u16 adds a mask in InitMainScreenBg.
 unsigned int LoadCompressedFileAt(int fileID, void *target);
 extern unsigned char gMainScreenLayers;
-void Mg_AddCredits(void *c, int delta);
-void Mg_SubCredits(void *c, int val);
 extern void Mg_SubmitScore(int self);
 extern int data_ov006_0213e948[];
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
-void Mg_DrawScoreTally(char *a0, int a1, int a2, int a3);
 extern void **sSlotLangSprites[];
 extern SlotState sSlot3StateTable[];
 /* The ROM PMF constants the Slot3 state table copies from (unlicensed
@@ -125,7 +112,7 @@ extern int data_0208ee44;
 extern void RenderOamMainScreen(OamAttr *, int, int, int, int);
 extern OamAttr sSlotsSlotBlinkSprites[];
 extern void Mg_LoseCredits(int c);
-void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m);
+void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *m);
 extern void *data_ov006_0213e528[];
 void Mg_GainCredits(int x);
 extern int Mg_GetSavedRecord0(void);
@@ -133,7 +120,7 @@ extern int sSlot1ReelPos[][2];
 extern void *sSlot1Sprites[];
 extern unsigned char sSlot1Payouts[];
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
-extern void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern void Mg_SaveRecordPair(int a, int b);
 extern void Mg_PlayJingle(void *c);
 extern int sSlotReelScrollSpeeds[];
@@ -220,19 +207,12 @@ void dScMgSlot3_c::InitMainScreenBg() {
                      GX_BG_CHARBASE_0x18000, GX_BG_EXTPLTT_01);
 }
 
-// Keep the strided cursors cast back to the class. mStripLength is read by
-// offset: a member read of it grows this body by 8 bytes (measured).
 void dScMgSlot3_c::ReelDigits(int reelIndex) {
-    char *c = (char *)this;
-    int symbolIndex = (((dScMgSlot3_c *)(c + reelIndex * 4))->mReelPos[0] >> 12) / 80;
+    int symbolIndex = (mReelPos[reelIndex] >> 12) / 80;
     int column;
-    char *dst = c + reelIndex * 3;
-    char *stripBytes = c + reelIndex * 5;
     for (column = 0; column < 3; column++) {
-        ((dScMgSlot3_c *)dst)->mResultSymbols[0][0] =
-            ((dScMgSlot3_c *)(stripBytes + symbolIndex))->mReelStrip[0][0];
-        symbolIndex = (symbolIndex + 1) % *(unsigned char *)(c + SLOT3_OFF(mStripLength));
-        dst += 1;
+        mResultSymbols[reelIndex][column] = mReelStrip[reelIndex][symbolIndex];
+        symbolIndex = (symbolIndex + 1) % mStripLength;
     }
 }
 
@@ -277,7 +257,7 @@ void dScMgSlot3_c::StatePayout() {
         if (mPayoutRemaining <= 0)
             return;
         mPayoutRemaining -= 1;
-        Mg_AddCredits(this, 1);
+        AddCredits(1);
         Sound::PlayBank2_2D(0x149);
         mStateTimer += 5;
         return;
@@ -292,7 +272,7 @@ void dScMgSlot3_c::StatePayout() {
             return;
     }
 
-    Mg_SubCredits(this, 1);
+    SubCredits(1);
     Sound::PlayBank2_2D(0x14a);
 }
 
@@ -321,6 +301,9 @@ void dScMgSlot3_c::StateJudge() {
             }
         } while (++reelIndex < 3);
         // Retain the compiler address barrier; deleting it grows this body by 32 bytes.
+        // Plain members (mResultSymbols[0][column], mReelPos[reelIndex], ...) with
+        // for, do-while or an inlined index hoist this+0x5031 into a stack slot:
+        // 0x1c0 against 0x1b8 (2026-11-16).
         self = (char *)((unsigned)self | (unsigned)(column - column));
     }
 
@@ -362,18 +345,16 @@ void dScMgSlot3_c::StateJudge() {
 void dScMgSlot3_c::StateSpin() {
     u8 playerSlot;
     int touchPressed;
-    int touchOffset;
     int reelIndex;
-    playerSlot = gActivePlayerSlot;
     touchPressed = 0;
-    touchOffset = playerSlot * 4;
-    if (gTouchHeld[playerSlot * 4]) {
-        if (gTouchEdge[touchOffset]) {
+    playerSlot = gActivePlayerSlot;
+    if (gTouchInfo[playerSlot].held) {
+        if (gTouchInfo[playerSlot].edge) {
             touchPressed = 1;
         }
     }
     if (touchPressed != 0) {
-        unsigned int touchY = gTouchY[playerSlot * 4];
+        unsigned int touchY = gTouchInfo[playerSlot].y;
         if (touchY >= 0x40 && touchY < 0x58) {
             if (mReelSpinning[0] == 1)
                 mReelSpinning[0] = 0;
@@ -457,8 +438,6 @@ void dScMgSlot3_c::StateIntro() {
 }
 
 void dScMgSlot3_c::StartRound(int mode) {
-    char *c = (char *)this;
-
     if (mode == 3 || mode == 0x12) {
         mCredits = 0xc;
         mCreditsShown = mCredits;
@@ -524,15 +503,12 @@ void dScMgSlot3_c::StartRound(int mode) {
             func_02012790(0x1aa);
         }
 
-        {
-            char *w = c;
-            for (j = 0; j < 3; j++, w += 5) {
-                for (k = 0; k < mStripLength; k++) {
-                    if (j == 1) {
-                        mReelStrip[1][k] = mStripLength - k - 1;
-                    } else {
-                        ((dScMgSlot3_c *)w)->mReelStrip[0][k] = k;
-                    }
+        for (j = 0; j < 3; j++) {
+            for (k = 0; k < mStripLength; k++) {
+                if (j == 1) {
+                    mReelStrip[1][k] = mStripLength - k - 1;
+                } else {
+                    mReelStrip[j][k] = k;
                 }
             }
         }
@@ -543,13 +519,11 @@ void dScMgSlot3_c::StartRound(int mode) {
         int j2;
         int k2;
         int m2;
-        char *w2 = c;
-        for (j2 = 0; j2 < 3; j2++, w2 += 3) {
+        for (j2 = 0; j2 < 3; j2++) {
             mReelSpinning[j2] = 1;
             mReelStopped[j2] = 0;
             for (k2 = 0; k2 < 3; k2++) {
-                /* mResultSymbols[j2][k2]; a typed spelling grows the function. */
-                *(u8 *)(w2 + k2 + SLOT3_OFF(mResultSymbols)) = mStripLength;
+                mResultSymbols[j2][k2] = mStripLength;
             }
         }
         for (m2 = 0; m2 < 3; m2++) {
@@ -567,6 +541,22 @@ void dScMgSlot3_c::StartRound(int mode) {
 // the functions between them. Measured -- this member DIFFs without them and
 // the members outside them DIFF with them applied file-wide.
 // Kept: pragma-free member spellings match except the mReelPos[i] load, which needs it.
+// Re-measured (#821): with the pragma, the `c` alias and every launder gone --
+// mResultSymbols[i2][j2], mReelStrip[i2][row], mReelWinPos[i2], mReelPos[i2],
+// j2 * 0x50 + 0x30 for the y counters, and the marker scan comparing mWinSymbol
+// directly instead of through a `u8 t` copy -- 401 of 410 words align and
+// the body is 0x664 against 0x668. The one miss is the scrolling pass's
+// mReelPos[i2] load: the ROM loads =0x4fe4 from the pool and does
+// `ldr [this + i2 * 4, r0]`, mwcc folds it to add #0x4000 / ldr #0xfe4 and
+// drops the pool word. Spellings tried for that load, none of which brings
+// the pool word back (all 0x664): `int a = mReelPos[i2]; a >>= 12`,
+// `(int)mReelPos[i2]`, `*(mReelPos + i2)`, a `s32 *pos = &mReelPos[i2]`,
+// `a` hoisted to the branch block and `row++; row %= mStripLength` (each
+// 401/410); rem before row 395/410; row/rem each reading mReelPos[i2]
+// 387/410; the outer loop on `i` 390/410. Keeping the old `(int)this`
+// offset launder without the pragma grows the body to 0x678. Keeping the
+// y counters (`y += 0x50`) instead measured 395/410; the indexed spelling
+// under the pragma measured 257 words off.
 #pragma opt_strength_reduction off
 /* dScMgSlot3_c::Render -- vtable slot 9.
  *
@@ -687,8 +677,8 @@ s32 dScMgSlot3_c::Render() {
         }
     }
 
-    Mg_DrawCredits(c, 0xc, 0xc, 0);
-    Mg_DrawScoreTally(c, 0xe0, 0x14, 1);
+    DrawCredits(0xc, 0xc, 0);
+    DrawScoreTally(0xe0, 0x14, 1);
 
     if (mState == 3 && mWinColumn >= 0) {
         Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], mWinColumn * 0x50 + 0x20,
@@ -755,8 +745,6 @@ s32 dScMgSlot3_c::Behavior() {
 
 /* Load the reel assets and initialise the scene state. */
 s32 dScMgSlot3_c::InitResources() {
-    char *c = (char *)this;
-
     G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8800,
                      GX_BG_CHARBASE_0x18000, GX_BG_EXTPLTT_01);
     G2_BG1Mosaic(0);
@@ -819,7 +807,7 @@ s32 dScMgSlot3_c::InitResources() {
 
     mReelDifficulty = (int)mLevel;
 
-    ((dScMgSlot3_c *)c)->StartRound(3);
+    StartRound(3);
 
     mWinSymbol = mNextWinSymbol;
     mReelDrawY = 0;
@@ -975,11 +963,8 @@ void dScMgSlot1_c::betIcon_c::Reset() {
 void dScMgSlot1_c::betIcon_c::Render() {
     OAM::RenderSub((OamAttr *)data_ov006_0213e528[mOn], mX, mY, -1, 1);
     int i;
-    int y = 0xb0;
-    int zero = 0;
     for (i = 0; i < BET_ICON(this)->mBetCount; i++) {
-        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], 0xb0 + i * 0x10, y,
-                              (void *)zero);
+        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], 0xb0 + i * 0x10, 0xb0, 0);
     }
 }
 
@@ -1061,8 +1046,6 @@ void dScMgSlot1_c::InitHud() {
 
 /* Slot 18. */
 void dScMgSlot1_c::StartRound(int i) {
-    char *raw = (char *)this;
-
     if (i == 4) {
         mPrevMatchedSymbol = mMatchedSymbol;
     } else if (i == 3) {
@@ -1078,22 +1061,18 @@ void dScMgSlot1_c::StartRound(int i) {
    include/dScMgSlot1_c.h's file banner). mBetIcon.Render() is the ROM's
    virtual call through the typed nested betIcon_c member at 0x4660. */
 s32 dScMgSlot1_c::Render() {
-    unsigned char *sceneBytes = (unsigned char *)this;
     int i, pos, drawY, j;
-    unsigned char *reelBytes = sceneBytes;
     unsigned char wildCount;
     for (i = 0; i < 3; i++) {
         pos = mSymbolIndex[i];
         drawY = sSlot1ReelPos[i][1] - ((s32)mReelScroll[i] >> 12);
         for (j = 0; j < 2; j++) {
-            Hud_RenderSprite(sSlot1Sprites[((dScMgSlot1_c *)(reelBytes + pos))->mReelStrip[0][0]],
-                             sSlot1ReelPos[i][0], drawY, -1, 3);
+            Hud_RenderSprite(sSlot1Sprites[mReelStrip[i][pos]], sSlot1ReelPos[i][0], drawY, -1, 3);
             pos--;
             drawY += 0x40;
             if (pos < 0)
                 pos += 0x15;
         }
-        reelBytes += 0x15;
     }
     mBetIcon.Render();
     Mg_DrawBigNumber(0x70, 0xb0, mCredits, 0, 1, 1, 0x14);
@@ -1138,7 +1117,7 @@ s32 dScMgSlot1_c::Render() {
  * single name it materializes `lsl r1, r2, #2` / `add r0, r0, r1` as the
  * cartridge does (+0x268). Case 7 is the one deliberate exception: the ROM
  * walks the reel-symbol rows with a strided copy of `this` (mov r5, r4).
- * The touch x/y are read INSIDE the hit loop through TouchRec, not hoisted
+ * The touch x/y are read INSIDE the hit loop through gTouchInfo, not hoisted
  * by hand; the compiler hoists them and that colours the loop. */
 s32 dScMgSlot1_c::Behavior() {
     int i;
@@ -1195,16 +1174,16 @@ s32 dScMgSlot1_c::Behavior() {
         if (mStoppedReelCount < 3) {
             int hit = 0;
             u8 idx = gActivePlayerSlot;
-            if (gTouchHeld[idx * 4] != 0) {
-                if (gTouchEdge[idx * 4] != 0) {
+            if (gTouchInfo[idx].held != 0) {
+                if (gTouchInfo[idx].edge != 0) {
                     hit = 1;
                 }
             }
             if (hit != 0) {
                 for (i = 0; i < 3; i++) {
                     if (mReelSpinning[i] == 1) {
-                        int dx = ((TouchRec *)gTouchHeld)[idx].x - sSlot1ReelPos[i][0];
-                        int dy = ((TouchRec *)gTouchHeld)[idx].y - sSlot1ReelPos[i][1];
+                        int dx = gTouchInfo[idx].x - sSlot1ReelPos[i][0];
+                        int dy = gTouchInfo[idx].y - sSlot1ReelPos[i][1];
                         if (dx <= 0x20 && dx >= -0x20 && dy <= 0x20 && dy >= -0x20) {
                             mReelSpinning[i] = 0;
                             mStoppedReelCount++;
@@ -1289,13 +1268,11 @@ s32 dScMgSlot1_c::Behavior() {
                 StartRound(5);
             } else {
                 int j;
-                char *p = (char *)this;
                 for (j = 0; j < 3; j++) {
                     mReelScroll[j] += 0x40000;
                     mSymbolIndex[j]++;
                     mSymbolIndex[j] %= 21;
-                    ((dScMgSlot1_c *)(p + mSymbolIndex[j]))->mReelStrip[0][0] = 0xd;
-                    p += 0x15;
+                    mReelStrip[j][mSymbolIndex[j]] = 0xd;
                 }
                 mState = 9;
             }
@@ -1347,10 +1324,10 @@ s32 dScMgSlot1_c::Behavior() {
 }
 
 /* The ov004 scroll words (sMgScoreDigitsX..sMgMainBannerX) name
- * no struct; they are stored raw. The reel-table fill keeps a stepped char*
- * cursor over mReelStrip (see leftovers). */
+ * no struct; they are stored raw. The reel-table fill walks the source table
+ * with a stepped pointer: indexing it as tbl[j * 21 + i] measured 0x4cc vs
+ * 0x4bc. Folding the two fill loops onto one counter measured 13 words off. */
 s32 dScMgSlot1_c::InitResources() {
-    char *c = (char *)this;
     volatile unsigned short fill;
     int i, j;
 
@@ -1434,30 +1411,26 @@ s32 dScMgSlot1_c::InitResources() {
 
     if ((int)param1 & 0xff) {
         unsigned char *tbl = sSlotReelSymbolsAlt;
-        char *p = c;
         for (j = 0; j < 3; j++) {
             for (i = 0; i < 21; i++) {
-                ((dScMgSlot1_c *)(p + i))->mReelStrip[0][0] = tbl[i];
+                mReelStrip[j][i] = tbl[i];
             }
             mSymbolIndex[j] = 0;
             mReelScroll[j] = 0x40000;
             mReelSpinning[j] = 1;
             tbl += 0x15;
-            p += 0x15;
         }
     } else {
         int k;
         unsigned char *tbl = sSlotReelSymbols;
-        char *p = c;
         for (k = 0; k < 3; k++) {
             for (i = 0; i < 21; i++) {
-                ((dScMgSlot1_c *)(p + i))->mReelStrip[0][0] = tbl[i];
+                mReelStrip[k][i] = tbl[i];
             }
             mSymbolIndex[k] = 0;
             mReelScroll[k] = 0x40000;
             mReelSpinning[k] = 1;
             tbl += 0x15;
-            p += 0x15;
         }
     }
 

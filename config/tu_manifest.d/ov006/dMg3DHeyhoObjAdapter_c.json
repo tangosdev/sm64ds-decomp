@@ -29,6 +29,11 @@
       "end": "0x02133570"
     },
     {
+      "name": ".data",
+      "start": "0x0213af18",
+      "end": "0x0213afd0"
+    },
+    {
       "name": ".bss",
       "start": "0x02140300",
       "end": "0x02140400"
@@ -386,7 +391,169 @@
       "ordinal": 49
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_Heyho_MotionPatrolBob",
+      "address": "0x0213af18",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionPatrolBob (0x020c627c), emitted by Heyho::StartMotionPatrolBob; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionBounceNear",
+      "address": "0x0213af20",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionBounceNear (0x020c6088), emitted by Heyho::StartMotionBounceNear; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionChase",
+      "address": "0x0213af28",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionChase (0x020c4fa4), emitted by Heyho::StartMotionChase; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionCircleUpper",
+      "address": "0x0213af30",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionCircleUpper (0x020c5530), emitted by Heyho::StartMotionCircleUpper; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionFlyIn",
+      "address": "0x0213af38",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionFlyIn (0x020c6a9c), emitted by Heyho::StartMotionFlyIn; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionDiagonal",
+      "address": "0x0213af40",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionDiagonal (0x020c5928), emitted by Heyho::StartMotionDiagonal; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionCircleLower",
+      "address": "0x0213af48",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionCircleLower (0x020c53f8), emitted by Heyho::StartMotionCircleLower; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionDiagonalMirror",
+      "address": "0x0213af50",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionDiagonalMirror (0x020c5658), emitted by Heyho::StartMotionDiagonalMirror; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionBounceInRange",
+      "address": "0x0213af58",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionBounceInRange (0x020c5bf8), emitted by Heyho::StartMotionBounceInRange; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionRegroup",
+      "address": "0x0213af60",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionRegroup (0x020c66bc), emitted by Heyho::StartMotionRegroup; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionVShape",
+      "address": "0x0213af68",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionVShape (0x020c5d28), emitted by Heyho::StartMotionVShape; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_StateIdle",
+      "address": "0x0213af70",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::StateIdle (0x020c4d1c), emitted by Heyho::React; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionBobVertical",
+      "address": "0x0213af78",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionBobVertical (0x020c61c4), emitted by Heyho::StartMotionBobVertical; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionHitSpin",
+      "address": "0x0213af80",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionHitSpin (0x020c4e8c), emitted by Heyho::StartMotionHitSpin; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionHover",
+      "address": "0x0213af88",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionHover (0x020c6378), emitted by Heyho::StartMotionHover; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_StateIdle_2",
+      "address": "0x0213af90",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::StateIdle (0x020c4d1c), emitted by Heyho::SetIdle; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_StateIdle_3",
+      "address": "0x0213af98",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::StateIdle (0x020c4d1c), emitted by Heyho::Draw; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionLeave",
+      "address": "0x0213afa0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionLeave (0x020c6400), emitted by Heyho::IsChasing; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_StateIdle_4",
+      "address": "0x0213afa8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::StateIdle (0x020c4d1c), emitted by _Z13Heyho_AllIdlev; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionChase_2",
+      "address": "0x0213afb0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionChase (0x020c4fa4), emitted by Heyho::IsChasing; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionLeave_2",
+      "address": "0x0213afb8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionLeave (0x020c6400), emitted by Heyho::React; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionHitSpin_2",
+      "address": "0x0213afc0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::MotionHitSpin (0x020c4e8c), emitted by Heyho::React; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "data_ov006_0213afc8",
+      "address": "0x0213afc8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &Heyho::StateIdle (0x020c4d1c), emitted by _Z15Heyho_SettleAllv; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    }
+  ],
   "bss": [
     {
       "symbol": "_ZGVsHeyho_React_Left256$317",
@@ -593,7 +760,8 @@
     "Text-only fold: dMg3DHeyhoObjAdapter_c (its base constructor at 0x020c4048, with its vtable and RTTI at their ROM homes) plus the 49 one-function C shards 0x020c4060..0x020c6f70. Each shard body is kept inside its own namespace (extern \"C\" for the former .c shards) so that cross-shard local type and declaration differences (Vec3/Obj/S/W2 shapes, K&R declarations, per-shard extern signatures) need no unification; the function names stay unmangled C names and the ROM bytes are unchanged.",
     "Seven shards (0x020c5370, 0x020c57d4, 0x020c5aa4, 0x020c5ec8, 0x020c64e4, 0x020c68f4, 0x020c6ca4) spell a struct copy differently from their .c originals: C++ copies a plain int-member struct member-wise where C99 emitted the cartridge's paired-load copy, so those copies go through a struct holding an int array.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
-    "The .bss claim is the whole Heyho window 0x02140300..0x02140400, which ends where dMgJump3DMario's window starts. The six side offsets are function-local static Vector3(-0x100000, 0, 0) and Vector3(0x100000, 0, 0). The counters, sHeyhos, data_ov006_021403b8 and sJumpAdapters in that window are plain definitions with no initializer, so the file-handle sinit is unchanged."
+    "The .bss claim is the whole Heyho window 0x02140300..0x02140400, which ends where dMgJump3DMario's window starts. The six side offsets are function-local static Vector3(-0x100000, 0, 0) and Vector3(0x100000, 0, 0). The counters, sHeyhos, data_ov006_021403b8 and sJumpAdapters in that window are plain definitions with no initializer, so the file-handle sinit is unchanged.",
+    "PMF LITERAL CLAIM (2026-11-17): the 23 pmf_Heyho_* / data_ov006_0213afc8 externs are now &Heyho::X expressions. mwcc emits one 8-byte {fn, 0} .data constant per use (StateIdle x5, MotionChase/MotionLeave/MotionHitSpin x2), and each is renamed to its configured row, paired by consumer relocation and handler. .data 0x0213af18..0x0213afd0 is claimed. The compiler-numbered statics and temps after the first literal are re-keyed by consumer relocation (14 pins)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -682,6 +850,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213af18",
+          "end": "0x0213afd0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02140300",
           "end": "0x02140400",
@@ -690,7 +865,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 82
+          "LICENSED": 105
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -701,19 +876,72 @@
           {
             "section": ".init",
             "original": [
-              148
+              194
             ],
             "desired": [
-              148
+              194
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              146
+              192
             ],
             "desired": [
-              146
+              192
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              17,
+              19,
+              21,
+              23,
+              26,
+              28,
+              30,
+              32,
+              34,
+              36,
+              38,
+              40,
+              42,
+              44,
+              46,
+              48,
+              50,
+              52,
+              54,
+              56,
+              58,
+              61,
+              63
+            ],
+            "desired": [
+              46,
+              42,
+              36,
+              28,
+              30,
+              40,
+              32,
+              34,
+              54,
+              38,
+              61,
+              26,
+              19,
+              44,
+              48,
+              52,
+              56,
+              58,
+              23,
+              17,
+              50,
+              63,
+              21
             ]
           },
           {
@@ -731,61 +959,139 @@
               14,
               15,
               16,
-              17,
-              18,
-              19,
-              20,
-              21,
-              22,
-              23,
-              24,
               25,
-              26,
-              27,
-              28,
-              29,
-              30,
-              31,
-              32,
-              33,
-              34
+              60,
+              65,
+              66,
+              67,
+              68,
+              69,
+              70,
+              71,
+              72,
+              73,
+              74,
+              75,
+              76,
+              77,
+              78,
+              79,
+              80
             ],
             "desired": [
               6,
-              13,
-              8,
-              5,
               14,
+              8,
               16,
-              11,
+              10,
               15,
               7,
-              9,
+              11,
+              13,
               12,
-              10,
-              17,
-              18,
-              33,
-              34,
-              32,
-              19,
-              29,
-              22,
-              24,
+              5,
+              9,
               25,
-              26,
-              28,
-              23,
-              30,
-              31,
-              20,
-              21,
-              27
+              60,
+              79,
+              80,
+              65,
+              66,
+              67,
+              68,
+              70,
+              71,
+              72,
+              73,
+              69,
+              75,
+              76,
+              77,
+              78,
+              74
             ]
           }
         ],
         "objisolate": {
           "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                17,
+                19,
+                21,
+                23,
+                26,
+                28,
+                30,
+                32,
+                34,
+                36,
+                38,
+                40,
+                42,
+                44,
+                46,
+                48,
+                50,
+                52,
+                54,
+                56,
+                58,
+                61,
+                63
+              ],
+              "desired": [
+                46,
+                42,
+                36,
+                28,
+                30,
+                40,
+                32,
+                34,
+                54,
+                38,
+                61,
+                26,
+                19,
+                44,
+                48,
+                52,
+                56,
+                58,
+                23,
+                17,
+                50,
+                63,
+                21
+              ],
+              "slots": [
+                17,
+                19,
+                21,
+                23,
+                26,
+                28,
+                30,
+                32,
+                34,
+                36,
+                38,
+                40,
+                42,
+                44,
+                46,
+                48,
+                50,
+                52,
+                54,
+                56,
+                58,
+                61,
+                63
+              ]
+            },
             {
               "section": ".bss",
               "original": [
@@ -801,56 +1107,56 @@
                 14,
                 15,
                 16,
-                17,
-                18,
-                19,
-                20,
-                21,
-                22,
-                23,
-                24,
                 25,
-                26,
-                27,
-                28,
-                29,
-                30,
-                31,
-                32,
-                33,
-                34
+                60,
+                65,
+                66,
+                67,
+                68,
+                69,
+                70,
+                71,
+                72,
+                73,
+                74,
+                75,
+                76,
+                77,
+                78,
+                79,
+                80
               ],
               "desired": [
                 6,
-                13,
-                8,
-                5,
                 14,
+                8,
                 16,
-                11,
+                10,
                 15,
                 7,
-                9,
+                11,
+                13,
                 12,
-                10,
-                17,
-                18,
-                33,
-                34,
-                32,
-                19,
-                29,
-                22,
-                24,
+                5,
+                9,
                 25,
-                26,
-                28,
-                23,
-                30,
-                31,
-                20,
-                21,
-                27
+                60,
+                79,
+                80,
+                65,
+                66,
+                67,
+                68,
+                70,
+                71,
+                72,
+                73,
+                69,
+                75,
+                76,
+                77,
+                78,
+                74
               ],
               "slots": [
                 5,
@@ -865,30 +1171,30 @@
                 14,
                 15,
                 16,
-                17,
-                18,
-                19,
-                20,
-                21,
-                22,
-                23,
-                24,
                 25,
-                26,
-                27,
-                28,
-                29,
-                30,
-                31,
-                32,
-                33,
-                34
+                60,
+                65,
+                66,
+                67,
+                68,
+                69,
+                70,
+                71,
+                72,
+                73,
+                74,
+                75,
+                76,
+                77,
+                78,
+                79,
+                80
               ]
             }
           ],
-          "symbolIndices": 30,
+          "symbolIndices": 53,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 23,
           "error": null
         },
         "errors": null
@@ -1130,6 +1436,144 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "function-local static Vector3; DSD requires a configured global at 0x021403e8"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionPatrolBob",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionBounceNear",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionChase",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionCircleUpper",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionFlyIn",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionDiagonal",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionCircleLower",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionDiagonalMirror",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionBounceInRange",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionRegroup",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionVShape",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_StateIdle",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionBobVertical",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionHitSpin",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionHover",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_StateIdle_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_StateIdle_3",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionLeave",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_StateIdle_4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionChase_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionLeave_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Heyho_MotionHitSpin_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "data_ov006_0213afc8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "relocations": [
@@ -1242,108 +1686,453 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212f4c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho15MotionPatrolBobEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c627c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho16MotionBounceNearEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c6088"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho11MotionChaseEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c4fa4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho17MotionCircleUpperEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c5530"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho11MotionFlyInEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c6a9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho14MotionDiagonalEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c5928"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho17MotionCircleLowerEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c53f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho20MotionDiagonalMirrorEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c5658"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho19MotionBounceInRangeEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c5bf8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho13MotionRegroupEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c66bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho12MotionVShapeEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c5d28"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c4d1c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho17MotionBobVerticalEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c61c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho13MotionHitSpinEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c4e8c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho11MotionHoverEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c6378"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c4d1c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213af98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c4d1c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213afa0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho11MotionLeaveEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c6400"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213afa8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c4d1c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213afb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho11MotionChaseEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c4fa4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213afb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho11MotionLeaveEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c6400"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213afc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho13MotionHitSpinEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c4e8c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213afc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN5Heyho9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x020c4d1c"
     }
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1167",
+      "from": "@1260",
       "to": "@1336",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1344 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho::Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1346 before -> @1344 after); licensed under the existing pin @1336 Re-keyed from @1343 to @1337 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @1337 to @1335 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Re-keyed from @1335 to @1326 when the VShape, Diagonal and DiagonalMirror motions' per-namespace POD Vec3 twins were retired for Vector3 (symtab index 115, section 33, offset 0, size 0xc on both sides; every non-strtab section byte-identical). Candidate-source rekey from @1326 to @1324 follows the same ELF symtab index 115 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @1324 to @1329 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @1329 to @1314 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1310 to @1168 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @1168 to @1165 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1165 to @1167 when a redundant pun was removed (same section, offset, size, type and binding)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1344 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho::Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1346 before -> @1344 after); licensed under the existing pin @1336 Re-keyed from @1343 to @1337 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @1337 to @1335 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Re-keyed from @1335 to @1326 when the VShape, Diagonal and DiagonalMirror motions' per-namespace POD Vec3 twins were retired for Vector3 (symtab index 115, section 33, offset 0, size 0xc on both sides; every non-strtab section byte-identical). Candidate-source rekey from @1326 to @1324 follows the same ELF symtab index 115 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @1324 to @1329 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @1329 to @1314 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1310 to @1168 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @1168 to @1165 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1165 to @1167 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @1167 to @1204 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1204 to @1216 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1216 to @1221 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1221 to @1260 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
     },
     {
-      "from": "@1168",
+      "from": "@1261",
       "to": "@1337",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1345 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho::Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1347 before -> @1345 after); licensed under the existing pin @1337. The six function-local Vector3s did not move this node: the sinit still relocates to @1288. Re-keyed from @1344 to @1338 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @1338 to @1336 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Re-keyed from @1336 to @1327 when the VShape, Diagonal and DiagonalMirror motions' per-namespace POD Vec3 twins were retired for Vector3 (symtab index 116, section 34, offset 0, size 0xc on both sides; every non-strtab section byte-identical). Candidate-source rekey from @1327 to @1325 follows the same ELF symtab index 116 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @1325 to @1330 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @1330 to @1315 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1311 to @1169 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @1169 to @1166 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1166 to @1168 when a redundant pun was removed (same section, offset, size, type and binding)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1345 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho::Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1347 before -> @1345 after); licensed under the existing pin @1337. The six function-local Vector3s did not move this node: the sinit still relocates to @1288. Re-keyed from @1344 to @1338 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @1338 to @1336 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Re-keyed from @1336 to @1327 when the VShape, Diagonal and DiagonalMirror motions' per-namespace POD Vec3 twins were retired for Vector3 (symtab index 116, section 34, offset 0, size 0xc on both sides; every non-strtab section byte-identical). Candidate-source rekey from @1327 to @1325 follows the same ELF symtab index 116 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @1325 to @1330 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @1330 to @1315 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1311 to @1169 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @1169 to @1166 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1166 to @1168 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @1168 to @1205 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1205 to @1217 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1217 to @1222 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1222 to @1261 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
     },
     {
-      "from": "@346",
+      "from": "@400",
       "to": "@174",
-      "evidence": "registration node of sHeyho_StartMotionFlyIn_Left256. FlyIn's pool word relocates to this node and to the Left256 storage. ov064 already defines @167, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @174. Candidate-source rekey from @223 to @222 follows the same ELF symtab index 114 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @222 to @230 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @230 to @215 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @211 to @349 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @349 to @346 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "registration node of sHeyho_StartMotionFlyIn_Left256. FlyIn's pool word relocates to this node and to the Left256 storage. ov064 already defines @167, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @174. Candidate-source rekey from @223 to @222 follows the same ELF symtab index 114 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @222 to @230 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @230 to @215 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @211 to @349 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @349 to @346 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @346 to @383 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @383 to @395 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @395 to @400 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@350",
+      "from": "@404",
       "to": "@175",
-      "evidence": "registration node of sHeyho_StartMotionFlyIn_Right256. FlyIn's pool word relocates to this node. ov100 already defines @171, so this row maps it to the unused same-length @175. Candidate-source rekey from @227 to @226 follows the same ELF symtab index 111 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @226 to @234 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @234 to @219 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @215 to @353 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @353 to @350 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "registration node of sHeyho_StartMotionFlyIn_Right256. FlyIn's pool word relocates to this node. ov100 already defines @171, so this row maps it to the unused same-length @175. Candidate-source rekey from @227 to @226 follows the same ELF symtab index 111 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @226 to @234 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @234 to @219 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @215 to @353 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @353 to @350 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @350 to @387 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @387 to @399 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @399 to @404 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@386",
+      "from": "@442",
       "to": "@241",
-      "evidence": "registration node of sHeyho_StartMotionRegroup_Left256. ov080 defines the compiled @225 and ov006 unit020cd744 defines @235, so this maps it to the unused same-length @241. Candidate-source rekey from @281 to @279 follows the same ELF symtab index 107 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @279 to @287 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @287 to @272 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @268 to @389 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @389 to @386 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
-    },
-    {
-      "from": "@390",
-      "to": "@242",
-      "evidence": "registration node of sHeyho_StartMotionRegroup_Right256. ov070 defines the compiled @229 and ov006 unit020cd744 defines @236, so this maps it to the unused same-length @242. Candidate-source rekey from @285 to @283 follows the same ELF symtab index 109 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @283 to @291 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @291 to @276 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @272 to @393 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @393 to @390 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "registration node of sHeyho_StartMotionRegroup_Left256. ov080 defines the compiled @225 and ov006 unit020cd744 defines @235, so this maps it to the unused same-length @241. Candidate-source rekey from @281 to @279 follows the same ELF symtab index 107 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @279 to @287 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @287 to @272 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @268 to @389 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @389 to @386 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @386 to @423 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @423 to @435 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @435 to @440 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @440 to @442 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
     },
     {
       "from": "@446",
+      "to": "@242",
+      "evidence": "registration node of sHeyho_StartMotionRegroup_Right256. ov070 defines the compiled @229 and ov006 unit020cd744 defines @236, so this maps it to the unused same-length @242. Candidate-source rekey from @285 to @283 follows the same ELF symtab index 109 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @283 to @291 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @291 to @276 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @272 to @393 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @393 to @390 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @390 to @427 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @427 to @439 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @439 to @444 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @444 to @446 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
+    },
+    {
+      "from": "@506",
       "to": "@243",
-      "evidence": "registration node of sHeyho_React_Left256. ov006 unit020cd744 also defines the compiled @320, so this maps it to the unused same-length @243. Re-keyed from @376 to @375 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @375 to @374 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Candidate-source rekey from @374 to @372 follows the same ELF symtab index 112 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @372 to @380 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @380 to @365 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @361 to @449 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @449 to @446 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "registration node of sHeyho_React_Left256. ov006 unit020cd744 also defines the compiled @320, so this maps it to the unused same-length @243. Re-keyed from @376 to @375 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @375 to @374 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Candidate-source rekey from @374 to @372 follows the same ELF symtab index 112 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @372 to @380 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @380 to @365 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @361 to @449 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @449 to @446 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @446 to @483 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @483 to @495 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @495 to @500 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @500 to @506 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
     },
     {
-      "from": "_ZGVsHeyho_React_Left256$443",
+      "from": "_ZGVsHeyho_React_Left256$503",
       "to": "_ZGVsHeyho_React_Left256$317",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from _ZGVsHeyho_React_Left256$373 to _ZGVsHeyho_React_Left256$372 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from _ZGVsHeyho_React_Left256$372 to _ZGVsHeyho_React_Left256$371 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Candidate-source rekey from _ZGVsHeyho_React_Left256$371 to _ZGVsHeyho_React_Left256$369 follows the same ELF symtab index 98 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from _ZGVsHeyho_React_Left256$369 to _ZGVsHeyho_React_Left256$377 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Left256$377 to _ZGVsHeyho_React_Left256$362 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Left256$358 to _ZGVsHeyho_React_Left256$446 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Left256$446 to _ZGVsHeyho_React_Left256$443 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from _ZGVsHeyho_React_Left256$373 to _ZGVsHeyho_React_Left256$372 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from _ZGVsHeyho_React_Left256$372 to _ZGVsHeyho_React_Left256$371 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Candidate-source rekey from _ZGVsHeyho_React_Left256$371 to _ZGVsHeyho_React_Left256$369 follows the same ELF symtab index 98 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from _ZGVsHeyho_React_Left256$369 to _ZGVsHeyho_React_Left256$377 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Left256$377 to _ZGVsHeyho_React_Left256$362 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Left256$358 to _ZGVsHeyho_React_Left256$446 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Left256$446 to _ZGVsHeyho_React_Left256$443 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Left256$443 to _ZGVsHeyho_React_Left256$480 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_React_Left256$480 to _ZGVsHeyho_React_Left256$492 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_React_Left256$492 to _ZGVsHeyho_React_Left256$497 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_React_Left256$497 to _ZGVsHeyho_React_Left256$503 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
     },
     {
-      "from": "_ZGVsHeyho_React_Right256$447",
+      "from": "_ZGVsHeyho_React_Right256$507",
       "to": "_ZGVsHeyho_React_Right256$321",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from _ZGVsHeyho_React_Right256$377 to _ZGVsHeyho_React_Right256$376 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from _ZGVsHeyho_React_Right256$376 to _ZGVsHeyho_React_Right256$375 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Candidate-source rekey from _ZGVsHeyho_React_Right256$375 to _ZGVsHeyho_React_Right256$373 follows the same ELF symtab index 97 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from _ZGVsHeyho_React_Right256$373 to _ZGVsHeyho_React_Right256$381 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Right256$381 to _ZGVsHeyho_React_Right256$366 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Right256$362 to _ZGVsHeyho_React_Right256$450 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Right256$450 to _ZGVsHeyho_React_Right256$447 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from _ZGVsHeyho_React_Right256$377 to _ZGVsHeyho_React_Right256$376 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from _ZGVsHeyho_React_Right256$376 to _ZGVsHeyho_React_Right256$375 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Candidate-source rekey from _ZGVsHeyho_React_Right256$375 to _ZGVsHeyho_React_Right256$373 follows the same ELF symtab index 97 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from _ZGVsHeyho_React_Right256$373 to _ZGVsHeyho_React_Right256$381 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Right256$381 to _ZGVsHeyho_React_Right256$366 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Right256$362 to _ZGVsHeyho_React_Right256$450 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Right256$450 to _ZGVsHeyho_React_Right256$447 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from _ZGVsHeyho_React_Right256$447 to _ZGVsHeyho_React_Right256$484 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_React_Right256$484 to _ZGVsHeyho_React_Right256$496 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_React_Right256$496 to _ZGVsHeyho_React_Right256$501 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_React_Right256$501 to _ZGVsHeyho_React_Right256$507 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
     },
     {
-      "from": "_ZGVsHeyho_StartMotionRegroup_Left256$383",
+      "from": "_ZGVsHeyho_StartMotionRegroup_Left256$439",
       "to": "_ZGVsHeyho_StartMotionRegroup_Left256$222",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from _ZGVsHeyho_StartMotionRegroup_Left256$278 to _ZGVsHeyho_StartMotionRegroup_Left256$276 follows the same ELF symtab index 102 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from _ZGVsHeyho_StartMotionRegroup_Left256$276 to _ZGVsHeyho_StartMotionRegroup_Left256$284 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Left256$284 to _ZGVsHeyho_StartMotionRegroup_Left256$269 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Left256$265 to _ZGVsHeyho_StartMotionRegroup_Left256$386 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Left256$386 to _ZGVsHeyho_StartMotionRegroup_Left256$383 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from _ZGVsHeyho_StartMotionRegroup_Left256$278 to _ZGVsHeyho_StartMotionRegroup_Left256$276 follows the same ELF symtab index 102 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from _ZGVsHeyho_StartMotionRegroup_Left256$276 to _ZGVsHeyho_StartMotionRegroup_Left256$284 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Left256$284 to _ZGVsHeyho_StartMotionRegroup_Left256$269 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Left256$265 to _ZGVsHeyho_StartMotionRegroup_Left256$386 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Left256$386 to _ZGVsHeyho_StartMotionRegroup_Left256$383 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Left256$383 to _ZGVsHeyho_StartMotionRegroup_Left256$420 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Left256$420 to _ZGVsHeyho_StartMotionRegroup_Left256$432 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Left256$432 to _ZGVsHeyho_StartMotionRegroup_Left256$437 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Left256$437 to _ZGVsHeyho_StartMotionRegroup_Left256$439 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
     },
     {
-      "from": "_ZGVsHeyho_StartMotionFlyIn_Right256$347",
+      "from": "_ZGVsHeyho_StartMotionFlyIn_Right256$401",
       "to": "_ZGVsHeyho_StartMotionFlyIn_Right256$168",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from _ZGVsHeyho_StartMotionFlyIn_Right256$224 to _ZGVsHeyho_StartMotionFlyIn_Right256$223 follows the same ELF symtab index 101 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Right256$223 to _ZGVsHeyho_StartMotionFlyIn_Right256$231 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Right256$231 to _ZGVsHeyho_StartMotionFlyIn_Right256$216 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Right256$212 to _ZGVsHeyho_StartMotionFlyIn_Right256$350 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Right256$350 to _ZGVsHeyho_StartMotionFlyIn_Right256$347 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from _ZGVsHeyho_StartMotionFlyIn_Right256$224 to _ZGVsHeyho_StartMotionFlyIn_Right256$223 follows the same ELF symtab index 101 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Right256$223 to _ZGVsHeyho_StartMotionFlyIn_Right256$231 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Right256$231 to _ZGVsHeyho_StartMotionFlyIn_Right256$216 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Right256$212 to _ZGVsHeyho_StartMotionFlyIn_Right256$350 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Right256$350 to _ZGVsHeyho_StartMotionFlyIn_Right256$347 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Right256$347 to _ZGVsHeyho_StartMotionFlyIn_Right256$384 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Right256$384 to _ZGVsHeyho_StartMotionFlyIn_Right256$396 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Right256$396 to _ZGVsHeyho_StartMotionFlyIn_Right256$401 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "_ZGVsHeyho_StartMotionRegroup_Right256$387",
+      "from": "_ZGVsHeyho_StartMotionRegroup_Right256$443",
       "to": "_ZGVsHeyho_StartMotionRegroup_Right256$226",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from _ZGVsHeyho_StartMotionRegroup_Right256$282 to _ZGVsHeyho_StartMotionRegroup_Right256$280 follows the same ELF symtab index 99 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from _ZGVsHeyho_StartMotionRegroup_Right256$280 to _ZGVsHeyho_StartMotionRegroup_Right256$288 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Right256$288 to _ZGVsHeyho_StartMotionRegroup_Right256$273 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Right256$269 to _ZGVsHeyho_StartMotionRegroup_Right256$390 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Right256$390 to _ZGVsHeyho_StartMotionRegroup_Right256$387 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from _ZGVsHeyho_StartMotionRegroup_Right256$282 to _ZGVsHeyho_StartMotionRegroup_Right256$280 follows the same ELF symtab index 99 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from _ZGVsHeyho_StartMotionRegroup_Right256$280 to _ZGVsHeyho_StartMotionRegroup_Right256$288 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Right256$288 to _ZGVsHeyho_StartMotionRegroup_Right256$273 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Right256$269 to _ZGVsHeyho_StartMotionRegroup_Right256$390 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Right256$390 to _ZGVsHeyho_StartMotionRegroup_Right256$387 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Right256$387 to _ZGVsHeyho_StartMotionRegroup_Right256$424 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Right256$424 to _ZGVsHeyho_StartMotionRegroup_Right256$436 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Right256$436 to _ZGVsHeyho_StartMotionRegroup_Right256$441 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_StartMotionRegroup_Right256$441 to _ZGVsHeyho_StartMotionRegroup_Right256$443 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
     },
     {
-      "from": "_ZGVsHeyho_StartMotionFlyIn_Left256$343",
+      "from": "_ZGVsHeyho_StartMotionFlyIn_Left256$397",
       "to": "_ZGVsHeyho_StartMotionFlyIn_Left256$164",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from _ZGVsHeyho_StartMotionFlyIn_Left256$220 to _ZGVsHeyho_StartMotionFlyIn_Left256$219 follows the same ELF symtab index 100 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Left256$219 to _ZGVsHeyho_StartMotionFlyIn_Left256$227 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Left256$227 to _ZGVsHeyho_StartMotionFlyIn_Left256$212 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Left256$208 to _ZGVsHeyho_StartMotionFlyIn_Left256$346 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Left256$346 to _ZGVsHeyho_StartMotionFlyIn_Left256$343 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from _ZGVsHeyho_StartMotionFlyIn_Left256$220 to _ZGVsHeyho_StartMotionFlyIn_Left256$219 follows the same ELF symtab index 100 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Left256$219 to _ZGVsHeyho_StartMotionFlyIn_Left256$227 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Left256$227 to _ZGVsHeyho_StartMotionFlyIn_Left256$212 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Left256$208 to _ZGVsHeyho_StartMotionFlyIn_Left256$346 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Left256$346 to _ZGVsHeyho_StartMotionFlyIn_Left256$343 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Left256$343 to _ZGVsHeyho_StartMotionFlyIn_Left256$380 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Left256$380 to _ZGVsHeyho_StartMotionFlyIn_Left256$392 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsHeyho_StartMotionFlyIn_Left256$392 to _ZGVsHeyho_StartMotionFlyIn_Left256$397 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "sHeyho_StartMotionFlyIn_Left256$343",
+      "from": "sHeyho_StartMotionFlyIn_Left256$397",
       "to": "sHeyho_StartMotionFlyIn_Left256$164",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from sHeyho_StartMotionFlyIn_Left256$220 to sHeyho_StartMotionFlyIn_Left256$219 follows the same ELF symtab index 103 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from sHeyho_StartMotionFlyIn_Left256$219 to sHeyho_StartMotionFlyIn_Left256$227 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Left256$227 to sHeyho_StartMotionFlyIn_Left256$212 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Left256$208 to sHeyho_StartMotionFlyIn_Left256$346 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Left256$346 to sHeyho_StartMotionFlyIn_Left256$343 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from sHeyho_StartMotionFlyIn_Left256$220 to sHeyho_StartMotionFlyIn_Left256$219 follows the same ELF symtab index 103 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from sHeyho_StartMotionFlyIn_Left256$219 to sHeyho_StartMotionFlyIn_Left256$227 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Left256$227 to sHeyho_StartMotionFlyIn_Left256$212 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Left256$208 to sHeyho_StartMotionFlyIn_Left256$346 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Left256$346 to sHeyho_StartMotionFlyIn_Left256$343 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Left256$343 to sHeyho_StartMotionFlyIn_Left256$380 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_StartMotionFlyIn_Left256$380 to sHeyho_StartMotionFlyIn_Left256$392 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_StartMotionFlyIn_Left256$392 to sHeyho_StartMotionFlyIn_Left256$397 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "sHeyho_StartMotionFlyIn_Right256$347",
+      "from": "sHeyho_StartMotionFlyIn_Right256$401",
       "to": "sHeyho_StartMotionFlyIn_Right256$168",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from sHeyho_StartMotionFlyIn_Right256$224 to sHeyho_StartMotionFlyIn_Right256$223 follows the same ELF symtab index 106 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from sHeyho_StartMotionFlyIn_Right256$223 to sHeyho_StartMotionFlyIn_Right256$231 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Right256$231 to sHeyho_StartMotionFlyIn_Right256$216 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Right256$212 to sHeyho_StartMotionFlyIn_Right256$350 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Right256$350 to sHeyho_StartMotionFlyIn_Right256$347 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from sHeyho_StartMotionFlyIn_Right256$224 to sHeyho_StartMotionFlyIn_Right256$223 follows the same ELF symtab index 106 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from sHeyho_StartMotionFlyIn_Right256$223 to sHeyho_StartMotionFlyIn_Right256$231 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Right256$231 to sHeyho_StartMotionFlyIn_Right256$216 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Right256$212 to sHeyho_StartMotionFlyIn_Right256$350 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Right256$350 to sHeyho_StartMotionFlyIn_Right256$347 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from sHeyho_StartMotionFlyIn_Right256$347 to sHeyho_StartMotionFlyIn_Right256$384 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_StartMotionFlyIn_Right256$384 to sHeyho_StartMotionFlyIn_Right256$396 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_StartMotionFlyIn_Right256$396 to sHeyho_StartMotionFlyIn_Right256$401 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "sHeyho_StartMotionRegroup_Left256$383",
+      "from": "sHeyho_StartMotionRegroup_Left256$439",
       "to": "sHeyho_StartMotionRegroup_Left256$222",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from sHeyho_StartMotionRegroup_Left256$278 to sHeyho_StartMotionRegroup_Left256$276 follows the same ELF symtab index 108 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from sHeyho_StartMotionRegroup_Left256$276 to sHeyho_StartMotionRegroup_Left256$284 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Left256$284 to sHeyho_StartMotionRegroup_Left256$269 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Left256$265 to sHeyho_StartMotionRegroup_Left256$386 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Left256$386 to sHeyho_StartMotionRegroup_Left256$383 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from sHeyho_StartMotionRegroup_Left256$278 to sHeyho_StartMotionRegroup_Left256$276 follows the same ELF symtab index 108 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from sHeyho_StartMotionRegroup_Left256$276 to sHeyho_StartMotionRegroup_Left256$284 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Left256$284 to sHeyho_StartMotionRegroup_Left256$269 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Left256$265 to sHeyho_StartMotionRegroup_Left256$386 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Left256$386 to sHeyho_StartMotionRegroup_Left256$383 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Left256$383 to sHeyho_StartMotionRegroup_Left256$420 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_StartMotionRegroup_Left256$420 to sHeyho_StartMotionRegroup_Left256$432 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_StartMotionRegroup_Left256$432 to sHeyho_StartMotionRegroup_Left256$437 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_StartMotionRegroup_Left256$437 to sHeyho_StartMotionRegroup_Left256$439 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
     },
     {
-      "from": "sHeyho_StartMotionRegroup_Right256$387",
+      "from": "sHeyho_StartMotionRegroup_Right256$443",
       "to": "sHeyho_StartMotionRegroup_Right256$226",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from sHeyho_StartMotionRegroup_Right256$282 to sHeyho_StartMotionRegroup_Right256$280 follows the same ELF symtab index 110 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from sHeyho_StartMotionRegroup_Right256$280 to sHeyho_StartMotionRegroup_Right256$288 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Right256$288 to sHeyho_StartMotionRegroup_Right256$273 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Right256$269 to sHeyho_StartMotionRegroup_Right256$390 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Right256$390 to sHeyho_StartMotionRegroup_Right256$387 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Candidate-source rekey from sHeyho_StartMotionRegroup_Right256$282 to sHeyho_StartMotionRegroup_Right256$280 follows the same ELF symtab index 110 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from sHeyho_StartMotionRegroup_Right256$280 to sHeyho_StartMotionRegroup_Right256$288 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Right256$288 to sHeyho_StartMotionRegroup_Right256$273 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Right256$269 to sHeyho_StartMotionRegroup_Right256$390 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Right256$390 to sHeyho_StartMotionRegroup_Right256$387 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from sHeyho_StartMotionRegroup_Right256$387 to sHeyho_StartMotionRegroup_Right256$424 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_StartMotionRegroup_Right256$424 to sHeyho_StartMotionRegroup_Right256$436 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_StartMotionRegroup_Right256$436 to sHeyho_StartMotionRegroup_Right256$441 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_StartMotionRegroup_Right256$441 to sHeyho_StartMotionRegroup_Right256$443 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
     },
     {
-      "from": "sHeyho_React_Left256$443",
+      "from": "sHeyho_React_Left256$503",
       "to": "sHeyho_React_Left256$317",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from sHeyho_React_Left256$373 to sHeyho_React_Left256$372 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from sHeyho_React_Left256$372 to sHeyho_React_Left256$371 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Candidate-source rekey from sHeyho_React_Left256$371 to sHeyho_React_Left256$369 follows the same ELF symtab index 113 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from sHeyho_React_Left256$369 to sHeyho_React_Left256$377 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from sHeyho_React_Left256$377 to sHeyho_React_Left256$362 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sHeyho_React_Left256$358 to sHeyho_React_Left256$446 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from sHeyho_React_Left256$446 to sHeyho_React_Left256$443 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from sHeyho_React_Left256$373 to sHeyho_React_Left256$372 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from sHeyho_React_Left256$372 to sHeyho_React_Left256$371 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Candidate-source rekey from sHeyho_React_Left256$371 to sHeyho_React_Left256$369 follows the same ELF symtab index 113 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from sHeyho_React_Left256$369 to sHeyho_React_Left256$377 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from sHeyho_React_Left256$377 to sHeyho_React_Left256$362 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sHeyho_React_Left256$358 to sHeyho_React_Left256$446 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from sHeyho_React_Left256$446 to sHeyho_React_Left256$443 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from sHeyho_React_Left256$443 to sHeyho_React_Left256$480 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_React_Left256$480 to sHeyho_React_Left256$492 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_React_Left256$492 to sHeyho_React_Left256$497 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_React_Left256$497 to sHeyho_React_Left256$503 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
     },
     {
-      "from": "@450",
+      "from": "@510",
       "to": "@324",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @380 to @379 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @379 to @378 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Candidate-source rekey from @378 to @376 follows the same ELF symtab index 104 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @376 to @384 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @384 to @369 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @365 to @453 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @453 to @450 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @380 to @379 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @379 to @378 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Candidate-source rekey from @378 to @376 follows the same ELF symtab index 104 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from @376 to @384 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @384 to @369 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @365 to @453 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from @453 to @450 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @450 to @487 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @487 to @499 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @499 to @504 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @504 to @510 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
     },
     {
-      "from": "sHeyho_React_Right256$447",
+      "from": "sHeyho_React_Right256$507",
       "to": "sHeyho_React_Right256$321",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from sHeyho_React_Right256$377 to sHeyho_React_Right256$376 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from sHeyho_React_Right256$376 to sHeyho_React_Right256$375 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Candidate-source rekey from sHeyho_React_Right256$375 to sHeyho_React_Right256$373 follows the same ELF symtab index 105 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from sHeyho_React_Right256$373 to sHeyho_React_Right256$381 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from sHeyho_React_Right256$381 to sHeyho_React_Right256$366 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sHeyho_React_Right256$362 to sHeyho_React_Right256$450 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from sHeyho_React_Right256$450 to sHeyho_React_Right256$447 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from sHeyho_React_Right256$377 to sHeyho_React_Right256$376 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from sHeyho_React_Right256$376 to sHeyho_React_Right256$375 when Heyho::React's and Heyho::MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Candidate-source rekey from sHeyho_React_Right256$375 to sHeyho_React_Right256$373 follows the same ELF symtab index 105 with section index, offset, size, binding and type unchanged after replacing the two pointer-only Vec3 views with Vector3. Re-keyed from sHeyho_React_Right256$373 to sHeyho_React_Right256$381 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from sHeyho_React_Right256$381 to sHeyho_React_Right256$366 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sHeyho_React_Right256$362 to sHeyho_React_Right256$450 when the TU took Heyho helpers become Heyho members; the TU's compiler numbering shifts (measured from the compiled object). Re-keyed from sHeyho_React_Right256$450 to sHeyho_React_Right256$447 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from sHeyho_React_Right256$447 to sHeyho_React_Right256$484 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_React_Right256$484 to sHeyho_React_Right256$496 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_React_Right256$496 to sHeyho_React_Right256$501 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sHeyho_React_Right256$501 to sHeyho_React_Right256$507 when the motion PMF literals became &Heyho:: expressions (paired by consumer relocation)."
+    },
+    {
+      "from": "@558",
+      "to": "pmf_Heyho_MotionPatrolBob",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionPatrolBob assigns &Heyho::MotionPatrolBob, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionPatrolBob+0x2c loads 0x0213af18 in the ROM) and by its own relocation target (Heyho::MotionPatrolBob at 0x020c627c)."
+    },
+    {
+      "from": "@599",
+      "to": "pmf_Heyho_MotionBounceNear",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionBounceNear assigns &Heyho::MotionBounceNear, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionBounceNear+0x38 loads 0x0213af20 in the ROM) and by its own relocation target (Heyho::MotionBounceNear at 0x020c6088)."
+    },
+    {
+      "from": "@867",
+      "to": "pmf_Heyho_MotionChase",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionChase assigns &Heyho::MotionChase, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionChase+0x84 loads 0x0213af28 in the ROM) and by its own relocation target (Heyho::MotionChase at 0x020c4fa4)."
+    },
+    {
+      "from": "@809",
+      "to": "pmf_Heyho_MotionCircleUpper",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionCircleUpper assigns &Heyho::MotionCircleUpper, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionCircleUpper+0x38 loads 0x0213af30 in the ROM) and by its own relocation target (Heyho::MotionCircleUpper at 0x020c5530)."
+    },
+    {
+      "from": "@409",
+      "to": "pmf_Heyho_MotionFlyIn",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionFlyIn assigns &Heyho::MotionFlyIn, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionFlyIn+0x1a4 loads 0x0213af38 in the ROM) and by its own relocation target (Heyho::MotionFlyIn at 0x020c6a9c)."
+    },
+    {
+      "from": "@735",
+      "to": "pmf_Heyho_MotionDiagonal",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionDiagonal assigns &Heyho::MotionDiagonal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionDiagonal+0x150 loads 0x0213af40 in the ROM) and by its own relocation target (Heyho::MotionDiagonal at 0x020c5928)."
+    },
+    {
+      "from": "@838",
+      "to": "pmf_Heyho_MotionCircleLower",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionCircleLower assigns &Heyho::MotionCircleLower, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionCircleLower+0x38 loads 0x0213af48 in the ROM) and by its own relocation target (Heyho::MotionCircleLower at 0x020c53f8)."
+    },
+    {
+      "from": "@780",
+      "to": "pmf_Heyho_MotionDiagonalMirror",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionDiagonalMirror assigns &Heyho::MotionDiagonalMirror, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionDiagonalMirror+0x150 loads 0x0213af50 in the ROM) and by its own relocation target (Heyho::MotionDiagonalMirror at 0x020c5658)."
+    },
+    {
+      "from": "@690",
+      "to": "pmf_Heyho_MotionBounceInRange",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionBounceInRange assigns &Heyho::MotionBounceInRange, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionBounceInRange+0x30 loads 0x0213af58 in the ROM) and by its own relocation target (Heyho::MotionBounceInRange at 0x020c5bf8)."
+    },
+    {
+      "from": "@451",
+      "to": "pmf_Heyho_MotionRegroup",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionRegroup assigns &Heyho::MotionRegroup, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionRegroup+0x1a4 loads 0x0213af60 in the ROM) and by its own relocation target (Heyho::MotionRegroup at 0x020c66bc)."
+    },
+    {
+      "from": "@657",
+      "to": "pmf_Heyho_MotionVShape",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionVShape assigns &Heyho::MotionVShape, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionVShape+0x1bc loads 0x0213af68 in the ROM) and by its own relocation target (Heyho::MotionVShape at 0x020c5d28)."
+    },
+    {
+      "from": "@489",
+      "to": "pmf_Heyho_StateIdle",
+      "evidence": "Compiler PMF literal: Heyho::React assigns &Heyho::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::React+0x1b0 loads 0x0213af70 in the ROM) and by its own relocation target (Heyho::StateIdle at 0x020c4d1c)."
+    },
+    {
+      "from": "@580",
+      "to": "pmf_Heyho_MotionBobVertical",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionBobVertical assigns &Heyho::MotionBobVertical, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionBobVertical+0x30 loads 0x0213af78 in the ROM) and by its own relocation target (Heyho::MotionBobVertical at 0x020c61c4)."
+    },
+    {
+      "from": "@958",
+      "to": "pmf_Heyho_MotionHitSpin",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionHitSpin assigns &Heyho::MotionHitSpin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionHitSpin+0x38 loads 0x0213af80 in the ROM) and by its own relocation target (Heyho::MotionHitSpin at 0x020c4e8c)."
+    },
+    {
+      "from": "@548",
+      "to": "pmf_Heyho_MotionHover",
+      "evidence": "Compiler PMF literal: Heyho::StartMotionHover assigns &Heyho::MotionHover, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::StartMotionHover+0x20 loads 0x0213af88 in the ROM) and by its own relocation target (Heyho::MotionHover at 0x020c6378)."
+    },
+    {
+      "from": "@990",
+      "to": "pmf_Heyho_StateIdle_2",
+      "evidence": "Compiler PMF literal: Heyho::SetIdle assigns &Heyho::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::SetIdle+0x18 loads 0x0213af90 in the ROM) and by its own relocation target (Heyho::StateIdle at 0x020c4d1c)."
+    },
+    {
+      "from": "@1010",
+      "to": "pmf_Heyho_StateIdle_3",
+      "evidence": "Compiler PMF literal: Heyho::Draw assigns &Heyho::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::Draw+0x80 loads 0x0213af98 in the ROM) and by its own relocation target (Heyho::StateIdle at 0x020c4d1c)."
+    },
+    {
+      "from": "@1103",
+      "to": "pmf_Heyho_MotionLeave",
+      "evidence": "Compiler PMF literal: Heyho::IsChasing assigns &Heyho::MotionLeave, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::IsChasing+0xbc loads 0x0213afa0 in the ROM) and by its own relocation target (Heyho::MotionLeave at 0x020c6400)."
+    },
+    {
+      "from": "@1244",
+      "to": "pmf_Heyho_StateIdle_4",
+      "evidence": "Compiler PMF literal: _Z13Heyho_AllIdlev assigns &Heyho::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (_Z13Heyho_AllIdlev+0x84 loads 0x0213afa8 in the ROM) and by its own relocation target (Heyho::StateIdle at 0x020c4d1c)."
+    },
+    {
+      "from": "@1106",
+      "to": "pmf_Heyho_MotionChase_2",
+      "evidence": "Compiler PMF literal: Heyho::IsChasing assigns &Heyho::MotionChase, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::IsChasing+0xc0 loads 0x0213afb0 in the ROM) and by its own relocation target (Heyho::MotionChase at 0x020c4fa4)."
+    },
+    {
+      "from": "@515",
+      "to": "pmf_Heyho_MotionLeave_2",
+      "evidence": "Compiler PMF literal: Heyho::React assigns &Heyho::MotionLeave, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::React+0x1d4 loads 0x0213afb8 in the ROM) and by its own relocation target (Heyho::MotionLeave at 0x020c6400)."
+    },
+    {
+      "from": "@496",
+      "to": "pmf_Heyho_MotionHitSpin_2",
+      "evidence": "Compiler PMF literal: Heyho::React assigns &Heyho::MotionHitSpin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Heyho::React+0x1b4 loads 0x0213afc0 in the ROM) and by its own relocation target (Heyho::MotionHitSpin at 0x020c4e8c)."
+    },
+    {
+      "from": "@1215",
+      "to": "data_ov006_0213afc8",
+      "evidence": "Compiler PMF literal: _Z15Heyho_SettleAllv assigns &Heyho::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (_Z15Heyho_SettleAllv+0x104 loads 0x0213afc8 in the ROM) and by its own relocation target (Heyho::StateIdle at 0x020c4d1c)."
     }
   ]
 }

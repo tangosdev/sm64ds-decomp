@@ -43,6 +43,7 @@
 #define DSCMGMCARLO_C_H
 #include "dScMgSingle3DBase_c.h"
 #include "Dealer.h"
+#include "Vector2.h"
 
 /* --- the board-card element class ------------------------------------------
    Name RTTI-confirmed (build/rtti.json: _ZTS18dMgMCarloCardObj_c at
@@ -93,12 +94,9 @@ struct dMgMCarloCardObj_c {
 
     dMgMCarloCardObj_c *mPrev; /* 0x04 -- the board list runs tail-to-head */
     dMgMCarloCardObj_c *mNext; /* 0x08                                  */
-    s32 mX;                    /* 0x0c -- 1:4096 fixed-point */
-    s32 mY;                    /* 0x10 */
-    s32 mTargetX;              /* 0x14 -- board slot m's column/row target */
-    s32 mTargetY;              /* 0x18 */
-    s32 mXStep;                /* 0x1c -- ApproachLinear's per-frame step */
-    s32 mYStep;                /* 0x20 */
+    Vector2 mPos;              /* 0x0c -- 1:4096 fixed-point */
+    Vector2 mTarget;           /* 0x14 -- board slot m's column/row target */
+    Vector2 mStep;             /* 0x1c -- ApproachLinear's per-axis step */
     s32 mLift;                 /* 0x24 -- 0x4000 = fully raised */
     s16 mDealDelay;            /* 0x28 -- deal/flip stagger countdown */
     s16 mSlot;                 /* 0x2a -- board slot, %5//5 = col/row */

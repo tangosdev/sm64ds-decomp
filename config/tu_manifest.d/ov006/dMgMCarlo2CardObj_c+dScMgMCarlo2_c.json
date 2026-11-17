@@ -449,6 +449,14 @@
       "reason": "Homeless deleting destructor. mwcc emits D0 alongside D1 from the single out-of-line definition, but the cartridge carries D1 (0x020f8ff0, size 0x10) only: the next ROM function starts at 0x020f9000, exactly D1's end, so the image has no room for a D0 between them. The destructor is not virtual (vtable slots are Render/Update, not D1/D0), so no call site or vtable slot can target it. _ZN19dMgMCarlo2CardObj_cD0Ev appears in no symbols.txt and no delinks.txt anywhere in the tree -- plain deadstrip."
     },
     {
+      "symbol": "_ZN7Vector2D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "NullDestructor_0203d47c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d47c",
+      "reason": "dMgMCarlo2CardObj_c's position, target and step pairs are Vector2 members, so its out-of-line destructor runs Vector2's empty inline destructor and mwccarm emits this 4-byte vague-linkage copy. It is the same body as the ARM9 NullDestructor_0203d47c at 0x0203d47c, as for the other Vector2-using TUs (ov006/dScMgMCarlo_c); the inlined calls leave no relocation to it, and all 26 licensed functions reproduce unchanged."
+    },
+    {
       "symbol": "_ZN19dMgMCarlo2CardObj_cC2Ev",
       "disposition": "deadstrip",
       "reason": "Homeless base-object constructor. The TU defines the complete-object constructor C1 (0x020fa740, size 0x1c) out of line and mwcc emits the byte-identical 0x1c base-object C2 alongside it, but the cartridge carries C1 only: it is the last function of the run (0x020fa740+0x1c = 0x020fa75c, the run end), so the image has no room for a C2 after it. _ZN19dMgMCarlo2CardObj_cC2Ev appears in no symbols.txt and no delinks.txt anywhere in the tree -- plain deadstrip."

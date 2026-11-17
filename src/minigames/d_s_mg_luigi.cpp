@@ -45,6 +45,7 @@ enum dScMgLuigi_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "SpawnInfo.h"
+#include "PlayerInput.h"
 #include "OamAttr.h"
 #include "nitro/gx/g2_oam.h"
 #include "nitro/gx/gx_bgcnt.h"
@@ -88,7 +89,7 @@ extern "C" {
    not mangle, so the data_* declarations stay next to their users. */
 extern int RandomIntInternal(int *seed);
 extern s32 GetGameLanguage(void);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *matrix);
 extern char *Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                        unsigned short a6);
 struct Matrix2x2;
@@ -960,13 +961,11 @@ void dScMgLuigi_c::StopPicture(int idx) {
 }
 
 void dScMgLuigi_c::RestartPicture(int idx) {
-    unsigned char *self = (unsigned char *)this;
     extern unsigned char sLuigiBoardMovers[];
     unsigned short board = mBoard;
-    self += idx;
-    ((dScMgLuigi_c *)self)->mShown[0] = 1;
-    ((dScMgLuigi_c *)self)->mStarted[0] = 0;
-    ((dScMgLuigi_c *)self)->mKind[0] = sLuigiBoardMovers[board] + 1;
+    mShown[idx] = 1;
+    mStarted[idx] = 0;
+    mKind[idx] = sLuigiBoardMovers[board] + 1;
 }
 
 void dScMgLuigi_c::UpdatePictures() {
@@ -1000,24 +999,14 @@ void dScMgLuigi_c::BeginCatch(int found) {
 }
 
 void dScMgLuigi_c::CheckTouch() {
-    // local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-    extern unsigned char gActivePlayerSlot;
-    // local extern: see above.
-    extern unsigned char gTouchHeld[][4];
-    // local extern: see above.
-    extern unsigned char gTouchEdge[][4];
-    // local extern: see above.
-    extern unsigned char gTouchX[][4];
-    // local extern: see above.
-    extern unsigned char gTouchY[][4];
     extern unsigned short sLuigiTouchSfx[];
     int playerSlot = gActivePlayerSlot;
     int touchPressed = 0;
     int target;
     int pictureIndex;
 
-    if (gTouchHeld[playerSlot][0] != 0) {
-        if (gTouchEdge[playerSlot][0] != 0)
+    if (gTouchInfo[playerSlot].held != 0) {
+        if (gTouchInfo[playerSlot].edge != 0)
             touchPressed = 1;
     }
     if (touchPressed == 0)
@@ -1025,8 +1014,8 @@ void dScMgLuigi_c::CheckTouch() {
 
     target = mTarget;
     {
-        int dx = gTouchX[playerSlot][0] - (mPosX[target - 1] >> 12);
-        int dy = gTouchY[playerSlot][0] - (mPosY[target - 1] >> 12);
+        int dx = gTouchInfo[playerSlot].x - (mPosX[target - 1] >> 12);
+        int dy = gTouchInfo[playerSlot].y - (mPosY[target - 1] >> 12);
         if (dx <= 0x10 && dx >= -0x10 && dy <= 0x10 && dy >= -0x10) {
             int level, soundTier;
 
@@ -1053,8 +1042,8 @@ void dScMgLuigi_c::CheckTouch() {
     for (pictureIndex = 0; pictureIndex < PICTURE_NUM; pictureIndex++) {
         if (mActive[pictureIndex] == 1) {
             if (mKind[pictureIndex] != PICTURE_FLASH) {
-                int dx2 = gTouchHeld[playerSlot][2] - (mPosX[pictureIndex] >> 12);
-                int dy2 = gTouchHeld[playerSlot][3] - (mPosY[pictureIndex] >> 12);
+                int dx2 = gTouchInfo[playerSlot].x - (mPosX[pictureIndex] >> 12);
+                int dy2 = gTouchInfo[playerSlot].y - (mPosY[pictureIndex] >> 12);
                 if (dx2 <= 0x10 && dx2 >= -0x10 && dy2 <= 0x10 && dy2 >= -0x10) {
                     AddPenalty(pictureIndex);
                     mFound = 0;
@@ -1269,7 +1258,6 @@ void dScMgLuigi_c::PlaceNextPicture() {
 
     attempts = 0;
     while (1) {
-        u8 *cell;
         if (attempts >= 100) {
             col++;
             if (col >= 12) {
@@ -1282,8 +1270,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
             col = LUIGI_RAND(13);
             row = LUIGI_RAND(9);
         }
-        cell = ((dScMgLuigi_c *)((char *)this + col * 9 + row))->mGrid[0];
-        if (*cell == 0) {
+        if (mGrid[col][row] == 0) {
             int jitterX;
             int jitterY;
             jitterY = -2;
@@ -1292,7 +1279,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
             jitterY += LUIGI_RAND(5);
             mPosX[pictureIndex] = (col * 20 + (jitterX + 8)) << 12;
             mPosY[pictureIndex] = (row * 20 + (jitterY + 16)) << 12;
-            *cell = 1;
+            mGrid[col][row] = 1;
             break;
         }
         attempts++;
@@ -1533,7 +1520,6 @@ extern void Mg_ShowBanner(int, int, int, int, int, short);
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 /* dScMgLuigi_c::Render */
-extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 /* dScMgLuigi_c::Behavior */
 extern LuigiStateHandler sLuigiStateTable[];
 /* dScMgLuigi_c::InitResources */
@@ -1583,7 +1569,7 @@ void dScMgLuigi_c::StartRound(int mode) {
 }
 
 s32 dScMgLuigi_c::Render() {
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     DrawCurtains();
     DrawReward();
     DrawPenalties();

@@ -109,6 +109,13 @@ dScEntry_c::icon_c::~icon_c() {}
 OamAnimation::~OamAnimation() {}
 
 void dScEntry_c::icon_c::Render() {
+    /* Kept (#821 r21). The ROM stores mX/mY to the stack and reads them back
+       at each OAM call. A plain s16[2] or two s16 locals stay in registers
+       (0x248 against 0x250); a Vector3s is 7 words off (wrong frame slots).
+       A local four-byte { s16 x, y; } with an empty inline destructor
+       matches exactly, as any non-POD aggregate would, but nothing in the
+       ROM names such a type, so it would only trade one launder for
+       another. dMgPsOpt_c's twin Render has the same pair. */
     volatile s16 xy[2];
     u16 *screenMap;
     int paletteBits;
@@ -400,95 +407,64 @@ void dScEntry_c::RenderPlayerScores() {
     int stride;
     int tens;
     int hundreds;
-    int i = 0;
+    int i;
     int d = 4 - count;
     int xbase;
     xbase = data_ov075_0211c6e8[d];
     stride = (d * 16) + 56;
-    {
-        if (count > 0) {
-            int minus1 = -1;
-            int zA;
-            int yIcon;
-            int zC;
-            int zB;
-            int off14;
-            int zD;
-            int zE;
-            int zF;
-            int scale;
-            int yNum;
-            zE = i;
-            zD = i;
-            zB = i;
-            off14 = 20;
-            zF = i;
-            zA = i;
-            yIcon = 152;
-            zC = i;
-            scale = 0x1000;
-            yNum = 176;
-            do {
-                int *p;
-                int pid = EntryPlayerIndex(i);
-                OAM::Render(zA, data_ov075_0211c7c0, xbase + i * stride, yIcon, minus1, minus1,
-                            scale, scale, zA, minus1);
-                p = (int *)OAM::Render(zC, (OamAttr *)data_ov075_0211c8b0, xbase + 28 + i * stride,
-                                       yIcon, minus1, minus1, scale, zC);
+    for (i = 0; i < count; i++) {
+        int *p;
+        int pid = EntryPlayerIndex(i);
+        OAM::Render(false, data_ov075_0211c7c0, xbase + i * stride, 152, -1, -1, 0x1000, 0x1000, 0,
+                    -1);
+        p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0, xbase + 28 + i * stride, 152,
+                               -1, -1, 0x1000, 0);
+        if (p != 0) {
+            int *q = p + 1;
+            int val = *q;
+            *q = (val & (~0x3ff)) | ((gNumStageStars[pid] + (((u32)(val << 22)) >> 22)) & 0x3ff);
+        }
+        OAM::Render(false, data_ov075_0211c870, xbase + i * stride, 176, -1, -1, 0x1000, 0x1000, 0,
+                    -1);
+        {
+            int n;
+            int dx = 20;
+            int rem;
+            n = (*((int *)(data_0209ee90 + 0x1d4))) + gNumCoins[pid];
+            hundreds = n / 100;
+            rem = n % 100;
+            tens = rem / 10;
+            if (hundreds != 0) {
+                p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0,
+                                       xbase + 20 + i * stride, 176, -1, -1, 0x1000, 0);
                 if (p != 0) {
                     int *q = p + 1;
                     int val = *q;
-                    *q = (val & (~0x3ff)) |
-                         ((gNumStageStars[pid] + (((u32)(val << 22)) >> 22)) & 0x3ff);
+                    *q = (val & (~0x3ff)) | ((hundreds + (((u32)(val << 22)) >> 22)) & 0x3ff);
                 }
-                OAM::Render(zB, data_ov075_0211c870, xbase + i * stride, yNum, minus1, minus1,
-                            scale, scale, zB, minus1);
-                {
-                    int n;
-                    int dx = off14;
-                    int rem;
-                    n = (*((int *)(data_0209ee90 + 0x1d4))) + gNumCoins[pid];
-                    hundreds = n / 100;
-                    rem = n % 100;
-                    tens = rem / 10;
-                    if (hundreds != 0) {
-                        p = (int *)OAM::Render(zD, (OamAttr *)data_ov075_0211c8b0,
-                                               xbase + 20 + i * stride, yNum, minus1, minus1, scale,
-                                               zD);
-                        if (p != 0) {
-                            int *q = p + 1;
-                            int val = *q;
-                            *q = (val & (~0x3ff)) |
-                                 ((hundreds + (((u32)(val << 22)) >> 22)) & 0x3ff);
-                        }
-                        dx = dx + 8;
-                    } else {
-                        dx = dx + 4;
-                    }
-                    if ((tens != 0) || (hundreds != 0)) {
-                        p = (int *)OAM::Render(zE, (OamAttr *)data_ov075_0211c8b0,
-                                               xbase + dx + i * stride, yNum, minus1, minus1, scale,
-                                               zE);
-                        if (p != 0) {
-                            int *q = p + 1;
-                            int val = *q;
-                            *q = (val & (~0x3ff)) | ((tens + (((u32)(val << 22)) >> 22)) & 0x3ff);
-                        }
-                        dx = dx + 8;
-                    } else {
-                        dx = dx + 4;
-                    }
-                    p = (int *)OAM::Render(zF, (OamAttr *)data_ov075_0211c8b0,
-                                           xbase + dx + i * stride, yNum, minus1, minus1, scale,
-                                           zF);
-                    if (p != 0) {
-                        int *q = p + 1;
-                        int val = *q;
-                        *q = (val & (~0x3ff)) | (((((u32)(val << 22)) >> 22) + (rem % 10)) & 0x3ff);
-                    }
+                dx = dx + 8;
+            } else {
+                dx = dx + 4;
+            }
+            if ((tens != 0) || (hundreds != 0)) {
+                p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0,
+                                       xbase + dx + i * stride, 176, -1, -1, 0x1000, 0);
+                if (p != 0) {
+                    int *q = p + 1;
+                    int val = *q;
+                    *q = (val & (~0x3ff)) | ((tens + (((u32)(val << 22)) >> 22)) & 0x3ff);
                 }
-                i++;
-            } while (i < count);
+                dx = dx + 8;
+            } else {
+                dx = dx + 4;
+            }
+            p = (int *)OAM::Render(false, (OamAttr *)data_ov075_0211c8b0, xbase + dx + i * stride,
+                                   176, -1, -1, 0x1000, 0);
+            if (p != 0) {
+                int *q = p + 1;
+                int val = *q;
+                *q = (val & (~0x3ff)) | (((((u32)(val << 22)) >> 22) + (rem % 10)) & 0x3ff);
+            }
         }
     }
 }

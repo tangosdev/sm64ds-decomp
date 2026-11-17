@@ -141,7 +141,7 @@ dActor_c::dActor_c() : mActorListNode(this) {
 }
 
 dActor_c::~dActor_c() {
-    func_0203b27c((int)&data_0209b468, (int)&mActorListNode);
+    func_0203b27c(&data_0209b468, &mActorListNode);
 }
 
 /* Kills an actor born dead: unless its profile sets 0x08000000 ("spawn even if
@@ -178,9 +178,6 @@ void dActor_c::AfterCleanupResources(u32 vfSuccess)
 }
 
 u8 IsAreaShowing(int areaId);
-extern "C" {
-void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-}
 
 extern int data_0209fc68;
 /* nonzero forces the actor to think anyway */
@@ -660,20 +657,18 @@ void dActor_c::func_020105cc(u32 flags) {
 }
 
 int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
-    /* The ROM reserves 0x10 bytes of stack (`sub sp, sp, #0x10`); this
-       volatile, address-taken array is what produces that frame. */
-    volatile s32 pad[4];
     s32 vel = player.mVertSpeed;
 
-    &pad;
     if (clsn.flags & 6) {
         if (vel < 0 && player.mIsAirborne != 0
             && mPosY < player.mPosY - 0xa000)
             return 1;
         return 0;
     } else {
-        s32 pushbackY = clsn.pushback.y;
-        if (vel < 0 && pushbackY < 0 && pushbackY > vel)
+        /* The copy is what gives the function its 0x10-byte frame; only
+           its y is read. */
+        Vector3 pushback = clsn.pushback;
+        if (vel < 0 && pushback.y < 0 && pushback.y > vel)
             return 1;
         return 0;
     }

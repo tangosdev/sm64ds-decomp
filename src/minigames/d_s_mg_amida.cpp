@@ -22,21 +22,20 @@
  *   - ProbeRung took the two rung ends as int pointers; it now takes them
  *     as by-value Points, the way the pen handler already declared it,
  *     and uses the member names.
- *   - gTouchX/gTouchY are declared as 4-byte rows, the form
- *     CheckHurryButton matched under. Indexing them as flat arrays costs
- *     it four words.
+ *   - the touch reads index gTouchInfo by player, the form
+ *     CheckHurryButton matches under. Indexing the bytes as one flat
+ *     array costs it four words.
  *   - each shard's file-wide optimisation pragma is now a push/pop bracket
  *     around its own function.
  *   - StepWalkers was the last to match. It was an unmatched draft from
  *     2026-09-14 and was matched on 2026-10-02.
  *
  * Remaining matching constraints:
- * - StepWalkers and Behavior step a char* through the per-walker and
- *   per-piece arrays and spell each field as element 0 of the stepped
- *   pointer (`((dScMgAmida_c *)p)->mWalkerDelay[0]`). Indexing the member
- *   directly diffs there: StepWalkers' pointer forms move bytes, and
- *   Behavior's piece walk keeps PIECE_OFF's cast arithmetic (see the
- *   macro). StepWalker, RenderBoard and Render take plain members.
+ * - StepWalkers steps a char* through the per-walker arrays and spells each
+ *   field as element 0 of the stepped pointer
+ *   (`((dScMgAmida_c *)p)->mWalkerDelay[0]`). Indexing the member directly
+ *   diffs there (see the function). Everything else, Behavior's piece
+ *   update included, takes plain members.
  * - StepWalkers keeps both opt pragmas. Without opt_common_subs off the
  *   literal arguments merge; the ROM hoists each one into its own stack
  *   slot ahead of the walker loop. Without opt_strength_reduction off the
@@ -44,8 +43,7 @@
  * - Amida_RestoreBgChars and Amida_SaveBgChars stay free helpers: the
  *   object pointer they take is never read -- both only copy BG char VRAM --
  *   so membership cannot be proven from the bodies.
- * - gTouchX/gTouchY stay 4-byte rows (flat indexing costs CheckHurryButton
- *   four words, measured at promotion), the pattern table is five separate
+ * - The pattern table is five separate
  *   data symbols. mLineColor is named for its only use, the colour
  *   argument of the line-draw helper (always 2).
  */
@@ -102,7 +100,6 @@ enum dScMgAmida_c_AssetId {
 extern "C" {
 /* --- shared ov004 and main helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 extern void FreeGfxSlotsById(int a);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
@@ -187,20 +184,6 @@ typedef struct {
 } AmidaRenderPeriods;
 extern AmidaRenderPeriods sAmidaRenderPeriods;
 
-/* PIECE_AT(p) is piece 0 seen from a char* that has been stepped by
-   whole pieces; PIECE_OFF names one field's offset from the scene. Both
-   keep the cast arithmetic: the member form `&((dScMgAmida_c *)p)->mPieces[0]`
-   grows Behavior by 0xc (measured 2026-10-20). */
-#define PIECE_OFF(m) ((int)&((dScMgAmida_c *)0)->mPieces[0].m)
-#define PIECE_AT(p) ((dScMgAmida_c_Piece *)((p) + PIECE_OFF(posX)))
-
-/* Launder helpers for Behavior's piece walk: AT makes the compiler
-   materialise each address on its own instead of folding it into a
-   neighbouring add, which is what the ROM does there. */
-#define AT(p, off) (((p)+(off)))
-#define IP(p, o) (*(int*)((p)+(o)))
-#define IAP(p, o) (*(int*)AT(p,(o)))
-
 #pragma defer_codegen off
 
 /* Empty: the compiler tears the four member arrays down in reverse
@@ -254,18 +237,12 @@ int dScMgAmida_c::InitSubScreenBg() {
    reshuffled until it differs somewhere from that copy as seen through
    mLanePerm; otherwise the first arg1 entries (at most 4) are 1 and
    the rest 0, shuffled once. */
-/* Kept: measured 2026-11-06, ShuffleGoals is the only function this bracket
-   reaches, and its size changes with strength reduction on -- the swap loops'
-   `this + (i << 2) + off` addressing is what the setting binds. */
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgAmida_c::ShuffleGoals(int arg1) {
     int i;
     int k;
     int j;
     int t;
     int u;
-    int *pi;
 
     if (IsVariant2()) {
         switch (mPatternIndex) {
@@ -290,33 +267,22 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
         }
         for (i = 0; i < 4; i++)
             mLaneWants[i] = mLaneResult[i];
-        {
-            /* The swap addresses are built as this + i*4 + offset: the
-               plain &mLaneResult[i] form shrinks ShuffleGoals by 0x18
-               (measured 2026-10-20). */
-            int off = (int)&((dScMgAmida_c *)0)->mLaneResult;
-            arg1 = 1;
-            do {
-                for (i = 0; i < 4; i++) {
-                    t = RandomIntInternal(&data_0209d4b8.value);
-                    pi = (int *)((char *)this + (i << 2) + off);
-                    j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
-                    t = *pi;
-                    {
-                        int *pjx = (int *)((char *)this + (j << 2) + off);
-                        u = *pjx;
-                        *pi = u;
-                        *pjx = t;
-                    }
+        arg1 = 1;
+        do {
+            for (i = 0; i < 4; i++) {
+                t = RandomIntInternal(&data_0209d4b8.value);
+                u = mLaneResult[i];
+                j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
+                mLaneResult[i] = mLaneResult[j];
+                mLaneResult[j] = u;
+            }
+            for (k = 0; k < 4; k++) {
+                if (mLaneWants[k] != mLaneResult[mLanePerm[k]]) {
+                    arg1 = 0;
+                    break;
                 }
-                for (k = 0; k < 4; k++) {
-                    if (mLaneWants[k] != mLaneResult[mLanePerm[k]]) {
-                        arg1 = 0;
-                        break;
-                    }
-                }
-            } while (arg1 == 1);
-        }
+            }
+        } while (arg1 == 1);
     } else {
         if (arg1 > 4)
             arg1 = 4;
@@ -324,24 +290,15 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
             mLaneResult[k] = 1;
         for (; arg1 < 4; arg1++)
             mLaneResult[arg1] = 0;
-        {
-            int off = (int)&((dScMgAmida_c *)0)->mLaneResult;
-            for (i = 0; i < 4; i++) {
-                t = RandomIntInternal(&data_0209d4b8.value);
-                pi = (int *)((char *)this + (i << 2) + off);
-                j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
-                t = *pi;
-                {
-                    int *pjx = (int *)((char *)this + (j << 2) + off);
-                    u = *pjx;
-                    *pi = u;
-                    *pjx = t;
-                }
-            }
+        for (i = 0; i < 4; i++) {
+            t = RandomIntInternal(&data_0209d4b8.value);
+            u = mLaneResult[i];
+            j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
+            mLaneResult[i] = mLaneResult[j];
+            mLaneResult[j] = u;
         }
     }
 }
-#pragma pop
 
 void dScMgAmida_c::ClearStroke() {
     int row = 0;
@@ -500,15 +457,14 @@ void dScMgAmida_c::CheckHurryButton() {
         return;
     unsigned int pressed = 0;
     int playerSlot = gActivePlayerSlot;
-    if (gTouchHeld[playerSlot << 2] != 0) {
-        unsigned int touchOffset = playerSlot << 2;
-        if (gTouchEdge[touchOffset] != 0)
+    if (gTouchInfo[playerSlot].held != 0) {
+        if (gTouchInfo[playerSlot].edge != 0)
             pressed = 1;
     }
     if (pressed == 0)
         return;
-    int touchX = ((u8(*)[4])gTouchX)[playerSlot][0];
-    int touchY = ((u8(*)[4])gTouchY)[playerSlot][0];
+    int touchX = gTouchInfo[playerSlot].x;
+    int touchY = gTouchInfo[playerSlot].y;
     if (touchX < 0x60)
         return;
     if (touchX >= 0xa0)
@@ -532,8 +488,8 @@ void dScMgAmida_c::CheckEdgeBoost() {
 
     playerSlot = gActivePlayerSlot;
     pressed = 0;
-    if (gTouchHeld[playerSlot * 4]) {
-        if (gTouchEdge[playerSlot * 4] != 0)
+    if (gTouchInfo[playerSlot].held) {
+        if (gTouchInfo[playerSlot].edge != 0)
             pressed = 1;
     }
     if (pressed != 0) {
@@ -541,9 +497,9 @@ void dScMgAmida_c::CheckEdgeBoost() {
         mEdgeBoostCount = 0;
     }
     playerSlot = gActivePlayerSlot;
-    if (gTouchHeld[playerSlot * 4] != 0) {
-        touchX = ((u8(*)[4])gTouchX)[playerSlot][0];
-        touchY = ((u8(*)[4])gTouchY)[playerSlot][0];
+    if (gTouchInfo[playerSlot].held != 0) {
+        touchX = gTouchInfo[playerSlot].x;
+        touchY = gTouchInfo[playerSlot].y;
         if ((touchX >= 0 && touchX < 0x10 && touchY >= 0x40 && touchY < 0x80) ||
             (touchX >= 0xf0 && touchX < 0x100 && touchY >= 0x40 && touchY < 0x80)) {
             if (mEdgeBoostCount >= 5) {
@@ -580,9 +536,9 @@ void dScMgAmida_c::HandlePen() {
     oldX = this->mPen.x;
     oldY = this->mPen.y;
 
-    if (gTouchHeld[gActivePlayerSlot * 4] != 0) {
-        int newX = ((u8(*)[4])gTouchX)[gActivePlayerSlot][0];
-        int newY = ((u8(*)[4])gTouchY)[gActivePlayerSlot][0];
+    if (gTouchInfo[gActivePlayerSlot].held != 0) {
+        int newX = gTouchInfo[gActivePlayerSlot].x;
+        int newY = gTouchInfo[gActivePlayerSlot].y;
         if (newX < 0)
             return;
         if (newX >= 0x100)
@@ -617,7 +573,7 @@ void dScMgAmida_c::HandlePen() {
         return;
     } else {
         int released;
-        if (gTouchHeld[gActivePlayerSlot * 4] == 0 && gTouchEdge[gActivePlayerSlot * 4] != 0) {
+        if (gTouchInfo[gActivePlayerSlot].held == 0 && gTouchInfo[gActivePlayerSlot].edge != 0) {
             released = 1;
         } else {
             released = 0;
@@ -918,7 +874,15 @@ int dScMgAmida_c::StepWalker(int walker, int dir) {
    mwccarm keeps the ROM's branch there instead of predicating it
    (notes/mwccarm-codegen.md 6cn). */
 /* Both kept: measured 2026-11-06, StepWalkers is the only function this
-   bracket reaches and its size changes when EITHER setting goes back on. */
+   bracket reaches and its size changes when EITHER setting goes back on.
+   The `sceneBytes` slot pointers stay too: the ROM forms each one as
+   (this + i*stride) + offset, and &mWalkerDelay[i] / &mWalkerCell[i] /
+   &mWalkerDone[i] put the offset first, 0xe4c against 0xe48 (2026-11-16).
+   Round 18, common subexpressions on (strength reduction still off): 0xe54
+   as written; the eight walker-x pointers as &mWalkerCell[walker].x 0xe14,
+   the literal stack slots then right but each case's x compares sharing the
+   walkerX address; only the two goal-check pointers typed 0xe40. Without
+   strength reduction off it is 0xe8c. */
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
@@ -1445,7 +1409,6 @@ void dScMgAmida_c::InitWalkers() {
 }
 
 void dScMgAmida_c::SetupRound() {
-    char *raw = (char *)this;
     int level;
     int shuffle;
     AmidaInitialRungs rungs;
@@ -1700,37 +1663,24 @@ void dScMgAmida_c::SetupRound() {
         mPenLocked = 0;
         {
             int lane = 0;
-            /* Kept: the lane x and the zero share a two-slot array; scalar
-               locals DIFF SetupRound by 9 words (measured 2026-11-08). */
-            int xw[2];
-            xw[0] = 0x20;
-            xw[1] = 0;
             for (; lane < 4; lane++) {
-                mLanePos[lane].x = xw[0] << 12;
+                mLanePos[lane].x = (lane * 0x40 + 0x20) << 12;
                 mLanePos[lane].y = 0xb0000;
-                mLaneVel[lane].x = xw[1];
-                mLaneVel[lane].y = xw[1];
-                xw[0] += 0x40;
+                mLaneVel[lane].x = 0;
+                mLaneVel[lane].y = 0;
             }
-            mFinaleTimer = xw[1];
+            mFinaleTimer = 0;
             {
-                int v = 0;
-                for (; v < 128; v++) {
-                    PIECE_AT(raw)->active = 0;
-                    PIECE_AT(raw)->timer = 0;
-                    raw += 0x18;
+                int v;
+                for (v = 0; v < 128; v++) {
+                    mPieces[v].active = 0;
+                    mPieces[v].timer = 0;
                 }
             }
         }
     }
 }
 
-/* This bracket is SetupRound's. mwcc reads opt_strength_reduction for
-   SetupRound only after its closing brace, so a pop right after SetupRound
-   undoes it; RenderBoard compiles the same either way. Without it SetupRound
-   strength-reduces the lane x (xw[0] << 12) into its own induction register. */
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgAmida_c::RenderBoard() {
     int i;
     int y;
@@ -1787,7 +1737,6 @@ void dScMgAmida_c::RenderBoard() {
     Mg_RenderSpriteBoth(sAmidaSideSprite, 8, 96, -1, 0);
     Mg_RenderSpriteBoth(sAmidaSideSprite, 248, 96, -1, 0);
 }
-#pragma pop
 
 void dScMgAmida_c::RenderBoardAlt() {
     int i;
@@ -1814,7 +1763,7 @@ s32 dScMgAmida_c::Render() {
         int off = sine / 0x100;
         SetSubBg2Offset(off, 0);
     }
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
 
     if (mState == 3 && mEndDelayTimer == 0) {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
@@ -1859,10 +1808,7 @@ s32 dScMgAmida_c::Render() {
 }
 
 s32 dScMgAmida_c::Behavior() {
-    char *raw = (char *)this;
     int piece;
-    char *piecePtr;
-    int *vel;
     int speed;
     int steps;
     int k;
@@ -1871,7 +1817,6 @@ s32 dScMgAmida_c::Behavior() {
     int lane;
     int j;
     int slot;
-    char *scan;
     int randA, randB;
     u32 randBits15, randAngle15;
     s16 cosA;
@@ -1972,8 +1917,8 @@ s32 dScMgAmida_c::Behavior() {
             mEndDelayTimer -= 1;
         touched = 0;
         touchSlot = gActivePlayerSlot;
-        if (gTouchHeld[touchSlot * 4] != 0) {
-            if (gTouchEdge[touchSlot * 4] != 0)
+        if (gTouchInfo[touchSlot].held != 0) {
+            if (gTouchInfo[touchSlot].edge != 0)
                 touched = 1;
         }
         if (touched != 0)
@@ -1991,31 +1936,25 @@ s32 dScMgAmida_c::Behavior() {
             lane++;
         } while (lane < 4);
 
-        piecePtr = raw;
-        vel = &mPieces[0].velX;
         for (piece = 0; piece < 128; piece++) {
-            if (PIECE_AT(piecePtr)->active != 0) {
-                PIECE_AT(piecePtr)->posX += PIECE_AT(piecePtr)->velX;
-                IAP(piecePtr, PIECE_OFF(posY)) += IP(piecePtr, PIECE_OFF(velY));
-                speed = Vec2_Len((const Vector2 *)vel) * 7 / 8;
-                if (func_0203d434(vel) != 0)
-                    func_0203d630(vel, speed);
-                IAP(piecePtr, PIECE_OFF(timer)) = IAP(piecePtr, PIECE_OFF(timer)) + 1;
-                {
-                    if (PIECE_AT(piecePtr)->timer >= 16)
-                        PIECE_AT(piecePtr)->active = 0;
-                }
+            if (mPieces[piece].active != 0) {
+                mPieces[piece].posX += mPieces[piece].velX;
+                mPieces[piece].posY += mPieces[piece].velY;
+                speed = Vec2_Len((const Vector2 *)&mPieces[piece].velX);
+                speed = speed * 7 / 8;
+                if (func_0203d434(&mPieces[piece].velX) != 0)
+                    func_0203d630(&mPieces[piece].velX, speed);
+                mPieces[piece].timer += 1;
+                if (mPieces[piece].timer >= 16)
+                    mPieces[piece].active = 0;
             }
-            piecePtr += 0x18;
-            vel += 6;
         }
 
         for (j = 0; j < 4; j++) {
             if (mLaneResult[j] != 0) {
                 slot = 0;
-                scan = raw;
                 do {
-                    if (PIECE_AT(scan)->active != 1) {
+                    if (mPieces[slot].active != 1) {
                         randA = RandomIntInternal(&data_0209d4b8.value);
                         randB = RandomIntInternal(&data_0209d4b8.value);
                         randBits15 = ((u32)randB >> 16) & 0x7fff;
@@ -2040,7 +1979,6 @@ s32 dScMgAmida_c::Behavior() {
                         break;
                     }
                     slot++;
-                    scan += 0x18;
                 } while (slot < 128);
             }
         }
@@ -2105,7 +2043,7 @@ s32 dScMgAmida_c::InitResources() {
     fillSub = 0;
     MI_CpuFill16(file, fillSub, 0x6000);
 
-    Mg_InitBrush((char *)this, 1, 0, 2);
+    InitBrush(1, 0, 2);
 
     G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
                          GX_BG_CHARBASE_0x0c000);

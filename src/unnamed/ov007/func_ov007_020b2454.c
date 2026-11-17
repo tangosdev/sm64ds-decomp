@@ -4,6 +4,7 @@
 #include "Ov007Work.h"
 #include "Ov007Model.h"
 #include "math/CalcLib.h"
+/* Vector3 VEC_*: base is the bone's Matrix4x3::t, a game Vector3 (#5207). */
 
 void func_ov007_020b2454(Vector3 *out, Vector3 *r1) {
     int w;

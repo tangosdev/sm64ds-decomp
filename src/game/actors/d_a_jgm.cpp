@@ -17,10 +17,9 @@
  *   `return new daJgm_c()`, through the inherited fBase_c::operator new.
  * - common.h first is load-bearing: the flat m[12] Matrix4x3 keeps the
  *   12-word ldm/stm copies; UpdateModels writes translation as m[9..11].
- * - DaJgmVector3Words (not Vector3): a Vector3 stack local emits a
- *   vague-linkage ~Vector3 into this text-only TU. JgmVector3's
- *   declared-not-defined destructor aliases the ROM's canonical D1.
- * - mSpawnPosX stays punned: daJgm_c stores it as three scalars.
+ * - Vector3 locals and the Vector3 collision offset emit the inline
+ *   ~Vector3; the manifest deadstrips that copy for the ROM's canonical
+ *   D1, which __sinit registers for the offset.
  * - dBgCh_Actr_UpdateDiscreteNoLava_veneer stays: the named
  *   UpdateDiscreteNoLava method is WRONG-DEST (ROM 0x02038420).
  * - dActor_c::IsTooFarAwayFromPlayer and FX_Div have no header decl,
@@ -72,19 +71,13 @@ enum d_a_jgm_AssetId {
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 
-/* Vector stack values are NitroSDK VecFx32. Vector3 has a genuine non-trivial
- * destructor and must not instantiate its otherwise unrelated vague-linkage D1
- * in this class TU. */
-
 /* File-scope objects at the end of this file construct the seven resource
  * handles (model files 0x34c/0x429/0x42a, animation files 0x34f/0x34d,
  * texture-sequence files 0x350/0x34e), fill the five-pair state table and
  * set the collision-offset vector (0, -0x1e000, 0). mwcc emits
  * __sinit_d_a_jgm.cpp from those definitions. The wrapper names are local;
  * the handle constructors and destructors are the ROM resource-family
- * functions, aliased in the manifest. The vector is a JgmVector3 (below),
- * whose declared-not-defined destructor aliases the ROM's canonical
- * Vector3 D1. */
+ * functions, aliased in the manifest. */
 struct DaJgmModelFile : SharedFilePtr {
     DaJgmModelFile(u32 fileID);
     ~DaJgmModelFile();
@@ -100,22 +93,6 @@ struct DaJgmTexSequenceFilePtr : SharedFilePtr {
     ~DaJgmTexSequenceFilePtr();
 };
 
-/* Collision-offset vector: three plain words built by an inline constructor
- * (mwcc inlines the stores into __sinit) with a declared-not-defined
- * destructor (never ~Vector3: a Vector3 here would instantiate its
- * vague-linkage D1 into this TU, which deliberately avoids it); the
- * destructor alias points at the ROM's canonical copy. */
-struct JgmVector3 {
-    int x, y, z;
-    JgmVector3(int a, int b, int c)
-    {
-        x = a;
-        y = b;
-        z = c;
-    }
-    ~JgmVector3();
-};
-
 extern "C" {
 extern DaJgmModelFile data_ov077_02127b50;
 extern DaJgmModelFile data_ov077_02127b48;
@@ -127,7 +104,7 @@ extern DaJgmTexSequenceFilePtr data_ov077_02127b30;
 extern SharedFilePtr *data_ov077_02127238[];
 extern SharedFilePtr *data_ov077_02127230[];
 extern DaJgmStateHandlers data_ov077_02127bc4[];
-extern JgmVector3 data_ov077_02127b88;
+extern Vector3 data_ov077_02127b88;
 extern DaJgmStateHandler data_ov077_021277e0;
 extern DaJgmStateHandler data_ov077_02127828;
 extern DaJgmStateHandler data_ov077_02127820;
@@ -183,7 +160,7 @@ s32 daJgm_c::InitResources()
     }
     if (mShadowModel.InitCylinder() == 0)
         return 0;
-    mdCcAcPos_c.Init(this, *((Vector3 *)&data_ov077_02127b88), 0x41000, 0x78000, 0x200002, 0x6eff0);
+    mdCcAcPos_c.Init(this, data_ov077_02127b88, 0x41000, 0x78000, 0x200002, 0x6eff0);
     mWithMeshClsn.Init(this, 0x2d000, 0x2d000, 0, 0);
 
     mVertAccel = 0;
@@ -191,9 +168,7 @@ s32 daJgm_c::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos = mPos;
     mSoundHandle = 0;
 
     SetState(0);
@@ -297,12 +272,12 @@ s32 daJgm_c::UpdateHoverState()
     mTextureSequence.Advance();
     HandlePlayerCollision();
     {
-        const JgmVector3 &offset = data_ov077_02127b88;
-        VecFx32 pos;
+        const Vector3 &offset = data_ov077_02127b88;
+        Vector3 pos;
         pos.y = offset.y + mBobOffsetY;
         pos.x = offset.x;
         pos.z = offset.z;
-        mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)&pos);
+        mdCcAcPos_c.SetPosRelativeToActor(pos);
     }
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
@@ -328,7 +303,7 @@ s32 daJgm_c::UpdateThrowState()
 {
     unsigned int frame = (unsigned int)(mAnmModel.currFrame << 4) >> 16;
     if (frame == 0x3a) {
-        dActor_c::Spawn(0x104, 0, *(Vector3 *)&mThrowPosX, &mAngle, mAreaId, -1);
+        dActor_c::Spawn(0x104, 0, mThrowPos, &mAngle, mAreaId, -1);
         func_0201267c(0xd2, &mCamSpacePos);
     }
     if (mAnmModel.Finished())
@@ -339,12 +314,12 @@ s32 daJgm_c::UpdateThrowState()
     mTextureSequence.Advance();
     HandlePlayerCollision();
     {
-        const JgmVector3 &offset = data_ov077_02127b88;
-        VecFx32 pos;
+        const Vector3 &offset = data_ov077_02127b88;
+        Vector3 pos;
         pos.y = offset.y + mBobOffsetY;
         pos.x = offset.x;
         pos.z = offset.z;
-        mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)&pos);
+        mdCcAcPos_c.SetPosRelativeToActor(pos);
     }
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
@@ -479,47 +454,43 @@ void daJgm_c::UpdateModels()
     if (t > 0x3a)
         return;
 
-    struct { int t[3]; int v[3]; } lv;
-    lv.t[0] = -0x2000;
-    lv.t[1] = 0x1800;
-    lv.t[2] = 0x1000;
+    Vector3 offset(-0x2000, 0x1800, 0x1000);
+    Vector3 pos;
 
     data_020a0e68 = mAnmModel.mat4x3;
     MTX_Concat43(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
 
-    mThrowPosX = data_020a0e68.m[9];
-    mThrowPosY = data_020a0e68.m[10];
-    mThrowPosZ = data_020a0e68.m[11];
+    mThrowPos.x = data_020a0e68.m[9];
+    mThrowPos.y = data_020a0e68.m[10];
+    mThrowPos.z = data_020a0e68.m[11];
 
-    Vec3_LslInPlace(&mThrowPosX, 3);
-    Vec3_Asr(lv.v, &mThrowPosX, 3);
+    Vec3_LslInPlace(&mThrowPos, 3);
+    Vec3_Asr(&pos, &mThrowPos, 3);
 
-    Matrix4x3_FromTranslation(&data_020a0e68, lv.v[0], lv.v[1], lv.v[2]);
+    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, lv.t[0], lv.t[1], lv.t[2]);
+    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, offset.x, offset.y, offset.z);
 
     mModel.mat4x3 = data_020a0e68;
 }
 
 void daJgm_c::UpdateWallAndWater(dBgCh_Actr &collision)
 {
-    VecFx32 nrm;
-    VecFx32 pos;
+    Vector3 nrm;
+    Vector3 pos;
 
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&collision);
     if (collision.IsOnWall() != 0) {
         SurfaceInfo *info =
             (SurfaceInfo *)((char *)collision.GetWallResult() + 4);
-        info->CopyNormalTo(*(Vector3 *)&nrm);
+        info->CopyNormalTo(nrm);
         mTurnDir ^= 1;
     }
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos = mPos;
     pos.y += 0x64000;
     {
         dBgCh_Gnd rg;
-        rg.SetObjAndPos(*(Vector3 *)&pos, 0);
+        rg.SetObjAndPos(pos, 0);
         rg.StartDetectingWater();
         if (rg.DetectClsn() != 0) {
             int yy = rg.clsnY + 0x3c000;
@@ -588,55 +559,49 @@ void daJgm_c::HandlePlayerCollision()
         return;
 
     {
-        VecFx32 v;
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
-        player->Hurt(*(Vector3 *)&v, 2, 0xc000, 1, 0, 1);
+        Vector3 v = mPos;
+        player->Hurt(v, 2, 0xc000, 1, 0, 1);
     }
 }
 
 void daJgm_c::DieAndDropCoins()
 {
-    VecFx32 t;
-    t.x = mPosX;
-    t.y = mPosY;
-    t.z = mPosZ;
-    SpawnCoins(*(const Vector3 *)&t, 5, 0x3000, 0);
+    Vector3 t = mPos;
+    SpawnCoins(t, 5, 0x3000, 0);
     PoofDust();
     KillAndTrackInDeathTable();
 }
 
 void daJgm_c::UpdateFlight() {
     daPly_c *p = ClosestNonVanishPlayer();
-    s32 *target;
+    const Vector3 *target;
     int chaseRange;
     if (p != 0) {
         chaseRange = (param1 != 0) ? 0x1068000 : 0x7d0000;
         for (;;) {
-            if (Vec3_HorzDist((Vector3 *)&mSpawnPosX, &p->mPos) < chaseRange) {
-                int d = mSpawnPosY - p->mPosY;
+            if (Vec3_HorzDist(&mSpawnPos, &p->mPos) < chaseRange) {
+                int d = mSpawnPos.y - p->mPosY;
                 if (d < 0)
                     d = -d;
                 if (d < 0x5dc000) {
-                    target = &p->mPosX;
+                    target = &p->mPos;
                     break;
                 }
             }
-            target = &mSpawnPosX;
+            target = &mSpawnPos;
             break;
         }
     } else {
-        target = &mSpawnPosX;
+        target = &mSpawnPos;
     }
-    int hd = Vec3_HorzDist(&mPos, (Vector3 *)target);
-    short ha = Vec3_HorzAngle(&mPos, (Vector3 *)target);
+    int hd = Vec3_HorzDist(&mPos, target);
+    short ha = Vec3_HorzAngle(&mPos, target);
     ApproachLinear(mAngleY, ha, 0x5e8);
     if (mTurnDir != 0)
         mPrevAngleY = (short)(mAngleY - TurnOffsetFromDist(hd));
     else
         mPrevAngleY = (short)(mAngleY + TurnOffsetFromDist(hd));
-    ApproachLinear(mPosY, target[1] + 0x12c000, 0x2000);
+    ApproachLinear(mPosY, target->y + 0x12c000, 0x2000);
     UpdatePos(&mdCcAcPos_c);
     UpdateWallAndWater(mWithMeshClsn);
 }
@@ -699,7 +664,7 @@ DaJgmStateHandlers data_ov077_02127bc4[5] = {
     {data_ov077_021277f0, data_ov077_02127808},
     {data_ov077_02127810, data_ov077_021277f8}
 };
-JgmVector3 data_ov077_02127b88(0, -0x1e000, 0);
+Vector3 data_ov077_02127b88(0, -0x1e000, 0);
 
 int daJgm_c::OnYoshiTryEat()
 {

@@ -26,8 +26,8 @@
     },
     {
       "name": ".bss",
-      "start": "0x020a0df0",
-      "end": "0x020a0df4"
+      "start": "0x020a0de8",
+      "end": "0x020a0df8"
     }
   ],
   "functions": [
@@ -42,11 +42,11 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_020a0df0",
-      "address": "0x020a0df0",
-      "size": "0x4",
+      "symbol": "gTouchInfo",
+      "address": "0x020a0de8",
+      "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "file-scope EmptyInit. The constructor body is empty, so the initializer is bx lr. The word is padding between gTouchY and data_020a0df8."
+      "evidence": "TouchInfo gTouchInfo[4], the per-player touch records. func_0203bb60 writes all four (0x020a0de8..0x020a0df7) and func_0203bb14 clears them. The touch .bss runs TPData (8), TPCalibrateParam (8), gTouchInfo (0x10), TPData[9] (0x48) in ascending size order. Readers' pool words name gTouchInfo+1..+3, which lcf_interior defines as the interior labels data_020a0de9/dea/deb."
     }
   ],
   "init": [
@@ -67,7 +67,13 @@
       "evidence": "constructor-table word relocates to __sinit_func_0203bb5c.cpp, as retail .p__sinit_020750b4 does"
     }
   ],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "sEmptyInit",
+      "disposition": "deadstrip",
+      "reason": "One-byte file-local object whose empty constructor is what makes mwcc emit the bx lr initializer. The initializer does not reference the object and the cartridge has no symbol or storage for it: every .bss word from data_020a0dd8 to data_020a0e40 is a live touch object (TPData, TPCalibrateParam, gTouchInfo[4], the nine-sample TPData ring). Same model as unit0203d7b8's sEmptyInit."
+    }
+  ],
   "undefined_symbol_aliases": [],
   "symbol_binding_rewrites": [
     {
@@ -97,7 +103,8 @@
     }
   ],
   "notes": [
-    "Folded __sinit_020750b4. One EmptyInit global, empty inline constructor, no destructor, so no registration node."
+    "Folded __sinit_020750b4. One static EmptyInit, empty inline constructor, no destructor, so no registration node; the linker drops the object. The .bss claim 0x020a0df0..0x020a0df4 (data_020a0df0, called padding) is retired: that word is gTouchInfo[2], which func_0203bb60 writes and func_0203bb14 clears.",
+    "Defines gTouchInfo[4] over .bss 0x020a0de8..0x020a0df8. It became definable once the flat lane names (gTouchHeld at the object's start, gTouchEdge/X/Y inside it) were retired: a .bss alias at an object's start cannot be linked, interior labels can."
   ],
   "production_mode": "intact-object",
   "verification": {
@@ -144,8 +151,8 @@
         },
         {
           "section": ".bss",
-          "start": "0x020a0df0",
-          "end": "0x020a0df4",
+          "start": "0x020a0de8",
+          "end": "0x020a0df8",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
@@ -162,28 +169,28 @@
           {
             "section": ".init",
             "original": [
-              9
+              10
             ],
             "desired": [
-              9
+              10
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              7
+              8
             ],
             "desired": [
-              7
+              8
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5
+              6
             ],
             "desired": [
-              5
+              6
             ]
           }
         ],

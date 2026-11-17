@@ -582,6 +582,14 @@
       "reason": "Base-object destructor of dScMgSingle3DBase_c, emitted as vague linkage once the factory's `new dScMgCard_c` expands the inline constructor chain (the same byproduct ov006/dScMgBSC_c, ov006/dScMgFlower_c and ov006/dScMgMemory2_c license for theirs). dScMgCard_c's D1/D0 inline the base destructor rather than chain to it, and no module's symbols.txt gives _ZN19dScMgSingle3DBase_cD2Ev a home. Homeless and unreferenced, so a plain deadstrip."
     },
     {
+      "symbol": "_ZN7Vector2D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "NullDestructor_0203d47c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d47c",
+      "reason": "dMgCardObj_c's position, target, step and home pairs are Vector2 members, so its out-of-line destructor and dMgDilarCardObj_c's run Vector2's empty inline destructor and mwccarm emits this 4-byte vague-linkage copy. It is the same body as the ARM9 NullDestructor_0203d47c at 0x0203d47c, as for the other Vector2-using TUs (ov006/dScMgFlower_c); the inlined calls leave no relocation to it, and all 37 licensed functions reproduce unchanged."
+    },
+    {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
