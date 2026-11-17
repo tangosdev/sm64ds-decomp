@@ -197,10 +197,6 @@ enum TrsFlag {
 };
 
 inline int inline_fn(int arg0) { return data_020a0e68.m[arg0]; }
-struct Frame {
-    VecFx32 v;
-    int pad[10];
-};
 daTrs_c::~daTrs_c()
 {
 }
@@ -656,12 +652,9 @@ int daTrs_c::func_ov063_02116f48() {
    (hopping in state 4), then vanishes (opacity 0, hidden). */
 void daTrs_c::func_ov063_02116fac() {
 
-    struct Frame fr;
+    Vector3 target = this->mHomePos;
     s16 r4 = 0xc00;
 
-    fr.v.x = this->mHomePos.x;
-    fr.v.y = this->mHomePos.y;
-    fr.v.z = this->mHomePos.z;
     this->mClsnScale = 0x1000;
 
     switch (this->mState) {
@@ -682,19 +675,15 @@ void daTrs_c::func_ov063_02116fac() {
         break;
     case 2:
         ApproachLinear(this->mHorzSpeed, 0x3a000, 0x1800);
-        fr.v.x = -0x3e8000;
-        fr.v.y = 0;
-        fr.v.z = 0xfea84000;
+        target = Vector3(-0x3e8000, 0, 0xfea84000);
         if (this->mPosZ < (int)0xfee08000) {
             this->mState++;
         }
         break;
     case 3:
         ApproachLinear(this->mHorzSpeed, 0, 0x9000);
-        fr.v.x = -0x3e8000;
-        fr.v.y = 0;
-        fr.v.z = -0xfa0000;
-        this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, (Vector3 *)&fr.v);
+        target = Vector3(-0x3e8000, 0, -0xfa0000);
+        this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, &target);
         r4 = 0x1000;
         if (this->mAngleY == this->mTargetAngleY && this->mHorzSpeed == 0) {
             this->mState++;
@@ -715,9 +704,7 @@ void daTrs_c::func_ov063_02116fac() {
         break;
     case 5:
         ApproachLinear(this->mHorzSpeed, 0x3a000, 0x1800);
-        fr.v.x = -0x3e8000;
-        fr.v.y = 0;
-        fr.v.z = 0xfea84000;
+        target = Vector3(-0x3e8000, 0, 0xfea84000);
         r4 = 0x1000;
         if (this->mPosZ < (int)0xfec78000) {
             this->mState++;
@@ -732,7 +719,7 @@ void daTrs_c::func_ov063_02116fac() {
 
     if (this->mState != 4) {
         this->mVertSpeed = 0;
-        this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, (Vector3 *)&fr.v);
+        this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, &target);
     }
     ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, r4);
     Oscillate(1);
