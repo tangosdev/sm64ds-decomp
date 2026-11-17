@@ -53,14 +53,12 @@
  * FIELD NAMES and their evidence are tabulated in
  * notes/smartball-provenance.md.
  *
- * CONSTRUCTED BY cMgSmartball_spring_c_Construct, left a free function per the recipe
- * (this tree has migrated zero constructors), with only its vtable-symbol
- * reference renamed. Unlike every sibling, its only caller is
- * dScMgSmartball_c::InitResources -- dScMgSmartball_c::SpawnObjects.c never allocates a
- * spring -- so this migration had fewer literal call sites to rename than
- * usual. It sets the base's mRadius to 0x20000, the per-child constant every
- * sibling constructor also writes; it does not touch anything from 0x34 to
- * 0x44. */
+ * CONSTRUCTED BY the real cMgSmartball_spring_c(dScMgSmartball_c *, int, Vector2)
+ * constructor; the cartridge keeps its C1, the C2 is deadstripped. Unlike
+ * every sibling, its only caller is dScMgSmartball_c::InitResources --
+ * dScMgSmartball_c::SpawnObjects never allocates a spring. It sets the
+ * base's mRadius to 0x20000, the per-child constant every sibling
+ * constructor also writes; it does not touch anything from 0x34 to 0x44. */
 #ifndef CMGSMARTBALL_SPRING_C_H
 #define CMGSMARTBALL_SPRING_C_H
 #include "types.h"
@@ -70,6 +68,7 @@ struct cMgSmartball_spring_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    cMgSmartball_spring_c(dScMgSmartball_c *manager, int index, Vector2 pos);
     ~cMgSmartball_spring_c() {}
 
     u8 mTriggered;   /* 0x031 -- the spring is held */

@@ -19,22 +19,15 @@
  * FACTORY AND DESTRUCTOR AGREE MEMBER FOR MEMBER, in exact reverse order:
  * built 0x47c8, 0x4854, 0x48d4, 0x599c; destroyed 0x599c, 0x48d4, 0x4854,
  * 0x47c8. Nothing is left over either way. Three of the four share an
- * element ctor/dtor pair (func_0203d738 / NullDestructor_0203d47c) so they
- * are the same element type as each other; mSparks's is its own
- * (SmartballObj_ElemCtor / SmartballObj_ElemDtor).
+ * element ctor/dtor pair (func_0203d738 / NullDestructor_0203d47c), which is
+ * include/Vector2.h's empty Vector2() / ~Vector2(), so they are Vector2
+ * arrays and the compiler emits their vec_ctor / vec_cleanup itself; mSparks's
+ * pair is its own (SmartballObj_ElemCtor / SmartballObj_ElemDtor).
  *
  * THE REST OF THE CLASS IS NOW MODELLED from its access sites: the
  * object counts and tables, the score popup queue, the dust puffs, the two
  * decompressed BG maps, the round state and the result tallies. Each field
- * below carries its evidence. mPopupPos, mDustPos and mDustVel stay byte
- * arrays for now, though their element is include/Vector2.h's Vector2: typed
- * that way, with `new dScMgSmartball_c` and an empty destructor, all 132
- * functions still match (measured 2026-10-25). What blocks it is the TU's
- * other Vector2 sites -- cMgSmartball_slot_c_Construct and the two inlined
- * slot deletes, and SpawnObjects's local pos array -- which name
- * func_0203d738 / NullDestructor_0203d47c directly; tubuild refuses a Vector2
- * deadstrip-duplicate row while the same object names its canonical body.
- * The conversion waits on the slot class's real structors.
+ * below carries its evidence.
  *
  * So: the four arrays below are evidenced by two witnesses each and the
  * size is evidenced by a third.
@@ -52,8 +45,8 @@
 #define DSCMGSMARTBALL_C_H
 #include "dScMgBase_c.h"
 #include "MWCPlusLib.h"
+#include "Vector2.h"
 
-extern "C" void NullDestructor_0203d47c(void);
 void SmartballObj_ElemDtor(void);
 
 struct cMgSmartball_spring_c;
@@ -191,15 +184,15 @@ struct dScMgSmartball_c : dScMgBase_c {
     s32 mPopupScore[5];      /* 0x478c -- the score value; > 0 marks a live slot */
     s32 mPopupMultiplier[5]; /* 0x47a0 -- EmitScore's last argument */
     s32 mPopupAge[5];        /* 0x47b4 -- frames shown; cleared past 0x3c */
-    s32 mPopupPos[5][2];     /* 0x47c8 -- elem dtor NullDestructor_0203d47c */
+    Vector2 mPopupPos[5];    /* 0x47c8 */
     s32 mPopupDelay[5];      /* 0x47f0 */
     /* The dust puffs: SpawnDust sets mDustActive and UpdateDust clears it,
        retiring a puff once mDustAge reaches 0xf. mDustPos/mDustVel are the
        0x10 * 8 positions and velocities. */
     u8 mDustActive[0x10]; /* 0x4804 */
     s32 mDustAge[0x10];   /* 0x4814 */
-    s32 mDustPos[16][2];  /* 0x4854 -- elem dtor NullDestructor_0203d47c */
-    s32 mDustVel[16][2];  /* 0x48d4 -- elem dtor NullDestructor_0203d47c */
+    Vector2 mDustPos[16]; /* 0x4854 */
+    Vector2 mDustVel[16]; /* 0x48d4 */
     /* sSmartballBg1NscFmt / sSmartballBg2NscFmt decompressed: scanned for the
        object tiles, and GetTile's upper and lower halves. */
     u16 mBg1Map[0x400]; /* 0x4954 */

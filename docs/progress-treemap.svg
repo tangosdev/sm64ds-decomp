@@ -25641,7 +25641,7 @@ matched: yes</title></rect><rect x="740.28" y="772.41" width="5.87" height="6.38
 module: ov006
 addr: 0x0210e098
 size: 56 bytes
-matched: yes</title></rect><rect x="740.28" y="778.79" width="5.87" height="9.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z29cMgSmartball_wing_c_ConstructP19cMgSmartball_wing_cP16dScMgSmartball_ciP2V2
+matched: yes</title></rect><rect x="740.28" y="778.79" width="5.87" height="9.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN19cMgSmartball_wing_cC1EP16dScMgSmartball_ci7Vector2
 module: ov006
 addr: 0x0210e0d0
 size: 80 bytes
@@ -25665,7 +25665,7 @@ matched: yes</title></rect><rect x="787.15" y="484.34" width="1.58" height="13.5
 module: ov006
 addr: 0x0210e460
 size: 32 bytes
-matched: yes</title></rect><rect x="788.73" y="484.34" width="3.55" height="13.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z35cMgSmartball_pushswitch_c_ConstructP25cMgSmartball_pushswitch_cP16dScMgSmartball_ciP2V2
+matched: yes</title></rect><rect x="788.73" y="484.34" width="3.55" height="13.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN25cMgSmartball_pushswitch_cC1EP16dScMgSmartball_ci7Vector2
 module: ov006
 addr: 0x0210e480
 size: 72 bytes
@@ -25697,7 +25697,7 @@ matched: yes</title></rect><rect x="746.15" y="505.93" width="10.99" height="5.8
 module: ov006
 addr: 0x0210f998
 size: 96 bytes
-matched: yes</title></rect><rect x="746.15" y="511.77" width="10.99" height="4.38" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z30cMgSmartball_board_c_ConstructP20cMgSmartball_board_cP16dScMgSmartball_ciP2V2
+matched: yes</title></rect><rect x="746.15" y="511.77" width="10.99" height="4.38" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN20cMgSmartball_board_cC1EP16dScMgSmartball_ci7Vector2
 module: ov006
 addr: 0x0210f9f8
 size: 72 bytes
@@ -25729,7 +25729,7 @@ matched: yes</title></rect><rect x="746.15" y="626.36" width="10.99" height="6.3
 module: ov006
 addr: 0x02110154
 size: 104 bytes
-matched: yes</title></rect><rect x="746.15" y="632.69" width="10.99" height="8.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z29cMgSmartball_slot_c_ConstructP19cMgSmartball_slot_cP16dScMgSmartball_ciP2V2
+matched: yes</title></rect><rect x="746.15" y="632.69" width="10.99" height="8.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN19cMgSmartball_slot_cC1EP16dScMgSmartball_ci7Vector2
 module: ov006
 addr: 0x021101bc
 size: 136 bytes
@@ -25749,7 +25749,7 @@ matched: yes</title></rect><rect x="746.15" y="735.11" width="10.99" height="2.1
 module: ov006
 addr: 0x02110850
 size: 36 bytes
-matched: yes</title></rect><rect x="746.15" y="737.30" width="10.99" height="4.38" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z31cMgSmartball_pakkun_c_ConstructP21cMgSmartball_pakkun_cP16dScMgSmartball_ciP2V2
+matched: yes</title></rect><rect x="746.15" y="737.30" width="10.99" height="4.38" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21cMgSmartball_pakkun_cC1EP16dScMgSmartball_ci7Vector2
 module: ov006
 addr: 0x02110874
 size: 72 bytes
@@ -25769,7 +25769,7 @@ matched: yes</title></rect><rect x="757.14" y="497.90" width="6.63" height="1.21
 module: ov006
 addr: 0x02110bb4
 size: 12 bytes
-matched: yes</title></rect><rect x="757.14" y="499.11" width="6.63" height="7.26" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z30cMgSmartball_dokan_c_ConstructP20cMgSmartball_dokan_cP16dScMgSmartball_ciP2V2
+matched: yes</title></rect><rect x="757.14" y="499.11" width="6.63" height="7.26" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN20cMgSmartball_dokan_cC1EP16dScMgSmartball_ci7Vector2
 module: ov006
 addr: 0x02110bc0
 size: 72 bytes
@@ -25793,7 +25793,7 @@ matched: yes</title></rect><rect x="757.14" y="658.84" width="6.63" height="4.84
 module: ov006
 addr: 0x021111f0
 size: 48 bytes
-matched: yes</title></rect><rect x="757.14" y="663.68" width="6.63" height="7.26" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z34cMgSmartball_propeller_c_ConstructP24cMgSmartball_propeller_cP16dScMgSmartball_ciP2V2
+matched: yes</title></rect><rect x="757.14" y="663.68" width="6.63" height="7.26" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN24cMgSmartball_propeller_cC1EP16dScMgSmartball_ci7Vector2
 module: ov006
 addr: 0x02111220
 size: 72 bytes
@@ -25809,7 +25809,7 @@ matched: yes</title></rect><rect x="757.14" y="747.57" width="6.63" height="2.82
 module: ov006
 addr: 0x02111560
 size: 28 bytes
-matched: yes</title></rect><rect x="757.14" y="750.39" width="6.63" height="7.26" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z31cMgSmartball_spring_c_ConstructP21cMgSmartball_spring_cP16dScMgSmartball_ciP2V2
+matched: yes</title></rect><rect x="757.14" y="750.39" width="6.63" height="7.26" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21cMgSmartball_spring_cC1EP16dScMgSmartball_ci7Vector2
 module: ov006
 addr: 0x0211157c
 size: 72 bytes
@@ -25833,7 +25833,7 @@ matched: yes</title></rect><rect x="773.81" y="497.90" width="3.77" height="6.39
 module: ov006
 addr: 0x02111750
 size: 36 bytes
-matched: yes</title></rect><rect x="777.58" y="497.90" width="7.53" height="6.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z28cMgSmartball_ana_c_ConstructP18cMgSmartball_ana_cP16dScMgSmartball_ciP2V2
+matched: yes</title></rect><rect x="777.58" y="497.90" width="7.53" height="6.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18cMgSmartball_ana_cC1EP16dScMgSmartball_ci7Vector2
 module: ov006
 addr: 0x02111774
 size: 72 bytes
@@ -25849,7 +25849,7 @@ matched: yes</title></rect><rect x="875.93" y="497.90" width="3.35" height="6.39
 module: ov006
 addr: 0x02111b20
 size: 32 bytes
-matched: yes</title></rect><rect x="879.28" y="497.90" width="8.37" height="6.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z31cMgSmartball_kinoko_c_ConstructP21cMgSmartball_kinoko_cP16dScMgSmartball_ciP2V2
+matched: yes</title></rect><rect x="879.28" y="497.90" width="8.37" height="6.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21cMgSmartball_kinoko_cC1EP16dScMgSmartball_ci7Vector2
 module: ov006
 addr: 0x02111b40
 size: 80 bytes
@@ -25949,7 +25949,7 @@ matched: yes</title></rect><rect x="763.77" y="780.46" width="21.55" height="7.4
 module: ov006
 addr: 0x02114458
 size: 240 bytes
-matched: yes</title></rect><rect x="785.32" y="504.29" width="7.81" height="6.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z29cMgSmartball_ball_c_ConstructP19cMgSmartball_ball_cP16dScMgSmartball_ciP2V2
+matched: yes</title></rect><rect x="785.32" y="504.29" width="7.81" height="6.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN19cMgSmartball_ball_cC1EP16dScMgSmartball_ci7Vector2
 module: ov006
 addr: 0x02114548
 size: 72 bytes
@@ -25989,7 +25989,7 @@ matched: yes</title></rect><rect x="839.14" y="504.29" width="2.17" height="6.16
 module: ov006
 addr: 0x02114738
 size: 20 bytes
-matched: yes</title></rect><rect x="841.31" y="504.29" width="10.42" height="6.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z31cMgSmartball_object_c_ConstructP21cMgSmartball_object_cP16dScMgSmartball_ciPi
+matched: yes</title></rect><rect x="841.31" y="504.29" width="10.42" height="6.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21cMgSmartball_object_cC2EP16dScMgSmartball_ci7Vector2
 module: ov006
 addr: 0x0211474c
 size: 96 bytes

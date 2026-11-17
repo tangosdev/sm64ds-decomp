@@ -5,7 +5,7 @@
  * header for the family's shape (a root, three slots, no virtual destructor).
  *
  * SIZE 0x9c, from operator new(0x9c) in dScMgSmartball_c::SpawnObjects immediately before the
- * call to this class's constructor cMgSmartball_board_c_Construct. The base's data
+ * call to this class's constructor. The base's data
  * ends at 0x31, so this class adds 0x6b bytes.
  *
  * FIELD EVIDENCE. RestoreInitial (ov006:0x0210f914) is exhaustive: it
@@ -38,11 +38,11 @@
  * cMgSmartball_object_c is not a POD and its data ends at 0x31, so mwccarm
  * places this class's first member there; mCells runs 0x31..0x39.
  *
- * CONSTRUCTED BY cMgSmartball_board_c_Construct, left a free function per the recipe
- * (this tree has migrated zero constructors), with only its vtable-symbol
- * reference renamed. It writes this vtable and sets the base's mRadius to
- * 0x18000 -- the per-child constant every sibling's constructor also writes,
- * each with its own value. */
+ * CONSTRUCTED BY the real cMgSmartball_board_c(dScMgSmartball_c *, int, Vector2)
+ * constructor; the cartridge keeps its C1, the C2 is deadstripped. It stores
+ * this vtable and sets the base's mRadius to 0x18000 -- the per-child
+ * constant every sibling's constructor also writes, each with its own
+ * value. */
 #ifndef CMGSMARTBALL_BOARD_C_H
 #define CMGSMARTBALL_BOARD_C_H
 #include "types.h"
@@ -52,6 +52,7 @@ struct cMgSmartball_board_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    cMgSmartball_board_c(dScMgSmartball_c *manager, int index, Vector2 pos);
     ~cMgSmartball_board_c() {}
 
     /* Recovered helpers: AnyLineActive reports a line banner still in its
