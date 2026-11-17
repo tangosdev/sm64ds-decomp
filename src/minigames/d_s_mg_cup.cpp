@@ -79,7 +79,6 @@ extern s16 sCupShuffleSpeeds[];
 extern IdxPair sCupSwapFirst[];
 extern RestPos sCupHomePositions[];
 extern void Mg_SetSharedState(int c);
-extern void Mg_SubCredits(void *c, int val);
 extern void Mg_SubmitScore(int self);
 extern void FreeGfxSlotsById(int arg);
 struct CupShuffleOffset {
@@ -370,7 +369,7 @@ void dScMgCup_c::StateResult() {
         mModel.PlayCheer();
         score++;
     } else {
-        Mg_SubCredits(this, 1);
+        SubCredits(1);
         if (mCredits > 0) {
             mTimer = 150;
             mModel.PlayMiss();

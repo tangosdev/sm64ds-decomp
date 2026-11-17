@@ -131,7 +131,7 @@ s32 dScMgBSC_c::Render() {
         }
     }
     MgCoins_Draw();
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
+    DrawCredits(0xc, 0xc, 0);
     Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
     mDealer.Draw();
     return 1;

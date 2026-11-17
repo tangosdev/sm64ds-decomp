@@ -19307,15 +19307,15 @@
     },
     "ov004:0x020b1b78": {
       "author": "tangosdev",
-      "name": "Mg_SubCredits"
+      "name": "_ZN11dScMgBase_c10SubCreditsEi"
     },
     "ov004:0x020b1ba0": {
       "author": "tangosdev",
-      "name": "Mg_AddCredits"
+      "name": "_ZN11dScMgBase_c10AddCreditsEi"
     },
     "ov004:0x020b1bc8": {
       "author": "tangosdev",
-      "name": "Mg_DrawCredits"
+      "name": "_ZN11dScMgBase_c11DrawCreditsEiii"
     },
     "ov004:0x020b1c68": {
       "author": "tangosdev",

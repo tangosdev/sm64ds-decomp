@@ -731,21 +731,21 @@
       "ordinal": 97
     },
     {
-      "symbol": "Mg_SubCredits",
+      "symbol": "_ZN11dScMgBase_c10SubCreditsEi",
       "address": "0x020b1b78",
       "size": "0x00000028",
       "legacy_source": "src/func_ov004_020b1b78.c",
       "ordinal": 98
     },
     {
-      "symbol": "Mg_AddCredits",
+      "symbol": "_ZN11dScMgBase_c10AddCreditsEi",
       "address": "0x020b1ba0",
       "size": "0x00000028",
       "legacy_source": "src/func_ov004_020b1ba0.c",
       "ordinal": 99
     },
     {
-      "symbol": "Mg_DrawCredits",
+      "symbol": "_ZN11dScMgBase_c11DrawCreditsEiii",
       "address": "0x020b1bc8",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov004_020b1bc8.c",

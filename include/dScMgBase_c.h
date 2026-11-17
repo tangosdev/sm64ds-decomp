@@ -14,11 +14,10 @@
 struct dScMgBase_c;
 extern "C" dScMgBase_c *gMgScene;
 
-/* d_s_mg_base.cpp's scene helpers: the brush PaintSquare paints with, and the
-   credit counter every betting minigame draws. The parameters are unnamed
-   because a named one takes an @NNN number in every including TU. */
+/* d_s_mg_base.cpp's scene helper: the brush PaintSquare paints with. The
+   parameters are unnamed because a named one takes an @NNN number in every
+   including TU. */
 extern "C" void Mg_InitBrush(dScMgBase_c *, char, int, int);
-extern "C" void Mg_DrawCredits(dScMgBase_c *, int, int, int);
 
 struct dScMgBase_c : dScene_c {
 
@@ -895,6 +894,14 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     void Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int size);
     void UpdateMenu();
     void DrawPrompt();
+
+    /* The credit counter every betting minigame keeps: SubCredits and
+       AddCredits clamp mCredits to 0..9999, DrawCredits draws mCreditsShown.
+       The parameters are unnamed because a named one takes an @NNN number in
+       every including TU. */
+    void SubCredits(int);
+    void AddCredits(s32);
+    void DrawCredits(int, int, int);
 
     s32 mTallyShown;            /* 0x050 */
     s32 mTallyAnimTimer;            /* 0x054 */

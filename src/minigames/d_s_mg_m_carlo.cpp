@@ -361,7 +361,7 @@ s32 dScMgMCarlo_c::Behavior() {
  * zero step. mStep.y is an absolute magnitude, not a direction. */
 s32 dScMgMCarlo_c::Render() {
     Camera_InitDealerView(&mCamera);
-    Mg_DrawCredits(this, 0xc, 0xc, 0);
+    DrawCredits(0xc, 0xc, 0);
     MgCoins_Draw();
     Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
 

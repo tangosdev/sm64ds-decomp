@@ -2805,69 +2805,60 @@ int Mg_GetLevel(void) {
 
 namespace s20b1b08 {
 extern "C" {
-/* Subtracts `amount` from the scene's mCredits (Mg_SubCredits). */
+/* Subtracts `amount` from the scene's mCredits (dScMgBase_c::SubCredits). */
 void Mg_LoseCredits(int amount) {
-    void *v = gMgScene;
-    if (v == 0) return;
-    Mg_SubCredits(v, amount);
+    dScMgBase_c *scene = gMgScene;
+    if (scene == 0)
+        return;
+    scene->SubCredits(amount);
 }
 }
 }
 
 namespace s20b1b40 {
 extern "C" {
-/* Adds `amount` to the scene's mCredits (Mg_AddCredits). */
+/* Adds `amount` to the scene's mCredits (dScMgBase_c::AddCredits). */
 void Mg_GainCredits(int amount) {
-    void *v = gMgScene;
-    if (v == 0) return;
-    Mg_AddCredits(v, amount);
+    dScMgBase_c *scene = gMgScene;
+    if (scene == 0)
+        return;
+    scene->AddCredits(amount);
 }
 }
 }
 
-namespace s20b1b78 {
-extern "C" {
 /* mCredits -= val, clamped to 0..9999. */
-void Mg_SubCredits(void* c, int val) {
-    dScMgBase_c *scene = (dScMgBase_c *)c;
-    int r2 = scene->mCredits;
-    r2 -= val;
-    if (r2 < 0) r2 = 0;
-    else if (r2 > 0x270f) r2 = 0x270f;
-    scene->mCredits = r2;
-}
-}
+void dScMgBase_c::SubCredits(int val) {
+    int credits = mCredits;
+    credits -= val;
+    if (credits < 0)
+        credits = 0;
+    else if (credits > 9999)
+        credits = 9999;
+    mCredits = credits;
 }
 
-namespace s20b1ba0 {
-extern "C" {
 /* mCredits += delta, clamped to 0..9999. */
-void Mg_AddCredits(void *c, s32 delta)
-{
-    dScMgBase_c *scene = (dScMgBase_c *)c;
-    s32 v = scene->mCredits + delta;
-    if (v < 0) v = 0;
-    else if (v > 0x270f) v = 0x270f;
-    scene->mCredits = v;
-}
-}
+void dScMgBase_c::AddCredits(s32 delta) {
+    s32 credits = mCredits + delta;
+    if (credits < 0)
+        credits = 0;
+    else if (credits > 9999)
+        credits = 9999;
+    mCredits = credits;
 }
 
-namespace s20b1bc8 {
-extern "C" {
-/* Draws sprite word 2 at (a1, a2) on wrapper a3 (Mg_DrawCreditsIcon),
-   then the scene's mCreditsShown beside it: below 100 through
-   Mg_DrawBigNumber, otherwise through Mg_DrawNumber. */
-void Mg_DrawCredits(dScMgBase_c *scene, int a1, int a2, int a3) {
-    Mg_DrawCreditsIcon(a1, a2, a3, -1);
-    int v = scene->mCreditsShown;
-    if (v < 0x64) {
-        Mg_DrawBigNumber(a1+0x12, a2, v, a3, -1, 2, 0);
+/* Draws sprite word 2 at (x, y) on wrapper `screen` (Mg_DrawCreditsIcon),
+   then mCreditsShown beside it: below 100 through Mg_DrawBigNumber,
+   otherwise through Mg_DrawNumber. */
+void dScMgBase_c::DrawCredits(int x, int y, int screen) {
+    Mg_DrawCreditsIcon(x, y, screen, -1);
+    int shown = mCreditsShown;
+    if (shown < 100) {
+        Mg_DrawBigNumber(x + 18, y, shown, screen, -1, 2, 0);
     } else {
-        Mg_DrawNumber(a1 + 12, a2, v, a3, -1, 2, 0x32);
+        Mg_DrawNumber(x + 12, y, shown, screen, -1, 2, 50);
     }
-}
-}
 }
 
 namespace s20b1c68 {
