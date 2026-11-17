@@ -268,7 +268,8 @@ void daCoin_c::Step() {
     if (!mWithMeshClsn.IsOnGround()) return;
     if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) == 0)
         return;
-    if (mSpeed.y > 0) return;
+    if (mSpeed.y > 0)
+        return;
     func_02012694(0xe2, &mCamSpacePos);
     Particle::System::NewBigSplash(mPosX, mPosY, mPosZ);
     mHorzSpeed = 0;

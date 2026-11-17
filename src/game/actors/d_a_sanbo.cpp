@@ -650,8 +650,7 @@ void daSanbo_c::HandleAttacks() {
                         vv3.z = mPosZ;
                         player->Hurt(vv3, 2, 0xc000, 1, 0, 1);
                     }
-                } else if (mWithMeshClsn.IsOnGround() != 0 &&
-                           mPrevSegment->mSpeed.y == 0) {
+                } else if (mWithMeshClsn.IsOnGround() != 0 && mPrevSegment->mSpeed.y == 0) {
                     vv4.x = mPosX;
                     vv4.y = mPosY;
                     vv4.z = mPosZ;

@@ -568,7 +568,7 @@ int daKrb_c::func_ov084_02129a00() {
             if (GetCapEatenOffIt(v) != 0) {
                 func_ov084_02129168(actor);
                 mHorzSpeed = -0xf000; /* -15.0 */
-                mSpeed.y = 0x14000; /* 20.0 */
+                mSpeed.y = 0x14000;   /* 20.0 */
                 dExtAnmMaterial_c::Prepare(*(BMD_File *)(data_ov084_02130cf8.filePtr),
                                            data_ov084_0213088c);
                 mMaterialChanger.SetFile(data_ov084_0213088c, 0x40000000, 0x1000, 0);

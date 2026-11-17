@@ -3207,7 +3207,8 @@ int daPly_c::func_ov002_020c0d90(int y) {
     }
 
     if (((y - 0x64000) >> 12) < (this->mPosY >> 12)) return 0;
-    if (this->mSpeed.y > 0) return 0;
+    if (this->mSpeed.y > 0)
+        return 0;
 
     if (this->mIsBalloon != 0 || (this->IsState(data_ov002_021102d4) && this->mStateStep < 2) || this->mIsUnderwater != 0 || this->IsState(data_ov002_021106ac) || this->IsState(data_ov002_021106c4) || this->IsState(data_ov002_021102a4)) {
         return 0;
@@ -3941,7 +3942,8 @@ void daPly_c::func_ov002_020c29d4() {
         if (this->mHorzSpeed >= ScaleByCharFactor(0x28000)) {
             if (this->IsState(data_ov002_0211013c)) {
                 mQuicksandRunTimer = 30;
-            } else if (this->IsState(data_ov002_021101b4) && this->mSpeed.y < 0 && (this->mPeakY - this->mPosY) < 0x64000) {
+            } else if (this->IsState(data_ov002_021101b4) && this->mSpeed.y < 0 &&
+                       (this->mPeakY - this->mPosY) < 0x64000) {
                 mQuicksandRunTimer = 30;
             }
         }
@@ -7383,7 +7385,7 @@ int daPly_c::func_ov002_020c9b10() {
     this->SetAnim(0x47, 0, 0x1000, 0);
     mStateTimer = 20;
     this->mHorzSpeed=0;
-    this->mSpeed.y=0;
+    this->mSpeed.y = 0;
     return 0;
 }
 
@@ -7415,7 +7417,7 @@ int daPly_c::func_ov002_020c9c00() {
     }
     mStateStep=0;
     this->mHorzSpeed=0;
-    this->mSpeed.y=0;
+    this->mSpeed.y = 0;
     return 0;
 }
 
@@ -7446,7 +7448,7 @@ int daPly_c::func_ov002_020c9d1c() {
     mAngleYSpeed=0x4000;
     this->SetAnim(0x47, 0, 0x1000, 0);
     this->mHorzSpeed=0;
-    this->mSpeed.y=0;
+    this->mSpeed.y = 0;
     return 0;
 }
 
@@ -7650,7 +7652,8 @@ int daPly_c::func_ov002_020ca270() {
 int daPly_c::JumpIntoBooCage(Vector3 &v_) {
     Vector3 *v = &v_;
     if (mIsAirborne) {
-        if (mSpeed.y < 0) return 0;
+        if (mSpeed.y < 0)
+            return 0;
     }
     if (!this->SetNoControlState(9, -1, 0))
         return 0;
@@ -9429,7 +9432,7 @@ int daPly_c::St_Swim_Main() {
 
     func_ov002_020cd218(mPrevVertSpeed, &mHorzSpeed, &mSpeed.y);
     {
-        int* pa8 = (int*)((unsigned int)(&mSpeed.y));
+        int *pa8 = (int *)((unsigned int)(&mSpeed.y));
         *pa8 = *pa8 + func_ov002_020ceaf4();
     }
     if (func_ov002_020ce5f8() != 0)
@@ -17428,9 +17431,10 @@ int daPly_c::St_WindCarry_Main() {
             else
                 speed = 0x2710000 / ((val + 0xc8000) >> 12);
             if (mSpeed.y < speed) {
-                int* p = &this->mSpeed.y;
+                int *p = &this->mSpeed.y;
                 *p = *p + (speed >> 3);
-                if (mSpeed.y > speed) mSpeed.y = speed;
+                if (mSpeed.y > speed)
+                    mSpeed.y = speed;
             }
         }
     }

@@ -594,7 +594,8 @@ int daPkn_c::PlayerMovingFast()
 {
     daPly_c *p = mClosestPlayer;
     if (p == 0) return 0;
-    if (p->mSpeed.y > 0xa000) return 1;
+    if (p->mSpeed.y > 0xa000)
+        return 1;
     return p->mHorzSpeed > 0xa000;
 }
 

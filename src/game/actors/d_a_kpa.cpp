@@ -2559,9 +2559,9 @@ void daKpa_c::FreeUpdate() {
                 this->mSpeed.y = 0x14000;
         } else if (this->mGroundNormal.y != 0) {
             this->mSpeed.y = -(FX_Div(FX_MUL(this->mGroundNormal.x, this->mSpeed.x) +
-                                            FX_MUL(this->mGroundNormal.z, this->mSpeed.z),
-                                        this->mGroundNormal.y) +
-                                 0x8000);
+                                          FX_MUL(this->mGroundNormal.z, this->mSpeed.z),
+                                      this->mGroundNormal.y) +
+                               0x8000);
         }
     }
 

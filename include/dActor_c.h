@@ -120,7 +120,7 @@ struct dActor_c : dBase_c {
     /* The velocity. UpdatePosWithOnlySpeed adds it to mPos, and
        UpdatePosWithHorzSpeedAndAng derives mSpeed.x and mSpeed.z from
        mHorzSpeed along the heading mPrevAngleY. */
-    Vector3 mSpeed;         /* 0x0a4 */
+    Vector3 mSpeed; /* 0x0a4 */
     /* Two populations of bits share this word. The profile descriptor's +0x08
      * word is copied in verbatim by the constructor; the framework then sets and
      * clears its own bits in the same storage. Across the 353 soundly-parsed

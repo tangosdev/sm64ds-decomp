@@ -497,7 +497,7 @@ int daObjMarioCap_c::Behavior()
             mDormant = 0;
             mPopScale = 0x2000;     /* 2.0 */
             mPopIn = 1;
-            mSpeed.y = 0xf000;    /* 15 units a frame, upward */
+            mSpeed.y = 0xf000; /* 15 units a frame, upward */
             SmallPoofDust();
         }
     }
@@ -991,9 +991,9 @@ int daObjMarioCap_c::Slide()
     if (mHorzSpeed > 0xf000)
         mHorzSpeed = 0xf000;
     mPrevAngleY = ang;
-    mSpeed.y = -(
-        FX_Div(FX_MUL(mFloorNormal.x, mSpeed.x) + FX_MUL(mFloorNormal.z, mSpeed.z), mFloorNormal.y) +
-        0x8000);
+    mSpeed.y = -(FX_Div(FX_MUL(mFloorNormal.x, mSpeed.x) + FX_MUL(mFloorNormal.z, mSpeed.z),
+                        mFloorNormal.y) +
+                 0x8000);
     pitch = func_02010844(&mFloorNormal, mAngleY);
     roll = func_02010844(&mFloorNormal, mAngleY - 0x4000);
     UpdateAngle(mAngleX, pitch, 4, 0x1000);

@@ -680,8 +680,7 @@ int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
 }
 
 int dActor_c::BumpedUnderneathByPlayer(daPly_c &player) {
-    if (player.mIsAirborne != 0 && player.mSpeed.y > 0
-        && player.mPosY < mPosY)
+    if (player.mIsAirborne != 0 && player.mSpeed.y > 0 && player.mPosY < mPosY)
         return 1;
 
     return 0;
