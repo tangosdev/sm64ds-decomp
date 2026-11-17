@@ -30,11 +30,7 @@ PORTED     ███████████████████████
 
 <!-- data:start -->
 ```
-DATA CLAIMED   =========---------------------  30.5%   4,607 / 15,093 initialized items
-DATA VERIFIED  =====-------------------------  17.9%   2,702 / 15,093 initialized items   87,896 B exact
-DATA PARTIAL   =-----------------------------   4.7%   703 / 15,093 initialized items   11,144 B compared
-DATA NAMED     ==========--------------------  32.4%   6,483 / 20,006 items
-BSS CLAIMED    =========================-----  84.2%   4,138 / 4,913 BSS items   67,992 B
+DATA       █████████████░░░░░░░░░░░░░░░░░  43.7%   8,745 / 20,006
 ```
 
 Data progress: [notes/data-tracking.md](notes/data-tracking.md).

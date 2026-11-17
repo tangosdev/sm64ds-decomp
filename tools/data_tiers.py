@@ -6,28 +6,26 @@ whether a complete delinks claim covers it. A claim is ownership, not proof.
 The full build's ``romData`` report is the proof: which emitted data symbols
 match the cartridge. This tool joins the two and reports one picture.
 
-  CLAIMED    a complete delinks claim covers an initialized address
+  CLAIMED    a complete delinks claim covers the address
   VERIFIED   the full build compared an emitted symbol there byte-for-byte
   PARTIAL    the emitted symbol was compared, but coverage is short or blind
   DIFFERS    at least one emitted copy disagreed with the cartridge
   UNCLAIMED  no complete source claim covers the address
-  BSS        storage only; its own bar, because it has no ROM payload
 
-The address is the item, as a function address is the item in the function
-tiers. Aliases, renames and TU moves do not create a second item. The key is
-``module:0xaddress``.
+The address is the item. Aliases, renames and TU moves do not create a second
+one. The key is ``module:0xaddress``.
 
-Initialized claims and verified symbols are counted against initialized
-storage. BSS is counted against BSS. Mixing the two makes a verified bar
-that can never reach 100%, because BSS has nothing for the build to compare.
+The public bar is one DATA line, the same way the function tiers are the code
+lines. BSS is data: a claimed BSS address counts in that line. The README does
+not split storage by section. Verified, partial and differing stay in the text
+report, because those are build results, not a second progress bar.
 
 ``source_coverage.py`` and ``validate_merge.py`` remain the byte ratchets.
-This tool does not duplicate them and it does not record who wrote the source.
+This tool does not duplicate them.
 
 No ROM, compiler or linker is used here. ``--rom-report`` is the optional
-``rombuild.py`` report; without it the byte-verification tiers are unavailable.
-``--write-readme`` without a report refreshes the claim bars and leaves an
-existing verified block in place.
+``rombuild.py`` report; without it the byte-verification lines are unavailable.
+``--write-readme`` rewrites the single DATA line from the inventory.
 """
 from __future__ import annotations
 
@@ -45,7 +43,6 @@ README_START = "<!-- data:start -->"
 README_END = "<!-- data:end -->"
 
 STORAGE_CATEGORIES = {"global-storage", "code-embedded-data"}
-_VERIFIED_LINE = re.compile(r"^DATA (VERIFIED|PARTIAL|DIFFERS) ")
 
 
 def canonical_id(module, address):
@@ -351,9 +348,9 @@ def summarize(inventory, verification=None):
         "limits": [
             "A complete claim is declared ownership; it is not compiled proof.",
             "VERIFIED/PARTIAL/DIFFERS require the full build's romData report.",
-            "CLAIMED and VERIFIED use the initialized universe. BSS is separate.",
+            "The DATA bar counts every storage address, BSS included.",
             "Per-address window bytes are the next configured boundary upper bound, not object sizes.",
-            "BSS is storage, not ROM payload; its byte count is NOBITS storage.",
+            "BSS has no ROM payload. A claim counts it as data; the build cannot byte-compare it.",
             "NAMED means the spelling is not a data_/reg_ placeholder. It is not a reviewed name.",
         ],
     }
@@ -364,68 +361,34 @@ def _pct(done, total):
 
 
 def bar(done, total, width=30):
+    """Same glyphs as the function bars in tools/tiers.py."""
     filled = round(_pct(done, total) / 100.0 * width) if total else 0
     if done and total and filled == 0:
         filled = 1
-    return "=" * filled + "-" * (width - filled)
+    return "█" * filled + "░" * (width - filled)
 
 
-def _count_line(label, done, total, suffix, extra=""):
-    return (f"{label:<14} {bar(done, total)}  "
-            f"{_pct(done, total):4.1f}%   "
-            f"{done:,} / {total:,} {suffix}{extra}")
-
-
-def readme_block(report, preserved_verified=None):
+def readme_block(report):
+    """One DATA line. BSS is included; it is not its own bar."""
     c = report["counts"]
-    v = report["verification"]
-    initialized = c["initialized"]
-    lines = [README_START, "```"]
-    lines.append(_count_line("DATA CLAIMED", c["initializedClaimed"], initialized,
-                             "initialized items"))
-    if v["available"]:
-        lines.append(_count_line(
-            "DATA VERIFIED", c["verified"], initialized, "initialized items",
-            f"   {v['verifiedBytes']:,} B exact"))
-        if c["partial"] or v["partialBytes"]:
-            lines.append(_count_line(
-                "DATA PARTIAL", c["partial"], initialized, "initialized items",
-                f"   {v['partialBytes']:,} B compared"))
-        if c["differs"]:
-            lines.append(_count_line(
-                "DATA DIFFERS", c["differs"], initialized, "initialized items"))
-    elif preserved_verified:
-        lines.extend(preserved_verified)
-    else:
-        lines.append("DATA VERIFIED  (full build report unavailable)")
-    lines.append(_count_line("DATA NAMED", c["named"], c["items"], "items"))
-    bss_total = c["bssClaimed"] + c["bssUnclaimed"]
-    bss_bytes = report["bytes"]["sectionCoverage"].get("bss:single-complete-claim", 0)
-    lines.append(_count_line(
-        "BSS CLAIMED", c["bssClaimed"], bss_total, "BSS items",
-        f"   {bss_bytes:,} B"))
-    lines.append("```")
-    lines.append("")
-    lines.append("Data progress: [notes/data-tracking.md](notes/data-tracking.md).")
-    lines.append(README_END)
-    return "\n".join(lines)
-
-
-def _preserved_verification_lines(text):
-    if README_START not in text or README_END not in text:
-        return None
-    block = text.split(README_START, 1)[1].split(README_END, 1)[0]
-    kept = [line for line in block.splitlines() if _VERIFIED_LINE.match(line)]
-    return kept or None
+    done, total = c["claimed"], c["items"]
+    line = (f"DATA       {bar(done, total)}  "
+            f"{_pct(done, total):4.1f}%   {done:,} / {total:,}")
+    return "\n".join([
+        README_START,
+        "```",
+        line,
+        "```",
+        "",
+        "Data progress: [notes/data-tracking.md](notes/data-tracking.md).",
+        README_END,
+    ])
 
 
 def write_readme(path, report):
     path = pathlib.Path(path)
     text = path.read_text(encoding="utf-8", errors="replace") if path.is_file() else ""
-    preserved = None
-    if not report["verification"].get("available"):
-        preserved = _preserved_verification_lines(text)
-    block = readme_block(report, preserved)
+    block = readme_block(report)
     if README_START in text and README_END in text:
         before, rest = text.split(README_START, 1)
         _old, after = rest.split(README_END, 1)
@@ -446,22 +409,15 @@ def write_readme(path, report):
 def _summary(report):
     c = report["counts"]
     v = report["verification"]
-    initialized = c["initialized"]
     lines = [
         "Data tracking",
-        f"  storage items: {c['items']:,} ({initialized:,} initialized, {c['bss']:,} BSS)",
-        f"  claimed:       {c['initializedClaimed']:,} / {initialized:,} initialized "
-        f"({_pct(c['initializedClaimed'], initialized):.1f}%)",
-        f"  verified:      {c['verified']:,} / {initialized:,} initialized "
-        f"({_pct(c['verified'], initialized):.1f}%)"
+        f"  data:          {c['claimed']:,} / {c['items']:,} "
+        f"({_pct(c['claimed'], c['items']):.1f}%)",
+        f"  verified:      {c['verified']:,}"
         + (f", {v['verifiedBytes']:,} B exact" if v["available"] else " (no romData report)"),
-        f"  partial:       {c['partial']:,} / {initialized:,}"
+        f"  partial:       {c['partial']:,}"
         + (f", {v['partialBytes']:,} B compared" if v["available"] else ""),
         f"  differs:       {c['differs']:,}",
-        f"  named:         {c['named']:,} / {c['items']:,} "
-        f"({_pct(c['named'], c['items']):.1f}%)",
-        f"  bss claimed:   {c['bssClaimed']:,} / {c['bss']:,} "
-        f"({_pct(c['bssClaimed'], c['bss']):.1f}%)",
     ]
     section = report["bytes"]["sectionCoverage"]
     lines.append("  section bytes: "
@@ -486,11 +442,7 @@ def main(argv=None):
         report = summarize(inventory, verification)
         if args.write_readme:
             write_readme(README, report)
-            if verification.get("available"):
-                print(f"updated {README} data block")
-            else:
-                print(f"updated {README} claim bars; verified lines kept "
-                      f"(no romData report)")
+            print(f"updated {README} data block")
         if args.json:
             path = pathlib.Path(args.json)
             path.parent.mkdir(parents=True, exist_ok=True)

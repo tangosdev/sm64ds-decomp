@@ -12,17 +12,19 @@ build has proved against the cartridge. It does not replace the byte gates:
 | `tools/validate_merge.py` | Did the full build lose a verified data symbol or gain a differing one? |
 | `tools/data_tiers.py` | What is the per-address status, and what do the progress bars say? |
 
-## Tiers
+## The bar
+
+The README has the function lines and one data line. Data is every configured
+storage address: `.data`, `.rodata`, and `.bss`. A complete claim counts,
+whichever section it is in. There is no BSS line.
 
 The address is the item. Aliases, renames and TU moves do not create a second
 data item. The key is `module:0xaddress`.
 
-Initialized data and BSS are separate universes. A BSS address has no ROM
-payload, so it cannot be verified, and it is not part of the claimed or
-verified denominator.
+The text report still says how a build treated the initialized bytes:
 
-- **CLAIMED** — exactly one complete `delinks.txt` claim covers an initialized
-  address. This is declared source ownership, not a byte proof.
+- **CLAIMED** — exactly one complete `delinks.txt` claim covers the address.
+  This is the README count. It is declared source ownership, not a byte proof.
 - **VERIFIED** — the full build's `romData` report compared an emitted symbol
   at that address and every compared byte matched.
 - **PARTIAL** — it was compared, but the emitted extent or a blind relocation
@@ -32,19 +34,14 @@ verified denominator.
   differing copy wins over a correct sibling at the same address.
 - **UNCLAIMED** — no complete claim covers the address; the cartridge supplies
   the bytes.
-- **BSS_CLAIMED / BSS_UNCLAIMED** — storage, reported on its own bar.
 
-`NAMED` counts addresses whose spelling is not a `data_` / `reg_` placeholder.
-The inventory marks that state unreviewed. It is not a count of recovered names.
-
-A verified address is still claimed when a complete window covers it. The
-verified bar is the proved subset, the same way MATCHED and LINKED overlap
-for functions.
+BSS has no ROM payload, so the build cannot mark it verified. A claimed BSS
+address still counts on the DATA line.
 
 ## Commands
 
 ```sh
-# Claim, named and BSS bars. Verification is reported as unavailable.
+# The DATA line, plus verified/partial/differs when a build report exists.
 python tools/data_tiers.py
 
 # Same report with the full build's verified, partial and differing verdicts.
@@ -54,10 +51,8 @@ python tools/data_tiers.py --rom-report build/rombuild-report.json
 python tools/data_tiers.py --json build/data-tracking.json \
   --items-json build/data-items.json
 
-# Rewrite the DATA block in README.md. With a rom report, the verified lines
-# are rewritten. Without one, the claim bars update and the verified lines
-# already in the README stay.
-python tools/data_tiers.py --rom-report build/rombuild-report.json --write-readme
+# Rewrite the DATA line in README.md. It does not need a ROM build.
+python tools/data_tiers.py --write-readme
 ```
 
 The inventory is read from `data_inventory.py` when `--inventory` is omitted.
@@ -66,11 +61,9 @@ The inventory is read from `data_inventory.py` when `--inventory` is omitted.
 `build/rombuild-report.json`. If that file is absent the verification tiers
 are unavailable rather than guessed.
 
-The function progress workflow refreshes the README on every push to `main`
-because `chaos-db.json` is built from committed config. Verified data needs a
-full ROM build, which that runner does not have, so the verified lines are
-rewritten only when someone passes `--rom-report`. Claim, named and BSS bars
-need no ROM.
+The DATA line is claimed addresses over every storage address. It needs no ROM.
+Verified, partial and differing counts are printed only when `--rom-report`
+points at a full build.
 
 ## How to add data
 
@@ -81,8 +74,8 @@ need no ROM.
    `python tools/rombuild.py -j16 --no-rom --report-json build/rombuild-report.json`
 4. Check the row:
    `python tools/data_tiers.py --rom-report build/rombuild-report.json`
-5. Regenerate the README DATA block with the same report when the landed row
-   changes the public progress picture.
+5. Regenerate the README DATA line when the claim count changes:
+   `python tools/data_tiers.py --write-readme`
 
 Byte proof stays with `romdata_check` / `validate_merge` / `source_coverage`.
 A claim can land before it is verified. The progress tool does not make a

@@ -98,22 +98,17 @@ class SummarizeTests(unittest.TestCase):
         self.assertEqual(report["counts"]["verified"], 0)
         self.assertEqual(report["bytes"]["sectionCoverage"]["bss:single-complete-claim"], 0x30)
 
-    def test_initialized_bars_exclude_bss(self):
-        rows = [rec(0x100), rec(0x200, section=".bss")]
-        ver = verification({"ov002:0x00000100": "VERIFIED"},
-                           verified=1, verifiedBytes=8)
-        report = DT.summarize(inventory(rows), ver)
-        self.assertEqual(report["counts"]["initialized"], 1)
-        self.assertEqual(report["counts"]["initializedClaimed"], 1)
-        self.assertEqual(report["counts"]["verified"], 1)
-        self.assertEqual(report["counts"]["bssClaimed"], 1)
+    def test_readme_counts_bss_with_the_rest_of_the_data(self):
+        rows = [rec(0x100), rec(0x200, section=".bss"),
+                rec(0x208, section=".bss", ownership="no-complete-claim")]
+        report = DT.summarize(inventory(rows), verification({}))
+        self.assertEqual(report["counts"]["claimed"], 2)
+        self.assertEqual(report["counts"]["items"], 3)
         block = DT.readme_block(report)
-        initialized = [line for line in block.splitlines()
-                       if line.startswith("DATA CLAIMED") or line.startswith("DATA VERIFIED")]
-        self.assertEqual(len(initialized), 2)
-        self.assertTrue(all("1 / 1 initialized items" in line for line in initialized))
-        self.assertNotIn("CREDITED", block)
-        self.assertNotIn("author", report["items"][0])
+        data_lines = [line for line in block.splitlines() if line.startswith("DATA")]
+        self.assertEqual(data_lines, [
+            "DATA       " + DT.bar(2, 3) + "  66.7%   2 / 3"])
+        self.assertNotIn("BSS", block)
 
     def test_named_is_independent_of_verification(self):
         rows = [rec(0x300, naming="existing-nonplaceholder-unreviewed"),
@@ -156,31 +151,17 @@ class ReportRenderingTests(unittest.TestCase):
             second = path.read_text(encoding="utf-8")
         self.assertEqual(first, second)
         self.assertIn(DT.README_START, first)
-        self.assertIn("DATA CLAIMED", first)
+        self.assertIn("DATA       ", first)
+        self.assertNotIn("BSS", first)
         self.assertIn("Tail", first)
         self.assertEqual(first.count(DT.README_START), 1)
 
-    def test_verification_absent_is_explicit(self):
+    def test_readme_does_not_wait_on_a_build_report(self):
         report = DT.summarize(inventory([rec(0x100)]), DT.load_verification(None))
         self.assertFalse(report["verification"]["available"])
-        self.assertIn("full build report unavailable", DT.readme_block(report))
-
-    def test_write_readme_keeps_verified_lines_without_a_report(self):
-        claimed = DT.summarize(inventory([rec(0x100)]), DT.load_verification(None))
-        verified = DT.summarize(
-            inventory([rec(0x100)]),
-            verification({"ov002:0x00000100": "VERIFIED"},
-                         verified=1, verifiedBytes=8))
-        with tempfile.TemporaryDirectory() as td:
-            path = pathlib.Path(td) / "README.md"
-            path.write_text("# Title\n\n<!-- tiers:end -->\n\nTail\n", encoding="utf-8")
-            DT.write_readme(path, verified)
-            DT.write_readme(path, claimed)
-            text = path.read_text(encoding="utf-8")
-        self.assertIn("DATA VERIFIED", text)
-        self.assertIn("8 B exact", text)
-        self.assertNotIn("full build report unavailable", text)
-        self.assertIn("Tail", text)
+        block = DT.readme_block(report)
+        self.assertIn("1 / 1", block)
+        self.assertNotIn("unavailable", block)
 
     def test_differs_wins_over_a_verified_sibling(self):
         with tempfile.TemporaryDirectory() as td:
