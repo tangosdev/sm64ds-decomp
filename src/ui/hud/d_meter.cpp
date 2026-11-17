@@ -804,7 +804,7 @@ void dMeter_c::RenderRedCoins() {
     int count = (unsigned char)gNumRedCoins[idx];
     int sl = flag ? 0x1c : 0xa;
     for (int i = 0; i < count; i++) {
-        OAM::Render(false, &OAM::RED_COIN, 0x10 + i * 0xb, sl, -1, 1, (Matrix2x2 *)0);
+        OAM::Render(false, &OAM::RED_COIN, 0x10 + i * 0xb, sl, -1, 1, 0);
     }
 }
 
@@ -898,7 +898,7 @@ void dMeter_c::RenderSilverStars() {
     if (sl < n) {
         sb = 0x10;
         do {
-            OAM::Render(0, (OamAttr *)data_ov001_020abac8, sb, 0xa, -1, 1, (Matrix2x2 *)0);
+            OAM::Render(0, (OamAttr *)data_ov001_020abac8, sb, 0xa, -1, 1, 0);
             sl++;
             sb += 0x11;
         } while (sl < n);
