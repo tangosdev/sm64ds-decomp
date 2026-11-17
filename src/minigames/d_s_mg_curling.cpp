@@ -69,7 +69,7 @@ extern void func_02012718(int a, int b);
 struct OamAttr;
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern int Mg_IsNewRecord(void);
 extern void Mg_SetSharedState(int state);
 extern void Mg_SubmitScore(int score);

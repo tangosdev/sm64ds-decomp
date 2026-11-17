@@ -72,7 +72,7 @@ extern void func_02012718(int id, int v);
 struct OamAttr;
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern int GetGameLanguage(void);
 extern void SetBg2Offset(int a, int b);
 extern void SetBg0Offset(int a, int b);

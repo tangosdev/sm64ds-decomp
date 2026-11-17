@@ -830,7 +830,7 @@ extern void Mg_SubmitScore(int);
 extern void Mg_SetTopRecord(int);
 extern void Mg_DrawFx(void *);
 extern void Mg_RestoreMusic(void);
-extern void Mg_RenderSubSpritePalMtx(void *, int, int, int, int, void *);
+extern void Mg_RenderSubSpritePalMtx(void *, int, int, int, int, struct Matrix2x2 *);
 extern void Mg_RenderSubSpriteMtx(void *, int, int, void *);
 extern int Mg_RenderMainSpriteScaled(void *, int, int, int, int, int, u16);
 extern void Mg_RenderSpriteBothMtx(void *, int, int, void *);

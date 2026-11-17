@@ -74,7 +74,7 @@ enum dScMgSnowball_c_AssetId {
 #define SNOW_OFF(m) ((int)&((dScMgSnowball_c *)0)->m)
 
 extern "C" {
-extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, void *f);
+extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, Matrix2x2 *f);
 extern OamAttr *sSnowballBitSprites[];
 extern void func_0203d388(int *p, s16 angle);
 extern int func_0203d434(int *p);

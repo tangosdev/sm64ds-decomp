@@ -108,7 +108,7 @@ extern "C" {
 
 int GetGameLanguage(void);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 void Vec2_Sub(int *out, int *a, int *b);
 void *LoadFile(int id);
 void DecompressLZ16(void *src, void *dst);

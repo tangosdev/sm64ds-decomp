@@ -120,7 +120,7 @@ extern int sSlot1ReelPos[][2];
 extern void *sSlot1Sprites[];
 extern unsigned char sSlot1Payouts[];
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
-extern void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern void Mg_SaveRecordPair(int a, int b);
 extern void Mg_PlayJingle(void *c);
 extern int sSlotReelScrollSpeeds[];
