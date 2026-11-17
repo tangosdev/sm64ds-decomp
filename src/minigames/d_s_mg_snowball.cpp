@@ -297,7 +297,9 @@ int dScMgSnowball_c::HitsBreakable(int *point) {
 // kept: the ROM recomputes x >> 12 and courseY >> 12 after the tile lookup; with
 // CSE on they are reused and the function is 0x288. A tile-lookup inline helper,
 // u16/unsigned casts or % 16 on the locals, and reading point[0] directly do not
-// break the reuse.
+// break the reuse. Re-measured (#821, 2026-11-16): a ternary tile-row pick 0x264,
+// the two lookup branches swapped 0x288, x / 0x10000 0x1e0, the else branch
+// re-reading point[] 0x288.
 #pragma opt_common_subs off
 int dScMgSnowball_c::HitsWall(int *point) {
     int courseY = point[1];
@@ -492,7 +494,7 @@ void dScMgSnowball_c::UpdateSnowball() {
                 mProbeWater[j] = 1;
             else
                 mProbeWater[j] = zDry;
-            angle = (s16)(angle + 0x800);
+            angle += 0x800;
         }
 
         response[0] = zOrigin;
@@ -507,7 +509,7 @@ void dScMgSnowball_c::UpdateSnowball() {
                     response[0] += hitNormal[0];
                     response[1] += hitNormal[1];
                 }
-                angle = (s16)(angle + 0x800);
+                angle += 0x800;
             }
             func_0203d434(response);
             if (Vec2_Len(&mVel) < 0x800)
@@ -528,7 +530,7 @@ void dScMgSnowball_c::UpdateSnowball() {
                 } else {
                     allWater = zNotAllWater;
                 }
-                angle = (s16)(angle + 0x800);
+                angle += 0x800;
             }
             func_0203d434(response);
             mVel.x += response[0];
