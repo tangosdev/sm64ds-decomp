@@ -2293,6 +2293,12 @@ int Mg_CheckBannerButton(int arg) {
         int cy = gTouchInfo[idx].y;
         for (i = 0; i < 3; i++, o++) {
             if (arg == o->mFileIndex && o->mArrived != 0) {
+                /* Kept volatile: the ROM round-trips the banner position
+                   through a stack pair (strh, then ldrsh) before the
+                   subtractions. Measured 2026-11-16 (#821 r22): direct
+                   `o->mX - cx` ints, a plain Vec2 assigned by member, a
+                   short[2] and a brace-initialised Vec2 all drop the
+                   round trip (0x180 against 0x190). */
                 volatile struct Vec2 pos;
                 int dx, dy;
                 short ty;
