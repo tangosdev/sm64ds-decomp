@@ -99,7 +99,6 @@ extern char data_ov009_02113c28[];
 extern struct daObjFloatBoard_c_Resources data_ov016_02114b8c;
 extern char data_ov024_02112d00[];
 extern char data_ov027_021130e8;
-extern char data_ov030_02115ddc[];
 
 extern char data_ov056_02112c68[];
 extern char data_ov063_0211ecb8;
@@ -788,7 +787,7 @@ extern void func_ov002_020d2e74(void *);
 extern void func_ov002_020d99a4(struct daPly_c *);
 extern void func_ov002_020db54c(void *, int, int, short);
 extern void func_ov002_020db704(void *);
-extern void func_ov002_020dc09c(char *);
+extern void func_ov002_020dc09c(struct daPly_c *);
 extern void func_ov002_020e3e00(void *, void *, u32);
 extern void func_ov002_020e6330(void *);
 extern void func_ov002_020e69c0(void *);

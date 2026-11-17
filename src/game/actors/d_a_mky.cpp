@@ -32,9 +32,9 @@
  * - data_ov030_* handles stay address labels. decl_common.h types
  *   four of them as void*[] where this file's blocks say int[].
  *   g_profile is not this TU's data.
- * - func_ov030_02112578 keeps `*(s32 *)((u8 *)v + N)` stores into a v
- *   it never reads. Spelled `v[N] = ...` or `s32 v[3] = {...}`, mwcc
- *   drops the three dead stores and the function comes out 0x24 short.
+ * - func_ov030_02112578 fills a Vector3 v it never reads. As a Vector3
+ *   the three stores survive; as `s32 v[3]`, or with v removed, mwcc
+ *   drops them and the function comes out 0x24 short.
  */
 #pragma defer_codegen off
 
@@ -83,6 +83,18 @@ struct MkyAnimFilePtr : SharedFilePtr {
     MkyAnimFilePtr(unsigned int fileID);
     ~MkyAnimFilePtr();
 };
+
+/* The carry offsets, one per hold pose: UpdateModelAndCap picks one by
+ * index. The table is defined at the bottom, in retail __sinit order. */
+struct MkyOff {
+    Vector3 offset;
+    MkyOff(int, int, int, int);
+    MkyOff(int, int, int);
+    ~MkyOff();
+};
+typedef char MkyOff_size_must_be_0xc[sizeof(MkyOff) == 0xc ? 1 : -1];
+
+extern MkyOff data_ov030_02115ddc[4];
 
 /* Actor IDs 0xbf, 0x10b and 0x10c are PLAYER, UKIKI_THIEF and UKIKI_STAR.
  * dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states.
@@ -373,9 +385,6 @@ void daMky_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
     }
 }
 void daMky_c::UpdateModelAndCap() {
-    /* from include/decl_common.h:255, which this TU does not include. */
-    extern char data_ov030_02115ddc[];
-
     struct Bundle { Vector3_16 rot; short _p; Vector3 trans; int _tail[2]; };
 
     int idx;
@@ -392,7 +401,7 @@ void daMky_c::UpdateModelAndCap() {
         if (this->mPlayer->param1 == 2) {
             idx = (idx + 2) & 0xff;
         }
-        res = UpdateCarry(*this->mPlayer, *(Vector3 *)(data_ov030_02115ddc + idx * 0xc));
+        res = UpdateCarry(*this->mPlayer, data_ov030_02115ddc[idx].offset);
         mAnmModel.mat4x3 = *res;
     } else {
         Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngleY);
@@ -1566,24 +1575,21 @@ extern "C" daMky_c::StateFunctions data_ov030_02115e0c[11] = {
  * three field stores. ~MkyOff is not defined here: after this TU's vague
  * ~Vector3 is stripped it is aliased onto _ZN7Vector3D1Ev, the one
  * destructor the cartridge registers for all four. */
-struct MkyOff {
-    int x, y, z;
-    MkyOff(int px, int py, int pz, int) {
-        x = px;
-        y = py;
-        z = pz;
-    }
-    MkyOff(int px, int py, int pz) {
-        unsigned int *p = (unsigned int *)this;
-        p[0] = px;
-        p[1] = py;
-        p[2] = pz;
-    }
-    ~MkyOff();
-};
-typedef char MkyOff_size_must_be_0xc[sizeof(MkyOff) == 0xc ? 1 : -1];
+inline MkyOff::MkyOff(int px, int py, int pz, int) {
+    offset.x = px;
+    offset.y = py;
+    offset.z = pz;
+}
+inline MkyOff::MkyOff(int px, int py, int pz) {
+    unsigned int *p = (unsigned int *)this;
+    p[0] = px;
+    p[1] = py;
+    p[2] = pz;
+}
 
-MkyOff data_ov030_02115ddc(0x1c000, -0x42000, 0x18000, 0);
-MkyOff data_ov030_02115de8(0x1c000, -0x28000, 0x28000);
-MkyOff data_ov030_02115df4(0x2b000, -0x42000, 0x18000);
-MkyOff data_ov030_02115e00(0x30000, -0x1e000, 0x1e000);
+MkyOff data_ov030_02115ddc[4] = {
+    MkyOff(0x1c000, -0x42000, 0x18000, 0),
+    MkyOff(0x1c000, -0x28000, 0x28000),
+    MkyOff(0x2b000, -0x42000, 0x18000),
+    MkyOff(0x30000, -0x1e000, 0x1e000),
+};
