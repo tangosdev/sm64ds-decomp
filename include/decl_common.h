@@ -1041,7 +1041,6 @@ extern void UnloadKeyModels(int);
 extern void UnloadSilverStarAndNumber(void);
 extern unsigned int func_02045a50(const void *, unsigned int);
 extern int func_ov002_020ad660(void *, void *, void *, int);
-extern void func_ov002_020ae968(struct dEnemyBase_c *, struct dActor_c *);
 extern int func_ov002_020eee3c(char *, char *);
 extern int func_ov002_020eeeb8(void *, char *);
 extern int func_ov002_020ef070(void *, char *);

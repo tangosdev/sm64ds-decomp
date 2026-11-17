@@ -200,6 +200,12 @@ struct dEnemyBase_c : dActor_c {
     int func_ov002_020ae4cc(dBgCh_Actr &);
     int func_ov002_020ae454(dBgCh_Actr &);
     int func_ov002_020aea24(dBgCh_Actr &);
+    /* Knock-back speeds from the attacker (a player's param1 indexes the
+       strength table), shared by the death start handlers. */
+    void func_ov002_020ae968(dActor_c *);
+    void func_ov002_020ae8b8(dActor_c *);
+    /* Shrink-death tail; its caller passes an argument the body ignores. */
+    int func_ov002_020ae5c8(int);
 };
 
 /* Makes dEnemyBase_c's size a claim the compiler enforces, and makes every header
