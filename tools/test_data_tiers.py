@@ -176,6 +176,23 @@ class ReportRenderingTests(unittest.TestCase):
         self.assertFalse(report["verification"]["available"])
         self.assertIn("full build report unavailable", DT.readme_block(report))
 
+    def test_report_normalizes_a_romdata_record_list(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = pathlib.Path(td) / "romdata.json"
+            path.write_text(json.dumps([
+                {"module": "ov002", "symbol": "data_1", "addr": 0x100,
+                 "bytes": 8, "verdict": "VERIFIED"},
+                {"module": "ov002", "symbol": "data_2", "addr": 0x108,
+                 "bytes": 3, "verdict": "PARTIAL"},
+                {"module": "ov002", "symbol": "data_3", "addr": 0x110,
+                 "bytes": 5, "verdict": "DIFFERS"},
+            ]), encoding="utf-8")
+            ver = DT.load_verification(path)
+        self.assertEqual(ver["by_address"]["ov002:0x00000100"], "VERIFIED")
+        self.assertEqual(ver["by_address"]["ov002:0x00000108"], "PARTIAL")
+        self.assertEqual(ver["by_address"]["ov002:0x00000110"], "DIFFERS")
+        self.assertEqual((ver["verified"], ver["partial"], ver["differs"]), (1, 1, 1))
+
     def test_report_normalizes_a_rombuild_romdata_report(self):
         with tempfile.TemporaryDirectory() as td:
             path = pathlib.Path(td) / "report.json"

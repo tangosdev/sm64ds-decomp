@@ -105,7 +105,7 @@ def load_verification(path=None):
     if isinstance(data, list):
         # The --data-json form: one record per emitted object/symbol. Dedupe a
         # symbol across duplicate vague-linkage copies, with DIFFERS winning.
-        rank = {"UNNAMED": 0, "PARTIAL": 1, "VERIFIED": 2}
+        rank = {"UNNAMED": 0, "PARTIAL": 1, "VERIFIED": 2, "DIFFERS": 3}
         best = {}
         for row in data:
             if not isinstance(row, dict):
