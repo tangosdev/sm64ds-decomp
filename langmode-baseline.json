@@ -15,10 +15,10 @@
       "opt_prelinearize": 1,
       "opt_propagation": 9,
       "opt_strength_reduction": 12,
-      "optimize_for_size": 13
+      "optimize_for_size": 12
     },
     "pragma_files": 37,
-    "pragma_overrides": 61,
+    "pragma_overrides": 60,
     "pragma_resets": 0,
     "pragma_resets_by_name": {}
   },
@@ -69,9 +69,9 @@
     "header_shadows": 1,
     "local_body_no_include": 12,
     "local_body_no_include_cpp": 3,
-    "local_struct_body": 338,
-    "local_struct_body_cpp": 308,
-    "pad_layout": 12
+    "local_struct_body": 336,
+    "local_struct_body_cpp": 306,
+    "pad_layout": 11
   },
   "totals": {
     "c_extension": 758,
