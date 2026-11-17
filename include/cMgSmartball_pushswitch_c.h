@@ -22,8 +22,9 @@
  * and says nothing more.
  *
  * CONSTRUCTED BY the real cMgSmartball_pushswitch_c(dScMgSmartball_c *, int, Vector2)
- * constructor; the cartridge keeps its C1, the C2 is deadstripped. It calls the base constructor, stores this vtable, and
- * sets the base's mRadius to 0x8000 -- the per-child constant every sibling
+ * constructor; the cartridge keeps its C1, the C2 is deadstripped. It calls
+ * the base constructor, stores this vtable, and sets the base's mRadius to
+ * 0x8000 -- the per-child constant every sibling
  * constructor also writes, each with its own value. It does not touch
  * mReleaseDelay; the field carries whatever the allocator left there until the
  * first RestoreInitial call. */

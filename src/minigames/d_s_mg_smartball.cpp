@@ -16,8 +16,8 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 
 // Leftovers kept for byte-exactness; each has a note at its site:
 // - several slot-0 overrides repeat the base's SaveSnapshot body inline;
-// - SpawnDust, UpdateScores and Render still walk the popup, dust and tally
-//   arrays by stepping `this` and reading element 0, and Behavior reads the
+// - UpdateScores and Render still walk the popup and tally arrays by stepping
+//   `this` and reading element 0, and Behavior reads the
 //   object tables through TableEntry, because indexing changes the
 //   addressing there.
 

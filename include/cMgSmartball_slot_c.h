@@ -76,9 +76,10 @@ struct cMgSmartball_slot_c : cMgSmartball_object_c {
     void StartSpin();
     void UpdateSpin();
 
-    /* 0x034 -- per-reel render offset from mCurrent. Update adds .x/.y to mCurrent0/mCurrent1; .y is the reel's
-       scroll position, wrapped at 0x30000 by UpdateSpin. .x is
-       zeroed by RestoreInitial and never written anywhere else. */
+    /* 0x034 -- per-reel render offset from mCurrent. Update adds .x/.y to
+       mCurrent0/mCurrent1; .y is the reel's scroll position, wrapped at
+       0x30000 by UpdateSpin. .x is zeroed by RestoreInitial and never
+       written anywhere else. */
     Vector2 mReelOffset[3];
 
     /* 0x04c -- per-reel scroll speed. Only .y is ever used: UpdateSpin ramps it up to 0x3000 while

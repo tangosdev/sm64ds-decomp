@@ -50,8 +50,9 @@
  * one).
  *
  * CONSTRUCTED BY the real cMgSmartball_kinoko_c(dScMgSmartball_c *, int, Vector2)
- * constructor; the cartridge keeps its C1, the C2 is deadstripped. It sets the base's mRadius to 0x7000 and mVariant to 2;
- * it does not touch mWasHit or mHitTimer. */
+ * constructor; the cartridge keeps its C1, the C2 is deadstripped. It sets
+ * the base's mRadius to 0x7000 and mVariant to 2; it does not touch mWasHit
+ * or mHitTimer. */
 #ifndef CMGSMARTBALL_KINOKO_C_H
 #define CMGSMARTBALL_KINOKO_C_H
 #include "types.h"

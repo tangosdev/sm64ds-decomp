@@ -39,9 +39,10 @@
  * places this class's first member there; mCells runs 0x31..0x39.
  *
  * CONSTRUCTED BY the real cMgSmartball_board_c(dScMgSmartball_c *, int, Vector2)
- * constructor; the cartridge keeps its C1, the C2 is deadstripped. It stores this vtable and sets the base's mRadius to
- * 0x18000 -- the per-child constant every sibling's constructor also writes,
- * each with its own value. */
+ * constructor; the cartridge keeps its C1, the C2 is deadstripped. It stores
+ * this vtable and sets the base's mRadius to 0x18000 -- the per-child
+ * constant every sibling's constructor also writes, each with its own
+ * value. */
 #ifndef CMGSMARTBALL_BOARD_C_H
 #define CMGSMARTBALL_BOARD_C_H
 #include "types.h"

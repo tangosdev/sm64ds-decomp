@@ -56,9 +56,9 @@
  * CONSTRUCTED BY the real cMgSmartball_spring_c(dScMgSmartball_c *, int, Vector2)
  * constructor; the cartridge keeps its C1, the C2 is deadstripped. Unlike
  * every sibling, its only caller is dScMgSmartball_c::InitResources --
- * dScMgSmartball_c::SpawnObjects never allocates a spring. It sets the base's mRadius to 0x20000, the per-child constant every
- * sibling constructor also writes; it does not touch anything from 0x34 to
- * 0x44. */
+ * dScMgSmartball_c::SpawnObjects never allocates a spring. It sets the
+ * base's mRadius to 0x20000, the per-child constant every sibling
+ * constructor also writes; it does not touch anything from 0x34 to 0x44. */
 #ifndef CMGSMARTBALL_SPRING_C_H
 #define CMGSMARTBALL_SPRING_C_H
 #include "types.h"
