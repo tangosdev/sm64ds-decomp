@@ -82,14 +82,11 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 extern "C" void func_0203c178(void *, int, int, int);
 
 /* The state records at 0x0213003c..0x021300bc are 8-byte Itanium
-   pointer-to-member-function constants, so SetState reaches one through a real
-   PMF. The self type is a shadow rather than daMip_c because the record's
-   pointer sits at 0x364 -- mState, which the header keeps as an opaque s32
-   precisely because Behavior compares it by ADDRESS against four ov085 objects
-   rather than dereferencing it as a type. */
-struct daMip_cSelf;
-typedef int (daMip_cSelf::*daMip_cStateFn)();
-struct daMip_cSelf { char pad[0x364]; daMip_cStateFn *pp; };
+   pointer-to-member-function constants on daMip_c, so SetState and Behavior
+   call them as real member pointers. The current record's address sits at
+   0x364 -- mState, which the header keeps as an opaque s32 because Behavior
+   compares it by ADDRESS against four ov085 objects. */
+typedef int (daMip_c::*daMip_cStateFn)();
 
 /* File-scope objects at the end of this file construct the seven resource
  * handles (model files 0x452/0x3a4, animation files 0x3a5/0x3a6/0x3a7/
@@ -918,14 +915,17 @@ int daMip_c::StateIdleInit()
 }
 
 /* Stores the state record at mState and runs its Init. Behavior runs the
-   record's second pointer-to-member every frame. mState stays an s32 because
-   Behavior compares the pointer by address, so the call goes through the
-   daMip_cSelf shadow. */
+   record's second pointer-to-member every frame. The ROM reloads mState
+   after storing it, so the record is read back through the member. */
 int daMip_c::SetState(void *record)
 {
-    daMip_cSelf *c = (daMip_cSelf *)this;
-    daMip_cStateFn *p = (daMip_cStateFn *)record;
-    c->pp = p; daMip_cStateFn *q = c->pp; if (*q == 0) return 1; return (c->**q)();
+    MipStatePair *state;
+
+    mState = (s32)record;
+    state = (MipStatePair *)mState;
+    if (state->a == 0)
+        return 1;
+    return (this->*(state->a))();
 }
 
 void daMip_c::UpdateMatrixAndShadow()
@@ -1103,8 +1103,8 @@ void daMip_c::RenderMirrorImage()
  * comparisons are what identify the states.
  *
  * The block before Advance calls MipStatePair::b, the record's second
- * pointer-to-member, on the daMip_cSelf shadow. mState stays an s32: the four
- * comparisons above identify the states by address.
+ * pointer-to-member. mState stays an s32: the four comparisons above identify
+ * the states by address.
  * */
 int daMip_c::Behavior()
 {
@@ -1228,10 +1228,9 @@ int daMip_c::Behavior()
     DecIfAbove0_Short(&mStateTimer);
 
     {
-        daMip_cSelf *self = (daMip_cSelf *)this;
         MipStatePair *state = (MipStatePair *)mState;
         if (state->b != 0)
-            (self->*(state->b))();
+            (this->*(state->b))();
     }
 
     mAnmModel.Advance();

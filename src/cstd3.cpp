@@ -21,6 +21,10 @@
 #include "nitro/hw/mmap_shared.h"
 #include "private/debugger_block.h"
 
+/* optimize_for_size is this library's own build setting, not a matching lever:
+   the ISD debug console and its soft-float helpers were shipped size-optimized. */
+#pragma optimize_for_size on
+
 extern "C" {
 extern const char data_020868a0[52];
 extern char data_020868d4;
@@ -39,9 +43,6 @@ struct CardBusState {
 };
 
 extern "C" {
-/* optimize_for_size is this library's own build setting, not a matching lever:
-   the ISD debug console and its soft-float helpers were shipped size-optimized. */
-#pragma optimize_for_size on
 void func_0206ce20(struct CardBusState* s){
   unsigned short v = REG_EXMEMCNT;
   s->exmemcnt = v;
@@ -56,22 +57,15 @@ void func_0206ce20(struct CardBusState* s){
 }
 
 extern "C" {
-#pragma optimize_for_size on
 void func_0206cd9c(struct CardBusState *s)
 {
+    /* The three reads of 0x9fe20f0 are dummy reads that let the debugger bus
+       settle; the cartridge stores each one to this stack slot. */
     volatile unsigned short scratch;
 
     if (func_0206cf7c(1) != 0 && s->ready != 0) {
-        volatile unsigned short *mirror;
-        volatile unsigned short *busReg;
-        unsigned short v2;
-
-        mirror = &((struct DebuggerBlock *)HW_ISD_RESERVED)->busMirror;
-        busReg = (unsigned short *)0x9fe2ffe;
-        v2 = s->busMirror;
-        *mirror = v2;
-        v2 = s->busMirror;
-        *busReg = v2;
+        ((struct DebuggerBlock *)HW_ISD_RESERVED)->busMirror = s->busMirror;
+        *(volatile unsigned short *)0x9fe2ffe = s->busMirror;
         scratch = *(volatile unsigned short *)0x9fe20f0;
         scratch = *(volatile unsigned short *)0x9fe20f0;
         scratch = *(volatile unsigned short*)0x9fe20f0;
