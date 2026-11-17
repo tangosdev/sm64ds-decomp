@@ -219,7 +219,6 @@ int daBtn_c::InitResources()
     int animIdx;
     u8 idx;
     void *bmd;
-    void *kcl;
     void *anim;
     int i;
 
@@ -247,8 +246,7 @@ int daBtn_c::InitResources()
     }
 
     idx = mIsKing;
-    kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov079_02127bf0[idx]);
-    kcl;
+    dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov079_02127bf0[idx]);
 
     if (mShadowModel.InitCuboid() == 0) {
         return 0;
