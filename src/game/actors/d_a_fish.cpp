@@ -85,22 +85,6 @@ extern FishModelFilePtr gFishAModelFile;
 extern FishModelFilePtr gFishBModelFile;
 extern FishAnimationFileHandle gFishSwimAnimationFile;
 extern FishAnimationFileHandle gFishAbSwimAnimationFile;
-extern "C" {
-/* local extern: mwccarm rejects casting &daFish_c::StateWaitSchoolGone to int. */
-void _ZN8daFish_c19StateWaitSchoolGoneEv();
-/* local extern: mwccarm rejects casting &daFish_c::StateWaitForPlayer to int. */
-void _ZN8daFish_c18StateWaitForPlayerEv();
-/* local extern: mwccarm rejects casting &daFish_c::StateFlee to int. */
-void _ZN8daFish_c9StateFleeEv();
-/* local extern: mwccarm rejects casting &daFish_c::StateWaitPlayerAway to int. */
-int _ZN8daFish_c19StateWaitPlayerAwayEv();
-/* local extern: mwccarm rejects casting &daFish_c::StateIdle to int. */
-void _ZN8daFish_c9StateIdleEv();
-/* local extern: mwccarm rejects casting &daFish_c::StateWander to int. */
-void _ZN8daFish_c11StateWanderEv();
-/* local extern: mwccarm rejects casting &daFish_c::StateTurnAbout to int. */
-void _ZN8daFish_c14StateTurnAboutEv();
-}
 extern SharedFilePtr *const data_ov100_021473a4[3] = {
     &gFishModelFile,
     &gFishAModelFile,
@@ -112,15 +96,6 @@ extern SharedFilePtr *const data_ov100_021473b0[3] = {
     &gFishAbSwimAnimationFile,
 };
 extern daFishState data_ov100_02148a1c[];
-/* Two-word pointer-to-member images. The initializer copies them into
-   data_ov100_02148a1c. */
-int data_ov100_02148448[2] = {(int)&_ZN8daFish_c19StateWaitSchoolGoneEv, 0};
-int data_ov100_02148450[2] = {(int)&_ZN8daFish_c18StateWaitForPlayerEv, 0};
-int data_ov100_02148458[2] = {(int)&_ZN8daFish_c9StateFleeEv, 0};
-int data_ov100_02148460[2] = {(int)&_ZN8daFish_c19StateWaitPlayerAwayEv, 0};
-int data_ov100_02148468[2] = {(int)&_ZN8daFish_c9StateIdleEv, 0};
-int data_ov100_02148470[2] = {(int)&_ZN8daFish_c11StateWanderEv, 0};
-int data_ov100_02148478[2] = {(int)&_ZN8daFish_c14StateTurnAboutEv, 0};
 extern int data_0209f32c;
 
 /* local extern: arm9 C helpers with no shared header yet. */
@@ -461,9 +436,13 @@ FishModelFilePtr gFishBModelFile(ASSET_FISH_B_BMD);
 FishAnimationFileHandle gFishSwimAnimationFile(ASSET_FISH_SWIM_BCA);
 FishAnimationFileHandle data_ov100_021489cc(ASSET_FISH_WAIT_BCA);
 FishAnimationFileHandle gFishAbSwimAnimationFile(ASSET_FISH_AB_SWIM_BCA);
+/* StateWaitPlayerAway returns int. The table calls every handler as void. */
 daFishState data_ov100_02148a1c[7] = {
-    *(daFishState *)&data_ov100_02148450, *(daFishState *)&data_ov100_02148460,
-    *(daFishState *)&data_ov100_02148448, *(daFishState *)&data_ov100_02148468,
-    *(daFishState *)&data_ov100_02148458, *(daFishState *)&data_ov100_02148470,
-    *(daFishState *)&data_ov100_02148478,
+    {&daFish_c::StateWaitForPlayer},
+    {(void (daFish_c::*)())&daFish_c::StateWaitPlayerAway},
+    {&daFish_c::StateWaitSchoolGone},
+    {&daFish_c::StateIdle},
+    {&daFish_c::StateFlee},
+    {&daFish_c::StateWander},
+    {&daFish_c::StateTurnAbout},
 };

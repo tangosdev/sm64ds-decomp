@@ -727,6 +727,41 @@
       "from": "@768",
       "to": "@157",
       "evidence": "compiler temporary; mwcc numbers it @684 per TU and ov070 daKrpa_c (this batch) also defines a global @684, so the scratch link collides Re-keyed from @768 to @714 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @714 to @751 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @751 to @763 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @763 to @768 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@770",
+      "to": "data_ov100_02148450",
+      "evidence": "Member-pointer constant for daFish_c::StateWaitForPlayer. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@771",
+      "to": "data_ov100_02148460",
+      "evidence": "Member-pointer constant for daFish_c::StateWaitPlayerAway. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@773",
+      "to": "data_ov100_02148448",
+      "evidence": "Member-pointer constant for daFish_c::StateWaitSchoolGone. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@775",
+      "to": "data_ov100_02148468",
+      "evidence": "Member-pointer constant for daFish_c::StateIdle. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@777",
+      "to": "data_ov100_02148458",
+      "evidence": "Member-pointer constant for daFish_c::StateFlee. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@779",
+      "to": "data_ov100_02148470",
+      "evidence": "Member-pointer constant for daFish_c::StateWander. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@781",
+      "to": "data_ov100_02148478",
+      "evidence": "Member-pointer constant for daFish_c::StateTurnAbout. The initializer relocation names that method, so this local keeps the configured image."
     }
   ],
   "symbol_binding_rewrites": [
@@ -777,6 +812,48 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02148a10"
+    },
+    {
+      "symbol": "data_ov100_02148450",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov100_02148460",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov100_02148448",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov100_02148468",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov100_02148458",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov100_02148470",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov100_02148478",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
     }
   ],
   "relocations": [

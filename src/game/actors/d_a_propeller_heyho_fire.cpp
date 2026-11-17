@@ -46,21 +46,9 @@ struct BMD_File;
    row there is the one unambiguous `kind:bss`, and CleanupResources already
    named it. It is the fireball's shared model file. */
 extern SharedFilePtr data_ov065_0211d610;
-/* The one state, as two member-function pointers of two words each:
- * data_ov002_0210d600 points at InitState0 (init) and
- * data_ov002_0210d5f8 at State0 (main). The static initializer
- * copies them into data_ov002_02111190, which InitResources installs.
- * Both loads of a pair happen before either store; an `{int a, b}` copy does not. */
-struct HeyhoFnPair {
-    int w[2];
-};
-extern HeyhoFnPair data_ov002_0210d600;
-extern HeyhoFnPair data_ov002_0210d5f8;
-struct HeyhoStateTable {
-    HeyhoFnPair init;
-    HeyhoFnPair main;
-};
-extern HeyhoStateTable data_ov002_02111190;
+/* The one state. InitState0 then State0. The initializer copies the two
+   member pointers into data_ov002_02111190, which InitResources installs. */
+extern daPropeller_Heyho_Fire_c::State data_ov002_02111190;
 
 /* local extern: no shared header declares these. */
 void func_02012694(unsigned int a, const Vector3 *v);
@@ -214,7 +202,7 @@ int daPropeller_Heyho_Fire_c::InitResources() {
     mdCcAc_c.Init(this, 0xa000, 0xa000, 0x200004, 0);
     mAngleY = mPrevAngleY;
     mWithMeshClsn.Init(this, 0xa000, 0xa000, 0, 0);
-    SetState((State *)&data_ov002_02111190);
+    SetState(&data_ov002_02111190);
     return 1;
 }
 
@@ -223,14 +211,9 @@ daPropeller_Heyho_Fire_c *daPropeller_Heyho_Fire_c_classInit(void) {
     return new daPropeller_Heyho_Fire_c;
 }
 
-/* Retail copy order: data_ov002_0210d600 (init), then data_ov002_0210d5f8
- * (main). mwcc emits __sinit_d_a_propeller_heyho_fire.cpp. */
-HeyhoStateTable data_ov002_02111190 = {data_ov002_0210d600, data_ov002_0210d5f8};
-
-/* Initialized data this file is the only complete referrer for. */
-/* local extern: mwccarm rejects casting &daPropeller_Heyho_Fire_c::State0 to int. */
-extern "C" int _ZN24daPropeller_Heyho_Fire_c6State0Ev();
-/* local extern: mwccarm rejects casting &daPropeller_Heyho_Fire_c::InitState0 to int. */
-extern "C" int _ZN24daPropeller_Heyho_Fire_c10InitState0Ev();
-HeyhoFnPair data_ov002_0210d5f8 = {(int)&_ZN24daPropeller_Heyho_Fire_c6State0Ev, 0};
-HeyhoFnPair data_ov002_0210d600 = {(int)&_ZN24daPropeller_Heyho_Fire_c10InitState0Ev, 0};
+/* Retail copy order: InitState0, then State0.
+   mwcc emits __sinit_d_a_propeller_heyho_fire.cpp. */
+daPropeller_Heyho_Fire_c::State data_ov002_02111190 = {
+    &daPropeller_Heyho_Fire_c::InitState0,
+    &daPropeller_Heyho_Fire_c::State0,
+};

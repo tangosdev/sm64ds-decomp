@@ -167,33 +167,6 @@ BtnAnimationFileHandle  data_ov079_021281b0(ASSET_BATTAN_KING_DAMAGE_BCA);
 BtnCollisionFilePtr     gBattanCollisionFile(ASSET_BATTAN_KCL);   /* the plain Whomp's KCL */
 BtnCollisionFilePtr     gBattanKingCollisionFile(ASSET_BATTAN_KING_KCL);   /* the king's KCL */
 
-extern "C" {
-/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_0212538c to int. */
-void _ZN7daBtn_c19func_ov079_0212538cEv();
-/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_02125240 to int. */
-void _ZN7daBtn_c19func_ov079_02125240Ev();
-/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_021258fc to int. */
-void _ZN7daBtn_c19func_ov079_021258fcEv();
-/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_021254b4 to int. */
-void _ZN7daBtn_c19func_ov079_021254b4Ev();
-/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_02124638 to int. */
-void _ZN7daBtn_c19func_ov079_02124638Ev();
-/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_021246dc to int. */
-void _ZN7daBtn_c19func_ov079_021246dcEv();
-/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_021246d8 to int. */
-void _ZN7daBtn_c19func_ov079_021246d8Ev();
-/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_02125b44 to int. */
-void _ZN7daBtn_c19func_ov079_02125b44Ev();
-/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_02124530 to int. */
-void _ZN7daBtn_c19func_ov079_02124530Ev();
-/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_021256d4 to int. */
-void _ZN7daBtn_c19func_ov079_021256d4Ev();
-/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_02124b08 to int. */
-void _ZN7daBtn_c19func_ov079_02124b08Ev();
-/* local extern: mwccarm rejects casting &daBtn_c::func_ov079_021249f0 to int. */
-void _ZN7daBtn_c19func_ov079_021249f0Ev();
-}
-
 /* Plain Whomp animation handles, then the king's six. */
 extern SharedFilePtr *const data_ov079_021275ec[5] = {
     &gBattanAttack01AnimationFile, &gBattanAttack02AnimationFile,  &gBattanRecoverAnimationFile,
@@ -205,28 +178,14 @@ extern void *const data_ov079_02127600[6] = {
     &gBattanKingWalkstartAnimationFile, &data_ov079_021281b0,
 };
 
-/* CLPS, the twelve state-handler images, and the two collision handles.
-   Each image is the two words a pointer-to-member stores; the initializer
-   below copies them into data_ov079_02128280. */
+/* CLPS for the moving mesh, then the two collision handles. */
 int data_ov079_02127ba0[8] = {
     0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
 };
-int data_ov079_02127bc0[2] = {(int)&_ZN7daBtn_c19func_ov079_0212538cEv, 0};
-int data_ov079_02127bc8[2] = {(int)&_ZN7daBtn_c19func_ov079_02125240Ev, 0};
-int data_ov079_02127bd0[2] = {(int)&_ZN7daBtn_c19func_ov079_021258fcEv, 0};
-int data_ov079_02127bd8[2] = {(int)&_ZN7daBtn_c19func_ov079_021254b4Ev, 0};
-int data_ov079_02127be0[2] = {(int)&_ZN7daBtn_c19func_ov079_02124638Ev, 0};
-int data_ov079_02127be8[2] = {(int)&_ZN7daBtn_c19func_ov079_021246dcEv, 0};
 void *data_ov079_02127bf0[2] = {
     &gBattanCollisionFile,
     &gBattanKingCollisionFile,
 };
-int data_ov079_02127bf8[2] = {(int)&_ZN7daBtn_c19func_ov079_021246d8Ev, 0};
-int data_ov079_02127c00[2] = {(int)&_ZN7daBtn_c19func_ov079_02125b44Ev, 0};
-int data_ov079_02127c08[2] = {(int)&_ZN7daBtn_c19func_ov079_02124530Ev, 0};
-int data_ov079_02127c10[2] = {(int)&_ZN7daBtn_c19func_ov079_021256d4Ev, 0};
-int data_ov079_02127c18[2] = {(int)&_ZN7daBtn_c19func_ov079_02124b08Ev, 0};
-int data_ov079_02127c20[2] = {(int)&_ZN7daBtn_c19func_ov079_021249f0Ev, 0};
 
 int data_ov079_02127cfc[96] = {
     0x00025000, 0x0002c000, 0x00030000, 0x00034000, 0x00038000, 0x00040000, 0x00046000, 0x0004a000,
@@ -243,13 +202,14 @@ int data_ov079_02127cfc[96] = {
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
 };
 
+/* Twelve state handlers. The initializer copies each member pointer into this table. */
 daBtn_c::StateFunc data_ov079_02128280[12] = {
-    *(daBtn_c::StateFunc *)&data_ov079_02127c00, *(daBtn_c::StateFunc *)&data_ov079_02127bd0,
-    *(daBtn_c::StateFunc *)&data_ov079_02127c10, *(daBtn_c::StateFunc *)&data_ov079_02127bd8,
-    *(daBtn_c::StateFunc *)&data_ov079_02127bc0, *(daBtn_c::StateFunc *)&data_ov079_02127bc8,
-    *(daBtn_c::StateFunc *)&data_ov079_02127c18, *(daBtn_c::StateFunc *)&data_ov079_02127c20,
-    *(daBtn_c::StateFunc *)&data_ov079_02127be8, *(daBtn_c::StateFunc *)&data_ov079_02127bf8,
-    *(daBtn_c::StateFunc *)&data_ov079_02127be0, *(daBtn_c::StateFunc *)&data_ov079_02127c08,
+    &daBtn_c::func_ov079_02125b44, &daBtn_c::func_ov079_021258fc,
+    &daBtn_c::func_ov079_021256d4, &daBtn_c::func_ov079_021254b4,
+    &daBtn_c::func_ov079_0212538c, &daBtn_c::func_ov079_02125240,
+    &daBtn_c::func_ov079_02124b08, &daBtn_c::func_ov079_021249f0,
+    &daBtn_c::func_ov079_021246dc, &daBtn_c::func_ov079_021246d8,
+    &daBtn_c::func_ov079_02124638, &daBtn_c::func_ov079_02124530,
 };
 
 /* OnAimedAtWithEggReturnVec's view of func_ov079_02123d4c: the (out, this)
