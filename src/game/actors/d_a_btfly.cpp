@@ -435,13 +435,13 @@ int daBtfly_c::Behavior()
         {
             int s = mHorzSpeed;
             int pitch = (unsigned short)mPrevAngleX >> 4;
-            mVertSpeed = FX_MUL(-FX_SinIdx(pitch), s);
+            mSpeed.y = FX_MUL(-FX_SinIdx(pitch), s);
             int horiz = FX_MUL(FX_CosIdx(pitch), s);
             int yaw = (unsigned short)mPrevAngleY >> 4;
-            mSpeedX = FX_MUL(horiz, FX_SinIdx(yaw));
+            mSpeed.x = FX_MUL(horiz, FX_SinIdx(yaw));
             /* The ROM recomputes the yaw index here; FX_CosIdx(yaw) is two
              * words short. */
-            mSpeedZ = FX_MUL(horiz, FX_CosIdx((unsigned short)mPrevAngleY >> 4));
+            mSpeed.z = FX_MUL(horiz, FX_CosIdx((unsigned short)mPrevAngleY >> 4));
         }
         UpdatePosWithOnlySpeed(0);
         mStateTimer++;

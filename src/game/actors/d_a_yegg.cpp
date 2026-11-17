@@ -670,17 +670,17 @@ void daYegg_c::EnterSeek() {
 void daYegg_c::ExecuteFollowPlayer() {
     Vector3 in, out;
     daPly_c *com;
-    int* p;
+    const Vector3 *p;
     Vector3 t1, t2;
     Vector3 v1, v2;
     Vector3 sumA, sumB, sumC;
 
     com = mPlayer;
     mHoldOffsetZ = -0x68000;
-    p = &com->mSpeedX;
-    mSpeedX = p[0];
-    mVertSpeed = p[1];
-    mSpeedZ = p[2];
+    p = &com->mSpeed;
+    mSpeed.x = p->x;
+    mSpeed.y = p->y;
+    mSpeed.z = p->z;
     mHorzSpeed = com->mHorzSpeed;
 
     if (DecIfAbove0_Byte(&mHoldFreezeTimer) == 0) {
@@ -766,28 +766,28 @@ void daYegg_c::ExecuteFollowPlayer() {
     }
 
     if (func_ov002_020ec654() == 0) {
-        int a4 = mSpeedX;
+        int a4 = mSpeed.x;
         if (a4 < 0) a4 = -a4;
-        mSpeedX = a4;
-        int ac = mSpeedZ;
+        mSpeed.x = a4;
+        int ac = mSpeed.z;
         if (ac < 0) ac = -ac;
-        mSpeedZ = ac;
-        a4 = mSpeedX;
+        mSpeed.z = ac;
+        a4 = mSpeed.x;
         if (a4 > 0x20000) {
             a4 = 0x20000;
-            mSpeedX = a4;
+            mSpeed.x = a4;
         }
-        a4 = mSpeedX;
+        a4 = mSpeed.x;
         {
             int fd1 = FX_Div(a4, 0x20000);
             int r1 = FX_MUL(fd1, 0xe39);
             short a4ang = (-r1);
-            ac = mSpeedZ;
+            ac = mSpeed.z;
             if (ac > 0x20000) {
                 ac = 0x20000;
-                mSpeedZ = ac;
+                mSpeed.z = ac;
             }
-            ac = mSpeedZ;
+            ac = mSpeed.z;
             {
                 int fd2 = FX_Div(ac, 0x20000);
                 int r2 = FX_MUL(fd2, 0xe39);

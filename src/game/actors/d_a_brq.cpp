@@ -286,7 +286,7 @@ s32 daBrq_c::EnterDefeatedState() {
     mPosY = mOrbitCenter.y;
     mPosZ = mOrbitCenter.z;
     mHorzSpeed = 0xa000;
-    mVertSpeed = 0x28000;
+    mSpeed.y = 0x28000;
     mStateTimer = 45;
     mAnmModel.SetAnim((BCA_File *)data_ov070_0212360c.filePtr, 0x40000000, 0x1000, 0);
     Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY, mPosZ);

@@ -109,7 +109,7 @@ int daObjCtMecha08_c::InitResources() {
 
     u8 setting = data_0209f2c0;
     mMoveTimer = data_ov065_0211c0d0[setting][mMoveDir].moveTimer;
-    mVertSpeed = data_ov065_0211c0d0[setting][mMoveDir].vertSpeed;
+    mSpeed.y = data_ov065_0211c0d0[setting][mMoveDir].vertSpeed;
     mTerminalVelocity = -0x3c000;
     return 1;
 }
@@ -142,7 +142,7 @@ int daObjCtMecha08_c::Behavior() {
                 u8 d = mMoveDir;
                 mMoveTimer = data_ov065_0211c0d0[setting][d].moveTimer;
                 d = mMoveDir;
-                mVertSpeed = data_ov065_0211c0d0[setting][d].vertSpeed;
+                mSpeed.y = data_ov065_0211c0d0[setting][d].vertSpeed;
                 if (data_0209f2c0 == CLOCK_SETTING_RANDOM) {
                     u32 rnd = (u32)RandomIntInternal(&data_0209e650.value);
                     mMoveTimer = (u16)((rnd % 6) * 20 + 10);

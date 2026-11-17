@@ -88,7 +88,7 @@ s32 daObjNumber_c::InitResources() {
     mStartPos.x = mPosX;
     mStartPos.y = mPosY;
     mStartPos.z = mPosZ;
-    mVertSpeed = 0x14000;
+    mSpeed.y = 0x14000;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
     mDelay = 0;
@@ -105,16 +105,16 @@ s32 daObjNumber_c::Behavior() {
     if (mDelay != 0)
         return 1;
 
-    mVertSpeed += mVertAccel;
-    if (mVertSpeed < mTerminalVelocity)
-        mVertSpeed = mTerminalVelocity;
-    mPosY += mVertSpeed;
+    mSpeed.y += mVertAccel;
+    if (mSpeed.y < mTerminalVelocity)
+        mSpeed.y = mTerminalVelocity;
+    mPosY += mSpeed.y;
 
     switch (mState) {
     case 0:
         if (mPosY < mStartPos.y) {
             mPosY = mStartPos.y;
-            mVertSpeed = 0xf000;
+            mSpeed.y = 0xf000;
             mState++;
         }
         break;

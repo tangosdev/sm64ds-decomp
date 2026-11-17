@@ -36,7 +36,7 @@ struct daObj1UpLogo_c : dActor_c {
     /* While nonzero, Behavior returns immediately and Render decrements
        it, so the logo is not drawn yet. */
     u16 mDelay; /* 0x14c */
-    /* 0: rise, snap to mStartPos.y, give mVertSpeed 0xf000, go to 1.
+    /* 0: rise, snap to mStartPos.y, give mSpeed.y 0xf000, go to 1.
        1: next fall below the floor emits particle 0xd2 and dies. */
     u8 mState; /* 0x14e */
     u8 pad_14f;

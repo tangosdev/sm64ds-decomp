@@ -959,7 +959,7 @@ int daIwante_c::HandPattern9Enter() {
  *      target Y drops to rest height + 0x1a000 (26.0) -> 2.
  *   2  after the timer, close in at 0x32000 (50.0) per frame; on arrival the
  *      landing effect plays (2000.0) and mTimer1 = 15 -> 3.
- *   3  on mTimer1 == 1 the hand jumps (mVertSpeed 0x7c000 = 124.0, mVertAccel
+ *   3  on mTimer1 == 1 the hand jumps (mSpeed.y 0x7c000 = 124.0, mVertAccel
  *      -0x14000 = -20.0, mHorzSpeed 0x1e000 = 30.0, mFlags 0x2000000, a
  *      profile-authored bit whose consumer is not recovered). On each landing the
  *      landing effect plays, mTimer1 = 15 and mStateWork0 counts it; after three
@@ -1045,7 +1045,7 @@ int daIwante_c::HandPattern8Execute() {
         if (st != 0) {
             if (st != 1)
                 break;
-            mVertSpeed = 0x7c000;
+            mSpeed.y = 0x7c000;
             mVertAccel = -0x14000;
             mHorzSpeed = 0x1e000;
             mFlags = 0x2000000;
@@ -1056,7 +1056,7 @@ int daIwante_c::HandPattern8Execute() {
         if (mRestPos.y < mPosY)
             break;
         mPosY = mRestPos.y;
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         mVertAccel = 0;
         mHorzSpeed = 0;
         PoundGround(0x7d0000);
@@ -1473,7 +1473,7 @@ int daIwante_c::HandPattern6Enter() {
 
 /* Pattern 5, hand run handler: the selected hand hops once while the other waits,
  * hittable. Sub-states:
- *   0  after mTimer1: the selected hand jumps (mVertSpeed 0x64000 = 100.0,
+ *   0  after mTimer1: the selected hand jumps (mSpeed.y 0x64000 = 100.0,
  *      mVertAccel -0xa000 = -10.0, mFlags 0x2000000) -> 1; the other hand takes
  *      the lowered pose -> 2.
  *   1  on landing: snap to rest, landing effect, data_ov066_0211ae08 += 1 (and
@@ -1494,7 +1494,7 @@ int daIwante_c::HandPattern5Execute() {
             break;
         if (data_ov066_0211ae0c == mPartIdx) {
             mVertAccel = -0xa000;
-            mVertSpeed = 0x64000;
+            mSpeed.y = 0x64000;
             mFlags = 0x2000000;
             mSubState = 1;
         } else {
@@ -1509,7 +1509,7 @@ int daIwante_c::HandPattern5Execute() {
         if (mRestPos.y < mPosY)
             break;
         mPosY = mRestPos.y;
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         mVertAccel = 0;
         PoundGround(0x7d0000);
         data_ov066_0211ae08 += 1;
@@ -1611,7 +1611,7 @@ int daIwante_c::HandPattern5Enter() {
  * second then returns 0, so that is the path taken when the phase is
  * PHASE_REST. Otherwise SetPoundHitVolume is applied
  * every frame. Sub-state 0: the hand whose number is in data_ov066_0211ae0c
- * jumps (mVertSpeed 0x64000 = 100.0, mVertAccel -0x14000 = -20.0) -> 1.
+ * jumps (mSpeed.y 0x64000 = 100.0, mVertAccel -0x14000 = -20.0) -> 1.
  * Sub-state 1: on landing, snap to rest, landing effect, clear this hand's bit
  * in data_ov066_0211ae0c -> 0. */
 int daIwante_c::HandPattern4Execute() {
@@ -1626,7 +1626,7 @@ int daIwante_c::HandPattern4Execute() {
         if (data_ov066_0211ae0c == mPartIdx) {
             int *p = &mSubState;
             mVertAccel = -0x14000;
-            mVertSpeed = 0x64000;
+            mSpeed.y = 0x64000;
             *p = *p + 1;
         }
         break;
@@ -1634,7 +1634,7 @@ int daIwante_c::HandPattern4Execute() {
         if (mVertAccel != 0) {
             if (mRestPos.y >= mPosY) {
                 mPosY = mRestPos.y;
-                mVertSpeed = 0;
+                mSpeed.y = 0;
                 mVertAccel = 0;
                 PoundGround(0x7d0000);
                 if ((data_ov066_0211ae0c & mPartIdx) != 0)
@@ -1684,7 +1684,7 @@ int daIwante_c::HandWaitingEnter() {
 
 /* Rise state, hand run handler (the first state a hand runs). Until the phase is
  * PHASE_RISE it only waits, with the animation held at speed 0. Then: animation
- * speed 0x1000 (1.0), a hop (hand 1: mVertSpeed 0x2d000 = 45.0, mVertAccel
+ * speed 0x1000 (1.0), a hop (hand 1: mSpeed.y 0x2d000 = 45.0, mVertAccel
  * -0x2000 = -2.0; hand 2: 0xa000 = 10.0 and -0x800 = -0.5), SE_START_MOVING. The
  * hand moves toward its rest X/Z at 0x14000 (20.0) per frame; on landing it is
  * snapped to rest height and the landing effect plays. Once it has landed, is
@@ -1696,10 +1696,10 @@ int daIwante_c::HandRiseExecute() {
         if (data_ov066_0211ae04 == PHASE_RISE) {
             mBlendAnmModel.speed = 0x1000;
             if (mPartIdx == PART_HAND_1) {
-                mVertSpeed = 0x2d000;
+                mSpeed.y = 0x2d000;
                 mVertAccel = -0x2000;
             } else {
-                mVertSpeed = 0xa000;
+                mSpeed.y = 0xa000;
                 mVertAccel = -0x800;
             }
             mStateWork0 = 1;
@@ -1713,7 +1713,7 @@ int daIwante_c::HandRiseExecute() {
         int v = mRestPos.y;
         if (v >= mPosY) {
             mPosY = v;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             mVertAccel = 0;
             PoundGround(0x7d0000);
         }

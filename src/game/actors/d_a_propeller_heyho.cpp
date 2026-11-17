@@ -265,16 +265,16 @@ int daPropeller_Heyho_c::Behavior()
     }
 
     {
-        /* Gravity, clamped at terminal velocity. mSpeedZ is read and written
+        /* Gravity, clamped at terminal velocity. mSpeed.z is read and written
            back unchanged -- the ROM really does reload and restore it here. */
-        int v = mVertSpeed + mVertAccel;
+        int v = mSpeed.y + mVertAccel;
         int hi = mTerminalVelocity;
         if (v >= hi) {
             hi = v;
         }
-        int tmp = mSpeedZ;
-        mVertSpeed = hi;
-        mSpeedZ = tmp;
+        int tmp = mSpeed.z;
+        mSpeed.y = hi;
+        mSpeed.z = tmp;
     }
 
     UpdatePosWithOnlySpeed(&mdCcAc_c);
@@ -402,7 +402,7 @@ extern daPropeller_Heyho_c::State data_ov070_021235ac;
 /* Wander main. Heads back toward home (keeping at least 20 frames on the timer)
  * when more than 500 units from it or touching a wall. Smooths the mPrevAngle
  * triple toward the heading (Y), the climb angle to home (X, linear) and a bank of
- * half the turn (Z), then eases the 0x0a4 / mVertSpeed / 0x0ac velocity words
+ * half the turn (Z), then eases the mSpeed velocity words
  * toward a 10.0-unit/frame forward vector rotated by mAngleY and the X tilt. When
  * the timer reaches 0 the state restarts (new heading). With the cooldown expired
  * and the actor within 1500 units of home, a non-vanished player within 1000 units
@@ -436,9 +436,9 @@ int daPropeller_Heyho_c::func_ov070_0211fd98() {
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngleX);
     MTX_MultVec43((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
 
-    ApproachLinear(this->mSpeedX, out[0], 0x1000);
-    ApproachLinear(this->mVertSpeed, out[1], 0x800);
-    ApproachLinear(this->mSpeedZ, out[2], 0x1000);
+    ApproachLinear(this->mSpeed.x, out[0], 0x1000);
+    ApproachLinear(this->mSpeed.y, out[1], 0x800);
+    ApproachLinear(this->mSpeed.z, out[2], 0x1000);
 
     if (this->mStateTimer == 0) {
         FlyGuy_ChangeState(this, &data_ov070_0212359c);
@@ -510,7 +510,7 @@ int daPropeller_Heyho_c::func_ov070_0211fae4() {
         this->mPosZ = this->mPrevPosZ;
         this->mPrevAngleX = 0;
         this->mStateTimer = 0;
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
         FlyGuy_ChangeState(this, &data_ov070_021235dc);
         return 1;
     }
@@ -546,7 +546,7 @@ int daPropeller_Heyho_c::func_ov070_0211fae4() {
     vin.z = 0xf000;
     Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngleX);
-    MTX_MultVec43(&vin, &data_020a0e68, (Vector3 *)&this->mSpeedX);
+    MTX_MultVec43(&vin, &data_020a0e68, &this->mSpeed);
 
     if (Vec3_Dist(&this->mPos, &this->mHomePos) > kHomeLeashDist) {
         FlyGuy_ChangeState(this, &data_ov070_0212359c);
@@ -559,9 +559,9 @@ int daPropeller_Heyho_c::func_ov070_0211fae4() {
         if (gCurrentSublevel == kLevel0x16)
             thresh = kArriveDistLevel0x16;
         if (dist < thresh) {
-            this->mSpeedX = 0;
-            this->mVertSpeed = 0;
-            this->mSpeedZ = 0;
+            this->mSpeed.x = 0;
+            this->mSpeed.y = 0;
+            this->mSpeed.z = 0;
             if (this->mCanSpitFire == 0 ||
                 (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 1) == 0) {
                 FlyGuy_ChangeState(this, &data_ov070_021235cc);
@@ -685,7 +685,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         mPosZ = mPrevPosZ;
         mPrevAngleX = 0;
         mStateTimer = 0;
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         FlyGuy_ChangeState(this, &data_ov070_021235dc);
         return 1;
     }
@@ -724,7 +724,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
 
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-    MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
 
     return 1;
 }
@@ -833,14 +833,14 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
 
 /* -------------------------------------------------------------------------- */
 
-/* Knocked init: zeroes the 0x0a4 / mVertSpeed / 0x0ac velocity words, then
- * mVertSpeed = +50.0 units/frame (upward pop), mVertAccel = -5.0, timer = 3
+/* Knocked init: zeroes the mSpeed velocity words, then
+ * mSpeed.y = +50.0 units/frame (upward pop), mVertAccel = -5.0, timer = 3
  * frames and mFlags = 0. */
 short daPropeller_Heyho_c::func_ov070_0211f450() {
-    this->mSpeedX = 0;
-    this->mVertSpeed = 0;
-    this->mSpeedZ = 0;
-    this->mVertSpeed = 0x32000;
+    this->mSpeed.x = 0;
+    this->mSpeed.y = 0;
+    this->mSpeed.z = 0;
+    this->mSpeed.y = 0x32000;
     this->mVertAccel = -0x5000;
     this->mStateTimer = 3;
     this->mFlags = 0;

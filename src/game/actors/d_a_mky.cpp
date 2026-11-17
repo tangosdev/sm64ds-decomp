@@ -366,8 +366,8 @@ void daMky_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
         Vector3 n;
         w->GetFloorResult()->surface.CopyNormalTo(n);
         if (n.y != 0) {
-            int s = FX_MUL(n.x, this->mSpeedX) + FX_MUL(n.z, this->mSpeedZ);
-            this->mVertSpeed = -(FX_Div(s, n.y) + 0x8000);
+            int s = FX_MUL(n.x, this->mSpeed.x) + FX_MUL(n.z, this->mSpeed.z);
+            this->mSpeed.y = -(FX_Div(s, n.y) + 0x8000);
         }
     }
     if (w->IsOnWall() != 0) {
@@ -564,7 +564,7 @@ int daMky_c::func_ov030_02112578()
                                     0);
             this->mPrevAngleY = this->mAngleY;
             this->mHorzSpeed = 0xf000;
-            this->mVertSpeed = 0x2f000;
+            this->mSpeed.y = 0x2f000;
             func_0201267c(0xf1, &this->mCamSpacePos);
             {
                 u8 *p = &this->mSubState;
@@ -657,7 +657,7 @@ int daMky_c::func_ov030_02112a84()
 {
     dBgCh_Actr_UpdateContinuous_Veneer(&this->mWithMeshClsn);
     if (this->mWithMeshClsn.JustHitGround() || this->mWithMeshClsn.IsOnGround()) {
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
         if (IsUkikiThief(this)) {
             dBgPi res = *mWithMeshClsn.GetSphereResult();
             if (res.GetClsnID() != 0xffffffff)
@@ -697,7 +697,7 @@ int daMky_c::EnterState7()
     mFlags &= ~0x80000;
     this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpStAnimationFile[1], 0x40000000, 0x1000, 0);
     this->mHorzSpeed = 0xa000;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     other = this->mPlayer;
     pos = &mPosX;
     s = other->mAngleY;
@@ -1203,7 +1203,7 @@ int daMky_c::EnterState2() {
 
     this->mPrevAngleY = this->mAngleY;
     this->mHorzSpeed = 0xd000;
-    this->mVertSpeed = IsUkikiThief(this) ? 0x23000 : 0x1e000;
+    this->mSpeed.y = IsUkikiThief(this) ? 0x23000 : 0x1e000;
 
     this->mWithMeshClsn.SetLimMovFlag();
     this->mAnmModel.SetAnim((BCA_File *)gMonkeyJumpStAnimationFile.filePtr, 0x40000000, 0x1000, 0);

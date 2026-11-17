@@ -272,9 +272,9 @@ void daChair_c::State2() {
 
     if (mStateTimer <= 70) {
         if (mStateTimer < 50)
-            mVertSpeed = 0x6000;
+            mSpeed.y = 0x6000;
         else
-            mVertSpeed = 0;
+            mSpeed.y = 0;
         ApproachStateValue(&mAngleX, &mStateValue0, -0xfa0, 0xc8, 0x14, 2);
         ApproachStateValue(&mAngleZ, &mStateValue2, 0, 0, 0x14, 1);
         if (mStateTimer == 70)
@@ -301,11 +301,11 @@ void daChair_c::State2() {
                 Vec3_Sub(&diff, &playerPos, &mPos);
                 mPrevAngleY = cstd::atan2(diff.x, diff.z);
                 mPrevAngleX = cstd::atan2(diff.y, Vec3_HorzLen(&diff)) * -1;
-                /* mSpeedX / mSpeedZ: lateral velocity beside mVertSpeed. */
+                /* mSpeed.x / mSpeed.z: lateral velocity beside mSpeed.y. */
                 reach = FX_MUL(FX_CosIdx((u16)mPrevAngleX >> 4), 0x32000);
-                mSpeedX = FX_MUL(reach, FX_SinIdx((u16)mPrevAngleY >> 4));
-                mVertSpeed = FX_MUL(FX_SinIdx((u16)mPrevAngleX >> 4), -0x32000);
-                mSpeedZ = FX_MUL(reach, FX_CosIdx((u16)mPrevAngleY >> 4));
+                mSpeed.x = FX_MUL(reach, FX_SinIdx((u16)mPrevAngleY >> 4));
+                mSpeed.y = FX_MUL(FX_SinIdx((u16)mPrevAngleX >> 4), -0x32000);
+                mSpeed.z = FX_MUL(reach, FX_CosIdx((u16)mPrevAngleY >> 4));
             } else {
                 if (mActionTimer > 20) {
                     mAngleY += 0x2710;
@@ -324,7 +324,7 @@ void daChair_c::State2() {
         }
     }
 
-    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
+    VEC_Add(&mPos, &mSpeed, &mPos);
 
     {
         u32 id = mCylinder.otherOwner;

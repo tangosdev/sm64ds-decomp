@@ -267,7 +267,7 @@ int daKrpa_c::EnterKnockedAway() {
     this->mVertAccel = -0x2000;
     this->mTerminalVelocity = -0x3c000;
     this->mHorzSpeed = 0xa000;
-    this->mVertSpeed = 0x28000;
+    this->mSpeed.y = 0x28000;
     this->mScaleX = 0x1000;
     this->mScaleY = 0x1000;
     this->mScaleZ = 0x1000;

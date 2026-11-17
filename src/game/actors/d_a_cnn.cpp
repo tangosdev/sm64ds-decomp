@@ -279,9 +279,9 @@ void daCnn_c::StateFire() {
             int sine = table[i * 2];
             sinCos = table;
             ball = spawned;
-            ball->mSpeedX = 0;
-            ball->mVertSpeed = sine * 100;
-            ball->mSpeedZ = 0;
+            ball->mSpeed.x = 0;
+            ball->mSpeed.y = sine * 100;
+            ball->mSpeed.z = 0;
         }
 
         elevation = (0x4000 - mPrevAngleX);
@@ -300,14 +300,14 @@ void daCnn_c::StateFire() {
         /* The muzzle is two frames of the ball's travel out from the spawn
            point. */
         {
-            int *vp = &ball->mSpeedX;
-            int vx = *vp;
+            const Vector3 *vp = &ball->mSpeed;
+            int vx = vp->x;
             int px = pos.x;
             vel[0] = vx;
-            int vy = *(vp + 1);
+            int vy = vp->y;
             int py = pos.y;
             vel[1] = vy;
-            int vz = *(vp + 2);
+            int vz = vp->z;
             int x = px + (vx << 1);
             int pz = pos.z;
             vel[2] = vz;

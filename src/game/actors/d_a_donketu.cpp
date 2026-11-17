@@ -87,9 +87,9 @@ int daDonketu_c::Behavior() {
             dActor_c *coin = dActor_c::Spawn(0x120, 2, pos, &rot, mAreaId, -1);
             if (coin) {
                 coin->mHorzSpeed = 0xa000;
-                coin->mSpeedX = 0;
-                coin->mVertSpeed = 0x50000;
-                coin->mSpeedZ = 0;
+                coin->mSpeed.x = 0;
+                coin->mSpeed.y = 0x50000;
+                coin->mSpeed.z = 0;
             }
             daBDonketu_c *bigBully = (daBDonketu_c *)dActor_c::FindWithID(mBigBullyID);
             if (bigBully)
@@ -123,9 +123,9 @@ void daDonketu_c::UpdateDeathState() {
     dActor_c *coin = dActor_c::Spawn(0x120, 2, pos, &rot, mAreaId, -1);
     if (coin) {
         coin->mHorzSpeed = 0xa000;
-        coin->mSpeedX = 0;
-        coin->mVertSpeed = 0x50000;
-        coin->mSpeedZ = 0;
+        coin->mSpeed.x = 0;
+        coin->mSpeed.y = 0x50000;
+        coin->mSpeed.z = 0;
     }
     dActor_c *spawner = dActor_c::FindWithID(mBigBullyID);
     if (spawner) {

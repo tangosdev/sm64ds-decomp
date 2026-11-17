@@ -495,7 +495,7 @@ void daTrs_c::func_ov063_02116a1c() {
         }
     }
 
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     ApproachLinear(this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &v), 0x5a8);
     Oscillate(1);
 }
@@ -617,9 +617,9 @@ void daTrs_c::func_ov063_02116e14() {
         dActor_c *r =
             dActor_c::Spawn(this->mCarriedID, 0, this->mCarriedPos, (0), this->mAreaIdx, -1);
         if (r != 0) {
-            r->mSpeedX = 0;
-            r->mVertSpeed = 0x32000;
-            r->mSpeedZ = 0;
+            r->mSpeed.x = 0;
+            r->mSpeed.y = 0x32000;
+            r->mSpeed.z = 0;
         }
     }
     this->mBooFlags.carrying = 0;
@@ -686,7 +686,7 @@ void daTrs_c::func_ov063_02116fac() {
         break;
     case 4:
         if (this->mStateTimer == 6) {
-            this->mVertSpeed = 0xf000;
+            this->mSpeed.y = 0xf000;
             this->mVertAccel = -0x4000;
             this->mTerminalVelocity = -0xf000;
         }
@@ -713,7 +713,7 @@ void daTrs_c::func_ov063_02116fac() {
     }
 
     if (this->mState != 4) {
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
         this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, &target);
     }
     ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, r4);
@@ -1336,7 +1336,7 @@ void daTrs_c::func_ov063_0211873c() {
     if (this->mAttackTimer != 0)
         return;
     this->mState = 4;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     this->mVertAccel = 0;
     func_02012694(0x159, &this->mCamSpacePos);
     this->mAnmModel.SetAnim((BCA_File *)data_ov063_0211edcc.filePtr, 0x40000000, 0x1000, 0);
@@ -2006,7 +2006,7 @@ void daTrs_c::UpdateEmerge() {
     if (this->mStateTimer >= 30) {
         this->mState = 1;
     } else {
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
         this->mHorzSpeed = 0x7ccc;
         Oscillate(0);
     }
@@ -2112,7 +2112,7 @@ void daTrs_c::func_ov063_02119cc0(int unused, s16 a2, int a3) {
     }
 
     ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, a2);
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     SetVelFromPlayerVel(0xa000 - this->mSpeedJitter, a3);
 
     if (this->mHorzSpeed != 0) {
@@ -2124,7 +2124,7 @@ void daTrs_c::func_ov063_02119cc0(int unused, s16 a2, int a3) {
 
 reset:
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     func_ov063_0211a960();
 }
 
@@ -2165,7 +2165,7 @@ void daTrs_c::ChaseMario(int a1, short a2, int a3) {
         }
 
         ApproachLinear(this->mPrevAngleY, angle, a2);
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
 
         {
             daPly_c *p = this->mClosestPlayer;
@@ -2174,7 +2174,7 @@ void daTrs_c::ChaseMario(int a1, short a2, int a3) {
                 int otherY = p->mPosY;
                 int dy = myY - otherY;
                 if ((a1 << 0xc) < dy && dy < 0x1f4000 && (this->mHomePos.y - myY) < 0xfa000) {
-                    this->mVertSpeed = this->func_ov063_0211a0a8(myY, otherY, 0xa000, 0x2000);
+                    this->mSpeed.y = this->func_ov063_0211a0a8(myY, otherY, 0xa000, 0x2000);
                 }
             }
         }
@@ -2189,7 +2189,7 @@ void daTrs_c::ChaseMario(int a1, short a2, int a3) {
     }
 
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     func_ov063_0211a960();
 }
 
@@ -2369,7 +2369,7 @@ int daTrs_c::UpdateDuringDeath() {
     return 1;
 
 fall:
-    this->mVertSpeed = 0x5000;
+    this->mSpeed.y = 0x5000;
     this->mAngleZ += 0x800;
     this->mAngleY += 0x800;
     return 0;
@@ -2433,7 +2433,7 @@ void daTrs_c::MoveDuringHit(int cond, int val) {
     s16 ang = (mStateTimer + 1) << 11;
 
     mHorzSpeed = val;
-    mVertSpeed = FX_CosIdx((u16)ang >> 4);
+    mSpeed.y = FX_CosIdx((u16)ang >> 4);
     mPrevAngleY = mKnockbackAngleY;
     if (cond == 0)
         return;
@@ -2462,7 +2462,7 @@ int daTrs_c::VanishOrAppear() {
     int r6 = GetSubtraction(this->mAngleToPlayer, this->mPrevAngleY);
     int r0 = GetSubtraction(this->mPrevAngleY, this->mClosestPlayer->mAngleY);
     int ret = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     if (r6 > 0x1568 || r0 < 0x6b58) {
         if (this->mOpacity == 0x28) {
             this->mTargetOpacity = 0xff;
@@ -2601,7 +2601,7 @@ int daTrs_c::ShouldBeStopped() {
 void daTrs_c::Stop() {
 
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     this->mVertAccel = 0;
     this->mChaseDelay = 30;
 }
@@ -2793,7 +2793,7 @@ int daTrs_c::Behavior()
                 mState = 0;
                 mHorzSpeed = 0;
                 mVertAccel = 0;
-                mVertSpeed = 0;
+                mSpeed.y = 0;
                 mSubState = 0;
                 mAreaId = mAreaIdx;
             }
@@ -2816,7 +2816,7 @@ int daTrs_c::Behavior()
                 mEatenByYoshi = 0;
                 (&mStateTimer)[2] = 0;
                 mVertAccel = 0;
-                mVertSpeed = 0;
+                mSpeed.y = 0;
                 goto block_39;
             }
         }
@@ -2988,8 +2988,8 @@ int daTBasket_c::Behavior()
         secretDone = Sound::PlaySecretSound(this, &mSoundTimer);
 
     if (mWithMeshClsn.JustHitGround()) {
-        int vertSpeed = mVertSpeed;
-        mVertSpeed = (-vertSpeed) >> 1;
+        int vertSpeed = mSpeed.y;
+        mSpeed.y = (-vertSpeed) >> 1;
         LandingDust(false);
     } else if (mWithMeshClsn.IsOnGround()) {
         onGround = 1;

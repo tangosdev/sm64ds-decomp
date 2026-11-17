@@ -198,7 +198,7 @@ int daOnms_c::StateBounce()
 
     mTumbleVelX = mTumbleVelY = mTumbleVelZ = 0;
     mHorzSpeed = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
 
     eq.x = mPosX;
     eq.y = mPosY;
@@ -257,7 +257,7 @@ void daOnms_c::StateKnocked()
     if (floor->surface.clps.GetSurfaceType() == 9) {
         mMoveDir = kDirSink;
         mHorzSpeed = 0;
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         func_02012694(0x178, CamPos(this));
     } else if (floor->surface.clps.GetSoundType() == 8) {
         /* The player's position is read through p: reading o->mPosX
@@ -455,7 +455,7 @@ void daOnms_c::Launch(dActor_c *player, u32 how)
     mMoveDir = kDirKnocked;
     mVertAccel = -0xc000;
     mTerminalVelocity = -0x48000;
-    mVertSpeed = sLaunchVertSpeed[how];
+    mSpeed.y = sLaunchVertSpeed[how];
     mHorzSpeed = sLaunchHorzSpeed[how];
     if (how < 2) mPrevAngleY = player->mAngleY;
     else mPrevAngleY = Vec3_HorzAngle(ActorPos(player), ActorPos(this));

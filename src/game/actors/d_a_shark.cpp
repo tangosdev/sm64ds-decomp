@@ -31,7 +31,7 @@
  * - CheckPlayerHit: `if (hit->actorID != 0xbf)` is size 0x120 to 0x114.
  *   The int temporary stays.
  * - Behavior: clamping with `speed < mTerminalVelocity` and dropping the
- *   mSpeedZ copy is size 0x1c0 to 0x1b8 and shifts the calls
+ *   mSpeed.z copy is size 0x1c0 to 0x1b8 and shifts the calls
  *   (WRONG-DEST, UpdateModelMatrix against 0x02010d40). The
  *   compare-into-terminal and the copy stay.
  */
@@ -228,18 +228,18 @@ int daShark_c::Behavior() {
         velocity.z = 0x14000;
         Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-        MTX_MultVec43(&velocity, &data_020a0e68, (Vector3 *)&mSpeedX);
+        MTX_MultVec43(&velocity, &data_020a0e68, &mSpeed);
     }
     {
-        /* mSpeedZ is the z word of the vector just stored at mSpeedX.
+        /* mSpeed.z is the z word of the vector just stored at mSpeed.x.
          * The copy is load-bearing. */
-        int speed = mVertSpeed + mVertAccel;
+        int speed = mSpeed.y + mVertAccel;
         int terminalVelocity = mTerminalVelocity;
-        int kept = mSpeedZ;
+        int kept = mSpeed.z;
         if (speed >= terminalVelocity)
             terminalVelocity = speed;
-        mVertSpeed = terminalVelocity;
-        mSpeedZ = kept;
+        mSpeed.y = terminalVelocity;
+        mSpeed.z = kept;
     }
     UpdatePosWithOnlySpeed(&mdCcAcPos_c);
     UpdateModelMatrix();

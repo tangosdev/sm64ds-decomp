@@ -250,7 +250,7 @@ void daCoin_c::BounceOffWall() {
 /* Shared per-frame tail of the movement handlers. Counts down the no-collision
  * timer and the disappear timer (the coin is killed when the latter reaches 1),
  * moves the coin, and runs the mesh collision -- the continuous variant when
- * the speed vector (mSpeedX, mVertSpeed, mSpeedZ) is longer than the collision
+ * the speed vector (mSpeed) is longer than the collision
  * radius. Landing on a floor with surface flag 0x20 while falling makes a big
  * splash and leaves the coin sinking slowly (gravity -0x800, terminal velocity
  * -0x5000). */
@@ -261,14 +261,15 @@ void daCoin_c::Step() {
         return;
     }
     UpdatePos(&mdCc_c);
-    if (VEC_Mag((const Vector3 *)&mSpeedX) > mWithMeshClsn.mRadius)
+    if (VEC_Mag(&mSpeed) > mWithMeshClsn.mRadius)
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     else
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     if (!mWithMeshClsn.IsOnGround()) return;
     if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) == 0)
         return;
-    if (mVertSpeed > 0) return;
+    if (mSpeed.y > 0)
+        return;
     func_02012694(0xe2, &mCamSpacePos);
     Particle::System::NewBigSplash(mPosX, mPosY, mPosZ);
     mHorzSpeed = 0;
@@ -498,7 +499,7 @@ void daCoin_c::StateLaunchNearPlayer() {
         if (gCurrentSublevel == 0xb)
             speed <<= 1;
         mHorzSpeed = speed;
-        mVertSpeed = 0x14000;
+        mSpeed.y = 0x14000;
         ((CoinFlagBits *)&mCoinFlags)->bounces++;
         mWithMeshClsn.SetLimMovFlag();
         mDisappearTimer = 450;
@@ -506,7 +507,7 @@ void daCoin_c::StateLaunchNearPlayer() {
     if (mWithMeshClsn.JustHitGround()) {
         if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)) == 0) {
             Sound::PlayBank3(0x52, mCamSpacePos);
-            mVertSpeed = 0x19000;
+            mSpeed.y = 0x19000;
         }
     }
     Step();
@@ -531,7 +532,7 @@ void daCoin_c::StateSlideAwayFromMario() {
     } else {
         if (mHorzSpeed > 0x13000) mHorzSpeed = 0x13000;
     }
-    mVertSpeed = 0x23000;
+    mSpeed.y = 0x23000;
     if (DistToCPlayer() < 0x4b0000) {
         mPrevAngleY = HorzAngleToCPlayer() + 0x8000;
     } else {
@@ -576,11 +577,11 @@ void daCoin_c::StateBounce() {
                     damping = ((3 - bounces) << 12) / 3;
                 else
                     damping = 0x555;
-                mVertSpeed = -mVertSpeed * damping / 0x1000;
+                mSpeed.y = -mSpeed.y * damping / 0x1000;
                 mHorzSpeed >>= 1;
-                if (mVertSpeed >= -mVertAccel)
+                if (mSpeed.y >= -mVertAccel)
                     return;
-                mVertSpeed = 0;
+                mSpeed.y = 0;
                 mHorzSpeed = 0;
                 mVertAccel = 0;
                 mBehaviorType = BEHAVIOR_RESTING;
@@ -608,22 +609,22 @@ void daCoin_c::StateBounce() {
                 damping = ((3 - bounces) << 12) / 3;
             else
                 damping = 0x555;
-            mVertSpeed = -mVertSpeed * damping / 0x1000;
+            mSpeed.y = -mSpeed.y * damping / 0x1000;
             mHorzSpeed >>= 1;
         }
     }
 
     if (normal.x != 0 || normal.z != 0) {
         int slide = data_ov002_020ff078[floorClass];
-        int *velocity = &mSpeedX;
-        *velocity += normal.x * slide;
-        mSpeedZ += normal.z * slide;
-        mHorzSpeed = Vec3_HorzLen((const Vector3 *)velocity);
+        Vector3 *velocity = &mSpeed;
+        velocity->x += normal.x * slide;
+        mSpeed.z += normal.z * slide;
+        mHorzSpeed = Vec3_HorzLen(velocity);
         if (mHorzSpeed > 0x1c000) {
             mHorzSpeed = 0x1c000;
             UpdatePosWithHorzSpeedAndAng();
         }
-        mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
+        mPrevAngleY = cstd::atan2(mSpeed.x, mSpeed.z);
     }
 
     if (mWithMeshClsn.JustHitGround() != 0)
@@ -632,9 +633,9 @@ void daCoin_c::StateBounce() {
         return;
 
     if (normal.y != 0) {
-        int dotX = FX_MUL(normal.x, mSpeedX);
-        int dotZ = FX_MUL(normal.z, mSpeedZ);
-        mVertSpeed = -(FX_Div(dotX + dotZ, normal.y) + 0x8000);
+        int dotX = FX_MUL(normal.x, mSpeed.x);
+        int dotZ = FX_MUL(normal.z, mSpeed.z);
+        mSpeed.y = -(FX_Div(dotX + dotZ, normal.y) + 0x8000);
     }
 
     if ((unsigned)(floorClass - 1) <= 1) {
@@ -645,7 +646,7 @@ void daCoin_c::StateBounce() {
 
     if (mHorzSpeed >= 0x1000)
         return;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mHorzSpeed = 0;
     mVertAccel = 0;
     mBehaviorType = BEHAVIOR_RESTING;
@@ -688,7 +689,7 @@ void daCoin_c::StateDrop() {
     Step();
     if (mWithMeshClsn.IsOnWall()) mHorzSpeed = 0;
     if (mWithMeshClsn.IsOnGround()) {
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         mVertAccel = 0;
         mBehaviorType = BEHAVIOR_RESTING;
     }
@@ -840,13 +841,13 @@ s32 daCoin_c::InitResources()
     }
     behavior = mBehaviorType;
     if (behavior == 8) {
-        mVertSpeed = 0x14000;
+        mSpeed.y = 0x14000;
         mVertAccel = -0x4000;
         mTerminalVelocity = -0x37000;
         *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~0xe0) | (FLOOR_NO_SHADOW << 5);
     } else if (behavior != 1 && behavior != 7) {
         if (behavior != 5) {
-            mVertSpeed = 0x24000;
+            mSpeed.y = 0x24000;
             mCoinFlags |= 2;
         } else {
             u32 flags = param1;

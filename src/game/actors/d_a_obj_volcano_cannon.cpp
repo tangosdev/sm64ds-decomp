@@ -92,8 +92,8 @@ int daObj_volcanoCannon_c::EnterFly() {
     mHorzSpeed = (r & 0x1f) + 0x14;
     mHorzSpeed <<= 0xc;
     mVertAccel = -0x4000;
-    mVertSpeed = (r & 0x3f) + 0x28;
-    mVertSpeed <<= 0xc;
+    mSpeed.y = (r & 0x3f) + 0x28;
+    mSpeed.y <<= 0xc;
     return 1;
 }
 

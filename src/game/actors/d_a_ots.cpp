@@ -648,7 +648,7 @@ void daOts_c::ActKnockback() {
         if (tail().mHopCount < 2) {
             if (this->mWithMeshClsn.IsOnGround()) {
                 unsigned char *p = &tail().mHopCount;
-                this->mVertSpeed = kHopSpeed;
+                this->mSpeed.y = kHopSpeed;
                 *p = *p + 1;
             }
             mStateTimer = 0;

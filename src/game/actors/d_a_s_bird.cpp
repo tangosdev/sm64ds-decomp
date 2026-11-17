@@ -143,7 +143,7 @@ void daSBird_c::StateFly() {
     ApproachLinear(mAngleZ, mBank, 0x258);
 
     mHorzSpeed = FX_MUL(mFlySpeed, FX_CosIdx((u16)mPrevAngleX >> 4));
-    mVertSpeed = FX_MUL(mFlySpeed, FX_SinIdx((u16)mPrevAngleX >> 4));
+    mSpeed.y = FX_MUL(mFlySpeed, FX_SinIdx((u16)mPrevAngleX >> 4));
 }
 
 /* State 2. Spawn the flock and take off in one step: when the closest player is

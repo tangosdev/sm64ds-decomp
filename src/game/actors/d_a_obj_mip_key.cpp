@@ -4,7 +4,7 @@
  */
 // Notes:
 // - unk_190 and unk_19c stay the header's names. The loose update
-//   approaches through mSpeedX/mSpeedZ, and 19c selects the entry.
+//   approaches through mSpeed.x/mSpeed.z, and 19c selects the entry.
 // - CollectMinigameKey, StartMinigameMenu and Vec3_VertAngle are arm9
 //   helpers no header declares yet.
 // - The model handle data_ov085_021305d8 is constructed by daMip_c.
@@ -159,9 +159,9 @@ int daObj_Mip_Key_c::StateCarried() {
 
 int daObj_Mip_Key_c::StateCarriedEnter() {
     int kind;
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     mAngleX = 0;
     kind = unk_19c;
     if (kind != 0x4d) {
@@ -216,9 +216,9 @@ int daObj_Mip_Key_c::StateLoose() {
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
     MTX_MultVec43(&v, &data_020a0e68, &out);
-    ApproachLinear(mSpeedX, out.x, 0x1000);
-    ApproachLinear(mVertSpeed, out.y, 0x1000);
-    ApproachLinear(mSpeedZ, out.z, 0x1000);
+    ApproachLinear(mSpeed.x, out.x, 0x1000);
+    ApproachLinear(mSpeed.y, out.y, 0x1000);
+    ApproachLinear(mSpeed.z, out.z, 0x1000);
     if (pp.y + 0x64000 > mPosY) {
         mPlayer = player;
         ChangeState(&data_ov085_0213072c);
@@ -230,7 +230,7 @@ int daObj_Mip_Key_c::StateLoose() {
 
 int daObj_Mip_Key_c::StateLooseEnter() {
     mStateTimer = 10;
-    mVertSpeed = 81920;
+    mSpeed.y = 81920;
     return 1;
 }
 
@@ -281,14 +281,14 @@ int daObj_Mip_Key_c::Behavior() {
     DecIfAbove0_Short(&mStateTimer);
     if (mState->execute)
         (this->*mState->execute)();
-    int nextSpeed = mVertSpeed + mVertAccel;
+    int nextSpeed = mSpeed.y + mVertAccel;
     int capped = mTerminalVelocity;
     if (nextSpeed >= capped)
         capped = nextSpeed;
-    /* The read-back-and-store of mSpeedZ is what the ROM does; it is not dead. */
-    int unk0acCopy = mSpeedZ;
-    mVertSpeed = capped;
-    mSpeedZ = unk0acCopy;
+    /* The read-back-and-store of mSpeed.z is what the ROM does; it is not dead. */
+    int unk0acCopy = mSpeed.z;
+    mSpeed.y = capped;
+    mSpeed.z = unk0acCopy;
     UpdatePosWithOnlySpeed(0);
     return 1;
 }

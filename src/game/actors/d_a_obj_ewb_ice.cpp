@@ -205,7 +205,7 @@ int daObjEwbIce_c::StateArena_Update() {
             mPosY = surface;
             mTimer = 0;
             mVertAccel = 0;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             SetState(&data_ov073_021234a0);
         }
     }
@@ -224,7 +224,7 @@ int daObjEwbIce_c::StateSink_Update() {
     UpdatePos(0);
     if (mTimer < kSinkQuietBelow) {
         mVertAccel = 0;
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         if (mTimer == kSinkSoundAt)
             func_02012694(0x171, &mCamSpacePos);
         if (mTimer < kSinkSoundAt) {

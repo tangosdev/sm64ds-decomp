@@ -168,7 +168,7 @@ void dPathLiftActor_c::StateFallInit() {
     mPrevAngleX = mAngleX;
     mPrevAngleY = mAngleY;
     mPrevAngleZ = mAngleZ;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     if (HasNonzeroAngleZ() == 0) {
         mFallDelay = 60;
         mFallBounceTimer = 0;

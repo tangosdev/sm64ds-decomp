@@ -190,16 +190,16 @@ int daHyuhyu_c::Behavior() {
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
     /* Fall, no faster than mTerminalVelocity. The cartridge reloads and
-       rewrites mSpeedZ here too (a whole-vector store, most likely); a plain
+       rewrites mSpeed.z here too (a whole-vector store, most likely); a plain
        clamp misses. */
     {
-        int speed = mVertSpeed + mVertAccel;
+        int speed = mSpeed.y + mVertAccel;
         int limit = mTerminalVelocity;
         if (speed >= limit)
             limit = speed;
-        int tmp = mSpeedZ;
-        mVertSpeed = limit;
-        mSpeedZ = tmp;
+        int tmp = mSpeed.z;
+        mSpeed.y = limit;
+        mSpeed.z = tmp;
     }
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     HandleCylinderHit();
@@ -374,7 +374,7 @@ int daHyuhyu_c::StateGustFlyMain() {
     mPrevAngleX -= 0x80;
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-    MTX_MultVec43(&fwd, &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43(&fwd, &data_020a0e68, &mSpeed);
     if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0 || mWithMeshClsn.IsOnWall() != 0 ||
         (mFlags & 8))
         MarkForDestruction();
@@ -466,9 +466,9 @@ void daHyuhyu_c::HandleCylinderHit() {
                 if (cap == 0)
                     return;
                 cap->mHorzSpeed = 0x32000;
-                cap->mSpeedX = 0;
-                cap->mVertSpeed = 0x14000;
-                cap->mSpeedZ = 0;
+                cap->mSpeed.x = 0;
+                cap->mSpeed.y = 0x14000;
+                cap->mSpeed.z = 0;
             }
         }
     }

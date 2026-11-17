@@ -194,9 +194,9 @@ void daMenbo_c::func_ov090_021310b4() {
     }
     if (flags & 0x20) {
         mVertAccel = 0;
-        mSpeedX = 0;
-        mVertSpeed = 0;
-        mSpeedZ = 0;
+        mSpeed.x = 0;
+        mSpeed.y = 0;
+        mSpeed.z = 0;
         mDeathState = 1;
         func_ov002_020aea30(p, 0);
         return;
@@ -265,7 +265,7 @@ void daMenbo_c::func_ov090_02131378() {
     }
     if (mPosY <= mSurfaceY) {
         mPosY = mSurfaceY;
-        mVertSpeed = 0;
+        mSpeed.y = 0;
     }
 }
 
@@ -669,9 +669,9 @@ int daMenbo_c::Behavior()
             UpdateWMClsn(mWithMeshClsn, 2);
             if (func_02035638((u8 *)(&mWithMeshClsn))) {
                 mVertAccel = 0;
-                mSpeedX = 0;
-                mVertSpeed = 0;
-                mSpeedZ = 0;
+                mSpeed.x = 0;
+                mSpeed.y = 0;
+                mSpeed.z = 0;
                 mDeathState = 1;
                 func_ov002_020aea30(ClosestPlayer(), 0);
                 return 1;
@@ -692,9 +692,9 @@ int daMenbo_c::Behavior()
         mPosY = mSurfaceY;
     if (gCurrentSublevel == 0x15 && mAreaId == 1 && func_02035638((u8 *)(&mWithMeshClsn))) {
         mVertAccel = 0;
-        mSpeedX = 0;
-        mVertSpeed = 0;
-        mSpeedZ = 0;
+        mSpeed.x = 0;
+        mSpeed.y = 0;
+        mSpeed.z = 0;
         mDeathState = 1;
         func_ov002_020aea30(ClosestPlayer(), 0);
         return 1;

@@ -188,7 +188,7 @@ s32 daShl_c::Behavior()
             if (mMeshClsn.IsOnGround() != 0) {
                 if (mState == &data_ov102_0214ea68) {
                     mVertAccel = 0;
-                    mVertSpeed = 0;
+                    mSpeed.y = 0;
                 }
                 if (mState != &data_ov102_0214ea48 &&
                     mState != &data_ov102_0214ea58)

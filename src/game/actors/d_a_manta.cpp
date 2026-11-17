@@ -18,7 +18,7 @@
  *   ring's uniqueID in cartridge order (cmp r0, r1). Swapping the
  *   operands DIFFs. The 0x3ac/+4 dance stays; uniqueID is the word
  *   at +4 of that ring.
- * - Behavior keeps the mSpeedZ copy after the terminal clamp.
+ * - Behavior keeps the mSpeed.z copy after the terminal clamp.
  *   Dropping it loses the reload of dActor_c's z speed.
  * - Matrix4x3 stays decl_common.h's flat s32[12].
  *   UpdateModelAndRingPos indexes .m. common.h must not replace it.
@@ -287,16 +287,16 @@ int daManta_c::Behavior() {
         forward.z = MANTA_FORWARD;
         Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-        MTX_MultVec43(&forward, &data_020a0e68, (Vector3 *)&mSpeedX);
+        MTX_MultVec43(&forward, &data_020a0e68, &mSpeed);
     }
     {
-        int speed = mVertSpeed + mVertAccel;
+        int speed = mSpeed.y + mVertAccel;
         int clamped = mTerminalVelocity;
-        int keep0ac = mSpeedZ;
+        int keep0ac = mSpeed.z;
         if (speed >= clamped)
             clamped = speed;
-        mVertSpeed = clamped;
-        mSpeedZ = keep0ac;
+        mSpeed.y = clamped;
+        mSpeed.z = keep0ac;
     }
     UpdatePosWithOnlySpeed(&mdCcAcPos_c);
     UpdateModelAndRingPos();

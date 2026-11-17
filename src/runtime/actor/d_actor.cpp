@@ -362,10 +362,10 @@ void dActor_c::func_02010da4() {
         mPosZ = 0x7d00000;
 }
 
-/* Adds the velocity (mSpeedX, mVertSpeed, mSpeedZ) to mPos, then the
+/* Adds the velocity (mSpeed) to mPos, then the
    cylinder's horizontal push-out, then clamps to the world bounds. */
 void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
-    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
+    VEC_Add(&mPos, &mSpeed, &mPos);
     if (clsn != 0) {
         mPosX += clsn->pushback.x;
         mPosZ += clsn->pushback.z;
@@ -375,17 +375,17 @@ void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
 
 /* Splits mHorzSpeed along mPrevAngleY (the heading the velocity follows) into
    the x/z velocity words, x by sin and z by cos, and applies mVertAccel to
-   mVertSpeed, clamped at mTerminalVelocity. */
+   mSpeed.y, clamped at mTerminalVelocity. */
 void dActor_c::UpdatePosWithHorzSpeedAndAng() {
     s32 horzSpeed = mHorzSpeed;
     if (horzSpeed == 0) {
-        s32 vertSpeed = mVertSpeed + mVertAccel;
+        s32 vertSpeed = mSpeed.y + mVertAccel;
         s32 terminal = mTerminalVelocity;
         if (vertSpeed >= terminal)
             terminal = vertSpeed;
-        mSpeedX = 0;
-        mVertSpeed = terminal;
-        mSpeedZ = 0;
+        mSpeed.x = 0;
+        mSpeed.y = terminal;
+        mSpeed.z = 0;
     } else {
         s32 vertSpeed;
         s32 accel;
@@ -396,7 +396,7 @@ void dActor_c::UpdatePosWithHorzSpeedAndAng() {
         s16 sinv;
         s32 speedX;
         cosv = FX_CosIdx((u16)mPrevAngleY >> 4);
-        vertSpeed = mVertSpeed;
+        vertSpeed = mSpeed.y;
         accel = mVertAccel;
         terminal = mTerminalVelocity;
         speedZ = FX_MUL(horzSpeed, cosv);
@@ -405,9 +405,9 @@ void dActor_c::UpdatePosWithHorzSpeedAndAng() {
             terminal = next;
         sinv = FX_SinIdx((u16)mPrevAngleY >> 4);
         speedX = FX_MUL(horzSpeed, sinv);
-        mSpeedX = speedX;
-        mVertSpeed = terminal;
-        mSpeedZ = speedZ;
+        mSpeed.x = speedX;
+        mSpeed.y = terminal;
+        mSpeed.z = speedZ;
     }
 }
 
@@ -662,7 +662,7 @@ void dActor_c::func_020105cc(u32 flags) {
 }
 
 int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
-    s32 vel = player.mVertSpeed;
+    s32 vel = player.mSpeed.y;
 
     if (clsn.flags & 6) {
         if (vel < 0 && player.mIsAirborne != 0
@@ -680,8 +680,7 @@ int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
 }
 
 int dActor_c::BumpedUnderneathByPlayer(daPly_c &player) {
-    if (player.mIsAirborne != 0 && player.mVertSpeed > 0
-        && player.mPosY < mPosY)
+    if (player.mIsAirborne != 0 && player.mSpeed.y > 0 && player.mPosY < mPosY)
         return 1;
 
     return 0;

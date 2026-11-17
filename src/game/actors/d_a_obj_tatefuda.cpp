@@ -446,7 +446,7 @@ void daObjTatefuda_c::Carried()
 void daObjTatefuda_c::InitThrown()
 {
     mHorzSpeed = 0x50000;
-    mVertSpeed = 0xa000;
+    mSpeed.y = 0xa000;
     mLastHolder = mHoldingPlayer;
     mHoldingPlayer = 0;
     {
@@ -528,7 +528,7 @@ void daObjTatefuda_c::InitDropped()
     int* py;
     Vector3 *src;
     mHorzSpeed = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     other = mHoldingPlayer;
     py = &mPosY;
     src = &other->mPos;

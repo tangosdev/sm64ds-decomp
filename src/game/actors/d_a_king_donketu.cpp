@@ -805,11 +805,11 @@ int daKing_Donketu_c::EnterJumpEnd() {
 }
 
 /* ..3340 update, a leap toward mSpawnPos. mStateTimer counts down from 10
-   (set by the enter handler). At 1 the leap's animation starts: mVertSpeed
+   (set by the enter handler). At 1 the leap's animation starts: mSpeed.y
    0x46000 (70.0), mVertAccel -0x3000 (-3.0), and SND_HOP_LAUNCH if mEdgeRecovered is
    set. At 0, while mStateScratch is 0, mAngleX is straightened (0x2000 a
    frame), mPrevAngleY turns toward the angle to mSpawnPos by 0x800, and the
-   x/z velocity words mSpeedX / mSpeedZ are set to 50.0 (0x32000) when
+   x/z velocity words mSpeed.x / mSpeed.z are set to 50.0 (0x32000) when
    mHitsRemaining is 2, else 30.0 (0x1e000), along that angle. While falling,
    if the actor touching the boss is the player and the boss is the higher,
    daPly_c::Unk_020c6a10(1) is called on it. On the ground the motion is
@@ -825,7 +825,7 @@ int daKing_Donketu_c::UpdateLeapToSpawn() {
                 *(BCA_File *)((BCA_File *)gKingIceDonketuJumpStAnimationFile.filePtr), 4,
                 0x40000000, 0x1000, 0);
             mBlendAnmModel.speed = 0x1000;
-            mVertSpeed = 0x46000;
+            mSpeed.y = 0x46000;
             mLandedWaypoint = 0xff;
             mVertAccel = -0x3000;
             if (mEdgeRecovered != 0) {
@@ -856,9 +856,9 @@ int daKing_Donketu_c::UpdateLeapToSpawn() {
         }
         Matrix4x3_FromRotationY(&data_020a0e68, horz);
         MTX_MultVec43(&offset, &data_020a0e68, &rotated);
-        mSpeedX = rotated.x;
-        mSpeedZ = rotated.z;
-        if (mVertSpeed < 0) {
+        mSpeed.x = rotated.x;
+        mSpeed.z = rotated.z;
+        if (mSpeed.y < 0) {
             int id = mdCcAcPos_c.otherOwner;
             if (id != 0) {
                 dActor_c *actor = dActor_c::FindWithID(id);
@@ -877,9 +877,9 @@ int daKing_Donketu_c::UpdateLeapToSpawn() {
     if (mWithMeshClsn.IsOnGround() != 0) {
         if (mStateScratch == 0) {
             mHorzSpeed = 0;
-            mSpeedX = 0;
-            mVertSpeed = 0;
-            mSpeedZ = 0;
+            mSpeed.x = 0;
+            mSpeed.y = 0;
+            mSpeed.z = 0;
             SpawnLandingEffects(0x1388000);
             func_02012694(SND_HOP_LANDING, &mCamSpacePos);
         }
@@ -909,7 +909,7 @@ int daKing_Donketu_c::EnterLeapToSpawn() {
 }
 
 /* ..3320 update, a waypoint hop. mStateTimer starts at 2. At 1 the hop
-   launches: mVertSpeed 0x5a000 (90.0), mVertAccel -0x5000 (-5.0), mWaypointCursor
+   launches: mSpeed.y 0x5a000 (90.0), mVertAccel -0x5000 (-5.0), mWaypointCursor
    advances modulo 8 and the animation in gKingIceDonketuDamageAnimationFile.filePtr runs at speed
    0x2000. At 0 the boss steers toward the current waypoint (set B while
    mHitsRemaining is 2, else set A): mPrevAngleY turns toward it by 0x800 and
@@ -922,7 +922,7 @@ int daKing_Donketu_c::UpdateWaypointHop() {
 
     if (mStateTimer != 0) {
         if (mStateTimer == 1) {
-            mVertSpeed = 0x5a000;
+            mSpeed.y = 0x5a000;
             mVertAccel = -0x5000;
             mWaypointCursor++;
             mWaypointCursor &= 7;
@@ -955,15 +955,15 @@ int daKing_Donketu_c::UpdateWaypointHop() {
         Matrix4x3_FromRotationY(&data_020a0e68, hz);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, vt);
         MTX_MultVec43(&in, &data_020a0e68, &out);
-        mSpeedX = out.x;
-        mSpeedZ = out.z;
+        mSpeed.x = out.x;
+        mSpeed.z = out.z;
     }
     if (mWithMeshClsn.IsOnGround() != 0) {
         mLandedWaypoint = mWaypointCursor;
         mHorzSpeed = 0;
-        mSpeedX = 0;
-        mVertSpeed = 0;
-        mSpeedZ = 0;
+        mSpeed.x = 0;
+        mSpeed.y = 0;
+        mSpeed.z = 0;
         SpawnLandingEffects(0x7d0000);
         func_02012694(SND_HOP_LANDING, &mCamSpacePos);
         mJumpCount++;
@@ -988,9 +988,9 @@ int daKing_Donketu_c::EnterWaypointHop() {
 /* ..3400 update: a waypoint hop like ..3320, but it also straightens mAngleX
    (0x2000 a frame), never turns mPrevAngleY toward the waypoint, and at
    timer 1 it only sets
-   mVertSpeed 0x5a000 (90.0) and the animation (no gravity change, no cursor
+   mSpeed.y 0x5a000 (90.0) and the animation (no gravity change, no cursor
    advance), and at timer 0 the aim speed is 40.0 (0x28000). Once mStateScratch
-   is set or the boss is falling, mVertSpeed also follows the aim. The landing
+   is set or the boss is falling, mSpeed.y also follows the aim. The landing
    sets mJumpCount to 1 and goes to ..3320. */
 int daKing_Donketu_c::func_ov073_02120610() {
     Vector3 v;
@@ -999,7 +999,7 @@ int daKing_Donketu_c::func_ov073_02120610() {
         goto mainblock;
 
     if (mStateTimer == 1) {
-        mVertSpeed = 0x5a000;
+        mSpeed.y = 0x5a000;
         mBlendAnmModel.SetAnim(
             *(BCA_File *)((BCA_File *)gKingIceDonketuDamageAnimationFile.filePtr), 4, 0, 0x1000, 0);
         mBlendAnmModel.speed = 0x2000;
@@ -1028,19 +1028,19 @@ mainblock:
         Matrix4x3_FromRotationY(&data_020a0e68, hz);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, vt);
         MTX_MultVec43(&in, &data_020a0e68, &out);
-        mSpeedX = out.x;
-        if (mStateScratch != 0 || mVertSpeed < 0) {
-            mVertSpeed = out.y;
+        mSpeed.x = out.x;
+        if (mStateScratch != 0 || mSpeed.y < 0) {
+            mSpeed.y = out.y;
             mStateScratch = 1;
         }
-        mSpeedZ = out.z;
+        mSpeed.z = out.z;
     }
     if (mWithMeshClsn.IsOnGround() != 0) {
         mLandedWaypoint = mWaypointCursor;
         mHorzSpeed = 0;
-        mSpeedX = 0;
-        mVertSpeed = 0;
-        mSpeedZ = 0;
+        mSpeed.x = 0;
+        mSpeed.y = 0;
+        mSpeed.z = 0;
         SpawnLandingEffects(0x7d0000);
         func_02012694(SND_HOP_LANDING, &mCamSpacePos);
         mJumpCount = 1;
@@ -1077,11 +1077,11 @@ int daKing_Donketu_c::func_ov073_02120844()
     return 1;
 }
 
-/* ..33f0 enter: mHorzSpeed 0x14000 (20.0), mVertSpeed 0x1e000 (30.0),
+/* ..33f0 enter: mHorzSpeed 0x14000 (20.0), mSpeed.y 0x1e000 (30.0),
    mVertAccel -0x3000 (-3.0); clears the sound handle. */
 int daKing_Donketu_c::func_ov073_021208e4() {
     mHorzSpeed = 0x14000;
-    mVertSpeed = 0x1e000;
+    mSpeed.y = 0x1e000;
     mVertAccel = -0x3000;
     mSoundHandle = 0;
     return 1;
@@ -1103,9 +1103,9 @@ int daKing_Donketu_c::UpdateEdgeWobble() {
 
     mVertAccel = 0;
     mHorzSpeed = 0;
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
 
     if (mStateTimer == 0) {
         mHitsRemaining = 1;
@@ -1152,9 +1152,9 @@ int daKing_Donketu_c::EnterEdgeWobble() {
     mStateScratch = 0;
     mVertAccel = 0;
     mHorzSpeed = 0;
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     mStateParam = -0x1000;
     mEdgePos.x = mGroundMissPos.x;
     mEdgePos.y = mGroundMissPos.y;
@@ -1184,7 +1184,7 @@ int daKing_Donketu_c::func_ov073_02120b78() {
 }
 
 /* ..33c0 enter: animation gKingIceDonketuWalkAnimationFile.filePtr at speed 0x4000;
-   mHorzSpeed 0x14000 (20.0), mVertSpeed 0x1e000 (30.0), mVertAccel -0x3000
+   mHorzSpeed 0x14000 (20.0), mSpeed.y 0x1e000 (30.0), mVertAccel -0x3000
    (-3.0); mAngleX and mStateScratch cleared. */
 int daKing_Donketu_c::func_ov073_02120c08()
 {
@@ -1192,7 +1192,7 @@ int daKing_Donketu_c::func_ov073_02120c08()
                            0, 0x1000, 0);
     mBlendAnmModel.speed = 0x4000;
     mHorzSpeed = 0x14000;
-    mVertSpeed = 0x1e000;
+    mSpeed.y = 0x1e000;
     mAngleX = 0;
     mVertAccel = -0x3000;
     mStateScratch = 0;
@@ -1649,8 +1649,8 @@ int daKing_Donketu_c::Render()
  * gates five separate things rather than one:
  *
  *   three states       use UpdatePosWithOnlySpeed instead of UpdatePos, and
- *                      apply gravity by hand first: mVertSpeed becomes
- *                      max(mTerminalVelocity, mVertSpeed + mVertAccel)
+ *                      apply gravity by hand first: mSpeed.y becomes
+ *                      max(mTerminalVelocity, mSpeed.y + mVertAccel)
  *   two states         at animation frame 7, build a world matrix from the
  *                      model's own bone and spawn the landing dust there --
  *                      the impact is tied to the ANIMATION, not to contact
@@ -1738,15 +1738,15 @@ int daKing_Donketu_c::Behavior()
         mState != &data_ov073_02123340) {
         UpdatePos(&mdCcAcPos_c);
     } else {
-        /* Gravity, clamped at terminal velocity. mSpeedZ is reloaded and
+        /* Gravity, clamped at terminal velocity. mSpeed.z is reloaded and
            stored back unchanged, as in every sibling actor's copy of this. */
-        int vertSpeed = mVertSpeed + mVertAccel;
+        int vertSpeed = mSpeed.y + mVertAccel;
         int clamped = mTerminalVelocity;
-        int keep = mSpeedZ;
+        int keep = mSpeed.z;
         if (vertSpeed >= clamped)
             clamped = vertSpeed;
-        mVertSpeed = clamped;
-        mSpeedZ = keep;
+        mSpeed.y = clamped;
+        mSpeed.z = keep;
         UpdatePosWithOnlySpeed(&mdCcAcPos_c);
     }
 

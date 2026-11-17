@@ -103,7 +103,7 @@ s32 daObjRc_Tikuwa_c::Behavior() {
         if (dist <= 0x3e8000)
             break;
         if (dist < 0x7d0000) {
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             mClsnTimer = 0;
             mHadClsn = 0;
             mState = 0;

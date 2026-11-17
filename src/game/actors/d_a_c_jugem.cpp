@@ -204,9 +204,9 @@ int daC_Jugem_c::StateIntroMain() {
             mHorzSpeed = 0;
             mTimer = 0;
             mAuxCounter = 0;
-            mSpeedX = 0;
-            mVertSpeed = 0;
-            mSpeedZ = 0;
+            mSpeed.x = 0;
+            mSpeed.y = 0;
+            mSpeed.z = 0;
             mAngleX = 0;
             daPly_c *player = ClosestPlayer();
             if (player != 0) {

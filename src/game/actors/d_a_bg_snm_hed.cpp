@@ -128,7 +128,7 @@ int daBgSnmHed_c::State2() {
     switch (mSubstate) {
     case 0:
         UpdatePos(&mCylinder);
-        if (mVertSpeed < 0 && mPosY < (int)0xffc427c0) {
+        if (mSpeed.y < 0 && mPosY < (int)0xffc427c0) {
             pos.x = mPosX;
             pos.y = mPosY;
             pos.z = mPosZ;
@@ -154,7 +154,7 @@ int daBgSnmHed_c::InitState2() {
     mFlags &= ~1;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mVertSpeed = 0x2d000;
+    mSpeed.y = 0x2d000;
     mStateTimer = 120;
     mSubstate = 0;
     mStateValue = 2;

@@ -40,7 +40,7 @@
  *   named by value here for that reason.
  * - mdCcAc_c's `flags`/`vulnFlags` words (0x200004 / 0x40010) are likewise
  *   given as numbers.
- * - mSpeedX / mSpeedZ are dActor_c's x/z velocity words (as da1up_c's banner
+ * - mSpeed.x / mSpeed.z are dActor_c's x/z velocity words (as da1up_c's banner
  *   records); they stay unnamed because naming them is a shared header change.
  */
 
@@ -160,7 +160,7 @@ void daSnowball_c::HandleContact() {
  *
  * 1. While mReachedSpawnY is still 0 and mTerminalVelocity still holds the
  *    -0x3c000 (-60 units/frame) InitResources set: the first frame the snowball
- *    is below its spawn height (mSpawnPos.y > mPosY) zero mVertSpeed and
+ *    is below its spawn height (mSpawnPos.y > mPosY) zero mSpeed.y and
  *    mVertAccel and set mReachedSpawnY. The snowball then hovers at (just
  *    below) the height it was placed at instead of falling further.
  * 2. Burst, with the bank-3 sound, when mStateTimer has run out to 0 or the
@@ -171,7 +171,7 @@ void daSnowball_c::HandleContact() {
 int daSnowball_c::State0() {
     if (this->mReachedSpawnY == 0 && this->mTerminalVelocity == -0x3c000) {
         if (this->mSpawnPos.y > this->mPosY) {
-            this->mVertSpeed = 0;
+            this->mSpeed.y = 0;
             this->mVertAccel = 0;
             this->mReachedSpawnY = 1;
         }
@@ -181,7 +181,7 @@ int daSnowball_c::State0() {
         Particle::System::NewSimple(PTCL_SNOWBALL_BURST, this->mPosX, this->mPosY, this->mPosZ);
         MarkForDestruction();
     }
-    if (this->mSpeedX != 0 || this->mSpeedZ != 0) {
+    if (this->mSpeed.x != 0 || this->mSpeed.z != 0) {
         HandleContact();
     }
     return 1;
@@ -237,13 +237,13 @@ int daSnowball_c::Render() {
  *   - count mStateTimer down towards 0 (DecIfAbove0_Short stops at 0);
  *   - run the installed state record's update function (State0 for the
  *     record InitResources installs), if it has one;
- *   - mVertSpeed = max(mVertSpeed + mVertAccel, mTerminalVelocity), i.e. fall
+ *   - mSpeed.y = max(mSpeed.y + mVertAccel, mTerminalVelocity), i.e. fall
  *     under gravity but not faster than the terminal velocity (both negative);
  *   - move by speed, update the mesh collision, copy mPrevAngleY into mAngleY,
  *     rebuild the model matrix;
  *   - clear the cylinder and, if there is a closest player and it is not
  *     vanished (mIsVanish), re-register it with dCcAc_c::Update.
- * What stays: the read and write-back of mSpeedZ around the mVertSpeed store is
+ * What stays: the read and write-back of mSpeed.z around the mSpeed.y store is
  * a no-op in source terms; it stays as written, the shape these bytes were
  * matched with. */
 int daSnowball_c::Behavior() {
@@ -251,13 +251,13 @@ int daSnowball_c::Behavior() {
     daSnowball_StateRec *rec = mStateRec;
     if (rec->update != 0)
         (this->*(rec->update))();
-    int v = mVertSpeed + mVertAccel;
+    int v = mSpeed.y + mVertAccel;
     int hi = mTerminalVelocity;
     if (v >= hi)
         hi = v;
-    int tmp = mSpeedZ;
-    mVertSpeed = hi;
-    mSpeedZ = tmp;
+    int tmp = mSpeed.z;
+    mSpeed.y = hi;
+    mSpeed.z = tmp;
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     mAngleY = mPrevAngleY;

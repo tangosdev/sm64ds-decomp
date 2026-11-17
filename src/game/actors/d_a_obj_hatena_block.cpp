@@ -876,14 +876,14 @@ void daObjHatenaBlock_c::OnHitByMegaChar(daPly_c &player) {
 }
 
 /* Hit from underneath: unless already BOUNCING, first sets mVertAccel to
-   -0x8000 (-8 units) and mVertSpeed to 0x1e000 (30 units), whether or not
+   -0x8000 (-8 units) and mSpeed.y to 0x1e000 (30 units), whether or not
    the hit is then accepted; the accept test and bounce start are the same as
    OnGroundPounded's. */
 int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
 {
     if (mState != STATE_BOUNCING) {
         mVertAccel = -0x8000;
-        mVertSpeed = 0x1e000;
+        mSpeed.y = 0x1e000;
         if (!IsHitBlocked()) {
             mHitterParam = other.param1;
             ChangeState(STATE_BOUNCING);
@@ -920,7 +920,7 @@ int daObjHatenaBlock_c::GetFloorY() {
    spawned, the cap gets heading (RandomIntInternal() + camera mAngleY +
    0x8000, truncated to 16 bits) in its mPrevAngleY, speed 0x3320 (about 3.2
    units) in mHorzSpeed, and a velocity vector (0, 0x11000, 0) in
-   mSpeedX / mVertSpeed / mSpeedZ (0x11000 = 17 units up). */
+   mSpeed.x / mSpeed.y / mSpeed.z (0x11000 = 17 units up). */
 void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
     Vector3 pos;
     int rnd;
@@ -938,9 +938,9 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
         o->mPrevAngleY = (short)vsum;
         o->mPrevAngleZ = 0;
         o->mHorzSpeed = 0x3320;
-        o->mSpeedX = vel.x;
-        o->mVertSpeed = vel.y;
-        o->mSpeedZ = vel.z;
+        o->mSpeed.x = vel.x;
+        o->mSpeed.y = vel.y;
+        o->mSpeed.z = vel.z;
     }
 }
 

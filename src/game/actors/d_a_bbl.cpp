@@ -193,7 +193,7 @@ int daBbl_c::ExecuteFountain() {
  * and a 135-frame fuse. */
 int daBbl_c::EnterJump() {
     mHorzSpeed = 0;
-    mVertSpeed = 0x14000;
+    mSpeed.y = 0x14000;
     mStateTimer = 135;
     return 1;
 }
@@ -208,10 +208,10 @@ int daBbl_c::ExecuteJump() {
     if (mWithMeshClsn.IsOnGround() != 0) {
         if (mHorzSpeed == 0) {
             mHorzSpeed = 0x16000;
-            mVertSpeed = 0x32000;
+            mSpeed.y = 0x32000;
         } else {
             ApproachLinear(mHorzSpeed, 0x8000, 0x3000);
-            mVertSpeed = mVertSpeed * -7 / 10;
+            mSpeed.y = mSpeed.y * -7 / 10;
         }
     }
     mFireParticle = Particle::System::New(mFireParticle, kPtclLavaBubbleFlame, mPosX,

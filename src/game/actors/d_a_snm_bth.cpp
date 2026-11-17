@@ -114,9 +114,9 @@ void SnowmanBreathParticle::HitPlayer()
         0x10d, (actor->param1 << 8) | 3, spawnPos, &rotation, 0, -1);
     if (cap == 0)
         return;
-    cap->mSpeedX = 0;
-    cap->mVertSpeed = 0x14000;
-    cap->mSpeedZ = 0;
+    cap->mSpeed.x = 0;
+    cap->mSpeed.y = 0x14000;
+    cap->mSpeed.z = 0;
     cap->mHorzSpeed = 0x1c000;
 }
 

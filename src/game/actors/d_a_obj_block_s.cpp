@@ -286,7 +286,7 @@ void daObjBlockS_c::UpdateBouncing() {
     if (mWithMeshClsn.IsOnGround() != 0) {
         Sound::PlayBank3(0x51, mCamSpacePos);
         DecIfAbove0_Byte(&mBounceCount);
-        mVertSpeed = mBounceCount * 0xa000;
+        mSpeed.y = mBounceCount * 0xa000;
         mHorzSpeed = mBounceCount * 0x5000;
     }
     if (mHorzSpeed == 0 && mBounceCount == 0) {
@@ -318,7 +318,7 @@ void daObjBlockS_c::EnterBouncing() {
     mClsnYOffset = 0;
     mFlags &= ~0x80000;
     mBounceCount = 3;
-    mVertSpeed = mBounceCount * 0xa000;
+    mSpeed.y = mBounceCount * 0xa000;
     mHorzSpeed = mBounceCount * 0x5000;
     mEatingPlayer = 0;
     mHoldingPlayer = 0;
@@ -388,7 +388,7 @@ void daObjBlockS_c::EnterSpitOut() {
     mFlags &= ~0x80000;
 
     mHorzSpeed = 0x1e000;
-    mVertSpeed = 0xf000;
+    mSpeed.y = 0xf000;
     mPrevHolder = mEatingPlayer;
     mEatingPlayer = 0;
     mdCcAcPos_c1.flags |= 0x2000;
@@ -450,7 +450,7 @@ void daObjBlockS_c::EnterThrown() {
     }
 
     mHorzSpeed = arr1.w[idx];
-    mVertSpeed = arr2.w[idx];
+    mSpeed.y = arr2.w[idx];
 
     mPrevHolder = mHoldingPlayer;
     mHoldingPlayer = 0;
@@ -525,7 +525,7 @@ void daObjBlockS_c::UpdateIdle() {
     int flag = (mFlags & ACTOR_FLAG_OFF_SCREEN) != 0;
     if (flag) {
         if (mHorzSpeed == 0) {
-            if (mVertSpeed == 0) {
+            if (mSpeed.y == 0) {
                 return;
             }
         }
@@ -626,7 +626,7 @@ int daObjBlockS_c::func_ov098_02138bfc()
 /* Puts the crate back in its starting condition: zeroes the sink offset,
  * target, particle handles and mBreakTimer, restores the home position and
  * angles, zeroes horizontal / vertical speed and the two velocity words
- * around mVertSpeed, then initialises both cylinders at the crate's
+ * around mSpeed.y, then initialises both cylinders at the crate's
  * own position:
  *   cylinder 1, radius 60 (0x3c000), height 110 (0x6e000), flags 0x200002,
  *     vulnFlags 0x4d390 -- the bits dCc_c.h labels mega / kick / breakdance /
@@ -648,9 +648,9 @@ void daObjBlockS_c::ResetToHome() {
     mAngleY = mHomeAngleY;
     mAngleZ = mHomeAngleZ;
     mHorzSpeed = 0;
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
 
     ((struct Vector3 *)(((long long)(int)&zero)))->x = 0;
     ((struct Vector3 *)(((long long)(int)&zero)))->y = 0;
@@ -850,14 +850,14 @@ void daObjBlockS_c::HandleWallHit() {
  * FX_SinCosTable_), a2 is hl in the direction atan2 of the normal's x and z
  * gives (through the same table), scaled by Vec3_HorzLen of the normal;
  * their sum becomes the new mPrevAngleY and mHorzSpeed (capped at 100 units,
- * 0x64000). mVertSpeed is set to -((normalX * mSpeedX + normalZ * mSpeedZ)
- * / normalY + 8 units); mSpeedX / mSpeedZ sit either side of mVertSpeed and
+ * 0x64000). mSpeed.y is set to -((normalX * mSpeed.x + normalZ * mSpeed.z)
+ * / normalY + 8 units); mSpeed.x / mSpeed.z sit either side of mSpeed.y and
  * are treated here as its x and z companions, which this file does not
  * otherwise confirm. When func_ov002_020f035c(n, mFloorNormal.y) (the
  * per-class slope test, include/daPly_c.h) is nonzero, the crate is nearly
  * level (|mAngleX| and |mAngleZ| below 0x10) and mHorzSpeed is above 5 units
- * (0x5000), sound bank 0x51 plays if mVertSpeed is above 10 units and
- * mVertSpeed is then clamped to a limit derived from the speed. Friction
+ * (0x5000), sound bank 0x51 plays if mSpeed.y is above 10 units and
+ * mSpeed.y is then clamped to a limit derived from the speed. Friction
  * slows mHorzSpeed by 0.5 unit per frame (0x800); while it has not reached
  * 0 and is above 10 units (0xa000) the sliding-dust particle and the slide
  * sound (mSlideSoundHandle) run (the extra compare of mClsnYOffsetTarget
@@ -905,7 +905,7 @@ int daObjBlockS_c::UpdateFloorContact() {
         return 0;
     }
 
-    if (mVertSpeed < -0xb000) {
+    if (mSpeed.y < -0xb000) {
         Kill();
     }
 
@@ -936,9 +936,9 @@ int daObjBlockS_c::UpdateFloorContact() {
     AngleDiff(mPrevAngleY, mAngleY);
 
     {
-        s32 m0 = FX_MUL(mFloorNormal.x, mSpeedX);
-        s32 m1 = FX_MUL(mFloorNormal.z, mSpeedZ);
-        mVertSpeed = -(FX_Div(m0 + m1, mFloorNormal.y) + 0x8000);
+        s32 m0 = FX_MUL(mFloorNormal.x, mSpeed.x);
+        s32 m1 = FX_MUL(mFloorNormal.z, mSpeed.z);
+        mSpeed.y = -(FX_Div(m0 + m1, mFloorNormal.y) + 0x8000);
     }
 
     if (func_ov002_020f035c(n, mFloorNormal.y) != 0 && mHorzSpeed > 0x5000) {
@@ -952,10 +952,10 @@ int daObjBlockS_c::UpdateFloorContact() {
             if (q1 < 0x10) {
                 sd = FX_Div(FX_MUL(mHorzSpeed, 8), 0xa);
                 if (sd < 0) sd = -sd;
-                if (mVertSpeed > 0xa000)
+                if (mSpeed.y > 0xa000)
                     Sound::PlayBank3(0x51, mCamSpacePos);
-                if (mVertSpeed > sd)
-                    mVertSpeed = sd;
+                if (mSpeed.y > sd)
+                    mSpeed.y = sd;
             }
         }
     }

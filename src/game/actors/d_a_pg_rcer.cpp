@@ -297,7 +297,7 @@ int daPgRcer_c::InitStatePrepareForRace() {
     mAnmModel.SetAnim((BCA_File *)gPenguinJumpStAnimationFile.filePtr, 0x40000000, 0x1000, 0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mVertSpeed = 0x16000;
+    mSpeed.y = 0x16000;
     mActionStep = 0;
     Sound::PlaySub(0x1f, 0x14, 0x7f, 0x15666, 0);
     func_0201267c(0x138, &mCamSpacePos);
@@ -592,11 +592,11 @@ int daPgRcer_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(floorNormal);
         if (floorNormal.y != 0) {
-            int x = FX_MUL(floorNormal.x, mSpeedX);
-            int y = FX_MUL(floorNormal.z, mSpeedZ);
-            mVertSpeed = -(FX_Div(x + y, floorNormal.y) + 0x8000);
-            if (mVertSpeed > 0)
-                mVertSpeed = 0;
+            int x = FX_MUL(floorNormal.x, mSpeed.x);
+            int y = FX_MUL(floorNormal.z, mSpeed.z);
+            mSpeed.y = -(FX_Div(x + y, floorNormal.y) + 0x8000);
+            if (mSpeed.y > 0)
+                mSpeed.y = 0;
         }
     }
     if (clsn->IsOnWall()) {
@@ -631,7 +631,7 @@ void daPgRcer_c::CheckFallCheat() {
         return;
     daPly_c *t = mTalkPlayer;
     if (t->mIsAirborne != 0) {
-        int vertSpeed = t->mVertSpeed;
+        int vertSpeed = t->mSpeed.y;
         int terminalVel = t->mTerminalVelocity;
         if (vertSpeed > terminalVel)
             return;
