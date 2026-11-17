@@ -383,18 +383,18 @@ int daBtn_c::Behavior()
     if (mHorzSpeed != 0) {
         if (IsGoingOffCliff(mWithMeshClsn, 0x3c000, 0x2888, false, false, 0x32000)) {
             /* The step would leave the ledge: rewind to last frame's position. */
-            mPosX = mSafePosX;
-            mPosY = mSafePosY;
-            mPosZ = mSafePosZ;
+            mPosX = mSafePos.x;
+            mPosY = mSafePos.y;
+            mPosZ = mSafePos.z;
         } else {
-            mSafePosX = mPosX;
-            mSafePosY = mPosY;
-            mSafePosZ = mPosZ;
+            mSafePos.x = mPosX;
+            mSafePos.y = mPosY;
+            mSafePos.z = mPosZ;
         }
     } else {
-        mSafePosX = mPosX;
-        mSafePosY = mPosY;
-        mSafePosZ = mPosZ;
+        mSafePos.x = mPosX;
+        mSafePos.y = mPosY;
+        mSafePos.z = mPosZ;
     }
 
     UpdateWMClsn(mWithMeshClsn, 0);
