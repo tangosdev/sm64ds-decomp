@@ -53,12 +53,6 @@ jobs:
       - name: Tracker unit tests
         run: python -m unittest -v tools.test_data_tiers
 
-      - name: Build the data progress report
-        run: |
-          python tools/data_tiers.py \
-            --json build/data-tracking.json \
-            --items-json build/data-items.json
-
       - name: Credit and claim ratchet
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
