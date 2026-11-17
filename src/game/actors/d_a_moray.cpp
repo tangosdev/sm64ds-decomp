@@ -346,9 +346,9 @@ int daMoray_c::StateLungeMain() {
         Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngleX);
         MTX_MultVec43(&localOffset, &data_020a0e68, &worldTarget);
-        worldTarget.x += this->mHomePosX;
-        worldTarget.y += this->mHomePosY;
-        worldTarget.z += this->mHomePosZ;
+        worldTarget.x += this->mHomePos.x;
+        worldTarget.y += this->mHomePos.y;
+        worldTarget.z += this->mHomePos.z;
         ApproachLinear(this->mPos, worldTarget, 0x14000);
     }
     if (this->mBlendAnmModel.Finished()) {
@@ -378,9 +378,9 @@ int daMoray_c::StateSwimOutMain() {
     Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngleX);
     MTX_MultVec43(&localOffset, &data_020a0e68, &worldTarget);
-    worldTarget.x += this->mHomePosX;
-    worldTarget.y += this->mHomePosY;
-    worldTarget.z += this->mHomePosZ;
+    worldTarget.x += this->mHomePos.x;
+    worldTarget.y += this->mHomePos.y;
+    worldTarget.z += this->mHomePos.z;
     ApproachLinear(this->mPos, worldTarget, 0x14000);
     if (Vec3_Dist(&this->mPos, &worldTarget) < 0x14000) {
         func_02012694(0xfa, &this->mCamSpacePos);
@@ -427,14 +427,14 @@ int daMoray_c::StateDenWaitMain() {
     unsigned char entrance;
     int dy;
 
-    if (Vec3_Dist(&this->mPos, (const Vector3 *)&this->mHomePosX) > 0xa000) {
-        ApproachLinear(this->mPos, *(const Vector3 *)&this->mHomePosX, 0x5000);
+    if (Vec3_Dist(&this->mPos, &this->mHomePos) > 0xa000) {
+        ApproachLinear(this->mPos, this->mHomePos, 0x5000);
         return 1;
     }
 
-    this->mPosX = this->mHomePosX;
-    this->mPosY = this->mHomePosY;
-    this->mPosZ = this->mHomePosZ;
+    this->mPosX = this->mHomePos.x;
+    this->mPosY = this->mHomePos.y;
+    this->mPosZ = this->mHomePos.z;
 
     player = this->ClosestPlayer();
     if (player != 0) {
@@ -463,9 +463,9 @@ int daMoray_c::StateDenWaitMain() {
             Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
             Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngleX);
             MTX_MultVec43(&local, &data_020a0e68, &world);
-            world.x += this->mHomePosX;
-            world.y += this->mHomePosY;
-            world.z += this->mHomePosZ;
+            world.x += this->mHomePos.x;
+            world.y += this->mHomePos.y;
+            world.z += this->mHomePos.z;
             if (Vec3_Dist(&playerPos, &world) < 0x224000)
                 SetState(&data_ov016_02114d9c);
         }
@@ -701,9 +701,9 @@ s32 daMoray_c::InitResources()
         mPathNodeCount = path.NumNodes();
     }
 
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mTerminalVelocity = -0x1e000;
     cylOffset1.x = data_ov016_02114d4c.x;
     cylOffset1.y = data_ov016_02114d4c.y;
@@ -727,11 +727,11 @@ s32 daMoray_c::InitResources()
     if (gCurrentStarId == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0) {
         /* Entrance 1, or star 1 still uncollected: only variant 2. */
         if (mVariant == 2) {
-            mHomePosY -= 0x80000;
+            mHomePos.y -= 0x80000;
             mPathNodeIndex = 8;
             if (mPathNodeIndex >= mPathNodeCount)
                 mPathNodeIndex = 4;
-            mPosY = mHomePosY;
+            mPosY = mHomePos.y;
             SetState(&data_ov016_02114d8c);
         } else {
             return 0;
