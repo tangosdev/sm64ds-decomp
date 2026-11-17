@@ -22351,7 +22351,7 @@
     },
     "ov006:0x020deac4": {
       "author": "tangosdev",
-      "name": "_Z14CupFx_ElemDtorv"
+      "name": "_ZN5CupFxD1Ev"
     },
     "ov006:0x020deac8": {
       "author": "tangosdev",
@@ -22467,7 +22467,7 @@
     },
     "ov006:0x020e0634": {
       "author": "tangosdev",
-      "name": "_Z11Cup_Nothingv"
+      "name": "_ZN5CupFxC1Ev"
     },
     "ov006:0x020e0638": {
       "author": "andrewboudreau",
