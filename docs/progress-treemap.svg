@@ -19329,71 +19329,71 @@ matched: yes</title></rect><rect x="1119.96" y="27.00" width="11.19" height="22.
 module: ov004
 addr: 0x020b3278
 size: 864 bytes
-matched: yes</title></rect><rect x="1131.15" y="27.00" width="2.54" height="21.92" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z22Banner_DrawLevelNumberP8MgBanner
+matched: yes</title></rect><rect x="1131.15" y="27.00" width="2.54" height="21.92" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner15DrawLevelNumberEv
 module: ov004
 addr: 0x020b35d8
 size: 192 bytes
-matched: yes</title></rect><rect x="1131.15" y="48.92" width="2.54" height="0.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z16Banner_SetupNonev
+matched: yes</title></rect><rect x="1131.15" y="48.92" width="2.54" height="0.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner9SetupNoneEv
 module: ov004
 addr: 0x020b3698
 size: 4 bytes
-matched: yes</title></rect><rect x="1133.69" y="27.00" width="5.28" height="16.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z15Banner_DrawSpinP8MgBanner
+matched: yes</title></rect><rect x="1133.69" y="27.00" width="5.28" height="16.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner8DrawSpinEv
 module: ov004
 addr: 0x020b369c
 size: 296 bytes
-matched: yes</title></rect><rect x="1133.69" y="43.23" width="5.28" height="2.41" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z17Banner_UpdateSpinP8MgBanner
+matched: yes</title></rect><rect x="1133.69" y="43.23" width="5.28" height="2.41" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner10UpdateSpinEv
 module: ov004
 addr: 0x020b37c4
 size: 44 bytes
-matched: yes</title></rect><rect x="1133.69" y="45.64" width="5.28" height="3.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z16Banner_StartSpinP8MgBanner
+matched: yes</title></rect><rect x="1133.69" y="45.64" width="5.28" height="3.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner9StartSpinEv
 module: ov004
 addr: 0x020b37f0
 size: 68 bytes
-matched: yes</title></rect><rect x="1138.98" y="27.00" width="4.77" height="5.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z17Banner_UpdateDropP8MgBanner
+matched: yes</title></rect><rect x="1138.98" y="27.00" width="4.77" height="5.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner10UpdateDropEv
 module: ov004
 addr: 0x020b3834
 size: 84 bytes
-matched: yes</title></rect><rect x="1138.98" y="32.11" width="4.77" height="2.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z16Banner_SetupDropP8MgBanner
+matched: yes</title></rect><rect x="1138.98" y="32.11" width="4.77" height="2.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner9SetupDropEv
 module: ov004
 addr: 0x020b3888
 size: 36 bytes
-matched: yes</title></rect><rect x="1138.98" y="34.30" width="4.77" height="12.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z15Banner_DrawWaveP8MgBanner
+matched: yes</title></rect><rect x="1138.98" y="34.30" width="4.77" height="12.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner8DrawWaveEv
 module: ov004
 addr: 0x020b38ac
 size: 204 bytes
-matched: yes</title></rect><rect x="1138.98" y="46.70" width="4.77" height="2.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z17Banner_UpdateWaveP8MgBanner
+matched: yes</title></rect><rect x="1138.98" y="46.70" width="4.77" height="2.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner10UpdateWaveEv
 module: ov004
 addr: 0x020b3978
 size: 44 bytes
-matched: yes</title></rect><rect x="1143.74" y="27.00" width="8.96" height="13.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z21Banner_StartWaveBurstP8MgBanner
+matched: yes</title></rect><rect x="1143.74" y="27.00" width="8.96" height="13.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner14StartWaveBurstEv
 module: ov004
 addr: 0x020b39a4
 size: 404 bytes
-matched: yes</title></rect><rect x="1143.74" y="40.06" width="8.96" height="9.31" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z18Banner_DrawSqueezeP8MgBanner
+matched: yes</title></rect><rect x="1143.74" y="40.06" width="8.96" height="9.31" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner11DrawSqueezeEv
 module: ov004
 addr: 0x020b3b38
 size: 288 bytes
-matched: yes</title></rect><rect x="1152.71" y="27.00" width="7.51" height="2.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z17Banner_UpdateFallP8MgBanner
+matched: yes</title></rect><rect x="1152.71" y="27.00" width="7.51" height="2.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner10UpdateFallEv
 module: ov004
 addr: 0x020b3c58
 size: 68 bytes
-matched: yes</title></rect><rect x="1152.71" y="29.62" width="7.51" height="1.08" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z16Banner_SetupFallP8MgBanner
+matched: yes</title></rect><rect x="1152.71" y="29.62" width="7.51" height="1.08" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner9SetupFallEv
 module: ov004
 addr: 0x020b3c9c
 size: 28 bytes
-matched: yes</title></rect><rect x="1152.71" y="30.70" width="7.51" height="18.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z19Banner_DrawPopSpinAP8MgBanner
+matched: yes</title></rect><rect x="1152.71" y="30.70" width="7.51" height="18.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner12DrawPopSpinAEv
 module: ov004
 addr: 0x020b3cb8
 size: 484 bytes
-matched: yes</title></rect><rect x="1160.22" y="27.00" width="6.27" height="22.37" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z19Banner_DrawPopSpinBP8MgBanner
+matched: yes</title></rect><rect x="1160.22" y="27.00" width="6.27" height="22.37" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner12DrawPopSpinBEv
 module: ov004
 addr: 0x020b3e9c
 size: 484 bytes
-matched: yes</title></rect><rect x="1166.49" y="27.00" width="5.23" height="2.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z20Banner_UpdatePopSpinP8MgBanner
+matched: yes</title></rect><rect x="1166.49" y="27.00" width="5.23" height="2.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner13UpdatePopSpinEv
 module: ov004
 addr: 0x020b4080
 size: 44 bytes
-matched: yes</title></rect><rect x="1166.49" y="29.44" width="5.23" height="1.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z19Banner_SetupPopSpinP8MgBanner
+matched: yes</title></rect><rect x="1166.49" y="29.44" width="5.23" height="1.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner12SetupPopSpinEv
 module: ov004
 addr: 0x020b40ac
 size: 20 bytes
@@ -19401,11 +19401,11 @@ matched: yes</title></rect><rect x="1166.49" y="30.54" width="5.23" height="4.21
 module: ov004
 addr: 0x020b40c0
 size: 76 bytes
-matched: yes</title></rect><rect x="1166.49" y="34.75" width="5.23" height="14.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z18Banner_DrawPressedP8MgBanner
+matched: yes</title></rect><rect x="1166.49" y="34.75" width="5.23" height="14.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner11DrawPressedEv
 module: ov004
 addr: 0x020b410c
 size: 264 bytes
-matched: yes</title></rect><rect x="1171.72" y="27.00" width="4.30" height="1.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z20Banner_UpdatePressedP8MgBanner
+matched: yes</title></rect><rect x="1171.72" y="27.00" width="4.30" height="1.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner13UpdatePressedEv
 module: ov004
 addr: 0x020b4214
 size: 24 bytes
@@ -19413,59 +19413,59 @@ matched: yes</title></rect><rect x="1171.72" y="28.62" width="4.30" height="9.97
 module: ov004
 addr: 0x020b422c
 size: 148 bytes
-matched: yes</title></rect><rect x="1171.72" y="38.59" width="4.30" height="8.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z16Banner_DrawPlainP8MgBanner
+matched: yes</title></rect><rect x="1171.72" y="38.59" width="4.30" height="8.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner9DrawPlainEv
 module: ov004
 addr: 0x020b42c0
 size: 124 bytes
-matched: yes</title></rect><rect x="1171.72" y="46.95" width="4.30" height="2.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z16Banner_SetupZoomP8MgBanner
+matched: yes</title></rect><rect x="1171.72" y="46.95" width="4.30" height="2.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner9SetupZoomEv
 module: ov004
 addr: 0x020b433c
 size: 36 bytes
-matched: yes</title></rect><rect x="1176.02" y="27.00" width="15.75" height="11.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z16Banner_DrawZoomAP8MgBanner
+matched: yes</title></rect><rect x="1176.02" y="27.00" width="15.75" height="11.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner9DrawZoomAEv
 module: ov004
 addr: 0x020b4360
 size: 608 bytes
-matched: yes</title></rect><rect x="1176.02" y="38.19" width="15.75" height="11.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z16Banner_DrawZoomBP8MgBanner
+matched: yes</title></rect><rect x="1176.02" y="38.19" width="15.75" height="11.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner9DrawZoomBEv
 module: ov004
 addr: 0x020b45c0
 size: 608 bytes
-matched: yes</title></rect><rect x="1191.77" y="27.00" width="5.85" height="2.18" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z17Banner_UpdateZoomP8MgBanner
+matched: yes</title></rect><rect x="1191.77" y="27.00" width="5.85" height="2.18" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner10UpdateZoomEv
 module: ov004
 addr: 0x020b4820
 size: 44 bytes
-matched: yes</title></rect><rect x="1191.77" y="29.18" width="5.85" height="18.02" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z21Banner_SetupZoomBurstP8MgBanner
+matched: yes</title></rect><rect x="1191.77" y="29.18" width="5.85" height="18.02" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner14SetupZoomBurstEv
 module: ov004
 addr: 0x020b484c
 size: 364 bytes
-matched: yes</title></rect><rect x="1191.77" y="47.20" width="5.85" height="2.18" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z27Banner_UpdateSlideFromRightP8MgBanner
+matched: yes</title></rect><rect x="1191.77" y="47.20" width="5.85" height="2.18" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner20UpdateSlideFromRightEv
 module: ov004
 addr: 0x020b49b8
 size: 44 bytes
-matched: yes</title></rect><rect x="1197.62" y="27.00" width="2.43" height="1.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z26Banner_SetupSlideFromRightP8MgBanner
+matched: yes</title></rect><rect x="1197.62" y="27.00" width="2.43" height="1.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner19SetupSlideFromRightEv
 module: ov004
 addr: 0x020b49e4
 size: 12 bytes
-matched: yes</title></rect><rect x="1197.62" y="28.43" width="2.43" height="5.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z26Banner_UpdateSlideFromLeftP8MgBanner
+matched: yes</title></rect><rect x="1197.62" y="28.43" width="2.43" height="5.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner19UpdateSlideFromLeftEv
 module: ov004
 addr: 0x020b49f0
 size: 44 bytes
-matched: yes</title></rect><rect x="1197.62" y="33.66" width="2.43" height="1.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z25Banner_SetupSlideFromLeftP8MgBanner
+matched: yes</title></rect><rect x="1197.62" y="33.66" width="2.43" height="1.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner18SetupSlideFromLeftEv
 module: ov004
 addr: 0x020b4a1c
 size: 12 bytes
-matched: yes</title></rect><rect x="1197.62" y="35.09" width="2.43" height="2.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z28Banner_UpdateSlideFromBottomP8MgBanner
+matched: yes</title></rect><rect x="1197.62" y="35.09" width="2.43" height="2.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner21UpdateSlideFromBottomEv
 module: ov004
 addr: 0x020b4a28
 size: 24 bytes
-matched: yes</title></rect><rect x="1197.62" y="37.95" width="2.43" height="1.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z27Banner_SetupSlideFromBottomP8MgBanner
+matched: yes</title></rect><rect x="1197.62" y="37.95" width="2.43" height="1.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner20SetupSlideFromBottomEv
 module: ov004
 addr: 0x020b4a40
 size: 12 bytes
-matched: yes</title></rect><rect x="1197.62" y="39.38" width="2.43" height="2.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z25Banner_UpdateSlideFromTopP8MgBanner
+matched: yes</title></rect><rect x="1197.62" y="39.38" width="2.43" height="2.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner18UpdateSlideFromTopEv
 module: ov004
 addr: 0x020b4a4c
 size: 24 bytes
-matched: yes</title></rect><rect x="1197.62" y="42.23" width="2.43" height="1.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z24Banner_SetupSlideFromTopP8MgBanner
+matched: yes</title></rect><rect x="1197.62" y="42.23" width="2.43" height="1.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MgBanner17SetupSlideFromTopEv
 module: ov004
 addr: 0x020b4a64
 size: 12 bytes
@@ -21945,7 +21945,7 @@ matched: yes</title></rect><rect x="1045.33" y="251.22" width="3.02" height="8.8
 module: ov006
 addr: 0x020dc26c
 size: 40 bytes
-matched: yes</title></rect><rect x="615.67" y="260.07" width="0.56" height="4.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dScMgCoin_c13Bag_StateIdleEv
+matched: yes</title></rect><rect x="615.67" y="260.07" width="0.56" height="4.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dScMgCoin_c13Bag_StateIdleEi
 module: ov006
 addr: 0x020dc294
 size: 4 bytes
@@ -22053,7 +22053,7 @@ matched: yes</title></rect><rect x="615.67" y="264.84" width="41.14" height="5.5
 module: ov006
 addr: 0x020dcea8
 size: 340 bytes
-matched: yes</title></rect><rect x="656.81" y="264.84" width="0.48" height="5.52" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dScMgCoin_c17Coin_StateSettledEv
+matched: yes</title></rect><rect x="656.81" y="264.84" width="0.48" height="5.52" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dScMgCoin_c17Coin_StateSettledEi
 module: ov006
 addr: 0x020dcffc
 size: 4 bytes
@@ -22085,7 +22085,7 @@ matched: yes</title></rect><rect x="853.79" y="264.84" width="43.08" height="5.5
 module: ov006
 addr: 0x020dd658
 size: 356 bytes
-matched: yes</title></rect><rect x="896.87" y="264.84" width="0.48" height="5.52" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dScMgCoin_c18Block_StateRestingEv
+matched: yes</title></rect><rect x="896.87" y="264.84" width="0.48" height="5.52" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dScMgCoin_c18Block_StateRestingEi
 module: ov006
 addr: 0x020dd7bc
 size: 4 bytes
@@ -25285,7 +25285,7 @@ matched: yes</title></rect><rect x="938.02" y="452.80" width="20.50" height="7.8
 module: ov006
 addr: 0x02107db8
 size: 240 bytes
-matched: yes</title></rect><rect x="958.51" y="452.80" width="89.84" height="7.83" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z23RouletteBoard_StateSlowP13RouletteBoard
+matched: yes</title></rect><rect x="958.51" y="452.80" width="89.84" height="7.83" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13RouletteBoard9StateSlowEv
 module: ov006
 addr: 0x02107ea8
 size: 1052 bytes
@@ -25293,7 +25293,7 @@ matched: yes</title></rect><rect x="718.70" y="460.63" width="11.21" height="3.3
 module: ov006
 addr: 0x021082c4
 size: 56 bytes
-matched: yes</title></rect><rect x="718.70" y="463.97" width="11.21" height="31.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z23RouletteBoard_StateSpinP13RouletteBoard
+matched: yes</title></rect><rect x="718.70" y="463.97" width="11.21" height="31.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13RouletteBoard9StateSpinEv
 module: ov006
 addr: 0x021082fc
 size: 524 bytes
@@ -26481,7 +26481,7 @@ matched: yes</title></rect><rect x="815.08" y="673.48" width="5.72" height="42.5
 module: ov006
 addr: 0x0211cd24
 size: 364 bytes
-matched: yes</title></rect><rect x="815.08" y="715.98" width="5.72" height="0.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13dScMgTeresa_c16BigBoo_StateGoneEv
+matched: yes</title></rect><rect x="815.08" y="715.98" width="5.72" height="0.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13dScMgTeresa_c16BigBoo_StateGoneEi
 module: ov006
 addr: 0x0211ce90
 size: 4 bytes
