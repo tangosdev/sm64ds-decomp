@@ -60,6 +60,7 @@
 #include "private/ov007_picker_scene.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/ProgressRatio.h"
+#include "Matrix2x2.h"
 
 /* data_ov007_02104b9c: the 0x14-byte sprite record. */
 typedef struct Ov007PickerSprites {
@@ -89,7 +90,7 @@ extern u16 data_ov007_020d7b54[];
 extern int data_ov007_020d7b60;
 extern char data_ov007_020d7b80[];
 
-extern "C" void MTX_Rot22_(int *p, int a, int b);
+extern "C" void MTX_Rot22_(Matrix2x2 *mtx, fx32 sinVal, fx32 cosVal);
 extern "C" void func_ov007_020bbe60(int idx);
 extern void func_ov007_020bda38(int v);
 extern void func_ov007_020bda8c(int a, int b);
@@ -106,7 +107,7 @@ extern "C" void func_ov007_020c4f50(void *c, int a1, int a2, int a3, int a4);
 extern "C" void func_ov007_020c4e98(Ov007Picker *c, int a1, int a2, int a3, int a4,
                                     unsigned short a5, int a6);
 extern "C" void func_ov007_020c5188(void *, int);
-extern "C" void func_ov007_020c5490(void *obj, int *m);
+extern "C" void func_ov007_020c5490(void *obj, Matrix2x2 *m);
 extern "C" void func_ov007_020c55bc(Ov007Picker *self, int m1, int m2);
 extern "C" void func_ov007_020c56bc(void *c, int a, int b, int d, int e, int f);
 extern void func_ov007_020c5a6c(Ov007Picker *, void *, int);
@@ -235,7 +236,7 @@ void PickerScene_HandleEditKeys(void) {
     int t1;
     Ov007Picker *s;
     Ov007Pad *pad;
-    int mat[4];
+    Matrix2x2 mat;
     u16 h;
 
     s = SCENE->picker;
@@ -362,8 +363,8 @@ void PickerScene_HandleEditKeys(void) {
             }
             if (md == 0) {
                 int idx = (u16)(((dir2 * amp) * 0x3555) >> 12) >> 4;
-                MTX_Rot22_(mat, FX_SinIdx(idx), FX_CosIdx(idx));
-                func_ov007_020c5490(s, mat);
+                MTX_Rot22_(&mat, FX_SinIdx(idx), FX_CosIdx(idx));
+                func_ov007_020c5490(s, &mat);
             } else {
                 int n = FX_DivS32(s->groupCount, 4) + 1;
                 if (n == 1) {
