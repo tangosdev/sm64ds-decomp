@@ -202,7 +202,6 @@ daWanwan2_c::~daWanwan2_c()
 /* The floor probe: a vertical line from 10 units above the chomp (0xa000) to
    184 units below it (0xb8000). Returns 1 on a hit. */
 int daWanwan2_c::func_ov100_02143370() {
-    daWanwan2_c *c = this;
     Vector3 va;
     Vector3 vb;
     int ya, yb;
@@ -210,17 +209,17 @@ int daWanwan2_c::func_ov100_02143370() {
     dBgCh_Lin line2;
     va.x = 0; va.y = 0; va.z = 0;
     vb.x = 0; vb.y = 0; vb.z = 0;
-    va.x = c->mPosX;
-    ya = c->mPosY;
+    va.x = mPosX;
+    ya = mPosY;
     va.y = ya;
-    va.z = c->mPosZ;
-    vb.x = c->mPosX;
-    yb = c->mPosY;
+    va.z = mPosZ;
+    vb.x = mPosX;
+    yb = mPosY;
     vb.y = yb;
-    vb.z = c->mPosZ;
+    vb.z = mPosZ;
     va.y = ya + 0xa000;
     vb.y = yb - 0xb8000;
-    line1.SetObjAndLine(va, vb, (dActor_c *)c);
+    line1.SetObjAndLine(va, vb, (dActor_c *)this);
     if (line1.DetectClsn()) {
         return 1;
     }
@@ -497,24 +496,23 @@ int daWanwan2_c::func_ov100_02143b18(ChompState *p) {
    link's position (mLinkPos >> 3) and a smaller drop shadow (radius 120
    units, depth 500 units). */
 void daWanwan2_c::func_ov100_02143b68() {
-    daWanwan2_c *c = this;
     Mtx43 tmp;
     int i;
     dExtSimpleModel_c *mdst;
-    Matrix4x3_FromRotationXYZExt(&c->mAnmModel.mat4x3, c->mAngleX, c->mAngleY, c->mAngleZ);
-    c->mAnmModel.mat4x3.t.x = c->mPosX >> 3;
-    c->mAnmModel.mat4x3.t.y = c->mPosY >> 3;
-    c->mAnmModel.mat4x3.t.z = c->mPosZ >> 3;
-    c->DropShadowRadHeight(c->mShadowModel, c->mAnmModel.mat4x3, 0x15e000, 0x1f4000, 0xf);
+    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mAnmModel.mat4x3.t.x = mPosX >> 3;
+    mAnmModel.mat4x3.t.y = mPosY >> 3;
+    mAnmModel.mat4x3.t.z = mPosZ >> 3;
+    DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000, 0x1f4000, 0xf);
     tmp = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     i = 0;
-    mdst = c->mModels;
+    mdst = mModels;
     for (; i < daWanwan2_NUM_LINKS; i++) {
         *(Mtx43 *)&mdst->mat4x3 = tmp;
-        c->mModels[i].mat4x3.t.x = c->mLinkPos[i].x >> 3;
-        c->mModels[i].mat4x3.t.y = c->mLinkPos[i].y >> 3;
-        c->mModels[i].mat4x3.t.z = c->mLinkPos[i].z >> 3;
-        c->DropShadowRadHeight(c->mShadowModels[i], mdst->mat4x3, 0x78000, 0x1f4000, 0xf);
+        mModels[i].mat4x3.t.x = mLinkPos[i].x >> 3;
+        mModels[i].mat4x3.t.y = mLinkPos[i].y >> 3;
+        mModels[i].mat4x3.t.z = mLinkPos[i].z >> 3;
+        DropShadowRadHeight(mShadowModels[i], mdst->mat4x3, 0x78000, 0x1f4000, 0xf);
         mdst++;
     }
 }
@@ -613,8 +611,7 @@ int daWanwan2_c::Behavior()
     if (flag != 0 && mCoinTimer == 0) {
         int q16 = 0x10000 / mPathNodeIndex;
         short spd = (short)q16;
-        dActor_c *pl = ClosestPlayer();
-        (void)pl;
+        ClosestPlayer();
 
         Vector3 v(0, 4, 0);
 
