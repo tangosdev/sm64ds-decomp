@@ -191,9 +191,9 @@ int daObjTatefuda_c::InitResources()
     int pz = mPosZ;
     int px = mPosX;
     int py2 = py + 0x64000;
-    VecFx32 v = {px, py2, pz};
+    Vector3 v(px, py2, pz);
     dBgCh_Gnd rg;
-    rg.SetObjAndPos(*(Vector3 *)&v, 0);
+    rg.SetObjAndPos(v, 0);
     if (rg.DetectClsn() != 0)
         mPosY = rg.clsnY;
 
