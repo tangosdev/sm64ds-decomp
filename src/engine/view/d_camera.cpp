@@ -2106,7 +2106,7 @@ s32 dCamera_c::func_02009e70() {
     if (mTargetPlayer == 0) {
         mAngleY = Vec3_HorzAngle(&lookAt, &pos);
     } else {
-        mode = (mFlags & 0x100) ? &data_0208747c : mMode;
+        mode = (mFlags & CAM_FLAG_HOLD_MODE) ? &data_0208747c : mMode;
         Vec3_Sub(&targetMove, &mTargetPlayer->mPos, &mTargetPos);
         mTargetPos = mTargetPlayer->mPos;
         r7 = Vec3_HorzLen(&targetMove);
@@ -2116,7 +2116,7 @@ s32 dCamera_c::func_02009e70() {
             framing = 1;
             mFramedActor = 0;
             mLookTargetPos = mFocusActor->mPos;
-            mFocusDist = 0xdfe60;
+            mFocusDist = CAM_FRAMING_DIST;
         }
         r6 = func_0200c66c(&mTargetPos, (int *)&view, (int *)&mode, &framing);
         r4 = 0;
@@ -2129,17 +2129,17 @@ s32 dCamera_c::func_02009e70() {
         fp = mode->flags;
         r4 = mode->minDist;
         r5 = mode->posDist;
-        if ((fp & 1) == 0 && (mFlags & 2) != 0) {
-            r4 = FX_MUL(r4, 0x1800);
-            r5 = FX_MUL(r5, 0x1800);
+        if ((fp & 1) == 0 && (mFlags & CAM_FLAG_ZOOMED_OUT) != 0) {
+            r4 = FX_MUL(r4, CAM_FAR_SCALE);
+            r5 = FX_MUL(r5, CAM_FAR_SCALE);
         }
         if (CheckMode() && (fp & 2) != 0 && IsTargetNearStarMarker() != 0) {
             r4 = FX_MUL(r4, 0x14cc);
             r5 = FX_MUL(r5, 0x14cc);
         }
         if (mFlags & 0x80) {
-            r4 = FX_MUL(r4, 0x1800);
-            r5 = FX_MUL(r5, 0x1800);
+            r4 = FX_MUL(r4, CAM_FAR_SCALE);
+            r5 = FX_MUL(r5, CAM_FAR_SCALE);
         }
         /* near limit -> fp (reuses the flags local), far limit -> r4 (reuses the
            near-distance local): both must be later live ranges of already-assigned
@@ -2154,7 +2154,7 @@ s32 dCamera_c::func_02009e70() {
             r4 = ScaleDistByFov(r5);
         }
         lookAtGroundY = func_0200bec4(&mTargetPos.x, r6, (char *)mode, r7);
-        turnInput = data_0209f498[gActivePlayerSlot].pressed & 0x4300;
+        turnInput = data_0209f498[gActivePlayerSlot].pressed & (CAM_BUTTON_BEHIND | CAM_BUTTON_TURN);
         if (mFocusActor != 0) {
             mAngleY = Vec3_HorzAngle(&lookAt, &pos);
         } else if (mode == (CamMode *)&data_0208733c) {
@@ -2168,17 +2168,12 @@ s32 dCamera_c::func_02009e70() {
             } else if (mode == (CamMode *)&data_0208742c) {
                 UpdateParallelTrackingCamera(view, r6);
             } else {
-                mFlags |= 0x1000;
+                mFlags |= CAM_FLAG_USER_TURN;
                 nearDist = ScaleDistByFov(mode->nearDist);
                 farDist = ScaleDistByFov(mode->farDist);
                 if (view != 0 && view->type == 2) {
                     if (view->p1 == 0) {
-                        s32 tx = view->x << 12;
-                        s32 tz = view->z << 12;
-                        s32 ty = view->y << 12;
-                        pos.x = tx;
-                        pos.y = ty;
-                        pos.z = tz;
+                        SetVec(pos, view->x << 12, view->y << 12, view->z << 12);
                     } else {
                         s16 a = (view->angleY + 0x8000);
                         if (mTargetAngleY != a) {
@@ -2199,7 +2194,7 @@ s32 dCamera_c::func_02009e70() {
                     Vector3 wallFrom;
                     Vector3 wallNormal;
                     ceil = 0x7fffffff;
-                    sb = mTargetPos.y + 0x82500;
+                    sb = mTargetPos.y + CAM_TARGET_HEAD;
                     {
                         dBgCh_Lin line;
                         PrepareBgCh(line);
@@ -2207,7 +2202,7 @@ s32 dCamera_c::func_02009e70() {
                         if (line.DetectClsn() != 0) {
                             ceil = CollisionCeiling(line, sb);
                         }
-                        if ((mFlags & 0x100) == 0 && (mode->flags & 8) != 0) {
+                        if ((mFlags & CAM_FLAG_HOLD_MODE) == 0 && (mode->flags & 8) != 0) {
                             SetVec(wallFrom, mTargetPos.x, sb, mTargetPos.z);
                             if (sb <= ceil) {
                                 line.SetObjAndLine(wallFrom, pos, 0);
@@ -2219,7 +2214,7 @@ s32 dCamera_c::func_02009e70() {
                                     if (t0 < 0)
                                         t0 = -t0;
                                     if (t0 > 0xb50) {
-                                        mFlags |= 0x80200;
+                                        mFlags |= (CAM_FLAG_WALL_REVERSE | CAM_FLAG_WALL_STEEP);
                                     } else {
                                         Vector3 wallHit = line.GetClsnPos();
                                         sba = cstd::atan2(wallNormal.x, wallNormal.z) + 0x8000;
@@ -2232,11 +2227,11 @@ s32 dCamera_c::func_02009e70() {
                                         mTargetAngleY = sba;
                                         mTurningToTarget = 1;
                                         t0 = (s16)(mAngleY - mTargetAngleY);
-                                        if (turnInput & 0x200)
+                                        if (turnInput & CAM_BUTTON_TURN_LEFT)
                                             t0 = (s16)(-t0);
                                         if (t0 > 0)
                                             turnInput = 0;
-                                        mFlags |= 0x40000;
+                                        mFlags |= CAM_FLAG_WALL_HIT;
                                     }
                                 }
                             }
@@ -2244,17 +2239,17 @@ s32 dCamera_c::func_02009e70() {
                         Vector3 mid;
                         Vector3 midAbove;
                         if (turnInput != 0) {
-                            if (turnInput & 0x4000)
+                            if (turnInput & CAM_BUTTON_BEHIND)
                                 func_02012790(0x1a);
                             mTurningToTarget = 0;
                         } else {
                             if (mTurningToTarget == 0) {
-                                turnInput = data_0209f498[gActivePlayerSlot].held & 0x4300;
+                                turnInput = data_0209f498[gActivePlayerSlot].held & (CAM_BUTTON_BEHIND | CAM_BUTTON_TURN);
                             }
                         }
-                        if (mFlags & 0x100) {
-                            if (dist > (s32)ScaleDistByFov(0xdfe60))
-                                mFlags &= ~0x100;
+                        if (mFlags & CAM_FLAG_HOLD_MODE) {
+                            if (dist > (s32)ScaleDistByFov(CAM_FRAMING_DIST))
+                                mFlags &= ~CAM_FLAG_HOLD_MODE;
                         }
                         /* sb = dist is assigned inside the test: hoisting it above the if
                            re-lays the function (290 words differ). */
@@ -2263,21 +2258,21 @@ s32 dCamera_c::func_02009e70() {
                             sb = mAngleY;
                             mAngleY = Vec3_HorzAngle(&lookAt, &pos);
                             if (turnInput != 0 || mRecentering != 0) {
-                                if ((turnInput & 0x4000) || mRecentering != 0) {
+                                if ((turnInput & CAM_BUTTON_BEHIND) || mRecentering != 0) {
                                     if (turnInput != 0) {
                                         mBehindAngleY = mTargetPlayer->mAngleY + 0x8000;
                                     }
                                     mRecentering = ApproachAngle(&mAngleY, mBehindAngleY, 4, 0x800,
                                                                  0x400) != 0;
                                     if (mRecentering != 0)
-                                        mFlags |= 0x60;
+                                        mFlags |= CAM_FLAG_TURNING;
                                 } else {
-                                    if (turnInput & 0x200) {
+                                    if (turnInput & CAM_BUTTON_TURN_LEFT) {
                                         mAngleY -= 0x400;
-                                        mFlags |= 0x20;
+                                        mFlags |= CAM_FLAG_TURN_LEFT;
                                     } else {
                                         mAngleY += 0x400;
-                                        mFlags |= 0x40;
+                                        mFlags |= CAM_FLAG_TURN_RIGHT;
                                     }
                                 }
                                 turnInput = 0;
@@ -2351,21 +2346,19 @@ s32 dCamera_c::func_02009e70() {
                             }
                         }
                         if (KeepPosOutOfWalls() != 0) {
-                            if (mFlags & 0x60) {
+                            if (mFlags & CAM_FLAG_TURNING) {
                                 turnInput = 1;
-                                mFlags &= ~0x60;
+                                mFlags &= ~CAM_FLAG_TURNING;
                             }
                         }
-                        SetVec(probe, pos.x, pos.y + 0x100000, pos.z);
+                        SetVec(probe, pos.x, pos.y + CAM_PROBE_RISE, pos.z);
                         line.SetObjAndLine(pos, probe, 0);
                         if (line.DetectClsn() != 0) {
                             ceil = LimitCameraCeiling(line, probe, ceil);
                         }
                         Vec3_Add(&mid, &pos, &lookAt);
                         Vec3_AsrInPlace(&mid, 1);
-                        midAbove.x = mid.x;
-                        midAbove.y = mid.y + 0x100000;
-                        midAbove.z = mid.z;
+                        SetVec(midAbove, mid.x, mid.y + CAM_PROBE_RISE, mid.z);
                         line.SetObjAndLine(mid, midAbove, 0);
                         if (line.DetectClsn() != 0) {
                             ceil = LimitMidpointCeiling(line, midAbove, ceil);
@@ -2387,7 +2380,7 @@ s32 dCamera_c::func_02009e70() {
                             if (sb < r6)
                                 goalY = r6;
                             goalY = goalY + ScaleHeightByFov((r6 - lookAtGroundY) +
-                                                             ((mFlags & 2) ? 0x1e8000 : 0x138000));
+                                                             ((mFlags & CAM_FLAG_ZOOMED_OUT) ? 0x1e8000 : 0x138000));
                             if (mode->flags & 0x80) {
                                 if (pos.y > (s32)goalY)
                                     goalY = pos.y;
@@ -2407,13 +2400,13 @@ s32 dCamera_c::func_02009e70() {
                             else if (offset.y > t0)
                                 goalY = lookAt.y + t0;
                             if (gCurrentSublevel == 0x26) {
-                                if (pos.y < sb + 0x25bc8)
-                                    pos.y = sb + 0x25bc8;
+                                if (pos.y < sb + CAM_MIN_ABOVE_TARGET)
+                                    pos.y = sb + CAM_MIN_ABOVE_TARGET;
                             }
-                            if (ceil < sb + 0x25bc8)
+                            if (ceil < sb + CAM_MIN_ABOVE_TARGET)
                                 ceil = probe.y;
-                            if (sb + 0x25bc8 > (s32)0x80000000)
-                                minY = sb + 0x25bc8;
+                            if (sb + CAM_MIN_ABOVE_TARGET > (s32)0x80000000)
+                                minY = sb + CAM_MIN_ABOVE_TARGET;
                         }
                         if (mode != &data_02087094 && mode != &data_020870e4 &&
                             mode != &data_0208710c) {
@@ -2434,7 +2427,7 @@ s32 dCamera_c::func_02009e70() {
             sPrevTurnInput = turnInput;
         } else {
             sPrevTurnInput = 0;
-            if (mFlags & 0x60) {
+            if (mFlags & CAM_FLAG_TURNING) {
                 mTurnSound = Sound_PlayIfNotActive(mTurnSound, 2, 0x43, 0);
             }
         }
