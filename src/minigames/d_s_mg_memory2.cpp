@@ -327,6 +327,12 @@ void dScMgMemory2_c::JudgePair() {
 }
 
 // opt_propagation off keeps the card loop's constant live, as in the ROM.
+/* Kept, measured (#821, 2026-11-16), the same as dScMgMemory_c::DrawCards,
+ * its twin: the ROM copies the loop's zero into `dimmed` (mov r0, sb) and
+ * computes it after the sprite index. Without the pragma this body is 27 of
+ * 42 words off; mCards[cardIndex] in a for or do-while 27; `dimmed` passed
+ * as `mState != STATE_JUDGE_PAIRS` or a ternary 26; the sprite index before
+ * `dimmed` 29; a card pointer, local or walked, 36. */
 #pragma push
 #pragma opt_propagation off
 void dScMgMemory2_c::DrawCards() {
