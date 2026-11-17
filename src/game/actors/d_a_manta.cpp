@@ -225,7 +225,7 @@ void daManta_c::UpdateModelAndRingPos() {
     Vector3 scaled;
     Vec3_Asr(&scaled, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, scaled.x, scaled.y, scaled.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = data_020a0e68;
     mRingPos.x = 0;
     mRingPos.y = 0;
@@ -280,9 +280,9 @@ int daManta_c::Behavior() {
         }
         ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, &node), 0x60);
         ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &node), 0x40);
-        mAngleX = mPrevAngleX;
-        mAngleY = mPrevAngleY;
-        mAngleZ = mPrevAngleZ;
+        mAngle.x = mPrevAngleX;
+        mAngle.y = mPrevAngleY;
+        mAngle.z = mPrevAngleZ;
         forward.y = forward.x = forward.z = 0;
         forward.z = MANTA_FORWARD;
         Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);

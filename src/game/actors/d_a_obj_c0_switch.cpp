@@ -91,7 +91,7 @@ daObjC0_Switch_c *daObjC0_Switch_c_classInit() {
 /* -------------------------------------------------------------------------- */
 /* daObjC0_Switch_c::InitResources -- vtable slot 0, ov012 0x02111370.
  *
- * mModel/mMeshCollider/mClsnMat/mAngleY are dBgActor_c's/dActor_c's own named
+ * mModel/mMeshCollider/mClsnMat/mAngle.y are dBgActor_c's/dActor_c's own named
  * fields. dExtSimpleModel_c::LoadFile, dExtModel_c::SetFile, dBgW_Kc::LoadFile,
  * UpdateModelPosAndRotY, UpdateClsnPosAndRot and dBgW_KcMbg::SetFile are
  * real method calls.
@@ -109,7 +109,7 @@ int daObjC0_Switch_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov012_021124a0);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov012_02111cd0);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov012_02111cd0);
     return 1;
 }
 

@@ -129,7 +129,7 @@ int daObjBk_Lift_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov015_02114a5c), mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov015_02114a5c), mClsnMat, 0x199, mAngle.y,
                           data_ov015_02113594);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
@@ -146,16 +146,16 @@ int daObjBk_Lift_c::InitResources() {
     if (ground.DetectClsn())
         mFloorPosY = ground.clsnY;
 
-    u16 angle = mAngleY;
+    u16 angle = mAngle.y;
     int sine = FX_SinIdx(angle >> 4);
     mShadowOffsetX = FX_MUL(sine, 0xc8000);
-    angle = mAngleY;
+    angle = mAngle.y;
     int cosine = FX_CosIdx(angle >> 4);
     mShadowOffsetY = FX_MUL(cosine, 0xc8000);
 
     UpdateShadow();
 
-    mPrevAngleY = mAngleY + 0x8000;
+    mPrevAngleY = mAngle.y + 0x8000;
     mMoveTimer = 135;
 
     int kind = param1 & 0xff;

@@ -172,17 +172,17 @@ void daDkk_c::StateLandPause() {
         return;
     }
     mState = 7;
-    mTurnTargetAngle = (mAngleY + 0x8000);
+    mTurnTargetAngle = (mAngle.y + 0x8000);
 }
 
-/* mState 7, the turn. Steps mAngleY toward mTurnTargetAngle; once
+/* mState 7, the turn. Steps mAngle.y toward mTurnTargetAngle; once
  * ApproachLinear reports it has arrived, copies it into mPrevAngleY, clears the
  * landing counter and goes back to state 6. */
 int daDkk_c::StateTurn() {
-    int arrived = ApproachLinear(mAngleY, mTurnTargetAngle, 0x400);
+    int arrived = ApproachLinear(mAngle.y, mTurnTargetAngle, 0x400);
     if (arrived == 0)
         return arrived;
-    mPrevAngleY = mAngleY;
+    mPrevAngleY = mAngle.y;
     mState = 6;
     mLandCount = 0;
     mTimer = 40;

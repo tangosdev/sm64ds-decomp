@@ -56,7 +56,7 @@ struct daSnowman_c : dEnemyBase_c {
     s32 mCapUniqueID;                 /* 0x400 */
     u8  pad_404[0x4];
     /* Coined. Walk uses it as a hop-phase counter (0 start, 1 landed,
-       then frames until the next hop). Spin stores mAngleY - player
+       then frames until the next hop). Spin stores mAngle.y - player
        angle and uses the sign to pick the spin direction. */
     s32 mStep;                        /* 0x408 */
     s32 mClosestPlayerIdx;            /* 0x40c -- coined; written by FindClosestPlayerDist */

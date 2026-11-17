@@ -127,12 +127,12 @@ s32 daBgSnwmn_c::CleanupResources() {
 }
 
 void daBgSnwmn_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationY(&mModel1.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mModel1.mat4x3, mAngle.y);
     mModel1.mat4x3.t.x = mPos.x >> 3;
     mModel1.mat4x3.t.y = (mPos.y + 0x13b000) >> 3;
     mModel1.mat4x3.t.z = mPos.z >> 3;
 
-    Matrix4x3_FromRotationY(&mModel2.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mModel2.mat4x3, mAngle.y);
     mModel2.mat4x3.t.x = mPos.x >> 3;
     mModel2.mat4x3.t.y = mPos.y >> 3;
     mModel2.mat4x3.t.z = mPos.z >> 3;

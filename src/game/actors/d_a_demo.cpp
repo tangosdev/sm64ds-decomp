@@ -2677,8 +2677,8 @@ int daDemo_c::func_ov002_020f6b4c(unsigned char *p)
     target.x = ReadUnalignedShort(p) << 12;
     target.y = y;
     target.z = z;
-    this->mAngleY = Vec3_HorzAngle(&this->mPos, &target);
-    this->mPrevAngleY = this->mAngleY;
+    this->mAngle.y = Vec3_HorzAngle(&this->mPos, &target);
+    this->mPrevAngleY = this->mAngle.y;
     this->mHorzSpeed = ReadUnalignedShort(p + 6);
     return 1;
 }
@@ -2693,8 +2693,8 @@ s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data)
     this->mPos.x = x;
     this->mPos.y = y;
     this->mPos.z = z;
-    this->mAngleY = ReadUnalignedShort(data + 6);
-    this->mPrevAngleY = this->mAngleY;
+    this->mAngle.y = ReadUnalignedShort(data + 6);
+    this->mPrevAngleY = this->mAngle.y;
     return 1;
 }
 
@@ -2756,9 +2756,9 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
       Vec3_LslInPlace((int *)&v, 3);
       func_ov002_020f6f48(&v, 8);
   }
-  this->mPrevAngleX = this->mAngleX;
-  this->mPrevAngleY = this->mAngleY;
-  this->mPrevAngleZ = this->mAngleZ;
+  this->mPrevAngleX = this->mAngle.x;
+  this->mPrevAngleY = this->mAngle.y;
+  this->mPrevAngleZ = this->mAngle.z;
   return 1;
 }
 
@@ -2787,12 +2787,12 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
     d = ReadUnalignedShort(p + 0xa);
     e = ReadUnalignedShort(p + 8);
     f = ReadUnalignedShort(p + 6);
-    this->mAngleX = (short)f;
-    this->mAngleY = (short)e;
-    this->mAngleZ = (short)d;
-    this->mPrevAngleX = this->mAngleX;
-    this->mPrevAngleY = this->mAngleY;
-    this->mPrevAngleZ = this->mAngleZ;
+    this->mAngle.x = (short)f;
+    this->mAngle.y = (short)e;
+    this->mAngle.z = (short)d;
+    this->mPrevAngleX = this->mAngle.x;
+    this->mPrevAngleY = this->mAngle.y;
+    this->mPrevAngleZ = this->mAngle.z;
     this->mMagnitude = (new_var = p[0xc]) << 12;
     this->mScale.x = 0xb33;
     this->mScale.y = 0xb33;
@@ -2804,7 +2804,7 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
     return 1;
 }
 
-/* Turn mAngleX/mAngleY toward v by 1/amt of the remaining difference per
+/* Turn mAngle.x/mAngle.y toward v by 1/amt of the remaining difference per
  * call (step capped at 0x4000, 90 degrees), then set mSpeed.x, mSpeed.y and
  * mSpeed.z to mMagnitude times rotation elements 6..8 of the animated model's
  * matrix. */
@@ -2812,8 +2812,8 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
 void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
 {
     Matrix4x3 *m;
-    ApproachAngle(&this->mAngleX, Vec3_VertAngle((&this->mPos), v), amt, 0x4000, 0);
-    ApproachAngle(&this->mAngleY, Vec3_HorzAngle((&this->mPos), v), amt, 0x4000, 0);
+    ApproachAngle(&this->mAngle.x, Vec3_VertAngle((&this->mPos), v), amt, 0x4000, 0);
+    ApproachAngle(&this->mAngle.y, Vec3_HorzAngle((&this->mPos), v), amt, 0x4000, 0);
     m = &this->mAnmModel->mat4x3;
     this->mSpeed.x = FX_MUL(this->mMagnitude, m->m[6]);
     this->mSpeed.y = FX_MUL(this->mMagnitude, m->m[7]);
@@ -2905,7 +2905,7 @@ int daDemo_c::func_ov002_020f72bc()
     this->mScale.y = 0x3000;
     this->mScale.z = 0x3000;
     {
-        s16* p = &this->mAngleY;
+        s16* p = &this->mAngle.y;
         *p = *p + 0x400;
     }
     this->mOpacity = 0x1f;
@@ -2953,9 +2953,9 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         p->x = -0x5d00;
         p->y = 0x1800;
         p->z = -0x16000;
-        this->mAngleX = 0;
-        this->mAngleY = 0xffffb3c0;
-        this->mAngleZ = 0;
+        this->mAngle.x = 0;
+        this->mAngle.y = 0xffffb3c0;
+        this->mAngle.z = 0;
         Message::func_0201f138();
     }
     MTX_MultVec43(((simpleModel_c *)this->mModel)->mScale, &data_0209b41c, (&this->mPos));
@@ -2993,9 +2993,9 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     Vector3 tmp, diff, scaled, sum;
 
     if (f1 != 0 && arg2 == gKuppaScriptFrame) {
-        this->mAngleX = 0xd00;
-        this->mAngleY = -0x7300;
-        this->mAngleZ = 0x2f00;
+        this->mAngle.x = 0xd00;
+        this->mAngle.y = -0x7300;
+        this->mAngle.z = 0x2f00;
         this->mRate = 0;
     }
 
@@ -3053,7 +3053,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 
             idx = gLocalPlayerId;
             {
-                short ang = ((dActor_c *)gPlayers[idx])->mAngleY;
+                short ang = ((dActor_c *)gPlayers[idx])->mAngle.y;
 
                 Vec3_RotateYAndTranslate(&this->mPos.x, &cam->pos, (ang + 0x8000), v);
             }
@@ -3061,7 +3061,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 
         this->mPrevAngleX = 0x1000;
         this->mPrevAngleY = -0x7000;
-        this->mAngleY = this->mPrevAngleY;
+        this->mAngle.y = this->mPrevAngleY;
         this->mOpacity = 0x1f;
     } else {
         short state = *&this->mPhase;
@@ -3074,7 +3074,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
                 *p92 = *p92 + 0x40;
 
                 short h = Vec3_HorzAngle((&this->mPos), &cam->pos);
-                ApproachLinear2(this->mAngleY, h, 0x200);
+                ApproachLinear2(this->mAngle.y, h, 0x200);
             }
 
             state = *&this->mPhase;
@@ -3085,7 +3085,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
             Math_Function_0203b0fc(&this->mMagnitude, 0x3c000, 0xcc, 0x7fffffff);
 
             short h = Vec3_HorzAngle((&this->mPos), &cam->pos);
-            ApproachLinear2(this->mAngleY, h, 0x200);
+            ApproachLinear2(this->mAngle.y, h, 0x200);
 
             state = *&this->mPhase;
             if (state < 0xa9) {
@@ -3126,7 +3126,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         *&this->mPhaseStep = 0x800;
         this->mRate = -0xc8000;
         this->mPrevAngleY = -0x8000;
-        this->mAngleY = -0x4000;
+        this->mAngle.y = -0x4000;
         this->mPrevAngleX = 0x800;
         this->mOpacity = 0x1f;
     } else {
@@ -3141,9 +3141,9 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         }
         Math_Function_0203b0fc(&this->mMagnitude, 0x64000, 0x7a, 0x7fffffff);
 
-        this->mAngleX = cstd::atan2(this->mPos.y - 0x190000, 0xc8000);
+        this->mAngle.x = cstd::atan2(this->mPos.y - 0x190000, 0xc8000);
 
-        ApproachAngle(&this->mAngleY, (short)(this->mPrevAngleY + 0x8000), 4, 0x4000, 0);
+        ApproachAngle(&this->mAngle.y, (short)(this->mPrevAngleY + 0x8000), 4, 0x4000, 0);
 
         data_ov002_02110ddc[2] = this->mMagnitude;
         v[0] = data_ov002_0210b964[0];
@@ -3226,8 +3226,8 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
 
     Vec3_RotateYAndTranslate(&this->mPos.x, &cam->pos, heading, src);
 
-    this->mAngleX = cstd::atan2(v1.y, Vec3_HorzLen(&v1));
-    this->mAngleY = cstd::atan2(v1.x, v1.z);
+    this->mAngle.x = cstd::atan2(v1.y, Vec3_HorzLen(&v1));
+    this->mAngle.y = cstd::atan2(v1.x, v1.z);
 
     return 1;
 }
@@ -3370,11 +3370,11 @@ int daDemo_c::Behavior()
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
     t = this->param1;
     if ((((u32)t) >= 0x1a) && (((u32)t) <= 0x2d)) {
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngleX, this->mAngleY,
-                                               this->mAngleZ);
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+                                               this->mAngle.z);
     } else {
-        Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, this->mAngleX, this->mAngleY,
-                                               this->mAngleZ);
+        Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+                                               this->mAngle.z);
     }
     if (this->mModel != 0) {
         this->mModel->mat4x3 = data_020a0e68;

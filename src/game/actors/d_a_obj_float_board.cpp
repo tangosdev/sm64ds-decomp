@@ -107,7 +107,7 @@ int daObjFloatBoard_c::UpdateWaterY() {
  * Euler angles and its translation row from the position >> 3. Also called
  * from InitResourcesFrom below. */
 void daObjFloatBoard_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -177,21 +177,21 @@ int daObjFloatBoard_c::Behavior() {
             tpos.z = riderPos->z;
             dist = Vec3_HorzDist(&mPos, &tpos) >> 12;
             atanRes = cstd::atan2(mPos.x - tpos.x, mPos.z - tpos.z);
-            angleDiff = atanRes - mAngleY;
+            angleDiff = atanRes - mAngle.y;
             s = FX_SinIdx((u16)angleDiff >> 4);
             co = FX_CosIdx((u16)angleDiff >> 4);
             val1 = (short)((-dist * co) / 2200);
             val2 = (short)((dist * s) / 1500);
         }
 
-        ApproachLinear(mAngleX, val1, 0xc0);
-        ApproachLinear(mAngleZ, val2, 0xc0);
+        ApproachLinear(mAngle.x, val1, 0xc0);
+        ApproachLinear(mAngle.z, val2, 0xc0);
 
         mPos.y = mWaterY + mSinkOffset + mBobOffset;
     } else {
         mPos.y = mWaterY;
-        mAngleZ = 0;
-        mAngleX = mAngleZ;
+        mAngle.z = 0;
+        mAngle.x = mAngle.z;
     }
 
     UpdateModelMatrix();
@@ -221,7 +221,7 @@ int daObjFloatBoard_c::InitResourcesFrom(daObjFloatBoard_c_Resources *fp) {
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
     kcl = dBgW_Kc::LoadFile(*fp->collision);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *fp->clps);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, *fp->clps);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 

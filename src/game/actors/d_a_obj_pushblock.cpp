@@ -93,7 +93,7 @@ int daObjPushblock_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     kcl = dBgW_Kc::LoadFile(data_ov002_0210df94);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)&data_ov002_0210d7b4);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, *(CLPS_Block *)&data_ov002_0210d7b4);
 
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
@@ -254,7 +254,7 @@ int daObjPushblock_c::CleanupResources() {
 int daObjPushblock_c::OnPushed(dActor_c &other) {
     dActor_c *pusher = &other;
     if (pusher != 0) {
-        mPrevAngleY = pusher->mAngleY;
+        mPrevAngleY = pusher->mAngle.y;
         if (pusher->param1 == 2)
             mHorzSpeed = 0x8000;
         else

@@ -96,7 +96,7 @@ int daObjWc_Obj02_c::InitResources() {
     UpdateClsnPosAndRot();
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(data_ov029_02114248);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov029_0211302c);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov029_0211302c);
     }
     {
         mPrevAngleY += 0x4000;

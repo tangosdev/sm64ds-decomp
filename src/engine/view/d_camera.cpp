@@ -860,7 +860,7 @@ void dCamera_c::func_0200d1e4() {
     lookAtOffset.z = lookAtDist;
     data_02086f2c.z = lookAtDist;
 
-    Vec3_RotateYAndTranslate(&lookAt, &mTargetPos, mTargetPlayer->mAngleY, &lookAtOffset);
+    Vec3_RotateYAndTranslate(&lookAt, &mTargetPos, mTargetPlayer->mAngle.y, &lookAtOffset);
 
     lookAtHeight = ScaleHeightByFov(mMode->lookAtHeight);
     lookAt.y += lookAtHeight;
@@ -872,7 +872,7 @@ void dCamera_c::func_0200d1e4() {
     posOffset.y = data_02086f14.y;
     posOffset.z = posDist;
 
-    Vec3_RotateYAndTranslate(&pos, &lookAt, mTargetPlayer->mAngleY, &posOffset);
+    Vec3_RotateYAndTranslate(&pos, &lookAt, mTargetPlayer->mAngle.y, &posOffset);
 
     pos.y += (lookAtHeight - 0x8b000);
 
@@ -885,7 +885,7 @@ void dCamera_c::LookAtExit(dActor_c &actor)
 {
     mLookTarget = &actor.mPos.x;
     mLookTargetPos = *(Vector3 *)mLookTarget;
-    mTargetAngleY = -actor.mAngleY;
+    mTargetAngleY = -actor.mAngle.y;
     ChangeState(&data_0209b0f8);
     mFlags |= CAM_FLAG_STATE_LOCKED;
 }
@@ -983,7 +983,7 @@ void dCamera_c::func_0200cce4() {
             lookAtOffset.y = data_02086f2c.y;
             data_02086f2c.z = lookAtDist;
         }
-        Vec3_RotateYAndTranslate(&lookAt, &mTargetPos, mTargetPlayer->mAngleY, &lookAtOffset);
+        Vec3_RotateYAndTranslate(&lookAt, &mTargetPos, mTargetPlayer->mAngle.y, &lookAtOffset);
 
         lookAtHeight = ScaleHeightByFov(mMode->lookAtHeight);
         lookAt.y += lookAtHeight;
@@ -995,7 +995,7 @@ void dCamera_c::func_0200cce4() {
             posOffset.x = data_02086f20.x;
             posOffset.y = data_02086f20.y;
         }
-        Vec3_RotateYAndTranslate(&pos, &lookAt, mTargetPlayer->mAngleY, &posOffset);
+        Vec3_RotateYAndTranslate(&pos, &lookAt, mTargetPlayer->mAngle.y, &posOffset);
 
         dBgCh_Lin line;
         PrepareBgCh(line);
@@ -1352,7 +1352,7 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
     data_02086f2c.z = offset.z;
     offset.x = data_02086f2c.x;
     offset.y = data_02086f2c.y;
-    Vec3_RotateYAndTranslate(&goal, target, mTargetPlayer->mAngleY, &offset);
+    Vec3_RotateYAndTranslate(&goal, target, mTargetPlayer->mAngle.y, &offset);
     dBgCh_Lin line;
     SetVec(to, goal.x, goal.y + 0x32000, goal.z);
     SetVec(from, target[0], target[1] + 0x32000, target[2]);
@@ -1572,7 +1572,7 @@ void dCamera_c::Mode8DirectionsCamera(CamViewObj *view) {
             func_02012790(0x1a);
         }
         if (behindHeld != 0) {
-            mBehindAngleY = (mTargetPlayer->mAngleY + 0x8000);
+            mBehindAngleY = (mTargetPlayer->mAngle.y + 0x8000);
         }
         mRecentering = (ApproachAngle(&mEasedAngleY, mBehindAngleY, 4, 0x400, 0x100) != 0);
         mBaseAngleOffset = (mEasedAngleY - mBaseAngleY);
@@ -1697,7 +1697,7 @@ void dCamera_c::UpdateRadialCamera(CamViewObj *obj, int arg2) {
 
     {
         dActor_c *ptr = mTargetPlayer;
-        s16 target = ptr->mAngleY;
+        s16 target = ptr->mAngle.y;
         s16 diff = (angle - target);
         if (diff < 0) {
             angle -= step;
@@ -2327,7 +2327,7 @@ s32 dCamera_c::func_02009e70() {
                             if (turnInput != 0 || mRecentering != 0) {
                                 if ((turnInput & CAM_BUTTON_BEHIND) || mRecentering != 0) {
                                     if (turnInput != 0) {
-                                        mBehindAngleY = mTargetPlayer->mAngleY + 0x8000;
+                                        mBehindAngleY = mTargetPlayer->mAngle.y + 0x8000;
                                     }
                                     mRecentering = ApproachAngle(&mAngleY, mBehindAngleY, 4, 0x800,
                                                                  0x400) != 0;
@@ -2354,7 +2354,7 @@ s32 dCamera_c::func_02009e70() {
                                     if (m == &data_0208724c)
                                         t0 = mTargetPlayer->mPrevAngleY;
                                     else
-                                        t0 = mTargetPlayer->mAngleY;
+                                        t0 = mTargetPlayer->mAngle.y;
                                     t0 = (s16)(t0 + 0x8000);
                                     if (m == &data_020874cc) {
                                         mAngleY = t0 + mBaseAngleOffset;
@@ -2554,7 +2554,7 @@ int func_02009d70(dCamera_c *cam) {
 int dCamera_c::func_02009d30() {
     mMode = &data_0208729c;
     mTurningToTarget = 1;
-    mTargetAngleY = mTargetPlayer->mAngleY + 0x8000;
+    mTargetAngleY = mTargetPlayer->mAngle.y + 0x8000;
     mFlags &= ~CAM_FLAG_HOLD_MODE;
     return 1;
 }
@@ -2570,7 +2570,7 @@ int func_02009aa8(dCamera_c *cam) {
 
     src = data_02086e90;
 
-    Vec3_RotateYAndTranslate(&lookAtGoal, &cam->mTargetPlayer->mPos, cam->mTargetPlayer->mAngleY,
+    Vec3_RotateYAndTranslate(&lookAtGoal, &cam->mTargetPlayer->mPos, cam->mTargetPlayer->mAngle.y,
                              &src);
 
     if (cam->mTurningToTarget != 0) {
@@ -2596,7 +2596,7 @@ int func_02009aa8(dCamera_c *cam) {
         int clamped;
         s16 pitch;
 
-        newAngle = cam->mTargetPlayer->mAngleY + 0x8000;
+        newAngle = cam->mTargetPlayer->mAngle.y + 0x8000;
         cam->mAngleY += newAngle - cam->mTargetAngleY;
         cam->mTargetAngleY = newAngle;
 
@@ -2617,7 +2617,7 @@ int func_02009aa8(dCamera_c *cam) {
         }
         excess = yawDelta - clamped;
 
-        cam->mTargetPlayer->mAngleY += excess;
+        cam->mTargetPlayer->mAngle.y += excess;
         cam->mTargetAngleY += excess;
 
         pitchInput = data_0209f498[gActivePlayerSlot].ny;
@@ -2652,7 +2652,7 @@ int dCamera_c::func_020098e0() {
         Vector3 goal;
         Vector3 offset = data_02086e9c;
 
-        Vec3_RotateYAndTranslate(&goal, &mTargetPlayer->mPos, mTargetPlayer->mAngleY, &offset);
+        Vec3_RotateYAndTranslate(&goal, &mTargetPlayer->mPos, mTargetPlayer->mAngle.y, &offset);
 
         if (ApproachLookAtAndAngles(&goal, mTargetAngleY, 0) != 0) {
             mTurningToTarget = 0;
@@ -2722,10 +2722,10 @@ int func_0200985c(dCamera_c *cam) {
 int func_020097ec(dCamera_c *cam) {
     cam->SetMode(0x18);
     cam->pos = cam->mTargetPlayer->mPos;
-    cam->mBehindAngleY = cam->mTargetPlayer->mAngleY + 0x8000;
+    cam->mBehindAngleY = cam->mTargetPlayer->mAngle.y + 0x8000;
     cam->mAngleY = cam->mBehindAngleY;
     cam->mTargetAngleY = 0;
-    cam->mAngleX = cam->mTargetPlayer->mAngleX;
+    cam->mAngleX = cam->mTargetPlayer->mAngle.x;
     cam->mInputScale = 0;
     return 1;
 }
@@ -2778,7 +2778,7 @@ int func_020095e4(dCamera_c *cam) {
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, cam->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, cam->mAngleX);
     MTX_MultVec43(&v, &data_020a0e68, &cam->lookAt);
-    cam->mTargetPlayer->mAngleY = cam->mAngleY - 0x8000;
+    cam->mTargetPlayer->mAngle.y = cam->mAngleY - 0x8000;
     return 1;
 }
 
@@ -2808,7 +2808,7 @@ int func_02009540(dCamera_c *cam) {
 int func_020094e4(dCamera_c *cam) {
     cam->SetMode(0x1f);
     Vector3 offset = data_02086eb4;
-    Vec3_RotateYAndTranslate(&cam->pos, &cam->mTargetPos, cam->mTargetPlayer->mAngleY, &offset);
+    Vec3_RotateYAndTranslate(&cam->pos, &cam->mTargetPos, cam->mTargetPlayer->mAngle.y, &offset);
     return 1;
 }
 
@@ -3308,7 +3308,7 @@ int func_0200814c(dCamera_c *cam) {
     if (val > -0x64000)
         v.z = -0x64000;
     if (diff > -0x300000)
-        Vec3_RotateYAndTranslate(&cam->lookAt, &a->mPos, a->mAngleY, &v);
+        Vec3_RotateYAndTranslate(&cam->lookAt, &a->mPos, a->mAngle.y, &v);
     return 1;
 }
 
@@ -3494,7 +3494,7 @@ int FocusInFrontOfMario(dCamera_c *cam, u8 *rec) {
            ReadUnalignedShort(rec + 4) << 12);
     step = rec[6] << 4;
     owner = cam->mTargetPlayer;
-    Vec3_RotateYAndTranslate(&res, &owner->mPos, owner->mAngleY + 0x8000, &v);
+    Vec3_RotateYAndTranslate(&res, &owner->mPos, owner->mAngle.y + 0x8000, &v);
     func_02007cec(&cam->lookAt, &res, step);
     return 1;
 }
@@ -3615,7 +3615,7 @@ int CutsceneKeyDanceJumpCvar(dCamera_c *cam, u8 *rec) {
 
     owner = cam->mTargetPlayer;
     pos = &owner->mPos;
-    angle = owner->mAngleY + 0x8000;
+    angle = owner->mAngle.y + 0x8000;
     Vec3_RotateYAndTranslate(&cam->lookAt, pos, angle, &v);
     Vec3_RotateYAndTranslate(&cam->pos, pos, angle, &w);
     return 1;
@@ -3626,7 +3626,7 @@ int CutsceneKeyDanceJumpCvar(dCamera_c *cam, u8 *rec) {
 int CutsceneGrandStarStart(dCamera_c *cam) {
     Vector3 offset = data_02086ec0;
 
-    short angle = cam->mTargetPlayer->mAngleY;
+    short angle = cam->mTargetPlayer->mAngle.y;
     angle = (angle + 0x8000);
 
     Vec3_RotateYAndTranslate(&cam->savedLookAt, &cam->mTargetPlayer->mPos, angle, &offset);
@@ -3661,7 +3661,7 @@ int CutsceneGrandStarFocusMario(dCamera_c *cam) {
 /* Script op, Super Mario 64's cutscene_grand_star_mario_jump: turn to the yaw
    behind the target player and clear savedLookAt. */
 int CutsceneGrandStarMarioJump(dCamera_c *cam) {
-    int yaw = cam->mTargetPlayer->mAngleY;
+    int yaw = cam->mTargetPlayer->mAngle.y;
     yaw += 0x8000;
     cam->mTargetAngleY = yaw;
     SetVec(cam->savedLookAt, 0, 0, 0);

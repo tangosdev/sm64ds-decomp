@@ -212,7 +212,7 @@ s32 daObjPile_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     KCL_File *k = dBgW_Kc::LoadFile(gPileCollisionFile);
-    mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngleY, *(CLPS_Block *)data_ov002_0210d874);
+    mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngle.y, *(CLPS_Block *)data_ov002_0210d874);
     mStepsLeft = 3;
     return 1;
 }

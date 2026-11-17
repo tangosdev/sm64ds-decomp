@@ -173,7 +173,7 @@ s32 daObjDorifu_c::InitResources(daObjDorifuResources *resources) {
     mActivePlank = 4;
     mStepTimer = 2;
     mEventBit = param1 & 15;
-    Matrix4x3_FromRotationY(&mPlankModels[0].mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mPlankModels[0].mat4x3, mAngle.y);
     mPlankModels[0].mat4x3.m[9] = mPos.x >> 3;
     mPlankModels[0].mat4x3.m[10] = mPos.y >> 3;
     mPlankModels[0].mat4x3.m[11] = mPos.z >> 3;
@@ -188,7 +188,7 @@ s32 daObjDorifu_c::InitResources(daObjDorifuResources *resources) {
     clsn = mPlankClsn;
     for (; j < 5; ++j) {
         modelDst->mat4x3 = *sourceMat;
-        clsn->SetFile(dBgW_Kc::LoadFile(*clsnResource->clsnFile), mPlatformMat, 0x1000, mAngleY,
+        clsn->SetFile(dBgW_Kc::LoadFile(*clsnResource->clsnFile), mPlatformMat, 0x1000, mAngle.y,
                       *clsnResource->clps);
         if (j == mActivePlank)
             clsn->Enable(this);

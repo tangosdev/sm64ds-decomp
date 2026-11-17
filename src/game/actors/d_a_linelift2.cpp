@@ -125,7 +125,7 @@ int daLinelift2_c::InitResources() {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*gLinelift2ModelFiles[mVariant]), 1, -1);
 
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(*gLinelift2CollisionFiles[mVariant]), mClsnMat, 0x199,
-                          mAngleY, *gLinelift2ClpsBlocks[mVariant]);
+                          mAngle.y, *gLinelift2ClpsBlocks[mVariant]);
 
     UpdateClsnPosAndRot();
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
@@ -145,7 +145,7 @@ int daLinelift2_c::InitResources() {
         mPathPtr.GetNode(mTargetPos, mNodeIndex);
     }
 
-    mBaseAngleY = mAngleY;
+    mBaseAngleY = mAngle.y;
     mSinkOffsetY = 0;
     mIsPressed = 0;
     return 1;
@@ -214,9 +214,9 @@ void daLinelift2_c::StateForward() {
     if (StepAlongPath() == -1) {
         mState = 2;
     }
-    s16 old = mAngleY;
-    mAngleY = mBaseAngleY;
-    if (old != mAngleY) {
+    s16 old = mAngle.y;
+    mAngle.y = mBaseAngleY;
+    if (old != mAngle.y) {
         mMeshCollider.SetBeforeClsnCallback(0);
     } else {
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
@@ -226,9 +226,9 @@ void daLinelift2_c::StateForward() {
 /* State 2: run back facing the other way. Resource set 0 pauses 20 frames
    first and settles in state 0 at the start; the other set loops. */
 void daLinelift2_c::StateReturn() {
-    s16 old = mAngleY;
-    mAngleY = mBaseAngleY + 0x8000;
-    if (old != mAngleY) {
+    s16 old = mAngle.y;
+    mAngle.y = mBaseAngleY + 0x8000;
+    if (old != mAngle.y) {
         mMeshCollider.SetBeforeClsnCallback(0);
     } else {
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
@@ -242,7 +242,7 @@ void daLinelift2_c::StateReturn() {
         return;
     }
     mState = 0;
-    mAngleY = mBaseAngleY;
+    mAngle.y = mBaseAngleY;
 }
 
 /* One step along the path. Moves by the velocity; within half a step of the

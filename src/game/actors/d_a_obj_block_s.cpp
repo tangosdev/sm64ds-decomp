@@ -358,7 +358,7 @@ void daObjBlockS_c::UpdateSpitOut() {
 /* STATE_SPIT_OUT, enter. Zeroes the sink offset and target, then puts the
  * crate 80 units ahead of mEatingPlayer along that player's Y angle (the x
  * offset is FX_SinIdx and the z offset FX_CosIdx of that angle, scaled by
- * 0x50000) and 80 units above it, facing the same way (mAngleY, mPrevAngleY). Clears mFlags bit
+ * 0x50000) and 80 units above it, facing the same way (mAngle.y, mPrevAngleY). Clears mFlags bit
  * 0x80000, launches it with horizontal speed 30 units (0x1e000) and vertical
  * speed 15 units (0xf000), hands mEatingPlayer over to mPrevHolder and sets
  * dCc_c flags bit 0x2000 on the first cylinder. */
@@ -371,18 +371,18 @@ void daObjBlockS_c::EnterSpitOut() {
     mClsnYOffset = 0;
 
     obj = mEatingPlayer;
-    angle = obj->mAngleY;
-    mAngleY = angle;
-    mPrevAngleY = mAngleY;
+    angle = obj->mAngle.y;
+    mAngle.y = angle;
+    mPrevAngleY = mAngle.y;
 
     mPos = mEatingPlayer->mPos;
 
-    xw = FX_SinIdx((unsigned short)mAngleY >> 4);
+    xw = FX_SinIdx((unsigned short)mAngle.y >> 4);
     mPos.x += FX_MUL(xw, 0x50000);
 
     mPos.y += 0x50000;
 
-    zw = FX_CosIdx((unsigned short)mAngleY >> 4);
+    zw = FX_CosIdx((unsigned short)mAngle.y >> 4);
     mPos.z += FX_MUL(zw, 0x50000);
 
     mFlags &= ~0x80000;
@@ -644,9 +644,9 @@ void daObjBlockS_c::ResetToHome() {
     mPos.x = mHomePos.x;
     mPos.y = mHomePos.y;
     mPos.z = mHomePos.z;
-    mAngleX = mHomeAngleX;
-    mAngleY = mHomeAngleY;
-    mAngleZ = mHomeAngleZ;
+    mAngle.x = mHomeAngleX;
+    mAngle.y = mHomeAngleY;
+    mAngle.z = mHomeAngleZ;
     mHorzSpeed = 0;
     mSpeed.x = 0;
     mSpeed.y = 0;
@@ -855,13 +855,13 @@ void daObjBlockS_c::HandleWallHit() {
  * are treated here as its x and z companions, which this file does not
  * otherwise confirm. When func_ov002_020f035c(n, mFloorNormal.y) (the
  * per-class slope test, include/daPly_c.h) is nonzero, the crate is nearly
- * level (|mAngleX| and |mAngleZ| below 0x10) and mHorzSpeed is above 5 units
+ * level (|mAngle.x| and |mAngle.z| below 0x10) and mHorzSpeed is above 5 units
  * (0x5000), sound bank 0x51 plays if mSpeed.y is above 10 units and
  * mSpeed.y is then clamped to a limit derived from the speed. Friction
  * slows mHorzSpeed by 0.5 unit per frame (0x800); while it has not reached
  * 0 and is above 10 units (0xa000) the sliding-dust particle and the slide
  * sound (mSlideSoundHandle) run (the extra compare of mClsnYOffsetTarget
- * with 0xa0 is true for every value this file stores there). Finally mAngleX / mAngleZ ease (a quarter of the
+ * with 0xa0 is true for every value this file stores there). Finally mAngle.x / mAngle.z ease (a quarter of the
  * difference, at most 0x1000 per call) toward the angles func_02010844 gives
  * for the floor normal, the crate's yaw and the yaw minus a quarter turn. */
 int daObjBlockS_c::UpdateFloorContact() {
@@ -933,7 +933,7 @@ int daObjBlockS_c::UpdateFloorContact() {
     if (mHorzSpeed > 0x64000)
         mHorzSpeed = 0x64000;
     mPrevAngleY = newAng;
-    AngleDiff(mPrevAngleY, mAngleY);
+    AngleDiff(mPrevAngleY, mAngle.y);
 
     {
         s32 m0 = FX_MUL(mFloorNormal.x, mSpeed.x);
@@ -942,12 +942,12 @@ int daObjBlockS_c::UpdateFloorContact() {
     }
 
     if (func_ov002_020f035c(n, mFloorNormal.y) != 0 && mHorzSpeed > 0x5000) {
-        int q0 = mAngleX;
+        int q0 = mAngle.x;
         int q1;
         int sd;
         if (q0 < 0) q0 = ((-q0) << 16) >> 16;
         if (q0 < 0x10) {
-            q1 = mAngleZ;
+            q1 = mAngle.z;
             if (q1 < 0) q1 = ((-q1) << 16) >> 16;
             if (q1 < 0x10) {
                 sd = FX_Div(FX_MUL(mHorzSpeed, 8), 0xa);
@@ -967,10 +967,10 @@ int daObjBlockS_c::UpdateFloorContact() {
     }
 
     {
-        s16 r5 = func_02010844(&mFloorNormal, mAngleY);
-        s16 r4 = func_02010844(&mFloorNormal, (s16)(mAngleY - 0x4000));
-        UpdateAngle(mAngleX, r5, 4, 0x1000);
-        UpdateAngle(mAngleZ, r4, 4, 0x1000);
+        s16 r5 = func_02010844(&mFloorNormal, mAngle.y);
+        s16 r4 = func_02010844(&mFloorNormal, (s16)(mAngle.y - 0x4000));
+        UpdateAngle(mAngle.x, r5, 4, 0x1000);
+        UpdateAngle(mAngle.z, r4, 4, 0x1000);
     }
     return 1;
 }
@@ -980,7 +980,7 @@ int daObjBlockS_c::UpdateFloorContact() {
  * nothing is found). The height above it, h = mPos.y - mGroundY, is floored
  * at 1 unit (0x1000); the shadow's scale is 100 units minus h * 0x180 / 0x1000
  * (so 3/32 of h), floored at 10 units (0xa000). Builds mShadowMtx from
- * mAngleY, puts its translation row at the crate's position (y lowered by
+ * mAngle.y, puts its translation row at the crate's position (y lowered by
  * 20 units, 0x14000; all three >> 3) and calls dActor_c::DropShadowScaleXYZ with it,
  * mShadowModel, that scale twice and h + 40 units (0x28000) in between,
  * and 0xf last (the opacity argument in include/dActor_c.h; the ScaleXYZ in
@@ -1004,7 +1004,7 @@ void daObjBlockS_c::UpdateDropShadow() {
     if (r5 <= 0x1000) r5 = 0x1000;
     r4 = 0x64000 - FX_MUL(r5, 0x180);
     if (r4 < 0xa000) r4 = 0xa000;
-    Matrix4x3_FromRotationY(&mShadowMtx, mAngleY);
+    Matrix4x3_FromRotationY(&mShadowMtx, mAngle.y);
     mShadowMtx.m[9] = mPos.x >> 3;
     mShadowMtx.m[10] = (mPos.y - 0x14000) >> 3;
     mShadowMtx.m[11] = mPos.z >> 3;
@@ -1013,7 +1013,7 @@ void daObjBlockS_c::UpdateDropShadow() {
 
 /* Collider transform. Copies the model matrix (mModel's mat4x3, at 0xf0)
  * into mClsnMat, overwrites its translation row with the crate's position
- * lowered by mClsnYOffset, and hands it and mAngleY to dBgW_KcMbg::Transform
+ * lowered by mClsnYOffset, and hands it and mAngle.y to dBgW_KcMbg::Transform
  * on mMeshCollider. */
 void daObjBlockS_c::UpdateMeshCollider() {
     Vector3 pos = mPos;
@@ -1022,7 +1022,7 @@ void daObjBlockS_c::UpdateMeshCollider() {
     mClsnMat.m[9] = pos.x;
     mClsnMat.m[10] = pos.y;
     mClsnMat.m[11] = pos.z;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 /* dExtSimpleModel_c matrix. When mHoldingPlayer is set, mFlags bit 0x4000 is set and the
@@ -1071,7 +1071,7 @@ void daObjBlockS_c::UpdateModelMatrix() {
     {
         Vector3 pos = mPos;
         pos.y -= mClsnYOffset;
-        Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+        Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
         mModel.mat4x3.m[9] = pos.x >> 3;
         mModel.mat4x3.m[10] = pos.y >> 3;
         mModel.mat4x3.m[11] = pos.z >> 3;
@@ -1198,7 +1198,7 @@ int daObjBlockS_c::Behavior()
  * angles as the home, then builds the crate from the ResourceDescriptor at
  * data_ov098_0213c4c8 (model file, collision file, CLPS block): model,
  * cuboid shadow, KCL mesh collider (SetFile with mClsnMat, an fx32 0x199
- * (about 0.1), mAngleY and the CLPS block word) and the dBgCh_Actr (Init with radius 40 and height
+ * (about 0.1), mAngle.y and the CLPS block word) and the dBgCh_Actr (Init with radius 40 and height
  * 40 units, 0x28000 each) with water detection on. Gravity is -2 units per
  * frame^2 (-0x2000) with a terminal velocity of -60 units per frame
  * (-0x3c000). Enters STATE_IDLE, clears mEatingPlayer and resets the crate
@@ -1213,12 +1213,12 @@ int daObjBlockS_c::InitResources()
     mHomePos.x = mPos.x;
     mHomePos.y = mPos.y;
     mHomePos.z = mPos.z;
-    mHomeAngleX = mAngleX;
-    mHomeAngleY = mAngleY;
-    mHomeAngleZ = mAngleZ;
+    mHomeAngleX = mAngle.x;
+    mHomeAngleY = mAngle.y;
+    mHomeAngleZ = mAngle.z;
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*res->model), 1, -1);
     mShadowModel.InitCuboid();
-    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*res->collision), mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*res->collision), mClsnMat, 0x199, mAngle.y,
                           *res->clps);
     mWithMeshClsn.Init(this, 0x28000, 0x28000, 0, 0);
     mWithMeshClsn.StartDetectingWater();

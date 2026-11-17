@@ -14,7 +14,7 @@
  * - Behavior's quadrant chain keeps the measured shape: lower-bound-first
  *   compares stay 0x100 and 21 words differ; dropping the repeated lower
  *   bounds sizes it 0xe0; folding the two stopped quadrants into one test
- *   sizes it 0xf8; mAngleZ = mAngleZ + step sizes it 0xfc; testing
+ *   sizes it 0xf8; mAngle.z = mAngle.z + step sizes it 0xfc; testing
  *   mHandIndex before IsAreaShowing stays 0x100 and 5 words differ.
  * - UpdateModelTransform keeps the three memberwise mat4x3.t stores:
  *   assigning a Vector3 sizes it 0x50 against 0x48.
@@ -115,16 +115,16 @@ int daObjClock_c::InitResources() {
 
 /* While the level id is not positive the hand advances by its per-hand
  * speed. Otherwise the long hand, when its area is showing, writes the
- * clock setting from the quadrant of -mAngleZ. Upper bound first is the
+ * clock setting from the quadrant of -mAngle.z. Upper bound first is the
  * match: lower-bound-first compares are 21 words off at the same 0x100.
  * Dropping the repeated lower bounds sizes this 0xe0. Folding the two
- * stopped quadrants sizes it 0xf8. mAngleZ = mAngleZ + step sizes it 0xfc.
+ * stopped quadrants sizes it 0xf8. mAngle.z = mAngle.z + step sizes it 0xfc.
  * Testing mHandIndex before IsAreaShowing is 5 words off. */
 int daObjClock_c::Behavior() {
     if (gNextSublevel <= 0) {
-        mAngleZ += data_ov013_021116ac[mHandIndex];
+        mAngle.z += data_ov013_021116ac[mHandIndex];
     } else if (IsAreaShowing(mAreaId) && mHandIndex == 0) {
-        u16 angle = -mAngleZ;
+        u16 angle = -mAngle.z;
         if (angle < 0x2000)
             data_0209f2c0 = CLOCK_SETTING_STOPPED;
         else if (angle < 0x6000 && angle >= 0x2000)
@@ -155,7 +155,7 @@ int daObjClock_c::CleanupResources() {
  * The marker above is not decoration -- without it tools/tiers.py folds this
  * body into the preceding member's fragment. */
 void daObjClock_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.t.x = mPos.x >> 3;
     mModel.mat4x3.t.y = mPos.y >> 3;
     mModel.mat4x3.t.z = mPos.z >> 3;

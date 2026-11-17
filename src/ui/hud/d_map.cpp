@@ -375,7 +375,7 @@ int dMap_c::Render()
             OAM::RenderSub(OAM::MM_VS_PLAYER_ICONS[player->param1 + idx * 4],
                            this->mPlayerIconX[idx], this->mPlayerIconY[idx], -1, 2);
             {
-                u16 ang = (s16)this->mAngle + ((player->mAngleY ^ 0xffff) + 0x8001);
+                u16 ang = (s16)this->mAngle + ((player->mAngle.y ^ 0xffff) + 0x8001);
                 s16 cs = FX_CosIdx((u16)(s16)ang >> 4);
                 this->mArrowMatrixA = (s16)FX_MUL(cs, this->mArrowScale);
                 s16 sn = FX_SinIdx((u16)(s16)ang >> 4);
@@ -421,9 +421,9 @@ int dMap_c::Render()
                     if (s != 0) {
                         u16 ang;
                         if (s == 1)
-                            ang = (player->mAngleY ^ 0xffff) + 0x8001;
+                            ang = (player->mAngle.y ^ 0xffff) + 0x8001;
                         else
-                            ang = (s16)this->mAngle + ((player->mAngleY ^ 0xffff) + 0x8001);
+                            ang = (s16)this->mAngle + ((player->mAngle.y ^ 0xffff) + 0x8001);
                         {
                             s16 cs = FX_CosIdx((u16)(s16)ang >> 4);
                             this->mArrowMatrixA = (s16)FX_MUL(cs, this->mArrowScale);

@@ -109,7 +109,7 @@ void daGrock_c::UpdateModelTransform() {
     Vec3_Asr(&shifted, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shifted.x, shifted.y, shifted.z);
     mShadowMtx = data_020a0e68;
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3 = data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMtx, 0x1f4000, 0x1f4000, 0xf);
 }
@@ -256,9 +256,9 @@ int daGrock_c::Behavior() {
             s16 *roll;
 
             ApplyGravityAndMove();
-            roll = &mAngleX;
+            roll = &mAngle.x;
             *roll = (s16)(*roll + (mHorzSpeed >> 12) * 0x43);
-            mAngleY = mPrevAngleY;
+            mAngle.y = mPrevAngleY;
             HandleMeshCollision();
         }
         UpdateModelTransform();

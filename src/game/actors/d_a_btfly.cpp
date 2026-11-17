@@ -451,8 +451,8 @@ int daBtfly_c::Behavior()
         int t[3];
         Vec3_Asr(t, &mPos.x, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, t[0], t[1], t[2]);
-        mAngleY = mPrevAngleY;
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+        mAngle.y = mPrevAngleY;
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
         if (mUseAnimModel != 0) {
             *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
             DropShadowRadHeight(mShadowModel1, mAnmModel.mat4x3, 0x14000, 0x12c000, 0xf);

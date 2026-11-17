@@ -25,7 +25,7 @@
  * - mWithMeshClsn.SetRadius / SetHeight are out of line. Storing mRadius /
  *   mHeight directly drops the call.
  * - func_ov102_0214b53c reads the eating
- *   player (mEatingPlayer, not the carrier): mPos, mAngleX/Y/Z, mHeadMatrix
+ *   player (mEatingPlayer, not the carrier): mPos, mAngle.x/.y/.z, mHeadMatrix
  *   and mHeadBoneRot, which d_a_ply_methods.cpp fills from bone 15's
  *   rotX/rotY/rotZ.
  * - ov078/daBombking_c writes mHurtDamage and mDetonate by those names.
@@ -207,7 +207,7 @@ int daBmb_c::InitResources()
     mCarryMatrix = 0;
     mHurtDamage = 2;
     mDetonate = 0;
-    mHomeAngleY = mAngleY;
+    mHomeAngleY = mAngle.y;
     return 1;
 }
 
@@ -397,7 +397,7 @@ void daBmb_c::State0() {
                 if (mVariant == 5) {
                     s16 ang = Vec3_HorzAngle(&mPos, &mHomePos);
                     ApproachLinear(mPrevAngleY, ang, 0x200);
-                    mAngleY = mPrevAngleY;
+                    mAngle.y = mPrevAngleY;
                 } else {
                     if (mTurnTimer == 0 || Vec3_Dist(&mPos, &mHomePos) >= 0x500000) {
                         mHorzSpeed = 0x5000;
@@ -415,7 +415,7 @@ void daBmb_c::State0() {
                     target = mPrevAngleY;
             }
             ApproachLinear(mPrevAngleY, target, 0x800);
-            mAngleY = mPrevAngleY;
+            mAngle.y = mPrevAngleY;
         }
         mAnmModel.speed = mHorzSpeed >> 3;
     }
@@ -462,7 +462,7 @@ void daBmb_c::State1() {
         mAnmModel.speed = 0x1000;
         ApproachLinear(mPrevAngleY, (short)mTargetAngY, 0x800);
     }
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
     mAnmModel.dExtFrameCtrl_c::Advance();
     if (mState == 2) return;
     if (mPrevAngleY != (short)mTargetAngY)
@@ -622,17 +622,17 @@ void daBmb_c::func_ov102_0214baa0() {
     mScale.x = FX32_ONE;
     mScale.y = FX32_ONE;
     mScale.z = FX32_ONE;
-    mAngleX = 0;
-    mAngleY = 0;
-    mAngleZ = 0;
+    mAngle.x = 0;
+    mAngle.y = 0;
+    mAngle.z = 0;
     mPrevAngleX = 0;
     mPrevAngleY = 0;
     mPrevAngleZ = 0;
 
     {
         s16 angle = *(s16 *)&mHomeAngleY;
-        mAngleY = angle;
-        s16 copy = mAngleY;
+        mAngle.y = angle;
+        s16 copy = mAngle.y;
         mPrevAngleY = copy;
     }
 
@@ -685,7 +685,7 @@ void daBmb_c::func_ov102_0214b988() {
         const Vector3 &p = pl->mPos;
         v = p;
     }
-    if (AngleDiff(Vec3_HorzAngle(&mPos, &v), mAngleY) >= mNoticeAngle)
+    if (AngleDiff(Vec3_HorzAngle(&mPos, &v), mAngle.y) >= mNoticeAngle)
         return;
     mChasePlayer = pl;
     func_ov102_0214b384(0x96);
@@ -738,7 +738,7 @@ void daBmb_c::func_ov102_0214b53c() {
             mCarryOff[0] = 0;
             mCarryOff[1] = 0;
             mCarryOff[2] = 0;
-            Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+            Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
             mAnmModel.mat4x3.m[9] = mPos.x >> 3;
             mAnmModel.mat4x3.m[10] = mPos.y >> 3;
             mAnmModel.mat4x3.m[11] = mPos.z >> 3;
@@ -849,7 +849,7 @@ void daBmb_c::func_ov102_0214b3b8() {
     if (mState != 3)
         return;
     func_ov102_0214bc20();
-    mPrevAngleY = mCarrier->mAngleY;
+    mPrevAngleY = mCarrier->mAngle.y;
     mCarrier = 0;
 }
 }
@@ -942,7 +942,7 @@ void daBmb_c::func_ov102_0214b128() {
         dActor_c *hitter = dActor_c::FindWithID(mdCc_c.otherOwner);
         if (!hitter) return;
         func_ov102_0214bc20();
-        mPrevAngleY = hitter->mAngleY;
+        mPrevAngleY = hitter->mAngle.y;
         UpdatePos(&mdCc_c);
         mWithMeshClsn.ClearGroundFlag();
     }

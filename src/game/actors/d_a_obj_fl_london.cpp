@@ -76,7 +76,7 @@ s32 daObjFl_London_c::InitResources() {
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
     KCL_File *k = dBgW_Kc::LoadFile(data_ov022_02114578);
-    mMeshCollider.SetFile(k, mClsnMat, 0x1000, mAngleY, data_ov064_0211bb2c);
+    mMeshCollider.SetFile(k, mClsnMat, 0x1000, mAngle.y, data_ov064_0211bb2c);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mFlag = 0;
     mCooldown = 15;
@@ -112,7 +112,7 @@ s32 daObjFl_London_c::Behavior() {
                 Sound::PlayBank3(0x35, mCamSpacePos);
         }
     }
-    mAngleZ = mPrevAngleZ;
+    mAngle.z = mPrevAngleZ;
     UpdateModelMatrix();
     if (IsClsnInRange(0, 0))
         UpdateClsnPosAndRot();
@@ -137,7 +137,7 @@ s32 daObjFl_London_c::CleanupResources() {
  * position at 1/8 scale. Both callers (InitResources and Behavior) are in
  * this TU. */
 void daObjFl_London_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;

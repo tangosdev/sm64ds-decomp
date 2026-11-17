@@ -149,7 +149,7 @@ int daYurei_Mucho_c::InitResources()
     dExtFrameCtrl_c::LoadFile(gYureiMuchoAttackAnimFile);
     mTerminalVelocity = -0x1e000;
     mdCcAc_c.Init(this, 0x38000, 0x7e000, 0x200000, 0x7eff0);
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
     mWithMeshClsn.Init(this, 0x46000, 0, 0, 0);
     mCoinType = 1;
     mExtraCoinCount = 1;
@@ -183,7 +183,7 @@ int daYurei_Mucho_c::Behavior()
         return 1;
     }
     if (mDeathState != 0) {
-        ApproachAngle(&mAngleX, -0x4000, 0xa, 0x200, 0x100);
+        ApproachAngle(&mAngle.x, -0x4000, 0xa, 0x200, 0x100);
         UpdateDeath(mWithMeshClsn);
         UpdateModelTransform();
         return 1;
@@ -223,9 +223,9 @@ int daYurei_Mucho_c::Behavior()
     UpdateWMClsn(mWithMeshClsn, 0);
     UpdateModelTransform();
     if (mCurrentState != &data_ov065_0211d660) {
-        mAngleX = mPrevAngleX;
-        mAngleY = mPrevAngleY;
-        mAngleZ = mPrevAngleZ;
+        mAngle.x = mPrevAngleX;
+        mAngle.y = mPrevAngleY;
+        mAngle.z = mPrevAngleZ;
         HandleCollision();
     }
     mdCcAc_c.Clear();
@@ -277,7 +277,7 @@ void daYurei_Mucho_c::UpdateModelTransform() {
 
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
 
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     mShotPos.x = 0;
@@ -356,7 +356,7 @@ int daYurei_Mucho_c::UpdateIdle() {
     ApproachAngle(&mPrevAngleX, 0, 1, 0x500, 0x500);
 
     in.z = 0xa000;
-    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
     MTX_MultVec43(&in, &data_020a0e68, &mSpeed);
 
     if ((u16)mStateTimer == 0) {
@@ -421,7 +421,7 @@ int daYurei_Mucho_c::UpdateChase() {
             v.z = -0x1000;
             v.x = 0;
             v.y = 0;
-            Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+            Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
             MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
         }
     } else {
@@ -469,8 +469,8 @@ int daYurei_Mucho_c::UpdateShoot() {
                 L.sout.x = 0;
                 L.sout.y = 0;
                 L.sout.z = 0;
-                Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-                Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+                Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
+                Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
                 MTX_MultVec43(&L.spv, &data_020a0e68, &L.sout);
                 shot->mSpeed.x = L.sout.x;
                 shot->mSpeed.y = L.sout.y;
@@ -526,8 +526,8 @@ int daYurei_Mucho_c::EnterBumped() {
  * wrong callee still reproduced the bytes; the ROM's own `bl 0x02115f84` at
  * 0x02116314 decides it. */
 int daYurei_Mucho_c::UpdateBumped() {
-    ApproachAngle(&mAngleX, -0x4000, 0xa, 0x200, 0x100);
-    ApproachLinear(mAngleX, -0x4000, 0x200);
+    ApproachAngle(&mAngle.x, -0x4000, 0xa, 0x200, 0x100);
+    ApproachLinear(mAngle.x, -0x4000, 0x200);
     if ((u16)mStateTimer == 0)
         KillWithCoins();
     return 1;

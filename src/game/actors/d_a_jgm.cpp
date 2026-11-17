@@ -361,7 +361,7 @@ s32 daJgm_c::EnterSpitState()
     mFlags &= ~0x80000;
 
     mHorzSpeed = mEatingPlayer->mHorzSpeed + 0xa000;
-    mPrevAngleY = mEatingPlayer->mAngleY;
+    mPrevAngleY = mEatingPlayer->mAngle.y;
     mPos = mEatingPlayer->mPos;
     mPos.x += FX_MUL(FX_SinIdx((u16)mPrevAngleY >> 4), 0x50000);
     mPos.y += 0x50000;
@@ -376,7 +376,7 @@ s32 daJgm_c::EnterSpitState()
 
 s32 daJgm_c::UpdateSpitState()
 {
-    mAngleY = (short)(mAngleY + mAngVelY);
+    mAngle.y = (short)(mAngle.y + mAngVelY);
     ApproachLinear2(mAngVelY, 0, 0x300);
     UpdatePos(&mdCcAcPos_c);
     UpdateWallAndWater(mWithMeshClsn);
@@ -410,7 +410,7 @@ s32 daJgm_c::EnterFallState()
 
 s32 daJgm_c::UpdateFallState()
 {
-    mAngleX = (short)(mAngleX - 0x1000);
+    mAngle.x = (short)(mAngle.x - 0x1000);
     mAnmModel.Advance();
     UpdatePos(&mdCcAcPos_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
@@ -425,7 +425,7 @@ void daJgm_c::UpdateModels()
     if (b)
         return;
 
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.m[9] = mPos.x >> 3;
     mAnmModel.mat4x3.m[10] = (mPos.y + mBobOffsetY) >> 3;
     mAnmModel.mat4x3.m[11] = mPos.z >> 3;
@@ -434,7 +434,7 @@ void daJgm_c::UpdateModels()
         data_020a0e68 = mAnmModel.mat4x3;
         int y1 = OnAimedAtWithEgg() >> 3;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
         int y2 = (-OnAimedAtWithEgg()) >> 3;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
         mAnmModel.mat4x3 = data_020a0e68;
@@ -469,7 +469,7 @@ void daJgm_c::UpdateModels()
     Vec3_Asr(&pos, &mThrowPos, 3);
 
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, offset.x, offset.y, offset.z);
 
     mModel.mat4x3 = data_020a0e68;
@@ -544,7 +544,7 @@ void daJgm_c::HandlePlayerCollision()
 
     if (mdCcAcPos_c.hitFlags & 0x10) {
         mPrevAngleY = Vec3_HorzAngle(&player->mPos, &mPos);
-        mAngleY = (short)(mPrevAngleY + 0x8000);
+        mAngle.y = (short)(mPrevAngleY + 0x8000);
         player->IncMegaKillCount();
         SetState(4);
         return;
@@ -597,11 +597,11 @@ void daJgm_c::UpdateFlight() {
     }
     int hd = Vec3_HorzDist(&mPos, target);
     short ha = Vec3_HorzAngle(&mPos, target);
-    ApproachLinear(mAngleY, ha, 0x5e8);
+    ApproachLinear(mAngle.y, ha, 0x5e8);
     if (mTurnDir != 0)
-        mPrevAngleY = (short)(mAngleY - TurnOffsetFromDist(hd));
+        mPrevAngleY = (short)(mAngle.y - TurnOffsetFromDist(hd));
     else
-        mPrevAngleY = (short)(mAngleY + TurnOffsetFromDist(hd));
+        mPrevAngleY = (short)(mAngle.y + TurnOffsetFromDist(hd));
     ApproachLinear(mPos.y, target->y + 0x12c000, 0x2000);
     UpdatePos(&mdCcAcPos_c);
     UpdateWallAndWater(mWithMeshClsn);

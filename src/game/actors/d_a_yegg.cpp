@@ -366,7 +366,7 @@ void daYegg_c::EnterDrop() {
 /* ROM ordinal 11 -- ExecuteWobble, 0x020ec9c4, size 0x110 */
 /* -------------------------------------------------------------------------- */
 /* State 2 (WOBBLE), execute. While mWobbling is set it steps the X and Z tilt
- * (mAngleX, mAngleZ) toward 0 by 0x400 a frame (a 64th of a turn) and clears
+ * (mAngle.x, mAngle.z) toward 0 by 0x400 a frame (a 64th of a turn) and clears
  * mWobbling once the X tilt and the Y angle are both 0. Otherwise it asks
  * func_ov002_020d5f98 about the daPly_c; on a yes, it sets the tilt from
  * the answer (b times two entries of the s16 table at 0x021000a8, indexed by
@@ -376,10 +376,10 @@ void daYegg_c::EnterDrop() {
  * collision. */
 void daYegg_c::ExecuteWobble() {
     if (mWobbling != 0) {
-        ApproachLinear2(mAngleX, 0, 0x400);
-        ApproachLinear2(mAngleZ, 0, 0x400);
-        if (mAngleX == 0) {
-            if (mAngleY == 0)
+        ApproachLinear2(mAngle.x, 0, 0x400);
+        ApproachLinear2(mAngle.z, 0, 0x400);
+        if (mAngle.x == 0) {
+            if (mAngle.y == 0)
                 mWobbling = 0;
         }
     } else {
@@ -388,8 +388,8 @@ void daYegg_c::ExecuteWobble() {
             unsigned char ip;
             a = a * 2;
             ip = a;
-            mAngleX = b * data_ov002_021000a8[ip];
-            mAngleZ = b * data_ov002_021000a8[ip + 1];
+            mAngle.x = b * data_ov002_021000a8[ip];
+            mAngle.z = b * data_ov002_021000a8[ip + 1];
             mWobbling = 1;
         }
     }
@@ -424,7 +424,7 @@ void daYegg_c::EnterWobble() {
  * Sound::PlayLong (3, 0x93), runs UpdateTilt (tilt), returns if
  * HandleCylinderHit handled a contact (nonzero), and bursts if IsOnWall is
  * set or bit 0x10 of the same result byte is. The particle's rotation pair comes from the sine
- * table indexed by mAngleY >> 4 (sin then cos). Every pass that gets this far
+ * table indexed by mAngle.y >> 4 (sin then cos). Every pass that gets this far
  * bursts if IsStalled reports the egg stalled, and otherwise clears
  * and, if flying, updates the cylinder, moves the egg and runs the ground
  * collision. */
@@ -460,9 +460,9 @@ void daYegg_c::SeekStraight() {
             b = ((fb0 & daYegg_FLAG_FLYING) != 0);
             if (b != 0) {
                 Vector3 pos(mPos.x, mPos.y + 0x28000, mPos.z);
-                rot.x = FX_SinIdx((u16)mAngleY >> 4);
+                rot.x = FX_SinIdx((u16)mAngle.y >> 4);
                 rot.y = 0;
-                rot.z = FX_CosIdx((u16)mAngleY >> 4);
+                rot.z = FX_CosIdx((u16)mAngle.y >> 4);
                 mParticleHandle = Particle::System::New(mParticleHandle, kPtclYoshiEggTrail, pos.x,
                                                         pos.y, pos.z, &rot, 0);
                 mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x93, mCamSpacePos, 0);
@@ -559,7 +559,7 @@ void daYegg_c::SeekHoming() {
                             return;
                         }
                     }
-                    mAngleY = Vec3_HorzAngle(&mPos, &tmp);
+                    mAngle.y = Vec3_HorzAngle(&mPos, &tmp);
                 }
                 Particle::RunningSlidingDustAt(mPos.x, mPos.y, mPos.z);
                 flag = 1;
@@ -621,7 +621,7 @@ void daYegg_c::EnterSeek() {
         r5 = (dActor_c *)FindTarget(0, 0xfa0000);
     }
     if (r5) {
-        mAngleY = Vec3_HorzAngle(&mPos, &r5->mPos);
+        mAngle.y = Vec3_HorzAngle(&mPos, &r5->mPos);
     } else {
         if (mTargetedCount) {
             if (!func_ov002_020ec654())
@@ -629,7 +629,7 @@ void daYegg_c::EnterSeek() {
         }
     }
     mdCcAc_c.Init(this, 0x64000, 0xc8000, 0x202000, 0);
-    mPrevAngleY = mAngleY;
+    mPrevAngleY = mAngle.y;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -655,14 +655,14 @@ void daYegg_c::EnterSeek() {
  *    the remaining distance per call, at most 1000 units) and each eased
  *    angle toward its goal (ApproachAngle: an eighth of the remaining angle,
  *    at most 0x4000 a call, at least 0x100), then copies the eased Y angle
- *    into mAngleY;
+ *    into mAngle.y;
  *  - sets the animation: the moving one (file 0x0210e6b0) when mHorzSpeed is
  *    nonzero, else the idle one (0x0210eb78), at a speed of 1.0 to 2.0 that
  *    grows with mHorzSpeed and saturates at 0x20000 (32 units); the speed is
  *    0 while the daPly_c's mIsAirborne is set;
  *  - for the variant func_ov002_020ec654 calls zero, rewrites the 0xa4/0xac
- *    words as absolute values capped at 0x20000 (32 units) and tilts mAngleX
- *    (negative) and mAngleZ by up to 0xe39 (20 degrees) in proportion to
+ *    words as absolute values capped at 0x20000 (32 units) and tilts mAngle.x
+ *    (negative) and mAngle.z by up to 0xe39 (20 degrees) in proportion to
  *    them; for the other variant it runs UpdateTilt instead;
  *  - clears the cylinder, and runs the discrete ground collision unless the
  *    daPly_c's mIsNoControl is set or the daPly_c is 0x190000 (400 units) or
@@ -694,8 +694,8 @@ void daYegg_c::ExecuteFollowPlayer() {
         if (mPlayer->mClimbClsn != 0 || func_ov002_020cf700(mPlayer) != 0 ||
             mPlayer->func_ov002_020d0d2c() != 0) {
             if (mWithMeshClsn.IsOnGround() != 0) {
-                mGoalAngleX = mPlayer->mAngleX;
-                mGoalAngleZ = mPlayer->mAngleZ;
+                mGoalAngleX = mPlayer->mAngle.x;
+                mGoalAngleZ = mPlayer->mAngle.z;
                 {
                     const Vector3 &a = com->mPrevPos;
                     const Vector3 &b = com->mPos;
@@ -715,8 +715,8 @@ void daYegg_c::ExecuteFollowPlayer() {
                 mHoldTarget.z = sumB.z;
             }
         } else {
-            mGoalAngleX = com->mAngleX;
-            mGoalAngleZ = com->mAngleZ;
+            mGoalAngleX = com->mAngle.x;
+            mGoalAngleZ = com->mAngle.z;
             {
                 const Vector3 &a = com->mPrevPos;
                 const Vector3 &b = com->mPos;
@@ -746,7 +746,7 @@ void daYegg_c::ExecuteFollowPlayer() {
     ApproachAngle(&mEasedAngleY, mGoalAngleY, 8, 0x4000, 0x100);
     ApproachAngle(&mEasedAngleZ, mGoalAngleZ, 8, 0x4000, 0x100);
 
-    mAngleY = mEasedAngleY;
+    mAngle.y = mEasedAngleY;
 
     {
         int v98 = mHorzSpeed;
@@ -791,8 +791,8 @@ void daYegg_c::ExecuteFollowPlayer() {
             {
                 int fd2 = FX_Div(ac, 0x20000);
                 int r2 = FX_MUL(fd2, 0xe39);
-                mAngleX = a4ang;
-                mAngleZ = r2;
+                mAngle.x = a4ang;
+                mAngle.z = r2;
             }
         }
     } else {
@@ -812,8 +812,8 @@ void daYegg_c::ExecuteFollowPlayer() {
 /* ROM ordinal 18 -- EnterFollowPlayer, 0x020ed5b0, size 0x8c */
 /* -------------------------------------------------------------------------- */
 // State 0 (FOLLOW_PLAYER), enter. Snaps this object to the actor it follows
-// (mPlayer): copies its position (mPos.x/.y/.z) and Y angle (mAngleY), mirrors
-// the position into mHoldTarget, and copies its rotation triple (mAngleX/Y/Z)
+// (mPlayer): copies its position (mPos.x/.y/.z) and Y angle (mAngle.y), mirrors
+// the position into mHoldTarget, and copies its rotation triple (mAngle.x/.y/.z)
 // into both the goal angles and the eased angles.
 void daYegg_c::EnterFollowPlayer() {
     daPly_c *src;
@@ -825,17 +825,17 @@ void daYegg_c::EnterFollowPlayer() {
     mPos.y = sp[1];
     mPos.z = sp[2];
     src = mPlayer;
-    mAngleY = src->mAngleY;
+    mAngle.y = src->mAngle.y;
     mHoldTarget.x = mPos.x;
     mHoldTarget.y = mPos.y;
     mHoldTarget.z = mPos.z;
     src = mPlayer;
-    m = &src->mAngleX;
+    m = &src->mAngle.x;
     mGoalAngleX = m[0];
     mGoalAngleY = m[1];
     mGoalAngleZ = m[2];
     src = mPlayer;
-    m = &src->mAngleX;
+    m = &src->mAngle.x;
     mEasedAngleX = m[0];
     mEasedAngleY = m[1];
     mEasedAngleZ = m[2];
@@ -890,7 +890,7 @@ int daYegg_c::IsStalled() {
 /* ROM ordinal 22 -- UpdateTilt, 0x020ed738, size 0xc0 */
 /* -------------------------------------------------------------------------- */
 /* recovered: shared common types */
-/* Eases the X and Z tilt (mAngleX, mAngleZ) toward a target pair, each by a
+/* Eases the X and Z tilt (mAngle.x, mAngle.z) toward a target pair, each by a
  * quarter of the remaining angle, at most 0x1000 (a 16th of a turn) a call
  * (UpdateAngle). On the ground the pair comes from the floor normal
  * (func_02010844 evaluated at the Y angle and at the Y angle minus 0x4000, a
@@ -903,19 +903,19 @@ void daYegg_c::UpdateTilt() {
         struct Vector3 n;
         dBgPi *fr = mWithMeshClsn.GetFloorResult();
         fr->surface.CopyNormalTo(n);
-        e4 = func_02010844(&n, mAngleY);
-        e6 = func_02010844(&n, (mAngleY - 0x4000));
+        e4 = func_02010844(&n, mAngle.y);
+        e6 = func_02010844(&n, (mAngle.y - 0x4000));
     } else {
         if (mState == 0) {
             daPly_c *p = mPlayer;
             if (p != 0) {
-                e4 = p->mAngleX;
-                e6 = p->mAngleZ;
+                e4 = p->mAngle.x;
+                e6 = p->mAngle.z;
             }
         }
     }
-    UpdateAngle(mAngleX, e4, 4, 0x1000);
-    UpdateAngle(mAngleZ, e6, 4, 0x1000);
+    UpdateAngle(mAngle.x, e4, 4, 0x1000);
+    UpdateAngle(mAngle.z, e6, 4, 0x1000);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -954,7 +954,7 @@ void daYegg_c::UpdateShadow() {
     if (r5 <= 0x1000) r5 = 0x1000;
     r4 = 0x50000 - FX_MUL(r5, 0x180);
     if (r4 < 0xa000) r4 = 0xa000;
-    Matrix4x3_FromRotationY(mShadowMtx, mAngleY);
+    Matrix4x3_FromRotationY(mShadowMtx, mAngle.y);
     mShadowMtx[9] = mPos.x >> 3;
     mShadowMtx[10] = mPos.y >> 3;
     mShadowMtx[11] = mPos.z >> 3;
@@ -980,7 +980,7 @@ void daYegg_c::UpdateShadow() {
  * translation << 3 and returns; matrix units are mPos >> 3 throughout.
  * Otherwise it builds the matrix from the egg's own pose: the translation is
  * mPos with 0x14000 (20 units) added to Y, scaled by 1/8 (x << 9 >> 12, rounded),
- * rotated by (mAngleX, mAngleY, mAngleZ), and stored into the model's own
+ * rotated by (mAngle.x, mAngle.y, mAngle.z), and stored into the model's own
  * matrix (mAnmModel.mat4x3). */
 void daYegg_c::UpdateModelMatrix() {
     int on = (mFlags & daYegg_FLAG_ATTACHED) != 0;
@@ -1001,7 +1001,7 @@ void daYegg_c::UpdateModelMatrix() {
                               FX_MUL(mPos.y + 0x14000, 0x200),
                               ((((long long)mPos.z << 9) + 0x800) >> 12));
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
-        mAngleX, mAngleY, mAngleZ);
+        mAngle.x, mAngle.y, mAngle.z);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
@@ -1259,7 +1259,7 @@ int daYegg_c::Behavior()
             /* BOTH oddities below are load-bearing, measured one at a time.
 
                `ang` must stay a pointer: reading the three angles as
-               mPlayer->mAngleX/Y/Z instead reloads mPlayer per field and
+               mPlayer->mAngle.x/.y/.z instead reloads mPlayer per field and
                changes the function's size.
 
                `vin.z` really is written twice. Dropping the dead first store
@@ -1272,7 +1272,7 @@ int daYegg_c::Behavior()
             vmid.x = 0;
             vmid.y = 0;
             vmid.z = 0;
-            ang = &mPlayer->mAngleX;
+            ang = &mPlayer->mAngle.x;
             Matrix4x3_FromRotationZXYExt(&data_020a0e68, ang[0], ang[1], ang[2]);
             MTX_MultVec43(&vin, &data_020a0e68, &vmid);
             Vec3_Add(&vout, &mPlayer->mPos, &vmid);
@@ -1375,12 +1375,12 @@ int daYegg_c::InitResources()
     for (i = 0; i < 5; i++)
         mTargetedIds[i] = 0;
 
-    mEasedAngleX = mAngleX;
-    mEasedAngleY = mAngleY;
-    mEasedAngleZ = mAngleZ;
-    mGoalAngleX = mAngleX;
-    mGoalAngleY = mAngleY;
-    mGoalAngleZ = mAngleZ;
+    mEasedAngleX = mAngle.x;
+    mEasedAngleY = mAngle.y;
+    mEasedAngleZ = mAngle.z;
+    mGoalAngleX = mAngle.x;
+    mGoalAngleY = mAngle.y;
+    mGoalAngleZ = mAngle.z;
     mStallTimer = 15;
 
     if (HasBlueCoinPayout() != 0)

@@ -135,7 +135,7 @@ void daObjTbox_c::State0() {
         playerPos.x = playerPosPtr->x;
         playerPos.y = playerPosPtr->y;
         playerPos.z = playerPosPtr->z;
-        if (AngleDiff(Vec3_HorzAngle(&mPos, &playerPos), mAngleY) < 0x4000) {
+        if (AngleDiff(Vec3_HorzAngle(&mPos, &playerPos), mAngle.y) < 0x4000) {
             int openCount = 0;
             int chestCount = 0;
             dActor_c *chest = FindWithActorID(0xd, 0);
@@ -249,7 +249,7 @@ void daObjTbox_c::State2() {
 }
 
 void daObjTbox_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.t.x = mPos.x >> 3;
     mAnmModel.mat4x3.t.y = mPos.y >> 3;
     mAnmModel.mat4x3.t.z = mPos.z >> 3;

@@ -135,7 +135,7 @@ s32 daChair_c::CleanupResources() {
 }
 
 void daChair_c::UpdateModel() {
-    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -207,15 +207,15 @@ void daChair_c::State1() {
         targetPos.z = av->z;
         if (Vec3_Dist(&mPos, &targetPos) >= 0xfa000)
             return;
-        delta = (Vec3_HorzAngle(&mPos, &targetPos) - mAngleY + 0x2000);
+        delta = (Vec3_HorzAngle(&mPos, &targetPos) - mAngle.y + 0x2000);
         if (delta & 0x4000) {
-            mTrackedAngle = &mAngleZ;
+            mTrackedAngle = &mAngle.z;
             if (delta > 0)
                 mTargetAngle = 0x4000;
             else
                 mTargetAngle = -0x4000;
         } else {
-            mTrackedAngle = &mAngleX;
+            mTrackedAngle = &mAngle.x;
             if (delta < 0)
                 mTargetAngle = 0x5800;
             else
@@ -241,7 +241,7 @@ void daChair_c::State1() {
 
     mStateTimer++;
     if (mStateTimer & 8) {
-        if (mAngleX >= 0) {
+        if (mAngle.x >= 0) {
             wobble = -4;
         } else {
             func_0201267c(kSfxWobble, &mCamSpacePos);
@@ -249,11 +249,11 @@ void daChair_c::State1() {
         }
         mPos.x -= wobble << 12;
         mPos.z -= wobble << 12;
-        mAngleZ = (wobble * 0x32);
-        mAngleX = mAngleZ;
+        mAngle.z = (wobble * 0x32);
+        mAngle.x = mAngle.z;
     } else {
-        mAngleZ = 0;
-        mAngleX = mAngleZ;
+        mAngle.z = 0;
+        mAngle.x = mAngle.z;
     }
 
     if (mStateTimer < 30)
@@ -275,8 +275,8 @@ void daChair_c::State2() {
             mSpeed.y = 0x6000;
         else
             mSpeed.y = 0;
-        ApproachStateValue(&mAngleX, &mStateValue0, -0xfa0, 0xc8, 0x14, 2);
-        ApproachStateValue(&mAngleZ, &mStateValue2, 0, 0, 0x14, 1);
+        ApproachStateValue(&mAngle.x, &mStateValue0, -0xfa0, 0xc8, 0x14, 2);
+        ApproachStateValue(&mAngle.z, &mStateValue2, 0, 0, 0x14, 1);
         if (mStateTimer == 70)
             func_0201267c(kSfxWindup, &mCamSpacePos);
     } else {
@@ -308,7 +308,7 @@ void daChair_c::State2() {
                 mSpeed.z = FX_MUL(reach, FX_CosIdx((u16)mPrevAngleY >> 4));
             } else {
                 if (mActionTimer > 20) {
-                    mAngleY += 0x2710;
+                    mAngle.y += 0x2710;
                 }
             }
         } else {
@@ -366,7 +366,7 @@ void daChair_c::State3() {
     sample = FX_SinIdx((u16)*ip >> 4);
     wrapped = angle;
     offset = (s16)sample * (s16)0x50;
-    if (ip != &mAngleX) {
+    if (ip != &mAngle.x) {
         mClsnOffset.x = -offset;
         mClsnOffset.y = 0;
         mClsnOffset.z = 0;

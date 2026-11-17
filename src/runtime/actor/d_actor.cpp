@@ -105,9 +105,9 @@ dActor_c::dActor_c() : mActorListNode(this) {
     {
         short *spawnRot = data_0209b45c;
         if (spawnRot) {
-            mAngleX = spawnRot[0];
-            mAngleY = spawnRot[1];
-            mAngleZ = spawnRot[2];
+            mAngle.x = spawnRot[0];
+            mAngle.y = spawnRot[1];
+            mAngle.z = spawnRot[2];
             /* The ROM reloads the global. Folding the two reads drops an ldr. */
             spawnRot = data_0209b45c;
             mPrevAngleX = spawnRot[0];
@@ -507,7 +507,7 @@ s16 dActor_c::HorzAngleToCPlayerOrAng()
     ClosestPlayer();
     player = (dActor_c *)data_0209b458;
     if (player == 0)
-        return mAngleY;
+        return mAngle.y;
 
     return Vec3_HorzAngle(&mPos, &player->mPos);
 }
@@ -799,10 +799,10 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     t.x = data_020a0e68.m[9];
     t.y = data_020a0e68.m[10];
     t.z = data_020a0e68.m[11];
-    mPrevAngleY = player.mAngleY;
-    mAngleY = mPrevAngleY;
+    mPrevAngleY = player.mAngle.y;
+    mAngle.y = mPrevAngleY;
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     Vector3 asr;
     /* vec is a const reference; Vec3_Asr's definition is not const-qualified. */
     Vec3_Asr(&asr, const_cast<Vector3 *>(&vec), 3);

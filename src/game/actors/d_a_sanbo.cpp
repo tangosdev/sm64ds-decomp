@@ -263,7 +263,7 @@ int daSanbo_c::UpdateStackedBody() {
             mSpeed.y = 0;
         }
 
-        mAngleY = mNextSegment->mAngleY;
+        mAngle.y = mNextSegment->mAngle.y;
         mSegAngY = mNextSegment->mSegAngY + 0x13000;
         mOffset.x = FX_MUL(FX_SinIdx((u16)mSegAngY >> 4), 0xe000);
         mOffset.y = 0;
@@ -420,7 +420,7 @@ int daSanbo_c::UpdateStackedOnGrowingBody() {
         mPos.x = next->mPos.x;
         mPos.y = raised + mNextSegment->mPos.y;
         mPos.z = mNextSegment->mPos.z;
-        mAngleY = mNextSegment->mAngleY;
+        mAngle.y = mNextSegment->mAngle.y;
         mSegAngY = mNextSegment->mSegAngY + 0x13000;
         mOffset.x = FX_MUL(FX_SinIdx((u16)mSegAngY >> 4), 0xe000);
         mOffset.y = 0;
@@ -446,7 +446,7 @@ int daSanbo_c::EnterMegaKill() {
     mPrevAngleY = Vec3_HorzAngle(&mHitActor->mPos, &mPos);
     rnd = RandomIntInternal(&data_0209e650.value);
     mPrevAngleY = (mPrevAngleY + ((rnd & 0x7fff) - 0x4000));
-    mAngleY = (mPrevAngleY + 0x8000);
+    mAngle.y = (mPrevAngleY + 0x8000);
     mSpeed.y = 0x28000;
     mHorzSpeed = 0xa000;
     mTimer = 45;
@@ -460,7 +460,7 @@ int daSanbo_c::UpdateMegaKill() {
     int head = (actorID == SANBO_HEAD) ? 1 : 0;
 
     if (head != 0)
-        mAngleX = (mAngleX - 0x1000);
+        mAngle.x = (mAngle.x - 0x1000);
     UpdatePos(&mdCcAc_c);
     func_02038414(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround() || !DecIfAbove0_Byte(&mTimer))
@@ -483,7 +483,7 @@ void daSanbo_c::UpdateModelAndShadow() {
             y = OnAimedAtWithEgg() >> 3;
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y, 0);
             Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-                mAngleX, mAngleY, mAngleZ);
+                mAngle.x, mAngle.y, mAngle.z);
 
             y = (-OnAimedAtWithEgg()) >> 3;
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y, 0);
@@ -498,7 +498,7 @@ void daSanbo_c::UpdateModelAndShadow() {
         }
     }
 
-    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
     mModel.mat4x3.m[9] = (mPos.x + mOffset.x) >> 3;
     mModel.mat4x3.m[10] = (mPos.y + 0x3c000) >> 3;
     mModel.mat4x3.m[11] = (mPos.z + mOffset.z) >> 3;
@@ -690,9 +690,9 @@ void daSanbo_c::UpdateWanderYaw() {
     }
     dist = Vec3_HorzDist(&mPos, target);
     ang = Vec3_HorzAngle(&mPos, target);
-    ApproachLinear(mAngleY, ang, (short)0x320);
+    ApproachLinear(mAngle.y, ang, (short)0x320);
     turn = CalcShyAwayAngle(dist);
-    mPrevAngleY = (mAngleY + turn);
+    mPrevAngleY = (mAngle.y + turn);
 }
 
 int daSanbo_c::CalcShyAwayAngle(int x) {

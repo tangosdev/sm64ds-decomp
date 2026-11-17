@@ -199,14 +199,14 @@ void daSnowman_c::RotateTowardPlayer(int idx) {
     if (idx != 1) {
         this->mInitAngleY = 0;
         this->mTimer = 0;
-    } else if (AngleDiff(ang, this->mAngleY) > 0x200) {
+    } else if (AngleDiff(ang, this->mAngle.y) > 0x200) {
         lim = -0x2000;
         this->mInitAngleY -= 0x100;
         if (this->mInitAngleY < lim) {
             this->mInitAngleY = lim;
             this->mTimer++;
             if (this->mTimer > 40) {
-                this->mStep = this->mAngleY - ang;
+                this->mStep = this->mAngle.y - ang;
                 SetState(&data_ov081_02128e94);
                 return;
             }
@@ -216,9 +216,9 @@ void daSnowman_c::RotateTowardPlayer(int idx) {
         ApproachAngle(&this->mInitAngleY, 0, 1, 0x500, 0x500);
     }
 
-    ApproachAngle(&this->mAngleX, this->mInitAngleY, data_ov081_021289a4[idx].divisor,
+    ApproachAngle(&this->mAngle.x, this->mInitAngleY, data_ov081_021289a4[idx].divisor,
                   data_ov081_021289a4[idx].band, data_ov081_021289a4[idx].maxStep);
-    this->mAngleY = this->mPrevAngleY;
+    this->mAngle.y = this->mPrevAngleY;
 }
 
 /* Reacts to whatever the collision cylinder touched this frame. */
@@ -377,7 +377,7 @@ int daSnowman_c::StateDeathExecute() {
         this->mInitAngleY += 0x200;
 
     this->mPrevAngleY += this->mInitAngleY;
-    ApproachAngle(&this->mAngleX, -0x2800, 1, 0x500, 0x500);
+    ApproachAngle(&this->mAngle.x, -0x2800, 1, 0x500, 0x500);
     this->mTimer++;
     if (this->mTimer > 40) {
         if (this->mCapPhase == 0) {
@@ -422,7 +422,7 @@ int daSnowman_c::StateBurrowExecute() {
         Particle::System::New(this->mParticleID2, kPtclSnowmanSinkB, pos.x, pos.y, pos.z, 0, 0);
 
     if (this->mHomePos.y > this->mPos.y) {
-        ApproachAngle(&this->mAngleX, this->mInitAngleY, 1, 0x1000, 0x1000);
+        ApproachAngle(&this->mAngle.x, this->mInitAngleY, 1, 0x1000, 0x1000);
     }
     t = this->mHomePos.y - 0x118000;
     if (t > this->mPos.y) {
@@ -432,7 +432,7 @@ int daSnowman_c::StateBurrowExecute() {
         SetState(&data_ov081_02128e84);
     }
     this->mPrevAngleY += 0x2000;
-    this->mAngleY = this->mPrevAngleY;
+    this->mAngle.y = this->mPrevAngleY;
     return 1;
 }
 
@@ -740,7 +740,7 @@ void daSnowman_c::UpdateModelMatrices() {
     Matrix4x3_FromTranslation(&data_020a0e68, dst[0], dst[1], dst[2]);
 
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
-        this->mAngleX, this->mAngleY, this->mAngleZ);
+        this->mAngle.x, this->mAngle.y, this->mAngle.z);
     this->mAnmModel.mat4x3 = data_020a0e68;
 
     if (this->mCapUniqueID != 0) {
@@ -873,9 +873,9 @@ int daSnowman_c::Behavior()
         }
 
     }
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngleX;
+    mAngle.y = mPrevAngleY;
+    mAngle.z = mPrevAngleZ;
     DecIfAbove0_Short(&mStateTimer);
     if (mState->execute != 0)
         (this->*mState->execute)();
@@ -952,8 +952,8 @@ int daSnowman_c::InitResources()
     v = data_ov081_02128998;
     mdCcAcPos_c.Init(this, v, 0x3c000, 0x96000, 0x200004, 0x42050);
 
-    mAngleY = mPrevAngleY;
-    mInitAngleY = mAngleY;
+    mAngle.y = mPrevAngleY;
+    mInitAngleY = mAngle.y;
     mWithMeshClsn.Init(this, 0x14000, 0xf000, 0, 0);
 
     mCoinType = 1;

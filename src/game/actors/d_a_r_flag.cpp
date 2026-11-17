@@ -51,7 +51,7 @@ daRFlag_c::~daRFlag_c() {}
  * The flag graphic sits 60.0 (0x3c000) above mPos.y. dExtSimpleModel_c-matrix
  * translation is in 1/8 world units, so the position is shifted down by 3. */
 void daRFlag_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.t.x = mPos.x >> 3;
     mAnmModel.mat4x3.t.y = (mPos.y + 0x3c000) >> 3;
     mAnmModel.mat4x3.t.z = mPos.z >> 3;

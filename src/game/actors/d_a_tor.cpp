@@ -93,7 +93,7 @@ void daTor_c::UpdateSpin(s32 scale)
     mScale.z = mScale.x;
     mSpinPhase += 0x200;
     mHorzSpeed = 0xe000;
-    mAngleY += 0x2c00;
+    mAngle.y += 0x2c00;
     mdCcAc_c.radius = mScale.x * 0x514;
     mdCcAc_c.height = mScale.y * 0xfa0;
     mScale.x <<= 1;

@@ -279,7 +279,7 @@ int daBombking_c::TickWalkHome() {
         this->mSoundCooldown = 5;
     }
     ApproachAngle(&this->mPrevAngleY, ang, 5, 0x1000, 0x100);
-    this->mAngleY = this->mPrevAngleY;
+    this->mAngle.y = this->mPrevAngleY;
     if (Vec3_Dist(&this->mPos, &this->mHomePos) < 0x32000) {
         KingBobOmb_SetState(data_ov078_0212710c);
     }
@@ -301,7 +301,7 @@ int daBombking_c::TickThrowPlayer() {
     if (CheckKnockbackHit() == 1) {
         DetonateSpawnedBombs();
         if (this->mHeldActor != 0) {
-            func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngleY);
+            func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngle.y);
             this->mTalkingPlayer = this->mHeldActor;
             this->mHeldActor = 0;
         }
@@ -309,7 +309,7 @@ int daBombking_c::TickThrowPlayer() {
     }
     if ((&this->mBlendAnmModel)->WillHitFrame(0x14)) {
         if (this->mHeldActor != 0) {
-            func_ov002_020db54c(this->mHeldActor, 0x28000, 0x50000, this->mAngleY);
+            func_ov002_020db54c(this->mHeldActor, 0x28000, 0x50000, this->mAngle.y);
             this->mTalkingPlayer = this->mHeldActor;
             this->mHeldActor = 0;
             func_02012694(0x131, &this->mCamSpacePos);
@@ -337,7 +337,7 @@ int daBombking_c::TickCarryPlayer() {
     if (CheckKnockbackHit() == 1) {
         DetonateSpawnedBombs();
         if (this->mHeldActor != 0) {
-            func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngleY);
+            func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngle.y);
             this->mTalkingPlayer = this->mHeldActor;
             this->mHeldActor = 0;
         }
@@ -360,7 +360,7 @@ int daBombking_c::TickCarryPlayer() {
         ApproachAngle(&this->mPrevAngleY, a, 5, 0x1000, 0x100);
     }
 
-    this->mAngleY = this->mPrevAngleY;
+    this->mAngle.y = this->mPrevAngleY;
 
     if (Vec3_Dist(&this->mPos, &v) > 0x1e000) {
         if (this->mSoundCooldown == 0) {
@@ -397,7 +397,7 @@ int daBombking_c::TickGrabPlayer() {
     }
     DetonateSpawnedBombs();
     if (this->mHeldActor != 0) {
-        func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngleY);
+        func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngle.y);
         this->mTalkingPlayer = this->mHeldActor;
         this->mHeldActor = 0;
     }
@@ -423,7 +423,7 @@ int daBombking_c::EnterGrabPlayer() {
 int daBombking_c::TickGetUp() {
     s16 ang = this->HorzAngleToCPlayer();
     ApproachAngle(&this->mPrevAngleY, ang, 1, 0x500, 0x500);
-    this->mAngleY = this->mPrevAngleY;
+    this->mAngle.y = this->mPrevAngleY;
     if ((&this->mBlendAnmModel)->Finished()) {
         KingBobOmb_SetState(data_ov078_0212703c);
     }
@@ -452,8 +452,8 @@ int daBombking_c::TickKnockback() {
                 return 1;
 
             ApproachAngle(&mPrevAngleY, HorzAngleToCPlayer(), 5, 0x1000, 0x200);
-            mAngleY = mPrevAngleY;
-            if (AngleDiff(HorzAngleToCPlayer(), mAngleY) < 0x1000) {
+            mAngle.y = mPrevAngleY;
+            if (AngleDiff(HorzAngleToCPlayer(), mAngle.y) < 0x1000) {
                 daPly_c *pl = mTalkingPlayer;
                 if (pl->StartTalk(*this, 1) != 0) {
                     msg = 0;
@@ -513,7 +513,7 @@ int daBombking_c::TickKnockback() {
         }
     }
 
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
     ApproachAngle(&mPrevAngleY, mTargetAngY, 5, 0x1000, 0x200);
     return 1;
 }
@@ -540,7 +540,7 @@ int daBombking_c::EnterKnockback() {
 int daBombking_c::TickDamaged() {
     s16 ang = this->HorzAngleToCPlayer();
     ApproachAngle(&this->mPrevAngleY, ang, 1, 0x500, 0x500);
-    this->mAngleY = this->mPrevAngleY;
+    this->mAngle.y = this->mPrevAngleY;
     if (this->mStateTimer == 0)
         KingBobOmb_SetState(&data_ov078_0212702c);
     return 1;
@@ -620,8 +620,8 @@ int daBombking_c::TickHomeTalk() {
         pos.z += out.z;
         cam->SetLookAt(look);
         cam->SetPos(pos);
-        ApproachLinear(this->mAngleY, ang, 0x800);
-        this->mPrevAngleY = this->mAngleY;
+        ApproachLinear(this->mAngle.y, ang, 0x800);
+        this->mPrevAngleY = this->mAngle.y;
         return 1;
     }
     cam->mFlags &= ~8;
@@ -659,7 +659,7 @@ int daBombking_c::TickReturnHome() {
         vA.z = 0;
         ApproachAngle(&this->mPrevAngleX, vert, 5, 0x1000, 0x300);
         ApproachAngle(&this->mPrevAngleY, horz, 5, 0x1000, 0x300);
-        this->mAngleY = this->mPrevAngleY;
+        this->mAngle.y = this->mPrevAngleY;
         if ((&this->mBlendAnmModel)->Finished() == 0)
             return 1;
         vB.x = 0;
@@ -901,11 +901,11 @@ flags:
             }
         }
         if (b0 != 0) {
-            this->mPrevAngleY = this->mHeldActor->mAngleY;
+            this->mPrevAngleY = this->mHeldActor->mAngle.y;
         }
         {
             short t = this->mPrevAngleY;
-            this->mAngleY = t;
+            this->mAngle.y = t;
         }
         this->mdCcAcPos_c.flags &= ~2;
         KingBobOmb_SetState(&data_ov078_0212708c);
@@ -955,9 +955,9 @@ int daBombking_c::TickThrowBomb() {
             target->mPrevAngleX = this->mPrevAngleX;
             target->mPrevAngleY = this->mPrevAngleY;
             target->mPrevAngleZ = this->mPrevAngleZ;
-            target->mAngleX = this->mAngleX;
-            target->mAngleY = this->mAngleY;
-            target->mAngleZ = this->mAngleZ;
+            target->mAngle.x = this->mAngle.x;
+            target->mAngle.y = this->mAngle.y;
+            target->mAngle.z = this->mAngle.z;
             target->func_ov102_0214b384(0x78);
             if ((&this->mBlendAnmModel)->WillHitFrame(0x13) != 0 || CheckKnockbackHit() == 1) {
                 in.x = 0; in.y = 0; in.z = 0x28000;
@@ -1070,7 +1070,7 @@ int daBombking_c::TickChase() {
         ApproachAngle(&this->mPrevAngleY, this->HorzAngleToCPlayer(), 0xa, 0x200, 0x100);
         {
             s16 ang = this->mPrevAngleY;
-            this->mAngleY = ang;
+            this->mAngle.y = ang;
             this->mFlags &= ~0x80;
         }
 
@@ -1081,7 +1081,7 @@ int daBombking_c::TickChase() {
                 isType = (a->actorID == 0xbf);
                 if (isType != 0) {
                     daPly_c *player = static_cast<daPly_c *>(a);
-                    if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) > 0x2800) {
+                    if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngle.y) > 0x2800) {
                         if ((this->mdCcAcPos_c2.hitFlags & 0x1000) != 0) {
                             this->mFlags |= 0x80;
                             if (player->TryGrab(*this) != 0) {
@@ -1103,7 +1103,7 @@ int daBombking_c::TickChase() {
         if (this->mThrowCooldown == 0) {
             if (gCurrentStarId == 1) {
                 if (this->DistToCPlayer() < 0x3e8000) {
-                    if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) < 0x2800) {
+                    if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngle.y) < 0x2800) {
                         index = 0;
                         empty = index;
                         z = index;
@@ -1153,7 +1153,7 @@ int daBombking_c::TickActivate() {
     if (CheckKnockbackHit() == 1)
         return 1;
     ApproachAngle(&this->mPrevAngleY, this->HorzAngleToCPlayer(), 1, 0x500, 0x500);
-    this->mAngleY = this->mPrevAngleY;
+    this->mAngle.y = this->mPrevAngleY;
     if ((&this->mBlendAnmModel)->WillHitFrame(0x46)) {
         ShakeScreen(0x7d0000);
         func_02012694(0x12c, &this->mCamSpacePos);
@@ -1203,8 +1203,8 @@ int daBombking_c::TickIntroTalk() {
     v.y = src[1];
     v.z = src[2];
     short ang = Vec3_HorzAngle(&this->mPos, &v);
-    ApproachLinear(this->mAngleY, ang, 0x800);
-    this->mPrevAngleY = this->mAngleY;
+    ApproachLinear(this->mAngle.y, ang, 0x800);
+    this->mPrevAngleY = this->mAngle.y;
     if (target->GetTalkState() == -1) {
         Message::EndTalk();
         func_02011d44();
@@ -1243,8 +1243,8 @@ int daBombking_c::TickInactive() {
         }
     }
 
-    ApproachLinear(this->mAngleY, this->mInitAngleY, 0x800);
-    this->mPrevAngleY = this->mAngleY;
+    ApproachLinear(this->mAngle.y, this->mInitAngleY, 0x800);
+    this->mPrevAngleY = this->mAngle.y;
 
     if (CheckKnockbackHit() == 1) {
         return 1;
@@ -1342,7 +1342,7 @@ void daBombking_c::UpdateHandMatrix() {
     struct Vector3 lv;
     int i;
 
-    Matrix4x3_FromRotationY(&this->mBlendAnmModel.mat4x3, this->mAngleY);
+    Matrix4x3_FromRotationY(&this->mBlendAnmModel.mat4x3, this->mAngle.y);
     this->mBlendAnmModel.mat4x3.m[9] = this->mPos.x >> 3;
     this->mBlendAnmModel.mat4x3.m[10] = this->mPos.y >> 3;
     this->mBlendAnmModel.mat4x3.m[11] = this->mPos.z >> 3;
@@ -1565,7 +1565,7 @@ int daBombking_c::InitResources()
     }
     mPhase = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x1e) & 1;
     mPhase = mPhase + 1;
-    mInitAngleY = mAngleY;
+    mInitAngleY = mAngle.y;
     KingBobOmb_SetState(&data_ov078_0212710c);
     return 1;
 }

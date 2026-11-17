@@ -256,7 +256,7 @@ s32 daObjFl_Amilift_c::InitResources() {
     UpdateClsnPosAndRot();
 
     kcl = dBgW_Kc::LoadFile(data_ov064_0211c728);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov064_0211bb6c);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov064_0211bb6c);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);

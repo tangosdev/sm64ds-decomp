@@ -278,7 +278,7 @@ void daCoin_c::Step() {
     mWithMeshClsn.StopDetectingWater();
 }
 
-/* Refreshes the model matrices (rotation from mAngleY, translation as position
+/* Refreshes the model matrices (rotation from mAngle.y, translation as position
  * >> 3) and the shadow, once per frame. The shadow is skipped while the
  * 0x40000 yoshi-mouth state bit is set, for an inactive coin, and for a red
  * coin sitting in a block.
@@ -290,7 +290,7 @@ void daCoin_c::UpdateModelMatrix() {
     int inYoshiMouth;
     int floorState;
 
-    Matrix4x3_FromRotationY(&mCommonModel1.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mCommonModel1.mat4x3, mAngle.y);
     mCommonModel1.mat4x3.m[9] = mPos.x >> 3;
     mCommonModel1.mat4x3.m[10] = mPos.y >> 3;
     mCommonModel1.mat4x3.m[11] = mPos.z >> 3;
@@ -769,7 +769,7 @@ int daCoin_c::Behavior()
     }
     if (KillIfCollected() != 0)
         return 1;
-    mAngleY += 0xc00;
+    mAngle.y += 0xc00;
     if (CheckInYoshiMouth() != 0) {
         UpdateModelMatrix();
         mdCc_c.Clear();

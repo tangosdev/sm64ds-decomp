@@ -136,7 +136,7 @@ s32 daDpLift_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov025_02113ad8);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov025_02112d08);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov025_02112d08);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 

@@ -2,7 +2,7 @@
 /* Koopa the Quick (daRNk_c), ov062 0x0211975c..0x0211af38. He waits, offers
  * a race, runs the path to the flag, and talks about who arrived first.
  * param1's low nibble is the path id; bits 4..9 and 10..15 are jump nodes.
- * mAngleX's low nibble is the star number. Highest address first. The
+ * mAngle.x's low nibble is the star number. Highest address first. The
  * destructor is inline, so D1 then D0 come from daRNk_c.h.
  */
 // leftovers:
@@ -235,7 +235,7 @@ int daRNk_c::InitResources()
         mPathPtToJumpAt1 = 0xff;
     if (mPathPtToJumpAt2 <= 1)
         mPathPtToJumpAt2 = 0xff;
-    mStarID = mAngleX & 0xf;
+    mStarID = mAngle.x & 0xf;
     mTrackedStar = TrackStar(mStarID, 2);
     mFlagID = 0;
     mPlayer = 0;
@@ -261,14 +261,14 @@ int daRNk_c::CleanupResources()
 }
 
 /* Per frame: run the handler for mState, advance the animation, put the
-   steered heading (mPrevAngleY) into mAngleY, move and collide, refresh the
+   steered heading (mPrevAngleY) into mAngle.y, move and collide, refresh the
    body cylinder and draw the drop shadow. */
 int daRNk_c::Behavior()
 {
     StateFunc *states = data_ov062_0211e0a4;
     (this->*states[mState])();
     mAnmModel.Advance();
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
     UpdatePos(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     mdCcAc_c.Clear();
@@ -293,7 +293,7 @@ void daRNk_c::func_ov062_0211aac0(){
     struct Vector3 v;
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
     /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
     *(Mtx43 *)&this->mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(this->mShadowModel, this->mAnmModel.mat4x3, 0xa0000, 0xa0000, 0xf);
@@ -345,7 +345,7 @@ void daRNk_c::func_ov062_0211a9c4()
 }
 
 /* STATE_OFFER_RACE. Offer the race after the player finishes talking.
- *   step 0  turn toward the player (0x800 a frame, mAngleY following); once
+ *   step 0  turn toward the player (0x800 a frame, mAngle.y following); once
  *           facing, switch to the talk animation, play the cue, and for Mario
  *           note it in mIsTalkingToMario (func_02012790(0xa) is called too;
  *           its meaning is not recovered)
@@ -371,7 +371,7 @@ void daRNk_c::func_ov062_0211a740()
                 this->mIsTalkingToMario = 1;
             }
         }
-        this->mAngleY = this->mPrevAngleY;
+        this->mAngle.y = this->mPrevAngleY;
         return;
     case 1:
         if (this->mPlayer->GetTalkState() != 0)
@@ -674,7 +674,7 @@ void daRNk_c::func_ov062_02119be0() {
     case 1:
         if (ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep) != 0)
             this->mStep++;
-        this->mAngleY = this->mPrevAngleY;
+        this->mAngle.y = this->mPrevAngleY;
         return;
     case 2:
         if (this->mPlayer->param1 == 0) {
@@ -745,7 +745,7 @@ void daRNk_c::func_ov062_02119be0() {
     case 6:
         if (ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, kTurnStep) != 0)
             this->mStep++;
-        this->mAngleY = this->mPrevAngleY;
+        this->mAngle.y = this->mPrevAngleY;
         return;
     case 7: {
         daPly_c *p = this->mPlayer;
@@ -912,7 +912,7 @@ void daRNk_c::func_ov062_02119800()
             return;
         func_0201267c(kSfxFootstep, &this->mCamSpacePos);
         this->mFootstepDone = 1;
-        s16 ang = this->mAngleY + 0x4000; /* a quarter turn: the sideways direction */
+        s16 ang = this->mAngle.y + 0x4000; /* a quarter turn: the sideways direction */
         Vector3 pos = this->mPos;
         pos.y += 0x1e000;
         if (kind <= 8) {

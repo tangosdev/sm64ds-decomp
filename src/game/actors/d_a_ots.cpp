@@ -88,7 +88,7 @@
  *   and the death branch of CheckFloorDeath overwrites it with the death spot
  *   for the particles.
  * - mPrevAngleY looks like the travel heading: the hit reactions set it, the
- *   walking states copy it into mAngleY after moving, and
+ *   walking states copy it into mAngle.y after moving, and
  *   dActor_c::UpdatePosWithHorzSpeedAndAng reads the s16 at 0x94 as the angle it
  *   moves along. Its real name is not settled here.
  * - The Tail view stands in for members: the children's pad_398 and fields from
@@ -281,12 +281,12 @@ int daOts_c::BehaviorCommon()
                               kAnimSpeedDouble, 0);
         }
         Step();
-        mAngleY = mPrevAngleY;
+        mAngle.y = mPrevAngleY;
         break;
     case STATE_CHASE:
         ActChaseMario();
         Step();
-        mAngleY = mPrevAngleY;
+        mAngle.y = mPrevAngleY;
         mAnmModel.speed = kAnimSpeedDouble;
         break;
     case STATE_KNOCKED_BACK:
@@ -362,13 +362,13 @@ int daOts_c::CleanupResources()
 
 /* -------------------------------------------------------------------------- */
 /* Rebuilds the two matrices every frame: the model matrix (a rotation about Y
- * by mAngleY, translated to mPos plus the model's Y offset) and the drop-shadow
+ * by mAngle.y, translated to mPos plus the model's Y offset) and the drop-shadow
  * matrix (the same rotation, translated to mPos), then drops the shadow. The
  * translation rows are positions divided by 8 (>> 3). The shadow's radius
  * shrinks by 3/32 (0x180 / 0x1000) of the actor's height above the floor, but not
  * below 10 units, and its depth is that height plus 40 units. Opacity is 0xf. */
 void daOts_c::func_ov064_02116bac(){
-    Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngleY);
+    Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngle.y);
     this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
     this->mAnmModel.mat4x3.t.y = (this->mPos.y + tail().mModelYOffset) >> 3;
     this->mAnmModel.mat4x3.t.z = this->mPos.z >> 3;
@@ -379,7 +379,7 @@ void daOts_c::func_ov064_02116bac(){
     int h = tail().mShadowRadius - rad;
     if (h < 0xa000)
         h = 0xa000; /* shadow radius, at least 10 units */
-    Matrix4x3_FromRotationY(&tail().mShadowMtx, this->mAngleY);
+    Matrix4x3_FromRotationY(&tail().mShadowMtx, this->mAngle.y);
     tail().mShadowMtx.t.x = this->mPos.x >> 3;
     tail().mShadowMtx.t.y = this->mPos.y >> 3;
     tail().mShadowMtx.t.z = this->mPos.z >> 3;
@@ -392,16 +392,16 @@ void daOts_c::func_ov064_02116bac(){
  * player. The cases, in the order tried:
  *   - hit flags 0x7c0 (punch, kick, breakdance, slide kick, dive -- see the bit
  *     table in dCc_c.h) or a metal player: mPrevAngleY takes the player's
- *     mAngleY and mHorzSpeed becomes 50 units a frame (40 when the player's
+ *     mAngle.y and mHorzSpeed becomes 50 units a frame (40 when the player's
  *     param1 is not 2);
  *   - flag 0x2000 (the egg bit): mPrevAngleY takes the player's mPrevAngleY,
  *     mHorzSpeed 40 units a frame;
  *   - not the Big Bully and flag 0x10: killed outright (KillByInvincibleChar);
- *   - flag 0x40000: mPrevAngleY takes the player's mAngleY, mHorzSpeed 57.5
+ *   - flag 0x40000: mPrevAngleY takes the player's mAngle.y, mHorzSpeed 57.5
  *     units a frame;
  *   - stomped (JumpedOnByPlayer): as the first case;
  *   - a player on a shell: the player's mHorzSpeed is set to minus the bully's,
- *     and the bully turns about (mPrevAngleY = mAngleY + half a turn) at 40 units
+ *     and the bully turns about (mPrevAngleY = mAngle.y + half a turn) at 40 units
  *     a frame;
  *   - a player with mIsVanish set is left alone; any other player is hurt
  *     (daPly_c::Hurt) and the bully turns about at 20 units a frame (10 for the
@@ -436,7 +436,7 @@ void daOts_c::CheckMarioCollision() {
 
     hitFlags = (s32)this->mdCcAc_c.hitFlags;
     if ((hitFlags & kHitAttackMask) || hitPlayer->mIsMetal != 0) {
-        this->mPrevAngleY = hitPlayer->mAngleY;
+        this->mPrevAngleY = hitPlayer->mAngle.y;
         if (hitPlayer->param1 == 2)
             this->mHorzSpeed = kHitSpeedHeavy;
         else
@@ -476,7 +476,7 @@ void daOts_c::CheckMarioCollision() {
     }
 
     if (hitFlags & kHitBit40000) {
-        this->mPrevAngleY = hitPlayer->mAngleY;
+        this->mPrevAngleY = hitPlayer->mAngle.y;
         this->mHorzSpeed = kHitSpeedBit40000;
         this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimHit]->filePtr, 0,
                                 kAnimSpeedNormal, 0);
@@ -488,7 +488,7 @@ void daOts_c::CheckMarioCollision() {
     }
 
     if (this->JumpedOnByPlayer(this->mdCcAc_c, *hitPlayer) != 0) {
-        this->mPrevAngleY = hitPlayer->mAngleY;
+        this->mPrevAngleY = hitPlayer->mAngle.y;
         if (hitPlayer->param1 == 2)
             this->mHorzSpeed = kHitSpeedHeavy;
         else
@@ -504,7 +504,7 @@ void daOts_c::CheckMarioCollision() {
 
     if (hitPlayer->IsOnShell() != 0) {
         hitPlayer->mHorzSpeed = -this->mHorzSpeed;
-        this->mPrevAngleY = (s16)(this->mAngleY + 0x8000);
+        this->mPrevAngleY = (s16)(this->mAngle.y + 0x8000);
         this->mHorzSpeed = kHitSpeedLight;
         this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimWalk]->filePtr, 0,
                                 kAnimSpeedNormal, 0);
@@ -533,7 +533,7 @@ void daOts_c::CheckMarioCollision() {
         }
     }
 
-    this->mPrevAngleY = (s16)(this->mAngleY + 0x8000);
+    this->mPrevAngleY = (s16)(this->mAngle.y + 0x8000);
     {
         int isD8 = (int)(this->actorID == kBigBullyActorId);
         if (!isD8)
@@ -635,7 +635,7 @@ void daOts_c::ActChaseMario() {
  * stopped the actor hops: while fewer than two hops are done, each frame on the
  * ground it launches upward at 15 units a frame and counts a hop. After the
  * second hop it waits for the state timer to reach 10 frames (20 for the Big
- * Bully), then goes back to STATE_CHASE with mPrevAngleY = mAngleY and the walk
+ * Bully), then goes back to STATE_CHASE with mPrevAngleY = mAngle.y and the walk
  * animation at double speed.
  *
  * N64: bully_act_knockback, which also slows to a stop and then returns to the
@@ -657,7 +657,7 @@ void daOts_c::ActKnockback() {
         if (mStateTimer < (unsigned int)lim)
             return;
         tail().mState = STATE_CHASE;
-        this->mPrevAngleY = this->mAngleY;
+        this->mPrevAngleY = this->mAngle.y;
         {
             BCA_File *anim = (BCA_File *)mFileTable->files[kAnimWalk]->filePtr;
             this->mAnmModel.SetAnim(anim, 0, kAnimSpeedDouble, 0);
@@ -670,8 +670,8 @@ void daOts_c::ActKnockback() {
 /* -------------------------------------------------------------------------- */
 /* STATE_LEDGE_TURN's body. On its first frame (state timer 0), if the actor is on
  * the ground, it flips mPrevAngleY by half a turn (0x8000). Every frame it sets
- * mHorzSpeed to 5 units a frame and turns mAngleY toward mPrevAngleY by up to
- * 0x200 (2.8 degrees). After 15 frames it snaps mPrevAngleY to mAngleY, goes back
+ * mHorzSpeed to 5 units a frame and turns mAngle.y toward mPrevAngleY by up to
+ * 0x200 (2.8 degrees). After 15 frames it snaps mPrevAngleY to mAngle.y, goes back
  * to STATE_RETURN_HOME and restarts the walk animation.
  *
  * N64: bully_act_back_up -- the same half-turn on the state's first frame, the
@@ -683,10 +683,10 @@ void daOts_c::ActBackUp() {
         }
     }
     mHorzSpeed = kWalkSpeed;
-    ApproachLinear(mAngleY, mPrevAngleY, 0x200);
+    ApproachLinear(mAngle.y, mPrevAngleY, 0x200);
     if (mStateTimer < 15)
         return;
-    mPrevAngleY = mAngleY;
+    mPrevAngleY = mAngle.y;
     tail().mState = STATE_RETURN_HOME;
     BCA_File *f = (BCA_File *)mFileTable->files[kAnimWalk]->filePtr;
     mAnmModel.SetAnim(f, 0, kAnimSpeedNormal, 0);

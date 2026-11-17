@@ -198,7 +198,7 @@ s32 daObjCvNewsLift_c::InitResources() {
     UpdateModelTransforms();
     UpdateClsnTransforms();
 
-    mMeshCollider.SetFile((KCL_File *)gCvNewsLiftCollisionFile.filePtr, mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile((KCL_File *)gCvNewsLiftCollisionFile.filePtr, mClsnMat, 0x199, mAngle.y,
                           data_ov021_02113a60);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&MainMeshCallback);
@@ -206,7 +206,7 @@ s32 daObjCvNewsLift_c::InitResources() {
 
     for (int i = 0; i < 4; i++) {
         mPlatformColliders[i].SetFile((KCL_File *)gCvLiftButtonCollisionFile.filePtr,
-                                      mPlatformMats[i], 0x199, mAngleY, data_ov021_02113a80);
+                                      mPlatformMats[i], 0x199, mAngle.y, data_ov021_02113a80);
         mPlatformColliders[i].SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     }
 
@@ -258,16 +258,16 @@ s32 daObjCvNewsLift_c::Behavior() {
                 s16 wobble = (s16)FX_MUL(amp, sine);
                 switch (which) {
                 case 0:
-                    mAngleX = -wobble;
+                    mAngle.x = -wobble;
                     break;
                 case 1:
-                    mAngleX = wobble;
+                    mAngle.x = wobble;
                     break;
                 case 2:
-                    mAngleZ = wobble;
+                    mAngle.z = wobble;
                     break;
                 case 3:
-                    mAngleZ = -wobble;
+                    mAngle.z = -wobble;
                     break;
                 }
             }
@@ -279,15 +279,15 @@ s32 daObjCvNewsLift_c::Behavior() {
                 mLoweredPlatform--;
             mBumped = 0;
             mPrevAngleY = sNewsLiftPlatformYaws[mLoweredPlatform];
-            mAngleX = 0;
-            mAngleZ = 0;
+            mAngle.x = 0;
+            mAngle.z = 0;
             mPos.y = mHomePos.y;
         }
         if (mPrevLoweredPlatform != mLoweredPlatform) {
             mBumped = 0;
             mPrevAngleY = sNewsLiftPlatformYaws[mLoweredPlatform];
-            mAngleX = 0;
-            mAngleZ = 0;
+            mAngle.x = 0;
+            mAngle.z = 0;
             mPos.y = mHomePos.y;
         }
     } else {
@@ -392,8 +392,8 @@ s32 daObjCvNewsLift_c::Behavior() {
         mWobblePhase = 0;
         mBumped = 0;
         mWobbleTimer = 0;
-        mAngleX = 0;
-        mAngleZ = 0;
+        mAngle.x = 0;
+        mAngle.z = 0;
         mHorzSpeed = 0;
     }
     if (!mBumped && mResetTimer < 270) {
@@ -446,9 +446,9 @@ void daObjCvNewsLift_c::UpdateModelTransforms() {
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     MtxStack::concat(tilt);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
     mModel.mat4x3 = data_020a0e68;
     mainMat = &mModel.mat4x3;
     offset = gNewsLiftPlatformOffsets;
@@ -484,11 +484,11 @@ void daObjCvNewsLift_c::UpdateClsnTransforms() {
     Matrix4x3_FromQuaternion(&mRotation, &tilt);
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     MtxStack::concat(tilt);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
     mClsnMat = data_020a0e68;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 
     offset = gNewsLiftPlatformOffsets;
     i = 0;
@@ -504,7 +504,7 @@ void daObjCvNewsLift_c::UpdateClsnTransforms() {
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, sNewsLiftPlatformYaws[i]);
         /* this stepped one matrix at a time. An index or *platformMat misses. */
         cursor->mPlatformMats[0] = data_020a0e68;
-        platformCollider->Transform(*platformMat, mAngleY);
+        platformCollider->Transform(*platformMat, mAngle.y);
         offset++;
         cursor = (daObjCvNewsLift_c *)((Matrix4x3 *)cursor + 1);
         platformMat++;

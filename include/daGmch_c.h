@@ -48,7 +48,7 @@ struct daGmch_c : dActor_c {
        by 0xc00 every frame.
        [UpdateDrawMatrices, UpdateState0] */
     s16 mSpinAngleY;           /* 0x3ec */
-    /* The heading UpdateState1 turns mAngleY toward, 0x2bc a frame; EnterState1
+    /* The heading UpdateState1 turns mAngle.y toward, 0x2bc a frame; EnterState1
        draws it at random.
        [EnterState1, UpdateState1] */
     s16 mTargetAngleY;         /* 0x3ee */

@@ -97,7 +97,7 @@ int daObjTtWater_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     KCL_File *mc = dBgW_Kc::LoadFile(data_ov033_021124e8);
-    mMeshCollider.SetFile(mc, mClsnMat, 0x1000, mAngleY, data_ov033_02111c1c);
+    mMeshCollider.SetFile(mc, mClsnMat, 0x1000, mAngle.y, data_ov033_02111c1c);
     mMeshCollider.Enable(this);
     mMinPosY = mPos.y - 0x3c000;
     return Event::GetBit(0xe) == 0;

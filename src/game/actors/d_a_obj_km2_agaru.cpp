@@ -69,7 +69,7 @@ s32 daObjKm2_Agaru_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov045_02113180);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov045_021125d0);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov045_021125d0);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 

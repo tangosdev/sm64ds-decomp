@@ -110,7 +110,7 @@ int daObjMcWater_c::InitResources() {
     UpdateClsnPosAndRot();
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(gMcWaterCollisionFile);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov009_02112c38);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov009_02112c38);
     }
     mMeshCollider.Enable(this);
     {

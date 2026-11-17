@@ -185,7 +185,7 @@ s32 daObjWlPolelift_c::CleanupResources()
 
 /* Rebuild the model matrix from the actor's Y rotation and position. */
 void daObjWlPolelift_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationY(&model.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&model.mat4x3, mAngle.y);
     model.mat4x3.m[9] = mPos.x >> 3;
     model.mat4x3.m[10] = mPos.y >> 3;
     model.mat4x3.m[11] = mPos.z >> 3;

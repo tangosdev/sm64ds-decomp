@@ -125,7 +125,7 @@ int daObjSlIceBlock_c::InitResources() {
             return 0;
         UpdateModelPosAndRotY();
         UpdateClsnPosAndRot();
-        mMeshCollider.SetFile((KCL_File *)data_ov027_02113be0.filePtr, mClsnMat, 0x1000, mAngleY,
+        mMeshCollider.SetFile((KCL_File *)data_ov027_02113be0.filePtr, mClsnMat, 0x1000, mAngle.y,
                               data_ov027_02113108);
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
         mMeshCollider.edgeContacts = false;

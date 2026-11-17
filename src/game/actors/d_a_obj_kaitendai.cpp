@@ -2,7 +2,7 @@
 /* The turntable platforms' shared base -- ov002/daObjKaitendai_c.
  * Abstract: slots 0 (InitResources) and 3 (CleanupResources) are pure.
  * Five leaves call InitResourcesFrom / CleanupResourcesFrom with their
- * own file tables. Setup seeds mPrevAngleZ from arg 3 (or mAngleZ when
+ * own file tables. Setup seeds mPrevAngleZ from arg 3 (or mAngle.z when
  * that is non-zero); Behavior advances mPrevAngleY by that increment.
  * No fields of its own; all five factories pass 0x320.
  *
@@ -63,7 +63,7 @@ s32 daObjKaitendai_c::Render() {
 /* ROM ordinal 4 -- vtable slot 6, ov002 0x020b6718. */
 s32 daObjKaitendai_c::Behavior() {
     mPrevAngleY += mPrevAngleZ;
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
     UpdateModelPosAndRotY();
     if (IsClsnInRangeOnScreen(0, 0))
         UpdateClsnPosAndRot();
@@ -80,14 +80,14 @@ int daObjKaitendai_c::InitResourcesFrom(ResourceDescriptor *descriptor, s16 angl
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x199, mAngle.y,
                           *descriptor->clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mPrevAngleZ = angle;
-    y = mAngleZ;
+    y = mAngle.z;
     if (y != 0) {
         mPrevAngleZ = y;
-        mAngleZ = 0;
+        mAngle.z = 0;
     }
     return 1;
 }

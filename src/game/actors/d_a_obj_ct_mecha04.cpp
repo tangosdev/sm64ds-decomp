@@ -107,10 +107,10 @@ void daObjCtMecha04_c::AfterClsnCallback(dBgW *collider, dActor_c *owner, dActor
 /* Inferred descriptive name. The collision callback supplies this conveyor as
  * owner and the actor whose X/Z position should advance with the belt. Each
  * axis moves by mBeltSpeed * 4 scaled by one sin/cos pair of FX_SinCosTable_,
- * indexed by (u16)mAngleY >> 4: [2i] for X, [2i + 1] for Z. Direct
+ * indexed by (u16)mAngle.y >> 4: [2i] for X, [2i + 1] for Z. Direct
  * actor.mPos.x/mPos.z stores differ; the PosX-derived pointer chain matches. */
 void daObjCtMecha04_c::MoveActorOnBelt(dActor_c &actor) {
-    u16 angleForX = (u16)mAngleY;
+    u16 angleForX = (u16)mAngle.y;
     int beltStepForX = mBeltSpeed << 2;
     int sinY = FX_SinIdx(angleForX >> 4);
     int deltaX = FX_MUL(beltStepForX, sinY);
@@ -118,7 +118,7 @@ void daObjCtMecha04_c::MoveActorOnBelt(dActor_c &actor) {
     int oldX = *actorPosX;
     *actorPosX = oldX + deltaX;
 
-    u16 angleForZ = (u16)mAngleY;
+    u16 angleForZ = (u16)mAngle.y;
     int beltStepForZ = mBeltSpeed << 2;
     s32 *actorPosZ = actorPosX + 2;
     int cosY = FX_CosIdx(angleForZ >> 4);
@@ -161,7 +161,7 @@ int daObjCtMecha04_c::InitResources() {
 
     variant = mVariant;
     collisionFile = dBgW_Kc::LoadFile(*data_ov065_0211d198[variant][0]);
-    mMeshCollider.SetFile((KCL_File *)collisionFile, mClsnMat, 0x199, mAngleY,
+    mMeshCollider.SetFile((KCL_File *)collisionFile, mClsnMat, 0x199, mAngle.y,
                           *data_ov065_0211d19c[variant][0]);
 
     mMeshCollider.SetStoodOnCallback(&daObjCtMecha04_c::AfterClsnCallback);
@@ -250,7 +250,7 @@ void daObjCtMecha04_c::UpdateShadow() {
     if (absHeightDiff > 0x7d0000)
         return;
 
-    Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
     mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = (mGroundY + 0x1000) >> 3;
     mShadowMat.m[11] = mPos.z >> 3;

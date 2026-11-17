@@ -10,7 +10,7 @@
  * slow hand (yaw speed 200), 1 the fast hand (400), 2 the random hand,
  * 3 the stopped hand. The speed lives in mPrevAngleZ, the random-hand
  * target in mPrevAngleX, and the accumulated yaw in mPrevAngleY, which
- * is copied to mAngleY for the model and the mesh.
+ * is copied to mAngle.y for the model and the mesh.
  *
  * The destructor pair comes off the inline ~daObjCtKaitendai_c() in the
  * header. Source order is reverse ROM order (2004/b56 emits .text back
@@ -23,7 +23,7 @@
  *   mPrevAngleX = mPrevAngleX * -1 comes out 0x12c, and
  *   mPrevAngleY = mPrevAngleY + mPrevAngleZ comes out 0x134, against
  *   Behavior's 0x138. The pointer is what keeps the halfword multiply
- *   and the reload into mAngleY.
+ *   and the reload into mAngle.y.
  * - data_ov065_0211d334 (the 200/400 speeds) and data_ov065_0211d35c
  *   (the two resource rows) are not this TU's data. Neither are
  *   g_profile_CT_MECHA06 / CT_MECHA07.
@@ -126,7 +126,7 @@ int daObjCtKaitendai_c::InitResources() {
     UpdateClsnPosAndRot();
 
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(*data_ov065_0211d35c[mVariant].collision), mClsnMat,
-                          0x199, mAngleY, *data_ov065_0211d35c[mVariant].clps);
+                          0x199, mAngle.y, *data_ov065_0211d35c[mVariant].clps);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
@@ -175,7 +175,7 @@ int daObjCtKaitendai_c::Behavior() {
         s16 *yaw = &mPrevAngleY;
         *yaw = (*yaw + mPrevAngleZ);
     }
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
 
     UpdateModelPosAndRotY();
     UpdateShadow();

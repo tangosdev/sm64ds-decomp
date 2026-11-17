@@ -186,9 +186,9 @@ int daHyuhyu_c::Behavior() {
         if (state->execute != 0)
             (this->*state->execute)();
     }
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngleX;
+    mAngle.y = mPrevAngleY;
+    mAngle.z = mPrevAngleZ;
     /* Fall, no faster than mTerminalVelocity. The cartridge reloads and
        rewrites mSpeed.z here too (a whole-vector store, most likely); a plain
        clamp misses. */
@@ -244,7 +244,7 @@ void daHyuhyu_c::UpdateModelTransform() {
     Vector3 pos;
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = data_020a0e68;
 }
 
@@ -312,9 +312,9 @@ int daHyuhyu_c::StateBlowMain() {
         func_02012694(0x164, &mCamSpacePos);
 
     if ((u16)(mAnmModel.currFrame >> 12) > 30) {
-        rot.x = FX_SinIdx((u16)mAngleY >> 4);
+        rot.x = FX_SinIdx((u16)mAngle.y >> 4);
         rot.y = 0;
-        rot.z = FX_CosIdx((u16)mAngleY >> 4);
+        rot.z = FX_CosIdx((u16)mAngle.y >> 4);
 
         pos.y = pos.y + 0x28000;
 

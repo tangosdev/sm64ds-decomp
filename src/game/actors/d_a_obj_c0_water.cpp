@@ -137,7 +137,7 @@ int daObjC0Water_c::InitResources() {
     mTextureTransformer.SetFile(data_ov012_02111c24, 0, 0x1000, 0);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile((KCL_File *)data_ov012_021124c8.filePtr, mClsnMat, 0x1000, mAngleY,
+    mMeshCollider.SetFile((KCL_File *)data_ov012_021124c8.filePtr, mClsnMat, 0x1000, mAngle.y,
                           data_ov012_02111c90);
     mMeshCollider.Enable(this);
     mLoweredY = mPos.y - 0x4b0000;

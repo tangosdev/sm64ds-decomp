@@ -109,7 +109,7 @@ int daObjWc_Mizu_c::InitResources() {
     UpdateClsnPosAndRot();
 
     k = dBgW_Kc::LoadFile(daObjWc_Obj07_c_ClsnFile);
-    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x1000, mAngleY, data_ov029_02112fec);
+    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x1000, mAngle.y, data_ov029_02112fec);
     mMeshCollider.Enable(this);
 
     mTrueAreaID = mAreaId;
@@ -198,7 +198,7 @@ void daObjWc_Mizu_c::UpdateClsnTransform() {
     mClsnMat.m[9] = mPos.x;
     mClsnMat.m[10] = mWaterHeight;
     mClsnMat.m[11] = mPos.z;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 /* -------------------------------------------------------------------------- */

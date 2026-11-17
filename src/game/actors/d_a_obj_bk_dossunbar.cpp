@@ -115,7 +115,7 @@ s32 daObjBk_Dossunbar_c::InitResources() {
     int j = mVariant * 0xc;
     KCL_File *kclFile = dBgW_Kc::LoadFile(**(SharedFilePtr **)((char *)&data_ov015_02114538 + j));
     (&mMeshCollider)
-        ->dBgW_KcMbg::SetFile((kclFile), *(&mClsnMat), 0x1000, mAngleY,
+        ->dBgW_KcMbg::SetFile((kclFile), *(&mClsnMat), 0x1000, mAngle.y,
                               *(CLPS_Block *)(*(void **)((char *)&data_ov015_0211453c + j)));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
 

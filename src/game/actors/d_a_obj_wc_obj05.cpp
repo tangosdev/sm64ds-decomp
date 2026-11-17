@@ -92,7 +92,7 @@ s32 daObjWc_Obj05_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     KCL_File *mc = dBgW_Kc::LoadFile(gWcObj05CollisionFile);
-    mMeshCollider.SetFile(mc, mClsnMat, 0x1000, mAngleY, data_ov029_0211306c);
+    mMeshCollider.SetFile(mc, mClsnMat, 0x1000, mAngle.y, data_ov029_0211306c);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     mPrevPlayerOnTop = 0;
@@ -157,7 +157,7 @@ s32 daObjWc_Obj05_c::Behavior() {
     if (IsClsnInRange(0, 0)) {
         UpdateClsnPosAndRot();
     }
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
     mPlayerOnTop = 0;
     return 1;
 }

@@ -924,7 +924,7 @@ void daKrb_c::func_ov084_02129ed4() {
     }
     func_ov002_020aea30((dActor_c *)other, &mWithMeshClsn);
     if (turnAround != 0) {
-        mAngleY = (mPrevAngleY + 0x8000); /* half a turn */
+        mAngle.y = (mPrevAngleY + 0x8000); /* half a turn */
     }
     if (mGoombaType != daKrb_c::GOOMBA_KING_MINION)
         return;
@@ -938,10 +938,10 @@ void daKrb_c::func_ov084_02129ed4() {
 }
 
 /* Per-frame model, shadow and cap placement. Rebuilds the model matrix from
- * mAngleY, sets its translation to the position >> 3, and draws the drop
+ * mAngle.y, sets its translation to the position >> 3, and draws the drop
  * shadow (radius 80 * mScale.x; depth 30.0 on the ground, 150.0 in the air)
  * unless the actor is in Yoshi's mouth (mFlags 0x40000). Then the cap is attached (UpdateCapPos)
- * 108.0 above the origin and 10 * (sin, cos) of mAngleY out along the
+ * 108.0 above the origin and 10 * (sin, cos) of mAngle.y out along the
  * heading. UpdateCapPos is handed temporary copies of both, the rotation
  * built first (mwcc evaluates arguments right to left); passing pos and
  * rotation themselves drops the copies. */
@@ -949,7 +949,7 @@ void daKrb_c::func_ov084_0212a580() {
     Vector3_16 rotation;
     Vector3 pos;
 
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.t.x = mPos.x >> 3;
     mAnmModel.mat4x3.t.y = mPos.y >> 3;
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
@@ -964,8 +964,8 @@ void daKrb_c::func_ov084_0212a580() {
     pos.x = 0;
     pos.z = 0;
     pos.y = 0x6c000;     /* 108.0 */
-    pos.x += FX_SinIdx((u16)mAngleY >> 4) * 10;
-    pos.z += FX_CosIdx((u16)mAngleY >> 4) * 10;
+    pos.x += FX_SinIdx((u16)mAngle.y >> 4) * 10;
+    pos.z += FX_CosIdx((u16)mAngle.y >> 4) * 10;
     UpdateCapPos(Vector3(pos), Vector3_16(rotation));
 }
 
@@ -1019,7 +1019,7 @@ void daKrb_c::ActTumble() {
         mTargetHorzSpeed = data_ov084_02130228[mGoombaType];
         mWithMeshClsn.ClearLimMovFlag();
         {
-            mPrevAngleY = mAngleY;
+            mPrevAngleY = mAngle.y;
             mdCcAc_c.flags &= ~0x20000;
         }
         dExtAnmMaterial_c::Prepare(*(BMD_File *)(data_ov084_02130cf8.filePtr),
@@ -1120,13 +1120,13 @@ void daKrb_c::ActJump() {
     } else {
         ApproachLinear(mPrevAngleY, mTargetAngleY, 0x800);
     }
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
 }
 
 /* STATE_ATTACKED_MARIO: begin a hop (BeginJump, which enters
  * STATE_JUMP). A KURIBO_L then scales its vertical speed by
  * 0x1800 / 0x1000 = 1.5. The target heading becomes the spawn heading
- * (mInitAngleY), MOVE_AVOIDING is cleared, and mAngleY follows mPrevAngleY.
+ * (mInitAngleY), MOVE_AVOIDING is cleared, and mAngle.y follows mPrevAngleY.
  * N64: goomba_act_attacked_mario's non-tiny branch -- goomba_begin_jump, a new
  * oGoombaTargetYaw, oGoombaTurningAwayFromWall = FALSE. Its tiny branch (the
  * Goomba dies) is in func_ov084_02129ed4 here, where KURIBO_S removes itself
@@ -1141,7 +1141,7 @@ void daKrb_c::ActAttackedMario() {
     }
     mTargetAngleY = mInitAngleY;
     mMoveFlags &= ~daKrb_c::MOVE_AVOIDING;
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
 }
 
 /* STATE_WALK for an ordinary Goomba (not a king minion): wander and chase.
@@ -1311,7 +1311,7 @@ void daKrb_c::func_ov084_0212af74() {
             DecIfAbove0_Byte(&mFreeRoamTimer) != 0 || dist > 0x3e8000) {
             ang = HorzAngleToCPlayer();
             flag = 1;
-            if (DistToCPlayer() < 0x3e8000 && AngleDiff(ang, mAngleY) < 0x3000) {
+            if (DistToCPlayer() < 0x3e8000 && AngleDiff(ang, mAngle.y) < 0x3000) {
                 mInitAngleY = HorzAngleToCPlayer();
                 mTargetAngleY = mInitAngleY;
                 lvl = mGoombaType;
@@ -1368,7 +1368,7 @@ void daKrb_c::func_ov084_0212af74() {
 }
 
 /* STATE_WALK handler: the king's minions follow the king, everything else
- * wanders / chases. mAngleY then follows mPrevAngleY.
+ * wanders / chases. mAngle.y then follows mPrevAngleY.
  * N64: goomba_act_walk (func_ov084_0212abd4 holds its body; its target picker
  * func_ov084_02129cf4 takes treat_far_home_as_mario's 1000.0). The minion
  * branch is DS-only. */
@@ -1377,7 +1377,7 @@ void daKrb_c::ActWalk() {
         func_ov084_0212af74();
     else
         func_ov084_0212abd4();
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
 }
 
 /* Returns an fx32 value by size: 65.0 for KURIBO, 150.0 for KURIBO_L and
@@ -1558,9 +1558,9 @@ int daKrb_c::Behavior() {
                 mPos.x = mHomePos.x;
                 mPos.y = mHomePos.y;
                 mPos.z = mHomePos.z;
-                mAngleX = 0;
-                mAngleY = 0;
-                mAngleZ = 0;
+                mAngle.x = 0;
+                mAngle.y = 0;
+                mAngle.z = 0;
                 RespawnIfHasCap();
                 func_ov084_021296cc();
             }

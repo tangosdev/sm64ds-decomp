@@ -212,7 +212,7 @@ void daSnowball_c::UpdateModelMatrix() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3 = data_020a0e68;
 }
 
@@ -239,7 +239,7 @@ int daSnowball_c::Render() {
  *     record InitResources installs), if it has one;
  *   - mSpeed.y = max(mSpeed.y + mVertAccel, mTerminalVelocity), i.e. fall
  *     under gravity but not faster than the terminal velocity (both negative);
- *   - move by speed, update the mesh collision, copy mPrevAngleY into mAngleY,
+ *   - move by speed, update the mesh collision, copy mPrevAngleY into mAngle.y,
  *     rebuild the model matrix;
  *   - clear the cylinder and, if there is a closest player and it is not
  *     vanished (mIsVanish), re-register it with dCcAc_c::Update.
@@ -260,7 +260,7 @@ int daSnowball_c::Behavior() {
     mSpeed.z = tmp;
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
     UpdateModelMatrix();
     mdCcAc_c.Clear();
     daPly_c *player = ClosestPlayer();
@@ -290,7 +290,7 @@ int daSnowball_c::InitResources() {
     mSpawnPos.y = mPos.y;
     mSpawnPos.z = mPos.z;
     mPos.y += 0x32000;
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
     mWithMeshClsn.Init(this, 0x14000, 0x14000, 0, 0);
 
     SetState(&data_ov081_02128eb4);

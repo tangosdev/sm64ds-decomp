@@ -172,8 +172,8 @@ int daPgBby_c::StateKeepDistanceUpdate() {
     switch (mSubState) {
     case 0:
         angle = (Vec3_HorzAngle(&mPos, &player->mPos) + 0x8000);
-        ApproachLinear(mAngleY, angle, 0x514);
-        mPrevAngleY = mAngleY;
+        ApproachLinear(mAngle.y, angle, 0x514);
+        mPrevAngleY = mAngle.y;
         mHorzSpeed = 0x5000;
         if (dist >= 0x1c2000) {
             mSubState = 2;
@@ -181,8 +181,8 @@ int daPgBby_c::StateKeepDistanceUpdate() {
         break;
     case 1:
         angle = Vec3_HorzAngle(&mPos, &player->mPos);
-        ApproachLinear(mAngleY, angle, 0x514);
-        mPrevAngleY = mAngleY;
+        ApproachLinear(mAngle.y, angle, 0x514);
+        mPrevAngleY = mAngle.y;
         mHorzSpeed = 0x5000;
         if (dist > 0x384000) {
             mSubState = 2;
@@ -281,8 +281,8 @@ int daPgBby_c::StateHeldEnter() {
 /* State 2, update: face where the carrier faces; once no longer held, drop
    to the ground under the carrier and return to state 0. */
 int daPgBby_c::StateHeldUpdate() {
-    mAngleY = mCarrier->mAngleY;
-    mPrevAngleY = mAngleY;
+    mAngle.y = mCarrier->mAngle.y;
+    mPrevAngleY = mAngle.y;
     u32 flags = mFlags;
     int held = (flags & 0x100) != 0;
     if (held) {
@@ -329,14 +329,14 @@ int daPgBby_c::StateWalkToMotherEnter() {
    units from her. */
 int daPgBby_c::StateWalkToMotherUpdate() {
     int dist = Vec3_Dist(&mPos, &mMother->mPos);
-    short tgt = mAngleY;
+    short tgt = mAngle.y;
     if (dist > 0xdc000) {
         tgt = Vec3_HorzAngle(&mPos, &mMother->mPos);
     } else if (dist < 0xc8000) {
         tgt = (Vec3_HorzAngle(&mPos, &mMother->mPos) + 0x8000);
     }
-    ApproachLinear(mAngleY, tgt, 0x2bc);
-    mPrevAngleY = mAngleY;
+    ApproachLinear(mAngle.y, tgt, 0x2bc);
+    mPrevAngleY = mAngle.y;
     mAnmModel.Advance();
     UpdatePos(&mCylClsn);
     UpdateFloorAndWalls(&mWithMeshClsn);
@@ -440,11 +440,11 @@ int daPgBby_c::func_ov072_02121368()
 
     eater = mEatingPlayer;
     posX = &mPos.x;
-    angle = eater->mAngleY;
+    angle = eater->mAngle.y;
     dist = 0x50000;
     round = 0x800;
-    mAngleY = angle;
-    angle = mAngleY;
+    mAngle.y = angle;
+    angle = mAngle.y;
     posY = &mPos.y;
     posZ = &mPos.z;
     mPrevAngleY = angle;
@@ -462,12 +462,12 @@ int daPgBby_c::func_ov072_02121368()
         mPos.z = srcZ;
     }
 
-    index = mAngleY;
+    index = mAngle.y;
     angle = FX_SinIdx(index >> 4);
     *posX = *posX + (int)(((s64)angle * dist + round) >> 12);
     *posY = *posY + dist;
 
-    index = mAngleY;
+    index = mAngle.y;
     angle = FX_CosIdx(index >> 4);
     *posZ = *posZ + (int)(((s64)angle * dist + round) >> 12);
 
@@ -525,7 +525,7 @@ void daPgBby_c::UpdateModelAndShadow() {
         carry = UpdateCarry(*mCarrier, gPenguinBabyCarryOffsets[idx]);
         *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)carry;
     } else {
-        Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+        Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
         mAnmModel.mat4x3.t.x = mPos.x >> 3;
         mAnmModel.mat4x3.t.y = mPos.y >> 3;
         mAnmModel.mat4x3.t.z = mPos.z >> 3;

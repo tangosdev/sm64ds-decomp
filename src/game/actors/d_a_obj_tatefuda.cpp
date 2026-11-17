@@ -202,7 +202,7 @@ int daObjTatefuda_c::InitResources()
     UpdateShadowMatrix();
 
     KCL_File *kf = dBgW_Kc::LoadFile(SignPost_ClsnFile);
-    mMeshCollider.SetFile(kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
+    mMeshCollider.SetFile(kf, mClsnMat, 0x199, mAngle.y, data_ov002_0210d714);
 
     mdCcAc_c.Init(this, 0x64000, 0x64000, 0x4800002, 0x41000);
 
@@ -210,9 +210,9 @@ int daObjTatefuda_c::InitResources()
     mHomePos.x = mPos.x;
     mHomePos.y = mPos.y;
     mHomePos.z = mPos.z;
-    mHomeAngleX = mAngleX;
-    mHomeAngleY = mAngleY;
-    mHomeAngleZ = mAngleZ;
+    mHomeAngleX = mAngle.x;
+    mHomeAngleY = mAngle.y;
+    mHomeAngleZ = mAngle.z;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
 
@@ -474,7 +474,7 @@ void daObjTatefuda_c::Thrown()
     unsigned id;
 
     {
-        s16* pa = &mAngleX;
+        s16* pa = &mAngle.x;
         *pa = *pa + 0x2000;
     }
     UpdatePos(0);
@@ -546,7 +546,7 @@ void daObjTatefuda_c::InitDropped()
  * water. Otherwise rebuild the model matrix (RebuildModelMatrix) and keep the
  * mesh collider off. */
 void daObjTatefuda_c::Dropped(){
-    ApproachLinear(mAngleX, 0x4000, 0x1000);
+    ApproachLinear(mAngle.x, 0x4000, 0x1000);
     UpdatePos(0);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     if (mWithMeshClsn.IsOnGround() || mWithMeshClsn.IsOnWall() || mWithMeshClsn.TouchesWater()) {
@@ -661,12 +661,12 @@ void daObjTatefuda_c::Talk()
     tz = mPos.z;
     tgt.z = tz;
 
-    ang = (unsigned short)mAngleY;
+    ang = (unsigned short)mAngle.y;
     sinV = FX_SinIdx(ang >> 4);
     tx = tx + FX_MUL(scale, sinV);
     tgt.x = tx;
 
-    ang = (unsigned short)mAngleY;
+    ang = (unsigned short)mAngle.y;
     cosV = FX_CosIdx(ang >> 4);
     tz = tz + FX_MUL(scale, cosV);
     tgt.z = tz;
@@ -688,7 +688,7 @@ void daObjTatefuda_c::Talk()
                 talkStep = &mTalkStep;
                 *talkStep = (*talkStep + 1);
             } else if (ApproachLinear(
-                           player->mAngleY,
+                           player->mAngle.y,
                            Vec3_HorzAngle(&plPos, &tgt),
                            0x800)
                        != 0) {
@@ -704,7 +704,7 @@ void daObjTatefuda_c::Talk()
             }
             break;
         case 2:
-            if (ApproachLinear(player->mAngleY, (mAngleY + 0x8000), 0x800) != 0) {
+            if (ApproachLinear(player->mAngle.y, (mAngle.y + 0x8000), 0x800) != 0) {
                 if (mPoundsLeft == 1) {
                     if (func_ov002_020bec84(player, 1) != 0
                         || func_ov002_020bec84(player, 0) != 0) {
@@ -777,7 +777,7 @@ int daObjTatefuda_c::TryStartTalk() {
         return 0;
     success: {
         int ang = Vec3_HorzAngle(&mPos, &other->mPos);
-        if (AngleDiff(ang, mAngleY) > 0x4000)
+        if (AngleDiff(ang, mAngle.y) > 0x4000)
             return 0;
         mTalkingPlayer = other;
         if (other->StartTalk(*this, false) == 0)
@@ -820,7 +820,7 @@ void daObjTatefuda_c::CheckGrabOrBreak() {
         int ang = Vec3_HorzAngle(&mPos, &other->mPos);
         if (other->param1 != 2)
             return;
-        if (AngleDiff(ang, mAngleY) <= 0x4000)
+        if (AngleDiff(ang, mAngle.y) <= 0x4000)
             return;
     }
     if ((mdCcAc_c.hitFlags & 0x1000) == 0)
@@ -881,13 +881,13 @@ void daObjTatefuda_c::Kill()
  * proved it wrong tree-wide (36bc6d1df). Same body shape
  * src/game/actors/d_a_obj_maruta.cpp records for its own
  * slot 27: dBgActor_c::KillByMegaChar is non-virtual, so the unqualified
- * call is already the direct `bl` the ROM has. mAngleY = mPrevAngleY is
+ * call is already the direct `bl` the ROM has. mAngle.y = mPrevAngleY is
  * dActor_c's own field pair (include/dActor_c.h, 0x08e/0x094). */
 void daObjTatefuda_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     func_02012694(0x1d, &mCamSpacePos);
     KillByMegaChar(player);
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
 }
 
 /* daObjTatefuda_c::OnGroundPounded -- vtable slot 21, ov002 0x020bb27c.
@@ -957,7 +957,7 @@ int daObjTatefuda_c::OnAttacked1(dActor_c &other)
  * the holder is front-sliding, or has lost its grabbed object while the body
  * animation's currFrame satisfies (frame << 4) >> 16 < 0xe. The X angle
  * approaches data_ov002_020ff0d0[r4] by 0x1000 per call;
- * the sign copies the holder's Y angle (into mAngleY and mPrevAngleY); the
+ * the sign copies the holder's Y angle (into mAngle.y and mPrevAngleY); the
  * matrix is built from a translation, a pivot offset of 0x8c00 up and back, the
  * sign's rotation (Matrix4x3_ApplyInPlaceToRotationXYZExt), and a per-pose offset from the
  * two-entry Vector3 table at data_ov002_020ff0d4 (the ROM's pool holds
@@ -978,7 +978,7 @@ void daObjTatefuda_c::AttachToHolder() {
             r4 = 1;
     }
 
-    ApproachLinear(mAngleX, data_ov002_020ff0d0[r4], 0x1000);
+    ApproachLinear(mAngle.x, data_ov002_020ff0d0[r4], 0x1000);
 
     v.x = 0;
     v.y = 0;
@@ -989,12 +989,12 @@ void daObjTatefuda_c::AttachToHolder() {
     v.y = data_020a0e68.t.y;
     v.z = data_020a0e68.t.z;
 
-    mPrevAngleY = mHoldingPlayer->mAngleY;
-    mAngleY = mPrevAngleY;
+    mPrevAngleY = mHoldingPlayer->mAngle.y;
+    mAngle.y = mPrevAngleY;
 
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x8c00, 0);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, data_ov002_020ff0d4[r4].x,
                                         data_ov002_020ff0d4[r4].y, data_ov002_020ff0d4[r4].z);
@@ -1023,7 +1023,7 @@ void daObjTatefuda_c::RebuildModelMatrix() {
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x8c00, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
@@ -1033,7 +1033,7 @@ void daObjTatefuda_c::RebuildModelMatrix() {
  * its translation row; units are position >> 3). */
 void daObjTatefuda_c::UpdateShadowMatrix()
 {
-    Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
     mShadowMat.t.x = mPos.x >> 3;
     mShadowMat.t.y = mPos.y >> 3;
     mShadowMat.t.z = mPos.z >> 3;
@@ -1057,9 +1057,9 @@ void daObjTatefuda_c::Reset()
   mPos.x = mHomePos.x;
   mPos.y = mHomePos.y;
   mPos.z = mHomePos.z;
-  mAngleX = mHomeAngleX;
-  mAngleY = mHomeAngleY;
-  mAngleZ = mHomeAngleZ;
+  mAngle.x = mHomeAngleX;
+  mAngle.y = mHomeAngleY;
+  mAngle.z = mHomeAngleZ;
   mPoundsLeft = 2;
   UpdateModelPosAndRotY();
   UpdateClsnPosAndRot();

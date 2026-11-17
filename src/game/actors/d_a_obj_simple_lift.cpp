@@ -177,9 +177,9 @@ int daObjSimpleLift_c::InitResources() {
     void *bmd = dExtSimpleModel_c::LoadFile(*data_ov091_02135024[mVariant].modelFile);
     mModel.SetFile((BMD_File *)bmd, 1, -1);
 
-    mPrevAngleY = mAngleY + data_ov091_02134514[mVariant];
-    if (mAngleX != 0)
-        mPrevAngleY = mAngleY + mAngleX;
+    mPrevAngleY = mAngle.y + data_ov091_02134514[mVariant];
+    if (mAngle.x != 0)
+        mPrevAngleY = mAngle.y + mAngle.x;
 
     mMoveTimer = data_ov091_02134504[mVariant];
     mHorzSpeed = 0xa000;
@@ -194,10 +194,10 @@ int daObjSimpleLift_c::InitResources() {
     int v = mVariant;
     if (v == 6) {
         KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov091_02135024[v].clsnFile);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *data_ov091_02135024[v].clps);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, *data_ov091_02135024[v].clps);
     } else {
         KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov091_02135024[v].clsnFile);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *data_ov091_02135024[v].clps);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, *data_ov091_02135024[v].clps);
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     return 1;

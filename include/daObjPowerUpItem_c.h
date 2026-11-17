@@ -29,7 +29,7 @@
  * Everything below 0x0d4 duplicated dActor_c's own fields under placeholder
  * names -- dActor_c ends at exactly 0x0d4. Consumer fields were repointed to
  * the inherited dActor_c/fBase_c names: mParam -> param1, unk_08e ->
- * mAngleY, unk_09c -> mVertAccel, unk_0a0 -> mTerminalVelocity, unk_0b0 ->
+ * mAngle.y, unk_09c -> mVertAccel, unk_0a0 -> mTerminalVelocity, unk_0b0 ->
  * mFlags (mPos and mScale already shared dActor_c's names).
  *
  * mShadowModel was mistyped `u8` at 0x174 in the generated header --

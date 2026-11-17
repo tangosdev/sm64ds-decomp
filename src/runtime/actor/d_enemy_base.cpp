@@ -241,7 +241,7 @@ void dEnemyBase_c::func_ov002_020ae968(dActor_c *arg) {
 }
 
 void dEnemyBase_c::func_ov002_020ae954(dActor_c *a, dBgCh_Actr *) {
-    mPrevAngleY = a->mAngleY;
+    mPrevAngleY = a->mAngle.y;
     func_ov002_020ae968(a);
 }
 
@@ -262,13 +262,13 @@ void dEnemyBase_c::func_ov002_020ae8b8(dActor_c *arg) {
 }
 
 void dEnemyBase_c::func_ov002_020ae890(dActor_c *a, dBgCh_Actr *) {
-    mPrevAngleY = a->mAngleY;
+    mPrevAngleY = a->mAngle.y;
     func_ov002_020ae8b8(a);
     Sound::PlayBank0(0xa, mCamSpacePos);
 }
 
 void dEnemyBase_c::func_ov002_020ae87c(dActor_c *a, dBgCh_Actr *) {
-    mPrevAngleY = a->mAngleY;
+    mPrevAngleY = a->mAngle.y;
     func_ov002_020ae8b8(a);
 }
 
@@ -518,7 +518,7 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
                 mPos.z = o2->z;
                 mPos.y += 0x32000;
                 {
-                    u16 ang = mEatingPlayer->mAngleY;
+                    u16 ang = mEatingPlayer->mAngle.y;
                     mPos.x += FX_MUL(FX_SinIdx(ang >> 4), 0x32000);
                     mPos.z += FX_MUL(FX_CosIdx(ang >> 4), 0x32000);
                 }
@@ -558,7 +558,7 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
             mSpeed.z += mFloorNormal.z << 3;
             mHorzSpeed = Vec3_HorzLen(&mSpeed);
         }
-        mAngleY = mPrevAngleY;
+        mAngle.y = mPrevAngleY;
         if (lim == 0)
             clsn.ClearLimMovFlag();
         return 3;
@@ -617,9 +617,9 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
         src.z = pv->z;
     }
 
-    dirvec[0] = FX_SinIdx((u16)mAngleY >> 4);
+    dirvec[0] = FX_SinIdx((u16)mAngle.y >> 4);
     dirvec[1] = 0;
-    dirvec[2] = FX_CosIdx((u16)mAngleY >> 4);
+    dirvec[2] = FX_CosIdx((u16)mAngle.y >> 4);
 
     if (p != 0) {
         Vector3 delta;
@@ -727,13 +727,13 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
     }
 
     if (&anim != 0) {
-        mAngleX += mSpinRateX;
-        mAngleY += mSpinRateY;
-        mAngleZ += mSpinRateZ;
+        mAngle.x += mSpinRateX;
+        mAngle.y += mSpinRateY;
+        mAngle.z += mSpinRateZ;
         Vec3_Asr(&v, &mPos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, OnAimedAtWithEgg() >> 3, 0);
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-OnAimedAtWithEgg()) >> 3, 0);
         /* Vector3's constructor makes Matrix4x3's own assignment copy the
            rotation and the translation separately (.text grows by 0x1c

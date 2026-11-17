@@ -473,7 +473,7 @@ void da1up_c::UpdateLaunchArc() {
 /* -------------------------------------------------------------------------- */
 /* Per-frame model matrix and drop shadow, run at the end of every Behavior,
    including the frames UpdateYoshiEat returns nonzero. mModel's matrix gets
-     types 11 and 12: a Y rotation by mAngleY and translation mPos >> 3;
+     types 11 and 12: a Y rotation by mAngle.y and translation mPos >> 3;
      other types:     translation mPos >> 3 only (through Vec3_Asr).
    Nothing more happens while mShown is 0. Otherwise the shadow size is chosen and
    handed to dActor_c::DropShadowRadHeight (shadow, matrix, radius, depth,
@@ -494,7 +494,7 @@ void da1up_c::UpdateModelAndShadow() {
     struct Vector3 v1;
 
     if ((unsigned)(mMushroomType - 0xb) <= 1) {
-        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
         mModel.mat4x3.m[9] = mPos.x >> 3;
         mModel.mat4x3.m[10] = mPos.y >> 3;
         mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -650,10 +650,10 @@ void da1up_c::UpdateSpawner() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Dispatch-table index 12 (MUSHROOM_SPIN_TRIGGER_FOR_7). Turns mAngleY by 0xc00
+/* Dispatch-table index 12 (MUSHROOM_SPIN_TRIGGER_FOR_7). Turns mAngle.y by 0xc00
    (16.875 degrees) a frame, then runs index 8's handler. */
 void da1up_c::UpdateSpinTriggerFor7() {
-    mAngleY += 0xc00;
+    mAngle.y += 0xc00;
     UpdateTriggerFor7();
 }
 
@@ -715,10 +715,10 @@ void da1up_c::UpdateHiddenChase() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Dispatch-table index 11 (MUSHROOM_SPIN_TRIGGER_FOR_5). Turns mAngleY by 0xc00
+/* Dispatch-table index 11 (MUSHROOM_SPIN_TRIGGER_FOR_5). Turns mAngle.y by 0xc00
    (16.875 degrees) a frame, then runs index 6's handler. */
 void da1up_c::UpdateSpinTriggerFor5() {
-    mAngleY += 0xc00;
+    mAngle.y += 0xc00;
     UpdateTriggerFor5();
 }
 

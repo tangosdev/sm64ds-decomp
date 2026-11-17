@@ -19,7 +19,7 @@
 // - Throw's spawn id stays `py ? 0x137 : 0x137`.
 // - LAUND() in func_ov080_02124088 keeps the cylinder flags, mFlags and
 //   mTimesHit addresses opaque.
-// - Throw reads mAngleX/Y/Z as unsigned short. Hidden reads mHasTurn as
+// - Throw reads mAngle.x/.y/.z as unsigned short. Hidden reads mHasTurn as
 //   signed char.
 // - The model and animation handles take SharedFilePtr's fileID, numRefs
 //   and filePtr. File ids: mole model
@@ -166,7 +166,7 @@ void daChoropu_c::func_ov080_02123860()
  *
  * dExtFrameCtrl_c file 0x2d3 (data_ov080_021283d0). Plays the animation out and then
  * goes to state 5 (Leap); it goes there early when the nearest daPly_c is within a
- * quarter turn (< 0x4000 = 90 degrees) of the way the mole faces (mAngleY) and
+ * quarter turn (< 0x4000 = 90 degrees) of the way the mole faces (mAngle.y) and
  * less than 500 units (0x1f4000) away horizontally. With no daPly_c it just waits for the
  * animation to end. */
 void daChoropu_c::func_ov080_02123924()
@@ -186,7 +186,7 @@ void daChoropu_c::func_ov080_02123924()
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];
-        if ((short)AngleDiff(mAngleY, Vec3_HorzAngle(&mPos, &v)) >= 0x4000)
+        if ((short)AngleDiff(mAngle.y, Vec3_HorzAngle(&mPos, &v)) >= 0x4000)
             return;
         if (Vec3_HorzDist(&mPos, &v) >= 0x1f4000)
             return;
@@ -199,11 +199,11 @@ void daChoropu_c::func_ov080_02123924()
  *
  * dExtFrameCtrl_c file 0x2d5 (data_ov080_021283e0). When the animation steps across
  * frame 10 it spawns a daChoro_Rock_c (actor 0x137, spawn parameter 0 = the big
- * rock) 80 units out from the mole along (mAngleY - 0x4000), a quarter turn off the way it
+ * rock) 80 units out from the mole along (mAngle.y - 0x4000), a quarter turn off the way it
  * faces, looked up in the
  * sine/cosine pair table FX_SinCosTable_ (entries are fx16, indexed by angle >> 4),
- * 10 units (0xa000) above its position, with the angle triple (mAngleX, mAngleY +
- * 0x400, mAngleZ) and the mole's area. The rock is then given horizontal speed
+ * 10 units (0xa000) above its position, with the angle triple (mAngle.x, mAngle.y +
+ * 0x400, mAngle.z) and the mole's area. The rock is then given horizontal speed
  * 30 units/frame (0x1e000) and vertical speed 4 units (0x4000) plus 4% of the
  * distance to the nearest daPly_c (that distance capped at 600 units = 0x258000),
  * and the sound effect 0xd2 plays at the mole.
@@ -222,12 +222,12 @@ void daChoropu_c::func_ov080_02123a34()
         int px, py, pz;
         Vector3_16 *pAng = &v16;
 
-        ax = *(unsigned short *)&mAngleX;
-        ay = *(unsigned short *)&mAngleY;
+        ax = *(unsigned short *)&mAngle.x;
+        ay = *(unsigned short *)&mAngle.y;
         v16.y = (short)ay;
         v16.x = (short)ax;
         {
-            unsigned short z = *(unsigned short *)&mAngleZ;
+            unsigned short z = *(unsigned short *)&mAngle.z;
             pAng->z = z;
             short yv = (short)v16.y;
             px = mPos.x;
@@ -241,10 +241,10 @@ void daChoropu_c::func_ov080_02123a34()
             pos.y = py + 0xa000;
         }
 
-        s = FX_SinIdx((u16)(s16)(mAngleY - 0x4000) >> 4);
+        s = FX_SinIdx((u16)(s16)(mAngle.y - 0x4000) >> 4);
         pos.x = s * (short)80 + px;
 
-        s = FX_CosIdx((u16)(s16)(mAngleY - 0x4000) >> 4);
+        s = FX_CosIdx((u16)(s16)(mAngle.y - 0x4000) >> 4);
         pos.z = s * (short)80 + pz;
 
         a = dActor_c::Spawn(
@@ -354,7 +354,7 @@ void daChoropu_c::func_ov080_02123c24()
             pos.y = pb[1];
             pos.z = pb[2];
             horz = Vec3_HorzAngle(&mPos, &pos);
-            diff = (short)AngleDiff(mAngleY, horz);
+            diff = (short)AngleDiff(mAngle.y, horz);
             if (diff < 0x4000) {
                 mState = daChoropu_ST_THROW_ROCK;
                 mAnmModel.SetAnim((BCA_File *)data_ov080_021283e0.filePtr, 0x40000000, 0x1000, 0);
@@ -372,7 +372,7 @@ void daChoropu_c::func_ov080_02123c24()
  * units (0x5dc000) horizontally (no daPly_c counts as exactly 1500, so no) and this
  * mole holds the turn (mHasTurn == 1). Then:
  *   - daPly_c 250 units (0xfa000) or more away: start emerging -- state 2, animation
- *     file 0x2d4, face the daPly_c (mAngleY and mPrevAngleY), enable the collision
+ *     file 0x2d4, face the daPly_c (mAngle.y and mPrevAngleY), enable the collision
  *     cylinder, set the mFlags bit, sound effect 0x116 at the mole;
  *   - daPly_c closer than 250 units: stay hidden and pass the turn on (func_ov080_02124360). */
 void daChoropu_c::func_ov080_02123ecc()
@@ -388,11 +388,11 @@ void daChoropu_c::func_ov080_02123ecc()
         mState = daChoropu_ST_EMERGE;
         mAnmModel.SetAnim((BCA_File *)data_ov080_021283d8.filePtr, 0x40000000, 0x1000, 0);
         daPly_c *p2 = ClosestPlayer();
-        mAngleY = Vec3_HorzAngle(&mPos, &p2->mPos);
+        mAngle.y = Vec3_HorzAngle(&mPos, &p2->mPos);
         {
             u32 *a = (u32 *)((int)&mdCcAc_c.flags);
             u32 *b = (u32 *)((int)&mFlags);
-            mPrevAngleY = mAngleY;
+            mPrevAngleY = mAngle.y;
             *a = *a & ~daChoropu_CC_DISABLED;
             *b = *b | daChoropu_FLAG_EMERGED;
             func_0201267c(0x116, &mCamSpacePos);
@@ -611,12 +611,12 @@ void *daChoropu_c::func_ov080_02124360()
     }
 }
 
-/* Rebuilds the model's matrix (mAnmModel.mat4x3): a rotation about Y by mAngleY,
+/* Rebuilds the model's matrix (mAnmModel.mat4x3): a rotation about Y by mAngle.y,
  * with the translation (words 9..11 of the flat 12-word spelling this TU sees) set to
  * the actor's position >> 3. */
 void daChoropu_c::func_ov080_021243d8()
 {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.m[9] = mPos.x >> 3;
     mAnmModel.mat4x3.m[10] = mPos.y >> 3;
     mAnmModel.mat4x3.m[11] = mPos.z >> 3;
@@ -624,7 +624,7 @@ void daChoropu_c::func_ov080_021243d8()
 
 /* Same as func_ov080_021243d8, for the rock's model (mModel.mat4x3). */
 void daChoro_Rock_c::func_ov080_02124418() {
-    Matrix4x3_FromRotationY(&this->mModel.mat4x3, this->mAngleY);
+    Matrix4x3_FromRotationY(&this->mModel.mat4x3, this->mAngle.y);
     this->mModel.mat4x3.m[9] = this->mPos.x >> 3;
     this->mModel.mat4x3.m[10] = this->mPos.y >> 3;
     this->mModel.mat4x3.m[11] = this->mPos.z >> 3;

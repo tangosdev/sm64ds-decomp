@@ -134,10 +134,10 @@ s32 daObjHatenaSwitch_c::InitResources() {
     UpdateModelTransform();
 
     KCL_File *staticClsn = dBgW_Kc::LoadFile(data_ov002_0210dd58);
-    mStaticMeshCollider.SetFile(staticClsn, mClsnMat, 0x199, mAngleY, data_ov002_0210d8b4);
+    mStaticMeshCollider.SetFile(staticClsn, mClsnMat, 0x199, mAngle.y, data_ov002_0210d8b4);
 
     KCL_File *movingClsn = dBgW_Kc::LoadFile(data_ov002_0210dd50);
-    mMovingMeshCollider.SetFile(movingClsn, mClsnMat, 0x199, mAngleY, data_ov002_0210d774);
+    mMovingMeshCollider.SetFile(movingClsn, mClsnMat, 0x199, mAngle.y, data_ov002_0210d774);
 
     mStaticMeshCollider.SetStoodOnCallback(&daObjHatenaSwitch_c::AfterClsnCallback);
 
@@ -268,7 +268,7 @@ void daObjHatenaSwitch_c::UpdateModelTransform() {
     Vector3 shifted;
     Vec3_Asr(&shifted, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shifted.x, shifted.y, shifted.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&mAnmModel.mat4x3;
 }
@@ -278,7 +278,7 @@ void daObjHatenaSwitch_c::UpdateClsnTransform() {
     mClsnMat.t.x = mPos.x;
     mClsnMat.t.y = mPos.y;
     mClsnMat.t.z = mPos.z;
-    mActiveMeshCollider->Transform(mClsnMat, mAngleY);
+    mActiveMeshCollider->Transform(mClsnMat, mAngle.y);
 }
 
 s32 daObjHatenaSwitch_c::UpdateClsnState() {

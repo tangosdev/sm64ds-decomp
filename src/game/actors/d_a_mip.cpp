@@ -381,7 +381,7 @@ int daMip_c::StateReleasedMain()
         if (a || IsBitSet(flags, 0x2000)) {
             /* obj is known non-null here; the ROM still re-tests it. */
             if (a && obj != 0)
-                mPrevAngleY = obj->mAngleY;
+                mPrevAngleY = obj->mAngle.y;
             mdCcAc_c.flags = mdCcAc_c.flags & ~2;
             mTalkingPlayer = 0;
         }
@@ -937,7 +937,7 @@ void daMip_c::UpdateMatrixAndShadow()
     Vector3 t;
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, tmp);
     Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xe000) >> 3, mPos.z >> 3);
@@ -1244,9 +1244,9 @@ int daMip_c::Behavior()
     if (!IsFlagSet(this, 0x4000)) {
         if ((void *)mState != &data_ov085_021306ac || mCatchState != 0)
             UpdatePos(&mdCcAc_c);
-        mAngleX = mPrevAngleX;
-        mAngleY = mPrevAngleY;
-        mAngleZ = mPrevAngleZ;
+        mAngle.x = mPrevAngleX;
+        mAngle.y = mPrevAngleY;
+        mAngle.z = mPrevAngleZ;
         UpdateWMClsn(mWithMeshClsn, 0);
         if ((void *)mState != &data_ov085_021306ac)
             UpdateGrab();

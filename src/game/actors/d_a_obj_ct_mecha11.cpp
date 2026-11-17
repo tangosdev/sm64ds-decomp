@@ -3,7 +3,7 @@
  * 9 function(s), .text 0x021116ec..0x02111bd0. Tick Tock Clock's spinning
  * platform (profile CT_MECHA11).
  *
- * Behavior adds a clock-setting step to mAngleX. Setting 2 rolls a sign
+ * Behavior adds a clock-setting step to mAngle.x. Setting 2 rolls a sign
  * and, for the first five frames of the burst, adds nothing. InitResources
  * loads the model and the moving mesh, then probes a short way down for the
  * floor the cuboid shadow sits on. UpdateShadow widens the clip as the
@@ -82,18 +82,18 @@ void daObjCtMecha11_c::UpdateShadow() {
         clipD = 0x350000;
     mClipOffsetY = -half;
     mClipRadius = (int)(clipD + ((unsigned)clipD >> 31)) >> 4;
-    Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
     mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = mFloorPosY >> 3;
     mShadowMat.m[11] = mPos.z >> 3;
-    int s = FX_CosIdx((u16)mAngleX >> 4);
+    int s = FX_CosIdx((u16)mAngle.x >> 4);
     int sa = s < 0 ? -s : s;
     int scaled = FX_MUL(sa, 0x26c000);
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x12c000, 0x32000, scaled + 0x50000, 0xf);
 }
 
 void daObjCtMecha11_c::UpdateModel() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -138,7 +138,7 @@ int daObjCtMecha11_c::Behavior() {
     }
     mMeshCollider.SetClipRadius(0x180000);
     mMeshCollider.SetClipOffsetY(0x1000);
-    short *angle = &mAngleX;
+    short *angle = &mAngle.x;
     *angle = (*angle + mPrevAngleX);
     UpdateModel();
     UpdateShadow();
@@ -154,7 +154,7 @@ int daObjCtMecha11_c::InitResources() {
     UpdateModel();
     UpdateClsnPosAndRot();
     KCL_File *kf = dBgW_Kc::LoadFile(RotatingClockHand_ClsnFile);
-    mMeshCollider.SetFile(kf, mClsnMat, 0x1000, mAngleY, data_ov035_02112238);
+    mMeshCollider.SetFile(kf, mClsnMat, 0x1000, mAngle.y, data_ov035_02112238);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetEdgeToleranceShift(0);
     Vector3 v;

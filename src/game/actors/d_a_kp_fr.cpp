@@ -148,8 +148,8 @@ int daKpFr_c::func_ov070_02121f18() {
     player = ClosestNonVanishPlayer();
     if (player) {
         short angleToPlayer = Vec3_HorzAngle(&mPos, &player->mPos);
-        ApproachLinear(mAngleY, angleToPlayer, 0x180);
-        mPrevAngleY = mAngleY;
+        ApproachLinear(mAngle.y, angleToPlayer, 0x180);
+        mPrevAngleY = mAngle.y;
     }
   UpdatePos(&mdCcAc_c);
   func_ov070_02121be4();

@@ -171,7 +171,7 @@ int daPkn_c::InitResources()
         mHomePos = *home;
         /* The shift must be LOGICAL so the angle wraps -- on the signed s16 it
            would index the wrong table entry for negative angles. */
-        int ang = (u16)mAngleY >> 4;
+        int ang = (u16)mAngle.y >> 4;
         /* Temporaries in the ROM's load order; folding them reorders it. */
         int y0 = mPos.y;
         int z0 = mPos.z;
@@ -336,7 +336,7 @@ void daPkn_c::StateBite()
     }
 
     ApproachLinear(mPrevAngleY, mTargetAngleY, 0x800);
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
 
     if (mAnmModel.Finished() != 0) {
         int thr;
@@ -489,8 +489,8 @@ void daPkn_c::StateDie()
         pos.x = mPos.x;
         pos.y = mPos.y;
         pos.z = mPos.z;
-        pos.x += data_ov084_0213030c[mStateTimer] * FX_SinIdx((u16)mAngleY >> 4);
-        pos.z += data_ov084_0213030c[mStateTimer] * FX_CosIdx((u16)mAngleY >> 4);
+        pos.x += data_ov084_0213030c[mStateTimer] * FX_SinIdx((u16)mAngle.y >> 4);
+        pos.z += data_ov084_0213030c[mStateTimer] * FX_CosIdx((u16)mAngle.y >> 4);
         pos.y += data_ov084_02130334[mStateTimer] << 12;
         mParticleHandle = Particle::System::New(mParticleHandle, kPtclPiranhaDeathBurst, pos.x,
                                                 pos.y, pos.z, 0, 0);
@@ -584,7 +584,7 @@ void daPkn_c::TrackClosestPlayer()
         mPlayerAirborne = mClosestPlayer->mIsAirborne;
     } else {
         mPlayerDist = 0x7fffffff;
-        mTargetAngleY = mAngleY;
+        mTargetAngleY = mAngle.y;
     }
 }
 
@@ -706,7 +706,7 @@ void daPkn_c::UpdatePose()
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     saved = data_020a0e68;
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
     mAnmModel.mat4x3 = data_020a0e68;
 
     ang.x = 0;
@@ -750,9 +750,9 @@ void daPkn_c::UpdatePose()
         mBubbleScale.z = scale;
     }
 
-    bubblePos.x += FX_SinIdx((u16)mAngleY >> 4) * 0xe0;
+    bubblePos.x += FX_SinIdx((u16)mAngle.y >> 4) * 0xe0;
     scale = scale - 0xc00;
-    bubblePos.z += FX_CosIdx((u16)mAngleY >> 4) * 0xe0;
+    bubblePos.z += FX_CosIdx((u16)mAngle.y >> 4) * 0xe0;
     bubblePos.y += scale * 0x18 + 0x38000;
 
     mBubblePos = bubblePos;

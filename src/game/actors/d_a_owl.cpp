@@ -455,7 +455,7 @@ int daOwl_c::UpdateDormant() {
                 *pz = *pz + mPos.z;
             }
             mPrevAngleY = Vec3_HorzAngle(&mPos, &mAnchor);
-            mAngleY = mPrevAngleY;
+            mAngle.y = mPrevAngleY;
             ChangeState(OWL_STATE_HOVER);
         }
     }
@@ -485,7 +485,7 @@ void daOwl_c::UpdateModelTransform() {
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
-        mAngleX, mAngleY, mAngleZ);
+        mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.ApplyOpacity(mOpacity, 1);
     mAnmModel.mat4x3 = data_020a0e68;
     MTX_Concat43(&mAnmModel.data.transforms[1], &mAnmModel.mat4x3, &out);
@@ -512,7 +512,7 @@ void daOwl_c::FollowRiderMatrix() {
     mPos.x = v.x << 3;
     mPos.y = v.y << 3;
     mPos.z = v.z << 3;
-    mPrevAngleY = mRider->mAngleY;
+    mPrevAngleY = mRider->mAngle.y;
     mPrevAngleX = 0;
     mAnmModel.mat4x3 = data_020a0e68;
 }
@@ -563,9 +563,9 @@ int daOwl_c::Behavior()
     if (mCurrentState == OWL_STATE_CARRY) {
         if (mCurrentState == OWL_STATE_CARRY) {
             FollowRiderMatrix();
-            mAngleX = mPrevAngleX;
-            mAngleY = mPrevAngleY;
-            mAngleZ = mPrevAngleZ;
+            mAngle.x = mPrevAngleX;
+            mAngle.y = mPrevAngleY;
+            mAngle.z = mPrevAngleZ;
             UpdateWMClsn(mWithMeshClsn, 0);
         } else {
             UpdateModelTransform();
@@ -582,9 +582,9 @@ int daOwl_c::Behavior()
         mSpeed.z = keep;
     }
     UpdatePosWithOnlySpeed(&mdCcAcPos_c);
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngleX;
+    mAngle.y = mPrevAngleY;
+    mAngle.z = mPrevAngleZ;
     UpdateModelTransform();
     if (mCurrentState == OWL_STATE_HOVER && mTalkState == TALK_DONE) {
         TryPickUpRider();

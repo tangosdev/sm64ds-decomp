@@ -298,7 +298,7 @@ daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W() {
  *     model).
  *  2. Sets the model, a cuboid shadow, state IDLE, terminal velocity
  *     -0x3c000 (-60 units), unit scale, the model and collider matrices, and
- *     the mesh collider (scale 0x199, about 0.1; heading mAngleY).
+ *     the mesh collider (scale 0x199, about 0.1; heading mAngle.y).
  *  3. mHomePosY = mPos.y. mContentType = low byte of param1 (0xff reads as 0);
  *     for CONTENT_STAR, mStarId = param1 bits 8..15 (0xff reads as 0) and the
  *     star is tracked.
@@ -350,7 +350,7 @@ int daObjHatenaBlock_c::InitResources()
     mShadowMat = mModel.mat4x3;
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(data_ov102_0214e7d0);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov002_0210d954);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov002_0210d954);
     }
     mHomePosY = mPos.y;
     mContentType = (unsigned char)param1;
@@ -565,11 +565,11 @@ int daObjHatenaBlock_c::CleanupResources()
     return 1;
 }
 
-/* Rebuilds the model matrix: a Y rotation by mAngleY, with the translation
+/* Rebuilds the model matrix: a Y rotation by mAngle.y, with the translation
    set to (mPos.x, mPos.y + mBounceYOffs, mPos.z) >> 3. A HATENA_BLOCK with
    SAVE_FLAGS1_BIT31 clear then copies the matrix into mAnmModel as well. */
 void daObjHatenaBlock_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = (mPos.y + mBounceYOffs) >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -592,7 +592,7 @@ void daObjHatenaBlock_c::UpdateModelMatrix() {
  *   shadow Y scale = height + 0x14000 (20 units)
  *   mClipOffsetY  = -(height + 0x14000) / 2 (signed divide by 2)
  *   mClipRadius   = max(height + 0x214000, 0x200000) / 16 (signed divide)
- * The shadow matrix is a Y rotation by mAngleY with the translation set to
+ * The shadow matrix is a Y rotation by mAngle.y with the translation set to
  * (mPos.x, mPos.y - 0x20000 (32 units), mPos.z) >> 3. The drop-shadow call is
  * (shadow, matrix, scale X = horizontal, scale Y, scale Z = horizontal) with
  * opacity 0xf. */
@@ -613,7 +613,7 @@ void daObjHatenaBlock_c::UpdateDropShadow() {
     mClipOffsetY = -((int)((height + 0x14000) + ((unsigned)(height + 0x14000) >> 31)) >> 1);
     mClipRadius = (int)(paddedHeight + ((unsigned)paddedHeight >> 31)) >> 4;
     shadowScale = FX_MUL(shadowScale, mScale.x);
-    Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
     mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = (mPos.y - 0x20000) >> 3;
     mShadowMat.m[11] = mPos.z >> 3;
@@ -622,13 +622,13 @@ void daObjHatenaBlock_c::UpdateDropShadow() {
 
 /* Puts the mesh collider where the model is: the model matrix with the
    translation overwritten by (mPos.x, mPos.y + mBounceYOffs, mPos.z) (not
-   shifted), and heading mAngleY. */
+   shifted), and heading mAngle.y. */
 void daObjHatenaBlock_c::UpdateMeshCollider() {
     mClsnMat = mModel.mat4x3;
     mClsnMat.m[9] = mPos.x;
     mClsnMat.m[10] = mPos.y + mBounceYOffs;
     mClsnMat.m[11] = mPos.z;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 /* Runs the update routine (column 1) of mState's row in the state table. */
@@ -918,7 +918,7 @@ int daObjHatenaBlock_c::GetFloorY() {
 
 /* Cap prize: spawns an OBJ_MARIO_CAP at the prize point with param1 =
    p2 | (p1 << 8) (cap type 0x12 for character p1) and no rotation. If it
-   spawned, the cap gets heading (RandomIntInternal() + camera mAngleY +
+   spawned, the cap gets heading (RandomIntInternal() + camera mAngle.y +
    0x8000, truncated to 16 bits) in its mPrevAngleY, speed 0x3320 (about 3.2
    units) in mHorzSpeed, and a velocity vector (0, 0x11000, 0) in
    mSpeed.x / mSpeed.y / mSpeed.z (0x11000 = 17 units up). */
@@ -998,8 +998,8 @@ void daObjHatenaBlock_c::SpawnPrizeShell() {
 
 /* FEATHER prize: spawns a FEATHER at the prize point with rotation taken
    from the three u16 words at data_020a0edc, except Y: the block's own
-   mAngleY when gGameMode (CURRENT_GAMEMODE) is 1, else the camera's
-   mAngleY + 0x4000. */
+   mAngle.y when gGameMode (CURRENT_GAMEMODE) is 1, else the camera's
+   mAngle.y + 0x4000. */
 void daObjHatenaBlock_c::SpawnPrizeFeather() {
     struct Vector3 pos;
     struct Vector3_16 rot;
@@ -1010,7 +1010,7 @@ void daObjHatenaBlock_c::SpawnPrizeFeather() {
     rot.y = *(u16 *)(data_020a0edc + 2);
     rot.z = *(u16 *)(data_020a0edc + 4);
     if ((int)(gGameMode == 1) != 0) {
-        rot.y = mAngleY;
+        rot.y = mAngle.y;
     } else {
         rot.y = gCamera->mAngleY + 0x4000;
     }

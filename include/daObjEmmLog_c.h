@@ -20,7 +20,7 @@
  * the phase and bobs mPos.y on a sine of it. Nothing writes mAngle*.
  */
 struct daObjEmmLog_c : dBgActor_c {
-    s16 mBobPhase;          /* 0x31e -- seeded from mAngleX, += 0x200 per Behavior */
+    s16 mBobPhase;          /* 0x31e -- seeded from mAngle.x, += 0x200 per Behavior */
     s32 mBasePosY;          /* 0x320 -- InitResources copies mPos.y */
     s32 mBobAmplitude;      /* 0x324 -- 0x64000, or the spawn byte * 0xa000 */
 

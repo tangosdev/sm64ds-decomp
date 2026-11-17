@@ -145,7 +145,7 @@ void dPathLiftActor_c::StateFall()
     }
     UpdatePos(0);
     if (HasNonzeroAngleZ() != 0)
-        ApproachLinear(mAngleX, 0x3000, 0x100);
+        ApproachLinear(mAngle.x, 0x3000, 0x100);
     if (DecIfAbove0_Byte(&mTriggerDelay) != 0)
         return;
     if (IsUnk42cSet() != 0) {
@@ -165,9 +165,9 @@ void dPathLiftActor_c::StateFallInit() {
         mTerminalVelocity = -0x3c000;
     }
     mTriggerDelay = 250;
-    mPrevAngleX = mAngleX;
-    mPrevAngleY = mAngleY;
-    mPrevAngleZ = mAngleZ;
+    mPrevAngleX = mAngle.x;
+    mPrevAngleY = mAngle.y;
+    mPrevAngleZ = mAngle.z;
     mSpeed.y = 0;
     if (HasNonzeroAngleZ() == 0) {
         mFallDelay = 60;
@@ -245,16 +245,16 @@ void dPathLiftActor_c::StatePath()
             targetPitch = Vec3_VertAngle(&destNode, &srcNode);
         }
     } else {
-        targetYaw = mAngleY;
-        targetPitch = mAngleX;
+        targetYaw = mAngle.y;
+        targetPitch = mAngle.x;
     }
 
     yawDiff = AngleDiff(mPrevPathAngle.y, targetYaw);
     pitchDiff = AngleDiff(mPrevPathAngle.x, targetPitch);
     pitchStep = (pitchDiff / segFrames);
-    ApproachLinear(mAngleY, targetYaw, (short)(yawDiff / segFrames));
+    ApproachLinear(mAngle.y, targetYaw, (short)(yawDiff / segFrames));
     if (HasNonzeroAngleZ() != 0) {
-        ApproachLinear(mAngleX, targetPitch, pitchStep);
+        ApproachLinear(mAngle.x, targetPitch, pitchStep);
     }
 
     if (destDist == 0 || destDist <= mHorzSpeed) {
@@ -290,9 +290,9 @@ void dPathLiftActor_c::StatePath()
         }
     }
 
-    mPrevPathAngle.x = mAngleX;
-    mPrevPathAngle.y = mAngleY;
-    mPrevPathAngle.z = mAngleZ;
+    mPrevPathAngle.x = mAngle.x;
+    mPrevPathAngle.y = mAngle.y;
+    mPrevPathAngle.z = mAngle.z;
 }
 
 // 0x020efa44 (0x10)
@@ -326,15 +326,15 @@ void dPathLiftActor_c::BaseInitResources()
     if (Param08ModeIs1Or2()) SetState(0);
     else SetState(1);
 
-    mPrevPathAngle.x = mAngleX;
-    mPrevPathAngle.y = mAngleY;
-    mPrevPathAngle.z = mAngleZ;
+    mPrevPathAngle.x = mAngle.x;
+    mPrevPathAngle.y = mAngle.y;
+    mPrevPathAngle.z = mAngle.z;
     mInitialPos.x = mPos.x;
     mInitialPos.y = mPos.y;
     mInitialPos.z = mPos.z;
-    mInitialAngle.x = mAngleX;
-    mInitialAngle.y = mAngleY;
-    mInitialAngle.z = mAngleZ;
+    mInitialAngle.x = mAngle.x;
+    mInitialAngle.y = mAngle.y;
+    mInitialAngle.z = mAngle.z;
     mMeshCollider.SetStoodOnCallback(&func_ov002_020eff90);
 }
 
@@ -344,9 +344,9 @@ void dPathLiftActor_c::ResetPath()
     mPos.x = mInitialPos.x;
     mPos.y = mInitialPos.y;
     mPos.z = mInitialPos.z;
-    mAngleX = mInitialAngle.x;
-    mAngleY = mInitialAngle.y;
-    mAngleZ = mInitialAngle.z;
+    mAngle.x = mInitialAngle.x;
+    mAngle.y = mInitialAngle.y;
+    mAngle.z = mInitialAngle.z;
     mPrevAngleX = mInitialAngle.x;
     mPrevAngleY = mInitialAngle.y;
     mPrevAngleZ = mInitialAngle.z;
@@ -430,7 +430,7 @@ void dPathLiftActor_c::UpdatePathModels()
 
 // 0x020efe68 (0x14)
 int dPathLiftActor_c::HasNonzeroAngleZ() const {
-    return mAngleZ != 0;
+    return mAngle.z != 0;
 }
 
 // 0x020efe7c (0x20)

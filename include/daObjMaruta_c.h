@@ -48,7 +48,7 @@ struct daObjMaruta_c : dBgActor_c {
     u8 pad_31e[0x2];
     Vector3 mRestPos; /* 0x320 -- InitResources copies mPos.x */
     Vector3 mHitPos;  /* 0x32c -- BeforeClsn copies PLAYER mPos */
-    s32 mPathAngDiff; /* 0x338 -- AngleDiff of travel vs mAngleY */
+    s32 mPathAngDiff; /* 0x338 -- AngleDiff of travel vs mAngle.y */
     s16 mRollAngVel;  /* 0x33c */
     u8 mHitTimer;     /* 0x33e -- DecIfAbove0_Byte */
     u8 pad_33f;
@@ -81,10 +81,10 @@ struct daObjMaruta_c : dBgActor_c {
        choice this header hasn't made for its own other declarations. */
     s32 Render();
 
-    /* Rotate the model by mAngleX/Y/Z and set its translation to mPos >> 3. */
+    /* Rotate the model by mAngle.x/.y/.z and set its translation to mPos >> 3. */
     void UpdateModelTransform();
     /* The collider's stood-on hook: record a touching player and shove it
-       along mAngleY. StoodOnCallback is the address the dBgW stores; it
+       along mAngle.y. StoodOnCallback is the address the dBgW stores; it
        drops its first argument and forwards to this. */
     void HandlePlayerContact(dActor_c *);
     static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);

@@ -77,13 +77,13 @@ s32 daObjKm1_Ukishima_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov043_021125e0);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov043_02111c00);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov043_02111c00);
 
     /* The mesh moves with the actor's velocity rather than its transform --
        the island slides, it does not carry a rotating platform's matrix. */
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
 
-    mPrevAngleY = mAngleY;
+    mPrevAngleY = mAngle.y;
     mHorzSpeed = 0xa000;
     mTurnTimer = 60;
     return 1;

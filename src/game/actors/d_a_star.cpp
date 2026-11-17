@@ -670,8 +670,8 @@ int daStarBase_c::Behavior()
         }
         Matrix4x3_FromTranslation(&mModel.mat4x3, mPos.x >> 3, mPos.y >> 3, mPos.z >> 3);
     } else {
-        mAngleY += 0x400;
-        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+        mAngle.y += 0x400;
+        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
         mModel.mat4x3.t.x = mPos.x >> 3;
         mModel.mat4x3.t.y = mPos.y >> 3;
         mModel.mat4x3.t.z = mPos.z >> 3;
@@ -1153,8 +1153,8 @@ void daStar_c::StateCollectBegin() {
             *posY += 0x1e000;
         }
 
-        mPrevAngleY = mPlayer->mAngleY;
-        mAngleX = 0;
+        mPrevAngleY = mPlayer->mAngle.y;
+        mAngle.x = 0;
 
         if (common->mIsMega != 0) {
             mScale.x = 0x3000;
@@ -1220,7 +1220,7 @@ void daStar_c::StateCollectHold() {
     mPos.x = s[0];
     mPos.y = s[1];
     mPos.z = s[2];
-    mPrevAngleY = mPlayer->mAngleY;
+    mPrevAngleY = mPlayer->mAngle.y;
     mState = STATE_COLLECT_TALK;
     mSeqTimer = 0;
     mTalkStep = 0;
@@ -1259,7 +1259,7 @@ void daStar_c::StateCollectTalk() {
     mPos.x = src[0];
     mPos.y = src[1];
     mPos.z = src[2];
-    mPrevAngleY = mPlayer->mAngleY;
+    mPrevAngleY = mPlayer->mAngle.y;
     if (mKind == KIND_9) {
         if (mMusicTimer < 120) {
             Sound::ChangeMusicVolume(0, 0x7f000);
@@ -1361,7 +1361,7 @@ void daStar_c::StateSaveMessage() {
             Sound::ChangeMusicVolume(0x40, 0xcb33);
         }
     }
-    mPrevAngleY = mPlayer->mAngleY;
+    mPrevAngleY = mPlayer->mAngle.y;
     switch (mTalkStep) {
     case 2:
         if (mPlayer->GetTalkState() == -1) {
@@ -1514,7 +1514,7 @@ void daStar_c::StateSpinAndEnd() {
     unsigned short t;
 
     mSeqTimer += 1;
-    mAngleY += 0x800;
+    mAngle.y += 0x800;
     t = mSeqTimer;
     if (t >= 0x1e) {
         if (t == 0x1e) {
@@ -2182,10 +2182,10 @@ void daStar_c::UpdateModelMatrix() {
          * same 12 words; proven byte-identical in isolation. */
         *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)mCarryMatrix;
     } else if (!mBits.noSpin) {
-        ang = &mAngleY;
+        ang = &mAngle.y;
         t = *ang + 0xc00;
         *ang = t;
-        Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mAngleY);
+        Matrix4x3_FromRotationY(&mAnmModel1.mat4x3, mAngle.y);
         mAnmModel1.mat4x3.t.x = mPos.x >> 3;
         mAnmModel1.mat4x3.t.y = mPos.y >> 3;
         mAnmModel1.mat4x3.t.z = mPos.z >> 3;

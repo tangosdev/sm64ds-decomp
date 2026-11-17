@@ -365,7 +365,7 @@ void daWanwan2_c::func_ov100_021435e8() {
 /* -------------------------------------------------------------------------- */
 /* The chain. It is anchored 250 units (0xfa000) behind the chomp along its
    rotation (data_020a0e68, MATRIX_SCRATCH_PAPER in symbols/verified.tsv, is
-   built from mAngleX/Y/Z). The anchor is kept in a local; it is also written
+   built from mAngle.x/.y/.z). The anchor is kept in a local; it is also written
    into mLinkPos[0], but the loop overwrites that. mChainTimer is then
    stepped, and each of the six links (positions mLinkPos, velocities
    mLinkVel, lower Y bounds mLinkMinY) is placed in turn 50 units (0x32000)
@@ -398,7 +398,7 @@ void daWanwan2_c::func_ov100_021437d4() {
     in.z = -0xfa000; in.x = 0; in.y = 0;    /* 250 units behind */
     out.x = 0; out.y = 0; out.z = 0;
 
-    Matrix4x3_FromRotationXYZExt(&data_020a0e68, this->mAngleX, this->mAngleY, this->mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&data_020a0e68, this->mAngle.x, this->mAngle.y, this->mAngle.z);
     MTX_MultVec43(&in, &data_020a0e68, &out);
     Vec3_Add(&added, &this->mPos, &out);
 
@@ -496,7 +496,7 @@ int daWanwan2_c::func_ov100_02143b18(ChompState *p) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* The per-frame matrices: the body model's rotation (from mAngleX/Y/Z) and
+/* The per-frame matrices: the body model's rotation (from mAngle.x/.y/.z) and
    position (mPos >> 3), its drop shadow (radius 350 units, depth 500 units,
    opacity 0xf), then for each of the six links an identity matrix at the
    link's position (mLinkPos >> 3) and a smaller drop shadow (radius 120
@@ -505,7 +505,7 @@ void daWanwan2_c::func_ov100_02143b68() {
     Mtx43 tmp;
     int i;
     dExtSimpleModel_c *mdst;
-    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3.t.x = mPos.x >> 3;
     mAnmModel.mat4x3.t.y = mPos.y >> 3;
     mAnmModel.mat4x3.t.z = mPos.z >> 3;
@@ -571,7 +571,7 @@ int daWanwan2_c::Render()
    toward the path node mPathNodeIndex: when it is closer than 400 units
    (0x190000) the index advances (back to 0 at mNumPathNodes) and the next
    node is fetched; mTargetAngle is the horizontal angle to the node,
-   mPrevAngleY eases toward it and mAngleY copies mPrevAngleY. The model
+   mPrevAngleY eases toward it and mAngle.y copies mPrevAngleY. The model
    matrices are rebuilt, and the collision body is updated only when a daPly_c
    exists and is not vanished. */
 int daWanwan2_c::Behavior()
@@ -661,7 +661,7 @@ int daWanwan2_c::Behavior()
 
         ApproachAngle(&mPrevAngleY, mTargetAngle, 0x10, 0x20, 0x500);
 
-        mAngleY = mPrevAngleY;
+        mAngle.y = mPrevAngleY;
 
         func_ov100_02143b68();
         mdCcAcPos_c.Clear();
@@ -740,8 +740,8 @@ int daWanwan2_c::InitResources()
     unk_6c9 = 0x1f;
     unk_6cc = 3;
 
-    mAngleY = mPrevAngleY;
-    mTargetAngle = mAngleY;
+    mAngle.y = mPrevAngleY;
+    mTargetAngle = mAngle.y;
 
     mChainEndActorID = 0;
     unk_6d4 = 0;

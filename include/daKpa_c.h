@@ -88,7 +88,7 @@ struct daKpa_c : dActor_c {
     u16 mTimer;            /* 0x3fc -- frames in the current state; reset on every state change */
     u16 mStepCounter;         /* 0x3fe -- general per-state counter; its meaning depends on mState */
     u16 mFireTimer;           /* 0x400 -- frames of fire breath so far */
-    s16 mSpinSpeed;           /* 0x402 -- angle added to mAngleY each frame in the defeat sequence */
+    s16 mSpinSpeed;           /* 0x402 -- angle added to mAngle.y each frame in the defeat sequence */
     u8  pad_404[0x2];
     s16 mAngleToTarget;            /* 0x406 */
     s16 mAngleToCenter;       /* 0x408 -- angle from Bowser toward the world origin */

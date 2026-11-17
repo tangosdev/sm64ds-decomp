@@ -143,9 +143,9 @@ s32 daKlr_c::Behavior() {
     }
     mCylClsn.Update();
 
-    mPrevAngleX = mAngleX;
-    mPrevAngleY = mAngleY;
-    mPrevAngleZ = mAngleZ;
+    mPrevAngleX = mAngle.x;
+    mPrevAngleY = mAngle.y;
+    mPrevAngleZ = mAngle.z;
     return 1;
 }
 
@@ -185,7 +185,7 @@ void daKlr_c::StateFly() {
     this->mHorzSpeed = 0x1e000;
     if (this->DistToCPlayer() > 0x12c000)
         ApproachLinear(this->mPrevAngleY, this->HorzAngleToCPlayer(), 0x200);
-    this->mAngleY = this->mPrevAngleY;
+    this->mAngle.y = this->mPrevAngleY;
     if (this->mStateTimer == 50) {
         func_0201267c(0xd4, &this->mCamSpacePos);
         this->mCylClsn.flags &= ~1;
@@ -222,7 +222,7 @@ void daKlr_c::StateShotDown() {
         this->mHorzSpeed = -0x1e000;
         this->mCylClsn.flags |= 1;
     }
-    this->mAngleX += 0x2000;
+    this->mAngle.x += 0x2000;
     this->mPos.y += 0x14000;
     if (this->mStateTimer <= 90)
         return;
@@ -233,7 +233,7 @@ void daKlr_c::StateShotDown() {
 
 /* Pose both models from the actor and drop the shadow under them. */
 void daKlr_c::UpdateModelAndShadow() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.t.x = mPos.x >> 3;
     mModel.mat4x3.t.y = mPos.y >> 3;
     mModel.mat4x3.t.z = mPos.z >> 3;

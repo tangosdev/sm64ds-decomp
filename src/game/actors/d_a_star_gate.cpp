@@ -121,7 +121,7 @@ int daStarGate_c::InitResources()
     if (!mModel.SetFile(file, 1, 1))
         return 0;
 
-    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
     mModel.mat4x3.t.x = mPos.x >> 3;
     mModel.mat4x3.t.y = mPos.y >> 3;
     mModel.mat4x3.t.z = mPos.z >> 3;
@@ -143,15 +143,15 @@ int daStarGate_c::Behavior()
 /* -------------------------------------------------------------------------- */
 int daStarGate_c::Render()
 {
-    if (IsAreaShowing((s8)mAngleX) != 0 ||
-        IsAreaShowing((s8)mAngleZ) != 0) {
-        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    if (IsAreaShowing((s8)mAngle.x) != 0 ||
+        IsAreaShowing((s8)mAngle.z) != 0) {
+        Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
         mModel.mat4x3.t.x = (mPos.x + mSpeed.x) >> 3;
         mModel.mat4x3.t.y = (mPos.y + mSpeed.y) >> 3;
         mModel.mat4x3.t.z = (mPos.z + mSpeed.z) >> 3;
         mModel.Render(0);
 
-        Matrix4x3_FromRotationY(&mModel.mat4x3, (s16)(mAngleY + 0x8000));
+        Matrix4x3_FromRotationY(&mModel.mat4x3, (s16)(mAngle.y + 0x8000));
         mModel.mat4x3.t.x = (mPos.x - mSpeed.x) >> 3;
         mModel.mat4x3.t.y = (mPos.y - mSpeed.y) >> 3;
         mModel.mat4x3.t.z = (mPos.z - mSpeed.z) >> 3;
@@ -190,7 +190,7 @@ daPly_c *daStarGate_c::CalculateRelativePlayerPos() {
     Vector3 tmp;
     daPly_c *player = gPlayers[gLocalPlayerId];
     Vec3_Sub(&tmp, &player->mPos, &mPos);
-    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, -mAngleY, &tmp);
+    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, -mAngle.y, &tmp);
     return player;
 }
 
@@ -200,10 +200,10 @@ bool daStarGate_c::IsInFrontOfPlayer(daPly_c *player) {
     int a;
     if (Abs(mScale.x) <= 0x82000 && Abs(mScale.y) <= 0x32000 && Abs(mScale.z) <= 0x78000) {
         if (mScale.z < 0)
-            a = mAngleY;
+            a = mAngle.y;
         else
-            a = mAngleY + 0x8000;
-        if (AngleDiff((short)a, player->mAngleY) < 0x2000)
+            a = mAngle.y + 0x8000;
+        if (AngleDiff((short)a, player->mAngle.y) < 0x2000)
             return true;
     }
     return false;
@@ -214,8 +214,8 @@ bool daStarGate_c::IsInFrontOfPlayer(daPly_c *player) {
 void daStarGate_c::TryOpenDoor(daPly_c *player) {
     int a;
     int z = mScale.z;
-    if (z < 0) a = mAngleY;
-    else a = mAngleY + 0x8000;
+    if (z < 0) a = mAngle.y;
+    else a = mAngle.y + 0x8000;
     if (player->TryEnterStarDoor(mPos, a))
         ChangeState(&ST_OPEN_CLOSE, player);
     SetTouchScreenDelay();
@@ -308,8 +308,8 @@ bool daStarGate_c::St_Unlocking_Main(daPly_c *player) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 bool daStarGate_c::St_OpenClose_Init(daPly_c *) {
-    ShowArea((s8)mAngleX);
-    ShowArea((s8)mAngleZ);
+    ShowArea((s8)mAngle.x);
+    ShowArea((s8)mAngle.z);
     gCamera->SetFlag_3();
     mTerminalVelocity = -0x8a000;
     func_02012694(0x4e, &mCamSpacePos);
@@ -339,9 +339,9 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
             {
                 int t;
                 if (mScale.z < 0)
-                    t = mAngleX;
+                    t = mAngle.x;
                 else
-                    t = mAngleZ;
+                    t = mAngle.z;
                 t = (s8)t;
                 player->mAreaId = t;
                 ChangeArea(t);
@@ -356,7 +356,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
     vec.x = vd;
     vec.z = gz;
     vec.y = gy;
-    Vec3_RotateYAndTranslate(&mSpeed, &data_020a0ebc, mAngleY, &vec);
+    Vec3_RotateYAndTranslate(&mSpeed, &data_020a0ebc, mAngle.y, &vec);
     return true;
 }
 

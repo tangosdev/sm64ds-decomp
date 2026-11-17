@@ -124,7 +124,7 @@ s32 daObjRc_Tikuwa_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     KCL_File *kcl = dBgW_Kc::LoadFile(gRcTikuwaCollisionFile);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)data_ov036_02112b48);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, *(CLPS_Block *)data_ov036_02112b48);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     mWithMeshClsn.Init(this, 0x32000, 0x64000, 0, 0);

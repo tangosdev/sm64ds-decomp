@@ -2,7 +2,7 @@
 /* daObjFm_Battan_c -- the slamming slab (FM_BATTAN), ov023.
  *
  * It waits until the player is within 1000.0 (sound 0x43), then tips over
- * about X, accelerating until it lies flat (mAngleX -0x4000). On impact it
+ * about X, accelerating until it lies flat (mAngle.x -0x4000). On impact it
  * shakes the ground, plays 0x44 and raises dust 400.0 behind its heading
  * (position - 400.0 * facing). After 60 frames it swings back upright
  * (0x45), rests 60 frames, and the cycle starts over. The shadow stretches with the tilt (UpdateShadow).
@@ -89,7 +89,7 @@ int daObjFm_Battan_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *file = dBgW_Kc::LoadFile(data_ov023_02112080);
-    mMeshCollider.SetFile(file, mClsnMat, 0x1000, mAngleY, data_ov064_0211ba4c);
+    mMeshCollider.SetFile(file, mClsnMat, 0x1000, mAngle.y, data_ov064_0211ba4c);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.Enable(this);
 
@@ -112,13 +112,13 @@ int daObjFm_Battan_c::Behavior() {
         mAngVelX -= 0x40;
         if (mAngVelX <= -0x1000)
             mAngVelX = -0x1000;
-        mAngleX += mAngVelX;
-        if (mAngleX <= -0x4000) {
+        mAngle.x += mAngVelX;
+        if (mAngle.x <= -0x4000) {
             VecFx32 offset;
             Vector3 pos;
             Vector3 dustPos;
 
-            mAngleX = -0x4000;
+            mAngle.x = -0x4000;
             mAngVelX = 0;
             mStateTimer = 0;
 
@@ -126,8 +126,8 @@ int daObjFm_Battan_c::Behavior() {
             Earthquake(pos, 0x04000000);
             Sound::PlayBank3(0x44, mCamSpacePos);
 
-            offset.x = FX_MUL(FX_SinIdx((u16)mAngleY >> 4), -0x190000);
-            offset.z = FX_MUL(FX_CosIdx((u16)mAngleY >> 4), -0x190000);
+            offset.x = FX_MUL(FX_SinIdx((u16)mAngle.y >> 4), -0x190000);
+            offset.z = FX_MUL(FX_CosIdx((u16)mAngle.y >> 4), -0x190000);
             VEC_Add((Vector3 *)&offset, &mPos, (Vector3 *)&offset);
 
             dustPos.x = offset.x;
@@ -149,10 +149,10 @@ int daObjFm_Battan_c::Behavior() {
         break;
 
     case 3:
-        mAngleX += mAngVelX;
-        if (mAngleX >= 0) {
+        mAngle.x += mAngVelX;
+        if (mAngle.x >= 0) {
             mAngVelX = 0;
-            mAngleX = 0;
+            mAngle.x = 0;
             mStateTimer = 0;
             mState++;
         }
@@ -185,18 +185,18 @@ int daObjFm_Battan_c::CleanupResources() {
 }
 
 void daObjFm_Battan_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 void daObjFm_Battan_c::UpdateShadow() {
-    int tableIndex = (u16)mAngleX >> 4;
+    int tableIndex = (u16)mAngle.x >> 4;
     int sinX = FX_SinIdx(tableIndex);
     int depth = FX_MUL(sinX, 0x49c000);
 
-    Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
     mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = mPos.y >> 3;
     mShadowMat.m[11] = mPos.z >> 3;

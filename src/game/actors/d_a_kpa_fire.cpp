@@ -279,7 +279,7 @@ void daKpaFire_c::func_ov060_02117624() {
  * dExtFrameCtrl_c at Bowser +0x124.
  *
  * Row n of the u16 table data_ov060_02119364 (five halfwords per row, t[0..4])
- * gives the mouth pose. In whole units, turned by Bowser's yaw (mAngleY >> 4,
+ * gives the mouth pose. In whole units, turned by Bowser's yaw (mAngle.y >> 4,
  * times two, indexes the sine table; s0 and s1 are the two entries there):
  * t[0] sideways, t[2] + 20 forward, and t[1] - 90 up. t[4] + 0x818 becomes
  * the fire's pitch word (0x92) and t[3] + yaw - 0x4700 its heading word
@@ -289,7 +289,7 @@ void daKpaFire_c::func_ov060_02117624() {
  * its own position, passing its own pitch/heading words as the spawn rotation.
  *
  * Bowser's position is copied into kpaPos after the sine entries are read.
- * Yaw is the unsigned half of mAngleY. Frame count is the dExtFrameCtrl_c
+ * Yaw is the unsigned half of mAngle.y. Frame count is the dExtFrameCtrl_c
  * inside mAnmModel. */
 void daKpaFire_c::func_ov060_0211747c() {
     daKpa_c *koopa;
@@ -315,7 +315,7 @@ void daKpaFire_c::func_ov060_0211747c() {
     if (n < 0)
         return;
 
-    yaw = (u16)koopa->mAngleY;
+    yaw = (u16)koopa->mAngle.y;
     s1 = FX_CosIdx(yaw >> 4);
     s0 = FX_SinIdx(yaw >> 4);
     {

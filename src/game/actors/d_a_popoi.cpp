@@ -20,7 +20,7 @@
  * The Wander, Chase and Pause handlers read mStateTimer as an unsigned short
  * (ldrh; a plain read of dEnemyBase_c's s16 is ldrsh), so they convert it with
  * (unsigned short). "heading" below means mPrevAngleY, which Behavior copies
- * into mAngleY every frame.
+ * into mAngle.y every frame.
  *
  * deslop leftovers:
  *   - TurnAway (data_ov077_02127d18) is its own record, so ChangeState
@@ -161,7 +161,7 @@ int daPopoi_c::InitResources()
     v.y = data_ov077_02127a5c.y;
     v.z = data_ov077_02127a5c.z;
     mdCcAcPos_c.Init(this, v, 0x54000, 0x32000, 0x200004, 0);
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
     mWithMeshClsn.Init(this, 0x64000, 0x64000, 0, 0);
     mCaughtPlayer = 0;
     mHomePos.x = mPos.x;
@@ -218,7 +218,7 @@ int daPopoi_c::Behavior()
     if (mWithMeshClsn.IsOnGround()) {
         dBgPi *floorResult = mWithMeshClsn.GetFloorResult();
         floorResult->surface.CopyNormalTo(floorNormal);
-        slope = func_02010844(&floorNormal, mAngleY);
+        slope = func_02010844(&floorNormal, mAngle.y);
     }
 
     /* Roll back to last frame's position if this step would walk off a ledge,
@@ -237,7 +237,7 @@ int daPopoi_c::Behavior()
     mSavedPos.z = mPos.z;
     UpdateWMClsn(mWithMeshClsn, 2);
 
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
     UpdateModelTransform();
 
     /* On the ground and not already in Grab (data_ov077_02127cd8): see whether the
@@ -291,11 +291,11 @@ int daPopoi_c::CleanupResources()
     return 1;
 }
 
-/* Rebuilds the model's matrix (mAnmModel.mat4x3): a rotation about Y by mAngleY,
+/* Rebuilds the model's matrix (mAnmModel.mat4x3): a rotation about Y by mAngle.y,
  * with the translation (words 9..11 of the flat 12-word spelling this TU sees) set
  * to the actor's position >> 3. Called from Behavior after the position writeback. */
 void daPopoi_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngle.y);
     mAnmModel.mat4x3.m[9] = mPos.x >> 3;
     mAnmModel.mat4x3.m[10] = mPos.y >> 3;
     mAnmModel.mat4x3.m[11] = mPos.z >> 3;
@@ -426,10 +426,10 @@ int daPopoi_c::UpdatePauseState() {
 }
 
 /* TurnAway, ENTER handler (record data_ov077_02127d18): the target heading becomes
- * mAngleY + 0x4000 (a quarter turn), animation at normal speed, file 0x40f's
+ * mAngle.y + 0x4000 (a quarter turn), animation at normal speed, file 0x40f's
  * animation (data_ov077_02127c90). Returns 1. */
 int daPopoi_c::EnterTurnAwayState() {
-    mTargetAngleY = mAngleY + 0x4000;
+    mTargetAngleY = mAngle.y + 0x4000;
     mAnmModel.speed = 0x1000;
     mAnmModel.SetAnim((BCA_File *)data_ov077_02127c90.filePtr, 0, 0x1000, 0);
     return 1;
@@ -545,9 +545,9 @@ int daPopoi_c::EnterGrabState() {
  * if the sensor's otherOwner names an actor, and that actor is the caught daPly_c, and
  * the daPly_c is not Metal, not Mega, not mIsNoControl and has a negative
  * GetHurtState(), launch them with func_ov002_020db674 (horizontal speed 0x28000 = 40
- * units/frame, vertical speed 0x70000 = 112 units/frame, heading argument mAngleY +
+ * units/frame, vertical speed 0x70000 = 112 units/frame, heading argument mAngle.y +
  * 0x8000; the callee stores that argument as the daPly_c's mPrevAngleY and the argument
- * + 0x8000 as the daPly_c's mAngleY, so the daPly_c ends up facing this actor's heading,
+ * + 0x8000 as the daPly_c's mAngle.y, so the daPly_c ends up facing this actor's heading,
  * and puts the daPly_c in ST_HURT). If that call returns nonzero, mCaughtPlayer = 0 and
  * daPopoi_SND_THROW_PLAYER plays at the actor's position.
  * Whether or not anything was caught, once the animation has Finished the state goes
@@ -569,7 +569,7 @@ int daPopoi_c::UpdateGrabState() {
                             if (!IsNoControl(a)) {
                                 if (a->GetHurtState() < 0) {
                                     if (func_ov002_020db674(a, 0x28000, 0x70000,
-                                                            (short)(mAngleY + 0x8000)) != 0) {
+                                                            (short)(mAngle.y + 0x8000)) != 0) {
                                         mCaughtPlayer = 0;
                                         func_02012694(daPopoi_SND_THROW_PLAYER, &mCamSpacePos);
                                     }
@@ -624,7 +624,7 @@ void daPopoi_c::TryGrabPlayer() {
  *
  * Two rays leave 40 units (0x28000) above the actor's position: a long level one
  * 200 units (0xc8000) ahead, and a short one 44 units (0x2c000) ahead pitched
- * down 0x3000 (67.5 degrees). "Ahead" is the +Z direction rotated by mAngleY.
+ * down 0x3000 (67.5 degrees). "Ahead" is the +Z direction rotated by mAngle.y.
  * Blocked means "the level ray hit something, OR the pitched ray found no ground".
  *
  * Guarded by gCurrentSublevel (LEVEL_ID) == 0x2a (42), so the probe only casts in
@@ -664,7 +664,7 @@ int daPopoi_c::IsBlockedAhead() {
         start.z = mPos.z;
         start.y = y + 0x28000;
         dir.z = 0xc8000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
         MTX_MultVec43(&dir, &data_020a0e68, &out);
         {
             int sx = start.x;
@@ -692,7 +692,7 @@ int daPopoi_c::IsBlockedAhead() {
         dir.x = 0;
         dir.y = 0;
         dir.z = 0x2c000;
-        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngle.y);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x3000);
         MTX_MultVec43(&dir, &data_020a0e68, &out);
         {

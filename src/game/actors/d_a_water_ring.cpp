@@ -81,7 +81,7 @@ void daWater_Ring_c::CheckPlayerPass() {
         otherPos.y = pos.y;
         otherPos.z = pos.z;
     }
-    if (AngleDiff(mAngleX, Vec3_VertAngle(&mPos, &otherPos)) >= 0x3000)
+    if (AngleDiff(mAngle.x, Vec3_VertAngle(&mPos, &otherPos)) >= 0x3000)
         return;
     if ((mRingType == 1 && ((mPrevPlayerAngle >> 16) & 1) != ((HorzAngleToCPlayer() >> 16) & 1)) ||
         mRingType != 1) {
@@ -176,7 +176,7 @@ void daWater_Ring_c::UpdateModel() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mModel.ApplyOpacity(mOpacity, 1);
     mModel.mat4x3 = data_020a0e68;
 }
@@ -199,9 +199,9 @@ int daWater_Ring_c::Behavior() {
     if (mState->execute)
         (this->*mState->execute)();
     UpdatePos(&mdCcAcPos_c);
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngleX;
+    mAngle.y = mPrevAngleY;
+    mAngle.z = mPrevAngleZ;
     UpdateModel();
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();

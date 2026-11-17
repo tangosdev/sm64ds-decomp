@@ -57,33 +57,27 @@ struct dActor_c : dBase_c {
        constructor appends this node, the destructor unlinks it, and Next() walks
        the next link and reads its owner to get back to the actor. */
     fLiNdBa_c mActorListNode; /* 0x050 -- owner is always `this` */
-    /* mAngle and mPrevAngle are still overlaid on scalar triples: mAngle is
-       also mAngleX/Y/Z, and mPrevAngle is also mPrevAngleX/Y/Z. Both
-       spellings name the same storage. The overlays are a decomp-era device,
-       not the original layout, and they are being retired one at a time in
-       favour of the plain vector member, as mPos, mPrevPos, mCamSpacePos,
-       mScale and mSpeed already are. New code should use the vector member.
+    /* mPrevAngle is still overlaid on a scalar triple: it is also
+       mPrevAngleX/Y/Z, and both spellings name the same storage. The overlay
+       is a decomp-era device, not the original layout, and it is being
+       retired in favour of the plain vector member, as mPos, mPrevPos,
+       mCamSpacePos, mScale, mAngle and mSpeed already are. New code should
+       use the vector member.
 
-       THESE OVERLAYS ARE NOT FREE, AND THEY ARE PAID FOR BELOW. mwcc numbers
-       its @NNN temporaries from one per-TU counter, and every unnamed struct
-       or union draws two numbers from it: four per overlay, 8 for the two
-       left. Unpaid, that renumbers the pinned @NNN symbols of every TU
-       including this header. A named parameter in a member declaration draws
-       one, so parameter names further down are left off to pay for them.
-       Retiring an overlay frees four numbers, and four of those parameters
-       get their names back. Naming or unnaming a parameter in this class,
-       or adding an overlay, moves every consumer's @NNN: keep the books
-       balanced. */
+       THIS OVERLAY IS NOT FREE, AND IT IS PAID FOR BELOW. mwcc numbers its
+       @NNN temporaries from one per-TU counter, and every unnamed struct or
+       union draws two numbers from it: four for the overlay. Unpaid, that
+       renumbers the pinned @NNN symbols of every TU including this header. A
+       named parameter in a member declaration draws one, so parameter names
+       further down are left off to pay for it. Retiring the overlay frees
+       four numbers, and four of those parameters get their names back.
+       Naming or unnaming a parameter in this class, or adding an overlay,
+       moves every consumer's @NNN: keep the books balanced. */
     Vector3 mPos;         /* 0x05c */
     Vector3 mPrevPos;     /* 0x068 -- last frame's position, snapshotted by BeforeBehavior */
     Vector3 mCamSpacePos; /* 0x074 */
     Vector3 mScale;       /* 0x080 */
-    union {
-        struct {
-            s16 mAngleX, mAngleY, mAngleZ;
-        };
-        Vector3_16 mAngle; /* 0x08c */
-    };
+    Vector3_16 mAngle;    /* 0x08c */
     union {
         struct {
             s16 mPrevAngleX, mPrevAngleY, mPrevAngleZ;
@@ -155,17 +149,18 @@ struct dActor_c : dBase_c {
     dActor_c();
 
     /* Parameters left unnamed in this class so that the counter balances
-       against the vector overlays above:
+       against the vector overlay above:
          daPly_c &: slot 27 (OnHitByMegaChar);
-         dActor_c &: slots 21-26 and 28;
+         dActor_c &: slots 25, 26 and 28;
          func_0200fccc's doRaycast flag;
          dExtShadowModel_c &: DropShadowScaleXYZ, DropShadowRadHeight.
        Each overlay retired so far gave four names back, all spelled as in the
        definitions: the dust workers' `pos` (mCamSpacePos), the dCc_c &
-       `clsn` (mPrevPos), the dCc_c * `clsn` (mScale) and the daPly_c &
+       `clsn` (mPrevPos), the dCc_c * `clsn` (mScale), the daPly_c &
        `player` of OnTurnIntoEgg, BumpedUnderneathByPlayer, JumpedOnByPlayer
-       and GivePlayerCoins (mPos). Naming one, or unnaming another, moves
-       every consumer's @NNN. */
+       and GivePlayerCoins (mPos), and the dActor_c & of slots 21-24
+       (mAngle). Naming one, or unnaming another, moves every consumer's
+       @NNN. */
 
     /* --- overrides of inherited slots. Each takes its base's index. --- */
     virtual bool BeforeInitResources();                /* slot  1 */
@@ -185,10 +180,10 @@ struct dActor_c : dBase_c {
        so only an override with early returns can tell the difference -- and one
        of each does, allocating registers differently under `int` even with r0
        untouched. Measured, not assumed; see notes/actor-core-provenance.md 9. */
-    virtual void OnGroundPounded(dActor_c &);          /* slot 21 */
-    virtual int OnAttacked1(dActor_c &);               /* slot 22 */
-    virtual int OnAttacked2(dActor_c &);               /* slot 23 */
-    virtual void OnKicked(dActor_c &);                 /* slot 24 */
+    virtual void OnGroundPounded(dActor_c &pounder);   /* slot 21 */
+    virtual int OnAttacked1(dActor_c &attacker);       /* slot 22 */
+    virtual int OnAttacked2(dActor_c &attacker);       /* slot 23 */
+    virtual void OnKicked(dActor_c &kicker);           /* slot 24 */
     virtual int OnPushed(dActor_c &);                  /* slot 25 */
     virtual int OnHitByCannonBlastedChar(dActor_c &);  /* slot 26 */
     virtual void OnHitByMegaChar(daPly_c &);           /* slot 27 */
@@ -230,7 +225,7 @@ struct dActor_c : dBase_c {
     static dActor_c *FindWithActorID(u32 actorID, dActor_c *after);
     static dActor_c *Next(const dActor_c *after);
 
-    /* Integrates mHorzSpeed along mAngleY and applies gravity. */
+    /* Integrates mHorzSpeed along mPrevAngleY and applies gravity. */
     void UpdatePosWithHorzSpeedAndAng();
     int BumpedUnderneathByPlayer(daPly_c &player);
     int  GetSubtraction(short a, short b);
@@ -392,12 +387,7 @@ struct dActor_c {
     Vector3 mPrevPos;     /* 0x068 */
     Vector3 mCamSpacePos; /* 0x074 */
     Vector3 mScale;       /* 0x080 */
-    union {
-        struct {
-            s16 mAngleX, mAngleY, mAngleZ;
-        };
-        struct Vector3_16 mAngle; /* 0x08c */
-    };
+    struct Vector3_16 mAngle; /* 0x08c */
     union {
         struct {
             s16 mPrevAngleX, mPrevAngleY, mPrevAngleZ;

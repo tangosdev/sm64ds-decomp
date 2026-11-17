@@ -55,7 +55,7 @@
    carrying (0x2): the carried item (mCarriedModel) is placed and drawn.
        Cleared once the carried actor is spawned (021162c8, 02116e14) and on
        the replacement actor RespawnIfHasCap returns.
-   followHeading (0x4): while set, Behavior copies mPrevAngleY into mAngleY.
+   followHeading (0x4): while set, Behavior copies mPrevAngleY into mAngle.y.
        0211a810 clears it when a knockback starts and 0211a6f0 sets it again
        when it ends; 0211a3d0 clears it when the death spin starts.
    visible (0x8): Render and the placement helpers do nothing while clear.

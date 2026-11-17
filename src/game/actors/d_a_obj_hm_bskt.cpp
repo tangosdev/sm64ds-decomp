@@ -85,7 +85,7 @@ s32 daObjHmBskt_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *clsnFile = dBgW_Kc::LoadFile(data_ov030_02115c80);
-    mMeshCollider.SetFile(clsnFile, mClsnMat, 0x199, mAngleY, data_ov030_02114ee4);
+    mMeshCollider.SetFile(clsnFile, mClsnMat, 0x199, mAngle.y, data_ov030_02114ee4);
 
     Vector3 starPos;
     starPos.x = mPos.x;
@@ -99,7 +99,7 @@ s32 daObjHmBskt_c::InitResources() {
 
 s32 daObjHmBskt_c::Behavior() {
     IsClsnInRangeOnScreen(0, 0);
-    mAngleY = mAngleY + mHorzSpeed;
+    mAngle.y = mAngle.y + mHorzSpeed;
 
     if (mVertAccel != 0) {
         mFlags &= ~1;

@@ -140,7 +140,7 @@ void daSBird_c::StateFly() {
     else if (dd > 0x3000)
         dd = 0x3000;
     mBank = (s16)dd;
-    ApproachLinear(mAngleZ, mBank, 0x258);
+    ApproachLinear(mAngle.z, mBank, 0x258);
 
     mHorzSpeed = FX_MUL(mFlySpeed, FX_CosIdx((u16)mPrevAngleX >> 4));
     mSpeed.y = FX_MUL(mFlySpeed, FX_SinIdx((u16)mPrevAngleX >> 4));
@@ -268,9 +268,9 @@ s32 daSBird_c::Behavior() {
     Vector3 tmp;
     Vec3_Asr(&tmp, &mPos, 3);
     MtxStack::transS(tmp.x, tmp.y, tmp.z);
-    mAngleY = mPrevAngleY;
-    Matrix4x3_ApplyInPlaceToRotationZ(&MtxStack::get(), mAngleZ);
-    MtxStack::YrotM(mAngleY);
+    mAngle.y = mPrevAngleY;
+    Matrix4x3_ApplyInPlaceToRotationZ(&MtxStack::get(), mAngle.z);
+    MtxStack::YrotM(mAngle.y);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&MtxStack::get();
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x1e000, 0x7d0000, 0xf);
     mAnmModel.Advance();

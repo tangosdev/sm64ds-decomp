@@ -299,7 +299,7 @@ s32 daBrq_c::EnterDefeatedState() {
  * dBgCh_Actr::UpdateDiscreteNoLava body at 0x02037024. */
 
 s32 daBrq_c::UpdateDefeatedState() {
-    mAngleX = (mAngleX - 0x1000);
+    mAngle.x = (mAngle.x - 0x1000);
     mAnmModel.Advance();
     UpdatePos(&mdCcAcPos_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
@@ -315,7 +315,7 @@ void daBrq_c::UpdateModelTransform() {
     int shadowDepth;
 
     if (mState == 2) {
-        Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+        Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
         mAnmModel.mat4x3.m[9] = mPos.x >> 3;
         mAnmModel.mat4x3.m[10] = mPos.y >> 3;
         mAnmModel.mat4x3.m[11] = mPos.z >> 3;
@@ -366,7 +366,7 @@ s32 daBrq_c::HandlePlayerCollision() {
 
     if (mdCcAcPos_c.hitFlags & 0x10) {
         mPrevAngleY = Vec3_HorzAngle(&player->mPos, &mPos);
-        mAngleY = (mPrevAngleY + 0x8000);
+        mAngle.y = (mPrevAngleY + 0x8000);
         player->IncMegaKillCount();
         SetState(2);
     } else {

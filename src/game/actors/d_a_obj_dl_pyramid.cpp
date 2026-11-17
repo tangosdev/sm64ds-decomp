@@ -121,7 +121,7 @@ void daObjDlPyramid_c::Descend() {
             mAngVelY = 0x1800;
             mSpeed.y = 0x5000;
         }
-        mAngleY += mAngVelY;
+        mAngle.y += mAngVelY;
         mPos.y += mSpeed.y;
     }
     mSpinParticleID = Particle::System::New(mSpinParticleID, kPtclPyramidTopSinking, mPos.x, mPos.y,
@@ -133,16 +133,16 @@ void daObjDlPyramid_c::Descend() {
 /* The collider follows the top: yaw matrix, actor position in the
  * translation row, then hand both to the mesh collider. */
 void daObjDlPyramid_c::UpdateClsnMatrix() {
-    Matrix4x3_FromRotationY(&mClsnMat2, mAngleY);
+    Matrix4x3_FromRotationY(&mClsnMat2, mAngle.y);
     mClsnMat2.t.x = mPos.x;
     mClsnMat2.t.y = mPos.y;
     mClsnMat2.t.z = mPos.z;
-    mMeshCollider.Transform(mClsnMat2, mAngleY);
+    mMeshCollider.Transform(mClsnMat2, mAngle.y);
 }
 
 /* The model follows the top: yaw matrix, position at 1/8 scale. */
 void daObjDlPyramid_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationY(&mTopModel.mat4x3, mAngleY);
+    Matrix4x3_FromRotationY(&mTopModel.mat4x3, mAngle.y);
     mTopModel.mat4x3.t.x = mPos.x >> 3;
     mTopModel.mat4x3.t.y = mPos.y >> 3;
     mTopModel.mat4x3.t.z = mPos.z >> 3;
@@ -219,7 +219,7 @@ int daObjDlPyramid_c::InitResources() {
     UpdateModelMatrix();
     UpdateClsnMatrix();
     KCL_File *kcl = dBgW_Kc::LoadFile(gDlPyramidCollisionFile);
-    mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngleY, *(CLPS_Block *)&data_ov024_021129f0);
+    mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngle.y, *(CLPS_Block *)&data_ov024_021129f0);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
     mHomePos.x = mPos.x;

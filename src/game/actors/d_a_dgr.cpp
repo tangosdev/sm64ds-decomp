@@ -16,8 +16,8 @@
  * not have.
  *
  * Kept shapes (each alternative was measured against the ROM):
- * - Behavior: `mAngleX = mAngleX + mAngleXSpeed` size-DIFF 0x3ec->0x3e8;
- *   the ROM's update is `mAngleX += mAngleXSpeed`.
+ * - Behavior: `mAngle.x = mAngle.x + mAngleXSpeed` size-DIFF 0x3ec->0x3e8;
+ *   the ROM's update is `mAngle.x += mAngleXSpeed`.
  * - Behavior: `speedDivisor = -speedDivisor` and `bob = -bob` size-DIFF
  *   0x3ec->0x3e4. The ROM multiplies, `x *= -1`.
  * - Behavior: deleting the `loc[0..2] = mPos*` seed size-DIFF 0x3ec->0x3d4.
@@ -96,10 +96,10 @@ s32 daDgr_c::InitResources() {
     }
     {
         KCL_File *kcl = dBgW_Kc::LoadFile(data_ov025_02113a60);
-        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov025_02112c28);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngle.y, data_ov025_02112c28);
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
-    mAngleY = 0;
+    mAngle.y = 0;
     mBasePosY = mPos.y;
     mAngleXSpeed = 0;
     mPhaseTimer = 0;
@@ -165,12 +165,12 @@ s32 daDgr_c::Behavior() {
         }
 
         mPos.z += mSpeed.z;
-        mAngleX += mAngleXSpeed;
-        if ((mAngleX & kGrindAngleMask) < kGrindWindow && mAngleXSpeed != 0)
+        mAngle.x += mAngleXSpeed;
+        if ((mAngle.x & kGrindAngleMask) < kGrindWindow && mAngleXSpeed != 0)
             func_02012694(kGrindSound, &mCamSpacePos);
 
         {
-            s32 bob = FX_SinIdx((u16)(s16)(mAngleX << 2) >> 4) * kBobScale;
+            s32 bob = FX_SinIdx((u16)(s16)(mAngle.x << 2) >> 4) * kBobScale;
             if (bob < 0)
                 bob *= -1;
             mPos.y = mBasePosY + bob;
@@ -189,10 +189,10 @@ s32 daDgr_c::Behavior() {
         {
             s32 along;
             s32 across;
-            across = FX_CosIdx((u16)mAngleY >> 4);
+            across = FX_CosIdx((u16)mAngle.y >> 4);
             loc[0] = across * kDustReach + mPos.x;
             loc[1] = mBasePosY - kDustDrop;
-            along = FX_SinIdx((u16)mAngleY >> 4);
+            along = FX_SinIdx((u16)mAngle.y >> 4);
             loc[2] = along * kDustReach + mPos.z;
             mDustParticle1 = Particle::System::New(mDustParticle1, kDustEffect, loc[0], loc[1],
                                                    loc[2], (const Vector3_16f *)((void *)0),
@@ -201,9 +201,9 @@ s32 daDgr_c::Behavior() {
         {
             s32 along;
             s32 across;
-            across = FX_CosIdx((u16)mAngleY >> 4);
+            across = FX_CosIdx((u16)mAngle.y >> 4);
             loc[0] = mPos.x - across * kDustReach;
-            along = FX_SinIdx((u16)mAngleY >> 4);
+            along = FX_SinIdx((u16)mAngle.y >> 4);
             loc[2] = mPos.z - along * kDustReach;
             mDustParticle2 = Particle::System::New(mDustParticle2, kDustEffect, loc[0], loc[1],
                                                    loc[2], (const Vector3_16f *)((void *)0),
@@ -234,7 +234,7 @@ s32 daDgr_c::CleanupResources() {
 
 /* dExtSimpleModel_c matrix: X rotation, then translation at 1/8 of the actor position. */
 void daDgr_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationX(&mModel.mat4x3, mAngleX);
+    Matrix4x3_FromRotationX(&mModel.mat4x3, mAngle.x);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -246,7 +246,7 @@ void daDgr_c::UpdateClsnMatrix() {
     mClsnMat.m[9] = mPos.x;
     mClsnMat.m[10] = mPos.y;
     mClsnMat.m[11] = mPos.z;
-    mMeshCollider.Transform(mClsnMat, mAngleY);
+    mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
 
 /* Yoshi egg within eight clip-radii: turn the mesh collider on.

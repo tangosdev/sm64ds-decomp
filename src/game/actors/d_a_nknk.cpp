@@ -253,7 +253,7 @@ int daNknk_c::Behavior()
 
         {
             int ang = mPrevAngleY;
-            mAngleY = (s16)ang;
+            mAngle.y = (s16)ang;
             {
                 u16 *p100 = &mStateTimer;
                 *p100 = (*p100 + 1);
@@ -639,7 +639,7 @@ void daNknk_c::UpdateModelMatrixAndShadow() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
     MtxStack::transS(v.x, v.y, v.z);
-    MtxStack::YrotM(mAngleY);
+    MtxStack::YrotM(mAngle.y);
     /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     /* No drop shadow while in Yoshi's mouth. */
@@ -777,7 +777,7 @@ void daNknk_c::func_ov062_02117c98()
         if (mKoopaVariant == 0) {
             DropShell();
             if (flags & 0x3c0)
-                mPrevAngleY = found->mAngleY;
+                mPrevAngleY = found->mAngle.y;
         } else {
             if (flags & 0x40040)
                 mDeathState = 2;
@@ -862,7 +862,7 @@ void daNknk_c::func_ov062_02117c98()
 tail:
     func_ov002_020aea30(found, &mWithMeshClsn);
     if (turnAround)
-        mAngleY = (u16)(mPrevAngleY + 0x8000);
+        mAngle.y = (u16)(mPrevAngleY + 0x8000);
 }
 
 void daNknk_c::DropShell() {
@@ -970,7 +970,7 @@ void daNknk_c::SpawnFootstepDust(
         mFootstep = 1;
         func_0201267c(0xe4, &mCamSpacePos);
         if (mAnimIndex == 1) return;
-        ang = (mAngleY + 0x4000);
+        ang = (mAngle.y + 0x4000);
         pos.x = mPos.x;
         pos.y = mPos.y;
         pos.z = mPos.z;

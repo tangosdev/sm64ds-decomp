@@ -72,7 +72,7 @@ s32 daObjBk_Rotebar_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *kcl = dBgW_Kc::LoadFile(data_ov015_02114a84);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov015_02113654);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, data_ov015_02113654);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
@@ -83,7 +83,7 @@ s32 daObjBk_Rotebar_c::InitResources() {
 s32 daObjBk_Rotebar_c::Behavior() {
     if (DecIfAbove0_Byte((unsigned char *)&mPauseTimer) == 0) {
         mPrevAngleY += 0x100;
-        mAngleY = mPrevAngleY;
+        mAngle.y = mPrevAngleY;
         mTurnSound = Sound::PlayLong(mTurnSound, 3, 0x88, mCamSpacePos, 0);
         if ((mPrevAngleY & 0x7fff) == 0)
             mPauseTimer = 60;

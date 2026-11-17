@@ -148,9 +148,9 @@ int daWater_Tatumaki_c::StateDrag() {
         player->mPos.z = this->mPullPos.z;
         {
             int ang = this->HorzAngleToCPlayer() + kHalfTurn;
-            player->mAngleX = kLookDown;
-            player->mAngleY = ang;
-            player->mAngleZ = 0;
+            player->mAngle.x = kLookDown;
+            player->mAngle.y = ang;
+            player->mAngle.z = 0;
         }
         {
             const Vector3 &p = player->mPos;
@@ -266,7 +266,7 @@ void daWater_Tatumaki_c::UpdateModelMatrix() {
     Vector3 pos;
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     /* Twelve flat words. A Matrix4x3 assignment copies r and t separately. */
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
@@ -296,9 +296,9 @@ int daWater_Tatumaki_c::Behavior() {
     pos.y += kSprayLift;
     mParticleID = Particle::System::New(mParticleID, kSprayEffect, pos.x, pos.y, pos.z, 0, 0);
 
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngleX;
+    mAngle.y = mPrevAngleY;
+    mAngle.z = mPrevAngleZ;
 
     UpdateModelMatrix();
     mTextureTransformer.Advance();

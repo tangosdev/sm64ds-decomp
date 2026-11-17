@@ -24,8 +24,8 @@
 //   veneer (size 0x14); a near branch to RequestShake is 0xc.
 // - RequestShake keeps the unused second parameter. The veneer forwards
 //   it, and a 1-arg callee drops `mov r1, r2`.
-// - Behavior case 2 keeps the masked address of mAngleX (this+0x8c) and
-//   mAngleZ (this+0x90). Named stores change the size. Case 1 keeps
+// - Behavior case 2 keeps the masked address of mAngle.x (this+0x8c) and
+//   mAngle.z (this+0x90). Named stores change the size. Case 1 keeps
 //   `(long long)sinv * 0x19000`.
 // - Kill materialises `(actorID == KM2_KUZURE)` into an int before the
 //   branch. Folding the test changes the compare.
@@ -80,7 +80,7 @@ void daObjFallBlock_c_EmitDestructor(daObjFallBlock_c *p) {
 }
 
 /* Once (mGroupLinked). Same-id neighbours closer than 0x96000 become
-   mNextInGroup when they sit within a quarter-turn of mAngleY, and
+   mNextInGroup when they sit within a quarter-turn of mAngle.y, and
    mPrevInGroup otherwise. Vec3_HorzAngle / Vec3_Dist / AngleDiff. */
 void daObjFallBlock_c::LinkGroup() {
     if (mGroupLinked != 0)
@@ -92,7 +92,7 @@ void daObjFallBlock_c::LinkGroup() {
             Vector3 *a = &mPos;
             int ang = Vec3_HorzAngle(a, b);
             if (Vec3_Dist(a, b) < 0x96000) {
-                if (AngleDiff(ang, mAngleY) < 0x4000)
+                if (AngleDiff(ang, mAngle.y) < 0x4000)
                     mNextInGroup = (daObjFallBlock_c *)r;
                 else
                     mPrevInGroup = (daObjFallBlock_c *)r;
@@ -133,8 +133,8 @@ void daObjFallBlock_c::FindLinkedStar() {
    frames before it will accept another stand. */
 void daObjFallBlock_c::ResetMotion() {
     mState = 0;
-    mAngleX = 0;
-    mAngleZ = 0;
+    mAngle.x = 0;
+    mAngle.z = 0;
     mShakeX = 0;
     mTiltVelZ = 0;
     mSpeed.x = 0;
@@ -187,7 +187,7 @@ void daObjFallBlock_c::Kill() {
 /* Full XYZ model matrix. Translation is model space, position >> 3,
    same row UpdateModelPosAndRotY writes for yaw alone. */
 void daObjFallBlock_c::ApplyModelXyz() {
-    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     mModel.mat4x3.m[11] = mPos.z >> 3;
@@ -315,14 +315,14 @@ s32 daObjFallBlock_c::Behavior() {
         break;
 
     case 2:
-        if (mAngleX < 0x400) {
+        if (mAngle.x < 0x400) {
             s16 *shakeX = &mShakeX;
             *shakeX = (s16)(*shakeX + 0x80);
         } else {
             if (mMeshCollider.IsEnabled() != 0)
                 mMeshCollider.Disable();
         }
-        yaw = mAngleZ;
+        yaw = mAngle.z;
         if (yaw > -0x400) {
             if (yaw < 0x400) {
                 s16 *tiltVelZ = &mTiltVelZ;
@@ -330,13 +330,13 @@ s32 daObjFallBlock_c::Behavior() {
             }
         }
         {
-            /* Integer-cast address form: plain mAngleX / mAngleZ
+            /* Integer-cast address form: plain mAngle.x / mAngle.z
                read-modify-writes shrink Behavior by 8 bytes. */
-            s16 t = *(s16 *)((int)&mAngleX);
+            s16 t = *(s16 *)((int)&mAngle.x);
             t = (s16)(t + mShakeX);
-            *(s16 *)((int)&mAngleX) = t;
-            t = (s16)(*(s16 *)((int)&mAngleZ) + mTiltVelZ);
-            *(s16 *)((int)&mAngleZ) = t;
+            *(s16 *)((int)&mAngle.x) = t;
+            t = (s16)(*(s16 *)((int)&mAngle.z) + mTiltVelZ);
+            *(s16 *)((int)&mAngle.z) = t;
             UpdatePos(0);
         }
         if (DecIfAbove0_Short(&mStateTimer) == 0) {
@@ -400,7 +400,7 @@ s32 daObjFallBlock_c::InitResourcesFrom(ResourceDescriptor *fp) {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(*fp->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*fp->collision), mClsnMat, 0x199, mAngleY, *fp->clps);
+    mMeshCollider.SetFile(dBgW_Kc::LoadFile(*fp->collision), mClsnMat, 0x199, mAngle.y, *fp->clps);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     v.x = mPos.x;
     y = mPos.y;

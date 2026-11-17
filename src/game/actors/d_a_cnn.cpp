@@ -146,15 +146,15 @@ int daCnn_c::InitResources() {
 
     if (mVariant != 2) {
         if (mVariant == 1)
-            mAngleX = 0x2000;
+            mAngle.x = 0x2000;
         mTargetPitch = 0x2000;
-        mTargetAngleY = mAngleY;
+        mTargetAngleY = mAngle.y;
         mState = 0;
         PickNextAim();
         mdCcAc_c.Init(this, 0xa0000, 0x12c000, 0x800004, 0);
     } else {
         mPos.y -= 0x190000;
-        mTargetAngleY = mAngleZ;
+        mTargetAngleY = mAngle.z;
         mTargetPitch = 0x2000;
         mState = 2;
         mFlags &= ~1;
@@ -202,7 +202,7 @@ int daCnn_c::CleanupResources() {
 void daCnn_c::PickNextAim() {
     int angleY;
     mTargetPitch = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16 & 0xfff) + 0x1000);
-    angleY = mAngleY;
+    angleY = mAngle.y;
     do {
         mTargetAngleY = (mHomeAngleY + 0xe000 +
                          ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3fff));
@@ -215,8 +215,8 @@ void daCnn_c::StateAim() {
     short prevAngleY = mPrevAngleY;
     ApproachLinear(mPrevAngleX, mTargetPitch, 0x100);
     ApproachLinear(mPrevAngleY, mTargetAngleY, 0x100);
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
+    mAngle.x = mPrevAngleX;
+    mAngle.y = mPrevAngleY;
     {
         short target = mTargetAngleY;
         if (prevAngleY != target && mPrevAngleY == target)
@@ -402,14 +402,14 @@ void daCnn_c::StateLoad() {
         rider->mPos.y = y;
         rider->mPos.z = z;
         if (mLoadStep < 3) {
-            s16 angleY = mAngleY;
-            s16 angleX = mAngleX;
+            s16 angleY = mAngle.y;
+            s16 angleX = mAngle.x;
             rider = mPlayer;
-            rider->mAngleX = angleX;
-            rider->mAngleY = angleY;
-            rider->mAngleZ = 0;
-            angleY = mAngleY;
-            angleX = mAngleX;
+            rider->mAngle.x = angleX;
+            rider->mAngle.y = angleY;
+            rider->mAngle.z = 0;
+            angleY = mAngle.y;
+            angleX = mAngle.x;
             rider = mPlayer;
             rider->mPrevAngleX = angleX;
             rider->mPrevAngleY = angleY;
@@ -435,7 +435,7 @@ void daCnn_c::StateLoad() {
     case 1:
         if (mTimer <= 10)
             break;
-        if (!ApproachLinear(mAngleY, mTargetAngleY, 0x200))
+        if (!ApproachLinear(mAngle.y, mTargetAngleY, 0x200))
             break;
         mLoadStep++;
         mTimer = 0;
@@ -445,7 +445,7 @@ void daCnn_c::StateLoad() {
     case 2:
         if (mTimer <= 10)
             break;
-        if (!ApproachLinear(mAngleX, 0x2000, 0x200))
+        if (!ApproachLinear(mAngle.x, 0x2000, 0x200))
             break;
         if (!func_ov002_020df300(mPlayer))
             break;
@@ -455,7 +455,7 @@ void daCnn_c::StateLoad() {
         break;
 
     case 3:
-        mAngleY = GetAngleToCamera(mPlayer->mPlayerNo) + 0x4000;
+        mAngle.y = GetAngleToCamera(mPlayer->mPlayerNo) + 0x4000;
         if (!mPlayer->IsBeingShotOutOfCannon())
             break;
         mLoadStep++;
@@ -465,9 +465,9 @@ void daCnn_c::StateLoad() {
     case 4: {
         u8 settled = 0;
         mPos.y -= 0x32000;
-        if (ApproachLinear(mAngleX, 0, 0x800))
+        if (ApproachLinear(mAngle.x, 0, 0x800))
             settled++;
-        if (ApproachLinear(mAngleY, mHomeAngleY, 0x800))
+        if (ApproachLinear(mAngle.y, mHomeAngleY, 0x800))
             settled++;
         if (settled != 2)
             break;
@@ -477,8 +477,8 @@ void daCnn_c::StateLoad() {
         mdCcAc_c.flags &= ~1;
         mPos.y = mSpawnPos.y - 0x190000;
         mPlayer = 0;
-        mAngleY = mHomeAngleY;
-        mPrevAngleY = mAngleY;
+        mAngle.y = mHomeAngleY;
+        mPrevAngleY = mAngle.y;
         break;
     }
     }
@@ -490,8 +490,8 @@ void daCnn_c::StateLoad() {
 /* Place the model and pose the barrel: yaw on the root bone, pitch and the
    recoil slide on the barrel bone. */
 void daCnn_c::UpdateModel() {
-    u16 pitch = mAngleX;
-    s16 yaw = mAngleY;
+    u16 pitch = mAngle.x;
+    s16 yaw = mAngle.y;
     ModelBone *bones;
 
     Matrix4x3_FromTranslation(&mModel.mat4x3, mPos.x >> 3, mPos.y >> 3, mPos.z >> 3);

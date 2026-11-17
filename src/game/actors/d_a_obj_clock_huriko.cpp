@@ -91,18 +91,18 @@ s32 daObjClockHuriko_c::InitResources() {
  * speed reverses at each end of the arc, the angle integrates it, and the tick
  * sound plays as the speed passes +-0x10.
  *
- * The swing angle is dActor_c::mAngleZ. Its separately materialized pointer
+ * The swing angle is dActor_c::mAngle.z. Its separately materialized pointer
  * below preserves the ROM's load/read-modify-write order under 2004/b56. */
 s32 daObjClockHuriko_c::Behavior() {
     if (gNextSublevel <= 0) {
-        s16 *angleZ = &mAngleZ;
+        s16 *angleZ = &mAngle.z;
         /* The test reads the field instead of going through angleZ, and that is
            load-bearing under 2004/b56: the ROM tests the field directly
            (`ldrsh r0,[r4,#0x90]`) and only then materialises the pointer
            (`add r3,r4,#0x90`) for the read-modify-write below. Spelled as
            `*angleZ`, b56 folds the test into the pointer and emits the two in
            the other order. */
-        if (mAngleZ > 0) {
+        if (mAngle.z > 0) {
             mAngSpeed -= 8;
         } else {
             mAngSpeed += 8;
@@ -132,7 +132,7 @@ s32 daObjClockHuriko_c::Render() {
  * The marker above is not decoration -- without it tools/tiers.py folds this
  * body into the preceding member's fragment. */
 void daObjClockHuriko_c::UpdateModelTransform() {
-    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     mModel.mat4x3.t.x = mPos.x >> 3;
     mModel.mat4x3.t.y = mPos.y >> 3;
     mModel.mat4x3.t.z = mPos.z >> 3;

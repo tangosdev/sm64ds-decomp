@@ -79,9 +79,9 @@
  *
  *   CheckTouch's angle copy keeps `a = b ? a : a` through a Vector3_16.
  *
- *   Reading the player's angles / position as plain members (`closest->mAngleX`)
+ *   Reading the player's angles / position as plain members (`closest->mAngle.x`)
  *   misses in InitAnim (0x19c vs 0x1a0 bytes) and Taken
- *   (0x224 vs 0x21c); taking `&player->mAngleX` / `&player->mPos.x` and indexing
+ *   (0x224 vs 0x21c); taking `&player->mAngle.x` / `&player->mPos.x` and indexing
  *   the pointer matches. mStateTimer is s16 in dEnemyBase_c but the helpers
  *   read it unsigned, hence CAP_TIMER.
  *
@@ -672,9 +672,9 @@ void daObjMarioCap_c::UpdateMatrix()
     int m = mType;
     if (m != 5 && m != 0x12 && m != 0x10 && m != 0xb && m != 7 && m != 9 &&
         m != 0x14 && m != 0x15 && m != 0x16) {
-        mAngleX = mPrevAngleX;
-        mAngleY = mPrevAngleY;
-        mAngleZ = mPrevAngleZ;
+        mAngle.x = mPrevAngleX;
+        mAngle.y = mPrevAngleY;
+        mAngle.z = mPrevAngleZ;
     }
 
     if (mCarryMatrix != 0) {
@@ -688,8 +688,8 @@ void daObjMarioCap_c::UpdateMatrix()
     /* position / 8: the model matrix's translation scale */
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX,
-                                           mAngleY, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x,
+                                           mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = data_020a0e68;
 
     {
@@ -728,7 +728,7 @@ void daObjMarioCap_c::UpdateMatrix()
                 off = -10;
             }
         }
-        Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
+        Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
         /* m[9..11] is the translation row. */
         mShadowMat.m[9] = mPos.x >> 3;
         mShadowMat.m[10] = (y + (off << 12)) >> 3;
@@ -920,8 +920,8 @@ int daObjMarioCap_c::InitSlide()
  * (mHorzSpeed along mPrevAngleY) and the sum becomes the new heading and
  * speed, capped at 0xf000 (15 units a frame). mSpeed.y is set from the floor
  * normal and the words at 0x0a4 / 0x0ac, with 0x8000 (8 units a frame) of
- * extra downward bias, and mAngleX / mAngleZ move toward the floor's tilt
- * along and across mAngleY (UpdateAngle with arguments 4 and 0x1000). Returns 1. */
+ * extra downward bias, and mAngle.x / mAngle.z move toward the floor's tilt
+ * along and across mAngle.y (UpdateAngle with arguments 4 and 0x1000). Returns 1. */
 int daObjMarioCap_c::Slide()
 {
     struct Vector3 ownVel;
@@ -996,10 +996,10 @@ int daObjMarioCap_c::Slide()
     mSpeed.y = -(FX_Div(FX_MUL(mFloorNormal.x, mSpeed.x) + FX_MUL(mFloorNormal.z, mSpeed.z),
                         mFloorNormal.y) +
                  0x8000);
-    pitch = func_02010844(&mFloorNormal, mAngleY);
-    roll = func_02010844(&mFloorNormal, mAngleY - 0x4000);
-    UpdateAngle(mAngleX, pitch, 4, 0x1000);
-    UpdateAngle(mAngleZ, roll, 4, 0x1000);
+    pitch = func_02010844(&mFloorNormal, mAngle.y);
+    roll = func_02010844(&mFloorNormal, mAngle.y - 0x4000);
+    UpdateAngle(mAngle.x, pitch, 4, 0x1000);
+    UpdateAngle(mAngle.z, roll, 4, 0x1000);
     return 1;
 }
 
@@ -1078,14 +1078,14 @@ int daObjMarioCap_c::Taken() {
     mCarryMatrix = 0;
 
     {
-        s16 *q = &mPlayer->mAngleX;
+        s16 *q = &mPlayer->mAngle.x;
         mPrevAngleX = q[0];
         mPrevAngleY = q[1];
         mPrevAngleZ = q[2];
     }
-    mAngleX = mPrevAngleX;
-    mAngleY = mPrevAngleY;
-    mAngleZ = mPrevAngleZ;
+    mAngle.x = mPrevAngleX;
+    mAngle.y = mPrevAngleY;
+    mAngle.z = mPrevAngleZ;
 
     {
         s32 *q = &mPlayer->mPos.x;
@@ -1140,7 +1140,7 @@ int daObjMarioCap_c::Taken() {
  * index them by mModelIndex). Returns 1. */
 int daObjMarioCap_c::InitAnim()
 {
-    /* Reading the angles through closest->mAngleX / &mAnmModel methods
+    /* Reading the angles through closest->mAngle.x / &mAnmModel methods
        changes the size; the pointer-to-first-member form below is the one
        that matches. */
     int state;
@@ -1152,13 +1152,13 @@ int daObjMarioCap_c::InitAnim()
     if (state == 0xa || state == 0xf) {
         daPly_c *closest = ClosestPlayer();
         if (closest != 0) {
-            s16* src = &closest->mAngleX;
+            s16* src = &closest->mAngle.x;
             mPrevAngleX = src[0];
             mPrevAngleY = src[1];
             mPrevAngleZ = src[2];
-            mAngleX = mPrevAngleX;
-            mAngleY = mPrevAngleY;
-            mAngleZ = mPrevAngleZ;
+            mAngle.x = mPrevAngleX;
+            mAngle.y = mPrevAngleY;
+            mAngle.z = mPrevAngleZ;
             mPlayer = closest;
         }
     }
@@ -1198,13 +1198,13 @@ int daObjMarioCap_c::Anim()
 
     if (mType == 0xa || mType == 0xf) {
         if (mPlayer != 0) {
-            sp = &mPlayer->mAngleX;
+            sp = &mPlayer->mAngle.x;
             mPrevAngleX = sp[0];
             mPrevAngleY = sp[1];
             mPrevAngleZ = sp[2];
-            mAngleX = mPrevAngleX;
-            mAngleY = mPrevAngleY;
-            mAngleZ = mPrevAngleZ;
+            mAngle.x = mPrevAngleX;
+            mAngle.y = mPrevAngleY;
+            mAngle.z = mPrevAngleZ;
 
             ip = &mPlayer->mPos.x;
             mPos.x = ip[0];
@@ -1321,18 +1321,18 @@ void daObjMarioCap_c::CheckTouch()
     {
         /* `a = b ? a : a` through a Vector3_16 is the MATCH form. */
         daPly_c *found = mPlayer;
-        int a = *(u16*)&found->mAngleX;
-        int b = *(u16*)&found->mAngleY;
+        int a = *(u16*)&found->mAngle.x;
+        int b = *(u16*)&found->mAngle.y;
         a = b ? a : a;
         v.x = a;
         v.y = b;
-        v.z = *(u16*)&found->mAngleZ;
+        v.z = *(u16*)&found->mAngle.z;
         mPrevAngleX = v.x;
         mPrevAngleY = v.y;
         mPrevAngleZ = *(s16*)&v.z;
-        mAngleX = mPrevAngleX;
-        mAngleY = mPrevAngleY;
-        mAngleZ = mPrevAngleZ;
+        mAngle.x = mPrevAngleX;
+        mAngle.y = mPrevAngleY;
+        mAngle.z = mPrevAngleZ;
     }
 
     EnterState(&data_ov002_0210df54);

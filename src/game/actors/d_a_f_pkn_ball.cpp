@@ -216,7 +216,7 @@ int daFPknBall_c::Behavior() {
     if (mTargetPlayer != 0 && mVariant != VARIANT_KEEPS_HEADING) {
         mTargetAngleY = Vec3_HorzAngle(&mPos, &mTargetPlayer->mPos);
     } else {
-        mTargetAngleY = mAngleY;
+        mTargetAngleY = mAngle.y;
     }
 
     hitByID = mdCcAc_c.otherOwner;

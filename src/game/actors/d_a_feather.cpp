@@ -90,12 +90,12 @@ int daFeather_c::InitResources() {
     UpdateModelAndShadow();
     mWithMeshClsn.Init(this, 0x28000, 0xa000, 0, 0);
 
-    mAngleX = 0x4000;
-    mAngleZ = -0x4000;
+    mAngle.x = 0x4000;
+    mAngle.z = -0x4000;
     b = (gGameMode == 1);
     if (!b) {
         /* dCamera_c::mAngleY, the same halfword Behavior re-reads every frame. */
-        mAngleY = gCamera->mAngleY + 0x4000;
+        mAngle.y = gCamera->mAngleY + 0x4000;
     }
     mLifeTimer = 180;
     mSpeed.y = 0x3000;
@@ -138,13 +138,13 @@ int daFeather_c::Behavior() {
 
     ApproachLinear(mDriftSpeed, 0x10000, 0x332);
 
-    mAngleX = FX_SinIdx((u16)mSwayAngle >> 4) + 0x4000;
-    mAngleZ = FX_CosIdx((u16)mSwayAngle >> 4) * 2 - 0x6000;
+    mAngle.x = FX_SinIdx((u16)mSwayAngle >> 4) + 0x4000;
+    mAngle.z = FX_CosIdx((u16)mSwayAngle >> 4) * 2 - 0x6000;
 
     {
         int b = (gGameMode == 1);
         if (!b) {
-            mAngleY = gCamera->mAngleY + 0x4000;
+            mAngle.y = gCamera->mAngleY + 0x4000;
         }
     }
 
@@ -203,14 +203,14 @@ void daFeather_c::UpdateModelAndShadow() {
 
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngle.z);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngle.x);
     mModel.mat4x3 = data_020a0e68;
 
     b = (gGameMode == 1);
     if (b) {
-        Matrix4x3_FromRotationY(&mShadowMtx, mAngleY);
+        Matrix4x3_FromRotationY(&mShadowMtx, mAngle.y);
         mShadowMtx.m[9] = mPos.x >> 3;
         mShadowMtx.m[10] = mPos.y >> 3;
         mShadowMtx.m[11] = mPos.z >> 3;
@@ -237,7 +237,7 @@ void daFeather_c::UpdateModelAndShadow() {
         if (r4 < 0xa000)
             r4 = 0xa000;
 
-        Matrix4x3_FromRotationY(&mShadowMtx, mAngleY);
+        Matrix4x3_FromRotationY(&mShadowMtx, mAngle.y);
         mShadowMtx.m[9] = mPos.x >> 3;
         mShadowMtx.m[10] = mPos.y >> 3;
         mShadowMtx.m[11] = mPos.z >> 3;

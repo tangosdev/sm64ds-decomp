@@ -169,8 +169,8 @@ s32 daFish_c::Behavior() {
         }
         Vec3_Asr(&shiftedPos, &mPos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, shiftedPos.x, shiftedPos.y, shiftedPos.z);
-        mAngleY = mPrevAngleY;
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+        mAngle.y = mPrevAngleY;
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngle.y);
         *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
         mAnmModel.Advance();
     }

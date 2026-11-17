@@ -273,7 +273,7 @@ s32 daDsnBase_c::Init() {
     files = mFileTable;
     kcl = dBgW_Kc::LoadFile(*files->collision);
     clps = files->clps;
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *clps);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, *clps);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
 

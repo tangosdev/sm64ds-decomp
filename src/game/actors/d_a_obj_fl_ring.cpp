@@ -120,7 +120,7 @@ s32 daObjFl_Ring_c::InitResources() {
     UpdateClsnPosAndRot();
 
     KCL_File *k = dBgW_Kc::LoadFile(*data_ov022_02113cc8.mClsnFile);
-    mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngleY, *data_ov022_02113cc8.mClps);
+    mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngle.y, *data_ov022_02113cc8.mClps);
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.SetStoodOnCallback((::StoodOnCallback)StoodOnCallback);
@@ -128,8 +128,8 @@ s32 daObjFl_Ring_c::InitResources() {
     /* The ring's own Z channel carries its spin rate, not an angle: it rests
        at -0x100 per frame unless the map row gave it one. */
     mPrevAngleZ = -0x100;
-    if (mAngleZ != 0)
-        mPrevAngleZ = mAngleZ;
+    if (mAngle.z != 0)
+        mPrevAngleZ = mAngle.z;
     return 1;
 }
 
@@ -186,7 +186,7 @@ s32 daObjFl_Ring_c::Behavior() {
         s16 *ip = &mPrevAngleY;
         *ip = (s16)(*ip + mPrevAngleZ);
     }
-    mAngleY = mPrevAngleY;
+    mAngle.y = mPrevAngleY;
 
     mMeshCollider.SetClipRadius(0x780000);
     mMeshCollider.SetClipOffsetY(0x1000);

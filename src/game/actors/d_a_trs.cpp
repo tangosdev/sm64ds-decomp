@@ -310,7 +310,7 @@ void daTrs_c::func_ov063_0211640c() {
         return;
 
     pos = this->mPos;
-    ang = this->mAngleY;
+    ang = this->mAngle.y;
 
     if (this->mBooFlags.mirrored) {
         pos.x *= -1;
@@ -325,9 +325,9 @@ void daTrs_c::func_ov063_0211640c() {
         func_020167a4(&this->mAnmModel);
         {
             TrsBone *m = (TrsBone *)this->mAnmModel.data.bones;
-            m->rotX = this->mAngleX;
+            m->rotX = this->mAngle.x;
             m->rotY = (s16)(ang - 0x4000);
-            m->rotZ = this->mAngleZ;
+            m->rotZ = this->mAngle.z;
         }
         this->mAnmModel.data.UpdateVertsUsingBones();
     } else {
@@ -389,15 +389,15 @@ void daTrs_c::func_ov063_021166ac() {
         func_020167a4(&this->mAnmModel);
         {
             TrsBone *p = (TrsBone *)this->mAnmModel.data.bones;
-            p->rotX = this->mAngleX;
-            p->rotY = this->mAngleY - 0x4000;
-            p->rotZ = this->mAngleZ;
+            p->rotX = this->mAngle.x;
+            p->rotY = this->mAngle.y - 0x4000;
+            p->rotZ = this->mAngle.z;
         }
         this->mAnmModel.data.UpdateVertsUsingBones();
     } else {
         Vec3_Asr(&t2, &this->mPos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, t2.x, t2.y, t2.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngle.y);
         this->mAnmModel.mat4x3 = data_020a0e68;
         this->mAnmModel.ApplyOpacity((u8)(this->mOpacity >> 3), 1);
     }
@@ -419,11 +419,11 @@ void daTrs_c::func_ov063_021166ac() {
            the third pair: two named u16 temps for x and y reproduce that; a
            Vector3_16 struct copy or three direct member copies alternate
            load/store (and the s16-typed copy sign-extends, ldrsh). */
-        u16 ax = *(u16 *)&this->mAngleX;
-        u16 ay = *(u16 *)&this->mAngleY;
+        u16 ax = *(u16 *)&this->mAngle.x;
+        u16 ay = *(u16 *)&this->mAngle.y;
         rot.y = ay;
         rot.x = ax;
-        rot.z = *(u16 *)&this->mAngleZ;
+        rot.z = *(u16 *)&this->mAngle.z;
     }
     /* equal-arm ternary: the rot address (r2) is set up before pos (r1), as in the ROM */
     UpdateCapPos(pos, this ? rot : rot);
@@ -682,7 +682,7 @@ void daTrs_c::func_ov063_02116fac() {
         target = Vector3(-0x3e8000, 0, -0xfa0000);
         this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, &target);
         r4 = 0x1000;
-        if (this->mAngleY == this->mTargetAngleY && this->mHorzSpeed == 0) {
+        if (this->mAngle.y == this->mTargetAngleY && this->mHorzSpeed == 0) {
             this->mState++;
         }
         break;
@@ -833,8 +833,8 @@ void daTrs_c::func_ov063_02117650() {
     this->mPos.x = npos.x;
     this->mPos.y = npos.y;
     this->mPos.z = npos.z;
-    this->mAngleY = Vec3_HorzAngle(&this->mPos, &ppos);
-    this->mPrevAngleY = this->mAngleY;
+    this->mAngle.y = Vec3_HorzAngle(&this->mPos, &ppos);
+    this->mPrevAngleY = this->mAngle.y;
 }
 
 
@@ -1068,7 +1068,7 @@ void daTrs_c::func_ov063_02117cdc() {
         w = this->mTalkPlayer->mPos;
         w.x = 0;
         ang = Vec3_HorzAngle(&this->mTalkPlayer->mPos, &w);
-        q = &this->mTalkPlayer->mAngleX;
+        q = &this->mTalkPlayer->mAngle.x;
         v[0] = q[0];
         v[1] = q[1];
         v[2] = q[2];
@@ -1080,9 +1080,9 @@ void daTrs_c::func_ov063_02117cdc() {
         }
         {
             daPly_c *d = this->mTalkPlayer;
-            d->mAngleX = v[0];
-            d->mAngleY = v[1];
-            d->mAngleZ = v[2];
+            d->mAngle.x = v[0];
+            d->mAngle.y = v[1];
+            d->mAngle.z = v[2];
         }
         {
             daPly_c *d = this->mTalkPlayer;
@@ -1151,8 +1151,8 @@ void daTrs_c::func_ov063_02117cdc() {
         neg = -1;
         w = this->mTalkPlayer->mPos;
         w.x = w.x * neg;
-        this->mAngleY = Vec3_HorzAngle(&this->mPos, &w);
-        this->mPrevAngleY = this->mAngleY;
+        this->mAngle.y = Vec3_HorzAngle(&this->mPos, &w);
+        this->mPrevAngleY = this->mAngle.y;
         func_0201277c(0x150);
         return;
     }
@@ -1175,7 +1175,7 @@ void daTrs_c::func_ov063_02117cdc() {
             this->mSubState += 1;
             this->mTargetOpacity = 0xff;
         }
-        this->mAngleY = this->mPrevAngleY;
+        this->mAngle.y = this->mPrevAngleY;
         return;
     case 9: {
         int tk = this->mTalkPlayer->GetTalkState();
@@ -1265,13 +1265,13 @@ void daTrs_c::func_ov063_02118458() {
         if (this->mAnmModel.file == (BCA_File *)data_ov063_0211edd4.filePtr &&
             this->mAnmModel.WillHitFrame(6)) {
             Vector3 v = this->mPos;
-            v.x += FX_SinIdx((u16)this->mAngleY >> 4) * 0x78;
-            v.z += FX_CosIdx((u16)this->mAngleY >> 4) * 0x78;
+            v.x += FX_SinIdx((u16)this->mAngle.y >> 4) * 0x78;
+            v.z += FX_CosIdx((u16)this->mAngle.y >> 4) * 0x78;
             dActor_c *fb;
-            this->mAngleX = 0x1000;
+            this->mAngle.x = 0x1000;
             func_02012694(0x156, &this->mCamSpacePos);
             fb = SpawnFireball(v, &this->mAngle, 0x14000, 0x6999, 4);
-            this->mAngleX = 0;
+            this->mAngle.x = 0;
             if (this->mBooFlags.mirrored)
                 ((daFPknBall_c *)fb)->mMirrored = 1;
             else
@@ -1369,7 +1369,7 @@ void daTrs_c::func_ov063_02118914() {
     this->mdCcAcPos_c.flags |= 1;
     this->mBooFlags.mirrored = 1;
     this->mPos.x = -this->mHomePos.x;
-    this->mAngleY += 0x8000;
+    this->mAngle.y += 0x8000;
     this->mPrevAngleY += 0x8000;
     this->mSubState = 0;
     this->mFlags &= ~2;
@@ -1780,9 +1780,9 @@ void daTrs_c::func_ov063_0211934c() {
             this->mPrevAngleY = this->mHomeAngleY;
             this->mPrevAngleZ = this->mHomeAngleZ;
             s16 *src = &this->mPrevAngleX;
-            this->mAngleX = src[0];
-            this->mAngleY = src[1];
-            this->mAngleZ = src[2];
+            this->mAngle.x = src[0];
+            this->mAngle.y = src[1];
+            this->mAngle.z = src[2];
             
             cap = RespawnIfHasCap();
             if (cap == 0)
@@ -1870,9 +1870,9 @@ void daTrs_c::func_ov063_0211934c() {
             this->mPrevAngleY = this->mHomeAngleY;
             this->mPrevAngleZ = this->mHomeAngleZ;
             s16 *src = &this->mPrevAngleX;
-            this->mAngleX = src[0];
-            this->mAngleY = src[1];
-            this->mAngleZ = src[2];
+            this->mAngle.x = src[0];
+            this->mAngle.y = src[1];
+            this->mAngle.z = src[2];
             
             cap2 = RespawnIfHasCap();
             if (cap2 == 0)
@@ -1898,9 +1898,9 @@ void daTrs_c::func_ov063_0211934c() {
             this->mPrevAngleY = this->mHomeAngleY;
             this->mPrevAngleZ = this->mHomeAngleZ;
             s16 *src = &this->mPrevAngleX;
-            this->mAngleX = src[0];
-            this->mAngleY = src[1];
-            this->mAngleZ = src[2];
+            this->mAngle.x = src[0];
+            this->mAngle.y = src[1];
+            this->mAngle.z = src[2];
             
             cap3 = RespawnIfHasCap();
             if (cap3 != 0) {
@@ -1928,9 +1928,9 @@ void daTrs_c::UpdateDying() {
         this->mPrevAngleY = this->mHomeAngleY;
         this->mPrevAngleZ = this->mHomeAngleZ;
         s16 *src = &this->mPrevAngleX;
-        this->mAngleX = src[0];
-        this->mAngleY = src[1];
-        this->mAngleZ = src[2];
+        this->mAngle.x = src[0];
+        this->mAngle.y = src[1];
+        this->mAngle.z = src[2];
         daTrs_c *r = (daTrs_c *)RespawnIfHasCap();
         if (r == 0) return;
         {
@@ -2303,7 +2303,7 @@ int daTrs_c::GetAttackStatus() {
                                 KillByInvincibleChar(spin, *found2, 0);
 
                                 {
-                                    s16 *ap = &this->mAngleY;
+                                    s16 *ap = &this->mAngle.y;
                                     *ap = (s16)(*ap + 0x8000);
                                 }
                                 return 1;
@@ -2328,7 +2328,7 @@ int daTrs_c::UpdateDuringDeath() {
 
     if (this->mStateTimer == 0) {
         this->mHorzSpeed = 0x28000;
-        this->mPrevAngleY = this->mClosestPlayer->mAngleY;
+        this->mPrevAngleY = this->mClosestPlayer->mAngle.y;
         this->mChildDeaths = 1;
         this->mBooFlags.followHeading = 0;
         goto fall;
@@ -2371,8 +2371,8 @@ int daTrs_c::UpdateDuringDeath() {
 
 fall:
     this->mSpeed.y = 0x5000;
-    this->mAngleZ += 0x800;
-    this->mAngleY += 0x800;
+    this->mAngle.z += 0x800;
+    this->mAngle.y += 0x800;
     return 0;
 }
 
@@ -2448,7 +2448,7 @@ void daTrs_c::SetMoveYawForDuringHit(int cond) {
     mBooFlags.followHeading = 0;
     mPreKnockbackAngleY = mPrevAngleY;
     if (cond != 0) {
-        mKnockbackAngleY = mClosestPlayer->mAngleY;
+        mKnockbackAngleY = mClosestPlayer->mAngle.y;
         return;
     }
     s16 base = mPrevAngleY;
@@ -2461,7 +2461,7 @@ void daTrs_c::SetMoveYawForDuringHit(int cond) {
 int daTrs_c::VanishOrAppear() {
 
     int r6 = GetSubtraction(this->mAngleToPlayer, this->mPrevAngleY);
-    int r0 = GetSubtraction(this->mPrevAngleY, this->mClosestPlayer->mAngleY);
+    int r0 = GetSubtraction(this->mPrevAngleY, this->mClosestPlayer->mAngle.y);
     int ret = 0;
     this->mSpeed.y = 0;
     if (r6 > 0x1568 || r0 < 0x6b58) {
@@ -2752,9 +2752,9 @@ int daTrs_c::Behavior()
                     mPrevAngleZ = mHomeAngleZ;
                     {
                         s16 (*ap)[3] = (s16 (*)[3])&this->mPrevAngleX;
-                        mAngleX = (*ap)[0];
-                        mAngleY = (*ap)[1];
-                        mAngleZ = (*ap)[2];
+                        mAngle.x = (*ap)[0];
+                        mAngle.y = (*ap)[1];
+                        mAngle.z = (*ap)[2];
                     }
                     p = RespawnIfHasCap();
                     if (p != 0) {
@@ -2787,9 +2787,9 @@ int daTrs_c::Behavior()
                 mPrevAngleX = mHomeAngleX;
                 mPrevAngleY = mHomeAngleY;
                 mPrevAngleZ = mHomeAngleZ;
-                mAngleX = prev->x;
-                mAngleY = prev->y;
-                mAngleZ = prev->z;
+                mAngle.x = prev->x;
+                mAngle.y = prev->y;
+                mAngle.z = prev->z;
                 *fp = (*fp) | TRS_FLAG_CAN_APPEAR;
                 mState = 0;
                 mHorzSpeed = 0;
@@ -2860,7 +2860,7 @@ block_39:
             mAngleToPlayer = Vec3_HorzAngle(&mPos, &pv);
             mDistToPlayer = Vec3_HorzDist(&mPos, &pv);
         } else {
-            this->mAngleToPlayer = mAngleY;
+            this->mAngleToPlayer = mAngle.y;
             mDistToPlayer = 0x2710000;
         }
     }
@@ -2906,7 +2906,7 @@ block_39:
     }
 
     if (mBooFlags.followHeading != 0)
-        mAngleY = mPrevAngleY;
+        mAngle.y = mPrevAngleY;
     mStateTimer += 1;
     DecIfAbove0_Short(&mChaseDelay);
     if (mPrevState != mState)
@@ -3153,9 +3153,9 @@ int daTrs_c::InitResources()
     mHomePos.x = mPos.x;
     mHomePos.y = mPos.y;
     mHomePos.z = mPos.z;
-    mHomeAngleX = mAngleX;
-    mHomeAngleY = mAngleY;
-    mHomeAngleZ = mAngleZ;
+    mHomeAngleX = mAngle.x;
+    mHomeAngleY = mAngle.y;
+    mHomeAngleZ = mAngle.z;
     mStateTimer = 0;
     mScale.x = 0x1000;
     mScale.y = 0x1000;

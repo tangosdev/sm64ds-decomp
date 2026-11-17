@@ -92,13 +92,13 @@ int daObjCtMecha03_c::InitResources() {
     mSwingDir = 1;
     mSwingAccel = data_ov065_0211c0b0[data_0209f2c0];
     mSwingAngle = 0x1964;
-    mAngleZ = mSwingAngle;
+    mAngle.z = mSwingAngle;
 
     UpdateModelMatrix();
     UpdateClsnPosAndRot();
 
     kcl = dBgW_Kc::LoadFile(data_ov065_0211d894);
-    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x1000, mAngleY, data_ov035_02112198);
+    mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x1000, mAngle.y, data_ov035_02112198);
 
     mMeshCollider.SetClipRadius(0x300000);
     mMeshCollider.SetClipOffsetY(-0x200000);
@@ -147,7 +147,7 @@ int daObjCtMecha03_c::Behavior() {
             }
             mSwingAngle += mSwingSpeed;
         }
-        mAngleZ = mSwingAngle;
+        mAngle.z = mSwingAngle;
     }
 
     UpdateModelMatrix();
@@ -173,7 +173,7 @@ int daObjCtMecha03_c::CleanupResources() {
 /* Writes mModel.mat4x3 from the actor's Y/Z angles and copies the
    actor position into its translation row. */
 int daObjCtMecha03_c::UpdateModelMatrix() {
-    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngle.y, mAngle.z);
     mModel.mat4x3.m[9] = mPos.x >> 3;
     mModel.mat4x3.m[10] = mPos.y >> 3;
     int z = mPos.z >> 3;
@@ -195,7 +195,7 @@ void daObjCtMecha03_c::UpdateShadow() {
     bobPos.z = 0;
     armOffset.x = 0;
     armOffset.z = 0;
-    Matrix4x3_FromRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     MTX_MultVec43(&armOffset, &data_020a0e68, &bobPos);
     VEC_Add(&bobPos, &mPos, &bobPos);
     {
@@ -210,7 +210,7 @@ void daObjCtMecha03_c::UpdateShadow() {
     mGroundY = pos.y;
     if (rc.DetectClsn())
         mGroundY = rc.clsnY;
-    Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
+    Matrix4x3_FromRotationY(&mShadowMat, mAngle.y);
     mShadowMat.m[9] = bobPos.x >> 3;
     mShadowMat.m[10] = mGroundY >> 3;
     mShadowMat.m[11] = bobPos.z >> 3;

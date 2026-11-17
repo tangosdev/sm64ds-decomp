@@ -40,7 +40,7 @@ struct daObjRcCarpet_c : dPathLiftActor_c {
     int Behavior();
     int Render();
 
-    /* Rotate the model by mAngleX/Y/Z and place it at mPos (dipped by
+    /* Rotate the model by mAngle.x/.y/.z and place it at mPos (dipped by
        mRideDipY), in model units. */
     void UpdateModelTransform();
     /* Copy the model matrix into mClsnMat at world scale and move the
