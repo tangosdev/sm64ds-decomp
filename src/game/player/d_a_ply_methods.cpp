@@ -4341,12 +4341,10 @@ int daPly_c::func_ov002_020c47f4() {
     vec.y = y + 0x64000;
     mHeadRot[0] = 0;
     mHeadRot[1] = 0;
-    r = ApproachLinear2(mAngleYSpeed, (short)(-Vec3_VertAngle((Vector3 *)&mStateTargetX, &vec)),
-                        0x200);
+    r = ApproachLinear2(mAngleYSpeed, (short)(-Vec3_VertAngle(&mStateTarget, &vec)), 0x200);
     mHeadRot[0] = mAngleYSpeed;
-    a = ApproachAngle(&this->mAngleY,
-                      (short)(Vec3_HorzAngle((Vector3 *)&mStateTargetX, &vec) + 0x8000), 4, 0x1000,
-                      0x200);
+    a = ApproachAngle(&this->mAngleY, (short)(Vec3_HorzAngle(&mStateTarget, &vec) + 0x8000), 4,
+                      0x1000, 0x200);
     mHeadRotMode = 3;
     // early return schedules the r==0 exit before the mHeadRotMode store at +0xb0
     if (r == 0) goto ret0;
@@ -4395,7 +4393,7 @@ int daPly_c::St_Talk_Main() {
             char *cam = gCamera;
             switch ((mStateArg >> 2) & 3) {
             case 0:
-                ((::dCamera_c *)cam)->func_0200d3f8(mPlayerNo, &mStateTargetX);
+                ((::dCamera_c *)cam)->func_0200d3f8(mPlayerNo, &mStateTarget);
                 break;
             case 1:
                 ((::dCamera_c *)cam)->func_0200d7a4(mPlayerNo);
@@ -4526,12 +4524,10 @@ int daPly_c::ShowMessage2(fBase_c &actor_, unsigned int msg, const Vector3 *pos,
     /* First entry constructs it: guard, three stores, ~Vector3() registration. */
     static Vector3 sTalkOff(0, 0x64000, 0x64000);
 
-    Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, &mPos, mAngleY, &sTalkOff);
+    Vec3_RotateYAndTranslate(&mStateTarget, &mPos, mAngleY, &sTalkOff);
 
     if (pos) {
-        mStateTargetX = pos->x;
-        mStateTargetY = pos->y;
-        mStateTargetZ = pos->z;
+        mStateTarget = *pos;
     }
 
     mHorzSpeed = 0;
@@ -4655,9 +4651,7 @@ int func_ov002_020c51d0(daPly_c *player, Vector3 *st) {
         return 0;
     if (player->mStateStep != 0)
         return 0;
-    player->mStateTargetX = st->x;
-    player->mStateTargetY = st->y;
-    player->mStateTargetZ = st->z;
+    player->mStateTarget = *st;
     player->mStateWork = 1;
     return 1;
 }
@@ -6320,7 +6314,7 @@ dummy_label_675641:;
     v.y = this->mPosY;
     v.z = this->mPosZ;
     v.y += 0x64000;
-    ang = Vec3_VertAngle((Vector3 *)&mStateTargetX, &v);
+    ang = Vec3_VertAngle(&mStateTarget, &v);
     ApproachLinear2(this->mAngleYSpeed, -ang, 0x400);
     mHeadRot[0] = 0;
     mHeadRot[1] = 0;
@@ -6470,15 +6464,14 @@ int daPly_c::func_ov002_020c8a4c() {
     int spd = this->mHorzSpeed >> 3;
     if (spd < 0x400) spd = 0x400;
     this->SetAnim(0x48, 0, spd, 0);
-    this->mPrevAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mStateTargetX);
+    this->mPrevAngleY = Vec3_HorzAngle(&mPos, &mStateTarget);
     this->mAngleY = this->mPrevAngleY;
-    if (VEC_Distance(&mPos, (Vector3 *)&mStateTargetX) < 0xa000) {
+    if (VEC_Distance(&mPos, &mStateTarget) < 0xa000) {
         if (mStateArg == 0) {
             mStateArg = 1;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
             static Vector3 sAnchorOff(0, 0, 0x12c000);
-            Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, &mStateAnchor, mAngleXSpeed,
-                                     &sAnchorOff);
+            Vec3_RotateYAndTranslate(&mStateTarget, &mStateAnchor, mAngleXSpeed, &sAnchorOff);
         } else {
             func_ov002_020ca108();
         }
@@ -6636,8 +6629,8 @@ int daPly_c::func_ov002_020c904c() {
     typedef unsigned char u8;
     int mid;
     char *anim;
-    ApproachLinear(this->mPosX, this->mStateTargetX, 0x8000);
-    ApproachLinear(this->mPosZ, this->mStateTargetZ, 0x8000);
+    ApproachLinear(this->mPosX, this->mStateTarget.x, 0x8000);
+    ApproachLinear(this->mPosZ, this->mStateTarget.z, 0x8000);
     if (Math_Function_0203b14c(&mPosY, (this->mGroundY) + 0x190000, 0x200, 0x64000, 0x10000) == 0) {
         this->mStateStep = 0xc;
         this->SetAnim(0x56, 0, 0x1000, 0);
@@ -7244,9 +7237,7 @@ int daPly_c::JumpIntoBooCage(Vector3 &v_) {
     }
     if (!this->SetNoControlState(9, -1, 0))
         return 0;
-    mStateTargetX = v->x;
-    mStateTargetY = v->y;
-    mStateTargetZ = v->z;
+    mStateTarget = *v;
     mAngleY = Vec3_HorzAngle(v, &mPos) + 0x8000;
     return 1;
 }
@@ -7300,8 +7291,7 @@ int daPly_c::TryEnterStarDoor(Vector3 &pos_, short kind) {
             mStateArg = 0;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
             static Vector3 sStarDoorOff(0, 0, 0x64000);
-            Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, &mStateAnchor, mAngleXSpeed,
-                                     &sStarDoorOff);
+            Vec3_RotateYAndTranslate(&mStateTarget, &mStateAnchor, mAngleXSpeed, &sStarDoorOff);
             mAngleY = Vec3_HorzAngle(&pos_, &mPos) + 0x8000;
             return 1;
         }
@@ -19933,14 +19923,14 @@ int daPly_c::func_ov002_020e3f90() {
             angs.y = 0x7000;
             angs.z = 0;
         }
-        ApproachLinear(mStateTargetX, tgt.x, 0x400);
-        ApproachLinear(mStateTargetY, tgt.y, 0x400);
-        ApproachLinear(mStateTargetZ, tgt.z, 0x400);
+        ApproachLinear(mStateTarget.x, tgt.x, 0x400);
+        ApproachLinear(mStateTarget.y, tgt.y, 0x400);
+        ApproachLinear(mStateTarget.z, tgt.z, 0x400);
         ApproachAngle(&mAngleX, angs.x, 0x10, 0x1000, 0x100);
         ApproachAngle(&mAngleY, angs.y, 0x10, 0x1000, 0x100);
         ApproachAngle(&mAngleZ, angs.z, 0x10, 0x1000, 0x100);
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, mStateTargetX, mStateTargetY,
-                                            mStateTargetZ);
+        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, mStateTarget.x, mStateTarget.y,
+                                            mStateTarget.z);
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
         Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
@@ -20996,28 +20986,26 @@ void daPly_c::func_ov002_020e640c() {
         int b = mRootMotionMode;
         if (b != 0) {
             if ((b & 1) == 1) {
-                mStateTargetX = md[1].transX;
+                mStateTarget.x = md[1].transX;
                 if (mRootMotionMode < 3)
-                    mStateTargetY = 0;
+                    mStateTarget.y = 0;
                 else
-                    mStateTargetY = md[1].transY;
-                mStateTargetZ = md[1].transZ;
-                mStateAnchor.x = mStateTargetX;
-                mStateAnchor.y = mStateTargetY;
-                mStateAnchor.z = mStateTargetZ;
+                    mStateTarget.y = md[1].transY;
+                mStateTarget.z = md[1].transZ;
+                mStateAnchor = mStateTarget;
                 mRootMotionMode++;
             } else {
-                d.x = (md[1].transX - mStateTargetX) << 3;
+                d.x = (md[1].transX - mStateTarget.x) << 3;
                 if (mRootMotionMode < 3)
                     d.y = 0;
                 else
-                    d.y = (md[1].transY - mStateTargetY) << 3;
-                d.z = (md[1].transZ - mStateTargetZ) << 3;
+                    d.y = (md[1].transY - mStateTarget.y) << 3;
+                d.z = (md[1].transZ - mStateTarget.z) << 3;
                 Vec3_RotateYAndTranslate(&mPos, &mPos, mAngleY, &d);
-                mStateTargetX = md[1].transX;
+                mStateTarget.x = md[1].transX;
                 if (mRootMotionMode >= 3)
-                    mStateTargetY = md[1].transY;
-                mStateTargetZ = md[1].transZ;
+                    mStateTarget.y = md[1].transY;
+                mStateTarget.z = md[1].transZ;
             }
             md[1].transX = 0;
             if (mRootMotionMode >= 3)
