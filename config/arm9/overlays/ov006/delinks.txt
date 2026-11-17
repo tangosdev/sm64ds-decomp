@@ -130,6 +130,7 @@ src/minigames/d_s_mg_jump_methods.cpp:
     .text start:0x020edec0 end:0x020eeafc
     .init start:0x02130e9c end:0x02130f00
     .ctor start:0x021335a4 end:0x021335a8
+    .data start:0x0213cb4c end:0x0213cb8c
     .bss start:0x02142188 end:0x021421b0
 
 src/minigames/d_s_mg_jump.cpp:
