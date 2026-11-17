@@ -174,9 +174,9 @@ int daNknk_c::InitResources()
 
     mCliffState = 0;
     mInvincibleTimer = 0;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
@@ -217,9 +217,9 @@ int daNknk_c::Behavior()
         else
             mState = 1;
         if (mWithMeshClsn.IsOnGround() != 0) {
-            mSafePosX = mPosX;
-            mSafePosY = mPosY;
-            mSafePosZ = mPosZ;
+            mSafePos.x = mPosX;
+            mSafePos.y = mPosY;
+            mSafePos.z = mPosZ;
         }
         return 1;
     }
@@ -267,13 +267,13 @@ int daNknk_c::Behavior()
 
         if (mDeathState == 0 && mState != 0) {
             if (IsGoingOffCliff(mWithMeshClsn, 0x32000, 0x3800, false, true, 0x32000) != 0) {
-                mPosX = mSafePosX;
-                mPosY = mSafePosY;
-                mPosZ = mSafePosZ;
+                mPosX = mSafePos.x;
+                mPosY = mSafePos.y;
+                mPosZ = mSafePos.z;
             } else {
-                mSafePosX = mPosX;
-                mSafePosY = mPosY;
-                mSafePosZ = mPosZ;
+                mSafePos.x = mPosX;
+                mSafePos.y = mPosY;
+                mSafePos.z = mPosZ;
             }
         }
 
