@@ -12354,32 +12354,21 @@ int daPly_c::St_BurnLava_Main() {
     {
         s8 lv = gCurrentSublevel;
         if (lv != 0x13 && lv != 0x31 && mVertSpeed >= 0) {
-            /* Field order is the stack layout the original built, not a choice. */
-            struct Info {
-                s16 vec[3];
-                int pos[3];
-            } info;
-            int zz = mPosZ;
-            int yy = mPosY;
-            int xx = mPosX;
-            info.pos[0] = xx;
-            info.pos[2] = zz - 0x1e000;
-            info.pos[1] = yy;
+            Vector3_16f dir;
+            Vector3 pos(mPosX, mPosY, mPosZ - 0x1e000);
             /* The u16 cast is the semantics, not a missing type fix. mAngleY
                really is signed -- AngleDiff takes it signed and mPrevAngleY is
                assigned from it directly -- but indexing this table wants the
                angle to WRAP, so the shift must be logical. Spelling it
                `mAngleY >> 4` costs 2 words and changes the meaning for
                negative angles. */
-            info.vec[0] = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
-            info.vec[1] = 0;
-            info.vec[2] = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
+            dir.x = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
+            dir.y = 0;
+            dir.z = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
             mParticle1 =
-                Particle::System::New(mParticle1, kPtclPlayerBurnA, info.pos[0], info.pos[1],
-                                      info.pos[2], (const Vector3_16f *)(info.vec), 0);
+                Particle::System::New(mParticle1, kPtclPlayerBurnA, pos.x, pos.y, pos.z, &dir, 0);
             mParticle2 =
-                Particle::System::New(mParticle2, kPtclPlayerBurnB, info.pos[0], info.pos[1],
-                                      info.pos[2], (const Vector3_16f *)(info.vec), 0);
+                Particle::System::New(mParticle2, kPtclPlayerBurnB, pos.x, pos.y, pos.z, &dir, 0);
             mLoopingSoundHandle = Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, mCamSpacePos, 0);
         }
     }
