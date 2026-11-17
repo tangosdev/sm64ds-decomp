@@ -18,6 +18,12 @@
  * - data_0209d6f4 is int here; Message2.cpp reads the same word as u8 *.
  *   The course-name lines set the cursor and then step it past three
  *   leading bytes with `+= 3`, and both stores emit.
+ * - Every volatile local here (li / ls, zero / blank and kin) is the value
+ *   handed to an MI_CpuFill16 / MI_CpuFill32. The ROM stores each constant
+ *   to the stack and loads it back before the call; plain locals fold it,
+ *   and by-value, const-reference and the SDK's two-level inline wrappers
+ *   do not reproduce the spill either (#821, measured on func_0201cd08:
+ *   0xf0 / 0xfc against 0x108).
  * - IsStarCollected and Message::DisplayText stay local externs. The header
  *   spellings take s8 / u16 and those parameters emit a narrow the ROM does
  *   not have. DisplayText must see this untruncated.
