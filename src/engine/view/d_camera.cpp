@@ -2491,31 +2491,25 @@ int dCamera_c::func_02009d30() {
    afterwards follow its facing, with the stylus axes adding up to 0x2000 of
    yaw (the rest turns the player) and 0x1c00 of pitch. */
 int func_02009aa8(dCamera_c *cam) {
-    s32 orbitOffset[3];
+    Vector3 lookAtGoal;
     Vector3 delta;
     Vector3 src;
 
-    src.x = data_02086e90[0];
-    src.y = data_02086e90[1];
-    src.z = data_02086e90[2];
+    src = *(Vector3 *)data_02086e90;
 
-    Vec3_RotateYAndTranslate(orbitOffset, &cam->mTargetPlayer->mPos, cam->mTargetPlayer->mAngleY,
+    Vec3_RotateYAndTranslate(&lookAtGoal, &cam->mTargetPlayer->mPos, cam->mTargetPlayer->mAngleY,
                              &src);
 
     if (cam->mTurningToTarget != 0) {
-        Vector3 *playerPos;
         int arrived;
 
         Vec3_Sub(&delta, &cam->mTargetPlayer->mPos, &cam->mTargetPos);
         VEC_Add(&cam->lookAt, &delta, &cam->lookAt);
         VEC_Add(&cam->pos, &delta, &cam->pos);
 
-        playerPos = &cam->mTargetPlayer->mPos;
-        cam->mTargetPos.x = playerPos->x;
-        cam->mTargetPos.y = playerPos->y;
-        cam->mTargetPos.z = playerPos->z;
+        cam->mTargetPos = cam->mTargetPlayer->mPos;
 
-        arrived = cam->ApproachLookAtAndAngles((Vector3 *)orbitOffset, cam->mTargetAngleY, 0);
+        arrived = cam->ApproachLookAtAndAngles(&lookAtGoal, cam->mTargetAngleY, 0);
         if (arrived != 0)
             cam->mTurningToTarget = 0;
 
@@ -2533,9 +2527,7 @@ int func_02009aa8(dCamera_c *cam) {
         cam->mAngleY += newAngle - cam->mTargetAngleY;
         cam->mTargetAngleY = newAngle;
 
-        cam->lookAt.x = orbitOffset[0];
-        cam->lookAt.y = orbitOffset[1];
-        cam->lookAt.z = orbitOffset[2];
+        cam->lookAt = lookAtGoal;
 
         yawInput = data_0209f498[gActivePlayerSlot].nx;
         cam->mAngleY -= FX_MUL(yawInput, 0x200);
@@ -2584,20 +2576,12 @@ int dCamera_c::func_02009a8c() {
    0x1c00. */
 int dCamera_c::func_020098e0() {
     if (mTurningToTarget != 0) {
-        int goal[3];
-        int src[3];
-        int result;
-        src[0] = data_02086e9c[0];
-        src[1] = data_02086e9c[1];
-        src[2] = data_02086e9c[2];
+        Vector3 goal;
+        Vector3 offset = *(Vector3 *)data_02086e9c;
 
-        {
-            dActor_c *player = mTargetPlayer;
-            Vec3_RotateYAndTranslate(goal, &player->mPos, player->mAngleY, src);
-        }
+        Vec3_RotateYAndTranslate(&goal, &mTargetPlayer->mPos, mTargetPlayer->mAngleY, &offset);
 
-        result = ApproachLookAtAndAngles((Vector3 *)goal, mTargetAngleY, 0);
-        if (result != 0) {
+        if (ApproachLookAtAndAngles(&goal, mTargetAngleY, 0) != 0) {
             mTurningToTarget = 0;
         }
     } else {
@@ -2663,13 +2647,8 @@ int func_0200985c(dCamera_c *cam) {
 
 /* Entry to the first-person state: pos at the player, facing its way. */
 int func_020097ec(dCamera_c *cam) {
-    Vector3 *src;
-
     cam->SetMode(0x18);
-    src = &cam->mTargetPlayer->mPos;
-    cam->pos.x = src->x;
-    cam->pos.y = src->y;
-    cam->pos.z = src->z;
+    cam->pos = cam->mTargetPlayer->mPos;
     cam->mBehindAngleY = cam->mTargetPlayer->mAngleY + 0x8000;
     cam->mAngleY = cam->mBehindAngleY;
     cam->mTargetAngleY = 0;
@@ -2743,15 +2722,10 @@ int func_020095c4(dCamera_c *cam) {
 int func_02009540(dCamera_c *cam) {
     cam->ApproachLookAtAndAngles(&cam->mLookTargetPos, cam->mTargetAngleY, 0);
 
-    /* stack layout: 12-byte temporary vector, then three ints */
     Vector3 goal;
-    int offset[3];
+    Vector3 offset = *(Vector3 *)data_02086ea8;
 
-    offset[0] = data_02086ea8[0];
-    offset[1] = data_02086ea8[1];
-    offset[2] = data_02086ea8[2];
-
-    Vec3_RotateYAndTranslate(&goal, cam->mLookTarget, cam->mTargetAngleY, offset);
+    Vec3_RotateYAndTranslate(&goal, cam->mLookTarget, cam->mTargetAngleY, &offset);
 
     ApproachLinear(cam->mLookTargetPos, goal, 0x8000);
 
@@ -2761,13 +2735,9 @@ int func_02009540(dCamera_c *cam) {
 }
 
 int func_020094e4(dCamera_c *cam) {
-    int buf[3];
     cam->SetMode(0x1f);
-    buf[0] = data_02086eb4[0];
-    buf[1] = data_02086eb4[1];
-    buf[2] = data_02086eb4[2];
-    short angle = cam->mTargetPlayer->mAngleY;
-    Vec3_RotateYAndTranslate(&cam->pos, &cam->mTargetPos, angle, buf);
+    Vector3 offset = *(Vector3 *)data_02086eb4;
+    Vec3_RotateYAndTranslate(&cam->pos, &cam->mTargetPos, cam->mTargetPlayer->mAngleY, &offset);
     return 1;
 }
 
@@ -2861,20 +2831,15 @@ int func_020092c4(void *cam, Vector3 *out, const Vector3 *target) {
     {
         struct Vector3 res;
         Vec3_Add(&res, target, &offset);
-        out->x = res.x;
-        out->y = res.y;
-        out->z = res.z;
+        *out = res;
     }
     return arrived == 0 ? 1 : 0;
 }
 
 /* Recompute mAngleY and mAngleX from the lookAt -> pos line. */
 void dCamera_c::UpdateAngles() {
-    short h = Vec3_HorzAngle(&lookAt, &pos);
-    mAngleY = h;
-
-    short v = Vec3_VertAngle(&lookAt, &pos);
-    mAngleX = v;
+    mAngleY = Vec3_HorzAngle(&lookAt, &pos);
+    mAngleX = Vec3_VertAngle(&lookAt, &pos);
 }
 
 /* Ease lookAt toward the given point and the two angles toward the given
@@ -2941,12 +2906,7 @@ int dCamera_c::KeepPosOutOfWalls() {
 
     scale = 0x200;
     if (mFlags & 0x40200) {
-        vz = mTargetPos.z;
-        vy = mTargetPos.y + 0x82500;
-        vx = mTargetPos.x;
-        v0.x = vx;
-        v0.y = vy;
-        v0.z = vz;
+        SetVec(v0, mTargetPos.x, mTargetPos.y + 0x82500, mTargetPos.z);
         Vec3_Sub(&dir1, &pos, &v0);
         len = VEC_Mag(&dir1);
         if (len != 0) {
@@ -2984,17 +2944,10 @@ int dCamera_c::KeepPosOutOfWalls() {
     {
         u32 f = mFlags;
         if (f & 0x80100) {
-            vz = mTargetPos.z;
-            vy = (f & 0x100) ? pos.y : 0x82500 + mTargetPos.y;
-            vx = mTargetPos.x;
-            v0.x = vx;
-            v0.y = vy;
-            v0.z = vz;
+            SetVec(v0, mTargetPos.x, (f & 0x100) ? pos.y : 0x82500 + mTargetPos.y, mTargetPos.z);
         } else {
             scale = 0x1000;
-            v0.x = mPrevPos.x;
-            v0.y = mPrevPos.y;
-            v0.z = mPrevPos.z;
+            v0 = mPrevPos;
         }
     }
 
@@ -3028,17 +2981,13 @@ int dCamera_c::KeepPosOutOfWalls() {
     Vector3 cp2 = rc2.GetClsnPos();
     Vector3 np;
     Vec3_Sub(&np, &cp2, &dir2);
-    pos.x = np.x;
-    pos.y = np.y;
-    pos.z = np.z;
+    pos = np;
     Vec3_Sub(&diff, &pos, &lookAt);
     if (VEC_Mag(&diff) >= d) {
         Vec3_MulScalarInPlace(&diff, FX_Div(d, VEC_Mag(&diff)));
         Vector3 cl;
         Vec3_Add(&cl, &lookAt, &diff);
-        pos.x = cl.x;
-        pos.y = cl.y;
-        pos.z = cl.z;
+        pos = cl;
     }
     if (mTurningToTarget != 0 || mRecentering != 0) {
         mTurningToTarget = 0;
@@ -3131,7 +3080,7 @@ short func_02008a70(dCamera_c *cam) {
 void dCamera_c::UpdateTargetPos() {
     dActor_c *player;
     Vector3 *playerPos;
-    int offset[3];
+    Vector3 offset;
 
     player = mTargetPlayer;
     if (player == 0) {
@@ -3141,10 +3090,8 @@ void dCamera_c::UpdateTargetPos() {
     mTargetPos.x = playerPos->x;
     mTargetPos.y = playerPos->y;
     mTargetPos.z = playerPos->z;
-    Vec3_Sub((Vector3 *)offset, &lookAt, &mTargetPos);
-    mLookAtOffset.x = offset[0];
-    mLookAtOffset.y = offset[1];
-    mLookAtOffset.z = offset[2];
+    Vec3_Sub(&offset, &lookAt, &mTargetPos);
+    mLookAtOffset = offset;
     mFocusBlend = 0;
 }
 
