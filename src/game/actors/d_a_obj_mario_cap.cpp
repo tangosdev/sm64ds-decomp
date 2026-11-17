@@ -466,7 +466,7 @@ int daObjMarioCap_c::InitResources()
             v = 1;
         else
             v = 0;
-        mCapIcon.Link((char *)this, mModelIndex & 0xff, mIconKind, v);
+        mCapIcon.Link(this, mModelIndex & 0xff, mIconKind, v);
     }
 
     /* Keep only the type and character bits (0..11) of param1. This is the
