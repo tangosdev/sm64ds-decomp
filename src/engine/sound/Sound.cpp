@@ -175,12 +175,6 @@ static NNSSndHandle sSubHandle;
 static char sSndArc[0x88];
 
 extern int data_0209baa0;
-/* "/data/sound_data.sdat", the archive path func_020133bc opens. Most likely
-   a string literal in the original: mwcc emits literals after a TU's
-   size-sorted named objects, which is where retail has it (after
-   sPlayerSeqLimits). It stays extern because it ends 2 bytes short of the
-   next 4-aligned object, and that tail fill cannot be claimed yet. */
-extern char data_0208e498[];
 extern unsigned char gLocalPlayerId;
 extern signed char gCurrentSublevel;
 extern daPly_c *gPlayers[];
@@ -230,6 +224,71 @@ typedef struct SndRegTable {
 } SndRegTable;
 
 SndRegTable data_0209b53c;
+
+void func_02013524(NNSSndHandle *handle, int b, int c) {
+    if (gSoundMuted != 0) {
+        c = b = 0;
+    }
+    NNS_SndPlayerMoveVolume(handle, b, c);
+}
+
+int func_020134d8(void *a, struct SndHeap *heap) {
+    int s = func_0201a9ec(&data_0209d574);
+    int r = func_02051918((u32)a, heap);
+    func_0201a9fc(&data_0209d574);
+    func_0201a96c(&data_0209d574, s);
+    return r;
+}
+
+void func_020134c8(void) {
+    /* arity split (banked): caller passes 0, def is (void) */
+    ((void (*)(int))func_020133bc)(0);
+}
+
+void func_020133bc(void) {
+    const char *path;
+    NNS_SndInit();
+    sSndHeap = NNS_SndHeapCreate((u32)Memory::Allocate(0x100000), 0x100000);
+    path = "/data/sound_data.sdat";
+    func_0201a9fc(&data_0209d574);
+    NNS_SndArcInit((data_020a5bb8_t *)&sSndArc, path, sSndHeap, 0);
+    func_0201a9fc(&data_0209d574);
+    func_02052008(func_0203d974() == 0 ? sSndHeap : 0);
+    if (func_0203d974() == 0) {
+        func_0201a9fc(&data_0209d574);
+        func_020134d8((void *)1, sSndHeap);
+        func_0201a9fc(&data_0209d574);
+    }
+    NNS_SndHandleInit(&sMusicHandle);
+    NNS_SndHandleInit(&sSubHandle);
+    NNS_SndHandleInit(&data_0209b4a4);
+    func_02011a28(&data_0209b53c);
+    func_02048f34(&sSndArc);
+    func_020506fc(2);
+    func_02049cd8(&data_0209baa0, 0x1000, 0);
+    gSoundInitialized = 1;
+}
+
+extern "C" void func_020132d8(void) {
+    if (gSoundInitialized == 0)
+        return;
+    func_02012d64();
+    if (gSubSoundID >= 0) {
+        ApproachLinear(gSubVolume, sSubVolumeTarget << 0xc, sVolumeRampStep);
+        func_02013524(&sSubHandle, gSubVolume >> 0xc, 0);
+        if (gSubVolume == 0) {
+            gSubSoundID = -1;
+            NNS_SndPlayerStopSeq(&sSubHandle, 0);
+        }
+    }
+    int s = func_02013078();
+    if (s >= 0) {
+        func_020494cc(&sMusicHandle, s);
+    }
+    func_020490b0(&sMusicHandle);
+    NNS_SndMain();
+    func_020119c8(&data_0209b53c);
+}
 
 namespace Sound {
 
@@ -1102,77 +1161,3 @@ int func_02011654(char *table, char *n) {
     return func_02011aa0(n);
 }
 
-#pragma defer_codegen off
-
-extern "C" void func_020132d8(void) {
-    if (gSoundInitialized == 0)
-        return;
-    func_02012d64();
-    if (gSubSoundID >= 0) {
-        ApproachLinear(gSubVolume, sSubVolumeTarget << 0xc, sVolumeRampStep);
-        func_02013524(&sSubHandle, gSubVolume >> 0xc, 0);
-        if (gSubVolume == 0) {
-            gSubSoundID = -1;
-            NNS_SndPlayerStopSeq(&sSubHandle, 0);
-        }
-    }
-    int s = func_02013078();
-    if (s >= 0) {
-        func_020494cc(&sMusicHandle, s);
-    }
-    func_020490b0(&sMusicHandle);
-    NNS_SndMain();
-    func_020119c8(&data_0209b53c);
-}
-
-#pragma opt_propagation off
-void func_020133bc(void) {
-    char *anim;
-    NNS_SndInit();
-    sSndHeap = NNS_SndHeapCreate((u32)Memory::Allocate(0x100000), 0x100000);
-    anim = data_0208e498;
-    func_0201a9fc(&data_0209d574);
-    NNS_SndArcInit((data_020a5bb8_t *)&sSndArc, anim, sSndHeap, 0);
-    func_0201a9fc(&data_0209d574);
-    func_02052008(func_0203d974() == 0 ? sSndHeap : 0);
-    if (func_0203d974() == 0) {
-        func_0201a9fc(&data_0209d574);
-        func_020134d8((void *)1, sSndHeap);
-        func_0201a9fc(&data_0209d574);
-    }
-    NNS_SndHandleInit(&sMusicHandle);
-    NNS_SndHandleInit(&sSubHandle);
-    NNS_SndHandleInit(&data_0209b4a4);
-    func_02011a28(&data_0209b53c);
-    func_02048f34(&sSndArc);
-    func_020506fc(2);
-    func_02049cd8(&data_0209baa0, 0x1000, 0);
-    gSoundInitialized = 1;
-}
-/* opt_propagation is file-global last-wins under deferred codegen in mwccarm
- * 2004/b56, and the deferred queue's codegen binds when the next function
- * parses. The defer_codegen brackets emit func_020132d8 and func_020133bc at
- * parse position -- func_020132d8 first, flushing the queued functions under
- * on -- so func_020133bc alone sees off and keeps `anim` in r4 like the ROM. */
-#pragma opt_propagation on
-#pragma defer_codegen on
-
-void func_02013524(NNSSndHandle *handle, int b, int c) {
-    if (gSoundMuted != 0) {
-        c = b = 0;
-    }
-    NNS_SndPlayerMoveVolume(handle, b, c);
-}
-
-int func_020134d8(void *a, struct SndHeap *heap) {
-    int s = func_0201a9ec(&data_0209d574);
-    int r = func_02051918((u32)a, heap);
-    func_0201a9fc(&data_0209d574);
-    func_0201a96c(&data_0209d574, s);
-    return r;
-}
-
-void func_020134c8(void) {
-    /* arity split (banked): caller passes 0, def is (void) */
-    ((void (*)(int))func_020133bc)(0);
-}

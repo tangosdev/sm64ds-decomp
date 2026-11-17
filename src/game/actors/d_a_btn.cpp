@@ -204,12 +204,10 @@ int data_ov079_02127cfc[96] = {
 
 /* Twelve state handlers. The initializer copies each member pointer into this table. */
 daBtn_c::StateFunc data_ov079_02128280[12] = {
-    &daBtn_c::func_ov079_02125b44, &daBtn_c::func_ov079_021258fc,
-    &daBtn_c::func_ov079_021256d4, &daBtn_c::func_ov079_021254b4,
-    &daBtn_c::func_ov079_0212538c, &daBtn_c::func_ov079_02125240,
-    &daBtn_c::func_ov079_02124b08, &daBtn_c::func_ov079_021249f0,
-    &daBtn_c::func_ov079_021246dc, &daBtn_c::func_ov079_021246d8,
-    &daBtn_c::func_ov079_02124638, &daBtn_c::func_ov079_02124530,
+    &daBtn_c::func_ov079_02125b44, &daBtn_c::func_ov079_021258fc, &daBtn_c::func_ov079_021256d4,
+    &daBtn_c::func_ov079_021254b4, &daBtn_c::func_ov079_0212538c, &daBtn_c::func_ov079_02125240,
+    &daBtn_c::func_ov079_02124b08, &daBtn_c::func_ov079_021249f0, &daBtn_c::func_ov079_021246dc,
+    &daBtn_c::func_ov079_021246d8, &daBtn_c::func_ov079_02124638, &daBtn_c::func_ov079_02124530,
 };
 
 /* OnAimedAtWithEggReturnVec's view of func_ov079_02123d4c: the (out, this)

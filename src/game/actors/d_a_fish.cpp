@@ -438,11 +438,8 @@ FishAnimationFileHandle data_ov100_021489cc(ASSET_FISH_WAIT_BCA);
 FishAnimationFileHandle gFishAbSwimAnimationFile(ASSET_FISH_AB_SWIM_BCA);
 /* StateWaitPlayerAway returns int. The table calls every handler as void. */
 daFishState data_ov100_02148a1c[7] = {
-    {&daFish_c::StateWaitForPlayer},
-    {(void (daFish_c::*)())&daFish_c::StateWaitPlayerAway},
-    {&daFish_c::StateWaitSchoolGone},
-    {&daFish_c::StateIdle},
-    {&daFish_c::StateFlee},
-    {&daFish_c::StateWander},
+    {&daFish_c::StateWaitForPlayer},  {(void(daFish_c::*)()) & daFish_c::StateWaitPlayerAway},
+    {&daFish_c::StateWaitSchoolGone}, {&daFish_c::StateIdle},
+    {&daFish_c::StateFlee},           {&daFish_c::StateWander},
     {&daFish_c::StateTurnAbout},
 };

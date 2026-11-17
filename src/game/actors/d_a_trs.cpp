@@ -1635,8 +1635,7 @@ void daTrs_c::func_ov063_02118eac() {
 }
 
 void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos) {
-    unsigned int val = 4;
-    icon->UntrackAndSpawnStar(icon->mTrackStarID, icon->mStarID, pos, val);
+    icon->UntrackAndSpawnStar(icon->mTrackStarID, icon->mStarID, pos, 4);
 }
 
 void daTrs_c::func_ov063_02118f50() {

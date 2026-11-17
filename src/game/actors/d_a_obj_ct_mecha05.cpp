@@ -62,10 +62,16 @@ extern Mecha05CollisionFilePtr TTC_MovingBar_ClsnFile;
 
 extern u8 data_0209f2c0;
 extern const s16 data_ov065_0211c0c8[4] = {
-    55, 30, 55, 0,
+    55,
+    30,
+    55,
+    0,
 };
 s8 data_ov065_0211d26c[4] = {
-    1, 12, 55, 100,
+    1,
+    12,
+    55,
+    100,
 };
 extern CLPS_Block data_ov035_02112258;
 

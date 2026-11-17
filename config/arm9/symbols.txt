@@ -3545,7 +3545,7 @@ sLayer1Music kind:data(any) addr:0x0208e43c
 sLayer2Music kind:data(any) addr:0x0208e440
 sLayer3Music kind:data(any) addr:0x0208e444
 sPlayerSeqLimits kind:data(any) addr:0x0208e448
-data_0208e498 kind:data(any) addr:0x0208e498
+data_0208e498 kind:data(byte[22]) addr:0x0208e498
 _ZTV7dBase_c kind:data(any) addr:0x0208e4b8
 data_0208e4b8 kind:data(any) addr:0x0208e4b8
 data_0208e500 kind:data(any) addr:0x0208e500
@@ -4942,10 +4942,9 @@ data_020a0dbc kind:bss addr:0x020a0dbc
 data_020a0dd8 kind:bss addr:0x020a0dd8
 data_020a0de0 kind:bss addr:0x020a0de0
 gTouchInfo kind:bss addr:0x020a0de8
-gTouchHeld kind:bss addr:0x020a0de8
-gTouchEdge kind:bss addr:0x020a0de9
-gTouchX kind:bss addr:0x020a0dea
-gTouchY kind:bss addr:0x020a0deb
+data_020a0de9 kind:bss addr:0x020a0de9
+data_020a0dea kind:bss addr:0x020a0dea
+data_020a0deb kind:bss addr:0x020a0deb
 data_020a0df8 kind:bss addr:0x020a0df8
 gActivePlayerSlot kind:bss addr:0x020a0e40
 data_020a0e44 kind:bss addr:0x020a0e44

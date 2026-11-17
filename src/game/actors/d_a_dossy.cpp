@@ -108,12 +108,8 @@ extern SharedFilePtr *const data_ov065_0211c080[3] = {
     &data_ov065_0211d770,
 };
 extern SharedFilePtr *const data_ov065_0211c08c[7] = {
-    &gDossyBodyCollisionFile,
-    &gDossyNeckCollisionFile,
-    &gDossyHeadCollisionFile,
-    &gDossyArmLCollisionFile,
-    &gDossyArmRCollisionFile,
-    &gDossyLegLCollisionFile,
+    &gDossyBodyCollisionFile, &gDossyNeckCollisionFile, &gDossyHeadCollisionFile,
+    &gDossyArmLCollisionFile, &gDossyArmRCollisionFile, &gDossyLegLCollisionFile,
     &gDossyLegRCollisionFile,
 };
 extern void *data_ov065_0211cd68[];

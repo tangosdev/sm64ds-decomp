@@ -23,6 +23,11 @@
       "name": ".ctor",
       "start": "0x02086ba4",
       "end": "0x02086ba8"
+    },
+    {
+      "name": ".bss",
+      "start": "0x020a0de8",
+      "end": "0x020a0df8"
     }
   ],
   "functions": [
@@ -35,7 +40,15 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "gTouchInfo",
+      "address": "0x020a0de8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "TouchInfo gTouchInfo[4], the per-player touch records. func_0203bb60 writes all four (0x020a0de8..0x020a0df7) and func_0203bb14 clears them. The touch .bss runs TPData (8), TPCalibrateParam (8), gTouchInfo (0x10), TPData[9] (0x48) in ascending size order. Readers' pool words name gTouchInfo+1..+3, which lcf_interior defines as the interior labels data_020a0de9/dea/deb."
+    }
+  ],
   "init": [
     {
       "symbol": "__sinit_func_0203bb5c.cpp",
@@ -90,7 +103,8 @@
     }
   ],
   "notes": [
-    "Folded __sinit_020750b4. One static EmptyInit, empty inline constructor, no destructor, so no registration node; the linker drops the object. The .bss claim 0x020a0df0..0x020a0df4 (data_020a0df0, called padding) is retired: that word is gTouchInfo[2], which func_0203bb60 writes and func_0203bb14 clears. gTouchInfo stays ROM-owned until a .bss start alias for gTouchHeld can be linked."
+    "Folded __sinit_020750b4. One static EmptyInit, empty inline constructor, no destructor, so no registration node; the linker drops the object. The .bss claim 0x020a0df0..0x020a0df4 (data_020a0df0, called padding) is retired: that word is gTouchInfo[2], which func_0203bb60 writes and func_0203bb14 clears.",
+    "Defines gTouchInfo[4] over .bss 0x020a0de8..0x020a0df8. It became definable once the flat lane names (gTouchHeld at the object's start, gTouchEdge/X/Y inside it) were retired: a .bss alias at an object's start cannot be linked, interior labels can."
   ],
   "production_mode": "intact-object",
   "verification": {
@@ -134,11 +148,17 @@
           "end": "0x02086ba8",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x020a0de8",
+          "end": "0x020a0df8",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 3
+          "LICENSED": 4
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -149,19 +169,28 @@
           {
             "section": ".init",
             "original": [
-              9
+              10
             ],
             "desired": [
-              9
+              10
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              7
+              8
             ],
             "desired": [
-              7
+              8
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              6
+            ],
+            "desired": [
+              6
             ]
           }
         ],

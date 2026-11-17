@@ -16241,56 +16241,6 @@
         "return:SharedFilePtr"
       ]
     },
-    "gTouchEdge": {
-      "src/game/stages/d_s_star_sel_methods.cpp": [
-        "return:unsigned char [][]"
-      ],
-      "src/minigames/d_mg_jump3d_mario.cpp": [
-        "return:unsigned char [][]"
-      ],
-      "src/minigames/d_s_mg_pachinko.cpp": [
-        "return:unsigned char [][]"
-      ]
-    },
-    "gTouchHeld": {
-      "src/game/stages/d_s_star_sel_methods.cpp": [
-        "return:unsigned char [][]"
-      ],
-      "src/minigames/d_mg_jump3d_mario.cpp": [
-        "return:unsigned char [][]"
-      ],
-      "src/minigames/d_s_mg_bomroom.cpp": [
-        "return:Tab []"
-      ],
-      "src/minigames/d_s_mg_pachinko.cpp": [
-        "return:unsigned char [][]"
-      ],
-      "src/minigames/d_s_mini_gm.cpp": [
-        "return:TouchRec []"
-      ]
-    },
-    "gTouchX": {
-      "include/PlayerInput.h": [
-        "return:unsigned char []"
-      ],
-      "src/minigames/d_s_mg_bomroom.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/minigames/d_s_mini_gm.cpp": [
-        "return:unsigned char []"
-      ]
-    },
-    "gTouchY": {
-      "include/PlayerInput.h": [
-        "return:unsigned char []"
-      ],
-      "src/minigames/d_s_mg_bomroom.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/minigames/d_s_mini_gm.cpp": [
-        "return:unsigned char []"
-      ]
-    },
     "nds_print": {
       "src/nds_vprintf.c": [
         "param:#2 char *"
