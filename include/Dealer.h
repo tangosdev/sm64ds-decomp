@@ -60,7 +60,7 @@ struct Dealer {
     void ResetMatrices();
     void StateIdle();
 
-    StateFn mState; /* 0x000 -- the current state */
+    void (Dealer::*mState)(); /* 0x000 -- the current state */
     Vector3 mPos;  /* 0x008 */
     s16 mRot[3];   /* 0x014 */
     s16 mHand; /* 0x01a -- picks deal_end (0) or deal_end2 (2); 1 makes PlayLose play deal_end first */

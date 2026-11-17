@@ -68,7 +68,7 @@ struct Presenter {
     void StateSurprisedThenIdle();
     void UpdateMatrix();
 
-    StateFn mState; /* 0x000 -- the current state */
+    void (Presenter::*mState)(); /* 0x000 -- the current state */
     /* 0x70 bytes. UpdateMatrix sets its mat4x3; Draw hands its data to mTexSeq
        and mTexAnim and nudges two of its materials; IsAnimDone tests its
        dExtFrameCtrl_c base and ResetPose rewinds its currFrame. */

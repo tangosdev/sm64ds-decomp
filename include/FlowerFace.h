@@ -72,7 +72,7 @@ struct FlowerFace {
     void StateLike();
     void StateHate();
 
-    StateFn mState; /* 0x000 -- the current state */
+    void (FlowerFace::*mState)(); /* 0x000 -- the current state */
     static const int PETAL_NUM = 22;
     FallingPetal mPetals[PETAL_NUM]; /* 0x008 */
     /* 0x64 bytes. Draw sets its mat4x3; Update advances its dExtFrameCtrl_c
