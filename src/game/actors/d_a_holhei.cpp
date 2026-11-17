@@ -170,9 +170,9 @@ int daHolhei_c::InitResources()
     mdCc_c.Init(this, 0xc8000, 0xfa000, 0x200004, 0x3010);
     mModel.speed = 0x1000;
     mMeshClsn.Init(this, 0x118000, 0x118000, 0, 0);
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mCoinType = 1;
     mExtraCoinCount = 4;
     mPrevPosX = mPosX;
@@ -246,9 +246,9 @@ int daHolhei_c::Behavior()
         UpdateHeldShadow();
     } else {
         mdCc_c.Update();
-        mCarryOffsX = 0;
-        mCarryOffsY = 0;
-        mCarryOffsZ = 0;
+        mCarryOffs.x = 0;
+        mCarryOffs.y = 0;
+        mCarryOffs.z = 0;
         BuildHoldMatrix();
         UpdateShadow();
     }
@@ -286,10 +286,10 @@ void daHolhei_c::HomeCarryOffset() {
     int idx = 0;
     if (mHeld->param1 == 2)
         idx = 1;
-    Math_Function_0203b14c(&mCarryOffsX, data_ov062_0211df10[idx].x, 0x800, 0x3e8000, 4);
-    Math_Function_0203b14c(&mCarryOffsY, data_ov062_0211df10[idx].y, 0x800, 0x3e8000, 4);
-    Math_Function_0203b14c(&mCarryOffsZ, data_ov062_0211df10[idx].z, 0x800, 0x3e8000, 4);
-    Matrix4x3 *r = UpdateCarry(*mHeld, *(Vector3 *)&mCarryOffsX);
+    Math_Function_0203b14c(&mCarryOffs.x, data_ov062_0211df10[idx].x, 0x800, 0x3e8000, 4);
+    Math_Function_0203b14c(&mCarryOffs.y, data_ov062_0211df10[idx].y, 0x800, 0x3e8000, 4);
+    Math_Function_0203b14c(&mCarryOffs.z, data_ov062_0211df10[idx].z, 0x800, 0x3e8000, 4);
+    Matrix4x3 *r = UpdateCarry(*mHeld, mCarryOffs);
     mModel.mat4x3 = *r;
 }
 
@@ -341,7 +341,7 @@ int daHolhei_c::func_ov062_02116c78() {
     mChargeStep = 0;
     mModel.speed = 0x1000;
     mModel.SetAnim((BCA_File *)(gHoruheiWalkAnimationFile.filePtr), 0, 0x1000, 0);
-    mTargetAngY = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
+    mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
     return 1;
 }
 
@@ -375,7 +375,7 @@ int daHolhei_c::func_ov062_02116a08() {
     int r;
     dActor_c *pl;
 
-    Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
+    Vec3_Dist(&mPos, &mHomePos);
 
     r = ClassifyObstruction();
     if (r != 0 || mEdgeStop == 1) {
@@ -397,7 +397,7 @@ int daHolhei_c::func_ov062_02116a08() {
         Vector3 *pos = &pl->mPos;
         plPos = *pos;
 
-        if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mHomePosX), &plPos) < 0x3e8000) {
+        if (Vec3_Dist(&mHomePos, &plPos) < 0x3e8000) {
             mHorzSpeed = 0;
             ::daHolhei_c_ChangeState(this, &data_ov062_0211de90);
         }
@@ -416,11 +416,10 @@ int daHolhei_c::func_ov062_02116980() {
     mPosY = mPrevPosY;
     mPosZ = mPrevPosZ;
     mHorzSpeed = 0;
-    if (AngleDiff(mTargetAngY,
-                  Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX))) <= 0x2000)
+    if (AngleDiff(mTargetAngY, Vec3_HorzAngle(&mPos, &mHomePos)) <= 0x2000)
         mTargetAngY = (s16)(mPrevAngleY - 0x1000);
     else
-        mTargetAngY = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
+        mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
     mStateTimer = 70;
     return 1;
 }
@@ -449,7 +448,7 @@ int daHolhei_c::func_ov062_02116894() {
 /* Stop, and aim the next turn at home. */
 int daHolhei_c::func_ov062_02116850() {
     mVertSpeed = 0;
-    mTargetAngY = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
+    mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
     mStateTimer = 20;
     mHorzSpeed = 0;
     return 1;
@@ -509,9 +508,9 @@ int daHolhei_c::func_ov062_021165e8()
         if (AngleDiff(mTargetAngY, mAngleY) < 0x200) {
             mHorzSpeed = 0x1e000;
             mChargeStep = 1;
-            mChasePosX = pos.x;
-            mChasePosY = pos.y;
-            mChasePosZ = pos.z;
+            mChasePos.x = pos.x;
+            mChasePos.y = pos.y;
+            mChasePos.z = pos.z;
         }
     }
 
@@ -521,10 +520,10 @@ int daHolhei_c::func_ov062_021165e8()
         int s = mChargeStep;
         if (s != 0) {
             if (s == 1) {
-                if (Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mChasePosX)) < 0x3c000)
+                if (Vec3_Dist(&mPos, &mChasePos) < 0x3c000)
                     mChargeStep = 2;
             } else {
-                if (Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mChasePosX)) > 0xc8000)
+                if (Vec3_Dist(&mPos, &mChasePos) > 0xc8000)
                     ::daHolhei_c_ChangeState(this, &data_ov062_0211ded0);
             }
         }
