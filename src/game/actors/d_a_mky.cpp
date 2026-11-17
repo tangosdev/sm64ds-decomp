@@ -57,6 +57,7 @@
 #include "Sound.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
+#include "Vector3s.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 
@@ -385,13 +386,12 @@ void daMky_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
     }
 }
 void daMky_c::UpdateModelAndCap() {
-    struct Bundle { Vector3_16 rot; short _p; Vector3 trans; int _tail[2]; };
-
     int idx;
     Matrix4x3 *res;
     dActor_c* obj;
     unsigned int id;
-    Bundle bnd;
+    Vector3s rot;
+    Vector3 trans;
 
     if (IsFlagSet(this, 0x100) && this->mPlayer && this->mPlayer->mCarryMatrix) {
         idx = 0;
@@ -420,17 +420,15 @@ void daMky_c::UpdateModelAndCap() {
 
     obj = dActor_c::FindWithID(id);
 
-    bnd.trans.x = 0xa00;
-    bnd.trans.y = 0;
-    bnd.trans.z = -0x2f00;
-    bnd.rot.x = -0x3f00;
-    bnd.rot.y = 0;
-    bnd.rot.z = -0x4000;
+    trans = Vector3(0xa00, 0, -0x2f00);
+    rot.x = -0x3f00;
+    rot.y = 0;
+    rot.z = -0x4000;
 
     MtxStack::copy(mAnmModel.mat4x3);
     MtxStack::concat(mAnmModel.data.transforms[5]);
-    MtxStack::transM(bnd.trans);
-    MtxStack::XYZrotM(bnd.rot);
+    MtxStack::transM(trans);
+    MtxStack::XYZrotM(rot.x, rot.y, rot.z);
     mCapMtx = MtxStack::get();
 
     obj->mCarryMatrix = &mCapMtx;

@@ -2504,20 +2504,11 @@ int daPly_c::func_ov002_020c0688() {
 }
 
 int daPly_c::func_ov002_020c06fc(int arg) {
-    /* The POD VecFx32, not Vector3, and this is the strongest case in the file:
-       it is a MEMBER of the local struct Frame below, so a non-POD element
-       gives Frame an implicit destructor, and mwccarm emits that as a new
-       compiler-numbered local-class symbol -- measured as
-       a D1 for daPly_c::Frame$2583Player_cpp. This TU emits no @NNNN/$NNN symbols
-       at all today, and such a name depends on declaration order (compare
-       Bundle$902d_a_mky_cpp in AGENTS.md). Frame has to stay POD. */
     extern ControllerInput data_0209f498[];
-    struct Frame {
-        VecFx32 v0;
-        VecFx32 v1;
-        VecFx32 v2;
-        VecFx32 v3;
-    } f;
+    Vector3 slide;
+    Vector3 rayStart;
+    Vector3 rayEnd;
+    Vector3 vel;
     int a;
     int t;
     int b;
@@ -2574,16 +2565,16 @@ int daPly_c::func_ov002_020c06fc(int arg) {
         mAngleYSpeed = (int)((((long long)b << 8) + 0x800) >> 12);
     }
 
-    f.v0.x = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2]);
-    f.v0.z = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2 + 1]);
+    slide.x = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2]);
+    slide.z = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2 + 1]);
     {
         int len = Vec3_HorzLen((const Vector3 *)&mFloorNormalX);
-        f.v0.x = FX_MUL(f.v0.x, len);
-        f.v0.z = FX_MUL(f.v0.z, len);
+        slide.x = FX_MUL(slide.x, len);
+        slide.z = FX_MUL(slide.z, len);
     }
 
     if ((this->mClsnFlags & 2) != 0 && (u16)(this->mStateFlags & 1) == 0 && this->mHorzSpeed <= 0x10000) {
-        int r6b = cstd::atan2(f.v0.x, f.v0.z);
+        int r6b = cstd::atan2(slide.x, slide.z);
         dBgCh_Lin ray;
         {
             int tz, ty, tx;
@@ -2592,30 +2583,36 @@ int daPly_c::func_ov002_020c06fc(int arg) {
             int j = ((u16)r6b >> 4) * 2;
             int p60 = this->mPosY;
             VecFx32 t;
-            t.x = p5c; t.y = p60 + 0x32000; t.z = p64;
-            f.v1.x = t.x; f.v1.y = t.y; f.v1.z = t.z;
+            t.x = p5c;
+            t.y = p60 + 0x32000;
+            t.z = p64;
+            rayStart.x = t.x;
+            rayStart.y = t.y;
+            rayStart.z = t.z;
             tx = FX_SinCosTable_[j] * 0x46 + this->mPosX;
             tz = FX_SinCosTable_[j + 1] * 0x46 + this->mPosZ;
             ty = this->mPosY + 0x32000;
-            f.v2.x = tx; f.v2.y = ty; f.v2.z = tz;
+            rayEnd.x = tx;
+            rayEnd.y = ty;
+            rayEnd.z = tz;
         }
-        ray.SetObjAndLine(*(const Vector3 *)&f.v1, *(const Vector3 *)&f.v2, this);
+        ray.SetObjAndLine(rayStart, rayEnd, this);
         if (ray.DetectClsn() != 0) {
-            f.v0.x = 0;
-            f.v0.z = 0;
+            slide.x = 0;
+            slide.z = 0;
         }
     }
 
     {
-        int s1 = r5v + f.v0.x;
-        int s2 = r4v + f.v0.z;
+        int s1 = r5v + slide.x;
+        int s2 = r4v + slide.z;
         int fx = FX_MUL(s1, t);
         int fz = FX_MUL(s2, t);
-        f.v3.x = fx;
-        f.v3.z = fz;
+        vel.x = fx;
+        vel.z = fz;
         ang = cstd::atan2(fx, fz);
     }
-    this->mHorzSpeed = Vec3_HorzLen((const Vector3 *)&f.v3);
+    this->mHorzSpeed = Vec3_HorzLen(&vel);
     if (this->mHorzSpeed > 0x64000)
         this->mHorzSpeed = 0x64000;
     this->mPrevAngleY = (s16)(ang + this->mAngleYSpeed);
@@ -12328,32 +12325,21 @@ int daPly_c::St_BurnLava_Main() {
     {
         s8 lv = gCurrentSublevel;
         if (lv != 0x13 && lv != 0x31 && mVertSpeed >= 0) {
-            /* Field order is the stack layout the original built, not a choice. */
-            struct Info {
-                s16 vec[3];
-                int pos[3];
-            } info;
-            int zz = mPosZ;
-            int yy = mPosY;
-            int xx = mPosX;
-            info.pos[0] = xx;
-            info.pos[2] = zz - 0x1e000;
-            info.pos[1] = yy;
+            Vector3_16f dir;
+            Vector3 pos(mPosX, mPosY, mPosZ - 0x1e000);
             /* The u16 cast is the semantics, not a missing type fix. mAngleY
                really is signed -- AngleDiff takes it signed and mPrevAngleY is
                assigned from it directly -- but indexing this table wants the
                angle to WRAP, so the shift must be logical. Spelling it
                `mAngleY >> 4` costs 2 words and changes the meaning for
                negative angles. */
-            info.vec[0] = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
-            info.vec[1] = 0;
-            info.vec[2] = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
+            dir.x = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
+            dir.y = 0;
+            dir.z = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
             mParticle1 =
-                Particle::System::New(mParticle1, kPtclPlayerBurnA, info.pos[0], info.pos[1],
-                                      info.pos[2], (const Vector3_16f *)(info.vec), 0);
+                Particle::System::New(mParticle1, kPtclPlayerBurnA, pos.x, pos.y, pos.z, &dir, 0);
             mParticle2 =
-                Particle::System::New(mParticle2, kPtclPlayerBurnB, info.pos[0], info.pos[1],
-                                      info.pos[2], (const Vector3_16f *)(info.vec), 0);
+                Particle::System::New(mParticle2, kPtclPlayerBurnB, pos.x, pos.y, pos.z, &dir, 0);
             mLoopingSoundHandle = Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, mCamSpacePos, 0);
         }
     }
@@ -12462,25 +12448,17 @@ int daPly_c::St_BurnFire_Main() {
     *(&mStateWork) += 2;
 
     {
-        struct Info {
-            s16 vec[3];
-            int pos[3];
-        } info;
-        int zz = mPosZ - 0x1e000;
-        int yy = mPosY + 0x32000;
-        int xx = mPosX;
+        Vector3_16f dir;
+        Vector3 pos(mPosX, mPosY + 0x32000, mPosZ - 0x1e000);
 
-        info.pos[0] = xx;
-        info.pos[1] = yy;
-        info.pos[2] = zz;
-        info.vec[0] = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
-        info.vec[1] = 0;
-        info.vec[2] = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
+        dir.x = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
+        dir.y = 0;
+        dir.z = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
 
-        mParticle1 = Particle::System::New(mParticle1, kPtclPlayerBurnA, info.pos[0], info.pos[1],
-                                           info.pos[2], (const Vector3_16f *)(info.vec), 0);
-        mParticle2 = Particle::System::New(mParticle2, kPtclPlayerBurnB, info.pos[0], info.pos[1],
-                                           info.pos[2], (const Vector3_16f *)(info.vec), 0);
+        mParticle1 =
+            Particle::System::New(mParticle1, kPtclPlayerBurnA, pos.x, pos.y, pos.z, &dir, 0);
+        mParticle2 =
+            Particle::System::New(mParticle2, kPtclPlayerBurnB, pos.x, pos.y, pos.z, &dir, 0);
         mLoopingSoundHandle = Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, mCamSpacePos, 0);
     }
 

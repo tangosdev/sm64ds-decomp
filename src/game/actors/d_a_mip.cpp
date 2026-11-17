@@ -678,7 +678,12 @@ int daMip_c::StateRestInit()
    mPathDir, and falls back to Rest past 0x4b0000. */
 int daMip_c::StateFleeMain() {
     /* V3Blk's array member is what makes the player-position copy a block
-       move; a three-scalar struct scalarises. */
+       move (ldm/stm into the lowest frame slot); a three-scalar struct
+       scalarises. Measured: `Vector3 plPos; plPos = pl->mPos;` and the same
+       with a VecFx32 are memberwise (+8 bytes); a block-scoped
+       `VecFx32 plPos = *(const VecFx32 *)&pl->mPos` gives the block move but
+       lands at the top of the frame, shifting every other slot by 0xc
+       (20/170 words off). */
     struct V3Blk {
         s32 w[3];
     };
