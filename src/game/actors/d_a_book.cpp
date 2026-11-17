@@ -264,9 +264,10 @@ int daBook_c::GetHitType() {
         return HIT_ATTACKED;
 
     if (BumpedUnderneathByPlayer(*found) != 0) {
-        /* the bump also cancels the player's vertical speed. A VecFx32, not a
-           Vector3: the copy through a Vector3 local does not match. */
-        VecFx32 *p = (VecFx32 *)&found->mSpeed;
+        /* the bump also cancels the player's vertical speed. The local is a
+           VecFx32, not a Vector3: the copy through a Vector3 local does not
+           match. */
+        Vector3 *p = &found->mSpeed;
         VecFx32 v;
         v.z = p->z;
         v.x = p->x;

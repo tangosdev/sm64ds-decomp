@@ -670,17 +670,17 @@ void daYegg_c::EnterSeek() {
 void daYegg_c::ExecuteFollowPlayer() {
     Vector3 in, out;
     daPly_c *com;
-    int* p;
+    const Vector3 *p;
     Vector3 t1, t2;
     Vector3 v1, v2;
     Vector3 sumA, sumB, sumC;
 
     com = mPlayer;
     mHoldOffsetZ = -0x68000;
-    p = &com->mSpeed.x;
-    mSpeed.x = p[0];
-    mSpeed.y = p[1];
-    mSpeed.z = p[2];
+    p = &com->mSpeed;
+    mSpeed.x = p->x;
+    mSpeed.y = p->y;
+    mSpeed.z = p->z;
     mHorzSpeed = com->mHorzSpeed;
 
     if (DecIfAbove0_Byte(&mHoldFreezeTimer) == 0) {

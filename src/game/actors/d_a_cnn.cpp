@@ -300,14 +300,14 @@ void daCnn_c::StateFire() {
         /* The muzzle is two frames of the ball's travel out from the spawn
            point. */
         {
-            int *vp = &ball->mSpeed.x;
-            int vx = *vp;
+            const Vector3 *vp = &ball->mSpeed;
+            int vx = vp->x;
             int px = pos.x;
             vel[0] = vx;
-            int vy = *(vp + 1);
+            int vy = vp->y;
             int py = pos.y;
             vel[1] = vy;
-            int vz = *(vp + 2);
+            int vz = vp->z;
             int x = px + (vx << 1);
             int pz = pos.z;
             vel[2] = vz;

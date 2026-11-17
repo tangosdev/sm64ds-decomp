@@ -122,7 +122,7 @@ int daEyBm_c::Behavior() {
         MTX_MultVec43(&velocity, &data_020a0e68, &mSpeed);
 
         /* Retail retains a typed whole-vector writeback after the transform. */
-        *(VecFx32 *)&mSpeed = *(VecFx32 *)&mSpeed;
+        mSpeed = mSpeed;
 
         UpdatePosWithOnlySpeed(&mdCcAcPos_c);
         UpdateCollision(mWithMeshClsn);
