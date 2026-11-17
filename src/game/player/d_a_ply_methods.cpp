@@ -1449,8 +1449,8 @@ void daPly_c::TurnOffToonShading(unsigned int j) {
 
 void daPly_c::UpdateCharacterChange() {
     extern char data_ov002_02110804[];
-    void* bodyModel;
-    void* headModel;
+    void *bodyModel;
+    void *headModel;
     int flickerPeriod;
     int timerRow;
     u16 capFlags;
@@ -2378,7 +2378,7 @@ int daPly_c::ShouldBeginSliding() {
 }
 
 int daPly_c::IsFacingDownhill() {
-  return AngleDiff(mFloorAngle, this->mAngleY) <= 0x4000;
+    return AngleDiff(mFloorAngle, this->mAngleY) <= 0x4000;
 }
 
 int daPly_c::ApplySlopeAccel() {
@@ -8731,7 +8731,8 @@ int daPly_c::St_Swim_Main() {
         break;
     case 1:
         speedStep = 0x800;
-        if (mStateTimer != 0) speedStep = 0x200;
+        if (mStateTimer != 0)
+            speedStep = 0x200;
         ApproachLinear(mPrevVertSpeed, 0, speedStep);
         if (this->IsAnim(0xa8) == 0) {
             if (this->FinishedAnim() != 0) {
@@ -8772,9 +8773,12 @@ int daPly_c::St_Swim_Main() {
         break;
     case 2:
         a4 = mStateTimer;
-        if (a4 >= 0xa) strokeStep = 0x800;
-        else if (a4 <= 4) strokeStep = 0x1800;
-        else strokeStep = 0;
+        if (a4 >= 0xa)
+            strokeStep = 0x800;
+        else if (a4 <= 4)
+            strokeStep = 0x1800;
+        else
+            strokeStep = 0;
         ApproachLinear(mPrevVertSpeed, func_ov002_020cedb0(0x10000), strokeStep);
         if (mStateTimer < 10 && t4 == 0) {
             mStateWork |= 1;
@@ -8821,9 +8825,13 @@ int daPly_c::St_Swim_Main() {
         func_ov002_020dbf4c();
         targetSpeed = func_ov002_020cedb0(0x10000);
         a4 = mStateTimer;
-        if (a4 >= 5) speedStep = 0x1000;
-        else if (a4 == 0) { speedStep = 0x800; targetSpeed = 0; }
-        else speedStep = 0;
+        if (a4 >= 5)
+            speedStep = 0x1000;
+        else if (a4 == 0) {
+            speedStep = 0x800;
+            targetSpeed = 0;
+        } else
+            speedStep = 0;
         ApproachLinear(mPrevVertSpeed, targetSpeed, speedStep);
         if (this->FinishedAnim() != 0) {
             has = (mHeldObj != 0) ? 1 : 0;
@@ -18570,7 +18578,8 @@ int daPly_c::CheckAirCancels() {
     }
 
     // return 0 instead of the shared label shrinks this function 0x270 -> 0x26c
-    if (!(buttons & 1)) goto ret0;
+    if (!(buttons & 1))
+        goto ret0;
 
     held = mHeldObj;
     b1 = !!held;
@@ -18643,7 +18652,8 @@ void daPly_c::UpdateAirMovement(int accel, int decel) {
             if (targetSpeed < 0xa000)
                 targetSpeed = 0xa000;
         } else {
-            targetSpeed = func_ov002_020bf224(ScaleByCharFactor(0x21000), ScaleByCharFactor(0xa000));
+            targetSpeed =
+                func_ov002_020bf224(ScaleByCharFactor(0x21000), ScaleByCharFactor(0xa000));
         }
 
         s16 targetYaw = mDesiredAngleY;
@@ -18730,8 +18740,7 @@ int daPly_c::CheckFallDamage() {
     fallHeight = mPeakY - mPosY;
     ShakeCameraOnWarioLanding();
 
-    if (WasState(&data_ov002_02110454) != 0 ||
-        WasState(&data_ov002_02110484) != 0 || mIsMega != 0)
+    if (WasState(&data_ov002_02110454) != 0 || WasState(&data_ov002_02110484) != 0 || mIsMega != 0)
         return 0;
 
     if (TryEnterBigFallLanding() != 0)
