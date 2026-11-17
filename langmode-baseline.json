@@ -1,0 +1,81 @@
+{
+  "_note": "ratchet baseline; regenerate with `python tools/langmode_audit.py --json <this file>`. Use --full for per-class detail and file lists. pragma_files 37 -> 38 and pragma_overrides 61 -> 63 against origin/chaos-data: Message::func_0201b388 and Message::func_020326ac keep #pragma opt_common_subs off. Without it func_0201b388 shrinks from 0x220 to 0x218, and case 6 of func_020326ac swaps registers. Byte match wins; the pragmas stay.",
+  "codegen_hacks": {
+    "cv_launder": 0,
+    "cv_launder_sites": 0,
+    "extern_vtable": 0,
+    "extern_vtable_classes": 0,
+    "inline_asm": 5,
+    "launder_or_forced": 18,
+    "launder_sites": 30,
+    "pragma_by_name": {
+      "opt_common_subs": 17,
+      "opt_lifetimes": 1,
+      "opt_loop_invariants": 10,
+      "opt_prelinearize": 1,
+      "opt_propagation": 9,
+      "opt_strength_reduction": 12,
+      "optimize_for_size": 13
+    },
+    "pragma_files": 38,
+    "pragma_overrides": 63,
+    "pragma_resets": 0,
+    "pragma_resets_by_name": {}
+  },
+  "exclusions": {
+    "by_value_class_param": 0
+  },
+  "language_mode": {
+    "by_kind": {
+      "C1": {
+        "draft": 0,
+        "migrated": 83,
+        "unmigrated": 0
+      },
+      "C2": {
+        "draft": 0,
+        "migrated": 25,
+        "unmigrated": 0
+      },
+      "D0": {
+        "draft": 0,
+        "migrated": 389,
+        "unmigrated": 0
+      },
+      "D1": {
+        "draft": 0,
+        "migrated": 434,
+        "unmigrated": 0
+      },
+      "D2": {
+        "draft": 0,
+        "migrated": 25,
+        "unmigrated": 0
+      },
+      "method": {
+        "draft": 0,
+        "migrated": 7985,
+        "unmigrated": 0
+      }
+    },
+    "cpp_still_handspelled": 0,
+    "mangled_c": 0,
+    "mangled_cpp": 8941,
+    "mangled_total": 8941,
+    "nonmatching_drafts": 0,
+    "unmigrated_total": 0
+  },
+  "shadow_decls": {
+    "header_shadows": 1,
+    "local_body_no_include": 12,
+    "local_body_no_include_cpp": 3,
+    "local_struct_body": 338,
+    "local_struct_body_cpp": 308,
+    "pad_layout": 12
+  },
+  "totals": {
+    "c_extension": 748,
+    "cpp_extension": 688,
+    "src_files": 1436
+  }
+}
