@@ -3118,8 +3118,6 @@ class IncludedInlineDestructorTests(unittest.TestCase):
         self.assertEqual(self.inspect(header)[2], [])
 
     def test_real_vector_carriers_reference_inline_header_bodies(self):
-        targets=['src/engine/view/d_camera_dtor.cpp', 'src/runtime/actor/d_actor.cpp']
-        _, _, defs, _=CDA.collect(REPO, targets)
         # Locate the inline destructors rather than pinning line numbers, so an
         # edit elsewhere in types.h does not fail this test.
         lines=(REPO / 'include/types.h').read_text(encoding='utf-8').splitlines()
@@ -3127,12 +3125,21 @@ class IncludedInlineDestructorTests(unittest.TestCase):
             hits=[i + 1 for i, text in enumerate(lines) if text.strip() == '~%s() {}' % owner]
             self.assertEqual(len(hits), 1, owner)
             return hits[0]
-        for owner, line in (('Vector3', dtor_line('Vector3')), ('Vector3s', dtor_line('Vector3s'))):
-            symbol='_ZN%d%sD1Ev' % (len(owner), owner)
-            found=[d for d in defs if d.symbol == symbol]
-            self.assertEqual(len(found), 1)
-            self.assertEqual((found[0].file, found[0].line), ('include/types.h', line))
-            self.assertEqual(CDA._native_destructor_abi(found[0]), (owner, owner + ' *'))
+        # daPly parses new Vector3[50] before the empty bodies, so ~Vector3() {}
+        # lives under #ifdef VECTOR3_DECLARE_STRUCTORS. An unknown conditional
+        # is not a body. d_camera_dtor.cpp still owns the symbol and must not
+        # pick that branch up. Vector3s stays an ordinary inline carrier.
+        dtor_line('Vector3')
+        self.assertIn('#ifdef VECTOR3_DECLARE_STRUCTORS', (REPO / 'include/types.h').read_text(encoding='utf-8'))
+        _, _, conditional, _ = CDA.collect(REPO, ['src/engine/view/d_camera_dtor.cpp'])
+        self.assertEqual([d for d in conditional if d.symbol == '_ZN7Vector3D1Ev'], [])
+        owner, line = 'Vector3s', dtor_line('Vector3s')
+        _, _, defs, _ = CDA.collect(REPO, ['src/runtime/actor/d_actor.cpp'])
+        symbol = '_ZN%d%sD1Ev' % (len(owner), owner)
+        found = [d for d in defs if d.symbol == symbol]
+        self.assertEqual(len(found), 1)
+        self.assertEqual((found[0].file, found[0].line), ('include/types.h', line))
+        self.assertEqual(CDA._native_destructor_abi(found[0]), (owner, owner + ' *'))
 
 
 if __name__ == "__main__":

@@ -24,9 +24,10 @@
 
 // leftovers:
 // - Measured residue, each with a note at the site: DrawCourseColumn's
-//   volatile tile locals and SNOW_OFF row arithmetic, Behavior's volatile
-//   touch read,
-//   and the opt_common_subs / opt_strength_reduction brackets.
+//   volatile tile locals and SNOW_OFF row arithmetic, and the
+//   opt_common_subs / opt_strength_reduction brackets. Neither pragma can be
+//   stated once for the file (#821 r43): opt_common_subs off from the top
+//   un-matches 18 functions, opt_strength_reduction off from the top 8.
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScMgSnowball_c_AssetId {
     ASSET_D_2D_MG_BG_YUKA_NSC_BIN = 0x00ac,
@@ -296,7 +297,9 @@ int dScMgSnowball_c::HitsBreakable(int *point) {
 // u16/unsigned casts or % 16 on the locals, and reading point[0] directly do not
 // break the reuse. Re-measured (#821, 2026-11-16): a ternary tile-row pick 0x264,
 // the two lookup branches swapped 0x288, x / 0x10000 0x1e0, the else branch
-// re-reading point[] 0x288.
+// re-reading point[] 0x288. Re-measured (#821 r43), all 0x288: x and courseY
+// shifted in place after the lookup (`x >>= 12`), the lookup reading point[0],
+// x re-read from point[0] after the lookup, and x/courseY declared long.
 #pragma opt_common_subs off
 int dScMgSnowball_c::HitsWall(int *point) {
     int courseY = point[1];
@@ -674,6 +677,8 @@ void dScMgSnowball_c::RedrawCourse() {
 // (47 words: x/j/row/line/tiles/2 land in r4/r6/r7/r5/sb/r8 against the ROM
 // r4/r8/sb/r7/r6/r5). Declaration order, block-scoped or per-branch locals,
 // else-vs-return, `long line` and dead initialisers did not move it.
+// Re-measured (#821 r43): mTileMap[i][col] with and without the `row` walk and
+// `j`, 76 of 230 words off in every combination.
 #pragma opt_strength_reduction off
 /* BG2 tile-column writer.
  *
