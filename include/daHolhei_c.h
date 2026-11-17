@@ -24,7 +24,7 @@ struct daHolhei_c : dEnemyBase_c {
     /* Current state record. Behavior calls its update PMF, when non-null,
        unless UpdateKillByInvincibleChar has already ended the frame.
        InitResources enters data_ov062_0211dee0 through
-       daHolhei_c_ChangeState. */
+       ChangeState. */
     HolheiState *mState;       /* 0x364 */
     dExtShadowModel_c mShadowModel;  /* 0x368 */
     /* UpdateShadow / UpdateHeldShadow copy identity here, write pos>>3 into
@@ -97,6 +97,7 @@ struct daHolhei_c : dEnemyBase_c {
     int func_ov062_02116b80();
     int func_ov062_02116bf8();
     int func_ov062_02116c78();
+    int ChangeState(HolheiState *);
     void UpdateHeldShadow();
     void UpdateShadow();
     void HandleCylinderHit();

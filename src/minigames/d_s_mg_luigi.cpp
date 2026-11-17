@@ -89,7 +89,7 @@ extern "C" {
    not mangle, so the data_* declarations stay next to their users. */
 extern int RandomIntInternal(int *seed);
 extern s32 GetGameLanguage(void);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *matrix);
 extern char *Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                        unsigned short a6);
 struct Matrix2x2;

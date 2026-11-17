@@ -143,7 +143,7 @@ extern void Mg_DrawCreditsIcon(int a, int b, int c, int d);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Mg_GetScoringMode(void);
 extern void Mg_SubmitScore(int score);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, struct Matrix2x2 *d);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 
 extern int sMgCoinRiseFrames;

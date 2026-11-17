@@ -262,23 +262,26 @@ void daOnms_c::StateKnocked()
 
 /* Path mode: step to the next path node and pick the roll that heads for it. */
 void daOnms_c::func_ov092_021313b0() {
-    daOnms_c *self = this;
     Vector3 old;
 
-    old = self->mPathNode;
-    self->mPathNodeIndex++;
-    if (self->mPathNodeIndex >= self->mPathNodeCount)
-        self->mPathNodeIndex = 0;
-    self->mPathPtr.GetNode(self->mPathNode, self->mPathNodeIndex);
-    if (self->mPathNode.x == old.x && self->mPathNode.z == old.z) {
-        self->mMoveDir = kDirWait;
+    old = mPathNode;
+    mPathNodeIndex++;
+    if (mPathNodeIndex >= mPathNodeCount)
+        mPathNodeIndex = 0;
+    mPathPtr.GetNode(mPathNode, mPathNodeIndex);
+    if (mPathNode.x == old.x && mPathNode.z == old.z) {
+        mMoveDir = kDirWait;
         return;
     }
-    u16 a = Vec3_HorzAngle(&old, &self->mPathNode);
-    if (a >= 0x2000 && a < 0x6000) self->mMoveDir = kDirRollPosX;
-    else if (a >= 0x6000 && a < 0xa000) self->mMoveDir = kDirRollNegZ;
-    else if (a >= 0xa000 && a < 0xe000) self->mMoveDir = kDirRollNegX;
-    else self->mMoveDir = kDirRollPosZ;
+    u16 a = Vec3_HorzAngle(&old, &mPathNode);
+    if (a >= 0x2000 && a < 0x6000)
+        mMoveDir = kDirRollPosX;
+    else if (a >= 0x6000 && a < 0xa000)
+        mMoveDir = kDirRollNegZ;
+    else if (a >= 0xa000 && a < 0xe000)
+        mMoveDir = kDirRollNegX;
+    else
+        mMoveDir = kDirRollPosZ;
 }
 
 void daOnms_c::NextMove()
@@ -458,13 +461,11 @@ void daOnms_c::CheckPlayerHit()
 /* Copy the model matrix over the collider and put the actor position in
    the translation row (flat Matrix4x3 words 9..11), then Transform. */
 void daOnms_c::func_ov092_02131a88() {
-    daOnms_c *self = this;
-
-    self->mClsnMat = self->mModel.mat4x3;
-    self->mClsnMat.m[9] = self->mPosX;
-    self->mClsnMat.m[10] = self->mPosY;
-    self->mClsnMat.m[11] = self->mPosZ;
-    self->mMeshCollider.Transform(self->mClsnMat, self->mAngleY);
+    mClsnMat = mModel.mat4x3;
+    mClsnMat.m[9] = mPosX;
+    mClsnMat.m[10] = mPosY;
+    mClsnMat.m[11] = mPosZ;
+    mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
 void daOnms_c::UpdateModelMtx()

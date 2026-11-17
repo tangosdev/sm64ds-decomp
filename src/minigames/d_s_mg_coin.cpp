@@ -124,7 +124,7 @@ extern void *sCoinSparkleSprites[];
 extern void *sCoinBagSprites[];
 extern void Mg_RenderSpriteBothPalMtx(void *obj, int x, int y, int w, int *vec);
 extern const int sCoinRowY[];
-extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 extern const u16 sCoinBlockFrameSprites[];
 extern void *sCoinBlocksSprites[];

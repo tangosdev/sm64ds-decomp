@@ -56,7 +56,7 @@ extern "C" void Mg_ShowBanner(int, int, int, int, int, short);
 extern "C" void Mg_SetSharedState(s32);
 extern "C" void FreeGfxSlotsById(int);
 extern "C" void Mg_SetTopScreenYOffset(int);
-extern "C" void Mg_RenderSubSpriteMtx(void *a, int, int, void *m);
+extern "C" void Mg_RenderSubSpriteMtx(void *a, int, int, Matrix2x2 *m);
 extern "C" int Mg_RenderSubSpriteScaled(void *, int, int, int, int, int, unsigned short);
 extern "C" void Mg_SubmitScore(int);
 void Mg_SetNextBanner(int);

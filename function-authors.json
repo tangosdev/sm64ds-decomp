@@ -12663,7 +12663,7 @@
     },
     "ov002:0x020ae5c8": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020ae5c8P12dEnemyBase_ci"
+      "name": "_ZN12dEnemyBase_c19func_ov002_020ae5c8Ei"
     },
     "ov002:0x020ae608": {
       "author": "tangosdev",
@@ -12699,7 +12699,7 @@
     },
     "ov002:0x020ae8b8": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020ae8b8P12dEnemyBase_cP8dActor_c"
+      "name": "_ZN12dEnemyBase_c19func_ov002_020ae8b8EP8dActor_c"
     },
     "ov002:0x020ae954": {
       "author": "ruspecial",
@@ -12707,7 +12707,7 @@
     },
     "ov002:0x020ae968": {
       "author": "tangosdev",
-      "name": "_Z19func_ov002_020ae968P12dEnemyBase_cP8dActor_c"
+      "name": "_ZN12dEnemyBase_c19func_ov002_020ae968EP8dActor_c"
     },
     "ov002:0x020ae9f8": {
       "author": "ruspecial",
@@ -35483,7 +35483,7 @@
     },
     "ov062:0x02116cd8": {
       "author": "tangosdev",
-      "name": "_Z22daHolhei_c_ChangeStateP10daHolhei_cP11HolheiState"
+      "name": "_ZN10daHolhei_c11ChangeStateEP11HolheiState"
     },
     "ov062:0x02116d28": {
       "author": "tangosdev",

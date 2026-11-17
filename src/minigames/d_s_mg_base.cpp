@@ -150,8 +150,10 @@ extern void Mg_SubCredits(void *c, int val);
 extern void Mg_AddCredits(void *c, s32 delta);
 extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
 extern void DecompressLZ16(void *src, void *dst);
-extern void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, void *mtx);
-extern void Mg_RenderMainSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority,
+                                 Matrix2x2 *mtx);
+extern void Mg_RenderMainSpritePalMtx(void *attr, int x, int y, int palette, int priority,
+                                      Matrix2x2 *mtx);
 }
 void Banner_Update(MgBanner *e);
 extern void func_02012e1c(void);
@@ -1702,7 +1704,7 @@ extern "C" int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4
 
 namespace s20af868 {
 extern "C" {
-void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5) {
+void Mg_RenderSubSpritePalMtx(void *attr, int x, int y, int palette, int priority, Matrix2x2 *mtx) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
@@ -1710,18 +1712,18 @@ void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5
         if (scene->GetDisplayMode() == 2) {
             if (((dScMgD3DBase_c *)gMgScene)->mDrawSubScreen != 0)
                 return;
-            OAM::Render(0, (OamAttr *)a0, a1, a2, a3, a4, (Matrix2x2 *)a5);
+            OAM::Render(0, (OamAttr *)attr, x, y, palette, priority, mtx);
             return;
         }
     }
-    OAM::Render(1, (OamAttr *)a0, a1, a2, a3, a4, (Matrix2x2 *)a5);
+    OAM::Render(1, (OamAttr *)attr, x, y, palette, priority, mtx);
 }
 }
 }
 
 namespace s20af948 {
 extern "C" {
-void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m) {
+void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *m) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
@@ -1729,11 +1731,11 @@ void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m) {
         if (scene->GetDisplayMode() == 2) {
             if (((dScMgD3DBase_c *)gMgScene)->mDrawSubScreen != 0)
                 return;
-            OAM::Render(false, (OamAttr *)a, b, c, -1, -1, (Matrix2x2 *)m);
+            OAM::Render(false, (OamAttr *)a, b, c, -1, -1, m);
             return;
         }
     }
-    OAM::Render(true, (OamAttr *)a, b, c, -1, -1, (Matrix2x2 *)m);
+    OAM::Render(true, (OamAttr *)a, b, c, -1, -1, m);
 }
 }
 }
@@ -1785,7 +1787,8 @@ extern "C" int Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4,
 
 namespace s20afc18 {
 extern "C" {
-void Mg_RenderMainSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5) {
+void Mg_RenderMainSpritePalMtx(void *attr, int x, int y, int palette, int priority,
+                               Matrix2x2 *mtx) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
@@ -1793,11 +1796,11 @@ void Mg_RenderMainSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a
         if (scene->GetDisplayMode() == 2) {
             if (((dScMgD3DBase_c *)gMgScene)->mDrawSubScreen != 1)
                 return;
-            OAM::Render(0, (OamAttr *)a0, a1, a2, a3, a4, (Matrix2x2 *)a5);
+            OAM::Render(0, (OamAttr *)attr, x, y, palette, priority, mtx);
             return;
         }
     }
-    OAM::Render(0, (OamAttr *)a0, a1, a2, a3, a4, (Matrix2x2 *)a5);
+    OAM::Render(0, (OamAttr *)attr, x, y, palette, priority, mtx);
 }
 }
 }
@@ -1883,7 +1886,7 @@ extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int
 
 namespace s20b0104 {
 extern "C" {
-void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, void *mtx) {
+void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, Matrix2x2 *mtx) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
@@ -1891,16 +1894,15 @@ void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, v
         if (scene->GetDisplayMode() == 2) {
             if (((dScMgD3DBase_c *)gMgScene)->mDrawSubScreen == 1) {
                 OAM::Render(false, (OamAttr *)attr, x, y + 192 + sMgTopScreenYOffset, palette,
-                            priority, (Matrix2x2 *)mtx);
+                            priority, mtx);
                 return;
             }
-            OAM::Render(false, (OamAttr *)attr, x, y, palette, priority, (Matrix2x2 *)mtx);
+            OAM::Render(false, (OamAttr *)attr, x, y, palette, priority, mtx);
             return;
         }
     }
-    OAM::Render(false, (OamAttr *)attr, x, y + 192 + sMgTopScreenYOffset, palette, priority,
-                (Matrix2x2 *)mtx);
-    OAM::Render(true, (OamAttr *)attr, x, y, palette, priority, (Matrix2x2 *)mtx);
+    OAM::Render(false, (OamAttr *)attr, x, y + 192 + sMgTopScreenYOffset, palette, priority, mtx);
+    OAM::Render(true, (OamAttr *)attr, x, y, palette, priority, mtx);
 }
 }
 }

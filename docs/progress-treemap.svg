@@ -12569,7 +12569,7 @@ matched: yes</title></rect><rect x="554.45" y="27.00" width="13.67" height="12.2
 module: ov002
 addr: 0x020ae4cc
 size: 252 bytes
-matched: yes</title></rect><rect x="568.12" y="27.00" width="3.47" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z19func_ov002_020ae5c8P12dEnemyBase_ci
+matched: yes</title></rect><rect x="568.12" y="27.00" width="3.47" height="12.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae5c8Ei
 module: ov002
 addr: 0x020ae5c8
 size: 64 bytes
@@ -12605,7 +12605,7 @@ matched: yes</title></rect><rect x="356.87" y="39.27" width="5.49" height="4.85"
 module: ov002
 addr: 0x020ae890
 size: 40 bytes
-matched: yes</title></rect><rect x="362.36" y="39.27" width="21.42" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z19func_ov002_020ae8b8P12dEnemyBase_cP8dActor_c
+matched: yes</title></rect><rect x="362.36" y="39.27" width="21.42" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae8b8EP8dActor_c
 module: ov002
 addr: 0x020ae8b8
 size: 156 bytes
@@ -12613,7 +12613,7 @@ matched: yes</title></rect><rect x="383.78" y="39.27" width="2.75" height="4.85"
 module: ov002
 addr: 0x020ae954
 size: 20 bytes
-matched: yes</title></rect><rect x="386.53" y="39.27" width="19.77" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z19func_ov002_020ae968P12dEnemyBase_cP8dActor_c
+matched: yes</title></rect><rect x="386.53" y="39.27" width="19.77" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dEnemyBase_c19func_ov002_020ae968EP8dActor_c
 module: ov002
 addr: 0x020ae968
 size: 144 bytes
@@ -26253,7 +26253,7 @@ matched: yes</title></rect><rect x="800.16" y="777.78" width="5.28" height="10.1
 module: ov006
 addr: 0x0211a648
 size: 80 bytes
-matched: yes</title></rect><rect x="805.44" y="549.35" width="4.79" height="0.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dScMgSound_c12Pop07_FinishEv
+matched: yes</title></rect><rect x="805.44" y="549.35" width="4.79" height="0.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dScMgSound_c12Pop07_FinishEi
 module: ov006
 addr: 0x0211a698
 size: 4 bytes
@@ -26301,7 +26301,7 @@ matched: yes</title></rect><rect x="805.44" y="737.62" width="4.79" height="11.1
 module: ov006
 addr: 0x0211abdc
 size: 80 bytes
-matched: yes</title></rect><rect x="805.44" y="748.80" width="4.79" height="0.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dScMgSound_c12Pop04_FinishEv
+matched: yes</title></rect><rect x="805.44" y="748.80" width="4.79" height="0.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dScMgSound_c12Pop04_FinishEi
 module: ov006
 addr: 0x0211ac2c
 size: 4 bytes
@@ -26365,7 +26365,7 @@ matched: yes</title></rect><rect x="1037.15" y="549.35" width="11.21" height="4.
 module: ov006
 addr: 0x0211b398
 size: 80 bytes
-matched: yes</title></rect><rect x="810.23" y="554.13" width="4.85" height="0.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dScMgSound_c12Pop00_FinishEv
+matched: yes</title></rect><rect x="810.23" y="554.13" width="4.85" height="0.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12dScMgSound_c12Pop00_FinishEi
 module: ov006
 addr: 0x0211b3e8
 size: 4 bytes
@@ -35229,7 +35229,7 @@ matched: yes</title></rect><rect x="1262.45" y="342.03" width="7.97" height="6.1
 module: ov062
 addr: 0x02116c78
 size: 96 bytes
-matched: yes</title></rect><rect x="1262.45" y="348.15" width="7.97" height="5.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z22daHolhei_c_ChangeStateP10daHolhei_cP11HolheiState
+matched: yes</title></rect><rect x="1262.45" y="348.15" width="7.97" height="5.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daHolhei_c11ChangeStateEP11HolheiState
 module: ov062
 addr: 0x02116cd8
 size: 80 bytes

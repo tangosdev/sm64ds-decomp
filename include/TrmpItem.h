@@ -16,6 +16,8 @@ struct V2;
  * MotionSpinDrift); unnamed regions are written in one place only, or sit
  * inside an embedded object. */
 struct TrmpItem {
+    typedef void (TrmpItem::*StateFn)();
+
     TrmpItem();
     ~TrmpItem();
 
@@ -62,7 +64,7 @@ struct TrmpItem {
     static void LoadAll(char *items, int count);
     static TrmpItem *Spawn(int position, int *normal, int itemType, short motionType);
 
-    s32 mState[2];        /* 0x000 -- the current motion's member-pointer record */
+    void (TrmpItem::*mState)(); /* 0x000 -- the current motion */
     Vector3 mPos;         /* 0x008 */
     Vector3 mPrevPos;     /* 0x014 -- mPos before this frame's move */
     Vector3 mSpawnPos;    /* 0x020 -- written once, in TrmpItem::Init, from the spawn position */
