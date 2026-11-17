@@ -555,6 +555,12 @@ void dScMgHanachan_c::Wiggler::DrawTarget() {
 }
 
 void dScMgHanachan_c::Wiggler::DrawField() {
+    /* The three anonymous groupings set the stack layout: the ROM spills A,
+       B, (u16)rot, the hoisted zero, res and py, and keeps px in a register.
+       Measured 2026-11-16 (#821 r22) against 0x3e0 bytes: plain Vector2
+       locals give 0x3dc, the same locals unnested 0x3d8, DrawTarget's
+       Vec2_ea914 shape 0x3e4, and all 72 declaration orders of A/B with
+       the points as Vector2 miss the size. */
     struct {
         int A, B, urot, va0x, res;
     } t;

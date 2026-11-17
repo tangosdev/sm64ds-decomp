@@ -1132,6 +1132,14 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene) {
             int *pbuf = buf;
             int scale = FX_Inv(FX_MUL(FX_SinIdx(idx), 0x800) + 0x1000);
 
+            /* Kept volatile: the ROM clears the matrix through a pointer
+               held in r6, in order 0, 4, 8, 0xc, before the diagonal
+               stores. Measured 2026-11-16 (#821 r22): plain stores through
+               pbuf, and an MtxFx22 local cleared by member (directly or
+               through pbuf), fold the address to sp-relative and reorder
+               the stores (10/118); a counted clear loop gives 0x1e0 or
+               0x1e4, and a copy from a const zero matrix 0x204, against
+               0x1d8. */
             {
                 volatile int *vp = pbuf;
                 vp[0] = 0;
@@ -2285,6 +2293,12 @@ int Mg_CheckBannerButton(int arg) {
         int cy = gTouchInfo[idx].y;
         for (i = 0; i < 3; i++, o++) {
             if (arg == o->mFileIndex && o->mArrived != 0) {
+                /* Kept volatile: the ROM round-trips the banner position
+                   through a stack pair (strh, then ldrsh) before the
+                   subtractions. Measured 2026-11-16 (#821 r22): direct
+                   `o->mX - cx` ints, a plain Vec2 assigned by member, a
+                   short[2] and a brace-initialised Vec2 all drop the
+                   round trip (0x180 against 0x190). */
                 volatile struct Vec2 pos;
                 int dx, dy;
                 short ty;
