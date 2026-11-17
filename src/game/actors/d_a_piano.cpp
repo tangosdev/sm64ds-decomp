@@ -283,7 +283,8 @@ void daPiano_c::StateAttack() {
     if (target != 0) {
         Vec3_Sub(&tmp, &this->mPos, &target->mPos);
         dist = VEC_Mag(&tmp);
-        ApproachLinear(this->mPrevAngle.y, Vec3_HorzAngle(&this->mPos, &this->mTarget->mPos), 0x200);
+        ApproachLinear(this->mPrevAngle.y, Vec3_HorzAngle(&this->mPos, &this->mTarget->mPos),
+                       0x200);
         this->mAngle.y = this->mPrevAngle.y;
         if (dist > 0x3ab000) {
             if ((u16)(this->mAnmModel.currFrame >> 12) == 0) {

@@ -119,7 +119,8 @@ int daObjYajirusi_c::InitResources() {
 
     u32 collisionIndex = mVariant;
     KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov098_0213c380[collisionIndex].clsnFile);
-    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y, *data_ov098_0213c380[collisionIndex].clps);
+    mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngle.y,
+                          *data_ov098_0213c380[collisionIndex].clps);
     return 1;
 }
 

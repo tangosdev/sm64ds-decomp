@@ -688,8 +688,7 @@ void daObjMarioCap_c::UpdateMatrix()
     /* position / 8: the model matrix's translation scale */
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x,
-                                           mAngle.y, mAngle.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     mAnmModel.mat4x3 = data_020a0e68;
 
     {
@@ -1152,7 +1151,7 @@ int daObjMarioCap_c::InitAnim()
     if (state == 0xa || state == 0xf) {
         daPly_c *closest = ClosestPlayer();
         if (closest != 0) {
-            s16* src = &closest->mAngle.x;
+            s16 *src = &closest->mAngle.x;
             mPrevAngle.x = src[0];
             mPrevAngle.y = src[1];
             mPrevAngle.z = src[2];
@@ -1321,15 +1320,15 @@ void daObjMarioCap_c::CheckTouch()
     {
         /* `a = b ? a : a` through a Vector3_16 is the MATCH form. */
         daPly_c *found = mPlayer;
-        int a = *(u16*)&found->mAngle.x;
-        int b = *(u16*)&found->mAngle.y;
+        int a = *(u16 *)&found->mAngle.x;
+        int b = *(u16 *)&found->mAngle.y;
         a = b ? a : a;
         v.x = a;
         v.y = b;
-        v.z = *(u16*)&found->mAngle.z;
+        v.z = *(u16 *)&found->mAngle.z;
         mPrevAngle.x = v.x;
         mPrevAngle.y = v.y;
-        mPrevAngle.z = *(s16*)&v.z;
+        mPrevAngle.z = *(s16 *)&v.z;
         mAngle.x = mPrevAngle.x;
         mAngle.y = mPrevAngle.y;
         mAngle.z = mPrevAngle.z;

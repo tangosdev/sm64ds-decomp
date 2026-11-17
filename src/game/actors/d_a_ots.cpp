@@ -807,7 +807,8 @@ int daOts_c::func_ov064_02116110(short step){
     dActor_c *p = (dActor_c *)this->ClosestPlayer();
     if(p != 0){
         short ang = Vec3_HorzAngle(&this->mPos, &p->mPos);
-        if(ApproachLinear(this->mPrevAngle.y, ang, step)) return 1;
+        if (ApproachLinear(this->mPrevAngle.y, ang, step))
+            return 1;
     }
     return 0;
 }

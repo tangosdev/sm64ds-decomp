@@ -2905,7 +2905,7 @@ int daDemo_c::func_ov002_020f72bc()
     this->mScale.y = 0x3000;
     this->mScale.z = 0x3000;
     {
-        s16* p = &this->mAngle.y;
+        s16 *p = &this->mAngle.y;
         *p = *p + 0x400;
     }
     this->mOpacity = 0x1f;

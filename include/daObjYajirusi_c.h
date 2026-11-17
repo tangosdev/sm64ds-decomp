@@ -38,16 +38,16 @@ struct daObjYajirusi_c {
     u8  pad_004[0x8];
     u16 actorID;                       /* 0x00c */
     u8  pad_00e[0x4e];
-     /* dActor_c's position, camera-space position and angle, at dActor_c's own
-        offsets (include/dActor_c.h). The flat view drops the inheritance but
-        src/game/actors/d_a_obj_yajirusi.cpp still reads these three fields by
-        name, so they are pinned here rather than buried in padding. */
+    /* dActor_c's position, camera-space position and angle, at dActor_c's own
+       offsets (include/dActor_c.h). The flat view drops the inheritance but
+       src/game/actors/d_a_obj_yajirusi.cpp still reads these three fields by
+       name, so they are pinned here rather than buried in padding. */
     Vector3 mPos; /* 0x05c */
     u8  pad_068[0xc];
     Vector3 mCamSpacePos; /* 0x074 */
     u8 pad_080[0xc];
-    Vector3_16 mAngle;                 /* 0x08c */
-    u8  pad_092[0x42];
+    Vector3_16 mAngle; /* 0x08c */
+    u8 pad_092[0x42];
     dExtSimpleModel_c mModel;          /* 0x0d4 */
     dBgW_KcMbg mMeshCollider;          /* 0x124 */
     Matrix4x3 mClsnMat;                /* 0x2ec */

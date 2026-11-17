@@ -143,8 +143,7 @@ int daStarGate_c::Behavior()
 /* -------------------------------------------------------------------------- */
 int daStarGate_c::Render()
 {
-    if (IsAreaShowing((s8)mAngle.x) != 0 ||
-        IsAreaShowing((s8)mAngle.z) != 0) {
+    if (IsAreaShowing((s8)mAngle.x) != 0 || IsAreaShowing((s8)mAngle.z) != 0) {
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngle.y);
         mModel.mat4x3.t.x = (mPos.x + mSpeed.x) >> 3;
         mModel.mat4x3.t.y = (mPos.y + mSpeed.y) >> 3;
@@ -214,8 +213,10 @@ bool daStarGate_c::IsInFrontOfPlayer(daPly_c *player) {
 void daStarGate_c::TryOpenDoor(daPly_c *player) {
     int a;
     int z = mScale.z;
-    if (z < 0) a = mAngle.y;
-    else a = mAngle.y + 0x8000;
+    if (z < 0)
+        a = mAngle.y;
+    else
+        a = mAngle.y + 0x8000;
     if (player->TryEnterStarDoor(mPos, a))
         ChangeState(&ST_OPEN_CLOSE, player);
     SetTouchScreenDelay();

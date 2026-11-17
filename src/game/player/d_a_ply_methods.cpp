@@ -3710,7 +3710,8 @@ if (this->mWallNormal.y)
 if (mClimbClsn || mIsTakingDamage)
     return 0;
 ang = cstd::atan2(this->mWallNormal.x, this->mWallNormal.z);
-if (AngleDiff(ang, this->mPrevAngle.y) < 0x6000) return 0;
+if (AngleDiff(ang, this->mPrevAngle.y) < 0x6000)
+    return 0;
 if (this->func_ov002_020c200c(ang)) return 1;
 if ((this->mHeldObj ? 1 : 0) || (this->mRidingShell ? 1 : 0)) return 0;
 if (this->func_ov002_020c1c84(ang)) return 1;
@@ -7467,11 +7468,11 @@ void daPly_c::func_ov002_020c9d68() {
   }
   this->SetAnim(0x54, 0x40000000, 0x1000, 0);
 tail:
-  this->mAngle.y = GetAngleToCamera(mPlayerNo);
-  this->mPrevAngle.y = this->mAngle.y;
-  mStateStep = 0;
-  mStateArg = 0;
-  this->mHorzSpeed = 0;
+    this->mAngle.y = GetAngleToCamera(mPlayerNo);
+    this->mPrevAngle.y = this->mAngle.y;
+    mStateStep = 0;
+    mStateArg = 0;
+    this->mHorzSpeed = 0;
 }
 
 extern "C" {
@@ -8397,7 +8398,7 @@ int daPly_c::St_Climb_Main() {
         func_ov002_020cb474();
     }
     {
-        s16* p8e = &this->mAngle.y;
+        s16 *p8e = &this->mAngle.y;
         *p8e = (s16)(*p8e + mAngleYSpeed);
     }
     {
@@ -13391,7 +13392,7 @@ int daPly_c::func_ov002_020d6998() {
         if (flag) return 0;
     }
     {
-        s16* p = &this->mAngle.y;
+        s16 *p = &this->mAngle.y;
         s16 diff = *p - mHeadRot[1];
         saved = this->mAngle.y;
         *p = diff;

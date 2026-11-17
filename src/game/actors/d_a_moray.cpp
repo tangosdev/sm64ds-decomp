@@ -529,7 +529,8 @@ void daMoray_c::UpdatePose() {
     MTX_MultVec43(&localOffset, &data_020a0e68, &worldTarget);
     Matrix4x3_FromTranslation(&data_020a0e68, (this->mPos.x + worldTarget.x) >> 3,
                               this->mPos.y >> 3, (this->mPos.z + worldTarget.z) >> 3);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y, this->mAngle.z);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+                                           this->mAngle.z);
     this->mBlendAnmModel.mat4x3 = data_020a0e68;
     ApproachLinear(this->mSegmentAngle[6], this->mSegmentAngle[7], 0x40);
     i = 0;

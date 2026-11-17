@@ -1000,8 +1000,7 @@ void daYegg_c::UpdateModelMatrix() {
     Matrix4x3_FromTranslation(&data_020a0e68, ((((long long)mPos.x << 9) + 0x800) >> 12),
                               FX_MUL(mPos.y + 0x14000, 0x200),
                               ((((long long)mPos.z << 9) + 0x800) >> 12));
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
-        mAngle.x, mAngle.y, mAngle.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 

@@ -571,7 +571,8 @@ void daBook_c::StateWait() {
         return;
     {
         short ang = Vec3_HorzAngle(&mPos, &v);
-        if (GetSubtraction(mPrevAngle.y, ang) >= 0x3000) return;
+        if (GetSubtraction(mPrevAngle.y, ang) >= 0x3000)
+            return;
     }
     mState = STATE_TILT_BACK;
     mHorzSpeed = 0x5000;

@@ -1541,7 +1541,9 @@ int daBtn_c::func_ov079_02123bcc() {
     if (v[1] > mPos.y)
         return 0;
     dist = ::Vec3_HorzDist((const ::Vector3 *)v, &mPos);
-    a0 = mAngle.y; a1 = mBodyYaw; a2 = mTargetAngle;
+    a0 = mAngle.y;
+    a1 = mBodyYaw;
+    a2 = mTargetAngle;
     raw = (a0 + a1) << 16; ang = a2 + (raw >> 16); rangle = raw >> 16;
     cosv = FX_CosIdx((u16)(s16)ang >> 4);
     hc = FX_MUL(dist, cosv);
@@ -1671,7 +1673,8 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         return;
     }
 
-    if (AngleDiff(ang, (s16)(mAngle.y + mBodyYaw)) <= 0x4400) return;
+    if (AngleDiff(ang, (s16)(mAngle.y + mBodyYaw)) <= 0x4400)
+        return;
 
     {
         int r1 = mState;

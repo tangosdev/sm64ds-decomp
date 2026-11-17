@@ -164,12 +164,15 @@ enum Bowser_HoldState {
 /* daKpa_c::mCondFlags. The low byte is recomputed every frame by
  * BowserLoop; the two high bits are set and cleared by the handlers. */
 enum Bowser_CondFlag {
-    BOWSER_COND_FACING_TARGET = 0x2,  /* |mAngle.y - mAngleToTarget| < 0x2000 (45 degrees) */
-    BOWSER_COND_FACING_CENTER = 0x4,  /* |mAngle.y - mAngleToCenter| < 0x3800 (about 79 degrees) */
-    BOWSER_COND_TARGET_NEAR = 0x8,    /* mDistToTarget < 0x352000 (850 units) */
-    BOWSER_COND_NEAR_CENTER = 0x10,   /* mDistToCenter < 0x3e8000 (1000 units) */
-    BOWSER_COND_RECOVERING = 0x10000, /* set each frame of BOWSER_STATE_RECOVER; the jump handlers read it for variant 2 */
-    BOWSER_COND_BREATHING = 0x20000   /* set each frame of the fire-breath handler; cleared when it ends, when he is held, or by the turn handler after five loops */
+    BOWSER_COND_FACING_TARGET = 0x2, /* |mAngle.y - mAngleToTarget| < 0x2000 (45 degrees) */
+    BOWSER_COND_FACING_CENTER = 0x4, /* |mAngle.y - mAngleToCenter| < 0x3800 (about 79 degrees) */
+    BOWSER_COND_TARGET_NEAR = 0x8,   /* mDistToTarget < 0x352000 (850 units) */
+    BOWSER_COND_NEAR_CENTER = 0x10,  /* mDistToCenter < 0x3e8000 (1000 units) */
+    /* set each frame of BOWSER_STATE_RECOVER; the jump handlers read it for variant 2 */
+    BOWSER_COND_RECOVERING = 0x10000,
+    /* set each frame of the fire-breath handler; cleared when it ends, when he
+       is held, or by the turn handler after five loops */
+    BOWSER_COND_BREATHING = 0x20000
 };
 
 /* daKpaTail_c::mState: the index into the table at data_ov060_0211ae9c. */
@@ -2473,7 +2476,7 @@ void daKpa_c::ActTiltLavaPlatform() {
         i += 1;
     }
     if (flag != 0) {
-        short* q = &found->mAngle.x;
+        short *q = &found->mAngle.x;
         this->mState = BOWSER_STATE_IDLE;
         found->mAngleXSpeed = 0;
         found->mAngleYSpeed = 0;

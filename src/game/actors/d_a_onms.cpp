@@ -459,8 +459,10 @@ void daOnms_c::Launch(dActor_c *player, u32 how)
     mTerminalVelocity = -0x48000;
     mSpeed.y = sLaunchVertSpeed[how];
     mHorzSpeed = sLaunchHorzSpeed[how];
-    if (how < 2) mPrevAngle.y = player->mAngle.y;
-    else mPrevAngle.y = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
+    if (how < 2)
+        mPrevAngle.y = player->mAngle.y;
+    else
+        mPrevAngle.y = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
 
     unsigned n = ((u16)mPrevAngle.y) >> 4;
     mTumbleVelX = (FX_CosIdx(n) >> 2);

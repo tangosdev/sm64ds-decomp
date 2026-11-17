@@ -474,7 +474,7 @@ void daObjTatefuda_c::Thrown()
     unsigned id;
 
     {
-        s16* pa = &mAngle.x;
+        s16 *pa = &mAngle.x;
         *pa = *pa + 0x2000;
     }
     UpdatePos(0);
@@ -687,11 +687,7 @@ void daObjTatefuda_c::Talk()
             if (Vec3_HorzDist(&plPos, &tgt) < 0x32000) {
                 talkStep = &mTalkStep;
                 *talkStep = (*talkStep + 1);
-            } else if (ApproachLinear(
-                           player->mAngle.y,
-                           Vec3_HorzAngle(&plPos, &tgt),
-                           0x800)
-                       != 0) {
+            } else if (ApproachLinear(player->mAngle.y, Vec3_HorzAngle(&plPos, &tgt), 0x800) != 0) {
                 talkStep = &mTalkStep;
                 *talkStep = (*talkStep + 1);
                 player->func_ov002_020bec9c(1, 0, 0x1000, 0);

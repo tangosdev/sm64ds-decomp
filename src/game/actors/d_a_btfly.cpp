@@ -235,7 +235,8 @@ void daBtfly_c::State5()
         ApproachLinear(mPrevAngle.x, target, 0x190);
     }
 
-    ApproachLinear(mPrevAngle.y, hAngle,
+    ApproachLinear(
+        mPrevAngle.y, hAngle,
         (s16)((((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) % 800) + 0x190));
 }
 

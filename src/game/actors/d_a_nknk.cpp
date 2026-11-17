@@ -488,8 +488,7 @@ void daNknk_c::func_ov062_02118718()
         SpawnFootstepDust(2, 5, 8, 0xb);
 
     if (mTurning) {
-        mTurning =
-            (ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200) ^ 1) != 0;
+        mTurning = (ApproachLinear(mPrevAngle.y, mTargetAngle, 0x200) ^ 1) != 0;
     } else {
         if (mPlayerDist >= 0x61a8000)
             mTargetAngle = mAimAngle;

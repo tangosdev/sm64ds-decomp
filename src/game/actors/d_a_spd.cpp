@@ -686,7 +686,8 @@ void daSpd_c::func_ov071_0211f0b4() {
     d = Vec3_Dist(&mPos, &p->mPos);
     if (d > 0x5dc000) return;
     ang = Vec3_HorzAngle(&mPos, &p->mPos);
-    if (AngleDiff(ang, mAngle.y) > 0x12c) return;
+    if (AngleDiff(ang, mAngle.y) > 0x12c)
+        return;
     mLeapDist = d;
     mLeapAngle = ang;
     SetState(3);

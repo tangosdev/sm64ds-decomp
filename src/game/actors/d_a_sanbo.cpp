@@ -482,8 +482,7 @@ void daSanbo_c::UpdateModelAndShadow() {
 
             y = OnAimedAtWithEgg() >> 3;
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y, 0);
-            Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-                mAngle.x, mAngle.y, mAngle.z);
+            Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngle.x, mAngle.y, mAngle.z);
 
             y = (-OnAimedAtWithEgg()) >> 3;
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y, 0);

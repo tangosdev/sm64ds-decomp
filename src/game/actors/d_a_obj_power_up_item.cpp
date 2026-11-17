@@ -380,11 +380,11 @@ void daObjPowerUpItem_c::DropShadow() {
 /* dExtSimpleModel_c matrices: rotates mOpenModel's matrix by mAngle.y, sets its translation
  * to the position >> 3 and copies it to mCloseModel. */
 void daObjPowerUpItem_c::UpdateMatrices(){
-  Matrix4x3_FromRotationY(&mOpenModel.mat4x3, mAngle.y);
-  mOpenModel.mat4x3.m[9] = mPos.x >> 3;
-  mOpenModel.mat4x3.m[10] = mPos.y >> 3;
-  mOpenModel.mat4x3.m[11] = mPos.z >> 3;
-  mCloseModel.mat4x3 = mOpenModel.mat4x3;
+    Matrix4x3_FromRotationY(&mOpenModel.mat4x3, mAngle.y);
+    mOpenModel.mat4x3.m[9] = mPos.x >> 3;
+    mOpenModel.mat4x3.m[10] = mPos.y >> 3;
+    mOpenModel.mat4x3.m[11] = mPos.z >> 3;
+    mCloseModel.mat4x3 = mOpenModel.mat4x3;
 }
 
 s32 daObjPowerUpItem_c::CleanupResources()

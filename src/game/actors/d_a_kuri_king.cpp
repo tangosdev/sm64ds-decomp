@@ -674,10 +674,10 @@ void daKuriKing_c::func_ov074_0211ffcc() {
   if (this->DistToCPlayer() >= 0x4b0000) {
       ChangeState(3);
   } else {
-    if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngle.y) < 0x3000) {
-        ChangeState(3);
-        return;
-    }
+      if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngle.y) < 0x3000) {
+          ChangeState(3);
+          return;
+      }
   }
   if (this->mSpawnedCount != 0) return;
   ChangeState(2);
@@ -761,7 +761,7 @@ void daKuriKing_c::UpdateIntroTalk() {
     cam->SetLookAt(look);
     cam->SetPos(pos);
 
-    ang = *(struct Ang16*)&this->mAngle.x;
+    ang = *(struct Ang16 *)&this->mAngle.x;
     ang.v[1] += 0x7fff;
     player->mAngle.x = ang.v[0];
     player->mAngle.y = ang.v[1];
@@ -1329,7 +1329,8 @@ int daKuriKing_c::WalkAlongRing() {
         this->mPos.x = FX_MUL(FX_SinIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
         this->mPos.z = FX_MUL(FX_CosIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
     }
-    ApproachAngle(&this->mAngle.y, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800, 0x10);
+    ApproachAngle(&this->mAngle.y, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800,
+                  0x10);
 }
 
 void daKuriKing_c::UpdateShadows() {
@@ -1690,7 +1691,8 @@ int daKuriKing_c::RenderVanish() {
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x6400, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y, this->mAngle.z);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+                                           this->mAngle.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x6400, 0);
     this->mAnmModel.mat4x3 = data_020a0e68;
 

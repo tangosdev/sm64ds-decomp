@@ -1233,7 +1233,7 @@ void daTrs_c::func_ov063_02118458() {
     int status = GetAttackStatus();
 
     ApproachLinear(this->mPrevAngle.y, this->mAngleToPlayer,
-        data_ov063_0211e1c0[this->mHitPoints - 1]);
+                   data_ov063_0211e1c0[this->mHitPoints - 1]);
 
     if (this->mAnmModel.Finished()) {
         if (VanishOrAppear()) {
@@ -1783,7 +1783,7 @@ void daTrs_c::func_ov063_0211934c() {
             this->mAngle.x = src[0];
             this->mAngle.y = src[1];
             this->mAngle.z = src[2];
-            
+
             cap = RespawnIfHasCap();
             if (cap == 0)
                 return;
@@ -1873,7 +1873,7 @@ void daTrs_c::func_ov063_0211934c() {
             this->mAngle.x = src[0];
             this->mAngle.y = src[1];
             this->mAngle.z = src[2];
-            
+
             cap2 = RespawnIfHasCap();
             if (cap2 == 0)
                 return;
@@ -1901,7 +1901,7 @@ void daTrs_c::func_ov063_0211934c() {
             this->mAngle.x = src[0];
             this->mAngle.y = src[1];
             this->mAngle.z = src[2];
-            
+
             cap3 = RespawnIfHasCap();
             if (cap3 != 0) {
                 u16 *p = (u16 *)&((daTrs_c *)cap3)->mBooFlags;
@@ -2751,7 +2751,7 @@ int daTrs_c::Behavior()
                     mPrevAngle.y = mHomeAngleY;
                     mPrevAngle.z = mHomeAngleZ;
                     {
-                        s16 (*ap)[3] = (s16 (*)[3])&this->mPrevAngle.x;
+                        s16(*ap)[3] = (s16(*)[3]) & this->mPrevAngle.x;
                         mAngle.x = (*ap)[0];
                         mAngle.y = (*ap)[1];
                         mAngle.z = (*ap)[2];

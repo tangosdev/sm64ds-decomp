@@ -318,10 +318,12 @@ void daTrsTrap_c::UpdateTiltingTrap() {
             mAngVelX = 0;
             v = mAngle.x;
             if (v > 0) {
-                if (v < 0xc8) mAngle.x = 0;
+                if (v < 0xc8)
+                    mAngle.x = 0;
                 else mAngVelX = -0xc8;
             } else {
-                if (v > -0xc8) mAngle.x = 0;
+                if (v > -0xc8)
+                    mAngle.x = 0;
                 else mAngVelX = 0xc8;
             }
         }

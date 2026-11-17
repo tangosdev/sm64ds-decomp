@@ -609,11 +609,11 @@ void daIwante_c::SetLoweredPose() {
         mMeshCollider2.Disable();
 
     if (mPartIdx == PART_HAND_1) {
-        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae34.filePtr), mClsnMat2, 0x199, mAngle.y,
-                               data_ov025_02112cc8);
+        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae34.filePtr), mClsnMat2, 0x199,
+                               mAngle.y, data_ov025_02112cc8);
     } else {
-        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae1c.filePtr), mClsnMat2, 0x199, mAngle.y,
-                               data_ov025_02112c88);
+        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae1c.filePtr), mClsnMat2, 0x199,
+                               mAngle.y, data_ov025_02112c88);
     }
 
     mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
@@ -2522,8 +2522,8 @@ int daIwante_c::InitResources() {
         data_ov066_0211abe4 = 1;
         data_ov066_0211ae04 = PHASE_DORMANT;
         data_ov066_0211abe0 = HANDS_BOTH;
-        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae24.filePtr), mClsnMat2, 0x199, mAngle.y,
-                               data_ov025_02112ca8);
+        mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae24.filePtr), mClsnMat2, 0x199,
+                               mAngle.y, data_ov025_02112ca8);
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
         mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
         mMeshCollider2.Enable(this);

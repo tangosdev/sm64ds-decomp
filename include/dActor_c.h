@@ -62,7 +62,7 @@ struct dActor_c : dBase_c {
     Vector3 mCamSpacePos; /* 0x074 */
     Vector3 mScale;       /* 0x080 */
     Vector3_16 mAngle;    /* 0x08c */
-    Vector3_16 mPrevAngle; /* 0x092 */
+    Vector3_16 mPrevAngle;  /* 0x092 */
     s32 mHorzSpeed;         /* 0x098 */
     s32 mVertAccel;         /* 0x09c -- fx32, negative (gravity) */
     s32 mTerminalVelocity;  /* 0x0a0 -- fx32, negative */
@@ -161,14 +161,14 @@ struct dActor_c : dBase_c {
        so only an override with early returns can tell the difference -- and one
        of each does, allocating registers differently under `int` even with r0
        untouched. Measured, not assumed; see notes/actor-core-provenance.md 9. */
-    virtual void OnGroundPounded(dActor_c &pounder);   /* slot 21 */
-    virtual int OnAttacked1(dActor_c &attacker);       /* slot 22 */
-    virtual int OnAttacked2(dActor_c &attacker);       /* slot 23 */
-    virtual void OnKicked(dActor_c &kicker);           /* slot 24 */
-    virtual int OnPushed(dActor_c &pusher);            /* slot 25 */
+    virtual void OnGroundPounded(dActor_c &pounder);          /* slot 21 */
+    virtual int OnAttacked1(dActor_c &attacker);              /* slot 22 */
+    virtual int OnAttacked2(dActor_c &attacker);              /* slot 23 */
+    virtual void OnKicked(dActor_c &kicker);                  /* slot 24 */
+    virtual int OnPushed(dActor_c &pusher);                   /* slot 25 */
     virtual int OnHitByCannonBlastedChar(dActor_c &attacker); /* slot 26 */
-    virtual void OnHitByMegaChar(daPly_c &player);     /* slot 27 */
-    virtual int OnHitFromUnderneath(dActor_c &attacker); /* slot 28 */
+    virtual void OnHitByMegaChar(daPly_c &player);            /* slot 27 */
+    virtual int OnHitFromUnderneath(dActor_c &attacker);      /* slot 28 */
     virtual int  OnAimedAtWithEgg();                   /* slot 29 */
     /* Returns a Vector3 by value, and the ROM says so: 0x020100dc writes x/y/z
        through r0 and reads every field off r1, the AAPCS indirect-return shape.

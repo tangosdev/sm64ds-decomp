@@ -739,8 +739,8 @@ void daSnowman_c::UpdateModelMatrices() {
     Vec3_Asr((Vector3 *)dst, (Vector3 *)src, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, dst[0], dst[1], dst[2]);
 
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
-        this->mAngle.x, this->mAngle.y, this->mAngle.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, this->mAngle.x, this->mAngle.y,
+                                           this->mAngle.z);
     this->mAnmModel.mat4x3 = data_020a0e68;
 
     if (this->mCapUniqueID != 0) {

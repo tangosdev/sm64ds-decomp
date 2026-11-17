@@ -109,7 +109,8 @@ int daObjWc_Obj03_c::Behavior()
         daObjWc_Mizu_c *water = (daObjWc_Mizu_c *)dActor_c::FindWithID(mWaterID);
         if (water != 0) {
             if (mPos.y == water->mPos.y) {
-                if (mAngle.y == 0) mActive = 0;
+                if (mAngle.y == 0)
+                    mActive = 0;
             }
             if (mPos.y != water->mTargetPosY) {
                 mActive = 0;
