@@ -264,6 +264,13 @@
       "canonical_module": "ov084",
       "canonical_address": "0x02130b28",
       "reason": "compiler-emitted vtable anchored by the out-of-line destructor. Section size 0x84 = 2 header words + 31 slots; the ROM interval is 0x02130b20..0x02130ba4 and the word at 0x02130b24 relocates to _ZTI8daFPkn_c. The g_profile_* descriptors sit between the typeinfo and the vtable, so this promotion stays text-only and the ROM keeps the table."
+    },
+    {
+      "symbol": "_ZN8Vector3sD1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02011508",
+      "reason": "daFPkn_c::UpdateClsnOffset sums its bone angles in a Vector3s local, and types.h gives Vector3s an inline destructor, so the compiler emits its own copy of the four-byte bx lr body. The ROM homes it in arm9; this copy is a duplicate and is discarded by text-only isolation."
     }
   ],
   "verification": {

@@ -1464,6 +1464,12 @@ void func_ov007_020b8fd4(Ov007Camera *camera) {
         Ov007PickerScene *c;
         Ov007Work *g;
         f8 = (int)data_ov007_02104b9c;
+        /* Kept (#821 r21). The ROM loads the scene pointer before the work
+           pointer; the volatile reads are what hold that order. Plain SCENE
+           and WORK reads into c and g (in any order around the sprite read),
+           direct SCENE->/WORK->/SPRITES-> spellings with or without scene and
+           sprite locals, and the sprite reads first all schedule the work
+           chain ahead of the scene: 16 to 20 of 120 words wrong. */
         c = *((Ov007PickerScene *volatile *)&data_ov007_02104ba0);
         g = *((Ov007Work *volatile *)&data_ov007_0210342c);
         flag = c->awaitingTap;
