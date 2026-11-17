@@ -108,7 +108,7 @@ extern "C" {
 
 int GetGameLanguage(void);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 void Vec2_Sub(int *out, int *a, int *b);
 void *LoadFile(int id);
 void DecompressLZ16(void *src, void *dst);
@@ -119,7 +119,6 @@ void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 void *Ov004_LoadFile(int id);
 void Mg_LoseCredits(int c);
 void Mg_GainCredits(int c);
-void Mg_DrawCredits(char *, int, int, int);
 void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
 
 int sRouletteResultsTimer;
@@ -429,7 +428,7 @@ s32 dScMgRoulette_c::Behavior() {
 }
 
 /* A tail-call veneer to RouletteResults_Draw. */
-void Roulette_DrawResultsThunk(char *) {
+void Roulette_DrawResultsThunk(dScMgRoulette_c *) {
     RouletteResults_Draw();
 }
 
@@ -437,7 +436,7 @@ void Roulette_DrawResultsThunk(char *) {
    countdown (its volume ramps over the last 3 seconds), and moves the camera
    to the current preset. */
 s32 dScMgRoulette_c::Render() {
-    Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
+    DrawCredits(0xc, 0xc, 0);
     MgCoins_Draw();
 
     {
@@ -446,7 +445,7 @@ s32 dScMgRoulette_c::Render() {
             RouletteRacer_Draw((char *)&mRacers[i]);
     }
 
-    Roulette_DrawResultsThunk((char *)this);
+    Roulette_DrawResultsThunk(this);
 
     {
         int idle = (int)(mBoard.mSpinSpeed == 0);

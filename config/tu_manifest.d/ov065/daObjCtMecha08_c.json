@@ -492,6 +492,13 @@
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
       "reason": "Ancestor RTTI passenger of the _ZTI16daObjCtMecha08_c record this TU emits: the root's RTTI name string (\"7fBase_c\"). The cartridge's __si_class_type_info chain is daObjCtMecha08_c (ov065:0x0211d434) -> dBgActor_c (ov002:0x021089ec) -> dActor_c (arm9:0x0208e390) -> dBase_c (arm9:0x02086e78) -> fBase_c (arm9:0x02086d70, the __class_type_info root), and mwccarm emits the whole chain in whichever TU emits the derived record, because each record's third word is a pointer to the next. The canonical cartridge copy at arm9:0x02086e60 is owned independently and lies outside this text-only entry's licensed 0x0211b7f0..0x0211bb7c range, so discarding this TU's duplicate cannot cost the image a byte."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's empty destructor from include/types.h, dragged in by the Vector3 member mHomePos: the classInit factories' `new daObjCtMecha08_c()` instantiates the class, so mwccarm re-emits ~Vector3() with vague linkage. No section in this TU references it. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by another enrolled source; this object's copy is the identical 4-byte `bx lr` body with no relocations, and rombuild compares it against those cartridge bytes before discarding the duplicate."
     }
   ],
   "init": [

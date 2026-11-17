@@ -189,9 +189,9 @@ int daBgSnmBdy_c::InitResources()
         mPosY = ground.clsnY;
     else
         mPosY = pos.y;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mHomeAngleX = mAngleX;
     mHomeAngleY = mAngleY;
     mHomeAngleZ = mAngleZ;
@@ -454,12 +454,12 @@ int daBgSnmBdy_c::State5()
         return 1;
     Vector3 clipResult;
     Vector3 homePos;
-    Vec3_Asr(&homePos, (Vector3 *)&mHomePosX, 3);
+    Vec3_Asr(&homePos, &mHomePos, 3);
     if (data_0209f43c.TransformAndClip(data_0209b3ec, homePos, 0x1f400, clipResult) < 0x1194000)
         return 1;
-    mPosX = mHomePosX;
-    mPosY = mHomePosY;
-    mPosZ = mHomePosZ;
+    mPosX = mHomePos.x;
+    mPosY = mHomePos.y;
+    mPosZ = mHomePos.z;
     mAngleX = mHomeAngleX;
     mAngleY = mHomeAngleY;
     mAngleZ = mHomeAngleZ;

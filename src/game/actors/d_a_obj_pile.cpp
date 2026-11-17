@@ -110,20 +110,12 @@ void daObjPile_c::Sink(int flag) {
     if (mStepsLeft != 0)
         return;
 
-    struct {
-        int vx, vy, vz;
-        int v2x, v2y, v2z;
-    } st;
-    st.vx = mPosX;
-    st.vy = mPosY;
-    st.vz = mPosZ;
-    st.vy = st.vy + 0x17c000;
+    Vector3 pos = mPos;
+    pos.y += 0x17c000;
     if (mBusy == 0) {
         if (GetBitInDeathTable() == 0) {
-            st.v2x = st.vx;
-            st.v2y = st.vy;
-            st.v2z = st.vz;
-            SpawnCoins(*(Vector3 *)&st.v2x, 5, 0x5000, 0);
+            Vector3 coinPos = pos;
+            SpawnCoins(coinPos, 5, 0x5000, 0);
         }
     }
     TrackInDeathTable();
@@ -141,7 +133,7 @@ void daObjPile_c::OnHitByMegaChar(daPly_c &player) {
         return;
     player.IncMegaKillCount();
     PoofDust();
-    func_02012694(0x62, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x62, &mCamSpacePos);
     Sink(1);
 }
 

@@ -1664,6 +1664,14 @@
       "count": 2,
       "reason": "The state pair stores the code address as an int. A pointer-to-member does not fit that slot, and mwccarm rejects the cast to int. Follow-up: a member-pointer type whose copy still loads both words before either store.",
       "evidence": "mwccarm: illegal explicit conversion from pointer-to-member to int. The pair is the two-word image the retail copy loads before either store."
+    },
+    {
+      "path": "src/minigames/d_s_mg_curling2.cpp",
+      "rule": "unknown-field",
+      "match": "unk_55b0",
+      "count": 1,
+      "reason": "dScMgCurling2_c::ResetGame clears 0x55b0 through the existing header member instead of a raw `*((short *)(c + 0x55b0))` store off a `char *c = (char *)this` alias (#821). It is the only access to the field anywhere in the tree; with no reader there is no evidence for a name, so none is invented. Same shape as the file's unk_55a0 and unk_55c0 stores. Follow-up: name it if a reader is found.",
+      "evidence": "include/dScMgCurling2_c.h `u16 unk_55b0; /* 0x55b0, write-only: ResetGame zeroes it */`; fdiff _ZN15dScMgCurling2_c9ResetGameEv ov006 58/58 2004/b56"
     }
   ]
 }

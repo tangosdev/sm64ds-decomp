@@ -352,7 +352,10 @@ void ModelComponents::func_02044b30(int idx) {
            local, beside a named textures/file local, through an inline
            accessor, or at any statement position tried -- the ROM's
            `ldr r5,[r7]; ldr r4,[r4,#0x18]; mla r6,r5,r0,r4` at +0xa8 comes
-           out with the two loads and their registers swapped (3 words). */
+           out with the two loads and their registers swapped (3 words).
+           Re-measured (#821 r17): the id loaded into the dead texImageParam,
+           a pointer `textures + textureId`, or the rotation index in its own
+           local ahead of tex are each 3 words off; tex after sin/cos is 7. */
         u32 textureId = *(volatile const u32 *)&mat.textureId;
         const BMD_Texture &tex = modelFile->textures[textureId];
         s16 sin = FX_SinIdx((u16)(mat.texRotation << 4) >> 4);
@@ -512,9 +515,10 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
         j = 0;
         if (part->count > 0) {
             do {
-                unsigned char b = *(volatile unsigned char*)(part->ids + j);
                 int t;
-                int ix = modelFile->transformBoneMap[b];
+                int ix;
+                ix = part->ids[j];
+                ix = modelFile->transformBoneMap[ix];
                 mp = (Mtx43 *)&transforms[ix];
                 if (mtx) {
                     MTX_Scale43_(&mw, dir->x, dir->y, dir->z);

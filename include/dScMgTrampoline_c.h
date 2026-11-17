@@ -27,11 +27,6 @@
 #include "TrmpLine.h"
 #include "TrmpScorePopup.h"
 
-/* One stylus point in screen pixels. */
-typedef struct Vec2s {
-    s16 x, y;
-} Vec2s;
-
 /* The flashing mark on the lit door, 0xc bytes at 0x5d84. */
 struct dScMgTrampoline_DoorMark {
     s16 row;            /* 0x00 -- which door the flash marks, 0 or 1 */

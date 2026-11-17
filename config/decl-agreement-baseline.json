@@ -15616,11 +15616,6 @@
         "return:void"
       ]
     },
-    "Mg_GetLastRecordRank": {
-      "src/minigames/d_s_mg_base.cpp": [
-        "arity:2"
-      ]
-    },
     "Mg_SetSessionBest": {
       "src/minigames/d_s_mg_base.cpp": [
         "return:int"
@@ -15668,11 +15663,6 @@
       "include/decl_common.h": [
         "param:#2 void *",
         "param:#3 void *"
-      ]
-    },
-    "Mg_InitBrush": {
-      "include/decl_common.h": [
-        "param:#2 int"
       ]
     },
     "Mg_CopySpriteList": {

@@ -24,19 +24,15 @@ struct daHolhei_c : dEnemyBase_c {
     /* Current state record. Behavior calls its update PMF, when non-null,
        unless UpdateKillByInvincibleChar has already ended the frame.
        InitResources enters data_ov062_0211dee0 through
-       daHolhei_c_ChangeState. */
+       ChangeState. */
     HolheiState *mState;       /* 0x364 */
     dExtShadowModel_c mShadowModel;  /* 0x368 */
     /* UpdateShadow / UpdateHeldShadow copy identity here, write pos>>3 into
        the translation, and pass it to DropShadowRadHeight. */
     Matrix4x3   mShadowMtx;    /* 0x390 */
-    s32         mHomePosX;     /* 0x3c0 -- InitResources copies mPos here */
-    s32         mHomePosY;     /* 0x3c4 */
-    s32         mHomePosZ;     /* 0x3c8 */
+    Vector3 mHomePos;          /* 0x3c0 -- InitResources copies mPos here */
     /* func_ov062_021165e8 stores the closest player's pos when the charge starts. */
-    s32         mChasePosX;    /* 0x3cc */
-    s32         mChasePosY;    /* 0x3d0 */
-    s32         mChasePosZ;    /* 0x3d4 */
+    Vector3 mChasePos; /* 0x3cc */
     /* Not dActor_c::mPrevPos at 0x068. Behavior rewinds mPos from these on a
        cliff or level-fence trip, then republishes them. */
     s32         mPrevPosX;     /* 0x3d8 */
@@ -66,9 +62,7 @@ struct daHolhei_c : dEnemyBase_c {
     Matrix4x3   mHoldMtx;      /* 0x3fc */
     /* Behavior zeroes these. HomeCarryOffset homes them toward the two
        Vector3s at data_ov062_0211df10 and hands them to UpdateCarry. */
-    s32         mCarryOffsX;   /* 0x42c */
-    s32         mCarryOffsY;   /* 0x430 */
-    s32         mCarryOffsZ;   /* 0x434 */
+    Vector3 mCarryOffs; /* 0x42c */
 
     /* INLINE IS LOAD-BEARING. Out-of-line, mwccarm emits D0 before D1 plus
        a homeless D2; the cartridge has D1 at 0x02115ee0 then D0 at 0x02115f28
@@ -103,6 +97,7 @@ struct daHolhei_c : dEnemyBase_c {
     int func_ov062_02116b80();
     int func_ov062_02116bf8();
     int func_ov062_02116c78();
+    int ChangeState(HolheiState *);
     void UpdateHeldShadow();
     void UpdateShadow();
     void HandleCylinderHit();

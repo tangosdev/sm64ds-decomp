@@ -51,22 +51,18 @@ struct dMap_c : dBase_c {
     /* Where the level wants its map centred, in world coordinates. A per-level
        constant: InitResources picks 0x258000/0/0x64000 for one level group,
        -0x2bc000/0/-0x2bc000 for another and zero otherwise, and nothing else
-       writes it. Behavior copies it into mMapCenterWorld* each frame. */
-    s32 mMapOriginX;                      /* 0x1e0 */
-    s32 mMapOriginY;                      /* 0x1e4 */
-    s32 mMapOriginZ;                      /* 0x1e8 */
+       writes it. Behavior copies it into mMapCenterWorld each frame. */
+    Vector3 mMapOrigin; /* 0x1e0 */
     /* Write-only, like unk_090..unk_09c: InitResources zeroes it. */
     s32 unk_1ec;                      /* 0x1ec */
     s32 mCurrentScale;                      /* 0x1f0 */
     /* The map centre actually used this frame, in world coordinates. Behavior
-       seeds it from mMapOrigin*, converts the player's position through
+       seeds it from mMapOrigin, converts the player's position through
        dMap_c::GetPosOnMinimap, clamps the icon inside the visible window,
        converts back with dMap_c::GetPosFromMinimapPos and adds the difference
        here -- so the map scrolls only as far as it must to keep the player on
        screen. Every icon on the map is projected relative to it. */
-    s32 mMapCenterWorldX;                      /* 0x1f4 */
-    s32 mMapCenterWorldY;                      /* 0x1f8 */
-    s32 mMapCenterWorldZ;                      /* 0x1fc */
+    Vector3 mMapCenterWorld; /* 0x1f4 */
     /* The direction arrow's 2x2 OAM matrix, same four-word shape as
        mBgMatrix*: Render fills A and B from FX_SinCosTable_ scaled by
        mArrowScale and sets C = -B, D = A, in both the VS and single-player

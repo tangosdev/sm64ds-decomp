@@ -89,7 +89,7 @@ extern "C" {
    not mangle, so the data_* declarations stay next to their users. */
 extern int RandomIntInternal(int *seed);
 extern s32 GetGameLanguage(void);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *matrix);
 extern char *Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                        unsigned short a6);
 struct Matrix2x2;
@@ -975,13 +975,11 @@ void dScMgLuigi_c::StopPicture(int idx) {
 }
 
 void dScMgLuigi_c::RestartPicture(int idx) {
-    unsigned char *self = (unsigned char *)this;
     extern unsigned char sLuigiBoardMovers[];
     unsigned short board = mBoard;
-    self += idx;
-    ((dScMgLuigi_c *)self)->mShown[0] = 1;
-    ((dScMgLuigi_c *)self)->mStarted[0] = 0;
-    ((dScMgLuigi_c *)self)->mKind[0] = sLuigiBoardMovers[board] + 1;
+    mShown[idx] = 1;
+    mStarted[idx] = 0;
+    mKind[idx] = sLuigiBoardMovers[board] + 1;
 }
 
 void dScMgLuigi_c::UpdatePictures() {
@@ -1273,7 +1271,6 @@ void dScMgLuigi_c::PlaceNextPicture() {
 
     attempts = 0;
     while (1) {
-        u8 *cell;
         if (attempts >= 100) {
             col++;
             if (col >= 12) {
@@ -1286,8 +1283,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
             col = LUIGI_RAND(13);
             row = LUIGI_RAND(9);
         }
-        cell = ((dScMgLuigi_c *)((char *)this + col * 9 + row))->mGrid[0];
-        if (*cell == 0) {
+        if (mGrid[col][row] == 0) {
             int jitterX;
             int jitterY;
             jitterY = -2;
@@ -1296,7 +1292,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
             jitterY += LUIGI_RAND(5);
             mPosX[pictureIndex] = (col * 20 + (jitterX + 8)) << 12;
             mPosY[pictureIndex] = (row * 20 + (jitterY + 16)) << 12;
-            *cell = 1;
+            mGrid[col][row] = 1;
             break;
         }
         attempts++;
@@ -1537,7 +1533,6 @@ extern void Mg_ShowBanner(int, int, int, int, int, short);
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 /* dScMgLuigi_c::Render */
-extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 /* dScMgLuigi_c::Behavior */
 extern LuigiStateHandler sLuigiStateTable[];
 /* dScMgLuigi_c::InitResources */
@@ -1587,7 +1582,7 @@ void dScMgLuigi_c::StartRound(int mode) {
 }
 
 s32 dScMgLuigi_c::Render() {
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     DrawCurtains();
     DrawReward();
     DrawPenalties();

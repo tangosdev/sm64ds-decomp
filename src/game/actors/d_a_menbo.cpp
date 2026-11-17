@@ -637,8 +637,6 @@ int daMenbo_c::Render()
  * is vanished. */
 int daMenbo_c::Behavior()
 {
-    char *c = (char *)this;
-
     if (UpdateYoshiEat(mWithMeshClsn)) {
         mdCcAcPos_c.Clear();
         if (mEatenByYoshi != 0 && mSpitOutTimer == 0)
@@ -661,9 +659,8 @@ int daMenbo_c::Behavior()
             PoofDust();
         if (mDeathTumble == 3) {
             ApproachLinear(mAngleX, -32767, 0x500);
-            if (AngleDiff(*&mAngleX, -32767) < 0x1000) {
-                s16 *yaw = &mAngleY;
-                *yaw += 0x1000;
+            if (AngleDiff(mAngleX, -32767) < 0x1000) {
+                mAngleY += 0x1000;
             }
         }
         if (mDeathState != 1 && mPosY <= mSurfaceY) {
@@ -671,7 +668,7 @@ int daMenbo_c::Behavior()
             v.x = mPosX;
             v.y = mPosY;
             v.z = mPosZ;
-            ((dActor_c *)c)->SpawnCoins(*(const Vector3 *)&v, mExtraCoinCount + 1, 0xa000, 0);
+            SpawnCoins(*(const Vector3 *)&v, mExtraCoinCount + 1, 0xa000, 0);
             PoofDust();
             KillAndTrackInDeathTable();
         }

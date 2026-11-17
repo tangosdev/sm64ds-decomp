@@ -61,7 +61,7 @@ typedef void (C::*PMF0)();
 extern "C" {
 
 extern int Mg_GetSubmittedScore(void);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *matrix);
 extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
 extern void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
@@ -69,7 +69,7 @@ extern void func_02012718(int a, int b);
 struct OamAttr;
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern int Mg_IsNewRecord(void);
 extern void Mg_SetSharedState(int state);
 extern void Mg_SubmitScore(int score);
@@ -985,12 +985,7 @@ void dScMgCurling_c::Stone_Collide(int idx) {
  * speed the stone stops (state 2). The collision and spin helpers run, and
  * the slide sound (slideSnd) is retuned to the speed. */
 void dScMgCurling_c::Stone_Slide(int stoneIndex) {
-    int stoneOffset;
     int zi;
-    u16 *pAngle;
-    int *pSpeed;
-    int *pX;
-    int *pY;
     int x;
     int z;
     int xi;
@@ -1004,51 +999,44 @@ void dScMgCurling_c::Stone_Slide(int stoneIndex) {
     int cosAngle;
     int sinAngle;
 
-    stoneOffset = stoneIndex * 0x2c;
-
-    pAngle = (u16 *)((char *)&mStone[0].angle + stoneOffset);
-    pSpeed = (int *)((char *)&mStone[0].speed + stoneOffset);
-    pX = &mStone[stoneIndex].x;
-    pY = &mStone[stoneIndex].y;
-
-    cosAngle = FX_CosIdx(*pAngle >> 4);
-    *pX += FX_MUL(cosAngle, *pSpeed);
-    sinAngle = FX_SinIdx(*pAngle >> 4);
-    *pY += FX_MUL(sinAngle, *pSpeed);
+    cosAngle = FX_CosIdx(mStone[stoneIndex].angle >> 4);
+    mStone[stoneIndex].x += FX_MUL(cosAngle, mStone[stoneIndex].speed);
+    sinAngle = FX_SinIdx(mStone[stoneIndex].angle >> 4);
+    mStone[stoneIndex].y += FX_MUL(sinAngle, mStone[stoneIndex].speed);
     mStone[stoneIndex].heading += (u16)mStone[stoneIndex].spin;
 
-    x = *pX;
-    z = *pY;
+    x = mStone[stoneIndex].x;
+    z = mStone[stoneIndex].y;
     xi = x >> 12;
     zi = z >> 12;
 
     if (xi + 0xc >= 0x100) {
-        *pAngle = 0x8000 - *pAngle;
-        *pX = 0xf4000;
-        func_02012718(0x1d4, *pX);
+        mStone[stoneIndex].angle = 0x8000 - mStone[stoneIndex].angle;
+        mStone[stoneIndex].x = 0xf4000;
+        func_02012718(0x1d4, mStone[stoneIndex].x);
     } else if (xi - 0xc < 0) {
-        *pAngle = 0x8000 - *pAngle;
-        *pX = 0xc000;
-        func_02012718(0x1d4, *pX);
+        mStone[stoneIndex].angle = 0x8000 - mStone[stoneIndex].angle;
+        mStone[stoneIndex].x = 0xc000;
+        func_02012718(0x1d4, mStone[stoneIndex].x);
     }
 
     if (zi + 0xc > 0xc0) {
         mStone[stoneIndex].angle = -mStone[stoneIndex].angle;
-        *pY = 0xb4000;
-        func_02012718(0x1d4, *pX);
+        mStone[stoneIndex].y = 0xb4000;
+        func_02012718(0x1d4, mStone[stoneIndex].x);
     } else if (zi - 0xc < -0xe0) {
         mStone[stoneIndex].angle = -mStone[stoneIndex].angle;
-        *pY = -0xd4000;
-        func_02012718(0x1d4, *pX);
+        mStone[stoneIndex].y = -0xd4000;
+        func_02012718(0x1d4, mStone[stoneIndex].x);
     }
 
-    zi = *pSpeed;
+    zi = mStone[stoneIndex].speed;
     v = zi >> 9;
     if (v <= 0x1c)
         v = 0x1c;
-    for (i2 = 0, sbv = *pY >> 12; i2 < 5; i2++) {
+    for (i2 = 0, sbv = mStone[stoneIndex].y >> 12; i2 < 5; i2++) {
         if (sbv <= -(sCurlingSlideZoneEdges[i2] + 0x20)) {
-            s = FX_SinIdx(*pAngle >> 4);
+            s = FX_SinIdx(mStone[stoneIndex].angle >> 4);
             if (s < 0) {
                 v = zi >> sCurlingSlideShiftLeft[i2];
                 if (v < sCurlingSlideMinLeft[i2])
@@ -1063,7 +1051,7 @@ void dScMgCurling_c::Stone_Slide(int stoneIndex) {
     }
 
     if (sbv > -0x20) {
-        s = FX_SinIdx(*pAngle >> 4);
+        s = FX_SinIdx(mStone[stoneIndex].angle >> 4);
         if (s > 0) {
             v = zi >> 3;
             if (v <= 0x180)
@@ -1074,7 +1062,7 @@ void dScMgCurling_c::Stone_Slide(int stoneIndex) {
     mStone[stoneIndex].speed -= v;
     pd = &mStone[stoneIndex].speed;
     if (mStone[stoneIndex].speed <= 0) {
-        *pSpeed = 0;
+        mStone[stoneIndex].speed = 0;
         mStone[stoneIndex].state = 2;
     }
 
@@ -1086,8 +1074,8 @@ void dScMgCurling_c::Stone_Slide(int stoneIndex) {
     p = v >> 7;
     if (p >= 0x7f)
         p = 0x7f;
-    mStone[stoneIndex].slideSnd =
-        func_02012468(mStone[stoneIndex].slideSnd, 2, 0xe7, 7, p, w, func_020126e8(*pX), 0);
+    mStone[stoneIndex].slideSnd = func_02012468(mStone[stoneIndex].slideSnd, 2, 0xe7, 7, p, w,
+                                                func_020126e8(mStone[stoneIndex].x), 0);
 }
 
 /* Releases stone idx if the aimed stone (mAimX/mAimY) overlaps it: it takes

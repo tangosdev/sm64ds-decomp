@@ -191,23 +191,23 @@ void daChair_c::State0() {
 }
 
 void daChair_c::State1() {
-    int targetPos[4];
+    Vector3 targetPos;
     dActor_c *target;
     short delta;
     daPly_c *player;
     int wobble;
-    int *av;
+    Vector3 *av;
 
     target = dActor_c::FindWithID(mTargetID);
     if (target != 0) {
         /* The three words are loaded before either Vec3 call. */
-        av = &target->mPosX;
-        targetPos[0] = *av;
-        targetPos[1] = av[1];
-        targetPos[2] = av[2];
-        if (Vec3_Dist(&mPos, (const Vector3 *)targetPos) >= 0xfa000)
+        av = &target->mPos;
+        targetPos.x = av->x;
+        targetPos.y = av->y;
+        targetPos.z = av->z;
+        if (Vec3_Dist(&mPos, &targetPos) >= 0xfa000)
             return;
-        delta = (Vec3_HorzAngle(&mPos, (const Vector3 *)targetPos) - mAngleY + 0x2000);
+        delta = (Vec3_HorzAngle(&mPos, &targetPos) - mAngleY + 0x2000);
         if (delta & 0x4000) {
             mTrackedAngle = &mAngleZ;
             if (delta > 0)
@@ -343,11 +343,11 @@ void daChair_c::State2() {
         if (isPlayer != 0)
             return;
         {
-            VecFx32 pos;
+            Vector3 pos;
             pos.x = mPosX;
             pos.y = mPosY;
             pos.z = mPosZ;
-            ((daPly_c *)actor)->Hurt(*(Vector3 *)&pos, 2, 0xc000, 1, 0, 1);
+            ((daPly_c *)actor)->Hurt(pos, 2, 0xc000, 1, 0, 1);
         }
     }
 }

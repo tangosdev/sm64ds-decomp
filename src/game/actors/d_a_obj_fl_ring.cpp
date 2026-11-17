@@ -163,6 +163,7 @@ s32 daObjFl_Ring_c::Behavior() {
         if (DecIfAbove0_Byte(&mSpawnGuard) != 0)
             break;
         {
+            /* A Vector3 v emits ~Vector3, which drags dBgActor_c's D2 and this class's RTTI into the TU (measured). */
             int v[3];
             daObj_volcanoCannon_c *s;
             v[0] = mPosX;

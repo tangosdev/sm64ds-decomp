@@ -34,12 +34,8 @@ struct daBakubaku_c : dEnemyBase_c {
     State      *mState;          /* 0x3b0 -- the table this fish is running */
     dExtShadowModel_c mShadowModel;    /* 0x3b4 */
     Matrix4x3   mShadowMat;      /* 0x3dc -- DropShadowRadHeight source */
-    s32         mSpawnPosX;      /* 0x40c */
-    s32         mSpawnPosY;      /* 0x410 */
-    s32         mSpawnPosZ;      /* 0x414 */
-    s32         mTargetPosX;     /* 0x418 */
-    s32         mTargetPosY;     /* 0x41c */
-    s32         mTargetPosZ;     /* 0x420 */
+    Vector3 mSpawnPos;           /* 0x40c */
+    Vector3 mTargetPos;          /* 0x418 */
     s32         mLungePhase;     /* 0x424 */
     u8          mMouthOpen;      /* 0x428 */
     u8          unk_429;         /* 0x429 -- only cleared */

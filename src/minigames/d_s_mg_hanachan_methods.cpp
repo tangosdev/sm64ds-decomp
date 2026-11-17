@@ -41,7 +41,6 @@
  *   the B72 bitfield view.
  * - Wiggler::DrawField: OAM::Render(int, OamAttr*, int, int, int,
  *   int, int, int) does not typecheck (the sprite table is void*).
- *   One sprite offset is still read back through the stack word under s.
  */
 
 /* .text in source order (ROM-ascending; do not reorder) and per-function
@@ -164,7 +163,6 @@ extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
 extern unsigned short sHanaUsedIds[];
 extern void Mg_CommitRecords(void);
-extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
 extern int GetGameLanguage(void);
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
@@ -377,7 +375,7 @@ typedef struct {
 } Ent_ea670;
 
 void HanaPopup_DrawAll(void) {
-    void *a = 0, *b = 0, *c = 0;
+    Matrix2x2 *a = 0, *b = 0, *c = 0;
     int i;
     for (i = 0; i < 16; i++) {
         Ent_ea670 *e = &((Ent_ea670 *)sHanaPopups)[i];
@@ -565,6 +563,12 @@ void dScMgHanachan_c::Wiggler::DrawTarget() {
 }
 
 void dScMgHanachan_c::Wiggler::DrawField() {
+    /* The three anonymous groupings set the stack layout: the ROM spills A,
+       B, (u16)rot, the hoisted zero, res and py, and keeps px in a register.
+       Measured 2026-11-16 (#821 r22) against 0x3e0 bytes: plain Vector2
+       locals give 0x3dc, the same locals unnested 0x3d8, DrawTarget's
+       Vec2_ea914 shape 0x3e4, and all 72 declaration orders of A/B with
+       the points as Vector2 miss the size. */
     struct {
         int A, B, urot, va0x, res;
     } t;
@@ -643,9 +647,8 @@ void dScMgHanachan_c::Wiggler::DrawField() {
                     s.vc.x = s3.vc0.x;
                     s.vc.y = s3.vc0.y;
                     if (hold < 0x26) {
-                        int d = (0x30 - hold) * 0x600;
-                        int vy;
-                        s.vc.y = (vy = *(int *)((char *)&s - 4), (idx = 1) ? vy : vy) - d;
+                        idx = 1;
+                        s.vc.y -= (0x30 - hold) * 0x600;
                     }
                     func_0203d388(&s.vc.x, rot);
                     s.vc.x += s.pos.x;
@@ -1575,7 +1578,7 @@ s32 dScMgHanachan_c::Render() {
     int i;
     Wiggler *arr;
 
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     HanaPopup_DrawAll();
     StarPopup_Draw();
 

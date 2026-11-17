@@ -72,6 +72,7 @@ extern Jump3DState pmf_dMgJump3DMario_c_StateMove;
 extern Jump3DState pmf_dMgJump3DMario_c_StateHold;
 extern Jump3DState pmf_dMgJump3DMario_c_StateDamp;
 extern Jump3DState pmf_dMgJump3DMario_c_StateRespawn;
+extern Jump3DState pmf_dMgJump3DMario_c_StateIdle;
 extern Jump3DState pmf_dMgJump3DMario_c_StateIdle_2;
 extern Jump3DState pmf_dMgJump3DMario_c_StateWindUp;
 extern Jump3DState pmf_dMgJump3DMario_c_StateIdle_3;
@@ -133,7 +134,6 @@ int sJump3DLayout;
 int sJump3DMarioCount;
 char *sJump3DMarioPool;
 extern char *sJumpAdapters[];
-extern int pmf_dMgJump3DMario_c_StateIdle[2];
 
 /* Input gate, spin phase and the model sprite list Draw hands OAM::Render. */
 u8 data_ov006_02140400;
@@ -222,21 +222,11 @@ void Jump3D_RestoreCount(void) {
     ApproachLinear(sJump3DMariosLeft, sJump3DMarioCount, 1);
 }
 
-/* Returns 0 if any entry's pair at +0x3c disagrees with the record at
- * 0213b040 (a y mismatch is tolerated when x is 0), else 1. */
-struct Jump3DEnt {
-    char _pad0[0x3c];
-    int x;
-    int y;
-    char _pad44[0x74];
-};
+/* Returns 1 when every Mario in the pool is in StateIdle, else 0. */
 int Jump3D_AllIdle(void) {
     int i;
     for (i = 0; i < sJump3DMarioCount; i++) {
-        int *v = (&((Jump3DEnt *)sJump3DMarioPool)[i].x);
-        volatile int *q = (int *)pmf_dMgJump3DMario_c_StateIdle;
-        if (v[0] != pmf_dMgJump3DMario_c_StateIdle[0] ||
-            (v[1] != q[1] && ((Jump3DEnt *)sJump3DMarioPool)[i].x != 0))
+        if (((dMgJump3DMario_c *)sJump3DMarioPool)[i].mState != pmf_dMgJump3DMario_c_StateIdle)
             return 0;
     }
     return 1;

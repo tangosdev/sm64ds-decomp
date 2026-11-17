@@ -180,7 +180,7 @@ int daDsn_c::Behavior() {
         StateRest();
         if (mState == 4) {
             if (mTriggered != 0) {
-                mRetrigger = 0x5a;
+                mTimer = 0x5a;
                 mTriggered = 0;
             }
         }
@@ -188,7 +188,7 @@ int daDsn_c::Behavior() {
     case 4:
         if (mTriggered != 0) {
             mTriggered = 0;
-            mRetrigger = 0x5a;
+            mTimer = 0x5a;
         }
         StateRecover();
         break;

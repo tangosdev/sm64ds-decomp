@@ -130,17 +130,13 @@ struct daOts_c : dEnemyBase_c {
         /* Where the actor stood at the top of the last Behavior frame that ran
            (BehaviorCommon copies mPos here before moving it); the ledge check puts
            x and z back to it. InitResourcesCommon seeds it with the spawn position. */
-        s32 mPosBeforeMoveX;    /* 0x39c */
-        s32 mPosBeforeMoveY;    /* 0x3a0 */
-        s32 mPosBeforeMoveZ;    /* 0x3a4 */
+        Vector3 mPosBeforeMove; /* 0x39c */
         /* InitResourcesCommon seeds this with the spawn position. STATE_RETURN_HOME
            steers toward it and the two player-range tests are measured from it (the
            chase-keeping one uses only its x and z, at the actor's own height). The death
            handler overwrites it with the spot the actor died at (y set 5 units above
            the floor), which is where func_ov064_0211616c spawns its particles. */
-        s32 mHomePosX;          /* 0x3a8 */
-        s32 mHomePosY;          /* 0x3ac */
-        s32 mHomePosZ;          /* 0x3b0 */
+        Vector3 mHomePos; /* 0x3a8 */
         /* Handed to DropShadowRadHeight; func_ov064_02116bac rebuilds it every
            frame as a Y rotation by mAngleY with the translation row set to the
            position divided by 8. */
