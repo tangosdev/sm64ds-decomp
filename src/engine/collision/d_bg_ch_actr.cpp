@@ -182,7 +182,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
     sphere.y = y + mHeight;
     mSphereClsn.SetObjAndSphere(sphere, mRadius, mActor);
     mSphereClsn.mMaxNormalY = mMaxNormalY;
-    if (pos->y - actor->mPrevPosY > 0) {
+    if (pos->y - actor->mPrevPos.y > 0) {
         mSphereClsn.flags |= 0x20;
     }
     if (mSphereClsn.DetectClsnSlot0()) {

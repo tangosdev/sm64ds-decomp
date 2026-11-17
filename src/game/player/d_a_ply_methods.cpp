@@ -4561,9 +4561,9 @@ int daPly_c::St_Respawn_Init() {
     mPos = mSpawnPos;
     mPosY += 0x3e8000;
     func_02035860(&mMeshClsn, &mPos);
-    mPrevPosX = mPosX;
-    mPrevPosY = mPosY;
-    mPrevPosZ = mPosZ;
+    mPrevPos.x = mPosX;
+    mPrevPos.y = mPosY;
+    mPrevPos.z = mPosZ;
     mPrevAngleY = mSpawnAngleY;
     mAngleY = mPrevAngleY;
     mIsBodyClsnEnabled = 1;
@@ -15800,9 +15800,9 @@ extern "C" void func_ov002_020db54c(void *self, int a, int b, short c) {
             v.z = src->z;
             v.y = ty + 0x64000;
             func_02035860(&p->mMeshClsn, &v);
-            p->mPrevPosX = v.x;
-            p->mPrevPosY = v.y;
-            p->mPrevPosZ = v.z;
+            p->mPrevPos.x = v.x;
+            p->mPrevPos.y = v.y;
+            p->mPrevPos.z = v.z;
         }
     }
     p->mGrabbedByActor = 0;

@@ -657,9 +657,9 @@ void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
         rc.SetObjAndPos(pos, this);
         if (!rc.DetectClsn() || rc.clsnY < mPosY - 0x32000) {
             mHorzSpeed = 0;
-            mPosX = mPrevPosX;
-            mPosY = mPrevPosY;
-            mPosZ = mPrevPosZ;
+            mPosX = mPrevPos.x;
+            mPosY = mPrevPos.y;
+            mPosZ = mPrevPos.z;
         } else {
             Vector3 normal;
             w->GetFloorResult()->surface.CopyNormalTo(normal);

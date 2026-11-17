@@ -1412,7 +1412,7 @@ void daStar_c::StateSaveMessage() {
  * runs once mStateTimer has counted out, unless the no-pickup flag is set. */
 void daStar_c::StateBounce() {
     CheckBounds();
-    mPrevPosY = mPosY;
+    mPrevPos.y = mPosY;
     UpdateWMClsn(mWithMeshClsn, 2);
     if (mWithMeshClsn.IsOnWall()) {
         mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
@@ -2098,7 +2098,7 @@ void daStar_c::UpdateWater() {
         }
         if (mBits.water == WATER_NONE) {
             mBits.water = WATER_TOUCH;
-            mPosY = mPrevPosY;
+            mPosY = mPrevPos.y;
             mWithMeshClsn.ClearGroundFlag();
             mWithMeshClsn.ClearJustHitGroundFlag();
             mWithMeshClsn.StopDetectingWater();

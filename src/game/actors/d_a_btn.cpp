@@ -1624,7 +1624,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
     /* Copied through a pointer: `v = other->mPrevPos` loads the three words
        in a different order and moves the literal pool. */
     {
-        int* q = &other->mPrevPosX;
+        int* q = &other->mPrevPos.x;
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];

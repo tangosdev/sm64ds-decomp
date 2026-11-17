@@ -247,9 +247,9 @@ int dActor_c::BeforeBehavior()
          data_0209fc68 == 0))
         return 0;
 
-    mPrevPosX = mPosX;
-    mPrevPosY = mPosY;
-    mPrevPosZ = mPosZ;
+    mPrevPos.x = mPosX;
+    mPrevPos.y = mPosY;
+    mPrevPos.z = mPosZ;
     return 1;
 }
 

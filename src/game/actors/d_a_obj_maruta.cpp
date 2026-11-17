@@ -181,14 +181,14 @@ int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
     if (ang <= 0x100)
         ang = 0;
     if (len > *maxDist) {
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPosX = mPrevPos.x;
+        mPosY = mPrevPos.y;
+        mPosZ = mPrevPos.z;
     }
     if (ang == mPathAngDiff || ang == 0x8000) {
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPosX = mPrevPos.x;
+        mPosY = mPrevPos.y;
+        mPosZ = mPrevPos.z;
         mHitTimer = 10;
     }
     mAngleX += mRollAngVel;

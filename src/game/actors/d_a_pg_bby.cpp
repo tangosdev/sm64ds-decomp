@@ -599,9 +599,9 @@ int daPgBby_c::GuardStepHeight() {
             if (d <= 0x1900)
                 goto bail;
         }
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPosX = mPrevPos.x;
+        mPosY = mPrevPos.y;
+        mPosZ = mPrevPos.z;
         return 1;
     bail:
         ;

@@ -332,9 +332,9 @@ void daBtfly_c::State2()
             mState = 3;
 
         pp = &player->mPosX;
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPosX = mPrevPos.x;
+        mPosY = mPrevPos.y;
+        mPosZ = mPrevPos.z;
 
         v.x = pp[0];
         v.y = pp[1];
@@ -359,9 +359,9 @@ void daBtfly_c::State2()
             mStateTimer = 0;
         return;
     }
-    mPosX = mPrevPosX;
-    mPosY = mPrevPosY;
-    mPosZ = mPrevPosZ;
+    mPosX = mPrevPos.x;
+    mPosY = mPrevPos.y;
+    mPosZ = mPrevPos.z;
 }
 
 

@@ -300,9 +300,9 @@ int daHuwa_c::Behavior() {
     UpdateWMClsn(mWithMeshClsn, 0);
 
     if (IsGoingOffCliff(mWithMeshClsn, 0x3c000, 0x2888, 1, 1, 0x32000) != 0) {
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPosX = mPrevPos.x;
+        mPosY = mPrevPos.y;
+        mPosZ = mPrevPos.z;
     }
     UpdateModelTransform();
     mdCcAc_c.Clear();

@@ -505,9 +505,9 @@ int daPropeller_Heyho_c::func_ov070_0211fae4() {
             this->mHomePosZ = this->mPosZ;
             this->mHomePosY += kHomeLiftEscape;
         }
-        this->mPosX = this->mPrevPosX;
-        this->mPosY = this->mPrevPosY;
-        this->mPosZ = this->mPrevPosZ;
+        this->mPosX = this->mPrevPos.x;
+        this->mPosY = this->mPrevPos.y;
+        this->mPosZ = this->mPrevPos.z;
         this->mPrevAngleX = 0;
         this->mStateTimer = 0;
         this->mSpeed.y = 0;
@@ -680,9 +680,9 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
             mHomePosZ = mPosZ;
             mHomePosY += kHomeLiftEscape;
         }
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPosX = mPrevPos.x;
+        mPosY = mPrevPos.y;
+        mPosZ = mPrevPos.z;
         mPrevAngleX = 0;
         mStateTimer = 0;
         mSpeed.y = 0;

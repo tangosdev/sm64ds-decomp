@@ -1803,9 +1803,9 @@ int daKing_Donketu_c::Behavior()
             mGroundMissPos.y = mPosY;
             mGroundMissPos.z = mPosZ;
             if (mState != &data_ov073_021233a0) {
-                mPosX = mPrevPosX;
-                mPosY = mPrevPosY;
-                mPosZ = mPrevPosZ;
+                mPosX = mPrevPos.x;
+                mPosY = mPrevPos.y;
+                mPosZ = mPrevPos.z;
                 mHorzSpeed = 0;
             }
         } else {

@@ -260,9 +260,9 @@ void daKpFr_c::func_ov070_02121be4()
     ground.SetObjAndPos(*(Vector3*)pos, this);
     if (ground.DetectClsn() == 0 ||
         ground.clsnY < mPosY - 0x32000) {
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPosX = mPrevPos.x;
+        mPosY = mPrevPos.y;
+        mPosZ = mPrevPos.z;
     }
 }
 
