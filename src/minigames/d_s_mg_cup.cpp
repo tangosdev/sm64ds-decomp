@@ -298,9 +298,9 @@ void dScMgCup_c::SetupSwap() {
     mSwapSlotA = sCupSwapFirst[swapPair].a;
     mSwapSlotB = sCupSwapFirst[swapPair].b;
 
-    mMidX = (sCupHomePositions[mSwapSlotB].x + sCupHomePositions[mSwapSlotA].x) / 2;
-    mMidY = (sCupHomePositions[mSwapSlotB].y + sCupHomePositions[mSwapSlotA].y) / 2;
-    mHalfX = mMidX - sCupHomePositions[mSwapSlotA].x;
+    mMid.x = (sCupHomePositions[mSwapSlotB].x + sCupHomePositions[mSwapSlotA].x) / 2;
+    mMid.y = (sCupHomePositions[mSwapSlotB].y + sCupHomePositions[mSwapSlotA].y) / 2;
+    mHalfX = mMid.x - sCupHomePositions[mSwapSlotA].x;
     mShuffleAngle = 0;
 
     {
@@ -475,15 +475,15 @@ void dScMgCup_c::StateShuffle() {
         int cosine = FX_CosIdx(mShuffleAngle >> 4);
         oldX = mCup[slot].x;
         oldY = mCup[slot].y;
-        mCup[slot].x = mMidX - FX_MUL(cosine, mHalfX);
+        mCup[slot].x = mMid.x - FX_MUL(cosine, mHalfX);
     }
     {
         int slot = mCupAtSlot[mSwapSlotA];
-        mCup[slot].y = mMidY - FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
+        mCup[slot].y = mMid.y - FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
     }
     {
         int slot = mCupAtSlot[mSwapSlotA];
-        mCupScale[slot] = ((mCup[slot].y - mMidY) >> 7) + 0x1000;
+        mCupScale[slot] = ((mCup[slot].y - mMid.y) >> 7) + 0x1000;
     }
     {
         int slot = mCupAtSlot[mSwapSlotA];
@@ -495,15 +495,15 @@ void dScMgCup_c::StateShuffle() {
         int cosine = FX_CosIdx(mShuffleAngle >> 4);
         oldX = mCup[slot].x;
         oldY = mCup[slot].y;
-        mCup[slot].x = mMidX + FX_MUL(cosine, mHalfX);
+        mCup[slot].x = mMid.x + FX_MUL(cosine, mHalfX);
     }
     {
         int slot = mCupAtSlot[mSwapSlotB];
-        mCup[slot].y = mMidY + FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
+        mCup[slot].y = mMid.y + FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
     }
     {
         int slot = mCupAtSlot[mSwapSlotB];
-        mCupScale[slot] = ((mCup[slot].y - mMidY) >> 7) + 0x1000;
+        mCupScale[slot] = ((mCup[slot].y - mMid.y) >> 7) + 0x1000;
     }
     {
         int slot = mCupAtSlot[mSwapSlotB];

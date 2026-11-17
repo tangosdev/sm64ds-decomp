@@ -74,9 +74,8 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     u8 pad_50e4[4];     /* 0x50e4 */
     CupFx mFx[0x20];    /* 0x50e8 */
     Vector2 mCup[3];    /* 0x53e8 -- StateSelect subtracts x>>12, y>>12 from the touch */
-    s32 mMidX;          /* 0x5400 -- average of the two cups' rest x */
-    s32 mMidY;          /* 0x5404 -- average of the two rest y */
-    s32 mHalfX;         /* 0x5408 -- mMidX minus the first cup's rest x */
+    Vector2 mMid;       /* 0x5400 -- midpoint of the two swapping cups' rest positions */
+    s32 mHalfX;         /* 0x5408 -- mMid.x minus the first cup's rest x */
     s32 mCupScale[3];   /* 0x540c -- fx32 size; converted to reciprocal for OAM rendering */
     s32 mState;         /* 0x5418 */
     s32 mTimer;         /* 0x541c */
