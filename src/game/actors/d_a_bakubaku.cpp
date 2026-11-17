@@ -20,10 +20,8 @@
  * the body and head cylinder offsets.
  */
 /* leftovers: common.h precedes daBakubaku_c.h to retain the current flat
- * Matrix4x3 copies. Actor, spawn and target positions remain separate scalar
- * fields; the existing vector pointer views at those helper boundaries are
- * still partial reconstruction. The state timer uses unsigned halfword reads,
- * and the state installer retains its StateFn pointer read-back.
+ * Matrix4x3 copies. The state timer uses unsigned halfword reads, and the
+ * state installer retains its StateFn pointer read-back.
  * The forward vectors retain the observed doubled Z store and store order.
  * g_profile_BAKUBAKU remains this file's data, not a class member.
  */
@@ -152,9 +150,9 @@ s32 daBakubaku_c::InitResources()
     headOffset.z = data_ov032_021137d8.z;
     mHeadClsn.Init(this, headOffset, 0x64000, 0x8c000, kCcEnemy | kCcCharProjectile, 0);
 
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
 
     mWithMeshClsn.Init(this, 0x64000, 0, 0, 0);
 
@@ -270,11 +268,11 @@ int daBakubaku_c::ExecuteWander() {
     if (ShouldReturnHome() == 1) {
         mStateTimer = 40;
         mChaseCooldown = 40;
-        ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mSpawnPosX);
+        ang = Vec3_HorzAngle(&mPos, &mSpawnPos);
         mAngTarget = ang;
     }
     ApproachLinear(mPrevAngleY, mAngTarget, 0x100);
-    ang = Vec3_VertAngle(&mPos, (const Vector3 *)&mSpawnPosX);
+    ang = Vec3_VertAngle(&mPos, &mSpawnPos);
     ApproachLinear(mPrevAngleX, ang, 0x100);
     in.z = 0;
     in.z = 0x5000;
@@ -342,14 +340,14 @@ int daBakubaku_c::ExecuteChase() {
         return 1;
     }
 
-    mAngTarget = Vec3_HorzAngle(&mPos, (Vector3 *)&mTargetPosX);
+    mAngTarget = Vec3_HorzAngle(&mPos, &mTargetPos);
     unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value);
     int s5 = (int)(((r >> 8) & 3) << 0x1c) >> 0x10;
     ApproachLinear(mPrevAngleY, mAngTarget, 0x200);
-    if (Vec3_HorzDist(&mPos, (Vector3 *)&mTargetPosX) < 0x258000) {
+    if (Vec3_HorzDist(&mPos, &mTargetPos) < 0x258000) {
         int d = AngleDiff(mAngleY, mAngTarget);
         if (d < (int)(short)(s5 + 0x200)) {
-            mAngTarget = Vec3_VertAngle(&mPos, (Vector3 *)&mTargetPosX);
+            mAngTarget = Vec3_VertAngle(&mPos, &mTargetPos);
             mFlags = 0;
             mAnmModel.speed = 0x1000;
             mDiveStartY = mPosY;
@@ -610,7 +608,7 @@ int daBakubaku_c::ShouldReturnHome() {
     if (mWithMeshClsn.IsOnWall() != 0
         || mWithMeshClsn.IsOnGround() != 0)
         return 1;
-    if (Vec3_HorzDist((struct Vector3 *)&mSpawnPosX, &mPos) > 0x4b0000)
+    if (Vec3_HorzDist(&mSpawnPos, &mPos) > 0x4b0000)
         return 1;
     if (mState != &data_ov032_02113abc) {
         if (data_0209f32c < mPosY) return 1;
@@ -627,9 +625,9 @@ int daBakubaku_c::FindChaseTarget() {
     if (pl == 0 || mChaseCooldown != 0)
         return 0;
     s = &pl->mPos;
-    mTargetPosX = s->x;
-    mTargetPosY = s->y;
-    mTargetPosZ = s->z;
+    mTargetPos.x = s->x;
+    mTargetPos.y = s->y;
+    mTargetPos.z = s->z;
     t = mState;
     if (t != &data_ov032_02113abc && t != &data_ov032_02113a7c) {
         if (pl->mIsUnderwater == 0)
@@ -640,9 +638,7 @@ int daBakubaku_c::FindChaseTarget() {
     if (d < 0xb4000)
         return 0;
     if (t != &data_ov032_02113abc && t != &data_ov032_02113a7c) {
-        if (Vec3_HorzDist(
-                (const Vector3 *)&mSpawnPosX,
-                (const Vector3 *)&mTargetPosX) > 0x4b0000)
+        if (Vec3_HorzDist(&mSpawnPos, &mTargetPos) > 0x4b0000)
             return 0;
     }
     return 1;

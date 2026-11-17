@@ -24,12 +24,8 @@ struct daLinelift2_c : dBgActor_c {
     s32 mState;       /* 0x320 */
     s32 mNodeCount;   /* 0x324 */
     s32 mNodeIndex;   /* 0x328 */
-    s32 mBasePosX;    /* 0x32c -- the node just left */
-    s32 mBasePosY;    /* 0x330 */
-    s32 mBasePosZ;    /* 0x334 */
-    s32 mTargetPosX;  /* 0x338 -- the node being headed for */
-    s32 mTargetPosY;  /* 0x33c */
-    s32 mTargetPosZ;  /* 0x340 */
+    Vector3 mBasePos; /* 0x32c -- the node just left */
+    Vector3 mTargetPos; /* 0x338 -- the node being headed for */
     PathPtr mPathPtr; /* 0x344 */
     s32 mSinkOffsetY; /* 0x34c */
     s16 mBaseAngleY;  /* 0x350 */

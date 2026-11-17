@@ -40,9 +40,7 @@ struct daObjFl_Amilift_c : dBgActor_c {
     s32 mFromX;       /* 0x348 -- the node it last reached */
     s32 mFromY;       /* 0x34c */
     s32 mFromZ;       /* 0x350 */
-    s32 mToX;         /* 0x354 -- position of node mNodeIndex */
-    s32 mToY;         /* 0x358 */
-    s32 mToZ;         /* 0x35c */
+    Vector3 mTo;      /* 0x354 -- position of node mNodeIndex */
     PathPtr mPathPtr; /* 0x360 */
 
     virtual ~daObjFl_Amilift_c(); /* slots 16 (D1), 17 (D0) */

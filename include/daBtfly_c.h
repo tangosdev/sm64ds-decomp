@@ -67,9 +67,7 @@ struct daBtfly_c : dActor_c {
     /* The position InitResources copies out of mPos before anything moves.
        State3 and State2 snap mPos back to it, and State5 takes the horizontal
        angle from mPos to it as the heading to fly home on. */
-    s32 mHomePosX;          /* 0x3d4 */
-    s32 mHomePosY;          /* 0x3d8 */
-    s32 mHomePosZ;          /* 0x3dc */
+    Vector3 mHomePos;       /* 0x3d4 */
     s32 mScale;             /* 0x3e0 -- the single fix12 scale Behavior copies
                                  into all three of mScaleX/Y/Z. InitResources
                                  sets 0x1000; State6 winds it from
