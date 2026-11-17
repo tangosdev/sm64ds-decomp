@@ -142,6 +142,7 @@ src/minigames/d_s_mg_jump2.cpp:
     .text start:0x020eebe8 end:0x020efc0c
     .init start:0x02130f00 end:0x02130f64
     .ctor start:0x021335a8 end:0x021335ac
+    .data start:0x0213cc74 end:0x0213cca4
     .bss start:0x021421c4 end:0x021421ec
 
 src/minigames/d_s_mg_luigi.cpp:
