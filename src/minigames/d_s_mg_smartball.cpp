@@ -25,6 +25,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "cMgSmartball_wing_c.h"
 #include "OamAttr.h"
 #include "OAM.h"
+#include "Matrix2x2.h"
 #include "cMgSmartball_pushswitch_c.h"
 #include "cMgSmartball_board_c.h"
 #include "types.h"
@@ -741,19 +742,19 @@ void cMgSmartball_board_c::Update() {
             Mg_RenderSpriteBoth(sSmartballCellSprites[1], (j % 3 - 1) * 24 + (mCurrent0 >> 12),
                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1);
         } else {
-            s32 vec[4];
+            Matrix2x2 mtx;
 
             if (ang < 0x4000)
-                vec[0] = -FX_Div(0x1000, FX_SinCosTable_[((u16)(ang + 0x8000) >> 4) * 2 + 1]);
+                mtx.m00 = -FX_Div(0x1000, FX_SinCosTable_[((u16)(ang + 0x8000) >> 4) * 2 + 1]);
             else
-                vec[0] = -FX_Div(0x1000, FX_SinCosTable_[((u16)ang >> 4) * 2 + 1]);
-            vec[1] = 0;
-            vec[2] = 0;
-            vec[3] = 0x1000;
+                mtx.m00 = -FX_Div(0x1000, FX_SinCosTable_[((u16)ang >> 4) * 2 + 1]);
+            mtx.m01 = 0;
+            mtx.m10 = 0;
+            mtx.m11 = 0x1000;
             RenderOamBothScreens(sSmartballCellSprites[idx], (j % 3 - 1) * 24 + (mCurrent0 >> 12),
-                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, vec);
+                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, &mtx);
             RenderOamBothScreens(sSmartballCellSprites[0], (j % 3 - 1) * 24 + (mCurrent0 >> 12),
-                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, vec);
+                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, &mtx);
         }
     }
 
@@ -1512,9 +1513,7 @@ void cMgSmartball_pakkun_c::Update() {
             int scale;
             int idx = 1;
             int b, a;
-            struct {
-                int _00, _01, _10, _11;
-            } vec;
+            Matrix2x2 mtx;
             if (f38 < 0x20) {
                 scale = FX_Div(0x20000, f38 << 12);
             } else {
@@ -1524,14 +1523,14 @@ void cMgSmartball_pakkun_c::Update() {
             }
             b = (int)((((long long)FX_SinCosTable_[1] * scale) + 0x800) >> 12);
             a = (int)((((long long)FX_SinCosTable_[0] * scale) + 0x800) >> 12);
-            vec._00 = b;
-            vec._01 = a;
-            vec._10 = -a;
-            vec._11 = b;
+            mtx.m00 = b;
+            mtx.m01 = a;
+            mtx.m10 = -a;
+            mtx.m11 = b;
             RenderOamBothScreens(sSmartballPakkunSprites[idx], mCurrent0 >> 12, mCurrent1 >> 12, -1,
-                                 0, &vec);
+                                 0, &mtx);
             RenderOamBothScreens(sSmartballPakkunSprites[2], mCurrent0 >> 12, (mCurrent1 >> 12) + 5,
-                                 -1, 2, &vec);
+                                 -1, 2, &mtx);
         } else {
             if (mTriggered != 0) {
                 Mg_RenderSpriteBoth(sSmartballPakkunSprites[0], mCurrent0 >> 12, mCurrent1 >> 12,
@@ -1805,19 +1804,19 @@ void cMgSmartball_propeller_c::Update() {
                      0x800) >>
                     12);
     int a;
-    int vec[4];
+    Matrix2x2 mtx;
 
-    vec[0] = b;
+    mtx.m00 = b;
     a = (short)((((long long)FX_SinCosTable_[((unsigned short)mAngle >> 4) * 2] << 12) + 0x800) >>
                 12);
-    vec[3] = b;
-    vec[1] = a;
-    vec[2] = -a;
+    mtx.m11 = b;
+    mtx.m01 = a;
+    mtx.m10 = -a;
 
     RenderOamBothScreens(sSmartballPropellerSprites[0], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1,
-                         vec);
+                         &mtx);
     RenderOamBothScreens(sSmartballPropellerSprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5, -1,
-                         2, vec);
+                         2, &mtx);
 }
 
 /* Slot 0: steps the spin speed toward its target, advances the angle and
@@ -2046,20 +2045,20 @@ void cMgSmartball_kinoko_c::Update() {
     case 1: {
         int d;
         int b, a;
-        int vec[4];
+        Matrix2x2 mtx;
         if (mRadius < 0x1000)
             return;
         d = FX_Div(0x7000, mRadius);
         b = FX_MUL(FX_SinCosTable_[1], d);
         a = FX_MUL(FX_SinCosTable_[0], d);
-        vec[0] = b;
-        vec[1] = a;
-        vec[2] = -a;
-        vec[3] = b;
+        mtx.m00 = b;
+        mtx.m01 = a;
+        mtx.m10 = -a;
+        mtx.m11 = b;
         RenderOamBothScreens(sSmartballKinokoTurnSprites[0], mCurrent0 >> 12, mCurrent1 >> 12, -1,
-                             1, vec);
+                             1, &mtx);
         RenderOamBothScreens(sSmartballKinokoTurnSprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5,
-                             -1, 2, vec);
+                             -1, 2, &mtx);
     } break;
     }
 }
