@@ -841,28 +841,28 @@ int daKing_Donketu_c::UpdateLeapToSpawn() {
     }
     /* state == 0 */
     if (mStateScratch == 0) {
-        int offset[3];
-        int rotated[3];
+        Vector3 offset;
+        Vector3 rotated;
         s16 horz;
         ApproachLinear(mAngleX, 0, 0x2000);
         horz = Vec3_HorzAngle(&mPos, &mSpawnPos);
         Vec3_VertAngle(&mPos, &mSpawnPos);
         ApproachLinear(mPrevAngleY, horz, 0x800);
-        offset[0] = 0;
-        offset[1] = 0;
-        offset[2] = 0;
-        rotated[0] = 0;
-        rotated[1] = 0;
-        rotated[2] = 0;
+        offset.x = 0;
+        offset.y = 0;
+        offset.z = 0;
+        rotated.x = 0;
+        rotated.y = 0;
+        rotated.z = 0;
         if (mHitsRemaining == 2) {
-            offset[2] = 0x32000;
+            offset.z = 0x32000;
         } else {
-            offset[2] = 0x1e000;
+            offset.z = 0x1e000;
         }
         Matrix4x3_FromRotationY(&data_020a0e68, horz);
-        MTX_MultVec43((Vector3 *)offset, &data_020a0e68, (Vector3 *)rotated);
-        mSpeedX = rotated[0];
-        mSpeedZ = rotated[2];
+        MTX_MultVec43(&offset, &data_020a0e68, &rotated);
+        mSpeedX = rotated.x;
+        mSpeedZ = rotated.z;
         if (mVertSpeed < 0) {
             int id = mdCcAcPos_c.otherOwner;
             if (id != 0) {
@@ -948,17 +948,21 @@ int daKing_Donketu_c::UpdateWaypointHop() {
     {
         short hz = Vec3_HorzAngle(&mPos, &v);
         short vt = Vec3_VertAngle(&mPos, &v);
-        int in[3];
-        int out[3];
+        Vector3 in;
+        Vector3 out;
         ApproachLinear(mPrevAngleY, hz, 0x800);
-        in[0] = 0; in[1] = 0; in[2] = 0;
-        out[0] = 0; out[1] = 0; out[2] = 0;
-        in[2] = 0x50000;
+        in.x = 0;
+        in.y = 0;
+        in.z = 0;
+        out.x = 0;
+        out.y = 0;
+        out.z = 0;
+        in.z = 0x50000;
         Matrix4x3_FromRotationY(&data_020a0e68, hz);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, vt);
-        MTX_MultVec43((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
-        mSpeedX = out[0];
-        mSpeedZ = out[2];
+        MTX_MultVec43(&in, &data_020a0e68, &out);
+        mSpeedX = out.x;
+        mSpeedZ = out.z;
     }
     if (mWithMeshClsn.IsOnGround() != 0) {
         mLandedWaypoint = mWaypointCursor;
@@ -1020,24 +1024,24 @@ mainblock:
     {
         short hz = Vec3_HorzAngle(&c->mPos, &v);
         short vt = Vec3_VertAngle(&c->mPos, &v);
-        int in[3];
-        int out[3];
-        in[2] = 0;
-        in[0] = 0;
-        in[1] = 0;
-        out[0] = 0;
-        out[1] = 0;
-        out[2] = 0;
-        in[2] = 0x28000;
+        Vector3 in;
+        Vector3 out;
+        in.z = 0;
+        in.x = 0;
+        in.y = 0;
+        out.x = 0;
+        out.y = 0;
+        out.z = 0;
+        in.z = 0x28000;
         Matrix4x3_FromRotationY(&data_020a0e68, hz);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, vt);
-        MTX_MultVec43((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
-        c->mSpeedX = out[0];
+        MTX_MultVec43(&in, &data_020a0e68, &out);
+        c->mSpeedX = out.x;
         if (c->mStateScratch != 0 || c->mVertSpeed < 0) {
-            c->mVertSpeed = out[1];
+            c->mVertSpeed = out.y;
             c->mStateScratch = 1;
         }
-        c->mSpeedZ = out[2];
+        c->mSpeedZ = out.z;
     }
     if (c->mWithMeshClsn.IsOnGround() != 0) {
         c->mLandedWaypoint = c->mWaypointCursor;
