@@ -138,7 +138,7 @@ struct dScMgSound_c : dScMgSingle3DBase_c {
     void Pop08_Fly(int slot);
     void Pop08_Start(int slot);
     void Pop08_Update(int slot);
-    void Pop07_Finish();
+    void Pop07_Finish(int slot);
     void Pop07_Fly(int slot);
     void Pop07_Start(int slot);
     void Pop07_Update(int slot);
@@ -150,7 +150,7 @@ struct dScMgSound_c : dScMgSingle3DBase_c {
     void Pop05_Fly(int slot);
     void Pop05_Start(int slot);
     void Pop05_Update(int slot);
-    void Pop04_Finish();
+    void Pop04_Finish(int slot);
     void Pop04_Fly(int slot);
     void Pop04_Start(int slot);
     void Pop04_Update(int slot);
@@ -166,7 +166,7 @@ struct dScMgSound_c : dScMgSingle3DBase_c {
     void Pop01_Fly(int slot);
     void Pop01_Start(int slot);
     void Pop01_Update(int slot);
-    void Pop00_Finish();
+    void Pop00_Finish(int slot);
     void Pop00_Fly(int slot);
     void Pop00_Start(int slot);
     void Pop00_Update(int slot);

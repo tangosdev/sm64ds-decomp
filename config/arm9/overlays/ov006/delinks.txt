@@ -233,7 +233,7 @@ src/minigames/d_s_mg_smartball.cpp:
 
 src/minigames/d_s_mg_sound.cpp:
     complete
-    .data start:0x0213f6e4 end:0x0213f8d4
+    .data start:0x0213f4fc end:0x0213f8d4
     .rodata.sound_tables start:0x0212ee0c end:0x0212ef5c
     .rodata.sound_note_offsets start:0x0212ef9c end:0x0212efc4
     .text start:0x02119904 end:0x0211cbd0
