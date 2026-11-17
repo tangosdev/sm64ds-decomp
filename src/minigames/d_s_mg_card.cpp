@@ -652,7 +652,7 @@ s32 dScMgCard_c::Render()
     }
 
     DrawCredits(0xc, 0xc, 0);
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
 
     if (this->mScore < this->mHudScore)
         this->mScore = this->mHudScore;

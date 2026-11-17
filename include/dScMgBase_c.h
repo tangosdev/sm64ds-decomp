@@ -899,6 +899,9 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     void DrawCredits(int, int, int);
     /* Arms the brush PaintSquare paints with (mBrushOnMain, mBrushLayer). */
     void InitBrush(char, int, int);
+    /* The score tally column at the right edge of the touch screen. */
+    void DrawTally(int);
+    void DrawScoreTally(int, int, int);
 
     s32 mTallyShown;            /* 0x050 */
     s32 mTallyAnimTimer;            /* 0x054 */

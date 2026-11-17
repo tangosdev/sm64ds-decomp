@@ -753,7 +753,7 @@ s32 dScMgCup_c::Render() {
     }
 
     Mg_DrawStockCounter(mCredits, 1);
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     mModel.Draw();
     return 1;
 }

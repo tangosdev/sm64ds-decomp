@@ -2431,6 +2431,8 @@ static inline int sdiv4(int d) {
 static inline int sdiv2(int e) {
     return (e + (int)((unsigned)e >> 31)) >> 1;
 }
+}
+}
 
 /* Draws a tally of `sb` in a column at x 0xf0, upward from y 0xa8: one
    icon (per-language sprite word 9) per unit, and from five upward the
@@ -2442,26 +2444,27 @@ static inline int sdiv2(int e) {
    stops it. When the tally reaches a multiple of
    five, the icons close up as mTallyAnimTimer runs from mTimeLimit to
    mTimeLimit + 0x20, with sound 0x1ba as they start. */
-extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
+void dScMgBase_c::DrawTally(int sb) {
+    using namespace s20b0e84;
     OamAttr **r8;
     int r7;
     int i;
     int pin;
 
     {
-        int t = sl->mTallyShown;
+        int t = mTallyShown;
         if (t < sb) {
-            sl->mTallyAnimTimer = 1;
-            sl->mTallyShown = sb;
+            mTallyAnimTimer = 1;
+            mTallyShown = sb;
             func_02012790(0x1bb);
         } else if (t > sb) {
-            sl->mTallyAnimTimer = 0;
-            sl->mTallyShown = sb;
-        } else if (sl->mTallyAnimTimer > 0) {
-            if (sl->GetDisplayMode() == 2) {
-                sl->mTallyAnimTimer += 2;
+            mTallyAnimTimer = 0;
+            mTallyShown = sb;
+        } else if (mTallyAnimTimer > 0) {
+            if (GetDisplayMode() == 2) {
+                mTallyAnimTimer += 2;
             } else {
-                sl->mTallyAnimTimer += 1;
+                mTallyAnimTimer += 1;
             }
         }
     }
@@ -2474,7 +2477,7 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
         i = 0;
         if (sb > 0) {
             do {
-                if (i == sb - 1 && sl->mTallyAnimTimer > 0 && sl->mTallyAnimTimer % 60 >= 30) {
+                if (i == sb - 1 && mTallyAnimTimer > 0 && mTallyAnimTimer % 60 >= 30) {
                     break;
                 }
                 RenderOamMainScreen(r8[9], 240, r7, -1, -1);
@@ -2482,18 +2485,18 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
                 r7 -= 16;
             } while (i < sb);
         }
-        if (sl->mTallyAnimTimer >= sl->mTimeLimit) {
-            sl->mTallyAnimTimer = 0;
+        if (mTallyAnimTimer >= mTimeLimit) {
+            mTallyAnimTimer = 0;
         }
         return;
     }
 
     if (sb == 5) {
-        int u = sl->mTallyAnimTimer;
+        int u = mTallyAnimTimer;
         if (u == 0) {
             Mg_DrawNumber(240, r7, 5, 1, 0, 0, 0x14);
             RenderOamMainScreen(r8[11], 240, r7, -1, -1);
-        } else if (u < sl->mTimeLimit) {
+        } else if (u < mTimeLimit) {
             r7 -= 8;
             i = 0;
             do {
@@ -2501,33 +2504,33 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
                 i += 1;
                 r7 -= 16;
             } while (i < 4);
-            if (sl->mTallyAnimTimer % 60 < 30) {
+            if (mTallyAnimTimer % 60 < 30) {
                 RenderOamMainScreen(r8[9], 240, r7, -1, -1);
             }
         } else {
-            int d = (sl->mTimeLimit + 32) - sl->mTallyAnimTimer;
+            int d = (mTimeLimit + 32) - mTallyAnimTimer;
             r7 -= sdiv4(d);
             i = 0;
             do {
                 RenderOamMainScreen(r8[9], 240, r7, -1, -1);
                 {
-                    unsigned e = (sl->mTimeLimit + 32) - sl->mTallyAnimTimer;
+                    unsigned e = (mTimeLimit + 32) - mTallyAnimTimer;
                     r7 -= sdiv2(e);
                 }
                 i += 1;
             } while (i < 5);
         }
-        if (sl->GetDisplayMode() == 2) {
-            int b = sl->mTimeLimit;
-            int c = sl->mTallyAnimTimer;
+        if (GetDisplayMode() == 2) {
+            int b = mTimeLimit;
+            int c = mTallyAnimTimer;
             if (c == b || c == b + 1) {
                 func_02012790(0x1ba);
             }
-        } else if (sl->mTallyAnimTimer == sl->mTimeLimit) {
+        } else if (mTallyAnimTimer == mTimeLimit) {
             func_02012790(0x1ba);
         }
-        if (sl->mTallyAnimTimer >= sl->mTimeLimit + 32) {
-            sl->mTallyAnimTimer = 0;
+        if (mTallyAnimTimer >= mTimeLimit + 32) {
+            mTallyAnimTimer = 0;
         }
         return;
     }
@@ -2535,17 +2538,17 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
     {
         int rem = sb % 5;
         if (rem == 0) {
-            int u = sl->mTallyAnimTimer;
+            int u = mTallyAnimTimer;
             if (u == 0) {
                 Mg_DrawNumber(240, r7, sb, 1, 0, 0, 0x14);
                 RenderOamMainScreen(r8[11], 240, r7, -1, -1);
-            } else if (u < sl->mTimeLimit) {
+            } else if (u < mTimeLimit) {
                 Mg_DrawNumber(240, r7, sb - 5, 1, 0, 0, 0x14);
                 RenderOamMainScreen(r8[11], 240, r7, -1, -1);
                 r7 -= 24;
                 i = 0;
                 do {
-                    if (i == 4 && sl->mTallyAnimTimer > 0 && sl->mTallyAnimTimer % 60 >= 30) {
+                    if (i == 4 && mTallyAnimTimer > 0 && mTallyAnimTimer % 60 >= 30) {
                         break;
                     }
                     RenderOamMainScreen(r8[9], 240, r7, -1, -1);
@@ -2556,27 +2559,27 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
                 int d;
                 Mg_DrawNumber(240, r7, sb - 5, 1, 0, 0, 0x14);
                 RenderOamMainScreen(r8[11], 240, r7, -1, -1);
-                d = (sl->mTimeLimit + 32) - sl->mTallyAnimTimer;
+                d = (mTimeLimit + 32) - mTallyAnimTimer;
                 r7 -= sdiv4(d);
                 i = 0;
                 do {
-                    unsigned e = (sl->mTimeLimit + 32) - sl->mTallyAnimTimer;
+                    unsigned e = (mTimeLimit + 32) - mTallyAnimTimer;
                     r7 -= sdiv2(e);
                     RenderOamMainScreen(r8[9], 240, r7, -1, -1);
                     i += 1;
                 } while (i < 5);
             }
-            if (sl->GetDisplayMode() == 2) {
-                int b = sl->mTimeLimit;
-                int c = sl->mTallyAnimTimer;
+            if (GetDisplayMode() == 2) {
+                int b = mTimeLimit;
+                int c = mTallyAnimTimer;
                 if (c == b || c == b + 1) {
                     func_02012790(0x1ba);
                 }
-            } else if (sl->mTallyAnimTimer == sl->mTimeLimit) {
+            } else if (mTallyAnimTimer == mTimeLimit) {
                 func_02012790(0x1ba);
             }
-            if (sl->mTallyAnimTimer >= sl->mTimeLimit + 32) {
-                sl->mTallyAnimTimer = 0;
+            if (mTallyAnimTimer >= mTimeLimit + 32) {
+                mTallyAnimTimer = 0;
             }
             return;
         }
@@ -2591,7 +2594,7 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
         if (rem > 0) {
             pin = rem - 1;
             do {
-                if (sb == pin && sl->mTallyAnimTimer > 0 && sl->mTallyAnimTimer % 60 >= 30) {
+                if (sb == pin && mTallyAnimTimer > 0 && mTallyAnimTimer % 60 >= 30) {
                     break;
                 }
                 RenderOamMainScreen(r8[9], 240, r7, -1, -1);
@@ -2599,12 +2602,10 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
                 r7 -= 16;
             } while (sb < rem);
         }
-        if (sl->mTallyAnimTimer >= sl->mTimeLimit) {
-            sl->mTallyAnimTimer = 0;
+        if (mTallyAnimTimer >= mTimeLimit) {
+            mTallyAnimTimer = 0;
         }
     }
-}
-}
 }
 
 namespace s20b14f0 {
@@ -2930,15 +2931,10 @@ void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3) {
 }
 }
 
-namespace s20b1e34 {
-extern "C" {
-extern void Mg_DrawTally(dScMgBase_c *sl, int sb);
-
-/* Draws the mHudScore tally through Mg_DrawTally (a tail call). */
-void Mg_DrawScoreTally(void* a, int unused1, int unused2, int unused3) {
-    Mg_DrawTally((dScMgBase_c *)a, ((dScMgBase_c *)a)->mHudScore);
-}
-}
+/* Draws the mHudScore tally through DrawTally (a tail call). The three
+   arguments every caller passes go unread. */
+void dScMgBase_c::DrawScoreTally(int, int, int) {
+    DrawTally(mHudScore);
 }
 
 namespace s20b1e44 {

@@ -675,7 +675,7 @@
       "ordinal": 89
     },
     {
-      "symbol": "Mg_DrawTally",
+      "symbol": "_ZN11dScMgBase_c9DrawTallyEi",
       "address": "0x020b0e84",
       "size": "0x0000066c",
       "legacy_source": "src/func_ov004_020b0e84.cpp",
@@ -780,7 +780,7 @@
       "ordinal": 104
     },
     {
-      "symbol": "Mg_DrawScoreTally",
+      "symbol": "_ZN11dScMgBase_c14DrawScoreTallyEiii",
       "address": "0x020b1e34",
       "size": "0x00000010",
       "legacy_source": "src/func_ov004_020b1e34.c",

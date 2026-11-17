@@ -100,7 +100,6 @@ enum dScMgAmida_c_AssetId {
 extern "C" {
 /* --- shared ov004 and main helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 extern void FreeGfxSlotsById(int a);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
@@ -1764,7 +1763,7 @@ s32 dScMgAmida_c::Render() {
         int off = sine / 0x100;
         SetSubBg2Offset(off, 0);
     }
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
 
     if (mState == 3 && mEndDelayTimer == 0) {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG0;

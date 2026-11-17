@@ -54,7 +54,6 @@ extern int sBscLaneX[];
 extern int sMgCoinsBetPlaced;
 extern void FreeGfxSlotsById(int arg);
 void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
-void Mg_DrawScoreTally(void *scene, int a1, int a2, int a3);
 extern unsigned char gMainScreenLayers;
 extern int data_0208ee44;
 extern s32 GetGameLanguage(void);
@@ -132,7 +131,7 @@ s32 dScMgBSC_c::Render() {
     }
     MgCoins_Draw();
     DrawCredits(0xc, 0xc, 0);
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     mDealer.Draw();
     return 1;
 }

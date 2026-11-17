@@ -19275,7 +19275,7 @@
     },
     "ov004:0x020b0e84": {
       "author": "lunavyqo",
-      "name": "Mg_DrawTally"
+      "name": "_ZN11dScMgBase_c9DrawTallyEi"
     },
     "ov004:0x020b14f0": {
       "author": "ruspecial",
@@ -19335,7 +19335,7 @@
     },
     "ov004:0x020b1e34": {
       "author": "ruspecial",
-      "name": "Mg_DrawScoreTally"
+      "name": "_ZN11dScMgBase_c14DrawScoreTallyEiii"
     },
     "ov004:0x020b1e44": {
       "author": "tangosdev",
