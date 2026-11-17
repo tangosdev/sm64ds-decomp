@@ -20,6 +20,7 @@
 struct daPly_c;
 struct daDossyCap_c;
 struct OamAttr;
+struct Matrix2x2;
 struct MascotWalker;
 struct Ov007MenuState;
 struct fLiNdBa_c;
@@ -462,7 +463,7 @@ extern int func_ov002_020df300(char *);
 extern int func_ov002_020e10a8(void *);
 extern int Mg_GetSavedRecord1(void);
 extern int Mg_GetSavedRecord0(void);
-extern void Mg_DrawSpriteListEntry(void *, void *, void *, void *);
+extern void Mg_DrawSpriteListEntry(void *, int, int, struct Matrix2x2 *);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Dealer_IsIdleAtRest(void *);
 extern int Mascot_Destruct(char *);

@@ -1085,7 +1085,7 @@ void dScMgBase_c::Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int si
 namespace s20ae858 {
 extern "C" {
 int GetGameLanguage(void);
-void Mg_DrawSpriteList(void *self, int a1, int a2, void *a3);
+void Mg_DrawSpriteList(OamAttr *list, int x, int y, Matrix2x2 *mtx);
 }
 }
 
@@ -1099,7 +1099,7 @@ void dScMgBase_c::DrawMenu() {
     using namespace s20ae858;
     int extra[3];
     s16 *tbl[3];
-    int buf[4];
+    Matrix2x2 mtx;
     int i;
 
     if (mTouchOptions.Draw() != 0)
@@ -1119,31 +1119,31 @@ void dScMgBase_c::DrawMenu() {
             OamAttr *cursor = (OamAttr *)extra[i];
             s16 *pos;
             u16 v;
-            int *pbuf = buf;
+            Matrix2x2 *pmtx = &mtx;
             int scale = FX_Inv(FX_MUL(FX_SinIdx(idx), 0x800) + 0x1000);
 
             /* Kept volatile: the ROM clears the matrix through a pointer
                held in r6, in order 0, 4, 8, 0xc, before the diagonal
                stores. Measured 2026-11-16 (#821 r22): plain stores through
-               pbuf, and an MtxFx22 local cleared by member (directly or
-               through pbuf), fold the address to sp-relative and reorder
-               the stores (10/118); a counted clear loop gives 0x1e0 or
-               0x1e4, and a copy from a const zero matrix 0x204, against
-               0x1d8. */
+               pmtx, and the matrix cleared by member (directly or through
+               pmtx), fold the address to sp-relative and reorder the
+               stores (10/118); a counted clear loop gives 0x1e0 or 0x1e4,
+               and a copy from a const zero matrix 0x204, against 0x1d8.
+               r28: the volatile pointer taken from &mtx in this block
+               instead of pmtx, 24 of 118 words off. */
             {
-                volatile int *vp = pbuf;
-                vp[0] = 0;
-                vp[1] = 0;
-                vp[2] = 0;
-                vp[3] = 0;
+                volatile Matrix2x2 *vp = pmtx;
+                vp->m00 = 0;
+                vp->m01 = 0;
+                vp->m10 = 0;
+                vp->m11 = 0;
             }
-            buf[0] = scale;
-            buf[3] = scale;
+            mtx.m00 = scale;
+            mtx.m11 = scale;
 
             pos = tbl[i];
             do {
-                Mg_DrawSpriteListEntry(cursor, (void *)(int)pos[0], (void *)(int)pos[1],
-                                       (void *)buf);
+                Mg_DrawSpriteListEntry(cursor, pos[0], pos[1], &mtx);
                 v = cursor->attr3;
                 cursor++;
             } while (v != 0xffff);
@@ -1151,7 +1151,7 @@ void dScMgBase_c::DrawMenu() {
             Mg_DrawSpriteList(data_ov006_021346bc, tbl[i][0], tbl[i][1], 0);
         } else {
             s16 *pos = tbl[i];
-            Mg_DrawSpriteList((void *)extra[i], pos[0], pos[1], 0);
+            Mg_DrawSpriteList((OamAttr *)extra[i], pos[0], pos[1], 0);
             Mg_DrawSpriteList(data_ov006_021346bc, pos[0], pos[1], 0);
         }
     }
@@ -1160,19 +1160,14 @@ void dScMgBase_c::DrawMenu() {
 namespace s20aea30 {
 extern "C" {
 /* Draws an OAM sprite list: calls Mg_DrawSpriteListEntry on each 8-byte
-   entry from `self`, up to and including the one whose attr3 is 0xffff. */
-extern "C" void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3) {
-    OamAttr *r8 = (OamAttr *)self;
-    void *r7 = actor;
-    void *r6 = c2;
-    void *r5 = c3;
-    u16 sentinel = 0xffff;
+   entry from `list`, up to and including the one whose attr3 is 0xffff. */
+extern "C" void Mg_DrawSpriteList(OamAttr *list, int x, int y, Matrix2x2 *mtx) {
+    u16 attr3;
     do {
-        Mg_DrawSpriteListEntry(r8, r7, r6, r5);
-        u16 v = r8->attr3;
-        r8++;
-        if (v == sentinel) break;
-    } while (1);
+        Mg_DrawSpriteListEntry(list, x, y, mtx);
+        attr3 = list->attr3;
+        list++;
+    } while (attr3 != 0xffff);
 }
 }
 }
