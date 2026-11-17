@@ -72,11 +72,9 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
     int mScoreGate;           /* 0x7b90 -- score at which the tier advances */
     int mScriptDone;          /* 0x7b94 -- set once mPattern reaches 6 */
     int mWaveStep;            /* 0x7b98 -- counts to 4 between random waves */
-    s16 mTouchX;              /* 0x7b9c -- current stylus sample */
-    s16 mTouchY;              /* 0x7b9e */
-    s16 mTouchStartX;         /* 0x7ba0 -- press edge; the swipe is measured
+    Vec2s mTouch;             /* 0x7b9c -- current stylus sample */
+    Vec2s mTouchStart;        /* 0x7ba0 -- press edge; the swipe is measured
                                  against it */
-    s16 mTouchStartY;         /* 0x7ba2 */
     s16 mInputEnabled;        /* 0x7ba4 -- while 0 the touch handler clears
                                  mTouching and returns */
     u8  pad_7ba6[2];          /* 0x7ba6 */
