@@ -20,29 +20,48 @@ enum d_s_mg_bsc_AssetId { ASSET_D_2D_MG_BIG_SMALL_NCL_BIN = 0x00b3 };
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "SpawnInfo.h"
+#include "OamAttr.h"
 
 int sBscBigSmallNcgByLanguage[5] = {178, 180, 175, 176, 177};
+
+/* Where the two dealt cards come to rest: x of each lane, fx32 (88.0 and
+ * 168.0). */
+int sBscLaneX[2] = {0x58000, 0xa8000};
+
+/* Card sprites: two-OAM lists (the second record's attr3 0xffff ends each),
+ * drawn through sBscCardSprites. */
+OamAttr data_ov006_0213fda8[2] = {{0x00e8, 0x81f0, 0x0000, 0x0000},
+                                  {0x4008, 0x81f0, 0x0080, 0xffff}};
+OamAttr data_ov006_0213fdb8[2] = {{0x80e8, 0x41fc, 0x101e, 0x0000},
+                                  {0x8008, 0x01fc, 0x109e, 0xffff}};
+OamAttr data_ov006_0213fdc8[2] = {{0x80e8, 0x81f8, 0x100a, 0x0000},
+                                  {0x0008, 0x41f8, 0x108a, 0xffff}};
+OamAttr data_ov006_0213fdd8[2] = {{0x00e8, 0x81f0, 0x1006, 0x0000},
+                                  {0x4008, 0x81f0, 0x1086, 0xffff}};
+OamAttr data_ov006_0213fde8[2] = {{0x00e8, 0x81f0, 0x100c, 0x0000},
+                                  {0x4008, 0x81f0, 0x108c, 0xffff}};
+OamAttr data_ov006_0213fdf8[2] = {{0x80e8, 0x81f8, 0x1016, 0x0000},
+                                  {0x0008, 0x41f8, 0x1096, 0xffff}};
+OamAttr data_ov006_0213fe08[2] = {{0x00e8, 0x81f0, 0x1012, 0x0000},
+                                  {0x4008, 0x81f0, 0x1092, 0xffff}};
+OamAttr data_ov006_0213fe18[2] = {{0x80e8, 0x81f8, 0x101c, 0x0000},
+                                  {0x0008, 0x41f8, 0x109c, 0xffff}};
+OamAttr data_ov006_0213fe28[2] = {{0x00e8, 0x81f0, 0x1018, 0x0000},
+                                  {0x4008, 0x81f0, 0x1098, 0xffff}};
+OamAttr data_ov006_0213fe38[2] = {{0x80e8, 0x81f8, 0x10c4, 0x0000},
+                                  {0x0008, 0x41f8, 0x1144, 0xffff}};
+OamAttr data_ov006_0213fe48[2] = {{0x80e8, 0x81f8, 0x1010, 0x0000},
+                                  {0x0008, 0x41f8, 0x1090, 0xffff}};
+OamAttr data_ov006_0213fe58[2] = {{0x00e8, 0x81f0, 0x10c0, 0x0000},
+                                  {0x4008, 0x81f0, 0x1140, 0xffff}};
+OamAttr data_ov006_0213fe68[2] = {{0x80e8, 0x81f8, 0x0004, 0x0000},
+                                  {0x0008, 0x41f8, 0x0084, 0xffff}};
 
 /* The state table: one pointer-to-member per state, indexed by mState.
  * Declared outside extern "C" it still links by its plain name. */
 typedef void (dScMgBSC_c::*StateHandler)();
 extern StateHandler sBSCStateTable[];
-/* The ROM PMF constants the state table copies from (unlicensed .data),
- * in retail copy order. */
-extern StateHandler pmf_dScMgBSC_c_StateDealCards;
-extern StateHandler pmf_dScMgBSC_c_StateWaitDeal;
-extern StateHandler pmf_dScMgBSC_c_StateChooseCard;
-extern StateHandler pmf_dScMgBSC_c_StateMoveCards;
-extern StateHandler pmf_dScMgBSC_c_StateWaitMove;
-extern StateHandler pmf_dScMgBSC_c_StateRevealCards;
-extern StateHandler pmf_dScMgBSC_c_StateJudgeCards;
-extern StateHandler pmf_dScMgBSC_c_StateTableReaction;
-extern StateHandler pmf_dScMgBSC_c_StateTableReaction_2;
-extern StateHandler pmf_dScMgBSC_c_StateWaitTable_2;
-extern StateHandler pmf_dScMgBSC_c_StateWaitTable;
-extern StateHandler pmf_dScMgBSC_c_StateReturnCards;
-extern StateHandler pmf_dScMgBSC_c_StateDone;
-extern StateHandler pmf_dScMgBSC_c_StateDone_2;
 
 extern "C" {
 extern short gMgCoinsStatus;
@@ -52,7 +71,6 @@ extern int gMgCoinsInPlay;
 extern void Mg_SubmitScore(int self);
 extern void Mg_SetSharedState(int v);
 extern void Mg_SaveRecordPair(int a, int b);
-extern int sBscLaneX[];
 extern int sMgCoinsBetPlaced;
 extern void FreeGfxSlotsById(int arg);
 void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
@@ -83,6 +101,8 @@ void PlayBank2_2D(u32 id);
 void *dScMgBSC_c_classInit() {
     return new dScMgBSC_c;
 }
+
+BaseSpawnInfo<void> g_profile_MG_BS_CARD = {dScMgBSC_c_classInit, 0x184, 0x184};
 
 /* Slot 0, and the key function: the destructor is inline in the header, so
  * this is the first virtual defined out of line, and defining it here emits
@@ -448,21 +468,13 @@ void dScMgBSC_c::StateDone() {}
  * in, in ROM order. Written out of line, D0 would come out first. */
 
 /* Static-init globals (was the handwritten __sinit_ov006_0213326c shard).
- * The state table plain-copied from the ROM PMF constants, in retail
- * copy order. */
+ * mwccarm emits each &dScMgBSC_c:: initializer as its own {fn, 0} .data
+ * constant, and the static initializer copies them into the table in
+ * retail copy order. */
 StateHandler sBSCStateTable[14] = {
-    pmf_dScMgBSC_c_StateDealCards,
-    pmf_dScMgBSC_c_StateWaitDeal,
-    pmf_dScMgBSC_c_StateChooseCard,
-    pmf_dScMgBSC_c_StateMoveCards,
-    pmf_dScMgBSC_c_StateWaitMove,
-    pmf_dScMgBSC_c_StateRevealCards,
-    pmf_dScMgBSC_c_StateJudgeCards,
-    pmf_dScMgBSC_c_StateTableReaction,
-    pmf_dScMgBSC_c_StateTableReaction_2,
-    pmf_dScMgBSC_c_StateWaitTable_2,
-    pmf_dScMgBSC_c_StateWaitTable,
-    pmf_dScMgBSC_c_StateReturnCards,
-    pmf_dScMgBSC_c_StateDone,
-    pmf_dScMgBSC_c_StateDone_2,
+    &dScMgBSC_c::StateDealCards,  &dScMgBSC_c::StateWaitDeal,      &dScMgBSC_c::StateChooseCard,
+    &dScMgBSC_c::StateMoveCards,  &dScMgBSC_c::StateWaitMove,      &dScMgBSC_c::StateRevealCards,
+    &dScMgBSC_c::StateJudgeCards, &dScMgBSC_c::StateTableReaction, &dScMgBSC_c::StateTableReaction,
+    &dScMgBSC_c::StateWaitTable,  &dScMgBSC_c::StateWaitTable,     &dScMgBSC_c::StateReturnCards,
+    &dScMgBSC_c::StateDone,       &dScMgBSC_c::StateDone,
 };
