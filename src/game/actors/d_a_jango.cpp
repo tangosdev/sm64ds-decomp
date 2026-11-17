@@ -836,7 +836,7 @@ int daJango_c::EnterSwoopState() {
     mSpeedX = 0;
     mVertSpeed = 0;
     mSpeedZ = 0;
-    func_02012694(SND_AT_SWOOP_ENTER, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(SND_AT_SWOOP_ENTER, &mCamSpacePos);
     mStateParam = ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 3) << 8) + 0x300;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e114.filePtr, 4, 0, 0x1000, 0);
     return 1;
@@ -942,7 +942,7 @@ int daJango_c::EnterHurtState() {
         mHeldActorID = 0;
         mTimer = 30;
     }
-    func_02012694(SND_AT_HURT_ENTER, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(SND_AT_HURT_ENTER, &mCamSpacePos);
     Particle::System::NewSimple(PARTICLE_AT_HURT_ENTER, mPosX, mPosY, mPosZ);
     mSpeedX = 0;
     mVertSpeed = 0;

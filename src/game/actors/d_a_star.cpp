@@ -823,7 +823,7 @@ void daStar_c::StateLaunch() {
     mFlags |= CUTSCENE_FLAG;
     gNextActorUpdateMask |= CUTSCENE_FLAG;
     mCamSeq = 0;
-    func_02012694(0x57, (const Vector3 *)&mCamSpacePosX);
+    func_02012694(0x57, &mCamSpacePos);
     mVertSpeed = 0x20000;
     SetDefaultGravity();
     other = dActor_c::FindWithID(mMarkerID);
@@ -1991,7 +1991,7 @@ void daStar_c::ReturnToHome() {
         mPosX = mHomePosX;
         mPosY = mHomePosY;
         mPosZ = mHomePosZ;
-        func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, (const Vector3 *)&mPosX);
+        func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, &mPos);
         mState = mHomeState;
         StopMotion();
         mdCc_c.flags |= 1;
@@ -2019,7 +2019,7 @@ void daStar_c::ReturnToHome() {
     mPosX = mHomePosX;
     mPosY = mHomePosY;
     mPosZ = mHomePosZ;
-    func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, (const Vector3 *)&mPosX);
+    func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, &mPos);
     mState = mHomeState;
     mVertSpeed = 0x20000;
     SetDefaultGravity();
@@ -2047,7 +2047,7 @@ void daStar_c::OnBounceLand() {
         mBits.noPickup = 0;
         mStateTimer = 0;
     }
-    func_02012694(0x55, (const Vector3 *)&mCamSpacePosX);
+    func_02012694(0x55, &mCamSpacePos);
     if (mBits.water == WATER_IN) {
         mHorzSpeed = 0xc000;
         mVertSpeed = 0xe000;
@@ -2456,7 +2456,7 @@ int daStar_c::RearmSoundObj6() {
  * hides it, clears its touch volume and bursts effects 0x12c, 0x12d and 0x12e. */
 void daStarBase_c::Collect()
 {
-    func_02012694(0x53, (const Vector3 *)&mCamSpacePosX);
+    func_02012694(0x53, &mCamSpacePos);
     {
         mBits.hold = 1;
         mBits.visible = 0;
@@ -2723,7 +2723,7 @@ void daStar_c::RelinkMarker() {
     mPosX = s[0];
     mPosY = s[1];
     mPosZ = s[2];
-    func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, (const Vector3 *)&mPosX);
+    func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, &mPos);
     if (a->mState == STATE_LAND) {
         mHomeState = a->mLinkedStarState;
         mState = mHomeState;

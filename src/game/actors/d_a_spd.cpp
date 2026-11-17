@@ -576,7 +576,7 @@ void daSpd_c::func_ov071_0211f498() {
     v.z = mPosZ;
     SpawnCoins(v, mCoinCount, 0xf000, 0);
     PoofDust();
-    func_02012694(0xc4, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0xc4, &mCamSpacePos);
     if (param1) {
         mCoinCount = 0;
         SetState(0);

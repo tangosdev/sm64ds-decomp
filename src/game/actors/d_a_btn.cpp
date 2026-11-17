@@ -942,7 +942,7 @@ void daBtn_c::func_ov079_02124ed4()
         if (mPounded != 0) {
             mPounded = 0;
             mHitPoints--;
-            func_02012694(0x134, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(0x134, &mCamSpacePos);
             {
                 s32 *p = &mPounder->mPosX;
                 Particle::System::NewSimple(kPtclWhompPounded, p[0], p[1], p[2]);
@@ -1469,7 +1469,7 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
     if (mIsKing != 0) return;
     if (mDeathState == 8) return;
     player.IncMegaKillCount();
-    func_02012694(0x1e, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x1e, &mCamSpacePos);
     Vector3 pos;
     func_ov079_02123d4c(&pos, this);
     Vector3 dust;

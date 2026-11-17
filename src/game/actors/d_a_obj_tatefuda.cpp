@@ -885,7 +885,7 @@ void daObjTatefuda_c::Kill()
  * dActor_c's own field pair (include/dActor_c.h, 0x08e/0x094). */
 void daObjTatefuda_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
-    func_02012694(0x1d, (const Vector3 *)&mCamSpacePosX);
+    func_02012694(0x1d, &mCamSpacePos);
     KillByMegaChar(player);
     mAngleY = mPrevAngleY;
 }

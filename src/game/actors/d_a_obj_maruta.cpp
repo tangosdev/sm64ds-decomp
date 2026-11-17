@@ -82,7 +82,7 @@ void daObjMaruta_c_EmitDestructor(daObjMaruta_c *p) {
    direct `bl` the ROM has. */
 void daObjMaruta_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
-    func_02012694(0x1e, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x1e, &mCamSpacePos);
     KillByMegaChar(player);
 }
 

@@ -564,7 +564,7 @@ int daHolhei_c::func_ov062_02116498() {
     mVertSpeed = 0x3c000;
     mHorzSpeed = 0xa000;
     mTerminalVelocity = -0x64000;
-    func_02012694(0xf7, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0xf7, &mCamSpacePos);
     mFlags = 0;
     return 1;
 }
@@ -579,7 +579,7 @@ int daHolhei_c::func_ov062_021163b0() {
     if (mMeshClsn.IsOnGround() != 0) {
         TriplePoofDust();
         KillAndTrackInDeathTable();
-        func_02012694(0x125, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(0x125, &mCamSpacePos);
         gCamera->func_0200d8c8(&mPos, 0x7d0000);
         v[0].x = mPosX;
         v[0].y = mPosY;
@@ -636,7 +636,7 @@ int daHolhei_c::func_ov062_021161a8() {
     if (mHeld != 0 && mModel.WillHitFrame(0x14)) {
         func_ov002_020db54c(mHeld, 0x28000, 0x50000, mAngleY);
         mHeld = 0;
-        func_02012694(0x126, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(0x126, &mCamSpacePos);
     }
     if (mModel.Finished()) {
         mdCc_c.flags &= ~2;
@@ -662,7 +662,7 @@ void daHolhei_c::HandleCylinderHit() {
         v.y = 0;
         v.z = 0;
         KillByInvincibleChar(v, *(daPly_c *)a, 0);
-        func_02012694(0x125, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(0x125, &mCamSpacePos);
         return;
     }
 

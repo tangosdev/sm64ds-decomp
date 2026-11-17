@@ -464,7 +464,7 @@ void daRNk_c::func_ov062_0211a1f4()
         if (this->mPlayer->GetTalkState() != -1)
             return;
         Sound::PlaySub(0x1f, 0x7f, 0, 0x7f000, 0);
-        func_02012694(kSfx4D, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(kSfx4D, &this->mCamSpacePos);
         Sound::LoadAndSetMusic_Layer2(kMusicRace);
         this->mIsRacing = 1;
         this->mStep++;

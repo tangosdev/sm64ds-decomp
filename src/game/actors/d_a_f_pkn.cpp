@@ -460,7 +460,7 @@ void daFPkn_c::StateSpit()
     pos.y += mMaxScale * 0x5a;
     mAngleX = 0x1000;
 
-    SpawnFireball(pos, (const Vector3_16 *)(&mAngleX), 0x1e000, 0xa000, 3);
+    SpawnFireball(pos, &mAngle, 0x1e000, 0xa000, 3);
     return;
 
 cold:
