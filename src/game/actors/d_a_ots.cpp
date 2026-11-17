@@ -222,12 +222,12 @@ int daOts_c::InitResourcesCommon()
             mdCcAc_c.vulnFlags |= kHitBit40000;
         }
     }
-    tail().mHomePosX = mPosX;
-    tail().mHomePosY = mPosY;
-    tail().mHomePosZ = mPosZ;
-    tail().mPosBeforeMoveX = mPosX;
-    tail().mPosBeforeMoveY = mPosY;
-    tail().mPosBeforeMoveZ = mPosZ;
+    tail().mHomePos.x = mPosX;
+    tail().mHomePos.y = mPosY;
+    tail().mHomePos.z = mPosZ;
+    tail().mPosBeforeMove.x = mPosX;
+    tail().mPosBeforeMove.y = mPosY;
+    tail().mPosBeforeMove.z = mPosZ;
     mVertAccel = -0x4000;
     mTerminalVelocity = -0x32000;
     tail().mHorzDecel = mFileTable->horzDecel;
@@ -266,9 +266,9 @@ int daOts_c::BehaviorCommon()
     }
 
     int four = tail().mState;   /* the state this frame started in */
-    tail().mPosBeforeMoveX = mPosX;
-    tail().mPosBeforeMoveY = mPosY;
-    tail().mPosBeforeMoveZ = mPosZ;
+    tail().mPosBeforeMove.x = mPosX;
+    tail().mPosBeforeMove.y = mPosY;
+    tail().mPosBeforeMove.z = mPosZ;
     MakeVanishLuigiWork(mdCcAc_c);
     CheckMarioCollision();
 
@@ -557,11 +557,11 @@ void daOts_c::CheckMarioCollision() {
  * the player. */
 int daOts_c::ReturnHomeIfSafe() {
     Vector3 v;
-    tail().mHomeAngle = Vec3_HorzAngle(&this->mPos, (Vector3 *)&tail().mHomePosX);
+    tail().mHomeAngle = Vec3_HorzAngle(&this->mPos, &tail().mHomePos);
     ApproachLinear(this->mPrevAngleY, tail().mHomeAngle, 0x140);
-    v.x = tail().mHomePosX;
-    v.y = tail().mHomePosY;
-    v.z = tail().mHomePosZ;
+    v.x = tail().mHomePos.x;
+    v.y = tail().mHomePos.y;
+    v.z = tail().mHomePos.z;
     return this->IsPlayerInRange(v, kStartChaseRange);
 }
 
@@ -586,8 +586,8 @@ void daOts_c::Step() {
     if (this->IsGoingOffCliff(this->mWithMeshClsn, mFileTable->cliffDown, 0x2888, 0, 1, 0x32000) !=
             0 &&
         tail().mState != STATE_KNOCKED_BACK && tail().mState != STATE_LEDGE_TURN) {
-        this->mPosX = tail().mPosBeforeMoveX;
-        this->mPosZ = tail().mPosBeforeMoveZ;
+        this->mPosX = tail().mPosBeforeMove.x;
+        this->mPosZ = tail().mPosBeforeMove.z;
         tail().mState = STATE_LEDGE_TURN;
         this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimLedgeTurn]->filePtr, 0,
                                 kAnimSpeedNormal, 0);
@@ -623,7 +623,7 @@ int daOts_c::UpdateRunState()
  * animation 0. */
 void daOts_c::ActChaseMario() {
     this->UpdateRunState();
-    if (IsPlayerInRange(tail().mHomePosX, this->mPosY, tail().mHomePosZ, kKeepChaseRange))
+    if (IsPlayerInRange(tail().mHomePos.x, this->mPosY, tail().mHomePos.z, kKeepChaseRange))
         return;
     tail().mState = STATE_RETURN_HOME;
     mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimWalk]->filePtr, 0, kAnimSpeedNormal, 0);
@@ -769,10 +769,10 @@ void daOts_c::CheckFloorDeath() {
                                         kAnimSpeedNormal, 0);
                 this->mFlags &= ~1u;
                 this->PlayDeathSound();
-                tail().mHomePosX = this->mPosX;
-                tail().mHomePosY = this->mPosY;
-                tail().mHomePosZ = this->mPosZ;
-                tail().mHomePosY = rg.clsnY + 0x5000;
+                tail().mHomePos.x = this->mPosX;
+                tail().mHomePos.y = this->mPosY;
+                tail().mHomePos.z = this->mPosZ;
+                tail().mHomePos.y = rg.clsnY + 0x5000;
             }
         }
     }
@@ -791,11 +791,11 @@ int daOts_c::func_ov064_0211616c() {
     }
     this->mPosY = this->mPosY - 0x5000;
     this->mParticle0 =
-        (u32)Particle::System::New(this->mParticle0, mFileTable->particleId, tail().mHomePosX,
-                                   tail().mHomePosY, tail().mHomePosZ, 0, 0);
+        (u32)Particle::System::New(this->mParticle0, mFileTable->particleId, tail().mHomePos.x,
+                                   tail().mHomePos.y, tail().mHomePos.z, 0, 0);
     this->mParticle1 =
-        (u32)Particle::System::New(this->mParticle1, mFileTable->particleId + 1, tail().mHomePosX,
-                                   tail().mHomePosY, tail().mHomePosZ, 0, 0);
+        (u32)Particle::System::New(this->mParticle1, mFileTable->particleId + 1, tail().mHomePos.x,
+                                   tail().mHomePos.y, tail().mHomePos.z, 0, 0);
     return 0;
 }
 
