@@ -899,83 +899,71 @@ void dCamera_c::func_0200cf40() {
     func_0200cce4();
 }
 
+/* Place lookAt and pos behind the target player with no easing, as
+   func_0200d1e4 does, but keep pos under the ceiling, the mode's height
+   over the floor below it, and within 0x3e8000 of lookAt's height. */
 void dCamera_c::func_0200cce4() {
-    Vector3 vec;
-    Vector3 tmp1;
-    Vector3 tmp2;
-    u32 d;
+    Vector3 above;
+    Vector3 lookAtOffset;
+    Vector3 posOffset;
+    u32 lookAtHeight;
 
     if (mTargetPlayer != 0) {
         mTargetPos = mTargetPlayer->mPos;
 
         {
-            u32 d1 = ScaleDistByFov(mMode->lookAtDist);
-            tmp1.z = d1;
-            tmp1.x = data_02086f2c.x;
-            tmp1.y = data_02086f2c.y;
-            data_02086f2c.z = d1;
+            u32 lookAtDist = ScaleDistByFov(mMode->lookAtDist);
+            lookAtOffset.z = lookAtDist;
+            lookAtOffset.x = data_02086f2c.x;
+            lookAtOffset.y = data_02086f2c.y;
+            data_02086f2c.z = lookAtDist;
         }
-        Vec3_RotateYAndTranslate(&lookAt, &mTargetPos, mTargetPlayer->mAngleY, &tmp1);
+        Vec3_RotateYAndTranslate(&lookAt, &mTargetPos, mTargetPlayer->mAngleY, &lookAtOffset);
 
-        d = ScaleHeightByFov(mMode->lookAtHeight);
-        lookAt.y += d;
+        lookAtHeight = ScaleHeightByFov(mMode->lookAtHeight);
+        lookAt.y += lookAtHeight;
 
         {
-            u32 d2 = ScaleDistByFov(-mMode->posDist);
-            tmp2.z = d2;
-            data_02086f20.z = d2;
-            tmp2.x = data_02086f20.x;
-            tmp2.y = data_02086f20.y;
+            u32 posDist = ScaleDistByFov(-mMode->posDist);
+            posOffset.z = posDist;
+            data_02086f20.z = posDist;
+            posOffset.x = data_02086f20.x;
+            posOffset.y = data_02086f20.y;
         }
-        Vec3_RotateYAndTranslate(&pos, &lookAt, mTargetPlayer->mAngleY, &tmp2);
+        Vec3_RotateYAndTranslate(&pos, &lookAt, mTargetPlayer->mAngleY, &posOffset);
 
         dBgCh_Lin line;
         PrepareBgCh(line);
-        {
-            int tx;
-            int ty;
-            int tz;
-            tx = pos.x;
-            tz = pos.z;
-            ty = pos.y + 0x100000;
-            vec.x = tx;
-            vec.y = ty;
-            vec.z = tz;
-        }
-        line.SetObjAndLine(pos, vec, 0);
+        SetVec(above, pos.x, pos.y + CAM_PROBE_RISE, pos.z);
+        line.SetObjAndLine(pos, above, 0);
         if (line.DetectClsn() != 0) {
-            vec = line.GetClsnPos();
+            above = line.GetClsnPos();
         }
         dBgCh_Gnd ground;
         PrepareBgCh(ground);
-        ground.SetObjAndPos(vec, 0);
+        ground.SetObjAndPos(above, 0);
         if (ground.DetectClsn() != 0) {
-            pos.y = d + ground.clsnY;
+            pos.y = lookAtHeight + ground.clsnY;
         }
         pos.y += ScaleHeightByFov(0x3c286);
         {
             int diff;
             int base;
-            int a;
+            int absDiff;
             base = lookAt.y;
             diff = pos.y - base;
-            a = (diff < 0) ? -diff : diff;
-            if (a > 0x3e8000) {
+            absDiff = (diff < 0) ? -diff : diff;
+            if (absDiff > 0x3e8000) {
                 if (diff < -0x3e8000) diff = -0x3e8000;
                 else if (diff > 0x3e8000) diff = 0x3e8000;
                 pos.y = base + diff;
             }
         }
-        {
-            u32 t = ScaleHeightByFov(mMode->lookAtHeight);
-            mLookAtOffset.x = 0;
-            mLookAtOffset.y = t;
-            mLookAtOffset.z = 0;
-        }
+        SetVec(mLookAtOffset, 0, ScaleHeightByFov(mMode->lookAtHeight), 0);
         UpdateAngles();
         ChangeArea(mTargetPlayer->mAreaId);
     }
-    mFlags |= 4;
+    mFlags |= CAM_FLAG_SNAP_POS;
 }
 
 void dCamera_c::SetLookAt(const Vector3 & lookAt_)
@@ -988,13 +976,15 @@ void dCamera_c::SetPos(const Vector3 & pos_)
     pos = pos_;
 }
 
+/* Remember the view before a talk moves it. Only the first call counts
+   until the restore has finished. */
 void dCamera_c::SaveCameraStateBeforeTalk()
 {
-    if (mFlags & 0x4000U)
+    if (mFlags & CAM_FLAG_TALK_SAVED)
         return;
     savedLookAt = lookAt;
     savedPos = pos;
-    mFlags |= 0x4000U;
+    mFlags |= CAM_FLAG_TALK_SAVED;
 }
 
 /* The other half of SaveCameraStateBeforeTalk: once EnterState has turned
@@ -1005,7 +995,7 @@ void dCamera_c::RestoreCameraStateAfterTalk() {
     int posDone = func_020092c4(this, &pos, &savedPos);
 
     if (posDone != 0 && lookDone != 0) {
-        mFlags &= ~0x8000;
+        mFlags &= ~CAM_FLAG_TALK_RESTORE;
     }
 
     mAngleY = Vec3_HorzAngle(&lookAt, &pos);
@@ -1018,7 +1008,7 @@ void dCamera_c::RestoreCameraStateAfterTalk() {
  * regardless. */
 int dCamera_c::ChangeState(State * state)
 {
-    if ((mFlags & 0x10) != 0)
+    if ((mFlags & CAM_FLAG_STATE_LOCKED) != 0)
         return 0;
     if (state != mState) {
         if (mState == &data_0209b0c8) {
@@ -1031,6 +1021,7 @@ int dCamera_c::ChangeState(State * state)
     return EnterState();
 }
 
+/* Point mMode at record `index` of the mode table. */
 void dCamera_c::SetMode(int index) {
     mMode = (CamMode *)(index * 0x28 + (int)&data_02086fcc);
 }
@@ -1062,9 +1053,9 @@ int dCamera_c::UpdateState() {
     }
     result = 1;
     flags = mFlags;
-    if (flags & 8) {
+    if (flags & CAM_FLAG_SCRIPT_HOLD) {
         ;
-    } else if (flags & 0x8000) {
+    } else if (flags & CAM_FLAG_TALK_RESTORE) {
         RestoreCameraStateAfterTalk();
     } else {
         State *state = mState;
@@ -1074,24 +1065,27 @@ int dCamera_c::UpdateState() {
     return result;
 }
 
+/* The floor under the player asks for a rise slope, for this frame only:
+   behaviour 0 the high one, anything else the low one. */
 void dCamera_c::func_0200ca14(unsigned char playerID, int clpsBehavior) {
     if (playerID != gLocalPlayerId)
         return;
 
     if (clpsBehavior == 0)
-        mFlags |= 0x20000;
+        mFlags |= CAM_FLAG_SLOPE_HIGH;
     else
-        mFlags |= 0x10000;
+        mFlags |= CAM_FLAG_SLOPE_LOW;
 }
 
+/* Replace both rise-slope limits when func_0200ca14 asked this frame. */
 void dCamera_c::func_0200c9e0(s32 *minRise, s32 *maxRise) {
     unsigned int v = mFlags;
-    if (v & 0x10000u) {
+    if (v & CAM_FLAG_SLOPE_LOW) {
         *minRise = 0xfffffd39;
         *maxRise = 0xfffffd39;
         return;
     }
-    if (v & 0x20000u) {
+    if (v & CAM_FLAG_SLOPE_HIGH) {
         *minRise = 0xd1b;
         *maxRise = 0xd1b;
     }
@@ -1130,14 +1124,7 @@ int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outF
     } else {
         dBgCh_Lin line;
         PrepareBgCh(line);
-        {
-            int x = pos->x;
-            int z = pos->z;
-            int y = pos->y + 0x100000;
-            above.x = x;
-            above.y = y;
-            above.z = z;
-        }
+        SetVec(above, pos->x, pos->y + CAM_PROBE_RISE, pos->z);
         line.SetObjAndLine(*pos, above, 0);
         if (line.DetectClsn() != 0) {
             above = line.GetClsnPos();
@@ -1177,7 +1164,7 @@ int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outF
                 *outMode = &data_020873dc;
                 if (((CamViewObj *)*outView)->p1 == 2) {
                     if (mAreaMode != *outMode)
-                        mFlags |= 4;
+                        mFlags |= CAM_FLAG_SNAP_POS;
                 }
                 groundY = floorY;
             } else if (type == 6) {
@@ -1194,7 +1181,7 @@ int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outF
                     *outMode = &data_02087404;
                 }
             }
-            mFlags &= ~0x100;
+            mFlags &= ~CAM_FLAG_HOLD_MODE;
         }
         if (*outMode != &data_02087094)
             mAreaMode = (CamMode *)*outMode;
@@ -1221,7 +1208,7 @@ int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outM
     int modeFlags = mode->flags;
     int locked;
 
-    if ((modeFlags & 0x20) || (locked = mFlags & 0x100) != 0)
+    if ((modeFlags & 0x20) || (locked = mFlags & CAM_FLAG_HOLD_MODE) != 0)
         return 0;
 
     if (areaType == 7 && (mFramedActor != 0 || (view != 0 && view->type == 3))) {
@@ -1229,12 +1216,7 @@ int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outM
         if (mFramedActor != 0) {
             mLookTargetPos = mFramedActor->mPos;
         } else {
-            int x = view->x << 12;
-            int z = view->z << 12;
-            int y = view->y << 12;
-            mLookTargetPos.x = x;
-            mLookTargetPos.y = y;
-            mLookTargetPos.z = z;
+            SetVec(mLookTargetPos, view->x << 12, view->y << 12, view->z << 12);
         }
         Vec3_Sub(&toFocus, &mLookTargetPos, (const Vector3 *)pos);
         mFocusDist = VEC_Mag(&toFocus) >> 1;
@@ -1248,8 +1230,8 @@ int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outM
         } else if (mFocusDist < 0x180000) {
             mFocusDist = 0x180000;
         }
-        if (mFlags & 2) {
-            mFocusDist = FX_MUL(mFocusDist, 0x1800);
+        if (mFlags & CAM_FLAG_ZOOMED_OUT) {
+            mFocusDist = FX_MUL(mFocusDist, CAM_FAR_SCALE);
         }
         if (level == 0x2f && mFocusDist > 0xc0000) {
             Vec3_MulScalarInPlace(&toFocus, FX_Div(0xc0000, mFocusDist << 1));
@@ -1307,21 +1289,15 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
     offset.y = data_02086f2c.y;
     Vec3_RotateYAndTranslate(&goal, target, mTargetPlayer->mAngleY, &offset);
     dBgCh_Lin line;
-    to.x = goal.x;
-    to.y = goal.y + 0x32000;
-    to.z = goal.z;
+    SetVec(to, goal.x, goal.y + 0x32000, goal.z);
     SetVec(from, target[0], target[1] + 0x32000, target[2]);
     PrepareBgCh(line);
     line.SetObjAndLine(from, to, 0);
     if (line.DetectClsn() != 0) {
         Vector3 hit = line.GetClsnPos();
-        goal.x = hit.x;
-        goal.y = hit.y;
-        goal.z = hit.z;
+        goal = hit;
     }
-    above.x = goal.x;
-    above.y = goal.y + 0x100000;
-    above.z = goal.z;
+    SetVec(above, goal.x, goal.y + CAM_PROBE_RISE, goal.z);
     PrepareBgCh(line);
     line.SetObjAndLine(goal, above, 0);
     if (line.DetectClsn() != 0) {
@@ -1344,7 +1320,7 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
     }
     VEC_Subtract(&goal, target, &goal);
     height = mode->lookAtHeight;
-    if (mFlags & 0x20000) {
+    if (mFlags & CAM_FLAG_SLOPE_HIGH) {
         height = FX_MUL(height, 0x3000);
     }
     goal.y += ScaleHeightByFov(height);
@@ -1352,7 +1328,7 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
     Vector3 focus;
     Vec3_MulScalar(&focus, &mLookTargetPos, mFocusBlend);
     VEC_Add(&goal, &focus, &goal);
-    if (mFlags & 4) {
+    if (mFlags & CAM_FLAG_SNAP_POS) {
         mLookAtOffset = goal;
     } else {
         int shrink = Vec3_HorzLen(&mLookAtOffset) - horzDist;
