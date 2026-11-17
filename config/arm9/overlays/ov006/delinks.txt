@@ -367,7 +367,15 @@
     .data.pmf_unit020cd744 start:0x0213b31c end:0x0213b3a4 kind:data align:4
     .data.gap50b start:0x0213b3a4 end:0x0213b3f4 kind:data align:4
     .data.sTrmpLineTex start:0x0213b3f4 end:0x0213b814 kind:data align:4
-    .data start:0x0213b814 end:0x021402e0 kind:data align:4
+    .data.w13b814 start:0x0213b814 end:0x0213c6c4 kind:data align:4
+    .data.pmf_Esp3D_a start:0x0213c6c4 end:0x0213c6d4 kind:data align:4
+    .data.gap51 start:0x0213c6d4 end:0x0213c6dc kind:data align:4
+    .data.pmf_Esp3D_b start:0x0213c6dc end:0x0213c75c kind:data align:4
+    .data.gap52 start:0x0213c75c end:0x0213c764 kind:data align:4
+    .data.pmf_Esp3D_c start:0x0213c764 end:0x0213c78c kind:data align:4
+    .data.gap53 start:0x0213c78c end:0x0213c794 kind:data align:4
+    .data.pmf_Esp3D_d start:0x0213c794 end:0x0213c7bc kind:data align:4
+    .data start:0x0213c7bc end:0x021402e0 kind:data align:4
     .bss        start:0x021402e0 end:0x021430a0 kind:bss align:32
 src/minigames/unit020bfec0.cpp:
     complete
@@ -458,7 +466,7 @@ src/minigames/unit020cd744.cpp:
 src/minigames/d_s_mg_amida.cpp:
     complete
     .text start:0x020d1018 end:0x020d5a54
-    .data start:0x0213b814 end:0x0213b9ac
+    .data.w13b814 start:0x0213b814 end:0x0213b9ac
 
 src/minigames/d_s_mg_bomroom.cpp:
     complete
@@ -553,7 +561,7 @@ src/minigames/d_s_mg_cup.cpp:
     .init start:0x021303d0 end:0x021304ac
     .ctor start:0x0213358c end:0x02133590
     .bss start:0x02141870 end:0x021418b0
-    .data start:0x0213bfe0 end:0x0213c1e4
+    .data.w13b814 start:0x0213bfe0 end:0x0213c1e4
     .data.data_ov006_02139db4 start:0x02139db4 end:0x02139dbc
     .data.data_ov006_02139dbc start:0x02139dbc end:0x02139dc4
     .data.data_ov006_02139dc4 start:0x02139dc4 end:0x02139dd4
@@ -581,7 +589,7 @@ src/minigames/d_s_mg_curling.cpp:
     .text start:0x020e0638 end:0x020e3854
     .init start:0x021304ac end:0x02130758
     .ctor start:0x02133590 end:0x02133594
-    .data start:0x0213c1e4 end:0x0213c2c4
+    .data.w13b814 start:0x0213c1e4 end:0x0213c2c4
     .bss start:0x021418b0 end:0x02141978
 
 src/minigames/d_s_mg_curling2.cpp:
@@ -589,7 +597,7 @@ src/minigames/d_s_mg_curling2.cpp:
     .text start:0x020e3854 end:0x020e6c28
     .init start:0x02130758 end:0x02130a04
     .ctor start:0x02133594 end:0x02133598
-    .data start:0x0213c3d4 end:0x0213c4bc
+    .data.w13b814 start:0x0213c3d4 end:0x0213c4bc
     .bss start:0x02141978 end:0x02141a40
 
 src/minigames/d_s_mg_d3d_base.cpp:
@@ -599,7 +607,7 @@ src/minigames/d_s_mg_d3d_base.cpp:
     .ctor start:0x02133598 end:0x0213359c
     .bss start:0x02141a40 end:0x02141e54
     .rodata.sD3DSoundPanOffsets start:0x0212e574 end:0x0212e57c
-    .data start:0x0213c5e8 end:0x0213c610
+    .data.w13b814 start:0x0213c5e8 end:0x0213c610
 
 src/minigames/d_mg3d_esp_anim_set.cpp:
     complete
@@ -611,9 +619,7 @@ src/minigames/d_mg3d_esp_anim_set.cpp:
     .rodata.sEsp3DCardsPerDifficulty start:0x0212e588 end:0x0212e58c
     .rodata.data_ov006_0212e58c start:0x0212e58c end:0x0212e594
     .rodata.sEsp3DResultSfx start:0x0212e594 end:0x0212e5a8
-    .data.sEsp3DAnimSetSlotsSprites start:0x02133a3c end:0x02133a5c
-    .data.data_ov006_02133f24 start:0x02133f24 end:0x02133f38
-    .data.sEsp3DAnimSetRowsSprites start:0x02136e38 end:0x02136e3c
+    .data start:0x0213c85c end:0x0213c88c
     .data.data_ov006_021339fc start:0x021339fc end:0x02133a04
     .data.data_ov006_02133a04 start:0x02133a04 end:0x02133a0c
     .data.data_ov006_02133a0c start:0x02133a0c end:0x02133a14
@@ -622,13 +628,19 @@ src/minigames/d_mg3d_esp_anim_set.cpp:
     .data.data_ov006_02133a24 start:0x02133a24 end:0x02133a2c
     .data.data_ov006_02133a2c start:0x02133a2c end:0x02133a34
     .data.data_ov006_02133a34 start:0x02133a34 end:0x02133a3c
+    .data.sEsp3DAnimSetSlotsSprites start:0x02133a3c end:0x02133a5c
+    .data.data_ov006_02133f24 start:0x02133f24 end:0x02133f38
     .data.data_ov006_02133f38 start:0x02133f38 end:0x02133f50
     .data.data_ov006_02133f50 start:0x02133f50 end:0x02133f68
     .data.data_ov006_02133f68 start:0x02133f68 end:0x02133f80
     .data.data_ov006_02133f80 start:0x02133f80 end:0x02133f98
     .data.data_ov006_02133f98 start:0x02133f98 end:0x02133fb0
+    .data.sEsp3DAnimSetRowsSprites start:0x02136e38 end:0x02136e3c
     .data.data_ov006_02136e3c start:0x02136e3c end:0x02136e44
-    .data start:0x0213c85c end:0x0213c88c
+    .data.pmf_Esp3D_a start:0x0213c6c4 end:0x0213c6d4
+    .data.pmf_Esp3D_b start:0x0213c6dc end:0x0213c75c
+    .data.pmf_Esp3D_c start:0x0213c764 end:0x0213c78c
+    .data.pmf_Esp3D_d start:0x0213c794 end:0x0213c7bc
 
 src/minigames/d_s_mg_hanachan_methods.cpp:
     complete
