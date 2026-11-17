@@ -137,6 +137,8 @@ extern s16 sTrmp2IntroFromX;
 extern s16 sTrmp2IntroToX;
 extern s16 sTrmpStartTouchY;
 extern short sTrmpStartTouchX;
+/* Kept volatile, measured (#821 r49): as plain s16 StartRound folds the second
+   pair of reads into the first and is 0x118 of 0x120. */
 extern volatile s16 data_020a0dbc[];
 extern u8 gMainScreenLayers;
 extern void *LoadFile(int handle);
@@ -882,7 +884,6 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
 }
 
 void dScMgTrampoline2_c::InitBrush(int layer) {
-    dScMgTrampoline2_c *self = this;
     volatile unsigned short t0;
     volatile unsigned short t1;
     int v = 0x7000;
@@ -890,10 +891,10 @@ void dScMgTrampoline2_c::InitBrush(int layer) {
     char *charPtr;
     int i;
 
-    self->mBrushOnMain = 1;
-    self->mBrushLayer = layer;
+    mBrushOnMain = 1;
+    mBrushLayer = layer;
 
-    switch (self->mBrushLayer) {
+    switch (mBrushLayer) {
     case 0:
         scrPtr = (char *)G2_GetBG0ScrPtr();
         charPtr = (char *)G2_GetBG0CharPtr();
