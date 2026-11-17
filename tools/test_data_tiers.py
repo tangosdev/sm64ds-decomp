@@ -140,6 +140,14 @@ class CreditTests(unittest.TestCase):
         errors, _warnings = DT.check(self.rows, credited, base)
         self.assertEqual(errors, [])
 
+    def test_malformed_credit_value_does_not_crash_the_report(self):
+        report = DT.summarize(inventory([rec(0x100)]), verification({}),
+                              {"ov002:0x00000100": "not-an-object"})
+        self.assertEqual(report["counts"]["credited"], 0)
+        errors, _warnings = DT.validate_authors(
+            {"ov002:0x00000100": "not-an-object"}, report["items"])
+        self.assertTrue(errors)
+
     def test_author_row_must_resolve_and_name_a_claim(self):
         errors, _warnings = DT.validate_authors(
             {"ov002:0x00000100": {"author": ""}}, self.rows["items"])

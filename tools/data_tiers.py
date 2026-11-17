@@ -223,7 +223,8 @@ def _record_rows(inventory, verification, authors):
             status = "CLAIMED"
         else:
             status = "UNCLAIMED"
-        credited = key in authors and bool(authors[key].get("author"))
+        credit = authors.get(key)
+        credited = isinstance(credit, dict) and bool(credit.get("author"))
         rows.append({
             "id": key,
             "module": module,
@@ -236,7 +237,7 @@ def _record_rows(inventory, verification, authors):
             "status": status,
             "named": is_named(record),
             "credited": credited,
-            "author": authors.get(key, {}).get("author") if credited else None,
+            "author": credit.get("author") if credited else None,
             "source": next((c.get("source") for c in record.get("claims", [])
                             if c.get("complete") and c.get("covers_window")
                             and c.get("section_matches")), None),
