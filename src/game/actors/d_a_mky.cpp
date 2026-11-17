@@ -175,19 +175,15 @@ void daMky_c::ReturnToPerch() {
     b.y = b.y - 0x96000;
     rc.SetObjAndLine(a, b, this);
 
-    if (this->mPerchPosY - this->mPosY > 0x96000 || rc.DetectClsn()) {
-        Vec3_Asr(&asr, (Vector3 *)&this->mPerchPosX, 3);
+    if (this->mPerchPos.y - this->mPosY > 0x96000 || rc.DetectClsn()) {
+        Vec3_Asr(&asr, &this->mPerchPos, 3);
 
         if (data_0209f43c.TransformAndClip(data_0209b3ec, asr, 0x1f400, out) > 0xc350000) {
-            this->mPosX = this->mPerchPosX;
-            this->mPosY = this->mPerchPosY;
-            this->mPosZ = this->mPerchPosZ;
-            this->mSpawnPosX = this->mPerchPosX;
-            this->mSpawnPosY = this->mPerchPosY;
-            this->mSpawnPosZ = this->mPerchPosZ;
-            this->mPrevPosX = this->mPerchPosX;
-            this->mPrevPosY = this->mPerchPosY;
-            this->mPrevPosZ = this->mPerchPosZ;
+            this->mPos = this->mPerchPos;
+            this->mSpawnPosX = this->mPerchPos.x;
+            this->mSpawnPosY = this->mPerchPos.y;
+            this->mSpawnPosZ = this->mPerchPos.z;
+            this->mPrevPos = this->mPerchPos;
             UpdateModelAndCap();
             this->mResetTimer = 150;
         }
@@ -482,8 +478,8 @@ int daMky_c::func_ov030_02112400()
     this->mdCcAc_c.Update();
 
     if (IsUkikiStar(this)) {
-        if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000) {
-            if (this->mPosY > this->mPerchPosY - 0x12c000) {
+        if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000) {
+            if (this->mPosY > this->mPerchPos.y - 0x12c000) {
                 ChangeState(1);
             }
         }
@@ -545,12 +541,9 @@ int daMky_c::func_ov030_02112578()
         PlayIdleSounds();
         break;
     case 2: {
-        s32 sp[3];
-        sp[0] = this->mPosX;
-        sp[1] = this->mPosY;
-        sp[2] = this->mPosZ;
-        sp[1] += 0x50000;
-        if (player->ShowMessage(*this, 0xbd, (const Vector3 *)sp, 1, 0) != 0) {
+        Vector3 sp = this->mPos;
+        sp.y += 0x50000;
+        if (player->ShowMessage(*this, 0xbd, &sp, 1, 0) != 0) {
             this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait3AnimationFile[1], 0, 0x1000, 0);
             this->mAnmModel.SetFlags(0);
             func_0201267c(0xd1, &this->mCamSpacePos);
@@ -678,8 +671,8 @@ int daMky_c::func_ov030_02112a84()
             else
                 ChangeState(this->mPrevState);
         } else if (IsUkikiStar(this)) {
-            if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-                this->mPosY > this->mPerchPosY - 0x12c000) {
+            if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
+                this->mPosY > this->mPerchPos.y - 0x12c000) {
                 ChangeState(this->mPrevState);
             } else {
                 ChangeState(9);
@@ -777,8 +770,8 @@ int daMky_c::func_ov030_02112da0()
         break;
     }
     case 1:
-        if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-            this->mPosY > this->mPerchPosY - 0x12c000) {
+        if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
+            this->mPosY > this->mPerchPos.y - 0x12c000) {
             if (this->mPlayer->ShowMessage(*this, 0xc1, 0, 0, 0) != 0) {
                 func_0201267c(0xd1, &this->mCamSpacePos);
                 this->mSubState++;
@@ -810,8 +803,7 @@ int daMky_c::func_ov030_02112da0()
 int daMky_c::EnterState6()
 {
     this->mFlags &= ~0x80000;
-    if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-        mPosY > mPerchPosY - 0x12c000) {
+    if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 && mPosY > mPerchPos.y - 0x12c000) {
         mSubState = 0;
         this->SpawnSoundObj(1);
     } else {
@@ -915,8 +907,8 @@ int daMky_c::func_ov030_02113324()
         v.z = oz;
         this->DetectRaycastClsn(v, this->mPos, 1);
 
-        if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-            this->mPosY > this->mPerchPosY - 0x12c000) {
+        if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
+            this->mPosY > this->mPerchPos.y - 0x12c000) {
             ChangeState(1);
         } else {
             ChangeState(9);
@@ -927,8 +919,8 @@ int daMky_c::func_ov030_02113324()
 
     switch (this->mSubState) {
     case 0:
-        if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-            this->mPosY > this->mPerchPosY - 0x12c000) {
+        if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
+            this->mPosY > this->mPerchPos.y - 0x12c000) {
             if (this->mPlayer->StartTalk(*this, 1) != 0) {
                 Vector3 camPos;
                 {
@@ -988,8 +980,8 @@ int daMky_c::EnterState4(){
     extern int gMonkeyHoldAnimationFile[];
     this->mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyHoldAnimationFile[1]), 0, 0x1000, 0);
     this->mAnmModel.speed = 0x1000;
-    if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-        this->mPosY > mPerchPosY - 0x12c000) {
+    if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
+        this->mPosY > mPerchPos.y - 0x12c000) {
         mSubState = 0;
         this->SpawnSoundObj(1);
     } else {
@@ -1209,12 +1201,12 @@ int daMky_c::EnterState2() {
         p = this->ClosestPlayer();
 
     if (IsUkikiThief(this)) {
-        this->mAngleY = Vec3_HorzAngle(&this->mPos, (Vector3 *)&this->mPerchPosX);
-    } else if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
-               this->mPosY > this->mPerchPosY - 0x12c000) {
+        this->mAngleY = Vec3_HorzAngle(&this->mPos, &this->mPerchPos);
+    } else if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
+               this->mPosY > this->mPerchPos.y - 0x12c000) {
         this->mAngleY = Vec3_HorzAngle(&this->mPos, &p->mPos);
     } else {
-        this->mAngleY = Vec3_HorzAngle(&this->mPos, (Vector3 *)&this->mPerchPosX);
+        this->mAngleY = Vec3_HorzAngle(&this->mPos, &this->mPerchPos);
     }
 
     this->mPrevAngleY = this->mAngleY;
@@ -1245,8 +1237,8 @@ int daMky_c::func_ov030_02113d20()
 
     dist = Vec3_Dist(&this->mPos, &p->mPos);
 
-    if ((IsUkikiStar(this) && Vec3_Dist((Vector3 *)&this->mPerchPosX, &p->mPos) > 0x514000) ||
-        p->mPosY < this->mPerchPosY - 0x12c000) {
+    if ((IsUkikiStar(this) && Vec3_Dist(&this->mPerchPos, &p->mPos) > 0x514000) ||
+        p->mPosY < this->mPerchPos.y - 0x12c000) {
         this->mSubState = 2;
     }
 
@@ -1454,10 +1446,8 @@ s32 daMky_c::InitResources()
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mPerchPosX = mPosX;
-    mPerchPosY = mPosY;
-    mPerchPosZ = mPosZ;
-    mPerchPosY += 0x64000;
+    mPerchPos = mPos;
+    mPerchPos.y += 0x64000;
     mSpawnPosX = mPosX;
     mSpawnPosY = mPosY;
     mSpawnPosZ = mPosZ;
