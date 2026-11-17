@@ -145,8 +145,8 @@ struct OamAttr;
 
 #pragma defer_codegen off
 
-/* StaffRoll's helpers are members. A char * walked across the doll or
-   star array is that member viewed from this. */
+/* StaffRoll's helpers are members and reach its stars, dolls and window
+   fields by name. */
 typedef daDemo_c::StaffRoll StaffRoll;
 
 /* shadow typedef 's16' */
@@ -637,81 +637,70 @@ void StaffRoll::func_ov002_020f26e0() {
 }
 
 void StaffRoll::func_ov002_020f2790(int p1, int p2, int p3, s16 p4) {
-    char *c = (char *)this;
-    ((StaffRoll *)c)->kira.unk308 = p3;
-    ((StaffRoll *)c)->kira.unk30c = p4;
-    ((StaffRoll *)c)->kiraParticle =
-        Particle::System::New(((StaffRoll *)c)->kiraParticle, kPtclEndingStarSparkle, p1 << 12,
-                              p2 << 12, 0, 0, &((StaffRoll *)c)->kira);
+    kira.unk308 = p3;
+    kira.unk30c = p4;
+    kiraParticle = Particle::System::New(kiraParticle, kPtclEndingStarSparkle, p1 << 12, p2 << 12,
+                                         0, 0, &kira);
 }
 
 int StaffRoll::func_ov002_020f27e8() {
-    char *c = (char *)this;
-    if (((StaffRoll *)c)->burstActive == 0)
-        return ((StaffRoll *)c)->burstActive;
+    if (burstActive == 0)
+        return burstActive;
 
-    ((StaffRoll *)c)->burstTimer += 1;
+    burstTimer += 1;
 
-    if (((StaffRoll *)c)->burstDefParam != 0x1000) {
-        if (((StaffRoll *)c)->burstTimer ==
-            data_ov002_02100140[((StaffRoll *)c)->burstPeriods & 3]) {
-            ((StaffRoll *)c)->burstDefParam += 0x199;
-            if (((StaffRoll *)c)->burstDefParam >= 0x1000)
-                ((StaffRoll *)c)->burstDefParam = 0x1000;
+    if (burstDefParam != 0x1000) {
+        if (burstTimer == data_ov002_02100140[burstPeriods & 3]) {
+            burstDefParam += 0x199;
+            if (burstDefParam >= 0x1000)
+                burstDefParam = 0x1000;
         }
     }
 
-    if (((StaffRoll *)c)->burstSysParam != 0x800) {
-        if (((StaffRoll *)c)->burstPeriods >= 5) {
-            if ((((StaffRoll *)c)->burstTimer & 3) == 3) {
-                ((StaffRoll *)c)->burstSysParam += 0x199;
-                if (((StaffRoll *)c)->burstSysParam >= 0x800)
-                    ((StaffRoll *)c)->burstSysParam = 0x800;
+    if (burstSysParam != 0x800) {
+        if (burstPeriods >= 5) {
+            if ((burstTimer & 3) == 3) {
+                burstSysParam += 0x199;
+                if (burstSysParam >= 0x800)
+                    burstSysParam = 0x800;
             }
         }
     }
 
-    ((StaffRoll *)c)
-        ->func_ov002_020f2790(0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
-                              ((StaffRoll *)c)->burstSysParam);
-    ((StaffRoll *)c)
-        ->func_ov002_020f2790(0x80, 0x60, ((StaffRoll *)c)->burstDefParam,
-                              ((StaffRoll *)c)->burstSysParam);
+    func_ov002_020f2790(0x80, 0x60, burstDefParam, burstSysParam);
+    func_ov002_020f2790(0x80, 0x60, burstDefParam, burstSysParam);
 
-    if (((StaffRoll *)c)->burstTimer >= 30) {
-        ((StaffRoll *)c)->burstTimer = 0;
-        ((StaffRoll *)c)->burstPeriods += 1;
+    if (burstTimer >= 30) {
+        burstTimer = 0;
+        burstPeriods += 1;
     }
-    if (((StaffRoll *)c)->burstPeriods < 0xa)
-        return ((StaffRoll *)c)->burstPeriods;
-    return ((StaffRoll *)c)->func_ov002_020f2984();
+    if (burstPeriods < 0xa)
+        return burstPeriods;
+    return func_ov002_020f2984();
 }
 
 void StaffRoll::func_ov002_020f2958() {
-    char *c = (char *)this;
-    ((StaffRoll *)c)->burstActive = 1;
-    ((StaffRoll *)c)->burstDefParam = 0x199;
-    ((StaffRoll *)c)->burstSysParam = 0x199;
-    ((StaffRoll *)c)->burstTimer = 0;
-    ((StaffRoll *)c)->burstPeriods = 0;
+    burstActive = 1;
+    burstDefParam = 0x199;
+    burstSysParam = 0x199;
+    burstTimer = 0;
+    burstPeriods = 0;
 }
 
 int StaffRoll::func_ov002_020f2984() {
-    char *p = (char *)this;
-    ((StaffRoll *)p)->burstActive = 0;
-    return (int)p;
+    burstActive = 0;
+    return (int)this;
 }
 
 int StaffRoll::func_ov002_020f2990() {
-    char *c = (char *)this;
     int x, y;
     int idx;
 
-    if (((StaffRoll *)c)->endVisible == 0)
-        return (int)c;
+    if (endVisible == 0)
+        return (int)this;
 
-    x = ((StaffRoll *)c)->endX >> 0xc;
-    y = ((StaffRoll *)c)->endY >> 0xc;
+    x = endX >> 0xc;
+    y = endY >> 0xc;
     idx = 0;
     if (GetOwnerLanguage() == 3) idx = 1;
     else if (GetOwnerLanguage() == 2 || GetOwnerLanguage() == 5) idx = 2;
@@ -729,10 +718,9 @@ void StaffRoll::func_ov002_020f2a48() {
 }
 
 void StaffRoll::func_ov002_020f2a68() {
-    char *p = (char *)this;
     /* 0x1d8/0x1d9: see func_ov002_020f2990. */
-    ((StaffRoll *)p)->endActive = 0;
-    ((StaffRoll *)p)->endVisible = 0;
+    endActive = 0;
+    endVisible = 0;
 }
 
 void StaffRoll::func_ov002_020f2a78(int i) {
@@ -837,33 +825,27 @@ void StaffRoll::StartCredit(int n) {
 }
 
 void StaffRoll::func_ov002_020f2ea0() {
-    char *p = (char *)this;
-    ((StaffRoll *)p)->credit[0].active = 0;
+    credit[0].active = 0;
 }
 
 void StaffRoll::func_ov002_020f2eac() {
     int i;
-    char *p = (char *)this;
     for (i = 0; i < 5; i++) {
-        if (((StaffRoll *)p)->dolls[0].visible != 0) {
-            OAM::RenderSub(data_ov002_0210bba0[((StaffRoll *)p)->dolls[0].frame],
-                           ((StaffRoll *)p)->dolls[0].x >> 12, ((StaffRoll *)p)->dolls[0].y >> 12,
-                           -1, ((StaffRoll *)p)->dolls[0].priority);
+        if (dolls[i].visible != 0) {
+            OAM::RenderSub(data_ov002_0210bba0[dolls[i].frame], dolls[i].x >> 12, dolls[i].y >> 12,
+                           -1, dolls[i].priority);
         }
-        p += 0x14;
     }
 }
 
 void StaffRoll::func_ov002_020f2f18(int a, int b) {
-    char *c = (char *)this;
     int i = 0;
     do {
-        if (((StaffRoll *)c)->dolls[0].active != 0) {
-            ((StaffRoll *)c)->dolls[0].x -= a;
-            ((StaffRoll *)c)->dolls[0].y -= b;
+        if (dolls[i].active != 0) {
+            dolls[i].x -= a;
+            dolls[i].y -= b;
         }
         i++;
-        c += 0x14;
     } while (i < 5);
 }
 
@@ -877,10 +859,8 @@ void StaffRoll::func_ov002_020f2f64() {
 }
 
 void StaffRoll::func_ov002_020f2f9c(int count) {
-    void *self = this;
-    char* sl = (char*)self;
     int i;
-    int idx = ((StaffRoll *)self)->func_ov002_020f5a94() - 2;
+    int idx = func_ov002_020f5a94() - 2;
     if (idx < 0) idx = 0;
     for (i = 0; i < count + 1; i++) {
         int ok = 0;
@@ -895,25 +875,22 @@ void StaffRoll::func_ov002_020f2f9c(int count) {
         }
         if (ok) {
             int* p;
-            ((StaffRoll *)sl)->dolls[0].active = 1;
-            ((StaffRoll *)sl)->dolls[0].visible = 1;
+            dolls[i].active = 1;
+            dolls[i].visible = 1;
             p = data_ov002_0210b97c[idx];
-            ((StaffRoll *)sl)->dolls[0].x = (p[i * 4 + 0] + 0xe0) << 12;
-            ((StaffRoll *)sl)->dolls[0].y = (p[i * 4 + 1] + 0x66) << 12;
-            ((StaffRoll *)sl)->dolls[0].priority = (u8)p[i * 4 + 2];
-            ((StaffRoll *)sl)->dolls[0].frame = (u8)p[i * 4 + 3];
+            dolls[i].x = (p[i * 4 + 0] + 0xe0) << 12;
+            dolls[i].y = (p[i * 4 + 1] + 0x66) << 12;
+            dolls[i].priority = (u8)p[i * 4 + 2];
+            dolls[i].frame = (u8)p[i * 4 + 3];
         }
-        sl += 0x14;
     }
 }
 
 void StaffRoll::func_ov002_020f30d4() {
-    char *p = (char *)this;
     int i;
     for (i = 0; i < 5; i++) {
-        ((StaffRoll *)p)->dolls[0].active = 0;
-        ((StaffRoll *)p)->dolls[0].visible = 0;
-        p += 0x14;
+        dolls[i].active = 0;
+        dolls[i].visible = 0;
     }
 }
 
@@ -1081,48 +1058,44 @@ void StaffRoll::func_ov002_020f37a0() {
 }
 
 void StaffRoll::func_ov002_020f37fc() {
-    char *c = (char *)this;
-    ((StaffRoll *)c)->func_ov002_020f3828();
-    ((StaffRoll *)c)->window[0].active = 1;
-    ((StaffRoll *)c)->window[0].kind = 2;
-    ((StaffRoll *)c)->window[0].step = 0;
+    func_ov002_020f3828();
+    window[0].active = 1;
+    window[0].kind = 2;
+    window[0].step = 0;
 }
 
 void StaffRoll::func_ov002_020f3828() {
-    int *c = (int *)this;
-    ((StaffRoll *)c)->window[0].left = 0x80000;
-    ((StaffRoll *)c)->window[0].top = 0x66000;
-    ((StaffRoll *)c)->window[0].right = 0xfc000;
-    ((StaffRoll *)c)->window[0].bottom = 0xbc000;
+    window[0].left = 0x80000;
+    window[0].top = 0x66000;
+    window[0].right = 0xfc000;
+    window[0].bottom = 0xbc000;
     GXS_SetVisibleWnd(GX_WNDMASK_W1);
     G2S_SetWnd1InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
                                GX_WND_PLANEMASK_OBJ,
                            true);
     G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_BG0, true);
     {
-        int a = ((StaffRoll *)c)->window[0].left >> 12;
-        int d = ((StaffRoll *)c)->window[0].right >> 12;
-        int e = ((StaffRoll *)c)->window[0].bottom >> 12;
-        int b = ((StaffRoll *)c)->window[0].top >> 12;
+        int a = window[0].left >> 12;
+        int d = window[0].right >> 12;
+        int e = window[0].bottom >> 12;
+        int b = window[0].top >> 12;
         G2S_SetWnd1Position(a, b, d, e);
     }
-    ((StaffRoll *)c)->window[0].bgX = -0x60000;
-    ((StaffRoll *)c)->window[0].bgY = -0x38000;
-    SetSubBg1Offset(((StaffRoll *)c)->window[0].bgX >> 12, ((StaffRoll *)c)->window[0].bgY >> 12);
-    SetSubBg2Offset(((StaffRoll *)c)->window[0].bgX >> 12, ((StaffRoll *)c)->window[0].bgY >> 12);
+    window[0].bgX = -0x60000;
+    window[0].bgY = -0x38000;
+    SetSubBg1Offset(window[0].bgX >> 12, window[0].bgY >> 12);
+    SetSubBg2Offset(window[0].bgX >> 12, window[0].bgY >> 12);
     gSubScreenLayers |= 6;
 }
 
 void StaffRoll::func_ov002_020f3954() {
-    char *p = (char *)this;
-    ((StaffRoll *)p)->window[0].active = 1;
-    ((StaffRoll *)p)->window[0].kind = 1;
-    ((StaffRoll *)p)->window[0].step = 0;
+    window[0].active = 1;
+    window[0].kind = 1;
+    window[0].step = 0;
 }
 
 void StaffRoll::func_ov002_020f396c() {
-    char *p = (char *)this;
-    ((StaffRoll *)p)->window[0].active = 0;
+    window[0].active = 0;
 }
 
 extern "C" {
@@ -1131,40 +1104,37 @@ extern void *data_ov002_0210b998[];
 }
 
 void StaffRoll::func_ov002_020f3978() {
-    char *c = (char *)this;
+    Star *star = stars;
     int i;
     for (i = 0; i < 4; i++) {
-        if (((StaffRoll *)c)->stars[0].visible) {
-            OAM::Render(true, (OamAttr *)data_ov002_0210b998[i],
-                        ((StaffRoll *)c)->stars[0].x >> 0xc, ((StaffRoll *)c)->stars[0].y >> 0xc,
-                        -1, 1, 0);
+        if (star->visible) {
+            OAM::Render(true, (OamAttr *)data_ov002_0210b998[i], star->x >> 0xc, star->y >> 0xc, -1,
+                        1, 0);
         }
-        c += 0x4c;
+        star++;
     }
 }
 
 void StaffRoll::func_ov002_020f39ec(int idx) {
-    char *self = (char *)this;
-    StaffRoll *s = (StaffRoll *)self;
-    s->stars[idx].frameTimer++;
-    if (s->stars[idx].frameTimer < 4)
+    stars[idx].frameTimer++;
+    if (stars[idx].frameTimer < 4)
         return;
-    s->stars[idx].frameTimer = 0;
-    s->stars[idx].frame++;
-    if (s->stars[idx].holdFrame != 0) {
-        if (s->stars[idx].frame >= 0x10)
-            s->stars[idx].frame = 0x10;
-    } else if (s->stars[idx].frame >= 0x20) {
-        s->stars[idx].frame = 0;
+    stars[idx].frameTimer = 0;
+    stars[idx].frame++;
+    if (stars[idx].holdFrame != 0) {
+        if (stars[idx].frame >= 0x10)
+            stars[idx].frame = 0x10;
+    } else if (stars[idx].frame >= 0x20) {
+        stars[idx].frame = 0;
     }
 
     for (int i = 0; i < 4; i++) {
-        int v = data_ov002_021002a0[s->stars[idx].frame];
+        int v = data_ov002_021002a0[stars[idx].frame];
         int src = i * 0x800 + ((v & 7) << 8);
         if (v & 8)
             src += 0x2000;
-        MI_CpuCopy16(s->starChars + src,
-                     (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400, 0x100);
+        MI_CpuCopy16(starChars + src, (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400,
+                     0x100);
     }
 }
 
@@ -2122,13 +2092,13 @@ void StaffRoll::func_ov002_020f5990() {
 }
 
 void StaffRoll::func_ov002_020f5a6c() {
-    char *p = (char *)this;
+    Star *star = stars;
     int i;
     for (i = 0; i < 4; i++) {
-        ((StaffRoll *)p)->stars[0].active = 0;
-        ((StaffRoll *)p)->stars[0].visible = 0;
-        ((StaffRoll *)p)->stars[0].holdFrame = 0;
-        p += 0x4c;
+        star->active = 0;
+        star->visible = 0;
+        star->holdFrame = 0;
+        star++;
     }
 }
 
@@ -2332,32 +2302,28 @@ void StaffRoll::func_ov002_020f5f0c(int idx) {
 }
 
 void StaffRoll::func_ov002_020f5f60() {
-    char *c = (char *)this;
-    void *p = ((StaffRoll *)c)->starChars;
+    void *p = starChars;
     if (p == 0)
         return;
     ::operator delete(p);
-    ((StaffRoll *)c)->starChars = 0;
+    starChars = 0;
 }
 
 int StaffRoll::func_ov002_020f5f8c() {
-    void *c = this;
-    ((StaffRoll *)c)->func_ov002_020f26e0();
-    ((StaffRoll *)c)->func_ov002_020f3978();
-    ((StaffRoll *)c)->func_ov002_020f2eac();
-    return ((StaffRoll *)c)->func_ov002_020f2990();
+    func_ov002_020f26e0();
+    func_ov002_020f3978();
+    func_ov002_020f2eac();
+    return func_ov002_020f2990();
 }
 
 int StaffRoll::func_ov002_020f5fb8() {
-    void *c = this;
-    ((StaffRoll *)c)->func_ov002_020f5990();
-    ((StaffRoll *)c)->func_ov002_020f37a0();
-    ((StaffRoll *)c)->func_ov002_020f2dd4();
-    return ((StaffRoll *)c)->func_ov002_020f27e8();
+    func_ov002_020f5990();
+    func_ov002_020f37a0();
+    func_ov002_020f2dd4();
+    return func_ov002_020f27e8();
 }
 
 void StaffRoll::func_ov002_020f5fe4() {
-    char *c = (char *)this;
     void *f;
     void *r5;
 
@@ -2451,15 +2417,15 @@ void StaffRoll::func_ov002_020f5fe4() {
         Deallocate(r5);
     }
 
-    ((StaffRoll *)c)->starChars = 0;
-    if (((StaffRoll *)c)->starChars == 0) {
-        ((StaffRoll *)c)->starChars = (u8 *)::operator new[](0x4000);
+    starChars = 0;
+    if (starChars == 0) {
+        starChars = (u8 *)::operator new[](0x4000);
     }
     f = LoadFile(ASSET_D_2D_ED_STAR_NCG_BIN);
-    DecompressLZ16(f, ((StaffRoll *)c)->starChars);
+    DecompressLZ16(f, starChars);
     Deallocate(f);
 
-    ((StaffRoll *)c)->func_ov002_020f5ad4();
+    func_ov002_020f5ad4();
 }
 
 int daDemo_c::func_ov002_020f63a0()
@@ -2757,7 +2723,7 @@ inline unsigned int inline_fn(unsigned int arg0)
 int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
 {
   u8 *flag = (u8 *) arg1;
-  VecFx32 v;
+  Vector3 v;
   if (arg2 == gKuppaScriptFrame) {
       if ((*flag) != 0) {
           int r = (inline_fn(RandomIntInternal(&data_0209e650)) >> 20) & 0xfff;
@@ -2786,9 +2752,9 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
   }
   else
   {
-      MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, (Vector3 *)&v);
+      MTX_MultVec43((Vector3 *)&data_ov002_0210b958, &data_0209b41c, &v);
       Vec3_LslInPlace((int *)&v, 3);
-      func_ov002_020f6f48((Vector3 *)&v, 8);
+      func_ov002_020f6f48(&v, 8);
   }
   this->mPrevAngleX = this->mAngleX;
   this->mPrevAngleY = this->mAngleY;
@@ -2979,7 +2945,6 @@ int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val)
 
 int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
 {
-    unsigned char *self = (unsigned char *)this;
     int a = in[0] << 12;
     int b = in[1] << 8;
     int t;
@@ -3025,7 +2990,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     int f2 = b << 8;
     const Vector3 *base;
     int scale;
-    VecFx32 tmp, diff, scaled, sum;
+    Vector3 tmp, diff, scaled, sum;
 
     if (f1 != 0 && arg2 == gKuppaScriptFrame) {
         this->mAngleX = 0xd00;
@@ -3048,12 +3013,12 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     }
 
     Math_Function_0203b0fc(&this->mRate, scale, 0x40, 0x100);
-    Vec3_Sub((Vector3 *)&diff, &sViewEnd, base);
+    Vec3_Sub(&diff, &sViewEnd, base);
     tmp.x = diff.x;
     tmp.y = diff.y;
     tmp.z = diff.z;
-    Vec3_MulScalar((Vector3 *)&scaled, (const Vector3 *)&tmp, this->mRate);
-    Vec3_Add((Vector3 *)&sum, base, (const Vector3 *)&scaled);
+    Vec3_MulScalar(&scaled, &tmp, this->mRate);
+    Vec3_Add(&sum, base, &scaled);
 
     {
         Vector3 *dp = ((anmModel_c *)this->mAnmModel)->mScale;
