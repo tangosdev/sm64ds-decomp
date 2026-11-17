@@ -116,7 +116,7 @@ int AngleDiff(int a, int b);
 
 /* other overlays / arm9 */
 void func_ov002_020c3e8c(void *player);
-void func_ov002_020c3f18(void *p);
+void func_ov002_020c3f18(daPly_c *player);
 void func_ov002_020c3f2c(void *p);
 
 /* globals */

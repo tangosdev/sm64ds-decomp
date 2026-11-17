@@ -117,7 +117,7 @@ extern signed char gCurrentSublevel;    /* LEVEL_ID */
 extern Matrix4x3 data_020a0e68;         /* scratch Matrix4x3 */
 extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
 
-extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
+extern int func_ov002_020db674(daPly_c *player, int a1, int a2, int a3);
 }
 void func_02012694(unsigned int id, const Vector3 *pos);
 

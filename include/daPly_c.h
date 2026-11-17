@@ -1080,7 +1080,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020d5f98(u8 *, u8 *);
     int func_ov002_020d6048();
     int func_ov002_020d6998();
-    char *func_ov002_020d708c();
+    dActor_c *func_ov002_020d708c();
     void func_ov002_020d718c();
     void func_ov002_020d71a0();
     int func_ov002_020d93ac();

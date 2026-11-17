@@ -616,15 +616,11 @@ struct P2 data_ov002_0210a34c = {{(void *)0x6e, (void *)0x6f}};
 
 /* Free handlers are stored as their actual function pointers; the union gives
  * them the PMF spelling the descriptor tables use. */
-extern "C" void func_ov002_020c9de4(char *);
-extern "C" void func_ov002_020e200c(char *);
-extern "C" void func_ov002_020c72a4(void *);
-union PlayerFreeCharPmf {
-    void (*free)(char *);
-    void (daPly_c::*pmf)();
-};
-union PlayerFreeVoidPmf {
-    void (*free)(void *);
+extern "C" void func_ov002_020c9de4(daPly_c *);
+extern "C" void func_ov002_020e200c(daPly_c *);
+extern "C" void func_ov002_020c72a4(daPly_c *);
+union PlayerFreePmf {
+    void (*free)(daPly_c *);
     void (daPly_c::*pmf)();
 };
 union PlayerStateFn {
@@ -635,28 +631,24 @@ union PlayerStateFn {
     void (*freeVoid)(void *);
 };
 extern "C" {
-PlayerFreeCharPmf data_ov002_02109dfc = {func_ov002_020c9de4};
-PlayerFreeCharPmf data_ov002_02109f0c = {func_ov002_020e200c};
-PlayerFreeCharPmf data_ov002_0210a10c = {func_ov002_020e200c};
-PlayerFreeCharPmf data_ov002_0210a23c = {func_ov002_020c9de4};
-PlayerFreeCharPmf data_ov002_0210a244 = {func_ov002_020c9de4};
-PlayerFreeCharPmf data_ov002_0210a264 = {func_ov002_020c9de4};
-PlayerFreeVoidPmf data_ov002_0210a334 = {func_ov002_020c72a4};
+PlayerFreePmf data_ov002_02109dfc = {func_ov002_020c9de4};
+PlayerFreePmf data_ov002_02109f0c = {func_ov002_020e200c};
+PlayerFreePmf data_ov002_0210a10c = {func_ov002_020e200c};
+PlayerFreePmf data_ov002_0210a23c = {func_ov002_020c9de4};
+PlayerFreePmf data_ov002_0210a244 = {func_ov002_020c9de4};
+PlayerFreePmf data_ov002_0210a264 = {func_ov002_020c9de4};
+PlayerFreePmf data_ov002_0210a334 = {func_ov002_020c72a4};
 }
 
 /* func_ov002_020e1e70 stays a free C-linkage body; the table slot is a PMF. */
-union PlayerFreeCleanupTarget {
-    void (*code)(char *);
-    void (daPly_c::*pmf)();
-};
 extern "C" {
 /* Non-PMF records in the descriptor band and the free cleanup handler's PMF
  * record. */
 AnimScriptStep data_ov002_0210a3dc[] = {{1, 0}};
 int data_ov002_0210a424[] = {19, 21};
 AnimScriptStep data_ov002_0210a434[] = {{188, 0}};
-void func_ov002_020e1e70(char *);
-PlayerFreeCleanupTarget data_ov002_0210a47c = {func_ov002_020e1e70};
+void func_ov002_020e1e70(daPly_c *);
+PlayerFreePmf data_ov002_0210a47c = {func_ov002_020e1e70};
 AnimScriptStep data_ov002_0210a4bc[] = {{191, 0}};
 
 /* Player animation scripts, frame windows, hurt tables, and body-model
@@ -1267,9 +1259,8 @@ void daPly_c::func_ov002_020bdc18() {
 /* recovered: named members + shared header, real C++ method */
 void daPly_c::IncMegaKillCount() {
     Vector3 v;
-    char *new_var2;
     int new_var3;
-    char *a;
+    daObj1UpLogo_c *logo;
     int y;
     if ((mIsMega) == 0) {
         return;
@@ -1286,13 +1277,12 @@ void daPly_c::IncMegaKillCount() {
     v.y = y;
     v.z = mPosZ;
     v.y = y + 0x190000;
-    new_var2 = (char *)Spawn(0x14b, mMegaKillCount, v, 0, mAreaId, new_var3);
-    a = new_var2;
-    if (a == 0) {
+    logo = (daObj1UpLogo_c *)Spawn(0x14b, mMegaKillCount, v, 0, mAreaId, new_var3);
+    if (logo == 0) {
         return;
     }
-    ((daObj1UpLogo_c *)a)->mDelay = 0;
-    ((daObj1UpLogo_c *)a)->SetFollowTarget(0);
+    logo->mDelay = 0;
+    logo->SetFollowTarget(0);
 }
 
 void daPly_c::func_ov002_020bdd2c() {
@@ -3582,28 +3572,27 @@ void daPly_c::func_ov002_020c2b08() {
 }
 
 void daPly_c::func_ov002_020c2db8() {
-    unsigned char *c = (unsigned char *)this;
-    ((daPly_c *)(c))->func_ov002_020c14b8();
+    func_ov002_020c14b8();
     mClsnFlags = 0;
     if (mSkipGroundUpdate != 0)
         return;
     mSlideType = 0;
     if (mFloorClass == 5)
         mSlideType = 1;
-    if (((daPly_c *)(c))->func_ov002_020c231c() == 0) {
+    if (func_ov002_020c231c() == 0) {
         func_02035798(&mMeshClsn, 0x1000);
-        ((daPly_c *)(c))->func_ov002_020c25a8(0);
+        func_ov002_020c25a8(0);
     } else {
         func_02035798(&mMeshClsn, 0);
-        ((daPly_c *)(c))->func_ov002_020c25a8(1);
+        func_ov002_020c25a8(1);
     }
-    ((daPly_c *)(c))->func_ov002_020c1234();
-    ((daPly_c *)(c))->func_ov002_020c0fb4();
-    ((daPly_c *)(c))->func_ov002_020c5d60();
-    ((daPly_c *)(c))->func_ov002_020c61ac();
-    func_ov002_020eea84(&mMeshClsn, (dActor_c *)c);
-    ((daPly_c *)(c))->func_ov002_020c2b08();
-    ((daPly_c *)(c))->func_ov002_020c29d4();
+    func_ov002_020c1234();
+    func_ov002_020c0fb4();
+    func_ov002_020c5d60();
+    func_ov002_020c61ac();
+    func_ov002_020eea84(&mMeshClsn, this);
+    func_ov002_020c2b08();
+    func_ov002_020c29d4();
 }
 
 void daPly_c::func_ov002_020c2e78() {
@@ -4028,9 +4017,9 @@ int daPly_c::St_OpeningWakeUp_Init() {
 }
 
 extern "C" {
-void func_ov002_020c3f18(char* p) {
-    ((daPly_c *)p)->mStatePhase = 1;
-    func_ov002_020d2e74((daPly_c *)p);
+void func_ov002_020c3f18(daPly_c *player) {
+    player->mStatePhase = 1;
+    func_ov002_020d2e74(player);
 }
 }
 
@@ -4839,16 +4828,15 @@ int daPly_c::St_BowserEarthquake_Init() {
 }
 
 extern "C" {
-int func_ov002_020c56f0(unsigned char* c, unsigned char arg)
-{
-    if (((daPly_c *)c)->func_ov002_020d82f0() == 0)
+int func_ov002_020c56f0(daPly_c *player, unsigned char arg) {
+    if (player->func_ov002_020d82f0() == 0)
         return 0;
-    ((daPly_c *)c)->mStateStep = arg;
-    if (((daPly_c *)c)->mStateStep == 0 && ((daPly_c *)c)->func_ov002_020d91e0(0x300, 1) != 0) {
-        ((daPly_c *)c)->ChangeState(data_ov002_0211010c);
+    player->mStateStep = arg;
+    if (player->mStateStep == 0 && player->func_ov002_020d91e0(0x300, 1) != 0) {
+        player->ChangeState(data_ov002_0211010c);
         return 1;
     }
-    ((daPly_c *)c)->ChangeState(data_ov002_021103c4);
+    player->ChangeState(data_ov002_021103c4);
     return 1;
 }
 }
@@ -5367,6 +5355,8 @@ int daPly_c::St_Squish_Main() {
                         int b1 = (id == 0xa4);
                         int b2;
                         if (b1 || (b2 = (id == 0xa5)) != 0)
+                            /* daBtn_c::unk_407: daBtn_c.h is not included here (it would
+                               renumber this file's compiler-generated names). */
                             *((u8 *)a + 0x407) = 1;
                     }
                 }
@@ -5768,10 +5758,7 @@ void daPly_c::func_ov002_020c71e0() {
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 extern "C" {
-void func_ov002_020c72a4(void* thisptr)
-{
-    unsigned char* r4 = (unsigned char*)thisptr;
-    daPly_c *player = (daPly_c *)r4;
+void func_ov002_020c72a4(daPly_c *player) {
     dBgCh_Gnd rg;
     Vector3 v;
     int z = player->mPosZ;
@@ -5781,7 +5768,7 @@ void func_ov002_020c72a4(void* thisptr)
     v.y = d;
     v.z = z;
     rg.mProbeHeight = d << 1;
-    rg.SetObjAndPos(v, (dActor_c*)thisptr);
+    rg.SetObjAndPos(v, player);
     rg.StartDetectingWater();
     if (rg.DetectClsn()) {
         if (SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
@@ -5790,7 +5777,7 @@ void func_ov002_020c72a4(void* thisptr)
         }
     }
     rg.mProbeHeight = 0x1f4000;
-    ((daPly_c *)(thisptr))->func_ov002_020c71e0();
+    player->func_ov002_020c71e0();
 }
 }
 
@@ -6874,7 +6861,6 @@ done:
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (overlay ov002).
  */
 void daPly_c::func_ov002_020c9718() {
-    unsigned char *self = (unsigned char *)this;
     int r2;
     if (mIsUnderwater == 0)
         return;
@@ -7082,12 +7068,12 @@ tail:
 }
 
 extern "C" {
-void func_ov002_020c9de4(char* c){
-    ((daPly_c *)(c))->func_ov002_020bdd9c();
-    ((daPly_c *)(c))->func_ov002_020bdef0();
-    ((daPly_c *)(c))->func_ov002_020bdd2c();
-    ((daPly_c *)c)->func_ov002_020d80d0();
-    ((daPly_c *)(c))->func_ov002_020c9d68();
+void func_ov002_020c9de4(daPly_c *player) {
+    player->func_ov002_020bdd9c();
+    player->func_ov002_020bdef0();
+    player->func_ov002_020bdd2c();
+    player->func_ov002_020d80d0();
+    player->func_ov002_020c9d68();
 }
 }
 
@@ -7805,22 +7791,20 @@ int daPly_c::St_Headstand_Init() {
 
 /* recovered: shared common types */
 int daPly_c::func_ov002_020cb354() {
-    unsigned char *p = (unsigned char *)this;
-    daPly_c *player = (daPly_c *)p;
     int a = IsAnim(0x24);
     if (a == 0) return a;
-    dExtFrameCtrl_c &anim = *player->mModels.mBodyModels[GetBodyModelID(player->param1 & 0xff, 0)];
+    dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
     if ((int)((unsigned int)(anim.currFrame << 4) >> 0x10) < 8) {
-        unsigned char f = player->mStateArg;
+        unsigned char f = mStateArg;
         if (f != 0) return f;
-        if (player->mClimbClsn->flags & 0x1000000)
-            Sound::PlayBank0(0xd, player->mCamSpacePos);
+        if (mClimbClsn->flags & 0x1000000)
+            Sound::PlayBank0(0xd, mCamSpacePos);
         else
-            Sound::PlayBank0(0xb0, player->mCamSpacePos);
-        player->mStateArg = 1;
+            Sound::PlayBank0(0xb0, mCamSpacePos);
+        mStateArg = 1;
         return 1;
     }
-    player->mStateArg = 0;
+    mStateArg = 0;
     return 0;
 }
 
@@ -10711,10 +10695,8 @@ int daPly_c::St_HoldHeavy_Init() {
 
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::St_HoldLight_Cleanup() {
-
-    char *p = (char *)mHeldObj;
-    if (p) {
-        ((dActor_c *)p)->mFlags |= 0x4000;
+    if (mHeldObj) {
+        mHeldObj->mFlags |= 0x4000;
     }
     return 1;
 }
@@ -10861,14 +10843,14 @@ int daPly_c::St_HoldLight_Init() {
         mHorzSpeed = ScaleByCharFactor(0x1c000);
     }
     if (mStateStep == 0) {
-        char *o = (char *)mHeldObj;
+        dActor_c *held = mHeldObj;
         unsigned int anim = 0x2f;
-        if (o != 0) {
-            int b = (int)((((dActor_c *)o)->mFlags & 0x8000) != 0);
+        if (held != 0) {
+            int b = (int)((held->mFlags & 0x8000) != 0);
             if (b != 0) {
                 anim = 0x86;
                 if (param1 == 2) {
-                    if ((int)(((dActor_c *)o)->actorID == 0xce) != 0)
+                    if ((int)(held->actorID == 0xce) != 0)
                         anim = 0x2f;
                 }
             }
@@ -12910,7 +12892,7 @@ int daPly_c::St_InYoshiMouth_Main() {
         daPly_c *eater = r4;
         u32 t;
         int d;
-        if (r4 != 0 && (char *)eater->mObjInMouth != ((char *)this)) {
+        if (r4 != 0 && eater->mObjInMouth != this) {
             if (func_ov002_020d5cec(this))
                 return 1;
         }
@@ -13317,7 +13299,7 @@ int daPly_c::TongueWallProbe() {
     Vector3 p1;
     Vector3 p2;
     dBgCh_Lin rl;
-    char *actor;
+    dActor_c *actor;
     s16 ang;
     int t;
     int idx;
@@ -13351,8 +13333,8 @@ int daPly_c::TongueWallProbe() {
     }
 
     dBgPi res(rl);
-    actor = (char *)dActor_c::FindWithID(res.GetClsnID());
-    if (actor != 0 && (t = (int)(((dActor_c *)actor)->actorID == 0xc2)) != 0) {
+    actor = dActor_c::FindWithID(res.GetClsnID());
+    if (actor != 0 && (t = (int)(actor->actorID == 0xc2)) != 0) {
         return 0;
     }
 
@@ -13382,19 +13364,18 @@ int daPly_c::func_ov002_020d7030(void *b) {
     return 1;
 }
 
-char *daPly_c::func_ov002_020d708c() {
-    char* a;
-    char* best = 0;
+dActor_c *daPly_c::func_ov002_020d708c() {
+    dActor_c *a;
+    dActor_c *best = 0;
     int bestAng = 0x238e;
-    a = (char *)Next((dActor_c *)best);
+    a = Next(best);
     if (a) {
         int thresh = bestAng;
         do {
-            if ((dActor_c *)a != this) {
-                if (((dActor_c *)a)->OnYoshiTryEat()) {
-                    if (Vec3_Dist(&mPos, &((dActor_c *)a)->mPos) < 0x15e000) {
-                        int diff =
-                            (short)(this->mAngleY - Vec3_HorzAngle(&mPos, &((dActor_c *)a)->mPos));
+            if (a != this) {
+                if (a->OnYoshiTryEat()) {
+                    if (Vec3_Dist(&mPos, &a->mPos) < 0x15e000) {
+                        int diff = (short)(this->mAngleY - Vec3_HorzAngle(&mPos, &a->mPos));
                         int ad = diff < 0 ? -diff : diff;
                         if (ad <= thresh) {
                             int ad2 = diff < 0 ? (short)(-diff) : diff;
@@ -13406,11 +13387,11 @@ char *daPly_c::func_ov002_020d708c() {
                     }
                 }
             }
-            a = (char *)Next((dActor_c *)a);
+            a = Next(a);
         } while (a);
     }
     if (best) {
-        short v = Vec3_VertAngle(&mPos, &((dActor_c *)best)->mPos);
+        short v = Vec3_VertAngle(&mPos, &best->mPos);
         this->mHeadRot[0] = 0;
         this->mHeadRot[1] = (short)bestAng;
         this->mHeadRot[2] = v;
@@ -13483,25 +13464,24 @@ void daPly_c::func_ov002_020d71ec(int arg1) {
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::St_YoshiPower_Cleanup() {
-    char *r2 = (char *)mObjInMouth;
-    if (r2 != 0) {
-        int t = (int)((((dActor_c *)r2)->mFlags & 0x20000) != 0);
+    dActor_c *eaten = mObjInMouth;
+    if (eaten != 0) {
+        int t = (int)((eaten->mFlags & 0x20000) != 0);
         if (t != 0) {
-            ((dActor_c *)r2)->mFlags &= ~0xe0000;
+            eaten->mFlags &= ~0xe0000;
             func_ov002_020d718c();
             return 1;
         }
-        ((dActor_c *)r2)->mFlags &= ~0x20000;
+        eaten->mFlags &= ~0x20000;
     }
     if (mUseAltBodyModel == 0) {
-        char *q = (char *)mObjInMouth;
-        if (q != 0 && (int)(((dActor_c *)q)->actorID == 0xbf) == 0) {
+        if (mObjInMouth != 0 && (int)(mObjInMouth->actorID == 0xbf) == 0) {
             func_ov002_020d6790();
         } else {
             func_ov002_020d718c();
         }
     } else {
-        if ((char *)mObjInMouth == 0 && mFireBreaths == 0)
+        if (mObjInMouth == 0 && mFireBreaths == 0)
             func_ov002_020d71a0();
     }
     return 1;
@@ -14071,7 +14051,7 @@ extern "C" int func_ov002_020d85fc(daPly_c *player, daPly_c *arg, int flags) {
 struct PVec869c { s32 x, y, z; ~PVec869c() {} };
 
 int daPly_c::func_ov002_020d869c() {
-    char *r6;
+    daPly_c *other;
     u32 flags;
     u32 f2;
     int t;
@@ -14084,27 +14064,27 @@ int daPly_c::func_ov002_020d869c() {
         return 0;
     if (mdCcAcPos_c.otherOwner == 0)
         return 0;
-    r6 = (char *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
-    if (r6 == 0 || r6 == (char *)this)
+    other = (daPly_c *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
+    if (other == 0 || other == this)
         return 0;
-    t = (int)(((dActor_c *)r6)->actorID == 0xbf);
+    t = (int)(other->actorID == 0xbf);
     if (t == 0)
         return 0;
 
     flags = mdCcAcPos_c.hitFlags & 0x27fe0;
     if (flags != 0) {
-        if (func_ov002_020d85fc((daPly_c *)(char *)this, (daPly_c *)r6, (int)flags) == 1)
+        if (func_ov002_020d85fc(this, other, (int)flags) == 1)
             return 0;
         f2 = flags & ~0x1000u;
         if (f2 != 0)
-            func_ov002_020d8360((daPly_c *)r6, f2);
+            func_ov002_020d8360(other, f2);
     } else {
         if (mIsNoControl != 0)
             return 0;
-        if (JumpedOnByPlayer(mdCcAcPos_c, *(daPly_c *)r6) != 0) {
-            if (((daPly_c *)r6)->IsInAir() == 0)
+        if (JumpedOnByPlayer(mdCcAcPos_c, *other) != 0) {
+            if (other->IsInAir() == 0)
                 return 0;
-            if (func_ov002_020d9298((daPly_c *)r6) != 0) {
+            if (func_ov002_020d9298(other) != 0) {
                 func_ov002_020db8bc(0);
                 x = mPosX;
                 y = mPosY + 0x82000;
@@ -14121,13 +14101,10 @@ int daPly_c::func_ov002_020d869c() {
     return 1;
 }
 
-// Set bit 0x20 in the halfword flag at self+0x6ce and return. The u64-mask launder
-// forces the base+offset to materialize into a register (pool-loaded 0x6ce + add) so
-// the ldrh/strh reuse it, matching the ROM instead of folding the address.
+// Set bit 0x20 in mStateFlags. d_bg_actor.cpp calls it when a ray from the player
+// hits a level object.
 extern "C" {
-void func_ov002_020d8838(char *self)
-{
-    daPly_c *player = (daPly_c *)self;
+void func_ov002_020d8838(daPly_c *player) {
     player->mStateFlags |= 0x20;
 }
 }
@@ -14335,7 +14312,7 @@ void daPly_c::func_ov002_020d8d10(Vector3 *pos) {
 
 int daPly_c::Hurt(const Vector3 &a, u32 b, fx32 dmg, u8 arg4, u8 arg5, u8 arg6) {
     s16 ang;
-    void* p360;
+    dActor_c *eaten;
     int hasCap;
 
     if (func_ov002_020d82f0() == 0) {
@@ -14360,11 +14337,11 @@ int daPly_c::Hurt(const Vector3 &a, u32 b, fx32 dmg, u8 arg4, u8 arg5, u8 arg6) 
     if (this->mIsMetal != 0) {
         b = 0;
     }
-    p360 = (void *)this->mObjInMouth;
-    if (p360 != 0) {
-        int match = (((dActor_c *)p360)->actorID == 0xbf);
+    eaten = this->mObjInMouth;
+    if (eaten != 0) {
+        int match = (eaten->actorID == 0xbf);
         if (match) {
-            func_ov002_020d5cec((char*)p360);
+            func_ov002_020d5cec(eaten);
             this->mStateFlags &= ~2;
         }
         this->mUseAltBodyModel = 0;
@@ -14524,7 +14501,7 @@ void daPly_c::Bounce(fx32 f) {
 int daPly_c::func_ov002_020d93ac() {
     extern u8 gGameMode;
     Vector3 pos;
-    char *spawned;
+    dActor_c *spawned;
     u32 chr;
     int xv, yv, sum, zv;
     int b;
@@ -14547,7 +14524,7 @@ int daPly_c::func_ov002_020d93ac() {
     pos.x = xv;
     pos.y = sum;
     pos.z = zv;
-    spawned = (char *)Spawn(0x10d, (chr << 8) | 5, pos, 0, this->mAreaId, -1);
+    spawned = Spawn(0x10d, (chr << 8) | 5, pos, 0, this->mAreaId, -1);
     if (spawned == 0) goto fail;
 
     b = (gGameMode == 1);
@@ -14556,15 +14533,15 @@ int daPly_c::func_ov002_020d93ac() {
         zz = this->mPrevAngleZ;
         xx = this->mPrevAngleX;
         ang += 0x8000;
-        ((dActor_c *)spawned)->mPrevAngleX = xx;
-        ((dActor_c *)spawned)->mPrevAngleY = ang;
-        ((dActor_c *)spawned)->mPrevAngleZ = zz;
+        spawned->mPrevAngleX = xx;
+        spawned->mPrevAngleY = ang;
+        spawned->mPrevAngleZ = zz;
     } else {
-        ((dActor_c *)spawned)->mPrevAngleX = this->mPrevAngleX;
-        ((dActor_c *)spawned)->mPrevAngleY = this->mPrevAngleY;
-        ((dActor_c *)spawned)->mPrevAngleZ = this->mPrevAngleZ;
+        spawned->mPrevAngleX = this->mPrevAngleX;
+        spawned->mPrevAngleY = this->mPrevAngleY;
+        spawned->mPrevAngleZ = this->mPrevAngleZ;
     }
-    ((dActor_c *)spawned)->mHorzSpeed = 0xb000;
+    spawned->mHorzSpeed = 0xb000;
     return 1;
 fail:
     return 0;
@@ -14578,7 +14555,7 @@ int daPly_c::func_ov002_020d94cc() {
     extern s8 gNumStageStars;
     Vector3 pos;
     dActor_c *sndobj;
-    char *spawned;
+    dActor_c *spawned;
     int ang, xx, zz;
     int xv, yv, sum, zv;
     int b;
@@ -14606,9 +14583,9 @@ int daPly_c::func_ov002_020d94cc() {
 
     b = (gGameMode == 1);
     if (b)
-        spawned = (char *)Spawn(0xb2, 0x10, pos, 0, this->mAreaId, -1);
+        spawned = Spawn(0xb2, 0x10, pos, 0, this->mAreaId, -1);
     else
-        spawned = (char *)Spawn(0xb3, 0x10, pos, 0, this->mAreaId, -1);
+        spawned = Spawn(0xb3, 0x10, pos, 0, this->mAreaId, -1);
 
     if (spawned == 0) goto fail;
 
@@ -14620,15 +14597,15 @@ int daPly_c::func_ov002_020d94cc() {
         zz = this->mPrevAngleZ;
         xx = this->mPrevAngleX;
         ang += 0x8000;
-        ((dActor_c *)spawned)->mPrevAngleX = xx;
-        ((dActor_c *)spawned)->mPrevAngleY = ang;
-        ((dActor_c *)spawned)->mPrevAngleZ = zz;
+        spawned->mPrevAngleX = xx;
+        spawned->mPrevAngleY = ang;
+        spawned->mPrevAngleZ = zz;
     } else {
-        ((dActor_c *)spawned)->mPrevAngleX = this->mPrevAngleX;
-        ((dActor_c *)spawned)->mPrevAngleY = this->mPrevAngleY;
-        ((dActor_c *)spawned)->mPrevAngleZ = this->mPrevAngleZ;
+        spawned->mPrevAngleX = this->mPrevAngleX;
+        spawned->mPrevAngleY = this->mPrevAngleY;
+        spawned->mPrevAngleZ = this->mPrevAngleZ;
     }
-    ((dActor_c *)spawned)->mHorzSpeed = this->mHorzSpeed;
+    spawned->mHorzSpeed = this->mHorzSpeed;
     return 1;
 fail:
     return 0;
@@ -14814,6 +14791,13 @@ int daPly_c::St_Hurt_Init() {
     this->SetAnim(data_ov002_0210a6d4[mStateStep & 7], 0x40000000, 0x1000, 0);
     mid = this->GetBodyModelID(param1 & 0xff, 0);
     m = (char *)mModels.mBodyModels[mid];
+    /* r19: the ROM forms the dExtFrameCtrl_c base (+0x50) in a register and
+     * stores currFrame at +8 from it. Every typed form folds that to one
+     * store at +0x58, 0xdc -> 0xd8: the St_CameraZoom_Main reference,
+     * a dExtAnmModel_c * local, a dExtFrameCtrl_c * from the reference
+     * cast, mBodyModels[mid]->currFrame and a reference-then-address
+     * split. An implicitly converted dExtFrameCtrl_c * adds the null test
+     * (0xe0). The masked round trip is what keeps the add. */
     m = (char *)((unsigned int)&(dExtFrameCtrl_c &)*(dExtAnmModel_c *)m & 0xFFFFFFFFU);
     ((dExtFrameCtrl_c *)m)->currFrame = 0;
     mStatePhase = 0;
@@ -14849,7 +14833,7 @@ void daPly_c::func_ov002_020d9c70() {
     int absv;
     int A, Braw;
     short Bnarrow, Bresult;
-    char *p;
+    dActor_c *p;
 
     absv = (v < 0) ? (short)(-v) : v;
     A = FX_MUL(absv, 0x28000);
@@ -14860,12 +14844,12 @@ void daPly_c::func_ov002_020d9c70() {
 
     Bresult = (v < 0) ? (short)(mAngleY - Bnarrow) : (short)(mAngleY + Bnarrow);
 
-    p = (char *)mHeldObj;
+    p = mHeldObj;
     if (p == 0)
         return;
 
     {
-        int t = ((dActor_c *)p)->actorID;
+        int t = p->actorID;
         t = t == 0xbf;
         if (t != false) {
             func_ov002_020db54c(p, A, 0x20000, Bresult);
@@ -14873,23 +14857,22 @@ void daPly_c::func_ov002_020d9c70() {
         }
     }
 
-    ((dActor_c *)p)->mPrevAngleX = 0;
-    ((dActor_c *)p)->mPrevAngleY = Bresult;
-    ((dActor_c *)p)->mPrevAngleZ = 0;
+    p->mPrevAngleX = 0;
+    p->mPrevAngleY = Bresult;
+    p->mPrevAngleZ = 0;
     {
-        char *q = (char *)mHeldObj;
-        short *r = (short *)(int)(&((dActor_c *)q)->mPrevAngle);
-        short first = r[0];
-        ((dActor_c *)q)->mAngleX = first;
-        ((dActor_c *)q)->mAngleY = r[1];
-        ((dActor_c *)q)->mAngleZ = r[2];
+        dActor_c *q = mHeldObj;
+        Vector3_16 *prev = &q->mPrevAngle;
+        q->mAngleX = prev->x;
+        q->mAngleY = prev->y;
+        q->mAngleZ = prev->z;
     }
     mHeldObj->mHorzSpeed = A;
     {
-        char *q = (char *)mHeldObj;
-        ((dActor_c *)q)->mSpeedX = 0;
-        ((dActor_c *)q)->mVertSpeed = 0x20000;
-        ((dActor_c *)q)->mSpeedZ = 0;
+        dActor_c *q = mHeldObj;
+        q->mSpeedX = 0;
+        q->mVertSpeed = 0x20000;
+        q->mSpeedZ = 0;
     }
 }
 
@@ -14901,13 +14884,13 @@ void daPly_c::func_ov002_020d9c70() {
  * The int view keeps the 0/1 and gives the return 0 its own path. */
 int daPly_c::func_ov002_020d9dcc() {
     extern s16 data_0209f4a0[];
-    char* p;
+    dActor_c *p;
 
     if (param1 != 2)
         return 0;
 
-    p = (char *)mHeldObj;
-    if (p == 0 || (int)(((dActor_c *)p)->actorID == 0xbf) == 0)
+    p = mHeldObj;
+    if (p == 0 || (int)(p->actorID == 0xbf) == 0)
         return 0;
 
     if (data_0209f498[gActivePlayerSlot].mag == 0 || mIsAirborne != 0) {
@@ -14962,9 +14945,8 @@ int daPly_c::func_ov002_020d9dcc() {
 
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::St_SwingPlayer_Cleanup() {
-    char *p = (char *)mHeldObj;
-    if (p) {
-        ((dActor_c *)p)->mFlags &= ~0x800;
+    if (mHeldObj) {
+        mHeldObj->mFlags &= ~0x800;
     }
     mPrevAngleY = mAngleY;
     return 1;
@@ -14992,9 +14974,9 @@ int daPly_c::St_SwingPlayer_Main() {
         Vector3 offset;
         Vector3 v;
         if ((data_0209f498[gActivePlayerSlot].pressed & 1) != 0) {
-            char *p = (char *)mHeldObj;
+            dActor_c *p = mHeldObj;
             if (p != 0) {
-                int b = (((dActor_c *)p)->mFlags & 0x200) != 0;
+                int b = (p->mFlags & 0x200) != 0;
                 if (!b) {
                     func_ov002_020d9c70();
                     func_ov002_020da95c();
@@ -15262,12 +15244,12 @@ int daPly_c::func_ov002_020da95c() {
 }
 
 int daPly_c::DropHeldObj() {
-    char *s = (char *)mHeldObj;
+    dActor_c *s = mHeldObj;
     int b = (s != 0);
     if (!b)
         return 0;
     {
-        int e = (((dActor_c *)s)->actorID == 0xbf);
+        int e = (s->actorID == 0xbf);
         if (e)
             func_ov002_020db54c(s, 0x10000, 0x10000, mAngleY);
     }
@@ -15279,16 +15261,16 @@ int daPly_c::DropHeldObj() {
 }
 
 int daPly_c::func_ov002_020daa74() {
-    char *s = (char *)mHeldObj;
+    dActor_c *s = mHeldObj;
     int b = (s != 0);
     if (!b)
         return 0;
-    ((dActor_c *)s)->mFlags &= ~0x4000;
+    s->mFlags &= ~0x4000;
     mHeldObj->mFlags |= 0x400;
     mHeldObj->mFlags &= ~0x100;
     {
-        char *s2 = (char *)mHeldObj;
-        int e = (((dActor_c *)s2)->actorID == 0xbf);
+        dActor_c *s2 = mHeldObj;
+        int e = (s2->actorID == 0xbf);
         if (e) {
             int c_val = this->mAngleY;
             func_ov002_020db54c(s2, 0x30000, 0x10000, c_val);
@@ -15299,11 +15281,11 @@ int daPly_c::func_ov002_020daa74() {
 }
 
 int daPly_c::ReleaseHeldActor() {
-    char *p = (char *)mHeldObj;
+    dActor_c *p = mHeldObj;
     int ok = (p != 0);
     int is_bf;
     if (ok == 0) return 0;
-    is_bf = (int)(((dActor_c *)p)->actorID == 0xbf);
+    is_bf = (int)(p->actorID == 0xbf);
     if (is_bf != 0) {
         func_ov002_020db54c(p, 0x10000, 0x10000, mAngleY);
     }
@@ -15391,14 +15373,14 @@ int daPly_c::func_ov002_020dacb4(dActor_c *actor) {
     }
 
     {
-        char *a2 = (char *)mHeldObj;
+        dActor_c *a2 = mHeldObj;
         int offset = 0xc4;
-        int s = ((dActor_c *)a2)->mFlags;
+        int s = a2->mFlags;
         s = (s & 0x8000) != false;
         if (s != false) {
             offset = 0x224;
             if (param1 == 2) {
-                int c = ((dActor_c *)a2)->actorID;
+                int c = a2->actorID;
                 c = c == 0xce;
                 if (c != false) offset = 0xc4;
             }
@@ -15421,7 +15403,7 @@ int daPly_c::St_Throw_Main() {
     if (mIsAirborne == 0) {
         ApproachLinear(mHorzSpeed, 0, 0x1000);
     }
-    if ((char *)mHeldObj) {
+    if (mHeldObj) {
         int r4 = 5;
         int id = this->GetBodyModelID(param1 & 0xff, 0);
         dExtAnmModel_c *anim = mModels.mBodyModels[id];
@@ -15429,8 +15411,8 @@ int daPly_c::St_Throw_Main() {
             if (func_ov002_020c19d0(0x40, 0x32))
                 r4 = 0;
         }
-        char *q = (char *)mHeldObj;
-        unsigned short a = ((dActor_c *)q)->actorID;
+        dActor_c *q = mHeldObj;
+        unsigned short a = q->actorID;
         int t1 = (a == 0xbd);
         // folding the two id tests shrinks this function 0x168 -> 0x164
         if (!t1) {
@@ -15441,7 +15423,7 @@ int daPly_c::St_Throw_Main() {
         r4 = 7;
         goto Ld0;
     Lb8: {
-        int b = (((dActor_c *)q)->mFlags & 0x200) ? 1 : 0;
+        int b = (q->mFlags & 0x200) ? 1 : 0;
         if (b)
             r4 = 0xd;
     }
@@ -15609,7 +15591,7 @@ int daPly_c::St_Grabbed_Cleanup() {
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::St_Grabbed_Main() {
-    char* grab;
+    dActor_c *grab;
     u8* p;
     unsigned int id;
     int ret;
@@ -15617,9 +15599,9 @@ int daPly_c::St_Grabbed_Main() {
     char* model;
 
     mPeakY = mPosY;
-    grab = (char *)mGrabbedByActor;
+    grab = mGrabbedByActor;
     if (grab != 0) {
-        int isBob = (((dActor_c *)grab)->actorID == 0xbf);
+        int isBob = (grab->actorID == 0xbf);
         if (isBob != 0) {
             ret = func_ov002_020beb38();
             if (ret != 0) {
@@ -15635,6 +15617,11 @@ int daPly_c::St_Grabbed_Main() {
         }
     }
 
+    /* r19: the pRate launder keeps the dExtFrameCtrl_c base (+0x50) and
+     * the speed field as separate adds, as the ROM has them. Typed stores
+     * (a dExtFrameCtrl_c reference, a dExtAnmModel_c * local, a
+     * dExtFrameCtrl_c * from the reference cast, both locals) fold them
+     * into one offset, 0x11c -> 0x114. */
     if (mStateTimer != 0) {
         id = this->GetBodyModelID(param1 & 0xff, 0);
         model = (char *)mModels.mBodyModels[id];
@@ -15712,21 +15699,19 @@ int func_ov002_020db5f4(daPly_c *c, dActor_c *arg) {
 }
 
 extern "C" {
-int func_ov002_020db674(char* c, int a1, int a2, int a3)
-{
-    daPly_c *p = (daPly_c *)c;
-    if (p->func_ov002_020d82f0() == 0)
+int func_ov002_020db674(daPly_c *player, int a1, int a2, int a3) {
+    if (player->func_ov002_020d82f0() == 0)
         return 0;
-    Sound::PlayCharVoice(p->mCharacter, 0x1d, p->mCamSpacePos);
-    p->mPrevAngleY = a3;
-    p->mAngleY = a3 + 0x8000;
-    p->mHorzSpeed = a1;
-    p->mVertSpeed = a2;
-    p->mHurtDamage = 0;
-    p->mStateStep = 4;
-    p->mIsAirborne = 1;
-    p->mLandSoundPlayed = 0;
-    ((daPly_c *)c)->ChangeState(data_ov002_02110094);
+    Sound::PlayCharVoice(player->mCharacter, 0x1d, player->mCamSpacePos);
+    player->mPrevAngleY = a3;
+    player->mAngleY = a3 + 0x8000;
+    player->mHorzSpeed = a1;
+    player->mVertSpeed = a2;
+    player->mHurtDamage = 0;
+    player->mStateStep = 4;
+    player->mIsAirborne = 1;
+    player->mLandSoundPlayed = 0;
+    player->ChangeState(data_ov002_02110094);
     return 1;
 }
 }
@@ -17591,9 +17576,8 @@ int daPly_c::IsBeingShotOutOfCannon() {
 }
 
 extern "C" {
-int func_ov002_020df300(char* p) {
+int func_ov002_020df300(daPly_c *player) {
     extern int gCamera;
-    daPly_c *player = (daPly_c *)p;
     if (player->mStateStep)
         return 0;
     player->mStateStep = 1;
@@ -17765,10 +17749,8 @@ int daPly_c::func_ov002_020df840(void *arg1, Vector3 *arg2) {
 }
 
 extern "C" {
-void func_ov002_020df8f0(char* c)
-{
+void func_ov002_020df8f0(daPly_c *player) {
     typedef unsigned long long u64;
-    daPly_c *player = (daPly_c *)c;
     int vb = player->mVertSpeed;
     int va = player->mHorzSpeed;
     int b = vb >> 8;
@@ -17903,8 +17885,6 @@ void func_ov002_020df8f0(char* c)
 }
 }
 
-#define c ((char *)this)
-
 int daPly_c::St_Fly_Main() {
     extern u16 data_0209f49e;
     extern u16 data_0209f49c;
@@ -17952,10 +17932,10 @@ skip:
         } else {
             mVertAccel = 0;
             mTerminalVelocity = -0x4b000;
-            func_ov002_020df8f0(c);
+            func_ov002_020df8f0(this);
         }
     } else {
-        func_ov002_020df8f0(c);
+        func_ov002_020df8f0(this);
     }
 
     Vector3_16f vec16;
@@ -18032,7 +18012,6 @@ skip:
 #undef sp14
 #undef sp18
 #undef sp1C
-#undef c
 
 /* recovered: named members + shared header, real C++ method */
 
@@ -18885,9 +18864,8 @@ void daPly_c::func_ov002_020e1c20() {
 }
 
 extern "C" {
-void func_ov002_020e1e70(char *c) {
+void func_ov002_020e1e70(daPly_c *player) {
     extern unsigned char data_0209f49c[];
-    daPly_c *player = (daPly_c *)c;
     player->mVertAccel = -0x4000;
     player->mTerminalVelocity = -0x4b000;
     if ((player->mVertSpeed) >= 0) {
@@ -18900,9 +18878,9 @@ void func_ov002_020e1e70(char *c) {
         return;
     }
     if ((data_0209f498[gActivePlayerSlot].held) & 2) {
-        ((daPly_c *)c)->SetAnim(0x3f, 0, 0x1000, 0);
+        player->SetAnim(0x3f, 0, 0x1000, 0);
         dExtFrameCtrl_c &anim =
-            *player->mModels.mBodyModels[((daPly_c *)c)->GetBodyModelID(player->param1 & 0xff, 0)];
+            *player->mModels.mBodyModels[player->GetBodyModelID(player->param1 & 0xff, 0)];
         anim.speed = 0x4000;
         player->mLoopingSoundHandle = func_02012120(player->mLoopingSoundHandle, player->mCharacter,
                                                     0x18, &player->mCamSpacePos, 0);
@@ -18912,16 +18890,15 @@ void func_ov002_020e1e70(char *c) {
         } else {
             player->mVertAccel = player->func_ov002_020bf27c(-0x4000);
         }
-    } else if (((daPly_c *)c)->IsAnim(0x3f) != 0) {
-        ((daPly_c *)c)->SetAnim(0x54, 0, 0x1000, 0);
+    } else if (player->IsAnim(0x3f) != 0) {
+        player->SetAnim(0x54, 0, 0x1000, 0);
     }
 }
 }
 
 extern "C" {
-void func_ov002_020e200c(char* c){
+void func_ov002_020e200c(daPly_c *player) {
     extern unsigned char data_0209f49c[];
-    daPly_c *player = (daPly_c *)c;
     player->mVertAccel = player->func_ov002_020bf27c(-0x4000);
     player->mTerminalVelocity = -0x4b000;
     if (player->mVertSpeed >= 0) {
@@ -18932,7 +18909,7 @@ void func_ov002_020e200c(char* c){
     if (player->mVertSpeed >= 0)
         return;
     if (player->mJumpComboStage == 1)
-        ((daPly_c *)c)->SetAnim(0x50, 0x40000000, 0x1000, 0);
+        player->SetAnim(0x50, 0x40000000, 0x1000, 0);
     if ((data_0209f498[gActivePlayerSlot].held & 2) == 0)
         return;
     if (player->mHasWings == 0)
@@ -20595,11 +20572,6 @@ s32 daPly_c::InitResources() {
     extern u8 gGameMode;
     extern s8 data_02092114;
     extern u8 gPrevReturnState;
-    /* The helpers below take void or char pointers, and this file's match
-       depends on declaration and load order documented in the header comment
-       above. One alias keeps every one of those decisions untouched. */
-    void *self = this;
-    char* c = (char*)self;
     Vector3 pos;
     unsigned int a, b;
     u8 n8;
@@ -20655,7 +20627,7 @@ Lac:
 Ld0:
     func_ov002_020e5948();
     if (changed != 0)
-        ((daPly_c *)(c))->func_ov002_020beabc();
+        func_ov002_020beabc();
     mTrailPos = (Vector3 *)__cxa_vec_new(0x32, 0xc, 8, (void (*)(void *))func_0203d384,
                                          (void (*)(void *))_ZN7Vector3D1Ev);
     mTrailFlags = (u8 *)::operator new[](0x32);
@@ -20665,7 +20637,7 @@ Ld0:
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     func_ov002_020e63a4();
-    mMeshClsn.Init((dActor_c *)c, 0x32000, 0x32000, &mPrevAngle, &mAngle);
+    mMeshClsn.Init(this, 0x32000, 0x32000, &mPrevAngle, &mAngle);
     func_02035644((int *)&mMeshClsn, 0x28000);
     mTerminalVelocity = -0x4b000;
     mSpawnPosX = mPosX;
@@ -20696,7 +20668,7 @@ Ld0:
         if (SaveData::HasPlayerLostCap() != 0)
             func_02013a00();
     }
-    ((daPly_c *)(c))->func_ov002_020c7dd0(n8);
+    func_ov002_020c7dd0(n8);
     dBgCh_Gnd rc;
     tz = mPosZ;
     tx = mPosX;
@@ -20705,7 +20677,7 @@ Ld0:
     pos.y = td;
     pos.z = tz;
     rc.mProbeHeight = td * 2;
-    rc.SetObjAndPos(pos, (dActor_c *)c);
+    rc.SetObjAndPos(pos, this);
     rc.StartDetectingWater();
     if (gCurrentSublevel == 0x1d) {
         gReturnSublevel = 2;
@@ -21010,140 +20982,110 @@ void daPly_c::func_ov002_020e63a4() {
     mdCcAcPos_c.Init(this, *(Vector3 *)v, 0x28000, 0x96000, 0x400008, 0x4f3ffe0);
 }
 
-/* One runtime bone of a body model: ModelComponents::bones points at
-   0x34-byte records, not the file's 0x40-byte BMD_Bone. Same shape as
-   d_a_cnn.cpp's CnnBone, except that the rotations are unsigned: the ROM
-   reads them with ldrh. func_ov002_020e640c writes the head (bone 15) and
-   spine (bone 8) rotations, reads bone 1's translation as root motion, and
-   resets every other bone's translation from the file bone's +0x24..+0x2c. */
-struct PlayerBone {
-    u8 pad_00[0x1a];
-    u16 rotX;   /* 0x1a */
-    u16 rotY;   /* 0x1c */
-    u16 rotZ;   /* 0x1e */
-    s32 transX; /* 0x20 */
-    s32 transY; /* 0x24 */
-    s32 transZ; /* 0x28 */
-    u8 pad_2c[0x8];
-};
-#ifndef SM64DS_PLATFORM_PC
-typedef char PlayerBone_size_must_be_0x34[sizeof(PlayerBone) == 0x34 ? 1 : -1];
-#endif
-
-/* One of the file's 0x40-byte bone records (BMD_File::bones). Its rest-pose
-   translation sits at +0x24; func_ov002_020e640c copies it into the runtime
-   PlayerBone. d_ent_obj.cpp's VsBoneFileRecord reads the same three words in
-   UnknownVsPlayer::func_ov075_02114b60. */
-struct PlayerFileBone {
-    u8 pad_00[0x24];
-    s32 transX; /* 0x24 */
-    s32 transY; /* 0x28 */
-    s32 transZ; /* 0x2c */
-    u8 pad_30[0x10];
-};
-typedef char PlayerFileBone_size_must_be_0x40[sizeof(PlayerFileBone) == 0x40 ? 1 : -1];
-
+/* Writes the head (bone 15) and spine (bone 8) rotations, reads bone 1's
+   translation as root motion, and resets every other bone's translation
+   from the BMD file's rest pose. */
 void daPly_c::func_ov002_020e640c() {
-    char *md;
-    char *mp;
-    char *r4p;
+    ModelBone *md;
+    BMD_File *mp;
+    BMD_Bone *r4p;
     int id;
     Vector3 d;
 
     id = GetBodyModelID(param1 & 0xff, 0);
     {
-        int *p = (int *)(int)&mModels.mBodyModels[id]->data;
-        md = (char *)p[2];
-        mp = (char *)p[0];
+        ModelComponents *p = &mModels.mBodyModels[id]->data;
+        md = p->bones;
+        mp = p->modelFile;
     }
-    r4p = (char *)((BMD_File *)mp)->bones;
+    r4p = mp->bones;
 
-    ((PlayerBone *)md)[8].rotY += mSpineRot[1];
-    ((PlayerBone *)md)[8].rotZ += mSpineRot[2];
+    md[8].rotY += mSpineRot[1];
+    md[8].rotZ += mSpineRot[2];
 
     {
         int b = mHeadRotMode;
         if (b == 0) {
         } else if (b == 1) {
-            ((PlayerBone *)md)[15].rotX += (u16)mHeadRot[0];
-            ((PlayerBone *)md)[15].rotY += (u16)mHeadRot[1];
-            ((PlayerBone *)md)[15].rotZ += (u16)mHeadRot[2];
+            md[15].rotX += (u16)mHeadRot[0];
+            md[15].rotY += (u16)mHeadRot[1];
+            md[15].rotZ += (u16)mHeadRot[2];
         } else if (b == 2) {
-            ((PlayerBone *)md)[15].rotX = *mHeadRot;
-            ((PlayerBone *)md)[15].rotY = mHeadRot[1];
-            ((PlayerBone *)md)[15].rotZ = mHeadRot[2];
+            md[15].rotX = *mHeadRot;
+            md[15].rotY = mHeadRot[1];
+            md[15].rotZ = mHeadRot[2];
         } else if (b == 3) {
-            ((PlayerBone *)md)[15].rotZ = (s16)(*mHeadRot + 0x4000);
-            ((PlayerBone *)md)[15].rotY = mHeadRot[1];
-            ((PlayerBone *)md)[15].rotX = mHeadRot[2];
-            ((PlayerBone *)md)[8].rotZ = *mSpineRot;
-            ((PlayerBone *)md)[8].rotX = mSpineRot[1];
-            ((PlayerBone *)md)[8].rotY = mSpineRot[2];
+            md[15].rotZ = (s16)(*mHeadRot + 0x4000);
+            md[15].rotY = mHeadRot[1];
+            md[15].rotX = mHeadRot[2];
+            md[8].rotZ = *mSpineRot;
+            md[8].rotX = mSpineRot[1];
+            md[8].rotY = mSpineRot[2];
         } else if (b == 4) {
-            ApproachLinear2(mHeadRot[0], (s16)(((PlayerBone *)md)[15].rotZ - 0x4000), 0x400);
-            ApproachLinear2(mHeadRot[1], ((PlayerBone *)md)[15].rotY, 0x400);
-            ApproachLinear2(mHeadRot[2], ((PlayerBone *)md)[15].rotX, 0x400);
-            ((PlayerBone *)md)[15].rotZ = (s16)(*mHeadRot + 0x4000);
-            ((PlayerBone *)md)[15].rotY = mHeadRot[1];
-            ((PlayerBone *)md)[15].rotX = mHeadRot[2];
+            ApproachLinear2(mHeadRot[0], (s16)(md[15].rotZ - 0x4000), 0x400);
+            ApproachLinear2(mHeadRot[1], md[15].rotY, 0x400);
+            ApproachLinear2(mHeadRot[2], md[15].rotX, 0x400);
+            md[15].rotZ = (s16)(*mHeadRot + 0x4000);
+            md[15].rotY = mHeadRot[1];
+            md[15].rotX = mHeadRot[2];
         }
     }
 
-    mHeadBoneRot[0] = ((PlayerBone *)md)[15].rotX;
-    mHeadBoneRot[1] = ((PlayerBone *)md)[15].rotY;
-    mHeadBoneRot[2] = ((PlayerBone *)md)[15].rotZ;
+    mHeadBoneRot[0] = md[15].rotX;
+    mHeadBoneRot[1] = md[15].rotY;
+    mHeadBoneRot[2] = md[15].rotZ;
 
-    ((PlayerBone *)md)->transX = ((PlayerFileBone *)r4p)->transX;
-    ((PlayerBone *)md)->transY = ((PlayerFileBone *)r4p)->transY;
-    ((PlayerBone *)md)->transZ = ((PlayerFileBone *)r4p)->transZ;
+    md->transX = r4p->transX;
+    md->transY = r4p->transY;
+    md->transZ = r4p->transZ;
 
     {
         int b = mRootMotionMode;
         if (b != 0) {
             if ((b & 1) == 1) {
-                mStateTargetX = ((PlayerBone *)md)[1].transX;
+                mStateTargetX = md[1].transX;
                 if (mRootMotionMode < 3)
                     mStateTargetY = 0;
                 else
-                    mStateTargetY = ((PlayerBone *)md)[1].transY;
-                mStateTargetZ = ((PlayerBone *)md)[1].transZ;
+                    mStateTargetY = md[1].transY;
+                mStateTargetZ = md[1].transZ;
                 mStateAnchorX = mStateTargetX;
                 mStateAnchorY = mStateTargetY;
                 mStateAnchorZ = mStateTargetZ;
                 mRootMotionMode++;
             } else {
-                d.x = (((PlayerBone *)md)[1].transX - mStateTargetX) << 3;
+                d.x = (md[1].transX - mStateTargetX) << 3;
                 if (mRootMotionMode < 3)
                     d.y = 0;
                 else
-                    d.y = (((PlayerBone *)md)[1].transY - mStateTargetY) << 3;
-                d.z = (((PlayerBone *)md)[1].transZ - mStateTargetZ) << 3;
+                    d.y = (md[1].transY - mStateTargetY) << 3;
+                d.z = (md[1].transZ - mStateTargetZ) << 3;
                 Vec3_RotateYAndTranslate(&mPos, &mPos, mAngleY, &d);
-                mStateTargetX = ((PlayerBone *)md)[1].transX;
+                mStateTargetX = md[1].transX;
                 if (mRootMotionMode >= 3)
-                    mStateTargetY = ((PlayerBone *)md)[1].transY;
-                mStateTargetZ = ((PlayerBone *)md)[1].transZ;
+                    mStateTargetY = md[1].transY;
+                mStateTargetZ = md[1].transZ;
             }
-            ((PlayerBone *)md)[1].transX = 0;
+            md[1].transX = 0;
             if (mRootMotionMode >= 3)
-                ((PlayerBone *)md)[1].transY = 0;
-            ((PlayerBone *)md)[1].transZ = 0;
+                md[1].transY = 0;
+            md[1].transZ = 0;
         }
     }
 
-    md += 0x68;
-    r4p += 0x80;
+    md += 2;
+    r4p += 2;
     {
         s16 i = 2;
-        if (((BMD_File *)mp)->numBones > 2) {
+        if (mp->numBones > 2) {
             do {
-                ((PlayerBone *)md)->transX = ((PlayerFileBone *)r4p)->transX;
-                ((PlayerBone *)md)->transY = ((PlayerFileBone *)r4p)->transY;
-                ((PlayerBone *)md)->transZ = ((PlayerFileBone *)r4p)->transZ;
+                md->transX = r4p->transX;
+                md->transY = r4p->transY;
+                md->transZ = r4p->transZ;
                 i = (s16)(i + 1);
-                md += 0x34;
-                r4p += 0x40;
-            } while ((u32)i < ((BMD_File *)mp)->numBones);
+                md++;
+                r4p++;
+            } while ((u32)i < mp->numBones);
         }
     }
 }
@@ -22719,11 +22661,11 @@ extern int (daPly_c::*data_ov002_0210a324)();
 extern int (daPly_c::*data_ov002_0210a32c)();
 extern int (daPly_c::*data_ov002_0210a33c)();
 extern int (daPly_c::*data_ov002_0210a344)();
-extern PlayerFreeCharPmf data_ov002_02109dfc;
-extern PlayerFreeCharPmf data_ov002_02109f0c;
+extern PlayerFreePmf data_ov002_02109dfc;
+extern PlayerFreePmf data_ov002_02109f0c;
 extern void (daPly_c::*data_ov002_02109f54)();
 extern void (daPly_c::*data_ov002_0210a074)();
-extern PlayerFreeCharPmf data_ov002_0210a10c;
+extern PlayerFreePmf data_ov002_0210a10c;
 extern void (daPly_c::*data_ov002_0210a12c)();
 extern void (daPly_c::*data_ov002_0210a134)();
 extern void (daPly_c::*data_ov002_0210a144)();
@@ -22733,13 +22675,13 @@ extern void (daPly_c::*data_ov002_0210a1cc)();
 extern void (daPly_c::*data_ov002_0210a1ec)();
 extern void (daPly_c::*data_ov002_0210a1fc)();
 extern void (daPly_c::*data_ov002_0210a22c)();
-extern PlayerFreeCharPmf data_ov002_0210a23c;
-extern PlayerFreeCharPmf data_ov002_0210a244;
-extern PlayerFreeCharPmf data_ov002_0210a264;
+extern PlayerFreePmf data_ov002_0210a23c;
+extern PlayerFreePmf data_ov002_0210a244;
+extern PlayerFreePmf data_ov002_0210a264;
 extern void (daPly_c::*data_ov002_0210a274)();
 extern void (daPly_c::*data_ov002_0210a29c)();
 extern void (daPly_c::*data_ov002_0210a30c)();
-extern PlayerFreeVoidPmf data_ov002_0210a334;
+extern PlayerFreePmf data_ov002_0210a334;
 
 /* daPly_c handler tables; the second is indexed by mNoCtrlKind, the third by mStateWork.
  * The objects below 0x02110884 are defined in the zero-filled block. C linkage

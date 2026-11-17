@@ -1546,7 +1546,7 @@ int daKpa_c::BowserLand() {
         if(this->mVariantID == 0){
             b = (this->mDistToTarget >= 0x352000);
             if (!this->mTargetPlayer->IsInAir())
-                func_ov002_020c56f0((unsigned char *)this->mTargetPlayer, b);
+                func_ov002_020c56f0(this->mTargetPlayer, b);
         }
         return 1;
     }
@@ -2178,8 +2178,7 @@ int daKpa_c::DeadWaitForMario() {
     int r = 0;
     LoopLayDownAnimation();
     if ((int)this->mAnmModel.file == (int)data_ov060_0211ac60.filePtr) {
-        char* player = (char *)this->mTargetPlayer;
-        if (player != 0) {
+        if (this->mTargetPlayer != 0) {
             int* targetPos = &this->mTargetPlayer->mPosX;
             struct Vector3 v;
             s16 ang;

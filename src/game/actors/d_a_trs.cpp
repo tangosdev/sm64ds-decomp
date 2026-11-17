@@ -300,9 +300,9 @@ unsigned char daTrs_c::func_ov063_021163d0() {
 
     unsigned int id = this->mCachedActorID;
     if(id==0) return 0;
-    char *a = (char*)(unsigned int)dActor_c::FindWithID(id);
+    daTrsTrap_c *a = (daTrsTrap_c *)dActor_c::FindWithID(id);
     if(a==0) return 0;
-    return ((daTrsTrap_c *)a)->mOccupiedFlag;
+    return a->mOccupiedFlag;
 }
 
 
@@ -534,11 +534,11 @@ void daTrs_c::func_ov063_02116bf4() {
         if (this->mChildDeaths < 5) {
             unsigned char cb = this->mSpawnCount;
             if (cb != 5 && (int)cb - this->mChildDeaths < 2) {
-                char *p = (char *)dActor_c::Spawn(TRS_ID_TERESA, 0xfff1, this->mPos,
-                                                  &this->mPrevAngle, this->mAreaIdx, -1);
+                daTrs_c *p = (daTrs_c *)dActor_c::Spawn(TRS_ID_TERESA, 0xfff1, this->mPos,
+                                                        &this->mPrevAngle, this->mAreaIdx, -1);
                 if (p != 0) {
-                    ((daTrs_c *)p)->mSpawnerID = this->uniqueID;
-                    ((daTrs_c *)p)->mCachedActorID = this->mCachedActorID;
+                    p->mSpawnerID = this->uniqueID;
+                    p->mCachedActorID = this->mCachedActorID;
                 }
                 {
                     unsigned char *q = &this->mSpawnCount;
@@ -623,12 +623,12 @@ void daTrs_c::func_ov063_02116e14() {
     }
     this->mState = 3;
     {
-        char *r = (char *)dActor_c::Spawn(
-            this->mCarriedID, 0, *(const Vector3 *)&this->mCarriedPosX, (0), this->mAreaIdx, -1);
+        dActor_c *r = dActor_c::Spawn(this->mCarriedID, 0, *(const Vector3 *)&this->mCarriedPosX,
+                                      (0), this->mAreaIdx, -1);
         if (r != 0) {
-            ((dActor_c *)r)->mSpeedX = 0;
-            ((dActor_c *)r)->mVertSpeed = 0x32000;
-            ((dActor_c *)r)->mSpeedZ = 0;
+            r->mSpeedX = 0;
+            r->mVertSpeed = 0x32000;
+            r->mSpeedZ = 0;
         }
     }
     this->mBooFlags.carrying = 0;
@@ -1976,10 +1976,10 @@ void daTrs_c::UpdateDying() {
         this->mAngleX = src[0];
         this->mAngleY = src[1];
         this->mAngleZ = src[2];
-        char* r = (char*)RespawnIfHasCap();
+        daTrs_c *r = (daTrs_c *)RespawnIfHasCap();
         if (r == 0) return;
         {
-            u16* p = (u16*)&((daTrs_c *)r)->mBooFlags;
+            u16 *p = (u16 *)&r->mBooFlags;
             *p &= ~TRS_FLAG_CARRYING;
         }
     } else {

@@ -705,10 +705,10 @@ int daStarBase_c::Behavior()
                ~daStarBase_c names (tools/dtor_members.py): 0x0f8 is +0x24,
                dCc_c::otherOwner, and 0x0f4 is +0x20, dCc_c::hitFlags. */
             if (mState != 2 && mdCcAcPos_c.otherOwner != 0) {
-                char *a = (char *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
+                dActor_c *a = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
                 if (a != 0) {
                     if ((mdCcAcPos_c.hitFlags & 0x408000) != 0) {
-                        mHitActor = (dActor_c *)a;
+                        mHitActor = a;
                         Collect();
                         return 1;
                     }
