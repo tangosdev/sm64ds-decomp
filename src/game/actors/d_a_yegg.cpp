@@ -705,16 +705,16 @@ void daYegg_c::ExecuteFollowPlayer() {
                     t2 = b;
                 }
                 Vec3_Add(&sumA, &com->mPos, &out);
-                mHoldTargetX = sumA.x;
-                mHoldTargetY = sumA.y;
-                mHoldTargetZ = sumA.z;
+                mHoldTarget.x = sumA.x;
+                mHoldTarget.y = sumA.y;
+                mHoldTarget.z = sumA.z;
             } else {
                 mGoalAngleX = -0x4000;
                 mGoalAngleZ = 0;
                 Vec3_Add(&sumB, &com->mPos, &out);
-                mHoldTargetX = sumB.x;
-                mHoldTargetY = sumB.y;
-                mHoldTargetZ = sumB.z;
+                mHoldTarget.x = sumB.x;
+                mHoldTarget.y = sumB.y;
+                mHoldTarget.z = sumB.z;
             }
         } else {
             mGoalAngleX = com->mAngleX;
@@ -729,9 +729,9 @@ void daYegg_c::ExecuteFollowPlayer() {
                 mGoalAngleY = Vec3_HorzAngle(&v1, &v2);
             }
             Vec3_Add(&sumC, &com->mPos, &out);
-            mHoldTargetX = sumC.x;
-            mHoldTargetY = sumC.y;
-            mHoldTargetZ = sumC.z;
+            mHoldTarget.x = sumC.x;
+            mHoldTarget.y = sumC.y;
+            mHoldTarget.z = sumC.z;
         }
         mHoldFreezeTimer = 0;
     }
@@ -739,9 +739,9 @@ void daYegg_c::ExecuteFollowPlayer() {
     {
         /* 0x1000 / 0x3000 as fx32: a third. */
         int fd = FX_Div(0x1000, 0x3000);
-        Math_Function_0203b14c(&mPosX, mHoldTargetX, fd, 0x3e8000, 4);
-        Math_Function_0203b14c(&mPosY, mHoldTargetY, fd, 0x3e8000, 4);
-        Math_Function_0203b14c(&mPosZ, mHoldTargetZ, fd, 0x3e8000, 4);
+        Math_Function_0203b14c(&mPosX, mHoldTarget.x, fd, 0x3e8000, 4);
+        Math_Function_0203b14c(&mPosY, mHoldTarget.y, fd, 0x3e8000, 4);
+        Math_Function_0203b14c(&mPosZ, mHoldTarget.z, fd, 0x3e8000, 4);
     }
 
     ApproachAngle(&mEasedAngleX, mGoalAngleX, 8, 0x4000, 0x100);
@@ -828,9 +828,9 @@ void daYegg_c::EnterFollowPlayer() {
     mPosZ = sp[2];
     src = mPlayer;
     mAngleY = src->mAngleY;
-    mHoldTargetX = mPosX;
-    mHoldTargetY = mPosY;
-    mHoldTargetZ = mPosZ;
+    mHoldTarget.x = mPosX;
+    mHoldTarget.y = mPosY;
+    mHoldTarget.z = mPosZ;
     src = mPlayer;
     m = &src->mAngleX;
     mGoalAngleX = m[0];
@@ -875,10 +875,10 @@ void daYegg_c::RunState() {
  * after 15 shorter moves in a row; it stays 1 while the egg stays put), else
  * 0. */
 int daYegg_c::IsStalled() {
-    fx32 d = Vec3_HorzDist((struct Vector3 *)&mLastPosX, &mPos);
-    mLastPosX = mPosX;
-    mLastPosY = mPosY;
-    mLastPosZ = mPosZ;
+    fx32 d = Vec3_HorzDist(&mLastPos, &mPos);
+    mLastPos.x = mPosX;
+    mLastPos.y = mPosY;
+    mLastPos.z = mPosZ;
     if (d < 0x32000) {
         if (DecIfAbove0_Byte(&mStallTimer) == 0)
             return 1;
@@ -1348,9 +1348,9 @@ int daYegg_c::InitResources()
     mAnmModel.SetAnim((BCA_File *)data_ov002_0210eb78.filePtr, 0, 0x1000, 0);
 
     mAreaId = -1;
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mState = param1 & 3;
