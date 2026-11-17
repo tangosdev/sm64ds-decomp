@@ -432,9 +432,7 @@ int daKpa_c::InitResources()
     pos.z = 0;
     this->mdCcAcPos_c.Init(this, pos, 0x78000, 0x118000, 0x200004, 0);
 
-    this->mHomePosX = this->mPosX;
-    this->mHomePosY = this->mPosY;
-    this->mHomePosZ = this->mPosZ;
+    this->mHomePos = this->mPos;
     /* fx32 gravity and terminal velocity. */
     this->mVertAccel = -0x2000;
     this->mTerminalVelocity = -0x3c000;
@@ -1176,18 +1174,18 @@ void daKpa_c::BitsActions() {
 
 /*
 Fall catch for the variant-2 jumps: if he is moving down (mVertSpeed < 0) and
-mPosY is below mHomePosY - 0x12c000 (300 units below the arena level), put him
+mPosY is below mHomePos.y - 0x12c000 (300 units below the arena level), put him
 at X = Z = 0, 0x7d0000 (2000 units) above the arena level, with both speeds
 zeroed. */
 void daKpa_c::ResetFallenOffStage() {
     int vy = this->mVertSpeed;
     if (vy >= 0) return;
-    int thresh = this->mHomePosY - 0x12c000;
+    int thresh = this->mHomePos.y - 0x12c000;
     int cur = this->mPosY;
     if (cur >= thresh) return;
     this->mPosZ = 0;
     this->mPosX = this->mPosZ;
-    this->mPosY = this->mHomePosY + 0x7d0000;
+    this->mPosY = this->mHomePos.y + 0x7d0000;
     this->mVertSpeed = 0;
     this->mHorzSpeed = 0;
 }
@@ -1363,9 +1361,7 @@ void daKpa_c::ActTeleport() {
                 }
                 if (this->mWithMeshClsn.IsOnGround() == 0)
                 {
-                    this->mPosX = this->mLastGroundPosX;
-                    this->mPosY = this->mLastGroundPosY;
-                    this->mPosZ = this->mLastGroundPosZ;
+                    this->mPos = this->mLastGroundPos;
                     endDash = 1;
                     this->mHorzSpeed = 0;
                 }
@@ -1571,9 +1567,9 @@ mVertSpeed = 0x28000 (40.0) for variant 2 while BOWSER_COND_RECOVERING is set,
 ShortSecondHop set a horizontal speed, and if it stays 0 snap X and Z to
 mLastGroundPos; advance and reset mAnimSpeed to 0x1000. Step 1: variant 2
 recovering runs ResetFallenOffStage first; he lands when BowserLand
-reports it, or when mPosY has dropped below mLastGroundPosY (then, if still
+reports it, or when mPosY has dropped below mLastGroundPos.y (then, if still
 moving vertically, the landing effects are replayed here); landing clears
-BOWSER_COND_RECOVERING, zeroes both speeds, puts him at mLastGroundPosY, advances,
+BOWSER_COND_RECOVERING, zeroes both speeds, puts him at mLastGroundPos.y, advances,
 runs SpawnShockwave and, for variant 1, goes to BOWSER_STATE_ARENA_TILT and
 records the KOOPA2BG actor's uniqueID in mArenaBgUniqueID. Step 2: at the last
 frame, BOWSER_STATE_IDLE. */
@@ -1594,8 +1590,8 @@ void daKpa_c::ActBigJump() {
         this->mHorzSpeed = 0;
         ShortSecondHop();
         if (this->mHorzSpeed == 0) {
-            this->mPosX = this->mLastGroundPosX;
-            this->mPosZ = this->mLastGroundPosZ;
+            this->mPosX = this->mLastGroundPos.x;
+            this->mPosZ = this->mLastGroundPos.z;
         }
         (this->mStep)++;
         this->mAnimSpeed = 0x1000;
@@ -1606,7 +1602,8 @@ void daKpa_c::ActBigJump() {
             ResetFallenOffStage();
         }
         if (BowserLand() == 0) {
-            if (this->mPosY >= this->mLastGroundPosY) return;
+            if (this->mPosY >= this->mLastGroundPos.y)
+                return;
         }
         if (this->mVertSpeed != 0) {
             vec = this->mPos;
@@ -1616,7 +1613,7 @@ void daKpa_c::ActBigJump() {
         this->mCondFlags &= ~BOWSER_COND_RECOVERING;
         this->mHorzSpeed = 0;
         this->mVertSpeed = 0;
-        this->mPosY = this->mLastGroundPosY;
+        this->mPosY = this->mLastGroundPos.y;
         (this->mStep)++;
         SpawnShockwave();
         if (this->mVariantID == 1) {
@@ -1833,9 +1830,7 @@ void daKpa_c::ActChargeMario() {
     if (this->mWithMeshClsn.IsOnGround())
         return;
     this->mState = BOWSER_STATE_PLAY_ANIM_1B;
-    this->mPosX = this->mLastGroundPosX;
-    this->mPosY = this->mLastGroundPosY;
-    this->mPosZ = this->mLastGroundPosZ;
+    this->mPos = this->mLastGroundPos;
     this->mHorzSpeed = 0;
 }
 
@@ -1861,8 +1856,8 @@ int daKpa_c::CheckHitMine() {
 /*
 State BOWSER_STATE_THROWN (1), the handler that runs after the tail lets go.
 mStepCounter is cleared for the first two frames. The ground height under him is
-found with a dBgCh_Gnd probe from 0x96000 (150 units) above mHomePosY when he is
-above mHomePosY (a floor at most 0x64000 = 100 units below mHomePosY counts), else
+found with a dBgCh_Gnd probe from 0x96000 (150 units) above mHomePos.y when he is
+above mHomePos.y (a floor at most 0x64000 = 100 units below mHomePos.y counts), else
 his own Y. Step 0: play animation 9; when he is more than 0xc8000 (200 units)
 above that height or mDistToCenter exceeds 0xdac000 (3500 units), pull
 mHorzSpeed down to 0x1e000 by 0x4000 per frame if it is higher; run the
@@ -1877,10 +1872,10 @@ void daKpa_c::ActThrown() {
     }
 
     int referenceY = this->mPosY;
-    if (this->mPosY > this->mHomePosY) {
+    if (this->mPosY > this->mHomePos.y) {
         Vector3 v;
         dBgCh_Gnd rg;
-        int base = this->mHomePosY;
+        int base = this->mHomePos.y;
         int zz = this->mPosZ;
         int xx = this->mPosX;
         int yy = base + 0x96000;
@@ -1890,7 +1885,7 @@ void daKpa_c::ActThrown() {
         rg.SetObjAndPos(v, this);
         if (rg.DetectClsn() != 0) {
             int hy = rg.clsnY;
-            if (hy >= this->mHomePosY - 0x64000)
+            if (hy >= this->mHomePos.y - 0x64000)
                 referenceY = hy;
         }
     }
@@ -1934,7 +1929,7 @@ void daKpa_c::ActThrown() {
 /*
 Keep him out of sight under the arena during BOWSER_STATE_RECOVER: target
 opacity 0; once mOpacity is 0, zero both speeds, put him 0x3e8000 (1000 units)
-below mHomePosY and, if he is 0xed8000 (3800 units) or more from the origin,
+below mHomePos.y and, if he is 0xed8000 (3800 units) or more from the origin,
 pull X and Z back to the circle of radius 0xed8 (3800) in his direction from the
 origin. */
 void daKpa_c::SetGoalInvisible() {
@@ -1942,7 +1937,7 @@ void daKpa_c::SetGoalInvisible() {
     if (this->mOpacity != 0) return;
     this->mHorzSpeed = 0;
     this->mVertSpeed = 0;
-    this->mPosY = this->mHomePosY - 0x3e8000;
+    this->mPosY = this->mHomePos.y - 0x3e8000;
     if (Vec3_HorzLen(&mPos) < 0xed8000)
         return;
     {
@@ -1959,18 +1954,18 @@ void daKpa_c::SetGoalInvisible() {
 
 /*
 State BOWSER_STATE_RECOVER (2), entered when he has fallen 1000 units below the
-arena (CheckFallenOffStage). Each frame: ground = mHomePosY - 0x7d0000 (2000
-units below), unless he is at or above mHomePosY and a dBgCh_Gnd probe from
-0x96000 (150 units) above mHomePosY finds a floor, whose height then replaces it;
+arena (CheckFallenOffStage). Each frame: ground = mHomePos.y - 0x7d0000 (2000
+units below), unless he is at or above mHomePos.y and a dBgCh_Gnd probe from
+0x96000 (150 units) above mHomePos.y finds a floor, whose height then replaces it;
 hit is set if that floor has a collision ID; BOWSER_COND_RECOVERING is set.
 Step 0 (also hides him with SetGoalInvisible): zero mAngleX/Z on the first frame, then add 0x800
 (11.25 degrees) to both each frame until mAngleX wraps back to 0 (32 frames),
 and advance. Step 1: animation 0xb once; from frame 0x20 face the centre, set
 mVertSpeed 0x28000 (40.0), sound 0xb1, gravity 0, target opacity 0xff, clear
 mStepCounter and advance (before that, keep hiding him). Step 2: while mPosY >=
-mHomePosY, gravity -0x1000 (-1.0) and steer mHorzSpeed (toward 0 by 0x5000 when
+mHomePos.y, gravity -0x1000 (-1.0) and steer mHorzSpeed (toward 0 by 0x5000 when
 mDistToCenter is under 0x8fc000 / 2300 units for variant 1 or 0x9c4000 / 2500
-units otherwise and the floor is within 0x64000 = 100 units of mHomePosY,
+units otherwise and the floor is within 0x64000 = 100 units of mHomePos.y,
 otherwise toward 0x4b000 = 75.0 by 0x2000); on landing (BowserLand)
 advance, run SpawnShockwave if the probe found no floor ID, send variant 2
 into BOWSER_STATE_JUMP with mAnimSpeed 0x4000 (4.0) and normal gravity -0x2000
@@ -1982,13 +1977,13 @@ void daKpa_c::ActJumpOntoStage() {
     int hit;
     int ground;
 
-    ground = this->mHomePosY - 0x7d0000;
+    ground = this->mHomePos.y - 0x7d0000;
     hit = 0;
-    if (this->mPosY >= this->mHomePosY) {
+    if (this->mPosY >= this->mHomePos.y) {
         dBgCh_Gnd rc;
         {
             int pz = this->mPosZ;
-            int py = this->mHomePosY + 0x96000;
+            int py = this->mHomePos.y + 0x96000;
             int px = this->mPosX;
             pos.x = px;
             pos.y = py;
@@ -2038,10 +2033,10 @@ void daKpa_c::ActJumpOntoStage() {
     {
         int thr;
         if (this->mVariantID == 1) thr = 0x8fc000; else thr = 0x9c4000;
-        if (this->mPosY >= this->mHomePosY) {
+        if (this->mPosY >= this->mHomePos.y) {
             this->mVertAccel = -0x1000;
             if (this->mDistToCenter < thr) {
-                int d = ground - this->mHomePosY;
+                int d = ground - this->mHomePos.y;
                 if (d < 0) d = -d;
                 if (d < 0x64000)
                     ApproachLinear(this->mHorzSpeed, 0, 0x5000);
@@ -2486,13 +2481,14 @@ void daKpa_c::ActTiltLavaPlatform() {
 }
 
 /*
-True when he has fallen 0x3e8000 (1000 units) below mHomePosY while not already
+True when he has fallen 0x3e8000 (1000 units) below mHomePos.y while not already
 in BOWSER_STATE_RECOVER or BOWSER_STATE_ARENA_TILT. (The result of the
 IsOnGround call is discarded.) */
 int daKpa_c::CheckFallenOffStage() {
     int state = this->mState;
     if (state != BOWSER_STATE_RECOVER && state != BOWSER_STATE_ARENA_TILT) {
-        if (this->mPosY < this->mHomePosY - 0x3e8000) return 1;
+        if (this->mPosY < this->mHomePos.y - 0x3e8000)
+            return 1;
         this->mWithMeshClsn.IsOnGround();
     }
     return 0;
@@ -2553,9 +2549,7 @@ void daKpa_c::FreeUpdate() {
     if (this->mWithMeshClsn.IsOnGround()) {
         void* fr = this->mWithMeshClsn.GetFloorResult();
         ((dBgPi *)fr)->surface.CopyNormalTo(this->mGroundNormal);
-        this->mLastGroundPosX = this->mPosX;
-        this->mLastGroundPosY = this->mPosY;
-        this->mLastGroundPosZ = this->mPosZ;
+        this->mLastGroundPos = this->mPos;
         if (this->mBounceOnLand != 0 && this->mWithMeshClsn.JustHitGround()) {
             this->mVertSpeed = (this->mVertSpeed * -60) / 100;
             if (this->mVertSpeed >= 0x14000)
@@ -2570,15 +2564,11 @@ void daKpa_c::FreeUpdate() {
 
     if (data_ov060_02119268[idx] != 0) {
         if (!this->mWithMeshClsn.IsOnGround()) {
-            mPosX = mLastGroundPosX;
-            mPosY = mLastGroundPosY;
-            mPosZ = mLastGroundPosZ;
+            mPos = mLastGroundPos;
             mPosX += FX_SinIdx((u16)mAngleToCenter >> 4) << 3;
             mPosZ += FX_CosIdx((u16)mAngleToCenter >> 4) << 3;
         } else {
-            this->mLastGroundPosX = this->mPosX;
-            this->mLastGroundPosY = this->mPosY;
-            this->mLastGroundPosZ = this->mPosZ;
+            this->mLastGroundPos = this->mPos;
         }
     }
 
