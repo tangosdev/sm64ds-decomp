@@ -378,6 +378,13 @@ void daHanachan_c::StateDamageInit()
         mHealth--;
 }
 
+/* One step of the level's random state. Written as an inline so the value is a
+   compiler temporary like VEC_Mag's: StateMoveMain's len and rnd then colour
+   in the ROM's order (len r5, rnd r4). */
+static inline int LevelRandom() {
+    return RandomIntInternal(&data_0209e650.value);
+}
+
 /* MOVE: wander and keep near home, checking player contact. Once defeated, fall away when a player comes near. */
 void daHanachan_c::StateMoveMain()
 {
@@ -399,7 +406,7 @@ void daHanachan_c::StateMoveMain()
     }
 
     if (DecIfAbove0_Byte(&mStateTimer) == 0) {
-        rnd = RandomIntInternal(&data_0209e650.value);
+        rnd = LevelRandom();
         {
             unsigned char health = mHealth;
             unsigned int bits;
@@ -416,7 +423,7 @@ void daHanachan_c::StateMoveMain()
     }
 
     if (mWithMeshClsn.IsOnWall() != 0 || len > 0x5dc000) {
-        rnd = RandomIntInternal(&data_0209e650.value);
+        rnd = LevelRandom();
         mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
         mStateTimer = ((unsigned int)(rnd + 0x1e) >> 0x1b);
         mStateTimer = (mStateTimer - (4 - mHealth) * 30);
@@ -616,7 +623,7 @@ void daHanachan_c::StateDemoWaitMain()
     }
 
     if (DecIfAbove0_Byte(&mStateTimer) == 0) {
-        int r = (unsigned)RandomIntInternal(&data_0209e650.value) >> 0x1b;
+        int r = (unsigned)LevelRandom() >> 0x1b;
         if (r & 1) {
             mTargetAngleY = ((r & 0xf) << 0xc);
         } else {

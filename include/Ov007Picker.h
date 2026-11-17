@@ -60,11 +60,11 @@ typedef struct Ov007Picker {
     Ov007StrokePath *path;     /* 0x20: the stroke being drawn (func_ov007_020c2c68) */
     /* 0x24: the path's points; func_ov007_020c65bc unprojects each appended
      * point into it through `camera` */
-    Vector3 *pathPoints;
+    VecFx32 *pathPoints;
     /* 0x28: per group, the points unprojected through camera
      * (func_ov007_020c6e68); the springs move them */
-    Vector3 **groupPoints;
-    Vector3 **groupPointCopies;  /* 0x2c: per group, the rest copy of groupPoints */
+    VecFx32 **groupPoints;
+    VecFx32 **groupPointCopies;  /* 0x2c: per group, the rest copy of groupPoints */
     int word30;                  /* 0x30: func_ov007_020c690c clears it; no reader found */
     Ov007Link ***groupLinks;     /* 0x34: per group, one link per point from posPoint */
     Ov007StrokePath **groups;    /* 0x38: committed strokes (func_ov007_020c6d20) */
@@ -80,20 +80,20 @@ typedef struct Ov007Picker {
     u16 *tailLinkPoints;     /* 0x54 */
     int hitGroup;            /* 0x58: picked group, -1 = none */
     int hitIndex;            /* 0x5c: picked point in that group, -1 = none */
-    Vector3 hitOffset;       /* 0x60 */
+    VecFx32 hitOffset;       /* 0x60 */
     Ov007Follower *posPoint; /* 0x6c: func_ov007_020c844c's follower over pos */
-    Vector3 pos;             /* 0x70 */
+    VecFx32 pos;             /* 0x70 */
     /* 0x7c: func_ov007_020c6af0 snapshots pos here; func_ov007_020c5dec
      * copies it back, func_ov007_020c6314 measures rest link lengths from it */
-    Vector3 restPos;
+    VecFx32 restPos;
     /* 0x88: func_ov007_020c5188 adds it to pos for one simulation step and
      * then restores pos; PickerScene_UpdateMoveAnim sweeps it per menu state */
-    Vector3 posOffset;
+    VecFx32 posOffset;
     /* 0x94: func_ov007_020c844c's follower over anchorPos; `link`'s from end */
     Ov007Follower *anchorPoint;
     /* 0x98: func_ov007_020c64c4 copies pos into it; mode 2 of
      * func_ov007_020c5a6c moves it to the hit point */
-    Vector3 anchorPos;
+    VecFx32 anchorPos;
     Ov007Link *link;            /* 0xa4: func_ov007_020c80a4; from anchorPoint to posPoint */
     struct Ov007Camera *camera; /* 0xa8: func_ov007_020c65bc unprojects through it */
     /* 0xac/0xb0: the draw limit. func_ov007_020c4dfc draws whole groups
@@ -105,8 +105,8 @@ typedef struct Ov007Picker {
     /* 0xb8/0xc4: the screen rectangle func_ov007_020c510c unprojects; pos
      * (func_ov007_020c5948) and every point (func_ov007_020c5188) are clamped
      * to it on x and y */
-    Vector3 boundsMin;
-    Vector3 boundsMax;
+    VecFx32 boundsMin;
+    VecFx32 boundsMax;
 #ifdef __cplusplus
     int func_ov007_020c5014(int x);
     void func_ov007_020c510c();
@@ -125,9 +125,9 @@ extern "C" {
 struct Ov007Camera;
 
 void func_ov007_020c4dfc(Ov007Picker *picker, int half, int a2, int a3);
-int func_ov007_020c5854(Ov007Picker *picker, Vector3 *target, int pull, int snapRadius, int reach,
+int func_ov007_020c5854(Ov007Picker *picker, VecFx32 *target, int pull, int snapRadius, int reach,
                         int scale);
-void func_ov007_020c5948(Ov007Picker *picker, Vector3 *src);
+void func_ov007_020c5948(Ov007Picker *picker, VecFx32 *src);
 void func_ov007_020c5fc8(Ov007Picker *picker, int idx, int t);
 void func_ov007_020c6174(Ov007Picker *picker, int idx, int flag);
 void func_ov007_020c62cc(Ov007Picker *picker, int flag);

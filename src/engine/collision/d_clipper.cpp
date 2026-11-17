@@ -30,12 +30,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/MtxStack.h"
-
-/* local extern: no non-generated header declares these vector helpers. */
-extern "C" {
-void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *result);
-void VEC_Normalize(const Vector3 *src, Vector3 *dst);
-}
+#include "math/CalcLib.h"
 
 /* Signed distance of (x, y, z) from a frustum side plane, each product rounded to fx32. */
 static inline int PlaneDistance(const ClipperPlane &n, long long x, long long y, long long z) {

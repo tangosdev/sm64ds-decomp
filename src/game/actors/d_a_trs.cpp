@@ -314,15 +314,12 @@ void daTrs_c::func_ov063_0211640c() {
     if (!this->mBooFlags.visible)
         return;
 
-    pos.x = this->mPosX;
-    pos.y = this->mPosY;
-    pos.z = this->mPosZ;
+    pos = this->mPos;
     ang = this->mAngleY;
 
     if (this->mBooFlags.mirrored) {
-        s16 neg = -1;
-        pos.x *= (int)neg;
-        ang *= (int)neg;
+        pos.x *= -1;
+        ang *= -1;
     }
 
     if (this->mState == 3) {
@@ -353,8 +350,7 @@ void daTrs_c::func_ov063_0211640c() {
         DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x12c000, 0xc8000, 0xf);
 
         if (this->mBooFlags.mirrored) {
-            s16 neg = -1;
-            pos.x *= (int)neg;
+            pos.x *= -1;
             Matrix4x3_FromTranslation(&data_020a0e68,
                 pos.x >> 3, pos.y >> 3, pos.z >> 3);
             this->mShadowMtx2 = data_020a0e68;
@@ -873,16 +869,13 @@ void daTrs_c::func_ov063_0211776c() {
 
 void daTrs_c::func_ov063_021177b0() {
 
-    if (this->mStateTimer == 0) {
-        unsigned char *p = &this->mHitPoints;
-        *p = (unsigned char)(*p - 1);
-    }
+    if (this->mStateTimer == 0)
+        this->mHitPoints--;
 
     if (this->mHitPoints == 0) {
         dCamera_c *cam = gCamera;
-        unsigned short flags = *(unsigned short*)&this->mBooFlags;
 
-        if (((unsigned)(flags << 21)) >> 31) {
+        if (this->mBooFlags.camHeld) {
             daPly_c *pl = ClosestPlayer();
             if (pl != 0) {
                 Vector3 v;
@@ -933,10 +926,7 @@ void daTrs_c::func_ov063_021177b0() {
         if (UpdateDuringDeath() == 0)
             return;
 
-        {
-            unsigned short* pf = (unsigned short*)&this->mBooFlags;
-            *pf = (unsigned short)(*pf & ~TRS_FLAG_VISIBLE);
-        }
+        this->mBooFlags.visible = 0;
         this->mState = 8;
         Stop();
         this->mPrevAngleX = 0;
@@ -955,11 +945,8 @@ void daTrs_c::func_ov063_021177b0() {
         return;
     }
 
-    if (this->mStateTimer == 0) {
-        int *p584 = &this->mClsnScale;
-        int dec = 0x255;
-        *p584 = *p584 - dec;
-    }
+    if (this->mStateTimer == 0)
+        this->mClsnScale -= 0x255;
     if (UpdateDuringNonlethalHit(0x28) == 0)
         return;
     this->mState = 6;
@@ -1285,7 +1272,7 @@ void daTrs_c::func_ov063_02117cdc() {
 
 
 void daTrs_c::func_ov063_02118458() {
-    int r4 = GetAttackStatus();
+    int status = GetAttackStatus();
 
     ApproachLinear(this->mPrevAngleY, this->mAngleToPlayer,
         data_ov063_0211e1c0[this->mHitPoints - 1]);
@@ -1320,12 +1307,11 @@ void daTrs_c::func_ov063_02118458() {
         if (this->mAnmModel.file == (BCA_File *)data_ov063_0211edd4.filePtr &&
             this->mAnmModel.WillHitFrame(6)) {
             VecFx32 v;
-            s16 m = 0x78;
             v.x = this->mPosX;
             v.y = this->mPosY;
             v.z = this->mPosZ;
-            v.x = FX_SinIdx((u16)this->mAngleY >> 4) * m + v.x;
-            v.z = FX_CosIdx((u16)this->mAngleY >> 4) * m + v.z;
+            v.x += FX_SinIdx((u16)this->mAngleY >> 4) * 0x78;
+            v.z += FX_CosIdx((u16)this->mAngleY >> 4) * 0x78;
             dActor_c *fb;
             this->mAngleX = 0x1000;
             func_02012694(0x156, &this->mCamSpacePos);
@@ -1340,11 +1326,11 @@ void daTrs_c::func_ov063_02118458() {
         }
     }
 
-    if (r4 == -1) {
+    if (status == -1) {
         this->mState = 2;
         return;
     }
-    if (r4 != 1)
+    if (status != 1)
         return;
     this->mState = 3;
     func_02012694(0x152, &this->mCamSpacePos);
@@ -1410,14 +1396,11 @@ void daTrs_c::func_ov063_0211873c() {
 
 void daTrs_c::func_ov063_02118914() {
 
-    int zero = 0;
-    u8 copied;
     s32 scale;
 
     this->mState = 7;
-    this->mOpacity = zero;
-    copied = this->mOpacity;
-    this->mTargetOpacity = copied;
+    this->mOpacity = 0;
+    this->mTargetOpacity = this->mOpacity;
     this->mClsnScale = 0x1000;
     this->mHitPoints = 3;
 
@@ -1433,7 +1416,7 @@ void daTrs_c::func_ov063_02118914() {
     this->mPosX = -this->mHomePos.x;
     this->mAngleY += 0x8000;
     this->mPrevAngleY += 0x8000;
-    this->mSubState = zero;
+    this->mSubState = 0;
     this->mFlags &= ~2;
 }
 

@@ -874,15 +874,15 @@ void dScMg3DEsp_c::CardTouch(int idx) {
     int ok = 0;
     int v, w;
 
-    if (gTouchHeld[i * 4] != 0) {
-        if (gTouchEdge[i * 4] != 0) {
+    if (gTouchInfo[i].held != 0) {
+        if (gTouchInfo[i].edge != 0) {
             ok = 1;
         }
     }
     if (ok == 0) return;
 
-    v = gTouchX[gActivePlayerSlot * 4] - (mCards[idx].mX >> 12);
-    w = gTouchY[gActivePlayerSlot * 4] - (mCards[idx].mY >> 12);
+    v = gTouchInfo[gActivePlayerSlot].x - (mCards[idx].mX >> 12);
+    w = gTouchInfo[gActivePlayerSlot].y - (mCards[idx].mY >> 12);
 
     if (v < -0xa) return;
     if (v > 0xa) return;
@@ -1142,8 +1142,8 @@ void dScMg3DEsp_c::Results() {
             return;
         b = 0;
         i = gActivePlayerSlot;
-        if (gTouchHeld[i * 4] != 0) {
-            if (gTouchEdge[i * 4] != 0)
+        if (gTouchInfo[i].held != 0) {
+            if (gTouchInfo[i].edge != 0)
                 b = 1;
         }
         if (b != 0)

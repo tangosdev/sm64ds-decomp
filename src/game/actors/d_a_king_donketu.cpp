@@ -218,7 +218,7 @@ extern "C" {
 struct BCA_File;
 extern SharedFilePtr data_ov002_0210da30;
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern void Matrix4x3_FromRotationY(void* m, short ang);
+extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void MTX_Concat43(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
@@ -915,69 +915,58 @@ int daKing_Donketu_c::EnterLeapToSpawn() {
    (0x7d0000), plays SND_HOP_LANDING and counts the landing in mJumpCount: past
    7 the state becomes ..3340, otherwise it re-enters ..3320. */
 int daKing_Donketu_c::UpdateWaypointHop() {
-    daKing_Donketu_c *c = this;
     Vector3 v;
 
-    if (c->mStateTimer == 0)
-        goto mainblock;
+    if (mStateTimer != 0) {
+        if (mStateTimer == 1) {
+            mVertSpeed = 0x5a000;
+            mVertAccel = -0x5000;
+            mWaypointCursor++;
+            mWaypointCursor &= 7;
 
-    if (c->mStateTimer == 1) {
-
-        int neg = 0x5000;
-        c->mVertSpeed = 0x5a000;
-        c->mVertAccel = -neg;
-        {
-            unsigned char *p = &c->mWaypointCursor;
-            *p = *p + 1;
-            *p = *p & 7;
+            mBlendAnmModel.SetAnim(*(BCA_File *)gKingIceDonketuDamageAnimationFile.filePtr, 4, 0,
+                                   0x1000, 0);
+            mBlendAnmModel.speed = 0x2000;
         }
-
-        c->mBlendAnmModel.SetAnim(
-            *(BCA_File *)((BCA_File *)gKingIceDonketuDamageAnimationFile.filePtr), 4, 0, 0x1000, 0);
-        c->mBlendAnmModel.speed = 0x2000;
+        return 1;
     }
-    return 1;
 
-mainblock:
-    if (c->mHitsRemaining == 2) {
-        v = c->mWaypointsB[c->mWaypointCursor];
+    if (mHitsRemaining == 2) {
+        v = mWaypointsB[mWaypointCursor];
     } else {
-        v = c->mWaypointsA[c->mWaypointCursor];
+        v = mWaypointsA[mWaypointCursor];
     }
     {
-        short hz = Vec3_HorzAngle(&c->mPos, &v);
-        short vt = Vec3_VertAngle(&c->mPos, &v);
+        short hz = Vec3_HorzAngle(&mPos, &v);
+        short vt = Vec3_VertAngle(&mPos, &v);
         int in[3];
         int out[3];
-        ApproachLinear(c->mPrevAngleY, hz, 0x800);
+        ApproachLinear(mPrevAngleY, hz, 0x800);
         in[0] = 0; in[1] = 0; in[2] = 0;
         out[0] = 0; out[1] = 0; out[2] = 0;
         in[2] = 0x50000;
         Matrix4x3_FromRotationY(&data_020a0e68, hz);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, vt);
         MTX_MultVec43((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
-        c->mSpeedX = out[0];
-        c->mSpeedZ = out[2];
+        mSpeedX = out[0];
+        mSpeedZ = out[2];
     }
-    if (c->mWithMeshClsn.IsOnGround() != 0) {
-        c->mLandedWaypoint = c->mWaypointCursor;
-        c->mHorzSpeed = 0;
-        c->mSpeedX = 0;
-        c->mVertSpeed = 0;
-        c->mSpeedZ = 0;
-        c->SpawnLandingEffects(0x7d0000);
-        func_02012694(SND_HOP_LANDING, &c->mCamSpacePos);
-        {
-            int *cnt = &c->mJumpCount;
-            *cnt = *cnt + 1;
-        }
-        if (c->mJumpCount > 7) {
-            ChiefChilly_ChangeState((C *)(c), (PMF *)&data_ov073_02123340);
+    if (mWithMeshClsn.IsOnGround() != 0) {
+        mLandedWaypoint = mWaypointCursor;
+        mHorzSpeed = 0;
+        mSpeedX = 0;
+        mVertSpeed = 0;
+        mSpeedZ = 0;
+        SpawnLandingEffects(0x7d0000);
+        func_02012694(SND_HOP_LANDING, &mCamSpacePos);
+        mJumpCount++;
+        if (mJumpCount > 7) {
+            ChiefChilly_ChangeState((C *)this, (PMF *)&data_ov073_02123340);
         } else {
-            ChiefChilly_ChangeState((C *)(c), (PMF *)&data_ov073_02123320);
+            ChiefChilly_ChangeState((C *)this, (PMF *)&data_ov073_02123320);
         }
     }
-    c->mAngleY = c->mPrevAngleY;
+    mAngleY = mPrevAngleY;
     return 1;
 }
 
@@ -1134,7 +1123,7 @@ int daKing_Donketu_c::UpdateEdgeWobble() {
     out.x = 0;
     out.y = 0;
     out.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY + 0x8000);
+    Matrix4x3_FromRotationY(&data_020a0e68, (s16)(c->mAngleY + 0x8000));
     MTX_MultVec43(&in, &data_020a0e68, &out);
     in.x = c->mEdgePosX + out.x;
     in.y = c->mEdgePosY;
@@ -1691,7 +1680,7 @@ int daKing_Donketu_c::Render()
  * the camera frames the boss with the player.
  *
  * `opt_propagation off` is what stops the many position temporaries being
- * folded (without it Behavior is 0x428, not 0x42c: angx's 0x2000 and the
+ * folded (without it Behavior is 0x428, not 0x42c: pitch's 0x2000 and the
  * data_020a0e68 address are folded instead of held in r4). It is bracketed to this one member: under `defer_codegen off` above,
  * the bracket binds positionally, so the members before and after it keep
  * the file's default propagation. The closing `#pragma pop` must NOT follow
@@ -1699,38 +1688,75 @@ int daKing_Donketu_c::Render()
  * before generating the body, so a pop there is already in force when
  * Behavior is compiled and Behavior no longer matches. The extern block below
  * Behavior (the declarations InitResources needs) is what keeps it clear.
+ *
+ * Kept (#821, measured 2026-11-16 against ov073 0x021218a0, 0x42c):
+ *   - bracket removed: 0x428; fdiff aligns 182 of 267 words, 85 replaced and
+ *     1 deleted. `this` moves from r5 to r4 for the whole body, because r4 no
+ *     longer holds the data_020a0e68 address across the ldm/stm copy and
+ *     MTX_Concat43, or 0x2000 across Matrix4x3_FromRotationY.
+ *   - the same pragma at file level (no bracket): Behavior matches, but 10
+ *     other members stop matching (SpawnHitParticles, UpdateDefeat,
+ *     UpdateWaypointHop, UpdateEdgeWobble, UpdateHitReaction,
+ *     EnterHitReaction, UpdateChase, UpdateIntroTalkEnd,
+ *     UpdateModelAndShadow and InitResources).
+ *   - bracket removed, matrix block spelled as `Matrix4x3 *m =
+ *     &data_020a0e68`, as `Matrix4x3 &m = data_020a0e68`, or with the bone
+ *     position as one Vector3 copy from m[9]: each is 0x428, the same 85
+ *     replaced words.
+ *   SpawnLandingEffects (0x0211f2c0) is the same copy-and-concat block, and
+ *   it holds the address in lr under the default propagation.
+ * Re-measured after the body was rewritten without the RayParams bundle and
+ * the `C *` alias: with the bracket removed it is still 0x428, and the same
+ * 182 equal / 85 replaced / 1 deleted words, so the launders were not what
+ * needed the pragma. Ignoring register names (fdiff --align-shape), only two
+ * sites differ: after MTX_Concat43 the bone reads reload &data_020a0e68 from
+ * the literal pool instead of using the copy held in r4, and 0x2000 goes to
+ * Matrix4x3_ApplyInPlaceToRotationX as an immediate instead of being held in
+ * r4 from before the dir.z if/else. Both are copy/constant propagation
+ * undone. Also measured with the bracket removed, each unchanged: pitch as
+ * `int` or `register short`, pitch (and yaw) as Vector3_16 fields, and a
+ * `Matrix4x3 *m` local declared at the top or in the stomp block.
+ *
+ * The eight Vector3 locals are declared up front in frame order (bonePos at
+ * sp+0, then start, end, dir, ray, shifted, dustPos, offset); declared inside
+ * the ray block, the four ray vectors land above the others. The ray block
+ * zeroes all four before filling them in, and the ROM keeps those stores.
  */
-struct RayParams { Vector3 start, end, in, out; };
-
 #pragma push
 #pragma opt_propagation off
 
 int daKing_Donketu_c::Behavior()
 {
-    C *c = (C *)this;
-    short angx;
-    Vector3 v0;
-    RayParams rp;
-    Vector3 v3C;
-    Vector3 v48;
-    Vector3 v54;
+    Vector3 bonePos;
+    Vector3 start;
+    Vector3 end;
+    Vector3 dir;
+    Vector3 ray;
+    Vector3 shifted;
+    Vector3 dustPos;
+    Vector3 offset;
+    short pitch;
 
     gCamera->mFramedActor = this;
     DecIfAbove0_Short(&mStateTimer);
 
-    if (c->pp[1] != 0)
-        (c->*c->pp[1])();
+    State *state = (State *)mState;
+    if (state->update != 0)
+        (this->*state->update)();
 
     if (mState != &data_ov073_02123400 && mState != &data_ov073_02123320 &&
         mState != &data_ov073_02123340) {
         UpdatePos(&mdCcAcPos_c);
     } else {
-        int sum = mVertSpeed + mVertAccel;
-        int m = mTerminalVelocity;
-        int ac = mSpeedZ;
-        if (sum >= m) m = sum;
-        mVertSpeed = m;
-        mSpeedZ = ac;
+        /* Gravity, clamped at terminal velocity. mSpeedZ is reloaded and
+           stored back unchanged, as in every sibling actor's copy of this. */
+        int vertSpeed = mVertSpeed + mVertAccel;
+        int clamped = mTerminalVelocity;
+        int keep = mSpeedZ;
+        if (vertSpeed >= clamped)
+            clamped = vertSpeed;
+        mVertSpeed = clamped;
+        mSpeedZ = keep;
         UpdatePosWithOnlySpeed(&mdCcAcPos_c);
     }
 
@@ -1738,14 +1764,14 @@ int daKing_Donketu_c::Behavior()
         mBlendAnmModel.WillHitFrame(7) != 0) {
         data_020a0e68 = mBlendAnmModel.mat4x3;
         MTX_Concat43(&mBlendAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
-        v0.x = data_020a0e68.m[9];
-        v0.y = data_020a0e68.m[10];
-        v0.z = data_020a0e68.m[11];
-        Vec3_Lsl(&v3C, &v0, 3);
-        v0 = v3C;
+        bonePos.x = data_020a0e68.m[9];
+        bonePos.y = data_020a0e68.m[10];
+        bonePos.z = data_020a0e68.m[11];
+        Vec3_Lsl(&shifted, &bonePos, 3);
+        bonePos = shifted;
         func_02012694(SND_ANIM_FRAME_STOMP, &mCamSpacePos);
-        v48 = v0;
-        HugeLandingDustAt(v48, 1);
+        dustPos = bonePos;
+        HugeLandingDustAt(dustPos, 1);
     }
 
     if (mState != &data_ov073_021233c0 && mState != &data_ov073_021233d0 &&
@@ -1753,46 +1779,36 @@ int daKing_Donketu_c::Behavior()
         mState != &data_ov073_02123320 && mState != &data_ov073_02123340 &&
         mState != &data_ov073_02123380) {
         dBgCh_Lin line;
-        rp.start.x = 0; rp.start.y = 0; rp.start.z = 0;
-        rp.end.x = 0; rp.end.y = 0; rp.end.z = 0;
-        rp.in.x = 0; rp.in.y = 0; rp.in.z = 0;
-        rp.out.x = 0; rp.out.y = 0; rp.out.z = 0;
-        {
-            int y;
-            rp.start.x = mPosX;
-            angx = 0x2000;
-            y = mPosY;
-            rp.start.y = y;
-            rp.start.z = mPosZ;
-            rp.start.y = y + 0x78000;
-            if (mHitsRemaining > 1)
-                rp.in.z = 0x258000;
-            else
-                rp.in.z = 0x12c000;
-            Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-            Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angx);
-        }
-        MTX_MultVec43(&rp.in, &data_020a0e68, &rp.out);
-        {
-            int sx = rp.start.x;
-            int ox = rp.out.x;
-            int sy = rp.start.y;
-            int sz = rp.start.z;
-            int oy, oz;
-            rp.end.x = sx;
-            rp.end.x = sx + ox;
-            oy = rp.out.y;
-            oz = rp.out.z;
-            rp.end.y = sy;
-            rp.end.y = sy + oy;
-            rp.end.z = sz;
-            rp.end.z = sz + oz;
-        }
-        line.SetObjAndLine(rp.start, rp.end, this);
+        start.x = 0;
+        start.y = 0;
+        start.z = 0;
+        end.x = 0;
+        end.y = 0;
+        end.z = 0;
+        dir.x = 0;
+        dir.y = 0;
+        dir.z = 0;
+        ray.x = 0;
+        ray.y = 0;
+        ray.z = 0;
+        start = mPos;
+        pitch = 0x2000;
+        start.y += 0x78000;
+        if (mHitsRemaining > 1)
+            dir.z = 0x258000;
+        else
+            dir.z = 0x12c000;
+        Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, pitch);
+        MTX_MultVec43(&dir, &data_020a0e68, &ray);
+        end = start;
+        end.x += ray.x;
+        end.y += ray.y;
+        end.z += ray.z;
+        line.SetObjAndLine(start, end, this);
         if (!line.DetectClsn()) {
-            if (mHorzSpeed > 0xa000) {
+            if (mHorzSpeed > 0xa000)
                 mNoGroundAhead = 1;
-            }
             mGroundMissPosX = mPosX;
             mGroundMissPosY = mPosY;
             mGroundMissPosZ = mPosZ;
@@ -1809,12 +1825,11 @@ int daKing_Donketu_c::Behavior()
 
     UpdateWMClsn(mWithMeshClsn, 0);
 
-    v54 = data_ov073_02123040;
-    mdCcAcPos_c.SetPosRelativeToActor(v54);
+    offset = data_ov073_02123040;
+    mdCcAcPos_c.SetPosRelativeToActor(offset);
 
-    if (mState == &data_ov073_02123360 || mState == &data_ov073_02123390) {
+    if (mState == &data_ov073_02123360 || mState == &data_ov073_02123390)
         HandleHit();
-    }
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
     UpdateModelAndShadow();

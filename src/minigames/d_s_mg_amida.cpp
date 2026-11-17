@@ -22,9 +22,9 @@
  *   - ProbeRung took the two rung ends as int pointers; it now takes them
  *     as by-value Points, the way the pen handler already declared it,
  *     and uses the member names.
- *   - gTouchX/gTouchY are declared as 4-byte rows, the form
- *     CheckHurryButton matched under. Indexing them as flat arrays costs
- *     it four words.
+ *   - the touch reads index gTouchInfo by player, the form
+ *     CheckHurryButton matches under. Indexing the bytes as one flat
+ *     array costs it four words.
  *   - each shard's file-wide optimisation pragma is now a push/pop bracket
  *     around its own function.
  *   - StepWalkers was the last to match. It was an unmatched draft from
@@ -44,8 +44,7 @@
  * - Amida_RestoreBgChars and Amida_SaveBgChars stay free helpers: the
  *   object pointer they take is never read -- both only copy BG char VRAM --
  *   so membership cannot be proven from the bodies.
- * - gTouchX/gTouchY stay 4-byte rows (flat indexing costs CheckHurryButton
- *   four words, measured at promotion), the pattern table is five separate
+ * - The pattern table is five separate
  *   data symbols. mLineColor is named for its only use, the colour
  *   argument of the line-draw helper (always 2).
  */
@@ -254,18 +253,12 @@ int dScMgAmida_c::InitSubScreenBg() {
    reshuffled until it differs somewhere from that copy as seen through
    mLanePerm; otherwise the first arg1 entries (at most 4) are 1 and
    the rest 0, shuffled once. */
-/* Kept: measured 2026-11-06, ShuffleGoals is the only function this bracket
-   reaches, and its size changes with strength reduction on -- the swap loops'
-   `this + (i << 2) + off` addressing is what the setting binds. */
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgAmida_c::ShuffleGoals(int arg1) {
     int i;
     int k;
     int j;
     int t;
     int u;
-    int *pi;
 
     if (IsVariant2()) {
         switch (mPatternIndex) {
@@ -290,33 +283,22 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
         }
         for (i = 0; i < 4; i++)
             mLaneWants[i] = mLaneResult[i];
-        {
-            /* The swap addresses are built as this + i*4 + offset: the
-               plain &mLaneResult[i] form shrinks ShuffleGoals by 0x18
-               (measured 2026-10-20). */
-            int off = (int)&((dScMgAmida_c *)0)->mLaneResult;
-            arg1 = 1;
-            do {
-                for (i = 0; i < 4; i++) {
-                    t = RandomIntInternal(&data_0209d4b8.value);
-                    pi = (int *)((char *)this + (i << 2) + off);
-                    j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
-                    t = *pi;
-                    {
-                        int *pjx = (int *)((char *)this + (j << 2) + off);
-                        u = *pjx;
-                        *pi = u;
-                        *pjx = t;
-                    }
+        arg1 = 1;
+        do {
+            for (i = 0; i < 4; i++) {
+                t = RandomIntInternal(&data_0209d4b8.value);
+                u = mLaneResult[i];
+                j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
+                mLaneResult[i] = mLaneResult[j];
+                mLaneResult[j] = u;
+            }
+            for (k = 0; k < 4; k++) {
+                if (mLaneWants[k] != mLaneResult[mLanePerm[k]]) {
+                    arg1 = 0;
+                    break;
                 }
-                for (k = 0; k < 4; k++) {
-                    if (mLaneWants[k] != mLaneResult[mLanePerm[k]]) {
-                        arg1 = 0;
-                        break;
-                    }
-                }
-            } while (arg1 == 1);
-        }
+            }
+        } while (arg1 == 1);
     } else {
         if (arg1 > 4)
             arg1 = 4;
@@ -324,24 +306,15 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
             mLaneResult[k] = 1;
         for (; arg1 < 4; arg1++)
             mLaneResult[arg1] = 0;
-        {
-            int off = (int)&((dScMgAmida_c *)0)->mLaneResult;
-            for (i = 0; i < 4; i++) {
-                t = RandomIntInternal(&data_0209d4b8.value);
-                pi = (int *)((char *)this + (i << 2) + off);
-                j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
-                t = *pi;
-                {
-                    int *pjx = (int *)((char *)this + (j << 2) + off);
-                    u = *pjx;
-                    *pi = u;
-                    *pjx = t;
-                }
-            }
+        for (i = 0; i < 4; i++) {
+            t = RandomIntInternal(&data_0209d4b8.value);
+            u = mLaneResult[i];
+            j = ((((u32)t >> 16) & 0x7fff) * 4) >> 15;
+            mLaneResult[i] = mLaneResult[j];
+            mLaneResult[j] = u;
         }
     }
 }
-#pragma pop
 
 void dScMgAmida_c::ClearStroke() {
     int row = 0;
@@ -500,15 +473,14 @@ void dScMgAmida_c::CheckHurryButton() {
         return;
     unsigned int pressed = 0;
     int playerSlot = gActivePlayerSlot;
-    if (gTouchHeld[playerSlot << 2] != 0) {
-        unsigned int touchOffset = playerSlot << 2;
-        if (gTouchEdge[touchOffset] != 0)
+    if (gTouchInfo[playerSlot].held != 0) {
+        if (gTouchInfo[playerSlot].edge != 0)
             pressed = 1;
     }
     if (pressed == 0)
         return;
-    int touchX = ((u8(*)[4])gTouchX)[playerSlot][0];
-    int touchY = ((u8(*)[4])gTouchY)[playerSlot][0];
+    int touchX = gTouchInfo[playerSlot].x;
+    int touchY = gTouchInfo[playerSlot].y;
     if (touchX < 0x60)
         return;
     if (touchX >= 0xa0)
@@ -532,8 +504,8 @@ void dScMgAmida_c::CheckEdgeBoost() {
 
     playerSlot = gActivePlayerSlot;
     pressed = 0;
-    if (gTouchHeld[playerSlot * 4]) {
-        if (gTouchEdge[playerSlot * 4] != 0)
+    if (gTouchInfo[playerSlot].held) {
+        if (gTouchInfo[playerSlot].edge != 0)
             pressed = 1;
     }
     if (pressed != 0) {
@@ -541,9 +513,9 @@ void dScMgAmida_c::CheckEdgeBoost() {
         mEdgeBoostCount = 0;
     }
     playerSlot = gActivePlayerSlot;
-    if (gTouchHeld[playerSlot * 4] != 0) {
-        touchX = ((u8(*)[4])gTouchX)[playerSlot][0];
-        touchY = ((u8(*)[4])gTouchY)[playerSlot][0];
+    if (gTouchInfo[playerSlot].held != 0) {
+        touchX = gTouchInfo[playerSlot].x;
+        touchY = gTouchInfo[playerSlot].y;
         if ((touchX >= 0 && touchX < 0x10 && touchY >= 0x40 && touchY < 0x80) ||
             (touchX >= 0xf0 && touchX < 0x100 && touchY >= 0x40 && touchY < 0x80)) {
             if (mEdgeBoostCount >= 5) {
@@ -580,9 +552,9 @@ void dScMgAmida_c::HandlePen() {
     oldX = this->mPen.x;
     oldY = this->mPen.y;
 
-    if (gTouchHeld[gActivePlayerSlot * 4] != 0) {
-        int newX = ((u8(*)[4])gTouchX)[gActivePlayerSlot][0];
-        int newY = ((u8(*)[4])gTouchY)[gActivePlayerSlot][0];
+    if (gTouchInfo[gActivePlayerSlot].held != 0) {
+        int newX = gTouchInfo[gActivePlayerSlot].x;
+        int newY = gTouchInfo[gActivePlayerSlot].y;
         if (newX < 0)
             return;
         if (newX >= 0x100)
@@ -617,7 +589,7 @@ void dScMgAmida_c::HandlePen() {
         return;
     } else {
         int released;
-        if (gTouchHeld[gActivePlayerSlot * 4] == 0 && gTouchEdge[gActivePlayerSlot * 4] != 0) {
+        if (gTouchInfo[gActivePlayerSlot].held == 0 && gTouchInfo[gActivePlayerSlot].edge != 0) {
             released = 1;
         } else {
             released = 0;
@@ -1700,19 +1672,13 @@ void dScMgAmida_c::SetupRound() {
         mPenLocked = 0;
         {
             int lane = 0;
-            /* Kept: the lane x and the zero share a two-slot array; scalar
-               locals DIFF SetupRound by 9 words (measured 2026-11-08). */
-            int xw[2];
-            xw[0] = 0x20;
-            xw[1] = 0;
             for (; lane < 4; lane++) {
-                mLanePos[lane].x = xw[0] << 12;
+                mLanePos[lane].x = (lane * 0x40 + 0x20) << 12;
                 mLanePos[lane].y = 0xb0000;
-                mLaneVel[lane].x = xw[1];
-                mLaneVel[lane].y = xw[1];
-                xw[0] += 0x40;
+                mLaneVel[lane].x = 0;
+                mLaneVel[lane].y = 0;
             }
-            mFinaleTimer = xw[1];
+            mFinaleTimer = 0;
             {
                 int v = 0;
                 for (; v < 128; v++) {
@@ -1725,12 +1691,6 @@ void dScMgAmida_c::SetupRound() {
     }
 }
 
-/* This bracket is SetupRound's. mwcc reads opt_strength_reduction for
-   SetupRound only after its closing brace, so a pop right after SetupRound
-   undoes it; RenderBoard compiles the same either way. Without it SetupRound
-   strength-reduces the lane x (xw[0] << 12) into its own induction register. */
-#pragma push
-#pragma opt_strength_reduction off
 void dScMgAmida_c::RenderBoard() {
     int i;
     int y;
@@ -1787,7 +1747,6 @@ void dScMgAmida_c::RenderBoard() {
     Mg_RenderSpriteBoth(sAmidaSideSprite, 8, 96, -1, 0);
     Mg_RenderSpriteBoth(sAmidaSideSprite, 248, 96, -1, 0);
 }
-#pragma pop
 
 void dScMgAmida_c::RenderBoardAlt() {
     int i;
@@ -1972,8 +1931,8 @@ s32 dScMgAmida_c::Behavior() {
             mEndDelayTimer -= 1;
         touched = 0;
         touchSlot = gActivePlayerSlot;
-        if (gTouchHeld[touchSlot * 4] != 0) {
-            if (gTouchEdge[touchSlot * 4] != 0)
+        if (gTouchInfo[touchSlot].held != 0) {
+            if (gTouchInfo[touchSlot].edge != 0)
                 touched = 1;
         }
         if (touched != 0)

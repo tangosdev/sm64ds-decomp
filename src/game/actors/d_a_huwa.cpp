@@ -38,6 +38,7 @@ enum daHuwa_c_AssetId { ASSET_HUWAHUWA_MODEL_BMD = 0x032d, ASSET_HUWAHUWA_MOVE_B
 #include "math/MtxStack.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "math/CalcLib.h"
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
    model handle constructs through func_02017acc and destroys through
@@ -63,8 +64,6 @@ extern HuwaAnimationFileHandle gHuwahuwaMoveAnimationFile;
 extern "C" {
 extern int func_ov002_020e10a8(void *);
 
-void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *out);
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *out);
 int *Vec3_LslInPlace(Vector3 *v, int shift);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);

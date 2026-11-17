@@ -16,8 +16,10 @@
  * What stays, and why:
  * - Behavior's locals take the type of the call that fills them: the NitroSDK
  *   MTX_MultVec43 inputs/outputs are VecFx32, the Vec3_Add results and the
- *   copied position are Vector3. The SDK prototype still says Vector3 (#5207),
- *   hence the casts on the VecFx32 side.
+ *   copied position are Vector3. MTX_MultVec43 takes VecFx32 with the SDK's
+ *   MtxFx43, or Vector3 with the game's Matrix4x3 (math/MtxStack.h, #5207);
+ *   these calls use the game's matrix stack, hence the casts on the VecFx32
+ *   side.
  * - gC1HikariModelFile is the model SharedFilePtr this Init LoadFile's,
  *   defined at the end of this file (constructed as file ID 1453)
  * - data_0209caa0.file.flags1 & 0x80000000; this Init is the consumer, no recovered

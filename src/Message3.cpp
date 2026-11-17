@@ -926,17 +926,17 @@ void func_020326ac(void) {
         }
         idx = gActivePlayerSlot;
         hasf1 = 0;
-        f0 = gTouchHeld[idx * 4];
+        f0 = gTouchInfo[idx].held;
         if (f0 != 0) {
-            if (gTouchEdge[idx * 4] != 0) {
+            if (gTouchInfo[idx].edge != 0) {
                 hasf1 = 1;
             }
         }
         if (hasf1 != 0) {
-            data_0209fcec = ((u8(*)[4])gTouchY)[idx][0];
+            data_0209fcec = gTouchInfo[idx].y;
             data_0209fcec -= (s16)(data_0209fcd0 * 8);
         } else if (f0 != 0) {
-            s16 debval = ((u8(*)[4])gTouchY)[idx][0];
+            s16 debval = gTouchInfo[idx].y;
             data_0209fcf0 = debval - data_0209fcec;
             if (data_0209fcf0 > 16) {
                 data_0209fcf0 = 16;

@@ -17,10 +17,10 @@ typedef struct Ov007Sprite {
     u16 width;       /* 0x0c: pixels; c43bc scales it, c4684 uses it as the texel width */
     u16 height;      /* 0x0e */
     s32 depth;       /* 0x10: c4388 view z; c43bc scales width/height by |depth| */
-    Vector3 pos;     /* 0x14: c4388 writes the world position, c42f8 translates by it */
+    VecFx32 pos;     /* 0x14: c4388 writes the world position, c42f8 translates by it */
     s32 worldWidth;  /* 0x20: c43bc result; c4684 quad width */
     s32 worldHeight; /* 0x24 */
-    Vector3 posOffset;   /* 0x28: c42f8 adds it to pos */
+    VecFx32 posOffset;   /* 0x28: c42f8 adds it to pos */
     u16 rotX;            /* 0x34: c42f8 rotation angles */
     u16 rotY;            /* 0x36 */
     u16 rotZ;            /* 0x38 */

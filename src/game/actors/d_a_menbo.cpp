@@ -42,7 +42,7 @@
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
-
+#include "math/MtxStack.h"
 
 struct BMD_File;
 struct BCA_File;
@@ -67,12 +67,6 @@ struct MenboAnimationFilePtr : SharedFilePtr {
     ~MenboAnimationFilePtr();
 };
 
-extern "C" void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
-extern "C" void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
-extern "C" void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int rx, int ry, int rz);
 extern "C" void Vec3_Lsl(Vector3 *out, const Vector3 *in, int n);
 extern "C" void Vec3_Asr(void *dst, void *src, int n);
 /* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) and Vec3_Lsl (non-const source) */
@@ -90,7 +84,6 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" int func_02035638(u8 *p);
 
-extern Matrix4x3     data_020a0e68;
 extern int           data_02092138;
 extern unsigned char gGameMode;
 extern signed char gCurrentSublevel;

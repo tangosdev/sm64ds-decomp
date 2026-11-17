@@ -54,10 +54,6 @@ extern "C" void RenderOamMainScreen(OamAttr *oam, int, int, int, int);
 extern "C" void Mg_CommitRecords(void);
 extern "C" s32 GetGameLanguage(void);
 
-/* local: UpdateTouchInput only reproduces through a 4-byte-record view of
-   each lane; the flat `gTouchHeld[slot * 4]` and TouchInfo forms DIFF there
-   (measured 2026-11-08). */
-#define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
 
 extern int sTrmpRowScreenY[];
 
@@ -300,11 +296,7 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
 
     mInputEnabled = 0;
     mRoundOver = 0;
-    mDoorSwitchTimer =
-        (((int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) *
-          0x2d0) >>
-         12) +
-        0x2d0;
+    mDoorSwitchTimer = RAND_FX_SCALE(0x2d0) + 0x2d0;
     mDoorBlinkTimer = 0;
     mDoorBlinkPhase = 1;
     mArrow1X = 0;
@@ -379,11 +371,7 @@ void dScMgTrampoline_c::StateIntro() {
         mTouch.x = (s16)(penX >> 12);
         mTouch.y = sTrmpStartTouchY;
 
-        mTouch.y +=
-            ((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) -
-               0x800)
-              << 2) >>
-             12);
+        mTouch.y += ((RAND_FX() - 0x800) << 2) >> 12;
 
         Mg_DrawLine(prevX, prevY, mTouch.x, mTouch.y, 2, 0xc);
 
@@ -529,7 +517,7 @@ void dScMgTrampoline_c::StateWaitExit() {
     if (mTimer != 0) {
         slot = gActivePlayerSlot;
         tapped = 0;
-        if (gTouchHeld[slot * 4] != 0 && gTouchEdge[slot * 4] != 0)
+        if (gTouchInfo[slot].held != 0 && gTouchInfo[slot].edge != 0)
             tapped = 1;
         if (tapped == 0)
             return;
@@ -566,11 +554,11 @@ void dScMgTrampoline_c::UpdateTouchInput() {
     }
 
     slot = gActivePlayerSlot;
-    edge = (TOUCH_REC(gTouchHeld)[slot][0] != 0 && TOUCH_REC(gTouchEdge)[slot][0] != 0);
+    edge = (gTouchInfo[slot].held != 0 && gTouchInfo[slot].edge != 0);
     if (edge) {
-        mTouch.x = TOUCH_REC(gTouchX)[slot][0];
+        mTouch.x = gTouchInfo[slot].x;
         mTouchStart.x = mTouch.x;
-        mTouch.y = TOUCH_REC(gTouchY)[slot][0];
+        mTouch.y = gTouchInfo[slot].y;
         mTouchStart.y = mTouch.y;
         mTouching = 1;
         mDragSoundHandle = 0;
@@ -580,16 +568,15 @@ void dScMgTrampoline_c::UpdateTouchInput() {
         return;
 
     slot = gActivePlayerSlot;
-    if (TOUCH_REC(gTouchHeld)[slot][0] != 0) {
-        Mg_DrawLine(mTouch.x, mTouch.y, TOUCH_REC(gTouchX)[slot][0], TOUCH_REC(gTouchY)[slot][0], 2,
-                    4);
+    if (gTouchInfo[slot].held != 0) {
+        Mg_DrawLine(mTouch.x, mTouch.y, gTouchInfo[slot].x, gTouchInfo[slot].y, 2, 4);
         slot = gActivePlayerSlot;
-        mTouch.x = TOUCH_REC(gTouchX)[slot][0];
-        mTouch.y = TOUCH_REC(gTouchY)[slot][0];
+        mTouch.x = gTouchInfo[slot].x;
+        mTouch.y = gTouchInfo[slot].y;
         mDragSoundHandle =
             func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mTouch.x << 12), 0, 0);
     } else {
-        edge = (TOUCH_REC(gTouchHeld)[slot][0] == 0 && TOUCH_REC(gTouchEdge)[slot][0] != 0);
+        edge = (gTouchInfo[slot].held == 0 && gTouchInfo[slot].edge != 0);
         if (edge != 0) {
             mTouchReleased = 1;
         }
