@@ -7745,8 +7745,6 @@ int daPly_c::CanEnterDoor(unsigned char door) {
 }
 
 void daPly_c::PlayMammaMiaSound() {
-    /* mCamSpacePosX/Y/Z are three consecutive words; dActor_c.h declares them
-       individually rather than as one Vector3. */
     Sound::PlayCharVoice(mCharacter, 0x27, mCamSpacePos);
 }
 
@@ -9731,7 +9729,7 @@ int daPly_c::UpdateSwimHealth() {
 
     if (GetHealth() <= 2) {
         mSurfaceSoundHandle =
-            Sound::PlayLong((unsigned int)mSurfaceSoundHandle, 2, 0x27, *&mCamSpacePos, 0);
+            Sound::PlayLong((unsigned int)mSurfaceSoundHandle, 2, 0x27, mCamSpacePos, 0);
     }
 
     {
@@ -16333,8 +16331,6 @@ int daPly_c::St_SweepKick_Init() {
     this->SetAnim(0x68, 0x40000000, 0x1000, 0);
     mHorzSpeed = 0;
     mAttackClashed = 0;
-    /* mCamSpacePosX/Y/Z are three consecutive words; dActor_c.h declares them
-       individually rather than as one Vector3. */
     Sound::PlayCharVoice(mCharacter, 0xa, mCamSpacePos);
     return 1;
 }
@@ -17471,7 +17467,7 @@ int daPly_c::func_ov002_020dec70() {
         v.x = v.z;
         func_ov002_020bf800(v);
     }
-    mSurfaceSoundHandle = Sound::PlayLong((u32)mSurfaceSoundHandle, 3, 0x90, *&mCamSpacePos, 0);
+    mSurfaceSoundHandle = Sound::PlayLong((u32)mSurfaceSoundHandle, 3, 0x90, mCamSpacePos, 0);
     if (IsState(data_ov002_02110274) || IsState(data_ov002_021102d4) || IsState(daPly_c::ST_OWL) ||
         mIsMetal || mIsMega || mIsNoControl || mIsAirborne == 0)
         return 0;
@@ -18535,8 +18531,6 @@ int daPly_c::St_LongJump_Init() {
     if (mHorzSpeed >= 0x3c000) {
         mHorzSpeed = 0x3c000;
     }
-    /* mCamSpacePosX/Y/Z are three consecutive words; dActor_c.h declares them
-       individually rather than as one Vector3. */
     if (mIsMetal == 0) {
         Sound::PlayBank0((u32)mGroundSoundType + 0x30, mCamSpacePos);
     } else {

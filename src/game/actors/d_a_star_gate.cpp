@@ -19,7 +19,7 @@
  * Leftover: func_ov100_02144fcc / 02145014 / 02145070 / 02144f84 stay those
  *   ROM labels. 02144fcc keeps the ellipsis: St_StayClosed_Main passes
  *   (this, player); the body is 0-arg.
- * Leftover: func_02012694 sound at mCamSpacePosX (TalkingToPlayer_Init,
+ * Leftover: func_02012694 sound at mCamSpacePos (TalkingToPlayer_Init,
  *   OpenClose_Init / Main).
  * Leftover: POD VecFx32 for data_ov100_02148948 -- Vector3's inline
  *   dtor is non-POD; a Vector3 BSS object would register in sinit.
@@ -267,7 +267,7 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 bool daStarGate_c::St_TalkingToPlayer_Init(daPly_c *) {
-    func_02012694(0xb8, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0xb8, &mCamSpacePos);
     daDoor_c::func_ov100_02145070(0x87);
     return true;
 }

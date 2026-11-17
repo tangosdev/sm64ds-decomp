@@ -9,7 +9,7 @@
  * - daPly_c::Hurt stays a scalar extern; daPly_c.h does not declare it.
  * - func_0201267c is the bank-3 veneer around Sound::Play. Sound::Play(3,
  *   id, Vector3 &) is +4 a call: St_Die_Init 0xd4->0xd8, St_Attack_Main
- *   0x314->0x318, St_Die_Main (two calls) 0x3dc->0x3e4. &mCamSpacePosX
+ *   0x314->0x318, St_Die_Main (two calls) 0x3dc->0x3e4. &mCamSpacePos
  *   does not bind to Vector3 &.
  * - dActor_c::func_0200f760 clears cylinder +0x18 bit 2 unless the closest
  *   player's byte at +0x6fb is set. No recovered name.

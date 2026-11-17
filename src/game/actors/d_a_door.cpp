@@ -653,7 +653,7 @@ int daDoor_c::func_ov100_02144c6c(daPly_c *r1) {
 /* State 021488c4, enter member. Play sound 0xb8 at the door and start the
    shared countdown at 0x87 (135). Was a C source. */
 int daDoor_c::func_ov100_02144ccc() {
-    func_02012694(0xb8, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0xb8, &mCamSpacePos);
     daDoor_c::func_ov100_02145070(0x87);
     return 1;
 }

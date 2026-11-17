@@ -79,7 +79,7 @@ enum { ACTOR_ID_PLAYER = 191 };
 enum { PTCL_SNOWBALL_BURST = 0x11c };
 
 /* Sound id handed to func_02012694, the bank-3 wrapper (it calls
- * Sound::Play(3, id, pos)). Played at the camera-space position (mCamSpacePosX)
+ * Sound::Play(3, id, pos)). Played at the camera-space position (mCamSpacePos)
  * on two of the four burst paths: timer expiry or mesh-collision ground in the
  * update helper, and after daPly_c::Hurt in the contact handler. The two
  * hit-flag / metal-player bursts are silent. Only the number is known here. */

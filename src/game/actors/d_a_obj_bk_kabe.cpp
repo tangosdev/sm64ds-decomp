@@ -27,7 +27,7 @@
  * What stays, and why (each alternative measured):
  * - Kill: folding the test into `if (actorID == kBreakableActor)` is a
  *   size-DIFF, 0x60 to 0x54. The compare stays a 0/1 local.
- * - Kill: a Vector3 built from mCamSpacePosX/Y/Z for PlayBank3 is a
+ * - Kill: a Vector3 built from mCamSpacePos for PlayBank3 is a
  *   size-DIFF, 0x60 to 0x84. The call passes mCamSpacePos.
  * - Behavior: `if (actorID == kBreakableActor && mBroken)` is a size-DIFF,
  *   0xf0 to 0xe4. The 0/1 local stays.

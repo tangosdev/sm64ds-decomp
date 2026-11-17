@@ -947,7 +947,7 @@ void daPropeller_Heyho_c::func_ov070_0211f100() {
     if (hitFlags & kHitMegaChar) {
         this->SpawnMegaCharParticles(*hitPlayer, (char *)0);
         hitPlayer->IncMegaKillCount();
-        func_02012694(kSndMegaKill, (const Vector3 *)&this->mCamSpacePosX);
+        func_02012694(kSndMegaKill, &this->mCamSpacePos);
         FlyGuy_ChangeState(this, &data_ov070_021235bc);
         return;
     }

@@ -708,7 +708,7 @@ int daIwante_c::GetPlayerDepthBand() {
  * mPosX/Z temporarily moved by 0x80000 (128.0) (X by -128.0 for hand 1, +128.0
  * otherwise; Z by +128.0), it spawns the huge landing dust at that shifted spot
  * and plays SE_LANDING at the object's own cached camera-space position
- * (mCamSpacePosX, which the shift does not change), and restores the position. */
+ * (mCamSpacePos, which the shift does not change), and restores the position. */
 void daIwante_c::PoundGround(int strength) {
     gCamera->func_0200d8c8(&mPos, strength);
     Vector3 saved = mPos;

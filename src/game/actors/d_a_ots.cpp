@@ -45,7 +45,7 @@
  *
  *
  * deslop leftovers:
- * - func_0201267c: PlayStepSound / PlayHitSound / PlayDeathSound at mCamSpacePosX.
+ * - func_0201267c: PlayStepSound / PlayHitSound / PlayDeathSound at mCamSpacePos.
  * - 0x398..0x3f9 stay children's padding (annexing them as members would move
  *   the fields the children declare from 0x3fa on); the helpers reach them
  *   through daOts_c::tail(), a cast of the whole object to the nested Tail struct

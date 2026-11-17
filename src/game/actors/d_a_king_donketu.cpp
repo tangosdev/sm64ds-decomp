@@ -142,7 +142,7 @@ enum KingDonketuActorID {
 };
 
 /* Sound ids passed to func_02012694, which, going by its call sites here,
-   plays a sound at the boss's camera-space position (mCamSpacePosX). Named for the site that plays them;
+   plays a sound at the boss's camera-space position (mCamSpacePos). Named for the site that plays them;
    no sound table was consulted, so the meanings are the call sites', not the
    cartridge's. */
 enum KingDonketuSound {

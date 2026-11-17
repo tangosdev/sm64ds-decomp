@@ -9,7 +9,7 @@
  * dBgActor_c ends at 0x320 (include/dBgActor_c.h). Members below that offset
  * used to be restated here under placeholder names by the AUTO-GENERATED flat
  * header; they are dActor_c's/dBgActor_c's own storage now (mSpawnParam ->
- * fBase_c::param1, mActorID -> fBase_c::actorID, unk_074 -> dActor_c::mCamSpacePosX,
+ * fBase_c::param1, mActorID -> fBase_c::actorID, unk_074 -> dActor_c::mCamSpacePos,
  * unk_0b0 -> dActor_c::mFlags), confirmed against include/dActor_c.h and
  * include/fBase_c.h and updated at every call site.
  *

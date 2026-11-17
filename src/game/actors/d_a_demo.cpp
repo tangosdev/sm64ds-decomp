@@ -2659,7 +2659,7 @@ int daDemo_c::func_ov002_020f6ae4(unsigned char *p)
 int daDemo_c::func_ov002_020f6b28(unsigned char *p)
 {
     unsigned int v = ReadUnalignedInt(p);
-    func_02012694(v, (const Vector3 *)&mCamSpacePosX);
+    func_02012694(v, &mCamSpacePos);
     return 1;
 }
 
