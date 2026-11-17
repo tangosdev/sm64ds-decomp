@@ -23,6 +23,7 @@
  */
 
 #include "common.h"
+#include "Vector3s.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "daPkn_c.h"
@@ -692,10 +693,11 @@ int daPkn_c::CheckHits()
 }
 
 /* Poses both models and places the head cylinder and the sleep bubble. The
-   bone sum into ang[1] is never read. */
+   bone sum into ang.y is never read; ang is a Vector3s, so it lives on the
+   stack and every store to it is kept. */
 void daPkn_c::UpdatePose()
 {
-    volatile s16 ang[3];
+    Vector3s ang;
     /* common.h comes first, so Matrix4x3 is the flat twelve words and
        assigning it is one block copy. */
     struct {
@@ -703,7 +705,7 @@ void daPkn_c::UpdatePose()
         VecFx32 tv;
         VecFx32 v;
     } L;
-    int lr;
+    int i;
     int scale;
 
     Vec3_Asr((Vector3 *)&L.v, &mPos, 3);
@@ -712,11 +714,13 @@ void daPkn_c::UpdatePose()
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     mAnmModel.mat4x3 = data_020a0e68;
 
-    ang[0] = 0;
-    ang[1] = 0;
-    ang[2] = 0;
-    for (lr = 0; lr < 5; lr++) {
-        ang[1] = (ang[1] + (s16)mAnmModel.data.bones[data_ov084_021302ec[lr]].rotY);
+    ang.x = 0;
+    ang.y = 0;
+    ang.z = 0;
+    {
+        ModelBone *bones = mAnmModel.data.bones;
+        for (i = 0; i < 5; i++)
+            ang.y += (s16)bones[data_ov084_021302ec[i]].rotY;
     }
 
     mHeadClsnOffset.x = 0;
@@ -731,9 +735,9 @@ void daPkn_c::UpdatePose()
     VEC_Subtract(&mHeadClsnOffset, &mPos, &mHeadClsnOffset);
 
     /* Still a hand-indexed FX_SinIdx: through the inline the table base loads
-       before mHeadClsnOffset.y and ang[0], and no spelling tried (local, index
+       before mHeadClsnOffset.y and ang.x, and no spelling tried (local, index
        local, y read first, split subtraction) gets the ROM's order back. */
-    mHeadClsnOffset.y -= FX_SinCosTable_[((u16)ang[0] >> 4) << 1] * 0x14 + 0x32000;
+    mHeadClsnOffset.y -= FX_SinCosTable_[((u16)ang.x >> 4) << 1] * 0x14 + 0x32000;
     mHeadClsnOffset.z += 0x32000;
 
     L.tv.x = mPosX;
