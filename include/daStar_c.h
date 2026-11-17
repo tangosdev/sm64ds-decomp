@@ -195,9 +195,7 @@ struct daStar_c : dEnemyBase_c {
         StarFlagBits mBits;       /* the same word as bit-fields, for the tests the ROM compiles as shifts */
     };
     u8   pad_4a4[0x4];
-    s32  mCenterX;                /* 0x4a8 -- cache for func_ov002_020e8244; zeroed each Behavior */
-    s32  mCenterY;                /* 0x4ac */
-    s32  mCenterZ;                /* 0x4b0 */
+    Vector3 mCenter;              /* 0x4a8 -- cache for func_ov002_020e8244; zeroed each Behavior */
     u32  mParticle[4];            /* 0x4b4 -- Particle::System handles: [0] shared by effects 0x113, 0x115 and 0x2f, [1] 0x116, [2] 0x114, [3] 0x10e (silver star) */
 
     /* --- vtable --- */
