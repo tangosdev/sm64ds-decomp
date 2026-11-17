@@ -12,8 +12,6 @@
  * D1 and D0 pair; `new` odr-uses the class so that pair is emitted here.
  *
  * deslop leftovers:
- * - UpdatePose still walks VecFx32 views: spelling those copies as
- *   Vector3 is emitted differently.
  * - The shared files keep their address names (d_a_f_pkn.cpp reads them
  *   too); the state table at 0x02130e80 also keeps its address name.
  *
@@ -698,19 +696,15 @@ int daPkn_c::CheckHits()
 void daPkn_c::UpdatePose()
 {
     Vector3s ang;
-    /* common.h comes first, so Matrix4x3 is the flat twelve words and
-       assigning it is one block copy. */
-    struct {
-        Matrix4x3 saved;
-        VecFx32 tv;
-        VecFx32 v;
-    } L;
+    Matrix4x3 saved;
+    Vector3 bubblePos;
+    Vector3 pos;
     int i;
     int scale;
 
-    Vec3_Asr((Vector3 *)&L.v, &mPos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, L.v.x, L.v.y, L.v.z);
-    L.saved = data_020a0e68;
+    Vec3_Asr(&pos, &mPos, 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
+    saved = data_020a0e68;
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     mAnmModel.mat4x3 = data_020a0e68;
 
@@ -726,7 +720,7 @@ void daPkn_c::UpdatePose()
     mHeadClsnOffset.x = 0;
     mHeadClsnOffset.y = 0;
     mHeadClsnOffset.z = 0;
-    data_020a0e68 = L.saved;
+    data_020a0e68 = saved;
     MTX_Concat43(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
     mHeadClsnOffset.x = data_020a0e68.m[9];
     mHeadClsnOffset.y = data_020a0e68.m[10];
@@ -740,9 +734,7 @@ void daPkn_c::UpdatePose()
     mHeadClsnOffset.y -= FX_SinCosTable_[((u16)ang.x >> 4) << 1] * 0x14 + 0x32000;
     mHeadClsnOffset.z += 0x32000;
 
-    L.tv.x = mPosX;
-    L.tv.y = mPosY;
-    L.tv.z = mPosZ;
+    bubblePos = mPos;
 
     {
         int rr = ((u32)(mAnmModel.currFrame << 4) >> 0x10);
@@ -757,16 +749,14 @@ void daPkn_c::UpdatePose()
         mBubbleScale.z = scale;
     }
 
-    L.tv.x = FX_SinIdx((u16)mAngleY >> 4) * 0xe0 + L.tv.x;
+    bubblePos.x += FX_SinIdx((u16)mAngleY >> 4) * 0xe0;
     scale = scale - 0xc00;
-    L.tv.z = FX_CosIdx((u16)mAngleY >> 4) * 0xe0 + L.tv.z;
-    L.tv.y = L.tv.y + (scale * 0x18 + 0x38000);
+    bubblePos.z += FX_CosIdx((u16)mAngleY >> 4) * 0xe0;
+    bubblePos.y += scale * 0x18 + 0x38000;
 
-    mBubblePos.x = L.tv.x;
-    mBubblePos.y = L.tv.y;
-    mBubblePos.z = L.tv.z;
+    mBubblePos = bubblePos;
 
-    Matrix4x3_FromTranslation(&mModel.mat4x3, L.tv.x >> 3, L.tv.y >> 3, L.tv.z >> 3);
+    Matrix4x3_FromTranslation(&mModel.mat4x3, bubblePos.x >> 3, bubblePos.y >> 3, bubblePos.z >> 3);
 }
 
 /* -------------------------------------------------------------------------- */
