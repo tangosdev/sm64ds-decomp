@@ -3545,7 +3545,7 @@ sLayer1Music kind:data(any) addr:0x0208e43c
 sLayer2Music kind:data(any) addr:0x0208e440
 sLayer3Music kind:data(any) addr:0x0208e444
 sPlayerSeqLimits kind:data(any) addr:0x0208e448
-data_0208e498 kind:data(any) addr:0x0208e498
+data_0208e498 kind:data(byte[22]) addr:0x0208e498
 _ZTV7dBase_c kind:data(any) addr:0x0208e4b8
 data_0208e4b8 kind:data(any) addr:0x0208e4b8
 data_0208e500 kind:data(any) addr:0x0208e500
