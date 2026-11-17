@@ -241,13 +241,13 @@ struct dCamera_c::State {
 enum Bool { FALSE, TRUE };
 /* Distances and limits that recur below, in fx32 unless noted. */
 enum {
-    CAM_FAR_SCALE = 0x1800,          /* 1.5: the zoomed-out follow distances */
-    CAM_PROBE_RISE = 0x100000,       /* how far above a point the ceiling probes reach */
-    CAM_TARGET_HEAD = 0x82500,       /* above the target's feet, where the wall checks start */
-    CAM_MIN_ABOVE_TARGET = 0x25bc8,  /* pos never sits lower than this over the floor it follows */
-    CAM_FRAMING_DIST = 0xdfe60,      /* follow distance while an actor is being framed */
-    CAM_LOOK_PITCH_MAX = 0x1c00,     /* angle units: the look-around pitch limit either way */
-    CAM_NO_STEP_LIMIT = 0x7fffffff   /* Math_Function_0203b0fc's step cap, when there is none */
+    CAM_FAR_SCALE = 0x1800,         /* 1.5: the zoomed-out follow distances */
+    CAM_PROBE_RISE = 0x100000,      /* how far above a point the ceiling probes reach */
+    CAM_TARGET_HEAD = 0x82500,      /* above the target's feet, where the wall checks start */
+    CAM_MIN_ABOVE_TARGET = 0x25bc8, /* pos never sits lower than this over the floor it follows */
+    CAM_FRAMING_DIST = 0xdfe60,     /* follow distance while an actor is being framed */
+    CAM_LOOK_PITCH_MAX = 0x1c00,    /* angle units: the look-around pitch limit either way */
+    CAM_NO_STEP_LIMIT = 0x7fffffff  /* Math_Function_0203b0fc's step cap, when there is none */
 };
 /* The controller-record bits the camera reads: the two turn buttons and the
    one that swings the camera round behind the player. */
@@ -260,23 +260,23 @@ enum {
 /* mFlags bits. The ones without a name here (0x80, 0x400, 0x800) are only
    read in this file, so nothing says what sets them. */
 enum {
-    CAM_FLAG_UNDERWATER = 0x1,     /* pos is below the water line (IsUnderwater) */
-    CAM_FLAG_ZOOMED_OUT = 0x2,     /* the far view: follow distances grow by half */
-    CAM_FLAG_SNAP_POS = 0x4,       /* place pos on its goal this frame instead of easing */
-    CAM_FLAG_SCRIPT_HOLD = 0x8,    /* an actor holds the camera; treated like a running script */
-    CAM_FLAG_STATE_LOCKED = 0x10,  /* ChangeState refuses */
-    CAM_FLAG_TURN_LEFT = 0x20,     /* turning; Render draws the matching arrow */
+    CAM_FLAG_UNDERWATER = 0x1,    /* pos is below the water line (IsUnderwater) */
+    CAM_FLAG_ZOOMED_OUT = 0x2,    /* the far view: follow distances grow by half */
+    CAM_FLAG_SNAP_POS = 0x4,      /* place pos on its goal this frame instead of easing */
+    CAM_FLAG_SCRIPT_HOLD = 0x8,   /* an actor holds the camera; treated like a running script */
+    CAM_FLAG_STATE_LOCKED = 0x10, /* ChangeState refuses */
+    CAM_FLAG_TURN_LEFT = 0x20,    /* turning; Render draws the matching arrow */
     CAM_FLAG_TURN_RIGHT = 0x40,
     CAM_FLAG_TURNING = CAM_FLAG_TURN_LEFT | CAM_FLAG_TURN_RIGHT,
-    CAM_FLAG_HOLD_MODE = 0x100,    /* keep following with data_0208747c until the player gets away */
-    CAM_FLAG_WALL_STEEP = 0x200,   /* this frame's wall between player and camera faces along the view */
-    CAM_FLAG_USER_TURN = 0x1000,   /* this frame's mode takes the turn buttons (the HUD reads it) */
-    CAM_FLAG_FOV_BLEND = 0x2000,   /* ease mFovBlend up to 1.0 rather than back to 0 */
-    CAM_FLAG_TALK_SAVED = 0x4000,  /* SaveCameraStateBeforeTalk has run */
-    CAM_FLAG_TALK_RESTORE = 0x8000, /* easing back to the saved view */
-    CAM_FLAG_SLOPE_LOW = 0x10000,  /* floor asks for the low rise slope (func_0200ca14) */
-    CAM_FLAG_SLOPE_HIGH = 0x20000, /* ...or the high one, with a tripled lookAt height */
-    CAM_FLAG_WALL_HIT = 0x40000,   /* this frame's wall was hit at a glancing angle */
+    CAM_FLAG_HOLD_MODE = 0x100,   /* keep following with data_0208747c until the player gets away */
+    CAM_FLAG_WALL_STEEP = 0x200,  /* the wall between player and camera faces along the view */
+    CAM_FLAG_USER_TURN = 0x1000,  /* this frame's mode takes the turn buttons (the HUD reads it) */
+    CAM_FLAG_FOV_BLEND = 0x2000,  /* ease mFovBlend up to 1.0 rather than back to 0 */
+    CAM_FLAG_TALK_SAVED = 0x4000, /* SaveCameraStateBeforeTalk has run */
+    CAM_FLAG_TALK_RESTORE = 0x8000,  /* easing back to the saved view */
+    CAM_FLAG_SLOPE_LOW = 0x10000,    /* floor asks for the low rise slope (func_0200ca14) */
+    CAM_FLAG_SLOPE_HIGH = 0x20000,   /* ...or the high one, with a tripled lookAt height */
+    CAM_FLAG_WALL_HIT = 0x40000,     /* this frame's wall was hit at a glancing angle */
     CAM_FLAG_WALL_REVERSE = 0x80000, /* swinging round to the other side of a wall */
     /* Behavior clears these every frame. */
     CAM_FLAG_PER_FRAME = CAM_FLAG_SNAP_POS | CAM_FLAG_WALL_STEEP | CAM_FLAG_SLOPE_LOW |
@@ -405,8 +405,8 @@ int dCamera_c::Behavior()
             mWeather = Particle::System::NewWeather(mWeather, weather, weatherPos.x, weatherPos.y,
                                                     weatherPos.z, 0, flag);
             if (weather == 0x86) {
-                mWeather2 = Particle::System::NewWeather(mWeather2, 0x87, weatherPos.x, weatherPos.y,
-                                                         weatherPos.z, 0, 1);
+                mWeather2 = Particle::System::NewWeather(mWeather2, 0x87, weatherPos.x,
+                                                         weatherPos.y, weatherPos.z, 0, 1);
             }
         }
     }
@@ -2154,7 +2154,8 @@ s32 dCamera_c::func_02009e70() {
             r4 = ScaleDistByFov(r5);
         }
         lookAtGroundY = func_0200bec4(&mTargetPos.x, r6, (char *)mode, r7);
-        turnInput = data_0209f498[gActivePlayerSlot].pressed & (CAM_BUTTON_BEHIND | CAM_BUTTON_TURN);
+        turnInput =
+            data_0209f498[gActivePlayerSlot].pressed & (CAM_BUTTON_BEHIND | CAM_BUTTON_TURN);
         if (mFocusActor != 0) {
             mAngleY = Vec3_HorzAngle(&lookAt, &pos);
         } else if (mode == (CamMode *)&data_0208733c) {
@@ -2244,7 +2245,8 @@ s32 dCamera_c::func_02009e70() {
                             mTurningToTarget = 0;
                         } else {
                             if (mTurningToTarget == 0) {
-                                turnInput = data_0209f498[gActivePlayerSlot].held & (CAM_BUTTON_BEHIND | CAM_BUTTON_TURN);
+                                turnInput = data_0209f498[gActivePlayerSlot].held &
+                                            (CAM_BUTTON_BEHIND | CAM_BUTTON_TURN);
                             }
                         }
                         if (mFlags & CAM_FLAG_HOLD_MODE) {
@@ -2379,8 +2381,10 @@ s32 dCamera_c::func_02009e70() {
                             goalY = sb;
                             if (sb < r6)
                                 goalY = r6;
-                            goalY = goalY + ScaleHeightByFov((r6 - lookAtGroundY) +
-                                                             ((mFlags & CAM_FLAG_ZOOMED_OUT) ? 0x1e8000 : 0x138000));
+                            goalY =
+                                goalY + ScaleHeightByFov(
+                                            (r6 - lookAtGroundY) +
+                                            ((mFlags & CAM_FLAG_ZOOMED_OUT) ? 0x1e8000 : 0x138000));
                             if (mode->flags & 0x80) {
                                 if (pos.y > (s32)goalY)
                                     goalY = pos.y;
@@ -2928,7 +2932,8 @@ int dCamera_c::KeepPosOutOfWalls() {
                 }
                 {
                     u32 f = mFlags;
-                    if ((f & CAM_FLAG_WALL_HIT) && mTurningToTarget != 0 && !(f & (CAM_FLAG_WALL_REVERSE | CAM_FLAG_HOLD_MODE))) {
+                    if ((f & CAM_FLAG_WALL_HIT) && mTurningToTarget != 0 &&
+                        !(f & (CAM_FLAG_WALL_REVERSE | CAM_FLAG_HOLD_MODE))) {
                         int a = cstd::atan2(n1.x, n1.z);
                         if (AngleDiff(a, cstd::atan2(mWallNormal.x, mWallNormal.z)) > 0x6000) {
                             mTargetAngleY += 0x8000;
@@ -2944,7 +2949,8 @@ int dCamera_c::KeepPosOutOfWalls() {
     {
         u32 f = mFlags;
         if (f & (CAM_FLAG_WALL_REVERSE | CAM_FLAG_HOLD_MODE)) {
-            SetVec(v0, mTargetPos.x, (f & CAM_FLAG_HOLD_MODE) ? pos.y : CAM_TARGET_HEAD + mTargetPos.y, mTargetPos.z);
+            SetVec(v0, mTargetPos.x,
+                   (f & CAM_FLAG_HOLD_MODE) ? pos.y : CAM_TARGET_HEAD + mTargetPos.y, mTargetPos.z);
         } else {
             scale = 0x1000;
             v0 = mPrevPos;
