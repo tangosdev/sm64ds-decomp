@@ -939,7 +939,6 @@ void func_ov002_020f30d4(char *p)
 }
 
 void StaffRoll::func_ov002_020f30f8(int i) {
-    char *o = (char *)this;
     unsigned short t;
     int oldA, oldB;
     int cc, dd, ee, ff;
@@ -978,7 +977,7 @@ void StaffRoll::func_ov002_020f30f8(int i) {
         this->window[i].bgY = 0;
 
     cc = this->window[i].bgX - oldA;
-    func_ov002_020f2f18(o, cc, this->window[i].bgY - oldB);
+    func_ov002_020f2f18((char *)this, cc, this->window[i].bgY - oldB);
 
     ee = this->window[i].right >> 12;
     ff = this->window[i].bottom >> 12;
@@ -1271,10 +1270,9 @@ void StaffRoll::func_ov002_020f3d98(int idx) {
     (this->*data_ov002_02110e34[sel])(idx);
 }
 
-/* Per-slot update of one 0x4c-byte cutscene record. func_ov002_020f5a94
- * takes c so r0 stays live through the orbit path to the call. */
+/* Per-star update of stars[i]: approach the target, then orbit; the last
+ * star's full orbit re-arms every active star. */
 void StaffRoll::func_ov002_020f3de4(int i) {
-    char *c = (char *)this;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
@@ -1346,28 +1344,25 @@ void StaffRoll::func_ov002_020f3de4(int i) {
     this->stars[i].heading += this->stars[i].angSpeed;
     this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
-    if (i != func_ov002_020f5a94(c) - 1)
+    if (i != func_ov002_020f5a94(this) - 1)
         return;
-    if ((unsigned int)((StaffRoll *)c)->stars[0].orbitTravel < 0x10000)
+    if ((unsigned int)this->stars[0].orbitTravel < 0x10000)
         return;
 
     for (j = 0; j < 4; j++) {
-        if (((StaffRoll *)c)->stars[0].active != 0) {
-            ((StaffRoll *)c)->stars[0].step = 1;
-            ((StaffRoll *)c)->stars[0].loops = 0;
-            ((StaffRoll *)c)->stars[0].phase = 0;
-            ((StaffRoll *)c)->stars[0].radius = 0x38000;
-            ((StaffRoll *)c)->stars[0].heading = data_ov002_021000c0[j];
-            ((StaffRoll *)c)->stars[0].orbitTravel = 0;
-            ((StaffRoll *)c)->stars[0].angSpeed = 0x200;
+        if (this->stars[j].active != 0) {
+            this->stars[j].step = 1;
+            this->stars[j].loops = 0;
+            this->stars[j].phase = 0;
+            this->stars[j].radius = 0x38000;
+            this->stars[j].heading = data_ov002_021000c0[j];
+            this->stars[j].orbitTravel = 0;
+            this->stars[j].angSpeed = 0x200;
         }
-        c += 0x4c;
     }
 }
 
 void StaffRoll::func_ov002_020f40fc(int i) {
-    char *c = (char *)this;
-
     if (this->stars[i].frame == 0) {
         if (this->stars[i].frameTimer == 0) {
             this->stars[i].loops += 1;
@@ -1409,7 +1404,7 @@ void StaffRoll::func_ov002_020f40fc(int i) {
             this->stars[i].speed = 0x2000;
         }
 
-        if (func_ov002_020f5a94(c) != 3)
+        if (func_ov002_020f5a94(this) != 3)
             return;
         if ((unsigned int)this->stars[i].orbitTravel < 0xc000)
             return;
@@ -1556,8 +1551,6 @@ void StaffRoll::func_ov002_020f43cc(int idx) {
 }
 
 void StaffRoll::func_ov002_020f4710(int i) {
-    char *c = (char *)this;
-
     if (this->stars[i].phase == 0) {
         int idx;
 
@@ -1600,7 +1593,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
             this->stars[i].speed = -0x2000;
         }
 
-        if (func_ov002_020f5a94(c) != 3)
+        if (func_ov002_020f5a94(this) != 3)
             return;
         if (i != 2)
             return;
@@ -1612,7 +1605,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
     this->stars[i].flyTimer++;
     this->stars[i].x += this->stars[i].speed;
 
-    if (func_ov002_020f5a94(c) == 3 && i == 2) {
+    if (func_ov002_020f5a94(this) == 3 && i == 2) {
         this->stars[i].speed += 0x300;
     } else if (i == 0 || i == 3) {
         this->stars[i].speed += 0x300;
@@ -1631,7 +1624,7 @@ void StaffRoll::func_ov002_020f4710(int i) {
         this->stars[i].heading = 0x8000;
         this->stars[i].delay = (u16)(data_ov002_02100110[i] << 6);
 
-        if (func_ov002_020f5a94(c) == 3) {
+        if (func_ov002_020f5a94(this) == 3) {
             if (i == 2)
                 this->stars[i].delay = 0x40;
         }
@@ -1646,7 +1639,6 @@ void StaffRoll::func_ov002_020f4710(int i) {
 }
 
 void StaffRoll::func_ov002_020f4a2c(int i) {
-    char *c = (char *)this;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
@@ -1674,13 +1666,13 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
         }
 
         if (this->stars[i].speed <= -0x2000)
-            this->stars[i].speed = this->stars[i].speed + 0x120;
+            this->stars[i].speed += 0x120;
 
         dx = (this->stars[i].targetX - this->stars[i].x) >> 12;
         dy = (this->stars[i].targetY - this->stars[i].y) >> 12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-            this->stars[i].phase += 1;
+            this->stars[i].phase++;
             this->stars[i].orbitTravel = 0;
             this->stars[i].heading = 0xc000;
             return;
@@ -1727,35 +1719,31 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
     this->stars[i].heading -= this->stars[i].angSpeed;
     this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
-    if (i != func_ov002_020f5a94(c) - 1)
+    if (i != func_ov002_020f5a94(this) - 1)
         return;
     if ((unsigned int)this->stars[0].orbitTravel < 0x10000)
         return;
 
     {
         int j;
-        char *p = c;
         for (j = 0; j < 4; j++) {
-            if (((StaffRoll *)p)->stars[0].active != 0) {
-                ((StaffRoll *)p)->stars[0].step += 1;
-                ((StaffRoll *)p)->stars[0].loops = 0;
-                ((StaffRoll *)p)->stars[0].phase = 0;
-                ((StaffRoll *)p)->stars[0].radius = 0x38000;
-                ((StaffRoll *)p)->stars[0].heading = data_ov002_021000c8[j];
-                if (func_ov002_020f5a94(c) == 3) {
+            if (this->stars[j].active != 0) {
+                this->stars[j].step++;
+                this->stars[j].loops = 0;
+                this->stars[j].phase = 0;
+                this->stars[j].radius = 0x38000;
+                this->stars[j].heading = data_ov002_021000c8[j];
+                if (func_ov002_020f5a94(this) == 3) {
                     if (j == 2)
-                        ((StaffRoll *)p)->stars[0].heading = 0;
+                        this->stars[j].heading = 0;
                 }
-                ((StaffRoll *)p)->stars[0].orbitTravel = 0;
+                this->stars[j].orbitTravel = 0;
             }
-            p += 0x4c;
         }
     }
 }
 
 void StaffRoll::func_ov002_020f4d70(int i) {
-    char *c = (char *)this;
-
     if (this->stars[i].frame == 0) {
         if (this->stars[i].frameTimer == 0)
             this->stars[i].loops++;
@@ -1818,7 +1806,7 @@ void StaffRoll::func_ov002_020f4d70(int i) {
         this->stars[i].loops = 0;
         this->stars[i].delay = data_ov002_021000f0[i] << 6;
 
-        if (func_ov002_020f5a94(c) == 3) {
+        if (func_ov002_020f5a94(this) == 3) {
             if (i == 2)
                 this->stars[i].delay = 0x40;
         }
@@ -1832,20 +1820,17 @@ void StaffRoll::func_ov002_020f4d70(int i) {
     this->stars[i].targetY = 0x28000;
 }
 
-/* recovered: the third of the three per-slot cursor/target updaters in this
- * family (func_ov002_020f43cc, func_ov002_020f4a2c, this one), same 0x4c-byte
- * record layout: hold timer +0x30, arrival flag +0x48, position +0/+4,
- * heading +0x2e, approach speed +8, target +0x1c/+0x20, orbit radius +0x10,
- * angular speed +0x42, orbit angle +0x24.
+/* recovered: the third of the three per-star approach/orbit updaters in this
+ * family (func_ov002_020f43cc, func_ov002_020f4a2c, this one), over the same
+ * stars[] fields: delay, phase, x/y, heading, speed, targetX/targetY,
+ * radius, angSpeed, orbitTravel.
  *
  * Differences from func_ov002_020f4a2c, each visible in the bytes: the speed
  * clamp works from the +0x2000 side (`cmp #0x2000 / subge #0x120`), the
- * arrived slots orbit with the heading ADDED to the angular speed, the
- * re-arm loop reads data_ov002_021000d0 and has no mode==3 special case.
- * With fewer live values the compiler needs only r4-r8/sb and keeps c in r6.
+ * arrived stars orbit with the heading ADDED to the angular speed, the
+ * re-arm loop reads data_ov002_021000d0 and has no unlock-count==3 case.
  */
 void StaffRoll::func_ov002_020f5010(int i) {
-    char *c = (char *)this;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
@@ -1873,13 +1858,13 @@ void StaffRoll::func_ov002_020f5010(int i) {
         }
 
         if (this->stars[i].speed >= 0x2000)
-            this->stars[i].speed = this->stars[i].speed - 0x120;
+            this->stars[i].speed -= 0x120;
 
         dx = (this->stars[i].targetX - this->stars[i].x) >> 12;
         dy = (this->stars[i].targetY - this->stars[i].y) >> 12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-            this->stars[i].phase += 1;
+            this->stars[i].phase++;
             this->stars[i].orbitTravel = 0;
             this->stars[i].heading = 0xc000;
             return;
@@ -1926,24 +1911,22 @@ void StaffRoll::func_ov002_020f5010(int i) {
     this->stars[i].heading += this->stars[i].angSpeed;
     this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
-    if (i != func_ov002_020f5a94(c) - 1)
+    if (i != func_ov002_020f5a94(this) - 1)
         return;
     if ((unsigned int)this->stars[0].orbitTravel < 0x10000)
         return;
 
     {
         int j;
-        char *p = c;
         for (j = 0; j < 4; j++) {
-            if (((StaffRoll *)p)->stars[0].active != 0) {
-                ((StaffRoll *)p)->stars[0].step += 1;
-                ((StaffRoll *)p)->stars[0].loops = 0;
-                ((StaffRoll *)p)->stars[0].phase = 0;
-                ((StaffRoll *)p)->stars[0].radius = 0x38000;
-                ((StaffRoll *)p)->stars[0].heading = data_ov002_021000d0[j];
-                ((StaffRoll *)p)->stars[0].orbitTravel = 0;
+            if (this->stars[j].active != 0) {
+                this->stars[j].step++;
+                this->stars[j].loops = 0;
+                this->stars[j].phase = 0;
+                this->stars[j].radius = 0x38000;
+                this->stars[j].heading = data_ov002_021000d0[j];
+                this->stars[j].orbitTravel = 0;
             }
-            p += 0x4c;
         }
     }
 }
@@ -2020,19 +2003,17 @@ void StaffRoll::func_ov002_020f5328(int i) {
 }
 
 void StaffRoll::func_ov002_020f55b4(int i) {
-    char *c = (char *)this;
-    char *e = c + i * 0x4c;
-    if (((StaffRoll *)e)->stars[0].frame != 0x10)
+    if (this->stars[i].frame != 0x10)
         return;
-    (&this->stars[0].step)[i * 0x4c] += 1;
-    ((StaffRoll *)e)->stars[0].radius = 0x38000;
-    ((StaffRoll *)e)->stars[0].heading = data_ov002_021000d8[i];
-    ((StaffRoll *)e)->stars[0].phase = 0;
-    ((StaffRoll *)e)->stars[0].loops = 0;
-    ((StaffRoll *)e)->stars[0].orbitTravel = 0;
-    ((StaffRoll *)e)->stars[0].angSpeed = 0x200;
-    ((StaffRoll *)e)->stars[0].kiraDefParam = 0x1000;
-    ((StaffRoll *)e)->stars[0].kiraSysParam = 0x200;
+    this->stars[i].step++;
+    this->stars[i].radius = 0x38000;
+    this->stars[i].heading = data_ov002_021000d8[i];
+    this->stars[i].phase = 0;
+    this->stars[i].loops = 0;
+    this->stars[i].orbitTravel = 0;
+    this->stars[i].angSpeed = 0x200;
+    this->stars[i].kiraDefParam = 0x1000;
+    this->stars[i].kiraSysParam = 0x200;
 }
 
 void StaffRoll::func_ov002_020f562c(int idx) {
@@ -2142,25 +2123,21 @@ void StaffRoll::func_ov002_020f5894(int i) {
 }
 
 void StaffRoll::func_ov002_020f5990() {
-    char *c = (char *)this;
     int i;
-    StaffRoll::Star *s = this->stars;
-    {
-        int *cnt = &this->kiraStar;
-        *cnt = *cnt + 1;
-        *cnt = *cnt & 3;
-    }
-    for (i = 0; i < 4; i++, s++) {
-        if (s->active == 0)
+    this->kiraStar++;
+    this->kiraStar &= 3;
+    for (i = 0; i < 4; i++) {
+        if (this->stars[i].active == 0)
             continue;
-        (this->*data_ov002_02110e7c[s->state])(i);
-        func_ov002_020f39ec(c, i);
-        if (s->sparkling == 0)
+        (this->*data_ov002_02110e7c[this->stars[i].state])(i);
+        func_ov002_020f39ec((char *)this, i);
+        if (this->stars[i].sparkling == 0)
             continue;
         if (i != this->kiraStar)
             continue;
-        func_ov002_020f2790(c, (s16)(s->x >> 12), (s16)(s->y >> 12), s->kiraDefParam,
-                            s->kiraSysParam);
+        func_ov002_020f2790((char *)this, (s16)(this->stars[i].x >> 12),
+                            (s16)(this->stars[i].y >> 12), this->stars[i].kiraDefParam,
+                            this->stars[i].kiraSysParam);
     }
 }
 
@@ -2232,12 +2209,10 @@ void StaffRoll::func_ov002_020f5b98() {
 }
 
 void StaffRoll::func_ov002_020f5bcc() {
-    char *p = (char *)this;
     int i;
     for (i = 0; i < 4; i++) {
-        if (((StaffRoll *)p)->stars[0].active)
-            ((StaffRoll *)p)->stars[0].holdFrame = 1;
-        p += 0x4c;
+        if (this->stars[i].active)
+            this->stars[i].holdFrame = 1;
     }
 }
 
@@ -2293,38 +2268,28 @@ void StaffRoll::func_ov002_020f5cd0() {
 }
 
 void StaffRoll::func_ov002_020f5d34() {
-    u8 *self = (u8 *)this;
-    int n = func_ov002_020f5a94(self);
-    int i = 0;
-    u8 *e;
-    int v;
-    if (n <= 0) goto done;
-    e = self;
-    v = 0;
-    do {
+    int n = func_ov002_020f5a94(this);
+    int i;
+    for (i = 0; i < n; i++) {
         /* +0x38 is Star::pad_38: written twice here, read nowhere. */
-        ((StaffRoll *)e)->stars[0].active = 1;
-        ((StaffRoll *)e)->stars[0].visible = 0;
-        ((StaffRoll *)e)->stars[0].heading = 0;
-        ((StaffRoll *)e)->stars[0].pad_38 = 0;
-        ((StaffRoll *)e)->stars[0].x = 0x80000;
-        ((StaffRoll *)e)->stars[0].y = 0x60000;
-        ((StaffRoll *)e)->stars[0].delay = v;
-        ((StaffRoll *)e)->stars[0].frameTimer = 0;
-        ((StaffRoll *)e)->stars[0].kiraTimer = 0;
-        ((StaffRoll *)e)->stars[0].kiraPeriods = 0;
-        ((StaffRoll *)e)->stars[0].kiraDefParam = 0x199;
-        ((StaffRoll *)e)->stars[0].kiraSysParam = 0x199;
-        ((StaffRoll *)e)->stars[0].pad_38 = 0;
-        ((StaffRoll *)e)->stars[0].state = 0;
-        ((StaffRoll *)e)->stars[0].step = 0;
-        ((StaffRoll *)e)->stars[0].sparkling = 0;
-        e += 0x4c;
-        v += 0x40;
-        i++;
-    } while (i < n);
-done:
-    func_ov002_020f2958((char*)self);
+        this->stars[i].active = 1;
+        this->stars[i].visible = 0;
+        this->stars[i].heading = 0;
+        this->stars[i].pad_38 = 0;
+        this->stars[i].x = 0x80000;
+        this->stars[i].y = 0x60000;
+        this->stars[i].delay = i << 6;
+        this->stars[i].frameTimer = 0;
+        this->stars[i].kiraTimer = 0;
+        this->stars[i].kiraPeriods = 0;
+        this->stars[i].kiraDefParam = 0x199;
+        this->stars[i].kiraSysParam = 0x199;
+        this->stars[i].pad_38 = 0;
+        this->stars[i].state = 0;
+        this->stars[i].step = 0;
+        this->stars[i].sparkling = 0;
+    }
+    func_ov002_020f2958((char *)this);
 }
 
 extern StaffRollCue data_ov002_02110f34[];
@@ -2371,8 +2336,7 @@ void StaffRoll::func_ov002_020f5ee4() {
 }
 
 void StaffRoll::func_ov002_020f5ef0() {
-    char *p = (char *)this;
-    func_ov002_020f3954(p);
+    func_ov002_020f3954((char *)this);
 }
 
 /* func_ov002_020f5efc @ 0x20f5efc (ov002) -- tail-call veneer to LoadFont (0x201fcd4) with r0=0.
@@ -2616,17 +2580,16 @@ void daDemo_c::anmModel_c::func_ov002_020f65ec() {
 int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, SharedFilePtr **anims,
                         int arg5, unsigned char texByte, SharedFilePtr **texs, int tsData)
 {
-    char *self = (char *)this;
     int i;
     mModelFile = mdl;
-    if (((dExtModel_c *)self)->SetFile(dExtSimpleModel_c::LoadFile(*mModelFile), 1, tsData) == 0)
+    if (SetFile(dExtSimpleModel_c::LoadFile(*mModelFile), 1, tsData) == 0)
         return 0;
     mNumAnimFiles = (u8)nAnims;
     mAnimFiles = anims;
     for (i = 0; i < mNumAnimFiles; i++) {
         dExtFrameCtrl_c::LoadFile(*mAnimFiles[i]);
     }
-    ((dExtAnmModel_c *)self)->SetAnim((BCA_File *)(mAnimFiles[0]->filePtr), 0, 0x1000, 0);
+    SetAnim((BCA_File *)(mAnimFiles[0]->filePtr), 0, 0x1000, 0);
     if (texByte) {
         mTexSeq = new dExtAnmTexPat_c;
         if (mTexSeq == 0)
