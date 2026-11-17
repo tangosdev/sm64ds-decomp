@@ -3,7 +3,7 @@
 
 /* The multiboot WM layer's MP send, as NitroSDK's private
  * libraries/mb/include/mb_wm_base.h declares it: mb_wm_base.c
- * (src/engine/mb/MB_WmBase.cpp) defines it, and mb_common.c's
+ * (src/engine/mb/MB_WmBase.c) defines it, and mb_common.c's
  * MBi_BlockHeaderEnd (src/engine/mb/MB_Common.c) sends every parent block
  * through it.
  *
