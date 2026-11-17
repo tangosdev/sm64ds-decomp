@@ -76,9 +76,9 @@ s32 daObjHmBskt_c::InitResources() {
     mVertAccel = 0;
     mTerminalVelocity = 0;
     mHorzSpeed = 0;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
 
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     UpdateModelPosAndRotY();

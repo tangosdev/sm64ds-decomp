@@ -140,9 +140,9 @@ int daPgMthr_c::InitResources()
     ChangeState(0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     /* Mesh radius and height 50.0. */
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     Vector3 pos;

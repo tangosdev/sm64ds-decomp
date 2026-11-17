@@ -261,16 +261,16 @@ void daWanwan2_c::func_ov100_0214344c() {
     flags = this->mdCcAcPos_c.hitFlags;
     if (flags & daWanwan2_HIT_EXPLOSION) {
         this->mHaltTimer = 90;
-        this->mScaleX = 0x2000; /* 2.0 */
-        this->mScaleY = this->mScaleX;
-        this->mScaleZ = this->mScaleY;
+        this->mScale.x = 0x2000; /* 2.0 */
+        this->mScale.y = this->mScale.x;
+        this->mScale.z = this->mScale.y;
         return;
     }
     if (flags & daWanwan2_HIT_MEGA) {
         this->mHaltTimer = 90;
-        this->mScaleX = 0x2000; /* 2.0 */
-        this->mScaleY = this->mScaleX;
-        this->mScaleZ = this->mScaleY;
+        this->mScale.x = 0x2000; /* 2.0 */
+        this->mScale.y = this->mScale.x;
+        this->mScale.z = this->mScale.y;
         return;
     }
 
@@ -278,9 +278,9 @@ void daWanwan2_c::func_ov100_0214344c() {
         enum Bool b = (enum Bool)(other->actorID == daWanwan2_ACTOR_YOSHI_EGG);
         if (b != FALSE && (flags & daWanwan2_HIT_EGG)) {
             this->mHaltTimer = 90;
-            this->mScaleX = 0x2000; /* 2.0 */
-            this->mScaleY = this->mScaleX;
-            this->mScaleZ = this->mScaleY;
+            this->mScale.x = 0x2000; /* 2.0 */
+            this->mScale.y = this->mScale.x;
+            this->mScale.z = this->mScale.y;
             return;
         }
     }
@@ -543,7 +543,7 @@ void daWanwan2_c::OnPendingDestroy()
 }
 
 /* -------------------------------------------------------------------------- */
-/* The body is drawn with the actor's own scale (mScaleX/Y/Z) and five of
+/* The body is drawn with the actor's own scale (mScale) and five of
    the six link models are drawn. */
 int daWanwan2_c::Render()
 {
@@ -579,9 +579,9 @@ int daWanwan2_c::Behavior()
     DecIfAbove0_Short(&mCoinTimer);
     DecIfAbove0_Short(&unk_6a8);
     if (DecIfAbove0_Short(&mHaltTimer) != 0) {
-        ApproachLinear(mScaleX, 0x1000, 0x500);
-        mScaleZ = mScaleX;
-        mScaleY = mScaleZ;
+        ApproachLinear(mScale.x, 0x1000, 0x500);
+        mScale.z = mScale.x;
+        mScale.y = mScale.z;
         func_ov100_02143b68();
         mHorzSpeed = 0;
         UpdatePos(&mdCcAcPos_c);
@@ -770,9 +770,9 @@ int daWanwan2_c::InitResources()
 
     /* Raise it 100 units (0x64000). */
     mPosY += 0x64000;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
 
     /* Start in the walking state. */
     this->func_ov100_02143b18(&data_ov100_021486f4);

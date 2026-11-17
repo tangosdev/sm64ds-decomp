@@ -68,9 +68,9 @@ int daKpFr_c::InitResources()
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mVertAccel = -0x400;
     mTerminalVelocity = -0x5000;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     func_ov070_02122044(0);
     *(Mtx43 *)&mMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     return 1;
@@ -260,9 +260,9 @@ void daKpFr_c::func_ov070_02121be4()
     ground.SetObjAndPos(*(Vector3*)pos, this);
     if (ground.DetectClsn() == 0 ||
         ground.clsnY < mPosY - 0x32000) {
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPosX = mPrevPos.x;
+        mPosY = mPrevPos.y;
+        mPosZ = mPrevPos.z;
     }
 }
 

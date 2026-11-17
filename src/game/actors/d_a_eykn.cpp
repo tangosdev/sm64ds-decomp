@@ -9,7 +9,7 @@
  * - daPly_c::Hurt stays a scalar extern; daPly_c.h does not declare it.
  * - func_0201267c is the bank-3 veneer around Sound::Play. Sound::Play(3,
  *   id, Vector3 &) is +4 a call: St_Die_Init 0xd4->0xd8, St_Attack_Main
- *   0x314->0x318, St_Die_Main (two calls) 0x3dc->0x3e4. &mCamSpacePosX
+ *   0x314->0x318, St_Die_Main (two calls) 0x3dc->0x3e4. &mCamSpacePos
  *   does not bind to Vector3 &.
  * - dActor_c::func_0200f760 clears cylinder +0x18 bit 2 unless the closest
  *   player's byte at +0x6fb is set. No recovered name.
@@ -396,9 +396,9 @@ int daEykn_c::St_Die_Main()
             mSubState++;
         }
         scale = mScale;
-        mScaleX = scale;
-        mScaleY = scale;
-        mScaleZ = scale;
+        dActor_c::mScale.x = scale;
+        dActor_c::mScale.y = scale;
+        dActor_c::mScale.z = scale;
         kind = actorID;
         isSmall = (kind == kSmallMrI);
         if (isSmall != 0) {
@@ -738,9 +738,9 @@ s32 daEykn_c::InitResources()
         v.y = -0x4b000;
         v.z = 0;
         mdCcAcPos_c.Init(this, v, 0x55000, 0x96000, 0x200004, 0x42000);
-        mScaleX = 0x1000;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1000;
+        dActor_c::mScale.x = 0x1000;
+        dActor_c::mScale.y = 0x1000;
+        dActor_c::mScale.z = 0x1000;
         mScale = 0x1000;
     } else {
         int isBig = (kind == kBigMrI);
@@ -750,9 +750,9 @@ s32 daEykn_c::InitResources()
             v.y = -0x96000;
             v.z = 0;
             mdCcAcPos_c.Init(this, v, 0xaa000, 0x12c000, 0x200004, 0);
-            mScaleX = 0x2000;
-            mScaleY = 0x2000;
-            mScaleZ = 0x2000;
+            dActor_c::mScale.x = 0x2000;
+            dActor_c::mScale.y = 0x2000;
+            dActor_c::mScale.z = 0x2000;
             mScale = 0x2000;
             {
                 unsigned char starID = (param1 & 0xf);

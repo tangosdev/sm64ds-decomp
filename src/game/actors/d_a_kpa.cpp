@@ -450,9 +450,9 @@ int daKpa_c::InitResources()
     this->mStep = 0;
     this->mDropsShadow = 1;
     this->mBounceOnLand = 0;
-    this->mScaleX = 0x1000;
-    this->mScaleY = 0x1000;
-    this->mScaleZ = 0x1000;
+    this->mScale.x = 0x1000;
+    this->mScale.y = 0x1000;
+    this->mScale.z = 0x1000;
     this->mAnimSpeed = 0x1000;
     this->mSkipIdleRoll = 1;
     InitFightState();
@@ -2194,10 +2194,10 @@ int daKpa_c::DeadWaitForMario() {
 /*
 Defeat shrink-and-spin for variants 0 and 1, per frame; returns 1 once done.
 Particle 0x99 is spawned 50 units above him each frame (mParticleHandle).
-Once mScaleX is below 0xccc (about 0.8), mSpinSpeed grows by 0x80 per frame.
-While mScaleX is above 0x334 (about 0.2) mScaleX and mScaleZ shrink by 0x52 per
-frame; after that mScaleY shrinks by 0x29, he rises at 0xa000 (10.0) and gravity
-is 0. The result is 1 once mScaleY is below 0x800 (0.5). mAngleY advances by
+Once mScale.x is below 0xccc (about 0.8), mSpinSpeed grows by 0x80 per frame.
+While mScale.x is above 0x334 (about 0.2) mScale.x and mScale.z shrink by 0x52 per
+frame; after that mScale.y shrinks by 0x29, he rises at 0xa000 (10.0) and gravity
+is 0. The result is 1 once mScale.y is below 0x800 (0.5). mAngleY advances by
 mSpinSpeed, mOpacity drops by 2 while above 2, and until done the looping sound
 0xba plays (mSoundHandle is reset when the sound ID changes). */
 int daKpa_c::DeadTwirlUp() {
@@ -2207,20 +2207,20 @@ int daKpa_c::DeadTwirlUp() {
 
     mParticleHandle = Particle::System::New(mParticleHandle, 0x99, pos.x, pos.y, pos.z, 0, 0);
 
-    if (this->mScaleX < 0xccc) {
+    if (this->mScale.x < 0xccc) {
         this->mSpinSpeed += 0x80;
     }
 
-    if (this->mScaleX > 0x334) {
-        this->mScaleX -= 0x52;
-        this->mScaleZ -= 0x52;
+    if (this->mScale.x > 0x334) {
+        this->mScale.x -= 0x52;
+        this->mScale.z -= 0x52;
     } else {
-        this->mScaleY -= 0x29;
+        this->mScale.y -= 0x29;
         this->mSpeed.y = 0xa000;
         this->mVertAccel = 0;
     }
 
-    if (this->mScaleY < 0x800)
+    if (this->mScale.y < 0x800)
         done = 1;
 
     this->mAngleY += this->mSpinSpeed;
@@ -2248,9 +2248,9 @@ void daKpa_c::DeadHide() {
     this->mPosX = 0;
     this->mPosY = y;
     this->mPosZ = 0;
-    this->mScaleX = 0;
-    this->mScaleY = 0;
-    this->mScaleZ = 0;
+    this->mScale.x = 0;
+    this->mScale.y = 0;
+    this->mScale.z = 0;
     this->mHorzSpeed = 0;
     this->mSpeed.y = 0;
     this->mVertAccel = 0;

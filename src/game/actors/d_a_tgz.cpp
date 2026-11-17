@@ -759,9 +759,9 @@ int daTgz_c::InitResources()
         return 0;
     mdCcAc_c.Init(this, 0x2d000, 0x3c000, 0x200000, 0x4a3d0);
     mWithMeshClsn.Init(this, 0x2d000, 0, &mPrevAngle, &mAngle);
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mDespawnTimer = 44;
     this->func_ov077_02125e94(0);
     mShadowMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;

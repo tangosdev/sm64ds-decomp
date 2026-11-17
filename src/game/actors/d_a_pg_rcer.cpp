@@ -141,16 +141,16 @@ int daPgRcer_c::InitResources()
 
     if (NumStars() == 0x96) {
         mdCcAc_c.Init(this, 0xd0000, 0x12c000, 0x800004, 0);
-        mScaleX = 0x1999;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1999;
+        mScale.x = 0x1999;
+        mScale.y = 0x1000;
+        mScale.z = 0x1999;
         mWithMeshClsn.Init(this, 0xd0000, 0xd0000, 0, 0);
         SetRanges(0xf0000, 0xf0000, 0x1c20000, 0x1c20000);
     } else {
         mdCcAc_c.Init(this, 0x82000, 0x12c000, 0x800004, 0);
-        mScaleX = 0x1000;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1000;
+        mScale.x = 0x1000;
+        mScale.y = 0x1000;
+        mScale.z = 0x1000;
         mWithMeshClsn.Init(this, 0x82000, 0x82000, 0, 0);
     }
 

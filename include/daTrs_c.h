@@ -185,10 +185,10 @@ struct daTrs_c : dCapEnemy_c {
        appears (02119074); 021189f4 hands it >> 0xc to Sound::PlaySub. */
     s32 mSavedMusicVolume;     /* 0x57c */
     s32 mDistToPlayer;         /* 0x580 -- Vec3_HorzDist each Behavior */
-    /* The Boo's base scale. Oscillate sets mScaleX/Y/Z (what
+    /* The Boo's base scale. Oscillate sets mScale (what
        Render draws) to this plus a wobble and sizes mdCcAcPos_c from them;
        the appear path copies it in directly. Runtime (EU, blinded 7/7):
-       poking this resized the drawn Boo; a direct mScaleX write was undone.
+       poking this resized the drawn Boo; a direct mScale.x write was undone.
        Both no-op shams were among 4 dropped pairs, so none was scored. */
     s32 mClsnScale;            /* 0x584 */
     /* Per-chase randoms, redrawn by 02119894/02119960 whenever mStateTimer
@@ -228,7 +228,7 @@ struct daTrs_c : dCapEnemy_c {
     s16 mPreKnockbackAngleY;   /* 0x5b4 */
     s16 mKnockbackAngleY;      /* 0x5b6 */
     /* Phase of the squash-and-stretch wobble: Oscillate reads it
-       >> 4 as a sine-table index and moves mScaleX / mScaleY by opposite
+       >> 4 as a sine-table index and moves mScale.x / mScale.y by opposite
        amounts. Only zero is ever stored (InitResources, twice), so the name
        rests on that one reader. Medium confidence. */
     u16 mWobblePhase; /* 0x5b8 */

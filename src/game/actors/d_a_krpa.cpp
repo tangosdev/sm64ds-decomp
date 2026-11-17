@@ -112,9 +112,9 @@ int daKrpa_c::InitResources() {
     mVertAccel = 0;
     mTerminalVelocity = 0;
     ChangeState(0);
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     *(Mtx43 *)&mMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
 
     dBgCh_Gnd ground;
@@ -200,9 +200,9 @@ int daKrpa_c::ExecuteIdle() {
     }
     this->mAnmModel.Advance();
     u32 frame = this->mFrameController.NextFrame();
-    this->mScaleX = frame;
-    this->mScaleY = frame;
-    this->mScaleZ = frame;
+    this->mScale.x = frame;
+    this->mScale.y = frame;
+    this->mScale.z = frame;
     this->TrackClosestPlayer();
     this->HandlePlayerHit();
     this->mdCcAcPos_c.Clear();
@@ -235,9 +235,9 @@ int daKrpa_c::ExecuteSpit() {
         this->ChangeState(0);
     this->mAnmModel.Advance();
     u32 frame = this->mFrameController.NextFrame();
-    this->mScaleX = frame;
-    this->mScaleY = frame;
-    this->mScaleZ = frame;
+    this->mScale.x = frame;
+    this->mScale.y = frame;
+    this->mScale.z = frame;
     this->TrackClosestPlayer();
     this->HandlePlayerHit();
     this->mdCcAcPos_c.Clear();
@@ -268,9 +268,9 @@ int daKrpa_c::EnterKnockedAway() {
     this->mTerminalVelocity = -0x3c000;
     this->mHorzSpeed = 0xa000;
     this->mSpeed.y = 0x28000;
-    this->mScaleX = 0x1000;
-    this->mScaleY = 0x1000;
-    this->mScaleZ = 0x1000;
+    this->mScale.x = 0x1000;
+    this->mScale.y = 0x1000;
+    this->mScale.z = 0x1000;
     this->mStateTimer = 45;
     this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
     Particle::System::NewSimple(kPtclKnockAwayA, this->mPosX, this->mPosY, this->mPosZ);
@@ -304,7 +304,7 @@ void daKrpa_c::UpdateModelAndShadow() {
     this->mMatrix.t.x = this->mPosX >> 3;
     this->mMatrix.t.y = this->mPosY >> 3;
     this->mMatrix.t.z = this->mPosZ >> 3;
-    DropShadowRadHeight(this->mShadowModel, this->mMatrix, this->mScaleX * 0x46,
+    DropShadowRadHeight(this->mShadowModel, this->mMatrix, this->mScale.x * 0x46,
                         this->mGroundDistance, 0xf);
 }
 

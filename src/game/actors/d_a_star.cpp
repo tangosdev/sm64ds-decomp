@@ -281,9 +281,9 @@ s32 daStar_c::InitResources()
     mCamSeq = 0xffff;
     mSavedAreaId = (u8)mAreaId;
     mMarkerSlot = -1;
-    mScaleX = FX32_ONE;
-    mScaleY = FX32_ONE;
-    mScaleZ = FX32_ONE;
+    mScale.x = FX32_ONE;
+    mScale.y = FX32_ONE;
+    mScale.z = FX32_ONE;
     mMarkerID = 0;
     mSoundObjID = 0;
     mParticle[3] = 0;
@@ -374,13 +374,13 @@ s32 daStar_c::InitResources()
                 return 0;
             }
             if (NumVsStarsObtained() == 5) {
-                mScaleX = FX32_ONE;
-                mScaleY = FX32_ONE;
-                mScaleZ = FX32_ONE;
+                mScale.x = FX32_ONE;
+                mScale.y = FX32_ONE;
+                mScale.z = FX32_ONE;
             } else {
-                mScaleX = 0;
-                mScaleY = 0;
-                mScaleZ = 0;
+                mScale.x = 0;
+                mScale.y = 0;
+                mScale.z = 0;
             }
         }
         if (mKind != KIND_0)
@@ -717,7 +717,7 @@ int daStarBase_c::Behavior()
 int daStar_c::Render()
 {
     int locked;
-    if (mScaleX == 0 || (locked = (mFlags & 0x40000) != 0) || !mBits.visible)
+    if (mScale.x == 0 || (locked = (mFlags & 0x40000) != 0) || !mBits.visible)
         return 1;
     else {
         if (!mBits.collectedModel)
@@ -983,10 +983,10 @@ void daStar_c::StateIdle() {
             }
         }
         if (en != 0) {
-            if (mScaleX != 0x1000 && (gNextActorUpdateMask & CUTSCENE_FLAG) == 0) {
+            if (mScale.x != 0x1000 && (gNextActorUpdateMask & CUTSCENE_FLAG) == 0) {
                 mFlags |= CUTSCENE_FLAG;
                 gNextActorUpdateMask |= CUTSCENE_FLAG;
-            } else if (mScaleX == 0x1000) {
+            } else if (mScale.x == 0x1000) {
                 mAppearTimer = lim + 11;
                 mBits.appeared = 1;
                 AddStarMarker();
@@ -998,8 +998,8 @@ void daStar_c::StateIdle() {
                     if (mCamSeq == 0xffff)
                         mCamSeq = 0x64;
                 }
-            } else if (mScaleX != 0x1000) {
-                spd = mScaleX;
+            } else if (mScale.x != 0x1000) {
+                spd = mScale.x;
                 if (mAppearTimer >= lim + 0xa) {
                     if (ApproachLinear(spd, 0x1000, step) != 0) {
                         AddStarMarker();
@@ -1010,9 +1010,9 @@ void daStar_c::StateIdle() {
                 }
                 {
                     int v = spd;
-                    mScaleX = v;
-                    mScaleY = v;
-                    mScaleZ = v;
+                    mScale.x = v;
+                    mScale.y = v;
+                    mScale.z = v;
                 }
             } else {
                 if (!mBits.switchStar)
@@ -1030,11 +1030,11 @@ void daStar_c::StateIdle() {
             mdCc_c.flags |= 1;
             if (mAppearTimer != 0) {
                 mAppearTimer -= 1;
-            } else if (mScaleX != 0) {
+            } else if (mScale.x != 0) {
                 int step2;
                 if (mStateTimer == 0)
                     func_02012790(0x42);
-                spd2 = mScaleX;
+                spd2 = mScale.x;
                 if (mStateTimer <= 15) {
                     mStateTimer += 1;
                     step2 = 0;
@@ -1047,9 +1047,9 @@ void daStar_c::StateIdle() {
                 }
                 {
                     int v2 = spd2;
-                    mScaleX = v2;
-                    mScaleY = v2;
-                    mScaleZ = v2;
+                    mScale.x = v2;
+                    mScale.y = v2;
+                    mScale.z = v2;
                 }
                 if ((gNextActorUpdateMask & CUTSCENE_FLAG) == 0) {
                     mFlags |= CUTSCENE_FLAG;
@@ -1158,13 +1158,13 @@ void daStar_c::StateCollectBegin() {
         mAngleX = 0;
 
         if (common->mIsMega != 0) {
-            mScaleX = 0x3000;
-            mScaleY = 0x3000;
-            mScaleZ = 0x3000;
+            mScale.x = 0x3000;
+            mScale.y = 0x3000;
+            mScale.z = 0x3000;
         } else {
-            mScaleX = FX32_ONE;
-            mScaleY = FX32_ONE;
-            mScaleZ = FX32_ONE;
+            mScale.x = FX32_ONE;
+            mScale.y = FX32_ONE;
+            mScale.z = FX32_ONE;
         }
 
         StopMotion();
@@ -1412,7 +1412,7 @@ void daStar_c::StateSaveMessage() {
  * runs once mStateTimer has counted out, unless the no-pickup flag is set. */
 void daStar_c::StateBounce() {
     CheckBounds();
-    mPrevPosY = mPosY;
+    mPrevPos.y = mPosY;
     UpdateWMClsn(mWithMeshClsn, 2);
     if (mWithMeshClsn.IsOnWall()) {
         mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
@@ -2098,7 +2098,7 @@ void daStar_c::UpdateWater() {
         }
         if (mBits.water == WATER_NONE) {
             mBits.water = WATER_TOUCH;
-            mPosY = mPrevPosY;
+            mPosY = mPrevPos.y;
             mWithMeshClsn.ClearGroundFlag();
             mWithMeshClsn.ClearJustHitGroundFlag();
             mWithMeshClsn.StopDetectingWater();
@@ -2221,7 +2221,7 @@ void daStar_c::DrawShadow() {
     if (mBits.noSpin)
         return;
 
-    r2 = mScaleX;
+    r2 = mScale.x;
     rad = r2 * 0x64;
     flag2 = actorID;
     flag2 = flag2 == ACTOR_STAR;
@@ -2321,9 +2321,9 @@ void daStar_c::SpawnCollectEffects() {
     if (mState != STATE_SPIN_AND_END)
         vc.y = v.y + 0x32000;
     VEC_Subtract(&vc, &mPos, &vc);
-    vc.x = FX_MUL(vc.x, mScaleX);
-    vc.y = FX_MUL(vc.y, mScaleY);
-    vc.z = FX_MUL(vc.z, mScaleZ);
+    vc.x = FX_MUL(vc.x, mScale.x);
+    vc.y = FX_MUL(vc.y, mScale.y);
+    vc.z = FX_MUL(vc.z, mScale.z);
     VEC_Add(&vc, &mPos, &vc);
     mParticle[0] =
         (u32)Particle::System::New(mParticle[0], kPtclStarCollectA, vc.x, vc.y, vc.z, 0, 0);
@@ -2634,7 +2634,7 @@ void daStar_c::StepCameraCutscene() {
         break;
     case 0x65:
         cam->SetLookAt(v);
-        if (mScaleX == 0x1000 || mScaleX == 0)
+        if (mScale.x == 0x1000 || mScale.x == 0)
             mCamSeq = 0x1b6;
         break;
     case 0x1f4:
@@ -2949,9 +2949,9 @@ void daStar_c::InitKind9() {
 /* Puts the appearing star back to nothing: scale 0, switch off, map marker
  * given up, appear and state timers cleared. */
 void daStar_c::ResetAppearance() {
-    mScaleX = 0;
-    mScaleY = 0;
-    mScaleZ = 0;
+    mScale.x = 0;
+    mScale.y = 0;
+    mScale.z = 0;
     mBits.switchOn = 0;
     UntrackStar(mMarkerSlot);
     mBits.appeared = 0;

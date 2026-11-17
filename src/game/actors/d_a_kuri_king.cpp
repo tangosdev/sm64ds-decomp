@@ -498,9 +498,9 @@ void daKuriKing_c::UpdateDefeat() {
 void daKuriKing_c::EnterDefeat() {
     this->mSizeIndex = 0;
     int v = data_ov074_02122e4c[1];
-    this->mScaleX = v;
-    this->mScaleY = v;
-    this->mScaleZ = v;
+    this->mScale.x = v;
+    this->mScale.y = v;
+    this->mScale.z = v;
     this->mTextureSequence.currFrame = 0x2000;
     this->mMaterialChanger.currFrame = ((int)data_ov074_02122e04[1]) << 0xc;
     this->mSubState = 0;
@@ -842,9 +842,9 @@ int daKuriKing_c::StepScaleTransition() {
 
     if (Math_Function_0203b14c(&this->mCurrentScale, this->mTargetScale, 0x78, 0x100, 0x20) == 0) {
         if (this->mScalePhase == 0) {
-            this->mScaleX = this->mCurrentScale;
-            this->mScaleY = this->mCurrentScale;
-            this->mScaleZ = this->mCurrentScale;
+            this->mScale.x = this->mCurrentScale;
+            this->mScale.y = this->mCurrentScale;
+            this->mScale.z = this->mCurrentScale;
         }
         if (this->mScaleSteps <= 1) return 1;
         this->mScaleSteps--;
@@ -858,10 +858,10 @@ int daKuriKing_c::StepScaleTransition() {
     }
     k = ((u16)mScalePhase >> 4) * 2;
     d = mTargetScale - mCurrentScale + 0x11e;
-    mScaleY = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k]);
-    mScaleX = mCurrentScale;
-    mScaleX = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k + 1]);
-    this->mScaleZ = this->mScaleX;
+    mScale.y = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k]);
+    mScale.x = mCurrentScale;
+    mScale.x = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k + 1]);
+    this->mScale.z = this->mScale.x;
     this->mScalePhase += 0x1230;
     return 0;
 }
@@ -939,7 +939,7 @@ Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
             scale = quo * 0xb4000 + 0x438000;
         }
 
-        q = mScaleX / 0x1000;
+        q = mScale.x / 0x1000;
         sum = (s16)(q * 0x350 + 0x500) + (s16)(rem * 0x600);
         prod = mDirection * sum;
         diff = (mWalkAngle + mMaxWalkSpeed) - prod;
@@ -974,7 +974,7 @@ Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
             scale2 = 0x4e2000 + (rem2 * 0x64 << 12);
         }
 
-        q2 = mScaleX / 0x1000;
+        q2 = mScale.x / 0x1000;
         sum2 = (s16)(q2 * 0x350 + 0x250) + (s16)(one * 0x600);
         prod2 = mDirection * sum2;
         prod3 = sign * prod2;
@@ -1160,7 +1160,7 @@ void daKuriKing_c::HandleCylinderHits() {
                                     dActor_c::FindWithID(this->mMegaMushroomID) == 0) {
                                     int k =
                                         ((u16)(s16)(this->mDirection *
-                                                        ((s16)((this->mScaleX / 0x1000) * 0x350 +
+                                                        ((s16)((this->mScale.x / 0x1000) * 0x350 +
                                                                0x500) +
                                                          0x600) +
                                                     (this->mWalkAngle + this->mMaxWalkSpeed))) >>
@@ -1227,7 +1227,7 @@ void daKuriKing_c::UpdateBodyMatrix() {
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
-    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, this->mScaleX, this->mScaleY, this->mScaleZ);
+    Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, this->mScale.x, this->mScale.y, this->mScale.z);
     *(struct Matrix4x3 *)this->mBodyMatrix = data_020a0e68;
 }
 
@@ -1244,18 +1244,18 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
     int d, a, b;
     int tx, ty, tz;
 
-    y0 = FX_MUL(this->mScaleY, 0x40000);
-    rad[1] = FX_MUL(this->mScaleX, 0x50000);
-    hgt[1] = FX_MUL(this->mScaleY, 0x40000);
-    yoff[1] = FX_MUL(this->mScaleY, -0x10000);
-    rad[2] = FX_MUL(this->mScaleX, 0x50000);
-    hgt[2] = FX_MUL(this->mScaleY, 0x40000);
-    yoff[2] = FX_MUL(this->mScaleY, -0x10000);
-    h0 = FX_MUL(this->mScaleY, 0x96000);
-    r0 = FX_MUL(this->mScaleX, 0x5a000);
-    yoff[0] = FX_MUL(this->mScaleY, 0x14000);
-    rad[0] = FX_MUL(this->mScaleX, 0xb4000);
-    hgt[0] = FX_MUL(this->mScaleY, 0x104000);
+    y0 = FX_MUL(this->mScale.y, 0x40000);
+    rad[1] = FX_MUL(this->mScale.x, 0x50000);
+    hgt[1] = FX_MUL(this->mScale.y, 0x40000);
+    yoff[1] = FX_MUL(this->mScale.y, -0x10000);
+    rad[2] = FX_MUL(this->mScale.x, 0x50000);
+    hgt[2] = FX_MUL(this->mScale.y, 0x40000);
+    yoff[2] = FX_MUL(this->mScale.y, -0x10000);
+    h0 = FX_MUL(this->mScale.y, 0x96000);
+    r0 = FX_MUL(this->mScale.x, 0x5a000);
+    yoff[0] = FX_MUL(this->mScale.y, 0x14000);
+    rad[0] = FX_MUL(this->mScale.x, 0xb4000);
+    hgt[0] = FX_MUL(this->mScale.y, 0x104000);
     for (i = 0; i < 3; i++) {
         int ax, ay, az;
         func_ov074_02121270(&v[2], this, bone.v[i]);
@@ -1281,7 +1281,7 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
     this->mdCc_cs[0].pos.y = ty;
     this->mdCc_cs[0].pos.z = tz;
 
-    d = FX_MUL(this->mScaleY, -0x4a000);
+    d = FX_MUL(this->mScale.y, -0x4a000);
     a = this->mCylClsnPos[2].y + d;
     b = this->mCylClsnPos[1].y + d;
     if (a < this->mPosY) {
@@ -1595,9 +1595,9 @@ int daKuriKing_c::InitResources()
 
     mSizeIndex = 3;
     p = (void *)(s32)data_ov074_02122e4c[mSizeIndex];
-    mScaleX = (s32)p;
-    mScaleY = (s32)p;
-    mScaleZ = (s32)p;
+    mScale.x = (s32)p;
+    mScale.y = (s32)p;
+    mScale.z = (s32)p;
     mVertAccel = -0xa000;
     mTerminalVelocity = -0x3c000;
 
@@ -1607,7 +1607,7 @@ int daKuriKing_c::InitResources()
 
     k = 0;
     do {
-        mdCc_cs[k].Init(this, mPos, mScaleX * 0xa, mScaleY * 0xa, 0x200004, 0x26fe0);
+        mdCc_cs[k].Init(this, mPos, mScale.x * 0xa, mScale.y * 0xa, 0x200004, 0x26fe0);
         k++;
     } while (k < 4);
 

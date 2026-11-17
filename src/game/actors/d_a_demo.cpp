@@ -2659,7 +2659,7 @@ int daDemo_c::func_ov002_020f6ae4(unsigned char *p)
 int daDemo_c::func_ov002_020f6b28(unsigned char *p)
 {
     unsigned int v = ReadUnalignedInt(p);
-    func_02012694(v, (const Vector3 *)&mCamSpacePosX);
+    func_02012694(v, &mCamSpacePos);
     return 1;
 }
 
@@ -2794,9 +2794,9 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
     this->mPrevAngleY = this->mAngleY;
     this->mPrevAngleZ = this->mAngleZ;
     this->mMagnitude = (new_var = p[0xc]) << 12;
-    this->mScaleX = 0xb33;
-    this->mScaleY = 0xb33;
-    this->mScaleZ = 0xb33;
+    this->mScale.x = 0xb33;
+    this->mScale.y = 0xb33;
+    this->mScale.z = 0xb33;
     rv = mAnmModel->numFramesAndFlags;
     new_var2 = RandomIntInternal(&data_0209e650);
     mAnmModel->currFrame =
@@ -2901,9 +2901,9 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
 
 int daDemo_c::func_ov002_020f72bc()
 {
-    this->mScaleX = 0x3000;
-    this->mScaleY = 0x3000;
-    this->mScaleZ = 0x3000;
+    this->mScale.x = 0x3000;
+    this->mScale.y = 0x3000;
+    this->mScale.z = 0x3000;
     {
         s16* p = &this->mAngleY;
         *p = *p + 0x400;
@@ -3451,9 +3451,9 @@ int daDemo_c::InitResources()
                                       0, 0, 0, -1) == 0)
             return 0;
     }
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     return 1;
 }
 

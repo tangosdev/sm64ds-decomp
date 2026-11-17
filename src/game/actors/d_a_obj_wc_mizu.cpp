@@ -150,7 +150,7 @@ int daObjWc_Mizu_c::Behavior() {
         }
     }
 
-    if (mPosY != mPrevPosY) {
+    if (mPosY != mPrevPos.y) {
         mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, mCamSpacePos, 0);
     }
 

@@ -342,9 +342,9 @@ int daObjHatenaBlock_c::InitResources()
     mShadowModel.InitCuboid();
     ChangeState(STATE_IDLE);
     mTerminalVelocity = -0x3c000;   /* -60 units */
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     UpdateModelMatrix();
     UpdateMeshCollider();
     mShadowMat = mModel.mat4x3;
@@ -462,7 +462,7 @@ int daObjHatenaBlock_c::Behavior()
 
 /* Draws nothing while POPPED. A HATENA_BLOCK with SAVE_FLAGS1_BIT31 clear
    draws mAnmModel; every other case draws mModel, passing the Vector3 at
-   mScaleX. Always returns 1. */
+   mScale.x. Always returns 1. */
 int daObjHatenaBlock_c::Render()
 {
     do {
@@ -587,7 +587,7 @@ void daObjHatenaBlock_c::UpdateModelMatrix() {
  * at least 0x1000 (1 unit).
  *   horizontal shadow scale = 0xb4000 (180 units) - height * 0x180 / 0x1000
  *                   (about 0.094 * height), at least 0xa000 (10 units), then
- *                   times mScaleX (an fx32 multiply)
+ *                   times mScale.x (an fx32 multiply)
  *   shadow Y scale = height + 0x14000 (20 units)
  *   mClipOffsetY  = -(height + 0x14000) / 2 (signed divide by 2)
  *   mClipRadius   = max(height + 0x214000, 0x200000) / 16 (signed divide)
@@ -611,7 +611,7 @@ void daObjHatenaBlock_c::UpdateDropShadow() {
     if (paddedHeight < 0x200000) paddedHeight = 0x200000;
     mClipOffsetY = -((int)((height + 0x14000) + ((unsigned)(height + 0x14000) >> 31)) >> 1);
     mClipRadius = (int)(paddedHeight + ((unsigned)paddedHeight >> 31)) >> 4;
-    shadowScale = FX_MUL(shadowScale, mScaleX);
+    shadowScale = FX_MUL(shadowScale, mScale.x);
     Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
     mShadowMat.m[9] = mPosX >> 3;
     mShadowMat.m[10] = (mPosY - 0x20000) >> 3;
@@ -648,9 +648,9 @@ void daObjHatenaBlock_c::ChangeState(int i) {
    acceleration -0x8000 (-8 units). */
 void daObjHatenaBlock_c::EnterIdle() {
     mBounceYOffs = 0;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mVertAccel = -0x8000;
 }
 
@@ -693,9 +693,9 @@ void daObjHatenaBlock_c::EnterBouncing() {
  * While mBounceTimer is still counting down (DecIfAbove0_Short returns the
  * new value; non-zero means it has not reached 0), squash and stretch, with
  * s = sin(mBounceAng) as fx16 from FX_SinCosTable_ (0x1000 = 1.0):
- *   mScaleY       = (1 + s) * 0x999/0x1000 + 0x666/0x1000
+ *   mScale.y      = (1 + s) * 0x999/0x1000 + 0x666/0x1000
  *                 = 0.4 + 0.6 * (1 + s)
- *   mScaleX, Z    = (1 - s) + 1.0
+ *   mScale.x, .z  = (1 - s) + 1.0
  *   mBounceYOffs  = (1 - s) * 13 (units)
  * then mBounceAng += 0x1000 (1/16 turn). The first frame starts at 0x4000
  * (s = 1: scale Y 1.6, X and Z 1.0, no offset).
@@ -728,9 +728,9 @@ void daObjHatenaBlock_c::UpdateBouncing() {
     func_ov102_02149684((int *)&pos, this);
     if (DecIfAbove0_Short(&mBounceTimer) != 0) {
 
-        mScaleY = FX_MUL(FX_SinIdx((u16)mBounceAng >> 4) + 0x1000, 0x999) + 0x666;
-        mScaleX = FX_MUL(0x1000 - FX_SinIdx((u16)mBounceAng >> 4), 0x1000) + 0x1000;
-        mScaleZ = mScaleX;
+        mScale.y = FX_MUL(FX_SinIdx((u16)mBounceAng >> 4) + 0x1000, 0x999) + 0x666;
+        mScale.x = FX_MUL(0x1000 - FX_SinIdx((u16)mBounceAng >> 4), 0x1000) + 0x1000;
+        mScale.z = mScale.x;
         mBounceYOffs = (0x1000 - FX_SinIdx((u16)mBounceAng >> 4)) * 0xd;
         mBounceAng += 0x1000;
 

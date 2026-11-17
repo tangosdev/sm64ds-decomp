@@ -4561,9 +4561,9 @@ int daPly_c::St_Respawn_Init() {
     mPos = mSpawnPos;
     mPosY += 0x3e8000;
     func_02035860(&mMeshClsn, &mPos);
-    mPrevPosX = mPosX;
-    mPrevPosY = mPosY;
-    mPrevPosZ = mPosZ;
+    mPrevPos.x = mPosX;
+    mPrevPos.y = mPosY;
+    mPrevPos.z = mPosZ;
     mPrevAngleY = mSpawnAngleY;
     mAngleY = mPrevAngleY;
     mIsBodyClsnEnabled = 1;
@@ -5761,9 +5761,9 @@ int daPly_c::St_Squish_Cleanup() {
     if (mIsMega != 0)
         val = 0x3000;
 
-    mScaleX = val;
-    mScaleY = val;
-    mScaleZ = val;
+    mScale.x = val;
+    mScale.y = val;
+    mScale.z = val;
 
     mdCcAcPos_c.flags &= ~4;
     return 1;
@@ -5777,13 +5777,13 @@ int daPly_c::St_Squish_Main() {
         {
             int r = func_ov002_020c647c(mAttachOffsetY);
             if (r >= 0) {
-                mScaleY = (r << 12) / 160;
+                mScale.y = (r << 12) / 160;
                 if (r >= 0x20)
                     break;
                 if (mStatePhase != 2)
                     break;
                 Sound::PlayCharVoice(mCharacter, 7, mCamSpacePos);
-                mScaleY = 0x100;
+                mScale.y = 0x100;
                 mStateStep = 2;
                 mStateArg = 1;
                 if (mIsMetal == 0) {
@@ -5810,11 +5810,11 @@ int daPly_c::St_Squish_Main() {
         break;
     case 1:
         if (mStateTimer != 0) {
-            mScaleY += 0x100;
-            if (mScaleY > 0x1000)
-                mScaleY = 0x1000;
+            mScale.y += 0x100;
+            if (mScale.y > 0x1000)
+                mScale.y = 0x1000;
         } else {
-            mScaleY = 0x1000;
+            mScale.y = 0x1000;
             this->ChangeState(data_ov002_0211013c);
         }
         break;
@@ -5914,7 +5914,7 @@ int daPly_c::Unk_020c6a10(unsigned int arg_) {
 
     Sound::PlayCharVoice(mCharacter, 7, mCamSpacePos);
     this->ChangeState(data_ov002_021102ec);
-    mScaleY = 0x100;
+    mScale.y = 0x100;
     mStateStep = 4;
     mStateTimer = 30;
     mStateArg = flag;
@@ -6634,14 +6634,15 @@ void daPly_c::func_ov002_020c7ff8() {
 }
 
 int daPly_c::St_NoControl_Cleanup() {
-  int v=0x1000;
-  if(mIsMega) v=0x3000;
-  mScaleX=v;
-  mScaleY=v;
-  mScaleZ=v;
-  if (mNoCtrlKind == 0x11)
-      KuppaScript::End();
-  return 1;
+    int v = 0x1000;
+    if (mIsMega)
+        v = 0x3000;
+    mScale.x = v;
+    mScale.y = v;
+    mScale.z = v;
+    if (mNoCtrlKind == 0x11)
+        KuppaScript::End();
+    return 1;
 }
 
 int daPly_c::St_NoControl_Main() {
@@ -6976,16 +6977,16 @@ int daPly_c::func_ov002_020c8d14() {
     int val;
     int id;
 
-    val = this->mScaleY + 0xf0;
+    val = this->mScale.y + 0xf0;
     if (val >= 0x3000) val = 0x3000;
-    this->mScaleX = val;
-    this->mScaleY = val;
-    this->mScaleZ = val;
+    this->mScale.x = val;
+    this->mScale.y = val;
+    this->mScale.z = val;
 
     v.x = this->mPosX;
     v.y = this->mPosY;
     v.z = this->mPosZ;
-    v.y = this->mPosY + FX_MUL(this->mScaleY, 0x50000);
+    v.y = this->mPosY + FX_MUL(this->mScale.y, 0x50000);
 
     id = this->GetBodyModelID(param1 & 0xff, 0);
     if (mModels.mBodyModels[id]->WillHitFrame(4)) {
@@ -7021,29 +7022,29 @@ int daPly_c::func_ov002_020c8d14() {
 }
 
 int daPly_c::func_ov002_020c8f0c() {
-  int *p0 = &this->mScaleX;
-  int *p1 = &this->mScaleY;
-  int *p2 = &this->mScaleZ;
-  *p0 -= 0x80;
-  *p1 -= 0x80;
-  *p2 -= 0x80;
-  if (this->mScaleX < 0) {
-    this->mScaleX = 0;
-    this->mScaleY = 0;
-    this->mScaleZ = 0;
-  }
-  if (mIsAirborne == 0) {
-    EnterBigBoosHaunt();
-    mStateStep = 6;
-  }
-  return 0;
+    int *p0 = &this->mScale.x;
+    int *p1 = &this->mScale.y;
+    int *p2 = &this->mScale.z;
+    *p0 -= 0x80;
+    *p1 -= 0x80;
+    *p2 -= 0x80;
+    if (this->mScale.x < 0) {
+        this->mScale.x = 0;
+        this->mScale.y = 0;
+        this->mScale.z = 0;
+    }
+    if (mIsAirborne == 0) {
+        EnterBigBoosHaunt();
+        mStateStep = 6;
+    }
+    return 0;
 }
 
 int daPly_c::func_ov002_020c8f80() {
 
-    this->mScaleX -= 0x80;
-    this->mScaleY -= 0x80;
-    this->mScaleZ -= 0x80;
+    this->mScale.x -= 0x80;
+    this->mScale.y -= 0x80;
+    this->mScale.z -= 0x80;
 
     unsigned int id = GetBodyModelID(param1 & 0xff, false);
     if (mModels.mBodyModels[id]->WillHitFrame(1)) {
@@ -7365,7 +7366,7 @@ void daPly_c::func_ov002_020c9a04() {
     v.y = this->mPosY + 0x28000;
     Particle::System::NewSimple(kPtclMegaGrowStartA, v.x, v.y, v.z);
 
-    v.y = this->mPosY + FX_MUL(this->mScaleY, 0x50000);
+    v.y = this->mPosY + FX_MUL(this->mScale.y, 0x50000);
     Particle::System::NewSimple(kPtclMegaGrowStartB, v.x, v.y, v.z);
 }
 
@@ -7745,8 +7746,6 @@ int daPly_c::CanEnterDoor(unsigned char door) {
 }
 
 void daPly_c::PlayMammaMiaSound() {
-    /* mCamSpacePosX/Y/Z are three consecutive words; dActor_c.h declares them
-       individually rather than as one Vector3. */
     Sound::PlayCharVoice(mCharacter, 0x27, mCamSpacePos);
 }
 
@@ -9731,7 +9730,7 @@ int daPly_c::UpdateSwimHealth() {
 
     if (GetHealth() <= 2) {
         mSurfaceSoundHandle =
-            Sound::PlayLong((unsigned int)mSurfaceSoundHandle, 2, 0x27, *&mCamSpacePos, 0);
+            Sound::PlayLong((unsigned int)mSurfaceSoundHandle, 2, 0x27, mCamSpacePos, 0);
     }
 
     {
@@ -12295,7 +12294,7 @@ merge:
         }
     }
 
-    if (mIsMega != 0 && mScaleX != 0x3000) {
+    if (mIsMega != 0 && mScale.x != 0x3000) {
         this->SetNoControlState(0xd, -1, 0);
     }
     return 1;
@@ -15802,9 +15801,9 @@ extern "C" void func_ov002_020db54c(void *self, int a, int b, short c) {
             v.z = src->z;
             v.y = ty + 0x64000;
             func_02035860(&p->mMeshClsn, &v);
-            p->mPrevPosX = v.x;
-            p->mPrevPosY = v.y;
-            p->mPrevPosZ = v.z;
+            p->mPrevPos.x = v.x;
+            p->mPrevPos.y = v.y;
+            p->mPrevPos.z = v.z;
         }
     }
     p->mGrabbedByActor = 0;
@@ -15864,7 +15863,7 @@ void daPly_c::UpdateScaleAnim() {
         if (mScaleAnimTimer == 0) {
             if (s == 1)
                 i++;
-            if (ApproachLinear(mScaleY, data_ov002_020ff2c0[s - 1 + j], data_ov002_020ff230[i])) {
+            if (ApproachLinear(mScale.y, data_ov002_020ff2c0[s - 1 + j], data_ov002_020ff230[i])) {
                 if (mScaleAnimStep == 1 || mScaleAnimStep == 6) {
                     mScaleAnimTimer = 10;
                 } else {
@@ -15878,29 +15877,29 @@ void daPly_c::UpdateScaleAnim() {
                 mScaleAnimStep = 0;
                 mScaleAnimTimer = 0;
                 if (mIsMega) {
-                    mScaleX = 0x3000;
-                    mScaleY = 0x3000;
-                    mScaleZ = 0x3000;
+                    mScale.x = 0x3000;
+                    mScale.y = 0x3000;
+                    mScale.z = 0x3000;
                     return;
                 }
             }
         }
-        mScaleZ = (0x1000 - mScaleY) / 2 + 0x1000;
-        mScaleX = mScaleZ;
+        mScale.z = (0x1000 - mScale.y) / 2 + 0x1000;
+        mScale.x = mScale.z;
         return;
     case 2:
-        if (ApproachLinear(mScaleY, 0x3000, 0x200)) {
+        if (ApproachLinear(mScale.y, 0x3000, 0x200)) {
             mScaleAnimStep = 0;
         }
-        mScaleZ = mScaleY;
-        mScaleX = mScaleZ;
+        mScale.z = mScale.y;
+        mScale.x = mScale.z;
         return;
     case 3:
-        if (ApproachLinear(mScaleY, 0x1000, 0x200)) {
+        if (ApproachLinear(mScale.y, 0x1000, 0x200)) {
             mScaleAnimStep = 0;
         }
-        mScaleZ = mScaleY;
-        mScaleX = mScaleZ;
+        mScale.z = mScale.y;
+        mScale.x = mScale.z;
         return;
     }
 }
@@ -16333,8 +16332,6 @@ int daPly_c::St_SweepKick_Init() {
     this->SetAnim(0x68, 0x40000000, 0x1000, 0);
     mHorzSpeed = 0;
     mAttackClashed = 0;
-    /* mCamSpacePosX/Y/Z are three consecutive words; dActor_c.h declares them
-       individually rather than as one Vector3. */
     Sound::PlayCharVoice(mCharacter, 0xa, mCamSpacePos);
     return 1;
 }
@@ -17471,7 +17468,7 @@ int daPly_c::func_ov002_020dec70() {
         v.x = v.z;
         func_ov002_020bf800(v);
     }
-    mSurfaceSoundHandle = Sound::PlayLong((u32)mSurfaceSoundHandle, 3, 0x90, *&mCamSpacePos, 0);
+    mSurfaceSoundHandle = Sound::PlayLong((u32)mSurfaceSoundHandle, 3, 0x90, mCamSpacePos, 0);
     if (IsState(data_ov002_02110274) || IsState(data_ov002_021102d4) || IsState(daPly_c::ST_OWL) ||
         mIsMetal || mIsMega || mIsNoControl || mIsAirborne == 0)
         return 0;
@@ -18535,8 +18532,6 @@ int daPly_c::St_LongJump_Init() {
     if (mHorzSpeed >= 0x3c000) {
         mHorzSpeed = 0x3c000;
     }
-    /* mCamSpacePosX/Y/Z are three consecutive words; dActor_c.h declares them
-       individually rather than as one Vector3. */
     if (mIsMetal == 0) {
         Sound::PlayBank0((u32)mGroundSoundType + 0x30, mCamSpacePos);
     } else {
@@ -19808,7 +19803,7 @@ int daPly_c::Render() {
                     Matrix4x3 *dst = mModels.mHeadModels[i]->data.transforms;
                     Matrix4x3 *src = &bodyMdl->data.transforms[15];
                     *dst = *src;
-                    ((VObj *)(char *)mModels.mHeadModels[i])->m14(&mScaleX);
+                    ((VObj *)(char *)mModels.mHeadModels[i])->m14(&mScale);
                 }
                 if (param1 == 1) {
                     mModels.mTexSeqPlayer[1].Update(mModels.mHeadModels[1]->data);
@@ -19992,7 +19987,7 @@ void daPly_c::func_ov002_020e4374(int *p1, int *p2) {
     if (*p1 <= 0x1000) *p1 = 0x1000;
     m = 0x64000;
     if (mIsMega != 0) {
-        m = mScaleY * 0x64;
+        m = mScale.y * 0x64;
     } else if (mIsBalloon != 0) {
         m = 0xc8000;
     }
@@ -20576,9 +20571,9 @@ Ld0:
     mTrailFlags = (u8 *)::operator new[](0x32);
     mHeldObjQueue = (dActor_c **)::operator new[](5 * sizeof(dActor_c *));
     __builtin__clear((void *)mHeldObjQueue, 5 * sizeof(dActor_c *));
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     func_ov002_020e63a4();
     mMeshClsn.Init(this, 0x32000, 0x32000, &mPrevAngle, &mAngle);
     func_02035644((int *)&mMeshClsn, 0x28000);

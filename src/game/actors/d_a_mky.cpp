@@ -347,9 +347,9 @@ int daMky_c::RevertOffLedge() {
         if (rg.DetectClsn() == 0 ||
             ABS(rg.clsnY - this->mPosY) > 0x1000) {
             this->mHorzSpeed = 0;
-            this->mPosX = this->mPrevPosX;
-            this->mPosY = this->mPrevPosY;
-            this->mPosZ = this->mPrevPosZ;
+            this->mPosX = this->mPrevPos.x;
+            this->mPosY = this->mPrevPos.y;
+            this->mPosZ = this->mPrevPos.z;
             return 1;
         }
     }
@@ -1441,9 +1441,9 @@ s32 daMky_c::InitResources()
     mPerchPos = mPos;
     mPerchPos.y += 0x64000;
     mSpawnPos = mPos;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mPlayer = 0;
     mCapUniqueID = 0;
     mResetTimer = 150;

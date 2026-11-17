@@ -383,9 +383,9 @@ int daMenbo_c::func_ov090_02131648() {
             p39a = (s16 *)&mTargetAngleY;
             angleSet = 1;
             *p39a = *p39a + (0x1800 - sh);
-            mPosX = mPrevPosX;
-            mPosY = mPrevPosY;
-            mPosZ = mPrevPosZ;
+            mPosX = mPrevPos.x;
+            mPosY = mPrevPos.y;
+            mPosZ = mPrevPos.z;
             mProbeLatch = 1;
         }
     } else {
@@ -397,9 +397,9 @@ int daMenbo_c::func_ov090_02131648() {
             ha = Vec3_HorzAngle(&mPos, &mAnchorPos);
             mTargetAngleY = (u16)ha;
             angleSet = 1;
-            mPosX = mPrevPosX;
-            mPosY = mPrevPosY;
-            mPosZ = mPrevPosZ;
+            mPosX = mPrevPos.x;
+            mPosY = mPrevPos.y;
+            mPosZ = mPrevPos.z;
             mFarLatch = 1;
         }
     } else {
@@ -414,9 +414,9 @@ int daMenbo_c::func_ov090_02131648() {
             p39a = (s16 *)&mTargetAngleY;
             angleSet = 1;
             *p39a = *p39a + (0x1800 - sh);
-            mPosX = mPrevPosX;
-            mPosY = mPrevPosY;
-            mPosZ = mPrevPosZ;
+            mPosX = mPrevPos.x;
+            mPosY = mPrevPos.y;
+            mPosZ = mPrevPos.z;
             mWallLatch = 1;
         }
     } else {
@@ -742,9 +742,9 @@ int daMenbo_c::InitResources()
 
     mAngleY = mPrevAngleY;
     mAnimSpeed = 0x1000;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mWithMeshClsn.Init(this, 0xc8000, 0, 0, 0);
     mWithMeshClsn.SetNoUpdatePosYFlag();
 

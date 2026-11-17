@@ -217,8 +217,8 @@ void daIbl_c::UpdateWallAndFloor() {
         return;
     ((SurfaceInfo *)((char *)mWithMeshClsn.GetFloorResult() + 4))->CopyNormalTo(mFloorNormal);
     if (mHitWall != 0) return;
-    mPosX = mPrevPosX;
-    mPosZ = mPrevPosZ;
+    mPosX = mPrevPos.x;
+    mPosZ = mPrevPos.z;
     if (mFloorNormal.y == 0)
         return;
     int s = FX_MUL(mFloorNormal.x, mSpeed.x) + FX_MUL(mFloorNormal.z, mSpeed.z);

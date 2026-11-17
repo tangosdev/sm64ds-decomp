@@ -46,8 +46,8 @@ struct daObjYajirusi_c {
     s32 mPosY;                         /* 0x060 */
     s32 mPosZ;                         /* 0x064 */
     u8  pad_068[0xc];
-    s32 mCamSpacePosX;                 /* 0x074 */
-    u8  pad_078[0x16];
+    Vector3 mCamSpacePos; /* 0x074 */
+    u8 pad_080[0xe];
     s16 mAngleY;                       /* 0x08e */
     u8  pad_090[0x44];
     dExtSimpleModel_c mModel;          /* 0x0d4 */
@@ -86,7 +86,7 @@ struct daObjYajirusi_c {
 
 static_assert(offsetof(daObjYajirusi_c, actorID) == 0x00c, "daObjYajirusi_c actorID");
 static_assert(offsetof(daObjYajirusi_c, mPosX) == 0x05c, "daObjYajirusi_c mPosX");
-static_assert(offsetof(daObjYajirusi_c, mCamSpacePosX) == 0x074, "daObjYajirusi_c mCamSpacePosX");
+static_assert(offsetof(daObjYajirusi_c, mCamSpacePos) == 0x074, "daObjYajirusi_c mCamSpacePos");
 static_assert(offsetof(daObjYajirusi_c, mAngleY) == 0x08e, "daObjYajirusi_c mAngleY");
 static_assert(offsetof(daObjYajirusi_c, mModel) == 0x0d4, "daObjYajirusi_c mModel");
 static_assert(offsetof(daObjYajirusi_c, mMeshCollider) == 0x124, "daObjYajirusi_c collider");

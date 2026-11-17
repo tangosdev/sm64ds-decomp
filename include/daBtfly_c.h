@@ -69,7 +69,7 @@ struct daBtfly_c : dActor_c {
        angle from mPos to it as the heading to fly home on. */
     Vector3 mHomePos;       /* 0x3d4 */
     s32 mScale;             /* 0x3e0 -- the single fix12 scale Behavior copies
-                                 into all three of mScaleX/Y/Z. InitResources
+                                 into each axis of dActor_c::mScale. InitResources
                                  sets 0x1000; State6 winds it from
                                  0 up to 0x800 in 0x40 steps, or drops it to 0
                                  for a butterfly that is not kind 1;

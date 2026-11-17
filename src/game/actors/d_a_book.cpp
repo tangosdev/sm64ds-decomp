@@ -520,9 +520,9 @@ void daBook_c::StateWindUp() {
     mClsnOffset.y = mUniformScale * -0x32;
     {
         s32 v = mUniformScale;
-        mScaleX = v;
-        mScaleY = v;
-        mScaleZ = v;
+        mScale.x = v;
+        mScale.y = v;
+        mScale.z = v;
     }
 }
 
@@ -628,7 +628,7 @@ void daBook_c::UpdateModelMatrix() {
     mShadowMat.m[9] = mPosX >> 3;
     mShadowMat.m[10] = mHomePosY >> 3;
     mShadowMat.m[11] = mPosZ >> 3;
-    DropShadowRadHeight(mShadowModel, mShadowMat, mScaleX * 0x64, 0x12c000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowMat, mScale.x * 0x64, 0x12c000, 0xf);
 }
 
 int daBook_c::CleanupResources()
@@ -753,9 +753,9 @@ int daBook_c::InitResources()
 
     mLinkedActorID = 0;
     mTouchedPlayer = 0;
-    mScaleX = 0x800;
-    mScaleY = 0x800;
-    mScaleZ = 0x800;
+    mScale.x = 0x800;
+    mScale.y = 0x800;
+    mScale.z = 0x800;
     mHomePosX = mPosX;
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;
@@ -798,9 +798,9 @@ int daBook_c::InitResources()
                     mCoinType = 0;
                     mdCcAcPos_c.flags |= 4;
                     mdCcAcPos_c.vulnFlags |= 0x3c0;
-                    mScaleX = 0x1000;
-                    mScaleY = 0x800;
-                    mScaleZ = 0x800;
+                    mScale.x = 0x1000;
+                    mScale.y = 0x800;
+                    mScale.z = 0x800;
                     break;
                 }
             }

@@ -151,9 +151,9 @@ int daWanwan_c::InitResources() {
     mPosZ += kRestLift;
 
     mChainExtension = kChainSlack;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     return 1;
 }
 
@@ -490,18 +490,18 @@ void daWanwan_c::HandleCylinderHit() {
        instructions, 12 bytes shorter per test. */
     if ((int)(other->actorID == kYoshiEggId) != 0) {
         if (mdCcAcPos_c.hitFlags & 0x2000) {
-            mScaleX = 0x2000;
-            mScaleY = mScaleX;
-            mScaleZ = mScaleY;
+            mScale.x = 0x2000;
+            mScale.y = mScale.x;
+            mScale.z = mScale.y;
             SetState(0);
             return;
         }
     }
 
     if (mdCcAcPos_c.hitFlags & 0x4000) {
-        mScaleX = 0x2000;
-        mScaleY = mScaleX;
-        mScaleZ = mScaleY;
+        mScale.x = 0x2000;
+        mScale.y = mScale.x;
+        mScale.z = mScale.y;
         SetState(4);
         return;
     }
@@ -641,9 +641,9 @@ void daWanwan_c::StateWaitInit() {
 /* State 0 update: scale back to 1.0, then idle. */
 void daWanwan_c::StateWaitMain() {
     mSpeed.y = 0;
-    ApproachLinear(mScaleX, 0x1000, 0x500);
-    mScaleZ = mScaleX;
-    mScaleY = mScaleZ;
+    ApproachLinear(mScale.x, 0x1000, 0x500);
+    mScale.z = mScale.x;
+    mScale.y = mScale.z;
     if (DecIfAbove0_Short(&mActionTimer) != 0)
         return;
     SetState(1);
@@ -867,9 +867,9 @@ void daWanwan_c::StateBombDamageInit() {
 /* State 4 update. The early exits fall out of the bottom: the ROM leaves r0
  * alone on those paths, and a valueless return is not available to the host. */
 int daWanwan_c::StateBombDamageMain() {
-    ApproachLinear(mScaleX, 0x1000, 0x500);
-    mScaleZ = mScaleX;
-    mScaleY = mScaleZ;
+    ApproachLinear(mScale.x, 0x1000, 0x500);
+    mScale.z = mScale.x;
+    mScale.y = mScale.z;
     ApproachAngle(&mAngleX, -0x4000, 4, 0x1000, 0x400);
     if (Math_Function_0203b14c(&mChainExtension, kChainMax, 0x800, 0x10000, 0x800) == 0) {
         if (DecIfAbove0_Short(&mActionTimer) == 0)

@@ -148,9 +148,9 @@ int daNknk_c::InitResources()
     {
         mKoopaVariant = 2;
         mAnimSpeed = 0x2000;
-        mScaleX = 0x599;
-        mScaleY = 0x599;
-        mScaleZ = 0x599;
+        mScale.x = 0x599;
+        mScale.y = 0x599;
+        mScale.z = 0x599;
         r = 0x1e000;
         h = 0x32000;
     }
@@ -158,9 +158,9 @@ int daNknk_c::InitResources()
     {
         mKoopaVariant = 0;
         mAnimSpeed = 0x1000;
-        mScaleX = 0xa66;
-        mScaleY = 0xa66;
-        mScaleZ = 0xa66;
+        mScale.x = 0xa66;
+        mScale.y = 0xa66;
+        mScale.z = 0xa66;
         r = 0x3c000;
         h = 0x64000;
         dExtSimpleModel_c::LoadFile(*data_ov062_0211cee0[mModelIndex]);
@@ -790,9 +790,9 @@ void daNknk_c::func_ov062_02117c98()
             else {
                 mDeathState = 1;
                 func_0201267c(0x113, &mCamSpacePos);
-                mScaleX = 0x1000;
-                mScaleY = 0x1000;
-                mScaleZ = 0x1000;
+                mScale.x = 0x1000;
+                mScale.y = 0x1000;
+                mScale.z = 0x1000;
             }
             func_ov002_020aea30(found, 0);
             return;
@@ -829,9 +829,9 @@ void daNknk_c::func_ov062_02117c98()
             } else {
                 mDeathState = 1;
                 func_ov002_020aea30(found, 0);
-                mScaleX = 0x1000;
-                mScaleY = 0x1000;
-                mScaleZ = 0x1000;
+                mScale.x = 0x1000;
+                mScale.y = 0x1000;
+                mScale.z = 0x1000;
                 func_0201267c(0x113, &mCamSpacePos);
             }
             ((daPly_c *)found)->Bounce(0x28000);

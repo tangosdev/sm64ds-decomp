@@ -35,7 +35,7 @@
  * - OnTurnIntoEgg's R6Player and UpdateWallAndWater's R10dBgCh_Actr take
  *   reference spelling; a pointer emits identical ARM. SetState's `int`
  *   signedness is indistinguishable.
- * - func_0201267c (throw SFX 0xd2 at +0x74, mCamSpacePosX),
+ * - func_0201267c (throw SFX 0xd2 at +0x74, mCamSpacePos),
  *   FX_SinCosTable_ (sin/cos pairs) and data_020a0e68 (arm9 scratch
  *   matrix) keep linker names.
  * - This TU claims .text only: the SharedFilePtr handles, the BCA/BTP
@@ -165,9 +165,9 @@ s32 daJgm_c::InitResources()
 
     mVertAccel = 0;
     mTerminalVelocity = 0;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mSpawnPos = mPos;
     mSoundHandle = 0;
 

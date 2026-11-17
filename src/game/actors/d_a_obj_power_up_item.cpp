@@ -139,10 +139,10 @@ void daObjPowerUpItem_c::BeginResting()
     mEffectHandle = 0;
 }
 
-/* Pop animation: while mWobbleTimer counts down, mScaleX and mScaleY follow the
+/* Pop animation: while mWobbleTimer counts down, mScale.x and mScale.y follow the
  * table pair selected by mWobbleAngle (scaled by the fraction of the timer
  * left) and the angle advances 0x2000 a frame. When the timer is spent,
- * mScaleY eases back to 0xfa0 and, once there, the flower enters
+ * mScale.y eases back to 0xfa0 and, once there, the flower enters
  * FLOWER_STATE_RESTING. */
 void daObjPowerUpItem_c::StateOpening()
 {
@@ -155,18 +155,18 @@ void daObjPowerUpItem_c::StateOpening()
         int u1 = FX_MUL(t1, 0x332);
         int v1 = u1 + 0xffa;
         int w1 = FX_MUL(v1, 0xfa0);
-        mScaleY = w1;
+        mScale.y = w1;
         signed short even = FX_SinIdx(hw >> 4);
         int t2 = FX_MUL(even, fdivResult);
         int u2 = FX_MUL(t2, 0x332);
         int v2 = u2 + 0xffa;
         int w2 = FX_MUL(v2, 0xfa0);
-        mScaleX = w2;
+        mScale.x = w2;
         // materialized base for halfword at offset >= 0x100
         short* p = (short*)(((int)this + 0x3c8));
         *p = *p + 0x2000;
     } else {
-        int ret = ApproachLinear(mScaleY, 0xfa0, 0x199);
+        int ret = ApproachLinear(mScale.y, 0xfa0, 0x199);
         if (ret) {
             SetState(FLOWER_STATE_RESTING);
         }
@@ -420,9 +420,9 @@ int daObjPowerUpItem_c::Behavior()
 {
     int b = (int)((mFlags & 0x40000) != 0);
     if (b != 0) return 1;
-    mScaleX = 0xfa0;
-    mScaleY = 0xfa0;
-    mScaleZ = 0xfa0;
+    mScale.x = 0xfa0;
+    mScale.y = 0xfa0;
+    mScale.z = 0xfa0;
     UpdateState();
     CheckPickup();
     UpdateMatrices();
@@ -453,9 +453,9 @@ int daObjPowerUpItem_c::InitResources()
     mTerminalVelocity = -0xf000;
     UpdateMatrices();
 
-    mScaleX = 0xfa0;
-    mScaleY = 0xfa0;
-    mScaleZ = 0xfa0;
+    mScale.x = 0xfa0;
+    mScale.y = 0xfa0;
+    mScale.z = 0xfa0;
 
     mdCcAc_c.Init(this, 0x32000, 0x64000, 0x800002, 0x8000);
     mWithMeshClsn.Init(this, 0x3c000, 0x3c000, 0, 0);

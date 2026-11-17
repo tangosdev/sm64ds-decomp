@@ -837,9 +837,9 @@ int daGmch_c::InitResources()
         mPosY = ground.clsnY;
     else
         mPosY = pos.y;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mSpawnPos.x = mPosX;
     mSpawnPos.y = mPosY;
     mSpawnPos.z = mPosZ;

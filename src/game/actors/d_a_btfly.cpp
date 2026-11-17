@@ -332,9 +332,9 @@ void daBtfly_c::State2()
             mState = 3;
 
         pp = &player->mPosX;
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPosX = mPrevPos.x;
+        mPosY = mPrevPos.y;
+        mPosZ = mPrevPos.z;
 
         v.x = pp[0];
         v.y = pp[1];
@@ -359,9 +359,9 @@ void daBtfly_c::State2()
             mStateTimer = 0;
         return;
     }
-    mPosX = mPrevPosX;
-    mPosY = mPrevPosY;
-    mPosZ = mPrevPosZ;
+    mPosX = mPrevPos.x;
+    mPosY = mPrevPos.y;
+    mPosZ = mPrevPos.z;
 }
 
 
@@ -428,9 +428,9 @@ int daBtfly_c::Behavior()
 
     if (mKind != 0) {
         int spd = mScale;
-        mScaleX = spd;
-        mScaleY = spd;
-        mScaleZ = spd;
+        dActor_c::mScale.x = spd;
+        dActor_c::mScale.y = spd;
+        dActor_c::mScale.z = spd;
 
         {
             int s = mHorzSpeed;
@@ -514,9 +514,9 @@ int daBtfly_c::InitResources()
 
     mScale = 0x1000;
     s32 spd = mScale;
-    mScaleX = spd;
-    mScaleY = spd;
-    mScaleZ = spd;
+    dActor_c::mScale.x = spd;
+    dActor_c::mScale.y = spd;
+    dActor_c::mScale.z = spd;
     mUseAnimModel = 1;
     return 1;
 }

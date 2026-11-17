@@ -210,9 +210,9 @@ int dActor_c::BeforeBehavior()
     signed char areaId = mAreaId;
     if (areaId >= 0 && !IsAreaShowing(areaId)) {
         mFlags |= 0x38;
-        mCamSpacePosX = 0x7fffffff;
-        mCamSpacePosY = 0x7fffffff;
-        mCamSpacePosZ = 0x7fffffff;
+        mCamSpacePos.x = 0x7fffffff;
+        mCamSpacePos.y = 0x7fffffff;
+        mCamSpacePos.z = 0x7fffffff;
         if (data_0209fc68 == 0 || (mFlags & 0x10000))
             return 0;
     } else {
@@ -247,9 +247,9 @@ int dActor_c::BeforeBehavior()
          data_0209fc68 == 0))
         return 0;
 
-    mPrevPosX = mPosX;
-    mPrevPosY = mPosY;
-    mPrevPosZ = mPosZ;
+    mPrevPos.x = mPosX;
+    mPrevPos.y = mPosY;
+    mPrevPos.z = mPosZ;
     return 1;
 }
 

@@ -105,9 +105,9 @@ int daPiano_c::Behavior() {
     CallStateBehavior();
     UpdatePos(0);
     if (Vec3_HorzDist(&mHomePos, &mPos) > 0x180000) {
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPosX = mPrevPos.x;
+        mPosY = mPrevPos.y;
+        mPosZ = mPrevPos.z;
     }
     if (mPosY <= mMinPosY)
         mPosY = mMinPosY;

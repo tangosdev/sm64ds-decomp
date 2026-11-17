@@ -99,10 +99,10 @@ int daWater_Ring_c::StatePassed() {
     mOpacity -= 2;
     if (mOpacity < 2)
         mOpacity = 2;
-    ApproachLinear(mScaleX, 0x3000, 0x199);
-    mScaleZ = mScaleX;
-    mScaleY = mScaleZ;
-    if (mStateTimer == 0 || mScaleX >= 0x2ffd)
+    ApproachLinear(mScale.x, 0x3000, 0x199);
+    mScale.z = mScale.x;
+    mScale.y = mScale.z;
+    if (mStateTimer == 0 || mScale.x >= 0x2ffd)
         MarkForDestruction();
     return 1;
 }
@@ -142,15 +142,15 @@ int daWater_Ring_c::StateActive() {
         int wobble = FX_MUL(FX_SinIdx((u16)phase >> 4), 0x400);
         int target = wobble + mScaleBase;
         ApproachLinear(mScaleBase, 0x2000, spd);
-        ApproachLinear(mScaleX, target, spd);
+        ApproachLinear(mScale.x, target, spd);
     }
     mSpinPhase += 0x800;
     {
         s16 phase = mSpinPhase;
         mPrevAngleX += FX_MUL(FX_SinIdx((u16)phase >> 4), 0x100);
     }
-    mScaleZ = mScaleX;
-    mScaleY = mScaleZ;
+    mScale.z = mScale.x;
+    mScale.y = mScale.z;
     if (mStateTimer == 0 || mOpacity <= 1)
         MarkForDestruction();
     return 1;
@@ -224,9 +224,9 @@ int daWater_Ring_c::InitResources() {
     mTextureTransformer.SetFile(*(BTA_File *)data_ov002_0210d6dc, 0, 0x1000, 0);
 
     mTextureTransformer.speed = 0x1000;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
 
     Vector3 v = data_ov064_0211c3d0;
     mdCcAcPos_c.Init(this, v, 0x88000, 0xe8000, 0x800006, 0);

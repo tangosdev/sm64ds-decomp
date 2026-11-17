@@ -89,9 +89,9 @@ int daEyBm_c::InitResources() {
 
     mdCcAcPos_c.Init(this, *((const Vector3 *)&data_ov071_021230b8), 0x23000, 0x3c000, 0x200002,
                      0x8000);
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mWithMeshClsn.Init(this, 0x19000, 0x19000, 0, 0);
     mVertAccel = 0;
     mTerminalVelocity = 0;

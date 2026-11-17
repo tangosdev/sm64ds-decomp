@@ -340,9 +340,9 @@ int daObjMarioCap_c::InitResources()
 
     mShadowModel.InitCylinder();
 
-    mScaleX = 0x1000;           /* 1.0 */
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000; /* 1.0 */
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
 
     flag = 0;
 
@@ -491,9 +491,9 @@ int daObjMarioCap_c::Behavior()
         if (((Flags3eb *)&mCapIcon.mFlags)->real == 0) {
             mDormant = 1;
         } else if (mDormant == 1) {
-            mScaleX = 0;
-            mScaleY = 0;
-            mScaleZ = 0;
+            mScale.x = 0;
+            mScale.y = 0;
+            mScale.z = 0;
             mDormant = 0;
             mPopScale = 0x2000;     /* 2.0 */
             mPopIn = 1;
@@ -510,13 +510,13 @@ int daObjMarioCap_c::Behavior()
        follows it by 0.25 a frame, and the cap moves and collides meanwhile. */
     if (mIconKind != 0xff && mPopIn != 0) {
         ApproachLinear(mPopScale, 0x1000, 0x200);
-        ApproachLinear(mScaleX, mPopScale, 0x400);
-        mScaleZ = mScaleX;
-        mScaleY = mScaleZ;
+        ApproachLinear(mScale.x, mPopScale, 0x400);
+        mScale.z = mScale.x;
+        mScale.y = mScale.z;
         UpdatePos(&mdCcAc_c);
         UpdateWMClsn(mWithMeshClsn, 0);
         if (mWithMeshClsn.IsOnGround() != 0) {
-            if (mScaleX == 0x1000) {
+            if (mScale.x == 0x1000) {
                 mPopIn = 0;
             }
         }
@@ -566,8 +566,10 @@ int daObjMarioCap_c::Behavior()
 int daObjMarioCap_c::Render()
 {
     int b = (mFlags & 0x40000) ? 1 : 0;
-    if (b) return 1;
-    if (mDormant == 1 || mScaleX < 0x100) return 1;
+    if (b)
+        return 1;
+    if (mDormant == 1 || mScale.x < 0x100)
+        return 1;
 
     int t = mType;
     if (t == 4 || t == 17 || t == 5 || t == 18 || t == 16 || t == 11 || (unsigned)(t - 6) <= 3) {
@@ -700,7 +702,7 @@ void daObjMarioCap_c::UpdateMatrix()
             return;
     }
 
-    if (mScaleX < 0x500)
+    if (mScale.x < 0x500)
         return;
 
     {
@@ -1047,9 +1049,9 @@ int daObjMarioCap_c::InitTaken()
     }
 
     mStateTimer = 150;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     return 1;
 }
 

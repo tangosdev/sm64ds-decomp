@@ -1355,16 +1355,16 @@ int daYegg_c::InitResources()
     switch (mState) {
     case 0:
     case 1:
-        mScaleX = 0x1000;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1000;
+        mScale.x = 0x1000;
+        mScale.y = 0x1000;
+        mScale.z = 0x1000;
         mdCcAc_c.Init(this, 0x46000, 0x8c000, 0x200002, 0xa08000);
         mWithMeshClsn.Init(this, 0x28000, 0x28000, 0, 0);
         break;
     case 2:
-        mScaleX = 0x2000;
-        mScaleY = 0x2000;
-        mScaleZ = 0x2000;
+        mScale.x = 0x2000;
+        mScale.y = 0x2000;
+        mScale.z = 0x2000;
         mdCcAc_c.Init(this, 0x78000, 0xa0000, 0x200002, 0xa08000);
         mWithMeshClsn.Init(this, 0x64000, 0x64000, 0, 0);
         break;

@@ -19,7 +19,7 @@
  *   daObjFlMaruta_c (ov022) and daObjHmMaruta_c (ov030) forward
  *   InitResources, Behavior and CleanupResources into them, so naming them
  *   means converting both leaves in the same change.
- * - func_02012694 (sound 0x1e at mCamSpacePosX), Matrix4x3_FromRotationXYZExt,
+ * - func_02012694 (sound 0x1e at mCamSpacePos), Matrix4x3_FromRotationXYZExt,
  *   Vec3_Sub and AngleDiff are arm9 C helpers no header declares yet.
  * - Abstract class: the leaves own classInit.
  * - common.h comes first so UpdateModelTransform's Matrix4x3 translation
@@ -181,14 +181,14 @@ int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
     if (ang <= 0x100)
         ang = 0;
     if (len > *maxDist) {
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPosX = mPrevPos.x;
+        mPosY = mPrevPos.y;
+        mPosZ = mPrevPos.z;
     }
     if (ang == mPathAngDiff || ang == 0x8000) {
-        mPosX = mPrevPosX;
-        mPosY = mPrevPosY;
-        mPosZ = mPrevPosZ;
+        mPosX = mPrevPos.x;
+        mPosY = mPrevPos.y;
+        mPosZ = mPrevPos.z;
         mHitTimer = 10;
     }
     mAngleX += mRollAngVel;

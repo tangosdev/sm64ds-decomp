@@ -148,9 +148,9 @@ int daPkn_c::InitResources()
     mdCcAc_c2.Init(this, 0x82000, 0x64000, 2, 0x423e0);
     v.x = 0; v.y = 0; v.z = 0;
     mdCcAcPos_c.Init(this, v, 0x46000, 0x64000, 0x200002, 0);
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mState = 0;
     mTargetAngleY = mPrevAngleY;
     mPlayerDist = 0x7fffffff;
@@ -202,9 +202,9 @@ int daPkn_c::Behavior()
         if (r == 2) {
             mCoinType = 0;
             mState = 7;
-            mScaleX = 0;
-            mScaleY = 0;
-            mScaleZ = 0;
+            mScale.x = 0;
+            mScale.y = 0;
+            mScale.z = 0;
             mPosX = mHomePos.x;
             mPosY = mHomePos.y;
             mPosZ = mHomePos.z;
@@ -247,7 +247,7 @@ int daPkn_c::Behavior()
  */
 int daPkn_c::Render()
 {
-    if (mScaleX == 0)
+    if (mScale.x == 0)
         return 1;
     mAnmModel.Render(&mScale);
     if (mAnmModel.file == data_ov084_02130df4.filePtr)
@@ -278,9 +278,9 @@ int daPkn_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 void daPkn_c::StateWait()
 {
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mClsnEnabled = 1;
     mFlags |= 0x10000000;
     mAnmModel.SetAnim((BCA_File *)data_ov084_02130df4.filePtr, 0, 0x1000, 0);
@@ -508,7 +508,7 @@ void daPkn_c::StateShrink()
     int scale;
 
     mClsnEnabled = 0;
-    scale = mScaleX;
+    scale = mScale.x;
     if (mStateTimer == 0) {
         func_02012694(0x11f, &mCamSpacePos);
         scale = 0x1000;
@@ -530,9 +530,9 @@ void daPkn_c::StateShrink()
         }
         mState = 7;
     }
-    mScaleX = scale;
-    mScaleY = scale;
-    mScaleZ = scale;
+    mScale.x = scale;
+    mScale.y = scale;
+    mScale.z = scale;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -551,7 +551,7 @@ void daPkn_c::StateRegrow()
 {
     int v;
     mClsnEnabled = 0;
-    v = mScaleX;
+    v = mScale.x;
     if (mStateTimer == 0)
         v = 0x4cc;
     if (v < 0x1000) {
@@ -560,9 +560,9 @@ void daPkn_c::StateRegrow()
         mState = 0;
         v = 0x1000;
     }
-    mScaleX = v;
-    mScaleY = v;
-    mScaleZ = v;
+    mScale.x = v;
+    mScale.y = v;
+    mScale.z = v;
 }
 
 /* -------------------------------------------------------------------------- */

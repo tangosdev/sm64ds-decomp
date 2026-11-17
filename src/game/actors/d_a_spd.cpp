@@ -184,9 +184,9 @@ int daSpd_c::InitResources() {
     mCoinCount = 3;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mEatingPlayer = 0;
     mTimer = 60;
     *(Matrix4x3 *)mShadowMtx = IDENTITY_MATRIX4X3;
@@ -657,9 +657,9 @@ void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
         rc.SetObjAndPos(pos, this);
         if (!rc.DetectClsn() || rc.clsnY < mPosY - 0x32000) {
             mHorzSpeed = 0;
-            mPosX = mPrevPosX;
-            mPosY = mPrevPosY;
-            mPosZ = mPrevPosZ;
+            mPosX = mPrevPos.x;
+            mPosY = mPrevPos.y;
+            mPosZ = mPrevPos.z;
         } else {
             Vector3 normal;
             w->GetFloorResult()->surface.CopyNormalTo(normal);

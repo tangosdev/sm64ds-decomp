@@ -269,9 +269,9 @@ int daBgSnmHed_c::InitResources() {
     }
 
     mCylinder.Init(this, 0x96000, 0x12c000, 0x800004, 0);
-    mScaleX = 0x1800;
-    mScaleY = 0x1800;
-    mScaleZ = 0x1800;
+    mScale.x = 0x1800;
+    mScale.y = 0x1800;
+    mScale.z = 0x1800;
     mWithMeshClsn.Init(this, 0x96000, 0x96000, 0, 0);
 
     pos.x = mPosX;

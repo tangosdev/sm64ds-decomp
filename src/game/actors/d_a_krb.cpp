@@ -803,9 +803,9 @@ void daKrb_c::func_ov084_02129ed4() {
         mDeathState = daKrb_c::DEATH_STOMPED;
         if (mGoombaType == daKrb_c::GOOMBA_LARGE)
             mCoinType = daKrb_c::COIN_BLUE;
-        mScaleX = FX32_ONE;
-        mScaleY = FX32_ONE;
-        mScaleZ = FX32_ONE;
+        mScale.x = FX32_ONE;
+        mScale.y = FX32_ONE;
+        mScale.z = FX32_ONE;
         func_02012694(SND_STOMPED, &mCamSpacePos);
     } else if (flags & HIT_FIRE) {
         turnAround = 1;
@@ -859,9 +859,9 @@ void daKrb_c::func_ov084_02129ed4() {
                         other->Bounce(0x28000); /* 40.0 */
                         func_02012694(SND_STOMPED, &mCamSpacePos);
                         mDeathState = daKrb_c::DEATH_STOMPED;
-                        mScaleX = FX32_ONE;
-                        mScaleY = FX32_ONE;
-                        mScaleZ = FX32_ONE;
+                        mScale.x = FX32_ONE;
+                        mScale.y = FX32_ONE;
+                        mScale.z = FX32_ONE;
                     } else {
                         if (other->mIsVanish != 0)
                             return;
@@ -896,9 +896,9 @@ void daKrb_c::func_ov084_02129ed4() {
                     other->Bounce(0x28000); /* 40.0 */
                     func_02012694(SND_STOMPED, &mCamSpacePos);
                     mDeathState = daKrb_c::DEATH_STOMPED;
-                    mScaleX = FX32_ONE;
-                    mScaleY = FX32_ONE;
-                    mScaleZ = FX32_ONE;
+                    mScale.x = FX32_ONE;
+                    mScale.y = FX32_ONE;
+                    mScale.z = FX32_ONE;
                 } else {
                     if (other->mIsVanish != 0)
                         return;
@@ -939,7 +939,7 @@ void daKrb_c::func_ov084_02129ed4() {
 
 /* Per-frame model, shadow and cap placement. Rebuilds the model matrix from
  * mAngleY, sets its translation to the position >> 3, and draws the drop
- * shadow (radius 80 * mScaleX; depth 30.0 on the ground, 150.0 in the air)
+ * shadow (radius 80 * mScale.x; depth 30.0 on the ground, 150.0 in the air)
  * unless the actor is in Yoshi's mouth (mFlags 0x40000). Then the cap is attached (UpdateCapPos)
  * 108.0 above the origin and 10 * (sin, cos) of mAngleY out along the
  * heading. UpdateCapPos is handed temporary copies of both, the rotation
@@ -957,9 +957,9 @@ void daKrb_c::func_ov084_0212a580() {
     int inYoshiMouth = (mFlags & 0x40000) ? 1 : 0;
     if (!inYoshiMouth) {
         if (mWithMeshClsn.IsOnGround())
-            DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, mScaleX * 0x50, 0x1e000, 0xf);
+            DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, mScale.x * 0x50, 0x1e000, 0xf);
         else
-            DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, mScaleX * 0x50, 0x96000, 0xf);
+            DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, mScale.x * 0x50, 0x96000, 0xf);
     }
     pos.x = 0;
     pos.z = 0;
@@ -1488,9 +1488,9 @@ int daKrb_c::Render()
     Vector3 backup = mScale;
 
     if (mDeathState == DEATH_STOMPED) {
-        mScaleX = FX_MUL(mScaleX, data_ov084_02130258[mGoombaType]);
-        mScaleY = FX_MUL(mScaleY, data_ov084_02130258[mGoombaType]);
-        mScaleZ = FX_MUL(mScaleZ, data_ov084_02130258[mGoombaType]);
+        mScale.x = FX_MUL(mScale.x, data_ov084_02130258[mGoombaType]);
+        mScale.y = FX_MUL(mScale.y, data_ov084_02130258[mGoombaType]);
+        mScale.z = FX_MUL(mScale.z, data_ov084_02130258[mGoombaType]);
     }
 
     mAnmModel.Render(&mScale);
@@ -1578,7 +1578,7 @@ int daKrb_c::Behavior() {
                                    (int)mAnmModel.file == (int)data_ov084_02130cc8.filePtr)) {
         mAnmModel.speed = 0x1000;
     } else {
-        int v = FX_Div(mHorzSpeed, mScaleX * 2);
+        int v = FX_Div(mHorzSpeed, mScale.x * 2);
         if (v > 0x3000)
             v = 0x3000;
         mAnmModel.speed = v;
@@ -1759,16 +1759,16 @@ int daKrb_c::InitResources() {
 
     {
         int scale = data_ov084_02130258[mGoombaType];
-        mScaleX = scale;
-        mScaleY = scale;
-        mScaleZ = scale;
+        mScale.x = scale;
+        mScale.y = scale;
+        mScale.z = scale;
     }
-    mdCcAc_c.Init(this, mScaleX * 0x3c, data_ov084_02130208[mGoombaType], 0x200000, 0xa6efe0);
+    mdCcAc_c.Init(this, mScale.x * 0x3c, data_ov084_02130208[mGoombaType], 0x200000, 0xa6efe0);
 
     if (mGoombaType == GOOMBA_LARGE)
         mdCcAc_c.vulnFlags &= ~HIT_YOSHI_TONGUE;
 
-    mWithMeshClsn.Init(this, mScaleX * 0x3c, mScaleX * 0x3c, 0, 0);
+    mWithMeshClsn.Init(this, mScale.x * 0x3c, mScale.x * 0x3c, 0, 0);
     mWithMeshClsn.StartDetectingWater();
 
     mMoveFlags = 0;

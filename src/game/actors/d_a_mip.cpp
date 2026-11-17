@@ -1040,9 +1040,9 @@ int daMip_c::Render()
     if (IsInYoshiMouth(this))
         return 1;
 
-    mScaleX = 0x1500;
-    mScaleZ = mScaleX;
-    mScaleY = mScaleZ;
+    mScale.x = 0x1500;
+    mScale.z = mScale.x;
+    mScale.y = mScale.z;
 
     {
         /* modelFile, then materials. texImageParam is the colour word. */
@@ -1332,9 +1332,9 @@ int daMip_c::InitResources()
     }
     UpdateMatrixAndShadow();
     mEatingPlayer = 0;
-    mScaleX = 0x1000;
-    mScaleZ = mScaleX;
-    mScaleY = mScaleZ;
+    mScale.x = 0x1000;
+    mScale.z = mScale.x;
+    mScale.y = mScale.z;
 
     if (mRabbitId == 7) {
         if (data_0209caa0.file.flags1 & 0x40)

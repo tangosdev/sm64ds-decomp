@@ -132,9 +132,9 @@ void daKirai_c::UpdateModelTransform() {
 
 /* Re-arm. */
 void daKirai_c::Rearm() {
-    mScaleX = FX32_ONE;
-    mScaleY = FX32_ONE;
-    mScaleZ = FX32_ONE;
+    mScale.x = FX32_ONE;
+    mScale.y = FX32_ONE;
+    mScale.z = FX32_ONE;
     mOpacity = 0xff;
     mStateIndex = 0;
     mdCcAcPos_c.flags &= ~1;
@@ -194,9 +194,9 @@ void daKirai_c::StateSpent() {
 /* Exploding: swell, fade and rise for 0x1c frames, then disarm. */
 void daKirai_c::StateExploding() {
     int scale = (mTimer * 9 << 12) / 14 + 0x1000;
-    mScaleX = scale;
-    mScaleY = scale;
-    mScaleZ = scale;
+    mScale.x = scale;
+    mScale.y = scale;
+    mScale.z = scale;
     mOpacity -= 0xa;
     if (mOpacity < 0xa)
         mOpacity = 0;
@@ -211,9 +211,9 @@ void daKirai_c::StateSwelling() {
     int scale;
     mdCcAcPos_c.flags |= 1;
     scale = (mTimer * 9 << 12) / 14 + 0x1000;
-    mScaleX = scale;
-    mScaleY = scale;
-    mScaleZ = scale;
+    mScale.x = scale;
+    mScale.y = scale;
+    mScale.z = scale;
     if (mTimer == 28)
         Disarm();
     mTimer++;
@@ -286,9 +286,9 @@ int daKirai_c::InitResources() {
     v.y = -0x96000;
     v.z = 0;
     mdCcAcPos_c.Init(this, v, 0x96000, 0x12c000, 0x204004, 0);
-    mScaleX = FX32_ONE;
-    mScaleY = FX32_ONE;
-    mScaleZ = FX32_ONE;
+    mScale.x = FX32_ONE;
+    mScale.y = FX32_ONE;
+    mScale.z = FX32_ONE;
     mOpacity = 0xff;
     z.x = 0;
     z.y = 0;

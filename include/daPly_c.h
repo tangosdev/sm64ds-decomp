@@ -521,7 +521,7 @@ struct daPly_c : dActor_c {
     u16 mTurnRamp; /* 0x6f0 */
     /* A squash-and-stretch on mScale, run each frame by UpdateScaleAnim
        and started by func_ov002_020db8bc(kind), which sets the step to 1 and
-       zeroes mScaleAnimTimer. Kinds 0 and 1 step mScaleY through the tables
+       zeroes mScaleAnimTimer. Kinds 0 and 1 step mScale.y through the tables
        data_ov002_020ff2c0 / data_ov002_020ff230 with X and Z set to
        (0x1000 - Y) / 2 + 0x1000: 0 after a stomp (func_ov002_020d869c),
        1 after St_Squish and a long fall (CheckFallDamage). Kind 2 grows

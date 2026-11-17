@@ -328,12 +328,12 @@ int dEnemyBase_c::UpdateDeath(dBgCh_Actr &clsn) {
 int dEnemyBase_c::func_ov002_020ae64c(dBgCh_Actr &clsn) {
     int x = (int)&clsn;
     if (mDeathTimer >= 5) {
-        int v = mScaleY - 0x23d;
+        int v = mScale.y - 0x23d;
         if (v < 0x4cc)
             v = 0x4cc;
-        mScaleY = v;
-        mScaleZ = 0x2000 - mScaleY;
-        mScaleX = mScaleZ;
+        mScale.y = v;
+        mScale.z = 0x2000 - mScale.y;
+        mScale.x = mScale.z;
     }
     return func_ov002_020ae5c8(x);
 }
@@ -359,7 +359,7 @@ int dEnemyBase_c::func_ov002_020ae5c8(int x) {
 
 int dEnemyBase_c::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
     Vector3 v;
-    int n = mScaleY;
+    int n = mScale.y;
     if (n == 0) {
         int z = mPosZ;
         int y = mPosY + 0x50000;
