@@ -9,8 +9,9 @@
  * - DrawCards steps a char* by 0x18 from this. mCards[i] and a card
  *   pointer both change that loop.
  * - CardFlyAway keeps FlyAwaySceneView. Direct mCards access misses.
- * - CheckFinished reads mCredits and mHudScore through inline_fn(&member);
- *   the plain reads change four words. unk_5407 is only cleared.
+ * - CheckFinished's clear-bonus call reads mCredits through WordAt, as
+ *   dScMgMemory_c's twin does; the plain read changes four words.
+ *   unk_5407 is only cleared.
  * - MEMORY2_OFF names the offsets CardFlyAway adds.
  * - Camera_InitDealerView sets mCamera and tail-calls
  *   Camera_UpdateMatrices. Render and InitResources call that wrapper.
@@ -269,10 +270,13 @@ void dScMgMemory2_c::InitPlayers() {
     }
 }
 
-/* inline_fn stays: reading mCredits and mHudScore directly changes the code. */
+/* WordAt stays for the clear bonus's mCredits read: as a plain member the
+   multiply-add takes its registers the other way round (4 of 41 words),
+   whichever side of the + mCredits sits on. mHudScore and the miss path's
+   reads are plain. */
 void Mg_SaveRecordPair(int r0arg, int r1arg);
-inline int *inline_fn(char *arg0) {
-    return (int *)arg0;
+inline int *WordAt(char *p) {
+    return (int *)p;
 }
 
 void dScMgMemory2_c::CheckFinished() {
@@ -280,14 +284,13 @@ void dScMgMemory2_c::CheckFinished() {
         mResultTimer = 64;
         mState = STATE_RESULT;
         mSubstate = RESULT_WAIT;
-        Mg_SaveRecordPair(((5 - mMisses) * 5) + (*inline_fn((char *)&mCredits)),
-                          (*inline_fn((char *)&mHudScore)) + 1);
+        Mg_SaveRecordPair((5 - mMisses) * 5 + *WordAt((char *)&mCredits), mHudScore + 1);
     }
     if (mMisses >= mMaxMisses) {
         mResultTimer = 64;
         mState = STATE_RESULT;
         mSubstate = RESULT_WAIT;
-        Mg_SaveRecordPair(*inline_fn((char *)&mCredits), (*inline_fn((char *)&mHudScore)) - 1);
+        Mg_SaveRecordPair(mCredits, mHudScore - 1);
     }
 }
 

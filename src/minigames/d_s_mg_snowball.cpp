@@ -718,7 +718,14 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
         off = masked << 7;
         n = 2;
         /* every member spelling of these mTileMap reads shrinks the function,
-           so they keep the `row + offset` arithmetic, named through SNOW_OFF */
+           so they keep the `row + offset` arithmetic, named through SNOW_OFF.
+           Re-measured 2026-11-16 (ROM 0x398), all sixteen reads in both
+           loops: mTileMap[i][col] 0x388; a `u16 *row` walk from
+           &mTileMap[0][col] (or mTileMap[0] + col) stepping 0x2e0 0x36c,
+           with or without the dead `row = scene` kept; a `u16 (*row)[0x2e0]`
+           row pointer with (*row)[col] 0x3bc. Without the SR-off bracket:
+           mTileMap[i][col] is the right size but 76 of 230 words off, the
+           u16 walk 0x36c, the row pointer 0x3b0. */
         do {
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = sSnowballCourseTiles[idx][0];

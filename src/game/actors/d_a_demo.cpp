@@ -1444,31 +1444,18 @@ void StaffRoll::func_ov002_020f40fc(int i) {
     }
 }
 
-/* recovered: per-slot update of a 4-entry cursor/target table (0x4c-byte
- * records at c). Slot i first burns its hold timer (+0x30); while its arrival
- * flag (+0x48) is clear it steps position (+0/+4) along heading (+0x2e) at
- * speed (+8), decelerates at the -0x2000 floor, and either snaps onto the
- * target (+0x1c/+0x20) within 2 units (flag++, timer reset, heading 0xc000)
- * or turns the heading toward atan2(dy,dx) in 0x100 steps. Arrived slots
- * orbit at radius +0x10 around (0x80000,0x60000) with angular speed +0x42.
- * When the last slot (func_ov002_020f5a94(c)-1) has orbited past 0x10000,
- * every active row (+0x44) is re-armed: +0x47 bumped, +0x3c/+0x48/+0x24
- * cleared, radius 0x38000, heading from data_ov002_021000b8[j] (0 for j==2
- * when the mode call returns 3).
- *
- * Codegen notes: the function is void (the ROM overwrites r0 in place after
- * both calls); func_ov002_020f5a94 takes c (r0 stays live to the bl). The
- * dx/dy block needs TWO named bases: px = c + off defined before the clamp
- * (colours to sb) and s = c + idx * 0x4c at the block start (recomputes the
- * same product as off under its own value number, so it is the r2 base the
- * tx/ty loads and the +0x24 store share).
+/* recovered: per-star update of the four stars[]. Star idx first burns its
+ * delay; while its phase is 0 it steps x/y along heading at speed,
+ * decelerates at the -0x2000 floor, and either snaps onto targetX/targetY
+ * within 2 units (phase++, orbitTravel reset, heading 0xc000) or turns the
+ * heading toward atan2(dy,dx) in 0x100 steps. Arrived stars orbit at radius
+ * around (0x80000,0x60000) at angSpeed. When the last star
+ * (func_ov002_020f5a94(this)-1) has orbited past 0x10000, every active star
+ * is re-armed: step bumped, loops/phase/orbitTravel cleared, radius 0x38000,
+ * heading from data_ov002_021000b8[j] (0 for j==2 when the unlock count is
+ * 3).
  */
-void StaffRoll::func_ov002_020f43cc(int i) {
-    char *c = (char *)this;
-    int idx = i;
-    char *px;
-    char *s;
-    int off = idx * 0x4c;
+void StaffRoll::func_ov002_020f43cc(int idx) {
     {
         unsigned short v = this->stars[idx].delay;
         if (v != 0) {
@@ -1492,17 +1479,14 @@ void StaffRoll::func_ov002_020f43cc(int i) {
             spd = this->stars[idx].speed;
             this->stars[idx].y += FX_MUL(tv, spd);
         }
-        px = c + off;
-        if (*(int *)((char *)&this->stars[0].speed + off) <= -0x2000)
-            *(int *)((char *)&this->stars[0].speed + off) =
-                *(int *)((char *)&this->stars[0].speed + off) + 0x120;
+        if (this->stars[idx].speed <= -0x2000)
+            this->stars[idx].speed += 0x120;
         {
-            s = c + idx * 0x4c;
-            int dx = (((StaffRoll *)s)->stars[0].targetX - ((StaffRoll *)px)->stars[0].x) >> 12;
-            int dy = (((StaffRoll *)s)->stars[0].targetY - this->stars[idx].y) >> 12;
+            int dx = (this->stars[idx].targetX - this->stars[idx].x) >> 12;
+            int dy = (this->stars[idx].targetY - this->stars[idx].y) >> 12;
             if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
                 this->stars[idx].phase++;
-                ((StaffRoll *)s)->stars[0].orbitTravel = 0;
+                this->stars[idx].orbitTravel = 0;
                 this->stars[idx].heading = 0xc000;
                 return;
             }
@@ -1548,27 +1532,25 @@ void StaffRoll::func_ov002_020f43cc(int i) {
         this->stars[idx].heading -= this->stars[idx].angSpeed;
         this->stars[idx].orbitTravel += this->stars[idx].angSpeed;
     }
-    if (idx != func_ov002_020f5a94(c) - 1)
+    if (idx != func_ov002_020f5a94(this) - 1)
         return;
     if ((unsigned int)this->stars[0].orbitTravel < 0x10000U)
         return;
     {
         int j;
-        char *p = c;
         for (j = 0; j < 4; j++) {
-            if (((StaffRoll *)p)->stars[0].active != 0) {
-                (((StaffRoll *)p)->stars[0].step)++;
-                ((StaffRoll *)p)->stars[0].loops = 0;
-                ((StaffRoll *)p)->stars[0].phase = 0;
-                ((StaffRoll *)p)->stars[0].radius = 0x38000;
-                ((StaffRoll *)p)->stars[0].heading = data_ov002_021000b8[j];
-                if (func_ov002_020f5a94(c) == 3) {
+            if (this->stars[j].active != 0) {
+                this->stars[j].step++;
+                this->stars[j].loops = 0;
+                this->stars[j].phase = 0;
+                this->stars[j].radius = 0x38000;
+                this->stars[j].heading = data_ov002_021000b8[j];
+                if (func_ov002_020f5a94(this) == 3) {
                     if (j == 2)
-                        ((StaffRoll *)p)->stars[0].heading = 0;
+                        this->stars[j].heading = 0;
                 }
-                ((StaffRoll *)p)->stars[0].orbitTravel = 0;
+                this->stars[j].orbitTravel = 0;
             }
-            p += 0x4c;
         }
     }
 }

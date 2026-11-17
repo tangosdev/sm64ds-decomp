@@ -31,12 +31,13 @@
  *     2026-09-14 and was matched on 2026-10-02.
  *
  * Remaining matching constraints:
- * - StepWalkers and Behavior step a char* through the per-walker and
- *   per-piece arrays and spell each field as element 0 of the stepped
- *   pointer (`((dScMgAmida_c *)p)->mWalkerDelay[0]`). Indexing the member
- *   directly diffs there: StepWalkers' pointer forms move bytes, and
- *   Behavior's piece walk keeps PIECE_OFF's cast arithmetic (see the
- *   macro). StepWalker, RenderBoard and Render take plain members.
+ * - StepWalkers and Behavior's piece-update loop step a char* through the
+ *   per-walker and per-piece arrays and spell each field as element 0 of
+ *   the stepped pointer (`((dScMgAmida_c *)p)->mWalkerDelay[0]`). Indexing
+ *   the member directly diffs there: StepWalkers' pointer forms move bytes,
+ *   and Behavior's piece walk keeps PIECE_OFF's cast arithmetic (see the
+ *   macro). StepWalker, RenderBoard, Render, SetupRound's piece reset and
+ *   Behavior's free-slot scan take plain members.
  * - StepWalkers keeps both opt pragmas. Without opt_common_subs off the
  *   literal arguments merge; the ROM hoists each one into its own stack
  *   slot ahead of the walker loop. Without opt_strength_reduction off the
@@ -187,9 +188,20 @@ typedef struct {
 extern AmidaRenderPeriods sAmidaRenderPeriods;
 
 /* PIECE_AT(p) is piece 0 seen from a char* that has been stepped by
-   whole pieces; PIECE_OFF names one field's offset from the scene. Both
-   keep the cast arithmetic: the member form `&((dScMgAmida_c *)p)->mPieces[0]`
-   grows Behavior by 0xc (measured 2026-10-20). */
+   whole pieces; PIECE_OFF names one field's offset from the scene. Only
+   Behavior's piece-update loop still uses them. The member form
+   `&((dScMgAmida_c *)p)->mPieces[0]` grows Behavior by 0xc (measured
+   2026-10-20). Plain mPieces[piece].field indexing (measured 2026-11-16)
+   is the right size but swaps three register colours: the ROM keeps the
+   stepped scene base in sb, vel in r8 and the posX address / speed in r7,
+   and the indexed form makes the base the last-ranked web. 15 of 477
+   words off with vel stepped as now, 12 with vel = &mPieces[piece].velX
+   per iteration (or block-scoped), 16 with the address inlined into the
+   calls; a block-scoped speed, `timer++` vs `timer = timer + 1`, a do/while
+   or comma-for loop, a u8 counter, and reusing lane/k/j/slot/touchSlot/
+   steps/accum/touched as the counter all stay at 12-20. A typed
+   `dScMgAmida_c_Piece *` walk rebases on mPieces and builds 0x18-0x24
+   bytes short. */
 #define PIECE_OFF(m) ((int)&((dScMgAmida_c *)0)->mPieces[0].m)
 #define PIECE_AT(p) ((dScMgAmida_c_Piece *)((p) + PIECE_OFF(posX)))
 
@@ -1417,7 +1429,6 @@ void dScMgAmida_c::InitWalkers() {
 }
 
 void dScMgAmida_c::SetupRound() {
-    char *raw = (char *)this;
     int level;
     int shuffle;
     AmidaInitialRungs rungs;
@@ -1680,11 +1691,10 @@ void dScMgAmida_c::SetupRound() {
             }
             mFinaleTimer = 0;
             {
-                int v = 0;
-                for (; v < 128; v++) {
-                    PIECE_AT(raw)->active = 0;
-                    PIECE_AT(raw)->timer = 0;
-                    raw += 0x18;
+                int v;
+                for (v = 0; v < 128; v++) {
+                    mPieces[v].active = 0;
+                    mPieces[v].timer = 0;
                 }
             }
         }
@@ -1830,7 +1840,6 @@ s32 dScMgAmida_c::Behavior() {
     int lane;
     int j;
     int slot;
-    char *scan;
     int randA, randB;
     u32 randBits15, randAngle15;
     s16 cosA;
@@ -1972,9 +1981,8 @@ s32 dScMgAmida_c::Behavior() {
         for (j = 0; j < 4; j++) {
             if (mLaneResult[j] != 0) {
                 slot = 0;
-                scan = raw;
                 do {
-                    if (PIECE_AT(scan)->active != 1) {
+                    if (mPieces[slot].active != 1) {
                         randA = RandomIntInternal(&data_0209d4b8.value);
                         randB = RandomIntInternal(&data_0209d4b8.value);
                         randBits15 = ((u32)randB >> 16) & 0x7fff;
@@ -1999,7 +2007,6 @@ s32 dScMgAmida_c::Behavior() {
                         break;
                     }
                     slot++;
-                    scan += 0x18;
                 } while (slot < 128);
             }
         }
