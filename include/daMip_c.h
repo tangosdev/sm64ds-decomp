@@ -89,10 +89,8 @@ struct daMip_c : dEnemyBase_c {
        branch) and reset together with it once it passes 0x96. */
     u8                           mEatenTimer;           /* 0x42a */
     u8  pad_42b[0x1];
-    /* StateIdleInit snapshots pos here; StateIdleMain HorzAngle's to it. */
-    s32                          mIdlePosX;             /* 0x42c */
-    s32                          mIdlePosY;             /* 0x430 */
-    s32                          mIdlePosZ;             /* 0x434 */
+    /* StateIdleInit snapshots mPos here; StateIdleMain HorzAngle's to it. */
+    Vector3 mIdlePos;                                   /* 0x42c */
     s32                          mPathId;               /* 0x438 -- param1 & 0xff, handed to PathPtr::FromID */
     s32                          mRabbitId;             /* 0x43c */
     s32                          mCharacterId;          /* 0x440 */

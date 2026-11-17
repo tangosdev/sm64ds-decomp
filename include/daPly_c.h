@@ -232,51 +232,41 @@ struct daPly_c : dActor_c {
        top (+0x08 height); ClearClimbCollider clears it. Every access is a word. */
     dCc_c *mClimbClsn; /* 0x37c */
     /* ~daPly_c calls _ZN10dBgCh_ActrD1Ev on this FIRST, and dBgCh_Actr
-       asserts 0x1bc -- which closes exactly at mSpawnPosX. */
+       asserts 0x1bc -- which closes exactly at mSpawnPos. */
     dBgCh_Actr mMeshClsn;            /* 0x380 */
     /* The spawn point, saved once and restored on death. daPly_c::InitResources
        writes all four from the live values (0x53c..0x544 <- mPosX/Y/Z, and
        mSpawnAngleY <- mAngleY); St_Respawn_Init reads them back the other way.
        Two functions, opposite directions, the same four slots -- which is what
        makes these names evidenced rather than guessed. */
-    s32 mSpawnPosX;            /* 0x53c */
-    s32 mSpawnPosY;            /* 0x540 */
-    s32 mSpawnPosZ;            /* 0x544 */
-    s32 mPreClsnPosX;            /* 0x548 */
-    s32 mPreClsnPosY;            /* 0x54c */
-    s32 mPreClsnPosZ;            /* 0x550 */
+    Vector3 mSpawnPos;   /* 0x53c */
+    Vector3 mPreClsnPos; /* 0x548 */
     /* Floor normal, fx12 (1.0 == 0x1000 -- already rescaled from KCL's 0x400).
      * Stored as three consecutive words by daPly_c::SetFloorSurfaceInfo
      * (0x020c16ec) at 0x020c1768 / 0x020c1770 / 0x020c1778, sourced
      * from SurfaceInfo::CopyNormalTo (func_02037dcc). 0x554 and 0x55c were
      * marked padding until those stores were disassembled.
-     * mFloorNormalY is the slope-test input: func_ov002_020f035c compares it
+     * mFloorNormal.y is the slope-test input: func_ov002_020f035c compares it
      * against a per-floor-class cosine threshold. */
-    s32 mFloorNormalX;            /* 0x554 */
-    s32 mFloorNormalY;            /* 0x558 */
-    s32 mFloorNormalZ;            /* 0x55c */
+    Vector3 mFloorNormal; /* 0x554 */
     /* Wall normal, fx12, and the exact counterpart of the floor normal above.
      * func_ov002_020c25a8 writes all three from
      * mMeshClsn.GetWallResult()->surface.CopyNormalTo(wn)
      * -- the same helper, the same shape, one surface over. It then pushes the
-     * actor out along it (`mPosX -= mWallNormalX * 2`, `mPosZ -= mWallNormalZ * 2`).
-     * Seven bodies read the pair back as `cstd::atan2(mWallNormalX, mWallNormalZ)`
+     * actor out along it (`mPosX -= mWallNormal.x * 2`, `mPosZ -= mWallNormal.z * 2`).
+     * Seven bodies read the pair back as `cstd::atan2(mWallNormal.x, mWallNormal.z)`
      * to get the wall's facing: St_Shell_Main, St_OnWall_Main (twice),
      * St_Balloon_Main, St_CrazedCrate_Main, func_ov002_020c2138,
      * func_ov002_020dd2f4 and func_ov002_020e28d4. 0x564 was marked padding until
      * that store was disassembled, exactly as 0x554/0x55c were. */
-    s32 mWallNormalX;            /* 0x560 */
-    s32 mWallNormalY;            /* 0x564 */
-    s32 mWallNormalZ;            /* 0x568 */
+    Vector3 mWallNormal; /* 0x560 */
     /* The sleep bubble's scale, fx12, the Vector3 Render passes to the bubble
        model's draw. func_ov002_020d228c and St_Wait_Main zero all three as
        they enter sleep stage 2; func_ov002_020d2f24 (Yoshi only) shrinks it by 0x180
        over breath frames 6..0x1c and grows it over 0x24..0x3a, clamped to
        0x400..0x4000. St_Wait_Main wakes the player once X reaches 0x3000, and
        func_ov002_020e444c pushes the bubble out by Z * 0x2400. */
-    s32 mSleepBubbleScaleX; /* 0x56c */
-    s32 mSleepBubbleScaleY; /* 0x570 */
-    s32 mSleepBubbleScaleZ; /* 0x574 */
+    Vector3 mSleepBubbleScale; /* 0x56c */
     /* A 50-entry trail buffer, built by InitResources (new Vector3[50], new
        u8[50]). func_ov002_020bf13c writes entry 0 for Yoshi only: a point 0x78
        behind him, and speed/airborne/moving flags. No other reader in the ROM. */
@@ -388,8 +378,8 @@ struct daPly_c : dActor_c {
     s32 mModelOffsetZ;           /* 0x694 */
     s16 mSpawnAngleY;            /* 0x698 */
     /* Downhill direction of the current floor, binary angle (0x10000 per turn).
-     * daPly_c::SetFloorSurfaceInfo computes it as cstd::atan2(mFloorNormalX,
-     * mFloorNormalZ) and stores it with a 16-bit strh at 0x020c178c (written
+     * daPly_c::SetFloorSurfaceInfo computes it as cstd::atan2(mFloorNormal.x,
+     * mFloorNormal.z) and stores it with a 16-bit strh at 0x020c178c (written
      * as [r5 + 0x600] + 0x9a). Consumed by daPly_c::ApplySlopeAccel
      * (func_ov002_020c04e0) via AngleDiff(mFloorAngle, moveYaw) to decide
      * whether a slope speeds you up or slows you down. */
@@ -715,16 +705,15 @@ struct daPly_c : dActor_c {
        the walk-to point (func_ov002_020c8a4c, TryEnterStarDoor), and the
        cage JumpIntoBooCage records. mRootMotionMode reuses it as last frame's
        bone translation and func_ov002_020e3f90 as an eased carry offset.
-       Kept as three s32: a Vector3 overlay would draw @NNN numbers. */
+       Still three s32 only because its retype is pending; mStateAnchor
+       below became a Vector3 with no byte change. */
     s32 mStateTargetX; /* 0x744 */
     s32 mStateTargetY; /* 0x748 */
     s32 mStateTargetZ; /* 0x74c */
     /* The fixed point mStateTarget is derived from: the door position
        TryEnterStarDoor records (the approach point is rotated off it), or
        the bone translation mRootMotionMode latches on its first frame. */
-    s32 mStateAnchorX; /* 0x750 */
-    s32 mStateAnchorY; /* 0x754 */
-    s32 mStateAnchorZ; /* 0x758 */
+    Vector3 mStateAnchor; /* 0x750 */
     /* Extra rotation for body bone 8 ("spin", the spine): func_ov002_020e640c
        adds [1]/[2] every frame and sets all three in mHeadRotMode 3. */
     s16 mSpineRot[3]; /* 0x75c */
@@ -1080,7 +1069,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020d5f98(u8 *, u8 *);
     int func_ov002_020d6048();
     int func_ov002_020d6998();
-    char *func_ov002_020d708c();
+    dActor_c *func_ov002_020d708c();
     void func_ov002_020d718c();
     void func_ov002_020d71a0();
     int func_ov002_020d93ac();

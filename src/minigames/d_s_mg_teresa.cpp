@@ -244,11 +244,11 @@ void dScMgTeresa_c::BigBoo_StateExit(int i) {
     *p16 = *p16 + 1;
     if (*p16 >= 8) {
         unsigned char *p8;
-        int z = 0;
-        *p16 = z;
+        *p16 = 0;
         p8 = &mBigBoo[i].frame;
         *p8 = *p8 + 1;
-        if (*p8 >= 4) *p8 = z;
+        if (*p8 >= 4)
+            *p8 = 0;
     }
     add = &mBigBoo[i].xVel;
     sum = &mBigBoo[i].x;

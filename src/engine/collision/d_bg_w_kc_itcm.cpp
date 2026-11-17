@@ -50,6 +50,7 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/cp/sqrt.h"
+#include "math/CalcLib.h"
 
 extern "C" {
 
@@ -61,8 +62,6 @@ extern "C" {
    and the normal into 0x8.
    local extern: no header in include/ declares them. */
 
-/* local extern: no shared header declares it; match src/VEC_DotProduct.c. */
-fx32 VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* local extern: no header in include/ declares it. */
 fx32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 }
@@ -454,15 +453,12 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s32 den12;
     s32 den23;
     s32 den31;
-    /* volatile POINTEE, not a volatile pointer.  The ROM loads `c` from its stack
-       home before almost every component read -- twice for the three `raw` reads in
-       the prologue alone -- and mwcc will otherwise keep it in a register and read
-       through it once.  `const volatile` is worth 290 instructions back onto their
-       correct index and is what brings the count to exactly 1778.  A plain
-       `(const Vector3 *)c` cast does nothing here: `c` is already const, so it
-       changes no qualifier, and it is the QUALIFIER CHANGE that re-issues a load.
-       Making the POINTER volatile instead (`const Vector3 *volatile c`) is -57 shape. */
-    const volatile Vector3 *c;
+    /* A plain pointer to the sphere's centre.  It used to point at a `const
+       volatile` Vector3, with the y and z prologue reads cast back to plain;
+       re-measured (#821 r18), dropping the qualifier and both casts leaves the
+       object byte-identical.  Making the POINTER volatile
+       (`const Vector3 *volatile c`) still changes the code. */
+    const Vector3 *c;
     s32 rsc;
     s32 rawX;
     s32 rawY;
@@ -480,24 +476,16 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     c = &sphere.centre;   /* the dM3dGSph base sub-object's centre, at 0x3c */
     f = kclFile;
     {
-        /* Per-site (const Vector3 *) casts on the y and z reads, ABOVE the
-           rad6/origin declarations, in x, y, z statement order.  The cast
-           expression is its own CSE class: it stops the `add r0,fp,#0x3c` result
-           being consumed by the first read (the ROM never reads through that add
-           -- f's load clobbers it first) and lets y and z share one pointer
-           reload while x takes its own.  The ROM's y-before-x LOAD order is
-           scheduler freedom, not source order.  Win conditions, from a
-           2,520-variant positional sweep: x,y,z statement order, reads above
-           BOTH rad6 and origin, rad6 declared before origin, and at least two of
-           the three reads cast-spelled.  Exactly two is enough -- x reads `c`
-           bare, as a genuine volatile read, and only y and z strip the qualifier.
-           This is what closes prologue indices 2..17.
+        /* The three reads sit ABOVE the rad6/origin declarations, in x, y, z
+           statement order, with rad6 declared before origin (from a 2,520-variant
+           positional sweep).  The ROM's y-before-x LOAD order is scheduler
+           freedom, not source order.
 
            No re-bind here any more, and do not re-add one: a second definition
            of `c` demotes it into the pool and undoes the slot fix below. */
         rawX = c->x >> 6;
-        rawY = ((const Vector3 *)c)->y >> 6;
-        rawZ = ((const Vector3 *)c)->z >> 6;
+        rawY = c->y >> 6;
+        rawZ = c->z >> 6;
         s32 rad6 = sphere.radius >> 6;
         const Vector3 *origin = &f->origin;
 
@@ -859,16 +847,6 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 
                             {
                                 s32 da, db, dc;
-                                /* `c` being a volatile pointee already forces most of the
-                                   reloads the ROM makes (ldr [sp,#0xc4], nine times in this
-                                   block).  These two re-binds are what is left: without them
-                                   mwcc folds `c` back to `sphere.pos` and addresses the
-                                   component straight off the object.  Each is a no-op --
-                                   `c` already holds &sphere.pos.  All 64 site subsets were
-                                   swept individually; four of the original six are
-                                   unnecessary and are gone.  One fold survives even so:
-                                   `vc.z -= c->z` still compiles to `ldr r8,[fp,#0x44]`
-                                   where the ROM goes through the pointer. */
                                 tp.x -= c->x;
                                 tp.y -= c->y;
                                 tp.z -= c->z;

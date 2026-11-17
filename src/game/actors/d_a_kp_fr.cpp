@@ -198,14 +198,14 @@ void daKpFr_c::func_ov070_02121e14() {
 
 void daKpFr_c::func_ov070_02121d50(void* vclsn) {
     dBgCh_Actr* clsn = (dBgCh_Actr*)vclsn;
-    fx32 normal[3];
+    Vector3 normal;
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
-        clsn->GetFloorResult()->surface.CopyNormalTo(*(Vector3 *)normal);
-        if (normal[1] != 0) {
-            int a = FX_MUL(normal[0], mSpeedX);
-            int b = FX_MUL(normal[2], mSpeedZ);
-            mVertSpeed = -(FX_Div(a + b, normal[1]) + 0x8000);
+        clsn->GetFloorResult()->surface.CopyNormalTo(normal);
+        if (normal.y != 0) {
+            int a = FX_MUL(normal.x, mSpeedX);
+            int b = FX_MUL(normal.z, mSpeedZ);
+            mVertSpeed = -(FX_Div(a + b, normal.y) + 0x8000);
         }
     }
     if (clsn->IsOnWall())
@@ -237,7 +237,7 @@ void daKpFr_c::func_ov070_02121cbc(){
 
 void daKpFr_c::func_ov070_02121c8c()
 {
-    func_02012694(0x166, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x166, &mCamSpacePos);
     SmallPoofDust();
     MarkForDestruction();
 }

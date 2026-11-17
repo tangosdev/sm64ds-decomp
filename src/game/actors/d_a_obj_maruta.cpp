@@ -21,8 +21,6 @@
  *   means converting both leaves in the same change.
  * - func_02012694 (sound 0x1e at mCamSpacePosX), Matrix4x3_FromRotationXYZExt,
  *   Vec3_Sub and AngleDiff are arm9 C helpers no header declares yet.
- * - (Vector3 *)&mRestPosX / &mHitPosX: the class stores those triples as
- *   scalars (issue #2566).
  * - Abstract class: the leaves own classInit.
  * - common.h comes first so UpdateModelTransform's Matrix4x3 translation
  *   stores use the flat s32 m[12] spelling (math/Matrix.h nested form
@@ -82,7 +80,7 @@ void daObjMaruta_c_EmitDestructor(daObjMaruta_c *p) {
    direct `bl` the ROM has. */
 void daObjMaruta_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
-    func_02012694(0x1e, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x1e, &mCamSpacePos);
     KillByMegaChar(player);
 }
 
@@ -153,10 +151,10 @@ int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
                     self->mRollAngVel = 0x100;
             }
         }
-        if (Vec3_Dist(&self->mPos, (Vector3 *)&self->mRestPosX) < 0x2000)
+        if (Vec3_Dist(&self->mPos, &self->mRestPos) < 0x2000)
             self->mRollAngVel = 0;
     } else {
-        horz = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mHitPosX);
+        horz = Vec3_HorzAngle(&self->mPos, &self->mHitPos);
         AngleDiff(horz, self->mAngleY);
         ang = AngleDiff(horz, self->mAngleY);
         if (ang > 0x4000) {
@@ -165,14 +163,10 @@ int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
             self->mRollAngVel += 0x10;
         }
         v = self->mRollAngVel;
-        {
-            int lim = 0x200;
-            int nlim = -lim;
-            if (v < nlim)
-                v = nlim;
-            else if (v > lim)
-                v = lim;
-        }
+        if (v < -0x200)
+            v = -0x200;
+        else if (v > 0x200)
+            v = 0x200;
         self->mRollAngVel = v;
     }
 
@@ -181,9 +175,9 @@ int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
         self->mHorzSpeed = (d / 64) << 12;
     }
     self->UpdatePos(0);
-    Vec3_Sub(&tmp, &self->mPos, (Vector3 *)&self->mRestPosX);
+    Vec3_Sub(&tmp, &self->mPos, &self->mRestPos);
     len = VEC_Mag(&tmp);
-    ang = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mRestPosX);
+    ang = Vec3_HorzAngle(&self->mPos, &self->mRestPos);
     ang = AngleDiff(ang, self->mAngleY);
     if (ang >= 0x7f00)
         ang = 0x8000;
@@ -201,16 +195,13 @@ int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
         self->mHitTimer = 10;
     }
     self->mAngleX += self->mRollAngVel;
-    {
-        int mask = 0x1fff;
-        if ((self->mAngleX & mask) < 0x210 && self->mRollAngVel != 0) {
-            if (self->mSoundTimer == 0) {
-                Sound::PlayBank3(0x25, self->mCamSpacePos);
-                self->mSoundTimer = 14;
-            }
-        } else {
-            DecIfAbove0_Short(&self->mSoundTimer);
+    if ((self->mAngleX & 0x1fff) < 0x210 && self->mRollAngVel != 0) {
+        if (self->mSoundTimer == 0) {
+            Sound::PlayBank3(0x25, self->mCamSpacePos);
+            self->mSoundTimer = 14;
         }
+    } else {
+        DecIfAbove0_Short(&self->mSoundTimer);
     }
     self->UpdateModelTransform();
     {
@@ -239,13 +230,12 @@ int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg) {
                                 self->mAngleY, *(arg->clps));
     self->mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     self->mMeshCollider.SetStoodOnCallback(&daObjMaruta_c::StoodOnCallback);
-    self->mRestPosX = self->mPosX;
-    self->mRestPosY = self->mPosY;
-    self->mRestPosZ = self->mPosZ;
-    Vec3_Sub(&d, &self->mPos, (Vector3 *)&self->mRestPosX);
+    self->mRestPos.x = self->mPosX;
+    self->mRestPos.y = self->mPosY;
+    self->mRestPos.z = self->mPosZ;
+    Vec3_Sub(&d, &self->mPos, &self->mRestPos);
     VEC_Mag(&d);
-    self->mPathAngDiff =
-        AngleDiff(Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mRestPosX), self->mAngleY);
+    self->mPathAngDiff = AngleDiff(Vec3_HorzAngle(&self->mPos, &self->mRestPos), self->mAngleY);
     return 1;
 }
 
@@ -263,9 +253,9 @@ void daObjMaruta_c::HandlePlayerContact(dActor_c *other) {
     t = (other->actorID == 0xbf);
     if (t != 0) {
         Vector3 *position = &other->mPos;
-        mHitPosX = position->x;
-        mHitPosY = position->y;
-        mHitPosZ = position->z;
+        mHitPos.x = position->x;
+        mHitPos.y = position->y;
+        mHitPos.z = position->z;
         mHitByPlayer = 1;
         mHitTimer = 120;
 

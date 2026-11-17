@@ -76,15 +76,7 @@ int daDonketu_c::Behavior() {
     int outcome = UpdateKillByInvincibleChar(mWithMeshClsn, mAnmModel, 3);
     if (outcome != 0) {
         if (outcome == 2) {
-            int y = mPosY;
-            int yoff = 0x136000;
-            int z = mPosZ;
-            int x = mPosX;
-            int sum = y + yoff;
-            Vector3 pos;
-            pos.x = x;
-            pos.y = sum;
-            pos.z = z;
+            Vector3 pos(mPosX, mPosY + 0x136000, mPosZ);
             int roll = RandomIntInternal(&data_0209e650.value);
             int yrot = mPrevAngleY + 0x8000 + (((u32)roll >> 8) & 0x3ff);
             Vector3_16 rot;
@@ -99,11 +91,9 @@ int daDonketu_c::Behavior() {
                 coin->mVertSpeed = 0x50000;
                 coin->mSpeedZ = 0;
             }
-            dActor_c *spawner = dActor_c::FindWithID(mBigBullyID);
-            if (spawner) {
-                daBDonketu_c *bigBully = (daBDonketu_c *)spawner;
+            daBDonketu_c *bigBully = (daBDonketu_c *)dActor_c::FindWithID(mBigBullyID);
+            if (bigBully)
                 bigBully->mNumBulliesKilled++;
-            }
         }
         return 1;
     }

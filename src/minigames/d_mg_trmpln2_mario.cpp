@@ -743,17 +743,17 @@ void dMgTrmpln2Mario_c::EnterBounce() {
 }
 
 void dMgTrmpln2Mario_c::StateRespawnWait() {
-    unsigned int r;
+    fx32 r;
     int tbl;
     mTimer -= 1;
     if (mTimer == 0) {
         mPos.y = 0x100000;
-        r = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
-        mPos.x = ((int)r - 0x800) * 0xc0;
+        r = RAND_FX();
+        mPos.x = (r - 0x800) * 0xc0;
         mVel.y = 0;
         tbl = sTrmp2DriftScale;
-        r = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
-        mVel.x = FX_MUL(((int)r - 0x800) << 1, tbl);
+        r = RAND_FX();
+        mVel.x = FX_MUL((r - 0x800) << 1, tbl);
         mAnmModel.SetAnim(sTrmpAnimWallJump, 0x40000000, 0x800, 0);
         mPrevPos.x = mPos.x;
         mPrevPos.y = mPos.y;
@@ -1022,7 +1022,7 @@ int Trmp2Mario_Hide(void) {
     int i;
     for (i = 0; i < sTrmp2MarioCount; i++) {
         int *v = ((dMgTrmpln2Mario_c *)sTrmp2Marios)[i].mState;
-        volatile int *q = (int *)pmf_Trmp2Mario_StateHidden_2;
+        int *q = pmf_Trmp2Mario_StateHidden_2;
         if (v[0] != pmf_Trmp2Mario_StateHidden_2[0] ||
             (v[1] != q[1] && ((dMgTrmpln2Mario_c *)sTrmp2Marios)[i].mState[0] != 0))
             return 0;
@@ -1069,7 +1069,7 @@ void Trmp2Mario_MoveToStart(void) {
     for (;;) {
 
         int *v = MARIO2(e)->mState;
-        volatile int *q = (int *)pmf_Trmp2Mario_StateHidden;
+        int *q = pmf_Trmp2Mario_StateHidden;
         if (v[0] == q0 && (v[1] == q[1] || MARIO2(e)->mState[0] == 0)) {
 
             ((dMgTrmpln2Mario_c *)(base + i * 0xdc))->EnterAppearWait((short)(i * 0x14));
@@ -1109,7 +1109,7 @@ void Trmp2Mario_DrawAll(void) {
     v[1] = 0;
     v[2] = -0xff8;
     func_0203cd80(v, -0x2000);
-    func_0203ccd4((Vector3 *)v, -0x3000);
+    func_0203ccd4(v, -0x3000);
     G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
     w.x = 0;
     w.y = 0;
@@ -1833,8 +1833,7 @@ void dMgTrmpln3DMario_c::JumpOff() {
     int b;
 
     mGravityStep = sTrmp3DGravityStep;
-    mVel.x = sTrmp3DJumpOffSpeed +
-             (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19);
+    mVel.x = sTrmp3DJumpOffSpeed + RAND_FX();
 
     b = mPos.x;
     if (b > 0)
@@ -2299,7 +2298,7 @@ void Trmp3DMario_DrawAll(void) {
     v[1] = 0;
     v[2] = -0xff8;
     func_0203cd80((int *)v, 0x2000);
-    func_0203ccd4((Vector3 *)v, 0);
+    func_0203ccd4(v, 0);
     G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
 
     w[0] = 0;

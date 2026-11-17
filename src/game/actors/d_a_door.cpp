@@ -399,7 +399,7 @@ int daDoor_c::func_ov100_02144528(daPly_c *pl) {
                 Sound::ChangeMusicVolume(0, 0x19666);
             }
             func_02012694(param1 == DOOR_ALT_SOUND ? SND_SWING_END_ALT : SND_SWING_END,
-                          (const Vector3 *)(&mCamSpacePosX));
+                          &mCamSpacePos);
         }
         if (DecIfAbove0_Byte(&mTimer) == 0) {
             void *r1 = data_ov100_02148704 != 0 ? 0 : &data_ov100_021488f4;
@@ -470,8 +470,7 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
         {
             gCamera->mFlags &= ~DOOR_CAMERA_FLAGS;
         }
-        func_02012694(param1 == DOOR_ALT_SOUND ? SND_SWING_END_ALT : SND_SWING_END,
-                      (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(param1 == DOOR_ALT_SOUND ? SND_SWING_END_ALT : SND_SWING_END, &mCamSpacePos);
     } else if (mKeyModelIdx != 0) {
         if (mModel.WillHitFrame((u16)(mModel.GetFrameCount() - 0x1c)) != 0) {
             gCamera->mFlags &= ~DOOR_CAMERA_FLAGS;
@@ -520,7 +519,7 @@ int daDoor_c::func_ov100_02144950(daPly_c *pl, int unused) {
     ShowArea((signed char)mAngleZ);
     gCamera->mFlags |= DOOR_CAMERA_FLAGS;
     func_02012694((param1 == DOOR_ALT_SOUND) ? SND_SWING_START_ALT : SND_SWING_START,
-                  (const Vector3 *)(&mCamSpacePosX));
+                  &mCamSpacePos);
     mTimer = 0;
     return 1;
 }

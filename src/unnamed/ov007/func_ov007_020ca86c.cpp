@@ -6,14 +6,14 @@
 #define SEND_VTX(p) G3_Vtx(((p)->x >> shift), ((p)->y >> shift), ((p)->z >> shift))
 #define SEND_NRM(q) G3_Normal((q)->x, (q)->y, (q)->z)
 
-void func_ov007_020ca86c(Vector3 *vtx, Vector3_16 *nrm, s32 w, s32 h, s32 shift) {
+void func_ov007_020ca86c(VecFx32 *vtx, Vector3_16 *nrm, s32 w, s32 h, s32 shift) {
     s32 j, i;
     s32 dir;
     s32 w1;
     s32 rowbase;
     Vector3_16 *n;
     Vector3_16 *n2;
-    Vector3 *p00, *p10, *p01, *p11;
+    VecFx32 *p00, *p10, *p01, *p11;
 
     G3_Begin(GX_BEGIN_TRIANGLES);
     w1 = w + 1;

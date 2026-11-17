@@ -58,12 +58,8 @@ struct daJgm_c : dActor_c {
     Matrix4x3                 mMatrix;               /* 0x3c0 */
     DaJgmStateHandlers       *mStateHandlers;        /* 0x3f0 */
     s32                       mState;                /* 0x3f4 */
-    s32                       mSpawnPosX;            /* 0x3f8 */
-    s32                       mSpawnPosY;            /* 0x3fc */
-    s32                       mSpawnPosZ;            /* 0x400 */
-    s32                       mThrowPosX;            /* 0x404 */
-    s32                       mThrowPosY;            /* 0x408 */
-    s32                       mThrowPosZ;            /* 0x40c */
+    Vector3 mSpawnPos;                               /* 0x3f8 */
+    Vector3 mThrowPos;                               /* 0x404 */
     u32                       mSoundHandle;          /* 0x410 */
     s32                       mBobOffsetY;           /* 0x414 */
     s16                       mBobAngle;             /* 0x418 */

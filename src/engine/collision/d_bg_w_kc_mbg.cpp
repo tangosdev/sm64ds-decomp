@@ -21,10 +21,9 @@
 #include "nitro/fx/fx_cp.h"
 
 extern "C" {
-/* Shared math workers.
-   local extern: no header in include/ declares them. */
+/* Shared math worker.
+   local extern: no header in include/ declares it. */
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, s32 x, s32 y, s32 z);
-void VEC_Normalize(const Vector3 *src, Vector3 *dst);
 
 /* The scratch line's lineEnd and dBgPi base (both inside data_020a0d0c,
    below), and the scratch scaled matrix.
@@ -101,7 +100,6 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     *(Mtx43 *)&invMat = *(Mtx43 *)&mat;
     MTX_Inverse43(&invMat, &invMat);
 
-    int zero = 0;
     *(Mtx43 *)&mat = *(const Mtx43 *)&mtx;
 
     s16 oldAngle = angY;
@@ -116,9 +114,9 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     pos.z = mtx.t.z;
 
     Mtx43 rotation = *(Mtx43 *)&mat;
-    rotation.r[3].x = zero;
-    rotation.r[3].y = zero;
-    rotation.r[3].z = zero;
+    rotation.r[3].x = 0;
+    rotation.r[3].y = 0;
+    rotation.r[3].z = 0;
     *(Mtx43 *)&invRotMat = rotation;
     MTX_Inverse43(&invRotMat, &invRotMat);
 
@@ -182,15 +180,15 @@ void dBgW_KcMbg::GetTriangleOrigin(s16 triID, Vector3 &res) {
 }
 
 void dBgW_KcMbg::WorldToLocalPosition(const Vector3 &position, Vector3 &result) {
-    MTX_MultVec43(const_cast<Vector3 *>(&position), &invScaledMat, &result);
+    MTX_MultVec43(&position, &invScaledMat, &result);
 }
 
 void dBgW_KcMbg::LocalToWorldPosition(const Vector3 &position, Vector3 &result) {
-    MTX_MultVec43(const_cast<Vector3 *>(&position), &newScaledMat, &result);
+    MTX_MultVec43(&position, &newScaledMat, &result);
 }
 
 void dBgW_KcMbg::WorldToLocalDirection(const Vector3 &direction, Vector3 &result) {
-    MTX_MultVec43(const_cast<Vector3 *>(&direction), &invRotMat, &result);
+    MTX_MultVec43(&direction, &invRotMat, &result);
 }
 
 /* Transform a direction by mat, leaving out the translation. */
@@ -200,7 +198,7 @@ void dBgW_KcMbg::LocalToWorldDirection(const Vector3 &direction, Vector3 &result
     rotation.t.x = 0;
     rotation.t.y = 0;
     rotation.t.z = 0;
-    MTX_MultVec43(const_cast<Vector3 *>(&direction), &rotation, &result);
+    MTX_MultVec43(&direction, &rotation, &result);
 }
 
 int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray) {
@@ -240,10 +238,8 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray) {
 int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr &sphere) {
     Vector3 localCentre;
     /* The local query's push-out bounds, and the same bounds scaled back out. */
-    struct {
-        VecFx32 localMin, localMax;
-        VecFx32 scaledMin, scaledMax;
-    } bounds;
+    Vector3 localMin, localMax;
+    Vector3 scaledMin, scaledMax;
     dBgCh_SphCrr localSphere;
     int hit;
 
@@ -254,15 +250,15 @@ int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr &sphere) {
     (dBgCh &)localSphere = sphere;
     hit = dBgW_Kc::DetectClsn(localSphere);
     if (hit) {
-        localSphere.GetPushOutBounds((Vector3 *)&bounds.localMin, (Vector3 *)&bounds.localMax);
-        bounds.scaledMin.x = FX_MUL(bounds.localMin.x, scale);
-        bounds.scaledMin.y = FX_MUL(bounds.localMin.y, scale);
-        bounds.scaledMin.z = FX_MUL(bounds.localMin.z, scale);
-        bounds.scaledMax.x = FX_MUL(bounds.localMax.x, scale);
-        bounds.scaledMax.y = FX_MUL(bounds.localMax.y, scale);
-        bounds.scaledMax.z = FX_MUL(bounds.localMax.z, scale);
-        sphere.ExpandPushOutBounds(bounds.scaledMin.x, bounds.scaledMin.y, bounds.scaledMin.z,
-                                   bounds.scaledMax.x, bounds.scaledMax.y, bounds.scaledMax.z);
+        localSphere.GetPushOutBounds(&localMin, &localMax);
+        scaledMin.x = FX_MUL(localMin.x, scale);
+        scaledMin.y = FX_MUL(localMin.y, scale);
+        scaledMin.z = FX_MUL(localMin.z, scale);
+        scaledMax.x = FX_MUL(localMax.x, scale);
+        scaledMax.y = FX_MUL(localMax.y, scale);
+        scaledMax.z = FX_MUL(localMax.z, scale);
+        sphere.ExpandPushOutBounds(scaledMin.x, scaledMin.y, scaledMin.z, scaledMax.x, scaledMax.y,
+                                   scaledMax.z);
         (dBgPi &)sphere = localSphere;
         sphere.flags |= 1;
         if (localSphere.flags & 4) {
@@ -318,7 +314,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Lin &ray) {
 /* Out of the previous frame's space, into the current one. */
 int dBgW_KcMbg::TransformPos(const Vector3 &localCentre, Vector3 &res) {
     Vector3 localPos;
-    MTX_MultVec43(const_cast<Vector3 *>(&localCentre), &invMat, &localPos);
+    MTX_MultVec43(&localCentre, &invMat, &localPos);
     MTX_MultVec43(&localPos, &mat, &res);
     return 1;
 }

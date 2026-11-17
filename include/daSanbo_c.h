@@ -46,9 +46,7 @@ struct daSanbo_c : dActor_c {
     /* Segment-follow offset: sin/cos of mSegAngY * 0xe000. UpdateStackedBody
        / UpdateStackedOnGrowingBody write it; UpdateModelAndShadow adds it to pos for
        the model translation. */
-    s32 mOffsetX;             /* 0x378 */
-    s32 mOffsetY;             /* 0x37c */
-    s32 mOffsetZ;             /* 0x380 */
+    Vector3 mOffset;            /* 0x378 */
     StateFunc *mStateFunctions; /* 0x384 -- current entry/update pair */
     dActor_c *mHitActor;        /* 0x388 */
     /* Behavior early-outs on distance from the player UNLESS mState is 2 or 5,

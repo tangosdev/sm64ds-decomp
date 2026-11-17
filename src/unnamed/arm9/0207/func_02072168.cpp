@@ -69,8 +69,6 @@ extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 extern unsigned char *func_02071a50(unsigned char *p, int *out);
 
 void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
-    int saved = 0;
-    int neg1 = -1;
     unsigned char op;
     unsigned char *p;
 
@@ -99,7 +97,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             int fp;
             q = ReadSignedVarInt(p + 1, &v0);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
-            ((F2)fp)((int)(c->mFP + v0), neg1);
+            ((F2)fp)((int)(c->mFP + v0), -1);
             s->mAction = q + 4;
             break;
         }
@@ -120,7 +118,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             else
                 t = (unsigned char)c->mFP[v0];
             if (t != 0)
-                ((F2)fp)((int)(c->mFP + v1), neg1);
+                ((F2)fp)((int)(c->mFP + v1), -1);
             s->mAction = adv;
             break;
         }
@@ -139,7 +137,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
                 a = c->mFrame.mGPR[v0];
             else
                 a = *(int *)(c->mFP + v0);
-            ((F2)fp)(a, neg1);
+            ((F2)fp)(a, -1);
             s->mAction = adv;
             break;
         }
@@ -161,7 +159,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             if (n != 0) {
                 do {
                     b -= v2;
-                    ((F2)fp)(b, neg1);
+                    ((F2)fp)(b, -1);
                 } while (--n != 0);
             }
             s->mAction = adv;
@@ -183,7 +181,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
                 a = c->mFrame.mGPR[v0];
             else
                 a = *(int *)(c->mFP + v0);
-            ((F2)fp)(a + v1, saved);
+            ((F2)fp)(a + v1, 0);
             s->mAction = adv;
             break;
         }
@@ -203,7 +201,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
                 a = c->mFrame.mGPR[v0];
             else
                 a = *(int *)(c->mFP + v0);
-            ((F2)fp)(a + v1, neg1);
+            ((F2)fp)(a + v1, -1);
             s->mAction = adv;
             break;
         }
@@ -231,7 +229,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
                     a = c->mFrame.mGPR[v1];
                 else
                     a = *(int *)(c->mFP + v1);
-                ((F2)fp)(a + v2, neg1);
+                ((F2)fp)(a + v2, -1);
             }
             s->mAction = adv;
             break;
@@ -261,7 +259,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             if (n != 0) {
                 do {
                     b -= v3;
-                    ((F2)fp)(b, neg1);
+                    ((F2)fp)(b, -1);
                 } while (--n != 0);
             }
             s->mAction = adv;
@@ -335,7 +333,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
                 if (c->mLocation == e->mLocation)
                     c->mDtor = fp;
                 else
-                    ((F2)fp)(e->mLocation, neg1);
+                    ((F2)fp)(e->mLocation, -1);
             }
             s->mAction = q;
             break;
@@ -437,7 +435,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
                 if (n != 0) {
                     do {
                         a -= v2;
-                        ((F2)fp)(a, neg1);
+                        ((F2)fp)(a, -1);
                     } while (--n != 0);
                 }
             }
@@ -456,7 +454,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             break;
         }
         if ((op & 0x80) != 0)
-            s->mAction = (unsigned char *)saved;
+            s->mAction = 0;
     }
 }
 }

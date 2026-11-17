@@ -799,14 +799,13 @@ void daKpa_c::UpdateModelMatrix() {
     Vector3 pos;
     Vector3 v;
     Vector3 v2;
-    int zero;
 
     if (this->mWithMeshClsn.IsOnGround() == 0)
         goto skip_angles;
     if (this->mHoldState != BOWSER_HOLD_NONE)
         goto skip_angles;
-    this->mAngleX = func_02010844((Vector3 *)&this->mGroundNormalX, this->mAngleY);
-    this->mAngleZ = func_02010844((Vector3 *)&this->mGroundNormalX, (s16)(this->mAngleY - 0x4000));
+    this->mAngleX = func_02010844(&this->mGroundNormal, this->mAngleY);
+    this->mAngleZ = func_02010844(&this->mGroundNormal, (s16)(this->mAngleY - 0x4000));
 skip_angles:
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
@@ -816,26 +815,25 @@ skip_angles:
     this->mAnmModel.mat4x3 = data_020a0e68;
     this->mAnmModel.ApplyOpacity((unsigned char)((int)this->mOpacity >> 3), 1);
     saved = data_020a0e68;
-    zero = 0;
-    this->mFootPosBX = zero;
-    this->mFootPosBY = zero;
-    this->mFootPosBZ = zero;
+    this->mFootPosB.x = 0;
+    this->mFootPosB.y = 0;
+    this->mFootPosB.z = 0;
     MTX_Concat43(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
-    this->mFootPosBX = data_020a0e68.m[9];
-    this->mFootPosBY = data_020a0e68.m[10];
-    this->mFootPosBZ = data_020a0e68.m[11];
-    Vec3_LslInPlace(&this->mFootPosBX, 3);
-    this->mFootPosBY = this->mPosY;
-    this->mFootPosAX = zero;
-    this->mFootPosAY = zero;
-    this->mFootPosAZ = zero;
+    this->mFootPosB.x = data_020a0e68.m[9];
+    this->mFootPosB.y = data_020a0e68.m[10];
+    this->mFootPosB.z = data_020a0e68.m[11];
+    Vec3_LslInPlace(&this->mFootPosB, 3);
+    this->mFootPosB.y = this->mPos.y;
+    this->mFootPosA.x = 0;
+    this->mFootPosA.y = 0;
+    this->mFootPosA.z = 0;
     data_020a0e68 = saved;
     MTX_Concat43(&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
-    this->mFootPosAX = data_020a0e68.m[9];
-    this->mFootPosAY = data_020a0e68.m[10];
-    this->mFootPosAZ = data_020a0e68.m[11];
-    Vec3_LslInPlace(&this->mFootPosAX, 3);
-    this->mFootPosAY = this->mPosY;
+    this->mFootPosA.x = data_020a0e68.m[9];
+    this->mFootPosA.y = data_020a0e68.m[10];
+    this->mFootPosA.z = data_020a0e68.m[11];
+    Vec3_LslInPlace(&this->mFootPosA, 3);
+    this->mFootPosA.y = this->mPos.y;
     if (this->mDropsShadow == 0)
         return;
     {
@@ -926,7 +924,6 @@ void daKpa_c::RunIntroTalk() {
                 int y;
                 int z;
                 int y2;
-                int zero;
                 int scale;
                 int msg;
                 s16 *msgs;
@@ -945,7 +942,6 @@ void daKpa_c::RunIntroTalk() {
                 y2 = y + 0xc8000;
                 pos[2] = z;
                 ang = this->mAngleY;
-                zero = 0;
                 msgs = data_ov060_0211a4e0;
                 sx = FX_SinIdx(ang >> 4);
                 pos[0] = sx * scale + x;
@@ -955,7 +951,7 @@ void daKpa_c::RunIntroTalk() {
                 pos[2] = sz * scale + z;
                 msg = msgs[this->mVariantID];
                 if (this->mTargetPlayer->ShowMessage(
-                        *this, msg, reinterpret_cast<const Vector3 *>(pos), zero, zero) == 0) {
+                        *this, msg, reinterpret_cast<const Vector3 *>(pos), 0, 0) == 0) {
                     return;
                 }
             }
@@ -1550,7 +1546,7 @@ int daKpa_c::BowserLand() {
         if(this->mVariantID == 0){
             b = (this->mDistToTarget >= 0x352000);
             if (!this->mTargetPlayer->IsInAir())
-                func_ov002_020c56f0((unsigned char *)this->mTargetPlayer, b);
+                func_ov002_020c56f0(this->mTargetPlayer, b);
         }
         return 1;
     }
@@ -1583,7 +1579,7 @@ records the KOOPA2BG actor's uniqueID in mArenaBgUniqueID. Step 2: at the last
 frame, BOWSER_STATE_IDLE. */
 void daKpa_c::ActBigJump() {
     unsigned char st = this->mStep;
-    int vec[3];
+    Vector3 vec;
 
     if (st == 0) {
         if (SetAnimJump() == 0)
@@ -1613,10 +1609,8 @@ void daKpa_c::ActBigJump() {
             if (this->mPosY >= this->mLastGroundPosY) return;
         }
         if (this->mVertSpeed != 0) {
-            vec[0] = this->mPosX;
-            vec[1] = this->mPosY;
-            vec[2] = this->mPosZ;
-            func_0200fa04((Vector3 *)vec, 0);
+            vec = this->mPos;
+            func_0200fa04(&vec, 0);
             InitAnimation(0xc, 0x40000000);
         }
         this->mCondFlags &= ~BOWSER_COND_RECOVERING;
@@ -2182,8 +2176,7 @@ int daKpa_c::DeadWaitForMario() {
     int r = 0;
     LoopLayDownAnimation();
     if ((int)this->mAnmModel.file == (int)data_ov060_0211ac60.filePtr) {
-        char* player = (char *)this->mTargetPlayer;
-        if (player != 0) {
+        if (this->mTargetPlayer != 0) {
             int* targetPos = &this->mTargetPlayer->mPosX;
             struct Vector3 v;
             s16 ang;
@@ -2559,7 +2552,7 @@ void daKpa_c::FreeUpdate() {
 
     if (this->mWithMeshClsn.IsOnGround()) {
         void* fr = this->mWithMeshClsn.GetFloorResult();
-        ((dBgPi *)fr)->surface.CopyNormalTo(*(Vector3 *)&this->mGroundNormalX);
+        ((dBgPi *)fr)->surface.CopyNormalTo(this->mGroundNormal);
         this->mLastGroundPosX = this->mPosX;
         this->mLastGroundPosY = this->mPosY;
         this->mLastGroundPosZ = this->mPosZ;
@@ -2567,10 +2560,10 @@ void daKpa_c::FreeUpdate() {
             this->mVertSpeed = (this->mVertSpeed * -60) / 100;
             if (this->mVertSpeed >= 0x14000)
                 this->mVertSpeed = 0x14000;
-        } else if (this->mGroundNormalY != 0) {
-            this->mVertSpeed = -(FX_Div(FX_MUL(this->mGroundNormalX, this->mSpeedX) +
-                                            FX_MUL(this->mGroundNormalZ, this->mSpeedZ),
-                                        this->mGroundNormalY) +
+        } else if (this->mGroundNormal.y != 0) {
+            this->mVertSpeed = -(FX_Div(FX_MUL(this->mGroundNormal.x, this->mSpeedX) +
+                                            FX_MUL(this->mGroundNormal.z, this->mSpeedZ),
+                                        this->mGroundNormal.y) +
                                  0x8000);
         }
     }
@@ -2824,25 +2817,21 @@ int daKpa_c::UpdateIntroCamera() {
     case 0:
         cam->SetFlag_3();
         pv = &((dActor_c *)player)->mPos;
-        sp.x = pv->x;
-        sp.y = pv->y;
-        sp.z = pv->z;
+        sp = *pv;
         sp.y = this->mPosY;
         cam->SetLookAt(sp);
-        this->mCamLookAtX = sp.x;
-        this->mCamLookAtY = sp.y;
-        this->mCamLookAtZ = sp.z;
+        this->mCamLookAt = sp;
         dist = Vec3_HorzDist(&mPos, &sp);
         k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x2000) >> 4;
         v = FX_MUL(dist, 0xA00);
-        this->mCamPosX = this->mPosX + FX_MUL(v, FX_SinIdx(k));
-        this->mCamPosY = this->mPosY + 0xc8000;
-        this->mCamPosZ = this->mPosZ + FX_MUL(v, FX_CosIdx(k));
-        cam->SetPos(*(const Vector3 *)(&this->mCamPosX));
+        this->mCamPos.x = this->mPosX + FX_MUL(v, FX_SinIdx(k));
+        this->mCamPos.y = this->mPosY + 0xc8000;
+        this->mCamPos.z = this->mPosZ + FX_MUL(v, FX_CosIdx(k));
+        cam->SetPos(this->mCamPos);
         this->mCutsceneStep++;
         break;
     case 1:
-        func_020092c4(cam, &cam->lookAt, &this->mCamLookAtX);
+        func_020092c4(cam, &cam->lookAt, &this->mCamLookAt);
         if (player->IsInAir() != 0)
             this->mCutsceneTimer = 0;
         else
@@ -2852,9 +2841,7 @@ int daKpa_c::UpdateIntroCamera() {
         break;
     case 2:
         pv = &((dActor_c *)player)->mPos;
-        sp.x = pv->x;
-        sp.y = pv->y;
-        sp.z = pv->z;
+        sp = *pv;
         dist = Vec3_HorzDist(&mPos, &sp);
         d = FX_MUL(dist, 0x600);
         if (d < 0x1f4000)
@@ -2862,12 +2849,12 @@ int daKpa_c::UpdateIntroCamera() {
         k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x1000) >> 4;
         sp.x = this->mPosX + FX_MUL(d, FX_SinIdx(k));
         sp.z = this->mPosZ + FX_MUL(d, FX_CosIdx(k));
-        ApproachLinear(this->mCamPosX, sp.x, 0x4000);
-        ApproachLinear(this->mCamPosZ, sp.z, 0x4000);
-        ApproachLinear(this->mCamLookAtX, this->mPosX, 0x1e000);
-        ApproachLinear(this->mCamLookAtZ, this->mPosZ, 0x1e000);
-        func_020092c4(cam, &cam->pos, &this->mCamPosX);
-        if (func_020092c4(cam, &cam->lookAt, &this->mCamLookAtX) != 0)
+        ApproachLinear(this->mCamPos.x, sp.x, 0x4000);
+        ApproachLinear(this->mCamPos.z, sp.z, 0x4000);
+        ApproachLinear(this->mCamLookAt.x, this->mPosX, 0x1e000);
+        ApproachLinear(this->mCamLookAt.z, this->mPosZ, 0x1e000);
+        func_020092c4(cam, &cam->pos, &this->mCamPos);
+        if (func_020092c4(cam, &cam->lookAt, &this->mCamLookAt) != 0)
             this->mCutsceneStep++;
         break;
     case 3: {
@@ -2879,10 +2866,10 @@ int daKpa_c::UpdateIntroCamera() {
         sp.y = ty;
         sp.z = tz;
     }
-        ApproachLinear(this->mCamLookAtX, sp.x, 0xa000);
-        ApproachLinear(this->mCamLookAtY, sp.y, 0xa000);
-        ApproachLinear(this->mCamLookAtZ, sp.z, 0xa000);
-        if (func_020092c4(cam, &cam->lookAt, &this->mCamLookAtX) != 0)
+        ApproachLinear(this->mCamLookAt.x, sp.x, 0xa000);
+        ApproachLinear(this->mCamLookAt.y, sp.y, 0xa000);
+        ApproachLinear(this->mCamLookAt.z, sp.z, 0xa000);
+        if (func_020092c4(cam, &cam->lookAt, &this->mCamLookAt) != 0)
             return 1;
         break;
     case 4:
@@ -3026,16 +3013,10 @@ void daKpa_c::UpdateFootfalls() {
         return;
 
     if (foot == 1) {
-        Vector3 dust;
-        dust.x = this->mFootPosAX;
-        dust.y = this->mFootPosAY;
-        dust.z = this->mFootPosAZ;
+        Vector3 dust = this->mFootPosA;
         this->HugeLandingDustAt(dust, 0);
     } else {
-        Vector3 dust;
-        dust.x = this->mFootPosBX;
-        dust.y = this->mFootPosBY;
-        dust.z = this->mFootPosBZ;
+        Vector3 dust = this->mFootPosB;
         this->HugeLandingDustAt(dust, 0);
     }
     Sound::Play(3, BOWSER_SND_FOOTFALL, this->mCamSpacePos);

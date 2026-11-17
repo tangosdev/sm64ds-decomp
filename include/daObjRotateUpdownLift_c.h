@@ -54,9 +54,7 @@ struct daObjRotateUpdownLift_c : dBgActor_c {
     s16 mSpawnAngleY;            /* 0x382 */
     s16 mSpawnAngleZ;            /* 0x384 */
     u8  pad_386[0x2];
-    s32 mBasePosX;            /* 0x388 */
-    s32 mBasePosY;            /* 0x38c */
-    s32 mBasePosZ;            /* 0x390 */
+    Vector3 mBasePos;              /* 0x388 */
     u8  mWaypointIndex;            /* 0x394 */
     u8  mVariant;            /* 0x395 */
     u8  pad_396[0x2];

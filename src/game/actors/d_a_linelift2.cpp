@@ -22,8 +22,8 @@
  */
 
 // Notes:
-// - &mTargetPosX / &mSpeedX: this class and dActor_c store those triples
-//   as scalars, so the vector helpers take the first word's address.
+// - (Vector3 *)&mSpeedX: dActor_c stores the speed as three scalars, so
+//   VEC_Add takes the first word's address.
 // - Vec3_Sub is defined on a file-local struct Vec3, so no shared header
 //   declares it yet; it is declared here. VEC_Add takes Vector3 now.
 // - Behavior lowers mPosY by the sink offset and restores it before the
@@ -71,7 +71,6 @@ extern StateFunc gLinelift2StateFuncs[];          /* by mState */
 /* arm9 C helpers with no shared header. */
 extern "C" {
 void Vec3_Sub(Vector3 *res, const Vector3 *a, const Vector3 *b);
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *out);
 }
 
 enum {
@@ -122,15 +121,15 @@ int daLinelift2_c::InitResources() {
     mPathPtr.FromID(param1 & 15);
     mNodeCount = mPathPtr.NumNodes();
     mNodeIndex = 0;
-    mBasePosX = mPosX;
-    mBasePosY = mPosY;
-    mBasePosZ = mPosZ;
-    mPathPtr.GetNode(*(Vector3 *)&mTargetPosX, mNodeIndex);
+    mBasePos.x = mPosX;
+    mBasePos.y = mPosY;
+    mBasePos.z = mPosZ;
+    mPathPtr.GetNode(mTargetPos, mNodeIndex);
 
     /* The first node is usually where we are standing; head for the next one. */
-    if (Vec3_Equal((Vector3 *)&mTargetPosX, (Vector3 *)&mBasePosX)) {
+    if (Vec3_Equal(&mTargetPos, &mBasePos)) {
         mNodeIndex++;
-        mPathPtr.GetNode(*(Vector3 *)&mTargetPosX, mNodeIndex);
+        mPathPtr.GetNode(mTargetPos, mNodeIndex);
     }
 
     mBaseAngleY = mAngleY;
@@ -185,12 +184,12 @@ void daLinelift2_c::StateWait() {
         mState = 1;
         mHorzSpeed = kRideSpeed;
         Vector3 target, base;
-        target.x = mTargetPosX;
-        target.y = mTargetPosY;
-        target.z = mTargetPosZ;
-        base.x = mBasePosX;
-        base.y = mBasePosY;
-        base.z = mBasePosZ;
+        target.x = mTargetPos.x;
+        target.y = mTargetPos.y;
+        target.z = mTargetPos.z;
+        base.x = mBasePos.x;
+        base.y = mBasePos.y;
+        base.z = mBasePos.z;
         SetVelocityToward(&target, &base);
         return;
     }
@@ -240,14 +239,14 @@ void daLinelift2_c::StateReturn() {
 int daLinelift2_c::StepAlongPath() {
     int result;
     VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
-    if (Vec3_Dist(&mPos, (const Vector3 *)&mTargetPosX) < (mHorzSpeed >> 1)) {
+    if (Vec3_Dist(&mPos, &mTargetPos) < (mHorzSpeed >> 1)) {
         result = 1;
-        mBasePosX = mTargetPosX;
-        mBasePosY = mTargetPosY;
-        mBasePosZ = mTargetPosZ;
-        mPosX = mBasePosX;
-        mPosY = mBasePosY;
-        mPosZ = mBasePosZ;
+        mBasePos.x = mTargetPos.x;
+        mBasePos.y = mTargetPos.y;
+        mBasePos.z = mTargetPos.z;
+        mPosX = mBasePos.x;
+        mPosY = mBasePos.y;
+        mPosZ = mBasePos.z;
         if (mState == 1) {
             mNodeIndex++;
             if (mNodeIndex >= mNodeCount) {
@@ -261,15 +260,15 @@ int daLinelift2_c::StepAlongPath() {
                 result = -1;
             }
         }
-        mPathPtr.GetNode(*(Vector3 *)&mTargetPosX, mNodeIndex);
+        mPathPtr.GetNode(mTargetPos, mNodeIndex);
         {
             Vector3 target, base;
-            target.x = mTargetPosX;
-            target.y = mTargetPosY;
-            target.z = mTargetPosZ;
-            base.x = mBasePosX;
-            base.y = mBasePosY;
-            base.z = mBasePosZ;
+            target.x = mTargetPos.x;
+            target.y = mTargetPos.y;
+            target.z = mTargetPos.z;
+            base.x = mBasePos.x;
+            base.y = mBasePos.y;
+            base.z = mBasePos.z;
             SetVelocityToward(&target, &base);
         }
         return result;

@@ -77,7 +77,7 @@ extern "C" {
 int func_02035638(void *clsn);   /* mSphereClsn.flags & 0x10: the ceiling bit */
 void *func_0203564c(void *clsn); /* mSphereClsn.GetUnderResult(): the ceiling hit */
 /* d_a_ply_methods.cpp: sets 0x20 in daPly_c::mStateFlags. */
-void func_ov002_020d8838(void *player);
+void func_ov002_020d8838(daPly_c *player);
 }
 
 /* Is this actor of the given kind? An int-returning inline: the ROM
@@ -141,7 +141,7 @@ int func_ov002_020ef070(void *unused, char *moverArg) {
     line.SetObjAndLine(start, end, mover);
     if (line.DetectClsn()) {
         if (IsActorID(mover, 0xbf))
-            func_ov002_020d8838(mover);
+            func_ov002_020d8838((daPly_c *)mover);
         dBgPi hit(line);
         if (hit.GetClsnID() != -1) {
             dActor_c *owner = dActor_c::FindWithID(hit.GetClsnID());
@@ -183,7 +183,7 @@ int func_ov002_020eeeb8(void *unused, char *moverArg) {
 
     if (line.DetectClsn()) {
         if (IsActorID(mover, 0xbf))
-            func_ov002_020d8838(mover);
+            func_ov002_020d8838((daPly_c *)mover);
 
         dBgPi hit(line);
         if (hit.GetClsnID() != -1) {

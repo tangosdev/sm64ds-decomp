@@ -65,9 +65,7 @@ struct daObjMarioCap_c : dEnemyBase_c {
     daPly_c *mPlayer; /* 0x3c0 */
     /* Where InitResources found the cap; the taken state respawns a
        TYPE_RESPAWNING cap here. */
-    s32 mHomePosX;                              /* 0x3c4 */
-    s32 mHomePosY;                              /* 0x3c8 */
-    s32 mHomePosZ;                              /* 0x3cc */
+    Vector3 mHomePos;                           /* 0x3c4 */
     dCapIcon_c mCapIcon;                        /* 0x3d0 */
     /* Blink: bit 0 set means "skip drawing this frame" (Render ignores it in
        the taken state). The sliding state writes it from a low bit of

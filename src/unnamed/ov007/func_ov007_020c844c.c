@@ -7,7 +7,7 @@ extern void func_ov007_020c83fc(void *o);
 /* Builds a follower that moves the Q12 position at p, with mass q (Q12):
  * invMass is its fixed-point reciprocal (FX_Inv), 0x1000 directly
  * for q = 1.0. */
-Ov007Follower *func_ov007_020c844c(Vector3 *p, int q) {
+Ov007Follower *func_ov007_020c844c(VecFx32 *p, int q) {
     Ov007Follower *f = func_ov007_020c3df4(0, sizeof(Ov007Follower));
     func_ov007_020c83fc(f);
     f->target = p;

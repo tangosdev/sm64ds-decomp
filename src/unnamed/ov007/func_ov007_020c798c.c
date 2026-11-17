@@ -2,7 +2,7 @@
 #include "Ov007MenuMem.h"
 
 extern void func_ov007_020c78b0(Ov007PointList *list);
-extern Ov007Follower *func_ov007_020c844c(Vector3 *p, int q);
+extern Ov007Follower *func_ov007_020c844c(VecFx32 *p, int q);
 extern Ov007Link *func_ov007_020c80a4(void);
 
 /* Builds a list of count points and the links between them. With flags bit

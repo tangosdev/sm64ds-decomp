@@ -299,13 +299,60 @@ class TerminalTests(unittest.TestCase):
                 self.license()
 
     def test_partial_module_owner(self):
-        for key in ("start", "end"):
-            with self.subTest(key=key), self.assertRaises(ValueError):
+        # A claim that starts before its section, or reaches the section end
+        # without owning the section start, is neither placement.
+        for key, delta in (("start", 4), ("end", -4), ("start", -4)):
+            with self.subTest(key=key, delta=delta), self.assertRaises(ValueError):
                 self.module = dict(
                     name=".data.kuriMeta0", start=0x2122E30, end=0x2122E4C
                 )
-                self.module[key] += 4
+                self.module[key] += delta
                 self.license()
+
+    def test_section_end_placement(self):
+        self.assertEqual(self.license()["placement"], "section-end")
+
+    def test_interior_placement(self):
+        # Ends inside a larger section: the fill is the ALIGNALL(4) padding before
+        # the next input, which link_plan must still place at the claim end.
+        for start in (0x2122E30, 0x2122E20):
+            with self.subTest(start=start):
+                self.module = dict(name=".data.kuriMeta0", start=start, end=0x2122F00)
+                row = self.license()
+                self.assertEqual(
+                    (row["placement"], row["linkerFillBytes"]), ("interior", 1)
+                )
+
+    def test_interior_keeps_every_fill_refusal(self):
+        self.module = dict(name=".data.kuriMeta0", start=0x2122E20, end=0x2122F00)
+        refusals = (
+            dict(retail_fill=b"\xff"),
+            dict(retail_fill=b"\0\0"),
+            dict(configured_symbols=[dict(address=0x2122E4B, size=0)]),
+            dict(configured_symbols=[dict(address=0x2122E3C, size=16)]),
+            dict(configured_symbols=[
+                dict(address=0x2122E3C, size=0, unknown_initialized_extent=True),
+                dict(address=0x2122E50, size=4)]),
+            dict(relocations=[dict(site=0x2122E48, size=4, target=0)]),
+            dict(relocations=[dict(site=0, size=4, target=0x2122E4B)]),
+        )
+        for kw in refusals:
+            with self.subTest(kw=kw), self.assertRaises(ValueError):
+                self.license(**kw)
+
+    def test_interior_successor_rows_at_claim_end_are_not_fill(self):
+        self.module = dict(name=".data.kuriMeta0", start=0x2122E20, end=0x2122F00)
+        row = self.license(
+            configured_symbols=self.kw["configured_symbols"]
+            + [dict(address=0x2122E4C, size=4)],
+            relocations=[dict(site=0x2122E4C, size=4, target=0x2122E4C)],
+        )
+        self.assertEqual(row["placement"], "interior")
+
+    def test_interior_section_name_must_match(self):
+        self.module = dict(name=".data", start=0x2122E20, end=0x2122F00)
+        with self.assertRaises(ValueError):
+            self.license()
 
     def test_extent(self):
         for end in (0x2122E4C, 0x2122E48, 0x2122E4D):
@@ -523,6 +570,88 @@ class LcfTests(unittest.TestCase):
                     self.text().replace("ALIGNALL(4);", "ALIGNALL(4); " + selector)
                 )
 
+    INTERIOR = (
+        ". = ALIGN(4); OV074_DATA.KURIMETA0_START = .;\n"
+        " head.o(.data.kuriMeta0)\n"
+        " d_a_kuri_king.o(.data.kuriMeta0)\n"
+        " _dsd_gap@ov074_3.o(.data.kuriMeta0)\n"
+        " . = ALIGN(4); OV074_DATA.KURIMETA0_END = .;"
+    )
+
+    def interior(self, text):
+        with tempfile.TemporaryDirectory() as d:
+            p = pathlib.Path(d) / "test.lcf"
+            p.write_text(text)
+            return P.verify_terminal_lcf(
+                p,
+                module="OV074",
+                section=".data.kuriMeta0",
+                provider="d_a_kuri_king.o",
+                placement="interior",
+            )
+
+    def test_interior_names_its_direct_successor(self):
+        row = self.interior(self.text(self.INTERIOR))
+        self.assertEqual(
+            (row["placement"], row["successor"], row["fill"]),
+            ("interior", "_dsd_gap@ov074_3.o", 0),
+        )
+
+    def test_section_end_mode_refuses_interior_shape(self):
+        with self.assertRaises(ValueError):
+            self.verify(self.text(self.INTERIOR))
+
+    def test_interior_mode_refuses_last_provider(self):
+        # No successor: the section's terminal ALIGN, not ALIGNALL, decides the fill.
+        with self.assertRaises(ValueError):
+            self.interior(self.text())
+
+    def test_interior_refuses_anything_between_provider_and_successor(self):
+        for between in (
+            ". = ALIGN(8);",
+            ". = ALIGN(4);",
+            ". = . + 2;",
+            "WRITEW(0);",
+            "label = .;",
+        ):
+            with self.subTest(between=between), self.assertRaises(ValueError):
+                self.interior(
+                    self.text(
+                        self.INTERIOR.replace(
+                            " _dsd_gap@ov074_3.o", " " + between + "\n _dsd_gap@ov074_3.o"
+                        )
+                    )
+                )
+
+    def test_interior_refusals(self):
+        bad = (
+            # provider selected twice
+            self.INTERIOR.replace(" head.o", " d_a_kuri_king.o(.data.kuriMeta0)\n head.o"),
+            # provider before the START marker
+            self.INTERIOR.replace(
+                ". = ALIGN(4); OV074_DATA.KURIMETA0_START = .;\n head.o(.data.kuriMeta0)\n"
+                " d_a_kuri_king.o(.data.kuriMeta0)\n",
+                "d_a_kuri_king.o(.data.kuriMeta0)\n"
+                ". = ALIGN(4); OV074_DATA.KURIMETA0_START = .;\n head.o(.data.kuriMeta0)\n",
+            ),
+            # successor selects a different section
+            self.INTERIOR.replace("_dsd_gap@ov074_3.o(.data.kuriMeta0)",
+                                  "_dsd_gap@ov074_3.o(.data)"),
+            # a name that merely ends with the provider's name is not the provider
+            self.INTERIOR.replace(" d_a_kuri_king.o", " xd_a_kuri_king.o"),
+            # wildcard selector anywhere
+            self.INTERIOR.replace(" head.o(.data.kuriMeta0)", " *(.data.kuriMeta0)"),
+        )
+        for body in bad:
+            with self.subTest(body=body), self.assertRaises(ValueError):
+                self.interior(self.text(body))
+        for text in (
+            self.text(self.INTERIOR).replace("ALIGNALL(4);", "ALIGNALL(4); FILL(255);"),
+            self.text(self.INTERIOR).replace("} > OV074", "} > OV074 = 255"),
+        ):
+            with self.subTest(text=text), self.assertRaises(ValueError):
+                self.interior(text)
+
     def test_missing_or_duplicate_marker(self):
         for text in (
             self.text().replace("KURIMETA0_END", "OTHER_END"),
@@ -532,6 +661,57 @@ class LcfTests(unittest.TestCase):
         ):
             with self.subTest(text=text), self.assertRaises(ValueError):
                 self.verify(text)
+
+
+def _sections_elf(rows):
+    """Minimal ELF32 relocatable: one PROGBITS section per (name, align, size)."""
+    import struct
+
+    names = b"\0.shstrtab\0" + b"".join(name.encode() + b"\0" for name, _a, _s in rows)
+    offsets, cursor = [], 11
+    for name, _a, _s in rows:
+        offsets.append(cursor)
+        cursor += len(name) + 1
+    data = b"".join(bytes(size) for _n, _a, size in rows)
+    shoff = 52 + len(data) + len(names)
+    headers = [bytes(40)]
+    at = 52
+    for (name, align, size), offset in zip(rows, offsets):
+        headers.append(struct.pack("<10I", offset, 1, 3, 0, at, size, 0, 0, align, 0))
+        at += size
+    headers.append(struct.pack("<10I", 1, 3, 0, 0, at, len(names), 0, 0, 1, 0))
+    ident = b"\x7fELF\x01\x01\x01" + bytes(9)
+    header = ident + struct.pack(
+        "<HHIIIIIHHHHHH", 1, 40, 1, 0, 0, shoff, 0, 52, 0, 0, 40, len(headers),
+        len(headers) - 1)
+    return header + data + names + b"".join(headers)
+
+
+class SuccessorTests(unittest.TestCase):
+    def test_alignall_places_a_byte_aligned_gap_at_the_next_word(self):
+        raw = _sections_elf([(".data", 1, 0x3B7C)])
+        self.assertEqual(P.successor_start(raw, ".data", 0x208E4AE), 0x208E4B0)
+
+    def test_larger_own_alignment_moves_the_successor(self):
+        raw = _sections_elf([(".data", 32, 8)])
+        self.assertEqual(P.successor_start(raw, ".data", 0x208E4AE), 0x208E4C0)
+
+    def test_empty_leading_sections_still_align(self):
+        raw = _sections_elf([(".text", 32, 4), (".data", 8, 0), (".data", 4, 4)])
+        self.assertEqual(P.successor_start(raw, ".data", 0x208E4AE), 0x208E4B0)
+        raw = _sections_elf([(".data", 16, 0), (".data", 4, 4)])
+        self.assertEqual(P.successor_start(raw, ".data", 0x208E4AE), 0x208E4B0)
+        raw = _sections_elf([(".data", 32, 0), (".data", 4, 4)])
+        self.assertEqual(P.successor_start(raw, ".data", 0x208E4AE), 0x208E4C0)
+
+    def test_no_contribution_or_malformed_refuses(self):
+        for raw in (
+            _sections_elf([(".text", 4, 4)]),
+            _sections_elf([(".data", 4, 0)]),
+            b"not an elf",
+        ):
+            with self.subTest(raw=raw[:8]), self.assertRaises(ValueError):
+                P.successor_start(raw, ".data", 0x208E4AE)
 
 
 if __name__ == "__main__":
