@@ -28,6 +28,14 @@ PORTED     ███████████████████████
 ```
 <!-- tiers:end -->
 
+<!-- data:start -->
+```
+DATA       █████████████░░░░░░░░░░░░░░░░░  43.7%   8,745 / 20,006
+```
+
+Data progress: [notes/data-tracking.md](notes/data-tracking.md).
+<!-- data:end -->
+
 ![Decompilation progress treemap](docs/progress-treemap.svg)
 
 For an interactive version where you can hover any function for its name, address,
