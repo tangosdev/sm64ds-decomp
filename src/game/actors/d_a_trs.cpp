@@ -161,10 +161,8 @@ extern short data_ov063_0211e7e0[];
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 void func_02012694(unsigned int a, const Vector3 *p);
-void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos);
-int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4);
 extern void func_020167a4(dExtAnmModel_c *model);
-extern void func_ov055_02111264(void);
+#include "daLuigi_c.h"
 extern u16 func_02011d14(void);
 
 /* Actor ids this file spawns, finds or compares (the names are the ones in
@@ -275,7 +273,7 @@ void daTrs_c::func_ov063_021162c8() {
         this->mState = 3;
         Vector3 v;
         v = this->mCapPos;
-        (this)->ReleaseCap(v);
+        ReleaseCap(v);
         if (this->mBooFlags.carrying) {
             unsigned int flags = 2;
             if (this->mCarriedID == TRS_ID_RED_COIN) flags |= 0x10;
@@ -361,19 +359,18 @@ void daTrs_c::func_ov063_0211640c() {
 
 void daTrs_c::func_ov063_021166ac() {
 
-    daTrs_c *t = this;
     Vector3_16 rot;
     Vector3 t1;
     Vector3 t2;
     Vector3 pos;
 
-    if (t->mVariant == 0xf) {
+    if (mVariant == 0xf) {
         func_ov063_0211640c();
         return;
     }
-    if (!t->mBooFlags.visible)
+    if (!mBooFlags.visible)
         return;
-    if (t->mBooFlags.carrying) {
+    if (mBooFlags.carrying) {
         if (this->mCarriedID != TRS_ID_T_BASKET) {
             s16 *ap = &this->mCarriedAngleY;
             *ap += 0xc00;
@@ -384,8 +381,7 @@ void daTrs_c::func_ov063_021166ac() {
         this->mCarriedModel.mat4x3.m[11] = this->mCarriedPos.z >> 3;
     }
 
-    if (t->mState == 3 || t->mState == 3 ||
-        t->mState == 3 || t->mState == 3) {
+    if (mState == 3 || mState == 3 || mState == 3 || mState == 3) {
         Vec3_Asr(&t1, &this->mPos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, t1.x, t1.y, t1.z);
         this->mAnmModel.mat4x3 = data_020a0e68;
@@ -499,7 +495,7 @@ void daTrs_c::func_ov063_02116a1c() {
         }
     }
 
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     ApproachLinear(this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &v), 0x5a8);
     Oscillate(1);
 }
@@ -621,9 +617,9 @@ void daTrs_c::func_ov063_02116e14() {
         dActor_c *r =
             dActor_c::Spawn(this->mCarriedID, 0, this->mCarriedPos, (0), this->mAreaIdx, -1);
         if (r != 0) {
-            r->mSpeedX = 0;
-            r->mVertSpeed = 0x32000;
-            r->mSpeedZ = 0;
+            r->mSpeed.x = 0;
+            r->mSpeed.y = 0x32000;
+            r->mSpeed.z = 0;
         }
     }
     this->mBooFlags.carrying = 0;
@@ -690,7 +686,7 @@ void daTrs_c::func_ov063_02116fac() {
         break;
     case 4:
         if (this->mStateTimer == 6) {
-            this->mVertSpeed = 0xf000;
+            this->mSpeed.y = 0xf000;
             this->mVertAccel = -0x4000;
             this->mTerminalVelocity = -0xf000;
         }
@@ -717,7 +713,7 @@ void daTrs_c::func_ov063_02116fac() {
     }
 
     if (this->mState != 4) {
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
         this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, &target);
     }
     ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, r4);
@@ -1098,7 +1094,7 @@ void daTrs_c::func_ov063_02117cdc() {
         if (this->mStateTimer < 30) {
             return;
         }
-        func_ov055_02111264();
+        daLuigi_c::func_ov055_02111264();
         {
             u8 *st = &this->mSubState;
             int n = *st + 1;
@@ -1340,7 +1336,7 @@ void daTrs_c::func_ov063_0211873c() {
     if (this->mAttackTimer != 0)
         return;
     this->mState = 4;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     this->mVertAccel = 0;
     func_02012694(0x159, &this->mCamSpacePos);
     this->mAnmModel.SetAnim((BCA_File *)data_ov063_0211edcc.filePtr, 0x40000000, 0x1000, 0);
@@ -1582,13 +1578,14 @@ void daTrs_c::func_ov063_02118eac() {
     p = dActor_c::FindWithID(id);
     this->mFoundActor = (dActor_c *)p;
     if (this->mFoundActor != 0) {
-        func_ov063_02118f24(static_cast<daTrsIcon_c *>(this->mFoundActor), v);
+        (static_cast<daTrsIcon_c *>(this->mFoundActor))->func_ov063_02118f24(v);
     }
     this->mFoundActor = 0;
 }
 
-void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos) {
-    icon->UntrackAndSpawnStar(icon->mTrackStarID, icon->mStarID, pos, 4);
+void daTrsIcon_c::func_ov063_02118f24(const Vector3 &pos) {
+    unsigned int val = 4;
+    this->UntrackAndSpawnStar(this->mTrackStarID, this->mStarID, pos, val);
 }
 
 void daTrs_c::func_ov063_02118f50() {
@@ -2009,7 +2006,7 @@ void daTrs_c::UpdateEmerge() {
     if (this->mStateTimer >= 30) {
         this->mState = 1;
     } else {
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
         this->mHorzSpeed = 0x7ccc;
         Oscillate(0);
     }
@@ -2115,7 +2112,7 @@ void daTrs_c::func_ov063_02119cc0(int unused, s16 a2, int a3) {
     }
 
     ApproachLinear(this->mPrevAngleY, this->mTargetAngleY, a2);
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     SetVelFromPlayerVel(0xa000 - this->mSpeedJitter, a3);
 
     if (this->mHorzSpeed != 0) {
@@ -2127,7 +2124,7 @@ void daTrs_c::func_ov063_02119cc0(int unused, s16 a2, int a3) {
 
 reset:
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     func_ov063_0211a960();
 }
 
@@ -2168,7 +2165,7 @@ void daTrs_c::ChaseMario(int a1, short a2, int a3) {
         }
 
         ApproachLinear(this->mPrevAngleY, angle, a2);
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
 
         {
             daPly_c *p = this->mClosestPlayer;
@@ -2177,7 +2174,7 @@ void daTrs_c::ChaseMario(int a1, short a2, int a3) {
                 int otherY = p->mPosY;
                 int dy = myY - otherY;
                 if ((a1 << 0xc) < dy && dy < 0x1f4000 && (this->mHomePos.y - myY) < 0xfa000) {
-                    this->mVertSpeed = func_ov063_0211a0a8((int)this, myY, otherY, 0xa000, 0x2000);
+                    this->mSpeed.y = this->func_ov063_0211a0a8(myY, otherY, 0xa000, 0x2000);
                 }
             }
         }
@@ -2192,7 +2189,7 @@ void daTrs_c::ChaseMario(int a1, short a2, int a3) {
     }
 
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     func_ov063_0211a960();
 }
 
@@ -2208,7 +2205,7 @@ void daTrs_c::SetVelFromPlayerVel(int a, int b) {
     this->mHorzSpeed = FX_MUL(pv, h);
 }
 
-int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4) {
+int daTrs_c::func_ov063_0211a0a8(int a1, int a2, int a3, int a4) {
     int diff = a1 - a2;
     if (diff > 0) {
         if (diff < a3) return 0;
@@ -2372,7 +2369,7 @@ int daTrs_c::UpdateDuringDeath() {
     return 1;
 
 fall:
-    this->mVertSpeed = 0x5000;
+    this->mSpeed.y = 0x5000;
     this->mAngleZ += 0x800;
     this->mAngleY += 0x800;
     return 0;
@@ -2436,7 +2433,7 @@ void daTrs_c::MoveDuringHit(int cond, int val) {
     s16 ang = (mStateTimer + 1) << 11;
 
     mHorzSpeed = val;
-    mVertSpeed = FX_CosIdx((u16)ang >> 4);
+    mSpeed.y = FX_CosIdx((u16)ang >> 4);
     mPrevAngleY = mKnockbackAngleY;
     if (cond == 0)
         return;
@@ -2462,12 +2459,10 @@ void daTrs_c::SetMoveYawForDuringHit(int cond) {
 
 int daTrs_c::VanishOrAppear() {
 
-    dActor_c *a = this;
-    int r6 = a->GetSubtraction(this->mAngleToPlayer, this->mPrevAngleY);
-    int r0 = a->GetSubtraction(this->mPrevAngleY,
-                               this->mClosestPlayer->mAngleY);
+    int r6 = GetSubtraction(this->mAngleToPlayer, this->mPrevAngleY);
+    int r0 = GetSubtraction(this->mPrevAngleY, this->mClosestPlayer->mAngleY);
     int ret = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     if (r6 > 0x1568 || r0 < 0x6b58) {
         if (this->mOpacity == 0x28) {
             this->mTargetOpacity = 0xff;
@@ -2606,7 +2601,7 @@ int daTrs_c::ShouldBeStopped() {
 void daTrs_c::Stop() {
 
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     this->mVertAccel = 0;
     this->mChaseDelay = 30;
 }
@@ -2798,7 +2793,7 @@ int daTrs_c::Behavior()
                 mState = 0;
                 mHorzSpeed = 0;
                 mVertAccel = 0;
-                mVertSpeed = 0;
+                mSpeed.y = 0;
                 mSubState = 0;
                 mAreaId = mAreaIdx;
             }
@@ -2821,7 +2816,7 @@ int daTrs_c::Behavior()
                 mEatenByYoshi = 0;
                 (&mStateTimer)[2] = 0;
                 mVertAccel = 0;
-                mVertSpeed = 0;
+                mSpeed.y = 0;
                 goto block_39;
             }
         }
@@ -2993,8 +2988,8 @@ int daTBasket_c::Behavior()
         secretDone = Sound::PlaySecretSound(this, &mSoundTimer);
 
     if (mWithMeshClsn.JustHitGround()) {
-        int vertSpeed = mVertSpeed;
-        mVertSpeed = (-vertSpeed) >> 1;
+        int vertSpeed = mSpeed.y;
+        mSpeed.y = (-vertSpeed) >> 1;
         LandingDust(false);
     } else if (mWithMeshClsn.IsOnGround()) {
         onGround = 1;

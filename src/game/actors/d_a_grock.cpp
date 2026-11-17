@@ -8,8 +8,8 @@
  * next nibble is the star index. Spawned rocks are actor 0xdd, this class.
  * 0xbf is the player.
  *
- * The travel heading lives in mPrevAngleY. Lateral velocity is mSpeedX /
- * mSpeedZ around mVertSpeed.
+ * The travel heading lives in mPrevAngleY. Lateral velocity is mSpeed.x /
+ * mSpeed.z around mSpeed.y.
  * The rolling sound handle (mRollSoundID) and the rolling dust handle
  * (mDustParticleID) are renewed every frame the rock rolls. A star rock
  * keeps its spawner's uniqueID in mSpawnerID and clears the spawner's
@@ -188,8 +188,8 @@ void daGrock_c::HandleMeshCollision() {
         pos.z -= normal.z * 0x12c;
 
         if (mWithMeshClsn.JustHitGround() != 0) {
-            if (mVertSpeed < (mVertAccel << 1) && normal.y >= 0xc00)
-                mVertSpeed = -mVertSpeed * 6 / 10;
+            if (mSpeed.y < (mVertAccel << 1) && normal.y >= 0xc00)
+                mSpeed.y = -mSpeed.y * 6 / 10;
             pos.y += 0x3c000;
             Particle::System::NewSimple(kPtclBigSteelieBounce, pos.x, pos.y, pos.z);
             func_0201267c(0x48, &mCamSpacePos);
@@ -198,14 +198,14 @@ void daGrock_c::HandleMeshCollision() {
                                                     pos.y, pos.z, 0, 0);
             mRollSoundID = Sound::PlayLong(mRollSoundID, 3, 0x8a, mCamSpacePos, 0);
         }
-        mSpeedX += normal.x * 5;
-        mSpeedZ += normal.z * 5;
-        mHorzSpeed = Vec3_HorzLen(reinterpret_cast<const Vector3 *>(&mSpeedX));
-        mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
+        mSpeed.x += normal.x * 5;
+        mSpeed.z += normal.z * 5;
+        mHorzSpeed = Vec3_HorzLen(&mSpeed);
+        mPrevAngleY = cstd::atan2(mSpeed.x, mSpeed.z);
         if (mHorzSpeed >= 0x22000) {
             mHorzSpeed = 0x22000;
-            mSpeedX = FX_SinIdx((u16)mPrevAngleY >> 4) * 0x22;
-            mSpeedZ = FX_CosIdx((u16)mPrevAngleY >> 4) * 0x22;
+            mSpeed.x = FX_SinIdx((u16)mPrevAngleY >> 4) * 0x22;
+            mSpeed.z = FX_CosIdx((u16)mPrevAngleY >> 4) * 0x22;
         }
     }
 
@@ -225,13 +225,13 @@ void daGrock_c::HandleMeshCollision() {
 
 /* Gravity, clamped at the terminal velocity, then step by the velocity. */
 void daGrock_c::ApplyGravityAndMove() {
-    int sum = mVertSpeed + mVertAccel;
+    int sum = mSpeed.y + mVertAccel;
     int clamped = mTerminalVelocity;
 
     if (sum >= clamped)
         clamped = sum;
-    mVertSpeed = clamped;
-    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
+    mSpeed.y = clamped;
+    VEC_Add(&mPos, &mSpeed, &mPos);
 }
 
 int daGrock_c::CleanupResources() {
@@ -367,8 +367,8 @@ int daGrock_c::InitResources() {
             mVertAccel = -0x4000;
             mTerminalVelocity = -0x28000;
             mHorzSpeed = 0x1e000;
-            mSpeedX = FX_SinIdx((u16)mPrevAngleY >> 4) * 0x1e;
-            mSpeedZ = FX_CosIdx((u16)mPrevAngleY >> 4) * 0x1e;
+            mSpeed.x = FX_SinIdx((u16)mPrevAngleY >> 4) * 0x1e;
+            mSpeed.z = FX_CosIdx((u16)mPrevAngleY >> 4) * 0x1e;
         }
     } else if (mType == kGrockStarSpawner) {
         mStarID = (u8)((param1 >> 8) & 0xf);

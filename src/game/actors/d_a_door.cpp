@@ -59,15 +59,17 @@
  *
  * comment leftovers:
  * - the member names keep their addresses (nothing here says what the
- *   original called them), and func_ov100_02144f84 / func_ov100_02144fcc /
- *   func_ov100_02145014 / func_ov100_02145070 stay free -- the shared
- *   countdown helpers, which d_a_ply_methods.cpp, daMugenBGM_c and d_a_star_gate.cpp
- *   also call and which take no door.
+ *   original called them). func_ov100_02144f84 / func_ov100_02144fcc /
+ *   func_ov100_02145014 / func_ov100_02145070 are static: they take no door.
+ * - the callees with Fix12<int> parameters (Sound, dExtAnmModel_c::SetAnim),
+ *   the SaveData, Sound::PlayCharVoice and dExtFrameCtrl_c::LoadFile calls, and the
+ *   dExtSimpleModel_c loaders InitResources calls stay spelled as mangled extern-C free
+ *   functions.
  * - dActor_c's mScaleX/Y/Z and mAngleX/Z carry other things for a door
  *   (the player's position in the door's frame, and two area ids), and
- *   mSpeedX/mVertSpeed/mSpeedZ hold the message position; the base names
- *   cannot change on one derived class's evidence, so the functions that read
- *   them describe them in their own comments.
+ *   mSpeed holds the message position; the base name cannot change on
+ *   one derived class's evidence, so the functions that read it describe
+ *   it in their own comments.
  * - the sound ids other than the two swing pairs, the message ids, camera
  *   flag bits 0xc00 (not in include/dCamera_c.h) and SaveData flags2 bit 16 stay
  *   numbers; their meanings are not recovered here.
@@ -187,10 +189,6 @@ struct Vector3_16;
 /* Defined below, called before their definitions. These four are the shared
    countdown helpers -- free functions, not members: d_a_ply_methods.cpp, daMugenBGM_c
    and d_a_star_gate.cpp call them too, and none takes the door. */
-int func_ov100_02144f84(void);
-int func_ov100_02144fcc(void);
-int func_ov100_02145014(void);
-void func_ov100_02145070(int v);
 extern "C" unsigned int func_0201277c(unsigned int a);
 void func_02012694(unsigned int a, const Vector3 *b);
 unsigned char NumStars(void);
@@ -369,7 +367,7 @@ int daDoor_c::func_ov100_02144468(int p) {
 /* State 02148924, execute member. Go to state data_ov100_021488b4 once
    func_ov100_02144fcc reports the shared countdown done. Was a C source. */
 int daDoor_c::func_ov100_021444e8(int a1) {
-    if (func_ov100_02144fcc()) {
+    if (daDoor_c::func_ov100_02144fcc()) {
         func_ov100_021453d8(&data_ov100_021488b4, a1);
     }
     return 1;
@@ -640,7 +638,7 @@ int daDoor_c::func_ov100_02144c64() {
    daPly_c::GetTalkState() returns -1 and the player has left the door's box,
    go to state data_ov100_02148924. Was a C source. */
 int daDoor_c::func_ov100_02144c6c(daPly_c *r1) {
-    func_ov100_02145014();
+    daDoor_c::func_ov100_02145014();
     if (r1->GetTalkState() == -1) {
         if (func_ov100_021452e4(r1) == 0) {
             func_ov100_021453d8(&data_ov100_02148924, (int)r1);
@@ -656,7 +654,7 @@ int daDoor_c::func_ov100_02144c6c(daPly_c *r1) {
    shared countdown at 0x87 (135). Was a C source. */
 int daDoor_c::func_ov100_02144ccc() {
     func_02012694(0xb8, (const Vector3 *)(&mCamSpacePosX));
-    func_ov100_02145070(0x87);
+    daDoor_c::func_ov100_02145070(0x87);
     return 1;
 }
 
@@ -681,7 +679,7 @@ int daDoor_c::func_ov100_02144ccc() {
        data_ov100_02148904 for a nonzero mKeyModelIdx, else
        data_ov100_021488f4.
    Where ShowMessage, TryTalkToDoor or TryTalkToKeyDoor returns 0, control
-   goes to the last case. The message position is mSpeedX (see
+   goes to the last case. The message position is mSpeed (see
    InitResources). Was a C source. */
 int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
     DoorEntry *entry;
@@ -691,9 +689,9 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
         if (entry->starsNeeded >= 0) {
             if ((data_0209caa0.file.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift)) == 0) {
                 if (NumStars() < entry->starsNeeded) {
-                    if (func_ov100_02144f84() == 0)
+                    if (daDoor_c::func_ov100_02144f84() == 0)
                         return 1;
-                    if (b->ShowMessage(*this, entry->msg, (Vector3 *)&mSpeedX, 0, 2) != 0) {
+                    if (b->ShowMessage(*this, entry->msg, &mSpeed, 0, 2) != 0) {
                         func_ov100_021453d8(&data_ov100_021488c4, (int)b);
                         return 1;
                     }
@@ -708,7 +706,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                 int val = data_0209caa0.file.flags1;
                 if ((val & (DOOR_SAVE_KEY_UNLOCKED << entry->flagShift)) == 0) {
                     if ((val & (DOOR_SAVE_HAVE_KEY << e9)) == 0) {
-                        if (func_ov100_02144f84() == 0)
+                        if (daDoor_c::func_ov100_02144f84() == 0)
                             return 1;
                         {
                             int msg;
@@ -725,7 +723,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                                 }
                                 msg = sel ? entry->msg : 0x17;
                             }
-                            if (b->ShowMessage(*this, (short)msg, (Vector3 *)&mSpeedX, 0, 2) != 0) {
+                            if (b->ShowMessage(*this, (short)msg, &mSpeed, 0, 2) != 0) {
                                 func_ov100_021453d8(&data_ov100_021488c4, (int)b);
                                 if (entry->keyIndex == 5)
                                     data_0209caa0.file.flags2 |= 0x10000;
@@ -750,7 +748,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
 /* 1 when the shared countdown is zero, the music volume gMusicVolume is at
    0x7f000 (127.0 as fx32) and the sub-channel volume gSubVolume is
    zero. Was a C source. */
-int func_ov100_02144f84(void) {
+int daDoor_c::func_ov100_02144f84() {
     if (*data_ov100_02148708 != 0)
         goto fail;
     if (gMusicVolume != 0x7f000)
@@ -767,8 +765,8 @@ fail:
 /* Tick the shared countdown (func_ov100_02145014); when it is done, call
    Sound::PlaySub(0x24, 0x7f, 0, 0x7222 = 7.13 as fx32, 0) and return its
    result, else 0. */
-int func_ov100_02144fcc(void) {
-    int r = func_ov100_02145014();
+int daDoor_c::func_ov100_02144fcc() {
+    int r = daDoor_c::func_ov100_02145014();
     if (r == 0)
         return 0;
     return Sound::PlaySub(0x24, 0x7f, 0, 0x7222, 0);
@@ -781,7 +779,7 @@ int func_ov100_02144fcc(void) {
    the ticked value is still nonzero, call Sound::PlaySub(0x24, 0x14, 0x7f,
    0x15666 = 21.4 as fx32, 0). Returns 1 once the countdown is zero. Was a C
    source. */
-int func_ov100_02145014(void) {
+int daDoor_c::func_ov100_02145014() {
     int r = DecIfAbove0_Short(data_ov100_02148708);
     if (r) {
         Sound::PlaySub(0x24, 0x14, 0x7f, 0x15666, 0);
@@ -793,7 +791,7 @@ int func_ov100_02145014(void) {
 /* ROM ordinal 19 -- func_ov100_02145070, 0x02145070, size 0x10 */
 /* -------------------------------------------------------------------------- */
 /* Start the shared countdown at v. Was a C source. */
-void func_ov100_02145070(int v) {
+void daDoor_c::func_ov100_02145070(int v) {
     data_ov100_02148708[0] = v;
 }
 
@@ -1027,13 +1025,11 @@ s32 daDoor_c::Behavior() {
  * matrix stores are the same store to the door model and the key model.
  *
  * The block near the end writes mPosX, mPosY + 0xb4000 (180 units up) and
- * mPosZ into 0x0a4/0x0a8/0x0ac. That triple is the Vector3 func_ov100_02144cf8
- * hands to daPly_c::ShowMessage. dActor_c.h names the middle of those three
- * `mVertSpeed`, which cannot be what a daDoor_c is storing there -- three
- * consecutive words taking a position triple say 0x0a4..0x0af is a second
- * Vector3 for at least this class. Left spelt as dActor_c has it, because
- * renaming a base field on one derived class's evidence is a dActor_c
- * change, not a daDoor_c one. */
+ * mPosZ into mSpeed. That vector is the one func_ov100_02144cf8 hands to
+ * daPly_c::ShowMessage: a door reuses the velocity it never moves by as
+ * the message position. Left spelt as dActor_c has it, because renaming
+ * a base field on one derived class's evidence is a dActor_c change, not
+ * a daDoor_c one. */
 s32 daDoor_c::InitResources() {
     unsigned int idx;
     DoorEntry *e;
@@ -1112,11 +1108,11 @@ s32 daDoor_c::InitResources() {
         z = mPosZ;
         x = mPosX;
         w = y + 0xb4000; /* 180 units up */
-        mSpeedX = x;
-        mVertSpeed = w;
+        mSpeed.x = x;
+        mSpeed.y = w;
         {
             unsigned char bi = gLocalPlayerId;
-            mSpeedZ = z;
+            mSpeed.z = z;
             r4 = (int)gPlayers[bi];
         }
     }

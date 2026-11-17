@@ -552,7 +552,7 @@ void daWanwan_c::RestrictToChain() {
         return;
     if (mChainExtension == kChainMax) {
         mHorzSpeed = 0;
-        mVertSpeed = 0;
+        mSpeed.y = 0;
     }
 }
 
@@ -632,7 +632,7 @@ void daWanwan_c::SetState(int i) {
 
 /* State 0 enter: stop, hold for 0x78 frames, play the idle BCA. */
 void daWanwan_c::StateWaitInit() {
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mHorzSpeed = 0;
     mActionTimer = 120;
     SetChompAnim(this, data_ov014_02114980);
@@ -640,7 +640,7 @@ void daWanwan_c::StateWaitInit() {
 
 /* State 0 update: scale back to 1.0, then idle. */
 void daWanwan_c::StateWaitMain() {
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     ApproachLinear(mScaleX, 0x1000, 0x500);
     mScaleZ = mScaleX;
     mScaleY = mScaleZ;
@@ -651,7 +651,7 @@ void daWanwan_c::StateWaitMain() {
 
 /* State 1 enter: gravity back on, idle BCA, 0x78-frame pause. */
 void daWanwan_c::StateWalkInit() {
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mVertAccel = -0x2000;
     mActionTimer = 120;
     SetChompAnim(this, data_ov014_02114980);
@@ -672,7 +672,7 @@ void daWanwan_c::StateWalkMain() {
         mTargetAngY = HorzAngleToCPlayer();
         mPrevAngleY = mAngleY;
         mHorzSpeed = 0xa000;
-        mVertSpeed = 0x14000;
+        mSpeed.y = 0x14000;
         unk_600 = 0;
         if (d < 0x500000 && AngleDiff(mTargetAngY, mAngleY) < 0x800 && mActionTimer == 0) {
             SetState(2);
@@ -706,13 +706,13 @@ void daWanwan_c::StateAttackInit() {
     }
 
     a = (unsigned short)Vec3_VertAngle(&mPos, &tgt);
-    mVertSpeed = -FX_MUL(FX_SinIdx(a >> 4), 0x8c000);
-    v = mVertSpeed;
+    mSpeed.y = -FX_MUL(FX_SinIdx(a >> 4), 0x8c000);
+    v = mSpeed.y;
     if (v < 0x5000)
         v = 0x5000;
     else if (v > 0x2d000)
         v = 0x2d000;
-    mVertSpeed = v;
+    mSpeed.y = v;
     mHorzSpeed = FX_MUL(FX_CosIdx(a >> 4), 0x8c000);
     mActionTimer = 60;
 }
@@ -731,7 +731,7 @@ int daWanwan_c::StateAttackMain() {
 /* State 3 enter: idle BCA, snap back to the rest height, clear clip flags. */
 void daWanwan_c::StateEscapeDemoInit() {
     SetChompAnim(this, data_ov014_02114980);
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mHorzSpeed = 0;
     mVertAccel = -0x2000;
     mReleaseStep = 0;
@@ -779,7 +779,7 @@ void daWanwan_c::StateEscapeDemoMain() {
         if (mIsOnGround != 0) {
             mPrevAngleY = (s16)(angleToAnchor + 0x2000);
             mAngleY = mPrevAngleY;
-            mVertSpeed = 0x32000;
+            mSpeed.y = 0x32000;
             mHorzSpeed = 0x1e000;
             mReleaseStep++;
         }
@@ -790,7 +790,7 @@ void daWanwan_c::StateEscapeDemoMain() {
         if (mIsOnGround != 0) {
             mPrevAngleY = angleToAnchor;
             mAngleY = mPrevAngleY;
-            mVertSpeed = 0x32000;
+            mSpeed.y = 0x32000;
             mHorzSpeed = 0x1e000;
             mReleaseStep++;
             if (fence->mDisabled != 0)
@@ -804,7 +804,7 @@ void daWanwan_c::StateEscapeDemoMain() {
             SetChompAnim(this, data_ov014_02114970);
             mAngleY = Vec3_HorzAngle(&mPos, &partnerPos);
             mPrevAngleY = mAngleY;
-            mVertSpeed = 0x14000;
+            mSpeed.y = 0x14000;
             mReleaseSpeed = kChainMax;
         }
         {
@@ -815,7 +815,7 @@ void daWanwan_c::StateEscapeDemoMain() {
                 mReleaseStep++;
                 mPrevAngleY = (s16)(Vec3_HorzAngle(&mPos, &partnerPos) + 0x8000);
                 mHorzSpeed = 0x28000;
-                mVertSpeed = 0xa000;
+                mSpeed.y = 0xa000;
                 fence->Break();
             }
         }
@@ -829,10 +829,10 @@ void daWanwan_c::StateEscapeDemoMain() {
             mAngleY = mPrevAngleY;
             if (fence->mDisabled != 0) {
                 mHorzSpeed = 0x28000;
-                mVertSpeed = 0x5a000;
+                mSpeed.y = 0x5a000;
             } else {
                 mHorzSpeed = 0x1e000;
-                mVertSpeed = kChainSlack;
+                mSpeed.y = kChainSlack;
             }
             camera->SetFlag_3();
             mReleaseStep++;
@@ -860,7 +860,7 @@ void daWanwan_c::StateEscapeDemoMain() {
 /* State 4 enter: sound 0x3a and a hard upward speed. */
 void daWanwan_c::StateBombDamageInit() {
     func_0201267c(0x3a, &mCamSpacePos);
-    mVertSpeed = 0x12c000;
+    mSpeed.y = 0x12c000;
     mVertAccel = 0;
 }
 
@@ -882,7 +882,7 @@ void daWanwan_c::StateGiantDamageInit() {
     mAngleY = mPrevAngleY;
     mActionTimer = 60;
     mHorzSpeed = kChainMax;
-    mVertSpeed = kRestLift;
+    mSpeed.y = kRestLift;
     mVertAccel = -0xa000;
 }
 
@@ -892,7 +892,7 @@ void daWanwan_c::StateGiantDamageMain() {
     if (DecIfAbove0_Short(&mActionTimer) == 0)
         SetState(1);
     if (mIsOnGround != 0)
-        mVertSpeed = mHorzSpeed;
+        mSpeed.y = mHorzSpeed;
     ApproachLinear(mHorzSpeed, 0, 0x2000);
 }
 

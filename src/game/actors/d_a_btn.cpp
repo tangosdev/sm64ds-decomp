@@ -94,7 +94,6 @@ extern "C" {
 void func_ov079_02123d4c(Vector3 *out, daBtn_c *self);
 }
 
-void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 int IsStarCollectedInCurLevel(int a);
 extern "C" void func_02011cfc(void);
 void func_02011d38(void);
@@ -823,7 +822,7 @@ void daBtn_c::func_ov079_0212538c()
     mMovingMeshCollider.SetDepthByDir();
     mAnmModel.Advance();
     if (mStateTimer == 0)
-        mVertSpeed = data_ov079_021275e4[mIsKing];
+        mSpeed.y = data_ov079_021275e4[mIsKing];
     if (mStateTimer < 8)
         return;
     if (mIsKing) {
@@ -861,7 +860,7 @@ void daBtn_c::func_ov079_02125240(){
         return;
     if (!mWithMeshClsn.IsOnGround())
         return;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mMovingMeshCollider.ClearDepthByDir();
     mMovingMeshCollider.SetShallowOnly();
     mSubState++;
@@ -873,7 +872,7 @@ void daBtn_c::func_ov079_02125240(){
     v.z = mPosZ;
     Earthquake(v, 0x7d0000);
     mState = 6;
-    mMovingMeshCollider.SetStoodOnCallback(func_ov079_0212522c);
+    mMovingMeshCollider.SetStoodOnCallback(daBtn_c::func_ov079_0212522c);
     if (mIsKing != 0) {
         func_ov079_02123d4c(&a, this);
         func_0200fa04(&a, 0);
@@ -888,7 +887,7 @@ void daBtn_c::func_ov079_02125240(){
    `ldr ip,[pc,#8]; bx ip` absolute tail-call; bracketed closed immediately
    because it is positional. */
 #pragma long_calls on
-void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void daBtn_c::func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daBtn_c *>(owner)->func_ov079_02125058(other);
 }
 #pragma long_calls off

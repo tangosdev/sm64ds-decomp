@@ -7,6 +7,8 @@
 
 /* Reconstructed names and layout, not an original class identity. */
 
+struct Ov007Swing;
+
 /* The 0x30-byte template func_ov007_020ca010 builds every swing from
  * (data_ov007_020d7cc8). */
 typedef struct Ov007SwingParams {
@@ -28,6 +30,9 @@ typedef struct Ov007SwingParams {
     u16 maxRotY;
     s16 maxNormalX; /* 0x2c: the mesh normal's x is clamped to +-maxNormalX */
     s16 maxNormalY; /* 0x2e */
+#ifdef __cplusplus
+    Ov007Swing *func_ov007_020ca010();
+#endif
 } Ov007SwingParams;
 
 #ifndef SM64DS_PLATFORM_PC
@@ -57,6 +62,13 @@ typedef struct Ov007Swing {
     Ov007Follower *yPoints[2]; /* 0x58 */
     Ov007Link *xLinks[2];      /* 0x60: xPoints[i] to the mesh (func_ov007_020c9d90) */
     Ov007Link *yLinks[2];      /* 0x68 */
+#ifdef __cplusplus
+    void func_ov007_020c9fa0();
+    void func_ov007_020c9f10(VecFx32 *pos, int w, int h);
+    void func_ov007_020c9d90(Ov007Mesh *mesh);
+    void func_ov007_020c9c24(int shift);
+    void func_ov007_020c9a84(VecFx32 *offset, u16 *rotX, u16 *rotY);
+#endif
 } Ov007Swing;
 
 #ifndef SM64DS_PLATFORM_PC

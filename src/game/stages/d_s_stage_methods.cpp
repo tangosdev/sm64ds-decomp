@@ -560,7 +560,6 @@ void func_0202b060(char *table, int count);
 struct ObjTeleport *GetTeleportDestObj(int i);
 void func_0202b090(void *table, int count);
 void func_0202b0c4(void *table, int count);
-void func_0202b0e0(LVL_Overlay::StandardEntry *entries, int count);
 void SetTouchScreenDelay(void);
 void ResetInput(void);
 int IsLevelTinyHugeIslandOutside(int level);
@@ -3602,8 +3601,8 @@ void func_0202b0c4(void *table, int count) {
     gNumViewObjs = count;
 }
 
-void func_0202b0e0(LVL_Overlay::StandardEntry *entries, int count) {
-    sEntranceObjs = entries;
+void LVL_Overlay::StandardEntry::func_0202b0e0(int count) {
+    sEntranceObjs = this;
     sNumEntranceObjs = count;
 }
 
@@ -4007,7 +4006,7 @@ int dScStage_c::Behavior() {
         } else {
             u8 c9c = data_0209fc9c;
             if (c9c != 0) {
-                func_02032f54();
+                Message::func_02032f54();
                 if (data_0209fcc8 >= 7u)
                     func_020199a4();
                 return 1;
@@ -4020,7 +4019,7 @@ int dScStage_c::Behavior() {
                         func_02012790(0x123);
                         func_02011c24();
                         func_02030a78();
-                        func_020345b0(0x13);
+                        Message::func_020345b0(0x13);
                     }
                     return 1;
                 }
@@ -4499,9 +4498,8 @@ void func_0203b9b4(int *p, int v);
 void func_ov001_020ab2e4(void);
 
 int dScStage_c::InitResources() {
-    dScStage_c *scene = this;
 
-    if (scene->mWaitingForLoad == 0) {
+    if (mWaitingForLoad == 0) {
         u8 mode = gGameMode;
         int isVsMode = (mode == 1) ? 1 : 0;
         if (isVsMode) {
@@ -4571,7 +4569,7 @@ int dScStage_c::InitResources() {
         gCurrentEntranceId = sNextEntranceId;
         gCurrentStarId = gNextStarId;
         gCurrentAreaId = -1;
-        data_0209f314 = (int)scene->mAreas;
+        data_0209f314 = (int)mAreas;
         data_0209f32c = 0x80000000;
         data_0209f274 = 0;
         SublevelToLevel(gCurrentSublevel);
@@ -4723,10 +4721,10 @@ int dScStage_c::InitResources() {
         } while (faderIndex < 7);
 
         data_0209f340 = (char *)data_02092208[gCurrentSublevel];
-        scene->LoadModel();
+        LoadModel();
         data_0208ee44 = 2;
         LVL_Overlay *level = (LVL_Overlay *)data_0209f340;
-        dScStage_c::LoadClsnAndObjects(*level, gCurrentEntranceId, scene->mMeshCollider);
+        dScStage_c::LoadClsnAndObjects(*level, gCurrentEntranceId, mMeshCollider);
 
         int vsModeMusic = (gGameMode == 1) ? 1 : 0;
         if (vsModeMusic == 0) {
@@ -4752,11 +4750,11 @@ int dScStage_c::InitResources() {
             UnloadArchive(levelArchive);
         }
         LoadDebugFont();
-        scene->LoadFog();
-        scene->LoadTextureTransformers();
-        scene->LoadSkybox();
+        LoadFog();
+        LoadTextureTransformers();
+        LoadSkybox();
         data_0209cef0 = 1;
-        scene->mParticle.Initialise();
+        mParticle.Initialise();
 
         u8 f2fc = gPrevReturnState;
         gVsExitScreenActive = 0;
@@ -4779,11 +4777,11 @@ int dScStage_c::InitResources() {
         gNextSublevel = -1;
 
         if (data_0209fc68 != 0) {
-            scene->mWaitingForLoad = 1;
+            mWaitingForLoad = 1;
         }
     }
 
-    if (scene->mWaitingForLoad != 0) {
+    if (mWaitingForLoad != 0) {
         if (func_020308a8() == 0)
             return -1;
     }

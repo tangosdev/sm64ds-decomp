@@ -8,7 +8,7 @@
 /* Notes: the shared file handles and the four state records keep address
  * names; their definitions at the bottom are this file's static initializer.
  * actorID and mFlags are tested through an int. ExecutePerch keeps its base
- * pointer. mSpeedZ is reloaded because a named temporary moves a word.
+ * pointer. mSpeed.z is reloaded because a named temporary moves a word.
  * EnterDrop's PoofPos is a three-int constructor; a Vector3 assignment does
  * not schedule the same stores.
  */
@@ -194,9 +194,9 @@ int daBasabasa_c::ExecuteReturn() {
             mPosX = mHomePos.x;
             mPosY = mHomePos.y;
             mPosZ = mHomePos.z;
-            mSpeedX = 0;
-            mVertSpeed = 0;
-            mSpeedZ = 0;
+            mSpeed.x = 0;
+            mSpeed.y = 0;
+            mSpeed.z = 0;
             SetState(&data_ov065_0211d700);
             return 1;
         }
@@ -206,7 +206,7 @@ int daBasabasa_c::ExecuteReturn() {
     ApproachAngle(&mPrevAngleY, mTargetAngleY, 0xa, 0x200, 0x100);
     v.z = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
     if (mStateTimer == 0) {
         SetState(&data_ov065_0211d6f0);
     }
@@ -236,7 +236,7 @@ int daBasabasa_c::ExecuteChase() {
     v.z = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-    MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
     if (Vec3_Dist(&mPos, &mHomePos) > 0x5dc000 || mStateTimer == 0) {
         mPerchTimer = 0;
         SetState(&data_ov065_0211d6f0);
@@ -387,15 +387,15 @@ int daBasabasa_c::Behavior() {
         }
     }
     {
-        /* Gravity, clamped at terminal velocity. mSpeedZ is reloaded and
+        /* Gravity, clamped at terminal velocity. mSpeed.z is reloaded and
            stored back unchanged, as in the ROM. */
-        int fallSpeed = mVertSpeed + mVertAccel;
+        int fallSpeed = mSpeed.y + mVertAccel;
         int clamped = mTerminalVelocity;
         if (fallSpeed >= clamped)
             clamped = fallSpeed;
-        int keep = mSpeedZ;
-        mVertSpeed = clamped;
-        mSpeedZ = keep;
+        int keep = mSpeed.z;
+        mSpeed.y = clamped;
+        mSpeed.z = keep;
     }
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);

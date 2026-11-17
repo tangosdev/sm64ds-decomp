@@ -277,7 +277,7 @@ int daSpd_c::func_ov071_02120130() {
     mVertAccel = -0x4000;
     mTerminalVelocity = -0x3e000;
     mHorzSpeed = 0x16000;
-    mVertSpeed = 0x4d000;
+    mSpeed.y = 0x4d000;
     mAnmModel.SetAnim((BCA_File *)gSpiderWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
     mWithMeshClsn.SetLimMovFlag();
@@ -294,9 +294,9 @@ int daSpd_c::func_ov071_02120028() {
         Vector3 v = mPos;
         v.y += 0x28000;
         Particle::System::NewSimple(kPtclLandingDust, v.x, v.y, v.z);
-        mVertSpeed = mVertSpeed * -0x28 / 100;
+        mSpeed.y = mSpeed.y * -0x28 / 100;
     } else if (mWithMeshClsn.IsOnGround()) {
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
         mAnchor.x = mPosX;
         mAnchor.y = mPosY;
@@ -346,7 +346,7 @@ int daSpd_c::func_ov071_0211fe38() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0xf000;
-    mVertSpeed = 0x12000;
+    mSpeed.y = 0x12000;
     mAngleY = mLeapAngle;
     mPrevAngleY = mAngleY;
     *p3a0 += 0x12c000;
@@ -384,7 +384,7 @@ int daSpd_c::func_ov071_0211fcd4() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = -0x4000;
-    mVertSpeed = 0x12000;
+    mSpeed.y = 0x12000;
     mAnmModel.SetAnim((BCA_File *)gSpiderWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x2c00;
     func_0201267c(0xf1, &mCamSpacePos);
@@ -472,7 +472,7 @@ int daSpd_c::func_ov071_0211fa54() {
 int daSpd_c::func_ov071_0211f8d0() {
     mFlags &= 0xfff7fffe;
     mHorzSpeed = mEatingPlayer->mHorzSpeed + 0x7000;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mAngleY = mEatingPlayer->mAngleY;
     mPrevAngleY = mAngleY;
     mPos = mEatingPlayer->mPos;
@@ -494,10 +494,10 @@ int daSpd_c::func_ov071_0211f7d4() {
         if (mWithMeshClsn.GetFloorResult()->surface.clps.GetSurfaceType() == 4) {
             func_ov071_0211f498();
         } else {
-            mVertSpeed = (mVertSpeed * -0x3c) / 0x64;
+            mSpeed.y = (mSpeed.y * -0x3c) / 0x64;
         }
     } else if (mWithMeshClsn.IsOnGround()) {
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
         mFlags |= 1;
         short heading = mPrevAngleY;
@@ -517,7 +517,7 @@ int daSpd_c::func_ov071_0211f6f8() {
     Sound::PlayBank0(9, mCamSpacePos);
     mFlags &= ~1;
     mHorzSpeed = 0xa000;
-    mVertSpeed = 0x28000;
+    mSpeed.y = 0x28000;
     mTimer = 45;
     mAnmModel.SetAnim((BCA_File *)gSpiderWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
@@ -664,8 +664,8 @@ void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
             Vector3 normal;
             w->GetFloorResult()->surface.CopyNormalTo(normal);
             if (normal.y != 0) {
-                mVertSpeed =
-                    -(FX_Div(FX_MUL(normal.x, mSpeedX) + FX_MUL(normal.z, mSpeedZ), normal.y) +
+                mSpeed.y =
+                    -(FX_Div(FX_MUL(normal.x, mSpeed.x) + FX_MUL(normal.z, mSpeed.z), normal.y) +
                       0x8000);
             }
         }

@@ -445,7 +445,7 @@ int daHolhei_c::func_ov062_02116894() {
 
 /* Stop, and aim the next turn at home. */
 int daHolhei_c::func_ov062_02116850() {
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
     mStateTimer = 20;
     mHorzSpeed = 0;
@@ -547,7 +547,7 @@ int daHolhei_c::func_ov062_021164e8()
         mdCc_c.flags |= 2;
         ChangeState(&data_ov062_0211dec0);
         if (mHeld->param1 == 2) {
-            mVertSpeed = 0x50000;
+            mSpeed.y = 0x50000;
             mHorzSpeed = 0x14000;
         }
         mHeld = 0;
@@ -558,7 +558,7 @@ int daHolhei_c::func_ov062_021164e8()
 /* Pop off: gravity, a launch, and a clear of the runtime flags. */
 int daHolhei_c::func_ov062_02116498() {
     mVertAccel = -0x4000;
-    mVertSpeed = 0x3c000;
+    mSpeed.y = 0x3c000;
     mHorzSpeed = 0xa000;
     mTerminalVelocity = -0x64000;
     func_02012694(0xf7, &mCamSpacePos);

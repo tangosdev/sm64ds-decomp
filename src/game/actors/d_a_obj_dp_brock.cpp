@@ -92,7 +92,7 @@ int daObjDpBrock_c::InitResources() {
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
     int phase = param1 & 3;
-    mVertSpeed = -kVertStep;
+    mSpeed.y = -kVertStep;
     mState = kSinking;
     mStateTimer = 0;
     switch (phase) {
@@ -107,7 +107,7 @@ int daObjDpBrock_c::InitResources() {
         /* At the bottom, about to rise. */
         mPosY -= kFullDrop;
         mState = kRising;
-        mVertSpeed = kVertStep;
+        mSpeed.y = kVertStep;
         break;
     }
     return 1;
@@ -118,20 +118,20 @@ int daObjDpBrock_c::Behavior() {
     case kSinking:
         if (mStateTimer == kFramesPerState) {
             mState = kRising;
-            mVertSpeed = kVertStep;
+            mSpeed.y = kVertStep;
             mStateTimer = 0;
         }
         break;
     case kRising:
         if (mStateTimer == kFramesPerState) {
             mState = kSinking;
-            mVertSpeed = -kVertStep;
+            mSpeed.y = -kVertStep;
             mStateTimer = 0;
         }
         break;
     }
     mStateTimer++;
-    mPosY += mVertSpeed;
+    mPosY += mSpeed.y;
     UpdateStepModelPosAndRotY();
     if (IsClsnInRange(0, 0))
         UpdateStepClsnPosAndRot();

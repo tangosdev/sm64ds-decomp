@@ -32,6 +32,7 @@
 #include "SaveBlock.h"
 #include "dCamera_c.h"
 #include "daPly_c.h"
+#include "daDoor_c.h"
 
 extern signed char data_ov002_02110af0;
 extern signed char gCurrentAreaId;
@@ -47,7 +48,6 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *trans, short angle, const Vector3 *v);
 }
 u8 NumStars(void);
-int func_ov100_02144f84(void);
 /* -------------------------------------------------------------------------- */
 /* Factory: `return new` inherits fBase_c::operator new. */
 /* -------------------------------------------------------------------------- */
@@ -139,7 +139,7 @@ int daMugenBGM_c::Behavior() {
     }
 
     if (mHorzSpeed == 0) {
-        if (func_ov100_02144f84() == 0)
+        if (daDoor_c::func_ov100_02144f84() == 0)
             return 1;
         mHorzSpeed = 1;
     }

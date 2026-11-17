@@ -551,7 +551,7 @@ void daRNk_c::func_ov062_0211a1f4()
         /* Walked off an edge: kick up 10 units a frame, keep 0xd00/0x1000 (81%)
            of his speed, and go to the in-the-air step. */
         SET_ANIM(this, ANIM_JUMP, kAnimPlayOnce);
-        this->mVertSpeed = 0xa000;
+        this->mSpeed.y = 0xa000;
         this->mHorzSpeed = FX_MUL(this->mHorzSpeed, 0xd00);
         this->mStep = 3;
         return;
@@ -893,7 +893,7 @@ ret0:
 void daRNk_c::func_ov062_02119954()
 {
     SET_ANIM(this, ANIM_JUMP, kAnimPlayOnce);
-    this->mVertSpeed = 0x2d000;
+    this->mSpeed.y = 0x2d000;
     this->mVertAccel = -0x4000;
     this->mStep = 3;
 }

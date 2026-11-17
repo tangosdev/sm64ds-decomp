@@ -387,7 +387,7 @@ int daBgSnmBdy_c::State3() {
                 (daBgSnmHed_c *)dActor_c::FindWithActorID(0x111, 0); /* BIG_SNOWMAN_HEAD */
             head->mBodyArriving = 1;
             func_0201267c(0x114, &mCamSpacePos);
-            mVertSpeed = 0x1d000;
+            mSpeed.y = 0x1d000;
             mHorzSpeed = 0xe000;
             mSubstate++;
         }
@@ -496,9 +496,9 @@ void daBgSnmBdy_c::UpdateGroundCollision(dBgCh_Actr *mc)
     floorResult->surface.CopyNormalTo(normal);
     if (normal.y == 0) return;
     {
-        int alongX = FX_Mul(normal.x, mSpeedX);
-        int alongZ = FX_Mul(normal.z, mSpeedZ);
-        mVertSpeed = -(FX_Div(alongX + alongZ, normal.y) + 0x8000);
+        int alongX = FX_Mul(normal.x, mSpeed.x);
+        int alongZ = FX_Mul(normal.z, mSpeed.z);
+        mSpeed.y = -(FX_Div(alongX + alongZ, normal.y) + 0x8000);
     }
 }
 

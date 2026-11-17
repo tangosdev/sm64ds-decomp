@@ -61,7 +61,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_02013f28",
+      "symbol": "_ZN9FatalSpin13func_02013f28Ev",
       "address": "0x02013f28",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0201/func_02013f28.c",

@@ -85,7 +85,7 @@ extern "C" SpawnInfo<daObjC1_Trap_c> g_profile_C1_TRAP = {
 
 /*
  * registered directly in InitResources. */
-void func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void daObjC1_Trap_c::func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daObjC1_Trap_c *>(owner)->OnCollision(*other);
 }
 
@@ -181,7 +181,7 @@ int daObjC1_Trap_c::InitResources() {
     UpdateCollisionTransform();
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov010_02112d00), mDoorMat, 0x1000, mAngleY,
                           data_ov010_021122f8);
-    mMeshCollider.SetStoodOnCallback(func_ov010_02111984);
+    mMeshCollider.SetStoodOnCallback(daObjC1_Trap_c::func_ov010_02111984);
     mMeshCollider.Enable(this);
     mOpenSpeed = 0;
     mState = 0;

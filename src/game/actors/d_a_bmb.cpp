@@ -106,7 +106,7 @@ extern unsigned char gGameMode;
 }
 void GiveCoins(int who, int count);
 int SurfaceInfo_TestFlag0x20(int *si);
-int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other);
+#include "BgChEvt.h"
 
 /* ==========================================================================
  *
@@ -391,7 +391,7 @@ void daBmb_c::State0() {
             func_ov102_0214b988();
             if (mChasePlayer != 0) {
                 mHorzSpeed = 0;
-                mVertSpeed = 0x14000;
+                mSpeed.y = 0x14000;
                 mState = 2;
             } else {
                 if (mVariant == 5) {
@@ -572,7 +572,7 @@ void daBmb_c::func_ov102_0214bc20() {
         if ((unsigned)idx > 4) idx = 4;
     }
     mHorzSpeed = a1.v[idx];
-    mVertSpeed = a2.v[idx];
+    mSpeed.y = a2.v[idx];
     mState = 4;
     mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
     mVertAccel = -0x2000;
@@ -898,7 +898,7 @@ int daBmb_c::UpdateFuse() {
                 mdCc_c.height = v * 0x50;
                 mWithMeshClsn.SetRadius(v * 0x3c);
                 mWithMeshClsn.SetHeight(v * 0x3c);
-                func_ov002_020ef228(&mWithMeshClsn, this);
+                ((BgChEvt *)&mWithMeshClsn)->func_ov002_020ef228(this);
             }
             {
                 mdCc_c.flags &= ~4;
@@ -1005,7 +1005,7 @@ void daBmb_c::func_ov102_0214ae1c() {
     Particle::System::NewSimple(kPtclBobOmbExplodeC, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeD, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeE, v.x, v.y, v.z);
-    func_ov002_020ef228(&mWithMeshClsn, this);
+    ((BgChEvt *)&mWithMeshClsn)->func_ov002_020ef228(this);
     if (mCarrier) {
         Vector3 w;
         mCarrier->DropActor();

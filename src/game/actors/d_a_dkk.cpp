@@ -136,7 +136,7 @@ int daDkk_c::Behavior() {
 void daDkk_c::StateFall() {
     Vector3 v[2];
     UpdatePos(0);
-    if (mVertSpeed >= 0)
+    if (mSpeed.y >= 0)
         mVertAccel = -0x4000;
     else
         mVertAccel = -0x8000;
@@ -167,7 +167,7 @@ void daDkk_c::StateLandPause() {
         return;
     if (mLandCount != 4) {
         mState = 5;
-        mVertSpeed = 0x3c000;
+        mSpeed.y = 0x3c000;
         func_0201267c(0xf4, &mCamSpacePos);
         return;
     }

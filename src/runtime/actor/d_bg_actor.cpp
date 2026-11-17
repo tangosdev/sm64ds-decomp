@@ -86,7 +86,10 @@ static inline int IsActorID(const dActor_c *actor, int id) {
     return actor->actorID == id;
 }
 
-int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
+#include "BgChEvt.h"
+
+int BgChEvt::func_ov002_020ef2a4(dActor_c *other) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     if (clsn->IsOnGround()) {
         dBgPi *hit = clsn->GetFloorResult();
         if (hit->GetClsnID() != -1) {
@@ -100,7 +103,8 @@ int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other) {
+int BgChEvt::func_ov002_020ef228(dActor_c *other) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
         if (hit->GetClsnID() != -1) {
@@ -114,7 +118,7 @@ int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-int func_ov002_020ef070(void *unused, char *moverArg) {
+int BgChEvt::func_ov002_020ef070(char *moverArg) {
     Vector3 start, end;
 
     dBgCh_Lin line;
@@ -154,7 +158,7 @@ int func_ov002_020ef070(void *unused, char *moverArg) {
     return 0;
 }
 
-int func_ov002_020eeeb8(void *unused, char *moverArg) {
+int BgChEvt::func_ov002_020eeeb8(char *moverArg) {
     Vector3 start, end;
 
     dBgCh_Lin line;
@@ -198,8 +202,8 @@ int func_ov002_020eeeb8(void *unused, char *moverArg) {
     return 0;
 }
 
-int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
-    dBgCh_Actr *clsn = (dBgCh_Actr *)clsnArg;
+int BgChEvt::func_ov002_020eee3c(char *otherArg) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     dActor_c *other = (dActor_c *)otherArg;
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
@@ -214,7 +218,8 @@ int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
     return 0;
 }
 
-int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
+int BgChEvt::func_ov002_020eedc0(dActor_c *other) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
         if (hit->GetClsnID() != -1) {
@@ -228,7 +233,8 @@ int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
+int BgChEvt::func_ov002_020eed24(daPly_c *player) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     dBgPi *hit;
     dActor_c *owner;
     if (clsn->IsOnWall() || clsn->IsOnGround() || func_02035638(clsn)) {
@@ -244,7 +250,8 @@ int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     return 0;
 }
 
-int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
+int BgChEvt::func_ov002_020eeca8(dActor_c *other) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     if (func_02035638(clsn)) {
         dBgPi *hit = clsn->GetSphereResult();
         if (hit->GetClsnID() != -1) {
@@ -266,7 +273,8 @@ int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
  * Vector3 scoped to its own branch. The scalar Hurt ABI remains a measured
  * reconstruction boundary. */
 
-int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
+int BgChEvt::func_ov002_020eea84(dActor_c *player) {
+    dBgCh_Actr *clsn = (dBgCh_Actr *)this;
     dActor_c *owner;
 
     if (!IsActorID(player, 0xbf))
@@ -488,7 +496,7 @@ void dBgActor_c::KillByMegaChar(daPly_c &player) {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0x14000;
-    mVertSpeed = 0x1e000;
+    mSpeed.y = 0x1e000;
     mPrevAngleY = Vec3_HorzAngle(&player.mPos, &mPos);
     mMegaKnockbackTimer = 30;
     if (mMeshCollider.IsEnabled())

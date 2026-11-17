@@ -228,7 +228,7 @@ int daPgBby_c::StateKeepDistanceUpdate() {
 /* State 1, enter: a hop. */
 int daPgBby_c::StateDiveEnter() {
     mHorzSpeed = 0x19000;
-    mVertSpeed = 0xc000;
+    mSpeed.y = 0xc000;
     mAnmModel.SetAnim((BCA_File *)gPenguinBabyDiveAnimationFile.filePtr, 0x40000000, 0x1000, 0);
     mSubState = 0;
     mStateId = 1;
@@ -436,7 +436,7 @@ int daPgBby_c::func_ov072_02121368()
 
     mFlags &= ~0x80000;
     mHorzSpeed = 0xa000;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
 
     eater = mEatingPlayer;
     posX = &mPosX;
@@ -492,9 +492,9 @@ int daPgBby_c::func_ov072_021212c0()
 {
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround()) {
-        mVertSpeed = (mVertSpeed * -0x28) / 100;
+        mSpeed.y = (mSpeed.y * -0x28) / 100;
     } else if (mWithMeshClsn.IsOnGround()) {
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
         ChangeState(0);
     }
@@ -567,9 +567,9 @@ void daPgBby_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(floorNormal);
         if (floorNormal.y != 0) {
-            int x = FX_MUL(floorNormal.x, mSpeedX);
-            int y = FX_MUL(floorNormal.z, mSpeedZ);
-            mVertSpeed = -(FX_Div(x + y, floorNormal.y) + 0x8000);
+            int x = FX_MUL(floorNormal.x, mSpeed.x);
+            int y = FX_MUL(floorNormal.z, mSpeed.z);
+            mSpeed.y = -(FX_Div(x + y, floorNormal.y) + 0x8000);
         }
     }
     if (clsn->IsOnWall()) {

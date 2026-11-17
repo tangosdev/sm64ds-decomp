@@ -82,7 +82,6 @@ int func_ov002_020cc16c(void *player, void *actor);
 void Matrix4x3_FromRotationY(void *m, int angle);
 
 }
-int func_ov002_020ad660(void *self, void *clsn, void *model, int kind);
 int SurfaceInfo_TestFlag0x20(int *si);
 
 daShl_c *daShl_c_classInit() {
@@ -133,7 +132,7 @@ s32 daShl_c::InitResources()
  */
 s32 daShl_c::Behavior()
 {
-    if (func_ov002_020ad660(this, &mMeshClsn, &mModel, 3) != 0)
+    if (this->func_ov002_020ad660(&mMeshClsn, &mModel, 3) != 0)
         return 1;
 
     if (UpdateYoshiEat(mMeshClsn) != 0) {
@@ -189,7 +188,7 @@ s32 daShl_c::Behavior()
             if (mMeshClsn.IsOnGround() != 0) {
                 if (mState == &data_ov102_0214ea68) {
                     mVertAccel = 0;
-                    mVertSpeed = 0;
+                    mSpeed.y = 0;
                 }
                 if (mState != &data_ov102_0214ea48 &&
                     mState != &data_ov102_0214ea58)

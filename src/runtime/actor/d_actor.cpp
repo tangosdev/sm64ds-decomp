@@ -84,6 +84,9 @@ struct ActorList {
     fLiNdBa_c *last;
 
     ActorList() : first(0), last(0) {}
+
+    fLiNdBa_c *func_02043f98(unsigned int key);
+    fLiNdBa_c *func_02043f4c(unsigned int key, fLiNdBa_c *after);
 };
 ActorList data_0209b468;
 
@@ -275,12 +278,9 @@ void dActor_c::AfterRender(u32 vfSuccess)
     fBase_c::AfterRender(vfSuccess);
 }
 
-/* local extern: defined in ActorBase.cpp, which has no header. */
-extern fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key);
-
 dActor_c *dActor_c::FindWithID(u32 id)
 {
-    fLiNdBa_c *node = func_02043f98(&data_0209b468.first, id);
+    fLiNdBa_c *node = data_0209b468.func_02043f98(id);
     if (node)
         return static_cast<dActor_c *>(node->owner);
     return 0;
@@ -289,9 +289,9 @@ dActor_c *dActor_c::FindWithID(u32 id)
 dActor_c *dActor_c::FindWithActorID(u32 actorID, dActor_c *after) {
     fLiNdBa_c *node;
     if (after)
-        node = func_02043f4c(&data_0209b468.first, actorID, &after->mActorListNode);
+        node = data_0209b468.func_02043f4c(actorID, &after->mActorListNode);
     else
-        node = func_02043f4c(&data_0209b468.first, actorID, 0);
+        node = data_0209b468.func_02043f4c(actorID, 0);
     if (node)
         return static_cast<dActor_c *>(node->owner);
     return 0;
@@ -309,9 +309,15 @@ dActor_c *dActor_c::Next(const dActor_c *after)
     return 0;
 }
 
-/* Stages Spawn's arguments for the constructor to pick up. */
-void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID) {
-    data_0209b460 = (s16 *)pos;
+/* Spawn's position is the receiver. Vector3's destructor is declared in
+   types.h, which this pass cannot add a method to, so the method lives on
+   this stand-in. It has no fields; this is the position pointer. */
+struct SpawnArg {
+    void func_02010e78(const Vector3_16 *rot, s8 areaID, s16 deathTableID);
+};
+
+void SpawnArg::func_02010e78(const Vector3_16 *rot, s8 areaID, s16 deathTableID) {
+    data_0209b460 = (s16 *)this;
     data_0209b45c = (s16 *)rot;
     data_0209b44c = areaID;
     data_0208e378 = deathTableID;
@@ -319,12 +325,11 @@ void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 dea
 }
 
 extern fBase_c *gCurrentScene;
-void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID);
 
 dActor_c *dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
                     const Vector3_16 *rot, s8 areaID, s16 deathTableID)
 {
-    func_02010e78(&pos, rot, areaID, deathTableID);
+    ((SpawnArg *)&pos)->func_02010e78(rot, areaID, deathTableID);
     return (dActor_c *)dBase_c::Spawn(actorID, gCurrentScene, spawnParam, 2);
 }
 
@@ -357,10 +362,10 @@ void dActor_c::func_02010da4() {
         mPosZ = 0x7d00000;
 }
 
-/* Adds the velocity (mSpeedX, mVertSpeed, mSpeedZ) to mPos, then the
+/* Adds the velocity (mSpeed) to mPos, then the
    cylinder's horizontal push-out, then clamps to the world bounds. */
 void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
-    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
+    VEC_Add(&mPos, &mSpeed, &mPos);
     if (clsn != 0) {
         mPosX += clsn->pushback.x;
         mPosZ += clsn->pushback.z;
@@ -370,17 +375,17 @@ void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
 
 /* Splits mHorzSpeed along mPrevAngleY (the heading the velocity follows) into
    the x/z velocity words, x by sin and z by cos, and applies mVertAccel to
-   mVertSpeed, clamped at mTerminalVelocity. */
+   mSpeed.y, clamped at mTerminalVelocity. */
 void dActor_c::UpdatePosWithHorzSpeedAndAng() {
     s32 horzSpeed = mHorzSpeed;
     if (horzSpeed == 0) {
-        s32 vertSpeed = mVertSpeed + mVertAccel;
+        s32 vertSpeed = mSpeed.y + mVertAccel;
         s32 terminal = mTerminalVelocity;
         if (vertSpeed >= terminal)
             terminal = vertSpeed;
-        mSpeedX = 0;
-        mVertSpeed = terminal;
-        mSpeedZ = 0;
+        mSpeed.x = 0;
+        mSpeed.y = terminal;
+        mSpeed.z = 0;
     } else {
         s32 vertSpeed;
         s32 accel;
@@ -391,7 +396,7 @@ void dActor_c::UpdatePosWithHorzSpeedAndAng() {
         s16 sinv;
         s32 speedX;
         cosv = FX_CosIdx((u16)mPrevAngleY >> 4);
-        vertSpeed = mVertSpeed;
+        vertSpeed = mSpeed.y;
         accel = mVertAccel;
         terminal = mTerminalVelocity;
         speedZ = FX_MUL(horzSpeed, cosv);
@@ -400,9 +405,9 @@ void dActor_c::UpdatePosWithHorzSpeedAndAng() {
             terminal = next;
         sinv = FX_SinIdx((u16)mPrevAngleY >> 4);
         speedX = FX_MUL(horzSpeed, sinv);
-        mSpeedX = speedX;
-        mVertSpeed = terminal;
-        mSpeedZ = speedZ;
+        mSpeed.x = speedX;
+        mSpeed.y = terminal;
+        mSpeed.z = speedZ;
     }
 }
 
@@ -657,7 +662,7 @@ void dActor_c::func_020105cc(u32 flags) {
 }
 
 int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
-    s32 vel = player.mVertSpeed;
+    s32 vel = player.mSpeed.y;
 
     if (clsn.flags & 6) {
         if (vel < 0 && player.mIsAirborne != 0
@@ -675,8 +680,7 @@ int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
 }
 
 int dActor_c::BumpedUnderneathByPlayer(daPly_c &player) {
-    if (player.mIsAirborne != 0 && player.mVertSpeed > 0
-        && player.mPosY < mPosY)
+    if (player.mIsAirborne != 0 && player.mSpeed.y > 0 && player.mPosY < mPosY)
         return 1;
 
     return 0;

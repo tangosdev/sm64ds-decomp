@@ -226,7 +226,7 @@ int daKpaFire_c::Behavior()
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
         if (mVariant != VARIANT_BOUNCING) {
             if (mWithMeshClsn.IsOnGround() != 0) {
-                mVertSpeed = 0;
+                mSpeed.y = 0;
                 mVertAccel = 0;
             }
         }
@@ -400,9 +400,9 @@ void daKpaFire_c::func_ov060_021172e0() {
     {
         dActor_c *spawned = dActor_c::Spawn(ACTOR_COIN, 0, this->mPos, 0, this->mAreaId, -1);
         if (spawned != 0) {
-            spawned->mSpeedX = 0;
-            spawned->mVertSpeed = 0;
-            spawned->mSpeedZ = 0;
+            spawned->mSpeed.x = 0;
+            spawned->mSpeed.y = 0;
+            spawned->mSpeed.z = 0;
         }
     }
 }
@@ -421,9 +421,9 @@ void daKpaFire_c::func_ov060_0211722c() {
     this->mPrevAngleY = (short)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
     r = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10;
     if (r % 10 < 2)
-        this->mVertSpeed = 0x1e000;
+        this->mSpeed.y = 0x1e000;
     else
-        this->mVertSpeed = 0xa000;
+        this->mSpeed.y = 0xa000;
     this->mHorzSpeed = 0x5000;
     this->mVertAccel = -0x1000;
     this->mFireScale =
@@ -437,7 +437,7 @@ void daKpaFire_c::func_ov060_0211722c() {
 void daKpaFire_c::func_ov060_021171e8() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
     this->mPrevAngleY = r >> 0x10;
-    this->mVertSpeed = 0xa000;
+    this->mSpeed.y = 0xa000;
     this->mHorzSpeed = 0;
     this->mFireScale = 0x6000;
     this->mShadowRadiusMul = 0x10;
@@ -473,8 +473,8 @@ void daKpaFire_c::func_ov060_0211712c() {
  * 0x266 (about 0.15) per frame; at 0 or below it ends in func_ov060_021172e0. */
 void daKpaFire_c::func_ov060_02116f90() {
     this->UpdatePos(0);
-    if (this->mVertSpeed < -0x4000)
-        this->mVertSpeed = -0x4000;
+    if (this->mSpeed.y < -0x4000)
+        this->mSpeed.y = -0x4000;
 
     if (this->mLanded == 0) {
         this->mParticleHandle =
@@ -491,7 +491,7 @@ void daKpaFire_c::func_ov060_02116f90() {
                     ((u32)RandomIntInternal(&data_0209e650.value) >> 16 & 0xfff) * 2 + 0x6000;
             }
             this->mHorzSpeed = 0;
-            this->mVertSpeed = 0;
+            this->mSpeed.y = 0;
             this->mVertAccel = 0;
             this->mParticleHandle2 = 0;
             this->mParticleHandle = this->mParticleHandle2;
@@ -526,7 +526,7 @@ void daKpaFire_c::func_ov060_02116f74() {
  * Each frame: mFireScale grows by 0x255 (about 0.146) while below 5.0 (0x5000),
  * and the pitch word (mPrevAngleX, signed) loses 0x200 while above 0x800.
  * The three velocity words come from the speed (mHorzSpeed), the pitch and the
- * heading: mVertSpeed is -speed * sin(pitch), and mSpeedX and mSpeedZ are
+ * heading: mSpeed.y is -speed * sin(pitch), and mSpeed.x and mSpeed.z are
  * speed * sin(pitch) times cos and -sin of the heading, divided by 896 (0x380,
  * not decoded). Position moves by those velocities. Shows
  * PARTICLE_SCALED_9A scaled by mFireScale (y offset 12 * scale). When the mesh
@@ -539,14 +539,14 @@ void daKpaFire_c::func_ov060_02116d78() {
     if (mPrevAngleX > 0x800)
         mPrevAngleX -= 0x200;
 
-    mSpeedX =
+    mSpeed.x =
         FX_CosIdx((u16)mPrevAngleY >> 4) * (mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 896;
-    mVertSpeed = -mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4);
-    mSpeedZ =
+    mSpeed.y = -mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4);
+    mSpeed.z =
         FX_SinIdx((u16)mPrevAngleY >> 4) * (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 896;
-    mPosX += mSpeedX;
-    mPosY += mVertSpeed;
-    mPosZ += mSpeedZ;
+    mPosX += mSpeed.x;
+    mPosY += mSpeed.y;
+    mPosZ += mSpeed.z;
 
     func_ov060_02116518(PARTICLE_SCALED_9A, 1, mFireScale * 0xc);
     if (mWithMeshClsn.IsOnGround() != 0) {
@@ -579,7 +579,7 @@ void daKpaFire_c::func_ov060_02116c68() {
     }
 
     r = ((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10;
-    this->mVertSpeed = (r % 10) << 0xc;
+    this->mSpeed.y = (r % 10) << 0xc;
     this->mVertAccel = -0x1000;
 
     this->mPhaseOffset = (short)(((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10);
@@ -618,7 +618,7 @@ void daKpaFire_c::func_ov060_02116b68() {
  * (0x11800), gravity +1.0 (0x1000, upward -- unlike the InitResources
  * default), mFireScale 2.0, random phase, shadow multiplier 0x10. */
 void daKpaFire_c::func_ov060_02116b18() {
-    this->mVertSpeed = 0x7000;
+    this->mSpeed.y = 0x7000;
     this->mHorzSpeed = 0x11800;
     this->mFireScale = 0x2000;
     this->mVertAccel = 0x1000;
@@ -665,7 +665,7 @@ void daKpaFire_c::func_ov060_021169f8() {
 /* Variant 4 init. Vertical speed 30.0, horizontal speed 15.0, random
  * phase, SetLimMovFlag on the mesh collision, shadow multiplier 0x10. */
 void daKpaFire_c::func_ov060_021169b0() {
-    this->mVertSpeed = 0x1e000;
+    this->mSpeed.y = 0x1e000;
     this->mHorzSpeed = 0xf000;
     this->mPhaseOffset = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 16;
     this->mWithMeshClsn.SetLimMovFlag();
@@ -692,7 +692,7 @@ void daKpaFire_c::func_ov060_021168c4() {
         koopa = (daKpa_c *)dActor_c::FindWithID(this->mKpaUniqueID);
     }
     if (this->mWithMeshClsn.JustHitGround() != 0) {
-        this->mVertSpeed = 0x1e000;
+        this->mSpeed.y = 0x1e000;
     }
     this->UpdatePos(0);
     func_ov060_02116518(PARTICLE_VARIANT_4, 0, 0x32000);

@@ -127,14 +127,14 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
             int dz = mFloorNormal.y;
             if (dz != 0) {
                 int nx = mFloorNormal.x;
-                int vx = mSpeedX;
+                int vx = mSpeed.x;
                 int nz = mFloorNormal.z;
-                int vz = mSpeedZ;
+                int vz = mSpeed.z;
                 int a = FX_MUL(nx, vx);
                 int b = FX_MUL(nz, vz);
                 int num = a + b;
                 int q = FX_Div(num, dz);
-                mVertSpeed = -(q + 0x8000);
+                mSpeed.y = -(q + 0x8000);
             }
         }
     }
@@ -208,11 +208,11 @@ int dEnemyBase_c::func_ov002_020aea24(dBgCh_Actr &) {
     return 0;
 }
 
-/* Stop the enemy (zero mHorzSpeed and mVertSpeed), start a 0xf-frame
+/* Stop the enemy (zero mHorzSpeed and mSpeed.y), start a 0xf-frame
    mDeathTimer, then clear mFlags bit 0x1. */
 void dEnemyBase_c::func_ov002_020ae9f8(dActor_c *, dBgCh_Actr *) {
     mHorzSpeed = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mDeathTimer = 15;
     mFlags &= ~0x1;
 }
@@ -229,7 +229,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
 }
 
 void dEnemyBase_c::func_ov002_020ae968(dActor_c *arg) {
-    mVertSpeed = 0x14000;
+    mSpeed.y = 0x14000;
     if (IsPlayerActor(arg)) {
         u16 t = data_ov002_020ff01c[(u16)arg->param1];
         mHorzSpeed = ((int)t << 0xf) / 50;
@@ -253,10 +253,10 @@ void dEnemyBase_c::func_ov002_020ae8b8(dActor_c *arg) {
         int d1 = ip / 100;
         int d2 = scaled / 100;
         mHorzSpeed = d1;
-        mVertSpeed = (d2 + 0x20) << 12;
+        mSpeed.y = (d2 + 0x20) << 12;
     } else {
         mHorzSpeed = 0xa000;
-        mVertSpeed = 0x28000;
+        mSpeed.y = 0x28000;
     }
     mFlags &= ~1;
 }
@@ -285,7 +285,7 @@ void dEnemyBase_c::func_ov002_020ae80c(dActor_c *a, dBgCh_Actr *) {
 
 void dEnemyBase_c::func_ov002_020ae73c(dActor_c *a, dBgCh_Actr *) {
     mPrevAngleY = Vec3_HorzAngle(&a->mPos, &mPos);
-    mVertSpeed = 0xa000;
+    mSpeed.y = 0xa000;
 
     if (IsPlayerActor(a))
         mHorzSpeed = (data_ov002_020ff01c[(unsigned short)a->param1] << 15) / 50;
@@ -469,8 +469,8 @@ int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr &clsn, short &outAngle) {
 
    The eater is mEatingPlayer, read as a dActor_c for its position, facing and
    speed. On landing, the floor normal's X/Z (scaled by 8) is added into
-   mSpeedX/mSpeedZ and mHorzSpeed becomes the horizontal length of the
-   mSpeedX/mVertSpeed/mSpeedZ triple. mSpitOutTimer is set to 5 at the spit
+   mSpeed.x/mSpeed.z and mHorzSpeed becomes the horizontal length of the
+   mSpeed.x/mSpeed.y/mSpeed.z triple. mSpitOutTimer is set to 5 at the spit
    and counted down here; the subclasses read 5 and 0 off it. */
 
 /* The three dActor_c::mFlags bits Yoshi's mouth drives. */
@@ -537,7 +537,7 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
             else
                 mHorzSpeed = FX_MUL(v, 0x800) + 0x14000;
             mHorzSpeed = FX_MUL(mHorzSpeed, 0x14cc);
-            mVertSpeed = 0xc000;
+            mSpeed.y = 0xc000;
             mEatingPlayer = 0;
         }
         lim = clsn.GetLimMovFlag();
@@ -548,15 +548,15 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
             dBgPi *fr = clsn.GetFloorResult();
             fr->surface.CopyNormalTo(mFloorNormal);
             if (clsn.JustHitGround() == 0) {
-                mVertSpeed = 0;
+                mSpeed.y = 0;
                 mEatenByYoshi = 0;
             } else {
                 fr->surface.CopyNormalTo(mFloorNormal);
-                mVertSpeed = FX_Div((mVertSpeed * -50) / 100, mFloorNormal.y);
+                mSpeed.y = FX_Div((mSpeed.y * -50) / 100, mFloorNormal.y);
             }
-            mSpeedX += mFloorNormal.x << 3;
-            mSpeedZ += mFloorNormal.z << 3;
-            mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
+            mSpeed.x += mFloorNormal.x << 3;
+            mSpeed.z += mFloorNormal.z << 3;
+            mHorzSpeed = Vec3_HorzLen(&mSpeed);
         }
         mAngleY = mPrevAngleY;
         if (lim == 0)
@@ -677,7 +677,7 @@ void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player,
     mFlags &= ~0x10000001;
     mPrevAngleY = Vec3_HorzAngle(&player.mPos, &mPos);
     mHorzSpeed = 0xa000;
-    mVertSpeed = 0x28000;
+    mSpeed.y = 0x28000;
     mDeathTimer = 30;
     mSpinRateX = spin.x;
     mSpinRateY = spin.y;
@@ -710,7 +710,7 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
     if (mDeathTimer != 0)
         mDeathTimer -= 1;
 
-    if (mDeathTimer == 0 || (&clsn != 0 && clsn.IsOnGround() != 0 && mVertSpeed < 0)) {
+    if (mDeathTimer == 0 || (&clsn != 0 && clsn.IsOnGround() != 0 && mSpeed.y < 0)) {
         if (flags & 1)
             SpawnCoin();
         if (flags & 2)

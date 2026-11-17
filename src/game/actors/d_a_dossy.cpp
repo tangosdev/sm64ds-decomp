@@ -118,11 +118,6 @@ extern SharedFilePtr data_ov002_0210d9c0;
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
 extern int AngleDiff(int a, int b);
 }
-int func_ov065_021180d4(daDossyCap_c *cap);
-void func_ov065_02118c4c(daDossyCap_c *cap);
-int func_ov065_02119210(daDossyCap_c *cap);
-void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other);
-void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other);
 
 typedef void (daDossy_c::*StateFunc)();
 extern "C" StateFunc data_ov065_0211d7fc[];
@@ -145,13 +140,13 @@ int daDossyCap_c::OnYoshiTryEat()
 }
 
 #pragma long_calls on
-void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void daDossy_c::func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daDossy_c *>(owner)->func_ov065_02119594(other);
 }
 #pragma long_calls off
 
 #pragma long_calls on
-void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void daDossy_c::func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daDossy_c *>(owner)->func_ov065_0211956c(other);
 }
 #pragma long_calls off
@@ -203,9 +198,9 @@ int daDossy_c::InitResources()
         if ((unsigned)j <= 2) {
             mPlatforms[j].mClsn.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
             if (j == 2)
-                mPlatforms[j].mClsn.SetStoodOnCallback(func_ov065_021195bc);
+                mPlatforms[j].mClsn.SetStoodOnCallback(daDossy_c::func_ov065_021195bc);
             else
-                mPlatforms[j].mClsn.SetStoodOnCallback(func_ov065_021195d0);
+                mPlatforms[j].mClsn.SetStoodOnCallback(daDossy_c::func_ov065_021195d0);
         }
         mPlatforms[j].mClsn.Enable(this);
     }
@@ -246,8 +241,8 @@ int daDossy_c::InitResources()
     return 1;
 }
 
-int func_ov065_02119210(daDossyCap_c *cap) {
-    int flags = cap->mCapIcon.mFlags << 30;
+int daDossyCap_c::func_ov065_02119210() {
+    int flags = this->mCapIcon.mFlags << 30;
     return ((unsigned)flags >> 31) != 0;
 }
 
@@ -276,8 +271,8 @@ int daDossyCap_c::Behavior()
     mAngleY = mCarrier->mAngleY;
     unsigned int flags = mCapIcon.mFlags;
     if ((flags << 30) >> 31) {
-        func_ov065_02118c4c(this);
-        if (func_ov065_021180d4(this) != 0) {
+        this->func_ov065_02118c4c();
+        if (this->func_ov065_021180d4() != 0) {
             mdCcAc_c.Clear();
             return 1;
         }
@@ -380,13 +375,13 @@ void daDossy_c::func_ov065_02118cc4()
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-void func_ov065_02118c4c(daDossyCap_c *cap) {
+void daDossyCap_c::func_ov065_02118c4c() {
     Vector3 pos;
-    Vec3_Asr(&pos, &cap->mPos, 3);
+    Vec3_Asr(&pos, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, cap->mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, cap->mAngleX);
-    cap->mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngleX);
+    this->mModel.mat4x3 = data_020a0e68;
 }
 
 void daDossy_c::func_ov065_02118838() {
@@ -527,7 +522,7 @@ void daDossy_c::func_ov065_021183c8()
 
     if (mClsnPlayer != 0) {
         if (mClsnState == 2 && mRideCooldown == 0) {
-            if (mCap == 0 || func_ov065_02119210(mCap) == 0) {
+            if (mCap == 0 || mCap->func_ov065_02119210() == 0) {
                 playerPos = mClsnPlayer->mPos;
                 if (playerPos.y >= mHomePos.y && Vec3_HorzDist(&playerPos, &mHomePos) < 0x88000 &&
                     ((daPly_c *)mClsnPlayer)->SetNoControlState(5, -1, 0) != 0) {
@@ -593,14 +588,14 @@ int daDossy_c::func_ov065_02118248()
     return 0;
 }
 
-int func_ov065_021180d4(daDossyCap_c *cap) {
+int daDossyCap_c::func_ov065_021180d4() {
     daPly_c *player;
     u32 id;
 
     /* Single exit for the failure path: an early return per check is
        56 bytes longer. */
-    id = cap->mdCcAc_c.otherOwner;
-    if (id != 0 && (cap->mdCcAc_c.hitFlags & 0x400000)) {
+    id = this->mdCcAc_c.otherOwner;
+    if (id != 0 && (this->mdCcAc_c.hitFlags & 0x400000)) {
         player = (daPly_c *)dActor_c::FindWithID(id);
         if (player != 0) {
             int isPlayer = (int)(player->actorID == 0xbf);
@@ -614,10 +609,10 @@ int func_ov065_021180d4(daDossyCap_c *cap) {
                 pos.y += 0x50000;
                 pos.x += FX_MUL(speed, FX_SinIdx(idx));
                 pos.z += FX_MUL(speed, FX_CosIdx(idx));
-                if (dActor_c::Spawn(0x10d, 0x1210, pos, &cap->mAngle, cap->mAreaId, -1) != 0) {
-                    cap->mCapIcon.Unlink();
-                    cap->mCapIcon.Link(cap, 2, 0, 0);
-                    cap->mCarrier->mRideCooldown = 30;
+                if (dActor_c::Spawn(0x10d, 0x1210, pos, &this->mAngle, this->mAreaId, -1) != 0) {
+                    this->mCapIcon.Unlink();
+                    this->mCapIcon.Link(this, 2, 0, 0);
+                    this->mCarrier->mRideCooldown = 30;
                 }
                 return 1;
             }

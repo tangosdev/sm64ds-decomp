@@ -315,14 +315,14 @@ void daGmch_c::ApplySlopeToVertSpeed(void *clsn)
     if (((dBgCh_Actr *)clsn)->IsOnGround()) {
         ((dBgCh_Actr *)clsn)->GetFloorResult()->surface.CopyNormalTo(floorNormal);
         if (floorNormal.y != 0) {
-            /* mSpeedX / mSpeedZ: world velocity X/Z next to mVertSpeed. */
-            s32 velX = mSpeedX;
-            s32 velZ = mSpeedZ;
+            /* mSpeed.x / mSpeed.z: world velocity X/Z next to mSpeed.y. */
+            s32 velX = mSpeed.x;
+            s32 velZ = mSpeed.z;
             int termX = FX_MUL(floorNormal.x, velX);
             int termZ = FX_MUL(floorNormal.z, velZ);
             int dot = termX + termZ;
             int slope = FX_Div(dot, floorNormal.y);
-            mVertSpeed = -(slope + 0x8000);
+            mSpeed.y = -(slope + 0x8000);
         }
     }
     if (((dBgCh_Actr *)clsn)->IsOnWall()) {
@@ -394,7 +394,7 @@ int daGmch_c::EnterState8()
     Sound::PlayBank0(9, mCamSpacePos);
     mFlags &= ~1;
     mHorzSpeed = 0xa000;
-    mVertSpeed = 0x28000;
+    mSpeed.y = 0x28000;
     mTimer = 45;
     mAnmModel.SetAnim((BCA_File *)data_ov081_02128edc.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
@@ -412,9 +412,9 @@ int daGmch_c::UpdateState7()
     func_02038414(&mWithMeshClsn);
     mAngleX = mAngleX + 0x1000;
     if (mWithMeshClsn.JustHitGround() != 0) {
-        mVertSpeed = mVertSpeed * -0x3c / 100;
+        mSpeed.y = mSpeed.y * -0x3c / 100;
     } else if (mWithMeshClsn.IsOnGround() != 0) {
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
         {
             short heading = mPrevAngleY;
@@ -449,7 +449,7 @@ int daGmch_c::EnterState7()
     zero = 0;
     holder = mEatingPlayer;
     mHorzSpeed = holder->mHorzSpeed + 0x7000;
-    mVertSpeed = zero;
+    mSpeed.y = zero;
     holder = mEatingPlayer;
     holderAngle = holder->mAngleY;
     mAngleY = holderAngle;
@@ -586,7 +586,7 @@ int daGmch_c::UpdateState3()
     case 0:
         if ((((unsigned int)mAnmModel.currFrame) << 4) >> 16 == 7) {
             mHorzSpeed = 0x12000;
-            mVertSpeed = 0x1e000;
+            mSpeed.y = 0x1e000;
             func_0201267c(0x77, &mCamSpacePos);
             mPhase++;
         }

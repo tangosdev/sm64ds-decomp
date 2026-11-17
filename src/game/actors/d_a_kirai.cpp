@@ -200,7 +200,7 @@ void daKirai_c::StateExploding() {
     mOpacity -= 0xa;
     if (mOpacity < 0xa)
         mOpacity = 0;
-    mPosY += mVertSpeed;
+    mPosY += mSpeed.y;
     if (mTimer == 28)
         Disarm();
     mTimer++;

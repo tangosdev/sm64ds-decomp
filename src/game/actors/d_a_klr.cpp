@@ -179,7 +179,7 @@ void daKlr_c::StateFly() {
     this->UpdateWMClsn(this->mWallClsn, 0);
     this->mHorzSpeed = -0x1e000;
     this->UpdatePosWithHorzSpeedAndAng();
-    Vec3_Add(&nose, &this->mPos, (Vector3 *)&this->mSpeedX);
+    Vec3_Add(&nose, &this->mPos, &this->mSpeed);
     this->mSmokeTrailID =
         Particle::System::New(this->mSmokeTrailID, kSmokeParticle, nose.x, nose.y, nose.z, 0, 0);
     this->mHorzSpeed = 0x1e000;

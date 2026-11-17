@@ -15,8 +15,15 @@
  *   data_0209d70c stays int * (decl_common.h spells it so); [1] is
  *   MessageInfoSection::sectionSize. data_0209d6f0 stays u8 * for the same
  *   reason (Message2.cpp) and is read back through a MessageEntry cast.
- * - data_0209d6f4 is volatile. DisplayCourseNameForStarSelect stores it twice
- *   in a row and both stores have to emit.
+ * - data_0209d6f4 is int here; Message2.cpp reads the same word as u8 *.
+ *   The course-name lines set the cursor and then step it past three
+ *   leading bytes with `+= 3`, and both stores emit.
+ * - Every volatile local here (li / ls, zero / blank and kin) is the value
+ *   handed to an MI_CpuFill16 / MI_CpuFill32. The ROM stores each constant
+ *   to the stack and loads it back before the call; plain locals fold it,
+ *   and by-value, const-reference and the SDK's two-level inline wrappers
+ *   do not reproduce the spill either (#821, measured on func_0201cd08:
+ *   0xf0 / 0xfc against 0x108).
  * - IsStarCollected and Message::DisplayText stay local externs. The header
  *   spellings take s8 / u16 and those parameters emit a narrow the ROM does
  *   not have. DisplayText must see this untruncated.
@@ -115,10 +122,8 @@ u8 gMsgChoicePositions[4];
 int data_0209d6e8;
 int data_0209d6ec;
 u8 *data_0209d6f0;
-/* byte-forced spelling: the cell is written twice back-to-back in
-   DisplayCourseNameForStarSelect and both stores must emit, so it is
-   volatile here; plurality decl elsewhere is u8 *. */
-volatile int data_0209d6f4;
+/* The text cursor. Message2.cpp reads it as u8 *. */
+int data_0209d6f4;
 int data_0209d6f8;
 int data_0209d6fc;
 int data_0209d700;
@@ -144,10 +149,6 @@ extern void SetBg3Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
 }
 
-extern void func_0201b6f8(int a);
-extern void func_0201b388(int a);
-extern void func_0201b100(int a);
-extern int func_0201fb4c(void);
 extern int IsStarCollected(s32 a, s32 b);
 extern "C" int SublevelToLevel(int a);
 
@@ -155,21 +156,9 @@ namespace Sound {
 int ChangeMusicVolume(u32 a, s32 b);
 }
 
-extern "C" void func_0201cd08(int arg);
-extern "C" void func_0201cebc(short a0);
-extern "C" void func_0201cfb8(int arg0);
 void LoadControllerModeText(int param0);
-extern "C" void func_0201d418(int p0, int p1);
 void Message_DrawLineBG2(void);
 extern "C" void Message_DrawCenteredLine(int mapPos, int width);
-extern "C" void func_0201d850(u32 course);
-extern "C" void func_0201e220(int arg);
-extern "C" void func_0201eaac(void);
-void func_0201ef38(void);
-void func_0201ef50(int arg);
-void func_0201f108(void);
-void func_0201f138(void);
-void func_0201f32c(int arg0);
 
 void dScStage_c::UpdateMessage() {
     if (data_0209d660 == 0)
@@ -214,7 +203,7 @@ void dScStage_c::UpdateMessage() {
     }
 }
 
-extern "C" void func_0201cd08(int arg) {
+void Message::func_0201cd08(int arg) {
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -257,7 +246,7 @@ void Message::DisplaySaveStatusText(unsigned short n)
     func_0201d418(0x109, 0x70);
 }
 
-extern "C" void func_0201cebc(short a0) {
+void Message::func_0201cebc(short a0) {
     volatile unsigned short v;
     volatile int z;
     data_0209d6d4 = a0;
@@ -288,7 +277,7 @@ void Message::DisplayLevelClearText(u16 msgID, u8 course) {
     func_0201e220(1);
 }
 
-extern "C" void func_0201cfb8(int arg0) {
+void Message::func_0201cfb8(int arg0) {
     data_0209d6d4 = arg0;
     data_0209d660 = 0;
     func_0201eaac();
@@ -330,7 +319,7 @@ void LoadControllerModeText(int param0) {
 
     data_0209d6d4 = param0;
     data_0209d660 = 0;
-    func_0201eaac();
+    Message::func_0201eaac();
 
     data_0209d668 = 1;
     data_0209d6a8 = 0;
@@ -429,7 +418,7 @@ void Message::DisplayControllerModeText(unsigned short n)
     Message_DrawCenteredLine(0x280, 0x20);
 }
 
-extern "C" void func_0201d418(int p0, int p1) {
+void Message::func_0201d418(int p0, int p1) {
     volatile int li;
     int i;
     int idx = data_0209d6d4;
@@ -473,7 +462,7 @@ void Message_DrawLineBG2(void) {
     data_0209d6f0 = (u8*)(base + idx * 8);
     data_0209d6f4 =
         data_0209d6fc + 0x28 + data_0209d70c[1] + ((MessageEntry *)(base + idx * 8))->textOffset;
-    func_0201b6f8(1);
+    Message::func_0201b6f8(1);
     data_0209d65c = 0;
     n = ((data_0209d6b0 + 7) / 8) << 6;
     {
@@ -481,7 +470,7 @@ void Message_DrawLineBG2(void) {
         li = 0;
         MI_CpuFill32((void *)p, li, n);
     }
-    func_0201b100(1);
+    Message::func_0201b100(1);
     data_0209d674 = data_0209d674 + (u8)(((data_0209d6b0 + 7) / 8) << 1);
 }
 
@@ -504,7 +493,7 @@ extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
     data_0209d6f0 = (u8 *)(base + idx * 8);
     data_0209d6f4 =
         data_0209d6fc + 0x28 + data_0209d70c[1] + ((MessageEntry *)(base + idx * 8))->textOffset;
-    func_0201b6f8(1);
+    Message::func_0201b6f8(1);
     old = data_0209d6b0;
     data_0209d65c = ((width * 8 - old) & 0xf) >> 1;
     data_0209d6b0 = old + data_0209d65c;
@@ -519,7 +508,7 @@ extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
         (&map[i])[0x20] = data_0209d6a8 + 0x200 + (data_0209d6b0 + 7) / 8 + i;
     }
 
-    func_0201b100(0);
+    Message::func_0201b100(0);
     data_0209d6a8 += (u8)((data_0209d6b0 + 7) / 8 * 2);
 }
 
@@ -531,7 +520,7 @@ extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
    (course < 15) gets its number line, the course name and the star line.
    The star line leads with glyph 0xf0 when the star is collected or
    data_0209f20c is set, and with 0xf1 otherwise. */
-extern "C" void func_0201d850(u32 course) {
+void Message::func_0201d850(u32 course) {
     u16 tile = 0x200;
     u16 mapPos = 0x80;
     /* The fill values go through the stack, as the cartridge does. */
@@ -606,7 +595,7 @@ extern "C" void func_0201d850(u32 course) {
             s32 sum = data_0209d6fc + 0x28 + data_0209d70c[1] +
                       ((MessageEntry *)((char *)data_0209d708 + (course + 0x196) * 8))->textOffset;
             data_0209d6f4 = sum;
-            data_0209d6f4 = sum + 3;
+            data_0209d6f4 += 3;
         }
         Message::LayoutLine();
 
@@ -793,7 +782,7 @@ void Message::DisplayDontSaveText(unsigned short n)
     Message_DrawCenteredLine(0x291, 0xa);
 }
 
-extern "C" void func_0201e220(int arg) {
+void Message::func_0201e220(int arg) {
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -981,7 +970,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     sum = data_0209d6fc + 0x28 + data_0209d70c[1] +
           ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
     data_0209d6f4 = sum;
-    data_0209d6f4 = sum + 3;
+    data_0209d6f4 += 3;
     func_0201b6f8(0);
 
     data_0209d65c = ((256 - data_0209d6b0) / 2);
@@ -1043,7 +1032,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     func_0201b388(data_0209d6a8);
 }
 
-extern "C" void func_0201eaac(void) {
+void Message::func_0201eaac(void) {
     data_0209d6c0 = 0;
     data_0209d6b4 = 0;
     data_0209d69c = 0;
@@ -1151,14 +1140,14 @@ void Message::DisplaySaving(unsigned short n)
     GX_SetVisiblePlane(gMainScreenLayers);
 }
 
-void func_0201ef38(void) {
+void Message::func_0201ef38(void) {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
 }
 
 /* Shows a credit text (message arg + 0x24e) on the sub screen's BG0: clears
    all of BG0's character tiles, then lays the message out one 32-tile line
    at a time, centred vertically on the screen. A negative arg only clears. */
-void func_0201ef50(int arg) {
+void Message::func_0201ef50(int arg) {
     volatile int zero;
     volatile int lineZero;
     int lines;
@@ -1203,7 +1192,7 @@ void func_0201ef50(int arg) {
     }
 }
 
-void func_0201f108(void) {
+void Message::func_0201f108(void) {
     u16 *scr = (u16 *)G2S_GetBG0ScrPtr();
     int i = 0;
     do {
@@ -1212,7 +1201,7 @@ void func_0201f108(void) {
     } while (i < 1024);
 }
 
-void func_0201f138(void) {
+void Message::func_0201f138(void) {
     volatile int li;
     volatile unsigned short ls;
     int idx;
@@ -1279,7 +1268,7 @@ static inline int IsGameMode(int mode) {
    screen's text tiles and map, lays the box's tiles out row by row from tile
    0x200 (0x2200 on the sub screen), and pumps Message::Update until the
    open state reaches 4. */
-void func_0201f32c(int arg0) {
+void Message::func_0201f32c(int arg0) {
     MessageEntry *entry;
     u8 disp2;
     u8 t;
@@ -1450,7 +1439,7 @@ void func_0201f32c(int arg0) {
 
 /* Course ids that must not open the talk window. data_0209d664 is the byte
    after the shared reset flag at data_0209d660. */
-int func_0201fb4c(void) {
+int Message::func_0201fb4c(void) {
     short v;
     unsigned int b;
     if (data_0209d664 != 0) goto no;
@@ -1491,7 +1480,7 @@ extern "C" int ObjectMessageIDToActualMessageID(s16 id) {
     return id;
 }
 
-extern "C" void func_0201fc88(s16 objectMsgID) {
+void Message::func_0201fc88(s16 objectMsgID) {
     s16 id = ObjectMessageIDToActualMessageID(objectMsgID);
     func_0201f32c(id);
 }

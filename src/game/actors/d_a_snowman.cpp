@@ -153,9 +153,9 @@ void daSnowman_c::ReleaseHeldObjects() {
             a->mPrevAngleX = 0;
             a->mPrevAngleY = rv << 0xc;
             a->mPrevAngleZ = 0;
-            a->mSpeedX = 0;
-            a->mVertSpeed = 0x14000;
-            a->mSpeedZ = 0;
+            a->mSpeed.x = 0;
+            a->mSpeed.y = 0x14000;
+            a->mSpeed.z = 0;
             a->mHorzSpeed = 0xa000;
             a->mCarryMatrix = 0;
         }
@@ -353,9 +353,9 @@ int daSnowman_c::StateMeltEnter() {
             a->mPrevAngleY = rv << 0xc;
             a->mPrevAngleZ = 0;
             a->mHorzSpeed = 0xa000;
-            a->mSpeedX = 0;
-            a->mVertSpeed = 0x14000;
-            a->mSpeedZ = 0;
+            a->mSpeed.x = 0;
+            a->mSpeed.y = 0x14000;
+            a->mSpeed.z = 0;
             a->mCarryMatrix = 0;
         }
         func_02012790(0xa);
@@ -427,7 +427,7 @@ int daSnowman_c::StateBurrowExecute() {
     t = this->mHomePos.y - 0x118000;
     if (t > this->mPosY) {
         this->mPosY = t;
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
         this->mVertAccel = 0;
         SetState(&data_ov081_02128e84);
     }
@@ -447,7 +447,7 @@ int daSnowman_c::StateBurrowEnter() {
             this->mSnowballID = 0;
         }
     }
-    this->mVertSpeed = 0xa000;
+    this->mSpeed.y = 0xa000;
     this->mVertAccel = -0x4000;
     this->mInitAngleY = 0;
     this->mAnmModel.SetAnim((BCA_File *)data_ov081_02128da8.filePtr, 0, 0x1000, 0);
@@ -487,9 +487,9 @@ int daSnowman_c::StateThrowSnowballExecute() {
                     MTX_MultVec43(&in, &data_020a0e68, &out);
                 }
                 out.y += 0x14000;
-                target->mSpeedX = out.x;
-                target->mVertSpeed = out.y;
-                target->mSpeedZ = out.z;
+                target->mSpeed.x = out.x;
+                target->mSpeed.y = out.y;
+                target->mSpeed.z = out.z;
                 target->mVertAccel = -0x2000;
                 this->mSnowballID = 0;
             }
@@ -561,9 +561,9 @@ int daSnowman_c::StateRotateEnter() {
 
 /* State "rise", execute. */
 int daSnowman_c::StateRiseFromGroundExecute() {
-    if (this->mVertSpeed < 0) {
+    if (this->mSpeed.y < 0) {
         if (this->mHomePos.y > this->mPosY) {
-            this->mVertSpeed = 0;
+            this->mSpeed.y = 0;
             this->mVertAccel = 0;
             this->mPosY = this->mHomePos.y;
             SetState(&data_ov081_02128e14);
@@ -577,7 +577,7 @@ int daSnowman_c::StateRiseFromGroundExecute() {
 int daSnowman_c::StateRiseFromGroundEnter() {
     struct Vector3 pos;
 
-    this->mVertSpeed = 0x3c000;
+    this->mSpeed.y = 0x3c000;
     this->mVertAccel = -0x4000;
     func_02012694(0xdc, &this->mCamSpacePos);
     pos.x = this->mHomePos.x;
@@ -653,7 +653,7 @@ int daSnowman_c::StateWalkExecute() {
 
     if ((u16)this->mStateTimer == 0) {
         if (this->mStep == 1) {
-            this->mVertSpeed = 0x14000;
+            this->mSpeed.y = 0x14000;
             this->mVertAccel = -0x4000;
             this->mStep = 2;
             func_02012694(0xdd, &this->mCamSpacePos);
@@ -675,7 +675,7 @@ int daSnowman_c::StateWalkExecute() {
                     return 1;
             }
             this->mStep = 0;
-            this->mVertSpeed = 0x3a000;
+            this->mSpeed.y = 0x3a000;
             this->mVertAccel = -0x4000;
             this->mAnmModel.SetAnim((BCA_File *)gSnowmanJumpStAnimationFile.filePtr, 0x40000000,
                                     0x1000, 0);

@@ -14,7 +14,7 @@
  * are `return new`.
  */
 // leftovers:
-// - func_ov080_02124418 stays free. Its first argument is a daChoro_Rock_c,
+// - func_ov080_02124418 is daChoro_Rock_c's. Its first argument is the rock,
 //   so it is not a daChoropu_c method.
 // - Throw's spawn id stays `py ? 0x137 : 0x137`.
 // - LAUND() in func_ov080_02124088 keeps the cylinder flags, mFlags and
@@ -94,8 +94,6 @@ extern ChoropuStateRow data_ov080_02128438[6];
 extern "C" int RandomIntInternal(int *seed);
 extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
 void func_02012694(unsigned int a, const Vector3 *p);
-
-void  func_ov080_02124418(daChoro_Rock_c *t);
 
 extern const int data_ov080_0212767c[18] = {
     90, 78, 62, 116, 176, 228, 252, 264, 288, 288, 288, 248, 208, 128, 32, 0, 0, 0,
@@ -255,9 +253,9 @@ void daChoropu_c::func_ov080_02123a34()
         if (d >= 0x258000)
             d = 0x258000;
         a->mHorzSpeed = 0x1e000;
-        a->mSpeedX = 0;
-        a->mVertSpeed = (d << 2) / 100 + 0x4000;
-        a->mSpeedZ = 0;
+        a->mSpeed.x = 0;
+        a->mSpeed.y = (d << 2) / 100 + 0x4000;
+        a->mSpeed.z = 0;
         func_0201267c(0xd2, &mCamSpacePos);
     }
 
@@ -625,11 +623,11 @@ void daChoropu_c::func_ov080_021243d8()
 }
 
 /* Same as func_ov080_021243d8, for the rock's model (mModel.mat4x3). */
-void func_ov080_02124418(daChoro_Rock_c *t) {
-    Matrix4x3_FromRotationY(&t->mModel.mat4x3, t->mAngleY);
-    t->mModel.mat4x3.m[9] = t->mPosX >> 3;
-    t->mModel.mat4x3.m[10] = t->mPosY >> 3;
-    t->mModel.mat4x3.m[11] = t->mPosZ >> 3;
+void daChoro_Rock_c::func_ov080_02124418() {
+    Matrix4x3_FromRotationY(&this->mModel.mat4x3, this->mAngleY);
+    this->mModel.mat4x3.m[9] = this->mPosX >> 3;
+    this->mModel.mat4x3.m[10] = this->mPosY >> 3;
+    this->mModel.mat4x3.m[11] = this->mPosZ >> 3;
 }
 
 /* Releases the shared model and animation files; never touches `this`: the model file
@@ -734,9 +732,9 @@ s32 daChoro_Rock_c::Behavior()
             s->mPrevAngleY = (short)((unsigned int)r >> 8);
             s->mPrevAngleZ = 0;
             s->mHorzSpeed = mHorzSpeed >> 1;
-            s->mSpeedX = 0;
-            s->mVertSpeed = 0x5000;
-            s->mSpeedZ = 0;
+            s->mSpeed.x = 0;
+            s->mSpeed.y = 0x5000;
+            s->mSpeed.z = 0;
 
             s = dActor_c::Spawn(daChoro_Rock_ACTOR_ID, 1, mPos, 0, mAreaId, -1);
             r = RandomIntInternal(&data_0209e650.value);
@@ -744,16 +742,16 @@ s32 daChoro_Rock_c::Behavior()
             s->mPrevAngleY = (short)((unsigned int)r >> 8);
             s->mPrevAngleZ = 0;
             s->mHorzSpeed = mHorzSpeed >> 1;
-            s->mSpeedX = 0;
-            s->mVertSpeed = 0x5000;
-            s->mSpeedZ = 0;
+            s->mSpeed.x = 0;
+            s->mSpeed.y = 0x5000;
+            s->mSpeed.z = 0;
         }
         MarkForDestruction();
     }
 
     UpdatePos(0);
     UpdateWMClsn(mWithMeshClsn, 0);
-    func_ov080_02124418(this);
+    this->func_ov080_02124418();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;

@@ -62,6 +62,10 @@ struct daDossyCap_c : dActor_c {
     virtual s32 Behavior();            /* slot 6 */
     virtual s32 Render();              /* slot 9 */
     virtual int OnYoshiTryEat();       /* slot 18 */
+
+    int func_ov065_021180d4();
+    void func_ov065_02118c4c();
+    int func_ov065_02119210();
 };
 
 #ifndef SM64DS_PLATFORM_PC

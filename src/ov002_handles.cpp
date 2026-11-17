@@ -59,38 +59,37 @@ Ov002ModelFile data_ov002_0210d9f0(0x9c0c);
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 
-int func_ov002_020ad660(void *enemy, void *clsnArg, void *modelArg, int flags) {
-    dEnemyBase_c *c = (dEnemyBase_c *)enemy;
+int dEnemyBase_c::func_ov002_020ad660(void *clsnArg, void *modelArg, int flags) {
     dBgCh_Actr *clsn = (dBgCh_Actr *)clsnArg;
     dExtSimpleModel_c *model = (dExtSimpleModel_c *)modelArg;
     int v[3];
 
-    if (c->mDeathState != 8)
+    if (mDeathState != 8)
         return 0;
 
-    if (c->mDeathTimer == 0 || (clsn != 0 && (clsn->IsOnGround() || clsn->IsOnWall()))) {
+    if (mDeathTimer == 0 || (clsn != 0 && (clsn->IsOnGround() || clsn->IsOnWall()))) {
         if (flags & 1)
-            c->SpawnCoin();
+            SpawnCoin();
         if (flags & 2)
-            c->KillAndTrackInDeathTable();
-        c->mDeathState = 0;
+            KillAndTrackInDeathTable();
+        mDeathState = 0;
         return 2;
     }
 
-    c->mDeathTimer -= 1;
-    c->UpdatePos(0);
+    mDeathTimer -= 1;
+    UpdatePos(0);
     if (clsn != 0)
-        c->UpdateWMClsn(*clsn, 0);
+        UpdateWMClsn(*clsn, 0);
 
     if (model != 0) {
-        c->mAngleX += c->mSpinRateX;
-        c->mAngleY += c->mSpinRateY;
-        c->mAngleZ += c->mSpinRateZ;
-        Vec3_Asr((Vector3 *)v, &c->mPos, 3);
+        mAngleX += mSpinRateX;
+        mAngleY += mSpinRateY;
+        mAngleZ += mSpinRateZ;
+        Vec3_Asr((Vector3 *)v, &mPos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, c->OnAimedAtWithEgg() >> 3, 0);
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-c->OnAimedAtWithEgg()) >> 3, 0);
+        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, OnAimedAtWithEgg() >> 3, 0);
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-OnAimedAtWithEgg()) >> 3, 0);
         model->mat4x3 = data_020a0e68;
     }
     return 1;

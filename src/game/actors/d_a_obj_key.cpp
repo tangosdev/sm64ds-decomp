@@ -240,12 +240,12 @@ void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
         int a = mVertAccel;
         if (a < 0)
             a = -a;
-        mVertSpeed = height * a;
+        mSpeed.y = height * a;
     } else {
         int a = mVertAccel;
         if (a < 0)
             a = -a;
-        mVertSpeed = (dy + 1) * a;
+        mSpeed.y = (dy + 1) * a;
     }
     mTerminalVelocity = TERMINAL_VY;
     mHorzSpeed = Vec3_HorzDist(&mPos, target) / JUMP_FRAMES;
@@ -334,7 +334,7 @@ void daObjKey_c::StateFlyToCenter()
         center1.x = 0;
         center1.y = 0;
         center1.z = 0;
-        mVertSpeed = FLY_VY;
+        mSpeed.y = FLY_VY;
         mHorzSpeed = Vec3_HorzDist(&mPos, &center1) / 80;
         mPrevAngleY = Vec3_HorzAngle(&mPos, &center1);
         mBounceCount = 0;
@@ -355,22 +355,22 @@ void daObjKey_c::StateFlyToCenter()
         center2.z = 0;
         Vec3_ApproachHorz(&mPosX, &center2, mHorzSpeed);
         if (mBounceCount == 0) {
-            if (mVertSpeed < 0) {
+            if (mSpeed.y < 0) {
                 int floor = mHomePos.y;
                 if (mPosY < floor) {
                     mPosY = floor;
-                    mVertSpeed = BOUNCE_VY;
+                    mSpeed.y = BOUNCE_VY;
                     mHorzSpeed = 0;
                     mBounceCount++;
                     Sound::PlayBank3(SND_BOUNCE, mCamSpacePos);
                 }
             }
         } else {
-            if (mVertSpeed < 0) {
+            if (mSpeed.y < 0) {
                 int hover = mHomePos.y + HOVER_Y;
                 if (mPosY < hover) {
                     mPosY = hover;
-                    mVertSpeed = 0;
+                    mSpeed.y = 0;
                     mVertAccel = 0;
                     mStep++;
                     mStateTimer = 0;
@@ -498,7 +498,7 @@ void daObjKey_c::StateStarJump()
         mPosY = mJumpTarget.y;
         mPosZ = mJumpTarget.z;
         mPosY += LAND_Y;
-        mVertSpeed = POP_VY;
+        mSpeed.y = POP_VY;
         mVertAccel = GRAVITY;
         mHorzSpeed = 0;
         mStep++;
@@ -507,7 +507,7 @@ void daObjKey_c::StateStarJump()
     case 2:
         cam->SetLookAt(v);
         if (mWithMeshClsn.JustHitGround()) {
-            mVertSpeed = -mVertSpeed >> 1;
+            mSpeed.y = -mSpeed.y >> 1;
             func_02012694(SND_LAND, &mCamSpacePos);
             return;
         }
@@ -610,7 +610,7 @@ void daObjKey_c::StateDrop()
         v.y = v.y + Y_SPARK;
         mParticleID[0] = Particle::System::New(mParticleID[0], FX_FALL, v.x, v.y, v.z, 0, 0);
         if (mWithMeshClsn.JustHitGround()) {
-            mVertSpeed = -mVertSpeed >> 1;
+            mSpeed.y = -mSpeed.y >> 1;
             func_02012694(SND_LAND, &mCamSpacePos);
             return;
         }
@@ -872,7 +872,7 @@ int daObjKey_c::InitResources()
         mScaleX = SCALE_KEY;
         mScaleY = SCALE_KEY;
         mScaleZ = SCALE_KEY;
-        mVertSpeed = POP_VY;
+        mSpeed.y = POP_VY;
         offset.x = data_ov089_02132ca4.x;
         offset.y = data_ov089_02132ca4.y;
         offset.z = data_ov089_02132ca4.z;

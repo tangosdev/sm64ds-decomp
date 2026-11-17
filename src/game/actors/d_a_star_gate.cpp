@@ -23,10 +23,7 @@
  *   OpenClose_Init / Main).
  * Leftover: POD VecFx32 for data_ov100_02148948 -- Vector3's inline
  *   dtor is non-POD; a Vector3 BSS object would register in sinit.
- *   The messagePos local is still a VecFx32 cast at ShowMessage.
  * Leftover: data_ov100_02148390 gate table.
- * Leftover: (Vector3 *)&mSpeedX (dActor_c consecutive
- *   s32s; a Vector3 member is not this class).
  */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_star_gate_AssetId {
@@ -36,6 +33,7 @@ enum d_a_star_gate_AssetId {
 #include "daStarGate_c.h"
 #include "SpawnInfo.h"
 #include "daPly_c.h"
+#include "daDoor_c.h"
 #include "SharedFilePtr.h"
 #include "dExtSimpleModel_c.h"
 #include "dCamera_c.h"
@@ -56,11 +54,6 @@ int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 }
-int func_ov100_02144fcc(void);
-int func_ov100_02145014(void);
-void func_ov100_02145070(int value);
-int func_ov100_02144f84(void);
-
 extern u8 gLocalPlayerId;
 extern dCamera_c *gCamera;
 extern daPly_c *gPlayers[];
@@ -153,15 +146,15 @@ int daStarGate_c::Render()
     if (IsAreaShowing((s8)mAngleX) != 0 ||
         IsAreaShowing((s8)mAngleZ) != 0) {
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-        mModel.mat4x3.t.x = (mPosX + mSpeedX) >> 3;
-        mModel.mat4x3.t.y = (mPosY + mVertSpeed) >> 3;
-        mModel.mat4x3.t.z = (mPosZ + mSpeedZ) >> 3;
+        mModel.mat4x3.t.x = (mPosX + mSpeed.x) >> 3;
+        mModel.mat4x3.t.y = (mPosY + mSpeed.y) >> 3;
+        mModel.mat4x3.t.z = (mPosZ + mSpeed.z) >> 3;
         mModel.Render(0);
 
         Matrix4x3_FromRotationY(&mModel.mat4x3, (s16)(mAngleY + 0x8000));
-        mModel.mat4x3.t.x = (mPosX - mSpeedX) >> 3;
-        mModel.mat4x3.t.y = (mPosY - mVertSpeed) >> 3;
-        mModel.mat4x3.t.z = (mPosZ - mSpeedZ) >> 3;
+        mModel.mat4x3.t.x = (mPosX - mSpeed.x) >> 3;
+        mModel.mat4x3.t.y = (mPosY - mSpeed.y) >> 3;
+        mModel.mat4x3.t.z = (mPosZ - mSpeed.z) >> 3;
         mModel.Render(0);
     }
 
@@ -233,7 +226,6 @@ void daStarGate_c::TryOpenDoor(daPly_c *player) {
 bool daStarGate_c::St_Wait_Main(daPly_c *player) {
     daStarGateInfo *entry;
     int isSpecial, notEnoughStars, isMario, messageID;
-    VecFx32 messagePos;
 
     if (IsInFrontOfPlayer(player)) {
         entry = &data_ov100_02148390[param1];
@@ -248,20 +240,13 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
            call returns 0. */
         if (!(data_0209caa0.file.flags1 & (0x8000 << entry->saveFlag))) {
             if (!isSpecial || (mScaleZ > 0 && (notEnoughStars || !isMario))) {
-                {
-                    int x = mPosX;
-                    int z = mPosZ;
-                    int y = mPosY + 0xb4000;
-                    messagePos.x = x;
-                    messagePos.y = y;
-                    messagePos.z = z;
-                }
+                Vector3 messagePos(mPosX, mPosY + 0xb4000, mPosZ);
 
                 if (!(isMario && !isSpecial && !notEnoughStars)) {
-                    if (func_ov100_02144f84() == 0)
+                    if (daDoor_c::func_ov100_02144f84() == 0)
                         return true;
                     messageID = isMario ? entry->notEnoughStarsMsgID : entry->notMarioMsgID;
-                    if (player->ShowMessage(*this, messageID, (Vector3 *)&messagePos, 0, 2) != 0) {
+                    if (player->ShowMessage(*this, messageID, &messagePos, 0, 2) != 0) {
                         if (isSpecial)
                             player->OpenBigDoor();
                         ChangeState(&ST_TALKING_TO_PLAYER, player);
@@ -283,14 +268,14 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
 /* -------------------------------------------------------------------------- */
 bool daStarGate_c::St_TalkingToPlayer_Init(daPly_c *) {
     func_02012694(0xb8, (const Vector3 *)(&mCamSpacePosX));
-    func_ov100_02145070(0x87);
+    daDoor_c::func_ov100_02145070(0x87);
     return true;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 bool daStarGate_c::St_TalkingToPlayer_Main(daPly_c *player) {
-    func_ov100_02145014();
+    daDoor_c::func_ov100_02145014();
     if (player->GetTalkState() == -1) {
         if (data_ov100_02148390[param1].numStars == 0x50) {
             TryOpenDoor(player);
@@ -338,7 +323,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
     Vector3 vec;
     int gy, gz, vd;
 
-    ready = func_ov100_02144fcc();
+    ready = daDoor_c::func_ov100_02144fcc();
     if (ApproachLinear(mHorzSpeed, mTerminalVelocity, 0x8000) != 0) {
         if (mTerminalVelocity != 0) {
             if (mCloseDoorTimer == 0) {
@@ -371,14 +356,14 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
     vec.x = vd;
     vec.z = gz;
     vec.y = gy;
-    Vec3_RotateYAndTranslate((Vector3 *)&mSpeedX, &data_020a0ebc, mAngleY, &vec);
+    Vec3_RotateYAndTranslate(&mSpeed, &data_020a0ebc, mAngleY, &vec);
     return true;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 bool daStarGate_c::St_StayClosed_Main(daPly_c *player) {
-    if (func_ov100_02144fcc())
+    if (daDoor_c::func_ov100_02144fcc())
         ChangeState(&ST_WAIT, player);
     return true;
 }

@@ -101,16 +101,16 @@ s32 daObj1UpLogo_c::Behavior() {
     if (mDelay != 0)
         return 1;
 
-    mVertSpeed += mVertAccel;
-    if (mVertSpeed < mTerminalVelocity)
-        mVertSpeed = mTerminalVelocity;
-    mPosY += mVertSpeed;
+    mSpeed.y += mVertAccel;
+    if (mSpeed.y < mTerminalVelocity)
+        mSpeed.y = mTerminalVelocity;
+    mPosY += mSpeed.y;
 
     switch (mState) {
     case 0:
         if (mPosY < mStartPos.y) {
             mPosY = mStartPos.y;
-            mVertSpeed = kBounceSpeed;
+            mSpeed.y = kBounceSpeed;
             mState++;
         }
         break;
@@ -154,7 +154,7 @@ s32 daObj1UpLogo_c::InitResources() {
     mStartPos.x = mPosX;
     mStartPos.y = mPosY;
     mStartPos.z = mPosZ;
-    mVertSpeed = kRiseSpeed;
+    mSpeed.y = kRiseSpeed;
     mVertAccel = kGravity;
     mTerminalVelocity = kTerminalSpeed;
     mDelay = 0;

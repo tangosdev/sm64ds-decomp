@@ -145,7 +145,6 @@ void ChangeMusicVolume(u32 a, int f);
 }
 extern unsigned short data_ov074_02122e04[];
 extern "C" int ApproachAngle(short *, short, int, int, int);
-void func_ov084_021296b0(void *a, void *b);
 extern "C" int __aeabi_idiv(int a, int b);
 extern "C" int AngleDiff(int a, int b);
 extern "C" int Math_Function_0203b14c(int* p, int a, int b, int d, int e);
@@ -186,8 +185,7 @@ extern SharedFilePtr *const sKurikingMinionAnimationFiles[7];
 extern SharedFilePtr *const sKurikingAnimationFiles[12];
 
 /* Intra-TU forward decls: calls run both ways across the file. */
-void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone);
-void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_);
+void func_ov074_02121270(Vector3 *, daKuriKing_c *, int);
 void func_ov074_021203e0(void);
 void func_ov074_021201ec(void);
 void func_ov074_0212007c(void);
@@ -284,9 +282,9 @@ void daKuriKing_c::LaunchVanishCopies() {
             int rv = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 8;
             t->mTimer = 48;
             t->mHorzSpeed = ((rv & 0xf) << 0xc) + 0x16000;
-            t->mSpeedX = 0;
-            t->mVertSpeed = ((rv & 0x1f) << 0xc) + 0x60000;
-            t->mSpeedZ = 0;
+            t->mSpeed.x = 0;
+            t->mSpeed.y = ((rv & 0x1f) << 0xc) + 0x60000;
+            t->mSpeed.z = 0;
             Vector3_16 pos = t->mPrevAngle;
             rv &= 0x1000;
             pos.y = (short)(pos.y + rv);
@@ -623,8 +621,7 @@ void daKuriKing_c::UpdateSummonGoombas() {
         return;
     if (DecIfAbove0_Short(&this->mTimer) != 0) return;
 
-    Vector3 pos;
-    func_ov074_0212087c((int*)&pos, this, this->mSpawnedCount);
+    Vector3 pos = this->func_ov074_0212087c(this->mSpawnedCount);
     Vector3 pp;
     pp.x = pos.x;
     pp.y = pos.y;
@@ -642,7 +639,7 @@ void daKuriKing_c::UpdateSummonGoombas() {
     v2.x = this->mSpawnPosX;
     v2.y = this->mSpawnPosY;
     v2.z = this->mSpawnPosZ;
-    func_ov084_021296b0(sp2, &v2);
+    sp2->func_ov084_021296b0(&v2);
 
     sp2->mMinionIndex = this->mSpawnedCount;
     /* Same pool-address increment as mSubState: 0x602 is not an ARM immediate. */
@@ -910,16 +907,18 @@ void daKuriKing_c::TurnIfPlayerBehind() {
     this->mDirection *= -1;
 }
 
-void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_) {
+Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
+    Vector3 result;
+    int *out = (int *)&result;
     int n;
 
     n = n_;
 
-    out[0] = self->mPosX;
-    out[1] = self->mPosY;
-    out[2] = self->mPosZ;
+    out[0] = mPosX;
+    out[1] = mPosY;
+    out[2] = mPosZ;
 
-    if ((int)self->ClosestPlayer()->param1 == 3) {
+    if ((int)ClosestPlayer()->param1 == 3) {
         int rem;
         int quo;
         int scale;
@@ -931,7 +930,7 @@ void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_) {
 
         rem = n % 3;
         quo = n / 3;
-        mode = self->mSizeIndex;
+        mode = mSizeIndex;
         if (mode == 3) {
             scale = 0x546000;
         } else if (mode == 2) {
@@ -940,10 +939,10 @@ void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_) {
             scale = quo * 0xb4000 + 0x438000;
         }
 
-        q = self->mScaleX / 0x1000;
+        q = mScaleX / 0x1000;
         sum = (s16)(q * 0x350 + 0x500) + (s16)(rem * 0x600);
-        prod = self->mDirection * sum;
-        diff = (self->mWalkAngle + self->mMaxWalkSpeed) - prod;
+        prod = mDirection * sum;
+        diff = (mWalkAngle + mMaxWalkSpeed) - prod;
         out[0] = FX_MUL(scale, FX_SinIdx((u16)(s16)diff >> 4));
         out[1] += 0x32000;
         out[2] = FX_MUL(scale, FX_CosIdx((u16)(s16)diff >> 4));
@@ -960,7 +959,7 @@ void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_) {
         int diff2;
 
         lim = 3;
-        if (self->mSizeIndex == 1)
+        if (mSizeIndex == 1)
             lim = 5;
 
         if (n < lim) {
@@ -975,15 +974,16 @@ void func_ov074_0212087c(int *out, daKuriKing_c *self, int n_) {
             scale2 = 0x4e2000 + (rem2 * 0x64 << 12);
         }
 
-        q2 = self->mScaleX / 0x1000;
+        q2 = mScaleX / 0x1000;
         sum2 = (s16)(q2 * 0x350 + 0x250) + (s16)(one * 0x600);
-        prod2 = self->mDirection * sum2;
+        prod2 = mDirection * sum2;
         prod3 = sign * prod2;
-        diff2 = (self->mWalkAngle + self->mWalkSpeed) - prod3;
+        diff2 = (mWalkAngle + mWalkSpeed) - prod3;
         out[0] = FX_MUL(scale2, FX_SinIdx((u16)(s16)diff2 >> 4));
         out[1] += 0x32000;
         out[2] = FX_MUL(scale2, FX_CosIdx((u16)(s16)diff2 >> 4));
     }
+    return result;
 }
 
 int daKuriKing_c::CalcWalkAnimSpeed() {
@@ -1731,7 +1731,7 @@ int daKuriKing_c::BehaviorVanish() {
         }
         this->mSubState++;
 
-        this->mVertSpeed = this->mHorzSpeed + 0xa000;
+        this->mSpeed.y = this->mHorzSpeed + 0xa000;
     }
 
     {

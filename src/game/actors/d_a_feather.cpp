@@ -98,7 +98,7 @@ int daFeather_c::InitResources() {
         mAngleY = gCamera->mAngleY + 0x4000;
     }
     mLifeTimer = 180;
-    mVertSpeed = 0x3000;
+    mSpeed.y = 0x3000;
     return 1;
 }
 

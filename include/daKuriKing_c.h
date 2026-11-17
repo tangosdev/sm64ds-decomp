@@ -170,6 +170,7 @@ struct daKuriKing_c : dEnemyBase_c {
     int RenderVanish();
     int BehaviorVanish();
     int InitVanishResources();
+    Vector3 func_ov074_0212087c(int n_);
 };
 
 #ifndef SM64DS_PLATFORM_PC

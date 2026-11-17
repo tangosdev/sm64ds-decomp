@@ -101,7 +101,7 @@ int daObjCtMecha09_c::Render() {
  * hold the beam still. Travel is clamped to [mStartPosY, mEndPosY]. */
 int daObjCtMecha09_c::Behavior() {
     u8 setting = data_0209f2c0;
-    mVertSpeed = mDirection * data_ov065_0211d520[setting];
+    mSpeed.y = mDirection * data_ov065_0211d520[setting];
 
     if (setting == 2) {
         if (DecIfAbove0_Short(&mLegTimer) == 0) {
@@ -113,7 +113,7 @@ int daObjCtMecha09_c::Behavior() {
             mLegTimer = (rnd % 6 + 1) * 30;
             mLegLength = mLegTimer;
         } else if (mLegTimer >= mLegLength - 5) {
-            mVertSpeed = 0;
+            mSpeed.y = 0;
         }
     }
 
@@ -165,7 +165,7 @@ int daObjCtMecha09_c::InitResources() {
             mEndPosY = mStartPosY + 0x1f4000;
     }
     mTerminalVelocity = -0x3c000;
-    mVertSpeed = 0x6000;
+    mSpeed.y = 0x6000;
     mDirection = 1;
 
     pos.x = mPosX;

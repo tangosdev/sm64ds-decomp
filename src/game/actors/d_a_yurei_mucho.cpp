@@ -196,16 +196,16 @@ int daYurei_Mucho_c::Behavior()
         }
     }
     {
-        /* Gravity, clamped at terminal velocity. mSpeedZ is read and written
+        /* Gravity, clamped at terminal velocity. mSpeed.z is read and written
            back unchanged -- the ROM really does reload and restore it here. */
-        int fallSpeed = mVertSpeed + mVertAccel;
+        int fallSpeed = mSpeed.y + mVertAccel;
         int clamped = mTerminalVelocity;
         if (fallSpeed >= clamped) {
             clamped = fallSpeed;
         }
-        int keep = mSpeedZ;
-        mVertSpeed = clamped;
-        mSpeedZ = keep;
+        int keep = mSpeed.z;
+        mSpeed.y = clamped;
+        mSpeed.z = keep;
     }
     if (mCurrentState != &data_ov065_0211d650) {
         int ang;
@@ -357,7 +357,7 @@ int daYurei_Mucho_c::UpdateIdle() {
 
     in.z = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MTX_MultVec43(&in, &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43(&in, &data_020a0e68, &mSpeed);
 
     if ((u16)mStateTimer == 0) {
         ChangeState(&data_ov065_0211d670);
@@ -383,9 +383,9 @@ int daYurei_Mucho_c::UpdateIdle() {
 /* -------------------------------------------------------------------------- */
 /* State entry hook at 0x0211d680 +0x00: stop the actor dead. */
 int daYurei_Mucho_c::EnterChase() {
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     return 1;
 }
 
@@ -413,16 +413,16 @@ int daYurei_Mucho_c::UpdateChase() {
         b.z = tmp.z;
         pitch = Vec3_VertAngle(&mPos, &b);
         if (Vec3_Dist(&mPos, &tmp) >= 0x1f4000) {
-            mSpeedX = 0;
-            mVertSpeed = 0;
-            mSpeedZ = 0;
+            mSpeed.x = 0;
+            mSpeed.y = 0;
+            mSpeed.z = 0;
         } else {
             v.z = 0;
             v.z = -0x1000;
             v.x = 0;
             v.y = 0;
             Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-            MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
+            MTX_MultVec43(&v, &data_020a0e68, &mSpeed);
         }
     } else {
         mStateTimer = pitch;
@@ -472,9 +472,9 @@ int daYurei_Mucho_c::UpdateShoot() {
                 Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
                 Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
                 MTX_MultVec43(&L.spv, &data_020a0e68, &L.sout);
-                shot->mSpeedX = L.sout.x;
-                shot->mVertSpeed = L.sout.y;
-                shot->mSpeedZ = L.sout.z;
+                shot->mSpeed.x = L.sout.x;
+                shot->mSpeed.y = L.sout.y;
+                shot->mSpeed.z = L.sout.z;
                 mShotCount += 1;
                 mStateTimer = 4;
             }
@@ -506,10 +506,10 @@ int daYurei_Mucho_c::UpdateShoot() {
 /* -------------------------------------------------------------------------- */
 /* State entry hook at 0x0211d660 +0x00: the bumped-from-below pop. */
 int daYurei_Mucho_c::EnterBumped() {
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
-    mVertSpeed = 0x32000;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
+    mSpeed.y = 0x32000;
     mVertAccel = -0x5000;
     mStateTimer = 10;
     mFlags = 0;

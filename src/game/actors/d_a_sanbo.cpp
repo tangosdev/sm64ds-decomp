@@ -251,16 +251,16 @@ int daSanbo_c::UpdateStackedBody() {
         mPosX = next->mPosX;
         mPosZ = mNextSegment->mPosZ;
 
-        vy = mVertSpeed - 0x2000;
+        vy = mSpeed.y - 0x2000;
         clamped = mTerminalVelocity;
         if (vy >= clamped)
             clamped = vy;
-        mVertSpeed = clamped;
-        mPosY += mVertSpeed;
+        mSpeed.y = clamped;
+        mPosY += mSpeed.y;
 
         if (mPosY < mNextSegment->mPosY + 0x6e000) {
             mPosY = mNextSegment->mPosY + 0x6e000;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
         }
 
         mAngleY = mNextSegment->mAngleY;
@@ -340,7 +340,7 @@ int daSanbo_c::EnterKnockback() {
     }
     UnlinkSegment();
     mPrevAngleY = Vec3_HorzAngle(&mHitActor->mPos, &mPos);
-    mVertSpeed = 0x14000;
+    mSpeed.y = 0x14000;
     if (mHitActor->param1 == 2)
         mHorzSpeed = 0x28000;
     else
@@ -447,7 +447,7 @@ int daSanbo_c::EnterMegaKill() {
     rnd = RandomIntInternal(&data_0209e650.value);
     mPrevAngleY = (mPrevAngleY + ((rnd & 0x7fff) - 0x4000));
     mAngleY = (mPrevAngleY + 0x8000);
-    mVertSpeed = 0x28000;
+    mSpeed.y = 0x28000;
     mHorzSpeed = 0xa000;
     mTimer = 45;
     Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
@@ -516,11 +516,11 @@ void daSanbo_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     if (clsn->IsOnGround()) {
         static_cast<dBgPi *>(clsn->GetFloorResult())->surface.CopyNormalTo(n0);
         if (n0.y != 0) {
-            int x = FX_MUL(n0.x, mSpeedX);
-            int z = FX_MUL(n0.z, mSpeedZ);
+            int x = FX_MUL(n0.x, mSpeed.x);
+            int z = FX_MUL(n0.z, mSpeed.z);
             int dot = x + z;
             int slope = FX_Div(dot, n0.y);
-            mVertSpeed = -(slope + 0x8000);
+            mSpeed.y = -(slope + 0x8000);
         }
     }
     if (clsn->IsOnWall()) {
@@ -630,13 +630,13 @@ void daSanbo_c::HandleAttacks() {
             if (state == 0) {
                 prev = mPrevSegment;
                 if (prev == 0) {
-                    if (mVertSpeed == 0) {
+                    if (mSpeed.y == 0) {
                         vv1.x = mPosX;
                         vv1.y = mPosY;
                         vv1.z = mPosZ;
                         player->Hurt(vv1, 2, 0xc000, 1, 0, 1);
                     }
-                } else if (mVertSpeed == 0 && prev->mVertSpeed == 0) {
+                } else if (mSpeed.y == 0 && prev->mSpeed.y == 0) {
                     vv2.x = mPosX;
                     vv2.y = mPosY;
                     vv2.z = mPosZ;
@@ -650,8 +650,7 @@ void daSanbo_c::HandleAttacks() {
                         vv3.z = mPosZ;
                         player->Hurt(vv3, 2, 0xc000, 1, 0, 1);
                     }
-                } else if (mWithMeshClsn.IsOnGround() != 0 &&
-                           mPrevSegment->mVertSpeed == 0) {
+                } else if (mWithMeshClsn.IsOnGround() != 0 && mPrevSegment->mSpeed.y == 0) {
                     vv4.x = mPosX;
                     vv4.y = mPosY;
                     vv4.z = mPosZ;

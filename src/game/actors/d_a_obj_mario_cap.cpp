@@ -478,7 +478,7 @@ int daObjMarioCap_c::InitResources()
 
 /* Per frame, for a cap with an icon: waits (dormant) while bit 1 of the
  * icon's flags is clear; when it comes on, the cap pops in -- scale reset to 0,
- * thrown up at 15 units a frame (mVertSpeed 0xf000), a puff of dust -- and
+ * thrown up at 15 units a frame (mSpeed.y 0xf000), a puff of dust -- and
  * scales up while it falls: the scale chases a target that starts at 2.0 and eases
  * down to 1.0, so it overshoots to about 1.25 before settling at 1.0. Then: the current
  * state's per-frame function, the render-matrix update, the model animation
@@ -497,7 +497,7 @@ int daObjMarioCap_c::Behavior()
             mDormant = 0;
             mPopScale = 0x2000;     /* 2.0 */
             mPopIn = 1;
-            mVertSpeed = 0xf000;    /* 15 units a frame, upward */
+            mSpeed.y = 0xf000; /* 15 units a frame, upward */
             SmallPoofDust();
         }
     }
@@ -916,7 +916,7 @@ int daObjMarioCap_c::InitSlide()
  * surface value to it), aimed along mSlopeAngle and scaled by the horizontal
  * length of the floor normal. That is added to the cap's own velocity
  * (mHorzSpeed along mPrevAngleY) and the sum becomes the new heading and
- * speed, capped at 0xf000 (15 units a frame). mVertSpeed is set from the floor
+ * speed, capped at 0xf000 (15 units a frame). mSpeed.y is set from the floor
  * normal and the words at 0x0a4 / 0x0ac, with 0x8000 (8 units a frame) of
  * extra downward bias, and mAngleX / mAngleZ move toward the floor's tilt
  * along and across mAngleY (UpdateAngle with arguments 4 and 0x1000). Returns 1. */
@@ -991,9 +991,9 @@ int daObjMarioCap_c::Slide()
     if (mHorzSpeed > 0xf000)
         mHorzSpeed = 0xf000;
     mPrevAngleY = ang;
-    mVertSpeed = -(
-        FX_Div(FX_MUL(mFloorNormal.x, mSpeedX) + FX_MUL(mFloorNormal.z, mSpeedZ), mFloorNormal.y) +
-        0x8000);
+    mSpeed.y = -(FX_Div(FX_MUL(mFloorNormal.x, mSpeed.x) + FX_MUL(mFloorNormal.z, mSpeed.z),
+                        mFloorNormal.y) +
+                 0x8000);
     pitch = func_02010844(&mFloorNormal, mAngleY);
     roll = func_02010844(&mFloorNormal, mAngleY - 0x4000);
     UpdateAngle(mAngleX, pitch, 4, 0x1000);
@@ -1011,9 +1011,9 @@ int daObjMarioCap_c::Slide()
  * starts the 150-frame removal timer and resets the scale to 1.0. Returns 1. */
 int daObjMarioCap_c::InitTaken()
 {
-    mSpeedX = 0;
-    mVertSpeed = 0;
-    mSpeedZ = 0;
+    mSpeed.x = 0;
+    mSpeed.y = 0;
+    mSpeed.z = 0;
     mVertAccel = 0;
     mTakenStep = 0;
     mBlinkHidden = 0;

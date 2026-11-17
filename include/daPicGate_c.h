@@ -57,7 +57,7 @@ struct daPicGate_c : dActor_c {
 
     Matrix4x3 mMtx;              /* 0x0d4 -- model-to-world */
     Matrix4x3 mInvMtx;           /* 0x104 -- its inverse */
-    s32 mWaveOrigin[3];          /* 0x134 -- x, y, 0 in cell space: BeginWave sets it,
+    Vector3 mWaveOrigin;         /* 0x134 -- x, y, 0 in cell space: BeginWave sets it,
                                     UpdateCellDistances measures each cell's dist from it */
     Vertex mCorners[4];          /* 0x140 */
     Vertex *mCells;              /* 0x1a0 -- mNumCells, from operator new[] */

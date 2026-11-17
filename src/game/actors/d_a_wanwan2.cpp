@@ -48,6 +48,11 @@
  *   include/decl_common.h declares them that way and check_decl_agreement
  *   compares the two. func_ov100_02143aa4 and func_ov100_02143ae0 are the
  *   state pair's members, called through ChompPmfSelf rather than as methods.
+ *   They stay free functions taking the chomp: the two PMF constants
+ *   (data_ov100_02147ff8, data_ov100_02148000) are defined here as static
+ *   {address, 0} pairs, and only a free function's address can initialize
+ *   one. A real `&daWanwan2_c::...` constant, here or in the state record,
+ *   makes mwcc copy it at run time (a 0x12c static initializer, not 0xf4).
  * - func_ov100_02143b68 reaches the link positions and the link models'
  *   translations through two raw char pointers that start at the chomp,
  *   and InitResources' link seeding loop does the same. Written as
@@ -203,7 +208,6 @@ daWanwan2_c::~daWanwan2_c()
 /* The floor probe: a vertical line from 10 units above the chomp (0xa000) to
    184 units below it (0xb8000). Returns 1 on a hit. */
 int daWanwan2_c::func_ov100_02143370() {
-    daWanwan2_c *c = this;
     Vector3 va;
     Vector3 vb;
     int ya, yb;
@@ -211,17 +215,17 @@ int daWanwan2_c::func_ov100_02143370() {
     dBgCh_Lin line2;
     va.x = 0; va.y = 0; va.z = 0;
     vb.x = 0; vb.y = 0; vb.z = 0;
-    va.x = c->mPosX;
-    ya = c->mPosY;
+    va.x = mPosX;
+    ya = mPosY;
     va.y = ya;
-    va.z = c->mPosZ;
-    vb.x = c->mPosX;
-    yb = c->mPosY;
+    va.z = mPosZ;
+    vb.x = mPosX;
+    yb = mPosY;
     vb.y = yb;
-    vb.z = c->mPosZ;
+    vb.z = mPosZ;
     va.y = ya + 0xa000;
     vb.y = yb - 0xb8000;
-    line1.SetObjAndLine(va, vb, (dActor_c *)c);
+    line1.SetObjAndLine(va, vb, (dActor_c *)this);
     if (line1.DetectClsn()) {
         return 1;
     }
@@ -239,7 +243,7 @@ int daWanwan2_c::func_ov100_02143370() {
    source; its `enum Bool` comparison temporaries are kept. */
 enum Bool { FALSE, TRUE };
 
-void func_ov100_0214344c(daWanwan2_c *self) {
+void daWanwan2_c::func_ov100_0214344c() {
     Vector3 v;
     daPly_c *other;
 
@@ -249,34 +253,34 @@ void func_ov100_0214344c(daWanwan2_c *self) {
     v.x = data_ov100_02148008[0];
     v.y = data_ov100_02148008[1];
     v.z = data_ov100_02148008[2];
-    self->mdCcAcPos_c.SetPosRelativeToActor(v);
-    id = self->mdCcAcPos_c.otherOwner;
+    this->mdCcAcPos_c.SetPosRelativeToActor(v);
+    id = this->mdCcAcPos_c.otherOwner;
     if (id == 0) return;
     other = static_cast<daPly_c *>(dActor_c::FindWithID(id));
     if (other == 0) return;
-    flags = self->mdCcAcPos_c.hitFlags;
+    flags = this->mdCcAcPos_c.hitFlags;
     if (flags & daWanwan2_HIT_EXPLOSION) {
-        self->mHaltTimer = 90;
-        self->mScaleX = 0x2000;     /* 2.0 */
-        self->mScaleY = self->mScaleX;
-        self->mScaleZ = self->mScaleY;
+        this->mHaltTimer = 90;
+        this->mScaleX = 0x2000; /* 2.0 */
+        this->mScaleY = this->mScaleX;
+        this->mScaleZ = this->mScaleY;
         return;
     }
     if (flags & daWanwan2_HIT_MEGA) {
-        self->mHaltTimer = 90;
-        self->mScaleX = 0x2000;     /* 2.0 */
-        self->mScaleY = self->mScaleX;
-        self->mScaleZ = self->mScaleY;
+        this->mHaltTimer = 90;
+        this->mScaleX = 0x2000; /* 2.0 */
+        this->mScaleY = this->mScaleX;
+        this->mScaleZ = this->mScaleY;
         return;
     }
 
     {
         enum Bool b = (enum Bool)(other->actorID == daWanwan2_ACTOR_YOSHI_EGG);
         if (b != FALSE && (flags & daWanwan2_HIT_EGG)) {
-            self->mHaltTimer = 90;
-            self->mScaleX = 0x2000;     /* 2.0 */
-            self->mScaleY = self->mScaleX;
-            self->mScaleZ = self->mScaleY;
+            this->mHaltTimer = 90;
+            this->mScaleX = 0x2000; /* 2.0 */
+            this->mScaleY = this->mScaleX;
+            this->mScaleZ = this->mScaleY;
             return;
         }
     }
@@ -288,9 +292,9 @@ void func_ov100_0214344c(daWanwan2_c *self) {
         return;
     {
         Vector3 pos;
-        pos.x = self->mPosX;
-        pos.y = self->mPosY;
-        pos.z = self->mPosZ;
+        pos.x = this->mPosX;
+        pos.y = this->mPosY;
+        pos.z = this->mPosZ;
         other->Hurt(pos, 2, 0xc000, 1, 0, 1);
     }
 }
@@ -304,53 +308,56 @@ void func_ov100_0214344c(daWanwan2_c *self) {
    frame until it is gone or its +0x440 word (daStar_c's unk_440) reads 5;
    either latches mChainEndDone, clears mChainEndActorID and stops the
    updates. */
-void func_ov100_021435e8(daWanwan2_c *c) {
-    if (c->mChainEndDone != 0) return;
+void daWanwan2_c::func_ov100_021435e8() {
+    if (this->mChainEndDone != 0)
+        return;
 
     int flag = (gGameMode == 1);
     if (!flag) {
-        if (c->mChainEndActorID == 0) {
-            dActor_c *a = dActor_c::Spawn(daWanwan2_ACTOR_SILVER_STAR, 0,
-                c->mLinkPos[5], 0, c->mAreaId, -1);
-            if (a != 0) c->mChainEndActorID = a->uniqueID;
+        if (this->mChainEndActorID == 0) {
+            dActor_c *a = dActor_c::Spawn(daWanwan2_ACTOR_SILVER_STAR, 0, this->mLinkPos[5], 0,
+                                          this->mAreaId, -1);
+            if (a != 0)
+                this->mChainEndActorID = a->uniqueID;
         } else {
-            dActor_c *a = dActor_c::FindWithID(c->mChainEndActorID);
+            dActor_c *a = dActor_c::FindWithID(this->mChainEndActorID);
             if (a != 0) {
                 if (((daStar_c *)a)->unk_440 == 5) {
-                    c->mChainEndDone = 1;
-                    c->mChainEndActorID = 0;
+                    this->mChainEndDone = 1;
+                    this->mChainEndActorID = 0;
                     return;
                 }
-                a->mPosX = c->mLinkPos[5].x;
-                a->mPosY = c->mLinkPos[5].y;
-                a->mPosZ = c->mLinkPos[5].z;
+                a->mPosX = this->mLinkPos[5].x;
+                a->mPosY = this->mLinkPos[5].y;
+                a->mPosZ = this->mLinkPos[5].z;
                 return;
             }
-            c->mChainEndDone = 1;
-            c->mChainEndActorID = 0;
+            this->mChainEndDone = 1;
+            this->mChainEndActorID = 0;
         }
     } else {
-        if (c->mChainEndActorID == 0) {
-            dActor_c *a = dActor_c::Spawn(daWanwan2_ACTOR_STAR, c->mSpawnParam | 0x30,
-                c->mLinkPos[5], 0, c->mAreaId, -1);
-            if (a != 0) c->mChainEndActorID = a->uniqueID;
-            dActor_c::Spawn(daWanwan2_ACTOR_STARBASE, c->mSpawnParam | 0x30,
-                c->mLinkPos[5], 0, c->mAreaId, -1);
+        if (this->mChainEndActorID == 0) {
+            dActor_c *a = dActor_c::Spawn(daWanwan2_ACTOR_STAR, this->mSpawnParam | 0x30,
+                                          this->mLinkPos[5], 0, this->mAreaId, -1);
+            if (a != 0)
+                this->mChainEndActorID = a->uniqueID;
+            dActor_c::Spawn(daWanwan2_ACTOR_STARBASE, this->mSpawnParam | 0x30, this->mLinkPos[5],
+                            0, this->mAreaId, -1);
         } else {
-            dActor_c *a = dActor_c::FindWithID(c->mChainEndActorID);
+            dActor_c *a = dActor_c::FindWithID(this->mChainEndActorID);
             if (a != 0) {
                 if (((daStar_c *)a)->unk_440 == 5) {
-                    c->mChainEndDone = 1;
-                    c->mChainEndActorID = 0;
+                    this->mChainEndDone = 1;
+                    this->mChainEndActorID = 0;
                     return;
                 }
-                a->mPosX = c->mLinkPos[5].x;
-                a->mPosY = c->mLinkPos[5].y;
-                a->mPosZ = c->mLinkPos[5].z;
+                a->mPosX = this->mLinkPos[5].x;
+                a->mPosY = this->mLinkPos[5].y;
+                a->mPosZ = this->mLinkPos[5].z;
                 return;
             }
-            c->mChainEndDone = 1;
-            c->mChainEndActorID = 0;
+            this->mChainEndDone = 1;
+            this->mChainEndActorID = 0;
         }
     }
 }
@@ -376,7 +383,7 @@ void func_ov100_021435e8(daWanwan2_c *c) {
    bound ended up more than 200 units above it. Was a C source; the
    materialised mChainTimer address and the `added` copy are the shapes the ROM
    carries. */
-void func_ov100_021437d4(daWanwan2_c *thisx) {
+void daWanwan2_c::func_ov100_021437d4() {
     Vector3 in, out, cur, delta, added, v48, v54, v60;
     Vector3 *pos, *vel, *src;
     int *heights;
@@ -384,16 +391,16 @@ void func_ov100_021437d4(daWanwan2_c *thisx) {
     int angOff;
     int idx, val, ang, hlen, angz;
 
-    pos = thisx->mLinkPos;
-    vel = thisx->mLinkVel;
-    heights = thisx->mLinkMinY;
+    pos = this->mLinkPos;
+    vel = this->mLinkVel;
+    heights = this->mLinkMinY;
 
     in.z = -0xfa000; in.x = 0; in.y = 0;    /* 250 units behind */
     out.x = 0; out.y = 0; out.z = 0;
 
-    Matrix4x3_FromRotationXYZExt(&data_020a0e68, thisx->mAngleX, thisx->mAngleY, thisx->mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&data_020a0e68, this->mAngleX, this->mAngleY, this->mAngleZ);
     MTX_MultVec43(&in, &data_020a0e68, &out);
-    Vec3_Add(&added, &thisx->mPos, &out);
+    Vec3_Add(&added, &this->mPos, &out);
 
     {
         int ax = added.x, ay = added.y, az = added.z;
@@ -401,14 +408,14 @@ void func_ov100_021437d4(daWanwan2_c *thisx) {
         int zin;
         loop = 0;
         cur.x = ax; cur.y = ay; cur.z = az;
-        thisx->mLinkPos[0].x = ax;
+        this->mLinkPos[0].x = ax;
         ay = cur.y;
-        p6a0 = &thisx->mChainTimer;
-        thisx->mLinkPos[0].y = ay;
+        p6a0 = &this->mChainTimer;
+        this->mLinkPos[0].y = ay;
         {
             int cz = cur.z;
             zin = 0x32000;     /* 50 units between links */
-            thisx->mLinkPos[0].z = cz;
+            this->mLinkPos[0].z = cz;
             {
                 int c = *p6a0;
                 *p6a0 = c + 1;
@@ -428,7 +435,7 @@ void func_ov100_021437d4(daWanwan2_c *thisx) {
         delta.x = vel->x + (pos->x - src->x);
         delta.z = vel->z + (pos->z - src->z);
         val = (pos->y + vel->y) - 0x2000 /* 2 units down */
-              + FX_MUL(FX_SinIdx((u16)(s16)(angOff + (thisx->mChainTimer << 12)) >> 4), -0xa000);
+              + FX_MUL(FX_SinIdx((u16)(s16)(angOff + (this->mChainTimer << 12)) >> 4), -0xa000);
         if (val <= *heights) val = *heights;
         delta.y = val - src->y;
         ang = cstd::atan2(delta.x, delta.z);
@@ -443,7 +450,7 @@ void func_ov100_021437d4(daWanwan2_c *thisx) {
         Vec3_Sub(&v54, pos, vel);
         Vec3_MulScalar(&v60, &v54, 0xbb8);
         vel->x = v60.x; vel->y = v60.y; vel->z = v60.z;
-        *heights = thisx->mPosY - 0xc8000;     /* 200 units below the chomp */
+        *heights = this->mPosY - 0xc8000; /* 200 units below the chomp */
         if (*heights - pos->y > 0xc8000) *heights = pos->y;
         angOff += 0x2000;
         vel++;
@@ -463,9 +470,9 @@ void func_ov100_021437d4(daWanwan2_c *thisx) {
 int func_ov100_02143aa4(daWanwan2_c *c) {
     c->mAnmModel.speed = 0x1000; /* 1.0 */
     c->mAnmModel.Advance();
-    func_ov100_021437d4(c);
-    func_ov100_0214344c(c);
-    func_ov100_021435e8(c);
+    c->func_ov100_021437d4();
+    c->func_ov100_0214344c();
+    c->func_ov100_021435e8();
     return 1;
 }
 
@@ -480,7 +487,8 @@ int func_ov100_02143ae0(daWanwan2_c *c) {
 /* -------------------------------------------------------------------------- */
 /* Enter a state: store the pair in mStatePair (+0x668) and call its enter
    member, if it has one. */
-int func_ov100_02143b18(ChompPmfSelf *c, ChompState *p) {
+int daWanwan2_c::func_ov100_02143b18(ChompState *p) {
+    ChompPmfSelf *c = (ChompPmfSelf *)this;
     c->state = p;
     ChompState *q = c->state;
     if (q->enter == 0) return 1;
@@ -494,24 +502,23 @@ int func_ov100_02143b18(ChompPmfSelf *c, ChompState *p) {
    link's position (mLinkPos >> 3) and a smaller drop shadow (radius 120
    units, depth 500 units). */
 void daWanwan2_c::func_ov100_02143b68() {
-    daWanwan2_c *c = this;
     Mtx43 tmp;
     int i;
     dExtSimpleModel_c *mdst;
-    Matrix4x3_FromRotationXYZExt(&c->mAnmModel.mat4x3, c->mAngleX, c->mAngleY, c->mAngleZ);
-    c->mAnmModel.mat4x3.t.x = c->mPosX >> 3;
-    c->mAnmModel.mat4x3.t.y = c->mPosY >> 3;
-    c->mAnmModel.mat4x3.t.z = c->mPosZ >> 3;
-    c->DropShadowRadHeight(c->mShadowModel, c->mAnmModel.mat4x3, 0x15e000, 0x1f4000, 0xf);
+    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mAnmModel.mat4x3.t.x = mPosX >> 3;
+    mAnmModel.mat4x3.t.y = mPosY >> 3;
+    mAnmModel.mat4x3.t.z = mPosZ >> 3;
+    DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000, 0x1f4000, 0xf);
     tmp = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     i = 0;
-    mdst = c->mModels;
+    mdst = mModels;
     for (; i < daWanwan2_NUM_LINKS; i++) {
         *(Mtx43 *)&mdst->mat4x3 = tmp;
-        c->mModels[i].mat4x3.t.x = c->mLinkPos[i].x >> 3;
-        c->mModels[i].mat4x3.t.y = c->mLinkPos[i].y >> 3;
-        c->mModels[i].mat4x3.t.z = c->mLinkPos[i].z >> 3;
-        c->DropShadowRadHeight(c->mShadowModels[i], mdst->mat4x3, 0x78000, 0x1f4000, 0xf);
+        mModels[i].mat4x3.t.x = mLinkPos[i].x >> 3;
+        mModels[i].mat4x3.t.y = mLinkPos[i].y >> 3;
+        mModels[i].mat4x3.t.z = mLinkPos[i].z >> 3;
+        DropShadowRadHeight(mShadowModels[i], mdst->mat4x3, 0x78000, 0x1f4000, 0xf);
         mdst++;
     }
 }
@@ -558,8 +565,8 @@ int daWanwan2_c::Render()
    units/frame (0x14000) and kicks up landing dust. Every 200 frames
    (mCoinTimer) in game mode 1 (gGameMode is 1) it spawns a COIN at its
    position, its mPrevAngleY set to 0x10000 / mPathNodeIndex (truncated to 16
-   bits; this divides by zero if the index has wrapped to 0), its mVertSpeed to
-   4 units/frame and its mSpeedX and mSpeedZ to 0, playing SND_COIN_SPAWN
+   bits; this divides by zero if the index has wrapped to 0), its mSpeed.y to
+   4 units/frame and its mSpeed.x and mSpeed.z to 0, playing SND_COIN_SPAWN
    (unless unk_6a8 is nonzero; played even if Spawn returned no actor). It then turns
    toward the path node mPathNodeIndex: when it is closer than 400 units
    (0x190000) the index advances (back to 0 at mNumPathNodes) and the next
@@ -602,7 +609,7 @@ int daWanwan2_c::Behavior()
         if (unk_6a8 == 0) {
             func_02012694(daWanwan2_SND_FLOOR_HIT, &mCamSpacePos);
         }
-        mVertSpeed = 0x14000;
+        mSpeed.y = 0x14000;
         HugeLandingDust(true);
     }
 
@@ -610,8 +617,7 @@ int daWanwan2_c::Behavior()
     if (flag != 0 && mCoinTimer == 0) {
         int q16 = 0x10000 / mPathNodeIndex;
         short spd = (short)q16;
-        dActor_c *pl = ClosestPlayer();
-        (void)pl;
+        ClosestPlayer();
 
         Vector3 v(0, 4, 0);
 
@@ -626,9 +632,9 @@ int daWanwan2_c::Behavior()
             sp->mPrevAngleZ = 0;
             int vx = v.x;
             int vy = v.y;
-            sp->mSpeedX = vx << 12;
-            sp->mVertSpeed = vy << 12;
-            sp->mSpeedZ = vx << 12;
+            sp->mSpeed.x = vx << 12;
+            sp->mSpeed.y = vy << 12;
+            sp->mSpeed.z = vx << 12;
         }
         mCoinTimer = 200;
     }
@@ -769,7 +775,7 @@ int daWanwan2_c::InitResources()
     mScaleZ = 0x1000;
 
     /* Start in the walking state. */
-    func_ov100_02143b18((ChompPmfSelf *)this, &data_ov100_021486f4);
+    this->func_ov100_02143b18(&data_ov100_021486f4);
     return 1;
 }
 

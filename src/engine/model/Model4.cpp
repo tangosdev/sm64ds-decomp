@@ -11,6 +11,7 @@
  */
 
 #include "dExtSimpleModel_c.h"
+#include "Dst.h"
 #include "nitro/gx/g3x.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_load.h"
@@ -172,27 +173,18 @@ typedef struct Desc {
     int f30;
 } Desc;
 
-typedef struct Dst {
-    Desc *f0;
-    ElemA *f4;
-    ElemB *f8;
-    ElemA *fc;
-    int f10;
-} Dst;
-
-void func_020462d0(Dst *d, Desc *h, ElemA *arr)
-{
+void RuntimeModel::func_020462d0(Desc *h, ElemA *arr) {
     u32 i;
     ElemA *p;
     SrcB *s2;
     ElemB *e2;
 
     p = arr;
-    d->f0 = h;
-    d->f10 = 0;
-    d->fc = p;
+    this->f0 = h;
+    this->f10 = 0;
+    this->fc = p;
     p += h->f4 + h->f30;
-    d->f4 = p;
+    this->f4 = p;
     p += h->f24;
     for (i = 0; i < h->f24; i++) {
         SrcA *s;
@@ -201,7 +193,7 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
         int idx2;
         int c1;
         s = &h->f28[i];
-        e = &d->f4[i];
+        e = &this->f4[i];
         e->f0 = s->f4;
         e->f4 = s->f8;
         c1 = h->f28[i].f4;
@@ -231,10 +223,10 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
         e->f14 = s->f18;
         e->f18 = s->f1c;
     }
-    d->f8 = (ElemB *)p;
+    this->f8 = (ElemB *)p;
     for (i = 0; i < h->f4; i++) {
         s2 = &h->f8[i];
-        e2 = &d->f8[i];
+        e2 = &this->f8[i];
         e2->f18 = 0;
         if (s2->f10 != 0x1000)
             e2->f18 |= 1;

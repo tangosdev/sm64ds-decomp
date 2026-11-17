@@ -169,7 +169,7 @@ extern daC_Jugem_c::StateFn data_ov085_02130284;
 extern daC_Jugem_c::StateFn data_ov085_0213029c;
 extern daC_Jugem_c::StateFn data_ov085_02130274;
 }
-void func_0201f32c(int a);
+#include "Message.h"
 
 #pragma defer_codegen off
 
@@ -204,9 +204,9 @@ int daC_Jugem_c::StateIntroMain() {
             mHorzSpeed = 0;
             mTimer = 0;
             mAuxCounter = 0;
-            mSpeedX = 0;
-            mVertSpeed = 0;
-            mSpeedZ = 0;
+            mSpeed.x = 0;
+            mSpeed.y = 0;
+            mSpeed.z = 0;
             mAngleX = 0;
             daPly_c *player = ClosestPlayer();
             if (player != 0) {
@@ -361,7 +361,7 @@ int daC_Jugem_c::StateGuideMain()
     mTimer += 1;
     switch (mTimer) {
     case 1:
-        func_0201f32c(2);
+        Message::func_0201f32c(2);
         break;
     case 20:
         func_ov002_020c3f2c(p);
@@ -370,7 +370,7 @@ int daC_Jugem_c::StateGuideMain()
         data_0209d66c = 1;
         break;
     case 140:
-        func_0201f32c(3);
+        Message::func_0201f32c(3);
         break;
     case 238:
         data_0209d66c = 1;
@@ -470,7 +470,7 @@ int daC_Jugem_c::StateArriveMain()
         p->mMuteSleepVoice = 1;
         break;
     case 120:
-        func_0201f32c(1);
+        Message::func_0201f32c(1);
         break;
     case 130:
         p->mMuteSleepVoice = 0;

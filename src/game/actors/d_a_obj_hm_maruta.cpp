@@ -73,9 +73,6 @@ extern "C" {
  * reaches them with the pooled `ldr ip,[pc]; bx ip` tail call. long_calls is
  * positional and binds at the declaration; closed again straight after. */
 #pragma long_calls on
-int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
-int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
-int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
 #pragma long_calls off
 }
 
@@ -97,17 +94,17 @@ daObjHmMaruta_c *daObjHmMaruta_c_classInit() {
 
 /* Vtable slot 0. */
 int daObjHmMaruta_c::InitResources() {
-    return func_ov080_021274ac(this, &data_ov030_02115a04);
+    return this->func_ov080_021274ac(&data_ov030_02115a04);
 }
 
 /* Vtable slot 6. The word handed over reads 0x412000 on the cartridge. */
 int daObjHmMaruta_c::Behavior() {
-    return func_ov080_0212714c(this, &data_ov030_021159f4);
+    return this->func_ov080_0212714c(&data_ov030_021159f4);
 }
 
 /* Vtable slot 3. */
 int daObjHmMaruta_c::CleanupResources() {
-    return func_ov080_021270dc(this, &data_ov030_02115a04);
+    return this->func_ov080_021270dc(&data_ov030_02115a04);
 }
 
 /* Retail construction order: model 1562, then collision 1563.

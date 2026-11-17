@@ -38,6 +38,8 @@ enum { daWanwan2_NUM_LINKS = 6 };
  * UnchainedChomp_Spawn) constructs it for the WANWAN2
  * registry profile.
  */
+struct ChompState;
+
 struct daWanwan2_c : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c;  /* 0x110 */
     dBgCh_Actr        mWithMeshClsn;      /* 0x150 */
@@ -114,6 +116,10 @@ struct daWanwan2_c : dEnemyBase_c {
     int Render();
     int func_ov100_02143370();
     void func_ov100_02143b68();
+    void func_ov100_0214344c();
+    void func_ov100_021435e8();
+    void func_ov100_021437d4();
+    int func_ov100_02143b18(ChompState *p);
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -1,20 +1,5 @@
 {
   "known": {
-    "pmf_Dealer_StateDeal_2": {
-      "src/minigames/unit020bfec0.cpp": [
-        "return:Dealer::StateFn"
-      ]
-    },
-    "pmf_Dealer_StateReveal": {
-      "src/minigames/unit020bfec0.cpp": [
-        "return:Dealer::StateFn"
-      ]
-    },
-    "pmf_MascotWalker_StateWalk_2": {
-      "src/minigames/unit020bfec0.cpp": [
-        "return:MascotWalker::StateFn"
-      ]
-    },
     "__global_destructor_chain": {
       "src/__register_global_object.c": [
         "return:DestructorChain *"

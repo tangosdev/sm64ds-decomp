@@ -744,10 +744,12 @@ extern int func_01ff99a4(int a, int b);
 extern int func_01ffa4bc(int a);
 }
 
+#include "Message.h"
+#include "BgChEvt.h"
+
 extern void func_0201628c(int a, int b);
 extern void func_020162a4(int a, int b);
 extern void func_020167a4(struct dExtAnmModel_c *p);
-extern "C" void func_0201fc88(s16);
 extern "C" {
 extern void func_02020388(int playerNo);
 }
@@ -757,14 +759,8 @@ extern "C" void *func_0203564c(void *);
 extern void func_02035798(dBgCh_Actr *, int);
 extern "C" int func_02037e20(int *);
 extern "C" void func_0203db0c(int idx, unsigned short val);
-extern void func_ov002_020ed63c(daYegg_c *, int);
-extern int func_ov002_020eea84(dBgCh_Actr *, dActor_c *);
-extern int func_ov002_020eeeb8(void *, char *);
-extern int func_ov002_020ef070(void *, char *);
 extern int func_ov002_020f035c(unsigned int sel, int r1);
-extern int func_ov100_02144fcc(void);
-extern int func_ov100_02145014(void);
-extern void func_ov100_02145070(int);
+#include "daDoor_c.h"
 extern "C" int GiveHealth(int, int);
 extern "C" void GiveLives(int);
 extern "C" {
@@ -923,7 +919,6 @@ extern SharedFilePtr data_ov002_0210eca8;
 extern SharedFilePtr data_ov002_0210ecb8;
 }
 
-extern int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player);
 extern int func_ov002_020f030c(int sel);
 extern "C" {
 extern void func_ov002_020d7430(daPly_c &player);
@@ -957,8 +952,6 @@ extern int data_0209f32c;
 }
 
 extern void func_02035860(dBgCh_Actr *, const Vector3 *);
-extern int func_ov002_020edca4(daYegg_c *);
-extern void func_ov002_020eedc0(dBgCh_Actr *, dActor_c *);
 extern "C" {
 extern u8 gMeterShownHealth;
 extern unsigned char gShowRaceTimer[];
@@ -1516,7 +1509,7 @@ int daPly_c::func_ov002_020bd250(unsigned char *params, int beginFrame, int endF
     v.y = out1.y;
     v.z = out1.z;
     this->Hurt(v, 0, 0xc000, 1, 0, 1);
-    this->mVertSpeed = 0x20000;
+    this->mSpeed.y = 0x20000;
     this->mHorzSpeed = 0xc000;
     if (param1 == 1) {
         off2.x = 0;
@@ -1536,7 +1529,7 @@ int daPly_c::func_ov002_020bd354(unsigned char *params, int beginFrame, int endF
         if (this->mPowerupTimer == 0)
             this->mPowerupTimer = 408;
     }
-    this->mVertSpeed = -0x20000;
+    this->mSpeed.y = -0x20000;
     this->mPeakY = this->mPosY;
     return 1;
 }
@@ -1794,7 +1787,7 @@ void daPly_c::func_ov002_020bdc18() {
     for (i = 0; i < 5; i++) {
         dActor_c **a = mHeldObjQueue;
         if (a[i] != 0) {
-            func_ov002_020edca4((daYegg_c *)a[i]);
+            ((daYegg_c *)a[i])->func_ov002_020edca4();
             a = mHeldObjQueue;
             a[i] = 0;
         }
@@ -2468,7 +2461,7 @@ int daPly_c::func_ov002_020bf27c(int value) {
 void daPly_c::SetVertSpeedByCharFactor(fx32 speed) {
     void *c = this;
     unsigned int factor = data_ov002_020ff140[param1];
-    this->mVertSpeed = FX_MUL(speed, (int)factor);
+    this->mSpeed.y = FX_MUL(speed, (int)factor);
 }
 
 fx32 daPly_c::ScaleByCharFactor(fx32 a) {
@@ -3214,7 +3207,8 @@ int daPly_c::func_ov002_020c0d90(int y) {
     }
 
     if (((y - 0x64000) >> 12) < (this->mPosY >> 12)) return 0;
-    if (this->mVertSpeed > 0) return 0;
+    if (this->mSpeed.y > 0)
+        return 0;
 
     if (this->mIsBalloon != 0 || (this->IsState(data_ov002_021102d4) && this->mStateStep < 2) || this->mIsUnderwater != 0 || this->IsState(data_ov002_021106ac) || this->IsState(data_ov002_021106c4) || this->IsState(data_ov002_021102a4)) {
         return 0;
@@ -3612,7 +3606,7 @@ int daPly_c::func_ov002_020c1c84(int arg) {
     if (this->mHorzSpeed < 0x3000)
         return 0;
 
-    if (this->mVertSpeed > 0)
+    if (this->mSpeed.y > 0)
         return 0;
 
     a = arg + 0x8000;
@@ -3697,7 +3691,7 @@ int daPly_c::func_ov002_020c200c(int arg) {
             return 0;
 
         if (this->IsBeingShotOutOfCannon())
-            func_ov002_020eedc0(&mMeshClsn, this);
+            ((BgChEvt *)&mMeshClsn)->func_ov002_020eedc0(this);
     } else {
         return 0;
     }
@@ -3849,7 +3843,7 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
 
     mMeshClsn.ClearLimMovFlag();
 
-    if (c->IsState(data_ov002_021100f4) && mVertSpeed > 0)
+    if (c->IsState(data_ov002_021100f4) && mSpeed.y > 0)
         mMeshClsn.SetLimMovFlag();
 
     mMeshClsn.ClearFlag800();
@@ -3860,9 +3854,9 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
     func_020383e4(&mMeshClsn);
 
     if (mIsMega)
-        func_ov002_020eed24(&mMeshClsn, c);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020eed24(c);
 
-    if (mVertSpeed > 0x1e000)
+    if (mSpeed.y > 0x1e000)
         mMeshClsn.ClearGroundFlag();
 
     if (mMeshClsn.IsOnGround())
@@ -3890,10 +3884,10 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
         if (mIsUnderwater == 0 && ret != 1) {
             fr->surface.CopyNormalTo(v);
             if (v.y != 0) {
-                int t = FX_Div(FX_MUL(v.x, mSpeedX) + FX_MUL(v.z, mSpeedZ), v.y);
+                int t = FX_Div(FX_MUL(v.x, mSpeed.x) + FX_MUL(v.z, mSpeed.z), v.y);
                 t = -(t + 0x8000);
                 if (t < 0)
-                    mVertSpeed = t;
+                    mSpeed.y = t;
             }
         }
         mIsAirborne = 0;
@@ -3903,8 +3897,8 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
             mPeakY = mPosY;
         mIsAirborne = 1;
         mLandSoundPlayed = 0;
-        if (func_02035638((unsigned char *)&mMeshClsn) && mVertSpeed > 0)
-            mVertSpeed = -0x1000;
+        if (func_02035638((unsigned char *)&mMeshClsn) && mSpeed.y > 0)
+            mSpeed.y = -0x1000;
         func_ov002_020cef84();
     }
 
@@ -3948,7 +3942,8 @@ void daPly_c::func_ov002_020c29d4() {
         if (this->mHorzSpeed >= ScaleByCharFactor(0x28000)) {
             if (this->IsState(data_ov002_0211013c)) {
                 mQuicksandRunTimer = 30;
-            } else if (this->IsState(data_ov002_021101b4) && this->mVertSpeed < 0 && (this->mPeakY - this->mPosY) < 0x64000) {
+            } else if (this->IsState(data_ov002_021101b4) && this->mSpeed.y < 0 &&
+                       (this->mPeakY - this->mPosY) < 0x64000) {
                 mQuicksandRunTimer = 30;
             }
         }
@@ -4090,7 +4085,7 @@ void daPly_c::func_ov002_020c2db8() {
     func_ov002_020c0fb4();
     func_ov002_020c5d60();
     func_ov002_020c61ac();
-    func_ov002_020eea84(&mMeshClsn, this);
+    ((BgChEvt *)&mMeshClsn)->func_ov002_020eea84(this);
     func_ov002_020c2b08();
     func_ov002_020c29d4();
 }
@@ -4400,7 +4395,7 @@ void daPly_c::JumboStarCutsceneFalling() {
         mRootMotionMode = 3;
         mSkipGroundUpdate = 1;
         mIsBodyClsnEnabled = 0;
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
         this->mVertAccel = 0;
         this->mPosY = 0x15e000;
     }
@@ -4580,7 +4575,7 @@ int daPly_c::St_Respawn_Init() {
     mStateStep = 0;
     mPeakY = mPosY;
     mHorzSpeed = 0;
-    mVertSpeed = mHorzSpeed;
+    mSpeed.y = mHorzSpeed;
     mVertAccel = 0;
     mStateTimer = 10;
     return 1;
@@ -4589,7 +4584,6 @@ int daPly_c::St_Respawn_Init() {
 int daPly_c::func_ov002_020c4188() {
     extern int *gCamera;
     extern int gNextActorUpdateMask;
-    extern void func_0201f32c(int arg0);
     int *p;
 
     if (mEventId == 0) {
@@ -4625,7 +4619,7 @@ int daPly_c::func_ov002_020c4188() {
             mEventWait--;
             break;
         }
-        func_0201f32c(data_ov002_020ff26c[mEventId - 1]);
+        Message::func_0201f32c(data_ov002_020ff26c[mEventId - 1]);
         if (mEventId == 6) {
             mAttachedActor = SpawnSoundObj(5);
         }
@@ -4747,8 +4741,8 @@ cont:
             static Vector3 sLevelIntroOff(0, 0x96000, 0x64000);
             Vec3_RotateYAndTranslate(&pos, &mPos, this->mAngleY, &sLevelIntroOff);
             this->ShowMessage(*this, 0x177, &pos, 2, 2);
-            func_ov100_02145070(0x1e);
-            func_ov100_02145014();
+            daDoor_c::func_ov100_02145070(0x1e);
+            daDoor_c::func_ov100_02145014();
             func_02012694(0xb8, &mCamSpacePos);
             mPlayMusicAfterTalk = 1;
             return 1;
@@ -4845,7 +4839,6 @@ ret0:
 }
 
 int daPly_c::St_Talk_Main() {
-    extern void func_0201f32c(int a);
     extern int gNextActorUpdateMask;
     extern char *gCamera;
     if (mRestoreMusicVolume != 0) {
@@ -4874,9 +4867,9 @@ int daPly_c::St_Talk_Main() {
         }
         mStateStep = 2;
         if (mStateWork == 0)
-            func_0201fc88(mAttachOffsetY);
+            Message::func_0201fc88(mAttachOffsetY);
         else
-            func_0201f32c((short)mAttachOffsetY);
+            Message::func_0201f32c((short)mAttachOffsetY);
         {
             char *cam = gCamera;
             switch ((mStateArg >> 2) & 3) {
@@ -4905,7 +4898,7 @@ int daPly_c::St_Talk_Main() {
         }
         break;
     case 8:
-        if (func_ov100_02144fcc() != 0)
+        if (daDoor_c::func_ov100_02144fcc() != 0)
             mStateStep = 4;
         break;
     case 4:
@@ -4952,8 +4945,8 @@ int daPly_c::St_Talk_Init() {
     mAngleYSpeed = 0;
     mHorzSpeed = 0;
     mNoCtrlKind = 0;
-    mVertSpeed = 0;
-    mVertAccel = mVertSpeed;
+    mSpeed.y = 0;
+    mVertAccel = mSpeed.y;
     mSkipGroundUpdate = 1;
     mIsBodyClsnEnabled = 0;
     mPos = mPreClsnPos;
@@ -5221,7 +5214,7 @@ int daPly_c::St_StuckInGround_Init() {
     this->SetAnim(data_ov002_0210a560[idx], 0x40000000, 0x1000, 0);
     Sound::PlayBank0(mGroundSoundType + 0x80, mCamSpacePos);
     func_ov002_020c5444();
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mHorzSpeed = 0;
     mStateWork = 0;
     return 1;
@@ -5242,7 +5235,7 @@ int daPly_c::St_BowserEarthquake_Main() {
 
         int radius = 0x4000 + ((0x6000 - ((t << 12) / 8)) << 3);
 
-        mVertSpeed = 0;
+        mSpeed.y = 0;
 
         int sinVal = FX_SinCosTable_[idx * 2];
 
@@ -5313,7 +5306,7 @@ int daPly_c::St_DeadPit_Main() {
     case 5:
         if (mIsAirborne == 0) {
             mHorzSpeed = 0;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
         }
         if (mStateWork == 0) {
             if (this->FinishedAnim() != 0) {
@@ -5422,7 +5415,7 @@ int daPly_c::St_DeadPit_Init() {
             break;
         case 2:
             this->SetAnim(7, 0x40000000, 0x1000, t);
-            mVertSpeed = 0xa000;
+            mSpeed.y = 0xa000;
             mHorzSpeed >>= 1;
             mIsAirborne = 1;
             mLandSoundPlayed = 0;
@@ -5430,26 +5423,26 @@ int daPly_c::St_DeadPit_Init() {
             break;
         case 3:
             this->SetAnim(0x82, 0x40000000, 0x1000, t);
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             mHorzSpeed = 0;
             mStateArg = 0;
             break;
         case 4:
             this->SetAnim(2, 0x40000000, 0x1000, t);
             mStateTimer = 100;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             mHorzSpeed = 0;
             Sound::PlayCharVoice(mCharacter, 0xb, mCamSpacePos);
             break;
         case 5:
             this->SetAnim(6, 0x40000000, 0x1000, t);
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             mHorzSpeed = 0;
             Sound::PlayCharVoice(mCharacter, 0xb, mCamSpacePos);
             break;
         case 6:
             mStateTimer = 60;
-            mVertSpeed = t;
+            mSpeed.y = t;
             mHorzSpeed = t;
             mVertAccel = t;
             break;
@@ -5457,7 +5450,7 @@ int daPly_c::St_DeadPit_Init() {
             this->SetAnim(0x84, 0x40000000, 0x1000, t);
             mVertAccel = 0;
             mTerminalVelocity = -0x1800;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             mHorzSpeed = 0;
             Sound::PlayCharVoice(mCharacter, 0x34, mCamSpacePos);
             break;
@@ -5550,9 +5543,9 @@ int daPly_c::St_DeadHit_Main() {
     if (mIsAirborne == 0) {
         if (mStateArg == 0) {
             if (mPrevVertSpeed < 0) {
-                mVertSpeed = -mPrevVertSpeed / 3;
-                if (mVertSpeed <= 0x1000)
-                    mVertSpeed = 0;
+                mSpeed.y = -mPrevVertSpeed / 3;
+                if (mSpeed.y <= 0x1000)
+                    mSpeed.y = 0;
             }
             t = mStateStep & 0xf0;
             if (t == 0 || t == 0x10)
@@ -5590,7 +5583,7 @@ int daPly_c::St_DeadHit_Main() {
 
     if (mStateWork != 1)
         AdvanceAnims();
-    mPrevVertSpeed = mVertSpeed;
+    mPrevVertSpeed = mSpeed.y;
     return 1;
 }
 
@@ -5894,7 +5887,7 @@ int daPly_c::St_Squish_Init() {
     mStateWork = 0;
     mStatePhase = 0;
     mHorzSpeed = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mVertAccel = 0;
     mStateStep = 0;
     mSkipGroundUpdate = 1;
@@ -6083,7 +6076,6 @@ int daPly_c::func_ov002_020c6e14() {
  * that returns VS_FAIL (1). The implicit daPly_c* this is unused.
  */
 s32 daPly_c::St_LevelEnter_Cleanup() {
-    this;
     return 1;
 }
 
@@ -6130,7 +6122,7 @@ void daPly_c::func_ov002_020c6fe4() {
 
 void daPly_c::func_ov002_020c70ac() {
     if (mStateTimer != 0) {
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
         this->mHorzSpeed = 0;
         return;
     }
@@ -6149,16 +6141,16 @@ void daPly_c::func_ov002_020c70ac() {
         this->mAngleY = this->mAngleY + 0x8000;
     case 8:
     case 16:
-        this->mVertSpeed = 0x40000;
+        this->mSpeed.y = 0x40000;
         this->mHorzSpeed = 0x18000;
         break;
     case 13:
-        this->mVertSpeed = 0x36000;
+        this->mSpeed.y = 0x36000;
         this->mHorzSpeed = 0xa000;
         mStateArg = 0;
         break;
     case 17:
-        this->mVertSpeed = 0x3c000;
+        this->mSpeed.y = 0x3c000;
         this->mHorzSpeed = 0xa000;
         mStateArg = 0;
         break;
@@ -6341,7 +6333,7 @@ void daPly_c::func_ov002_020c75f0() {
             mIsAirborne = 1;
             mLandSoundPlayed = 0;
             this->mHorzSpeed >>= 2;
-            this->mVertSpeed = -(this->mVertSpeed >> 2);
+            this->mSpeed.y = -(this->mSpeed.y >> 2);
             mStateArg = 0;
             this->SetAnim(0x13, 0x40000000, 0x1000, 0);
             break;
@@ -6488,7 +6480,7 @@ int daPly_c::St_LevelEnter_Init() {
         } else {
             this->InitWingFeathers(0);
             mStateWork = 3;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             mVertAccel = 0;
         }
         break;
@@ -6632,8 +6624,8 @@ void daPly_c::func_ov002_020c7ff8() {
             mStateStep = 2;
         }
     }
-    this->mVertSpeed = 0;
-    this->mVertAccel = this->mVertSpeed;
+    this->mSpeed.y = 0;
+    this->mVertAccel = this->mSpeed.y;
     mSkipGroundUpdate = 1;
     mIsBodyClsnEnabled = 0;
     Sound::PlayCharVoice(mCharacter, 0x1c, mCamSpacePos);
@@ -6689,7 +6681,7 @@ int daPly_c::St_NoControl_Main() {
             mHorzSpeed = 0;
         if (mNoCtrlKind == 6 && mIsUnderwater != 0) {
             mVertAccel = 0;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
         } else {
             func_ov002_020c9718();
         }
@@ -6782,7 +6774,6 @@ dummy_label_675641:;
 }
 
 int daPly_c::func_ov002_020c8540() {
-    extern void func_0201f32c(int arg0);
     extern int gNextActorUpdateMask;
     u32 s8;
     int id;
@@ -6810,7 +6801,7 @@ int daPly_c::func_ov002_020c8540() {
                 ((dActor_c *)o)->mFlags &= ~0x800000;
             }
             gNextActorUpdateMask |= 0x800000;
-            func_0201f32c(data_ov002_020ff108[this->param1]);
+            Message::func_0201f32c(data_ov002_020ff108[this->param1]);
             mStateArg = 1;
             return 1;
         }
@@ -6844,14 +6835,14 @@ int daPly_c::func_ov002_020c8714() {
             this->mHorzSpeed = FX_MUL(this->mHorzSpeed, 0xf60);
             if (mIsAirborne == 0) {
                 this->mHorzSpeed = 0;
-                this->mVertSpeed = 0;
+                this->mSpeed.y = 0;
                 this->SetAnim(0x51, 0x40000000, 0x1000, 0);
                 mStateArg = 1;
             }
         } else if (mStateTimer == 1) {
             this->SetAnim(0x56, 0, 0x1000, 0);
             this->mHorzSpeed = 0x1a000;
-            this->mVertSpeed = 0x38000;
+            this->mSpeed.y = 0x38000;
             mIsAirborne = 1;
             mLandSoundPlayed = 0;
         }
@@ -6879,7 +6870,7 @@ int daPly_c::func_ov002_020c8714() {
             }
         } else {
             daStar_c *st;
-            this->mVertSpeed = 0;
+            this->mSpeed.y = 0;
             mAttachOffsetY = 0x187;
             func_ov002_020c7ff8();
             st = (daStar_c *)Spawn(0xb2, 0x6f, mPos, &mAngle, this->mAreaId, -1);
@@ -7123,9 +7114,8 @@ int daPly_c::func_ov002_020c91bc() {
 }
 
 int daPly_c::func_ov002_020c924c() {
-    extern void func_0201f32c(int x);
     if (mStateTimer == 0) {
-        func_0201f32c((short)mAttachOffsetY);
+        Message::func_0201f32c((short)mAttachOffsetY);
         mStateStep = 0x15;
     }
     return 0;
@@ -7151,7 +7141,7 @@ int daPly_c::func_ov002_020c92fc() {
     extern unsigned char gGameMode;
     extern void *gCamera;
     int flag = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
 
     if (mAttachOffsetY != -1) {
         if (mIsUnderwater == 0) {
@@ -7166,7 +7156,7 @@ int daPly_c::func_ov002_020c92fc() {
     if (flag != 0) {
         mStateTimer = 20;
         mStateStep = 0x14;
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
         mFlags |= 0x800000;
         gNextActorUpdateMask |= 0x800000;
         return 0;
@@ -7197,7 +7187,7 @@ int daPly_c::func_ov002_020c94a4() {
     extern u8 gReturnSublevel;
     unsigned short st;
 
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
 
     st = mStateTimer;
     if (st != 0) {
@@ -7257,7 +7247,7 @@ int daPly_c::func_ov002_020c965c() {
         if (mIsUnderwater == 0) goto done;
     }
 
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     st = mNoCtrlKind;
     if (st == 0 || st == 1 || st == 0x11 || (u8)(st + 0xfe) <= 1) {
         func_ov002_020c7ff8();
@@ -7279,11 +7269,11 @@ void daPly_c::func_ov002_020c9718() {
     int r2;
     if (mIsUnderwater == 0)
         return;
-    mVertSpeed = func_ov002_020ceaf4();
+    mSpeed.y = func_ov002_020ceaf4();
     r2 = data_0209f32c - 0x50000;
     if (mPosY < r2)
         return;
-    if (mVertSpeed >= 0)
+    if (mSpeed.y >= 0)
         mPosY = r2;
 }
 
@@ -7304,7 +7294,7 @@ int daPly_c::St_NoControl_Init() {
 void daPly_c::func_ov002_020c97e0() {
     mStateStep = 19;
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
 }
 
 void daPly_c::func_ov002_020c97f8() {
@@ -7312,7 +7302,7 @@ void daPly_c::func_ov002_020c97f8() {
     mAngleYSpeed = 0;
     this->SetAnim(0x47, 0, 0x1000, 0);
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
 }
 
 void daPly_c::func_ov002_020c9840() {
@@ -7321,7 +7311,7 @@ void daPly_c::func_ov002_020c9840() {
     this->SetAnim(0x47, 0, 0x1000, 0);
     mStateTimer = 2;
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     mStateArg = 0;
     Sound::PlayCharVoice(mCharacter, 4, mCamSpacePos);
 }
@@ -7333,7 +7323,7 @@ void daPly_c::func_ov002_020c98a4() {
     this->SetAnim(0x47, 0, 0x1000, 0);
     mStateTimer = 2;
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     mStateArg = 0;
     ((::dCamera_c *)gCamera[0])->func_0200d148(mPlayerNo);
 }
@@ -7348,7 +7338,7 @@ void daPly_c::func_ov002_020c990c() {
         this->SetAnim(0x98, 0x40000000, 0x1000, 0);
     }
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     Sound::PlayCharVoice(this->mCharacter, 0x29, this->mCamSpacePos);
 }
 
@@ -7357,7 +7347,7 @@ void daPly_c::func_ov002_020c9998() {
     this->SetAnim(0x92, 0x40000000, 0x1000, 0);
     dActor_c::Spawn(0xb2, 0xffff, this->mPos, &this->mAngle, this->mAreaId, -1);
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
 }
 
 void daPly_c::func_ov002_020c9a04() {
@@ -7367,7 +7357,7 @@ void daPly_c::func_ov002_020c9a04() {
     this->SetAnim(0x9a, 0x40000000, 0x1000, 0);
 
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
 
     v.x = this->mPosX;
     v.y = this->mPosY;
@@ -7385,7 +7375,7 @@ void daPly_c::func_ov002_020c9ac0() {
     mIsBodyClsnEnabled = 0;
     this->mVertAccel = 0;
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     mStateStep = 0x10;
     this->SetAnim(0x93, 0x40000000, 0x1000, 0);
 }
@@ -7395,7 +7385,7 @@ int daPly_c::func_ov002_020c9b10() {
     this->SetAnim(0x47, 0, 0x1000, 0);
     mStateTimer = 20;
     this->mHorzSpeed=0;
-    this->mVertSpeed=0;
+    this->mSpeed.y = 0;
     return 0;
 }
 
@@ -7418,7 +7408,7 @@ void daPly_c::func_ov002_020c9b7c() {
     }
     this->mVertAccel = 0;
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
 }
 
 int daPly_c::func_ov002_020c9c00() {
@@ -7427,7 +7417,7 @@ int daPly_c::func_ov002_020c9c00() {
     }
     mStateStep=0;
     this->mHorzSpeed=0;
-    this->mVertSpeed=0;
+    this->mSpeed.y = 0;
     return 0;
 }
 
@@ -7439,7 +7429,7 @@ void daPly_c::func_ov002_020c9c4c() {
     mIsBodyClsnEnabled = 0;
     this->mVertAccel = 0;
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
 }
 
 void daPly_c::func_ov002_020c9cc0() {
@@ -7447,8 +7437,8 @@ void daPly_c::func_ov002_020c9cc0() {
     mStateStep = 6;
     mSkipGroundUpdate = 1;
     mIsBodyClsnEnabled = 0;
-    if (this->mVertSpeed >= 0x14000)
-        this->mVertSpeed = 0x14000;
+    if (this->mSpeed.y >= 0x14000)
+        this->mSpeed.y = 0x14000;
     if (gNextSublevel == 0x26 || gNextSublevel == 0x12)
         mOpacity = 0;
 }
@@ -7458,7 +7448,7 @@ int daPly_c::func_ov002_020c9d1c() {
     mAngleYSpeed=0x4000;
     this->SetAnim(0x47, 0, 0x1000, 0);
     this->mHorzSpeed=0;
-    this->mVertSpeed=0;
+    this->mSpeed.y = 0;
     return 0;
 }
 
@@ -7662,7 +7652,8 @@ int daPly_c::func_ov002_020ca270() {
 int daPly_c::JumpIntoBooCage(Vector3 &v_) {
     Vector3 *v = &v_;
     if (mIsAirborne) {
-        if (mVertSpeed < 0) return 0;
+        if (mSpeed.y < 0)
+            return 0;
     }
     if (!this->SetNoControlState(9, -1, 0))
         return 0;
@@ -7784,7 +7775,7 @@ int daPly_c::St_DebugFly_Main() {
     u16 flags;
 
     mHorzSpeed = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mClsnFlags = 0;
 
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
@@ -7811,7 +7802,7 @@ int daPly_c::St_DebugFly_Main() {
 int daPly_c::St_DebugFly_Init() {
     DisableInteraction();
     mHorzSpeed = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mVertAccel = 0;
     return 1;
 }
@@ -7920,7 +7911,6 @@ void daPly_c::func_ov002_020cabe0() {
  * The implicit daPly_c* this is unused.
  */
 s32 daPly_c::St_Null_Cleanup() {
-    this;
     return 1;
 }
 
@@ -7928,7 +7918,6 @@ s32 daPly_c::St_Null_Cleanup() {
  * (All ST_NULL state functions are "return 1;" per daPly_c.h.)
  */
 s32 daPly_c::St_Null_Main() {
-    this;
     return 1;
 }
 
@@ -8025,7 +8014,7 @@ void daPly_c::func_ov002_020cae10() {
 int daPly_c::St_CameraZoom_Init() {
     extern dCamera_c *gCamera;
     mHorzSpeed = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     dCamera_c *cam = gCamera;
     int pid = mPlayerNo;
     cam->func_0200d064(pid);
@@ -8150,7 +8139,7 @@ int daPly_c::St_Headstand_Init() {
     mStateStep = 2;
     mVertAccel = 0;
     mHorzSpeed = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     ((::dCamera_c *)gCamera)->SetHeadstandState(mPlayerNo);
     mHideShadow = 1;
     return 1;
@@ -8302,12 +8291,12 @@ int daPly_c::St_Climb_Main() {
                 mAngleYSpeed = 0;
                 ApproachLinear(this->mAngleY, GetAngleToCamera(mPlayerNo), 0x200);
                 if (mClimbClsn->height <= mAttachOffsetY) {
-                    if ((mClimbClsn->flags & 0x2000000) && mVertSpeed == 0 &&
+                    if ((mClimbClsn->flags & 0x2000000) && mSpeed.y == 0 &&
                         (s32)(data_0209f498[gActivePlayerSlot].ny) < -0xc00 && mStateWork == 1) {
                         this->ChangeState(data_ov002_021106f4);
                     }
                     mAttachOffsetY = mClimbClsn->height;
-                    mVertSpeed = 0;
+                    mSpeed.y = 0;
                 } else {
                     s32 mag;
                     if (data_0209f498[gActivePlayerSlot].touching == 0) {
@@ -8319,7 +8308,7 @@ int daPly_c::St_Climb_Main() {
                     if (av < 0)
                         av = -av;
                     s32 fx = FX_MUL(mag, av);
-                    func_ov002_020bf340(&this->mVertSpeed, 0x800, fx);
+                    func_ov002_020bf340(&this->mSpeed.y, 0x800, fx);
                     this->SetAnim(0x24, 0, 0x1000, 0);
                     s32 fx2 = FX_MUL(fx, 0x500);
                     if (fx2 >= 0x4000)
@@ -8342,7 +8331,7 @@ int daPly_c::St_Climb_Main() {
                     }
                     s16 val = data_0209f498[gActivePlayerSlot].ny;
                     s32 fx = FX_MUL(mag, val);
-                    func_ov002_020bf340(&this->mVertSpeed, -0x800, fx);
+                    func_ov002_020bf340(&this->mSpeed.y, -0x800, fx);
                 }
                 mAngleYSpeed -= 0x40;
                 {
@@ -8362,7 +8351,7 @@ int daPly_c::St_Climb_Main() {
                 }
             } else {
                 mStateTimer = 30;
-                mVertSpeed = 0;
+                mSpeed.y = 0;
                 func_ov002_020cc05c(flagsC);
                 if (!IsAnim(0x26)) {
                     this->SetAnim(0x26, 0, 0x1000, 0);
@@ -8400,7 +8389,7 @@ int daPly_c::St_Climb_Main() {
             mAttachOffsetY = t2;
         }
     }
-    if (mJumpComboTimer != 0 || (mVertSpeed != 0 && mStateStep == 1)) {
+    if (mJumpComboTimer != 0 || (mSpeed.y != 0 && mStateStep == 1)) {
         func_ov002_020cb474();
     }
     {
@@ -8409,7 +8398,7 @@ int daPly_c::St_Climb_Main() {
     }
     {
         s32* p688 = &this->mAttachOffsetY;
-        *p688 += mVertSpeed;
+        *p688 += mSpeed.y;
     }
     if (func_ov002_020cbea8()) {
         return 1;
@@ -8450,7 +8439,7 @@ int daPly_c::St_Climb_Init() {
     mAttachOffsetY = mPosY - res.y;
     mVertAccel = 0;
     mHorzSpeed = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
 
     Sound::PlayCharVoice(mCharacter, 0xd, mCamSpacePos);
 
@@ -8495,23 +8484,23 @@ int daPly_c::func_ov002_020cbea8() {
         return 0;
     if (func_ov002_020cc01c() != 0 || o->func_ov002_020cc01c() != 0)
         return 1;
-    ca8 = mVertSpeed;
+    ca8 = mSpeed.y;
     amt = mdCcAcPos_c.pushback.y;
-    if (ca8 == 0 || o->mVertSpeed == 0)
+    if (ca8 == 0 || o->mSpeed.y == 0)
         amt = amt * 2;
     if (ca8 != 0) {
         p = &mAttachOffsetY;
         *p += amt * 2;
         mAngleYSpeed = 0;
-        mVertSpeed = 0;
+        mSpeed.y = 0;
     }
-    if (o->mVertSpeed != 0) {
+    if (o->mSpeed.y != 0) {
         p = (int *)LA(&o->mAttachOffsetY);
         *p -= amt * 2;
         o->mAngleYSpeed = 0;
-        t = o->mSpeedZ;
-        o->mVertSpeed = 0;
-        o->mSpeedZ = t;
+        t = o->mSpeed.z;
+        o->mSpeed.y = 0;
+        o->mSpeed.z = t;
     }
     return 0;
 }
@@ -8610,7 +8599,6 @@ int daPly_c::St_Shell_Cleanup() {
 }
 
 int daPly_c::St_Shell_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern ControllerInput data_0209f498[];
     int flag = 0;
     dBgPi *res;
@@ -8623,7 +8611,7 @@ int daPly_c::St_Shell_Main() {
             if (a) {
                 u16 type = a->actorID;
                 if ((type == 0x14 ? flag : 0) || (type == 0x15 ? 1 : 0)) {
-                    func_ov002_020eeca8(&mMeshClsn, this);
+                    ((BgChEvt *)&mMeshClsn)->func_ov002_020eeca8(this);
                     flag = 0;
                 }
             }
@@ -8673,7 +8661,7 @@ int daPly_c::St_Shell_Main() {
         {
             if (data_0209f498[gActivePlayerSlot].pressed & 2) {
                 mStateStep++;
-                mVertSpeed = (mHorzSpeed >> 2) + 0x2a000;
+                mSpeed.y = (mHorzSpeed >> 2) + 0x2a000;
                 mIsAirborne = 1;
                 mLandSoundPlayed = 0;
                 PlayJumpSound(0);
@@ -8699,7 +8687,7 @@ int daPly_c::St_Shell_Main() {
             UpdateAirMovement(0x1800, 0x800);
             mVertAccel = -0x4000;
             mTerminalVelocity = -0x4b000;
-            if (mVertSpeed >= 0) {
+            if (mSpeed.y >= 0) {
                 mVertAccel = -0x8000;
                 if (data_0209f498[gActivePlayerSlot].held & 2) {
                     mVertAccel = -0x3400;
@@ -8757,7 +8745,7 @@ int daPly_c::St_HurtWater_Main() {
         return 1;
     ApproachLinear(mHorzSpeed, 0, 0x800);
     int t = func_ov002_020ceaf4();
-    ApproachLinear(mVertSpeed, t, 0x800);
+    ApproachLinear(mSpeed.y, t, 0x800);
     if (this->FinishedAnim()) {
         if ((mStateStep & 1) == 0) {
             mPrevAngleY = mPrevAngleY + 0x8000;
@@ -8778,9 +8766,9 @@ int daPly_c::St_HurtWater_Main() {
     }
     int lim = data_0209f32c - 0x50000;
     if (mPosY >= lim && (mClsnFlags & 1) == 0) {
-        if (mVertSpeed >= 0) {
+        if (mSpeed.y >= 0) {
             mPosY = lim;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
         }
     }
     func_ov002_020ceb7c();
@@ -8796,7 +8784,7 @@ int daPly_c::St_HurtWater_Init() {
     mStateArg = 0;
     mVertAccel = 0;
     mTerminalVelocity = -0xc000;
-    mVertSpeed = 0x10000;
+    mSpeed.y = 0x10000;
     mIsTakingDamage = 1;
     if (mHurtDamage) {
         int b = mStateStep & 0xf0;
@@ -8818,7 +8806,6 @@ int daPly_c::St_HurtWater_Init() {
  */
 
 int daPly_c::St_MetalWaterWater_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern struct S18b2 data_0209f4a0[];
     u32 f;
     int v;
@@ -8832,7 +8819,8 @@ int daPly_c::St_MetalWaterWater_Main() {
         this->ChangeState(data_ov002_0211067c);
         return 1;
     }
-    if (f != 0) func_ov002_020eeca8(&mMeshClsn, this);
+    if (f != 0)
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020eeca8(this);
 
     if (mStateWork == 0) {
         v = 0;
@@ -9442,9 +9430,9 @@ int daPly_c::St_Swim_Main() {
         break;
     }
 
-    func_ov002_020cd218(mPrevVertSpeed, &mHorzSpeed, &mVertSpeed);
+    func_ov002_020cd218(mPrevVertSpeed, &mHorzSpeed, &mSpeed.y);
     {
-        int* pa8 = (int*)((unsigned int)(&mVertSpeed));
+        int *pa8 = (int *)((unsigned int)(&mSpeed.y));
         *pa8 = *pa8 + func_ov002_020ceaf4();
     }
     if (func_ov002_020ce5f8() != 0)
@@ -9526,9 +9514,9 @@ int daPly_c::St_Swim_Init() {
     mTerminalVelocity = -0xc000;
     mIsUnderwater = 1;
     gCamera->func_0200d768(mPlayerNo);
-    mPrevVertSpeed = mVertSpeed;
+    mPrevVertSpeed = mSpeed.y;
     mHorzSpeed = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mAngleYSpeed = 0;
     mStateWork = 0;
     mStateArg = 0;
@@ -9550,9 +9538,9 @@ int daPly_c::func_ov002_020ce5f8() {
     y = mPosY;
     if (y >= threshold) {
         if ((mClsnFlags & 1) == 0) {
-            if (mVertSpeed >= 0) {
+            if (mSpeed.y >= 0) {
                 mPosY = threshold;
-                mVertSpeed = 0;
+                mSpeed.y = 0;
             }
         } else {
             if (threshold < y - 0xa000) {
@@ -9817,7 +9805,7 @@ int daPly_c::func_ov002_020cef84() {
     int lim;
 
     dBgCh_Lin line;
-    if (!IsInAir() || mIsUnderwater != 0 || mVertSpeed <= 0 || IsState(data_ov002_0211001c) ||
+    if (!IsInAir() || mIsUnderwater != 0 || mSpeed.y <= 0 || IsState(data_ov002_0211001c) ||
         mIsMega != 0 || mIsTakingDamage != 0 || mIsNoControl != 0) {
         return 0;
     }
@@ -9860,7 +9848,7 @@ int daPly_c::func_ov002_020cef84() {
             int d = cp.y - mPosY;
             if (d < 0) d = -d;
             if (d < lim) {
-                mVertSpeed = -0x1000;
+                mSpeed.y = -0x1000;
                 mClsnFlags |= 8;
                 dBgPi hit(line);
                 dActor_c *a = dActor_c::FindWithID(hit.GetClsnID());
@@ -9912,7 +9900,7 @@ void daPly_c::func_ov002_020cf2f8() {
 
 void daPly_c::func_ov002_020cf384() {
     mVertAccel = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mHorzSpeed = 0;
 }
 
@@ -10009,7 +9997,6 @@ extern "C" int func_ov002_020cf700(daPly_c *player) {
 
 int daPly_c::St_OnWall_Main() {
     extern ControllerInput data_0209f498[];
-    extern void func_ov002_020eee3c(char *, char *);
     u16 f = mStateFlags;
     u16 b0 = f & 1;
     if (b0 != 0) {
@@ -10052,7 +10039,7 @@ int daPly_c::St_OnWall_Main() {
         ApproachLinear(mAngleY, (s16)a, 0x800);
         mPrevAngleY = a;
         mHorzSpeed = func_ov002_020bf224(0xa000, 0x2000);
-        func_ov002_020eee3c((char *)&mMeshClsn, (char *)this);
+        ((BgChEvt *)(char *)&mMeshClsn)->func_ov002_020eee3c((char *)this);
     } else {
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
             int ang = cstd::atan2(mWallNormal.x, mWallNormal.z);
@@ -10464,7 +10451,7 @@ cont:
         if (mStateStep != 0)
             return 0;
     }
-    if (mIsAirborne == 0 || mVertSpeed > 0)
+    if (mIsAirborne == 0 || mSpeed.y > 0)
         return 0;
     if (func_ov002_020d0178(mPosY, 0) == 0)
         return 0;
@@ -10640,7 +10627,7 @@ int daPly_c::St_LedgeHang_Init() {
     }
     mStateWaitTimer = 2;
     mPrevAngleY = mAngleY;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mHorzSpeed = 0;
     mIsAirborne = 0;
     Sound::PlayCharVoice(mCharacter, 0x16, mCamSpacePos);
@@ -10697,8 +10684,8 @@ int daPly_c::St_WallSlide_Init() {
 
     this->SetAnim(0x29, 0x40000000, 0x1000, 0);
     mHorzSpeed = 0;
-    if (mVertSpeed >= 0)
-        mVertSpeed = 0;
+    if (mSpeed.y >= 0)
+        mSpeed.y = 0;
     mStateTimer = 7;
     return 1;
 }
@@ -11183,7 +11170,6 @@ void daPly_c::func_ov002_020d1f78(u32 param) {
     extern Rec18 data_0209f49c[];
     extern Rec18 data_0209f4a0[];
 
-    daPly_c *p = this;
     int idx;
     int flag;
     int id;
@@ -11201,37 +11187,37 @@ void daPly_c::func_ov002_020d1f78(u32 param) {
             flag = 1;
     }
 
-    if (p->param1 == 2 && flag == 0) {
-        dExtFrameCtrl_c &anim = *p->mModels.mBodyModels[GetBodyModelID(p->param1 & 0xff, 0)];
+    if (param1 == 2 && flag == 0) {
+        dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
         w = anim.currFrame;
         /* The whole frame of the 20.12 counter; the u16 parameter's narrowing
            folds with the shift into the ROM's lsl #4 / lsr #16. */
-        p->SetAnim(0x3f, 0, 0x2800, w >> 12);
+        SetAnim(0x3f, 0, 0x2800, w >> 12);
     } else {
-        int v = p->mHorzSpeed;
+        int v = mHorzSpeed;
         int shift = v >> 3;
         if (shift < 0x400)
             shift = 0x400;
         SetAnim(param, 0, shift, 0);
     }
 
-    id = GetBodyModelID(p->param1 & 0xff, 0);
-    if (!p->mModels.mBodyModels[id]->WillHitFrame(4)) {
-        id = GetBodyModelID(p->param1 & 0xff, 0);
-        if (!p->mModels.mBodyModels[id]->WillHitFrame(0x13))
+    id = GetBodyModelID(param1 & 0xff, 0);
+    if (!mModels.mBodyModels[id]->WillHitFrame(4)) {
+        id = GetBodyModelID(param1 & 0xff, 0);
+        if (!mModels.mBodyModels[id]->WillHitFrame(0x13))
             return;
     }
 
-    if (p->mIsInShallowWater != 0) {
-        u32 newId = Particle::System::NewCheckWaterRipple((u32)p->mParticle1, kPtclShallowWaterLand,
-                                                          p->mPosX, data_0209f32c, p->mPosZ, 0);
-        p->mParticle1 = newId;
+    if (mIsInShallowWater != 0) {
+        u32 newId = Particle::System::NewCheckWaterRipple((u32)mParticle1, kPtclShallowWaterLand,
+                                                          mPosX, data_0209f32c, mPosZ, 0);
+        mParticle1 = newId;
         return;
     }
 
-    func_0201251c(0, p->mGroundSoundType + 0x20, &p->mCamSpacePos, p->mHorzSpeed);
+    func_0201251c(0, mGroundSoundType + 0x20, &mCamSpacePos, mHorzSpeed);
 
-    state = p->mGroundSoundType;
+    state = mGroundSoundType;
     target = -1;
     if (state != 6) {
         if (state != 8) {
@@ -11244,7 +11230,7 @@ void daPly_c::func_ov002_020d1f78(u32 param) {
     if (target == -1)
         return;
 
-    Particle::System::NewSimple(target, p->mPosX, p->mPosY, p->mPosZ);
+    Particle::System::NewSimple(target, mPosX, mPosY, mPosZ);
 }
 
 int daPly_c::St_WaitQuicksand_Main() {
@@ -12525,7 +12511,7 @@ int daPly_c::St_Bonk_Main() {
 
     if (mStateTimer != 0) {
         mHorzSpeed = 0x40000;
-        mVertSpeed = 0x8000;
+        mSpeed.y = 0x8000;
         /* early return duplicates the shared epilogue, 0x1a4 to 0x1b0 */
         goto ret1;
     }
@@ -12534,9 +12520,9 @@ int daPly_c::St_Bonk_Main() {
     if (mIsAirborne == 0) {
         int v = mPrevVertSpeed;
         if (v < 0) {
-            mVertSpeed = (-v) / 3;
-            if (mVertSpeed <= 0x1000) {
-                mVertSpeed = 0;
+            mSpeed.y = (-v) / 3;
+            if (mSpeed.y <= 0x1000) {
+                mSpeed.y = 0;
             }
         }
 
@@ -12573,7 +12559,7 @@ int daPly_c::St_Bonk_Main() {
     if (mStateWork == 0) {
         AdvanceAnims();
     }
-    mPrevVertSpeed = mVertSpeed;
+    mPrevVertSpeed = mSpeed.y;
 ret1:
     return 1;
 }
@@ -12582,7 +12568,7 @@ int daPly_c::St_Bonk_Init() {
     this->SetAnim(0x13, 0x40000000, 0x1000, 0);
     mStateTimer = 16;
     mHorzSpeed = 0x40;
-    mVertSpeed = 0xa000;
+    mSpeed.y = 0xa000;
     mStateWork = 0;
     return 1;
 }
@@ -12619,7 +12605,7 @@ int daPly_c::St_BurnLava_Main() {
 
     {
         s8 lv = gCurrentSublevel;
-        if (lv != 0x13 && lv != 0x31 && mVertSpeed >= 0) {
+        if (lv != 0x13 && lv != 0x31 && mSpeed.y >= 0) {
             Vector3_16f dir;
             Vector3 pos(mPosX, mPosY, mPosZ - 0x1e000);
             /* The u16 cast is the semantics, not a missing type fix. mAngleY
@@ -12652,9 +12638,9 @@ int daPly_c::St_BurnLava_Main() {
                 mIsAirborne = 1;
                 mLandSoundPlayed = 0;
                 if (mStateWork == 1)
-                    mVertSpeed = 0x14000;
+                    mSpeed.y = 0x14000;
                 else
-                    mVertSpeed = 0xa000;
+                    mSpeed.y = 0xa000;
             }
         }
     } else {
@@ -12679,7 +12665,7 @@ int daPly_c::St_BurnLava_Init() {
     mIsTakingDamage = 1;
     this->SetAnim(0x16, 0, 0x1000, 0);
     mHorzSpeed = 0;
-    mVertSpeed = 0x64000;
+    mSpeed.y = 0x64000;
     mStateWork = 0;
     mStateStep = 0;
     if (WasState(&data_ov002_021100f4) == 0) {
@@ -12772,7 +12758,7 @@ int daPly_c::St_BurnFire_Main() {
             this->SetAnim(0x53, 0, 0x1000, 0);
             mIsAirborne = 1;
             mLandSoundPlayed = 0;
-            mVertSpeed = 0x1e000;
+            mSpeed.y = 0x1e000;
             break;
         }
         }
@@ -12814,7 +12800,7 @@ int daPly_c::St_BurnFire_Init() {
        CLPS block in daPly_c.h): on it the player is planted on the ground
        instead of being popped upward by the burn. */
     if (mFloorClass != 1) {
-        mVertSpeed = 0x1e000;
+        mSpeed.y = 0x1e000;
     } else {
         mPosY = mGroundY;
     }
@@ -12888,7 +12874,7 @@ int daPly_c::St_Electrocute_Init() {
     mStateTimer = 30;
     mInvincibleTimer = 30;
     mHorzSpeed = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mVertAccel = 0;
     this->SetAnim(0x11, 0, 0x1000, 0);
     Sound::PlayCharVoice(mCharacter, 7, mCamSpacePos);
@@ -12994,7 +12980,7 @@ extern "C" int func_ov002_020d5cec(void *self) {
     player->mPrevAngleZ = m[2];
     player->mAngleY = player->mPrevAngleY;
     player->mHorzSpeed = 0x18000;
-    player->mVertSpeed = 0x18000;
+    player->mSpeed.y = 0x18000;
 
     p = &player->mEatingPlayer->mPos;
     v1.x = p->x;
@@ -13277,7 +13263,7 @@ int daPly_c::St_Swallow_Main() {
         mObjInMouth = 0;
     }
     if (mIsUnderwater != 0) {
-        mVertSpeed += func_ov002_020ceaf4();
+        mSpeed.y += func_ov002_020ceaf4();
     }
     if (this->FinishedAnim()) {
         if (mIsUnderwater != 0) {
@@ -13520,7 +13506,6 @@ ret0b:
  * constructor) before the collider owner is looked up. */
 
 int daPly_c::TongueWallProbe() {
-    daPly_c *player = this;
     Vector3_16f dir;
     Vector3 p1;
     Vector3 p2;
@@ -13531,20 +13516,20 @@ int daPly_c::TongueWallProbe() {
     int idx;
 
     {
-        u8 b = player->mUseAltBodyModel;
+        u8 b = mUseAltBodyModel;
         int model;
-        Matrix4x3 *m1 = player->mModels.mHeadModels[(b << 2) + 3]->data.transforms;
-        model = (this)->GetBodyModelID(player->param1 & 0xff, 0);
-        MTX_MultVec43((Vector3 *)&m1->m[9], &player->mModels.mBodyModels[model]->mat4x3, &p1);
+        Matrix4x3 *m1 = mModels.mHeadModels[(b << 2) + 3]->data.transforms;
+        model = GetBodyModelID(param1 & 0xff, 0);
+        MTX_MultVec43((Vector3 *)&m1->m[9], &mModels.mBodyModels[model]->mat4x3, &p1);
         Vec3_MulScalarInPlace(&p1, 0x8000);
     }
 
     {
-        u8 b2 = player->mUseAltBodyModel;
-        Matrix4x3 *m2i = &player->mModels.mHeadModels[(b2 << 2) + 3]->data.transforms[3];
-        int model2 = (this)->GetBodyModelID(player->param1 & 0xff, 0);
+        u8 b2 = mUseAltBodyModel;
+        Matrix4x3 *m2i = &mModels.mHeadModels[(b2 << 2) + 3]->data.transforms[3];
+        int model2 = GetBodyModelID(param1 & 0xff, 0);
         void *a0, *a1, *a2;
-        a1 = player->mModels.mBodyModels[model2];
+        a1 = mModels.mBodyModels[model2];
         a0 = &m2i->m[9];
         a1 = &((dExtAnmModel_c *)a1)->mat4x3;
         a2 = &p2;
@@ -13565,7 +13550,7 @@ int daPly_c::TongueWallProbe() {
     }
 
     ::Vector3 clsnPos = rl.GetClsnPos();
-    player->mTongueHitDist = VEC_Distance(&p1, &clsnPos);
+    mTongueHitDist = VEC_Distance(&p1, &clsnPos);
     Vector3 normal;
     rl.surface.CopyNormalTo(normal);
     ang = cstd::atan2(normal.x, normal.z);
@@ -14040,7 +14025,7 @@ int daPly_c::St_YoshiPower_Init() {
         mStateStep = 6;
         mHeldObj = mHeldObjQueue[0];
         mHeldObj->mFlags |= 0x100;
-        func_ov002_020ed63c((daYegg_c *)mHeldObj, 1);
+        ((daYegg_c *)mHeldObj)->func_ov002_020ed63c(1);
         mHeldObjQueue[0] = 0;
         for (i = 1; i < 5; i++) {
             dActor_c **p = mHeldObjQueue;
@@ -14065,10 +14050,10 @@ void daPly_c::func_ov002_020d80d0() {
 }
 
 void daPly_c::func_ov002_020d8118() {
-    (this)->func_ov002_020bda48();
+    func_ov002_020bda48();
     mFireTimer = 600;
     StartPowerupMusic(0x32);
-    (this)->func_ov002_020c43c4(5);
+    func_ov002_020c43c4(5);
     mIsFire = 1;
 }
 
@@ -14213,7 +14198,7 @@ int daPly_c::func_ov002_020d8360(daPly_c *other, unsigned int flags) {
             mIsAirborne = 1;
             mLandSoundPlayed = 0;
             if (flag != 0) {
-                mVertSpeed = t98 + 0x20000;
+                mSpeed.y = t98 + 0x20000;
                 {
                     int *hp = (int *)(int)(&mHorzSpeed);
                     int half = *hp >> 1;
@@ -14221,7 +14206,7 @@ int daPly_c::func_ov002_020d8360(daPly_c *other, unsigned int flags) {
                     return half;
                 }
             }
-            mVertSpeed = 0x18000;
+            mSpeed.y = 0x18000;
             return 0x18000;
         }
     }
@@ -14431,11 +14416,11 @@ void daPly_c::func_ov002_020d8a50(int which) {
     switch (which) {
     case 0:
     case 1:
-        func_ov002_020ef070(&mMeshClsn, (char *)this);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020ef070((char *)this);
         break;
     case 2:
     case 3:
-        func_ov002_020eeeb8(&mMeshClsn, (char *)this);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020eeeb8((char *)this);
         break;
     }
 
@@ -14662,7 +14647,7 @@ extern "C" int func_ov002_020d9298(daPly_c *player) {
         return 0;
     Sound::PlayCharVoice(player->mCharacter, 0x14, player->mCamSpacePos);
     if (player->IsState(data_ov002_021100f4)) {
-        player->mVertSpeed = 0x40000;
+        player->mSpeed.y = 0x40000;
         return 1;
     }
     if (player->IsState(data_ov002_0211019c)) {
@@ -14679,7 +14664,7 @@ void daPly_c::Bounce(fx32 f) {
     if (this->GetHealth() == 0)
         return;
     this->ChangeState(data_ov002_0211019c);
-    this->mVertSpeed = f;
+    this->mSpeed.y = f;
     Sound::PlayCharVoice(this->mCharacter, 0x14, this->mCamSpacePos);
     Sound::PlayBank0(0xb6, this->mCamSpacePos);
 }
@@ -14882,7 +14867,7 @@ int daPly_c::St_Hurt_Main() {
     if ((mStateWork & 0xf) == 0) {
         AdvanceAnims();
     }
-    mPrevVertSpeed = mVertSpeed;
+    mPrevVertSpeed = mSpeed.y;
     if (mIsAirborne == 0) {
         CheckFallDamage();
     }
@@ -14912,16 +14897,14 @@ void daPly_c::func_ov002_020d98b4() {
 }
 
 void daPly_c::StartHurtFallAnim() {
-    daPly_c *player = this;
     u8 idx;
-    if (player->mIsAirborne == 0)
+    if (mIsAirborne == 0)
         return;
-    idx = player->mStateStep;
+    idx = mStateStep;
     if (idx > 1) return;
-    (this)->SetAnim(data_ov002_0210a6ec[idx & 7], 0x40000000, 0x1000,
-                    (u16)(data_ov002_02109dcc[idx] + 1));
-    player->mStateStep += 2;
-    player->mStateWork |= 1;
+    SetAnim(data_ov002_0210a6ec[idx & 7], 0x40000000, 0x1000, (u16)(data_ov002_02109dcc[idx] + 1));
+    mStateStep += 2;
+    mStateWork |= 1;
 }
 
 void daPly_c::func_ov002_020d9a4c() {
@@ -14936,12 +14919,12 @@ void daPly_c::func_ov002_020d9aac() {
 
     if ((mStateStep & 7) >= 2) {
         if (mPrevVertSpeed < 0) {
-            mVertSpeed = -(mPrevVertSpeed >> 2);
-            v = mVertSpeed;
+            mSpeed.y = -(mPrevVertSpeed >> 2);
+            v = mSpeed.y;
             if (v <= 0x1000) {
-                mVertSpeed = 0;
+                mSpeed.y = 0;
             } else if (v >= 0xa000) {
-                mVertSpeed = 0xa000;
+                mSpeed.y = 0xa000;
             }
             if (mHorzSpeed >= 0xa000)
                 mHorzSpeed = 0xa000;
@@ -14986,7 +14969,7 @@ int daPly_c::St_Hurt_Init() {
         func_ov002_020d93ac();
     }
     mIsTakingDamage = 1;
-    mPrevVertSpeed = mVertSpeed;
+    mPrevVertSpeed = mSpeed.y;
     ((dCamera_c *)gCamera)->func_0200d89c();
     mJumpComboTimer = 5;
     return 1;
@@ -15044,9 +15027,9 @@ void daPly_c::func_ov002_020d9c70() {
     mHeldObj->mHorzSpeed = A;
     {
         dActor_c *q = mHeldObj;
-        q->mSpeedX = 0;
-        q->mVertSpeed = 0x20000;
-        q->mSpeedZ = 0;
+        q->mSpeed.x = 0;
+        q->mSpeed.y = 0x20000;
+        q->mSpeed.z = 0;
     }
 }
 
@@ -15674,7 +15657,7 @@ int daPly_c::St_Thrown_Main() {
         mAngleY = mPrevAngleY;
         mHorzSpeed = FX_MUL(mHorzSpeed, 0xfae);
         if (mIsAirborne != 0) {
-            int a = cstd::atan2(mHorzSpeed, mVertSpeed);
+            int a = cstd::atan2(mHorzSpeed, mSpeed.y);
             s16 b = a - 0x4000;
             if (b > 0x3000) b = 0x3000;
             mAngleX = b;
@@ -15805,7 +15788,7 @@ extern "C" void func_ov002_020db54c(void *self, int a, int b, short c) {
     void *node;
     p->mPrevAngleY = c;
     p->mHorzSpeed = a;
-    p->mVertSpeed = b;
+    p->mSpeed.y = b;
     node = p->mGrabbedByActor;
     if (node != 0) {
         int bb = (int)(((dActor_c *)node)->actorID == 0xbf);
@@ -15852,7 +15835,7 @@ int func_ov002_020db674(daPly_c *player, int a1, int a2, int a3) {
     player->mPrevAngleY = a3;
     player->mAngleY = a3 + 0x8000;
     player->mHorzSpeed = a1;
-    player->mVertSpeed = a2;
+    player->mSpeed.y = a2;
     player->mHurtDamage = 0;
     player->mStateStep = 4;
     player->mIsAirborne = 1;
@@ -16275,7 +16258,7 @@ La8:
                 int t = -mPrevVertSpeed;
                 if (t > 0x14000)
                     t = 0x14000;
-                mVertSpeed = t;
+                mSpeed.y = t;
                 mStateWork = 1;
             }
         }
@@ -16312,7 +16295,7 @@ L18c: {
 
 L1d8:
     AdvanceAnims();
-    mPrevVertSpeed = mVertSpeed;
+    mPrevVertSpeed = mSpeed.y;
     return 1;
 }
 
@@ -16323,7 +16306,7 @@ int daPly_c::St_SlideKick_Init() {
     Sound::PlayCharVoice(mCharacter, data_ov002_020ff130[(r >> 4) & 1], mCamSpacePos);
     this->SetAnim(0x67, 0x40000000, 0x1000, 0);
     int *yv = &mHorzSpeed;
-    mVertSpeed = 0x14000;
+    mSpeed.y = 0x14000;
     yv[0] += 0xf000;
     if (mHorzSpeed > 0x28000) mHorzSpeed = 0x28000;
     mStateWork = 0;
@@ -16442,7 +16425,7 @@ int daPly_c::St_ButtSlide_Main() {
             mStatePhase = 1;
             mStateWork = 0;
             if ((mStateArg | mSlideType) != 0)
-                mVertSpeed = 0x15000;
+                mSpeed.y = 0x15000;
             PlayJumpSound(0);
             mIsAirborne = 1;
             mLandSoundPlayed = 0;
@@ -16460,11 +16443,11 @@ int daPly_c::St_ButtSlide_Main() {
                 Sound::PlayBank0(mGroundSoundType + 0x50, mCamSpacePos);
             }
             if (mStateWork == 0 && mFloorNormal.y >= 0xfc1) {
-                mVertSpeed = -mPrevVertSpeed / 2;
+                mSpeed.y = -mPrevVertSpeed / 2;
                 (this->mStateWork)++;
             } else {
                 mStatePhase = 0;
-                mVertSpeed = 0;
+                mSpeed.y = 0;
                 break;
             }
         } else {
@@ -16490,7 +16473,7 @@ int daPly_c::St_ButtSlide_Main() {
         break;
     }
 
-    mPrevVertSpeed = mVertSpeed;
+    mPrevVertSpeed = mSpeed.y;
     AdvanceAnims();
     mStateArg = mSlideType;
     return 1;
@@ -16604,7 +16587,7 @@ int daPly_c::St_StomachSlide_Main() {
                 mStateStep = 0;
                 if (*(int*)((char*)&data_0209ee90 + 0x244) != 0) {
                     if ((mStateArg | mSlideType) != 0) {
-                        mVertSpeed = 0x15000;
+                        mSpeed.y = 0x15000;
                     }
                 }
                 PlayJumpSound(0);
@@ -16622,7 +16605,7 @@ int daPly_c::St_StomachSlide_Main() {
         mAttackClsn.Update();
         if (mIsAirborne == 0) {
             mStatePhase = 0;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             mStateStep = 0;
             this->SetAnim(0x43, 0x40000000, 0x1000, 0);
             break;
@@ -16678,7 +16661,7 @@ int daPly_c::St_StomachSlide_Main() {
     }
 
     if (mIsAirborne != 0) {
-        s16 v = cstd::atan2(mHorzSpeed >> 8, mVertSpeed >> 8) - 0x4000;
+        s16 v = cstd::atan2(mHorzSpeed >> 8, mSpeed.y >> 8) - 0x4000;
         if (v < 0) v = 0;
         if (v >= 0x2aaa) v = 0x2aaa;
         ApproachLinear2(mAngleX, v, 0x200);
@@ -16712,7 +16695,7 @@ int daPly_c::St_Dive_Init() {
     this->SetAnim(0x40, 0x40000000, 0x1000, 0);
     mStateStep = 0;
     int *yv = &mHorzSpeed;
-    mVertSpeed = 0x1e000;
+    mSpeed.y = 0x1e000;
     yv[0] += 0xf000;
     if (mHorzSpeed > 0x28000) mHorzSpeed = 0x28000;
     mIsAirborne = 1;
@@ -16859,10 +16842,10 @@ void daPly_c::func_ov002_020dd5ec() {
     mPunchKickCooldown = data_ov002_02109dbc[mPunchKickStep];
     if ((mPunchKickStep) == 2) {
         if (((data_0209f498[gActivePlayerSlot].held & 2) != 0) || ((mIsAirborne) != 0)) {
-            mVertSpeed = 0x20000;
+            mSpeed.y = 0x20000;
             mVertAccel = new_var2;
         } else {
-            mVertSpeed = 0xc000;
+            mSpeed.y = 0xc000;
             mVertAccel = -0x1800;
         }
         mIsAirborne = 1;
@@ -16973,9 +16956,9 @@ int daPly_c::St_GroundPound_Main() {
     extern char data_0209f4a0[];
     s8 timer = (s8)mStateStep;
     if (timer > 0) {
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         if (mStateStep == 2)
-            mVertSpeed = 0xa000;
+            mSpeed.y = 0xa000;
         if (FinishedAnim() != 0) {
             mStateStep -= 1;
             if (mStateStep != 0) {
@@ -16986,14 +16969,14 @@ int daPly_c::St_GroundPound_Main() {
                 u32 anim = 0x3d;
                 if (mIsMega != 0) anim = 0xa1;
                 this->SetAnim(anim, 0x40000000, 0x1000, 0);
-                mVertSpeed = -0x32000;
+                mSpeed.y = -0x32000;
                 Sound::PlayCharVoice(mCharacter, 0x15, mCamSpacePos);
                 mPeakY = mPosY;
             }
         }
     } else if (timer == 0) {
         u16 st;
-        func_ov002_020ef2a4(&mMeshClsn, this);
+        ((BgChEvt *)&mMeshClsn)->func_ov002_020ef2a4(this);
         st = mStateTimer;
         if (st != 0) {
             if (st == 1) {
@@ -17089,7 +17072,7 @@ int daPly_c::St_GroundPound_Init() {
   unsigned int anim;
   ReleaseHeldActor();
   mJumpComboStage = 0;
-  mVertSpeed = 0;
+  mSpeed.y = 0;
   mHorzSpeed = 0;
   mPrevAngleY = mAngleY;
   anim=0x3b;
@@ -17139,7 +17122,7 @@ change574:
 
 /* Being carried up a tornado. The player orbits mAttachedActor: the horizontal
  * offset is rotated by an ever-increasing mAngleYSpeed while mAttachOffsetY
- * climbs at mVertSpeed. Leaving happens at the tornado's own height limit
+ * climbs at mSpeed.y. Leaving happens at the tornado's own height limit
  * (+0xdc on it) or on a collision bit. A dBgCh_Gnd from 0x64000 above the
  * candidate position decides whether the player is placed there or clamped to
  * mGroundY.
@@ -17151,13 +17134,13 @@ int daPly_c::St_TornadoSpin_Main() {
     int dz = mPosZ - mAttachedActor->mPosZ;
     int sx = FX_MUL(dx, 0xf33);
     int sz = FX_MUL(dz, 0xf33);
-    int spd = mVertSpeed;
+    int spd = mSpeed.y;
     if (spd < 0) {
-        mVertSpeed = 0x1000;
+        mSpeed.y = 0x1000;
     } else if (spd < 0x3c000) {
-        mVertSpeed += 0x1000;
+        mSpeed.y += 0x1000;
     }
-    mAttachOffsetY += mVertSpeed;
+    mAttachOffsetY += mSpeed.y;
     if (mAttachOffsetY < 0)
         mAttachOffsetY = 0;
     /* The attached actor is the tornado: func_ov002_020de33c, the only way
@@ -17165,8 +17148,8 @@ int daPly_c::St_TornadoSpin_Main() {
     if (mAttachOffsetY > ((daTor_c *)mAttachedActor)->mdCcAc_c.height || (mClsnFlags & 4) != 0) {
         mStatePhase = 0;
         this->ChangeState(data_ov002_02110454);
-        if (mVertSpeed < 0x14000)
-            mVertSpeed = 0x14000;
+        if (mSpeed.y < 0x14000)
+            mSpeed.y = 0x14000;
         return 1;
     }
     if (mAngleYSpeed < 0x3000)
@@ -17206,7 +17189,7 @@ int daPly_c::St_TornadoSpin_Init() {
     extern dCamera_c *gCamera;
     ReleaseHeldActor();
     this->SetAnim(0x5f, 0, 0x1000, 0);
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mVertAccel = 0;
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
@@ -17277,7 +17260,7 @@ s32 daPly_c::St_Balloon_Main() {
     mPeakY = mPosY;
     mVertAccel = 0;
     mTerminalVelocity = -0xc000;
-    ApproachLinear(mVertSpeed, -0x6000, 0x800);
+    ApproachLinear(mSpeed.y, -0x6000, 0x800);
 
     if (mBalloonTimer == 0) {
         func_ov002_020de968();
@@ -17294,17 +17277,17 @@ s32 daPly_c::St_Balloon_Main() {
 
     if ((flags & 2) && mStateWaitTimer == 0) {
         if (mStateTimer == 0) {
-            mVertSpeed += 0xc000;
-            if (mVertSpeed < 0xc000)
-                mVertSpeed = 0xc000;
-            if (mVertSpeed > 0x10000)
-                mVertSpeed = 0x10000;
+            mSpeed.y += 0xc000;
+            if (mSpeed.y < 0xc000)
+                mSpeed.y = 0xc000;
+            if (mSpeed.y > 0x10000)
+                mSpeed.y = 0x10000;
         } else {
-            mVertSpeed += 0x6000;
-            if (mVertSpeed < 0x6000)
-                mVertSpeed = 0x6000;
-            if (mVertSpeed > 0xc000)
-                mVertSpeed = 0xc000;
+            mSpeed.y += 0x6000;
+            if (mSpeed.y < 0x6000)
+                mSpeed.y = 0x6000;
+            if (mSpeed.y > 0xc000)
+                mSpeed.y = 0xc000;
         }
         Sound::PlayBank0(0xbe, mCamSpacePos);
         mStateTimer = 8;
@@ -17335,20 +17318,20 @@ s32 daPly_c::St_Balloon_Main() {
     if (mode & 1) {
         s32 g = mPrevVertSpeed;
         if (g < 0) {
-            mVertSpeed = -FX_MUL(g, 0x2800);
+            mSpeed.y = -FX_MUL(g, 0x2800);
             this->func_ov002_020de428();
         }
     } else if (mode & 4) {
         s32 g = mPrevVertSpeed;
         if (g > 0) {
-            mVertSpeed = -(s32)((((long long)g << 14) + 0x800) >> 12);
+            mSpeed.y = -(s32)((((long long)g << 14) + 0x800) >> 12);
             mStateWaitTimer = 30;
             this->func_ov002_020de428();
         }
     }
 
-    if (mVertSpeed >= 0xa000)
-        mVertSpeed = 0xa000;
+    if (mSpeed.y >= 0xa000)
+        mSpeed.y = 0xa000;
 
     s32 r4 = 0;
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
@@ -17359,7 +17342,7 @@ s32 daPly_c::St_Balloon_Main() {
     ApproachLinear(mHorzSpeed, func_ov002_020bf224(r4, 0), 0x100);
     func_ov002_020de3d0(&mAngleZ, &mAngleYSpeed);
     func_ov002_020de3d0(&mAngleX, &mAngleXSpeed);
-    mPrevVertSpeed = mVertSpeed;
+    mPrevVertSpeed = mSpeed.y;
     mModels.mAnmModel1.Advance();
     return 1;
 }
@@ -17370,16 +17353,16 @@ int daPly_c::St_Balloon_Init() {
     ReleaseHeldActor();
     mIsInAirState = 1;
     mIsFallScreaming = 0;
-    if (mVertSpeed >= 0x10000)
-        mVertSpeed = 0x10000;
-    if (mVertSpeed <= -0x10000)
-        mVertSpeed = -0x10000;
+    if (mSpeed.y >= 0x10000)
+        mSpeed.y = 0x10000;
+    if (mSpeed.y <= -0x10000)
+        mSpeed.y = -0x10000;
     mHorzSpeed = 0;
     mModelOffsetY = 0x64000;
     ((::dCamera_c *)gCamera[0])->func_0200d63c(mPlayerNo);
     mAngleYSpeed = 0x100;
     mAngleXSpeed = 0x100;
-    mPrevVertSpeed = mVertSpeed;
+    mPrevVertSpeed = mSpeed.y;
     mModels.mAnmModel1.SetAnim((BCA_File *)((void *)data_ov002_0210e750[1]), 0x40000000, 0x1000, 0);
     mModels.mAnmModel1.currFrame = 0;
     return 1;
@@ -17434,7 +17417,7 @@ int daPly_c::St_WindCarry_Main() {
         this->PlayLandingSoundOnce();
         this->ChangeState(data_ov002_021105bc);
         this->SetAnim(0x43, 0x40000000, 0x1000, 0);
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         return 1;
     }
 
@@ -17447,10 +17430,11 @@ int daPly_c::St_WindCarry_Main() {
                 speed = 0x32000;
             else
                 speed = 0x2710000 / ((val + 0xc8000) >> 12);
-            if (mVertSpeed < speed) {
-                int* p = &this->mVertSpeed;
+            if (mSpeed.y < speed) {
+                int *p = &this->mSpeed.y;
                 *p = *p + (speed >> 3);
-                if (mVertSpeed > speed) mVertSpeed = speed;
+                if (mSpeed.y > speed)
+                    mSpeed.y = speed;
             }
         }
     }
@@ -17470,7 +17454,7 @@ int daPly_c::St_WindCarry_Init() {
     extern int gCamera[];
     DropHeldObj();
     this->SetAnim(0x4a, 0x40000000, 0x1000, 0);
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
     ((::dCamera_c *)gCamera[0])->func_0200d63c(mPlayerNo);
@@ -17519,7 +17503,7 @@ int daPly_c::St_JumpQuicksand_Init() {
     mJumpedFromQuicksand = 1;
     this->SetAnim(0x53, 0x40000000, 0x1000, 0);
     mStateWork = 0;
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
     return 1;
@@ -17549,7 +17533,7 @@ int daPly_c::St_Cannon_Main() {
         int ang = (u16)((dCamera_c *)p)->mAngleX;
         int j = ang >> 4;
         mHorzSpeed = FX_MUL(FX_SinCosTable_[j * 2 + 1], 0x64000);
-        mVertSpeed = FX_MUL(FX_SinCosTable_[j * 2], 0x64000);
+        mSpeed.y = FX_MUL(FX_SinCosTable_[j * 2], 0x64000);
         mAngleX = 0;
         mStateStep = 2;
         mOpacity = 0x1f;
@@ -17576,10 +17560,10 @@ int daPly_c::St_Cannon_Main() {
             this->ChangeState(data_ov002_0211031c);
             mIsAirborne = 1;
             mLandSoundPlayed = 0;
-            mVertSpeed = 0xa000;
+            mSpeed.y = 0xa000;
             return 1;
         }
-        if (mHasWings != 0 && mVertSpeed < 0) {
+        if (mHasWings != 0 && mSpeed.y < 0) {
             this->SetAnim(0x72, 0x40000000, 0x1000, 0);
             mStateStep = 3;
             return 1;
@@ -17587,10 +17571,10 @@ int daPly_c::St_Cannon_Main() {
         mHorzSpeed -= 0x80;
         if (mHorzSpeed < 0xa000)
             mHorzSpeed = 0xa000;
-        if (mVertSpeed >= 0)
+        if (mSpeed.y >= 0)
             Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
         if (mStateWork == 0)
-            mAngleX = cstd::atan2(mHorzSpeed >> 8, mVertSpeed >> 8) - 0x4000;
+            mAngleX = cstd::atan2(mHorzSpeed >> 8, mSpeed.y >> 8) - 0x4000;
         AdvanceAnims();
         // fall through
     case 3:
@@ -17675,7 +17659,6 @@ int daPly_c::St_Owl_Cleanup() {
 }
 
 int daPly_c::St_Owl_Main() {
-    extern void func_0201f32c(int a);
     extern unsigned char data_0209f49c[];
     extern char data_0209f4a0[];
     extern char *gCamera;
@@ -17697,13 +17680,13 @@ int daPly_c::St_Owl_Main() {
             mVertAccel = -0x2c00;
         }
         if (mIsAirborne != 0) {
-            if (mVertSpeed < 0) {
-                ApproachLinear(mVertSpeed, 0x3c000, 0x8000);
+            if (mSpeed.y < 0) {
+                ApproachLinear(mSpeed.y, 0x3c000, 0x8000);
             } else {
-                ApproachLinear(mVertSpeed, 0x3c000, 0x2000);
+                ApproachLinear(mSpeed.y, 0x3c000, 0x2000);
             }
         } else {
-            mVertSpeed = 0x8000;
+            mSpeed.y = 0x8000;
             mIsAirborne = 1;
             mLandSoundPlayed = 0;
         }
@@ -17714,7 +17697,7 @@ int daPly_c::St_Owl_Main() {
     case 4: {
         int frame = (u16)((u32)((daOwl_c *)mHeldObj)->mAnmModel.currFrame >> 12);
         short ang = (frame + 0xb) * 0xccc;
-        mVertSpeed = FX_CosIdx((u16)ang >> 4) * 10;
+        mSpeed.y = FX_CosIdx((u16)ang >> 4) * 10;
         mHorzSpeed = 0x14000;
         if (data_0209f498[gActivePlayerSlot].mag != 0) {
             ApproachAngle(&mAngleY, mDesiredAngleY, 0x20, 0x100, 0);
@@ -17722,7 +17705,7 @@ int daPly_c::St_Owl_Main() {
         if (mStateStep == 1) {
             if (mAttachOffsetY - 0xed8000 > mPosY) {
                 mOwlFarCamera = 1;
-                func_0201f32c(0xa3);
+                Message::func_0201f32c(0xa3);
                 ((::dCamera_c *)gCamera)->func_0200d3f8(mPlayerNo, 0);
                 mVertAccel = 0;
                 DisableInteraction();
@@ -17739,7 +17722,7 @@ int daPly_c::St_Owl_Main() {
 
     case 2:
         mHorzSpeed = 0;
-        mVertSpeed = mHorzSpeed;
+        mSpeed.y = mHorzSpeed;
         if (data_0209d660 == 0) {
             mStateStep = 3;
             ((::dCamera_c *)gCamera)->func_0200d6b4(mPlayerNo);
@@ -17810,7 +17793,7 @@ int daPly_c::func_ov002_020df840(void *arg1, Vector3 *arg2) {
 extern "C" {
 void func_ov002_020df8f0(daPly_c *player) {
     typedef unsigned long long u64;
-    int vb = player->mVertSpeed;
+    int vb = player->mSpeed.y;
     int va = player->mHorzSpeed;
     int b = vb >> 8;
     int sq = b * b;
@@ -17923,7 +17906,7 @@ void func_ov002_020df8f0(daPly_c *player) {
     if (player->mPrevAngleX < (s16)0xd556)
         player->mPrevAngleX = (s16)0xd556;
 
-    player->mVertSpeed =
+    player->mSpeed.y =
         FX_MUL(player->mPrevVertSpeed, FX_SinCosTable_[((u16)player->mPrevAngleX >> 4) * 2]);
     player->mHorzSpeed =
         FX_MUL(player->mPrevVertSpeed, FX_SinCosTable_[((u16)player->mPrevAngleX >> 4) * 2 + 1]);
@@ -17968,14 +17951,14 @@ skip:
         this->PlayLandingSoundOnce();
         this->ChangeState(data_ov002_021105bc);
         this->SetAnim(0x43, 0x40000000, 0x1000, 0);
-        mVertSpeed = 0;
+        mSpeed.y = 0;
         return 1;
     }
 
     if (this->IsAnim(0x4a) != 0) {
-        if (mVertSpeed > 0x20000) {
+        if (mSpeed.y > 0x20000) {
             mVertAccel = -0x3400;
-            if (mVertSpeed >= 0) {
+            if (mSpeed.y >= 0) {
                 if ((data_0209f498[gActivePlayerSlot].held & 2) == 0) {
                     mVertAccel = -0x8000;
                 }
@@ -18081,7 +18064,7 @@ int daPly_c::St_Fly_Init() {
     mPrevAngleY = mAngleY;
     ReleaseHeldActor();
     if (mStateStep == 0) {
-        mVertSpeed = 0x5d000;
+        mSpeed.y = 0x5d000;
         this->SetAnim(0x4a, 0x40000000, 0x1000, 0);
         mTerminalVelocity = -0x4000;
     } else {
@@ -18307,7 +18290,7 @@ int daPly_c::St_SmallLaunchUp_Init() {
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
     this->SetAnim(0x56, 0, 0x1000, 0);
-    mVertSpeed = 0x2a000;
+    mSpeed.y = 0x2a000;
     mHorzSpeed = 0;
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
@@ -18345,7 +18328,7 @@ int daPly_c::St_SlopeJump_Init() {
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
     this->SetAnim(0x53, 0x40000000, 0x1000, 0);
-    mVertSpeed = 0x2a000;
+    mSpeed.y = 0x2a000;
     ApplyQuicksandToJump();
     if (mHorzSpeed > 0) {
         mHorzSpeed = FX_MUL(mHorzSpeed, 0xc00);
@@ -18411,7 +18394,7 @@ int daPly_c::St_CrazedCrate_Main() {
     }
 
     int v98 = mHorzSpeed;
-    int va8 = mVertSpeed;
+    int va8 = mSpeed.y;
     int atan2 = cstd::atan2(v98 >> 8, va8 >> 8);
     mAngleX = (s16)(atan2 - 0x4000);
 
@@ -18419,7 +18402,7 @@ int daPly_c::St_CrazedCrate_Main() {
 }
 
 void daPly_c::func_ov002_020e0f38(int a) {
-    mVertSpeed = data_ov002_020ff17c[a];
+    mSpeed.y = data_ov002_020ff17c[a];
     mHorzSpeed = data_ov002_020ff188[a];
     if (a != 0)
         LandingDust(true);
@@ -18448,7 +18431,7 @@ void daPly_c::SpinBounce(fx32 f) {
         return;
     if (this->GetHealth() == 0)
         return;
-    this->mVertSpeed = f;
+    this->mSpeed.y = f;
     Sound::PlayCharVoice(this->mCharacter, 0x28, this->mCamSpacePos);
     Sound::PlayBank0(0xb6, this->mCamSpacePos);
     this->mStatePhase = 1;
@@ -18501,7 +18484,7 @@ int daPly_c::St_Spin_Init() {
     this->SetAnim(0x5f, 0, 0x1000, 0);
     mTerminalVelocity = -0x10000;
     if (mStatePhase) {
-        mVertSpeed = 0x50000;
+        mSpeed.y = 0x50000;
         PlayJumpSound(2);
     }
     u32 *p = &mdCcAcPos_c.flags;
@@ -18545,7 +18528,7 @@ int daPly_c::St_LongJump_Init() {
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
     this->SetAnim(0x1a, 0x40000000, 0x1000, 0);
-    mVertSpeed = 0x1e000;
+    mSpeed.y = 0x1e000;
     ApplyQuicksandToJump();
     mVertAccel = -0x2000;
     mHorzSpeed = FX_MUL(mHorzSpeed, 0x1800);
@@ -18564,13 +18547,12 @@ int daPly_c::St_LongJump_Init() {
 }
 
 int daPly_c::St_SideFlip_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr * a, dActor_c * b);
     extern u16 data_0209f49e[];
     extern u16 data_0209f49c[];
-    func_ov002_020eeca8(&mMeshClsn, this);
+    ((BgChEvt *)&mMeshClsn)->func_ov002_020eeca8(this);
 
     if (IsState(data_ov002_02110694)) {
-        if (mVertSpeed < 0) {
+        if (mSpeed.y < 0) {
             mHorzSpeed = 0x12000;
         }
         UpdateAirMovement(0, 0x800);
@@ -18599,7 +18581,7 @@ int daPly_c::St_SideFlip_Main() {
 
         mVertAccel = -0x4000;
 
-        if (mVertSpeed >= 0) {
+        if (mSpeed.y >= 0) {
             u16 r1v = data_0209f498[gActivePlayerSlot].held;
             if ((r1v & 2) != 0 || IsState(data_ov002_021101e4) || IsState(data_ov002_021101fc) ||
                 IsState(data_ov002_0211052c)) {
@@ -18634,7 +18616,7 @@ int daPly_c::St_WaterJump_Init() {
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
     this->SetAnim(0x53, 0x40000000, 0x1000, 0);
-    mVertSpeed = 0x2a000;
+    mSpeed.y = 0x2a000;
     mHorzSpeed = 0x12000;
     Sound::PlayBank0(0x18, mCamSpacePos);
     PlayJumpSound(0);
@@ -18649,17 +18631,16 @@ int daPly_c::St_HeadstandJump_Init() {
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
     this->SetAnim(0x1c, 0x40000000, 0x1000, 0);
-    mVertSpeed = 0x3e000;
+    mSpeed.y = 0x3e000;
     mHorzSpeed = 0x18000;
     Sound::PlayCharVoice(mCharacter, 0xc, mCamSpacePos);
     return 1;
 }
 
 int daPly_c::St_WallJump_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern unsigned short data_0209f49e[];
     extern void (daPly_c::*data_ov002_0211073c[])();
-    func_ov002_020eeca8(&mMeshClsn, this);
+    ((BgChEvt *)&mMeshClsn)->func_ov002_020eeca8(this);
     UpdateAirMovement(0x1800, 0x800);
     if (mIsAirborne == 0) {
         this->ChangeState(data_ov002_02110424);
@@ -18708,7 +18689,7 @@ int daPly_c::St_WallJump_Init() {
     mLandSoundPlayed = 0;
     this->SetAnim(0x28, 0x40000000, 0x1000, 0);
     if (param1 == 2) {
-        mVertSpeed = 0x2aa00;
+        mSpeed.y = 0x2aa00;
     } else {
         SetVertSpeedByCharFactor(0x3e000);
     }
@@ -18735,9 +18716,9 @@ int daPly_c::St_BackFlip_Init() {
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
     this->SetAnim(0x2a, 0x40000000, 0x1000, 0);
-    mVertSpeed = 0x3e000;
+    mSpeed.y = 0x3e000;
     if (param1 == 1)
-        mVertSpeed = 0x4c000;
+        mSpeed.y = 0x4c000;
     ApplyQuicksandToJump();
     mHorzSpeed = 0x10000;
     mPrevAngleY = mAngleY + 0x8000;
@@ -18753,7 +18734,7 @@ int daPly_c::St_SlideKickRecover_Init() {
     mJumpComboStage = 0;
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
-    mVertSpeed = 0x20000;
+    mSpeed.y = 0x20000;
     this->SetAnim(0x56, 0x40000000, 0x1000, 0);
     PlayJumpSound(0);
     Sound::PlayBank0(0xf, mCamSpacePos);
@@ -18774,7 +18755,7 @@ int daPly_c::St_SideFlip_Init() {
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
     mHorzSpeed = 0x8000;
-    mVertSpeed = 0x3e000;
+    mSpeed.y = 0x3e000;
     ApplyQuicksandToJump();
     this->SetAnim(0x4d, 0x40000000, 0x1000, 0);
     mPrevAngleY = mDesiredAngleY;
@@ -18824,19 +18805,19 @@ void daPly_c::func_ov002_020e1c20() {
     if ((mStateStep) != 0) {
         if ((data_0209f498[gActivePlayerSlot].held) & 2) {
             if ((mClsnFlags) & 4) {
-                mVertSpeed = -0x20000;
+                mSpeed.y = -0x20000;
             }
             mLoopingSoundHandle =
                 func_02012120(mLoopingSoundHandle, mCharacter, 0x18, &mCamSpacePos, 0);
             mHorzSpeed = FX_MUL(mHorzSpeed, 0xf00);
-            if ((mVertSpeed) < 0) {
-                int *p = (&mVertSpeed);
+            if ((mSpeed.y) < 0) {
+                int *p = (&mSpeed.y);
                 *p = *p + 0xc00;
             } else {
-                int *p = (&mVertSpeed);
+                int *p = (&mSpeed.y);
                 *p = *p + 0x1000;
             }
-            if ((mVertSpeed) < 0x11000) {
+            if ((mSpeed.y) < 0x11000) {
                 return;
             }
         }
@@ -18847,7 +18828,7 @@ void daPly_c::func_ov002_020e1c20() {
     }
 
     mVertAccel = func_ov002_020bf27c(-0x4000);
-    if ((mVertSpeed) >= 0) {
+    if ((mSpeed.y) >= 0) {
         mVertAccel = -0x8000;
         if ((data_0209f498[gActivePlayerSlot].held) & 2) {
             mVertAccel = func_ov002_020bf27c(-0x3000);
@@ -18855,7 +18836,7 @@ void daPly_c::func_ov002_020e1c20() {
         return;
     }
 
-    if ((mVertSpeed) >= -0x8000) {
+    if ((mSpeed.y) >= -0x8000) {
         return;
     }
 
@@ -18875,13 +18856,13 @@ void func_ov002_020e1e70(daPly_c *player) {
     extern unsigned char data_0209f49c[];
     player->mVertAccel = -0x4000;
     player->mTerminalVelocity = -0x4b000;
-    if ((player->mVertSpeed) >= 0) {
+    if ((player->mSpeed.y) >= 0) {
         player->mVertAccel = -0x8000;
         if ((data_0209f498[gActivePlayerSlot].held) & 2) {
             player->mVertAccel = -0x3400;
         }
     }
-    if ((player->mVertSpeed) >= 0) {
+    if ((player->mSpeed.y) >= 0) {
         return;
     }
     if ((data_0209f498[gActivePlayerSlot].held) & 2) {
@@ -18908,12 +18889,12 @@ void func_ov002_020e200c(daPly_c *player) {
     extern unsigned char data_0209f49c[];
     player->mVertAccel = player->func_ov002_020bf27c(-0x4000);
     player->mTerminalVelocity = -0x4b000;
-    if (player->mVertSpeed >= 0) {
+    if (player->mSpeed.y >= 0) {
         player->mVertAccel = -0x8000;
         if (data_0209f498[gActivePlayerSlot].held & 2)
             player->mVertAccel = -0x3400;
     }
-    if (player->mVertSpeed >= 0)
+    if (player->mSpeed.y >= 0)
         return;
     if (player->mJumpComboStage == 1)
         player->SetAnim(0x50, 0x40000000, 0x1000, 0);
@@ -18927,10 +18908,9 @@ void func_ov002_020e200c(daPly_c *player) {
 }
 
 int daPly_c::St_Jump_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr *, dActor_c *);
     extern u16 data_0209f49e[];
     extern void (daPly_c::*data_ov002_0211073c[])();
-    func_ov002_020eeca8(&mMeshClsn, this);
+    ((BgChEvt *)&mMeshClsn)->func_ov002_020eeca8(this);
     UpdateAirMovement(0xd00, 0x800);
 
     if (mIsAirborne == 0) {
@@ -18954,7 +18934,7 @@ int daPly_c::St_Jump_Main() {
         if (mJumpComboStage == 2) {
             mVertAccel = -0x4000;
             mTerminalVelocity = -0x4b000;
-            if (mVertSpeed >= 0) {
+            if (mSpeed.y >= 0) {
                 mVertAccel = -0x3400;
             }
 
@@ -19225,7 +19205,7 @@ void daPly_c::ApplyQuicksandToJump() {
     if (mSinkDepth <= 0x1000)
         return;
     if (mQuicksandJumpTimer == 0) {
-        mVertSpeed = FX_MUL(mVertSpeed, 0x900);
+        mSpeed.y = FX_MUL(mSpeed.y, 0x900);
         mHorzSpeed >>= 1;
         mJumpedFromQuicksand = 1;
     } else {
@@ -19320,7 +19300,7 @@ int daPly_c::CheckFallDamage() {
             }
 
             func_ov002_020db8bc(1);
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             gCamera->func_0200d8c8(&mPos, 0x7d0000);
             mIsFallScreaming = 0;
             Sound::PlayCharVoice(mCharacter, 7, mCamSpacePos);
@@ -19731,9 +19711,7 @@ int daPly_c::CleanupResources() {
 
 /* Vtable slot 12. Empty override; daPly_c does nothing when marked for destruction.
  */
-void daPly_c::OnPendingDestroy() {
-    this;
-}
+void daPly_c::OnPendingDestroy() {}
 
 int daPly_c::Render() {
     struct VObj {
@@ -20659,7 +20637,6 @@ void daPly_c::func_ov002_020e5948() {
     extern SharedFilePtr data_ov002_0210e3d8;
     extern SharedFilePtr data_ov002_0210eb88;
     extern SharedFilePtr data_ov002_0210e750;
-    daPly_c *player = this;
     s32 i;
     s32 j;
     s32 bodyId;
@@ -20679,27 +20656,27 @@ void daPly_c::func_ov002_020e5948() {
     dExtFrameCtrl_c::LoadFile(data_ov002_0210eb88);
     dExtFrameCtrl_c::LoadFile(data_ov002_0210e4c0);
 
-    if (gNumStageStars[player->mPlayerNo] != 0) {
+    if (gNumStageStars[mPlayerNo] != 0) {
         LoadSilverStarAndNumber();
-        player->mLoadedResourceFlags |= 1;
+        mLoadedResourceFlags |= 1;
     }
 
     {
-        s32 b = player->param1;
-        s32 a = player->mCharacter;
+        s32 b = param1;
+        s32 a = mCharacter;
         if (a != b) {
         switch (b) {
         case 0:
             dExtSimpleModel_c::LoadFile(data_ov002_0210da40);
-            player->mLoadedResourceFlags |= 2;
+            mLoadedResourceFlags |= 2;
             break;
         case 1:
             dExtSimpleModel_c::LoadFile(data_ov002_0210d9a0);
-            player->mLoadedResourceFlags |= 4;
+            mLoadedResourceFlags |= 4;
             break;
         case 2:
             dExtSimpleModel_c::LoadFile(data_ov002_0210d9c0);
-            player->mLoadedResourceFlags |= 8;
+            mLoadedResourceFlags |= 8;
             break;
         }
     }
@@ -20793,23 +20770,22 @@ void daPly_c::func_ov002_020e5948() {
         mode = gGameMode;
         mode = (mode == 1);
         if (mode == 0) {
-            player->mCharFileBase = 0;
+            mCharFileBase = 0;
         } else {
-            player->mCharFileBase = 0x44;
+            mCharFileBase = 0x44;
             func_ov002_020bec2c();
         }
     }
 
-    dExtFrameCtrl_c::LoadFile(*data_ov002_020ff480[(s32)player->mCharFileBase]);
+    dExtFrameCtrl_c::LoadFile(*data_ov002_020ff480[(s32)mCharFileBase]);
 
     i = 0;
     do {
-        player->mModels.mBodyModels[i] = new dExtAnm2Model_c;
-        player->mModels.mBodyModels[i]->SetFile(
-            dExtSimpleModel_c::LoadFile(*data_ov002_0210a68c[i]), 1, 1);
-        player->mModels.mBodyModels[i]->Func_020162C4(
-            (BCA_File *)data_ov002_020ff480[i + 0xC4]->filePtr, 0, 0x1000, 0);
-        player->mModels.mBodyTexParams[i] = func_ov002_020e6bb0(player->mModels.mBodyModels[i]);
+        mModels.mBodyModels[i] = new dExtAnm2Model_c;
+        mModels.mBodyModels[i]->SetFile(dExtSimpleModel_c::LoadFile(*data_ov002_0210a68c[i]), 1, 1);
+        mModels.mBodyModels[i]->Func_020162C4((BCA_File *)data_ov002_020ff480[i + 0xC4]->filePtr, 0,
+                                              0x1000, 0);
+        mModels.mBodyTexParams[i] = func_ov002_020e6bb0(mModels.mBodyModels[i]);
         i++;
     } while (i < 4);
 
@@ -20818,17 +20794,17 @@ void daPly_c::func_ov002_020e5948() {
     i = 0;
     do {
         if (i == 3) {
-            player->mModels.mHeadModels[i] = new dExtAnmModel_c;
-            player->mModels.mHeadModels[i]->SetFile(
-                dExtSimpleModel_c::LoadFile(*data_ov002_0210a69c[i]), 1, 1);
-            ((dExtAnmModel_c *)player->mModels.mHeadModels[i])
+            mModels.mHeadModels[i] = new dExtAnmModel_c;
+            mModels.mHeadModels[i]->SetFile(dExtSimpleModel_c::LoadFile(*data_ov002_0210a69c[i]), 1,
+                                            1);
+            ((dExtAnmModel_c *)mModels.mHeadModels[i])
                 ->SetAnim((BCA_File *)data_ov002_0210eb88.filePtr, 0, 0x1000, 0);
         } else {
-            player->mModels.mHeadModels[i] = new dExtSimpleModel_c;
-            player->mModels.mHeadModels[i]->SetFile(
-                dExtSimpleModel_c::LoadFile(*data_ov002_0210a69c[i]), 1, 1);
+            mModels.mHeadModels[i] = new dExtSimpleModel_c;
+            mModels.mHeadModels[i]->SetFile(dExtSimpleModel_c::LoadFile(*data_ov002_0210a69c[i]), 1,
+                                            1);
         }
-        player->mModels.mHeadTexParams[i] = func_ov002_020e6bb0(player->mModels.mHeadModels[i]);
+        mModels.mHeadTexParams[i] = func_ov002_020e6bb0(mModels.mHeadModels[i]);
         i++;
     } while (i < 4);
 
@@ -20837,11 +20813,10 @@ void daPly_c::func_ov002_020e5948() {
         p = new dExtSimpleModel_c;
         {
             s32 idx = j + 4;
-            player->mModels.mHeadModels[idx] = (dExtSimpleModel_c *)p;
-            player->mModels.mHeadModels[idx]->SetFile(
-                dExtSimpleModel_c::LoadFile(*data_ov002_0210a6ac[j]), 1, 1);
-            player->mModels.mHeadTexParams[idx] =
-                func_ov002_020e6bb0(player->mModels.mHeadModels[idx]);
+            mModels.mHeadModels[idx] = (dExtSimpleModel_c *)p;
+            mModels.mHeadModels[idx]->SetFile(dExtSimpleModel_c::LoadFile(*data_ov002_0210a6ac[j]),
+                                              1, 1);
+            mModels.mHeadTexParams[idx] = func_ov002_020e6bb0(mModels.mHeadModels[idx]);
         }
         j++;
     } while (j < 4);
@@ -20851,40 +20826,34 @@ void daPly_c::func_ov002_020e5948() {
         mode = gGameMode;
         mode = (mode == 1);
         if (mode == 0) {
-            player->mModels.mSleepBubbleModel = new dExtSimpleModel_c;
-            player->mModels.mSleepBubbleModel->SetFile(
-                dExtSimpleModel_c::LoadFile(data_ov002_0210da38), 1, -1);
+            mModels.mSleepBubbleModel = new dExtSimpleModel_c;
+            mModels.mSleepBubbleModel->SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210da38), 1,
+                                               -1);
 
             if (gCurrentSublevel != 2 && gCurrentSublevel != 5 && gCurrentSublevel != 4) {
-                player->mLoadedResourceFlags |= 0x20;
-                player->mModels.mBodyModels[4] = new dExtAnm2Model_c;
-                player->mModels.mBodyModels[4]->SetFile(
-                    dExtSimpleModel_c::LoadFile(data_ov002_0210e780), 1, -1);
-                player->mModels.mBodyModels[4]->Func_020162C4(
+                mLoadedResourceFlags |= 0x20;
+                mModels.mBodyModels[4] = new dExtAnm2Model_c;
+                mModels.mBodyModels[4]->SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e780), 1,
+                                                -1);
+                mModels.mBodyModels[4]->Func_020162C4(
                     (BCA_File *)data_ov002_020ff480[0xC6]->filePtr, 0, 0x1000, 0);
-                player->mModels.mAnmModel1.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e6f8),
-                                                   1, 1);
-                player->mModels.mAnmModel1.SetAnim((BCA_File *)data_ov002_0210e750.filePtr, 0,
-                                                   0x1000, 0);
-                player->mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0),
-                                                   1, 1);
-                player->mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0,
-                                                   0x1000, 0);
+                mModels.mAnmModel1.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e6f8), 1, 1);
+                mModels.mAnmModel1.SetAnim((BCA_File *)data_ov002_0210e750.filePtr, 0, 0x1000, 0);
+                mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1, 1);
+                mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0, 0x1000, 0);
             }
         } else {
-            player->mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1,
-                                               1);
-            player->mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0, 0x1000,
-                                               0);
+            mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1, 1);
+            mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0, 0x1000, 0);
         }
     }
 
-    player->mShadowModel.InitCylinder();
+    mShadowModel.InitCylinder();
 
     bodyId = GetBodyModelID(3, 0);
-    ma = player->mModels.mBodyModels[bodyId];
-    player->mVsYoshiMaterialParam =
-        (player->mPlayerNo << 1) + ((dExtAnmModel_c *)ma)->data.materials->texImageParam;
+    ma = mModels.mBodyModels[bodyId];
+    mVsYoshiMaterialParam =
+        (mPlayerNo << 1) + ((dExtAnmModel_c *)ma)->data.materials->texImageParam;
 
     n = 0;
     {
@@ -20899,7 +20868,7 @@ void daPly_c::func_ov002_020e5948() {
         outer = n * 4;
         do {
             k = 0;
-            texseq = player->mModels.mTexSeqBody;
+            texseq = mModels.mTexSeqBody;
             do {
                 entry = data_ov002_020ff2f0[outer + k];
                 dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210a69c[k]->filePtr,
@@ -20917,12 +20886,10 @@ void daPly_c::func_ov002_020e5948() {
 
     dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210ebb8.filePtr,
                              *(BTP_File *)data_ov002_0210e8d0.filePtr);
-    player->mModels.mTexSeqPlayer[0].SetFile(*(BTP_File *)data_ov002_0210e8d0.filePtr, 0, 0x1000,
-                                             0);
+    mModels.mTexSeqPlayer[0].SetFile(*(BTP_File *)data_ov002_0210e8d0.filePtr, 0, 0x1000, 0);
     dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210eb20.filePtr,
                              *(BTP_File *)data_ov002_0210ebd8.filePtr);
-    player->mModels.mTexSeqPlayer[1].SetFile(*(BTP_File *)data_ov002_0210ebd8.filePtr, 0, 0x1000,
-                                             0);
+    mModels.mTexSeqPlayer[1].SetFile(*(BTP_File *)data_ov002_0210ebd8.filePtr, 0, 0x1000, 0);
 }
 
 void daPly_c::PlayCharacterSound() {
@@ -21079,15 +21046,12 @@ daPly_c::~daPly_c() {}
 daPly_c::daPly_c() {}
 
 int daPly_c::OnYoshiTryEat() {
-    this;
     return 1;
 }
 
 extern "C" {
 extern unsigned short data_ov002_0210a760[];
-void func_ov002_020e69c0(void *unused)
-{
-    (void)unused;
+void func_ov002_020e69c0(void *) {
     unsigned short *dst = data_ov002_0210a760;
     unsigned short a = *dst;
     unsigned short b = dst[1];
@@ -22317,7 +22281,6 @@ void func_0203b9b4(int *p, int v);
 void __register_global_object(void *object, void *destructor, void **node);
 }
 
-void *func_02017acc(void *self, unsigned int fileID);
 int func_02017ab4(int self);
 int SharedFilePtr_Destruct_Anim(int self);
 void *SharedFilePtr_Construct_TexSeq(void *self, unsigned int fileID);
@@ -22935,43 +22898,43 @@ extern "C" {
 void __sinit_ov002_021019d0(void) {
     func_0203b9b4(&data_ov002_0210e160, 1234);
     __register_global_object(&data_ov002_0210e160, (void *)func_0201973c, data_ov002_0210f9b0);
-    func_02017acc(&data_ov002_0210e6f8, ASSET_B_MARIO_ALL_BMD);
+    data_ov002_0210e6f8.func_02017acc(ASSET_B_MARIO_ALL_BMD);
     __register_global_object(&data_ov002_0210e6f8, (void *)func_02017ab4, data_ov002_0210f9c8);
-    func_02017acc(&data_ov002_0210e648, ASSET_B_MARIO_BODY_BMD);
+    data_ov002_0210e648.func_02017acc(ASSET_B_MARIO_BODY_BMD);
     __register_global_object(&data_ov002_0210e648, (void *)func_02017ab4, data_ov002_0210f9d4);
-    func_02017acc(&data_ov002_0210eae8, ASSET_B_MARIO_HEAD_CAP_BMD);
+    data_ov002_0210eae8.func_02017acc(ASSET_B_MARIO_HEAD_CAP_BMD);
     __register_global_object(&data_ov002_0210eae8, (void *)func_02017ab4, data_ov002_0210f9e0);
-    func_02017acc(&data_ov002_0210eb20, 0x807e);
+    data_ov002_0210eb20.func_02017acc(0x807e);
     __register_global_object(&data_ov002_0210eb20, (void *)func_02017ab4, data_ov002_0210f9f8);
-    func_02017acc(&data_ov002_0210eb00, 0x807f);
+    data_ov002_0210eb00.func_02017acc(0x807f);
     __register_global_object(&data_ov002_0210eb00, (void *)func_02017ab4, data_ov002_0210fa04);
-    func_02017acc(&data_ov002_0210ebb8, 0x8080);
+    data_ov002_0210ebb8.func_02017acc(0x8080);
     __register_global_object(&data_ov002_0210ebb8, (void *)func_02017ab4, data_ov002_0210fa1c);
-    func_02017acc(&data_ov002_0210e690, 0x8081);
+    data_ov002_0210e690.func_02017acc(0x8081);
     __register_global_object(&data_ov002_0210e690, (void *)func_02017ab4, data_ov002_0210fa28);
-    func_02017acc(&data_ov002_0210ec38, 0x8082);
+    data_ov002_0210ec38.func_02017acc(0x8082);
     __register_global_object(&data_ov002_0210ec38, (void *)func_02017ab4, data_ov002_0210fa40);
-    func_02017acc(&data_ov002_0210ec50, 0x8083);
+    data_ov002_0210ec50.func_02017acc(0x8083);
     __register_global_object(&data_ov002_0210ec50, (void *)func_02017ab4, data_ov002_0210fa4c);
-    func_02017acc(&data_ov002_0210e758, 0x80b8);
+    data_ov002_0210e758.func_02017acc(0x80b8);
     __register_global_object(&data_ov002_0210e758, (void *)func_02017ab4, data_ov002_0210fa64);
-    func_02017acc(&data_ov002_0210e790, 0x80b9);
+    data_ov002_0210e790.func_02017acc(0x80b9);
     __register_global_object(&data_ov002_0210e790, (void *)func_02017ab4, data_ov002_0210fa70);
-    func_02017acc(&data_ov002_0210e780, ASSET_WARIO_METAL_MODEL_BMD);
+    data_ov002_0210e780.func_02017acc(ASSET_WARIO_METAL_MODEL_BMD);
     __register_global_object(&data_ov002_0210e780, (void *)func_02017ab4, data_ov002_0210fa94);
-    func_02017acc(&data_ov002_0210ec60, 0x80ba);
+    data_ov002_0210ec60.func_02017acc(0x80ba);
     __register_global_object(&data_ov002_0210ec60, (void *)func_02017ab4, data_ov002_0210faa0);
-    func_02017acc(&data_ov002_0210e7b0, 0x80bd);
+    data_ov002_0210e7b0.func_02017acc(0x80bd);
     __register_global_object(&data_ov002_0210e7b0, (void *)func_02017ab4, data_ov002_0210fab8);
-    func_02017acc(&data_ov002_0210e3a0, 0x80c0);
+    data_ov002_0210e3a0.func_02017acc(0x80c0);
     __register_global_object(&data_ov002_0210e3a0, (void *)func_02017ab4, data_ov002_0210fac4);
-    func_02017acc(&data_ov002_0210e7d8, 0x80c1);
+    data_ov002_0210e7d8.func_02017acc(0x80c1);
     __register_global_object(&data_ov002_0210e7d8, (void *)func_02017ab4, data_ov002_0210fadc);
-    func_02017acc(&data_ov002_0210e7a8, 0x80c2);
+    data_ov002_0210e7a8.func_02017acc(0x80c2);
     __register_global_object(&data_ov002_0210e7a8, (void *)func_02017ab4, data_ov002_0210fae8);
-    func_02017acc(&data_ov002_0210e7f0, 0x80c3);
+    data_ov002_0210e7f0.func_02017acc(0x80c3);
     __register_global_object(&data_ov002_0210e7f0, (void *)func_02017ab4, data_ov002_0210fb00);
-    func_02017acc(&data_ov002_0210e818, 0x80c4);
+    data_ov002_0210e818.func_02017acc(0x80c4);
     __register_global_object(&data_ov002_0210e818, (void *)func_02017ab4, data_ov002_0210fb0c);
     data_ov002_0210e490.Construct(0x801d);
     __register_global_object(&data_ov002_0210e490, (void *)SharedFilePtr_Destruct_Anim,

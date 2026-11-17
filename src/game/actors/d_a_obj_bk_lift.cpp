@@ -165,7 +165,7 @@ int daObjBk_Lift_c::InitResources() {
         mMinPosY = mPosY;
         mMaxPosY = mMinPosY + 0x1f4000;
         mTerminalVelocity = -0x3c000;
-        mVertSpeed = 0xa000;
+        mSpeed.y = 0xa000;
     }
 
     if (gCurrentSublevel == 7 && (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0) &&
@@ -200,7 +200,7 @@ int daObjBk_Lift_c::Behavior() {
                 flag = (y >= bound);
                 if (flag == 0) {
                     mPosY = (y < bound) ? bound : y;
-                    mVertSpeed = 0xa000;
+                    mSpeed.y = 0xa000;
                     if (mJustSteppedOn == 0)
                         mMove = 0;
                 } else {
@@ -208,7 +208,7 @@ int daObjBk_Lift_c::Behavior() {
                     flag = (y <= bound);
                     if (flag == 0) {
                         mPosY = (y > bound) ? bound : y;
-                        mVertSpeed = -0xa000;
+                        mSpeed.y = -0xa000;
                         mMoveTimer = 90;
                     }
                 }

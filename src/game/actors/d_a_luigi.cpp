@@ -258,7 +258,7 @@ int daLuigi_c::ExecuteMirror(daPly_c *player) {
 
 /* One candidate caller, ov063 0x02118004, relocates to ov027 or ov055, so
  * the owner is unknown. */
-void func_ov055_02111264(void) {
+void daLuigi_c::func_ov055_02111264() {
     data_ov055_02111b68 = kReqFade;
     func_0201277c(kAppearSound);
 }

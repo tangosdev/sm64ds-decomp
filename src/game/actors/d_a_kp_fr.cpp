@@ -203,9 +203,9 @@ void daKpFr_c::func_ov070_02121d50(void* vclsn) {
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(normal);
         if (normal.y != 0) {
-            int a = FX_MUL(normal.x, mSpeedX);
-            int b = FX_MUL(normal.z, mSpeedZ);
-            mVertSpeed = -(FX_Div(a + b, normal.y) + 0x8000);
+            int a = FX_MUL(normal.x, mSpeed.x);
+            int b = FX_MUL(normal.z, mSpeed.z);
+            mSpeed.y = -(FX_Div(a + b, normal.y) + 0x8000);
         }
     }
     if (clsn->IsOnWall())

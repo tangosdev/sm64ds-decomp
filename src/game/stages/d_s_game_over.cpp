@@ -51,6 +51,7 @@ enum dScGameOver_c_AssetId {
 #include "OAM.h"
 #include "SpawnInfo.h"
 #include "decl_common.h"
+#include "Message.h"
 #include "PlayerInput.h"
 #include "dFdBrightness_c.h"
 #include "Sound.h"
@@ -268,7 +269,7 @@ s32 dScGameOver_c::InitResources() {
     DecompressLZ16(f, G2S_GetBG2ScrPtr());
     Deallocate(f);
 
-    func_0201cebc(0x27d);
+    Message::func_0201cebc(0x27d);
     UpdateButtonPalettes(1);
 
     mCursorState = 0;

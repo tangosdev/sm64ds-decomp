@@ -84,7 +84,6 @@ enum { kFlightSpeed = 0x32000 };
 extern "C" {
 void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
 }
-void func_ov063_0211cae8(daTrsTrap_c *c, int m);
 
 /* BOOK_SWITCH push order, indexed by the book's param1: the value the
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}
@@ -265,16 +264,17 @@ int daBook_c::GetHitType() {
         return HIT_ATTACKED;
 
     if (BumpedUnderneathByPlayer(*found) != 0) {
-        /* the bump also cancels the player's vertical speed. A VecFx32, not a
-           Vector3: the copy through a Vector3 local does not match. */
-        VecFx32 *p = (VecFx32 *)&found->mSpeedX;
+        /* the bump also cancels the player's vertical speed. The local is a
+           VecFx32, not a Vector3: the copy through a Vector3 local does not
+           match. */
+        Vector3 *p = &found->mSpeed;
         VecFx32 v;
         v.z = p->z;
         v.x = p->x;
         v.y = 0;
-        found->mSpeedX = v.x;
-        found->mVertSpeed = v.y;
-        found->mSpeedZ = v.z;
+        found->mSpeed.x = v.x;
+        found->mSpeed.y = v.y;
+        found->mSpeed.z = v.z;
         mTouchedPlayer = found;
         return HIT_ATTACKED;
     }
@@ -357,7 +357,7 @@ void daBook_c::UpdateSwitchBook() {
                 SpawnShootBook();
         }
         mTouchedPlayer = 0;
-        func_ov063_0211cae8(partner, (1u << param1) & 0xff);
+        partner->func_ov063_0211cae8((1u << param1) & 0xff);
         mPosZ = mHomePosZ;
         mState = STATE_SWITCH_DONE;
         return;
@@ -402,9 +402,9 @@ void daBook_c::StateYoshiSkid() {
         else
             mdCcAcPos_c.flags &= ~1;
     }
-    ApproachLinear(mVertSpeed, 0, 0x800);
+    ApproachLinear(mSpeed.y, 0, 0x800);
     ApproachLinear(mHorzSpeed, 0, 0x800);
-    if (mVertSpeed == 0 && mHorzSpeed == 0) {
+    if (mSpeed.y == 0 && mHorzSpeed == 0) {
         mWithMeshClsn.SetRadius(0x32000);
         mState = mSavedState;
         if (mState == STATE_FLY)
@@ -428,14 +428,14 @@ void daBook_c::StateSpawned() {
     UpdatePos(0);
 }
 
-/* STATE_FLY: moves by the velocity in mSpeedX/mVertSpeed/mSpeedZ and is gone
+/* STATE_FLY: moves by the velocity in mSpeed.x/mSpeed.y/mSpeed.z and is gone
  * when it hits the player, the ground, or a wall that faces it (the wall's
  * normal more than a quarter turn from the book's heading). */
 void daBook_c::StateFly() {
     if (mUsesAnmModel != 0) {
         mAnmModel.Advance();
     }
-    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
+    VEC_Add(&mPos, &mSpeed, &mPos);
     if (CheckAttacks() != 0)
         return;
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
@@ -490,9 +490,9 @@ void daBook_c::StateWindUp() {
         {
             /* velocity = kFlightSpeed along (yaw, pitch) */
             s32 r = FX_MUL(FX_CosIdx((u16)mAngleX >> 4), 0x32000);
-            mSpeedX = FX_MUL(r, FX_SinIdx((u16)mAngleY >> 4));
-            mVertSpeed = FX_MUL(FX_SinIdx((u16)mAngleX >> 4), -0x32000);
-            mSpeedZ = FX_MUL(r, FX_CosIdx((u16)mAngleY >> 4));
+            mSpeed.x = FX_MUL(r, FX_SinIdx((u16)mAngleY >> 4));
+            mSpeed.y = FX_MUL(FX_SinIdx((u16)mAngleX >> 4), -0x32000);
+            mSpeed.z = FX_MUL(r, FX_CosIdx((u16)mAngleY >> 4));
         }
         return;
     }
@@ -675,7 +675,7 @@ int daBook_c::Behavior()
             mSavedState = mState;
             mState = STATE_YOSHI_SKID;
             mEatenByYoshi = 0;
-            mVertSpeed = 0;
+            mSpeed.y = 0;
             mHorzSpeed = 0x8000;
         }
         UpdateModelMatrix();

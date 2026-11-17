@@ -157,6 +157,8 @@ struct daYegg_c : dEnemyBase_c {
     void ExecuteFollowPlayer();
     void EnterFollowPlayer();
     void RunState();
+    void func_ov002_020ed63c(int i);
+    void func_ov002_020edca4();
     int IsStalled();
     void UpdateTilt();
     void UpdateShadow();

@@ -48,6 +48,7 @@ struct daObjC1_Trap_c : dBgActor_c {
     void UpdateCollisionTransform();
     void UpdateModelTransform();
     void OnCollision(dActor_c &other);
+    static void func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor_c *other);
 };
 
 #ifndef SM64DS_PLATFORM_PC

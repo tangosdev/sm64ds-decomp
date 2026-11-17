@@ -1176,12 +1176,12 @@ void daKpa_c::BitsActions() {
 }
 
 /*
-Fall catch for the variant-2 jumps: if he is moving down (mVertSpeed < 0) and
+Fall catch for the variant-2 jumps: if he is moving down (mSpeed.y < 0) and
 mPosY is below mHomePos.y - 0x12c000 (300 units below the arena level), put him
 at X = Z = 0, 0x7d0000 (2000 units) above the arena level, with both speeds
 zeroed. */
 void daKpa_c::ResetFallenOffStage() {
-    int vy = this->mVertSpeed;
+    int vy = this->mSpeed.y;
     if (vy >= 0) return;
     int thresh = this->mHomePos.y - 0x12c000;
     int cur = this->mPosY;
@@ -1189,7 +1189,7 @@ void daKpa_c::ResetFallenOffStage() {
     this->mPosZ = 0;
     this->mPosX = this->mPosZ;
     this->mPosY = this->mHomePos.y + 0x7d0000;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     this->mHorzSpeed = 0;
 }
 
@@ -1213,7 +1213,7 @@ void daKpa_c::ActDefault() {
     InitAnimation(BOWSER_ANIM_IDLE, 0);
     this->mSpinSpeed = 0;
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     if (this->mVariantID == 0)
         BitdwActions();
     else if (this->mVariantID == 1)
@@ -1462,7 +1462,7 @@ void daKpa_c::ActSpitFireIntoSky() {
 
 /*
 State BOWSER_STATE_HURT_HOP (0xc), the knock-back after a bomb hit. On the first
-frame: mHorzSpeed -0x1c000 (-28.0), mVertSpeed 0x50000 (80.0), mAngleY = angle to
+frame: mHorzSpeed -0x1c000 (-28.0), mSpeed.y 0x50000 (80.0), mAngleY = angle to
 the centre + 0x8000 (so the negative speed carries him toward the centre),
 unk_422 = 1, mAngleX = -0xc00 and sound 0xb1. On later frames mAngleX drops by
 0xc00 (16.9 degrees) per frame, from its unsigned value 0xf400 (-0xc00): 20 drops,
@@ -1475,7 +1475,7 @@ frame of step 2. */
 void daKpa_c::ActHitMine() {
     if (this->mTimer == 0) {
         this->mHorzSpeed = -0x1c000;
-        this->mVertSpeed = 0x50000;
+        this->mSpeed.y = 0x50000;
         this->mAngleY = this->mAngleToCenter + 0x8000;
         this->unk_422 = 1;
         this->mAngleX = -0xc00;
@@ -1500,7 +1500,7 @@ void daKpa_c::ActHitMine() {
             if (this->mStepCounter == 1)
                 InitAnimation(2, 0x40000000);
             if (this->mStepCounter < 3) return;
-            this->mVertSpeed = 0;
+            this->mSpeed.y = 0;
             this->mHorzSpeed = 0;
             this->mStep++;
             return;
@@ -1535,7 +1535,7 @@ int daKpa_c::BowserLand() {
     int b;
     if(this->mWithMeshClsn.IsOnGround()){
         this->mHorzSpeed = 0;
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
         v.x = this->mPosX;
         v.y = this->mPosY;
         v.z = this->mPosZ;
@@ -1565,7 +1565,7 @@ void daKpa_c::ShortSecondHop() {
 
 /*
 State BOWSER_STATE_JUMP (0xd). Step 0: wind-up (SetAnimJump); then
-mVertSpeed = 0x28000 (40.0) for variant 2 while BOWSER_COND_RECOVERING is set,
+mSpeed.y = 0x28000 (40.0) for variant 2 while BOWSER_COND_RECOVERING is set,
 0x32000 (50.0) otherwise; sound 0xb1; zero mHorzSpeed and mStepCounter, let
 ShortSecondHop set a horizontal speed, and if it stays 0 snap X and Z to
 mLastGroundPos; advance and reset mAnimSpeed to 0x1000. Step 1: variant 2
@@ -1584,9 +1584,9 @@ void daKpa_c::ActBigJump() {
         if (SetAnimJump() == 0)
             return;
         if (this->mVariantID == 2 && (this->mCondFlags & BOWSER_COND_RECOVERING)) {
-            this->mVertSpeed = 0x28000;
+            this->mSpeed.y = 0x28000;
         } else {
-            this->mVertSpeed = 0x32000;
+            this->mSpeed.y = 0x32000;
         }
         func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
         this->mStepCounter = 0;
@@ -1608,14 +1608,14 @@ void daKpa_c::ActBigJump() {
             if (this->mPosY >= this->mLastGroundPos.y)
                 return;
         }
-        if (this->mVertSpeed != 0) {
+        if (this->mSpeed.y != 0) {
             vec = this->mPos;
             func_0200fa04(&vec, 0);
             InitAnimation(0xc, 0x40000000);
         }
         this->mCondFlags &= ~BOWSER_COND_RECOVERING;
         this->mHorzSpeed = 0;
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
         this->mPosY = this->mLastGroundPos.y;
         (this->mStep)++;
         SpawnShockwave();
@@ -1636,7 +1636,7 @@ void daKpa_c::ActBigJump() {
 
 /*
 State BOWSER_STATE_HOP (0x11). Step 0: wind-up (SetAnimJump); then
-mVertSpeed 0x32000 (50.0), mHorzSpeed 0x19000 (25.0), mStepCounter 0, sound 0xb1,
+mSpeed.y 0x32000 (50.0), mHorzSpeed 0x19000 (25.0), mStepCounter 0, sound 0xb1,
 advance. Step 1: advance once BowserLand reports the landing. Step 2:
 BOWSER_STATE_IDLE at the last frame. */
 void daKpa_c::ActQuickJump() {
@@ -1644,7 +1644,7 @@ void daKpa_c::ActQuickJump() {
     if (k == 0) {
         if (!SetAnimJump())
             return;
-        this->mVertSpeed = 0x32000;
+        this->mSpeed.y = 0x32000;
         this->mHorzSpeed = 0x19000;
         this->mStepCounter = 0;
         this->mStep++;
@@ -1939,7 +1939,7 @@ void daKpa_c::SetGoalInvisible() {
     this->mTargetOpacity = 0;
     if (this->mOpacity != 0) return;
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     this->mPosY = this->mHomePos.y - 0x3e8000;
     if (Vec3_HorzLen(&mPos) < 0xed8000)
         return;
@@ -1964,7 +1964,7 @@ hit is set if that floor has a collision ID; BOWSER_COND_RECOVERING is set.
 Step 0 (also hides him with SetGoalInvisible): zero mAngleX/Z on the first frame, then add 0x800
 (11.25 degrees) to both each frame until mAngleX wraps back to 0 (32 frames),
 and advance. Step 1: animation 0xb once; from frame 0x20 face the centre, set
-mVertSpeed 0x28000 (40.0), sound 0xb1, gravity 0, target opacity 0xff, clear
+mSpeed.y 0x28000 (40.0), sound 0xb1, gravity 0, target opacity 0xff, clear
 mStepCounter and advance (before that, keep hiding him). Step 2: while mPosY >=
 mHomePos.y, gravity -0x1000 (-1.0) and steer mHorzSpeed (toward 0 by 0x5000 when
 mDistToCenter is under 0x8fc000 / 2300 units for variant 1 or 0x9c4000 / 2500
@@ -2022,7 +2022,7 @@ void daKpa_c::ActJumpOntoStage() {
         if ((((u32)this->mAnmModel.currFrame << 4) >> 16) >= 0x20) {
             this->mAngleY = this->mAngleToCenter;
             this->mPrevAngleY = this->mAngleY;
-            this->mVertSpeed = 0x28000;
+            this->mSpeed.y = 0x28000;
             func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
             this->mVertAccel = 0;
             this->mTargetOpacity = 0xff;
@@ -2120,7 +2120,7 @@ void daKpa_c::SpawnCollectable() {
 /*
 Defeat step 0 (from ActDead): knock-back launch. Animation 0 once,
 mHorzSpeed -0x1c000 (-28.0) for variant 2 and -0x19000 (-25.0) otherwise,
-mVertSpeed 0x50000 (80.0), gravity -0x2000 (-2.0), mAngleY = angle to the centre
+mSpeed.y 0x50000 (80.0), gravity -0x2000 (-2.0), mAngleY = angle to the centre
 + 0x8000 (so the negative speed carries him toward the centre), clear
 mStepCounter, advance, widen the body collider's radius to 0xb4000 (180 units)
 and play sound 0xb1. */
@@ -2130,7 +2130,7 @@ void daKpa_c::FlyBackDead() {
         this->mHorzSpeed = -0x1c000;
     else
         this->mHorzSpeed = -0x19000;
-    this->mVertSpeed = 0x50000;
+    this->mSpeed.y = 0x50000;
     this->mVertAccel = -0x2000;
     this->mAngleY = (short)(this->mAngleToCenter + 0x8000);
     this->mStepCounter = 0;
@@ -2216,7 +2216,7 @@ int daKpa_c::DeadTwirlUp() {
         this->mScaleZ -= 0x52;
     } else {
         this->mScaleY -= 0x29;
-        this->mVertSpeed = 0xa000;
+        this->mSpeed.y = 0xa000;
         this->mVertAccel = 0;
     }
 
@@ -2252,7 +2252,7 @@ void daKpa_c::DeadHide() {
     this->mScaleY = 0;
     this->mScaleZ = 0;
     this->mHorzSpeed = 0;
-    this->mVertSpeed = 0;
+    this->mSpeed.y = 0;
     this->mVertAccel = 0;
     this->mDropsShadow = 0;
     this->mdCcAcPos_c.flags |= BOWSER_CC_DISABLED;
@@ -2429,7 +2429,7 @@ void daKpa_c::TiltPlatform(int tiltSpeed) {
 }
 
 /*
-State BOWSER_STATE_ARENA_TILT (0x13): the arena rocks for 186 frames. mVertSpeed
+State BOWSER_STATE_ARENA_TILT (0x13): the arena rocks for 186 frames. mSpeed.y
 is held at mTerminalVelocity. If the KOOPA2BG actor is gone, back to
 BOWSER_STATE_IDLE. Otherwise the table at data_ov060_02119294 (rows of three
 halfwords: sign, scale, end frame; a row with end frame 0 ends it) is walked for
@@ -2438,13 +2438,13 @@ linear ramp in mTimer (counting down to the row's end for a positive sign, up
 from the previous row's end otherwise) and goes to TiltPlatform; on odd
 frames with v non-zero the arena plays its tilt sound (PlayTiltSound). When no row is
 left, go to BOWSER_STATE_IDLE and zero the arena's three angular speeds and three
-angles, and mVertSpeed. */
+angles, and mSpeed.y. */
 /* p is volatile so the walk reloads the sentinel for each test -- lifetimes
  * on would keep p[2] in a register and skip the ROM's second load, and the
  * flag and the computed value are split so the flag keeps r6. */
 void daKpa_c::ActTiltLavaPlatform() {
     daKpa2Bg_c* found; int i; int flag; volatile short* p;
-    this->mVertSpeed = this->mTerminalVelocity;
+    this->mSpeed.y = this->mTerminalVelocity;
     found = (daKpa2Bg_c*)dActor_c::FindWithID(this->mArenaBgUniqueID);
     if (found == 0) { this->mState = BOWSER_STATE_IDLE; return; }
     p = data_ov060_02119294;
@@ -2479,7 +2479,7 @@ void daKpa_c::ActTiltLavaPlatform() {
         found->mAngleYSpeed = 0;
         found->mAngleZSpeed = 0;
         q[0] = 0; q[1] = 0; q[2] = 0;
-        this->mVertSpeed = 0;
+        this->mSpeed.y = 0;
     }
 }
 
@@ -2508,9 +2508,9 @@ is the this-adjustment), count mTimer, and on a state change reset mStep and
 mTimer. Then: dActor_c::UpdatePos with the body collider; update the floor
 collider (variant 1 uses func_02038408, others the continuous update); on the
 ground, copy the floor normal into mGroundNormal and remember mLastGroundPos;
-with mBounceOnLand set, a fresh ground hit makes mVertSpeed -60 percent of itself,
+with mBounceOnLand set, a fresh ground hit makes mSpeed.y -60 percent of itself,
 at most 0x14000 (20.0); otherwise, when the floor normal's Y is non-zero,
-mVertSpeed is recomputed from the floor normal and mSpeedX/mSpeedZ, minus 0x8000.
+mSpeed.y is recomputed from the floor normal and mSpeed.x/mSpeed.z, minus 0x8000.
 For the states whose byte is 1 in data_ov060_02119268 (0, 3, 7..0xb, 0xe..0x10,
 0x12 and 0x13), if he has left the ground he is put back at mLastGroundPos and
 moved 8 units toward the centre (the sin/cos table entry shifted left 3), else
@@ -2554,14 +2554,14 @@ void daKpa_c::FreeUpdate() {
         ((dBgPi *)fr)->surface.CopyNormalTo(this->mGroundNormal);
         this->mLastGroundPos = this->mPos;
         if (this->mBounceOnLand != 0 && this->mWithMeshClsn.JustHitGround()) {
-            this->mVertSpeed = (this->mVertSpeed * -60) / 100;
-            if (this->mVertSpeed >= 0x14000)
-                this->mVertSpeed = 0x14000;
+            this->mSpeed.y = (this->mSpeed.y * -60) / 100;
+            if (this->mSpeed.y >= 0x14000)
+                this->mSpeed.y = 0x14000;
         } else if (this->mGroundNormal.y != 0) {
-            this->mVertSpeed = -(FX_Div(FX_MUL(this->mGroundNormal.x, this->mSpeedX) +
-                                            FX_MUL(this->mGroundNormal.z, this->mSpeedZ),
-                                        this->mGroundNormal.y) +
-                                 0x8000);
+            this->mSpeed.y = -(FX_Div(FX_MUL(this->mGroundNormal.x, this->mSpeed.x) +
+                                          FX_MUL(this->mGroundNormal.z, this->mSpeed.z),
+                                      this->mGroundNormal.y) +
+                               0x8000);
         }
     }
 
@@ -2636,7 +2636,7 @@ Hold states BOWSER_HOLD_RELEASE_NOW (2) and BOWSER_HOLD_RELEASE_AFTER_ANIM (3):
 the release. Plays animation 0xe once; state 3 waits for its last frame. Then: clear
 mHoldStep and mHoldState, switch the body collider back on, set
 BOWSER_STATE_THROWN, and launch him: v = |mSwingSpeed| * 0x46 / 6000, times 2.5
-when v is above 0x2d; mHorzSpeed = v * cos(mAngleX) and mVertSpeed =
+when v is above 0x2d; mHorzSpeed = v * cos(mAngleX) and mSpeed.y =
 -v * sin(mAngleX) (table entries at mAngleX >> 4). The tail (by mTailUniqueID) goes
 to BOWSER_TAIL_COOLDOWN with mTimer 0; mAngleX, mTimer and mStep are cleared and
 the floor collider's ground flag is cleared. */
@@ -2660,7 +2660,7 @@ void daKpa_c::ThrownDroppedUpdate() {
     if (v > 0x2d)
         v = v * 0x19 / 10;
     this->mHorzSpeed = v * FX_CosIdx((u16)mAngleX >> 4);
-    this->mVertSpeed = -v * FX_SinIdx((u16)mAngleX >> 4);
+    this->mSpeed.y = -v * FX_SinIdx((u16)mAngleX >> 4);
     tail = (daKpaTail_c *)dActor_c::FindWithID(this->mTailUniqueID);
     if (tail != 0) {
         tail->mState = BOWSER_TAIL_COOLDOWN;

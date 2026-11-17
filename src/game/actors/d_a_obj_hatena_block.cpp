@@ -42,10 +42,8 @@
  *   `return new` emits a homeless _ZN10dBgActor_cD2Ev. That is a licensed
  *   deadstrip, the same helper ov045/daObjKm2_Ami_Bou_c records.
  *
- *   The (int *) / (Vector3 *) casts around the local position buffers in
- *   the spawn helpers stay: the buffers are plain ints, and a real Vector3
- *   local would emit an extra Vector3 D1 destructor. The copies here are
- *   licensed deadstrip-duplicates.
+ *   The spawn helpers' prize points are Vector3 locals. The TU already
+ *   emits Vector3 D1 (licensed deadstrip-duplicates), so they cost nothing.
  *
  *   OnAttacked1 / OnHitFromUnderneath keep their valueless nested-if exits;
  *   C++ rejects a valueless return in a non-void function.
@@ -91,9 +89,8 @@
  * - func_ov102_02149684 stays free: it writes the prize point into a
  *   caller's buffer in arg0 and takes the block in arg1, so member form
  *   would swap the register operands.
- * - The (Vector3 *) prize-point casts around func_ov102_02149684's int
- *   buffers stay: they are local ints, and a real Vector3 local emits a
- *   Vector3 D1 deadstrip.
+ * - func_ov102_02149684 takes int * (its symbol is mangled with Pi), so
+ *   the Vector3 prize points reach it through (int *) casts.
  */
 
 /* common.h first: see the header. */
@@ -130,12 +127,6 @@ enum daObjHatenaBlock_c_AssetId {
 struct CLPS_Block;
 struct KCL_File;
 struct BCA_File;
-
-struct V3 {
-  int x, y, z;
-  V3(int a, int b, int d) { x = a; y = b; z = d; }
-  V3() {}
-};
 
 /* State entries pair enter/update handlers; prize rows contain four handlers.
  * All dispatches discard results. These native member pointers are eight
@@ -689,11 +680,8 @@ void daObjHatenaBlock_c::UpdateIdle() {
    (argument 0x5dc000, 1500 units), then the bounce begins: mBounceAng =
    0x4000 (a quarter turn) and mBounceTimer = 7 frames. */
 void daObjHatenaBlock_c::EnterBouncing() {
-    s32 vec[3];
-    vec[0] = mPosX;
-    vec[1] = mPosY;
-    vec[2] = mPosZ;
-    Earthquake(*(const Vector3 *)vec, 0x5dc000);
+    Vector3 pos = mPos;
+    Earthquake(pos, 0x5dc000);
     mBounceAng = 0x4000;
     mBounceTimer = 7;
 }
@@ -888,14 +876,14 @@ void daObjHatenaBlock_c::OnHitByMegaChar(daPly_c &player) {
 }
 
 /* Hit from underneath: unless already BOUNCING, first sets mVertAccel to
-   -0x8000 (-8 units) and mVertSpeed to 0x1e000 (30 units), whether or not
+   -0x8000 (-8 units) and mSpeed.y to 0x1e000 (30 units), whether or not
    the hit is then accepted; the accept test and bounce start are the same as
    OnGroundPounded's. */
 int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
 {
     if (mState != STATE_BOUNCING) {
         mVertAccel = -0x8000;
-        mVertSpeed = 0x1e000;
+        mSpeed.y = 0x1e000;
         if (!IsHitBlocked()) {
             mHitterParam = other.param1;
             ChangeState(STATE_BOUNCING);
@@ -905,21 +893,21 @@ int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
 
 /* dst = the block's position with Y raised by 0x32000 (50 units): the point
    the prizes spawn at. */
-void func_ov102_02149684(int* dst, daObjHatenaBlock_c* src){
-  int z = src->mPosZ;
-  int liftedY = src->mPosY + 0x32000;
-  dst[0] = src->mPosX;
-  dst[1] = liftedY;
-  dst[2] = z;
+void func_ov102_02149684(int *dst, daObjHatenaBlock_c *src) {
+    int z = src->mPosZ;
+    int liftedY = src->mPosY + 0x32000;
+    dst[0] = src->mPosX;
+    dst[1] = liftedY;
+    dst[2] = z;
 }
 
 /* Floor height under the block: a ground raycast (dBgCh_Gnd) from 0x28000 (40
    units) above the block, with probe height 0x3e8000 (1000 units). Returns
    the hit height, or mPosY when nothing is hit. */
 int daObjHatenaBlock_c::GetFloorY() {
-    V3 pos(mPosX, mPosY + 0x28000, mPosZ);
+    Vector3 pos(mPosX, mPosY + 0x28000, mPosZ);
     dBgCh_Gnd rg;
-    rg.SetObjAndPos(*(Vector3 *)&pos, 0);
+    rg.SetObjAndPos(pos, 0);
     rg.mProbeHeight = 0x3e8000;
     int r = mPosY;
     if (rg.DetectClsn())
@@ -932,7 +920,7 @@ int daObjHatenaBlock_c::GetFloorY() {
    spawned, the cap gets heading (RandomIntInternal() + camera mAngleY +
    0x8000, truncated to 16 bits) in its mPrevAngleY, speed 0x3320 (about 3.2
    units) in mHorzSpeed, and a velocity vector (0, 0x11000, 0) in
-   mSpeedX / mVertSpeed / mSpeedZ (0x11000 = 17 units up). */
+   mSpeed.x / mSpeed.y / mSpeed.z (0x11000 = 17 units up). */
 void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
     Vector3 pos;
     int rnd;
@@ -950,9 +938,9 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
         o->mPrevAngleY = (short)vsum;
         o->mPrevAngleZ = 0;
         o->mHorzSpeed = 0x3320;
-        o->mSpeedX = vel.x;
-        o->mVertSpeed = vel.y;
-        o->mSpeedZ = vel.z;
+        o->mSpeed.x = vel.x;
+        o->mSpeed.y = vel.y;
+        o->mSpeed.z = vel.z;
     }
 }
 
@@ -960,25 +948,22 @@ void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
    that many coins from the prize point (SpawnCoinSpray, speed 0x1800 =
    1.5 units, base angle 0), then KillAndTrackInDeathTable. */
 void daObjHatenaBlock_c::SpawnPrizeCoins() {
-    int s[3];
-    func_ov102_02149684(s, this);
+    Vector3 pos;
+    func_ov102_02149684((int *)&pos, this);
     int count = (param1 >> 8) & 0xff;
     if (count == 0xff)
         count = 1;
-    int w[3];
-    w[0] = s[0];
-    w[1] = s[1];
-    w[2] = s[2];
-    SpawnCoinSpray((Vector3 *)w, count, 0x1800, 0);
+    Vector3 from = pos;
+    SpawnCoinSpray(&from, count, 0x1800, 0);
     KillAndTrackInDeathTable();
 }
 
 /* CONTENT_STAR prize: spawns a STAR at the prize point with param mStarId |
    0x40 (the 0x40 bit is not interpreted here), then MarkForDestruction. */
 void daObjHatenaBlock_c::SpawnPrizeStar() {
-    char local[12];
-    func_ov102_02149684((int *)local, this);
-    dActor_c::Spawn(ACTOR_STAR, mStarId | 0x40, *(Vector3 *)local, 0, mAreaId, -1);
+    Vector3 pos;
+    func_ov102_02149684((int *)&pos, this);
+    dActor_c::Spawn(ACTOR_STAR, mStarId | 0x40, pos, 0, mAreaId, -1);
     MarkForDestruction();
 }
 

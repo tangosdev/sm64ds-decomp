@@ -94,7 +94,7 @@
  * - The da1up_MushroomType names describe what each type does when it runs;
  *   they are not recovered original names (nor are the address-named
  *   handlers).
- * - mSpeedX / mSpeedZ are dActor_c's velocity x/z words (UpdatePosWithHorzSpeedAndAng
+ * - mSpeed.x / mSpeed.z are dActor_c's velocity x/z words (UpdatePosWithHorzSpeedAndAng
  *   writes them from mHorzSpeed and mPrevAngleY); they stay unnamed here because
  *   naming them is a shared dActor_c.h change.
  * - The SND3_* names and the effect ids are known by use only (0x68 is played
@@ -239,8 +239,8 @@ void da1up_c::func_ov002_020aefa4() {
 /* The shared per-frame physics step. Moves by mHorzSpeed along mPrevAngleY
    (UpdatePosWithHorzSpeedAndAng). While on the ground it adds ten times the
    floor normal's x and z to the words at 0xa4 / 0xac (the x and z of a velocity
-   whose y is mVertSpeed: UpdateWaitThenAccelerate saves and restores them as that
-   triple), sets mVertSpeed to -0.4 times its value on the frame it lands and to
+   whose y is mSpeed.y: UpdateWaitThenAccelerate saves and restores them as that
+   triple), sets mSpeed.y to -0.4 times its value on the frame it lands and to
    0 otherwise, and raises mHorzSpeed to the horizontal length of that vector
    when that is larger, capped at 15 units (0xf000). Then it integrates position
    (UpdatePosWithOnlySpeed), runs the wall/floor collision update, and on a wall
@@ -254,15 +254,15 @@ void da1up_c::UpdatePhysics() {
 
     UpdatePosWithHorzSpeedAndAng();
     if (mWithMeshClsn.IsOnGround()) {
-        mSpeedX += mFloorNormal.x * 0xa;
-        mSpeedZ += mFloorNormal.z * 0xa;
+        mSpeed.x += mFloorNormal.x * 0xa;
+        mSpeed.z += mFloorNormal.z * 0xa;
         if (mWithMeshClsn.JustHitGround()) {
-            mVertSpeed = -(mVertSpeed << 2) / 10;
+            mSpeed.y = -(mSpeed.y << 2) / 10;
         } else {
-            mVertSpeed = 0;
+            mSpeed.y = 0;
         }
-        if (Vec3_HorzLen((Vector3 *)&mSpeedX) > mHorzSpeed) {
-            mHorzSpeed = Vec3_HorzLen((Vector3 *)&mSpeedX);
+        if (Vec3_HorzLen(&mSpeed) > mHorzSpeed) {
+            mHorzSpeed = Vec3_HorzLen(&mSpeed);
             if (mHorzSpeed >= 0xf000) mHorzSpeed = 0xf000;
         }
     }
@@ -279,7 +279,7 @@ void da1up_c::UpdatePhysics() {
    player is in one of two daPly_c states and raised by 120 units (0x78000)
    otherwise -- and steps mPrevAngleY toward the horizontal bearing and
    mPrevAngleX toward the pitch (cstd::atan2(horizontal length, height
-   difference)), at most 0x1000 (22.5 degrees) per frame each. mVertSpeed and
+   difference)), at most 0x1000 (22.5 degrees) per frame each. mSpeed.y and
    mHorzSpeed are then 30 units (0x1e) times the cosine and the sine of
    mPrevAngleX. Always finishes with CollectOnTouch. */
 void da1up_c::SteerTowardPlayer() {
@@ -305,7 +305,7 @@ void da1up_c::SteerTowardPlayer() {
         short yaw = Vec3_HorzAngle(&mPos, &ppos);
         ApproachLinear(mPrevAngleY, yaw, 0x1000);
         ApproachLinear(mPrevAngleX, pitch, 0x1000);
-        mVertSpeed = FX_CosIdx((u16)mPrevAngleX >> 4) * 0x1e;
+        mSpeed.y = FX_CosIdx((u16)mPrevAngleX >> 4) * 0x1e;
         mHorzSpeed = FX_SinIdx((u16)mPrevAngleX >> 4) * 0x1e;
     }
     CollectOnTouch();
@@ -454,19 +454,19 @@ void da1up_c::CollectOnTouch() {
 
 /* -------------------------------------------------------------------------- */
 /* The launch arc of the types that pop out (0, 1, 5 and 7). For the first five
-   frames of the state (mStateTimer < 5) it only sets mVertSpeed to 40 units
+   frames of the state (mStateTimer < 5) it only sets mSpeed.y to 40 units
    (0x28000). After that, every frame it lowers mPrevAngleX by 0x1000 (22.5
-   degrees): mVertSpeed = 30 units (0x1e) times the cosine of mPrevAngleX plus
+   degrees): mSpeed.y = 30 units (0x1e) times the cosine of mPrevAngleX plus
    2 units (0x2000); mHorzSpeed = -30 units times its sine. */
 void da1up_c::UpdateLaunchArc() {
     if (mStateTimer < 5) {
-        mVertSpeed = 0x28000;
+        mSpeed.y = 0x28000;
         return;
     }
 
     mPrevAngleX -= 0x1000;
 
-    mVertSpeed = FX_CosIdx((u16)mPrevAngleX >> 4) * 0x1e + 0x2000;
+    mSpeed.y = FX_CosIdx((u16)mPrevAngleX >> 4) * 0x1e + 0x2000;
     mHorzSpeed = FX_SinIdx((u16)mPrevAngleX >> 4) * -0x1e;
 }
 
@@ -670,7 +670,7 @@ void da1up_c::UpdateTriggerFor7() {
 
 /* -------------------------------------------------------------------------- */
 /* Dispatch-table index 7 (MUSHROOM_HIDDEN_CHASE). State 0: hidden (mShown 0)
-   until mUnlockCount is 0; then it appears -- mVertSpeed 40 units (0x28000),
+   until mUnlockCount is 0; then it appears -- mSpeed.y 40 units (0x28000),
    state 3, shown, opened to Yoshi (func_ov002_020aefa4), sound 0x68, mFlags bit
    0 cleared. State 3 is the launch arc (UpdateLaunchArc) under physics, with
    the trail effect once mStateTimer is past 17 (0x11); at mStateTimer 0x25 (37)
@@ -685,7 +685,7 @@ void da1up_c::UpdateHiddenChase() {
       if (mUnlockCount != 0)
         return;
 
-      mVertSpeed = 0x28000;
+      mSpeed.y = 0x28000;
       mState = 3;
       mShown = 1;
       func_ov002_020aefa4();
@@ -749,7 +749,7 @@ void da1up_c::UpdateHiddenFlee() {
         mShown = 0;
         if (mUnlockCount != 0)
             return;
-        mVertSpeed = 0x28000;
+        mSpeed.y = 0x28000;
         mState = 3;
         mShown = 1;
         func_ov002_020aefa4();
@@ -783,7 +783,7 @@ void da1up_c::UpdateHiddenFlee() {
 
 /* -------------------------------------------------------------------------- */
 /* Dispatch-table index 4 (MUSHROOM_WAIT_THEN_FACE_AWAY). State 0 waits for the
-   player to come within 1000 units (0x3e8), then sets mVertSpeed to 40 units
+   player to come within 1000 units (0x3e8), then sets mSpeed.y to 40 units
    (0x28000) and goes to state 1. State 1 turns away from the player
    (WalkAwayFromPlayer) with the trail effect; unlike types 1 and 5 it sets no
    horizontal speed here; state 2 is the touch check plus
@@ -795,7 +795,7 @@ void da1up_c::UpdateWaitThenFaceAway() {
     switch (mState) {
     case 0:
         if (IsPlayerInRange(0x3e8)) {
-            mVertSpeed = 0x28000;
+            mSpeed.y = 0x28000;
             mState = 1;
         }
         break;
@@ -823,7 +823,7 @@ void da1up_c::UpdateStationary() {
 
 /* -------------------------------------------------------------------------- */
 /* State 1 of index 2 (MUSHROOM_WAIT_THEN_ACCELERATE). On the ground it adds 25
-   units (0x19000) to mHorzSpeed and zeroes mVertSpeed. In the air it multiplies
+   units (0x19000) to mHorzSpeed and zeroes mSpeed.y. In the air it multiplies
    mHorzSpeed by 0xfae / 0x1000 (about 0.98) and passes the product through
    FX_Div(t, 0x1000). mHorzSpeed is capped at 40 units (0x28000). When the
    player is not within 5000 units (0x1388) it goes to state 2. */
@@ -831,7 +831,7 @@ void da1up_c::AccelerateOnGround() {
 
     if (mWithMeshClsn.IsOnGround() != 0) {
         mHorzSpeed += 0x19000;
-        mVertSpeed = 0;
+        mSpeed.y = 0;
     } else {
         int t = FX_MUL(mHorzSpeed, 0xfae);
         mHorzSpeed = FX_Div(t, 0x1000);
@@ -854,12 +854,12 @@ void da1up_c::AccelerateOnGround() {
 void da1up_c::UpdateWaitThenAccelerate() {
     if (mState != 0) {
         Vector3 speed;
-        speed.x = mSpeedX;
-        speed.y = mVertSpeed;
-        speed.z = mSpeedZ;
+        speed.x = mSpeed.x;
+        speed.y = mSpeed.y;
+        speed.z = mSpeed.z;
         UpdatePhysics();
-        mSpeedX = speed.x;
-        mSpeedZ = speed.z;
+        mSpeed.x = speed.x;
+        mSpeed.z = speed.z;
     }
 
     switch (mState) {
