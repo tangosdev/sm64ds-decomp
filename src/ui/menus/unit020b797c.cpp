@@ -173,7 +173,6 @@ void MenuText_DrawGlyph(int plane, int glyph) {
     u32 *dst;
     u32 palmask;
     u32 *src;
-    u32 mask;
     int q, rem;
     int shift;
 
@@ -210,15 +209,14 @@ void MenuText_DrawGlyph(int plane, int glyph) {
 
     shift = rem * 4;
     palmask = data_ov007_020d7ac4[pal];
-    mask = data_ov007_020d7aa0[rem];
 
     for (i = 0; i < 16; i++) {
         u32 s = *src++ & palmask;
-        *dst = (*dst & mask) | (s << shift);
+        *dst = (*dst & data_ov007_020d7aa0[rem]) | (s << shift);
         if (rem != 0) {
-            /* The spill re-reads the keep-mask and recomputes its shift;
-               the compiler hoists both out of the loop, which is the ROM's
-               shape. Through `mask` and a precomputed shift it is 0x174. */
+            /* Both halves index the const keep-mask table directly; the
+               compiler shares the one load. A `mask` local hoists the
+               complement out of the loop instead (0x174). */
             u32 *d2 = (dst + 8);
             *d2 = (*d2 & ~data_ov007_020d7aa0[rem]) | (s >> (32 - shift));
         }
