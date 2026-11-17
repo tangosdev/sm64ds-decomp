@@ -1490,36 +1490,36 @@ void func_020094c0(dCamera_c *cam);
    +0xa; its byte 1 zero means jump to it at once (snap mEasedAngleY and set
    mFlags bit 4, which places pos directly). */
 void dCamera_c::Mode8DirectionsCamera(CamViewObj *view) {
-    s32 flag4000;
-    s32 sp_speed;
+    s32 behindHeld;
+    s32 riseSlope;
     struct Vector3 vsrc;
     struct Vector3 vin;
     struct Vector3 vout;
     s32 *tbl;
-    s32 comp;
+    s32 height;
 
-    mFlags |= 0x1000;
+    mFlags |= CAM_FLAG_USER_TURN;
 
-    flag4000 = data_0209f498[gActivePlayerSlot].held & 0x4000;
+    behindHeld = data_0209f498[gActivePlayerSlot].held & CAM_BUTTON_BEHIND;
 
-    if (flag4000 != 0 || mRecentering != 0) {
-        if (data_0209f498[gActivePlayerSlot].pressed & 0x4000) {
+    if (behindHeld != 0 || mRecentering != 0) {
+        if (data_0209f498[gActivePlayerSlot].pressed & CAM_BUTTON_BEHIND) {
             func_02012790(0x1a);
         }
-        if (flag4000 != 0) {
+        if (behindHeld != 0) {
             mBehindAngleY = (mTargetPlayer->mAngleY + 0x8000);
         }
         mRecentering = (ApproachAngle(&mEasedAngleY, mBehindAngleY, 4, 0x400, 0x100) != 0);
         mBaseAngleOffset = (mEasedAngleY - mBaseAngleY);
         mBaseAngleOffset = ((mBaseAngleOffset + 0x1000) & -0x2000);
-        mFlags |= 0x60;
+        mFlags |= CAM_FLAG_TURNING;
     } else {
         if (view != 0) {
             if (view->type == 2 && view != mViewObj) {
                 mBaseAngleY = (view->angleY + 0x8000);
                 if (view->p1 == 0) {
                     mEasedAngleY = mBaseAngleY;
-                    mFlags |= 4;
+                    mFlags |= CAM_FLAG_SNAP_POS;
                 }
                 mBaseAngleOffset = 0;
                 mViewObj = view;
@@ -1527,28 +1527,28 @@ void dCamera_c::Mode8DirectionsCamera(CamViewObj *view) {
         } else {
             mViewObj = 0;
         }
-        if (!(mFlags & 0x60)) {
-            s32 f1;
+        if (!(mFlags & CAM_FLAG_TURNING)) {
+            s32 held;
             /* Here mStateTimer is the delay before a held turn button
                repeats. */
             DecIfAbove0_Short(&mStateTimer);
-            f1 = data_0209f498[gActivePlayerSlot].held & 0x300;
-            if (f1 != 0) {
-                s32 f2 = data_0209f498[gActivePlayerSlot].pressed & 0x300;
-                if (f2 != 0) {
-                    mTurnButtons = f2;
-                } else if (!(mTurnButtons & f1)) {
-                    f2 = f1;
-                    mTurnButtons = f1;
+            held = data_0209f498[gActivePlayerSlot].held & CAM_BUTTON_TURN;
+            if (held != 0) {
+                s32 pressed = data_0209f498[gActivePlayerSlot].pressed & CAM_BUTTON_TURN;
+                if (pressed != 0) {
+                    mTurnButtons = pressed;
+                } else if (!(mTurnButtons & held)) {
+                    pressed = held;
+                    mTurnButtons = held;
                 }
-                if (f2 != 0 || mStateTimer == 0) {
+                if (pressed != 0 || mStateTimer == 0) {
                     u32 dir = mTurnButtons;
-                    if (dir & 0x200) {
+                    if (dir & CAM_BUTTON_TURN_LEFT) {
                         mBaseAngleOffset -= 0x2000;
-                        mFlags |= 0x20;
-                    } else if (dir & 0x100) {
+                        mFlags |= CAM_FLAG_TURN_LEFT;
+                    } else if (dir & CAM_BUTTON_TURN_RIGHT) {
                         mBaseAngleOffset += 0x2000;
-                        mFlags |= 0x40;
+                        mFlags |= CAM_FLAG_TURN_RIGHT;
                     }
                     mStateTimer = 20;
                 }
@@ -1557,26 +1557,26 @@ void dCamera_c::Mode8DirectionsCamera(CamViewObj *view) {
         ApproachLinear(mEasedAngleY, (mBaseAngleY + mBaseAngleOffset), 0x800);
     }
 
-    tbl = (mFlags & 2) ? data_02086d50 : data_02086cc8;
-    sp_speed = tbl[1];
-    func_0200c9e0(&sp_speed, &sp_speed);
-    comp = FX_MUL(tbl[0], sp_speed);
+    tbl = (mFlags & CAM_FLAG_ZOOMED_OUT) ? data_02086d50 : data_02086cc8;
+    riseSlope = tbl[1];
+    func_0200c9e0(&riseSlope, &riseSlope);
+    height = FX_MUL(tbl[0], riseSlope);
     vsrc.x = 0;
     vsrc.z = 0;
-    vsrc.y = comp;
+    vsrc.y = height;
     {
         s32 radius = tbl[0];
-        vsrc.z = cstd::sqrt((s64)radius * radius - (s64)comp * comp);
+        vsrc.z = cstd::sqrt((s64)radius * radius - (s64)height * height);
     }
     SetVec(vin, mTargetPos.x, lookAt.y, mTargetPos.z);
     Vec3_RotateYAndTranslate(&vout.x, &vin.x, mEasedAngleY, &vsrc.x);
-    if (mFlags & 4) {
+    if (mFlags & CAM_FLAG_SNAP_POS) {
         pos = vout;
     }
     Math_Function_0203b14c(&pos.y, vout.y, 0x300, 0x18000, 0x100);
     vout.y = pos.y;
-    if (ApproachLinear(pos, vout, flag4000 != 0 ? 0xc0000 : 0x40000) != 0 && flag4000 == 0) {
-        mFlags &= ~0x60;
+    if (ApproachLinear(pos, vout, behindHeld != 0 ? 0xc0000 : 0x40000) != 0 && behindHeld == 0) {
+        mFlags &= ~CAM_FLAG_TURNING;
     }
     mAngleY = mEasedAngleY;
 }
@@ -1715,7 +1715,7 @@ void dCamera_c::UpdateFixedCamera(CamViewObj *obj, int arg2) {
         v2 = v4;
     }
 
-    if (mFlags & 4) {
+    if (mFlags & CAM_FLAG_SNAP_POS) {
         pos = v2;
     } else {
         func_020092c4(this, &pos, &v2);
@@ -1783,7 +1783,7 @@ void dCamera_c::UpdateSpiralStairsCamera(CamViewObj *obj, int arg2) {
     rem = 0x100000 - dist;
     if (rem > 0)
         rotated.y += rem;
-    if (mFlags & 4) {
+    if (mFlags & CAM_FLAG_SNAP_POS) {
         this->pos = rotated;
     } else {
         func_020092c4(this, &this->pos, &rotated);
@@ -1839,7 +1839,7 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
 
     path.FromID(obj->p1);
 
-    if (mFlags & 4) {
+    if (mFlags & CAM_FLAG_SNAP_POS) {
         mPathNode = 0;
     }
     idx = mPathNode + 1;
@@ -1941,7 +1941,7 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
     Vec3_MulScalarInPlace(&side, projSide);
     VEC_Add(&targetPos, &side, &targetPos);
 
-    if (mFlags & 4) {
+    if (mFlags & CAM_FLAG_SNAP_POS) {
         pos = targetPos;
     } else {
         func_020092c4(this, &pos, &targetPos);
@@ -2014,7 +2014,7 @@ void dCamera_c::func_0200af20(Vector3 *v1, Vector3 *v2, short *out) {
 
     *out = 0xe38;
     data_0209f43c.Func_020156DC(mAspect, *out, mNear, mFar);
-    mFlags &= ~1;
+    mFlags &= ~CAM_FLAG_UNDERWATER;
 }
 
 int dCamera_c::func_0200af0c() {
