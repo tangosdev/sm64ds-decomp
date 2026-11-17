@@ -1424,13 +1424,13 @@ void daStar_c::StateBounce() {
     mPrevPosY = mPosY;
     UpdateWMClsn(mWithMeshClsn, 2);
     if (mWithMeshClsn.IsOnWall()) {
-        mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
     }
     UpdateWater();
     if (mWithMeshClsn.JustHitGround()) {
         OnBounceLand();
     } else if (mWithMeshClsn.IsOnGround()) {
-        mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
         if (mBits.water == WATER_IN)
             mVertSpeed = 0xe000;
         else
@@ -2079,7 +2079,7 @@ void daStar_c::OnBounceLand() {
     }
     if (Vec3_Dist(&mPos, &v) < 0x4b0000) {
         mPrevAngleY = Vec3_HorzAngle(&v, &mPos);
-        if (mFloorNormalY >= *(short*)(data_02082714 + 0x56)) {
+        if (mFloorNormal.y >= *(short *)(data_02082714 + 0x56)) {
             if (gCurrentSublevel != 0x1d)
                 return;
             if (mWithMeshClsn.GetFloorResult()->surface.clps.GetFloorClass() != 5)

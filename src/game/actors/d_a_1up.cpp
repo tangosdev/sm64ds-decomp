@@ -254,8 +254,8 @@ void da1up_c::UpdatePhysics() {
 
     UpdatePosWithHorzSpeedAndAng();
     if (mWithMeshClsn.IsOnGround()) {
-        mSpeedX += mFloorNormalX * 0xa;
-        mSpeedZ += mFloorNormalZ * 0xa;
+        mSpeedX += mFloorNormal.x * 0xa;
+        mSpeedZ += mFloorNormal.z * 0xa;
         if (mWithMeshClsn.JustHitGround()) {
             mVertSpeed = -(mVertSpeed << 2) / 10;
         } else {
@@ -269,7 +269,7 @@ void da1up_c::UpdatePhysics() {
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     if (!mWithMeshClsn.IsOnWall()) return;
-    mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+    mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
 }
 
 /* -------------------------------------------------------------------------- */

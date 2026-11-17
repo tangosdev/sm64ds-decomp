@@ -209,22 +209,21 @@ void daIbl_c::UpdateWallAndFloor() {
         func_020383f0(&mWithMeshClsn);
     else func_02038414(&mWithMeshClsn);
     if (mWithMeshClsn.IsOnWall() != 0) {
-        ((SurfaceInfo *)((char *)mWithMeshClsn.GetWallResult() + 4))
-            ->CopyNormalTo(*(Vector3 *)&mWallNormalX);
-        short a = cstd::atan2(mWallNormalX, mWallNormalZ);
+        ((SurfaceInfo *)((char *)mWithMeshClsn.GetWallResult() + 4))->CopyNormalTo(mWallNormal);
+        short a = cstd::atan2(mWallNormal.x, mWallNormal.z);
         if (GetSubtraction(mPrevAngleY, a) > 0x4000)
             mHitWall = 1;
     }
     if (mWithMeshClsn.IsOnGround() == 0)
         return;
-    ((SurfaceInfo *)((char *)mWithMeshClsn.GetFloorResult() + 4))
-        ->CopyNormalTo(*(Vector3 *)&mFloorNormalX);
+    ((SurfaceInfo *)((char *)mWithMeshClsn.GetFloorResult() + 4))->CopyNormalTo(mFloorNormal);
     if (mHitWall != 0) return;
     mPosX = mPrevPosX;
     mPosZ = mPrevPosZ;
-    if (mFloorNormalY == 0) return;
-    int s = FX_MUL(mFloorNormalX, mSpeedX) + FX_MUL(mFloorNormalZ, mSpeedZ);
-    mVertSpeed = -(FX_Div(s, mFloorNormalY) + 0x8000);
+    if (mFloorNormal.y == 0)
+        return;
+    int s = FX_MUL(mFloorNormal.x, mSpeedX) + FX_MUL(mFloorNormal.z, mSpeedZ);
+    mVertSpeed = -(FX_Div(s, mFloorNormal.y) + 0x8000);
 }
 
 /* Per-frame model and shadow matrices. The model matrix is the identity with
@@ -418,7 +417,7 @@ void daIbl_c::PathBehavior() {
         vy = mVertSpeed;
         UpdateWallAndFloor();
         if (mHitWall != 0 && had == 0) {
-            mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+            mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
             mRollSoundHandle = 0;
         } else if (mWithMeshClsn.IsOnGround() != 0) {
             if (mWithMeshClsn.JustHitGround() != 0) {
@@ -436,8 +435,8 @@ void daIbl_c::PathBehavior() {
             } else if (mVariant == daIbl_KIND_PATH_RAMP) {
                 ApproachLinear(mHorzSpeed, 0x23000, 0x400);
             } else {
-                mSpeedX += mFloorNormalX;
-                mSpeedZ += mFloorNormalZ;
+                mSpeedX += mFloorNormal.x;
+                mSpeedZ += mFloorNormal.z;
                 mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
             }
         }
@@ -485,8 +484,8 @@ void daIbl_c::RollOffBehavior() {
     }
 
     if (mWithMeshClsn.IsOnGround()) {
-        mSpeedX += mFloorNormalX * 3;
-        mSpeedZ += mFloorNormalZ * 3;
+        mSpeedX += mFloorNormal.x * 3;
+        mSpeedZ += mFloorNormal.z * 3;
         mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
 
         mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
@@ -552,17 +551,17 @@ void daIbl_c::FreeRollBehavior() {
     UpdateWallAndFloor();
 
     if (mHitWall != 0) {
-        mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
         mSpeedX = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleY >> 4));
         mSpeedZ = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngleY >> 4));
-        mSpeedX -= mWallNormalX * 3;
-        mSpeedZ -= mWallNormalZ * 3;
+        mSpeedX -= mWallNormal.x * 3;
+        mSpeedZ -= mWallNormal.z * 3;
         mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
     } else if (mWithMeshClsn.IsOnGround()) {
-        mSpeedX += mFloorNormalX * 3;
-        mSpeedZ += mFloorNormalZ * 3;
+        mSpeedX += mFloorNormal.x * 3;
+        mSpeedZ += mFloorNormal.z * 3;
         mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
-        if (mFloorNormalY == 0x1000 && mHorzSpeed > 0x1c000) {
+        if (mFloorNormal.y == 0x1000 && mHorzSpeed > 0x1c000) {
             mHorzSpeed = 0x1c000;
             mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
             UpdatePosWithHorzSpeedAndAng();
