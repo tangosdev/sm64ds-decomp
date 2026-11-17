@@ -15,7 +15,7 @@ machine and is git-ignored.
 
 ## Credits
 
-A lot of people have put real time into this. Thank you to everyone in [CREDITS.md](CREDITS.md); [contributions.json](contributions.json) has live per-person match counts. Data credit is tracked separately in [data-authors.json](data-authors.json).
+A lot of people have put real time into this. Thank you to everyone in [CREDITS.md](CREDITS.md); [contributions.json](contributions.json) has live per-person match counts.
 
 ## Progress
 
@@ -30,15 +30,14 @@ PORTED     ███████████████████████
 
 <!-- data:start -->
 ```
-DATA CLAIMED   =============-----------------  43.7%   8,745 / 20,006 items
-DATA VERIFIED  ====--------------------------  13.5%   2,702 / 20,006 items   87,896 B exact
-DATA PARTIAL   =-----------------------------   3.5%   703 / 20,006 items   11,144 B compared
+DATA CLAIMED   =========---------------------  30.5%   4,607 / 15,093 initialized items
+DATA VERIFIED  =====-------------------------  17.9%   2,702 / 15,093 initialized items   87,896 B exact
+DATA PARTIAL   =-----------------------------   4.7%   703 / 15,093 initialized items   11,144 B compared
 DATA NAMED     ==========--------------------  32.4%   6,483 / 20,006 items
 BSS CLAIMED    =========================-----  84.2%   4,138 / 4,913 BSS items   67,992 B
-DATA CREDITED  ===---------------------------  10.6%   924 / 8,745 claimed items
 ```
 
-Data tiers, checks and credit: [notes/data-tracking.md](notes/data-tracking.md).
+Data progress: [notes/data-tracking.md](notes/data-tracking.md).
 <!-- data:end -->
 
 ![Decompilation progress treemap](docs/progress-treemap.svg)

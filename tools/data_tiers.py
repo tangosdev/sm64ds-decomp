@@ -1,29 +1,33 @@
 #!/usr/bin/env python3
-"""Track global-data reconstruction with the same surfaces as function tiers.
+"""Track global-data reconstruction the way function tiers track code.
 
-The data inventory is a backlog: it knows every configured storage address and
-which source claim covers it, but a complete claim is not a compiled proof.  The
-full build's ``romData`` report knows which emitted data symbols are byte-exact.
-This tool joins those two facts, adds the credit record, and reports one
-reproducible picture:
+The data inventory is the universe: every configured storage address, and
+whether a complete delinks claim covers it. A claim is ownership, not proof.
+The full build's ``romData`` report is the proof: which emitted data symbols
+match the cartridge. This tool joins the two and reports one picture.
 
-  CLAIMED    a complete delinks claim covers the address
+  CLAIMED    a complete delinks claim covers an initialized address
   VERIFIED   the full build compared an emitted symbol there byte-for-byte
   PARTIAL    the emitted symbol was compared, but coverage is short or blind
   DIFFERS    at least one emitted copy disagreed with the cartridge
   UNCLAIMED  no complete source claim covers the address
-  BSS        storage only; reported separately because it has no ROM payload
+  BSS        storage only; its own bar, because it has no ROM payload
 
-The address is the identity, as it is for ``function-authors.json``.  Aliases,
-renames and TU moves do not create a second item.  Credit lives in
-``data-authors.json`` and is keyed by module and address.  Existing historical
-claims may be listed in ``config/data-tracking-baseline.json`` as uncredited;
-a claim that is not in that baseline needs an author row.  That is the ratchet
-for new data work, while ``source_coverage.py`` and ``validate_merge.py`` keep
-the existing source-byte and emitted-byte ratchets.
+The address is the item, as a function address is the item in the function
+tiers. Aliases, renames and TU moves do not create a second item. The key is
+``module:0xaddress``.
 
-No ROM, compiler or linker is used here.  ``--rom-report`` is the optional
+Initialized claims and verified symbols are counted against initialized
+storage. BSS is counted against BSS. Mixing the two makes a verified bar
+that can never reach 100%, because BSS has nothing for the build to compare.
+
+``source_coverage.py`` and ``validate_merge.py`` remain the byte ratchets.
+This tool does not duplicate them and it does not record who wrote the source.
+
+No ROM, compiler or linker is used here. ``--rom-report`` is the optional
 ``rombuild.py`` report; without it the byte-verification tiers are unavailable.
+``--write-readme`` without a report refreshes the claim bars and leaves an
+existing verified block in place.
 """
 from __future__ import annotations
 
@@ -32,23 +36,20 @@ import collections
 import json
 import pathlib
 import re
-import subprocess
 import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
-DEFAULT_AUTHORS = REPO / "data-authors.json"
-DEFAULT_BASELINE = REPO / "config" / "data-tracking-baseline.json"
 DEFAULT_ROM_REPORT = REPO / "build" / "rombuild-report.json"
 README = REPO / "README.md"
 README_START = "<!-- data:start -->"
 README_END = "<!-- data:end -->"
 
 STORAGE_CATEGORIES = {"global-storage", "code-embedded-data"}
-ID = re.compile(r"^(?P<module>arm9|itcm|dtcm|ov\d{3}):(?P<address>0x[0-9a-fA-F]{1,8})$")
+_VERIFIED_LINE = re.compile(r"^DATA (VERIFIED|PARTIAL|DIFFERS) ")
 
 
 def canonical_id(module, address):
-    """The module-qualified key used by both tier rows and the credit record."""
+    """Module-qualified key. One address is one data item."""
     value = int(address, 0) if isinstance(address, str) else int(address)
     return f"{module}:0x{value:08x}"
 
@@ -65,6 +66,12 @@ def is_bss(record):
 
 
 def is_named(record):
+    """True when the address is not a data_/reg_ placeholder.
+
+    The inventory calls this ``existing-nonplaceholder-unreviewed``: the
+    spelling is not a placeholder, and nobody has accepted it as the original
+    name. It is not a recovered-name count.
+    """
     return record.get("naming") == "existing-nonplaceholder-unreviewed"
 
 
@@ -85,11 +92,17 @@ def load_inventory(path=None, repo=REPO):
         if not isinstance(data, dict) or "records" not in data:
             raise ValueError(f"{path}: not a data_inventory report")
         return data
-    if str(REPO) not in sys.path:
+    if str(REPO / "tools") not in sys.path:
         sys.path.insert(0, str(REPO / "tools"))
     import data_inventory  # local tool; importing it reads no ROM
 
     return data_inventory.build_report(repo)
+
+
+def _empty_verification(reason):
+    return {"available": False, "reason": reason, "by_address": {},
+            "symbols": 0, "verified": 0, "partial": 0, "differs": 0,
+            "unnamed": 0, "verifiedBytes": 0, "partialBytes": 0}
 
 
 def load_verification(path=None):
@@ -97,9 +110,7 @@ def load_verification(path=None):
     path = pathlib.Path(path) if path else None
     data = _load_json(path) if path else None
     if data is None:
-        return {"available": False, "reason": "no romData report", "by_address": {},
-                "symbols": 0, "verified": 0, "partial": 0, "differs": 0,
-                "unnamed": 0, "verifiedBytes": 0, "partialBytes": 0}
+        return _empty_verification("no romData report")
 
     rom = data.get("romData", data) if isinstance(data, dict) else {}
     if isinstance(data, list):
@@ -125,11 +136,10 @@ def load_verification(path=None):
                              if r["verdict"] == "VERIFIED")
         partial_bytes = sum(int(r.get("bytes", 0) or 0) for r in rows
                             if r["verdict"] == "PARTIAL")
+        symbol_count = len(rows)
     else:
         if not isinstance(rom, dict) or "verified" not in rom:
-            return {"available": False, "reason": "report has no romData verdicts",
-                    "by_address": {}, "symbols": 0, "verified": 0, "partial": 0,
-                    "differs": 0, "unnamed": 0, "verifiedBytes": 0, "partialBytes": 0}
+            return _empty_verification("report has no romData verdicts")
         counts = collections.Counter({
             "VERIFIED": int(rom.get("verified", 0)),
             "PARTIAL": int(rom.get("partial", 0)),
@@ -139,13 +149,13 @@ def load_verification(path=None):
         verified_bytes = int(rom.get("verifiedBytes", 0))
         partial_bytes = int(rom.get("partialBytes", 0))
         rows = []
-        for field in ("verifiedSymbols", "partialSymbols", "differingSymbols"):
-            rows.extend(rom.get(field, []) or [])
-        # Some older reports only list the exact and differing identities.
-        rows = [{**r, "verdict": ("VERIFIED" if r in (rom.get("verifiedSymbols") or [])
-                                 else "PARTIAL" if r in (rom.get("partialSymbols") or [])
-                                 else "DIFFERS")}
-                for r in rows]
+        for field, verdict in (("verifiedSymbols", "VERIFIED"),
+                               ("partialSymbols", "PARTIAL"),
+                               ("differingSymbols", "DIFFERS")):
+            for row in rom.get(field, []) or []:
+                if isinstance(row, dict):
+                    rows.append({**row, "verdict": verdict})
+        symbol_count = int(rom.get("symbols", len(rows)))
 
     by_address = {}
     by_symbol = {}
@@ -166,6 +176,8 @@ def load_verification(path=None):
         if isinstance(addr, int):
             key = canonical_id(module, addr)
             old = by_address.get(key)
+            # DIFFERS hides nothing. VERIFIED beats PARTIAL. A later PARTIAL
+            # must not downgrade an exact comparison of the same address.
             if old is None or verdict == "DIFFERS" or (
                     old != "DIFFERS" and verdict == "VERIFIED"):
                 by_address[key] = verdict
@@ -176,8 +188,7 @@ def load_verification(path=None):
         "available": True,
         "by_address": by_address,
         "by_symbol": by_symbol,
-        "symbols": int(rom.get("symbols", len(rows) if isinstance(rom, dict) else 0))
-        if isinstance(rom, dict) else len(rows),
+        "symbols": symbol_count,
         "verified": counts["VERIFIED"],
         "partial": counts["PARTIAL"],
         "differs": counts["DIFFERS"],
@@ -189,18 +200,7 @@ def load_verification(path=None):
     }
 
 
-def load_authors(path=None):
-    path = pathlib.Path(path) if path else DEFAULT_AUTHORS
-    data = _load_json(path)
-    if data is None:
-        return {}, path
-    rows = data.get("data", data) if isinstance(data, dict) else None
-    if not isinstance(rows, dict):
-        raise ValueError(f"{path}: expected a 'data' object keyed by module:address")
-    return rows, path
-
-
-def _record_rows(inventory, verification, authors):
+def _record_rows(inventory, verification):
     """One row per configured storage address, with no double-counted aliases."""
     by_address = verification.get("by_address", {}) if verification else {}
     rows = []
@@ -223,8 +223,6 @@ def _record_rows(inventory, verification, authors):
             status = "CLAIMED"
         else:
             status = "UNCLAIMED"
-        credit = authors.get(key)
-        credited = isinstance(credit, dict) and bool(credit.get("author"))
         rows.append({
             "id": key,
             "module": module,
@@ -236,8 +234,6 @@ def _record_rows(inventory, verification, authors):
             "claim_status": record.get("declared_ownership"),
             "status": status,
             "named": is_named(record),
-            "credited": credited,
-            "author": credit.get("author") if credited else None,
             "source": next((c.get("source") for c in record.get("claims", [])
                             if c.get("complete") and c.get("covers_window")
                             and c.get("section_matches")), None),
@@ -246,21 +242,19 @@ def _record_rows(inventory, verification, authors):
     return rows
 
 
-def summarize(inventory, verification=None, authors=None):
+def summarize(inventory, verification=None):
     """Build the stable, JSON-serializable tracking report."""
     verification = verification or load_verification(None)
-    authors = authors or {}
-    rows = _record_rows(inventory, verification, authors)
+    rows = _record_rows(inventory, verification)
 
     counts = collections.Counter()
     sizes = collections.Counter()
     modules = collections.defaultdict(lambda: {
-        "items": 0, "claimed": 0, "verified": 0, "partial": 0, "differs": 0,
-        "unclaimed": 0, "bssClaimed": 0, "bssUnclaimed": 0, "named": 0,
-        "credited": 0, "bytes": 0, "claimedBytes": 0, "verifiedBytes": 0,
+        "items": 0, "claimed": 0, "initializedClaimed": 0, "verified": 0,
+        "partial": 0, "differs": 0, "unclaimed": 0, "bssClaimed": 0,
+        "bssUnclaimed": 0, "named": 0, "bytes": 0, "claimedBytes": 0,
+        "verifiedBytes": 0,
     })
-    author_counts = collections.Counter()
-    author_bytes = collections.Counter()
     for row in rows:
         status = row["status"]
         counts["items"] += 1
@@ -274,15 +268,12 @@ def summarize(inventory, verification=None, authors=None):
             sizes["claimedWindowBytes"] += row["bytes"]
             mod["claimed"] += 1
             mod["claimedBytes"] += row["bytes"]
+            if not row["bss"]:
+                counts["initializedClaimed"] += 1
+                mod["initializedClaimed"] += 1
         if row["named"]:
             counts["named"] += 1
             mod["named"] += 1
-        if row["credited"]:
-            counts["credited"] += 1
-            mod["credited"] += 1
-            author = row["author"]
-            author_counts[author] += 1
-            author_bytes[author] += row["bytes"]
         if status == "VERIFIED":
             counts["verified"] += 1
             mod["verified"] += 1
@@ -320,13 +311,14 @@ def summarize(inventory, verification=None, authors=None):
     source_build = verification.get("sourceBuild")
     return {
         "schemaVersion": 1,
-        "purpose": "Data reconstruction progress and credit; inventory claims are not byte proof",
+        "purpose": "Data reconstruction progress. Inventory claims are not byte proof.",
         "repository": inventory.get("repository"),
         "counts": {
             "items": counts["items"],
             "initialized": counts["initialized"],
             "bss": counts["bss"],
             "claimed": counts["claimed"],
+            "initializedClaimed": counts["initializedClaimed"],
             "verified": counts["verified"],
             "partial": counts["partial"],
             "differs": counts["differs"],
@@ -334,7 +326,6 @@ def summarize(inventory, verification=None, authors=None):
             "bssClaimed": counts["bssClaimed"],
             "bssUnclaimed": counts["bssUnclaimed"],
             "named": counts["named"],
-            "credited": counts["credited"],
         },
         "bytes": {
             "window": sizes["windowBytes"],
@@ -356,15 +347,14 @@ def summarize(inventory, verification=None, authors=None):
         },
         "sourceBuild": source_build,
         "modules": [{"module": key, **value} for key, value in sorted(modules.items())],
-        "authors": [{"author": key, "items": count, "windowBytes": author_bytes[key]}
-                    for key, count in author_counts.most_common()],
         "items": rows,
         "limits": [
             "A complete claim is declared ownership; it is not compiled proof.",
             "VERIFIED/PARTIAL/DIFFERS require the full build's romData report.",
+            "CLAIMED and VERIFIED use the initialized universe. BSS is separate.",
             "Per-address window bytes are the next configured boundary upper bound, not object sizes.",
             "BSS is storage, not ROM payload; its byte count is NOBITS storage.",
-            "Credit is data-authors.json; an existing key is never rewritten by this tool.",
+            "NAMED means the spelling is not a data_/reg_ placeholder. It is not a reviewed name.",
         ],
     }
 
@@ -380,47 +370,62 @@ def bar(done, total, width=30):
     return "=" * filled + "-" * (width - filled)
 
 
-def readme_block(report, width=30):
+def _count_line(label, done, total, suffix, extra=""):
+    return (f"{label:<14} {bar(done, total)}  "
+            f"{_pct(done, total):4.1f}%   "
+            f"{done:,} / {total:,} {suffix}{extra}")
+
+
+def readme_block(report, preserved_verified=None):
     c = report["counts"]
     v = report["verification"]
+    initialized = c["initialized"]
     lines = [README_START, "```"]
-    lines.append(f"DATA CLAIMED   {bar(c['claimed'], c['items'], width)}  "
-                 f"{_pct(c['claimed'], c['items']):4.1f}%   "
-                 f"{c['claimed']:,} / {c['items']:,} items")
+    lines.append(_count_line("DATA CLAIMED", c["initializedClaimed"], initialized,
+                             "initialized items"))
     if v["available"]:
-        lines.append(f"DATA VERIFIED  {bar(c['verified'], c['items'], width)}  "
-                     f"{_pct(c['verified'], c['items']):4.1f}%   "
-                     f"{c['verified']:,} / {c['items']:,} items   "
-                     f"{v['verifiedBytes']:,} B exact")
+        lines.append(_count_line(
+            "DATA VERIFIED", c["verified"], initialized, "initialized items",
+            f"   {v['verifiedBytes']:,} B exact"))
         if c["partial"] or v["partialBytes"]:
-            lines.append(f"DATA PARTIAL   {bar(c['partial'], c['items'], width)}  "
-                         f"{_pct(c['partial'], c['items']):4.1f}%   "
-                         f"{c['partial']:,} / {c['items']:,} items   "
-                         f"{v['partialBytes']:,} B compared")
+            lines.append(_count_line(
+                "DATA PARTIAL", c["partial"], initialized, "initialized items",
+                f"   {v['partialBytes']:,} B compared"))
+        if c["differs"]:
+            lines.append(_count_line(
+                "DATA DIFFERS", c["differs"], initialized, "initialized items"))
+    elif preserved_verified:
+        lines.extend(preserved_verified)
     else:
         lines.append("DATA VERIFIED  (full build report unavailable)")
-    lines.append(f"DATA NAMED     {bar(c['named'], c['items'], width)}  "
-                 f"{_pct(c['named'], c['items']):4.1f}%   "
-                 f"{c['named']:,} / {c['items']:,} items")
+    lines.append(_count_line("DATA NAMED", c["named"], c["items"], "items"))
     bss_total = c["bssClaimed"] + c["bssUnclaimed"]
-    lines.append(f"BSS CLAIMED    {bar(c['bssClaimed'], bss_total, width)}  "
-                 f"{_pct(c['bssClaimed'], bss_total):4.1f}%   "
-                 f"{c['bssClaimed']:,} / {bss_total:,} BSS items   "
-                 f"{report['bytes']['sectionCoverage'].get('bss:single-complete-claim', 0):,} B")
-    lines.append(f"DATA CREDITED  {bar(c['credited'], c['claimed'], width)}  "
-                 f"{_pct(c['credited'], c['claimed']):4.1f}%   "
-                 f"{c['credited']:,} / {c['claimed']:,} claimed items")
+    bss_bytes = report["bytes"]["sectionCoverage"].get("bss:single-complete-claim", 0)
+    lines.append(_count_line(
+        "BSS CLAIMED", c["bssClaimed"], bss_total, "BSS items",
+        f"   {bss_bytes:,} B"))
     lines.append("```")
     lines.append("")
-    lines.append("Data tiers, checks and credit: [notes/data-tracking.md](notes/data-tracking.md).")
+    lines.append("Data progress: [notes/data-tracking.md](notes/data-tracking.md).")
     lines.append(README_END)
     return "\n".join(lines)
+
+
+def _preserved_verification_lines(text):
+    if README_START not in text or README_END not in text:
+        return None
+    block = text.split(README_START, 1)[1].split(README_END, 1)[0]
+    kept = [line for line in block.splitlines() if _VERIFIED_LINE.match(line)]
+    return kept or None
 
 
 def write_readme(path, report):
     path = pathlib.Path(path)
     text = path.read_text(encoding="utf-8", errors="replace") if path.is_file() else ""
-    block = readme_block(report)
+    preserved = None
+    if not report["verification"].get("available"):
+        preserved = _preserved_verification_lines(text)
+    block = readme_block(report, preserved)
     if README_START in text and README_END in text:
         before, rest = text.split(README_START, 1)
         _old, after = rest.split(README_END, 1)
@@ -438,126 +443,25 @@ def write_readme(path, report):
     return block
 
 
-def validate_authors(authors, rows):
-    """Return (errors, warnings) for the credit record against this inventory."""
-    by_id = {row["id"]: row for row in rows}
-    errors, warnings = [], []
-    for key, row in authors.items():
-        match = ID.fullmatch(str(key))
-        if not match:
-            errors.append(f"{key}: key must be module:0xaddress")
-            continue
-        canonical = canonical_id(match["module"], match["address"])
-        if canonical != key:
-            errors.append(f"{key}: expected canonical key {canonical}")
-        if not isinstance(row, dict) or not isinstance(row.get("author"), str) \
-                or not row["author"].strip():
-            errors.append(f"{key}: missing nonempty author")
-            continue
-        if key not in by_id:
-            errors.append(f"{key}: address is not a configured global-data record")
-            continue
-        if not by_id[key]["claimed"]:
-            warnings.append(f"{key}: credit exists for an unclaimed data record")
-    return errors, warnings
-
-
-def load_baseline(path=None, base=None, repo=REPO, missing_ok=False):
-    """Read the baseline file, or its blob at a git ref for PR comparisons."""
-    path = pathlib.Path(path) if path else DEFAULT_BASELINE
-    if base:
-        rel = path.resolve().relative_to(pathlib.Path(repo).resolve()).as_posix()
-        proc = subprocess.run(["git", "-C", str(repo), "show", f"{base}:{rel}"],
-                              capture_output=True, text=True, encoding="utf-8")
-        if proc.returncode != 0:
-            if missing_ok:
-                return None
-            raise ValueError(f"baseline {rel} does not exist at {base}")
-        try:
-            return json.loads(proc.stdout)
-        except ValueError as exc:
-            raise ValueError(f"{base}:{rel}: {exc}") from exc
-    data = _load_json(path)
-    if data is None:
-        return None
-    return data
-
-
-def check(report, authors, baseline=None):
-    """Credit and schema checks; returns (errors, warnings)."""
-    rows = report["items"]
-    errors, warnings = validate_authors(authors, rows)
-    claimed = {row["id"] for row in rows if row["claimed"]}
-    if baseline is None:
-        warnings.append("no data-tracking baseline: new uncredited claims are not gated")
-        return errors, warnings
-    known = set(baseline.get("uncredited", []) or [])
-    new = sorted(claimed - known - set(authors))
-    if new:
-        errors.append(f"{len(new)} claimed data item(s) have no credit row: "
-                      + ", ".join(new[:8]) + (", ..." if len(new) > 8 else ""))
-    unknown = sorted(known - claimed)
-    if unknown:
-        warnings.append(f"{len(unknown)} baseline claim(s) are not present in this tree: "
-                        + ", ".join(unknown[:8]) + (", ..." if len(unknown) > 8 else ""))
-    return errors, warnings
-
-
-def write_baseline(path, report, authors):
-    claimed = {row["id"] for row in report["items"] if row["claimed"]}
-    data = {
-        "schemaVersion": 1,
-        "purpose": "Existing uncredited data claims; new claims need data-authors.json",
-        "uncredited": sorted(claimed - set(authors)),
-    }
-    path = pathlib.Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8", newline="\n")
-    return data
-
-
-def write_authors(path, authors):
-    path = pathlib.Path(path)
-    data = {
-        "note": ("Who decompiled each data item. The key is the module and address; "
-                 "moving source or renaming an alias does not change the key. This file "
-                 "is the only data credit record."),
-        "data": authors,
-    }
-    path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n",
-                    encoding="utf-8", newline="\n")
-
-
-def credit_source(report, authors, source, author):
-    """Credit every complete claimed address owned by one source file."""
-    source = source.replace("\\", "/")
-    added = 0
-    for row in report["items"]:
-        if row["claimed"] and row["source"] == source and row["id"] not in authors:
-            authors[row["id"]] = {
-                "author": author,
-                "name": row["aliases"][0] if row["aliases"] else None,
-                "source": source,
-            }
-            added += 1
-    return added
-
-
-def _summary(report, authors_path):
+def _summary(report):
     c = report["counts"]
     v = report["verification"]
+    initialized = c["initialized"]
     lines = [
         "Data tracking",
-        f"  storage items: {c['items']:,} ({c['initialized']:,} initialized, {c['bss']:,} BSS)",
-        f"  claimed:       {c['claimed']:,} ({_pct(c['claimed'], c['items']):.1f}%)",
-        f"  verified:      {c['verified']:,} ({_pct(c['verified'], c['items']):.1f}%)"
+        f"  storage items: {c['items']:,} ({initialized:,} initialized, {c['bss']:,} BSS)",
+        f"  claimed:       {c['initializedClaimed']:,} / {initialized:,} initialized "
+        f"({_pct(c['initializedClaimed'], initialized):.1f}%)",
+        f"  verified:      {c['verified']:,} / {initialized:,} initialized "
+        f"({_pct(c['verified'], initialized):.1f}%)"
         + (f", {v['verifiedBytes']:,} B exact" if v["available"] else " (no romData report)"),
-        f"  partial:       {c['partial']:,}" + (f", {v['partialBytes']:,} B compared"
-                                                 if v["available"] else ""),
+        f"  partial:       {c['partial']:,} / {initialized:,}"
+        + (f", {v['partialBytes']:,} B compared" if v["available"] else ""),
         f"  differs:       {c['differs']:,}",
-        f"  named:         {c['named']:,} ({_pct(c['named'], c['items']):.1f}%)",
-        f"  credited:      {c['credited']:,} / {c['claimed']:,} claimed",
-        f"  credit record: {authors_path}",
+        f"  named:         {c['named']:,} / {c['items']:,} "
+        f"({_pct(c['named'], c['items']):.1f}%)",
+        f"  bss claimed:   {c['bssClaimed']:,} / {c['bss']:,} "
+        f"({_pct(c['bssClaimed'], c['bss']):.1f}%)",
     ]
     section = report["bytes"]["sectionCoverage"]
     lines.append("  section bytes: "
@@ -571,54 +475,22 @@ def main(argv=None):
     ap.add_argument("--inventory", help="prebuilt data_inventory JSON (default: scan)")
     ap.add_argument("--rom-report", default=str(DEFAULT_ROM_REPORT),
                     help="rombuild report with romData, or a romdata_json list")
-    ap.add_argument("--authors", default=str(DEFAULT_AUTHORS))
-    ap.add_argument("--baseline", default=str(DEFAULT_BASELINE))
-    ap.add_argument("--base", help="read the baseline from this git ref")
     ap.add_argument("--json", help="write the summary tracking report")
     ap.add_argument("--items-json", help="write every per-address tracking row")
     ap.add_argument("--write-readme", action="store_true")
-    ap.add_argument("--check", action="store_true")
-    ap.add_argument("--update-baseline", action="store_true")
-    ap.add_argument("--credit-source", help="credit every complete claim owned by this src path")
-    ap.add_argument("--author", help="author name for --credit-source")
     args = ap.parse_args(argv)
 
     try:
         inventory = load_inventory(args.inventory)
         verification = load_verification(args.rom_report)
-        authors, authors_path = load_authors(args.authors)
-        report = summarize(inventory, verification, authors)
-        if args.credit_source:
-            if not args.author:
-                raise ValueError("--credit-source needs --author")
-            added = credit_source(report, authors, args.credit_source, args.author)
-            write_authors(authors_path, authors)
-            report = summarize(inventory, verification, authors)
-            print(f"credited {added} data item(s) from {args.credit_source} to {args.author}")
-        if args.update_baseline:
-            baseline = write_baseline(args.baseline, report, authors)
-            print(f"wrote {args.baseline}: {len(baseline['uncredited'])} uncredited claim(s)")
+        report = summarize(inventory, verification)
         if args.write_readme:
-            if not verification.get("available"):
-                raise ValueError("--write-readme needs a --rom-report with data verdicts")
             write_readme(README, report)
-            print(f"updated {README} data block")
-        if args.check:
-            baseline = load_baseline(args.baseline, args.base, missing_ok=bool(args.base))
-            if baseline is None and args.base:
-                # First rollout: the baseline is introduced by this branch, so
-                # the base ref cannot name it yet. The working-tree baseline is
-                # the only usable one; later PRs read the committed base file.
-                baseline = load_baseline(args.baseline)
-                print(f"warning: no baseline at {args.base}; using the working-tree baseline",
-                      file=sys.stderr)
-            errors, warnings = check(report, authors, baseline)
-            for warning in warnings:
-                print(f"warning: {warning}", file=sys.stderr)
-            for error in errors:
-                print(f"error: {error}", file=sys.stderr)
-            if errors:
-                return 1
+            if verification.get("available"):
+                print(f"updated {README} data block")
+            else:
+                print(f"updated {README} claim bars; verified lines kept "
+                      f"(no romData report)")
         if args.json:
             path = pathlib.Path(args.json)
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -630,7 +502,7 @@ def main(argv=None):
             path.write_text(json.dumps(report["items"], indent=2) + "\n",
                             encoding="utf-8", newline="\n")
             print(f"items: {path}")
-        print(_summary(report, authors_path))
+        print(_summary(report))
         return 0
     except (OSError, ValueError) as exc:
         print(f"data tiers: {exc}", file=sys.stderr)

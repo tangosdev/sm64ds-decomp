@@ -1,4 +1,4 @@
-"""The data tracker joins claims, build verdicts and credit without inventing any."""
+"""The data tracker joins claims and build verdicts without inventing either."""
 import json
 import pathlib
 import sys
@@ -63,7 +63,7 @@ class SummarizeTests(unittest.TestCase):
     def test_address_is_the_item_and_aliases_do_not_double_count(self):
         report = DT.summarize(
             inventory([rec(0x100, aliases=["data_1", "named_table"])]),
-            verification({}), {})
+            verification({}))
         self.assertEqual(report["counts"]["items"], 1)
         self.assertEqual(report["items"][0]["aliases"], ["data_1", "named_table"])
         self.assertEqual(report["items"][0]["status"], "CLAIMED")
@@ -80,7 +80,7 @@ class SummarizeTests(unittest.TestCase):
             "ov002:0x00000108": "PARTIAL",
             "ov002:0x00000110": "DIFFERS",
         }, verified=1, partial=1, differs=1, verifiedBytes=8, partialBytes=3)
-        report = DT.summarize(inventory(rows), ver, {})
+        report = DT.summarize(inventory(rows), ver)
         self.assertEqual([r["status"] for r in report["items"]],
                          ["VERIFIED", "PARTIAL", "DIFFERS", "UNCLAIMED"])
         self.assertEqual(report["counts"]["verified"], 1)
@@ -92,72 +92,53 @@ class SummarizeTests(unittest.TestCase):
         rows = [rec(0x200, section=".bss"), rec(0x208, section=".bss",
                                                 ownership="no-complete-claim")]
         ver = verification({"ov002:0x00000200": "VERIFIED"}, verified=1)
-        report = DT.summarize(inventory(rows), ver, {})
+        report = DT.summarize(inventory(rows), ver)
         self.assertEqual([r["status"] for r in report["items"]],
                          ["BSS_CLAIMED", "BSS_UNCLAIMED"])
         self.assertEqual(report["counts"]["verified"], 0)
         self.assertEqual(report["bytes"]["sectionCoverage"]["bss:single-complete-claim"], 0x30)
 
-    def test_named_and_credit_are_independent_of_verification(self):
+    def test_initialized_bars_exclude_bss(self):
+        rows = [rec(0x100), rec(0x200, section=".bss")]
+        ver = verification({"ov002:0x00000100": "VERIFIED"},
+                           verified=1, verifiedBytes=8)
+        report = DT.summarize(inventory(rows), ver)
+        self.assertEqual(report["counts"]["initialized"], 1)
+        self.assertEqual(report["counts"]["initializedClaimed"], 1)
+        self.assertEqual(report["counts"]["verified"], 1)
+        self.assertEqual(report["counts"]["bssClaimed"], 1)
+        block = DT.readme_block(report)
+        initialized = [line for line in block.splitlines()
+                       if line.startswith("DATA CLAIMED") or line.startswith("DATA VERIFIED")]
+        self.assertEqual(len(initialized), 2)
+        self.assertTrue(all("1 / 1 initialized items" in line for line in initialized))
+        self.assertNotIn("CREDITED", block)
+        self.assertNotIn("author", report["items"][0])
+
+    def test_named_is_independent_of_verification(self):
         rows = [rec(0x300, naming="existing-nonplaceholder-unreviewed"),
                 rec(0x308)]
-        authors = {"ov002:0x00000300": {"author": "lunavyqo"}}
-        report = DT.summarize(inventory(rows), verification({}), authors)
+        report = DT.summarize(inventory(rows), verification({}))
         self.assertEqual(report["counts"]["named"], 1)
-        self.assertEqual(report["counts"]["credited"], 1)
-        self.assertEqual(report["authors"], [{"author": "lunavyqo", "items": 1,
-                                              "windowBytes": 8}])
-        self.assertEqual(report["items"][1]["author"], None)
+        self.assertNotIn("credited", report["counts"])
+        self.assertNotIn("authors", report)
+
+    def test_later_partial_does_not_downgrade_verified(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = pathlib.Path(td) / "romdata.json"
+            path.write_text(json.dumps([
+                {"module": "ov002", "symbol": "data_a", "addr": 0x100,
+                 "bytes": 8, "verdict": "VERIFIED"},
+                {"module": "ov002", "symbol": "data_b", "addr": 0x100,
+                 "bytes": 4, "verdict": "PARTIAL"},
+            ]), encoding="utf-8")
+            loaded = DT.load_verification(path)
+        self.assertEqual(loaded["by_address"]["ov002:0x00000100"], "VERIFIED")
 
     def test_code_labels_are_not_data_items(self):
         report = DT.summarize(
-            inventory([rec(0x400, category="code-label")]), verification({}), {})
+            inventory([rec(0x400, category="code-label")]), verification({}))
         self.assertEqual(report["counts"]["items"], 0)
-
-
-class CreditTests(unittest.TestCase):
-    def setUp(self):
-        self.rows = DT.summarize(
-            inventory([rec(0x100, source="src/a.c"), rec(0x108, source="src/b.c")]),
-            verification({}), {})
-
-    def test_credit_source_only_touches_the_named_source(self):
-        authors = {}
-        added = DT.credit_source(self.rows, authors, "src/a.c", "alice")
-        self.assertEqual(added, 1)
-        self.assertEqual(authors["ov002:0x00000100"]["author"], "alice")
-        self.assertNotIn("ov002:0x00000108", authors)
-
-    def test_new_claim_must_be_credited_but_baseline_rows_are_allowed(self):
-        base = {"uncredited": ["ov002:0x00000100", "ov002:0x00000108"]}
-        errors, _warnings = DT.check(self.rows, {}, base)
-        self.assertEqual(errors, [])
-        base = {"uncredited": ["ov002:0x00000100"]}
-        errors, _warnings = DT.check(self.rows, {}, base)
-        self.assertEqual(len(errors), 1)
-        self.assertIn("ov002:0x00000108", errors[0])
-        credited = {"ov002:0x00000108": {"author": "alice"}}
-        errors, _warnings = DT.check(self.rows, credited, base)
-        self.assertEqual(errors, [])
-
-    def test_malformed_credit_value_does_not_crash_the_report(self):
-        report = DT.summarize(inventory([rec(0x100)]), verification({}),
-                              {"ov002:0x00000100": "not-an-object"})
-        self.assertEqual(report["counts"]["credited"], 0)
-        errors, _warnings = DT.validate_authors(
-            {"ov002:0x00000100": "not-an-object"}, report["items"])
-        self.assertTrue(errors)
-
-    def test_author_row_must_resolve_and_name_a_claim(self):
-        errors, _warnings = DT.validate_authors(
-            {"ov002:0x00000100": {"author": ""}}, self.rows["items"])
-        self.assertTrue(errors)
-        errors, _warnings = DT.validate_authors(
-            {"ov002:0xdeadbeef": {"author": "alice"}}, self.rows["items"])
-        self.assertTrue(errors)
-        errors, _warnings = DT.validate_authors(
-            {"ov002:0x00000100": {"author": "alice"}}, self.rows["items"])
-        self.assertEqual(errors, [])
 
 
 class ReportRenderingTests(unittest.TestCase):
@@ -165,7 +146,7 @@ class ReportRenderingTests(unittest.TestCase):
         report = DT.summarize(
             inventory([rec(0x100, naming="existing-nonplaceholder-unreviewed")]),
             verification({"ov002:0x00000100": "VERIFIED"},
-                         verified=1, verifiedBytes=8), {})
+                         verified=1, verifiedBytes=8))
         with tempfile.TemporaryDirectory() as td:
             path = pathlib.Path(td) / "README.md"
             path.write_text("# Title\n\n<!-- tiers:end -->\n\nTail\n", encoding="utf-8")
@@ -180,9 +161,40 @@ class ReportRenderingTests(unittest.TestCase):
         self.assertEqual(first.count(DT.README_START), 1)
 
     def test_verification_absent_is_explicit(self):
-        report = DT.summarize(inventory([rec(0x100)]), DT.load_verification(None), {})
+        report = DT.summarize(inventory([rec(0x100)]), DT.load_verification(None))
         self.assertFalse(report["verification"]["available"])
         self.assertIn("full build report unavailable", DT.readme_block(report))
+
+    def test_write_readme_keeps_verified_lines_without_a_report(self):
+        claimed = DT.summarize(inventory([rec(0x100)]), DT.load_verification(None))
+        verified = DT.summarize(
+            inventory([rec(0x100)]),
+            verification({"ov002:0x00000100": "VERIFIED"},
+                         verified=1, verifiedBytes=8))
+        with tempfile.TemporaryDirectory() as td:
+            path = pathlib.Path(td) / "README.md"
+            path.write_text("# Title\n\n<!-- tiers:end -->\n\nTail\n", encoding="utf-8")
+            DT.write_readme(path, verified)
+            DT.write_readme(path, claimed)
+            text = path.read_text(encoding="utf-8")
+        self.assertIn("DATA VERIFIED", text)
+        self.assertIn("8 B exact", text)
+        self.assertNotIn("full build report unavailable", text)
+        self.assertIn("Tail", text)
+
+    def test_differs_wins_over_a_verified_sibling(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = pathlib.Path(td) / "romdata.json"
+            path.write_text(json.dumps([
+                {"module": "ov002", "symbol": "data_1", "addr": 0x100,
+                 "bytes": 8, "verdict": "VERIFIED"},
+                {"module": "ov002", "symbol": "data_1", "addr": 0x100,
+                 "bytes": 8, "verdict": "DIFFERS"},
+            ]), encoding="utf-8")
+            ver = DT.load_verification(path)
+        self.assertEqual(ver["by_address"]["ov002:0x00000100"], "DIFFERS")
+        self.assertEqual(ver["differs"], 1)
+        self.assertEqual(ver["verified"], 0)
 
     def test_report_normalizes_a_romdata_record_list(self):
         with tempfile.TemporaryDirectory() as td:
