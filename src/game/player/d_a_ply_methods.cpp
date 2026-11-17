@@ -5512,7 +5512,6 @@ int daPly_c::func_ov002_020c6e14() {
  * that returns VS_FAIL (1). The implicit daPly_c* this is unused.
  */
 s32 daPly_c::St_LevelEnter_Cleanup() {
-    this;
     return 1;
 }
 
@@ -7347,7 +7346,6 @@ void daPly_c::func_ov002_020cabe0() {
  * The implicit daPly_c* this is unused.
  */
 s32 daPly_c::St_Null_Cleanup() {
-    this;
     return 1;
 }
 
@@ -7355,7 +7353,6 @@ s32 daPly_c::St_Null_Cleanup() {
  * (All ST_NULL state functions are "return 1;" per daPly_c.h.)
  */
 s32 daPly_c::St_Null_Main() {
-    this;
     return 1;
 }
 
@@ -10608,7 +10605,6 @@ void daPly_c::func_ov002_020d1f78(u32 param) {
     extern Rec18 data_0209f49c[];
     extern Rec18 data_0209f4a0[];
 
-    daPly_c *p = this;
     int idx;
     int flag;
     int id;
@@ -10626,37 +10622,37 @@ void daPly_c::func_ov002_020d1f78(u32 param) {
             flag = 1;
     }
 
-    if (p->param1 == 2 && flag == 0) {
-        dExtFrameCtrl_c &anim = *p->mModels.mBodyModels[GetBodyModelID(p->param1 & 0xff, 0)];
+    if (param1 == 2 && flag == 0) {
+        dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
         w = anim.currFrame;
         /* The whole frame of the 20.12 counter; the u16 parameter's narrowing
            folds with the shift into the ROM's lsl #4 / lsr #16. */
-        p->SetAnim(0x3f, 0, 0x2800, w >> 12);
+        SetAnim(0x3f, 0, 0x2800, w >> 12);
     } else {
-        int v = p->mHorzSpeed;
+        int v = mHorzSpeed;
         int shift = v >> 3;
         if (shift < 0x400)
             shift = 0x400;
         SetAnim(param, 0, shift, 0);
     }
 
-    id = GetBodyModelID(p->param1 & 0xff, 0);
-    if (!p->mModels.mBodyModels[id]->WillHitFrame(4)) {
-        id = GetBodyModelID(p->param1 & 0xff, 0);
-        if (!p->mModels.mBodyModels[id]->WillHitFrame(0x13))
+    id = GetBodyModelID(param1 & 0xff, 0);
+    if (!mModels.mBodyModels[id]->WillHitFrame(4)) {
+        id = GetBodyModelID(param1 & 0xff, 0);
+        if (!mModels.mBodyModels[id]->WillHitFrame(0x13))
             return;
     }
 
-    if (p->mIsInShallowWater != 0) {
-        u32 newId = Particle::System::NewCheckWaterRipple((u32)p->mParticle1, kPtclShallowWaterLand,
-                                                          p->mPosX, data_0209f32c, p->mPosZ, 0);
-        p->mParticle1 = newId;
+    if (mIsInShallowWater != 0) {
+        u32 newId = Particle::System::NewCheckWaterRipple((u32)mParticle1, kPtclShallowWaterLand,
+                                                          mPosX, data_0209f32c, mPosZ, 0);
+        mParticle1 = newId;
         return;
     }
 
-    func_0201251c(0, p->mGroundSoundType + 0x20, &p->mCamSpacePos, p->mHorzSpeed);
+    func_0201251c(0, mGroundSoundType + 0x20, &mCamSpacePos, mHorzSpeed);
 
-    state = p->mGroundSoundType;
+    state = mGroundSoundType;
     target = -1;
     if (state != 6) {
         if (state != 8) {
@@ -10669,7 +10665,7 @@ void daPly_c::func_ov002_020d1f78(u32 param) {
     if (target == -1)
         return;
 
-    Particle::System::NewSimple(target, p->mPosX, p->mPosY, p->mPosZ);
+    Particle::System::NewSimple(target, mPosX, mPosY, mPosZ);
 }
 
 int daPly_c::St_WaitQuicksand_Main() {
@@ -12945,7 +12941,6 @@ ret0b:
  * constructor) before the collider owner is looked up. */
 
 int daPly_c::TongueWallProbe() {
-    daPly_c *player = this;
     Vector3_16f dir;
     Vector3 p1;
     Vector3 p2;
@@ -12956,20 +12951,20 @@ int daPly_c::TongueWallProbe() {
     int idx;
 
     {
-        u8 b = player->mUseAltBodyModel;
+        u8 b = mUseAltBodyModel;
         int model;
-        Matrix4x3 *m1 = player->mModels.mHeadModels[(b << 2) + 3]->data.transforms;
-        model = (this)->GetBodyModelID(player->param1 & 0xff, 0);
-        MTX_MultVec43((Vector3 *)&m1->m[9], &player->mModels.mBodyModels[model]->mat4x3, &p1);
+        Matrix4x3 *m1 = mModels.mHeadModels[(b << 2) + 3]->data.transforms;
+        model = GetBodyModelID(param1 & 0xff, 0);
+        MTX_MultVec43((Vector3 *)&m1->m[9], &mModels.mBodyModels[model]->mat4x3, &p1);
         Vec3_MulScalarInPlace(&p1, 0x8000);
     }
 
     {
-        u8 b2 = player->mUseAltBodyModel;
-        Matrix4x3 *m2i = &player->mModels.mHeadModels[(b2 << 2) + 3]->data.transforms[3];
-        int model2 = (this)->GetBodyModelID(player->param1 & 0xff, 0);
+        u8 b2 = mUseAltBodyModel;
+        Matrix4x3 *m2i = &mModels.mHeadModels[(b2 << 2) + 3]->data.transforms[3];
+        int model2 = GetBodyModelID(param1 & 0xff, 0);
         void *a0, *a1, *a2;
-        a1 = player->mModels.mBodyModels[model2];
+        a1 = mModels.mBodyModels[model2];
         a0 = &m2i->m[9];
         a1 = &((dExtAnmModel_c *)a1)->mat4x3;
         a2 = &p2;
@@ -12990,7 +12985,7 @@ int daPly_c::TongueWallProbe() {
     }
 
     ::Vector3 clsnPos = rl.GetClsnPos();
-    player->mTongueHitDist = VEC_Distance(&p1, &clsnPos);
+    mTongueHitDist = VEC_Distance(&p1, &clsnPos);
     Vector3 normal;
     rl.surface.CopyNormalTo(normal);
     ang = cstd::atan2(normal.x, normal.z);
@@ -13490,10 +13485,10 @@ void daPly_c::func_ov002_020d80d0() {
 }
 
 void daPly_c::func_ov002_020d8118() {
-    (this)->func_ov002_020bda48();
+    func_ov002_020bda48();
     mFireTimer = 600;
     StartPowerupMusic(0x32);
-    (this)->func_ov002_020c43c4(5);
+    func_ov002_020c43c4(5);
     mIsFire = 1;
 }
 
@@ -14337,16 +14332,14 @@ void daPly_c::func_ov002_020d98b4() {
 }
 
 void daPly_c::StartHurtFallAnim() {
-    daPly_c *player = this;
     u8 idx;
-    if (player->mIsAirborne == 0)
+    if (mIsAirborne == 0)
         return;
-    idx = player->mStateStep;
+    idx = mStateStep;
     if (idx > 1) return;
-    (this)->SetAnim(data_ov002_0210a6ec[idx & 7], 0x40000000, 0x1000,
-                    (u16)(data_ov002_02109dcc[idx] + 1));
-    player->mStateStep += 2;
-    player->mStateWork |= 1;
+    SetAnim(data_ov002_0210a6ec[idx & 7], 0x40000000, 0x1000, (u16)(data_ov002_02109dcc[idx] + 1));
+    mStateStep += 2;
+    mStateWork |= 1;
 }
 
 void daPly_c::func_ov002_020d9a4c() {
@@ -19152,9 +19145,7 @@ int daPly_c::CleanupResources() {
 
 /* Vtable slot 12. Empty override; daPly_c does nothing when marked for destruction.
  */
-void daPly_c::OnPendingDestroy() {
-    this;
-}
+void daPly_c::OnPendingDestroy() {}
 
 int daPly_c::Render() {
     struct VObj {
@@ -20093,7 +20084,6 @@ void daPly_c::func_ov002_020e5948() {
     extern SharedFilePtr data_ov002_0210e3d8;
     extern SharedFilePtr data_ov002_0210eb88;
     extern SharedFilePtr data_ov002_0210e750;
-    daPly_c *player = this;
     s32 i;
     s32 j;
     s32 bodyId;
@@ -20113,27 +20103,27 @@ void daPly_c::func_ov002_020e5948() {
     dExtFrameCtrl_c::LoadFile(data_ov002_0210eb88);
     dExtFrameCtrl_c::LoadFile(data_ov002_0210e4c0);
 
-    if (gNumStageStars[player->mPlayerNo] != 0) {
+    if (gNumStageStars[mPlayerNo] != 0) {
         LoadSilverStarAndNumber();
-        player->mLoadedResourceFlags |= 1;
+        mLoadedResourceFlags |= 1;
     }
 
     {
-        s32 b = player->param1;
-        s32 a = player->mCharacter;
+        s32 b = param1;
+        s32 a = mCharacter;
         if (a != b) {
         switch (b) {
         case 0:
             dExtSimpleModel_c::LoadFile(data_ov002_0210da40);
-            player->mLoadedResourceFlags |= 2;
+            mLoadedResourceFlags |= 2;
             break;
         case 1:
             dExtSimpleModel_c::LoadFile(data_ov002_0210d9a0);
-            player->mLoadedResourceFlags |= 4;
+            mLoadedResourceFlags |= 4;
             break;
         case 2:
             dExtSimpleModel_c::LoadFile(data_ov002_0210d9c0);
-            player->mLoadedResourceFlags |= 8;
+            mLoadedResourceFlags |= 8;
             break;
         }
     }
@@ -20227,23 +20217,22 @@ void daPly_c::func_ov002_020e5948() {
         mode = gGameMode;
         mode = (mode == 1);
         if (mode == 0) {
-            player->mCharFileBase = 0;
+            mCharFileBase = 0;
         } else {
-            player->mCharFileBase = 0x44;
+            mCharFileBase = 0x44;
             func_ov002_020bec2c();
         }
     }
 
-    dExtFrameCtrl_c::LoadFile(*data_ov002_020ff480[(s32)player->mCharFileBase]);
+    dExtFrameCtrl_c::LoadFile(*data_ov002_020ff480[(s32)mCharFileBase]);
 
     i = 0;
     do {
-        player->mModels.mBodyModels[i] = new dExtAnm2Model_c;
-        player->mModels.mBodyModels[i]->SetFile(
-            dExtSimpleModel_c::LoadFile(*data_ov002_0210a68c[i]), 1, 1);
-        player->mModels.mBodyModels[i]->Func_020162C4(
-            (BCA_File *)data_ov002_020ff480[i + 0xC4]->filePtr, 0, 0x1000, 0);
-        player->mModels.mBodyTexParams[i] = func_ov002_020e6bb0(player->mModels.mBodyModels[i]);
+        mModels.mBodyModels[i] = new dExtAnm2Model_c;
+        mModels.mBodyModels[i]->SetFile(dExtSimpleModel_c::LoadFile(*data_ov002_0210a68c[i]), 1, 1);
+        mModels.mBodyModels[i]->Func_020162C4((BCA_File *)data_ov002_020ff480[i + 0xC4]->filePtr, 0,
+                                              0x1000, 0);
+        mModels.mBodyTexParams[i] = func_ov002_020e6bb0(mModels.mBodyModels[i]);
         i++;
     } while (i < 4);
 
@@ -20252,17 +20241,17 @@ void daPly_c::func_ov002_020e5948() {
     i = 0;
     do {
         if (i == 3) {
-            player->mModels.mHeadModels[i] = new dExtAnmModel_c;
-            player->mModels.mHeadModels[i]->SetFile(
-                dExtSimpleModel_c::LoadFile(*data_ov002_0210a69c[i]), 1, 1);
-            ((dExtAnmModel_c *)player->mModels.mHeadModels[i])
+            mModels.mHeadModels[i] = new dExtAnmModel_c;
+            mModels.mHeadModels[i]->SetFile(dExtSimpleModel_c::LoadFile(*data_ov002_0210a69c[i]), 1,
+                                            1);
+            ((dExtAnmModel_c *)mModels.mHeadModels[i])
                 ->SetAnim((BCA_File *)data_ov002_0210eb88.filePtr, 0, 0x1000, 0);
         } else {
-            player->mModels.mHeadModels[i] = new dExtSimpleModel_c;
-            player->mModels.mHeadModels[i]->SetFile(
-                dExtSimpleModel_c::LoadFile(*data_ov002_0210a69c[i]), 1, 1);
+            mModels.mHeadModels[i] = new dExtSimpleModel_c;
+            mModels.mHeadModels[i]->SetFile(dExtSimpleModel_c::LoadFile(*data_ov002_0210a69c[i]), 1,
+                                            1);
         }
-        player->mModels.mHeadTexParams[i] = func_ov002_020e6bb0(player->mModels.mHeadModels[i]);
+        mModels.mHeadTexParams[i] = func_ov002_020e6bb0(mModels.mHeadModels[i]);
         i++;
     } while (i < 4);
 
@@ -20271,11 +20260,10 @@ void daPly_c::func_ov002_020e5948() {
         p = new dExtSimpleModel_c;
         {
             s32 idx = j + 4;
-            player->mModels.mHeadModels[idx] = (dExtSimpleModel_c *)p;
-            player->mModels.mHeadModels[idx]->SetFile(
-                dExtSimpleModel_c::LoadFile(*data_ov002_0210a6ac[j]), 1, 1);
-            player->mModels.mHeadTexParams[idx] =
-                func_ov002_020e6bb0(player->mModels.mHeadModels[idx]);
+            mModels.mHeadModels[idx] = (dExtSimpleModel_c *)p;
+            mModels.mHeadModels[idx]->SetFile(dExtSimpleModel_c::LoadFile(*data_ov002_0210a6ac[j]),
+                                              1, 1);
+            mModels.mHeadTexParams[idx] = func_ov002_020e6bb0(mModels.mHeadModels[idx]);
         }
         j++;
     } while (j < 4);
@@ -20285,40 +20273,34 @@ void daPly_c::func_ov002_020e5948() {
         mode = gGameMode;
         mode = (mode == 1);
         if (mode == 0) {
-            player->mModels.mSleepBubbleModel = new dExtSimpleModel_c;
-            player->mModels.mSleepBubbleModel->SetFile(
-                dExtSimpleModel_c::LoadFile(data_ov002_0210da38), 1, -1);
+            mModels.mSleepBubbleModel = new dExtSimpleModel_c;
+            mModels.mSleepBubbleModel->SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210da38), 1,
+                                               -1);
 
             if (gCurrentSublevel != 2 && gCurrentSublevel != 5 && gCurrentSublevel != 4) {
-                player->mLoadedResourceFlags |= 0x20;
-                player->mModels.mBodyModels[4] = new dExtAnm2Model_c;
-                player->mModels.mBodyModels[4]->SetFile(
-                    dExtSimpleModel_c::LoadFile(data_ov002_0210e780), 1, -1);
-                player->mModels.mBodyModels[4]->Func_020162C4(
+                mLoadedResourceFlags |= 0x20;
+                mModels.mBodyModels[4] = new dExtAnm2Model_c;
+                mModels.mBodyModels[4]->SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e780), 1,
+                                                -1);
+                mModels.mBodyModels[4]->Func_020162C4(
                     (BCA_File *)data_ov002_020ff480[0xC6]->filePtr, 0, 0x1000, 0);
-                player->mModels.mAnmModel1.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e6f8),
-                                                   1, 1);
-                player->mModels.mAnmModel1.SetAnim((BCA_File *)data_ov002_0210e750.filePtr, 0,
-                                                   0x1000, 0);
-                player->mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0),
-                                                   1, 1);
-                player->mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0,
-                                                   0x1000, 0);
+                mModels.mAnmModel1.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e6f8), 1, 1);
+                mModels.mAnmModel1.SetAnim((BCA_File *)data_ov002_0210e750.filePtr, 0, 0x1000, 0);
+                mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1, 1);
+                mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0, 0x1000, 0);
             }
         } else {
-            player->mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1,
-                                               1);
-            player->mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0, 0x1000,
-                                               0);
+            mModels.mAnmModel2.SetFile(dExtSimpleModel_c::LoadFile(data_ov002_0210e7b0), 1, 1);
+            mModels.mAnmModel2.SetAnim((BCA_File *)data_ov002_0210e4c0.filePtr, 0, 0x1000, 0);
         }
     }
 
-    player->mShadowModel.InitCylinder();
+    mShadowModel.InitCylinder();
 
     bodyId = GetBodyModelID(3, 0);
-    ma = player->mModels.mBodyModels[bodyId];
-    player->mVsYoshiMaterialParam =
-        (player->mPlayerNo << 1) + ((dExtAnmModel_c *)ma)->data.materials->texImageParam;
+    ma = mModels.mBodyModels[bodyId];
+    mVsYoshiMaterialParam =
+        (mPlayerNo << 1) + ((dExtAnmModel_c *)ma)->data.materials->texImageParam;
 
     n = 0;
     {
@@ -20333,7 +20315,7 @@ void daPly_c::func_ov002_020e5948() {
         outer = n * 4;
         do {
             k = 0;
-            texseq = player->mModels.mTexSeqBody;
+            texseq = mModels.mTexSeqBody;
             do {
                 entry = data_ov002_020ff2f0[outer + k];
                 dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210a69c[k]->filePtr,
@@ -20351,12 +20333,10 @@ void daPly_c::func_ov002_020e5948() {
 
     dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210ebb8.filePtr,
                              *(BTP_File *)data_ov002_0210e8d0.filePtr);
-    player->mModels.mTexSeqPlayer[0].SetFile(*(BTP_File *)data_ov002_0210e8d0.filePtr, 0, 0x1000,
-                                             0);
+    mModels.mTexSeqPlayer[0].SetFile(*(BTP_File *)data_ov002_0210e8d0.filePtr, 0, 0x1000, 0);
     dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210eb20.filePtr,
                              *(BTP_File *)data_ov002_0210ebd8.filePtr);
-    player->mModels.mTexSeqPlayer[1].SetFile(*(BTP_File *)data_ov002_0210ebd8.filePtr, 0, 0x1000,
-                                             0);
+    mModels.mTexSeqPlayer[1].SetFile(*(BTP_File *)data_ov002_0210ebd8.filePtr, 0, 0x1000, 0);
 }
 
 void daPly_c::PlayCharacterSound() {
@@ -20513,15 +20493,12 @@ daPly_c::~daPly_c() {}
 daPly_c::daPly_c() {}
 
 int daPly_c::OnYoshiTryEat() {
-    this;
     return 1;
 }
 
 extern "C" {
 extern unsigned short data_ov002_0210a760[];
-void func_ov002_020e69c0(void *unused)
-{
-    (void)unused;
+void func_ov002_020e69c0(void *) {
     unsigned short *dst = data_ov002_0210a760;
     unsigned short a = *dst;
     unsigned short b = dst[1];

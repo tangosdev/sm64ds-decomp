@@ -301,7 +301,7 @@ int daMenbo_c::func_ov090_021314a0() {
     if (this->mChaseLatch == 1) {
         this->mHorzSpeed = 0x9000;
         this->mChaseLatch = 0;
-        this->mTargetAngleY = (u16)Vec3_HorzAngle(&this->mPos, (const Vector3 *)&this->mAnchorPosX);
+        this->mTargetAngleY = (u16)Vec3_HorzAngle(&this->mPos, &this->mAnchorPos);
     }
     return 0;
 }
@@ -336,9 +336,7 @@ int daMenbo_c::func_ov090_02131608()
  * A turn reloads the three timers and snaps the position back to last
  * frame's. The heading then eases toward mTargetAngleY. Close to a player, the
  * playback rate and the speed both double for a bit. */
-int daMenbo_c::func_ov090_02131648()
-{
-    daMenbo_c *self = this;
+int daMenbo_c::func_ov090_02131648() {
     int dist;
     u32 rnd;
     int selfY;
@@ -350,10 +348,10 @@ int daMenbo_c::func_ov090_02131648()
     s32 *p390;
 
     rnd = (u32)RandomIntInternal(&data_0209e650.value) >> 8;
-    dist = Vec3_Dist(&self->mPos, (Vector3 *)&self->mAnchorPosX);
+    dist = Vec3_Dist(&mPos, &mAnchorPos);
 
-    if (((((u32)self->mAnmModel.currFrame) << 4) >> 0x10 & 0xf) == 0) {
-        func_02012694(0xfc, &self->mCamSpacePos);
+    if (((((u32)mAnmModel.currFrame) << 4) >> 0x10 & 0xf) == 0) {
+        func_02012694(0xfc, &mCamSpacePos);
     }
 
     angleSet = 0;
@@ -364,15 +362,15 @@ int daMenbo_c::func_ov090_02131648()
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
 
-    a.x = self->mPosX;
-    selfY = self->mPosY;
+    a.x = mPosX;
+    selfY = mPosY;
     a.y = selfY;
-    a.z = self->mPosZ;
+    a.z = mPosZ;
     a.y = selfY + 0x64000;
     in.y = 0x64000;
     in.z = 0x1f4000;
 
-    Matrix4x3_FromRotationY(&data_020a0e68, self->mAngleY);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x2000);
     MTX_MultVec43(&in, &data_020a0e68, &out);
 
@@ -383,95 +381,94 @@ int daMenbo_c::func_ov090_02131648()
     b.y = a.y + out.y;
     b.z = a.z + out.z;
 
-    line.SetObjAndLine(a, b, self);
+    line.SetObjAndLine(a, b, this);
 
     if (!line.DetectClsn()) {
-        if (self->mProbeLatch == 0) {
-            ha = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mAnchorPosX);
+        if (mProbeLatch == 0) {
+            ha = Vec3_HorzAngle(&mPos, &mAnchorPos);
             sh = (rnd & 3) << 0xc;
-            self->mTargetAngleY = (u16)ha;
-            p39a = (s16 *)&self->mTargetAngleY;
+            mTargetAngleY = (u16)ha;
+            p39a = (s16 *)&mTargetAngleY;
             angleSet = 1;
             *p39a = *p39a + (0x1800 - sh);
-            self->mPosX = self->mPrevPosX;
-            self->mPosY = self->mPrevPosY;
-            self->mPosZ = self->mPrevPosZ;
-            self->mProbeLatch = 1;
+            mPosX = mPrevPosX;
+            mPosY = mPrevPosY;
+            mPosZ = mPrevPosZ;
+            mProbeLatch = 1;
         }
     } else {
-        self->mProbeLatch = (u8)angleSet;
+        mProbeLatch = (u8)angleSet;
     }
 
     if (dist > 0x3c0000) {
-        if (self->mFarLatch == 0 && self->mProbeLatch == 0) {
-            ha = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mAnchorPosX);
-            self->mTargetAngleY = (u16)ha;
+        if (mFarLatch == 0 && mProbeLatch == 0) {
+            ha = Vec3_HorzAngle(&mPos, &mAnchorPos);
+            mTargetAngleY = (u16)ha;
             angleSet = 1;
-            self->mPosX = self->mPrevPosX;
-            self->mPosY = self->mPrevPosY;
-            self->mPosZ = self->mPrevPosZ;
-            self->mFarLatch = 1;
+            mPosX = mPrevPosX;
+            mPosY = mPrevPosY;
+            mPosZ = mPrevPosZ;
+            mFarLatch = 1;
         }
     } else {
-        self->mFarLatch = 0;
+        mFarLatch = 0;
     }
 
-    if (self->mWithMeshClsn.IsOnWall() != 0) {
-        if (self->mWallLatch == 0 && self->mFarLatch == 0 && self->mProbeLatch == 0) {
-            ha = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mAnchorPosX);
+    if (mWithMeshClsn.IsOnWall() != 0) {
+        if (mWallLatch == 0 && mFarLatch == 0 && mProbeLatch == 0) {
+            ha = Vec3_HorzAngle(&mPos, &mAnchorPos);
             sh = (rnd & 3) << 0xc;
-            self->mTargetAngleY = (u16)ha;
-            p39a = (s16 *)&self->mTargetAngleY;
+            mTargetAngleY = (u16)ha;
+            p39a = (s16 *)&mTargetAngleY;
             angleSet = 1;
             *p39a = *p39a + (0x1800 - sh);
-            self->mPosX = self->mPrevPosX;
-            self->mPosY = self->mPrevPosY;
-            self->mPosZ = self->mPrevPosZ;
-            self->mWallLatch = 1;
+            mPosX = mPrevPosX;
+            mPosY = mPrevPosY;
+            mPosZ = mPrevPosZ;
+            mWallLatch = 1;
         }
     } else {
-        self->mWallLatch = 0;
+        mWallLatch = 0;
     }
 
-    if (self->mWanderTimer == 0 && self->mWallLatch == 0 && self->mFarLatch == 0 &&
-        self->mProbeLatch == 0) {
-        self->mWanderTimer = (u16)((rnd + 50) & 0x3f);
-        p39a = (s16 *)&self->mTargetAngleY;
+    if (mWanderTimer == 0 && mWallLatch == 0 && mFarLatch == 0 && mProbeLatch == 0) {
+        mWanderTimer = (u16)((rnd + 50) & 0x3f);
+        p39a = (s16 *)&mTargetAngleY;
         *p39a = *p39a + (0x1800 - ((rnd & 3) << 0xc));
     }
 
     if (angleSet == 1) {
-        self->mTurnTimer = 10;
-        self->mWanderTimer = 50;
-        self->mSpeedHoldTimer = 30;
-        self->mHorzSpeed = 0x9000;
-        self->mAnimSpeed = 0x1000;
+        mTurnTimer = 10;
+        mWanderTimer = 50;
+        mSpeedHoldTimer = 30;
+        mHorzSpeed = 0x9000;
+        mAnimSpeed = 0x1000;
     }
 
-    ApproachLinear(self->mPrevAngleY, (s16)self->mTargetAngleY, 0x500);
+    ApproachLinear(mPrevAngleY, (s16)mTargetAngleY, 0x500);
 
-    if (self->mTurnTimer == 0 && self->mSpeedHoldTimer == 0) {
-        self->mAnimSpeed = 0x1000;
-        self->mHorzSpeed = 0x9000;
-        if (self->func_ov090_021314a0() == 1) {
-            self->mSpeedHoldTimer = 30;
-            self->mWanderTimer = 30;
-            self->mAnimSpeed = 0x2000;
-            self->mHorzSpeed = 0xe000;
+    if (mTurnTimer == 0 && mSpeedHoldTimer == 0) {
+        mAnimSpeed = 0x1000;
+        mHorzSpeed = 0x9000;
+        if (func_ov090_021314a0() == 1) {
+            mSpeedHoldTimer = 30;
+            mWanderTimer = 30;
+            mAnimSpeed = 0x2000;
+            mHorzSpeed = 0xe000;
         }
     }
 
-    if (((u32)(((u32)self->mAnmModel.currFrame) << 4) >> 0x10) >= 0x10) {
-        p390 = &self->mAnimLoops;
+    if (((u32)(((u32)mAnmModel.currFrame) << 4) >> 0x10) >= 0x10) {
+        p390 = &mAnimLoops;
         *p390 = *p390 + 1;
     }
 
-    if (self->mAnimLoops > 0x1e && self->mFarLatch == 0) {
-        self->func_ov090_02131e00(data_ov090_021344e4);
+    if (mAnimLoops > 0x1e && mFarLatch == 0) {
+        func_ov090_02131e00(data_ov090_021344e4);
     }
 
-    if (self->mOnWater == 1) {
-        self->func_ov090_02131e00(data_ov090_02134504);
+    if (mOnWater == 1) {
+        func_ov090_02131e00(data_ov090_02134504);
     }
 
     return 1;
@@ -497,9 +494,9 @@ int daMenbo_c::func_ov090_02131ac4()
     ApproachLinear(mHorzSpeed, 0, 0x1000);
     if (mHorzSpeed > 0) return 1;
     if (mOnWater == 0) {
-        mAnchorPosX = mPosX;
-        mAnchorPosY = mPosY;
-        mAnchorPosZ = mPosZ;
+        mAnchorPos.x = mPosX;
+        mAnchorPos.y = mPosY;
+        mAnchorPos.z = mPosZ;
         mTargetAngleY = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) << 0xd);
         this->func_ov090_02131e00(data_ov090_021344e4);
     }
@@ -558,9 +555,9 @@ int daMenbo_c::func_ov090_02131c48()
     }
 
     if (mOnWater == 0) {
-        mAnchorPosX = mPosX;
-        mAnchorPosY = mPosY;
-        mAnchorPosZ = mPosZ;
+        mAnchorPos.x = mPosX;
+        mAnchorPos.y = mPosY;
+        mAnchorPos.z = mPosZ;
         mTargetAngleY = (u16)(((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) << 13);
         this->func_ov090_02131e00(data_ov090_021344e4);
     }
@@ -769,9 +766,9 @@ int daMenbo_c::InitResources()
 
     if (IsGameMode(2) && gCurrentSublevel == 0x12) {
         mSurfaceY = mPosY;
-        mAnchorPosX = mPosX;
-        mAnchorPosY = mPosY;
-        mAnchorPosZ = mPosZ;
+        mAnchorPos.x = mPosX;
+        mAnchorPos.y = mPosY;
+        mAnchorPos.z = mPosZ;
         this->func_ov090_02131e00(data_ov090_021344f4);
         return 1;
     }
@@ -802,9 +799,9 @@ int daMenbo_c::InitResources()
         }
 
         mPosY = mSurfaceY;
-        mAnchorPosX = mPosX;
-        mAnchorPosY = mPosY;
-        mAnchorPosZ = mPosZ;
+        mAnchorPos.x = mPosX;
+        mAnchorPos.y = mPosY;
+        mAnchorPos.z = mPosZ;
 
         if (mOnWater != 0) {
             this->func_ov090_02131e00(data_ov090_021344f4);
