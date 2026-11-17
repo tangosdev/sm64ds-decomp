@@ -866,15 +866,12 @@ void dCamera_c::func_0200cf40() {
 
 void dCamera_c::func_0200cce4() {
     Vector3 vec;
-    VecFx32 tmp1;
-    VecFx32 tmp2;
+    Vector3 tmp1;
+    Vector3 tmp2;
     u32 d;
 
     if (mTargetPlayer != 0) {
-        Vector3 *p = &mTargetPlayer->mPos;
-        mTargetPos.x = p->x;
-        mTargetPos.y = p->y;
-        mTargetPos.z = p->z;
+        mTargetPos = mTargetPlayer->mPos;
 
         {
             u32 d1 = ScaleDistByFov(mMode->lookAtDist);
@@ -912,10 +909,7 @@ void dCamera_c::func_0200cce4() {
         }
         line.SetObjAndLine(pos, vec, 0);
         if (line.DetectClsn() != 0) {
-            Vector3 cp = line.GetClsnPos();
-            vec.x = cp.x;
-            vec.y = cp.y;
-            vec.z = cp.z;
+            vec = line.GetClsnPos();
         }
         dBgCh_Gnd ground;
         PrepareBgCh(ground);
@@ -951,28 +945,20 @@ void dCamera_c::func_0200cce4() {
 
 void dCamera_c::SetLookAt(const Vector3 & lookAt_)
 {
-    lookAt.x = lookAt_.x;
-    lookAt.y = lookAt_.y;
-    lookAt.z = lookAt_.z;
+    lookAt = lookAt_;
 }
 
 void dCamera_c::SetPos(const Vector3 & pos_)
 {
-    pos.x = pos_.x;
-    pos.y = pos_.y;
-    pos.z = pos_.z;
+    pos = pos_;
 }
 
 void dCamera_c::SaveCameraStateBeforeTalk()
 {
     if (mFlags & 0x4000U)
         return;
-    savedLookAt.x = lookAt.x;
-    savedLookAt.y = lookAt.y;
-    savedLookAt.z = lookAt.z;
-    savedPos.x = pos.x;
-    savedPos.y = pos.y;
-    savedPos.z = pos.z;
+    savedLookAt = lookAt;
+    savedPos = pos;
     mFlags |= 0x4000U;
 }
 
@@ -982,20 +968,13 @@ void dCamera_c::SaveCameraStateBeforeTalk()
 void dCamera_c::RestoreCameraStateAfterTalk() {
     int lookDone = func_020092c4(this, &lookAt, &savedLookAt);
     int posDone = func_020092c4(this, &pos, &savedPos);
-    short yaw;
-    short pitch;
 
-    if (posDone != 0) {
-        if (lookDone != 0) {
-            mFlags &= ~0x8000;
-        }
+    if (posDone != 0 && lookDone != 0) {
+        mFlags &= ~0x8000;
     }
 
-    yaw = Vec3_HorzAngle(&lookAt, &pos);
-    mAngleY = yaw;
-
-    pitch = Vec3_VertAngle(&lookAt, &pos);
-    mAngleX = pitch;
+    mAngleY = Vec3_HorzAngle(&lookAt, &pos);
+    mAngleX = Vec3_VertAngle(&lookAt, &pos);
 }
 
 /* Swaps the state object; the PNS_5StateE mangling is the evidence for the
@@ -1126,10 +1105,7 @@ int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outF
         }
         line.SetObjAndLine(*pos, above, 0);
         if (line.DetectClsn() != 0) {
-            Vector3 hit = line.GetClsnPos();
-            above.x = hit.x;
-            above.y = hit.y;
-            above.z = hit.z;
+            above = line.GetClsnPos();
         }
         dBgCh_Gnd ground;
         PrepareBgCh(ground);
@@ -1205,7 +1181,7 @@ int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outM
                              int *outFramed) {
     CamViewObj *view = (CamViewObj *)viewArg;
     CamMode *mode = mMode;
-    VecFx32 toFocus;
+    Vector3 toFocus;
     Vector3 focus;
     int modeFlags = mode->flags;
     int locked;
@@ -1284,7 +1260,7 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
     Vector3 from;
     Vector3 above;
     Vector3 delta;
-    VecFx32 offset;
+    Vector3 offset;
     int groundY;
     int height;
     int horzDist;
@@ -1338,13 +1314,11 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
     }
     goal.y += ScaleHeightByFov(height);
     horzDist = Vec3_HorzLen((const Vector3 *)&goal);
-    VecFx32 focus;
-    Vec3_MulScalar((Vector3 *)&focus, &mLookTargetPos, mFocusBlend);
+    Vector3 focus;
+    Vec3_MulScalar(&focus, &mLookTargetPos, mFocusBlend);
     VEC_Add(&goal, &focus, &goal);
     if (mFlags & 4) {
-        mLookAtOffset.x = goal.x;
-        mLookAtOffset.y = goal.y;
-        mLookAtOffset.z = goal.z;
+        mLookAtOffset = goal;
     } else {
         int shrink = Vec3_HorzLen(&mLookAtOffset) - horzDist;
         if (mode->flags & 0x40) {
@@ -1375,7 +1349,7 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
         int goalY = target[1] + mLookAtOffset.y;
         int climb = goalY - lookAt.y;
         if (climb < (int)ScaleHeightByFov(mode->followRise)) {
-            ApproachLinear(*&lookAt.y, goalY, 0x64000);
+            ApproachLinear(lookAt.y, goalY, 0x64000);
         } else {
             int drop = baseY - target[1];
             if (drop >= 0) {
