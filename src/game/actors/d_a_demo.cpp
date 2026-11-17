@@ -743,52 +743,50 @@ void StaffRoll::func_ov002_020f2a88(int i) {
 }
 
 void StaffRoll::func_ov002_020f2aec(int idx) {
-    StaffRoll *s = this;
 
-    if (s->credit[idx].timer == 0) {
+    if (credit[idx].timer == 0) {
         gSubScreenLayers |= 1;
     }
-    s->credit[idx].timer++;
-    s->credit[idx].blendTimer++;
+    credit[idx].timer++;
+    credit[idx].blendTimer++;
 
-    if (s->credit[idx].blendTimer >= 2) {
-        s->credit[idx].blendTimer = 0;
-        s->credit[idx].blend++;
-        unsigned char cnt = s->credit[idx].blend;
+    if (credit[idx].blendTimer >= 2) {
+        credit[idx].blendTimer = 0;
+        credit[idx].blend++;
+        unsigned char cnt = credit[idx].blend;
         G2S_SetBlendAlpha(1, 0x36, cnt, 0x10 - cnt);
     }
 
-    if (s->credit[idx].timer < 30) {
+    if (credit[idx].timer < 30) {
         return;
     }
-    s->credit[idx].timer = 0;
-    s->credit[idx].step++;
+    credit[idx].timer = 0;
+    credit[idx].step++;
     G2S_BlendNone();
 }
 
 void StaffRoll::func_ov002_020f2bf4(int idx) {
-    StaffRoll *s = this;
 
-    s->credit[idx].timer++;
-    s->credit[idx].blendTimer++;
+    credit[idx].timer++;
+    credit[idx].blendTimer++;
 
-    if (s->credit[idx].blendTimer >= 2) {
-        s->credit[idx].blendTimer = 0;
-        s->credit[idx].blend++;
-        unsigned char cnt = s->credit[idx].blend;
+    if (credit[idx].blendTimer >= 2) {
+        credit[idx].blendTimer = 0;
+        credit[idx].blend++;
+        unsigned char cnt = credit[idx].blend;
         G2S_SetBlendAlpha(1, 0x36, 0x10 - cnt, cnt);
     }
 
-    if (s->credit[idx].timer < 30) {
+    if (credit[idx].timer < 30) {
         return;
     }
-    s->credit[idx].timer = 0;
-    s->credit[idx].step++;
-    s->credit[idx].message++;
-    s->credit[idx].blend = 0;
-    s->credit[idx].blendTimer = 0;
+    credit[idx].timer = 0;
+    credit[idx].step++;
+    credit[idx].message++;
+    credit[idx].blend = 0;
+    credit[idx].blendTimer = 0;
     gSubScreenLayers &= ~1;
-    Message::func_0201ef50(s->credit[idx].message);
+    Message::func_0201ef50(credit[idx].message);
 }
 
 void StaffRoll::func_ov002_020f2d0c(int i) {
