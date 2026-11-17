@@ -32,6 +32,11 @@
       "end": "0x021335d0"
     },
     {
+      "name": ".data",
+      "start": "0x0213e2e8",
+      "end": "0x0213e300"
+    },
+    {
       "name": ".bss",
       "start": "0x021428c8",
       "end": "0x02142bdc"
@@ -136,7 +141,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "_Z23RouletteBoard_StateSlowP13RouletteBoard",
+      "symbol": "_ZN13RouletteBoard9StateSlowEv",
       "address": "0x02107ea8",
       "size": "0x0000041c",
       "legacy_source": "src/func_ov006_02107ea8.c",
@@ -150,7 +155,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "_Z23RouletteBoard_StateSpinP13RouletteBoard",
+      "symbol": "_ZN13RouletteBoard9StateSpinEv",
       "address": "0x021082fc",
       "size": "0x0000020c",
       "legacy_source": "src/func_ov006_021082fc.c",
@@ -362,7 +367,29 @@
       "evidence": "Roulette table read by index. Declared length matches this symbol's window."
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_RouletteBoard_StateSpin",
+      "address": "0x0213e2e8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &RouletteBoard::StateSpin (0x021082fc), emitted by _Z26RouletteBoard_SetStateSpinP13RouletteBoard; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "g_profile_MG_ROULETTE",
+      "address": "0x0213e2f0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "BaseSpawnInfo<void> {dScMgRoulette_c_classInit, 0x17f, 0x17f}; ROM words 0210a400 017f017f. It sits between this unit's two RouletteBoard state literals, so it is this unit's .data; its factory is d_s_mg_roulette.cpp's"
+    },
+    {
+      "symbol": "pmf_RouletteBoard_StateSlow",
+      "address": "0x0213e2f8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &RouletteBoard::StateSlow (0x02107ea8), emitted by _Z27RouletteBoard_StartSlowdownP13RouletteBoard; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    }
+  ],
   "bss": [
     {
       "symbol": "sRouletteLandedRacer",
@@ -838,6 +865,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213e2e8",
+          "end": "0x0213e300",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x021428c8",
           "end": "0x02142bdc",
@@ -853,7 +887,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 86
+          "LICENSED": 94
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -864,19 +898,32 @@
           {
             "section": ".init",
             "original": [
-              148
+              160
             ],
             "desired": [
-              148
+              160
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              146
+              158
             ],
             "desired": [
-              146
+              158
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              8,
+              11,
+              15
+            ],
+            "desired": [
+              15,
+              8,
+              11
             ]
           },
           {
@@ -886,18 +933,12 @@
               6,
               7,
               10,
-              18,
-              19,
               20,
-              21,
-              22,
-              25,
+              23,
               26,
-              29,
-              30,
+              27,
+              28,
               31,
-              32,
-              33,
               34,
               35,
               36,
@@ -906,9 +947,9 @@
               39,
               40,
               41,
+              42,
+              43,
               44,
-              45,
-              46,
               47,
               48,
               49,
@@ -924,59 +965,100 @@
               59,
               60,
               61,
+              62,
               63,
-              68
+              64,
+              65,
+              66,
+              67,
+              69,
+              79
             ],
             "desired": [
-              7,
               6,
+              7,
               5,
               10,
-              58,
-              47,
-              49,
               39,
-              45,
-              41,
-              40,
-              26,
-              51,
-              21,
-              38,
-              19,
-              32,
-              31,
-              30,
-              61,
-              29,
-              18,
-              33,
-              36,
               35,
-              20,
-              37,
+              51,
               50,
-              22,
-              34,
-              60,
-              59,
-              44,
-              57,
-              46,
-              56,
-              48,
-              55,
-              25,
-              54,
-              52,
               53,
+              55,
+              57,
+              59,
+              26,
+              60,
+              47,
+              61,
+              42,
+              23,
+              40,
+              41,
+              20,
+              62,
+              64,
+              43,
+              52,
+              49,
+              48,
+              31,
+              34,
+              44,
+              66,
+              28,
+              54,
+              67,
+              56,
+              38,
+              58,
+              65,
+              27,
+              37,
+              36,
               63,
-              68
+              69,
+              79
+            ]
+          },
+          {
+            "section": ".rodata.sRouletteTables",
+            "original": [
+              70,
+              71,
+              74,
+              75,
+              76
+            ],
+            "desired": [
+              71,
+              70,
+              74,
+              75,
+              76
             ]
           }
         ],
         "objisolate": {
           "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                8,
+                11,
+                15
+              ],
+              "desired": [
+                15,
+                8,
+                11
+              ],
+              "slots": [
+                8,
+                11,
+                15
+              ]
+            },
             {
               "section": ".bss",
               "original": [
@@ -984,18 +1066,12 @@
                 6,
                 7,
                 10,
-                18,
-                19,
                 20,
-                21,
-                22,
-                25,
+                23,
                 26,
-                29,
-                30,
+                27,
+                28,
                 31,
-                32,
-                33,
                 34,
                 35,
                 36,
@@ -1004,9 +1080,9 @@
                 39,
                 40,
                 41,
+                42,
+                43,
                 44,
-                45,
-                46,
                 47,
                 48,
                 49,
@@ -1022,72 +1098,72 @@
                 59,
                 60,
                 61,
+                62,
                 63,
-                68
+                64,
+                65,
+                66,
+                67,
+                69,
+                79
               ],
               "desired": [
-                7,
                 6,
+                7,
                 5,
                 10,
-                58,
-                47,
-                49,
                 39,
-                45,
-                41,
-                40,
-                26,
-                51,
-                21,
-                38,
-                19,
-                32,
-                31,
-                30,
-                61,
-                29,
-                18,
-                33,
-                36,
                 35,
-                20,
-                37,
+                51,
                 50,
-                22,
-                34,
-                60,
-                59,
-                44,
-                57,
-                46,
-                56,
-                48,
-                55,
-                25,
-                54,
-                52,
                 53,
+                55,
+                57,
+                59,
+                26,
+                60,
+                47,
+                61,
+                42,
+                23,
+                40,
+                41,
+                20,
+                62,
+                64,
+                43,
+                52,
+                49,
+                48,
+                31,
+                34,
+                44,
+                66,
+                28,
+                54,
+                67,
+                56,
+                38,
+                58,
+                65,
+                27,
+                37,
+                36,
                 63,
-                68
+                69,
+                79
               ],
               "slots": [
                 5,
                 6,
                 7,
                 10,
-                18,
-                19,
                 20,
-                21,
-                22,
-                25,
+                23,
                 26,
-                29,
-                30,
+                27,
+                28,
                 31,
-                32,
-                33,
                 34,
                 35,
                 36,
@@ -1096,9 +1172,9 @@
                 39,
                 40,
                 41,
+                42,
+                43,
                 44,
-                45,
-                46,
                 47,
                 48,
                 49,
@@ -1114,14 +1190,44 @@
                 59,
                 60,
                 61,
+                62,
                 63,
-                68
+                64,
+                65,
+                66,
+                67,
+                69,
+                79
+              ]
+            },
+            {
+              "section": ".rodata.sRouletteTables",
+              "original": [
+                70,
+                71,
+                74,
+                75,
+                76
+              ],
+              "desired": [
+                71,
+                70,
+                74,
+                75,
+                76
+              ],
+              "slots": [
+                70,
+                71,
+                74,
+                75,
+                76
               ]
             }
           ],
-          "symbolIndices": 44,
+          "symbolIndices": 52,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 3,
           "error": null
         },
         "errors": null
@@ -1419,19 +1525,19 @@
       "evidence": "mwcc emits @481, already defined in another module. @248 is unused and no longer. Re-keyed from @481 to @485 (same symtab index 86, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @485 to @493 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @493 to @492 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @492 to @495 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @495 to @486 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @492 to @490 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @492 to @470 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @462 to @465 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @465 to @541 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @541 to @547 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @547 to @584 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @584 to @596 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @596 to @601 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
-      "from": "@951",
+      "from": "@949",
       "to": "@181",
-      "evidence": "mwcc emits @867, already defined in another module. @181 is unused and no longer. Re-keyed from @866 to @868 (same symtab index 82, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @868 to @873 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @873 to @872 (same relocation sites, every section identical) after InitResources spelled its display registers through the REG_ macros. Re-keyed from @872 to @856 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @856 to @859 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @859 to @850 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @856 to @854 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @856 to @834 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @826 to @829 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @829 to @828 when d_s_mg_roulette_methods dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @828 to @896 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @896 to @897 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @897 to @934 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @934 to @946 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @946 to @951 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "mwcc emits @867, already defined in another module. @181 is unused and no longer. Re-keyed from @866 to @868 (same symtab index 82, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @868 to @873 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @873 to @872 (same relocation sites, every section identical) after InitResources spelled its display registers through the REG_ macros. Re-keyed from @872 to @856 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @856 to @859 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @859 to @850 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @856 to @854 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @856 to @834 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @826 to @829 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @829 to @828 when d_s_mg_roulette_methods dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @828 to @896 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @896 to @897 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @897 to @934 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @934 to @946 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @946 to @951 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @951 to @949 when RouletteBoard_StateSpin/StateSlow became RouletteBoard members and their two {fn, 0} literals became defined objects of this unit (paired by its consumer relocation, RouletteRacer_Init+0x70; same section, size and binding)."
     },
     {
-      "from": "_ZGVsRouletteRacerGoal$948",
+      "from": "_ZGVsRouletteRacerGoal$946",
       "to": "sRouletteRacerGoalGuard",
-      "evidence": "function-local guard emitted as _ZGVsRouletteRacerGoal$863; the configured name is shorter Re-keyed from _ZGVsRouletteRacerGoal$863 to _ZGVsRouletteRacerGoal$865 (same symtab index 77, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from _ZGVsRouletteRacerGoal$865 to _ZGVsRouletteRacerGoal$870 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from _ZGVsRouletteRacerGoal$870 to _ZGVsRouletteRacerGoal$869 (same relocation sites, every section identical) after InitResources spelled its display registers through the REG_ macros. Re-keyed from _ZGVsRouletteRacerGoal$869 to _ZGVsRouletteRacerGoal$853 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from _ZGVsRouletteRacerGoal$853 to _ZGVsRouletteRacerGoal$856 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$856 to _ZGVsRouletteRacerGoal$847 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$853 to _ZGVsRouletteRacerGoal$851 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$853 to _ZGVsRouletteRacerGoal$831 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$823 to _ZGVsRouletteRacerGoal$826 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$826 to _ZGVsRouletteRacerGoal$825 when d_s_mg_roulette_methods dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$825 to _ZGVsRouletteRacerGoal$893 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$893 to _ZGVsRouletteRacerGoal$894 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from _ZGVsRouletteRacerGoal$894 to _ZGVsRouletteRacerGoal$931 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsRouletteRacerGoal$931 to _ZGVsRouletteRacerGoal$943 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsRouletteRacerGoal$943 to _ZGVsRouletteRacerGoal$948 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "function-local guard emitted as _ZGVsRouletteRacerGoal$863; the configured name is shorter Re-keyed from _ZGVsRouletteRacerGoal$863 to _ZGVsRouletteRacerGoal$865 (same symtab index 77, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from _ZGVsRouletteRacerGoal$865 to _ZGVsRouletteRacerGoal$870 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from _ZGVsRouletteRacerGoal$870 to _ZGVsRouletteRacerGoal$869 (same relocation sites, every section identical) after InitResources spelled its display registers through the REG_ macros. Re-keyed from _ZGVsRouletteRacerGoal$869 to _ZGVsRouletteRacerGoal$853 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from _ZGVsRouletteRacerGoal$853 to _ZGVsRouletteRacerGoal$856 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$856 to _ZGVsRouletteRacerGoal$847 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$853 to _ZGVsRouletteRacerGoal$851 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$853 to _ZGVsRouletteRacerGoal$831 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$823 to _ZGVsRouletteRacerGoal$826 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$826 to _ZGVsRouletteRacerGoal$825 when d_s_mg_roulette_methods dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$825 to _ZGVsRouletteRacerGoal$893 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from _ZGVsRouletteRacerGoal$893 to _ZGVsRouletteRacerGoal$894 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from _ZGVsRouletteRacerGoal$894 to _ZGVsRouletteRacerGoal$931 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsRouletteRacerGoal$931 to _ZGVsRouletteRacerGoal$943 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsRouletteRacerGoal$943 to _ZGVsRouletteRacerGoal$948 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsRouletteRacerGoal$948 to _ZGVsRouletteRacerGoal$946 when RouletteBoard_StateSpin/StateSlow became RouletteBoard members and their two {fn, 0} literals became defined objects of this unit (the one guard object; same section, size and de-numbered name)."
     },
     {
-      "from": "sRouletteRacerGoal$948",
+      "from": "sRouletteRacerGoal$946",
       "to": "sRouletteRacerGoal",
-      "evidence": "function-local Vector2 emitted as sRouletteRacerGoal$863; the configured name is shorter Re-keyed from sRouletteRacerGoal$863 to sRouletteRacerGoal$865 (same symtab index 78, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from sRouletteRacerGoal$865 to sRouletteRacerGoal$870 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from sRouletteRacerGoal$870 to sRouletteRacerGoal$869 (same relocation sites, every section identical) after InitResources spelled its display registers through the REG_ macros. Re-keyed from sRouletteRacerGoal$869 to sRouletteRacerGoal$853 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from sRouletteRacerGoal$853 to sRouletteRacerGoal$856 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from sRouletteRacerGoal$856 to sRouletteRacerGoal$847 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from sRouletteRacerGoal$853 to sRouletteRacerGoal$851 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from sRouletteRacerGoal$853 to sRouletteRacerGoal$831 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sRouletteRacerGoal$823 to sRouletteRacerGoal$826 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from sRouletteRacerGoal$826 to sRouletteRacerGoal$825 when d_s_mg_roulette_methods dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from sRouletteRacerGoal$825 to sRouletteRacerGoal$893 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from sRouletteRacerGoal$893 to sRouletteRacerGoal$894 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from sRouletteRacerGoal$894 to sRouletteRacerGoal$931 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sRouletteRacerGoal$931 to sRouletteRacerGoal$943 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sRouletteRacerGoal$943 to sRouletteRacerGoal$948 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "function-local Vector2 emitted as sRouletteRacerGoal$863; the configured name is shorter Re-keyed from sRouletteRacerGoal$863 to sRouletteRacerGoal$865 (same symtab index 78, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from sRouletteRacerGoal$865 to sRouletteRacerGoal$870 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from sRouletteRacerGoal$870 to sRouletteRacerGoal$869 (same relocation sites, every section identical) after InitResources spelled its display registers through the REG_ macros. Re-keyed from sRouletteRacerGoal$869 to sRouletteRacerGoal$853 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from sRouletteRacerGoal$853 to sRouletteRacerGoal$856 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from sRouletteRacerGoal$856 to sRouletteRacerGoal$847 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from sRouletteRacerGoal$853 to sRouletteRacerGoal$851 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from sRouletteRacerGoal$853 to sRouletteRacerGoal$831 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sRouletteRacerGoal$823 to sRouletteRacerGoal$826 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from sRouletteRacerGoal$826 to sRouletteRacerGoal$825 when d_s_mg_roulette_methods dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from sRouletteRacerGoal$825 to sRouletteRacerGoal$893 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from sRouletteRacerGoal$893 to sRouletteRacerGoal$894 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from sRouletteRacerGoal$894 to sRouletteRacerGoal$931 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sRouletteRacerGoal$931 to sRouletteRacerGoal$943 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sRouletteRacerGoal$943 to sRouletteRacerGoal$948 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sRouletteRacerGoal$948 to sRouletteRacerGoal$946 when RouletteBoard_StateSpin/StateSlow became RouletteBoard members and their two {fn, 0} literals became defined objects of this unit (the one function-local Vector2; same section, size and de-numbered name)."
     },
     {
       "from": "@598",
@@ -1472,6 +1578,16 @@
       "from": "@505",
       "to": "@385",
       "evidence": "mwcc emitted @385, its ROM name, until include/MgCamera.h typed the minigame camera; it now emits @389 at the same symtab index 116, with every non-strtab section identical. Re-keyed from @389 to @397 (measured numsyms, every section identical) after the bet-tile inlines and FX_SinIdx/FX_CosIdx reads in d_s_mg_roulette_methods.cpp. Re-keyed from @397 to @396 (same relocation sites, every section identical) after d_s_mg_roulette_methods.cpp retired its RacerXY/RacerPos/TileXY/Vec2_Fix12/RacerScene views. Re-keyed from @396 to @399 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @399 to @390 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object). Re-keyed from @396 to @394 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @396 to @374 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @366 to @369 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object). Re-keyed from @369 to @445 when the TU traded its local helper declarations for the shared headers (measured from the compiled object). Re-keyed from @445 to @451 when the header move removed this TU's named-parameter local declarations; the new declarations in the shared header are unnamed, so they cost no compiler-local numbers. Paired by symtab index, shape unchanged. Re-keyed from @451 to @488 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @488 to @500 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @500 to @505 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@1293",
+      "to": "pmf_RouletteBoard_StateSpin",
+      "evidence": "Compiler PMF literal: _Z26RouletteBoard_SetStateSpinP13RouletteBoard assigns &RouletteBoard::StateSpin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (_Z26RouletteBoard_SetStateSpinP13RouletteBoard+0x18 loads 0x0213e2e8 in the ROM) and by its own relocation target (RouletteBoard::StateSpin at 0x021082fc)."
+    },
+    {
+      "from": "@1324",
+      "to": "pmf_RouletteBoard_StateSlow",
+      "evidence": "Compiler PMF literal: _Z27RouletteBoard_StartSlowdownP13RouletteBoard assigns &RouletteBoard::StateSlow, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (_Z27RouletteBoard_StartSlowdownP13RouletteBoard+0x34 loads 0x0213e2f8 in the ROM) and by its own relocation target (RouletteBoard::StateSlow at 0x02107ea8)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -1726,6 +1842,18 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "registration node is a configured relocation destination at 0x02142a98"
+    },
+    {
+      "symbol": "pmf_RouletteBoard_StateSpin",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_RouletteBoard_StateSlow",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "relocations": [
@@ -2858,6 +2986,36 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021322bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e2e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13RouletteBoard9StateSpinEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021082fc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e2f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z25dScMgRoulette_c_classInitv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0210a400"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e2f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13RouletteBoard9StateSlowEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02107ea8"
     }
   ]
 }

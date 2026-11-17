@@ -25463,7 +25463,7 @@
     },
     "ov006:0x02107ea8": {
       "author": "andrewboudreau",
-      "name": "_Z23RouletteBoard_StateSlowP13RouletteBoard"
+      "name": "_ZN13RouletteBoard9StateSlowEv"
     },
     "ov006:0x021082c4": {
       "author": "ruspecial",
@@ -25471,7 +25471,7 @@
     },
     "ov006:0x021082fc": {
       "author": "andrewboudreau",
-      "name": "_Z23RouletteBoard_StateSpinP13RouletteBoard"
+      "name": "_ZN13RouletteBoard9StateSpinEv"
     },
     "ov006:0x02108508": {
       "author": "tangosdev",

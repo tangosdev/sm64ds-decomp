@@ -1328,9 +1328,9 @@ _Z22RouletteStrip_AddRacerP13RouletteStripP13RouletteRacer kind:function(arm,siz
 _Z19RouletteStrip_ResetP13RouletteStrip kind:function(arm,size=0x28) addr:0x02107d58
 _Z18RouletteBoard_DrawPc kind:function(arm,size=0x38) addr:0x02107d80
 _Z20RouletteBoard_UpdateP13RouletteBoard kind:function(arm,size=0xf0) addr:0x02107db8
-_Z23RouletteBoard_StateSlowP13RouletteBoard kind:function(arm,size=0x41c) addr:0x02107ea8
+_ZN13RouletteBoard9StateSlowEv kind:function(arm,size=0x41c) addr:0x02107ea8
 _Z27RouletteBoard_StartSlowdownP13RouletteBoard kind:function(arm,size=0x38) addr:0x021082c4
-_Z23RouletteBoard_StateSpinP13RouletteBoard kind:function(arm,size=0x20c) addr:0x021082fc
+_ZN13RouletteBoard9StateSpinEv kind:function(arm,size=0x20c) addr:0x021082fc
 _Z26RouletteBoard_SetStateSpinP13RouletteBoard kind:function(arm,size=0x1c) addr:0x02108508
 _Z23RouletteBoard_StartSpinPc kind:function(arm,size=0x68) addr:0x02108524
 _Z24RouletteBoard_FreeModelsP13RouletteBoard kind:function(arm,size=0x34) addr:0x0210858c
