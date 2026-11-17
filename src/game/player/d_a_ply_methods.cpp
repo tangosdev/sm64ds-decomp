@@ -6506,8 +6506,8 @@ int daPly_c::func_ov002_020c8a4c() {
             mStateArg = 1;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
             static Vector3 sAnchorOff(0, 0, 0x12c000);
-            Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, (Vector3 *)&mStateAnchorX,
-                                     mAngleXSpeed, &sAnchorOff);
+            Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, &mStateAnchor, mAngleXSpeed,
+                                     &sAnchorOff);
         } else {
             func_ov002_020ca108();
         }
@@ -7324,15 +7324,13 @@ int daPly_c::TryEnterStarDoor(Vector3 &pos_, short kind) {
     int *pos = (int *)&pos_;
     if (IsState(data_ov002_0211013c) || IsState(daPly_c::ST_WAIT) || IsState(data_ov002_0211043c)) {
         if (this->SetNoControlState(0xa, -1, 0)) {
-            mStateAnchorX = pos_.x;
-            mStateAnchorY = pos_.y;
-            mStateAnchorZ = pos_.z;
+            mStateAnchor = pos_;
             mAngleXSpeed = kind;
             mStateArg = 0;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
             static Vector3 sStarDoorOff(0, 0, 0x64000);
-            Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, (const Vector3 *)&mStateAnchorX,
-                                     mAngleXSpeed, &sStarDoorOff);
+            Vec3_RotateYAndTranslate((Vector3 *)&mStateTargetX, &mStateAnchor, mAngleXSpeed,
+                                     &sStarDoorOff);
             mAngleY = Vec3_HorzAngle(&pos_, &mPos) + 0x8000;
             return 1;
         }
@@ -21074,9 +21072,9 @@ void daPly_c::func_ov002_020e640c() {
                 else
                     mStateTargetY = md[1].transY;
                 mStateTargetZ = md[1].transZ;
-                mStateAnchorX = mStateTargetX;
-                mStateAnchorY = mStateTargetY;
-                mStateAnchorZ = mStateTargetZ;
+                mStateAnchor.x = mStateTargetX;
+                mStateAnchor.y = mStateTargetY;
+                mStateAnchor.z = mStateTargetZ;
                 mRootMotionMode++;
             } else {
                 d.x = (md[1].transX - mStateTargetX) << 3;

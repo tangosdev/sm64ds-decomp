@@ -705,16 +705,15 @@ struct daPly_c : dActor_c {
        the walk-to point (func_ov002_020c8a4c, TryEnterStarDoor), and the
        cage JumpIntoBooCage records. mRootMotionMode reuses it as last frame's
        bone translation and func_ov002_020e3f90 as an eased carry offset.
-       Kept as three s32: a Vector3 overlay would draw @NNN numbers. */
+       Still three s32 only because its retype is pending; mStateAnchor
+       below became a Vector3 with no byte change. */
     s32 mStateTargetX; /* 0x744 */
     s32 mStateTargetY; /* 0x748 */
     s32 mStateTargetZ; /* 0x74c */
     /* The fixed point mStateTarget is derived from: the door position
        TryEnterStarDoor records (the approach point is rotated off it), or
        the bone translation mRootMotionMode latches on its first frame. */
-    s32 mStateAnchorX; /* 0x750 */
-    s32 mStateAnchorY; /* 0x754 */
-    s32 mStateAnchorZ; /* 0x758 */
+    Vector3 mStateAnchor; /* 0x750 */
     /* Extra rotation for body bone 8 ("spin", the spine): func_ov002_020e640c
        adds [1]/[2] every frame and sets all three in mHeadRotMode 3. */
     s16 mSpineRot[3]; /* 0x75c */
