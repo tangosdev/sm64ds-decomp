@@ -48,6 +48,7 @@ src/minigames/unit020cd744.cpp:
     .text start:0x020cd744 end:0x020d1018
     .init start:0x0212fc7c end:0x0212fd48
     .ctor start:0x0213357c end:0x02133580
+    .data start:0x0213b31c end:0x0213b3a4
     .bss start:0x02140808 end:0x02141640
 
 src/minigames/d_s_mg_amida.cpp:

@@ -22,6 +22,8 @@ typedef char Vec2s_size_must_be_0x4[sizeof(Vec2s) == 0x4 ? 1 : -1];
  * fade states step it with the int ApproachLinear2 through an (int *) cast of
  * its address. */
 struct TrmpLine {
+    typedef void (TrmpLine::*StateFn)();
+
     TrmpLine();
     ~TrmpLine();
 
@@ -57,7 +59,7 @@ struct TrmpLine {
         fx32 x, y, z;
     };
 
-    s32 mState[2];          /* 0x000 -- the current state's member-pointer record */
+    StateFn mState;         /* 0x000 -- the current state */
     Vector3 mCenter;        /* 0x008 -- midpoint of the drawn stroke */
     Vector3 mNormal;        /* 0x014 -- copied into a jumper's mContactNormal */
     Vector3 mAxis;          /* 0x020 -- unit vector along the stroke */
