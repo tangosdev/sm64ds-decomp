@@ -300,8 +300,8 @@ void daUdlift_c::StateMoveUp()
 {
     Vector3 &camPos = mCamSpacePos;
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x82, camPos, 0);
-    ApproachLinear(mVertSpeed, (10 << 12), (2 << 12));
-    mPosY += mVertSpeed;
+    ApproachLinear(mSpeed.y, (10 << 12), (2 << 12));
+    mPosY += mSpeed.y;
     if (mPosY < mTopY)
         return;
     mPosY = mTopY;
@@ -329,8 +329,8 @@ void daUdlift_c::StateMoveDown()
     if (mStateTimer == 0 && (int)(actorID == UDLIFT) != 0)
         Sound::PlayBank3(0x40, mCamSpacePos);
 
-    ApproachLinear(mVertSpeed, -(10 << 12), -(2 << 12));
-    mPosY += mVertSpeed;
+    ApproachLinear(mSpeed.y, -(10 << 12), -(2 << 12));
+    mPosY += mSpeed.y;
     if (mPosY > mBottomY)
         return;
     mPosY = mBottomY;
@@ -355,7 +355,7 @@ void daUdlift_c::StateMoveDown()
  * and call Earthquake at the lift, then climb again once re-armed. */
 void daUdlift_c::StateStopAtBottom()
 {
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     if (mStateTimer == 0) {
         Vector3 &camPos = mCamSpacePos;
         Sound::PlayBank3(0x6b, camPos);
@@ -374,7 +374,7 @@ void daUdlift_c::StateStopAtBottom()
  * again once re-armed. */
 void daUdlift_c::StateStop()
 {
-    mVertSpeed = 0;
+    mSpeed.y = 0;
     if (mStateTimer == 0) {
         Vector3 &camPos = mCamSpacePos;
         Sound::PlayBank3(0x6b, camPos);
