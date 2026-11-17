@@ -349,11 +349,11 @@ src/unnamed/arm9/0201/func_02018598.c:
     complete
     .text start:0x02018598 end:0x020185c0
 
-src/unnamed/arm9/0201/func_020185c0.cpp:
+src/unnamed/arm9/0201/func_020185c0.c:
     complete
     .text start:0x020185c0 end:0x020186c0
 
-src/unnamed/arm9/0201/func_020186c0.cpp:
+src/unnamed/arm9/0201/func_020186c0.c:
     complete
     .text start:0x020186c0 end:0x02018770
 

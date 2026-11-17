@@ -496,7 +496,7 @@
       "source": "0x0213c328",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@579",
+      "symbol": "@513",
       "addend": 0,
       "target_module": "ov098",
       "target_address": "0x0213c924"

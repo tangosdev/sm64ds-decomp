@@ -327,7 +327,7 @@
       "source": "0x02133ff4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@626",
+      "symbol": "@620",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x0213456c"
@@ -357,7 +357,7 @@
       "source": "0x02134004",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@627",
+      "symbol": "@737",
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02134578"
