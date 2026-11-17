@@ -117,8 +117,8 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     if (!isPlayer)
         return;
 
-    otherPosition = (VecFx32 *)&other.mPosX;
-    spawnerPosition = (VecFx32 *)&spawner->mPosX;
+    otherPosition = (VecFx32 *)&other.mPos;
+    spawnerPosition = (VecFx32 *)&spawner->mPos;
     otherPos.x = otherPosition->x;
     otherPos.y = otherPosition->y;
     otherPos.z = otherPosition->z;
@@ -153,9 +153,9 @@ int daObjC1_Trap_c::InitResources() {
 
         cosAngle = FX_CosIdx((u16)mAngleY >> 4);
         sinAngle = FX_SinIdx((u16)mAngleY >> 4);
-        z = mPosZ + sinAngle * 349;
-        x = mPosX - cosAngle * 349;
-        y = mPosY;
+        z = mPos.z + sinAngle * 349;
+        x = mPos.x - cosAngle * 349;
+        y = mPos.y;
         position.x = x;
         position.y = y;
         position.z = z;
@@ -164,9 +164,9 @@ int daObjC1_Trap_c::InitResources() {
 
         sinAngle = FX_SinIdx((u16)mAngleY >> 4);
         cosAngle = FX_CosIdx((u16)mAngleY >> 4);
-        z = mPosZ - sinAngle * 349;
-        x = cosAngle * 349 + mPosX;
-        y = mPosY;
+        z = mPos.z - sinAngle * 349;
+        x = cosAngle * 349 + mPos.x;
+        y = mPos.y;
         position.x = x;
         position.y = y;
         position.z = z;
@@ -232,9 +232,9 @@ void daObjC1_Trap_c::UpdateModelTransform() {
     int radius = sinZ * 5;
     int offsetX = FX_MUL(radius, cosY);
     int offsetZ = FX_MUL(radius, sinY);
-    int x = (mPosX - offsetX) >> 3;
-    int y = mPosY >> 3;
-    int z = (mPosZ + offsetZ) >> 3;
+    int x = (mPos.x - offsetX) >> 3;
+    int y = mPos.y >> 3;
+    int z = (mPos.z + offsetZ) >> 3;
 
     Matrix4x3_FromTranslation(&data_020a0e68, x, y, z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
@@ -244,7 +244,7 @@ void daObjC1_Trap_c::UpdateModelTransform() {
 
 
 void daObjC1_Trap_c::UpdateCollisionTransform() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
     mDoorMat = data_020a0e68;

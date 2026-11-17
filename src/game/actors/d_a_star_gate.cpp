@@ -122,9 +122,9 @@ int daStarGate_c::InitResources()
         return 0;
 
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-    mModel.mat4x3.t.x = mPosX >> 3;
-    mModel.mat4x3.t.y = mPosY >> 3;
-    mModel.mat4x3.t.z = mPosZ >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     ChangeState(&ST_WAIT, gPlayers[gLocalPlayerId]);
     return 1;
 }
@@ -146,15 +146,15 @@ int daStarGate_c::Render()
     if (IsAreaShowing((s8)mAngleX) != 0 ||
         IsAreaShowing((s8)mAngleZ) != 0) {
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-        mModel.mat4x3.t.x = (mPosX + mSpeed.x) >> 3;
-        mModel.mat4x3.t.y = (mPosY + mSpeed.y) >> 3;
-        mModel.mat4x3.t.z = (mPosZ + mSpeed.z) >> 3;
+        mModel.mat4x3.t.x = (mPos.x + mSpeed.x) >> 3;
+        mModel.mat4x3.t.y = (mPos.y + mSpeed.y) >> 3;
+        mModel.mat4x3.t.z = (mPos.z + mSpeed.z) >> 3;
         mModel.Render(0);
 
         Matrix4x3_FromRotationY(&mModel.mat4x3, (s16)(mAngleY + 0x8000));
-        mModel.mat4x3.t.x = (mPosX - mSpeed.x) >> 3;
-        mModel.mat4x3.t.y = (mPosY - mSpeed.y) >> 3;
-        mModel.mat4x3.t.z = (mPosZ - mSpeed.z) >> 3;
+        mModel.mat4x3.t.x = (mPos.x - mSpeed.x) >> 3;
+        mModel.mat4x3.t.y = (mPos.y - mSpeed.y) >> 3;
+        mModel.mat4x3.t.z = (mPos.z - mSpeed.z) >> 3;
         mModel.Render(0);
     }
 
@@ -240,7 +240,7 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
            call returns 0. */
         if (!(data_0209caa0.file.flags1 & (0x8000 << entry->saveFlag))) {
             if (!isSpecial || (mScale.z > 0 && (notEnoughStars || !isMario))) {
-                Vector3 messagePos(mPosX, mPosY + 0xb4000, mPosZ);
+                Vector3 messagePos(mPos.x, mPos.y + 0xb4000, mPos.z);
 
                 if (!(isMario && !isSpecial && !notEnoughStars)) {
                     if (daDoor_c::func_ov100_02144f84() == 0)

@@ -157,7 +157,7 @@ int daObjKsWater_c::InitResources() {
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(data_ov017_02111c80), mClsnMat, 0x1000, mAngleY,
                           data_ov017_02111a94);
     mMeshCollider.Enable(this);
-    mOriginalPosY = mPosY;
+    mOriginalPosY = mPos.y;
     return 1;
 }
 
@@ -181,12 +181,12 @@ int daObjKsWater_c::Behavior() {
         if (ok != 0)
             mChestsOpen = 1;
     } else {
-        int d = mOriginalPosY - mPosY;
+        int d = mOriginalPosY - mPos.y;
         if (d < 0)
             d = -d;
         if (d < 0x92e000) {
             mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, mCamSpacePos, 0);
-            mPosY -= 0x5000;
+            mPos.y -= 0x5000;
         }
     }
     mTextureTransformer.speed = 0x1000;

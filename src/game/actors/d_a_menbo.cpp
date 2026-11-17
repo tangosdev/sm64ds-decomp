@@ -218,17 +218,17 @@ void daMenbo_c::func_ov090_021310b4() {
     if (!IsPlayerActor(p))
         return;
     if (((daPly_c *)p)->mIsMetal == 1 || ((daPly_c *)p)->IsOnShell() == 1) {
-        cv.x = mPosX;
-        cv.y = mPosY;
-        cv.z = mPosZ;
+        cv.x = mPos.x;
+        cv.y = mPos.y;
+        cv.z = mPos.z;
         SpawnCoins(cv, mExtraCoinCount + 1, 0xa000, 0);
         PoofDust();
         KillAndTrackInDeathTable();
         return;
     }
-    hurt.x = mPosX;
-    hurt.y = mPosY;
-    hurt.z = mPosZ;
+    hurt.x = mPos.x;
+    hurt.y = mPos.y;
+    hurt.z = mPos.z;
     ((daPly_c *)p)->Hurt(hurt, 2, 0xc000, 1, 0, 1);
 }
 
@@ -243,9 +243,9 @@ void daMenbo_c::func_ov090_02131378() {
     }
     dBgCh_Gnd rg;
     Vector3 v;
-    int vz = mPosZ;
-    int vy = mPosY + 0x32000;
-    v.x = mPosX;
+    int vz = mPos.z;
+    int vy = mPos.y + 0x32000;
+    v.x = mPos.x;
     v.y = vy;
     v.z = vz;
     mOnWater = 0;
@@ -256,15 +256,15 @@ void daMenbo_c::func_ov090_02131378() {
     }
     if (mFloorY < data_0209f32c) {
         mSurfaceY = data_0209f32c;
-        if (mPosY <= mSurfaceY) {
+        if (mPos.y <= mSurfaceY) {
             mOnWater = 1;
             this->func_ov090_02130f94();
         }
     } else {
         mSurfaceY = mFloorY;
     }
-    if (mPosY <= mSurfaceY) {
-        mPosY = mSurfaceY;
+    if (mPos.y <= mSurfaceY) {
+        mPos.y = mSurfaceY;
         mSpeed.y = 0;
     }
 }
@@ -275,7 +275,7 @@ void daMenbo_c::func_ov090_02131378() {
 int daMenbo_c::func_ov090_021314a0() {
     daPly_c *p = this->ClosestNonVanishPlayer();
     if (p != 0 && AngleDiff(this->mPrevAngleY, this->HorzAngleToCPlayer()) < 0x2000) {
-        int *sv = &p->mPosX;
+        int *sv = &p->mPos.x;
         int v[3];
         v[0] = sv[0];
         v[1] = sv[1];
@@ -354,10 +354,10 @@ int daMenbo_c::func_ov090_02131648() {
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
 
-    a.x = mPosX;
-    selfY = mPosY;
+    a.x = mPos.x;
+    selfY = mPos.y;
     a.y = selfY;
-    a.z = mPosZ;
+    a.z = mPos.z;
     a.y = selfY + 0x64000;
     in.y = 0x64000;
     in.z = 0x1f4000;
@@ -383,9 +383,9 @@ int daMenbo_c::func_ov090_02131648() {
             p39a = (s16 *)&mTargetAngleY;
             angleSet = 1;
             *p39a = *p39a + (0x1800 - sh);
-            mPosX = mPrevPos.x;
-            mPosY = mPrevPos.y;
-            mPosZ = mPrevPos.z;
+            mPos.x = mPrevPos.x;
+            mPos.y = mPrevPos.y;
+            mPos.z = mPrevPos.z;
             mProbeLatch = 1;
         }
     } else {
@@ -397,9 +397,9 @@ int daMenbo_c::func_ov090_02131648() {
             ha = Vec3_HorzAngle(&mPos, &mAnchorPos);
             mTargetAngleY = (u16)ha;
             angleSet = 1;
-            mPosX = mPrevPos.x;
-            mPosY = mPrevPos.y;
-            mPosZ = mPrevPos.z;
+            mPos.x = mPrevPos.x;
+            mPos.y = mPrevPos.y;
+            mPos.z = mPrevPos.z;
             mFarLatch = 1;
         }
     } else {
@@ -414,9 +414,9 @@ int daMenbo_c::func_ov090_02131648() {
             p39a = (s16 *)&mTargetAngleY;
             angleSet = 1;
             *p39a = *p39a + (0x1800 - sh);
-            mPosX = mPrevPos.x;
-            mPosY = mPrevPos.y;
-            mPosZ = mPrevPos.z;
+            mPos.x = mPrevPos.x;
+            mPos.y = mPrevPos.y;
+            mPos.z = mPrevPos.z;
             mWallLatch = 1;
         }
     } else {
@@ -486,9 +486,9 @@ int daMenbo_c::func_ov090_02131ac4()
     ApproachLinear(mHorzSpeed, 0, 0x1000);
     if (mHorzSpeed > 0) return 1;
     if (mOnWater == 0) {
-        mAnchorPos.x = mPosX;
-        mAnchorPos.y = mPosY;
-        mAnchorPos.z = mPosZ;
+        mAnchorPos.x = mPos.x;
+        mAnchorPos.y = mPos.y;
+        mAnchorPos.z = mPos.z;
         mTargetAngleY = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) << 0xd);
         this->func_ov090_02131e00(data_ov090_021344e4);
     }
@@ -547,9 +547,9 @@ int daMenbo_c::func_ov090_02131c48()
     }
 
     if (mOnWater == 0) {
-        mAnchorPos.x = mPosX;
-        mAnchorPos.y = mPosY;
-        mAnchorPos.z = mPosZ;
+        mAnchorPos.x = mPos.x;
+        mAnchorPos.y = mPos.y;
+        mAnchorPos.z = mPos.z;
         mTargetAngleY = (u16)(((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) << 13);
         this->func_ov090_02131e00(data_ov090_021344e4);
     }
@@ -579,9 +579,9 @@ int daMenbo_c::func_ov090_02131e00(StateFn *state) {
 void daMenbo_c::func_ov090_02131e50() {
     int src[3];
     int dst[3];
-    src[0] = mPosX;
-    src[1] = mPosY;
-    src[2] = mPosZ;
+    src[0] = mPos.x;
+    src[1] = mPos.y;
+    src[2] = mPos.z;
     Vec3_Asr(dst, src, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, dst[0], dst[1], dst[2]);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
@@ -647,11 +647,11 @@ int daMenbo_c::Behavior()
                 mAngleY += 0x1000;
             }
         }
-        if (mDeathState != 1 && mPosY <= mSurfaceY) {
+        if (mDeathState != 1 && mPos.y <= mSurfaceY) {
             VecFx32 v;
-            v.x = mPosX;
-            v.y = mPosY;
-            v.z = mPosZ;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             SpawnCoins(*(const Vector3 *)&v, mExtraCoinCount + 1, 0xa000, 0);
             PoofDust();
             KillAndTrackInDeathTable();
@@ -688,8 +688,8 @@ int daMenbo_c::Behavior()
     DecIfAbove0_Short(&mSpeedHoldTimer);
     DecIfAbove0_Short(&mWanderTimer);
     UpdateWMClsn(mWithMeshClsn, 2);
-    if (mPosY <= mSurfaceY)
-        mPosY = mSurfaceY;
+    if (mPos.y <= mSurfaceY)
+        mPos.y = mSurfaceY;
     if (gCurrentSublevel == 0x15 && mAreaId == 1 && func_02035638((u8 *)(&mWithMeshClsn))) {
         mVertAccel = 0;
         mSpeed.x = 0;
@@ -753,10 +753,10 @@ int daMenbo_c::InitResources()
     mVertAccel = -0x3000;
 
     if (IsGameMode(2) && gCurrentSublevel == 0x12) {
-        mSurfaceY = mPosY;
-        mAnchorPos.x = mPosX;
-        mAnchorPos.y = mPosY;
-        mAnchorPos.z = mPosZ;
+        mSurfaceY = mPos.y;
+        mAnchorPos.x = mPos.x;
+        mAnchorPos.y = mPos.y;
+        mAnchorPos.z = mPos.z;
         this->func_ov090_02131e00(data_ov090_021344f4);
         return 1;
     }
@@ -766,9 +766,9 @@ int daMenbo_c::InitResources()
         ground.mProbeHeight = 0xbb8000;
         ground.StartDetectingWater();
         {
-            int py = mPosY;
-            int pz = mPosZ;
-            int px = mPosX;
+            int py = mPos.y;
+            int pz = mPos.z;
+            int px = mPos.x;
             int ip = py + 0x32000;
             pos.x = px;
             pos.y = ip;
@@ -786,10 +786,10 @@ int daMenbo_c::InitResources()
             }
         }
 
-        mPosY = mSurfaceY;
-        mAnchorPos.x = mPosX;
-        mAnchorPos.y = mPosY;
-        mAnchorPos.z = mPosZ;
+        mPos.y = mSurfaceY;
+        mAnchorPos.x = mPos.x;
+        mAnchorPos.y = mPos.y;
+        mAnchorPos.z = mPos.z;
 
         if (mOnWater != 0) {
             this->func_ov090_02131e00(data_ov090_021344f4);

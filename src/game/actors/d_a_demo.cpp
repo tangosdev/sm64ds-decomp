@@ -344,7 +344,7 @@ extern int data_0208ee44;
 extern int data_ov002_0210b970[3];
 extern unsigned char gLocalPlayerId;
 extern void *gPlayers[];
-/* void *: every caller passes &mPosX and POD int[3] scratch; retyping that
+/* void *: every caller passes &mPos.x and POD int[3] scratch; retyping that
    scratch as Vector3 renumbers this TU's @NNN literals. */
 extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
 extern int data_ov002_0210b964[3];
@@ -2690,9 +2690,9 @@ s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data)
     z = ReadUnalignedShort(data + 4) << 12;
     y = ReadUnalignedShort(data + 2) << 12;
     x = ReadUnalignedShort(data) << 12;
-    this->mPosX = x;
-    this->mPosY = y;
-    this->mPosZ = z;
+    this->mPos.x = x;
+    this->mPos.y = y;
+    this->mPos.z = z;
     this->mAngleY = ReadUnalignedShort(data + 6);
     this->mPrevAngleY = this->mAngleY;
     return 1;
@@ -2732,7 +2732,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
       }
       VEC_Add(&this->mPos, &((dCamera_c *)gCamera)->pos, &this->mPos);
       if (arg2 > 0x2bc) {
-          this->mPosY -= 0x96000;
+          this->mPos.y -= 0x96000;
       }
       if (arg2 != data_ov002_0210b614) {
           func_0201267c(0x6a, &this->mCamSpacePos);
@@ -2781,9 +2781,9 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
     a = ReadUnalignedShort(p + 4) << 12;
     b = ReadUnalignedShort(p + 2) << 12;
     c0 = ReadUnalignedShort(p) << 12;
-    this->mPosX = c0;
-    this->mPosY = b;
-    this->mPosZ = a;
+    this->mPos.x = c0;
+    this->mPos.y = b;
+    this->mPos.z = a;
     d = ReadUnalignedShort(p + 0xa);
     e = ReadUnalignedShort(p + 8);
     f = ReadUnalignedShort(p + 6);
@@ -2836,7 +2836,7 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
         mParticleID[1] = 0;
         mParticleID[2] = 0;
     }
-    if (this->mPosY >= 0x514000) {
+    if (this->mPos.y >= 0x514000) {
         if (mRate < 0x3c000) {
             mRate += 0x5000;
         }
@@ -2851,12 +2851,12 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
             obj->func_ov002_020f6514(data_ov002_0210bc88, 1);
         }
     }
-    this->mPosY -= FX_MUL(mRate, 0x199);
+    this->mPos.y -= FX_MUL(mRate, 0x199);
     {
         struct Vector3 pos;
-        int z = this->mPosZ;
-        int x = this->mPosX;
-        int y = this->mPosY + 0x50000;
+        int z = this->mPos.z;
+        int x = this->mPos.x;
+        int y = this->mPos.y + 0x50000;
         pos.x = x;
         pos.y = y;
         pos.z = z;
@@ -2882,9 +2882,9 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
     }
     {
         struct Vector3 pos;
-        int z = this->mPosZ;
-        int x = this->mPosX;
-        int y = this->mPosY + 0x50000;
+        int z = this->mPos.z;
+        int x = this->mPos.x;
+        int y = this->mPos.y + 0x50000;
         pos.x = x;
         pos.y = y;
         pos.z = z;
@@ -2925,12 +2925,12 @@ int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val)
     if (*flag != 0) {
         if (val == gKuppaScriptFrame)
             func_02012790(0x17);
-        ApproachLinear(this->mPosY, 0xfa000, 0xa000);
+        ApproachLinear(this->mPos.y, 0xfa000, 0xa000);
         this->mOpacity = 0x1f;
     } else {
         if (val == gKuppaScriptFrame)
             func_02012790(0x16);
-        if (ApproachLinear(this->mPosY, 0x32000, 0x5000) != 0)
+        if (ApproachLinear(this->mPos.y, 0x32000, 0x5000) != 0)
             this->mOpacity = 0;
     }
     return 1;
@@ -2959,7 +2959,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         Message::func_0201f138();
     }
     MTX_MultVec43(((simpleModel_c *)this->mModel)->mScale, &data_0209b41c, (&this->mPos));
-    Vec3_LslInPlace(&this->mPosX, 3);
+    Vec3_LslInPlace(&this->mPos.x, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
         Message::func_0201ef38();
     this->mOpacity = this->mMagnitude >> 12;
@@ -3027,7 +3027,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
         dp->z = sum.z;
     }
     MTX_MultVec43(((anmModel_c *)this->mAnmModel)->mScale, &data_0209b41c, &this->mPos);
-    Vec3_LslInPlace(&this->mPosX, 3);
+    Vec3_LslInPlace(&this->mPos.x, 3);
     ApproachLinear(this->mMagnitude, f1, f2);
     this->mOpacity = this->mMagnitude >> 0xc;
     return 1;
@@ -3055,7 +3055,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
             {
                 short ang = ((dActor_c *)gPlayers[idx])->mAngleY;
 
-                Vec3_RotateYAndTranslate(&this->mPosX, &cam->pos, (ang + 0x8000), v);
+                Vec3_RotateYAndTranslate(&this->mPos.x, &cam->pos, (ang + 0x8000), v);
             }
         }
 
@@ -3141,7 +3141,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         }
         Math_Function_0203b0fc(&this->mMagnitude, 0x64000, 0x7a, 0x7fffffff);
 
-        this->mAngleX = cstd::atan2(this->mPosY - 0x190000, 0xc8000);
+        this->mAngleX = cstd::atan2(this->mPos.y - 0x190000, 0xc8000);
 
         ApproachAngle(&this->mAngleY, (short)(this->mPrevAngleY + 0x8000), 4, 0x4000, 0);
 
@@ -3152,12 +3152,12 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         w[0] = data_ov002_02110ddc[0];
         w[1] = data_ov002_02110ddc[1];
         w[2] = data_ov002_02110ddc[2];
-        Vec3_RotateYAndTranslate(&this->mPosX, v, this->mPrevAngleY, w);
+        Vec3_RotateYAndTranslate(&this->mPos.x, v, this->mPrevAngleY, w);
 
         h = (unsigned short)this->mPhase;
         t = FX_SinCosTable_[(h >> 4) * 2 + 1];
         {
-            int *p60 = &this->mPosY;
+            int *p60 = &this->mPos.y;
             *p60 = *p60 + FX_MUL(t, 0x96000);
         }
 
@@ -3168,7 +3168,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         ApproachAngle(&this->mPhaseStep, 0x200, 0x14, 0x4000, 0);
 
         {
-            int *p5c = &this->mPosX;
+            int *p5c = &this->mPos.x;
             *p5c = *p5c + this->mRate;
         }
         Math_Function_0203b0fc(&this->mRate, 0, 0xcc, 0x7fffffff);
@@ -3224,7 +3224,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     src[1] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2]);
     src[2] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2 + 1]);
 
-    Vec3_RotateYAndTranslate(&this->mPosX, &cam->pos, heading, src);
+    Vec3_RotateYAndTranslate(&this->mPos.x, &cam->pos, heading, src);
 
     this->mAngleX = cstd::atan2(v1.y, Vec3_HorzLen(&v1));
     this->mAngleY = cstd::atan2(v1.x, v1.z);
@@ -3347,9 +3347,9 @@ int daDemo_c::Behavior()
         anmModel_c *g = (anmModel_c *)this->mAnmModel;
         if ((g != 0) && (g->mSnapToFloor != 0)) {
             {
-                s32 xx = this->mPosX;
-                s32 yy = this->mPosY;
-                s32 zz = this->mPosZ;
+                s32 xx = this->mPos.x;
+                s32 yy = this->mPos.y;
+                s32 zz = this->mPos.z;
                 new_var2 = yy + 0x96000;
                 v.x = xx;
                 v.y = new_var2;
@@ -3359,8 +3359,8 @@ int daDemo_c::Behavior()
             ground.SetObjAndPos(v, 0);
             if (ground.DetectClsn() != 0) {
                 s32 h = ground.clsnY;
-                if ((this->mPosY) < h) {
-                    this->mPosY = h;
+                if ((this->mPos.y) < h) {
+                    this->mPos.y = h;
                     this->mGroundFlags |= 1;
                 }
             }

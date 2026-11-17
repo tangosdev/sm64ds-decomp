@@ -50,13 +50,13 @@ extern CLPS_Block data_ov064_0211bacc;
 /* Vtable slots 16 (D1) and 17 (D0). */
 daObjFl_Seesaw_c::~daObjFl_Seesaw_c() {}
 
-/* Writes mModel's transform from mPosX/Y/Z and mAngleX/Y/Z -- the base's
+/* Writes mModel's transform from mPos.x/.y/.z and mAngleX/Y/Z -- the base's
  * UpdateModelPosAndRotY job, on three axes. */
 void daObjFl_Seesaw_c::UpdateModelTransform() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.t.x = mPosX >> 3;
-    mModel.mat4x3.t.y = mPosY >> 3;
-    mModel.mat4x3.t.z = mPosZ >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 s32 daObjFl_Seesaw_c::CleanupResources() {

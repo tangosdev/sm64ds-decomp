@@ -113,9 +113,9 @@ void daManta_c::HurtTouchingPlayer() {
         return;
     {
         Vector3 hit;
-        hit.x = mPosX;
-        hit.y = mPosY;
-        hit.z = mPosZ;
+        hit.x = mPos.x;
+        hit.y = mPos.y;
+        hit.z = mPos.z;
         ((daPly_c *)actor)->Hurt(hit, 1, 0xc000, 1, 0, 1);
     }
 }
@@ -348,9 +348,9 @@ int daManta_c::InitResources() {
             mPrevAngleX = (short)0xf303;
             mPrevAngleY = 0xb50;
             mPrevAngleZ = 0;
-            mPosX = (int)0xfdfb8000;
-            mPosY = (int)0xff8f8000;
-            mPosZ = 0x29a000;
+            mPos.x = (int)0xfdfb8000;
+            mPos.y = (int)0xff8f8000;
+            mPos.z = 0x29a000;
             mFlags = 0;
         }
     }

@@ -45,7 +45,7 @@ struct daShl_c;
 
 struct daPly_c : dActor_c {
     /* 0x000..0x0d3 is dActor_c's, inherited rather than duplicated. It used to be
-       written out inline here -- mParam at 0x008 was fBase_c's param1, mPosX
+       written out inline here -- mParam at 0x008 was fBase_c's param1, mPos.x
        at 0x05c was dActor_c's, and so on. The names were reconciled first so that
        deleting the block is all that happens here. sizeof(dActor_c) is 0xd4, so
        daPly_c's own fields start exactly where the base ends. */
@@ -235,7 +235,7 @@ struct daPly_c : dActor_c {
        asserts 0x1bc -- which closes exactly at mSpawnPos. */
     dBgCh_Actr mMeshClsn;            /* 0x380 */
     /* The spawn point, saved once and restored on death. daPly_c::InitResources
-       writes all four from the live values (0x53c..0x544 <- mPosX/Y/Z, and
+       writes all four from the live values (0x53c..0x544 <- mPos.x/.y/.z, and
        mSpawnAngleY <- mAngleY); St_Respawn_Init reads them back the other way.
        Two functions, opposite directions, the same four slots -- which is what
        makes these names evidenced rather than guessed. */
@@ -253,7 +253,7 @@ struct daPly_c : dActor_c {
      * func_ov002_020c25a8 writes all three from
      * mMeshClsn.GetWallResult()->surface.CopyNormalTo(wn)
      * -- the same helper, the same shape, one surface over. It then pushes the
-     * actor out along it (`mPosX -= mWallNormal.x * 2`, `mPosZ -= mWallNormal.z * 2`).
+     * actor out along it (`mPos.x -= mWallNormal.x * 2`, `mPos.z -= mWallNormal.z * 2`).
      * Seven bodies read the pair back as `cstd::atan2(mWallNormal.x, mWallNormal.z)`
      * to get the wall's facing: St_Shell_Main, St_OnWall_Main (twice),
      * St_Balloon_Main, St_CrazedCrate_Main, func_ov002_020c2138,
@@ -311,8 +311,8 @@ struct daPly_c : dActor_c {
     s32 mGroundY;            /* 0x644 */
     /* The floor probe in func_ov002_020c14b8 stores its clsnY here
        (0x80000000 on a miss) and copies it to mGroundY; four no-control
-       sequences then overwrite mGroundY with mPosY, but not this copy.
-       func_ov002_020c0fb4 tests mPosY against it on a lava floor. */
+       sequences then overwrite mGroundY with mPos.y, but not this copy.
+       func_ov002_020c0fb4 tests mPos.y against it on a lava floor. */
     s32 mProbedGroundY; /* 0x648 */
     /* Height of the water surface above the player: set from a dBgCh_Gnd
        probe that detects water when the hit's CLPS has the water bit (0x20),
@@ -578,7 +578,7 @@ struct daPly_c : dActor_c {
     u8  mStateArg;            /* 0x70c */
     u8  mIsFallScreaming;            /* 0x70d */
     u8  mSlideType;            /* 0x70e */
-    /* Set when func_ov002_020c231c snaps mPosY onto mGroundY on a class-1
+    /* Set when func_ov002_020c231c snaps mPos.y onto mGroundY on a class-1
        floor; while set, the next call snaps again within the same 0xc8000
        window. Cleared on every other exit. */
     u8 mSnapToFloor;        /* 0x70f */
@@ -637,7 +637,7 @@ struct daPly_c : dActor_c {
        0x2b in step 4). daC_Jugem_c::StateArriveMain sets it on the closest
        player at its first tick and clears it at tick 0x82. */
     u8 mMuteSleepVoice; /* 0x723 */
-    /* St_Owl_Main sets it in step 1 once mPosY is below mAttachOffsetY -
+    /* St_Owl_Main sets it in step 1 once mPos.y is below mAttachOffsetY -
        0xed8000, calls func_0201f32c(0xa3) and hands the camera to
        func_0200d3f8 with no look target; it clears it in step 3 once camera
        flag 0x8000 is clear. That camera state's main, func_02005110, pulls

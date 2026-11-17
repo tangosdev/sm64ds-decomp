@@ -188,7 +188,7 @@ s32 daObjRc_Hane_c::Render() {
 void daObjRc_Hane_c::UpdateModelTransform() {
     int v[3];
 
-    Vec3_Asr(v, &mPosX, 3);
+    Vec3_Asr(v, &mPos.x, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
 
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);

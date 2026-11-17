@@ -156,9 +156,9 @@ int daObjClock_c::CleanupResources() {
  * body into the preceding member's fragment. */
 void daObjClock_c::UpdateModelTransform() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.t.x = mPosX >> 3;
-    mModel.mat4x3.t.y = mPosY >> 3;
-    mModel.mat4x3.t.z = mPosZ >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* Both destructors come from the inline `~daObjClock_c() {}` in the header.

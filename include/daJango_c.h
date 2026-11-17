@@ -70,7 +70,7 @@ struct daJango_c : dEnemyBase_c {
     void                        *mState;                /* 0x42c */
     /* The path node Klepto is at. InitResources has PathPtr::GetNode write the
        node at mPathNodeIndex here (the carrying-a-star branch then teleports the
-       actor onto it: `mPosX = mPathNodePos.x;` ...), and UpdateFlyPathState sets
+       actor onto it: `mPos.x = mPathNodePos.x;` ...), and UpdateFlyPathState sets
        it to the actor's own position each time it snaps onto a node. */
     Vector3 mPathNodePos; /* 0x430 */
     /* Two uses on the one word. In UpdateCircleState (circling) it is a phase

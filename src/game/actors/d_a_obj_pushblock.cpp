@@ -99,18 +99,18 @@ int daObjPushblock_c::InitResources() {
     mTerminalVelocity = -0x3c000;
     mWithMeshClsn.Init(this, 0x96000, 0x96000, 0, 0);
 
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     v.y = v.y + 0x14000;
     dBgCh_Gnd ground;
     ground.SetObjAndPos(v, 0);
     mGroundY = v.y;
     if (ground.DetectClsn())
         mGroundY = ground.clsnY;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     return 1;
 }
 
@@ -179,9 +179,9 @@ int daObjPushblock_c::Behavior() {
                 pos.z = homeZ;
                 pos.y = homeY + 0x96000;
                 q = mLinkedActor;
-                q->mPosX = homeX;
-                q->mPosY = pos.y;
-                q->mPosZ = pos.z;
+                q->mPos.x = homeX;
+                q->mPos.y = pos.y;
+                q->mPos.z = pos.z;
                 ((daSCoin_c *)mLinkedActor)->Collect();
             }
             mLinkedActor = 0;
@@ -292,9 +292,9 @@ void daObjPushblock_c::OnHitByMegaChar(daPly_c &player) {
 void daObjPushblock_c::Kill() {
     Vector3 vec;
     Vector3 vec2;
-    vec.x = mPosX;
-    vec.y = mPosY;
-    vec.z = mPosZ;
+    vec.x = mPos.x;
+    vec.y = mPos.y;
+    vec.z = mPos.z;
     vec.y += 0x96000;
     Particle::System::NewSimple(kPtclStoneBlockBreak, vec.x, vec.y, vec.z);
     vec2.x = vec.x;

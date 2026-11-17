@@ -19,7 +19,7 @@
 //   Sound::PlayBank3.
 // - The wall normal goes through the CopyNormalTo reference pun. Vec3 POD
 //   twins (player copy, diff, normal, hurt pos): a Vector3 local emits its
-//   destructor call. Copying player->mPosX field by field changes State2's
+//   destructor call. Copying player->mPos.x field by field changes State2's
 //   size.
 // - g_profile_CHAIR is not in this TU. data_ov020_02114af0 is the model
 //   handle.
@@ -94,9 +94,9 @@ s32 daChair_c::InitResources() {
     mClsnOffset.z = 0;
     mCylinder.Init(this, mClsnOffset, 0x32000, 0x64000, 0x200004, 0);
     mState = 0;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mShadowMat = IDENTITY_MATRIX4X3;
     return 1;
 }
@@ -136,18 +136,18 @@ s32 daChair_c::CleanupResources() {
 
 void daChair_c::UpdateModel() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
-    mShadowMat.m[9] = mPosX >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
+    mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = mHomePos.y >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x32000, 0x1e000, 0xf);
 }
 
 void daChair_c::Break() {
-    Particle::System::NewSimple(kPtclChairBreakA, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclChairBreakB, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclChairBreakA, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclChairBreakB, mPos.x, mPos.y, mPos.z);
     PoofDust();
     MarkForDestruction();
 }
@@ -247,8 +247,8 @@ void daChair_c::State1() {
             func_0201267c(kSfxWobble, &mCamSpacePos);
             wobble = 4;
         }
-        mPosX -= wobble << 12;
-        mPosZ -= wobble << 12;
+        mPos.x -= wobble << 12;
+        mPos.z -= wobble << 12;
         mAngleZ = (wobble * 0x32);
         mAngleX = mAngleZ;
     } else {
@@ -292,9 +292,9 @@ void daChair_c::State2() {
                 player = ClosestPlayer();
                 if (player == 0)
                     return;
-                /* Copied through a plain vector. Copying player->mPosX
+                /* Copied through a plain vector. Copying player->mPos.x
                  * field by field changes the code size. */
-                pp = (VecFx32 *)&player->mPosX;
+                pp = (VecFx32 *)&player->mPos;
                 playerPos.x = pp->x;
                 playerPos.y = pp->y;
                 playerPos.z = pp->z;
@@ -344,9 +344,9 @@ void daChair_c::State2() {
             return;
         {
             Vector3 pos;
-            pos.x = mPosX;
-            pos.y = mPosY;
-            pos.z = mPosZ;
+            pos.x = mPos.x;
+            pos.y = mPos.y;
+            pos.z = mPos.z;
             ((daPly_c *)actor)->Hurt(pos, 2, 0xc000, 1, 0, 1);
         }
     }
@@ -378,10 +378,10 @@ void daChair_c::State3() {
     if (wrapped >= 0x4000) {
         s16 past = (wrapped - 0x4000);
         s16 tip = FX_SinIdx((u16)past >> 4);
-        mPosY = (s16)tip * (s16)0x28 + (mHomePos.y + 0x28000);
+        mPos.y = (s16)tip * (s16)0x28 + (mHomePos.y + 0x28000);
     } else {
         s16 tip = FX_SinIdx((u16)wrapped >> 4);
-        mPosY = (s16)tip * (s16)0x28 + mHomePos.y;
+        mPos.y = (s16)tip * (s16)0x28 + mHomePos.y;
     }
 }
 

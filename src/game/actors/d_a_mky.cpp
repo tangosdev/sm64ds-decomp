@@ -165,17 +165,17 @@ void daMky_c::ReturnToPerch() {
 
     dBgCh_Lin rc;
 
-    a.x = this->mPosX;
-    a.y = this->mPosY;
-    a.z = this->mPosZ;
+    a.x = this->mPos.x;
+    a.y = this->mPos.y;
+    a.z = this->mPos.z;
     a.y = a.y + 0x32000;
-    b.x = this->mPosX;
-    b.y = this->mPosY;
-    b.z = this->mPosZ;
+    b.x = this->mPos.x;
+    b.y = this->mPos.y;
+    b.z = this->mPos.z;
     b.y = b.y - 0x96000;
     rc.SetObjAndLine(a, b, this);
 
-    if (this->mPerchPos.y - this->mPosY > 0x96000 || rc.DetectClsn()) {
+    if (this->mPerchPos.y - this->mPos.y > 0x96000 || rc.DetectClsn()) {
         Vec3_Asr(&asr, &this->mPerchPos, 3);
 
         if (data_0209f43c.TransformAndClip(data_0209b3ec, asr, 0x1f400, out) > 0xc350000) {
@@ -312,15 +312,15 @@ int daMky_c::UpdateSafePos() {
         dBgCh_Gnd rg;
         Vector3 v;
         int y, z, x, s;
-        y = this->mPosY;
-        z = this->mPosZ;
-        x = this->mPosX;
+        y = this->mPos.y;
+        z = this->mPos.z;
+        x = this->mPos.x;
         s = y + 0x1e000;
         v.x = x;
         v.y = s;
         v.z = z;
         rg.SetObjAndPos(v, this);
-        if (rg.DetectClsnSlot0() == 0 || this->mPosY - rg.clsnY > 0x2000) {
+        if (rg.DetectClsnSlot0() == 0 || this->mPos.y - rg.clsnY > 0x2000) {
             this->mPos = this->mSpawnPos;
             return 1;
         }
@@ -335,9 +335,9 @@ int daMky_c::RevertOffLedge() {
         dBgCh_Gnd rg;
         Vector3 pos;
         {
-            int y = this->mPosY;
-            int z = this->mPosZ;
-            int x = this->mPosX;
+            int y = this->mPos.y;
+            int z = this->mPos.z;
+            int x = this->mPos.x;
             int y2 = y + 0x1e000;
             pos.x = x;
             pos.y = y2;
@@ -345,11 +345,11 @@ int daMky_c::RevertOffLedge() {
         }
         rg.SetObjAndPos(pos, this);
         if (rg.DetectClsn() == 0 ||
-            ABS(rg.clsnY - this->mPosY) > 0x1000) {
+            ABS(rg.clsnY - this->mPos.y) > 0x1000) {
             this->mHorzSpeed = 0;
-            this->mPosX = this->mPrevPos.x;
-            this->mPosY = this->mPrevPos.y;
-            this->mPosZ = this->mPrevPos.z;
+            this->mPos.x = this->mPrevPos.x;
+            this->mPos.y = this->mPrevPos.y;
+            this->mPos.z = this->mPrevPos.z;
             return 1;
         }
     }
@@ -395,9 +395,9 @@ void daMky_c::UpdateModelAndCap() {
         mAnmModel.mat4x3 = *res;
     } else {
         Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngleY);
-        this->mAnmModel.mat4x3.m[9] = this->mPosX >> 3;
-        this->mAnmModel.mat4x3.m[10] = this->mPosY >> 3;
-        this->mAnmModel.mat4x3.m[11] = this->mPosZ >> 3;
+        this->mAnmModel.mat4x3.m[9] = this->mPos.x >> 3;
+        this->mAnmModel.mat4x3.m[10] = this->mPos.y >> 3;
+        this->mAnmModel.mat4x3.m[11] = this->mPos.z >> 3;
     }
 
     if (!IsInYoshiMouth(this)) {
@@ -422,9 +422,9 @@ void daMky_c::UpdateModelAndCap() {
     mCapMtx = MtxStack::get();
 
     obj->mCarryMatrix = &mCapMtx;
-    obj->mPosX = this->mPosX;
-    obj->mPosY = this->mPosY;
-    obj->mPosZ = this->mPosZ;
+    obj->mPos.x = this->mPos.x;
+    obj->mPos.y = this->mPos.y;
+    obj->mPos.z = this->mPos.z;
 }
 int daMky_c::func_ov030_021122b0()
 {
@@ -473,7 +473,7 @@ int daMky_c::func_ov030_02112400()
 
     if (IsUkikiStar(this)) {
         if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000) {
-            if (this->mPosY > this->mPerchPos.y - 0x12c000) {
+            if (this->mPos.y > this->mPerchPos.y - 0x12c000) {
                 ChangeState(1);
             }
         }
@@ -666,7 +666,7 @@ int daMky_c::func_ov030_02112a84()
                 ChangeState(this->mPrevState);
         } else if (IsUkikiStar(this)) {
             if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
-                this->mPosY > this->mPerchPos.y - 0x12c000) {
+                this->mPos.y > this->mPerchPos.y - 0x12c000) {
                 ChangeState(this->mPrevState);
             } else {
                 ChangeState(9);
@@ -699,22 +699,22 @@ int daMky_c::EnterState7()
     this->mHorzSpeed = 0xa000;
     this->mSpeed.y = 0;
     other = this->mPlayer;
-    pos = &mPosX;
+    pos = &mPos.x;
     s = other->mAngleY;
     this->mAngleY = s;
     s = this->mAngleY;
-    py = &mPosY;
-    pz = &mPosZ;
+    py = &mPos.y;
+    pz = &mPos.z;
     this->mPrevAngleY = s;
     other = this->mPlayer;
     {
-        int *op = &other->mPosX;
+        int *op = &other->mPos.x;
         int t0 = op[0];
-        mPosX = t0;
+        mPos.x = t0;
         int t1 = op[1];
-        this->mPosY = t1;
+        this->mPos.y = t1;
         int t2 = op[2];
-        this->mPosZ = t2;
+        this->mPos.z = t2;
     }
     ang = (u16)this->mAngleY;
     s = FX_SinIdx(ang >> 4);
@@ -725,10 +725,10 @@ int daMky_c::EnterState7()
     *pz = (*pz) + FX_MUL(s, mul);
     other = this->mPlayer;
     {
-        int oy = other->mPosY;
-        int oz = other->mPosZ;
+        int oy = other->mPos.y;
+        int oz = other->mPos.z;
         mul = oy + 0x50000;
-        v.x = other->mPosX;
+        v.x = other->mPos.x;
         v.y = mul;
         v.z = oz;
     }
@@ -765,7 +765,7 @@ int daMky_c::func_ov030_02112da0()
     }
     case 1:
         if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
-            this->mPosY > this->mPerchPos.y - 0x12c000) {
+            this->mPos.y > this->mPerchPos.y - 0x12c000) {
             if (this->mPlayer->ShowMessage(*this, 0xc1, 0, 0, 0) != 0) {
                 func_0201267c(0xd1, &this->mCamSpacePos);
                 this->mSubState++;
@@ -797,7 +797,7 @@ int daMky_c::func_ov030_02112da0()
 int daMky_c::EnterState6()
 {
     this->mFlags &= ~0x80000;
-    if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 && mPosY > mPerchPos.y - 0x12c000) {
+    if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 && mPos.y > mPerchPos.y - 0x12c000) {
         mSubState = 0;
         this->SpawnSoundObj(1);
     } else {
@@ -814,10 +814,10 @@ int daMky_c::EnterState6()
 int daMky_c::func_ov030_02113094()
 {
     if (IsInYoshiMouth(this)) {
-        int *p = &this->mPlayer->mPosX;
-        this->mPosX = p[0];
-        this->mPosY = p[1];
-        this->mPosZ = p[2];
+        int *p = &this->mPlayer->mPos.x;
+        this->mPos.x = p[0];
+        this->mPos.y = p[1];
+        this->mPos.z = p[2];
     }
 
     switch (this->mSubState) {
@@ -893,16 +893,16 @@ int daMky_c::func_ov030_02113324()
     if (!IsFlagSet(this, 0x100) || IsFlagSet(this, 0x2000)) {
         daPly_c *other = this->mPlayer;
         Vector3 v;
-        int oy = other->mPosY;
-        int oz = other->mPosZ;
+        int oy = other->mPos.y;
+        int oz = other->mPos.z;
         int vy = oy + 0x32000;
-        v.x = other->mPosX;
+        v.x = other->mPos.x;
         v.y = vy;
         v.z = oz;
         this->DetectRaycastClsn(v, this->mPos, 1);
 
         if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
-            this->mPosY > this->mPerchPos.y - 0x12c000) {
+            this->mPos.y > this->mPerchPos.y - 0x12c000) {
             ChangeState(1);
         } else {
             ChangeState(9);
@@ -914,7 +914,7 @@ int daMky_c::func_ov030_02113324()
     switch (this->mSubState) {
     case 0:
         if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
-            this->mPosY > this->mPerchPos.y - 0x12c000) {
+            this->mPos.y > this->mPerchPos.y - 0x12c000) {
             if (this->mPlayer->StartTalk(*this, 1) != 0) {
                 Vector3 camPos;
                 {
@@ -935,7 +935,7 @@ int daMky_c::func_ov030_02113324()
                 msgPos.x = MtxStack::get().m[9];
                 msgPos.y = MtxStack::get().m[10];
                 msgPos.z = MtxStack::get().m[11];
-                msgPos.y = this->mPosY + 0x64000;
+                msgPos.y = this->mPos.y + 0x64000;
 
                 if (this->mPlayer->ShowMessage(*this, 0xc0, &msgPos, 0, 2) != 0) {
                     func_0201267c(0xd1, &this->mCamSpacePos);
@@ -975,7 +975,7 @@ int daMky_c::EnterState4(){
     this->mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyHoldAnimationFile[1]), 0, 0x1000, 0);
     this->mAnmModel.speed = 0x1000;
     if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
-        this->mPosY > mPerchPos.y - 0x12c000) {
+        this->mPos.y > mPerchPos.y - 0x12c000) {
         mSubState = 0;
         this->SpawnSoundObj(1);
     } else {
@@ -1050,7 +1050,7 @@ int daMky_c::func_ov030_021136b0()
             ang = Vec3_HorzAngle(&camPos, &this->mPlayer->mPos);
         }
         {
-            int *op = &this->mPlayer->mPosX;
+            int *op = &this->mPlayer->mPos.x;
             MtxStack::transS(op[0], op[1], op[2]);
         }
         MtxStack::YrotM(ang);
@@ -1063,7 +1063,7 @@ int daMky_c::func_ov030_021136b0()
             msgPos.x = mx;
             msgPos.y = my;
             msgPos.z = mz;
-            msgPos.y = this->mPosY + 0x64000;
+            msgPos.y = this->mPos.y + 0x64000;
             if (this->mPlayer->ShowMessage(*this, msgArg, &msgPos, 0, 2) != 0) {
                 func_0201267c(0xd1, &this->mCamSpacePos);
                 {
@@ -1102,10 +1102,10 @@ int daMky_c::func_ov030_021136b0()
                 dActor_c *act = dActor_c::FindWithID(this->mCapUniqueID);
                 act->mCarryMatrix = 0;
                 {
-                    int *src = &this->mPlayer->mPosX;
-                    act->mPosX = src[0];
-                    act->mPosY = src[1];
-                    act->mPosZ = src[2];
+                    int *src = &this->mPlayer->mPos.x;
+                    act->mPos.x = src[0];
+                    act->mPos.y = src[1];
+                    act->mPos.z = src[2];
                 }
                 this->mCapUniqueID = 0;
                 ChangeState(0xa);
@@ -1195,7 +1195,7 @@ int daMky_c::EnterState2() {
     if (IsUkikiThief(this)) {
         this->mAngleY = Vec3_HorzAngle(&this->mPos, &this->mPerchPos);
     } else if (Vec3_Dist(&this->mPerchPos, &this->mPos) < 0x514000 &&
-               this->mPosY > this->mPerchPos.y - 0x12c000) {
+               this->mPos.y > this->mPerchPos.y - 0x12c000) {
         this->mAngleY = Vec3_HorzAngle(&this->mPos, &p->mPos);
     } else {
         this->mAngleY = Vec3_HorzAngle(&this->mPos, &this->mPerchPos);
@@ -1230,7 +1230,7 @@ int daMky_c::func_ov030_02113d20()
     dist = Vec3_Dist(&this->mPos, &p->mPos);
 
     if ((IsUkikiStar(this) && Vec3_Dist(&this->mPerchPos, &p->mPos) > 0x514000) ||
-        p->mPosY < this->mPerchPos.y - 0x12c000) {
+        p->mPos.y < this->mPerchPos.y - 0x12c000) {
         this->mSubState = 2;
     }
 

@@ -15,7 +15,7 @@
  * daSnowman_c_classInit (0x02125ec0) abuts the rest and is written last.
  *
  * deslop leftovers:
- * - RotateTowardPlayer: naming player mPosX/Y/Z is 0x190 -> 0x18c.
+ * - RotateTowardPlayer: naming player mPos.x/.y/.z is 0x190 -> 0x18c.
  * - FindClosestPlayerDist: the same loads are 0xb8 -> 0xb4.
  * - StateThrowSnowballExecute: the same loads differ by 3 words; size stays 0x17c.
  * - CheckAttacks: `if (actorID == PLAYER)` is 0x21c -> 0x210.
@@ -183,7 +183,7 @@ void daSnowman_c::RotateTowardPlayer(int idx) {
     /* Read through one base pointer, y and z first: naming the three
        fields directly reschedules the loads. */
     {
-        int *pp = &player->mPosX;
+        int *pp = &player->mPos.x;
         int py = pp[1];
         int pz = pp[2];
         v.x = pp[0];
@@ -292,7 +292,7 @@ int daSnowman_c::FindClosestPlayerDist() {
             daPly_c *obj = gPlayers[i];
             if (obj != 0) {
                 int dist;
-                int *s = &obj->mPosX;   /* one base pointer; see 0212423c */
+                int *s = &obj->mPos.x;   /* one base pointer; see 0212423c */
                 v.x = s[0];
                 v.y = s[1];
                 v.z = s[2];
@@ -325,9 +325,9 @@ int daSnowman_c::StateMeltExecute() {
             this->mStateTimer = 20;
         if (this->mScale.y < 0x50) {
             if (this->mCapPhase == 0) {
-                v.x = this->mPosX;
-                v.y = this->mPosY;
-                v.z = this->mPosZ;
+                v.x = this->mPos.x;
+                v.y = this->mPos.y;
+                v.z = this->mPos.z;
                 SpawnCoins(v, this->mExtraCoinCount + 1, 0xa000, 0);
             }
             ReleaseHeldObjects();
@@ -381,9 +381,9 @@ int daSnowman_c::StateDeathExecute() {
     this->mTimer++;
     if (this->mTimer > 40) {
         if (this->mCapPhase == 0) {
-            v.x = this->mPosX;
-            v.y = this->mPosY;
-            v.z = this->mPosZ;
+            v.x = this->mPos.x;
+            v.y = this->mPos.y;
+            v.z = this->mPos.z;
             SpawnCoins(v, this->mExtraCoinCount + 1, 0xa000, 0);
         }
         ReleaseHeldObjects();
@@ -421,12 +421,12 @@ int daSnowman_c::StateBurrowExecute() {
     this->mParticleID2 =
         Particle::System::New(this->mParticleID2, kPtclSnowmanSinkB, pos.x, pos.y, pos.z, 0, 0);
 
-    if (this->mHomePos.y > this->mPosY) {
+    if (this->mHomePos.y > this->mPos.y) {
         ApproachAngle(&this->mAngleX, this->mInitAngleY, 1, 0x1000, 0x1000);
     }
     t = this->mHomePos.y - 0x118000;
-    if (t > this->mPosY) {
-        this->mPosY = t;
+    if (t > this->mPos.y) {
+        this->mPos.y = t;
         this->mSpeed.y = 0;
         this->mVertAccel = 0;
         SetState(&data_ov081_02128e84);
@@ -463,9 +463,9 @@ int daSnowman_c::StateThrowSnowballExecute() {
     if (this->mSnowballID != 0) {
         target = dActor_c::FindWithID(this->mSnowballID);
         if (target != 0) {
-            target->mPosX = this->mHandPos.x;
-            target->mPosY = this->mHandPos.y;
-            target->mPosZ = this->mHandPos.z;
+            target->mPos.x = this->mHandPos.x;
+            target->mPos.y = this->mHandPos.y;
+            target->mPos.z = this->mHandPos.z;
             if (this->mAnmModel.WillHitFrame(0xa) != 0) {
                 in.x = 0; in.y = 0; in.z = 0x1e000;
                 out.x = 0; out.y = 0; out.z = 0;
@@ -473,7 +473,7 @@ int daSnowman_c::StateThrowSnowballExecute() {
                 player = this->ClosestPlayer();
                 if (player != 0) {
                     int angle;
-                    int *q = &player->mPosX;   /* one base pointer; see 0212423c */
+                    int *q = &player->mPos.x;   /* one base pointer; see 0212423c */
                     v[1].x = q[0];
                     v[1].y = q[1];
                     v[1].z = q[2];
@@ -512,9 +512,9 @@ int daSnowman_c::StateSpawnSnowballExecute() {
     dActor_c *ball = dActor_c::FindWithID(this->mSnowballID);
     if (ball != 0 && ball->mVertAccel == 0) {
         RotateTowardPlayer(1);
-        ball->mPosX = this->mHandPos.x;
-        ball->mPosY = this->mHandPos.y;
-        ball->mPosZ = this->mHandPos.z;
+        ball->mPos.x = this->mHandPos.x;
+        ball->mPos.y = this->mHandPos.y;
+        ball->mPos.z = this->mHandPos.z;
     }
 
     if ((u16)this->mStateTimer == 0) {
@@ -562,10 +562,10 @@ int daSnowman_c::StateRotateEnter() {
 /* State "rise", execute. */
 int daSnowman_c::StateRiseFromGroundExecute() {
     if (this->mSpeed.y < 0) {
-        if (this->mHomePos.y > this->mPosY) {
+        if (this->mHomePos.y > this->mPos.y) {
             this->mSpeed.y = 0;
             this->mVertAccel = 0;
-            this->mPosY = this->mHomePos.y;
+            this->mPos.y = this->mHomePos.y;
             SetState(&data_ov081_02128e14);
         }
     }
@@ -628,7 +628,7 @@ int daSnowman_c::StateHopExecute() {
     PathPtr p;
     p.FromID(this->mPathId);
     p.GetNode(node, this->mPathNodeIndex);
-    node.y = this->mPosY;
+    node.y = this->mPos.y;
     Vec3_Sub(&diff, &this->mPos, &node);
     len = VEC_Mag(&diff);
     ApproachAngle(&this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &node), 1, 0x1000, 0x500);
@@ -695,15 +695,15 @@ int daSnowman_c::StateWalkEnter() {
     PathPtr pp;
     pp.FromID(this->mPathId);
     pp.GetNode(node, this->mPathNodeIndex);
-    node.y = this->mPosY;
+    node.y = this->mPos.y;
     Vec3_Sub(&diff, &this->mPos, &node);
     len = VEC_Mag(&diff);
     this->mHopStep = 0xa000;
     this->mStep = 0;
     if (len == 0 || len <= this->mHopStep) {
-        this->mPosX = node.x;
-        this->mPosY = node.y;
-        this->mPosZ = node.z;
+        this->mPos.x = node.x;
+        this->mPos.y = node.y;
+        this->mPos.z = node.z;
         this->mPathNodeIndex++;
         if (this->mPathNodeIndex >= this->mPathNodeCount)
             this->mPathNodeIndex = 0;
@@ -731,10 +731,10 @@ void daSnowman_c::UpdateModelMatrices() {
 
     this->mAnmModel.UpdateVerts();
 
-    src[0] = this->mPosX;
-    t = this->mPosY;
+    src[0] = this->mPos.x;
+    t = this->mPos.y;
     src[1] = t;
-    src[2] = this->mPosZ;
+    src[2] = this->mPos.z;
     src[1] = t + this->mSinkOffsetY;
     Vec3_Asr((Vector3 *)dst, (Vector3 *)src, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, dst[0], dst[1], dst[2]);
@@ -758,9 +758,9 @@ void daSnowman_c::UpdateModelMatrices() {
             this->mCapPos.x <<= 3;
             this->mCapPos.y <<= 3;
             this->mCapPos.z <<= 3;
-            actor->mPosX = this->mCapPos.x;
-            actor->mPosY = this->mCapPos.y;
-            actor->mPosZ = this->mCapPos.z;
+            actor->mPos.x = this->mCapPos.x;
+            actor->mPos.y = this->mCapPos.y;
+            actor->mPos.z = this->mCapPos.z;
 
             Matrix4x3_FromTranslation(&data_020a0e68, 0, 0x4000, 0);
             Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0, 0x2000, 0);
@@ -787,9 +787,9 @@ void daSnowman_c::UpdateModelMatrices() {
         return;
 
     Matrix4x3_FromTranslation(&data_020a0e68,
-        this->mPosX >> 3,
-        (this->mPosY - 0xe000) >> 3,
-        this->mPosZ >> 3);
+        this->mPos.x >> 3,
+        (this->mPos.y - 0xe000) >> 3,
+        this->mPos.z >> 3);
     this->mShadowMatrix = data_020a0e68;
     DropShadowRadHeight(this->mShadowModel, this->mShadowMatrix, 0x78000, 0xc8000, 0xf);
 }
@@ -921,9 +921,9 @@ int daSnowman_c::InitResources()
     if (mType == 0xff)
         mType = 0;
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
 
     if (GetBitInDeathTable() != 0) {
         if (mType == 2) {
@@ -970,7 +970,7 @@ int daSnowman_c::InitResources()
         mFlags = 0x10000000;
         SetState(&data_ov081_02128e54);
     } else {
-        mPosY -= 0x118000;
+        mPos.y -= 0x118000;
         SetState(&data_ov081_02128e84);
         if (mType == 3) {
             mCoinType = 0;

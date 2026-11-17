@@ -64,7 +64,7 @@ struct daPicGate_c : dActor_c {
     State *mState;               /* 0x1a4 */
     s32 mTexRecord;              /* 0x1a8 -- from LoadTexture */
     const WaveParams *mWaveParams; /* 0x1ac */
-    s32 mClosedPosX;             /* 0x1b0 -- mPosX as spawned */
+    s32 mClosedPosX;             /* 0x1b0 -- mPos.x as spawned */
     s16 mWavePhase;              /* 0x1b4 */
     u16 mWaveTimer;              /* 0x1b6 */
     u16 mNumCells;               /* 0x1b8 */

@@ -159,7 +159,7 @@ void daBook_c::SpawnShootBook() {
         {
             struct Vector3 pos;
             struct Vector3_16 rot;
-            int *fp = &partner->mPosX;
+            int *fp = &partner->mPos.x;
             int mul = 0x1f4 * bit;
             int x = fp[0];
             int dx = mul - 0xfa;
@@ -176,7 +176,7 @@ void daBook_c::SpawnShootBook() {
                     pos.y = ny;
                 }
             }
-            pos.z = mTouchedPlayer->mPosZ;
+            pos.z = mTouchedPlayer->mPos.z;
             rot.y = (short)((bit << 15) + 0x4000);
             rot.x = 0;
             rot.z = 0;
@@ -197,7 +197,7 @@ int daBook_c::CheckAttacks() {
     }
     if (r == HIT_METAL_PLAYER) {
         Vector3 v;
-        v.x = mPosX; v.y = mPosY; v.z = mPosZ;
+        v.x = mPos.x; v.y = mPos.y; v.z = mPos.z;
         mTouchedPlayer->Hurt(v, 0, 0xc000, 1, 0, 1);
         Die();
         return 1;
@@ -206,11 +206,11 @@ int daBook_c::CheckAttacks() {
         int eq = (actorID == kKillerBookActorId);
         if (eq) {
             Vector3 v;
-            v.x = mPosX; v.y = mPosY; v.z = mPosZ;
+            v.x = mPos.x; v.y = mPos.y; v.z = mPos.z;
             mTouchedPlayer->Hurt(v, 2, 0xc000, 1, 0, 1);
         } else {
             Vector3 v;
-            v.x = mPosX; v.y = mPosY; v.z = mPosZ;
+            v.x = mPos.x; v.y = mPos.y; v.z = mPos.z;
             mTouchedPlayer->Hurt(v, 1, 0xc000, 1, 0, 1);
         }
         mCoinType = 0;
@@ -325,10 +325,10 @@ void daBook_c::UpdateSwitchBook() {
             mStateTimer -= 1;
             return;
         }
-        mPosZ -= 0x4000;
-        if (mHomePosZ - mPosZ < 0x28000)
+        mPos.z -= 0x4000;
+        if (mHomePosZ - mPos.z < 0x28000)
             return;
-        mPosZ = mHomePosZ - 0x28000;
+        mPos.z = mHomePosZ - 0x28000;
         mState = STATE_SWITCH_READY;
         mdCcAcPos_c.flags &= ~1;
         return;
@@ -348,8 +348,8 @@ void daBook_c::UpdateSwitchBook() {
     {
         /* slides forward 10 units a frame; once home, checks the push order
          * and tells the partner this book was pushed */
-        mPosZ += 0xa000;
-        if (mPosZ < mHomePosZ)
+        mPos.z += 0xa000;
+        if (mPos.z < mHomePosZ)
             return;
         {
             int idx = param1;
@@ -358,7 +358,7 @@ void daBook_c::UpdateSwitchBook() {
         }
         mTouchedPlayer = 0;
         partner->func_ov063_0211cae8((1u << param1) & 0xff);
-        mPosZ = mHomePosZ;
+        mPos.z = mHomePosZ;
         mState = STATE_SWITCH_DONE;
         return;
     }
@@ -373,8 +373,8 @@ void daBook_c::UpdateSwitchBook() {
             return;
         }
         if (partner->mState == 2) {
-            mPosX += 0x5000;
-            if (mPosX < -0x5dc000)
+            mPos.x += 0x5000;
+            if (mPos.x < -0x5dc000)
                 return;
             MarkForDestruction();
             return;
@@ -543,7 +543,7 @@ void daBook_c::StateTiltBack() {
         mAnmModel.SetAnim((BCA_File *)data_ov020_02114aa8.filePtr, 0x40000000, 0x1000, 0);
         mUsesAnmModel = 1;
         mStateTimer = 0;
-        mPosY += 0x32000;
+        mPos.y += 0x32000;
         mClsnOffset.y = -0x19000;
     }
     UpdatePos(0);
@@ -556,7 +556,7 @@ void daBook_c::StateWait() {
     Vector3 v;
     daPly_c *p = ClosestPlayer();
     {
-        int* s = &p->mPosX;
+        int* s = &p->mPos.x;
         v.x = s[0];
         v.y = s[1];
         v.z = s[2];
@@ -620,14 +620,14 @@ void daBook_c::Die() {
 void daBook_c::UpdateModelMatrix() {
     Matrix4x3 *m = (mUsesAnmModel != 0) ? &mAnmModel.mat4x3 : &mModel.mat4x3;
     Matrix4x3_FromRotationZXYExt(m, mAngleX, mAngleY, mAngleZ);
-    m->m[9] = mPosX >> 3;
-    m->m[10] = mPosY >> 3;
-    m->m[11] = mPosZ >> 3;
+    m->m[9] = mPos.x >> 3;
+    m->m[10] = mPos.y >> 3;
+    m->m[11] = mPos.z >> 3;
     int b = (actorID == kKillerBookActorId);
     if (b == 0) return;
-    mShadowMat.m[9] = mPosX >> 3;
+    mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = mHomePosY >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowMat, mScale.x * 0x64, 0x12c000, 0xf);
 }
 
@@ -756,9 +756,9 @@ int daBook_c::InitResources()
     mScale.x = 0x800;
     mScale.y = 0x800;
     mScale.z = 0x800;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePosX = mPos.x;
+    mHomePosY = mPos.y;
+    mHomePosZ = mPos.z;
 
     if (mModel.SetFile((BMD_File *)data_ov020_02114ab8.filePtr, 1, -1) == 0)
         return 0;

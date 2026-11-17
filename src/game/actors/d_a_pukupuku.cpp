@@ -106,9 +106,9 @@ int daPukupuku_c::InitResources() {
     v = data_ov090_021342d8;
     mdCcAcPos_c.Init(this, v, 0x32000, 0x3c000, 0x200004, 0x8000);
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mAngleY = mPrevAngleY;
     mWithMeshClsn.Init(this, 0x1e000, 0x1e000, 0, 0);
 
@@ -248,9 +248,9 @@ void daPukupuku_c::CheckPlayerHit() {
                 return;
             {
                 Vector3 hv;
-                hv.x = mPosX;
-                hv.y = mPosY;
-                hv.z = mPosZ;
+                hv.x = mPos.x;
+                hv.y = mPos.y;
+                hv.z = mPos.z;
                 a->Hurt(hv, 1, 0xc000, 1, 0, 1);
             }
         }

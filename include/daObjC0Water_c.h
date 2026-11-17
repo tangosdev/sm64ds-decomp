@@ -6,7 +6,7 @@
 
 /* daObjC0Water_c -- Castle basement water (profile C0_WATER / BASEMENT_WATER,
  * actor 35, ov012). It sits still until the switch pillars set the shared
- * group flag in data_0209caa0.file.flags2, then sinks (mPosY -= 0x5000) to mLoweredY
+ * group flag in data_0209caa0.file.flags2, then sinks (mPos.y -= 0x5000) to mLoweredY
  * and publishes that height through data_0209f32c.
  *
  * WHAT THE CARTRIDGE PROVES ABOUT THE NAME AND THE SHAPE:
@@ -48,7 +48,7 @@ struct daObjC0Water_c : dBgActor_c {
                                                      surface texture every frame */
     s32 mLoweredY;                                /* 0x334 -- drain target:
                                                      InitResources stores
-                                                     mPosY - 0x4b0000 */
+                                                     mPos.y - 0x4b0000 */
     u32 mSoundID;                                 /* 0x338 -- looping drain
                                                      sound handle */
     u16 mSoundTimer;                              /* 0x33c -- PlaySecretSound

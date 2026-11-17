@@ -157,9 +157,9 @@ void daObjFallBlock_c::ResetMotion() {
 void daObjFallBlock_c::Kill() {
     Vector3 pos;
     Vector3 dustPos;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x32000;
     u32 id = 0x48;
     /* THE INTERMEDIATE IS LOAD-BEARING. `if (actorID == 0x8b)` folds the test
@@ -178,9 +178,9 @@ void daObjFallBlock_c::Kill() {
     PoofDustAt(dustPos);
     Sound::PlayBank3(0x41, mCamSpacePos);
     mStateTimer = 30;
-    mPosX = mRestPos.x;
-    mPosY = mRestPos.y;
-    mPosZ = mRestPos.z;
+    mPos.x = mRestPos.x;
+    mPos.y = mRestPos.y;
+    mPos.z = mRestPos.z;
     mReady = 0;
 }
 
@@ -188,9 +188,9 @@ void daObjFallBlock_c::Kill() {
    same row UpdateModelPosAndRotY writes for yaw alone. */
 void daObjFallBlock_c::ApplyModelXyz() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* `player` is never read, matching the ROM body, which only ever takes the
@@ -306,7 +306,7 @@ s32 daObjFallBlock_c::Behavior() {
             sinv = FX_SinIdx((u16)mBobPhase >> 4);
             /* (long long) is load-bearing: a plain int mul changes the code
                size. */
-            mPosY = mRestPos.y + FX_MUL(sinv, 0x19000);
+            mPos.y = mRestPos.y + FX_MUL(sinv, 0x19000);
             {
                 s16 *bobPhase = &mBobPhase;
                 *bobPhase = (s16)(*bobPhase + 0x3000);
@@ -340,17 +340,17 @@ s32 daObjFallBlock_c::Behavior() {
             UpdatePos(0);
         }
         if (DecIfAbove0_Short(&mStateTimer) == 0) {
-            mPosX = mRestPos.x;
-            mPosY = mRestPos.y;
-            mPosZ = mRestPos.z;
+            mPos.x = mRestPos.x;
+            mPos.y = mRestPos.y;
+            mPos.z = mRestPos.z;
             st = &mState;
             *st = (u8)(*st + 1);
         } else {
-            if (mPosY < mKillY) {
+            if (mPos.y < mKillY) {
                 Kill();
-                mPosX = mRestPos.x;
-                mPosY = mRestPos.y;
-                mPosZ = mRestPos.z;
+                mPos.x = mRestPos.x;
+                mPos.y = mRestPos.y;
+                mPos.z = mRestPos.z;
                 st = &mState;
                 *st = (u8)(*st + 1);
             }
@@ -358,9 +358,9 @@ s32 daObjFallBlock_c::Behavior() {
         break;
 
     case 3:
-        mPosX = mRestPos.x;
-        mPosY = mRestPos.y;
-        mPosZ = mRestPos.z;
+        mPos.x = mRestPos.x;
+        mPos.y = mRestPos.y;
+        mPos.z = mRestPos.z;
         is53 = (int)(actorID == ACTOR_FL_KUZURE);
         if (is53 == 0) {
             pl = ClosestPlayer();
@@ -402,10 +402,10 @@ s32 daObjFallBlock_c::InitResourcesFrom(ResourceDescriptor *fp) {
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(*fp->collision), mClsnMat, 0x199, mAngleY, *fp->clps);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
-    v.x = mPosX;
-    y = mPosY;
+    v.x = mPos.x;
+    y = mPos.y;
     v.y = y;
-    v.z = mPosZ;
+    v.z = mPos.z;
     v.y = y - 0x64000;
     {
         dBgCh_Gnd rc;
@@ -418,9 +418,9 @@ s32 daObjFallBlock_c::InitResourcesFrom(ResourceDescriptor *fp) {
         on = 1;
         mStateTimer = 4;
         mReady = on;
-        mRestPos.x = mPosX;
-        mRestPos.y = mPosY;
-        mRestPos.z = mPosZ;
+        mRestPos.x = mPos.x;
+        mRestPos.y = mPos.y;
+        mRestPos.z = mPos.z;
         mLinkedStarID = 0;
         if (actorID != ACTOR_FL_KUZURE)
             on = 0;

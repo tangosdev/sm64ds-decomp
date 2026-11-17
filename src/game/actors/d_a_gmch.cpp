@@ -11,7 +11,7 @@
  * - GetFloorResult / GetWallResult return the raw word; a dBgPi* return
  *   disagrees with the definitions, so the callers still cast.
  *   TouchesWater and FX_Div are the const method and the divide.
- * - holder->mPosX/Y/Z in place of the word triple changes EnterState7 and
+ * - holder->mPos.x/.y/.z in place of the word triple changes EnterState7 and
  *   UpdateState6.
  * - UpdateState0 keeps mPhase++. mPhase = (u8)(mPhase + 1) is 0x144
  *   against 0x158, and mSpinAngleY += 0xc00 is four words off.
@@ -229,9 +229,9 @@ void daGmch_c::ChooseNextState()
 void daGmch_c::SpawnCoinsAndDie()
 {
     Vector3 coinPos;
-    coinPos.x = mPosX;
-    coinPos.y = mPosY;
-    coinPos.z = mPosZ;
+    coinPos.x = mPos.x;
+    coinPos.y = mPos.y;
+    coinPos.z = mPos.z;
     SpawnCoins(coinPos, 5, 0xf000, 0);
     PoofDust();
     KillAndTrackInDeathTable();
@@ -299,9 +299,9 @@ void daGmch_c::CheckPlayerContact()
 
     {
         Vector3 hurtPos;
-        hurtPos.x = mPosX;
-        hurtPos.y = mPosY;
-        hurtPos.z = mPosZ;
+        hurtPos.x = mPos.x;
+        hurtPos.y = mPos.y;
+        hurtPos.z = mPos.z;
         player->Hurt(hurtPos, 2, 0xc000, 1, 0, 1);
     }
 }
@@ -344,9 +344,9 @@ void daGmch_c::UpdateDrawMatrices()
         return;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 
     mAnmModel.ApplyOpacity(mState, 0);
 
@@ -367,9 +367,9 @@ void daGmch_c::UpdateDrawMatrices()
 
     mModel.ApplyOpacity((0x20 - mState) & 0xff, 0);
 
-    mMatrix.m[9] = mPosX >> 3;
-    mMatrix.m[10] = mPosY >> 3;
-    mMatrix.m[11] = mPosZ >> 3;
+    mMatrix.m[9] = mPos.x >> 3;
+    mMatrix.m[10] = mPos.y >> 3;
+    mMatrix.m[11] = mPos.z >> 3;
 
     int dh = (mStateIndex == 8) ? 0x258000 : 0x12c000;
     DropShadowRadHeight(mShadowModel, mMatrix, 0x78000, dh, 0xf);
@@ -399,9 +399,9 @@ int daGmch_c::EnterState8()
     mAnmModel.SetAnim((BCA_File *)data_ov081_02128edc.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int yOffset1 = OnAimedAtWithEgg();
-    Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + yOffset1, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, mPos.x, mPos.y + yOffset1, mPos.z);
     int yOffset2 = OnAimedAtWithEgg();
-    Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + yOffset2, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayB, mPos.x, mPos.y + yOffset2, mPos.z);
     mStateIndex = 8;
     return 1;
 }
@@ -455,27 +455,27 @@ int daGmch_c::EnterState7()
     mAngleY = holderAngle;
     mPrevAngleY = mAngleY;
 
-    /* Word triple through &mPosX. Naming the three fields is 0x178 vs 0x17c. */
+    /* Word triple through &mPos.x. Naming the three fields is 0x178 vs 0x17c. */
     holder = mEatingPlayer;
-    holderPos = &holder->mPosX;
-    mPosX = holderPos[0];
-    mPosY = holderPos[1];
-    mPosZ = holderPos[2];
+    holderPos = &holder->mPos.x;
+    mPos.x = holderPos[0];
+    mPos.y = holderPos[1];
+    mPos.z = holderPos[2];
 
     angleIdx = ((u16)mAngleY >> 4);
     trig = FX_SinIdx(angleIdx);
-    mPosX = mPosX + FX_MUL(trig, 0x50000);
-    mPosY = mPosY + 0x50000;
+    mPos.x = mPos.x + FX_MUL(trig, 0x50000);
+    mPos.y = mPos.y + 0x50000;
     angleIdx = ((u16)mAngleY >> 4);
     trig = FX_CosIdx(angleIdx);
-    mPosZ = mPosZ + FX_MUL(trig, 0x50000);
+    mPos.z = mPos.z + FX_MUL(trig, 0x50000);
 
     holder = mEatingPlayer;
     {
-        int y = holder->mPosY;
-        int z = holder->mPosZ;
+        int y = holder->mPos.y;
+        int z = holder->mPos.z;
         int y2 = y + 0x14000;
-        int x = holder->mPosX;
+        int x = holder->mPos.x;
         rayStart.x = x;
         rayStart.y = y2;
         rayStart.z = z;
@@ -494,10 +494,10 @@ int daGmch_c::UpdateState6()
     flagSet = (mFlags & MFLAG_YOSHI_MOUTH_B) != 0;
     if (flagSet) {
         /* Same word triple. Naming the three fields is 0x9c vs 0xa0. */
-        s32 *sv = &mEatingPlayer->mPosX;
-        mPosX = sv[0];
-        mPosY = sv[1];
-        mPosZ = sv[2];
+        s32 *sv = &mEatingPlayer->mPos.x;
+        mPos.x = sv[0];
+        mPos.y = sv[1];
+        mPos.z = sv[2];
     }
     flagSet = (mFlags & 0x80000) != 0;
     if (flagSet) {
@@ -825,24 +825,24 @@ int daGmch_c::InitResources()
     mTerminalVelocity = -0x3c000;
     {
         int curY;
-        pos.x = mPosX;
-        curY = mPosY;
+        pos.x = mPos.x;
+        curY = mPos.y;
         pos.y = curY;
-        pos.z = mPosZ;
+        pos.z = mPos.z;
         pos.y = curY + 0x14000;
     }
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     if (ground.DetectClsn())
-        mPosY = ground.clsnY;
+        mPos.y = ground.clsnY;
     else
-        mPosY = pos.y;
+        mPos.y = pos.y;
     mScale.x = 0x1000;
     mScale.y = 0x1000;
     mScale.z = 0x1000;
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     mState = 1;
     mMatrix = IDENTITY_MATRIX4X3;
     UpdateDrawMatrices();

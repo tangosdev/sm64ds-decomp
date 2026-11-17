@@ -129,26 +129,26 @@ int daWanwan_c::InitResources() {
         int cnt = 0;
         daWanwan_c *dst = this;
         do {
-            dst->mLinkPos[0].x = mPosX;
+            dst->mLinkPos[0].x = mPos.x;
             cnt = cnt + 1;
-            dst->mLinkPos[0].y = mPosY;
-            dst->mLinkPos[0].z = mPosZ;
+            dst->mLinkPos[0].y = mPos.y;
+            dst->mLinkPos[0].z = mPos.z;
             dst = (daWanwan_c *)((char *)dst + sizeof(Vector3));
         } while (cnt < 7);
     }
 
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
 
     dActor_c *spawned = dActor_c::Spawn(kStumpActorId, 0x11, mPos, 0, mAreaId, -1);
     mStumpUniqueID = spawned->uniqueID;
     ((daObjPile_c *)spawned)->mBusy = 1;
     mFenceUniqueID = 0;
 
-    mPosX += kRestLift;
-    mPosY += kRestLift;
-    mPosZ += kRestLift;
+    mPos.x += kRestLift;
+    mPos.y += kRestLift;
+    mPos.z += kRestLift;
 
     mChainExtension = kChainSlack;
     mScale.x = 0x1000;
@@ -161,8 +161,8 @@ int daWanwan_c::Behavior() {
     mIsOnGround = 0;
     {
         int rest = mSpawnPos.y + kRestLift;
-        if (mPosY <= rest) {
-            mPosY = rest;
+        if (mPos.y <= rest) {
+            mPos.y = rest;
             if (mWasOnGround == 0)
                 PlayLandingEffects();
             mIsOnGround = 1;
@@ -236,10 +236,10 @@ void daWanwan_c::UpdateModelTransform() {
     daWanwan_c *o;
     dExtShadowModel_c *sm;
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
-    t = mPosY - mSpawnPos.y;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+    t = mPos.y - mSpawnPos.y;
     if (t <= 0x1000)
         t = 0x1000;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000 - FX_MUL(t, 0x180), t + 0x28000,
@@ -514,9 +514,9 @@ void daWanwan_c::HandleCylinderHit() {
         }
         if (AngleDiff(ang, mAngleY) < 0x4000) {
             Vector3 v;
-            v.x = mPosX;
-            v.y = mPosY;
-            v.z = mPosZ;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             ((daPly_c *)other)->Hurt(v, 3, 0xc000, 1, 0, 1);
         }
     }
@@ -545,9 +545,9 @@ void daWanwan_c::RestrictToChain() {
     v.y = FX_MUL(v.y, FX_Div(lim, len));
     v.z = FX_MUL(v.z, FX_Div(lim, len));
     Vec3_Add(&out, &mSpawnPos, &v);
-    mPosX = out.x;
-    mPosY = out.y;
-    mPosZ = out.z;
+    mPos.x = out.x;
+    mPos.y = out.y;
+    mPos.z = out.z;
     if (mState != 2)
         return;
     if (mChainExtension == kChainMax) {
@@ -697,9 +697,9 @@ void daWanwan_c::StateAttackInit() {
 
     /* ROM load order: y, z, x — then y+0x50000, store x, setup call, store y/z */
     {
-        int y = player->mPosY;
-        int z = player->mPosZ;
-        int x = player->mPosX;
+        int y = player->mPos.y;
+        int z = player->mPos.z;
+        int x = player->mPos.x;
         tgt.x = x;
         tgt.y = y + 0x50000;
         tgt.z = z;
@@ -738,7 +738,7 @@ void daWanwan_c::StateEscapeDemoInit() {
     unk_600 = 0;
     mActionTimer = 60;
     mFlags &= ~3;
-    mPosY = mSpawnPos.y + kRestLift;
+    mPos.y = mSpawnPos.y + kRestLift;
 }
 
 /* State 3 update: the fence-break cutscene. mReleaseStep is the phase. */
@@ -752,7 +752,7 @@ void daWanwan_c::StateEscapeDemoMain() {
     Sound::PlaySecretSound(this, &mSecretSound);
     fence = (daObjWanwanShutter_c *)dActor_c::FindWithID((unsigned)mFenceUniqueID);
     {
-        s32 *src = &fence->mPosX;
+        s32 *src = &fence->mPos.x;
         partnerPos.x = src[0];
         partnerPos.y = src[1];
         partnerPos.z = src[2];

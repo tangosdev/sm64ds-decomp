@@ -94,9 +94,9 @@ void daBttBk_c::HandleCollision() {
     Vector3 v;
     Vector3 v2;
     Vector3 v3;
-    int y0 = mPosY;
-    int z = mPosZ;
-    int x = mPosX;
+    int y0 = mPos.y;
+    int z = mPos.z;
+    int x = mPos.x;
     int y = y0 + 0x32000;
     v.x = x;
     v.y = y;
@@ -106,7 +106,7 @@ void daBttBk_c::HandleCollision() {
     v2.y = v.y;
     v2.z = v.z;
     PoofDustAt(v2);
-    int t = mPosY + 0x64000;
+    int t = mPos.y + 0x64000;
     v3.x = v.x;
     v.y = t;
     v3.y = t;
@@ -140,20 +140,20 @@ void daBttBk_c::UpdateModelTransform() {
                 data_020a0e68 = *carrier->mCarryMatrix;
                 Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, t.x, t.y, t.z);
 
-                mPosX = data_020a0e68.m[9];
-                mPosY = data_020a0e68.m[10];
-                mPosZ = data_020a0e68.m[11];
+                mPos.x = data_020a0e68.m[9];
+                mPos.y = data_020a0e68.m[10];
+                mPos.z = data_020a0e68.m[11];
                 Vec3_LslInPlace(&mPos, 3);
             }
         }
     }
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y = pos.y + 0x14000;
     dBgCh_Gnd rg;
     rg.SetObjAndPos(pos, 0);
@@ -162,9 +162,9 @@ void daBttBk_c::UpdateModelTransform() {
         groundY = rg.clsnY;
     }
     Matrix4x3_FromRotationY(&mShadowMtx, mAngleY);
-    mShadowMtx.m[9] = mPosX >> 3;
+    mShadowMtx.m[9] = mPos.x >> 3;
     mShadowMtx.m[10] = groundY >> 3;
-    mShadowMtx.m[11] = mPosZ >> 3;
+    mShadowMtx.m[11] = mPos.z >> 3;
     {
         s16 a = mAngleX;
         int sv = FX_SinIdx((unsigned short)(short)(a << 1) >> 4);
@@ -217,9 +217,9 @@ int daBttBk_c::StateCarriedMain() {
             {
                 Vector3 vec;
                 Vector3 vec2;
-                int x = mPosX;
-                int z = mPosZ;
-                int y = mPosY + 0xb4000;
+                int x = mPos.x;
+                int z = mPos.z;
+                int y = mPos.y + 0xb4000;
                 vec.x = x;
                 vec.y = y;
                 vec.z = z;
@@ -230,7 +230,7 @@ int daBttBk_c::StateCarriedMain() {
                 Particle::System::NewSimple(kPtclBattaBlockBreak, vec.x, vec.y, vec.z);
 
                 {
-                    int ybase = mPosY;
+                    int ybase = mPos.y;
                     int xx = vec.x;
                     int y2 = ybase + 0x64000;
                     int zz = vec.z;
@@ -335,18 +335,18 @@ int daBttBk_c::InitResources() {
     mTerminalVelocity = -0x3c000;
     {
         int spawnY;
-        pos.x = mPosX;
-        spawnY = mPosY;
+        pos.x = mPos.x;
+        spawnY = mPos.y;
         pos.y = spawnY;
-        pos.z = mPosZ;
+        pos.z = mPos.z;
         pos.y = spawnY + 0xc8000;
     }
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     if (ground.DetectClsn())
-        mPosY = ground.clsnY;
+        mPos.y = ground.clsnY;
     else
-        mPosY = pos.y;
+        mPos.y = pos.y;
     mScale.x = FX32_ONE;
     mScale.y = FX32_ONE;
     mScale.z = FX32_ONE;
@@ -363,9 +363,9 @@ void daBttBk_c::OnTurnIntoEgg(daPly_c &player) {
     }
     Vector3 vec;
     Vector3 vec2;
-    int x = mPosX;
-    int z = mPosZ;
-    int y = mPosY + 0xb4000;
+    int x = mPos.x;
+    int z = mPos.z;
+    int y = mPos.y + 0xb4000;
     vec.x = x;
     vec.y = y;
     vec.z = z;

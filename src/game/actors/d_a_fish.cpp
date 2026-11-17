@@ -148,7 +148,7 @@ s32 daFish_c::InitResources() {
     mIsSpawner = 1;
     mSpawnerID = uniqueID;
     mState = 0;
-    mSurfaceY = mPosY + 0xc8000;
+    mSurfaceY = mPos.y + 0xc8000;
     mStateTimer = 0;
     return 1;
 }
@@ -239,14 +239,14 @@ void daFish_c::StateWaitForPlayer() {
         int r;
         if (this->mVariant != 0) {
             r = RandomIntInternal(&data_0209e650.value);
-            pos.x = this->mPosX + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
+            pos.x = this->mPos.x + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
             r = RandomIntInternal(&data_0209e650.value);
-            pos.z = this->mPosZ + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
+            pos.z = this->mPos.z + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
         } else {
             r = RandomIntInternal(&data_0209e650.value);
-            pos.x = this->mPosX + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
+            pos.x = this->mPos.x + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
             r = RandomIntInternal(&data_0209e650.value);
-            pos.z = this->mPosZ + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
+            pos.z = this->mPos.z + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
         }
 
         r = RandomIntInternal(&data_0209e650.value);

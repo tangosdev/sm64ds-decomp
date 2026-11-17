@@ -60,9 +60,9 @@ int daBbl_c::InitResources() {
     } else {
         mdCcAc_c.Init(this, 0x32000, 0x50000, 0x200002, 0x8000);
     }
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     if (mJumps == 0) {
         mFlags |= 1;
     } else {
@@ -183,7 +183,7 @@ int daBbl_c::EnterFountain() {
 int daBbl_c::ExecuteFountain() {
     if (mStateTimer == 0) {
         mStateTimer = 180;
-        Vector3 spawnPos(mPosX, mPosY + 0x78000, mPosZ);
+        Vector3 spawnPos(mPos.x, mPos.y + 0x78000, mPos.z);
         dActor_c::Spawn(0xd6, 0, spawnPos, &mPrevAngle, mAreaId, -1);
     }
     return 1;
@@ -214,10 +214,10 @@ int daBbl_c::ExecuteJump() {
             mSpeed.y = mSpeed.y * -7 / 10;
         }
     }
-    mFireParticle = Particle::System::New(mFireParticle, kPtclLavaBubbleFlame, mPosX,
-                                          mPosY + 0x37000, mPosZ, 0, 0);
-    mSmokeParticle = Particle::System::New(mSmokeParticle, kPtclLavaBubbleSmoke, mPosX,
-                                           mPosY + 0x37000, mPosZ, 0, 0);
+    mFireParticle = Particle::System::New(mFireParticle, kPtclLavaBubbleFlame, mPos.x,
+                                          mPos.y + 0x37000, mPos.z, 0, 0);
+    mSmokeParticle = Particle::System::New(mSmokeParticle, kPtclLavaBubbleSmoke, mPos.x,
+                                           mPos.y + 0x37000, mPos.z, 0, 0);
     if (mStateTimer == 0)
         MarkForDestruction();
     return 1;

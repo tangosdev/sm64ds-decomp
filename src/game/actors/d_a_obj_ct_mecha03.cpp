@@ -174,9 +174,9 @@ int daObjCtMecha03_c::CleanupResources() {
    actor position into its translation row. */
 int daObjCtMecha03_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    int z = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    int z = mPos.z >> 3;
     mModel.mat4x3.m[11] = z;
     return z;
 }

@@ -175,9 +175,9 @@ int daNknk_c::InitResources()
 
     mCliffState = 0;
     mInvincibleTimer = 0;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
@@ -218,9 +218,9 @@ int daNknk_c::Behavior()
         else
             mState = 1;
         if (mWithMeshClsn.IsOnGround() != 0) {
-            mSafePos.x = mPosX;
-            mSafePos.y = mPosY;
-            mSafePos.z = mPosZ;
+            mSafePos.x = mPos.x;
+            mSafePos.y = mPos.y;
+            mSafePos.z = mPos.z;
         }
         return 1;
     }
@@ -268,13 +268,13 @@ int daNknk_c::Behavior()
 
         if (mDeathState == 0 && mState != 0) {
             if (IsGoingOffCliff(mWithMeshClsn, 0x32000, 0x3800, false, true, 0x32000) != 0) {
-                mPosX = mSafePos.x;
-                mPosY = mSafePos.y;
-                mPosZ = mSafePos.z;
+                mPos.x = mSafePos.x;
+                mPos.y = mSafePos.y;
+                mPos.z = mSafePos.z;
             } else {
-                mSafePos.x = mPosX;
-                mSafePos.y = mPosY;
-                mSafePos.z = mPosZ;
+                mSafePos.x = mPos.x;
+                mSafePos.y = mPos.y;
+                mSafePos.z = mPos.z;
             }
         }
 
@@ -657,7 +657,7 @@ void daNknk_c::UpdateClosestPlayer(int lim) {
         mPlayerDist = 0x61a8000;
     } else {
         Vector3 v;
-        int* src = &mClosestPlayer->mPosX;
+        int* src = &mClosestPlayer->mPos.x;
         v.x = src[0];
         v.y = src[1];
         v.z = src[2];
@@ -730,9 +730,9 @@ void daNknk_c::SlideToStop(int a1) {
     int r = mWithMeshClsn.IsOnGround();
     if (r == 0) return;
     ApproachLinear(mHorzSpeed, 0, a1);
-    int x = mPosX;
-    int y = mPosY;
-    int z = mPosZ;
+    int x = mPos.x;
+    int y = mPos.y;
+    int z = mPos.z;
     Particle::RunningSlidingDustAt(x, y, z);
 }
 
@@ -873,9 +873,9 @@ void daNknk_c::DropShell() {
     SetAnimByIndex(7);
     {
         Vector3 v;
-        int z = mPosZ;
-        int y = mPosY + 0x3c000;
-        v.x = mPosX;
+        int z = mPos.z;
+        int y = mPos.y + 0x3c000;
+        v.x = mPos.x;
         v.y = y;
         v.z = z;
         dActor_c::Spawn(0x11d /* SHELL */, mModelIndex, v, 0, mAreaId, -1);
@@ -939,9 +939,9 @@ void daNknk_c::func_ov062_02117a3c()
 }
 
 void daNknk_c::SpawnBlueCoin() {
-    int x = mPosX;
-    int z = mPosZ;
-    int y = mPosY + 0x78000;
+    int x = mPos.x;
+    int z = mPos.z;
+    int y = mPos.y + 0x78000;
     Vector3 pos;
     pos.x = x;
     pos.y = y;
@@ -971,9 +971,9 @@ void daNknk_c::SpawnFootstepDust(
         func_0201267c(0xe4, &mCamSpacePos);
         if (mAnimIndex == 1) return;
         ang = (mAngleY + 0x4000);
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
         iscb = actorID == 0xcb;
         k = iscb ? 0xf : 0xa;
         pos.y = pos.y + (k << 12);
@@ -1009,9 +1009,9 @@ void daNknk_c::SpawnLandingDust() {
 
     if (mLandingDustTimer != 0) return;
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
 
     t = actorID;
     t = t == 0xcb;

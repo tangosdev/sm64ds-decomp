@@ -93,9 +93,9 @@ int daObjHsBillboard_c::CleanupResources() {
 /* Yaw the model and set its translation to the position >> 3. */
 void daObjHsBillboard_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-    mModel.mat4x3.t.x = mPosX >> 3;
-    mModel.mat4x3.t.y = mPosY >> 3;
-    mModel.mat4x3.t.z = mPosZ >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjHsBillboard_c() {}` in the
    header is the whole source of both variants: from an inline body mwcc emits

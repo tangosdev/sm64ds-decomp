@@ -122,7 +122,7 @@ void daSnowball_c::HandleContact() {
         return;
     flags = mdCcAc_c.hitFlags;
     if ((flags & SNOWBALL_HIT_BIT_0x10) || (flags & SNOWBALL_HIT_BIT_0x40000)) {
-        Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPos.x, mPos.y, mPos.z);
         MarkForDestruction();
         return;
     }
@@ -133,7 +133,7 @@ void daSnowball_c::HandleContact() {
             if (player->mIsVanish != 0)
                 return;
             if (player->mIsMetal == 1) {
-                Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPos.x, mPos.y, mPos.z);
                 MarkForDestruction();
                 return;
             }
@@ -142,12 +142,12 @@ void daSnowball_c::HandleContact() {
                    (1, 0xc000, 1, 0, 1) daBasabasa_c and daSpd_c pass; 0xc000
                    is fx32 12.0. */
                 Vector3 pos;
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
+                pos.x = mPos.x;
+                pos.y = mPos.y;
+                pos.z = mPos.z;
                 player->Hurt(pos, 1, 0xc000, 1, 0, 1);
                 func_02012694(SND3_SNOWBALL_BURST, &mCamSpacePos);
-                Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(PTCL_SNOWBALL_BURST, mPos.x, mPos.y, mPos.z);
                 MarkForDestruction();
                 return;
             }
@@ -160,7 +160,7 @@ void daSnowball_c::HandleContact() {
  *
  * 1. While mReachedSpawnY is still 0 and mTerminalVelocity still holds the
  *    -0x3c000 (-60 units/frame) InitResources set: the first frame the snowball
- *    is below its spawn height (mSpawnPos.y > mPosY) zero mSpeed.y and
+ *    is below its spawn height (mSpawnPos.y > mPos.y) zero mSpeed.y and
  *    mVertAccel and set mReachedSpawnY. The snowball then hovers at (just
  *    below) the height it was placed at instead of falling further.
  * 2. Burst, with the bank-3 sound, when mStateTimer has run out to 0 or the
@@ -170,7 +170,7 @@ void daSnowball_c::HandleContact() {
  * Always returns 1. */
 int daSnowball_c::State0() {
     if (this->mReachedSpawnY == 0 && this->mTerminalVelocity == -0x3c000) {
-        if (this->mSpawnPos.y > this->mPosY) {
+        if (this->mSpawnPos.y > this->mPos.y) {
             this->mSpeed.y = 0;
             this->mVertAccel = 0;
             this->mReachedSpawnY = 1;
@@ -178,7 +178,7 @@ int daSnowball_c::State0() {
     }
     if (this->mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0) {
         func_02012694(SND3_SNOWBALL_BURST, &this->mCamSpacePos);
-        Particle::System::NewSimple(PTCL_SNOWBALL_BURST, this->mPosX, this->mPosY, this->mPosZ);
+        Particle::System::NewSimple(PTCL_SNOWBALL_BURST, this->mPos.x, this->mPos.y, this->mPos.z);
         MarkForDestruction();
     }
     if (this->mSpeed.x != 0 || this->mSpeed.z != 0) {
@@ -286,10 +286,10 @@ int daSnowball_c::InitResources() {
     mTerminalVelocity = -0x3c000;
     mdCcAc_c.Init(this, 0x1e000, 0x1e000, SNOWBALL_CC_FLAGS, SNOWBALL_CC_VULN);
 
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
-    mPosY += 0x32000;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
+    mPos.y += 0x32000;
     mAngleY = mPrevAngleY;
     mWithMeshClsn.Init(this, 0x14000, 0x14000, 0, 0);
 

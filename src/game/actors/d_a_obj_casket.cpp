@@ -17,7 +17,7 @@
  *   (+0x18). Assigning the member directly sizes InitResources 0x110
  *   against the ROM's 0x114, so the call stays.
  * - St_Wait_Main reads the closest player's position through the pointer
- *   &closest->mPos; copying mPosX..mPosZ by name is one instruction short.
+ *   &closest->mPos; copying mPos.x..mPos.z by name is one instruction short.
  * - mModel.mat4x3.t does not compile: common.h's flat Matrix4x3
  *   (s32 m[12]) is the one this TU sees, so the translation row is
  *   m[9], m[10] and m[11].
@@ -110,9 +110,9 @@ int daObjCasket_c::InitResources() {
     MTX_MultVec43(&localOffset, &data_020a0e68, &worldOffset);
     Vector3 newPos;
     Vec3_Add(&newPos, &mPos, &worldOffset);
-    mPosX = newPos.x;
-    mPosY = newPos.y;
-    mPosZ = newPos.z;
+    mPos.x = newPos.x;
+    mPos.y = newPos.y;
+    mPos.z = newPos.z;
 
     UpdateModelTransform();
     UpdateClsnPosAndRot();
@@ -186,9 +186,9 @@ void daObjCasket_c::St_Wait_Main() {
         ApproachLinear(mAngleStep, -0x7d0, 0xc8);
         if (ApproachLinear(mAngleX, 0, -mAngleStep) == 0)
             return;
-        quakePos.x = mPosX;
-        quakePos.y = mPosY;
-        quakePos.z = mPosZ;
+        quakePos.x = mPos.x;
+        quakePos.y = mPos.y;
+        quakePos.z = mPos.z;
         Earthquake(quakePos, 0x5dc000);
 
         landLocal.x = 0;
@@ -265,9 +265,9 @@ void daObjCasket_c::St_StandUp_Main() {
 /* Puts the model where the actor is. */
 void daObjCasket_c::UpdateModelTransform() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Definition order is the retail initializer's construction order: the

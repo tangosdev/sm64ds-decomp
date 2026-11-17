@@ -3,7 +3,7 @@
  *
  * A chain of flame segments along mTransform, one dCcPos_c each.
  * Twelve segments normally; nine in Big Boo's Haunt (LEVEL_ID 0xc),
- * where each segment's height is a sine bow under mPosY. State 0
+ * where each segment's height is a sine bow under mPos.y. State 0
  * pulls the jet in one segment a frame and state 1 pushes it back
  * out; each phase lasts 60 frames. Every active segment burns Mario
  * and recycles a pair of flame particles. param1's low byte selects
@@ -211,7 +211,7 @@ int daObjFlamethrower_c::Behavior() {
                 }
                 if (gCurrentSublevel == kBigBoosHaunt) {
                     s16 wave = FX_SinIdx(((u16)(s16)(i * 0x1000)) >> 4);
-                    mFlamePositions[i].y = mPosY + FX_MUL(wave, -0xaa000);
+                    mFlamePositions[i].y = mPos.y + FX_MUL(wave, -0xaa000);
                 }
                 mColliders[i].pos = mFlamePositions[i];
             }

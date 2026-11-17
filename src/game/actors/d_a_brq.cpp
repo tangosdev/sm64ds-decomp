@@ -282,15 +282,15 @@ s32 daBrq_c::EnterDefeatedState() {
     mFlags &= ~1;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mPosX = mOrbitCenter.x;
-    mPosY = mOrbitCenter.y;
-    mPosZ = mOrbitCenter.z;
+    mPos.x = mOrbitCenter.x;
+    mPos.y = mOrbitCenter.y;
+    mPos.z = mOrbitCenter.z;
     mHorzSpeed = 0xa000;
     mSpeed.y = 0x28000;
     mStateTimer = 45;
     mAnmModel.SetAnim((BCA_File *)data_ov070_0212360c.filePtr, 0x40000000, 0x1000, 0);
-    Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclKnockAwayB, mPos.x, mPos.y, mPos.z);
     mState = 2;
     return 1;
 }
@@ -316,12 +316,12 @@ void daBrq_c::UpdateModelTransform() {
 
     if (mState == 2) {
         Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-        mAnmModel.mat4x3.m[9] = mPosX >> 3;
-        mAnmModel.mat4x3.m[10] = mPosY >> 3;
-        mAnmModel.mat4x3.m[11] = mPosZ >> 3;
-        mMat4x3.m[9] = mPosX >> 3;
-        mMat4x3.m[10] = mPosY >> 3;
-        mMat4x3.m[11] = mPosZ >> 3;
+        mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+        mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+        mAnmModel.mat4x3.m[11] = mPos.z >> 3;
+        mMat4x3.m[9] = mPos.x >> 3;
+        mMat4x3.m[10] = mPos.y >> 3;
+        mMat4x3.m[11] = mPos.z >> 3;
     } else {
         mAnmModel.mat4x3.m[9] = mOrbitCenter.x >> 3;
         mAnmModel.mat4x3.m[10] = mOrbitCenter.y >> 3;
@@ -336,15 +336,15 @@ void daBrq_c::UpdateModelTransform() {
     if (gCurrentSublevel == 0x11) {
         Vector3 pos;
         int y;
-        pos.x = mPosX;
-        y = mPosY;
+        pos.x = mPos.x;
+        y = mPos.y;
         pos.y = y;
-        pos.z = mPosZ;
+        pos.z = mPos.z;
         pos.y = y - 0xa000;
         dBgCh_Gnd ground;
         ground.SetObjAndPos(pos, 0);
         if (ground.DetectClsn() != 0) {
-            shadowDepth = (mPosY - ground.clsnY) + 0x28000;
+            shadowDepth = (mPos.y - ground.clsnY) + 0x28000;
         }
     }
 

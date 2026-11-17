@@ -263,9 +263,9 @@ void daYegg_c::PayOut() {
     if (mPayoutDone[idx] != 0) return;
     n = GetCoinPayoutCount();
     {
-        int tx = mPosX;
-        int tz = mPosZ;
-        int ty = mPosY + 0x28000;
+        int tx = mPos.x;
+        int tz = mPos.z;
+        int ty = mPos.y + 0x28000;
         vec.x = tx;
         vec.y = ty;
         vec.z = tz;
@@ -561,7 +561,7 @@ void daYegg_c::SeekHoming() {
                     }
                     mAngleY = Vec3_HorzAngle(&mPos, &tmp);
                 }
-                Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
+                Particle::RunningSlidingDustAt(mPos.x, mPos.y, mPos.z);
                 flag = 1;
                 if (HandleCylinderHit() != 0)
                     return;
@@ -737,9 +737,9 @@ void daYegg_c::ExecuteFollowPlayer() {
     {
         /* 0x1000 / 0x3000 as fx32: a third. */
         int fd = FX_Div(0x1000, 0x3000);
-        Math_Function_0203b14c(&mPosX, mHoldTarget.x, fd, 0x3e8000, 4);
-        Math_Function_0203b14c(&mPosY, mHoldTarget.y, fd, 0x3e8000, 4);
-        Math_Function_0203b14c(&mPosZ, mHoldTarget.z, fd, 0x3e8000, 4);
+        Math_Function_0203b14c(&mPos.x, mHoldTarget.x, fd, 0x3e8000, 4);
+        Math_Function_0203b14c(&mPos.y, mHoldTarget.y, fd, 0x3e8000, 4);
+        Math_Function_0203b14c(&mPos.z, mHoldTarget.z, fd, 0x3e8000, 4);
     }
 
     ApproachAngle(&mEasedAngleX, mGoalAngleX, 8, 0x4000, 0x100);
@@ -812,7 +812,7 @@ void daYegg_c::ExecuteFollowPlayer() {
 /* ROM ordinal 18 -- EnterFollowPlayer, 0x020ed5b0, size 0x8c */
 /* -------------------------------------------------------------------------- */
 // State 0 (FOLLOW_PLAYER), enter. Snaps this object to the actor it follows
-// (mPlayer): copies its position (mPosX/Y/Z) and Y angle (mAngleY), mirrors
+// (mPlayer): copies its position (mPos.x/.y/.z) and Y angle (mAngleY), mirrors
 // the position into mHoldTarget, and copies its rotation triple (mAngleX/Y/Z)
 // into both the goal angles and the eased angles.
 void daYegg_c::EnterFollowPlayer() {
@@ -820,15 +820,15 @@ void daYegg_c::EnterFollowPlayer() {
     int* sp;
     short* m;
     src = mPlayer;
-    sp = &src->mPosX;
-    mPosX = sp[0];
-    mPosY = sp[1];
-    mPosZ = sp[2];
+    sp = &src->mPos.x;
+    mPos.x = sp[0];
+    mPos.y = sp[1];
+    mPos.z = sp[2];
     src = mPlayer;
     mAngleY = src->mAngleY;
-    mHoldTarget.x = mPosX;
-    mHoldTarget.y = mPosY;
-    mHoldTarget.z = mPosZ;
+    mHoldTarget.x = mPos.x;
+    mHoldTarget.y = mPos.y;
+    mHoldTarget.z = mPos.z;
     src = mPlayer;
     m = &src->mAngleX;
     mGoalAngleX = m[0];
@@ -874,9 +874,9 @@ void daYegg_c::RunState() {
  * 0. */
 int daYegg_c::IsStalled() {
     fx32 d = Vec3_HorzDist(&mLastPos, &mPos);
-    mLastPos.x = mPosX;
-    mLastPos.y = mPosY;
-    mLastPos.z = mPosZ;
+    mLastPos.x = mPos.x;
+    mLastPos.y = mPos.y;
+    mLastPos.z = mPos.z;
     if (d < 0x32000) {
         if (DecIfAbove0_Byte(&mStallTimer) == 0)
             return 1;
@@ -941,23 +941,23 @@ void daYegg_c::UpdateShadow() {
     if (mPlayer->mOpacity < 1)
         return;
 
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     v.y += 0x28000;
     dBgCh_Gnd rg;
     rg.SetObjAndPos(v, 0);
     r4 = v.y;
     if (rg.DetectClsn())
         r4 = rg.clsnY;
-    r5 = mPosY - r4;
+    r5 = mPos.y - r4;
     if (r5 <= 0x1000) r5 = 0x1000;
     r4 = 0x50000 - FX_MUL(r5, 0x180);
     if (r4 < 0xa000) r4 = 0xa000;
     Matrix4x3_FromRotationY(mShadowMtx, mAngleY);
-    mShadowMtx[9] = mPosX >> 3;
-    mShadowMtx[10] = mPosY >> 3;
-    mShadowMtx[11] = mPosZ >> 3;
+    mShadowMtx[9] = mPos.x >> 3;
+    mShadowMtx[10] = mPos.y >> 3;
+    mShadowMtx[11] = mPos.z >> 3;
     b = (mFlags & 0x40000) ? 1 : 0;
     if (b == 0 && mPlayer->mClimbClsn == 0 && !func_ov002_020cf700(mPlayer) &&
         !mPlayer->func_ov002_020d0d2c()) {
@@ -992,14 +992,14 @@ void daYegg_c::UpdateModelMatrix() {
         v.x = data_020a0e68.t.x;
         v.y = data_020a0e68.t.y;
         v.z = data_020a0e68.t.z;
-        mPosX = v.x << 3;
-        mPosY = v.y << 3;
-        mPosZ = v.z << 3;
+        mPos.x = v.x << 3;
+        mPos.y = v.y << 3;
+        mPos.z = v.z << 3;
         return;
     }
-    Matrix4x3_FromTranslation(&data_020a0e68, ((((long long)mPosX << 9) + 0x800) >> 12),
-                              FX_MUL(mPosY + 0x14000, 0x200),
-                              ((((long long)mPosZ << 9) + 0x800) >> 12));
+    Matrix4x3_FromTranslation(&data_020a0e68, ((((long long)mPos.x << 9) + 0x800) >> 12),
+                              FX_MUL(mPos.y + 0x14000, 0x200),
+                              ((((long long)mPos.z << 9) + 0x800) >> 12));
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
         mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
@@ -1103,10 +1103,10 @@ void daYegg_c::func_ov002_020edca4() {
 
     PayOut();
 
-    yv = mPosY;
-    zv = mPosZ;
+    yv = mPos.y;
+    zv = mPos.z;
     sy = yv + 0x28000;
-    xv = mPosX;
+    xv = mPos.x;
     pos.x = xv;
     pos.y = sy;
     pos.z = zv;
@@ -1119,10 +1119,10 @@ void daYegg_c::func_ov002_020edca4() {
         }
     }
 
-    Particle::System::NewSimple(kPtclYoshiEggBreakA, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclYoshiEggBreakB, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclYoshiEggBreakC, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclYoshiEggBreakD, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclYoshiEggBreakA, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclYoshiEggBreakB, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclYoshiEggBreakC, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclYoshiEggBreakD, mPos.x, mPos.y, mPos.z);
     MarkForDestruction();
     Sound::PlayCharVoice(0, 0x103, mCamSpacePos);
 
@@ -1171,9 +1171,9 @@ int daYegg_c::HandleCylinderHit() {
                     }
                     if (!(flags & 0x26fe0)) {
                         struct Vector3 pos;
-                        pos.x = mPosX;
-                        pos.y = mPosY;
-                        pos.z = mPosZ;
+                        pos.x = mPos.x;
+                        pos.y = mPos.y;
+                        pos.z = mPos.z;
                         actor->Hurt(pos, 1, 0xc000, 1, 0, 1);
                     }
                 }
@@ -1276,9 +1276,9 @@ int daYegg_c::Behavior()
             Matrix4x3_FromRotationZXYExt(&data_020a0e68, ang[0], ang[1], ang[2]);
             MTX_MultVec43(&vin, &data_020a0e68, &vmid);
             Vec3_Add(&vout, &mPlayer->mPos, &vmid);
-            mPosX = vout.x;
-            mPosY = vout.y;
-            mPosZ = vout.z;
+            mPos.x = vout.x;
+            mPos.y = vout.y;
+            mPos.z = vout.z;
         }
         mAnmModel.ApplyOpacity(mPlayer->mOpacity, 0);
     } else {
@@ -1345,9 +1345,9 @@ int daYegg_c::InitResources()
     mAnmModel.SetAnim((BCA_File *)data_ov002_0210eb78.filePtr, 0, 0x1000, 0);
 
     mAreaId = -1;
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mState = param1 & 3;

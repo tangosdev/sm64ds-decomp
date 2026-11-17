@@ -89,9 +89,9 @@ int daObjEwmIceBlock_c::Behavior()
         mPath.GetNode(node, delta);
     } else {
         if (delta < 0 || delta >= (int)mPath.NumNodes()) {
-            node.x = mPosX;
-            node.y = mPosY;
-            node.z = mPosZ;
+            node.x = mPos.x;
+            node.y = mPos.y;
+            node.z = mPos.z;
         } else {
             mPath.GetNode(node, delta);
         }

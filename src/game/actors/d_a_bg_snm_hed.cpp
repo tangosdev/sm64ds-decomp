@@ -71,18 +71,18 @@ daBgSnmHed_c::~daBgSnmHed_c() {}
 
 void daBgSnmHed_c::UpdateModel() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = (mPosY + 0x96000) >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = (mPos.y + 0x96000) >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 int daBgSnmHed_c::State3() {
     /* The POD VecFx32: a Vector3 here schedules the four stores
        differently. */
     VecFx32 pos;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x1c2000;
 
     switch (mSubstate) {
@@ -109,7 +109,7 @@ int daBgSnmHed_c::State3() {
     }
     mTextureSequence.Advance();
     ApproachLinear(mAngleY, -0x4000, 0x514);
-    mPosY = (int)0xffc427c0;
+    mPos.y = (int)0xffc427c0;
     return 1;
 }
 
@@ -128,14 +128,14 @@ int daBgSnmHed_c::State2() {
     switch (mSubstate) {
     case 0:
         UpdatePos(&mCylinder);
-        if (mSpeed.y < 0 && mPosY < (int)0xffc427c0) {
-            pos.x = mPosX;
-            pos.y = mPosY;
-            pos.z = mPosZ;
+        if (mSpeed.y < 0 && mPos.y < (int)0xffc427c0) {
+            pos.x = mPos.x;
+            pos.y = mPos.y;
+            pos.z = mPos.z;
             Earthquake(pos, 0x5dc000);
             func_0201267c(0x115, &mCamSpacePos);
-            Particle::System::NewSimple(kPtclBigSnowmanHeadLandA, mPosX, mPosY, mPosZ);
-            Particle::System::NewSimple(kPtclBigSnowmanHeadLandB, mPosX, mPosY, mPosZ);
+            Particle::System::NewSimple(kPtclBigSnowmanHeadLandA, mPos.x, mPos.y, mPos.z);
+            Particle::System::NewSimple(kPtclBigSnowmanHeadLandB, mPos.x, mPos.y, mPos.z);
             Sound::PlaySub(0x20, 0x14, 0x7f, 0x15666, 0);
             mSubstate++;
         }
@@ -167,9 +167,9 @@ int daBgSnmHed_c::State1() {
         short angle = Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos);
         if (ApproachLinear(mAngleY, angle, 0x514)) {
             Vector3 pos;
-            pos.x = mPosX;
-            pos.y = mPosY;
-            pos.z = mPosZ;
+            pos.x = mPos.x;
+            pos.y = mPos.y;
+            pos.z = mPos.z;
             pos.y += 0xfa000;
             if (mTalkPlayer->ShowMessage(*this, 0xaf, &pos, 0, 0))
                 mSubstate++;
@@ -274,16 +274,16 @@ int daBgSnmHed_c::InitResources() {
     mScale.z = 0x1800;
     mWithMeshClsn.Init(this, 0x96000, 0x96000, 0, 0);
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x14000;
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     if (ground.DetectClsn() != 0)
-        mPosY = ground.clsnY;
+        mPos.y = ground.clsnY;
     else
-        mPosY = pos.y;
+        mPos.y = pos.y;
 
     SetState(0);
     UpdateModel();

@@ -883,7 +883,7 @@ void dCamera_c::func_0200d1e4() {
 
 void dCamera_c::LookAtExit(dActor_c &actor)
 {
-    mLookTarget = &actor.mPosX;
+    mLookTarget = &actor.mPos.x;
     mLookTargetPos = *(Vector3 *)mLookTarget;
     mTargetAngleY = -actor.mAngleY;
     ChangeState(&data_0209b0f8);
@@ -1178,7 +1178,7 @@ int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outF
     if (IsPlayer(target)) {
         groundY = target->mGroundY;
         if (groundY == 0x80000000)
-            groundY = target->mPosY;
+            groundY = target->mPos.y;
         player = target;
     }
 
@@ -3283,7 +3283,7 @@ int func_02008200(dCamera_c *cam, u8 *data, int first) {
     if (first == gKuppaScriptFrame)
         cam->savedLookAt.y = 0x190000;
     a = (daPly_c *)KuppaScript::FindScriptPlayer(0);
-    diff = a->mPosY - a->mGroundY;
+    diff = a->mPos.y - a->mGroundY;
     val = FX_MUL(diff, 0x1199);
     target = a->mGroundY + 0x50000 + val;
     Math_Function_0203b0fc(&cam->savedLookAt.y, target, 0xa3, CAM_NO_STEP_LIMIT);
@@ -3339,7 +3339,7 @@ int func_02008080(dCamera_c *cam) {
 
     a = KuppaScript::FindDemoActor(0x13);
     dst = &cam->pos.y;
-    *dst = *dst + a->mPosY;
+    *dst = *dst + a->mPos.y;
     return 1;
 }
 
@@ -3352,7 +3352,7 @@ int func_02008028(dCamera_c *cam) {
     y = cam->pos.y;
     func_02009414(cam);
     obj = KuppaScript::FindDemoActor(0x13);
-    Math_Function_0203b0fc(&y, cam->pos.y + obj->mPosY, 0x11e, CAM_NO_STEP_LIMIT);
+    Math_Function_0203b0fc(&y, cam->pos.y + obj->mPos.y, 0x11e, CAM_NO_STEP_LIMIT);
     cam->pos.y = y;
     return 1;
 }
@@ -3705,7 +3705,7 @@ int CutsceneGrandStarMoveCvar2(dCamera_c *cam) {
    0), and clears mScriptParam and mRampSpeed. */
 int CutsceneGrandStarFlyStart(dCamera_c *cam) {
     SetVec(cam->savedLookAt, 0, 0, 0);
-    SetVec(cam->savedPos, 0, cam->lookAt.y - cam->mTargetPlayer->mPosY, 0);
+    SetVec(cam->savedPos, 0, cam->lookAt.y - cam->mTargetPlayer->mPos.y, 0);
     cam->mScriptParam = 0;
     cam->mRampSpeed = 0;
 

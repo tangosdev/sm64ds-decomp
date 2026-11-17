@@ -10,7 +10,7 @@
  */
 // Notes (measured spellings that do not match):
 // - Behavior and UpdateDeathState each build the coin position in separate
-//   locals. `pos.y = mPosY + 0x136000` costs 9 words of Behavior.
+//   locals. `pos.y = mPos.y + 0x136000` costs 9 words of Behavior.
 // - mStateTimer is read and written through a u16 pointer. A plain member
 //   increment does not match UpdateRunState.
 // - The four Play*Sound methods call Sound.h's func_0201267c, the
@@ -76,7 +76,7 @@ int daDonketu_c::Behavior() {
     int outcome = UpdateKillByInvincibleChar(mWithMeshClsn, mAnmModel, 3);
     if (outcome != 0) {
         if (outcome == 2) {
-            Vector3 pos(mPosX, mPosY + 0x136000, mPosZ);
+            Vector3 pos(mPos.x, mPos.y + 0x136000, mPos.z);
             int roll = RandomIntInternal(&data_0209e650.value);
             int yrot = mPrevAngleY + 0x8000 + (((u32)roll >> 8) & 0x3ff);
             Vector3_16 rot;
@@ -107,9 +107,9 @@ int daDonketu_c::Behavior() {
 void daDonketu_c::UpdateDeathState() {
     if (func_ov064_0211616c() == 0)
         return;
-    int pz = mPosZ;
-    int py = mPosY + 0x136000;
-    int px = mPosX;
+    int pz = mPos.z;
+    int py = mPos.y + 0x136000;
+    int px = mPos.x;
     Vector3 pos;
     pos.x = px;
     pos.y = py;

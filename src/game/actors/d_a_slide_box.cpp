@@ -134,9 +134,9 @@ void daSlide_Box_c::UpdateModel()
 {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     /* Flat Matrix4x3 (common.h): words 9..11 are the translation, at 1/8. */
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 int daSlide_Box_c::CleanupResources()
@@ -173,9 +173,9 @@ int daSlide_Box_c::Behavior()
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
         if (mWithMeshClsn.IsOnGround()) {
             mState++;
-            mBasePos.x = mPosX;
-            mBasePos.y = mPosY;
-            mBasePos.z = mPosZ;
+            mBasePos.x = mPos.x;
+            mBasePos.y = mPos.y;
+            mBasePos.z = mPos.z;
         }
         break;
     case kStateRide: {
@@ -194,8 +194,8 @@ int daSlide_Box_c::Behavior()
             mHorzPos = kHorzPosMax;
         else if (spd < kHorzPosMin)
             mHorzPos = kHorzPosMin;
-        mPosX = mBasePos.x + FixMul(mHorzPos, FX_SinIdx((u16)mAngleY >> 4));
-        mPosZ = mBasePos.z + FixMul(mHorzPos, FX_CosIdx((u16)mAngleY >> 4));
+        mPos.x = mBasePos.x + FixMul(mHorzPos, FX_SinIdx((u16)mAngleY >> 4));
+        mPos.z = mBasePos.z + FixMul(mHorzPos, FX_CosIdx((u16)mAngleY >> 4));
         mHorzSpeed = 0;
         UpdatePos(0);
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);

@@ -121,9 +121,9 @@ void daObjPowerUpItem_c::StateResting()
     } while (0);
 
     {
-        int z = mPosZ;
-        int x = mPosX;
-        int y = mPosY + 0x82000;
+        int z = mPos.z;
+        int x = mPos.x;
+        int y = mPos.y + 0x82000;
         ((int*)&pos)[0] = x;
         ((int*)&pos)[1] = y;
         ((int*)&pos)[2] = z;
@@ -179,9 +179,9 @@ void daObjPowerUpItem_c::StateOpening()
 void daObjPowerUpItem_c::BeginOpening()
 {
     Vector3 pos;
-    int x = mPosX;
-    int y = mPosY + 0x82000;
-    int z = mPosZ;
+    int x = mPos.x;
+    int y = mPos.y + 0x82000;
+    int z = mPos.z;
     pos.x = x;
     pos.y = y;
     pos.z = z;
@@ -209,8 +209,8 @@ void daObjPowerUpItem_c::StateLaunched()
     int gy;
     int diff;
 
-    mEffectHandle = (u32)Particle::System::New(mEffectHandle, kPtclPowerFlowerLaunched, mPosX,
-                                               mPosY, mPosZ, 0, 0);
+    mEffectHandle = (u32)Particle::System::New(mEffectHandle, kPtclPowerFlowerLaunched, mPos.x,
+                                               mPos.y, mPos.z, 0, 0);
 
     a = mSpeed.y;
     mag = (a < 0) ? -a : a;
@@ -230,15 +230,15 @@ void daObjPowerUpItem_c::StateLaunched()
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 
     if (mWithMeshClsn.TouchesWater()) {
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
         dBgCh_Gnd rg;
         rg.SetObjAndPos(pos, 0);
         if (rg.DetectClsn()) {
             gy = rg.clsnY;
             pos.y = gy;
-            diff = mPosY - gy;
+            diff = mPos.y - gy;
             if (diff < 0)
                 diff = -diff;
             if (diff > 0x64000) {
@@ -369,7 +369,7 @@ void daObjPowerUpItem_c::DropShadow() {
     mShadowMat.m[10] = mGroundY >> 3;
     r3 = 0x78000;
     if (mState == FLOWER_STATE_LAUNCHED) {
-        int d = mPosY - mGroundY;
+        int d = mPos.y - mGroundY;
         if (d <= 0x1000) d = 0x1000;
         r3 = 0x64000 - FX_MUL(d, 0x180);
         if (r3 < 0x3c000) r3 = 0x3c000;
@@ -381,9 +381,9 @@ void daObjPowerUpItem_c::DropShadow() {
  * to the position >> 3 and copies it to mCloseModel. */
 void daObjPowerUpItem_c::UpdateMatrices(){
   Matrix4x3_FromRotationY(&mOpenModel.mat4x3, mAngleY);
-  mOpenModel.mat4x3.m[9] = mPosX >> 3;
-  mOpenModel.mat4x3.m[10] = mPosY >> 3;
-  mOpenModel.mat4x3.m[11] = mPosZ >> 3;
+  mOpenModel.mat4x3.m[9] = mPos.x >> 3;
+  mOpenModel.mat4x3.m[10] = mPos.y >> 3;
+  mOpenModel.mat4x3.m[11] = mPos.z >> 3;
   mCloseModel.mat4x3 = mOpenModel.mat4x3;
 }
 
@@ -462,9 +462,9 @@ int daObjPowerUpItem_c::InitResources()
     mWithMeshClsn.StartDetectingWater();
 
     /* ground probe: a ray starting 0x14000 above the flower */
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x14000;
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);

@@ -156,11 +156,11 @@ void daCoin_c::ProbeFloor() {
             do {
                 u16 type = platform->actorID;
                 if (type == 0x7e || type == 0x81 || type == 0x9c) {
-                    int dy = mPosY - platform->mPosY;
+                    int dy = mPos.y - platform->mPos.y;
                     int radius = platform->mClipRadius;
                     int dist = Vec3_HorzDist(&mPos, &platform->mPos);
                     if (dist < (radius << 3) && dy <= 0x1f4000 && dy >= 0) {
-                        mFloorPosY = platform->mPosY + 0x32000;
+                        mFloorPosY = platform->mPos.y + 0x32000;
                         ((CoinFlagBits *)&mCoinFlags)->floorState = FLOOR_FIXED;
                         return;
                     }
@@ -174,9 +174,9 @@ void daCoin_c::ProbeFloor() {
         dBgCh_Lin ray;
         dBgPi hit;
         Vector3 rayTop, rayBottom;
-        rayBottom.x = mPosX;
-        rayBottom.y = mPosY;
-        rayBottom.z = mPosZ;
+        rayBottom.x = mPos.x;
+        rayBottom.y = mPos.y;
+        rayBottom.z = mPos.z;
         rayTop.x = rayBottom.x;
         rayTop.y = rayBottom.y;
         rayTop.z = rayBottom.z;
@@ -271,7 +271,7 @@ void daCoin_c::Step() {
     if (mSpeed.y > 0)
         return;
     func_02012694(0xe2, &mCamSpacePos);
-    Particle::System::NewBigSplash(mPosX, mPosY, mPosZ);
+    Particle::System::NewBigSplash(mPos.x, mPos.y, mPos.z);
     mHorzSpeed = 0;
     mVertAccel = -0x800;
     mTerminalVelocity = -0x5000;
@@ -291,14 +291,14 @@ void daCoin_c::UpdateModelMatrix() {
     int floorState;
 
     Matrix4x3_FromRotationY(&mCommonModel1.mat4x3, mAngleY);
-    mCommonModel1.mat4x3.m[9] = mPosX >> 3;
-    mCommonModel1.mat4x3.m[10] = mPosY >> 3;
-    mCommonModel1.mat4x3.m[11] = mPosZ >> 3;
+    mCommonModel1.mat4x3.m[9] = mPos.x >> 3;
+    mCommonModel1.mat4x3.m[10] = mPos.y >> 3;
+    mCommonModel1.mat4x3.m[11] = mPos.z >> 3;
     mCommonModel2.mat4x3 = mCommonModel1.mat4x3;
     mShadowMat = IDENTITY_MATRIX4X3;
-    mShadowMat.m[9] = mPosX >> 3;
-    mShadowMat.m[10] = mPosY >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
+    mShadowMat.m[9] = mPos.x >> 3;
+    mShadowMat.m[10] = mPos.y >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
 
     inYoshiMouth = mFlags & 0x40000;
     inYoshiMouth = inYoshiMouth != 0;
@@ -319,7 +319,7 @@ void daCoin_c::UpdateModelMatrix() {
     if (floorState != FLOOR_FIXED) return;
 
     {
-        int depth = mPosY - mFloorPosY;
+        int depth = mPos.y - mFloorPosY;
         mClipRadius = (depth + 0x50000) >> 3;
         DropShadowRadHeight(mShadowModel, mShadowMat, 0x50000, depth + 0x28000, 0xf);
     }
@@ -459,13 +459,13 @@ int daCoin_c::CheckPlayerHit() {
 void daCoin_c::StateFollowTarget() {
     mDisappearTimer += 1;
     {
-        int *targetPos = &mFollowTarget->mPosX;
-        mPosX = targetPos[0];
-        mPosY = targetPos[1];
-        mPosZ = targetPos[2];
+        int *targetPos = &mFollowTarget->mPos.x;
+        mPos.x = targetPos[0];
+        mPos.y = targetPos[1];
+        mPos.z = targetPos[2];
     }
     {
-        int *posY = &mPosY;
+        int *posY = &mPos.y;
         *posY += 0xc8000;
     }
     if (mDisappearTimer < 65)
@@ -567,8 +567,8 @@ void daCoin_c::StateBounce() {
         isFlCoin = flCoin->actorID;
         isFlCoin = isFlCoin == 0x4f;
         if (isFlCoin != 0) {
-            if (mPosY <= flCoin->mPosY) {
-                mPosY = flCoin->mPosY;
+            if (mPos.y <= flCoin->mPos.y) {
+                mPos.y = flCoin->mPos.y;
                 Sound::PlayBank3(0x52, mCamSpacePos);
                 bits = (CoinFlagBits *)&mCoinFlags;
                 bits->bounces++;
@@ -724,7 +724,7 @@ s32 daCoin_c::CleanupResources()
         }
     }
     if (mDisappearTimer != 0) return 1;
-    Particle::System::NewSimple(kPtclItemVanish, mPosX, mPosY + 0x28000, mPosZ);
+    Particle::System::NewSimple(kPtclItemVanish, mPos.x, mPos.y + 0x28000, mPos.z);
     return 1;
 }
 
@@ -862,7 +862,7 @@ s32 daCoin_c::InitResources()
         mCoinFlags &= ~0xe0;
     } else {
         *(u8 *)((int)&mCoinFlags) = (*(u8 *)((int)&mCoinFlags) & ~0xe0) | (FLOOR_UNPROBED << 5);
-        mFloorPosY = mPosY - 0x1f4000;
+        mFloorPosY = mPos.y - 0x1f4000;
         if (mBehaviorType == 7) {
             ccRadius = 0x32000;
             ccHeight = 0x28000;
@@ -983,7 +983,7 @@ void daCoin_c::OnTurnIntoEgg(daPly_c &player) {
     int coinType = mCoinType;
 
     if (coinType == COIN_RED) {
-        mPosY += 0x50000;
+        mPos.y += 0x50000;
         CollectRedCoin(&player);
     } else if (coinType == COIN_BLUE) {
         CollectBlueCoin(&player);

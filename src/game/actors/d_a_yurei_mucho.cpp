@@ -153,9 +153,9 @@ int daYurei_Mucho_c::InitResources()
     mWithMeshClsn.Init(this, 0x46000, 0, 0, 0);
     mCoinType = 1;
     mExtraCoinCount = 1;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mAnmModel.speed = 0x1000;
     ChangeState(&data_ov065_0211d670);
     return 1;
@@ -173,9 +173,9 @@ int daYurei_Mucho_c::Behavior()
             }
         }
         UpdateModelTransform();
-        mHomePos.x = mPosX;
-        mHomePos.y = mPosY;
-        mHomePos.z = mPosZ;
+        mHomePos.x = mPos.x;
+        mHomePos.y = mPos.y;
+        mHomePos.z = mPos.z;
         ChangeState(&data_ov065_0211d670);
         return 1;
     }
@@ -217,7 +217,7 @@ int daYurei_Mucho_c::Behavior()
            signed s16 would read the wrong table entry for negative angles. */
         sine = FX_SinIdx((unsigned short)(short)ang >> 4);
         result = FX_MUL(sine, 0x46000);
-        ApproachLinear(mPosY, mHomePos.y + (result + 0xb4000), 0x3000);
+        ApproachLinear(mPos.y, mHomePos.y + (result + 0xb4000), 0x3000);
     }
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
@@ -295,7 +295,7 @@ void daYurei_Mucho_c::UpdateModelTransform() {
     mShotPos.y -= 0xa000;
     mShotPos.z <<= 3;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
 
     mShadowMat = *(Mtx43 *)&data_020a0e68;
 
@@ -400,7 +400,7 @@ int daYurei_Mucho_c::UpdateChase() {
     daPly_c *p = ClosestNonVanishPlayer();
     if (p != 0) {
         Vector3 tmp;
-        *(V3A *)&tmp = *(V3A *)&p->mPosX;
+        *(V3A *)&tmp = *(V3A *)&p->mPos.x;
         Vector3 v;
         Vector3 a;
         a.x = tmp.x;
@@ -452,7 +452,7 @@ int daYurei_Mucho_c::UpdateShoot() {
     V3Quint L;
     daPly_c *pl = ClosestNonVanishPlayer();
     if (pl != 0) {
-        *(V3A *)(&L.pp) = *(V3A *)(&pl->mPosX);
+        *(V3A *)(&L.pp) = *(V3A *)(&pl->mPos.x);
         L.tgt = L.pp;
         mTargetAngle = Vec3_HorzAngle(&mPos, &L.tgt);
         ApproachAngle(&mPrevAngleY, mTargetAngle, 1, 0x500, 0x500);
@@ -483,7 +483,7 @@ int daYurei_Mucho_c::UpdateShoot() {
 
     if (mAnmModel.Finished() != 0) {
         if (pl != 0) {
-            s32 *dsrc = (s32 *)(&pl->mPosX);
+            s32 *dsrc = (s32 *)(&pl->mPos.x);
             L.d.x = dsrc[0];
             L.d.y = dsrc[1];
             L.d.z = dsrc[2];
@@ -606,9 +606,9 @@ void daYurei_Mucho_c::HandleCollision() {
         func_02012694(0x11e, &mCamSpacePos);
         return;
     }
-    hv.x = mPosX;
-    hv.y = mPosY;
-    hv.z = mPosZ;
+    hv.x = mPos.x;
+    hv.y = mPos.y;
+    hv.z = mPos.z;
     p->Hurt(hv, 2, 0xc000, 1, 0, 1);
 }
 
@@ -617,9 +617,9 @@ void daYurei_Mucho_c::HandleCollision() {
 void daYurei_Mucho_c::KillWithCoins() {
     Vector3 v;
     SmallPoofDust();
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     SpawnCoins(v, mExtraCoinCount + 1, 0xa000, 0);
     KillAndTrackInDeathTable();
     func_02012694(0x11e, &mCamSpacePos);

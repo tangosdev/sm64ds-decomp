@@ -48,8 +48,8 @@
    check_header_offsets can parse the member declaration. Bit N is the N-th
    field; d_a_trs.cpp's TrsFlag enum spells the same bits as masks for the
    sites that matched as a halfword read-modify-write. From the uses:
-   limitZ (0x1): InitResources sets it when LEVEL_ID is 0xc, mPosX is 0xbb8000
-       and mAreaId is 2. Behavior then keeps mPosZ >= -0x12c000, and with it
+   limitZ (0x1): InitResources sets it when LEVEL_ID is 0xc, mPos.x is 0xbb8000
+       and mAreaId is 2. Behavior then keeps mPos.z >= -0x12c000, and with it
        set 02116190's leave test is the player's z >= 0x3e8000 instead of the
        y / horizontal-distance test.
    carrying (0x2): the carried item (mCarriedModel) is placed and drawn.
@@ -61,7 +61,7 @@
    visible (0x8): Render and the placement helpers do nothing while clear.
    canAppear (0x10): variants 4 and 0xb leave state 0 only while set.
        For those variants InitResources sets it when the closest player's
-       mPosZ is above -0x514000 (signed); Behavior's area-reset block sets it
+       mPos.z is above -0x514000 (signed); Behavior's area-reset block sets it
        too.
    groundSeen (0x20): Behavior's ground ray found floor less than 0x12c000
        below. While set, a TERESA below variant 8 falls back to mLastGroundPos

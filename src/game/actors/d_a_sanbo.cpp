@@ -248,18 +248,18 @@ int daSanbo_c::UpdateStackedBody() {
         int vy;
         int clamped;
 
-        mPosX = next->mPosX;
-        mPosZ = mNextSegment->mPosZ;
+        mPos.x = next->mPos.x;
+        mPos.z = mNextSegment->mPos.z;
 
         vy = mSpeed.y - 0x2000;
         clamped = mTerminalVelocity;
         if (vy >= clamped)
             clamped = vy;
         mSpeed.y = clamped;
-        mPosY += mSpeed.y;
+        mPos.y += mSpeed.y;
 
-        if (mPosY < mNextSegment->mPosY + 0x6e000) {
-            mPosY = mNextSegment->mPosY + 0x6e000;
+        if (mPos.y < mNextSegment->mPos.y + 0x6e000) {
+            mPos.y = mNextSegment->mPos.y + 0x6e000;
             mSpeed.y = 0;
         }
 
@@ -327,7 +327,7 @@ int daSanbo_c::UpdateLeader() {
     mdCcAc_c.Clear();
     mdCcAc_c.dCc_c::Update();
     if (mWithMeshClsn.IsOnGround() != 0) {
-        Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
+        Particle::RunningSlidingDustAt(mPos.x, mPos.y, mPos.z);
     }
     return 1;
 }
@@ -359,9 +359,9 @@ int daSanbo_c::UpdateKnockback() {
 
     UpdatePos(&mdCcAc_c);
     if (mParticle0 != 0 && mParticle1 != 0) {
-        x = mPosX;
-        z = mPosZ;
-        y = mPosY + 0x3c000;
+        x = mPos.x;
+        z = mPos.z;
+        y = mPos.y + 0x3c000;
         pos.x = x;
         pos.y = y;
         pos.z = z;
@@ -417,9 +417,9 @@ int daSanbo_c::UpdateStackedOnGrowingBody() {
         int scale = next->mScale.x;
         int raised = FX_MUL(scale, fullHeight);
 
-        mPosX = next->mPosX;
-        mPosY = raised + mNextSegment->mPosY;
-        mPosZ = mNextSegment->mPosZ;
+        mPos.x = next->mPos.x;
+        mPos.y = raised + mNextSegment->mPos.y;
+        mPos.z = mNextSegment->mPos.z;
         mAngleY = mNextSegment->mAngleY;
         mSegAngY = mNextSegment->mSegAngY + 0x13000;
         mOffset.x = FX_MUL(FX_SinIdx((u16)mSegAngY >> 4), 0xe000);
@@ -450,8 +450,8 @@ int daSanbo_c::EnterMegaKill() {
     mSpeed.y = 0x28000;
     mHorzSpeed = 0xa000;
     mTimer = 45;
-    Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
-    Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, mPos.x, mPos.y + OnAimedAtWithEgg(), mPos.z);
+    Particle::System::NewSimple(kPtclKnockAwayB, mPos.x, mPos.y + OnAimedAtWithEgg(), mPos.z);
     mState = 5;
     return 1;
 }
@@ -489,9 +489,9 @@ void daSanbo_c::UpdateModelAndShadow() {
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y, 0);
             mModel.mat4x3 = data_020a0e68;
 
-            mMatrix.m[9] = mPosX >> 3;
-            mMatrix.m[10] = mPosY >> 3;
-            mMatrix.m[11] = mPosZ >> 3;
+            mMatrix.m[9] = mPos.x >> 3;
+            mMatrix.m[10] = mPos.y >> 3;
+            mMatrix.m[11] = mPos.z >> 3;
 
             DropShadowRadHeight(mShadowModel, mMatrix, 0xa0000, 0x2bc000, 0xf);
             return;
@@ -499,9 +499,9 @@ void daSanbo_c::UpdateModelAndShadow() {
     }
 
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-    mModel.mat4x3.m[9] = (mPosX + mOffset.x) >> 3;
-    mModel.mat4x3.m[10] = (mPosY + 0x3c000) >> 3;
-    mModel.mat4x3.m[11] = (mPosZ + mOffset.z) >> 3;
+    mModel.mat4x3.m[9] = (mPos.x + mOffset.x) >> 3;
+    mModel.mat4x3.m[10] = (mPos.y + 0x3c000) >> 3;
+    mModel.mat4x3.m[11] = (mPos.z + mOffset.z) >> 3;
 
     if (mNextSegment == 0 || mState == 2 || mState == 5) {
         DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x82000, 0x2bc000, 0xf);
@@ -585,10 +585,10 @@ void daSanbo_c::HandleAttacks() {
             index = (unsigned short)angle >> 4;
             sine = FX_SinIdx(index);
             dist = mdCcAc_c.radius + 0x1a9000;
-            mPosX = other->mPosX + FX_MUL(dist, sine);
+            mPos.x = other->mPos.x + FX_MUL(dist, sine);
             cosine = FX_CosIdx(index);
             dist2 = mdCcAc_c.radius + 0x1a9000;
-            mPosZ = other->mPosZ + FX_MUL(dist2, cosine);
+            mPos.z = other->mPos.z + FX_MUL(dist2, cosine);
         }
         }
     }
@@ -604,9 +604,9 @@ void daSanbo_c::HandleAttacks() {
         daPly_c *player = (daPly_c *)other;
 
         if (flags & 0x40000) {
-            x = mPosX;
-            z = mPosZ;
-            y = mPosY + 0x3c000;
+            x = mPos.x;
+            z = mPos.z;
+            y = mPos.y + 0x3c000;
             pos.x = x;
             pos.y = y;
             pos.z = z;
@@ -631,35 +631,35 @@ void daSanbo_c::HandleAttacks() {
                 prev = mPrevSegment;
                 if (prev == 0) {
                     if (mSpeed.y == 0) {
-                        vv1.x = mPosX;
-                        vv1.y = mPosY;
-                        vv1.z = mPosZ;
+                        vv1.x = mPos.x;
+                        vv1.y = mPos.y;
+                        vv1.z = mPos.z;
                         player->Hurt(vv1, 2, 0xc000, 1, 0, 1);
                     }
                 } else if (mSpeed.y == 0 && prev->mSpeed.y == 0) {
-                    vv2.x = mPosX;
-                    vv2.y = mPosY;
-                    vv2.z = mPosZ;
+                    vv2.x = mPos.x;
+                    vv2.y = mPos.y;
+                    vv2.z = mPos.z;
                     player->Hurt(vv2, 2, 0xc000, 1, 0, 1);
                 }
             } else if (state == 1) {
                 if (mPrevSegment == 0) {
                     if (mWithMeshClsn.IsOnGround() != 0) {
-                        vv3.x = mPosX;
-                        vv3.y = mPosY;
-                        vv3.z = mPosZ;
+                        vv3.x = mPos.x;
+                        vv3.y = mPos.y;
+                        vv3.z = mPos.z;
                         player->Hurt(vv3, 2, 0xc000, 1, 0, 1);
                     }
                 } else if (mWithMeshClsn.IsOnGround() != 0 && mPrevSegment->mSpeed.y == 0) {
-                    vv4.x = mPosX;
-                    vv4.y = mPosY;
-                    vv4.z = mPosZ;
+                    vv4.x = mPos.x;
+                    vv4.y = mPos.y;
+                    vv4.z = mPos.z;
                     player->Hurt(vv4, 2, 0xc000, 1, 0, 1);
                 }
             } else {
-                vv5.x = mPosX;
-                vv5.y = mPosY;
-                vv5.z = mPosZ;
+                vv5.x = mPos.x;
+                vv5.y = mPos.y;
+                vv5.z = mPos.z;
                 player->Hurt(vv5, 2, 0xc000, 1, 0, 1);
             }
         }

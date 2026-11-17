@@ -86,9 +86,9 @@ int daObjFloatBoard_c::UpdateWaterY() {
     Vector3 vec;
     dBgCh_Gnd rg;
     /* Staged through locals: direct member stores schedule differently. */
-    int vx = mPosX;
-    int vz = mPosZ;
-    int vy = mPosY + 0x64000;
+    int vx = mPos.x;
+    int vz = mPos.z;
+    int vy = mPos.y + 0x64000;
     vec.x = vx;
     vec.y = vy;
     vec.z = vz;
@@ -108,9 +108,9 @@ int daObjFloatBoard_c::UpdateWaterY() {
  * from InitResourcesFrom below. */
 void daObjFloatBoard_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* ROM ordinal 4 -- vtable slot 3, ov002 0x020b5be0. THE KEY FUNCTION: the
@@ -169,14 +169,14 @@ int daObjFloatBoard_c::Behavior() {
             val1 = val2;
         } else {
             /* The rider's position as one address: spelling the three loads
-               as rider->mPosX/Y/Z instead of [riderPos+0/4/8] costs an
+               as rider->mPos.x/.y/.z instead of [riderPos+0/4/8] costs an
                instruction and DIFFs. */
             Vector3 *riderPos = &mRider->mPos;
             tpos.x = riderPos->x;
             tpos.y = riderPos->y;
             tpos.z = riderPos->z;
             dist = Vec3_HorzDist(&mPos, &tpos) >> 12;
-            atanRes = cstd::atan2(mPosX - tpos.x, mPosZ - tpos.z);
+            atanRes = cstd::atan2(mPos.x - tpos.x, mPos.z - tpos.z);
             angleDiff = atanRes - mAngleY;
             s = FX_SinIdx((u16)angleDiff >> 4);
             co = FX_CosIdx((u16)angleDiff >> 4);
@@ -187,9 +187,9 @@ int daObjFloatBoard_c::Behavior() {
         ApproachLinear(mAngleX, val1, 0xc0);
         ApproachLinear(mAngleZ, val2, 0xc0);
 
-        mPosY = mWaterY + mSinkOffset + mBobOffset;
+        mPos.y = mWaterY + mSinkOffset + mBobOffset;
     } else {
-        mPosY = mWaterY;
+        mPos.y = mWaterY;
         mAngleZ = 0;
         mAngleX = mAngleZ;
     }
@@ -228,18 +228,18 @@ int daObjFloatBoard_c::InitResourcesFrom(daObjFloatBoard_c_Resources *fp) {
     mSinkOffset = 0;
     mBobOffset = 0;
     mBobPhase = 0;
-    mRestPosX = mPosX;
-    mWaterY = mPosY;
-    mRestPosZ = mPosZ;
+    mRestPosX = mPos.x;
+    mWaterY = mPos.y;
+    mRestPosZ = mPos.z;
     mRider = 0;
     pad_340[0] = 0;
-    mFallbackWaterY = mPosY;
+    mFallbackWaterY = mPos.y;
 
     if (gCurrentSublevel == 0x15) {
         dBgCh_Gnd rg;
-        vy = mPosY;
-        vz = mPosZ;
-        vx = mPosX;
+        vy = mPos.y;
+        vz = mPos.z;
+        vx = mPos.x;
         {
             int t = vy + 0x50000;
             v.x = vx;

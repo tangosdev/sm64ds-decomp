@@ -148,9 +148,9 @@ int daObjWc_Obj04_c::CleanupResources() {
 /* The plank model's matrix: yaw plus position >> 3 (world fix12 to model units). */
 void daObjWc_Obj04_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mModel2.mat4x3, mAngleY);
-    mModel2.mat4x3.m[9] = mPosX >> 3;
-    mModel2.mat4x3.m[10] = mPosY >> 3;
-    mModel2.mat4x3.m[11] = mPosZ >> 3;
+    mModel2.mat4x3.m[9] = mPos.x >> 3;
+    mModel2.mat4x3.m[10] = mPos.y >> 3;
+    mModel2.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -158,9 +158,9 @@ void daObjWc_Obj04_c::UpdateModelMatrix() {
 /* The plank collision matrix: yaw plus the world position. */
 void daObjWc_Obj04_c::UpdateClsnMatrix() {
     Matrix4x3_FromRotationY(&mClsnMat2, mAngleY);
-    mClsnMat2.m[9] = mPosX;
-    mClsnMat2.m[10] = mPosY;
-    mClsnMat2.m[11] = mPosZ;
+    mClsnMat2.m[9] = mPos.x;
+    mClsnMat2.m[10] = mPos.y;
+    mClsnMat2.m[11] = mPos.z;
 }
 
 /* -------------------------------------------------------------------------- */

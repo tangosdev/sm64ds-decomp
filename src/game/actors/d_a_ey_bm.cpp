@@ -140,9 +140,9 @@ int daEyBm_c::Behavior() {
 
 int daEyBm_c::Render() {
     mParticle1 =
-        Particle::System::NewCleanParticle(mParticle1, kPtclMrIBeamA, mPosX, mPosY, mPosZ, 0);
+        Particle::System::NewCleanParticle(mParticle1, kPtclMrIBeamA, mPos.x, mPos.y, mPos.z, 0);
     mParticle2 =
-        Particle::System::NewCleanParticle(mParticle2, kPtclMrIBeamB, mPosX, mPosY, mPosZ, 0);
+        Particle::System::NewCleanParticle(mParticle2, kPtclMrIBeamB, mPos.x, mPos.y, mPos.z, 0);
     return 1;
 }
 void daEyBm_c::OnPendingDestroy() {}
@@ -152,15 +152,15 @@ int daEyBm_c::CleanupResources() {
 }
 
 void daEyBm_c::UpdateShadow() {
-    mMatrix.m[9] = mPosX >> 3;
-    mMatrix.m[10] = mPosY >> 3;
-    mMatrix.m[11] = mPosZ >> 3;
+    mMatrix.m[9] = mPos.x >> 3;
+    mMatrix.m[10] = mPos.y >> 3;
+    mMatrix.m[11] = mPos.z >> 3;
 
     dBgCh_Gnd ground;
     ground.SetObjAndPos(mPos, this);
     fx32 depth;
     if (ground.DetectClsn())
-        depth = (mPosY - ground.clsnY) + 0x1e000;
+        depth = (mPos.y - ground.clsnY) + 0x1e000;
     else
         depth = 0x1f4000;
     DropShadowRadHeight(mShadowModel, mMatrix, 0x50000, depth, 0xf);
@@ -186,9 +186,9 @@ void daEyBm_c::HurtPlayer() {
         return;
 
     Vector3 position;
-    position.x = mPosX;
-    position.y = mPosY;
-    position.z = mPosZ;
+    position.x = mPos.x;
+    position.y = mPos.y;
+    position.z = mPos.z;
     player->Hurt(position, 1, 0xc000, 1, 0, 1);
     SpawnDestroyEffect();
 }
@@ -205,7 +205,7 @@ void daEyBm_c::UpdateCollision(dBgCh_Actr &collision) {
 
 /* 0x02121b08, size 0x48. */
 void daEyBm_c::SpawnDestroyEffect() {
-    mParticle1 = Particle::System::New(0, kPtclMrIBeamBurst, mPosX, mPosY, mPosZ, 0, 0);
+    mParticle1 = Particle::System::New(0, kPtclMrIBeamBurst, mPos.x, mPos.y, mPos.z, 0, 0);
     MarkForDestruction();
 }
 

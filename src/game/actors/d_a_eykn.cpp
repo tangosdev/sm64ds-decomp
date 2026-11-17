@@ -272,9 +272,9 @@ void daEykn_c::LookForPlayer()
         return;
     if (AngleDiff(Vec3_HorzAngle(&mPos, &p->mPos), mAngleY) > kWatchFov)
         return;
-    int px = p->mPosX;
-    int pz = p->mPosZ;
-    int py = p->mPosY + 0x8c000;
+    int px = p->mPos.x;
+    int pz = p->mPos.z;
+    int py = p->mPos.y + 0x8c000;
     Vector3 v;
     v.x = px;
     v.y = py;
@@ -311,17 +311,17 @@ void daEykn_c::CheckAttacks()
 
     if (mdCcAcPos_c.hitFlags & kKillHit) {
         mParticleID0 =
-            (u32)Particle::System::New(mParticleID0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
+            (u32)Particle::System::New(mParticleID0, kDeathPtcl0, mPos.x, mPos.y, mPos.z, 0, 0);
         mParticleID1 =
-            Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
+            Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPos.x, mPos.y, mPos.z, 0);
         SetState(2);
         return;
     }
 
     Vector3 hv;
-    hv.x = mPosX;
-    hv.y = mPosY;
-    hv.z = mPosZ;
+    hv.x = mPos.x;
+    hv.y = mPos.y;
+    hv.z = mPos.z;
     f->Hurt(hv, 2, 0xc000, 1, 0, 1);
 }
 
@@ -329,12 +329,12 @@ void daEykn_c::CheckAttacks()
 void daEykn_c::UpdateModelTransform()
 {
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mAnmModel.mat4x3.t.x = mPosX >> 3;
-    mAnmModel.mat4x3.t.y = mPosY >> 3;
-    mAnmModel.mat4x3.t.z = mPosZ >> 3;
-    mShadowMat[9] = mPosX >> 3;
-    mShadowMat[10] = mPosY >> 3;
-    mShadowMat[11] = mPosZ >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
+    mShadowMat[9] = mPos.x >> 3;
+    mShadowMat[10] = mPos.y >> 3;
+    mShadowMat[11] = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMat, mScale * 0xb4, mShadowHeight, 0xf);
 }
 
@@ -358,9 +358,9 @@ int daEykn_c::St_Die_Main()
     if (id0 != 0 && mParticleID1 != 0) {
         Particle::System *p0;
         Particle::System *p1;
-        mParticleID0 = Particle::System::New(id0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
+        mParticleID0 = Particle::System::New(id0, kDeathPtcl0, mPos.x, mPos.y, mPos.z, 0, 0);
         mParticleID1 =
-            Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
+            Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPos.x, mPos.y, mPos.z, 0);
         p0 = Particle::System::FromUniqueID(mParticleID0);
         p1 = Particle::System::FromUniqueID(mParticleID1);
         if (p0 != 0) {
@@ -418,12 +418,12 @@ int daEykn_c::St_Die_Main()
             /* Plain field copies are 13 words off. */
             int yadj, zcopy, y, z, x;
             Vector3 pos;
-            y = mPosY;
-            z = mPosZ;
+            y = mPos.y;
+            z = mPos.z;
             yadj = 0x78000;
             yadj = y + yadj;
             zcopy = z;
-            x = mPosX;
+            x = mPos.x;
             pos.x = x;
             pos.z = zcopy;
             pos.y = yadj;
@@ -434,9 +434,9 @@ int daEykn_c::St_Die_Main()
             if (isBig != 0) {
                 unsigned char star = (param1 & 0xf);
                 UntrackAndSpawnStar(mStarTrackID, star, mPos, 4);
-                Particle::System::NewSimple(kPtclTriplePoofA, mPosX, mPosY, mPosZ);
-                Particle::System::NewSimple(kPtclTriplePoofB, mPosX, mPosY, mPosZ);
-                Particle::System::NewSimple(kPtclTriplePoofC, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclTriplePoofA, mPos.x, mPos.y, mPos.z);
+                Particle::System::NewSimple(kPtclTriplePoofB, mPos.x, mPos.y, mPos.z);
+                Particle::System::NewSimple(kPtclTriplePoofC, mPos.x, mPos.y, mPos.z);
             }
         }
         func_0201267c(0xc4, &mCamSpacePos);
@@ -497,10 +497,10 @@ int daEykn_c::St_Attack_Main()
         s32 yoff;
 
         pl = mTarget;
-        py = pl->mPosY;
-        pz = pl->mPosZ;
+        py = pl->mPos.y;
+        pz = pl->mPos.z;
         yoff = py + 0x78000;
-        target1.x = pl->mPosX;
+        target1.x = pl->mPos.x;
         target1.y = yoff;
         target1.z = pz;
     }
@@ -524,10 +524,10 @@ int daEykn_c::St_Attack_Main()
         s32 yoff2;
 
         pl2 = mTarget;
-        py2 = pl2->mPosY;
-        pz2 = pl2->mPosZ;
+        py2 = pl2->mPos.y;
+        pz2 = pl2->mPos.z;
         yoff2 = py2 + 0x4b000;
-        target2.x = pl2->mPosX;
+        target2.x = pl2->mPos.x;
         target2.y = yoff2;
         target2.z = pz2;
 
@@ -540,11 +540,11 @@ int daEykn_c::St_Attack_Main()
             int isBig;
             int param;
 
-            px = mPosX;
+            px = mPos.x;
             scale = 0x50000;
             pos.x = px;
-            pos.y = mPosY;
-            pz = mPosZ;
+            pos.y = mPos.y;
+            pz = mPos.z;
             round = 0x800;
             pos.z = pz;
 
@@ -590,10 +590,10 @@ int daEykn_c::St_Attack_Main()
         s32 yoff3;
 
         p3 = mTarget;
-        y3 = p3->mPosY;
-        z3 = p3->mPosZ;
+        y3 = p3->mPos.y;
+        z3 = p3->mPos.z;
         yoff3 = y3 + 0x8c000;
-        target3.x = p3->mPosX;
+        target3.x = p3->mPos.x;
         target3.y = yoff3;
         target3.z = z3;
     }
@@ -780,7 +780,7 @@ s32 daEykn_c::InitResources()
     ray.SetObjAndPos(mPos, this);
     int y;
     if (ray.DetectClsn()) {
-        y = (mPosY - ray.clsnY) + 0x1e000;
+        y = (mPos.y - ray.clsnY) + 0x1e000;
     } else {
         y = 0x12c000;
     }

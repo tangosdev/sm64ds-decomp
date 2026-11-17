@@ -100,10 +100,10 @@ int daObjWc_Mizu_c::InitResources() {
         unsigned int idx = data_0209f2c0;
         if (idx >= 3)
             idx = 2;
-        mPosY = data_ov029_02112b2c[idx];
+        mPos.y = data_ov029_02112b2c[idx];
     }
-    mTargetPosY = mPosY;
-    data_0209f32c = mPosY;
+    mTargetPosY = mPos.y;
+    data_0209f32c = mPos.y;
 
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
@@ -138,24 +138,24 @@ int daObjWc_Mizu_c::Behavior() {
     }
 
     t = mTargetPosY;
-    if (mPosY != t) {
-        if (mPosY < t) {
-            mPosY += 0xa000;
-            if (mPosY > mTargetPosY)
-                mPosY = mTargetPosY;
+    if (mPos.y != t) {
+        if (mPos.y < t) {
+            mPos.y += 0xa000;
+            if (mPos.y > mTargetPosY)
+                mPos.y = mTargetPosY;
         } else {
-            mPosY -= 0xa000;
-            if (mPosY < mTargetPosY)
-                mPosY = mTargetPosY;
+            mPos.y -= 0xa000;
+            if (mPos.y < mTargetPosY)
+                mPos.y = mTargetPosY;
         }
     }
 
-    if (mPosY != mPrevPos.y) {
+    if (mPos.y != mPrevPos.y) {
         mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, mCamSpacePos, 0);
     }
 
     mPhaseAngle += 0x200;
-    mWaterHeight = FX_SinIdx((u16)mPhaseAngle >> 4) * 15 + mPosY;
+    mWaterHeight = FX_SinIdx((u16)mPhaseAngle >> 4) * 15 + mPos.y;
     data_0209f32c = mWaterHeight;
     UpdateModelTransform();
     UpdateClsnTransform();
@@ -187,7 +187,7 @@ int daObjWc_Mizu_c::CleanupResources() {
 /* -------------------------------------------------------------------------- */
 /* The water model sits at the bobbing surface height, in model eighths. */
 void daObjWc_Mizu_c::UpdateModelTransform() {
-    Matrix4x3_FromTranslation(&mModel.mat4x3, mPosX >> 3, mWaterHeight >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&mModel.mat4x3, mPos.x >> 3, mWaterHeight >> 3, mPos.z >> 3);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -195,9 +195,9 @@ void daObjWc_Mizu_c::UpdateModelTransform() {
 /* The collision mesh takes the model's rotation with a full-scale translation. */
 void daObjWc_Mizu_c::UpdateClsnTransform() {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPosX;
+    mClsnMat.m[9] = mPos.x;
     mClsnMat.m[10] = mWaterHeight;
-    mClsnMat.m[11] = mPosZ;
+    mClsnMat.m[11] = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 

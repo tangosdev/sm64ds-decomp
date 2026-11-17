@@ -133,9 +133,9 @@ void daShark_c::CheckPlayerHit() {
     }
     if (((daPly_c *)hit)->mIsVanish)
         return;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     ((daPly_c *)hit)->Hurt(pos, 3, 0xc000, 1, 0, 1);
 }
 

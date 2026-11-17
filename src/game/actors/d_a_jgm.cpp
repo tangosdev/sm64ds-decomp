@@ -258,7 +258,7 @@ s32 daJgm_c::UpdateHoverState()
         /* Nested on purpose: one flat && chain is 12 bytes shorter. */
         daPly_c *p = ClosestNonVanishPlayer();
         if (p != 0) {
-            if (p->mPosY < mPosY && Vec3_HorzDist(&mPos, &p->mPos) < 0x190000 && CountSpinies() < 4)
+            if (p->mPos.y < mPos.y && Vec3_HorzDist(&mPos, &p->mPos) < 0x190000 && CountSpinies() < 4)
                 SetState(1);
             else
                 mTimer = 150;
@@ -339,10 +339,10 @@ s32 daJgm_c::UpdateYoshiMouthState()
 {
     if (((mFlags & 0x40000) ? 1 : 0) != 0) {
         dActor_c *carrier = mEatingPlayer;
-        s32 *carrierPos = &carrier->mPosX;
-        mPosX = carrierPos[0];
-        mPosY = carrierPos[1];
-        mPosZ = carrierPos[2];
+        s32 *carrierPos = &carrier->mPos.x;
+        mPos.x = carrierPos[0];
+        mPos.y = carrierPos[1];
+        mPos.z = carrierPos[2];
     }
     {
         int flags = mFlags;
@@ -362,9 +362,9 @@ s32 daJgm_c::EnterSpitState()
     mHorzSpeed = mEatingPlayer->mHorzSpeed + 0xa000;
     mPrevAngleY = mEatingPlayer->mAngleY;
     mPos = mEatingPlayer->mPos;
-    mPosX += FX_MUL(FX_SinIdx((u16)mPrevAngleY >> 4), 0x50000);
-    mPosY += 0x50000;
-    mPosZ += FX_MUL(FX_CosIdx((u16)mPrevAngleY >> 4), 0x50000);
+    mPos.x += FX_MUL(FX_SinIdx((u16)mPrevAngleY >> 4), 0x50000);
+    mPos.y += 0x50000;
+    mPos.z += FX_MUL(FX_CosIdx((u16)mPrevAngleY >> 4), 0x50000);
 
     mAngVelY = 0x7000;
     mTimer = 30;
@@ -399,9 +399,9 @@ s32 daJgm_c::EnterFallState()
     mAnmModel.speed = 0x4000;
     {
         int aimHeight = OnAimedAtWithEgg();
-        Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + aimHeight, mPosZ);
+        Particle::System::NewSimple(kPtclKnockAwayA, mPos.x, mPos.y + aimHeight, mPos.z);
         int aimHeightAgain = OnAimedAtWithEgg();
-        Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + aimHeightAgain, mPosZ);
+        Particle::System::NewSimple(kPtclKnockAwayB, mPos.x, mPos.y + aimHeightAgain, mPos.z);
     }
     mState = 4;
     return 1;
@@ -425,9 +425,9 @@ void daJgm_c::UpdateModels()
         return;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = (mPosY + mBobOffsetY) >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = (mPos.y + mBobOffsetY) >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 
     if (mState == 4) {
         data_020a0e68 = mAnmModel.mat4x3;
@@ -439,9 +439,9 @@ void daJgm_c::UpdateModels()
         mAnmModel.mat4x3 = data_020a0e68;
     }
 
-    mMatrix.m[9] = mPosX >> 3;
-    mMatrix.m[10] = mPosY >> 3;
-    mMatrix.m[11] = mPosZ >> 3;
+    mMatrix.m[9] = mPos.x >> 3;
+    mMatrix.m[10] = mPos.y >> 3;
+    mMatrix.m[11] = mPos.z >> 3;
 
     DropShadowRadHeight(mShadowModel, mMatrix, 0x5a000, 0x320000, 0xf);
 
@@ -494,8 +494,8 @@ void daJgm_c::UpdateWallAndWater(dBgCh_Actr &collision)
         rg.StartDetectingWater();
         if (rg.DetectClsn() != 0) {
             int yy = rg.clsnY + 0x3c000;
-            if (mPosY < yy)
-                mPosY = yy;
+            if (mPos.y < yy)
+                mPos.y = yy;
         }
         rg.StopDetectingWater();
     }
@@ -580,7 +580,7 @@ void daJgm_c::UpdateFlight() {
         chaseRange = (param1 != 0) ? 0x1068000 : 0x7d0000;
         for (;;) {
             if (Vec3_HorzDist(&mSpawnPos, &p->mPos) < chaseRange) {
-                int d = mSpawnPos.y - p->mPosY;
+                int d = mSpawnPos.y - p->mPos.y;
                 if (d < 0)
                     d = -d;
                 if (d < 0x5dc000) {
@@ -601,7 +601,7 @@ void daJgm_c::UpdateFlight() {
         mPrevAngleY = (short)(mAngleY - TurnOffsetFromDist(hd));
     else
         mPrevAngleY = (short)(mAngleY + TurnOffsetFromDist(hd));
-    ApproachLinear(mPosY, target->y + 0x12c000, 0x2000);
+    ApproachLinear(mPos.y, target->y + 0x12c000, 0x2000);
     UpdatePos(&mdCcAcPos_c);
     UpdateWallAndWater(mWithMeshClsn);
 }

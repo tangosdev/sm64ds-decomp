@@ -108,10 +108,10 @@ int daObjWc_Obj03_c::Behavior()
         *angleY = *angleY + 0x400;
         daObjWc_Mizu_c *water = (daObjWc_Mizu_c *)dActor_c::FindWithID(mWaterID);
         if (water != 0) {
-            if (mPosY == water->mPosY) {
+            if (mPos.y == water->mPos.y) {
                 if (mAngleY == 0) mActive = 0;
             }
-            if (mPosY != water->mTargetPosY) {
+            if (mPos.y != water->mTargetPosY) {
                 mActive = 0;
                 mAngleY = 0;
             }
@@ -147,9 +147,9 @@ int daObjWc_Obj03_c::CleanupResources()
 void daObjWc_Obj03_c::UpdateModelTransform()
 {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-    mModel.mat4x3.t.x = mPosX >> 3;
-    mModel.mat4x3.t.y = mPosY >> 3;
-    mModel.mat4x3.t.z = mPosZ >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -188,12 +188,12 @@ void daObjWc_Obj03_c::CheckClsnWithPlayer()
         return;
     daObjWc_Mizu_c *water = (daObjWc_Mizu_c *)dActor_c::FindWithID(mWaterID);
     int targetPosY = water->mTargetPosY;
-    if (targetPosY != water->mPosY)
+    if (targetPosY != water->mPos.y)
         return;
-    if (targetPosY == mPosY)
+    if (targetPosY == mPos.y)
         return;
     mActive = 1;
-    water->mTargetPosY = mPosY;
+    water->mTargetPosY = mPos.y;
     Sound::PlayBank3(0x63, mCamSpacePos);
 }
 

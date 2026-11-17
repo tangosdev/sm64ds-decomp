@@ -266,7 +266,7 @@ int daBombking_c::TickWalkHome() {
     daPly_c *p = this->ClosestPlayer();
     if (p != 0) {
         /* A Vector3 copy of p->mPos is memberwise: 0x124 -> 0x12c. */
-        VecFx32 v = *(VecFx32 *)&p->mPosX;
+        VecFx32 v = *(VecFx32 *)&p->mPos;
         if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&v) < 0x640000) {
             if (this->mArenaPos.y - 0x64000 < v.y) {
                 KingBobOmb_SetState(data_ov078_0212703c);
@@ -350,9 +350,9 @@ int daBombking_c::TickCarryPlayer() {
     v.z = this->mArenaPos.z;
 
     if (gCurrentStarId != 1) {
-        v.x = this->mPosX;
-        v.y = this->mPosY;
-        v.z = this->mPosZ;
+        v.x = this->mPos.x;
+        v.y = this->mPos.y;
+        v.z = this->mPos.z;
         this->mPrevAngleY += 0x1000;
         this->mHorzSpeed = 0;
     } else {
@@ -504,8 +504,8 @@ int daBombking_c::TickKnockback() {
                 if (a != 0) {
                     int b = (a->actorID == 0xbf);
                     if (b != 0) {
-                        VecFx32 v = *(const VecFx32 *)&a->mPosX;
-                        if (mPosY > v.y)
+                        VecFx32 v = *(const VecFx32 *)&a->mPos;
+                        if (mPos.y > v.y)
                             a->Unk_020c6a10(1);
                     }
                 }
@@ -594,7 +594,7 @@ int daBombking_c::TickHomeTalk() {
     }
     player = this->mTalkingPlayer;
     if (player->GetTalkState() != -1) {
-        pp = &player->mPosX;
+        pp = &player->mPos.x;
         in.x = 0;
         in.y = 0;
         in.z = 0;
@@ -605,12 +605,12 @@ int daBombking_c::TickHomeTalk() {
         ppos.y = pp[1];
         ppos.z = pp[2];
         ang = Vec3_HorzAngle(&this->mPos, &ppos);
-        look.x = this->mPosX;
-        look.y = this->mPosY;
-        look.z = this->mPosZ;
-        pos.x = this->mPosX;
-        pos.y = this->mPosY;
-        pos.z = this->mPosZ;
+        look.x = this->mPos.x;
+        look.y = this->mPos.y;
+        look.z = this->mPos.z;
+        pos.x = this->mPos.x;
+        pos.y = this->mPos.y;
+        pos.z = this->mPos.z;
         look.y += 0x100000;
         in.z = 0x800000;
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
@@ -681,9 +681,9 @@ int daBombking_c::TickReturnHome() {
         }
         this->mSpeed.z = vC.z;
         this->mSpeed.y += this->mVertAccel;
-        vA.x = this->mPosX;
-        vA.y = this->mPosY;
-        vA.z = this->mPosZ;
+        vA.x = this->mPos.x;
+        vA.y = this->mPos.y;
+        vA.z = this->mPos.z;
         vA.y = this->mArenaPos.y;
         if (Vec3_Dist(&vA, &this->mArenaPos) > 0x640000)
             return 1;
@@ -693,7 +693,7 @@ int daBombking_c::TickReturnHome() {
     if (this->mWithMeshClsn.IsOnGround() != 0) {
         daPly_c *pl = this->ClosestPlayer();
         if (pl != 0) {
-            *(struct M3 *)&D = *(struct M3 *)&pl->mPosX;
+            *(struct M3 *)&D = *(struct M3 *)&pl->mPos.x;
             if (Vec3_Dist(&this->mArenaPos, &D) > 0x640000 || this->mArenaPos.y - 0x64000 > D.y) {
                 this->mSpeed.x = 0;
                 this->mSpeed.y = 0;
@@ -721,9 +721,9 @@ int daBombking_c::TickReturnHome() {
         if ((&this->mBlendAnmModel)->Finished() != 0) {
             daPly_c *pl2 = this->mTalkingPlayer;
             unsigned short m;
-            E.x = this->mPosX;
-            E.y = this->mPosY;
-            E.z = this->mPosZ;
+            E.x = this->mPos.x;
+            E.y = this->mPos.y;
+            E.z = this->mPos.z;
             E.y += 0xc8000;
             m = pl2->mStateFlags & 0x800;
             if (m == 0) {
@@ -761,7 +761,7 @@ int daBombking_c::EnterReturnHome() {
 int daBombking_c::TickBounceOffHill() {
     if (this->mStateTimer != 0)
         return 1;
-    if (*&data_02092138 > this->mPosY) {
+    if (*&data_02092138 > this->mPos.y) {
         KingBobOmb_SetState(data_ov078_021270bc);
         return 1;
     }
@@ -799,7 +799,7 @@ int daBombking_c::EnterBounceOffHill() {
 int daBombking_c::TickThrown() {
     if (this->mWithMeshClsn.IsOnGround() == 0) goto done;
     this->mHorzSpeed = 0;
-    if ((this->mArenaPos.y - 0x28000) > this->mPosY) {
+    if ((this->mArenaPos.y - 0x28000) > this->mPos.y) {
         func_02012694(0x128, &this->mCamSpacePos);
         KingBobOmb_SetState(&data_ov078_021270ac);
         goto done;
@@ -874,7 +874,7 @@ int daBombking_c::TickHeldByPlayer() {
         }
         {
             /* A Vector3 copy of obj->mPos is memberwise: 0x1a8 -> 0x1b0. */
-            VecFx32 copy = *(VecFx32 *)&obj->mPosX;
+            VecFx32 copy = *(VecFx32 *)&obj->mPos;
             if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&copy) > 0x640000)
                 goto drop;
             if (this->mArenaPos.y - 0xa000 <= copy.y)
@@ -949,9 +949,9 @@ int daBombking_c::TickThrowBomb() {
     if (this->mSpawnedThrown[this->mSpawnSlot] == 0) {
         target = (daBmb_c *)dActor_c::FindWithID(this->mSpawnedId[this->mSpawnSlot]);
         if (target != 0) {
-            target->mPosX = this->mThrowPos.x;
-            target->mPosY = this->mThrowPos.y;
-            target->mPosZ = this->mThrowPos.z;
+            target->mPos.x = this->mThrowPos.x;
+            target->mPos.y = this->mThrowPos.y;
+            target->mPos.z = this->mThrowPos.z;
             target->mPrevAngleX = this->mPrevAngleX;
             target->mPrevAngleY = this->mPrevAngleY;
             target->mPrevAngleZ = this->mPrevAngleZ;
@@ -965,7 +965,7 @@ int daBombking_c::TickThrowBomb() {
                 v[0].x = 0; v[0].y = 0; v[0].z = 0;
                 player = this->ClosestPlayer();
                 if (player != 0) {
-                    int *q = &player->mPosX;
+                    int *q = &player->mPos.x;
                     v[1].x = q[0];
                     v[1].y = q[1];
                     v[1].z = q[2];
@@ -1059,7 +1059,7 @@ int daBombking_c::TickChase() {
     p = this->ClosestPlayer();
     if (p != 0) {
         /* A Vector3 copy of p->mPos is memberwise: 0x2ec -> 0x2f4. */
-        VecFx32 v = *(const VecFx32 *)&p->mPosX;
+        VecFx32 v = *(const VecFx32 *)&p->mPos;
         if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&v) > 0x640000 ||
             (this->mArenaPos.y - 0xa000) > v.y) {
             this->mHorzSpeed = 0;
@@ -1196,7 +1196,7 @@ int daBombking_c::EnterActivate() {
 /* -------------------------------------------------------------------------- */
 int daBombking_c::TickIntroTalk() {
     daPly_c *target = this->mTalkingPlayer;
-    int *src = &target->mPosX;
+    int *src = &target->mPos.x;
     Vector3 v;
     int t = src[0];
     v.x = t;
@@ -1252,15 +1252,15 @@ int daBombking_c::TickInactive() {
 
     player = this->ClosestPlayer();
     if (player != 0) {
-        *(struct M3 *)&ppos = *(struct M3 *)&player->mPosX;
+        *(struct M3 *)&ppos = *(struct M3 *)&player->mPos.x;
 
         if (this->mIntroTalked == 0) {
             dist = Vec3_Dist(&this->mPos, &ppos);
             if (dist < 0x12c000) {
                 this->mTalkingPlayer = player;
-                v.x = this->mPosX;
-                v.y = this->mPosY;
-                v.z = this->mPosZ;
+                v.x = this->mPos.x;
+                v.y = this->mPos.y;
+                v.z = this->mPos.z;
                 v.y = v.y + 0xc8000;
 
                 if (this->mTalkingPlayer->StartTalk(*this, 1)) {
@@ -1311,7 +1311,7 @@ int daBombking_c::KingBobOmb_SetState(void *pv) {
 
 /* -------------------------------------------------------------------------- */
 void daBombking_c::UpdateShadow() {
-    int h = mPosY;
+    int h = mPos.y;
     if (this->mWithMeshClsn.IsOnGround() == 0) {
         dBgCh_Gnd rg;
         rg.SetObjAndPos(this->mPos, 0);
@@ -1322,18 +1322,18 @@ void daBombking_c::UpdateShadow() {
     if (b) {
         daPly_c *p = this->mHeldActor;
         if (p != 0)
-            h = p->mPosY;
+            h = p->mPos.y;
     }
-    int ip = this->mPosY - h;
+    int ip = this->mPos.y - h;
     if (ip <= 0x1000)
         ip = 0x1000;
     int scale = 0x15e000 - FX_MUL(ip, 0x180);
     if (scale < 0xa000)
         scale = 0xa000;
     this->mShadowMtx = IDENTITY_MATRIX4X3;
-    this->mShadowMtx.m[9] = this->mPosX >> 3;
-    this->mShadowMtx.m[10] = this->mPosY >> 3;
-    this->mShadowMtx.m[11] = this->mPosZ >> 3;
+    this->mShadowMtx.m[9] = this->mPos.x >> 3;
+    this->mShadowMtx.m[10] = this->mPos.y >> 3;
+    this->mShadowMtx.m[11] = this->mPos.z >> 3;
     DropShadowRadHeight(this->mShadowModel, this->mShadowMtx, scale, ip + 0x28000, 0xf);
 }
 
@@ -1343,9 +1343,9 @@ void daBombking_c::UpdateHandMatrix() {
     int i;
 
     Matrix4x3_FromRotationY(&this->mBlendAnmModel.mat4x3, this->mAngleY);
-    this->mBlendAnmModel.mat4x3.m[9] = this->mPosX >> 3;
-    this->mBlendAnmModel.mat4x3.m[10] = this->mPosY >> 3;
-    this->mBlendAnmModel.mat4x3.m[11] = this->mPosZ >> 3;
+    this->mBlendAnmModel.mat4x3.m[9] = this->mPos.x >> 3;
+    this->mBlendAnmModel.mat4x3.m[10] = this->mPos.y >> 3;
+    this->mBlendAnmModel.mat4x3.m[11] = this->mPos.z >> 3;
     MTX_Concat43(&this->mBlendAnmModel.data.transforms[10], &this->mBlendAnmModel.mat4x3,
                  &this->mHoldMtx);
 
@@ -1483,7 +1483,7 @@ int daBombking_c::Behavior()
 
     if ((char *)mState == (char *)data_ov078_0212703c || (char *)mState == (char *)data_ov078_021270fc) {
         if (mWithMeshClsn.IsOnWall() != 0 || mWithMeshClsn.IsOnGround() == 0 ||
-            (mArenaPos.y - 0x28000) > mPosY) {
+            (mArenaPos.y - 0x28000) > mPos.y) {
             KingBobOmb_SetState(data_ov078_021270bc);
         }
     }
@@ -1547,9 +1547,9 @@ int daBombking_c::InitResources()
     v1.z = data_ov078_02126e00.z;
     mdCcAcPos_c2.Init(this, v1, 0xc8000, 0xc8000, 0x200000, 0x207000);
     unk_498 = 0x1f;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mArenaPos.x = 0xb1d000;
     mArenaPos.y = 0x1060000;
     mArenaPos.z = 0xfee15000;

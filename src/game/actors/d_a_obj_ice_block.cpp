@@ -103,9 +103,9 @@ s32 daObjIceBlock_c::Behavior() {
             MarkForDestruction();
         } else {
             Vector3 pos;
-            pos.x = mPosX;
-            pos.y = mPosY;
-            pos.z = mPosZ;
+            pos.x = mPos.x;
+            pos.y = mPos.y;
+            pos.z = mPos.z;
             pos.y += FX_MUL(mScale, kShardHeight);
 
             mParticleHandle1 =
@@ -172,9 +172,9 @@ void daObjIceBlock_c::Kill() {
     Vector3 pos;
     Vector3 dustPos;
     Sound::PlayBank3(0x41, mCamSpacePos);
-    int x = mPosX;
-    int y = mPosY + kShardHeight;
-    int z = mPosZ;
+    int x = mPos.x;
+    int y = mPos.y + kShardHeight;
+    int z = mPos.z;
     pos.x = x;
     pos.y = y;
     pos.z = z;

@@ -114,10 +114,10 @@ s32 daObjWlPolelift_c::Behavior()
         Vec3_Sub(&delta, &mPos, &node);
         length = VEC_Mag(&delta);
         if (length == 0 || length <= 0xa000) {
-            mPosX = node.x;
+            mPos.x = node.x;
             moved = 1;
-            mPosY = node.y;
-            mPosZ = node.z;
+            mPos.y = node.y;
+            mPos.z = node.z;
         } else {
             scale = FX_Div(0xa000, length);
             Vec3_MulScalar(&step, &delta, scale);
@@ -186,9 +186,9 @@ s32 daObjWlPolelift_c::CleanupResources()
 /* Rebuild the model matrix from the actor's Y rotation and position. */
 void daObjWlPolelift_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&model.mat4x3, mAngleY);
-    model.mat4x3.m[9] = mPosX >> 3;
-    model.mat4x3.m[10] = mPosY >> 3;
-    model.mat4x3.m[11] = mPosZ >> 3;
+    model.mat4x3.m[9] = mPos.x >> 3;
+    model.mat4x3.m[10] = mPos.y >> 3;
+    model.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Copy the model matrix into the drop-shadow matrix, drop it to the ground

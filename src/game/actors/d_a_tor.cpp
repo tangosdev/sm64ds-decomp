@@ -12,8 +12,8 @@
  * NOTES:
  * - dBgCh_Actr_UpdateContinuous_Veneer is the ROM's own tail-call thunk, not
  *   UpdateContinuous itself: the reloc points at the veneer symbol.
- * - State1 copies the player position through an s32 pointer to mPosX:
- *   three named mPosX/Y/Z loads come out one instruction shorter.
+ * - State1 copies the player position through an s32 pointer to mPos.x:
+ *   three named mPos.x/.y/.z loads come out one instruction shorter.
  * - unk_352 stays unnamed: zeroed by state 0 and read nowhere.
  */
 
@@ -141,7 +141,7 @@ void daTor_c::State1()
 
     /* One pointer, not three named loads: those change codegen; see file header. */
     {
-        s32 *pos = &((dActor_c *)player)->mPosX;
+        s32 *pos = &((dActor_c *)player)->mPos.x;
         playerPos.x = pos[0];
         playerPos.y = pos[1];
         playerPos.z = pos[2];
@@ -181,17 +181,17 @@ cont:
     UpdateSpin(0x1000);
 
     mParticleHandle0 =
-        Particle::System::New(mParticleHandle0, kPtclTornadoA, mPosX, mPosY, mPosZ, 0, 0);
+        Particle::System::New(mParticleHandle0, kPtclTornadoA, mPos.x, mPos.y, mPos.z, 0, 0);
     mParticleHandle1 =
-        Particle::System::New(mParticleHandle1, kPtclTornadoB, mPosX, mPosY, mPosZ, 0, 0);
+        Particle::System::New(mParticleHandle1, kPtclTornadoB, mPos.x, mPos.y, mPos.z, 0, 0);
 }
 
 void daTor_c::State0()
 {
     if (mChaseTimer >= 900) {
-        mPosX = mHomePos.x;
-        mPosY = mHomePos.y;
-        mPosZ = mHomePos.z;
+        mPos.x = mHomePos.x;
+        mPos.y = mHomePos.y;
+        mPos.z = mHomePos.z;
     }
 
     if (mTriggerCount == 0) {
@@ -256,7 +256,7 @@ int daTor_c::Behavior()
     }
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
-    Matrix4x3_FromTranslation(&mAnmModel.mat4x3, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&mAnmModel.mat4x3, mPos.x >> 3, mPos.y >> 3, mPos.z >> 3);
     mAnmModel.dExtFrameCtrl_c::Advance();
     mTextureTransformer.Advance();
     return 1;
@@ -273,9 +273,9 @@ int daTor_c::InitResources()
     mdCcAc_c.Init(this, 0, 0, 0x200002, 0);
     mWithMeshClsn.Init(this, 0x50000, 0x50000, 0, 0);
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mSpinPhase = 0;
     mState = 0;
     mTriggerCount = 0;

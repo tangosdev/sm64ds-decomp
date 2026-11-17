@@ -88,9 +88,9 @@ s32 daObjHmBskt_c::InitResources() {
     mMeshCollider.SetFile(clsnFile, mClsnMat, 0x199, mAngleY, data_ov030_02114ee4);
 
     Vector3 starPos;
-    starPos.x = mPosX;
-    starPos.y = mPosY;
-    starPos.z = mPosZ;
+    starPos.x = mPos.x;
+    starPos.y = mPos.y;
+    starPos.z = mPos.z;
     starPos.y += 0x3c000;
     mStarActor = dActor_c::Spawn(0xb2, (u8)(param1 & 15) | 0x50, starPos, 0, mAreaId, -1);
 
@@ -143,13 +143,13 @@ int daObjHmBskt_c::CheckLanding(dBgCh_Actr *clsn) {
     if (!g)
         return g;
     mStarActor->MarkForDestruction();
-    int px = mPosX;
-    int pz = mPosZ;
-    int py = mPosY + 0x96000;
+    int px = mPos.x;
+    int pz = mPos.z;
+    int py = mPos.y + 0x96000;
     Vector3 p(px, py, pz);
     dActor_c::Spawn(0xb2, (unsigned char)(param1 & 15) | 0x20, p, 0, mAreaId, -1);
-    Particle::System::NewSimple(kPtclBlockBreakA, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclBlockBreakB, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclBlockBreakA, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclBlockBreakB, mPos.x, mPos.y, mPos.z);
     MarkForDestruction();
 }
 

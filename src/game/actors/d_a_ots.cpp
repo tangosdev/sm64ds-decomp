@@ -222,12 +222,12 @@ int daOts_c::InitResourcesCommon()
             mdCcAc_c.vulnFlags |= kHitBit40000;
         }
     }
-    tail().mHomePos.x = mPosX;
-    tail().mHomePos.y = mPosY;
-    tail().mHomePos.z = mPosZ;
-    tail().mPosBeforeMove.x = mPosX;
-    tail().mPosBeforeMove.y = mPosY;
-    tail().mPosBeforeMove.z = mPosZ;
+    tail().mHomePos.x = mPos.x;
+    tail().mHomePos.y = mPos.y;
+    tail().mHomePos.z = mPos.z;
+    tail().mPosBeforeMove.x = mPos.x;
+    tail().mPosBeforeMove.y = mPos.y;
+    tail().mPosBeforeMove.z = mPos.z;
     mVertAccel = -0x4000;
     mTerminalVelocity = -0x32000;
     tail().mHorzDecel = mFileTable->horzDecel;
@@ -266,9 +266,9 @@ int daOts_c::BehaviorCommon()
     }
 
     int four = tail().mState;   /* the state this frame started in */
-    tail().mPosBeforeMove.x = mPosX;
-    tail().mPosBeforeMove.y = mPosY;
-    tail().mPosBeforeMove.z = mPosZ;
+    tail().mPosBeforeMove.x = mPos.x;
+    tail().mPosBeforeMove.y = mPos.y;
+    tail().mPosBeforeMove.z = mPos.z;
     MakeVanishLuigiWork(mdCcAc_c);
     CheckMarioCollision();
 
@@ -369,10 +369,10 @@ int daOts_c::CleanupResources()
  * below 10 units, and its depth is that height plus 40 units. Opacity is 0xf. */
 void daOts_c::func_ov064_02116bac(){
     Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngleY);
-    this->mAnmModel.mat4x3.t.x = this->mPosX >> 3;
-    this->mAnmModel.mat4x3.t.y = (this->mPosY + tail().mModelYOffset) >> 3;
-    this->mAnmModel.mat4x3.t.z = this->mPosZ >> 3;
-    int d = this->mPosY - tail().mFloorY; /* height above the floor, at least 1 unit */
+    this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
+    this->mAnmModel.mat4x3.t.y = (this->mPos.y + tail().mModelYOffset) >> 3;
+    this->mAnmModel.mat4x3.t.z = this->mPos.z >> 3;
+    int d = this->mPos.y - tail().mFloorY; /* height above the floor, at least 1 unit */
     if (d <= 0x1000)
         d = 0x1000;
     int rad = FX_MUL(d, 0x180); /* how much the shadow shrinks */
@@ -380,9 +380,9 @@ void daOts_c::func_ov064_02116bac(){
     if (h < 0xa000)
         h = 0xa000; /* shadow radius, at least 10 units */
     Matrix4x3_FromRotationY(&tail().mShadowMtx, this->mAngleY);
-    tail().mShadowMtx.t.x = this->mPosX >> 3;
-    tail().mShadowMtx.t.y = this->mPosY >> 3;
-    tail().mShadowMtx.t.z = this->mPosZ >> 3;
+    tail().mShadowMtx.t.x = this->mPos.x >> 3;
+    tail().mShadowMtx.t.y = this->mPos.y >> 3;
+    tail().mShadowMtx.t.z = this->mPos.z >> 3;
     DropShadowRadHeight(this->mShadowModel, tail().mShadowMtx, h, d + 0x28000, 0xf);
 }
 
@@ -525,9 +525,9 @@ void daOts_c::CheckMarioCollision() {
 
     {
         Vector3 v;
-        v.x = this->mPosX;
-        v.y = this->mPosY;
-        v.z = this->mPosZ;
+        v.x = this->mPos.x;
+        v.y = this->mPos.y;
+        v.z = this->mPos.z;
         if (hitPlayer->Hurt(v, 0, 0x14000, 1, 0, 1) != 0) {
             func_ov064_02115f98((char*)hitPlayer);
         }
@@ -586,8 +586,8 @@ void daOts_c::Step() {
     if (this->IsGoingOffCliff(this->mWithMeshClsn, mFileTable->cliffDown, 0x2888, 0, 1, 0x32000) !=
             0 &&
         tail().mState != STATE_KNOCKED_BACK && tail().mState != STATE_LEDGE_TURN) {
-        this->mPosX = tail().mPosBeforeMove.x;
-        this->mPosZ = tail().mPosBeforeMove.z;
+        this->mPos.x = tail().mPosBeforeMove.x;
+        this->mPos.z = tail().mPosBeforeMove.z;
         tail().mState = STATE_LEDGE_TURN;
         this->mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimLedgeTurn]->filePtr, 0,
                                 kAnimSpeedNormal, 0);
@@ -623,7 +623,7 @@ int daOts_c::UpdateRunState()
  * animation 0. */
 void daOts_c::ActChaseMario() {
     this->UpdateRunState();
-    if (IsPlayerInRange(tail().mHomePos.x, this->mPosY, tail().mHomePos.z, kKeepChaseRange))
+    if (IsPlayerInRange(tail().mHomePos.x, this->mPos.y, tail().mHomePos.z, kKeepChaseRange))
         return;
     tail().mState = STATE_RETURN_HOME;
     mAnmModel.SetAnim((BCA_File *)mFileTable->files[kAnimWalk]->filePtr, 0, kAnimSpeedNormal, 0);
@@ -746,10 +746,10 @@ void daOts_c::PlayDeathSound()
 void daOts_c::CheckFloorDeath() {
     dBgCh_Gnd rg;
     Vector3 v;
-    int y = this->mPosY;
+    int y = this->mPos.y;
     int yoff = tail().mModelYOffset;
-    int z = this->mPosZ;
-    int x = this->mPosX;
+    int z = this->mPos.z;
+    int x = this->mPos.x;
     int sum = y + yoff;
     int yv = sum + 0x96000;
     v.x = x;
@@ -759,7 +759,7 @@ void daOts_c::CheckFloorDeath() {
     rg.SetObjAndPos(v, this);
     if (rg.DetectClsn() != 0) {
         tail().mFloorY = rg.clsnY;
-        if (this->mPosY <= rg.clsnY + 0x14000) {
+        if (this->mPos.y <= rg.clsnY + 0x14000) {
             int r = rg.surface.clps.GetSurfaceType();
             if (r == 4 || r == 5 || r == 0x13) {
                 tail().mState = STATE_REMOVE;
@@ -769,9 +769,9 @@ void daOts_c::CheckFloorDeath() {
                                         kAnimSpeedNormal, 0);
                 this->mFlags &= ~1u;
                 this->PlayDeathSound();
-                tail().mHomePos.x = this->mPosX;
-                tail().mHomePos.y = this->mPosY;
-                tail().mHomePos.z = this->mPosZ;
+                tail().mHomePos.x = this->mPos.x;
+                tail().mHomePos.y = this->mPos.y;
+                tail().mHomePos.z = this->mPos.z;
                 tail().mHomePos.y = rg.clsnY + 0x5000;
             }
         }
@@ -781,7 +781,7 @@ void daOts_c::CheckFloorDeath() {
 /* -------------------------------------------------------------------------- */
 /* The death animation's tick, called by the children's UpdateDeathState. Once the
  * state timer exceeds 30 it marks the actor for destruction and returns 1. Until
- * then it sinks mPosY by 5 units a frame and keeps two particle systems alive
+ * then it sinks mPos.y by 5 units a frame and keeps two particle systems alive
  * at mHomePos (the death spot): config->particleId and particleId + 1, their
  * handles kept in mParticle0 / mParticle1. Returns 0. */
 int daOts_c::func_ov064_0211616c() {
@@ -789,7 +789,7 @@ int daOts_c::func_ov064_0211616c() {
         this->MarkForDestruction();
         return 1;
     }
-    this->mPosY = this->mPosY - 0x5000;
+    this->mPos.y = this->mPos.y - 0x5000;
     this->mParticle0 =
         (u32)Particle::System::New(this->mParticle0, mFileTable->particleId, tail().mHomePos.x,
                                    tail().mHomePos.y, tail().mHomePos.z, 0, 0);
@@ -837,11 +837,11 @@ void daOts_c::func_ov064_02115f98(char* a1)
     int* p1;
     int tmpy;
 
-    p1 = &((dActor_c *)a1)->mPosX;
-    pos0[0] = this->mPosX;
-    y0 = this->mPosY;
+    p1 = &((dActor_c *)a1)->mPos.x;
+    pos0[0] = this->mPos.x;
+    y0 = this->mPos.y;
     pos0[1] = y0;
-    pos0[2] = this->mPosZ;
+    pos0[2] = this->mPos.z;
     pos1[0] = *p1;
     tmpy = p1[1];
     pos1[1] = tmpy;

@@ -284,9 +284,9 @@ int daC_Jugem_c::StateApproachInit()
     cam->SetLookAt(mCamLook);
     cam->SetPos(mCamPos);
     mAuxCounter = 0xa0;
-    mPosX = data_ov085_02130840.x;
-    mPosY = data_ov085_02130840.y;
-    mPosZ = data_ov085_02130840.z;
+    mPos.x = data_ov085_02130840.x;
+    mPos.y = data_ov085_02130840.y;
+    mPos.z = data_ov085_02130840.z;
     return 1;
 }
 
@@ -300,7 +300,7 @@ int daC_Jugem_c::StateBobMain()
     mTimer += 1;
     mAuxCounter += 0x500;
 
-    ApproachLinear(mPosY, FX_MUL(FX_SinIdx((u16)(s16)mAuxCounter >> 4), 0x1a000) + mTarget.y,
+    ApproachLinear(mPos.y, FX_MUL(FX_SinIdx((u16)(s16)mAuxCounter >> 4), 0x1a000) + mTarget.y,
                    0x10000000);
 
     if (mTimer == 50) {
@@ -331,12 +331,12 @@ int daC_Jugem_c::StateBobInit()
     dCamera_c *cam;
     mTimer = 0;
     mAuxCounter = 0;
-    mPosX = -0x5a0000;
-    mPosY = 0x2c0000;
-    mPosZ = 0x1c6f000;
-    mTarget.x = mPosX;
-    mTarget.y = mPosY;
-    mTarget.z = mPosZ;
+    mPos.x = -0x5a0000;
+    mPos.y = 0x2c0000;
+    mPos.z = 0x1c6f000;
+    mTarget.x = mPos.x;
+    mTarget.y = mPos.y;
+    mTarget.z = mPos.z;
     cam = gCamera;
     cam->SetFlag_3();
     look.x = -0x304000;
@@ -509,9 +509,9 @@ int daC_Jugem_c::StateArriveInit()
     cam->SetLookAt(look);
     cam->SetPos(pos);
     mStateTimer = 121;
-    mPosX = mTarget.x;
-    mPosY = mTarget.y;
-    mPosZ = mTarget.z;
+    mPos.x = mTarget.x;
+    mPos.y = mTarget.y;
+    mPos.z = mTarget.z;
     mTalkPlayer = 0;
     return 1;
 }
@@ -524,7 +524,7 @@ int daC_Jugem_c::StateLeaveMain() {
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
     if (AngleDiff(mPrevAngleY, ::Vec3_HorzAngle(&mPos, &mTarget)) < 0x2000) {
         Vec3_ApproachHorz(&mPos, &mTarget, 0x1e000);
-        ApproachLinear(mPosY, mTarget.y, 0x1e000);
+        ApproachLinear(mPos.y, mTarget.y, 0x1e000);
     }
     if (mStateTimer == 0) {
         if (Sound::PlaySub(0x4a, 0x7f, 0, 0x7222, 0) != 0) {
@@ -616,9 +616,9 @@ int daC_Jugem_c::StateFlyToPlayerMain()
     in.z = 0xc8000;
     Matrix4x3_FromRotationY(&data_020a0e68, 0);
     MTX_MultVec43(&in, &data_020a0e68, &out);
-    out.x += p->mPosX;
-    out.y += p->mPosY + 0x70000;
-    out.z += p->mPosZ;
+    out.x += p->mPos.x;
+    out.y += p->mPos.y + 0x70000;
+    out.z += p->mPos.z;
 
     ApproachLinear(mPos, out, 0x14000);
     ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, &out), 0x800);
@@ -634,7 +634,7 @@ int daC_Jugem_c::StateFlyToPlayerMain()
 
 int daC_Jugem_c::StateFlyToPlayerInit()
 {
-    mPosZ = 2457600;
+    mPos.z = 2457600;
     mTimer = 0;
     mStateTimer = 40;
     return 1;
@@ -646,16 +646,16 @@ int daC_Jugem_c::StateHiddenMain()
 {
     daPly_c *p = ClosestPlayer();
     if (p != 0) {
-        VecFx32 v = *(VecFx32 *)&p->mPosX;
+        VecFx32 v = *(VecFx32 *)&p->mPos;
         if ((data_0209caa0.file.flags2 & 0x10000) != 0 && v.z > -0x28000 &&
             p->SetNoControlState(0x12, -1, 0) != 0) {
             p->mStateTarget = mPos;
-            *(VecFx32 *)&mPosX = v;
-            mPosX -= 0x3e8000;
-            mPosY = p->mGroundY + 0x3e8000;
-            mTarget.x = mPosX;
-            mTarget.y = mPosY;
-            mTarget.z = mPosZ;
+            *(VecFx32 *)&mPos = v;
+            mPos.x -= 0x3e8000;
+            mPos.y = p->mGroundY + 0x3e8000;
+            mTarget.x = mPos.x;
+            mTarget.y = mPos.y;
+            mTarget.z = mPos.z;
             mHidden = 0;
             SetState(data_ov085_02130800);
         }
@@ -685,29 +685,29 @@ int daC_Jugem_c::StateHoverMain()
     plpos.y = src->y;
     plpos.z = src->z;
     if (gCurrentSublevel == 0x2f) {
-        mPosX = 0;
+        mPos.x = 0;
     } else {
-        mPosX = 0x1086000;
+        mPos.x = 0x1086000;
         if (mAuxCounter == 0) {
             p = ClosestPlayer();
-            if (p != 0 && p->mPosX > 0x1086000) {
+            if (p != 0 && p->mPos.x > 0x1086000) {
                 SpawnSoundObj(0);
                 mAuxCounter = 1;
             }
         }
     }
-    mPosY = plpos.y;
-    mPosZ = plpos.z;
+    mPos.y = plpos.y;
+    mPos.z = plpos.z;
     in.z = ::Vec3_HorzDist(&plpos, &mPos);
     Matrix4x3_FromRotationY(&data_020a0e68, ::Vec3_HorzAngle(&plpos, &mPos));
     MTX_MultVec43(&in, &data_020a0e68, &out);
-    mPosX += out.x;
+    mPos.x += out.x;
     if (gCurrentSublevel == 0x2f) {
-        if (mPosX > 0x79e000) {
-            mPosX = 0x79e000;
+        if (mPos.x > 0x79e000) {
+            mPos.x = 0x79e000;
         }
     }
-    mPosZ += out.z;
+    mPos.z += out.z;
     mPrevAngleY = 0x8000 - cam->mAngleY;
     mPrevAngleX = -cam->mAngleX;
     return 1;
@@ -735,7 +735,7 @@ void daC_Jugem_c::UpdateShadow()
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)&data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x38000) >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
     *(Mtx43 *)&mShadowMat1 = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMat1, 0x46000, 0x258000, 0xf);
 }
@@ -760,9 +760,9 @@ void daC_Jugem_c::UpdateShadowPlayer()
     *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     Matrix4x3_FromTranslation(&data_020a0e68,
-        mPosX >> 3,
-        (mPosY - 0x38000) >> 3,
-        mPosZ >> 3);
+        mPos.x >> 3,
+        (mPos.y - 0x38000) >> 3,
+        mPos.z >> 3);
     *(Mtx43 *)&mShadowMat1 = *(Mtx43 *)&data_020a0e68;
 
     DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMat1, 0x46000, 0x258000, 0xf);

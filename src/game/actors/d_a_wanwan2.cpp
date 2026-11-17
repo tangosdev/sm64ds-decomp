@@ -215,14 +215,14 @@ int daWanwan2_c::func_ov100_02143370() {
     dBgCh_Lin line2;
     va.x = 0; va.y = 0; va.z = 0;
     vb.x = 0; vb.y = 0; vb.z = 0;
-    va.x = mPosX;
-    ya = mPosY;
+    va.x = mPos.x;
+    ya = mPos.y;
     va.y = ya;
-    va.z = mPosZ;
-    vb.x = mPosX;
-    yb = mPosY;
+    va.z = mPos.z;
+    vb.x = mPos.x;
+    yb = mPos.y;
     vb.y = yb;
-    vb.z = mPosZ;
+    vb.z = mPos.z;
     va.y = ya + 0xa000;
     vb.y = yb - 0xb8000;
     line1.SetObjAndLine(va, vb, (dActor_c *)this);
@@ -292,9 +292,9 @@ void daWanwan2_c::func_ov100_0214344c() {
         return;
     {
         Vector3 pos;
-        pos.x = this->mPosX;
-        pos.y = this->mPosY;
-        pos.z = this->mPosZ;
+        pos.x = this->mPos.x;
+        pos.y = this->mPos.y;
+        pos.z = this->mPos.z;
         other->Hurt(pos, 2, 0xc000, 1, 0, 1);
     }
 }
@@ -327,9 +327,9 @@ void daWanwan2_c::func_ov100_021435e8() {
                     this->mChainEndActorID = 0;
                     return;
                 }
-                a->mPosX = this->mLinkPos[5].x;
-                a->mPosY = this->mLinkPos[5].y;
-                a->mPosZ = this->mLinkPos[5].z;
+                a->mPos.x = this->mLinkPos[5].x;
+                a->mPos.y = this->mLinkPos[5].y;
+                a->mPos.z = this->mLinkPos[5].z;
                 return;
             }
             this->mChainEndDone = 1;
@@ -351,9 +351,9 @@ void daWanwan2_c::func_ov100_021435e8() {
                     this->mChainEndActorID = 0;
                     return;
                 }
-                a->mPosX = this->mLinkPos[5].x;
-                a->mPosY = this->mLinkPos[5].y;
-                a->mPosZ = this->mLinkPos[5].z;
+                a->mPos.x = this->mLinkPos[5].x;
+                a->mPos.y = this->mLinkPos[5].y;
+                a->mPos.z = this->mLinkPos[5].z;
                 return;
             }
             this->mChainEndDone = 1;
@@ -450,7 +450,7 @@ void daWanwan2_c::func_ov100_021437d4() {
         Vec3_Sub(&v54, pos, vel);
         Vec3_MulScalar(&v60, &v54, 0xbb8);
         vel->x = v60.x; vel->y = v60.y; vel->z = v60.z;
-        *heights = this->mPosY - 0xc8000; /* 200 units below the chomp */
+        *heights = this->mPos.y - 0xc8000; /* 200 units below the chomp */
         if (*heights - pos->y > 0xc8000) *heights = pos->y;
         angOff += 0x2000;
         vel++;
@@ -506,9 +506,9 @@ void daWanwan2_c::func_ov100_02143b68() {
     int i;
     dExtSimpleModel_c *mdst;
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mAnmModel.mat4x3.t.x = mPosX >> 3;
-    mAnmModel.mat4x3.t.y = mPosY >> 3;
-    mAnmModel.mat4x3.t.z = mPosZ >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000, 0x1f4000, 0xf);
     tmp = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     i = 0;
@@ -750,16 +750,16 @@ int daWanwan2_c::InitResources()
     {
         int i = 0;
         do {
-            mLinkPos[i].x = mPosX;
-            mLinkPos[i].y = mPosY;
-            mLinkPos[i].z = mPosZ;
+            mLinkPos[i].x = mPos.x;
+            mLinkPos[i].y = mPos.y;
+            mLinkPos[i].z = mPos.z;
             i++;
         } while (i < daWanwan2_NUM_LINKS);
     }
 
     mCoinTimer = 200;
 
-    /* Start at node 1: GetNode writes that node's position over mPosX/Y/Z,
+    /* Start at node 1: GetNode writes that node's position over mPos.x/.y/.z,
        after the links were seeded above from the placed position. */
     {
         PathPtr path;
@@ -769,7 +769,7 @@ int daWanwan2_c::InitResources()
     }
 
     /* Raise it 100 units (0x64000). */
-    mPosY += 0x64000;
+    mPos.y += 0x64000;
     mScale.x = 0x1000;
     mScale.y = 0x1000;
     mScale.z = 0x1000;

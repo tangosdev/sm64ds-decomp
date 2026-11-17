@@ -167,7 +167,7 @@ daTrsTrap_c::~daTrsTrap_c()
    mModel.mat4x3 at 0xf0. Called from Behavior. */
 void daTrsTrap_c::UpdateModelTransform() {
     int v[3];
-    Vec3_Asr(v, &mPosX, 3);
+    Vec3_Asr(v, &mPos.x, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3 = data_020a0e68;
@@ -176,18 +176,18 @@ void daTrsTrap_c::UpdateModelTransform() {
 /* The collision matrix mClsnMat from position and angles, then the moving
    mesh follows it. Called from InitResources and Behavior. */
 void daTrsTrap_c::UpdateClsnMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     mClsnMat = data_020a0e68;
     mMovingMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
-/* Staircase settle: frames 0..3 nudge mPosY by the signed table entry
+/* Staircase settle: frames 0..3 nudge mPos.y by the signed table entry
    (<< 12); any later frame reports done. */
 int daTrsTrap_c::SettleStaircase(int frame) {
     if ((unsigned int)frame > 3 || (short)frame < 0)
         return 1;
-    mPosY += data_ov063_0211e26c[frame] << 12;
+    mPos.y += data_ov063_0211e26c[frame] << 12;
     return 0;
 }
 
@@ -236,7 +236,7 @@ void daTrsTrap_c::UpdateBookshelf() {
     }
     p = (dActor_c *)ClosestPlayer();
     {
-        int *q = &p->mPosX;
+        int *q = &p->mPos.x;
         pp.x = q[0];
         pp.y = q[1];
         pp.z = q[2];
@@ -276,7 +276,7 @@ void daTrsTrap_c::UpdateBookshelf() {
         }
         return;
     case 2:
-        mPosX += 0x5000;
+        mPos.x += 0x5000;
         mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8d, mCamSpacePos, 0);
         Sound::PlaySecretSound(this, &mSoundTimer);
         if (mStateTimer > 101)
@@ -308,7 +308,7 @@ void daTrsTrap_c::func_ov063_0211cae8(int m) {
    level. The tilt is applied twice in the standing case, as in the ROM. */
 void daTrsTrap_c::UpdateTiltingTrap() {
     if (mStandingActor != 0) {
-        mAngVelX = (s16)((mStandingActor->mPosZ - mPosZ) >> 0xc);
+        mAngVelX = (s16)((mStandingActor->mPos.z - mPos.z) >> 0xc);
         mAngleX += mAngVelX;
     } else {
         int a = mAngleX;
@@ -350,18 +350,18 @@ void daTrsTrap_c::UpdateStaircase() {
 
     switch (mState) {
     case 0:
-        mPosY = mHomePos.y;
+        mPos.y = mHomePos.y;
         mRiseProgress = 0;
         mState++;
         /* fallthrough */
     case 1:
-        mPosY += 0x8000;
+        mPos.y += 0x8000;
         mRiseProgress += 8;
         mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x82, mCamSpacePos, 0);
         if (mRiseProgress <= limit)
             return;
         mRiseProgress = limit;
-        mPosY = mHomePos.y + (limit << 12);
+        mPos.y = mHomePos.y + (limit << 12);
         mState++;
         return;
     case 2:
@@ -463,10 +463,10 @@ int daTrsTrap_c::InitResources()
             dx = (bit ^ 1) * 0xc8000;
             if (bit)
                 mVisible = 0;
-            mPosY = mPosY - 0x258000 + dx;
-            pos.x = mPosX;
-            pos.y = mPosY;
-            pos.z = mPosZ;
+            mPos.y = mPos.y - 0x258000 + dx;
+            pos.x = mPos.x;
+            pos.y = mPos.y;
+            pos.z = mPos.z;
             for (i = 1; i <= 2; i++) {
                 pos.z -= 0xc8000;
                 pos.y += dx;
@@ -483,9 +483,9 @@ int daTrsTrap_c::InitResources()
         mIndex = 3;
     }
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mState = 0;
     mStandingActor = 0;
     mInitLatch = 0;

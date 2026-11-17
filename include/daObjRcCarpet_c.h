@@ -27,7 +27,7 @@ struct daObjRcCarpet_c : dPathLiftActor_c {
     /* How far the carpet sags under a rider: Behavior eases it toward
        -0x14000 (20 units down) at 0x5000 a frame while mAfterClsnRan is
        set and back toward 0 otherwise; UpdateModelTransform and
-       UpdateClsnTransform add it to mPosY for the model and collision
+       UpdateClsnTransform add it to mPos.y for the model and collision
        matrices. Was unk_4bc. */
     s32 mRideDipY; /* 0x4bc */
 

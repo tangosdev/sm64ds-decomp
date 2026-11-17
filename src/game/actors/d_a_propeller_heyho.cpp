@@ -212,9 +212,9 @@ int daPropeller_Heyho_c::InitResources()
     mWithMeshClsn.Init(this, 0x50000, 0x3c000, 0, 0);
     mCoinType = 1;
     mExtraCoinCount = 1;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePosX = mPos.x;
+    mHomePosY = mPos.y;
+    mHomePosZ = mPos.z;
     FlyGuy_ChangeState(this, &data_ov070_0212359c);
     return 1;
 }
@@ -359,7 +359,7 @@ void daPropeller_Heyho_c::func_ov070_02120070() {
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0xa000) >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xa000) >> 3, mPos.z >> 3);
     mShadowMatrix = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMatrix, 0x76000, 0x320000, 0xf);
 }
@@ -450,7 +450,7 @@ int daPropeller_Heyho_c::func_ov070_0211fd98() {
         p = this->ClosestNonVanishPlayer();
         if (p) {
             int *pos =
-                &p->mPosX; /* int view is load-bearing: plain p->mPosX reads change this function's size */
+                &p->mPos.x; /* int view is load-bearing: plain p->mPos.x reads change this function's size */
             t.x = pos[0];
             t.y = pos[1];
             t.z = pos[2];
@@ -500,14 +500,14 @@ int daPropeller_Heyho_c::func_ov070_0211fae4() {
     player = this->ClosestNonVanishPlayer();
     if (player == 0) {
         if (gCurrentSublevel != kLevel0x16) {
-            this->mHomePosX = this->mPosX;
-            this->mHomePosY = this->mPosY;
-            this->mHomePosZ = this->mPosZ;
+            this->mHomePosX = this->mPos.x;
+            this->mHomePosY = this->mPos.y;
+            this->mHomePosZ = this->mPos.z;
             this->mHomePosY += kHomeLiftEscape;
         }
-        this->mPosX = this->mPrevPos.x;
-        this->mPosY = this->mPrevPos.y;
-        this->mPosZ = this->mPrevPos.z;
+        this->mPos.x = this->mPrevPos.x;
+        this->mPos.y = this->mPrevPos.y;
+        this->mPos.z = this->mPrevPos.z;
         this->mPrevAngleX = 0;
         this->mStateTimer = 0;
         this->mSpeed.y = 0;
@@ -522,7 +522,7 @@ int daPropeller_Heyho_c::func_ov070_0211fae4() {
     {
         int *q =
             &player
-                 ->mPosX; /* int view is load-bearing: plain player->mPosX reads change this function's size */
+                 ->mPos.x; /* int view is load-bearing: plain player->mPos.x reads change this function's size */
         vb.x = q[0];
         vb.y = q[1];
         vb.z = q[2];
@@ -652,9 +652,9 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
 
     if (mStateTimer == 0 || mWithMeshClsn.IsOnWall()) {
         if (gCurrentSublevel != kLevel0x16) {
-            mHomePosX = mPosX;
-            mHomePosY = mPosY;
-            mHomePosZ = mPosZ;
+            mHomePosX = mPos.x;
+            mHomePosY = mPos.y;
+            mHomePosZ = mPos.z;
         }
         mPrevAngleX = 0;
         FlyGuy_ChangeState(this, &data_ov070_021235dc);
@@ -664,25 +664,25 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     player = ClosestNonVanishPlayer();
     if (player == 0) {
         if (gCurrentSublevel != kLevel0x16) {
-            mHomePosX = mPosX;
-            mHomePosY = mPosY;
-            mHomePosZ = mPosZ;
+            mHomePosX = mPos.x;
+            mHomePosY = mPos.y;
+            mHomePosZ = mPos.z;
         }
         mPrevAngleX = 0;
         FlyGuy_ChangeState(this, &data_ov070_021235dc);
         return 1;
     }
 
-    if (player->mIsUnderwater != 0 && data_0209f32c > mPosY) {
+    if (player->mIsUnderwater != 0 && data_0209f32c > mPos.y) {
         if (gCurrentSublevel != kLevel0x16) {
-            mHomePosX = mPosX;
-            mHomePosY = mPosY;
-            mHomePosZ = mPosZ;
+            mHomePosX = mPos.x;
+            mHomePosY = mPos.y;
+            mHomePosZ = mPos.z;
             mHomePosY += kHomeLiftEscape;
         }
-        mPosX = mPrevPos.x;
-        mPosY = mPrevPos.y;
-        mPosZ = mPrevPos.z;
+        mPos.x = mPrevPos.x;
+        mPos.y = mPrevPos.y;
+        mPos.z = mPrevPos.z;
         mPrevAngleX = 0;
         mStateTimer = 0;
         mSpeed.y = 0;
@@ -690,7 +690,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         return 1;
     }
 
-    *(V3w*)&tmp = *(V3w*)&player->mPosX;  /* array-wrapper keeps the ldm/stm block copy under -lang c++ */
+    *(V3w*)&tmp = *(V3w*)&player->mPos.x;  /* array-wrapper keeps the ldm/stm block copy under -lang c++ */
     z = 0;
     v.x = z;
     v.y = z;
@@ -712,8 +712,8 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     ApproachAngle(&mPrevAngleX, vAngle, 0xa, 0x200, 0x100);
 
     v.z = 0x11000;
-    if (mPosY <= tmp.y + 0x5000 ||
-        mPosY <= player->mPosY + 0x5000 ||
+    if (mPos.y <= tmp.y + 0x5000 ||
+        mPos.y <= player->mPos.y + 0x5000 ||
         Vec3_Dist(&mPos, &mHomePos) > kHomeLeashDist) {
         DecIfAbove0_Short(&mStateTimer);
         v.z = 0x9000;
@@ -802,7 +802,7 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
     pl = ClosestPlayer();
     if ((unsigned)(mAnmModel.currFrame << 4) >> 0x10 < kFireFrame) {
         if (pl != 0) {
-            *(V3w *)&posbuf = *(V3w *)&pl->mPosX;
+            *(V3w *)&posbuf = *(V3w *)&pl->mPos.x;
             tmp.x = posbuf.x;
             tmp.y = posbuf.y;
             tmp.z = posbuf.z;
@@ -814,7 +814,7 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
     if (mAnmModel.dExtFrameCtrl_c::WillHitFrame(kFireFrame) != 0) {
         *(V3h*)&vel = *(V3h*)&mAngleX;
         if (pl != 0) {
-            int *base = (int *)M(&pl->mPosX);
+            int *base = (int *)M(&pl->mPos.x);
             fp.x = base[0];
             fp.y = base[1];
             fp.z = base[2];
@@ -859,9 +859,9 @@ int daPropeller_Heyho_c::func_ov070_0211f368() {
     if (this->mStateStep != 0) {
         Vector3 v;
         int x, y, z;
-        x = this->mPosX;
-        z = this->mPosZ;
-        y = this->mPosY + 0x50000;
+        x = this->mPos.x;
+        z = this->mPos.z;
+        y = this->mPos.y + 0x50000;
         v.x = x;
         v.y = y;
         v.z = z;
@@ -960,9 +960,9 @@ void daPropeller_Heyho_c::func_ov070_0211f100() {
 
     {
         Vector3 v;
-        v.x = this->mPosX;
-        v.y = this->mPosY;
-        v.z = this->mPosZ;
+        v.x = this->mPos.x;
+        v.y = this->mPos.y;
+        v.z = this->mPos.z;
         hitPlayer->Hurt(v, 2, 0xc000, 1, 0, 1);
     }
     if (this->mHitDuringAttack != 0)
@@ -985,9 +985,9 @@ void daPropeller_Heyho_c::func_ov070_0211f100() {
 int daPropeller_Heyho_c::func_ov070_0211f0a4() {
     this->SmallPoofDust();
     Vector3 pos;
-    pos.x = this->mPosX;
-    pos.y = this->mPosY;
-    pos.z = this->mPosZ;
+    pos.x = this->mPos.x;
+    pos.y = this->mPos.y;
+    pos.z = this->mPos.z;
     unsigned int coins = this->mExtraCoinCount + 1;
     this->SpawnCoins(pos, coins, 0xa000, 0);
     this->KillAndTrackInDeathTable();

@@ -183,9 +183,9 @@ int daObjSimpleLift_c::InitResources() {
 
     mMoveTimer = data_ov091_02134504[mVariant];
     mHorzSpeed = 0xa000;
-    mBasePos.x = mPosX;
-    mBasePos.y = mPosY;
-    mBasePos.z = mPosZ;
+    mBasePos.x = mPos.x;
+    mBasePos.y = mPos.y;
+    mBasePos.z = mPos.z;
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 

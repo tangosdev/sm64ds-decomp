@@ -86,9 +86,9 @@ void daObjMaruta_c::OnHitByMegaChar(daPly_c &player) {
 /* -------------------------------------------------------------------------- */
 void daObjMaruta_c::UpdateModelTransform() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -181,14 +181,14 @@ int daObjMaruta_c::func_ov080_0212714c(int *maxDist) {
     if (ang <= 0x100)
         ang = 0;
     if (len > *maxDist) {
-        mPosX = mPrevPos.x;
-        mPosY = mPrevPos.y;
-        mPosZ = mPrevPos.z;
+        mPos.x = mPrevPos.x;
+        mPos.y = mPrevPos.y;
+        mPos.z = mPrevPos.z;
     }
     if (ang == mPathAngDiff || ang == 0x8000) {
-        mPosX = mPrevPos.x;
-        mPosY = mPrevPos.y;
-        mPosZ = mPrevPos.z;
+        mPos.x = mPrevPos.x;
+        mPos.y = mPrevPos.y;
+        mPos.z = mPrevPos.z;
         mHitTimer = 10;
     }
     mAngleX += mRollAngVel;
@@ -227,9 +227,9 @@ int daObjMaruta_c::func_ov080_021274ac(ResourceDescriptor *arg) {
                           *(arg->clps));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     mMeshCollider.SetStoodOnCallback(&daObjMaruta_c::StoodOnCallback);
-    mRestPos.x = mPosX;
-    mRestPos.y = mPosY;
-    mRestPos.z = mPosZ;
+    mRestPos.x = mPos.x;
+    mRestPos.y = mPos.y;
+    mRestPos.z = mPos.z;
     Vec3_Sub(&d, &mPos, &mRestPos);
     VEC_Mag(&d);
     mPathAngDiff = AngleDiff(Vec3_HorzAngle(&mPos, &mRestPos), mAngleY);

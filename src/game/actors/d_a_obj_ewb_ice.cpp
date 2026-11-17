@@ -165,13 +165,13 @@ int daObjEwbIce_c::StateSettled_Enter() {
     mWobblePhase = 0;
     /* Written twice. One assignment then `pos.y -=` is 0x74 against the
        cartridge's 0x8c: the first copy is a separate store of mPos. */
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
-    pos.x = mPosX;
-    y = mPosY;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
+    pos.x = mPos.x;
+    y = mPos.y;
     pos.y = y;
-    pos.z = mPosZ;
+    pos.z = mPos.z;
     pos.y = y - kSplashDrop;
     Particle::System::NewSimple(kPtclEwbIceSettleA, pos.x, pos.y, pos.z);
     Particle::System::NewSimple(kPtclEwbIceSettleB, pos.x, pos.y, pos.z);
@@ -201,8 +201,8 @@ int daObjEwbIce_c::StateArena_Update() {
     UpdatePos(0);
     if (mVariant == 0) {
         int surface = data_02092138 + kSurfaceAboveVoid;
-        if (surface > mPosY) {
-            mPosY = surface;
+        if (surface > mPos.y) {
+            mPos.y = surface;
             mTimer = 0;
             mVertAccel = 0;
             mSpeed.y = 0;
@@ -232,7 +232,7 @@ int daObjEwbIce_c::StateSink_Update() {
             ApproachLinear(mAngleX, kTiltTarget, kTiltStep);
         }
     }
-    if (DecIfAbove0_Short(&mTimer) == 0 || data_02092138 - kDeathBelowVoid > mPosY) {
+    if (DecIfAbove0_Short(&mTimer) == 0 || data_02092138 - kDeathBelowVoid > mPos.y) {
         MarkForDestruction();
     }
     return 1;
@@ -261,16 +261,16 @@ int daObjEwbIce_c::StateReport_Update() {
                 break;
             case ACTOR_EWB_ICE_B: {
                 char *slot = boss + mSpawnIndex * 0xc;
-                ((daKing_Donketu_c *)slot)->mWaypointsA[0].x = mPosX;
-                ((daKing_Donketu_c *)slot)->mWaypointsA[0].y = mPosY;
-                ((daKing_Donketu_c *)slot)->mWaypointsA[0].z = mPosZ;
+                ((daKing_Donketu_c *)slot)->mWaypointsA[0].x = mPos.x;
+                ((daKing_Donketu_c *)slot)->mWaypointsA[0].y = mPos.y;
+                ((daKing_Donketu_c *)slot)->mWaypointsA[0].z = mPos.z;
                 break;
             }
             case ACTOR_EWB_ICE_C: {
                 char *slot = boss + mSpawnIndex * 0xc;
-                ((daKing_Donketu_c *)slot)->mWaypointsB[0].x = mPosX;
-                ((daKing_Donketu_c *)slot)->mWaypointsB[0].y = mPosY;
-                ((daKing_Donketu_c *)slot)->mWaypointsB[0].z = mPosZ;
+                ((daKing_Donketu_c *)slot)->mWaypointsB[0].x = mPos.x;
+                ((daKing_Donketu_c *)slot)->mWaypointsB[0].y = mPos.y;
+                ((daKing_Donketu_c *)slot)->mWaypointsB[0].z = mPos.z;
                 break;
             }
             }
@@ -296,9 +296,9 @@ void daObjEwbIce_c::Kill() {
     Vector3 pos;
     Vector3 dust;
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += kKillRise;
     Particle::System::NewSimple(kPtclBgActorBreak, pos.x, pos.y, pos.z);
     dust = pos;
@@ -323,9 +323,9 @@ int daObjEwbIce_c::Behavior() {
     if (mState->update != 0)
         (this->*(mState->update))();
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.t.x = mPosX >> 3;
-    mModel.mat4x3.t.y = mPosY >> 3;
-    mModel.mat4x3.t.z = mPosZ >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     UpdateClsnPosAndRot();
     return 1;
 }
@@ -356,9 +356,9 @@ int daObjEwbIce_c::InitResources() {
     bmd = dExtSimpleModel_c::LoadFile(*((EwbIceFileSlot *)data_ov073_021231bc)[mVariant].file);
     mModel.SetFile(bmd, 1, -1);
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.t.x = mPosX >> 3;
-    mModel.mat4x3.t.y = mPosY >> 3;
-    mModel.mat4x3.t.z = mPosZ >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     UpdateClsnPosAndRot();
 
     /* mVariant reloaded after LoadFile is a second mul (0x1b8 -> 0x1c4).

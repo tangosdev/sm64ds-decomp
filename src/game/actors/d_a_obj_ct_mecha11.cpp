@@ -72,7 +72,7 @@ short data_ov035_02112b80[2] = {0x00c8, 0x0258};
 daObjCtMecha11_c::~daObjCtMecha11_c() {}
 
 void daObjCtMecha11_c::UpdateShadow() {
-    int d1 = mPosY - mFloorPosY;
+    int d1 = mPos.y - mFloorPosY;
     int ad = d1 < 0 ? -d1 : d1;
     if (ad > 0x7d0000)
         return;
@@ -83,9 +83,9 @@ void daObjCtMecha11_c::UpdateShadow() {
     mClipOffsetY = -half;
     mClipRadius = (int)(clipD + ((unsigned)clipD >> 31)) >> 4;
     Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
-    mShadowMat.m[9] = mPosX >> 3;
+    mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = mFloorPosY >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
     int s = FX_CosIdx((u16)mAngleX >> 4);
     int sa = s < 0 ? -s : s;
     int scaled = FX_MUL(sa, 0x26c000);
@@ -94,9 +94,9 @@ void daObjCtMecha11_c::UpdateShadow() {
 
 void daObjCtMecha11_c::UpdateModel() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 int daObjCtMecha11_c::CleanupResources() {
@@ -158,9 +158,9 @@ int daObjCtMecha11_c::InitResources() {
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetEdgeToleranceShift(0);
     Vector3 v;
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     v.y = v.y - 0xa000;
     dBgCh_Gnd rg;
     rg.SetObjAndPos(v, 0);

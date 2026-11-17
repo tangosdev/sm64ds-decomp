@@ -174,7 +174,7 @@ int daObjSwitch_c::InitResources()
             mTimeLimit *= 10;
     }
     mPressTimer = 5;
-    mPosY += 0x5000;
+    mPos.y += 0x5000;
     mMusicFadeDone = 1;
     return 1;
 }
@@ -337,7 +337,7 @@ void daObjSwitch_c::StatePressedMain() {
             mAreaId = -1;
         }
     } else {
-        if (gCurrentSublevel == 0xd && mPosX == -0x140000) {
+        if (gCurrentSublevel == 0xd && mPos.x == -0x140000) {
             SpawnSoundObj(0);
         }
         Event::SetBit(mEventBit);
@@ -426,9 +426,9 @@ void daObjSwitch_c::OnGroundPounded(dActor_c &other)
 
 void daObjSwitch_c::UpdateClsnMatrix() {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPosX;
-    mClsnMat.m[10] = mPosY - mDisplacementY;
-    mClsnMat.m[11] = mPosZ;
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y - mDisplacementY;
+    mClsnMat.m[11] = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 

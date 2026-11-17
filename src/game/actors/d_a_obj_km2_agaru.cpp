@@ -75,7 +75,7 @@ s32 daObjKm2_Agaru_c::InitResources() {
 
     mWaitTimer = 0;
     mState = 0;
-    mRestY = mPosY;
+    mRestY = mPos.y;
     return 1;
 }
 
@@ -87,10 +87,10 @@ s32 daObjKm2_Agaru_c::Behavior() {
         break;
     case 1:
         if (mWaitTimer >= kWaitFrames) {
-            mPosY += kRideSpeed;
+            mPos.y += kRideSpeed;
             int top = mRestY + kRideHeight;
-            if (mPosY >= top) {
-                mPosY = top;
+            if (mPos.y >= top) {
+                mPos.y = top;
                 mState++;
                 mWaitTimer = 0;
             }
@@ -100,10 +100,10 @@ s32 daObjKm2_Agaru_c::Behavior() {
         break;
     case 2:
         if (mWaitTimer >= kWaitFrames) {
-            mPosY -= kRideSpeed;
+            mPos.y -= kRideSpeed;
             int bottom = mRestY;
-            if (mPosY <= bottom) {
-                mPosY = bottom;
+            if (mPos.y <= bottom) {
+                mPos.y = bottom;
                 mState = 0;
                 mWaitTimer = 0;
             }

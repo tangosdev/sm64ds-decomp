@@ -99,7 +99,7 @@ daObjCtRotateBlock_c::~daObjCtRotateBlock_c() {}
 void daObjCtRotateBlock_c::UpdateShadow() {
     int d, b;
     int bval = mFloorY;
-    int aval = mPosY;
+    int aval = mPos.y;
     int diff = aval - bval;
     if (diff < 0)
         diff = -diff;
@@ -112,9 +112,9 @@ void daObjCtRotateBlock_c::UpdateShadow() {
         d = b;
     }
     Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
-    mShadowMat.m[9] = mPosX >> 3;
+    mShadowMat.m[9] = mPos.x >> 3;
     mShadowMat.m[10] = (mFloorY + 0x1000) >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
     {
         int s = FX_SinIdx((u16)(s16)(mAngleZ << 1) >> 4);
         int sa = s < 0 ? -s : s;
@@ -125,20 +125,20 @@ void daObjCtRotateBlock_c::UpdateShadow() {
 
 void daObjCtRotateBlock_c::UpdateClsn() {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPosX;
-    mClsnMat.m[10] = mPosY + mOffsetY;
-    mClsnMat.m[11] = mPosZ;
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y + mOffsetY;
+    mClsnMat.m[11] = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
 void daObjCtRotateBlock_c::UpdateModel() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = (mPosY + mOffsetY) >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = (mPos.y + mOffsetY) >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
     Matrix4x3_FromRotationY(&mRotatingModel.mat4x3, mAngleY);
     mRotatingModel.mat4x3.m[9] = mModel.mat4x3.m[9];
-    mRotatingModel.mat4x3.m[10] = mPosY >> 3;
+    mRotatingModel.mat4x3.m[10] = mPos.y >> 3;
     mRotatingModel.mat4x3.m[11] = mModel.mat4x3.m[11];
 }
 
@@ -270,9 +270,9 @@ int daObjCtRotateBlock_c::InitResources() {
             mFloorY = ground.clsnY;
         }
 
-        vb.x = mPosX;
-        vb.y = mPosY;
-        vb.z = mPosZ;
+        vb.x = mPos.x;
+        vb.y = mPos.y;
+        vb.z = mPos.z;
         vb.y -= 0xd2000;
 
         ground.SetObjAndPos(vb, 0);

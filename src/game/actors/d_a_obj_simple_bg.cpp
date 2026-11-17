@@ -186,7 +186,7 @@ int daObjSimpleBg_c::InitResources() {
 
     if (IsBkTower(this) && gCurrentSublevel == 7) {
         if (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0) {
-            if (mPosY >= 0xdac000)
+            if (mPos.y >= 0xdac000)
                 return 0;
         }
     }

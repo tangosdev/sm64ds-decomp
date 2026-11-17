@@ -461,7 +461,7 @@ int daKpa_c::InitResources()
     this->mCutsceneStep = 0;
 
     /* Spawn takes the three position words as one Vector3. dActor_c stores them as
-     * mPosX/Y/Z at 0x5c, so the argument is the vector, not a pointer to the first
+     * mPos.x/.y/.z at 0x5c, so the argument is the vector, not a pointer to the first
      * scalar. */
     fire =
         (daKpaFire_c *)dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE, 0, this->mPos, 0, this->mAreaId, -1);
@@ -496,9 +496,9 @@ int daKpaTail_c::Behavior()
     Vector3 pos;
     const Vector3 &p = a->mPos;
     pos = p;
-    mPosX = pos.x + FX_SinIdx((u16)ang >> 4) * 0x8c;
-    mPosY = pos.y;
-    mPosZ = pos.z + FX_CosIdx((u16)ang >> 4) * 0x8c;
+    mPos.x = pos.x + FX_SinIdx((u16)ang >> 4) * 0x8c;
+    mPos.y = pos.y;
+    mPos.z = pos.z + FX_CosIdx((u16)ang >> 4) * 0x8c;
 
     func_ov060_02115b84();
     return 1;
@@ -746,9 +746,9 @@ the same value daKirai_c passes when a bomb goes off) and a FIRERING actor
 void daKpa_c::SpawnShockwave() {
     struct Vector3 v;
     if (this->mVariantID != 2) return;
-    v.x = this->mPosX;
-    v.y = this->mPosY;
-    v.z = this->mPosZ;
+    v.x = this->mPos.x;
+    v.y = this->mPos.y;
+    v.z = this->mPos.z;
     Earthquake(v, 0x7d0000);
     dActor_c::Spawn(BOWSER_ACTOR_FIRERING, 0, mPos, 0, this->mAreaId, -1);
 }
@@ -764,9 +764,9 @@ void daKpa_c::BounceEffects(char *counter) {
     *(unsigned short*)counter = *(unsigned short*)counter + 1;
     if (*(unsigned short*)counter >= 4) return;
     struct Vector3 v;
-    v.x = this->mPosX;
-    v.y = this->mPosY;
-    v.z = this->mPosZ;
+    v.x = this->mPos.x;
+    v.y = this->mPos.y;
+    v.z = this->mPos.z;
     this->LandingDustAt(v, 0);
     func_02012694(BOWSER_SND_LAND_SOFT, &mCamSpacePos);
 }
@@ -839,15 +839,15 @@ skip_angles:
         return;
     {
         dBgCh_Gnd rc;
-        pos.x = this->mPosX;
-        pos.y = this->mPosY;
-        pos.z = this->mPosZ;
+        pos.x = this->mPos.x;
+        pos.y = this->mPos.y;
+        pos.z = this->mPos.z;
         pos.y = pos.y + 0x32000;
         rc.SetObjAndPos(pos, 0);
         if (rc.DetectClsn())
             pos.y = rc.clsnY;
         else
-            pos.y = this->mPosY;
+            pos.y = this->mPos.y;
         Vec3_Asr(&v2, &pos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v2.x, v2.y, v2.z);
         *(Matrix4x3 *)(&this->mShadowMtx) = data_020a0e68;
@@ -934,12 +934,12 @@ void daKpa_c::RunIntroTalk() {
                 /* pos[] is first filled with his position and then overwritten
                  * before use; dropping those first three stores builds 12 bytes
                  * shorter (measured). */
-                x = this->mPosX;
+                x = this->mPos.x;
                 pos[0] = x;
-                y = this->mPosY;
+                y = this->mPos.y;
                 scale = 0xc8;
                 pos[1] = y;
-                z = this->mPosZ;
+                z = this->mPos.z;
                 y2 = y + 0xc8000;
                 pos[2] = z;
                 ang = this->mAngleY;
@@ -1177,18 +1177,18 @@ void daKpa_c::BitsActions() {
 
 /*
 Fall catch for the variant-2 jumps: if he is moving down (mSpeed.y < 0) and
-mPosY is below mHomePos.y - 0x12c000 (300 units below the arena level), put him
+mPos.y is below mHomePos.y - 0x12c000 (300 units below the arena level), put him
 at X = Z = 0, 0x7d0000 (2000 units) above the arena level, with both speeds
 zeroed. */
 void daKpa_c::ResetFallenOffStage() {
     int vy = this->mSpeed.y;
     if (vy >= 0) return;
     int thresh = this->mHomePos.y - 0x12c000;
-    int cur = this->mPosY;
+    int cur = this->mPos.y;
     if (cur >= thresh) return;
-    this->mPosZ = 0;
-    this->mPosX = this->mPosZ;
-    this->mPosY = this->mHomePos.y + 0x7d0000;
+    this->mPos.z = 0;
+    this->mPos.x = this->mPos.z;
+    this->mPos.y = this->mHomePos.y + 0x7d0000;
     this->mSpeed.y = 0;
     this->mHorzSpeed = 0;
 }
@@ -1536,9 +1536,9 @@ int daKpa_c::BowserLand() {
     if(this->mWithMeshClsn.IsOnGround()){
         this->mHorzSpeed = 0;
         this->mSpeed.y = 0;
-        v.x = this->mPosX;
-        v.y = this->mPosY;
-        v.z = this->mPosZ;
+        v.x = this->mPos.x;
+        v.y = this->mPos.y;
+        v.z = this->mPos.z;
         func_0200fa04(&v, 0);
         InitAnimation(0xc, 0x40000000);
         func_02012694(BOWSER_SND_LAND, &mCamSpacePos);
@@ -1570,7 +1570,7 @@ mSpeed.y = 0x28000 (40.0) for variant 2 while BOWSER_COND_RECOVERING is set,
 ShortSecondHop set a horizontal speed, and if it stays 0 snap X and Z to
 mLastGroundPos; advance and reset mAnimSpeed to 0x1000. Step 1: variant 2
 recovering runs ResetFallenOffStage first; he lands when BowserLand
-reports it, or when mPosY has dropped below mLastGroundPos.y (then, if still
+reports it, or when mPos.y has dropped below mLastGroundPos.y (then, if still
 moving vertically, the landing effects are replayed here); landing clears
 BOWSER_COND_RECOVERING, zeroes both speeds, puts him at mLastGroundPos.y, advances,
 runs SpawnShockwave and, for variant 1, goes to BOWSER_STATE_ARENA_TILT and
@@ -1593,8 +1593,8 @@ void daKpa_c::ActBigJump() {
         this->mHorzSpeed = 0;
         ShortSecondHop();
         if (this->mHorzSpeed == 0) {
-            this->mPosX = this->mLastGroundPos.x;
-            this->mPosZ = this->mLastGroundPos.z;
+            this->mPos.x = this->mLastGroundPos.x;
+            this->mPos.z = this->mLastGroundPos.z;
         }
         (this->mStep)++;
         this->mAnimSpeed = 0x1000;
@@ -1605,7 +1605,7 @@ void daKpa_c::ActBigJump() {
             ResetFallenOffStage();
         }
         if (BowserLand() == 0) {
-            if (this->mPosY >= this->mLastGroundPos.y)
+            if (this->mPos.y >= this->mLastGroundPos.y)
                 return;
         }
         if (this->mSpeed.y != 0) {
@@ -1616,7 +1616,7 @@ void daKpa_c::ActBigJump() {
         this->mCondFlags &= ~BOWSER_COND_RECOVERING;
         this->mHorzSpeed = 0;
         this->mSpeed.y = 0;
-        this->mPosY = this->mLastGroundPos.y;
+        this->mPos.y = this->mLastGroundPos.y;
         (this->mStep)++;
         SpawnShockwave();
         if (this->mVariantID == 1) {
@@ -1807,8 +1807,8 @@ void daKpa_c::ActChargeMario() {
         this->mStepCounter = 0;
         InitAnimation(0x1a, 0x40000000);
         this->mParticleHandle =
-            (unsigned int)Particle::System::New(this->mParticleHandle, kPtclSlideDust, this->mPosX,
-                                                this->mPosY + 0x32000, this->mPosZ, 0, 0);
+            (unsigned int)Particle::System::New(this->mParticleHandle, kPtclSlideDust, this->mPos.x,
+                                                this->mPos.y + 0x32000, this->mPos.z, 0, 0);
         if (ApproachLinear(this->mHorzSpeed, 0, 0x1000) != 0)
             this->mStep = 2;
         break;
@@ -1845,9 +1845,9 @@ int daKpa_c::CheckHitMine() {
     Vector3 v;
     dActor_c *closest = this->ClosestWithActorID(BOWSER_ACTOR_KIRAI);
     if (closest) {
-        v.x = this->mPosX;
-        v.y = this->mPosY;
-        v.z = this->mPosZ;
+        v.x = this->mPos.x;
+        v.y = this->mPos.y;
+        v.z = this->mPos.z;
         if (((daKirai_c *)closest)->IsInTriggerRange(&v)) {
             ((daKirai_c *)closest)->Explode();
             return 1;
@@ -1874,13 +1874,13 @@ void daKpa_c::ActThrown() {
         this->mStepCounter = 0;
     }
 
-    int referenceY = this->mPosY;
-    if (this->mPosY > this->mHomePos.y) {
+    int referenceY = this->mPos.y;
+    if (this->mPos.y > this->mHomePos.y) {
         Vector3 v;
         dBgCh_Gnd rg;
         int base = this->mHomePos.y;
-        int zz = this->mPosZ;
-        int xx = this->mPosX;
+        int zz = this->mPos.z;
+        int xx = this->mPos.x;
         int yy = base + 0x96000;
         v.x = xx;
         v.y = yy;
@@ -1896,7 +1896,7 @@ void daKpa_c::ActThrown() {
     if (this->mStep == 0) {
         InitAnimation(9, 0);
 
-        int dy = this->mPosY - referenceY;
+        int dy = this->mPos.y - referenceY;
         if (dy > 0xc8000 || this->mDistToCenter > 0xdac000) {
             if (this->mHorzSpeed >= 0x1e000) {
                 ApproachLinear(this->mHorzSpeed, 0x1e000, 0x4000);
@@ -1940,7 +1940,7 @@ void daKpa_c::SetGoalInvisible() {
     if (this->mOpacity != 0) return;
     this->mHorzSpeed = 0;
     this->mSpeed.y = 0;
-    this->mPosY = this->mHomePos.y - 0x3e8000;
+    this->mPos.y = this->mHomePos.y - 0x3e8000;
     if (Vec3_HorzLen(&mPos) < 0xed8000)
         return;
     {
@@ -1950,8 +1950,8 @@ void daKpa_c::SetGoalInvisible() {
         zero.y = 0;
         zero.z = 0;
         a = (unsigned short)Vec3_HorzAngle(&zero, &mPos) >> 4;
-        this->mPosX = (short)FX_SinIdx(a) * (short)0xed8;
-        this->mPosZ = (short)FX_CosIdx(a) * (short)0xed8;
+        this->mPos.x = (short)FX_SinIdx(a) * (short)0xed8;
+        this->mPos.z = (short)FX_CosIdx(a) * (short)0xed8;
     }
 }
 
@@ -1965,7 +1965,7 @@ Step 0 (also hides him with SetGoalInvisible): zero mAngleX/Z on the first frame
 (11.25 degrees) to both each frame until mAngleX wraps back to 0 (32 frames),
 and advance. Step 1: animation 0xb once; from frame 0x20 face the centre, set
 mSpeed.y 0x28000 (40.0), sound 0xb1, gravity 0, target opacity 0xff, clear
-mStepCounter and advance (before that, keep hiding him). Step 2: while mPosY >=
+mStepCounter and advance (before that, keep hiding him). Step 2: while mPos.y >=
 mHomePos.y, gravity -0x1000 (-1.0) and steer mHorzSpeed (toward 0 by 0x5000 when
 mDistToCenter is under 0x8fc000 / 2300 units for variant 1 or 0x9c4000 / 2500
 units otherwise and the floor is within 0x64000 = 100 units of mHomePos.y,
@@ -1982,12 +1982,12 @@ void daKpa_c::ActJumpOntoStage() {
 
     ground = this->mHomePos.y - 0x7d0000;
     hit = 0;
-    if (this->mPosY >= this->mHomePos.y) {
+    if (this->mPos.y >= this->mHomePos.y) {
         dBgCh_Gnd rc;
         {
-            int pz = this->mPosZ;
+            int pz = this->mPos.z;
             int py = this->mHomePos.y + 0x96000;
-            int px = this->mPosX;
+            int px = this->mPos.x;
             pos.x = px;
             pos.y = py;
             pos.z = pz;
@@ -2036,7 +2036,7 @@ void daKpa_c::ActJumpOntoStage() {
     {
         int thr;
         if (this->mVariantID == 1) thr = 0x8fc000; else thr = 0x9c4000;
-        if (this->mPosY >= this->mHomePos.y) {
+        if (this->mPos.y >= this->mHomePos.y) {
             this->mVertAccel = -0x1000;
             if (this->mDistToCenter < thr) {
                 int d = ground - this->mHomePos.y;
@@ -2175,7 +2175,7 @@ int daKpa_c::DeadWaitForMario() {
     LoopLayDownAnimation();
     if ((int)this->mAnmModel.file == (int)data_ov060_0211ac60.filePtr) {
         if (this->mTargetPlayer != 0) {
-            int* targetPos = &this->mTargetPlayer->mPosX;
+            int* targetPos = &this->mTargetPlayer->mPos.x;
             struct Vector3 v;
             s16 ang;
             v.x = targetPos[0];
@@ -2243,11 +2243,11 @@ int daKpa_c::DeadTwirlUp() {
 Park him after the defeat: X and Z set to 0 (Y kept), scale 0, both speeds and
 gravity 0, no shadow, body collider switched off. */
 void daKpa_c::DeadHide() {
-    int y = this->mPosY;
+    int y = this->mPos.y;
 
-    this->mPosX = 0;
-    this->mPosY = y;
-    this->mPosZ = 0;
+    this->mPos.x = 0;
+    this->mPos.y = y;
+    this->mPos.z = 0;
     this->mScale.x = 0;
     this->mScale.y = 0;
     this->mScale.z = 0;
@@ -2490,7 +2490,7 @@ IsOnGround call is discarded.) */
 int daKpa_c::CheckFallenOffStage() {
     int state = this->mState;
     if (state != BOWSER_STATE_RECOVER && state != BOWSER_STATE_ARENA_TILT) {
-        if (this->mPosY < this->mHomePos.y - 0x3e8000)
+        if (this->mPos.y < this->mHomePos.y - 0x3e8000)
             return 1;
         this->mWithMeshClsn.IsOnGround();
     }
@@ -2525,9 +2525,9 @@ void daKpa_c::FreeUpdate() {
             int b = (((dActor_c *)f)->actorID == BOWSER_ACTOR_PLAYER);
             if (b) {
                 Vector3 v;
-                v.x = this->mPosX;
-                v.y = this->mPosY;
-                v.z = this->mPosZ;
+                v.x = this->mPos.x;
+                v.y = this->mPos.y;
+                v.z = this->mPos.z;
                 f->Hurt(v, 2, 0x8000, 1, 0, 1);
             }
         }
@@ -2568,8 +2568,8 @@ void daKpa_c::FreeUpdate() {
     if (data_ov060_02119268[idx] != 0) {
         if (!this->mWithMeshClsn.IsOnGround()) {
             mPos = mLastGroundPos;
-            mPosX += FX_SinIdx((u16)mAngleToCenter >> 4) << 3;
-            mPosZ += FX_CosIdx((u16)mAngleToCenter >> 4) << 3;
+            mPos.x += FX_SinIdx((u16)mAngleToCenter >> 4) << 3;
+            mPos.z += FX_CosIdx((u16)mAngleToCenter >> 4) << 3;
         } else {
             this->mLastGroundPos = this->mPos;
         }
@@ -2626,9 +2626,9 @@ void daKpa_c::HeldUpdate() {
     this->mAngleY = a;
 
     mPos = mGrabbedPlayer->mPos;
-    mPosX += FX_SinIdx((u16)a >> 4) * 0xa0;
-    mPosY += 0x18000 - FX_SinIdx((u16)mAngleX >> 4) * 0xa0;
-    mPosZ += FX_CosIdx((u16)a >> 4) * 0xa0;
+    mPos.x += FX_SinIdx((u16)a >> 4) * 0xa0;
+    mPos.y += 0x18000 - FX_SinIdx((u16)mAngleX >> 4) * 0xa0;
+    mPos.z += FX_CosIdx((u16)a >> 4) * 0xa0;
 }
 
 /*
@@ -2811,15 +2811,15 @@ int daKpa_c::UpdateIntroCamera() {
         cam->SetFlag_3();
         pv = &((dActor_c *)player)->mPos;
         sp = *pv;
-        sp.y = this->mPosY;
+        sp.y = this->mPos.y;
         cam->SetLookAt(sp);
         this->mCamLookAt = sp;
         dist = Vec3_HorzDist(&mPos, &sp);
         k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x2000) >> 4;
         v = FX_MUL(dist, 0xA00);
-        this->mCamPos.x = this->mPosX + FX_MUL(v, FX_SinIdx(k));
-        this->mCamPos.y = this->mPosY + 0xc8000;
-        this->mCamPos.z = this->mPosZ + FX_MUL(v, FX_CosIdx(k));
+        this->mCamPos.x = this->mPos.x + FX_MUL(v, FX_SinIdx(k));
+        this->mCamPos.y = this->mPos.y + 0xc8000;
+        this->mCamPos.z = this->mPos.z + FX_MUL(v, FX_CosIdx(k));
         cam->SetPos(this->mCamPos);
         this->mCutsceneStep++;
         break;
@@ -2840,21 +2840,21 @@ int daKpa_c::UpdateIntroCamera() {
         if (d < 0x1f4000)
             d = 0x1f4000;
         k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x1000) >> 4;
-        sp.x = this->mPosX + FX_MUL(d, FX_SinIdx(k));
-        sp.z = this->mPosZ + FX_MUL(d, FX_CosIdx(k));
+        sp.x = this->mPos.x + FX_MUL(d, FX_SinIdx(k));
+        sp.z = this->mPos.z + FX_MUL(d, FX_CosIdx(k));
         ApproachLinear(this->mCamPos.x, sp.x, 0x4000);
         ApproachLinear(this->mCamPos.z, sp.z, 0x4000);
-        ApproachLinear(this->mCamLookAt.x, this->mPosX, 0x1e000);
-        ApproachLinear(this->mCamLookAt.z, this->mPosZ, 0x1e000);
+        ApproachLinear(this->mCamLookAt.x, this->mPos.x, 0x1e000);
+        ApproachLinear(this->mCamLookAt.z, this->mPos.z, 0x1e000);
         func_020092c4(cam, &cam->pos, &this->mCamPos);
         if (func_020092c4(cam, &cam->lookAt, &this->mCamLookAt) != 0)
             this->mCutsceneStep++;
         break;
     case 3: {
         int ty, tz, tx;
-        tz = FX_CosIdx((u16)this->mAngleY >> 4) * 0xc0 + this->mPosZ;
-        ty = this->mPosY + 0xfa000;
-        tx = FX_SinIdx((u16)this->mAngleY >> 4) * 0xc0 + this->mPosX;
+        tz = FX_CosIdx((u16)this->mAngleY >> 4) * 0xc0 + this->mPos.z;
+        ty = this->mPos.y + 0xfa000;
+        tx = FX_SinIdx((u16)this->mAngleY >> 4) * 0xc0 + this->mPos.x;
         sp.x = tx;
         sp.y = ty;
         sp.z = tz;
@@ -3015,9 +3015,9 @@ void daKpa_c::UpdateFootfalls() {
     Sound::Play(3, BOWSER_SND_FOOTFALL, this->mCamSpacePos);
     {
         Vector3 quake;
-        quake.x = this->mPosX;
-        quake.y = this->mPosY;
-        quake.z = this->mPosZ;
+        quake.x = this->mPos.x;
+        quake.y = this->mPos.y;
+        quake.z = this->mPos.z;
         Earthquake(quake, 0x320000);
     }
 }

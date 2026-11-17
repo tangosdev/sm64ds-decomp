@@ -90,10 +90,10 @@ int daKpFr_c::Render()
 {
   int hidden = (mFlags & 0x40000) != 0;
   if (hidden) return 1;
-  mParticle1 = Particle::System::NewCleanParticle(mParticle1, kPtclKeronpaFireA, mPosX,
-                                                  mPosY + 0x4b000, mPosZ, 0);
-  mParticle2 = Particle::System::NewCleanParticle(mParticle2, kPtclKeronpaFireB, mPosX,
-                                                  mPosY + 0x4b000, mPosZ, 0);
+  mParticle1 = Particle::System::NewCleanParticle(mParticle1, kPtclKeronpaFireA, mPos.x,
+                                                  mPos.y + 0x4b000, mPos.z, 0);
+  mParticle2 = Particle::System::NewCleanParticle(mParticle2, kPtclKeronpaFireB, mPos.x,
+                                                  mPos.y + 0x4b000, mPos.z, 0);
   return 1;
 }
 
@@ -180,13 +180,13 @@ int daKpFr_c::func_ov070_02121eb0() {
 
 void daKpFr_c::func_ov070_02121e14() {
   int shadowDepth;
-  mMatrix.t.x = mPosX >> 3;
-  mMatrix.t.y = mPosY >> 3;
-  mMatrix.t.z = mPosZ >> 3;
+  mMatrix.t.x = mPos.x >> 3;
+  mMatrix.t.y = mPos.y >> 3;
+  mMatrix.t.z = mPos.z >> 3;
   dBgCh_Gnd ground;
   ground.SetObjAndPos(mPos, this);
   if (ground.DetectClsn() != 0)
-    shadowDepth = (mPosY - ground.clsnY) + 0x1e000;
+    shadowDepth = (mPos.y - ground.clsnY) + 0x1e000;
   else
     shadowDepth = 0x12c000;
   DropShadowRadHeight(mShadowModel, mMatrix, 0x64000, shadowDepth, 15);
@@ -250,19 +250,19 @@ void daKpFr_c::func_ov070_02121be4()
 
     dBgCh_Gnd ground;
     {
-        fx32 z = mPosZ;
-        fx32 y = mPosY + 0x1e000;
-        fx32 x = mPosX;
+        fx32 z = mPos.z;
+        fx32 y = mPos.y + 0x1e000;
+        fx32 x = mPos.x;
         pos[0] = x;
         pos[1] = y;
         pos[2] = z;
     }
     ground.SetObjAndPos(*(Vector3*)pos, this);
     if (ground.DetectClsn() == 0 ||
-        ground.clsnY < mPosY - 0x32000) {
-        mPosX = mPrevPos.x;
-        mPosY = mPrevPos.y;
-        mPosZ = mPrevPos.z;
+        ground.clsnY < mPos.y - 0x32000) {
+        mPos.x = mPrevPos.x;
+        mPos.y = mPrevPos.y;
+        mPos.z = mPrevPos.z;
     }
 }
 

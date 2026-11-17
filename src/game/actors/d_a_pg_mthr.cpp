@@ -146,16 +146,16 @@ int daPgMthr_c::InitResources()
     /* Mesh radius and height 50.0. */
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     Vector3 pos;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x14000;
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     if (ground.DetectClsn())
-        mPosY = ground.clsnY;
+        mPos.y = ground.clsnY;
     else
-        mPosY = pos.y;
+        mPos.y = pos.y;
     mHomePos = mPos;
     mPlayer = 0;
     UpdateModelAndShadow();
@@ -272,7 +272,7 @@ int daPgMthr_c::StateTalkUpdate() {
         break;
     case 1:
         if (ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514)) {
-            Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
+            Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
             Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x300000, -0x480000);
             {
@@ -356,9 +356,9 @@ int daPgMthr_c::StateFollowUpdate() {
 void daPgMthr_c::UpdateModelAndShadow() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
     /* m[9..11] are mat4x3's translation (pos >> 3). */
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
     if (mLookAngX != 0 || mLookAngY != 0) {
         Matrix4x3 *bone = &mAnmModel.data.transforms[LOOK_BONE];
@@ -432,9 +432,9 @@ void daPgMthr_c::TurnHeadToward(char *b) {
     horzAngle = Vec3_HorzAngle(&mPos, &who->mPos);
 
     if (dist < LOOK_RANGE && AngleDiff(horzAngle, mAngleY) < 0x1400) {
-        tz = who->mPosZ;
-        ty = who->mPosY + 0x640000;
-        tx = who->mPosX;
+        tz = who->mPos.z;
+        ty = who->mPos.y + 0x640000;
+        tx = who->mPos.x;
         lookTarget.x = tx;
         lookTarget.z = tz;
         lookTarget.y = ty;

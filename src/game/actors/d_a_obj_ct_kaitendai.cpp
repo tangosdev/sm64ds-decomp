@@ -130,9 +130,9 @@ int daObjCtKaitendai_c::InitResources() {
 
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y = pos.y - 0xa000;
 
     {

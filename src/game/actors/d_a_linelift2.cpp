@@ -24,7 +24,7 @@
 // Notes:
 // - Vec3_Sub is defined on a file-local struct Vec3, so no shared header
 //   declares it yet; it is declared here. VEC_Add takes Vector3 now.
-// - Behavior lowers mPosY by the sink offset and restores it before the
+// - Behavior lowers mPos.y by the sink offset and restores it before the
 //   model update, which the cartridge does too; the dead store is its own.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -134,9 +134,9 @@ int daLinelift2_c::InitResources() {
     mPathPtr.FromID(param1 & 15);
     mNodeCount = mPathPtr.NumNodes();
     mNodeIndex = 0;
-    mBasePos.x = mPosX;
-    mBasePos.y = mPosY;
-    mBasePos.z = mPosZ;
+    mBasePos.x = mPos.x;
+    mBasePos.y = mPos.y;
+    mBasePos.z = mPos.z;
     mPathPtr.GetNode(mTargetPos, mNodeIndex);
 
     /* The first node is usually where we are standing; head for the next one. */
@@ -164,10 +164,10 @@ int daLinelift2_c::Behavior() {
         mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     }
     if (mVariant == 0) {
-        int saved = mPosY;
+        int saved = mPos.y;
         ApproachLinear(mSinkOffsetY, mIsPressed ? cSinkDepth : 0, cSinkRate);
-        mPosY -= mSinkOffsetY;
-        mPosY = saved;
+        mPos.y -= mSinkOffsetY;
+        mPos.y = saved;
     }
     UpdateModelPosAndRotY();
     if (IsClsnInRange(0, 0) != 0)
@@ -257,9 +257,9 @@ int daLinelift2_c::StepAlongPath() {
         mBasePos.x = mTargetPos.x;
         mBasePos.y = mTargetPos.y;
         mBasePos.z = mTargetPos.z;
-        mPosX = mBasePos.x;
-        mPosY = mBasePos.y;
-        mPosZ = mBasePos.z;
+        mPos.x = mBasePos.x;
+        mPos.y = mBasePos.y;
+        mPos.z = mBasePos.z;
         if (mState == 1) {
             mNodeIndex++;
             if (mNodeIndex >= mNodeCount) {

@@ -33,7 +33,7 @@
  */
 struct daObjCtRotateBlock_c : dBgActor_c {
     dExtSimpleModel_c mRotatingModel; /* 0x320 the part that turns */
-    s32 mOffsetY;                     /* 0x370 hop added to mPosY */
+    s32 mOffsetY;                     /* 0x370 hop added to mPos.y */
     u16 mWaitTimer;                   /* 0x374 DecIfAbove0_Short countdown */
     u8 mState;                        /* 0x376 0 wait, 1 hop, 2 turn */
     u8 mVariant;                      /* 0x377 actor 0x6c or 0x6d */

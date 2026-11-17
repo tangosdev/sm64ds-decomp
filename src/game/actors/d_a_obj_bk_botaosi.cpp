@@ -154,7 +154,7 @@ void daObjBk_Botaosi_c::HandleHit(dActor_c *other) {
 
     if (mState == 1) {
         if (mWobbleTimer >= 800) {
-            if (other->mPosY > mPosY + 0x64000)
+            if (other->mPos.y > mPos.y + 0x64000)
                 mState++;
         }
     }
@@ -201,9 +201,9 @@ void daObjBk_Botaosi_c::UpdateShadow() {
    row. */
 void daObjBk_Botaosi_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.t.x = mPosX >> 3;
-    mModel.mat4x3.t.y = mPosY >> 3;
-    mModel.mat4x3.t.z = mPosZ >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -255,18 +255,18 @@ int daObjBk_Botaosi_c::Behavior() {
                 mState++;
 
                 Vector3 pos;
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
+                pos.x = mPos.x;
+                pos.y = mPos.y;
+                pos.z = mPos.z;
                 Earthquake(pos, 0x2000000);
                 Sound::PlayBank3(0x44, mCamSpacePos);
             }
         } else {
             mJumpSpeed += 0x2000;
-            mPosY += mJumpSpeed;
+            mPos.y += mJumpSpeed;
             int limit = mOriginalPosY + 0x46000;
-            if (mPosY > limit) {
-                mPosY = limit;
+            if (mPos.y > limit) {
+                mPos.y = limit;
             }
             if (mAngleX > 0x4000) {
                 mAngleX = 0x4000;
@@ -274,9 +274,9 @@ int daObjBk_Botaosi_c::Behavior() {
                 mState++;
 
                 Vector3 pos;
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
+                pos.x = mPos.x;
+                pos.y = mPos.y;
+                pos.z = mPos.z;
                 Earthquake(pos, 0x2000000);
                 Sound::PlayBank3(0x44, mCamSpacePos);
             }
@@ -343,11 +343,11 @@ int daObjBk_Botaosi_c::InitResources() {
     mFrontPos.x = d.x;
     mFrontPos.y = d.y;
     mFrontPos.z = d.z;
-    mOriginalPosY = mPosY;
+    mOriginalPosY = mPos.y;
     mKnockDir = one;
 
     if (gCurrentSublevel == 7 && (gCurrentStarId == 1 || IsStarCollectedInCurLevel(one) == 0) &&
-        mPosY >= 0xdac000) {
+        mPos.y >= 0xdac000) {
         return 0;
     }
     return 1;

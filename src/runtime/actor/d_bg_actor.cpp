@@ -340,9 +340,9 @@ int dBgActor_c::IsClsnInRangeOnScreen(fx32 radius, fx32 yOffset) {
             mMeshCollider.Enable(this);
     } else {
         Vector3 center;
-        center.x = mPosX;
-        center.y = mPosY;
-        center.z = mPosZ;
+        center.x = mPos.x;
+        center.y = mPos.y;
+        center.z = mPos.z;
         if (yOffset == 0)
             center.y += mClipOffsetY;
         else
@@ -365,9 +365,9 @@ int dBgActor_c::IsClsnInRangeOnScreen(fx32 radius, fx32 yOffset) {
  * (mClipRadius, shifted into fx32); zero yOffset to mClipOffsetY. */
 int dBgActor_c::IsClsnInRange(fx32 radius, fx32 yOffset) {
     Vector3 center;
-    center.x = mPosX;
-    center.y = mPosY;
-    center.z = mPosZ;
+    center.x = mPos.x;
+    center.y = mPos.y;
+    center.z = mPos.z;
     if (radius == 0)
         radius = mClipRadius << 3;
     if (yOffset == 0)
@@ -391,9 +391,9 @@ int dBgActor_c::IsClsnInRange(fx32 radius, fx32 yOffset) {
 void dBgActor_c::UpdateModelPosAndRotY()
 {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-    mModel.mat4x3.m[9]  = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9]  = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* The collider follows the model: copy its matrix, overwrite the translation
@@ -401,9 +401,9 @@ void dBgActor_c::UpdateModelPosAndRotY()
 void dBgActor_c::UpdateClsnPosAndRot()
 {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9]  = mPosX;
-    mClsnMat.m[10] = mPosY;
-    mClsnMat.m[11] = mPosZ;
+    mClsnMat.m[9]  = mPos.x;
+    mClsnMat.m[10] = mPos.y;
+    mClsnMat.m[11] = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
@@ -468,9 +468,9 @@ void dBgActor_c::Kill()
 {
     Vector3 pos;
     Vector3 dustPos;
-    fx32 x = mPosX;
-    fx32 y = mPosY + 0x64000;
-    fx32 z = mPosZ;
+    fx32 x = mPos.x;
+    fx32 y = mPos.y + 0x64000;
+    fx32 z = mPos.z;
     pos.x = x;
     pos.y = y;
     pos.z = z;
@@ -488,9 +488,9 @@ void dBgActor_c::Kill()
  * take the mesh collider out of the world. */
 void dBgActor_c::KillByMegaChar(daPly_c &player) {
     Vector3 v;
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     Earthquake(v, 0x5dc000);
     mMegaKnockback = 1;
     mVertAccel = -0x2000;
