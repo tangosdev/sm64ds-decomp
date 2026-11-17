@@ -283,7 +283,7 @@ u8 dMgPsOpt_c::Update() {
 }
 
 /* Draw every live icon. Returns 1 while the panel is up, which makes
-   Mg_DrawMenu skip the rest of the touch-screen UI. */
+   dScMgBase_c::DrawMenu skip the rest of the touch-screen UI. */
 int dMgPsOpt_c::Draw() {
     int i;
 

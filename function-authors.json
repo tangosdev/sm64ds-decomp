@@ -19107,7 +19107,7 @@
     },
     "ov004:0x020ae858": {
       "author": "lunavyqo",
-      "name": "Mg_DrawMenu"
+      "name": "_ZN11dScMgBase_c8DrawMenuEv"
     },
     "ov004:0x020aea30": {
       "author": "tangosdev",
@@ -19395,7 +19395,7 @@
     },
     "ov004:0x020b29a0": {
       "author": "tangosdev",
-      "name": "Mg_CallStartRound"
+      "name": "_ZN11dScMgBase_c14CallStartRoundEi"
     },
     "ov004:0x020b29c0": {
       "author": "tangosdev",

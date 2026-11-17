@@ -1083,9 +1083,9 @@ void dScMgBase_c::Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int si
 
 namespace s20ae858 {
 extern "C" {
-extern "C" {
 int GetGameLanguage(void);
 void Mg_DrawSpriteList(void *self, int a1, int a2, void *a3);
+}
 }
 
 /* Draws the three-item overlay menu: each item's per-language sprite list
@@ -1094,26 +1094,27 @@ void Mg_DrawSpriteList(void *self, int a1, int a2, void *a3);
    is FX_Inv of a pulse that mMenuCursorPhase drives through
    FX_SinIdx. Nothing is drawn while mTouchOptions.Draw() returns
    nonzero. */
-extern "C" void Mg_DrawMenu(dScMgBase_c *scene) {
+void dScMgBase_c::DrawMenu() {
+    using namespace s20ae858;
     int extra[3];
     s16 *tbl[3];
     int buf[4];
     int i;
 
-    if (scene->mTouchOptions.Draw() != 0)
+    if (mTouchOptions.Draw() != 0)
         return;
 
     extra[0] = *sMgMenuItem0SpritesByLanguage[GetGameLanguage()];
     extra[1] = *sMgMenuItem1SpritesByLanguage[GetGameLanguage()];
     extra[2] = *sMgMenuItem2SpritesByLanguage[GetGameLanguage()];
 
-    tbl[0] = &scene->mMenuItem0X;
-    tbl[1] = &scene->mMenuItem1X;
-    tbl[2] = &scene->mMenuItem2X;
+    tbl[0] = &mMenuItem0X;
+    tbl[1] = &mMenuItem1X;
+    tbl[2] = &mMenuItem2X;
 
     for (i = 0; i < 3; i++) {
-        if (i == scene->mMenuCursor) {
-            int idx = (int)(((u32)scene->mMenuCursorPhase << 0xf) >> 0x10) >> 4;
+        if (i == mMenuCursor) {
+            int idx = (int)(((u32)mMenuCursorPhase << 0xf) >> 0x10) >> 4;
             OamAttr *cursor = (OamAttr *)extra[i];
             s16 *pos;
             u16 v;
@@ -1153,8 +1154,6 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene) {
             Mg_DrawSpriteList(data_ov006_021346bc, pos[0], pos[1], 0);
         }
     }
-}
-}
 }
 
 namespace s20aea30 {
@@ -2013,7 +2012,7 @@ int dScMgBase_c::BeforeRender()
         return 0;
 
     if (mMenuOpen != 0) {
-        Mg_DrawMenu(this);
+        DrawMenu();
         return 0;
     }
 
@@ -3408,14 +3407,10 @@ void dScMgBase_c::StartRound(int arg)
 {
 }
 
-namespace s20b29a0 {
-/* Calls the scene's StartRound (slot 18). Its callers, all in dMgState_c,
-   pass the scene singleton and its mState, declaring the state as a
-   void *, so the parameter stays one here. */
-extern "C" void Mg_CallStartRound(dScMgBase_c *scene, void *state)
-{
-    scene->StartRound((int)state);
-}
+/* Calls StartRound (slot 18) with `state`. Its callers, all in dMgState_c,
+   pass the finished state's mState. */
+void dScMgBase_c::CallStartRound(int state) {
+    StartRound(state);
 }
 
 #pragma push

@@ -462,7 +462,6 @@ extern int func_ov002_020df300(char *);
 extern int func_ov002_020e10a8(void *);
 extern int Mg_GetSavedRecord1(void);
 extern int Mg_GetSavedRecord0(void);
-extern void Mg_DrawMenu(void *);
 extern void Mg_DrawSpriteListEntry(void *, void *, void *, void *);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Dealer_IsIdleAtRest(void *);

@@ -887,6 +887,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
        PaintSquare (slot 34); a zero-length line plots once. The amida, teresa
        and both trampoline minigames draw their strokes with it. */
     void Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int size);
+    void DrawMenu();
     void UpdateMenu();
     void DrawPrompt();
 
@@ -913,6 +914,8 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     int GetSaveTable();
     void DrawRecordTable();
     void DrawRecordRow(int, int, int);
+    /* StartRound (slot 18) for dMgState_c, which passes its mState. */
+    void CallStartRound(int);
 
     s32 mTallyShown;            /* 0x050 */
     s32 mTallyAnimTimer;            /* 0x054 */

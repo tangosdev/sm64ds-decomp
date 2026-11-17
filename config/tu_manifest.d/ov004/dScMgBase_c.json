@@ -381,7 +381,7 @@
       "ordinal": 47
     },
     {
-      "symbol": "Mg_DrawMenu",
+      "symbol": "_ZN11dScMgBase_c8DrawMenuEv",
       "address": "0x020ae858",
       "size": "0x000001d8",
       "legacy_source": "src/func_ov004_020ae858.cpp",
@@ -885,7 +885,7 @@
       "ordinal": 119
     },
     {
-      "symbol": "Mg_CallStartRound",
+      "symbol": "_ZN11dScMgBase_c14CallStartRoundEi",
       "address": "0x020b29a0",
       "size": "0x00000020",
       "legacy_source": "src/func_ov004_020b29a0.cpp",
