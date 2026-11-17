@@ -355,7 +355,8 @@
     .data.sJump3DAnimTable start:0x0213b098 end:0x0213b0a4 kind:data align:4
     .data.gap48 start:0x0213b0a4 end:0x0213b0d8 kind:data align:4
     .data.sPuffSprites start:0x0213b0d8 end:0x0213b0ec kind:data align:4
-    .data.gap49 start:0x0213b0ec end:0x0213b22c kind:data align:4
+    .data.gap49 start:0x0213b0ec end:0x0213b0f4 kind:data align:4
+    .data.trmpmariopmf start:0x0213b0f4 end:0x0213b22c kind:data align:4
     .data.sTrmpBounceAnimTable start:0x0213b22c end:0x0213b238 kind:data align:4
     .data.gap50 start:0x0213b238 end:0x0213b31c kind:data align:4
     .data.pmf_unit020cd744 start:0x0213b31c end:0x0213b3a4 kind:data align:4
@@ -434,6 +435,7 @@ src/minigames/d_mg_trmpln2_mario.cpp:
     .init start:0x0212f6b4 end:0x0212fc7c
     .ctor start:0x02133578 end:0x0213357c
     .bss start:0x0214053c end:0x02140808
+    .data.trmpmariopmf start:0x0213b0f4 end:0x0213b22c
     .data.sTrmpBounceAnimTable start:0x0213b22c end:0x0213b238
 
 src/minigames/unit020cd744.cpp:

@@ -79,7 +79,7 @@ struct dMgTrmpln3DMario_c : dMgTrmpObjAdapter_c {
     s32 pad_5c;             /* 0x5c -- only ever stored 0 */
     s16 mTimer;             /* 0x60 -- state countdown */
     u8 pad_62[0x2];         /* 0x62 */
-    s32 mState[2];          /* 0x64 -- the current state's member-pointer record */
+    void (dMgTrmpln3DMario_c::*mState)(); /* 0x64 -- the current state's member-pointer record */
     dExtAnmModel_c mAnmModel; /* 0x6c -- 0x64 bytes: UpdateMatrix sets its mat4x3, the
                              * states drive its dExtFrameCtrl_c base and read its file */
 };

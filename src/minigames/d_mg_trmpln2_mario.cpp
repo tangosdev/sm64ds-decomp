@@ -9,11 +9,11 @@
  * _ZTI18dMgTrmpln3DMario_c 0x0213b244 sit beside the adapters' typeinfos;
  * D1 0x020ca604 / 0x020ccfc8, constructors 0x020ca78c / 0x020cd12c. GetPos is
  * each class's key function, so this file emits both vtables and typeinfos and
- * the manifest discards them against the cartridge's copies. The state table
- * the cartridge keeps at 0x0213b0f4..0x0213b22c is a run of eight-byte
- * {handler, 0} records -- a member pointer with no this-adjustment -- so the
- * handlers are members of their class and mState holds one. Functions are in
- * ROM order under defer_codegen off; do not reorder.
+ * the manifest discards the vtables against the cartridge's copies. mState is
+ * a pointer to a state member; every `&C::StateX` this file takes is an
+ * eight-byte {handler, 0} .data literal, and the cartridge keeps the unit's 38
+ * of them at 0x0213b0f4..0x0213b22c with _ZTI19dMgTrmpObjAdapter_c among them.
+ * Functions are in ROM order under defer_codegen off; do not reorder.
  *
  * Leftovers: the pool walkers (Trmp2Mario_*All, MoveToStart, PlaceAtStart,
  * InitPool, Hide and the Trmp3DMario_* equivalents) are module-level free
@@ -22,12 +22,7 @@
  * Their C-linkage declarations live in dMgTrmplnShared.h, which the scenes
  * include too; this file defines them without a linkage wrapper.
  * Trmp3DMario_EnterWalkIn and Trmp3DMario_IsOffstage are the scene's entry
- * points for one Mario and take a dMgTrmpln3DMario_c *. The dispatch in
- * Update and the state tests are spelled out word by word: the typed forms do
- * not reproduce the cartridge. Measured on this tree, `(this->*fn)()` in
- * Update makes mwccarm call its out-of-line PMF helper and lose the
- * 0x104-byte shape, and `state != pmf` in IsActive grows it from 0xa4 to 0xb0
- * bytes; both DIFF.
+ * points for one Mario and take a dMgTrmpln3DMario_c *.
  * The bounce states still walk the line in gotos and raw offsets -- that is
  * the matched state machine, not decoration. Helper prototypes with no owning
  * header (Puff_*, Sound_PlayBank1Panned, TrmpFx_Spawn, Vec3_MulScalar) stay
@@ -64,18 +59,6 @@
  * below use it; every other function is a member of one of the two classes. */
 #define MARIO2(p) ((dMgTrmpln2Mario_c *)(p))
 #define MARIO3D(p) ((dMgTrmpln3DMario_c *)(p))
-
-/* Two 32-bit words: the shape every state record is copied in. */
-struct W2 {
-    int w[2];
-};
-
-/* The {code, this-adjustment} pair a state record holds; the adjustment is
- * applied as adj >> 1. */
-struct Closure {
-    int off;
-    int adj;
-};
 
 /* The animation banks, loaded by the Load methods and released by the
  * destructors; the states select one through sTrmpBounceAnimTable. */
@@ -133,9 +116,8 @@ extern Trmpln2MarioAnimFilePtr sTrmpMarioRollJumpAnimFile;
 extern Trmpln2MarioAnimFilePtr sTrmpMarioStruggleAnimFile;
 extern Trmpln2MarioAnimFilePtr sTrmpMarioSdownAnimFile;
 
-/* One declaration per symbol for the whole unit. The state records live in
- * unit020cd744; the tuning words and pools are defined at the bottom of this
- * file. Each record is declared in the shape its one consumer copies it in. */
+/* One declaration per symbol for the whole unit. The tuning words and pools
+ * are defined at the bottom of this file. */
 /* .data / .rodata owned by other units */
 extern Vector3 data_020a0ebc;
 extern Vector3 sTrmp2MarioScale;
@@ -145,45 +127,6 @@ extern int sTrmpRowBaseHeights[2];
 extern short sTrmpGoalRow;
 extern int sTrmp2Lives;
 extern int sTrmp3DLives;
-
-/* 2D state records (8 bytes each) */
-extern int pmf_Trmp2Mario_StateMissed[2];
-extern int pmf_Trmp2Mario_StateHidden_4[2];
-extern int pmf_Trmp2Mario_StateHidden_5[2];
-extern int pmf_Trmp2Mario_StateRespawnWait[2];
-extern int pmf_Trmp2Mario_StateKnockedOut[2];
-extern int pmf_Trmp2Mario_StateAppearWait_2[2];
-extern int pmf_Trmp2Mario_StateBounce_2[2];
-extern int pmf_Trmp2Mario_StateBounce[2];
-extern int pmf_Trmp2Mario_StateRespawnWait_2[2];
-extern int pmf_Trmp2Mario_StateMissed_2[2];
-extern long long pmf_Trmp2Mario_StateWallBounce;
-extern int pmf_Trmp2Mario_StateFall[2];
-extern int pmf_Trmp2Mario_StateAppearWait[2];
-extern int pmf_Trmp2Mario_StateHidden_3[2];
-extern int pmf_Trmp2Mario_StateHidden_2[2];
-extern int pmf_Trmp2Mario_StateHidden[2];
-
-/* 3D state records (8 bytes each) */
-extern int pmf_Trmp3DMario_StateMissed[];
-extern int pmf_Trmp3DMario_StateOffstage_4[2];
-extern int pmf_Trmp3DMario_StateGoal_2[2];
-extern int pmf_Trmp3DMario_StateKnockedOut[2];
-extern int pmf_Trmp3DMario_StateGoal[2];
-extern int pmf_Trmp3DMario_StateLand[2];
-extern int pmf_Trmp3DMario_StateFallToLedge[2];
-extern int pmf_Trmp3DMario_StateBounce_2[2];
-extern int pmf_Trmp3DMario_StateMissed_2[2];
-extern int pmf_Trmp3DMario_StateFall[2];
-extern int pmf_Trmp3DMario_StateWalkBack[2];
-extern int pmf_Trmp3DMario_StateFallToLedge_2[2];
-extern int pmf_Trmp3DMario_StateOnLedge[2];
-extern W2 pmf_Trmp3DMario_StateOnGround;
-extern int pmf_Trmp3DMario_StateWalkIn[2];
-extern int pmf_Trmp3DMario_StateOnGround_2[2];
-extern int pmf_Trmp3DMario_StateOffstage_3[];
-extern int pmf_Trmp3DMario_StateOffstage_2[2];
-extern int pmf_Trmp3DMario_StateOffstage[];
 
 /* module state, defined at the bottom of this file */
 extern int sTrmp2MarioCount;
@@ -230,39 +173,7 @@ Vector3 *dMgTrmpln2Mario_c::GetVelocity() {
 
 /* Neither missed nor hidden: the drawn line only bounces a Mario in play. */
 int dMgTrmpln2Mario_c::IsActive() {
-    int *p;
-    int *d;
-    int result;
-    int flag;
-
-    p = mState;
-    d = pmf_Trmp2Mario_StateMissed;
-    result = 0;
-    flag = 1;
-    if (p[0] == d[0]) {
-        if (p[1] != d[1]) {
-            if (mState[0] != 0)
-                goto after1;
-        }
-        flag = 0;
-    }
-after1:
-    if (flag != 0) {
-        p = mState;
-        d = pmf_Trmp2Mario_StateHidden_4;
-        flag = 1;
-        if (p[0] == d[0]) {
-            if (p[1] != d[1]) {
-                if (mState[0] != 0)
-                    goto after2;
-            }
-            flag = 0;
-        }
-    after2:
-        if (flag != 0)
-            result = 1;
-    }
-    return result;
+    return mState != &dMgTrmpln2Mario_c::StateMissed && mState != &dMgTrmpln2Mario_c::StateHidden;
 }
 
 Vector3 *dMgTrmpln2Mario_c::GetPrevPos() {
@@ -290,18 +201,8 @@ void dMgTrmpln2Mario_c::Update() {
     mPrevPos.x = mPos.x;
     mPrevPos.y = mPos.y;
     mPrevPos.z = mPos.z;
-    if (mState[0] != 0) {
-        /* Inline member-pointer call; the typed form does not reproduce
-           it (see the file header). */
-        Closure *cl = (Closure *)mState;
-        void *tobj = (char *)this + (cl->adj >> 1);
-        void (*fn)();
-        if (cl->adj & 1)
-            fn = *(void (**)())(*(char **)tobj + cl->off);
-        else
-            fn = (void (*)())cl->off;
-        ((void (*)(void *))fn)(tobj);
-    }
+    if (mState != 0)
+        (this->*mState)();
     ApplyGravity();
     fx32 v = FX_MUL(mBounceVy, 0xb4b);
     if (mVel.y > v) {
@@ -327,37 +228,19 @@ void dMgTrmpln2Mario_c::StateKnockedOut() {
 }
 
 void dMgTrmpln2Mario_c::EnterByKind() {
-    int *p;
-    int *d;
-
-    p = mState;
-    d = pmf_Trmp2Mario_StateHidden_5;
-    if (p[0] == d[0]) {
-        if (p[1] != d[1]) {
-            if (mState[0] != 0)
-                goto check2;
-        }
+    if (mState == &dMgTrmpln2Mario_c::StateHidden)
         return;
-    }
-check2:
-    p = mState;
-    d = pmf_Trmp2Mario_StateRespawnWait;
-    if (p[0] == d[0]) {
-        if (p[1] != d[1]) {
-            if (mState[0] != 0)
-                goto body;
-        }
+    if (mState == &dMgTrmpln2Mario_c::StateRespawnWait) {
         EnterHidden();
         return;
     }
-body:
     mGravityStep = 0x100;
     mVel.x = 0;
     mVel.y = 0x2000;
     D3D_PlaySeAtX(0x1c9, mPos.x);
     mAnmModel.SetAnim(sTrmpAnimStruggle, 0, 0x800, 0);
     mAnmModel.currFrame = 0;
-    mState = pmf_Trmp2Mario_StateKnockedOut;
+    mState = &dMgTrmpln2Mario_c::StateKnockedOut;
 }
 
 void dMgTrmpln2Mario_c::StateBounce() {
@@ -523,12 +406,9 @@ void dMgTrmpln2Mario_c::BounceOffLineA() {
         int x = tmp.x;
         vec16.x = (s16)x;
         vec16.y = (s16)y;
-        char *bp = (char *)mState;
-        int *s = (int *)(bp);
-        vec16.z = (s16)(z + (int)((unsigned)bp - (unsigned)bp));
+        vec16.z = (s16)z;
 
-        int *q = pmf_Trmp2Mario_StateAppearWait_2;
-        if (s[0] != q[0] || (s[1] != q[1] && mState[0] != 0)) {
+        if (mState != &dMgTrmpln2Mario_c::StateAppearWait) {
 
             Particle::System::New(0, kPtclMgTrampolineBounceA, (mPos.x) << 3, (mPos.y) << 3,
                                   (mPos.z) << 3, (const Vector3_16f *)(&vec16), 0);
@@ -547,7 +427,7 @@ void dMgTrmpln2Mario_c::BounceOffLineA() {
     Sound_PlayBank1Panned(0, 4, mPos.x);
     D3D_PlaySeAtX(0x1b5, mPos.x);
     pad_68 = 0;
-    mState = pmf_Trmp2Mario_StateBounce_2;
+    mState = &dMgTrmpln2Mario_c::StateBounce;
     StateBounce();
 }
 
@@ -722,7 +602,7 @@ void dMgTrmpln2Mario_c::BounceOffLineB() {
     mAnmModel.currFrame = 0;
     Sound_PlayBank1Panned(0, mAnim, mPos.x);
 
-    mState = pmf_Trmp2Mario_StateWallBounce_2;
+    mState = &dMgTrmpln2Mario_c::StateWallBounce;
     StateWallBounce();
 }
 
@@ -738,7 +618,7 @@ void dMgTrmpln2Mario_c::EnterBounce() {
     D3D_PlaySeAtX(0x110, mPos.x);
     D3D_PlaySeAtX(0x1b5, mPos.x);
     pad_68 = 0;
-    mState = pmf_Trmp2Mario_StateBounce;
+    mState = &dMgTrmpln2Mario_c::StateBounce;
     StateBounce();
 }
 
@@ -773,7 +653,7 @@ void dMgTrmpln2Mario_c::EnterRespawnWait() {
     mPrevPos.z = mPos.z;
     mVel.y = 0;
     mAnmModel.SetAnim(sTrmpAnimWallJump, 0x40000000, 0x800, 0);
-    mState = pmf_Trmp2Mario_StateRespawnWait_2;
+    mState = &dMgTrmpln2Mario_c::StateRespawnWait;
 }
 
     /* `mTimer = mTimer - 1` comes out 4 bytes short; the decrement matches. */
@@ -806,7 +686,7 @@ void dMgTrmpln2Mario_c::EnterMissed() {
         Sound::PlayBank2_2D(0x1c9);
     mAnmModel.SetAnim(sTrmpAnimStruggle, 0, 0x800, 0);
     mTimer = 40;
-    mState = pmf_Trmp2Mario_StateMissed_2;
+    mState = &dMgTrmpln2Mario_c::StateMissed;
 }
 
 void dMgTrmpln2Mario_c::StateFall() {
@@ -862,11 +742,7 @@ L70: {
         mAnmModel.currFrame = 0;
         Sound_PlayBank1Panned(0, mAnim, mPos.x);
 
-        {
-            long long ll = pmf_Trmp2Mario_StateWallBounce;
-            mState[0] = (int)ll;
-            mState[1] = (int)((unsigned long long)ll >> 32);
-        }
+        mState = &dMgTrmpln2Mario_c::StateWallBounce;
     }
     return;
 
@@ -909,7 +785,7 @@ L260: {
 }
 
 void dMgTrmpln2Mario_c::EnterFall() {
-    mState = pmf_Trmp2Mario_StateFall;
+    mState = &dMgTrmpln2Mario_c::StateFall;
     StateFall();
 }
 
@@ -929,7 +805,7 @@ void dMgTrmpln2Mario_c::StateAppearWait() {
 void dMgTrmpln2Mario_c::EnterAppearWait(short v) {
     mTimer = v;
     mGravityStep = 0;
-    mState = pmf_Trmp2Mario_StateAppearWait;
+    mState = &dMgTrmpln2Mario_c::StateAppearWait;
 }
 
 void dMgTrmpln2Mario_c::StateHidden() {
@@ -947,7 +823,7 @@ void dMgTrmpln2Mario_c::EnterHidden() {
     mGravityStep = 0;
     mWallBumpTimer = 0;
     mAnmModel.SetAnim(sTrmpAnimWalk, 0, 0x800, 0);
-    mState = pmf_Trmp2Mario_StateHidden_3;
+    mState = &dMgTrmpln2Mario_c::StateHidden;
 }
 
 int dMgTrmpln2Mario_c::Load() {
@@ -1021,10 +897,7 @@ dMgTrmpln2Mario_c::dMgTrmpln2Mario_c() {}
 int Trmp2Mario_Hide(void) {
     int i;
     for (i = 0; i < sTrmp2MarioCount; i++) {
-        int *v = ((dMgTrmpln2Mario_c *)sTrmp2Marios)[i].mState;
-        int *q = pmf_Trmp2Mario_StateHidden_2;
-        if (v[0] != pmf_Trmp2Mario_StateHidden_2[0] ||
-            (v[1] != q[1] && ((dMgTrmpln2Mario_c *)sTrmp2Marios)[i].mState[0] != 0))
+        if (MARIO2(sTrmp2Marios)[i].mState != &dMgTrmpln2Mario_c::StateHidden)
             return 0;
     }
     return 1;
@@ -1051,39 +924,17 @@ void Trmp2Mario_EnterAll(void) {
 }
 
 void Trmp2Mario_MoveToStart(void) {
-    char *base;
-    char *e;
     int i;
-    int q0;
-    int count;
 
     ApproachLinear(sTrmp2MarioCount, sTrmp2MarioTarget, 1);
-    i = 0;
-    count = sTrmp2MarioCount;
-    if (count <= 0)
-        return;
-
-    base = sTrmp2Marios;
-    e = base;
-    q0 = pmf_Trmp2Mario_StateHidden[0];
-    for (;;) {
-
-        int *v = MARIO2(e)->mState;
-        int *q = pmf_Trmp2Mario_StateHidden;
-        if (v[0] == q0 && (v[1] == q[1] || MARIO2(e)->mState[0] == 0)) {
-
-            ((dMgTrmpln2Mario_c *)(base + i * 0xdc))->EnterAppearWait((short)(i * 0x14));
-            MARIO2(sTrmp2Marios + i * 0xdc)->mPos.x = 0;
-            MARIO2(sTrmp2Marios + i * 0xdc)->mVel.x = FX_MUL(sTrmp2DriftScale, (i << 11) - 0x1000);
-            ((dMgTrmpln2Mario_c *)(sTrmp2Marios + i * 0xdc))->UpdateMatrix();
+    for (i = 0; i < sTrmp2MarioCount; i++) {
+        if (MARIO2(sTrmp2Marios)[i].mState == &dMgTrmpln2Mario_c::StateHidden) {
+            MARIO2(sTrmp2Marios)[i].EnterAppearWait((short)(i * 0x14));
+            MARIO2(sTrmp2Marios)[i].mPos.x = 0;
+            MARIO2(sTrmp2Marios)[i].mVel.x = FX_MUL(sTrmp2DriftScale, (i << 11) - 0x1000);
+            MARIO2(sTrmp2Marios)[i].UpdateMatrix();
             return;
         }
-
-        i++;
-        e += 0xdc;
-        if (i < count)
-            continue;
-        break;
     }
 }
 
@@ -1215,14 +1066,7 @@ Vector3 *dMgTrmpln3DMario_c::GetVelocity() {
 
 /* Anything but missed: the drawn line only bounces a Mario in play. */
 int dMgTrmpln3DMario_c::IsActive() {
-    int *p = mState;
-    int *g = pmf_Trmp3DMario_StateMissed;
-    int lr = 1;
-    if (p[0] == g[0]) {
-        if (p[1] == g[1] || mState[0] == 0)
-            lr = 0;
-    }
-    return lr;
+    return mState != &dMgTrmpln3DMario_c::StateMissed;
 }
 
 Vector3 *dMgTrmpln3DMario_c::GetPrevPos() {
@@ -1250,18 +1094,8 @@ void dMgTrmpln3DMario_c::Update() {
     mPrevPos.x = mPos.x;
     mPrevPos.y = mPos.y;
     mPrevPos.z = mPos.z;
-    if (mState[0] != 0) {
-        /* Inline member-pointer call; the typed form does not reproduce
-           it (see the file header). */
-        Closure *cl = (Closure *)mState;
-        void *tobj = (char *)this + (cl->adj >> 1);
-        void (*fn)();
-        if (cl->adj & 1)
-            fn = *(void (**)())(*(char **)tobj + cl->off);
-        else
-            fn = (void (*)())cl->off;
-        ((void (*)(void *))fn)(tobj);
-    }
+    if (mState != 0)
+        (this->*mState)();
     ApplyGravity();
     fx32 v = FX_MUL(mBounceVy, 0xb4b);
     if (mVel.y > v) {
@@ -1287,36 +1121,17 @@ void dMgTrmpln3DMario_c::StateKnockedOut() {
 }
 
 void dMgTrmpln3DMario_c::EnterByKind() {
-    int *p;
-    int *d;
-
-    p = mState;
-    d = pmf_Trmp3DMario_StateOffstage_4;
-    if (p[0] == d[0]) {
-        if (p[1] != d[1]) {
-            if (mState[0] != 0)
-                goto check2;
-        }
+    if (mState == &dMgTrmpln3DMario_c::StateOffstage)
         return;
-    }
-check2:
-    p = mState;
-    d = pmf_Trmp3DMario_StateGoal_2;
-    if (p[0] == d[0]) {
-        if (p[1] != d[1]) {
-            if (mState[0] != 0)
-                goto body;
-        }
+    if (mState == &dMgTrmpln3DMario_c::StateGoal)
         return;
-    }
-body:
     mGravityStep = 0x100;
     mVel.x = 0;
     mVel.y = 0x2000;
     Sound::PlayBank2_2D(0x1c9);
     mAnmModel.SetAnim(sTrmpAnimStruggle, 0, 0x800, 0);
     mAnmModel.currFrame = 0;
-    mState = pmf_Trmp3DMario_StateKnockedOut;
+    mState = &dMgTrmpln3DMario_c::StateKnockedOut;
 }
 
 void dMgTrmpln3DMario_c::StateGoal() {
@@ -1392,7 +1207,7 @@ void dMgTrmpln3DMario_c::EnterGoal() {
     Sound_PlayBank1Panned(0, 0x10, mPos.x);
     mAnmModel.SetAnim(sTrmpAnimRollJumpEnd, 0x40000000, 0x800, 0);
     sTrmpMariosOnLedges = sTrmpMariosOnLedges + 1;
-    mState = pmf_Trmp3DMario_StateGoal;
+    mState = &dMgTrmpln3DMario_c::StateGoal;
     StateGoal();
 }
 
@@ -1420,7 +1235,7 @@ void dMgTrmpln3DMario_c::EnterLand() {
     mVel.z = data_020a0ebc.z;
     mAnmModel.SetAnim(sTrmpAnimHangUp, 0x40000000, 0x800, 0);
     Sound_PlayBank1Panned(0, 0x17, mPos.x);
-    mState = pmf_Trmp3DMario_StateLand;
+    mState = &dMgTrmpln3DMario_c::StateLand;
     int *p20 = &mPos.y;
     *p20 = *p20 + 0x20000;
     StateLand();
@@ -1467,7 +1282,7 @@ void dMgTrmpln3DMario_c::StateFallToLedge() {
 }
 
 void dMgTrmpln3DMario_c::EnterFallToLedge() {
-    mState = pmf_Trmp3DMario_StateFallToLedge;
+    mState = &dMgTrmpln3DMario_c::StateFallToLedge;
     StateFallToLedge();
 }
 
@@ -1658,7 +1473,7 @@ void dMgTrmpln3DMario_c::BounceOffLineA() {
     D3D_PlaySeAtX(0x1b5, mPos.x);
 
     pad_5c = 0;
-    mState = pmf_Trmp3DMario_StateHardBounce;
+    mState = &dMgTrmpln3DMario_c::StateHardBounce;
     StateHardBounce();
 }
 
@@ -1823,7 +1638,7 @@ void dMgTrmpln3DMario_c::BounceOffLineB() {
     mAnmModel.currFrame = 0;
     Sound_PlayBank1Panned(0, mAnim, mPos.x);
 
-    mState = pmf_Trmp3DMario_StateBounce;
+    mState = &dMgTrmpln3DMario_c::StateBounce;
 
     StateBounce();
 }
@@ -1851,7 +1666,7 @@ void dMgTrmpln3DMario_c::JumpOff() {
     mAnmModel.currFrame = 0;
     Sound_PlayBank1Panned(0, mAnim, mPos.x);
 
-    mState = pmf_Trmp3DMario_StateBounce_2;
+    mState = &dMgTrmpln3DMario_c::StateBounce;
 
     StateBounce();
 }
@@ -1886,7 +1701,7 @@ void dMgTrmpln3DMario_c::EnterMissed() {
         Sound::PlayBank2_2D(0x1c9);
     mAnmModel.SetAnim(sTrmpAnimStruggle, 0, 0x800, 0);
     mTimer = 40;
-    mState = pmf_Trmp3DMario_StateMissed_2;
+    mState = &dMgTrmpln3DMario_c::StateMissed;
 }
 
 void dMgTrmpln3DMario_c::StateFall() {
@@ -1990,7 +1805,7 @@ L180: {
 }
 
 void dMgTrmpln3DMario_c::EnterFall() {
-    mState = pmf_Trmp3DMario_StateFall;
+    mState = &dMgTrmpln3DMario_c::StateFall;
     StateFall();
 }
 
@@ -2012,7 +1827,7 @@ void dMgTrmpln3DMario_c::EnterWalkBack() {
     mVel.z = 0;
     mRotY = -0x4000;
     mAnmModel.SetAnim(sTrmpAnimWalk, 0, 0x800, 0);
-    mState = pmf_Trmp3DMario_StateWalkBack;
+    mState = &dMgTrmpln3DMario_c::StateWalkBack;
 }
 
 void dMgTrmpln3DMario_c::StateOnLedge() {
@@ -2053,8 +1868,6 @@ void dMgTrmpln3DMario_c::StateOnLedge() {
 }
 
 void dMgTrmpln3DMario_c::EnterOnLedge() {
-    int *cur;
-    int *want;
     int z = 0;
     mGravityStep = z;
     mPos.y = sTrmpRowHeights[mHeightRow];
@@ -2062,9 +1875,7 @@ void dMgTrmpln3DMario_c::EnterOnLedge() {
     mVel.x = z;
     mVel.y = z;
     mVel.z = z;
-    cur = mState;
-    want = pmf_Trmp3DMario_StateFallToLedge_2;
-    if (cur[0] == want[0] && (cur[1] == want[1] || mState[0] == 0)) {
+    if (mState == &dMgTrmpln3DMario_c::StateFallToLedge) {
         mAnmModel.SetAnim(sTrmpAnimJumpEnd, 0x40000000, 0x800, 0);
     } else {
         mAnmModel.SetAnim(sTrmpAnimWalk, 0, 0x800, 0);
@@ -2073,7 +1884,7 @@ void dMgTrmpln3DMario_c::EnterOnLedge() {
         int *ctr = &sTrmpMariosOnLedges;
         int c = *ctr;
         *ctr = c + 1;
-        mState = pmf_Trmp3DMario_StateOnLedge;
+        mState = &dMgTrmpln3DMario_c::StateOnLedge;
     }
 }
 
@@ -2096,12 +1907,10 @@ void Trmp3DMario_EnterWalkIn(dMgTrmpln3DMario_c *mario) {
     mario->mVel.z = 0;
     mario->mRotY = 0x4000;
     mario->mAnmModel.SetAnim(sTrmpAnimWalk, 0, 0x800, 0);
-    int *s = mario->mState;
-    W2 *d = &pmf_Trmp3DMario_StateOnGround;
-    if (s[0] != d->w[0] || (s[1] != d->w[1] && mario->mState[0] != 0)) {
+    if (mario->mState != &dMgTrmpln3DMario_c::StateOnGround) {
         sTrmpMariosInPlay += 1;
     }
-    mario->mState = pmf_Trmp3DMario_StateWalkIn;
+    mario->mState = &dMgTrmpln3DMario_c::StateWalkIn;
 }
 
 void dMgTrmpln3DMario_c::StateOnGround() {
@@ -2149,23 +1958,11 @@ void dMgTrmpln3DMario_c::EnterOnGround() {
     mVel.y = 0;
     mVel.z = 0;
     mAnmModel.SetAnim(sTrmpAnimJumpEnd, 0x40000000, 0x800, 0);
-    mState = pmf_Trmp3DMario_StateOnGround_2;
+    mState = &dMgTrmpln3DMario_c::StateOnGround;
 }
 
 int Trmp3DMario_IsOffstage(dMgTrmpln3DMario_c *mario) {
-    int *p = mario->mState;
-    int *g = pmf_Trmp3DMario_StateOffstage_3;
-    int ret = 1;
-    if (p[0] == g[0]) {
-        if (p[1] == g[1])
-            goto zero;
-        if (mario->mState[0] != 0)
-            goto out;
-    zero:
-        ret = 0;
-    }
-out:
-    return ret == 0;
+    return mario->mState == &dMgTrmpln3DMario_c::StateOffstage;
 }
 
 void dMgTrmpln3DMario_c::StateOffstage() {
@@ -2181,7 +1978,7 @@ void dMgTrmpln3DMario_c::EnterOffstage() {
     mVel.z = data_020a0ebc.z;
     mGravityStep = 0;
     mAnmModel.SetAnim(sTrmpAnimWalk, 0, 0x800, 0);
-    mState = pmf_Trmp3DMario_StateOffstage_2;
+    mState = &dMgTrmpln3DMario_c::StateOffstage;
 }
 
 int dMgTrmpln3DMario_c::Load() {
@@ -2246,29 +2043,10 @@ dMgTrmpln3DMario_c::~dMgTrmpln3DMario_c() {
 dMgTrmpln3DMario_c::dMgTrmpln3DMario_c() {}
 
 int Trmp3DMario_CountFinished(void) {
-    int i = 0;
-    char *e;
-    int first;
-    int n;
-    int *b;
-    n = sTrmp3DMarioCount;
-    if (n > 0) {
-        e = sTrmp3DMarios;
-        b = pmf_Trmp3DMario_StateOffstage;
-        first = b[0];
-        do {
-            int *p = MARIO3D(e)->mState;
-            if (p[0] == first) {
-                if (p[1] == b[1])
-                    goto next;
-                if (MARIO3D(e)->mState[0] == 0)
-                    goto next;
-            }
+    int i;
+    for (i = 0; i < sTrmp3DMarioCount; i++) {
+        if (MARIO3D(sTrmp3DMarios)[i].mState != &dMgTrmpln3DMario_c::StateOffstage)
             return 0;
-        next:
-            e += 0xd0;
-            i++;
-        } while (i < n);
     }
     return 1;
 }
