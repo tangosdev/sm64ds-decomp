@@ -1424,31 +1424,27 @@ void daStar_c::StateSaveMessage() {
  * 14.0 in water or 23.0 on land after each ground contact. The pickup test
  * runs once mStateTimer has counted out, unless the no-pickup flag is set. */
 void daStar_c::StateBounce() {
-    char *c = (char *)this;
     CheckBounds();
     mPrevPosY = mPosY;
     UpdateWMClsn(mWithMeshClsn, 2);
     if (mWithMeshClsn.IsOnWall()) {
-        mPrevAngleY = ((dActor_c *)c)->ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
     }
     UpdateWater();
     if (mWithMeshClsn.JustHitGround()) {
         OnBounceLand();
     } else if (mWithMeshClsn.IsOnGround()) {
-        mPrevAngleY = ((dActor_c *)c)->ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
         if (mBits.water == WATER_IN)
             mVertSpeed = 0xe000;
         else
             mVertSpeed = 0x17000;
     }
-    {
-        unsigned short *ctr = &mStateTimer;
-        if (*ctr == 0) {
-            if (!mBits.noPickup)
-                CheckPickup();
-        } else {
-            *ctr = *ctr - 1;
-        }
+    if (mStateTimer == 0) {
+        if (!mBits.noPickup)
+            CheckPickup();
+    } else {
+        mStateTimer--;
     }
     ProbeGround();
     UpdateSparkleEffect();
@@ -2235,7 +2231,6 @@ void daStar_c::UpdateModelMatrix() {
  * times the scale, less 0.09375 per unit of height above mGroundY (at least
  * 1.0), never below 10.0; the shadow is 40.0 deeper than that height. */
 void daStar_c::DrawShadow() {
-    char *c = (char *)this;
     int r2, rad, delta, r8, t;
     int flag2;
 
@@ -2271,7 +2266,7 @@ void daStar_c::DrawShadow() {
     mShadowMtx.ty = mPosY >> 3;
     mShadowMtx.tz = mPosZ >> 3;
 
-    ((dActor_c *)c)->DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMtx, r8, t, 0xf);
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMtx, r8, t, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */

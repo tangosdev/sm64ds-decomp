@@ -887,7 +887,6 @@ particle:
 }
 
 void daPly_c::func_ov002_020bd06c(unsigned int state2) {
-    char *self = (char *)this;
     int flag;
 
     flag = 0;
@@ -965,7 +964,6 @@ int daPly_c::func_ov002_020bd20c(unsigned char *params, int beginFrame, int endF
 }
 
 int daPly_c::func_ov002_020bd250(unsigned char *params, int beginFrame, int endFrame) {
-    char *self = (char *)this;
     Vector3 out1, off1, out2, off2, v;
     this->mAngleY = ReadUnalignedShort(params);
     off1.x = 0;
@@ -1049,7 +1047,6 @@ int daPly_c::func_ov002_020bd4e0(unsigned char *data, int beginFrame, int endFra
     extern char data_0209f4a0[];
     extern char data_0209f4ac[];
     extern char data_0209f49c[];
-    char *self = (char *)this;
     Vector3 v;
     int y, z;
     int idx;
@@ -1234,7 +1231,6 @@ int daPly_c::HasNoCap() {
 }
 
 void daPly_c::func_ov002_020bdb50(int arg) {
-    char* c = (char*)this;
     this->func_ov002_020bdc18();
     ReleaseHeldActor();
     if (arg != 0) return;
@@ -1258,7 +1254,6 @@ void daPly_c::func_ov002_020bdb50(int arg) {
 }
 
 void daPly_c::func_ov002_020bdc18() {
-    char *c = (char *)this;
     int i;
     for (i = 0; i < 5; i++) {
         dActor_c **a = mHeldObjQueue;
@@ -1691,7 +1686,6 @@ int daPly_c::IsCollectingCap() {
 }
 
 void daPly_c::func_ov002_020beabc() {
-    char *p = (char *)this;
     mCapFlags = 5;
     mCapTimer = 47;
     mCapPaletteBlend = 0x1000;
@@ -2337,7 +2331,6 @@ int daPly_c::func_ov002_020bfec0() {
 }
 
 int daPly_c::func_ov002_020c0108(int p1) {
-    char *self = (char *)this;
     typedef unsigned char u8;
     typedef unsigned short u16;
     typedef short s16;
@@ -3045,7 +3038,6 @@ void daPly_c::func_ov002_020c18b0(int p1) {
 }
 
 int daPly_c::func_ov002_020c19d0(int arg1, int arg2) {
-    char* self = (char*)this;
     int angle = (unsigned short)mAngleY;
     dBgCh_Lin line;
     int k = angle >> 4;
@@ -3054,7 +3046,7 @@ int daPly_c::func_ov002_020c19d0(int arg1, int arg2) {
     Vector3 v1(this->mPosX, this->mPosY + (arg2 << 12), this->mPosZ);
     Vector3 v2(arg1 * cs + this->mPosX, this->mPosY + (arg2 << 12), arg1 * sn + this->mPosZ);
     Vector3 nrm;
-    line.SetObjAndLine(v1, v2, (dActor_c *)self);
+    line.SetObjAndLine(v1, v2, this);
     if (!line.DetectClsn()) {
         return 0;
     }
@@ -3111,13 +3103,11 @@ int daPly_c::func_ov002_020c1ad8(int ang) {
 }
 
 int daPly_c::func_ov002_020c1c84(int arg) {
-    char *self = (char *)this;
     int a;
     int p;
 
-    if ((u16)(this->mStateFlags & 0x200) || !this->mIsAirborne ||
-        func_ov002_020cf700((daPly_c *)self) || this->mIsMega || func_ov002_020e0478() ||
-        this->mEatingPlayer || this->mIsUnderwater)
+    if ((u16)(this->mStateFlags & 0x200) || !this->mIsAirborne || func_ov002_020cf700(this) ||
+        this->mIsMega || func_ov002_020e0478() || this->mEatingPlayer || this->mIsUnderwater)
         return 0;
 
     if (AngleDiff(arg, this->mPrevAngleY) < 0x6000)
@@ -3203,9 +3193,8 @@ void daPly_c::func_ov002_020c1eb4(int dmg) {
 }
 
 int daPly_c::func_ov002_020c200c(int arg) {
-    char* self = (char*)this;
     if (this->mSlideType == 1)
-        return func_ov002_020c1e44(self, arg);
+        return func_ov002_020c1e44(this, arg);
 
     if (this->mIsNoControl)
         return 0;
@@ -3217,7 +3206,7 @@ int daPly_c::func_ov002_020c200c(int arg) {
             return 0;
 
         if (this->IsBeingShotOutOfCannon())
-            func_ov002_020eedc0(&mMeshClsn, (dActor_c *)self);
+            func_ov002_020eedc0(&mMeshClsn, this);
     } else {
         return 0;
     }
@@ -3228,7 +3217,6 @@ int daPly_c::func_ov002_020c200c(int arg) {
 
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 int daPly_c::func_ov002_020c2138() {
-    char* self = (char*)this;
 int ang;
 if (this->mIsUnderwater || this->mIsBalloon) return 0;
 if (this->mWallNormalY) return 0;
@@ -3464,7 +3452,6 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
 }
 
 void daPly_c::func_ov002_020c29d4() {
-    char *base = (char *)this;
     if (param1 != 1)
         return;
     if (this->mIsMega != 0) return;
@@ -5180,7 +5167,6 @@ int daPly_c::St_DeadHit_Init() {
 }
 
 int daPly_c::func_ov002_020c607c(int p1, int p2, int *outptr) {
-    char *self = (char *)this;
     mLineClsnActor = 0;
     *outptr = (int)0x80000000;
 
@@ -5188,7 +5174,7 @@ int daPly_c::func_ov002_020c607c(int p1, int p2, int *outptr) {
 
     Vector3 a(this->mPosX, p1, this->mPosZ);
     Vector3 b(this->mPosX, p2, this->mPosZ);
-    rc.SetObjAndLine(a, b, (dActor_c *)self);
+    rc.SetObjAndLine(a, b, this);
     if (rc.DetectClsn() != 0) {
         Vector3 pos = rc.GetClsnPos();
         *outptr = pos.y;
@@ -5288,7 +5274,6 @@ int daPly_c::func_ov002_020c61ac() {
 /* recovered: shared common types */
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 int daPly_c::func_ov002_020c647c(int arg1) {
-    char* c = (char*)this;
     Vector3 v1;
     Vector3 v2;
     dBgCh_Lin line;
@@ -5303,7 +5288,7 @@ int daPly_c::func_ov002_020c647c(int arg1) {
     v2.z = z2;
     v2.y = arg1 + 0xaa000;
     int r5 = -64;
-    line.SetObjAndLine(v1, v2, (dActor_c*)c);
+    line.SetObjAndLine(v1, v2, this);
     if (line.DetectClsn()) {
         ::Vector3 clsnPos = line.GetClsnPos();
         int d = (clsnPos.y - this->mPosY) / 0x1000;
@@ -6660,7 +6645,6 @@ int daPly_c::func_ov002_020c8f0c() {
 
 /* recovered: shared common types */
 int daPly_c::func_ov002_020c8f80() {
-    char *p = (char *)this;
 
     this->mScaleX -= 0x80;
     this->mScaleY -= 0x80;
@@ -9431,10 +9415,8 @@ fx32 daPly_c::func_ov002_020cedb0(fx32 a) {
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 int daPly_c::func_ov002_020cede0() {
-    char *thiz = (char *)this;
-    daPly_c *p = (daPly_c *)thiz;
     Vector3 v;
-    int y = p->mPosY;
+    int y = mPosY;
     int g = data_0209f32c;
     if (g < y - 0x64000)
         return 0;
@@ -9447,31 +9429,31 @@ int daPly_c::func_ov002_020cede0() {
     }
     dBgCh_Gnd rg;
     {
-        int z = p->mPosZ;
+        int z = mPosZ;
         int yy = data_0209f32c + 0xc8000;
-        int x = p->mPosX;
+        int x = mPosX;
         v.x = x;
         v.y = yy;
         v.z = z;
     }
     rg.StartDetectingWater();
     rg.StopDetectingOrdinary();
-    rg.SetObjAndPos(v, (dActor_c *)thiz);
+    rg.SetObjAndPos(v, this);
     if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
         return 1;
     }
     v.y = data_0209212c;
     rg.StartDetectingWater();
     rg.StopDetectingOrdinary();
-    rg.SetObjAndPos(v, (dActor_c *)thiz);
+    rg.SetObjAndPos(v, this);
     if (rg.DetectClsn() != 0 && SurfaceInfo_TestFlag0x20((int *)&rg.surface) != 0) {
-        p->mWaterSurfaceY = rg.clsnY;
-        data_0209f32c = p->mWaterSurfaceY;
+        mWaterSurfaceY = rg.clsnY;
+        data_0209f32c = mWaterSurfaceY;
         return 1;
     }
     if (gCurrentSublevel == 0x21) {
-        p->mWaterSurfaceY = 0x80000000;
-        data_0209f32c = p->mWaterSurfaceY;
+        mWaterSurfaceY = 0x80000000;
+        data_0209f32c = mWaterSurfaceY;
         return 0;
     }
     return 1;
@@ -10236,14 +10218,8 @@ int daPly_c::St_LedgeHang_Cleanup() {
 }
 
 void daPly_c::func_ov002_020d0948() {
-
-    /* The two header reads go through a byte pointer: with the int-typed
-       self, mwcc materializes the +0x703 offset from the literal pool
-       (ldr r1,[pc] / ldrb r2,[r0,r1]) instead of folding it into the ldrb. */
-    char *s = (char *)this;
-    daPly_c *player = (daPly_c *)s;
-    int base = (short)(player->mAngleY + 0x8000);
-    if (player->mIsMega != 0) {
+    int base = (short)(mAngleY + 0x8000);
+    if (mIsMega != 0) {
         int idx = (unsigned short)base >> 4;
         int *p0 = (&mPosX);
         int *p1 = (&mPosY);
@@ -12120,19 +12096,12 @@ void daPly_c::func_ov002_020d45c0() {
     }
 }
 
-/* local extern: the call passes an untyped this, so it cannot use the header method. */
-extern "C" {
-static inline int* GetAnim(char* c)
-{
-    daPly_c *player = (daPly_c *)c;
-    return (
-        int *)((char *)player->mModels
-                   .mBodyModels[((daPly_c *)c)->GetBodyModelID((unsigned char)player->param1, 0)] +
-               0x50);
+/* The body model's frame controller: dExtAnm2Model_c's dExtFrameCtrl_c base. */
+static inline dExtFrameCtrl_c &BodyAnim(daPly_c *player) {
+    return *player->mModels.mBodyModels[player->GetBodyModelID((unsigned char)player->param1, 0)];
 }
-static inline u16 AnimSpeed(char *c) {
-    return GetAnim(c)[2] >> 12;
-}
+static inline u16 BodyAnimFrame(daPly_c *player) {
+    return BodyAnim(player).currFrame >> 12;
 }
 
 void daPly_c::func_ov002_020d4748() {
@@ -12140,7 +12109,6 @@ void daPly_c::func_ov002_020d4748() {
     extern unsigned short data_0209f49c;
     extern short data_0209f4a0;
     extern unsigned char gGameMode;
-    char* c = (char*)this;
     int i = gActivePlayerSlot * 0x18;
     int flag = 0;
 
@@ -12170,14 +12138,14 @@ void daPly_c::func_ov002_020d4748() {
                 } else {
                     spd = v * 3;
                 }
-                ((daPly_c *)c)->SetAnim(0x9e, 0, spd, 0);
+                SetAnim(0x9e, 0, spd, 0);
                 return;
             } else {
-                ((daPly_c *)c)->SetAnim(0xa4, 0, 0x2000, 0);
+                SetAnim(0xa4, 0, 0x2000, 0);
                 return;
             }
         } else {
-            ((daPly_c *)c)->SetAnim(0x9d, 0x40000000, 0x1000, 0);
+            SetAnim(0x9d, 0x40000000, 0x1000, 0);
             return;
         }
     } else {
@@ -12209,21 +12177,20 @@ void daPly_c::func_ov002_020d4748() {
         }
 
         if (this->mSinkDepth > 0x32000) {
-            ((daPly_c *)c)
-                ->SetAnim(0x7e, 0, *(short *)((char *)&data_0209f4a0 + gActivePlayerSlot * 0x18),
-                          AnimSpeed(c));
+            SetAnim(0x7e, 0, *(short *)((char *)&data_0209f4a0 + gActivePlayerSlot * 0x18),
+                    BodyAnimFrame(this));
         } else if (this->mStateStep >= 0x17) {
             this->mStateStep = 0x17;
-            ((daPly_c *)c)->SetAnim(0x61, 0, 0x1000, AnimSpeed(c));
+            SetAnim(0x61, 0, 0x1000, BodyAnimFrame(this));
         } else if (this->mFloorClass == 4 && *(short*)((char*)&data_0209f4a0 + gActivePlayerSlot * 0x18) == 0) {
             Particle::RunningSlidingDustAt(this->mPosX, this->mPosY, this->mPosZ);
-            ((daPly_c *)c)->SetAnim(0x47, 0, 0x1000, 0);
+            SetAnim(0x47, 0, 0x1000, 0);
         } else if (this->mIsWalkPace != 0) {
-            u16 s5 = AnimSpeed(c);
+            u16 s5 = BodyAnimFrame(this);
             int spd = this->mHorzSpeed >> 3;
             if (spd < 0x400)
                 spd = 0x400;
-            ((daPly_c *)c)->SetAnim(0x48, 0, spd, s5);
+            SetAnim(0x48, 0, spd, s5);
         } else {
             int t = 0x1000 - this->mFloorNormalY;
             int f = (int)((((long long)t << 10) + 0x800) >> 12);
@@ -12232,11 +12199,10 @@ void daPly_c::func_ov002_020d4748() {
             v = FX_MUL(diff, f);
             if (v < 0)
                 v = 0;
-            ((daPly_c *)c)->SetAnim(0x3f, 0, v + 0x2800, AnimSpeed(c));
+            SetAnim(0x3f, 0, v + 0x2800, BodyAnimFrame(this));
         }
 
-        if (((dExtFrameCtrl_c *)(GetAnim(c)))->WillHitFrame(4) != 0 ||
-            ((dExtFrameCtrl_c *)(GetAnim(c)))->WillHitFrame(0x13) != 0) {
+        if (BodyAnim(this).WillHitFrame(4) != 0 || BodyAnim(this).WillHitFrame(0x13) != 0) {
             PlayLandingEffects();
         }
     }
@@ -13220,7 +13186,6 @@ int daPly_c::func_ov002_020d6790() {
 
 int daPly_c::func_ov002_020d6998() {
     typedef int (*VFunc)(void*);
-    char* self = (char*)this;
     s16 saved;
     void* other;
     u32 id;
@@ -13429,7 +13394,6 @@ int daPly_c::func_ov002_020d7030(void *b) {
 }
 
 char *daPly_c::func_ov002_020d708c() {
-    char* self = (char*)this;
     char* a;
     char* best = 0;
     int bestAng = 0x238e;
@@ -13437,7 +13401,7 @@ char *daPly_c::func_ov002_020d708c() {
     if (a) {
         int thresh = bestAng;
         do {
-            if (a != self) {
+            if ((dActor_c *)a != this) {
                 if (((dActor_c *)a)->OnYoshiTryEat()) {
                     if (Vec3_Dist(&mPos, &((dActor_c *)a)->mPos) < 0x15e000) {
                         int diff =
@@ -13477,7 +13441,6 @@ void daPly_c::func_ov002_020d71a0() {
         int w[2];
     };
     extern struct G data_ov002_0210eb88;
-    char *p = (char*)this;
     this->mUseAltBodyModel = 0;
     ((dExtAnmModel_c *)mModels.mHeadModels[3])
         ->SetAnim((BCA_File *)((void *)data_ov002_0210eb88.w[1]), 0x40000000, 0x1000, 0);
@@ -13595,10 +13558,6 @@ struct PVec { int x, y, z; PVec() {} ~PVec() {} };
 
 int daPly_c::St_YoshiPower_Main() {
     extern int data_ov002_0210e3d8[];
-    /* The helpers this calls are all declared taking char*, and there are
-       thirty-odd call sites. One alias keeps them untouched; the field
-       accesses below are the part that needed recovering. */
-    char* c = (char*)this;
     Vector3_16f dir;
     Vector3 tmp;
     PVec pos;
@@ -13806,7 +13765,7 @@ int daPly_c::St_YoshiPower_Main() {
                                                    &dir, 0);
                 mParticle2 = Particle::System::New(mParticle2, kPtclYoshiFireB, pos.x, pos.y, pos.z,
                                                    &dir, 0);
-                func_ov002_020dc09c(c);
+                func_ov002_020dc09c((char *)this);
                 mAttackClsn.Clear();
                 mAttackClsn.Update();
                 if (mStateTimer == 1 && mFireBreaths == 0) {
@@ -14575,7 +14534,6 @@ void daPly_c::Bounce(fx32 f) {
 
 int daPly_c::func_ov002_020d93ac() {
     extern u8 gGameMode;
-    char *self = (char*)this;
     Vector3 pos;
     char *spawned;
     u32 chr;
@@ -14629,7 +14587,6 @@ int daPly_c::func_ov002_020d94cc() {
     void GiveVsStars(int idx, int delta);
     extern u8 gGameMode;
     extern s8 gNumStageStars;
-    char *self = (char*)this;
     Vector3 pos;
     dActor_c *sndobj;
     char *spawned;
@@ -14666,7 +14623,7 @@ int daPly_c::func_ov002_020d94cc() {
 
     if (spawned == 0) goto fail;
 
-    ((daStar_c *)spawned)->SeekNewMarker(self, 0);
+    ((daStar_c *)spawned)->SeekNewMarker((char *)this, 0);
 
     b = (gGameMode == 1);
     if (!b) {
@@ -15032,13 +14989,12 @@ int daPly_c::St_SwingPlayer_Cleanup() {
 // angular speed is declared before the difference, which gives it ip and the step r3.
 
 int daPly_c::St_SwingPlayer_Main() {
-    char* c = (char*)this;
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     switch (this->mStateStep) {
     case 0:
         if (this->FinishedAnim()) {
-            ((daPly_c *)c)->SetAnim(0x6d, 0x40000000, 0x1000, 0);
+            SetAnim(0x6d, 0x40000000, 0x1000, 0);
             this->mStateStep = 1;
         }
         this->mAngleY += this->mAngleYSpeed;
@@ -15053,7 +15009,7 @@ int daPly_c::St_SwingPlayer_Main() {
                 if (!b) {
                     func_ov002_020d9c70();
                     func_ov002_020da95c();
-                    ((daPly_c *)c)->SetAnim(0x6e, 0x40000000, 0x1000, 0);
+                    SetAnim(0x6e, 0x40000000, 0x1000, 0);
                     this->mStateStep = 3;
                 } else {
                     DropHeldObj();
@@ -15097,7 +15053,7 @@ int daPly_c::St_SwingPlayer_Main() {
                 this->mStateTimer = 10;
         }
         if (this->mStateTimer == 0) {
-            ((daPly_c *)c)->SetAnim(0x6f, 0x40000000, 0x1000, 0);
+            SetAnim(0x6f, 0x40000000, 0x1000, 0);
             this->mStateStep = 2;
         }
         {
@@ -15334,7 +15290,6 @@ int daPly_c::DropHeldObj() {
 }
 
 int daPly_c::func_ov002_020daa74() {
-    char* self = (char*)this;
     char *s = (char *)mHeldObj;
     int b = (s != 0);
     if (!b)
@@ -17420,7 +17375,6 @@ void daPly_c::InitBalloonMario() {
 }
 
 int daPly_c::St_WindCarry_Main() {
-    char* c = (char*)this;
 
     if (mIsAirborne == 0) {
         this->func_ov002_020c2f64();
@@ -18259,7 +18213,6 @@ tail:
 
 int daPly_c::St_Land_Init() {
     extern char data_0209f4a0[];
-    char* c = (char*)this;
     daPly_c::State *r4;
 
     this->func_ov002_020c2f64();
@@ -18301,7 +18254,7 @@ int daPly_c::St_Land_Init() {
     int idx = gActivePlayerSlot;
     short sval = data_0209f498[idx].mag;
     if (sval == 0 && (IsAnim(0x2b) || IsAnim(0x4c))) {
-        func_ov002_020e25d4(c);
+        func_ov002_020e25d4((char *)this);
     }
     mStateStep = 0;
     if (r4 == &data_ov002_0211019c && mJumpComboStage == 2) {
