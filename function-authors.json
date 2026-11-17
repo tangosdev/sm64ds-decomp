@@ -18171,11 +18171,11 @@
     },
     "ov002:0x020f64ac": {
       "author": "tangosdev",
-      "name": "_ZN8daDemo_c10anmModel_c19func_ov002_020f64acEPc"
+      "name": "_ZN8daDemo_c10anmModel_c19func_ov002_020f64acEPKNS0_9AnimEntryE"
     },
     "ov002:0x020f6514": {
       "author": "tangosdev",
-      "name": "_ZN8daDemo_c10anmModel_c19func_ov002_020f6514EPvh"
+      "name": "_ZN8daDemo_c10anmModel_c19func_ov002_020f6514EPKNS0_9AnimEntryEh"
     },
     "ov002:0x020f65b8": {
       "author": "tangosdev",
@@ -22351,7 +22351,7 @@
     },
     "ov006:0x020deac4": {
       "author": "tangosdev",
-      "name": "_Z14CupFx_ElemDtorv"
+      "name": "_ZN5CupFxD1Ev"
     },
     "ov006:0x020deac8": {
       "author": "tangosdev",
@@ -22467,7 +22467,7 @@
     },
     "ov006:0x020e0634": {
       "author": "tangosdev",
-      "name": "_Z11Cup_Nothingv"
+      "name": "_ZN5CupFxC1Ev"
     },
     "ov006:0x020e0638": {
       "author": "andrewboudreau",
@@ -25559,7 +25559,7 @@
     },
     "ov006:0x02109aa0": {
       "author": "ruspecial",
-      "name": "_Z25Roulette_DrawResultsThunkPc"
+      "name": "_Z25Roulette_DrawResultsThunkP15dScMgRoulette_c"
     },
     "ov006:0x02109aac": {
       "author": "andrewboudreau",

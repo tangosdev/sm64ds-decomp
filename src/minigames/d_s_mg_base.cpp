@@ -24,8 +24,7 @@
  * file emits both classes' vtables and RTTI.
  *
  * Still unnamed: the header's unk_ fields, and the bytes it leaves as
- * padding that this file reaches by offset (+0xb0; the menu save buffers
- * go through the file-local MgMenuSaveArea); the func_ov004 and data_ov004
+ * padding that this file reaches by offset (+0xb0); the func_ov004 and data_ov004
  * helpers are unnamed in symbols.txt.
  */
 
@@ -1133,6 +1132,14 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene) {
             int *pbuf = buf;
             int scale = FX_Inv(FX_MUL(FX_SinIdx(idx), 0x800) + 0x1000);
 
+            /* Kept volatile: the ROM clears the matrix through a pointer
+               held in r6, in order 0, 4, 8, 0xc, before the diagonal
+               stores. Measured 2026-11-16 (#821 r22): plain stores through
+               pbuf, and an MtxFx22 local cleared by member (directly or
+               through pbuf), fold the address to sp-relative and reorder
+               the stores (10/118); a counted clear loop gives 0x1e0 or
+               0x1e4, and a copy from a const zero matrix 0x204, against
+               0x1d8. */
             {
                 volatile int *vp = pbuf;
                 vp[0] = 0;
@@ -1326,18 +1333,6 @@ void dScMgBase_c::UpdateMenu() {
     }
 }
 
-/* What SaveScreenForMenu and RestoreScreenFromMenu keep in the header's
-   pad_228 while the menu is up. A file-local view: dScMgBase_c.h is shared
-   by 36 sources, and only these two bodies touch the buffers. It overlays
-   the whole object from `this`; a view cast from pad_228 moves the literal
-   pool. */
-struct MgMenuSaveArea {
-    u8 pad_000[0x2228];     /* 0x000 -- the dScMgBase_c members before them */
-    u8 subObjChars[0x2000]; /* 0x2228 -- sub-screen OBJ VRAM at 0x06606000 */
-    u8 mainBgPltt[0x200];   /* 0x4228 -- main BG palette from colour 16 on */
-    u8 subBgPltt[0x200];    /* 0x4428 -- first 0x80 bytes of the sub BG palette */
-};
-
 /* dScMgBase_c::RestoreScreenFromMenu - slot 30.
 
    WHAT IT DOES, because the name says the opposite of both halves.  This is
@@ -1369,8 +1364,6 @@ struct MgMenuSaveArea {
    already said void; the retail source did too. */
 
 void dScMgBase_c::RestoreScreenFromMenu() {
-    MgMenuSaveArea *save = (MgMenuSaveArea *)this;
-
     gMainScreenLayers = 0;
     gSubScreenLayers = 0;
 
@@ -1380,16 +1373,15 @@ void dScMgBase_c::RestoreScreenFromMenu() {
     GX_SetVisibleWnd(data_0209d460);
     GXS_SetVisibleWnd(data_0209d458);
 
-    GX_LoadBGPltt(save->mainBgPltt, 0x20, 0x1e0);
-    {
-        /* stepped from mainBgPltt: save->subBgPltt moves the literal pool */
-        char *p = (char *)save->mainBgPltt;
-        p += 0x200;
-        GXS_LoadBGPltt(p, 0, 0x80);
-    }
+    GX_LoadBGPltt(mSavedBgPltt, 0x20, 0x1e0);
+    /* The sub palette is reached as colour 0x100 of the buffer: as
+       mSavedBgPltt + 0x200 (or &mSavedBgPltt[0x200], a stepped u8 local, or a
+       u16 [0x200] / [2][0x100] buffer) mwccarm folds the two offsets into one
+       0x4428 literal, 53 of 93 words off (#821, 2026-11-16). */
+    GXS_LoadBGPltt((u16 *)mSavedBgPltt + 0x100, 0, 0x80);
 
     if (GetDisplayMode() != 2) {
-        MI_CpuCopy32(save->subObjChars, (u8 *)G2S_GetOBJCharPtr() + 0x6000, 0x2000);
+        MI_CpuCopy32(mSavedSubObjChars, (u8 *)G2S_GetOBJCharPtr() + 0x6000, 0x2000);
     }
 
     gMainScreenLayers = mSavedMainBgBits;
@@ -1428,8 +1420,10 @@ namespace s20af094 {
 extern "C" {
 /* dScMgBase_c::SaveScreenForMenu - slot 29.
 
-   The two buffers at +0x2228 and +0x4228 sit inside the header's pad_228;
-   this body and RestoreScreenFromMenu reach them through MgMenuSaveArea.
+   It fills mSavedSubObjChars and mSavedBgPltt; RestoreScreenFromMenu puts
+   them back. The sub palette goes in as `(u16 *)mSavedBgPltt + 0x100`, as in
+   RestoreScreenFromMenu: mSavedBgPltt + 0x200 folds the two offsets into one
+   0x4428 literal, 63 of 122 words off (#821, 2026-11-16).
 
    WHAT IT DOES.  The name is coined from this body; until 2026-10-14 the
    slot carried `OnAimedAtWithEgg`, transplanted from include/dActor_c.h at
@@ -1449,8 +1443,6 @@ extern int GetGameLanguage(void);
 
 int dScMgBase_c::SaveScreenForMenu() {
     using s20af094::GetGameLanguage;
-    MgMenuSaveArea *save = (MgMenuSaveArea *)this;
-
     if (GetDisplayMode() != 0)
         Disable3dEngines();
 
@@ -1468,13 +1460,9 @@ int dScMgBase_c::SaveScreenForMenu() {
     REG_DISPCNT &= ~0xe000;
     REG_DISPCNT_SUB &= ~0xe000;
 
-    MI_CpuCopy32((int *)0x5000020, save->mainBgPltt, 0x1e0);
-    {
-        /* stepped from mainBgPltt: save->subBgPltt moves the literal pool */
-        int *pltt = (int *)save->mainBgPltt;
-        MI_CpuCopy32((int *)0x5000400, pltt + 0x80, 0x80);
-    }
-    DC_FlushRange(save->mainBgPltt, 0x400);
+    MI_CpuCopy32((int *)0x5000020, mSavedBgPltt, 0x1e0);
+    MI_CpuCopy32((int *)0x5000400, (u16 *)mSavedBgPltt + 0x100, 0x80);
+    DC_FlushRange(mSavedBgPltt, 0x400);
 
     GX_LoadBGPltt((const void *)sMgMenuBgPltt, 0x20, 0xa0);
     GXS_LoadBGPltt((const void *)sMgMenuSubBgPltt, 0, 0x80);
@@ -1495,10 +1483,10 @@ int dScMgBase_c::SaveScreenForMenu() {
 
     if (GetDisplayMode() != 2) {
         int *vram = (int *)((u8 *)G2S_GetOBJCharPtr() + 0x6000);
-        MI_CpuCopy32(vram, save->subObjChars, 0x2000);
+        MI_CpuCopy32(vram, mSavedSubObjChars, 0x2000);
         int idx = GetGameLanguage();
         DecompressLZ16(sMgMenuScreenByLanguage[idx], vram);
-        DC_FlushRange(save->subObjChars, 0x2000);
+        DC_FlushRange(mSavedSubObjChars, 0x2000);
     }
 }
 
@@ -1523,16 +1511,14 @@ void dScMgBase_c::OpenMenu()
 
 namespace s20af2f8 {
 extern "C" {
-/* Sets up the brush that PaintSquare paints with. `sb` is the scene: stores
+/* Sets up the brush that PaintSquare paints with on `scene`: stores
    `en` in mBrushOnMain and the layer `mode` (0..3) in mBrushLayer, fills
    the first 0x300 screen entries of that sub-screen BG layer (and of the
    main-screen one when `en` is set) with tile numbers 0..0x2ff under
    palette `base`, zeroes 0x6000 bytes of the layer's character data, and
    loads the 0x20-byte palette sMgBrushPalette into palette slot `base` on
    both screens. Any other mode returns at once. */
-void Mg_InitBrush(char* sb, char en, int mode, int base)
-{
-    dScMgBase_c *scene = (dScMgBase_c *)sb;
+void Mg_InitBrush(dScMgBase_c *scene, char en, int mode, int base) {
     volatile unsigned short v0, v1, v2, v3, v4, v5, v6, v7;
     volatile unsigned short w0, w1, w2, w3, w4, w5, w6, w7;
     int val;
@@ -2307,6 +2293,12 @@ int Mg_CheckBannerButton(int arg) {
         int cy = gTouchInfo[idx].y;
         for (i = 0; i < 3; i++, o++) {
             if (arg == o->mFileIndex && o->mArrived != 0) {
+                /* Kept volatile: the ROM round-trips the banner position
+                   through a stack pair (strh, then ldrsh) before the
+                   subtractions. Measured 2026-11-16 (#821 r22): direct
+                   `o->mX - cx` ints, a plain Vec2 assigned by member, a
+                   short[2] and a brace-initialised Vec2 all drop the
+                   round trip (0x180 against 0x190). */
                 volatile struct Vec2 pos;
                 int dx, dy;
                 short ty;
@@ -2866,10 +2858,9 @@ extern "C" {
 /* Draws sprite word 2 at (a1, a2) on wrapper a3 (Mg_DrawCreditsIcon),
    then the scene's mCreditsShown beside it: below 100 through
    Mg_DrawBigNumber, otherwise through Mg_DrawNumber. */
-void Mg_DrawCredits(char *a0, int a1, int a2, int a3)
-{
+void Mg_DrawCredits(dScMgBase_c *scene, int a1, int a2, int a3) {
     Mg_DrawCreditsIcon(a1, a2, a3, -1);
-    int v = ((dScMgBase_c *)a0)->mCreditsShown;
+    int v = scene->mCreditsShown;
     if (v < 0x64) {
         Mg_DrawBigNumber(a1+0x12, a2, v, a3, -1, 2, 0);
     } else {
@@ -3075,7 +3066,14 @@ extern "C" {
    The fixed-point multiply and the 2x2 rotation are the NitroSDK FX_Mul and
    MTX_Rot22 shapes, written as local inlines. Spelled that way the
    allocator keeps the thousands counter in r0 as the cartridge does; with
-   the products written out in the body it lands in ip or r3. */
+   the products written out in the body it lands in ip or r3.
+   Kept, measured (#821, 2026-11-16): without opt_propagation off this body is
+   38 of 137 words off (the counters start from a zero in r3 or lr, not the
+   thousands counter in r0, and the two smulls take other registers); through
+   fx.h's FX_MUL 36; `th = hu = te = 0` or three separate zeros 36-40; the
+   counters as for-loop variables 51-52; divide-and-subtract digits 0x23c.
+   Round 17: each counter zeroed just before its own while loop 52, the
+   `x = x - k` / `th = th + 1` spellings 52. */
 struct M { int _00, _01, _10, _11; };
 extern void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, struct M *a5);
 extern OamAttr *sMgDigitSprites[];

@@ -29,9 +29,7 @@ struct daGmch_c : dActor_c {
     Matrix4x3 mMatrix;      /* 0x3a0 */
     /* Copy of mPosX/Y/Z taken once in InitResources.
        [_ZN8daGmch_c13InitResourcesEv, now in src/game/actors/d_a_gmch.cpp] */
-    s32 mSpawnPosX;            /* 0x3d0 */
-    s32 mSpawnPosY;            /* 0x3d4 */
-    s32 mSpawnPosZ;            /* 0x3d8 */
+    Vector3 mSpawnPos; /* 0x3d0 */
     /* The current state's 16-byte pointer-to-member-function pair: SetState
        stores &mStateTable[n] here and the two invokers read it back.
        [SetState, CallStateEnter, CallStateUpdate] */

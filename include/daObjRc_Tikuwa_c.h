@@ -38,9 +38,7 @@
 struct daObjRc_Tikuwa_c : dBgActor_c {
     u8 pad_31e[0x2];          /* 0x31e -- dBgActor_c tail */
     dBgCh_Actr mWithMeshClsn; /* 0x320 */
-    s32 mHomePosX;            /* 0x4dc */
-    s32 mHomePosY;            /* 0x4e0 */
-    s32 mHomePosZ;            /* 0x4e4 */
+    Vector3 mHomePos;         /* 0x4dc */
     u8 mHadClsn;              /* 0x4e8 */
     u8 mClsnTimer;            /* 0x4e9 */
     u8 mState;                /* 0x4ea */

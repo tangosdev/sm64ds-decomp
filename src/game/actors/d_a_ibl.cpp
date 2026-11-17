@@ -178,7 +178,7 @@ void daIbl_c::CheckContact() {
             Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
             PoofDust();
             MarkForDestruction();
-            func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
             return;
         }
         Sound::PlayBank0(daIbl_SND_HIT_NOT_BROKEN, mCamSpacePos);
@@ -269,14 +269,14 @@ void daIbl_c::UpdateModelMatrix() {
 int daIbl_c::AdvancePath() {
     int px = mNextNodePos.x;
     int ax = mPosX;
-    int prevx = mPrevNodePosX;
+    int prevx = mPrevNodePos.x;
     /* name A  = node.x - prev.x  (C8)  -- high-priority web -> r8 */
     int A = px - prevx;
     int pz = mNextNodePos.z;
     int az = mPosZ;
-    int prevz = mPrevNodePosZ;
+    int prevz = mPrevNodePos.z;
     int py = mNextNodePos.y;
-    int prevy = mPrevNodePosY;
+    int prevy = mPrevNodePos.y;
     /* name B  = node.y - prev.y  (C7) */
     int B = py - prevy;
     /* name C8 = node.z - prev.z  (C6) */
@@ -348,11 +348,11 @@ int daIbl_c::AdvancePath() {
     if (dot <= 0) {
         int v = mNextNodePos.x;
         int *pidx = &mPathNodeIndex;
-        mPrevNodePosX = v;
+        mPrevNodePos.x = v;
         v = mNextNodePos.y;
-        mPrevNodePosY = v;
+        mPrevNodePos.y = v;
         v = mNextNodePos.z;
-        mPrevNodePosZ = v;
+        mPrevNodePos.z = v;
         *pidx = *pidx + 1;
         if (mPathNodeIndex >= mNumPathNodes) {
             mPathNodeIndex = 0;
@@ -393,7 +393,7 @@ void daIbl_c::PathBehavior() {
         if (r != 2)
             return;
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
 
@@ -422,7 +422,7 @@ void daIbl_c::PathBehavior() {
             mRollSoundHandle = 0;
         } else if (mWithMeshClsn.IsOnGround() != 0) {
             if (mWithMeshClsn.JustHitGround() != 0) {
-                func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
+                func_02012694(daIbl_SND_LAND, &mCamSpacePos);
                 LandingDust(1);
                 if (vy < -0x14000)
                     mVertSpeed = (int)(-vy + ((u32)-vy >> 31)) >> 1;
@@ -469,7 +469,7 @@ void daIbl_c::RollOffBehavior() {
             return;
 
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
 
@@ -478,7 +478,7 @@ void daIbl_c::RollOffBehavior() {
 
     if (mPosY < mKillY || mHitWall != 0) {
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos);
-        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         TriplePoofDust();
         MarkForDestruction();
         return;
@@ -492,7 +492,7 @@ void daIbl_c::RollOffBehavior() {
         mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
 
         if (mWithMeshClsn.JustHitGround()) {
-            func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(daIbl_SND_LAND, &mCamSpacePos);
             LandingDust(1);
 
             if (mVertSpeed < -0x8000)
@@ -542,7 +542,7 @@ void daIbl_c::FreeRollBehavior() {
         if (r != 2)
             return;
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
-        func_02012694(daIbl_SND_BREAK, (const Vector3 *)(&mCamSpacePosX));
+        func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
 
@@ -569,7 +569,7 @@ void daIbl_c::FreeRollBehavior() {
         }
 
         if (mWithMeshClsn.JustHitGround()) {
-            func_02012694(daIbl_SND_LAND, (const Vector3 *)(&mCamSpacePosX));
+            func_02012694(daIbl_SND_LAND, &mCamSpacePos);
             LandingDust(1);
         } else {
             mRollSoundHandle =
@@ -732,9 +732,9 @@ int daIbl_c::InitResources()
         mPathPtr.FromID(param1 & 0xf);
         mNumPathNodes = mPathPtr.NumNodes();
         mPathNodeIndex = 0;
-        mPrevNodePosX = mPosX;
-        mPrevNodePosY = mPosY;
-        mPrevNodePosZ = mPosZ;
+        mPrevNodePos.x = mPosX;
+        mPrevNodePos.y = mPosY;
+        mPrevNodePos.z = mPosZ;
         mPathPtr.GetNode(mNextNodePos, mPathNodeIndex);
         if (Vec3_Equal(&mPos, &mNextNodePos)) {
             mPathNodeIndex += 1;

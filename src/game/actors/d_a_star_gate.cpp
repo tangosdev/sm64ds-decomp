@@ -327,7 +327,7 @@ bool daStarGate_c::St_OpenClose_Init(daPly_c *) {
     ShowArea((s8)mAngleZ);
     gCamera->SetFlag_3();
     mTerminalVelocity = -0x8a000;
-    func_02012694(0x4e, (const Vector3 *)(&mCamSpacePosX));
+    func_02012694(0x4e, &mCamSpacePos);
     return true;
 }
 
@@ -345,7 +345,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
                 mCloseDoorTimer = 28;
             } else if (DecIfAbove0_Byte(&mCloseDoorTimer) == 0) {
                 mTerminalVelocity = 0;
-                func_02012694(0x4f, (const Vector3 *)(&mCamSpacePosX));
+                func_02012694(0x4f, &mCamSpacePos);
             } else if (mCloseDoorTimer == 8) {
                 gCamera->GoBehindPlayer(gLocalPlayerId);
             }

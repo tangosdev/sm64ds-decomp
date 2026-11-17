@@ -54,7 +54,6 @@ extern int sBscLaneX[];
 extern int sMgCoinsBetPlaced;
 extern void FreeGfxSlotsById(int arg);
 void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
-void Mg_DrawCredits(void *scene, int a1, int a2, int a3);
 void Mg_DrawScoreTally(void *scene, int a1, int a2, int a3);
 extern unsigned char gMainScreenLayers;
 extern int data_0208ee44;

@@ -14,6 +14,12 @@
 struct dScMgBase_c;
 extern "C" dScMgBase_c *gMgScene;
 
+/* d_s_mg_base.cpp's scene helpers: the brush PaintSquare paints with, and the
+   credit counter every betting minigame draws. The parameters are unnamed
+   because a named one takes an @NNN number in every including TU. */
+extern "C" void Mg_InitBrush(dScMgBase_c *, char, int, int);
+extern "C" void Mg_DrawCredits(dScMgBase_c *, int, int, int);
+
 struct dScMgBase_c : dScene_c {
 
     class graphCallback_c;
@@ -932,7 +938,12 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     u32 mSavedSubBgBits;      /* 0x220 -- the same pair for gSubScreenLayers */
     u32 mSavedScreenSwap;   /* 0x224 -- bit 15 of POWCNT1 (0x4000304), saved and
                                 restored by the same two functions */
-    u8  pad_228[0x4400];
+    u8 pad_228[0x2000];
+    u8 mSavedSubObjChars[0x2000]; /* 0x2228 -- SaveScreenForMenu's copy of the sub
+                                     OBJ VRAM at 0x06606000, put back by
+                                     RestoreScreenFromMenu */
+    u8 mSavedBgPltt[0x400];       /* 0x4228 -- the same pair's BG palettes: main from
+                                     colour 16 on, then the sub palette at +0x200 */
     s32 mMenuOpen;          /* 0x4628 -- the three-item overlay menu is up;
                                 BeforeRender skips the normal render pass and
                                 draws that instead */

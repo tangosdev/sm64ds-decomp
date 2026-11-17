@@ -35,12 +35,8 @@ struct daCnn_c : dActor_c {
     dExtSimpleModel_c mModel; /* 0x0d4 */
     dCcAc_c mdCcAc_c;         /* 0x124 */
     daPly_c *mPlayer;         /* 0x158 -- the player riding the load sequence */
-    s32 mSpawnPosX;           /* 0x15c */
-    s32 mSpawnPosY;           /* 0x160 */
-    s32 mSpawnPosZ;           /* 0x164 */
-    s32 mMuzzlePosX;          /* 0x168 -- where the last ball left the barrel */
-    s32 mMuzzlePosY;          /* 0x16c */
-    s32 mMuzzlePosZ;          /* 0x170 */
+    Vector3 mSpawnPos;        /* 0x15c */
+    Vector3 mMuzzlePos;       /* 0x168 -- where the last ball left the barrel */
     s32 mTimer;               /* 0x174 */
     s16 mTargetPitch;         /* 0x178 */
     s16 mTargetAngleY;        /* 0x17a */

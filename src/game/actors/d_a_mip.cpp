@@ -100,9 +100,10 @@ struct daMip_cSelf { char pad[0x364]; daMip_cStateFn *pp; };
  * aliased in the manifest. MipVec3's plain overload builds the first vector
  * with ordinary stores; the (int, int, long) overload builds the other
  * three through a volatile lvalue, exactly as retail. Both share the one
- * declared-not-defined destructor (never ~Vector3: a Vector3 here would
- * instantiate its vague-linkage D1 into this TU, which deliberately avoids
- * it); the destructor alias points at the ROM's canonical copy. */
+ * declared-not-defined destructor; the destructor alias points at the ROM's
+ * canonical copy. (This was spelled to keep Vector3's vague-linkage D1 out
+ * of the TU; Behavior's Vector3 locals now emit it, so whether a plain
+ * Vector3 reproduces these is open.) */
 struct DaMipModelFile : SharedFilePtr {
     DaMipModelFile(u32 fileID);
     ~DaMipModelFile();
@@ -205,18 +206,10 @@ daMip_c::~daMip_c()
    water flag to pick splash over dust. */
 int daMip_c::TestWaterBelow()
 {
-    /* The POD VecFx32: a real Vector3 local emits the vague-linkage ~Vector3. */
     dBgCh_Gnd rg;
-    VecFx32 v;
     rg.StartDetectingWater();
-    int x = mPosX;
-    int y = mPosY;
-    int z = mPosZ;
-    int yk = y + 0xc8000;
-    v.x = x;
-    v.y = yk;
-    v.z = z;
-    rg.SetObjAndPos(*(::Vector3 *)&v, this);
+    Vector3 v(mPosX, mPosY + 0xc8000, mPosZ);
+    rg.SetObjAndPos(v, this);
     if (rg.DetectClsn()) {
         mFloorY = rg.clsnY;
         if (SurfaceInfo_TestFlag0x20((int *)&rg.surface))
@@ -256,13 +249,12 @@ void daMip_c::UpdateGrab()
    Message::DisplaySaving, then Released. */
 int daMip_c::StateSaveTalkMain()
 {
-    /* The POD VecFx32: types.h Vector3 has a destructor this function does not emit. */
     extern unsigned char data_0209d684;
     extern unsigned char data_0209d660;
     extern MipStatePair data_ov085_021306bc;
 
     daPly_c *player = mSaveTalkPlayer;
-    VecFx32 vec;
+    Vector3 vec;
     unsigned char gb;
     int state;
 
@@ -270,15 +262,13 @@ int daMip_c::StateSaveTalkMain()
     ApproachAngle(&mPrevAngleY, mTargetAngY, 1, 0x500, 0x500);
 
     gb = data_0209d684;
-    vec.x = mPosX;
-    vec.y = mPosY;
-    vec.z = mPosZ;
+    vec = mPos;
     vec.y += 0x3c000;
 
     state = mActionStep;
     switch (state) {
     case 0:
-        if (player->ShowMessage(*this, 0x148, (Vector3 *)&vec, 0, 0)) {
+        if (player->ShowMessage(*this, 0x148, &vec, 0, 0)) {
             func_02012790(0xa);
             mActionStep++;
         }
@@ -325,21 +315,16 @@ int daMip_c::StateTalkMain()
     extern MipStatePair data_ov085_021306bc;
 
     daPly_c *player;
-    int *pq;
-    VecFx32 pos;
-    VecFx32 pp;
+    Vector3 pos;
+    Vector3 pp;
     s16 angle;
     unsigned int id;
 
     player = mSaveTalkPlayer;
-    pq = &player->mPosX;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
-    pp.x = pq[0];
-    pp.y = pq[1];
-    pp.z = pq[2];
-    angle = Vec3_HorzAngle(&mPos, (const Vector3 *)&pp);
+    const Vector3 &playerPos = player->mPos;
+    pos = mPos;
+    pp = playerPos;
+    angle = Vec3_HorzAngle(&mPos, &pp);
 
     id = 0x139;
     switch (player->GetTalkState()) {
@@ -354,7 +339,7 @@ int daMip_c::StateTalkMain()
         if (ApproachLinear(mPrevAngleY, angle, 0x800)) {
             if (Sound::PlaySub(0x26, 0x12, 0x7f, 0x15ccc, 0)) {
                 Message::PrepareTalk();
-                player->ShowMessage(*this, id, (Vector3 *)&pos, 0, 0);
+                player->ShowMessage(*this, id, &pos, 0, 0);
             }
         }
         break;
@@ -455,9 +440,6 @@ int daMip_c::StateReleasedInit()
    branch that runs once all eight glowing rabbits are found. */
 int daMip_c::StateCaughtMain()
 {
-    /* POD VecFx32 locals. The ::Vector3 casts below are the destructor-bearing type
-       ShowMessage and Spawn take by pointer; these locals are not that type. */
-
     extern MipStatePair data_ov085_021306cc;
     extern MipStatePair data_ov085_021306bc;
     extern MipStatePair data_ov085_0213068c;
@@ -465,10 +447,10 @@ int daMip_c::StateCaughtMain()
     extern u8 data_0209d6bc;
 
     daPly_c *pl;
-    VecFx32 pv;
-    VecFx32 pos;
-    VecFx32 pos7;
-    VecFx32 posR;
+    Vector3 pv;
+    Vector3 pos;
+    Vector3 pos7;
+    Vector3 posR;
     int soundId;
     int msg;
 
@@ -480,24 +462,20 @@ int daMip_c::StateCaughtMain()
 
     if (mActionStep == 0) {
         {
-            int *ps = &pl->mPosX;
-            pv.x = ps[0];
-            pv.y = ps[1];
-            pv.z = ps[2];
+            const Vector3 &playerPos = pl->mPos;
+            pv = playerPos;
         }
 
         if (mCatchState != 0) {
-            s16 ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&pv);
+            s16 ang = Vec3_HorzAngle(&mPos, &pv);
             ApproachLinear(mPrevAngleY, ang, 0x800);
             if (AngleDiff(mPrevAngleY, ang) > 0x200)
                 return 1;
         }
 
         if ((IsFlagSet(this, 0x4000) || mCatchState == 2) && pl->StartTalk(*this, 1) != 0) {
-            pos.x = mPosX;
+            pos = mPos;
             soundId = 0;
-            pos.y = mPosY;
-            pos.z = mPosZ;
 
             if (mRabbitId != 7) {
                 if (func_02013890(mRabbitId, (s32)pl->param1) == 0) {
@@ -558,7 +536,7 @@ int daMip_c::StateCaughtMain()
             }
 
             pos.y += 0x64000;
-            if (pl->ShowMessage(*this, (u32)msg, (::Vector3 *)&pos, 0, 0) == 1) {
+            if (pl->ShowMessage(*this, (u32)msg, &pos, 0, 0) == 1) {
                 mActionStep = 1;
                 if (soundId != 0)
                     func_02012694(soundId, &mCamSpacePos);
@@ -583,13 +561,10 @@ int daMip_c::StateCaughtMain()
     mHorzSpeed = 0;
 
     if (mRabbitId == 7) {
-        pos7.x = mPosX;
-        pos7.y = mPosY;
-        pos7.z = mPosZ;
+        pos7 = mPos;
         pos7.y += 0x32000;
         {
-            dActor_c *spawned =
-                dActor_c::Spawn(0xe5, mRabbitId, *(::Vector3 *)&pos7, &mAngle, mAreaId, -1);
+            dActor_c *spawned = dActor_c::Spawn(0xe5, mRabbitId, pos7, &mAngle, mAreaId, -1);
             if (spawned != 0)
                 ((daObj_Mip_Key_c *)spawned)->unk_190 = uniqueID;
         }
@@ -602,9 +577,7 @@ int daMip_c::StateCaughtMain()
 
     if (func_02013890(mRabbitId, (s32)pl->param1) == 0 ||
         (mIsGlowing != 0 && SaveData::NumGlowingRabbitsFound() == 7)) {
-        posR.x = mPosX;
-        posR.y = mPosY;
-        posR.z = mPosZ;
+        posR = mPos;
         {
             u32 param = mRabbitId;
             if (mIsGlowing != 0) {
@@ -613,8 +586,7 @@ int daMip_c::StateCaughtMain()
             }
             posR.y += 0x32000;
             {
-                dActor_c *spawned =
-                    dActor_c::Spawn(0xe5, param, *(::Vector3 *)&posR, 0, mAreaId, -1);
+                dActor_c *spawned = dActor_c::Spawn(0xe5, param, posR, 0, mAreaId, -1);
                 if (spawned != 0)
                     ((daObj_Mip_Key_c *)spawned)->unk_190 = uniqueID;
             }
@@ -677,8 +649,13 @@ int daMip_c::StateRestInit()
 /* Runs the path away from the player. Dust or splash at a node, steps
    mPathDir, and falls back to Rest past 0x4b0000. */
 int daMip_c::StateFleeMain() {
-    /* POD VecFx32 locals. V3Blk's array member is what makes the player-position
-       copy a block move; a three-scalar struct scalarises. */
+    /* V3Blk's array member is what makes the player-position copy a block
+       move (ldm/stm into the lowest frame slot); a three-scalar struct
+       scalarises. Measured: `Vector3 plPos; plPos = pl->mPos;` and the same
+       with a VecFx32 are memberwise (+8 bytes); a block-scoped
+       `VecFx32 plPos = *(const VecFx32 *)&pl->mPos` gives the block move but
+       lands at the top of the frame, shifting every other slot by 0xc
+       (20/170 words off). */
     struct V3Blk {
         s32 w[3];
     };
@@ -686,11 +663,11 @@ int daMip_c::StateFleeMain() {
 
     daPly_c *pl;
     struct V3Blk v;
-    VecFx32 pos;
-    VecFx32 node;
-    VecFx32 node2;
-    VecFx32 delta;
-    VecFx32 scaled;
+    Vector3 pos;
+    Vector3 node;
+    Vector3 node2;
+    Vector3 delta;
+    Vector3 scaled;
     s32 len;
     s32 lim;
     s16 ang;
@@ -717,25 +694,24 @@ int daMip_c::StateFleeMain() {
     }
 
     if (TestWaterBelow() == 1) {
-        s32 pair[2];
-        pair[0] = mPosX;
-        pair[1] = mFloorY;
-        {
-            s32 z = mPosZ;
-            s32 y = pair[1] + 0x3000;
-            s32 x = pair[0];
-            *((volatile s32 *)(&pos.x)) = x;
-            pos.y = y;
-            pos.z = z;
-            mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove,
-                                                          pos.x, pos.y, z, 0);
-        }
+        /* pos is the outer Vector3 so it lives in the frame (pos.x and pos.y
+           are read back from it for the call); a VecFx32 there is kept in
+           registers, and a block-scope Vector3 lands above node/node2/delta/
+           scaled in the frame. */
+        s32 z = mPosZ;
+        s32 y = mFloorY + 0x3000;
+        s32 x = mPosX;
+        pos.x = x;
+        pos.y = y;
+        pos.z = z;
+        mDustParticle =
+            Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, pos.x, pos.y, z, 0);
     }
 
     PathPtr pathptr;
     pathptr.FromID(mPathId);
-    pathptr.GetNode(*(::Vector3 *)&node, mPathNodeIndex);
-    ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&node);
+    pathptr.GetNode(node, mPathNodeIndex);
+    ang = Vec3_HorzAngle(&mPos, &node);
     ApproachAngle(&mPrevAngleY, ang, 1, 0x1000, 0x1000);
     idx = mPathNodeIndex + mPathDir;
     if (idx < 0) {
@@ -744,7 +720,7 @@ int daMip_c::StateFleeMain() {
     if (idx >= mNumPathNodes) {
         idx = 0;
     }
-    pathptr.GetNode(*(::Vector3 *)&node2, (u32)idx);
+    pathptr.GetNode(node2, (u32)idx);
     lim = 0x26000;
     if (mRabbitId == 7) {
         lim = lim >> 1;
@@ -752,13 +728,11 @@ int daMip_c::StateFleeMain() {
     {
         s32 y = mPosY;
         node.y = y;
-        Vec3_Sub((::Vector3 *)&delta, &mPos, (const ::Vector3 *)&node);
-        len = VEC_Mag((const Vector3 *)&delta);
+        Vec3_Sub(&delta, &mPos, &node);
+        len = VEC_Mag(&delta);
     }
     if ((len == 0) || (len <= lim)) {
-        mPosX = node.x;
-        mPosY = node.y;
-        mPosZ = node.z;
+        mPos = node;
         {
             s32 *p = &mPathNodeIndex;
             *p = (*p) + mPathDir;
@@ -770,13 +744,13 @@ int daMip_c::StateFleeMain() {
             mPathNodeIndex = mNumPathNodes - 1;
         }
     } else {
-        ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&node);
+        ang = Vec3_HorzAngle(&mPos, &node);
         if (AngleDiff(ang, mPrevAngleY) < 0x2000) {
             ysave = mPosY;
             {
                 int s = FX_Div(lim, len);
-                Vec3_MulScalar((Vector3 *)&scaled, (const Vector3 *)&delta, s);
-                VEC_Subtract(&mPos, (::Vector3 *)&scaled, &mPos);
+                Vec3_MulScalar(&scaled, &delta, s);
+                VEC_Subtract(&mPos, &scaled, &mPos);
             }
             if (mVertSpeed > 0) {
                 mPosY = ysave;
@@ -792,24 +766,21 @@ int daMip_c::StateFleeMain() {
     return 1;
 }
 
-/* Whichever neighbouring node is further from the player becomes mPathDir.
-   The scratch vectors are the POD VecFx32, not types.h Vector3: the
-   ROM emits no scope-exit cleanup here. */
+/* Whichever neighbouring node is further from the player becomes mPathDir. */
 int daMip_c::StateFleeInit()
 {
     extern DaMipAnimationFilePtr gMipRunAnimationFile;
 
-    VecFx32 v;
-    VecFx32 nodes[2];
+    Vector3 v;
+    Vector3 nodes[2];
     int i;
     int d0;
-    VecFx32 *src;
 
     daPly_c *p = ClosestPlayer();
     mActionStep = 0;
     if (p) {
-        src = (VecFx32 *)&p->mPosX;
-        v = *src;
+        const Vector3 &playerPos = p->mPos;
+        v = playerPos;
         PathPtr pathptr;
         int indices[2];
         pathptr.FromID(mPathId);
@@ -822,11 +793,11 @@ int daMip_c::StateFleeInit()
             indices[1] = 0;
 
         for (i = 0; i < 2; i++)
-            pathptr.GetNode(*(::Vector3 *)&nodes[i], indices[i]);
+            pathptr.GetNode(nodes[i], indices[i]);
 
         mPathDir = 1;
-        d0 = Vec3_Dist((const Vector3 *)&v, (const Vector3 *)&nodes[0]);
-        if (d0 > Vec3_Dist((const Vector3 *)&v, (const Vector3 *)&nodes[1]))
+        d0 = Vec3_Dist(&v, &nodes[0]);
+        if (d0 > Vec3_Dist(&v, &nodes[1]))
             mPathDir = -1;
     }
 
@@ -856,10 +827,10 @@ int daMip_c::StateStartleInit()
    stored. */
 int daMip_c::StateIdleMain()
 {
-    /* Scratch vectors are the POD VecFx32, not types.h Vector3: the
-       ROM emits no scope-exit cleanup here, so the genuine destructor must
-       not instantiate (its vague-linkage D1 lived in this TU only for
-       these two locals). */
+    /* The splash position is a Vector3 built by its (x, y, z) constructor:
+       that is what loads mFloorY, mPosZ, mPosX in the ROM's order and keeps
+       the three stores. Vector3's empty destructor emits no cleanup; its D1
+       is already this TU's deadstrip-duplicate (Behavior's locals). */
     extern MipStatePair data_ov085_0213066c;
     extern DaMipAnimationFilePtr gMipRunAnimationFile;
     extern DaMipAnimationFilePtr data_ov085_021305b0;
@@ -870,29 +841,18 @@ int daMip_c::StateIdleMain()
     if (player == 0) return 1;
 
     if (TestWaterBelow() == 1) {
-        VecFx32 sp;
-        s32 pair[2];
-        pair[0] = mPosX;
-        pair[1] = mFloorY;
-        s32 z = mPosZ;
-        s32 y = pair[1] + 0x3000;
-        s32 x = pair[0];
-        *((volatile s32*)(&sp.x)) = x;
-        sp.y = y;
-        sp.z = z;
-        mDustParticle =
-            Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, sp.x, sp.y, z, 0);
+        Vector3 sp(mPosX, mFloorY + 0x3000, mPosZ);
+        mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, sp.x,
+                                                      sp.y, sp.z, 0);
     }
 
-    VecFx32 pp;
-    const ::Vector3 *ppp = &player->mPos;
-    pp.x = ppp->x;
-    pp.y = ppp->y;
-    pp.z = ppp->z;
+    Vector3 pp;
+    const Vector3 &playerPos = player->mPos;
+    pp = playerPos;
     int lim = 0x3e8000;
     if (mRabbitId == 7) lim = 0x2ee000;
 
-    if (Vec3_HorzDist(&mPos, (const Vector3 *)&pp) < lim) {
+    if (Vec3_HorzDist(&mPos, &pp) < lim) {
         int t = mRabbitId;
         int cond = 0;
         if (t == 7 || t == 1 ||
@@ -909,8 +869,8 @@ int daMip_c::StateIdleMain()
 
     u32 r = (u32)RandomIntInternal(&data_0209e650.value) >> 8;
     if (mRabbitId == 1) {
-        if (Vec3_HorzDist(&mPos, (const Vector3 *)&pp) < 0x4b0000) {
-            mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&pp) + 0x8000;
+        if (Vec3_HorzDist(&mPos, &pp) < 0x4b0000) {
+            mTargetAngY = Vec3_HorzAngle(&mPos, &pp) + 0x8000;
             mStateTimer = 30;
         }
     }
@@ -936,7 +896,7 @@ int daMip_c::StateIdleMain()
     }
 
     if (mActionStep == 0 && mStateTimer == 0) {
-        mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mIdlePosX);
+        mTargetAngY = Vec3_HorzAngle(&mPos, &mIdlePos);
         mTargetAngY += 0x1800 - ((r & 3) << 12);
         mAnmModel.SetAnim((BCA_File *)data_ov085_021305c8.filePtr, 0x40000000, 0x1000, 0);
         mActionStep = 1;
@@ -951,9 +911,7 @@ int daMip_c::StateIdleInit()
     extern DaMipAnimationFilePtr data_ov085_021305c0;
 
     mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
-    mIdlePosX = mPosX;
-    mIdlePosY = mPosY;
-    mIdlePosZ = mPosZ;
+    mIdlePos = mPos;
     mActionStep = 0;
     mStateTimer = 0;
     return 1;
@@ -975,8 +933,8 @@ void daMip_c::UpdateMatrixAndShadow()
     extern Matrix4x3 data_020a0e68;
 
     char tmp[0x30];
-    VecFx32 t;
-    Vec3_Asr((Vector3 *)&t, &mPos, 3);
+    Vector3 t;
+    Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
@@ -1020,21 +978,19 @@ void daMip_c::UpdateMirrorShadow()
 {
     extern Matrix4x3 data_020a0e68;
 
-    VecFx32 v;
-    VecFx32 res;
-    VecFx32 vd;
+    Vector3 v;
+    Vector3 res;
+    Vector3 vd;
 
     v.x = 0; v.y = 0; v.z = 0;
     res.x = 0; res.y = 0; res.z = 0;
     vd.x = 0; vd.y = 0; vd.z = 0;
 
-    vd.x = mPosX;
-    vd.y = mPosY;
-    vd.z = mPosZ;
+    vd = mPos;
     vd.x = 0x1086000;
-    v.z = Vec3_HorzDist(&mPos, (const Vector3 *)&vd);
-    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle(&mPos, (const Vector3 *)&vd));
-    MTX_MultVec43((Vector3 *)&v, &data_020a0e68, (Vector3 *)&res);
+    v.z = Vec3_HorzDist(&mPos, &vd);
+    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle(&mPos, &vd));
+    MTX_MultVec43(&v, &data_020a0e68, &res);
     {
         int t;
         vd.x = vd.x + res.x;
@@ -1148,7 +1104,7 @@ void daMip_c::RenderMirrorImage()
  *
  * The block before Advance calls MipStatePair::b, the record's second
  * pointer-to-member, on the daMip_cSelf shadow. mState stays an s32: the four
- * comparisons above identify the states by address. `c` is the char* this.
+ * comparisons above identify the states by address.
  * */
 int daMip_c::Behavior()
 {
@@ -1161,7 +1117,6 @@ int daMip_c::Behavior()
     extern MipStatePair data_ov085_021306bc;
     extern MipStatePair data_ov085_021306dc;
 
-    char* c = (char*)this;
     daPly_c *player;
 
     if (gCurrentSublevel != 0x32) {
@@ -1182,7 +1137,7 @@ int daMip_c::Behavior()
     }
 
     if (mRabbitId == 7 && !(data_0209caa0.file.flags1 & 0x40))
-        data_0209f33c = c;
+        data_0209f33c = this;
 
     if (mIsGlowing != 0) {
         Vector3 pv = mPos;
@@ -1273,7 +1228,7 @@ int daMip_c::Behavior()
     DecIfAbove0_Short(&mStateTimer);
 
     {
-        daMip_cSelf *self = (daMip_cSelf *)c;
+        daMip_cSelf *self = (daMip_cSelf *)this;
         MipStatePair *state = (MipStatePair *)mState;
         if (state->b != 0)
             (self->*(state->b))();

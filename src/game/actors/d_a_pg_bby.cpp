@@ -79,9 +79,9 @@ s32 daPgBby_c::InitResources()
     mCylClsn.Init(this, 0x28000, 0x50000, 0x800004, 0x9000);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     mScaleX = 0x400;
     mScaleY = 0x400;
     mScaleZ = 0x400;
@@ -654,16 +654,16 @@ void daPgBby_c::CheckRespawn() {
     Vector3 tmp;
     if (mStateId == 3) return;
     if ((unsigned)mPosY > (unsigned)(-0x1800000)) {
-        if (Vec3_Dist((Vector3 *)&mSpawnPosX, &mPos) < 0x190000)
+        if (Vec3_Dist(&mSpawnPos, &mPos) < 0x190000)
             return;
         if (DecIfAbove0_Short(&mRespawnTimer) != 0) return;
     }
-    Vec3_Asr(&tmp, (Vector3 *)&mSpawnPosX, 3);
+    Vec3_Asr(&tmp, &mSpawnPos, 3);
     if (data_0209f43c.TransformAndClip(data_0209b3ec, tmp, 0x1f400, out) <= 0xc350000)
         return;
-    mPosX = mSpawnPosX;
-    mPosY = mSpawnPosY;
-    mPosZ = mSpawnPosZ;
+    mPosX = mSpawnPos.x;
+    mPosY = mSpawnPos.y;
+    mPosZ = mSpawnPos.z;
 }
 
 s32 daPgBby_c::OnYoshiTryEat()

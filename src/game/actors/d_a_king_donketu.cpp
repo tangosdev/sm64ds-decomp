@@ -578,6 +578,15 @@ int daKing_Donketu_c::UpdateDefeat() {
     pos.y = pos.y + 0x190000;
     c->func_0200fa8c(1);
 
+    /* Kept (#821 r20, measured against ov073 0x0211fa74, 0x178). rot is
+       built and never read; the ROM still stores all four halfwords.
+         non-volatile rot with plain field stores: 0x15c (the stores are
+           dropped).
+         volatile rot, `rot.x = mAngleX; rot.y = mAngleY; ...`: 5 of 94
+           words differ.
+         volatile rot with the reads below but `rot.x = a`: 4 differ.
+       Vector3_16 has no destructor, so the non-POD lever that keeps a
+       dead Vector3 copy does not apply. */
     {
         unsigned short a = *(unsigned short *)&c->mAngleX;
         unsigned short b = *(unsigned short *)&c->mAngleY;
@@ -1125,9 +1134,9 @@ int daKing_Donketu_c::UpdateEdgeWobble() {
     out.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, (s16)(c->mAngleY + 0x8000));
     MTX_MultVec43(&in, &data_020a0e68, &out);
-    in.x = c->mEdgePosX + out.x;
-    in.y = c->mEdgePosY;
-    in.z = c->mEdgePosZ + out.z;
+    in.x = c->mEdgePos.x + out.x;
+    in.y = c->mEdgePos.y;
+    in.z = c->mEdgePos.z + out.z;
     Vec3_ApproachHorz(&c->mPosX, &in, 0x14000);
     c->mAngleY = Vec3_HorzAngle(&c->mPos, &c->mSpawnPos);
     c->mPrevAngleY = c->mAngleY + 0x8000;
@@ -1157,9 +1166,9 @@ int daKing_Donketu_c::EnterEdgeWobble() {
     t->mVertSpeed = 0;
     t->mSpeedZ = 0;
     t->mStateParam = -0x1000;
-    t->mEdgePosX = t->mGroundMissPosX;
-    t->mEdgePosY = t->mGroundMissPosY;
-    t->mEdgePosZ = t->mGroundMissPosZ;
+    t->mEdgePos.x = t->mGroundMissPos.x;
+    t->mEdgePos.y = t->mGroundMissPos.y;
+    t->mEdgePos.z = t->mGroundMissPos.z;
     t->mSoundHandle = 0;
     t->mStateTimer = 90;
     return 1;
@@ -1809,9 +1818,9 @@ int daKing_Donketu_c::Behavior()
         if (!line.DetectClsn()) {
             if (mHorzSpeed > 0xa000)
                 mNoGroundAhead = 1;
-            mGroundMissPosX = mPosX;
-            mGroundMissPosY = mPosY;
-            mGroundMissPosZ = mPosZ;
+            mGroundMissPos.x = mPosX;
+            mGroundMissPos.y = mPosY;
+            mGroundMissPos.z = mPosZ;
             if (mState != &data_ov073_021233a0) {
                 mPosX = mPrevPosX;
                 mPosY = mPrevPosY;

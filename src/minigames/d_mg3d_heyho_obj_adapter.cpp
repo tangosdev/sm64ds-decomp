@@ -164,7 +164,12 @@ void Heyho::StartMotionFlyIn(const HeyhoPath *path) {
     mPath = *path;
 
     /* The ROM re-loads goal.x from the record after the copy instead of
-       reusing the copied register; only a volatile read reproduces it. */
+       reusing the copied register; only a volatile read reproduces it.
+       Measured (#821, 2026-11-16): a plain mPath.goal.x test is 0x1a0
+       against 0x1a8 (the tested value is stored to mPos.x in both
+       branches); testing path->goal.x is one word off (the load is from the
+       source, not mPath); the copy hoisted above one if around VEC_Add, or
+       testing mPos.x after it, 0x190. */
     if (*(volatile int *)&mPath.goal.x > 0) {
         mPos.x = mPath.goal.x;
         mPos.y = mPath.goal.y;

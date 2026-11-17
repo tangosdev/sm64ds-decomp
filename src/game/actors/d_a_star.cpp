@@ -37,8 +37,6 @@
  *   output vector, not the star.
  * - Still unnamed: the dActor_c word at +0xc8 and the halfword at
  *   data_02082714 + 0x56, which lands mid-word in an untyped arm9 table.
- * - `this` goes to LinkSilverStarAndStarMarker as (char *)this to keep its
- *   declared signature.
  * - The Kind names are numbers (KIND_n): only what the code evidences is
  *   said about each one.
  * Methods are named for what their bodies do (and, for the State handlers and the
@@ -83,10 +81,9 @@ enum daStar_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "KuppaScript.h"
 
-/* Plain-data stand-ins. Vector3 and Matrix4x3 carry declared destructors, so
- * a local or a struct copy of either one adds cleanup code the cartridge does
- * not have; NitroSDK VecFx32 and these same-layout PODs keep the bytes
- * identical. Whole matrices are copied through Mtx43. */
+/* Plain-data stand-in. Matrix4x3 carries a declared destructor, so a local
+ * or a struct copy of one adds cleanup code the cartridge does not have; whole
+ * matrices are copied through the same-layout Mtx43. */
 /* A state handler: data_ov002_021109d8 holds one pointer-to-member per
    daStar_c::State. */
 typedef void (daStar_c::*StateHandler)();
@@ -276,8 +273,8 @@ s32 daStar_c::InitResources()
     s32 kind;
     char *sp;
     s32 *q;
-    VecFx32 v;
-    VecFx32 v2;
+    Vector3 v;
+    Vector3 v2;
 
     ret = 1;
     mStarFlags = 0;
@@ -352,7 +349,7 @@ s32 daStar_c::InitResources()
     v2.x = data_ov002_0210aa0c[0];
     v2.y = data_ov002_0210aa0c[1];
     v2.z = data_ov002_0210aa0c[2];
-    mdCc_c.Init(this, *(Vector3 *)&v2, 0x64000, 0x96000, 0x100002, 0x8000);
+    mdCc_c.Init(this, v2, 0x64000, 0x96000, 0x100002, 0x8000);
     mWithMeshClsn.Init(this, 0x50000, 0, 0, 0);
     mWithMeshClsn.SetLimMovFlag();
     mStarID = (u8)(param1 & 0xf);
@@ -373,8 +370,7 @@ s32 daStar_c::InitResources()
             v.y = mPosY;
             v.z = mPosZ;
             v.y = v.y + 0xa000;
-            sp = (char *)dActor_c::Spawn(ACTOR_STAR_MARKER, 0x40, *(Vector3 *)&v, 0, mSavedAreaId,
-                                         -1);
+            sp = (char *)dActor_c::Spawn(ACTOR_STAR_MARKER, 0x40, v, 0, mSavedAreaId, -1);
             if (sp != 0) {
                 mMarkerID = ((dActor_c *)sp)->uniqueID;
             } else {
@@ -451,7 +447,7 @@ s32 daStar_c::InitResources()
 
     sp = (char *)dActor_c::FindWithID(mMarkerID);
     if (sp != 0)
-        ((daStarBase_c *)(sp))->LinkSilverStarAndStarMarker((char *)this);
+        ((daStarBase_c *)(sp))->LinkSilverStarAndStarMarker(this);
     if (gCurrentSublevel == 8 && mStarID == 7) {
         if (IsStarCollected(SublevelToLevel(8), 1) == 0 || gCurrentStarId == 1) {
             MarkForDestruction();
@@ -633,11 +629,11 @@ int daStar_c::Behavior()
     UpdateModelMatrix();
     mdCc_c.Clear();
     {
-        VecFx32 v;
+        Vector3 v;
         v.x = data_ov002_0210aa0c[0];
         v.y = data_ov002_0210aa0c[1];
         v.z = data_ov002_0210aa0c[2];
-        mdCc_c.SetPosRelativeToActor(*(Vector3 *)&v);
+        mdCc_c.SetPosRelativeToActor(v);
     }
     if (mInIceBlock == 0)
         mdCc_c.Update();
@@ -707,10 +703,10 @@ int daStarBase_c::Behavior()
                ~daStarBase_c names (tools/dtor_members.py): 0x0f8 is +0x24,
                dCc_c::otherOwner, and 0x0f4 is +0x20, dCc_c::hitFlags. */
             if (mState != 2 && mdCcAcPos_c.otherOwner != 0) {
-                char *a = (char *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
+                dActor_c *a = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
                 if (a != 0) {
                     if ((mdCcAcPos_c.hitFlags & 0x408000) != 0) {
-                        mHitActor = (dActor_c *)a;
+                        mHitActor = a;
                         Collect();
                         return 1;
                     }
@@ -825,7 +821,7 @@ void daStar_c::StateLaunch() {
     mFlags |= CUTSCENE_FLAG;
     gNextActorUpdateMask |= CUTSCENE_FLAG;
     mCamSeq = 0;
-    func_02012694(0x57, (const Vector3 *)&mCamSpacePosX);
+    func_02012694(0x57, &mCamSpacePos);
     mVertSpeed = 0x20000;
     SetDefaultGravity();
     other = dActor_c::FindWithID(mMarkerID);
@@ -1424,31 +1420,27 @@ void daStar_c::StateSaveMessage() {
  * 14.0 in water or 23.0 on land after each ground contact. The pickup test
  * runs once mStateTimer has counted out, unless the no-pickup flag is set. */
 void daStar_c::StateBounce() {
-    char *c = (char *)this;
     CheckBounds();
     mPrevPosY = mPosY;
     UpdateWMClsn(mWithMeshClsn, 2);
     if (mWithMeshClsn.IsOnWall()) {
-        mPrevAngleY = ((dActor_c *)c)->ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
     }
     UpdateWater();
     if (mWithMeshClsn.JustHitGround()) {
         OnBounceLand();
     } else if (mWithMeshClsn.IsOnGround()) {
-        mPrevAngleY = ((dActor_c *)c)->ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
         if (mBits.water == WATER_IN)
             mVertSpeed = 0xe000;
         else
             mVertSpeed = 0x17000;
     }
-    {
-        unsigned short *ctr = &mStateTimer;
-        if (*ctr == 0) {
-            if (!mBits.noPickup)
-                CheckPickup();
-        } else {
-            *ctr = *ctr - 1;
-        }
+    if (mStateTimer == 0) {
+        if (!mBits.noPickup)
+            CheckPickup();
+    } else {
+        mStateTimer--;
     }
     ProbeGround();
     UpdateSparkleEffect();
@@ -1602,7 +1594,7 @@ void daStar_c::FindMarker() {
         }
     }
     mMarkerID = found->uniqueID;
-    found->LinkSilverStarAndStarMarker((char *)this);
+    found->LinkSilverStarAndStarMarker(this);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1731,7 +1723,7 @@ int daStar_c::Collect(void *p) {
     mState = STATE_TOUCHED;
     found = dActor_c::FindWithID(mMarkerID);
     if (found) {
-        ((daStarBase_c *)((char *)found))->LinkSilverStarAndStarMarker((char *)0);
+        ((daStarBase_c *)((char *)found))->LinkSilverStarAndStarMarker(0);
     }
     mPlayer = (daPly_c *)p;
 
@@ -1952,7 +1944,7 @@ void daStar_c::AddStarMarker()
 /* -------------------------------------------------------------------------- */
 /* Bounds test: a star more than 80000.0 from the origin on X or Z, higher than
  * 80000.0, or below mMinPosY goes to ReturnToHome. */
-volatile unsigned int daStar_c::CheckBounds() {
+void daStar_c::CheckBounds() {
     int v;
     int y;
     v = mPosX;
@@ -1997,7 +1989,7 @@ void daStar_c::ReturnToHome() {
         mPosX = mHomePosX;
         mPosY = mHomePosY;
         mPosZ = mHomePosZ;
-        func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, (const Vector3 *)&mPosX);
+        func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, &mPos);
         mState = mHomeState;
         StopMotion();
         mdCc_c.flags |= 1;
@@ -2025,7 +2017,7 @@ void daStar_c::ReturnToHome() {
     mPosX = mHomePosX;
     mPosY = mHomePosY;
     mPosZ = mHomePosZ;
-    func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, (const Vector3 *)&mPosX);
+    func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, &mPos);
     mState = mHomeState;
     mVertSpeed = 0x20000;
     SetDefaultGravity();
@@ -2053,7 +2045,7 @@ void daStar_c::OnBounceLand() {
         mBits.noPickup = 0;
         mStateTimer = 0;
     }
-    func_02012694(0x55, (const Vector3 *)&mCamSpacePosX);
+    func_02012694(0x55, &mCamSpacePos);
     if (mBits.water == WATER_IN) {
         mHorzSpeed = 0xc000;
         mVertSpeed = 0xe000;
@@ -2235,7 +2227,6 @@ void daStar_c::UpdateModelMatrix() {
  * times the scale, less 0.09375 per unit of height above mGroundY (at least
  * 1.0), never below 10.0; the shadow is 40.0 deeper than that height. */
 void daStar_c::DrawShadow() {
-    char *c = (char *)this;
     int r2, rad, delta, r8, t;
     int flag2;
 
@@ -2271,7 +2262,7 @@ void daStar_c::DrawShadow() {
     mShadowMtx.ty = mPosY >> 3;
     mShadowMtx.tz = mPosZ >> 3;
 
-    ((dActor_c *)c)->DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMtx, r8, t, 0xf);
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMtx, r8, t, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2285,11 +2276,11 @@ void daStar_c::DrawShadow() {
 void func_ov002_020e8244(void *out, daStar_c *b)
 {
     Mtx43 local;
-    VecFx32 zero;
+    Vector3 zero;
     zero.x = 0;
     zero.y = 0;
     zero.z = 0;
-    if (func_0203d024((struct Vector3 *)&b->mCenterX, (struct Vector3 *)&zero) != 0) {
+    if (func_0203d024((struct Vector3 *)&b->mCenterX, &zero) != 0) {
         ((int *)out)[0] = b->mCenterX;
         ((int *)out)[1] = b->mCenterY;
         ((int *)out)[2] = b->mCenterZ;
@@ -2389,26 +2380,15 @@ void daStar_c::SpawnPoseEffects() {
 /* Keeps effect 0x114 (mParticle[2]) 13.0 above the star until mSparkleTimer
  * runs out. */
 void daStar_c::UpdateSparkleEffect() {
-    volatile s32 x, y, zvar;
-    s32 z, yraw;
-
     if (mSparkleTimer == 0)
         return;
     mSparkleTimer--;
     if (mSparkleTimer == 0)
         mParticle[2] = 0;
-    x = mPosX;
-    yraw = mPosY;
-    y = yraw;
-    {
-        s32 zraw = mPosZ;
-        s32 yadj = yraw + 0xd000;
-        z = zraw;
-        zvar = zraw;
-        y = yadj;
-    }
-    volatile u32 &slot = mParticle[2];
-    mParticle[2] = (u32)Particle::System::New(slot, kPtclStarSparkle, x, y, z, 0, 0);
+    Vector3 pos = mPos;
+    pos.y += 0xd000;
+    mParticle[2] =
+        (u32)Particle::System::New(mParticle[2], kPtclStarSparkle, pos.x, pos.y, pos.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2474,7 +2454,7 @@ int daStar_c::RearmSoundObj6() {
  * hides it, clears its touch volume and bursts effects 0x12c, 0x12d and 0x12e. */
 void daStarBase_c::Collect()
 {
-    func_02012694(0x53, (const Vector3 *)&mCamSpacePosX);
+    func_02012694(0x53, &mCamSpacePos);
     {
         mBits.hold = 1;
         mBits.visible = 0;
@@ -2618,7 +2598,7 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
  * counts up, so 0x1d6 (set by STATE_LAND) and 0x1b6 reach 0x1f4 after 30 and
  * 62 frames: that restores the saved view, and 0x1f5 ends the cutscene. */
 void daStar_c::StepCameraCutscene() {
-    VecFx32 v;
+    Vector3 v;
     dCamera_c *cam;
 
     if ((gNextActorUpdateMask & CUTSCENE_FLAG) == 0)
@@ -2653,7 +2633,7 @@ void daStar_c::StepCameraCutscene() {
     case 1:
         if (mState != STATE_FLY_TO_MARKER)
             return;
-        cam->SetLookAt(*(const Vector3 *)&v);
+        cam->SetLookAt(v);
         break;
     case 0x64:
     {
@@ -2672,7 +2652,7 @@ void daStar_c::StepCameraCutscene() {
         mCamSeq += 1;
         break;
     case 0x65:
-        cam->SetLookAt(*(const Vector3 *)&v);
+        cam->SetLookAt(v);
         if (mScaleX == 0x1000 || mScaleX == 0)
             mCamSeq = 0x1b6;
         break;
@@ -2723,7 +2703,7 @@ void daStar_c::LinkRandomFreeMarker() {
     found = arr[idx];
     if (found == 0) return;
     mMarkerID = found->uniqueID;
-    found->LinkSilverStarAndStarMarker((char *)this);
+    found->LinkSilverStarAndStarMarker(this);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2741,7 +2721,7 @@ void daStar_c::RelinkMarker() {
     mPosX = s[0];
     mPosY = s[1];
     mPosZ = s[2];
-    func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, (const Vector3 *)&mPosX);
+    func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, &mPos);
     if (a->mState == STATE_LAND) {
         mHomeState = a->mLinkedStarState;
         mState = mHomeState;
@@ -2783,7 +2763,7 @@ u8 daStar_c::PickTalkState() {
  * marker and gets the coin-reward flag. */
 void daStarBase_c::SpawnRedCoinStarIfNecessary()
 {
-    VecFx32 v;
+    Vector3 v;
     daStar_c *star;
     int y;
     if (mBits.spawned) return;
@@ -2793,7 +2773,7 @@ void daStarBase_c::SpawnRedCoinStarIfNecessary()
     v.y = y;
     v.z = mPosZ;
     v.y = y + 0x78000;
-    star = (daStar_c *)dActor_c::Spawn(ACTOR_STAR, mStarID, *(Vector3 *)&v, 0, mAreaId, -1);
+    star = (daStar_c *)dActor_c::Spawn(ACTOR_STAR, mStarID, v, 0, mAreaId, -1);
     if (star == 0) return;
     star->AddStarMarker();
     star->mBits.coinReward = 1;
@@ -2807,13 +2787,12 @@ void daStarBase_c::SpawnRedCoinStarIfNecessary()
 /* Sends the star looking for a new marker. With gate 0 it first spawns a score
  * popup 200.0 above the player. Sets the relink flag and picks a marker with
  * LinkRandomFreeMarker. */
-void daStar_c::SeekNewMarker(char *player, int gate) {
-    daPly_c *a = (daPly_c *)player;
+void daStar_c::SeekNewMarker(daPly_c *player, int gate) {
     if (gate == 0) {
         struct Vector3 pos[2];
         bool b;
         int* v;
-        v = &a->mPosX;
+        v = &player->mPosX;
         pos[0].x = v[0];
         pos[0].y = v[1];
         pos[0].z = v[2];
@@ -2823,7 +2802,7 @@ void daStar_c::SeekNewMarker(char *player, int gate) {
         pos[1].x = pos[0].x;
         pos[1].z = pos[0].z;
         pos[1].y = pos[0].y;
-        SpawnNumber(pos[1], gNumStageStars[a->mPlayerNo], b, 0x15, a);
+        SpawnNumber(pos[1], gNumStageStars[player->mPlayerNo], b, 0x15, player);
     }
     mBits.relink = 1;
     LinkRandomFreeMarker();
@@ -2832,10 +2811,9 @@ void daStar_c::SeekNewMarker(char *player, int gate) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- LinkSilverStarAndStarMarker, 0x020e71d4, size 0x44 */
 /* -------------------------------------------------------------------------- */
-/* Links the marker to the star b, copying its uniqueID, State and (when it has
+/* Links the marker to star, copying its uniqueID, State and (when it has
  * one) death-table id; with 0 it forgets the star. */
-void daStarBase_c::LinkSilverStarAndStarMarker(char* b) {
-    daStar_c *star = (daStar_c *)b;
+void daStarBase_c::LinkSilverStarAndStarMarker(daStar_c *star) {
     if (star != 0) {
         mLinkedStarID = star->uniqueID;
         mLinkedStarState = star->mState;

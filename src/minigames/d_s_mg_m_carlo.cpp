@@ -28,7 +28,6 @@ enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 extern "C" void Mg_DrawScoreTally(void *, int, int, int);
-extern "C" void Mg_DrawCredits(char *a0, int, int, int);
 extern "C" void FreeGfxSlotsById(int);
 extern "C" void Hud_RenderSprite(void *attr, int, int, int, int);
 extern "C" s32 GetGameLanguage(void);
@@ -359,10 +358,10 @@ s32 dScMgMCarlo_c::Behavior() {
 
 /* Slot 9. The board draws in two passes over the same tail-to-head walk:
  * cards with a positive vertical movement step first, then those with a
- * zero step. mYStep is an absolute magnitude, not a direction. */
+ * zero step. mStep.y is an absolute magnitude, not a direction. */
 s32 dScMgMCarlo_c::Render() {
     Camera_InitDealerView(&mCamera);
-    Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
+    Mg_DrawCredits(this, 0xc, 0xc, 0);
     MgCoins_Draw();
     Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
 
@@ -372,7 +371,7 @@ s32 dScMgMCarlo_c::Render() {
         for (;;) {
             if (card == 0)
                 break;
-            if (card->mYStep > 0)
+            if (card->mStep.y > 0)
                 card->Render();
             cardIndex++;
             card = card->mPrev;
@@ -386,7 +385,7 @@ s32 dScMgMCarlo_c::Render() {
         for (;;) {
             if (card == 0)
                 break;
-            if (card->mYStep == 0)
+            if (card->mStep.y == 0)
                 card->Render();
             cardIndex++;
             card = card->mPrev;
@@ -425,8 +424,8 @@ void dMgMCarloCardObj_c::Init(int slot) {
     if (slot == 0x13)
         sMCarloCardsTail = this;
     mVisible = 1;
-    mXStep = 0;
-    mYStep = 0;
+    mStep.x = 0;
+    mStep.y = 0;
     mState = CARD_WAITING;
     mNext = 0;
     mPrev = mNext;
@@ -437,20 +436,20 @@ void dMgMCarloCardObj_c::Init(int slot) {
  * Other cards move from their current position. The target is the slot's
  * column and row, and the absolute scaled delta supplies the movement step. */
 void dMgMCarloCardObj_c::DealIn(int slot) {
-    int delta[3];
+    Vector2 delta;
 
     if (slot >= 0x14) {
         return;
     }
 
     if (mSlot >= 0x14) {
-        mX = (0x70 - ((sMCarloDeckSize >> 2) << 1)) << 12;
-        mY = -0x30000;
+        mPos.x = (0x70 - ((sMCarloDeckSize >> 2) << 1)) << 12;
+        mPos.y = -0x30000;
         sMCarloCardsTail = this;
         mState = CARD_ENTERING;
     } else if (mState == CARD_WAITING) {
-        mX = (0x70 - ((sMCarloDeckSize >> 2) << 1)) << 12;
-        mY = -0x30000;
+        mPos.x = (0x70 - ((sMCarloDeckSize >> 2) << 1)) << 12;
+        mPos.y = -0x30000;
         mState = CARD_MOVING;
         sMCarloCardsMoving++;
     } else {
@@ -458,20 +457,19 @@ void dMgMCarloCardObj_c::DealIn(int slot) {
         sMCarloCardsMoving++;
     }
 
-    mTargetX = ((slot % 5) * 32 + 0x30) << 12;
-    mTargetY = ((slot / 5) * 0x30) << 12;
+    mTarget.x = ((slot % 5) * 32 + 0x30) << 12;
+    mTarget.y = ((slot / 5) * 0x30) << 12;
     mSlot = (short)slot;
 
-    Vec2_Sub(delta, &mTargetX, &mX);
-    mXStep = delta[0];
-    mYStep = delta[1];
-    func_0203d630(&mXStep, 0x124);
+    Vec2_Sub(&delta.x, &mTarget.x, &mPos.x);
+    mStep = delta;
+    func_0203d630(&mStep.x, 0x124);
 
-    if (mXStep < 0) {
-        mXStep = -mXStep;
+    if (mStep.x < 0) {
+        mStep.x = -mStep.x;
     }
-    if (mYStep < 0) {
-        mYStep = -mYStep;
+    if (mStep.y < 0) {
+        mStep.y = -mStep.y;
     }
 }
 
@@ -526,8 +524,8 @@ int dMgMCarloCardObj_c::HitTest(void) {
                 touching = 1;
         }
         if (touching != 0) {
-            touchXOffset = gTouchInfo[touchSlot].x - (mX >> 12);
-            touchYOffset = gTouchInfo[touchSlot].y - (mY >> 12);
+            touchXOffset = gTouchInfo[touchSlot].x - (mPos.x >> 12);
+            touchYOffset = gTouchInfo[touchSlot].y - (mPos.y >> 12);
             if (touchXOffset > 7 && touchXOffset < 0x28 && touchYOffset > 0 && touchYOffset < 0x31)
                 return 1;
         }
@@ -594,23 +592,23 @@ void dMgMCarloCardObj_c::Update(int slot) {
 
     case CARD_ENTERING:
     case CARD_MOVING:
-        ApproachLinear(mX, mTargetX, mXStep);
-        ApproachLinear(mY, mTargetY, mYStep);
+        ApproachLinear(mPos.x, mTarget.x, mStep.x);
+        ApproachLinear(mPos.y, mTarget.y, mStep.y);
         ApproachLinear(mLift, 0x4000, 0x300);
-        if (func_0203d5dc(&mX, &mTargetX) != 0)
+        if (func_0203d5dc(&mPos.x, &mTarget.x) != 0)
             return;
         if (mLift != 0x4000)
             return;
         mState = CARD_IDLE;
         ApproachLinear(sMCarloCardsMoving, 0, 1);
-        mXStep = 0;
-        mYStep = 0;
+        mStep.x = 0;
+        mStep.y = 0;
         return;
 
     case CARD_LEAVING:
         if (ApproachLinear2(mDealDelay, 0, 1) == 0)
             return;
-        ApproachLinear(mX, -0x30000, 0x10000);
+        ApproachLinear(mPos.x, -0x30000, 0x10000);
         return;
 
     default:
@@ -640,8 +638,8 @@ void dMgMCarloCardObj_c::Render(void) {
     {
         int frameIndex = (mFace + 1) * 5 + (mLift >> 12);
         unsigned short sprite = sMCarloCardFrameSprites[frameIndex];
-        Hud_RenderSprite((void *)sMCarloCardSprites[sprite], (mX >> 12) + 24, (mY >> 12) + 24, -1,
-                         -1);
+        Hud_RenderSprite((void *)sMCarloCardSprites[sprite], (mPos.x >> 12) + 24,
+                         (mPos.y >> 12) + 24, -1, -1);
     }
 }
 

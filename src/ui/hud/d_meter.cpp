@@ -46,7 +46,7 @@
  *
  * leftovers:
  * - The HUD globals are data_ names: symbols.txt has no recovered name for them.
- * - InitResources keeps one launder: the volatile pun on mVsTimer in the
+ * - InitResources keeps one launder: the `u16 *` pun on mVsTimer in the
  *   gCurrentSublevel == 0x2B branch (a plain member store emits different code).
  * - gGameMode is CURRENT_GAMEMODE (symbols/verified.tsv); mode 1 is the one
  *   dMap_c draws its VS icons for.
@@ -292,9 +292,14 @@ int dMeter_c::InitResources() {
                    `else if (true)`: 0x740.
                  one unconditional store: 0x6fc. switch: 0x75c.
                  u16 local holding 30: 0x738. `!IsVsMode()` first: 0x73c.
+                 (#821 r20) `30L`, `(s16)30` or `(u8)30` here, or `30L` in
+                   the else: 0x740. `mVsTimer = mVsTimer = 30` matches but
+                   is the same trick spelled another way.
                The arms most likely stored different values in another
-               build. Nothing in this ROM says what they were. */
-            *(volatile u16 *)&mVsTimer = 30;
+               build. Nothing in this ROM says what they were. The `u16 *` pun is
+               what keeps the stores apart; a `volatile` qualifier on it
+               changes nothing. */
+            *(u16 *)&mVsTimer = 30;
         else
             mVsTimer = 30;
     } else {

@@ -7,7 +7,11 @@
  * thresholds to progress x: 0 inside a stroke, 1 when it steps on to the
  * next stroke, 2 once it passes the last stroke. */
 /* opt_common_subs stays off: the cartridge re-reads the stroke's threshold on
-   each pass of the advance loop, and CSE hoists it (0xf0 against 0xf8). */
+   each pass of the advance loop, and CSE hoists it (0xf0 against 0xf8).
+   Re-measured (#821 r17): `++`, `= limitIndex + 1` and `j = ++limitIndex`
+   for the step, and the loop as a while on the threshold test, are all
+   0xf0 (0xf4 with j assigned in the condition); the progressThresholds
+   pointer stays cached in a register across the loop. */
 #pragma opt_common_subs off
 int Ov007Picker::func_ov007_020c5014(int x) {
     Ov007Picker *self = this;

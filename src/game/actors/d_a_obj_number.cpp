@@ -85,9 +85,9 @@ s32 daObjNumber_c::InitResources() {
     }
 
     mState = 0;
-    mStartPosX = mPosX;
-    mStartPosY = mPosY;
-    mStartPosZ = mPosZ;
+    mStartPos.x = mPosX;
+    mStartPos.y = mPosY;
+    mStartPos.z = mPosZ;
     mVertSpeed = 0x14000;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
@@ -112,14 +112,14 @@ s32 daObjNumber_c::Behavior() {
 
     switch (mState) {
     case 0:
-        if (mPosY < mStartPosY) {
-            mPosY = mStartPosY;
+        if (mPosY < mStartPos.y) {
+            mPosY = mStartPos.y;
             mVertSpeed = 0xf000;
             mState++;
         }
         break;
     case 1:
-        if (mPosY < mStartPosY) {
+        if (mPosY < mStartPos.y) {
             Particle::System::NewSimple(kPtclItemVanish, mPos);
             MarkForDestruction();
         }
@@ -134,7 +134,7 @@ s32 daObjNumber_c::Behavior() {
                 const Vector3 &op = other->mPos;
                 pos = op;
             }
-            pos.y += mFollowOffsetY + (mPosY - mStartPosY);
+            pos.y += mFollowOffsetY + (mPosY - mStartPos.y);
         }
     }
     Matrix4x3_FromTranslation(&mModel.mat4x3, pos.x >> 3, pos.y >> 3, pos.z >> 3);

@@ -13,7 +13,12 @@ static inline int subz(int a, int b) {
 }
 
 /* Kept: indexed-for rewrites over int* or Vector3* points, with or without
- * these, are 0x278..0x2ac against the cartridge's 0x2b8. */
+ * these, are 0x278..0x2ac against the cartridge's 0x2b8. Re-measured
+ * (#821 r17): dropping both is 0x2d4, only strength reduction 0x2dc, only
+ * loop invariants 0x288. With loop invariants still off, rowIndex taken as
+ * `row * w1` each pass is 0x2b8 but 28 words off (the row base gets its
+ * own stack slot, shifting six spills by 4), and the rows indexed as
+ * `pts + rowIndex * 3` are 0x2e0. */
 #pragma opt_strength_reduction off
 #pragma opt_loop_invariants off
 

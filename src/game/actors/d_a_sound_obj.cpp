@@ -112,7 +112,9 @@ daSoundObj_c *daSoundObj_c_classInit() {
 /* opt_loop_invariants is file-global last-wins: this off covers the
    FindWithActorID loop below (dropping it un-matches InitResources),
    and no other member has a loop. Without it the loop's constant
-   arguments are hoisted: 0x15c, not 0x14c. */
+   arguments are hoisted: 0x15c, not 0x14c. Re-measured (#821 r17): the
+   loop as a goto back-edge is also 0x15c, the ROM's in-loop literal load
+   of 0x167 still hoisted. */
 #pragma opt_loop_invariants off
 int daSoundObj_c::InitResources()
 {

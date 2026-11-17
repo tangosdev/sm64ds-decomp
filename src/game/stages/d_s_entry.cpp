@@ -109,6 +109,13 @@ dScEntry_c::icon_c::~icon_c() {}
 OamAnimation::~OamAnimation() {}
 
 void dScEntry_c::icon_c::Render() {
+    /* Kept (#821 r21). The ROM stores mX/mY to the stack and reads them back
+       at each OAM call. A plain s16[2] or two s16 locals stay in registers
+       (0x248 against 0x250); a Vector3s is 7 words off (wrong frame slots).
+       A local four-byte { s16 x, y; } with an empty inline destructor
+       matches exactly, as any non-POD aggregate would, but nothing in the
+       ROM names such a type, so it would only trade one launder for
+       another. dMgPsOpt_c's twin Render has the same pair. */
     volatile s16 xy[2];
     u16 *screenMap;
     int paletteBits;

@@ -642,52 +642,34 @@ void daHanachan_c::StateDemoWaitMain()
 /* DEMOWAIT entry: lay the body out in a line behind the head. */
 void daHanachan_c::StateDemoWaitInit()
 {
-    /* Strength reduction is off. posRow and rotRow start at this and step by
-       one element. Indexing mSegmentPos[seg] is 47 words off, so the fields
-       are named off the shifted pointer. */
-    char *self = (char *)this;
     int seg;
-    char *posRow;
-    char *rotRow;
-    int zero;
     Vector3 in;
     Vector3 out;
     Vector3 sum;
 
-    seg = 0;
     mPlayer = 0;
     mHorzSpeed = data_ov034_02114488[0];
-    posRow = self;
-    rotRow = self;
-    zero = seg;
-    for (; seg < 5; seg++, posRow += sizeof(Vector3), rotRow += sizeof(Vector3s)) {
+    for (seg = 0; seg < 5; seg++) {
         if (seg == 0) {
-            ((daHanachan_c *)posRow)->mSegmentPos[0].x = mPosX;
-            ((daHanachan_c *)posRow)->mSegmentPos[0].y = mPosY;
-            ((daHanachan_c *)posRow)->mSegmentPos[0].z = mPosZ;
-            {
-                short ang = HorzAngleToCPlayer();
-                ((daHanachan_c *)rotRow)->mSegmentRot[0].y = ang;
-                mPrevAngleY = ((daHanachan_c *)rotRow)->mSegmentRot[0].y;
-            }
+            mSegmentPos[seg].x = mPosX;
+            mSegmentPos[seg].y = mPosY;
+            mSegmentPos[seg].z = mPosZ;
+            mSegmentRot[seg].y = HorzAngleToCPlayer();
+            mPrevAngleY = mSegmentRot[seg].y;
         } else {
-            int prev;
-            int zval;
-            zval = -mSegmentSpacing[seg];
-            in.x = zero;
-            in.y = zero;
-            out.x = zero;
-            out.y = zero;
-            out.z = zero;
-            in.z = zval;
+            in.z = -mSegmentSpacing[seg];
+            in.x = 0;
+            in.y = 0;
+            out.x = 0;
+            out.y = 0;
+            out.z = 0;
             Matrix4x3_FromRotationY(&data_020a0e68, (short)(mSegmentRot[0].y + 0x200));
             MTX_MultVec43(&in, &data_020a0e68, &out);
-            prev = seg - 1;
-            Vec3_Add(&sum, &mSegmentPos[prev], &out);
-            ((daHanachan_c *)posRow)->mSegmentPos[0].x = sum.x;
-            ((daHanachan_c *)posRow)->mSegmentPos[0].y = sum.y;
-            ((daHanachan_c *)posRow)->mSegmentPos[0].z = sum.z;
-            ((daHanachan_c *)rotRow)->mSegmentRot[0].y = mSegmentRot[prev].y;
+            Vec3_Add(&sum, &mSegmentPos[seg - 1], &out);
+            mSegmentPos[seg].x = sum.x;
+            mSegmentPos[seg].y = sum.y;
+            mSegmentPos[seg].z = sum.z;
+            mSegmentRot[seg].y = mSegmentRot[seg - 1].y;
         }
     }
 }
@@ -819,19 +801,18 @@ void daHanachan_c::UpdateSegments()
 /* Copies each segment's rotation and position into its model matrix. */
 void daHanachan_c::UpdateSegmentModels()
 {
-    /* rot steps by one Vector3s from this, so the y load keeps add #0x400.
-       model steps by one dExtAnmModel_c. &mAnmModels[i].mat4x3 folds +0x1c into
-       the base and drops that add; a dExtSimpleModel_c* walk keeps it. */
+    /* The rotation call takes its matrix through a model pointer (the ROM
+       steps &mAnmModels[i] and adds 0x1c at the call); the translation stores
+       index the array. Spelling the call as &mAnmModels[i].mat4x3 folds the
+       0x1c into the base, and routing the stores through model moves them
+       onto its register too. */
     int i;
-    char *rot = (char *)this;
-    dExtSimpleModel_c *model = &mAnmModels[0];
     for (i = 0; i < 5; i++) {
-        Matrix4x3_FromRotationY(&model->mat4x3, ((daHanachan_c *)rot)->mSegmentRot[0].y);
+        dExtAnmModel_c *model = &mAnmModels[i];
+        Matrix4x3_FromRotationY(&model->mat4x3, mSegmentRot[i].y);
         mAnmModels[i].mat4x3.t.x = mSegmentPos[i].x >> 3;
         mAnmModels[i].mat4x3.t.y = mSegmentPos[i].y >> 3;
         mAnmModels[i].mat4x3.t.z = mSegmentPos[i].z >> 3;
-        rot += sizeof(Vector3s);
-        model = (dExtSimpleModel_c *)((char *)model + sizeof(dExtAnmModel_c));
     }
 }
 
@@ -1062,8 +1043,14 @@ int daHanachan_c::InitResources()
     cyl1Flags = 0x200000;
     cyl2Height = 0x32000;
     one = 1;
-    /* These three start at this and step by one element. Dropping them for
-       mSegmentPos[i] / mSegmentRot[i] / mTextureSequences[i] is 152 words off. */
+    /* These three start at this and step by one element. Measured (#821):
+       indexing mSegmentPos[i] / mSegmentRot[i] / mSegmentScale[i] /
+       mTextureSequences[i] instead is 42/282 off; indexing segPos too is 27,
+       and every pointer walk (texSeq, animRow, cyl1, cyl2) 26. What is left is
+       the stack slot order of the spilled row pointers. Even the lone
+       (c + prev * 6) read spelled mSegmentRot[prev].y is 6/282: prev and
+       radius trade stack slots, and swapping their declarations, scoping
+       either to its branch or dropping prev for i - 1 all stay at 6. */
     texRow = c;
     posRow = c;
     rotRow = c;

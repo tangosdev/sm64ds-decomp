@@ -3,11 +3,6 @@
  * once y passes 0xc8. mValue is the number SpawnValue drops between two
  * stones when they collide.
  *
- * Leftover: StoneSlide's speed decay keeps the ROM's `this + field +
- *   stoneOffset` order (`&mStone[0].speed + stoneOffset`) and its stop
- *   keeps a stepped `char *` cast back to the class; the member spellings
- *   of those sites move bytes.
- *
  * The whole class TU, .text 0x020e3854..0x020e6c28: 52 member functions
  * in ROM order from the destructor to InitResources, then the registry
  * factory dScMgCurling2_c_classInit. Behavior state machine: BeginRound
@@ -207,7 +202,6 @@ void dScMgCurling2_c::SpawnValue(int stone, int other) {
     int i;
     int sx;
     int sy;
-    unsigned char *count;
 
     for (i = 0; i < 60; i++) {
         if (mValue[i].live != 0)
@@ -235,8 +229,7 @@ void dScMgCurling2_c::SpawnValue(int stone, int other) {
             mValue[i].mode = 2;
         }
 
-        count = &combo;
-        *count = *count + 1;
+        combo++;
         if (combo >= 0x17)
             combo = 0x17;
         Mg_SubmitScore(mValue[i].value + Mg_GetSubmittedScore());
@@ -274,10 +267,9 @@ void dScMgCurling2_c::StepYRampDown(int entry) {
         if ((s16)mPiece[entry].countdown3 < 0)
             mPiece[entry].countdown3 = 0;
     } else if (mPiece[entry].yInc > 0x100) {
-        int *q = &mPiece[entry].yInc;
-        *q = *q - 0x10;
-        if ((short)*q < 0x100)
-            *q = 0x100;
+        mPiece[entry].yInc -= 0x10;
+        if ((short)mPiece[entry].yInc < 0x100)
+            mPiece[entry].yInc = 0x100;
     } else {
         mPiece[entry].yIndex = 0;
     }
@@ -312,28 +304,24 @@ void dScMgCurling2_c::StepYRestart(int entry) {
 /* Step the piece, hold while countdown is set (the hold decrements
  * countdown2, not countdown), then bleed xInc toward zero 8 a frame. */
 void dScMgCurling2_c::StepXSettle(int entry) {
-    /* xInc, x, y: the ROM loads those bases in that order. */
-    s32 *xInc = &mPiece[entry].xInc;
-    s32 *x = &mPiece[entry].x;
-    s32 *y = &mPiece[entry].y;
-    *x = *x + *xInc;
-    *y = *y + mPiece[entry].yInc;
+    mPiece[entry].x = mPiece[entry].x + mPiece[entry].xInc;
+    mPiece[entry].y = mPiece[entry].y + mPiece[entry].yInc;
     if (mPiece[entry].countdown != 0) {
         mPiece[entry].countdown2--;
         if ((s16)mPiece[entry].countdown2 < 0)
             mPiece[entry].countdown2 = 0;
         return;
     }
-    if (*xInc > 0) {
-        *xInc = *xInc - 8;
-        if ((s16)*xInc < 0)
-            *xInc = 0;
+    if (mPiece[entry].xInc > 0) {
+        mPiece[entry].xInc = mPiece[entry].xInc - 8;
+        if ((s16)mPiece[entry].xInc < 0)
+            mPiece[entry].xInc = 0;
         return;
     }
-    if (*xInc < 0) {
-        *xInc = *xInc + 8;
-        if (*xInc > 0)
-            *xInc = 0;
+    if (mPiece[entry].xInc < 0) {
+        mPiece[entry].xInc = mPiece[entry].xInc + 8;
+        if (mPiece[entry].xInc > 0)
+            mPiece[entry].xInc = 0;
         return;
     }
     mPiece[entry].xIndex = 0;
@@ -415,32 +403,27 @@ void dScMgCurling2_c::StepXPick(int entry) {
     mPiece[entry].countdown2 = (u8)(MG_RAND(0x40) + 0x60);
 }
 
-/* Run one piece's xIndex callback, then its yIndex callback.
- * yIndex is re-read through the pointer-to-member receiver. */
+/* Run one piece's xIndex callback, then its yIndex callback. */
 void dScMgCurling2_c::StepXAndY(int entry) {
     C *self = (C *)this;
     unsigned char k0 = mPiece[entry].xIndex;
     (self->*sCurling2StepXTable[k0])(entry);
-    unsigned char k1 = ((dScMgCurling2_c *)self)->mPiece[entry].yIndex;
+    unsigned char k1 = mPiece[entry].yIndex;
     (self->*sCurling2StepYTable[k1])(entry);
 }
 
 /* Step the piece, then bleed xInc toward zero 0x20 a frame. */
 void dScMgCurling2_c::StepXSettleFast(int entry) {
-    /* x, xInc, y -- the ROM's load order, not a tidy one. */
-    int *x = &mPiece[entry].x;
-    int *xInc = &mPiece[entry].xInc;
-    int *y = &mPiece[entry].y;
-    *x += *xInc;
-    *y += mPiece[entry].yInc;
-    if (*xInc > 0) {
-        *xInc -= 0x20;
-        if ((short)*xInc < 0)
-            *xInc = 0;
-    } else if (*xInc < 0) {
-        *xInc += 0x20;
-        if (*xInc > 0)
-            *xInc = 0;
+    mPiece[entry].x += mPiece[entry].xInc;
+    mPiece[entry].y += mPiece[entry].yInc;
+    if (mPiece[entry].xInc > 0) {
+        mPiece[entry].xInc -= 0x20;
+        if ((short)mPiece[entry].xInc < 0)
+            mPiece[entry].xInc = 0;
+    } else if (mPiece[entry].xInc < 0) {
+        mPiece[entry].xInc += 0x20;
+        if (mPiece[entry].xInc > 0)
+            mPiece[entry].xInc = 0;
     } else {
         mPiece[entry].xIndex = 0;
     }
@@ -1089,21 +1072,9 @@ void dScMgCurling2_c::StoneRest(int i) {
 /* Stone state 1: integrate by speed at the heading, bounce off the rink
  * walls (the bounce flips the heading and plays 0x1d4), decay speed to a
  * stop, run the collision step and the spin update, then feed the rolling
- * sound from speed and position.
- *
- * The speed decay keeps the ROM's order of adding the field offset to
- * `this` before the stone offset, spelled `&mStone[0].speed + stoneOffset`,
- * and the stop's `state = 2` keeps the stepped
- * `((dScMgCurling2_c *)(c + stoneIndex * 0x30))` cast; the other fields take
- * mStone[stoneIndex] directly. */
+ * sound from speed and position. */
 void dScMgCurling2_c::StoneSlide(int stoneIndex) {
-    char *c = (char *)this;
-    int stoneOffset;
     int zi;
-    u16 *pHeading;
-    int *pSpeed;
-    int *pX;
-    int *pY;
     int x;
     int z;
     int xi;
@@ -1114,57 +1085,47 @@ void dScMgCurling2_c::StoneSlide(int stoneIndex) {
     int cosAngle;
     int sinAngle;
 
-    stoneOffset = stoneIndex * 0x30;
-
-    pHeading = &mStone[stoneIndex].angle;
-    pSpeed = &mStone[stoneIndex].speed;
-    pX = &mStone[stoneIndex].x;
-    pY = &mStone[stoneIndex].y;
-
-    cosAngle = FX_CosIdx(*pHeading >> 4);
-    *pX += FX_MUL(cosAngle, *pSpeed);
-    sinAngle = FX_SinIdx(*pHeading >> 4);
-    *pY += FX_MUL(sinAngle, *pSpeed);
+    cosAngle = FX_CosIdx(mStone[stoneIndex].angle >> 4);
+    mStone[stoneIndex].x += FX_MUL(cosAngle, mStone[stoneIndex].speed);
+    sinAngle = FX_SinIdx(mStone[stoneIndex].angle >> 4);
+    mStone[stoneIndex].y += FX_MUL(sinAngle, mStone[stoneIndex].speed);
     mStone[stoneIndex].spinAngle += mStone[stoneIndex].spinVel;
 
-    x = *pX;
-    z = *pY;
+    x = mStone[stoneIndex].x;
+    z = mStone[stoneIndex].y;
     xi = x >> 12;
     zi = z >> 12;
 
     if (xi + 0xc >= 0x100) {
-        *pHeading = 0x8000 - *pHeading;
-        *pX = 0xf4000;
-        func_02012718(0x1d4, *pX);
+        mStone[stoneIndex].angle = 0x8000 - mStone[stoneIndex].angle;
+        mStone[stoneIndex].x = 0xf4000;
+        func_02012718(0x1d4, mStone[stoneIndex].x);
     } else if (xi - 0xc < 0) {
-        *pHeading = 0x8000 - *pHeading;
-        *pX = 0xc000;
-        func_02012718(0x1d4, *pX);
+        mStone[stoneIndex].angle = 0x8000 - mStone[stoneIndex].angle;
+        mStone[stoneIndex].x = 0xc000;
+        func_02012718(0x1d4, mStone[stoneIndex].x);
     }
 
     if (zi + 0xc > 0xc0) {
         mStone[stoneIndex].angle = -mStone[stoneIndex].angle;
-        *pY = 0xb4000;
-        func_02012718(0x1d4, *pX);
+        mStone[stoneIndex].y = 0xb4000;
+        func_02012718(0x1d4, mStone[stoneIndex].x);
     } else if (zi - 0xc < -0xe0) {
         mStone[stoneIndex].angle = -mStone[stoneIndex].angle;
-        *pY = -0xd4000;
-        func_02012718(0x1d4, *pX);
+        mStone[stoneIndex].y = -0xd4000;
+        func_02012718(0x1d4, mStone[stoneIndex].x);
     }
 
-    zi = *pSpeed;
+    zi = mStone[stoneIndex].speed;
     v = zi >> 9;
     if (v <= 0x1c)
         v = 0x1c;
 
-    /* `&mStone[0].speed + stoneOffset` here: mStone[stoneIndex].speed and the
-       stepped `((dScMgCurling2_c *)(c + stoneOffset))` form both move bytes
-       (the stepped form builds 8 bytes shorter). */
-    *(int *)((char *)&mStone[0].speed + stoneOffset) -= v;
-    pd = (int *)((char *)&mStone[0].speed + stoneOffset);
-    if (*(int *)((char *)&mStone[0].speed + stoneOffset) <= 0) {
-        *pSpeed = 0;
-        ((dScMgCurling2_c *)(c + stoneIndex * 0x30))->mStone[0].state = 2;
+    mStone[stoneIndex].speed -= v;
+    pd = &mStone[stoneIndex].speed;
+    if (mStone[stoneIndex].speed <= 0) {
+        mStone[stoneIndex].speed = 0;
+        mStone[stoneIndex].state = 2;
     }
 
     ResolveStoneCollision(stoneIndex);
@@ -1175,8 +1136,8 @@ void dScMgCurling2_c::StoneSlide(int stoneIndex) {
     p = v >> 7;
     if (p >= 0x7f)
         p = 0x7f;
-    mStone[stoneIndex].snd =
-        func_02012468(mStone[stoneIndex].snd, 2, 0xe7, 7, p, w, func_020126e8(*pX), 0);
+    mStone[stoneIndex].snd = func_02012468(mStone[stoneIndex].snd, 2, 0xe7, 7, p, w,
+                                           func_020126e8(mStone[stoneIndex].x), 0);
 }
 
 /* Stone state 0: armed, waiting. While a drag is on (mDragState == 1) and
@@ -1448,7 +1409,6 @@ void dScMgCurling2_c::ResetScroll() {
 /* Clear the stones, the score marks and every game variable back to a
  * fresh round, then clear the collision values. */
 void dScMgCurling2_c::ResetGame() {
-    char *c = (char *)this;
     int i;
     for (i = 0; i < STONE_NUM; i++) {
         mStone[i].x = 0;
@@ -1487,9 +1447,7 @@ void dScMgCurling2_c::ResetGame() {
     spawning = 0;
     gameOver = 0;
     mStateTimer = 0;
-    /* 0x55b0 is write-only (this store is its only access); left raw
-       until something gives it a name. */
-    *((short *)(c + 0x55b0)) = 0;
+    unk_55b0 = 0;
     sndCooldown = 0;
     Mg_SubmitScore(0);
     ClearValues();

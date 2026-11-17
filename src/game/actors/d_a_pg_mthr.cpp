@@ -354,8 +354,6 @@ int daPgMthr_c::StateFollowUpdate() {
 }
 
 void daPgMthr_c::UpdateModelAndShadow() {
-    /* Unused, but deleting this local DIFFs. */
-    char *s = (char *)this;
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
     /* m[9..11] are mat4x3's translation (pos >> 3). */
     mAnmModel.mat4x3.m[9] = mPosX >> 3;

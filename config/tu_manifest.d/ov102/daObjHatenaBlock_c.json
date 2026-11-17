@@ -1326,11 +1326,6 @@
       "reason": "return new daObjHatenaBlock_c() instantiates the class, so mwccarm emits the base-object destructor helper. No configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained."
     },
     {
-      "symbol": "_ZN12HbSpawnFrameD1Ev",
-      "disposition": "deadstrip",
-      "reason": "HbSpawnFrame is func_ov102_0214953c's local spawn frame; its Vector3 member carries the inline destructor types.h gives Vector3, so the compiler synthesises a four-byte bx lr body for the aggregate. The aggregate exists only inside that one function, so the body has no ROM symbol and no caller. Text-only isolation discards it."
-    },
-    {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
