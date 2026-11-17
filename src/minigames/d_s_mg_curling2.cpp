@@ -60,7 +60,7 @@ extern void Mg_SubmitScore(int self);
 extern int Mg_IsNewRecord(void);
 extern int Mg_GetTopRecord(void);
 extern void *Ov004_LoadFileByPath(const char *p);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *matrix);
 extern void Mg_SetTopScreenYOffset(int a);
 extern void Mg_SetSharedState(s32 state);
 extern void Mg_DrawTopLeftCounter(int self);

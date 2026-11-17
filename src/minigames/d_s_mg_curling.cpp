@@ -61,7 +61,7 @@ typedef void (C::*PMF0)();
 extern "C" {
 
 extern int Mg_GetSubmittedScore(void);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *matrix);
 extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
 extern void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);

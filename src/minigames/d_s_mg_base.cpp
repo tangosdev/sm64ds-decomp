@@ -1723,7 +1723,7 @@ void Mg_RenderSubSpritePalMtx(void *attr, int x, int y, int palette, int priorit
 
 namespace s20af948 {
 extern "C" {
-void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m) {
+void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *m) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
@@ -1731,11 +1731,11 @@ void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m) {
         if (scene->GetDisplayMode() == 2) {
             if (((dScMgD3DBase_c *)gMgScene)->mDrawSubScreen != 0)
                 return;
-            OAM::Render(false, (OamAttr *)a, b, c, -1, -1, (Matrix2x2 *)m);
+            OAM::Render(false, (OamAttr *)a, b, c, -1, -1, m);
             return;
         }
     }
-    OAM::Render(true, (OamAttr *)a, b, c, -1, -1, (Matrix2x2 *)m);
+    OAM::Render(true, (OamAttr *)a, b, c, -1, -1, m);
 }
 }
 }

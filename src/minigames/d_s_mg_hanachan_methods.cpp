@@ -366,7 +366,7 @@ typedef struct {
 } Ent_ea670;
 
 void HanaPopup_DrawAll(void) {
-    void *a = 0, *b = 0, *c = 0;
+    Matrix2x2 *a = 0, *b = 0, *c = 0;
     int i;
     for (i = 0; i < 16; i++) {
         Ent_ea670 *e = &((Ent_ea670 *)sHanaPopups)[i];
