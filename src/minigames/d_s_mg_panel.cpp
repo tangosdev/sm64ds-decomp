@@ -72,10 +72,10 @@ struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void Hud_RenderSprite(void *a, int b, int c, int d, int e);
 void Mg_SubmitScore(int a);
-void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
+void Mg_RenderSubSpriteMtx(void *a, int b, int c, Matrix2x2 *d);
 void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
 void Mg_SetSharedState(int a);
-void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5);
+void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 void Mg_DrawBigNumber(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 }
 

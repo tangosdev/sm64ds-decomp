@@ -124,7 +124,7 @@ extern int Mg_IsNewRecord(void);
 extern void Mg_RestoreMusic(void);
 extern void Mg_PlayJingle(void *c);
 extern void Mg_StartMusic(void);
-extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, struct Matrix2x2 *d);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Mg_CheckBannerButton(int arg);
 extern void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6);

@@ -622,7 +622,7 @@ void dScMgTeresa_c::Reveal_Hide()
 }
 
 /* decl_common.h declares this one with a `void *` parameter, and
-   Mg_RenderSubSpriteMtx as `(void *, int, int, void *)`. */
+   Mg_RenderSubSpriteMtx as `(void *, int, int, Matrix2x2 *)`. */
 void dScMgTeresa_c::FoundNumber_DrawAll() {
     int i;
     for (i = 0; i < FOUND_NUMBER_NUM; i++) {
