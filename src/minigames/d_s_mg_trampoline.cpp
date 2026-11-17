@@ -342,6 +342,8 @@ s32 dScMgTrampoline_c::InitResources() {
 }
 void TrmpLine_ClearAll(u32);
 
+/* Kept volatile, measured (#821 r49): as plain s16 StartRound folds the second
+   pair of reads into the first and is 0x1ec of 0x1f4. */
 extern volatile s16 data_020a0dbc[];
 
 void dScMgTrampoline_c::StartRound(int /* arg */) {
