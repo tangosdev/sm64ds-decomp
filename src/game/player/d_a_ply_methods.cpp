@@ -10982,9 +10982,9 @@ void daPly_c::func_ov002_020d228c() {
     ChangeState(daPly_c::ST_WAIT);
     SetAnim(9, 0, 0x1000, 0);
     mStateStep = 4;
-    mSleepBubbleScaleX = 0;
-    mSleepBubbleScaleY = 0;
-    mSleepBubbleScaleZ = 0;
+    mSleepBubbleScale.x = 0;
+    mSleepBubbleScale.y = 0;
+    mSleepBubbleScale.z = 0;
     mSleepStage = 2;
     mStateArg = 0;
 }
@@ -11234,9 +11234,9 @@ int daPly_c::St_Wait_Main() {
             if (this->FinishedAnim()) {
                 this->SetAnim(9, 0, 0x1000, 0);
                 mStateStep = 4;
-                mSleepBubbleScaleX = 0;
-                mSleepBubbleScaleY = 0;
-                mSleepBubbleScaleZ = 0;
+                mSleepBubbleScale.x = 0;
+                mSleepBubbleScale.y = 0;
+                mSleepBubbleScale.z = 0;
                 mSleepStage = 2;
                 mStateArg = 1;
             }
@@ -11275,7 +11275,7 @@ int daPly_c::St_Wait_Main() {
                     if (b4b != false)
                         break;
                 }
-                if (func_ov002_020d2da0() == 1 || mSleepBubbleScaleX >= 0x3000 ||
+                if (func_ov002_020d2da0() == 1 || mSleepBubbleScale.x >= 0x3000 ||
                     mIsInShallowWater != 0 || (unsigned short)(mStateFlags & 4)) {
                     func_ov002_020d2e74(this);
                     mSleepStage = 0;
@@ -11372,7 +11372,7 @@ void daPly_c::func_ov002_020d2f24() {
     id = param1;
     if (id != 3) return;
 
-    r4 = mSleepBubbleScaleX;
+    r4 = mSleepBubbleScale.x;
     {
         dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(id & 0xff, 0)];
         v = (u32)(anim.currFrame << 4) >> 0x10;
@@ -11390,9 +11390,9 @@ void daPly_c::func_ov002_020d2f24() {
 
     if (r4 < 0x400) r4 = 0x400;
     if (r4 > 0x4000) r4 = 0x4000;
-    mSleepBubbleScaleX = r4;
-    mSleepBubbleScaleY = r4;
-    mSleepBubbleScaleZ = r4;
+    mSleepBubbleScale.x = r4;
+    mSleepBubbleScale.y = r4;
+    mSleepBubbleScale.z = r4;
 }
 
 int daPly_c::func_ov002_020d2fdc() {
@@ -19873,7 +19873,7 @@ int daPly_c::Render() {
                 func_ov002_020e3e00((dExtSimpleModel_c *)(char *)mModels.mHeadModels[i], &mScale,
                                     mOpacity);
                 if (func_ov002_020d225c()) {
-                    ((VObj *)mModels.mSleepBubbleModel)->m14(&mSleepBubbleScaleX);
+                    mModels.mSleepBubbleModel->Render(&mSleepBubbleScale);
                 }
             }
         }
@@ -20116,7 +20116,7 @@ void daPly_c::func_ov002_020e444c() {
         }
 
         if (func_ov002_020d225c() != 0) {
-            int z = FX_MUL(mSleepBubbleScaleZ, 0x2400) + 0xc000;
+            int z = FX_MUL(mSleepBubbleScale.z, 0x2400) + 0xc000;
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x7000, z);
             mModels.mSleepBubbleModel->mat4x3 = data_020a0e68;
         }

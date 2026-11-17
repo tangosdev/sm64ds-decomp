@@ -266,9 +266,7 @@ struct daPly_c : dActor_c {
        over breath frames 6..0x1c and grows it over 0x24..0x3a, clamped to
        0x400..0x4000. St_Wait_Main wakes the player once X reaches 0x3000, and
        func_ov002_020e444c pushes the bubble out by Z * 0x2400. */
-    s32 mSleepBubbleScaleX; /* 0x56c */
-    s32 mSleepBubbleScaleY; /* 0x570 */
-    s32 mSleepBubbleScaleZ; /* 0x574 */
+    Vector3 mSleepBubbleScale; /* 0x56c */
     /* A 50-entry trail buffer, built by InitResources (new Vector3[50], new
        u8[50]). func_ov002_020bf13c writes entry 0 for Yoshi only: a point 0x78
        behind him, and speed/airborne/moving flags. No other reader in the ROM. */
