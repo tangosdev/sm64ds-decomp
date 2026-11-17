@@ -2513,20 +2513,11 @@ int daPly_c::func_ov002_020c0688() {
 }
 
 int daPly_c::func_ov002_020c06fc(int arg) {
-    /* The POD VecFx32, not Vector3, and this is the strongest case in the file:
-       it is a MEMBER of the local struct Frame below, so a non-POD element
-       gives Frame an implicit destructor, and mwccarm emits that as a new
-       compiler-numbered local-class symbol -- measured as
-       a D1 for daPly_c::Frame$2583Player_cpp. This TU emits no @NNNN/$NNN symbols
-       at all today, and such a name depends on declaration order (compare
-       Bundle$902d_a_mky_cpp in AGENTS.md). Frame has to stay POD. */
     extern ControllerInput data_0209f498[];
-    struct Frame {
-        VecFx32 v0;
-        VecFx32 v1;
-        VecFx32 v2;
-        VecFx32 v3;
-    } f;
+    Vector3 slide;
+    Vector3 rayStart;
+    Vector3 rayEnd;
+    Vector3 vel;
     int a;
     int t;
     int b;
@@ -2583,16 +2574,16 @@ int daPly_c::func_ov002_020c06fc(int arg) {
         mAngleYSpeed = (int)((((long long)b << 8) + 0x800) >> 12);
     }
 
-    f.v0.x = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2]);
-    f.v0.z = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2 + 1]);
+    slide.x = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2]);
+    slide.z = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2 + 1]);
     {
         int len = Vec3_HorzLen((const Vector3 *)&mFloorNormalX);
-        f.v0.x = FX_MUL(f.v0.x, len);
-        f.v0.z = FX_MUL(f.v0.z, len);
+        slide.x = FX_MUL(slide.x, len);
+        slide.z = FX_MUL(slide.z, len);
     }
 
     if ((this->mClsnFlags & 2) != 0 && (u16)(this->mStateFlags & 1) == 0 && this->mHorzSpeed <= 0x10000) {
-        int r6b = cstd::atan2(f.v0.x, f.v0.z);
+        int r6b = cstd::atan2(slide.x, slide.z);
         dBgCh_Lin ray;
         {
             int tz, ty, tx;
@@ -2601,30 +2592,36 @@ int daPly_c::func_ov002_020c06fc(int arg) {
             int j = ((u16)r6b >> 4) * 2;
             int p60 = this->mPosY;
             VecFx32 t;
-            t.x = p5c; t.y = p60 + 0x32000; t.z = p64;
-            f.v1.x = t.x; f.v1.y = t.y; f.v1.z = t.z;
+            t.x = p5c;
+            t.y = p60 + 0x32000;
+            t.z = p64;
+            rayStart.x = t.x;
+            rayStart.y = t.y;
+            rayStart.z = t.z;
             tx = FX_SinCosTable_[j] * 0x46 + this->mPosX;
             tz = FX_SinCosTable_[j + 1] * 0x46 + this->mPosZ;
             ty = this->mPosY + 0x32000;
-            f.v2.x = tx; f.v2.y = ty; f.v2.z = tz;
+            rayEnd.x = tx;
+            rayEnd.y = ty;
+            rayEnd.z = tz;
         }
-        ray.SetObjAndLine(*(const Vector3 *)&f.v1, *(const Vector3 *)&f.v2, this);
+        ray.SetObjAndLine(rayStart, rayEnd, this);
         if (ray.DetectClsn() != 0) {
-            f.v0.x = 0;
-            f.v0.z = 0;
+            slide.x = 0;
+            slide.z = 0;
         }
     }
 
     {
-        int s1 = r5v + f.v0.x;
-        int s2 = r4v + f.v0.z;
+        int s1 = r5v + slide.x;
+        int s2 = r4v + slide.z;
         int fx = FX_MUL(s1, t);
         int fz = FX_MUL(s2, t);
-        f.v3.x = fx;
-        f.v3.z = fz;
+        vel.x = fx;
+        vel.z = fz;
         ang = cstd::atan2(fx, fz);
     }
-    this->mHorzSpeed = Vec3_HorzLen((const Vector3 *)&f.v3);
+    this->mHorzSpeed = Vec3_HorzLen(&vel);
     if (this->mHorzSpeed > 0x64000)
         this->mHorzSpeed = 0x64000;
     this->mPrevAngleY = (s16)(ang + this->mAngleYSpeed);
