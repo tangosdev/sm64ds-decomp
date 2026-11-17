@@ -31,12 +31,10 @@ struct daKirai_c : dActor_c {
     dCcAcPos_c mdCcAcPos_c;   /* 0x124 */
     u8 pad_164[0xc];
     s32 mStateIndex; /* 0x170 */
-    s32 mHomePosX;   /* 0x174 */
-    s32 mHomePosY;   /* 0x178 */
-    s32 mHomePosZ;   /* 0x17c */
+    Vector3 mHomePos; /* 0x174 */
     /* Both taken in InitResources. mHomeHorzDist is Vec3_HorzLen of the spawn
        position -- how far out in XZ the bomb starts from the world origin.
-       mHomeYOffset is the constant 0x2ee000, and mHomePosY is raised by
+       mHomeYOffset is the constant 0x2ee000, and mHomePos.y is raised by
        mHomeYOffset >> 3 right after the home triple is copied.
        [daKirai_c::InitResources] */
     s32 mHomeHorzDist; /* 0x180 */
