@@ -144,33 +144,22 @@ int daObjShell_c::InitResources() {
  * one compile settles each, and the idiom is per-site.
  */
 int daObjShell_c::Behavior() {
-    struct {
-        int shutPuff[3];
-        int lungePuff[3];
-        int hurtFrom[3];
-    } u;
-
     switch (mState) {
     case STATE_SHUT:
         if (mAnmModel.WillHitFrame(0x19)) {
             func_0201267c(0x27, &mCamSpacePos);
-            u.shutPuff[0] = mPosX;
-            u.shutPuff[1] = mPosY;
-            u.shutPuff[2] = mPosZ;
-            u.shutPuff[1] = u.shutPuff[1] + 0x32000;
-            Particle::System::NewSimple(kPtclClamShut, u.shutPuff[0], u.shutPuff[1], u.shutPuff[2]);
+            Vector3 shutPuff = mPos;
+            shutPuff.y += 0x32000;
+            Particle::System::NewSimple(kPtclClamShut, shutPuff.x, shutPuff.y, shutPuff.z);
             mShutTimer = 10;
             mStateTimer = 0;
             mdCcAc_c.flags &= ~1;
         } else {
             if (mStateTimer > 150 && DistToCPlayer() < 0x1f4000) {
                 func_0201267c(0x26, &mCamSpacePos);
-                u.lungePuff[0] = mPosX;
-                u.lungePuff[1] = mPosY;
-                u.lungePuff[2] = mPosZ;
-                u.lungePuff[1] = u.lungePuff[1] + 0x32000;
-                Particle::System::NewSimple(kPtclClamLunge, u.lungePuff[0], u.lungePuff[1],
-                                            u.lungePuff[2]);
+                Vector3 lungePuff = mPos;
+                lungePuff.y += 0x32000;
+                Particle::System::NewSimple(kPtclClamLunge, lungePuff.x, lungePuff.y, lungePuff.z);
                 mStateTimer = 0;
                 mState = STATE_LUNGE;
                 mAnmModel.SetAnim((BCA_File *)data_ov064_0211c9cc.filePtr, 0x40000000, 0x1000, 0);
@@ -201,10 +190,8 @@ int daObjShell_c::Behavior() {
         if (touched != 0) {
             int isPlayer = (int)(touched->actorID == ACTOR_PLAYER);
             if (isPlayer != 0) {
-                u.hurtFrom[0] = mPosX;
-                u.hurtFrom[1] = mPosY;
-                u.hurtFrom[2] = mPosZ;
-                touched->Hurt(*(Vector3 *)u.hurtFrom, 2, 0xc000, 1, 0, 1);
+                Vector3 hurtFrom = mPos;
+                touched->Hurt(hurtFrom, 2, 0xc000, 1, 0, 1);
             }
         }
     }
