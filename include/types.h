@@ -71,6 +71,11 @@ typedef struct Vector3 {
        quite: 10,812 of 10,813 enrolled functions are byte-identical either way,
        and Rabbit::Behavior grows 8 bytes (0x5cc -> 0x5d4). That one is the
        price of the six destructors this unblocks. */
+#ifdef VECTOR3_DECLARE_STRUCTORS
+    ~Vector3();
+    Vector3();
+    Vector3(fx32, fx32, fx32);
+#else
     ~Vector3() {}
 
     /* Static-init globals spell this `Vector3(x, y, z)`; a real member ctor is
@@ -81,7 +86,19 @@ typedef struct Vector3 {
     Vector3() {}
     Vector3(fx32 x_, fx32 y_, fx32 z_) : x(x_), y(y_), z(z_) {}
 #endif
+#endif
 } Vector3;
+
+/* One TU sets VECTOR3_DECLARE_STRUCTORS. Its new[] is parsed here, before the
+   empty bodies below. A new-expression parsed after those bodies passes null
+   for both structors. The include is quoted: a macro include is not a
+   literal header, and the declaration check then refuses every carrier. */
+#ifdef VECTOR3_DECLARE_STRUCTORS
+#include "daPly_TrailArray.h"
+inline Vector3::Vector3() {}
+inline Vector3::~Vector3() {}
+inline Vector3::Vector3(fx32 x_, fx32 y_, fx32 z_) : x(x_), y(y_), z(z_) {}
+#endif
 
 #ifdef __cplusplus
 /* 0xc, and the ROM agrees twice over: daKing_Donketu_c's arrays stride by 0xc and

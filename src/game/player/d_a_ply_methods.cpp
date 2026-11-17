@@ -44,6 +44,7 @@
 
 #pragma defer_codegen off
 
+#define VECTOR3_DECLARE_STRUCTORS
 #include "KuppaScript.h"
 #include "types.h"
 #include "Vector3s.h"
@@ -104,9 +105,6 @@ extern "C" {
 void Vec3_RotateYAndTranslate(Vector3 *, const Vector3 *, short, const Vector3 *);
 int *Vec3_LslInPlace(int *, int);
 int func_01ffa344(int, int);
-void func_0203d384(void);
-void *__cxa_vec_new(unsigned int, unsigned int, unsigned int, void (*)(void *), void (*)(void *));
-void *_ZN7Vector3D1Ev(void *);
 void func_ov002_020bcdf0(daPly_c *);
 void func_ov002_020cd190(daPly_c *);
 int func_ov002_020cf700(daPly_c *);
@@ -19973,18 +19971,6 @@ s32 daPly_c::InitResources() {
     void LoadSilverStarAndNumber(void);
     void func_02013a00(void);
     int StartWithFarCamera(void);
-    /* local extern: `new Vector3[50]` elides both structor args to 0 because
-       types.h's ctor/dtor are inline-empty; the ROM passes them, so the
-       __cxa_vec_new call is spelled by hand. Measured under the pin: mwccarm
-       elides each pointer independently when that structor's empty inline
-       body is visible where the new-expression is parsed; a body defined
-       after it is passed (and locals still inline it). types.h defines both
-       in the class, so only a shared-header change could pass them here, and
-       __cxa_vec_ctor (member arrays) never elides. The two callees cannot be renamed
-       to readable aliases: enroll.candidates() enrolls the defining file for
-       every symbols.txt row at its address, so a second name at a compiled
-       function's address fails its isolate (one emitted def only), and
-       _ZN7Vector3D1Ev's emitted name is compiler-mangled besides. */
     extern u8 gGameMode;
     extern s8 data_02092114;
     extern u8 gPrevReturnState;
@@ -20044,8 +20030,7 @@ Ld0:
     func_ov002_020e5948();
     if (changed != 0)
         func_ov002_020beabc();
-    mTrailPos = (Vector3 *)__cxa_vec_new(0x32, 0xc, 8, (void (*)(void *))func_0203d384,
-                                         (void (*)(void *))_ZN7Vector3D1Ev);
+    mTrailPos = daPly_AllocTrailPositions();
     mTrailFlags = (u8 *)::operator new[](0x32);
     mHeldObjQueue = (dActor_c **)::operator new[](5 * sizeof(dActor_c *));
     __builtin__clear((void *)mHeldObjQueue, 5 * sizeof(dActor_c *));
