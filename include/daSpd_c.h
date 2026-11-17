@@ -37,9 +37,7 @@ struct daSpd_c : dActor_c {
     s32 mShadowMtx[12];                      /* 0x350 */
     /* Current row of data_ov071_02122fa8. Two pointer-to-member calls. */
     void *mStateRow;                         /* 0x380 */
-    s32 mHomeX;                              /* 0x384 */
-    s32 mHomeY;                              /* 0x388 */
-    s32 mHomeZ;                              /* 0x38c */
+    Vector3 mHome;                           /* 0x384 */
     /* Where the bug walks back to. Refreshed from mPos when it lands. */
     Vector3 mAnchor;                         /* 0x390 */
     s32 mState;                              /* 0x39c */

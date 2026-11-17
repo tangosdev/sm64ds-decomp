@@ -170,9 +170,9 @@ int daSpd_c::InitResources() {
     mdCcAc_c.Init(this, 0x46000, 0x64000, 0x200000, 0x6eff0);
     mWithMeshClsn.Init(this, 0x50000, 0x50000, (Vector3_16 *)0, (Vector3_16 *)0);
     mWithMeshClsn.StartDetectingWater();
-    mHomeX = mPosX;
-    mHomeY = mPosY;
-    mHomeZ = mPosZ;
+    mHome.x = mPosX;
+    mHome.y = mPosY;
+    mHome.z = mPosZ;
     mHomeAngleY = mAngleY;
     mAnchor.x = mPosX;
     mAnchor.y = mPosY;
@@ -251,10 +251,10 @@ int daSpd_c::func_ov071_02120200() {
     short ang;
 
     mFlags = mFlags & ~0x10000001;
-    mPosX = mHomeX;
+    mPosX = mHome.x;
     z = 0;
-    mPosY = mHomeY;
-    mPosZ = mHomeZ;
+    mPosY = mHome.y;
+    mPosZ = mHome.z;
     mPrevAngleY = mHomeAngleY;
     ang = mHomeAngleY;
     mAngleX = z;
