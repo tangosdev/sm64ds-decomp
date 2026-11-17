@@ -4492,9 +4492,8 @@ void func_0203b9b4(int *p, int v);
 void func_ov001_020ab2e4(void);
 
 int dScStage_c::InitResources() {
-    dScStage_c *scene = this;
 
-    if (scene->mWaitingForLoad == 0) {
+    if (mWaitingForLoad == 0) {
         u8 mode = gGameMode;
         int isVsMode = (mode == 1) ? 1 : 0;
         if (isVsMode) {
@@ -4564,7 +4563,7 @@ int dScStage_c::InitResources() {
         gCurrentEntranceId = sNextEntranceId;
         gCurrentStarId = gNextStarId;
         gCurrentAreaId = -1;
-        data_0209f314 = (int)scene->mAreas;
+        data_0209f314 = (int)mAreas;
         data_0209f32c = 0x80000000;
         data_0209f274 = 0;
         SublevelToLevel(gCurrentSublevel);
@@ -4716,10 +4715,10 @@ int dScStage_c::InitResources() {
         } while (faderIndex < 7);
 
         data_0209f340 = (char *)data_02092208[gCurrentSublevel];
-        scene->LoadModel();
+        LoadModel();
         data_0208ee44 = 2;
         LVL_Overlay *level = (LVL_Overlay *)data_0209f340;
-        dScStage_c::LoadClsnAndObjects(*level, gCurrentEntranceId, scene->mMeshCollider);
+        dScStage_c::LoadClsnAndObjects(*level, gCurrentEntranceId, mMeshCollider);
 
         int vsModeMusic = (gGameMode == 1) ? 1 : 0;
         if (vsModeMusic == 0) {
@@ -4745,11 +4744,11 @@ int dScStage_c::InitResources() {
             UnloadArchive(levelArchive);
         }
         LoadDebugFont();
-        scene->LoadFog();
-        scene->LoadTextureTransformers();
-        scene->LoadSkybox();
+        LoadFog();
+        LoadTextureTransformers();
+        LoadSkybox();
         data_0209cef0 = 1;
-        scene->mParticle.Initialise();
+        mParticle.Initialise();
 
         u8 f2fc = gPrevReturnState;
         gVsExitScreenActive = 0;
@@ -4772,11 +4771,11 @@ int dScStage_c::InitResources() {
         gNextSublevel = -1;
 
         if (data_0209fc68 != 0) {
-            scene->mWaitingForLoad = 1;
+            mWaitingForLoad = 1;
         }
     }
 
-    if (scene->mWaitingForLoad != 0) {
+    if (mWaitingForLoad != 0) {
         if (func_020308a8() == 0)
             return -1;
     }
