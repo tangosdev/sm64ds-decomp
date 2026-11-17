@@ -29,6 +29,7 @@ enum dScMgSound_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_trig.h"
+#include "Matrix2x2.h"
 
 /* The state/phase dispatch tables hold pointer-to-member records: the
    sinit copies {pmf, delta} descriptors into them. */
@@ -1437,18 +1438,18 @@ void dScMgSound_c::DrawPops() {
 
     for (slot = 0; slot < POP_NUM; slot++) {
         if (mPops[slot].visible) {
-            int matrix[4];
+            Matrix2x2 matrix;
             long long scale = mPops[slot].scale;
             int x = mPops[slot].x;
             int y = mPops[slot].y;
             int scaledCos = (int)((cosAngle * scale + 0x800) >> 12);
             int scaledSin = FX_MUL(sinAngle, (int)scale);
-            matrix[0] = scaledCos;
-            matrix[3] = scaledCos;
-            matrix[1] = scaledSin;
-            matrix[2] = -scaledSin;
+            matrix.m00 = scaledCos;
+            matrix.m11 = scaledCos;
+            matrix.m01 = scaledSin;
+            matrix.m10 = -scaledSin;
             Mg_RenderSpriteBothPalMtx(sSoundPopsSprites[mPops[slot].sprite], (x >> 12) - 8,
-                                      (y >> 12) - 0x10, -1, matrix);
+                                      (y >> 12) - 0x10, -1, &matrix);
         }
         sinAngle = FX_SinCosTable_[0];
     }
