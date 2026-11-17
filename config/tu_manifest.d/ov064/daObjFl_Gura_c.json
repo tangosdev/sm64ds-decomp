@@ -20,6 +20,11 @@
       "end": "0x02118138"
     },
     {
+      "name": ".rodata",
+      "start": "0x0211adb0",
+      "end": "0x0211adbc"
+    },
+    {
       "name": ".init",
       "start": "0x0211b078",
       "end": "0x0211b0e4"
@@ -28,6 +33,12 @@
       "name": ".ctor",
       "start": "0x0211b738",
       "end": "0x0211b73c"
+    },
+    {
+      "name": ".data.guraClps",
+      "input_section": ".data",
+      "start": "0x0211bb8c",
+      "end": "0x0211bbac"
     },
     {
       "name": ".bss",
@@ -72,7 +83,24 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "rodata": [
+    {
+      "symbol": "data_ov064_0211adb0",
+      "address": "0x0211adb0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "model, collision and CLPS handles for the tilting slab"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "data_ov064_0211bb8c",
+      "address": "0x0211bb8c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "mesh collider CLPS block for the tilting slab"
+    }
+  ],
   "bss": [
     {
       "symbol": "gFlGuraModelFile",
@@ -223,6 +251,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0211adb0",
+          "end": "0x0211adbc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x0211b078",
           "end": "0x0211b0e4",
@@ -233,6 +268,13 @@
           "section": ".ctor",
           "start": "0x0211b738",
           "end": "0x0211b73c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.guraClps",
+          "start": "0x0211bb8c",
+          "end": "0x0211bbac",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -500,6 +542,36 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x0211adb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlGuraModelFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c768"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211adb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFlGuraCollisionFile",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211c770"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211adb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211bb8c",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211bb8c"
+    },
     {
       "section": ".init",
       "source": "0x211b088",

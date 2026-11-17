@@ -18,6 +18,11 @@
       "end": "0x02120824"
     },
     {
+      "name": ".rodata",
+      "start": "0x02121ffc",
+      "end": "0x02122004"
+    },
+    {
       "name": ".init",
       "start": "0x021221f8",
       "end": "0x02122350"
@@ -264,6 +269,15 @@
       "evidence": "compiler storage has the two-word ABI preamble; the configured public address point remains unchanged at 0x021228bc, and the storage ends at _ZTI11daBgSnwmn_c (0x02122938)"
     }
   ],
+  "rodata": [
+    {
+      "symbol": "data_ov072_02121ffc",
+      "address": "0x02121ffc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Cry and smile BTP handles. Two pointers relocating to this TU's texture-sequence objects."
+    }
+  ],
   "bss": [
     {
       "symbol": "gBgSnmHedModelFile",
@@ -417,6 +431,13 @@
           "section": ".text",
           "start": "0x0211ff34",
           "end": "0x02120824",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02121ffc",
+          "end": "0x02122004",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -797,6 +818,26 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x02121ffc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBigSnowmanCryTextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122bd4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02122000",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBigSnowmanSmileTextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov072",
+      "target_address": "0x02122bcc"
+    },
     {
       "section": ".init",
       "source": "0x02122208",

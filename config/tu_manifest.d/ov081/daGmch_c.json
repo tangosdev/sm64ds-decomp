@@ -12,13 +12,18 @@
     "RIGHT bound: _ZN15daObjIceBlock_cD1Ev begins at 0x02127b34, so the run ends on a function boundary and takes nothing from daObjIceBlock_c.",
     "self-contained: filtering all 106 modules' relocs.txt on module:overlay(81) accepts 64 of the 436 rows whose destination lies in this address range (ov077..ov082 share base 0x02123740, so 372 are phantoms). Those 64 are 35 from .text inside the run, the 18 pointer-to-member records at 0x02128b38..0x02128bc8, the 10 own vtable slots and the profile's factory word. Zero come from .text outside the run.",
     "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU). Narrowed by hand instead: __sinit_ov081_021284f0 has 45 relocations -- 18 into this class's pointer-to-member band, 13 into its .bss objects, 14 into arm9 -- and references no text outside this run, so it is this class's static initializer and nobody else's. It stays enrolled: it lives in .init, outside the claimed .text range.",
-    "CURRENT METADATA OWNERSHIP: the reconstructed TU now supplies the compiler-native leaf name/RTTI/vtable and typed GAMAGUCHI profile at ov081:0x02128bc8..0x02128c80 (182 object bytes plus 2 natural alignment bytes). Existing methods and native initializer establish the class relationship; this assignment does not recover an original filename or prove a unique historical TU boundary. The separate 16-byte animation pointer list remains ROM-owned."
+    "CURRENT METADATA OWNERSHIP: the reconstructed TU now supplies the compiler-native leaf name/RTTI/vtable and typed GAMAGUCHI profile at ov081:0x02128bc8..0x02128c80 (182 object bytes plus 2 natural alignment bytes). Existing methods and native initializer establish the class relationship; this assignment does not recover an original filename or prove a unique historical TU boundary. The 16-byte animation pointer list at 0x021280d8 is the const SharedFilePtr table in this TU."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x02126504",
       "end": "0x02127b34"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021280d8",
+      "end": "0x021280e8"
     },
     {
       "name": ".init",
@@ -300,6 +305,15 @@
       "size": "0x00000058",
       "legacy_source": "src/d_a_gmch.c",
       "ordinal": 36
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov081_021280d8",
+      "address": "0x021280d8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four SharedFilePtr pointers walked by InitResources and CleanupResources: walk, walk-end, jump, jump-end"
     }
   ],
   "data": [
@@ -690,6 +704,13 @@
           "section": ".text",
           "start": "0x02126504",
           "end": "0x02127b34",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021280d8",
+          "end": "0x021280e8",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1371,6 +1392,46 @@
   ],
   "production_mode": "intact-object",
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x021280d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov081_02128edc",
+      "addend": 0,
+      "target_module": "ov081",
+      "target_address": "0x02128edc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021280dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gGamaguchiWalkEndAnimationFile",
+      "addend": 0,
+      "target_module": "ov081",
+      "target_address": "0x02128ee4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021280e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gGamaguchiJumpAnimationFile",
+      "addend": 0,
+      "target_module": "ov081",
+      "target_address": "0x02128ecc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021280e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gGamaguchiJumpEndAnimationFile",
+      "addend": 0,
+      "target_module": "ov081",
+      "target_address": "0x02128ec4"
+    },
     {
       "section": ".ctor",
       "source": "0x02128830",

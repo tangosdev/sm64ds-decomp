@@ -17,6 +17,11 @@
       "end": "0x0211261c"
     },
     {
+      "name": ".rodata",
+      "start": "0x0211277c",
+      "end": "0x021127a4"
+    },
+    {
       "name": ".init",
       "start": "0x021127a4",
       "end": "0x02112b14"
@@ -552,6 +557,22 @@
       "evidence": "six two-PMF state rows {init, behavior} that the initializer fills from the twelve literals; func_ov019_021122dc indexes it at state * 0x10"
     }
   ],
+  "rodata": [
+    {
+      "symbol": "data_ov019_0211277c",
+      "address": "0x0211277c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three BTP SharedFilePtr pointers. Each word relocates to a handle this TU constructs."
+    },
+    {
+      "symbol": "data_ov019_02112788",
+      "address": "0x02112788",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "Seven BCA SharedFilePtr pointers. Each word relocates to a handle this TU constructs."
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZN7Vector3D1Ev",
@@ -694,6 +715,13 @@
           "section": ".text",
           "start": "0x021111a0",
           "end": "0x0211261c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0211277c",
+          "end": "0x021127a4",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1378,6 +1406,106 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x0211277c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gOV019PenguinAngryTextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x021134a8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112780",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinSliderTextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x021134b0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112784",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gOV019PenguinWait1TextureSequenceFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113468"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112788",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gOV019PenguinWait1AnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113470"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211278c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gOV019PenguinWalkAnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x021134a0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112790",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinJumpStAnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113478"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112794",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinJumpEdAnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113460"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112798",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinDiveAnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113480"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211279c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinSliderAnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113488"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021127a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gPenguinStandUpAnimationFile",
+      "addend": 0,
+      "target_module": "ov019",
+      "target_address": "0x02113490"
+    },
     {
       "section": ".init",
       "source": "0x021127b4",

@@ -21,6 +21,22 @@
       "end": "0x020b67e8"
     },
     {
+      "name": ".rodata",
+      "start": "0x020b9488",
+      "end": "0x020b948c"
+    },
+    {
+      "name": ".data",
+      "start": "0x020bc7d0",
+      "end": "0x020bc7d4"
+    },
+    {
+      "name": ".data.coinspr",
+      "input_section": ".data",
+      "start": "0x020bc828",
+      "end": "0x020bc850"
+    },
+    {
       "name": ".init",
       "start": "0x020b9ad0",
       "end": "0x020b9b24"
@@ -339,7 +355,38 @@
       "ordinal": 42
     }
   ],
-  "data": [],
+  "rodata": [
+    {
+      "symbol": "sMgCoinRiseFrames",
+      "address": "0x020b9488",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "rise lasts 20 frames"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "sMgCoinsBetCap",
+      "address": "0x020bc7d0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "MgCoins_AddBetCoin stops at 5"
+    },
+    {
+      "symbol": "sMgCoinsButtonSprites",
+      "address": "0x020bc828",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five bet-button sprite lists"
+    },
+    {
+      "symbol": "sMgCoinsDeltaSprites",
+      "address": "0x020bc83c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language text-sprite lists for the coin delta"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov004_020bfa28",
@@ -408,6 +455,27 @@
           "section": ".text",
           "start": "0x020b4aa4",
           "end": "0x020b67e8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x020b9488",
+          "end": "0x020b948c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x020bc7d0",
+          "end": "0x020bc7d4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.coinspr",
+          "start": "0x020bc828",
+          "end": "0x020bc850",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -534,6 +602,106 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data.coinspr",
+      "source": "0x020bc828",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021338c4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021338c4"
+    },
+    {
+      "section": ".data.coinspr",
+      "source": "0x020bc82c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021338ac",
+      "addend": 0,
+      "target_module": "overlays(6,91)",
+      "target_address": "0x021338ac"
+    },
+    {
+      "section": ".data.coinspr",
+      "source": "0x020bc830",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021338b8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021338b8"
+    },
+    {
+      "section": ".data.coinspr",
+      "source": "0x020bc834",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021338a0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021338a0"
+    },
+    {
+      "section": ".data.coinspr",
+      "source": "0x020bc838",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021338d0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021338d0"
+    },
+    {
+      "section": ".data.coinspr",
+      "source": "0x020bc83c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021373a4"
+    },
+    {
+      "section": ".data.coinspr",
+      "source": "0x020bc840",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesSpanish",
+      "addend": 0,
+      "target_module": "overlays(6,95)",
+      "target_address": "0x021373fc"
+    },
+    {
+      "section": ".data.coinspr",
+      "source": "0x020bc844",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesFrench",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213734c"
+    },
+    {
+      "section": ".data.coinspr",
+      "source": "0x020bc848",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesGerman",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021372f4"
+    },
+    {
+      "section": ".data.coinspr",
+      "source": "0x020bc84c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesItalian",
+      "addend": 0,
+      "target_module": "overlays(6,95)",
+      "target_address": "0x02137454"
+    },
     {
       "section": ".init",
       "source": "0x020b9af0",

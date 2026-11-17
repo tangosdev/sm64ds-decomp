@@ -70,6 +70,9 @@ enum daOwl_c_AssetId {
 #pragma defer_codegen off
 
 #include "decl_common.h"
+
+/* Spawn offset. 20.12. The middle word is -32.0. */
+int data_ov094_02136a1c[3] = {0, 0xfffe0000, 0};
 #include "daOwl_c.h"
 #include "nitro/fx/fx_trig.h"
 #include "SharedFilePtr.h"

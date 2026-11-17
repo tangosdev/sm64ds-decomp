@@ -69,7 +69,18 @@ struct BkBotaosiCollisionFilePtr : SharedFilePtr {
 
 extern BkBotaosiCollisionFilePtr data_ov015_02114974; /* collision KCL */
 extern BkBotaosiModelFilePtr data_ov015_0211497c;     /* plank BMD */
-extern CLPS_Block data_ov015_02113574;
+struct CLPS_Block {
+    u32 tag;
+    u32 hdr;
+    u32 w0;
+    u32 w1;
+    u32 w2;
+    u32 w3;
+    u32 tail0;
+    u32 tail1;
+};
+CLPS_Block data_ov015_02113574 = {0x53504c43, 0x00010008, 0x01000fc5, 0x000000ff,
+                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 

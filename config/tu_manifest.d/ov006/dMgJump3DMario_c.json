@@ -30,8 +30,62 @@
     },
     {
       "name": ".bss",
-      "start": "0x02140438",
+      "start": "0x02140400",
       "end": "0x021404c4"
+    },
+    {
+      "name": ".data.data_ov006_02134d1c",
+      "input_section": ".data",
+      "start": "0x02134d1c",
+      "end": "0x02134d20"
+    },
+    {
+      "name": ".data.data_ov006_02134d20",
+      "input_section": ".data",
+      "start": "0x02134d20",
+      "end": "0x02134d28"
+    },
+    {
+      "name": ".data.sJump3DBounceVy",
+      "input_section": ".data",
+      "start": "0x0213b008",
+      "end": "0x0213b00c"
+    },
+    {
+      "name": ".data.sJump3DRiseVy",
+      "input_section": ".data",
+      "start": "0x0213b00c",
+      "end": "0x0213b010"
+    },
+    {
+      "name": ".data.sJump3DFallSpeed",
+      "input_section": ".data",
+      "start": "0x0213b010",
+      "end": "0x0213b014"
+    },
+    {
+      "name": ".data.sJump3DStartVx",
+      "input_section": ".data",
+      "start": "0x0213b014",
+      "end": "0x0213b018"
+    },
+    {
+      "name": ".data.sJump3DGravityStep",
+      "input_section": ".data",
+      "start": "0x0213b018",
+      "end": "0x0213b01c"
+    },
+    {
+      "name": ".data.sJump3DMoveSpeed",
+      "input_section": ".data",
+      "start": "0x0213b01c",
+      "end": "0x0213b020"
+    },
+    {
+      "name": ".data.sJump3DAnimTable",
+      "input_section": ".data",
+      "start": "0x0213b098",
+      "end": "0x0213b0a4"
     }
   ],
   "functions": [
@@ -323,8 +377,170 @@
       "ordinal": 40
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov006_02134d1c",
+      "address": "0x02134d1c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134d20",
+      "address": "0x02134d20",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Draw's single sprite record; data_ov006_02134d1c points at it and OAM::Render walks it, attr3 == 0xffff terminating"
+    },
+    {
+      "symbol": "sJump3DBounceVy",
+      "address": "0x0213b008",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sJump3DRiseVy",
+      "address": "0x0213b00c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sJump3DFallSpeed",
+      "address": "0x0213b010",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sJump3DStartVx",
+      "address": "0x0213b014",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sJump3DGravityStep",
+      "address": "0x0213b018",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sJump3DMoveSpeed",
+      "address": "0x0213b01c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sJump3DAnimTable",
+      "address": "0x0213b098",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    }
+  ],
   "bss": [
+    {
+      "symbol": "data_ov006_02140400",
+      "address": "0x02140400",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8 input gate: Jump3D_DisableInput writes 0 and Jump3D_EnableInput writes 1; Draw renders the shadow sprite only while it is non-zero"
+    },
+    {
+      "symbol": "sJump3DSpinAngle",
+      "address": "0x02140404",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "u16 spin phase: Jump3D_UpdateAll adds 0x800 per frame and Draw feeds it to FX_SinIdx/FX_CosIdx for the shadow sprite's sway and scale"
+    },
+    {
+      "symbol": "sJump3DAnimSdown",
+      "address": "0x02140408",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "loaded BCA pointer EnterHold and EnterDamp hand SetAnim"
+    },
+    {
+      "symbol": "sJump3DAnimDoubleJump1",
+      "address": "0x0214040c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "loaded BCA pointer sJump3DAnimTable's second slot selects"
+    },
+    {
+      "symbol": "sJump3DArrangeLevel",
+      "address": "0x02140410",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "round level Jump3D_Arrange stores and then tests modulo 5 to decide whether MariosLeft resets"
+    },
+    {
+      "symbol": "sJump3DLayout",
+      "address": "0x02140414",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "layout index Jump3D_Arrange stores; Jump3D_StartRoundLayout strides the per-round record table by 0x24"
+    },
+    {
+      "symbol": "sJump3DMarioCount",
+      "address": "0x02140418",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "number of Marios in the caller's pool; every loop and Jump3D_InitPool write it"
+    },
+    {
+      "symbol": "sJump3DAnimRollJump",
+      "address": "0x0214041c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "loaded BCA pointer StateRiseOut compares and EnterHit/StartRiseOut hand SetAnim"
+    },
+    {
+      "symbol": "sJump3DMarioPool",
+      "address": "0x02140420",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "base of the caller's 0xb8-byte Mario records; every helper strides it"
+    },
+    {
+      "symbol": "sJump3DAnimWallJump",
+      "address": "0x02140424",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "loaded BCA pointer StateRespawn and EnterRespawn hand SetAnim"
+    },
+    {
+      "symbol": "sJump3DMariosLeft",
+      "address": "0x02140428",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Marios still in play: Jump3D_InitPool and Jump3D_Arrange store it, StateDamp decrements it, EnterDamp plays a different cue while it is above 1"
+    },
+    {
+      "symbol": "sJump3DAnimStruggle",
+      "address": "0x0214042c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "loaded BCA pointer EnterDamp and StartFallOut hand SetAnim"
+    },
+    {
+      "symbol": "sJump3DAnimJump",
+      "address": "0x02140430",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "loaded BCA pointer LoadResources installs as the idle anim and sJump3DAnimTable's first slot selects"
+    },
+    {
+      "symbol": "sJump3DRisenOutCount",
+      "address": "0x02140434",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "risen-out counter: StateRiseOut increments it and Jump3D_Arrange clears it"
+    },
     {
       "symbol": "sJump3DMarioWallJumpAnimFile",
       "address": "0x02140438",
@@ -473,7 +689,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dMgJump3DMario_c/dMgJump3DMario_c.o (gitignored)",
+    "object": "build/tu/ov006-dMgJump3DMario_c/d_mg_jump3d_mario.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 41,
     "functions_declared": 41,
@@ -491,24 +707,24 @@
         "_ZN22dMg3DHeyhoObjAdapter_cD2Ev"
       ],
       "droppedSections": [
-        80,
-        81,
-        82,
-        83,
-        84,
-        85,
-        88,
-        89,
         104,
         105,
         106,
         107,
         108,
         109,
-        110,
-        111,
         112,
-        113
+        113,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138
       ],
       "data": [
         "_ZTV16dMgJump3DMario_c",
@@ -525,7 +741,8 @@
         "_ZTS22dMg3DHeyhoObjAdapter_c",
         "_ZTV16dMgJump3DMario_c",
         "_ZTV22dMg3DHeyhoObjAdapter_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -577,9 +794,72 @@
         },
         {
           "section": ".bss",
-          "start": "0x02140438",
+          "start": "0x02140400",
           "end": "0x021404c4",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.data_ov006_02134d1c",
+          "start": "0x02134d1c",
+          "end": "0x02134d20",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134d20",
+          "start": "0x02134d20",
+          "end": "0x02134d28",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DBounceVy",
+          "start": "0x0213b008",
+          "end": "0x0213b00c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DRiseVy",
+          "start": "0x0213b00c",
+          "end": "0x0213b010",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DFallSpeed",
+          "start": "0x0213b010",
+          "end": "0x0213b014",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DStartVx",
+          "start": "0x0213b014",
+          "end": "0x0213b018",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DGravityStep",
+          "start": "0x0213b018",
+          "end": "0x0213b01c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DMoveSpeed",
+          "start": "0x0213b01c",
+          "end": "0x0213b020",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sJump3DAnimTable",
+          "start": "0x0213b098",
+          "end": "0x0213b0a4",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -1207,6 +1487,46 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212f52c"
+    },
+    {
+      "section": ".data.data_ov006_02134d1c",
+      "source": "0x02134d1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134d20",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134d20"
+    },
+    {
+      "section": ".data.sJump3DAnimTable",
+      "source": "0x0213b0a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sJump3DAnimWallJump",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02140424"
+    },
+    {
+      "section": ".data.sJump3DAnimTable",
+      "source": "0x0213b09c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sJump3DAnimDoubleJump1",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0214040c"
+    },
+    {
+      "section": ".data.sJump3DAnimTable",
+      "source": "0x0213b098",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sJump3DAnimJump",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02140430"
     }
   ],
   "defined_symbol_renames": [

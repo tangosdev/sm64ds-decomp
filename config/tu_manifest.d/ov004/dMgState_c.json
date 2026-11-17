@@ -21,6 +21,18 @@
       "end": "0x020b8c18"
     },
     {
+      "name": ".data.layout",
+      "input_section": ".data",
+      "start": "0x020bc850",
+      "end": "0x020bc8bc"
+    },
+    {
+      "name": ".data.statetext",
+      "input_section": ".data",
+      "start": "0x020bca44",
+      "end": "0x020bca58"
+    },
+    {
       "name": ".bss",
       "start": "0x020bfd04",
       "end": "0x020bfda8"
@@ -392,7 +404,256 @@
       "ordinal": 51
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "sMgScoreX",
+      "address": "0x020bc850",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc850"
+    },
+    {
+      "symbol": "sMgRecordBannerX",
+      "address": "0x020bc854",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc854"
+    },
+    {
+      "symbol": "sMgDrawBannerY",
+      "address": "0x020bc858",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc858"
+    },
+    {
+      "symbol": "sMgScoreDigitsX",
+      "address": "0x020bc85c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc85c"
+    },
+    {
+      "symbol": "sMgWinBannerY",
+      "address": "0x020bc860",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc860"
+    },
+    {
+      "symbol": "sMgResultsBannerY",
+      "address": "0x020bc864",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc864"
+    },
+    {
+      "symbol": "sMgDrawBannerX",
+      "address": "0x020bc868",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc868"
+    },
+    {
+      "symbol": "sMgQuitX",
+      "address": "0x020bc86c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc86c"
+    },
+    {
+      "symbol": "sMgScoreDigitsY",
+      "address": "0x020bc870",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc870"
+    },
+    {
+      "symbol": "sMgRetryBannerY",
+      "address": "0x020bc874",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc874"
+    },
+    {
+      "symbol": "sMgLoseBannerX",
+      "address": "0x020bc878",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc878"
+    },
+    {
+      "symbol": "sMgRecordBannerY",
+      "address": "0x020bc87c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc87c"
+    },
+    {
+      "symbol": "sMgClearBannerX",
+      "address": "0x020bc880",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc880"
+    },
+    {
+      "symbol": "sMgClearBannerY",
+      "address": "0x020bc884",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc884"
+    },
+    {
+      "symbol": "sMgResultsBannerX",
+      "address": "0x020bc888",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc888"
+    },
+    {
+      "symbol": "sMgWinBannerX",
+      "address": "0x020bc88c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc88c"
+    },
+    {
+      "symbol": "sMgLoseBannerY",
+      "address": "0x020bc890",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc890"
+    },
+    {
+      "symbol": "sMgRetryBannerX",
+      "address": "0x020bc894",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc894"
+    },
+    {
+      "symbol": "sMgPlayAgainY",
+      "address": "0x020bc898",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc898"
+    },
+    {
+      "symbol": "sMgScoreY",
+      "address": "0x020bc89c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc89c"
+    },
+    {
+      "symbol": "sMgNextBanner",
+      "address": "0x020bc8a0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc8a0"
+    },
+    {
+      "symbol": "sMgQuitY",
+      "address": "0x020bc8a4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc8a4"
+    },
+    {
+      "symbol": "sMgPlayAgainX",
+      "address": "0x020bc8a8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc8a8"
+    },
+    {
+      "symbol": "sMgTopBannerY",
+      "address": "0x020bc8ac",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc8ac"
+    },
+    {
+      "symbol": "sMgTopBannerX",
+      "address": "0x020bc8b0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc8b0"
+    },
+    {
+      "symbol": "sMgMainBannerY",
+      "address": "0x020bc8b4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc8b4"
+    },
+    {
+      "symbol": "sMgMainBannerX",
+      "address": "0x020bc8b8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized screen word at 0x020bc8b8"
+    },
+    {
+      "symbol": "sMgStateTextSpritesByLanguage",
+      "address": "0x020bca44",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite lists: English, Spanish, French, German, Italian"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".data.statetext",
+      "source": "0x020bca44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021373a4"
+    },
+    {
+      "section": ".data.statetext",
+      "source": "0x020bca48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesSpanish",
+      "addend": 0,
+      "target_module": "overlays(6,95)",
+      "target_address": "0x021373fc"
+    },
+    {
+      "section": ".data.statetext",
+      "source": "0x020bca4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesFrench",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213734c"
+    },
+    {
+      "section": ".data.statetext",
+      "source": "0x020bca50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesGerman",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021372f4"
+    },
+    {
+      "section": ".data.statetext",
+      "source": "0x020bca54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgTextSpritesItalian",
+      "addend": 0,
+      "target_module": "overlays(6,95)",
+      "target_address": "0x02137454"
+    }
+  ],
   "bss": [
     {
       "symbol": "_ZGVsEnterTable$170",
@@ -468,6 +729,20 @@
           "section": ".text",
           "start": "0x020b67e8",
           "end": "0x020b8c18",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.layout",
+          "start": "0x020bc850",
+          "end": "0x020bc8bc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.statetext",
+          "start": "0x020bca44",
+          "end": "0x020bca58",
           "differingBytes": 0,
           "firstDiff": null
         },

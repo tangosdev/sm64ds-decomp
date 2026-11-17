@@ -1,8 +1,14 @@
     .text       start:0x020bfec0 end:0x020c2250 kind:code align:32
     .rodata     start:0x020c2250 end:0x020c2430 kind:rodata align:4
     .ctor       start:0x020c2430 end:0x020c2430 kind:rodata align:4
-    .data       start:0x020c2440 end:0x020c3020 kind:data align:32
+    .data.early start:0x020c2440 end:0x020c2464 kind:data align:32
+    .data.screenoffs start:0x020c2464 end:0x020c2488 kind:data align:4
+    .data.vt    start:0x020c2488 end:0x020c24d8 kind:data align:4
+    .data       start:0x020c24d8 end:0x020c3020 kind:data align:4
     .bss        start:0x020c3020 end:0x020c3020 kind:bss align:32
 src/minigames/d_s_mini_gm.cpp:
     complete
     .text start:0x020bfec0 end:0x020c2250
+    .rodata start:0x020c2250 end:0x020c2430
+    .data.screenoffs start:0x020c2464 end:0x020c2488
+    .data start:0x020c24d8 end:0x020c3020

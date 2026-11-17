@@ -776,3 +776,19 @@ void func_ov007_020b2cf0(void) {
 extern "C" Ov007MenuState *func_ov007_020b2cdc(void) {
     return data_ov007_02103360->state;
 }
+
+unsigned char data_ov007_020d7dc0[8] = {
+    22, 22, 20, 32, 32, 29, 0, 0,
+};
+unsigned char data_ov007_020d7dc8[8] = {
+    6, 6, 6, 2, 2, 2, 0, 0,
+};
+unsigned char data_ov007_020d7dd0[12] = {
+    0x50, 0x70, 0x68, 0x70, 0x0, 0x0, 0xd8, 0x0, 0xd8, 0x0, 0xf0, 0x0,
+};
+unsigned char data_ov007_020d7ddc[12] = {
+    24, 16, 24, 16, 24, 16, 24, 16, 24, 16, 16, 16,
+};
+short data_ov007_020d7de8[12] = {
+    6, -20, 20, -8, 100, 100, 6, -20, 6, -20, 6, -18,
+};

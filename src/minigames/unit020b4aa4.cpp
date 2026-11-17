@@ -146,8 +146,12 @@ extern void Mg_SubmitScore(int score);
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, struct Matrix2x2 *d);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 
-extern int sMgCoinRiseFrames;
-extern int sMgCoinsBetCap;   /* cap MgCoins_AddBetCoin raises the count to */
+/* const folds Coin_Rise and Coin_RiseSpent. This int has to stay a load, in .rodata. */
+#pragma define_section coinframes ".rodata" ".rodata" ".rodata" far_data
+#pragma section coinframes begin
+int sMgCoinRiseFrames = 20;
+#pragma section coinframes end
+int sMgCoinsBetCap = 5;   /* cap MgCoins_AddBetCoin raises the count to */
 extern int gMgCoinsShowDelta;   /* nonzero: sequences also show their count */
 /* Sprite states: member-pointer records (ov004 relocs.txt names each
    target). */
@@ -161,8 +165,30 @@ extern SpriteFn pmf_Coin_FlyToCounter; /* Coin_FlyToCounter */
 extern SpriteFn pmf_Coin_MoveThenRiseSpent; /* Coin_MoveThenRiseSpent */
 extern SpriteFn pmf_Coin_MoveThenRefund; /* Coin_MoveThenRefund */
 extern SpriteFn pmf_Coin_Move_3; /* Coin_Move */
-extern int *sMgCoinsButtonSprites[];
-extern unsigned char *sMgCoinsDeltaSprites[];
+extern int data_ov006_021338c4[];
+extern int data_ov006_021338ac[];
+extern int data_ov006_021338b8[];
+extern int data_ov006_021338a0[];
+extern int data_ov006_021338d0[];
+int *sMgCoinsButtonSprites[] = {
+    data_ov006_021338c4,
+    data_ov006_021338ac,
+    data_ov006_021338b8,
+    data_ov006_021338a0,
+    data_ov006_021338d0,
+};
+extern struct OamAttr *sMgTextSpritesEnglish[];
+extern struct OamAttr *sMgTextSpritesSpanish[];
+extern struct OamAttr *sMgTextSpritesFrench[];
+extern struct OamAttr *sMgTextSpritesGerman[];
+extern struct OamAttr *sMgTextSpritesItalian[];
+unsigned char *sMgCoinsDeltaSprites[] = {
+    (unsigned char *)sMgTextSpritesEnglish,
+    (unsigned char *)sMgTextSpritesSpanish,
+    (unsigned char *)sMgTextSpritesFrench,
+    (unsigned char *)sMgTextSpritesGerman,
+    (unsigned char *)sMgTextSpritesItalian,
+};
 extern short gMgCoinsStatus; /* 1 when a sequence finishes; 2, 3, 4 while one runs */
 extern int sMgCoinsDelta;   /* the count MgCoins_DrawDelta shows */
 extern int sMgCoinsBetPlaced;   /* set once by MgCoins_PlaceBet */

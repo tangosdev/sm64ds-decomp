@@ -31,6 +31,12 @@
       "name": ".bss",
       "start": "0x0213c800",
       "end": "0x0213c850"
+    },
+    {
+      "name": ".data.blockHead",
+      "input_section": ".data",
+      "start": "0x0213c380",
+      "end": "0x0213c398"
     }
   ],
   "functions": [
@@ -119,7 +125,15 @@
       "ordinal": 11
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov098_0213c380",
+      "address": "0x0213c380",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "two arrow-sign rows; 0213c384 and 0213c388 are interior labels"
+    }
+  ],
   "bss": [
     {
       "symbol": "gYajirusiLCollisionFile",
@@ -307,6 +321,13 @@
           "start": "0x0213c800",
           "end": "0x0213c850",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.blockHead",
+          "start": "0x0213c380",
+          "end": "0x0213c398",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -811,6 +832,66 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data.blockHead",
+      "source": "0x0213c380",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gYajirusiLModelFile",
+      "addend": 0,
+      "target_module": "ov098",
+      "target_address": "0x0213c810"
+    },
+    {
+      "section": ".data.blockHead",
+      "source": "0x0213c384",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gYajirusiLCollisionFile",
+      "addend": 0,
+      "target_module": "ov098",
+      "target_address": "0x0213c800"
+    },
+    {
+      "section": ".data.blockHead",
+      "source": "0x0213c388",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d914",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d914"
+    },
+    {
+      "section": ".data.blockHead",
+      "source": "0x0213c38c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gYajirusiRModelFile",
+      "addend": 0,
+      "target_module": "ov098",
+      "target_address": "0x0213c808"
+    },
+    {
+      "section": ".data.blockHead",
+      "source": "0x0213c390",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gYajirusiRCollisionFile",
+      "addend": 0,
+      "target_module": "ov098",
+      "target_address": "0x0213c818"
+    },
+    {
+      "section": ".data.blockHead",
+      "source": "0x0213c394",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d734",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d734"
+    },
     {
       "section": ".ctor",
       "source": "0x0213c33c",

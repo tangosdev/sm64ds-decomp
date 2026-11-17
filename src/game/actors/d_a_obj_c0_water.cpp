@@ -39,9 +39,12 @@
 #include "SaveBlock.h"
 
 struct BMD_File;
-struct BTA_File;
+#include "private/BTA_File.h"
+
+struct CLPS_Block {
+    u32 words[8];
+};
 struct KCL_File;
-struct CLPS_Block;
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
@@ -59,8 +62,58 @@ struct C0WaterCollisionFilePtr : SharedFilePtr {
 /* Defined at the end of this file so the constructors do not enter .text. */
 extern C0WaterModelFilePtr data_ov012_021124d0;
 extern C0WaterCollisionFilePtr data_ov012_021124c8;
-extern BTA_File data_ov012_02111c24;
-extern CLPS_Block data_ov012_02111c90;
+extern const u16 data_ov012_02111768[];
+extern const fx32 data_ov012_02111770[];
+extern const fx32 data_ov012_0211191c[];
+extern const BTAMaterialRecord data_ov012_02111778[];
+extern char data_ov012_02111bc4[];
+
+BTA_File data_ov012_02111c24 = {
+    91,
+    0,
+    (fx32 *)data_ov012_02111770,
+    (u16 *)data_ov012_02111768,
+    (fx32 *)data_ov012_0211191c,
+    1,
+    0,
+    (BTAMaterialRecord *)data_ov012_02111778,
+};
+
+/* The texture-SRT keys and the single material record the file table above
+ * drives. Retail keeps them in .rodata, interleaved with the keys of the
+ * second BTA file at 0x02111c3c. The record is the one piece func_02046b64
+ * patches in place (its material id), so the file table takes its address
+ * through a non-const pointer. */
+
+/* The single rotation key is the identity angle. */
+const u16 data_ov012_02111768[2] = {0, 0};
+
+const fx32 data_ov012_02111770[1] = {0x1000};
+
+const BTAMaterialRecord data_ov012_02111778[1] = {
+    {0xffff, 0, data_ov012_02111bc4, {1, 0}, {1, 0}, {1, 0}, {91, 0}, {1, 0}},
+};
+
+/* One texture translation per animation frame; the ramp climbs to 0x19a and
+ * comes back, so the water scrolls one way and then the other. */
+const fx32 data_ov012_0211191c[91] = {
+    0x00000000, 0xffffffff, 0x00000000, 0x00000002, 0x00000005, 0x00000009, 0x0000000e, 0x00000014,
+    0x0000001b, 0x00000023, 0x0000002b, 0x00000035, 0x0000003f, 0x0000004a, 0x00000055, 0x00000061,
+    0x0000006d, 0x0000007a, 0x00000087, 0x00000095, 0x000000a2, 0x000000b0, 0x000000be, 0x000000cc,
+    0x000000da, 0x000000e8, 0x000000f6, 0x00000103, 0x00000111, 0x0000011e, 0x0000012b, 0x00000137,
+    0x00000143, 0x0000014f, 0x00000159, 0x00000164, 0x0000016d, 0x00000176, 0x0000017e, 0x00000185,
+    0x0000018b, 0x00000190, 0x00000194, 0x00000197, 0x00000199, 0x0000019a, 0x00000199, 0x00000197,
+    0x00000195, 0x00000191, 0x0000018c, 0x00000187, 0x00000180, 0x00000179, 0x00000171, 0x00000168,
+    0x0000015f, 0x00000155, 0x0000014a, 0x0000013f, 0x00000134, 0x00000128, 0x0000011c, 0x0000010f,
+    0x00000103, 0x000000f6, 0x000000e8, 0x000000db, 0x000000ce, 0x000000c1, 0x000000b3, 0x000000a6,
+    0x00000099, 0x0000008c, 0x00000080, 0x00000073, 0x00000067, 0x0000005c, 0x00000051, 0x00000046,
+    0x0000003c, 0x00000033, 0x0000002a, 0x00000022, 0x0000001a, 0x00000013, 0x0000000e, 0x00000009,
+    0x00000005, 0x00000002, 0x00000000,
+};
+
+CLPS_Block data_ov012_02111c90 = {
+    0x53504c43, 0x00010008, 0x00000fe0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+};
 extern int data_0209f32c;
 
 /* Reconstructed source-style name; exact original SM64DS spelling is not
@@ -136,3 +189,6 @@ int daObjC0Water_c::CleanupResources() {
  * destructors; the registration nodes are compiler temporaries. */
 C0WaterModelFilePtr data_ov012_021124d0(1451);
 C0WaterCollisionFilePtr data_ov012_021124c8(1452);
+
+/* The BMD material this file's record drives. */
+char data_ov012_02111bc4[12] = "obj_water";

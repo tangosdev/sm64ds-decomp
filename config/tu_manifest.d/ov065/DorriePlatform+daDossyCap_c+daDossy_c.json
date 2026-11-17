@@ -24,6 +24,11 @@
       "name": ".bss",
       "start": "0x0211d720",
       "end": "0x0211d814"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0211c078",
+      "end": "0x0211c0a8"
     }
   ],
   "functions": [
@@ -270,6 +275,29 @@
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov065_0211c078",
+      "address": "0x0211c078",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "bone index bytes read by the neck setup loop"
+    },
+    {
+      "symbol": "data_ov065_0211c080",
+      "address": "0x0211c080",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three animation SharedFilePtr pointers"
+    },
+    {
+      "symbol": "data_ov065_0211c08c",
+      "address": "0x0211c08c",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven collision SharedFilePtr pointers"
     }
   ],
   "bss": [
@@ -1096,6 +1124,106 @@
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x02118634"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c080",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov065_0211d768",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d768"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c084",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov065_0211d748",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d748"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c088",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov065_0211d770",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d770"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c08c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyBodyCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d740"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c090",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyNeckCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d758"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c094",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyHeadCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d730"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c098",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyArmLCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d738"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c09c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyArmRCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d750"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c0a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyLegLCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d728"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0211c0a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDossyLegRCollisionFile",
+      "addend": 0,
+      "target_module": "ov065",
+      "target_address": "0x0211d760"
     }
   ],
   "undefined_symbol_aliases": [
@@ -1385,6 +1513,13 @@
           "start": "0x0211d720",
           "end": "0x0211d814",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0211c078",
+          "end": "0x0211c0a8",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -1684,6 +1819,5 @@
       "to": "@2702",
       "evidence": "Including the Vector3s inline default constructor advances this compiler temporary from @1029 to @1033; complete baseline/candidate symbol bytes, metadata and all typed relocation references prove the same object, retaining the existing @2702 ROM pin. Re-keyed from @1014 to @1001 when func_ov065_02118838's constant locals and pointer aliases were removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed down one from #5066 head ef624a9b1bad17d1ca4299ea15c4f543ff9517e9 after typing func_ov065_02119210 as daDossyCap_c * and removing its byte-pointer alias. Baseline/candidate TU objects are identical after local-name normalization: symbol metadata, every section byte and typed relocation match; section kinds, flags and sizes match. Re-keyed from @1055 to @981 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @981 to @989 when the TU took Adding fx_trig.h for FX_SinIdx/FX_CosIdx renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @989 to @978 when the TU took Retyping DorriePlatform::mRot as Vector3s and dropping the file-wide optimisation pragmas with the char * platform walks renumbers the TU's compiler-numbered symbols. (measured from the compiled object). Re-keyed from @978 to @950 when the TU took dossy hand pass: dead local decls and their @NNN-holding notes dropped, Vector3 mCapPos, typed mCarrier (measured from the compiled object). Re-keyed from @950 to @947 when the TU took dossy hand pass: Vector3 mHomePos/mSpawnPos, struct copies, flattened blocks and temporaries (measured from the compiled object). Re-keyed from @947 to @984 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @984 to @996 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @996 to @1001 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
-  ],
-  "rodata": null
+  ]
 }

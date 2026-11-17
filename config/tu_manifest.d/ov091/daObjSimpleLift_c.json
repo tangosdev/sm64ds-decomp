@@ -32,6 +32,11 @@
       "name": ".bss",
       "start": "0x021354f8",
       "end": "0x02135610"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02134504",
+      "end": "0x02134524"
     }
   ],
   "functions": [
@@ -128,6 +133,22 @@
     }
   ],
   "data": [],
+  "rodata": [
+    {
+      "symbol": "data_ov091_02134504",
+      "address": "0x02134504",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight wait timers"
+    },
+    {
+      "symbol": "data_ov091_02134514",
+      "address": "0x02134514",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight yaw angles"
+    }
+  ],
   "bss": [
     {
       "symbol": "gKm1DeruModelFile",
@@ -455,6 +476,13 @@
           "start": "0x021354f8",
           "end": "0x02135610",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02134504",
+          "end": "0x02134524",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

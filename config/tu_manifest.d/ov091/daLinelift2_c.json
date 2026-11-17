@@ -30,12 +30,17 @@
     {
       "name": ".data",
       "start": "0x02134e44",
-      "end": "0x02134e5c"
+      "end": "0x02134e64"
     },
     {
       "name": ".bss",
       "start": "0x02135490",
       "end": "0x021354f8"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021344f4",
+      "end": "0x02134504"
     }
   ],
   "functions": [
@@ -184,6 +189,29 @@
       "size": "0x8",
       "binding": "STB_LOCAL",
       "evidence": "compiler temporary for the state table's StateWait pointer-to-member (state 0); the initializer copies it into gLinelift2StateFuncs[0]"
+    },
+    {
+      "symbol": "gLinelift2ClpsBlocks",
+      "address": "0x02134e5c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block pointers for the two variants"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "gLinelift2CollisionFiles",
+      "address": "0x021344f4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision file pointers for the two variants"
+    },
+    {
+      "symbol": "gLinelift2ModelFiles",
+      "address": "0x021344fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "model file pointers for the two variants"
     }
   ],
   "bss": [
@@ -616,6 +644,66 @@
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02132000"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021344f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3RiftCollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x021354a0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021344f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm2SusumuCollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135490"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021344fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3RiftModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135498"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02134500",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm2SusumuModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x021354a8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02134e5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov058_02111af4",
+      "addend": 0,
+      "target_module": "overlays(8,12,13,17,24,33,41,43,47,52,53,54,55,56,58)",
+      "target_address": "0x02111af4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02134e60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_02112610",
+      "addend": 0,
+      "target_module": "overlays(10,22,24,26,35,43,45,47,52,56)",
+      "target_address": "0x02112610"
     }
   ],
   "notes": [
@@ -739,7 +827,7 @@
         {
           "section": ".data",
           "start": "0x02134e44",
-          "end": "0x02134e5c",
+          "end": "0x02134e64",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -748,6 +836,13 @@
           "start": "0x02135490",
           "end": "0x021354f8",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021344f4",
+          "end": "0x02134504",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

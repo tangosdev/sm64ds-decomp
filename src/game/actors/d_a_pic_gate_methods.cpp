@@ -95,9 +95,9 @@ enum {
 
 extern "C" {
 extern Matrix4x3 data_0209b3ec;
-extern u8 data_ov080_02127714[];
+extern const u8 data_ov080_02127714[8] = {13, 14, 16, 20, 20, 25, 30, 0};
 extern void G3_LoadMtx43(void *mtx);
-extern void *data_ov080_02127834;
+extern const int data_ov080_02127834[5] = {0x3a000, 0x1111, 0x16c000, 0x384000, 0x64};
 }
 extern int IsStarCollectedInLevel(signed char levelID, int starID);
 

@@ -48,6 +48,11 @@
  *   include/decl_common.h declares them that way and check_decl_agreement
  *   compares the two. func_ov100_02143aa4 and func_ov100_02143ae0 are the
  *   state pair's members, called through ChompPmfSelf rather than as methods.
+ *   They stay free functions taking the chomp: the two PMF constants
+ *   (data_ov100_02147ff8, data_ov100_02148000) are defined here as static
+ *   {address, 0} pairs, and only a free function's address can initialize
+ *   one. A real `&daWanwan2_c::...` constant, here or in the state record,
+ *   makes mwcc copy it at run time (a 0x12c static initializer, not 0xf4).
  * - func_ov100_02143b68 reaches the link positions and the link models'
  *   translations through two raw char pointers that start at the chomp,
  *   and InitResources' link seeding loop does the same. Written as
@@ -174,11 +179,12 @@ int ApproachAngle(short *cur, short target, int step, int a, int b);
 }
 
 extern SharedFilePtr data_ov002_0211092c;
-extern s32 data_ov100_02148008[3];
 extern ChompState data_ov100_021486f4;
-/* The ROM PMF constants the state record copies from (unlicensed .data). */
-extern ChompPmf data_ov100_02148000;
-extern ChompPmf data_ov100_02147ff8;
+int func_ov100_02143aa4(daWanwan2_c *);
+int func_ov100_02143ae0(daWanwan2_c *);
+int data_ov100_02147ff8[2] = {(int)&func_ov100_02143aa4, 0};
+int data_ov100_02148000[2] = {(int)&func_ov100_02143ae0, 0};
+s32 data_ov100_02148008[3] = {0, -0xa0000, 0};
 extern unsigned char gGameMode;
 extern Matrix4x3 data_020a0e68;
 
@@ -461,20 +467,20 @@ void daWanwan2_c::func_ov100_021437d4() {
    recovered as "RollingIronBall_Kill" / "daIbl_c::Kill, from vtable slot
    identity": the pointer-to-member constant that holds it follows daIbl_c's
    vtable directly, and that is the whole of the old claim. Was a C source. */
-int daWanwan2_c::func_ov100_02143aa4() {
-    this->mAnmModel.speed = 0x1000; /* 1.0 */
-    this->mAnmModel.Advance();
-    this->func_ov100_021437d4();
-    this->func_ov100_0214344c();
-    this->func_ov100_021435e8();
+int func_ov100_02143aa4(daWanwan2_c *c) {
+    c->mAnmModel.speed = 0x1000; /* 1.0 */
+    c->mAnmModel.Advance();
+    c->func_ov100_021437d4();
+    c->func_ov100_0214344c();
+    c->func_ov100_021435e8();
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* The walking state's enter member (data_ov100_02148000): start the walk
    animation from data_ov100_021486ac. Was a C source. */
-int daWanwan2_c::func_ov100_02143ae0() {
-    this->mAnmModel.SetAnim((BCA_File *)data_ov100_021486ac.filePtr, 0, 0x1000, 0);
+int func_ov100_02143ae0(daWanwan2_c *c) {
+    c->mAnmModel.SetAnim((BCA_File *)data_ov100_021486ac.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
@@ -804,6 +810,6 @@ Wanwan2ModelFilePtr data_ov100_021486a4(0x9c01);
 Wanwan2AnimFileHandle data_ov100_021486ac(0x9c04);
 Wanwan2AnimFileHandle data_ov100_021486b4(0x9c03);
 ChompState data_ov100_021486f4 = {
-    data_ov100_02148000,
-    data_ov100_02147ff8,
+    *(ChompPmf *)&data_ov100_02148000,
+    *(ChompPmf *)&data_ov100_02147ff8,
 };

@@ -18,6 +18,18 @@
       "end": "0x02115ab8"
     },
     {
+      "name": ".rodata.ent_pat",
+      "input_section": ".rodata",
+      "start": "0x0211b524",
+      "end": "0x0211b52c"
+    },
+    {
+      "name": ".data.ent_step",
+      "input_section": ".data",
+      "start": "0x0211b52c",
+      "end": "0x0211b534"
+    },
+    {
       "name": ".rodata",
       "start": "0x0211b534",
       "end": "0x0211b5d4"
@@ -36,6 +48,18 @@
       "name": ".data",
       "start": "0x0211c5c0",
       "end": "0x0211c648"
+    },
+    {
+      "name": ".data.ent_anim",
+      "input_section": ".data",
+      "start": "0x0211c678",
+      "end": "0x0211c688"
+    },
+    {
+      "name": ".data.ent_anim2",
+      "input_section": ".data",
+      "start": "0x0211c688",
+      "end": "0x0211c698"
     },
     {
       "name": ".bss",
@@ -465,6 +489,27 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer14MoveTurnToExitEv"
+    },
+    {
+      "symbol": "data_ov075_0211b52c",
+      "address": "0x0211b52c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "four player-slot step halfwords; decl_common.h keeps the array non-const"
+    },
+    {
+      "symbol": "data_ov075_0211c678",
+      "address": "0x0211c678",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four animation-handle pointers indexed by player slot"
+    },
+    {
+      "symbol": "data_ov075_0211c688",
+      "address": "0x0211c688",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four animation-handle pointers; the following eight bytes are the vtable preamble"
     }
   ],
   "bss": [
@@ -923,6 +968,20 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata.ent_pat",
+          "start": "0x0211b524",
+          "end": "0x0211b52c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.ent_step",
+          "start": "0x0211b52c",
+          "end": "0x0211b534",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".rodata",
           "start": "0x0211b534",
           "end": "0x0211b5d4",
@@ -947,6 +1006,20 @@
           "section": ".data",
           "start": "0x0211c5c0",
           "end": "0x0211c648",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.ent_anim",
+          "start": "0x0211c678",
+          "end": "0x0211c688",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.ent_anim2",
+          "start": "0x0211c688",
+          "end": "0x0211c698",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -3154,6 +3227,16 @@
     },
     {
       "section": ".data",
+      "source": "0x0211c610",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z19dEntObj_c_classInitv",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x021159f4"
+    },
+    {
+      "section": ".data",
       "source": "0x0211c618",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -3213,14 +3296,74 @@
       "target_address": "0x0211473c"
     },
     {
-      "section": ".data",
-      "source": "0x0211c610",
+      "section": ".data.ent_anim",
+      "source": "0x0211c678",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z19dEntObj_c_classInitv",
+      "symbol": "data_ov075_0211d394",
       "addend": 0,
       "target_module": "ov075",
-      "target_address": "0x021159f4"
+      "target_address": "0x0211d394"
+    },
+    {
+      "section": ".data.ent_anim",
+      "source": "0x0211c67c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov075_0211d3cc",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x0211d3cc"
+    },
+    {
+      "section": ".data.ent_anim",
+      "source": "0x0211c680",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov075_0211d39c",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x0211d39c"
+    },
+    {
+      "section": ".data.ent_anim",
+      "source": "0x0211c684",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov075_0211d3d4",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x0211d3d4"
+    },
+    {
+      "section": ".data.ent_anim2",
+      "source": "0x0211c688",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov075_0211d3b4",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x0211d3b4"
+    },
+    {
+      "section": ".data.ent_anim2",
+      "source": "0x0211c68c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov075_0211d3f4",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x0211d3f4"
+    },
+    {
+      "section": ".data.ent_anim2",
+      "source": "0x0211c690",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov075_0211d38c",
+      "addend": 0,
+      "target_module": "ov075",
+      "target_address": "0x0211d38c"
     }
   ],
   "rodata": [
@@ -3247,6 +3390,13 @@
       "address": "0x211b594",
       "size": "0x40",
       "evidence": "Native signed32 Q12 constant table; consumer-derived role and observed four-player indexing. Original identifier and original declaration syntax are not recovered."
+    },
+    {
+      "symbol": "data_ov075_0211b524",
+      "address": "0x0211b524",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight-byte pattern; the consumer indexes the first six"
     }
   ]
 }

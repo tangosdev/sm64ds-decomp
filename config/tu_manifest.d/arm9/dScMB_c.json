@@ -32,6 +32,11 @@
       "name": ".bss",
       "start": "0x020a0c5c",
       "end": "0x020a0c78"
+    },
+    {
+      "name": ".data",
+      "start": "0x0209444c",
+      "end": "0x020945f0"
     }
   ],
   "functions": [
@@ -127,7 +132,26 @@
       "ordinal": 12
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_0209444c",
+      "address": "0x0209444c",
+      "size": "0x20",
+      "evidence": "OBJ palette loaded by InitResources at offset 0 and 0xa0"
+    },
+    {
+      "symbol": "data_0209446c",
+      "address": "0x0209446c",
+      "size": "0x164",
+      "evidence": "LZ16 OBJ tile blob decompressed by InitResources"
+    },
+    {
+      "symbol": "data_020945d0",
+      "address": "0x020945d0",
+      "size": "0x20",
+      "evidence": "OBJ palette loaded by InitResources at offset 0xa0"
+    }
+  ],
   "bss": [
     {
       "symbol": "sPrevHeap$390",
@@ -415,6 +439,13 @@
           "start": "0x020a0c5c",
           "end": "0x020a0c78",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x0209444c",
+          "end": "0x020945f0",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

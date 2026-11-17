@@ -32,6 +32,17 @@
       "name": ".bss",
       "start": "0x02141a40",
       "end": "0x02141e54"
+    },
+    {
+      "name": ".rodata.sD3DSoundPanOffsets",
+      "start": "0x0212e574",
+      "end": "0x0212e57c",
+      "input_section": ".rodata"
+    },
+    {
+      "name": ".data",
+      "start": "0x0213c5e8",
+      "end": "0x0213c610"
     }
   ],
   "functions": [
@@ -225,7 +236,31 @@
       "ordinal": 26
     }
   ],
-  "data": [],
+  "rodata": [
+    {
+      "symbol": "sD3DSoundPanOffsets",
+      "address": "0x0212e574",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Pan offsets indexed by the sound helper."
+    }
+  ],
+  "data": [
+    {
+      "symbol": "sD3DSubScreenBgByLanguage",
+      "address": "0x0213c5e8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "Five sub-screen backgrounds, one per language, pointing at ov004 file records."
+    },
+    {
+      "symbol": "sD3DCommonNcgByLanguage",
+      "address": "0x0213c5fc",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "Five common NCG file ids, one per language."
+    }
+  ],
   "init": [
     {
       "symbol": "__sinit_d_s_mg_d3d_base.cpp",
@@ -303,6 +338,56 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x0213c5e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bcaa0",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bcaa0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c5ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bdccc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bdccc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c5f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bd074",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bd074"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c5f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020be34c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020be34c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213c5f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bd698",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bd698"
+    },
     {
       "section": ".ctor",
       "source": "0x02133598",
@@ -445,6 +530,20 @@
           "start": "0x02141a40",
           "end": "0x02141e54",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata.sD3DSoundPanOffsets",
+          "start": "0x0212e574",
+          "end": "0x0212e57c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0213c5e8",
+          "end": "0x0213c610",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

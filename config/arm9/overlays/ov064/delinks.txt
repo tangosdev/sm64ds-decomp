@@ -2,7 +2,10 @@
     .rodata     start:0x0211adb0 end:0x0211ae00 kind:rodata align:4
     .init       start:0x0211ae00 end:0x0211b72c kind:code align:4
     .ctor       start:0x0211b72c end:0x0211b758 kind:rodata align:4
-    .data       start:0x0211b760 end:0x0211c660 kind:data align:32
+    .data.coinClps start:0x0211b760 end:0x0211bacc kind:data align:32
+    .data.amiliftClps start:0x0211bacc end:0x0211bb8c kind:data align:4
+    .data.guraClps start:0x0211bb8c end:0x0211bc00 kind:data align:4
+    .data       start:0x0211bc00 end:0x0211c660 kind:data align:32
     .bss        start:0x0211c660 end:0x0211ca00 kind:bss align:32
 src/game/actors/d_a_ots.cpp:
     complete
@@ -27,21 +30,26 @@ src/game/actors/d_a_obj_fl_amilift.cpp:
     .text start:0x02117978 end:0x02118020
     .init start:0x0211afc0 end:0x0211b078
     .ctor start:0x0211b734 end:0x0211b738
+    .data.amiliftClps start:0x0211bb6c end:0x0211bb8c
     .data start:0x0211bc0c end:0x0211bc24
     .bss start:0x0211c728 end:0x0211c768
 
 src/game/actors/d_a_obj_fl_gura.cpp:
     complete
     .text start:0x02118020 end:0x02118138
+    .rodata start:0x0211adb0 end:0x0211adbc
     .init start:0x0211b078 end:0x0211b0e4
     .ctor start:0x0211b738 end:0x0211b73c
+    .data.guraClps start:0x0211bb8c end:0x0211bbac
     .bss start:0x0211c768 end:0x0211c790
 
 src/game/actors/d_a_obj_fl_koma_u.cpp:
     complete
     .text start:0x02118138 end:0x021185c0
+    .rodata start:0x0211adbc end:0x0211adc8
     .init start:0x0211b0e4 end:0x0211b150
     .ctor start:0x0211b73c end:0x0211b740
+    .data start:0x0211bdac end:0x0211bdcc
     .bss start:0x0211c790 end:0x0211c7b8
 
 src/game/actors/d_a_bbl.cpp:
@@ -54,8 +62,11 @@ src/game/actors/d_a_bbl.cpp:
 src/game/actors/d_a_obj_fl_coin.cpp:
     complete
     .text start:0x02118b50 end:0x02119330
+    .rodata start:0x0211adc8 end:0x0211ae00
     .init start:0x0211b1d4 end:0x0211b4dc
     .ctor start:0x0211b744 end:0x0211b748
+    .data.coinClps start:0x0211baac end:0x0211bacc
+    .data start:0x0211bfd8 end:0x0211c198
     .bss start:0x0211c7d8 end:0x0211c934
 
 src/game/actors/d_a_water_hakidasi.cpp:

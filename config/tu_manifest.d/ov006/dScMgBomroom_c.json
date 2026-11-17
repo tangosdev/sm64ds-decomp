@@ -34,6 +34,216 @@
       "name": ".bss",
       "start": "0x02141660",
       "end": "0x02141768"
+    },
+    {
+      "name": ".data.sBomroomMarkerLitSprites",
+      "input_section": ".data",
+      "start": "0x02133a70",
+      "end": "0x02133a80"
+    },
+    {
+      "name": ".data.sBomroomMarkerPlainSprites",
+      "input_section": ".data",
+      "start": "0x02133ae0",
+      "end": "0x02133af0"
+    },
+    {
+      "name": ".data.sBomroomHatchPanelSprites",
+      "input_section": ".data",
+      "start": "0x021342bc",
+      "end": "0x021342d0"
+    },
+    {
+      "name": ".data.sBomroomTopDoorSprites",
+      "input_section": ".data",
+      "start": "0x021343b0",
+      "end": "0x021343c4"
+    },
+    {
+      "name": ".data.sBomroomPenGateSprites",
+      "input_section": ".data",
+      "start": "0x021344ec",
+      "end": "0x02134514"
+    },
+    {
+      "name": ".data.sBomroomRoundOverSprites",
+      "input_section": ".data",
+      "start": "0x02134f30",
+      "end": "0x02134f34"
+    },
+    {
+      "name": ".data.data_ov006_02133a80",
+      "input_section": ".data",
+      "start": "0x02133a80",
+      "end": "0x02133a98"
+    },
+    {
+      "name": ".data.data_ov006_02133a98",
+      "input_section": ".data",
+      "start": "0x02133a98",
+      "end": "0x02133ab0"
+    },
+    {
+      "name": ".data.data_ov006_02133ab0",
+      "input_section": ".data",
+      "start": "0x02133ab0",
+      "end": "0x02133ac8"
+    },
+    {
+      "name": ".data.data_ov006_02133ac8",
+      "input_section": ".data",
+      "start": "0x02133ac8",
+      "end": "0x02133ae0"
+    },
+    {
+      "name": ".data.data_ov006_02133af0",
+      "input_section": ".data",
+      "start": "0x02133af0",
+      "end": "0x02133b28"
+    },
+    {
+      "name": ".data.data_ov006_02133b28",
+      "input_section": ".data",
+      "start": "0x02133b28",
+      "end": "0x02133b60"
+    },
+    {
+      "name": ".data.data_ov006_02133b60",
+      "input_section": ".data",
+      "start": "0x02133b60",
+      "end": "0x02133ba0"
+    },
+    {
+      "name": ".data.data_ov006_02133ba0",
+      "input_section": ".data",
+      "start": "0x02133ba0",
+      "end": "0x02133be0"
+    },
+    {
+      "name": ".data.data_ov006_021342d0",
+      "input_section": ".data",
+      "start": "0x021342d0",
+      "end": "0x021342f0"
+    },
+    {
+      "name": ".data.data_ov006_021342f0",
+      "input_section": ".data",
+      "start": "0x021342f0",
+      "end": "0x02134310"
+    },
+    {
+      "name": ".data.data_ov006_02134310",
+      "input_section": ".data",
+      "start": "0x02134310",
+      "end": "0x02134340"
+    },
+    {
+      "name": ".data.data_ov006_02134340",
+      "input_section": ".data",
+      "start": "0x02134340",
+      "end": "0x02134370"
+    },
+    {
+      "name": ".data.data_ov006_02134370",
+      "input_section": ".data",
+      "start": "0x02134370",
+      "end": "0x021343a0"
+    },
+    {
+      "name": ".data.data_ov006_021343a0",
+      "input_section": ".data",
+      "start": "0x021343a0",
+      "end": "0x021343b0"
+    },
+    {
+      "name": ".data.data_ov006_021343c4",
+      "input_section": ".data",
+      "start": "0x021343c4",
+      "end": "0x021343e4"
+    },
+    {
+      "name": ".data.data_ov006_021343e4",
+      "input_section": ".data",
+      "start": "0x021343e4",
+      "end": "0x02134404"
+    },
+    {
+      "name": ".data.data_ov006_02134404",
+      "input_section": ".data",
+      "start": "0x02134404",
+      "end": "0x02134444"
+    },
+    {
+      "name": ".data.data_ov006_02134444",
+      "input_section": ".data",
+      "start": "0x02134444",
+      "end": "0x02134484"
+    },
+    {
+      "name": ".data.data_ov006_02134484",
+      "input_section": ".data",
+      "start": "0x02134484",
+      "end": "0x021344a4"
+    },
+    {
+      "name": ".data.data_ov006_021344a4",
+      "input_section": ".data",
+      "start": "0x021344a4",
+      "end": "0x021344c4"
+    },
+    {
+      "name": ".data.data_ov006_021344c4",
+      "input_section": ".data",
+      "start": "0x021344c4",
+      "end": "0x021344ec"
+    },
+    {
+      "name": ".data.data_ov006_02134514",
+      "input_section": ".data",
+      "start": "0x02134514",
+      "end": "0x0213453c"
+    },
+    {
+      "name": ".data.data_ov006_0213453c",
+      "input_section": ".data",
+      "start": "0x0213453c",
+      "end": "0x0213456c"
+    },
+    {
+      "name": ".data.data_ov006_0213456c",
+      "input_section": ".data",
+      "start": "0x0213456c",
+      "end": "0x021345ac"
+    },
+    {
+      "name": ".data.data_ov006_021345ac",
+      "input_section": ".data",
+      "start": "0x021345ac",
+      "end": "0x021345ec"
+    },
+    {
+      "name": ".data.data_ov006_021345ec",
+      "input_section": ".data",
+      "start": "0x021345ec",
+      "end": "0x0213462c"
+    },
+    {
+      "name": ".data.data_ov006_0213462c",
+      "input_section": ".data",
+      "start": "0x0213462c",
+      "end": "0x0213466c"
+    },
+    {
+      "name": ".data.data_ov006_0213466c",
+      "input_section": ".data",
+      "start": "0x0213466c",
+      "end": "0x021346bc"
+    },
+    {
+      "name": ".data.data_ov006_02134f34",
+      "input_section": ".data",
+      "start": "0x02134f34",
+      "end": "0x02134fdc"
     }
   ],
   "functions": [
@@ -605,7 +815,253 @@
       "ordinal": 80
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "sBomroomMarkerLitSprites",
+      "address": "0x02133a70",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sBomroomMarkerPlainSprites",
+      "address": "0x02133ae0",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sBomroomHatchPanelSprites",
+      "address": "0x021342bc",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sBomroomTopDoorSprites",
+      "address": "0x021343b0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sBomroomPenGateSprites",
+      "address": "0x021344ec",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sBomroomRoundOverSprites",
+      "address": "0x02134f30",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a80",
+      "address": "0x02133a80",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02133a98",
+      "address": "0x02133a98",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02133ab0",
+      "address": "0x02133ab0",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02133ac8",
+      "address": "0x02133ac8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02133af0",
+      "address": "0x02133af0",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02133b28",
+      "address": "0x02133b28",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02133b60",
+      "address": "0x02133b60",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02133ba0",
+      "address": "0x02133ba0",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_021342d0",
+      "address": "0x021342d0",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_021342f0",
+      "address": "0x021342f0",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134310",
+      "address": "0x02134310",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134340",
+      "address": "0x02134340",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134370",
+      "address": "0x02134370",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_021343a0",
+      "address": "0x021343a0",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_021343c4",
+      "address": "0x021343c4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_021343e4",
+      "address": "0x021343e4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134404",
+      "address": "0x02134404",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134444",
+      "address": "0x02134444",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134484",
+      "address": "0x02134484",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_021344a4",
+      "address": "0x021344a4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_021344c4",
+      "address": "0x021344c4",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134514",
+      "address": "0x02134514",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_0213453c",
+      "address": "0x0213453c",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_0213456c",
+      "address": "0x0213456c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_021345ac",
+      "address": "0x021345ac",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_021345ec",
+      "address": "0x021345ec",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_0213462c",
+      "address": "0x0213462c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_0213466c",
+      "address": "0x0213466c",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134f34",
+      "address": "0x02134f34",
+      "size": "0xa8",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM list ending at attr3 0xffff"
+    }
+  ],
   "bss": [
     {
       "symbol": "sBomroomTopDoorStateTable",
@@ -1099,6 +1555,296 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212fd48"
+    },
+    {
+      "section": ".data.sBomroomMarkerLitSprites",
+      "source": "0x02133a70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133ab0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133ab0"
+    },
+    {
+      "section": ".data.sBomroomMarkerLitSprites",
+      "source": "0x02133a74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133a98",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133a98"
+    },
+    {
+      "section": ".data.sBomroomMarkerLitSprites",
+      "source": "0x02133a78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133a80",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133a80"
+    },
+    {
+      "section": ".data.sBomroomMarkerLitSprites",
+      "source": "0x02133a7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133ac8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133ac8"
+    },
+    {
+      "section": ".data.sBomroomMarkerPlainSprites",
+      "source": "0x02133ae0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133b60",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133b60"
+    },
+    {
+      "section": ".data.sBomroomMarkerPlainSprites",
+      "source": "0x02133ae4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133ba0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133ba0"
+    },
+    {
+      "section": ".data.sBomroomMarkerPlainSprites",
+      "source": "0x02133ae8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133af0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133af0"
+    },
+    {
+      "section": ".data.sBomroomMarkerPlainSprites",
+      "source": "0x02133aec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133b28",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133b28"
+    },
+    {
+      "section": ".data.sBomroomHatchPanelSprites",
+      "source": "0x021342bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134340",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134340"
+    },
+    {
+      "section": ".data.sBomroomHatchPanelSprites",
+      "source": "0x021342c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021342d0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021342d0"
+    },
+    {
+      "section": ".data.sBomroomHatchPanelSprites",
+      "source": "0x021342c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021342f0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021342f0"
+    },
+    {
+      "section": ".data.sBomroomHatchPanelSprites",
+      "source": "0x021342c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134310",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134310"
+    },
+    {
+      "section": ".data.sBomroomHatchPanelSprites",
+      "source": "0x021342cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134370",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134370"
+    },
+    {
+      "section": ".data.sBomroomTopDoorSprites",
+      "source": "0x021343b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134404",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134404"
+    },
+    {
+      "section": ".data.sBomroomTopDoorSprites",
+      "source": "0x021343b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021343a0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021343a0"
+    },
+    {
+      "section": ".data.sBomroomTopDoorSprites",
+      "source": "0x021343b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021343e4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021343e4"
+    },
+    {
+      "section": ".data.sBomroomTopDoorSprites",
+      "source": "0x021343bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021343c4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021343c4"
+    },
+    {
+      "section": ".data.sBomroomTopDoorSprites",
+      "source": "0x021343c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134444",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134444"
+    },
+    {
+      "section": ".data.sBomroomPenGateSprites",
+      "source": "0x021344ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134514",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134514"
+    },
+    {
+      "section": ".data.sBomroomPenGateSprites",
+      "source": "0x021344f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213466c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213466c"
+    },
+    {
+      "section": ".data.sBomroomPenGateSprites",
+      "source": "0x021344f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021345ec",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021345ec"
+    },
+    {
+      "section": ".data.sBomroomPenGateSprites",
+      "source": "0x021344f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134484",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134484"
+    },
+    {
+      "section": ".data.sBomroomPenGateSprites",
+      "source": "0x021344fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213456c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213456c"
+    },
+    {
+      "section": ".data.sBomroomPenGateSprites",
+      "source": "0x02134500",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021344c4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021344c4"
+    },
+    {
+      "section": ".data.sBomroomPenGateSprites",
+      "source": "0x02134504",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213453c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213453c"
+    },
+    {
+      "section": ".data.sBomroomPenGateSprites",
+      "source": "0x02134508",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213462c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213462c"
+    },
+    {
+      "section": ".data.sBomroomPenGateSprites",
+      "source": "0x0213450c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021344a4",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021344a4"
+    },
+    {
+      "section": ".data.sBomroomPenGateSprites",
+      "source": "0x02134510",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021345ac",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021345ac"
+    },
+    {
+      "section": ".data.sBomroomRoundOverSprites",
+      "source": "0x02134f30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134f34",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134f34"
     }
   ],
   "compiler_only_output": [
@@ -1198,7 +1944,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgBomroom_c/dScMgBomroom_c.o (gitignored)",
+    "object": "build/tu/ov006-dScMgBomroom_c/d_s_mg_bomroom.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 81,
     "functions_declared": 81,
@@ -1210,25 +1956,25 @@
         "_ZN14dScMgBomroom_cD2Ev"
       ],
       "droppedSections": [
-        9,
-        10,
-        142,
-        143,
-        144,
-        145,
-        146,
-        147,
-        148,
-        149,
-        150,
-        151,
-        152,
-        153,
-        154,
-        155,
-        156,
-        157,
-        158
+        50,
+        51,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206
       ],
       "data": [
         "_ZTV14dScMgBomroom_c",
@@ -1255,12 +2001,13 @@
         "_ZTS7fBase_c",
         "_ZTS8dScene_c",
         "_ZTV14dScMgBomroom_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -1310,6 +2057,251 @@
           "start": "0x02141660",
           "end": "0x02141768",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.sBomroomMarkerLitSprites",
+          "start": "0x02133a70",
+          "end": "0x02133a80",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sBomroomMarkerPlainSprites",
+          "start": "0x02133ae0",
+          "end": "0x02133af0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sBomroomHatchPanelSprites",
+          "start": "0x021342bc",
+          "end": "0x021342d0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sBomroomTopDoorSprites",
+          "start": "0x021343b0",
+          "end": "0x021343c4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sBomroomPenGateSprites",
+          "start": "0x021344ec",
+          "end": "0x02134514",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sBomroomRoundOverSprites",
+          "start": "0x02134f30",
+          "end": "0x02134f34",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a80",
+          "start": "0x02133a80",
+          "end": "0x02133a98",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a98",
+          "start": "0x02133a98",
+          "end": "0x02133ab0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133ab0",
+          "start": "0x02133ab0",
+          "end": "0x02133ac8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133ac8",
+          "start": "0x02133ac8",
+          "end": "0x02133ae0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133af0",
+          "start": "0x02133af0",
+          "end": "0x02133b28",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133b28",
+          "start": "0x02133b28",
+          "end": "0x02133b60",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133b60",
+          "start": "0x02133b60",
+          "end": "0x02133ba0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133ba0",
+          "start": "0x02133ba0",
+          "end": "0x02133be0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021342d0",
+          "start": "0x021342d0",
+          "end": "0x021342f0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021342f0",
+          "start": "0x021342f0",
+          "end": "0x02134310",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134310",
+          "start": "0x02134310",
+          "end": "0x02134340",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134340",
+          "start": "0x02134340",
+          "end": "0x02134370",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134370",
+          "start": "0x02134370",
+          "end": "0x021343a0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021343a0",
+          "start": "0x021343a0",
+          "end": "0x021343b0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021343c4",
+          "start": "0x021343c4",
+          "end": "0x021343e4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021343e4",
+          "start": "0x021343e4",
+          "end": "0x02134404",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134404",
+          "start": "0x02134404",
+          "end": "0x02134444",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134444",
+          "start": "0x02134444",
+          "end": "0x02134484",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134484",
+          "start": "0x02134484",
+          "end": "0x021344a4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021344a4",
+          "start": "0x021344a4",
+          "end": "0x021344c4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021344c4",
+          "start": "0x021344c4",
+          "end": "0x021344ec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134514",
+          "start": "0x02134514",
+          "end": "0x0213453c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213453c",
+          "start": "0x0213453c",
+          "end": "0x0213456c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213456c",
+          "start": "0x0213456c",
+          "end": "0x021345ac",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021345ac",
+          "start": "0x021345ac",
+          "end": "0x021345ec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021345ec",
+          "start": "0x021345ec",
+          "end": "0x0213462c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213462c",
+          "start": "0x0213462c",
+          "end": "0x0213466c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213466c",
+          "start": "0x0213466c",
+          "end": "0x021346bc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134f34",
+          "start": "0x02134f34",
+          "end": "0x02134fdc",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

@@ -32,6 +32,137 @@
       "name": ".bss",
       "start": "0x02141e54",
       "end": "0x02141fcc"
+    },
+    {
+      "name": ".data",
+      "start": "0x0213c85c",
+      "end": "0x0213c88c"
+    },
+    {
+      "name": ".rodata.data_ov006_0212e57c",
+      "input_section": ".rodata",
+      "start": "0x0212e57c",
+      "end": "0x0212e580"
+    },
+    {
+      "name": ".rodata.sEsp3DCardsPerDifficulty",
+      "input_section": ".rodata",
+      "start": "0x0212e588",
+      "end": "0x0212e58c"
+    },
+    {
+      "name": ".rodata.data_ov006_0212e58c",
+      "input_section": ".rodata",
+      "start": "0x0212e58c",
+      "end": "0x0212e594"
+    },
+    {
+      "name": ".rodata.sEsp3DResultSfx",
+      "input_section": ".rodata",
+      "start": "0x0212e594",
+      "end": "0x0212e5a8"
+    },
+    {
+      "name": ".data.data_ov006_021339fc",
+      "input_section": ".data",
+      "start": "0x021339fc",
+      "end": "0x02133a04"
+    },
+    {
+      "name": ".data.data_ov006_02133a04",
+      "input_section": ".data",
+      "start": "0x02133a04",
+      "end": "0x02133a0c"
+    },
+    {
+      "name": ".data.data_ov006_02133a0c",
+      "input_section": ".data",
+      "start": "0x02133a0c",
+      "end": "0x02133a14"
+    },
+    {
+      "name": ".data.data_ov006_02133a14",
+      "input_section": ".data",
+      "start": "0x02133a14",
+      "end": "0x02133a1c"
+    },
+    {
+      "name": ".data.data_ov006_02133a1c",
+      "input_section": ".data",
+      "start": "0x02133a1c",
+      "end": "0x02133a24"
+    },
+    {
+      "name": ".data.data_ov006_02133a24",
+      "input_section": ".data",
+      "start": "0x02133a24",
+      "end": "0x02133a2c"
+    },
+    {
+      "name": ".data.data_ov006_02133a2c",
+      "input_section": ".data",
+      "start": "0x02133a2c",
+      "end": "0x02133a34"
+    },
+    {
+      "name": ".data.data_ov006_02133a34",
+      "input_section": ".data",
+      "start": "0x02133a34",
+      "end": "0x02133a3c"
+    },
+    {
+      "name": ".data.sEsp3DAnimSetSlotsSprites",
+      "input_section": ".data",
+      "start": "0x02133a3c",
+      "end": "0x02133a5c"
+    },
+    {
+      "name": ".data.data_ov006_02133f24",
+      "input_section": ".data",
+      "start": "0x02133f24",
+      "end": "0x02133f38"
+    },
+    {
+      "name": ".data.data_ov006_02133f38",
+      "input_section": ".data",
+      "start": "0x02133f38",
+      "end": "0x02133f50"
+    },
+    {
+      "name": ".data.data_ov006_02133f50",
+      "input_section": ".data",
+      "start": "0x02133f50",
+      "end": "0x02133f68"
+    },
+    {
+      "name": ".data.data_ov006_02133f68",
+      "input_section": ".data",
+      "start": "0x02133f68",
+      "end": "0x02133f80"
+    },
+    {
+      "name": ".data.data_ov006_02133f80",
+      "input_section": ".data",
+      "start": "0x02133f80",
+      "end": "0x02133f98"
+    },
+    {
+      "name": ".data.data_ov006_02133f98",
+      "input_section": ".data",
+      "start": "0x02133f98",
+      "end": "0x02133fb0"
+    },
+    {
+      "name": ".data.sEsp3DAnimSetRowsSprites",
+      "input_section": ".data",
+      "start": "0x02136e38",
+      "end": "0x02136e3c"
+    },
+    {
+      "name": ".data.data_ov006_02136e3c",
+      "input_section": ".data",
+      "start": "0x02136e3c",
+      "end": "0x02136e44"
     }
   ],
   "functions": [
@@ -512,7 +643,134 @@
       "ordinal": 67
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "sEsp3DAnimSetSlotsSprites",
+      "address": "0x02133a3c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133f24",
+      "address": "0x02133f24",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sEsp3DAnimSetRowsSprites",
+      "address": "0x02136e38",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213c85c",
+      "address": "0x0213c85c",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021339fc",
+      "address": "0x021339fc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a04",
+      "address": "0x02133a04",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a0c",
+      "address": "0x02133a0c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a14",
+      "address": "0x02133a14",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a1c",
+      "address": "0x02133a1c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a24",
+      "address": "0x02133a24",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a2c",
+      "address": "0x02133a2c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133a34",
+      "address": "0x02133a34",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133f38",
+      "address": "0x02133f38",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133f50",
+      "address": "0x02133f50",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133f68",
+      "address": "0x02133f68",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133f80",
+      "address": "0x02133f80",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02133f98",
+      "address": "0x02133f98",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02136e3c",
+      "address": "0x02136e3c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    }
+  ],
   "bss": [
     {
       "symbol": "gEspCardModelFile",
@@ -704,6 +962,36 @@
       "evidence": "dScMg3DEsp_cState[4] play-phase table; the initializer plain-copies the ROM PMF constants into it"
     }
   ],
+  "rodata": [
+    {
+      "symbol": "data_ov006_0212e57c",
+      "address": "0x0212e57c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sEsp3DCardsPerDifficulty",
+      "address": "0x0212e588",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0212e58c",
+      "address": "0x0212e58c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sEsp3DResultSfx",
+      "address": "0x0212e594",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    }
+  ],
   "notes": [
     "Widened from the nine-function dMg3DEspAnimSet_c span 0x020e777c..0x020e7b0c to the whole unit, which also holds dScMg3DEsp_c and dMg3DEspModel_c. The manifest id and the path stay dMg3DEspAnimSet_c's, the smaller change: renaming the TU after dScMg3DEsp_c would re-key the nine existing attribution and converted-baseline entries and the queue row as well. The folded files were dScMg3DEsp_c's D1 and D0, dMg3DEspModel_c's seven members, the 43 helpers from func_ov006_020e7cc0 to func_ov006_020e9bbc, and dScMg3DEsp_c's Virtual50, OnYoshiTryEat, CleanupResources, Render, Behavior and InitResources files; attribution.json keeps each one's credit through a path#symbol override.",
     "Written ROM-ASCENDING because `#pragma defer_codegen off` makes CodeWarrior emit each definition as it is encountered rather than in reverse source order. With dScMg3DEsp_c's out-of-line destructor first in the file it emits D1 and D0 at ordinals 0 and 1; the homeless D2s and C2s of the three classes are dispositioned deadstrip.",
@@ -853,6 +1141,160 @@
           "start": "0x02141e54",
           "end": "0x02141fcc",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x0213c85c",
+          "end": "0x0213c88c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212e57c",
+          "start": "0x0212e57c",
+          "end": "0x0212e580",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sEsp3DCardsPerDifficulty",
+          "start": "0x0212e588",
+          "end": "0x0212e58c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.data_ov006_0212e58c",
+          "start": "0x0212e58c",
+          "end": "0x0212e594",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sEsp3DResultSfx",
+          "start": "0x0212e594",
+          "end": "0x0212e5a8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sEsp3DAnimSetSlotsSprites",
+          "start": "0x02133a3c",
+          "end": "0x02133a5c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133f24",
+          "start": "0x02133f24",
+          "end": "0x02133f38",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sEsp3DAnimSetRowsSprites",
+          "start": "0x02136e38",
+          "end": "0x02136e3c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021339fc",
+          "start": "0x021339fc",
+          "end": "0x02133a04",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a04",
+          "start": "0x02133a04",
+          "end": "0x02133a0c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a0c",
+          "start": "0x02133a0c",
+          "end": "0x02133a14",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a14",
+          "start": "0x02133a14",
+          "end": "0x02133a1c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a1c",
+          "start": "0x02133a1c",
+          "end": "0x02133a24",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a24",
+          "start": "0x02133a24",
+          "end": "0x02133a2c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a2c",
+          "start": "0x02133a2c",
+          "end": "0x02133a34",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133a34",
+          "start": "0x02133a34",
+          "end": "0x02133a3c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133f38",
+          "start": "0x02133f38",
+          "end": "0x02133f50",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133f50",
+          "start": "0x02133f50",
+          "end": "0x02133f68",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133f68",
+          "start": "0x02133f68",
+          "end": "0x02133f80",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133f80",
+          "start": "0x02133f80",
+          "end": "0x02133f98",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02133f98",
+          "start": "0x02133f98",
+          "end": "0x02133fb0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02136e3c",
+          "start": "0x02136e3c",
+          "end": "0x02136e44",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -2047,6 +2489,146 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02130a08"
+    },
+    {
+      "section": ".data.sEsp3DAnimSetSlotsSprites",
+      "source": "0x02133a58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021339fc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021339fc"
+    },
+    {
+      "section": ".data.sEsp3DAnimSetSlotsSprites",
+      "source": "0x02133a54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133a04",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133a04"
+    },
+    {
+      "section": ".data.sEsp3DAnimSetSlotsSprites",
+      "source": "0x02133a50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133a0c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133a0c"
+    },
+    {
+      "section": ".data.sEsp3DAnimSetSlotsSprites",
+      "source": "0x02133a4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133a14",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133a14"
+    },
+    {
+      "section": ".data.sEsp3DAnimSetSlotsSprites",
+      "source": "0x02133a48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133a1c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133a1c"
+    },
+    {
+      "section": ".data.sEsp3DAnimSetSlotsSprites",
+      "source": "0x02133a44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133a24",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133a24"
+    },
+    {
+      "section": ".data.sEsp3DAnimSetSlotsSprites",
+      "source": "0x02133a40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133a2c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133a2c"
+    },
+    {
+      "section": ".data.sEsp3DAnimSetSlotsSprites",
+      "source": "0x02133a3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133a34",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133a34"
+    },
+    {
+      "section": ".data.data_ov006_02133f24",
+      "source": "0x02133f34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133f98",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133f98"
+    },
+    {
+      "section": ".data.data_ov006_02133f24",
+      "source": "0x02133f30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133f38",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133f38"
+    },
+    {
+      "section": ".data.data_ov006_02133f24",
+      "source": "0x02133f2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133f50",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133f50"
+    },
+    {
+      "section": ".data.data_ov006_02133f24",
+      "source": "0x02133f28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133f68",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133f68"
+    },
+    {
+      "section": ".data.data_ov006_02133f24",
+      "source": "0x02133f24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02133f80",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02133f80"
+    },
+    {
+      "section": ".data.sEsp3DAnimSetRowsSprites",
+      "source": "0x02136e38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02136e3c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02136e3c"
     }
   ],
   "defined_symbol_renames": [

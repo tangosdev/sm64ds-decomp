@@ -23,7 +23,22 @@
 #include "nitro/hw/registers.h"
 #include "SpawnInfo.h"
 #include "dScStarSel_c.h"
+/* decl_common.h still spells these three camera vectors as void*. The
+   LookAt call reads each as twelve bytes. Hide that declaration. */
+#define data_ov003_020b132c data_ov003_020b132c_decl
+#define data_ov003_020b1338 data_ov003_020b1338_decl
+#define data_ov003_020b1344 data_ov003_020b1344_decl
 #include "decl_common.h"
+#undef data_ov003_020b132c
+#undef data_ov003_020b1338
+#undef data_ov003_020b1344
+
+/* Eye, focus, and up for G3i_LookAt_. 20.12 fixed-point.
+   extern keeps the retail global binding; a plain const would be local.
+   The first two are declared out of address order: mwcc emits that pair reversed. */
+extern const s32 data_ov003_020b1338[3] = {0, 0x1000, 0};
+extern const s32 data_ov003_020b132c[3] = {0, 0, 0x00f60000};
+extern const s32 data_ov003_020b1344[3] = {0, 0, 0};
 #include "dFdBrightness_c.h"
 #include "dFdColor_c.h"
 #include "OAM.h"

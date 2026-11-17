@@ -81,3 +81,20 @@ s32 daObjCvShutter_c::CleanupResources() {
  * handle, then the collision handle. */
 CvShutterModelFilePtr gCvShutterModelFile(ASSET_CV_SHUTTER_BMD);
 CvShutterCollisionFilePtr gCvShutterCollisionFile(ASSET_CV_SHUTTER_KCL);
+/* Collision properties: the 'CLPS' tag, the 8-byte stride header with one
+ * entry, then the default entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+CLPS_Block data_ov021_02113a00 = {
+    0x53504c43,
+    0x00010008,
+    {0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
+ResourceDescriptor data_ov021_021148d0 = {
+    &gCvShutterModelFile,
+    &gCvShutterCollisionFile,
+    &data_ov021_02113a00,
+};

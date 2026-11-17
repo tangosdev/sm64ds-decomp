@@ -82,7 +82,7 @@ extern StateEntry data_ov015_021144a0;
    A typed ResourceDescriptor[2] changes Init reloc destinations. */
 extern SharedFilePtr *data_ov015_02114534;
 extern SharedFilePtr *data_ov015_02114538;
-extern CLPS_Block *data_ov015_0211453c;
+extern void *data_ov015_0211453c[4];
 
 /* local extern: arm9 math and MeshCollider helpers with no shared header. */
 extern "C" {
@@ -294,6 +294,28 @@ DossunbarModelFile gBkDossunbarSModelFile(0x058d);
 DossunbarCollisionFile gBkDossunbarSCollisionFile(0x058e);
 DossunbarModelFile gBkDossunbarLModelFile(0x058b);
 DossunbarCollisionFile gBkDossunbarLCollisionFile(0x058c);
+struct CLPS_Block {
+    u32 tag;
+    u32 hdr;
+    u32 w0;
+    u32 w1;
+    u32 w2;
+    u32 w3;
+    u32 tail0;
+    u32 tail1;
+};
+CLPS_Block data_ov015_021135b4 = {0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff,
+                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+CLPS_Block data_ov015_02113634 = {0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff,
+                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+SharedFilePtr *data_ov015_02114534 = &gBkDossunbarSModelFile;
+SharedFilePtr *data_ov015_02114538 = &gBkDossunbarSCollisionFile;
+void *data_ov015_0211453c[4] = {
+    &data_ov015_021135b4,
+    &gBkDossunbarLModelFile,
+    &gBkDossunbarLCollisionFile,
+    &data_ov015_02113634,
+};
 
 StateEntry data_ov015_02114a24[7] = {
     data_ov015_021144b0, data_ov015_021144f8, data_ov015_021144c8, data_ov015_021144c0,

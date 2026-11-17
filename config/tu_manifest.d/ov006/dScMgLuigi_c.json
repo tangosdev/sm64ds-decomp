@@ -36,6 +36,114 @@
       "name": ".bss",
       "start": "0x021421ec",
       "end": "0x021422a4"
+    },
+    {
+      "name": ".rodata.sLuigiTouchSfx",
+      "input_section": ".rodata",
+      "start": "0x0212e848",
+      "end": "0x0212e850"
+    },
+    {
+      "name": ".rodata.sLuigiCurtainX",
+      "input_section": ".rodata",
+      "start": "0x0212e850",
+      "end": "0x0212e858"
+    },
+    {
+      "name": ".rodata.sLuigiDriftByColumnSpeed",
+      "input_section": ".rodata",
+      "start": "0x0212e858",
+      "end": "0x0212e868"
+    },
+    {
+      "name": ".rodata.sLuigiDriftByRowSpeed",
+      "input_section": ".rodata",
+      "start": "0x0212e868",
+      "end": "0x0212e878"
+    },
+    {
+      "name": ".rodata.sLuigiDriftRandomSpeed",
+      "input_section": ".rodata",
+      "start": "0x0212e878",
+      "end": "0x0212e888"
+    },
+    {
+      "name": ".rodata.sLuigiSwaySpeed",
+      "input_section": ".rodata",
+      "start": "0x0212e888",
+      "end": "0x0212e898"
+    },
+    {
+      "name": ".rodata.sLuigiSwayStartVY",
+      "input_section": ".rodata",
+      "start": "0x0212e898",
+      "end": "0x0212e8a8"
+    },
+    {
+      "name": ".rodata.sLuigiSwayAccel",
+      "input_section": ".rodata",
+      "start": "0x0212e8a8",
+      "end": "0x0212e8b8"
+    },
+    {
+      "name": ".rodata.sLuigiBounceSpeeds",
+      "input_section": ".rodata",
+      "start": "0x0212e8b8",
+      "end": "0x0212e8c8"
+    },
+    {
+      "name": ".rodata.sLuigiDriftFixedSpeed",
+      "input_section": ".rodata",
+      "start": "0x0212e8c8",
+      "end": "0x0212e8d8"
+    },
+    {
+      "name": ".rodata.sLuigiDriftByLevelSpeed",
+      "input_section": ".rodata",
+      "start": "0x0212e8d8",
+      "end": "0x0212e8e8"
+    },
+    {
+      "name": ".data.sLuigiCurtainSprite",
+      "input_section": ".data",
+      "start": "0x021350d8",
+      "end": "0x021350dc"
+    },
+    {
+      "name": ".data.data_ov006_021350dc",
+      "input_section": ".data",
+      "start": "0x021350dc",
+      "end": "0x021350fc"
+    },
+    {
+      "name": ".data.data_ov006_0213aba8",
+      "input_section": ".data",
+      "start": "0x0213aba8",
+      "end": "0x0213abb0"
+    },
+    {
+      "name": ".data.data_ov006_0213abb0",
+      "input_section": ".data",
+      "start": "0x0213abb0",
+      "end": "0x0213abb8"
+    },
+    {
+      "name": ".data.data_ov006_0213abb8",
+      "input_section": ".data",
+      "start": "0x0213abb8",
+      "end": "0x0213abc0"
+    },
+    {
+      "name": ".data.data_ov006_0213abc0",
+      "input_section": ".data",
+      "start": "0x0213abc0",
+      "end": "0x0213abc8"
+    },
+    {
+      "name": ".data.sLuigiPictureSprites",
+      "input_section": ".data",
+      "start": "0x0213abc8",
+      "end": "0x0213abd8"
     }
   ],
   "functions": [
@@ -621,6 +729,55 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "PMF record {_ZN12dScMgLuigi_c10StateCatchEv, 0}, copied into sLuigiStateTable"
+    },
+    {
+      "symbol": "sLuigiCurtainSprite",
+      "address": "0x021350d8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sLuigiPictureSprites",
+      "address": "0x0213abc8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_021350dc",
+      "address": "0x021350dc",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213aba8",
+      "address": "0x0213aba8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213abb0",
+      "address": "0x0213abb0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213abb8",
+      "address": "0x0213abb8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213abc0",
+      "address": "0x0213abc0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     }
   ],
   "bss": [
@@ -658,6 +815,85 @@
       "size": "0x50",
       "binding": "STB_GLOBAL",
       "evidence": "LuigiSlotHandler picture-motion table [10]; the initializer copies 10 PMF records into it"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "sLuigiTouchSfx",
+      "address": "0x0212e848",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sLuigiCurtainX",
+      "address": "0x0212e850",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sLuigiDriftByColumnSpeed",
+      "address": "0x0212e858",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sLuigiDriftByRowSpeed",
+      "address": "0x0212e868",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sLuigiDriftRandomSpeed",
+      "address": "0x0212e878",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sLuigiSwaySpeed",
+      "address": "0x0212e888",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sLuigiSwayStartVY",
+      "address": "0x0212e898",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sLuigiSwayAccel",
+      "address": "0x0212e8a8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sLuigiBounceSpeeds",
+      "address": "0x0212e8b8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sLuigiDriftFixedSpeed",
+      "address": "0x0212e8c8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "sLuigiDriftByLevelSpeed",
+      "address": "0x0212e8d8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
     }
   ],
   "notes": [
@@ -819,6 +1055,132 @@
           "start": "0x021421ec",
           "end": "0x021422a4",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata.sLuigiTouchSfx",
+          "start": "0x0212e848",
+          "end": "0x0212e850",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sLuigiCurtainX",
+          "start": "0x0212e850",
+          "end": "0x0212e858",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sLuigiDriftByColumnSpeed",
+          "start": "0x0212e858",
+          "end": "0x0212e868",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sLuigiDriftByRowSpeed",
+          "start": "0x0212e868",
+          "end": "0x0212e878",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sLuigiDriftRandomSpeed",
+          "start": "0x0212e878",
+          "end": "0x0212e888",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sLuigiSwaySpeed",
+          "start": "0x0212e888",
+          "end": "0x0212e898",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sLuigiSwayStartVY",
+          "start": "0x0212e898",
+          "end": "0x0212e8a8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sLuigiSwayAccel",
+          "start": "0x0212e8a8",
+          "end": "0x0212e8b8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sLuigiBounceSpeeds",
+          "start": "0x0212e8b8",
+          "end": "0x0212e8c8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sLuigiDriftFixedSpeed",
+          "start": "0x0212e8c8",
+          "end": "0x0212e8d8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.sLuigiDriftByLevelSpeed",
+          "start": "0x0212e8d8",
+          "end": "0x0212e8e8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sLuigiCurtainSprite",
+          "start": "0x021350d8",
+          "end": "0x021350dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sLuigiPictureSprites",
+          "start": "0x0213abc8",
+          "end": "0x0213abd8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021350dc",
+          "start": "0x021350dc",
+          "end": "0x021350fc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213aba8",
+          "start": "0x0213aba8",
+          "end": "0x0213abb0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213abb0",
+          "start": "0x0213abb0",
+          "end": "0x0213abb8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213abb8",
+          "start": "0x0213abb8",
+          "end": "0x0213abc0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213abc0",
+          "start": "0x0213abc0",
+          "end": "0x0213abc8",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -1956,6 +2318,56 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x020f300c"
+    },
+    {
+      "section": ".data.sLuigiCurtainSprite",
+      "source": "0x021350d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_021350dc",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x021350dc"
+    },
+    {
+      "section": ".data.sLuigiPictureSprites",
+      "source": "0x0213abd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213aba8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213aba8"
+    },
+    {
+      "section": ".data.sLuigiPictureSprites",
+      "source": "0x0213abd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213abb0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213abb0"
+    },
+    {
+      "section": ".data.sLuigiPictureSprites",
+      "source": "0x0213abcc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213abb8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213abb8"
+    },
+    {
+      "section": ".data.sLuigiPictureSprites",
+      "source": "0x0213abc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213abc0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213abc0"
     }
   ]
 }

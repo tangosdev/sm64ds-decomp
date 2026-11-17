@@ -2,7 +2,9 @@
     .rodata     start:0x021344e8 end:0x02134524 kind:rodata align:4
     .init       start:0x02134524 end:0x02134b68 kind:code align:4
     .ctor       start:0x02134b68 end:0x02134b80 kind:rodata align:4
-    .data       start:0x02134ba0 end:0x02135440 kind:data align:32
+    .data start:0x02134ba0 end:0x02135100 kind:data align:32
+    .data.dsnClps start:0x02135100 end:0x02135120 kind:data align:4
+    .data.w135120 start:0x02135120 end:0x02135440 kind:data align:32
     .bss        start:0x02135440 end:0x021356e0 kind:bss align:32
 src/game/actors/d_a_obj_rotate_updown_lift.cpp:
     complete
@@ -11,6 +13,7 @@ src/game/actors/d_a_obj_rotate_updown_lift.cpp:
     .ctor start:0x02134b68 end:0x02134b6c
     .bss start:0x02135440 end:0x02135490
     .data start:0x02134ba0 end:0x02134bc4
+    .rodata start:0x021344e8 end:0x021344f4
 
 src/game/actors/d_a_obj_rotate_updown_lift_shadow.cpp:
     complete
@@ -21,7 +24,8 @@ src/game/actors/d_a_linelift2.cpp:
     .text start:0x02131c14 end:0x02132404
     .init start:0x021345dc end:0x021346e8
     .ctor start:0x02134b6c end:0x02134b70
-    .data start:0x02134e44 end:0x02134e5c
+    .data start:0x02134e44 end:0x02134e64
+    .rodata start:0x021344f4 end:0x02134504
     .bss start:0x02135490 end:0x021354f8
 
 src/game/actors/d_a_obj_simple_lift.cpp:
@@ -30,13 +34,16 @@ src/game/actors/d_a_obj_simple_lift.cpp:
     .init start:0x021346e8 end:0x02134930
     .ctor start:0x02134b70 end:0x02134b74
     .bss start:0x021354f8 end:0x02135610
+    .rodata start:0x02134504 end:0x02134524
 
 src/game/actors/d_a_dsn.cpp:
     complete
     .text start:0x02132938 end:0x02132d04
     .init start:0x02134930 end:0x021349c4
     .ctor start:0x02134b74 end:0x02134b78
+    .data.dsnClps start:0x02135100 end:0x02135120
     .bss start:0x02135610 end:0x0213564c
+    .data.w135120 start:0x02135138 end:0x02135150
 
 src/game/actors/d_a_dsn_base.cpp:
     complete

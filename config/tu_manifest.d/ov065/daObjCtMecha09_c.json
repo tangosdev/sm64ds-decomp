@@ -30,6 +30,11 @@
       "name": ".bss",
       "start": "0x0211d9cc",
       "end": "0x0211d9f4"
+    },
+    {
+      "name": ".data",
+      "start": "0x0211d520",
+      "end": "0x0211d530"
     }
   ],
   "functions": [
@@ -90,7 +95,15 @@
       "ordinal": 7
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov065_0211d520",
+      "address": "0x0211d520",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four fixed-point speeds"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov065_0211d9cc",
@@ -355,6 +368,13 @@
           "start": "0x0211d9cc",
           "end": "0x0211d9f4",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x0211d520",
+          "end": "0x0211d530",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

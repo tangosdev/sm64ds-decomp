@@ -119,8 +119,6 @@ struct daWanwan2_c : dEnemyBase_c {
     void func_ov100_0214344c();
     void func_ov100_021435e8();
     void func_ov100_021437d4();
-    int func_ov100_02143aa4();
-    int func_ov100_02143ae0();
     int func_ov100_02143b18(ChompState *p);
 };
 

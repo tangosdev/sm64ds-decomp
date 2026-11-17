@@ -45,6 +45,7 @@ src/game/actors/d_a_obj_fl_ukiyuka.cpp:
     .text start:0x02111f6c end:0x02112130
     .init start:0x02112ec0 end:0x02112f78
     .ctor start:0x0211310c end:0x02113110
+    .data start:0x021140d4 end:0x021140ec
     .bss start:0x021145c8 end:0x02114618
 
 src/game/actors/d_a_obj_fl_uki_ki.cpp:
@@ -59,10 +60,12 @@ src/game/actors/d_a_obj_fl_fall_block.cpp:
     .text start:0x02112380 end:0x02112498
     .init start:0x02112fe4 end:0x02113050
     .ctor start:0x02113114 end:0x02113118
+    .data start:0x0211427c end:0x02114288
     .bss start:0x02114640 end:0x02114668
 
 src/game/actors/d_a_obj_fl_maruta.cpp:
     complete
+    .rodata start:0x02112c98 end:0x02112ca8
     .text start:0x02112498 end:0x021125e0
     .init start:0x02113050 end:0x021130bc
     .ctor start:0x02113118 end:0x0211311c

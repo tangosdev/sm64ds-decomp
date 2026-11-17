@@ -48,7 +48,8 @@ struct PianoAnimationFilePtr : SharedFilePtr {
 extern PianoModelFilePtr gPianoModelFile;
 extern PianoCollisionFilePtr gPianoCollisionFile;
 extern PianoAnimationFilePtr gPianoAttackAnimationFile;
-extern char data_ov063_0211ecb8;
+int data_ov063_0211ecb8[8] = {0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff,
+                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 
 /* local extern: no shared header declares these. */
 extern "C" {

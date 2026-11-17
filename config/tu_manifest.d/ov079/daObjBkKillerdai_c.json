@@ -31,6 +31,17 @@
       "name": ".bss",
       "start": "0x021282f0",
       "end": "0x02128340"
+    },
+    {
+      "name": ".data",
+      "start": "0x02127f64",
+      "end": "0x02127f70"
+    },
+    {
+      "name": ".data.bkKillerdaiClps",
+      "input_section": ".data",
+      "start": "0x02127e7c",
+      "end": "0x02127e9c"
     }
   ],
   "functions": [
@@ -98,7 +109,22 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov079_02127f64",
+      "address": "0x02127f64",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "launcher model, collision, and CLPS"
+    },
+    {
+      "symbol": "data_ov079_02127e7c",
+      "address": "0x02127e7c",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "one entry: floor 0x01040fc4, the launcher's collision surface"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov079_021282f0",
@@ -171,7 +197,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov079-daObjBkKillerdai_c/daObjBkKillerdai_c.o (gitignored)",
+    "object": "build/tu/ov079-daObjBkKillerdai_c/d_a_obj_bk_killerdai.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 9,
     "functions_declared": 9,
@@ -187,20 +213,9 @@
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
-        9,
-        10,
-        13,
-        25,
-        26,
-        27,
-        28,
-        29,
-        30,
-        31,
-        32,
-        33,
-        34,
-        35,
+        20,
+        21,
+        24,
         36,
         37,
         38,
@@ -208,7 +223,18 @@
         40,
         41,
         42,
-        43
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54
       ],
       "data": [
         "_ZTI18daObjBkKillerdai_c",
@@ -235,12 +261,13 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV18daObjBkKillerdai_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -290,6 +317,20 @@
           "start": "0x021282f0",
           "end": "0x02128340",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02127f64",
+          "end": "0x02127f70",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.bkKillerdaiClps",
+          "start": "0x02127e7c",
+          "end": "0x02127e9c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -794,6 +835,36 @@
       "addend": 0,
       "target_module": "ov079",
       "target_address": "0x02127a10"
+    },
+    {
+      "section": ".data",
+      "source": "0x02127f64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkKillerDaiModelFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02128308"
+    },
+    {
+      "section": ".data",
+      "source": "0x02127f68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkKillerDaiCollisionFile",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x021282f8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02127f6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov079_02127e7c",
+      "addend": 0,
+      "target_module": "ov079",
+      "target_address": "0x02127e7c"
     }
   ],
   "production_mode": "intact-object"

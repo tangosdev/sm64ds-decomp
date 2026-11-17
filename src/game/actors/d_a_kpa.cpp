@@ -274,7 +274,7 @@ extern dCamera_c *gCamera;
 /* Eases a camera vector toward a target; 1 when it arrives (d_camera.cpp). */
 extern int func_020092c4(void *, void *, void *);
 extern KpaAnimationFileHandle data_ov060_0211acd0;
-extern unsigned char data_ov060_02119264[];
+extern const unsigned char data_ov060_02119264[];
 extern PmfEnt data_ov060_0211aeb4[];
 /* Sound::Play(3, id, pos) (sound/Sound.cpp). The legacy shards passed a third
  * argument the callee does not take; dropped rather than widening the
@@ -303,8 +303,8 @@ extern void func_02011cfc(void);
  *   data_ov089_02132c50              a model handle in ov089
  *   data_ov060_0211b208              a model handle (SharedFilePtr)
  *   data_ov060_0211ac78              Bowser's model handle (KpaModelFilePtr) */
-extern SharedFilePtr *data_ov060_021192dc[];
-extern SharedFilePtr *data_ov060_0211927c[];
+extern SharedFilePtr *const data_ov060_021192dc[];
+extern SharedFilePtr *const data_ov060_0211927c[];
 extern SharedFilePtr data_ov089_02132c50;
 /* daFRing_c defines this handle. decl_common.h no longer declares it. */
 extern SharedFilePtr data_ov060_0211b208;
@@ -324,8 +324,11 @@ extern KpaAnimationFileHandle data_ov060_0211ace0;
 extern KpaAnimationFileHandle data_ov060_0211aca0;
 extern KpaAnimationFileHandle data_ov060_0211abf8;
 extern KpaAnimationFileHandle data_ov060_0211ac90;
-/* The arena-tilt table walked by ActTiltLavaPlatform: rows of three halfwords
- * (sign, scale, end frame); each column is read through its own symbol. */
+/* The arena-tilt table walked by ActTiltLavaPlatform. Rows of three halfwords
+ * (sign, scale, end frame), each column addressed through its own symbol.
+ * It stays a ROM copy: the linker aligns every input section to 4, so a
+ * section cannot start at 0x02119296, and one array lets the compiler fold
+ * the three bases. */
 extern short data_ov060_02119294[];
 extern short data_ov060_02119296[];
 extern short data_ov060_02119298[];
@@ -3057,6 +3060,25 @@ KpaTexSequenceFilePtr data_ov060_0211ac10(ASSET_KOOPA_DEAD_BTP);
 KpaTexSequenceFilePtr data_ov060_0211abf0(ASSET_KOOPA_THROW_BTP);
 KpaTexSequenceFilePtr data_ov060_0211ac28(ASSET_KOOPA_WAIT_BTP);
 KpaTexSequenceFilePtr data_ov060_0211ac30(ASSET_KOOPA_HOLD_BTP);
+
+/* Overlay .rodata. const so the section is not executable; a named route
+ * refuses an executable section. data_ov060_02119268 stays the decl_common.h
+ * u8[] ROM copy: that declaration is non-const. */
+extern "C" {
+extern const unsigned char data_ov060_02119264[] = {1, 1, 3, 0};
+extern SharedFilePtr *const data_ov060_0211927c[] = {&data_ov060_0211ac40, &data_ov060_0211acb8,
+                                                     &data_ov060_0211ac10, &data_ov060_0211abf0,
+                                                     &data_ov060_0211ac28, &data_ov060_0211ac30};
+extern SharedFilePtr *const data_ov060_021192dc[] = {
+    &data_ov060_0211ac88, &data_ov060_0211ac50, &data_ov060_0211ac58, &data_ov060_0211ac60,
+    &data_ov060_0211ac18, &data_ov060_0211acd0, &data_ov060_0211ac68, &data_ov060_0211ac70,
+    &data_ov060_0211ac20, &data_ov060_0211ac80, &data_ov060_0211abe8, &data_ov060_0211ac48,
+    &data_ov060_0211ac38, &data_ov060_0211ac90, &data_ov060_0211ac98, &data_ov060_0211abf8,
+    &data_ov060_0211aca8, &data_ov060_0211acb0, &data_ov060_0211ac00, &data_ov060_0211ac08,
+    &data_ov060_0211abe0, &data_ov060_0211acd8, &data_ov060_0211acf0, &data_ov060_0211ace8,
+    &data_ov060_0211ace0, &data_ov060_0211aca0, &data_ov060_0211acc8, &data_ov060_0211acc0};
+s16 data_ov060_0211a4e0[] = {0x00cc, 0x00ce, 0x00d0, 0};
+}
 
 /* Indexed by mHoldState (Bowser_HoldState). */
 PmfEnt data_ov060_0211aeb4[4] = {

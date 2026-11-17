@@ -31,6 +31,16 @@
       "name": ".bss",
       "start": "0x0211d8b4",
       "end": "0x0211d904"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0211c0b8",
+      "end": "0x0211c0c8"
+    },
+    {
+      "name": ".data",
+      "start": "0x0211d16c",
+      "end": "0x0211d174"
     }
   ],
   "functions": [
@@ -112,8 +122,25 @@
       "ordinal": 10
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov065_0211d16c",
+      "address": "0x0211d16c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two BTA file pointers"
+    }
+  ],
   "production_mode": "intact-object",
+  "rodata": [
+    {
+      "symbol": "data_ov065_0211c0b8",
+      "address": "0x0211c0b8",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four fixed-point belt speeds"
+    }
+  ],
   "bss": [
     {
       "symbol": "gCtMechaObj04sCollisionFile",
@@ -470,6 +497,26 @@
       "addend": 0,
       "target_module": "ov065",
       "target_address": "0x0211c7d8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211d16c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_0211208c",
+      "addend": 0,
+      "target_module": "overlays(12,13,23,24,33,35,43,45,47,52,53,56)",
+      "target_address": "0x0211208c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211d170",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov056_021120a4",
+      "addend": 0,
+      "target_module": "overlays(12,13,23,24,33,35,43,45,47,52,53,56)",
+      "target_address": "0x021120a4"
     }
   ],
   "notes": [
@@ -602,6 +649,20 @@
           "start": "0x0211d8b4",
           "end": "0x0211d904",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0211c0b8",
+          "end": "0x0211c0c8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0211d16c",
+          "end": "0x0211d174",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

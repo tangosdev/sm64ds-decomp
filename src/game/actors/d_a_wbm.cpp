@@ -76,8 +76,7 @@ extern "C" {
 /* dExtSimpleModel_c files: the fragment's, which the other variants load too. */
 extern SharedFilePtr data_ov002_0210da38;
 /* The five fragments' launch angles. */
-extern u16 data_ov098_0213bf90[];
-
+extern const u16 data_ov098_0213bf90[6] = {0x0000, 0x3000, 0x6000, 0x9000, 0xc000, 0x0000};
 }
 
 /* The bomb's file-scope SharedFilePtr object, spelled through the same

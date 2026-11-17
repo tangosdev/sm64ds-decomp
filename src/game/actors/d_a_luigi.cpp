@@ -72,7 +72,7 @@
  * copies its two pointer-to-member descriptors into it at overlay load.
  * a90 is written full on reset and b60 is cleared; neither has a matched
  * reader. func_ov002_020e3e00 reads b6c and b64. */
-extern int data_ov055_02111a90;
+int data_ov055_02111a90 = kFadeFull;
 extern int data_ov055_02111b60;
 extern int data_ov055_02111b64;
 extern int data_ov055_02111b68;

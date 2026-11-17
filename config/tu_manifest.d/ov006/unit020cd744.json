@@ -32,14 +32,21 @@
       "end": "0x02133580"
     },
     {
-      "name": ".data",
+      "name": ".data.pmf_unit020cd744",
       "start": "0x0213b31c",
-      "end": "0x0213b3a4"
+      "end": "0x0213b3a4",
+      "input_section": ".data"
     },
     {
       "name": ".bss",
       "start": "0x02140808",
       "end": "0x02141640"
+    },
+    {
+      "name": ".data.sTrmpLineTex",
+      "start": "0x0213b3f4",
+      "end": "0x0213b814",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -577,6 +584,20 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler PMF literal for &TrmpItem::MotionSpin (0x020cdd08), emitted by TrmpItem::SetMotionSpin; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "sTrmpLinePltt",
+      "address": "0x0213b3f4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "Trampoline line palette bytes loaded by func_02045a50."
+    },
+    {
+      "symbol": "sTrmpLineTex",
+      "address": "0x0213b414",
+      "size": "0x400",
+      "binding": "STB_GLOBAL",
+      "evidence": "Trampoline line texture, 1024 bytes loaded by LoadTextureToVram."
     }
   ],
   "bss": [
@@ -972,7 +993,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.pmf_unit020cd744",
           "start": "0x0213b31c",
           "end": "0x0213b3a4",
           "differingBytes": 0,
@@ -983,6 +1004,13 @@
           "start": "0x02140808",
           "end": "0x02141640",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.sTrmpLineTex",
+          "start": "0x0213b3f4",
+          "end": "0x0213b814",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -2197,7 +2225,7 @@
       "target_address": "0x0212fc7c"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b31c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2207,7 +2235,7 @@
       "target_address": "0x020cd9b0"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b324",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2217,7 +2245,7 @@
       "target_address": "0x020cdf3c"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b32c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2227,7 +2255,7 @@
       "target_address": "0x020cd744"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b334",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2237,7 +2265,7 @@
       "target_address": "0x020cd744"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b33c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2247,7 +2275,7 @@
       "target_address": "0x020cd744"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b344",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2257,7 +2285,7 @@
       "target_address": "0x020cdf3c"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b34c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2267,7 +2295,7 @@
       "target_address": "0x020cdf1c"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b354",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2277,7 +2305,7 @@
       "target_address": "0x020cdea0"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b35c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2287,7 +2315,7 @@
       "target_address": "0x020cde4c"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b364",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2297,7 +2325,7 @@
       "target_address": "0x020cfa44"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b36c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2307,7 +2335,7 @@
       "target_address": "0x020cd864"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b374",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2317,7 +2345,7 @@
       "target_address": "0x020cf820"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b37c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2327,7 +2355,7 @@
       "target_address": "0x020cf790"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b384",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2337,7 +2365,7 @@
       "target_address": "0x020cdc8c"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b38c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2347,7 +2375,7 @@
       "target_address": "0x020cdc38"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b394",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2357,7 +2385,7 @@
       "target_address": "0x020cdaec"
     },
     {
-      "section": ".data",
+      "section": ".data.pmf_unit020cd744",
       "source": "0x0213b39c",
       "type": "R_ARM_ABS32",
       "kind": "load",

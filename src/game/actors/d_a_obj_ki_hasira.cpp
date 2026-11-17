@@ -79,7 +79,22 @@ struct HasiraCollisionFile : SharedFilePtr {
  * dBgW_KcMbg::SetFile is handed (ov016 .data). */
 extern HasiraModelFile RockPillar_ModelFile;
 extern HasiraCollisionFile RockPillar_ClsnFile;
-extern CLPS_Block data_ov016_02113cac;
+/* CLPS.h leaves the block incomplete. This one is a header plus one entry. */
+struct CLPS_Block {
+    u32 tag;
+    u32 hdr;
+    u32 w0;
+    u32 w1;
+    u32 rest[4];
+};
+
+CLPS_Block data_ov016_02113cac = {
+    0x53504c43,
+    0x00010008,
+    0x01000fc4,
+    0x000000ff,
+    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
 
 /* local extern: no shared header declares these. */
 extern "C" {

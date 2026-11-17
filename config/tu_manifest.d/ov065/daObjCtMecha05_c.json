@@ -32,6 +32,16 @@
       "name": ".bss",
       "start": "0x0211d904",
       "end": "0x0211d92c"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x0211c0c8",
+      "end": "0x0211c0d0"
+    },
+    {
+      "name": ".data",
+      "start": "0x0211d26c",
+      "end": "0x0211d270"
     }
   ],
   "functions": [
@@ -99,7 +109,24 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov065_0211d26c",
+      "address": "0x0211d26c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "four byte parameters"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov065_0211c0c8",
+      "address": "0x0211c0c8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "four frame counts"
+    }
+  ],
   "bss": [
     {
       "symbol": "TTC_MovingBar_ModelFile",
@@ -360,6 +387,20 @@
           "start": "0x0211d904",
           "end": "0x0211d92c",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x0211c0c8",
+          "end": "0x0211c0d0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0211d26c",
+          "end": "0x0211d270",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

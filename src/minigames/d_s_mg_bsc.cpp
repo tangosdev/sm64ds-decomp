@@ -21,6 +21,8 @@ enum d_s_mg_bsc_AssetId { ASSET_D_2D_MG_BIG_SMALL_NCL_BIN = 0x00b3 };
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 
+int sBscBigSmallNcgByLanguage[5] = {178, 180, 175, 176, 177};
+
 /* The state table: one pointer-to-member per state, indexed by mState.
  * Declared outside extern "C" it still links by its plain name. */
 typedef void (dScMgBSC_c::*StateHandler)();

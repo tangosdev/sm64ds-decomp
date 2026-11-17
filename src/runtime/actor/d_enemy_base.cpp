@@ -148,7 +148,7 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
    types.h's Vector3 -- which declares ~Vector3(){} and is therefore NOT a POD --
    for the local `v` costs nothing here, all 0x13c bytes reproduce, which is what
    lets dActor_c::Spawn take it by const reference as its real signature says. */
-extern u16 data_ov002_020ff014[]; /* coin actor IDs: 0x120, 0x121, 0x122 */
+extern const u16 data_ov002_020ff014[]; /* coin actor IDs: 0x120, 0x121, 0x122 */
 
 void dEnemyBase_c::SpawnCoin()
 {
@@ -219,7 +219,7 @@ void dEnemyBase_c::func_ov002_020ae9f8(dActor_c *, dBgCh_Actr *) {
 
 /* Knock-back strengths, indexed by the attacking player's param1. */
 extern "C" {
-extern u16 data_ov002_020ff01c[];
+extern const u16 data_ov002_020ff01c[];
 }
 
 /* Actor ID 0xbf is the player. Int-returning, as the 0/1 the ROM
@@ -760,3 +760,7 @@ DeathPMF data_ov002_0210dbc0[8] = {
     &dEnemyBase_c::func_ov002_020ae608, &dEnemyBase_c::func_ov002_020ae608,
     &dEnemyBase_c::func_ov002_020ae454, &dEnemyBase_c::func_ov002_020aea24,
 };
+
+/* Initialized data this file is the only complete referrer for. */
+const unsigned short data_ov002_020ff014[4] = {288, 289, 290, 0};
+const unsigned short data_ov002_020ff01c[6] = {150, 150, 400, 80, 400, 0};

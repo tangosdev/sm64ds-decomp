@@ -29,8 +29,6 @@
 
 extern "C" {
 
-extern SharedFilePtr *data_ov019_02112788[7];      /* the seven BCA handles */
-extern SharedFilePtr *data_ov019_0211277c[3];      /* the three BTP handles */
 extern unsigned char data_0209d684;                /* talk-script choice */
 
 extern void func_02038414(void *clsn);
@@ -84,6 +82,18 @@ PgRcerAnimFile gPenguinStandUpAnimationFile(ASSET_PENGUIN_STAND_UP_BCA);        
 PgRcerTexSeqFile gOV019PenguinAngryTextureSequenceFile(ASSET_PENGUIN_ANGRY_BTP); /* lost */
 PgRcerTexSeqFile gPenguinSliderTextureSequenceFile(ASSET_PENGUIN_SLIDER_BTP);    /* race */
 PgRcerTexSeqFile gOV019PenguinWait1TextureSequenceFile(ASSET_PENGUIN_WAIT1_BTP); /* neutral */
+
+extern SharedFilePtr *const data_ov019_0211277c[3] = {
+    &gOV019PenguinAngryTextureSequenceFile,
+    &gPenguinSliderTextureSequenceFile,
+    &gOV019PenguinWait1TextureSequenceFile,
+};
+
+extern SharedFilePtr *const data_ov019_02112788[7] = {
+    &gOV019PenguinWait1AnimationFile, &gOV019PenguinWalkAnimationFile, &gPenguinJumpStAnimationFile,
+    &gPenguinJumpEdAnimationFile,     &gPenguinDiveAnimationFile,      &gPenguinSliderAnimationFile,
+    &gPenguinStandUpAnimationFile,
+};
 
 /* The six states, {init, behavior}; SetState installs one. */
 daPgRcerState data_ov019_0211356c[6] = {

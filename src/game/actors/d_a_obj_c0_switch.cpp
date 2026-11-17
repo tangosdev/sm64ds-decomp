@@ -61,7 +61,13 @@ struct C0SwitchCollisionFilePtr : SharedFilePtr {
  * end of this file so the constructors do not enter .text. */
 extern C0SwitchModelFilePtr data_ov012_021124a8;
 extern C0SwitchCollisionFilePtr data_ov012_021124a0;
-extern CLPS_Block data_ov012_02111cd0;
+struct CLPS_Block {
+    u32 words[8];
+};
+
+CLPS_Block data_ov012_02111cd0 = {
+    0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+};
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */

@@ -37,6 +37,11 @@
       "name": ".data",
       "start": "0x02134ba0",
       "end": "0x02134bc4"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021344e8",
+      "end": "0x021344f4"
     }
   ],
   "functions": [
@@ -153,6 +158,15 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "per-variant shadow size Z {0x32000, 0x32000, 0x78000}, copied to the stack by InitResources"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov091_021344e8",
+      "address": "0x021344e8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three fixed-point rotate speeds"
     }
   ],
   "bss": [
@@ -451,6 +465,13 @@
           "section": ".data",
           "start": "0x02134ba0",
           "end": "0x02134bc4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021344e8",
+          "end": "0x021344f4",
           "differingBytes": 0,
           "firstDiff": null
         }

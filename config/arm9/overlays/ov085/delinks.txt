@@ -6,6 +6,7 @@
     .bss        start:0x02130480 end:0x02130880 kind:bss align:32
 src/game/actors/d_a_kinopio.cpp:
     complete
+    .rodata start:0x0212f27c end:0x0212f280
     .text start:0x02129020 end:0x02129d18
     .init start:0x0212f2a8 end:0x0212f3a0
     .ctor start:0x0212fdf0 end:0x0212fdf4
@@ -14,6 +15,7 @@ src/game/actors/d_a_kinopio.cpp:
 
 src/game/actors/d_a_peach.cpp:
     complete
+    .rodata start:0x0212f280 end:0x0212f29c
     .text start:0x02129d18 end:0x0212a6d4
     .init start:0x0212f3a0 end:0x0212f5ec
     .ctor start:0x0212fdf4 end:0x0212fdf8

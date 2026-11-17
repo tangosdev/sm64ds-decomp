@@ -4,6 +4,7 @@
   "source": "src/minigames/d_s_mini_gm.cpp",
   "promoted_source": "src/minigames/d_s_mini_gm.cpp",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20bfec0..0x20c2250, 26 function(s), from build/tu_map.json (tools/tu_map.py) plus the immediately following factory",
@@ -15,6 +16,22 @@
       "name": ".text",
       "start": "0x020bfec0",
       "end": "0x020c2250"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x020c2250",
+      "end": "0x020c2430"
+    },
+    {
+      "name": ".data.screenoffs",
+      "input_section": ".data",
+      "start": "0x020c2464",
+      "end": "0x020c2488"
+    },
+    {
+      "name": ".data",
+      "start": "0x020c24d8",
+      "end": "0x020c3020"
     }
   ],
   "functions": [
@@ -201,7 +218,588 @@
       "ordinal": 25
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "sMiniGmIconScreenOffsets",
+      "address": "0x020c2464",
+      "size": "0x24",
+      "evidence": "nine screen-map offsets; the next eight bytes are the vtable preamble"
+    },
+    {
+      "symbol": "sMiniGmRows",
+      "address": "0x020c24d8",
+      "size": "0x750",
+      "evidence": "36 MgEntry rows; sMiniGmSaveTable is the first sceneParam at +4"
+    },
+    {
+      "symbol": "sMiniGmGroupTabs",
+      "address": "0x020c2c28",
+      "size": "0x20",
+      "evidence": "eight tab sprite lists"
+    },
+    {
+      "symbol": "data_ov005_020c2c48",
+      "address": "0x020c2c48",
+      "size": "0x48",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2c90",
+      "address": "0x020c2c90",
+      "size": "0x48",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2cd8",
+      "address": "0x020c2cd8",
+      "size": "0x48",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2d20",
+      "address": "0x020c2d20",
+      "size": "0x48",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2d68",
+      "address": "0x020c2d68",
+      "size": "0x48",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2db0",
+      "address": "0x020c2db0",
+      "size": "0x48",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2df8",
+      "address": "0x020c2df8",
+      "size": "0x48",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2e40",
+      "address": "0x020c2e40",
+      "size": "0x48",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2e8c",
+      "address": "0x020c2e8c",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2e94",
+      "address": "0x020c2e94",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2e9c",
+      "address": "0x020c2e9c",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2eac",
+      "address": "0x020c2eac",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2eb4",
+      "address": "0x020c2eb4",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2ebc",
+      "address": "0x020c2ebc",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2ec4",
+      "address": "0x020c2ec4",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2ecc",
+      "address": "0x020c2ecc",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2ed4",
+      "address": "0x020c2ed4",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2edc",
+      "address": "0x020c2edc",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2ee4",
+      "address": "0x020c2ee4",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2eec",
+      "address": "0x020c2eec",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2ef4",
+      "address": "0x020c2ef4",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2f24",
+      "address": "0x020c2f24",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2f2c",
+      "address": "0x020c2f2c",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2f34",
+      "address": "0x020c2f34",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2f3c",
+      "address": "0x020c2f3c",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2f44",
+      "address": "0x020c2f44",
+      "size": "0x8",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2f68",
+      "address": "0x020c2f68",
+      "size": "0x10",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2f78",
+      "address": "0x020c2f78",
+      "size": "0x10",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2f8c",
+      "address": "0x020c2f8c",
+      "size": "0x40",
+      "evidence": "OAM list ending at attr3 0xffff"
+    },
+    {
+      "symbol": "data_ov005_020c2fd0",
+      "address": "0x020c2fd0",
+      "size": "0x50",
+      "evidence": "caption OAM list; 0xffff terminator then 16 zero bytes to the end of .data"
+    },
+    {
+      "symbol": "sMiniGmExitButton",
+      "address": "0x020c2e88",
+      "size": "0x4",
+      "evidence": "exit-button sprite list"
+    },
+    {
+      "symbol": "sMiniGmPageArrows",
+      "address": "0x020c2ea4",
+      "size": "0x8",
+      "evidence": "two page-arrow sprite lists"
+    },
+    {
+      "symbol": "sMiniGmDigits",
+      "address": "0x020c2efc",
+      "size": "0x28",
+      "evidence": "ten digit sprite lists"
+    },
+    {
+      "symbol": "sMiniGmRecordLabels",
+      "address": "0x020c2f4c",
+      "size": "0x14",
+      "evidence": "five record-label sprite lists"
+    },
+    {
+      "symbol": "sMiniGmNewBadge",
+      "address": "0x020c2f60",
+      "size": "0x8",
+      "evidence": "two new-badge sprite lists"
+    },
+    {
+      "symbol": "sMiniGmSavingCaption",
+      "address": "0x020c2f88",
+      "size": "0x4",
+      "evidence": "saving-caption sprite list"
+    },
+    {
+      "symbol": "sMiniGmCaption",
+      "address": "0x020c2fcc",
+      "size": "0x4",
+      "evidence": "caption sprite list"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "sMiniGmGroupBases",
+      "address": "0x020c2250",
+      "size": "0x10",
+      "evidence": "four group bases, indexed 0..3"
+    },
+    {
+      "symbol": "sMiniGmBgFiles",
+      "address": "0x020c2260",
+      "size": "0x20",
+      "evidence": "eight background file ids"
+    },
+    {
+      "symbol": "sMiniGmRecordPos",
+      "address": "0x020c2280",
+      "size": "0x48",
+      "evidence": "nine record icon positions"
+    },
+    {
+      "symbol": "sMiniGmBadgePos",
+      "address": "0x020c22c8",
+      "size": "0x48",
+      "evidence": "nine new-badge positions"
+    },
+    {
+      "symbol": "sMiniGmIconPalettes",
+      "address": "0x020c2310",
+      "size": "0x90",
+      "evidence": "36 icon palette file ids"
+    },
+    {
+      "symbol": "sMiniGmIconChars",
+      "address": "0x020c23a0",
+      "size": "0x90",
+      "evidence": "36 icon character file ids"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x020c2c28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2df8",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2df8"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2c2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2c90",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2c90"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2c30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2d68",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2d68"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2c34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2d20",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2d20"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2c38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2cd8",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2cd8"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2c3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2db0",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2db0"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2c40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2c48",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2c48"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2c44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2e40",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2e40"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2e88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2e8c",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2e8c"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2ea4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2e9c",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2e9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2ea8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2e94",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2e94"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2efc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2ef4",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2ef4"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2eec",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2eec"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2ee4",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2ee4"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2edc",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2edc"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2ed4",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2ed4"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2ecc",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2ecc"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2ec4",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2ec4"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2ebc",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2ebc"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2eb4",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2eb4"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2eac",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2eac"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2f44",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2f44"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2f3c",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2f3c"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2f34",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2f34"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2f2c",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2f2c"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2f24",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2f24"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2f68",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2f68"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2f78",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2f88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2f8c",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2f8c"
+    },
+    {
+      "section": ".data",
+      "source": "0x020c2fcc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov005_020c2fd0",
+      "addend": 0,
+      "target_module": "ov005",
+      "target_address": "0x020c2fd0"
+    }
+  ],
   "bss": [],
   "compiler_only_output": [
     {
@@ -377,7 +975,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov005-dScMiniGm_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -385,7 +983,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -401,19 +999,287 @@
           "end": "0x020c2250",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x020c2250",
+          "end": "0x020c2430",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.screenoffs",
+          "start": "0x020c2464",
+          "end": "0x020c2488",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x020c24d8",
+          "end": "0x020c3020",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 26
+          "LICENSED": 72
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".rodata",
+            "original": [
+              47,
+              50,
+              57,
+              58,
+              70,
+              71
+            ],
+            "desired": [
+              47,
+              50,
+              57,
+              58,
+              70,
+              71
+            ]
+          },
+          {
+            "section": ".data.screenoffs",
+            "original": [
+              53
+            ],
+            "desired": [
+              53
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              9,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              20,
+              21,
+              22,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              32,
+              33,
+              34,
+              45,
+              46,
+              48,
+              51,
+              54,
+              56,
+              59,
+              60,
+              61,
+              62,
+              63,
+              64,
+              65,
+              66,
+              67,
+              72
+            ],
+            "desired": [
+              72,
+              51,
+              59,
+              60,
+              61,
+              62,
+              63,
+              64,
+              65,
+              66,
+              7,
+              20,
+              26,
+              12,
+              22,
+              15,
+              16,
+              29,
+              27,
+              25,
+              14,
+              13,
+              11,
+              21,
+              28,
+              54,
+              34,
+              33,
+              32,
+              17,
+              24,
+              48,
+              30,
+              45,
+              46,
+              5,
+              56,
+              9,
+              67
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                7,
+                9,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                20,
+                21,
+                22,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                32,
+                33,
+                34,
+                45,
+                46,
+                48,
+                51,
+                54,
+                56,
+                59,
+                60,
+                61,
+                62,
+                63,
+                64,
+                65,
+                66,
+                67,
+                72
+              ],
+              "desired": [
+                72,
+                51,
+                59,
+                60,
+                61,
+                62,
+                63,
+                64,
+                65,
+                66,
+                7,
+                20,
+                26,
+                12,
+                22,
+                15,
+                16,
+                29,
+                27,
+                25,
+                14,
+                13,
+                11,
+                21,
+                28,
+                54,
+                34,
+                33,
+                32,
+                17,
+                24,
+                48,
+                30,
+                45,
+                46,
+                5,
+                56,
+                9,
+                67
+              ],
+              "slots": [
+                5,
+                7,
+                9,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                20,
+                21,
+                22,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                32,
+                33,
+                34,
+                45,
+                46,
+                48,
+                51,
+                54,
+                56,
+                59,
+                60,
+                61,
+                62,
+                63,
+                64,
+                65,
+                66,
+                67,
+                72
+              ]
+            }
+          ],
+          "symbolIndices": 39,
+          "sectionLinks": 0,
+          "sectionInfos": 8,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,

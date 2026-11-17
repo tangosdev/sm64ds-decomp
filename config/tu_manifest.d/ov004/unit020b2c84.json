@@ -31,8 +31,326 @@
     },
     {
       "name": ".data",
-      "start": "0x020bc6e8",
+      "start": "0x020bc27c",
       "end": "0x020bc7d0"
+    },
+    {
+      "name": ".data.data_ov004_020b9e00",
+      "input_section": ".data",
+      "start": "0x20b9e00",
+      "end": "0x20b9e50"
+    },
+    {
+      "name": ".data.MsgSuperEsperSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9e50",
+      "end": "0x20b9e54"
+    },
+    {
+      "name": ".data.data_ov004_020b9e54",
+      "input_section": ".data",
+      "start": "0x20b9e54",
+      "end": "0x20b9e70"
+    },
+    {
+      "name": ".data.MsgNoPairSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9e70",
+      "end": "0x20b9e74"
+    },
+    {
+      "name": ".data.data_ov004_020b9e74",
+      "input_section": ".data",
+      "start": "0x20b9e74",
+      "end": "0x20b9e78"
+    },
+    {
+      "name": ".data.MsgFullHouseSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9e78",
+      "end": "0x20b9e7c"
+    },
+    {
+      "name": ".data.MsgTimeOverSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9e7c",
+      "end": "0x20b9e80"
+    },
+    {
+      "name": ".data.data_ov004_020b9e80",
+      "input_section": ".data",
+      "start": "0x20b9e80",
+      "end": "0x20b9e8c"
+    },
+    {
+      "name": ".data.MsgQuitSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9e8c",
+      "end": "0x20b9e90"
+    },
+    {
+      "name": ".data.MsgYouWinSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9e90",
+      "end": "0x20b9e94"
+    },
+    {
+      "name": ".data.data_ov004_020b9e94",
+      "input_section": ".data",
+      "start": "0x20b9e94",
+      "end": "0x20b9e98"
+    },
+    {
+      "name": ".data.MsgRetrySpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9e98",
+      "end": "0x20b9e9c"
+    },
+    {
+      "name": ".data.data_ov004_020b9e9c",
+      "input_section": ".data",
+      "start": "0x20b9e9c",
+      "end": "0x20b9ea4"
+    },
+    {
+      "name": ".data.MsgGoalSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9ea4",
+      "end": "0x20b9ea8"
+    },
+    {
+      "name": ".data.MsgHateSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9ea8",
+      "end": "0x20b9eac"
+    },
+    {
+      "name": ".data.data_ov004_020b9eac",
+      "input_section": ".data",
+      "start": "0x20b9eac",
+      "end": "0x20b9eb8"
+    },
+    {
+      "name": ".data.MsgPerfectSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9eb8",
+      "end": "0x20b9ebc"
+    },
+    {
+      "name": ".data.MsgWhereSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9ebc",
+      "end": "0x20b9ec0"
+    },
+    {
+      "name": ".data.data_ov004_020b9ec0",
+      "input_section": ".data",
+      "start": "0x20b9ec0",
+      "end": "0x20b9ed4"
+    },
+    {
+      "name": ".data.MsgTooBadSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9ed4",
+      "end": "0x20b9ed8"
+    },
+    {
+      "name": ".data.data_ov004_020b9ed8",
+      "input_section": ".data",
+      "start": "0x20b9ed8",
+      "end": "0x20b9ee4"
+    },
+    {
+      "name": ".data.MsgLikeSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9ee4",
+      "end": "0x20b9ee8"
+    },
+    {
+      "name": ".data.MsgFiveCardSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9ee8",
+      "end": "0x20b9eec"
+    },
+    {
+      "name": ".data.data_ov004_020b9eec",
+      "input_section": ".data",
+      "start": "0x20b9eec",
+      "end": "0x20b9ef0"
+    },
+    {
+      "name": ".data.MsgLoveSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9ef0",
+      "end": "0x20b9ef4"
+    },
+    {
+      "name": ".data.data_ov004_020b9ef4",
+      "input_section": ".data",
+      "start": "0x20b9ef4",
+      "end": "0x20b9efc"
+    },
+    {
+      "name": ".data.MsgTwoPairSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9efc",
+      "end": "0x20b9f00"
+    },
+    {
+      "name": ".data.data_ov004_020b9f00",
+      "input_section": ".data",
+      "start": "0x20b9f00",
+      "end": "0x20b9f0c"
+    },
+    {
+      "name": ".data.MsgEsperSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9f0c",
+      "end": "0x20b9f10"
+    },
+    {
+      "name": ".data.data_ov004_020b9f10",
+      "input_section": ".data",
+      "start": "0x20b9f10",
+      "end": "0x20b9f2c"
+    },
+    {
+      "name": ".data.MsgLevelClearSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9f2c",
+      "end": "0x20b9f30"
+    },
+    {
+      "name": ".data.data_ov004_020b9f30",
+      "input_section": ".data",
+      "start": "0x20b9f30",
+      "end": "0x20b9f54"
+    },
+    {
+      "name": ".data.MsgGiveUpSprites",
+      "input_section": ".data",
+      "start": "0x20b9f54",
+      "end": "0x20b9f58"
+    },
+    {
+      "name": ".data.data_ov004_020b9f58",
+      "input_section": ".data",
+      "start": "0x20b9f58",
+      "end": "0x20b9f5c"
+    },
+    {
+      "name": ".data.MsgResultHiScoreSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9f5c",
+      "end": "0x20b9f60"
+    },
+    {
+      "name": ".data.MsgOnePairSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9f60",
+      "end": "0x20b9f64"
+    },
+    {
+      "name": ".data.data_ov004_020b9f64",
+      "input_section": ".data",
+      "start": "0x20b9f64",
+      "end": "0x20b9f78"
+    },
+    {
+      "name": ".data.MsgStartSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9f78",
+      "end": "0x20b9f7c"
+    },
+    {
+      "name": ".data.MsgDislikeSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9f7c",
+      "end": "0x20b9f80"
+    },
+    {
+      "name": ".data.data_ov004_020b9f80",
+      "input_section": ".data",
+      "start": "0x20b9f80",
+      "end": "0x20b9f88"
+    },
+    {
+      "name": ".data.MsgThreeCardSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9f88",
+      "end": "0x20b9f8c"
+    },
+    {
+      "name": ".data.data_ov004_020b9f8c",
+      "input_section": ".data",
+      "start": "0x20b9f8c",
+      "end": "0x20b9fa0"
+    },
+    {
+      "name": ".data.MsgLevelSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9fa0",
+      "end": "0x20b9fa4"
+    },
+    {
+      "name": ".data.data_ov004_020b9fa4",
+      "input_section": ".data",
+      "start": "0x20b9fa4",
+      "end": "0x20b9fc8"
+    },
+    {
+      "name": ".data.MsgFourCardSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9fc8",
+      "end": "0x20b9fcc"
+    },
+    {
+      "name": ".data.data_ov004_020b9fcc",
+      "input_section": ".data",
+      "start": "0x20b9fcc",
+      "end": "0x20b9fd8"
+    },
+    {
+      "name": ".data.MsgHiScoreSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9fd8",
+      "end": "0x20b9fdc"
+    },
+    {
+      "name": ".data.data_ov004_020b9fdc",
+      "input_section": ".data",
+      "start": "0x20b9fdc",
+      "end": "0x20b9ffc"
+    },
+    {
+      "name": ".data.MsgDrawSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20b9ffc",
+      "end": "0x20ba000"
+    },
+    {
+      "name": ".data.data_ov004_020ba000",
+      "input_section": ".data",
+      "start": "0x20ba000",
+      "end": "0x20ba010"
+    },
+    {
+      "name": ".data.MsgGameOverSpritesEnglish",
+      "input_section": ".data",
+      "start": "0x20ba010",
+      "end": "0x20ba014"
+    },
+    {
+      "name": ".data.data_ov004_020ba014",
+      "input_section": ".data",
+      "start": "0x20ba014",
+      "end": "0x20ba034"
+    },
+    {
+      "name": ".data.data_ov004_020ba034",
+      "input_section": ".data",
+      "start": "0x20ba034",
+      "end": "0x20bbf4c"
     },
     {
       "name": ".bss",
@@ -357,6 +675,2379 @@
       "size": "0xe8",
       "binding": "STB_GLOBAL",
       "evidence": "the 29-entry (29 x 8 = 0xe8) Entry table Mg_LoadBannerFiles copies into its stack frame: all zero but entry 1, { 0x140, &sMgMsgGiveUpSprites }. The cartridge's only reference to it is the load at 0x020b30a8, inside that function."
+    },
+    {
+      "symbol": "sMgBannerGfxSlotCharNo",
+      "address": "0x020bc27c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three OBJ character numbers, 0x380, 0x300 and 0x340"
+    },
+    {
+      "symbol": "sMgMsgWhereSpritesByLanguage",
+      "address": "0x20bc288",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgLikeSpritesByLanguage",
+      "address": "0x20bc29c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgLoveSpritesByLanguage",
+      "address": "0x20bc2b0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgDislikeSpritesByLanguage",
+      "address": "0x20bc2c4",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgEsperSpritesByLanguage",
+      "address": "0x20bc2d8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgSuperEsperSpritesByLanguage",
+      "address": "0x20bc2ec",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgGoalSpritesByLanguage",
+      "address": "0x20bc300",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgOnePairNcgByLanguage",
+      "address": "0x20bc314",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgTwoPairNcgByLanguage",
+      "address": "0x20bc328",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgFourCardNcgByLanguage",
+      "address": "0x20bc33c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgHateSpritesByLanguage",
+      "address": "0x20bc350",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgFiveCardNcgByLanguage",
+      "address": "0x20bc364",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgDrawNcgByLanguage",
+      "address": "0x20bc378",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgNoPairNcgByLanguage",
+      "address": "0x20bc38c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgTimeOverSpritesByLanguage",
+      "address": "0x20bc3a0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgGameOverNcgByLanguage",
+      "address": "0x20bc3b4",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgLevelClearNcgByLanguage",
+      "address": "0x20bc3c8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgHiScoreNcgByLanguage",
+      "address": "0x20bc3dc",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgPerfectNcgByLanguage",
+      "address": "0x20bc3f0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgResultHiScoreNcgByLanguage",
+      "address": "0x20bc404",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgQuitNcgByLanguage",
+      "address": "0x20bc418",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgRetryNcgByLanguage",
+      "address": "0x20bc42c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgLevelNcgByLanguage",
+      "address": "0x20bc440",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgTooBadNcgByLanguage",
+      "address": "0x20bc454",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgYouWinNcgByLanguage",
+      "address": "0x20bc468",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgWhereNcgByLanguage",
+      "address": "0x20bc47c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgLikeNcgByLanguage",
+      "address": "0x20bc490",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgLoveNcgByLanguage",
+      "address": "0x20bc4a4",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgDislikeNcgByLanguage",
+      "address": "0x20bc4b8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgEsperNcgByLanguage",
+      "address": "0x20bc4cc",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgSuperEsperNcgByLanguage",
+      "address": "0x20bc4e0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgGoalNcgByLanguage",
+      "address": "0x20bc4f4",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgNoPairSpritesByLanguage",
+      "address": "0x20bc508",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgOnePairSpritesByLanguage",
+      "address": "0x20bc51c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgTwoPairSpritesByLanguage",
+      "address": "0x20bc530",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgThreeCardSpritesByLanguage",
+      "address": "0x20bc544",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgFourCardSpritesByLanguage",
+      "address": "0x20bc558",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgFiveCardSpritesByLanguage",
+      "address": "0x20bc56c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgHateNcgByLanguage",
+      "address": "0x20bc580",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgDrawSpritesByLanguage",
+      "address": "0x20bc594",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgFullHouseSpritesByLanguage",
+      "address": "0x20bc5a8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgGameOverSpritesByLanguage",
+      "address": "0x20bc5bc",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgTimeOverNcgByLanguage",
+      "address": "0x20bc5d0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgLevelClearSpritesByLanguage",
+      "address": "0x20bc5e4",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgHiScoreSpritesByLanguage",
+      "address": "0x20bc5f8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgPerfectSpritesByLanguage",
+      "address": "0x20bc60c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgStartNcgByLanguage",
+      "address": "0x20bc620",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgResultHiScoreSpritesByLanguage",
+      "address": "0x20bc634",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgQuitSpritesByLanguage",
+      "address": "0x20bc648",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgRetrySpritesByLanguage",
+      "address": "0x20bc65c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgStartSpritesByLanguage",
+      "address": "0x20bc670",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgLevelSpritesByLanguage",
+      "address": "0x20bc684",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgTooBadSpritesByLanguage",
+      "address": "0x20bc698",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgYouWinSpritesByLanguage",
+      "address": "0x20bc6ac",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite words"
+    },
+    {
+      "symbol": "sMgMsgFullHouseNcgByLanguage",
+      "address": "0x20bc6c0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgThreeCardNcgByLanguage",
+      "address": "0x20bc6d4",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five file ids"
+    },
+    {
+      "symbol": "sMgMsgSuperEsperSpritesEnglish",
+      "address": "0x20b9e50",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgNoPairSpritesEnglish",
+      "address": "0x20b9e70",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgFullHouseSpritesEnglish",
+      "address": "0x20b9e78",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgTimeOverSpritesEnglish",
+      "address": "0x20b9e7c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgQuitSpritesEnglish",
+      "address": "0x20b9e8c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgYouWinSpritesEnglish",
+      "address": "0x20b9e90",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgRetrySpritesEnglish",
+      "address": "0x20b9e98",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgGoalSpritesEnglish",
+      "address": "0x20b9ea4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgHateSpritesEnglish",
+      "address": "0x20b9ea8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgPerfectSpritesEnglish",
+      "address": "0x20b9eb8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgWhereSpritesEnglish",
+      "address": "0x20b9ebc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgTooBadSpritesEnglish",
+      "address": "0x20b9ed4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgLikeSpritesEnglish",
+      "address": "0x20b9ee4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgFiveCardSpritesEnglish",
+      "address": "0x20b9ee8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgLoveSpritesEnglish",
+      "address": "0x20b9ef0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgTwoPairSpritesEnglish",
+      "address": "0x20b9efc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgEsperSpritesEnglish",
+      "address": "0x20b9f0c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgLevelClearSpritesEnglish",
+      "address": "0x20b9f2c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgGiveUpSprites",
+      "address": "0x20b9f54",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgResultHiScoreSpritesEnglish",
+      "address": "0x20b9f5c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgOnePairSpritesEnglish",
+      "address": "0x20b9f60",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgStartSpritesEnglish",
+      "address": "0x20b9f78",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgDislikeSpritesEnglish",
+      "address": "0x20b9f7c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgThreeCardSpritesEnglish",
+      "address": "0x20b9f88",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgLevelSpritesEnglish",
+      "address": "0x20b9fa0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgFourCardSpritesEnglish",
+      "address": "0x20b9fc8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgHiScoreSpritesEnglish",
+      "address": "0x20b9fd8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgDrawSpritesEnglish",
+      "address": "0x20b9ffc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "sMgMsgGameOverSpritesEnglish",
+      "address": "0x20ba010",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "address of the English sprite list"
+    },
+    {
+      "symbol": "data_ov004_020b9e00",
+      "address": "0x20b9e00",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba944"
+    },
+    {
+      "symbol": "data_ov004_020b9e04",
+      "address": "0x20b9e04",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba074"
+    },
+    {
+      "symbol": "data_ov004_020b9e08",
+      "address": "0x20b9e08",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba914"
+    },
+    {
+      "symbol": "data_ov004_020b9e0c",
+      "address": "0x20b9e0c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bae8c"
+    },
+    {
+      "symbol": "data_ov004_020b9e10",
+      "address": "0x20b9e10",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba5cc"
+    },
+    {
+      "symbol": "data_ov004_020b9e14",
+      "address": "0x20b9e14",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba974"
+    },
+    {
+      "symbol": "data_ov004_020b9e18",
+      "address": "0x20b9e18",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb5e4"
+    },
+    {
+      "symbol": "data_ov004_020b9e1c",
+      "address": "0x20b9e1c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba8e4"
+    },
+    {
+      "symbol": "data_ov004_020b9e20",
+      "address": "0x20b9e20",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bbb1c"
+    },
+    {
+      "symbol": "data_ov004_020b9e24",
+      "address": "0x20b9e24",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb9bc"
+    },
+    {
+      "symbol": "data_ov004_020b9e28",
+      "address": "0x20b9e28",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba2b4"
+    },
+    {
+      "symbol": "data_ov004_020b9e2c",
+      "address": "0x20b9e2c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba5a4"
+    },
+    {
+      "symbol": "data_ov004_020b9e30",
+      "address": "0x20b9e30",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20badac"
+    },
+    {
+      "symbol": "data_ov004_020b9e34",
+      "address": "0x20b9e34",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba2f4"
+    },
+    {
+      "symbol": "data_ov004_020b9e38",
+      "address": "0x20b9e38",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bac94"
+    },
+    {
+      "symbol": "data_ov004_020b9e3c",
+      "address": "0x20b9e3c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba884"
+    },
+    {
+      "symbol": "data_ov004_020b9e40",
+      "address": "0x20b9e40",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba8b4"
+    },
+    {
+      "symbol": "data_ov004_020b9e44",
+      "address": "0x20b9e44",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20baccc"
+    },
+    {
+      "symbol": "data_ov004_020b9e48",
+      "address": "0x20b9e48",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba57c"
+    },
+    {
+      "symbol": "data_ov004_020b9e4c",
+      "address": "0x20b9e4c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb50c"
+    },
+    {
+      "symbol": "data_ov004_020b9e54",
+      "address": "0x20b9e54",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba254"
+    },
+    {
+      "symbol": "data_ov004_020b9e58",
+      "address": "0x20b9e58",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba854"
+    },
+    {
+      "symbol": "data_ov004_020b9e5c",
+      "address": "0x20b9e5c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bad3c"
+    },
+    {
+      "symbol": "data_ov004_020b9e60",
+      "address": "0x20b9e60",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba2d4"
+    },
+    {
+      "symbol": "data_ov004_020b9e64",
+      "address": "0x20b9e64",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bba14"
+    },
+    {
+      "symbol": "data_ov004_020b9e68",
+      "address": "0x20b9e68",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20babb4"
+    },
+    {
+      "symbol": "data_ov004_020b9e6c",
+      "address": "0x20b9e6c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb75c"
+    },
+    {
+      "symbol": "data_ov004_020b9e74",
+      "address": "0x20b9e74",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba3d4"
+    },
+    {
+      "symbol": "data_ov004_020b9e80",
+      "address": "0x20b9e80",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba554"
+    },
+    {
+      "symbol": "data_ov004_020b9e84",
+      "address": "0x20b9e84",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba234"
+    },
+    {
+      "symbol": "data_ov004_020b9e88",
+      "address": "0x20b9e88",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba704"
+    },
+    {
+      "symbol": "data_ov004_020b9e94",
+      "address": "0x20b9e94",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb2ac"
+    },
+    {
+      "symbol": "data_ov004_020b9e9c",
+      "address": "0x20b9e9c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bac5c"
+    },
+    {
+      "symbol": "data_ov004_020b9ea0",
+      "address": "0x20b9ea0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bae54"
+    },
+    {
+      "symbol": "data_ov004_020b9eac",
+      "address": "0x20b9eac",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba154"
+    },
+    {
+      "symbol": "data_ov004_020b9eb0",
+      "address": "0x20b9eb0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb85c"
+    },
+    {
+      "symbol": "data_ov004_020b9eb4",
+      "address": "0x20b9eb4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb90c"
+    },
+    {
+      "symbol": "data_ov004_020b9ec0",
+      "address": "0x20b9ec0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba274"
+    },
+    {
+      "symbol": "data_ov004_020b9ec4",
+      "address": "0x20b9ec4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bbb7c"
+    },
+    {
+      "symbol": "data_ov004_020b9ec8",
+      "address": "0x20b9ec8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb964"
+    },
+    {
+      "symbol": "data_ov004_020b9ecc",
+      "address": "0x20b9ecc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba52c"
+    },
+    {
+      "symbol": "data_ov004_020b9ed0",
+      "address": "0x20b9ed0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20baf6c"
+    },
+    {
+      "symbol": "data_ov004_020b9ed8",
+      "address": "0x20b9ed8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb0ac"
+    },
+    {
+      "symbol": "data_ov004_020b9edc",
+      "address": "0x20b9edc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba7f4"
+    },
+    {
+      "symbol": "data_ov004_020b9ee0",
+      "address": "0x20b9ee0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb22c"
+    },
+    {
+      "symbol": "data_ov004_020b9eec",
+      "address": "0x20b9eec",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb36c"
+    },
+    {
+      "symbol": "data_ov004_020b9ef4",
+      "address": "0x20b9ef4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb32c"
+    },
+    {
+      "symbol": "data_ov004_020b9ef8",
+      "address": "0x20b9ef8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba094"
+    },
+    {
+      "symbol": "data_ov004_020b9f00",
+      "address": "0x20b9f00",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba9d4"
+    },
+    {
+      "symbol": "data_ov004_020b9f04",
+      "address": "0x20b9f04",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba504"
+    },
+    {
+      "symbol": "data_ov004_020b9f08",
+      "address": "0x20b9f08",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb47c"
+    },
+    {
+      "symbol": "data_ov004_020b9f10",
+      "address": "0x20b9f10",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba0f4"
+    },
+    {
+      "symbol": "data_ov004_020b9f14",
+      "address": "0x20b9f14",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20baa34"
+    },
+    {
+      "symbol": "data_ov004_020b9f18",
+      "address": "0x20b9f18",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bafec"
+    },
+    {
+      "symbol": "data_ov004_020b9f1c",
+      "address": "0x20b9f1c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba644"
+    },
+    {
+      "symbol": "data_ov004_020b9f20",
+      "address": "0x20b9f20",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20baa64"
+    },
+    {
+      "symbol": "data_ov004_020b9f24",
+      "address": "0x20b9f24",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bad74"
+    },
+    {
+      "symbol": "data_ov004_020b9f28",
+      "address": "0x20b9f28",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bbac4"
+    },
+    {
+      "symbol": "data_ov004_020b9f30",
+      "address": "0x20b9f30",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bbdec"
+    },
+    {
+      "symbol": "data_ov004_020b9f34",
+      "address": "0x20b9f34",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bad04"
+    },
+    {
+      "symbol": "data_ov004_020b9f38",
+      "address": "0x20b9f38",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bab0c"
+    },
+    {
+      "symbol": "data_ov004_020b9f3c",
+      "address": "0x20b9f3c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bade4"
+    },
+    {
+      "symbol": "data_ov004_020b9f40",
+      "address": "0x20b9f40",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20baa9c"
+    },
+    {
+      "symbol": "data_ov004_020b9f44",
+      "address": "0x20b9f44",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba9a4"
+    },
+    {
+      "symbol": "data_ov004_020b9f48",
+      "address": "0x20b9f48",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba114"
+    },
+    {
+      "symbol": "data_ov004_020b9f4c",
+      "address": "0x20b9f4c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba674"
+    },
+    {
+      "symbol": "data_ov004_020b9f50",
+      "address": "0x20b9f50",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bbe5c"
+    },
+    {
+      "symbol": "data_ov004_020b9f58",
+      "address": "0x20b9f58",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb62c"
+    },
+    {
+      "symbol": "data_ov004_020b9f64",
+      "address": "0x20b9f64",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bac24"
+    },
+    {
+      "symbol": "data_ov004_020b9f68",
+      "address": "0x20b9f68",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bbecc"
+    },
+    {
+      "symbol": "data_ov004_020b9f6c",
+      "address": "0x20b9f6c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bbcac"
+    },
+    {
+      "symbol": "data_ov004_020b9f70",
+      "address": "0x20b9f70",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20baad4"
+    },
+    {
+      "symbol": "data_ov004_020b9f74",
+      "address": "0x20b9f74",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bab7c"
+    },
+    {
+      "symbol": "data_ov004_020b9f80",
+      "address": "0x20b9f80",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba0d4"
+    },
+    {
+      "symbol": "data_ov004_020b9f84",
+      "address": "0x20b9f84",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba6a4"
+    },
+    {
+      "symbol": "data_ov004_020b9f8c",
+      "address": "0x20b9f8c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb12c"
+    },
+    {
+      "symbol": "data_ov004_020b9f90",
+      "address": "0x20b9f90",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb1ec"
+    },
+    {
+      "symbol": "data_ov004_020b9f94",
+      "address": "0x20b9f94",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb0ec"
+    },
+    {
+      "symbol": "data_ov004_020b9f98",
+      "address": "0x20b9f98",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bbd14"
+    },
+    {
+      "symbol": "data_ov004_020b9f9c",
+      "address": "0x20b9f9c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba394"
+    },
+    {
+      "symbol": "data_ov004_020b9fa4",
+      "address": "0x20b9fa4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb2ec"
+    },
+    {
+      "symbol": "data_ov004_020b9fa8",
+      "address": "0x20b9fa8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb6bc"
+    },
+    {
+      "symbol": "data_ov004_020b9fac",
+      "address": "0x20b9fac",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bbbdc"
+    },
+    {
+      "symbol": "data_ov004_020b9fb0",
+      "address": "0x20b9fb0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba194"
+    },
+    {
+      "symbol": "data_ov004_020b9fb4",
+      "address": "0x20b9fb4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20baa04"
+    },
+    {
+      "symbol": "data_ov004_020b9fb8",
+      "address": "0x20b9fb8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb8b4"
+    },
+    {
+      "symbol": "data_ov004_020b9fbc",
+      "address": "0x20b9fbc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba034"
+    },
+    {
+      "symbol": "data_ov004_020b9fc0",
+      "address": "0x20b9fc0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba794"
+    },
+    {
+      "symbol": "data_ov004_020b9fc4",
+      "address": "0x20b9fc4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba054"
+    },
+    {
+      "symbol": "data_ov004_020b9fcc",
+      "address": "0x20b9fcc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba1b4"
+    },
+    {
+      "symbol": "data_ov004_020b9fd0",
+      "address": "0x20b9fd0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba61c"
+    },
+    {
+      "symbol": "data_ov004_020b9fd4",
+      "address": "0x20b9fd4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bbd7c"
+    },
+    {
+      "symbol": "data_ov004_020b9fdc",
+      "address": "0x20b9fdc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20baf34"
+    },
+    {
+      "symbol": "data_ov004_020b9fe0",
+      "address": "0x20b9fe0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bae1c"
+    },
+    {
+      "symbol": "data_ov004_020b9fe4",
+      "address": "0x20b9fe4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba374"
+    },
+    {
+      "symbol": "data_ov004_020b9fe8",
+      "address": "0x20b9fe8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba314"
+    },
+    {
+      "symbol": "data_ov004_020b9fec",
+      "address": "0x20b9fec",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bafac"
+    },
+    {
+      "symbol": "data_ov004_020b9ff0",
+      "address": "0x20b9ff0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba294"
+    },
+    {
+      "symbol": "data_ov004_020b9ff4",
+      "address": "0x20b9ff4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba3f4"
+    },
+    {
+      "symbol": "data_ov004_020b9ff8",
+      "address": "0x20b9ff8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb7ac"
+    },
+    {
+      "symbol": "data_ov004_020ba000",
+      "address": "0x20ba000",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba6d4"
+    },
+    {
+      "symbol": "data_ov004_020ba004",
+      "address": "0x20ba004",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba3b4"
+    },
+    {
+      "symbol": "data_ov004_020ba008",
+      "address": "0x20ba008",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba0b4"
+    },
+    {
+      "symbol": "data_ov004_020ba00c",
+      "address": "0x20ba00c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20baefc"
+    },
+    {
+      "symbol": "data_ov004_020ba014",
+      "address": "0x20ba014",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20baec4"
+    },
+    {
+      "symbol": "data_ov004_020ba018",
+      "address": "0x20ba018",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bba6c"
+    },
+    {
+      "symbol": "data_ov004_020ba01c",
+      "address": "0x20ba01c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba334"
+    },
+    {
+      "symbol": "data_ov004_020ba020",
+      "address": "0x20ba020",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb804"
+    },
+    {
+      "symbol": "data_ov004_020ba024",
+      "address": "0x20ba024",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb3ec"
+    },
+    {
+      "symbol": "data_ov004_020ba028",
+      "address": "0x20ba028",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb26c"
+    },
+    {
+      "symbol": "data_ov004_020ba02c",
+      "address": "0x20ba02c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20bb4c4"
+    },
+    {
+      "symbol": "data_ov004_020ba030",
+      "address": "0x20ba030",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer cell holding the OAM sprite list at 0x20ba5f4"
+    },
+    {
+      "symbol": "data_ov004_020ba034",
+      "address": "0x20ba034",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba054",
+      "address": "0x20ba054",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba074",
+      "address": "0x20ba074",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba094",
+      "address": "0x20ba094",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba0b4",
+      "address": "0x20ba0b4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba0d4",
+      "address": "0x20ba0d4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba0f4",
+      "address": "0x20ba0f4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba114",
+      "address": "0x20ba114",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba134",
+      "address": "0x20ba134",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba154",
+      "address": "0x20ba154",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba174",
+      "address": "0x20ba174",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba194",
+      "address": "0x20ba194",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba1b4",
+      "address": "0x20ba1b4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba1d4",
+      "address": "0x20ba1d4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba1f4",
+      "address": "0x20ba1f4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba214",
+      "address": "0x20ba214",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba234",
+      "address": "0x20ba234",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba254",
+      "address": "0x20ba254",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba274",
+      "address": "0x20ba274",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba294",
+      "address": "0x20ba294",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba2b4",
+      "address": "0x20ba2b4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba2d4",
+      "address": "0x20ba2d4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba2f4",
+      "address": "0x20ba2f4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba314",
+      "address": "0x20ba314",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba334",
+      "address": "0x20ba334",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba354",
+      "address": "0x20ba354",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba374",
+      "address": "0x20ba374",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba394",
+      "address": "0x20ba394",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba3b4",
+      "address": "0x20ba3b4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba3d4",
+      "address": "0x20ba3d4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba3f4",
+      "address": "0x20ba3f4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 4 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba414",
+      "address": "0x20ba414",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba43c",
+      "address": "0x20ba43c",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba464",
+      "address": "0x20ba464",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba48c",
+      "address": "0x20ba48c",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba4b4",
+      "address": "0x20ba4b4",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba4dc",
+      "address": "0x20ba4dc",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba504",
+      "address": "0x20ba504",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba52c",
+      "address": "0x20ba52c",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba554",
+      "address": "0x20ba554",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba57c",
+      "address": "0x20ba57c",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba5a4",
+      "address": "0x20ba5a4",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba5cc",
+      "address": "0x20ba5cc",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba5f4",
+      "address": "0x20ba5f4",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba61c",
+      "address": "0x20ba61c",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 5 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba644",
+      "address": "0x20ba644",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba674",
+      "address": "0x20ba674",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba6a4",
+      "address": "0x20ba6a4",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba6d4",
+      "address": "0x20ba6d4",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba704",
+      "address": "0x20ba704",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba734",
+      "address": "0x20ba734",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba764",
+      "address": "0x20ba764",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba794",
+      "address": "0x20ba794",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba7c4",
+      "address": "0x20ba7c4",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba7f4",
+      "address": "0x20ba7f4",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba824",
+      "address": "0x20ba824",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba854",
+      "address": "0x20ba854",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba884",
+      "address": "0x20ba884",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba8b4",
+      "address": "0x20ba8b4",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba8e4",
+      "address": "0x20ba8e4",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba914",
+      "address": "0x20ba914",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba944",
+      "address": "0x20ba944",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba974",
+      "address": "0x20ba974",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba9a4",
+      "address": "0x20ba9a4",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020ba9d4",
+      "address": "0x20ba9d4",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020baa04",
+      "address": "0x20baa04",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020baa34",
+      "address": "0x20baa34",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 6 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020baa64",
+      "address": "0x20baa64",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020baa9c",
+      "address": "0x20baa9c",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020baad4",
+      "address": "0x20baad4",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bab0c",
+      "address": "0x20bab0c",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bab44",
+      "address": "0x20bab44",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bab7c",
+      "address": "0x20bab7c",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020babb4",
+      "address": "0x20babb4",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020babec",
+      "address": "0x20babec",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bac24",
+      "address": "0x20bac24",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bac5c",
+      "address": "0x20bac5c",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bac94",
+      "address": "0x20bac94",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020baccc",
+      "address": "0x20baccc",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bad04",
+      "address": "0x20bad04",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bad3c",
+      "address": "0x20bad3c",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bad74",
+      "address": "0x20bad74",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020badac",
+      "address": "0x20badac",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bade4",
+      "address": "0x20bade4",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bae1c",
+      "address": "0x20bae1c",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bae54",
+      "address": "0x20bae54",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bae8c",
+      "address": "0x20bae8c",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020baec4",
+      "address": "0x20baec4",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020baefc",
+      "address": "0x20baefc",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020baf34",
+      "address": "0x20baf34",
+      "size": "0x38",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 7 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020baf6c",
+      "address": "0x20baf6c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bafac",
+      "address": "0x20bafac",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bafec",
+      "address": "0x20bafec",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb02c",
+      "address": "0x20bb02c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb06c",
+      "address": "0x20bb06c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb0ac",
+      "address": "0x20bb0ac",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb0ec",
+      "address": "0x20bb0ec",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb12c",
+      "address": "0x20bb12c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb16c",
+      "address": "0x20bb16c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb1ac",
+      "address": "0x20bb1ac",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb1ec",
+      "address": "0x20bb1ec",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb22c",
+      "address": "0x20bb22c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb26c",
+      "address": "0x20bb26c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb2ac",
+      "address": "0x20bb2ac",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb2ec",
+      "address": "0x20bb2ec",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb32c",
+      "address": "0x20bb32c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb36c",
+      "address": "0x20bb36c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb3ac",
+      "address": "0x20bb3ac",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 8 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb3ec",
+      "address": "0x20bb3ec",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 9 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb434",
+      "address": "0x20bb434",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 9 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb47c",
+      "address": "0x20bb47c",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 9 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb4c4",
+      "address": "0x20bb4c4",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 9 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb50c",
+      "address": "0x20bb50c",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 9 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb554",
+      "address": "0x20bb554",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 9 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb59c",
+      "address": "0x20bb59c",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 9 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb5e4",
+      "address": "0x20bb5e4",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 9 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb62c",
+      "address": "0x20bb62c",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 9 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb674",
+      "address": "0x20bb674",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 9 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb6bc",
+      "address": "0x20bb6bc",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 10 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb70c",
+      "address": "0x20bb70c",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 10 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb75c",
+      "address": "0x20bb75c",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 10 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb7ac",
+      "address": "0x20bb7ac",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 11 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb804",
+      "address": "0x20bb804",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 11 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb85c",
+      "address": "0x20bb85c",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 11 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb8b4",
+      "address": "0x20bb8b4",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 11 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb90c",
+      "address": "0x20bb90c",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 11 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb964",
+      "address": "0x20bb964",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 11 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bb9bc",
+      "address": "0x20bb9bc",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 11 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bba14",
+      "address": "0x20bba14",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 11 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bba6c",
+      "address": "0x20bba6c",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 11 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bbac4",
+      "address": "0x20bbac4",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 11 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bbb1c",
+      "address": "0x20bbb1c",
+      "size": "0x60",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 12 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bbb7c",
+      "address": "0x20bbb7c",
+      "size": "0x60",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 12 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bbbdc",
+      "address": "0x20bbbdc",
+      "size": "0x68",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 13 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bbc44",
+      "address": "0x20bbc44",
+      "size": "0x68",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 13 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bbcac",
+      "address": "0x20bbcac",
+      "size": "0x68",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 13 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bbd14",
+      "address": "0x20bbd14",
+      "size": "0x68",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 13 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bbd7c",
+      "address": "0x20bbd7c",
+      "size": "0x70",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 14 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bbdec",
+      "address": "0x20bbdec",
+      "size": "0x70",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 14 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bbe5c",
+      "address": "0x20bbe5c",
+      "size": "0x70",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 14 records ending at the attr3 0xffff terminator"
+    },
+    {
+      "symbol": "data_ov004_020bbecc",
+      "address": "0x20bbecc",
+      "size": "0x80",
+      "binding": "STB_GLOBAL",
+      "evidence": "OAM sprite list, 16 records ending at the attr3 0xffff terminator"
     }
   ],
   "bss": [
@@ -460,7 +3151,8 @@
     "Text and the one template only: this unit's bss (0x020bf3e8..0x020bf9e4, including the static array at gMgBanners) stays ROM-owned and is reached by extern, as the one-function sources did; __sinit_ov004_020b955c stays its own enrolled source.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
     "2026-10-25 Vector2 adoption: Banner_StartWaveBurst and Banner_SetupZoomBurst each hand-built a function-local static (guard test, two stores, __register_global_object with NullDestructor_0203d47c, guard set). They are now `static Vector2 sBannerWaveFxPos(0, 0xc0)` / `sBannerZoomFxPos`, byte-identical once posA is computed y-first as before. The compiler owns the object, its guard and its registration node, so this unit's .bss claim now starts at 0x020bf3ec (was 0x020bf41c) and covers the six ov004 names there: each emitted name$N / _ZGVname$N / @N is renamed onto its configured name and made global, exactly as dMgState_c does for sEnterTable. The ROM's layout (both guards, both objects, then the Zoom node before the Wave node) is placed by address, not by object order. The statics and the new Vector2(x, y) constructor advance the counter by twenty ahead of gMgBanners, so the emitted __arraydtor$974 / @975 are renamed onto __arraydtor$954 (an owned_function row: the configured symbols.txt name stays) and @938. This TU's copy of ~Vector2 is a deadstrip-duplicate of NullDestructor_0203d47c. tubuild verify: 44/44 MATCH, objisolate clean, ROM-ascending -> TEXT-VERIFIED.",
-    "2026-11-08 (#821): the two burst statics sBannerWaveFxPos / sBannerZoomFxPos (and their Guard / DtorRec names) are renamed sBannerWaveFxGravity / sBannerZoomFxGravity: Mg_SpawnFx takes them as vecB, which MgFx::UpdateDrift adds to the velocity each frame. data_ov004_020bc27c, the {0x380, 0x300, 0x340} table Banner_Init copies to pick a graphics slot's first OBJ character number, is renamed sMgBannerGfxSlotCharNo."
+    "2026-11-08 (#821): the two burst statics sBannerWaveFxPos / sBannerZoomFxPos (and their Guard / DtorRec names) are renamed sBannerWaveFxGravity / sBannerZoomFxGravity: Mg_SpawnFx takes them as vecB, which MgFx::UpdateDrift adds to the velocity each frame. data_ov004_020bc27c, the {0x380, 0x300, 0x340} table Banner_Init copies to pick a graphics slot's first OBJ character number, is renamed sMgBannerGfxSlotCharNo.",
+    "2026-11-16 (data batch 01): the banner graphics this unit reached through imports are now part of the unit. 141 OamAttr sprite lists tile 0x020ba034..0x020bbf4c (995 records; each list ends at the record whose attr3 is 0xffff, the terminator Mg_CopySpriteList stops on) and the 141 pointer cells naming them tile 0x020b9e00..0x020ba034, the 29 *SpritesEnglish cells between the unnamed ones. The cells route to .data.data_ov004_<first cell> sections and the lists to one .data.data_ov004_020ba034 section; 112 new R_ARM_ABS32 cell->list relocations license the unnamed half (the English half already had them). The sMgMsg*SpritesByLanguage entries are now OamAttr ** -- addresses of the cells -- so Mg_LoadBannerFiles still copies *entry.sprites into sMgBannerSprites."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -472,16 +3164,30 @@
     "functions_declared": 44,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN8MgBannerC2Ev"
+        "_ZN8MgBannerC2Ev",
+        "_ZN7Vector2D1Ev"
       ],
       "deadstripped": [
+        "_ZN7Vector2D1Ev",
         "_ZN8MgBannerC2Ev"
       ],
       "droppedSections": [
-        80
+        548,
+        595
       ],
       "data": [],
-      "dataExternalized": []
+      "dataExternalized": [],
+      "canonicalDuplicates": [
+        {
+          "symbol": "_ZN7Vector2D1Ev",
+          "canonicalSymbol": "NullDestructor_0203d47c",
+          "module": "arm9",
+          "address": "0x0203d47c",
+          "size": 4,
+          "bodySha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": 0
+        }
+      ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -533,8 +3239,379 @@
         },
         {
           "section": ".data",
-          "start": "0x020bc6e8",
+          "start": "0x020bc27c",
           "end": "0x020bc7d0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9e00",
+          "start": "0x20b9e00",
+          "end": "0x20b9e50",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgSuperEsperSpritesEnglish",
+          "start": "0x20b9e50",
+          "end": "0x20b9e54",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9e54",
+          "start": "0x20b9e54",
+          "end": "0x20b9e70",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgNoPairSpritesEnglish",
+          "start": "0x20b9e70",
+          "end": "0x20b9e74",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9e74",
+          "start": "0x20b9e74",
+          "end": "0x20b9e78",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgFullHouseSpritesEnglish",
+          "start": "0x20b9e78",
+          "end": "0x20b9e7c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgTimeOverSpritesEnglish",
+          "start": "0x20b9e7c",
+          "end": "0x20b9e80",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9e80",
+          "start": "0x20b9e80",
+          "end": "0x20b9e8c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgQuitSpritesEnglish",
+          "start": "0x20b9e8c",
+          "end": "0x20b9e90",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgYouWinSpritesEnglish",
+          "start": "0x20b9e90",
+          "end": "0x20b9e94",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9e94",
+          "start": "0x20b9e94",
+          "end": "0x20b9e98",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgRetrySpritesEnglish",
+          "start": "0x20b9e98",
+          "end": "0x20b9e9c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9e9c",
+          "start": "0x20b9e9c",
+          "end": "0x20b9ea4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgGoalSpritesEnglish",
+          "start": "0x20b9ea4",
+          "end": "0x20b9ea8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgHateSpritesEnglish",
+          "start": "0x20b9ea8",
+          "end": "0x20b9eac",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9eac",
+          "start": "0x20b9eac",
+          "end": "0x20b9eb8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgPerfectSpritesEnglish",
+          "start": "0x20b9eb8",
+          "end": "0x20b9ebc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgWhereSpritesEnglish",
+          "start": "0x20b9ebc",
+          "end": "0x20b9ec0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9ec0",
+          "start": "0x20b9ec0",
+          "end": "0x20b9ed4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgTooBadSpritesEnglish",
+          "start": "0x20b9ed4",
+          "end": "0x20b9ed8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9ed8",
+          "start": "0x20b9ed8",
+          "end": "0x20b9ee4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgLikeSpritesEnglish",
+          "start": "0x20b9ee4",
+          "end": "0x20b9ee8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgFiveCardSpritesEnglish",
+          "start": "0x20b9ee8",
+          "end": "0x20b9eec",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9eec",
+          "start": "0x20b9eec",
+          "end": "0x20b9ef0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgLoveSpritesEnglish",
+          "start": "0x20b9ef0",
+          "end": "0x20b9ef4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9ef4",
+          "start": "0x20b9ef4",
+          "end": "0x20b9efc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgTwoPairSpritesEnglish",
+          "start": "0x20b9efc",
+          "end": "0x20b9f00",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9f00",
+          "start": "0x20b9f00",
+          "end": "0x20b9f0c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgEsperSpritesEnglish",
+          "start": "0x20b9f0c",
+          "end": "0x20b9f10",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9f10",
+          "start": "0x20b9f10",
+          "end": "0x20b9f2c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgLevelClearSpritesEnglish",
+          "start": "0x20b9f2c",
+          "end": "0x20b9f30",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9f30",
+          "start": "0x20b9f30",
+          "end": "0x20b9f54",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgGiveUpSprites",
+          "start": "0x20b9f54",
+          "end": "0x20b9f58",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9f58",
+          "start": "0x20b9f58",
+          "end": "0x20b9f5c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgResultHiScoreSpritesEnglish",
+          "start": "0x20b9f5c",
+          "end": "0x20b9f60",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgOnePairSpritesEnglish",
+          "start": "0x20b9f60",
+          "end": "0x20b9f64",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9f64",
+          "start": "0x20b9f64",
+          "end": "0x20b9f78",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgStartSpritesEnglish",
+          "start": "0x20b9f78",
+          "end": "0x20b9f7c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgDislikeSpritesEnglish",
+          "start": "0x20b9f7c",
+          "end": "0x20b9f80",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9f80",
+          "start": "0x20b9f80",
+          "end": "0x20b9f88",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgThreeCardSpritesEnglish",
+          "start": "0x20b9f88",
+          "end": "0x20b9f8c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9f8c",
+          "start": "0x20b9f8c",
+          "end": "0x20b9fa0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgLevelSpritesEnglish",
+          "start": "0x20b9fa0",
+          "end": "0x20b9fa4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9fa4",
+          "start": "0x20b9fa4",
+          "end": "0x20b9fc8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgFourCardSpritesEnglish",
+          "start": "0x20b9fc8",
+          "end": "0x20b9fcc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9fcc",
+          "start": "0x20b9fcc",
+          "end": "0x20b9fd8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgHiScoreSpritesEnglish",
+          "start": "0x20b9fd8",
+          "end": "0x20b9fdc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020b9fdc",
+          "start": "0x20b9fdc",
+          "end": "0x20b9ffc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgDrawSpritesEnglish",
+          "start": "0x20b9ffc",
+          "end": "0x20ba000",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020ba000",
+          "start": "0x20ba000",
+          "end": "0x20ba010",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.MsgGameOverSpritesEnglish",
+          "start": "0x20ba010",
+          "end": "0x20ba014",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020ba014",
+          "start": "0x20ba014",
+          "end": "0x20ba034",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov004_020ba034",
+          "start": "0x20ba034",
+          "end": "0x20bbf4c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -841,6 +3918,1696 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data.MsgSuperEsperSpritesEnglish",
+      "source": "0x20b9e50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb16c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb16c"
+    },
+    {
+      "section": ".data.MsgNoPairSpritesEnglish",
+      "source": "0x20b9e70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba1f4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba1f4"
+    },
+    {
+      "section": ".data.MsgFullHouseSpritesEnglish",
+      "source": "0x20b9e78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb554",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb554"
+    },
+    {
+      "section": ".data.MsgTimeOverSpritesEnglish",
+      "source": "0x20b9e7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb1ac",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb1ac"
+    },
+    {
+      "section": ".data.MsgQuitSpritesEnglish",
+      "source": "0x20b9e8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba214",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba214"
+    },
+    {
+      "section": ".data.MsgYouWinSpritesEnglish",
+      "source": "0x20b9e90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba734",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba734"
+    },
+    {
+      "section": ".data.MsgRetrySpritesEnglish",
+      "source": "0x20b9e98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb59c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb59c"
+    },
+    {
+      "section": ".data.MsgGoalSpritesEnglish",
+      "source": "0x20b9ea4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba134",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba134"
+    },
+    {
+      "section": ".data.MsgHateSpritesEnglish",
+      "source": "0x20b9ea8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba174",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba174"
+    },
+    {
+      "section": ".data.MsgPerfectSpritesEnglish",
+      "source": "0x20b9eb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020babec",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20babec"
+    },
+    {
+      "section": ".data.MsgWhereSpritesEnglish",
+      "source": "0x20b9ebc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bbc44",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bbc44"
+    },
+    {
+      "section": ".data.MsgTooBadSpritesEnglish",
+      "source": "0x20b9ed4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba824",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba824"
+    },
+    {
+      "section": ".data.MsgLikeSpritesEnglish",
+      "source": "0x20b9ee4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bab44",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bab44"
+    },
+    {
+      "section": ".data.MsgFiveCardSpritesEnglish",
+      "source": "0x20b9ee8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba464",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba464"
+    },
+    {
+      "section": ".data.MsgLoveSpritesEnglish",
+      "source": "0x20b9ef0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba1d4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba1d4"
+    },
+    {
+      "section": ".data.MsgTwoPairSpritesEnglish",
+      "source": "0x20b9efc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba764",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba764"
+    },
+    {
+      "section": ".data.MsgEsperSpritesEnglish",
+      "source": "0x20b9f0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba48c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba48c"
+    },
+    {
+      "section": ".data.MsgLevelClearSpritesEnglish",
+      "source": "0x20b9f2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba4b4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba4b4"
+    },
+    {
+      "section": ".data.MsgGiveUpSprites",
+      "source": "0x20b9f54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba7c4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba7c4"
+    },
+    {
+      "section": ".data.MsgResultHiScoreSpritesEnglish",
+      "source": "0x20b9f5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb434",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb434"
+    },
+    {
+      "section": ".data.MsgOnePairSpritesEnglish",
+      "source": "0x20b9f60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba43c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba43c"
+    },
+    {
+      "section": ".data.MsgStartSpritesEnglish",
+      "source": "0x20b9f78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba414",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba414"
+    },
+    {
+      "section": ".data.MsgDislikeSpritesEnglish",
+      "source": "0x20b9f7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb70c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb70c"
+    },
+    {
+      "section": ".data.MsgThreeCardSpritesEnglish",
+      "source": "0x20b9f88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb02c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb02c"
+    },
+    {
+      "section": ".data.MsgLevelSpritesEnglish",
+      "source": "0x20b9fa0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba4dc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba4dc"
+    },
+    {
+      "section": ".data.MsgFourCardSpritesEnglish",
+      "source": "0x20b9fc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb06c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb06c"
+    },
+    {
+      "section": ".data.MsgHiScoreSpritesEnglish",
+      "source": "0x20b9fd8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb674",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb674"
+    },
+    {
+      "section": ".data.MsgDrawSpritesEnglish",
+      "source": "0x20b9ffc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba354",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba354"
+    },
+    {
+      "section": ".data.MsgGameOverSpritesEnglish",
+      "source": "0x20ba010",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb3ac",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb3ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc288",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgWhereSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ebc"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc28c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f68",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f68"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc290",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f28",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f28"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc294",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9ec8",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ec8"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc298",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e64",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e64"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc29c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgLikeSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ee4"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e34",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e34"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9ec0",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ec0"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e28",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e28"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e10",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e10"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgLoveSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ef0"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba004",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba004"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fe8",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fe8"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba01c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba01c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fe4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fe4"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgDislikeSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e74",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e74"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9ff0",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ff0"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f9c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba008",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba008"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgEsperSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f0c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fa8",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fa8"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f14",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f14"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9ff8",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ff8"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba020",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba020"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgSuperEsperSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e50"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e4c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e4c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba018",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba018"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fd4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc2fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fb8",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fb8"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc300",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgGoalSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ea4"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc304",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f10",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f10"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc308",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f70",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f70"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc30c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f80",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f80"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc310",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fc0",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fc0"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc350",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgHateSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ea8"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc354",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fcc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fcc"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc358",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f48",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f48"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc35c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9eac",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9eac"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc360",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fb0",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fb0"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc3a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgTimeOverSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc3a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba028",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba028"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc3a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9eb4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9eb4"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc3ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f50",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f50"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc3b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9ec4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ec4"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc508",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgNoPairSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e70"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc50c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fc4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fc4"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc510",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9ff4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ff4"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc514",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f4c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f4c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc518",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9eb0",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9eb0"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc51c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgOnePairSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f60"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc520",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e40",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e40"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc524",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e58",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e58"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc528",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e80",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e80"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc52c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e3c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e3c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc530",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgTwoPairSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9efc"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc534",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e24",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e24"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc538",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e44",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e44"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc53c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e08",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e08"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc540",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e20",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e20"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc544",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgThreeCardSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f88"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc548",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e60",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e60"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc54c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e00",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e00"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc550",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f90",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f90"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc554",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e5c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e5c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc558",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgFourCardSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc55c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e14",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e14"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc560",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e2c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e2c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc564",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9ee0",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ee0"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc568",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e30",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e30"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc56c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgFiveCardSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ee8"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc570",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba014",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba014"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc574",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba030",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba030"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc578",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fd0",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fd0"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc57c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9ea0",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ea0"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc594",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgDrawSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ffc"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc598",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e0c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e0c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc59c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fe0",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fe0"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f6c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f44",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f44"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgFullHouseSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e78"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9ef8",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ef8"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fbc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fbc"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba02c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba02c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e04",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e04"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgGameOverSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba010"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9eec",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9eec"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e94",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e94"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fa4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fa4"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9ef4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ef4"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgLevelClearSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f2c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e54",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e54"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e38",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e38"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e18",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e18"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e1c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e1c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgHiScoreSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fd8"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc5fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fb4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fb4"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc600",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f98",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f98"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc604",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f58",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f58"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc608",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f00",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f00"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc60c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgPerfectSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9eb8"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc610",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f8c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f8c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc614",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f38",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f38"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc618",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9ed8",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ed8"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc61c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f94",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f94"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc634",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgResultHiScoreSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f5c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc638",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f20",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f20"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc63c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fac",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fac"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc640",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba024",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba024"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc644",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f1c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f1c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc648",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgQuitSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e8c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc64c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e48",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e48"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc650",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f74",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f74"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc654",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f64",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f64"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc658",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e84",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e84"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc65c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgRetrySpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e98"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc660",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba00c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba00c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc664",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f34",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f34"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc668",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f24",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f24"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc66c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f3c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f3c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc670",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgStartSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc674",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fec",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fec"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc678",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f08",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f08"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc67c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9ed0",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ed0"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc680",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f84",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f84"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc684",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgLevelSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fa0"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc688",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9ecc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ecc"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc68c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9edc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9edc"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc690",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f04",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f04"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc694",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e9c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc698",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgTooBadSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9ed4"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc69c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e6c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc6a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9fdc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9fdc"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc6a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e88",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e88"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc6a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9e68",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e68"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc6ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sMgMsgYouWinSpritesEnglish",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9e90"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc6b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f40",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f40"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc6b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba000",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba000"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc6b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f30",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f30"
+    },
+    {
+      "section": ".data",
+      "source": "0x20bc6bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020b9f18",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20b9f18"
+    },
     {
       "section": ".data",
       "source": "0x020bc6f4",
@@ -1570,6 +6337,1126 @@
       "addend": 0,
       "target_module": "ov004",
       "target_address": "0x020b955c"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba944",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba944"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba074",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba074"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba914",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba914"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bae8c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bae8c"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba5cc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba5cc"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba974",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba974"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb5e4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb5e4"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba8e4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba8e4"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bbb1c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bbb1c"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb9bc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb9bc"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba2b4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba2b4"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba5a4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba5a4"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020badac",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20badac"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba2f4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba2f4"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bac94",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bac94"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba884",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba884"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba8b4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba8b4"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020baccc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20baccc"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba57c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba57c"
+    },
+    {
+      "section": ".data.data_ov004_020b9e00",
+      "source": "0x20b9e4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb50c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb50c"
+    },
+    {
+      "section": ".data.data_ov004_020b9e54",
+      "source": "0x20b9e54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba254",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba254"
+    },
+    {
+      "section": ".data.data_ov004_020b9e54",
+      "source": "0x20b9e58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba854",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba854"
+    },
+    {
+      "section": ".data.data_ov004_020b9e54",
+      "source": "0x20b9e5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bad3c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bad3c"
+    },
+    {
+      "section": ".data.data_ov004_020b9e54",
+      "source": "0x20b9e60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba2d4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba2d4"
+    },
+    {
+      "section": ".data.data_ov004_020b9e54",
+      "source": "0x20b9e64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bba14",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bba14"
+    },
+    {
+      "section": ".data.data_ov004_020b9e54",
+      "source": "0x20b9e68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020babb4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20babb4"
+    },
+    {
+      "section": ".data.data_ov004_020b9e54",
+      "source": "0x20b9e6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb75c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb75c"
+    },
+    {
+      "section": ".data.data_ov004_020b9e74",
+      "source": "0x20b9e74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba3d4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba3d4"
+    },
+    {
+      "section": ".data.data_ov004_020b9e80",
+      "source": "0x20b9e80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba554",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba554"
+    },
+    {
+      "section": ".data.data_ov004_020b9e80",
+      "source": "0x20b9e84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba234",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba234"
+    },
+    {
+      "section": ".data.data_ov004_020b9e80",
+      "source": "0x20b9e88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba704",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba704"
+    },
+    {
+      "section": ".data.data_ov004_020b9e94",
+      "source": "0x20b9e94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb2ac",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb2ac"
+    },
+    {
+      "section": ".data.data_ov004_020b9e9c",
+      "source": "0x20b9e9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bac5c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bac5c"
+    },
+    {
+      "section": ".data.data_ov004_020b9e9c",
+      "source": "0x20b9ea0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bae54",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bae54"
+    },
+    {
+      "section": ".data.data_ov004_020b9eac",
+      "source": "0x20b9eac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba154",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba154"
+    },
+    {
+      "section": ".data.data_ov004_020b9eac",
+      "source": "0x20b9eb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb85c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb85c"
+    },
+    {
+      "section": ".data.data_ov004_020b9eac",
+      "source": "0x20b9eb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb90c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb90c"
+    },
+    {
+      "section": ".data.data_ov004_020b9ec0",
+      "source": "0x20b9ec0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba274",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba274"
+    },
+    {
+      "section": ".data.data_ov004_020b9ec0",
+      "source": "0x20b9ec4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bbb7c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bbb7c"
+    },
+    {
+      "section": ".data.data_ov004_020b9ec0",
+      "source": "0x20b9ec8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb964",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb964"
+    },
+    {
+      "section": ".data.data_ov004_020b9ec0",
+      "source": "0x20b9ecc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba52c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba52c"
+    },
+    {
+      "section": ".data.data_ov004_020b9ec0",
+      "source": "0x20b9ed0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020baf6c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20baf6c"
+    },
+    {
+      "section": ".data.data_ov004_020b9ed8",
+      "source": "0x20b9ed8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb0ac",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb0ac"
+    },
+    {
+      "section": ".data.data_ov004_020b9ed8",
+      "source": "0x20b9edc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba7f4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba7f4"
+    },
+    {
+      "section": ".data.data_ov004_020b9ed8",
+      "source": "0x20b9ee0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb22c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb22c"
+    },
+    {
+      "section": ".data.data_ov004_020b9eec",
+      "source": "0x20b9eec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb36c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb36c"
+    },
+    {
+      "section": ".data.data_ov004_020b9ef4",
+      "source": "0x20b9ef4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb32c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb32c"
+    },
+    {
+      "section": ".data.data_ov004_020b9ef4",
+      "source": "0x20b9ef8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba094",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba094"
+    },
+    {
+      "section": ".data.data_ov004_020b9f00",
+      "source": "0x20b9f00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba9d4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba9d4"
+    },
+    {
+      "section": ".data.data_ov004_020b9f00",
+      "source": "0x20b9f04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba504",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba504"
+    },
+    {
+      "section": ".data.data_ov004_020b9f00",
+      "source": "0x20b9f08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb47c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb47c"
+    },
+    {
+      "section": ".data.data_ov004_020b9f10",
+      "source": "0x20b9f10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba0f4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba0f4"
+    },
+    {
+      "section": ".data.data_ov004_020b9f10",
+      "source": "0x20b9f14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020baa34",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20baa34"
+    },
+    {
+      "section": ".data.data_ov004_020b9f10",
+      "source": "0x20b9f18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bafec",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bafec"
+    },
+    {
+      "section": ".data.data_ov004_020b9f10",
+      "source": "0x20b9f1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba644",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba644"
+    },
+    {
+      "section": ".data.data_ov004_020b9f10",
+      "source": "0x20b9f20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020baa64",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20baa64"
+    },
+    {
+      "section": ".data.data_ov004_020b9f10",
+      "source": "0x20b9f24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bad74",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bad74"
+    },
+    {
+      "section": ".data.data_ov004_020b9f10",
+      "source": "0x20b9f28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bbac4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bbac4"
+    },
+    {
+      "section": ".data.data_ov004_020b9f30",
+      "source": "0x20b9f30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bbdec",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bbdec"
+    },
+    {
+      "section": ".data.data_ov004_020b9f30",
+      "source": "0x20b9f34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bad04",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bad04"
+    },
+    {
+      "section": ".data.data_ov004_020b9f30",
+      "source": "0x20b9f38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bab0c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bab0c"
+    },
+    {
+      "section": ".data.data_ov004_020b9f30",
+      "source": "0x20b9f3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bade4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bade4"
+    },
+    {
+      "section": ".data.data_ov004_020b9f30",
+      "source": "0x20b9f40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020baa9c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20baa9c"
+    },
+    {
+      "section": ".data.data_ov004_020b9f30",
+      "source": "0x20b9f44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba9a4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba9a4"
+    },
+    {
+      "section": ".data.data_ov004_020b9f30",
+      "source": "0x20b9f48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba114",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba114"
+    },
+    {
+      "section": ".data.data_ov004_020b9f30",
+      "source": "0x20b9f4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba674",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba674"
+    },
+    {
+      "section": ".data.data_ov004_020b9f30",
+      "source": "0x20b9f50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bbe5c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bbe5c"
+    },
+    {
+      "section": ".data.data_ov004_020b9f58",
+      "source": "0x20b9f58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb62c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb62c"
+    },
+    {
+      "section": ".data.data_ov004_020b9f64",
+      "source": "0x20b9f64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bac24",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bac24"
+    },
+    {
+      "section": ".data.data_ov004_020b9f64",
+      "source": "0x20b9f68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bbecc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bbecc"
+    },
+    {
+      "section": ".data.data_ov004_020b9f64",
+      "source": "0x20b9f6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bbcac",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bbcac"
+    },
+    {
+      "section": ".data.data_ov004_020b9f64",
+      "source": "0x20b9f70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020baad4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20baad4"
+    },
+    {
+      "section": ".data.data_ov004_020b9f64",
+      "source": "0x20b9f74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bab7c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bab7c"
+    },
+    {
+      "section": ".data.data_ov004_020b9f80",
+      "source": "0x20b9f80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba0d4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba0d4"
+    },
+    {
+      "section": ".data.data_ov004_020b9f80",
+      "source": "0x20b9f84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba6a4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba6a4"
+    },
+    {
+      "section": ".data.data_ov004_020b9f8c",
+      "source": "0x20b9f8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb12c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb12c"
+    },
+    {
+      "section": ".data.data_ov004_020b9f8c",
+      "source": "0x20b9f90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb1ec",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb1ec"
+    },
+    {
+      "section": ".data.data_ov004_020b9f8c",
+      "source": "0x20b9f94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb0ec",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb0ec"
+    },
+    {
+      "section": ".data.data_ov004_020b9f8c",
+      "source": "0x20b9f98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bbd14",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bbd14"
+    },
+    {
+      "section": ".data.data_ov004_020b9f8c",
+      "source": "0x20b9f9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba394",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba394"
+    },
+    {
+      "section": ".data.data_ov004_020b9fa4",
+      "source": "0x20b9fa4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb2ec",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb2ec"
+    },
+    {
+      "section": ".data.data_ov004_020b9fa4",
+      "source": "0x20b9fa8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb6bc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb6bc"
+    },
+    {
+      "section": ".data.data_ov004_020b9fa4",
+      "source": "0x20b9fac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bbbdc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bbbdc"
+    },
+    {
+      "section": ".data.data_ov004_020b9fa4",
+      "source": "0x20b9fb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba194",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba194"
+    },
+    {
+      "section": ".data.data_ov004_020b9fa4",
+      "source": "0x20b9fb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020baa04",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20baa04"
+    },
+    {
+      "section": ".data.data_ov004_020b9fa4",
+      "source": "0x20b9fb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb8b4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb8b4"
+    },
+    {
+      "section": ".data.data_ov004_020b9fa4",
+      "source": "0x20b9fbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba034",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba034"
+    },
+    {
+      "section": ".data.data_ov004_020b9fa4",
+      "source": "0x20b9fc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba794",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba794"
+    },
+    {
+      "section": ".data.data_ov004_020b9fa4",
+      "source": "0x20b9fc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba054",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba054"
+    },
+    {
+      "section": ".data.data_ov004_020b9fcc",
+      "source": "0x20b9fcc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba1b4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba1b4"
+    },
+    {
+      "section": ".data.data_ov004_020b9fcc",
+      "source": "0x20b9fd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba61c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba61c"
+    },
+    {
+      "section": ".data.data_ov004_020b9fcc",
+      "source": "0x20b9fd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bbd7c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bbd7c"
+    },
+    {
+      "section": ".data.data_ov004_020b9fdc",
+      "source": "0x20b9fdc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020baf34",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20baf34"
+    },
+    {
+      "section": ".data.data_ov004_020b9fdc",
+      "source": "0x20b9fe0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bae1c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bae1c"
+    },
+    {
+      "section": ".data.data_ov004_020b9fdc",
+      "source": "0x20b9fe4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba374",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba374"
+    },
+    {
+      "section": ".data.data_ov004_020b9fdc",
+      "source": "0x20b9fe8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba314",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba314"
+    },
+    {
+      "section": ".data.data_ov004_020b9fdc",
+      "source": "0x20b9fec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bafac",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bafac"
+    },
+    {
+      "section": ".data.data_ov004_020b9fdc",
+      "source": "0x20b9ff0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba294",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba294"
+    },
+    {
+      "section": ".data.data_ov004_020b9fdc",
+      "source": "0x20b9ff4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba3f4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba3f4"
+    },
+    {
+      "section": ".data.data_ov004_020b9fdc",
+      "source": "0x20b9ff8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb7ac",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb7ac"
+    },
+    {
+      "section": ".data.data_ov004_020ba000",
+      "source": "0x20ba000",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba6d4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba6d4"
+    },
+    {
+      "section": ".data.data_ov004_020ba000",
+      "source": "0x20ba004",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba3b4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba3b4"
+    },
+    {
+      "section": ".data.data_ov004_020ba000",
+      "source": "0x20ba008",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba0b4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba0b4"
+    },
+    {
+      "section": ".data.data_ov004_020ba000",
+      "source": "0x20ba00c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020baefc",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20baefc"
+    },
+    {
+      "section": ".data.data_ov004_020ba014",
+      "source": "0x20ba014",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020baec4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20baec4"
+    },
+    {
+      "section": ".data.data_ov004_020ba014",
+      "source": "0x20ba018",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bba6c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bba6c"
+    },
+    {
+      "section": ".data.data_ov004_020ba014",
+      "source": "0x20ba01c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba334",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba334"
+    },
+    {
+      "section": ".data.data_ov004_020ba014",
+      "source": "0x20ba020",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb804",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb804"
+    },
+    {
+      "section": ".data.data_ov004_020ba014",
+      "source": "0x20ba024",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb3ec",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb3ec"
+    },
+    {
+      "section": ".data.data_ov004_020ba014",
+      "source": "0x20ba028",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb26c",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb26c"
+    },
+    {
+      "section": ".data.data_ov004_020ba014",
+      "source": "0x20ba02c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020bb4c4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20bb4c4"
+    },
+    {
+      "section": ".data.data_ov004_020ba014",
+      "source": "0x20ba030",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov004_020ba5f4",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x20ba5f4"
     }
   ]
 }

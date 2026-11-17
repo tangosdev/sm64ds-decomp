@@ -34,6 +34,11 @@
       "name": ".bss",
       "start": "0x02137898",
       "end": "0x02137940"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02136f68",
+      "end": "0x02136f80"
     }
   ],
   "functions": [
@@ -148,6 +153,22 @@
       "size": "0x00000030",
       "legacy_source": "src/d_a_udlift_udlift_teresa.c",
       "ordinal": 15
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov095_02136f68",
+      "address": "0x02136f68",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-variant model handles"
+    },
+    {
+      "symbol": "data_ov095_02136f74",
+      "address": "0x02136f74",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-variant collision handles"
     }
   ],
   "data": [],
@@ -374,6 +395,13 @@
           "start": "0x02137898",
           "end": "0x02137940",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02136f68",
+          "end": "0x02136f80",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -731,6 +759,66 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".rodata",
+      "source": "0x02136f68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThLiftModelFile",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x02137898"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02136f6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gCvUdLiftModelFile",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x021378a8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02136f70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gRcRift02ModelFile",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x021378c0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02136f74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gThLiftCollisionFile",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x021378b0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02136f78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gCvUdLiftCollisionFile",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x021378b8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02136f7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gRcRift02CollisionFile",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x021378a0"
+    },
     {
       "section": ".ctor",
       "source": "0x021373b8",

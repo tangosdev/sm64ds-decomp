@@ -37,7 +37,7 @@ extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov002_0210da18;
 
 /* Spawn heights above the tag, indexed by mActionIndex. */
-extern s32 data_ov002_020ff090[];
+extern const s32 data_ov002_020ff090[4] = {0x64000, 0x64000, 0xa000, 0x64000};
 
 /* PMF action table, indexed by mActionIndex. */
 typedef void (daObjBlockItemTag_c::*ItemTagAction)();

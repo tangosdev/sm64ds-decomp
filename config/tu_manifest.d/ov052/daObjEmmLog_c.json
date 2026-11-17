@@ -13,6 +13,11 @@
   ],
   "sections": [
     {
+      "name": ".data",
+      "start": "0x021124d4",
+      "end": "0x021124e0"
+    },
+    {
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x02111440"
@@ -84,7 +89,15 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov052_021124d4",
+      "address": "0x021124d4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Model, collision and CLPS pointers for the log."
+    }
+  ],
   "bss": [
     {
       "symbol": "gEmmLogModelFile",
@@ -223,6 +236,13 @@
         "firstDiff": null
       },
       "tuRanges": [
+        {
+          "section": ".data",
+          "start": "0x021124d4",
+          "end": "0x021124e0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
         {
           "section": ".text",
           "start": "0x021111a0",
@@ -498,6 +518,36 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x021124d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gEmmLogModelFile",
+      "addend": 0,
+      "target_module": "ov052",
+      "target_address": "0x02112680"
+    },
+    {
+      "section": ".data",
+      "source": "0x021124d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gEmmLogCollisionFile",
+      "addend": 0,
+      "target_module": "ov052",
+      "target_address": "0x02112688"
+    },
+    {
+      "section": ".data",
+      "source": "0x021124dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211ba2c",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211ba2c"
+    },
     {
       "section": ".init",
       "source": "0x02111b74",

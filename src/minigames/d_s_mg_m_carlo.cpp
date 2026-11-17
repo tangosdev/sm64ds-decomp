@@ -73,7 +73,9 @@ extern int sMCarloPayout;
 
 extern int sMCarloDeckSize;
 
-extern int sMCarloFaceCounts[8];
+int sMCarloFaceCounts[8] = {
+    10, 10, 10, 10, 10, 10, 10, 10,
+};
 /* the eight face weights */
 extern int data_020a0db0;
 

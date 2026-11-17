@@ -39,6 +39,54 @@
       "name": ".bss",
       "start": "0x02141774",
       "end": "0x021417b0"
+    },
+    {
+      "name": ".data.data_ov006_02134028",
+      "input_section": ".data",
+      "start": "0x02134028",
+      "end": "0x0213402c"
+    },
+    {
+      "name": ".data.data_ov006_0213402c",
+      "input_section": ".data",
+      "start": "0x0213402c",
+      "end": "0x0213406c"
+    },
+    {
+      "name": ".data.sCardHudSprites",
+      "input_section": ".data",
+      "start": "0x0213406c",
+      "end": "0x02134074"
+    },
+    {
+      "name": ".data.data_ov006_02134074",
+      "input_section": ".data",
+      "start": "0x02134074",
+      "end": "0x02134124"
+    },
+    {
+      "name": ".data.data_ov006_02134124",
+      "input_section": ".data",
+      "start": "0x02134124",
+      "end": "0x021341d4"
+    },
+    {
+      "name": ".data.data_ov006_021341d4",
+      "input_section": ".data",
+      "start": "0x021341d4",
+      "end": "0x021341dc"
+    },
+    {
+      "name": ".data.data_ov006_021341dc",
+      "input_section": ".data",
+      "start": "0x021341dc",
+      "end": "0x021341e4"
+    },
+    {
+      "name": ".data.data_ov006_021341e4",
+      "input_section": ".data",
+      "start": "0x021341e4",
+      "end": "0x021341ec"
     }
   ],
   "functions": [
@@ -302,7 +350,64 @@
       "ordinal": 37
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov006_02134028",
+      "address": "0x02134028",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_0213402c",
+      "address": "0x0213402c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "the card-table sprite list Render indexes by card kind; the last record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "sCardHudSprites",
+      "address": "0x0213406c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    },
+    {
+      "symbol": "data_ov006_02134074",
+      "address": "0x02134074",
+      "size": "0xb0",
+      "binding": "STB_GLOBAL",
+      "evidence": "first play-field sprite list sCardHudSprites[0] selects"
+    },
+    {
+      "symbol": "data_ov006_02134124",
+      "address": "0x02134124",
+      "size": "0xb0",
+      "binding": "STB_GLOBAL",
+      "evidence": "second play-field sprite list sCardHudSprites[1] selects"
+    },
+    {
+      "symbol": "data_ov006_021341d4",
+      "address": "0x021341d4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "single-sprite list that follows the play-field lists"
+    },
+    {
+      "symbol": "data_ov006_021341dc",
+      "address": "0x021341dc",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "single-sprite list that follows the play-field lists"
+    },
+    {
+      "symbol": "data_ov006_021341e4",
+      "address": "0x021341e4",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "single-sprite list that follows the play-field lists"
+    }
+  ],
   "bss": [
     {
       "symbol": "sCardObjSprites",
@@ -355,20 +460,25 @@
     "functions_matched": 37,
     "functions_declared": 37,
     "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
+      "requested": [
+        "_ZN12dMgCardObj_cD2Ev",
+        "_ZN12dMgCardObj_cD0Ev",
+        "_ZN17dMgDilarCardObj_cD2Ev",
+        "_ZN17dMgDilarCardObj_cD0Ev",
+        "_ZN19dScMgSingle3DBase_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN12dMgCardObj_cD0Ev",
+        "_ZN12dMgCardObj_cD2Ev",
+        "_ZN17dMgDilarCardObj_cD0Ev",
+        "_ZN17dMgDilarCardObj_cD2Ev",
+        "_ZN19dScMgSingle3DBase_cD2Ev"
+      ],
       "droppedSections": [
-        5,
-        6,
-        7,
         8,
         9,
         10,
         11,
-        12,
-        13,
-        14,
-        15,
         16,
         17,
         18,
@@ -387,7 +497,24 @@
         31,
         32,
         33,
-        34
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        42,
+        43,
+        50,
+        51,
+        52,
+        53,
+        56,
+        57,
+        58,
+        59,
+        112,
+        113
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -430,12 +557,13 @@
         "_ZTV11dScMgCard_c",
         "_ZTV12dMgCardObj_c",
         "_ZTV17dMgDilarCardObj_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -499,6 +627,62 @@
           "start": "0x02141774",
           "end": "0x021417b0",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.data_ov006_02134028",
+          "start": "0x02134028",
+          "end": "0x0213402c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_0213402c",
+          "start": "0x0213402c",
+          "end": "0x0213406c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sCardHudSprites",
+          "start": "0x0213406c",
+          "end": "0x02134074",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134074",
+          "start": "0x02134074",
+          "end": "0x02134124",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134124",
+          "start": "0x02134124",
+          "end": "0x021341d4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021341d4",
+          "start": "0x021341d4",
+          "end": "0x021341dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021341dc",
+          "start": "0x021341dc",
+          "end": "0x021341e4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_021341e4",
+          "start": "0x021341e4",
+          "end": "0x021341ec",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -866,6 +1050,36 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021300b0"
+    },
+    {
+      "section": ".data.data_ov006_02134028",
+      "source": "0x02134028",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_0213402c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213402c"
+    },
+    {
+      "section": ".data.sCardHudSprites",
+      "source": "0x02134070",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134124",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134124"
+    },
+    {
+      "section": ".data.sCardHudSprites",
+      "source": "0x0213406c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134074",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134074"
     }
   ]
 }

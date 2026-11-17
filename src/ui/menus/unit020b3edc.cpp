@@ -42,7 +42,7 @@ extern Ov007FileLoad data_ov007_02103368;
 extern Ov007FileRelease data_ov007_0210336c;
 extern void *data_ov007_02103370[];
 /* the file id each slot loads */
-extern u16 data_ov007_020d7584[];
+extern const u16 data_ov007_020d7584[];
 
 extern "C" void *func_ov007_020c3df4(const char *name, int size);
 extern "C" void DecompressLZ16(void *src, void *dst);
@@ -140,3 +140,9 @@ void func_ov007_020b3edc(int idx) {
     data_ov007_0210336c(file);
     data_ov007_02103370[idx] = 0;
 }
+
+extern const u16 data_ov007_020d7584[46] = {
+    65535, 646, 656, 649, 645,  640,   642,   651,   655,   643,   653,   648,   650, 626, 659, 660,
+    647,   641, 652, 657, 644,  654,   631,   658,   636,   627,   637,   628,   639, 630, 638, 629,
+    632,   633, 635, 634, 2054, 38926, 40973, 41997, 43021, 45069, 44045, 38919, 553, 554,
+};

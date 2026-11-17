@@ -66,7 +66,11 @@ u8 IsAreaShowing(int idx);
 
 extern WcMizuModelFilePtr daObjWc_Obj07_c_ModelFile;
 extern WcMizuCollisionFilePtr daObjWc_Obj07_c_ClsnFile;
-extern int data_ov029_02112b2c[];
+extern const int data_ov029_02112b2c[3] = {
+    0x0002d000,
+    0x003e8000,
+    0x00abe000,
+};
 extern BTA_File data_ov029_02112fb8;
 extern CLPS_Block data_ov029_02112fec;
 extern u8 data_0209f2c0;

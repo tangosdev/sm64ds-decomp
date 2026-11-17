@@ -71,9 +71,27 @@ extern DsnTextureSeqFileHandle gDosuneTextureSequenceFile;
    the pointer this leaf stores:
      +0x00 SharedFilePtr * BMD      +0x0c SharedFilePtr * BTP
      +0x04 SharedFilePtr * KCL      +0x10 shadow extent X
-     +0x08 CLPS block (not a file)  +0x14 shadow extent Z
-   The symbol stays the overlay's; this TU does not own the bytes. */
-extern DsnBaseFileTable data_ov091_02135138;
+     +0x08 CLPS block (not a file)  +0x14 shadow extent Z */
+/* Collision properties: the 'CLPS' tag, the 8-byte stride header with two
+ * entries, then the default entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+CLPS_Block data_ov091_02135100 = {
+    0x53504c43,
+    0x00020008,
+    {0x01001fc4, 0x000000ff, 0x01000fc4, 0x000000ff, 0xffffffff, 0xffffffff},
+};
+DsnBaseFileTable data_ov091_02135138 = {
+    &gDosuneModelFile,
+    &gDosuneCollisionFile,
+    &data_ov091_02135100,
+    &gDosuneTextureSequenceFile,
+    0x140000,
+    0xe6000,
+};
 
 /* The bank-3 sound veneer (src/engine/sound/Sound.cpp); no shared header. */
 void func_02012694(unsigned int id, const Vector3 *pos);

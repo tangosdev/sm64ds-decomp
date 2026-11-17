@@ -41,7 +41,26 @@ typedef char Km2FallClsnFileHandle_size_must_be_8[sizeof(Km2FallClsnFileHandle) 
 
 #include "ResourceDescriptor.h"
 
-extern ResourceDescriptor data_ov045_021130ac;
+extern Km2FallModelFilePtr gKm2KuzureModelFile;
+extern Km2FallClsnFileHandle gKm2KuzureCollisionFile;
+/* Collision properties: the 'CLPS' tag, the 8-byte stride header with one
+ * entry, then the default entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+CLPS_Block data_ov045_021125f0 = {
+    0x53504c43,
+    0x00010008,
+    {0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
+
+ResourceDescriptor data_ov045_021130ac = {
+    &gKm2KuzureModelFile,
+    &gKm2KuzureCollisionFile,
+    &data_ov045_021125f0,
+};
 
 daObjKm2_Fall_Block_c *daObjKm2_Fall_Block_c_classInit() {
     return new daObjKm2_Fall_Block_c();

@@ -39,6 +39,11 @@
       "name": ".bss",
       "start": "0x02142f94",
       "end": "0x02143004"
+    },
+    {
+      "name": ".data",
+      "start": "0x0213fe78",
+      "end": "0x0213fe8c"
     }
   ],
   "functions": [
@@ -183,7 +188,15 @@
       "ordinal": 19
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "sBscBigSmallNcgByLanguage",
+      "address": "0x0213fe78",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "initialized ROM object"
+    }
+  ],
   "bss": [
     {
       "symbol": "sBSCStateTable",
@@ -328,6 +341,13 @@
           "start": "0x02142f94",
           "end": "0x02143004",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x0213fe78",
+          "end": "0x0213fe8c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

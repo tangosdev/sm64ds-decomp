@@ -2,13 +2,18 @@
     .rodata     start:0x0213bf60 end:0x0213bf9c kind:rodata align:4
     .init       start:0x0213bf9c end:0x0213c33c kind:code align:4
     .ctor       start:0x0213c33c end:0x0213c34c kind:rodata align:4
-    .data       start:0x0213c360 end:0x0213c800 kind:data align:32
+    .data.blockHead start:0x0213c360 end:0x0213c4c8 kind:data align:32
+    .data.blockDesc start:0x0213c4c8 end:0x0213c4d4 kind:data align:4
+    .data       start:0x0213c4d4 end:0x0213c52c kind:data align:4
+    .data.blockVt start:0x0213c52c end:0x0213c5b4 kind:data align:4
+    .data.blockTail start:0x0213c5b4 end:0x0213c800 kind:data align:4
     .bss        start:0x0213c800 end:0x0213c960 kind:bss align:32
 src/game/actors/d_a_obj_yajirusi.cpp:
     complete
     .text start:0x02137be0 end:0x02138040
     .init start:0x0213bf9c end:0x0213c058
     .ctor start:0x0213c33c end:0x0213c340
+    .data.blockHead start:0x0213c380 end:0x0213c398
     .bss start:0x0213c800 end:0x0213c850
 
 src/game/actors/d_a_obj_block_s.cpp:
@@ -16,7 +21,9 @@ src/game/actors/d_a_obj_block_s.cpp:
     .text start:0x02138040 end:0x02139f70
     .init start:0x0213c058 end:0x0213c214
     .ctor start:0x0213c340 end:0x0213c344
+    .data.blockDesc start:0x0213c4c8 end:0x0213c4d4
     .data start:0x0213c4e0 end:0x0213c500
+    .data.blockVt start:0x0213c52c end:0x0213c5b4
     .bss start:0x0213c850 end:0x0213c8e8
 
 src/game/actors/d_a_obj_fall_block.cpp:
@@ -32,6 +39,7 @@ src/game/actors/d_a_cnn.cpp:
 
 src/game/actors/d_a_wbm.cpp:
     complete
+    .rodata start:0x0213bf90 end:0x0213bf9c
     .text start:0x0213b47c end:0x0213bf60
     .init start:0x0213c2b4 end:0x0213c33c
     .ctor start:0x0213c348 end:0x0213c34c

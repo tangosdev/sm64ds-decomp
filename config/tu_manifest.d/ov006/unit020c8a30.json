@@ -33,6 +33,132 @@
       "name": ".bss",
       "start": "0x021404c4",
       "end": "0x02140538"
+    },
+    {
+      "name": ".data.data_ov006_02134b54",
+      "input_section": ".data",
+      "start": "0x02134b54",
+      "end": "0x02134b60"
+    },
+    {
+      "name": ".data.data_ov006_02134b60",
+      "input_section": ".data",
+      "start": "0x02134b60",
+      "end": "0x02134b6c"
+    },
+    {
+      "name": ".data.data_ov006_02134b6c",
+      "input_section": ".data",
+      "start": "0x02134b6c",
+      "end": "0x02134b78"
+    },
+    {
+      "name": ".data.data_ov006_02134b78",
+      "input_section": ".data",
+      "start": "0x02134b78",
+      "end": "0x02134b84"
+    },
+    {
+      "name": ".data.data_ov006_02134b84",
+      "input_section": ".data",
+      "start": "0x02134b84",
+      "end": "0x02134b90"
+    },
+    {
+      "name": ".data.data_ov006_02134b90",
+      "input_section": ".data",
+      "start": "0x02134b90",
+      "end": "0x02134ba8"
+    },
+    {
+      "name": ".data.data_ov006_02134ba8",
+      "input_section": ".data",
+      "start": "0x02134ba8",
+      "end": "0x02134bc0"
+    },
+    {
+      "name": ".data.data_ov006_02134bc0",
+      "input_section": ".data",
+      "start": "0x02134bc0",
+      "end": "0x02134bd8"
+    },
+    {
+      "name": ".data.data_ov006_02134bd8",
+      "input_section": ".data",
+      "start": "0x02134bd8",
+      "end": "0x02134bf0"
+    },
+    {
+      "name": ".data.data_ov006_02134bf0",
+      "input_section": ".data",
+      "start": "0x02134bf0",
+      "end": "0x02134c08"
+    },
+    {
+      "name": ".data.data_ov006_02134c08",
+      "input_section": ".data",
+      "start": "0x02134c08",
+      "end": "0x02134c20"
+    },
+    {
+      "name": ".data.data_ov006_02134c20",
+      "input_section": ".data",
+      "start": "0x02134c20",
+      "end": "0x02134c38"
+    },
+    {
+      "name": ".data.data_ov006_02134c38",
+      "input_section": ".data",
+      "start": "0x02134c38",
+      "end": "0x02134c50"
+    },
+    {
+      "name": ".data.data_ov006_02134c50",
+      "input_section": ".data",
+      "start": "0x02134c50",
+      "end": "0x02134c68"
+    },
+    {
+      "name": ".data.data_ov006_02134c68",
+      "input_section": ".data",
+      "start": "0x02134c68",
+      "end": "0x02134c80"
+    },
+    {
+      "name": ".data.data_ov006_02134c80",
+      "input_section": ".data",
+      "start": "0x02134c80",
+      "end": "0x02134c98"
+    },
+    {
+      "name": ".data.data_ov006_02134c98",
+      "input_section": ".data",
+      "start": "0x02134c98",
+      "end": "0x02134cb0"
+    },
+    {
+      "name": ".data.data_ov006_02134cb0",
+      "input_section": ".data",
+      "start": "0x02134cb0",
+      "end": "0x02134cc8"
+    },
+    {
+      "name": ".data.data_ov006_02134cc8",
+      "input_section": ".data",
+      "start": "0x02134cc8",
+      "end": "0x02134ce0"
+    },
+    {
+      "name": ".data.data_ov006_02134ce0",
+      "input_section": ".data",
+      "start": "0x02134ce0",
+      "end": "0x02134cf8"
+    },
+    {
+      "name": ".data.sPuffSprites",
+      "input_section": ".data",
+      "start": "0x0213b0d8",
+      "end": "0x0213b0ec"
     }
   ],
   "functions": [
@@ -107,7 +233,155 @@
       "ordinal": 9
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov006_02134b54",
+      "address": "0x02134b54",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "language table 0: three sprite-list pointers, one per Puff slot; Puff::Draw indexes sPuffSprites[GetGameLanguage()][mIndex] into it"
+    },
+    {
+      "symbol": "data_ov006_02134b60",
+      "address": "0x02134b60",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "language table 1: three sprite-list pointers, one per Puff slot; Puff::Draw indexes sPuffSprites[GetGameLanguage()][mIndex] into it"
+    },
+    {
+      "symbol": "data_ov006_02134b6c",
+      "address": "0x02134b6c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "language table 2: three sprite-list pointers, one per Puff slot; Puff::Draw indexes sPuffSprites[GetGameLanguage()][mIndex] into it"
+    },
+    {
+      "symbol": "data_ov006_02134b78",
+      "address": "0x02134b78",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "language table 3: three sprite-list pointers, one per Puff slot; Puff::Draw indexes sPuffSprites[GetGameLanguage()][mIndex] into it"
+    },
+    {
+      "symbol": "data_ov006_02134b84",
+      "address": "0x02134b84",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "language table 4: three sprite-list pointers, one per Puff slot; Puff::Draw indexes sPuffSprites[GetGameLanguage()][mIndex] into it"
+    },
+    {
+      "symbol": "data_ov006_02134b90",
+      "address": "0x02134b90",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134ba8",
+      "address": "0x02134ba8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134bc0",
+      "address": "0x02134bc0",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134bd8",
+      "address": "0x02134bd8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134bf0",
+      "address": "0x02134bf0",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134c08",
+      "address": "0x02134c08",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134c20",
+      "address": "0x02134c20",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134c38",
+      "address": "0x02134c38",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134c50",
+      "address": "0x02134c50",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134c68",
+      "address": "0x02134c68",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134c80",
+      "address": "0x02134c80",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134c98",
+      "address": "0x02134c98",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134cb0",
+      "address": "0x02134cb0",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134cc8",
+      "address": "0x02134cc8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "data_ov006_02134ce0",
+      "address": "0x02134ce0",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "one language slot's three sprite records; the third record's attr3 is 0xffff"
+    },
+    {
+      "symbol": "sPuffSprites",
+      "address": "0x0213b0d8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five language sprite tables; Puff::Draw indexes sPuffSprites[GetGameLanguage()][mIndex]"
+    }
+  ],
   "bss": [
     {
       "symbol": "sPuffNextIndex",
@@ -159,7 +433,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -209,6 +483,153 @@
           "start": "0x021404c4",
           "end": "0x02140538",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.data_ov006_02134b54",
+          "start": "0x02134b54",
+          "end": "0x02134b60",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134b60",
+          "start": "0x02134b60",
+          "end": "0x02134b6c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134b6c",
+          "start": "0x02134b6c",
+          "end": "0x02134b78",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134b78",
+          "start": "0x02134b78",
+          "end": "0x02134b84",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134b84",
+          "start": "0x02134b84",
+          "end": "0x02134b90",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134b90",
+          "start": "0x02134b90",
+          "end": "0x02134ba8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134ba8",
+          "start": "0x02134ba8",
+          "end": "0x02134bc0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134bc0",
+          "start": "0x02134bc0",
+          "end": "0x02134bd8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134bd8",
+          "start": "0x02134bd8",
+          "end": "0x02134bf0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134bf0",
+          "start": "0x02134bf0",
+          "end": "0x02134c08",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134c08",
+          "start": "0x02134c08",
+          "end": "0x02134c20",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134c20",
+          "start": "0x02134c20",
+          "end": "0x02134c38",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134c38",
+          "start": "0x02134c38",
+          "end": "0x02134c50",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134c50",
+          "start": "0x02134c50",
+          "end": "0x02134c68",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134c68",
+          "start": "0x02134c68",
+          "end": "0x02134c80",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134c80",
+          "start": "0x02134c80",
+          "end": "0x02134c98",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134c98",
+          "start": "0x02134c98",
+          "end": "0x02134cb0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134cb0",
+          "start": "0x02134cb0",
+          "end": "0x02134cc8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134cc8",
+          "start": "0x02134cc8",
+          "end": "0x02134ce0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.data_ov006_02134ce0",
+          "start": "0x02134ce0",
+          "end": "0x02134cf8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.sPuffSprites",
+          "start": "0x0213b0d8",
+          "end": "0x0213b0ec",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -416,6 +837,206 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x0212f660"
+    },
+    {
+      "section": ".data.sPuffSprites",
+      "source": "0x0213b0e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134b54",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134b54"
+    },
+    {
+      "section": ".data.sPuffSprites",
+      "source": "0x0213b0e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134b60",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134b60"
+    },
+    {
+      "section": ".data.sPuffSprites",
+      "source": "0x0213b0e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134b84",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134b84"
+    },
+    {
+      "section": ".data.sPuffSprites",
+      "source": "0x0213b0dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134b78",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134b78"
+    },
+    {
+      "section": ".data.sPuffSprites",
+      "source": "0x0213b0d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134b6c",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134b6c"
+    },
+    {
+      "section": ".data.data_ov006_02134b54",
+      "source": "0x02134b54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134cc8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134cc8"
+    },
+    {
+      "section": ".data.data_ov006_02134b54",
+      "source": "0x02134b58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134bc0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134bc0"
+    },
+    {
+      "section": ".data.data_ov006_02134b54",
+      "source": "0x02134b5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134ce0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134ce0"
+    },
+    {
+      "section": ".data.data_ov006_02134b60",
+      "source": "0x02134b60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134c98",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134c98"
+    },
+    {
+      "section": ".data.data_ov006_02134b60",
+      "source": "0x02134b64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134b90",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134b90"
+    },
+    {
+      "section": ".data.data_ov006_02134b60",
+      "source": "0x02134b68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134ba8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134ba8"
+    },
+    {
+      "section": ".data.data_ov006_02134b6c",
+      "source": "0x02134b6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134bf0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134bf0"
+    },
+    {
+      "section": ".data.data_ov006_02134b6c",
+      "source": "0x02134b70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134cb0",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134cb0"
+    },
+    {
+      "section": ".data.data_ov006_02134b6c",
+      "source": "0x02134b74",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134c68",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134c68"
+    },
+    {
+      "section": ".data.data_ov006_02134b78",
+      "source": "0x02134b78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134c80",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134c80"
+    },
+    {
+      "section": ".data.data_ov006_02134b78",
+      "source": "0x02134b7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134c50",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134c50"
+    },
+    {
+      "section": ".data.data_ov006_02134b78",
+      "source": "0x02134b80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134c38",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134c38"
+    },
+    {
+      "section": ".data.data_ov006_02134b84",
+      "source": "0x02134b84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134c08",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134c08"
+    },
+    {
+      "section": ".data.data_ov006_02134b84",
+      "source": "0x02134b88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134bd8",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134bd8"
+    },
+    {
+      "section": ".data.data_ov006_02134b84",
+      "source": "0x02134b8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov006_02134c20",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x02134c20"
     }
   ]
 }

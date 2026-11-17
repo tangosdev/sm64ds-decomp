@@ -72,13 +72,14 @@ struct NknkAnimationFileHandle : SharedFilePtr {
     ~NknkAnimationFileHandle();
 };
 
-extern NknkAnimationFileHandle *data_ov062_0211cee8[];
-extern int data_ov062_0211cf0c[];
+extern NknkAnimationFileHandle *const data_ov062_0211cee8[9];
+extern const int data_ov062_0211cf0c[9];
 extern "C" int RandomIntInternal(int *seed);
 
-extern SharedFilePtr* data_ov062_0211ced8[2];
-extern SharedFilePtr* data_ov062_0211cee0[2];
-
+extern SharedFilePtr *const data_ov062_0211ced8[2];
+extern SharedFilePtr *const data_ov062_0211cee0[2];
+extern SharedFilePtr data_ov002_0210da18;
+extern SharedFilePtr data_ov002_0210da20;
 
 int SurfaceInfo_TestFlag0x20(int *p); /* CLPS bit 0x20: water */
 
@@ -1073,3 +1074,21 @@ NknkAnimationFileHandle gNokonokoWait2AnimationFile(ASSET_NOKONOKO_WAIT2_BCA);
 NknkAnimationFileHandle gNokonokoDiveStAnimationFile(ASSET_NOKONOKO_DIVE_ST_BCA);
 NknkAnimationFileHandle gNokonokoDiveAnimationFile(ASSET_NOKONOKO_DIVE_BCA);
 NknkAnimationFileHandle gNokonokoDiveEdAnimationFile(ASSET_NOKONOKO_DIVE_ED_BCA);
+
+extern SharedFilePtr *const data_ov062_0211ced8[2] = {
+    &gNokonokoModelFile,
+    &gNokonokoRedModelFile,
+};
+extern SharedFilePtr *const data_ov062_0211cee0[2] = {
+    &data_ov002_0210da18,
+    &data_ov002_0210da20,
+};
+extern NknkAnimationFileHandle *const data_ov062_0211cee8[9] = {
+    &gNokonokoWalkStAnimationFile, &gNokonokoWalkAnimationFile,  &gNokonokoWalkEdAnimationFile,
+    &gNokonokoRunAnimationFile,    &gNokonokoWait1AnimationFile, &gNokonokoWait2AnimationFile,
+    &gNokonokoDiveStAnimationFile, &gNokonokoDiveAnimationFile,  &gNokonokoDiveEdAnimationFile,
+};
+extern const int data_ov062_0211cf0c[9] = {
+    0x40000000, 0x00000000, 0x40000000, 0x00000000, 0x00000000,
+    0x00000000, 0x40000000, 0x40000000, 0x40000000,
+};

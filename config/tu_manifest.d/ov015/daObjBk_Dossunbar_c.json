@@ -28,6 +28,24 @@
       "end": "0x0211341c"
     },
     {
+      "name": ".data.dos_clps0",
+      "input_section": ".data",
+      "start": "0x021135b4",
+      "end": "0x021135d4"
+    },
+    {
+      "name": ".data.dos_clps1",
+      "input_section": ".data",
+      "start": "0x02113634",
+      "end": "0x02113654"
+    },
+    {
+      "name": ".data.dos_ptr",
+      "input_section": ".data",
+      "start": "0x02114534",
+      "end": "0x0211454c"
+    },
+    {
       "name": ".bss",
       "start": "0x0211499c",
       "end": "0x02114a5c"
@@ -210,7 +228,43 @@
       "ordinal": 24
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov015_021135b4",
+      "address": "0x021135b4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "small-bar CLPS block"
+    },
+    {
+      "symbol": "data_ov015_02113634",
+      "address": "0x02113634",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "large-bar CLPS block"
+    },
+    {
+      "symbol": "data_ov015_02114534",
+      "address": "0x02114534",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "small-bar model file pointer"
+    },
+    {
+      "symbol": "data_ov015_02114538",
+      "address": "0x02114538",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "small-bar collision file pointer"
+    },
+    {
+      "symbol": "data_ov015_0211453c",
+      "address": "0x0211453c",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "variant resource pointers"
+    }
+  ],
   "bss": [
     {
       "symbol": "gBkDossunbarLCollisionFile",
@@ -400,6 +454,27 @@
           "section": ".ctor",
           "start": "0x02113418",
           "end": "0x0211341c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.dos_clps0",
+          "start": "0x021135b4",
+          "end": "0x021135d4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.dos_clps1",
+          "start": "0x02113634",
+          "end": "0x02113654",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.dos_ptr",
+          "start": "0x02114534",
+          "end": "0x0211454c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1078,6 +1153,66 @@
       "addend": 0,
       "target_module": "ov015",
       "target_address": "0x021144e8"
+    },
+    {
+      "section": ".data.dos_ptr",
+      "source": "0x02114534",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDossunbarSModelFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021149a4"
+    },
+    {
+      "section": ".data.dos_ptr",
+      "source": "0x02114538",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDossunbarSCollisionFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021149ac"
+    },
+    {
+      "section": ".data.dos_ptr",
+      "source": "0x0211453c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov015_021135b4",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021135b4"
+    },
+    {
+      "section": ".data.dos_ptr",
+      "source": "0x02114540",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDossunbarLModelFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021149b4"
+    },
+    {
+      "section": ".data.dos_ptr",
+      "source": "0x02114544",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkDossunbarLCollisionFile",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x0211499c"
+    },
+    {
+      "section": ".data.dos_ptr",
+      "source": "0x02114548",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov015_02113634",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x02113634"
     }
   ]
 }

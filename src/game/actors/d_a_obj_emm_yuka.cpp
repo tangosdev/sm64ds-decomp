@@ -160,3 +160,11 @@ daObjEmmYuka_c *daObjEmmYuka_c_classInit() {
  * and .collision point at them. */
 EmmYukaModelFilePtr gEmmYukaModelFile(ASSET_EMM_YUKA_BMD);
 EmmYukaCollisionFilePtr gEmmYukaCollisionFile(ASSET_EMM_YUKA_KCL);
+
+extern CLPS_Block data_ov064_0211ba0c;
+
+EmmYukaFiles data_ov052_021125a0 = {
+    &gEmmYukaModelFile,
+    &gEmmYukaCollisionFile,
+    &data_ov064_0211ba0c,
+};

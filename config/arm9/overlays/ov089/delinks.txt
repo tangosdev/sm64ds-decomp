@@ -1,5 +1,7 @@
     .text       start:0x02130f00 end:0x02132880 kind:code align:32
-    .rodata     start:0x02132880 end:0x021328d4 kind:rodata align:4
+    .rodata.anims  start:0x02132880 end:0x02132894 kind:rodata align:4
+    .data.models start:0x02132894 end:0x021328b4 kind:data align:4
+    .rodata.extra  start:0x021328b4 end:0x021328d4 kind:rodata align:4
     .init       start:0x021328d4 end:0x02132af4 kind:code align:4
     .ctor       start:0x02132af4 end:0x02132af8 kind:rodata align:4
     .data       start:0x02132b00 end:0x02132c40 kind:data align:32
@@ -7,6 +9,9 @@
 src/game/actors/d_a_obj_key.cpp:
     complete
     .text start:0x02130f00 end:0x02132880
+    .rodata.anims start:0x02132880 end:0x02132894
+    .data.models start:0x02132894 end:0x021328b4
+    .rodata.extra start:0x021328b4 end:0x021328d4
     .init start:0x021328d4 end:0x02132af4
     .ctor start:0x02132af4 end:0x02132af8
     .data start:0x02132b00 end:0x02132b40

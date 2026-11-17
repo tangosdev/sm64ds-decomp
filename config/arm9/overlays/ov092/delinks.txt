@@ -1,13 +1,34 @@
     .text       start:0x02130f00 end:0x02132074 kind:code align:32
-    .rodata     start:0x02132074 end:0x021320cc kind:rodata align:4
+    .rodata.launch_vert start:0x02132074 end:0x02132080 kind:rodata align:4
+    .rodata.launch_horz start:0x02132080 end:0x0213208c kind:rodata align:4
+    .rodata.bank start:0x0213208c end:0x021320cc kind:rodata align:1
     .init       start:0x021320cc end:0x02132210 kind:code align:4
     .ctor       start:0x02132210 end:0x02132214 kind:rodata align:4
-    .data       start:0x02132220 end:0x02132540 kind:data align:32
+    .data.clps  start:0x02132220 end:0x02132230 kind:data align:32
+    .data.gap_ff start:0x02132230 end:0x02132240 kind:data align:4
+    .data       start:0x02132240 end:0x02132288 kind:data align:4
+    .data.gap_zts start:0x02132288 end:0x02132294 kind:data align:4
+    .data.moves start:0x02132294 end:0x021322a0 kind:data align:4
+    .data.gap_rtti start:0x021322a0 end:0x021322c8 kind:data align:4
+    .data.vt    start:0x021322c8 end:0x02132350 kind:data align:4
+    .data.seq0  start:0x02132350 end:0x021323dc kind:data align:4
+    .data.seq1  start:0x021323dc end:0x0213246c kind:data align:4
+    .data.seq2  start:0x0213246c end:0x0213253c kind:data align:4
+    .data.gap_tail start:0x0213253c end:0x02132540 kind:data align:4
     .bss        start:0x02132540 end:0x021325c0 kind:bss align:32
 src/game/actors/d_a_onms.cpp:
     complete
     .text start:0x02130f00 end:0x02132074
+    .rodata.launch_vert start:0x02132074 end:0x02132080
+    .rodata.launch_horz start:0x02132080 end:0x0213208c
+    .rodata.bank start:0x0213208c end:0x021320cc
     .init start:0x021320cc end:0x02132210
     .ctor start:0x02132210 end:0x02132214
+    .data.clps start:0x02132220 end:0x02132230
     .data start:0x02132240 end:0x02132288
+    .data.moves start:0x02132294 end:0x021322a0
+    .data.vt start:0x021322c8 end:0x02132350
+    .data.seq0 start:0x02132350 end:0x021323dc
+    .data.seq1 start:0x021323dc end:0x0213246c
+    .data.seq2 start:0x0213246c end:0x0213253c
     .bss start:0x02132540 end:0x021325b0

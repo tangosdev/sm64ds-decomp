@@ -64,7 +64,13 @@ struct LiftState {
 
 struct BMD_File;
 struct KCL_File;
-struct CLPS_Block;
+struct CLPS_Block {
+    u32 words[8];
+};
+
+CLPS_Block data_ov064_0211bb6c = {
+    0x53504c43, 0x00020008, 0x01880fcc, 0x000000ff, 0x01880fc0, 0x000000ff, 0xffffffff, 0xffffffff,
+};
 
 extern "C" {
 extern void Vec3_Sub(Vector3 *dst, const Vector3 *a, const Vector3 *b);
@@ -74,7 +80,6 @@ extern void Vec3_Sub(Vector3 *dst, const Vector3 *a, const Vector3 *b);
 extern LiftState data_ov064_0211c750[];
 extern AmiliftModelFilePtr data_ov064_0211c730;
 extern AmiliftClsnFilePtr data_ov064_0211c728;
-extern CLPS_Block data_ov064_0211bb6c;
 
 /* Emission order is ROM order. Do not reorder. */
 #pragma defer_codegen off

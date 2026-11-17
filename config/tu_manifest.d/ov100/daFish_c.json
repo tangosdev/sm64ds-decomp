@@ -31,6 +31,16 @@
       "name": ".bss",
       "start": "0x021489a4",
       "end": "0x02148a54"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x021473a4",
+      "end": "0x021473bc"
+    },
+    {
+      "name": ".data",
+      "start": "0x02148448",
+      "end": "0x02148480"
     }
   ],
   "functions": [
@@ -161,7 +171,57 @@
       "ordinal": 17
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov100_02148448",
+      "address": "0x02148448",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the wait until the school is gone state"
+    },
+    {
+      "symbol": "data_ov100_02148450",
+      "address": "0x02148450",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the wait for the player state"
+    },
+    {
+      "symbol": "data_ov100_02148458",
+      "address": "0x02148458",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the flee state"
+    },
+    {
+      "symbol": "data_ov100_02148460",
+      "address": "0x02148460",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the wait until the player leaves state"
+    },
+    {
+      "symbol": "data_ov100_02148468",
+      "address": "0x02148468",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the idle state"
+    },
+    {
+      "symbol": "data_ov100_02148470",
+      "address": "0x02148470",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the wander state"
+    },
+    {
+      "symbol": "data_ov100_02148478",
+      "address": "0x02148478",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer-to-member image of the turn about state"
+    }
+  ],
   "bss": [
     {
       "symbol": "gFishModelFile",
@@ -368,6 +428,20 @@
           "start": "0x021489a4",
           "end": "0x02148a54",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x021473a4",
+          "end": "0x021473bc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02148448",
+          "end": "0x02148480",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -653,6 +727,41 @@
       "from": "@768",
       "to": "@157",
       "evidence": "compiler temporary; mwcc numbers it @684 per TU and ov070 daKrpa_c (this batch) also defines a global @684, so the scratch link collides Re-keyed from @768 to @714 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @714 to @751 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @751 to @763 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @763 to @768 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@770",
+      "to": "data_ov100_02148450",
+      "evidence": "Member-pointer constant for daFish_c::StateWaitForPlayer. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@771",
+      "to": "data_ov100_02148460",
+      "evidence": "Member-pointer constant for daFish_c::StateWaitPlayerAway. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@773",
+      "to": "data_ov100_02148448",
+      "evidence": "Member-pointer constant for daFish_c::StateWaitSchoolGone. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@775",
+      "to": "data_ov100_02148468",
+      "evidence": "Member-pointer constant for daFish_c::StateIdle. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@777",
+      "to": "data_ov100_02148458",
+      "evidence": "Member-pointer constant for daFish_c::StateFlee. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@779",
+      "to": "data_ov100_02148470",
+      "evidence": "Member-pointer constant for daFish_c::StateWander. The initializer relocation names that method, so this local keeps the configured image."
+    },
+    {
+      "from": "@781",
+      "to": "data_ov100_02148478",
+      "evidence": "Member-pointer constant for daFish_c::StateTurnAbout. The initializer relocation names that method, so this local keeps the configured image."
     }
   ],
   "symbol_binding_rewrites": [
@@ -703,6 +812,48 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02148a10"
+    },
+    {
+      "symbol": "data_ov100_02148450",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov100_02148460",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov100_02148448",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov100_02148468",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov100_02148458",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov100_02148470",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
+    },
+    {
+      "symbol": "data_ov100_02148478",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits this member-pointer image local. The configured data symbol stays global."
     }
   ],
   "relocations": [
@@ -1055,6 +1206,152 @@
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148478"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489a4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishAModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489bc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishBModelFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489b4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishSwimAnimationFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489c4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishAbSwimAnimationFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489ac"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021473b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gFishAbSwimAnimationFile",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021489ac"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148448",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c19StateWaitSchoolGoneEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021467d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148450",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c18StateWaitForPlayerEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02146828"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148458",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c9StateFleeEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021464f4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148460",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c19StateWaitPlayerAwayEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021467e8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148468",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c9StateIdleEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02146640"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148470",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c11StateWanderEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02146468"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148478",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daFish_c14StateTurnAboutEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021463b0"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov100_021473a4",
+      "address": "0x021473a4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "model handles indexed by mModelIndex"
+    },
+    {
+      "symbol": "data_ov100_021473b0",
+      "address": "0x021473b0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "animation handles indexed by mModelIndex"
     }
   ]
 }

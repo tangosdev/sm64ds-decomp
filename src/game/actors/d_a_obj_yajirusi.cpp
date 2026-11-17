@@ -80,7 +80,9 @@ extern "C" void Matrix4x3_FromRotationY(void *mtx, int angle);
 void func_02012694(unsigned int id, const Vector3 *pos);
 
 /* The model, KCL and CLPS for each of the two variants. */
-extern ArrowSignAssets data_ov098_0213c380[];
+extern "C" ArrowSignAssets data_ov098_0213c380[];
+extern CLPS_Block data_ov002_0210d914;
+extern CLPS_Block data_ov002_0210d734;
 
 // 0x02138008 (0x38)
 /* Second registry factory for the same class (YAJIRUSI_L profile); body twin
@@ -223,4 +225,8 @@ YajirusiModelFile gYajirusiLModelFile(0x0497);
 YajirusiModelFile gYajirusiRModelFile(0x0499);
 YajirusiCollisionFile gYajirusiLCollisionFile(0x0498);
 YajirusiCollisionFile gYajirusiRCollisionFile(0x049a);
+ArrowSignAssets data_ov098_0213c380[2] = {
+    {&gYajirusiLModelFile, &gYajirusiLCollisionFile, &data_ov002_0210d914},
+    {&gYajirusiRModelFile, &gYajirusiRCollisionFile, &data_ov002_0210d734},
+};
 #endif

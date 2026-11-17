@@ -14,6 +14,11 @@
   ],
   "sections": [
     {
+      "name": ".data",
+      "start": "0x02113314",
+      "end": "0x02113320"
+    },
+    {
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x021115cc"
@@ -85,7 +90,15 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov056_02113314",
+      "address": "0x02113314",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Model, collision and CLPS pointers for the ice block."
+    }
+  ],
   "bss": [
     {
       "symbol": "gEwmIceBrockModelFile",
@@ -319,6 +332,13 @@
       },
       "tuRanges": [
         {
+          "section": ".data",
+          "start": "0x02113314",
+          "end": "0x02113320",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".text",
           "start": "0x021111a0",
           "end": "0x021115cc",
@@ -509,6 +529,36 @@
     }
   ],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02113314",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gEwmIceBrockModelFile",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x02113400"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113318",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gEwmIceBrockCollisionFile",
+      "addend": 0,
+      "target_module": "ov056",
+      "target_address": "0x02113408"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211331c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov064_0211bbec",
+      "addend": 0,
+      "target_module": "ov064",
+      "target_address": "0x0211bbec"
+    },
     {
       "section": ".init",
       "source": "0x02112b58",

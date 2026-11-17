@@ -24,6 +24,11 @@
       "name": ".ctor",
       "start": "0x02086b74",
       "end": "0x02086b78"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02075298",
+      "end": "0x020752cc"
     }
   ],
   "functions": [
@@ -43,6 +48,15 @@
     }
   ],
   "data": [],
+  "rodata": [
+    {
+      "symbol": "SUBLEVEL_LEVEL_TABLE",
+      "address": "0x02075298",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "sublevel id to course id, indexed by SublevelToLevel"
+    }
+  ],
   "bss": [],
   "init": [
     {
@@ -169,6 +183,13 @@
           "section": ".ctor",
           "start": "0x02086b74",
           "end": "0x02086b78",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02075298",
+          "end": "0x020752cc",
           "differingBytes": 0,
           "firstDiff": null
         }

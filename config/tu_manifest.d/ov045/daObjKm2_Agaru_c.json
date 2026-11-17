@@ -32,9 +32,10 @@
       "end": "0x021131a8"
     },
     {
-      "name": ".data",
+      "name": ".data.w12570",
       "start": "0x021125d0",
-      "end": "0x021125f0"
+      "end": "0x021125f0",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -262,7 +263,7 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".data",
+          "section": ".data.w12570",
           "start": "0x021125d0",
           "end": "0x021125f0",
           "differingBytes": 0,

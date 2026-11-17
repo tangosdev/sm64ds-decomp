@@ -29,6 +29,12 @@
       "end": "0x02111ac4"
     },
     {
+      "name": ".data.clps",
+      "input_section": ".data",
+      "start": "0x02111bfc",
+      "end": "0x02111c0c"
+    },
+    {
       "name": ".bss",
       "start": "0x021124c0",
       "end": "0x021124e8"
@@ -92,7 +98,15 @@
       "ordinal": 7
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov033_02111bfc",
+      "address": "0x02111bfc",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS header plus one entry; the following 0xFF bytes stay unclaimed"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov033_021124c0",
@@ -242,6 +256,13 @@
           "section": ".ctor",
           "start": "0x02111ac0",
           "end": "0x02111ac4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.clps",
+          "start": "0x02111bfc",
+          "end": "0x02111c0c",
           "differingBytes": 0,
           "firstDiff": null
         },

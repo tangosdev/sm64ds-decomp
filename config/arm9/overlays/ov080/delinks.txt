@@ -1,5 +1,7 @@
     .text       start:0x02123740 end:0x0212766c kind:code align:32
-    .rodata     start:0x0212766c end:0x021278c0 kind:rodata align:4
+    .rodata      start:0x0212766c end:0x02127714 kind:rodata align:4
+    .rodata.rows start:0x02127714 end:0x02127834 kind:rodata align:4
+    .rodata.pic start:0x02127834 end:0x021278c0 kind:rodata align:4
     .init       start:0x021278c0 end:0x02127f60 kind:code align:4
     .ctor       start:0x02127f60 end:0x02127f6c kind:rodata align:4
     .data       start:0x02127f80 end:0x021283c0 kind:data align:32
@@ -9,6 +11,7 @@ src/game/actors/d_a_choropu.cpp:
     .text start:0x02123740 end:0x02124a20
     .init start:0x021278c0 end:0x02127a60
     .ctor start:0x02127f60 end:0x02127f64
+    .rodata start:0x0212766c end:0x02127714
     .data start:0x02127f80 end:0x02127fb0
     .bss start:0x021283c0 end:0x02128468
 
@@ -27,6 +30,8 @@ src/game/actors/d_a_pic_gate.cpp:
 src/game/actors/d_a_pic_gate_methods.cpp:
     complete
     .text start:0x021264ec end:0x02126fbc
+    .rodata.rows start:0x02127714 end:0x0212771c
+    .rodata.pic start:0x02127834 end:0x02127848
     .init start:0x02127b2c end:0x02127f60
     .ctor start:0x02127f68 end:0x02127f6c
     .data start:0x02128214 end:0x02128274

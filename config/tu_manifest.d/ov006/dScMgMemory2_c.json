@@ -36,6 +36,12 @@
       "name": ".bss",
       "start": "0x021423a8",
       "end": "0x021424ec"
+    },
+    {
+      "name": ".rodata.sMemory2Tables",
+      "start": "0x0212e8e8",
+      "end": "0x0212e954",
+      "input_section": ".rodata"
     }
   ],
   "functions": [
@@ -660,6 +666,71 @@
       "evidence": "23 permuted sprite pointers, plain-copied from the ROM constants"
     }
   ],
+  "rodata": [
+    {
+      "symbol": "sMemory2ResultRowsPerDifficulty",
+      "address": "0x0212e8e8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2ResultColsPerDifficulty",
+      "address": "0x0212e8f4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2PreviewCountPerDifficulty",
+      "address": "0x0212e900",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2PreviewTimePerDifficulty",
+      "address": "0x0212e90c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2EasyDealsPerDifficulty",
+      "address": "0x0212e918",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2NormalDealsPerDifficulty",
+      "address": "0x0212e924",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2FlyAwayLimitPerMode",
+      "address": "0x0212e930",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2HardDealsPerMode",
+      "address": "0x0212e93c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    },
+    {
+      "symbol": "sMemory2FourthDealsPerDifficulty",
+      "address": "0x0212e948",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "Three difficulty values read by index."
+    }
+  ],
   "notes": [
     "The complete 52-function Memory Master scene/factory run is reconstructed as one dScMgMemory2_c C++ translation unit. Address-only behavior is attached to class members. Main, result, round and card tables use typed member pointers; player-table ownership follows the initializer evidence below. The 0x270 shared state has compiler-owned destruction, and the header exposes scene/card/player/cursor fields. Some legacy loop views remain; this is not a claim that the entire class is fully reconstructed.",
     "PMF ownership evidence: __sinit_ov006_021314e4 builds main StateSetup/StatePlay/StateJudge/StateResult/StateExit, result ResultWait/ResultReward/ResultTurnCards/ResultFinish, card CardMove/CardIdle/CardSelect/CardFlipUp/CardWait/CardFlipDown/CardFlyAway, and player PlayerDrop/PlayerMove/PlayerWait tables. Its ten-entry round table independently fixes RoundStart through RoundReveal order.",
@@ -813,6 +884,13 @@
           "start": "0x021423a8",
           "end": "0x021424ec",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata.sMemory2Tables",
+          "start": "0x0212e8e8",
+          "end": "0x0212e954",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

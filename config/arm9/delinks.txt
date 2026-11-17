@@ -93,6 +93,7 @@ src/engine/view/d_camera.cpp:
     .init start:0x02073a24 end:0x02073e6c
     .ctor start:0x02086b60 end:0x02086b64
     .bss start:0x0209b000 end:0x0209b270
+    .data start:0x02086fcc end:0x020874cc
 
 src/KuppaScript.cpp:
     complete
@@ -203,6 +204,7 @@ src/SublevelToLevel.cpp:
     .text start:0x02013558 end:0x02013568
     .init start:0x02074dc0 end:0x02074dc4
     .ctor start:0x02086b74 end:0x02086b78
+    .rodata start:0x02075298 end:0x020752cc
 
 src/engine/save/SaveData.cpp:
     complete
@@ -884,6 +886,7 @@ src/game/stages/d_s_stage_methods.cpp:
     .init start:0x02074e84 end:0x02074edc
     .ctor start:0x02086b88 end:0x02086b8c
     .bss start:0x0209f1ec end:0x0209f5b8
+    .rodata start:0x02075804 end:0x02075b04
 
 src/data/arm9/data_02092654.c:
     complete
@@ -1024,6 +1027,7 @@ src/data/arm9/data_0209289c.c:
 src/Message3.cpp:
     complete
     .text start:0x02030fa8 end:0x02034a78
+    .data start:0x02092d3c end:0x0209435c
 
 src/game/stages/d_s_mb.cpp:
     complete
@@ -1031,6 +1035,7 @@ src/game/stages/d_s_mb.cpp:
     .init start:0x02074fb8 end:0x02074fe4
     .ctor start:0x02086b94 end:0x02086b98
     .bss start:0x020a0c5c end:0x020a0c78
+    .data start:0x0209444c end:0x020945f0
 
 src/engine/collision/d_bg_ch.cpp:
     complete
@@ -1408,6 +1413,8 @@ src/engine/link/unit0203d7b8.cpp:
     .text start:0x0203d7b8 end:0x02042804
     .init start:0x02075150 end:0x02075154
     .ctor start:0x02086bb4 end:0x02086bb8
+    .rodata start:0x02082158 end:0x02082178
+    .data start:0x02099e18 end:0x02099e70
 
 src/engine/save/SaveData2.cpp:
     complete
@@ -1420,6 +1427,7 @@ src/runtime/actor/ActorBase.cpp:
 src/data/arm9/data_02082178.c:
     complete
     .rodata start:0x02082178 end:0x02082190
+    .data start:0x02099f28 end:0x02099f48
 
 src/fListNode.cpp:
     complete

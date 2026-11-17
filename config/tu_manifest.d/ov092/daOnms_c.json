@@ -19,6 +19,24 @@
       "end": "0x02132074"
     },
     {
+      "name": ".rodata.launch_vert",
+      "input_section": ".rodata",
+      "start": "0x02132074",
+      "end": "0x02132080"
+    },
+    {
+      "name": ".rodata.launch_horz",
+      "input_section": ".rodata",
+      "start": "0x02132080",
+      "end": "0x0213208c"
+    },
+    {
+      "name": ".rodata.bank",
+      "input_section": ".rodata",
+      "start": "0x0213208c",
+      "end": "0x021320cc"
+    },
+    {
       "name": ".init",
       "start": "0x021320cc",
       "end": "0x02132210"
@@ -32,6 +50,42 @@
       "name": ".data",
       "start": "0x02132240",
       "end": "0x02132288"
+    },
+    {
+      "name": ".data.clps",
+      "input_section": ".data",
+      "start": "0x02132220",
+      "end": "0x02132230"
+    },
+    {
+      "name": ".data.moves",
+      "input_section": ".data",
+      "start": "0x02132294",
+      "end": "0x021322a0"
+    },
+    {
+      "name": ".data.vt",
+      "input_section": ".data",
+      "start": "0x021322c8",
+      "end": "0x02132350"
+    },
+    {
+      "name": ".data.seq0",
+      "input_section": ".data",
+      "start": "0x02132350",
+      "end": "0x021323dc"
+    },
+    {
+      "name": ".data.seq1",
+      "input_section": ".data",
+      "start": "0x021323dc",
+      "end": "0x0213246c"
+    },
+    {
+      "name": ".data.seq2",
+      "input_section": ".data",
+      "start": "0x0213246c",
+      "end": "0x0213253c"
     },
     {
       "name": ".bss",
@@ -265,6 +319,50 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "anonymous wait state descriptor; retail first word is 0x02131578"
+    },
+    {
+      "symbol": "data_ov092_02132220",
+      "address": "0x02132220",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "one-entry CLPS block passed to SetFile; the following 16 0xFF bytes stay unclaimed"
+    },
+    {
+      "symbol": "data_ov092_02132294",
+      "address": "0x02132294",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three s32* move scripts, indexed by param1 & 3"
+    },
+    {
+      "symbol": "data_ov092_02132350",
+      "address": "0x02132350",
+      "size": "0x8c",
+      "binding": "STB_GLOBAL",
+      "evidence": "move script 1, 35 s32 words ending at -1"
+    },
+    {
+      "symbol": "data_ov092_021323dc",
+      "address": "0x021323dc",
+      "size": "0x90",
+      "binding": "STB_GLOBAL",
+      "evidence": "move script 2, 36 s32 words ending at -1"
+    },
+    {
+      "symbol": "data_ov092_0213246c",
+      "address": "0x0213246c",
+      "size": "0xd0",
+      "binding": "STB_GLOBAL",
+      "evidence": "move script 0, 52 s32 words ending at -1; the trailing zero word stays unclaimed"
+    },
+    {
+      "symbol": "_ZTV8daOnms_c",
+      "address": "0x021322d0",
+      "emitted_storage_address": "0x021322c8",
+      "address_point_bias": "0x8",
+      "size": "0x88",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler storage includes the two-word ABI preamble; the public address point remains 0x021322d0"
     }
   ],
   "bss": [
@@ -302,6 +400,29 @@
       "size": "0x48",
       "binding": "STB_GLOBAL",
       "evidence": "nine-entry state table Behavior indexes by mMoveDir; the initializer copies the nine descriptors into it"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "_ZN8daOnms_c16sLaunchVertSpeedE",
+      "address": "0x02132074",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three 20.12 launch speeds Launch indexes by how"
+    },
+    {
+      "symbol": "_ZN8daOnms_c16sLaunchHorzSpeedE",
+      "address": "0x02132080",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three 20.12 horizontal launch speeds Launch indexes by how"
+    },
+    {
+      "symbol": "_ZN8daOnms_c9sBankAxisE",
+      "address": "0x0213208c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "64 s8 bank-axis selectors Roll indexes by mOrientBits"
     }
   ],
   "notes": [
@@ -365,8 +486,7 @@
         "_ZTI10dBgActor_c",
         "_ZTS10dBgActor_c",
         "_ZTI8daOnms_c",
-        "_ZTS8daOnms_c",
-        "_ZTV8daOnms_c"
+        "_ZTS8daOnms_c"
       ],
       "dataExternalized": [
         "_ZTI10dBgActor_c",
@@ -378,8 +498,7 @@
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
-        "_ZTS8daOnms_c",
-        "_ZTV8daOnms_c"
+        "_ZTS8daOnms_c"
       ]
     },
     "criteria": {
@@ -417,6 +536,27 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata.launch_vert",
+          "start": "0x02132074",
+          "end": "0x02132080",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.launch_horz",
+          "start": "0x02132080",
+          "end": "0x0213208c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.bank",
+          "start": "0x0213208c",
+          "end": "0x021320cc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x021320cc",
           "end": "0x02132210",
@@ -434,6 +574,48 @@
           "section": ".data",
           "start": "0x02132240",
           "end": "0x02132288",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.clps",
+          "start": "0x02132220",
+          "end": "0x02132230",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.moves",
+          "start": "0x02132294",
+          "end": "0x021322a0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.vt",
+          "start": "0x021322c8",
+          "end": "0x02132350",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.seq0",
+          "start": "0x02132350",
+          "end": "0x021323dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.seq1",
+          "start": "0x021323dc",
+          "end": "0x0213246c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.seq2",
+          "start": "0x0213246c",
+          "end": "0x0213253c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -685,13 +867,6 @@
       "canonical_module": "ov092",
       "canonical_address": "0x02132288",
       "reason": "type-name string. The overlay bytes at 0x02132288 are 8daOnms_c. Text-only; the ROM keeps the string."
-    },
-    {
-      "symbol": "_ZTV8daOnms_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov092",
-      "canonical_address": "0x021322d0",
-      "reason": "compiler-emitted vtable anchored by the out-of-line destructor. Public address point ov092:0x021322d0. g_profile_ONIMASU sits between the typeinfo and the vtable, so this promotion stays text-only and the ROM keeps the table."
     }
   ],
   "production_mode": "intact-object",
@@ -1123,6 +1298,366 @@
       "addend": 0,
       "target_module": "ov092",
       "target_address": "0x02131578"
+    },
+    {
+      "section": ".data.moves",
+      "source": "0x02132294",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov092_0213246c",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x0213246c"
+    },
+    {
+      "section": ".data.moves",
+      "source": "0x02132298",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov092_02132350",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02132350"
+    },
+    {
+      "section": ".data.moves",
+      "source": "0x0213229c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov092_021323dc",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x021323dc"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8daOnms_c",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x021322a0"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daOnms_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02131da0"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daOnms_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02131bd8"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daOnms_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02131c44"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daOnms_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02131c1c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x021322fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132300",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132304",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132308",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x0213230c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132310",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daOnms_cD1Ev",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02130f00"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132314",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8daOnms_cD0Ev",
+      "addend": 0,
+      "target_module": "ov092",
+      "target_address": "0x02130f5c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132318",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x0213231c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132320",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132324",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132328",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x0213232c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132330",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132334",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132338",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x0213233c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132340",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132344",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x02132348",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data.vt",
+      "source": "0x0213234c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dBgActor_c4KillEv",
+      "addend": 0,
+      "target_module": "overlays(2,7)",
+      "target_address": "0x020ee55c"
     }
   ],
   "defined_symbol_renames": [

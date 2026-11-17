@@ -24,7 +24,7 @@
  * The two resource handles below (model gDlPyramidModelFile, collision
  * gDlPyramidCollisionFile) are defined by this TU; mwcc builds
  * __sinit_d_a_obj_dl_pyramid.cpp from them. data_ov024_021129f0 is the
- * collision CLPS block, overlay .data this TU does not own.
+ * 16-byte collision CLPS block (the 0xFF tail is not part of it).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -47,7 +47,7 @@ struct BMD_File;
 struct KCL_File;
 struct CLPS_Block;
 
-extern CLPS_Block data_ov024_021129f0; /* the collision CLPS block */
+extern char data_ov024_021129f0[16];
 
 /* The retail static initializer constructs these two 8-byte resource handles
  * in source order (model 1501, then collision 1502) and lets the C++ runtime
@@ -219,7 +219,7 @@ int daObjDlPyramid_c::InitResources() {
     UpdateModelMatrix();
     UpdateClsnMatrix();
     KCL_File *kcl = dBgW_Kc::LoadFile(gDlPyramidCollisionFile);
-    mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngleY, data_ov024_021129f0);
+    mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngleY, *(CLPS_Block *)&data_ov024_021129f0);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
     mHomePos.x = mPosX;
@@ -265,3 +265,6 @@ daObjDlPyramid_c *daObjDlPyramid_c_classInit() {
  * __sinit_d_a_obj_dl_pyramid.cpp from these two definitions. */
 DlPyramidModelFilePtr gDlPyramidModelFile(ASSET_DL_PYRAMID_BMD);
 DlPyramidCollisionFilePtr gDlPyramidCollisionFile(ASSET_DL_PYRAMID_KCL);
+char data_ov024_021129f0[16] = {
+    0x43, 0x4c, 0x50, 0x53, 0x08, 0x00, 0x01, 0x00, 0xc4, 0x3f, 0x00, 0x00, 0xff, 0x00, 0x00, 0x00,
+};

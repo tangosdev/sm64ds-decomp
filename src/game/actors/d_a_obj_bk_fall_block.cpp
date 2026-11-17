@@ -13,8 +13,8 @@
  * daObjBk_Fall_Block_c, BK_DOWN_B registry). Retail does not store
  * that spelling.
  *
- * data_ov015_02114880 is overlay .data this TU does not own; the
- * CLPS_Block it points at is still data_ov015_*. g_profile_BK_DOWN_B
+ * data_ov015_02114880 is this TU's model, collision, and CLPS triple.
+ * g_profile_BK_DOWN_B
  * lives outside this TU (S14).
  */
 
@@ -26,7 +26,7 @@ enum d_a_obj_bk_fall_block_AssetId { ASSET_BK_DOWN_B_BMD = 0x058f, ASSET_BK_DOWN
 
 /* The model handle constructs through func_02017acc and destroys through
  * func_02017ab4. The collision handle constructs through func_02017b4c and
- * destroys through SharedFilePtr_Destruct_Clsn. The descriptor stays ROM data. */
+ * destroys through SharedFilePtr_Destruct_Clsn. */
 struct FallBlockModelFilePtr : SharedFilePtr {
     FallBlockModelFilePtr(unsigned int fileId);
     ~FallBlockModelFilePtr();
@@ -58,3 +58,21 @@ s32 daObjBk_Fall_Block_c::CleanupResources() {
  * mwcc emits __sinit_d_a_obj_bk_fall_block.cpp. */
 FallBlockModelFilePtr gBkDownBModelFile(ASSET_BK_DOWN_B_BMD);
 FallBlockClsnFileHandle gBkDownBCollisionFile(ASSET_BK_DOWN_B_KCL);
+
+struct CLPS_Block {
+    u32 tag;
+    u32 hdr;
+    u32 w0;
+    u32 w1;
+    u32 w2;
+    u32 w3;
+    u32 tail0;
+    u32 tail1;
+};
+CLPS_Block data_ov015_021136b4 = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
+                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+ResourceDescriptor data_ov015_02114880 = {
+    &gBkDownBModelFile,
+    &gBkDownBCollisionFile,
+    &data_ov015_021136b4,
+};

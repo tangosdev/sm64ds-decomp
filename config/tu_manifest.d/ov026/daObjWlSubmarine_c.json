@@ -32,6 +32,11 @@
       "name": ".bss",
       "start": "0x02113edc",
       "end": "0x02113f04"
+    },
+    {
+      "name": ".data",
+      "start": "0x02112fd4",
+      "end": "0x02112ffc"
     }
   ],
   "functions": [
@@ -78,7 +83,14 @@
       "ordinal": 5
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov026_02112fd4",
+      "address": "0x02112fd4",
+      "size": "0x28",
+      "binding": "STB_GLOBAL"
+    }
+  ],
   "bss": [
     {
       "symbol": "Submarine_ClsnFile",
@@ -235,6 +247,13 @@
           "start": "0x02113edc",
           "end": "0x02113f04",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02112fd4",
+          "end": "0x02112ffc",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

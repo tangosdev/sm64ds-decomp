@@ -365,8 +365,27 @@ void dScMgLuigi_c::StartReward(int pictureIndex) {
     mReward.velY = -3840;
 }
 
+OamAttr data_ov006_021350dc[4] = {
+    {0x00c0, 0xc1c0, 0x0018, 0x0000},
+    {0x00c0, 0xd000, 0x0018, 0x0000},
+    {0x0000, 0xe1c0, 0x0018, 0x0000},
+    {0x0000, 0xf000, 0x0018, 0xffff},
+};
+OamAttr *sLuigiCurtainSprite = data_ov006_021350dc;
+
+extern const int sLuigiCurtainX[2] = {0xffffffc0, 0x140};
+extern const int sLuigiBounceSpeeds[4] = {0xe00, 0xa00, 0x600, 0xc00};
+extern const int sLuigiSwaySpeed[4] = {0x1000, 0xc00, 0x800, 0xe00};
+extern const int sLuigiSwayStartVY[4] = {0xfffff200, 0xa00, 0x800, 0xc00};
+extern const int sLuigiSwayAccel[4] = {0xc0, 0x80, 0x40, 0xa0};
+extern const int sLuigiDriftRandomSpeed[4] = {0xe00, 0xa00, 0x600, 0xc00};
+extern const int sLuigiDriftByRowSpeed[4] = {0xe00, 0xe00, 0xe00, 0xe00};
+extern const int sLuigiDriftByColumnSpeed[4] = {0xe00, 0xe00, 0xe00, 0xe00};
+extern const int sLuigiDriftByLevelSpeed[4] = {0xe00, 0xa00, 0x600, 0xc00};
+extern const int sLuigiDriftFixedSpeed[4] = {0xe00, 0xa00, 0x600, 0xc00};
+extern const unsigned short sLuigiTouchSfx[4] = {188, 189, 190, 0};
+
 void dScMgLuigi_c::DrawCurtains() {
-    extern OamAttr *sLuigiCurtainSprite;
     int curtainIndex;
     for (curtainIndex = 0; curtainIndex < 2; curtainIndex++) {
         if (mCurtain[curtainIndex].shown != 0) {
@@ -538,7 +557,6 @@ void dScMgLuigi_c::CurtainUpdate(int i) {
 
 void dScMgLuigi_c::CurtainStart(int curtainIndex) {
     extern unsigned char data_0209d460;
-    extern int sLuigiCurtainX[];
     int roundInSet;
 
     if (mCurtain[curtainIndex].delay != 0) {
@@ -632,8 +650,14 @@ void dScMgLuigi_c::TickTimer() {
     BeginCatch(0);
 }
 
+OamAttr data_ov006_0213abc0[1] = {{0x00f0, 0x81f0, 0x4084, 0xffff}};
+OamAttr data_ov006_0213abb8[1] = {{0x00f0, 0x81f0, 0x5088, 0xffff}};
+OamAttr data_ov006_0213abb0[1] = {{0x00f0, 0x81f0, 0x608c, 0xffff}};
+OamAttr data_ov006_0213aba8[1] = {{0x00f0, 0x81f0, 0x7080, 0xffff}};
+void *sLuigiPictureSprites[] = {data_ov006_0213abc0, data_ov006_0213abb8, data_ov006_0213abb0,
+                                data_ov006_0213aba8};
+
 void dScMgLuigi_c::DrawPictures() {
-    extern void *sLuigiPictureSprites[];
     int i;
     if (mState == STATE_SETUP)
         return;
@@ -720,7 +744,6 @@ void dScMgLuigi_c::AddPenalty(int pictureIndex) {
 }
 
 void dScMgLuigi_c::DrawWantedIcon() {
-    extern void *sLuigiPictureSprites[];
     if (mIconOn == 0)
         return;
     Mg_RenderSubSpriteMtx(sLuigiPictureSprites[mWanted], (unsigned short)mIconX,
@@ -744,7 +767,6 @@ void dScMgLuigi_c::TickPictureFlash(int pictureIndex) {
 }
 
 void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
-    extern int sLuigiBounceSpeeds[];
     if (mStarted[pictureIndex] == 0) {
         mMovePhase[pictureIndex] = LUIGI_RAND(16) << 12;
         mStarted[pictureIndex]++;
@@ -783,9 +805,6 @@ void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
 /* Sway. A new slot takes phase 0 and a signed x speed; a running slot
    coasts, flips at zero, and wraps at the screen edge. */
 void dScMgLuigi_c::MovePictureSway(int idx) {
-    extern int sLuigiSwaySpeed[];
-    extern int sLuigiSwayStartVY[];
-    extern int sLuigiSwayAccel[];
     if (mStarted[idx] == 0) {
         mMovePhase[idx] = 0;
         mStarted[idx]++;
@@ -829,7 +848,6 @@ void dScMgLuigi_c::MovePictureSway(int idx) {
 
 /* Drift on a random angle, one of sixteen steps of 0x1000. */
 void dScMgLuigi_c::MovePictureDriftRandom(int pictureIndex) {
-    extern int sLuigiDriftRandomSpeed[];
     if (mStarted[pictureIndex] == 0) {
         mMovePhase[pictureIndex] = LUIGI_RAND(16) << 12;
         mStarted[pictureIndex]++;
@@ -848,7 +866,6 @@ void dScMgLuigi_c::MovePictureDriftRandom(int pictureIndex) {
 
 /* Drift left or right from mRowDir of the slot's row. */
 void dScMgLuigi_c::MovePictureDriftByRow(int pictureIndex) {
-    extern int sLuigiDriftByRowSpeed[];
     int rowIndex;
     int columnIndex;
     if (mStarted[pictureIndex] == 0) {
@@ -881,7 +898,6 @@ void dScMgLuigi_c::MovePictureDriftByRow(int pictureIndex) {
 
 /* Drift up or down from mColDir of the slot's column. */
 void dScMgLuigi_c::MovePictureDriftByColumn(int pictureIndex) {
-    extern int sLuigiDriftByColumnSpeed[];
     if (mStarted[pictureIndex] == 0) {
         mStarted[pictureIndex]++;
         if (mColDir[pictureIndex & 7] != 0) {
@@ -904,7 +920,6 @@ void dScMgLuigi_c::MovePictureDriftByColumn(int pictureIndex) {
 
 /* Drift on the angle stored for this picture's speed. */
 void dScMgLuigi_c::MovePictureDriftByLevel(int pictureIndex) {
-    extern int sLuigiDriftByLevelSpeed[];
     if (mStarted[pictureIndex] == 0) {
         u8 character = mCharacter[pictureIndex];
         mMovePhase[pictureIndex] = mLevelPhase[character];
@@ -924,7 +939,6 @@ void dScMgLuigi_c::MovePictureDriftByLevel(int pictureIndex) {
 
 /* Drift on a fixed angle of 0x6000. */
 void dScMgLuigi_c::MovePictureDriftFixed(int pictureIndex) {
-    extern int sLuigiDriftFixedSpeed[];
     if (mStarted[pictureIndex] == 0) {
         mMovePhase[pictureIndex] = 0x6000;
         mStarted[pictureIndex]++;
@@ -999,7 +1013,6 @@ void dScMgLuigi_c::BeginCatch(int found) {
 }
 
 void dScMgLuigi_c::CheckTouch() {
-    extern unsigned short sLuigiTouchSfx[];
     int playerSlot = gActivePlayerSlot;
     int touchPressed = 0;
     int target;

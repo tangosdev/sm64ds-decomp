@@ -27,9 +27,21 @@
       "end": "0x02113740"
     },
     {
+      "name": ".data.cvres",
+      "input_section": ".data",
+      "start": "0x021148d0",
+      "end": "0x021148dc"
+    },
+    {
       "name": ".bss",
       "start": "0x02114a64",
       "end": "0x02114a8c"
+    },
+    {
+      "name": ".data.cvShutterClps",
+      "input_section": ".data",
+      "start": "0x02113a00",
+      "end": "0x02113a20"
     }
   ],
   "functions": [
@@ -76,7 +88,22 @@
       "ordinal": 5
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov021_021148d0",
+      "address": "0x021148d0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "model, collision, and CLPS handles InitResourcesFrom loads"
+    },
+    {
+      "symbol": "data_ov021_02113a00",
+      "address": "0x02113a00",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "one entry: floor 0x01000fc0, the shutter's collision surface"
+    }
+  ],
   "bss": [
     {
       "symbol": "gCvShutterCollisionFile",
@@ -131,30 +158,30 @@
         "_ZN13daObjSwdoor_cD2Ev"
       ],
       "droppedSections": [
+        6,
         7,
-        8,
         9,
         10,
         11,
-        12,
-        13,
         14,
         15,
-        16,
         17,
         18,
         19,
         20,
         21,
+        22,
         24,
         25,
         26,
         27,
         28,
-        41,
-        42,
-        43,
-        44
+        30,
+        31,
+        44,
+        45,
+        46,
+        47
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -185,7 +212,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV16daObjCvShutter_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -204,7 +232,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -236,15 +264,29 @@
           "firstDiff": null
         },
         {
+          "section": ".data.cvres",
+          "start": "0x021148d0",
+          "end": "0x021148dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02114a64",
           "end": "0x02114a8c",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.cvShutterClps",
+          "start": "0x02113a00",
+          "end": "0x02113a20",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 12
+          "LICENSED": 14
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -255,34 +297,52 @@
           {
             "section": ".init",
             "original": [
-              47
+              50
             ],
             "desired": [
-              47
+              50
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              48
             ],
             "desired": [
-              45
+              48
+            ]
+          },
+          {
+            "section": ".data.cvres",
+            "original": [
+              12
+            ],
+            "desired": [
+              12
             ]
           },
           {
             "section": ".bss",
             "original": [
               5,
-              6,
-              22,
+              8,
+              16,
               23
             ],
             "desired": [
-              6,
+              8,
               5,
-              22,
+              16,
               23
+            ]
+          },
+          {
+            "section": ".data.cvShutterClps",
+            "original": [
+              29
+            ],
+            "desired": [
+              29
             ]
           }
         ],
@@ -292,20 +352,20 @@
               "section": ".bss",
               "original": [
                 5,
-                6,
-                22,
+                8,
+                16,
                 23
               ],
               "desired": [
-                6,
+                8,
                 5,
-                22,
+                16,
                 23
               ],
               "slots": [
                 5,
-                6,
-                22,
+                8,
+                16,
                 23
               ]
             }
@@ -510,6 +570,46 @@
   ],
   "relocations": [
     {
+      "section": ".ctor",
+      "source": "0x0211373c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_obj_cv_shutter.cpp",
+      "addend": 0,
+      "target_module": "ov021",
+      "target_address": "0x021136c8"
+    },
+    {
+      "section": ".data.cvres",
+      "source": "0x021148d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gCvShutterModelFile",
+      "addend": 0,
+      "target_module": "ov021",
+      "target_address": "0x02114a6c"
+    },
+    {
+      "section": ".data.cvres",
+      "source": "0x021148d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gCvShutterCollisionFile",
+      "addend": 0,
+      "target_module": "ov021",
+      "target_address": "0x02114a64"
+    },
+    {
+      "section": ".data.cvres",
+      "source": "0x021148d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov021_02113a00",
+      "addend": 0,
+      "target_module": "ov021",
+      "target_address": "0x02113a00"
+    },
+    {
       "section": ".init",
       "source": "0x021136d8",
       "type": "R_ARM_PC24",
@@ -608,16 +708,6 @@
       "addend": 0,
       "target_module": "ov021",
       "target_address": "0x02114a80"
-    },
-    {
-      "section": ".ctor",
-      "source": "0x0211373c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "__sinit_d_a_obj_cv_shutter.cpp",
-      "addend": 0,
-      "target_module": "ov021",
-      "target_address": "0x021136c8"
     }
   ],
   "defined_symbol_renames": [
