@@ -62,13 +62,16 @@
  *   0x338  dExtShadowModel_c, same two-sided evidence, _ZN17dExtShadowModel_cC1Ev at +0x338.
  *          sizeof is 0x28, so it closes on 0x360.
  *
- * SIZE 0x360, WHICH IS THE MINIMAL READING AND SAID AS SUCH. The dExtShadowModel_c
- * closes there and nothing this class owns reaches higher. The leaves allocate
- * more -- daDkk_c_classInit passes 928 = 0x3a0 and Thwomp_Spawn 932 = 0x3a4 -- and
- * because the two disagree, no literal fixes this class's end the way
- * daObjKm2_Ukishima_c fixes daObjUkiyuka_c's. 0x360..0x3a0 exists in both leaves and
- * is declared on them; if a later pass shows both reading the same offsets in it,
- * it moves up here.
+ * SIZE 0x3a0. Past the dExtShadowModel_c (which closes on 0x360) sits the
+ * cycle span 0x360..0x3a0: this class's own states and drop-shadow refresh
+ * read and write all of it on both leaves, so it is declared here rather than
+ * per leaf. daDkk_c_classInit allocates exactly 928 = 0x3a0, so Grindel adds
+ * nothing; Thwomp_Spawn allocates 932 = 0x3a4 for the Thwomp's own two fields.
+ * mShadowMtx is a Matrix4x3. In the three TUs that include this header
+ * first (d_a_dsn_base.cpp, d_a_dsn.cpp, d_a_dkk.cpp) that is common.h's flat
+ * s32 m[12], which has no destructor, so the leaves' inline teardown is
+ * unchanged; d_a_yegg.cpp sees math/Matrix.h's spelling and never destroys
+ * one of these.
  *
  * Field NAMES are coined from what the code does; nothing in the ROM names them.
  */
@@ -107,6 +110,15 @@ struct daDsnBase_c : dBgActor_c {
     DsnBaseFileTable *mFileTable;     /* 0x320 */
     dExtAnmTexPat_c mTextureSequence; /* 0x324 */
     dExtShadowModel_c mShadowModel;   /* 0x338 */
+    /* The rise/hover/slam/rest/recover cycle both leaves run. Its states and
+       the drop-shadow refresh below read and write all of it. */
+    Matrix4x3 mShadowMtx; /* 0x360 -- the model matrix, translation >> 3 */
+    s32 mRiseY;           /* 0x390 -- top of the rise (state 0) */
+    s32 mGroundY;         /* 0x394 -- ground height the slam snaps to */
+    s32 mState;           /* 0x398 -- the leaves' Behavior switches on it */
+    s16 mTurnTargetAngle; /* 0x39c -- Grindel's turn; nothing here touches it */
+    u8 mTimer;            /* 0x39e -- frame countdown of hover, rest, recover */
+    u8 mLandCount;        /* 0x39f -- Grindel's landings since its last turn */
 
     /* --- vtable --- */
     /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own:
@@ -161,7 +173,7 @@ struct daDsnBase_c : dBgActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char daDsnBase_c_size_must_be_0x360[sizeof(daDsnBase_c) == 0x360 ? 1 : -1];
+typedef char daDsnBase_c_size_must_be_0x3a0[sizeof(daDsnBase_c) == 0x3a0 ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */

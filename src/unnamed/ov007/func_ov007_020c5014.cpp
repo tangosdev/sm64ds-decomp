@@ -14,32 +14,31 @@
    pointer stays cached in a register across the loop. */
 #pragma opt_common_subs off
 int Ov007Picker::func_ov007_020c5014(int x) {
-    Ov007Picker *self = this;
     Ov007StrokePath *obj;
     int i;
     int j;
     int *arr;
     int d, den;
-    self->limitFraction = 0x1000;
-    i = self->limitGroup;
-    if (i < self->groupCount) {
-        obj = self->groups[i];
-        j = self->limitIndex;
+    limitFraction = 0x1000;
+    i = limitGroup;
+    if (i < groupCount) {
+        obj = groups[i];
+        j = limitIndex;
         if (x >= obj->progressThresholds[j]) {
             for (;;) {
-                self->limitIndex += 1;
-                j = self->limitIndex;
+                limitIndex += 1;
+                j = limitIndex;
                 if (j >= obj->pointCount) {
-                    self->limitGroup += 1;
+                    limitGroup += 1;
                     {
-                        int cnt = self->groupCount;
-                        if (self->limitGroup >= cnt) {
-                            self->limitGroup = cnt;
-                            self->limitIndex = obj->pointCount;
+                        int cnt = groupCount;
+                        if (limitGroup >= cnt) {
+                            limitGroup = cnt;
+                            limitIndex = obj->pointCount;
                             return 2;
                         }
                     }
-                    self->limitIndex = 0;
+                    limitIndex = 0;
                     return 1;
                 }
                 if (x < obj->progressThresholds[j])
@@ -52,7 +51,7 @@ int Ov007Picker::func_ov007_020c5014(int x) {
             den = arr[j] - arr[j - 1];
             if (den == 0)
                 den = 1;
-            self->limitFraction = 0x1000 - FX_DivS32(d << 12, den);
+            limitFraction = 0x1000 - FX_DivS32(d << 12, den);
         }
         return 0;
     }
