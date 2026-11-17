@@ -277,7 +277,7 @@ struct dScMgPachinko_c : dScMgBase_c {
     void DrawAimLine();
     void Pipe_DrawAll();
     void Pipe_SetAll(int);
-    int Pipe_StateIdle(int);
+    void Pipe_StateIdle(int);
     void Pipe_StateSink(int);
     void Pipe_StateRise(int);
     void Pipe_StatePick(int);
