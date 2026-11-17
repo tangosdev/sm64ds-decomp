@@ -4028,25 +4028,25 @@ sSingle3DCommonNcgByLanguage kind:data(any) addr:0x0213e42c
 _ZTV19dScMgSingle3DBase_c kind:data(any) addr:0x0213e448
 sSlot1Payouts kind:data(any) addr:0x0213e4d8
 pmf_Slot3_StateJudge kind:data(any) addr:0x0213e4e0
-data_ov006_0213e4e8 kind:data(any) addr:0x0213e4e8
-data_ov006_0213e4f0 kind:data(any) addr:0x0213e4f0
-sSlotWildBlinkX kind:data(any) addr:0x0213e4f8
+sSlot1SymbolIcon0 kind:data(any) addr:0x0213e4e8
+sSlot1SymbolIcon1 kind:data(any) addr:0x0213e4f0
+sSlotWildBlinkPos kind:data(any) addr:0x0213e4f8
 sSlotWildBlinkY kind:data(any) addr:0x0213e4fa
-data_ov006_0213e500 kind:data(any) addr:0x0213e500
+sSlotBetIconSprite kind:data(any) addr:0x0213e500
 g_profile_MG_SLOT3 kind:data(any) addr:0x0213e508 ambiguous
-data_ov006_0213e510 kind:data(any) addr:0x0213e510
-data_ov006_0213e518 kind:data(any) addr:0x0213e518
+sSlot1GameOverReelSprite kind:data(any) addr:0x0213e510
+sSlot1SymbolIcon4 kind:data(any) addr:0x0213e518
 pmf_Slot3_StateIntro kind:data(any) addr:0x0213e520
-data_ov006_0213e528 kind:data(any) addr:0x0213e528
+sSlotBetIconSprites kind:data(any) addr:0x0213e528
 pmf_Slot3_StateSpin kind:data(any) addr:0x0213e530
 pmf_Slot3_StatePayout kind:data(any) addr:0x0213e538
-data_ov006_0213e540 kind:data(any) addr:0x0213e540
+sSlotBetIconLitSprite kind:data(any) addr:0x0213e540
 pmf_Slot3_StateWait kind:data(any) addr:0x0213e548
 pmf_Slot3_StatePayout_2 kind:data(any) addr:0x0213e550
-data_ov006_0213e558 kind:data(any) addr:0x0213e558
+sSlot1SymbolIcon2 kind:data(any) addr:0x0213e558
 g_profile_MG_SLOT1 kind:data(any) addr:0x0213e560 ambiguous
-data_ov006_0213e568 kind:data(any) addr:0x0213e568
-data_ov006_0213e570 kind:data(any) addr:0x0213e570
+sSlot1SymbolIcon3 kind:data(any) addr:0x0213e568
+sSlot1SymbolIcon5 kind:data(any) addr:0x0213e570
 pmf_Slot3_StateDone kind:data(any) addr:0x0213e578
 pmf_Slot3_StateGameOver kind:data(any) addr:0x0213e580
 _ZTI12dScMgSlot3_c kind:data(any) addr:0x0213e588

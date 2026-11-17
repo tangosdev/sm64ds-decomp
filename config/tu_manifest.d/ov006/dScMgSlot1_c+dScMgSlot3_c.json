@@ -31,6 +31,11 @@
       "end": "0x021335d4"
     },
     {
+      "name": ".data",
+      "start": "0x0213e4e0",
+      "end": "0x0213e588"
+    },
+    {
       "name": ".bss",
       "start": "0x02142bdc",
       "end": "0x02142c1c"
@@ -332,7 +337,155 @@
       "ordinal": 41
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "pmf_Slot3_StateJudge",
+      "address": "0x0213e4e0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgSlot3_c::StateJudge (0x0210adac), emitted by __sinit_d_s_mg_slots.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "sSlot1SymbolIcon0",
+      "address": "0x0213e4e8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "OamAttr one-cell sprite list (attr3 0xffff terminator): sSlot1Sprites[6] at 0x0213e984 points here; dScMgSlot1_c::Render draws it through sSlot1Sprites[mMatchedSymbol + 6]. ROM words match the initializer."
+    },
+    {
+      "symbol": "sSlot1SymbolIcon1",
+      "address": "0x0213e4f0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "OamAttr one-cell sprite list (attr3 0xffff terminator): sSlot1Sprites[7] at 0x0213e988 points here; dScMgSlot1_c::Render draws it through sSlot1Sprites[mMatchedSymbol + 6]. ROM words match the initializer."
+    },
+    {
+      "symbol": "sSlotWildBlinkPos",
+      "address": "0x0213e4f8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "s16[2][2] {x, y} rows read by dScMgSlot1_c::Behavior case 4 for mWildBlink.Start: the ROM pool words 0x0210d1e0 / 0x0210d1e4 are the row base and base + 2 (the y column)."
+    },
+    {
+      "symbol": "sSlotBetIconSprite",
+      "address": "0x0213e500",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "OamAttr sprite list, the unlit bet icon: sSlotBetIconSprites[0] (0x0213e528) points here and betIcon_c::Render passes it to OAM::RenderSub when mOn is 0."
+    },
+    {
+      "symbol": "g_profile_MG_SLOT3",
+      "address": "0x0213e508",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "BaseSpawnInfo<void> {dScMgSlot3_c_classInit, 365, 365}: word 0 relocates to the factory 0x0210c120; the arm9 minigame registry (0x02090e18) points here."
+    },
+    {
+      "symbol": "sSlot1GameOverReelSprite",
+      "address": "0x0213e510",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "OamAttr one-cell 64x64 sprite list: sSlot1Sprites[13] at 0x0213e9a0 points here; dScMgSlot1_c::Render draws reel symbol 13 with it, the symbol Behavior case 7 writes into every reel when the credits run out. ROM words match the initializer."
+    },
+    {
+      "symbol": "sSlot1SymbolIcon4",
+      "address": "0x0213e518",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "OamAttr one-cell sprite list (attr3 0xffff terminator): sSlot1Sprites[10] at 0x0213e994 points here; dScMgSlot1_c::Render draws it through sSlot1Sprites[mMatchedSymbol + 6]. ROM words match the initializer."
+    },
+    {
+      "symbol": "pmf_Slot3_StateIntro",
+      "address": "0x0213e520",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgSlot3_c::StateIntro (0x0210b1fc), emitted by __sinit_d_s_mg_slots.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "sSlotBetIconSprites",
+      "address": "0x0213e528",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "OamAttr *[2] indexed by dThIcon_c::mOn in dScMgSlot1_c::betIcon_c::Render (0x0210c408 loads it); its two words relocate to 0x0213e500 and 0x0213e540."
+    },
+    {
+      "symbol": "pmf_Slot3_StateSpin",
+      "address": "0x0213e530",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgSlot3_c::StateSpin (0x0210af64), emitted by __sinit_d_s_mg_slots.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Slot3_StatePayout",
+      "address": "0x0213e538",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgSlot3_c::StatePayout (0x0210ac3c), emitted by __sinit_d_s_mg_slots.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "sSlotBetIconLitSprite",
+      "address": "0x0213e540",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "OamAttr sprite list, the lit bet icon: sSlotBetIconSprites[1] (0x0213e52c) points here and betIcon_c::Render passes it to OAM::RenderSub when mOn is 1."
+    },
+    {
+      "symbol": "pmf_Slot3_StateWait",
+      "address": "0x0213e548",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgSlot3_c::StateWait (0x0210ac38), emitted by __sinit_d_s_mg_slots.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Slot3_StatePayout_2",
+      "address": "0x0213e550",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgSlot3_c::StatePayout (0x0210ac3c), emitted by __sinit_d_s_mg_slots.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "sSlot1SymbolIcon2",
+      "address": "0x0213e558",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "OamAttr one-cell sprite list (attr3 0xffff terminator): sSlot1Sprites[8] at 0x0213e98c points here; dScMgSlot1_c::Render draws it through sSlot1Sprites[mMatchedSymbol + 6]. ROM words match the initializer."
+    },
+    {
+      "symbol": "g_profile_MG_SLOT1",
+      "address": "0x0213e560",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "BaseSpawnInfo<void> {dScMgSlot1_c_classInit, 364, 364}: word 0 relocates to the factory 0x0210d6b8; the arm9 minigame registry (0x02090e14) points here."
+    },
+    {
+      "symbol": "sSlot1SymbolIcon3",
+      "address": "0x0213e568",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "OamAttr one-cell sprite list (attr3 0xffff terminator): sSlot1Sprites[9] at 0x0213e990 points here; dScMgSlot1_c::Render draws it through sSlot1Sprites[mMatchedSymbol + 6]. ROM words match the initializer."
+    },
+    {
+      "symbol": "sSlot1SymbolIcon5",
+      "address": "0x0213e570",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "OamAttr one-cell sprite list (attr3 0xffff terminator): sSlot1Sprites[11] at 0x0213e998 points here; dScMgSlot1_c::Render draws it through sSlot1Sprites[mMatchedSymbol + 6] and, once per wild reel, as sSlot1Sprites[11]. ROM words match the initializer."
+    },
+    {
+      "symbol": "pmf_Slot3_StateDone",
+      "address": "0x0213e578",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgSlot3_c::StateDone (0x0210ab90), emitted by __sinit_d_s_mg_slots.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "pmf_Slot3_StateGameOver",
+      "address": "0x0213e580",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler PMF literal for &dScMgSlot3_c::StateGameOver (0x0210ab94), emitted by __sinit_d_s_mg_slots.cpp; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    }
+  ],
   "bss": [
     {
       "symbol": "sSlot3StateTable",
@@ -489,7 +642,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -521,6 +674,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0213e4e0",
+          "end": "0x0213e588",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x02142bdc",
           "end": "0x02142c1c",
@@ -529,7 +689,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 45
+          "LICENSED": 66
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -540,32 +700,160 @@
           {
             "section": ".init",
             "original": [
-              120
+              158
             ],
             "desired": [
-              120
+              158
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              118
+              156
             ],
             "desired": [
+              156
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              61,
+              104,
+              106,
+              108,
+              110,
+              112,
+              114,
+              116,
+              118,
+              120
+            ],
+            "desired": [
+              110,
+              15,
+              14,
+              16,
+              8,
+              61,
+              9,
+              11,
+              106,
+              5,
+              108,
+              112,
+              7,
+              116,
+              114,
+              13,
+              104,
+              12,
+              10,
+              120,
               118
             ]
           },
           {
             "section": ".bss",
             "original": [
-              84
+              122
             ],
             "desired": [
-              84
+              122
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                61,
+                104,
+                106,
+                108,
+                110,
+                112,
+                114,
+                116,
+                118,
+                120
+              ],
+              "desired": [
+                110,
+                15,
+                14,
+                16,
+                8,
+                61,
+                9,
+                11,
+                106,
+                5,
+                108,
+                112,
+                7,
+                116,
+                114,
+                13,
+                104,
+                12,
+                10,
+                120,
+                118
+              ],
+              "slots": [
+                5,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                61,
+                104,
+                106,
+                108,
+                110,
+                112,
+                114,
+                116,
+                118,
+                120
+              ]
+            }
+          ],
+          "symbolIndices": 21,
+          "sectionLinks": 0,
+          "sectionInfos": 11,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -786,6 +1074,54 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "pmf_Slot3_StateJudge",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Slot3_StateIntro",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Slot3_StateSpin",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Slot3_StatePayout",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Slot3_StateWait",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Slot3_StatePayout_2",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Slot3_StateDone",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_Slot3_StateGameOver",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "relocations": [
@@ -888,6 +1224,168 @@
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02142bdc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e4e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dScMgSlot3_c10StateJudgeEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0210adac"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e508",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z22dScMgSlot3_c_classInitv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0210c120"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e520",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dScMgSlot3_c10StateIntroEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0210b1fc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e528",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSlotBetIconSprite",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213e500"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e52c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "sSlotBetIconLitSprite",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0213e540"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e530",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dScMgSlot3_c9StateSpinEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0210af64"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e538",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dScMgSlot3_c11StatePayoutEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0210ac3c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e548",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dScMgSlot3_c9StateWaitEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0210ac38"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e550",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dScMgSlot3_c11StatePayoutEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0210ac3c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e560",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z22dScMgSlot1_c_classInitv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0210d6b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e578",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dScMgSlot3_c9StateDoneEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0210ab90"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213e580",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12dScMgSlot3_c13StateGameOverEv",
+      "addend": 0,
+      "target_module": "ov006",
+      "target_address": "0x0210ab94"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "@1823",
+      "to": "pmf_Slot3_StateJudge",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateJudge, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xc0 loads 0x0213e4e0 in the ROM) and by its own relocation target (dScMgSlot3_c::StateJudge at 0x0210adac)."
+    },
+    {
+      "from": "@1819",
+      "to": "pmf_Slot3_StateIntro",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateIntro, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xb8 loads 0x0213e520 in the ROM) and by its own relocation target (dScMgSlot3_c::StateIntro at 0x0210b1fc)."
+    },
+    {
+      "from": "@1821",
+      "to": "pmf_Slot3_StateSpin",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateSpin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xbc loads 0x0213e530 in the ROM) and by its own relocation target (dScMgSlot3_c::StateSpin at 0x0210af64)."
+    },
+    {
+      "from": "@1825",
+      "to": "pmf_Slot3_StatePayout",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StatePayout, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xc4 loads 0x0213e538 in the ROM) and by its own relocation target (dScMgSlot3_c::StatePayout at 0x0210ac3c)."
+    },
+    {
+      "from": "@1829",
+      "to": "pmf_Slot3_StateWait",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateWait, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xcc loads 0x0213e548 in the ROM) and by its own relocation target (dScMgSlot3_c::StateWait at 0x0210ac38)."
+    },
+    {
+      "from": "@1827",
+      "to": "pmf_Slot3_StatePayout_2",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StatePayout, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xc8 loads 0x0213e550 in the ROM) and by its own relocation target (dScMgSlot3_c::StatePayout at 0x0210ac3c)."
+    },
+    {
+      "from": "@1833",
+      "to": "pmf_Slot3_StateDone",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateDone, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xd4 loads 0x0213e578 in the ROM) and by its own relocation target (dScMgSlot3_c::StateDone at 0x0210ab90)."
+    },
+    {
+      "from": "@1831",
+      "to": "pmf_Slot3_StateGameOver",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateGameOver, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xd0 loads 0x0213e580 in the ROM) and by its own relocation target (dScMgSlot3_c::StateGameOver at 0x0210ab94)."
     }
   ]
 }

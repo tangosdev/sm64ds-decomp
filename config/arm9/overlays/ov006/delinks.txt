@@ -228,6 +228,7 @@ src/minigames/d_s_mg_slots.cpp:
     .text start:0x0210a8c0 end:0x0210d740
     .init start:0x02132894 end:0x02132970
     .ctor start:0x021335d0 end:0x021335d4
+    .data start:0x0213e4e0 end:0x0213e588
     .bss start:0x02142bdc end:0x02142c1c
 
 src/minigames/d_s_mg_smartball.cpp:
