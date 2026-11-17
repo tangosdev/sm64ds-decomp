@@ -367,7 +367,11 @@ void dScMgTrampoline_c::StateIntro() {
     {
         int t = FX_Div(counter << 12, 0x5a000);
         /* Kept volatile: the ROM spills the previous point to the stack
-           across the random draw; plain locals DIFF (measured 2026-11-08). */
+           across the random draw; plain locals DIFF (measured 2026-11-08).
+           Re-measured 2026-11-16 (#821 r22): a whole-struct copy
+           `Vec2s prev = mTouch` keeps the stack slot but loads it with
+           ldrh, not ldrsh (10/104); member-wise Vec2s, s16[2] (assigned
+           or brace-initialised) and (&prev)->x are all kept in registers. */
         volatile s16 prevX = mTouch.x;
         volatile s16 prevY = mTouch.y;
         int penX = sTrmpStartTouchX * t + sTrmpIntroFromX * (0x1000 - t);
