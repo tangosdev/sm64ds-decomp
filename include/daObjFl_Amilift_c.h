@@ -27,9 +27,7 @@ struct daObjFl_Amilift_c : dBgActor_c {
     s32 mBobOffset;  /* 0x324 -- sin(mBobPhase) * 10, added to the height */
     s16 mBobPhase;   /* 0x328 */
     u8 pad_32a[2];
-    s32 mHomeX;       /* 0x32c -- position at spawn; only mHomeY is read again */
-    s32 mHomeY;       /* 0x330 */
-    s32 mHomeZ;       /* 0x334 */
+    Vector3 mHome;    /* 0x32c -- position at spawn; only mHome.y is read again */
     u16 mStateFrames; /* 0x338 -- frames in the current state */
     u8 mRiderOn;      /* 0x33a -- set by OnStoodOn when the player touches it; cleared each frame */
     u8 mState;        /* 0x33b */
@@ -37,12 +35,8 @@ struct daObjFl_Amilift_c : dBgActor_c {
     u8 pad_33d[3];
     s32 mNodeCount;   /* 0x340 */
     s32 mNodeIndex;   /* 0x344 -- the node it is walking toward */
-    s32 mFromX;       /* 0x348 -- the node it last reached */
-    s32 mFromY;       /* 0x34c */
-    s32 mFromZ;       /* 0x350 */
-    s32 mToX;         /* 0x354 -- position of node mNodeIndex */
-    s32 mToY;         /* 0x358 */
-    s32 mToZ;         /* 0x35c */
+    Vector3 mFrom;    /* 0x348 -- the node it last reached */
+    Vector3 mTo;      /* 0x354 -- position of node mNodeIndex */
     PathPtr mPathPtr; /* 0x360 */
 
     virtual ~daObjFl_Amilift_c(); /* slots 16 (D1), 17 (D0) */

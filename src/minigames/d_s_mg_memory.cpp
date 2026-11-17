@@ -6,10 +6,8 @@
  *   - func_ and data_ helpers are still the linker names.
  *   - CheckFinished reads mCredits through WordAt. As a plain member the
  *     multiply-add takes its registers the other way round.
- *   - ShuffleCards: mValueCounts[cardValue] hoists the base; the slot is
- *     added to `this` first and the array reached through a cast back to
- *     the class. The card walks (DrawCards, RoundWaitDeal, ShuffleCards)
- *     step a `char *` the same way -- mCards[i] does not match there.
+ *   - DrawCards still steps a `char *` cursor over the cards; mCards[i]
+ *     does not match there (measured; see the function).
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -64,8 +62,6 @@ extern dScMgMemory_cCardState sMemoryCardTable[];
 extern "C" dScMgMemory_cPlayerState sMemoryPlayerTable[];
 
 extern "C" {
-extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
-extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemoryCardFrameSprites[];
 extern void *sMemoryCardSprites[];
@@ -76,7 +72,6 @@ extern short gMgCoinsStatus;
 extern void Mg_SetSharedState(int c);
 extern void Mg_SubmitScore(int self);
 extern void FreeGfxSlotsById(int x);
-void Mg_DrawCredits(char *c, int a, int b, int d);
 s32 GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
@@ -108,13 +103,13 @@ dScMgMemory_c::~dScMgMemory_c() {
 void dScMgMemory_c::DrawMessage() {
     if (mMessageVisible == 0)
         return;
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
 }
 
 void dScMgMemory_c::DrawCursor() {
     if (mCursor.enabled == 0)
         return;
-    Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
+    DrawBlinkSprite(0xe0, 0xa0);
 }
 
 void dScMgMemory_c::UpdateCursor() {
@@ -239,8 +234,13 @@ void dScMgMemory_c::CheckFinished() {
         mResultTimer = 64;
         mState = STATE_RESULT;
         mSubstate = RESULT_WAIT;
-        /* Read mCredits through WordAt: as a plain member the multiply-add takes
-       its registers the other way round. */
+        /* Read mCredits through WordAt: as a plain member the multiply-add
+           takes its registers the other way round (4 of 41 words, measured
+           2026-11-16). The same 4 words with the operands swapped, `6 * (3 -
+           mMisses)`, `(int)mMisses`, this->mCredits, a named bonus / credits
+           / score / left / misses (s32 or u8) local, `int *credits =
+           &mCredits`, `*&mCredits` and `*(int *)(char *)&mCredits`; only the
+           inline call moves the load. */
         Mg_SaveRecordPair(*WordAt((char *)&mCredits) + (3 - mMisses) * 6, mHudScore + 1);
     }
     if (mMisses >= mMaxMisses) {
@@ -292,7 +292,8 @@ void dScMgMemory_c::JudgePair() {
  * card counter is ranked first and takes sl; the ROM ranks it after the
  * hoisted constants, in r4 (colour only). A card pointer or reference is 36
  * off. With the pragma, mCards[i] gets the right colours but starts the walk
- * with an mla (one word more). memory2's DrawCards keeps the same pragma. */
+ * with an mla (one word more), which is why the `raw` cursor stays.
+ * memory2's DrawCards keeps the same pragma. */
 #pragma opt_propagation off
 void dScMgMemory_c::DrawCards() {
     char *raw = (char *)this;
@@ -633,38 +634,22 @@ void dScMgMemory_c::RoundReveal() {
  * contract and preserves the complete emitted body; the historical return
  * type cannot be recovered from the unused value left in r0. */
 void dScMgMemory_c::RoundWaitDeal() {
-    char *raw = (char *)this;
     int waiting = 0;
-    int cardIndex = 0;
-    char *cardBase = raw;
-    for (; cardIndex < CARD_NUM;) {
-        dScMgMemory_c *card = (dScMgMemory_c *)cardBase;
-        if (card->mCards[0].active != 0) {
-            if (card->mCards[0].state != CARD_IDLE) {
+    for (int cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
+        if (mCards[cardIndex].active != 0) {
+            if (mCards[cardIndex].state != CARD_IDLE) {
                 waiting++;
                 break;
             }
         }
-        cardIndex++;
-        cardBase += 0x18;
     }
     if (waiting != 0)
         return;
-    cardBase = raw;
-    cardIndex = 0;
-    {
-        unsigned char selectState = CARD_SELECTABLE;
-        for (; cardIndex < CARD_NUM;) {
-            ((dScMgMemory_c *)cardBase)->mCards[0].state = selectState;
-            cardIndex++;
-            cardBase += 0x18;
-        }
+    for (int cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
+        mCards[cardIndex].state = CARD_SELECTABLE;
     }
-    {
-        mSubstate = ROUND_START;
-        mState = STATE_JUDGE_PAIRS;
-        return;
-    }
+    mSubstate = ROUND_START;
+    mState = STATE_JUDGE_PAIRS;
 }
 
 void dScMgMemory_c::RoundDealHard() {
@@ -727,88 +712,67 @@ void dScMgMemory_c::RoundStart() {
 }
 
 void dScMgMemory_c::ShuffleCards() {
-    char *raw = (char *)this;
     int cardValue;
-    int valueIndex;
-    u8 *valueCount;
-    int cardIndex;
-    char *cardBase;
 
-    for (cardIndex = 0; cardIndex < VALUE_NUM; cardIndex++)
-        mValueCounts[cardIndex] = 0;
+    for (int i = 0; i < VALUE_NUM; i++)
+        mValueCounts[i] = 0;
 
     if (mDifficulty == 0) {
-        cardBase = raw + 0x60;
-        for (valueIndex = 4; valueIndex < CARD_NUM; valueIndex++) {
+        for (int cardIndex = 4; cardIndex < CARD_NUM; cardIndex++) {
             cardValue = MG_RAND(4) + 1;
             for (;;) {
-                /* mValueCounts[cardValue] hoists the base. Same spelling below. */
-                valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
-                if (*valueCount < 2) {
-                    ((dScMgMemory_c *)cardBase)->mCards[0].value = cardValue;
-                    *valueCount += 1;
+                if (mValueCounts[cardValue] < 2) {
+                    mCards[cardIndex].value = cardValue;
+                    mValueCounts[cardValue]++;
                     break;
                 }
                 cardValue = MG_RAND(4) + 1;
             }
-            cardBase += 0x18;
         }
-        cardBase = raw + 0x60;
-        for (cardIndex = 4; cardIndex < CARD_NUM; cardIndex++) {
-            ((dScMgMemory_c *)cardBase)->mCards[0].x = 0x80000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].y = -0x80000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].speed = 0x8000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].visible = 1;
-            ((dScMgMemory_c *)cardBase)->mCards[0].state = CARD_MOVING;
-            cardBase += 0x18;
+        for (int cardIndex = 4; cardIndex < CARD_NUM; cardIndex++) {
+            mCards[cardIndex].x = 0x80000;
+            mCards[cardIndex].y = -0x80000;
+            mCards[cardIndex].speed = 0x8000;
+            mCards[cardIndex].visible = 1;
+            mCards[cardIndex].state = CARD_MOVING;
         }
     } else if (mDifficulty == 1) {
-        cardBase = raw + 0x30;
-        for (cardIndex = 2; cardIndex < CARD_NUM; cardIndex++) {
+        for (int cardIndex = 2; cardIndex < CARD_NUM; cardIndex++) {
             cardValue = MG_RAND(5) + 1;
             for (;;) {
-                valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
-                if (*valueCount < 2) {
-                    ((dScMgMemory_c *)cardBase)->mCards[0].value = cardValue;
-                    *valueCount += 1;
+                if (mValueCounts[cardValue] < 2) {
+                    mCards[cardIndex].value = cardValue;
+                    mValueCounts[cardValue]++;
                     break;
                 }
                 cardValue = MG_RAND(5) + 1;
             }
-            cardBase += 0x18;
         }
-        cardBase = raw + 0x30;
-        for (cardIndex = 2; cardIndex < CARD_NUM; cardIndex++) {
-            ((dScMgMemory_c *)cardBase)->mCards[0].x = 0x80000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].y = -0x80000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].speed = 0x8000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].visible = 1;
-            ((dScMgMemory_c *)cardBase)->mCards[0].state = CARD_MOVING;
-            cardBase += 0x18;
+        for (int cardIndex = 2; cardIndex < CARD_NUM; cardIndex++) {
+            mCards[cardIndex].x = 0x80000;
+            mCards[cardIndex].y = -0x80000;
+            mCards[cardIndex].speed = 0x8000;
+            mCards[cardIndex].visible = 1;
+            mCards[cardIndex].state = CARD_MOVING;
         }
     } else {
-        cardBase = raw;
-        for (cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
+        for (int cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
             cardValue = MG_RAND(6) + 1;
             for (;;) {
-                valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
-                if (*valueCount < 2) {
-                    ((dScMgMemory_c *)cardBase)->mCards[0].value = cardValue;
-                    *valueCount += 1;
+                if (mValueCounts[cardValue] < 2) {
+                    mCards[cardIndex].value = cardValue;
+                    mValueCounts[cardValue]++;
                     break;
                 }
                 cardValue = MG_RAND(6) + 1;
             }
-            cardBase += 0x18;
         }
-        cardBase = raw;
-        for (cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
-            ((dScMgMemory_c *)cardBase)->mCards[0].x = 0x80000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].y = -0x80000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].speed = 0x8000;
-            ((dScMgMemory_c *)cardBase)->mCards[0].visible = 1;
-            ((dScMgMemory_c *)cardBase)->mCards[0].state = CARD_MOVING;
-            cardBase += 0x18;
+        for (int cardIndex = 0; cardIndex < CARD_NUM; cardIndex++) {
+            mCards[cardIndex].x = 0x80000;
+            mCards[cardIndex].y = -0x80000;
+            mCards[cardIndex].speed = 0x8000;
+            mCards[cardIndex].visible = 1;
+            mCards[cardIndex].state = CARD_MOVING;
         }
     }
 }
@@ -950,7 +914,7 @@ void dScMgMemory_c::StartRound(int /* arg */) {
 /* Slot 9. */
 s32 dScMgMemory_c::Render() {
     Camera_InitDealerView(&mCamera);
-    Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
+    DrawCredits(0xc, 0xc, 0);
     MgCoins_Draw();
     DrawMessage();
     DrawCursor();

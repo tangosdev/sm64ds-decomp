@@ -2,6 +2,7 @@
 #define OV075_ENTRY_MESH_H
 
 #include "common.h"
+#include "nitro/fx/fx.h"
 
 struct BMD_File;
 
@@ -11,14 +12,12 @@ struct BMD_File;
  * rippled outward from a touched point. Its methods are ov075
  * 0x0211a948..0x0211b524, in src/game/stages/d_s_entry_entry.cpp. */
 
-/* Vector3- and Matrix4x3-layout twins. Not those types themselves:
- * Vector3 declares a destructor, so a Vector3 member (or the Vector3 t of
- * math/Matrix.h's Matrix4x3) makes this unit emit an unreferenced
- * ~Vector3() copy and gives EntryMesh a destructor dEntObj_c's object would
- * emit; the ROM has neither (the same reason as dBgW_Kc's PlainVec). */
-struct EntryMeshVec {
-    s32 x, y, z;
-};
+/* The grid's vectors are the SDK's POD VecFx32, not types.h Vector3: Vector3
+ * declares a destructor, so a Vector3 member makes this unit emit an
+ * unreferenced ~Vector3() copy and gives EntryMesh a destructor dEntObj_c's
+ * object would emit; the ROM has neither (the same reason as dBgW_Kc's
+ * PlainVec). EntryMeshMtx is a Matrix4x3-layout twin for the same reason
+ * (math/Matrix.h's Matrix4x3 holds a Vector3 t). */
 struct EntryMeshMtx {
     s32 m[12];
 };
@@ -26,7 +25,7 @@ struct EntryMeshMtx {
 /* One grid vertex. InitGrid lays the grid out, CalcNormals packs the
  * normals and DrawGrid sends each vertex to the geometry engine. */
 typedef struct EntryMeshVertex {
-    EntryMeshVec pos; /* 0x00 -- 1.19.12, sent as VTX_16; z is the ripple height */
+    VecFx32 pos;      /* 0x00 -- 1.19.12, sent as VTX_16; z is the ripple height */
     s32 dist;         /* 0x0c -- CalcDistances: distance from mRippleCenter */
     /* 0x10: the packed 10-bit x/y/z normal CalcNormals builds; DrawGrid
        sends it to G3_NORMAL (0x4000484). */
@@ -51,7 +50,7 @@ struct EntryMesh;
 typedef void (EntryMesh::*EntryMeshHandler)();
 
 struct EntryMesh {
-    EntryMeshVec mPos; /* 0x00 -- CalcMatrix translates mMtx by it */
+    VecFx32 mPos;      /* 0x00 -- CalcMatrix translates mMtx by it */
     s16 mAngleX;       /* 0x0c -- only zeroed, by Init (medium confidence) */
     s16 mAngleY;       /* 0x0e -- CalcMatrix rotates mMtx by it */
     s16 mAngleZ;       /* 0x10 -- only zeroed, by Init (medium confidence) */
@@ -64,7 +63,7 @@ struct EntryMesh {
     EntryMeshMtx mInvMtx;
     /* 0x74: the point in grid space a ripple starts at (StartRipple;
        TouchAt maps the touch into grid space). */
-    EntryMeshVec mRippleCenter;
+    VecFx32 mRippleCenter;
     EntryMeshVertex *mVertices; /* 0x80 -- mNumVertices of them */
     /* 0x84: a {init, behavior, render} row of handlers. Init runs [0],
        Behavior [1] and Render [2]. */

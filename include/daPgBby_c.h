@@ -57,9 +57,7 @@ struct daPgBby_c : dActor_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x194 */
     /* Copy of mPosX/Y/Z taken once in InitResources and never written
        again; the respawn check teleports back here. */
-    s32 mSpawnPosX;                 /* 0x350 */
-    s32 mSpawnPosY;                 /* 0x354 */
-    s32 mSpawnPosZ;                 /* 0x358 */
+    Vector3 mSpawnPos;              /* 0x350 */
     State *mState;                  /* 0x35c -- current {enter, update} pair */
     daPly_c *mCarrier;              /* 0x360 -- the player holding it */
     /* Lazily filled with FindWithActorID(0x101, 0) and never cleared.

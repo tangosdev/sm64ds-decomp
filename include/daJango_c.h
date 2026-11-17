@@ -70,14 +70,9 @@ struct daJango_c : dEnemyBase_c {
     void                        *mState;                /* 0x42c */
     /* The path node Klepto is at. InitResources has PathPtr::GetNode write the
        node at mPathNodeIndex here (the carrying-a-star branch then teleports the
-       actor onto it: `mPosX = mPathNodePosX;` ...), and UpdateFlyPathState sets
+       actor onto it: `mPosX = mPathNodePos.x;` ...), and UpdateFlyPathState sets
        it to the actor's own position each time it snaps onto a node. */
-    union {
-        struct {
-            s32 mPathNodePosX, mPathNodePosY, mPathNodePosZ;
-        };
-        Vector3 mPathNodePos; /* 0x430 */
-    };
+    Vector3 mPathNodePos; /* 0x430 */
     /* Two uses on the one word. In UpdateCircleState (circling) it is a phase
        counter for the animation switch: 0, then 1 when jango_attack.bca is
        started, then 2..0x18 counting up, then back to 0. In the swoop it is the
@@ -131,9 +126,7 @@ struct daJango_c : dEnemyBase_c {
     s32                          mHeldActorID;          /* 0x44c */
     /* The position Behavior writes into the held actor (about Klepto's own mPos)
        every frame; where the held actor is drawn comes from mHeldMat. */
-    s32                          mHeldPosX;             /* 0x450 */
-    s32                          mHeldPosY;             /* 0x454 */
-    s32                          mHeldPosZ;             /* 0x458 */
+    Vector3 mHeldPos; /* 0x450 */
     u8  pad_45c[0x4];
     /* Ticked (+1, & 7) at the top of ChangeTarget, which only does its
        work when it wraps to 0; UpdateFlyPathState stores 7 so the very next
@@ -156,14 +149,8 @@ struct daJango_c : dEnemyBase_c {
     s32                          mPathNodeCount;        /* 0x470 */
     s32                          mPathNodeIndex;        /* 0x474 -- the index handed to PathPtr::GetNode */
     u8  pad_478[0xc];
-    /* InitResources snapshots mPos before movement. Keep the component names
-       and vector view over this same 0x484-0x490 storage. */
-    union {
-        struct {
-            s32 mSpawnPosX, mSpawnPosY, mSpawnPosZ;
-        };
-        Vector3 mSpawnPos; /* 0x484 */
-    };
+    /* InitResources snapshots mPos here before movement. */
+    Vector3 mSpawnPos; /* 0x484 */
 
     /* --- vtable --- */
     virtual ~daJango_c() {}

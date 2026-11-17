@@ -350,7 +350,7 @@ void daTrsTrap_c::UpdateStaircase() {
 
     switch (mState) {
     case 0:
-        mPosY = mHomePosY;
+        mPosY = mHomePos.y;
         mRiseProgress = 0;
         mState++;
         /* fallthrough */
@@ -361,7 +361,7 @@ void daTrsTrap_c::UpdateStaircase() {
         if (mRiseProgress <= limit)
             return;
         mRiseProgress = limit;
-        mPosY = mHomePosY + (limit << 12);
+        mPosY = mHomePos.y + (limit << 12);
         mState++;
         return;
     case 2:
@@ -483,9 +483,9 @@ int daTrsTrap_c::InitResources()
         mIndex = 3;
     }
 
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mState = 0;
     mStandingActor = 0;
     mInitLatch = 0;
@@ -519,10 +519,10 @@ int daTrsTrap_c::InitResources()
     if (mIndex == 2) {
         Vector3 base; Vector3_16 v16;
         int j, even, odd, actorId, neg1;
-        base.x = mHomePosX;
-        base.y = mHomePosY;
+        base.x = mHomePos.x;
+        base.y = mHomePos.y;
         j = 0;
-        base.z = mHomePosZ;
+        base.z = mHomePos.z;
         v16.x = 0;
         even = j;
         v16.y = -0x8000;
@@ -531,9 +531,9 @@ int daTrsTrap_c::InitResources()
         actorId = 0xd5;
         neg1 = -1;
         for (; j < 3; j++) {
-            base.x = mHomePosX - data_ov063_0211e9f8[even];
-            base.y = mHomePosY + data_ov063_0211e9f8[odd];
-            base.z = mHomePosZ - 0xb4000;
+            base.x = mHomePos.x - data_ov063_0211e9f8[even];
+            base.y = mHomePos.y + data_ov063_0211e9f8[odd];
+            base.z = mHomePos.z - 0xb4000;
             sp = dActor_c::Spawn(actorId, j, base, &v16, mAreaId, neg1);
             ((daBook_c *)sp)->mLinkedActorID = uniqueID;
             even += 2; odd += 2;

@@ -60,11 +60,6 @@
 #include "cstd.h"
 #include "nitro/gx/gx_load.h"
 
-/* Scene_StateResult's view of the ov004 score block at gMgScene
-   (dScMgBase_c.h declares it void *): the current score at +0xb4 and the best
-   at +0xb8. */
-struct ScoreView { unsigned char pad[0xb4]; int b4; int b8; };
-
 /* Everything this file calls or reads that decl_common.h does not declare. */
 extern "C" {
 
@@ -77,7 +72,6 @@ struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Hud_RenderSprite(void *fn, int a, int b, int c, int d);
 extern void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
-extern void Mg_DrawScoreTally(void *, int, int, int);
 extern int Mg_IsNewRecord(void);
 #include "OAM.h"
 #include "nitro/mi/memory.h"
@@ -1209,7 +1203,7 @@ void dScMgTeresa_c::Reveal_Hide()
 }
 
 /* decl_common.h declares this one with a `void *` parameter, and
-   Mg_RenderSubSpriteMtx as `(void *, int, int, void *)`. */
+   Mg_RenderSubSpriteMtx as `(void *, int, int, Matrix2x2 *)`. */
 void dScMgTeresa_c::FoundNumber_DrawAll() {
     int i;
     for (i = 0; i < FOUND_NUMBER_NUM; i++) {
@@ -2073,18 +2067,18 @@ void dScMgTeresa_c::Scene_StateResult() {
         return;
     mSceneTimer = 0;
     if (mRoundCleared != 0) {
-        struct ScoreView *p;
+        dScMgBase_c *scene;
         Mg_SetSharedState(MG_STATE_ROUND_CLEAR);
-        p = (struct ScoreView *)gMgScene;
-        if (p != 0) {
-            if (p->b4 < 0x270f) {
-                p->b4 += 1;
+        scene = gMgScene;
+        if (scene != 0) {
+            if (scene->mHudScore < 0x270f) {
+                scene->mHudScore += 1;
             }
-            if (p->b4 > p->b8) {
-                p->b8 = p->b4;
+            if (scene->mHudScore > scene->mBestHudScore) {
+                scene->mBestHudScore = scene->mHudScore;
             }
         }
-        Mg_SubmitScore(gMgScene ? ((struct ScoreView *)gMgScene)->b4 : 0);
+        Mg_SubmitScore(gMgScene ? gMgScene->mHudScore : 0);
     } else {
         if (Mg_IsNewRecord() != 0) {
             mCountdownShown = 0;
@@ -2171,7 +2165,10 @@ void dScMgTeresa_c::Scene_StateInit() {
  * grows and buf moves to another slot. The hand-rotated do/while is kept
  * too: `for (j = 0; j < n; j++)` with y = cy - half + j is the right size
  * but schedules cx - half and cy - half ahead of the n <= 0 exit (12 words
- * off; corner in the for initialiser, a word short; measured 2026-11-07). */
+ * off; corner in the for initialiser, a word short; measured 2026-11-07).
+ * Re-measured (#821, 2026-11-16): 0x170 without the pragma against the ROM's
+ * 0x15c; a ~(0xf << s) mask or a named shift local 0x16c; x = cx - half + i
+ * 0x174. */
 #pragma opt_loop_invariants off
 /* dScMgTeresa_c::PaintSquare - slot 34, a STIPPLED brush.
 
@@ -2271,7 +2268,7 @@ void dScMgTeresa_c::StartRound(int reset) {
 /* Vtable slot 9. */
 s32 dScMgTeresa_c::Render()
 {
-    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
+    DrawScoreTally(0xe0, 0x14, 1);
     FoundNumber_DrawAll();
     DrawCountdown();
     Exclaim_DrawAll();
@@ -2345,7 +2342,7 @@ s32 dScMgTeresa_c::InitResources()
         fb = 0;
         MI_CpuFill16(p, fb, 0x800);
     }
-    Mg_InitBrush((char *)this, 0, 0, 0);
+    InitBrush(0, 0, 0);
     {
         void *p = G2S_GetBG0CharPtr();
         fc = 0x1111;

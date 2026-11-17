@@ -106,7 +106,6 @@ extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *
 extern int Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_SetSharedState(int a);
 extern void Mg_SetTopScreenYOffset(int a);
-extern void Mg_InitBrush(char *a, char b, int c, int d);
 extern void func_02012718(int a, int b);
 extern void FreeGfxSlotsById(int arg);
 extern void *LoadFile(int handle);
@@ -732,7 +731,20 @@ void dScMgPachinko_c::ClearAimLine() {
    data, 4bpp tiles laid out 32 to a row: y picks the tile row and the
    4-byte line inside the tile, x the tile column and the nibble. It does
    not read `this`.
-   opt_loop_invariants stays off: the ROM keeps j on the stack and every spelling without these staged locals is a word short (0x7c of 0x80). */
+   Kept, measured (#821, 2026-11-16): without opt_loop_invariants off this
+   body is the right 0x80 (j's zero still comes off the stack) but 10 of 32
+   words off: py & 7 and py >> 3 swap order and xb, lineOfs and rowTile
+   rotate registers. 36 orders of the staged assignments land on the same
+   10 words or a word short; dropping x0 (a fresh px), or hoisting rowTile
+   and xb out of the inner loop, is 0x7c, and the unstaged one-line index
+   is 0x78. dScMgPachinko2_c's twin keeps the same pragma.
+   The byte-offset store stays too (#821, re-measured 2026-11-16): the ROM
+   adds lineOfs to the tile's address as a register offset. With tile =
+   rowTile + (x >> 3), bp[tile * 8 + line] is 0x7c, and (bp + tile * 8)[line],
+   a u32 *tile local or bp[tile * 8 + (lineOfs >> 2)] is 0x84. A 32-byte
+   tile type (u32 (*)[8], a { u32 line[8]; } struct, a tile row pointer,
+   either operand order) is the right 0x80 but 15 of 32 words off: line * 4
+   is folded into the tile base and the registers rotate. */
 void dScMgPachinko_c::PlotSubBg2Pixels(int x, int y, int colour) {
     int i, j, py, line, tileY, lineOfs, rowTile, xb, x0;
     u32 *bp;
@@ -1075,9 +1087,19 @@ static inline int FX_Mul(int v1, int v2)
  * `sprite` picks, at its position plus offX/offY, through a 2x2
  * rotate-and-scale matrix: `rotation` is the angle (>> 4 indexes the shared
  * sine/cosine table) and the 20.12 `scale` is the scale. The products go through FX_Mul; spelled out in the body
- * they put the scale in the first smull's Rm instead of the table value. With
- * opt_prelinearize on, every callee-saved register in the loop rotates by one
- * place. */
+ * they put the scale in the first smull's Rm instead of the table value.
+ * Kept, measured (#821, 2026-11-16): without opt_prelinearize off this local
+ * FX_Mul (and the SDK's own fx32 FX_Mul body) is 42 of 60 words off, every
+ * callee-saved register in the loop rotated. Through fx.h's FX_MUL macro it is
+ * 6 words off: the scale lands in sl instead of ip, so the two smulls take
+ * other registers. 36 orders of the scale, sprite and matrix locals, the
+ * matrix stores and the x/y reads, swapped FX_MUL operands, a fx32 or long
+ * scale and an `idx` local all stay at 6. A ball pointer (local or walked)
+ * is 56; a function-scope matrix 42.
+ * Re-measured (#821, round 18): FX_MUL without the pragma stays 6 words off
+ * with fx64 casts on both operands or on the scale alone, a block-scope loop
+ * counter and a u16 rotation local. The sine product first is 18 off, fx16
+ * or int sine/cosine locals 42, the scale re-read per product 52. */
 void dScMgPachinko_c::Ball_DrawAll() {
     int i;
     for (i = 0; i < BALL_NUM; i++) {
@@ -1153,7 +1175,14 @@ void dScMgPachinko_c::Ball_CheckPipes(int idx) {
  * The two velocity-component base offsets must be introduced in the order
  * below: the constant pool emits 0x4668 before 0x466c, and the declaration
  * order is what fixes it.
- * opt_common_subs stays off: typed mBall[i] spellings land at 0x1fc-0x260 of 0x240 with or without it, so the field-base forms remain. */
+ * opt_common_subs stays off: typed mBall[i] spellings land at 0x1fc-0x260 of 0x240 with or without it, so the field-base forms remain.
+ * Kept, re-measured (#821, 2026-11-16): this body without the pragma is 0x23c;
+ * the plain typed body (one sqrt expression, while-loop re-roll, every field
+ * as mBall[i].f) is 0x260 without it and 0x230 with it. The ROM reaches each
+ * field as its own this + offset base indexed by i * 0x38, the shape common
+ * subexpressions off gives. Round 18: a `ball` pointer for every field is
+ * 0x204 without the pragma and 0x200 with it; the squared length summed in
+ * an s64 local is 0x260 / 0x230, as the one-expression form. */
 void dScMgPachinko_c::Ball_AimAtTarget(int i) {
     int idx;
     int n;
@@ -1701,6 +1730,15 @@ void dScMgPachinko_c::BobOmb_StateWaitGrab(int i) {
  * the touch loads, the x/y reloads and the clamps differently (74 words,
  * unmoved by declaration order, idx type, vx/vy order, `py`, inline touch
  * reads, `+=` or else-if clamps).
+ * Kept, re-measured (#821, 2026-11-16) in dScMgPachinko2_c::Ball_StateAim's
+ * typed shape without the pragma: 0x3bc and 65 of 239 words off, every one in
+ * the held branch (touch loads, x/y stores and reloads, clamp addresses); the
+ * release branch, FX_CosIdx/FX_SinIdx products included, is exact. 16 held-
+ * branch variants (touch locals or inline, int or u32 idx, operand and
+ * read order) give 65-71; a shot pointer for the x clamps 62. With the pragma
+ * that shape is 0x3e8. Round 18: plain mShot[i] at every use with typed
+ * touch reads is 84 off (0x3e8 with the pragma); the twin's flat byte-view
+ * touch reads bring it to 35, a launder for a pragma, so not taken.
  * The two velocity reads stay hand-indexed into FX_SinCosTable_: through
  * FX_CosIdx / FX_SinIdx the products take swapped registers (17-22 DIFF in
  * eleven spellings: inline, index local, fx16 local, speed read first).
@@ -2081,7 +2119,6 @@ s32 dScMgPachinko_c::Behavior()
 /* Vtable slot 0. */
 s32 dScMgPachinko_c::InitResources()
 {
-    char *c = (char *)this;
     char *b;
     char *dst;
     volatile u16 fillScr;
@@ -2142,7 +2179,7 @@ s32 dScMgPachinko_c::InitResources()
     G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
                           GX_BG_CHARBASE_0x18000);
 
-    Mg_InitBrush(c, 0, 2, 0);
+    InitBrush(0, 2, 0);
 
     b = (char *)G2S_GetBG2CharPtr();
     fillZero = 0;

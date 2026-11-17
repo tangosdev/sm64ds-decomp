@@ -3,6 +3,14 @@
 
 #include "types.h"
 
+/* A stylus point on the touch screen, in pixels. The trampoline scenes keep
+ * the current sample and the press-edge sample as two of these and hand a
+ * copy of each to TrmpLine::Create, which reads the pair as s16[2]. */
+struct Vec2s {
+    s16 x, y;
+};
+typedef char Vec2s_size_must_be_0x4[sizeof(Vec2s) == 0x4 ? 1 : -1];
+
 /* TrmpLine, one stylus-drawn trampoline of Trampoline and Trampoline2: the
  * 0x32c-byte slot whose methods in src/minigames/unit020cd744.cpp build, flex
  * and draw it (the scenes construct three or four). The name is coined.
@@ -14,6 +22,8 @@
  * fade states step it with the int ApproachLinear2 through an (int *) cast of
  * its address. */
 struct TrmpLine {
+    typedef void (TrmpLine::*StateFn)();
+
     TrmpLine();
     ~TrmpLine();
 
@@ -49,7 +59,7 @@ struct TrmpLine {
         fx32 x, y, z;
     };
 
-    s32 mState[2];          /* 0x000 -- the current state's member-pointer record */
+    void (TrmpLine::*mState)(); /* 0x000 -- the current state */
     Vector3 mCenter;        /* 0x008 -- midpoint of the drawn stroke */
     Vector3 mNormal;        /* 0x014 -- copied into a jumper's mContactNormal */
     Vector3 mAxis;          /* 0x020 -- unit vector along the stroke */

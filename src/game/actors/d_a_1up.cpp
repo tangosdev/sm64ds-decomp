@@ -254,8 +254,8 @@ void da1up_c::UpdatePhysics() {
 
     UpdatePosWithHorzSpeedAndAng();
     if (mWithMeshClsn.IsOnGround()) {
-        mSpeedX += mFloorNormalX * 0xa;
-        mSpeedZ += mFloorNormalZ * 0xa;
+        mSpeedX += mFloorNormal.x * 0xa;
+        mSpeedZ += mFloorNormal.z * 0xa;
         if (mWithMeshClsn.JustHitGround()) {
             mVertSpeed = -(mVertSpeed << 2) / 10;
         } else {
@@ -269,7 +269,7 @@ void da1up_c::UpdatePhysics() {
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     if (!mWithMeshClsn.IsOnWall()) return;
-    mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+    mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -602,17 +602,19 @@ void da1up_c::UpdateFallThenWait() {
 
 /* -------------------------------------------------------------------------- */
 /* Dispatch-table index 10 (MUSHROOM_RISE_THEN_POP_OUT). Marks the mushroom
-   shown and, while it is below 100 units (0x64000) above mSpawnPosY, raises it 5
+   shown and, while it is below 100 units (0x64000) above mSpawnPos.y, raises it 5
    units (0x5000) per frame. On the frame it reaches that height it is clamped
    to it and turned into type 0 in state 0, with mStateTimer and mStateFrames set
    to 0xffff so the increments Behavior makes right after the call wrap them to
    0. */
 void da1up_c::UpdateRiseThenPopOut() {
     mShown = 1;
-    if (mPosY >= mSpawnPosY + 0x64000) return;
+    if (mPosY >= mSpawnPos.y + 0x64000)
+        return;
     mPosY += 0x5000;
-    if (mPosY < mSpawnPosY + 0x64000) return;
-    mPosY = mSpawnPosY + 0x64000;
+    if (mPosY < mSpawnPos.y + 0x64000)
+        return;
+    mPosY = mSpawnPos.y + 0x64000;
     mMushroomType = 0;
     mState = 0;
     mStateTimer = 0xffff;
@@ -628,19 +630,19 @@ void da1up_c::UpdateRiseThenPopOut() {
 void da1up_c::UpdateSpawner() {
     struct Vector3 vec;
 
-    vec.x = mSpawnPosX;
-    vec.y = mSpawnPosY;
-    vec.z = mSpawnPosZ;
-    vec.y = mSpawnPosY + 0x32000;
+    vec.x = mSpawnPos.x;
+    vec.y = mSpawnPos.y;
+    vec.z = mSpawnPos.z;
+    vec.y = mSpawnPos.y + 0x32000;
     dActor_c::Spawn(
         actorID, 0x25, vec, 0, mAreaId, -1);
 
-    vec.y = mSpawnPosY;
-    vec.x = mSpawnPosX - 0x1f4000;
+    vec.y = mSpawnPos.y;
+    vec.x = mSpawnPos.x - 0x1f4000;
     dActor_c::Spawn(
         actorID, 0xb, vec, 0, mAreaId, -1);
 
-    vec.x = mSpawnPosX + 0x1f4000;
+    vec.x = mSpawnPos.x + 0x1f4000;
     dActor_c::Spawn(
         actorID, 0xb, vec, 0, mAreaId, -1);
 
@@ -1144,9 +1146,9 @@ int da1up_c::InitResources() {
     }
     mBlinkOn = 1;
     mUnlockCount = (param1 >> 4) & 0xf;
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);

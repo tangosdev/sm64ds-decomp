@@ -776,8 +776,7 @@ int daObjKey_c::Behavior()
                 VEC_Subtract(&vec, &mPos, &vec);
                 Vec3_LslInPlace(&vec, 3);
                 VEC_Add(&vec, &mPos, &vec);
-                /* First bone, word at +0xc. BMD_Bone has no field there. */
-                vec.y = *(int *)((char *)mAnmModel.data.bones + 0xc) * BONE_Y_MUL + vec.y;
+                vec.y = mAnmModel.data.bones->scaleX * BONE_Y_MUL + vec.y;
                 vec.y = vec.y - Y_BONE;
                 mParticleID[0] =
                     Particle::System::New(mParticleID[0], FX_BURST_A, vec.x, vec.y, vec.z, 0, 0);

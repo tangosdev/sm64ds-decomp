@@ -15,7 +15,7 @@
  * SM64DS symbols.
  *
  * SIZE 0x330. dBgActor_c members end at 0x31e and sizeof rounds to 0x320;
- * pad_31e reuses that tail padding so mHomePosX lands at 0x320. pad_31e is
+ * pad_31e reuses that tail padding so mHomePos lands at 0x320. pad_31e is
  * not live -- it is alignment, not unk_31e.
  *
  * dBgActor_c.h FIRST so common.h beats dExtSimpleModel_c.h on Matrix4x3.
@@ -27,9 +27,7 @@
 
 struct daObjCannonShutter_c : dBgActor_c {
     u8 pad_31e[0x2];
-    s32 mHomePosX;  /* 0x320 */
-    s32 mHomePosY;  /* 0x324 */
-    s32 mHomePosZ;  /* 0x328 */
+    Vector3 mHomePos; /* 0x320 */
     u8 mOpening;    /* 0x32c */
     u8 mOpenPhase;  /* 0x32d */
     u8 mCannonOpen; /* 0x32e */

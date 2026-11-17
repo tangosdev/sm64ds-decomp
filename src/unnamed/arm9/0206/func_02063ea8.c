@@ -33,16 +33,12 @@ int func_02063ea8(WBTWork *work, int aid, int buf, int size) {
     int consumed;
     int field;
     WBTPeerRecord *peer;
-    int off;
     const u8 *cur;
-    char *recv;
+    WBTPeerRecv *recv;
 
-    off = aid * sizeof(WBTPeerRecord);
     peer = &work->peer[aid];
     field = 1;
-    /* Not &peer->recv: the cartridge forms the address from the
-       record offset a second time. */
-    recv = (char *)&work->peer[0].recv + off;
+    recv = &work->peer[aid].recv;
     consumed = 0;
     cur = (const u8 *)buf;
     peer->state = 1;

@@ -69,11 +69,11 @@ struct dScMgJump2_c : dScMgD3DBase_c {
     s16 mStateTimer;              /* 0x5a74 -- the state functions' countdown */
     u16 pad_5a76;                 /* 0x5a76 */
 
-    /* The PMF state machine. pmf_dScMgJump2_c_State_Idle..9c are the eight-byte
-       records the state functions copy into mState whole; their first
-       words relocate to State_Idle, ..ef5ac, ..ef480, ..ef794 and
-       ..ef4ec respectively (config/arm9/overlays/ov006/relocs.txt). The
-       three remaining members are the transitions that install them. */
+    /* The state machine. Each `mState = &dScMgJump2_c::State_*` makes mwcc
+       emit an eight-byte {fn, 0} member-pointer constant
+       (pmf_dScMgJump2_c_* in symbols.txt), and Behavior dispatches
+       through mState. The three Begin* members are the transitions that
+       install a state. */
     void State_Idle();
     void State_Result();
     void State_End();

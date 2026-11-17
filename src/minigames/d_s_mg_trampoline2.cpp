@@ -28,7 +28,14 @@ enum d_s_mg_trampoline2_AssetId {
  * invariants are hoisted, and the setting still cannot be narrowed to it --
  * this TU leaves codegen deferred, so mwccarm reads the state at the end of
  * the file and an `on` placed after PaintSquare (or after the function
- * following it) puts hoisting back for PaintSquare as well. TUBUILD CONFLICT
+ * following it) puts hoisting back for PaintSquare as well.
+ * Kept, re-measured (#821, 2026-11-16): without the pragma the other 41
+ * functions still match and PaintSquare is 0x188 of 0x170 (hoisted
+ * constants spill past the ROM's five stack words). dScMgTrampoline_c's
+ * spelling of the same body 0x188; for loops with x and y as products of
+ * the counters 0x184-0x18c; the layer read once before the loops 0x188.
+ * The siblings in d_s_mg_trampoline.cpp and d_s_mg_teresa.cpp keep the
+ * same pragma. TUBUILD CONFLICT
  * lines stay; the manifest pairs them.
  *
  * leftovers:
@@ -273,10 +280,10 @@ s32 dScMgTrampoline2_c::InitResources() {
 void dScMgTrampoline2_c::StartRound(int /* arg */) {
     G2_SetBlendAlpha(1, 0x2e, 0x10, 0x10);
 
-    mTouchStartX = data_020a0dbc[0];
-    mTouchStartY = data_020a0dbc[1];
-    mTouchX = data_020a0dbc[0];
-    mTouchY = data_020a0dbc[1];
+    mTouchStart.x = data_020a0dbc[0];
+    mTouchStart.y = data_020a0dbc[1];
+    mTouch.x = data_020a0dbc[0];
+    mTouch.y = data_020a0dbc[1];
 
     mLevel = 0;
     if (mLevel > 0x270e)
@@ -319,11 +326,11 @@ void dScMgTrampoline2_c::BeginIntro() {
     short a, b;
     mTimer = 90;
     a = sTrmpStartTouchX;
-    mTouchStartX = a;
+    mTouchStart.x = a;
     b = sTrmpStartTouchY;
-    mTouchStartY = b;
-    mTouchX = a;
-    mTouchY = b;
+    mTouchStart.y = b;
+    mTouch.x = a;
+    mTouch.y = b;
     mDragSoundHandle = 0;
     mScoreGate = 0x3e8;
     mState = &dScMgTrampoline2_c::StateIntro;
@@ -357,15 +364,21 @@ void dScMgTrampoline2_c::StateIntro() {
 
     {
         int t = FX_Div(counter << 12, 0x5a000);
-        volatile s16 old9c = mTouchX;
-        volatile s16 old9e = mTouchY;
+        /* Kept volatile: the ROM spills the previous point to the stack
+           across the random draw, as in dScMgTrampoline_c::StateIntro.
+           Measured 2026-11-16 (#821 r22): plain s16 locals shrink it
+           to 0x198 of 0x1a0; a whole-struct copy `Vec2s prev = mTouch`
+           keeps the stack slot but loads it with ldrh, not ldrsh
+           (10/104). */
+        volatile s16 old9c = mTouch.x;
+        volatile s16 old9e = mTouch.y;
         int mixRaw = sTrmp2IntroToX * t + sTrmp2IntroFromX * (0x1000 - t);
-        mTouchX = (mixRaw >> 12);
-        mTouchY = sTrmpStartTouchY;
+        mTouch.x = (mixRaw >> 12);
+        mTouch.y = sTrmpStartTouchY;
 
-        mTouchY += ((RAND_FX() - 0x800) << 2) >> 12;
+        mTouch.y += ((RAND_FX() - 0x800) << 2) >> 12;
 
-        Mg_DrawLine(old9c, old9e, mTouchX, mTouchY, 2, 0xc);
+        Mg_DrawLine(old9c, old9e, mTouch.x, mTouch.y, 2, 0xc);
 
         mDragSoundHandle =
             func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mixRaw), 0, 0);
@@ -511,10 +524,10 @@ void dScMgTrampoline2_c::UpdateTouchInput() {
     i = ACTIVE_SLOT;
     b = (gTouchInfo[i].held != 0 && gTouchInfo[i].edge != 0);
     if (b) {
-        mTouchX = gTouchInfo[i].x;
-        mTouchStartX = mTouchX;
-        mTouchY = gTouchInfo[i].y;
-        mTouchStartY = mTouchY;
+        mTouch.x = gTouchInfo[i].x;
+        mTouchStart.x = mTouch.x;
+        mTouch.y = gTouchInfo[i].y;
+        mTouchStart.y = mTouch.y;
         mTouching = 1;
         mDragSoundHandle = 0;
     }
@@ -524,12 +537,12 @@ void dScMgTrampoline2_c::UpdateTouchInput() {
 
     i = ACTIVE_SLOT;
     if (gTouchInfo[i].held != 0) {
-        Mg_DrawLine(mTouchX, mTouchY, gTouchInfo[i].x, gTouchInfo[i].y, 2, 4);
+        Mg_DrawLine(mTouch.x, mTouch.y, gTouchInfo[i].x, gTouchInfo[i].y, 2, 4);
         i = ACTIVE_SLOT;
-        mTouchX = gTouchInfo[i].x;
-        mTouchY = gTouchInfo[i].y;
+        mTouch.x = gTouchInfo[i].x;
+        mTouch.y = gTouchInfo[i].y;
         mDragSoundHandle =
-            func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mTouchX << 12), 0, 0);
+            func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mTouch.x << 12), 0, 0);
     } else {
         b = (gTouchInfo[i].held == 0 && gTouchInfo[i].edge != 0);
         if (b != 0) {
@@ -833,16 +846,26 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
         return 0;
 
     if (mTouchReleased != 0) {
-        s16 a = *(volatile s16 *)&mTouchStartX;
-        if ((a < 0x18 && mTouchX < 0x18) || (a > 0xe8 && mTouchX > 0xe8)) {
+        /* Kept volatile: the ROM reloads mTouchStart.x for the Create copy
+           after the edge test. dScMgTrampoline_c's twin gets that reload from
+           `from = mTouchStart; to = mTouch;` (struct copies, lowered after
+           CSE), but here buf[0] carries the fill value and only an
+           address-taken array reproduces its strh/ldrh spill. Measured
+           2026-11-16 against 0x1a0: a plain `a` read gives 0x19c (r1 forwarded
+           into buf[1]); Vec2s struct copies with a separate u16 fill, u16
+           fill[1] or Vec2s line[2] give 0x198 (the fill folds to a register,
+           frame 0x10 -> 0x8). The twin's `volatile u16 fill` would match but
+           only moves the volatile. */
+        s16 a = *(volatile s16 *)&mTouchStart.x;
+        if ((a < 0x18 && mTouch.x < 0x18) || (a > 0xe8 && mTouch.x > 0xe8)) {
             func_02012790(0xe);
         } else {
-            buf[1] = mTouchStartX;
-            buf[2] = mTouchStartY;
-            buf[3] = mTouchX;
-            buf[4] = mTouchY;
+            buf[1] = mTouchStart.x;
+            buf[2] = mTouchStart.y;
+            buf[3] = mTouch.x;
+            buf[4] = mTouch.y;
             if (TrmpLine::Create(&buf[1], &buf[3])) {
-                func_02012718(0x1af, (mTouchStartX + mTouchX) << 11);
+                func_02012718(0x1af, (mTouchStart.x + mTouch.x) << 11);
             } else {
                 func_02012790(0xe);
             }

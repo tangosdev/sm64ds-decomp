@@ -111,7 +111,7 @@ struct daTrs_c : dCapEnemy_c {
     /* Not "mModel": dCapEnemy_c's own dExtSimpleModel_c at 0x114 is inherited, and calling
        this one mModel shadows it. This is the item the Boo carries, not its
        body (that is mAnmModel): InitResources loads the Boo cage (T_BASKET) or a
-       coin model chosen by mCarriedID. Render draws it at mCarriedScaleX
+       coin model chosen by mCarriedID. Render draws it at mCarriedScale
        while `carrying` is set. */
     dExtSimpleModel_c mCarriedModel;                              /* 0x3e4 */
     dExtShadowModel_c                mShadowModel1;               /* 0x434 */
@@ -152,22 +152,16 @@ struct daTrs_c : dCapEnemy_c {
        (+0xa000 in y, +0x3c000 for the cage) while `carrying` is set, and
        021166ac anchors mCarriedModel's matrix at it >> 3. The carried actor
        is spawned here when it is released. */
-    s32 mCarriedPosX;          /* 0x504 */
-    s32 mCarriedPosY;          /* 0x508 */
-    s32 mCarriedPosZ;          /* 0x50c */
+    Vector3 mCarriedPos; /* 0x504 */
     /* Carried-item draw scale (0xc00 = 0.75 each); Render hands it to
        mCarriedModel. */
-    s32 mCarriedScaleX;        /* 0x510 */
-    s32 mCarriedScaleY;        /* 0x514 */
-    s32 mCarriedScaleZ;        /* 0x518 */
+    Vector3 mCarriedScale; /* 0x510 */
     /* Spawn position; Behavior restores here on hide and on respawn, and the
        leash distance is measured from here. */
     Vector3 mHomePos; /* 0x51c */
     /* Last grounded position; Behavior falls back here when the raycast finds
        no ground within range. */
-    s32 mLastGroundPosX;       /* 0x528 */
-    s32 mLastGroundPosY;       /* 0x52c */
-    s32 mLastGroundPosZ;       /* 0x530 */
+    Vector3 mLastGroundPos; /* 0x528 */
     /* Collision center, as an offset from the actor position: the Init offset
        for mdCcAcPos_c, recomputed by 021160d4 from the bone matrix. */
     Vector3 mClsnOff; /* 0x534 */
@@ -176,19 +170,13 @@ struct daTrs_c : dCapEnemy_c {
     Vector3 mClsnBase; /* 0x540 */
     /* Camera goals for variant 0xf's intro scene (02117cdc), built from the
        talking player's position in case 2 and moved in case 5:
-       func_020092c4 is handed dCamera_c::pos with mTalkCamPos* and
-       dCamera_c::lookAt with mTalkCamLook* in cases 3 and 7. */
-    s32 mTalkCamPosX;          /* 0x54c */
-    s32 mTalkCamPosY;          /* 0x550 */
-    s32 mTalkCamPosZ;          /* 0x554 */
-    s32 mTalkCamLookX;         /* 0x558 */
-    s32 mTalkCamLookY;         /* 0x55c */
-    s32 mTalkCamLookZ;         /* 0x560 */
+       func_020092c4 is handed dCamera_c::pos with mTalkCamPos and
+       dCamera_c::lookAt with mTalkCamLook in cases 3 and 7. */
+    Vector3 mTalkCamPos;  /* 0x54c */
+    Vector3 mTalkCamLook; /* 0x558 */
     /* Cap anchor: 021166ac repositions the cap from here and the actor
-       angles (y rebuilt from mClsnOffY plus scale height). */
-    s32 mCapPosX;              /* 0x564 */
-    s32 mCapPosY;              /* 0x568 */
-    s32 mCapPosZ;              /* 0x56c */
+       angles (y rebuilt from mClsnOff.y plus scale height). */
+    Vector3 mCapPos;           /* 0x564 */
     s16 mHomeAngleX;           /* 0x570 */
     s16 mHomeAngleY;           /* 0x572 */
     s16 mHomeAngleZ;           /* 0x574 */

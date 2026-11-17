@@ -304,7 +304,7 @@
       "ordinal": 36
     },
     {
-      "symbol": "_Z25Roulette_DrawResultsThunkPc",
+      "symbol": "_Z25Roulette_DrawResultsThunkP15dScMgRoulette_c",
       "address": "0x02109aa0",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_02109aa0.c",

@@ -918,11 +918,11 @@ int daIwante_c::HandPattern9Execute() {
     case 4:
         SetRestHitVolume();
         ApproachAngle(&mAngleY, 0, 2, 0x400, 0x200);
-        Vec3_ApproachHorz(&mPos, (Vector3 *)&mRestPosX, 0x37000);
-        if (Vec3_HorzDist(&mPos, (const Vector3 *)&mRestPosX) <= 0x37000) {
-            mPosX = mRestPosX;
-            mPosY = mRestPosY;
-            mPosZ = mRestPosZ;
+        Vec3_ApproachHorz(&mPos, &mRestPos, 0x37000);
+        if (Vec3_HorzDist(&mPos, &mRestPos) <= 0x37000) {
+            mPosX = mRestPos.x;
+            mPosY = mRestPos.y;
+            mPosZ = mRestPos.z;
             data_ov066_0211ae08 = 2;
             mAngleY = 0;
             mSubState = 5;
@@ -1002,7 +1002,7 @@ int daIwante_c::HandPattern8Execute() {
             }
         }
         func_02012694(SE_START_MOVING, &mCamSpacePos);
-        mTargetPos.y = mRestPosY + 0x1c2000;
+        mTargetPos.y = mRestPos.y + 0x1c2000;
         mSubState = 1;
         break;
     }
@@ -1024,7 +1024,7 @@ int daIwante_c::HandPattern8Execute() {
             if (mPartIdx == PART_HAND_1)
                 mTimer1 = 0x12;
         }
-        mTargetPos.y = mRestPosY + 0x1a000;
+        mTargetPos.y = mRestPos.y + 0x1a000;
         mSubState = 2;
         break;
     case 2:
@@ -1053,9 +1053,9 @@ int daIwante_c::HandPattern8Execute() {
         }
         if (mVertAccel == 0)
             break;
-        if (mRestPosY < mPosY)
+        if (mRestPos.y < mPosY)
             break;
-        mPosY = mRestPosY;
+        mPosY = mRestPos.y;
         mVertSpeed = 0;
         mVertAccel = 0;
         mHorzSpeed = 0;
@@ -1074,13 +1074,13 @@ int daIwante_c::HandPattern8Execute() {
         }
         if (data_ov066_0211ae00 != 0)
             break;
-        Vec3_ApproachHorz(&mPos, (Vector3 *)&mRestPosX, 0x28000);
-        if (Vec3_HorzDist(&mPos, (const Vector3 *)&mRestPosX) > 0x28000)
+        Vec3_ApproachHorz(&mPos, &mRestPos, 0x28000);
+        if (Vec3_HorzDist(&mPos, &mRestPos) > 0x28000)
             break;
         data_ov066_0211ae0c = 0;
-        mPosX = mRestPosX;
-        mPosY = mRestPosY;
-        mPosZ = mRestPosZ;
+        mPosX = mRestPos.x;
+        mPosY = mRestPos.y;
+        mPosZ = mRestPos.z;
         data_ov066_0211ae08 += 1;
         mSubState = 5;
         break;
@@ -1136,7 +1136,7 @@ int daIwante_c::HandPattern8Enter() {
  *      data_ov066_0211ae08 += 1 (and once more if a hand is gone) -> 8.
  *   8  waits for the phase to leave PATTERN_7, then back to the waiting state. */
 int daIwante_c::HandPattern7Execute() {
-    VecFx32 v;
+    Vector3 v;
 
     switch (mSubState) {
     case 0:
@@ -1158,7 +1158,7 @@ int daIwante_c::HandPattern7Execute() {
                     mTargetPos.z = -0x73a000;
             }
             func_02012694(SE_START_MOVING, &mCamSpacePos);
-            mTargetPos.y = mRestPosY + 0x1c2000;
+            mTargetPos.y = mRestPos.y + 0x1c2000;
             mSubState = 1;
         } else if (mTimer1 == 0) {
             SetLoweredPose();
@@ -1173,7 +1173,7 @@ int daIwante_c::HandPattern7Execute() {
             mPosX = mTargetPos.x;
             mPosY = mTargetPos.y;
             mPosZ = mTargetPos.z;
-            mTargetPos.y = mRestPosY;
+            mTargetPos.y = mRestPos.y;
             mSubState = 2;
         }
         break;
@@ -1195,7 +1195,7 @@ int daIwante_c::HandPattern7Execute() {
                     v.y = pp->y;
                     v.z = pp->z;
                     mTimer1 = 0x24;
-                    if (Vec3_HorzDist(&mPos, (const Vector3 *)&v) < 0x400000) {
+                    if (Vec3_HorzDist(&mPos, &v) < 0x400000) {
                         if (v.x < mPosX)
                             mPrevAngleY = -0x4000;
                         else
@@ -1267,12 +1267,12 @@ int daIwante_c::HandPattern7Execute() {
         break;
     case 7:
         if (mTimer1 == 0) {
-            Vec3_ApproachHorz(&mPos, (Vector3 *)&mRestPosX, 0x28000);
-            if (Vec3_HorzDist(&mPos, (const Vector3 *)&mRestPosX) <= 0x28000) {
+            Vec3_ApproachHorz(&mPos, &mRestPos, 0x28000);
+            if (Vec3_HorzDist(&mPos, &mRestPos) <= 0x28000) {
                 data_ov066_0211ae0c ^= mPartIdx;
-                mPosX = mRestPosX;
-                mPosY = mRestPosY;
-                mPosZ = mRestPosZ;
+                mPosX = mRestPos.x;
+                mPosY = mRestPos.y;
+                mPosZ = mRestPos.z;
                 data_ov066_0211ae08 += 1;
                 if (data_ov066_0211abe0 != HANDS_BOTH)
                     data_ov066_0211ae08 += 1;
@@ -1322,7 +1322,7 @@ int daIwante_c::HandPattern7Enter() {
  *      once more if a hand is gone) -> 7.
  *   7  waits for the phase to leave PATTERN_6, then back to the waiting state. */
 int daIwante_c::HandPattern6Execute() {
-    VecFx32 v;
+    Vector3 v;
 
     switch (mSubState) {
     case 0:
@@ -1371,7 +1371,7 @@ int daIwante_c::HandPattern6Execute() {
                     v.y = pp->y;
                     v.z = pp->z;
                     mTimer1 = 0x24;
-                    if (Vec3_HorzDist(&mPos, (const Vector3 *)&v) < 0x400000) {
+                    if (Vec3_HorzDist(&mPos, &v) < 0x400000) {
                         if (v.x < mPosX)
                             mPrevAngleY = -0x4000;
                         else
@@ -1442,12 +1442,12 @@ int daIwante_c::HandPattern6Execute() {
         }
         break;
     case 6:
-        Vec3_ApproachHorz(&mPos, (Vector3 *)&mRestPosX, 0x28000);
-        if (Vec3_HorzDist(&mPos, (const Vector3 *)&mRestPosX) <= 0x28000) {
+        Vec3_ApproachHorz(&mPos, &mRestPos, 0x28000);
+        if (Vec3_HorzDist(&mPos, &mRestPos) <= 0x28000) {
             data_ov066_0211ae0c ^= mPartIdx;
-            mPosX = mRestPosX;
-            mPosY = mRestPosY;
-            mPosZ = mRestPosZ;
+            mPosX = mRestPos.x;
+            mPosY = mRestPos.y;
+            mPosZ = mRestPos.z;
             data_ov066_0211ae08 += 1;
             if (data_ov066_0211abe0 != HANDS_BOTH)
                 data_ov066_0211ae08 += 1;
@@ -1506,9 +1506,9 @@ int daIwante_c::HandPattern5Execute() {
     case 1:
         if (mVertAccel == 0)
             break;
-        if (mRestPosY < mPosY)
+        if (mRestPos.y < mPosY)
             break;
-        mPosY = mRestPosY;
+        mPosY = mRestPos.y;
         mVertSpeed = 0;
         mVertAccel = 0;
         PoundGround(0x7d0000);
@@ -1632,8 +1632,8 @@ int daIwante_c::HandPattern4Execute() {
         break;
     case 1:
         if (mVertAccel != 0) {
-            if (mRestPosY >= mPosY) {
-                mPosY = mRestPosY;
+            if (mRestPos.y >= mPosY) {
+                mPosY = mRestPos.y;
                 mVertSpeed = 0;
                 mVertAccel = 0;
                 PoundGround(0x7d0000);
@@ -1708,9 +1708,9 @@ int daIwante_c::HandRiseExecute() {
         return 1;
     }
 
-    Vec3_ApproachHorz(&mPos, (Vector3 *)&mRestPosX, 0x14000);
+    Vec3_ApproachHorz(&mPos, &mRestPos, 0x14000);
     if (mVertAccel != 0) {
-        int v = mRestPosY;
+        int v = mRestPos.y;
         if (v >= mPosY) {
             mPosY = v;
             mVertSpeed = 0;
@@ -1719,7 +1719,7 @@ int daIwante_c::HandRiseExecute() {
         }
     }
 
-    if (mVertAccel == 0 && Vec3_HorzDist(&mPos, (const Vector3 *)&mRestPosX) <= 0x14000 &&
+    if (mVertAccel == 0 && Vec3_HorzDist(&mPos, &mRestPos) <= 0x14000 &&
         mBlendAnmModel.Finished()) {
         mMeshCollider2.Enable(this);
         data_ov066_0211ae0c |= mPartIdx;
@@ -2217,7 +2217,7 @@ void daIwante_c::UpdateModelMatrices() {
         *(Mtx43 *)&mBlendAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     if (mPartIdx == PART_MAIN)
         return;
-    if (mRestPosY >= mPosY)
+    if (mRestPos.y >= mPosY)
         return;
     {
         int d;
@@ -2302,7 +2302,7 @@ static inline u32 NewDust(u32 handle, u32 id, const Vector3 &pos) {
  * nonzero slots have particles 0x13a and 0x13b (re)issued. The counter then goes
  * up by one, and past 0x26 the slots are cleared and it returns to 0. After that
  * the body refreshes its matrices and collision and returns. A hand also sets
- * mRestPosY to mSpawnPosY + 0x8000 (8.0), runs UpdatePos(0), moves its hit cylinder
+ * mRestPos.y to mSpawnPos.y + 0x8000 (8.0), runs UpdatePos(0), moves its hit cylinder
  * (mdCcAcPos_c) to its position plus data_ov066_0211ad18, refreshes matrices and
  * collision, clears its hit results, re-registers it (Update links it into the
  * collision list) and advances both animations. */
@@ -2389,7 +2389,7 @@ int daIwante_c::Behavior() {
     }
 
     {
-        mRestPosY = mSpawnPosY + 0x8000;
+        mRestPos.y = mSpawnPos.y + 0x8000;
         UpdatePos(0);
         mdCcAcPos_c.pos.x = mPosX;
         mdCcAcPos_c.pos.y = mPosY;
@@ -2426,7 +2426,6 @@ int daIwante_c::Behavior() {
  * mHitPoints = 3; data_ov066_0211ae00 = 0; it enters the rise state
  * (data_ov066_0211b05c). */
 int daIwante_c::InitResources() {
-    char *c = (char *)(this);
     Vector3 v;
     Vector3 w;
 
@@ -2486,7 +2485,7 @@ int daIwante_c::InitResources() {
         w.x = data_ov066_0211ad18[0];
         w.y = data_ov066_0211ad18[1];
         w.z = data_ov066_0211ad18[2];
-        mdCcAcPos_c.Init((dActor_c *)c, w, 0x64000, 0x64000, 0x200002, 0);
+        mdCcAcPos_c.Init(this, w, 0x64000, 0x64000, 0x200002, 0);
     }
 
     for (int i = 0; i < 20; i++) {
@@ -2502,9 +2501,9 @@ int daIwante_c::InitResources() {
     if (mPartIdx == PART_MAIN) {
         dActor_c *r;
         mPosZ -= 0x7C000;
-        mRestPosX = mPosX;
-        mRestPosY = mPosY;
-        mRestPosZ = mPosZ;
+        mRestPos.x = mPosX;
+        mRestPos.y = mPosY;
+        mRestPos.z = mPosZ;
         v.x = mPosX;
         v.y = mPosY;
         v.z = mPosZ;
@@ -2531,25 +2530,25 @@ int daIwante_c::InitResources() {
         mTimer2 = 0x64;
         SetState(&data_ov066_0211b09c);
     } else {
-        mRestPosX = mPosX;
-        mRestPosY = mPosY;
-        mRestPosZ = mPosZ;
-        mSpawnPosX = mPosX;
-        mSpawnPosY = mPosY;
-        mSpawnPosZ = mPosZ;
+        mRestPos.x = mPosX;
+        mRestPos.y = mPosY;
+        mRestPos.z = mPosZ;
+        mSpawnPos.x = mPosX;
+        mSpawnPos.y = mPosY;
+        mSpawnPos.z = mPosZ;
         if (mPartIdx == PART_HAND_1) {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211ae14.filePtr), mClsnMat2, 0x199,
                                    mAngleY, data_ov025_02112c08);
-            mRestPosX -= 0x31F000;
+            mRestPos.x -= 0x31F000;
         } else {
             mMeshCollider2.SetFile((KCL_File *)(data_ov066_0211aeac.filePtr), mClsnMat2, 0x199,
                                    mAngleY, data_ov025_02112d48);
-            mRestPosX += 0x31F000;
+            mRestPos.x += 0x31F000;
         }
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
         mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
         mMeshCollider2.SetFilterByMoveDir();
-        mRestPosZ -= 0x32000;
+        mRestPos.z -= 0x32000;
         mHitPoints = 3;
         data_ov066_0211ae00 = 0;
         SetState(&data_ov066_0211b05c);

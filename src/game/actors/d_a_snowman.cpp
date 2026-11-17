@@ -68,9 +68,13 @@ enum {
 };
 
 /* Sound::Play2D(2, id). This TU calls the wrapper, not Play2D. */
-extern s16 data_ov081_021289a4;
-extern s16 data_ov081_021289a6;
-extern s16 data_ov081_021289a8;
+/* How fast RotateTowardPlayer turns, as ApproachAngle's three limits. */
+struct daSnowmanTurnRate {
+    s16 divisor;
+    s16 band;
+    s16 maxStep;
+};
+extern daSnowmanTurnRate data_ov081_021289a4[2];
 extern "C" int AngleDiff(int a, int b);
 /* Sound::Play(3, id, pos) — PlayBank3. This TU calls the wrapper. */
 void func_02012694(unsigned int a, const Vector3 *p);
@@ -170,10 +174,6 @@ void daSnowman_c::RotateTowardPlayer(int idx) {
     daPly_c *player;
     struct Vector3 v;
     short ang;
-    int off;
-    s16 *maxStep;
-    s16 *band;
-    s16 *divisor;
     int lim;
 
     player = this->ClosestNonVanishPlayer();
@@ -192,14 +192,9 @@ void daSnowman_c::RotateTowardPlayer(int idx) {
     }
     ang = Vec3_HorzAngle(&this->mPos, &v);
 
-    /* Two rows of (divisor, band, maxStep), six bytes apart. Both rows in
-       the ROM are 1, 0x1000, 0x1000; idx still selects which one. */
-    off = idx * 6;
-    maxStep = (s16 *)((char *)&data_ov081_021289a8 + off);
-    band = (s16 *)((char *)&data_ov081_021289a6 + off);
-    divisor = (s16 *)((char *)&data_ov081_021289a4 + off);
-
-    ApproachAngle(&this->mPrevAngleY, ang, *divisor, *band, *maxStep);
+    /* Both rows in the ROM are 1, 0x1000, 0x1000; idx still selects one. */
+    ApproachAngle(&this->mPrevAngleY, ang, data_ov081_021289a4[idx].divisor,
+                  data_ov081_021289a4[idx].band, data_ov081_021289a4[idx].maxStep);
 
     if (idx != 1) {
         this->mInitAngleY = 0;
@@ -221,7 +216,8 @@ void daSnowman_c::RotateTowardPlayer(int idx) {
         ApproachAngle(&this->mInitAngleY, 0, 1, 0x500, 0x500);
     }
 
-    ApproachAngle(&this->mAngleX, this->mInitAngleY, *divisor, *band, *maxStep);
+    ApproachAngle(&this->mAngleX, this->mInitAngleY, data_ov081_021289a4[idx].divisor,
+                  data_ov081_021289a4[idx].band, data_ov081_021289a4[idx].maxStep);
     this->mAngleY = this->mPrevAngleY;
 }
 

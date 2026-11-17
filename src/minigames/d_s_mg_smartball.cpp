@@ -27,6 +27,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "cMgSmartball_wing_c.h"
 #include "OamAttr.h"
 #include "OAM.h"
+#include "Matrix2x2.h"
 #include "cMgSmartball_pushswitch_c.h"
 #include "cMgSmartball_board_c.h"
 #include "types.h"
@@ -117,7 +118,7 @@ extern struct OamAttr *sSmartballWingSprites[];
 extern void OamRender10_d_s_mg_smartball(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
                                          s32 priority, fx32 scaleX, fx32 scaleY, s32 rotation,
                                          s32 mode);
-extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 extern int GetOwnerLanguage(void);
 extern OamAttr *sSmartballLineSpritesItalian[];
 extern OamAttr *sSmartballLineSpritesSpanish[];
@@ -177,7 +178,6 @@ int GetGameLanguage(void);
 int Mg_GetTopRecord(void);
 void Mg_DrawTopRightCounter(int a0, int a1);
 void Mg_DrawTopLeftCounter(int self);
-void Mg_DrawBlinkSprite(void *c, int a1, int a2);
 extern OamAttr *data_ov006_02138ae0[];
 extern OamAttr **sSmartballTextSpritesByLanguage[];
 extern int sSmartballCellScores[];
@@ -731,19 +731,19 @@ void cMgSmartball_board_c::Update() {
             Mg_RenderSpriteBoth(sSmartballCellSprites[1], (j % 3 - 1) * 24 + (mCurrent0 >> 12),
                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1);
         } else {
-            s32 vec[4];
+            Matrix2x2 mtx;
 
             if (ang < 0x4000)
-                vec[0] = -FX_Div(0x1000, FX_SinCosTable_[((u16)(ang + 0x8000) >> 4) * 2 + 1]);
+                mtx.m00 = -FX_Div(0x1000, FX_SinCosTable_[((u16)(ang + 0x8000) >> 4) * 2 + 1]);
             else
-                vec[0] = -FX_Div(0x1000, FX_SinCosTable_[((u16)ang >> 4) * 2 + 1]);
-            vec[1] = 0;
-            vec[2] = 0;
-            vec[3] = 0x1000;
+                mtx.m00 = -FX_Div(0x1000, FX_SinCosTable_[((u16)ang >> 4) * 2 + 1]);
+            mtx.m01 = 0;
+            mtx.m10 = 0;
+            mtx.m11 = 0x1000;
             RenderOamBothScreens(sSmartballCellSprites[idx], (j % 3 - 1) * 24 + (mCurrent0 >> 12),
-                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, vec);
+                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, &mtx);
             RenderOamBothScreens(sSmartballCellSprites[0], (j % 3 - 1) * 24 + (mCurrent0 >> 12),
-                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, vec);
+                                 (j / 3 - 1) * 0x18 + (mCurrent1 >> 12), -1, 1, &mtx);
         }
     }
 
@@ -1486,9 +1486,7 @@ void cMgSmartball_pakkun_c::Update() {
             int scale;
             int idx = 1;
             int b, a;
-            struct {
-                int _00, _01, _10, _11;
-            } vec;
+            Matrix2x2 mtx;
             if (f38 < 0x20) {
                 scale = FX_Div(0x20000, f38 << 12);
             } else {
@@ -1498,14 +1496,14 @@ void cMgSmartball_pakkun_c::Update() {
             }
             b = (int)((((long long)FX_SinCosTable_[1] * scale) + 0x800) >> 12);
             a = (int)((((long long)FX_SinCosTable_[0] * scale) + 0x800) >> 12);
-            vec._00 = b;
-            vec._01 = a;
-            vec._10 = -a;
-            vec._11 = b;
+            mtx.m00 = b;
+            mtx.m01 = a;
+            mtx.m10 = -a;
+            mtx.m11 = b;
             RenderOamBothScreens(sSmartballPakkunSprites[idx], mCurrent0 >> 12, mCurrent1 >> 12, -1,
-                                 0, &vec);
+                                 0, &mtx);
             RenderOamBothScreens(sSmartballPakkunSprites[2], mCurrent0 >> 12, (mCurrent1 >> 12) + 5,
-                                 -1, 2, &vec);
+                                 -1, 2, &mtx);
         } else {
             if (mTriggered != 0) {
                 Mg_RenderSpriteBoth(sSmartballPakkunSprites[0], mCurrent0 >> 12, mCurrent1 >> 12,
@@ -1779,19 +1777,19 @@ void cMgSmartball_propeller_c::Update() {
                      0x800) >>
                     12);
     int a;
-    int vec[4];
+    Matrix2x2 mtx;
 
-    vec[0] = b;
+    mtx.m00 = b;
     a = (short)((((long long)FX_SinCosTable_[((unsigned short)mAngle >> 4) * 2] << 12) + 0x800) >>
                 12);
-    vec[3] = b;
-    vec[1] = a;
-    vec[2] = -a;
+    mtx.m11 = b;
+    mtx.m01 = a;
+    mtx.m10 = -a;
 
     RenderOamBothScreens(sSmartballPropellerSprites[0], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1,
-                         vec);
+                         &mtx);
     RenderOamBothScreens(sSmartballPropellerSprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5, -1,
-                         2, vec);
+                         2, &mtx);
 }
 
 /* Slot 0: steps the spin speed toward its target, advances the angle and
@@ -2020,20 +2018,20 @@ void cMgSmartball_kinoko_c::Update() {
     case 1: {
         int d;
         int b, a;
-        int vec[4];
+        Matrix2x2 mtx;
         if (mRadius < 0x1000)
             return;
         d = FX_Div(0x7000, mRadius);
         b = FX_MUL(FX_SinCosTable_[1], d);
         a = FX_MUL(FX_SinCosTable_[0], d);
-        vec[0] = b;
-        vec[1] = a;
-        vec[2] = -a;
-        vec[3] = b;
+        mtx.m00 = b;
+        mtx.m01 = a;
+        mtx.m10 = -a;
+        mtx.m11 = b;
         RenderOamBothScreens(sSmartballKinokoTurnSprites[0], mCurrent0 >> 12, mCurrent1 >> 12, -1,
-                             1, vec);
+                             1, &mtx);
         RenderOamBothScreens(sSmartballKinokoTurnSprites[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5,
-                             -1, 2, vec);
+                             -1, 2, &mtx);
     } break;
     }
 }
@@ -3669,7 +3667,6 @@ void dScMgSmartball_c::CountCell() {
 }
 
 unsigned short dScMgSmartball_c::GetTile(int *pos) {
-    unsigned char *base = (unsigned char *)this;
     int a = pos[1];
     if (a >= 0 && a < 0xc0000) {
         int b = pos[0];
@@ -3714,14 +3711,12 @@ void dScMgSmartball_c::UpdateDust() {
  * Leftover: TVec2's empty destructor keeps `v` in memory, and `sa` must be its
  * own assignment before the first product. */
 void dScMgSmartball_c::SpawnDust(int *origin) {
-    char *c = (char *)this;
     int i;
     int j;
 
     for (i = 0; i < 4; i++) {
         for (j = 0; j < 16; j++) {
-            u8 *flag = ((dScMgSmartball_c *)(c + j))->mDustActive;
-            if (*flag == 1) {
+            if (mDustActive[j] == 1) {
                 continue;
             }
             {
@@ -3736,18 +3731,16 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
                 TVec2 v;
                 sa = (s64)sinA;
                 v.x = FX_MUL(sinB, FX_MUL(sinA, 0x8000));
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][0] = v.x;
+                mDustPos[j][0] = v.x;
                 cosA = FX_SinCosTable_[(angA >> 4) * 2];
                 v.y = FX_MUL(sinB, FX_MUL(cosA, 0x8000));
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][1] = v.y;
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][0] += origin[0];
-                ((dScMgSmartball_c *)(c + j * 8))->mDustPos[0][1] += origin[1];
-                ((dScMgSmartball_c *)(c + j * 8))->mDustVel[0][0] =
-                    FX_MUL(sinB, FX_MUL(sa, 0x4000));
-                ((dScMgSmartball_c *)(c + j * 8))->mDustVel[0][1] =
-                    FX_MUL(sinB, FX_MUL(cosA, 0x4000));
+                mDustPos[j][1] = v.y;
+                mDustPos[j][0] += origin[0];
+                mDustPos[j][1] += origin[1];
+                mDustVel[j][0] = FX_MUL(sinB, FX_MUL(sa, 0x4000));
+                mDustVel[j][1] = FX_MUL(sinB, FX_MUL(cosA, 0x4000));
                 mDustAge[j] = 0;
-                *flag = 1;
+                mDustActive[j] = 1;
             }
             break;
         }
@@ -4665,15 +4658,11 @@ void dScMgSmartball_c::SpawnObjects() {
     __cxa_vec_cleanup(pos, 25, 8, (dtor_t)NullDestructor_0203d47c);
 }
 
-/* Kept (#821): Render needs both pragmas off, and the locals below must stay
- * in this order (each one pins a stack slot). Without SR off the body is
- * 0x1124, not 0x10c0. Indexing every tally, popup and dust array by name
- * with both pragmas on gives 0x10b8: CSE folds the popup's first digit-count
- * read into the address of mPopupScore[sb], where the ROM forms it again with
- * the offset in a register. The same indexed body with either pragma off is
- * 0x109c, and indexing one array alone under the pragmas is 0x10bc. */
+/* Kept (#821): Render needs strength reduction off (without it the body is
+ * larger than the ROM's 0x10c0), and the locals below must stay in this order
+ * (each one pins a stack slot). The tally and popup-score pointers still step
+ * the byte view `g`: the ROM forms (this + i*4) + offset. */
 #pragma push
-#pragma opt_common_subs off
 #pragma opt_strength_reduction off
 /* Slot 9: the frame draw. On the result screen it reveals the tally rows one
  * at a time, then draws the side lamps, every board object and the score
@@ -4842,17 +4831,17 @@ s32 dScMgSmartball_c::Render() {
         /* Continue prompt. */
         if (mPhase == 1 && mResultTimer >= 300) {
             if (col >= 7)
-                Mg_DrawBlinkSprite(g, 0x80, 0xa8);
+                DrawBlinkSprite(0x80, 0xa8);
             else if (col == 6)
-                Mg_DrawBlinkSprite(g, 0xe0, 0xa8);
+                DrawBlinkSprite(0xe0, 0xa8);
             else
-                Mg_DrawBlinkSprite(g, 0xe0, 0xa0);
+                DrawBlinkSprite(0xe0, 0xa0);
         }
     }
 
     /* Sparks, except while draining on the main screen. */
     if ((param1 & 0xff) != 0 || mDraining == 0)
-        ((dScMgSmartball_c *)(g))->RenderSparks();
+        RenderSparks();
 
     /* Score counters at the top of both screens. */
     Mg_DrawTopRightCounter(Mg_GetSubmittedScore(), 6);
@@ -4874,9 +4863,7 @@ s32 dScMgSmartball_c::Render() {
                     int *px = &((dScMgSmartball_c *)(g + sb * 8))->mPopupPos[0][0];
                     Mg_DrawNumber((*px >> 12) - 0x10, *py >> 12, cnt, -1, 0, 0, 0);
                     nd = 0;
-                    /* Leftover: the score is read again through an int address. */
-                    u = (unsigned int)*(int *)SlotAddress(
-                        this, OFFSET_OF(dScMgSmartball_c, mPopupScore), sb, 4);
+                    u = mPopupScore[sb];
                     if (u != 0) {
                         do {
                             u /= 10;
@@ -4896,9 +4883,8 @@ s32 dScMgSmartball_c::Render() {
                     }
                     Mg_DrawNumber((*px >> 12) + nd * 8 + 8, *py >> 12, *slot[0], -1, 0, 0, 0);
                 } else {
-                    dScMgSmartball_c *popup = (dScMgSmartball_c *)(g + sb * 8);
-                    int y = popup->mPopupPos[0][1];
-                    int x = popup->mPopupPos[0][0];
+                    int y = mPopupPos[sb][1];
+                    int x = mPopupPos[sb][0];
                     Mg_DrawNumber(x >> 12, y >> 12, cnt, -1, 0, 0, 0);
                 }
             }
@@ -4913,9 +4899,8 @@ s32 dScMgSmartball_c::Render() {
                 int idx = mDustAge[slot] / 5;
                 if (idx > 3)
                     idx = 2;
-                dScMgSmartball_c *dust = (dScMgSmartball_c *)(g + slot * 8);
-                Mg_RenderSpriteBoth(data_ov006_02137a60[idx], dust->mDustPos[0][0] >> 12,
-                                    dust->mDustPos[0][1] >> 12, -1, 0);
+                Mg_RenderSpriteBoth(data_ov006_02137a60[idx], mDustPos[slot][0] >> 12,
+                                    mDustPos[slot][1] >> 12, -1, 0);
             }
         }
     }
@@ -5004,7 +4989,7 @@ s32 dScMgSmartball_c::Render() {
     }
 
     if ((param1 & 0xff) == 0 && mDraining != 0)
-        ((dScMgSmartball_c *)(g))->RenderSparks();
+        RenderSparks();
 
     return 1;
 }
@@ -5027,7 +5012,6 @@ s32 dScMgSmartball_c::Render() {
  * address in a register instead of folding it into an indexed load), and the
  * declarations below must keep C linkage and their `extern` keyword. */
 s32 dScMgSmartball_c::Behavior() {
-    char *c = (char *)this;
     int vec[3];
 
     if (mPromptBlinkCount == 0) {
@@ -5130,9 +5114,9 @@ s32 dScMgSmartball_c::Behavior() {
                         ((i >= 13) ? 0 : mpBalls[i])->ArmExpire(1) != 0) {
                         ((i >= 13) ? 0 : mpBalls[i])->Burst();
                         CopyObjectPos(vec, (i >= 13) ? 0 : mpBalls[i]);
-                        ((dScMgSmartball_c *)c)->EmitScore(vec, 0x7d0, 0, 1);
+                        EmitScore(vec, 0x7d0, 0, 1);
                         Sound::PlayBank2_2D(0x175);
-                        ((dScMgSmartball_c *)(c))->CountOut();
+                        CountOut();
                         found = 1;
                         break;
                     }
@@ -5190,7 +5174,7 @@ s32 dScMgSmartball_c::Behavior() {
         (*p)--;
     }
 
-    ((dScMgSmartball_c *)(c))->UpdateSparks();
+    UpdateSparks();
     return 1;
 }
 
@@ -5241,11 +5225,10 @@ inline void G2_SetOBJMode(OamAttr *oam_, int mode, int cParam) {
  * Leftover: the mode byte needs both the mask and the (u8) cast, and the last
  * Pakkun G2_SetOBJMode reads its colour param from [2] instead of [2]+1. */
 s32 dScMgSmartball_c::InitResources() {
-    char *c = (char *)this;
     void *f;
     s32 i;
-    if ((*((s32 *)(c + 8))) & 0xff) {
-        mLevel = (u8)((*((s32 *)(c + 8))) & 0xFF);
+    if (param1 & 0xff) {
+        mLevel = (u8)(param1 & 0xFF);
         if ((mLevel) > 0x270e) {
             mLevel = 0x270e;
         }
@@ -5291,7 +5274,7 @@ s32 dScMgSmartball_c::InitResources() {
     G2S_BG3Mosaic(false);
     G2S_SetBG3Offset(0, 0);
     G2S_SetBG3Priority(2);
-    if (((u8)(*((s32 *)(c + 8)))) == 0) {
+    if ((u8)param1 == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1FrameNcgPath);
         DecompressLZ16(f, G2_GetBG2CharPtr());
         Ov004_Deallocate(f);
@@ -5318,7 +5301,7 @@ s32 dScMgSmartball_c::InitResources() {
         DecompressLZ16(f, G2S_GetBG3CharPtr());
         Ov004_Deallocate(f);
     }
-    if (((u8)(*((s32 *)(c + 8)))) == 0) {
+    if ((u8)param1 == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1NclPath);
         DC_FlushRange(f, 0x1a0);
         GX_LoadBGPltt(f, 0x60, 0x1a0);

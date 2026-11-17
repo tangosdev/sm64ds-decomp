@@ -45,9 +45,7 @@ struct daShl_c : dEnemyBase_c {
     /* Where it was spawned: InitResources copies mPos here verbatim, and
        Behavior stashes mPrevAngleY into mSpawnAngleY when the shell is spat
        back out of Yoshi's mouth. */
-    s32 mSpawnPosX;            /* 0x3b0 */
-    s32 mSpawnPosY;            /* 0x3b4 */
-    s32 mSpawnPosZ;            /* 0x3b8 */
+    Vector3 mSpawnPos;         /* 0x3b0 */
     s16 mSpawnAngleY;          /* 0x3bc */
     u8  pad_3be[0x2];
     /* The player riding or holding the shell. */

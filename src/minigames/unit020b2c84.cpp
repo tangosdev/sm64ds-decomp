@@ -119,8 +119,8 @@
 #include "MgBanner.h"
 #include "nitro/fx/fx_cp.h"
 #include "math/CalcLib.h"
+#include "Matrix2x2.h"
 
-struct M { int _00, _01, _10, _11; };
 struct SlotCharNos {
     int v[3];
 };
@@ -145,7 +145,7 @@ int Mg_CopySpriteList(int a, void *b, int c, int d);
 void func_0203d704(int *o, int *a, int *b);
 void func_0203d388(int *p, s16 angle);
 void Mg_SpawnFx(int state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
-void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
+void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, Matrix2x2 *a5);
 void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e);
 int Mg_GetLevel(void);
 void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
@@ -1396,7 +1396,7 @@ void MgBanner::SetupNone() {}
 void MgBanner::DrawSpin() {
     GXOamAttr *oam = (GXOamAttr *)mOam;
     int angle = (u16)mTimer;
-    M m;
+    Matrix2x2 m;
     u16 flag;
     do {
         int mm = FX_MUL(FX_SinIdx(angle >> 4), 0x800);
@@ -1404,10 +1404,10 @@ void MgBanner::DrawSpin() {
         int sin1 = FX_SinIdx((u16)mm >> 4);
         int fc = FX_MUL(cos1, 0x1000);
         int fs = FX_MUL(sin1, 0x1000);
-        m._00 = fc;
-        m._11 = fc;
-        m._01 = fs;
-        m._10 = -fs;
+        m.m00 = fc;
+        m.m11 = fc;
+        m.m01 = fs;
+        m.m10 = -fs;
         Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m);
         angle = (u16)(angle + 0x4000);
         flag = oam->attr3;
@@ -1456,9 +1456,9 @@ void MgBanner::DrawWave() {
             v += FX_MUL((0x1000 - d), 0x400);
         v = FX_Inv(v);
         {
-            M m = {0};
-            m._00 = v;
-            m._11 = v;
+            Matrix2x2 m = {0};
+            m.m00 = v;
+            m.m11 = v;
             Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m);
         }
         t += 0x1000;
@@ -1515,9 +1515,9 @@ void MgBanner::DrawSqueeze() {
         t = FX_MUL(FX_Div(m, 0x1000), 0x1000);
         v = FX_Inv(m);
         {
-            M buf = {0};
-            buf._00 = v;
-            buf._11 = v;
+            Matrix2x2 buf = {0};
+            buf.m00 = v;
+            buf.m11 = v;
             t = 0x1000 - t;
             do {
                 s16 x = oam->x;
@@ -1561,9 +1561,9 @@ void MgBanner::DrawPopSpinA() {
                 v = FX_Inv(v);
             }
             {
-                M m = {0};
-                m._00 = v;
-                m._11 = v;
+                Matrix2x2 m = {0};
+                m.m00 = v;
+                m.m11 = v;
                 do {
                     Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m);
                     flag = oam->attr3;
@@ -1572,17 +1572,17 @@ void MgBanner::DrawPopSpinA() {
             }
         } else {
             int angle = (u16)(mTimer - 0x18000);
-            M m2;
+            Matrix2x2 m2;
             do {
                 int mm = FX_MUL(FX_SinIdx(angle >> 4), 0x800);
                 int cos1 = FX_CosIdx((u16)mm >> 4);
                 int sin1 = FX_SinIdx((u16)mm >> 4);
                 int fc = FX_MUL(cos1, 0x1000);
                 int fs = FX_MUL(sin1, 0x1000);
-                m2._00 = fc;
-                m2._11 = fc;
-                m2._01 = fs;
-                m2._10 = -fs;
+                m2.m00 = fc;
+                m2.m11 = fc;
+                m2.m01 = fs;
+                m2.m10 = -fs;
                 Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m2);
                 angle = (u16)(angle + 0x4000);
                 flag = oam->attr3;
@@ -1608,9 +1608,9 @@ void MgBanner::DrawPopSpinB() {
                 v = FX_Inv(v);
             }
             {
-                M m = {0};
-                m._00 = v;
-                m._11 = v;
+                Matrix2x2 m = {0};
+                m.m00 = v;
+                m.m11 = v;
                 do {
                     Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m);
                     flag = oam->attr3;
@@ -1619,17 +1619,17 @@ void MgBanner::DrawPopSpinB() {
             }
         } else {
             int angle = (u16)(mTimer - 0x18000);
-            M m2;
+            Matrix2x2 m2;
             do {
                 int mm = FX_MUL(FX_SinIdx(angle >> 4), 0x800);
                 int cos1 = FX_CosIdx((u16)mm >> 4);
                 int sin1 = FX_SinIdx((u16)mm >> 4);
                 int fc = FX_MUL(cos1, 0x1000);
                 int fs = FX_MUL(sin1, 0x1000);
-                m2._00 = fc;
-                m2._11 = fc;
-                m2._01 = fs;
-                m2._10 = -fs;
+                m2.m00 = fc;
+                m2.m11 = fc;
+                m2.m01 = fs;
+                m2.m10 = -fs;
                 Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m2);
                 angle = (u16)(angle + 0x4000);
                 flag = oam->attr3;
@@ -1662,10 +1662,10 @@ void MgBanner::DrawPressed() {
     u16 ang = (unsigned int)x >> 1;
     fx16 s = FX_SinIdx(ang >> 4);
     int v = FX_Inv(FX_MUL(s, 0x800) + 0x1000);
-    M m = {0};
+    Matrix2x2 m = {0};
     u16 flag;
-    m._00 = v;
-    m._11 = v;
+    m.m00 = v;
+    m.m11 = v;
     do {
         Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m);
         flag = oam->attr3;
@@ -1734,9 +1734,9 @@ void MgBanner::DrawZoomA() {
             }
             d = FX_Inv(d);
             {
-                M m = {0};
-                m._00 = d;
-                m._11 = d;
+                Matrix2x2 m = {0};
+                m.m00 = d;
+                m.m11 = d;
                 scale = 0x1000 - scale;
                 do {
                     s16 x = oam->x;
@@ -1760,9 +1760,9 @@ void MgBanner::DrawZoomA() {
                 }
                 r = FX_Inv(r);
                 {
-                    M m2 = {0};
-                    m2._00 = r;
-                    m2._11 = r;
+                    Matrix2x2 m2 = {0};
+                    m2.m00 = r;
+                    m2.m11 = r;
                     Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m2);
                 }
                 i += 0x1000;
@@ -1796,9 +1796,9 @@ void MgBanner::DrawZoomB() {
             }
             d = FX_Inv(d);
             {
-                M m = {0};
-                m._00 = d;
-                m._11 = d;
+                Matrix2x2 m = {0};
+                m.m00 = d;
+                m.m11 = d;
                 scale = 0x1000 - scale;
                 do {
                     s16 x = oam->x;
@@ -1822,9 +1822,9 @@ void MgBanner::DrawZoomB() {
                 }
                 r = FX_Inv(r);
                 {
-                    M m2 = {0};
-                    m2._00 = r;
-                    m2._11 = r;
+                    Matrix2x2 m2 = {0};
+                    m2.m00 = r;
+                    m2.m11 = r;
                     Mg_RenderSpriteOnMtx(oam, mX, mY, mScreen, mPriority, &m2);
                 }
                 i += 0x1000;

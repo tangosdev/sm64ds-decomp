@@ -2384,257 +2384,257 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "sEnterTable$209",
+      "from": "sEnterTable$207",
       "to": "sEnterTable$170",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, and retiring the TU-local FaderCallView view freed its four named parameters, shifting it again from $191 to $187, and including dScMgBase_c.h in place of the TU-local Base view shifts it from $187 to $216; licensed under the existing pin Re-keyed from sEnterTable$216 to sEnterTable$209 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsEnterTable$209",
+      "from": "_ZGVsEnterTable$207",
       "to": "_ZGVsEnterTable$170",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, and retiring the TU-local FaderCallView view freed its four named parameters, shifting it again from $191 to $187, and including dScMgBase_c.h in place of the TU-local Base view shifts it from $187 to $216; licensed under the existing pin Re-keyed from _ZGVsEnterTable$216 to _ZGVsEnterTable$209 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@319",
+      "from": "@317",
       "to": "pmf_dMgState_c_NextRound_Update",
       "evidence": "Compiler PMF literal: dMgState_c::NextRound_Enter assigns &dMgState_c::NextRound_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::NextRound_Enter+0x20 loads 0x020bc8bc in the ROM) and by its own relocation target (dMgState_c::NextRound_Update at 0x020b841c)."
     },
     {
-      "from": "@341",
+      "from": "@339",
       "to": "pmf_dMgState_c_RoundBanner5_Update",
       "evidence": "Compiler PMF literal: dMgState_c::RoundBanner5_Enter assigns &dMgState_c::RoundBanner5_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RoundBanner5_Enter+0x6c loads 0x020bc8c4 in the ROM) and by its own relocation target (dMgState_c::RoundBanner5_Update at 0x020b8284)."
     },
     {
-      "from": "@569",
+      "from": "@567",
       "to": "pmf_dMgState_c_DrawScore",
       "evidence": "Compiler PMF literal: dMgState_c::ScoreThenRound_Enter assigns &dMgState_c::DrawScore, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::ScoreThenRound_Enter+0x4c loads 0x020bc8cc in the ROM) and by its own relocation target (dMgState_c::DrawScore at 0x020b6ad8)."
     },
     {
-      "from": "@367",
+      "from": "@365",
       "to": "pmf_dMgState_c_RetryPrompt_Update",
       "evidence": "Compiler PMF literal: dMgState_c::RetryPrompt_Enter assigns &dMgState_c::RetryPrompt_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RetryPrompt_Enter+0x88 loads 0x020bc8d4 in the ROM) and by its own relocation target (dMgState_c::RetryPrompt_Update at 0x020b8098)."
     },
     {
-      "from": "@376",
+      "from": "@374",
       "to": "pmf_dMgState_c_UpdateRetryFadeOut",
       "evidence": "Compiler PMF literal: dMgState_c::RetryPrompt_Update assigns &dMgState_c::UpdateRetryFadeOut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RetryPrompt_Update+0x148 loads 0x020bc8dc in the ROM) and by its own relocation target (dMgState_c::UpdateRetryFadeOut at 0x020b7fec)."
     },
     {
-      "from": "@649",
+      "from": "@647",
       "to": "pmf_dMgState_c_Results_Update",
       "evidence": "Compiler PMF literal: dMgState_c::Results_Enter assigns &dMgState_c::Results_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Results_Enter+0x8c loads 0x020bc8e4 in the ROM) and by its own relocation target (dMgState_c::Results_Update at 0x020b6f88)."
     },
     {
-      "from": "@402",
+      "from": "@400",
       "to": "pmf_dMgState_c_Win_Update",
       "evidence": "Compiler PMF literal: dMgState_c::Win_Enter assigns &dMgState_c::Win_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Win_Enter+0x8c loads 0x020bc8ec in the ROM) and by its own relocation target (dMgState_c::Win_Update at 0x020b7eac)."
     },
     {
-      "from": "@421",
+      "from": "@419",
       "to": "pmf_dMgState_c_Lose_Update",
       "evidence": "Compiler PMF literal: dMgState_c::Lose_Enter assigns &dMgState_c::Lose_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Lose_Enter+0x70 loads 0x020bc8f4 in the ROM) and by its own relocation target (dMgState_c::Lose_Update at 0x020b7cd0)."
     },
     {
-      "from": "@595",
+      "from": "@593",
       "to": "pmf_dMgState_c_UpdateRetryPrompt",
       "evidence": "Compiler PMF literal: dMgState_c::RetryPromptWideB_Enter assigns &dMgState_c::UpdateRetryPrompt, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RetryPromptWideB_Enter+0x20 loads 0x020bc8fc in the ROM) and by its own relocation target (dMgState_c::UpdateRetryPrompt at 0x020b72d4)."
     },
     {
-      "from": "@441",
+      "from": "@439",
       "to": "pmf_dMgState_c_UpdateGameOverToMenu",
       "evidence": "Compiler PMF literal: dMgState_c::Lose_Update assigns &dMgState_c::UpdateGameOverToMenu, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Lose_Update+0x164 loads 0x020bc904 in the ROM) and by its own relocation target (dMgState_c::UpdateGameOverToMenu at 0x020b7c04)."
     },
     {
-      "from": "@467",
+      "from": "@465",
       "to": "pmf_dMgState_c_LoseResume_Update",
       "evidence": "Compiler PMF literal: dMgState_c::LoseResume_Enter assigns &dMgState_c::LoseResume_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::LoseResume_Enter+0x70 loads 0x020bc90c in the ROM) and by its own relocation target (dMgState_c::LoseResume_Update at 0x020b7b20)."
     },
     {
-      "from": "@605",
+      "from": "@603",
       "to": "pmf_dMgState_c_UpdateRetryFadeOut_2",
       "evidence": "Compiler PMF literal: dMgState_c::UpdateRetryPrompt assigns &dMgState_c::UpdateRetryFadeOut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::UpdateRetryPrompt+0x150 loads 0x020bc914 in the ROM) and by its own relocation target (dMgState_c::UpdateRetryFadeOut at 0x020b7fec)."
     },
     {
-      "from": "@651",
+      "from": "@649",
       "to": "pmf_dMgState_c_DrawRecordTable",
       "evidence": "Compiler PMF literal: dMgState_c::Results_Enter assigns &dMgState_c::DrawRecordTable, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Results_Enter+0x90 loads 0x020bc91c in the ROM) and by its own relocation target (dMgState_c::DrawRecordTable at 0x020b68e8)."
     },
     {
-      "from": "@704",
+      "from": "@702",
       "to": "pmf_dMgState_c_GameOver_Update",
       "evidence": "Compiler PMF literal: dMgState_c::GameOver_Enter assigns &dMgState_c::GameOver_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::GameOver_Enter+0x6c loads 0x020bc924 in the ROM) and by its own relocation target (dMgState_c::GameOver_Update at 0x020b6c9c)."
     },
     {
-      "from": "@225",
+      "from": "@223",
       "to": "pmf_dMgState_c_Draw_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::Draw_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x264 loads 0x020bc92c in the ROM) and by its own relocation target (dMgState_c::Draw_Enter at 0x020b79b0)."
     },
     {
-      "from": "@227",
+      "from": "@225",
       "to": "pmf_dMgState_c_Tie_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::Tie_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x25c loads 0x020bc934 in the ROM) and by its own relocation target (dMgState_c::Tie_Enter at 0x020b798c)."
     },
     {
-      "from": "@478",
+      "from": "@476",
       "to": "pmf_dMgState_c_UpdateAfterHidden",
       "evidence": "Compiler PMF literal: dMgState_c::LoseResume_Update assigns &dMgState_c::UpdateAfterHidden, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::LoseResume_Update+0x64 loads 0x020bc93c in the ROM) and by its own relocation target (dMgState_c::UpdateAfterHidden at 0x020b7a18)."
     },
     {
-      "from": "@223",
+      "from": "@221",
       "to": "pmf_dMgState_c_LoseResume_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::LoseResume_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x260 loads 0x020bc944 in the ROM) and by its own relocation target (dMgState_c::LoseResume_Enter at 0x020b7b90)."
     },
     {
-      "from": "@221",
+      "from": "@219",
       "to": "pmf_dMgState_c_Lose_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::Lose_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x254 loads 0x020bc94c in the ROM) and by its own relocation target (dMgState_c::Lose_Enter at 0x020b7e38)."
     },
     {
-      "from": "@219",
+      "from": "@217",
       "to": "pmf_dMgState_c_Win_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::Win_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x24c loads 0x020bc954 in the ROM) and by its own relocation target (dMgState_c::Win_Enter at 0x020b7f5c)."
     },
     {
-      "from": "@217",
+      "from": "@215",
       "to": "pmf_dMgState_c_RetryPrompt_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RetryPrompt_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x248 loads 0x020bc95c in the ROM) and by its own relocation target (dMgState_c::RetryPrompt_Enter at 0x020b81f8)."
     },
     {
-      "from": "@215",
+      "from": "@213",
       "to": "pmf_dMgState_c_RoundBanner5_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RoundBanner5_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x244 loads 0x020bc964 in the ROM) and by its own relocation target (dMgState_c::RoundBanner5_Enter at 0x020b83ac)."
     },
     {
-      "from": "@213",
+      "from": "@211",
       "to": "pmf_dMgState_c_NextRound_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::NextRound_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x240 loads 0x020bc96c in the ROM) and by its own relocation target (dMgState_c::NextRound_Enter at 0x020b853c)."
     },
     {
-      "from": "@211",
+      "from": "@209",
       "to": "pmf_dMgState_c_RoundClear_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RoundClear_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x238 loads 0x020bc974 in the ROM) and by its own relocation target (dMgState_c::RoundClear_Enter at 0x020b8688)."
     },
     {
-      "from": "@229",
+      "from": "@227",
       "to": "pmf_dMgState_c_RoundClearTop_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RoundClearTop_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x250 loads 0x020bc97c in the ROM) and by its own relocation target (dMgState_c::RoundClearTop_Enter at 0x020b7854)."
     },
     {
-      "from": "@231",
+      "from": "@229",
       "to": "pmf_dMgState_c_RetryPromptB_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RetryPromptB_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x258 loads 0x020bc984 in the ROM) and by its own relocation target (dMgState_c::RetryPromptB_Enter at 0x020b7744)."
     },
     {
-      "from": "@492",
+      "from": "@490",
       "to": "pmf_dMgState_c_UpdateGameOverToMenu_2",
       "evidence": "Compiler PMF literal: dMgState_c::UpdateAfterHidden assigns &dMgState_c::UpdateGameOverToMenu, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::UpdateAfterHidden+0x104 loads 0x020bc98c in the ROM) and by its own relocation target (dMgState_c::UpdateGameOverToMenu at 0x020b7c04)."
     },
     {
-      "from": "@617",
+      "from": "@615",
       "to": "pmf_dMgState_c_UpdateFadeThenResume",
       "evidence": "Compiler PMF literal: dMgState_c::DigitsThenRound_Enter assigns &dMgState_c::UpdateFadeThenResume, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::DigitsThenRound_Enter+0x80 loads 0x020bc994 in the ROM) and by its own relocation target (dMgState_c::UpdateFadeThenResume at 0x020b7124)."
     },
     {
-      "from": "@233",
+      "from": "@231",
       "to": "pmf_dMgState_c_ScoreThenRound_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::ScoreThenRound_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x268 loads 0x020bc99c in the ROM) and by its own relocation target (dMgState_c::ScoreThenRound_Enter at 0x020b7594)."
     },
     {
-      "from": "@235",
+      "from": "@233",
       "to": "pmf_dMgState_c_RetryPromptWide_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RetryPromptWide_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x26c loads 0x020bc9a4 in the ROM) and by its own relocation target (dMgState_c::RetryPromptWide_Enter at 0x020b7460)."
     },
     {
-      "from": "@502",
+      "from": "@500",
       "to": "pmf_dMgState_c_UpdateWaitThenResume",
       "evidence": "Compiler PMF literal: dMgState_c::Draw_Enter assigns &dMgState_c::UpdateWaitThenResume, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Draw_Enter+0x64 loads 0x020bc9ac in the ROM) and by its own relocation target (dMgState_c::UpdateWaitThenResume at 0x020b78f4)."
     },
     {
-      "from": "@508",
+      "from": "@506",
       "to": "pmf_dMgState_c_UpdateWaitThenResume_2",
       "evidence": "Compiler PMF literal: dMgState_c::Tie_Enter assigns &dMgState_c::UpdateWaitThenResume, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Tie_Enter+0x20 loads 0x020bc9b4 in the ROM) and by its own relocation target (dMgState_c::UpdateWaitThenResume at 0x020b78f4)."
     },
     {
-      "from": "@239",
+      "from": "@237",
       "to": "pmf_dMgState_c_DigitsThenRound_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::DigitsThenRound_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x274 loads 0x020bc9bc in the ROM) and by its own relocation target (dMgState_c::DigitsThenRound_Enter at 0x020b724c)."
     },
     {
-      "from": "@619",
+      "from": "@617",
       "to": "pmf_dMgState_c_DrawScoreDigits",
       "evidence": "Compiler PMF literal: dMgState_c::DigitsThenRound_Enter assigns &dMgState_c::DrawScoreDigits, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::DigitsThenRound_Enter+0x84 loads 0x020bc9c4 in the ROM) and by its own relocation target (dMgState_c::DrawScoreDigits at 0x020b6948)."
     },
     {
-      "from": "@670",
+      "from": "@668",
       "to": "pmf_dMgState_c_ResultsNewRecord_Update",
       "evidence": "Compiler PMF literal: dMgState_c::ResultsNewRecord_Enter assigns &dMgState_c::ResultsNewRecord_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::ResultsNewRecord_Enter+0x6c loads 0x020bc9cc in the ROM) and by its own relocation target (dMgState_c::ResultsNewRecord_Update at 0x020b6ddc)."
     },
     {
-      "from": "@241",
+      "from": "@239",
       "to": "pmf_dMgState_c_BannerEThenRound_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::BannerEThenRound_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x278 loads 0x020bc9d4 in the ROM) and by its own relocation target (dMgState_c::BannerEThenRound_Enter at 0x020b70b4)."
     },
     {
-      "from": "@243",
+      "from": "@241",
       "to": "pmf_dMgState_c_Results_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::Results_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x27c loads 0x020bc9dc in the ROM) and by its own relocation target (dMgState_c::Results_Enter at 0x020b7020)."
     },
     {
-      "from": "@528",
+      "from": "@526",
       "to": "pmf_dMgState_c_RoundClearTop_Update",
       "evidence": "Compiler PMF literal: dMgState_c::RoundClearTop_Enter assigns &dMgState_c::RoundClearTop_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RoundClearTop_Enter+0x9c loads 0x020bc9e4 in the ROM) and by its own relocation target (dMgState_c::RoundClearTop_Update at 0x020b77b4)."
     },
     {
-      "from": "@245",
+      "from": "@243",
       "to": "pmf_dMgState_c_ResultsNewRecord_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::ResultsNewRecord_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x280 loads 0x020bc9ec in the ROM) and by its own relocation target (dMgState_c::ResultsNewRecord_Enter at 0x020b6f14)."
     },
     {
-      "from": "@247",
+      "from": "@245",
       "to": "pmf_dMgState_c_GameOver_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::GameOver_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x284 loads 0x020bc9f4 in the ROM) and by its own relocation target (dMgState_c::GameOver_Enter at 0x020b6d6c)."
     },
     {
-      "from": "@545",
+      "from": "@543",
       "to": "pmf_dMgState_c_RetryPromptB_Update",
       "evidence": "Compiler PMF literal: dMgState_c::RetryPromptB_Enter assigns &dMgState_c::RetryPromptB_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RetryPromptB_Enter+0x6c loads 0x020bc9fc in the ROM) and by its own relocation target (dMgState_c::RetryPromptB_Update at 0x020b75e4)."
     },
     {
-      "from": "@641",
+      "from": "@639",
       "to": "pmf_dMgState_c_UpdateFadeThenResume_2",
       "evidence": "Compiler PMF literal: dMgState_c::BannerEThenRound_Enter assigns &dMgState_c::UpdateFadeThenResume, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::BannerEThenRound_Enter+0x6c loads 0x020bca04 in the ROM) and by its own relocation target (dMgState_c::UpdateFadeThenResume at 0x020b7124)."
     },
     {
-      "from": "@249",
+      "from": "@247",
       "to": "pmf_dMgState_c_Finished_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::Finished_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x288 loads 0x020bca0c in the ROM) and by its own relocation target (dMgState_c::Finished_Enter at 0x020b6c10)."
     },
     {
-      "from": "@554",
+      "from": "@552",
       "to": "pmf_dMgState_c_UpdateRetryFadeOut_3",
       "evidence": "Compiler PMF literal: dMgState_c::RetryPromptB_Update assigns &dMgState_c::UpdateRetryFadeOut, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RetryPromptB_Update+0x148 loads 0x020bca14 in the ROM) and by its own relocation target (dMgState_c::UpdateRetryFadeOut at 0x020b7fec)."
     },
     {
-      "from": "@297",
+      "from": "@295",
       "to": "pmf_dMgState_c_RoundClear_Update",
       "evidence": "Compiler PMF literal: dMgState_c::RoundClear_Enter assigns &dMgState_c::RoundClear_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::RoundClear_Enter+0x88 loads 0x020bca1c in the ROM) and by its own relocation target (dMgState_c::RoundClear_Update at 0x020b8560)."
     },
     {
-      "from": "@567",
+      "from": "@565",
       "to": "pmf_dMgState_c_ScoreThenRound_Update",
       "evidence": "Compiler PMF literal: dMgState_c::ScoreThenRound_Enter assigns &dMgState_c::ScoreThenRound_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::ScoreThenRound_Enter+0x48 loads 0x020bca24 in the ROM) and by its own relocation target (dMgState_c::ScoreThenRound_Update at 0x020b746c)."
     },
     {
-      "from": "@672",
+      "from": "@670",
       "to": "pmf_dMgState_c_DrawRecordTable_2",
       "evidence": "Compiler PMF literal: dMgState_c::ResultsNewRecord_Enter assigns &dMgState_c::DrawRecordTable, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::ResultsNewRecord_Enter+0x70 loads 0x020bca2c in the ROM) and by its own relocation target (dMgState_c::DrawRecordTable at 0x020b68e8)."
     },
     {
-      "from": "@733",
+      "from": "@731",
       "to": "pmf_dMgState_c_Finished_Update",
       "evidence": "Compiler PMF literal: dMgState_c::Finished_Enter assigns &dMgState_c::Finished_Update, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::Finished_Enter+0x88 loads 0x020bca34 in the ROM) and by its own relocation target (dMgState_c::Finished_Update at 0x020b6b40)."
     },
     {
-      "from": "@237",
+      "from": "@235",
       "to": "pmf_dMgState_c_RetryPromptWideB_Enter",
       "evidence": "Compiler PMF literal: dMgState_c::SetState assigns &dMgState_c::RetryPromptWideB_Enter, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (dMgState_c::SetState+0x270 loads 0x020bca3c in the ROM) and by its own relocation target (dMgState_c::RetryPromptWideB_Enter at 0x020b743c)."
     }

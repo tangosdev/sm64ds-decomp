@@ -63,7 +63,6 @@ extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 extern const Five sCardHandOrder;
 extern int sCardFaceWeights[6];
 extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
-extern void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
 extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 extern "C" OamAttr data_ov006_0213402c[];
 OamAttr *data_ov006_02134028 = data_ov006_0213402c;
@@ -631,7 +630,6 @@ s32 dScMgCard_c::Behavior()
  * (dScMgBase_c::Render). */
 s32 dScMgCard_c::Render()
 {
-    char *c = (char *)this;
     int hiddenRank;
     short state;
     int i;
@@ -661,8 +659,8 @@ s32 dScMgCard_c::Render()
         RenderOamMainScreen(data_ov006_02134028, 40, 56, -1, -1);
     }
 
-    Mg_DrawCredits(c, 0xc, 0xc, 0);
-    Mg_DrawScoreTally(c, 0xe0, 0x14, 1);
+    DrawCredits(0xc, 0xc, 0);
+    DrawScoreTally(0xe0, 0x14, 1);
 
     if (this->mScore < this->mHudScore)
         this->mScore = this->mHudScore;
@@ -1141,27 +1139,28 @@ void dScMgCard_c::SettleHand(dMgCardObj_c *hand) {
  * source pair names, then retarget the approach steps off GetOffscreenY's
  * start height through the Vec2_Sub/func_0203d680 transform pair (the same
  * 1:256 fixed-point rounding both hands use), reset the raise state, and
- * draw its face. The mid-body alias reads the just-stored {x, y} back out
- * through memory into the target pair -- spelled exactly so, because a
- * plain `mTargetX = mX` would let the registers be reused and the reloads
- * would vanish. Coined name; the ROM's symbol is address-only. */
+ * draw its face. The mid-body alias reads the just-stored position back
+ * out through memory into the target -- spelled exactly so, because a
+ * plain `mTarget = mPos;` lets the registers be reused and the reloads
+ * vanish (DealIn diverges on 2004/b56). Coined name; the ROM's symbol is
+ * address-only. */
 void dMgCardObj_c::DealIn(const s32 *src)
 {
-    int buf[4];
-    mX = src[0];
-    mY = src[1];
+    Vector2 delta;
+    Vector2 step;
+    mPos.x = src[0];
+    mPos.y = src[1];
     {
-        int *b = (int *)(((int)this + 4));
-        mTargetX = b[0];
-        mTargetY = b[1];
+        Vector2 *b = &mPos;
+        mTarget = *b;
     }
-    mY = GetOffscreenY();
-    mX = 0x80000;
-    Vec2_Sub(&buf[0], &mTargetX, &mX);
-    func_0203d680((Vector2 *)&buf[2], (const Vector2 *)&buf[0], 0x100);
-    mXStep = buf[2];
-    mYStep = buf[3];
-    if (mXStep < 0) mXStep = -mXStep;
+    mPos.y = GetOffscreenY();
+    mPos.x = 0x80000;
+    Vec2_Sub(&delta.x, &mTarget.x, &mPos.x);
+    func_0203d680(&step, &delta, 0x100);
+    mStep = step;
+    if (mStep.x < 0)
+        mStep.x = -mStep.x;
     mLift = 0;
     mLiftFlag = 0;
     mValue = dScMgCard_c::DrawCardValue();
@@ -1174,16 +1173,16 @@ void dMgCardObj_c::DealIn(const s32 *src)
  * drawing a fresh face. Coined name; the ROM's symbol is address-only. */
 void dMgCardObj_c::Redeal()
 {
-    int buf[4];
-    mX = mTargetX;
-    mY = mTargetY;
-    mY = GetOffscreenY();
-    mX = 0x80000;
-    Vec2_Sub(&buf[0], &mTargetX, &mX);
-    func_0203d680((Vector2 *)&buf[2], (const Vector2 *)&buf[0], 0x100);
-    mXStep = buf[2];
-    mYStep = buf[3];
-    if (mXStep < 0) mXStep = -mXStep;
+    Vector2 delta;
+    Vector2 step;
+    mPos = mTarget;
+    mPos.y = GetOffscreenY();
+    mPos.x = 0x80000;
+    Vec2_Sub(&delta.x, &mTarget.x, &mPos.x);
+    func_0203d680(&step, &delta, 0x100);
+    mStep = step;
+    if (mStep.x < 0)
+        mStep.x = -mStep.x;
     mState = 0;
     mLift = 0;
     mLiftFlag = 0;
@@ -1196,7 +1195,7 @@ void dMgCardObj_c::Redeal()
  * machine. mState: 1 fly in from off-screen and settle (2, lift raising, on
  * both axes arriving -- the one card sound); 3 retreat a row (the touched
  * card dodging); 4 deal a fresh card at the deck position (6) after asking
- * GetOffscreenY for the start height; 7 fly home to the mHomeX slot (8);
+ * GetOffscreenY for the start height; 7 fly home to the mHome.x slot (8);
  * 9 settle into the dealt row; 0xa fly off home after the mFlyDelay stagger.
  * The lift runs every frame below the state block (raised toward 0x4000 =
  * one flip frame per 0x1000 of mLift when mLiftFlag is set). The tail is
@@ -1216,8 +1215,8 @@ void dMgCardObj_c::Update()
             ApproachLinear2(mFlyDelay, 0, 1);
             return;
         }
-        yReached = ApproachLinear(mY, mTargetY, mYStep);
-        if (ApproachLinear(mX, mTargetX, mXStep) != 0 && yReached != 0) {
+        yReached = ApproachLinear(mPos.y, mTarget.y, mStep.y);
+        if (ApproachLinear(mPos.x, mTarget.x, mStep.x) != 0 && yReached != 0) {
             Sound::PlayBank2_2D(0x144);
             mState = 2;
             mLiftFlag = 1;
@@ -1232,31 +1231,31 @@ void dMgCardObj_c::Update()
     {
         int state = mState;
         if (state == 3) {
-            ApproachLinear(mY, mTargetY - 0x10000, 0x2000);
+            ApproachLinear(mPos.y, mTarget.y - 0x10000, 0x2000);
         } else if (state == 5) {
-            yReached = ApproachLinear(mY, mTargetY, mYStep);
-            if (ApproachLinear(mX, mTargetX, mXStep) != 0 && yReached != 0) {
+            yReached = ApproachLinear(mPos.y, mTarget.y, mStep.y);
+            if (ApproachLinear(mPos.x, mTarget.x, mStep.x) != 0 && yReached != 0) {
                 Sound::PlayBank2_2D(0x144);
                 mState = 2;
                 mLiftFlag = 1;
             }
         } else if (state == 2) {
-            ApproachLinear(mY, mTargetY, 0x4000);
+            ApproachLinear(mPos.y, mTarget.y, 0x4000);
         } else if (state == 4 && mLift == 0) {
             int result = GetOffscreenY();
-            if (ApproachLinear(mY, result, 0x8000) != 0) {
-                mX = 0x80000;
+            if (ApproachLinear(mPos.y, result, 0x8000) != 0) {
+                mPos.x = 0x80000;
                 mState = 6;
                 mValue = dScMgCard_c::DrawCardValue();
             }
         } else if (state == 7) {
-            if (ApproachLinear(mX, mHomeX, 0x6000) != 0)
+            if (ApproachLinear(mPos.x, mHome.x, 0x6000) != 0)
                 mState = 8;
         } else if (state == 9) {
-            ApproachLinear(mY, 0x80000, 0x6000);
+            ApproachLinear(mPos.y, 0x80000, 0x6000);
         } else if (state == 0xa) {
             if (ApproachLinear2(mFlyDelay, 0, 1) != 0)
-                ApproachLinear(mX, mHomeX, mXStep);
+                ApproachLinear(mPos.x, mHome.x, mStep.x);
         }
     }
 
@@ -1286,8 +1285,8 @@ void dMgCardObj_c::Update()
             if (mLift != 0x4000)
                 return;
             {
-                int touchDeltaX = (int)gTouchInfo[touchIndex].x - (mX >> 12);
-                int touchDeltaY = (int)gTouchInfo[touchIndex].y - (mY >> 12);
+                int touchDeltaX = (int)gTouchInfo[touchIndex].x - (mPos.x >> 12);
+                int touchDeltaY = (int)gTouchInfo[touchIndex].y - (mPos.y >> 12);
                 if (touchDeltaX <= 7)
                     return;
                 if (touchDeltaX >= 0x29)
@@ -1320,7 +1319,7 @@ void dMgCardObj_c::Render()
     if (mState == 0) return;
     idx = (mValue + 1) * 5 + (mLift >> 12);
     e = sCardFaceSprites[idx];
-    Hud_RenderSprite(sCardObjSprites[e], (mX >> 12) + 24, (mY >> 12) + 24, -1, -1);
+    Hud_RenderSprite(sCardObjSprites[e], (mPos.x >> 12) + 24, (mPos.y >> 12) + 24, -1, -1);
 }
 
 /* dMgCardObj_c::GetOffscreenY -- vtable slot 2. The y the card starts flying
@@ -1373,10 +1372,10 @@ void dScMgCard_c::RenderHud()
 /* dMgCardObj_c::SetHome -- aim the card at home slot n (the row pitch is
  * 0x28, the first slot sits at 0x2c) and put it into state 7, the fly-home
  * step. Coined name; the ROM's symbol is address-only. */
-void dMgCardObj_c::SetHome(s32 n){
-  mHomeX = (n*0x28+0x2c)<<0xc;
-  mHomeY = 0x80000;
-  mState = 7;
+void dMgCardObj_c::SetHome(s32 n) {
+    mHome.x = (n * 0x28 + 0x2c) << 0xc;
+    mHome.y = 0x80000;
+    mState = 7;
 }
 
 /* dMgCardObj_c::FlyOff -- the end-of-round fly-away: home becomes the
@@ -1384,15 +1383,15 @@ void dMgCardObj_c::SetHome(s32 n){
  * x step's frame count becomes the stagger -- one card leaves per frame,
  * counted down from how high the card sits. State 0xa is the fly-away
  * step. Coined name; the ROM's symbol is address-only. */
-void dMgCardObj_c::FlyOff(){
-  mHomeX = -0x28000;
-  mHomeY = mY;
-  int t = mX;
-  unsigned ip = 0x80000 - t;
-  mFlyDelay = ((int)ip / 0x10000);
-  mXStep = 0x10000;
-  mYStep = 0;
-  mState = 0xa;
+void dMgCardObj_c::FlyOff() {
+    mHome.x = -0x28000;
+    mHome.y = mPos.y;
+    int t = mPos.x;
+    unsigned ip = 0x80000 - t;
+    mFlyDelay = ((int)ip / 0x10000);
+    mStep.x = 0x10000;
+    mStep.y = 0;
+    mState = 0xa;
 }
 
 /* dMgDilarCardObj_c::GetOffscreenY -- vtable slot 2, the same answer the base
@@ -1423,8 +1422,8 @@ void dMgDilarCardObj_c::Update()
     u8 state = mState;
 
     if (state == 5) {
-        int r5 = ApproachLinear(mY, mTargetY, mYStep);
-        int r0 = ApproachLinear(mX, mTargetX, mXStep);
+        int r5 = ApproachLinear(mPos.y, mTarget.y, mStep.y);
+        int r0 = ApproachLinear(mPos.x, mTarget.x, mStep.x);
         if (r5 == 0)
             return;
         if (r0 != 0)
@@ -1434,24 +1433,24 @@ void dMgDilarCardObj_c::Update()
 
     if (state == 4 && mLift == 0) {
         int v = GetOffscreenY();
-        int r0 = ApproachLinear(mY, v, 0x8000);
+        int r0 = ApproachLinear(mPos.y, v, 0x8000);
         if (r0 == 0)
             return;
-        mX = 0x80000;
+        mPos.x = 0x80000;
         mState = 6;
         mValue = dScMgCard_c::DrawCardValue();
         return;
     }
 
     if (state == 7) {
-        int r0 = ApproachLinear(mX, mHomeX, 0x6000);
+        int r0 = ApproachLinear(mPos.x, mHome.x, 0x6000);
         if (r0 != 0)
             mState = 8;
         return;
     }
 
     if (state == 9) {
-        ApproachLinear(mY, 0x10000, 0x6000);
+        ApproachLinear(mPos.y, 0x10000, 0x6000);
         return;
     }
 
@@ -1460,8 +1459,8 @@ void dMgDilarCardObj_c::Update()
             ApproachLinear2(mFlyDelay, 0, 1);
             return;
         }
-        ApproachLinear(mY, mTargetY, mYStep);
-        ApproachLinear(mX, mTargetX, mXStep);
+        ApproachLinear(mPos.y, mTarget.y, mStep.y);
+        ApproachLinear(mPos.x, mTarget.x, mStep.x);
         return;
     }
 
@@ -1471,13 +1470,13 @@ void dMgDilarCardObj_c::Update()
     if (ApproachLinear2(mFlyDelay, 0, 1) == 0)
         return;
 
-    ApproachLinear(mX, mHomeX, mXStep);
+    ApproachLinear(mPos.x, mHome.x, mStep.x);
 }
 
 /* dMgDilarCardObj_c::Render -- vtable slot 0, the dealer's card face down.
  * The sprite bank table sCardFaceSprites is indexed by the card's face
  * (mValue + 1, the +1 skipping the card-back row) and its flip frame
- * (mLift >> 12), and Hud_RenderSprite takes the 1:4096 fixed-point mX/mY
+ * (mLift >> 12), and Hud_RenderSprite takes the 1:4096 fixed-point mPos.x/mPos.y
  * back down to pixels, plus the 24-pixel hand margin. Kept compact -- one index
  * temporary -- because that is the register shape the cartridge carries;
  * the base class's Render below spells its temporaries out instead, and
@@ -1487,7 +1486,7 @@ void dMgDilarCardObj_c::Render()
   int k;
   if(mState==0) return;
   k = sCardFaceSprites[(mValue + 1) * 5 + (mLift >> 12)];
-  Hud_RenderSprite(sCardObjSprites[k], (mX >> 12) + 24, (mY >> 12) + 24, -1, -1);
+  Hud_RenderSprite(sCardObjSprites[k], (mPos.x >> 12) + 24, (mPos.y >> 12) + 24, -1, -1);
 }
 
 /* -------------------------------------------------------------------------- */
