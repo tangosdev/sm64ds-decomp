@@ -198,8 +198,8 @@ daPly_c *daStarGate_c::CalculateRelativePlayerPos() {
 /* -------------------------------------------------------------------------- */
 bool daStarGate_c::IsInFrontOfPlayer(daPly_c *player) {
     int a;
-    if (Abs(mScaleX) <= 0x82000 && Abs(mScaleY) <= 0x32000 && Abs(mScaleZ) <= 0x78000) {
-        if (mScaleZ < 0)
+    if (Abs(mScale.x) <= 0x82000 && Abs(mScale.y) <= 0x32000 && Abs(mScale.z) <= 0x78000) {
+        if (mScale.z < 0)
             a = mAngleY;
         else
             a = mAngleY + 0x8000;
@@ -213,7 +213,7 @@ bool daStarGate_c::IsInFrontOfPlayer(daPly_c *player) {
 /* -------------------------------------------------------------------------- */
 void daStarGate_c::TryOpenDoor(daPly_c *player) {
     int a;
-    int z = mScaleZ;
+    int z = mScale.z;
     if (z < 0) a = mAngleY;
     else a = mAngleY + 0x8000;
     if (player->TryEnterStarDoor(mPos, a))
@@ -234,12 +234,12 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
         isMario = data_0209caa0.file.mCharacter == 0;
 
         /* A door already unlocked in the save just opens. So does the 80-star
-           door from behind (mScaleZ <= 0), or for Mario with enough stars.
+           door from behind (mScale.z <= 0), or for Mario with enough stars.
            Otherwise it shows its message (or, for Mario with enough stars,
            starts the unlock talk) and falls back to TryOpenDoor when that
            call returns 0. */
         if (!(data_0209caa0.file.flags1 & (0x8000 << entry->saveFlag))) {
-            if (!isSpecial || (mScaleZ > 0 && (notEnoughStars || !isMario))) {
+            if (!isSpecial || (mScale.z > 0 && (notEnoughStars || !isMario))) {
                 Vector3 messagePos(mPosX, mPosY + 0xb4000, mPosZ);
 
                 if (!(isMario && !isSpecial && !notEnoughStars)) {
@@ -338,7 +338,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
             ChangeState(&ST_WAIT, player);
             {
                 int t;
-                if (mScaleZ < 0)
+                if (mScale.z < 0)
                     t = mAngleX;
                 else
                     t = mAngleZ;

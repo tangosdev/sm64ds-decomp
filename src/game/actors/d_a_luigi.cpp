@@ -97,7 +97,7 @@ extern "C" {
 unsigned int func_0201277c(unsigned int soundID);
 
 /* Depth from mModelOffsetY, mPosY, mSinkDepth and mGroundY; radius from that,
- * mIsBalloon, mIsMega and mScaleY. The definition takes char *. */
+ * mIsBalloon, mIsMega and mScale.y. The definition takes char *. */
 /* Returns mBodyModels[GetBodyModelID(mBodyModelId, 1)] as int. */
 int func_ov002_020e496c(daPly_c *player);
 

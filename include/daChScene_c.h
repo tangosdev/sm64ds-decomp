@@ -10,13 +10,13 @@
  * kept deliberately so this header does not contradict include/dActor_c.h, but
  * what this class actually does with them is:
  *
- *   mScaleX  0x080   HALF-WIDTH of the trigger box. InitResources derives it
+ *   mScale.x 0x080   HALF-WIDTH of the trigger box. InitResources derives it
  *                    from the spawn param's low nibble, ((n+1) * 0x64000) >> 1,
  *                    and Behavior tests |local.x| <= it.
- *   mScaleY  0x084   HEIGHT of the box, from the next nibble, tested as
+ *   mScale.y 0x084   HEIGHT of the box, from the next nibble, tested as
  *                    0 <= local.y <= it. Two levels (0x20, 0x22) override both
  *                    with fixed sizes.
- *   mScaleZ  0x088   NOT a size at all: last frame's local z of the player.
+ *   mScale.z 0x088   NOT a size at all: last frame's local z of the player.
  *                    Behavior XORs it with this frame's and tests the sign, so
  *                    the door fires on the frame the player CROSSES its plane,
  *                    then stores the new value. It is the only one of the three
@@ -52,7 +52,7 @@
 /* daChScene_c is a real dActor_c, like every other actor in this family
  * (daChRoom_c_Spawn's neighbor, daBar_c_classInit, and daCamTag_c_Spawn; the
  * bar factory's historical alias was InvisiblePole_Spawn) --
- * mParam/mPosX/mScaleX/mAngleX/mHorzSpeed are dActor_c's own fields
+ * mParam/mPosX/mScale.x/mAngleX/mHorzSpeed are dActor_c's own fields
  * (param1 at 0x008 via fBase_c, the rest at 0x05c..0x098), inherited rather
  * than re-declared flat as they were before. The non-motion reuse those fields
  * get here is documented in the file comment above.

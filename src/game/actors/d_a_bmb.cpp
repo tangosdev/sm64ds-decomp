@@ -196,9 +196,9 @@ int daBmb_c::InitResources()
     *(Matrix4x3 *)mMatrix = IDENTITY_MATRIX4X3;
     mTurnTimer = 0;
     mFuse = 0;
-    mScaleX = FX32_ONE;
-    mScaleY = FX32_ONE;
-    mScaleZ = FX32_ONE;
+    mScale.x = FX32_ONE;
+    mScale.y = FX32_ONE;
+    mScale.z = FX32_ONE;
     mCarrier = 0;
     mTurnCount = 0;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
@@ -619,9 +619,9 @@ void daBmb_c::func_ov102_0214baa0() {
     mChasePlayer = 0;
     mCarrier = 0;
     mFuse = 0;
-    mScaleX = FX32_ONE;
-    mScaleY = FX32_ONE;
-    mScaleZ = FX32_ONE;
+    mScale.x = FX32_ONE;
+    mScale.y = FX32_ONE;
+    mScale.z = FX32_ONE;
     mAngleX = 0;
     mAngleY = 0;
     mAngleZ = 0;
@@ -820,7 +820,7 @@ void daBmb_c::UpdateShadow() {
     mMatrix[10] = v >> 3;
     mMatrix[11] = mPosZ >> 3;
 
-    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mMatrix, mScaleX * 0x50, 0x1e000, 0xf);
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mMatrix, mScale.x * 0x50, 0x1e000, 0xf);
 }
 
 /* ==========================================================================
@@ -891,9 +891,9 @@ int daBmb_c::UpdateFuse() {
             }
             {
                 int v = ((5 - mFuse) << 12) / 4 + 0x1000;
-                mScaleZ = v;
-                mScaleY = mScaleZ;
-                mScaleX = mScaleY;
+                mScale.z = v;
+                mScale.y = mScale.z;
+                mScale.x = mScale.y;
                 mdCc_c.radius = v * 0x3c;
                 mdCc_c.height = v * 0x50;
                 mWithMeshClsn.SetRadius(v * 0x3c);

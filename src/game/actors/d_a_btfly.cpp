@@ -428,9 +428,9 @@ int daBtfly_c::Behavior()
 
     if (mKind != 0) {
         int spd = mScale;
-        mScaleX = spd;
-        mScaleY = spd;
-        mScaleZ = spd;
+        dActor_c::mScale.x = spd;
+        dActor_c::mScale.y = spd;
+        dActor_c::mScale.z = spd;
 
         {
             int s = mHorzSpeed;
@@ -514,9 +514,9 @@ int daBtfly_c::InitResources()
 
     mScale = 0x1000;
     s32 spd = mScale;
-    mScaleX = spd;
-    mScaleY = spd;
-    mScaleZ = spd;
+    dActor_c::mScale.x = spd;
+    dActor_c::mScale.y = spd;
+    dActor_c::mScale.z = spd;
     mUseAnimModel = 1;
     return 1;
 }

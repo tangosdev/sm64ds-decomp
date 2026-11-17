@@ -315,15 +315,15 @@ int daSnowman_c::FindClosestPlayerDist() {
 int daSnowman_c::StateMeltExecute() {
     Vector3 v;
     if (this->mType != 0 || this->mWithMeshClsn.IsOnGround() != 0) {
-        ApproachLinear(this->mScaleX, 0x1700, 0x50);
-        ApproachLinear(this->mScaleZ, 0x1700, 0x50);
-        ApproachLinear(this->mScaleY, 0, 0x50);
+        ApproachLinear(this->mScale.x, 0x1700, 0x50);
+        ApproachLinear(this->mScale.z, 0x1700, 0x50);
+        ApproachLinear(this->mScale.y, 0, 0x50);
         ApproachLinear(this->mSinkOffsetY, -0x4000, 0x199);
         /* Every read of mStateTimer here is ldrh: it is counted down
            through DecIfAbove0_Short, which takes it unsigned. */
         if ((u16)this->mStateTimer == 0)
             this->mStateTimer = 20;
-        if (this->mScaleY < 0x50) {
+        if (this->mScale.y < 0x50) {
             if (this->mCapPhase == 0) {
                 v.x = this->mPosX;
                 v.y = this->mPosY;
@@ -946,9 +946,9 @@ int daSnowman_c::InitResources()
         mPathNodeCount = pp.NumNodes();
     }
 
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mTerminalVelocity = -0xc8000;
 
     v = data_ov081_02128998;

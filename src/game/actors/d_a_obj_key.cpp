@@ -408,7 +408,7 @@ void daObjKey_c::StateFlyToCenter()
     VEC_Subtract(&v, &mPos, &v);
     Vec3_LslInPlace(&v, 3);
     VEC_Add(&v, &mPos, &v);
-    v.y = mScaleX * 13 + v.y;
+    v.y = mScale.x * 13 + v.y;
     mParticleID[0] = Particle::System::New(mParticleID[0], FX_TRAIL_A, v.x, v.y, v.z, 0, 0);
     mParticleID[1] = Particle::System::New(mParticleID[1], FX_TRAIL_B, v.x, v.y, v.z, 0, 0);
     mParticleID[2] = Particle::System::New(mParticleID[2], FX_TRAIL_C, v.x, v.y, v.z, 0, 0);
@@ -842,9 +842,9 @@ int daObjKey_c::InitResources()
         if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)&data_ov002_0211094c)->filePtr, 1, 1) == 0)
             return 0;
         mAnmModel.SetAnim((BCA_File *)data_ov002_02110964.filePtr, ANIM_FLAGS, ANIM_SPEED, 0);
-        mScaleX = SCALE_STAR;
-        mScaleY = SCALE_STAR;
-        mScaleZ = SCALE_STAR;
+        mScale.x = SCALE_STAR;
+        mScale.y = SCALE_STAR;
+        mScale.z = SCALE_STAR;
         offset7.x = data_ov089_02132b40.x;
         offset7.y = data_ov089_02132b40.y;
         offset7.z = data_ov089_02132b40.z;
@@ -869,9 +869,9 @@ int daObjKey_c::InitResources()
             }
         }
         mAnmModel.SetAnim((BCA_File *)data_ov002_02110964.filePtr, ANIM_FLAGS, ANIM_SPEED, 0);
-        mScaleX = SCALE_KEY;
-        mScaleY = SCALE_KEY;
-        mScaleZ = SCALE_KEY;
+        mScale.x = SCALE_KEY;
+        mScale.y = SCALE_KEY;
+        mScale.z = SCALE_KEY;
         mSpeed.y = POP_VY;
         offset.x = data_ov089_02132ca4.x;
         offset.y = data_ov089_02132ca4.y;

@@ -82,9 +82,9 @@ s32 daPgBby_c::InitResources()
     mSpawnPos.x = mPosX;
     mSpawnPos.y = mPosY;
     mSpawnPos.z = mPosZ;
-    mScaleX = 0x400;
-    mScaleY = 0x400;
-    mScaleZ = 0x400;
+    mScale.x = 0x400;
+    mScale.y = 0x400;
+    mScale.z = 0x400;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mEatingPlayer = 0;
     mCarrier = 0;

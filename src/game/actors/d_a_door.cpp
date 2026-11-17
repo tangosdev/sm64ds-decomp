@@ -65,7 +65,7 @@
  *   the SaveData, Sound::PlayCharVoice and dExtFrameCtrl_c::LoadFile calls, and the
  *   dExtSimpleModel_c loaders InitResources calls stay spelled as mangled extern-C free
  *   functions.
- * - dActor_c's mScaleX/Y/Z and mAngleX/Z carry other things for a door
+ * - dActor_c's mScale and mAngleX/Z carry other things for a door
  *   (the player's position in the door's frame, and two area ids), and
  *   mSpeed holds the message position; the base name cannot change on
  *   one derived class's evidence, so the functions that read it describe
@@ -457,7 +457,7 @@ void daDoor_c::func_ov100_021446f8(daPly_c *r1) {
    frame count minus 0x28 (40) it runs func_ov100_02145080 every frame. When
    the animation finishes it goes to state data_ov100_021488a4 (latch set) or
    data_ov100_021488b4, stores the area id on the far side (the low byte of
-   mAngleX when mScaleZ is negative, else of mAngleZ -- see Render) as the
+   mAngleX when mScale.z is negative, else of mAngleZ -- see Render) as the
    player's mAreaId and ChangeArea's it, clears the DOOR_CAMERA_FLAGS camera
    bits and plays the swing-end sound. Before the end: with a nonzero
    mKeyModelIdx, on the frame 0x1c (28) from the end it clears the camera
@@ -480,7 +480,7 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
             func_ov100_021453d8(&data_ov100_021488a4, (int)arg1);
         else
             func_ov100_021453d8(&data_ov100_021488b4, (int)arg1);
-        if (mScaleZ < 0)
+        if (mScale.z < 0)
             t = mAngleX;
         else
             t = mAngleZ;
@@ -830,12 +830,12 @@ int daDoor_c::func_ov100_02145080(daPly_c *arg1) {
 /* ROM ordinal 21 -- func_ov100_02145170, 0x02145170, size 0x54 */
 /* -------------------------------------------------------------------------- */
 /* Place the player at the door: offset a, facing the door's mAngleY turned
-   half round, when mScaleZ > 0; offset b, facing mAngleY, otherwise -- the new facing also copied to the player's
+   half round, when mScale.z > 0; offset b, facing mAngleY, otherwise -- the new facing also copied to the player's
    mPrevAngleY, and either offset rotated by mAngleY about the door's
    position. Was a C source taking the door and the player as char *. */
 void daDoor_c::func_ov100_02145170(daPly_c *pl, Vector3 *a, Vector3 *b) {
     Vector3 *v;
-    if (mScaleZ > 0) {
+    if (mScale.z > 0) {
         pl->mAngleY = mAngleY + 0x8000;
         v = a;
     } else {
@@ -851,14 +851,14 @@ void daDoor_c::func_ov100_02145170(daPly_c *pl, Vector3 *a, Vector3 *b) {
 /* -------------------------------------------------------------------------- */
 /* Send the player through: unless no state was given (then
    data_ov100_021488f4 is used without asking), the player must be able to
-   enter from its side (daPly_c::CanEnterDoor, told whether mScaleZ <= 0);
+   enter from its side (daPly_c::CanEnterDoor, told whether mScale.z <= 0);
    place it through func_ov100_02145170 with the offsets (0, 0, 100) and
    (0, 0, -100) units, go to the given state and call SetTouchScreenDelay.
    Returns 0 when the player cannot enter. */
 int daDoor_c::func_ov100_021451c4(void *r5, daPly_c *r4) {
     if (r5 == 0) {
         r5 = &data_ov100_021488f4;
-    } else if (r4->CanEnterDoor(mScaleZ <= 0) == 0) {
+    } else if (r4->CanEnterDoor(mScale.z <= 0) == 0) {
         return 0;
     }
     /* 100 units to either side of the door. */
@@ -874,21 +874,21 @@ int daDoor_c::func_ov100_021451c4(void *r5, daPly_c *r4) {
 /* ROM ordinal 23 -- func_ov100_021452e4, 0x021452e4, size 0x8c */
 /* -------------------------------------------------------------------------- */
 /* 1 when the player is inside the door's box (the player's door-relative
-   offset in mScaleX/Y/Z within 75, 50 and 110 units, bounds inclusive) and
+   offset in mScale within 75, 50 and 110 units, bounds inclusive) and
    AngleDiff between the player's mAngleY and the door's is below 0x2000 (45
-   degrees) -- the door's mAngleY when mScaleZ is negative, half a turn from
+   degrees) -- the door's mAngleY when mScale.z is negative, half a turn from
    it otherwise. Was a C source. */
 int daDoor_c::func_ov100_021452e4(daPly_c *r1) {
     int v, z, a;
-    v = mScaleX;
+    v = mScale.x;
     if (v < 0)
         v = -v;
     if (v <= 0x4b000) {
-        v = mScaleY;
+        v = mScale.y;
         if (v < 0)
             v = -v;
         if (v <= 0x32000) {
-            z = mScaleZ;
+            z = mScale.z;
             v = (z < 0) ? -z : z;
             if (v <= 0x6e000) {
                 if (z < 0)
@@ -909,7 +909,7 @@ int daDoor_c::func_ov100_021452e4(daPly_c *r1) {
 /* -------------------------------------------------------------------------- */
 /* The player's position in the door's frame (the offset from the door,
    rotated by minus mAngleY), stored into the door's
-   mScaleX/Y/Z, which a door does not use as a scale; returns the player
+   mScale, which a door does not use as a scale; returns the player
    (gPlayers[gLocalPlayerId], the current one). Was a C source. */
 daPly_c *daDoor_c::func_ov100_02145370() {
     Vector3 v;
@@ -1016,8 +1016,8 @@ s32 daDoor_c::Behavior() {
  * the door animation (speed 0x1000 = 1.0); build the model matrix from the
  * position >> 3 and mAngleY and give it to the door model and, when the entry
  * has a second file, a freshly built key model; then choose the starting
- * state: data_ov100_02148914 if the player stands inside |mScaleX| <= 75,
- * |mScaleY| <= 50, |mScaleZ| <= 500 units of the door (mScaleX/Y/Z are the
+ * state: data_ov100_02148914 if the player stands inside |mScale.x| <= 75,
+ * |mScale.y| <= 50, |mScale.z| <= 500 units of the door (mScale is the
  * player's offset, set by func_ov100_02145370), else data_ov100_021488b4.
  *
  * 0x05c/0x060/0x064 are mPosX/Y/Z and 0x08e mAngleY, so the opening call
@@ -1118,15 +1118,15 @@ s32 daDoor_c::InitResources() {
     }
     func_ov100_02145370();
 
-    v = mScaleX;
+    v = mScale.x;
     if (v < 0)
         v = -v;
     if (v <= 0x4b000) { /* 75 units */
-        v = mScaleY;
+        v = mScale.y;
         if (v < 0)
             v = -v;
         if (v <= 0x32000) { /* 50 */
-            v = mScaleZ;
+            v = mScale.z;
             if (v < 0)
                 v = -v;
             if (v <= 0x1f4000) { /* 500 */

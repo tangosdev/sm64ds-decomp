@@ -411,7 +411,7 @@ void daTrs_c::func_ov063_021166ac() {
         else
             DropShadowRadHeight(this->mShadowModel1, this->mShadowMtx, 0x64000, 0xc8000, 0xf);
     }
-    this->mCapPos.y = this->mClsnOff.y + FX_MUL(this->mScaleX, 0x60000);
+    this->mCapPos.y = this->mClsnOff.y + FX_MUL(this->mScale.x, 0x60000);
     pos = this->mCapPos;
     {
         /* The angle triple copies as two halfword loads, then two stores, then
@@ -463,9 +463,9 @@ void daTrs_c::func_ov063_02116a1c() {
             *fp |= TRS_FLAG_VISIBLE;
             this->mOpacity = 0xb4;
             scale = this->mClsnScale;
-            this->mScaleX = scale;
-            this->mScaleY = scale;
-            this->mScaleZ = scale;
+            this->mScale.x = scale;
+            this->mScale.y = scale;
+            this->mScale.z = scale;
             this->mdCcAcPos_c.radius = this->mClsnRadius * this->mClsnScale;
             this->mdCcAcPos_c.height = this->mClsnHeight * this->mClsnScale;
             *st += 1;
@@ -631,11 +631,11 @@ int daTrs_c::func_ov063_02116f48() {
     this->mBigBooID = 0;
     this->mTargetOpacity = 0xff;
     this->mClsnScale = 0x2000;
-    this->mScaleX = 0x2000;
-    this->mScaleY = 0x2000;
-    this->mScaleZ = 0x2000;
-    this->mdCcAcPos_c.radius = this->mClsnRadius * this->mScaleX;
-    this->mdCcAcPos_c.height = this->mClsnHeight * this->mScaleX;
+    this->mScale.x = 0x2000;
+    this->mScale.y = 0x2000;
+    this->mScale.z = 0x2000;
+    this->mdCcAcPos_c.radius = this->mClsnRadius * this->mScale.x;
+    this->mdCcAcPos_c.height = this->mClsnHeight * this->mScale.x;
     int r = ShouldBeActive();
     if (r) { this->mState = 1; r = 1; }
     return r;
@@ -1358,9 +1358,9 @@ void daTrs_c::func_ov063_02118914() {
     this->mHitPoints = 3;
 
     scale = this->mClsnScale;
-    this->mScaleX = scale;
-    this->mScaleY = scale;
-    this->mScaleZ = scale;
+    this->mScale.x = scale;
+    this->mScale.y = scale;
+    this->mScale.z = scale;
     this->mdCcAcPos_c.radius = this->mClsnRadius * this->mClsnScale;
     this->mdCcAcPos_c.height = this->mClsnHeight * this->mClsnScale;
     this->mBooFlags.visible = 1;
@@ -1667,9 +1667,9 @@ void daTrs_c::func_ov063_02119074() {
         this->mClsnScale =
             data_ov063_0211e1d0[this->mVariant - 0xc];
         scale = this->mClsnScale;
-        this->mScaleX = scale;
-        this->mScaleY = scale;
-        this->mScaleZ = scale;
+        this->mScale.x = scale;
+        this->mScale.y = scale;
+        this->mScale.z = scale;
 
         this->mAnmModel.SetPolygonID(0x16);
 
@@ -2487,12 +2487,12 @@ void daTrs_c::Oscillate(int arg1) {
 
     if (mOpacity != 0xff && arg1 == 0)
         return;
-    mScaleX = mClsnScale + (FX_SinIdx(mWobblePhase >> 4) << 3) / 100;
-    mScaleY = mClsnScale + -(FX_SinIdx(mWobblePhase >> 4) << 3) / 100;
-    mScaleZ = mScaleX;
+    mScale.x = mClsnScale + (FX_SinIdx(mWobblePhase >> 4) << 3) / 100;
+    mScale.y = mClsnScale + -(FX_SinIdx(mWobblePhase >> 4) << 3) / 100;
+    mScale.z = mScale.x;
     func_ov063_0211a960();
-    mdCcAcPos_c.radius = mClsnRadius * mScaleX;
-    mdCcAcPos_c.height = mClsnHeight * mScaleY;
+    mdCcAcPos_c.radius = mClsnRadius * mScale.x;
+    mdCcAcPos_c.height = mClsnHeight * mScale.y;
 }
 
 void daTrs_c::ApproachTargetOpacityAndUpdateScale() {
@@ -2526,9 +2526,9 @@ void daTrs_c::ApproachTargetOpacityAndUpdateScale() {
     }
     v = this->mClsnScale * 8 / 10
         + this->mClsnScale * (this->mOpacity * 2) / 2550;
-    this->mScaleX = v;
-    this->mScaleY = v;
-    this->mScaleZ = v;
+    this->mScale.x = v;
+    this->mScale.y = v;
+    this->mScale.z = v;
     this->mdCcAcPos_c.radius = this->mClsnRadius * v;
     this->mdCcAcPos_c.height = this->mClsnHeight * v;
 }
@@ -3158,9 +3158,9 @@ int daTrs_c::InitResources()
     mHomeAngleY = mAngleY;
     mHomeAngleZ = mAngleZ;
     mStateTimer = 0;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mOpacity = 0xff;
     mWithMeshClsn.StartIgnoringVanishSurfaces();
     mState = 0;

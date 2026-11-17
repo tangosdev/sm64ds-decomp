@@ -347,9 +347,9 @@ int daBttBk_c::InitResources() {
         mPosY = ground.clsnY;
     else
         mPosY = pos.y;
-    mScaleX = FX32_ONE;
-    mScaleY = FX32_ONE;
-    mScaleZ = FX32_ONE;
+    mScale.x = FX32_ONE;
+    mScale.y = FX32_ONE;
+    mScale.z = FX32_ONE;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mCarrier = 0;
     SetState(0);

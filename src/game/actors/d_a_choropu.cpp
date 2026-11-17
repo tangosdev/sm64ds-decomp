@@ -662,7 +662,7 @@ s32 daChoropu_c::Render()
     return 1;
 }
 
-/* Draws the rock's model, scaled by (mScaleX, mScaleY, mScaleZ). */
+/* Draws the rock's model, scaled by mScale. */
 s32 daChoro_Rock_c::Render()
 {
     dExtSimpleModel_c *m = &mModel;
@@ -804,13 +804,13 @@ s32 daChoro_Rock_c::InitResources()
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     if (mIsSmall == 0) {
-        mScaleX = 0x1000;
-        mScaleY = 0x1000;
-        mScaleZ = 0x1000;
+        mScale.x = 0x1000;
+        mScale.y = 0x1000;
+        mScale.z = 0x1000;
     } else {
-        mScaleX = 0x800;
-        mScaleY = 0x800;
-        mScaleZ = 0x800;
+        mScale.x = 0x800;
+        mScale.y = 0x800;
+        mScale.z = 0x800;
     }
     return 1;
 }

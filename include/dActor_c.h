@@ -57,17 +57,17 @@ struct dActor_c : dBase_c {
        constructor appends this node, the destructor unlinks it, and Next() walks
        the next link and reads its owner to get back to the actor. */
     fLiNdBa_c mActorListNode; /* 0x050 -- owner is always `this` */
-    /* mPos, mScale, mAngle and mPrevAngle are still overlaid on scalar
-       triples: mPos is also mPosX/Y/Z, mAngle is also mAngleX/Y/Z, and so
-       on. Both spellings name the same storage. The overlays are a decomp-era
-       device, not the original layout, and they are being retired one at a
-       time in favour of the plain vector member, as mPrevPos, mCamSpacePos
-       and mSpeed already are. New code should use the vector member (`&mPos`, not
-       `(Vector3 *)&mPosX`).
+    /* mPos, mAngle and mPrevAngle are still overlaid on scalar triples: mPos
+       is also mPosX/Y/Z, mAngle is also mAngleX/Y/Z, and mPrevAngle is also
+       mPrevAngleX/Y/Z. Both spellings name the same storage. The overlays
+       are a decomp-era device, not the original layout, and they are being
+       retired one at a time in favour of the plain vector member, as
+       mPrevPos, mCamSpacePos, mScale and mSpeed already are. New code should
+       use the vector member (`&mPos`, not `(Vector3 *)&mPosX`).
 
        THESE OVERLAYS ARE NOT FREE, AND THEY ARE PAID FOR BELOW. mwcc numbers
        its @NNN temporaries from one per-TU counter, and every unnamed struct
-       or union draws two numbers from it: four per overlay, 16 for the four
+       or union draws two numbers from it: four per overlay, 12 for the three
        left. Unpaid, that renumbers the pinned @NNN symbols of every TU
        including this header. A named parameter in a member declaration draws
        one, so parameter names further down are left off to pay for them.
@@ -77,9 +77,9 @@ struct dActor_c : dBase_c {
        balanced.
 
        Vector3 has a constructor, so mwcc warns "unions cannot have nontrivial
-       class members" here; the warning is expected. Nothing is constructed
-       through these, but the constructor's TU also emits an unused empty
-       destructor for each Vector3 union. For the port (C++11 and later), a
+       class members" at mPos; the warning is expected. Nothing is constructed
+       through it, but the constructor's TU also emits an unused empty
+       destructor for the mPos union. For the port (C++11 and later), a
        nontrivial union member also deletes dActor_c's implicit copy
        constructor and copy assignment; nothing copies an actor. */
     union {
@@ -88,14 +88,9 @@ struct dActor_c : dBase_c {
         };
         Vector3 mPos; /* 0x05c */
     };
-    Vector3 mPrevPos; /* 0x068 -- last frame's position, snapshotted by BeforeBehavior */
-    Vector3 mCamSpacePos; /* 0x074 */
-    union {
-        struct {
-            s32 mScaleX, mScaleY, mScaleZ;
-        };
-        Vector3 mScale; /* 0x080 */
-    };
+    Vector3 mPrevPos;       /* 0x068 -- last frame's position, snapshotted by BeforeBehavior */
+    Vector3 mCamSpacePos;   /* 0x074 */
+    Vector3 mScale;         /* 0x080 */
     union {
         struct {
             s16 mAngleX, mAngleY, mAngleZ;
@@ -172,18 +167,16 @@ struct dActor_c : dBase_c {
        function, so no TU gains a vtable from this. */
     dActor_c();
 
-    /* The unnamed parameters in this class, each left off because a name
-       would cost an @NNN number that the vector overlays above spend instead:
+    /* Parameters left unnamed in this class so that the counter balances
+       against the vector overlays above:
          daPly_c & / dActor_c &: slots 19 and 21-28, BumpedUnderneathByPlayer,
            JumpedOnByPlayer's daPly_c, GivePlayerCoins;
-         dCc_c *: UpdatePos, UpdatePosWithOnlySpeed, func_0200f760,
-           func_02010304;
          func_0200fccc's doRaycast flag;
          dExtShadowModel_c &: DropShadowScaleXYZ, DropShadowRadHeight.
-       The dust workers' `pos` names came back when mCamSpacePos stopped
-       being an overlay, and the dCc_c & `clsn` names when mPrevPos did.
-       Naming one, or unnaming another, moves every
-       consumer's @NNN. */
+       Each overlay retired so far gave four names back, all spelled as in the
+       definitions: the dust workers' `pos` (mCamSpacePos), the dCc_c &
+       `clsn` (mPrevPos) and the dCc_c * `clsn` (mScale). Naming one, or
+       unnaming another, moves every consumer's @NNN. */
 
     /* --- overrides of inherited slots. Each takes its base's index. --- */
     virtual bool BeforeInitResources();                /* slot  1 */
@@ -274,14 +267,14 @@ struct dActor_c : dBase_c {
     int JumpedOnByPlayer(dCc_c &clsn, daPly_c &);
     /* The landing thump's sound: 0xa for 0x380, 9 for 0x40. */
     void func_020105cc(u32);
-    void UpdatePos(dCc_c *);
-    void UpdatePosWithOnlySpeed(dCc_c *);
+    void UpdatePos(dCc_c *clsn);
+    void UpdatePosWithOnlySpeed(dCc_c *clsn);
     /* MakeVanishLuigiWork again, taking the cylinder by pointer; the ROM keeps
        both copies. */
-    void func_0200f760(dCc_c *);
+    void func_0200f760(dCc_c *clsn);
     /* The player behind the cylinder's last hit, if that hit carried hitFlags
        0x1000 and the player then grabbed this actor; otherwise null. */
-    daPly_c *func_02010304(dCc_c *);
+    daPly_c *func_02010304(dCc_c *clsn);
     /* Clamps each axis of mPos to the world bounds, +-32000.0. */
     void func_02010da4();
 
@@ -405,21 +398,16 @@ struct dActor_c {
     void *mListPrev;        /* 0x050 */
     void *mListNext;        /* 0x054 */
     struct dActor_c *mListOwner; /* 0x058 */
-    /* The same vector overlays as the C++ layout above. */
+    /* The same vectors, and the same overlays, as the C++ layout above. */
     union {
         struct {
             s32 mPosX, mPosY, mPosZ;
         };
         Vector3 mPos; /* 0x05c */
     };
-    Vector3 mPrevPos; /* 0x068 */
-    Vector3 mCamSpacePos; /* 0x074 */
-    union {
-        struct {
-            s32 mScaleX, mScaleY, mScaleZ;
-        };
-        Vector3 mScale; /* 0x080 */
-    };
+    Vector3 mPrevPos;       /* 0x068 */
+    Vector3 mCamSpacePos;   /* 0x074 */
+    Vector3 mScale;         /* 0x080 */
     union {
         struct {
             s16 mAngleX, mAngleY, mAngleZ;

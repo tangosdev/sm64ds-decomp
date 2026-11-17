@@ -258,10 +258,10 @@ int daBgSnmBdy_c::InitState0()
 {
     mVertAccel = 0;
     mTerminalVelocity = 0;
-    mScaleX = 0x800;
-    mScaleY = 0x800;
-    mScaleZ = 0x800;
-    mRadius = FX_Mul(mScaleX, 0x82000);
+    mScale.x = 0x800;
+    mScale.y = 0x800;
+    mScale.z = 0x800;
+    mRadius = FX_Mul(mScale.x, 0x82000);
     mCylinder.radius = mRadius;
     mCylinder.height = mRadius << 1;
     mWithMeshClsn.SetRadius(mRadius);
@@ -335,12 +335,12 @@ int daBgSnmBdy_c::State2()
     int newScale;
     ApproachLinear(mHorzSpeed, 0x28000, 0x400);
     if (DecIfAbove0_Short(&mStateTimer) == 0) {
-        growScale = mScaleX;
+        growScale = mScale.x;
         ApproachLinear(growScale, 0x1800, 0x11);
         newScale = growScale;
-        mScaleX = newScale;
-        mScaleY = newScale;
-        mScaleZ = newScale;
+        mScale.x = newScale;
+        mScale.y = newScale;
+        mScale.z = newScale;
         mRadius = FX_Mul(growScale, 0x82000);
         mCylinder.radius = mRadius;
         mCylinder.height = mRadius << 1;

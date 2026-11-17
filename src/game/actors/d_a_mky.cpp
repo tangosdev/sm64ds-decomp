@@ -1441,9 +1441,9 @@ s32 daMky_c::InitResources()
     mPerchPos = mPos;
     mPerchPos.y += 0x64000;
     mSpawnPos = mPos;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mPlayer = 0;
     mCapUniqueID = 0;
     mResetTimer = 150;

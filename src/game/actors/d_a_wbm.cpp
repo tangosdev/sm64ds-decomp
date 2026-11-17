@@ -149,17 +149,17 @@ int daWbm_c::InitResources()
     {
         if (mVariant == 2)
         {
-            mScaleX = 0x800;
-            mScaleY = 0x800;
-            mScaleZ = 0x800;
+            mScale.x = 0x800;
+            mScale.y = 0x800;
+            mScale.z = 0x800;
             mdCcAc_c.Init(this, 0x14000, 0x28000, 0x200004, 0);
             mWithMeshClsn.Init(this, 0x1e000, 0x1e000, 0, 0);
         }
         else
         {
-            mScaleX = 0x1000;
-            mScaleY = 0x1000;
-            mScaleZ = 0x1000;
+            mScale.x = 0x1000;
+            mScale.y = 0x1000;
+            mScale.z = 0x1000;
             mdCcAc_c.Init(this, 0x28000, 0x50000, 0x204004, 0);
             mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
         }
@@ -324,9 +324,9 @@ void daWbm_c::StateBounce()
                 mBouncePhase++;
         }
         mSquashSpeed = FX_Div(FX_MUL(mSquashSpeed, 0xb00), 0x1000);
-        mScaleY = mSquashScale;
-        mScaleZ = 0x2000 - mScaleY;
-        mScaleX = mScaleZ;
+        mScale.y = mSquashScale;
+        mScale.z = 0x2000 - mScale.y;
+        mScale.x = mScale.z;
     } else if (state == 1) {
         int approach = ApproachLinear(mSquashScale, 0x1000, mSquashSpeed);
         if (approach != 0) {
@@ -343,19 +343,19 @@ void daWbm_c::StateBounce()
             }
         }
         mSquashSpeed = FX_Div(FX_MUL(mSquashSpeed, 0x1400), 0x1000);
-        mScaleY = mSquashScale;
-        mScaleZ = 0x2000 - mScaleY;
-        mScaleX = mScaleZ;
+        mScale.y = mSquashScale;
+        mScale.z = 0x2000 - mScale.y;
+        mScale.x = mScale.z;
     } else {
         if (mSpeed.y >= 0) {
-            mScaleX = 0xf00;
-            mScaleY = 0x1200;
-            mScaleZ = 0xf00;
+            mScale.x = 0xf00;
+            mScale.y = 0x1200;
+            mScale.z = 0xf00;
         } else {
             mState = 1;
-            mScaleX = 0x1000;
-            mScaleY = 0x1000;
-            mScaleZ = 0x1000;
+            mScale.x = 0x1000;
+            mScale.y = 0x1000;
+            mScale.z = 0x1000;
         }
     }
 }
@@ -427,14 +427,14 @@ void daWbm_c::func_ov098_0213b584()
     mShadowMat = data_020a0e68;
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     mModel.mat4x3 = data_020a0e68;
-    DropShadowRadHeight(mShadowModel, mShadowMat, mScaleX * 0xa0, 0x3e8000, 6);
+    DropShadowRadHeight(mShadowModel, mShadowMat, mScale.x * 0xa0, 0x3e8000, 6);
 }
 
 /* Stop, start the squash from the current height and count the bounce. */
 void daWbm_c::Land()
 {
     mSquashSpeed = 0x600;
-    mSquashScale = mScaleY;
+    mSquashScale = mScale.y;
     mBounceCount++;
     unk_3b4 = 0;
     mSpeed.y = 0;

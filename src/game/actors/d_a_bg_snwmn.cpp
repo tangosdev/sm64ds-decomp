@@ -95,9 +95,9 @@ s32 daBgSnwmn_c::InitResources() {
     mPosY += 0xc3000;
     mVertAccel = 0;
     mTerminalVelocity = 0;
-    mScaleX = 0x1800;
-    mScaleY = 0x1800;
-    mScaleZ = 0x1800;
+    mScale.x = 0x1800;
+    mScale.y = 0x1800;
+    mScale.z = 0x1800;
     UpdateModelTransform();
     return 1;
 }

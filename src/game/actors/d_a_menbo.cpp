@@ -742,9 +742,9 @@ int daMenbo_c::InitResources()
 
     mAngleY = mPrevAngleY;
     mAnimSpeed = 0x1000;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     mWithMeshClsn.Init(this, 0xc8000, 0, 0, 0);
     mWithMeshClsn.SetNoUpdatePosYFlag();
 

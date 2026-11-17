@@ -251,7 +251,7 @@ daKing_Donketu_c::~daKing_Donketu_c()
 }
 
 /* The 0x77 / 0x78 effects the cut scenes and the defeat keep alive each frame. The point is
-   mPos with y raised by 30.0 * the scale (mScaleX is fx32, so the 0x1e000
+   mPos with y raised by 30.0 * the scale (mScale.x is fx32, so the 0x1e000
    constant shrinks with the boss) and x/z moved 200.0 (0xc8000) along
    mPrevAngleY. Particle systems 0x77 and 0x78 are renewed there (ids kept in
    mParticleId0/1), and the emitRadius of each is set to 20.0 * the scale. The
@@ -264,7 +264,7 @@ void daKing_Donketu_c::RenewLoopedParticles() {
     y = mPosY;
     pos.y = y;
     pos.z = mPosZ;
-    pos.y = y + FX_MUL(mScaleX, 0x1e000);
+    pos.y = y + FX_MUL(mScale.x, 0x1e000);
 
     Vec3_HorzAngle(&mPos, &mSpawnPos);
     in.z = 0; in.z = 0xc8000; in.x = 0; in.y = 0;
@@ -278,14 +278,14 @@ void daKing_Donketu_c::RenewLoopedParticles() {
     if (mParticleId0 != 0) {
         Particle::System *sys = Particle::System::FromUniqueID(mParticleId0);
         if (sys != 0)
-            sys->emitRadius = mScaleX * 0x14;
+            sys->emitRadius = mScale.x * 0x14;
     }
     if (mParticleId1 == 0)
         return;
     {
         Particle::System *sys = Particle::System::FromUniqueID(mParticleId1);
         if (sys != 0)
-            sys->emitRadius = mScaleX * 0x14;
+            sys->emitRadius = mScale.x * 0x14;
     }
 }
 
@@ -547,8 +547,8 @@ done0:
     return 0;
 }
 
-/* ..3370 update, the defeat. mScaleX is approached toward 0 by 0x80 a frame
-   and copied to Y and Z, with those effects kept alive. Once mScaleX is below 0x100
+/* ..3370 update, the defeat. mScale.x is approached toward 0 by 0x80 a frame
+   and copied to Y and Z, with those effects kept alive. Once mScale.x is below 0x100
    (1/16) the boss ends the talk, stops the layer-3 music, restores the music
    volume, spawns OBJ_KEY 400.0 (0x190000) above mSpawnPos, plays SND_POOF,
    and if an OBJ_BLUE_FIRE actor exists puts a puff of dust at it and marks it
@@ -562,11 +562,11 @@ int daKing_Donketu_c::UpdateDefeat() {
     struct Vector3 pos;
     cam = gCamera;
     cam->SetFlag_3();
-    ApproachLinear(mScaleX, 0, 0x80);
-    mScaleZ = mScaleX;
-    mScaleY = mScaleZ;
+    ApproachLinear(mScale.x, 0, 0x80);
+    mScale.z = mScale.x;
+    mScale.y = mScale.z;
     RenewLoopedParticles();
-    if (mScaleX >= 0x100)
+    if (mScale.x >= 0x100)
         goto end;
     pos.x = mSpawnPos.x;
     pos.y = mSpawnPos.y;
@@ -1873,9 +1873,9 @@ int daKing_Donketu_c::InitResources()
     mTargetAngle = mAngleY;
     mStepBoneIdx = 2;
     mHitsRemaining = 3;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
+    mScale.x = 0x1000;
+    mScale.y = 0x1000;
+    mScale.z = 0x1000;
     ChiefChilly_ChangeState((C *)this, (PMF *)&data_ov073_02123330);
     return 1;
 }

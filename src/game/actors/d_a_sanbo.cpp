@@ -137,17 +137,17 @@ int daSanbo_c::InitResources()
     t = (actorID == SANBO_HEAD);
     if (t != false) {
         mRootPos = mPos;
-        mScaleX = FX32_ONE;
-        mScaleY = FX32_ONE;
-        mScaleZ = FX32_ONE;
+        mScale.x = FX32_ONE;
+        mScale.y = FX32_ONE;
+        mScale.z = FX32_ONE;
         mPrevSegment = 0;
         mNextSegment = 0;
     } else {
         t = (actorID == SANBO_BODY);
         if (t != false) {
-            mScaleX = 0;
-            mScaleY = 0;
-            mScaleZ = 0;
+            mScale.x = 0;
+            mScale.y = 0;
+            mScale.z = 0;
             mPrevSegment = (daSanbo_c *)dActor_c::FindWithID(param1);
             mNextSegment = 0;
             mRootPos = mPrevSegment->mRootPos;
@@ -287,9 +287,9 @@ int daSanbo_c::EnterLeader() {
     mTimer = timer;
     timer = mTimer;
     if (timer == 0) {
-        mScaleX = FX32_ONE;
-        mScaleY = FX32_ONE;
-        mScaleZ = FX32_ONE;
+        mScale.x = FX32_ONE;
+        mScale.y = FX32_ONE;
+        mScale.z = FX32_ONE;
     }
     mState = 1;
     return 1;
@@ -297,14 +297,14 @@ int daSanbo_c::EnterLeader() {
 
 /* Grow this segment, then sprout the next one when the timer expires. */
 int daSanbo_c::UpdateLeader() {
-    int scale = mScaleX;
+    int scale = mScale.x;
     int copied;
 
     ApproachLinear(scale, 0x1000, 0x12c);
     copied = scale;
-    mScaleX = copied;
-    mScaleY = copied;
-    mScaleZ = copied;
+    mScale.x = copied;
+    mScale.y = copied;
+    mScale.z = copied;
     mSegAngY = (mSegAngY + 0x500);
     mOffset.x = 0;
     mOffset.y = 0;
@@ -414,7 +414,7 @@ int daSanbo_c::UpdateStackedOnGrowingBody() {
         ChangeState(1);
     } else {
         int fullHeight = 0x6e000;
-        int scale = next->mScaleX;
+        int scale = next->mScale.x;
         int raised = FX_MUL(scale, fullHeight);
 
         mPosX = next->mPosX;

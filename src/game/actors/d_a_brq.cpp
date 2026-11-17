@@ -230,9 +230,9 @@ s32 daBrq_c::EnterActiveState() {
     mStateTimer = 15;
     mTurnSpeed = 0;
     mSpinAngle = 0;
-    mScaleX = FX32_ONE;
-    mScaleY = FX32_ONE;
-    mScaleZ = FX32_ONE;
+    mScale.x = FX32_ONE;
+    mScale.y = FX32_ONE;
+    mScale.z = FX32_ONE;
     mState = 1;
     return 1;
 }
@@ -261,9 +261,9 @@ s32 daBrq_c::UpdateActiveState() {
     mSpinAngle = mSpinAngle + 0x4000;
 
     int scale = FX_MUL(0x555, FX_SinIdx((u16)mSpinAngle >> 4)) + 0x800;
-    mScaleX = scale;
-    mScaleY = scale;
-    mScaleZ = scale;
+    mScale.x = scale;
+    mScale.y = scale;
+    mScale.z = scale;
 
     mAnmModel.Advance();
     mTextureSequence.Advance();

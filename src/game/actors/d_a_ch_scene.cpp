@@ -69,19 +69,19 @@ s32 daChScene_c::InitResources() {
     }
 
     if (gCurrentSublevel == 0x20) {
-        mScaleX = 0x2bc0000;
-        mScaleY = 0x3200000;
+        mScale.x = 0x2bc0000;
+        mScale.y = 0x3200000;
     } else if (gCurrentSublevel == 0x22) {
-        mScaleX = 0x3e80000;
-        mScaleY = 0x3e80000;
+        mScale.x = 0x3e80000;
+        mScale.y = 0x3e80000;
     } else {
-        mScaleX = (unsigned int)(((param1 & 15) + 1) * 0x64000) >> 1;
-        mScaleY = (((param1 >> 4) & 15) + 1) * 0x64000;
+        mScale.x = (unsigned int)(((param1 & 15) + 1) * 0x64000) >> 1;
+        mScale.y = (((param1 >> 4) & 15) + 1) * 0x64000;
     }
 
     if (mAngleX == 0) {
-        mScaleX += 0x64000;
-        mScaleY += 0x64000;
+        mScale.x += 0x64000;
+        mScale.y += 0x64000;
         mPosY -= 0x32000;
     }
 
@@ -90,7 +90,7 @@ s32 daChScene_c::InitResources() {
     Matrix4x3_ApplyInPlaceToRotationX(&mInvMat, -mAngleX);
     MTX_Inverse43(&mInvMat, &mInvMat);
 
-    mPosY += mScaleY >> 1;
+    mPosY += mScale.y >> 1;
     return 1;
 }
 
@@ -125,9 +125,9 @@ s32 daChScene_c::Behavior() {
                     int a = out2.x;
                     if (a < 0)
                         a = -a;
-                    if (a <= mScaleX) {
-                        if (out2.y >= 0 && out2.y <= mScaleY) {
-                            if ((out2.z ^ mScaleZ) < 0) {
+                    if (a <= mScale.x) {
+                        if (out2.y >= 0 && out2.y <= mScale.y) {
+                            if ((out2.z ^ mScale.z) < 0) {
                                 dCamera_c *cam;
                                 mAngleZ = 0;
                                 if (out2.y > 0x100000) {
@@ -176,7 +176,7 @@ s32 daChScene_c::Behavior() {
                         }
                     }
                 }
-                mScaleZ = out2.z;
+                mScale.z = out2.z;
             }
         }
     }

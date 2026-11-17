@@ -83,22 +83,22 @@ void daTor_c::UpdateSpin(s32 scale)
     s32 frameScale = FX_MUL(scale, 0x666);
     s32 radius = FX_MUL(radiusScale, 0x4cc);
     radius += 0x1000;
-    mScaleX = FX_MUL(radius, frameScale);
+    mScale.x = FX_MUL(radius, frameScale);
 
     u16 idx2 = (u16)mSpinPhase;
     s16 wave2 = FX_CosIdx(idx2 >> 4);
     s32 heightScale = ((0x1000 - wave2) >> 2) + 0x800;
-    mScaleY = FX_MUL(heightScale, frameScale);
+    mScale.y = FX_MUL(heightScale, frameScale);
 
-    mScaleZ = mScaleX;
+    mScale.z = mScale.x;
     mSpinPhase += 0x200;
     mHorzSpeed = 0xe000;
     mAngleY += 0x2c00;
-    mdCcAc_c.radius = mScaleX * 0x514;
-    mdCcAc_c.height = mScaleY * 0xfa0;
-    mScaleX <<= 1;
-    mScaleY <<= 2;
-    mScaleZ <<= 1;
+    mdCcAc_c.radius = mScale.x * 0x514;
+    mdCcAc_c.height = mScale.y * 0xfa0;
+    mScale.x <<= 1;
+    mScale.y <<= 2;
+    mScale.z <<= 1;
 }
 
 void daTor_c::State2()
@@ -197,9 +197,9 @@ void daTor_c::State0()
     if (mTriggerCount == 0) {
         mParticleHandle1 = 0;
         mParticleHandle0 = mParticleHandle1;
-        mScaleX = 0;
-        mScaleY = 0;
-        mScaleZ = 0;
+        mScale.x = 0;
+        mScale.y = 0;
+        mScale.z = 0;
         unk_352 = 0;
         if (DistToCPlayer() < 0x5dc000)
             ++mTriggerCount;
