@@ -1104,7 +1104,7 @@
       "ordinal": 150
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c5decEi",
+      "symbol": "_ZN7daPly_c3DieEi",
       "address": "0x020c5dec",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020c5dec.cpp",
@@ -2168,7 +2168,7 @@
       "ordinal": 302
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020cec2cEv",
+      "symbol": "_ZN7daPly_c16UpdateSwimHealthEv",
       "address": "0x020cec2c",
       "size": "0x00000184",
       "legacy_source": "src/func_ov002_020cec2c.c",

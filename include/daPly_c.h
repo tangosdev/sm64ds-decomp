@@ -468,7 +468,7 @@ struct daPly_c : dActor_c {
     u16 mQuicksandJumpTimer;        /* 0x6c4 */
     u16 mMouthHoldTimer;            /* 0x6c6 */
     u16 mTeleportTimer;            /* 0x6c8 */
-    /* func_ov002_020cec2c (the water states): counts up while the player is
+    /* UpdateSwimHealth (the water states): counts up while the player is
        0x8c000 below the water surface or in levels 0x13/0x14/0x30, and
        costs 0x100 health on reaching 0xf0 (0x50 in those levels); reset to
        0 otherwise. */
@@ -1175,7 +1175,7 @@ struct daPly_c : dActor_c {
     void func_ov002_020c5444();
     int func_ov002_020c5d0c();
     void func_ov002_020c5d60();
-    int func_ov002_020c5dec(const int);
+    int Die(const int);
     int func_ov002_020c607c(const int, const int, int *);
     int func_ov002_020c61ac();
     int func_ov002_020c647c(const int);
@@ -1288,7 +1288,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020ceaf4();
     int func_ov002_020ceb54();
     void func_ov002_020ceb7c();
-    int func_ov002_020cec2c();
+    int UpdateSwimHealth();
     fx32 func_ov002_020cedb0(const fx32);
     int func_ov002_020cef84();
     int func_ov002_020cf20c();
