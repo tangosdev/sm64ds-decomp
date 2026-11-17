@@ -80,8 +80,6 @@ void Matrix4x3_FromRotationY(void *m, int angle);
 int func_ov002_020ad660(void *self, void *clsn, void *model, int kind);
 int SurfaceInfo_TestFlag0x20(int *si);
 
-/* func_ov102_0214c84c's positions are VecFx32: Vector3 members here emit
-   an extra destructor function into this TU (measured). */
 daShl_c *daShl_c_classInit() {
     return new daShl_c();
 }
@@ -465,41 +463,23 @@ void daShl_c::func_ov102_0214cbec()
    or a floor. */
 void daShl_c::func_ov102_0214c84c()
 {
-    /* One object: as two separate locals the function is 64 bytes
-       shorter (measured). */
-    struct {
-        VecFx32 trail;
-        VecFx32 probe;
-    } pos;
-
-    pos.trail.x = mPosX;
-    pos.trail.y = mPosY;
-    pos.trail.z = mPosZ;
+    Vector3 trail = mPos;
 
     if (mState == &data_ov102_0214ea48 && mCarrier != 0 && mCarrier->mIsAirborne == 0) {
         dBgCh_Gnd ground;
         ground.StartDetectingWater();
-        {
-            int vx = mPosX;
-            int vz = mPosZ;
-            int vy = mPosY + 0x32000;
-            pos.probe.x = vx;
-            pos.probe.y = vy;
-            pos.probe.z = vz;
-        }
-        ground.SetObjAndPos(*(Vector3 *)&pos.probe, this);
+        Vector3 probe(mPosX, mPosY + 0x32000, mPosZ);
+        ground.SetObjAndPos(probe, this);
         if (ground.DetectClsn())
         {
             if (SurfaceInfo_TestFlag0x20((int *)&ground.surface)) {
-                pos.trail.y = ground.clsnY + 0x3c000;
+                trail.y = ground.clsnY + 0x3c000;
                 mParticleHandle_3d4 = 0;
                 mParticleHandle_3c8 = mParticleHandle_3d4;
-                mParticleHandle_3cc =
-                    Particle::System::NewCheckWaterRipple(mParticleHandle_3cc, kPtclShellRideWaterA,
-                                                          pos.trail.x, pos.trail.y, pos.trail.z, 0);
-                mParticleHandle_3d0 =
-                    Particle::System::New(mParticleHandle_3d0, kPtclShellRideWaterB, pos.trail.x,
-                                          pos.trail.y, pos.trail.z, 0, 0);
+                mParticleHandle_3cc = Particle::System::NewCheckWaterRipple(
+                    mParticleHandle_3cc, kPtclShellRideWaterA, trail.x, trail.y, trail.z, 0);
+                mParticleHandle_3d0 = Particle::System::New(
+                    mParticleHandle_3d0, kPtclShellRideWaterB, trail.x, trail.y, trail.z, 0, 0);
                 if (mSoundID != ground.surface.clps.GetSoundType() + 0xf2)
                     mSoundHandle = 0;
                 mSoundID = ground.surface.clps.GetSoundType() + 0xf2;
@@ -508,27 +488,24 @@ void daShl_c::func_ov102_0214c84c()
             }
             if (ground.surface.clps.GetSurfaceType() == 1) {
                 if (ground.surface.clps.GetSoundType() == 7) {
-                    pos.trail.y = ground.clsnY + 0x3c000;
+                    trail.y = ground.clsnY + 0x3c000;
                     mParticleHandle_3d4 = 0;
                     mParticleHandle_3c8 = mParticleHandle_3d4;
                     mParticleHandle_3cc = Particle::System::NewCheckWaterRipple(
-                        mParticleHandle_3cc, kPtclShellRideWaterA, pos.trail.x, pos.trail.y,
-                        pos.trail.z, 0);
-                    mParticleHandle_3d0 =
-                        Particle::System::New(mParticleHandle_3d0, kPtclShellRideWaterB,
-                                              pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
+                        mParticleHandle_3cc, kPtclShellRideWaterA, trail.x, trail.y, trail.z, 0);
+                    mParticleHandle_3d0 = Particle::System::New(
+                        mParticleHandle_3d0, kPtclShellRideWaterB, trail.x, trail.y, trail.z, 0, 0);
                     if (mSoundID != ground.surface.clps.GetSoundType() + 0xf2)
                         mSoundHandle = 0;
                     mSoundID = ground.surface.clps.GetSoundType() + 0xf2;
                     mSoundHandle = Sound::PlayLong(mSoundHandle, 0, mSoundID, mCamSpacePos, 0);
                 } else {
-                    pos.trail.y = ground.clsnY + 0xa000;
+                    trail.y = ground.clsnY + 0xa000;
                     mParticleHandle_3d0 = 0;
                     mParticleHandle_3cc = mParticleHandle_3d0;
                     mParticleHandle_3d4 = mParticleHandle_3cc;
-                    mParticleHandle_3c8 =
-                        Particle::System::New(mParticleHandle_3c8, kPtclShellRideLava, pos.trail.x,
-                                              pos.trail.y, pos.trail.z, 0, 0);
+                    mParticleHandle_3c8 = Particle::System::New(
+                        mParticleHandle_3c8, kPtclShellRideLava, trail.x, trail.y, trail.z, 0, 0);
                     if (mSoundID != 0x102)
                         mSoundHandle = 0;
                     mSoundID = 0x102;
@@ -551,9 +528,9 @@ void daShl_c::func_ov102_0214c84c()
     mParticleHandle_3d0 = 0;
     mParticleHandle_3cc = mParticleHandle_3d0;
     mParticleHandle_3c8 = mParticleHandle_3cc;
-    pos.trail.y = pos.trail.y + 0x1e000;
-    mParticleHandle_3d4 = Particle::System::New(mParticleHandle_3d4, kPtclShellRideTrail,
-                                                pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
+    trail.y += 0x1e000;
+    mParticleHandle_3d4 = Particle::System::New(mParticleHandle_3d4, kPtclShellRideTrail, trail.x,
+                                                trail.y, trail.z, 0, 0);
 }
 
 /* Landed on a floor whose CLPS entry has bit 0x20 set: poof and go. Bit
