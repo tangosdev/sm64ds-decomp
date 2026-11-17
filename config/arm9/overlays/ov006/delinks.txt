@@ -350,7 +350,7 @@
     .data.sJump3DStartVx start:0x0213b014 end:0x0213b018 kind:data align:4
     .data.sJump3DGravityStep start:0x0213b018 end:0x0213b01c kind:data align:4
     .data.sJump3DMoveSpeed start:0x0213b01c end:0x0213b020 kind:data align:4
-    .data.gap47 start:0x0213b020 end:0x0213b098 kind:data align:4
+    .data.jump3dpmf start:0x0213b020 end:0x0213b098 kind:data align:4
     .data.sJump3DAnimTable start:0x0213b098 end:0x0213b0a4 kind:data align:4
     .data.gap48 start:0x0213b0a4 end:0x0213b0d8 kind:data align:4
     .data.sPuffSprites start:0x0213b0d8 end:0x0213b0ec kind:data align:4
@@ -396,6 +396,7 @@ src/minigames/d_mg_jump3d_mario.cpp:
     .data.sJump3DStartVx start:0x0213b014 end:0x0213b018
     .data.sJump3DGravityStep start:0x0213b018 end:0x0213b01c
     .data.sJump3DMoveSpeed start:0x0213b01c end:0x0213b020
+    .data.jump3dpmf start:0x0213b020 end:0x0213b098
     .data.sJump3DAnimTable start:0x0213b098 end:0x0213b0a4
 
 src/minigames/unit020c8a30.cpp:
@@ -454,6 +455,7 @@ src/minigames/d_s_mg_bomroom.cpp:
     .init start:0x0212fd48 end:0x021300b0
     .ctor start:0x02133580 end:0x02133584
     .bss start:0x02141660 end:0x02141768
+    .data start:0x0213b9ec end:0x0213bafc
     .data.sBomroomMarkerLitSprites start:0x02133a70 end:0x02133a80
     .data.sBomroomMarkerPlainSprites start:0x02133ae0 end:0x02133af0
     .data.sBomroomHatchPanelSprites start:0x021342bc end:0x021342d0
