@@ -192,7 +192,7 @@ void daGmch_c::ChooseNextState()
     int curState;
 
     distC = DistToCPlayer();
-    dist = Vec3_Dist(&mPos, (Vector3 *)&mSpawnPosX);
+    dist = Vec3_Dist(&mPos, &mSpawnPos);
     if (dist > 0x5dc000) {
         mNextState = 5;
     } else if (distC > 0x3e8000) {
@@ -521,13 +521,13 @@ int daGmch_c::EnterState6()
 
 int daGmch_c::UpdateState5()
 {
-    fx32 distToSpawn = Vec3_Dist(&mPos, (Vector3 *)&mSpawnPosX);
+    fx32 distToSpawn = Vec3_Dist(&mPos, &mSpawnPos);
     if (distToSpawn < mHorzSpeed) {
-        mAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mSpawnPosX);
+        mAngleY = Vec3_HorzAngle(&mPos, &mSpawnPos);
         mPrevAngleY = mAngleY;
         mHorzSpeed = distToSpawn;
     } else {
-        ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, (Vector3 *)&mSpawnPosX), 0x2bc);
+        ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mSpawnPos), 0x2bc);
         mPrevAngleY = mAngleY;
     }
     mAnmModel.Advance();
@@ -839,9 +839,9 @@ int daGmch_c::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     mState = 1;
     mMatrix = IDENTITY_MATRIX4X3;
     UpdateDrawMatrices();
