@@ -32,6 +32,8 @@ struct DealerAnimationFileHandle : SharedFilePtr {
  * Dealer member and the compiler builds and tears it down. Its methods are the
  * game's state machine: Idle/Shuffle/Deal/Reveal/Swap/Lose/Win. */
 struct Dealer {
+    typedef void (Dealer::*StateFn)();
+
     Dealer();
     ~Dealer();
 
@@ -58,7 +60,7 @@ struct Dealer {
     void ResetMatrices();
     void StateIdle();
 
-    s32 mState[2]; /* 0x000 -- the current state's member-pointer record */
+    void (Dealer::*mState)(); /* 0x000 -- the current state */
     Vector3 mPos;  /* 0x008 */
     s16 mRot[3];   /* 0x014 */
     s16 mHand; /* 0x01a -- picks deal_end (0) or deal_end2 (2); 1 makes PlayLose play deal_end first */

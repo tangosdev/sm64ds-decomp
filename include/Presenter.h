@@ -42,6 +42,8 @@ struct PresenterTexSeqFileHandle : SharedFilePtr {
  * arrays: an array of a class with a destructor is torn down through
  * __cxa_vec_cleanup, and the cartridge's destructor is unrolled. */
 struct Presenter {
+    typedef void (Presenter::*StateFn)();
+
     Presenter();
     ~Presenter();
 
@@ -66,7 +68,7 @@ struct Presenter {
     void StateSurprisedThenIdle();
     void UpdateMatrix();
 
-    s32 mState[2]; /* 0x000 -- the current state's member-pointer record */
+    void (Presenter::*mState)(); /* 0x000 -- the current state */
     /* 0x70 bytes. UpdateMatrix sets its mat4x3; Draw hands its data to mTexSeq
        and mTexAnim and nudges two of its materials; IsAnimDone tests its
        dExtFrameCtrl_c base and ResetPose rewinds its currFrame. */
