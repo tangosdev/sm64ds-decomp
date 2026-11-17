@@ -31,7 +31,7 @@ reach the game, and the script's ops for that frame are applied.
 
 Injection (as the first RAM-diff pass did, verified there against named
 effects): at the hook, CheckInput entry, the raw pad record data_020a0e58[0]
-{u16 held, u16 pressed} (NDS KEYINPUT bit order) and the touch record gTouchHeld
+{u16 held, u16 pressed} (NDS KEYINPUT bit order) and the touch record gTouchInfo
 {u8 held, u8 edge, u8 x, u8 y} at 0x020a0de8 are overwritten; CheckInput builds
 the controller record from them.
 """
