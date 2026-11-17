@@ -16,9 +16,6 @@ extern "C" {
  * slot in the addressing mode; a read through a TouchInfo pointer adds the
  * slot once and takes each field at its offset. Readers use both shapes.
  *
- * gTouchHeld..gTouchY name the same four bytes one field at a time, for the
- * readers that have not moved to gTouchInfo yet.
- *
  * gActivePlayerSlot is the player (0..3) the single-player code paths read.
  * daPly_c::Behavior sets it to mPlayerNo while that player updates (or 0, per
  * gRunningKuppaScript) and, once the update is done, to gLocalPlayerId (or 0 if
@@ -36,10 +33,6 @@ typedef struct TouchInfo {
 } TouchInfo;
 
 extern TouchInfo gTouchInfo[4];
-extern u8 gTouchHeld[];
-extern u8 gTouchEdge[];
-extern u8 gTouchX[];
-extern u8 gTouchY[];
 extern u8 gActivePlayerSlot;
 
 #ifdef __cplusplus

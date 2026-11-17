@@ -89,7 +89,7 @@ fBase_c > dBase_c > dScene_c
   - Seven games (BSC, Card, Memory, Memory2, MCarlo, Roulette, Slot1) have that word set to 1. They save two values each through `Mg_SaveRecordPair` instead. All but Roulette still submit through `Mg_SubmitScore`.
 - **Input.**
   - `data_0209f5bc` is the installed screen fader.
-  - Each of the four input slots (index `gActivePlayerSlot`) has a four-byte touch sample `{down, changed, x, y}` in `gTouchHeld`. A new touch is `down && changed`.
+  - Each of the four input slots (index `gActivePlayerSlot`) has a four-byte touch sample `TouchInfo {held, edge, x, y}`, `gTouchInfo[slot]`. A new touch is `held && edge`.
   - The per-slot button state is in `data_020a0e58`; its second halfword holds the buttons pressed this frame.
 - **Pause menu.** Fields `+0x4628..+0x4648` of `dScMgBase_c` hold a three-item menu. The items are:
   - resume (slot 28)

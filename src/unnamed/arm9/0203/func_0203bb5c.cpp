@@ -1,4 +1,10 @@
 //cpp
+#include "PlayerInput.h"
+
+/* The four per-player touch records (PlayerInput.h): func_0203bb60
+   rebuilds them every frame and func_0203bb14 clears them. */
+TouchInfo gTouchInfo[4];
+
 /* Empty. Boot (func_0201a054) calls it right after the touch-panel setup
    (func_0203bbc0). */
 void func_0203bb5c(void) {}
