@@ -164,9 +164,9 @@ int daPopoi_c::InitResources()
     mAngleY = mPrevAngleY;
     mWithMeshClsn.Init(this, 0x64000, 0x64000, 0, 0);
     mCaughtPlayer = 0;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     mAnmModel.speed = 0x1000;
     mSavedPosX = mPosX;
     mSavedPosY = mPosY;
@@ -198,9 +198,9 @@ int daPopoi_c::Behavior()
     /* Below the water surface (data_0209f32c): snap back to the spawn position
      * and skip the frame. */
     if (mPosY < data_0209f32c) {
-        mPosX = mHomePosX;
-        mPosY = mHomePosY;
-        mPosZ = mHomePosZ;
+        mPosX = mHomePos.x;
+        mPosY = mHomePos.y;
+        mPosZ = mHomePos.z;
         return 1;
     }
 
@@ -355,7 +355,7 @@ int daPopoi_c::UpdateWanderState() {
     daPly_c *player;
     struct Vector3 pp;
 
-    dist = Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
+    dist = Vec3_Dist(&mPos, &mHomePos);
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, daPopoi_SND_MOVE_LOOP, mCamSpacePos, 0);
 
     if (IsBlockedAhead() != 0) {
@@ -370,7 +370,7 @@ int daPopoi_c::UpdateWanderState() {
     }
 
     if (dist > 0x1f4000) {
-        mTargetAngleY = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
+        mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
         if (mStateTimer < 20)
             mStateTimer = 20;
         ApproachLinear(mPrevAngleY, mTargetAngleY, 0x400);
@@ -394,8 +394,8 @@ int daPopoi_c::UpdateWanderState() {
         pp.x = src->x;
         pp.y = src->y;
         pp.z = src->z;
-        if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mHomePosX), &pp) < 0x3e8000 &&
-            player->mIsMetal == 0 && player->mIsMega == 0 && player->GetHurtState() < 0) {
+        if (Vec3_Dist(&mHomePos, &pp) < 0x3e8000 && player->mIsMetal == 0 && player->mIsMega == 0 &&
+            player->GetHurtState() < 0) {
             ChangeState(&data_ov077_02127d08); /* Chase */
             return 1;
         }
@@ -487,7 +487,7 @@ int daPopoi_c::UpdateChaseState() {
     daPly_c *p;
     unsigned short spd;
 
-    dist = Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
+    dist = Vec3_Dist(&mPos, &mHomePos);
 
     if (IsBlockedAhead() != 0) {
         ChangeState(&data_ov077_02127d18.state); /* TurnAway */
