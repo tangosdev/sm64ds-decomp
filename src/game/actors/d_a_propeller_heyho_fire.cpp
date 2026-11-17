@@ -104,9 +104,9 @@ void daPropeller_Heyho_Fire_c::CheckPlayerHit() {
     if ((flags & 0x10) != 0) {
         return;
     }
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     player->Hurt(v, 1, 0xc000, 1, 0, 1);
 }
 

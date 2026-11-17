@@ -188,9 +188,9 @@ int daPeach_c::IsTouchingPlayer() {
  * the two look angles through the scratch matrix at data_020a0e68. */
 void daPeach_c::UpdateModel() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
     data_020a0e68 = mAnmModel.data.transforms[18];
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mLookHorzAngle);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mLookVertAngle);
@@ -253,9 +253,9 @@ int daPeach_c::State3() {
         break;
     case 1:
         if (ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos), 0x514) != 0) {
-            msgPos.x = mPosX;
-            msgPos.y = mPosY;
-            msgPos.z = mPosZ;
+            msgPos.x = mPos.x;
+            msgPos.y = mPos.y;
+            msgPos.z = mPos.z;
             msgPos.y = msgPos.y + 0xa0000;
             if (mTalkPlayer->ShowMessage(*this, 0xd0, &msgPos, 0, 0) != 0)
                 mTalkState += 1;

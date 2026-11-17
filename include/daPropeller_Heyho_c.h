@@ -56,7 +56,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
        destructor would change D1/D0. */
     Mtx43 mShadowMatrix;                                /* 0x38c */
     State                       *mCurrentState;         /* 0x3bc */
-    /* InitResources copies mPosX/Y/Z here. Wander/chase compare Vec3_Dist
+    /* InitResources copies mPos.x/.y/.z here. Wander/chase compare Vec3_Dist
        against this triple; several states rewrite it from the live position
        and add a Y lift (0xc8000 / 0x12c000). Keep both component names and
        the Vector3 view over the same 0x3c0-0x3cc storage. 0211fd98 only reads

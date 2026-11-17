@@ -4,8 +4,8 @@
  *
  * InitResources loads the shared float-board model and collision, then
  * if the board spawned above the water it raycasts down onto the surface
- * (or the first hit under it) and writes that Y into mPosY. It then
- * copies mPosX/Y/Z onto mRestPosX, mWaterY, mRestPosZ.
+ * (or the first hit under it) and writes that Y into mPos.y. It then
+ * copies mPos.x/.y/.z onto mRestPosX, mWaterY, mRestPosZ.
  *
  * daObjWcObj06_c_classInit is reconstructed (RTTI daObjWcObj06_c,
  * WC_OBJ06 registry). Retail does not store that spelling.
@@ -74,13 +74,13 @@ int daObjWcObj06_c::InitResources() {
 
     if (InitResourcesFrom(&data_ov029_02113f00) != 0) {
         waterY = GetWaterHeightWDW();
-        if (mPosY > waterY) {
+        if (mPos.y > waterY) {
             dBgCh_Lin line;
-            x = mPosX;
+            x = mPos.x;
             startEnd[3] = x; /* end.x */
-            y = mPosY;
+            y = mPos.y;
             startEnd[4] = y; /* end.y temp */
-            z = mPosZ;
+            z = mPos.z;
             startEnd[1] = y; /* start.y temp */
             startEnd[5] = z; /* end.z */
             startEnd[0] = x; /* start.x */
@@ -89,15 +89,15 @@ int daObjWcObj06_c::InitResources() {
             startEnd[4] = waterY;
             line.SetObjAndLine(*(Vector3 *)&startEnd[0], *(Vector3 *)&startEnd[3], this);
             if (line.DetectClsn() == 0) {
-                mPosY = waterY;
+                mPos.y = waterY;
             } else {
                 Vector3 hit = line.GetClsnPos();
-                mPosY = hit.y;
+                mPos.y = hit.y;
             }
         }
-        mRestPosX = mPosX;
-        mWaterY = mPosY;
-        mRestPosZ = mPosZ;
+        mRestPosX = mPos.x;
+        mWaterY = mPos.y;
+        mRestPosZ = mPos.z;
         return 1;
     }
     return 0;

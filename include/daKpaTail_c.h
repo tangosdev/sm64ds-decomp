@@ -26,7 +26,7 @@
  * fBase_c::operator new for 280 bytes.
  *
  * The position fields the generated header declared at 0x5c..0x64 are gone on
- * purpose -- they are dActor_c's mPosX/mPosY/mPosZ and are inherited now.
+ * purpose -- they are dActor_c's mPos.x/mPos.y/mPos.z and are inherited now.
  */
 #ifndef DAKPATAIL_C_H
 #define DAKPATAIL_C_H

@@ -85,7 +85,7 @@
  *   swaps two registers. Those functions also ldrh mStateTimer and
  *   mAngleX/Y/Z through unsigned short; a plain s16 read is ldrsh.
  * - s16* behind mPrevAngleY in HandleHit and 02120d80, the
- *   const s32* walk of mPosX, and mFootPos[i] in the dust loops stay. The
+ *   const s32* walk of mPos.x, and mFootPos[i] in the dust loops stay. The
  *   direct member forms change addressing.
  * - SpawnLandingEffects's six Vector3 locals are declared up front in
  *   frame order (bone, spawn, offset, rotated, shifted, dust). Declared
@@ -260,10 +260,10 @@ void daKing_Donketu_c::RenewLoopedParticles() {
 
     Vector3 pos, in, out;
     int y;
-    pos.x = mPosX;
-    y = mPosY;
+    pos.x = mPos.x;
+    y = mPos.y;
     pos.y = y;
-    pos.z = mPosZ;
+    pos.z = mPos.z;
     pos.y = y + FX_MUL(mScale.x, 0x1e000);
 
     Vec3_HorzAngle(&mPos, &mSpawnPos);
@@ -469,9 +469,9 @@ s32 daKing_Donketu_c::HandleHit() {
         func_02012694(SND_HIT_REGISTERED, &mCamSpacePos);
         rnd = RandomIntInternal(&data_0209e650.value);
         if (((rnd >> 8) & 7) == 0) {
-            v.x = mPosX;
-            v.y = mPosY;
-            v.z = mPosZ;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             count = (rnd >> 0xc) & 3;
             v.y = v.y + 0x64000;
             if (count == 0)
@@ -517,14 +517,14 @@ s32 daKing_Donketu_c::HandleHit() {
 
     {
         Vector3 v2;
-        v2.x = mPosX;
-        v2.y = mPosY;
-        v2.z = mPosZ;
+        v2.x = mPos.x;
+        v2.y = mPos.y;
+        v2.z = mPos.z;
         if (((daPly_c *)target)->Hurt(v2, 0, 0x14000, 1, 0, 1) == 0)
             goto done0;
     }
     {
-        s32* pv = &target->mPosX;
+        s32 *pv = &target->mPos.x;
         Particle::System::NewSimple(kPtclChiefChillyHitPlayer, pv[0], pv[1], pv[2]);
     }
     if (mState == &data_ov073_021233d0) {
@@ -601,7 +601,7 @@ int daKing_Donketu_c::UpdateDefeat() {
     func_02012694(SND_POOF, &mCamSpacePos);
     if (found != 0) {
         struct Vector3 fp;
-        const s32* pv = &found->mPosX;
+        const s32 *pv = &found->mPos.x;
         fp.x = pv[0];
         fp.y = pv[1];
         fp.z = pv[2];
@@ -660,15 +660,15 @@ int daKing_Donketu_c::UpdateDefeatCutscene2() {
     RenewLoopedParticles();
 
     {
-        const s32* pv = &player->mPosX;
+        const s32 *pv = &player->mPos.x;
         msgpos[0].x = pv[0];
         msgpos[0].y = pv[1];
         msgpos[0].z = pv[2];
     }
     cam = gCamera;
-    msgpos[1].x = mPosX;
-    msgpos[1].y = mPosY;
-    msgpos[1].z = mPosZ;
+    msgpos[1].x = mPos.x;
+    msgpos[1].y = mPos.y;
+    msgpos[1].z = mPos.z;
 
     cam->SetFlag_3();
 
@@ -678,9 +678,9 @@ int daKing_Donketu_c::UpdateDefeatCutscene2() {
     la.x = mSpawnPos.x;
     la.y = mSpawnPos.y;
     la.z = mSpawnPos.z;
-    ps.x = mPosX;
-    ps.y = mPosY;
-    ps.z = mPosZ;
+    ps.x = mPos.x;
+    ps.y = mPos.y;
+    ps.z = mPos.z;
 
     la.y -= 0x300000;
     in.z = -0x55e000;
@@ -749,9 +749,9 @@ int daKing_Donketu_c::UpdateDefeatCutscene1() {
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
 
-    look.x = mPosX;
-    look.y = mPosY;
-    look.z = mPosZ;
+    look.x = mPos.x;
+    look.y = mPos.y;
+    look.z = mPos.z;
     pos.x = mSpawnPos.x;
     pos.y = mSpawnPos.y;
     pos.z = mSpawnPos.z;
@@ -865,8 +865,8 @@ int daKing_Donketu_c::UpdateLeapToSpawn() {
                 if (actor != 0) {
                     enum Bool eq = (enum Bool)(actor->actorID == ACTOR_PLAYER);
                     if (eq != FALSE) {
-                        VecFx32 pos = *(VecFx32 *)&actor->mPosX;
-                        if (mPosY > pos.y) {
+                        VecFx32 pos = *(VecFx32 *)&actor->mPos;
+                        if (mPos.y > pos.y) {
                             ((daPly_c *)actor)->Unk_020c6a10(1);
                         }
                     }
@@ -1068,7 +1068,7 @@ int daKing_Donketu_c::func_ov073_02120844()
 {
     ApproachLinear(mAngleX, -0x4000, 0x400);
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x170, mCamSpacePos, 0);
-    if (mSpawnPos.y > mPosY && mWithMeshClsn.IsOnGround()) {
+    if (mSpawnPos.y > mPos.y && mWithMeshClsn.IsOnGround()) {
         SpawnLandingEffects(0x7d0000);
         func_02012694(SND_BIG_LANDING, &mCamSpacePos);
         mHorzSpeed = 0;
@@ -1129,7 +1129,7 @@ int daKing_Donketu_c::UpdateEdgeWobble() {
     in.x = mEdgePos.x + out.x;
     in.y = mEdgePos.y;
     in.z = mEdgePos.z + out.z;
-    Vec3_ApproachHorz(&mPosX, &in, 0x14000);
+    Vec3_ApproachHorz(&mPos.x, &in, 0x14000);
     mAngleY = Vec3_HorzAngle(&mPos, &mSpawnPos);
     mPrevAngleY = mAngleY + 0x8000;
     mStateScratch += 0x500;
@@ -1170,7 +1170,7 @@ int daKing_Donketu_c::EnterEdgeWobble() {
    ..3400. */
 int daKing_Donketu_c::func_ov073_02120b78() {
     ApproachLinear(mAngleX, -0x4000, 0x400);
-    if (mSpawnPos.y > mPosY) {
+    if (mSpawnPos.y > mPos.y) {
         if (mWithMeshClsn.IsOnGround()) {
             SpawnLandingEffects(0xfa0000);
             mHorzSpeed = 0;
@@ -1447,12 +1447,12 @@ int daKing_Donketu_c::UpdateIntroTalkEnd() {
     player = mTalkPlayer;
     cam->SetFlag_3();
 
-    la.x = mPosX;
-    la.y = mPosY;
-    la.z = mPosZ;
-    ps.x = mPosX;
-    ps.y = mPosY;
-    ps.z = mPosZ;
+    la.x = mPos.x;
+    la.y = mPos.y;
+    la.z = mPos.z;
+    ps.x = mPos.x;
+    ps.y = mPos.y;
+    ps.z = mPos.z;
     la.y = la.y + 0x70000;
     la.z = la.z - 0x2a0000;
     ps.x = ps.x - 0x300000;
@@ -1498,24 +1498,24 @@ int daKing_Donketu_c::UpdateIntroTalk() {
     if (player == 0) return 1;
 
     {
-        const s32* pv = &player->mPosX;
+        const s32 *pv = &player->mPos.x;
         vplayer.x = pv[0];
         vplayer.y = pv[1];
         vplayer.z = pv[2];
     }
     cam = gCamera;
-    vmsg.x = mPosX;
-    vmsg.y = mPosY;
-    vmsg.z = mPosZ;
+    vmsg.x = mPos.x;
+    vmsg.y = mPos.y;
+    vmsg.z = mPos.z;
 
     cam->SetFlag_3();
 
-    la.x = mPosX;
-    la.y = mPosY;
-    la.z = mPosZ;
-    ps.x = mPosX;
-    ps.y = mPosY;
-    ps.z = mPosZ;
+    la.x = mPos.x;
+    la.y = mPos.y;
+    la.z = mPos.z;
+    ps.x = mPos.x;
+    ps.y = mPos.y;
+    ps.z = mPos.z;
     la.y = la.y + 0x70000;
     la.z = la.z - 0x2a0000;
     ps.x = ps.x - 0x300000;
@@ -1614,7 +1614,7 @@ void daKing_Donketu_c::UpdateModelAndShadow() {
     if (m == &data_ov073_02123370)
         return;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0xa000) >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xa000) >> 3, mPos.z >> 3);
     mShadowMtx = data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMtx, 0x12c000, 0x3e8000, 0xf);
 }
@@ -1799,13 +1799,13 @@ int daKing_Donketu_c::Behavior()
         if (!line.DetectClsn()) {
             if (mHorzSpeed > 0xa000)
                 mNoGroundAhead = 1;
-            mGroundMissPos.x = mPosX;
-            mGroundMissPos.y = mPosY;
-            mGroundMissPos.z = mPosZ;
+            mGroundMissPos.x = mPos.x;
+            mGroundMissPos.y = mPos.y;
+            mGroundMissPos.z = mPos.z;
             if (mState != &data_ov073_021233a0) {
-                mPosX = mPrevPos.x;
-                mPosY = mPrevPos.y;
-                mPosZ = mPrevPos.z;
+                mPos.x = mPrevPos.x;
+                mPos.y = mPrevPos.y;
+                mPos.z = mPrevPos.z;
                 mHorzSpeed = 0;
             }
         } else {
@@ -1856,16 +1856,16 @@ int daKing_Donketu_c::InitResources()
     mdCcAcPos_c.Init(this, v, 0xa4000, 0x1e4000, 0x200000, 0x567f0);
     mBlendAnmModel.speed = 0x2000;
     mWithMeshClsn.Init(this, 0x96000, 0x94000, 0, 0);
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     for (i = 0; i < 8; i++) {
-        mWaypointsA[i].x = mPosX;
-        mWaypointsA[i].y = mPosY;
-        mWaypointsA[i].z = mPosZ;
-        mWaypointsB[i].x = mPosX;
-        mWaypointsB[i].y = mPosY;
-        mWaypointsB[i].z = mPosZ;
+        mWaypointsA[i].x = mPos.x;
+        mWaypointsA[i].y = mPos.y;
+        mWaypointsA[i].z = mPos.z;
+        mWaypointsB[i].x = mPos.x;
+        mWaypointsB[i].y = mPos.y;
+        mWaypointsB[i].z = mPos.z;
     }
     mLandedWaypoint = 0xff;
     mPrevAngleY = HorzAngleToCPlayer();

@@ -61,9 +61,9 @@ void daObjKurumajiku_c_EmitDestructor(daObjKurumajiku_c *p) {
    world position. The return value is the z word, which no caller reads. */
 int daObjKurumajiku_c::UpdateModelTransform() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    int z = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    int z = mPos.z >> 3;
     mModel.mat4x3.m[11] = z;
     return z;
 }
@@ -102,9 +102,9 @@ s32 daObjKurumajiku_c::Behavior() {
                 Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
                 MTX_MultVec43(&data_ov002_0210ddd0[i], &data_020a0e68, &mid);
                 Vec3_Add(&res, &mPos, &mid);
-                rider->mPosX = res.x;
-                rider->mPosY = res.y;
-                rider->mPosZ = res.z;
+                rider->mPos.x = res.x;
+                rider->mPos.y = res.y;
+                rider->mPos.z = res.z;
             }
         }
     }

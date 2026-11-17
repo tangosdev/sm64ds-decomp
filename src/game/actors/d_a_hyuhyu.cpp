@@ -303,9 +303,9 @@ int daHyuhyu_c::StateBlowMain() {
     daPly_c *player;
     s16 heading;
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
 
     u16 frame = (u16)(mAnmModel.currFrame >> 12);
     if (frame == 31)

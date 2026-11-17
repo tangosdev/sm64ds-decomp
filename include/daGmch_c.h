@@ -27,7 +27,7 @@ struct daGmch_c : dActor_c {
        Matrix4x3 type reaches this header through dExtSimpleModel_c.h.
        [InitResources, UpdateDrawMatrices] */
     Matrix4x3 mMatrix;      /* 0x3a0 */
-    /* Copy of mPosX/Y/Z taken once in InitResources.
+    /* Copy of mPos.x/.y/.z taken once in InitResources.
        [_ZN8daGmch_c13InitResourcesEv, now in src/game/actors/d_a_gmch.cpp] */
     Vector3 mSpawnPos; /* 0x3d0 */
     /* The current state's 16-byte pointer-to-member-function pair: SetState

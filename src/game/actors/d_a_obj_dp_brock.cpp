@@ -100,12 +100,12 @@ int daObjDpBrock_c::InitResources() {
         break;
     case 1:
         /* Halfway down, halfway through the sink. */
-        mPosY -= kHalfDrop;
+        mPos.y -= kHalfDrop;
         mStateTimer += kFramesPerState / 2;
         break;
     case 2:
         /* At the bottom, about to rise. */
-        mPosY -= kFullDrop;
+        mPos.y -= kFullDrop;
         mState = kRising;
         mSpeed.y = kVertStep;
         break;
@@ -131,7 +131,7 @@ int daObjDpBrock_c::Behavior() {
         break;
     }
     mStateTimer++;
-    mPosY += mSpeed.y;
+    mPos.y += mSpeed.y;
     UpdateStepModelPosAndRotY();
     if (IsClsnInRange(0, 0))
         UpdateStepClsnPosAndRot();
@@ -155,9 +155,9 @@ int daObjDpBrock_c::CleanupResources() {
  * UpdateModelPosAndRotY does the same for the inherited model. */
 void daObjDpBrock_c::UpdateStepModelPosAndRotY() {
     Matrix4x3_FromRotationY(&mStepModel.mat4x3, mAngleY);
-    mStepModel.mat4x3.m[9] = mPosX >> 3;
-    mStepModel.mat4x3.m[10] = mPosY >> 3;
-    mStepModel.mat4x3.m[11] = mPosZ >> 3;
+    mStepModel.mat4x3.m[9] = mPos.x >> 3;
+    mStepModel.mat4x3.m[10] = mPos.y >> 3;
+    mStepModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Moves the collider with the block: rotation from mAngleY, translation
@@ -165,9 +165,9 @@ void daObjDpBrock_c::UpdateStepModelPosAndRotY() {
  * UpdateClsnPosAndRot does the same for the inherited collider. */
 void daObjDpBrock_c::UpdateStepClsnPosAndRot() {
     Matrix4x3_FromRotationY(&mClsnMat2, mAngleY);
-    mClsnMat2.m[9] = mPosX;
-    mClsnMat2.m[10] = mPosY;
-    mClsnMat2.m[11] = mPosZ;
+    mClsnMat2.m[9] = mPos.x;
+    mClsnMat2.m[10] = mPos.y;
+    mClsnMat2.m[11] = mPos.z;
     mMeshCollider.Transform(mClsnMat2, mAngleY);
 }
 

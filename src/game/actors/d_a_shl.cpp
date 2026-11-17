@@ -110,9 +110,9 @@ s32 daShl_c::InitResources()
     if (mShadowModel.InitCylinder() == 0)
         return 0;
     mdCc_c.Init(this, 0x3c000, 0x46000, 0x100004, 0xa083c0);
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     mVertAccel = -0x2000;          /* -2.0 */
     mTerminalVelocity = -0x32000;  /* -50.0 */
     mStateTimer = 20;
@@ -367,9 +367,9 @@ void daShl_c::func_ov102_0214ce60()
         mModel.mat4x3 = *UpdateCarry(*mCarrier, offset);
     } else {
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-        mModel.mat4x3.m[9] = mPosX >> 3;
-        mModel.mat4x3.m[10] = mPosY >> 3;
-        mModel.mat4x3.m[11] = mPosZ >> 3;
+        mModel.mat4x3.m[9] = mPos.x >> 3;
+        mModel.mat4x3.m[10] = mPos.y >> 3;
+        mModel.mat4x3.m[11] = mPos.z >> 3;
     }
     int hidden = (mFlags & 0x40000) != 0;
     if (hidden)
@@ -436,17 +436,17 @@ void daShl_c::func_ov102_0214cbec()
         }
         if (mState != &data_ov102_0214ea78.rec)
             return;
-        v1.x = mPosX;
-        v1.y = mPosY;
-        v1.z = mPosZ;
+        v1.x = mPos.x;
+        v1.y = mPos.y;
+        v1.z = mPos.z;
         player->Hurt(v1, 1, 0xc000, 1, 0, 1);
         return;
     }
 
     if (mState == &data_ov102_0214ea78.rec) {
-        v2.x = mPosX;
-        v2.y = mPosY;
-        v2.z = mPosZ;
+        v2.x = mPos.x;
+        v2.y = mPos.y;
+        v2.z = mPos.z;
         player->Hurt(v2, 1, 0xc000, 1, 0, 1);
         return;
     }
@@ -472,7 +472,7 @@ void daShl_c::func_ov102_0214c84c()
     if (mState == &data_ov102_0214ea48 && mCarrier != 0 && mCarrier->mIsAirborne == 0) {
         dBgCh_Gnd ground;
         ground.StartDetectingWater();
-        Vector3 probe(mPosX, mPosY + 0x32000, mPosZ);
+        Vector3 probe(mPos.x, mPos.y + 0x32000, mPos.z);
         ground.SetObjAndPos(probe, this);
         if (ground.DetectClsn())
         {

@@ -255,12 +255,12 @@ void daKuriKing_c::SetDefeatTalkCamera() {
     cam->SetFlag_3();
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
-    look.x = this->mPosX;
-    look.y = this->mPosY;
-    look.z = this->mPosZ;
-    pos.x = this->mPosX;
-    pos.y = this->mPosY;
-    pos.z = this->mPosZ;
+    look.x = this->mPos.x;
+    look.y = this->mPos.y;
+    look.z = this->mPos.z;
+    pos.x = this->mPos.x;
+    pos.y = this->mPos.y;
+    pos.z = this->mPos.z;
     look.y += 0x1a0000;
     in.z = 0x59c000;
     Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
@@ -328,9 +328,9 @@ int daKuriKing_c::SpawnVanishCopy() {
     daPly_c *player;
     spawnPos.x=0; spawnPos.y=0; spawnPos.z=0;
     spawnAngle.x=0; spawnAngle.y=0; spawnAngle.z=0;
-    spawnPos.x=this->mPosX;
-    spawnPos.y=this->mPosY;
-    spawnPos.z=this->mPosZ;
+    spawnPos.x = this->mPos.x;
+    spawnPos.y = this->mPos.y;
+    spawnPos.z = this->mPos.z;
     spawnPos.y+=0xe4000;
     basePos.x=spawnPos.x;
     basePos.y=spawnPos.y;
@@ -413,7 +413,7 @@ void daKuriKing_c::UpdateDefeat() {
                     s32 flag = (actor->mFlags & 0x40000) ? 1 : 0;
                     if (flag == 0) {
                         Vector3 v2;
-                        s32* src = &actor->mPosX;
+                        s32 *src = &actor->mPos.x;
                         v2.x = src[0];
                         v2.y = src[1];
                         v2.z = src[2];
@@ -482,9 +482,9 @@ void daKuriKing_c::UpdateDefeat() {
         this->mSubState += 1;
         return;
     case 4:
-        vzero.x = this->mPosX;
-        vzero.y = this->mPosY;
-        vzero.z = this->mPosZ;
+        vzero.x = this->mPos.x;
+        vzero.y = this->mPos.y;
+        vzero.z = this->mPos.z;
         vzero.y = vzero.y + 0x12c000;
         dActor_c::Spawn(0x11a, 2, vzero, 0, this->mAreaId, -1);
         func_02012694(0xbb, &this->mCamSpacePos);
@@ -746,12 +746,12 @@ void daKuriKing_c::UpdateIntroTalk() {
     cam = gCamera;
     cam->SetFlag_3();
 
-    look.x = this->mPosX;
-    look.y = this->mPosY;
-    look.z = this->mPosZ;
-    pos.x = this->mPosX;
-    pos.y = this->mPosY;
-    pos.z = this->mPosZ;
+    look.x = this->mPos.x;
+    look.y = this->mPos.y;
+    look.z = this->mPos.z;
+    pos.x = this->mPos.x;
+    pos.y = this->mPos.y;
+    pos.z = this->mPos.z;
     look.x += 0x130000;
     look.y = 0x1cd000;
     look.z -= 0x2a0000;
@@ -773,9 +773,9 @@ void daKuriKing_c::UpdateIntroTalk() {
         msgpos[0].y = pv->y;
         msgpos[0].z = pv->z;
     }
-    msgpos[1].x = this->mPosX;
-    msgpos[1].y = this->mPosY;
-    msgpos[1].z = this->mPosZ;
+    msgpos[1].x = this->mPos.x;
+    msgpos[1].y = this->mPos.y;
+    msgpos[1].z = this->mPos.z;
     msgpos[1].y += 0x78000;
 
     this->mAngleY = this->mDirection * 0x4500 + this->mWalkAngle;
@@ -849,9 +849,9 @@ int daKuriKing_c::StepScaleTransition() {
         if (this->mScaleSteps <= 1) return 1;
         this->mScaleSteps--;
         if (this->mState == 6) {
-            v.x = this->mPosX;
-            v.y = this->mPosY;
-            v.z = this->mPosZ;
+            v.x = this->mPos.x;
+            v.y = this->mPos.y;
+            v.z = this->mPos.z;
             v.y += FX_MUL(this->mCurrentScale, 0x190000);
             Particle::System::NewSimple(kPtclHugeLandingDust, v.x, v.y, v.z);
         }
@@ -914,9 +914,9 @@ Vector3 daKuriKing_c::func_ov074_0212087c(int n_) {
 
     n = n_;
 
-    out[0] = mPosX;
-    out[1] = mPosY;
-    out[2] = mPosZ;
+    out[0] = mPos.x;
+    out[1] = mPos.y;
+    out[2] = mPos.z;
 
     if ((int)ClosestPlayer()->param1 == 3) {
         int rem;
@@ -1011,9 +1011,9 @@ void daKuriKing_c::SpawnHitParticles(dActor_c *other, dCcAcPos_c *clsn, int mode
     s32 iX, iY;
     s32 s, w;
 
-    dst.x = this->mPosX;
-    dst.y = this->mPosY;
-    dst.z = this->mPosZ;
+    dst.x = this->mPos.x;
+    dst.y = this->mPos.y;
+    dst.z = this->mPos.z;
     {
         Vector3 *pv = &other->mPos;
         src.x = pv->x;
@@ -1108,9 +1108,9 @@ void daKuriKing_c::HandleCylinderHits() {
                             pl->Unk_020c6a10(2);
                             this->mHurtTimer = 30;
                         } else {
-                            v1.x = this->mPosX;
-                            v1.y = this->mPosY;
-                            v1.z = this->mPosZ;
+                            v1.x = this->mPos.x;
+                            v1.y = this->mPos.y;
+                            v1.z = this->mPos.z;
                             pl->Hurt(v1, 1, 0x5000, 1, 0, 1);
                         }
                     } else if (cur == &this->mdCc_cs[3]) {
@@ -1118,15 +1118,15 @@ void daKuriKing_c::HandleCylinderHits() {
                             pl->Unk_020c6a10(2);
                             this->mHurtTimer = 30;
                         } else {
-                            v2.x = this->mPosX;
-                            v2.y = this->mPosY;
-                            v2.z = this->mPosZ;
+                            v2.x = this->mPos.x;
+                            v2.y = this->mPos.y;
+                            v2.z = this->mPos.z;
                             pl->Hurt(v2, 1, 0x5000, 1, 0, 1);
                         }
                     } else {
-                        v3.x = this->mPosX;
-                        v3.y = this->mPosY;
-                        v3.z = this->mPosZ;
+                        v3.x = this->mPos.x;
+                        v3.y = this->mPos.y;
+                        v3.z = this->mPos.z;
                         pl->Hurt(v3, 1, 0x5000, 1, 0, 1);
                         this->mHurtTimer = 16;
                     }
@@ -1153,9 +1153,9 @@ void daKuriKing_c::HandleCylinderHits() {
                             else
                                 ChangeState(4);
                             if ((int)pl->param1 == 0) {
-                                v0.x = this->mPosX;
-                                v0.y = this->mPosY;
-                                v0.z = this->mPosZ;
+                                v0.x = this->mPos.x;
+                                v0.y = this->mPos.y;
+                                v0.z = this->mPos.z;
                                 if (this->mMegaMushroomID == 0 &&
                                     dActor_c::FindWithID(this->mMegaMushroomID) == 0) {
                                     int k =
@@ -1272,9 +1272,9 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
         this->mdCc_cs[i + 1].pos.z = az;
     }
 
-    tx = this->mPosX;
-    ty = this->mPosY + y0;
-    tz = this->mPosZ;
+    tx = this->mPos.x;
+    ty = this->mPos.y + y0;
+    tz = this->mPos.z;
     this->mdCc_cs[0].radius = r0;
     this->mdCc_cs[0].height = h0;
     this->mdCc_cs[0].pos.x = tx;
@@ -1284,7 +1284,7 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
     d = FX_MUL(this->mScale.y, -0x4a000);
     a = this->mCylClsnPos[2].y + d;
     b = this->mCylClsnPos[1].y + d;
-    if (a < this->mPosY) {
+    if (a < this->mPos.y) {
         if (this->mFoot2Latch == 0) {
             this->mLeftFootSteppedOnGround = 1;
         } else {
@@ -1295,7 +1295,7 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
         this->mFoot2Latch = 0;
         this->mLeftFootSteppedOnGround = 0;
     }
-    if (b < this->mPosY) {
+    if (b < this->mPos.y) {
         if (this->mFoot1Latch == 0) {
             this->mRightFootSteppedOnGround = 1;
         } else {
@@ -1326,8 +1326,8 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
 int daKuriKing_c::WalkAlongRing() {
     if (this->mWithMeshClsn.IsOnGround()) {
         this->mWalkAngle += this->mWalkSpeed;
-        this->mPosX = FX_MUL(FX_SinIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
-        this->mPosZ = FX_MUL(FX_CosIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
+        this->mPos.x = FX_MUL(FX_SinIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
+        this->mPos.z = FX_MUL(FX_CosIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
     }
     ApproachAngle(&this->mAngleY, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800, 0x10);
 }
@@ -1355,7 +1355,7 @@ void daKuriKing_c::UpdateShadows() {
     m = (char *)mShadowMatrices;
     shadow = mShadowModels;
     for (i = 0; i < 3; i++) {
-        height = this->mPosY - this->mSpawnPosY;
+        height = this->mPos.y - this->mSpawnPosY;
         if (height <= 0x1000)
             height = 0x1000;
         rad = (this->mdCc_cs[i + 1].radius << 1) - FX_MUL(height, 0x180);
@@ -1365,7 +1365,7 @@ void daKuriKing_c::UpdateShadows() {
         *(Matrix4x3 *)((daKuriKing_c *)self)->mShadowMatrices[0] = mtx;
         ((daKuriKing_c *)self)->mShadowMatrices[0][9] =
             ((daKuriKing_c *)src)->mCylClsnPos[0].x >> 3;
-        posY = this->mPosY;
+        posY = this->mPos.y;
         ((daKuriKing_c *)self)->mShadowMatrices[0][10] = posY >> 3;
         height += 0x28000;
         ((daKuriKing_c *)self)->mShadowMatrices[0][11] =
@@ -1382,9 +1382,9 @@ void daKuriKing_c::UpdateShadows() {
  * world >> 3). */
 void daKuriKing_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 void daKuriKing_c::UpdateAnimation() {
@@ -1601,9 +1601,9 @@ int daKuriKing_c::InitResources()
     mVertAccel = -0xa000;
     mTerminalVelocity = -0x3c000;
 
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPosX = mPos.x;
+    mSpawnPosY = mPos.y;
+    mSpawnPosZ = mPos.z;
 
     k = 0;
     do {
@@ -1638,17 +1638,17 @@ int daKuriKing_c::InitResources()
     mWalkAngle = 0x1000;
     mWalkAngle += mWalkSpeed;
 
-    mPosX = FX_MUL(FX_SinIdx((u16)mWalkAngle >> 4), 0x546000);
-    mPosZ = FX_MUL(FX_CosIdx((u16)mWalkAngle >> 4), 0x546000);
+    mPos.x = FX_MUL(FX_SinIdx((u16)mWalkAngle >> 4), 0x546000);
+    mPos.z = FX_MUL(FX_CosIdx((u16)mWalkAngle >> 4), 0x546000);
 
     {
         s32 a2;
         s32 a1;
         s32 a0;
         s32 a3;
-        a2 = mPosY;
-        a1 = mPosZ;
-        a0 = mPosX;
+        a2 = mPos.y;
+        a1 = mPos.z;
+        a0 = mPos.x;
         a3 = a2 + 0x64000;
         pos.x = a0;
         pos.y = a3;
@@ -1658,7 +1658,7 @@ int daKuriKing_c::InitResources()
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     if (ground.DetectClsn() != 0) {
-        mPosY = ground.clsnY;
+        mPos.y = ground.clsnY;
     }
 
     UpdateBodyMatrix();
@@ -1735,9 +1735,9 @@ int daKuriKing_c::BehaviorVanish() {
     }
 
     {
-        int yy = this->mPosY;
-        int zz = this->mPosZ;
-        int xx = this->mPosX;
+        int yy = this->mPos.y;
+        int zz = this->mPos.z;
+        int xx = this->mPos.x;
         int py = yy + 0x190000;
         pos.x = xx;
         pos.y = py;
@@ -1750,10 +1750,8 @@ int daKuriKing_c::BehaviorVanish() {
     rg.StopDetectingOrdinary();
     rg.SetObjAndPos(pos, this);
 
-    if (rg.DetectClsn() != 0
-        && func_02037e20((int *)&rg.surface) != 0
-        && rg.clsnY != (int)0x80000000
-        && this->mPosY < rg.clsnY) {
+    if (rg.DetectClsn() != 0 && func_02037e20((int *)&rg.surface) != 0 &&
+        rg.clsnY != (int)0x80000000 && this->mPos.y < rg.clsnY) {
         this->PoofDust();
         this->MarkForDestruction();
         return 1;
@@ -1769,9 +1767,9 @@ int daKuriKing_c::BehaviorVanish() {
     /* One drop shadow, through the first shadow matrix. */
     *(Matrix4x3 *)mShadowMatrices[0] = IDENTITY_MATRIX4X3;
 
-    mShadowMatrices[0][9] = this->mPosX >> 3;
-    mShadowMatrices[0][10] = this->mPosY >> 3;
-    mShadowMatrices[0][11] = this->mPosZ >> 3;
+    mShadowMatrices[0][9] = this->mPos.x >> 3;
+    mShadowMatrices[0][10] = this->mPos.y >> 3;
+    mShadowMatrices[0][11] = this->mPos.z >> 3;
 
     DropShadowRadHeight(this->mShadowModels[0], *(Matrix4x3 *)mShadowMatrices[0], 0x8c000, 0x3e8000,
                         0xf);

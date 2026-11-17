@@ -10,7 +10,7 @@
  * InitResources reads the inherited mPrevAngleX and mPrevAngleZ as unsigned
  * shaft lengths rather than angles:
  *     mBottomY = mTopY - (mPrevAngleX << 12)
- *     mTopY    = mPosY + (mPrevAngleZ << 12)   (mMode 2 only)
+ *     mTopY    = mPos.y + (mPrevAngleZ << 12)   (mMode 2 only)
  *
  * mMode picks what the lift does at either end:
  *     0  follow the player (UDLIFT_TERESA, UDLIFT)

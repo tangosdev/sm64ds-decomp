@@ -289,17 +289,17 @@ void da1up_c::SteerTowardPlayer() {
     if(p != 0){
         Vector3 diff;
         Vector3 ppos;
-        /* mPos is the position. Reading mPosX/Y/Z directly changes the bytes. */
+        /* mPos is the position. Reading mPos.x/.y/.z directly changes the bytes. */
         const Vector3 *s = &p->mPos;
         ppos.x = s->x;
         ppos.y = s->y;
         ppos.z = s->z;
-        diff.x = ppos.x - mPosX;
+        diff.x = ppos.x - mPos.x;
         if (p->func_ov002_020d0d2c() != 0)
-            diff.y = ppos.y - mPosY - 0x50000;
+            diff.y = ppos.y - mPos.y - 0x50000;
         else
-            diff.y = ppos.y - mPosY + 0x78000;
-        diff.z = ppos.z - mPosZ;
+            diff.y = ppos.y - mPos.y + 0x78000;
+        diff.z = ppos.z - mPos.z;
         int len = Vec3_HorzLen(&diff);
         short pitch = cstd::atan2(len, diff.y);
         short yaw = Vec3_HorzAngle(&mPos, &ppos);
@@ -399,9 +399,9 @@ void da1up_c::OnTurnIntoEgg(daPly_c &player) {
         Vector3 vec;
         Sound::PlayBank3(SND3_GIVE_LIFE, mCamSpacePos);
         GiveLives(1);
-        vec.x = mPosX;
-        vec.y = mPosY;
-        vec.z = mPosZ;
+        vec.x = mPos.x;
+        vec.y = mPos.y;
+        vec.z = mPos.z;
         vec.y += 0xb4000;
         Spawn(ACTOR_OBJ_1UPLOGO, 8, vec, 0, mAreaId, -1);
         KillAndTrackInDeathTable();
@@ -441,9 +441,9 @@ void da1up_c::CollectOnTouch() {
             struct Vector3 vec;
             Sound::PlayBank3(SND3_GIVE_LIFE, mCamSpacePos);
             GiveLives(1);
-            vec.x = mPosX;
-            vec.y = mPosY;
-            vec.z = mPosZ;
+            vec.x = mPos.x;
+            vec.y = mPos.y;
+            vec.z = mPos.z;
             vec.y += 0xb4000;
             dActor_c::Spawn(
                 ACTOR_OBJ_1UPLOGO, 8, vec, 0, mAreaId, -1);
@@ -495,9 +495,9 @@ void da1up_c::UpdateModelAndShadow() {
 
     if ((unsigned)(mMushroomType - 0xb) <= 1) {
         Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-        mModel.mat4x3.m[9] = mPosX >> 3;
-        mModel.mat4x3.m[10] = mPosY >> 3;
-        mModel.mat4x3.m[11] = mPosZ >> 3;
+        mModel.mat4x3.m[9] = mPos.x >> 3;
+        mModel.mat4x3.m[10] = mPos.y >> 3;
+        mModel.mat4x3.m[11] = mPos.z >> 3;
     } else {
         Vec3_Asr(&v1, &mPos, 3);
         Matrix4x3_FromTranslation(&mModel.mat4x3, v1.x, v1.y, v1.z);
@@ -509,10 +509,10 @@ void da1up_c::UpdateModelAndShadow() {
         radius = 0x50000;
         depth = 0x50000;
     } else if (!mWithMeshClsn.IsOnGround()) {
-        int y = mPosY;
-        int z = mPosZ;
+        int y = mPos.y;
+        int z = mPos.z;
         int adjustedY;
-        int x = mPosX;
+        int x = mPos.x;
         adjustedY = y + 0x28000;
         v2.x = x;
         v2.y = adjustedY;
@@ -523,7 +523,7 @@ void da1up_c::UpdateModelAndShadow() {
         if (rg.DetectClsn()) {
             depth = rg.clsnY;
         }
-        depth = mPosY - depth;
+        depth = mPos.y - depth;
         if (depth <= 0x1000) depth = 0x1000;
         radius = (mdCcAc_c.radius - 0xa000) * 2 - FX_MUL(depth, 0x180);
         if (radius < 0xa000) radius = 0xa000;
@@ -609,12 +609,12 @@ void da1up_c::UpdateFallThenWait() {
    0. */
 void da1up_c::UpdateRiseThenPopOut() {
     mShown = 1;
-    if (mPosY >= mSpawnPos.y + 0x64000)
+    if (mPos.y >= mSpawnPos.y + 0x64000)
         return;
-    mPosY += 0x5000;
-    if (mPosY < mSpawnPos.y + 0x64000)
+    mPos.y += 0x5000;
+    if (mPos.y < mSpawnPos.y + 0x64000)
         return;
-    mPosY = mSpawnPos.y + 0x64000;
+    mPos.y = mSpawnPos.y + 0x64000;
     mMushroomType = 0;
     mState = 0;
     mStateTimer = 0xffff;
@@ -997,7 +997,7 @@ int da1up_c::CleanupResources()
     else data_ov002_0210da30.Release();
   }
   if ((unsigned int)(mMushroomType - 0xb) <= 1)
-      Particle::System::NewSimple(PTCL_TYPE_11_12_CLEANUP, mPosX, mPosY + 0x28000, mPosZ);
+      Particle::System::NewSimple(PTCL_TYPE_11_12_CLEANUP, mPos.x, mPos.y + 0x28000, mPos.z);
   return 1;
 }
 
@@ -1146,16 +1146,16 @@ int da1up_c::InitResources() {
     }
     mBlinkOn = 1;
     mUnlockCount = (param1 >> 4) & 0xf;
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mWithMeshClsn.SetLimMovFlag();
     mParticleID = 0;
 
-    if (gCurrentSublevel == 7 && mPosY == 0xdac000 && mPosZ == 0 &&
+    if (gCurrentSublevel == 7 && mPos.y == 0xdac000 && mPos.z == 0 &&
         (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0)) {
         MarkForDestruction();
         return 0;

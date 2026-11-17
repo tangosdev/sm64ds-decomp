@@ -48,13 +48,13 @@ extern RFlagAnimResFileHandle data_ov062_0211e0dc;
 daRFlag_c::~daRFlag_c() {}
 
 /* Builds the model matrix from the actor's facing and position.
- * The flag graphic sits 60.0 (0x3c000) above mPosY. dExtSimpleModel_c-matrix
+ * The flag graphic sits 60.0 (0x3c000) above mPos.y. dExtSimpleModel_c-matrix
  * translation is in 1/8 world units, so the position is shifted down by 3. */
 void daRFlag_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.t.x = mPosX >> 3;
-    mAnmModel.mat4x3.t.y = (mPosY + 0x3c000) >> 3;
-    mAnmModel.mat4x3.t.z = mPosZ >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = (mPos.y + 0x3c000) >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 int daRFlag_c::CleanupResources() {

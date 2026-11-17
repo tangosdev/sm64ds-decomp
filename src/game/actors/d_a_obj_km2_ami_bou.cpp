@@ -66,7 +66,7 @@ extern "C" SpawnInfo<daObjKm2_Ami_Bou_c> g_profile_KM2_AMI_BOU = {
 s32 daObjKm2_Ami_Bou_c::InitResources() {
     mModel.SetFile(dExtSimpleModel_c::LoadFile(data_ov045_021131b0), 1, -1);
     if (param1 != kUnsetParam)
-        mPosY -= kLoweredY;
+        mPos.y -= kLoweredY;
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
@@ -80,9 +80,9 @@ s32 daObjKm2_Ami_Bou_c::Behavior() {
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     if (param1 != kUnsetParam)
-        mPosY += FX_MUL(FX_SinIdx((u16)mHeightAng >> 4), kRiseAmp);
+        mPos.y += FX_MUL(FX_SinIdx((u16)mHeightAng >> 4), kRiseAmp);
     else
-        mPosY -= FX_MUL(FX_SinIdx((u16)mHeightAng >> 4), kFallAmp);
+        mPos.y -= FX_MUL(FX_SinIdx((u16)mHeightAng >> 4), kFallAmp);
     mHeightAng += kPhaseStep;
     UpdateModelPosAndRotY();
     if (IsClsnInRangeOnScreen(kOnScreenRange, 0))

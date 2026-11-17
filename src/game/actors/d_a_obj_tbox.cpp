@@ -198,9 +198,9 @@ void daObjTbox_c::State1() {
         daPly_c *player = ClosestPlayer();
 
         Vector3 spawnPos;
-        spawnPos.x = mPosX;
-        spawnPos.y = mPosY;
-        spawnPos.z = mPosZ;
+        spawnPos.x = mPos.x;
+        spawnPos.y = mPos.y;
+        spawnPos.z = mPos.z;
         spawnPos.y += 0xc8000;
 
         if (mIsLastChest == 0) {
@@ -238,9 +238,9 @@ void daObjTbox_c::State2() {
 
     if (mStarID != 0xff) {
         Vector3 spawnPos;
-        spawnPos.x = mPosX;
-        spawnPos.y = mPosY;
-        spawnPos.z = mPosZ;
+        spawnPos.x = mPos.x;
+        spawnPos.y = mPos.y;
+        spawnPos.z = mPos.z;
         spawnPos.y += 0xc8000;
         UntrackAndSpawnStar(mTrackedStarID, mStarID, spawnPos, 4);
     }
@@ -250,9 +250,9 @@ void daObjTbox_c::State2() {
 
 void daObjTbox_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.t.x = mPosX >> 3;
-    mAnmModel.mat4x3.t.y = mPosY >> 3;
-    mAnmModel.mat4x3.t.z = mPosZ >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 /* D1 and D0 come from the inline destructor in daObjTbox_c.h. */

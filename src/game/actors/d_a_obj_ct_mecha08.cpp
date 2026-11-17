@@ -102,9 +102,9 @@ int daObjCtMecha08_c::InitResources() {
     mMeshCollider.SetFile(dBgW_Kc::LoadFile(gCtMechaObj08aCollisionFile), mClsnMat, 0x199, mAngleY,
                           data_ov035_021121b8);
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mMoveDir = 0;
 
     u8 setting = data_0209f2c0;
@@ -122,7 +122,7 @@ int daObjCtMecha08_c::InitResources() {
    materialize its 0/1 before branching on it. */
 int daObjCtMecha08_c::Behavior() {
     if (data_0209f2c0 == CLOCK_SETTING_STOPPED) {
-        mPosY = mHomePos.y + LIFT_TRAVEL;
+        mPos.y = mHomePos.y + LIFT_TRAVEL;
         UpdateModelPosAndRotY();
         if (IsClsnInRange(0, 0) != 0)
             UpdateClsnPosAndRot();
@@ -133,8 +133,8 @@ int daObjCtMecha08_c::Behavior() {
             UpdatePos(0);
             lower = mHomePos.y;
             upper = lower + LIFT_TRAVEL;
-            if (!IsInRange(mPosY, lower, upper)) {
-                mPosY = Clamp(mPosY, lower, upper);
+            if (!IsInRange(mPos.y, lower, upper)) {
+                mPos.y = Clamp(mPos.y, lower, upper);
 
                 mMoveDir ^= 1;
 

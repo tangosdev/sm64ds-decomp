@@ -190,9 +190,9 @@ int daBmb_c::InitResources()
         mCoinType = 1;
     }
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     *(Matrix4x3 *)mMatrix = IDENTITY_MATRIX4X3;
     mTurnTimer = 0;
     mFuse = 0;
@@ -479,9 +479,9 @@ void daBmb_c::State1() {
 void daBmb_c::func_ov102_0214bd90(){
   if (mWithMeshClsn.JustHitGround()) {
     struct Vector3 v;
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     func_0200fc44(&v, 1);
   }
   if (mWithMeshClsn.IsOnGround()) {
@@ -612,9 +612,9 @@ void daBmb_c::func_ov102_0214baa0() {
     mdCc_c.Clear();
 
     mFlags &= 0xfff1fffe;
-    mPosX = mHomePos.x;
-    mPosY = mHomePos.y;
-    mPosZ = mHomePos.z;
+    mPos.x = mHomePos.x;
+    mPos.y = mHomePos.y;
+    mPos.z = mHomePos.z;
     mShouldRender = 0;
     mChasePlayer = 0;
     mCarrier = 0;
@@ -739,9 +739,9 @@ void daBmb_c::func_ov102_0214b53c() {
             mCarryOff[1] = 0;
             mCarryOff[2] = 0;
             Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-            mAnmModel.mat4x3.m[9] = mPosX >> 3;
-            mAnmModel.mat4x3.m[10] = mPosY >> 3;
-            mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+            mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+            mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+            mAnmModel.mat4x3.m[11] = mPos.z >> 3;
         }
     }
     int haveMtx2 = (int)((mFlags & 0x4000) != 0);
@@ -797,7 +797,7 @@ void daBmb_c::UpdateShadow() {
     if (b)
         return;
 
-    v = mPosY;
+    v = mPos.y;
     if (mWithMeshClsn.IsOnGround() == 0) {
         dBgCh_Gnd rg;
         rg.SetObjAndPos(mPos, (dActor_c *)0);
@@ -811,14 +811,14 @@ void daBmb_c::UpdateShadow() {
             daPly_c *p = mCarrier;
             if (p != 0) {
                 if (p->mCarryMatrix != 0)
-                    v = p->mPosY;
+                    v = p->mPos.y;
             }
         }
     }
 
-    mMatrix[9] = mPosX >> 3;
+    mMatrix[9] = mPos.x >> 3;
     mMatrix[10] = v >> 3;
-    mMatrix[11] = mPosZ >> 3;
+    mMatrix[11] = mPos.z >> 3;
 
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mMatrix, mScale.x * 0x50, 0x1e000, 0xf);
 }
@@ -988,10 +988,10 @@ void daBmb_c::func_ov102_0214ae1c() {
     Vector3 v;
     int y, z, w;
     mdCc_c.flags &= ~0x8000;
-    y = mPosY;
-    z = mPosZ;
+    y = mPos.y;
+    z = mPos.z;
     w = y + 0x78000;
-    v.x = mPosX;
+    v.x = mPos.x;
     v.y = w;
     v.z = z;
     if (mCoinType) {
@@ -999,7 +999,7 @@ void daBmb_c::func_ov102_0214ae1c() {
         mCoinType = 0;
     }
     func_0201267c(0x10c, &mCamSpacePos);
-    v.y = mPosY + 0x64000;
+    v.y = mPos.y + 0x64000;
     Particle::System::NewSimple(kPtclBobOmbExplodeA, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeB, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeC, v.x, v.y, v.z);
@@ -1009,9 +1009,9 @@ void daBmb_c::func_ov102_0214ae1c() {
     if (mCarrier) {
         Vector3 w;
         mCarrier->DropActor();
-        w.x = mPosX;
-        w.y = mPosY;
-        w.z = mPosZ;
+        w.x = mPos.x;
+        w.y = mPos.y;
+        w.z = mPos.z;
         mCarrier->Hurt(w, 2, 0xc000, 1, 0, 1);
         mCarrier = 0;
     } else if (mdCc_c.otherOwner) {
@@ -1019,18 +1019,18 @@ void daBmb_c::func_ov102_0214ae1c() {
         if (a) {
             if (mdCc_c.hitFlags & 0x400000) {
                 Vector3 w;
-                w.x = mPosX;
-                w.y = mPosY;
-                w.z = mPosZ;
+                w.x = mPos.x;
+                w.y = mPos.y;
+                w.z = mPos.z;
                 ((daPly_c *)a)->Hurt(w, mHurtDamage, 0xc000, 1, 0, 1);
             }
         }
     }
     if (mEatingPlayer) {
         Vector3 w;
-        w.x = mPosX;
-        w.y = mPosY;
-        w.z = mPosZ;
+        w.x = mPos.x;
+        w.y = mPos.y;
+        w.z = mPos.z;
         mEatingPlayer->Hurt(w, mHurtDamage, 0xc000, 1, 0, 1);
         mEatingPlayer->func_ov002_020d718c();
         mEatingPlayer = 0;
@@ -1057,7 +1057,7 @@ void daBmb_c::OnTurnIntoEgg(daPly_c &player) {
 void daBmb_c::func_ov102_0214ad40() {
     if ((unsigned char)(mVariant + 0xfe) > 1)
         return;
-    if (mPosY >= mHomePos.y - 0x12c000)
+    if (mPos.y >= mHomePos.y - 0x12c000)
         return;
     {
         unsigned short v = mFuse;
@@ -1184,9 +1184,9 @@ int daBmb_c::func_ov102_0214aa18() {
         mdCc_c.dCc_c::Update();
         if (mWithMeshClsn.JustHitGround()) {
             Vector3 v;
-            v.x = mPosX;
-            v.y = mPosY;
-            v.z = mPosZ;
+            v.x = mPos.x;
+            v.y = mPos.y;
+            v.z = mPos.z;
             func_0200fc44(&v, 1);
         }
         if (mWithMeshClsn.IsOnGround() == 0)

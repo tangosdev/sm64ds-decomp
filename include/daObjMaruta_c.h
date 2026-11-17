@@ -46,7 +46,7 @@ struct ResourceDescriptor;
 
 struct daObjMaruta_c : dBgActor_c {
     u8 pad_31e[0x2];
-    Vector3 mRestPos; /* 0x320 -- InitResources copies mPosX */
+    Vector3 mRestPos; /* 0x320 -- InitResources copies mPos.x */
     Vector3 mHitPos;  /* 0x32c -- BeforeClsn copies PLAYER mPos */
     s32 mPathAngDiff; /* 0x338 -- AngleDiff of travel vs mAngleY */
     s16 mRollAngVel;  /* 0x33c */

@@ -93,9 +93,9 @@ s32 daObjRc_Tikuwa_c::Behavior() {
         TriplePoofDust();
         if (mMeshCollider.IsEnabled() != 0)
             mMeshCollider.Disable();
-        mPosX = mHomePos.x;
-        mPosY = mHomePos.y;
-        mPosZ = mHomePos.z;
+        mPos.x = mHomePos.x;
+        mPos.y = mHomePos.y;
+        mPos.z = mHomePos.z;
         mState = 2;
         break;
     case 2: {
@@ -130,9 +130,9 @@ s32 daObjRc_Tikuwa_c::InitResources() {
     mWithMeshClsn.Init(this, 0x32000, 0x64000, 0, 0);
     mTerminalVelocity = -0x1e000;
     mVertAccel = ~0x198;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     return 1;
 }
 

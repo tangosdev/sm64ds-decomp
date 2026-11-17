@@ -88,7 +88,7 @@ int daObjSlIceBlock_c::Behavior() {
     if (isType) {
         if (DecIfAbove0_Short(&mDelayTimer) == 0) {
             ApproachLinear(mHorzSpeed, 0, 0x3000);
-            if (ApproachLinear(mPosY, mMinPosY, 0xa000) != 0) {
+            if (ApproachLinear(mPos.y, mMinPosY, 0xa000) != 0) {
                 MarkForDestruction();
             }
         }
@@ -97,9 +97,9 @@ int daObjSlIceBlock_c::Behavior() {
     } else {
         if (DecIfAbove0_Short(&mDelayTimer) == 0) {
             Vector3 pos;
-            pos.x = mPosX;
-            pos.y = mPosY;
-            pos.z = mPosZ;
+            pos.x = mPos.x;
+            pos.y = mPos.y;
+            pos.z = mPos.z;
             int spawnType = 1;
             if (DecIfAbove0_Byte(&mNumToBigIce) == 0) {
                 mNumToBigIce = 5;
@@ -133,7 +133,7 @@ int daObjSlIceBlock_c::InitResources() {
         mHorzSpeed = 0x2d000;
         mDelayTimer = 100;
         mPrevAngleY = -0x4000;
-        mMinPosY = mPosY - 0xc8000;
+        mMinPosY = mPos.y - 0xc8000;
     } else {
         mDelayTimer = (u8)mNumToBigIce * 20;
         mNumToBigIce = 5;

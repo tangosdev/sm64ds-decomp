@@ -66,7 +66,7 @@ void daKpa2Bg_c::PlayTiltSound() {
 /* Rebuilds the collision matrix from the position and the X and Z angles,
    then moves the moving mesh collider to it with the Y angle. */
 void daKpa2Bg_c::UpdateClsnMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
     mClsnMat = data_020a0e68;
@@ -77,7 +77,7 @@ void daKpa2Bg_c::UpdateClsnMatrix() {
    bits. The Y angle is not part of this matrix build. */
 void daKpa2Bg_c::UpdateModelMatrix() {
     int pos[4];
-    Vec3_Asr(&pos, &mPosX, 3);
+    Vec3_Asr(&pos, &mPos.x, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos[0], pos[1], pos[2]);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);

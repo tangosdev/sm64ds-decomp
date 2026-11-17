@@ -53,7 +53,7 @@
 #include "nitro/fx/fx_cp.h"
 
 /* The position overload reads mPos through its reference, so the break puff
-   reloads mPosY after the kill-height test (a scalar mPosY reuses the test's
+   reloads mPos.y after the kill-height test (a scalar mPos.y reuses the test's
    load and RollOffBehavior comes out 0x1e8 against the ROM's 0x1ec).
    d_a_obj_number.cpp defines it the same way; a body in
    Particle__System.h would renumber every includer's @NNN. */
@@ -166,7 +166,7 @@ void daIbl_c::CheckContact() {
     if ((fl & daIbl_HIT_MEGA) != 0) {
         Vector3_16 s;
         u32 r = OnAimedAtWithEgg();
-        mPosY += r;
+        mPos.y += r;
         s.x = 0; s.y = 0; s.z = 0;
         KillByInvincibleChar(s, *a, 0);
         mWithMeshClsn.ClearGroundFlag();
@@ -174,7 +174,7 @@ void daIbl_c::CheckContact() {
     }
     if ((fl & daIbl_HIT_ATTACK) != 0) {
         if (a->param1 == 2) {
-            Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
+            Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos.x, mPos.y, mPos.z);
             PoofDust();
             MarkForDestruction();
             func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
@@ -185,9 +185,9 @@ void daIbl_c::CheckContact() {
     }
     {
         Vector3 v;
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         a->Hurt(v, 2, 0xc000, 1, 0, 1);
     }
 }
@@ -217,8 +217,8 @@ void daIbl_c::UpdateWallAndFloor() {
         return;
     ((SurfaceInfo *)((char *)mWithMeshClsn.GetFloorResult() + 4))->CopyNormalTo(mFloorNormal);
     if (mHitWall != 0) return;
-    mPosX = mPrevPos.x;
-    mPosZ = mPrevPos.z;
+    mPos.x = mPrevPos.x;
+    mPos.z = mPrevPos.z;
     if (mFloorNormal.y == 0)
         return;
     int s = FX_MUL(mFloorNormal.x, mSpeed.x) + FX_MUL(mFloorNormal.z, mSpeed.z);
@@ -228,20 +228,20 @@ void daIbl_c::UpdateWallAndFloor() {
 /* Per-frame model and shadow matrices. The model matrix is the identity with
    its translation set to mPos >> 3 (the ball's position in model units). It
    is copied to the shadow's matrix, whose Y translation is then replaced with
-   (50 units * scale + mPosY) >> 3 -- 50 units times the draw scale above the
+   (50 units * scale + mPos.y) >> 3 -- 50 units times the draw scale above the
    ball's position -- and the drop shadow is cast with radius 200 units * scale,
    depth 90 units * scale on the ground (0x32 + 0x28) or 450 units * scale in
    the air (0x32 + 0x190), and opacity 0xf. "Scale" is mDrawScale.x, 0x1000
    being 1.0. */
 void daIbl_c::UpdateModelMatrix() {
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&IDENTITY_MATRIX4X3;
-    mModel.mat4x3.t.x = mPosX >> 3;
-    mModel.mat4x3.t.y = mPosY >> 3;
-    mModel.mat4x3.t.z = mPosZ >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
     Mtx43 *shadow = (Mtx43 *)mShadowMtx;
     *shadow = *(Mtx43 *)&mModel.mat4x3;
     int k = 0x32;
-    mShadowMtx[10] = (mDrawScale.x * k + mPosY) >> 3;
+    mShadowMtx[10] = (mDrawScale.x * k + mPos.y) >> 3;
     if (mWithMeshClsn.IsOnGround() != 0)
         k += 0x28;
     else
@@ -266,12 +266,12 @@ void daIbl_c::UpdateModelMatrix() {
  */
 int daIbl_c::AdvancePath() {
     int px = mNextNodePos.x;
-    int ax = mPosX;
+    int ax = mPos.x;
     int prevx = mPrevNodePos.x;
     /* name A  = node.x - prev.x  (C8)  -- high-priority web -> r8 */
     int A = px - prevx;
     int pz = mNextNodePos.z;
-    int az = mPosZ;
+    int az = mPos.z;
     int prevz = mPrevNodePos.z;
     int py = mNextNodePos.y;
     int prevy = mPrevNodePos.y;
@@ -279,7 +279,7 @@ int daIbl_c::AdvancePath() {
     int B = py - prevy;
     /* name C8 = node.z - prev.z  (C6) */
     int C8 = pz - prevz;
-    int ay = mPosY;
+    int ay = mPos.y;
     /* name C7 = node.y - pos.y   (Csl) */
     int C7 = py - ay;
     /* name C6 = node.x - pos.x   (true A) */
@@ -390,7 +390,7 @@ void daIbl_c::PathBehavior() {
     if (r != 0) {
         if (r != 2)
             return;
-        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos.x, mPos.y, mPos.z);
         func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
@@ -407,7 +407,7 @@ void daIbl_c::PathBehavior() {
         /* mVariant was just set to 3, so the != 4 test cannot fail here. */
         if (mVariant != daIbl_KIND_PATH_RAMP && mWithMeshClsn.IsOnGround() != 0) {
             mSpeed.y = 0;
-            mPosY += 0xf000;
+            mPos.y += 0xf000;
         } else {
             UpdateWallAndFloor();
         }
@@ -466,7 +466,7 @@ void daIbl_c::RollOffBehavior() {
         if (r != 2)
             return;
 
-        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos.x, mPos.y, mPos.z);
         func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
@@ -474,7 +474,7 @@ void daIbl_c::RollOffBehavior() {
     CheckContact();
     UpdateWallAndFloor();
 
-    if (mPosY < mKillY || mHitWall != 0) {
+    if (mPos.y < mKillY || mHitWall != 0) {
         Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos);
         func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         TriplePoofDust();
@@ -539,7 +539,7 @@ void daIbl_c::FreeRollBehavior() {
     if (r != 0) {
         if (r != 2)
             return;
-        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPos.x, mPos.y, mPos.z);
         func_02012694(daIbl_SND_BREAK, &mCamSpacePos);
         return;
     }
@@ -633,7 +633,8 @@ void daIbl_c::SpawnerBehavior() {
     }
 
     if ((param1 & 0xf) != daIbl_KIND_PATH_RAMP) {
-        if (pos.y >= mPosY - 0x28000) return;
+        if (pos.y >= mPos.y - 0x28000)
+            return;
     }
 
     {
@@ -730,9 +731,9 @@ int daIbl_c::InitResources()
         mPathPtr.FromID(param1 & 0xf);
         mNumPathNodes = mPathPtr.NumNodes();
         mPathNodeIndex = 0;
-        mPrevNodePos.x = mPosX;
-        mPrevNodePos.y = mPosY;
-        mPrevNodePos.z = mPosZ;
+        mPrevNodePos.x = mPos.x;
+        mPrevNodePos.y = mPos.y;
+        mPrevNodePos.z = mPos.z;
         mPathPtr.GetNode(mNextNodePos, mPathNodeIndex);
         if (Vec3_Equal(&mPos, &mNextNodePos)) {
             mPathNodeIndex += 1;

@@ -100,7 +100,7 @@ s32 daDgr_c::InitResources() {
     }
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mAngleY = 0;
-    mBasePosY = mPosY;
+    mBasePosY = mPos.y;
     mAngleXSpeed = 0;
     mPhaseTimer = 0;
     mRollStage = 0;
@@ -164,7 +164,7 @@ s32 daDgr_c::Behavior() {
             mAngleXSpeed = (s16)((-kRollAngleStep) / speedDivisor);
         }
 
-        mPosZ += mSpeed.z;
+        mPos.z += mSpeed.z;
         mAngleX += mAngleXSpeed;
         if ((mAngleX & kGrindAngleMask) < kGrindWindow && mAngleXSpeed != 0)
             func_02012694(kGrindSound, &mCamSpacePos);
@@ -173,27 +173,27 @@ s32 daDgr_c::Behavior() {
             s32 bob = FX_SinIdx((u16)(s16)(mAngleX << 2) >> 4) * kBobScale;
             if (bob < 0)
                 bob *= -1;
-            mPosY = mBasePosY + bob;
+            mPos.y = mBasePosY + bob;
         }
 
         if (mPhaseTimer == rollFrames - 1) {
-            loc[3] = mPosX;
-            loc[4] = mPosY;
-            loc[5] = mPosZ;
+            loc[3] = mPos.x;
+            loc[4] = mPos.y;
+            loc[5] = mPos.z;
             Earthquake(*(const Vector3 *)&loc[3], kQuakeMagnitude);
         }
 
-        loc[0] = mPosX;
-        loc[1] = mPosY;
-        loc[2] = mPosZ;
+        loc[0] = mPos.x;
+        loc[1] = mPos.y;
+        loc[2] = mPos.z;
         {
             s32 along;
             s32 across;
             across = FX_CosIdx((u16)mAngleY >> 4);
-            loc[0] = across * kDustReach + mPosX;
+            loc[0] = across * kDustReach + mPos.x;
             loc[1] = mBasePosY - kDustDrop;
             along = FX_SinIdx((u16)mAngleY >> 4);
-            loc[2] = along * kDustReach + mPosZ;
+            loc[2] = along * kDustReach + mPos.z;
             mDustParticle1 = Particle::System::New(mDustParticle1, kDustEffect, loc[0], loc[1],
                                                    loc[2], (const Vector3_16f *)((void *)0),
                                                    (dPa_c::level_c::callback_c *)((void *)0));
@@ -202,9 +202,9 @@ s32 daDgr_c::Behavior() {
             s32 along;
             s32 across;
             across = FX_CosIdx((u16)mAngleY >> 4);
-            loc[0] = mPosX - across * kDustReach;
+            loc[0] = mPos.x - across * kDustReach;
             along = FX_SinIdx((u16)mAngleY >> 4);
-            loc[2] = mPosZ - along * kDustReach;
+            loc[2] = mPos.z - along * kDustReach;
             mDustParticle2 = Particle::System::New(mDustParticle2, kDustEffect, loc[0], loc[1],
                                                    loc[2], (const Vector3_16f *)((void *)0),
                                                    (dPa_c::level_c::callback_c *)((void *)0));
@@ -235,17 +235,17 @@ s32 daDgr_c::CleanupResources() {
 /* dExtSimpleModel_c matrix: X rotation, then translation at 1/8 of the actor position. */
 void daDgr_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationX(&mModel.mat4x3, mAngleX);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Collision matrix. Flat Matrix4x3, copied whole, then translation in full units. */
 void daDgr_c::UpdateClsnMatrix() {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPosX;
-    mClsnMat.m[10] = mPosY;
-    mClsnMat.m[11] = mPosZ;
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y;
+    mClsnMat.m[11] = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 

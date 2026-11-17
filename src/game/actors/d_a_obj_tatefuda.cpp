@@ -187,15 +187,15 @@ int daObjTatefuda_c::InitResources()
     mModel.SetFile(mf, 1, -1);
     mShadowModel.InitCuboid();
 
-    int py = mPosY;
-    int pz = mPosZ;
-    int px = mPosX;
+    int py = mPos.y;
+    int pz = mPos.z;
+    int px = mPos.x;
     int py2 = py + 0x64000;
     Vector3 v(px, py2, pz);
     dBgCh_Gnd rg;
     rg.SetObjAndPos(v, 0);
     if (rg.DetectClsn() != 0)
-        mPosY = rg.clsnY;
+        mPos.y = rg.clsnY;
 
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
@@ -207,9 +207,9 @@ int daObjTatefuda_c::InitResources()
     mdCcAc_c.Init(this, 0x64000, 0x64000, 0x4800002, 0x41000);
 
     mPoundsLeft = 2;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mHomeAngleX = mAngleX;
     mHomeAngleY = mAngleY;
     mHomeAngleZ = mAngleZ;
@@ -299,7 +299,7 @@ int daObjTatefuda_c::Behavior()
         enum Bool b = (enum Bool)((mFlags & 8) != 0);
         if (b != FALSE && DecIfAbove0_Byte(&mRespawnDelay) == 0 && DistToCPlayer() > 0x7d0000) {
             mPoundsLeft = 2;
-            mPosY = mHomePos.y;
+            mPos.y = mHomePos.y;
             UpdateModelPosAndRotY();
             UpdateClsnPosAndRot();
             UpdateShadowMatrix();
@@ -313,9 +313,9 @@ int daObjTatefuda_c::Behavior()
         int x, y, z;
         if (mMeshCollider.IsEnabled())
             mMeshCollider.Disable();
-        x = mPosX;
-        z = mPosZ;
-        y = mPosY + 0x50000;
+        x = mPos.x;
+        z = mPos.z;
+        y = mPos.y + 0x50000;
         v.x = x;
         v.y = y;
         v.z = z;
@@ -326,9 +326,9 @@ int daObjTatefuda_c::Behavior()
                 Particle::System::NewCleanParticle(mParticleHandle2, kPtclDeathB, v.x, v.y, v.z, 0);
         } else {
             int x2, y2, z2;
-            x2 = mPosX;
-            z2 = mPosZ;
-            y2 = mPosY + 0x28000;
+            x2 = mPos.x;
+            z2 = mPos.z;
+            y2 = mPos.y + 0x28000;
             vec.x = x2;
             vec.y = y2;
             vec.z = z2;
@@ -495,9 +495,9 @@ void daObjTatefuda_c::Thrown()
                 b = (found)->actorID;
                 b = b == ACTOR_PLAYER;
                 if (b) {
-                    vec.x = mPosX;
-                    vec.y = mPosY;
-                    vec.z = mPosZ;
+                    vec.x = mPos.x;
+                    vec.y = mPos.y;
+                    vec.z = mPos.z;
                     found->Hurt(vec, 1, 0xc000, 1, 0, 1);
                 }
             }
@@ -530,11 +530,11 @@ void daObjTatefuda_c::InitDropped()
     mHorzSpeed = 0;
     mSpeed.y = 0;
     other = mHoldingPlayer;
-    py = &mPosY;
+    py = &mPos.y;
     src = &other->mPos;
-    mPosX = src->x;
-    mPosY = src->y;
-    mPosZ = src->z;
+    mPos.x = src->x;
+    mPos.y = src->y;
+    mPos.z = src->z;
     *py += 0x64000;
     mLastHolder = mHoldingPlayer;
     mHoldingPlayer = 0;
@@ -643,9 +643,9 @@ void daObjTatefuda_c::Talk()
        ROM leaves after `lslne`, which in turn hands the height r1 and the depth
        r2 the way the ROM colours them. Folding the +0x50000 into the temp
        rather than into the store is the other half of it. */
-    mx = mPosX;
-    mz = mPosZ;
-    my = mPosY + 0x50000;
+    mx = mPos.x;
+    mz = mPos.z;
+    my = mPos.y + 0x50000;
     msgPos.x = mx;
     msgPos.y = my;
     msgPos.z = mz;
@@ -654,11 +654,11 @@ void daObjTatefuda_c::Talk()
     if (mPoundsLeft == 1) {
         scale = 0x78000;
     }
-    tx = mPosX;
+    tx = mPos.x;
     tgt.x = tx;
-    ty = mPosY;
+    ty = mPos.y;
     tgt.y = ty;
-    tz = mPosZ;
+    tz = mPos.z;
     tgt.z = tz;
 
     ang = (unsigned short)mAngleY;
@@ -672,7 +672,7 @@ void daObjTatefuda_c::Talk()
     tgt.z = tz;
 
     {
-        s32 *pPos = &player->mPosX;
+        s32 *pPos = &player->mPos.x;
         plPos.x = pPos[0];
         plPos.y = pPos[1];
         plPos.z = pPos[2];
@@ -857,9 +857,9 @@ void daObjTatefuda_c::Kill()
 {
     Vector3 pos;
     Vector3 dustPos;
-    fx32 x = mPosX;
-    fx32 y = mPosY + 0x28000;
-    fx32 z = mPosZ;
+    fx32 x = mPos.x;
+    fx32 y = mPos.y + 0x28000;
+    fx32 z = mPos.z;
     pos.x = x;
     pos.y = y;
     pos.z = z;
@@ -913,13 +913,13 @@ void daObjTatefuda_c::OnGroundPounded(dActor_c &other)
     if (mPoundCooldown != 0) return;
     Sound::PlayBank3(0x62, mCamSpacePos);
     if (other.param1 == 2 || ((daPly_c &)other).mIsMega != 0) {
-        mPosY -= (mPoundsLeft * 0x2d) << 12;
+        mPos.y -= (mPoundsLeft * 0x2d) << 12;
         mPoundsLeft = 0;
         UpdateModelPosAndRotY();
         UpdateClsnPosAndRot();
         mRespawnDelay = 30;
     } else {
-        mPosY -= 0x2d000;
+        mPos.y -= 0x2d000;
         mPoundsLeft -= 1;
         UpdateModelPosAndRotY();
         UpdateClsnPosAndRot();
@@ -999,13 +999,13 @@ void daObjTatefuda_c::AttachToHolder() {
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, data_ov002_020ff0d4[r4].x,
                                         data_ov002_020ff0d4[r4].y, data_ov002_020ff0d4[r4].z);
 
-    mPosX = data_020a0e68.t.x;
-    mPosY = data_020a0e68.t.y;
-    mPosZ = data_020a0e68.t.z;
+    mPos.x = data_020a0e68.t.x;
+    mPos.y = data_020a0e68.t.y;
+    mPos.z = data_020a0e68.t.z;
     Vec3_Lsl(&lo, &mPos, 3);
-    mPosX = lo.x;
-    mPosY = lo.y;
-    mPosZ = lo.z;
+    mPos.x = lo.x;
+    mPos.y = lo.y;
+    mPos.z = lo.z;
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
@@ -1034,9 +1034,9 @@ void daObjTatefuda_c::RebuildModelMatrix() {
 void daObjTatefuda_c::UpdateShadowMatrix()
 {
     Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
-    mShadowMat.t.x = mPosX >> 3;
-    mShadowMat.t.y = mPosY >> 3;
-    mShadowMat.t.z = mPosZ >> 3;
+    mShadowMat.t.x = mPos.x >> 3;
+    mShadowMat.t.y = mPos.y >> 3;
+    mShadowMat.t.z = mPos.z >> 3;
 }
 
 /* The reset: the sign goes back where it was spawned and hides. Sets mHidden
@@ -1054,9 +1054,9 @@ void daObjTatefuda_c::Reset()
   mBreakTimer = 0;
   mParticleHandle1 = 0;
   mParticleHandle2 = 0;
-  mPosX = mHomePos.x;
-  mPosY = mHomePos.y;
-  mPosZ = mHomePos.z;
+  mPos.x = mHomePos.x;
+  mPos.y = mHomePos.y;
+  mPos.z = mHomePos.z;
   mAngleX = mHomeAngleX;
   mAngleY = mHomeAngleY;
   mAngleZ = mHomeAngleZ;

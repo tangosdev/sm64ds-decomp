@@ -52,7 +52,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        translation to the boss's position >> 3, with y taken 0xa000 (10
        units) lower first. */
     Matrix4x3 mShadowMtx;                                  /* 0x3a8 */
-    /* InitResources copies mPosX/mPosY/mPosZ here once, in the same breath as
+    /* InitResources copies mPos.x/mPos.y/mPos.z here once, in the same breath as
        seeding both waypoint arrays with the same position. The part-2 cut-scene
        camera looks at it, the part-1 camera is placed relative to it, the key
        spawns above it, and the ..3390 and leap states turn toward it. Whether

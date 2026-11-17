@@ -92,9 +92,9 @@ daObjDlPyramidDummy_c::~daObjDlPyramidDummy_c() {}
  * the top removes itself and raises the event the level script waits on. */
 void daObjDlPyramid_c::FinishDescent() {
     Vector3 v;
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     v.y += 0xfa000;
     Particle::System::NewSimple(kPtclPyramidTopSunkA, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclPyramidTopSunkB, v.x, v.y, v.z);
@@ -109,12 +109,12 @@ void daObjDlPyramid_c::FinishDescent() {
  * for the first two seconds, then spin up and sink. Keeps the dust
  * particle alive and moves to state 2 at frame 150. */
 void daObjDlPyramid_c::Descend() {
-    mPosX = FX_SinIdx((u16)(s16)(mStateTimer << 14) >> 4) * 0x28 + mHomePos.x;
+    mPos.x = FX_SinIdx((u16)(s16)(mStateTimer << 14) >> 4) * 0x28 + mHomePos.x;
     if (mStateTimer < 60) {
         int bob = FX_SinIdx((u16)(s16)(mStateTimer << 13) >> 4) * 0xa;
         if (bob < 0)
             bob = -bob;
-        mPosY = mHomePos.y + bob;
+        mPos.y = mHomePos.y + bob;
     } else {
         mAngVelY += 0x100;
         if (mAngVelY > 0x1800) {
@@ -122,10 +122,10 @@ void daObjDlPyramid_c::Descend() {
             mSpeed.y = 0x5000;
         }
         mAngleY += mAngVelY;
-        mPosY += mSpeed.y;
+        mPos.y += mSpeed.y;
     }
-    mSpinParticleID =
-        Particle::System::New(mSpinParticleID, kPtclPyramidTopSinking, mPosX, mPosY, mPosZ, 0, 0);
+    mSpinParticleID = Particle::System::New(mSpinParticleID, kPtclPyramidTopSinking, mPos.x, mPos.y,
+                                            mPos.z, 0, 0);
     if (mStateTimer == 150)
         mState = 2;
 }
@@ -134,18 +134,18 @@ void daObjDlPyramid_c::Descend() {
  * translation row, then hand both to the mesh collider. */
 void daObjDlPyramid_c::UpdateClsnMatrix() {
     Matrix4x3_FromRotationY(&mClsnMat2, mAngleY);
-    mClsnMat2.t.x = mPosX;
-    mClsnMat2.t.y = mPosY;
-    mClsnMat2.t.z = mPosZ;
+    mClsnMat2.t.x = mPos.x;
+    mClsnMat2.t.y = mPos.y;
+    mClsnMat2.t.z = mPos.z;
     mMeshCollider.Transform(mClsnMat2, mAngleY);
 }
 
 /* The model follows the top: yaw matrix, position at 1/8 scale. */
 void daObjDlPyramid_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mTopModel.mat4x3, mAngleY);
-    mTopModel.mat4x3.t.x = mPosX >> 3;
-    mTopModel.mat4x3.t.y = mPosY >> 3;
-    mTopModel.mat4x3.t.z = mPosZ >> 3;
+    mTopModel.mat4x3.t.x = mPos.x >> 3;
+    mTopModel.mat4x3.t.y = mPos.y >> 3;
+    mTopModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 int daObjDlPyramid_c::CleanupResources() {
@@ -222,9 +222,9 @@ int daObjDlPyramid_c::InitResources() {
     mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngleY, *(CLPS_Block *)&data_ov024_021129f0);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mAngVelY = 0;
     mNumTagsTriggered = 0;
     mState = 0;

@@ -30,7 +30,7 @@
  * names -- dActor_c ends at exactly 0x0d4. Consumer fields were repointed to
  * the inherited dActor_c/fBase_c names: mParam -> param1, unk_08e ->
  * mAngleY, unk_09c -> mVertAccel, unk_0a0 -> mTerminalVelocity, unk_0b0 ->
- * mFlags (mPosX/Y/Z and mScale already shared dActor_c's names).
+ * mFlags (mPos and mScale already shared dActor_c's names).
  *
  * mShadowModel was mistyped `u8` at 0x174 in the generated header --
  * daObjPowerUpItem_c_classInit calls _ZN17dExtShadowModel_cC1Ev at that offset, so it is the

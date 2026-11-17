@@ -317,9 +317,9 @@ int daBtn_c::InitResources()
     anim = ((SharedFilePtr *)data_ov079_021275ec[idx * 5 + 3])->filePtr;
     mAnmModel.SetAnim((BCA_File *)anim, 0, 0x1000, 0);
 
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     mSpawnAngleX = mAngleX;
     mSpawnAngleY = mAngleY;
     mSpawnAngleZ = mAngleZ;
@@ -394,18 +394,18 @@ int daBtn_c::Behavior()
     if (mHorzSpeed != 0) {
         if (IsGoingOffCliff(mWithMeshClsn, 0x3c000, 0x2888, false, false, 0x32000)) {
             /* The step would leave the ledge: rewind to last frame's position. */
-            mPosX = mSafePos.x;
-            mPosY = mSafePos.y;
-            mPosZ = mSafePos.z;
+            mPos.x = mSafePos.x;
+            mPos.y = mSafePos.y;
+            mPos.z = mSafePos.z;
         } else {
-            mSafePos.x = mPosX;
-            mSafePos.y = mPosY;
-            mSafePos.z = mPosZ;
+            mSafePos.x = mPos.x;
+            mSafePos.y = mPos.y;
+            mSafePos.z = mPos.z;
         }
     } else {
-        mSafePos.x = mPosX;
-        mSafePos.y = mPosY;
-        mSafePos.z = mPosZ;
+        mSafePos.x = mPos.x;
+        mSafePos.y = mPos.y;
+        mSafePos.z = mPos.z;
     }
 
     UpdateWMClsn(mWithMeshClsn, 0);
@@ -488,7 +488,7 @@ void daBtn_c::func_ov079_02125b44()
         case 0:
             if (mNearestDist < 0x190000) {
                 daPly_c *p = mPlayers[mNearestPlayer];
-                if (p->mPosY >= mPosY - 0xa000) {
+                if (p->mPos.y >= mPos.y - 0xa000) {
                     if (p->StartTalk(*this, true) != 0) {
                         mSubState++;
                     }
@@ -509,7 +509,7 @@ void daBtn_c::func_ov079_02125b44()
                 int y;
                 {
                     daPly_c *p = mPlayers[mNearestPlayer];
-                    int *src = &p->mPosX;
+                    int *src = &p->mPos.x;
                     pos.x = src[0];
                     pos.y = src[1];
                     pos.z = src[2];
@@ -689,7 +689,7 @@ void daBtn_c::func_ov079_021256d4()
 
     r = mPlayers[mNearestPlayer];
     if (r != 0) {
-        if (mPosY - r->mPosY <= 0x37f000)
+        if (mPos.y - r->mPos.y <= 0x37f000)
             return;
     }
 
@@ -703,10 +703,10 @@ void daBtn_c::func_ov079_021256d4()
         Sound::StopLoadedMusic_Layer3();
         func_02011cfc();
         mState = 0;
-        mPosX = mSpawnPos.x;
-        mPosY = mSpawnPos.y;
+        mPos.x = mSpawnPos.x;
+        mPos.y = mSpawnPos.y;
         five = 5;
-        mPosZ = mSpawnPos.z;
+        mPos.z = mSpawnPos.z;
         tab = (SharedFilePtr **)data_ov079_021275ec;
         t = mSpawnAngleX;
         ma = &mAnmModel;
@@ -763,9 +763,9 @@ void daBtn_c::func_ov079_02125504()
         func_0201267c(0xc5, &mCamSpacePos);
 
         if ((gNextActorUpdateMask & 0x800000) == 0) {
-            v[1].x = mPosX;
-            v[1].y = mPosY;
-            v[1].z = mPosZ;
+            v[1].x = mPos.x;
+            v[1].y = mPos.y;
+            v[1].z = mPos.z;
             Earthquake(v[1], 0x320000);
         }
 
@@ -773,12 +773,12 @@ void daBtn_c::func_ov079_02125504()
             s16 a0 = mAngleY;
             s16 a1 = mBodyYaw;
             s32 py;
-            px = mPosX;
+            px = mPos.x;
             v[0].x = px;
-            py = mPosY;
+            py = mPos.y;
             t = (a0 + a1 + 0x4000);
             v[0].y = py;
-            pz = mPosZ;
+            pz = mPos.z;
             v[0].z = pz;
             v[0].y = py + 0x28000;
         }
@@ -867,9 +867,9 @@ void daBtn_c::func_ov079_02125240(){
     mAnmModel.SetAnim(
         (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 1])->filePtr), 0x40000000,
         0x1000, 0);
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     Earthquake(v, 0x7d0000);
     mState = 6;
     mMovingMeshCollider.SetStoodOnCallback(daBtn_c::func_ov079_0212522c);
@@ -930,7 +930,7 @@ void daBtn_c::func_ov079_02125058(dActor_c *other)
         if (t - 1 > 1) return;
         const Vector3 &p = other->mPos;
         v2 = p;
-        if (v2.y - mPosY < 0x2bc000)
+        if (v2.y - mPos.y < 0x2bc000)
             return;
         if (DecIfAbove0_Byte(&mCoinsLeft) == 0) return;
         w2 = v2;
@@ -955,7 +955,7 @@ void daBtn_c::func_ov079_02124ed4()
             mHitPoints--;
             func_02012694(0x134, &mCamSpacePos);
             {
-                s32 *p = &mPounder->mPosX;
+                s32 *p = &mPounder->mPos.x;
                 Particle::System::NewSimple(kPtclWhompPounded, p[0], p[1], p[2]);
             }
             if (mHitPoints == 0) {
@@ -976,9 +976,9 @@ void daBtn_c::func_ov079_02124ed4()
         v = mSubTimer;
         if (v <= 10) {
             if (v % 2) {
-                mPosY += 0x10000;
+                mPos.y += 0x10000;
             } else {
-                mPosY -= 0x10000;
+                mPos.y -= 0x10000;
             }
             return;
         }
@@ -1000,11 +1000,11 @@ void daBtn_c::func_ov079_02124dec()
     if (mSubState == 0) {
         if (mTouched != 0) {
             if (mPounded != 0) {
-                int x = mPosX;
+                int x = mPos.x;
                 v1.x = x;
-                int y = mPosY;
+                int y = mPos.y;
                 v1.y = y;
-                int z = mPosZ;
+                int z = mPos.z;
                 y = y + 0x78000;
 
                 w1.x = x;
@@ -1287,7 +1287,7 @@ void daBtn_c::func_ov079_02124530()
         }
         return;
     }
-    mPosY += (mIsKing + 1) << 15;
+    mPos.y += (mIsKing + 1) << 15;
 }
 
 /* Keep the mesh collider enabled only near a player: always for a hidden
@@ -1313,10 +1313,10 @@ int daBtn_c::func_ov079_021243e0(int range)
         return 0;
     }
 
-    v.x = mPosX;
-    y = mPosY;
+    v.x = mPos.x;
+    y = mPos.y;
     v.y = y;
-    v.z = mPosZ;
+    v.z = mPos.z;
     if (range == 0) {
         int radius = mClipRadius;
         v.y = y + mClipOffsetY;
@@ -1351,14 +1351,14 @@ void daBtn_c::func_ov079_02124188()
 
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
 
-    mAnmModel.mat4x3.t.x = mPosX >> 3;
-    mAnmModel.mat4x3.t.y = (mPosY + mTipLift) >> 3;
-    mAnmModel.mat4x3.t.z = mPosZ >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = (mPos.y + mTipLift) >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
 
     bone = mAnmModel.data.bones;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
 
     mBodyPitch = -bone->rotY;
     mBodyYaw = bone->rotX;
@@ -1426,9 +1426,9 @@ void daBtn_c::func_ov079_02124008()
     }
     Matrix4x3_ApplyInPlaceToScale(&mMeshMatrix, 0x1000, s, 0x1000);
 
-    mMeshMatrix.t.x = mPosX;
-    mMeshMatrix.t.y = mPosY + mTipLift - off;
-    mMeshMatrix.t.z = mPosZ;
+    mMeshMatrix.t.x = mPos.x;
+    mMeshMatrix.t.y = mPos.y + mTipLift - off;
+    mMeshMatrix.t.z = mPos.z;
 
     mMovingMeshCollider.Transform(mMeshMatrix, mBodyYaw);
 }
@@ -1503,9 +1503,9 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
    free form is the byte-exact shape, and the callers that need the member
    view reach it through vecret below. */
 extern "C" void func_ov079_02123d4c(Vector3 *out, daBtn_c *self) {
-    out->x = self->mPosX;
-    out->y = self->mPosY;
-    out->z = self->mPosZ;
+    out->x = self->mPos.x;
+    out->y = self->mPos.y;
+    out->z = self->mPos.z;
     {
         int m;
         int d;
@@ -1536,9 +1536,10 @@ int daBtn_c::func_ov079_02123bcc() {
     s16 cosv, sinv, sin2, cos2;
     int a0, a1, a2, raw, ang;
     player = mPlayers[mNearestPlayer];
-    p = &player->mPosX;
+    p = &player->mPos.x;
     v[0] = p[0]; v[1] = p[1]; v[2] = p[2];
-    if (v[1] > mPosY) return 0;
+    if (v[1] > mPos.y)
+        return 0;
     dist = ::Vec3_HorzDist((const ::Vector3 *)v, &mPos);
     a0 = mAngleY; a1 = mBodyYaw; a2 = mTargetAngle;
     raw = (a0 + a1) << 16; ang = a2 + (raw >> 16); rangle = raw >> 16;
@@ -1559,9 +1560,9 @@ int daBtn_c::func_ov079_02123bcc() {
             nz = cos2 * 5 + vz;
             i = mNearestPlayer;
             player = mPlayers[i];
-            player->mPosX = nx;
-            player->mPosY = vy;
-            player->mPosZ = nz;
+            player->mPos.x = nx;
+            player->mPos.y = vy;
+            player->mPos.z = nz;
             return 1;
         }
     }
@@ -1594,9 +1595,9 @@ int daBtn_c::func_ov079_02123a8c()
 
     dActor_c *closest = ClosestWithActorID(9);
     if (closest) {
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         v.y = v.y + OnAimedAtWithEgg();
         int dist = ::Vec3_Dist(&v, &closest->mPos);
         if (dist < (mClipRadius << 3)) {
@@ -1687,7 +1688,7 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         }
         {
             Vector3 pos;
-            int* q = &other->mPosX;
+            int *q = &other->mPos.x;
             pos.x = q[0];
             pos.y = q[1];
             pos.z = q[2];

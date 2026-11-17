@@ -119,7 +119,7 @@ int daFeather_c::Behavior() {
         }
     }
 
-    mParticle = Particle::System::New(mParticle, kPtclFeather, mPosX, mPosY, mPosZ, 0, 0);
+    mParticle = Particle::System::New(mParticle, kPtclFeather, mPos.x, mPos.y, mPos.z, 0, 0);
 
     UpdatePos(0);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
@@ -128,7 +128,7 @@ int daFeather_c::Behavior() {
         ApproachLinear2(mSwayAngle, 0, 0x50);
         ApproachLinear(mHorzSpeed, 0, 0x555);
         if (DecIfAbove0_Byte(&mLifeTimer) == 0) {
-            Particle::System::NewSimple(kPtclItemVanish, mPosX, mPosY, mPosZ);
+            Particle::System::NewSimple(kPtclItemVanish, mPos.x, mPos.y, mPos.z);
             MarkForDestruction();
         }
     } else {
@@ -155,7 +155,7 @@ int daFeather_c::Behavior() {
             int eq = (a->actorID == 0xbf);
             if (eq) {
                 ((daPly_c *)a)->InitWingFeathers(true);
-                Particle::System::NewSimple(kPtclItemVanish, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclItemVanish, mPos.x, mPos.y, mPos.z);
                 MarkForDestruction();
                 return 1;
             }
@@ -211,9 +211,9 @@ void daFeather_c::UpdateModelAndShadow() {
     b = (gGameMode == 1);
     if (b) {
         Matrix4x3_FromRotationY(&mShadowMtx, mAngleY);
-        mShadowMtx.m[9] = mPosX >> 3;
-        mShadowMtx.m[10] = mPosY >> 3;
-        mShadowMtx.m[11] = mPosZ >> 3;
+        mShadowMtx.m[9] = mPos.x >> 3;
+        mShadowMtx.m[10] = mPos.y >> 3;
+        mShadowMtx.m[11] = mPos.z >> 3;
         DropShadowRadHeight(mShadowModel, mShadowMtx, 0x96000, 0x320000, 0xf);
         return;
     }
@@ -223,14 +223,14 @@ void daFeather_c::UpdateModelAndShadow() {
         int r4;
 
         dBgCh_Gnd rg;
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
         pos.y = pos.y + 0x14000;
         rg.SetObjAndPos(pos, this);
         rg.DetectClsn();
 
-        r5 = mPosY - rg.clsnY;
+        r5 = mPos.y - rg.clsnY;
         if (r5 <= 0x1000)
             r5 = 0x1000;
         r4 = 0x96000 - FX_MUL(r5, 0x180);
@@ -238,9 +238,9 @@ void daFeather_c::UpdateModelAndShadow() {
             r4 = 0xa000;
 
         Matrix4x3_FromRotationY(&mShadowMtx, mAngleY);
-        mShadowMtx.m[9] = mPosX >> 3;
-        mShadowMtx.m[10] = mPosY >> 3;
-        mShadowMtx.m[11] = mPosZ >> 3;
+        mShadowMtx.m[9] = mPos.x >> 3;
+        mShadowMtx.m[10] = mPos.y >> 3;
+        mShadowMtx.m[11] = mPos.z >> 3;
         DropShadowRadHeight(mShadowModel, mShadowMtx, r4, r5 + 0x28000, 0xf);
     }
 }

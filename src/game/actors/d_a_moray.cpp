@@ -162,9 +162,9 @@ void daMoray_c::UpdateHitCylinders() {
     int idx;
     int *px;
 
-    va.x = this->mPosX;
-    va.y = this->mPosY;
-    va.z = this->mPosZ;
+    va.x = this->mPos.x;
+    va.y = this->mPos.y;
+    va.z = this->mPos.z;
 
     vb.x = 0;
     vb.y = 0;
@@ -243,9 +243,9 @@ void daMoray_c::UpdateHitCylinders() {
     if (t == 0)
         return;
 
-    hv.x = this->mPosX;
-    hv.y = this->mPosY;
-    hv.z = this->mPosZ;
+    hv.x = this->mPos.x;
+    hv.y = this->mPos.y;
+    hv.z = this->mPos.z;
     ((daPly_c *)p)->Hurt(hv, 3, 0xc000, 1, 0, 1);
 }
 
@@ -433,9 +433,9 @@ int daMoray_c::StateDenWaitMain() {
         return 1;
     }
 
-    this->mPosX = this->mHomePos.x;
-    this->mPosY = this->mHomePos.y;
-    this->mPosZ = this->mHomePos.z;
+    this->mPos.x = this->mHomePos.x;
+    this->mPos.y = this->mHomePos.y;
+    this->mPos.z = this->mHomePos.z;
 
     player = this->ClosestPlayer();
     if (player != 0) {
@@ -473,7 +473,7 @@ int daMoray_c::StateDenWaitMain() {
 
         if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) < thrAng) {
             if (Vec3_HorzDist(&this->mPos, &playerPos) < thrHorz) {
-                dy = this->mPosY - playerPos.y;
+                dy = this->mPos.y - playerPos.y;
                 if (dy < 0)
                     dy = -dy;
                 if (dy < thrVert)
@@ -527,8 +527,8 @@ void daMoray_c::UpdatePose() {
     worldTarget.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
     MTX_MultVec43(&localOffset, &data_020a0e68, &worldTarget);
-    Matrix4x3_FromTranslation(&data_020a0e68, (this->mPosX + worldTarget.x) >> 3, this->mPosY >> 3,
-                              (this->mPosZ + worldTarget.z) >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, (this->mPos.x + worldTarget.x) >> 3,
+                              this->mPos.y >> 3, (this->mPos.z + worldTarget.z) >> 3);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngleX, this->mAngleY, this->mAngleZ);
     this->mBlendAnmModel.mat4x3 = data_020a0e68;
     ApproachLinear(this->mSegmentAngle[6], this->mSegmentAngle[7], 0x40);
@@ -654,9 +654,9 @@ s32 daMoray_c::Behavior()
             mStarUniqueID = 0;
         }
         if (mStarUniqueID != 0) {
-            star->mPosX = mStarPos.x;
-            star->mPosY = mStarPos.y;
-            star->mPosZ = mStarPos.z;
+            star->mPos.x = mStarPos.x;
+            star->mPos.y = mStarPos.y;
+            star->mPos.z = mStarPos.z;
             mStarSpinAngle += 0x1000;
         }
     }
@@ -701,9 +701,9 @@ s32 daMoray_c::InitResources()
         mPathNodeCount = path.NumNodes();
     }
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mTerminalVelocity = -0x1e000;
     cylOffset1.x = data_ov016_02114d4c.x;
     cylOffset1.y = data_ov016_02114d4c.y;
@@ -731,7 +731,7 @@ s32 daMoray_c::InitResources()
             mPathNodeIndex = 8;
             if (mPathNodeIndex >= mPathNodeCount)
                 mPathNodeIndex = 4;
-            mPosY = mHomePos.y;
+            mPos.y = mHomePos.y;
             SetState(&data_ov016_02114d8c);
         } else {
             return 0;
@@ -772,9 +772,9 @@ s32 daMoray_c::InitResources()
         /* array index form -> add r0,r4,ip,lsl#1 (not strength-reduced i*2) */
         mSegmentAngle[i] = 0;
         mSegmentAngle[7] = 0;
-        mSegmentPos[i].x = mPosX;
-        mSegmentPos[i].y = mPosY;
-        mSegmentPos[i].z = mPosZ;
+        mSegmentPos[i].x = mPos.x;
+        mSegmentPos[i].y = mPos.y;
+        mSegmentPos[i].z = mPos.z;
     }
     mInitAngleX = mAngleX;
     mInitAngleY = mAngleY;

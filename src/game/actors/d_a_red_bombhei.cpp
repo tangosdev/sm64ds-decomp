@@ -175,9 +175,9 @@ s32 daRedBombhei_c::InitResources()
     mShutterID = 0;
 
     {
-        int z = mPosZ;
-        int y = mPosY + 0x64000;
-        pos.x = mPosX;
+        int z = mPos.z;
+        int y = mPos.y + 0x64000;
+        pos.x = mPos.x;
         pos.y = y;
         pos.z = z;
     }
@@ -185,7 +185,7 @@ s32 daRedBombhei_c::InitResources()
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     if (ground.DetectClsn() != 0)
-        mPosY = ground.clsnY;
+        mPos.y = ground.clsnY;
 
     if (IsCharacterSpecific() != 0) {
         u8 character = ClosestPlayer()->mCharacter;
@@ -242,13 +242,13 @@ s32 daRedBombhei_c::CleanupResources()
 /* Places the model and drops the shadow under the body. */
 void daRedBombhei_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngleY);
-    this->mAnmModel.mat4x3.t.x = this->mPosX >> 3;
-    this->mAnmModel.mat4x3.t.y = (this->mPosY + 0x4000) >> 3;
-    this->mAnmModel.mat4x3.t.z = this->mPosZ >> 3;
+    this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
+    this->mAnmModel.mat4x3.t.y = (this->mPos.y + 0x4000) >> 3;
+    this->mAnmModel.mat4x3.t.z = this->mPos.z >> 3;
     *(Mtx43 *)&this->mShadowMat = *(Mtx43 *)&IDENTITY_MATRIX4X3;
-    this->mShadowMat.t.x = this->mPosX >> 3;
-    this->mShadowMat.t.y = (this->mPosY - 0x8000) >> 3;
-    this->mShadowMat.t.z = this->mPosZ >> 3;
+    this->mShadowMat.t.x = this->mPos.x >> 3;
+    this->mShadowMat.t.y = (this->mPos.y - 0x8000) >> 3;
+    this->mShadowMat.t.z = this->mPos.z >> 3;
     DropShadowRadHeight(this->mShadowModel, this->mShadowMat, 0x64000, 0x32000, 15);
 }
 
@@ -397,9 +397,9 @@ int daRedBombhei_c::IsCharacterSpecific() {
 void daRedBombhei_c::ShowTalkMessage(int msgID, u8 msgFlag) {
     daPly_c *player = this->mTalkPlayer;
     Vector3 pos;
-    int x = this->mPosX;
-    int z = this->mPosZ;
-    int y = this->mPosY + 0x32000;
+    int x = this->mPos.x;
+    int z = this->mPos.z;
+    int y = this->mPos.y + 0x32000;
     pos.x = x;
     pos.y = y;
     pos.z = z;
@@ -457,7 +457,7 @@ void daRedBombhei_c::UpdateTalk() {
     if (param != 0xffff)
         msgID = (u16)param;
     {
-        int *p = (int *)(unsigned)&player->mPosX;
+        int *p = (int *)(unsigned)&player->mPos.x;
         int a = p[0];
         playerPos.x = a;
         int b = p[1];
@@ -587,7 +587,7 @@ void daRedBombhei_c::UpdateCannonOpening() {
     dCamera_c *cam = gCamera;
     Vector3 playerPos;
     s16 angle;
-    int *src = &player->mPosX;
+    int *src = &player->mPos.x;
 
     playerPos.x = src[0];
     playerPos.y = src[1];

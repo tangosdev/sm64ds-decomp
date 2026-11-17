@@ -281,9 +281,9 @@ void daKrb_c::func_ov084_02129238() {
         Vector3 pos;
         {
             /* z before y: mwcc keeps that load order. */
-            int vx = mPosX;
-            int vz = mPosZ;
-            int vy = mPosY + 0x190000; /* 400.0 above */
+            int vx = mPos.x;
+            int vz = mPos.z;
+            int vy = mPos.y + 0x190000; /* 400.0 above */
             pos.x = vx;
             pos.y = vy;
             pos.z = vz;
@@ -296,7 +296,7 @@ void daKrb_c::func_ov084_02129238() {
         if (rg.DetectClsn() != 0) {
             if (func_02037e20((int *)&rg.surface) != 0) {
                 if (rg.clsnY != 0x80000000) {
-                    if (mPosY < rg.clsnY) {
+                    if (mPos.y < rg.clsnY) {
                         SpawnCoin();
                         PoofDust();
                         func_ov084_02129498();
@@ -307,9 +307,9 @@ void daKrb_c::func_ov084_02129238() {
                             cap.z = 0;
                             ReleaseCap(cap);
                         }
-                        mPosX = mHomePos.x;
-                        mPosY = mHomePos.y;
-                        mPosZ = mHomePos.z;
+                        mPos.x = mHomePos.x;
+                        mPos.y = mHomePos.y;
+                        mPos.z = mHomePos.z;
                         RespawnIfHasCap();
                     }
                 }
@@ -523,9 +523,9 @@ int daKrb_c::func_ov084_021298d0() {
         func_02012694(data_ov084_02130218[mGoombaType], &mCamSpacePos);
         func_ov084_021296cc();
         if ((mCapId & 0xf) < 6 || mRewardType == daKrb_c::REWARD_SILVER_STAR_IF_CURRENT) {
-            mPosX = mHomePos.x;
-            mPosY = mHomePos.y;
-            mPosZ = mHomePos.z;
+            mPos.x = mHomePos.x;
+            mPos.y = mHomePos.y;
+            mPos.z = mHomePos.z;
             RespawnIfHasCap();
         }
         if ((mCapId & 0xf) < 6)
@@ -615,7 +615,7 @@ int daKrb_c::func_ov084_02129a00() {
         }
 
         if (mGoombaType == daKrb_c::GOOMBA_KING_MINION && eatState >= 3 &&
-            mPosY < mHomePos.y - 0x3e8000) { /* 1000.0 below home */
+            mPos.y < mHomePos.y - 0x3e8000) { /* 1000.0 below home */
             MarkForDestruction();
             return 1;
         }
@@ -667,7 +667,7 @@ void daKrb_c::func_ov084_02129cf4(fx32 distThresh) {
     }
 
     {
-        int *ppos_src = (&mClosestPlayer->mPosX);
+        int *ppos_src = (&mClosestPlayer->mPos.x);
         ppos.x = ppos_src[0];
         ppos.y = ppos_src[1];
         ppos.z = ppos_src[2];
@@ -950,9 +950,9 @@ void daKrb_c::func_ov084_0212a580() {
     Vector3 pos;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.t.x = mPosX >> 3;
-    mAnmModel.mat4x3.t.y = mPosY >> 3;
-    mAnmModel.mat4x3.t.z = mPosZ >> 3;
+    mAnmModel.mat4x3.t.x = mPos.x >> 3;
+    mAnmModel.mat4x3.t.y = mPos.y >> 3;
+    mAnmModel.mat4x3.t.z = mPos.z >> 3;
     rotation = mAngle;
     int inYoshiMouth = (mFlags & 0x40000) ? 1 : 0;
     if (!inYoshiMouth) {
@@ -1038,9 +1038,9 @@ void daKrb_c::ActTumble() {
             v.y = 0x6c000;     /* 108.0 */
             v.z = 0;
             ReleaseCap(v);
-            mPosX = mHomePos.x;
-            mPosY = mHomePos.y;
-            mPosZ = mHomePos.z;
+            mPos.x = mHomePos.x;
+            mPos.y = mHomePos.y;
+            mPos.z = mHomePos.z;
             RespawnIfHasCap();
         }
     }
@@ -1357,7 +1357,7 @@ void daKrb_c::func_ov084_0212af74() {
         }
     }
 
-    if (mPosY < mHomePos.y - 0x3e8000) { /* 1000.0 below home */
+    if (mPos.y < mHomePos.y - 0x3e8000) { /* 1000.0 below home */
         MarkForDestruction();
     }
 
@@ -1406,9 +1406,9 @@ void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef) {
     bool b4;
 
     if ((mCapId & 0xf) < 6 || mRewardType == REWARD_SILVER_STAR_IF_CURRENT) {
-        mPosX = mHomePos.x;
-        mPosY = mHomePos.y;
-        mPosZ = mHomePos.z;
+        mPos.x = mHomePos.x;
+        mPos.y = mHomePos.y;
+        mPos.z = mHomePos.z;
         RespawnIfHasCap();
     }
 
@@ -1555,9 +1555,9 @@ int daKrb_c::Behavior() {
                 v1.y = 0x6c000; /* 108.0 */
                 v1.z = 0;
                 ReleaseCap(v1);
-                mPosX = mHomePos.x;
-                mPosY = mHomePos.y;
-                mPosZ = mHomePos.z;
+                mPos.x = mHomePos.x;
+                mPos.y = mHomePos.y;
+                mPos.z = mHomePos.z;
                 mAngleX = 0;
                 mAngleY = 0;
                 mAngleZ = 0;
@@ -1611,13 +1611,13 @@ int daKrb_c::Behavior() {
     if (mDeathState == DEATH_NONE && mState != STATE_JUMP && mState != STATE_TUMBLE) {
         /* Args: 50.0 reach, angle limit 0x1f49 (about 44 degrees), 0, 1, 50.0. */
         if (IsGoingOffCliff(mWithMeshClsn, 0x32000, 0x1f49, 0, 1, 0x32000) != 0) {
-            mPosX = mSafePos.x;
-            mPosY = mSafePos.y;
-            mPosZ = mSafePos.z;
+            mPos.x = mSafePos.x;
+            mPos.y = mSafePos.y;
+            mPos.z = mSafePos.z;
         } else {
-            mSafePos.x = mPosX;
-            mSafePos.y = mPosY;
-            mSafePos.z = mPosZ;
+            mSafePos.x = mPos.x;
+            mSafePos.y = mPos.y;
+            mSafePos.z = mPos.z;
         }
     }
 
@@ -1660,17 +1660,17 @@ int daKrb_c::Behavior() {
                         v2.y = 0x6c000; /* 108.0 */
                         v2.z = 0;
                         ReleaseCap(v2);
-                        mPosX = mHomePos.x;
-                        mPosY = mHomePos.y;
-                        mPosZ = mHomePos.z;
+                        mPos.x = mHomePos.x;
+                        mPos.y = mHomePos.y;
+                        mPos.z = mHomePos.z;
                         RespawnIfHasCap();
                         return 1;
                     }
                 } else {
                     mStuckTimer = 0;
-                    mStuckCheckPos.x = mPosX;
-                    mStuckCheckPos.y = mPosY;
-                    mStuckCheckPos.z = mPosZ;
+                    mStuckCheckPos.x = mPos.x;
+                    mStuckCheckPos.y = mPos.y;
+                    mStuckCheckPos.z = mPos.z;
                 }
                 break;
             }
@@ -1782,15 +1782,15 @@ int daKrb_c::InitResources() {
     mTargetUniqueID = 0;
     mWanderRerollTimer = 0;
     mStuckTimer = 0;
-    mStuckCheckPos.x = mPosX;
-    mStuckCheckPos.y = mPosY;
-    mStuckCheckPos.z = mPosZ;
+    mStuckCheckPos.x = mPos.x;
+    mStuckCheckPos.y = mPos.y;
+    mStuckCheckPos.z = mPos.z;
     mUnstickTimer = 0;
     func_ov084_021290d4();
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mVertAccel = data_ov084_02130238[mGoombaType];
     mTerminalVelocity = -0x32000; /* -50.0 */
     mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);

@@ -168,9 +168,9 @@ int daWbm_c::InitResources()
     mStateTimer = 0;
     mBounceCount = 0;
     unk_3b4 = 0;
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
 
     if ((unsigned int)(mVariant - 1) <= 1)
     {
@@ -246,7 +246,7 @@ void daWbm_c::StateFall()
         MarkForDestruction();
         return;
     }
-    if (mPosY < 0x1800000)
+    if (mPos.y < 0x1800000)
         return;
     MarkForDestruction();
 }
@@ -282,7 +282,7 @@ void daWbm_c::StateDrop()
     if (Vec3_HorzDist(&spawnPos, &mPos) > 0x5dc000)
         return;
     playerY = spawnPos.y;
-    bombY = mPosY;
+    bombY = mPos.y;
     if (playerY > bombY)
         return;
 
@@ -375,13 +375,13 @@ int daWbm_c::func_ov098_0213b6e0()
                function is shorter than the ROM's. */
             int cmp = actorID == ACTOR_PLAYER;
             if (cmp) {
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
+                pos.x = mPos.x;
+                pos.y = mPos.y;
+                pos.z = mPos.z;
                 other->Hurt(pos, 1, 0xc000, 1, 0, 1);
                 if (mVariant == 1) {
-                    Particle::System::NewSimple(kPtclWaterBombBurstA, mPosX, mPosY, mPosZ);
-                    Particle::System::NewSimple(kPtclWaterBombBurstB, mPosX, mPosY, mPosZ);
+                    Particle::System::NewSimple(kPtclWaterBombBurstA, mPos.x, mPos.y, mPos.z);
+                    Particle::System::NewSimple(kPtclWaterBombBurstB, mPos.x, mPos.y, mPos.z);
                     Burst();
                     return 1;
                 }

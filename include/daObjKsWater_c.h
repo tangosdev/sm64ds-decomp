@@ -6,7 +6,7 @@
 
 /* daObjKsWater_c -- the draining water inside the sunken ship (profile KS_MIZU,
  * actor 62, ov017). It sits still until every treasure chest in the room has
- * been opened, then sinks, frame by frame (mPosY -= 0x5000), until it has
+ * been opened, then sinks, frame by frame (mPos.y -= 0x5000), until it has
  * dropped 0x92e000 from where it began.
  *
  * WHAT THE CARTRIDGE PROVES ABOUT THE NAME AND THE SHAPE:

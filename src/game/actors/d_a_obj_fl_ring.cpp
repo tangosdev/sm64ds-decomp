@@ -166,13 +166,13 @@ s32 daObjFl_Ring_c::Behavior() {
             /* A Vector3 v emits ~Vector3, which drags dBgActor_c's D2 and this class's RTTI into the TU (measured). */
             int v[3];
             daObj_volcanoCannon_c *s;
-            v[0] = mPosX;
-            v[1] = mPosY;
-            v[2] = mPosZ;
-            v[1] = mPosY + 0x1f4000;
+            v[0] = mPos.x;
+            v[1] = mPos.y;
+            v[2] = mPos.z;
+            v[1] = mPos.y + 0x1f4000;
             s = (daObj_volcanoCannon_c *)dActor_c::Spawn(0xf3, 0, *(Vector3 *)v, 0, mAreaId, -1);
             s->mSpawner = this;
-            s->mKillPosY = mPosY;
+            s->mKillPosY = mPos.y;
             {
                 u16 *t = &mSpawnCount;
                 *t = *t + 1;

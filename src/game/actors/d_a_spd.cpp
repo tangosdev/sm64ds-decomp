@@ -170,13 +170,13 @@ int daSpd_c::InitResources() {
     mdCcAc_c.Init(this, 0x46000, 0x64000, 0x200000, 0x6eff0);
     mWithMeshClsn.Init(this, 0x50000, 0x50000, (Vector3_16 *)0, (Vector3_16 *)0);
     mWithMeshClsn.StartDetectingWater();
-    mHome.x = mPosX;
-    mHome.y = mPosY;
-    mHome.z = mPosZ;
+    mHome.x = mPos.x;
+    mHome.y = mPos.y;
+    mHome.z = mPos.z;
     mHomeAngleY = mAngleY;
-    mAnchor.x = mPosX;
-    mAnchor.y = mPosY;
-    mAnchor.z = mPosZ;
+    mAnchor.x = mPos.x;
+    mAnchor.y = mPos.y;
+    mAnchor.z = mPos.z;
     if (param1 != 0)
         SetState(0);
     else
@@ -251,10 +251,10 @@ int daSpd_c::func_ov071_02120200() {
     short ang;
 
     mFlags = mFlags & ~0x10000001;
-    mPosX = mHome.x;
+    mPos.x = mHome.x;
     z = 0;
-    mPosY = mHome.y;
-    mPosZ = mHome.z;
+    mPos.y = mHome.y;
+    mPos.z = mHome.z;
     mPrevAngleY = mHomeAngleY;
     ang = mHomeAngleY;
     mAngleX = z;
@@ -298,9 +298,9 @@ int daSpd_c::func_ov071_02120028() {
     } else if (mWithMeshClsn.IsOnGround()) {
         mSpeed.y = 0;
         mWithMeshClsn.ClearLimMovFlag();
-        mAnchor.x = mPosX;
-        mAnchor.y = mPosY;
-        mAnchor.z = mPosZ;
+        mAnchor.x = mPos.x;
+        mAnchor.y = mPos.y;
+        mAnchor.z = mPos.z;
         mFlags |= 0x10000001;
         SetState(2);
     }
@@ -444,10 +444,10 @@ int daSpd_c::func_ov071_0211fb0c() {
 int daSpd_c::func_ov071_0211fa54() {
     int b0 = (int)((mFlags & 0x40000) != 0);
     if (b0 != 0) {
-        int *src = &mEatingPlayer->mPosX;
-        mPosX = src[0];
-        mPosY = src[1];
-        mPosZ = src[2];
+        int *src = &mEatingPlayer->mPos.x;
+        mPos.x = src[0];
+        mPos.y = src[1];
+        mPos.z = src[2];
     }
     {
         int v = mFlags;
@@ -476,10 +476,10 @@ int daSpd_c::func_ov071_0211f8d0() {
     mAngleY = mEatingPlayer->mAngleY;
     mPrevAngleY = mAngleY;
     mPos = mEatingPlayer->mPos;
-    mPosX += FX_MUL(FX_SinIdx((u16)mAngleY >> 4), 0x5a000);
-    mPosY += 0x50000;
-    mPosZ += FX_MUL(FX_CosIdx((u16)mAngleY >> 4), 0x5a000);
-    Vector3 v(mEatingPlayer->mPosX, mEatingPlayer->mPosY + 0x50000, mEatingPlayer->mPosZ);
+    mPos.x += FX_MUL(FX_SinIdx((u16)mAngleY >> 4), 0x5a000);
+    mPos.y += 0x50000;
+    mPos.z += FX_MUL(FX_CosIdx((u16)mAngleY >> 4), 0x5a000);
+    Vector3 v(mEatingPlayer->mPos.x, mEatingPlayer->mPos.y + 0x50000, mEatingPlayer->mPos.z);
     DetectRaycastClsn(v, mPos, 1);
     mEatingPlayer = 0;
     mWithMeshClsn.SetLimMovFlag();
@@ -522,9 +522,9 @@ int daSpd_c::func_ov071_0211f6f8() {
     mAnmModel.SetAnim((BCA_File *)gSpiderWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int yOffset1 = OnAimedAtWithEgg();
-    Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + yOffset1, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, mPos.x, mPos.y + yOffset1, mPos.z);
     int yOffset2 = OnAimedAtWithEgg();
-    Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + yOffset2, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayB, mPos.x, mPos.y + yOffset2, mPos.z);
     mState = 8;
     return 1;
 }
@@ -547,9 +547,9 @@ void daSpd_c::func_ov071_0211f524() {
     }
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 
     if (mAngleX != 0) {
         data_020a0e68 = mAnmModel.mat4x3;
@@ -561,9 +561,9 @@ void daSpd_c::func_ov071_0211f524() {
         mAnmModel.mat4x3 = data_020a0e68;
     }
 
-    mShadowMtx[9] = mPosX >> 3;
-    mShadowMtx[10] = mPosY >> 3;
-    mShadowMtx[11] = mPosZ >> 3;
+    mShadowMtx[9] = mPos.x >> 3;
+    mShadowMtx[10] = mPos.y >> 3;
+    mShadowMtx[11] = mPos.z >> 3;
 
     int dh = (mState == 8) ? 0x190000 : 0xc8000;
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, 0xa0000, dh, 0xf);
@@ -571,9 +571,9 @@ void daSpd_c::func_ov071_0211f524() {
 
 void daSpd_c::func_ov071_0211f498() {
     Vector3 v;
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     SpawnCoins(v, mCoinCount, 0xf000, 0);
     PoofDust();
     func_02012694(0xc4, &mCamSpacePos);
@@ -641,9 +641,9 @@ void daSpd_c::func_ov071_0211f29c() {
 
     {
         Vector3 v;
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         if (hitPlayer->Hurt(v, 1, 0xc000, 1, 0, 1) != 0)
             SetState(4);
     }
@@ -653,13 +653,13 @@ void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
     if (w->IsOnGround()) {
         dBgCh_Gnd rc;
-        Vector3 pos(mPosX, mPosY + 0x1e000, mPosZ);
+        Vector3 pos(mPos.x, mPos.y + 0x1e000, mPos.z);
         rc.SetObjAndPos(pos, this);
-        if (!rc.DetectClsn() || rc.clsnY < mPosY - 0x32000) {
+        if (!rc.DetectClsn() || rc.clsnY < mPos.y - 0x32000) {
             mHorzSpeed = 0;
-            mPosX = mPrevPos.x;
-            mPosY = mPrevPos.y;
-            mPosZ = mPrevPos.z;
+            mPos.x = mPrevPos.x;
+            mPos.y = mPrevPos.y;
+            mPos.z = mPrevPos.z;
         } else {
             Vector3 normal;
             w->GetFloorResult()->surface.CopyNormalTo(normal);

@@ -73,11 +73,11 @@ int daDkk_c::InitResources() {
         Vector3 va;
         Vector3 vb;
         /* Far point first, then the near point. */
-        int x = mPosX;
+        int x = mPos.x;
         vb.x = x;
-        int y = mPosY;
+        int y = mPos.y;
         vb.y = y;
-        int z = mPosZ;
+        int z = mPos.z;
         va.x = x;
         vb.z = z;
         va.y = y;
@@ -140,19 +140,19 @@ void daDkk_c::StateFall() {
         mVertAccel = -0x4000;
     else
         mVertAccel = -0x8000;
-    if (mPosY > mGroundY)
+    if (mPos.y > mGroundY)
         return;
-    mPosY = mGroundY;
-    v[1].x = mPosX;
-    v[1].y = mPosY;
-    v[1].z = mPosZ;
+    mPos.y = mGroundY;
+    v[1].x = mPos.x;
+    v[1].y = mPos.y;
+    v[1].z = mPos.z;
     Earthquake(v[1], 0x7d0000);
     mTimer = 60;
     mLandCount++;
     mState = 6;
-    v[0].x = mPosX;
-    v[0].y = mPosY;
-    v[0].z = mPosZ;
+    v[0].x = mPos.x;
+    v[0].y = mPos.y;
+    v[0].z = mPos.z;
     v[0].y = v[0].y + 0x3c000;
     Particle::System::NewSimple(kPtclGrindelLanding, v[0].x, v[0].y, v[0].z);
     func_0201267c(0xc7, &mCamSpacePos);

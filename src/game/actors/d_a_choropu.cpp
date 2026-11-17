@@ -146,8 +146,8 @@ void daChoropu_c::func_ov080_02123860()
         mdCcAc_c.flags |= daChoropu_CC_DISABLED;
         mFlags &= ~daChoropu_FLAG_EMERGED;
         if (idx == 15) {
-            Particle::System::NewSimple(kPtclMontyMoleLeapA, mPosX, mPosY, mPosZ);
-            Particle::System::NewSimple(kPtclMontyMoleLeapB, mPosX, mPosY + 0x1e000, mPosZ);
+            Particle::System::NewSimple(kPtclMontyMoleLeapA, mPos.x, mPos.y, mPos.z);
+            Particle::System::NewSimple(kPtclMontyMoleLeapB, mPos.x, mPos.y + 0x1e000, mPos.z);
         }
     }
     {
@@ -182,7 +182,7 @@ void daChoropu_c::func_ov080_02123924()
         Vector3 v;
         fx32 *q;
         if (p == 0) return;
-        q = (fx32 *)((int)&p->mPosX);
+        q = (fx32 *)((int)&p->mPos.x);
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];
@@ -230,12 +230,12 @@ void daChoropu_c::func_ov080_02123a34()
             unsigned short z = *(unsigned short *)&mAngleZ;
             pAng->z = z;
             short yv = (short)v16.y;
-            px = mPosX;
+            px = mPos.x;
             pos.x = px;
             yv = (short)(yv + 0x400);
-            py = mPosY;
+            py = mPos.y;
             pos.y = py;
-            pz = mPosZ;
+            pz = mPos.z;
             pAng->y = yv;
             pos.z = pz;
             pos.y = py + 0xa000;
@@ -308,8 +308,8 @@ void daChoropu_c::func_ov080_02123c24()
             amt = 0x50000;
         } else {
             amt = data_ov080_021276c4[state - 6] << 12;
-            mEmergeSystemID = Particle::System::New(mEmergeSystemID, kPtclMontyMoleEmerge, mPosX,
-                                                    mPosY, mPosZ, 0, 0);
+            mEmergeSystemID = Particle::System::New(mEmergeSystemID, kPtclMontyMoleEmerge, mPos.x,
+                                                    mPos.y, mPos.z, 0, 0);
         }
     }
 
@@ -349,7 +349,7 @@ void daChoropu_c::func_ov080_02123c24()
             Vector3 pos;
             short horz;
             int diff;
-            int *pb = (int *)((int)&player->mPosX);
+            int *pb = (int *)((int)&player->mPos.x);
             pos.x = pb[0];
             pos.y = pb[1];
             pos.z = pb[2];
@@ -473,11 +473,11 @@ void daChoropu_c::func_ov080_02124088()
 
     func_0201267c(0xd5, &mCamSpacePos);
 
-    v1.x = mPosX;
+    v1.x = mPos.x;
     {
-        int y1 = mPosY;
+        int y1 = mPos.y;
         v1.y = y1;
-        v1.z = mPosZ;
+        v1.z = mPos.z;
         v1.y = y1 + (mdCcAc_c.height - 0x50000);
     }
     v2.x = v1.x;
@@ -501,11 +501,11 @@ void daChoropu_c::func_ov080_02124088()
         if (acc != 7)
             return;
 
-        v3.x = mPosX;
+        v3.x = mPos.x;
         {
-            int y3 = mPosY;
+            int y3 = mPos.y;
             v3.y = y3;
-            v3.z = mPosZ;
+            v3.z = mPos.z;
             v3.y = y3 + 0x64000;
         }
         dActor_c::Spawn(daChoropu_ACTOR_ONEUPKINOKO, 0, v3, 0, mAreaId, -1);
@@ -578,9 +578,9 @@ void daChoropu_c::func_ov080_02124208()
 
     {
         Vector3 pos;
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
         p->Hurt(pos, 2, 0xc000, 1, 0, 1);
     }
 }
@@ -617,17 +617,17 @@ void *daChoropu_c::func_ov080_02124360()
 void daChoropu_c::func_ov080_021243d8()
 {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Same as func_ov080_021243d8, for the rock's model (mModel.mat4x3). */
 void daChoro_Rock_c::func_ov080_02124418() {
     Matrix4x3_FromRotationY(&this->mModel.mat4x3, this->mAngleY);
-    this->mModel.mat4x3.m[9] = this->mPosX >> 3;
-    this->mModel.mat4x3.m[10] = this->mPosY >> 3;
-    this->mModel.mat4x3.m[11] = this->mPosZ >> 3;
+    this->mModel.mat4x3.m[9] = this->mPos.x >> 3;
+    this->mModel.mat4x3.m[10] = this->mPos.y >> 3;
+    this->mModel.mat4x3.m[11] = this->mPos.z >> 3;
 }
 
 /* Releases the shared model and animation files; never touches `this`: the model file
@@ -706,15 +706,15 @@ s32 daChoro_Rock_c::Behavior()
         if (player != 0 && (mdCcAc_c.hitFlags & daChoropu_HIT_PLAYER)) {
             if (player->mIsMetal) {
                 Vector3 pos;
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
+                pos.x = mPos.x;
+                pos.y = mPos.y;
+                pos.z = mPos.z;
                 player->Hurt(pos, 1, 0xc000, 1, 0, 1);
             } else if (!player->mIsVanish) {
                 Vector3 pos;
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
+                pos.x = mPos.x;
+                pos.y = mPos.y;
+                pos.z = mPos.z;
                 player->Hurt(pos, 1, 0xc000, 1, 0, 1);
             }
         }

@@ -164,13 +164,13 @@ int daPopoi_c::InitResources()
     mAngleY = mPrevAngleY;
     mWithMeshClsn.Init(this, 0x64000, 0x64000, 0, 0);
     mCaughtPlayer = 0;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mAnmModel.speed = 0x1000;
-    mSavedPos.x = mPosX;
-    mSavedPos.y = mPosY;
-    mSavedPos.z = mPosZ;
+    mSavedPos.x = mPos.x;
+    mSavedPos.y = mPos.y;
+    mSavedPos.z = mPos.z;
     ChangeState(&data_ov077_02127ce8); /* start in Wander */
     return 1;
 }
@@ -197,10 +197,10 @@ int daPopoi_c::Behavior()
 
     /* Below the water surface (data_0209f32c): snap back to the spawn position
      * and skip the frame. */
-    if (mPosY < data_0209f32c) {
-        mPosX = mHomePos.x;
-        mPosY = mHomePos.y;
-        mPosZ = mHomePos.z;
+    if (mPos.y < data_0209f32c) {
+        mPos.x = mHomePos.x;
+        mPos.y = mHomePos.y;
+        mPos.z = mHomePos.z;
         return 1;
     }
 
@@ -228,13 +228,13 @@ int daPopoi_c::Behavior()
      * upward probe of 50 units (0x32000). */
     goingOffCliff = IsGoingOffCliff(mWithMeshClsn, 0x3c000, 0x2888, 0, 1, 0x32000);
     if (goingOffCliff != 0 || (slope < 0 ? (s16)-slope : slope) > 0x100) {
-        mPosX = mSavedPos.x;
-        mPosY = mSavedPos.y;
-        mPosZ = mSavedPos.z;
+        mPos.x = mSavedPos.x;
+        mPos.y = mSavedPos.y;
+        mPos.z = mSavedPos.z;
     }
-    mSavedPos.x = mPosX;
-    mSavedPos.y = mPosY;
-    mSavedPos.z = mPosZ;
+    mSavedPos.x = mPos.x;
+    mSavedPos.y = mPos.y;
+    mSavedPos.z = mPos.z;
     UpdateWMClsn(mWithMeshClsn, 2);
 
     mAngleY = mPrevAngleY;
@@ -257,7 +257,8 @@ int daPopoi_c::Behavior()
 int daPopoi_c::Render()
 {
     /* Nothing below the water surface is drawn. */
-    if (mPosY < data_0209f32c) return 1;
+    if (mPos.y < data_0209f32c)
+        return 1;
     /* Through a pointer, so the call dispatches through vtable slot 5 as the
        ROM does instead of binding dExtAnmModel_c::Render directly. */
     dExtAnmModel_c *model = &mAnmModel;
@@ -295,9 +296,9 @@ int daPopoi_c::CleanupResources()
  * to the actor's position >> 3. Called from Behavior after the position writeback. */
 void daPopoi_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Install a state and run its entry action on the same frame.
@@ -364,9 +365,9 @@ int daPopoi_c::UpdateWanderState() {
     }
 
     if (mWithMeshClsn.IsOnWall() != 0) {
-        mPosX = mSavedPos.x;
-        mPosY = mSavedPos.y;
-        mPosZ = mSavedPos.z;
+        mPos.x = mSavedPos.x;
+        mPos.y = mSavedPos.y;
+        mPos.z = mSavedPos.z;
     }
 
     if (dist > 0x1f4000) {
@@ -495,9 +496,9 @@ int daPopoi_c::UpdateChaseState() {
     }
 
     if (mWithMeshClsn.IsOnWall() != 0) {
-        mPosX = mSavedPos.x;
-        mPosY = mSavedPos.y;
-        mPosZ = mSavedPos.z;
+        mPos.x = mSavedPos.x;
+        mPos.y = mSavedPos.y;
+        mPos.z = mSavedPos.z;
     }
 
     p = ClosestPlayer();
@@ -657,10 +658,10 @@ int daPopoi_c::IsBlockedAhead() {
         out.y = 0;
         out.z = 0;
 
-        start.x = mPosX;
-        y = mPosY;
+        start.x = mPos.x;
+        y = mPos.y;
         start.y = y;
-        start.z = mPosZ;
+        start.z = mPos.z;
         start.y = y + 0x28000;
         dir.z = 0xc8000;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
@@ -683,10 +684,10 @@ int daPopoi_c::IsBlockedAhead() {
         }
         ray1.SetObjAndLine(start, end, this);
 
-        start.x = mPosX;
-        y = mPosY;
+        start.x = mPos.x;
+        y = mPos.y;
         start.y = y;
-        start.z = mPosZ;
+        start.z = mPos.z;
         start.y = y + 0x28000;
         dir.x = 0;
         dir.y = 0;
@@ -713,9 +714,9 @@ int daPopoi_c::IsBlockedAhead() {
         ray2.SetObjAndLine(start, end, this);
 
         if (ray1.DetectClsn() != 0 || ray2.DetectClsn() == 0) {
-            mPosX = mSavedPos.x;
-            mPosY = mSavedPos.y;
-            mPosZ = mSavedPos.z;
+            mPos.x = mSavedPos.x;
+            mPos.y = mSavedPos.y;
+            mPos.z = mSavedPos.z;
             mHorzSpeed = 0;
             return 1;
         }

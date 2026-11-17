@@ -186,9 +186,9 @@ int daObjFm_Battan_c::CleanupResources() {
 
 void daObjFm_Battan_c::UpdateModelTransform() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 void daObjFm_Battan_c::UpdateShadow() {
@@ -197,8 +197,8 @@ void daObjFm_Battan_c::UpdateShadow() {
     int depth = FX_MUL(sinX, 0x49c000);
 
     Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
-    mShadowMat.m[9] = mPosX >> 3;
-    mShadowMat.m[10] = mPosY >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
+    mShadowMat.m[9] = mPos.x >> 3;
+    mShadowMat.m[10] = mPos.y >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x258000, 0x32000, -depth, 0xf);
 }

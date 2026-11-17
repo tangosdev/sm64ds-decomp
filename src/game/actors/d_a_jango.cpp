@@ -261,9 +261,9 @@ int daJango_c::InitResources()
     path1.FromID(mPathId);
     mPathNodeCount = 4;
     mTerminalVelocity = -0x1e000;               /* fall speed capped at 30 units/frame */
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     /* Init(radius, height, flags, vulnFlags): radii 100 and 60 units, both 160 high. */
     mdCcAc_c1.Init(this, 0x64000, 0xa0000, 0x200002, 0x3eff0);
     mdCcAc_c2.Init(this, 0x3c000, 0xa0000, 0x200000, 0);
@@ -288,9 +288,9 @@ int daJango_c::InitResources()
             spawned->SetRanges(0x64000, 0x258000, 0x1f40000, 0x1f40000);
         }
         /* Start on the path node, already holding the star. */
-        mPosX = mPathNodePos.x;
-        mPosY = mPathNodePos.y;
-        mPosZ = mPathNodePos.z;
+        mPos.x = mPathNodePos.x;
+        mPos.y = mPathNodePos.y;
+        mPos.z = mPathNodePos.z;
         ChangeState(JANGO_STATE_FLY_PATH);
     } else {
         pl = gPlayers[0];
@@ -375,16 +375,16 @@ int daJango_c::Behavior()
         dActor_c *p = dActor_c::FindWithID(actorId);
         if (p != 0) {
             if (mCarriedItem == CARRIES_STAR) {
-                p->mPosX = mHeldPos.x;
-                p->mPosY = mHeldPos.y;
-                p->mPosZ = mHeldPos.z;
+                p->mPos.x = mHeldPos.x;
+                p->mPos.y = mHeldPos.y;
+                p->mPos.z = mHeldPos.z;
             } else if (static_cast<daObjMarioCap_c *>(p)->mTaken == 0) {
                 /* daObjMarioCap_c::mTaken: the cap sets it to 1 in
                    InitTaken, the same function that clears the +0xc8
                    matrix pointer stored below. */
-                p->mPosX = mHeldPos.x;
-                p->mPosY = mHeldPos.y;
-                p->mPosZ = mHeldPos.z;
+                p->mPos.x = mHeldPos.x;
+                p->mPos.y = mHeldPos.y;
+                p->mPos.z = mHeldPos.z;
             } else {
                 mHeldActorID = 0;
                 ((void (*)(int, int))func_02012790)(SND_HELD_RELEASED, 0);
@@ -502,7 +502,7 @@ void daJango_c::UpdateModelAndShadow() {
         }
     }
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
     *(Mtx43 *)&mShadowMat = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x40000, 0x258000, 0xf);
 }
@@ -553,7 +553,7 @@ int daJango_c::EnterFlyPathState() {
    levels the roll. While more than 20 units from the node it is pulled toward
    it by 20 units per frame (diff * (20.0 / len) is subtracted from mPos), but
    only once mAngleY is within 0x2000 (45 degrees) of the node's direction.
-   While mRiseToFarNode is 1 the pull leaves mPosY alone (the vertical motion comes
+   While mRiseToFarNode is 1 the pull leaves mPos.y alone (the vertical motion comes
    from mSpeed.y, set by c594), and when mStateTimer has run out the vertical
    speed is cleared and the flag dropped. Within 20 units (or exactly on it) it
    has arrived: mPathPickTick = 7 so the next b3ac call runs at once, the node index advances (the next node in order
@@ -603,12 +603,12 @@ int daJango_c::UpdateFlyPathState() {
                 *p &= 3;
             }
         }
-        mPosX = node.x;
-        mPosY = node.y;
-        mPosZ = node.z;
-        mPathNodePos.x = mPosX;
-        mPathNodePos.y = mPosY;
-        mPathNodePos.z = mPosZ;
+        mPos.x = node.x;
+        mPos.y = node.y;
+        mPos.z = node.z;
+        mPathNodePos.x = mPos.x;
+        mPathNodePos.y = mPos.y;
+        mPathNodePos.z = mPos.z;
         zero[2] = 0;
         zero[0] = 0;
         zero[1] = 0;
@@ -621,12 +621,12 @@ int daJango_c::UpdateFlyPathState() {
 
     if (AngleDiff(Vec3_HorzAngle(&mPos, &node), mAngleY) < 0x2000) {
         int s;
-        zero[1] = mPosY;
+        zero[1] = mPos.y;
         s = FX_Div(0x14000, len);
         Vec3_MulScalar(&scaled, &diff, s);
         VEC_Subtract(&mPos, &scaled, &mPos);
         if (mRiseToFarNode == 1) {
-            mPosY = zero[1];
+            mPos.y = zero[1];
             if (mStateTimer == 0) {
                 mSpeed.y = 0;
                 mRiseToFarNode = 0;
@@ -747,7 +747,7 @@ int daJango_c::UpdateCircleState() {
         if (SaveData::HasPlayerLostCap() == 0) {
             player = ClosestPlayer();
             if (player != 0) {
-                pp = &player->mPosX;
+                pp = &player->mPos.x;
                 tmp = pp[0];
                 ppos.x = tmp;
                 tmp = pp[1];
@@ -755,12 +755,12 @@ int daJango_c::UpdateCircleState() {
                 ppos.y = tmp;
                 tmp = pp[2];
                 ppos.z = tmp;
-                if (stage != 0x10 && (mPosY + 0x28000 < ppos.y || player->mIsUnderwater != 0)) {
+                if (stage != 0x10 && (mPos.y + 0x28000 < ppos.y || player->mIsUnderwater != 0)) {
                     UpdateCircleVelocity();
                     return 1;
                 }
                 thr = 0x3e8000;
-                ppos.y = mPosY;
+                ppos.y = mPos.y;
                 if (stage != 0x10) {
                     thr = 0x2bc000;
                 }
@@ -874,7 +874,7 @@ int daJango_c::UpdateSwoopState() {
             return 1;
         }
 
-        t = *(SwoopPositionWords *)&player->mPosX;
+        t = *(SwoopPositionWords *)&player->mPos.x;
         tx = t.w[0];
         {
             int y = player->mGroundY;
@@ -943,7 +943,7 @@ int daJango_c::EnterHurtState() {
         mTimer = 30;
     }
     func_02012694(SND_AT_HURT_ENTER, &mCamSpacePos);
-    Particle::System::NewSimple(PARTICLE_AT_HURT_ENTER, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(PARTICLE_AT_HURT_ENTER, mPos.x, mPos.y, mPos.z);
     mSpeed.x = 0;
     mSpeed.y = 0;
     mSpeed.z = 0;
@@ -979,18 +979,18 @@ int daJango_c::EnterRiseState() {
 }
 
 /* RISE update: climbs at 20 units per frame while pitch (mPrevAngleX) and roll
-   (mPrevAngleZ) level off by 0x300 per frame. Once mPosY is within 2 units
+   (mPrevAngleZ) level off by 0x300 per frame. Once mPos.y is within 2 units
    below mPathNodePos.y or above it, it stops, snaps to that height, restores
    the animation speed to 1.0 and enters CIRCLE. */
 int daJango_c::UpdateRiseState() {
     mSpeed.y = 0x14000;
     ApproachLinear(mPrevAngleX, 0, 0x300);
     ApproachLinear(mPrevAngleZ, 0, 0x300);
-    if (mPosY >= mPathNodePos.y - 0x2000) {
+    if (mPos.y >= mPathNodePos.y - 0x2000) {
         mSpeed.x = 0;
         mSpeed.y = 0;
         mSpeed.z = 0;
-        mPosY = mPathNodePos.y;
+        mPos.y = mPathNodePos.y;
         mBlendAnmModel.speed = 0x1000;
         ChangeState(JANGO_STATE_CIRCLE);
     }
@@ -1109,9 +1109,9 @@ int daJango_c::HandleCylinderHit() {
     if (mSilverStarFlag == 2 || (int)pl->param1 == 3)
         flag = 1;
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     r = pl->Hurt(pos, flag, 0xc000, 1, 0, 1);
     if (r == 0)
         return r;
@@ -1153,7 +1153,7 @@ int daJango_c::ChangeTarget() {
     best.x = bestIdx; best.y = bestIdx; best.z = bestIdx;
 
     if (player != 0) {
-        int *pp = &player->mPosX;
+        int *pp = &player->mPos.x;
         ppos.x = *pp;
         i = bestIdx;
         ppos.y = pp[1];

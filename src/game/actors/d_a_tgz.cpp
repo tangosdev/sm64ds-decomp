@@ -25,7 +25,7 @@
  *   func_ov077_021251d0 call a destructor the cartridge does not.
  *
  * deslop leftovers:
- * - func_ov077_021256b4 and func_ov077_02125830: carrier->mPosX/Y/Z is -4
+ * - func_ov077_021256b4 and func_ov077_02125830: carrier->mPos.x/.y/.z is -4
  *   (0x17c->0x178, 0xac->0xa8). The ROM keeps add #0x5c then [0]/[4]/[8].
  */
 #include "decl_common.h"
@@ -129,10 +129,10 @@ int daTgz_c::func_ov077_02124c28() {
         dBgCh_Gnd rg;
         Vector3 pos;
         {
-            int y = this->mPosY;
-            int z = this->mPosZ;
+            int y = this->mPos.y;
+            int z = this->mPos.z;
             int y2 = y + 0xc8000;
-            int x = this->mPosX;
+            int x = this->mPos.x;
             pos.x = x;
             pos.y = y2;
             pos.z = z;
@@ -145,7 +145,7 @@ int daTgz_c::func_ov077_02124c28() {
             return 0;
         rg.StopDetectingWater();
     }
-    return this->mPosY - this->mWaterY;
+    return this->mPos.y - this->mWaterY;
 }
 
 /* Is the Spiny below the cached water surface? */
@@ -153,7 +153,7 @@ int daTgz_c::func_ov077_02124ce4() {
     int waterY = this->mWaterY;
     if (waterY == 0)
         return 0;
-    return waterY > this->mPosY;
+    return waterY > this->mPos.y;
 }
 
 /* Toxic floor destroys the Spiny. A sloped floor rewrites vertical speed
@@ -167,17 +167,17 @@ void daTgz_c::func_ov077_02124d08(dBgCh_Actr *clsn) {
     if (clsn->IsOnGround()) {
         dBgCh_Gnd rc;
         {
-            int actorY = this->mPosY;
-            int pz = this->mPosZ;
+            int actorY = this->mPos.y;
+            int pz = this->mPos.z;
             int py = actorY + 0xc8000;
-            pos.x = this->mPosX;
+            pos.x = this->mPos.x;
             pos.y = py;
             pos.z = pz;
         }
         rc.StartDetectingToxic();
         rc.SetObjAndPos(pos, this);
         if (rc.DetectClsn()) {
-            if (func_02037e20((int *)&rc.surface) != 0 && this->mPosY < rc.clsnY) {
+            if (func_02037e20((int *)&rc.surface) != 0 && this->mPos.y < rc.clsnY) {
                 this->PoofDust();
                 func_02012694(0xc4, &this->mCamSpacePos);
                 this->MarkForDestruction();
@@ -211,9 +211,9 @@ void daTgz_c::func_ov077_02124eb0() {
 
     if (this->FindEgg(this->mdCcAc_c) != 0) {
         int v[3];
-        v[0] = this->mPosX;
-        v[1] = this->mPosY;
-        v[2] = this->mPosZ;
+        v[0] = this->mPos.x;
+        v[1] = this->mPos.y;
+        v[2] = this->mPos.z;
         this->SpawnCoins(*(const Vector3 *)v, 1, 0x2000, 0);
         this->PoofDust();
         func_02012694(0xc4, &this->mCamSpacePos);
@@ -262,9 +262,9 @@ void daTgz_c::func_ov077_02124eb0() {
 
     {
         int v[3];
-        v[0] = this->mPosX;
-        v[1] = this->mPosY;
-        v[2] = this->mPosZ;
+        v[0] = this->mPos.x;
+        v[1] = this->mPos.y;
+        v[2] = this->mPos.z;
         player->Hurt(*(const Vector3 *)v, 2, 0xc000, 1, 0, 1);
     }
 }
@@ -297,9 +297,9 @@ void daTgz_c::func_ov077_021250a8() {
     if ((flags & 0x40000) != 0)
         return;
     Vector3 v;
-    v.x = this->mPosX;
-    v.y = this->mPosY;
-    v.z = this->mPosZ;
+    v.x = this->mPos.x;
+    v.y = this->mPos.y;
+    v.z = this->mPos.z;
     player->Hurt(v, 2, 0xc000, 1, 0, 1);
 }
 
@@ -330,9 +330,9 @@ void daTgz_c::func_ov077_02125290() {
     else
         m = &this->mAnmModel.mat4x3;
     Matrix4x3_FromRotationZXYExt(m, this->mAngleX, this->mAngleY, this->mAngleZ);
-    m->m[9] = this->mPosX >> 3;
-    m->m[10] = this->mPosY >> 3;
-    m->m[11] = this->mPosZ >> 3;
+    m->m[9] = this->mPos.x >> 3;
+    m->m[10] = this->mPos.y >> 3;
+    m->m[11] = this->mPos.z >> 3;
 }
 
 void daTgz_c::func_ov077_02125304() {
@@ -343,9 +343,9 @@ void daTgz_c::func_ov077_02125304() {
         this->func_ov077_021251d0();
     else
         this->func_ov077_02125290();
-    this->mShadowMatrix.a[9] = this->mPosX >> 3;
-    this->mShadowMatrix.a[10] = this->mPosY >> 3;
-    this->mShadowMatrix.a[11] = this->mPosZ >> 3;
+    this->mShadowMatrix.a[9] = this->mPos.x >> 3;
+    this->mShadowMatrix.a[10] = this->mPos.y >> 3;
+    this->mShadowMatrix.a[11] = this->mPos.z >> 3;
     this->DropShadowRadHeight(this->mShadowModel, *(Matrix4x3 *)&this->mShadowMatrix, 0x50000,
                               0x320000, 0xf);
 }
@@ -363,9 +363,9 @@ int daTgz_c::func_ov077_021253a4() {
 
     if (mWithMeshClsn.JustHitGround() || DecIfAbove0_Byte(&mActionTimer) == 0) {
         Vector3 v;
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         SpawnCoins(v, 1, 0x2000, 0);
         PoofDust();
         func_02012694(0xc4, &mCamSpacePos);
@@ -385,9 +385,9 @@ int daTgz_c::func_ov077_02125480() {
     mAnmModel.SetAnim((BCA_File *)TGZ_BCA, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int aimHeight = OnAimedAtWithEgg();
-    Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + aimHeight, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, mPos.x, mPos.y + aimHeight, mPos.z);
     int aimHeightAgain = OnAimedAtWithEgg();
-    Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + aimHeightAgain, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayB, mPos.x, mPos.y + aimHeightAgain, mPos.z);
     mState = 5;
     return 1;
 }
@@ -408,9 +408,9 @@ int daTgz_c::func_ov077_02125550() {
     if (mWithMeshClsn.JustHitGround()) {
         mSpeed.y = mSpeed.y * -0x3c / 100;
         if (mSpeed.y > 0x8000) {
-            x = mPosX;
-            y = mPosY + 0x28000;
-            z = mPosZ;
+            x = mPos.x;
+            y = mPos.y + 0x28000;
+            z = mPos.z;
             vec.x = x;
             vec.y = y;
             vec.z = z;
@@ -424,7 +424,7 @@ int daTgz_c::func_ov077_02125550() {
         }
     }
 
-    d = mWaterY ? mPosY - mWaterY : 0;
+    d = mWaterY ? mPos.y - mWaterY : 0;
     if (d < -0xc8000) {
         PoofDust();
         func_02012694(0x166, &mCamSpacePos);
@@ -461,23 +461,23 @@ int daTgz_c::func_ov077_021256b4() {
 
     carrier = mEatingPlayer;
     one = 1;
-    int *src = &carrier->mPosX;
-    mPosX = src[0];
-    mPosY = src[1];
-    mPosZ = src[2];
+    int *src = &carrier->mPos.x;
+    mPos.x = src[0];
+    mPos.y = src[1];
+    mPos.z = src[2];
 
     sinv = FX_SinIdx((u16)mAngleY >> 4);
-    mPosX = mPosX + FX_MUL(sinv, 0x3c000);
-    mPosY = mPosY + 0x85000;
+    mPos.x = mPos.x + FX_MUL(sinv, 0x3c000);
+    mPos.y = mPos.y + 0x85000;
     cosv = FX_CosIdx((u16)mAngleY >> 4);
-    mPosZ = mPosZ + FX_MUL(cosv, 0x3c000);
+    mPos.z = mPos.z + FX_MUL(cosv, 0x3c000);
 
     carrier = mEatingPlayer;
     {
-        int ty = carrier->mPosY;
-        int tz = carrier->mPosZ;
+        int ty = carrier->mPos.y;
+        int tz = carrier->mPos.z;
         int ty2 = ty + 0x50000;
-        int tx = carrier->mPosX;
+        int tx = carrier->mPos.x;
         v.x = tx;
         v.y = ty2;
         v.z = tz;
@@ -498,10 +498,10 @@ int daTgz_c::func_ov077_02125830() {
         dActor_c *carrier = mEatingPlayer;
         /* Address of the triple, then [0]/[4]/[8]. Three field loads fold the
            0x5c into the ldr and drop the add the ROM kept. */
-        int *src = &carrier->mPosX;
-        mPosX = src[0];
-        mPosY = src[1];
-        mPosZ = src[2];
+        int *src = &carrier->mPos.x;
+        mPos.x = src[0];
+        mPos.y = src[1];
+        mPos.z = src[2];
     }
     {
         int flags = mFlags;
@@ -539,7 +539,7 @@ int daTgz_c::func_ov077_02125908() {
     }
 
     if (mWaterY != 0)
-        v = mPosY - mWaterY;
+        v = mPos.y - mWaterY;
     else
         v = 0;
 
@@ -576,7 +576,7 @@ int daTgz_c::func_ov077_02125a54() {
     mAnmModel.dExtFrameCtrl_c::Advance();
     this->func_ov077_02124eb0();
     if (mWaterY)
-        d = mPosY - mWaterY;
+        d = mPos.y - mWaterY;
     else
         d = 0;
     if (d < -0xc8000) {
@@ -623,9 +623,9 @@ int daTgz_c::func_ov077_02125bb4() {
     if (underwater) {
         if (mInWater == 0) {
             func_02012694(0xe2, &mCamSpacePos);
-            Particle::System::NewBigSplash(mPosX, data_0209f32c, mPosZ);
+            Particle::System::NewBigSplash(mPos.x, data_0209f32c, mPos.z);
             mRippleId =
-                Particle::System::New(mRippleId, kPtclRipple, mPosX, data_0209f32c, mPosZ, 0, 0);
+                Particle::System::New(mRippleId, kPtclRipple, mPos.x, data_0209f32c, mPos.z, 0, 0);
         }
         mVertAccel = -0x400;
         mTerminalVelocity = -0x5000;
@@ -639,7 +639,7 @@ int daTgz_c::func_ov077_02125bb4() {
 
     if (mWithMeshClsn.JustHitGround()) {
         mSpeed.y = (mSpeed.y * -0x3c) / 100;
-        d = mWaterY ? mPosY - mWaterY : 0;
+        d = mWaterY ? mPos.y - mWaterY : 0;
         if (d < -0xc8000) {
             PoofDust();
             func_02012694(0x166, &mCamSpacePos);
@@ -653,9 +653,9 @@ int daTgz_c::func_ov077_02125bb4() {
             mFlags |= 0x10000000u;
             this->func_ov077_02125e94(1);
         } else {
-            x = mPosX;
-            y = mPosY + 0x28000;
-            z = mPosZ;
+            x = mPos.x;
+            y = mPos.y + 0x28000;
+            z = mPos.z;
             vec.x = x;
             vec.y = y;
             vec.z = z;
@@ -737,7 +737,7 @@ int daTgz_c::Behavior()
         this->func_ov077_02125e20();
         MakeVanishLuigiWork(mdCcAc_c);
         this->func_ov077_02125304();
-        if (gCurrentSublevel == 0x1c && mPosY <= -0x1600000) {
+        if (gCurrentSublevel == 0x1c && mPos.y <= -0x1600000) {
             PoofDust();
             func_02012694(0xc4, &mCamSpacePos);
             MarkForDestruction();

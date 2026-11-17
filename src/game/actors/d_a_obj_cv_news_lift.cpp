@@ -15,7 +15,7 @@
  * - InitResources: mMeshCollider.stoodOnCallback = &MainMeshCallback, and a cast
  *   store of UpdatePosWithTransform into beforeClsnCallback, are each
  *   0x254 against 0x258.
- * - InitResources: probePos.y = mPosY - 0x14000 is 0x254 against 0x258.
+ * - InitResources: probePos.y = mPos.y - 0x14000 is 0x254 against 0x258.
  * - InitResources: dExtSimpleModel_c::LoadFile's return in place of filePtr differs
  *   by 20 words.
  * - OnMainMeshRide: copying mTargetRotation in a loop is 0x100 against
@@ -221,9 +221,9 @@ s32 daObjCvNewsLift_c::InitResources() {
     mHomePos = mPos;
 
     Vector3 probePos;
-    probePos.x = mPosX;
-    probePos.y = mPosY;
-    probePos.z = mPosZ;
+    probePos.x = mPos.x;
+    probePos.y = mPos.y;
+    probePos.z = mPos.z;
     probePos.y -= 0x14000;
 
     dBgCh_Gnd ground;
@@ -281,14 +281,14 @@ s32 daObjCvNewsLift_c::Behavior() {
             mPrevAngleY = sNewsLiftPlatformYaws[mLoweredPlatform];
             mAngleX = 0;
             mAngleZ = 0;
-            mPosY = mHomePos.y;
+            mPos.y = mHomePos.y;
         }
         if (mPrevLoweredPlatform != mLoweredPlatform) {
             mBumped = 0;
             mPrevAngleY = sNewsLiftPlatformYaws[mLoweredPlatform];
             mAngleX = 0;
             mAngleZ = 0;
-            mPosY = mHomePos.y;
+            mPos.y = mHomePos.y;
         }
     } else {
         if (mLoweredPlatform != -1) {
@@ -482,7 +482,7 @@ void daObjCvNewsLift_c::UpdateClsnTransforms() {
     Vector3 hang;
 
     Matrix4x3_FromQuaternion(&mRotation, &tilt);
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     MtxStack::concat(tilt);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);

@@ -64,9 +64,9 @@ daObjBlockItemTag_c::~daObjBlockItemTag_c() {}
 
 void daObjBlockItemTag_c::GetSpawnPos(Vector3 &destination, daObjBlockItemTag_c &tag) {
     u8 index = tag.mActionIndex;
-    s32 z = tag.mPosZ;
-    s32 y = tag.mPosY + data_ov002_020ff090[index];
-    s32 x = tag.mPosX;
+    s32 z = tag.mPos.z;
+    s32 y = tag.mPos.y + data_ov002_020ff090[index];
+    s32 x = tag.mPos.x;
 
     destination.x = x;
     destination.y = y;

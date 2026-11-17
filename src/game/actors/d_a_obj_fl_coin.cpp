@@ -241,9 +241,9 @@ int daObjFl_Puzzle_c::CleanupResources() {
 /* dExtSimpleModel_c matrix translation: the position (plus the shake offset on Y), each
  * axis shifted right by 3. */
 void daObjFl_Puzzle_c::UpdateModelMatrix() {
-    int x = mPosX >> 3;
-    int y = (mPosY + mShakeOffsetY) >> 3;
-    int z = mPosZ >> 3;
+    int x = mPos.x >> 3;
+    int y = (mPos.y + mShakeOffsetY) >> 3;
+    int z = mPos.z >> 3;
     Matrix4x3_FromTranslation(&mModel.mat4x3, x, y, z);
 }
 
@@ -251,7 +251,7 @@ void daObjFl_Puzzle_c::UpdateModelMatrix() {
  * matrix at 0x020a0e68, copies it into mClsnMat, and hands it to the moving
  * mesh collider along with the Y angle. */
 void daObjFl_Puzzle_c::UpdateClsnMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY + mShakeOffsetY, mPosZ);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y + mShakeOffsetY, mPos.z);
     mClsnMat = data_020a0e68;
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
@@ -315,8 +315,8 @@ void daObjFl_Puzzle_c::ShakeThenSlide(int dx, int dz, int slideTicks) {
         return;
     }
 
-    mPosX += dx;
-    mPosZ += dz;
+    mPos.x += dx;
+    mPos.z += dz;
 }
 
 /* PIECE_STATE_INIT. Finds the FL_COIN manager; if there is one, remembers its

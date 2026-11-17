@@ -75,7 +75,7 @@ struct daKrpa_c : dActor_c {
     s32 mStateIndex;                        /* 0x3a0 */
     daPly_c *mPlayer;                       /* 0x3a4 */
     /* InitResources raycasts a dBgCh_Gnd straight down from mPos and stores
-       (mPosY - hit height) + 0x1e000, or the constant 0x1f4000 when nothing is
+       (mPos.y - hit height) + 0x1e000, or the constant 0x1f4000 when nothing is
        hit. [_ZN8daKrpa_c13InitResourcesEv, now in src/game/actors/d_a_krpa.cpp] */
     fx32 mGroundDistance;   /* 0x3a8 */
     u8 mStateTimer;         /* 0x3ac */

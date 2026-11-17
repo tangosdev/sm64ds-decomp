@@ -120,7 +120,7 @@ int daKrpa_c::InitResources() {
     dBgCh_Gnd ground;
     ground.SetObjAndPos(mPos, this);
     if (ground.DetectClsn())
-        groundDistance = (mPosY - ground.clsnY) + 0x1e000;
+        groundDistance = (mPos.y - ground.clsnY) + 0x1e000;
     else
         groundDistance = 0x1f4000;
     mGroundDistance = groundDistance;
@@ -191,7 +191,7 @@ int daKrpa_c::EnterIdle() {
 }
 int daKrpa_c::ExecuteIdle() {
     if (this->mPlayer) {
-        if (this->mPosY > data_0209f32c) {
+        if (this->mPos.y > data_0209f32c) {
             if (DecIfAbove0_Byte(&this->mStateTimer) == 0)
                 this->ChangeState(1);
         }
@@ -222,9 +222,9 @@ int daKrpa_c::ExecuteSpit() {
         int sinv = FX_SinIdx((u16)this->mAngleY >> 4);
         int offZ = FX_MUL(cosv, 0x50000);
         int offX = FX_MUL(sinv, 0x50000);
-        int x = this->mPosX + offX;
-        int z = this->mPosZ + offZ;
-        int y = this->mPosY - 0x29000;
+        int x = this->mPos.x + offX;
+        int z = this->mPos.z + offZ;
+        int y = this->mPos.y - 0x29000;
         firePos.x = x;
         firePos.z = z;
         firePos.y = y;
@@ -273,8 +273,8 @@ int daKrpa_c::EnterKnockedAway() {
     this->mScale.z = 0x1000;
     this->mStateTimer = 45;
     this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
-    Particle::System::NewSimple(kPtclKnockAwayA, this->mPosX, this->mPosY, this->mPosZ);
-    Particle::System::NewSimple(kPtclKnockAwayB, this->mPosX, this->mPosY, this->mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, this->mPos.x, this->mPos.y, this->mPos.z);
+    Particle::System::NewSimple(kPtclKnockAwayB, this->mPos.x, this->mPos.y, this->mPos.z);
     this->mStateIndex = 3;
     return 1;
 }
@@ -298,12 +298,12 @@ void daKrpa_c::UpdateModelAndShadow() {
     } else {
         Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngleY);
     }
-    this->mAnmModel.mat4x3.t.x = this->mPosX >> 3;
-    this->mAnmModel.mat4x3.t.y = this->mPosY >> 3;
-    this->mAnmModel.mat4x3.t.z = this->mPosZ >> 3;
-    this->mMatrix.t.x = this->mPosX >> 3;
-    this->mMatrix.t.y = this->mPosY >> 3;
-    this->mMatrix.t.z = this->mPosZ >> 3;
+    this->mAnmModel.mat4x3.t.x = this->mPos.x >> 3;
+    this->mAnmModel.mat4x3.t.y = this->mPos.y >> 3;
+    this->mAnmModel.mat4x3.t.z = this->mPos.z >> 3;
+    this->mMatrix.t.x = this->mPos.x >> 3;
+    this->mMatrix.t.y = this->mPos.y >> 3;
+    this->mMatrix.t.z = this->mPos.z >> 3;
     DropShadowRadHeight(this->mShadowModel, this->mMatrix, this->mScale.x * 0x46,
                         this->mGroundDistance, 0xf);
 }

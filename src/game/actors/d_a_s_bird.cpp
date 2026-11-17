@@ -108,7 +108,7 @@ void daSBird_c::AttachToLeader(int ownerID) {
 void daSBird_c::StateFly() {
     UpdatePos(0);
     dActor_c *owner = dActor_c::FindWithID(mOwnerID);
-    if (owner == 0 || owner->mPosY > 0xbb8000) {
+    if (owner == 0 || owner->mPos.y > 0xbb8000) {
         MarkForDestruction();
         return;
     }
@@ -119,7 +119,7 @@ void daSBird_c::StateFly() {
         Vec3_Sub(&d1, &mTargetPos, &mPos);
         diff = d1;
         s32 hl = Vec3_HorzLen(&diff);
-        mTargetPitch = cstd::atan2(hl, mPosY + 0xfd8f0000);
+        mTargetPitch = cstd::atan2(hl, mPos.y + 0xfd8f0000);
         mTargetYaw = cstd::atan2(diff.z, diff.x);
     } else {
         Vector3 d2;
@@ -234,9 +234,9 @@ void daSBird_c::StateSpawnFlock() {
             Vector3_16 rot = mPrevAngle;
             for (int i = 0; i < n - 1; i++) {
                 Vector3 pos;
-                pos.x = mPosX + (int)((Random() % 400) - 160) * 0x1000;
-                pos.y = mPosY;
-                pos.z = mPosZ + (int)((Random() % 400) - 160) * 0x1000;
+                pos.x = mPos.x + (int)((Random() % 400) - 160) * 0x1000;
+                pos.y = mPos.y;
+                pos.z = mPos.z + (int)((Random() % 400) - 160) * 0x1000;
                 rot.y = (short)(rot.y + (short)(Random() >> 16));
                 daSBird_c *follower =
                     (daSBird_c *)dActor_c::Spawn(0x157, 0, pos, &rot, mAreaId, -1);
@@ -283,14 +283,14 @@ s32 daSBird_c::InitResources() {
     BCA_File *animFile = dExtFrameCtrl_c::LoadFile(data_ov009_02113c28);
     mAnmModel.SetAnim((BCA_File *)animFile, 0, 0x1000, 0);
     mShadowModel.InitCylinder();
-    mPosY += 0xa000;
+    mPos.y += 0xa000;
     mVertAccel = 0;
     mTerminalVelocity = -0x32000;
     mIsLeader = 1;
     mOwnerID = uniqueID;
-    mTargetPos.x = mPosX;
-    mTargetPos.y = mPosY;
-    mTargetPos.z = mPosZ;
+    mTargetPos.x = mPos.x;
+    mTargetPos.y = mPos.y;
+    mTargetPos.z = mPos.z;
     mState = 0;
     return 1;
 }

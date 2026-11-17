@@ -251,7 +251,7 @@ void daKpa3Bg_c::StateFall() {
     mSpeed.y += mVertAccel;
     if (mSpeed.y <= mTerminalVelocity)
         mSpeed.y = mTerminalVelocity;
-    mPosY += mSpeed.y;
+    mPos.y += mSpeed.y;
     if (mPhase > 300)
         MarkForDestruction();
     mPhase++;

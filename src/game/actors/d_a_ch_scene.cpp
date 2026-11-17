@@ -64,7 +64,7 @@ s32 daChScene_c::InitResources() {
 
     if ((unsigned char)(param1 >> 24) == 0x12) {
         if (IsStarCollectedInLevel(0x12, 1) != 0) {
-            mPosX += 0x802000;
+            mPos.x += 0x802000;
         }
     }
 
@@ -82,15 +82,15 @@ s32 daChScene_c::InitResources() {
     if (mAngleX == 0) {
         mScale.x += 0x64000;
         mScale.y += 0x64000;
-        mPosY -= 0x32000;
+        mPos.y -= 0x32000;
     }
 
-    Matrix4x3_FromTranslation(&mInvMat, mPosX, mPosY, mPosZ);
+    Matrix4x3_FromTranslation(&mInvMat, mPos.x, mPos.y, mPos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&mInvMat, -mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&mInvMat, -mAngleX);
     MTX_Inverse43(&mInvMat, &mInvMat);
 
-    mPosY += mScale.y >> 1;
+    mPos.y += mScale.y >> 1;
     return 1;
 }
 

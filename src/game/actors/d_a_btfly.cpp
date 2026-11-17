@@ -154,9 +154,9 @@ void daBtfly_c::State7()
                 int isPlayer = (hit->actorID == 0xbf);
                 if (isPlayer != 0) {
                     Vector3 pos;
-                    pos.x = mPosX;
-                    pos.y = mPosY;
-                    pos.z = mPosZ;
+                    pos.x = mPos.x;
+                    pos.y = mPos.y;
+                    pos.z = mPos.z;
                     ((daPly_c *)hit)->Hurt(pos, 2, 0xc000, 1, 0, 1);
                 }
             }
@@ -225,7 +225,7 @@ void daBtfly_c::State5()
 
     {
         s16 target;
-        if (mPosY <
+        if (mPos.y <
             mHomePos.y +
                 (int)(((unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0xfff) * 0x32 +
                       0x32000))
@@ -294,7 +294,7 @@ void daBtfly_c::State3()
     UpdatePos(0);
 
     {
-        int *p = &mPosY;
+        int *p = &mPos.y;
         *p = *p -
              (FX_MUL(mHorzSpeed, FX_SinIdx((unsigned short)mPrevAngleX >> 4)) +
               FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * (short)20 / 4);
@@ -307,9 +307,9 @@ void daBtfly_c::State3()
     if (IsPlayerInRange(0xbb8))
         return;
 
-    mPosX = mHomePos.x;
-    mPosY = mHomePos.y;
-    mPosZ = mHomePos.z;
+    mPos.x = mHomePos.x;
+    mPos.y = mHomePos.y;
+    mPos.z = mHomePos.z;
     mState = 1;
 }
 
@@ -319,9 +319,9 @@ void daBtfly_c::State2()
     Vector3 v;
     Vector3 d;
 
-    mPosX = mHomePos.x;
-    mPosY = mHomePos.y;
-    mPosZ = mHomePos.z;
+    mPos.x = mHomePos.x;
+    mPos.y = mHomePos.y;
+    mPos.z = mHomePos.z;
 
     player = ClosestPlayer();
     if (player != 0) {
@@ -331,10 +331,10 @@ void daBtfly_c::State2()
         if (Vec3_HorzLen(&v) > 0x4b0000)
             mState = 3;
 
-        pp = &player->mPosX;
-        mPosX = mPrevPos.x;
-        mPosY = mPrevPos.y;
-        mPosZ = mPrevPos.z;
+        pp = &player->mPos.x;
+        mPos.x = mPrevPos.x;
+        mPos.y = mPrevPos.y;
+        mPos.z = mPrevPos.z;
 
         v.x = pp[0];
         v.y = pp[1];
@@ -343,7 +343,7 @@ void daBtfly_c::State2()
         v.z += mStateTimer * 0x5000 / 4;
         ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, &v), 0x300);
 
-        pp = &player->mPosX;
+        pp = &player->mPos.x;
         v.x = pp[0];
         v.y = pp[1];
         v.z = pp[2];
@@ -352,16 +352,16 @@ void daBtfly_c::State2()
 
         UpdatePos(0);
 
-        mPosY -= (FX_MUL(mHorzSpeed, FX_SinIdx((unsigned short)mPrevAngleX >> 4)) +
-                  FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 20 / 4);
+        mPos.y -= (FX_MUL(mHorzSpeed, FX_SinIdx((unsigned short)mPrevAngleX >> 4)) +
+                   FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 20 / 4);
         mStateTimer++;
         if (mStateTimer > 100)
             mStateTimer = 0;
         return;
     }
-    mPosX = mPrevPos.x;
-    mPosY = mPrevPos.y;
-    mPosZ = mPrevPos.z;
+    mPos.x = mPrevPos.x;
+    mPos.y = mPrevPos.y;
+    mPos.z = mPrevPos.z;
 }
 
 
@@ -386,11 +386,11 @@ void daBtfly_c::State0()
         Vector3 pos;
         int r;
         r = RandomIntInternal(&data_0209e650.value);
-        pos.x = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosX;
+        pos.x = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPos.x;
         r = RandomIntInternal(&data_0209e650.value);
-        pos.y = mPosY + ((int)((unsigned int)r % 40) << 13);
+        pos.y = mPos.y + ((int)((unsigned int)r % 40) << 13);
         r = RandomIntInternal(&data_0209e650.value);
-        pos.z = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosZ;
+        pos.z = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPos.z;
         r = RandomIntInternal(&data_0209e650.value);
         rot.w[1] = (s16)((s16)rot.w[1] + ((r << 1) >> 16));
         dActor_c::Spawn(0x150, 0, pos, (Vector3_16 *)&rot, mAreaId, -1);
@@ -449,7 +449,7 @@ int daBtfly_c::Behavior()
 
     if (mState != 4) {
         int t[3];
-        Vec3_Asr(t, &mPosX, 3);
+        Vec3_Asr(t, &mPos.x, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, t[0], t[1], t[2]);
         mAngleY = mPrevAngleY;
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
@@ -503,9 +503,9 @@ int daBtfly_c::InitResources()
         mState = 4;
     }
 
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
 
     int r = RandomIntInternal(&data_0209e650.value);
     int fc = mAnmModel.GetFrameCount();

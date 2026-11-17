@@ -107,9 +107,9 @@ int daObjCannonShutter_c::InitResources() {
         /* 0x199 is 409/4096, i.e. a collider scale of 0.1. */
         mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov002_0210d7f4);
     }
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     if (IsCannonOpenInCurLevel() != 0) {
         mCannonOpen = 1;
     }
@@ -121,9 +121,9 @@ int daObjCannonShutter_c::InitResources() {
 int daObjCannonShutter_c::Behavior() {
     if (mCannonOpen != 0) {
         if (ClosestPlayer()->mIsMega != 0) {
-            mPosX = mHomePos.x;
-            mPosY = mHomePos.y;
-            mPosZ = mHomePos.z;
+            mPos.x = mHomePos.x;
+            mPos.y = mHomePos.y;
+            mPos.z = mHomePos.z;
             if (IsClsnInRangeOnScreen(0, 0)) {
                 UpdateModelPosAndRotY();
                 UpdateClsnPosAndRot();

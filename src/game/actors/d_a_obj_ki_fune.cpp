@@ -134,9 +134,9 @@ int daObjKi_Fune_c::CleanupResources() {
 
 void daObjKi_Fune_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = mPosY >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = mPos.y >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Retail construction order. mwcc emits __sinit_d_a_obj_ki_fune.cpp. */

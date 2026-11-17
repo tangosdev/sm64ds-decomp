@@ -160,27 +160,27 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     mAngleX = mSpawnAngleX;
     mAngleY = mSpawnAngleY;
     mAngleZ = mSpawnAngleZ;
-    mPosX = mBasePos.x;
-    mPosY = mBasePos.y;
-    mPosZ = mBasePos.z;
+    mPos.x = mBasePos.x;
+    mPos.y = mBasePos.y;
+    mPos.z = mBasePos.z;
     mWaypointIndex = (param1 & 15);
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &offset);
     Vec3_Add(&pos, &mBasePos, &offset);
-    mPosX = pos.x;
-    mPosY = pos.y;
-    mPosZ = pos.z;
+    mPos.x = pos.x;
+    mPos.y = pos.y;
+    mPos.z = pos.z;
 }
 
 // 0x02131070 (0x8c)
 void daObjRotateUpdownLift_c::Kill()
 {
-    Particle::System::NewSimple(kPtclUpdownLiftBreak, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclUpdownLiftBreak, mPos.x, mPos.y, mPos.z);
     /* memberwise stores: the (x,y,z) ctor form batches the loads */
     Vector3 v;
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     PoofDustAt(v);
     Sound::PlayBank3(0xf, mCamSpacePos);
     mIsDead = 1;
@@ -216,7 +216,7 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     VariantWords clipCap = data_ov091_02134ba0;
 
     Matrix4x3_FromRotationY((Matrix4x3 *)mShadowMat, mAngleY);
-    ((Matrix4x3 *)mShadowMat)->t.x = mPosX >> 3;
+    ((Matrix4x3 *)mShadowMat)->t.x = mPos.x >> 3;
 
     int sine = FX_SinIdx((u16)mAngleX >> 4);
     int sineAbs = sine < 0 ? -sine : sine;
@@ -224,12 +224,12 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     int variantA = mVariant;
     int base = shadowBaseY.v[variantA];
     int sum = base + scaled;
-    int py = mPosY;
+    int py = mPos.y;
     ((Matrix4x3 *)mShadowMat)->t.y = (py - sum) >> 3;
-    ((Matrix4x3 *)mShadowMat)->t.z = mPosZ >> 3;
+    ((Matrix4x3 *)mShadowMat)->t.z = mPos.z >> 3;
 
     int variantB = mVariant;
-    int h = mPosY - mGroundY;
+    int h = mPos.y - mGroundY;
     if (h <= 0x1000)
         h = 0x1000;
     int cap = clipCap.v[variantB];
@@ -255,9 +255,9 @@ void daObjRotateUpdownLift_c::func_ov091_02131340()
 {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3,
                                  mAngleX, mAngleY, mAngleZ);
-    mModel.mat4x3.t.x = mPosX >> 3;
-    mModel.mat4x3.t.y = mPosY >> 3;
-    mModel.mat4x3.t.z = mPosZ >> 3;
+    mModel.mat4x3.t.x = mPos.x >> 3;
+    mModel.mat4x3.t.y = mPos.y >> 3;
+    mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
 // 0x02131388 (0x80)
@@ -360,10 +360,10 @@ int daObjRotateUpdownLift_c::Behavior()
 
     {
         int py;
-        pos.x = mPosX;
-        py = mPosY;
+        pos.x = mPos.x;
+        py = mPos.y;
         pos.y = py;
-        pos.z = mPosZ;
+        pos.z = mPos.z;
         pos.y = py - 0x14000;
     }
     dBgCh_Gnd ground;
@@ -390,14 +390,14 @@ int daObjRotateUpdownLift_c::Behavior()
 
     if (dist == 0 || dist <= stepLen) {
         Vec3_Add(&snapped, &mBasePos, &cur);
-        mPosX = snapped.x;
-        mPosY = snapped.y;
-        mPosZ = snapped.z;
+        mPos.x = snapped.x;
+        mPos.y = snapped.y;
+        mPos.z = snapped.z;
         arrived = 1;
         mPitchBase += mPitchStep;
     } else {
         Vec3_MulScalar(&stepVec, &remain, FX_Div(stepLen, dist));
-        VEC_Subtract(&mPosX, &stepVec, &mPosX);
+        VEC_Subtract(&mPos.x, &stepVec, &mPos.x);
     }
 
     if (arrived != 0) {
@@ -447,9 +447,9 @@ int daObjRotateUpdownLift_c::InitResources()
         return 1;
     }
 
-    mBasePos.x = mPosX;
-    mBasePos.y = mPosY;
-    mBasePos.z = mPosZ;
+    mBasePos.x = mPos.x;
+    mBasePos.y = mPos.y;
+    mBasePos.z = mPos.z;
     mShadowModel.InitCuboid();
 
     mVariant = 0;
@@ -472,9 +472,9 @@ int daObjRotateUpdownLift_c::InitResources()
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MTX_MultVec43(&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68, &rotated);
     Vec3_Add(&placed, &mBasePos, &rotated);
-    mPosX = placed.x;
-    mPosY = placed.y;
-    mPosZ = placed.z;
+    mPos.x = placed.x;
+    mPos.y = placed.y;
+    mPos.z = placed.z;
 
     variant = mVariant;
     bmd = dExtSimpleModel_c::LoadFile(*data_ov091_02134c30[variant].file);
@@ -491,10 +491,10 @@ int daObjRotateUpdownLift_c::InitResources()
 
     {
         int py;
-        probe.x = mPosX;
-        py = mPosY;
+        probe.x = mPos.x;
+        py = mPos.y;
         probe.y = py;
-        probe.z = mPosZ;
+        probe.z = mPos.z;
         probe.y = py - 0x14000;
     }
     dBgCh_Gnd ground;

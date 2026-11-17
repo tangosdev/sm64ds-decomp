@@ -205,7 +205,7 @@ int daMip_c::TestWaterBelow()
 {
     dBgCh_Gnd rg;
     rg.StartDetectingWater();
-    Vector3 v(mPosX, mPosY + 0xc8000, mPosZ);
+    Vector3 v(mPos.x, mPos.y + 0xc8000, mPos.z);
     rg.SetObjAndPos(v, this);
     if (rg.DetectClsn()) {
         mFloorY = rg.clsnY;
@@ -672,7 +672,7 @@ int daMip_c::StateFleeMain() {
     int ysave;
     pl = ClosestPlayer();
     if (pl != 0) {
-        v = *((struct V3Blk *)&pl->mPosX);
+        v = *((struct V3Blk *)&pl->mPos.x);
         if (Vec3_Dist(&mPos, (const Vector3 *)&v) > 0x4b0000) {
             SetState(&data_ov085_0213069c);
             return 1;
@@ -683,7 +683,7 @@ int daMip_c::StateFleeMain() {
         if (((u16)t) == 0) {
             if (TestWaterBelow() == 1) {
                 func_02012694(0x124, &mCamSpacePos);
-                Particle::System::NewSplash(mPosX, mFloorY + 0x3000, mPosZ);
+                Particle::System::NewSplash(mPos.x, mFloorY + 0x3000, mPos.z);
             } else {
                 func_02012694(0x123, &mCamSpacePos);
             }
@@ -695,9 +695,9 @@ int daMip_c::StateFleeMain() {
            are read back from it for the call); a VecFx32 there is kept in
            registers, and a block-scope Vector3 lands above node/node2/delta/
            scaled in the frame. */
-        s32 z = mPosZ;
+        s32 z = mPos.z;
         s32 y = mFloorY + 0x3000;
-        s32 x = mPosX;
+        s32 x = mPos.x;
         pos.x = x;
         pos.y = y;
         pos.z = z;
@@ -723,7 +723,7 @@ int daMip_c::StateFleeMain() {
         lim = lim >> 1;
     }
     {
-        s32 y = mPosY;
+        s32 y = mPos.y;
         node.y = y;
         Vec3_Sub(&delta, &mPos, &node);
         len = VEC_Mag(&delta);
@@ -743,14 +743,14 @@ int daMip_c::StateFleeMain() {
     } else {
         ang = Vec3_HorzAngle(&mPos, &node);
         if (AngleDiff(ang, mPrevAngleY) < 0x2000) {
-            ysave = mPosY;
+            ysave = mPos.y;
             {
                 int s = FX_Div(lim, len);
                 Vec3_MulScalar(&scaled, &delta, s);
                 VEC_Subtract(&mPos, &scaled, &mPos);
             }
             if (mSpeed.y > 0) {
-                mPosY = ysave;
+                mPos.y = ysave;
             }
             if (mActionStep == 0) {
                 if (mWithMeshClsn.IsOnWall() != 0) {
@@ -825,7 +825,7 @@ int daMip_c::StateStartleInit()
 int daMip_c::StateIdleMain()
 {
     /* The splash position is a Vector3 built by its (x, y, z) constructor:
-       that is what loads mFloorY, mPosZ, mPosX in the ROM's order and keeps
+       that is what loads mFloorY, mPos.z, mPos.x in the ROM's order and keeps
        the three stores. Vector3's empty destructor emits no cleanup; its D1
        is already this TU's deadstrip-duplicate (Behavior's locals). */
     extern MipStatePair data_ov085_0213066c;
@@ -838,7 +838,7 @@ int daMip_c::StateIdleMain()
     if (player == 0) return 1;
 
     if (TestWaterBelow() == 1) {
-        Vector3 sp(mPosX, mFloorY + 0x3000, mPosZ);
+        Vector3 sp(mPos.x, mFloorY + 0x3000, mPos.z);
         mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, sp.x,
                                                       sp.y, sp.z, 0);
     }
@@ -855,7 +855,8 @@ int daMip_c::StateIdleMain()
         if (t == 7 || t == 1 ||
             (t == 4 && mCharacterId == 1) ||
             (t == 4 && mCharacterId == 3)) {
-            if (mPosY + 0x64000 <= pp.y) cond = 1;
+            if (mPos.y + 0x64000 <= pp.y)
+                cond = 1;
         }
         if (!cond) {
             mHorzSpeed = 0;
@@ -939,10 +940,7 @@ void daMip_c::UpdateMatrixAndShadow()
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, tmp);
-    Matrix4x3_FromTranslation(&data_020a0e68,
-        mPosX >> 3,
-        (mPosY - 0xe000) >> 3,
-        mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xe000) >> 3, mPos.z >> 3);
     mShadowMtx = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMtx, 0x46000, 0x258000, 0xf);
 }
@@ -968,7 +966,7 @@ void daMip_c::UpdateCarriedMatrix()
     }
     res = UpdateCarry(*mTalkingPlayer, *(Vector3 *)&(&data_ov085_021306ec)[idx]);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)res;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0xc000) >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0xc000) >> 3, mPos.z >> 3);
     mShadowMtx = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMtx, 0x46000, 0x258000, 0xf);
 }
@@ -994,7 +992,7 @@ void daMip_c::UpdateMirrorShadow()
     {
         int t;
         vd.x = vd.x + res.x;
-        t = mPosY;
+        t = mPos.y;
         vd.y = t;
         vd.z = vd.z + res.z;
         Matrix4x3_FromTranslation(&data_020a0e68, vd.x >> 3, (t - 0xc000) >> 3, vd.z >> 3);

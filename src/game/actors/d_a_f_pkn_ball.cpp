@@ -284,9 +284,9 @@ int daFPknBall_c::Behavior() {
     mSpeed.x = (flatSpeed * FX_SinIdx((u16)mPrevAngleY >> 4)) / 0x1000;
     mSpeed.y = (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 0x1000;
     mSpeed.z = (flatSpeed * FX_CosIdx((u16)mPrevAngleY >> 4)) / 0x1000;
-    mPosX += mSpeed.x;
-    mPosY += mSpeed.y;
-    mPosZ += mSpeed.z;
+    mPos.x += mSpeed.x;
+    mPos.y += mSpeed.y;
+    mPos.z += mSpeed.z;
 
     mdCcAc_c.Clear();
     mdCcAc_c.Update();

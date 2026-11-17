@@ -155,9 +155,9 @@ void dEnemyBase_c::SpawnCoin()
     int i;
     Vector3 v;
     if (mCoinType != 0) {
-        int tz = mPosZ;
-        int ty = mPosY + 0x78000;
-        int tx = mPosX;
+        int tz = mPos.z;
+        int ty = mPos.y + 0x78000;
+        int tx = mPos.x;
         v.x = tx;
         v.y = ty;
         v.z = tz;
@@ -361,16 +361,16 @@ int dEnemyBase_c::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
     Vector3 v;
     int n = mScale.y;
     if (n == 0) {
-        int z = mPosZ;
-        int y = mPosY + 0x50000;
-        int x = mPosX;
+        int z = mPos.z;
+        int y = mPos.y + 0x50000;
+        int x = mPos.x;
         v.x = x;
         v.y = y;
         v.z = z;
     } else {
-        int z = mPosZ;
-        int y = mPosY + n * 0x50;
-        int x = mPosX;
+        int z = mPos.z;
+        int y = mPos.y + n * 0x50;
+        int x = mPos.x;
         v.x = x;
         v.y = y;
         v.z = z;
@@ -407,13 +407,13 @@ int dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &clsn, fx32 down, s16 maxSlope, boo
     mCliffState = 0;
     if (clsn.IsOnGround() != 0) {
         dBgCh_Lin line;
-        start.x = mPosX;
-        start.y = mPosY;
-        start.z = mPosZ;
+        start.x = mPos.x;
+        start.y = mPos.y;
+        start.z = mPos.z;
         start.y += up;
-        end.x = mPosX;
-        end.y = mPosY;
-        end.z = mPosZ;
+        end.x = mPos.x;
+        end.y = mPos.y;
+        end.z = mPos.z;
         end.y -= down;
         line.SetObjAndLine(start, end, this);
         if (detectWater)
@@ -492,10 +492,10 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
             mFlags &= ~YOSHI_HOLDING;
         } else {
             Vector3 *o = &mEatingPlayer->mPos;
-            mPosX = o->x;
-            mPosY = o->y;
-            mPosZ = o->z;
-            mPosY += 0x30000;
+            mPos.x = o->x;
+            mPos.y = o->y;
+            mPos.z = o->z;
+            mPos.y += 0x30000;
         }
         mEatenByYoshi = 0;
         return 2;
@@ -513,14 +513,14 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
             mFlags &= ~YOSHI_SPAT_OUT;
             if (mEatingPlayer != 0) {
                 Vector3 *o2 = &mEatingPlayer->mPos;
-                mPosX = o2->x;
-                mPosY = o2->y;
-                mPosZ = o2->z;
-                mPosY += 0x32000;
+                mPos.x = o2->x;
+                mPos.y = o2->y;
+                mPos.z = o2->z;
+                mPos.y += 0x32000;
                 {
                     u16 ang = mEatingPlayer->mAngleY;
-                    mPosX += FX_MUL(FX_SinIdx(ang >> 4), 0x32000);
-                    mPosZ += FX_MUL(FX_CosIdx(ang >> 4), 0x32000);
+                    mPos.x += FX_MUL(FX_SinIdx(ang >> 4), 0x32000);
+                    mPos.z += FX_MUL(FX_CosIdx(ang >> 4), 0x32000);
                 }
                 {
                     Vector3_16 *p = &mEatingPlayer->mAngle;
@@ -607,11 +607,11 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
     Vector3 v;
     Vector3 dst, src;
 
-    dst.x = mPosX;
-    dst.y = mPosY;
+    dst.x = mPos.x;
+    dst.y = mPos.y;
     {
         Vector3 *pv = &other.mPos;
-        dst.z = mPosZ;
+        dst.z = mPos.z;
         src.x = pv->x;
         src.y = pv->y;
         src.z = pv->z;

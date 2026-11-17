@@ -127,9 +127,9 @@ void daObjIceBoard_c::OnGroundPounded(dActor_c &other) {
  * the cartridge has. */
 void daObjIceBoard_c::Kill() {
     Sound::PlayBank3(0x41, mCamSpacePos);
-    Particle::System::NewSimple(kPtclIceBreakA, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclIceBreakB, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(kPtclIceBreakC, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclIceBreakA, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclIceBreakB, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclIceBreakC, mPos.x, mPos.y, mPos.z);
     MarkForDestruction();
 }
 

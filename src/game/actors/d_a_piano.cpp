@@ -79,9 +79,9 @@ int daPiano_c::InitResources() {
     mAnmModel.SetAnim((BCA_File *)f, 0, 0x1000, 0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mWithMeshClsn.Init(this, 0x159000, 0x159000, 0, 0);
     for (i = 0, cylinder = mCylinderClsn; i < 2; i++) {
         /* Sensor cylinders, 155.0 radius by 250.0 tall, tracking mPos.
@@ -105,12 +105,12 @@ int daPiano_c::Behavior() {
     CallStateBehavior();
     UpdatePos(0);
     if (Vec3_HorzDist(&mHomePos, &mPos) > 0x180000) {
-        mPosX = mPrevPos.x;
-        mPosY = mPrevPos.y;
-        mPosZ = mPrevPos.z;
+        mPos.x = mPrevPos.x;
+        mPos.y = mPrevPos.y;
+        mPos.z = mPrevPos.z;
     }
-    if (mPosY <= mMinPosY)
-        mPosY = mMinPosY;
+    if (mPos.y <= mMinPosY)
+        mPos.y = mMinPosY;
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     mWithMeshClsn.SetRadius(0x159000);
     mWithMeshClsn.SetHeight(0x159000);
@@ -320,18 +320,18 @@ void daPiano_c::StateAttack() {
 /* Sync the model matrix from the facing and position (eighths). */
 void daPiano_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 /* Refresh the collision matrix from the model matrix and position, then
  * refit the mesh collider to it. */
 void daPiano_c::UpdateClsnMatrix() {
     mClsnMat = mAnmModel.mat4x3;
-    mClsnMat.m[9] = mPosX;
-    mClsnMat.m[10] = mPosY;
-    mClsnMat.m[11] = mPosZ;
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y;
+    mClsnMat.m[11] = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
@@ -352,7 +352,7 @@ void daPiano_c::UpdateShadows() {
     VEC_Add(&out, &mPos, &out);
     Matrix4x3_FromRotationY(&mShadowMats[2], mAngleY);
     mShadowMats[2].m[9] = out.x >> 3;
-    mShadowMats[2].m[10] = mPosY >> 3;
+    mShadowMats[2].m[10] = mPos.y >> 3;
     mShadowMats[2].m[11] = out.z >> 3;
 
     out.x = 0;
@@ -366,7 +366,7 @@ void daPiano_c::UpdateShadows() {
     VEC_Add(&out, &mPos, &out);
     Matrix4x3_FromRotationY(&mShadowMats[0], mAngleY);
     mShadowMats[0].m[9] = out.x >> 3;
-    mShadowMats[0].m[10] = mPosY >> 3;
+    mShadowMats[0].m[10] = mPos.y >> 3;
     mShadowMats[0].m[11] = out.z >> 3;
 
     out.x = 0;
@@ -380,7 +380,7 @@ void daPiano_c::UpdateShadows() {
     VEC_Add(&out, &mPos, &out);
     Matrix4x3_FromRotationY(&mShadowMats[1], mAngleY);
     mShadowMats[1].m[9] = out.x >> 3;
-    mShadowMats[1].m[10] = mPosY >> 3;
+    mShadowMats[1].m[10] = mPos.y >> 3;
     mShadowMats[1].m[11] = out.z >> 3;
 
     DropShadowRadHeight(mShadowModel3, mShadowMats[2], 0xf0000, 0x50000, 0xf);

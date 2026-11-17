@@ -1020,12 +1020,12 @@ s32 daDoor_c::Behavior() {
  * |mScale.y| <= 50, |mScale.z| <= 500 units of the door (mScale is the
  * player's offset, set by func_ov100_02145370), else data_ov100_021488b4.
  *
- * 0x05c/0x060/0x064 are mPosX/Y/Z and 0x08e mAngleY, so the opening call
+ * 0x05c/0x060/0x064 are mPos.x/.y/.z and 0x08e mAngleY, so the opening call
  * moves the door by (75, 0, 0) units rotated by its own facing angle; the two
  * matrix stores are the same store to the door model and the key model.
  *
- * The block near the end writes mPosX, mPosY + 0xb4000 (180 units up) and
- * mPosZ into mSpeed. That vector is the one func_ov100_02144cf8 hands to
+ * The block near the end writes mPos.x, mPos.y + 0xb4000 (180 units up) and
+ * mPos.z into mSpeed. That vector is the one func_ov100_02144cf8 hands to
  * daPly_c::ShowMessage: a door reuses the velocity it never moves by as
  * the message position. Left spelt as dActor_c has it, because renaming
  * a base field on one derived class's evidence is a dActor_c change, not
@@ -1104,9 +1104,9 @@ s32 daDoor_c::InitResources() {
 
     {
         int w;
-        y = mPosY;
-        z = mPosZ;
-        x = mPosX;
+        y = mPos.y;
+        z = mPos.z;
+        x = mPos.x;
         w = y + 0xb4000; /* 180 units up */
         mSpeed.x = x;
         mSpeed.y = w;

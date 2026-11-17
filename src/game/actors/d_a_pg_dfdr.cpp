@@ -138,9 +138,9 @@ s32 daPgDfdr_c::InitResources() {
 
     mAngleY = 0xdd30;
     mPrevAngleY = mAngleY;
-    mPosX = 0x6c4000;
-    mPosY = 0xcb2000;
-    mPosZ = 0x182bb8;
+    mPos.x = 0x6c4000;
+    mPos.y = 0xcb2000;
+    mPos.z = 0x182bb8;
     UpdateModelMatrix();
 
     file = dBgW_Kc::LoadFile(data_ov027_02113c6c);
@@ -153,16 +153,16 @@ s32 daPgDfdr_c::InitResources() {
     mdCcAc_c.Init(this, 0x82000, 0xc8000, 0x800004, 0);
     SetState(kStateWalk);
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     pos.y += 0x14000;
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);
     if (ground.DetectClsn())
-        mPosY = ground.clsnY;
+        mPos.y = ground.clsnY;
     else
-        mPosY = pos.y;
+        mPos.y = pos.y;
     mScale.x = 0x1000;
     mScale.y = 0x1000;
     mScale.z = 0x1000;
@@ -305,13 +305,13 @@ int daPgDfdr_c::StateWalk() {
    full position. Flat Matrix4x3 (common.h before dExtSimpleModel_c.h) is the 12-word copy. */
 void daPgDfdr_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
     mClsnMat = mAnmModel.mat4x3;
-    mClsnMat.m[9] = mPosX;
-    mClsnMat.m[10] = mPosY;
-    mClsnMat.m[11] = mPosZ;
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y;
+    mClsnMat.m[11] = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 /* -------------------------------------------------------------------------- */

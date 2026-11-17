@@ -299,7 +299,7 @@ daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W() {
  *  2. Sets the model, a cuboid shadow, state IDLE, terminal velocity
  *     -0x3c000 (-60 units), unit scale, the model and collider matrices, and
  *     the mesh collider (scale 0x199, about 0.1; heading mAngleY).
- *  3. mHomePosY = mPosY. mContentType = low byte of param1 (0xff reads as 0);
+ *  3. mHomePosY = mPos.y. mContentType = low byte of param1 (0xff reads as 0);
  *     for CONTENT_STAR, mStarId = param1 bits 8..15 (0xff reads as 0) and the
  *     star is tracked.
  *  4. The VS block (22) forces mContentType to 0 and loads the file at
@@ -352,7 +352,7 @@ int daObjHatenaBlock_c::InitResources()
         KCL_File *kcl = dBgW_Kc::LoadFile(data_ov102_0214e7d0);
         mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov002_0210d954);
     }
-    mHomePosY = mPosY;
+    mHomePosY = mPos.y;
     mContentType = (unsigned char)param1;
     if (mContentType == 0xff)
         mContentType = 0;
@@ -413,7 +413,7 @@ int daObjHatenaBlock_c::InitResources()
 
 /* Per frame:
  *  1. Run the state's update routine (CallStateUpdate).
- *  2. Unless POPPED: move (UpdatePos), clamp mPosY up to mHomePosY, rebuild
+ *  2. Unless POPPED: move (UpdatePos), clamp mPos.y up to mHomePosY, rebuild
  *     the model matrix and the shadow / clip volume.
  *  3. Poke two words of the mesh collider (dBgW::SetClipRadius / dBgW::SetClipOffsetY)
  *     with 0x8c000 (140 units) and 0x46000 (70 units).
@@ -430,7 +430,8 @@ int daObjHatenaBlock_c::Behavior()
     CallStateUpdate();
     if (mState != STATE_POPPED) {
         UpdatePos(0);
-        if (mPosY <= mHomePosY) mPosY = mHomePosY;
+        if (mPos.y <= mHomePosY)
+            mPos.y = mHomePosY;
         UpdateModelMatrix();
         UpdateDropShadow();
     }
@@ -565,13 +566,13 @@ int daObjHatenaBlock_c::CleanupResources()
 }
 
 /* Rebuilds the model matrix: a Y rotation by mAngleY, with the translation
-   set to (mPosX, mPosY + mBounceYOffs, mPosZ) >> 3. A HATENA_BLOCK with
+   set to (mPos.x, mPos.y + mBounceYOffs, mPos.z) >> 3. A HATENA_BLOCK with
    SAVE_FLAGS1_BIT31 clear then copies the matrix into mAnmModel as well. */
 void daObjHatenaBlock_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
-    mModel.mat4x3.m[9] = mPosX >> 3;
-    mModel.mat4x3.m[10] = (mPosY + mBounceYOffs) >> 3;
-    mModel.mat4x3.m[11] = mPosZ >> 3;
+    mModel.mat4x3.m[9] = mPos.x >> 3;
+    mModel.mat4x3.m[10] = (mPos.y + mBounceYOffs) >> 3;
+    mModel.mat4x3.m[11] = mPos.z >> 3;
     if (data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31)
         return;
     int b = (int)(actorID == ACTOR_HATENA_BLOCK);
@@ -583,7 +584,7 @@ void daObjHatenaBlock_c::UpdateModelMatrix() {
 /* The drop shadow and the clip volume, both sized by the drop to the floor.
  *
  * mFloorY is refreshed (GetFloorY) unless mFlags bit 8 (dActor_c's
- * off-screen bit) is set and gGameMode is not 1. height = mPosY - mFloorY,
+ * off-screen bit) is set and gGameMode is not 1. height = mPos.y - mFloorY,
  * at least 0x1000 (1 unit).
  *   horizontal shadow scale = 0xb4000 (180 units) - height * 0x180 / 0x1000
  *                   (about 0.094 * height), at least 0xa000 (10 units), then
@@ -592,7 +593,7 @@ void daObjHatenaBlock_c::UpdateModelMatrix() {
  *   mClipOffsetY  = -(height + 0x14000) / 2 (signed divide by 2)
  *   mClipRadius   = max(height + 0x214000, 0x200000) / 16 (signed divide)
  * The shadow matrix is a Y rotation by mAngleY with the translation set to
- * (mPosX, mPosY - 0x20000 (32 units), mPosZ) >> 3. The drop-shadow call is
+ * (mPos.x, mPos.y - 0x20000 (32 units), mPos.z) >> 3. The drop-shadow call is
  * (shadow, matrix, scale X = horizontal, scale Y, scale Z = horizontal) with
  * opacity 0xf. */
 void daObjHatenaBlock_c::UpdateDropShadow() {
@@ -602,7 +603,7 @@ void daObjHatenaBlock_c::UpdateDropShadow() {
     b0 = (mFlags & 8) ? 1 : 0;
     if (b0 == 0 || ((b1 = (gGameMode == 1) ? 1 : 0) != 0))
         mFloorY = GetFloorY();
-    height = mPosY - mFloorY;
+    height = mPos.y - mFloorY;
     if (height <= 0x1000) height = 0x1000;
     shadowScale = FX_MUL(height, 0x180);
     shadowScale = 0xb4000 - shadowScale;
@@ -613,20 +614,20 @@ void daObjHatenaBlock_c::UpdateDropShadow() {
     mClipRadius = (int)(paddedHeight + ((unsigned)paddedHeight >> 31)) >> 4;
     shadowScale = FX_MUL(shadowScale, mScale.x);
     Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
-    mShadowMat.m[9] = mPosX >> 3;
-    mShadowMat.m[10] = (mPosY - 0x20000) >> 3;
-    mShadowMat.m[11] = mPosZ >> 3;
+    mShadowMat.m[9] = mPos.x >> 3;
+    mShadowMat.m[10] = (mPos.y - 0x20000) >> 3;
+    mShadowMat.m[11] = mPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMat, shadowScale, height + 0x14000, shadowScale, 0xf);
 }
 
 /* Puts the mesh collider where the model is: the model matrix with the
-   translation overwritten by (mPosX, mPosY + mBounceYOffs, mPosZ) (not
+   translation overwritten by (mPos.x, mPos.y + mBounceYOffs, mPos.z) (not
    shifted), and heading mAngleY. */
 void daObjHatenaBlock_c::UpdateMeshCollider() {
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = mPosX;
-    mClsnMat.m[10] = mPosY + mBounceYOffs;
-    mClsnMat.m[11] = mPosZ;
+    mClsnMat.m[9] = mPos.x;
+    mClsnMat.m[10] = mPos.y + mBounceYOffs;
+    mClsnMat.m[11] = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
@@ -657,7 +658,7 @@ void daObjHatenaBlock_c::EnterIdle() {
 /* STATE_IDLE update routine. Returns without effect for a HATENA_BLOCK while
    SAVE_FLAGS1_BIT31 is clear. Otherwise, when the closest player is mega
    (daPly_c::mIsMega), less than 0xc8000 (200 units) away horizontally and
-   below the block (mPosY is greater than the player's), treats it as a hit
+   below the block (mPos.y is greater than the player's), treats it as a hit
    by a mega character: virtual OnHitByMegaChar. */
 void daObjHatenaBlock_c::UpdateIdle() {
     daPly_c *player;
@@ -671,7 +672,7 @@ void daObjHatenaBlock_c::UpdateIdle() {
         return;
     if (Vec3_HorzDist(&mPos, &player->mPos) >= 0xc8000)
         return;
-    if (mPosY <= player->mPosY)
+    if (mPos.y <= player->mPos.y)
         return;
     OnHitByMegaChar(*player);
 }
@@ -894,22 +895,22 @@ int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
 /* dst = the block's position with Y raised by 0x32000 (50 units): the point
    the prizes spawn at. */
 void func_ov102_02149684(int *dst, daObjHatenaBlock_c *src) {
-    int z = src->mPosZ;
-    int liftedY = src->mPosY + 0x32000;
-    dst[0] = src->mPosX;
+    int z = src->mPos.z;
+    int liftedY = src->mPos.y + 0x32000;
+    dst[0] = src->mPos.x;
     dst[1] = liftedY;
     dst[2] = z;
 }
 
 /* Floor height under the block: a ground raycast (dBgCh_Gnd) from 0x28000 (40
    units) above the block, with probe height 0x3e8000 (1000 units). Returns
-   the hit height, or mPosY when nothing is hit. */
+   the hit height, or mPos.y when nothing is hit. */
 int daObjHatenaBlock_c::GetFloorY() {
-    Vector3 pos(mPosX, mPosY + 0x28000, mPosZ);
+    Vector3 pos(mPos.x, mPos.y + 0x28000, mPos.z);
     dBgCh_Gnd rg;
     rg.SetObjAndPos(pos, 0);
     rg.mProbeHeight = 0x3e8000;
-    int r = mPosY;
+    int r = mPos.y;
     if (rg.DetectClsn())
         r = rg.clsnY;
     return r;

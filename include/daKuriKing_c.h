@@ -49,7 +49,7 @@ struct daKuriKing_c : dEnemyBase_c {
     dExtAnmModel_c mAnmModel;                     /* 0x210 */
     dExtShadowModel_c mShadowModels[3];           /* 0x274 */
     /* One drop-shadow matrix per foot. UpdateShadows sets each to the
-       identity with that foot's mCylClsnPos x/z and mPosY (>> 3) as translation
+       identity with that foot's mCylClsnPos x/z and mPos.y (>> 3) as translation
        and hands it to DropShadowRadHeight; BehaviorVanish uses [0] alone.
        Raw words rather than Matrix4x3: see d_a_kuri_king.cpp's deslop notes. */
     s32 mShadowMatrices[3][12]; /* 0x2ec */
@@ -65,7 +65,7 @@ struct daKuriKing_c : dEnemyBase_c {
     /* ClosestPlayer, kept for StartTalk / ShowMessage / GetTalkState. */
     daPly_c *mTalkPlayer;  /* 0x5c8 */
     s32 mState;            /* 0x5cc */
-    /* InitResources copies mPosX/mPosY/mPosZ into these three once, right after
+    /* InitResources copies mPos.x/mPos.y/mPos.z into these three once, right after
        the collision cylinders are sized, and nothing writes them again. */
     s32 mSpawnPosX;         /* 0x5d0 */
     s32 mSpawnPosY;         /* 0x5d4 */

@@ -3547,7 +3547,7 @@ int GetMinimapID(dActor_c *actor, int arg) {
     if (g != 0) {
         node = (MinimapChangeNode *)((StageArea *)g)[idx].mBlockList;
         if (node != 0) {
-            val = actor->mPosY;
+            val = actor->mPos.y;
             while (node != 0) {
                 int d = val - node->height;
                 if (d > 0) {
@@ -3951,7 +3951,7 @@ int dScStage_c::Render() {
             daPly_c *player = gPlayers[playerIndex];
             if (player != 0) {
                 u8 playerFlags = player->mHasWings;
-                int *position = (&player->mPosX);
+                int *position = (&player->mPos.x);
                 positionXor ^= (u8)(position[2] ^ (position[0] ^ position[1]));
                 playerFlagBits |= (u8)((playerFlags & 1) << playerIndex);
             }

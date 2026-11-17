@@ -139,7 +139,7 @@ void dPathLiftActor_c::StateFall()
            into mFallAngle makes mwcc reuse the signed load and drops 12 bytes. */
         raw = mFallAngle;
         v = FX_SinIdx((u16)(int)(long long)raw >> 4);
-        mPosY = mFallStartY + (s32)(u32)((((long long)v << 15) + 0x800) >> 12);
+        mPos.y = mFallStartY + (s32)(u32)((((long long)v << 15) + 0x800) >> 12);
         *(u16 *)((int)&mFallAngle) = (u16)(*(u16 *)((int)&mFallAngle) + 0x3000);
         return;
     }
@@ -176,7 +176,7 @@ void dPathLiftActor_c::StateFallInit() {
         mFallDelay = 30;
         mFallBounceTimer = 24;
         mFallAngle = 0;
-        mFallStartY = mPosY;
+        mFallStartY = mPos.y;
     }
     if (IsActorID(this, 0x82))
         mHorzSpeed = Vec3_HorzDist(&mPos, &mPrevPos);
@@ -220,9 +220,9 @@ void dPathLiftActor_c::StatePath()
         mPath.GetNode(srcNode, srcIdx);
     } else {
         if (srcIdx < 0 || srcIdx >= (int)mPath.NumNodes()) {
-            srcNode.x = mPosX;
-            srcNode.y = mPosY;
-            srcNode.z = mPosZ;
+            srcNode.x = mPos.x;
+            srcNode.y = mPos.y;
+            srcNode.z = mPos.z;
         } else {
             mPath.GetNode(srcNode, srcIdx);
         }
@@ -329,9 +329,9 @@ void dPathLiftActor_c::BaseInitResources()
     mPrevPathAngle.x = mAngleX;
     mPrevPathAngle.y = mAngleY;
     mPrevPathAngle.z = mAngleZ;
-    mInitialPos.x = mPosX;
-    mInitialPos.y = mPosY;
-    mInitialPos.z = mPosZ;
+    mInitialPos.x = mPos.x;
+    mInitialPos.y = mPos.y;
+    mInitialPos.z = mPos.z;
     mInitialAngle.x = mAngleX;
     mInitialAngle.y = mAngleY;
     mInitialAngle.z = mAngleZ;
@@ -341,9 +341,9 @@ void dPathLiftActor_c::BaseInitResources()
 // 0x020efbdc (0x98)
 void dPathLiftActor_c::ResetPath()
 {
-    mPosX = mInitialPos.x;
-    mPosY = mInitialPos.y;
-    mPosZ = mInitialPos.z;
+    mPos.x = mInitialPos.x;
+    mPos.y = mInitialPos.y;
+    mPos.z = mInitialPos.z;
     mAngleX = mInitialAngle.x;
     mAngleY = mInitialAngle.y;
     mAngleZ = mInitialAngle.z;

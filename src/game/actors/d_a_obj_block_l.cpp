@@ -221,9 +221,9 @@ void daObjBlockL_c::Kill() {
 
     int is11 = (actorID == 0x11);
     if (is11 && mStarID != 0) {
-        starPos.x = mPosX;
-        starPos.y = mPosY;
-        starPos.z = mPosZ;
+        starPos.x = mPos.x;
+        starPos.y = mPos.y;
+        starPos.z = mPos.z;
         starPos.y += 0x96000;
 
         if (((param1 >> 8) & 0xff) == 0xff) {
@@ -235,18 +235,18 @@ void daObjBlockL_c::Kill() {
         int isF = (actorID == 0xf);
         if (isF || is11) {
             if (mLinkedActor == 0) {
-                coinPos.x = mPosX;
-                coinPos.y = mPosY;
-                coinPos.z = mPosZ;
+                coinPos.x = mPos.x;
+                coinPos.y = mPos.y;
+                coinPos.z = mPos.z;
                 SpawnCoins(coinPos, 3, 0xf000, 0);
             }
         }
     }
 
     {
-        fx32 z = mPosZ;
-        fx32 y = mPosY + 0x64000;
-        fx32 x = mPosX;
+        fx32 z = mPos.z;
+        fx32 y = mPos.y + 0x64000;
+        fx32 x = mPos.x;
         pos.x = x;
         pos.z = z;
         pos.y = y;
@@ -254,7 +254,7 @@ void daObjBlockL_c::Kill() {
 
     u32 kind = 0xa;
     if (IsActorID(this, 0x11)) {
-        pos.y = mPosY + 0x96000;
+        pos.y = mPos.y + 0x96000;
         kind = 0xf;
     }
     if (IsActorID(this, 0x2e)) {
@@ -429,7 +429,7 @@ int daObjBlockL_c::InitResources() {
 
     if (IsActorID(this, 0x2e) && gCurrentSublevel == 7) {
         if (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0) {
-            if (mPosY >= 0xdac000)
+            if (mPos.y >= 0xdac000)
                 return 0;
         }
     }

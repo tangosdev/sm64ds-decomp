@@ -206,7 +206,7 @@ int daDossy_c::InitResources()
     }
 
     mSpawnPos = mPos;
-    mPosX += 0x7d0000;
+    mPos.x += 0x7d0000;
     mWithMeshClsn.Init(this, 0x1e0000, 0xa0000, 0, 0);
     mCylClsn1.Init(this, 0xdc000, 0xfa000, 2, 0x20);
     Vector3 offset;
@@ -315,16 +315,16 @@ int daDossy_c::Behavior()
     }
 
     if (mDistToCenter >= outer) {
-        mPosX = mSpawnPos.x - FX_MUL(outer, FX_SinIdx((u16)mAngToCenter >> 4));
-        mPosZ = mSpawnPos.z - FX_MUL(outer, FX_CosIdx((u16)mAngToCenter >> 4));
+        mPos.x = mSpawnPos.x - FX_MUL(outer, FX_SinIdx((u16)mAngToCenter >> 4));
+        mPos.z = mSpawnPos.z - FX_MUL(outer, FX_CosIdx((u16)mAngToCenter >> 4));
     } else if (mDistToCenter <= inner) {
-        mPosX = mSpawnPos.x - FX_MUL(inner, FX_SinIdx((u16)mAngToCenter >> 4));
-        mPosZ = mSpawnPos.z - FX_MUL(inner, FX_CosIdx((u16)mAngToCenter >> 4));
+        mPos.x = mSpawnPos.x - FX_MUL(inner, FX_SinIdx((u16)mAngToCenter >> 4));
+        mPos.z = mSpawnPos.z - FX_MUL(inner, FX_CosIdx((u16)mAngToCenter >> 4));
     }
 
     UpdatePos(0);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
-    mPosY = mSpawnPos.y - mSinkHeight - mPushDownHeight;
+    mPos.y = mSpawnPos.y - mSinkHeight - mPushDownHeight;
     mAnmModel.Advance();
     func_ov065_02118cc4();
     func_ov065_02118838();
@@ -370,9 +370,9 @@ int daDossy_c::CleanupResources()
 void daDossy_c::func_ov065_02118cc4()
 {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
-    mAnmModel.mat4x3.m[9] = mPosX >> 3;
-    mAnmModel.mat4x3.m[10] = mPosY >> 3;
-    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    mAnmModel.mat4x3.m[9] = mPos.x >> 3;
+    mAnmModel.mat4x3.m[10] = mPos.y >> 3;
+    mAnmModel.mat4x3.m[11] = mPos.z >> 3;
 }
 
 void daDossyCap_c::func_ov065_02118c4c() {
@@ -390,7 +390,7 @@ void daDossy_c::func_ov065_02118838() {
     Matrix4x3 base;
     s32 i;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     base = data_020a0e68;
     for (i = 0; i < 7; i++) {

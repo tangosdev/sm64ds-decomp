@@ -207,9 +207,9 @@ int daDsn_c::Behavior() {
 void daDsn_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     Vector3 poofPos;
-    poofPos.x = mPosX;
-    poofPos.y = mPosY;
-    poofPos.z = mPosZ;
+    poofPos.x = mPos.x;
+    poofPos.y = mPos.y;
+    poofPos.z = mPos.z;
     poofPos.y += OnAimedAtWithEgg();
     Particle::System::NewSimple(kPtclStoneBlockBreak, poofPos.x, poofPos.y, poofPos.z);
     Vector3 poofPosCopy;

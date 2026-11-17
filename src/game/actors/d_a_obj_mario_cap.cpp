@@ -81,7 +81,7 @@
  *
  *   Reading the player's angles / position as plain members (`closest->mAngleX`)
  *   misses in InitAnim (0x19c vs 0x1a0 bytes) and Taken
- *   (0x224 vs 0x21c); taking `&player->mAngleX` / `&player->mPosX` and indexing
+ *   (0x224 vs 0x21c); taking `&player->mAngleX` / `&player->mPos.x` and indexing
  *   the pointer matches. mStateTimer is s16 in dEnemyBase_c but the helpers
  *   read it unsigned, hence CAP_TIMER.
  *
@@ -706,7 +706,7 @@ void daObjMarioCap_c::UpdateMatrix()
         return;
 
     {
-        int y = mPosY;
+        int y = mPos.y;
         int off;
         if (mWithMeshClsn.IsOnGround() == 0) {
             probe = mPos;
@@ -730,9 +730,9 @@ void daObjMarioCap_c::UpdateMatrix()
         }
         Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
         /* m[9..11] is the translation row. */
-        mShadowMat.m[9] = mPosX >> 3;
+        mShadowMat.m[9] = mPos.x >> 3;
         mShadowMat.m[10] = (y + (off << 12)) >> 3;
-        mShadowMat.m[11] = mPosZ >> 3;
+        mShadowMat.m[11] = mPos.z >> 3;
         DropShadowRadHeight(mShadowModel, mShadowMat, 0x50000, 0x32000, 0xf);
     }
 }
@@ -780,7 +780,7 @@ int daObjMarioCap_c::Wait() {
         SetRanges(0x32000, 0x32000, kClipFar, kClipFar);
     }
     CheckTouch();
-    if (data_02092138 > mPosY) {
+    if (data_02092138 > mPos.y) {
         SaveData::PlayerLoseCap();
         MarkForDestruction();
     }
@@ -799,7 +799,7 @@ int daObjMarioCap_c::InitTimedWait()
  * Returns 1. */
 int daObjMarioCap_c::TimedWait()
 {
-    if (data_02092138 > mPosY || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
+    if (data_02092138 > mPos.y || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
         (mFlags & 8)) {
         MarkForDestruction();
         return 1;
@@ -833,7 +833,7 @@ int daObjMarioCap_c::InitTimedWait2()
  * TimedWait. Returns 1. */
 int daObjMarioCap_c::TimedWait2()
 {
-    if (data_02092138 > mPosY || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
+    if (data_02092138 > mPos.y || mWithMeshClsn.IsOnGround() || !DecIfAbove0_Short(&mStateTimer) ||
         (mFlags & 8)) {
         MarkForDestruction();
         return 1;
@@ -864,9 +864,9 @@ int daObjMarioCap_c::Fall() {
       SetRanges(0x32000, 0x32000, kClipFar, kClipFar);
     }
   }
-  if (data_02092138 > mPosY) {
-    SaveData::PlayerLoseCap();
-    MarkForDestruction();
+  if (data_02092138 > mPos.y) {
+      SaveData::PlayerLoseCap();
+      MarkForDestruction();
   }
   return 1;
 }
@@ -1038,9 +1038,9 @@ int daObjMarioCap_c::InitTaken()
                     struct Vector3 v;
                     Sound::PlayBank3(kSfx1Up, mCamSpacePos);
                     GiveLives(1);
-                    v.x = mPosX;
-                    v.y = mPosY;
-                    v.z = mPosZ;
+                    v.x = mPos.x;
+                    v.y = mPos.y;
+                    v.z = mPos.z;
                     v.y += 0x64000;
                     dActor_c::Spawn(kActor1UpLogo, 8, v, 0, mAreaId, -1);
                 }
@@ -1088,10 +1088,10 @@ int daObjMarioCap_c::Taken() {
     mAngleZ = mPrevAngleZ;
 
     {
-        s32 *q = &mPlayer->mPosX;
-        mPosX = q[0];
-        mPosY = q[1];
-        mPosZ = q[2];
+        s32 *q = &mPlayer->mPos.x;
+        mPos.x = q[0];
+        mPos.y = q[1];
+        mPos.z = q[2];
     }
 
     switch (mTakenStep) {
@@ -1206,10 +1206,10 @@ int daObjMarioCap_c::Anim()
             mAngleY = mPrevAngleY;
             mAngleZ = mPrevAngleZ;
 
-            ip = &mPlayer->mPosX;
-            mPosX = ip[0];
-            mPosY = ip[1];
-            mPosZ = ip[2];
+            ip = &mPlayer->mPos.x;
+            mPos.x = ip[0];
+            mPos.y = ip[1];
+            mPos.z = ip[2];
         }
     }
 

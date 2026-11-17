@@ -55,7 +55,7 @@ struct daPgBby_c : dActor_c {
     dExtShadowModel_c mShadowModel;       /* 0x138 */
     dCcAc_c mCylClsn;               /* 0x160 */
     dBgCh_Actr mWithMeshClsn;       /* 0x194 */
-    /* Copy of mPosX/Y/Z taken once in InitResources and never written
+    /* Copy of mPos.x/.y/.z taken once in InitResources and never written
        again; the respawn check teleports back here. */
     Vector3 mSpawnPos;              /* 0x350 */
     State *mState;                  /* 0x35c -- current {enter, update} pair */

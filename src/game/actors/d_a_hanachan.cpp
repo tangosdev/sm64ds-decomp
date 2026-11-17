@@ -279,9 +279,9 @@ void daHanachan_c::StateDeadMain()
     }
 
     {
-        int px = mPosX;
-        int pz = mPosZ;
-        int py = mPosY + 0x64000;
+        int px = mPos.x;
+        int pz = mPos.z;
+        int py = mPos.y + 0x64000;
         starPos.x = px;
         starPos.y = py;
         starPos.z = pz;
@@ -617,7 +617,7 @@ void daHanachan_c::StateDemoWaitMain()
     Vec3_Sub(&v, &mPos, &mHomePos);
     len = VEC_Mag(&v);
     player = ClosestPlayer();
-    if (player->mPosY > mPosY + 0x12c000) {
+    if (player->mPos.y > mPos.y + 0x12c000) {
         SetState(1);
         return;
     }
@@ -651,9 +651,9 @@ void daHanachan_c::StateDemoWaitInit()
     mHorzSpeed = data_ov034_02114488[0];
     for (seg = 0; seg < 5; seg++) {
         if (seg == 0) {
-            mSegmentPos[seg].x = mPosX;
-            mSegmentPos[seg].y = mPosY;
-            mSegmentPos[seg].z = mPosZ;
+            mSegmentPos[seg].x = mPos.x;
+            mSegmentPos[seg].y = mPos.y;
+            mSegmentPos[seg].z = mPos.z;
             mSegmentRot[seg].y = HorzAngleToCPlayer();
             mPrevAngleY = mSegmentRot[seg].y;
         } else {
@@ -865,7 +865,7 @@ int daHanachan_c::Behavior()
     Vector3 t1;
 
     if (mFalling != 0) {
-        if (mHomePos.y + mPosY < -0x1f4000)
+        if (mHomePos.y + mPos.y < -0x1f4000)
             MarkForDestruction();
     }
 
@@ -891,7 +891,7 @@ int daHanachan_c::Behavior()
                     func_0201267c(0x11d, &mCamSpacePos);
             }
             if (mHealth == 2) {
-                Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
+                Particle::RunningSlidingDustAt(mPos.x, mPos.y, mPos.z);
             }
         }
     }
@@ -938,9 +938,9 @@ int daHanachan_c::Behavior()
     if (mFalling == 0)
         UpdateWMClsn(mWithMeshClsn, 0);
 
-    mSegmentPos[0].x = mPosX;
-    mSegmentPos[0].y = mPosY;
-    mSegmentPos[0].z = mPosZ;
+    mSegmentPos[0].x = mPos.x;
+    mSegmentPos[0].y = mPos.y;
+    mSegmentPos[0].z = mPos.z;
     UpdateSegments();
 
     mSegmentPos[0].y = mSegmentPos[1].y + 0x1000;
@@ -1079,9 +1079,9 @@ int daHanachan_c::InitResources()
         texSeq->SetFile(*(BTP_File *)texFile->filePtr, zeroB, 0x1000, zeroB);
         ((daHanachan_c *)texRow)->mTextureSequences[0].speed = zeroC;
         if (i == 0) {
-            ((daHanachan_c *)posRow)->mSegmentPos[0].x = mPosX;
-            ((daHanachan_c *)posRow)->mSegmentPos[0].y = mPosY;
-            ((daHanachan_c *)posRow)->mSegmentPos[0].z = mPosZ;
+            ((daHanachan_c *)posRow)->mSegmentPos[0].x = mPos.x;
+            ((daHanachan_c *)posRow)->mSegmentPos[0].y = mPos.y;
+            ((daHanachan_c *)posRow)->mSegmentPos[0].z = mPos.z;
             ((daHanachan_c *)rotRow)->mSegmentRot[0].x = mAngleX;
             ((daHanachan_c *)rotRow)->mSegmentRot[0].y = mAngleY;
             ((daHanachan_c *)rotRow)->mSegmentRot[0].z = mAngleZ;
@@ -1137,9 +1137,9 @@ int daHanachan_c::InitResources()
     mWithMeshClsn.Init(this, 0x14000, 0x14000, 0, 0);
     mHealth = 4;
     UpdateSegmentModels();
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     return 1;
 }
 

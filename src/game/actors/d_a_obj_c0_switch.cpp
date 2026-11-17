@@ -96,14 +96,14 @@ daObjC0_Switch_c *daObjC0_Switch_c_classInit() {
  * UpdateModelPosAndRotY, UpdateClsnPosAndRot and dBgW_KcMbg::SetFile are
  * real method calls.
  *
- * mPosY -= 0x64000 and mPressed = 1 only run when data_0209caa0.file.flags2 & 0x80000
+ * mPos.y -= 0x64000 and mPressed = 1 only run when data_0209caa0.file.flags2 & 0x80000
  * is set -- some other pillar in the group already reported pressed (see
  * OnGroundPounded), so this one starts sunk and pre-flagged. */
 int daObjC0_Switch_c::InitResources() {
     BMD_File *mdl = dExtSimpleModel_c::LoadFile(data_ov012_021124a8);
     mModel.SetFile(mdl, 1, -1);
     if (data_0209caa0.file.flags2 & 0x80000) {
-        mPosY -= 0x64000;
+        mPos.y -= 0x64000;
         mPressed = 1;
     }
     UpdateModelPosAndRotY();
@@ -140,7 +140,7 @@ s32 daObjC0_Switch_c::CleanupResources() {
 /* -------------------------------------------------------------------------- */
 /* daObjC0_Switch_c::OnGroundPounded -- vtable slot 21, ov012 0x0211123c.
  *
- * mPosY and mPressed are the same fields InitResources touches.
+ * mPos.y and mPressed are the same fields InitResources touches.
  * dActor_c::FindWithActorID walks every actor of a given actorID (0x22, this
  * class's own -- SWITCH_PILLAR 34). This one no-ops if already pressed;
  * otherwise it sinks, marks itself pressed, then returns at the first
@@ -149,7 +149,7 @@ s32 daObjC0_Switch_c::CleanupResources() {
 void daObjC0_Switch_c::OnGroundPounded(dActor_c &other) {
     if (mPressed)
         return;
-    mPosY -= 0x64000;
+    mPos.y -= 0x64000;
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     mPressed = 1;

@@ -133,7 +133,7 @@ void daGrock_c::HandleCylinderHit() {
         func_02012694(0x17a, &mCamSpacePos);
         ((daPly_c *)other)->IncMegaKillCount();
         TriplePoofDust();
-        Particle::System::NewSimple(kPtclBigSteelieBreak, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(kPtclBigSteelieBreak, mPos.x, mPos.y, mPos.z);
         SpawnStar();
         MarkForDestruction();
         return;
@@ -150,7 +150,7 @@ void daGrock_c::HandleCylinderHit() {
             func_02012694(0x17a, &mCamSpacePos);
             MarkForDestruction();
             TriplePoofDust();
-            Particle::System::NewSimple(kPtclBigSteelieBreak, mPosX, mPosY, mPosZ);
+            Particle::System::NewSimple(kPtclBigSteelieBreak, mPos.x, mPos.y, mPos.z);
             SpawnStar();
             return;
         }
@@ -162,9 +162,9 @@ void daGrock_c::HandleCylinderHit() {
         return;
     {
         Vector3 pos;
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
         ((daPly_c *)other)->Hurt(pos, 3, 0xc000, 1, 0, 1);
     }
 }
@@ -264,7 +264,7 @@ int daGrock_c::Behavior() {
         UpdateModelTransform();
         mdCcAcPos_c.Clear();
 
-        if (mPosZ >= (int)0xfe82c000) {
+        if (mPos.z >= (int)0xfe82c000) {
             Vector3 offset;
             offset.x = 0;
             offset.y = (int)0xffebb000;
@@ -280,7 +280,7 @@ int daGrock_c::Behavior() {
         mdCcAcPos_c.dCc_c::Update();
 
         if (mType != kGrockStill) {
-            if (mPosY < -0x3e8000) {
+            if (mPos.y < -0x3e8000) {
                 daGrock_c *spawner;
 
                 MarkForDestruction();
@@ -291,7 +291,7 @@ int daGrock_c::Behavior() {
                 }
                 UntrackStar(mTrackStarID);
                 TriplePoofDust();
-                Particle::System::NewSimple(kPtclBigSteelieBreak, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclBigSteelieBreak, mPos.x, mPos.y, mPos.z);
                 func_02012694(0x17a, &mCamSpacePos);
             }
         }

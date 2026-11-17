@@ -147,9 +147,9 @@ void daBasabasa_c::CheckTouch() {
         SmallPoofDust();
         KillAndTrackInDeathTable();
         func_02012694(0x112, &mCamSpacePos);
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
+        pos.x = mPos.x;
+        pos.y = mPos.y;
+        pos.z = mPos.z;
         SpawnCoins(pos, mExtraCoinCount + 1, 0xa000, 0);
         return;
     }
@@ -162,9 +162,9 @@ void daBasabasa_c::CheckTouch() {
         return;
     }
     Vector3 pos;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos.x = mPos.x;
+    pos.y = mPos.y;
+    pos.z = mPos.z;
     p->Hurt(pos, 1, 0xc000, 1, 0, 1);
     if (mCurrentState != &data_ov065_0211d6e0)
         return;
@@ -191,9 +191,9 @@ int daBasabasa_c::ExecuteReturn() {
             mFlags |= 1;
             mPrevAngleX = -0x8000;
             mAngleX = mPrevAngleX;
-            mPosX = mHomePos.x;
-            mPosY = mHomePos.y;
-            mPosZ = mHomePos.z;
+            mPos.x = mHomePos.x;
+            mPos.y = mHomePos.y;
+            mPos.z = mHomePos.z;
             mSpeed.x = 0;
             mSpeed.y = 0;
             mSpeed.z = 0;
@@ -260,7 +260,7 @@ int daBasabasa_c::ExecuteDrop() {
     daPly_c *p;
     mPrevAngleY += 0x1000;
     p = ClosestPlayer();
-    posY = mPosY;
+    posY = mPos.y;
     floorY = posY - 0xc8000;
     if (p != 0) {
         floorY = p->mGroundY + 0x50000;
@@ -277,9 +277,9 @@ int daBasabasa_c::EnterDrop() {
     mIsFlying = 0;
     mAnmModel2.speed = 0;
     mAnmModel2.SetAnim((BCA_File *)data_ov065_0211d6a0.filePtr, 0, 0x1000, 0);
-    PoofPos vec(mPosX, mPosY + 0x64000, mPosZ);
+    PoofPos vec(mPos.x, mPos.y + 0x64000, mPos.z);
     mStateTimer = 25;
-    if (mPosY == 0x898000)
+    if (mPos.y == 0x898000)
         mStateTimer = 50;
     func_02012694(0xf9, &mCamSpacePos);
     return 1;
@@ -289,8 +289,8 @@ int daBasabasa_c::ExecutePerch() {
     daPly_c *p = ClosestNonVanishPlayer();
     if (p) {
         Vector3 v;
-        /* One base pointer: reading p->mPosX and so on directly compiles differently. */
-        int *q = &p->mPosX;
+        /* One base pointer: reading p->mPos.x and so on directly compiles differently. */
+        int *q = &p->mPos.x;
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];
@@ -328,7 +328,7 @@ void daBasabasa_c::UpdateModelTransform() {
     } else {
         mAnmModel2.mat4x3 = data_020a0e68;
     }
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x18000) >> 3, mPos.z >> 3);
     mShadowMatrix = data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMatrix, 0x32000, 0x258000, 0xf);
 }
@@ -438,9 +438,9 @@ int daBasabasa_c::InitResources() {
     mAnmModel1.speed = 0x1000;
     mAnmModel2.speed = 0x1000;
     mWithMeshClsn.Init(this, 0x28000, 0x1e000, 0, 0);
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mCoinType = 1;
     SetState(&data_ov065_0211d700);
     return 1;

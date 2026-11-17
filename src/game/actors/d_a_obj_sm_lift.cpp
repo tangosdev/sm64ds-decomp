@@ -163,10 +163,10 @@ int daObjSm_Lift_c::Behavior() {
         {
             int len = VEC_Mag(&diff);
             if (len == 0 || len <= mHorzSpeed) {
-                mPosX = nodeA.x;
+                mPos.x = nodeA.x;
                 reached = 1;
-                mPosY = nodeA.y;
-                mPosZ = nodeA.z;
+                mPos.y = nodeA.y;
+                mPos.z = nodeA.z;
             } else {
                 int scale = FX_Div(mHorzSpeed, len);
                 Vec3_MulScalar(&scaled, &diff, scale);
@@ -226,9 +226,9 @@ s32 daObjSm_Lift_c::InitResources() {
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mPauseTimer = 60;
-    mBasePos.x = mPosX;
-    mBasePos.y = mPosY;
-    mBasePos.z = mPosZ;
+    mBasePos.x = mPos.x;
+    mBasePos.y = mPos.y;
+    mBasePos.z = mPos.z;
     mAngleY -= 0x4000;
     PathPtr p;
     p.FromID(mPathId);

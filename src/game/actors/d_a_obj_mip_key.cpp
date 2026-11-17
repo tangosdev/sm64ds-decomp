@@ -76,10 +76,10 @@ int daObj_Mip_Key_c::StateCarried() {
     Vector3 v;
     v = *playerPos;
     v.y += 0xc8000;
-    ApproachLinear(mPosY, v.y, 0xa000);
+    ApproachLinear(mPos.y, v.y, 0xa000);
 
-    mPosX = v.x;
-    mPosZ = v.z;
+    mPos.x = v.x;
+    mPos.z = v.z;
     mode = data_0209d684;
 
     switch (mTalkState) {
@@ -219,7 +219,7 @@ int daObj_Mip_Key_c::StateLoose() {
     ApproachLinear(mSpeed.x, out.x, 0x1000);
     ApproachLinear(mSpeed.y, out.y, 0x1000);
     ApproachLinear(mSpeed.z, out.z, 0x1000);
-    if (pp.y + 0x64000 > mPosY) {
+    if (pp.y + 0x64000 > mPos.y) {
         mPlayer = player;
         ChangeState(&data_ov085_0213072c);
     }
@@ -253,7 +253,7 @@ void daObj_Mip_Key_c::UpdateModelAndShadow() {
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)(&mModel.mat4x3) = *(Mtx43 *)&data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x32000) >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x32000) >> 3, mPos.z >> 3);
     DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x23000, 0x12c000, 15);
 }
 

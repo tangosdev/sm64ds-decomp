@@ -378,12 +378,12 @@ void daObjBlockS_c::EnterSpitOut() {
     mPos = mEatingPlayer->mPos;
 
     xw = FX_SinIdx((unsigned short)mAngleY >> 4);
-    mPosX += FX_MUL(xw, 0x50000);
+    mPos.x += FX_MUL(xw, 0x50000);
 
-    mPosY += 0x50000;
+    mPos.y += 0x50000;
 
     zw = FX_CosIdx((unsigned short)mAngleY >> 4);
-    mPosZ += FX_MUL(zw, 0x50000);
+    mPos.z += FX_MUL(zw, 0x50000);
 
     mFlags &= ~0x80000;
 
@@ -641,9 +641,9 @@ void daObjBlockS_c::ResetToHome() {
     mParticleHandle1 = 0;
     mParticleHandle2 = 0;
     mBreakTimer = 0;
-    mPosX = mHomePos.x;
-    mPosY = mHomePos.y;
-    mPosZ = mHomePos.z;
+    mPos.x = mHomePos.x;
+    mPos.y = mHomePos.y;
+    mPos.z = mHomePos.z;
     mAngleX = mHomeAngleX;
     mAngleY = mHomeAngleY;
     mAngleZ = mHomeAngleZ;
@@ -672,9 +672,9 @@ void daObjBlockS_c::ResetToHome() {
 void daObjBlockS_c::SpawnBreakCoins() {
     Vector3 v;
     if (mCoinsPaid == 1) return;
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     SpawnCoins(v, 3, 0xf000, 0);
     mCoinsPaid = 1;
 }
@@ -757,9 +757,9 @@ void daObjBlockS_c::HandleHits() {
 
     {
         struct Vector3 v;
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        v.x = mPos.x;
+        v.y = mPos.y;
+        v.z = mPos.z;
         a->Hurt(v, 1, 0xc000, 1, 0, 1);
     }
 }
@@ -775,9 +775,9 @@ void daObjBlockS_c::Kill()
     Vector3 vec2;
     int x, y, z;
     SpawnBreakCoins();
-    x = mPosX;
-    y = mPosY + 0x28000;
-    z = mPosZ;
+    x = mPos.x;
+    y = mPos.y + 0x28000;
+    z = mPos.z;
     vec.x = x;
     vec.y = y;
     vec.z = z;
@@ -962,7 +962,7 @@ int daObjBlockS_c::UpdateFloorContact() {
 
     if (ApproachLinear(mHorzSpeed, 0, 0x800) == 0 && mClsnYOffsetTarget != 0xa0 &&
         mHorzSpeed > 0xa000) {
-        Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
+        Particle::RunningSlidingDustAt(mPos.x, mPos.y, mPos.z);
         mSlideSoundHandle = Sound::PlayLong(mSlideSoundHandle, 3, 0x93, mCamSpacePos, 0);
     }
 
@@ -977,7 +977,7 @@ int daObjBlockS_c::UpdateFloorContact() {
 
 /* Drop shadow. Probes for ground 10 units below the crate (0xa000) with
  * dBgCh_Gnd and stores the ground height in mGroundY (the probe's own Y if
- * nothing is found). The height above it, h = mPosY - mGroundY, is floored
+ * nothing is found). The height above it, h = mPos.y - mGroundY, is floored
  * at 1 unit (0x1000); the shadow's scale is 100 units minus h * 0x180 / 0x1000
  * (so 3/32 of h), floored at 10 units (0xa000). Builds mShadowMtx from
  * mAngleY, puts its translation row at the crate's position (y lowered by
@@ -990,9 +990,9 @@ void daObjBlockS_c::UpdateDropShadow() {
     int r5;
     int r4;
 
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
+    v.x = mPos.x;
+    v.y = mPos.y;
+    v.z = mPos.z;
     v.y -= 0xa000;
     dBgCh_Gnd rg;
     rg.SetObjAndPos(v, 0);
@@ -1000,14 +1000,14 @@ void daObjBlockS_c::UpdateDropShadow() {
     if (rg.DetectClsn()) {
         mGroundY = rg.clsnY;
     }
-    r5 = mPosY - mGroundY;
+    r5 = mPos.y - mGroundY;
     if (r5 <= 0x1000) r5 = 0x1000;
     r4 = 0x64000 - FX_MUL(r5, 0x180);
     if (r4 < 0xa000) r4 = 0xa000;
     Matrix4x3_FromRotationY(&mShadowMtx, mAngleY);
-    mShadowMtx.m[9] = mPosX >> 3;
-    mShadowMtx.m[10] = (mPosY - 0x14000) >> 3;
-    mShadowMtx.m[11] = mPosZ >> 3;
+    mShadowMtx.m[9] = mPos.x >> 3;
+    mShadowMtx.m[10] = (mPos.y - 0x14000) >> 3;
+    mShadowMtx.m[11] = mPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMtx, r4, r5 + 0x28000, r4, 0xf);
 }
 
@@ -1152,9 +1152,9 @@ int daObjBlockS_c::Behavior()
     }
 
     if (mBreakTimer != 0) {
-        x = mPosX;
-        z = mPosZ;
-        y = mPosY + 0x50000;
+        x = mPos.x;
+        z = mPos.z;
+        y = mPos.y + 0x50000;
         v.x = x;
         v.y = y;
         v.z = z;
@@ -1165,9 +1165,9 @@ int daObjBlockS_c::Behavior()
                 Particle::System::NewCleanParticle(mParticleHandle2, kPtclDeathB, v.x, v.y, v.z, 0);
         } else {
             SpawnBreakCoins();
-            x = mPosX;
-            z = mPosZ;
-            y = mPosY + 0x28000;
+            x = mPos.x;
+            z = mPos.z;
+            y = mPos.y + 0x28000;
             vec.x = x;
             vec.y = y;
             vec.z = z;
@@ -1180,9 +1180,9 @@ int daObjBlockS_c::Behavior()
         }
     }
 
-    t.x = mPosX;
-    t.y = mPosY;
-    t.z = mPosZ;
+    t.x = mPos.x;
+    t.y = mPos.y;
+    t.z = mPos.z;
     t.y = t.y - mClsnYOffset;
     mdCcAcPos_c1.pos.x = t.x;
     mdCcAcPos_c1.pos.y = t.y;
@@ -1210,9 +1210,9 @@ int daObjBlockS_c::InitResources()
         res = &data_ov098_0213c4c8;
     if (res == 0)
         return 0;
-    mHomePos.x = mPosX;
-    mHomePos.y = mPosY;
-    mHomePos.z = mPosZ;
+    mHomePos.x = mPos.x;
+    mHomePos.y = mPos.y;
+    mHomePos.z = mPos.z;
     mHomeAngleX = mAngleX;
     mHomeAngleY = mAngleY;
     mHomeAngleZ = mAngleZ;

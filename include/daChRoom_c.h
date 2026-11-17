@@ -12,7 +12,7 @@
  * SIZE 0xd4 from the factory's `mov r0, #0xd4` into fBase_c::operator new.
  * That is exactly sizeof(dActor_c): this class adds no field of its own.
  * Every value this class uses is inherited actor state: InitResources
- * writes mScale.x/mScale.y/mAngleY, Behavior reads mPosX/mAngleY/mScale.x/
+ * writes mScale.x/mScale.y/mAngleY, Behavior reads mPos.x/mAngleY/mScale.x/
  * mScale.y/mAngleX/mAngleZ. mScale.x/mScale.y are the trigger box half-width
  * and height; mAngleX/mAngleZ are the two area ids.
  *

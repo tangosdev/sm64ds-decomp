@@ -140,9 +140,9 @@ int daObjC0Water_c::InitResources() {
     mMeshCollider.SetFile((KCL_File *)data_ov012_021124c8.filePtr, mClsnMat, 0x1000, mAngleY,
                           data_ov012_02111c90);
     mMeshCollider.Enable(this);
-    mLoweredY = mPosY - 0x4b0000;
+    mLoweredY = mPos.y - 0x4b0000;
     if (data_0209caa0.file.flags2 & 0x80000) {
-        mPosY = mLoweredY;
+        mPos.y = mLoweredY;
     }
     return 1;
 }
@@ -150,18 +150,18 @@ int daObjC0Water_c::InitResources() {
 int daObjC0Water_c::Behavior() {
     if (mWasJustDrained != 0)
         Sound::PlaySecretSound(this, &mSoundTimer);
-    if (mPosY <= mLoweredY) {
-        mPosY = mLoweredY;
+    if (mPos.y <= mLoweredY) {
+        mPos.y = mLoweredY;
     } else if (data_0209caa0.file.flags2 & 0x80000) {
         mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, mCamSpacePos, 0);
-        mPosY -= 0x5000;
+        mPos.y -= 0x5000;
         mWasJustDrained = 1;
-        if (mPosY <= mLoweredY) {
-            mPosY = mLoweredY;
+        if (mPos.y <= mLoweredY) {
+            mPos.y = mLoweredY;
             dMap_c::UpdateLevelSpecific();
         }
     }
-    data_0209f32c = mPosY;
+    data_0209f32c = mPos.y;
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     mTextureTransformer.speed = 0x1000;

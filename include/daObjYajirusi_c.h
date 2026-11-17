@@ -39,12 +39,10 @@ struct daObjYajirusi_c {
     u16 actorID;                       /* 0x00c */
     u8  pad_00e[0x4e];
      /* dActor_c's position and camera-space position, at dActor_c's own offsets
-        (include/dActor_c.h lines 59-65). The flat view drops the inheritance but
-        src/game/actors/d_a_obj_yajirusi.cpp (Kill) still reads these four fields by
+        (include/dActor_c.h). The flat view drops the inheritance but
+        src/game/actors/d_a_obj_yajirusi.cpp (Kill) still reads these two fields by
         name, so they are pinned here rather than buried in padding. */
-    s32 mPosX;                         /* 0x05c */
-    s32 mPosY;                         /* 0x060 */
-    s32 mPosZ;                         /* 0x064 */
+    Vector3 mPos; /* 0x05c */
     u8  pad_068[0xc];
     Vector3 mCamSpacePos; /* 0x074 */
     u8 pad_080[0xe];
@@ -85,7 +83,7 @@ struct daObjYajirusi_c {
 };
 
 static_assert(offsetof(daObjYajirusi_c, actorID) == 0x00c, "daObjYajirusi_c actorID");
-static_assert(offsetof(daObjYajirusi_c, mPosX) == 0x05c, "daObjYajirusi_c mPosX");
+static_assert(offsetof(daObjYajirusi_c, mPos) == 0x05c, "daObjYajirusi_c mPos");
 static_assert(offsetof(daObjYajirusi_c, mCamSpacePos) == 0x074, "daObjYajirusi_c mCamSpacePos");
 static_assert(offsetof(daObjYajirusi_c, mAngleY) == 0x08e, "daObjYajirusi_c mAngleY");
 static_assert(offsetof(daObjYajirusi_c, mModel) == 0x0d4, "daObjYajirusi_c mModel");

@@ -52,7 +52,7 @@
 /* daChScene_c is a real dActor_c, like every other actor in this family
  * (daChRoom_c_Spawn's neighbor, daBar_c_classInit, and daCamTag_c_Spawn; the
  * bar factory's historical alias was InvisiblePole_Spawn) --
- * mParam/mPosX/mScale.x/mAngleX/mHorzSpeed are dActor_c's own fields
+ * mParam/mPos.x/mScale.x/mAngleX/mHorzSpeed are dActor_c's own fields
  * (param1 at 0x008 via fBase_c, the rest at 0x05c..0x098), inherited rather
  * than re-declared flat as they were before. The non-motion reuse those fields
  * get here is documented in the file comment above.

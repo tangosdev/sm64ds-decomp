@@ -137,10 +137,10 @@ int daCnn_c::InitResources() {
     mBarrelRestY = mModel.data.bones[1].transY;
     mVariant = param1 & 3;
     mTimer = 0;
-    mPosY -= 0x50000;
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mPos.y -= 0x50000;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     mHomeAngleY = mPrevAngleY;
     mLoadStep = 0;
 
@@ -153,7 +153,7 @@ int daCnn_c::InitResources() {
         PickNextAim();
         mdCcAc_c.Init(this, 0xa0000, 0x12c000, 0x800004, 0);
     } else {
-        mPosY -= 0x190000;
+        mPos.y -= 0x190000;
         mTargetAngleY = mAngleZ;
         mTargetPitch = 0x2000;
         mState = 2;
@@ -394,13 +394,13 @@ void daCnn_c::StateLoad() {
         daPly_c *rider;
         int x, y, z;
         /* z first (statement order) colors y into r2 like the ROM */
-        z = mPosZ;
-        y = mPosY + 0xd0000;
+        z = mPos.z;
+        y = mPos.y + 0xd0000;
         rider = mPlayer;
-        x = mPosX;
-        rider->mPosX = x;
-        rider->mPosY = y;
-        rider->mPosZ = z;
+        x = mPos.x;
+        rider->mPos.x = x;
+        rider->mPos.y = y;
+        rider->mPos.z = z;
         if (mLoadStep < 3) {
             s16 angleY = mAngleY;
             s16 angleX = mAngleX;
@@ -419,15 +419,15 @@ void daCnn_c::StateLoad() {
 
     switch (mLoadStep) {
     case 0:
-        mPosY += 0xa000;
-        if (mPosY < mSpawnPos.y)
+        mPos.y += 0xa000;
+        if (mPos.y < mSpawnPos.y)
             break;
-        mPosY = mSpawnPos.y;
+        mPos.y = mSpawnPos.y;
         mLoadStep++;
         mTimer = 0;
-        quakePos.x = mPosX;
-        quakePos.y = mPosY;
-        quakePos.z = mPosZ;
+        quakePos.x = mPos.x;
+        quakePos.y = mPos.y;
+        quakePos.z = mPos.z;
         Earthquake(quakePos, 0x1f4000);
         Sound::PlayBank3(0x14c, mCamSpacePos);
         break;
@@ -464,18 +464,18 @@ void daCnn_c::StateLoad() {
 
     case 4: {
         u8 settled = 0;
-        mPosY -= 0x32000;
+        mPos.y -= 0x32000;
         if (ApproachLinear(mAngleX, 0, 0x800))
             settled++;
         if (ApproachLinear(mAngleY, mHomeAngleY, 0x800))
             settled++;
         if (settled != 2)
             break;
-        if (mPosY > mSpawnPos.y - 0x190000)
+        if (mPos.y > mSpawnPos.y - 0x190000)
             break;
         mState = 2;
         mdCcAc_c.flags &= ~1;
-        mPosY = mSpawnPos.y - 0x190000;
+        mPos.y = mSpawnPos.y - 0x190000;
         mPlayer = 0;
         mAngleY = mHomeAngleY;
         mPrevAngleY = mAngleY;
@@ -494,7 +494,7 @@ void daCnn_c::UpdateModel() {
     s16 yaw = mAngleY;
     ModelBone *bones;
 
-    Matrix4x3_FromTranslation(&mModel.mat4x3, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
+    Matrix4x3_FromTranslation(&mModel.mat4x3, mPos.x >> 3, mPos.y >> 3, mPos.z >> 3);
 
     bones = mModel.data.bones;
 

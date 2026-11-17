@@ -228,10 +228,10 @@ int daOwl_c::UpdateReturn() {
             mSpeed.x = 0;
             mSpeed.y = 0;
             mSpeed.z = 0;
-            mPosX = mAnchor.x;
-            mPosY = mAnchor.y;
-            mPosZ = mAnchor.z;
-            mPosY += 0x64000;
+            mPos.x = mAnchor.x;
+            mPos.y = mAnchor.y;
+            mPos.z = mAnchor.z;
+            mPos.y += 0x64000;
         }
     } else {
         ApproachLinear(mPos, mAnchor, 0x2000);
@@ -366,7 +366,7 @@ int daOwl_c::UpdateHover() {
     buf.v[5] = 0;
 
     unk_3e8 += 0x200;
-    ApproachLinear(mPosY, mAnchor.y + FX_MUL(FX_SinIdx((u16)(s16)unk_3e8 >> 4), 0x64000), 0x3000);
+    ApproachLinear(mPos.y, mAnchor.y + FX_MUL(FX_SinIdx((u16)(s16)unk_3e8 >> 4), 0x64000), 0x3000);
 
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
     MTX_MultVec43((Vector3 *)&buf, &data_020a0e68, &mSpeed);
@@ -391,7 +391,7 @@ int daOwl_c::UpdateTalk() {
         ChangeState(OWL_STATE_HOVER);
         return 1;
     }
-    VecFx32 v = *(VecFx32 *)&mTalkTarget->mPosX;
+    VecFx32 v = *(VecFx32 *)&mTalkTarget->mPos;
     Vector3 w;
     w.x = v.x;
     w.y = v.y;
@@ -434,13 +434,13 @@ int daOwl_c::UpdateDormant() {
         pp.x = playerPos->x;
         pp.y = playerPos->y;
         pp.z = playerPos->z;
-        mPosY = p->mGroundY + 0x190000;
+        mPos.y = p->mGroundY + 0x190000;
         mTalkTarget = p;
         Vec3_Sub(&d, selfpos, &pp);
         if (VEC_Mag(&d) < 0x28000) {
-            d.x = mPosX;
-            d.y = mPosY;
-            d.z = mPosZ;
+            d.x = mPos.x;
+            d.y = mPos.y;
+            d.z = mPos.z;
             d.x = 0;
             d.y = 0;
             d.z = 0x320000;
@@ -450,9 +450,9 @@ int daOwl_c::UpdateDormant() {
                 int *px = &mAnchor.x;
                 int *py = &mAnchor.y;
                 int *pz = &mAnchor.z;
-                *px = *px + mPosX;
-                *py = *py + mPosY;
-                *pz = *pz + mPosZ;
+                *px = *px + mPos.x;
+                *py = *py + mPos.y;
+                *pz = *pz + mPos.z;
             }
             mPrevAngleY = Vec3_HorzAngle(&mPos, &mAnchor);
             mAngleY = mPrevAngleY;
@@ -489,10 +489,7 @@ void daOwl_c::UpdateModelTransform() {
     mAnmModel.ApplyOpacity(mOpacity, 1);
     mAnmModel.mat4x3 = data_020a0e68;
     MTX_Concat43(&mAnmModel.data.transforms[1], &mAnmModel.mat4x3, &out);
-    Matrix4x3_FromTranslation(&data_020a0e68,
-        mPosX >> 3,
-        (mPosY - 0x38000) >> 3,
-        mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x >> 3, (mPos.y - 0x38000) >> 3, mPos.z >> 3);
     mShadowMat = data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x64000, 0x320000, 0xf);
 }
@@ -512,9 +509,9 @@ void daOwl_c::FollowRiderMatrix() {
     v.x = data_020a0e68.m[9];
     v.y = data_020a0e68.m[10];
     v.z = data_020a0e68.m[11];
-    mPosX = v.x << 3;
-    mPosY = v.y << 3;
-    mPosZ = v.z << 3;
+    mPos.x = v.x << 3;
+    mPos.y = v.y << 3;
+    mPos.z = v.z << 3;
     mPrevAngleY = mRider->mAngleY;
     mPrevAngleX = 0;
     mAnmModel.mat4x3 = data_020a0e68;

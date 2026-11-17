@@ -214,9 +214,9 @@ int daRNk_c::InitResources()
     mState = 0;
     unk_3aa = 0;
     mHasFinished = 0;
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mSpawnPos.x = mPos.x;
+    mSpawnPos.y = mPos.y;
+    mSpawnPos.z = mPos.z;
     mVertAccel = -0x2000;           /* gravity: 2 units a frame squared */
     mTerminalVelocity = -0x3c000;   /* 60 units a frame */
     /* Mesh collision: 120 units by 120 units. */
@@ -224,9 +224,9 @@ int daRNk_c::InitResources()
     mPathPtr.FromID(param1 & 0xf);
     mNumPathPts = mPathPtr.NumNodes();
     mCurPathPt = 0;
-    mPrevPathPt.x = mPosX;
-    mPrevPathPt.y = mPosY;
-    mPrevPathPt.z = mPosZ;
+    mPrevPathPt.x = mPos.x;
+    mPrevPathPt.y = mPos.y;
+    mPrevPathPt.z = mPos.z;
     mPathPtr.GetNode(mPathTarget, mCurPathPt);
     mHasPlayerUsedCannon = 0;
     mPathPtToJumpAt1 = ((param1 >> 4) + 1) & 0x3f;
@@ -388,9 +388,9 @@ void daRNk_c::func_ov062_0211a740()
             }
 
             {
-                int z = this->mPosZ;
-                int y = this->mPosY + kMsgAnchorHeight;
-                int x = this->mPosX;
+                int z = this->mPos.z;
+                int y = this->mPos.y + kMsgAnchorHeight;
+                int x = this->mPos.x;
                 v.x = x;
                 v.y = y;
                 v.z = z;
@@ -696,9 +696,9 @@ void daRNk_c::func_ov062_02119be0() {
         x = this->mPlayer->GetTalkState();
         if (x != 0)
             return;
-        x = this->mPosX;
-        z = this->mPosZ;
-        y = this->mPosY + kMsgAnchorHeight;
+        x = this->mPos.x;
+        z = this->mPos.z;
+        y = this->mPos.y + kMsgAnchorHeight;
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
@@ -712,9 +712,9 @@ void daRNk_c::func_ov062_02119be0() {
         SET_ANIM(this, ANIM_IDLE, kAnimLoop);
         this->mStateTimer = 60;
         if (this->mPlayerWon != 0) {
-            starPos.x = this->mPosX;
-            starPos.y = this->mPosY;
-            starPos.z = this->mPosZ;
+            starPos.x = this->mPos.x;
+            starPos.y = this->mPos.y;
+            starPos.z = this->mPos.z;
             starPos.y += kStarSpawnHeight;
             this->UntrackAndSpawnStar(this->mTrackedStar, this->mStarID, starPos, 4);
             return;
@@ -757,9 +757,9 @@ void daRNk_c::func_ov062_02119be0() {
         if (x != 0)
             return;
     }
-        x = this->mPosX;
-        z = this->mPosZ;
-        y = this->mPosY + kMsgAnchorHeight;
+        x = this->mPos.x;
+        z = this->mPos.z;
+        y = this->mPos.y + kMsgAnchorHeight;
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
@@ -796,12 +796,12 @@ int daRNk_c::func_ov062_02119af0() {
     int prevZ;
 
     targetX = p->mPathTarget.x;
-    posX = p->mPosX;
+    posX = p->mPos.x;
     prevX = p->mPrevPathPt.x;
     dx = targetX - posX;
     dxc = targetX - prevX;  /* computed here, not after dz: first-use order drives the allocator under propagation (the standalone .c used #pragma opt_propagation off instead, which is file-final in a merged TU) */
     targetZ = p->mPathTarget.z;
-    posZ = p->mPosZ;
+    posZ = p->mPos.z;
     prevZ = p->mPrevPathPt.z;
     dz = targetZ - posZ;
     dzc = targetZ - prevZ;

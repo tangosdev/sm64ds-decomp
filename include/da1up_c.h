@@ -83,7 +83,7 @@ struct da1up_c : dEnemyBase_c {
     dExtSimpleModel_c mModel;                         /* 0x300 */
     dExtShadowModel_c                  mShadowModel;          /* 0x350 */
     /* mPos as InitResources found it (the three words are copied from
-       mPosX/Y/Z). Type 10 rises to 100 units above mSpawnPos.y; type 9 spawns
+       mPos.x/.y/.z). Type 10 rises to 100 units above mSpawnPos.y; type 9 spawns
        its three mushrooms relative to it. */
     Vector3 mSpawnPos;                                  /* 0x378 */
     s32                          mMushroomType;         /* 0x384 -- param1 & 0xf, see da1up_MushroomType */
