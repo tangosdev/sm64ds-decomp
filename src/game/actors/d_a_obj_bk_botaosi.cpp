@@ -170,13 +170,13 @@ void daObjBk_Botaosi_c::UpdateShadow() {
     lean = lean + tilt;
     Matrix4x3_FromRotationY(&mShadowMat, (s16)(mAngleY + yaw));
     {
-        int front = mFrontPosX;
+        int front = mFrontPos.x;
         int cosine = FX_CosIdx((u16)(s16)(mAngleY + yaw) >> 4);
         mShadowMat.t.x = (front + FX_MUL(cosine, (lean >> 1))) >> 3;
     }
-    mShadowMat.t.y = mFrontPosY >> 3;
+    mShadowMat.t.y = mFrontPos.y >> 3;
     {
-        int front = mFrontPosZ;
+        int front = mFrontPos.z;
         int sine2 = FX_SinIdx((u16)(s16)(mAngleY + yaw) >> 4);
         mShadowMat.t.z = (front + FX_MUL(sine2, (lean >> 1))) >> 3;
     }
@@ -329,9 +329,9 @@ int daObjBk_Botaosi_c::InitResources() {
     Vec3_Add(&d, &b, &mPos);
 
     one = 1;
-    mFrontPosX = d.x;
-    mFrontPosY = d.y;
-    mFrontPosZ = d.z;
+    mFrontPos.x = d.x;
+    mFrontPos.y = d.y;
+    mFrontPos.z = d.z;
     mOriginalPosY = mPosY;
     mKnockDir = one;
 
