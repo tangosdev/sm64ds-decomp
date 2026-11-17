@@ -272,7 +272,7 @@ s32 daStar_c::InitResources()
     u32 k;
     s32 kind;
     char *sp;
-    s32 *q;
+    Vector3 *q;
     Vector3 v;
     Vector3 v2;
 
@@ -294,9 +294,7 @@ s32 daStar_c::InitResources()
     mAppearTimer = 0;
     mSeqTimer = 0;
     mSoundObj6State = 0xff;
-    mInitPosX = mPosX;
-    mInitPosY = mPosY;
-    mInitPosZ = mPosZ;
+    mInitPos = mPos;
     mMusicTimer = 0;
     dExtFrameCtrl_c::LoadFile(data_ov002_02110944);
     dExtFrameCtrl_c::LoadFile(data_ov002_02110924);
@@ -407,13 +405,9 @@ s32 daStar_c::InitResources()
     }
 
     mHomeState = mState;
-    mSafePosX = mPosX;
-    mSafePosY = mPosY;
-    mSafePosZ = mPosZ;
-    q = &mSafePosX;
-    mHomePosX = q[0];
-    mHomePosY = q[1];
-    mHomePosZ = q[2];
+    mSafePos = mPos;
+    q = &mSafePos;
+    mHomePos = *q;
     mMinPosY = data_02092138;
     if (!mBits.visible)
         mdCc_c.flags |= 1;
@@ -1069,8 +1063,8 @@ void daStar_c::StateIdle() {
         int t = actorID;
         t = t == ACTOR_SILVER_STAR;
         if (t != false) {
-            if (mPosY <= mHomePosY) {
-                mPosY = mHomePosY;
+            if (mPosY <= mHomePos.y) {
+                mPosY = mHomePos.y;
                 mVertSpeed = 0x10000;
             }
         } else {
@@ -1150,14 +1144,14 @@ void daStar_c::StateCollectBegin() {
         mSeqTimer = 0;
 
         {
-            int *src = &mPlayer->mPosX;
-            int *cache = &mHomePosX;
-            mHomePosX = src[0];
-            mHomePosY = src[1];
-            mHomePosZ = src[2];
-            mPosX = cache[0];
-            mPosY = cache[1];
-            mPosZ = cache[2];
+            Vector3 *src = &mPlayer->mPos;
+            Vector3 *cache = &mHomePos;
+            mHomePos.x = src->x;
+            mHomePos.y = src->y;
+            mHomePos.z = src->z;
+            mPosX = cache->x;
+            mPosY = cache->y;
+            mPosZ = cache->z;
             *posY += 0x1e000;
         }
 
@@ -1424,13 +1418,13 @@ void daStar_c::StateBounce() {
     mPrevPosY = mPosY;
     UpdateWMClsn(mWithMeshClsn, 2);
     if (mWithMeshClsn.IsOnWall()) {
-        mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
     }
     UpdateWater();
     if (mWithMeshClsn.JustHitGround()) {
         OnBounceLand();
     } else if (mWithMeshClsn.IsOnGround()) {
-        mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
+        mPrevAngleY = ReflectAngle(mWallNormal.x, mWallNormal.z, mPrevAngleY);
         if (mBits.water == WATER_IN)
             mVertSpeed = 0xe000;
         else
@@ -1986,9 +1980,7 @@ void daStar_c::ReturnToHome() {
     }
 
     if (mHomeState == STATE_WAIT_MARKER) {
-        mPosX = mHomePosX;
-        mPosY = mHomePosY;
-        mPosZ = mHomePosZ;
+        mPos = mHomePos;
         func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, &mPos);
         mState = mHomeState;
         StopMotion();
@@ -2014,9 +2006,7 @@ void daStar_c::ReturnToHome() {
         }
     }
 
-    mPosX = mHomePosX;
-    mPosY = mHomePosY;
-    mPosZ = mHomePosZ;
+    mPos = mHomePos;
     func_02035860((dBgCh_Actr *)(void *)&mWithMeshClsn, &mPos);
     mState = mHomeState;
     mVertSpeed = 0x20000;
@@ -2055,9 +2045,7 @@ void daStar_c::OnBounceLand() {
     }
     r = mWithMeshClsn.GetFloorResult()->surface.clps.GetSurfaceType();
     if (r == 1 || r == 9) {
-        w.x = mSafePosX;
-        w.y = mSafePosY;
-        w.z = mSafePosZ;
+        w = mSafePos;
         AimArcTo(&w, 0xc8000);
         return;
     }
@@ -2066,9 +2054,7 @@ void daStar_c::OnBounceLand() {
         return;
     }
     SetDefaultGravity();
-    mSafePosX = mPosX;
-    mSafePosY = mPosY;
-    mSafePosZ = mPosZ;
+    mSafePos = mPos;
     p = (dActor_c *)ClosestPlayer();
     if (p == 0) return;
     {
@@ -2079,7 +2065,7 @@ void daStar_c::OnBounceLand() {
     }
     if (Vec3_Dist(&mPos, &v) < 0x4b0000) {
         mPrevAngleY = Vec3_HorzAngle(&v, &mPos);
-        if (mFloorNormalY >= *(short*)(data_02082714 + 0x56)) {
+        if (mFloorNormal.y >= *(short *)(data_02082714 + 0x56)) {
             if (gCurrentSublevel != 0x1d)
                 return;
             if (mWithMeshClsn.GetFloorResult()->surface.clps.GetFloorClass() != 5)
@@ -2527,7 +2513,7 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
 
     vec[0].y += 0xc8000;
     vec[1] = vec[0];
-    dist = Vec3_Dist(&vec[0], (Vector3*)&mCamPosX);
+    dist = Vec3_Dist(&vec[0], &mCamPos);
 
     unsigned short mode = mCamSeq;
     flag = (((mode == 100 && (dist > 0x3e8000 || dist < 0x1f4000)) ||
@@ -2545,14 +2531,14 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
             vec[0].y += 0x12c000;
 
         if (flag) {
-            short ang = Vec3_HorzAngle(&vec[0], (Vector3*)&mCamPosX);
+            short ang = Vec3_HorzAngle(&vec[0], &mCamPos);
             vec[0].x = FX_SinIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4) * 1000 + vec[0].x;
             vec[0].z = FX_CosIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4) * 1000 + vec[0].z;
             ((dCamera_c *)cam)->SetPos(vec[0]);
         } else {
             if (!IsAreaShowing(mAreaId))
                 return;
-            short ang = Vec3_HorzAngle(&vec[0], (Vector3*)&mCamPosX);
+            short ang = Vec3_HorzAngle(&vec[0], &mCamPos);
             vec[0].x += FX_MUL(dist, FX_SinIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4));
             vec[0].z += FX_MUL(dist, FX_CosIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4));
             ((dCamera_c *)cam)->SetPos(vec[0]);
@@ -2576,7 +2562,7 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
                 r6 = (r6 + 1) & 0xff;
                 vec[0] = vec[1];
                 if (r6 >= 0x14) {
-                    ((dCamera_c *)cam)->SetPos(*(const Vector3*)&mCamPosX);
+                    ((dCamera_c *)cam)->SetPos(mCamPos);
                     return;
                 }
                 continue;
@@ -2615,14 +2601,14 @@ void daStar_c::StepCameraCutscene() {
     switch (mCamSeq) {
     case 0:
     {
-        int *s1 = (int *)&cam->lookAt;
-        int *s2 = (int *)&cam->pos;
-        mCamLookAtX = s1[0];
-        mCamLookAtY = s1[1];
-        mCamLookAtZ = s1[2];
-        mCamPosX = s2[0];
-        mCamPosY = s2[1];
-        mCamPosZ = s2[2];
+        Vector3 *s1 = &cam->lookAt;
+        Vector3 *s2 = &cam->pos;
+        mCamLookAt.x = s1->x;
+        mCamLookAt.y = s1->y;
+        mCamLookAt.z = s1->z;
+        mCamPos.x = s2->x;
+        mCamPos.y = s2->y;
+        mCamPos.z = s2->z;
     }
         PlaceCameraAtStarCamera(cam);
         cam->SetFlag_3();
@@ -2637,14 +2623,14 @@ void daStar_c::StepCameraCutscene() {
         break;
     case 0x64:
     {
-        int *s1 = (int *)&cam->lookAt;
-        int *s2 = (int *)&cam->pos;
-        mCamLookAtX = s1[0];
-        mCamLookAtY = s1[1];
-        mCamLookAtZ = s1[2];
-        mCamPosX = s2[0];
-        mCamPosY = s2[1];
-        mCamPosZ = s2[2];
+        Vector3 *s1 = &cam->lookAt;
+        Vector3 *s2 = &cam->pos;
+        mCamLookAt.x = s1->x;
+        mCamLookAt.y = s1->y;
+        mCamLookAt.z = s1->z;
+        mCamPos.x = s2->x;
+        mCamPos.y = s2->y;
+        mCamPos.z = s2->z;
     }
         cam->SetFlag_3();
         if (PlaceCameraAtStarCamera(cam) == 0)
@@ -2657,8 +2643,8 @@ void daStar_c::StepCameraCutscene() {
             mCamSeq = 0x1b6;
         break;
     case 0x1f4:
-        cam->SetLookAt(*(const Vector3 *)&mCamLookAtX);
-        cam->SetPos(*(const Vector3 *)&mCamPosX);
+        cam->SetLookAt(mCamLookAt);
+        cam->SetPos(mCamPos);
         mCamSeq += 1;
         break;
     case 0x1f5:
